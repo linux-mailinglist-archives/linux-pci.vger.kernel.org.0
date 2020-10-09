@@ -2,115 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC9B3289A29
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 23:06:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DFE2289A92
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 23:27:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391213AbgJIVGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 17:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391133AbgJIVF5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 17:05:57 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8376C0613D5
-        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 14:05:55 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id e10so7892813pfj.1
-        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 14:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QXQaBaNS7A6eVo/ydORo8r5bdU1C9Le836RTdHwCBbM=;
-        b=JoSdKxNwxsMfI2U0CjlTc5BwvhqCy714WkSi+WKKGJVkSxeS4A84NzKevK6CPn9KXt
-         luyi7jDs6nQbVyyVPeYM9mQUjAAefT+ScUKjFnKzQLP7hS1caTnxv6LwwjUOs1sG613o
-         Z1mfBp8CiisbR4rWjXF/lItpg0T+9m58kSN6ymcBrb9qx1Q5pE6/8rfEwDSOFoHPmLeK
-         ZOhU9su8JfRbkCsj5wTlpzUcuguhQKLNKVmqQEdIiT1RZKGFUwDcT20B3P+mB4B8pmtl
-         zOKoiM+eB3smbcYTz3v4uqlSVWDNijwAFgnLDRm8ha9grVnXIpZsyUDrdJ34aNugK5Zh
-         t79g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QXQaBaNS7A6eVo/ydORo8r5bdU1C9Le836RTdHwCBbM=;
-        b=dUBJXEhu1fsQ173W+vyu3ML/pqhamf2XujQGCjYMAIu0FV9SxsiWrJNG74C1yNYoB4
-         D86qu/9T+L/MoSsYnWMCqTnx+wXDGRXUhwhdvx/gVWjDgI7NOaNEvdoVYF1EGwiWIdT3
-         HS4DePo/KPb0UuHbDPP4hmaTuSzrf049EUyhZZtEE4NIuq8eC/pnus8aaMfo71+nRL0j
-         MANhEmF166RJgs9EqU4GvUsyi9iHjbsYT2DNEKbwh705NXFmaxinSOK2ZmHnNcw76gCR
-         hYiGIJdzhLyrDZ5r8BOeuEyE4Kyoh27JdKqfXffHWuOi2zxatzADAa59hCCER9/g1FHm
-         DRFA==
-X-Gm-Message-State: AOAM532Bk/oBTPZgG8GSJQmehOipll1tV9WwfJmvkl8XjbNpzWKf3W/l
-        GAc6azg8alyGOMqCqhM/bLwmPQ==
-X-Google-Smtp-Source: ABdhPJxjzJ92vFbxcRcoQJ+j6aZ4ui51r5YFp2dBuqEKUdI8vRCJOM24sn81H3xCAiwt33ZPrcU5Mg==
-X-Received: by 2002:a65:64cc:: with SMTP id t12mr5047545pgv.106.1602277555126;
-        Fri, 09 Oct 2020 14:05:55 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id t13sm12057753pfc.1.2020.10.09.14.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2020 14:05:54 -0700 (PDT)
-Date:   Fri, 9 Oct 2020 14:05:48 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v5 00/29] Add support for Clang LTO
-Message-ID: <20201009210548.GB1448445@google.com>
-References: <20201009161338.657380-1-samitolvanen@google.com>
- <20201009153512.1546446a@gandalf.local.home>
+        id S2391315AbgJIV1Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 17:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389123AbgJIV1Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Oct 2020 17:27:24 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12A91215A4;
+        Fri,  9 Oct 2020 21:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602278843;
+        bh=NwIKZ+f6HMeX/oLRxsIlvognVA13GEfEwW6Ct7aIaqM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eW8l3AM7rf9hC2tqoamawjUHB+nTNgln6hqqfyORAUuj0HJlajVUPiI/NPQCDliBN
+         XUwJqTSuvZzeknHQwG+6Qo5E6GxR9kO/Ojyf7hQlAxLGa+NpW8lJlD6knmEJpB5/3e
+         6FQbj9v7VDJHAub0q/8241/9wgtTveA+AyX8UI4k=
+Date:   Fri, 9 Oct 2020 16:27:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <seanvk.dev@oregontracks.org>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
+        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: Re: [PATCH v8 08/14] PCI/AER: Extend AER error handling to RCECs
+Message-ID: <20201009212721.GA3503883@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201009153512.1546446a@gandalf.local.home>
+In-Reply-To: <20201002184735.1229220-9-seanvk.dev@oregontracks.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 09, 2020 at 03:35:12PM -0400, Steven Rostedt wrote:
-> On Fri,  9 Oct 2020 09:13:09 -0700
-> Sami Tolvanen <samitolvanen@google.com> wrote:
+On Fri, Oct 02, 2020 at 11:47:29AM -0700, Sean V Kelley wrote:
+> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> > This patch series adds support for building x86_64 and arm64 kernels
-> > with Clang's Link Time Optimization (LTO).
-> > 
-> > In addition to performance, the primary motivation for LTO is
-> > to allow Clang's Control-Flow Integrity (CFI) to be used in the
-> > kernel. Google has shipped millions of Pixel devices running three
-> > major kernel versions with LTO+CFI since 2018.
-> > 
-> > Most of the patches are build system changes for handling LLVM
-> > bitcode, which Clang produces with LTO instead of ELF object files,
-> > postponing ELF processing until a later stage, and ensuring initcall
-> > ordering.
-> > 
-> > Note that this version is based on tip/master to reduce the number
-> > of prerequisite patches, and to make it easier to manage changes to
-> > objtool. Patch 1 is from Masahiro's kbuild tree, and while it's not
-> > directly related to LTO, it makes the module linker script changes
-> > cleaner.
-> > 
+> Currently the kernel does not handle AER errors for Root Complex
+> integrated End Points (RCiEPs)[0]. These devices sit on a root bus within
+> the Root Complex (RC). AER handling is performed by a Root Complex Event
+> Collector (RCEC) [1] which is a effectively a type of RCiEP on the same
+> root bus.
 > 
-> I went to test this, but it appears that the latest tip/master fails to
-> build for me. This error is on tip/master, before I even applied a single
-> patch.
+> For an RCEC (technically not a Bridge), error messages "received" from
+> associated RCiEPs must be enabled for "transmission" in order to cause a
+> System Error via the Root Control register or (when the Advanced Error
+> Reporting Capability is present) reporting via the Root Error Command
+> register and logging in the Root Error Status register and Error Source
+> Identification register.
 > 
-> (config attached)
+> In addition to the defined OS level handling of the reset flow for the
+> associated RCiEPs of an RCEC, it is possible to also have non-native
+> handling. In that case there is no need to take any actions on the RCEC
+> because the firmware is responsible for them. This is true where APEI [2]
+> is used to report the AER errors via a GHES[v2] HEST entry [3] and
+> relevant AER CPER record [4] and non-native handling is in use.
+> 
+> We effectively end up with two different types of discovery for
+> purposes of handling AER errors:
+> 
+> 1) Normal bus walk - we pass the downstream port above a bus to which
+> the device is attached and it walks everything below that point.
+> 
+> 2) An RCiEP with no visible association with an RCEC as there is no need
+> to walk devices. In that case, the flow is to just call the callbacks for
+> the actual device, which in turn references its associated RCEC.
+> 
+> Modify pci_walk_bridge() to handle devices which lack a subordinate bus.
+> If the device does not then it will call the function on that device
+> alone.
+> 
+> [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex
+> Integrated Endpoint Rules.
+> [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling and
+> Logging
+> [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface (APEI)
+> [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
+> [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
+> 
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> ---
+>  drivers/pci/pcie/err.c | 25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 5ff1afa4763d..c4ceca42a3bf 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -148,19 +148,25 @@ static int report_resume(struct pci_dev *dev, void *data)
+>  
+>  /**
+>   * pci_walk_bridge - walk bridges potentially AER affected
+> - * @bridge   bridge which may be a Port.
+> + * @bridge   bridge which may be an RCEC with associated RCiEPs,
+> + *           an RCiEP associated with an RCEC, or a Port.
+>   * @cb       callback to be called for each device found
+>   * @userdata arbitrary pointer to be passed to callback.
+>   *
+>   * If the device provided is a bridge, walk the subordinate bus,
+>   * including any bridged devices on buses under this bus.
+>   * Call the provided callback on each device found.
+> + *
+> + * If the device provided has no subordinate bus, call the provided
+> + * callback on the device itself.
+>   */
+>  static void pci_walk_bridge(struct pci_dev *bridge, int (*cb)(struct pci_dev *, void *),
+>  			    void *userdata)
+>  {
+>  	if (bridge->subordinate)
+>  		pci_walk_bus(bridge->subordinate, cb, userdata);
+> +	else
+> +		cb(bridge, userdata);
+>  }
+>  
+>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> @@ -174,11 +180,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	/*
+>  	 * Error recovery runs on all subordinates of the first downstream
+>  	 * bridge. If the downstream bridge detected the error, it is
+> -	 * cleared at the end.
+> +	 * cleared at the end. For RCiEPs we should reset just the RCiEP itself.
+>  	 */
+>  	type = pci_pcie_type(dev);
+>  	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> -	    type == PCI_EXP_TYPE_DOWNSTREAM)
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	    type == PCI_EXP_TYPE_RC_EC ||
 
-Ah yes, X86_DECODER_SELFTEST seems to be broken in tip/master. If you
-prefer, I have these patches on top of mainline here:
+What is the case where an RCEC is passed to pcie_do_recovery()?  I
+guess it's the case where an RCEC is reporting an error that it logged
+itself, i.e., no RCiEP is involved at all?  In that case I guess we
+should try an FLR on the RCEC and clear its status?
 
-  https://github.com/samitolvanen/linux/tree/clang-lto
+(I don't think the current series attempts the FLR.)
 
-Testing your config with LTO on this tree, it does build and boot for
-me, although I saw a couple of new objtool warnings, and with LLVM=1,
-one warning from llvm-objdump.
-
-Sami
+> +	    type == PCI_EXP_TYPE_RC_END)
+>  		bridge = dev;
+>  	else
+>  		bridge = pci_upstream_bridge(dev);
+> @@ -186,7 +194,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bridge(bridge, report_frozen_detected, &status);
+> -		status = reset_subordinate_device(bridge);
+> +		if (type == PCI_EXP_TYPE_RC_END) {
+> +			pci_warn(dev, "subordinate device reset not possible for RCiEP\n");
+> +			status = PCI_ERS_RESULT_NONE;
+> +			goto failed;
+> +		}
+> +
+> +		status = reset_subordinate_devices(bridge);
+>  		if (status != PCI_ERS_RESULT_RECOVERED) {
+>  			pci_warn(dev, "subordinate device reset failed\n");
+>  			goto failed;
+> @@ -219,7 +233,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_walk_bridge(bridge, report_resume, &status);
+>  
+>  	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> -	    type == PCI_EXP_TYPE_DOWNSTREAM) {
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	    type == PCI_EXP_TYPE_RC_EC) {
+>  		if (pcie_aer_is_native(bridge))
+>  			pcie_clear_device_status(bridge);
+>  		pci_aer_clear_nonfatal_status(bridge);
+> -- 
+> 2.28.0
+> 
