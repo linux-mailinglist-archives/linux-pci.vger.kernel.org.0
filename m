@@ -2,328 +2,230 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8E928922A
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 21:48:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EF882895BA
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 21:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732777AbgJITsN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 15:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732706AbgJITsN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 15:48:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629F1C0613D5
-        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 12:48:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b26so7739673pff.3
-        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 12:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H/2rA06sg5FxkAp5yy9qiPPIMqv8IB6ptWM+AFeYLtM=;
-        b=mzONLCWrhGPIbzbk9DDu33FPaLeeX7j1uDjZ/xIU3mkHpUuWFhmW25c5WKrvtj/44W
-         R+R+IyPQm/flAmAoeFchAQh/6PjBjCn40lv7rb/+i0GoG077SZF06xTDe2IUWUapEFzm
-         MhOvp017WcuTqJsE57YGzdHiCWyu2EGu2pqiGqTaVDnXRtByCzT6pMc1G/5bYbj7ZCDx
-         RI26XqbBaTGwnw+NACd6WT/xyjdXl0ozH58L0Pq7F5cEBlQPwsC8qLqGwxDBQHPDpfKi
-         plZJMYyidLhyTevl5MckygIo8oHOocjCCPWiL95I3lESLYHC2Ydum5JF0z5qLMqpIh+u
-         wciA==
+        id S1731392AbgJIT5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 15:57:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38540 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389523AbgJITxe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 15:53:34 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i12so10098107ota.5
+        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 12:53:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H/2rA06sg5FxkAp5yy9qiPPIMqv8IB6ptWM+AFeYLtM=;
-        b=LqY+ISg8RGRXC60wJKu4MjZkCOcMKoGVkK0qvThZohbtdlWIYDe93GYfA7q2nU11oJ
-         3KQ1Z04+jDyDlRkUYMGs0jdHvjwPkbXaPj/P58t6+Op+ATu36ct/pdZyexLmsqS15dnh
-         7KfSI98vgwvfGS4zrMIre1Gr96VYs4g9i8H8fnTCneJIYslHSHfkyKHuadgy3Lzxxg9e
-         98ZIyogv3DgY836RoJaKAwwqFdveO+yFuVWouYsAPKIMZ5lsRmJrEroMfjjNXx/IJ/tY
-         5A8baATJgNy4KlRpEFWPoI6fewgwrmiolY+evBPcilt4FoCbaftGrjyjKDrqNi9MMLmp
-         UsbA==
-X-Gm-Message-State: AOAM533VGHzfMHxcFv7eVGsebhWqtjnDkz1nmJhrurGZyBHDI8O8etwW
-        pIWnt2KkeGUJqAdNqMyfAXefbA==
-X-Google-Smtp-Source: ABdhPJwgtrYOHsz2AiwEc1Fq4CRSceqE7ska627cJL+yJwUjulYKZOW6zTxltN2clfFP8FUSMKiTWw==
-X-Received: by 2002:a62:6044:0:b029:151:1a04:895 with SMTP id u65-20020a6260440000b02901511a040895mr13465852pfb.34.1602272892739;
-        Fri, 09 Oct 2020 12:48:12 -0700 (PDT)
-Received: from [10.213.166.37] (fmdmzpr03-ext.fm.intel.com. [192.55.54.38])
-        by smtp.gmail.com with ESMTPSA id b127sm7481963pfb.143.2020.10.09.12.48.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Oct 2020 12:48:11 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     "Sean V Kelley" <seanvk.dev@oregontracks.org>, bhelgaas@google.com,
-        Jonathan.Cameron@huawei.com, rafael.j.wysocki@intel.com,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@intel.com, qiuxu.zhuo@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 11/14] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Date:   Fri, 09 Oct 2020 12:48:07 -0700
-X-Mailer: MailMate (1.13.2r5673)
-Message-ID: <5D41DFBA-CF5D-4DFD-A6B2-A28B621CB228@intel.com>
-In-Reply-To: <B3F01188-01A5-4807-B2C8-33AD5AD4A506@intel.com>
-References: <20201009175745.GA3489710@bjorn-Precision-5520>
- <41B2B0A9-80B0-41DA-9FF3-A5D9465E6E08@intel.com>
- <C3CF4A15-B00B-4347-89C7-B331E17ECF69@intel.com>
- <B3F01188-01A5-4807-B2C8-33AD5AD4A506@intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RuJMRkm/6mOfAA06cZuhfs1T0jl6aR1m0eqVuTh18Xg=;
+        b=OpRx27J+Tz+68Rkazo5bLukNQL3yPQNt2LTtfucAMdIb0i5tANt1dG+09rGajSobkk
+         k9+PTbZTkyGhh0ke8NJPhPR1i/3m2XWQw2zIsiBHzJ5rv2OI+deOtA4DW7B3RJQmVsb0
+         nUwVspvS9RY3NaVsrNmef1iZaOdYoz9ujrFosbFJljEVHY6HeUvaUAkIIXzbyxFPncdN
+         o1zWCcCo2tiMj5g3Fiie8D6XUXi1Datg6VkSWDlentVNSqrdlkoXFJjOKhnN0gJadRpY
+         kaGhAK20OGT9YCXvr0LRmMfb2mfOgbAQ2KxKurXhDP3vVq84NbUJO3Hmx0QLGeCK0AGx
+         JIow==
+X-Gm-Message-State: AOAM5302zPuppUTjbnYG7dtAN7MQ+6uTMCrJlj7fSfEeeMCURO1uaili
+        UhfNZcnwPjrt9XxwhBDzKvaofZ4GV1n6
+X-Google-Smtp-Source: ABdhPJwi1Nt0bUQebv1yfgeFfw3DTpd+okHMVMA/kAzJwhWYLHi73v6K/4pHkplIlP85ycCMJBtTgA==
+X-Received: by 2002:a9d:638d:: with SMTP id w13mr9789206otk.32.1602273212011;
+        Fri, 09 Oct 2020 12:53:32 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id t20sm8316526oot.22.2020.10.09.12.53.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Oct 2020 12:53:31 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH] PCI: Move Rockchip driver to Cadence directory
+Date:   Fri,  9 Oct 2020 14:53:30 -0500
+Message-Id: <20201009195330.396775-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 9 Oct 2020, at 11:53, Sean V Kelley wrote:
+The Rockchip PCIe host controller is in fact a Cadence based PCIe host.
+This is most evident by comparing the address translation registers.
 
-> On 9 Oct 2020, at 11:34, Sean V Kelley wrote:
->
->> On 9 Oct 2020, at 11:26, Sean V Kelley wrote:
->>
->>> Hi Bjorn,
->>>
->>> On 9 Oct 2020, at 10:57, Bjorn Helgaas wrote:
->>>
->>>> On Fri, Oct 02, 2020 at 11:47:32AM -0700, Sean V Kelley wrote:
->>>>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>>>>
->>>>> When attempting error recovery for an RCiEP associated with an 
->>>>> RCEC device,
->>>>> there needs to be a way to update the Root Error Status, the 
->>>>> Uncorrectable
->>>>> Error Status and the Uncorrectable Error Severity of the parent 
->>>>> RCEC.
->>>>> In some non-native cases in which there is no OS visible device
->>>>> associated with the RCiEP, there is nothing to act upon as the 
->>>>> firmware
->>>>> is acting before the OS. So add handling for the linked 'rcec' in 
->>>>> AER/ERR
->>>>> while taking into account non-native cases.
->>>>>
->>>>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
->>>>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
->>>>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>> ---
->>>>>  drivers/pci/pcie/aer.c |  9 +++++----
->>>>>  drivers/pci/pcie/err.c | 39 
->>>>> ++++++++++++++++++++++++++++-----------
->>>>>  2 files changed, 33 insertions(+), 15 deletions(-)
->>>>>
->>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>>>> index 65dff5f3457a..dccdba60b5d9 100644
->>>>> --- a/drivers/pci/pcie/aer.c
->>>>> +++ b/drivers/pci/pcie/aer.c
->>>>> @@ -1358,17 +1358,18 @@ static int aer_probe(struct pcie_device 
->>>>> *dev)
->>>>>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->>>>>  {
->>>>>  	int aer = dev->aer_cap;
->>>>> +	int rc = 0;
->>>>>  	u32 reg32;
->>>>> -	int rc;
->>>>> -
->>>>>
->>>>>  	/* Disable Root's interrupt in response to error messages */
->>>>>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->>>>>  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
->>>>>  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->>>>>
->>>>> -	rc = pci_bus_error_reset(dev);
->>>>> -	pci_info(dev, "Root Port link has been reset\n");
->>>>> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
->>>>> +		rc = pci_bus_error_reset(dev);
->>>>> +		pci_info(dev, "Root Port link has been reset\n");
->>>>> +	}
->>>>>
->>>>>  	/* Clear Root Error Status */
->>>>>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
->>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>>> index 38abd7984996..956ad4c86d53 100644
->>>>> --- a/drivers/pci/pcie/err.c
->>>>> +++ b/drivers/pci/pcie/err.c
->>>>> @@ -149,7 +149,8 @@ static int report_resume(struct pci_dev *dev, 
->>>>> void *data)
->>>>>  /**
->>>>>   * pci_walk_bridge - walk bridges potentially AER affected
->>>>>   * @bridge   bridge which may be an RCEC with associated RCiEPs,
->>>>> - *           an RCiEP associated with an RCEC, or a Port.
->>>>> + *           or a Port.
->>>>> + * @dev      an RCiEP lacking an associated RCEC.
->>>>>   * @cb       callback to be called for each device found
->>>>>   * @userdata arbitrary pointer to be passed to callback.
->>>>>   *
->>>>> @@ -160,13 +161,20 @@ static int report_resume(struct pci_dev 
->>>>> *dev, void *data)
->>>>>   * If the device provided has no subordinate bus, call the 
->>>>> provided
->>>>>   * callback on the device itself.
->>>>>   */
->>>>> -static void pci_walk_bridge(struct pci_dev *bridge, int 
->>>>> (*cb)(struct pci_dev *, void *),
->>>>> +static void pci_walk_bridge(struct pci_dev *bridge, struct 
->>>>> pci_dev *dev,
->>>>> +			    int (*cb)(struct pci_dev *, void *),
->>>>>  			    void *userdata)
->>>>>  {
->>>>> -	if (bridge->subordinate)
->>>>> +	/*
->>>>> +	 * In a non-native case where there is no OS-visible reporting
->>>>> +	 * device the bridge will be NULL, i.e., no RCEC, no PORT.
->>>>> +	 */
->>>>> +	if (bridge && bridge->subordinate)
->>>>>  		pci_walk_bus(bridge->subordinate, cb, userdata);
->>>>> -	else
->>>>> +	else if (bridge)
->>>>>  		cb(bridge, userdata);
->>>>> +	else
->>>>> +		cb(dev, userdata);
->>>>>  }
->>>>>
->>>>>  static pci_ers_result_t flr_on_rciep(struct pci_dev *dev)
->>>>> @@ -196,16 +204,25 @@ pci_ers_result_t pcie_do_recovery(struct 
->>>>> pci_dev *dev,
->>>>>  	type = pci_pcie_type(dev);
->>>>>  	if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>>>>  	    type == PCI_EXP_TYPE_DOWNSTREAM ||
->>>>> -	    type == PCI_EXP_TYPE_RC_EC ||
->>>>> -	    type == PCI_EXP_TYPE_RC_END)
->>>>> +	    type == PCI_EXP_TYPE_RC_EC)
->>>>>  		bridge = dev;
->>>>> +	else if (type == PCI_EXP_TYPE_RC_END)
->>>>> +		bridge = dev->rcec;
->>>>>  	else
->>>>>  		bridge = pci_upstream_bridge(dev);
->>>>>
->>>>>  	pci_dbg(dev, "broadcast error_detected message\n");
->>>>>  	if (state == pci_channel_io_frozen) {
->>>>> -		pci_walk_bridge(bridge, report_frozen_detected, &status);
->>>>> +		pci_walk_bridge(bridge, dev, report_frozen_detected, &status);
->>>>>  		if (type == PCI_EXP_TYPE_RC_END) {
->>>>> +			/*
->>>>> +			 * The callback only clears the Root Error Status
->>>>> +			 * of the RCEC (see aer.c). Only perform this for the
->>>>> +			 * native case, i.e., an RCEC is present.
->>>>> +			 */
->>>>> +			if (bridge)
->>>>> +				reset_subordinate_devices(bridge);
->>>>
->>>> Help me understand this.  There are lots of callbacks in this 
->>>> picture,
->>>> but I guess this "callback only clears Root Error Status" must 
->>>> refer
->>>> to aer_root_reset(), i.e., the reset_subordinate_devices pointer?
->>>
->>> The ‘bridge’ in this case will always be dev->rcec, the event 
->>> collector for the associated RC_END. And that’s what’s being 
->>> cleared in aer.c via aer_root_reset() as the callback. It’s also 
->>> being checked for native/non-native here.
->>>
->>>>
->>>> Of course, the caller of pcie_do_recovery() supplied that pointer.
->>>> And we can infer that it must be aer_root_reset(), not
->>>> dpc_reset_link(), because RCECs and RCiEPs are not allowed to
->>>> implement DPC.
->>>
->>> Correct.
->>>
->>>>
->>>> I wish we didn't have either this assumption about what
->>>> reset_subordinate_devices points to, or the assumption about what
->>>> aer_root_reset() does.  They both seem a little bit tenuous.
->>>
->>> Agree. It’s the relationship between the RC_END and the RC_EC.
->>>
->>>>
->>>> We already made aer_root_reset() smart enough to check for RCECs.  
->>>> Can
->>>> we put the FLR there, too?  Then we wouldn't have this weird 
->>>> situation
->>>> where reset_subordinate_devices() does a reset and clears error
->>>> status, EXCEPT for this case where it only clears error status and 
->>>> we
->>>> do the reset here?
->>>
->>> We could add the smarts to aer_root_reset() to check for an RC_END 
->>> in that callback and perform the clear there on its RC_EC. We just 
->>> wouldn’t map ‘bridge’ to dev->rcec for RC_END in 
->>> pcie_do_recovery() which would simplify things.
->>>
->>> Further, the FLR in the case of flr_on_rciep() below is specific to 
->>> the RCiEP itself. So it could be performed either in 
->>> aer_root_reset() or remain in the pcie_do_recovery().
->>>
->>> That should work.
->>>
->>> Sean
->>
->> Thinking more on this, you could still pass dev->rcec to the callback 
->> (eventually aer_root_reset()), but you won’t have the ability to 
->> handle the FLR there without the pointer to the RC_END. That’s why 
->> I suggested passing the RC_END and checking for its RC_EC in 
->> aer_root_reset() if you want to also handle FLR there too from below.
->
-> Where you get into trouble is that you don’t want to do anything in 
-> the non-native case and shouldn’t be going to the callback. So this 
-> would add complexity to aer_root_reset() for checking on dev->rcec == 
-> NULL…where before you never would have invoked 
-> reset_subordinate_devices() in the non-native case.
->
->
+As a first step to merge the Rockchip driver into the Cadence driver,
+let's just move the Rockchip driver into the Cadence directoy. This at
+least makes the relationship obvious.
 
-Unmapping of bridge to dev->rcec in pcie_do_recovery() also causes 
-problems for pci_walk_bridge() which pays attention to the non-native 
-case, even making available the dev for when there is no ‘bridge’ 
-like device.
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Tom Joseph <tjoseph@cadence.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+This is going to conflict at least with 'PCI: rockchip: Fix bus checks 
+in rockchip_pcie_valid_device()' and the common ECAM defines. 
 
-I think we may be just shifting things elsewhere despite the constraints 
-remaining the same. So while it should work, I believe that I prefer the 
-current approach.
+ drivers/pci/controller/Kconfig                | 28 -------------------
+ drivers/pci/controller/Makefile               |  3 --
+ drivers/pci/controller/cadence/Kconfig        | 28 +++++++++++++++++++
+ drivers/pci/controller/cadence/Makefile       |  3 ++
+ .../{ => cadence}/pcie-rockchip-ep.c          |  0
+ .../{ => cadence}/pcie-rockchip-host.c        |  2 +-
+ .../controller/{ => cadence}/pcie-rockchip.c  |  2 +-
+ .../controller/{ => cadence}/pcie-rockchip.h  |  0
+ 8 files changed, 33 insertions(+), 33 deletions(-)
+ rename drivers/pci/controller/{ => cadence}/pcie-rockchip-ep.c (100%)
+ rename drivers/pci/controller/{ => cadence}/pcie-rockchip-host.c (99%)
+ rename drivers/pci/controller/{ => cadence}/pcie-rockchip.c (99%)
+ rename drivers/pci/controller/{ => cadence}/pcie-rockchip.h (100%)
 
-Sean
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index f18c3725ef80..3ffc4ad01a33 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -202,34 +202,6 @@ config PCI_HOST_THUNDER_ECAM
+ 	help
+ 	  Say Y here if you want ECAM support for CN88XX-Pass-1.x Cavium Thunder SoCs.
+ 
+-config PCIE_ROCKCHIP
+-	bool
+-	depends on PCI
+-
+-config PCIE_ROCKCHIP_HOST
+-	tristate "Rockchip PCIe host controller"
+-	depends on ARCH_ROCKCHIP || COMPILE_TEST
+-	depends on OF
+-	depends on PCI_MSI_IRQ_DOMAIN
+-	select MFD_SYSCON
+-	select PCIE_ROCKCHIP
+-	help
+-	  Say Y here if you want internal PCI support on Rockchip SoC.
+-	  There is 1 internal PCIe port available to support GEN2 with
+-	  4 slots.
+-
+-config PCIE_ROCKCHIP_EP
+-	bool "Rockchip PCIe endpoint controller"
+-	depends on ARCH_ROCKCHIP || COMPILE_TEST
+-	depends on OF
+-	depends on PCI_ENDPOINT
+-	select MFD_SYSCON
+-	select PCIE_ROCKCHIP
+-	help
+-	  Say Y here if you want to support Rockchip PCIe controller in
+-	  endpoint mode on Rockchip SoC. There is 1 internal PCIe port
+-	  available to support GEN2 with 4 slots.
+-
+ config PCIE_MEDIATEK
+ 	tristate "MediaTek PCIe controller"
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
+diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+index bcdbf49ab1e4..1c03d1178df0 100644
+--- a/drivers/pci/controller/Makefile
++++ b/drivers/pci/controller/Makefile
+@@ -23,9 +23,6 @@ obj-$(CONFIG_PCIE_IPROC_PLATFORM) += pcie-iproc-platform.o
+ obj-$(CONFIG_PCIE_IPROC_BCMA) += pcie-iproc-bcma.o
+ obj-$(CONFIG_PCIE_ALTERA) += pcie-altera.o
+ obj-$(CONFIG_PCIE_ALTERA_MSI) += pcie-altera-msi.o
+-obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
+-obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
+-obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
+ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+ obj-$(CONFIG_VMD) += vmd.o
+diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+index 5d30564190e1..2bdf6eb03ed8 100644
+--- a/drivers/pci/controller/cadence/Kconfig
++++ b/drivers/pci/controller/cadence/Kconfig
+@@ -65,4 +65,32 @@ config PCI_J721E_EP
+ 	  Say Y here if you want to support the TI J721E PCIe platform
+ 	  controller in endpoint mode. TI J721E PCIe controller uses Cadence PCIe
+ 	  core.
++
++config PCIE_ROCKCHIP
++	bool
++
++config PCIE_ROCKCHIP_HOST
++	tristate "Rockchip PCIe host controller"
++	depends on ARCH_ROCKCHIP || COMPILE_TEST
++	depends on OF
++	depends on PCI_MSI_IRQ_DOMAIN
++	select MFD_SYSCON
++	select PCIE_ROCKCHIP
++	help
++	  Say Y here if you want internal PCI support on Rockchip SoC.
++	  There is 1 internal PCIe port available to support GEN2 with
++	  4 slots.
++
++config PCIE_ROCKCHIP_EP
++	bool "Rockchip PCIe endpoint controller"
++	depends on ARCH_ROCKCHIP || COMPILE_TEST
++	depends on OF
++	depends on PCI_ENDPOINT
++	select MFD_SYSCON
++	select PCIE_ROCKCHIP
++	help
++	  Say Y here if you want to support Rockchip PCIe controller in
++	  endpoint mode on Rockchip SoC. There is 1 internal PCIe port
++	  available to support GEN2 with 4 slots.
++
+ endmenu
+diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
+index 9bac5fb2f13d..eb1aeae6c52b 100644
+--- a/drivers/pci/controller/cadence/Makefile
++++ b/drivers/pci/controller/cadence/Makefile
+@@ -4,3 +4,6 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+ obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+ obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
+ obj-$(CONFIG_PCI_J721E) += pci-j721e.o
++obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
++obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
++obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
+diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/cadence/pcie-rockchip-ep.c
+similarity index 100%
+rename from drivers/pci/controller/pcie-rockchip-ep.c
+rename to drivers/pci/controller/cadence/pcie-rockchip-ep.c
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/cadence/pcie-rockchip-host.c
+similarity index 99%
+rename from drivers/pci/controller/pcie-rockchip-host.c
+rename to drivers/pci/controller/cadence/pcie-rockchip-host.c
+index 0bb2fb3e8a0b..1ee409d7b7e5 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/cadence/pcie-rockchip-host.c
+@@ -36,7 +36,7 @@
+ #include <linux/reset.h>
+ #include <linux/regmap.h>
+ 
+-#include "../pci.h"
++#include "../../pci.h"
+ #include "pcie-rockchip.h"
+ 
+ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/cadence/pcie-rockchip.c
+similarity index 99%
+rename from drivers/pci/controller/pcie-rockchip.c
+rename to drivers/pci/controller/cadence/pcie-rockchip.c
+index 904dec0d3a88..72ba71bab8e9 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/cadence/pcie-rockchip.c
+@@ -19,7 +19,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+ 
+-#include "../pci.h"
++#include "../../pci.h"
+ #include "pcie-rockchip.h"
+ 
+ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/cadence/pcie-rockchip.h
+similarity index 100%
+rename from drivers/pci/controller/pcie-rockchip.h
+rename to drivers/pci/controller/cadence/pcie-rockchip.h
+-- 
+2.25.1
 
-
-
->>
->> Sean
->>
->>>
->>>
->>>>
->>>>>  			status = flr_on_rciep(dev);
->>>>>  			if (status != PCI_ERS_RESULT_RECOVERED) {
->>>>>  				pci_warn(dev, "function level reset failed\n");
->>>>> @@ -219,13 +236,13 @@ pci_ers_result_t pcie_do_recovery(struct 
->>>>> pci_dev *dev,
->>>>>  			}
->>>>>  		}
->>>>>  	} else {
->>>>> -		pci_walk_bridge(bridge, report_normal_detected, &status);
->>>>> +		pci_walk_bridge(bridge, dev, report_normal_detected, &status);
->>>>>  	}
->>>>>
->>>>>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>>>  		status = PCI_ERS_RESULT_RECOVERED;
->>>>>  		pci_dbg(dev, "broadcast mmio_enabled message\n");
->>>>> -		pci_walk_bridge(bridge, report_mmio_enabled, &status);
->>>>> +		pci_walk_bridge(bridge, dev, report_mmio_enabled, &status);
->>>>>  	}
->>>>>
->>>>>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>>> @@ -236,14 +253,14 @@ pci_ers_result_t pcie_do_recovery(struct 
->>>>> pci_dev *dev,
->>>>>  		 */
->>>>>  		status = PCI_ERS_RESULT_RECOVERED;
->>>>>  		pci_dbg(dev, "broadcast slot_reset message\n");
->>>>> -		pci_walk_bridge(bridge, report_slot_reset, &status);
->>>>> +		pci_walk_bridge(bridge, dev, report_slot_reset, &status);
->>>>>  	}
->>>>>
->>>>>  	if (status != PCI_ERS_RESULT_RECOVERED)
->>>>>  		goto failed;
->>>>>
->>>>>  	pci_dbg(dev, "broadcast resume message\n");
->>>>> -	pci_walk_bridge(bridge, report_resume, &status);
->>>>> +	pci_walk_bridge(bridge, dev, report_resume, &status);
->>>>>
->>>>>  	if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>>>>  	    type == PCI_EXP_TYPE_DOWNSTREAM ||
->>>>> -- 
->>>>> 2.28.0
->>>>>
