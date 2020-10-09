@@ -2,199 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70B35288106
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 06:11:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C4112882D8
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 08:43:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgJIELS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 00:11:18 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:61042 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726147AbgJIELS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 00:11:18 -0400
-Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09946OCd013591;
-        Fri, 9 Oct 2020 04:11:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=UFmCA3vn2Jwa1U3jzBh3mGOHf5C1nnnscXE2M84P0Lg=;
- b=RWuJDDSGoyN5ihItZgu7JGLEiT7RfL1Vo9zHaoG5ZvKef0srG6ATQaXLEIO4V6KafVLq
- 21Z9fKTuaWTjDm2wTFbxJLJK/dWLcIVth2P8PfWrLJdG5u+ISdgImChCCIIf6Q+jRQ+B
- dsoePztXkZhJe6fNsF5KiK5i+ciGp0aJfZylZH8HcZUNOFPXRGD780g8RvrMhKu/zssf
- Eg2CQz5/vrsExGfL+HjxF9DaOSVLrYB6Y/TUUGI4PN1R60PcZVS/NvYL6o0zLgnvg89n
- pofecqy63fJWu83m+4eWB9WAjhjetExW9Naf3Gmj8sgvuz/1SVfn9/jS4aH96V51Fv/u VA== 
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com with ESMTP id 3429m52q20-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Oct 2020 04:11:08 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3426.houston.hpe.com (Postfix) with ESMTP id D79A35F;
-        Fri,  9 Oct 2020 04:11:07 +0000 (UTC)
-Received: from sarge.linuxathome.me (unknown [16.29.167.198])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 1434647;
-        Fri,  9 Oct 2020 04:11:05 +0000 (UTC)
-Date:   Fri, 9 Oct 2020 05:11:05 +0100
-From:   Hedi Berriche <hedi.berriche@hpe.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Russ Anderson <rja@hpe.com>,
+        id S1728901AbgJIGnh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 02:43:37 -0400
+Received: from mail-mw2nam12on2041.outbound.protection.outlook.com ([40.107.244.41]:52193
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726510AbgJIGnh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Oct 2020 02:43:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n9xdTIFnKK4m4uO6hwDHfMDdsteln9BLOOyVpPpgihIesSa7eeo3etYCdUJwyuuPtqR0a242CPpzDWbnbkJl9rzSKESNV6bBYwqTSrm3jTnzy+xmLJ78Zk1WO5CxG0N6Bbi15Vleqdv3BbqLxfQj7bbt/c212ICqd6nkxPpOMMQt9b6RyRUiYAL4VYUITc9ckcaIWMlHvXY5p4zEXLI6jkUkHdrPjk4lwsMteIwzaue/gXTUyIC+YT6Insj4qBzH3FrqeZ7OjgOxblB+nCy4Tp7B5onY8XEqFQRgNirb2lUInPGDOkFBKZzWyfACTd287dLZpmJxYlgS7OmdS6rDDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H48G7QfZnH9nUHuleRCrMY5vga6sx9XjnMa7GjkNdyg=;
+ b=odyXNN2I8ooSTHit4hyGowMTw/F69mpSsozAk4znSJMwmYtC1PAFt2sGc3gMpZsE0GzR8wM2UIgNpIobt1/CwSW2Tsd/CyXmI25cRNbtjCyJTwfZx7swGIbLcBNJHAh3jcKBBuMaPCCP+tJclRJk3TdanS22+VMyEdYQT/bHVeuIBj7jHd+p1S97+JeOy/gm4Q4uW8y+HQNZQOxahzEVDlTR/EqGhRvsTzHd43mr7XXGbqXCXc/YS6caaTHLM7p2iEL77VrQ6/1vFBrv7ZOjpJdK2r3S1L4zjkgvrd2KtfiBF0PcZy5vycq9TUW656qzfZnREP2bknBCUzfWI7XHzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H48G7QfZnH9nUHuleRCrMY5vga6sx9XjnMa7GjkNdyg=;
+ b=KEVdmXZXHx+a4iwzSymWrpemPdxTW5LoF9jI5h3D9oNWQ8tPf5s8gQ/KNMxecmqYputo+q3yKhoAg/zvBQKRg2bvX39grDGaGoCMituhkKPDLgXMmRZMfc/g7/zlUE/WjQ7ahy/2hyXKofVy9T32YtIeN6iIncEA6H502zK2rVM=
+Authentication-Results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=synaptics.com;
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
+ by DM5PR03MB3036.namprd03.prod.outlook.com (2603:10b6:3:11e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.23; Fri, 9 Oct
+ 2020 06:43:34 +0000
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3433.046; Fri, 9 Oct 2020
+ 06:43:34 +0000
+Date:   Fri, 9 Oct 2020 14:40:29 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.com>, stable@kernel.org
-Subject: Re: [PATCH v1 1/1] PCI/ERR: don't clobber status after reset_link()
-Message-ID: <20201009041105.GC2365427@sarge.linuxathome.me>
-Mail-Followup-To: "Raj, Ashok" <ashok.raj@intel.com>,
-        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Russ Anderson <rja@hpe.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.com>, stable@kernel.org
-References: <20201009025251.2360659-1-hedi.berriche@hpe.com>
- <20201009034614.GB60852@otc-nc-03>
- <20201009040554.GB2365427@sarge.linuxathome.me>
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] PCI: dwc: fix two MSI issues
+Message-ID: <20201009144029.62f327a9@xhacker.debian>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [124.74.246.114]
+X-ClientProxiedBy: TYAPR03CA0016.apcprd03.prod.outlook.com
+ (2603:1096:404:14::28) To DM6PR03MB4555.namprd03.prod.outlook.com
+ (2603:10b6:5:102::17)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20201009040554.GB2365427@sarge.linuxathome.me>
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-10-09_01:2020-10-09,2020-10-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- mlxscore=0 adultscore=0 mlxlogscore=999 phishscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 suspectscore=1 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010090027
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TYAPR03CA0016.apcprd03.prod.outlook.com (2603:1096:404:14::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.11 via Frontend Transport; Fri, 9 Oct 2020 06:43:31 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dbbedda9-72a9-4a81-92c4-08d86c1ea4ca
+X-MS-TrafficTypeDiagnostic: DM5PR03MB3036:
+X-Microsoft-Antispam-PRVS: <DM5PR03MB30368ACBF28BD4E4B7C71E9EED080@DM5PR03MB3036.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: //TXgtJe06VOfOPvWFGsMRmCW93Kj8+xf4TV1PBCIm5r8FTBNToz49DMDvSCQrsVUUtZ4zh/WweiTcvG8uuTgDQ2DsHau+dEAaYVXLP6kNDeiqf7NneHfvScZw7NNQjeQPiF9fMqv2e0Z7jN1IBH8/1w/04ZYz64aAiACaQobnTta1C7o3Zrqh6uT1onaiY9M/MXv1yuXqL9o1pzLXzYy2filByPQG0pp/sDLSP3GtOpZebRyGR/J7XCNTVHuF1u07tYyRYB99Yo69zmmp+bACbYA94BSTA9O3WkNPGA6WjG45kiAxFJNGDL1gFe8OL1I3b6VFYmqzjpII7vD4I6fg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39850400004)(376002)(396003)(366004)(136003)(5660300002)(66946007)(8676002)(66476007)(66556008)(55016002)(9686003)(2906002)(7416002)(110136005)(86362001)(83380400001)(956004)(1076003)(26005)(6506007)(316002)(7696005)(52116002)(4326008)(478600001)(186003)(16526019)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: mXCNIHF9P4fZu7xcIHwIWipfpUBOX585Q9x5tcH74yRrOOtwsaGesroqsoEXk/x/xD611/qDvHh5AV5clzdGTX4DtaRVknycaI/cyB1Rmg8d5Lllq6NtlwXkx9FTd7TcszMmOzOZS0fAtHTk7S6BGi4MCH24q1nyh/SGtQs8udzyhENCCfamoUsePnBlfv7pJmE/GrA+1uycItHJGHPPHD2RKt5I3f+QKs2eT0rwdaW/wm3suK96rTpLjR7Gf+Lj62CmTMbK4dDSnrL/QhxTbSVjKhcRA8/DHvVgQuab8ROF5CxidS43fykwdAWmcvg0luPGxaGxacsZpCAVSD1eoA496bfmcNfr7+00AyfuLI5MMGpIIN/hwYvWUbOWWDOqw1vWf3YYhQ8SD8dLBtMVrBJY4oDWd1iS98+FmDeTg6hcFCO7LNQKcUdaz3+Ohc9qOhGgBjjqIXkiT7aSsQSAnfK8/urfdNFdWSUr3+vlRDzrptCHROk97+I3Ko3VSZA+R2rWUSEvnhnIbfDRKVEaOKsuNuoONzrxlue7Hcbw75EtoSxu+EALjp1mUNILgcQiC0W1Xtku6KLCCkJcqs5mcMd7L2HNGiJL6y3gvnPEsQ/7qBFdSkMODIlDQ21RFzcRRfFMZ93IShPoQsiLkGkdjA==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbbedda9-72a9-4a81-92c4-08d86c1ea4ca
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Oct 2020 06:43:34.4711
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EJMHGcIYOqmWJWkrOHtmHy/U0tqwaofpbRwkwmuabc7vFylhk4S177ptSsETz3XsN+M2XCNtTX+rluKaDL1N9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB3036
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 09, 2020 at 05:09 Hedi Berriche wrote:
->On Fri, Oct 09, 2020 at 04:46 Raj, Ashok wrote:
->
->Hi Ashok,
->
->Thanks for looking into this.
->
->>On Fri, Oct 09, 2020 at 03:52:51AM +0100, Hedi Berriche wrote:
->>>Commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>>changed pcie_do_recovery() so that status is updated with the return
->>>value from reset_link(); this was to fix the problem where we would
->>>wrongly report recovery failure, despite a successful reset_link(),
->>>whenever the initial error status is PCI_ERS_RESULT_DISCONNECT or
->>>PCI_ERS_RESULT_NO_AER_DRIVER.
->>>
->>>Unfortunately this breaks the flow of pcie_do_recovery() as it prevents
->>
->>What is the reference to "this breaks" above?
->
->The code change introduced by commit 6d2c89441571; would
->
->    "this code change" instead of "this breaks"
->
->work better? If not, I can also rephrase the whole paragraph along the following lines:
->
->Commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()") breaks the flow
->of pcie_do_recovery() as it prevents the actions needed when the initial error is
->PCI_ERS_RESULT_CAN_RECOVER or PCI_ERS_RESULT_NEED_RESET from taking place which causes
->error recovery to fail.
->
->... and do away with the first paragraph.
->
->>>the actions needed when the initial error is PCI_ERS_RESULT_CAN_RECOVER
->>>or PCI_ERS_RESULT_NEED_RESET from taking place which causes error
->>>recovery to fail.
->>>
->>>Don't clobber status after reset_link() to restore the intended flow in
->>>pcie_do_recovery().
->>>
->>>Fix the original problem by saving the return value from reset_link()
->>>and use it later on to decide whether error recovery should be deemed
->>>successful in the scenarios where the initial error status is
->>>PCI_ERS_RESULT_{DISCONNECT,NO_AER_DRIVER}.
->>
->>I would rather rephrase the above to make it clear what is being proposed.
->>Since the description seems to talk about the old problem and new solution
->>all mixed up.
->
->OK; will do that to clarify that what's being proposed here is:
->
->    1. fix the regression introduced by commit 6d2c89441571
->    2. address the problem that commit 6d2c89441571 aimed to fix
->
->>>Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->>>Signed-off-by: Hedi Berriche <hedi.berriche@hpe.com>
->>>Cc: Russ Anderson <rja@hpe.com>
->>>Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>Cc: Bjorn Helgaas <bhelgaas@google.com>
->>>Cc: Ashok Raj <ashok.raj@intel.com>
->>>Cc: Keith Busch <keith.busch@intel.com>
->>>Cc: Joerg Roedel <jroedel@suse.com>
->>>
->>>Cc: stable@kernel.org # v5.7+
->>>---
->>> drivers/pci/pcie/err.c | 13 ++++++++++---
->>> 1 file changed, 10 insertions(+), 3 deletions(-)
->>>
->>>diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>index c543f419d8f9..dbd0b56bd6c1 100644
->>>--- a/drivers/pci/pcie/err.c
->>>+++ b/drivers/pci/pcie/err.c
->>>@@ -150,7 +150,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>> 			pci_channel_state_t state,
->>> 			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
->>> {
->>>-	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>>+	pci_ers_result_t post_reset_status, status = PCI_ERS_RESULT_CAN_RECOVER;
->>
->>why call it post_reset_status?
->
->Perhaps post_reset_status is not a great choice; would reset_result or reset_link_result be better?
+Fix two MSI issues. One to skip PCIE_MSI_INTR0* programming if MSI is
+disabled, another to use an address in the driver data for MSI address,
+to fix the MSI page leakage during suspend/resume.
 
-... or just do this with a boolean instead as I had it in an earlier iteration of the patch before I
-eventually opted to use an pci_ers_result_t.
+Since v5:
+  - rebase on pci/dwc branch
+  - add Acked-by tag
 
-Cheers,
-Hedi.
->
->Cheers,
->Hedi.
->
->>
->>> 	struct pci_bus *bus;
->>>
->>> 	/*
->>>@@ -165,8 +165,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>> 	pci_dbg(dev, "broadcast error_detected message\n");
->>> 	if (state == pci_channel_io_frozen) {
->>> 		pci_walk_bus(bus, report_frozen_detected, &status);
->>>-		status = reset_link(dev);
->>>-		if (status != PCI_ERS_RESULT_RECOVERED) {
->>>+		post_reset_status = reset_link(dev);
->>>+		if (post_reset_status != PCI_ERS_RESULT_RECOVERED) {
->>> 			pci_warn(dev, "link reset failed\n");
->>> 			goto failed;
->>> 		}
->>>@@ -174,6 +174,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>> 		pci_walk_bus(bus, report_normal_detected, &status);
->>> 	}
->>>
->>>+	if ((status == PCI_ERS_RESULT_DISCONNECT ||
->>>+	     status == PCI_ERS_RESULT_NO_AER_DRIVER) &&
->>>+	     post_reset_status == PCI_ERS_RESULT_RECOVERED) {
->>>+		/* error recovery succeeded thanks to reset_link() */
->>>+		status = PCI_ERS_RESULT_RECOVERED;
->>>+	}
->>>+
->>> 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>> 		status = PCI_ERS_RESULT_RECOVERED;
->>> 		pci_dbg(dev, "broadcast mmio_enabled message\n");
->>>--
->>>2.28.0
->>>
->
->-- 
->Be careful of reading health books, you might die of a misprint.
->	-- Mark Twain
+Since v4:
+  - fix pci-dra7xx.c
+
+Since v3:
+  - add Acked-by tag
+  - change patch2 commit msg to make it clear
+  - map the MSI msg with dma_map_single_attrs() for some platforms
+    which either has separate addrs for dma and phy or has mem access
+    limitation for the PCIe.
+
+Since v2:
+  - add Acked-by tag
+  - use an address in the driver data for MSI address. Thank Ard and Rob
+    for pointing out this correct direction.
+  - Since the MSI page has gone, the leak issue doesn't exist anymore,
+    remove unnecessary patches.
+  - Remove dw_pcie_free_msi rename and the last patch. They could be
+    targeted to next. So will send out patches in a separate series.
+
+Since v1:
+  - add proper error handling patches.
+  - solve the msi page leakage by moving dw_pcie_msi_init() from each
+    users to designware host
+
+Jisheng Zhang (2):
+  PCI: dwc: Skip PCIE_MSI_INTR0* programming if MSI is disabled
+  PCI: dwc: Fix MSI page leakage in suspend/resume
+
+ drivers/pci/controller/dwc/pci-dra7xx.c       | 18 ++++++++-
+ .../pci/controller/dwc/pcie-designware-host.c | 37 +++++++++----------
+ drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
+ 3 files changed, 36 insertions(+), 21 deletions(-)
 
 -- 
-Be careful of reading health books, you might die of a misprint.
-	-- Mark Twain
+2.28.0
+
