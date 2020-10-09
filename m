@@ -2,89 +2,297 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B4C9288D9E
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 18:03:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25E8D288DE2
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 18:13:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389522AbgJIQCy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 12:02:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58854 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389135AbgJIQCx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 12:02:53 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1602259371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZHt8XKpvOg8gA4nFcOb4ywxF5VhRSTiXsFiBgkwu8B8=;
-        b=PZXU42J+noDD0cxK0VwzkFTB1O1ZMlVR4ciJrWmGNNjCW7z+U6/fPdM/VrIK5jn891zfRF
-        zsZySS/8mYik/JuGzKmmWWbEya2Zwm3ZS4siFcm+rWM0kbLOX2SVR0ClM3ytOeJvQr7QZh
-        dAcxQ5R6F6FknxrG9JuOt07A8eUCSza53Cv5AuC+hlpDhlrxB51jXTgZVtlzqteqGKToAP
-        AP/Y2z83BB+TMGZL6Bs2yRDuYy581E6ItMpfV1UcXhLxmcNOEf/iGEWUwFN4Cxv135AYmk
-        FTgQgJNVyUhJD+vIFuFMk2+g0f9SGIOwu6wLNAJ/T5b2Qfyths1T+PSzw1DNXw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1602259371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZHt8XKpvOg8gA4nFcOb4ywxF5VhRSTiXsFiBgkwu8B8=;
-        b=w1fJ/MJLSeMBuSGG0nDlKWfzrPoFMaZhljKfwDjF06uVySTctoTPsdDTaJTQNfblBx2kFS
-        umsjrxsBGffaBqDw==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v3 11/18] dmaengine: idxd: ims setup for the vdcm
-In-Reply-To: <20201009145236.GM4734@nvidia.com>
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com> <160021253189.67751.12686144284999931703.stgit@djiang5-desk3.ch.intel.com> <87mu17ghr1.fsf@nanos.tec.linutronix.de> <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com> <87r1q92mkx.fsf@nanos.tec.linutronix.de> <44e19c5d-a0d2-0ade-442c-61727701f4d8@intel.com> <87y2kgux2l.fsf@nanos.tec.linutronix.de> <20201008233210.GH4734@nvidia.com> <87v9fjtq5w.fsf@nanos.tec.linutronix.de> <20201009145236.GM4734@nvidia.com>
-Date:   Fri, 09 Oct 2020 18:02:51 +0200
-Message-ID: <87d01rtmj8.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S2389638AbgJIQNn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 12:13:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389540AbgJIQNm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 12:13:42 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695C4C0613D7
+        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 09:13:41 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id z9so4039237pfk.2
+        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 09:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=U16gZthY7GiG18hos+s39UYV/dexC5axxz2McFtoNlo=;
+        b=vhS3dYYv7bY+kDyncQJsbZHYYRW1XDqySvWZWDFarm0NAC6t9TncD/IBNB/bSb7aeW
+         yO1QWKnY9zZuRVt0I5ketNvf2kwK6hQr/FtPX4aTTCjPQpQH9Kg5pG4twJezVXWA7gG5
+         q61G4nTK1e1JfKvUs62OWO2wUvu5uFU95sw9VJOgMZ84UQFi9tifXdq1QzQQb9/Q4Bar
+         SMjL1y00LJghai39w0XQPvPAqn9xpZkft1LV9D9T1plKJclDr7pQLMRdfPsbiVEMAusr
+         HQiAgzqgWCYnbolCw3ACEgXYwB2G6s0voPqAnEYoukixEBca0YeYYXWai/YvJXDmoRdf
+         XvCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=U16gZthY7GiG18hos+s39UYV/dexC5axxz2McFtoNlo=;
+        b=Lr3AgUP0jXsThCs2I3pWRmcFRsjK7dugxzjJtY76Ge2x0JUlUeILGjTPQOw5lLB2QT
+         Kx3+IRTi+FLkZdDQUZ6PsFFYx2TvQ32VHOmK9cAjy7LwPijuc7djVJ754bPghCIT99eO
+         Vrr+/r8sCwJpa0EucE+AmYnocwF0mj+sZkjqZh8u4AGFavkgt9hBXR18KHaVzeDvmZOg
+         B00nkyeBoLNGXzOKlP0Bbvy/2UjiMCV4mWGHSmddCMo+iMdC1zlcC1whRVowKpVm/XZv
+         BjtSB4FUicJQn3G0toRLeFlSNQP6t56GD0w871XvZgTR/YaXSHZ5aq44peg/sgRb3GI7
+         TlMQ==
+X-Gm-Message-State: AOAM530u+nf9s5LuVTflcLW4ekm+76MnWqCQDFvyBc88OoYc9du+dRNP
+        QCEvfzgLJCDf52J2iAPC+64Icwb5IjwNWSW8cn0=
+X-Google-Smtp-Source: ABdhPJwbxDO8SrAUtzuxujURZ/yjaUl/YNSKyWSLiFwER3BiW6zhR2u6G2f7Brx3XJ1eZPqqUJbUpRgrV5plJ6K3FIk=
+Sender: "samitolvanen via sendgmr" 
+        <samitolvanen@samitolvanen1.mtv.corp.google.com>
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+ (user=samitolvanen job=sendgmr) by 2002:aa7:8812:0:b029:154:e0ed:1fed with
+ SMTP id c18-20020aa788120000b0290154e0ed1fedmr12987823pfo.33.1602260020696;
+ Fri, 09 Oct 2020 09:13:40 -0700 (PDT)
+Date:   Fri,  9 Oct 2020 09:13:09 -0700
+Message-Id: <20201009161338.657380-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.1011.ga647a8990f-goog
+Subject: [PATCH v5 00/29] Add support for Clang LTO
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 09 2020 at 11:52, Jason Gunthorpe wrote:
-> On Fri, Oct 09, 2020 at 04:44:27PM +0200, Thomas Gleixner wrote:
->> > This is really not that different from what I was describing for queue
->> > contexts - the queue context needs to be assigned to the irq # before
->> > it can be used in the irq chip other wise there is no idea where to
->> > write the msg to. Just like pasid here.
->> 
->> Not really. In the IDXD case the storage is known when the host device
->> and the irq domain is initialized which is not the case for your variant
->> and it neither needs to send a magic command to the device to update the
->> data.
->
-> I mean, needing the PASID vs needing the memory address before the IRQ
-> can be use are basically the same issue. Data needs to be attached to
-> the IRQ before it can be programmed.. In this case programming with
-> the wrong PASID could lead to a security issue.
+This patch series adds support for building x86_64 and arm64 kernels
+with Clang's Link Time Optimization (LTO).
 
-Yeah. I looked at doing it similar to the callback I added for
-retrieving the shadow storage pointer, but the PASID is not necessarily
-established at that point.
+In addition to performance, the primary motivation for LTO is
+to allow Clang's Control-Flow Integrity (CFI) to be used in the
+kernel. Google has shipped millions of Pixel devices running three
+major kernel versions with LTO+CFI since 2018.
 
->> I agree that irq_set_auxdata() is not the most elegant thing, but the
->> alternative solutions I looked at are just worse.
->
-> It seems reasonable, but quite an obfuscated way to tell a driver they
-> need to hold irq_get_desc_buslock() when touching data shared with the
-> irqchip ops.. Not that I have a better suggestion
+Most of the patches are build system changes for handling LLVM
+bitcode, which Clang produces with LTO instead of ELF object files,
+postponing ELF processing until a later stage, and ensuring initcall
+ordering.
 
-It's an obfuscated way to make obfuscated hardware supported :)
+Note that this version is based on tip/master to reduce the number
+of prerequisite patches, and to make it easier to manage changes to
+objtool. Patch 1 is from Masahiro's kbuild tree, and while it's not
+directly related to LTO, it makes the module linker script changes
+cleaner.
 
-Thanks,
+Furthermore, patches 2-6 include Peter's patch for generating
+__mcount_loc with objtool, and build system changes to enable it on
+x86. With these patches, we no longer need to annotate functions
+that have non-call references to __fentry__ with LTO, which greatly
+simplifies supporting dynamic ftrace.
 
-        tglx
+You can also pull this series from
+
+  https://github.com/samitolvanen/linux.git lto-v5
+
+---
+Changes in v5:
+
+  - Rebased on top of tip/master.
+
+  - Changed the command line for objtool to use --vmlinux --duplicate
+    to disable warnings about retpoline thunks and to fix .orc_unwind
+    generation for vmlinux.o.
+
+  - Added --noinstr flag to objtool, so we can use --vmlinux without
+    also enabling noinstr validation.
+
+  - Disabled objtool's unreachable instruction warnings with LTO to
+    disable false positives for the int3 padding in vmlinux.o.
+
+  - Added ANNOTATE_RETPOLINE_SAFE annotations to the indirect jumps
+    in x86 assembly code to fix objtool warnings with retpoline.
+
+  - Fixed modpost warnings about missing version information with
+    CONFIG_MODVERSIONS.
+
+  - Included Makefile.lib into Makefile.modpost for ld_flags. Thanks
+    to Sedat for pointing this out.
+
+  - Updated the help text for ThinLTO to better explain the trade-offs.
+
+  - Updated commit messages with better explanations.
+
+Changes in v4:
+
+  - Fixed a typo in Makefile.lib to correctly pass --no-fp to objtool.
+
+  - Moved ftrace configs related to generating __mcount_loc to Kconfig,
+    so they are available also in Makefile.modfinal.
+
+  - Dropped two prerequisite patches that were merged to Linus' tree.
+
+Changes in v3:
+
+  - Added a separate patch to remove the unused DISABLE_LTO treewide,
+    as filtering out CC_FLAGS_LTO instead is preferred.
+
+  - Updated the Kconfig help to explain why LTO is behind a choice
+    and disabled by default.
+
+  - Dropped CC_FLAGS_LTO_CLANG, compiler-specific LTO flags are now
+    appended directly to CC_FLAGS_LTO.
+
+  - Updated $(AR) flags as KBUILD_ARFLAGS was removed earlier.
+
+  - Fixed ThinLTO cache handling for external module builds.
+
+  - Rebased on top of Masahiro's patch for preprocessing modules.lds,
+    and moved the contents of module-lto.lds to modules.lds.S.
+
+  - Moved objtool_args to Makefile.lib to avoid duplication of the
+    command line parameters in Makefile.modfinal.
+
+  - Clarified in the commit message for the initcall ordering patch
+    that the initcall order remains the same as without LTO.
+
+  - Changed link-vmlinux.sh to use jobserver-exec to control the
+    number of jobs started by generate_initcall_ordering.pl.
+
+  - Dropped the x86/relocs patch to whitelist L4_PAGE_OFFSET as it's
+    no longer needed with ToT kernel.
+
+  - Disabled LTO for arch/x86/power/cpu.c to work around a Clang bug
+    with stack protector attributes.
+
+Changes in v2:
+
+  - Fixed -Wmissing-prototypes warnings with W=1.
+
+  - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
+    scrubbing to make distclean.
+
+  - Added a comment about Clang >=11 being required.
+
+  - Added a patch to disable LTO for the arm64 KVM nVHE code.
+
+  - Disabled objtool's noinstr validation with LTO unless enabled.
+
+  - Included Peter's proposed objtool mcount patch in the series
+    and replaced recordmcount with the objtool pass to avoid
+    whitelisting relocations that are not calls.
+
+  - Updated several commit messages with better explanations.
+
+
+Masahiro Yamada (1):
+  kbuild: preprocess module linker script
+
+Peter Zijlstra (1):
+  objtool: Add a pass for generating __mcount_loc
+
+Sami Tolvanen (27):
+  objtool: Don't autodetect vmlinux.o
+  tracing: move function tracer options to Kconfig
+  tracing: add support for objtool mcount
+  x86, build: use objtool mcount
+  treewide: remove DISABLE_LTO
+  kbuild: add support for Clang LTO
+  kbuild: lto: fix module versioning
+  objtool: Split noinstr validation from --vmlinux
+  kbuild: lto: postpone objtool
+  kbuild: lto: limit inlining
+  kbuild: lto: merge module sections
+  kbuild: lto: remove duplicate dependencies from .mod files
+  init: lto: ensure initcall ordering
+  init: lto: fix PREL32 relocations
+  PCI: Fix PREL32 relocations for LTO
+  modpost: lto: strip .lto from module names
+  scripts/mod: disable LTO for empty.c
+  efi/libstub: disable LTO
+  drivers/misc/lkdtm: disable LTO for rodata.o
+  arm64: vdso: disable LTO
+  KVM: arm64: disable LTO for the nVHE directory
+  arm64: disable recordmcount with DYNAMIC_FTRACE_WITH_REGS
+  arm64: allow LTO_CLANG and THINLTO to be selected
+  x86/asm: annotate indirect jumps
+  x86, vdso: disable LTO only for vDSO
+  x86, cpu: disable LTO for cpu.c
+  x86, build: allow LTO_CLANG and THINLTO to be selected
+
+ .gitignore                                    |   1 +
+ Makefile                                      |  68 +++--
+ arch/Kconfig                                  |  74 +++++
+ arch/arm/Makefile                             |   4 -
+ .../module.lds => include/asm/module.lds.h}   |   2 +
+ arch/arm64/Kconfig                            |   4 +
+ arch/arm64/Makefile                           |   4 -
+ .../module.lds => include/asm/module.lds.h}   |   2 +
+ arch/arm64/kernel/vdso/Makefile               |   4 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile              |   4 +-
+ arch/ia64/Makefile                            |   1 -
+ .../{module.lds => include/asm/module.lds.h}  |   0
+ arch/m68k/Makefile                            |   1 -
+ .../module.lds => include/asm/module.lds.h}   |   0
+ arch/powerpc/Makefile                         |   1 -
+ .../module.lds => include/asm/module.lds.h}   |   0
+ arch/riscv/Makefile                           |   3 -
+ .../module.lds => include/asm/module.lds.h}   |   3 +-
+ arch/sparc/vdso/Makefile                      |   2 -
+ arch/um/include/asm/Kbuild                    |   1 +
+ arch/x86/Kconfig                              |   3 +
+ arch/x86/Makefile                             |   5 +
+ arch/x86/entry/vdso/Makefile                  |   5 +-
+ arch/x86/kernel/acpi/wakeup_64.S              |   2 +
+ arch/x86/platform/pvh/head.S                  |   2 +
+ arch/x86/power/Makefile                       |   4 +
+ arch/x86/power/hibernate_asm_64.S             |   3 +
+ drivers/firmware/efi/libstub/Makefile         |   2 +
+ drivers/misc/lkdtm/Makefile                   |   1 +
+ include/asm-generic/Kbuild                    |   1 +
+ include/asm-generic/module.lds.h              |  10 +
+ include/asm-generic/vmlinux.lds.h             |  11 +-
+ include/linux/init.h                          |  79 ++++-
+ include/linux/pci.h                           |  19 +-
+ kernel/Makefile                               |   3 -
+ kernel/trace/Kconfig                          |  29 ++
+ scripts/.gitignore                            |   1 +
+ scripts/Makefile                              |   3 +
+ scripts/Makefile.build                        |  69 +++--
+ scripts/Makefile.lib                          |  17 +-
+ scripts/Makefile.modfinal                     |  29 +-
+ scripts/Makefile.modpost                      |  25 +-
+ scripts/generate_initcall_order.pl            | 270 ++++++++++++++++++
+ scripts/link-vmlinux.sh                       |  98 ++++++-
+ scripts/mod/Makefile                          |   1 +
+ scripts/mod/modpost.c                         |  16 +-
+ scripts/mod/modpost.h                         |   9 +
+ scripts/mod/sumversion.c                      |   6 +-
+ scripts/{module-common.lds => module.lds.S}   |  31 ++
+ scripts/package/builddeb                      |   2 +-
+ tools/objtool/builtin-check.c                 |  10 +-
+ tools/objtool/check.c                         |  84 +++++-
+ tools/objtool/include/objtool/builtin.h       |   2 +-
+ tools/objtool/include/objtool/check.h         |   1 +
+ tools/objtool/include/objtool/objtool.h       |   1 +
+ tools/objtool/objtool.c                       |   1 +
+ 56 files changed, 903 insertions(+), 131 deletions(-)
+ rename arch/arm/{kernel/module.lds => include/asm/module.lds.h} (72%)
+ rename arch/arm64/{kernel/module.lds => include/asm/module.lds.h} (76%)
+ rename arch/ia64/{module.lds => include/asm/module.lds.h} (100%)
+ rename arch/m68k/{kernel/module.lds => include/asm/module.lds.h} (100%)
+ rename arch/powerpc/{kernel/module.lds => include/asm/module.lds.h} (100%)
+ rename arch/riscv/{kernel/module.lds => include/asm/module.lds.h} (84%)
+ create mode 100644 include/asm-generic/module.lds.h
+ create mode 100755 scripts/generate_initcall_order.pl
+ rename scripts/{module-common.lds => module.lds.S} (59%)
+
+
+base-commit: 80396d76da65fc8b82581c0260c25a6aa0a495a3
+-- 
+2.28.0.1011.ga647a8990f-goog
+
