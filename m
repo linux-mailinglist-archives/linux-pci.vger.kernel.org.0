@@ -2,57 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF95C288E49
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 18:15:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83423288E56
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 18:15:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389861AbgJIQPI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 12:15:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        id S2389863AbgJIQPY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 12:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389828AbgJIQOw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 12:14:52 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA764C0613BB
-        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 09:14:32 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id z3so3504299yba.21
-        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 09:14:32 -0700 (PDT)
+        with ESMTP id S2389699AbgJIQPG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 12:15:06 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98FD6C0613BC
+        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 09:14:34 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id q4so6596350plr.11
+        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 09:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=eOx9MhffeJ9wDXWdE5ocpTXQ8u7ymKHm7bpeM0Lggio=;
-        b=Plxh6rO8fZsaoEQYUiFTv8Gctd0ORGzpZ7B+rZvfUdc7hYRYEfwwGuB/jOOB4N8mRZ
-         iAAD+kQylOB8+xnUsPp1FuxiMJFvWDb9+nHFjKZSUxLvWnE/9FbEqxjRwOpDx5ONEslI
-         8qXKafYcstPuDgNqimTWoairPVZO2J3rswrWaBPN8Qj/9SVTW+SDOPJ/1LdMPf3bODQ3
-         tIT8O2Z6HcQ4IP/C1bLPAj4juZIAgQDUFSX0gtccixqyP1Lwa6S3qb2MSbgtHQfAoxEv
-         QRJywRQXLDBTL6z66phNxnXE5ujjd1RTPx5601HvsGfueNCH/Cf7DS82U8ob3oCEPZMJ
-         O6DA==
+        bh=hXDRuVDCt6QcdhcOoOZPfzkgSyHjAxTz3vM4hOZGaOg=;
+        b=Of/McM9MKCVt3xMTzgE2jLFxrK6HLM9gHntYJNTcjy9ApZaKHz0NdjwbrXXqJ0KeXL
+         QILhcYMJykX0DmdfDMEtd1i9+jSTop+Teol7A0HSxWBP/JcipzZjeYHbk2YDLsmk1NQ5
+         G2UUcHyxFMpvulEN8vXHpV9R6Nt0Bh4/MBsRvGu0XRXB7N2md6vLGW5FRJ7LZH5lBvgB
+         pDYYRrNjX76WD2872VTFDZDZcdeeeYnq5VF5RlcVhEUVYIDLvVOw1Myce0txxTVpNib1
+         ITGnOYce1pEF2cgi2zX7oPIqItMYk/+MigcROat7aHTJYH0uDLF+ZV1tegP02Tx/IS94
+         4skA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=eOx9MhffeJ9wDXWdE5ocpTXQ8u7ymKHm7bpeM0Lggio=;
-        b=qX6RiFh4xWV8SIbRsmHbgRRLRlESG4Tas4kN2/G/e7J9vZsMKt4bfXdN5x3d4uy85S
-         r18MQylQAwsnp7fX9BgS3iQw7ZlP6EJeLot38qvUpGXqJa2YbNvK/GBtIH+vw8Qx5xKh
-         2mBeOgPhU8OcUG8Q3T5ClJAr+70GWX37gsXVHI2nJr5FBeniuRDpOipNzFeKZIjYGfi2
-         OprcbGlZYBAAtzv0AKvSemoqeBkyBKOO4UhFoTTKcPR9wzmsun/MQZXKCQHYDj7R/C25
-         ocNTZaQqQQHKhryLqgSt6Pp+OB0fPcFUqrjJi9KR8tBK6wi+Lzokw42O1g+O5SZAw4R4
-         su/g==
-X-Gm-Message-State: AOAM531kW0PWxM6s+Vr1RPEciQZYzq626uE6ZaXLVt+PTvS7qyGOpCEh
-        I8xqWxW9IOyNM39TapilidJ0j7wKlXVLxMncJlA=
-X-Google-Smtp-Source: ABdhPJxyS0XHBxv62ZqOUe+ZCIUsnixCIBFhk+Syvlgu7UF8/267koanykdI+IOKX/T5PRLdfssp5bIj1Kz2wguq10U=
+        bh=hXDRuVDCt6QcdhcOoOZPfzkgSyHjAxTz3vM4hOZGaOg=;
+        b=osULPz5X7Br9gUD4DcJh8STYK4LkV4xzv1mjh7ZpsBZq+oONcLwx28KXPWmECNX04C
+         bCTaj/b73ZpSdbGtcVH/m/hqcSCLostqAyt59NW2XpCC2OBf7nWwzmhPlOdyL8RqF137
+         1VGU7fuOmygvOM7tpFMLAl9v9CsBtxeAw9Mga1Rzle/8JCmv/8hH5KBKsNogGQR4B5i0
+         97plOA9H9bywV6ImgzCYfgceSU97ML0SH8cqK/uJdqP9vUDofF1Q38BgQ9+4sYgHhYK2
+         E+8XVcu/VYwl5Qh4goFlUTGEicNRAzGO8bFjbLyvyabIC2ApWlzw6un2CklgGVISWpZ1
+         MwNA==
+X-Gm-Message-State: AOAM531CgPcRLtWUzjhKY3QYnAjw5ywuU0IOxrhHt9q6/JEidNH3FPqi
+        4URvkkK1pddYk/xQVl0d3NesNL22uStyne09N70=
+X-Google-Smtp-Source: ABdhPJyBk60af/C9C5g9kK9znnQdELrD7eCQBW2IcTXEuF7Dn8nzTsEw+V/y+nNCQlumSGoUUFgDmGGBfFH5vdLVxvs=
 Sender: "samitolvanen via sendgmr" 
         <samitolvanen@samitolvanen1.mtv.corp.google.com>
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a25:8209:: with SMTP id
- q9mr19033461ybk.353.1602260072154; Fri, 09 Oct 2020 09:14:32 -0700 (PDT)
-Date:   Fri,  9 Oct 2020 09:13:35 -0700
+ (user=samitolvanen job=sendgmr) by 2002:a62:c701:0:b029:142:2501:39e4 with
+ SMTP id w1-20020a62c7010000b0290142250139e4mr13194002pfg.51.1602260074046;
+ Fri, 09 Oct 2020 09:14:34 -0700 (PDT)
+Date:   Fri,  9 Oct 2020 09:13:36 -0700
 In-Reply-To: <20201009161338.657380-1-samitolvanen@google.com>
-Message-Id: <20201009161338.657380-27-samitolvanen@google.com>
+Message-Id: <20201009161338.657380-28-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20201009161338.657380-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.28.0.1011.ga647a8990f-goog
-Subject: [PATCH v5 26/29] x86/asm: annotate indirect jumps
+Subject: [PATCH v5 27/29] x86, vdso: disable LTO only for vDSO
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Will Deacon <will@kernel.org>,
@@ -72,91 +73,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Running objtool --vmlinux --duplicate on vmlinux.o produces a few
-warnings about indirect jumps with retpoline:
-
-  vmlinux.o: warning: objtool: wakeup_long64()+0x61: indirect jump
-  found in RETPOLINE build
-  ...
-
-This change adds ANNOTATE_RETPOLINE_SAFE annotations to the jumps
-in assembly code to stop the warnings.
+Disable LTO for the vDSO. Note that while we could use Clang's LTO
+for the 64-bit vDSO, it won't add noticeable benefit for the small
+amount of C code.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/kernel/acpi/wakeup_64.S  | 2 ++
- arch/x86/platform/pvh/head.S      | 2 ++
- arch/x86/power/hibernate_asm_64.S | 3 +++
- 3 files changed, 7 insertions(+)
+ arch/x86/entry/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/acpi/wakeup_64.S b/arch/x86/kernel/acpi/wakeup_64.S
-index c8daa92f38dc..041e79c4e195 100644
---- a/arch/x86/kernel/acpi/wakeup_64.S
-+++ b/arch/x86/kernel/acpi/wakeup_64.S
-@@ -7,6 +7,7 @@
- #include <asm/msr.h>
- #include <asm/asm-offsets.h>
- #include <asm/frame.h>
-+#include <asm/nospec-branch.h>
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index ecc27018ae13..9b742f21d2db 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -90,7 +90,7 @@ ifneq ($(RETPOLINE_VDSO_CFLAGS),)
+ endif
+ endif
  
- # Copyright 2003 Pavel Machek <pavel@suse.cz
+-$(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
++$(vobjs): KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO) $(GCC_PLUGINS_CFLAGS) $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS)) $(CFL)
  
-@@ -39,6 +40,7 @@ SYM_FUNC_START(wakeup_long64)
- 	movq	saved_rbp, %rbp
- 
- 	movq	saved_rip, %rax
-+	ANNOTATE_RETPOLINE_SAFE
- 	jmp	*%rax
- SYM_FUNC_END(wakeup_long64)
- 
-diff --git a/arch/x86/platform/pvh/head.S b/arch/x86/platform/pvh/head.S
-index 43b4d864817e..640b79cc64b8 100644
---- a/arch/x86/platform/pvh/head.S
-+++ b/arch/x86/platform/pvh/head.S
-@@ -15,6 +15,7 @@
- #include <asm/asm.h>
- #include <asm/boot.h>
- #include <asm/processor-flags.h>
-+#include <asm/nospec-branch.h>
- #include <asm/msr.h>
- #include <xen/interface/elfnote.h>
- 
-@@ -105,6 +106,7 @@ SYM_CODE_START_LOCAL(pvh_start_xen)
- 	/* startup_64 expects boot_params in %rsi. */
- 	mov $_pa(pvh_bootparams), %rsi
- 	mov $_pa(startup_64), %rax
-+	ANNOTATE_RETPOLINE_SAFE
- 	jmp *%rax
- 
- #else /* CONFIG_X86_64 */
-diff --git a/arch/x86/power/hibernate_asm_64.S b/arch/x86/power/hibernate_asm_64.S
-index 7918b8415f13..715509d94fa3 100644
---- a/arch/x86/power/hibernate_asm_64.S
-+++ b/arch/x86/power/hibernate_asm_64.S
-@@ -21,6 +21,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/processor-flags.h>
- #include <asm/frame.h>
-+#include <asm/nospec-branch.h>
- 
- SYM_FUNC_START(swsusp_arch_suspend)
- 	movq	$saved_context, %rax
-@@ -66,6 +67,7 @@ SYM_CODE_START(restore_image)
- 
- 	/* jump to relocated restore code */
- 	movq	relocated_restore_code(%rip), %rcx
-+	ANNOTATE_RETPOLINE_SAFE
- 	jmpq	*%rcx
- SYM_CODE_END(restore_image)
- 
-@@ -97,6 +99,7 @@ SYM_CODE_START(core_restore_code)
- 
- .Ldone:
- 	/* jump to the restore_registers address from the image header */
-+	ANNOTATE_RETPOLINE_SAFE
- 	jmpq	*%r8
- SYM_CODE_END(core_restore_code)
- 
+ #
+ # vDSO code runs in userspace and -pg doesn't help with profiling anyway.
+@@ -148,6 +148,7 @@ KBUILD_CFLAGS_32 := $(filter-out -fno-pic,$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 := $(filter-out -mfentry,$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 := $(filter-out $(GCC_PLUGINS_CFLAGS),$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 := $(filter-out $(RETPOLINE_CFLAGS),$(KBUILD_CFLAGS_32))
++KBUILD_CFLAGS_32 := $(filter-out $(CC_FLAGS_LTO),$(KBUILD_CFLAGS_32))
+ KBUILD_CFLAGS_32 += -m32 -msoft-float -mregparm=0 -fpic
+ KBUILD_CFLAGS_32 += -fno-stack-protector
+ KBUILD_CFLAGS_32 += $(call cc-option, -foptimize-sibling-calls)
 -- 
 2.28.0.1011.ga647a8990f-goog
 
