@@ -2,206 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8CB42880A2
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 05:16:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F85C2880CB
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 05:46:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbgJIDQh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Oct 2020 23:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728854AbgJIDQh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Oct 2020 23:16:37 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA6B4C0613D2;
-        Thu,  8 Oct 2020 20:16:36 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id i5so7895197edr.5;
-        Thu, 08 Oct 2020 20:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=S4gstCC/FekJI8QJ+2SOlsD1pKXfkis98By+iBN9Ti4=;
-        b=jNjl33WDmlv7VtnPM5xttIFdg89OTGfAVQ5ZVUaMCPLxhEgXRjfbPCX8BD/hIR2RKs
-         yWYwltFNyc/4s1vHMyfEvLO8IRllVCMyDp0ttjeoFqU3MuKSfiJ4zl7zf6/bm9EHcOqG
-         KSw0wCvZ21TDXq/57ZLsjdtVXgaNE6N29X7tPsClpmTaCWUq5j37w6wOqkqDFkw0AwI9
-         by0x9Y2Ps+UFAhwDoIHAKoZy5JrVqVUGyyDtfNXbNH6IcYcQcYDi5GJ7Y4IAPYJkrAfc
-         EokiF+ejLKBYrxeq9MXoJiuO7RHgMAGe9K4VISFdYBGt9IKngGCh3zZdN/eoQ4kn+o/P
-         t/NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=S4gstCC/FekJI8QJ+2SOlsD1pKXfkis98By+iBN9Ti4=;
-        b=brs/bohK5/3Qcn9z7UUyWdXOIeo3wkimqof7urPuG9tShs1BcCwsusHHNDsreii2R2
-         g93n2qtgK0hDYaJ7lXR/MwmZ0xGHEz8ZXbAARu1+dtV2Ht3oRA7kPuk5RCkmtwNFNhWa
-         vcwG/vZukgQ11dHelSdkAc3PJVdERHAwVqVtvvbIz3uyfIEIAZ8LsXvUtow4Cx+pa64W
-         ZAkLvwvlhNsi/5xHKWRFZgR9u1gB++Fy1fQeY3mTq5YpzFWrogM0p5W4bJLP9/vyF6oW
-         Zx0CuaRMY9hd9UdXcPzLR6n3iMvyDQ8X+NmIvEZ9ihhdbAfrLjuOTUkwyPu/a2KxtIok
-         QDvA==
-X-Gm-Message-State: AOAM5331igb6UmXVRs3gfMx3rHaCjCHt4cRu0DcfhXisG9gkenMvU9kN
-        B+OLI97MDz9eB1RfNe8dV61s/70N1CRl6/L/oXKpMwYoadDhNg==
-X-Google-Smtp-Source: ABdhPJzyTKYR17OrIp2pbuAikyU62aKMT80JVOwYk4I58TqifFjCJAUTIKpgM+wlbBCpUUyKe2MKZdN9xcACzAsvUms=
-X-Received: by 2002:a05:6402:1779:: with SMTP id da25mr12157144edb.60.1602213395450;
- Thu, 08 Oct 2020 20:16:35 -0700 (PDT)
+        id S1729437AbgJIDqW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Oct 2020 23:46:22 -0400
+Received: from mga07.intel.com ([134.134.136.100]:45009 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgJIDqW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 8 Oct 2020 23:46:22 -0400
+IronPort-SDR: sAH5wkdwKvr49s5rBqK+N47Gs7teTsZQv2Ysu2OoOOWqtREX4XJUAXbtJpAOuaTbHvOzwffp0N
+ tUIkBt2RirGg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9768"; a="229624589"
+X-IronPort-AV: E=Sophos;i="5.77,353,1596524400"; 
+   d="scan'208";a="229624589"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2020 20:46:20 -0700
+IronPort-SDR: FpjiBfNdoN7koPf8fXg6fDEgVMPctALFUvERJN1oVb0s+aBw6dMeqtgXHkOelCOvEep486C0DU
+ HCiG3AAiwEwA==
+X-IronPort-AV: E=Sophos;i="5.77,353,1596524400"; 
+   d="scan'208";a="462045333"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2020 20:46:20 -0700
+Date:   Thu, 8 Oct 2020 20:46:14 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Hedi Berriche <hedi.berriche@hpe.com>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Joerg Roedel <jroedel@suse.com>, stable@kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v1 1/1] PCI/ERR: don't clobber status after reset_link()
+Message-ID: <20201009034614.GB60852@otc-nc-03>
+References: <20201009025251.2360659-1-hedi.berriche@hpe.com>
 MIME-Version: 1.0
-References: <20201007113158.48933-1-haifeng.zhao@intel.com>
- <20201007113158.48933-3-haifeng.zhao@intel.com> <4bedeb35-942e-5ad3-9721-62495af1f09a@intel.com>
-In-Reply-To: <4bedeb35-942e-5ad3-9721-62495af1f09a@intel.com>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Fri, 9 Oct 2020 11:16:23 +0800
-Message-ID: <CAKF3qh2BPt1Vgh+P_dJ=bHKMAhGjJmA2TY3WpBEmz=x0MOahNw@mail.gmail.com>
-Subject: Re: [PATCH v8 2/6] PCI/DPC: define a function to check and wait till
- port finish DPC handling
-To:     "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
-Cc:     Ethan Zhao <haifeng.zhao@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Oliver <oohall@gmail.com>,
-        ruscur@russell.cc, Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Raj, Ashok" <ashok.raj@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201009025251.2360659-1-hedi.berriche@hpe.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 8, 2020 at 2:16 AM Kuppuswamy, Sathyanarayanan
-<sathyanarayanan.kuppuswamy@intel.com> wrote:
->
->
-> On 10/7/20 4:31 AM, Ethan Zhao wrote:
-> > Once root port DPC capability is enabled and triggered, at the beginnin=
-g
-> > of DPC is triggered, the DPC status bits are set by hardware and then
-> > sends DPC/DLLSC/PDC interrupts to OS DPC and pciehp drivers, it will
-> > take the port and software DPC interrupt handler 10ms to 50ms (test dat=
-a
-> > on ICS(Ice Lake SP platform, see
-> > https://en.wikichip.org/wiki/intel/microarchitectures/ice_lake_(server)
-> > & stable 5.9-rc6) to complete the DPC containment procedure
-> This data is based on one particular architecture. So using this
-> to create a timed loop in pci_wait_port_outdpc() looks incorrect.
+On Fri, Oct 09, 2020 at 03:52:51AM +0100, Hedi Berriche wrote:
+> Commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> changed pcie_do_recovery() so that status is updated with the return
+> value from reset_link(); this was to fix the problem where we would
+> wrongly report recovery failure, despite a successful reset_link(),
+> whenever the initial error status is PCI_ERS_RESULT_DISCONNECT or
+> PCI_ERS_RESULT_NO_AER_DRIVER.
+> 
+> Unfortunately this breaks the flow of pcie_do_recovery() as it prevents
 
-To clarify there, it is not random to wait for specific 1000ms for
-specific architecture.
-Though there is no specification to say how many ms totally cost by
-hardware DPC containment,
-plus its interrupt handling.  but you could read the whole PCIe
-specification to know how
-many ms cost at most by power state transition, link training etc, you
-may know the max single delay
-in hardware state transition is 200ms. Other small delay in hardware
-state transition is 100ms,
-48ms, 32ms etc.
+What is the reference to "this breaks" above?  
 
-If the DPC containment hardware procedure is pure resetting (or cold
-power on) without
-software access configuration as the worst case. we wait its handling
-process from 10ms
-(actually 20ms is the minimum delay we could do with msleep() )  till
-1000ms timeout is a
-reasonable value.
+> the actions needed when the initial error is PCI_ERS_RESULT_CAN_RECOVER
+> or PCI_ERS_RESULT_NEED_RESET from taking place which causes error
+> recovery to fail.
+> 
+> Don't clobber status after reset_link() to restore the intended flow in
+> pcie_do_recovery().
+> 
+> Fix the original problem by saving the return value from reset_link()
+> and use it later on to decide whether error recovery should be deemed
+> successful in the scenarios where the initial error status is
+> PCI_ERS_RESULT_{DISCONNECT,NO_AER_DRIVER}.
 
-Thanks,
-Ethan
+I would rather rephrase the above to make it clear what is being proposed.
+Since the description seems to talk about the old problem and new solution
+all mixed up.
 
+> 
+> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> Signed-off-by: Hedi Berriche <hedi.berriche@hpe.com>
+> Cc: Russ Anderson <rja@hpe.com>
+> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Joerg Roedel <jroedel@suse.com>
+> 
+> Cc: stable@kernel.org # v5.7+
+> ---
+>  drivers/pci/pcie/err.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index c543f419d8f9..dbd0b56bd6c1 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -150,7 +150,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  			pci_channel_state_t state,
+>  			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
+>  {
+> -	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> +	pci_ers_result_t post_reset_status, status = PCI_ERS_RESULT_CAN_RECOVER;
 
+why call it post_reset_status? 
 
-
->
-> I still recommend looking for some locking model to fix this
-> issue (may be atomic state flag or lock).
-> > till the DPC status is cleared at the end of the DPC interrupt handler.
-> >
-> > We use this function to check if the root port is in DPC handling statu=
-s
-> > and wait till the hardware and software completed the procedure.
-> >
-> > Signed-off-by: Ethan Zhao <haifeng.zhao@intel.com>
-> > Tested-by: Wen Jin <wen.jin@intel.com>
-> > Tested-by: Shanshan Zhang <ShanshanX.Zhang@intel.com>
-> > ---
-> > changes:
-> >   v2=EF=BC=9Aalign ICS code name to public doc.
-> >   v3: no change.
-> >   v4: response to Christoph's (Christoph Hellwig <hch@infradead.org>)
-> >       tip, move pci_wait_port_outdpc() to DPC driver and its declaratio=
-n
-> >       to pci.h.
-> >   v5: fix building issue reported by lkp@intel.com with some config.
-> >   v6: move from [1/5] to [2/5].
-> >   v7: no change.
-> >   v8: no change.
-> >
-> >   drivers/pci/pci.h      |  2 ++
-> >   drivers/pci/pcie/dpc.c | 27 +++++++++++++++++++++++++++
-> >   2 files changed, 29 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index fa12f7cbc1a0..455b32187abd 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -455,10 +455,12 @@ void pci_restore_dpc_state(struct pci_dev *dev);
-> >   void pci_dpc_init(struct pci_dev *pdev);
-> >   void dpc_process_error(struct pci_dev *pdev);
-> >   pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
-> > +bool pci_wait_port_outdpc(struct pci_dev *pdev);
-> >   #else
-> >   static inline void pci_save_dpc_state(struct pci_dev *dev) {}
-> >   static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
-> >   static inline void pci_dpc_init(struct pci_dev *pdev) {}
-> > +static inline bool pci_wait_port_outdpc(struct pci_dev *pdev) { return=
- false; }
-> >   #endif
-> >
-> >   #ifdef CONFIG_PCI_ATS
-> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > index daa9a4153776..2e0e091ce923 100644
-> > --- a/drivers/pci/pcie/dpc.c
-> > +++ b/drivers/pci/pcie/dpc.c
-> > @@ -71,6 +71,33 @@ void pci_restore_dpc_state(struct pci_dev *dev)
-> >       pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
-> >   }
-> >
-> > +bool pci_wait_port_outdpc(struct pci_dev *pdev)
-> > +{
-> > +     u16 cap =3D pdev->dpc_cap, status;
-> > +     u16 loop =3D 0;
-> > +
-> > +     if (!cap) {
-> > +             pci_WARN_ONCE(pdev, !cap, "No DPC capability initiated\n"=
-);
-> > +             return false;
-> > +     }
-> > +     pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-> > +     pci_dbg(pdev, "DPC status %x, cap %x\n", status, cap);
-> > +
-> > +     while (status & PCI_EXP_DPC_STATUS_TRIGGER && loop < 100) {
-> > +             msleep(10);
-> > +             loop++;
-> > +             pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &sta=
-tus);
-> > +     }
-> > +
-> > +     if (!(status & PCI_EXP_DPC_STATUS_TRIGGER)) {
-> > +             pci_dbg(pdev, "Out of DPC %x, cost %d ms\n", status, loop=
-*10);
-> > +             return true;
-> > +     }
-> > +
-> > +     pci_dbg(pdev, "Timeout to wait port out of DPC status\n");
-> > +     return false;
-> > +}
-> > +
-> >   static int dpc_wait_rp_inactive(struct pci_dev *pdev)
-> >   {
-> >       unsigned long timeout =3D jiffies + HZ;
->
-> --
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
->
+>  	struct pci_bus *bus;
+>  
+>  	/*
+> @@ -165,8 +165,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bus(bus, report_frozen_detected, &status);
+> -		status = reset_link(dev);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		post_reset_status = reset_link(dev);
+> +		if (post_reset_status != PCI_ERS_RESULT_RECOVERED) {
+>  			pci_warn(dev, "link reset failed\n");
+>  			goto failed;
+>  		}
+> @@ -174,6 +174,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		pci_walk_bus(bus, report_normal_detected, &status);
+>  	}
+>  
+> +	if ((status == PCI_ERS_RESULT_DISCONNECT ||
+> +	     status == PCI_ERS_RESULT_NO_AER_DRIVER) &&
+> +	     post_reset_status == PCI_ERS_RESULT_RECOVERED) {
+> +		/* error recovery succeeded thanks to reset_link() */
+> +		status = PCI_ERS_RESULT_RECOVERED;
+> +	}
+> +
+>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(dev, "broadcast mmio_enabled message\n");
+> -- 
+> 2.28.0
+> 
