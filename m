@@ -2,79 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AF0228890A
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 14:43:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A0028890E
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Oct 2020 14:43:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730772AbgJIMnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 08:43:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:50276 "EHLO foss.arm.com"
+        id S1731932AbgJIMnL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 08:43:11 -0400
+Received: from mga09.intel.com ([134.134.136.24]:56440 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725852AbgJIMnK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 9 Oct 2020 08:43:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BD7F1063;
-        Fri,  9 Oct 2020 05:43:09 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 417DE3F70D;
-        Fri,  9 Oct 2020 05:43:08 -0700 (PDT)
-Date:   Fri, 9 Oct 2020 13:43:02 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Ray Jui <rjui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH] PCI: iproc: Fix using plain integer as NULL pointer in
- iproc_pcie_pltfm_probe
-Message-ID: <20201009124302.GA18707@e121166-lin.cambridge.arm.com>
-References: <20200922194932.465925-1-kw@linux.com>
+        id S1725852AbgJIMnL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 9 Oct 2020 08:43:11 -0400
+IronPort-SDR: Dgz9NowuqHeyF2t5fvvpG8OdBX8+IxI8Wxhuzw7Or5bWtmgPg/7OH9j/0EopSqiHPY6v/43Z7C
+ 2ckPJYkbGTcA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9768"; a="165592474"
+X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
+   d="scan'208";a="165592474"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2020 05:43:10 -0700
+IronPort-SDR: mbOaxvauxBcqkYS5cswFgFbzINe8QEqu5bJ/bWN0EeIwnWp6+4EEPaUUW5HzGvu1SGaneXGBVn
+ jYNQVCGl5L+A==
+X-IronPort-AV: E=Sophos;i="5.77,355,1596524400"; 
+   d="scan'208";a="354841361"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2020 05:43:09 -0700
+Date:   Fri, 9 Oct 2020 05:43:07 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        dan.j.williams@intel.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v3 11/18] dmaengine: idxd: ims setup for the vdcm
+Message-ID: <20201009124307.GA63643@otc-nc-03>
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
+ <160021253189.67751.12686144284999931703.stgit@djiang5-desk3.ch.intel.com>
+ <87mu17ghr1.fsf@nanos.tec.linutronix.de>
+ <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com>
+ <87r1q92mkx.fsf@nanos.tec.linutronix.de>
+ <44e19c5d-a0d2-0ade-442c-61727701f4d8@intel.com>
+ <87y2kgux2l.fsf@nanos.tec.linutronix.de>
+ <20201008233210.GH4734@nvidia.com>
+ <20201009012231.GA60263@otc-nc-03>
+ <20201009115737.GI4734@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200922194932.465925-1-kw@linux.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20201009115737.GI4734@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Sep 22, 2020 at 07:49:32PM +0000, Krzysztof Wilczyński wrote:
-> Fix sparse build warning:
+On Fri, Oct 09, 2020 at 08:57:37AM -0300, Jason Gunthorpe wrote:
+> On Thu, Oct 08, 2020 at 06:22:31PM -0700, Raj, Ashok wrote:
 > 
->   drivers/pci/controller/pcie-iproc-platform.c:102:33: warning: Using plain integer as NULL pointer
+> > Not randomly put there Jason :-).. There is a good reason for it. 
 > 
-> The map_irq member of the struct iproc_pcie takes a function pointer
-> serving as a callback to map interrupts, therefore we should pass a NULL
-> pointer to it rather than a integer in the iproc_pcie_pltfm_probe()
-> function.
-> 
-> Related:
->   commit b64aa11eb2dd ("PCI: Set bridge map_irq and swizzle_irq to
->   default functions")
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> ---
->  drivers/pci/controller/pcie-iproc-platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Sure the PASID value being associated with the IRQ make sense, but
+> combining that register with the interrupt mask is just a compltely
+> random thing to do.
 
-Applied to pci/iproc, thanks.
+Hummm... Not sure what you are complaining.. but in any case giving
+hardware a more efficient way to store interrupt entries breaking any
+boundaries that maybe implied by the spec is why IMS was defined.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pcie-iproc-platform.c b/drivers/pci/controller/pcie-iproc-platform.c
-> index a956b0c18bd1..b93e7bda101b 100644
-> --- a/drivers/pci/controller/pcie-iproc-platform.c
-> +++ b/drivers/pci/controller/pcie-iproc-platform.c
-> @@ -99,7 +99,7 @@ static int iproc_pcie_pltfm_probe(struct platform_device *pdev)
->  	switch (pcie->type) {
->  	case IPROC_PCIE_PAXC:
->  	case IPROC_PCIE_PAXC_V2:
-> -		pcie->map_irq = 0;
-> +		pcie->map_irq = NULL;
->  		break;
->  	default:
->  		break;
-> -- 
-> 2.28.0
 > 
+> If this HW was using MSI-X PASID would have been given its own
+> register.
+
+Well there is no MSI-X PASID is there? 
