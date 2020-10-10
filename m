@@ -2,104 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC746289C99
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Oct 2020 02:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43631289C9B
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Oct 2020 02:13:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgJJALn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Oct 2020 20:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbgJJABF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 20:01:05 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED9CC0613D5
-        for <linux-pci@vger.kernel.org>; Fri,  9 Oct 2020 17:01:03 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g4so11192940edk.0
-        for <linux-pci@vger.kernel.org>; Fri, 09 Oct 2020 17:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NyEG6unrPY9TR7tF+FNQAaLApT1kctBGIfqP3l5IFb4=;
-        b=mijmHtCMvGsgDu4uYd7w3AkGuavHKsRtISq1sPYHXYFaJw1WU+TYM2fX64XYscUKFv
-         oU1cjxRYTJM1zp/QWqADJjTuB9hPhK+ZKhKINQnaiff6eqCzhX5w5wrxbRlGrJ0vyWiv
-         ro3O+Z6DBIysL9dvjFawfl9YpJ7VnqXVeFq0auogXHWgzG/yIY2Ex8Vg0F1RLU4QxqSG
-         bPLvghG+BsOIiRJ7zUxm1IgTps9IY/HH1VRZFA09lds3Gl17NZfWxvoZiUPcmFwlV7So
-         V3Y3SV5Dt+Y35HFON8xSJwLyPjVkAmtWcAvVa4XffcGawnjsCdKwV9RsaQRB1eOPndHI
-         e4Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NyEG6unrPY9TR7tF+FNQAaLApT1kctBGIfqP3l5IFb4=;
-        b=oDQbKeKh2Hp2/SwMvOJFz0kUVZK3AO3j7IGj7j34accqKsWKeS2N5ZZ6H/kFOX0fDx
-         /29ZpJ8MShnHoEh1+JRC3n/2ewPhCk6APyNHrU+DYNrWZQm4c1cOYw3Q8JlWhBHPVOvA
-         Lt12aMtlC39kseXEWRPuAbcF8TdcqE78pqp+rQnJmAgrlZByS0HRt992fAmvfWckbLk6
-         LZ23sV3N7DvT60vxBBfVVglXMthASTEHSd9xWJdlA3zoIc9FnUn/e2VLberdmK0qNX4q
-         UBsvweWusGyQRnuJdyfKKX/Fd+REiBpx8XbkJ09wJ3C0N0UAC656FmSuX5F+dG9OT2Qh
-         0B5A==
-X-Gm-Message-State: AOAM531oP0bKrvN32FFGkGPNzeoiuHlsD60kMlt1lpCbtyakryAfMT5t
-        OaLQxPKM0DFbBnKC4ESMEITCl0Gc2qn1Kgc3Lq/66g==
-X-Google-Smtp-Source: ABdhPJygCrm7pkL/BYEq335cylOsmwx8yyljt1uWu6UwT8l62xqSHabdTtXkuhnBI7dZHTHKXqo8112Hls6msX6/ovk=
-X-Received: by 2002:a50:dec9:: with SMTP id d9mr1852468edl.145.1602288062227;
- Fri, 09 Oct 2020 17:01:02 -0700 (PDT)
+        id S1728793AbgJJAM0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Oct 2020 20:12:26 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:40080 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728696AbgJJALH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Oct 2020 20:11:07 -0400
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09A08t2l016461;
+        Sat, 10 Oct 2020 00:09:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
+ bh=s6G6YLhuQ8YhUBsYDzQjuCrO5rTHLw9HuFyhEDF1ae0=;
+ b=hbzoONbNgv1IfWMe6VwhKAE0f/2ph0f40vq57EpLpFdo5g8R4dhlpOhyDtAEwWOEoZQf
+ JZhV968xKRM6+4agzUR/SWPyeUgkPH7y8HbPXWNDXV07rJd/LUBY6pCM90bB/sool4Ce
+ eXmvO9V4CVVLjR3XigdbXkjHnq+SYwAgETA4XodIkYjtbpbyhwGVc0xzk+5jSsszyBBQ
+ Xs1djC6tpA0nzT742LQtf6zHFhIKPKs5YEimzPtJb30J8zI/eWz8nD1EvuwB+uS41qpH
+ Gu1TdO+7Oqd6Rw8wX+3yBlAmrvdKTcB+HfuxgrloAUfIoqpVthLXRJBG6uqSTBq89WMW 3w== 
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0b-002e3701.pphosted.com with ESMTP id 342nqcdd02-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 10 Oct 2020 00:09:30 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 838F462;
+        Sat, 10 Oct 2020 00:09:29 +0000 (UTC)
+Received: from sarge.linuxathome.me (unknown [16.29.167.198])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 8E03D4A;
+        Sat, 10 Oct 2020 00:09:27 +0000 (UTC)
+From:   Hedi Berriche <hedi.berriche@hpe.com>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.com>, stable@kernel.org
+Subject: [PATCH v2 0/1] PCI/ERR: fix regression introduced by 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+Date:   Sat, 10 Oct 2020 01:09:15 +0100
+Message-Id: <20201010000916.2572432-1-hedi.berriche@hpe.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20201009161338.657380-1-samitolvanen@google.com>
- <20201009153512.1546446a@gandalf.local.home> <20201009210548.GB1448445@google.com>
- <20201009193759.13043836@oasis.local.home>
-In-Reply-To: <20201009193759.13043836@oasis.local.home>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 9 Oct 2020 17:00:51 -0700
-Message-ID: <CABCJKueGW5UeH1++ES7ZRDcAnZ6hV-tFVwt6usjcZUnR95YQPQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/29] Add support for Clang LTO
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-09_14:2020-10-09,2020-10-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ phishscore=0 clxscore=1015 adultscore=0 spamscore=0 impostorscore=0
+ bulkscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ mlxlogscore=664 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010090182
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 9, 2020 at 4:38 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 9 Oct 2020 14:05:48 -0700
-> Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> > Ah yes, X86_DECODER_SELFTEST seems to be broken in tip/master. If you
-> > prefer, I have these patches on top of mainline here:
-> >
-> >   https://github.com/samitolvanen/linux/tree/clang-lto
-> >
-> > Testing your config with LTO on this tree, it does build and boot for
-> > me, although I saw a couple of new objtool warnings, and with LLVM=1,
-> > one warning from llvm-objdump.
->
-> Thanks, I disabled X86_DECODER_SELFTEST and it now builds.
->
-> I forced the objdump mcount logic with the below patch, which produces:
->
-> CONFIG_FTRACE_MCOUNT_RECORD=y
-> CONFIG_FTRACE_MCOUNT_USE_OBJTOOL=y
->
-> But I don't see the __mcount_loc sections being created.
->
-> I applied patches 1 - 6.
+- Changes since v1:
 
-Patch 6 is missing the part where we actually pass --mcount to
-objtool, it's in patch 11 ("kbuild: lto: postpone objtool"). I'll fix
-this in v6. In the meanwhile, please apply patches 1-11 to test the
-objtool change. Do you have any thoughts about the approach otherwise?
+ * changed the commit message to clarify what broke post commit 6d2c89441571
+ * dropped the misnomer post_reset_status variable in favour of a more natural
+   approach that relies on a boolean to keep track of the outcome of reset_link()
 
-Sami
+After commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+pcie_do_recovery() no longer calls ->slot_reset() in the case of a successful
+reset which breaks error recovery by breaking driver (re)initialisation.
+
+Cc: Russ Anderson <rja@hpe.com>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Joerg Roedel <jroedel@suse.com>
+
+Cc: stable@kernel.org # v5.7+
+
+---
+Hedi Berriche (1):
+  PCI/ERR: don't clobber status after reset_link()
+
+ drivers/pci/pcie/err.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+-- 
+2.28.0
+
