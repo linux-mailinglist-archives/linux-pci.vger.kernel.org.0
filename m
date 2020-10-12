@@ -2,126 +2,326 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E44228BB63
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 16:51:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A52F128BC10
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 17:36:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389539AbgJLOvo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Oct 2020 10:51:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387930AbgJLOvo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Oct 2020 10:51:44 -0400
-Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A3982080A;
-        Mon, 12 Oct 2020 14:51:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602514303;
-        bh=MqiIO/6MLXuvTKpPmH2MYO7ZOZ7tXD/fVdrsl4Sxio4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ab0mjyt6GjPskoZ3bBXarcCywI9R/YTxaDDDWlwsdaq5jRBDUNjnMrLvHH4gNM1Da
-         Pujbe7UUQgTx60I0z+s0XmsxmB7Jyhwj0PBW+Cmpftvmez29g4Ebj0jv8JdS++Ftla
-         wsFSV7Lc0VBp6m4ype8rPRqRdYnpb6zptW/LGzew=
-Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
- call
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-References: <20200922233333.GA2239404@bjorn-Precision-5520>
- <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
- <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
- <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
- <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
- <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
- <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
- <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
- <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
- <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
- <44f0cac5-8deb-1169-eb6d-93ac4889fe7e@kernel.org>
- <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
- <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
- <8a3aeb3c-83c4-8626-601d-360946d55dd8@linux.intel.com>
- <9b295cad-7302-cf2c-d19d-d27fabcb48be@kernel.org>
- <93b4015f-df2b-728b-3ef7-ac5aa10f03ed@kernel.org>
- <d6da2246-cf82-315e-c716-62ab9ec13a22@linux.intel.com>
- <0013f3d2-569a-27ba-336e-3d4668834545@linux.intel.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <95fb03e3-97c0-296f-25ba-5d7ce857ad86@kernel.org>
-Date:   Mon, 12 Oct 2020 10:51:42 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S2389975AbgJLPgK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Oct 2020 11:36:10 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2568 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389121AbgJLPgJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Oct 2020 11:36:09 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f8477dc0006>; Mon, 12 Oct 2020 08:35:56 -0700
+Received: from [10.25.77.115] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 12 Oct
+ 2020 15:35:58 +0000
+Subject: Re: [PATCH v7 2/2] PCI: dwc: Fix MSI page leakage in suspend/resume
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20201009155311.22d3caa5@xhacker.debian>
+ <20201009155505.5a580ef5@xhacker.debian>
+ <38a00dde-598f-b6de-ecf3-5d012bd7594a@arm.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <1a1c41f1-4085-6b24-adea-d1e0867e7d9d@nvidia.com>
+Date:   Mon, 12 Oct 2020 21:05:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
 MIME-Version: 1.0
-In-Reply-To: <0013f3d2-569a-27ba-336e-3d4668834545@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <38a00dde-598f-b6de-ecf3-5d012bd7594a@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1602516956; bh=iMpY4EcqsltfDucfSgNi/HRriIso15sLE1BSSwyiAe4=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=FBkDCHw2cXDvEjEFqo6jSf20McjZNBzqDWrpIwOoz29LA9n1utvEQPudD7NkLgntM
+         sG6pDoAbhgNgMcMIDQSVuRgbzg60ZZOvyls7rxgbmlVdB4SUCdNFSEbd4QJDTJ2e2n
+         N2pcTBjZxcv/MOb5rbtpHWezZfmPPt6Op6oTZ3Sy7jWawztXZoN2R5NsCDZ+qkPnSM
+         GR+sGMa5G6UBWCymEKXoZdDYa1dBfiDAGl6RAFdDn9+TFpPxv8EczpalhV+FtXNBFy
+         1byNv8AYZnTgn2iNnEhCeXpnAMdmWzQQb01I4Q5tFHZAzQcySE18ovp/3XYciLJf+2
+         N4rY9Va+1Mffg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/12/2020 1:13 AM, Kuppuswamy, Sathyanarayanan wrote:
-> Hi Sinan,
-> 
-> On 9/28/20 11:32 AM, Kuppuswamy, Sathyanarayanan wrote:
->>
->>
->> On 9/28/20 11:25 AM, Sinan Kaya wrote:
->>> On 9/28/2020 2:02 PM, Sinan Kaya wrote:
->>>> Since there is no state restoration for FATAL errors, I am wondering
->>>> whether
->>>> calls to ->error_detected(), ->mmio_enabled() and ->slot_reset() are
->>>> required?
->>>
->>> I also would like to ask someone closer to the spec language double
->>> check this.
->>>
->>> When we recover the link at the end of the DPC handler, what is the
->>> expected state of the endpoint?
->>>
->>> Is it a some kind of a reset like secondary bus reset? (I assumed this
->>>   one)
->> I think it will be in reset state.
->>>
->>> Undefined?
->>>
->>> or just plain link recovery with everything else as intact as it used
->>> to be?
->>>
->>
-> 
-> Please check the following version. It should fix most of the reset issues
-> properly.
-> 
-> https://lore.kernel.org/linux-pci/5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com/T/#t
-> 
-> 
 
-Thanks, good stuff.
+
+On 10/12/2020 5:07 PM, Robin Murphy wrote:
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> On 2020-10-09 08:55, Jisheng Zhang wrote:
+>> Currently, dw_pcie_msi_init() allocates and maps page for msi, then
+>> program the PCIE_MSI_ADDR_LO and PCIE_MSI_ADDR_HI. The Root Complex
+>> may lose power during suspend-to-RAM, so when we resume, we want to
+>> redo the latter but not the former. If designware based driver (for
+>> example, pcie-tegra194.c) calls dw_pcie_msi_init() in resume path, the
+>> msi page will be leaked.
+>>
+>> As pointed out by Rob and Ard, there's no need to allocate a page for
+>> the MSI address, we could use an address in the driver data.
+>>
+>> To avoid map the MSI msg again during resume, we move the map MSI msg
+>> from dw_pcie_msi_init() to dw_pcie_host_init().
+>=20
+> You should move the unmap there as well. As soon as you know what the
+> relevant address would be if you *were* to do DMA to this location, then
+> the exercise is complete. Leaving it mapped for the lifetime of the
+> device in order to do not-DMA to it seems questionable (and represents
+> technically incorrect API usage without at least a sync_for_cpu call
+> before any other access to the data).
+>=20
+> Another point of note is that using streaming DMA mappings at all is a
+> bit fragile (regardless of this change). If the host controller itself
+> has a limited DMA mask relative to physical memory (which integrators
+> still seem to keep doing...) then you could end up punching your MSI
+> hole right in the middle of the SWIOTLB bounce buffer, where it's then
+> almost *guaranteed* to interfere with real DMA :(
+Agree with Robin. Since the MSI page is going to be locked till=20
+shutdown/reboot, wouldn't it make sense to use dma_alloc_coherent() API?
+Also, shouldn't we call dma_set_mask() to limit the address to only=20
+32-bits so as to enable MSI for even those legacy PCIe devices with only=20
+32-bit MSI capability?
+
+- Vidya Sagar
+
+>=20
+> If no DWC users have that problem and the current code is working well
+> enough, then I see little reason not to make this partucular change to
+> tidy up the implementation, just bear in mind that there's always the
+> possibility of having to come back and change it yet again in future to
+> make it more robust. I had it in mind that this trick was done with a
+> coherent DMA allocation, which would be safe from addressing problems
+> but would need to be kept around for the lifetime of the device, but
+> maybe that was a different driver :/
+>=20
+> Robin.
+>=20
+>> Suggested-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>> =C2=A0 drivers/pci/controller/dwc/pci-dra7xx.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 18 +++++++++-
+>> =C2=A0 .../pci/controller/dwc/pcie-designware-host.c | 33 ++++++++++----=
+-----
+>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0 |=C2=A0 2 +-
+>> =C2=A0 3 files changed, 36 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c=20
+>> b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> index 8f0b6d644e4b..6d012d2b1e90 100644
+>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
+>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+>> @@ -466,7 +466,9 @@ static struct irq_chip=20
+>> dra7xx_pci_msi_bottom_irq_chip =3D {
+>> =C2=A0 static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct dw_pcie *pci =3D to_dw_pcie_from_p=
+p(pp);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D pci->dev;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 ctrl, num_ctrls;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pp->msi_irq_chip =3D &dra7xx_pci_msi_bott=
+om_irq_chip;
+>>
+>> @@ -482,7 +484,21 @@ static int dra7xx_pcie_msi_host_init(struct=20
+>> pcie_port *pp)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ~0);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 return dw_pcie_allocate_domains(pp);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D dw_pcie_allocate_domains(pp);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return ret;
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 pp->msi_data =3D dma_map_single_attrs(dev, &pp=
+->msi_msg,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 sizeof(pp->msi_msg),
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 DMA_FROM_DEVICE,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 DMA_ATTR_SKIP_CPU_SYNC);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D dma_mapping_error(dev, pp->msi_data);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (ret) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 dev_err(dev, "Failed to map MSI data\n");
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 pp->msi_data =3D 0;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 dw_pcie_free_msi(pp);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>> =C2=A0 }
+>>
+>> =C2=A0 static const struct dw_pcie_host_ops dra7xx_pcie_host_ops =3D {
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c=20
+>> b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> index d3e9ea11ce9e..d02c7e74738d 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>> @@ -266,30 +266,23 @@ void dw_pcie_free_msi(struct pcie_port *pp)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq_domain_remove(pp->msi_domain);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq_domain_remove(pp->irq_domain);
+>>
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 if (pp->msi_page)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 __free_page(pp->msi_page);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 if (pp->msi_data) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 struct dw_pcie *pci =3D to_dw_pcie_from_pp(pp);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 struct device *dev =3D pci->dev;
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 dma_unmap_single_attrs(dev, pp->msi_data,=20
+>> sizeof(pp->msi_msg),
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMA_FROM=
+_DEVICE,=20
+>> DMA_ATTR_SKIP_CPU_SYNC);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0 }
+>>
+>> =C2=A0 void dw_pcie_msi_init(struct pcie_port *pp)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct dw_pcie *pci =3D to_dw_pcie_from_p=
+p(pp);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D pci->dev;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 u64 msi_target;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 u64 msi_target =3D (u64)pp->msi_data;
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!IS_ENABLED(CONFIG_PCI_MSI))
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 return;
+>>
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 pp->msi_page =3D alloc_page(GFP_KERNEL);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 pp->msi_data =3D dma_map_page(dev, pp->msi_pag=
+e, 0, PAGE_SIZE,
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DMA_FROM_DEVICE);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 if (dma_mapping_error(dev, pp->msi_data)) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 dev_err(dev, "Failed to map MSI data\n");
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 __free_page(pp->msi_page);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 pp->msi_page =3D NULL;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 return;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 msi_target =3D (u64)pp->msi_data;
+>> -
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Program the msi_data */
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_LO,=
+=20
+>> lower_32_bits(msi_target));
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI,=
+=20
+>> upper_32_bits(msi_target));
+>> @@ -394,6 +387,16 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>                              =20
+>> irq_set_chained_handler_and_data(pp->msi_irq,
+>>                                                          =20
+>> dw_chained_msi_isr,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pp);
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pp->msi_data =3D dma_ma=
+p_single_attrs(pci->dev,=20
+>> &pp->msi_msg,
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 sizeof(pp->msi_msg),
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 DMA_FROM_DEVICE,
+>> +                                                  =20
+>> DMA_ATTR_SKIP_CPU_SYNC);
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dma_mapping_error(p=
+ci->dev, pp->msi_data)) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(pci->dev, "Failed to map MSI=20
+>> data\n");
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 pp->msi_data =3D 0;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 goto err_free_msi;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 } else {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D pp->ops->msi=
+_host_init(pp);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h=20
+>> b/drivers/pci/controller/dwc/pcie-designware.h
+>> index 97c7063b9e89..9d2f511f13fa 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -190,8 +190,8 @@ struct pcie_port {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 msi_irq;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct irq_domain=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 *irq_domain;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct irq_domain=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 *msi_domain;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0 u16=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 msi_msg;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dma_addr_t=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 msi_data;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 struct page=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *msi_page;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct irq_chip=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 *msi_irq_chip;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 num_vectors;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 irq_mask[MAX_MSI_CTRLS];
+>>
