@@ -2,34 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29C2F28BB59
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 16:51:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C9E28BB61
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 16:51:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389189AbgJLOuc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Oct 2020 10:50:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
+        id S2389611AbgJLOvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Oct 2020 10:51:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387930AbgJLOub (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Oct 2020 10:50:31 -0400
+        id S1730003AbgJLOvU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Oct 2020 10:51:20 -0400
 Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37B142080A;
-        Mon, 12 Oct 2020 14:50:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B2BE2080A;
+        Mon, 12 Oct 2020 14:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602514230;
-        bh=Um3brhR4V7mbgCo0NMThdWSXjyTwvJ/bNPfg+5StKaM=;
+        s=default; t=1602514279;
+        bh=KjcJj3HhUJ7QjgoguyEHAlgwsxwB6hxZaDCQ/+0hunU=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LJqc3NPzieo+zCMFKTWJbZTtyeoHuwpGsCfHSBwse3DTJOJaJoamovVG0tKre3pIP
-         kP3vaN9XQyoxFskgTFvlBth9KjiJftUWI6h5Y6yOUjlPz5wzlrnUxtMt4Ayi4aIHuE
-         3R4tIBD50qhLdnfnA5/+1oYfSdQ37BN3Tka2EsjU=
-Subject: Re: [PATCH v4 2/2] PCI/ERR: Split the fatal and non-fatal error
- recovery handling
+        b=ftQ9hEcYMpMcGI44trydysHHPWBqKPKVBnHIj7m2LvnfYWBkj6ieYZ8DlIUJuHKZC
+         l31hJcJGp32qBVnwZfsWROfNSf0K2qj48as7jMv4XlHwDi45Rp0r58J0W0yUkbjjWf
+         fzomFq53wYQUfTb8D9qJTLtUlYtX0DgJG0dVWlQo=
+Subject: Re: [PATCH v4 1/2] PCI/ERR: Call pci_bus_reset() before calling
+ ->slot_reset() callback
 To:     sathyanarayanan.nkuppuswamy@gmail.com, bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
 References: <5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <c6e3f1168d5d88b207b59c434792a10a7331bb89.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 From:   Sinan Kaya <okaya@kernel.org>
 Autocrypt: addr=okaya@kernel.org; keydata=
  mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
@@ -55,15 +54,15 @@ Autocrypt: addr=okaya@kernel.org; keydata=
  9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
  2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
  L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <5ae14b67-94a5-6d2f-b74d-ca32bbd079cd@kernel.org>
-Date:   Mon, 12 Oct 2020 10:50:29 -0400
+Message-ID: <5d8db992-27bf-5c34-2abd-dc490cf76c92@kernel.org>
+Date:   Mon, 12 Oct 2020 10:51:17 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <c6e3f1168d5d88b207b59c434792a10a7331bb89.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -71,57 +70,37 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On 10/12/2020 1:03 AM, sathyanarayanan.nkuppuswamy@gmail.com wrote:
 > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-> merged fatal and non-fatal error recovery paths, and also made
-> recovery code depend on hotplug handler for "remove affected
-> device + rescan" support. But this change also complicated the
-> error recovery path and which in turn led to the following
-> issues.
+> Currently if report_error_detected() or report_mmio_enabled()
+> functions requests PCI_ERS_RESULT_NEED_RESET, current
+> pcie_do_recovery() implementation does not do the requested
+> explicit device reset, but instead just calls the
+> report_slot_reset() on all affected devices. Notifying about the
+> reset via report_slot_reset() without doing the actual device
+> reset is incorrect. So call pci_bus_reset() before triggering
+> ->slot_reset() callback.
 > 
-> 1. We depend on hotplug handler for removing the affected
-> devices/drivers on DLLSC LINK down event (on DPC event
-> trigger) and DPC handler for handling the error recovery. Since
-> both handlers operate on same set of affected devices, it leads
-> to race condition, which in turn leads to  NULL pointer
-> exceptions or error recovery failures.You can find more details
-> about this issue in following link.
-> 
-> https://lore.kernel.org/linux-pci/20201007113158.48933-1-haifeng.zhao@intel.com/T/#t
-> 
-> 2. For non-hotplug capable devices fatal (DPC) error recovery
-> is currently broken. Current fatal error recovery implementation
-> relies on PCIe hotplug (pciehp) handler for detaching and
-> re-enumerating the affected devices/drivers. So when dealing with
-> non-hotplug capable devices, recovery code does not restore the state
-> of the affected devices correctly. You can find more details about
-> this issue in the following links.
-> 
-> https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
-> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
-> https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
-> 
-> In order to fix the above two issues, we should stop relying on hotplug
-> handler for cleaning the affected devices/drivers and let error recovery
-> handler own this functionality. So this patch reverts Commit bdb5ac85777d
-> ("PCI/ERR: Handle fatal error recovery") and re-introduce the  "remove
-> affected device + rescan"  functionality in fatal error recovery handler.
-> 
-> Also holding pci_lock_rescan_remove() will prevent the race between hotplug
-> and DPC handler.
-> 
-> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
 > Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  Documentation/PCI/pci-error-recovery.rst | 47 ++++++++++------
->  drivers/pci/pcie/err.c                   | 71 +++++++++++++++++++-----
->  2 files changed, 87 insertions(+), 31 deletions(-)
-
-I'm not sure about locks involved but I do like the concept.
-Current fatal error handling is best effort.
-
-There is no way to recover if link is down by the time we
-reach to fatal error handling routine.
-
-This change will make the solution more reliable.
+>  drivers/pci/pcie/err.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index c543f419d8f9..067c58728b88 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -181,11 +181,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> -		/*
+> -		 * TODO: Should call platform-specific
+> -		 * functions to reset slot before calling
+> -		 * drivers' slot_reset callbacks?
+> -		 */
+> +		pci_reset_bus(dev);
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(dev, "broadcast slot_reset message\n");
+>  		pci_walk_bus(bus, report_slot_reset, &status);
+> 
 
 Reviewed-by: Sinan Kaya <okaya@kernel.org>
