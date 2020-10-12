@@ -2,67 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFC1528BEAC
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 19:07:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCB2628BF0C
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 19:30:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404016AbgJLRHH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Oct 2020 13:07:07 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42989 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404009AbgJLRHH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Oct 2020 13:07:07 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 16so19381708oix.9;
-        Mon, 12 Oct 2020 10:07:07 -0700 (PDT)
+        id S2404075AbgJLRaY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Oct 2020 13:30:24 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37578 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403805AbgJLRaX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Oct 2020 13:30:23 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t77so19508049oie.4;
+        Mon, 12 Oct 2020 10:30:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=a2xn/+GgwQqWyrD+ZSEN3mfGA6kk2+5ejAkBwwRM630=;
-        b=GN+/7lb1z4zpW79KbbPFsK5Er/9rVnozuYkr5E/cc1ZjAwbdO5W69SHa32TSOYbn7N
-         72s4BN5vek+/zddTUlrVIaL+PkeLRjKkQADg2ryh9BYBb80XOwkQO+wZ64T2CQeXIJh6
-         YcwRncyRjyOQKA613od6Xk9zsPZBGO8QkVhv44T0SbT1qx2WG7oRoHQ8pbZ+gNkeqDe/
-         S6SAPyQOijjLC9pN6jmVHeh0U+By0NOT/yVNA4+Pvcut2IrWGZdMFlTJ9qL/pHwWlSVT
-         6jWlXmhcgeyiMMAwRR71tVnTv0FSrsVYoM6VDd8gjZgKXLYltDaMxHwz95vzPVTj5pSk
-         fSYA==
-X-Gm-Message-State: AOAM533wh9Ng0bKLfqNDNz3EqBKUdgGZSkScKBZaEOxFzL5hQ5rpes5J
-        jaPyJJ8Ob76UVtWmfRdn+w==
-X-Google-Smtp-Source: ABdhPJysap7a6nFLcVGrL9w5d0/nnNmFZN3FQotgKMPiTMPbbmrheZOSrq19vIboQlMmKuQhjGhxYA==
-X-Received: by 2002:aca:ef03:: with SMTP id n3mr11172935oih.67.1602522426804;
-        Mon, 12 Oct 2020 10:07:06 -0700 (PDT)
+        bh=gNwjPesxpBjopk2GNZh+9rdN0E3TWK6jx3SW4ZJaqOc=;
+        b=J918cK3lVPE2b2XlYtI7ar8vPhVpRoCKbIosA807VGq30cg13EFMgLLywRYrvmD+Rh
+         mLeWeyqSzp7Sj6yQk4OTFC51lYXpnDzRyFRlP0NK/2zvgmqEO4IiJJ+lQ8a6Cky+thKp
+         DTaLm3BK95FBDA38A07n3BvagEeEGyh5Nn8mCSoEkO2rAg7At/o6iopuptP69+bXr1RG
+         kfhVBqwtQ+E4uk0bSXKKZdu4i/9j4bSk8FXqsujfky+nTa7yIrv6HHSXNJ2UuHx9xHSW
+         2HtaymNoDwolpXPcFoQxkZG6JlOHeg3QNGhjVb8urirw4RqnqJm0p2rp7RUi55LBKTsS
+         ZU6w==
+X-Gm-Message-State: AOAM533uIk4vjjUOBA8kD7IfHftD+WnkEPR3bhxQ6lBg1zh2Psp/hBfW
+        5m/QSEITqv8rTRiDZ1o4bw==
+X-Google-Smtp-Source: ABdhPJxvq9+kkJx9i7hqrA0SWl0qognXkLZEj9NVi7a6wWCs3cHj9QQ/qTjrffpLYx0gree8Vrgymw==
+X-Received: by 2002:aca:4ec7:: with SMTP id c190mr11397149oib.16.1602523822632;
+        Mon, 12 Oct 2020 10:30:22 -0700 (PDT)
 Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v17sm8934191ote.40.2020.10.12.10.07.05
+        by smtp.gmail.com with ESMTPSA id j21sm9123708otq.18.2020.10.12.10.30.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2020 10:07:06 -0700 (PDT)
-Received: (nullmailer pid 1761398 invoked by uid 1000);
-        Mon, 12 Oct 2020 17:07:05 -0000
-Date:   Mon, 12 Oct 2020 12:07:05 -0500
+        Mon, 12 Oct 2020 10:30:22 -0700 (PDT)
+Received: (nullmailer pid 1792182 invoked by uid 1000);
+        Mon, 12 Oct 2020 17:30:21 -0000
+Date:   Mon, 12 Oct 2020 12:30:21 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     daire.mcnamara@microchip.com
-Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v16 1/3] PCI: Call platform_set_drvdata earlier in
- devm_pci_alloc_host_bridge
-Message-ID: <20201012170705.GA1761341@bogus>
+Cc:     devicetree@vger.kernel.org, david.abdurachmanov@gmail.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        lorenzo.pieralisi@arm.com, robh+dt@kernel.org
+Subject: Re: [PATCH v16 2/3] dt-bindings: PCI: microchip: Add Microchip
+ PolarFire host binding
+Message-ID: <20201012173021.GA1792130@bogus>
 References: <20201012105754.22596-1-daire.mcnamara@microchip.com>
- <20201012105754.22596-2-daire.mcnamara@microchip.com>
+ <20201012105754.22596-3-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201012105754.22596-2-daire.mcnamara@microchip.com>
+In-Reply-To: <20201012105754.22596-3-daire.mcnamara@microchip.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 12 Oct 2020 11:57:52 +0100, daire.mcnamara@microchip.com wrote:
-> Many drivers can now use pci_host_common_probe() directly.
-> Their hardware window setup can be moved from their 'custom' probe
-> functions to individual driver init functions.
+On Mon, 12 Oct 2020 11:57:53 +0100, daire.mcnamara@microchip.com wrote:
+> Add device tree bindings for the Microchip PolarFire PCIe controller
+> when configured in host (Root Complex) mode.
 > 
 > Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 > ---
->  drivers/pci/controller/pci-host-common.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../bindings/pci/microchip,pcie-host.yaml     | 93 +++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
