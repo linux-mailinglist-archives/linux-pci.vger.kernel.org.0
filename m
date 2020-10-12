@@ -2,70 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4338028C47A
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Oct 2020 00:03:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A68128C4BB
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Oct 2020 00:25:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732171AbgJLWD2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Oct 2020 18:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbgJLWD2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Oct 2020 18:03:28 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FFAB2074F;
-        Mon, 12 Oct 2020 22:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602540207;
-        bh=Kx9hqJT+lWZx8bfUCcU0kLaDrcmL3KSNc330gGz7jug=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VOa7aWnYvs8p4CWXcLmbokyUagcJffbsSznjOnmtf9/YxI7TrIEYqeLXv2P/RTEaQ
-         XBLQUpC/hGFvQ2z1uCBR7Vzd2aoYateSKeW5MMaqKZilDOiRyhkm4BnejGbJ0LRXlB
-         vOH1iZGAeky1RFB+4qEh4YS9TXT6tPY34m4Kq1Jk=
-Date:   Mon, 12 Oct 2020 17:03:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     "Alex G." <mr.nuke.me@gmail.com>, linux-pci@vger.kernel.org,
-        "Bolen, Austin" <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: Re: spammy dmesg about fluctuating pcie bandwidth on 5.9
-Message-ID: <20201012220325.GA3752081@bjorn-Precision-5520>
+        id S2388500AbgJLWZ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Oct 2020 18:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388361AbgJLWZ4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Oct 2020 18:25:56 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4DEC0613D0
+        for <linux-pci@vger.kernel.org>; Mon, 12 Oct 2020 15:25:56 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1602541553;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c/jnwvjKTWXUQSzqDtJQ9DVB2IWZ3znhzaC28M8nvl4=;
+        b=UwB5idtTkSSBaCtsq4vgB95/7TfnI8JoQYrnYNmD4iZDjIRneGWCHKxvtEg7gs8BXAyQ6j
+        qpeKWDYzSYNmaUxbsx41SAozijN/5b8u5BSczmkgpBjtu+XuNJlmYQxrknnoS+0dwkyDHA
+        zcliFZcGRh64I87S3zZeY4BIUoWBVx6QoUKm2VlJ6imUTuO9K4pR7hpOd3lB0NmkQMtwMP
+        zz1lTyaSSyRjAn2xU+CfL5s+ffabImAt1xMnYUBy+I9J7UEogFkpRVpbHLCNOh+7r/LF5A
+        e9AczGPVc2SLoSab9Ac4tTO0CUcApgZFdXbFfzD/DcwQ6RMnumLKQMIg3VPc9Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1602541553;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c/jnwvjKTWXUQSzqDtJQ9DVB2IWZ3znhzaC28M8nvl4=;
+        b=IzuYrqiJRVtjOVwEeI3ChzKxK8olHH5c44a8/7M3NQBgX9vJQCACcCMwrfoamgFAewWvfn
+        4AlOuDGSA8gJ5QBw==
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Chris Friesen <chris.friesen@windriver.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nitesh Narayan Lal <nitesh@redhat.com>
+Subject: Re: PCI, isolcpus, and irq affinity
+In-Reply-To: <cdc531fd18adc46c5642fed456aad25507df5eba.camel@infradead.org>
+References: <20201012165839.GA3732859@bjorn-Precision-5520> <87a6wrqqpf.fsf@nanos.tec.linutronix.de> <df1be4be-88b5-b848-97bf-4c38824e840a@windriver.com> <87zh4rp7gg.fsf@nanos.tec.linutronix.de> <cdc531fd18adc46c5642fed456aad25507df5eba.camel@infradead.org>
+Date:   Tue, 13 Oct 2020 00:25:53 +0200
+Message-ID: <87blh7ozda.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9qa4NQCj8w-Apd2TnbtMjbox0jA6T347Bf_wEkJrzSz0g@mail.gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 09, 2020 at 05:17:53PM +0200, Jason A. Donenfeld wrote:
-> Interestingly, some of the time that I run that lspci command, the
-> dmesg line is provoked. That sort of makes sense, since lspci is
-> communicating over the bus to gather all that info. I ran the command
-> a few times and stored the output, if you want to look at their diffs.
-> See attached.
+On Mon, Oct 12 2020 at 21:24, David Woodhouse wrote:
+> On Mon, 2020-10-12 at 21:31 +0200, Thomas Gleixner wrote:
+>> > In this case could disk I/O submitted by one of those CPUs end up 
+>> > interrupting another one?
+>> 
+>> On older kernels, yes.
+>> 
+>> X86 enforces effective single CPU affinity for interrupts since v4.15.
+>
+> Is that here to stay?
 
-The dmesg logs from your initial report:
+Yes. The way how logical mode works is that it sends the vast majority
+to the first CPU in the logical mask. So the benefit is pretty much zero
+and we haven't had anyone complaining since we switched to that mode.
 
-  pcieport 0000:04:00.0: 31.504 Gb/s available PCIe bandwidth, limited by 8.0 GT/s PCIe x4 link at 0000:00:1b.4 (capable of 1984.941 Gb/s with 32.0 GT/s PCIe x63 link)
+Having single CPU affinity enforced made the whole x86 affinity
+disaster^Wlogic way simpler and also reduced vector pressure
+significantly.
 
-are almost certainly seeing ~0 responses to config reads of 04:00.0.
-That would happen if 04:00.0 were powered off or if the bridge leading
-to it (00:1b.4) were in Downstream Port Containment mode.  00:1b.4
-does support DPC, but none of the lspci logs you attached show DPC
-being triggered.  If it were, you should see some indication in dmesg
-as well, e.g., the "containment event, status:%#06x source:%#06x\n"
-message from dpc_process_error().
+> Because it means that sending external interrupts
+> in logical mode is kind of pointless, and we might as well do this...
+>
+> --- a/arch/x86/kernel/apic/x2apic_cluster.c
+> +++ b/arch/x86/kernel/apic/x2apic_cluster.c
+> @@ -187,3 +187,3 @@ static struct apic apic_x2apic_cluster __ro_after_init = {
+>         .irq_delivery_mode              = dest_Fixed,
+> -       .irq_dest_mode                  = 1, /* logical */
+> +       .irq_dest_mode                  = 0, /* physical */
+>  
+> @@ -205,3 +205,3 @@ static struct apic apic_x2apic_cluster __ro_after_init = {
+>  
+> -       .calc_dest_apicid               = x2apic_calc_apicid,
+> +       .calc_dest_apicid               = apic_default_calc_apicid,
+>  
+>
+> And then a bunch of things which currently set x2apic_phys just because
+> of *external* IRQ limitations, no longer have to, and can still benefit
+> from multicast of IPIs to whole clusters at a time.
 
-If you can collect the complete dmesg log, especially after you get
-the bandwidth notification spam, it might have a clue.
+Indeed, never thought about that.
 
-Just to re-confirm: this happens with v5.8 but not with v5.9?  (v5.9
-had not been released at your initial report, so I assume you meant
-v5.9-rc8 or something?)
+Thanks,
 
-If you can bisect, that would be the easiest way to identify the
-problem.
-
-Bjorn
+        tglx
