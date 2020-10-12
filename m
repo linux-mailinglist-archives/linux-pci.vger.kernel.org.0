@@ -2,204 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 770C728B3E4
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 13:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C2F28BB59
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 16:51:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbgJLLht (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Oct 2020 07:37:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:39736 "EHLO foss.arm.com"
+        id S2389189AbgJLOuc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Oct 2020 10:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387617AbgJLLhs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Oct 2020 07:37:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1F0D6E;
-        Mon, 12 Oct 2020 04:37:47 -0700 (PDT)
-Received: from [10.57.48.76] (unknown [10.57.48.76])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4ACA3F719;
-        Mon, 12 Oct 2020 04:37:41 -0700 (PDT)
-Subject: Re: [PATCH v7 2/2] PCI: dwc: Fix MSI page leakage in suspend/resume
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc:     linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20201009155311.22d3caa5@xhacker.debian>
- <20201009155505.5a580ef5@xhacker.debian>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <38a00dde-598f-b6de-ecf3-5d012bd7594a@arm.com>
-Date:   Mon, 12 Oct 2020 12:37:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+        id S2387930AbgJLOub (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Oct 2020 10:50:31 -0400
+Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37B142080A;
+        Mon, 12 Oct 2020 14:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602514230;
+        bh=Um3brhR4V7mbgCo0NMThdWSXjyTwvJ/bNPfg+5StKaM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LJqc3NPzieo+zCMFKTWJbZTtyeoHuwpGsCfHSBwse3DTJOJaJoamovVG0tKre3pIP
+         kP3vaN9XQyoxFskgTFvlBth9KjiJftUWI6h5Y6yOUjlPz5wzlrnUxtMt4Ayi4aIHuE
+         3R4tIBD50qhLdnfnA5/+1oYfSdQ37BN3Tka2EsjU=
+Subject: Re: [PATCH v4 2/2] PCI/ERR: Split the fatal and non-fatal error
+ recovery handling
+To:     sathyanarayanan.nkuppuswamy@gmail.com, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
+References: <5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <c6e3f1168d5d88b207b59c434792a10a7331bb89.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <5ae14b67-94a5-6d2f-b74d-ca32bbd079cd@kernel.org>
+Date:   Mon, 12 Oct 2020 10:50:29 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <20201009155505.5a580ef5@xhacker.debian>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <c6e3f1168d5d88b207b59c434792a10a7331bb89.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-10-09 08:55, Jisheng Zhang wrote:
-> Currently, dw_pcie_msi_init() allocates and maps page for msi, then
-> program the PCIE_MSI_ADDR_LO and PCIE_MSI_ADDR_HI. The Root Complex
-> may lose power during suspend-to-RAM, so when we resume, we want to
-> redo the latter but not the former. If designware based driver (for
-> example, pcie-tegra194.c) calls dw_pcie_msi_init() in resume path, the
-> msi page will be leaked.
+On 10/12/2020 1:03 AM, sathyanarayanan.nkuppuswamy@gmail.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> As pointed out by Rob and Ard, there's no need to allocate a page for
-> the MSI address, we could use an address in the driver data.
+> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
+> merged fatal and non-fatal error recovery paths, and also made
+> recovery code depend on hotplug handler for "remove affected
+> device + rescan" support. But this change also complicated the
+> error recovery path and which in turn led to the following
+> issues.
 > 
-> To avoid map the MSI msg again during resume, we move the map MSI msg
-> from dw_pcie_msi_init() to dw_pcie_host_init().
-
-You should move the unmap there as well. As soon as you know what the 
-relevant address would be if you *were* to do DMA to this location, then 
-the exercise is complete. Leaving it mapped for the lifetime of the 
-device in order to do not-DMA to it seems questionable (and represents 
-technically incorrect API usage without at least a sync_for_cpu call 
-before any other access to the data).
-
-Another point of note is that using streaming DMA mappings at all is a 
-bit fragile (regardless of this change). If the host controller itself 
-has a limited DMA mask relative to physical memory (which integrators 
-still seem to keep doing...) then you could end up punching your MSI 
-hole right in the middle of the SWIOTLB bounce buffer, where it's then 
-almost *guaranteed* to interfere with real DMA :(
-
-If no DWC users have that problem and the current code is working well 
-enough, then I see little reason not to make this partucular change to 
-tidy up the implementation, just bear in mind that there's always the 
-possibility of having to come back and change it yet again in future to 
-make it more robust. I had it in mind that this trick was done with a 
-coherent DMA allocation, which would be safe from addressing problems 
-but would need to be kept around for the lifetime of the device, but 
-maybe that was a different driver :/
-
-Robin.
-
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> 1. We depend on hotplug handler for removing the affected
+> devices/drivers on DLLSC LINK down event (on DPC event
+> trigger) and DPC handler for handling the error recovery. Since
+> both handlers operate on same set of affected devices, it leads
+> to race condition, which in turn leads to  NULL pointer
+> exceptions or error recovery failures.You can find more details
+> about this issue in following link.
+> 
+> https://lore.kernel.org/linux-pci/20201007113158.48933-1-haifeng.zhao@intel.com/T/#t
+> 
+> 2. For non-hotplug capable devices fatal (DPC) error recovery
+> is currently broken. Current fatal error recovery implementation
+> relies on PCIe hotplug (pciehp) handler for detaching and
+> re-enumerating the affected devices/drivers. So when dealing with
+> non-hotplug capable devices, recovery code does not restore the state
+> of the affected devices correctly. You can find more details about
+> this issue in the following links.
+> 
+> https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
+> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+> https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+> 
+> In order to fix the above two issues, we should stop relying on hotplug
+> handler for cleaning the affected devices/drivers and let error recovery
+> handler own this functionality. So this patch reverts Commit bdb5ac85777d
+> ("PCI/ERR: Handle fatal error recovery") and re-introduce the  "remove
+> affected device + rescan"  functionality in fatal error recovery handler.
+> 
+> Also holding pci_lock_rescan_remove() will prevent the race between hotplug
+> and DPC handler.
+> 
+> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->   drivers/pci/controller/dwc/pci-dra7xx.c       | 18 +++++++++-
->   .../pci/controller/dwc/pcie-designware-host.c | 33 ++++++++++---------
->   drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
->   3 files changed, 36 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index 8f0b6d644e4b..6d012d2b1e90 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -466,7 +466,9 @@ static struct irq_chip dra7xx_pci_msi_bottom_irq_chip = {
->   static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
->   {
->   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct device *dev = pci->dev;
->   	u32 ctrl, num_ctrls;
-> +	int ret;
->   
->   	pp->msi_irq_chip = &dra7xx_pci_msi_bottom_irq_chip;
->   
-> @@ -482,7 +484,21 @@ static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
->   				    ~0);
->   	}
->   
-> -	return dw_pcie_allocate_domains(pp);
-> +	ret = dw_pcie_allocate_domains(pp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pp->msi_data = dma_map_single_attrs(dev, &pp->msi_msg,
-> +					   sizeof(pp->msi_msg),
-> +					   DMA_FROM_DEVICE,
-> +					   DMA_ATTR_SKIP_CPU_SYNC);
-> +	ret = dma_mapping_error(dev, pp->msi_data);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to map MSI data\n");
-> +		pp->msi_data = 0;
-> +		dw_pcie_free_msi(pp);
-> +	}
-> +	return ret;
->   }
->   
->   static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index d3e9ea11ce9e..d02c7e74738d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -266,30 +266,23 @@ void dw_pcie_free_msi(struct pcie_port *pp)
->   	irq_domain_remove(pp->msi_domain);
->   	irq_domain_remove(pp->irq_domain);
->   
-> -	if (pp->msi_page)
-> -		__free_page(pp->msi_page);
-> +	if (pp->msi_data) {
-> +		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +		struct device *dev = pci->dev;
-> +
-> +		dma_unmap_single_attrs(dev, pp->msi_data, sizeof(pp->msi_msg),
-> +				       DMA_FROM_DEVICE, DMA_ATTR_SKIP_CPU_SYNC);
-> +	}
->   }
->   
->   void dw_pcie_msi_init(struct pcie_port *pp)
->   {
->   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> -	struct device *dev = pci->dev;
-> -	u64 msi_target;
-> +	u64 msi_target = (u64)pp->msi_data;
->   
->   	if (!IS_ENABLED(CONFIG_PCI_MSI))
->   		return;
->   
-> -	pp->msi_page = alloc_page(GFP_KERNEL);
-> -	pp->msi_data = dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
-> -				    DMA_FROM_DEVICE);
-> -	if (dma_mapping_error(dev, pp->msi_data)) {
-> -		dev_err(dev, "Failed to map MSI data\n");
-> -		__free_page(pp->msi_page);
-> -		pp->msi_page = NULL;
-> -		return;
-> -	}
-> -	msi_target = (u64)pp->msi_data;
-> -
->   	/* Program the msi_data */
->   	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_LO, lower_32_bits(msi_target));
->   	dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
-> @@ -394,6 +387,16 @@ int dw_pcie_host_init(struct pcie_port *pp)
->   				irq_set_chained_handler_and_data(pp->msi_irq,
->   							    dw_chained_msi_isr,
->   							    pp);
-> +
-> +			pp->msi_data = dma_map_single_attrs(pci->dev, &pp->msi_msg,
-> +						      sizeof(pp->msi_msg),
-> +						      DMA_FROM_DEVICE,
-> +						      DMA_ATTR_SKIP_CPU_SYNC);
-> +			if (dma_mapping_error(pci->dev, pp->msi_data)) {
-> +				dev_err(pci->dev, "Failed to map MSI data\n");
-> +				pp->msi_data = 0;
-> +				goto err_free_msi;
-> +			}
->   		} else {
->   			ret = pp->ops->msi_host_init(pp);
->   			if (ret < 0)
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 97c7063b9e89..9d2f511f13fa 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -190,8 +190,8 @@ struct pcie_port {
->   	int			msi_irq;
->   	struct irq_domain	*irq_domain;
->   	struct irq_domain	*msi_domain;
-> +	u16			msi_msg;
->   	dma_addr_t		msi_data;
-> -	struct page		*msi_page;
->   	struct irq_chip		*msi_irq_chip;
->   	u32			num_vectors;
->   	u32			irq_mask[MAX_MSI_CTRLS];
-> 
+>  Documentation/PCI/pci-error-recovery.rst | 47 ++++++++++------
+>  drivers/pci/pcie/err.c                   | 71 +++++++++++++++++++-----
+>  2 files changed, 87 insertions(+), 31 deletions(-)
+
+I'm not sure about locks involved but I do like the concept.
+Current fatal error handling is best effort.
+
+There is no way to recover if link is down by the time we
+reach to fatal error handling routine.
+
+This change will make the solution more reliable.
+
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
