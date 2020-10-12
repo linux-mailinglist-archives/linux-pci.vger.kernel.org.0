@@ -2,33 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29C9E28BB61
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 16:51:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E44228BB63
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Oct 2020 16:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389611AbgJLOvU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Oct 2020 10:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57350 "EHLO mail.kernel.org"
+        id S2389539AbgJLOvo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Oct 2020 10:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730003AbgJLOvU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 12 Oct 2020 10:51:20 -0400
+        id S2387930AbgJLOvo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 12 Oct 2020 10:51:44 -0400
 Received: from [192.168.0.112] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2BE2080A;
-        Mon, 12 Oct 2020 14:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A3982080A;
+        Mon, 12 Oct 2020 14:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602514279;
-        bh=KjcJj3HhUJ7QjgoguyEHAlgwsxwB6hxZaDCQ/+0hunU=;
+        s=default; t=1602514303;
+        bh=MqiIO/6MLXuvTKpPmH2MYO7ZOZ7tXD/fVdrsl4Sxio4=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ftQ9hEcYMpMcGI44trydysHHPWBqKPKVBnHIj7m2LvnfYWBkj6ieYZ8DlIUJuHKZC
-         l31hJcJGp32qBVnwZfsWROfNSf0K2qj48as7jMv4XlHwDi45Rp0r58J0W0yUkbjjWf
-         fzomFq53wYQUfTb8D9qJTLtUlYtX0DgJG0dVWlQo=
-Subject: Re: [PATCH v4 1/2] PCI/ERR: Call pci_bus_reset() before calling
- ->slot_reset() callback
-To:     sathyanarayanan.nkuppuswamy@gmail.com, bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-References: <5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        b=ab0mjyt6GjPskoZ3bBXarcCywI9R/YTxaDDDWlwsdaq5jRBDUNjnMrLvHH4gNM1Da
+         Pujbe7UUQgTx60I0z+s0XmsxmB7Jyhwj0PBW+Cmpftvmez29g4Ebj0jv8JdS++Ftla
+         wsFSV7Lc0VBp6m4ype8rPRqRdYnpb6zptW/LGzew=
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <20200922233333.GA2239404@bjorn-Precision-5520>
+ <1fdcc4a6-53b7-2b5f-8496-f0f09405f561@linux.intel.com>
+ <aef0b9aa-59f5-9ec3-adac-5bc366b362e0@kernel.org>
+ <a647f485-8db4-db45-f404-940b55117b53@linux.intel.com>
+ <aefd8842-90c4-836a-b43a-f21c5428d2ba@kernel.org>
+ <95e23cb5-f6e1-b121-0de8-a2066d507d9c@linux.intel.com>
+ <65238d0b-0a39-400a-3a18-4f68eb554538@kernel.org>
+ <4ae86061-2182-bcf1-ebd7-485acf2d47b9@linux.intel.com>
+ <f360165e-5f73-057c-efd1-557b5e5027eb@kernel.org>
+ <8beca800-ffb5-c535-6d43-7e750cbf06d0@linux.intel.com>
+ <44f0cac5-8deb-1169-eb6d-93ac4889fe7e@kernel.org>
+ <3bc0fd23-8ddd-32c5-1dd9-4d5209ea68c3@linux.intel.com>
+ <a2bbdfed-fb17-51dc-8ae4-55d924c13211@kernel.org>
+ <8a3aeb3c-83c4-8626-601d-360946d55dd8@linux.intel.com>
+ <9b295cad-7302-cf2c-d19d-d27fabcb48be@kernel.org>
+ <93b4015f-df2b-728b-3ef7-ac5aa10f03ed@kernel.org>
+ <d6da2246-cf82-315e-c716-62ab9ec13a22@linux.intel.com>
+ <0013f3d2-569a-27ba-336e-3d4668834545@linux.intel.com>
 From:   Sinan Kaya <okaya@kernel.org>
 Autocrypt: addr=okaya@kernel.org; keydata=
  mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
@@ -54,53 +74,54 @@ Autocrypt: addr=okaya@kernel.org; keydata=
  9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
  2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
  L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <5d8db992-27bf-5c34-2abd-dc490cf76c92@kernel.org>
-Date:   Mon, 12 Oct 2020 10:51:17 -0400
+Message-ID: <95fb03e3-97c0-296f-25ba-5d7ce857ad86@kernel.org>
+Date:   Mon, 12 Oct 2020 10:51:42 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <0013f3d2-569a-27ba-336e-3d4668834545@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/12/2020 1:03 AM, sathyanarayanan.nkuppuswamy@gmail.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On 10/12/2020 1:13 AM, Kuppuswamy, Sathyanarayanan wrote:
+> Hi Sinan,
 > 
-> Currently if report_error_detected() or report_mmio_enabled()
-> functions requests PCI_ERS_RESULT_NEED_RESET, current
-> pcie_do_recovery() implementation does not do the requested
-> explicit device reset, but instead just calls the
-> report_slot_reset() on all affected devices. Notifying about the
-> reset via report_slot_reset() without doing the actual device
-> reset is incorrect. So call pci_bus_reset() before triggering
-> ->slot_reset() callback.
+> On 9/28/20 11:32 AM, Kuppuswamy, Sathyanarayanan wrote:
+>>
+>>
+>> On 9/28/20 11:25 AM, Sinan Kaya wrote:
+>>> On 9/28/2020 2:02 PM, Sinan Kaya wrote:
+>>>> Since there is no state restoration for FATAL errors, I am wondering
+>>>> whether
+>>>> calls to ->error_detected(), ->mmio_enabled() and ->slot_reset() are
+>>>> required?
+>>>
+>>> I also would like to ask someone closer to the spec language double
+>>> check this.
+>>>
+>>> When we recover the link at the end of the DPC handler, what is the
+>>> expected state of the endpoint?
+>>>
+>>> Is it a some kind of a reset like secondary bus reset? (I assumed this
+>>>   one)
+>> I think it will be in reset state.
+>>>
+>>> Undefined?
+>>>
+>>> or just plain link recovery with everything else as intact as it used
+>>> to be?
+>>>
+>>
 > 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pcie/err.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+> Please check the following version. It should fix most of the reset issues
+> properly.
 > 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index c543f419d8f9..067c58728b88 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -181,11 +181,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	}
->  
->  	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> -		/*
-> -		 * TODO: Should call platform-specific
-> -		 * functions to reset slot before calling
-> -		 * drivers' slot_reset callbacks?
-> -		 */
-> +		pci_reset_bus(dev);
->  		status = PCI_ERS_RESULT_RECOVERED;
->  		pci_dbg(dev, "broadcast slot_reset message\n");
->  		pci_walk_bus(bus, report_slot_reset, &status);
+> https://lore.kernel.org/linux-pci/5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com/T/#t
+> 
 > 
 
-Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Thanks, good stuff.
