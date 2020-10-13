@@ -2,149 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 839ED28CD1A
-	for <lists+linux-pci@lfdr.de>; Tue, 13 Oct 2020 13:56:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C5AB28CEF6
+	for <lists+linux-pci@lfdr.de>; Tue, 13 Oct 2020 15:11:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgJML4z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Oct 2020 07:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbgJML4G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Oct 2020 07:56:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60B8C0613D0;
-        Tue, 13 Oct 2020 04:56:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=i0ogLBIlUVV0CdjypROGeu7AwfcIja0K5SScq0Xwq2M=; b=J2JcvL/9JKUWD4xXGI6c4tpQrz
-        Avqawykjj1JhP+KCdPkiLORxjpowmRlzbufq8PWMMVYwLff/gIHYShdK9xJE2fJkL9Gc72bT+GtvT
-        +KioDU3FFMWcVkP+8ebCNJLszUYEady/KF1g9IE4tw47r7+w/JZe1Sj+ldJ3CS8O7WR7NY85kxcqL
-        LQ6e47n1GPNOUSB26jyBfm+DxJEVoFygYQ7a7MpBtp3wNJVthZHajNc3E3g27I7/kpq6MeKf+VZ0P
-        2zA+Q2Fl5UdIrN9ApaZCu/hSxSM4cW14pGtlAn4uNZmXBwYUANBZm9e9TnUJKMD7rlzhyMiQ3Hl7S
-        Un/J/ihQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kSIuP-0003TM-2b; Tue, 13 Oct 2020 11:56:01 +0000
-Date:   Tue, 13 Oct 2020 12:56:00 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     sathyanarayanan.nkuppuswamy@gmail.com
-Cc:     bhelgaas@google.com, okaya@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v4 2/2] PCI/ERR: Split the fatal and non-fatal error
- recovery handling
-Message-ID: <20201013115600.GA11976@infradead.org>
-References: <5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <c6e3f1168d5d88b207b59c434792a10a7331bb89.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1727789AbgJMNLy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 13 Oct 2020 09:11:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:21610 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728490AbgJMNLv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 13 Oct 2020 09:11:51 -0400
+IronPort-SDR: Sc6GquQmtZ7vMOcMhhM3SEoCoTQVwhu/on/gHMSX13K6Mq18oN/Ti7oVeyRrZ6BEYXKo3Eq7vG
+ n0QH0HtDJh0A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9772"; a="152836537"
+X-IronPort-AV: E=Sophos;i="5.77,370,1596524400"; 
+   d="scan'208";a="152836537"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2020 06:11:48 -0700
+IronPort-SDR: yQnZ5/QLRvT3t2B0gLQ7WWGnPAz3XWnjg1/hdbLObHTcou04AHxikPAVs0XTpwm/hNpJR7uxbp
+ 30caWhdSeM4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,370,1596524400"; 
+   d="scan'208";a="356147368"
+Received: from lkp-server01.sh.intel.com (HELO ca2eb8e9a2ab) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Oct 2020 06:11:46 -0700
+Received: from kbuild by ca2eb8e9a2ab with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kSK5i-00000T-7W; Tue, 13 Oct 2020 13:11:46 +0000
+Date:   Tue, 13 Oct 2020 21:11:13 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/err] BUILD SUCCESS
+ e49e4b167fd301aa569d757d40e104eed16c6cbe
+Message-ID: <5f85a771.i3sPcfgL6SMoKvUG%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c6e3f1168d5d88b207b59c434792a10a7331bb89.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-You might want to split out pcie_do_fatal_recovery and get rid of the
-state argument:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/err
+branch HEAD: e49e4b167fd301aa569d757d40e104eed16c6cbe  PCI/AER: Add RCEC AER error injection support
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index fa12f7cbc1a095..eec0d3fe9fd967 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -556,7 +556,8 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
- 
- /* PCI error reporting and recovery */
- pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
--			pci_channel_state_t state,
-+			pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
-+pci_ers_result_t pcie_do_fatal_recovery(struct pci_dev *dev,
- 			pci_ers_result_t (*reset_link)(struct pci_dev *pdev));
- 
- bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 65dff5f3457ac0..4bf7ebb34cf854 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -947,9 +947,9 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
- 		if (pcie_aer_is_native(dev))
- 			pcie_clear_device_status(dev);
- 	} else if (info->severity == AER_NONFATAL)
--		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
-+		pcie_do_recovery(dev, aer_root_reset);
- 	else if (info->severity == AER_FATAL)
--		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
-+		pcie_do_fatal_recovery(dev, aer_root_reset);
- 	pci_dev_put(dev);
- }
- 
-@@ -985,11 +985,9 @@ static void aer_recover_work_func(struct work_struct *work)
- 		}
- 		cper_print_aer(pdev, entry.severity, entry.regs);
- 		if (entry.severity == AER_NONFATAL)
--			pcie_do_recovery(pdev, pci_channel_io_normal,
--					 aer_root_reset);
-+			pcie_do_recovery(pdev, aer_root_reset);
- 		else if (entry.severity == AER_FATAL)
--			pcie_do_recovery(pdev, pci_channel_io_frozen,
--					 aer_root_reset);
-+			pcie_do_fatal_recovery(pdev, aer_root_reset);
- 		pci_dev_put(pdev);
- 	}
- }
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index daa9a4153776ce..74e7d1da3cf054 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -233,7 +233,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
- 	dpc_process_error(pdev);
- 
- 	/* We configure DPC so it only triggers on ERR_FATAL */
--	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
-+	pcie_do_fatal_recovery(pdev, dpc_reset_link);
- 
- 	return IRQ_HANDLED;
- }
-diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
-index a6b9b479b97ad0..87379bc566f691 100644
---- a/drivers/pci/pcie/edr.c
-+++ b/drivers/pci/pcie/edr.c
-@@ -183,7 +183,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
- 	 * or ERR_NONFATAL, since the link is already down, use the FATAL
- 	 * error recovery path for both cases.
- 	 */
--	estate = pcie_do_recovery(edev, pci_channel_io_frozen, dpc_reset_link);
-+	estate = pcie_do_fatal_recovery(edev, dpc_reset_link);
- 
- send_ost:
- 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index c2ae4d08801a4d..11fcff16b17303 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -141,7 +141,7 @@ static int report_resume(struct pci_dev *dev, void *data)
- 	return 0;
- }
- 
--static pci_ers_result_t pcie_do_fatal_recovery(struct pci_dev *dev,
-+pci_ers_result_t pcie_do_fatal_recovery(struct pci_dev *dev,
- 			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
- {
- 	struct pci_dev *udev;
-@@ -194,15 +194,11 @@ static pci_ers_result_t pcie_do_fatal_recovery(struct pci_dev *dev,
- }
- 
- pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
--			pci_channel_state_t state,
- 			pci_ers_result_t (*reset_link)(struct pci_dev *pdev))
- {
- 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
- 	struct pci_bus *bus;
- 
--	if (state == pci_channel_io_frozen)
--		return pcie_do_fatal_recovery(dev, reset_link);
--
- 	/*
- 	 * Error recovery runs on all subordinates of the first downstream port.
- 	 * If the downstream port detected the error, it is cleared at the end.
+elapsed time: 722m
+
+configs tested: 128
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+mips                         db1xxx_defconfig
+powerpc                        warp_defconfig
+arm                          lpd270_defconfig
+powerpc                    sam440ep_defconfig
+s390                          debug_defconfig
+ia64                                defconfig
+powerpc                      cm5200_defconfig
+arm                            mmp2_defconfig
+sh                          rsk7201_defconfig
+arm                       mainstone_defconfig
+openrisc                 simple_smp_defconfig
+sh                                  defconfig
+powerpc                    socrates_defconfig
+arm                          prima2_defconfig
+arm                         palmz72_defconfig
+arm                            qcom_defconfig
+sh                        sh7785lcr_defconfig
+m68k                        stmark2_defconfig
+xtensa                  cadence_csp_defconfig
+x86_64                           allyesconfig
+mips                      fuloong2e_defconfig
+parisc                              defconfig
+mips                           xway_defconfig
+arm                            xcep_defconfig
+powerpc                     tqm8548_defconfig
+arm                       aspeed_g4_defconfig
+mips                          rm200_defconfig
+powerpc                 mpc832x_mds_defconfig
+arm                           spitz_defconfig
+arm                        vexpress_defconfig
+arm                            u300_defconfig
+h8300                     edosk2674_defconfig
+powerpc                      pcm030_defconfig
+arm64                            alldefconfig
+arm                             rpc_defconfig
+powerpc                     tqm8555_defconfig
+arm                       multi_v4t_defconfig
+powerpc                  mpc885_ads_defconfig
+arc                           tb10x_defconfig
+mips                          ath25_defconfig
+parisc                           allyesconfig
+sh                     sh7710voipgw_defconfig
+powerpc                  mpc866_ads_defconfig
+arm                         at91_dt_defconfig
+m68k                         amcore_defconfig
+sh                          lboxre2_defconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                             allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20201013
+x86_64               randconfig-a002-20201013
+x86_64               randconfig-a006-20201013
+x86_64               randconfig-a001-20201013
+x86_64               randconfig-a003-20201013
+x86_64               randconfig-a005-20201013
+i386                 randconfig-a005-20201012
+i386                 randconfig-a006-20201012
+i386                 randconfig-a001-20201012
+i386                 randconfig-a003-20201012
+i386                 randconfig-a004-20201012
+i386                 randconfig-a002-20201012
+x86_64               randconfig-a016-20201012
+x86_64               randconfig-a015-20201012
+x86_64               randconfig-a012-20201012
+x86_64               randconfig-a013-20201012
+x86_64               randconfig-a014-20201012
+x86_64               randconfig-a011-20201012
+i386                 randconfig-a016-20201013
+i386                 randconfig-a015-20201013
+i386                 randconfig-a013-20201013
+i386                 randconfig-a012-20201013
+i386                 randconfig-a011-20201013
+i386                 randconfig-a014-20201013
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a004-20201012
+x86_64               randconfig-a002-20201012
+x86_64               randconfig-a006-20201012
+x86_64               randconfig-a001-20201012
+x86_64               randconfig-a003-20201012
+x86_64               randconfig-a005-20201012
+x86_64               randconfig-a016-20201013
+x86_64               randconfig-a015-20201013
+x86_64               randconfig-a012-20201013
+x86_64               randconfig-a013-20201013
+x86_64               randconfig-a014-20201013
+x86_64               randconfig-a011-20201013
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
