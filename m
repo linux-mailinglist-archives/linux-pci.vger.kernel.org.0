@@ -2,90 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E46528D68D
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Oct 2020 00:44:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3891F28DD83
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Oct 2020 11:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgJMWne (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 13 Oct 2020 18:43:34 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34364 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgJMWnZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 13 Oct 2020 18:43:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09DMYHRI023311;
-        Tue, 13 Oct 2020 22:43:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=BPXVhR8Zcz1sWINwPPKI15oRrSSfJmS7Dk7t6k2FBvc=;
- b=X98OMsUEJ6iXi28jlvGzIuUNtCUPCHKr9Y26mlldDvGV1tVg0rW4+z19ERv9nUm05fW2
- 7uLfRfkQC87plb6dqK0JgwDllNVeWHEr4KuohBovrquRB4Wp8Fn55mzzRhERGk86b1R8
- IUAHuFALM9P0nzG0SMad9VRc3S4BqwSCpX9uXbI7E8E4JWNs+M489BfaOy69s9tMy36o
- WsDINZk0QvR9KX7AD1uVtYIm858Ec1rCBrQM2cWhu74pWwQ4sERB2XP+p4QlG2a3ov36
- KsDceZW1Gf6MViMvswmWBcHmPujmAKdJrQLwx9ihpq7sGfN7gk8NuWumGIvUgBivX+8I Nw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 3434wkmr7r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 13 Oct 2020 22:43:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09DMZeSv129581;
-        Tue, 13 Oct 2020 22:43:18 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 343phntsx7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 13 Oct 2020 22:43:18 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09DMhIGo146795;
-        Tue, 13 Oct 2020 22:43:18 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 343phntswf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Oct 2020 22:43:18 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09DMhFrt005717;
-        Tue, 13 Oct 2020 22:43:16 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Oct 2020 15:43:15 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     linux-spi@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-media@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        linux-serial@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Yossi Leybovich <sleybo@amazon.com>,
-        linux-block@vger.kernel.org, rds-devel@oss.oracle.com
-Subject: Re: [PATCH 00/14] drop double zeroing
-Date:   Tue, 13 Oct 2020 18:42:52 -0400
-Message-Id: <160262862433.3018.13907233755506910409.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
-References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9773 signatures=668681
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 phishscore=0 suspectscore=0 impostorscore=0 clxscore=1011
- spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010130158
+        id S1730348AbgJNJZC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Oct 2020 05:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730650AbgJNJUB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Oct 2020 05:20:01 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23DA7C08EBB0;
+        Tue, 13 Oct 2020 16:45:14 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a200so827140pfa.10;
+        Tue, 13 Oct 2020 16:45:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=m+Z/XvjZu06KL0G8enGFCvQ7cV3DU0ERkocEYKyzM7U=;
+        b=rQvfSxBGOM6CHmHfoaTdbh6Vl2S9t794cBtfQQhTytpjfLarTPZUbRO2Yy0eP19+A3
+         hoB8qSzpkfIhFqqye6qZFNkdeagvl6i6osh8gG8OlC+Gpk06Vj8AmqyNg9gO74Qn2npl
+         5+rZ+/V2W5UouEn/xccwtWNt/+BsNVoaZylBBbZloCoqAlJGS2ZEWJKDBvd+Eov9TcDW
+         1kbS7Wi5cq78oxbCV1DPTE7M6ZvIf5s+bVc6wzLeBmsb462EyFRXUtKugQxyX8kdVS1h
+         3XsoKA56H8dmRyDP8IyFRHh3kWpxIZvLs2SryX2LbFKFtJ7EU5VptunO/fMZLzTzwrVl
+         myhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=m+Z/XvjZu06KL0G8enGFCvQ7cV3DU0ERkocEYKyzM7U=;
+        b=BpCPRjZVQYNpaAAQviMC4z0J192f7poum8KizVa+SFamMx/buNMQ5AN596BrNIjXET
+         Yq8y07YwqolKsKVZgDZVN1Vuz5/5g1+3O2zRtU7sIfSVpiykDYAxM9n/tKk927eNJEm4
+         RVFMzLUKcLHt28gZ2MT7DPyWDHlkQKt1WfIZKc2JbwslhldpitpdkW1Si6lxLEzttusI
+         1RZYKjkvXdn43hI+6+PkIASJeQs5UmhK3NZ+u1F8w8snQ4zU9qYtoNP8rBIBGt3z77M5
+         /32jzybRB+4PQrTXlwd/HBf1RSnXo/yRoYiTnf9M2DaqBSShzFDe2vLXjz4Vc/U2JV9I
+         DiuA==
+X-Gm-Message-State: AOAM532S9BV8wbK8Dns2szfINsAtJs35TfGKmadr8DboiCLM2mygXvZq
+        8uY3CFRSuoZv8hDuYtobFQI=
+X-Google-Smtp-Source: ABdhPJyl9ZxXs3+HdWdnTEbiuqY5P9MzdGFczlYnuExEFAlJeCOa1VKNE+5YwJJmXVnNP2JEv69ArA==
+X-Received: by 2002:a05:6a00:2d5:b029:152:197a:a23a with SMTP id b21-20020a056a0002d5b0290152197aa23amr1911152pft.66.1602632713660;
+        Tue, 13 Oct 2020 16:45:13 -0700 (PDT)
+Received: from skuppusw-mobl5.amr.corp.intel.com (jfdmzpr05-ext.jf.intel.com. [134.134.139.74])
+        by smtp.gmail.com with ESMTPSA id s6sm786171pfd.157.2020.10.13.16.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Oct 2020 16:45:12 -0700 (PDT)
+From:   Kuppuswamy Sathyanarayanan <sathyanarayanan.nkuppuswamy@gmail.com>
+X-Google-Original-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     bhelgaas@google.com, okaya@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v5 1/2] PCI/ERR: Call pci_bus_reset() before calling ->slot_reset() callback
+Date:   Tue, 13 Oct 2020 16:45:01 -0700
+Message-Id: <162495c76c391de6e021919e2b69c5cd2dbbc22a.1602632140.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 20 Sep 2020 13:26:12 +0200, Julia Lawall wrote:
+Currently if report_error_detected() or report_mmio_enabled()
+functions requests PCI_ERS_RESULT_NEED_RESET, current
+pcie_do_recovery() implementation does not do the requested
+explicit device reset, but instead just calls the
+report_slot_reset() on all affected devices. Notifying about the
+reset via report_slot_reset() without doing the actual device
+reset is incorrect. So call pci_bus_reset() before triggering
+->slot_reset() callback.
 
-> sg_init_table zeroes its first argument, so the allocation of that argument
-> doesn't have to.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+---
+ Changes since v4:
+  * Added check for pci_reset_bus() return value.
 
-Applied to 5.10/scsi-queue, thanks!
+ drivers/pci/pcie/err.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-[02/14] scsi: target: rd: Drop double zeroing
-        https://git.kernel.org/mkp/scsi/c/4b217e015b75
-
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index c543f419d8f9..315a4d559c4c 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -152,6 +152,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ {
+ 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+ 	struct pci_bus *bus;
++	int ret;
+ 
+ 	/*
+ 	 * Error recovery runs on all subordinates of the first downstream port.
+@@ -181,11 +182,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	}
+ 
+ 	if (status == PCI_ERS_RESULT_NEED_RESET) {
+-		/*
+-		 * TODO: Should call platform-specific
+-		 * functions to reset slot before calling
+-		 * drivers' slot_reset callbacks?
+-		 */
++		ret = pci_reset_bus(dev);
++		if (ret < 0) {
++			pci_err(dev, "Failed to reset %d\n", ret);
++			status = PCI_ERS_RESULT_DISCONNECT;
++			goto failed;
++		}
+ 		status = PCI_ERS_RESULT_RECOVERED;
+ 		pci_dbg(dev, "broadcast slot_reset message\n");
+ 		pci_walk_bus(bus, report_slot_reset, &status);
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
