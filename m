@@ -2,188 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD6EE28DA1E
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Oct 2020 09:03:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0295E28DB32
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Oct 2020 10:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgJNHDV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Oct 2020 03:03:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18671 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbgJNHDV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Oct 2020 03:03:21 -0400
-IronPort-SDR: LJNV/ICKdzEmwS/DVyGtIfTtGTwyEz+/bW9uH71huEQXzBZ5ThjUWkIkBPEPz8heUWsvRIZn0U
- GSSsOw0u131w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9773"; a="166170250"
-X-IronPort-AV: E=Sophos;i="5.77,373,1596524400"; 
-   d="scan'208";a="166170250"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2020 00:03:17 -0700
-IronPort-SDR: Irfy1VKEjfpOF2ep4mgUE/hNxWSZL9Wb0nXk+rM9Vd7Dl2r8CUEkIalQN6aVaNn7D1OkPy1t/u
- fWG9TIXRv4PQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,373,1596524400"; 
-   d="scan'208";a="520279109"
-Received: from lkp-server01.sh.intel.com (HELO 77f7a688d8fd) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Oct 2020 00:03:16 -0700
-Received: from kbuild by 77f7a688d8fd with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kSaod-00004W-IV; Wed, 14 Oct 2020 07:03:15 +0000
-Date:   Wed, 14 Oct 2020 15:03:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS ec8d6eaa648655a79ef27f343600e561e4ab8384
-Message-ID: <5f86a2a4.nnZEuSLqLSqM9UHG%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726160AbgJNIZD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Oct 2020 04:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729007AbgJNITf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Oct 2020 04:19:35 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE97C05112C;
+        Wed, 14 Oct 2020 01:00:17 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a3so3442690ejy.11;
+        Wed, 14 Oct 2020 01:00:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8cAshw9w9g+tb5Wga6crJkHmZaZvSDhk98YhcxthM3g=;
+        b=Gw1+k6GaIZIOqOScQ2WBuYIWesxGm1IIlTnWn3DPl5FPq/MC5CcCjV9+eik/2N5fO+
+         BP+YHo9PbSxbQ+URpvt4NSPqIxbH2GEHYnJuBNUjhDA6/VnavJxF4z+Gg4zCMH1uW7DA
+         o4n3oziqf2INvMG/1Z35vw4mSUloHw0RgnVHfgm4hMIzP1YQ4Pt+12eGSzZvJA5SZsV/
+         amXvbThF7HCQoiKgAKgbk9gB4Avmldyvx69BEXEMCId6/0QV1r8nvVn7HBXRFapdaPgb
+         12XwQMLJ0BFv2l1iIDqsk9M4Q/koDEZ2XWPO+5mhS0m53TUa5XStubu6UL+YpxOwP/ap
+         IIng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8cAshw9w9g+tb5Wga6crJkHmZaZvSDhk98YhcxthM3g=;
+        b=bndgkcDA0iOeTbtaeQ1EAV0GNTQ/Pwn+41EFp8P7O86FXfcQ9wMSzDELWWv6xzoIE5
+         4jBEw5wcXAVxh3UfFenQShWMehi0tpYZQssYo4lXjDWbkVFudqcMPHIcMuSpsT9p1nyS
+         hspDvPExTWwDMvd8bn/+sDhulXgp7qH0SQxY2vPoCdfhwSooueEHX4OCH7CoXGqVhMHF
+         mxnNT4xAmbW+B6IoalxbZMS3eEOv7kgMrNi+awtxdPyxS0zM9bAnkgr5qQ6FMFgzCOyi
+         lXDMWdQwdtHNai02M5lVSZndJfJEqPlONx9MvMfXNVX/8guLIXoJQ4gDeOI9QCjGL3qb
+         YBhQ==
+X-Gm-Message-State: AOAM533pgAJoHMaVzvZv0K03Kx8kRNkd/NGT94UFyQeRYvaMugZoefuq
+        Fzvry9C3gPk5DlPWrJbMLRDJJeBHDM3lwbRlSiI=
+X-Google-Smtp-Source: ABdhPJxkH9r6BW9EGqcYbZTg0uRIMpguiE/ZlQJjnRiOA896kinPXGtVBYwALXHHySAjYv6Ik2073C0XAilbo3RAFJs=
+X-Received: by 2002:a17:906:745:: with SMTP id z5mr4212217ejb.408.1602662415913;
+ Wed, 14 Oct 2020 01:00:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20201012210522.GA86612@otc-nc-03> <9b7db59d-832c-1c21-90b6-1676ea9058ce@linux.intel.com>
+In-Reply-To: <9b7db59d-832c-1c21-90b6-1676ea9058ce@linux.intel.com>
+From:   Ethan Zhao <xerces.zhao@gmail.com>
+Date:   Wed, 14 Oct 2020 16:00:04 +0800
+Message-ID: <CAKF3qh0tykZV9-wrxqg-n1r-m+J1YL2L-s2j+wSPVRPw9k2sPA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] PCI/ERR: Call pci_bus_reset() before calling
+ ->slot_reset() callback
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        sathyanarayanan.nkuppuswamy@gmail.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: ec8d6eaa648655a79ef27f343600e561e4ab8384  Merge branch 'remotes/lorenzo/pci/xilinx'
+Please fix the building issue.
 
-elapsed time: 722m
+drivers/pci/pcie/err.c:144:25: error: static declaration of
+=E2=80=98pcie_do_fatal_recovery=E2=80=99 follows non-static declaration
+ static pci_ers_result_t pcie_do_fatal_recovery(struct pci_dev *dev,
+                         ^~~~~~~~~~~~~~~~~~~~~~
+In file included from drivers/pci/pcie/err.c:21:
+drivers/pci/pcie/../pci.h:560:18: note: previous declaration of
+=E2=80=98pcie_do_fatal_recovery=E2=80=99 was here
+ pci_ers_result_t pcie_do_fatal_recovery(struct pci_dev *dev,
+                  ^~~~~~~~~~~~~~~~~~~~~~
+drivers/pci/pcie/err.c:144:25: warning: =E2=80=98pcie_do_fatal_recovery=E2=
+=80=99
+defined but not used [-Wunused-function]
+ static pci_ers_result_t pcie_do_fatal_recovery(struct pci_dev *dev,
 
-configs tested: 125
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
+Ethan
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                        sh7763rdp_defconfig
-powerpc                     tqm8555_defconfig
-powerpc                       eiger_defconfig
-ia64                             alldefconfig
-arm                         hackkit_defconfig
-sh                          landisk_defconfig
-arm                           h3600_defconfig
-x86_64                              defconfig
-mips                        nlm_xlr_defconfig
-arm                        spear6xx_defconfig
-powerpc                       ppc64_defconfig
-powerpc                     stx_gp3_defconfig
-m68k                        stmark2_defconfig
-powerpc                       holly_defconfig
-mips                       capcella_defconfig
-powerpc                      katmai_defconfig
-arm                            hisi_defconfig
-arm                          iop32x_defconfig
-nds32                               defconfig
-arm                            qcom_defconfig
-arm                           corgi_defconfig
-sh                           se7721_defconfig
-arm                     davinci_all_defconfig
-arm                          pxa3xx_defconfig
-arm                            dove_defconfig
-sh                             shx3_defconfig
-arm                          lpd270_defconfig
-powerpc                      tqm8xx_defconfig
-openrisc                         alldefconfig
-m68k                        m5307c3_defconfig
-arm                        realview_defconfig
-sh                              ul2_defconfig
-powerpc                     mpc5200_defconfig
-powerpc                     mpc83xx_defconfig
-c6x                              alldefconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-parisc                              defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20201013
-x86_64               randconfig-a002-20201013
-x86_64               randconfig-a006-20201013
-x86_64               randconfig-a001-20201013
-x86_64               randconfig-a003-20201013
-x86_64               randconfig-a005-20201013
-i386                 randconfig-a005-20201014
-i386                 randconfig-a006-20201014
-i386                 randconfig-a001-20201014
-i386                 randconfig-a003-20201014
-i386                 randconfig-a004-20201014
-i386                 randconfig-a002-20201014
-i386                 randconfig-a005-20201013
-i386                 randconfig-a006-20201013
-i386                 randconfig-a001-20201013
-i386                 randconfig-a003-20201013
-i386                 randconfig-a004-20201013
-i386                 randconfig-a002-20201013
-x86_64               randconfig-a016-20201014
-x86_64               randconfig-a012-20201014
-x86_64               randconfig-a015-20201014
-x86_64               randconfig-a013-20201014
-x86_64               randconfig-a014-20201014
-x86_64               randconfig-a011-20201014
-i386                 randconfig-a016-20201014
-i386                 randconfig-a013-20201014
-i386                 randconfig-a015-20201014
-i386                 randconfig-a011-20201014
-i386                 randconfig-a012-20201014
-i386                 randconfig-a014-20201014
-i386                 randconfig-a016-20201013
-i386                 randconfig-a015-20201013
-i386                 randconfig-a013-20201013
-i386                 randconfig-a012-20201013
-i386                 randconfig-a011-20201013
-i386                 randconfig-a014-20201013
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a004-20201014
-x86_64               randconfig-a002-20201014
-x86_64               randconfig-a006-20201014
-x86_64               randconfig-a001-20201014
-x86_64               randconfig-a005-20201014
-x86_64               randconfig-a003-20201014
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+On Tue, Oct 13, 2020 at 10:18 PM Kuppuswamy, Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+>
+> On 10/12/20 2:05 PM, Raj, Ashok wrote:
+> > On Sun, Oct 11, 2020 at 10:03:40PM -0700, sathyanarayanan.nkuppuswamy@g=
+mail.com wrote:
+> >> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.int=
+el.com>
+> >>
+> >> Currently if report_error_detected() or report_mmio_enabled()
+> >> functions requests PCI_ERS_RESULT_NEED_RESET, current
+> >> pcie_do_recovery() implementation does not do the requested
+> >> explicit device reset, but instead just calls the
+> >> report_slot_reset() on all affected devices. Notifying about the
+> >> reset via report_slot_reset() without doing the actual device
+> >> reset is incorrect. So call pci_bus_reset() before triggering
+> >> ->slot_reset() callback.
+> >>
+> >> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@=
+linux.intel.com>
+> >> ---
+> >>   drivers/pci/pcie/err.c | 6 +-----
+> >>   1 file changed, 1 insertion(+), 5 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> >> index c543f419d8f9..067c58728b88 100644
+> >> --- a/drivers/pci/pcie/err.c
+> >> +++ b/drivers/pci/pcie/err.c
+> >> @@ -181,11 +181,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev =
+*dev,
+> >>      }
+> >>
+> >>      if (status =3D=3D PCI_ERS_RESULT_NEED_RESET) {
+> >> -            /*
+> >> -             * TODO: Should call platform-specific
+> >> -             * functions to reset slot before calling
+> >> -             * drivers' slot_reset callbacks?
+> >> -             */
+> >> +            pci_reset_bus(dev);
+> >
+> > pci_reset_bus() returns an error, do you need to consult that before
+> > unconditionally setting PCI_ERS_RESULT_RECOVERED?
+> Good point. I will fix this in next version.
+> >
+> >>              status =3D PCI_ERS_RESULT_RECOVERED;
+> >>              pci_dbg(dev, "broadcast slot_reset message\n");
+> >>              pci_walk_bus(bus, report_slot_reset, &status);
+> >> --
+> >> 2.17.1
+> >>
+>
+> --
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
