@@ -2,231 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96B9028E512
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Oct 2020 19:08:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD9E928E631
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Oct 2020 20:21:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbgJNRIQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Oct 2020 13:08:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:54000 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728955AbgJNRIQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 14 Oct 2020 13:08:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B1AAD6E;
-        Wed, 14 Oct 2020 10:08:15 -0700 (PDT)
-Received: from [10.57.48.76] (unknown [10.57.48.76])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 114C33F71F;
-        Wed, 14 Oct 2020 10:08:12 -0700 (PDT)
-Subject: Re: [PATCH v7 2/2] PCI: dwc: Fix MSI page leakage in suspend/resume
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20201009155311.22d3caa5@xhacker.debian>
- <20201009155505.5a580ef5@xhacker.debian>
- <38a00dde-598f-b6de-ecf3-5d012bd7594a@arm.com>
- <CAMj1kXGZnFLaGAFuyMPC8c8TPKf25d1matV9UT2AD2LqO1Rbpw@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <05324fc9-26bf-26bc-bda2-c6ec01ef7e7f@arm.com>
-Date:   Wed, 14 Oct 2020 18:08:11 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+        id S1729318AbgJNSVs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Oct 2020 14:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbgJNSVs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Oct 2020 14:21:48 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC9E4C061755;
+        Wed, 14 Oct 2020 11:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4D+6T/0Jyivj7fxKw3DZP3bEv4Hi+6DaIRYNjOGogQc=; b=icPeuHkhwm/7g2D5K7SjNoPM5s
+        al/it2gTFcFnA3j1b1bbGIvp9LTWyagOXzUN5jvmI0GDPi6ml4eD0d52R2OwRtyKSvCS+k4demdSu
+        VT5KGDheTz5gEsE3WBJE9K02m+nLco4ZktkKbpuxeQdHPW3/i9FtrGhn6R3XCDKJQd/onhJsK73W4
+        LKhukfnTNYT9ZUzSX6bJ/yNVJYi9sFnQkAK2Ap4gEoxUpX3920FOVTde0jJ7FAsLgwsBb9awOT8wF
+        J2wNgf1SGp7lO6tY4adBbux1qDforNMyg6G3iWIsLIfBozBc0lW3wPEQ/gxl/dF/llRv6F8wwIxxm
+        oZgiXiXg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kSlOq-0004TS-Kg; Wed, 14 Oct 2020 18:21:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 402B0300DAE;
+        Wed, 14 Oct 2020 20:21:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 23F3520696FD8; Wed, 14 Oct 2020 20:21:15 +0200 (CEST)
+Date:   Wed, 14 Oct 2020 20:21:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        x86@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH v6 02/25] objtool: Add a pass for generating __mcount_loc
+Message-ID: <20201014182115.GF2594@hirez.programming.kicks-ass.net>
+References: <20201013003203.4168817-1-samitolvanen@google.com>
+ <20201013003203.4168817-3-samitolvanen@google.com>
+ <20201014165004.GA3593121@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMj1kXGZnFLaGAFuyMPC8c8TPKf25d1matV9UT2AD2LqO1Rbpw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201014165004.GA3593121@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-10-14 17:52, Ard Biesheuvel wrote:
-> On Mon, 12 Oct 2020 at 13:38, Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 2020-10-09 08:55, Jisheng Zhang wrote:
->>> Currently, dw_pcie_msi_init() allocates and maps page for msi, then
->>> program the PCIE_MSI_ADDR_LO and PCIE_MSI_ADDR_HI. The Root Complex
->>> may lose power during suspend-to-RAM, so when we resume, we want to
->>> redo the latter but not the former. If designware based driver (for
->>> example, pcie-tegra194.c) calls dw_pcie_msi_init() in resume path, the
->>> msi page will be leaked.
->>>
->>> As pointed out by Rob and Ard, there's no need to allocate a page for
->>> the MSI address, we could use an address in the driver data.
->>>
->>> To avoid map the MSI msg again during resume, we move the map MSI msg
->>> from dw_pcie_msi_init() to dw_pcie_host_init().
->>
->> You should move the unmap there as well. As soon as you know what the
->> relevant address would be if you *were* to do DMA to this location, then
->> the exercise is complete. Leaving it mapped for the lifetime of the
->> device in order to do not-DMA to it seems questionable (and represents
->> technically incorrect API usage without at least a sync_for_cpu call
->> before any other access to the data).
->>
->> Another point of note is that using streaming DMA mappings at all is a
->> bit fragile (regardless of this change). If the host controller itself
->> has a limited DMA mask relative to physical memory (which integrators
->> still seem to keep doing...) then you could end up punching your MSI
->> hole right in the middle of the SWIOTLB bounce buffer, where it's then
->> almost *guaranteed* to interfere with real DMA :(
->>
+On Wed, Oct 14, 2020 at 06:50:04PM +0200, Ingo Molnar wrote:
+> Meh, adding --mcount as an option to 'objtool check' was a valid hack for a 
+> prototype patchset, but please turn this into a proper subcommand, just 
+> like 'objtool orc' is.
 > 
-> Wouldn't it be the unmap you are suggesting that would create this
-> problem? If the bounce buffer is never released, the fake MSI doorbell
-> address can never conflict with any other DMA mappings.
+> 'objtool check' should ... keep checking. :-)
 
-True, it's just that hogging a SWIOTLB slot for effectively the entire 
-lifetime of the system is such an anathema that it didn't even cross my 
-mind...
-
-Ugh, so I guess the patch as it stands does actually work out more 
-robust than I gave it credit for, even if the reason is horrid... oh well :)
-
-Robin.
-
->> If no DWC users have that problem and the current code is working well
->> enough, then I see little reason not to make this partucular change to
->> tidy up the implementation, just bear in mind that there's always the
->> possibility of having to come back and change it yet again in future to
->> make it more robust. I had it in mind that this trick was done with a
->> coherent DMA allocation, which would be safe from addressing problems
->> but would need to be kept around for the lifetime of the device, but
->> maybe that was a different driver :/
->>
->> Robin.
->>
->>> Suggested-by: Rob Herring <robh@kernel.org>
->>> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> ---
->>>    drivers/pci/controller/dwc/pci-dra7xx.c       | 18 +++++++++-
->>>    .../pci/controller/dwc/pcie-designware-host.c | 33 ++++++++++---------
->>>    drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
->>>    3 files changed, 36 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
->>> index 8f0b6d644e4b..6d012d2b1e90 100644
->>> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
->>> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
->>> @@ -466,7 +466,9 @@ static struct irq_chip dra7xx_pci_msi_bottom_irq_chip = {
->>>    static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
->>>    {
->>>        struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>> +     struct device *dev = pci->dev;
->>>        u32 ctrl, num_ctrls;
->>> +     int ret;
->>>
->>>        pp->msi_irq_chip = &dra7xx_pci_msi_bottom_irq_chip;
->>>
->>> @@ -482,7 +484,21 @@ static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
->>>                                    ~0);
->>>        }
->>>
->>> -     return dw_pcie_allocate_domains(pp);
->>> +     ret = dw_pcie_allocate_domains(pp);
->>> +     if (ret)
->>> +             return ret;
->>> +
->>> +     pp->msi_data = dma_map_single_attrs(dev, &pp->msi_msg,
->>> +                                        sizeof(pp->msi_msg),
->>> +                                        DMA_FROM_DEVICE,
->>> +                                        DMA_ATTR_SKIP_CPU_SYNC);
->>> +     ret = dma_mapping_error(dev, pp->msi_data);
->>> +     if (ret) {
->>> +             dev_err(dev, "Failed to map MSI data\n");
->>> +             pp->msi_data = 0;
->>> +             dw_pcie_free_msi(pp);
->>> +     }
->>> +     return ret;
->>>    }
->>>
->>>    static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
->>> index d3e9ea11ce9e..d02c7e74738d 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>> @@ -266,30 +266,23 @@ void dw_pcie_free_msi(struct pcie_port *pp)
->>>        irq_domain_remove(pp->msi_domain);
->>>        irq_domain_remove(pp->irq_domain);
->>>
->>> -     if (pp->msi_page)
->>> -             __free_page(pp->msi_page);
->>> +     if (pp->msi_data) {
->>> +             struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>> +             struct device *dev = pci->dev;
->>> +
->>> +             dma_unmap_single_attrs(dev, pp->msi_data, sizeof(pp->msi_msg),
->>> +                                    DMA_FROM_DEVICE, DMA_ATTR_SKIP_CPU_SYNC);
->>> +     }
->>>    }
->>>
->>>    void dw_pcie_msi_init(struct pcie_port *pp)
->>>    {
->>>        struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>> -     struct device *dev = pci->dev;
->>> -     u64 msi_target;
->>> +     u64 msi_target = (u64)pp->msi_data;
->>>
->>>        if (!IS_ENABLED(CONFIG_PCI_MSI))
->>>                return;
->>>
->>> -     pp->msi_page = alloc_page(GFP_KERNEL);
->>> -     pp->msi_data = dma_map_page(dev, pp->msi_page, 0, PAGE_SIZE,
->>> -                                 DMA_FROM_DEVICE);
->>> -     if (dma_mapping_error(dev, pp->msi_data)) {
->>> -             dev_err(dev, "Failed to map MSI data\n");
->>> -             __free_page(pp->msi_page);
->>> -             pp->msi_page = NULL;
->>> -             return;
->>> -     }
->>> -     msi_target = (u64)pp->msi_data;
->>> -
->>>        /* Program the msi_data */
->>>        dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_LO, lower_32_bits(msi_target));
->>>        dw_pcie_writel_dbi(pci, PCIE_MSI_ADDR_HI, upper_32_bits(msi_target));
->>> @@ -394,6 +387,16 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>                                irq_set_chained_handler_and_data(pp->msi_irq,
->>>                                                            dw_chained_msi_isr,
->>>                                                            pp);
->>> +
->>> +                     pp->msi_data = dma_map_single_attrs(pci->dev, &pp->msi_msg,
->>> +                                                   sizeof(pp->msi_msg),
->>> +                                                   DMA_FROM_DEVICE,
->>> +                                                   DMA_ATTR_SKIP_CPU_SYNC);
->>> +                     if (dma_mapping_error(pci->dev, pp->msi_data)) {
->>> +                             dev_err(pci->dev, "Failed to map MSI data\n");
->>> +                             pp->msi_data = 0;
->>> +                             goto err_free_msi;
->>> +                     }
->>>                } else {
->>>                        ret = pp->ops->msi_host_init(pp);
->>>                        if (ret < 0)
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->>> index 97c7063b9e89..9d2f511f13fa 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>> @@ -190,8 +190,8 @@ struct pcie_port {
->>>        int                     msi_irq;
->>>        struct irq_domain       *irq_domain;
->>>        struct irq_domain       *msi_domain;
->>> +     u16                     msi_msg;
->>>        dma_addr_t              msi_data;
->>> -     struct page             *msi_page;
->>>        struct irq_chip         *msi_irq_chip;
->>>        u32                     num_vectors;
->>>        u32                     irq_mask[MAX_MSI_CTRLS];
->>>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+No, no subcommands. orc being a subcommand was a mistake.
