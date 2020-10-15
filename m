@@ -2,223 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FAFF28F440
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Oct 2020 16:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2E0D28F5E6
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Oct 2020 17:33:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729948AbgJOODN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Oct 2020 10:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729930AbgJOODN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 10:03:13 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FE4C061755;
-        Thu, 15 Oct 2020 07:03:13 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id t25so3743469ejd.13;
-        Thu, 15 Oct 2020 07:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bG4cxtJPKg/dYogx9AfPFutW3uBcYHkHh3Gef7cyoJw=;
-        b=vWDZgGWAg4ucxgg8GNz4pRV78XmTazCJJbZEWqjFvtpRooS/CLDEL+5OkLaghlh+N2
-         PQpObxY+3lTfPL9gmZyPa/Qtp5Dkvlit7IbWecFLJ49HJolr+pAbz4eXVQTwvNQAyPjV
-         yMrA7ibPNzPvj/3iXfOE6V+gHYCTfPhaAjpViWKj6izlhPsEK0NvhxdNmxsuRO9MQG4+
-         wtPjuJ76EJrfkRYQYqsVb+VaUd9YCXS+kjwo025Sjh5ECpyleY/6OLs5nYk7MPGoxEOB
-         DKncNh/m4RdO+tGtQWbiwQKl/Pj8+t3SOhKUdN4rqqH/dxlmAbm/5z4MKtfh44neUffT
-         T68Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bG4cxtJPKg/dYogx9AfPFutW3uBcYHkHh3Gef7cyoJw=;
-        b=Q+BozmW3/SAlI8XmGYXb4aZuIS/L0mIZg2ahBjb3IazFehr5VGmG+VBHEn/tPMr8NW
-         Tihz4xYHRS1BtyeOqjGuuNJ1NVTF0YkTKng+6bke+5EXr795dMGMImPvs+1bDD91Jyli
-         nt9jlKwM33bygAsZwQ4V6bkQptKOAyy4E/mGwTw/z+tSkz/aZsU9AQ16Lf2yh9nO6omY
-         7Eyd5goUPgt2+ooULGPqRZpNSXd72uz122w9B08IphzruX0Q6kCvfqXINkaDACRNmbEI
-         7WITVfM7j0z7k/u7mQi72eVE0dp5Avt2PlMiojPFhGmV1dOlJFB6IuSTty+VJkuCK7cC
-         yOMQ==
-X-Gm-Message-State: AOAM532oibHxpuULspfaBlsxSxPKTf6bm1H8D3BLEPq1zf/TEMsZIQMp
-        ydXj1FfoPNA1HNB98RP5BVAqWc+2SFuRoYTby1s=
-X-Google-Smtp-Source: ABdhPJy8W/zMvXoXel4TxtKKFrzyqF1WxDRG1ms6VjQOOVqPllwTb666hPg7+GFhiwBNl8SElq2lXV/KfDSUHw38POU=
-X-Received: by 2002:a17:906:2bc5:: with SMTP id n5mr4548468ejg.476.1602770591615;
- Thu, 15 Oct 2020 07:03:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <546d346644654915877365b19ea534378db0894d.1602663397.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <d97541df3b44822e0d085ffa058e9e7c0ba05214.1602663397.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAKF3qh3nnLaKUAbBdhdXwzknasTWmLFTjB7gz65vjzpHP4Y46Q@mail.gmail.com>
- <17e142b8-b19a-0ec7-833b-7a4ac2e76d0d@linux.intel.com> <CAKF3qh1fiqqRGvUB2Jxm8tM6Q06GntquGxzmcKe1vapONSPREA@mail.gmail.com>
- <b84ae5fd-d1db-9378-7e2e-937b660d2e9a@linux.intel.com> <CAKF3qh107RGykkHCXhCzfq+A6COQWri8svsUfukF9PySHW-qQA@mail.gmail.com>
- <eb94df0b-4cb9-eb49-576a-87ac43fcfdfb@linux.intel.com>
-In-Reply-To: <eb94df0b-4cb9-eb49-576a-87ac43fcfdfb@linux.intel.com>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Thu, 15 Oct 2020 22:03:00 +0800
-Message-ID: <CAKF3qh3skCfHLZ5-y93KXeG7GcmJsekVvEO5DpoB-+t-qEW_qQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] PCI/ERR: Split the fatal and non-fatal error
- recovery handling
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.nkuppuswamy@gmail.com>,
+        id S2388892AbgJOPdD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Oct 2020 11:33:03 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:31198 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388749AbgJOPdD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 11:33:03 -0400
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09FFWrnQ031557;
+        Thu, 15 Oct 2020 15:32:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=tsCv5a712czLA1nu4qAvu55PQpGk+2CkmwhjuDiy1lY=;
+ b=Ub6+qobNt/BbUjStNVakejVKlwCj2SwgZYdR+x1rcyaGuRV8TImVcDVEe/DDmx6zeNOG
+ iBwlX9sOz91eD63wXQsU6ZXm2M7u1U3KDg5g7j7faXN44ogPLO4Wffu+dzVI4c9PtPFn
+ iaa8haiBTgrNjkFIJtAw+gCafRdqmj47xH/TuFuIIGmsjBRFU3bF8ij96oasYEXbypBt
+ f+jr3ZdDUGKwlV3wEejZF5kGHINayHxN4tXDjXTrd3CT97oncj93uzREmBsgitM95jRk
+ bXr4LgQ5W165xGAMYEfLRCfBZIsFyOtIYhh+dWBp6jw4s6IkAbPJny1tm+SKsP/Zz7vW sw== 
+Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
+        by mx0b-002e3701.pphosted.com with ESMTP id 345gq7by1x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 15 Oct 2020 15:32:53 +0000
+Received: from sarge.linuxathome.me (unknown [16.29.146.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by g2t2353.austin.hpe.com (Postfix) with ESMTPS id AC5138C;
+        Thu, 15 Oct 2020 15:32:36 +0000 (UTC)
+Date:   Thu, 15 Oct 2020 16:32:33 +0100
+From:   Hedi Berriche <hedi.berriche@hpe.com>
+To:     Sinan Kaya <okaya@kernel.org>
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Russ Anderson <rja@hpe.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.com>, stable@kernel.org
+Subject: Re: [RESEND PATCH v3 1/1] PCI/ERR: don't clobber status after
+ reset_link()
+Message-ID: <20201015153233.GE8203@sarge.linuxathome.me>
+Mail-Followup-To: Sinan Kaya <okaya@kernel.org>,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Russ Anderson <rja@hpe.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <jroedel@suse.com>,
+        stable@kernel.org
+References: <20201010221653.2782993-1-hedi.berriche@hpe.com>
+ <20201010221653.2782993-2-hedi.berriche@hpe.com>
+ <5f5eeaf4-4638-6718-1ec9-002d6753e73f@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <5f5eeaf4-4638-6718-1ec9-002d6753e73f@kernel.org>
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-15_09:2020-10-14,2020-10-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 malwarescore=0 spamscore=0 suspectscore=1 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 clxscore=1011 adultscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010150105
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 15, 2020 at 1:53 PM Kuppuswamy, Sathyanarayanan
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+On Sun, Oct 11, 2020 at 18:56 Sinan Kaya wrote:
+>On 10/10/2020 6:16 PM, Hedi Berriche wrote:
+>> Commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>> broke pcie_do_recovery(): updating status after reset_link() has the ill
+>> side effect of causing recovery to fail if the error status is
+>> PCI_ERS_RESULT_CAN_RECOVER or PCI_ERS_RESULT_NEED_RESET as the following
+>> code will *never* run in the case of a successful reset_link()
+>>
+>>    177         if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>>    ...
+>>    181         }
+>>
+>>    183         if (status == PCI_ERS_RESULT_NEED_RESET) {
+>>    ...
+>>    192         }
+>>
+>> For instance in the case of PCI_ERS_RESULT_NEED_RESET we end up not
+>> calling ->slot_reset() (because we skip report_slot_reset()) thus
+>> breaking driver (re)initialisation.
+>>
+>> Don't clobber status with the return value of reset_link(); set status
+>> to PCI_ERS_RESULT_RECOVERED, in case of successful link reset, if and
+>> only if the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>> or PCI_ERS_RESULT_NO_AER_DRIVER.
+>>
+>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>> Signed-off-by: Hedi Berriche <hedi.berriche@hpe.com>
+>> Cc: Russ Anderson <rja@hpe.com>
+>> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Ashok Raj <ashok.raj@intel.com>
+>> Cc: Joerg Roedel <jroedel@suse.com>
+>>
+>> Cc: stable@kernel.org # v5.7+
+>> ---
+>>  drivers/pci/pcie/err.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index c543f419d8f9..2730826cfd8a 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -165,10 +165,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>  	pci_dbg(dev, "broadcast error_detected message\n");
+>>  	if (state == pci_channel_io_frozen) {
+>>  		pci_walk_bus(bus, report_frozen_detected, &status);
+>> -		status = reset_link(dev);
+>> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+>> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+>>  			pci_warn(dev, "link reset failed\n");
+>>  			goto failed;
+>> +		} else {
+>> +			if (status == PCI_ERS_RESULT_DISCONNECT ||
+>> +			    status == PCI_ERS_RESULT_NO_AER_DRIVER)
+>> +				status = PCI_ERS_RESULT_RECOVERED;
+>>  		}
+>>  	} else {
+>>  		pci_walk_bus(bus, report_normal_detected, &status);
+>>
 >
->
->
-> On 10/14/20 10:05 PM, Ethan Zhao wrote:
-> > On Thu, Oct 15, 2020 at 11:04 AM Kuppuswamy, Sathyanarayanan
-> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> >>
-> >>
-> >>
-> >> On 10/14/20 6:58 PM, Ethan Zhao wrote:
-> >>> On Thu, Oct 15, 2020 at 1:06 AM Kuppuswamy, Sathyanarayanan
-> >>> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 10/14/20 8:07 AM, Ethan Zhao wrote:
-> >>>>> On Wed, Oct 14, 2020 at 5:00 PM Kuppuswamy Sathyanarayanan
-> >>>>> <sathyanarayanan.nkuppuswamy@gmail.com> wrote:
-> >>>>>>
-> >>>>>> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-> >>>>>> merged fatal and non-fatal error recovery paths, and also made
-> >>>>>> recovery code depend on hotplug handler for "remove affected
-> >>>>>> device + rescan" support. But this change also complicated the
-> >>>>>> error recovery path and which in turn led to the following
-> >>>>>> issues.
-> >>>>>>
-> >>>>>> 1. We depend on hotplug handler for removing the affected
-> >>>>>> devices/drivers on DLLSC LINK down event (on DPC event
-> >>>>>> trigger) and DPC handler for handling the error recovery. Since
-> >>>>>> both handlers operate on same set of affected devices, it leads
-> >>>>>> to race condition, which in turn leads to  NULL pointer
-> >>>>>> exceptions or error recovery failures.You can find more details
-> >>>>>> about this issue in following link.
-> >>>>>>
-> >>>>>> https://lore.kernel.org/linux-pci/20201007113158.48933-1-haifeng.zhao@intel.com/T/#t
-> >>>>>>
-> >>>>>> 2. For non-hotplug capable devices fatal (DPC) error recovery
-> >>>>>> is currently broken. Current fatal error recovery implementation
-> >>>>>> relies on PCIe hotplug (pciehp) handler for detaching and
-> >>>>>> re-enumerating the affected devices/drivers. So when dealing with
-> >>>>>> non-hotplug capable devices, recovery code does not restore the state
-> >>>>>> of the affected devices correctly. You can find more details about
-> >>>>>> this issue in the following links.
-> >>>>>>
-> >>>>>> https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
-> >>>>>> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
-> >>>>>> https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
-> >>>>>>
-> >>>>>> In order to fix the above two issues, we should stop relying on hotplug
-> >>>>>      Yes, it doesn't rely on hotplug handler to remove and rescan the device,
-> >>>>> but it couldn't prevent hotplug drivers from doing another replicated
-> >>>>> removal/rescanning.
-> >>>>> it doesn't make sense to leave another useless removal/rescanning there.
-> >>>>> Maybe that's why these two paths were merged to one and made it rely on
-> >>>>> hotplug.
-> >>>> No, as per PCIe spec, hotplug and DPC has no functional dependency. Hence
-> >>>> depending on it to handle some of its recovery function is in-correct and
-> >>>> would lead to issues in non-hotplug capable platforms (which is true
-> >>>> currently).
-> >>>>>
-> >>
->
-> >
-> >>>    Though pciehp is not so hot/scalable and performance critical, but there
-> >>>    is per cpu thread to handle hot-plug operation. synchronize all threads
-> >>>    make them walk backwards for scalability.
-> >> DPC events does not happen in high frequency. So I don't think we should
-> >   It's holding global lock, once malfunction happens to one device and
-> > it's driver,
-> > the whole system, everyone holds it, would be blocked to work.
-> >> worry about the performance here. Even hotplug handler will hold this lock
-> >> when adding/removing the devices. So adding/removing devices is a serialized
-> > You don't worry about performance, but if there is a requirement needs
-> > more scalable
-> > and reliable hotplug, the effect will be much harder. what to do then ? choose
-> > another OS ?
-> As I have mentioned, all device creation/removal in PCI core code is already
-> protected by this lock (including hotplug code).  So the multidomain performance
-> impact you mentioned should exist even now. All I am doing is, using the
-> same lock for protecting device removal/rescan in error recovery code.
->
-> drivers/pci/xen-pcifront.c:477: pci_lock_rescan_remove();
-> drivers/pci/xen-pcifront.c:567: pci_lock_rescan_remove();
-> drivers/pci/xen-pcifront.c:1064:                pci_lock_rescan_remove();
-> drivers/pci/hotplug/rpaphp_core.c:498:          pci_lock_rescan_remove();
-> drivers/pci/hotplug/rpaphp_core.c:520:  pci_lock_rescan_remove();
-> drivers/pci/hotplug/s390_pci_hpc.c:70:  pci_lock_rescan_remove();
-> drivers/pci/hotplug/shpchp_pci.c:31:    pci_lock_rescan_remove();
-> drivers/pci/hotplug/shpchp_pci.c:73:    pci_lock_rescan_remove();
-> drivers/pci/hotplug/pciehp_pci.c:39:    pci_lock_rescan_remove();
-> drivers/pci/hotplug/pciehp_pci.c:96:    pci_lock_rescan_remove();
-> drivers/pci/hotplug/acpiphp_glue.c:762:         pci_lock_rescan_remove();
-> drivers/pci/hotplug/acpiphp_glue.c:787: pci_lock_rescan_remove();
-> drivers/pci/hotplug/acpiphp_glue.c:975: pci_lock_rescan_remove();
-> drivers/pci/hotplug/acpiphp_glue.c:1026:        pci_lock_rescan_remove();
-> drivers/pci/hotplug/cpqphp_pci.c:75:    pci_lock_rescan_remove();
-> drivers/pci/hotplug/cpqphp_pci.c:120:   pci_lock_rescan_remove();
-> drivers/pci/hotplug/rpadlpar_core.c:361:        pci_lock_rescan_remove();
-> drivers/pci/hotplug/pnv_php.c:513:                      pci_lock_rescan_remove();
-> drivers/pci/hotplug/pnv_php.c:582:      pci_lock_rescan_remove();
-> drivers/pci/hotplug/ibmphp_core.c:668:  pci_lock_rescan_remove();
-> drivers/pci/hotplug/ibmphp_core.c:738:  pci_lock_rescan_remove();
-> drivers/pci/hotplug/cpci_hotplug_pci.c:245:     pci_lock_rescan_remove();
-> drivers/pci/hotplug/cpci_hotplug_pci.c:298:     pci_lock_rescan_remove();
-> drivers/pci/controller/pci-hyperv.c:1866:       pci_lock_rescan_remove();
-> drivers/pci/controller/pci-hyperv.c:2135:               pci_lock_rescan_remove();
-> drivers/pci/controller/pci-hyperv.c:2313:               pci_lock_rescan_remove();
-> drivers/pci/controller/pci-hyperv.c:3300:               pci_lock_rescan_remove();
-> drivers/pci/controller/pci-host-common.c:91:    pci_lock_rescan_remove();
-> drivers/pci/remove.c:123:       pci_lock_rescan_remove();
-> drivers/pci/pci-sysfs.c:410:            pci_lock_rescan_remove();
-> drivers/pci/pci-sysfs.c:444:            pci_lock_rescan_remove();
-> drivers/pci/pci-sysfs.c:479:            pci_lock_rescan_remove();
-> drivers/pci/probe.c:3231:void pci_lock_rescan_remove(void)
-> drivers/pci/probe.c:3235:EXPORT_SYMBOL_GPL(pci_lock_rescan_remove);
-The existing fact isn't a good justification to use it and make things worse,
-vice versa ---use it in more places and "fix" something.
-The same logic as PCIe spec doesn't mention DPC should rely on hotplug,
-but it doesn't mean that's correct or incorrect.
+>Reviewed-by: Sinan Kaya <okaya@kernel.org>
 
-Thanks,
- Ethan
->
-> > To be honest, I don't like the global lock/ pci_lock_rescan_remove().
-> >
-> > BTW, I didn't try the FATAL errors brute force injection on your
-> > patch, duplicated
-> > removal will work naturally because it was removed ?
-> >
-> > Thanks,
-> > Ethan
-> >> operation.
-> >>>
-> >>
-> >>>>
-> >>>>>> --
-> >>>>>> 2.17.1
-> >>>>>>
-> >>>>
-> >>>> --
-> >>>> Sathyanarayanan Kuppuswamy
-> >>>> Linux Kernel Developer
-> >>
-> >> --
-> >> Sathyanarayanan Kuppuswamy
-> >> Linux Kernel Developer
->
-> --
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
+Thanks for the Reviewed-by, Sinan.
+
+Folks,
+
+Any further comments or is this ripe for acceptance?
+
+Cheers,
+Hedi.
+-- 
+Be careful of reading health books, you might die of a misprint.
+	-- Mark Twain
