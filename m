@@ -2,160 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D6F528EF08
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Oct 2020 11:03:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86A8C28F018
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Oct 2020 12:22:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388678AbgJOJDJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Oct 2020 05:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
+        id S2389288AbgJOKWo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Oct 2020 06:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388658AbgJOJDF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 05:03:05 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82881C0613D2
-        for <linux-pci@vger.kernel.org>; Thu, 15 Oct 2020 02:03:04 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id v19so2269748edx.9
-        for <linux-pci@vger.kernel.org>; Thu, 15 Oct 2020 02:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=x6z5xqfcq1Sp2BijtV/eJd8Vk7MAj53+3Nspgxz8YIY=;
-        b=W9AXKgXQuRJ69P6P9RwOQBQdA3thwvZ4DuYZl/AnWv+6fsXJnE++gI/+k3F0gqygRL
-         S7PWXqmqWlU1D/fpWW2bpxpyWdR2ZL5U/cky16o2xyurM+/xUg9Yn5zCh6zAsxU+4CEf
-         UMnSk388/fBsDtGE3YVa/32CCpoIsGRCahY9xl1C3oPWaUuqzHbuPZZ/ffchzaTq1jis
-         vtK9m6cz4WAdfPu9UvO2fzCoVhvAI5cr6I5jIITbOelcaEi1ScRBINYLW6fC5TPnLBRu
-         7O+MbHrfK6Ls0F08T9uEIN+iPTfy/t4tIqubV5DfUVU+jxVWNTo5HEuuHeJ5YI7D7Yll
-         +E0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=x6z5xqfcq1Sp2BijtV/eJd8Vk7MAj53+3Nspgxz8YIY=;
-        b=r9e+7ywN14y1a2E4+sX0naYQ7JKP0hHnuRsgcOl53G9BFg8kR/RKy4rmWYAWHoM/VP
-         Sp4DYLm58l5KJHyyCWYrx6RkIaz4BRfcxLi6/WodenPEOdFfFq976KD+rGgxm6vkAv2l
-         C6U2HntR+aVXWAE0YL7TCeMASH97BpWYk4y7WUn7lb8Y2A2SfB6COeODDgXj/LxzdZog
-         MBArgL1YZ8dHpLrUvuGU/e1T/0CzbVSuBbJEK2FU9ORZJqaIpnU64GtAHGx9TkPXFE8P
-         l5x6GWqYUR8DHBTf6Py2HG+80rhA5sKyJgvF1KGoTO5SQWD3HLDnDzeBHN5Ez+HSzNlS
-         7OHQ==
-X-Gm-Message-State: AOAM530cJxVaHAqU9cIuLmVEBhwMr8By9QKGFzmifETazXNKV1hyghPM
-        P6/8mAXlZ7IwPm8A5N/msyS6Bw==
-X-Google-Smtp-Source: ABdhPJyK8hd+j8uB3o5Q/Dz8Ch3k2aQc6UNBsyR0dpdZSVT9IFPmtHBVJTekYNLCX44gCo6pYyot4Q==
-X-Received: by 2002:a50:abc3:: with SMTP id u61mr3257384edc.253.1602752583017;
-        Thu, 15 Oct 2020 02:03:03 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id d12sm1103078ejt.105.2020.10.15.02.03.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2020 02:03:02 -0700 (PDT)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
-        zhangfei.gao@linaro.org, wangzhou1@hisilicon.com
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-accelerators@lists.ozlabs.org, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
-        linux-pci@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [RFC PATCH 2/2] iommu: Add IOMMU_UNBIND_FAULT_PENDING flag
-Date:   Thu, 15 Oct 2020 11:00:29 +0200
-Message-Id: <20201015090028.1278108-3-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201015090028.1278108-1-jean-philippe@linaro.org>
-References: <20201015090028.1278108-1-jean-philippe@linaro.org>
+        with ESMTP id S2389271AbgJOKWo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 06:22:44 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA8BC061755;
+        Thu, 15 Oct 2020 03:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rmt+w86dS/ArDl7p6coE3p1FQiRlDnETDOF85EAeo80=; b=H7urFq9tcKjVEHrGlgs6qqhDf4
+        oQMvOJQ0ykGC0OUWm6j6P40c2ClfoS4N1iUdDzI7NszgLIB2YI4qMJ892z90AJsTn11EvwW+MtOVh
+        ddVXM7uYTIl+ahd+gEQFvcaxfyuaPnkbEsTt/vmXLtStZfCQlSfc+oQ9GKbTIbh1QtEndZUFKS8iQ
+        RG2CeCNJ8oLWOZ1j2VOtlC36cNeboOcj3IpHWd0dVqImsYZOp+GtYIoL4M+5SqxrBrt55upHkAlVA
+        rdh+0h6U56l/Lqn5r2zQ2t0WOc1/OVeHC7M8/6/Im8NyIi7W3dDDZL1d8iqegaLUsqXcJBsUpBLPv
+        pDxD+k8g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kT0Oo-0006aX-4e; Thu, 15 Oct 2020 10:22:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 835C0300DAE;
+        Thu, 15 Oct 2020 12:22:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6F7A9235F4457; Thu, 15 Oct 2020 12:22:16 +0200 (CEST)
+Date:   Thu, 15 Oct 2020 12:22:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201015102216.GB2611@hirez.programming.kicks-ass.net>
+References: <20201013003203.4168817-1-samitolvanen@google.com>
+ <20201013003203.4168817-23-samitolvanen@google.com>
+ <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-IOMMU drivers only need to flush their PRI queue when faults might be
-pending. According to the PCIe spec (quoted below) this only happens
-when using the "Stop Marker" method. Otherwise the function waits for
-pending faults before signaling to the device driver that it can
-unbind().
+On Thu, Oct 15, 2020 at 01:23:41AM +0200, Jann Horn wrote:
 
-Add the IOMMU_UNBIND_FAULT_PENDING flags to unbind(), to tell the IOMMU
-driver whether it's worth flushing the queue.
+> It would probably be good to keep LTO and non-LTO builds in sync about
+> which files are subjected to objtool checks. So either you should be
+> removing the OBJECT_FILES_NON_STANDARD annotations for anything that
+> is linked into the main kernel (which would be a nice cleanup, if that
+> is possible), 
 
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
- include/linux/iommu.h     | 31 +++++++++++++++++++++++++++++++
- drivers/iommu/intel/svm.c |  3 ++-
- drivers/iommu/iommu.c     |  5 ++++-
- 3 files changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 26c1358a2a37..fd9630b1240d 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -163,6 +163,37 @@ enum iommu_dev_features {
- 
- #define IOMMU_PASID_INVALID	(-1U)
- 
-+/*
-+ * Indicate that a device stops using a PASID by issuing a Stop Marker Message.
-+ * From PCIe 4.0r1.0, 10.4.1.2 Managing PASID TLP Prefix Usage:
-+ *
-+ * "To stop without using a Stop Marker Message, the Function shall:
-+ *  1. Stop queueing new Page Request Messages for this PASID.
-+ *  2. Finish transmitting any multi-page Page Request Messages for this PASID
-+ *     (i.e. send the Page Request Message with the L bit Set).
-+ *  3. Wait for PRG Response Messages associated any outstanding Page Request
-+ *     Messages for the PASID.
-+ *  4. Indicate that the PASID has stopped using a device specific mechanism.
-+ *     This mechanism must indicate that a Stop Marker Message will not be
-+ *     generated.
-+ *  To stop with the use of a Stop Marker Message the Function shall:
-+ * [1. and 2. are the same]
-+ *  3. Internally mark all outstanding Page Request Messages for this PASID as
-+ *     stale. PRG Response Messages associated with these requests will return
-+ *     Page Request Allocation credits and PRG Index values but are otherwise
-+ *     ignored.
-+ *  4. Indicate that the PASID has stopped using a device specific mechanism.
-+ *     This mechanism must indicate that a Stop Marker Message will be
-+ *     generated.
-+ *  5. Send a Stop Marker Message to indicate to the host that all subsequent
-+ *     Page Request Messages for this PASID are for a new use of the PASID
-+ *     value."
-+ *
-+ * If the device indicates that the Stop Marker Message will be generated, the
-+ * device driver should set the IOMMU_UNBIND_FAULT_PENDING flag.
-+ */
-+#define IOMMU_UNBIND_FAULT_PENDING	(1UL << 0)
-+
- #ifdef CONFIG_IOMMU_API
- 
- /**
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 700b05612af9..aa1fcb66fa95 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -680,7 +680,8 @@ static int intel_svm_unbind_mm(struct device *dev, u32 pasid,
- 			 * hard to be as defensive as we might like. */
- 			intel_pasid_tear_down_entry(iommu, dev,
- 						    svm->pasid, false);
--			intel_svm_drain_prq(dev, svm->pasid);
-+			if (flags & IOMMU_UNBIND_FAULT_PENDING)
-+				intel_svm_drain_prq(dev, svm->pasid);
- 			kfree_rcu(sdev, rcu);
- 
- 			if (list_empty(&svm->devs)) {
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 741c463095a8..eede0592a2c0 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2995,7 +2995,10 @@ EXPORT_SYMBOL_GPL(iommu_sva_bind_device);
-  *
-  * Put reference to a bond between device and address space. The device should
-  * not be issuing any more transaction for this PASID. All outstanding page
-- * requests for this PASID must have been flushed to the IOMMU.
-+ * requests for this PASID must have been completed, or flushed to the IOMMU. If
-+ * they have not been completed, for example when using a Stop Marker Message to
-+ * stop PASID in a PCIe device, then the caller must set the flag
-+ * %IOMMU_UNBIND_FAULT_PENDING.
-  *
-  * Returns 0 on success, or an error value
-  */
--- 
-2.28.0
-
+This, I've had to do that for a number of files already for the limited
+vmlinux.o passes we needed for noinstr validation.
