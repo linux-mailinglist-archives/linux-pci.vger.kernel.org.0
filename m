@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B704528EF06
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Oct 2020 11:03:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D6F528EF08
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Oct 2020 11:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388471AbgJOJDD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Oct 2020 05:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34780 "EHLO
+        id S2388678AbgJOJDJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Oct 2020 05:03:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388636AbgJOJDB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 05:03:01 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7698C0613D2
-        for <linux-pci@vger.kernel.org>; Thu, 15 Oct 2020 02:03:00 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id t25so2446018ejd.13
-        for <linux-pci@vger.kernel.org>; Thu, 15 Oct 2020 02:03:00 -0700 (PDT)
+        with ESMTP id S2388658AbgJOJDF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 05:03:05 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82881C0613D2
+        for <linux-pci@vger.kernel.org>; Thu, 15 Oct 2020 02:03:04 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id v19so2269748edx.9
+        for <linux-pci@vger.kernel.org>; Thu, 15 Oct 2020 02:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=c3Jqalpf0P5zErHtqk4l6C16sl+wqSCxxuGIVGQs7DQ=;
-        b=mr1fJQxpFk6abhFRMQtgpsgRIQwMBR0j7QGlRlhj7KuzeWmJXU0YbdwETZLcnmq+9J
-         lX5tzFr26YXz+yCzdPD6gtShQO0epQctYygRlnqtbdAgPRH8xfeAzwyQlCoe1hpYpRhc
-         xwphAD4uJCzd4cGQ9hB74QqliOtQ4Dy33Ekxq5HL+w8+cXhQna7Krm+UnUXseQr3T5nZ
-         Q9GQCPSXjkNDB4KiLJteBzG5Q7d7aONk/oIVn5iY78oX+F0saxAuvq+7/MqKH8US4DNJ
-         MLB4yYSQepenvMw4TLWdd6eJh2iPKDdmg3iM9wSgX0XPJTl02z0qzfIgeJiRo1E0htjz
-         jmhg==
+        bh=x6z5xqfcq1Sp2BijtV/eJd8Vk7MAj53+3Nspgxz8YIY=;
+        b=W9AXKgXQuRJ69P6P9RwOQBQdA3thwvZ4DuYZl/AnWv+6fsXJnE++gI/+k3F0gqygRL
+         S7PWXqmqWlU1D/fpWW2bpxpyWdR2ZL5U/cky16o2xyurM+/xUg9Yn5zCh6zAsxU+4CEf
+         UMnSk388/fBsDtGE3YVa/32CCpoIsGRCahY9xl1C3oPWaUuqzHbuPZZ/ffchzaTq1jis
+         vtK9m6cz4WAdfPu9UvO2fzCoVhvAI5cr6I5jIITbOelcaEi1ScRBINYLW6fC5TPnLBRu
+         7O+MbHrfK6Ls0F08T9uEIN+iPTfy/t4tIqubV5DfUVU+jxVWNTo5HEuuHeJ5YI7D7Yll
+         +E0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=c3Jqalpf0P5zErHtqk4l6C16sl+wqSCxxuGIVGQs7DQ=;
-        b=ZlUimIF28eKe+iEEgCH0YWE8V6VzxOLtSBEffVeGY2f1VNZ6EiTUV/pqtwDhK6uahR
-         vyj/Zxl49CoHAQLDNp0OiVx2HszKBewSSmB99oEsQBjaqBLC79esrjh3KPl8sGRMHeMW
-         o1ZAs3hNfz+e7UUDpNaYIXqnvsHPQ54wciJBMF9VXXiuueTKTZxWsaPQzYPhs+FSS+20
-         9USUt+23wnvWaUnb2+0bDGW4CpEG6Vf/rabgdrsviMyC5wrAFfa6XrQV+GVG2cN0VS1R
-         KNpvx4bocbOMgKDHBas4egMzNp97TDDeab80U1uG5idJ1a1Fy2r7jaU26y7cUxyWOSIS
-         74bw==
-X-Gm-Message-State: AOAM532610uY2PfD6WuZ87Avq4QSw7W4MeOxgB88JSiFYN6boa5zBY+5
-        lOrd3Q9sHHPx/Oq2aGZEamf2CQ==
-X-Google-Smtp-Source: ABdhPJxvp3P0VbmCOj0Sd9J3gE3rGotPaup8wTuhiDlW0LHaF7KYjyTBGnMO/Laaf51govZhXOzDLw==
-X-Received: by 2002:a17:906:340b:: with SMTP id c11mr3325221ejb.213.1602752579395;
-        Thu, 15 Oct 2020 02:02:59 -0700 (PDT)
+        bh=x6z5xqfcq1Sp2BijtV/eJd8Vk7MAj53+3Nspgxz8YIY=;
+        b=r9e+7ywN14y1a2E4+sX0naYQ7JKP0hHnuRsgcOl53G9BFg8kR/RKy4rmWYAWHoM/VP
+         Sp4DYLm58l5KJHyyCWYrx6RkIaz4BRfcxLi6/WodenPEOdFfFq976KD+rGgxm6vkAv2l
+         C6U2HntR+aVXWAE0YL7TCeMASH97BpWYk4y7WUn7lb8Y2A2SfB6COeODDgXj/LxzdZog
+         MBArgL1YZ8dHpLrUvuGU/e1T/0CzbVSuBbJEK2FU9ORZJqaIpnU64GtAHGx9TkPXFE8P
+         l5x6GWqYUR8DHBTf6Py2HG+80rhA5sKyJgvF1KGoTO5SQWD3HLDnDzeBHN5Ez+HSzNlS
+         7OHQ==
+X-Gm-Message-State: AOAM530cJxVaHAqU9cIuLmVEBhwMr8By9QKGFzmifETazXNKV1hyghPM
+        P6/8mAXlZ7IwPm8A5N/msyS6Bw==
+X-Google-Smtp-Source: ABdhPJyK8hd+j8uB3o5Q/Dz8Ch3k2aQc6UNBsyR0dpdZSVT9IFPmtHBVJTekYNLCX44gCo6pYyot4Q==
+X-Received: by 2002:a50:abc3:: with SMTP id u61mr3257384edc.253.1602752583017;
+        Thu, 15 Oct 2020 02:03:03 -0700 (PDT)
 Received: from localhost.localdomain ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id d12sm1103078ejt.105.2020.10.15.02.02.58
+        by smtp.gmail.com with ESMTPSA id d12sm1103078ejt.105.2020.10.15.02.03.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2020 02:02:58 -0700 (PDT)
+        Thu, 15 Oct 2020 02:03:02 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
         zhangfei.gao@linaro.org, wangzhou1@hisilicon.com
@@ -56,9 +56,9 @@ Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
         jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
         linux-pci@vger.kernel.org,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [RFC PATCH 1/2] iommu: Add flags to sva_unbind()
-Date:   Thu, 15 Oct 2020 11:00:28 +0200
-Message-Id: <20201015090028.1278108-2-jean-philippe@linaro.org>
+Subject: [RFC PATCH 2/2] iommu: Add IOMMU_UNBIND_FAULT_PENDING flag
+Date:   Thu, 15 Oct 2020 11:00:29 +0200
+Message-Id: <20201015090028.1278108-3-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201015090028.1278108-1-jean-philippe@linaro.org>
 References: <20201015090028.1278108-1-jean-philippe@linaro.org>
@@ -68,146 +68,94 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Provide a way for device drivers to tell IOMMU drivers about the device
-state and the cleanup work to be done, when unbinding. No functional
-change.
+IOMMU drivers only need to flush their PRI queue when faults might be
+pending. According to the PCIe spec (quoted below) this only happens
+when using the "Stop Marker" method. Otherwise the function waits for
+pending faults before signaling to the device driver that it can
+unbind().
+
+Add the IOMMU_UNBIND_FAULT_PENDING flags to unbind(), to tell the IOMMU
+driver whether it's worth flushing the queue.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- include/linux/intel-iommu.h | 2 +-
- include/linux/iommu.h       | 7 ++++---
- drivers/iommu/intel/svm.c   | 7 ++++---
- drivers/iommu/iommu.c       | 5 +++--
- drivers/misc/uacce/uacce.c  | 4 ++--
- 5 files changed, 14 insertions(+), 11 deletions(-)
+ include/linux/iommu.h     | 31 +++++++++++++++++++++++++++++++
+ drivers/iommu/intel/svm.c |  3 ++-
+ drivers/iommu/iommu.c     |  5 ++++-
+ 3 files changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index fbf5b3e7707e..5b66b23d591d 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -747,7 +747,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
- int intel_svm_unbind_gpasid(struct device *dev, u32 pasid);
- struct iommu_sva *intel_svm_bind(struct device *dev, struct mm_struct *mm,
- 				 void *drvdata);
--void intel_svm_unbind(struct iommu_sva *handle);
-+void intel_svm_unbind(struct iommu_sva *handle, unsigned long flags);
- u32 intel_svm_get_pasid(struct iommu_sva *handle);
- int intel_svm_page_response(struct device *dev, struct iommu_fault_event *evt,
- 			    struct iommu_page_response *msg);
 diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index b95a6f8db6ff..26c1358a2a37 100644
+index 26c1358a2a37..fd9630b1240d 100644
 --- a/include/linux/iommu.h
 +++ b/include/linux/iommu.h
-@@ -285,7 +285,7 @@ struct iommu_ops {
+@@ -163,6 +163,37 @@ enum iommu_dev_features {
  
- 	struct iommu_sva *(*sva_bind)(struct device *dev, struct mm_struct *mm,
- 				      void *drvdata);
--	void (*sva_unbind)(struct iommu_sva *handle);
-+	void (*sva_unbind)(struct iommu_sva *handle, unsigned long flags);
- 	u32 (*sva_get_pasid)(struct iommu_sva *handle);
+ #define IOMMU_PASID_INVALID	(-1U)
  
- 	int (*page_response)(struct device *dev,
-@@ -636,7 +636,7 @@ int iommu_aux_get_pasid(struct iommu_domain *domain, struct device *dev);
- struct iommu_sva *iommu_sva_bind_device(struct device *dev,
- 					struct mm_struct *mm,
- 					void *drvdata);
--void iommu_sva_unbind_device(struct iommu_sva *handle);
-+void iommu_sva_unbind_device(struct iommu_sva *handle, unsigned long flags);
- u32 iommu_sva_get_pasid(struct iommu_sva *handle);
++/*
++ * Indicate that a device stops using a PASID by issuing a Stop Marker Message.
++ * From PCIe 4.0r1.0, 10.4.1.2 Managing PASID TLP Prefix Usage:
++ *
++ * "To stop without using a Stop Marker Message, the Function shall:
++ *  1. Stop queueing new Page Request Messages for this PASID.
++ *  2. Finish transmitting any multi-page Page Request Messages for this PASID
++ *     (i.e. send the Page Request Message with the L bit Set).
++ *  3. Wait for PRG Response Messages associated any outstanding Page Request
++ *     Messages for the PASID.
++ *  4. Indicate that the PASID has stopped using a device specific mechanism.
++ *     This mechanism must indicate that a Stop Marker Message will not be
++ *     generated.
++ *  To stop with the use of a Stop Marker Message the Function shall:
++ * [1. and 2. are the same]
++ *  3. Internally mark all outstanding Page Request Messages for this PASID as
++ *     stale. PRG Response Messages associated with these requests will return
++ *     Page Request Allocation credits and PRG Index values but are otherwise
++ *     ignored.
++ *  4. Indicate that the PASID has stopped using a device specific mechanism.
++ *     This mechanism must indicate that a Stop Marker Message will be
++ *     generated.
++ *  5. Send a Stop Marker Message to indicate to the host that all subsequent
++ *     Page Request Messages for this PASID are for a new use of the PASID
++ *     value."
++ *
++ * If the device indicates that the Stop Marker Message will be generated, the
++ * device driver should set the IOMMU_UNBIND_FAULT_PENDING flag.
++ */
++#define IOMMU_UNBIND_FAULT_PENDING	(1UL << 0)
++
+ #ifdef CONFIG_IOMMU_API
  
- #else /* CONFIG_IOMMU_API */
-@@ -1026,7 +1026,8 @@ iommu_sva_bind_device(struct device *dev, struct mm_struct *mm, void *drvdata)
- 	return NULL;
- }
- 
--static inline void iommu_sva_unbind_device(struct iommu_sva *handle)
-+static inline void iommu_sva_unbind_device(struct iommu_sva *handle,
-+					   unsigned long flags)
- {
- }
- 
+ /**
 diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index f1861fa3d0e4..700b05612af9 100644
+index 700b05612af9..aa1fcb66fa95 100644
 --- a/drivers/iommu/intel/svm.c
 +++ b/drivers/iommu/intel/svm.c
-@@ -651,7 +651,8 @@ intel_svm_bind_mm(struct device *dev, unsigned int flags,
- }
+@@ -680,7 +680,8 @@ static int intel_svm_unbind_mm(struct device *dev, u32 pasid,
+ 			 * hard to be as defensive as we might like. */
+ 			intel_pasid_tear_down_entry(iommu, dev,
+ 						    svm->pasid, false);
+-			intel_svm_drain_prq(dev, svm->pasid);
++			if (flags & IOMMU_UNBIND_FAULT_PENDING)
++				intel_svm_drain_prq(dev, svm->pasid);
+ 			kfree_rcu(sdev, rcu);
  
- /* Caller must hold pasid_mutex */
--static int intel_svm_unbind_mm(struct device *dev, u32 pasid)
-+static int intel_svm_unbind_mm(struct device *dev, u32 pasid,
-+			       unsigned long flags)
- {
- 	struct intel_svm_dev *sdev;
- 	struct intel_iommu *iommu;
-@@ -1091,13 +1092,13 @@ intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
- 	return sva;
- }
- 
--void intel_svm_unbind(struct iommu_sva *sva)
-+void intel_svm_unbind(struct iommu_sva *sva, unsigned long flags)
- {
- 	struct intel_svm_dev *sdev;
- 
- 	mutex_lock(&pasid_mutex);
- 	sdev = to_intel_svm_dev(sva);
--	intel_svm_unbind_mm(sdev->dev, sdev->pasid);
-+	intel_svm_unbind_mm(sdev->dev, sdev->pasid, flags);
- 	mutex_unlock(&pasid_mutex);
- }
- 
+ 			if (list_empty(&svm->devs)) {
 diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 8c470f451a32..741c463095a8 100644
+index 741c463095a8..eede0592a2c0 100644
 --- a/drivers/iommu/iommu.c
 +++ b/drivers/iommu/iommu.c
-@@ -2991,6 +2991,7 @@ EXPORT_SYMBOL_GPL(iommu_sva_bind_device);
- /**
-  * iommu_sva_unbind_device() - Remove a bond created with iommu_sva_bind_device
-  * @handle: the handle returned by iommu_sva_bind_device()
-+ * @flags: IOMMU_UNBIND_* flags
+@@ -2995,7 +2995,10 @@ EXPORT_SYMBOL_GPL(iommu_sva_bind_device);
   *
   * Put reference to a bond between device and address space. The device should
   * not be issuing any more transaction for this PASID. All outstanding page
-@@ -2998,7 +2999,7 @@ EXPORT_SYMBOL_GPL(iommu_sva_bind_device);
+- * requests for this PASID must have been flushed to the IOMMU.
++ * requests for this PASID must have been completed, or flushed to the IOMMU. If
++ * they have not been completed, for example when using a Stop Marker Message to
++ * stop PASID in a PCIe device, then the caller must set the flag
++ * %IOMMU_UNBIND_FAULT_PENDING.
   *
   * Returns 0 on success, or an error value
   */
--void iommu_sva_unbind_device(struct iommu_sva *handle)
-+void iommu_sva_unbind_device(struct iommu_sva *handle, unsigned long flags)
- {
- 	struct iommu_group *group;
- 	struct device *dev = handle->dev;
-@@ -3012,7 +3013,7 @@ void iommu_sva_unbind_device(struct iommu_sva *handle)
- 		return;
- 
- 	mutex_lock(&group->mutex);
--	ops->sva_unbind(handle);
-+	ops->sva_unbind(handle, flags);
- 	mutex_unlock(&group->mutex);
- 
- 	iommu_group_put(group);
-diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
-index 56dd98ab5a81..0800566a6656 100644
---- a/drivers/misc/uacce/uacce.c
-+++ b/drivers/misc/uacce/uacce.c
-@@ -105,7 +105,7 @@ static int uacce_bind_queue(struct uacce_device *uacce, struct uacce_queue *q)
- 
- 	pasid = iommu_sva_get_pasid(handle);
- 	if (pasid == IOMMU_PASID_INVALID) {
--		iommu_sva_unbind_device(handle);
-+		iommu_sva_unbind_device(handle, 0);
- 		return -ENODEV;
- 	}
- 
-@@ -118,7 +118,7 @@ static void uacce_unbind_queue(struct uacce_queue *q)
- {
- 	if (!q->handle)
- 		return;
--	iommu_sva_unbind_device(q->handle);
-+	iommu_sva_unbind_device(q->handle, 0);
- 	q->handle = NULL;
- }
- 
 -- 
 2.28.0
 
