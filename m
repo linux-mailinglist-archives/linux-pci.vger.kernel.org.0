@@ -2,234 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A9A2907CB
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 16:54:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C18290A7D
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 19:19:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409439AbgJPOyC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Oct 2020 10:54:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2409438AbgJPOyB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Oct 2020 10:54:01 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 905D8C061755
-        for <linux-pci@vger.kernel.org>; Fri, 16 Oct 2020 07:54:01 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id de3so1194853qvb.5
-        for <linux-pci@vger.kernel.org>; Fri, 16 Oct 2020 07:54:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uvPsbBCVgpEyNkXzeRH4ousRQR+UCCsXd9+M67vq/4c=;
-        b=W1xCfTNPErnDJUuqjtcpEd8BcyqFu9nQ0YF4tws6/H5LnIp8KMf7iaIJE96YPFbzp+
-         WPJYsMseEVDpv2EwRCTURkMrhZD3jXL6yyh1nHvatqZ35HjtdjWeGZJrh2v/LXq2XVpu
-         mLwW0sMZDjhadQg91DJNgCoPGXOecZMeblRTEoSHGdU/CFWX6cBvMFTzRmx/ZqAm0kxM
-         czhaKzPLP4R24+CX/4SydECGjbGwlQCjtKqt3OuTxIyN2WUSfzig/7wQjoUh0pEZqVGT
-         XYww4Pe9i8uix52PrTG4ZCAfz5p/6hwTne8fAUygh4vFvvMQM6ApJmgiZmpGtLl6LQta
-         nKRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uvPsbBCVgpEyNkXzeRH4ousRQR+UCCsXd9+M67vq/4c=;
-        b=EngF4TLDkifm7KqrvVjCFb5T2FR9bLJebuOtHPvgJEByWIYhEEkwUxdx5KI+NyboBV
-         cX1nQdmPCYLC9nIpTnwH5u7lMlN30XphUWpMGrHCcx+tdWm0aF0BruL9JPReozwc1q6U
-         nfScScJqNIswgSWQRt5E/deeq1CjydJAOG7uxm2Zq71IObpXhUtWfEagDml1j31SqONq
-         ojIx6pqyrcUd4vKAID+pHSQgsMu8+MvPrAv0LIhIyu+v2fPKmlSMP8BQUl0B3kBv+NTE
-         Fopl7SHWdU/MCIJFgR/fxKPUOYwzp4ZMH+Eon3vhpr/0achGSOAU885KbOnlCfrmyGie
-         u2MQ==
-X-Gm-Message-State: AOAM531kHiUh1Hv34JSV3rWmBYso8wB8w1JwAKo4JL6/tFMvicUkgyr3
-        OGGMf2R/r8W+NCZ9MLwmVecBkGht4/J9EU65e+U=
-X-Google-Smtp-Source: ABdhPJx/H6Qx0o6u7abrGdo/1C7eiYnCK7Tvi2/Kd6z9qm1z08cQkNZhl6lIUxWk12cM2veviEsiJ9fbCeLWhd3qKUs=
-X-Received: by 2002:a0c:99c6:: with SMTP id y6mr4414917qve.41.1602860040569;
- Fri, 16 Oct 2020 07:54:00 -0700 (PDT)
+        id S2390371AbgJPRTe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Oct 2020 13:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390321AbgJPRTe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Oct 2020 13:19:34 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D71520704;
+        Fri, 16 Oct 2020 17:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602868773;
+        bh=9kLpyiAYynL4fs7VkW+MjrLNVjELYDZXp4v/TfTQB2g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=GymZvpishaFRuNxpLri5eyNg1vnMIzZZtcMQGadqRjYDKQs+DBJ1aLYaseEKL1gQO
+         hNqmhOskfTjxrfMXWgm33lr9Wd7HotwEJp7g/xSjHEo0FGlxB9IshW0iVLHwophT1o
+         38xb4xJ++9sNO0L7GtvbDFXyimmnRV6TxCV8Auw8=
+Date:   Fri, 16 Oct 2020 12:19:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <seanvk.dev@oregontracks.org>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
+        qiuxu.zhuo@intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: Re: [PATCH v9 09/15] PCI/ERR: Add pci_walk_bridge() to
+ pcie_do_recovery()
+Message-ID: <20201016171931.GA85196@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <CAA85sZsnMd3SdnH2bchxfkR7_Ka1wDvu9Z592uaK3FFm4rszTw@mail.gmail.com>
- <20201014143646.GA3946160@bjorn-Precision-5520> <CAA85sZuSAorUvLJ5KL6=OqpEgBuHc47hf3wdBX9u_pX9xpYCoQ@mail.gmail.com>
-In-Reply-To: <CAA85sZuSAorUvLJ5KL6=OqpEgBuHc47hf3wdBX9u_pX9xpYCoQ@mail.gmail.com>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Fri, 16 Oct 2020 16:53:49 +0200
-Message-ID: <CAA85sZsEQV+YgZaW0WsW2M2Xuv6P0w=D+H3n7-dk-7JT3ip23g@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1 ASPM
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201016001113.2301761-10-seanvk.dev@oregontracks.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 14, 2020 at 5:39 PM Ian Kumlien <ian.kumlien@gmail.com> wrote:
->
-> On Wed, Oct 14, 2020 at 4:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Wed, Oct 14, 2020 at 03:33:17PM +0200, Ian Kumlien wrote:
-> >
-> > > I'm actually starting to think that reporting what we do with the
-> > > latency bit could
-> > > be beneficial - i.e. report which links have their L1 disabled due to
-> > > which device...
-> > >
-> > > I also think that this could benefit debugging - I have no clue of ho=
-w
-> > > to read the lspci:s - I mean i do see some differences that might be
-> > > the fix but nothing really specific without a proper message in
-> > > dmesg....
-> >
-> > Yeah, might be worth doing.  Probably pci_dbg() since I think it would
-> > be too chatty to be enabled all the time.
->
-> OK, will look in to it =3D)
+On Thu, Oct 15, 2020 at 05:11:07PM -0700, Sean V Kelley wrote:
+> From: Sean V Kelley <sean.v.kelley@intel.com>
+> 
+> Consolidate subordinate bus checks with pci_walk_bus() into
+> pci_walk_bridge() for walking below potentially AER affected bridges.
+> 
+> [bhelgaas: fix kerneldoc]
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Link: https://lore.kernel.org/r/20201002184735.1229220-7-seanvk.dev@oregontracks.org
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pcie/err.c | 30 +++++++++++++++++++++++-------
+>  1 file changed, 23 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 931e75f2549d..8b53aecdb43d 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -146,13 +146,30 @@ static int report_resume(struct pci_dev *dev, void *data)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * pci_walk_bridge - walk bridges potentially AER affected
+> + * @bridge:	bridge which may be a Port
+> + * @cb:		callback to be called for each device found
+> + * @userdata:	arbitrary pointer to be passed to callback
+> + *
+> + * If the device provided is a bridge, walk the subordinate bus, including
+> + * any bridged devices on buses under this bus.  Call the provided callback
+> + * on each device found.
+> + */
+> +static void pci_walk_bridge(struct pci_dev *bridge,
+> +			    int (*cb)(struct pci_dev *, void *),
+> +			    void *userdata)
+> +{
+> +	if (bridge->subordinate)
 
-Just did some very basic hack, since i think it's much better to get
-the information in dmesg than have to boot will full debug.
+Remind me why we add this bridge->subordinate test?  I see that we're
+going to need it later, but I think we should add the test in the same
+patch that adds the case where "bridge->subordinate == NULL" becomes
+possible.
 
-I assume that there is a niftier way to do it - but i wanted some
-feedback basically...
+Or else a note in this commit log about what's happening.
 
-My current output is:
-dmesg |grep latency
-[    0.817872] pci 0000:04:00.0: ASPM latency exceeded, disabling:
-L1:0000:01:00.0-0000:00:01.2
+AFAICT, this test is literally the only possible functional change in
+this patch, so the commit log should mention it.
 
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 253c30cc1967..5a5146f47aae 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
-
- static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- {
--       u32 latency, l1_switch_latency =3D 0;
-+       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0;
-+       bool aspm_disable =3D 0;
-        struct aspm_latency *acceptable;
-        struct pcie_link_state *link;
-
-@@ -446,6 +447,16 @@ static void pcie_aspm_check_latency(struct
-pci_dev *endpoint)
-        link =3D endpoint->bus->self->link_state;
-        acceptable =3D &link->acceptable[PCI_FUNC(endpoint->devfn)];
-
-+#define aspm_info(device, type, down, up) \
-+       if (!aspm_disable) \
-+       { \
-+               pr_cont("pci %s: ASPM latency exceeded, disabling: %s:%s-%s=
-", \
-+                       pci_name(device), type, pci_name(down), pci_name(up=
-)); \
-+               aspm_disable =3D 1; \
-+       } \
-+       else \
-+                pr_cont(", %s:%s-%s", type, pci_name(down), pci_name(up));
-+
-        while (link) {
-                /* Check upstream direction L0s latency */
-                if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
-@@ -456,10 +467,14 @@ static void pcie_aspm_check_latency(struct
-pci_dev *endpoint)
-                if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
-                    (link->latency_dw.l0s > acceptable->l0s))
-                        link->aspm_capable &=3D ~ASPM_STATE_L0S_DW;
-+
-                /*
-                 * Check L1 latency.
--                * Every switch on the path to root complex need 1
--                * more microsecond for L1. Spec doesn't mention L0s.
-+                *
-+                * PCIe r5.0, sec 5.4.1.2.2 states:
-+                * A Switch is required to initiate an L1 exit transition o=
-n its
-+                * Upstream Port Link after no more than 1 =CE=BCs from the
-beginning of an
-+                * L1 exit transition on any of its Downstream Port Links.
-                 *
-                 * The exit latencies for L1 substates are not advertised
-                 * by a device.  Since the spec also doesn't mention a way
-@@ -469,14 +484,22 @@ static void pcie_aspm_check_latency(struct
-pci_dev *endpoint)
-                 * L1 exit latencies advertised by a device include L1
-                 * substate latencies (and hence do not do any check).
-                 */
--               latency =3D max_t(u32, link->latency_up.l1, link->latency_d=
-w.l1);
--               if ((link->aspm_capable & ASPM_STATE_L1) &&
--                   (latency + l1_switch_latency > acceptable->l1))
--                       link->aspm_capable &=3D ~ASPM_STATE_L1;
--               l1_switch_latency +=3D 1000;
-+               if (link->aspm_capable & ASPM_STATE_L1) {
-+                       latency =3D max_t(u32, link->latency_up.l1,
-link->latency_dw.l1);
-+                       l1_max_latency =3D max_t(u32, latency, l1_max_laten=
-cy);
-+                       if (l1_max_latency + l1_switch_latency > acceptable=
-->l1)
-+                       {
-+                               aspm_info(endpoint, "L1",
-link->downstream, link->pdev);
-+                               link->aspm_capable &=3D ~ASPM_STATE_L1;
-+                       }
-+                       l1_switch_latency +=3D 1000;
-+               }
-
-                link =3D link->parent;
-        }
-+       if (aspm_disable)
-+               pr_cont("\n");
-+#undef aspm_info
- }
-
-for L1 and L0s, which we haven't discussed that much yet:
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 5a5146f47aae..b01d393e742d 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
-
- static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- {
--       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0;
-+       u32 latency, l1_max_latency =3D 0, l1_switch_latency =3D 0,
-+               l0s_latency_up =3D 0, l0s_latency_dw =3D 0;
-        bool aspm_disable =3D 0;
-        struct aspm_latency *acceptable;
-        struct pcie_link_state *link;
-@@ -459,14 +460,24 @@ static void pcie_aspm_check_latency(struct
-pci_dev *endpoint)
-
-        while (link) {
-                /* Check upstream direction L0s latency */
--               if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
--                   (link->latency_up.l0s > acceptable->l0s))
--                       link->aspm_capable &=3D ~ASPM_STATE_L0S_UP;
-+               if (link->aspm_capable & ASPM_STATE_L0S_UP) {
-+                       l0s_latency_up +=3D link->latency_up.l0s;
-+                       if (l0s_latency_up > acceptable->l0s)
-+                       {
-+                               aspm_info(endpoint, "L0s-up",
-link->downstream, link->pdev);
-+                               link->aspm_capable &=3D ~ASPM_STATE_L0S_UP;
-+                       }
-+               }
-
-                /* Check downstream direction L0s latency */
--               if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
--                   (link->latency_dw.l0s > acceptable->l0s))
--                       link->aspm_capable &=3D ~ASPM_STATE_L0S_DW;
-+               if (link->aspm_capable & ASPM_STATE_L0S_DW) {
-+                       l0s_latency_dw +=3D link->latency_dw.l0s;
-+                       if (l0s_latency_dw > acceptable->l0s)
-+                       {
-+                               aspm_info(endpoint, "L0s-dw",
-link->downstream, link->pdev);
-+                               link->aspm_capable &=3D ~ASPM_STATE_L0S_DW;
-+                       }
-+               }
-
-                /*
-                 * Check L1 latency.
+> +		pci_walk_bus(bridge->subordinate, cb, userdata);
+> +}
+> +
+>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		pci_channel_state_t state,
+>  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+>  {
+>  	int type = pci_pcie_type(dev);
+>  	struct pci_dev *bridge;
+> -	struct pci_bus *bus;
+>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>  
+>  	/*
+> @@ -165,23 +182,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	else
+>  		bridge = pci_upstream_bridge(dev);
+>  
+> -	bus = bridge->subordinate;
+>  	pci_dbg(bridge, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+> -		pci_walk_bus(bus, report_frozen_detected, &status);
+> +		pci_walk_bridge(bridge, report_frozen_detected, &status);
+>  		status = reset_subordinates(bridge);
+>  		if (status != PCI_ERS_RESULT_RECOVERED) {
+>  			pci_warn(bridge, "subordinate device reset failed\n");
+>  			goto failed;
+>  		}
+>  	} else {
+> -		pci_walk_bus(bus, report_normal_detected, &status);
+> +		pci_walk_bridge(bridge, report_normal_detected, &status);
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(bridge, "broadcast mmio_enabled message\n");
+> -		pci_walk_bus(bus, report_mmio_enabled, &status);
+> +		pci_walk_bridge(bridge, report_mmio_enabled, &status);
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> @@ -192,14 +208,14 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  		 */
+>  		status = PCI_ERS_RESULT_RECOVERED;
+>  		pci_dbg(bridge, "broadcast slot_reset message\n");
+> -		pci_walk_bus(bus, report_slot_reset, &status);
+> +		pci_walk_bridge(bridge, report_slot_reset, &status);
+>  	}
+>  
+>  	if (status != PCI_ERS_RESULT_RECOVERED)
+>  		goto failed;
+>  
+>  	pci_dbg(bridge, "broadcast resume message\n");
+> -	pci_walk_bus(bus, report_resume, &status);
+> +	pci_walk_bridge(bridge, report_resume, &status);
+>  
+>  	if (pcie_aer_is_native(bridge))
+>  		pcie_clear_device_status(bridge);
+> -- 
+> 2.28.0
+> 
