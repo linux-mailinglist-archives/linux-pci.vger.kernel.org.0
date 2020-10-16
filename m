@@ -2,77 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A8A728FE2D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 08:19:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE99429053B
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 14:37:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392129AbgJPGT5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Oct 2020 02:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391810AbgJPGT4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 16 Oct 2020 02:19:56 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECA802074F;
-        Fri, 16 Oct 2020 06:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602829196;
-        bh=zazvmy1lt9Z41+MMNemilywN+s6lX54NA7oWGo08ESs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZD3AxQIG5rD8dJ4sz01tmhN2a1F/9VP38doUhhoNGV7aPqGjMK4nu+OGfrvGC4tbr
-         Oih4VBbUxgS9IZ1tsXG+zWeAFQaemBzzYfjO6+N/lDW+XPa4iVNJDuWS5iv0DM2T0A
-         M0+OcNkDOJ1CrLGLkT0LhhnbOuA3FFtHt0xCfibk=
-Date:   Fri, 16 Oct 2020 08:20:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Allen Pais <allen.lkml@gmail.com>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, ast@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Allen Pais <apais@linux.microsoft.com>,
-        Allen Pais <allen.pais@lkml.com>
-Subject: Re: [RFC] PCI: allow sysfs file owner to read the config space with
- CAP_SYS_RAWIO
-Message-ID: <20201016062027.GB569795@kroah.com>
-References: <20201016055235.440159-1-allen.lkml@gmail.com>
+        id S2407624AbgJPMha (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Oct 2020 08:37:30 -0400
+Received: from cpanel.giganet.cl ([190.96.78.139]:39766 "EHLO
+        cpanel.giganet.cl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407562AbgJPMhY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Oct 2020 08:37:24 -0400
+X-Greylist: delayed 20782 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Oct 2020 08:37:10 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=dplgrout.cl
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:
+        Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=TrgUs68YRs3neP+PfrvGhLoeMXh3YzKv5z9oCWPJ0m4=; b=m/ABHCVvyLYD2QkkwOjuWUgGFG
+        i9BJXsIic9wHOFEzjhXFPbcsR2XTWptcrmKLSqDrJOV7hGJM6za5nSEFhd4CC/+eaHHsgS48/E2jM
+        qvMpEeazlOlIrwSs4xM+Zdf/REorOK5GVU6ZAJUjCzQuCMv9dTVBPKuexZxj1Qoi2hPLiQ576Ik0L
+        XzwzerIXphINfmlVQ0r0UMIuChB1Vcn201QVmD2skB/Nh9D/yp0E95Av9ZMQq7ln6H0uEUnu/2/5Y
+        /CHuMEs39xrrgaYDtG7jTh3PfukIIcCJEs3b52/mZokA1w+tDL1dp0MaV2Z+qYj+Bzs13o0ru0vv/
+        Mq733mMw==;
+Received: from [::1] (port=55048 helo=cpanel.giganet.cl)
+        by cpanel.giganet.cl with esmtpa (Exim 4.93)
+        (envelope-from <info@controlypotencia.com>)
+        id 1kTJ7f-0009vt-N3; Fri, 16 Oct 2020 03:21:51 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201016055235.440159-1-allen.lkml@gmail.com>
+Date:   Fri, 16 Oct 2020 03:21:50 -0300
+From:   Ying Chongan <info@controlypotencia.com>
+To:     undisclosed-recipients:;
+Subject: Investment opportunity
+Reply-To: yingchongan@zohomail.com
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <e70e5a6e462f92c7f06eea146a612430@controlypotencia.com>
+X-Sender: info@controlypotencia.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.giganet.cl
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - controlypotencia.com
+X-Get-Message-Sender-Via: cpanel.giganet.cl: authenticated_id: mariapaz.lopez@dplgrout.cl
+X-Authenticated-Sender: cpanel.giganet.cl: mariapaz.lopez@dplgrout.cl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 16, 2020 at 11:22:35AM +0530, Allen Pais wrote:
-> From: Allen Pais <apais@linux.microsoft.com>
-> 
->  Access to pci config space is explictly checked with CAP_SYS_ADMIN
-> in order to read configuration space past the frist 64B.
-> 
->  Since the path is only for reading, could we use CAP_SYS_RAWIO?
+Greetings,
 
-Why?  What needs this reduced capability?
+This email is for an opportunity to invest in any lucrative business in 
+your country.
 
-> This patch contains a simpler fix, I would love to hear from the
-> Maintainers on the approach.
-> 
->  The other approach that I considered was to introduce and API
-> which would check for multiple capabilities, something similar to
-> perfmon_capable()/bpf_capable(). But I could not find more users
-> for the API and hence dropped it.
-> 
->  The problem I am trying to solve is to avoid handing out
-> CAP_SYS_ADMIN for extended reads of the PCI config space.
+We offer a quick loan at low interest rate, if you are interested, 
+please reply to yingchongan@gmail.com for more details.
 
-Who is reading this config space that doesn't have admin rights?  And
-what are they doing with it?
-
-One big problem is that some devices will crash if you do this wrong,
-which is why we restricted it to root.  Hopefully all of those devices
-are now gone, but I don't think you can count on it.
-
-The "guaranteed safe" fields in the config space are already exported by
-sysfs for all users to read, are they not sufficient?
-
-thanks,
-
-greg k-h
+Sincerely: Ying Chongan
