@@ -2,103 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5989328FDD2
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 07:52:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A8A728FE2D
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 08:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390225AbgJPFwq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Oct 2020 01:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390204AbgJPFwq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Oct 2020 01:52:46 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5EEC061755;
-        Thu, 15 Oct 2020 22:52:46 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id n14so838569pff.6;
-        Thu, 15 Oct 2020 22:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kI/NTRnsuiqMq/19qfG8dHccdcc45HtUzVtiWVJOA54=;
-        b=pD5FJ7dGZbZIGvMFGfGVp6uhM0aQbeJzP5nuTKxe6hekA+xD+Bz7avwlOlqMZVaxda
-         4gA9MxiFUWw7PitLTs/C0cLZVbksoy67J1NbwAozTllcMgXBvWl+3zXD3/lcn8p8A58a
-         vTlV4BojkNq0clIkEDio75syqxacmUyDRc7NWbCzDglDqM+sE8uj2RH/Yc9/N6LOx6Mf
-         NufIzGnE9X2rCdVx85BwGqFt1Aum7/TQAqwuOqcAQQoaQQikuFUdKa6NHLc1ol93+pdA
-         w/tEcuxYyRn8DLxilt9izQMErmMZmaquSOJMZv9YNKaVLXk9JbfpDmYduD7/YdMIQBac
-         i/5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kI/NTRnsuiqMq/19qfG8dHccdcc45HtUzVtiWVJOA54=;
-        b=JRh/uIrpBVzfkXXBS9TEOOWsmWihIUkrH4Jk99C+PD07qwkZQFX4SlFzFFUA+/Itua
-         9/ij5cyTBdODaMw2unNBWfroRpS8oH8QNhfWWbA7xrIfxdjs8jJBCwY7taOwQUx/iuJC
-         /Dh1ZBH8OvsqIrbHWFWFOkYfl1Pf6NfEI+ZIlKxVPuo2wlog/cvy0tDIPwEO2H/FkGoP
-         53c7F04xKdNpz9Mzb0UsGn0F5S64AYxUPzhtEDDi/Fwi1Q95dyBlcXoaM8cyltBRXD80
-         kLih0aQBmAI7tlyfm3bhkxImMoqYaFNlr4W9iMw5Zt5pUCTFf9GGlp0BjIiHHU+n9Mkq
-         lwZg==
-X-Gm-Message-State: AOAM532puCibg2cm+s6CcLxBGvJP51cUy+mcie0C4W/YjYLLSpytPTaB
-        ITwgcASzA/d2vzkrmx+nhI80o375+kg=
-X-Google-Smtp-Source: ABdhPJyDewsrfBilzjkXeoqPjtx3xNkDPU5NaeYKQi2avPxnn8ssglwAlSDWYUCi0lSnJKhbiA1axg==
-X-Received: by 2002:a63:cf46:: with SMTP id b6mr1794900pgj.49.1602827565724;
-        Thu, 15 Oct 2020 22:52:45 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.214.53])
-        by smtp.gmail.com with ESMTPSA id u14sm1308110pjf.53.2020.10.15.22.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Oct 2020 22:52:45 -0700 (PDT)
-From:   Allen Pais <allen.lkml@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     bhelgaas@google.com, ast@kernel.org, gregkh@linuxfoundation.org,
+        id S2392129AbgJPGT5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Oct 2020 02:19:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391810AbgJPGT4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 16 Oct 2020 02:19:56 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECA802074F;
+        Fri, 16 Oct 2020 06:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602829196;
+        bh=zazvmy1lt9Z41+MMNemilywN+s6lX54NA7oWGo08ESs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZD3AxQIG5rD8dJ4sz01tmhN2a1F/9VP38doUhhoNGV7aPqGjMK4nu+OGfrvGC4tbr
+         Oih4VBbUxgS9IZ1tsXG+zWeAFQaemBzzYfjO6+N/lDW+XPa4iVNJDuWS5iv0DM2T0A
+         M0+OcNkDOJ1CrLGLkT0LhhnbOuA3FFtHt0xCfibk=
+Date:   Fri, 16 Oct 2020 08:20:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Allen Pais <allen.lkml@gmail.com>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, ast@kernel.org,
         linux-kernel@vger.kernel.org,
         Allen Pais <apais@linux.microsoft.com>,
         Allen Pais <allen.pais@lkml.com>
-Subject: [RFC] PCI: allow sysfs file owner to read the config space with CAP_SYS_RAWIO
-Date:   Fri, 16 Oct 2020 11:22:35 +0530
-Message-Id: <20201016055235.440159-1-allen.lkml@gmail.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [RFC] PCI: allow sysfs file owner to read the config space with
+ CAP_SYS_RAWIO
+Message-ID: <20201016062027.GB569795@kroah.com>
+References: <20201016055235.440159-1-allen.lkml@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201016055235.440159-1-allen.lkml@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Allen Pais <apais@linux.microsoft.com>
+On Fri, Oct 16, 2020 at 11:22:35AM +0530, Allen Pais wrote:
+> From: Allen Pais <apais@linux.microsoft.com>
+> 
+>  Access to pci config space is explictly checked with CAP_SYS_ADMIN
+> in order to read configuration space past the frist 64B.
+> 
+>  Since the path is only for reading, could we use CAP_SYS_RAWIO?
 
- Access to pci config space is explictly checked with CAP_SYS_ADMIN
-in order to read configuration space past the frist 64B.
+Why?  What needs this reduced capability?
 
- Since the path is only for reading, could we use CAP_SYS_RAWIO?
-This patch contains a simpler fix, I would love to hear from the
-Maintainers on the approach.
+> This patch contains a simpler fix, I would love to hear from the
+> Maintainers on the approach.
+> 
+>  The other approach that I considered was to introduce and API
+> which would check for multiple capabilities, something similar to
+> perfmon_capable()/bpf_capable(). But I could not find more users
+> for the API and hence dropped it.
+> 
+>  The problem I am trying to solve is to avoid handing out
+> CAP_SYS_ADMIN for extended reads of the PCI config space.
 
- The other approach that I considered was to introduce and API
-which would check for multiple capabilities, something similar to
-perfmon_capable()/bpf_capable(). But I could not find more users
-for the API and hence dropped it.
+Who is reading this config space that doesn't have admin rights?  And
+what are they doing with it?
 
- The problem I am trying to solve is to avoid handing out
-CAP_SYS_ADMIN for extended reads of the PCI config space.
+One big problem is that some devices will crash if you do this wrong,
+which is why we restricted it to root.  Hopefully all of those devices
+are now gone, but I don't think you can count on it.
 
-Signed-off-by: Allen Pais <allen.pais@lkml.com>
----
- drivers/pci/pci-sysfs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The "guaranteed safe" fields in the config space are already exported by
+sysfs for all users to read, are they not sufficient?
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6d78df981d41..6574c0203475 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -666,7 +666,8 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
- 	u8 *data = (u8 *) buf;
- 
- 	/* Several chips lock up trying to read undefined config space */
--	if (file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN))
-+	if (file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN) ||
-+	    file_ns_capable(filp, &init_user_ns, CAP_SYS_RAWIO))
- 		size = dev->cfg_size;
- 	else if (dev->hdr_type == PCI_HEADER_TYPE_CARDBUS)
- 		size = 128;
--- 
-2.25.1
+thanks,
 
+greg k-h
