@@ -2,102 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B21192904B4
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 14:04:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAD982904F8
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 14:21:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407168AbgJPMEn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Oct 2020 08:04:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
+        id S2407436AbgJPMVK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Oct 2020 08:21:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406845AbgJPMEl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Oct 2020 08:04:41 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B49BC061755;
-        Fri, 16 Oct 2020 05:04:40 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id h24so2736519ejg.9;
-        Fri, 16 Oct 2020 05:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=99xt5tOxYL+SsaIFtCFHk6b78TJvFfz6VlYtP/wHSYo=;
-        b=AbuFMvGpPxRfTL0Vkv6wAp+YVoZ+whZsEj43YJm114aAlLx625EC1u/srVJNFN1TCC
-         G+K86rE8ptlqoY4+Ytn1Rrq5kKmuvHcYNmKxZOtkBh0806jurIDiL8iSwp99+kf8KKE/
-         YAVmXkE8a801FFX/0zTyt8b0RIFCa695HTQBmzwCIpAcn7rPDe15pCDNvgBqgJ+kz65J
-         f4gTRCj5ViPxdG5IBArXJTrFGCaYofVs/b4CnHXgPky197QMpfNw+iExW3S8s8WJckMq
-         +ClQ5QS6J9fq70XpZ2i5r+1uopRCp751MF0Jvlo1uUIefTq6vuurS0crkIwbh9ngHYF0
-         hegA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=99xt5tOxYL+SsaIFtCFHk6b78TJvFfz6VlYtP/wHSYo=;
-        b=ryOQKUuwuBIpsvDKjo3SqY8z+kTnWzpvNCTG1/OqCn1R572V0E7IFB0NXLxgnScW75
-         k1LXK1IGsgLN6PZ4KjbPzhwLARnxT+F22AW7/eJt/pgvKm1wnrWmzAzRF65fVNT0uiS5
-         Sipu84SLDmztavoFAAiNBfVV9jcjtgfej4SjjTM/rvxRhAF0TioqyXTBFq0e+35/G8aA
-         wKYVAUzoX22Z/UtJuYCzMiuJeZ+dJ9HJWjEpm27WLaqUglh5Rkjc0PVamz8HFjT1TdfB
-         ecgIsjMNr60xvlX3qJal1UszFSyJN4KjzeWdYks4cd0b+U8b4gr0s3FXQhmdD+EIcoL/
-         t0MQ==
-X-Gm-Message-State: AOAM532Fjb3rvc5uWYvY1uQdgxNML6CU+8NWGZQDhrk/HHtp8K2XzqSI
-        d1C57QV+RZQWnCc924Tqh2cZRS+xCqm24Q==
-X-Google-Smtp-Source: ABdhPJx96sTZPYVmd1ghvhar6UA0CdNGRd8QNjox83Ax1W1Vq/YQtzqh/rrU7JIMwtMpdOSQqPb1dw==
-X-Received: by 2002:a17:906:1f08:: with SMTP id w8mr3260880ejj.181.1602849879120;
-        Fri, 16 Oct 2020 05:04:39 -0700 (PDT)
-Received: from localhost.localdomain (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id g18sm1450298eje.12.2020.10.16.05.04.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Oct 2020 05:04:38 -0700 (PDT)
-From:   marek.vasut@gmail.com
-To:     linux-pci@vger.kernel.org
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] PCI: rcar: Always allocate MSI addresses in 32bit space
-Date:   Fri, 16 Oct 2020 14:04:31 +0200
-Message-Id: <20201016120431.7062-1-marek.vasut@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        with ESMTP id S2405384AbgJPMVK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Oct 2020 08:21:10 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8BBC061755;
+        Fri, 16 Oct 2020 05:21:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZUmWjNg65V6AiFrCgaLFBLQXLIVV8qim1PDjDYaGvo4=; b=KfVXg1CGrkJBMgna6XMAK92lmy
+        rZ2nMvNRNI6MsIvb7H6Ot9k6iXWvJDUsz4Nifz9deCLlH8Fc6JWNPrBEa69q20Xn8cg1w1GiS7ZD/
+        SlOv8NPpdHDXcyNfo1C6pWTC+kKcZHRwprCMys5LCGK87ukyg8NEtiodChPxwTz9t1uqNL5akXq52
+        OBBf6HNe1bua1XTzhReL2j3vae+lhlaZzjElMEmlD+X54wI1hd3LKbrz06HUpcZ8/iH75eyfKmOIh
+        D84WSri5aJOa64SHb+vddNKk82n2Hp41rbRUdJOHsLsxQfnmR2quEjFJXw/ZMyoCbIuUL7BdNOER6
+        9Edddoxw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kTOj4-0007HQ-FF; Fri, 16 Oct 2020 12:20:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DA3F13050F0;
+        Fri, 16 Oct 2020 14:20:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C6543203EB17E; Fri, 16 Oct 2020 14:20:46 +0200 (CEST)
+Date:   Fri, 16 Oct 2020 14:20:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jiri@nvidia.com, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, lgoncalv@redhat.com
+Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to
+ housekeeping CPUs
+Message-ID: <20201016122046.GP2611@hirez.programming.kicks-ass.net>
+References: <20200928183529.471328-1-nitesh@redhat.com>
+ <20200928183529.471328-5-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200928183529.471328-5-nitesh@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+On Mon, Sep 28, 2020 at 02:35:29PM -0400, Nitesh Narayan Lal wrote:
+> If we have isolated CPUs dedicated for use by real-time tasks, we try to
+> move IRQs to housekeeping CPUs from the userspace to reduce latency
+> overhead on the isolated CPUs.
+> 
+> If we allocate too many IRQ vectors, moving them all to housekeeping CPUs
+> may exceed per-CPU vector limits.
+> 
+> When we have isolated CPUs, limit the number of vectors allocated by
+> pci_alloc_irq_vectors() to the minimum number required by the driver, or
+> to one per housekeeping CPU if that is larger.
+> 
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>  drivers/pci/msi.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 30ae4ffda5c1..8c156867803c 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/sched/isolation.h>
+>  
+>  #include "pci.h"
+>  
+> @@ -1191,8 +1192,25 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  				   struct irq_affinity *affd)
+>  {
+>  	struct irq_affinity msi_default_affd = {0};
+> +	unsigned int hk_cpus;
+>  	int nvecs = -ENOSPC;
+>  
+> +	hk_cpus = housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ);
+> +
+> +	/*
+> +	 * If we have isolated CPUs for use by real-time tasks, to keep the
+> +	 * latency overhead to a minimum, device-specific IRQ vectors are moved
+> +	 * to the housekeeping CPUs from the userspace by changing their
+> +	 * affinity mask. Limit the vector usage to keep housekeeping CPUs from
+> +	 * running out of IRQ vectors.
+> +	 */
+> +	if (hk_cpus < num_online_cpus()) {
+> +		if (hk_cpus < min_vecs)
+> +			max_vecs = min_vecs;
+> +		else if (hk_cpus < max_vecs)
+> +			max_vecs = hk_cpus;
 
-This fixes MSI operation on legacy PCI cards, which cannot issue 64bit MSIs.
-The R-Car controller only has one MSI trigger address instead of two, one
-for 64bit and one for 32bit MSI, set the address to 32bit PCIe space so that
-legacy PCI cards can also trigger MSIs.
+is that:
 
-Fixes: 290c1fb35860 ("PCI: rcar: Add MSI support for PCIe")
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-renesas-soc@vger.kernel.org
----
- drivers/pci/controller/pcie-rcar-host.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+		max_vecs = clamp(hk_cpus, min_vecs, max_vecs);
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index 1194d5f3341b..ac5c7d7573a6 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -753,7 +753,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
- 	}
- 
- 	/* setup MSI data target */
--	msi->pages = __get_free_pages(GFP_KERNEL, 0);
-+	msi->pages = __get_free_pages(GFP_KERNEL | GFP_DMA32, 0);
- 	rcar_pcie_hw_enable_msi(host);
- 
- 	return 0;
--- 
-2.28.0
+Also, do we really need to have that conditional on hk_cpus <
+num_online_cpus()? That is, why can't we do this unconditionally?
 
+And what are the (desired) semantics vs hotplug? Using a cpumask without
+excluding hotplug is racy.
+
+> +	}
+> +
+>  	if (flags & PCI_IRQ_AFFINITY) {
+>  		if (!affd)
+>  			affd = &msi_default_affd;
+> -- 
+> 2.18.2
+> 
