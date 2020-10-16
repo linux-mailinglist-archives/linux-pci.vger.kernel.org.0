@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8163128FBED
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 02:12:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F38628FC02
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 02:13:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389752AbgJPAMi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Oct 2020 20:12:38 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:50267 "EHLO
+        id S1733173AbgJPAN1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Oct 2020 20:13:27 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:34715 "EHLO
         wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389671AbgJPAM1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 20:12:27 -0400
+        by vger.kernel.org with ESMTP id S2389715AbgJPAM2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 20:12:28 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id B0CB920D;
-        Thu, 15 Oct 2020 20:12:25 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id ED04DAEF;
+        Thu, 15 Oct 2020 20:12:26 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 15 Oct 2020 20:12:26 -0400
+  by compute4.internal (MEProxy); Thu, 15 Oct 2020 20:12:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         oregontracks.org; h=from:to:cc:subject:date:message-id
         :in-reply-to:references:mime-version:content-transfer-encoding;
-         s=fm1; bh=0c/JONLL/FRrSvwQ4PVvmvGdLpt/b1FZX+mwA7CeAjQ=; b=pk3wQ
-        DsxLtW0RrZaGwTiZ2D1i2ovvGHHXoPeYINXKb5VbFynmpO8roft/UCTqFkdkT+jO
-        GRcJ21X+ArcbWjIQ+gZ8lmmA0R3Ev1dV14zGm1GqBN75NMmheqDJ6I+A1u9dft56
-        SDLrPjq7qpiJ7TejG1aRRX8Grx1UvPxNmx8Z91tLt5KZBzpj4GYsaDfICU9LdBbj
-        JQyeoWPz0vTdKv/6nzfpewyFBGn8iCkZntOE9PydYmSyQZh9O9p9I+OjlJYlAkWY
-        qAw17A9PBXlIUN+ZLEe7Za/3d2rgUtxYDpVO7hxkPV86nIT/MCsbl46AhAl40vL7
-        EL5dbq7TJP5EHYLAg==
+         s=fm1; bh=PHyu6MB+XozbsB2RUwUB3vXsDG5zNx4Z0tOfnB5deko=; b=NIOuO
+        3xfAoRxLaHDl7JTmKQDkEgC7LCYyT+ePglNajQgRhc6CFzOQPJs2vGY2K0Kg0GVS
+        +hIyRtgMq/Qr5mfs9bwN8Vlw8gBRSCtePmsJN7HhPScsmw0+sR6YxvX5DajIqFCl
+        b1K/IhDQ6+HD1Zp9fg/S1vbJy1cWdZeHSbVBTqmW6d1GUIzG0lUGiBlEfqtisTJw
+        6MaIefmhtFjmwKWVMOAKuZTN9kjH+ZLq2nbnDf9ezZ5gfFjrvrNcT9HTDFp3hwpW
+        wtDdD2DLvbQK/5PbU6UkdxWELh4vsJBeGQGQ//Rk0Kca0f8EcbX20eS7QIOwvSg/
+        emmgHdweSLyW5lJVA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=0c/JONLL/FRrSvwQ4PVvmvGdLpt/b1FZX+mwA7CeAjQ=; b=rMTZbVGf
-        Edd1vrClHq45ysuYvZtD57GrawYGjXV2ynTkyf0X3vfENn8yWInTY8ug4qs42MSP
-        W/9Hx1M02GbYzq9OUV9V1ywD9PVfgjBANylYGykv1T6zL3Ji44u1F8XtVKw1ZvGp
-        SaMj+o13D6kYz+321eNwz5SQWdPKIRzwrTLq7fdFsKL3K2Cii8YfJpoh14Tai/Zr
-        U1KE5ryZaJy/RTHIYlB8nGCxsiNKJ0NBA15/lxgbqeD9BvxcyYv4kiJL61j9HZv9
-        Z8/HfrcSsgaBgXdeO7novcCPiVQzQ9hCXeooGrHbuB9g7JuED0ADSoyvJH8L+g+v
-        toX7iWCsBEExMw==
-X-ME-Sender: <xms:aeWIX8eKSpCW2Y4-5dgCH8VWZtvm4csAV8h8ilXlwQhl0HqYK_zt3g>
-    <xme:aeWIX-P81TFecIp8u9Q8jiD2w7UhHVZ0PN0UApyfR1GnRFHKRKUpifFN-wZuhgK2I
-    kK6LXy1vmv0Y7DI>
+        fm1; bh=PHyu6MB+XozbsB2RUwUB3vXsDG5zNx4Z0tOfnB5deko=; b=E4kZyhQc
+        zRKiVT6oSLNKFS/Hwq0lFbdGehzByh5t9gQjYvjaLGQKfOYvqGr0yL1taKhSH3nW
+        SWnErQcMMKou0Urac4iVWUXjT/4o5iNtx5oYXlkvjQ3RkHG2vGud95R3YnYN4YvV
+        YKQPC0qPWQ0O3IDld7mzV4sT9CUMT/CNN3ptvGxtuju/smO+2fpFsnWaEtjo8Yhj
+        XSp/EzrLfO+yel/CraMSg1lB5SUwGAnqy55rCXLLv/DO9G9pdTJmRxGNR/rC1w30
+        2WTRAnj550Re/Ko4cpAj/qR7lw30KR/jWeA3FAIwV77T9GnjtqWuTGSskCdDANbs
+        EnL7AnpJgbuHlw==
+X-ME-Sender: <xms:auWIX73KEd5CMFt8BROVbz7uW9lRA-VToRH64l2HZiwnf78Qzv46fA>
+    <xme:auWIX6E86523i50casHQ3qWlWsLUOmUBUEIWcmmDT-RCffdPK_CY3Y_RVrMZbM47M
+    SZO0ZKfghmJA0X_>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrieeggdeffecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
@@ -47,15 +47,15 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrieeggdeffecutefuodetggdote
     sehorhgvghhonhhtrhgrtghkshdrohhrgheqnecuggftrfgrthhtvghrnhepkefggeektd
     dttdeuffffjeeihfetfffghfdugefhvdeuheeuudelheegleevheefnecuffhomhgrihhn
     pehkvghrnhgvlhdrohhrghenucfkphepvdegrddvtddrudegkedrgeelnecuvehluhhsth
-    gvrhfuihiivgepfeenucfrrghrrghmpehmrghilhhfrhhomhepshgvrghnvhhkrdguvghv
+    gvrhfuihiivgepieenucfrrghrrghmpehmrghilhhfrhhomhepshgvrghnvhhkrdguvghv
     sehorhgvghhonhhtrhgrtghkshdrohhrgh
-X-ME-Proxy: <xmx:aeWIX9j29Gu_jay3inzpfssdSzxmGBysUEhleY3Ij7ke2qPGWOZkpQ>
-    <xmx:aeWIXx-WFjEw8C-YMcgp4epajH87AJxtXtrBkv80FtE6WskidjR3wg>
-    <xmx:aeWIX4uJVbR6bHh6eVlTi0Go_ZZ-nfjBZuFzdmxialfQTNAt2D4bpA>
-    <xmx:aeWIX9-FlPwQ7oqhHxqQtUTs-5eQpquTh_Wa8MA1hHPKbFpx1ck3yA>
+X-ME-Proxy: <xmx:auWIX77ObQ_SG1vmTW6zBlWJeefCstqZA2JYnLjSNhFQToSSxkkDFA>
+    <xmx:auWIXw0ni9kWKFEp5lKL9dkvX0SLOT1x3MFDj6xohKqVMOuR8tixOg>
+    <xmx:auWIX-ESlScGIsI_ACnlN4vPWuGPtC-yezC4q4k3aoVtZb4nBqoVbA>
+    <xmx:auWIXx0xkbpiAWfihCtFIh-QzQQpAyR2ymdGmtLlPPMQqY5iBQjvSw>
 Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4F3EE306467E;
-        Thu, 15 Oct 2020 20:12:23 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 570F73064680;
+        Thu, 15 Oct 2020 20:12:25 -0400 (EDT)
 From:   Sean V Kelley <seanvk.dev@oregontracks.org>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rafael.j.wysocki@intel.com, ashok.raj@intel.com,
@@ -63,9 +63,9 @@ To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         qiuxu.zhuo@intel.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [PATCH v9 06/15] PCI/ERR: Simplify by computing pci_pcie_type() once
-Date:   Thu, 15 Oct 2020 17:11:04 -0700
-Message-Id: <20201016001113.2301761-7-seanvk.dev@oregontracks.org>
+Subject: [PATCH v9 07/15] PCI/ERR: Use "bridge" for clarity in pcie_do_recovery()
+Date:   Thu, 15 Oct 2020 17:11:05 -0700
+Message-Id: <20201016001113.2301761-8-seanvk.dev@oregontracks.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201016001113.2301761-1-seanvk.dev@oregontracks.org>
 References: <20201016001113.2301761-1-seanvk.dev@oregontracks.org>
@@ -77,41 +77,110 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Sean V Kelley <sean.v.kelley@intel.com>
 
-Instead of calling pci_pcie_type(dev) twice, call it once and save the
-result.  No functional change intended.
+pcie_do_recovery() may be called with "dev" being either a bridge (Root
+Port or Switch Downstream Port) or an Endpoint.  The bulk of the function
+deals with the bridge, so if we start with an Endpoint, we reset "dev" to
+be the bridge leading to it.
 
-[bhelgaas: split to separate patch]
+For clarity, replace "dev" in the body of the function with "bridge".  No
+functional change intended.
+
+[bhelgaas: commit log, split pieces out so this is pure rename, also
+replace "dev" with "bridge" in messages and pci_uevent_ers()]
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Link: https://lore.kernel.org/r/20201002184735.1229220-6-seanvk.dev@oregontracks.org
 Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/pci/pcie/err.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/err.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 05f61da5ed9d..7a5af873d8bc 100644
+index 7a5af873d8bc..46a5b84f8842 100644
 --- a/drivers/pci/pcie/err.c
 +++ b/drivers/pci/pcie/err.c
-@@ -150,6 +150,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 		pci_channel_state_t state,
+@@ -151,24 +151,27 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
  {
-+	int type = pci_pcie_type(dev);
- 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+ 	int type = pci_pcie_type(dev);
+-	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
++	struct pci_dev *bridge;
  	struct pci_bus *bus;
++	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
  
-@@ -157,8 +158,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	 * Error recovery runs on all subordinates of the first downstream port.
- 	 * If the downstream port detected the error, it is cleared at the end.
+ 	/*
+-	 * Error recovery runs on all subordinates of the first downstream port.
+-	 * If the downstream port detected the error, it is cleared at the end.
++	 * Error recovery runs on all subordinates of the bridge.  If the
++	 * bridge detected the error, it is cleared at the end.
  	 */
--	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
--	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
-+	if (!(type == PCI_EXP_TYPE_ROOT_PORT ||
-+	      type == PCI_EXP_TYPE_DOWNSTREAM))
- 		dev = pci_upstream_bridge(dev);
- 	bus = dev->subordinate;
+ 	if (!(type == PCI_EXP_TYPE_ROOT_PORT ||
+ 	      type == PCI_EXP_TYPE_DOWNSTREAM))
+-		dev = pci_upstream_bridge(dev);
+-	bus = dev->subordinate;
++		bridge = pci_upstream_bridge(dev);
++	else
++		bridge = dev;
  
+-	pci_dbg(dev, "broadcast error_detected message\n");
++	bus = bridge->subordinate;
++	pci_dbg(bridge, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bus(bus, report_frozen_detected, &status);
+-		status = reset_subordinates(dev);
++		status = reset_subordinates(bridge);
+ 		if (status != PCI_ERS_RESULT_RECOVERED) {
+-			pci_warn(dev, "subordinate device reset failed\n");
++			pci_warn(bridge, "subordinate device reset failed\n");
+ 			goto failed;
+ 		}
+ 	} else {
+@@ -177,7 +180,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 
+ 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+ 		status = PCI_ERS_RESULT_RECOVERED;
+-		pci_dbg(dev, "broadcast mmio_enabled message\n");
++		pci_dbg(bridge, "broadcast mmio_enabled message\n");
+ 		pci_walk_bus(bus, report_mmio_enabled, &status);
+ 	}
+ 
+@@ -188,27 +191,27 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 		 * drivers' slot_reset callbacks?
+ 		 */
+ 		status = PCI_ERS_RESULT_RECOVERED;
+-		pci_dbg(dev, "broadcast slot_reset message\n");
++		pci_dbg(bridge, "broadcast slot_reset message\n");
+ 		pci_walk_bus(bus, report_slot_reset, &status);
+ 	}
+ 
+ 	if (status != PCI_ERS_RESULT_RECOVERED)
+ 		goto failed;
+ 
+-	pci_dbg(dev, "broadcast resume message\n");
++	pci_dbg(bridge, "broadcast resume message\n");
+ 	pci_walk_bus(bus, report_resume, &status);
+ 
+-	if (pcie_aer_is_native(dev))
+-		pcie_clear_device_status(dev);
+-	pci_aer_clear_nonfatal_status(dev);
+-	pci_info(dev, "device recovery successful\n");
++	if (pcie_aer_is_native(bridge))
++		pcie_clear_device_status(bridge);
++	pci_aer_clear_nonfatal_status(bridge);
++	pci_info(bridge, "device recovery successful\n");
+ 	return status;
+ 
+ failed:
+-	pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
++	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
+ 
+ 	/* TODO: Should kernel panic here? */
+-	pci_info(dev, "device recovery failed\n");
++	pci_info(bridge, "device recovery failed\n");
+ 
+ 	return status;
+ }
 -- 
 2.28.0
 
