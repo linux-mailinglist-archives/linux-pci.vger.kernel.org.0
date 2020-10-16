@@ -2,112 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6418C28FBF0
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 02:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5989328FDD2
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Oct 2020 07:52:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389823AbgJPAMm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Oct 2020 20:12:42 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:42513 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389795AbgJPAMk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Oct 2020 20:12:40 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id A159AC0D;
-        Thu, 15 Oct 2020 20:12:37 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 15 Oct 2020 20:12:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        oregontracks.org; h=from:to:cc:subject:date:message-id
-        :in-reply-to:references:mime-version:content-transfer-encoding;
-         s=fm1; bh=nyBbTyXDf3mqxE2/pZf0BxJ4TGB40IXyTT523AFOsZI=; b=J1D6k
-        GgzWexZu/3n7Jql4gEoh3wTR+SZE1IgYJ6nTyOBCyZbbtaSjQhvdtoTsTKiok7q0
-        Swivwxy4O0C7rNU2zed+2d7CQiRF1B9GZvuC5A6r5ss2yX2FO7rL1lQsCJ4vhj4W
-        4MeJMF6XYP9rL3XZtnbH5qD6GMapuxBhCFyHo+c4rX/mdFpn0xeTMMdoY2xvqFyk
-        1MCQ1YloALFoRskO2cFlnjFwvKZJ6IoWBQKhPN25kO47DlA/h/kKrgTKRc+2T05J
-        eNFsJAV4uSdph9s3WJc2HH2WsyM2YnVuNuHKbyPS75Z+wb7KRIo4/j15zXh4n58b
-        qt+xMbpj8eJSsHWPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=nyBbTyXDf3mqxE2/pZf0BxJ4TGB40IXyTT523AFOsZI=; b=JxDvwG8C
-        YixRWruYLieByU9vsRo+wbXxvWQnFqsESJyChRUpC+qgxA7bkF3di1rJ/ATy9RLq
-        kkKBf9BARn2mm6FyY7GdAQXTJWXQwZ0ghCT6UqC0ENx+5iU8kFCguKI85DqXsAjC
-        Yl5EuO9PF2LD0wXP+g0MLiY4OxZssDjciQ2bc78IinTbgSiGfNEmOahTx0xLIIc2
-        Kkcw/LmyGt39MhqzcvBS9RHWSQ+belJlq8LFIlG1f3gXii8emLbjoGCLxL5GtkiP
-        GTGc/OoVHiOYNwjBPyfUtc0w50/MAB983HO3krqt64GtnU3kkhLLEOIvNrROgVWj
-        0hZYcM6X47f6ew==
-X-ME-Sender: <xms:deWIX0E0nb7dpcIlWg7A36d45oKIUH-74AkEqLnGz3Qi6YTxRPupzw>
-    <xme:deWIX9XBwzdGMlG9NwoNEr9vV3K6kg-PXZgIIfzmEgiROmthD9gQmbrHm0yHzDh8-
-    RmhKjMWzJ9vP9_S>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrieeggdeffecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
-    ertddtnecuhfhrohhmpefuvggrnhcuggcumfgvlhhlvgihuceoshgvrghnvhhkrdguvghv
-    sehorhgvghhonhhtrhgrtghkshdrohhrgheqnecuggftrfgrthhtvghrnhepkefggeektd
-    dttdeuffffjeeihfetfffghfdugefhvdeuheeuudelheegleevheefnecuffhomhgrihhn
-    pehkvghrnhgvlhdrohhrghenucfkphepvdegrddvtddrudegkedrgeelnecuvehluhhsth
-    gvrhfuihiivgepuddunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsvggrnhhvkhdruggv
-    vhesohhrvghgohhnthhrrggtkhhsrdhorhhg
-X-ME-Proxy: <xmx:deWIX-I9O_yb9LGTDXf3kUQy4XDjPX9hWucahZ053LUN4uqt_S2ITA>
-    <xmx:deWIX2HRDezLEZJEBRz9QJ-RX4gCCblcIerReNr0_uq9bXCu6GPfAw>
-    <xmx:deWIX6UQr0umghZ9VJ-CeYrnGJXLTMPsFqEJLz1nm07pLp51RZYOrg>
-    <xmx:deWIX1FrJVdzCMMm6ip1qr0TkGlkqEiWL8HDxALOU0K64u3H9JB0Wg>
-Received: from arch-ashland-svkelley.hsd1.or.comcast.net (c-24-20-148-49.hsd1.or.comcast.net [24.20.148.49])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E94FA3064680;
-        Thu, 15 Oct 2020 20:12:35 -0400 (EDT)
-From:   Sean V Kelley <seanvk.dev@oregontracks.org>
-To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
-        qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [PATCH v9 15/15] PCI/AER: Add RCEC AER error injection support
-Date:   Thu, 15 Oct 2020 17:11:13 -0700
-Message-Id: <20201016001113.2301761-16-seanvk.dev@oregontracks.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201016001113.2301761-1-seanvk.dev@oregontracks.org>
-References: <20201016001113.2301761-1-seanvk.dev@oregontracks.org>
+        id S2390225AbgJPFwq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Oct 2020 01:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390204AbgJPFwq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Oct 2020 01:52:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5EEC061755;
+        Thu, 15 Oct 2020 22:52:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id n14so838569pff.6;
+        Thu, 15 Oct 2020 22:52:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kI/NTRnsuiqMq/19qfG8dHccdcc45HtUzVtiWVJOA54=;
+        b=pD5FJ7dGZbZIGvMFGfGVp6uhM0aQbeJzP5nuTKxe6hekA+xD+Bz7avwlOlqMZVaxda
+         4gA9MxiFUWw7PitLTs/C0cLZVbksoy67J1NbwAozTllcMgXBvWl+3zXD3/lcn8p8A58a
+         vTlV4BojkNq0clIkEDio75syqxacmUyDRc7NWbCzDglDqM+sE8uj2RH/Yc9/N6LOx6Mf
+         NufIzGnE9X2rCdVx85BwGqFt1Aum7/TQAqwuOqcAQQoaQQikuFUdKa6NHLc1ol93+pdA
+         w/tEcuxYyRn8DLxilt9izQMErmMZmaquSOJMZv9YNKaVLXk9JbfpDmYduD7/YdMIQBac
+         i/5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kI/NTRnsuiqMq/19qfG8dHccdcc45HtUzVtiWVJOA54=;
+        b=JRh/uIrpBVzfkXXBS9TEOOWsmWihIUkrH4Jk99C+PD07qwkZQFX4SlFzFFUA+/Itua
+         9/ij5cyTBdODaMw2unNBWfroRpS8oH8QNhfWWbA7xrIfxdjs8jJBCwY7taOwQUx/iuJC
+         /Dh1ZBH8OvsqIrbHWFWFOkYfl1Pf6NfEI+ZIlKxVPuo2wlog/cvy0tDIPwEO2H/FkGoP
+         53c7F04xKdNpz9Mzb0UsGn0F5S64AYxUPzhtEDDi/Fwi1Q95dyBlcXoaM8cyltBRXD80
+         kLih0aQBmAI7tlyfm3bhkxImMoqYaFNlr4W9iMw5Zt5pUCTFf9GGlp0BjIiHHU+n9Mkq
+         lwZg==
+X-Gm-Message-State: AOAM532puCibg2cm+s6CcLxBGvJP51cUy+mcie0C4W/YjYLLSpytPTaB
+        ITwgcASzA/d2vzkrmx+nhI80o375+kg=
+X-Google-Smtp-Source: ABdhPJyDewsrfBilzjkXeoqPjtx3xNkDPU5NaeYKQi2avPxnn8ssglwAlSDWYUCi0lSnJKhbiA1axg==
+X-Received: by 2002:a63:cf46:: with SMTP id b6mr1794900pgj.49.1602827565724;
+        Thu, 15 Oct 2020 22:52:45 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.214.53])
+        by smtp.gmail.com with ESMTPSA id u14sm1308110pjf.53.2020.10.15.22.52.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Oct 2020 22:52:45 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, ast@kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Allen Pais <apais@linux.microsoft.com>,
+        Allen Pais <allen.pais@lkml.com>
+Subject: [RFC] PCI: allow sysfs file owner to read the config space with CAP_SYS_RAWIO
+Date:   Fri, 16 Oct 2020 11:22:35 +0530
+Message-Id: <20201016055235.440159-1-allen.lkml@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+From: Allen Pais <apais@linux.microsoft.com>
 
-Root Complex Event Collectors (RCEC) appear as peers to Root Ports and may
-also have the AER capability.
+ Access to pci config space is explictly checked with CAP_SYS_ADMIN
+in order to read configuration space past the frist 64B.
 
-Add RCEC support to the AER error injection driver.
+ Since the path is only for reading, could we use CAP_SYS_RAWIO?
+This patch contains a simpler fix, I would love to hear from the
+Maintainers on the approach.
 
-Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-Link: https://lore.kernel.org/r/20201002184735.1229220-15-seanvk.dev@oregontracks.org
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+ The other approach that I considered was to introduce and API
+which would check for multiple capabilities, something similar to
+perfmon_capable()/bpf_capable(). But I could not find more users
+for the API and hence dropped it.
+
+ The problem I am trying to solve is to avoid handing out
+CAP_SYS_ADMIN for extended reads of the PCI config space.
+
+Signed-off-by: Allen Pais <allen.pais@lkml.com>
 ---
- drivers/pci/pcie/aer_inject.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/pci-sysfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index c2cbf425afc5..767f8859b99b 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -333,8 +333,11 @@ static int aer_inject(struct aer_error_inj *einj)
- 	if (!dev)
- 		return -ENODEV;
- 	rpdev = pcie_find_root_port(dev);
-+	/* If Root Port not found, try to find an RCEC */
-+	if (!rpdev)
-+		rpdev = dev->rcec;
- 	if (!rpdev) {
--		pci_err(dev, "Root port not found\n");
-+		pci_err(dev, "Neither Root Port nor RCEC found\n");
- 		ret = -ENODEV;
- 		goto out_put;
- 	}
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 6d78df981d41..6574c0203475 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -666,7 +666,8 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
+ 	u8 *data = (u8 *) buf;
+ 
+ 	/* Several chips lock up trying to read undefined config space */
+-	if (file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN))
++	if (file_ns_capable(filp, &init_user_ns, CAP_SYS_ADMIN) ||
++	    file_ns_capable(filp, &init_user_ns, CAP_SYS_RAWIO))
+ 		size = dev->cfg_size;
+ 	else if (dev->hdr_type == PCI_HEADER_TYPE_CARDBUS)
+ 		size = 128;
 -- 
-2.28.0
+2.25.1
 
