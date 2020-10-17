@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C8B9290F43
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Oct 2020 07:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78508290F9A
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Oct 2020 07:49:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393101AbgJQFb6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Oct 2020 01:31:58 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46277 "EHLO mga14.intel.com"
+        id S2411689AbgJQFtN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Oct 2020 01:49:13 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33965 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392668AbgJQFb6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 17 Oct 2020 01:31:58 -0400
-IronPort-SDR: dyqzDkd7E0cnLbx2xFEJS67u+Eq9kahluiYU8NL8LNCgqeQXM4LTav+GdZLGKFhsi8qLuH68UU
- rODbFe3ciMtA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9776"; a="165948492"
-X-IronPort-AV: E=Sophos;i="5.77,384,1596524400"; 
-   d="scan'208";a="165948492"
+        id S2411648AbgJQFtN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 17 Oct 2020 01:49:13 -0400
+IronPort-SDR: q7+t2EQpcqYaq686ib+yRChjsvzCcH7LvL0GlJAWeoZopp5kP2xUMsp2EBNLAnq9e89rRu6j2Z
+ jCYGujDYOLvA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9776"; a="153647405"
+X-IronPort-AV: E=Sophos;i="5.77,385,1596524400"; 
+   d="scan'208";a="153647405"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2020 17:28:36 -0700
-IronPort-SDR: Z3/1OQLLK+Hj28b868G8zmgY/tUtxixXfmj7tgI9CJ7Jl5RVra1sv+1an/xWJS59IetIM1Aw6+
- VqaI5IVV9XFw==
-X-IronPort-AV: E=Sophos;i="5.77,384,1596524400"; 
-   d="scan'208";a="522477806"
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2020 18:45:51 -0700
+IronPort-SDR: Q5gEDNQXeCcbE0JfZ+2NMM7LCxnN2del1Q9LlwSmCx6tHtlJfZ9OAA4RyjL8HAGmF6Z+lEVhTl
+ +LSuScGY3qhg==
+X-IronPort-AV: E=Sophos;i="5.77,385,1596524400"; 
+   d="scan'208";a="522490359"
 Received: from ukapaley-mobl.amr.corp.intel.com (HELO [10.254.66.36]) ([10.254.66.36])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2020 17:28:34 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Oct 2020 18:45:49 -0700
 Subject: Re: [PATCH v9 12/15] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Sean V Kelley <seanvk.dev@oregontracks.org>,
@@ -36,11 +36,14 @@ Cc:     bhelgaas@google.com, rafael.j.wysocki@intel.com,
         Sean V Kelley <sean.v.kelley@intel.com>,
         Christoph Hellwig <hch@lst.de>,
         Ethan Zhao <xerces.zhao@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>, Keith Busch <kbusch@kernel.org>
+        Sinan Kaya <okaya@kernel.org>, Keith Busch <kbusch@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.nkuppuswamy@gmail.com>
 References: <20201016222902.GA112659@bjorn-Precision-5520>
-From:   "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
-Message-ID: <e5a004dd-f7bc-4445-be6e-55004ae97b8c@intel.com>
-Date:   Fri, 16 Oct 2020 17:28:32 -0700
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <468a3a6d-b75b-3caf-5a8e-6fcaa3a64587@linux.intel.com>
+Date:   Fri, 16 Oct 2020 18:45:47 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
@@ -62,8 +65,7 @@ This part is not very clear in ACPI spec or PCI firmware spec.
 
 IMO, since AEPI notifies the OS about the error, then I guess
 we are allowed to clear the PCI_ERR_ROOT_STATUS register
-after handling the error.
-
+after handling the error (similar to EDR case).
 >
 > On Fri, Oct 16, 2020 at 03:30:37PM -0500, Bjorn Helgaas wrote:
 >> [+to Jonathan]
