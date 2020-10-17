@@ -2,131 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC07C2911A2
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Oct 2020 13:25:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18643291224
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Oct 2020 16:03:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437440AbgJQLZb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Oct 2020 07:25:31 -0400
-Received: from mga03.intel.com ([134.134.136.65]:56571 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726543AbgJQLZ3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 17 Oct 2020 07:25:29 -0400
-IronPort-SDR: /MNjUu7z8YiuzsXFgFHDUrv3PCZoE43UzLQ4PIFlbGuX0LJ9NbCpwLgMOvKL5PEjoX4C8f0t6f
- d7O+gcr8lNZQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9776"; a="166864037"
-X-IronPort-AV: E=Sophos;i="5.77,386,1596524400"; 
-   d="scan'208";a="166864037"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2020 04:25:27 -0700
-IronPort-SDR: fJYorjHmM8rSDgf+AxOo8DQPaNgLXY2tWkNpbZAoBerP99MSi411fEqxxCXwYO+Iv27hZtjlge
- nyFknD9/+HXQ==
-X-IronPort-AV: E=Sophos;i="5.77,386,1596524400"; 
-   d="scan'208";a="532052790"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2020 04:25:26 -0700
-Date:   Sat, 17 Oct 2020 04:25:25 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
-        zhangfei.gao@linaro.org, wangzhou1@hisilicon.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-accelerators@lists.ozlabs.org,
-        kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        linux-pci@vger.kernel.org, "Lu, Baolu" <baolu.lu@intel.com>,
-        Jacon Jun Pan <jacob.jun.pan@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 0/2] iommu: Avoid unnecessary PRI queue flushes
-Message-ID: <20201017112525.GA47206@otc-nc-03>
-References: <20201015090028.1278108-1-jean-philippe@linaro.org>
- <20201015182211.GA54780@otc-nc-03>
- <20201016075923.GB1309464@myrica>
+        id S2438209AbgJQODS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Oct 2020 10:03:18 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44895 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2438207AbgJQODS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Oct 2020 10:03:18 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e20so5330321otj.11;
+        Sat, 17 Oct 2020 07:03:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0b/seI0e+TIVKTjq67vJOS1hG39AvC6HlXoE0qWwu7c=;
+        b=BbVp3WTXErfIVv40Gb9GPfD65Db6axQ1gm/t7/23KdvZ8YEFb9y4/lNoXBEqCFaArL
+         xx1KVrLxrYOj2z2BaNtJjgAhTY99DR8YlfcIJldNZmI3piCQGGLOX2fG7Wdhpq4Jn9nh
+         GQ9p9CKjZQBG1s3EuUnD2sYX0CqJ9KicqzA0Xq4m0Vrs1y6pD8gYcCdxpBtNkWeC1jet
+         HqTvulOi4echVFp8EqHj+Ph0DZR4Vbd1CZPmxTa28w0Q3n6vzWjttJne1QNDloA/XIL+
+         GZ32i/qWOpI+7j6g1u3rp+4SgyQ2t/ELMF8yUSAqc2JCK0hURqCaih/ynmardpBW8rJW
+         zgFg==
+X-Gm-Message-State: AOAM53079Nwx99CoWdeVnGuDMbGWHdVWjTguHKawGMsnNWrLB4BSTafS
+        5XRbml9I3i/Y2RWZUdyqTi1kTCcUiIw7+6+jiHE=
+X-Google-Smtp-Source: ABdhPJzI8ptGp0z9jVeQrsLhxqPhvm+m6NNLmUXaM7rl2FAUkiWKzsDfgt0OINi0GxYXHzP0DJ3/NM5xOiSWlEDKLIw=
+X-Received: by 2002:a9d:5e14:: with SMTP id d20mr5732667oti.107.1602943397450;
+ Sat, 17 Oct 2020 07:03:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201016075923.GB1309464@myrica>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20201016120416.7008-1-marek.vasut@gmail.com>
+In-Reply-To: <20201016120416.7008-1-marek.vasut@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 17 Oct 2020 16:03:05 +0200
+Message-ID: <CAMuHMdUR1=+mX7RnrL2e4+kiR=pa9vPc3GVyUBOVsf+DFei2Aw@mail.gmail.com>
+Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
+To:     Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean
+On Fri, Oct 16, 2020 at 2:04 PM <marek.vasut@gmail.com> wrote:
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>
+> The R-Car PCIe controller is capable of handling L0s/L1 link states.
+> While the controller can enter and exit L0s link state, and exit L1
+> link state, without any additional action from the driver, to enter
+> L1 link state, the driver must complete the link state transition by
+> issuing additional commands to the controller.
+>
+> The problem is, this transition is not atomic. The controller sets
+> PMEL1RX bit in PMSR register upon reception of PM_ENTER_L1 DLLP from
+> the PCIe card, but then the controller enters some sort of inbetween
+> state. The driver must detect this condition and complete the link
+> state transition, by setting L1IATN bit in PMCTLR and waiting for
+> the link state transition to complete.
+>
+> If a PCIe access happens inside this window, where the controller
+> is between L0 and L1 link states, the access generates a fault and
+> the ARM 'imprecise external abort' handler is invoked.
+>
+> Just like other PCI controller drivers, here we hook the fault handler,
+> perform the fixup to help the controller enter L1 link state, and then
+> restart the instruction which triggered the fault. Since the controller
+> is in L1 link state now, the link can exit from L1 link state to L0 and
+> successfully complete the access.
+>
+> Note that this fixup is applicable only to Aarch32 R-Car controllers,
+> the Aarch64 R-Car perform the same fixup in TFA, see TFA commit [1]
+> 0969397f2 ("rcar_gen3: plat: Prevent PCIe hang during L1X config access")
+> [1] https://github.com/ARM-software/arm-trusted-firmware/commit/0969397f295621aa26b3d14b76dd397d22be58bf
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+> V2: - Update commit message, add link to TFA repository commit
+>     - Handle the LPAE case as in ARM fault.c and fsr-{2,3}level.c
+>     - Cache clock and check whether they are enabled before register
+>       access
+> V3: - Fix commit message according to spellchecker
+>     - Use of_find_matching_node() to apply hook only on Gen1 and Gen2 RCar
+>       (in case the kernel is multiplatform)
+> V4: - Mark rcar_pcie_abort_handler_of_match with __initconst
 
-On Fri, Oct 16, 2020 at 09:59:23AM +0200, Jean-Philippe Brucker wrote:
-> On Thu, Oct 15, 2020 at 11:22:11AM -0700, Raj, Ashok wrote:
-> > Hi Jean
-> > 
-> > + Baolu who is looking into this.
-> > 
-> > 
-> > On Thu, Oct 15, 2020 at 11:00:27AM +0200, Jean-Philippe Brucker wrote:
-> > > Add a parameter to iommu_sva_unbind_device() that tells the IOMMU driver
-> > > whether the PRI queue needs flushing. When looking at the PCIe spec
-> > > again I noticed that most of the time the SMMUv3 driver doesn't actually
-> > > need to flush the PRI queue. Does this make sense for Intel VT-d as well
-> > > or did I overlook something?
-> > > 
-> > > Before calling iommu_sva_unbind_device(), device drivers must stop the
-> > > device from using the PASID. For PCIe devices, that consists of
-> > > completing any pending DMA, and completing any pending page request
-> > > unless the device uses Stop Markers. So unless the device uses Stop
-> > > Markers, we don't need to flush the PRI queue. For SMMUv3, stopping DMA
-> > > means completing all stall events, so we never need to flush the event
-> > > queue.
-> > 
-> > I don't think this is true. Baolu is working on an enhancement to this,
-> > I'll quickly summarize this below:
-> > 
-> > Stop markers are weird, I'm not certain there is any device today that
-> > sends STOP markers. Even if they did, markers don't have a required
-> > response, they are fire and forget from the device pov.
-> 
-> Definitely agree with this, and I hope none will implement stop marker.
-> For devices that *don't* use a stop marker, the PCIe spec says (10.4.1.2):
-> 
->   To stop [using a PASID] without using a Stop Marker Message, the
->   function shall:
->   1. Stop queueing new Page Request Messages for this PASID.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The device driver would need to tell stop sending any new PR's.
+Please add tags given to the previous version:
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->   2. Finish transmitting any multi-page Page Request Messages for this
->      PASID (i.e. send the Page Request Message with the L bit Set).
->   3. Wait for PRG Response Messages associated any outstanding Page
->      Request Messages for the PASID.
-> 
-> So they have to flush their PR themselves. And since the device driver
-> completes this sequence before calling unbind(), then there shouldn't be
-> any oustanding PR for the PASID, and unbind() doesn't need to flush,
-> right?
+Gr{oetje,eeting}s,
 
-I can see how the device can complete #2,3 above. But the device driver
-isn't the one managing page-responses right. So in order for the device to
-know the above sequence is complete, it would need to get some assist from
-IOMMU driver?
+                        Geert
 
-How does the driver know that everything host received has been responded
-back to device?
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> 
-> > I'm not sure about other IOMMU's how they behave, When there is no space in
-> > the PRQ, IOMMU auto-responds to the device. This puts the device in a
-> > while (1) loop. The fake successful response will let the device do a ATS
-> > lookup, and that would fail forcing the device to do another PRQ.
-> 
-> But in the sequence above, step 1 should ensure that the device will not
-> send another PR for any successful response coming back at step 3.
-
-True, but there could be some page-request in flight on its way to the
-IOMMU. By draining and getting that round trip back to IOMMU we gaurantee
-things in flight are flushed to PRQ after that Drain completes.
-> 
-> So I agree with the below if we suspect there could be pending PR, but
-> given that pending PR are a stop marker thing and we don't know any device
-> using stop markers, I wondered why I bothered implementing PRIq flush at
-> all for SMMUv3, hence this RFC.
-> 
-
-Cheers,
-Ashok
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
