@@ -2,124 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C08C29172E
-	for <lists+linux-pci@lfdr.de>; Sun, 18 Oct 2020 13:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C448D2917CC
+	for <lists+linux-pci@lfdr.de>; Sun, 18 Oct 2020 16:05:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgJRLfl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Oct 2020 07:35:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgJRLfl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Oct 2020 07:35:41 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1968C061755
-        for <linux-pci@vger.kernel.org>; Sun, 18 Oct 2020 04:35:39 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id x20so5764891qkn.1
-        for <linux-pci@vger.kernel.org>; Sun, 18 Oct 2020 04:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LRsXpjulKclQsZReY9ZC9kN9qaflaz0NAuODSgAB6oE=;
-        b=pljsNfh9k2iEWOtXc/HybsW3lv8Nmz55NBLu29d9RYU0wIrCby18xXBO4LDkNHOPJ7
-         AXGOaoN/8Xk+JPuz1HYNyjuPfGwCscGKtLXBZsHw6tOkEeiqmrGo1UcMmqzckL6cW6s+
-         a0fU/wZoob2A3ruilBEcWG4EdDldnLFVoIp7wtPtFjJ7zloX8x+zNMcg5zsVPEAH5xgN
-         7R3bOFnSSjLCnwSyVCMh29H+LAxszdKaDJEWidXwLhVkrzzNfelAYCNLtFnb+HWg7h5F
-         zqWHolF58Tlr5e1D/YNhkXnUqqGIW0/YkJZoROhbMv40m2ra7khuk9yxYEK2FPL0fCI2
-         C3jg==
+        id S1727025AbgJROFh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 18 Oct 2020 10:05:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56522 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726960AbgJROFA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Oct 2020 10:05:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603029898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kBVMPnQfqrYuRmZ0mFLSkNqYWCaxPfshC6ZYuKW12NQ=;
+        b=CE3TTm0ZWS3xUbYzjwLA7+TYTk7Dg+VxIL4Zp73oDsqTuzAXXNjBX0Doq5M5Cu6ffXkYev
+        bZ3C9BpL47kMqRFuXYSmeuVfmCYD0R8cyybmNyMbwair6n3qDaCsRQ2KiiaxG8Fe9Zs8sm
+        6xUrramWNvo4ZIP3aUKUh3vEKSsfIgI=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-269-Ji30A5UHN4Wa38Sfrcq6gQ-1; Sun, 18 Oct 2020 10:04:56 -0400
+X-MC-Unique: Ji30A5UHN4Wa38Sfrcq6gQ-1
+Received: by mail-qk1-f197.google.com with SMTP id s14so836633qke.1
+        for <linux-pci@vger.kernel.org>; Sun, 18 Oct 2020 07:04:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LRsXpjulKclQsZReY9ZC9kN9qaflaz0NAuODSgAB6oE=;
-        b=rvKpho9juZ4U37DIo2yC67wI2girLbGc0yMHrQ86H96n3OjLoAvwd1SqsnjykhNsws
-         T1lSovZKTvyQaZURyCOCVjkoaBDC44u5KNST4ItjUJWxLDs1ngQlvZJQTyY4wOMpKwJA
-         AY56/PtESxMTfbD48QNNLJ3LopXjmEwwoEbfQ+nkrTbN27ghUhVJIiqKu0awzFuU071b
-         1Jqj0i7RSmxrZmwibBCLwy+7Ue46JlA3avrgJ/OxPK/gGfl7KU6IE97M9bLVoMBoh9uG
-         +JwEFf/NifbasfVqSk17yoJNUEIooEweTk6EJon7WkVZtOganiGS6FuYJysYyLj5xzPe
-         2erQ==
-X-Gm-Message-State: AOAM530y7C2MgboYNI0NDeL9EVNxhhPwvJslpD2k13/BuSOgPF0M/bFX
-        kRZmwv2H8b7t9w7pU/iKsjKfUOqCSvGos+mh9GM=
-X-Google-Smtp-Source: ABdhPJyYcXNYVhcMfT9j9KLHhMVrOcg4OkfUvd5RTY0uiFauCr3DGk+ngb1IrEtT5qfOgiWvn4IxLuF5YsvEljDPdnU=
-X-Received: by 2002:a37:a187:: with SMTP id k129mr12135401qke.435.1603020938477;
- Sun, 18 Oct 2020 04:35:38 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=kBVMPnQfqrYuRmZ0mFLSkNqYWCaxPfshC6ZYuKW12NQ=;
+        b=H42O78b3IKORuFZLCc/WCrQ8kFF+xIYFV5AeTQu+DZr3WMIYm4IPUOvHnXe2R+0CXt
+         jNPggMT5GHAl7B3g/MDqseq3ioHpkUutJvg4AgUrZwadxc1dmH88qZtIx9ogXc+ybq9L
+         +lmdeSNCl3yKYSS85CQkWEzZawGn3I2YJ30RJYaH5vGGDZAO+d2EI8UjjLNAvINB3MO5
+         0Fi9yUFmNy3Fp642rxAHZ0cyjY0rnsATnhKXXrpmGFKvrXEtDagqBUdccLp0r5ottymb
+         o/5QnMIpDi7mwVi9Q5cbewV2hASAEsiZwxCkt7ibAJYo50LFbuUSjFaWvrZK0FXVDxFb
+         SxLQ==
+X-Gm-Message-State: AOAM530w9Fax07hgTfIiPC6jIR7rYNganjzsImCoChBvlAT4TG+p9RfI
+        w7gdrm2N9v5cGnuOMU/d3jcc1ZYWrI6BNbMt8oBitmbCERoEmLHLH5xOpi2V7D7GrIOlHzmk2PL
+        VVBlcwghn0Xo+9Z87FtPG
+X-Received: by 2002:a05:620a:1287:: with SMTP id w7mr12724290qki.436.1603029896363;
+        Sun, 18 Oct 2020 07:04:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy6z5rS79nBj0nCbIqVRZ9qmkAzjArqewdITB0rtwnhi1UUe/kvxLZTENMJDRITA4iBlrUAlw==
+X-Received: by 2002:a05:620a:1287:: with SMTP id w7mr12724258qki.436.1603029896034;
+        Sun, 18 Oct 2020 07:04:56 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id u16sm3288927qth.42.2020.10.18.07.04.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Oct 2020 07:04:55 -0700 (PDT)
+Subject: Re: [RFC] treewide: cleanup unreachable breaks
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        storagedev@microchip.com, devel@driverdev.osuosl.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        bpf@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com
+References: <20201017160928.12698-1-trix@redhat.com>
+ <20201018054332.GB593954@kroah.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <eecb7c3e-88b2-ec2f-0235-280da51ae69c@redhat.com>
+Date:   Sun, 18 Oct 2020 07:04:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <CAA85sZsnMd3SdnH2bchxfkR7_Ka1wDvu9Z592uaK3FFm4rszTw@mail.gmail.com>
- <20201016212846.GA109479@bjorn-Precision-5520> <CAA85sZuOh8ZtnWj8svxK_9er7hLskTjc0ASUVkvAkv9Rc=Bh_g@mail.gmail.com>
-In-Reply-To: <CAA85sZuOh8ZtnWj8svxK_9er7hLskTjc0ASUVkvAkv9Rc=Bh_g@mail.gmail.com>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Sun, 18 Oct 2020 13:35:27 +0200
-Message-ID: <CAA85sZufMEAieVgzxdPrbCzaPV0eM_NYX7idWkLVxQaJrYjC+A@mail.gmail.com>
-Subject: Re: [PATCH] Use maximum latency when determining L1 ASPM
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201018054332.GB593954@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 17, 2020 at 12:41 AM Ian Kumlien <ian.kumlien@gmail.com> wrote:
+
+On 10/17/20 10:43 PM, Greg KH wrote:
+> On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
+>> From: Tom Rix <trix@redhat.com>
+>>
+>> This is a upcoming change to clean up a new warning treewide.
+>> I am wondering if the change could be one mega patch (see below) or
+>> normal patch per file about 100 patches or somewhere half way by collecting
+>> early acks.
+> Please break it up into one-patch-per-subsystem, like normal, and get it
+> merged that way.
+
+OK.
+
+Thanks,
+
+Tom
+
 >
-> On Fri, Oct 16, 2020 at 11:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Wed, Oct 14, 2020 at 03:33:17PM +0200, Ian Kumlien wrote:
-> > > On Wed, Oct 14, 2020 at 10:34 AM Kai-Heng Feng
-> > > <kai.heng.feng@canonical.com> wrote:
-> > > > > On Oct 12, 2020, at 18:20, Ian Kumlien <ian.kumlien@gmail.com> wrote:
-> > > > > On Thu, Oct 8, 2020 at 6:13 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > > > >> OK, now we're getting close.  We just need to flesh out the
-> > > > >> justification.  We need:
-> > > > >>
-> > > > >>  - Tidy subject line.  Use "git log --oneline drivers/pci/pcie/aspm.c"
-> > > > >>    and follow the example.
-> > > > >
-> > > > > Will do
-> > > > >
-> > > > >>  - Description of the problem.  I think it's poor bandwidth on your
-> > > > >>    Intel I211 device, but we don't have the complete picture because
-> > > > >>    that NIC is 03:00.0, which doesn't appear above at all.
-> > > > >
-> > > > > I think we'll use Kai-Hengs issue, since it's actually more related to
-> > > > > the change itself...
-> > > > >
-> > > > > Mine is a side effect while Kai-Heng is actually hitting an issue
-> > > > > caused by the bug.
-> > > >
-> > > > I filed a bug here:
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=209671
-> > >
-> > > Thanks!
-> >
-> > Sigh.  I feel like I'm just not getting anywhere here.  I still do not
-> > have a "before" and "after" set of lspci output.
-> >
-> > Kai-Heng's bugzilla has two sets of output, but one is a working
-> > config with CONFIG_PCIEASPM_DEFAULT=y and the other is a working
-> > config with Ian's patch applied and CONFIG_PCIEASPM_POWERSAVE=y.
-> >
-> > Comparing them doesn't show the effect of Ian's patch; it shows the
-> > combined effect of Ian's patch and the CONFIG_PCIEASPM_POWERSAVE=y
-> > change.  I'm not really interested in spending a few hours trying to
-> > reverse-engineer the important changes.
-> >
-> > Can you please, please, collect these on your system, Ian?  I assume
-> > that you can easily collect it once without your patch, when you see
-> > poor I211 NIC performance but the system is otherwise working.  And
-> > you can collect it again *with* your patch.  Same Kconfig, same
-> > *everything* except adding your patch.
+> Sending us a patch, without even a diffstat to review, isn't going to
+> get you very far...
 >
-> Yeah I can do that, but I would like the changes output from the
-> latest patch suggestion
-> running on Kai-Heng's system so we can actually see what it does...
+> thanks,
+>
+> greg k-h
+>
 
-Is:
-https://bugzilla.kernel.org/show_bug.cgi?id=209725
-
-More to your liking?
-
-> > Bjorn
