@@ -2,124 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79FFB29263B
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 13:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10B3C2927C9
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 15:00:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgJSLMJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Oct 2020 07:12:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39050 "EHLO
+        id S1726992AbgJSNAa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Oct 2020 09:00:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgJSLMJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 07:12:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABD1C0613CE;
-        Mon, 19 Oct 2020 04:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=bDcR7UZAo6x2NnmYgmfbzx+iKi+io+kT/yc3B05Vq8w=; b=dG1bd3uiGTmLS2XdOdubnm/OuZ
-        P6KPYF4d6TlO9l9Mb+ClxI4oDFFQ5B3Mo+4QAgnDkmkjXwq6mWp0jrROT9EsszcmuTVtMbtDz2Lj1
-        Jx8bT3ltK/RIwsr2+zpgb0FbRMhnXDkbKvTI5uqMtTFpR5HqJBzjT06hOsBY1I2avywzAOMx3VoMQ
-        T7MLozeyRJQW8bRXfQVDsGB83DngFBbJM4Gqc29tTjiEcYALeqKs8SGwpr+CeeUyKtNFHEC/v4kj6
-        s8L3OjnxD95DBO+JIrIqg9o96iWAiQ/fua+8+9/FdXLDzEQ1iQKxaGH3zwQX07soYf/JPPOU0UCBC
-        GDQRBFGQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kUT4m-0001kH-Q4; Mon, 19 Oct 2020 11:11:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A54873011E6;
-        Mon, 19 Oct 2020 13:11:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8859420419078; Mon, 19 Oct 2020 13:11:37 +0200 (CEST)
-Date:   Mon, 19 Oct 2020 13:11:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jiri@nvidia.com, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, lgoncalv@redhat.com
-Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to
- housekeeping CPUs
-Message-ID: <20201019111137.GL2628@hirez.programming.kicks-ass.net>
-References: <20200928183529.471328-1-nitesh@redhat.com>
- <20200928183529.471328-5-nitesh@redhat.com>
- <20201016122046.GP2611@hirez.programming.kicks-ass.net>
- <79f382a7-883d-ff42-394d-ec4ce81fed6a@redhat.com>
+        with ESMTP id S1726336AbgJSNAa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 09:00:30 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BE2C0613CE;
+        Mon, 19 Oct 2020 06:00:29 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id t15so10373705otk.0;
+        Mon, 19 Oct 2020 06:00:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4cymyCd5gi37rlWCj127ejDxfl3SFdVGt+7daiAA+8M=;
+        b=rPEF+DNiMUWfzLdtOZ5Ur+BfiTWLQVcvI+X5jEFCXsQhM68/HvNbLZvzUIKbdcUAId
+         7TcQSPREmdZQXQf9UXPbrdaNy+Q43EwC7apgHesdXNPAxw5Dvie6sA7YuoV3c0P7bFsD
+         V16iWVGGhyOLN52oVpi3vBvO8y3juMza1Me1j9iQ66rPFZSv6JlXdM9NIA1l2AndXQBJ
+         uUWVcopAMNMbVCN6yfrKUdCOM7Gi52tLRlcFOx0gjPBkE8PBpB/7aLe23hTwUQuGnmNV
+         91Pdy41IzIaexzKtq4wXq36jUryYDg3XD0HymZ7hloGBFVlutzV5b57ugqwGkjF69pyL
+         bcww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4cymyCd5gi37rlWCj127ejDxfl3SFdVGt+7daiAA+8M=;
+        b=a9TmdSdXFq/eRmZxA6MMI/sKapuTThXshxVBCnelZBCplMzSBaUaugsDxd51C7tBVa
+         uJzkPxVDd+QmJK0qyf5WB6IFKGV72AZNSughBazFOawmd0/nk0cHzjCvM9fiByc++HeQ
+         Qetc8B3y3b0xFrI/fYdecwzz7V30DX8jp214H9dhyK179ntQoJ74y5FvKJcCtWtUyvhp
+         c1Z3RyQW4aHI6tZnmeOCcMLtxaMop61jkJ76B5wBDINjkcxUmuwV4fsjncLBTx+yR8Es
+         lRhSDKZO3hUdOCweRfTTBP2nmrxoL3T8ovRjgv1nlFvv6ocrFNrYHoLQkoTmeen1eLku
+         4BFw==
+X-Gm-Message-State: AOAM530ZQuSWJMAqMulraZ9BSAo1eH8txLXv3BcDiHArAj0gA9Cw5BRG
+        VD64CD3eI8bbK4yLVqXtpZTNztGR8xVC7h4Y4JU=
+X-Google-Smtp-Source: ABdhPJzjSWH9JW/j+crBHwvQjSp7BLNlgchS8tuosRBv2UR19CqZRRjs00K7J+7G4QBCbEbhynG+p6YhtQ9gih5V00U=
+X-Received: by 2002:a05:6830:2434:: with SMTP id k20mr11264589ots.205.1603112429088;
+ Mon, 19 Oct 2020 06:00:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <79f382a7-883d-ff42-394d-ec4ce81fed6a@redhat.com>
+References: <20201016055235.440159-1-allen.lkml@gmail.com> <20201016062027.GB569795@kroah.com>
+In-Reply-To: <20201016062027.GB569795@kroah.com>
+From:   Allen <allen.lkml@gmail.com>
+Date:   Mon, 19 Oct 2020 18:30:16 +0530
+Message-ID: <CAOMdWSJDJ-uXpis1WbG3LnOG7bMiif5Q4Maafv_a=55Y_qypfQ@mail.gmail.com>
+Subject: Re: [RFC] PCI: allow sysfs file owner to read the config space with CAP_SYS_RAWIO
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, ast@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Allen Pais <apais@linux.microsoft.com>,
+        Allen Pais <allen.pais@lkml.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 18, 2020 at 02:14:46PM -0400, Nitesh Narayan Lal wrote:
-> >> +	hk_cpus =3D housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ);
-> >> +
-> >> +	/*
-> >> +	 * If we have isolated CPUs for use by real-time tasks, to keep the
-> >> +	 * latency overhead to a minimum, device-specific IRQ vectors are mo=
-ved
-> >> +	 * to the housekeeping CPUs from the userspace by changing their
-> >> +	 * affinity mask. Limit the vector usage to keep housekeeping CPUs f=
-rom
-> >> +	 * running out of IRQ vectors.
-> >> +	 */
-> >> +	if (hk_cpus < num_online_cpus()) {
-> >> +		if (hk_cpus < min_vecs)
-> >> +			max_vecs =3D min_vecs;
-> >> +		else if (hk_cpus < max_vecs)
-> >> +			max_vecs =3D hk_cpus;
-> > is that:
 > >
-> > 		max_vecs =3D clamp(hk_cpus, min_vecs, max_vecs);
->=20
-> Yes, I think this will do.
->=20
+> >  Access to pci config space is explictly checked with CAP_SYS_ADMIN
+> > in order to read configuration space past the frist 64B.
 > >
-> > Also, do we really need to have that conditional on hk_cpus <
-> > num_online_cpus()? That is, why can't we do this unconditionally?
->=20
-> FWIU most of the drivers using this API already restricts the number of
-> vectors based on the num_online_cpus, if we do it unconditionally we can
-> unnecessary duplicate the restriction for cases where we don't have any
-> isolated CPUs.
+> >  Since the path is only for reading, could we use CAP_SYS_RAWIO?
+>
+> Why?  What needs this reduced capability?
 
-unnecessary isn't really a concern here, this is a slow path. What's
-important is code clarity.
+Thanks for the review.
 
-> Also, different driver seems to take different factors into consideration
-> along with num_online_cpus while finding the max_vecs to request, for
-> example in the case of mlx5:
-> MLX5_CAP_GEN(dev, num_ports) * num_online_cpus() +
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 MLX5_EQ_VEC_COMP_BASE
->=20
-> Having hk_cpus < num_online_cpus() helps us ensure that we are only
-> changing the behavior when we have isolated CPUs.
->=20
-> Does that make sense?
+We need read access to /sys/bus/pci/devices/,  We need write access to config,
+remove, rescan & enable files under the device directory for each PCIe
+functions & the downstream PCIe port.
 
-That seems to want to allocate N interrupts per cpu (plus some random
-static amount, which seems weird, but whatever). This patch breaks that.
+We need r/w access to sysfs to unbind and rebind the root complex.
 
-So I think it is important to figure out what that driver really wants
-in the nohz_full case. If it wants to retain N interrupts per CPU, and
-only reduce the number of CPUs, the proposed interface is wrong.
+>
+> > This patch contains a simpler fix, I would love to hear from the
+> > Maintainers on the approach.
+> >
+> >  The other approach that I considered was to introduce and API
+> > which would check for multiple capabilities, something similar to
+> > perfmon_capable()/bpf_capable(). But I could not find more users
+> > for the API and hence dropped it.
+> >
+> >  The problem I am trying to solve is to avoid handing out
+> > CAP_SYS_ADMIN for extended reads of the PCI config space.
+>
+> Who is reading this config space that doesn't have admin rights?  And
+> what are they doing with it?
+>
+> One big problem is that some devices will crash if you do this wrong,
+> which is why we restricted it to root.  Hopefully all of those devices
+> are now gone, but I don't think you can count on it.
+>
+> The "guaranteed safe" fields in the config space are already exported by
+> sysfs for all users to read, are they not sufficient?
+>
+> thanks,
+>
+> greg k-h
 
-> > And what are the (desired) semantics vs hotplug? Using a cpumask without
-> > excluding hotplug is racy.
->=20
-> The housekeeping_mask should still remain constant, isn't?
-> In any case, I can double check this.
 
-The goal is very much to have that dynamically configurable.
+
+-- 
+       - Allen
