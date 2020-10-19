@@ -2,109 +2,196 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F28C292817
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 15:21:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9BED29284D
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 15:38:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgJSNVw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Oct 2020 09:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbgJSNVw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 09:21:52 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABAE9C0613CE;
-        Mon, 19 Oct 2020 06:21:51 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id u17so12347297oie.3;
-        Mon, 19 Oct 2020 06:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E3Lz+f5H2qnCm4YPaUNgSzjSIKDYKn6c8ZxYUYNfS1w=;
-        b=JFS4SpmyPt5ZOjC7dlCnr4rKUh/FWhWLlYxEQ7unXai0oPrxai1RJZlmpbxaZtjqn/
-         WsGr4jpeEPexCxQElREO/n28ABT1DPKZYLoqDlvKtvyQ/ZKRwW/a14TvIaEjgQzPjrIe
-         amwUZzmIfhkqG9mdD5iBJ7dmY3T3wU1+9qXLCRNYcooTOcthVz/YDa5+ltTYvh3bd4U5
-         ZZldtf0fyU0QWKczckMPiuuMqQovFlOA2TXVhOl5NEES/bzIIhaTajDMlxUJTGLLdlyT
-         wcjnk1LxwGfMwHXbMO1NGsA67qPltFCIRb3RzlJrJ2bIEVtvcOyLYf9nF9TSWeQLF5aS
-         hq3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E3Lz+f5H2qnCm4YPaUNgSzjSIKDYKn6c8ZxYUYNfS1w=;
-        b=uiT1C2ZT4Q4uTes/rb9UbLjWKsm+2gPdoT0FTx0vCsKK1K2RFjKKnmrkNcaiTQwlfW
-         xeCOxTqOqYOcLNHEhzP9F0el/CP1epdm0/CH4ikTa9z8Ai35IwdJYCZKKneILpNl4sKN
-         ipjwwt6snEsNluE+wX4eExDSytt2S1QnPHxwN1OoJXZ6kbDIkJWuXxFuMzu/e+yNq4IA
-         qGhAIsSILb21nPy86oU9TrTbBv5DJB5a496sUPIma9vUOXvSAnj/rM07oSDnvL0+9IIw
-         4q2op7vXWYucrSDjXA7MFSrsCRwafsGUx2ysRzas3k2wYzIYE/zi7DlLUTkekQrJdyDh
-         cVfQ==
-X-Gm-Message-State: AOAM531JrcVM7KmNHVcKxHhOFc8aS7qVoTGDA5p84eJOwds0EqC+Q2eF
-        68sJMk7oW3YpWgCcFE5dAT4t14cEkyzF5m8xrDM=
-X-Google-Smtp-Source: ABdhPJyJ8FZf8rCCzlAoa9tjv/hbnEkXiWU94wZJumCKipG5ZENn745vfPepWrBUB7XWR7xR6+/WY28kSGyZruv7OX4=
-X-Received: by 2002:aca:4dd2:: with SMTP id a201mr10963292oib.135.1603113711085;
- Mon, 19 Oct 2020 06:21:51 -0700 (PDT)
+        id S1728352AbgJSNiz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Oct 2020 09:38:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728275AbgJSNiy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 19 Oct 2020 09:38:54 -0400
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CDF42223C;
+        Mon, 19 Oct 2020 13:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603114733;
+        bh=QLl//rSYnpjI4XjsLivmaRA2q702aMuao3NMwW0AZCU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZJ0UeatYQoCfuwjODgSFqcdGke2T/VzdRlInpmZ8BW5LGWfYNWT6Us7AD7LSvghAw
+         ovGl1TIHvNQ1Sik3JLTWfyDAndg1U+svVh3VWmUaKrDtjgiTDSyC7LZJHgri7Y4Lum
+         sBVeb1uXisrOJIxuAsOY6PKTBBO7RZkwfiv/NJgs=
+Received: by mail-ot1-f44.google.com with SMTP id e20so10432464otj.11;
+        Mon, 19 Oct 2020 06:38:53 -0700 (PDT)
+X-Gm-Message-State: AOAM530TEX2PGRION19xoUwOSsLg6yhtDxFyg4kuwTBINxxZoPXRgCbB
+        zw+jg7fyyOYnANSDZ8amaF+RjCOhH5R/jHvdug==
+X-Google-Smtp-Source: ABdhPJxPScoNZrlBxS9IlCTidVRXbPv6VWkKWABPQ2lSmgTF04BwvvKmDYpcVnycQB3EFkkwQ2mstx5y1VG7XAji/kU=
+X-Received: by 2002:a9d:7993:: with SMTP id h19mr10559otm.129.1603114732682;
+ Mon, 19 Oct 2020 06:38:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201016055235.440159-1-allen.lkml@gmail.com> <20201016062027.GB569795@kroah.com>
- <CAOMdWSJDJ-uXpis1WbG3LnOG7bMiif5Q4Maafv_a=55Y_qypfQ@mail.gmail.com> <20201019131613.GA3254417@kroah.com>
-In-Reply-To: <20201019131613.GA3254417@kroah.com>
-From:   Allen <allen.lkml@gmail.com>
-Date:   Mon, 19 Oct 2020 18:51:39 +0530
-Message-ID: <CAOMdWS+F=cCK=Rgy-0xk4_mqUFMn1PQBWR8u3JwqTP2AVifxsA@mail.gmail.com>
-Subject: Re: [RFC] PCI: allow sysfs file owner to read the config space with CAP_SYS_RAWIO
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        ast@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Allen Pais <apais@linux.microsoft.com>,
-        Allen Pais <allen.pais@lkml.com>
+References: <CGME20201019094739eucas1p18cd4c7e5a0197393d2e7c5c6fcc2777d@eucas1p1.samsung.com>
+ <20201019094715.15343-1-m.szyprowski@samsung.com> <20201019094715.15343-3-m.szyprowski@samsung.com>
+In-Reply-To: <20201019094715.15343-3-m.szyprowski@samsung.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 19 Oct 2020 08:38:40 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+X3w=1-_SpXPTdO_UGg5er9vU-XETT-NbS96LSfNLUVQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+X3w=1-_SpXPTdO_UGg5er9vU-XETT-NbS96LSfNLUVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] Documetation: dt-bindings: add the
+ samsung,exynos-pcie binding
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> > > >
-> > > >  Access to pci config space is explictly checked with CAP_SYS_ADMIN
-> > > > in order to read configuration space past the frist 64B.
-> > > >
-> > > >  Since the path is only for reading, could we use CAP_SYS_RAWIO?
-> > >
-> > > Why?  What needs this reduced capability?
-> >
-> > Thanks for the review.
-> >
-> > We need read access to /sys/bus/pci/devices/,  We need write access to config,
-> > remove, rescan & enable files under the device directory for each PCIe
-> > functions & the downstream PCIe port.
-> >
-> > We need r/w access to sysfs to unbind and rebind the root complex.
+On Mon, Oct 19, 2020 at 4:47 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 >
-> That didn't answer my question at all.
-
-Sorry about that, breaking it down:
-
-When the machine first boots, the VFIO device bindings under /dev/vfio
-are not present.
-
-root@localhost:/tmp# ls -l /dev/vfio/
-total 0
-crw-rw-rw-. 1 root root 10, 196 Jan  5 01:47 vfio
-
-We have an agent which needs to run the following commands (We get
-access denied here and need permissions to do this).
-echo -n xxxx yyyy > /sys/module/vfio_pci/drivers/pci:vfio-pci/new_id
-echo -n xxxx yyyy > /sys/module/vfio_pci/drivers/pci:vfio-pci/new_id
-
-And we want to avoid handing CAP_SYS_ADMIN here. Which is why the
-thought about CAP_SYS_RAWIO.
+> From: Jaehoon Chung <jh80.chung@samsung.com>
 >
-> Why can't you have the process that wants to do all of the above, have
-> admin rights as well?  Doing all of that is _very_ low-level and can
-> cause all sorts of horrible things to happen to your machine, and is not
-> really "raw io" in the traditional sense at all, right?
+> Add dt-bindings for the Samsung Exynos PCIe controller (Exynos5433
+> variant).
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> [mszyprow: updated the binding to latest driver changes, rewrote it in yaml,
+>            rewrote commit message]
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  .../bindings/pci/samsung,exynos-pcie.yaml     | 106 ++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+> new file mode 100644
+> index 000000000000..48fb569c238c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/samsung,exynos-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC series PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Jaehoon Chung <jh80.chung@samsung.com>
+> +
+> +description: |+
+> +  Exynos5433 SoC PCIe host controller is based on the Synopsys DesignWare
+> +  PCIe IP and thus inherits all the common properties defined in
+> +  designware-pcie.txt.
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,exynos5433-pcie
+> +
+> +  reg:
+> +    items:
+> +      - description: External Local Bus interface (ELBI) registers.
+> +      - description: Data Bus Interface (DBI) registers.
+> +      - description: PCIe configuration space region.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: elbi
+> +      - const: bdi
 
+dbi
 
-If the above approach is going to cause the system to do horrible things,
-then I'll drop the idea.
+> +      - const: config
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: PCIe bridge clock
+> +      - description: PCIe bus clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pcie
+> +      - const: pcie_bus
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pcie-phy
 
--- 
-       - Allen
+Kind of a pointless name.
+
+> +
+> +  vdd10-supply:
+> +    description:
+> +      Phandle to a regulator that provides 1.0V power to the PCIe block.
+> +
+> +  vdd18-supply:
+> +    description:
+> +      Phandle to a regulator that provides 1.8V power to the PCIe block.
+> +
+> +required:
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - interrupt-names
+> +  - clocks
+> +  - clock-names
+> +  - phys
+> +  - phy-names
+> +  - vdd10-supply
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/exynos5433.h>
+> +
+> +    pcie: pcie@15700000 {
+> +        compatible = "samsung,exynos5433-pcie";
+> +        reg = <0x156b0000 0x1000>, <0x15700000 0x1000>, <0x0c000000 0x1000>;
+> +        reg-names = "elbi", "dbi", "config";
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        #interrupt-cells = <1>;
+> +        device_type = "pci";
+> +        interrupts = <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&cmu_fsys CLK_PCIE>, <&cmu_fsys CLK_PCLK_PCIE_PHY>;
+> +        clock-names = "pcie", "pcie_bus";
+> +        phys = <&pcie_phy>;
+> +        phy-names = "pcie-phy";
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&pcie_bus &pcie_wlanen>;
+> +        num-lanes = <1>;
+> +        bus-range = <0x00 0xff>;
+> +        ranges = <0x81000000 0 0         0x0c001000 0 0x00010000>,
+> +                 <0x82000000 0 0x0c011000 0x0c011000 0 0x03feefff>;
+> +        vdd10-supply = <&ldo6_reg>;
+> +        vdd18-supply = <&ldo7_reg>;
+> +        iterrupt-map-mask = <0 0 0 0>;
+
+typo
+
+> +        interrupt-map = <0 0 0 0 &gic GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> --
+> 2.17.1
+>
