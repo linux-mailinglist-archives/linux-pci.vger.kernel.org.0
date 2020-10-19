@@ -2,127 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9E81293058
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 23:16:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1B7A2931B6
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 01:05:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbgJSVQO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Oct 2020 17:16:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23214 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbgJSVQO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 19 Oct 2020 17:16:14 -0400
-IronPort-SDR: aTJfIgVgYfspjpKNvfzp+LCP/tjI6vsS8JDPXO38Mn7Ude3oiUS99TuMQuoq8GFDmRSs1uUNVH
- ImLxUx/bIviQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9779"; a="251802583"
-X-IronPort-AV: E=Sophos;i="5.77,395,1596524400"; 
-   d="scan'208";a="251802583"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2020 14:16:09 -0700
-IronPort-SDR: CD359c4xk3Rf5x/5MIJhCR+FanRrzqfrS0rmjpc53eh6Mc5CuJOA3jRoJQHw7dASZ8S8ab517E
- oIggluFAQglg==
-X-IronPort-AV: E=Sophos;i="5.77,395,1596524400"; 
-   d="scan'208";a="347587269"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2020 14:16:09 -0700
-Date:   Mon, 19 Oct 2020 14:16:08 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
-        zhangfei.gao@linaro.org, wangzhou1@hisilicon.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-accelerators@lists.ozlabs.org,
-        kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        linux-pci@vger.kernel.org, "Lu, Baolu" <baolu.lu@intel.com>,
-        Jacon Jun Pan <jacob.jun.pan@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [RFC PATCH 0/2] iommu: Avoid unnecessary PRI queue flushes
-Message-ID: <20201019211608.GA79633@otc-nc-03>
-References: <20201015090028.1278108-1-jean-philippe@linaro.org>
- <20201015182211.GA54780@otc-nc-03>
- <20201016075923.GB1309464@myrica>
- <20201017112525.GA47206@otc-nc-03>
- <20201019140824.GA1478235@myrica>
+        id S2388896AbgJSXFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Oct 2020 19:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388891AbgJSXFu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 19:05:50 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BFA8C0613D0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Oct 2020 16:05:49 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id h21so31375iob.10
+        for <linux-pci@vger.kernel.org>; Mon, 19 Oct 2020 16:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KZcwJitFojA7RhzeD/UU8gbzehCBdvf6g5ia0ZYCrq4=;
+        b=R0THCPfeT+NjRv5n7wRuWr3+iQQVH5mYQugrcFEorv7jMlZOJpq4gWO8x2sltRZ1S3
+         8+uXkfK+0xraFRPc7RLEyC+L1Eqn+lwfgcQ60rCu3Ir6T0iqCUlHxkXPI8IxQxljNihW
+         MxA7dERE+Fo0B6yhfEPLGm6gbjuMrGvt0ee7i4ozPAa6C0OwTV1SJBaz+sj8rzyyiIix
+         DQ1LhxNguLsVQ2r9xWcmCur9QDHoeimXQtC/UVpN+4Yl8O9ZbpYKUwlrKFZtzYHwjpgZ
+         iC+kREvCZvwgmOBCIm7DmgxG6/6ncKrp6QDCnbxkp/qIzrhuMyauJsg53LWTp//HSslk
+         z+3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KZcwJitFojA7RhzeD/UU8gbzehCBdvf6g5ia0ZYCrq4=;
+        b=Qt3RNsqApJ1doMB66cEOVFYTAv/b2vTw/j30SybwAMEmGBJXXVETxWcw7FKHtIE5W7
+         moI4PmZm2CLN9nO8z2aVOZwl8cncLAtFWM9xARzTUGIGle7pjYU7dftDwdfT3mJmqxfZ
+         VzwebIvBX7wrYtK1WbRqA7PT7cW9q20T66ZGCeHEmkah2zZ7Dh+hfiEapbAwOnMZFMl3
+         f9NaUfa1VWkKetI4R8bYWTGRylpPTj3elXKmm0SISLK4PnGLLX+aVYJIM3g+nvomKjow
+         8kpyBWstMVxUlrbCjbbnwhXis9KQokj3ZJ47BafR/8HBBvuysMflx8N0QFl9qIGTvsmj
+         XQ/w==
+X-Gm-Message-State: AOAM533HjXASR4r7iQqQb/tMLE1oorhh9zfXCb1FZlwtiSgbpj8wIhNA
+        HpIwZQF4caRYjTUcB55XfCtyuQ==
+X-Google-Smtp-Source: ABdhPJwE/qhLAedndnNRaUrUDMs331Onaq8Iz+VDEVRJN+4h4B5ckC67pNXDnvS9MRF/DxLJjNlnIQ==
+X-Received: by 2002:a6b:5019:: with SMTP id e25mr44377iob.123.1603148748578;
+        Mon, 19 Oct 2020 16:05:48 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id u8sm7938ilm.36.2020.10.19.16.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2020 16:05:47 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kUeDq-002hRf-LL; Mon, 19 Oct 2020 20:05:46 -0300
+Date:   Mon, 19 Oct 2020 20:05:46 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Tom Rix <trix@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-block@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        storagedev@microchip.com, devel@driverdev.osuosl.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        bpf <bpf@vger.kernel.org>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        George Burgess <gbiv@google.com>
+Subject: Re: [RFC] treewide: cleanup unreachable breaks
+Message-ID: <20201019230546.GH36674@ziepe.ca>
+References: <20201017160928.12698-1-trix@redhat.com>
+ <20201018054332.GB593954@kroah.com>
+ <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201019140824.GA1478235@myrica>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean
-
-On Mon, Oct 19, 2020 at 04:08:24PM +0200, Jean-Philippe Brucker wrote:
-> On Sat, Oct 17, 2020 at 04:25:25AM -0700, Raj, Ashok wrote:
-> > > For devices that *don't* use a stop marker, the PCIe spec says (10.4.1.2):
-> > > 
-> > >   To stop [using a PASID] without using a Stop Marker Message, the
-> > >   function shall:
-> > >   1. Stop queueing new Page Request Messages for this PASID.
-> > 
-> > The device driver would need to tell stop sending any new PR's.
-> > 
-> > >   2. Finish transmitting any multi-page Page Request Messages for this
-> > >      PASID (i.e. send the Page Request Message with the L bit Set).
-> > >   3. Wait for PRG Response Messages associated any outstanding Page
-> > >      Request Messages for the PASID.
-> > > 
-> > > So they have to flush their PR themselves. And since the device driver
-> > > completes this sequence before calling unbind(), then there shouldn't be
-> > > any oustanding PR for the PASID, and unbind() doesn't need to flush,
-> > > right?
-> > 
-> > I can see how the device can complete #2,3 above. But the device driver
-> > isn't the one managing page-responses right. So in order for the device to
-> > know the above sequence is complete, it would need to get some assist from
-> > IOMMU driver?
+On Mon, Oct 19, 2020 at 12:42:15PM -0700, Nick Desaulniers wrote:
+> On Sat, Oct 17, 2020 at 10:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
+> > > From: Tom Rix <trix@redhat.com>
+> > >
+> > > This is a upcoming change to clean up a new warning treewide.
+> > > I am wondering if the change could be one mega patch (see below) or
+> > > normal patch per file about 100 patches or somewhere half way by collecting
+> > > early acks.
+> >
+> > Please break it up into one-patch-per-subsystem, like normal, and get it
+> > merged that way.
+> >
+> > Sending us a patch, without even a diffstat to review, isn't going to
+> > get you very far...
 > 
-> No the device driver just waits for the device to indicate that it has
-> completed the sequence. That's what the magic stop-PASID mechanism
-> described by PCIe does. In 6.20.1 "Managing PASID TLP Prefix Usage" it
-> says:
+> Tom,
+> If you're able to automate this cleanup, I suggest checking in a
+> script that can be run on a directory.  Then for each subsystem you
+> can say in your commit "I ran scripts/fix_whatever.py on this subdir."
+>  Then others can help you drive the tree wide cleanup.  Then we can
+> enable -Wunreachable-code-break either by default, or W=2 right now
+> might be a good idea.
 
-The goal is we do this when the device is in a messup up state. So we can't
-take for granted the device is properly operating which is why we are going
-to wack the device with a flr().
+I remember using clang-modernize in the past to fix issues very
+similar to this, if clang machinery can generate the warning, can't
+something like clang-tidy directly generate the patch?
 
-The only thing that's supposed to work without a brain freeze is the
-invalidation logic. Spec requires devices to respond to invalidations even when
-they are in the process of flr().
+You can send me a patch for drivers/infiniband/* as well
 
-So when IOMMU does an invalidation wait with a Page-Drain, IOMMU waits till
-the response for that arrives before completing the descriptor. Due to 
-the posted semantics it will ensure any PR's issued and in the fabric are flushed 
-out to memory. 
-
-I suppose you can wait for the device to vouch for all responses, but that
-is assuming the device is still functioning properly. Given that we use it
-in two places,
-
-* Reclaiming a PASID - only during a tear down sequence, skipping it
-  doesn't really buy us much.
-* During FLR this can't be skipped anyway due to the above sequence
-  requirement. 
-
-> 
-> "A Function must have a mechanism to request that it gracefully stop using
->  a specific PASID. This mechanism is device specific but must satisfy the
->  following rules:
->  [...]
->  * When the stop request mechanism indicates completion, the Function has:
->    [...]
->    * Complied with additional rules described in Address Translation
->      Services (Chapter 10 [10.4.1.2 quoted above]) if Address Translations
->      or Page Requests were issued on the behalf of this PASID."
-> 
-> So after the device driver initiates this mechanism in the device, the
-> device must be able to indicate completion of the mechanism, which
-> includes completing all in-flight Page Requests. At that point the device
-> driver can call unbind() knowing there is no pending PR for this PASID.
-> 
-
-Cheers,
-Ashok
+Thanks,
+Jason
