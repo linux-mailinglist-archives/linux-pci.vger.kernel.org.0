@@ -2,150 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9552928B2
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 16:00:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B5C32928F4
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 16:08:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgJSOAj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Oct 2020 10:00:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49002 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728344AbgJSOAi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 10:00:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603116036;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bwyahxi85URE6wJwi5L9sObd1frPfqSbtg8aT1VkGus=;
-        b=RxtKVYd+d6ZqTkbmXqIy6Pwdg5rOqMmlP0SM+6f+5y5hG/IA+UeHJOObpeZPu4ijJVbiIH
-        N1qVYOLATfJ2KsJ9ss3lwgVZUlnYPd1R/nfeGHVtz+gnRvHO/5wOeEcFHKUYxeWXVzuoAb
-        6g931kt/NBGn42fonURswDHUuwr2zmI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-ueyBBMGRNu-6PNBOYI-31A-1; Mon, 19 Oct 2020 10:00:32 -0400
-X-MC-Unique: ueyBBMGRNu-6PNBOYI-31A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8653710E218F;
-        Mon, 19 Oct 2020 14:00:29 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-3.gru2.redhat.com [10.97.112.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C9C825B4B0;
-        Mon, 19 Oct 2020 14:00:28 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id B10F0417F242; Mon, 19 Oct 2020 11:00:05 -0300 (-03)
-Date:   Mon, 19 Oct 2020 11:00:05 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jiri@nvidia.com, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, lgoncalv@redhat.com
-Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to
- housekeeping CPUs
-Message-ID: <20201019140005.GB17287@fuller.cnet>
-References: <20200928183529.471328-1-nitesh@redhat.com>
- <20200928183529.471328-5-nitesh@redhat.com>
- <20201016122046.GP2611@hirez.programming.kicks-ass.net>
- <79f382a7-883d-ff42-394d-ec4ce81fed6a@redhat.com>
- <20201019111137.GL2628@hirez.programming.kicks-ass.net>
+        id S1729037AbgJSOIr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Oct 2020 10:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728977AbgJSOIr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 10:08:47 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDDEDC0613D0
+        for <linux-pci@vger.kernel.org>; Mon, 19 Oct 2020 07:08:46 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id ce10so14111688ejc.5
+        for <linux-pci@vger.kernel.org>; Mon, 19 Oct 2020 07:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/KfoISsApaN0NSURJOvvfJb6dwcjjrFUhXMB/UsO5u8=;
+        b=NdZ9UN+yHyzobun2pSlu10EnMwdoI5kP57Dg+V9m5zdFRPjXDmTawgoX/3q3hFLOr7
+         TR5GP/k/Lp6kZRQsnuow8o3X97atocZ1Gg0S7CVRhxF9sCC+PDl3TXsHlCw5ZYr214ny
+         d39+ustjfCO8YQY2hsjzo1g621AuJAVzgi+iHCt05Y95N7+cvHBoiwfmQS5qyExSnd6U
+         VNNSXIdBmX7tr2OAhm0mMmhtrkIqePNqGUavbKyC7caHTGUlbxS42DsK58B8keW2wtLJ
+         66lBN8ZAkgIhKatEKaGFAMpbsGtj/WH3lUykXJ8SFQGCrlYHkigOufghId9ptnzODJmi
+         c9Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/KfoISsApaN0NSURJOvvfJb6dwcjjrFUhXMB/UsO5u8=;
+        b=l0owxpGxed0i6kkEQJ432fY0in0oPEq9JG1wUlnvmZUV4ZeNUc8BdwJ/SDocUggJWB
+         ITh2lPK0bja5HffF6aUj/NUe7Nyquh8fqoIJ1mkGq9dogusfVQEMW/ymrEEp0gfE780L
+         u52b7/0xRZuaFiJekO3Dvea2blbMK2yEisQm5dSvVnSmRYbCM6LDWOYQmdCmqcqVAZo3
+         5KtgQ8E7Vrbj+h/BuYs5KOE96ujhb0GyJ0SgLhaXB0msRLC5a7Vpwnf9Vv95ITnleI5X
+         XHP96gALmmGZvKcVv7O1pUJG+QRastSeLsjigrWJ1yE23gsT47WfJdN3Wa46LyCf5g5b
+         dm3w==
+X-Gm-Message-State: AOAM532JA2gfwHgkg4XR1vJFJY9lYOYiaNBwrdoDl9WrEzAhKVb1w5ME
+        cY0m/sstLk7KQBbvYI+jl4ZLNQ==
+X-Google-Smtp-Source: ABdhPJwA7uw6+ZE3RVnaAj9H96KR8FzN4UrEVEZS6aUBgtDdquQPDfuzZYCFSozbMOV5OyjLm10zow==
+X-Received: by 2002:a17:906:1150:: with SMTP id i16mr96740eja.82.1603116524907;
+        Mon, 19 Oct 2020 07:08:44 -0700 (PDT)
+Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id f25sm10868868edy.52.2020.10.19.07.08.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Oct 2020 07:08:44 -0700 (PDT)
+Date:   Mon, 19 Oct 2020 16:08:24 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
+        zhangfei.gao@linaro.org, wangzhou1@hisilicon.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-accelerators@lists.ozlabs.org,
+        kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
+        linux-pci@vger.kernel.org, "Lu, Baolu" <baolu.lu@intel.com>,
+        Jacon Jun Pan <jacob.jun.pan@intel.com>
+Subject: Re: [RFC PATCH 0/2] iommu: Avoid unnecessary PRI queue flushes
+Message-ID: <20201019140824.GA1478235@myrica>
+References: <20201015090028.1278108-1-jean-philippe@linaro.org>
+ <20201015182211.GA54780@otc-nc-03>
+ <20201016075923.GB1309464@myrica>
+ <20201017112525.GA47206@otc-nc-03>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201019111137.GL2628@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20201017112525.GA47206@otc-nc-03>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 01:11:37PM +0200, Peter Zijlstra wrote:
-> On Sun, Oct 18, 2020 at 02:14:46PM -0400, Nitesh Narayan Lal wrote:
-> > >> +	hk_cpus = housekeeping_num_online_cpus(HK_FLAG_MANAGED_IRQ);
-> > >> +
-> > >> +	/*
-> > >> +	 * If we have isolated CPUs for use by real-time tasks, to keep the
-> > >> +	 * latency overhead to a minimum, device-specific IRQ vectors are moved
-> > >> +	 * to the housekeeping CPUs from the userspace by changing their
-> > >> +	 * affinity mask. Limit the vector usage to keep housekeeping CPUs from
-> > >> +	 * running out of IRQ vectors.
-> > >> +	 */
-> > >> +	if (hk_cpus < num_online_cpus()) {
-> > >> +		if (hk_cpus < min_vecs)
-> > >> +			max_vecs = min_vecs;
-> > >> +		else if (hk_cpus < max_vecs)
-> > >> +			max_vecs = hk_cpus;
-> > > is that:
-> > >
-> > > 		max_vecs = clamp(hk_cpus, min_vecs, max_vecs);
+On Sat, Oct 17, 2020 at 04:25:25AM -0700, Raj, Ashok wrote:
+> > For devices that *don't* use a stop marker, the PCIe spec says (10.4.1.2):
 > > 
-> > Yes, I think this will do.
-> > 
-> > >
-> > > Also, do we really need to have that conditional on hk_cpus <
-> > > num_online_cpus()? That is, why can't we do this unconditionally?
-> > 
-> > FWIU most of the drivers using this API already restricts the number of
-> > vectors based on the num_online_cpus, if we do it unconditionally we can
-> > unnecessary duplicate the restriction for cases where we don't have any
-> > isolated CPUs.
+> >   To stop [using a PASID] without using a Stop Marker Message, the
+> >   function shall:
+> >   1. Stop queueing new Page Request Messages for this PASID.
 > 
-> unnecessary isn't really a concern here, this is a slow path. What's
-> important is code clarity.
+> The device driver would need to tell stop sending any new PR's.
 > 
-> > Also, different driver seems to take different factors into consideration
-> > along with num_online_cpus while finding the max_vecs to request, for
-> > example in the case of mlx5:
-> > MLX5_CAP_GEN(dev, num_ports) * num_online_cpus() +
-> >                MLX5_EQ_VEC_COMP_BASE
+> >   2. Finish transmitting any multi-page Page Request Messages for this
+> >      PASID (i.e. send the Page Request Message with the L bit Set).
+> >   3. Wait for PRG Response Messages associated any outstanding Page
+> >      Request Messages for the PASID.
 > > 
-> > Having hk_cpus < num_online_cpus() helps us ensure that we are only
-> > changing the behavior when we have isolated CPUs.
-> > 
-> > Does that make sense?
+> > So they have to flush their PR themselves. And since the device driver
+> > completes this sequence before calling unbind(), then there shouldn't be
+> > any oustanding PR for the PASID, and unbind() doesn't need to flush,
+> > right?
 > 
-> That seems to want to allocate N interrupts per cpu (plus some random
-> static amount, which seems weird, but whatever). This patch breaks that.
+> I can see how the device can complete #2,3 above. But the device driver
+> isn't the one managing page-responses right. So in order for the device to
+> know the above sequence is complete, it would need to get some assist from
+> IOMMU driver?
 
-On purpose. For the isolated CPUs we don't want network device 
-interrupts (in this context).
+No the device driver just waits for the device to indicate that it has
+completed the sequence. That's what the magic stop-PASID mechanism
+described by PCIe does. In 6.20.1 "Managing PASID TLP Prefix Usage" it
+says:
 
-> So I think it is important to figure out what that driver really wants
-> in the nohz_full case. If it wants to retain N interrupts per CPU, and
-> only reduce the number of CPUs, the proposed interface is wrong.
+"A Function must have a mechanism to request that it gracefully stop using
+ a specific PASID. This mechanism is device specific but must satisfy the
+ following rules:
+ [...]
+ * When the stop request mechanism indicates completion, the Function has:
+   [...]
+   * Complied with additional rules described in Address Translation
+     Services (Chapter 10 [10.4.1.2 quoted above]) if Address Translations
+     or Page Requests were issued on the behalf of this PASID."
 
-It wants N interrupts per non-isolated (AKA housekeeping) CPU.
-Zero interrupts for isolated interrupts.
+So after the device driver initiates this mechanism in the device, the
+device must be able to indicate completion of the mechanism, which
+includes completing all in-flight Page Requests. At that point the device
+driver can call unbind() knowing there is no pending PR for this PASID.
 
-> > > And what are the (desired) semantics vs hotplug? Using a cpumask without
-> > > excluding hotplug is racy.
-> > 
-> > The housekeeping_mask should still remain constant, isn't?
-> > In any case, I can double check this.
+Thanks,
+Jean
+
 > 
-> The goal is very much to have that dynamically configurable.
-
-Yes, but this patch is a fix for customer bug in the old, static on-boot 
-isolation CPU configuration.
-
----
-
-Discussing the dynamic configuration (not this patch!) case:
-
-Would need to enable/disable interrupts for a particular device 
-on a per-CPU basis. Such interface does not exist yet.
-
-Perhaps that is what you are looking for when writing "proposed interface
-is wrong" Peter? 
-
-
-
+> How does the driver know that everything host received has been responded
+> back to device?
+> 
+> > 
+> > > I'm not sure about other IOMMU's how they behave, When there is no space in
+> > > the PRQ, IOMMU auto-responds to the device. This puts the device in a
+> > > while (1) loop. The fake successful response will let the device do a ATS
+> > > lookup, and that would fail forcing the device to do another PRQ.
+> > 
+> > But in the sequence above, step 1 should ensure that the device will not
+> > send another PR for any successful response coming back at step 3.
+> 
+> True, but there could be some page-request in flight on its way to the
+> IOMMU. By draining and getting that round trip back to IOMMU we gaurantee
+> things in flight are flushed to PRQ after that Drain completes.
+> > 
+> > So I agree with the below if we suspect there could be pending PR, but
+> > given that pending PR are a stop marker thing and we don't know any device
+> > using stop markers, I wondered why I bothered implementing PRIq flush at
+> > all for SMMUv3, hence this RFC.
+> > 
+> 
+> Cheers,
+> Ashok
