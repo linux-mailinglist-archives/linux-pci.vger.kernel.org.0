@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D5AB292545
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 12:14:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E73929254A
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Oct 2020 12:16:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgJSKON (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 19 Oct 2020 06:14:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40501 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgJSKON (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 06:14:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h5so10710475wrv.7;
-        Mon, 19 Oct 2020 03:14:11 -0700 (PDT)
+        id S1726504AbgJSKQT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Oct 2020 06:16:19 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52047 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbgJSKQT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Oct 2020 06:16:19 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d81so9737284wmc.1;
+        Mon, 19 Oct 2020 03:16:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9St9YBwaIdNG1DkrmYoDAHtzZomOtz2yYrj1dmUwNYY=;
-        b=sLY2mPBKtWF+IC6vn3Z3lj5t53/pnOvYR6PVDQHLjUESQF/nY9f8mYbnnlkgNZHzEw
-         2z1HjM/Qb7Yxk0NYB4I7PmwWFbj+LvLaEqM3IB4J8ICJrM0Zb37SdRsdMe/Uh9GTtwCL
-         V/r+I9URn0e8pxbF+uiWsADE/XIJpkhEHeMIIsWB/23LYXF5RgtRyP/BUdcfKTFwfbLu
-         fNOMOg2g5XhqYG96f+rl4MX8LN2egHljxCPUScRn2ee9M4KMyX9aGwfqwXOIEasPGCyR
-         q3GeJZlXKHseOQaNP/sxlQJof/gElU8wwwIOWiI0pXOlUi3qSYgk/Fc+fB8xt9gfi10F
-         /Chw==
-X-Gm-Message-State: AOAM533cyJVg9EyJe+uWEC4HfXxPaEgEjSWcJ7LVcoF8VV8KxkfQkSJc
-        /UIP6gK1VJBTHectVoWsLck=
-X-Google-Smtp-Source: ABdhPJwZex/zba0ZWy7QZHYxMyR4SAGsYleqSCpR5G7pfpF1D737D02ETx1kE5+7SBYa8h63QQAUTA==
-X-Received: by 2002:adf:f1c8:: with SMTP id z8mr20204114wro.371.1603102450855;
-        Mon, 19 Oct 2020 03:14:10 -0700 (PDT)
+        bh=+Sou4lxGRAq1dK5QgqtSBQCCefIqYxpTxJ9hIjv7QOE=;
+        b=Qb7cYwUKg+AtgIOl9L96GaeyQ3DvQbo77YBzyNxm/LrrURZFmYqfZ+egRQCIFKRgQZ
+         MppZ1nv7JGz39mU3/iiCPr1BJPGTnxBcNVTL9tJ5OOnEUBG/IJNJKeSzwvU7Qe4BX5zk
+         0HmJjWo+fIzcrScgUymQ1TRKNrrnqqVzNG7XEfP1W0u2UvQocdfpDFlqL78zGFFahH44
+         dFod1huFk3pJGGFkfsfF0UrdBD8wLkNeeQBjjdhhy2diRFVAKdfl6GZ2HMFvelFnvuSd
+         +skZ1kA5mMCVLRhZ90f8dv4lbdHyP9oeqRLPMsRu13IBWtfCjCdoIgvCWMZlL+QbHRMr
+         5TfA==
+X-Gm-Message-State: AOAM5331ujb1umo2YlFf9bj2hBj1qj5UCmUFyIJeqXXjscd5P5AWikM1
+        NtS5oLYtjlnh+4qa0CZlnqE=
+X-Google-Smtp-Source: ABdhPJyOyNXRxavkp9tyFnmBFkKlWbeCdQ1DhdkxfqIRjIvJ54n9vaf2A6nReVgTpP3zNo7beoXhWw==
+X-Received: by 2002:a1c:1b8f:: with SMTP id b137mr14211025wmb.61.1603102575285;
+        Mon, 19 Oct 2020 03:16:15 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.171])
-        by smtp.googlemail.com with ESMTPSA id q6sm16106138wma.0.2020.10.19.03.14.09
+        by smtp.googlemail.com with ESMTPSA id w4sm15199041wmi.10.2020.10.19.03.16.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 03:14:09 -0700 (PDT)
-Date:   Mon, 19 Oct 2020 12:14:07 +0200
+        Mon, 19 Oct 2020 03:16:13 -0700 (PDT)
+Date:   Mon, 19 Oct 2020 12:16:11 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Marek Szyprowski <m.szyprowski@samsung.com>
 Cc:     linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -45,65 +45,37 @@ Cc:     linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org,
         Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/6] Documetation: dt-bindings: add the
- samsung,exynos-pcie-phy binding
-Message-ID: <20201019101407.GC51073@kozik-lap>
+Subject: Re: [PATCH 4/6] phy: samsung: phy-exynos-pcie: rework driver to
+ support Exynos5433 PCIe PHY
+Message-ID: <20201019101611.GD51073@kozik-lap>
 References: <20201019094715.15343-1-m.szyprowski@samsung.com>
- <CGME20201019094739eucas1p17424b1224bf2a1a5b16c33deb4209166@eucas1p1.samsung.com>
- <20201019094715.15343-4-m.szyprowski@samsung.com>
+ <CGME20201019094740eucas1p10ea264deb2cd185858d0dfdd9f6ed6fe@eucas1p1.samsung.com>
+ <20201019094715.15343-5-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201019094715.15343-4-m.szyprowski@samsung.com>
+In-Reply-To: <20201019094715.15343-5-m.szyprowski@samsung.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 11:47:12AM +0200, Marek Szyprowski wrote:
+On Mon, Oct 19, 2020 at 11:47:13AM +0200, Marek Szyprowski wrote:
 > From: Jaehoon Chung <jh80.chung@samsung.com>
 > 
-> Add dt-bindings for the Samsung Exynos PCIe PHY controller (Exynos5433
-> variant).
+> Exynos5440 SoC support has been dropped since commit 8c83315da1cf ("ARM:
+> dts: exynos: Remove Exynos5440"). Rework this driver to support PCIe PHY
+> variant found in the Exynos5433 SoCs.
 > 
 > Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> [mszyprow: updated the binding to latest driver changes, rewrote it in yaml,
-> 	   rewrote commit message]
-
-The same as for 2/6 - conversion of TXT to YAML is like a new patch.  It
-is quite significant work.
-
+> [mszyprow: reworked the driver to support only Exynos5433 variant, rebased
+> 	   onto current kernel code, rewrote commit message]
 > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  .../bindings/phy/samsung,exynos-pcie-phy.yaml | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
+>  drivers/phy/samsung/phy-exynos-pcie.c | 304 ++++++++++----------------
+>  1 file changed, 112 insertions(+), 192 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> new file mode 100644
-> index 000000000000..ce92d1e687e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/samsung,exynos-pcie-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung SoC series PCIe PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Jaehoon Chung <jh80.chung@samsung.com>
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    enum:
-> +      - samsung,exynos5433-pcie-phy
 
-enum->const
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 Best regards,
 Krzysztof
