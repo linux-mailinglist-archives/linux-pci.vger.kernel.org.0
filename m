@@ -2,148 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0545A293708
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 10:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BDD22937B5
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 11:13:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392126AbgJTItI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 04:49:08 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41530 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389490AbgJTItF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 04:49:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09K8i7rI188082;
-        Tue, 20 Oct 2020 08:48:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : message-id :
- content-type : mime-version : subject : date : in-reply-to : cc : to :
- references; s=corp-2020-01-29;
- bh=UBSvDuZX45rcdCwz1yIzvCzCqfd2joSCizhea4x+Xao=;
- b=q8gn83IPPWdFm1HT3taLhd9DUF/VTUU+yXtsd8f9nD6wriupB19ul4FsqzWGdtIZMcde
- GW+G9oeRVHaGmJfZ8muagtVwvuWLE6AywXuhak+OXkSgdFP6EIR2H2OqKDUhR7yIW2Vz
- zpamQMFlTWRfwdWHBA7I0p8HYGgPlEg7NOi5pNpKeOCI5/Zqu82RI3DyvlSb3YeNhNvu
- 1nAbi2LxPOnr/RtC4QoVHdNGHfdCdQB+x9xvmqx+BqjtbEr8lrxt1aMjIali/bjhTn7W
- dzqjxrXdOv4FjsFo2kwRKNjQX5RScYby9/qqSUitUFXIKeMy4YBvXYVTZYkhax1TMfnU 0w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 347s8msmp0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Oct 2020 08:48:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09K8is45150623;
-        Tue, 20 Oct 2020 08:48:12 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 348ahw07cp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Oct 2020 08:48:12 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09K8mAEe159753;
-        Tue, 20 Oct 2020 08:48:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 348ahw07bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Oct 2020 08:48:10 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09K8lvTX021447;
-        Tue, 20 Oct 2020 08:47:58 GMT
-Received: from [10.175.164.120] (/10.175.164.120)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 20 Oct 2020 01:47:57 -0700
-From:   John Haxby <john.haxby@oracle.com>
-Message-Id: <27A23102-A7F5-48C5-8972-48CE4C283C6E@oracle.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [Ocfs2-devel] [RFC] treewide: cleanup unreachable breaks
-Date:   Tue, 20 Oct 2020 09:47:45 +0100
-In-Reply-To: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
-Cc:     Tom Rix <trix@redhat.com>, alsa-devel@alsa-project.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-iio@vger.kernel.org, nouveau@lists.freedesktop.org,
-        storagedev@microchip.com,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        virtualization@lists.linux-foundation.org,
-        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ath10k@lists.infradead.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        usb-storage@lists.one-eyed-alien.net,
-        linux-watchdog@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        linux-acpi@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org, spice-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-nfc@lists.01.org, linux-pm@vger.kernel.org,
-        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-gpio@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-amlogic@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org, George Burgess <gbiv@google.com>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, patches@opensource.cirrus.com,
-        bpf <bpf@vger.kernel.org>, ocfs2-devel@oss.oracle.com,
-        linux-power@fi.rohmeurope.com
-To:     Nick Desaulniers <ndesaulniers@google.com>
-References: <20201017160928.12698-1-trix@redhat.com>
- <20201018054332.GB593954@kroah.com>
- <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9779 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
- phishscore=0 clxscore=1011 bulkscore=0 impostorscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010200059
+        id S2391029AbgJTJNC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 05:13:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:48364 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390971AbgJTJNC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Oct 2020 05:13:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77E2E101E;
+        Tue, 20 Oct 2020 02:13:01 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E2C43F66E;
+        Tue, 20 Oct 2020 02:13:00 -0700 (PDT)
+Date:   Tue, 20 Oct 2020 10:12:55 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH] PCI: dwc: Added link up check in map_bus of
+ dw_child_pcie_ops
+Message-ID: <20201020091255.GA21678@e121166-lin.cambridge.arm.com>
+References: <20200916054130.8685-1-Zhiqiang.Hou@nxp.com>
+ <20201015224738.GA24466@bjorn-Precision-5520>
+ <HE1PR0402MB3371CD54946A513C12A5ABC2841E0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+ <7778161f-b87c-5499-b4e6-de0550bc165c@ti.com>
+ <HE1PR0402MB337161161D04C34247C1D876841F0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HE1PR0402MB337161161D04C34247C1D876841F0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Oct 20, 2020 at 02:13:13AM +0000, Z.q. Hou wrote:
 
---Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+[...]
 
+> > > For NXP Layerscape platforms (the ls1028a and ls2088a are also NXP
+> > Layerscape platform), as the error response to AXI/AHB was enabled, it will
+> > get UR error and trigger SError on AXI bus when it accesses a non-existent
+> > BDF on a link down bus. I'm not clear about how it happens on dra7xxx and
+> > imx6, since they doesn't enable the error response to AXI/AHB.
+> > 
+> > That's exactly the case with DRA7xx as the error response is enabled by
+> > default in the platform integration.
+> 
+> Got feedback from the imx6 owner that imx6 like the dra7xx has the
+> error response enabled by default.  Now it's clear that the problem on
+> all these platforms is the same.
 
+Ok. Now the question is: on these platforms we trigger an SError because
+the link is down. If the link is down there is no point in enumerating
+the PCI hierarchy, is there ? If I am right the link-up check should be
+moved at probe time and skip enumeration if the link is down, map_bus()
+is not really the place where it should be - having it there is
+misleading and it is racy code whatever we do.
 
-> On 19 Oct 2020, at 20:42, Nick Desaulniers <ndesaulniers@google.com> =
-wrote:
->=20
-> We probably should add all 3 to W=3D2 builds (wrapped in cc-option).
-> I've filed https://github.com/ClangBuiltLinux/linux/issues/1180 to
-> follow up on.
+We may still merge this code as a temporary workaround but the DWC
+drivers should be reworked to skip enumeration if the link is down.
 
-It looks as though the URL mangling has been fixed.   If anyone sees =
-that specific URL mangled, please let me know.
+Please let me know if my reading is correct.
 
-jch
+Thanks,
+Lorenzo
 
---Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iHUEAREIAB0WIQT+pxvb11CFWUkNSOVFC7t+lC+jyAUCX46kMQAKCRBFC7t+lC+j
-yBKiAP90JVXdPzuAwtRGkROpw1eVCo7wCaZ5nOa8Oo0sN6gC9gD/S0eGTqQhmg+n
-sXPJxPYqQsg09qmS6k/HX+AP5Oz2AMo=
-=xx66
------END PGP SIGNATURE-----
-
---Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3--
+> Thanks,
+> Zhiqiang
+> 
+> > 
+> > Thanks
+> > Kishon
+> > 
+> > >
+> > >>
+> > >> The backtrace below contains a bunch of irrelevant info.  The
+> > >> timestamps are pointless.  The backtrace past
+> > >> pci_scan_single_device+0x80/0x100 or so really doesn't add anything
+> > either.
+> > >>
+> > >> It'd be nice to have a comment in the code because the code *looks*
+> > >> wrong and racy.  Without a hint, everybody who sees it will have to
+> > >> dig through the history to see why we tolerate the race.
+> > >
+> > > Yes, agree, but seems the cause of the SError on dra7xx and imx6 is
+> > different from Layerscape platforms, we need to make it clear first.
+> > >
+> > > Thanks,
+> > > Zhiqiang
+> > >
+> > >>
+> > >>> [    0.807773] SError Interrupt on CPU2, code 0xbf000002 -- SError
+> > >>> [    0.807775] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+> > >> 5.9.0-rc5-next-20200914-00001-gf965d3ec86fa #67
+> > >>> [    0.807776] Hardware name: LS1046A RDB Board (DT)
+> > >>> [    0.807777] pstate: 20000085 (nzCv daIf -PAN -UAO BTYPE=--)
+> > >>> [    0.807778] pc : pci_generic_config_read+0x3c/0xe0
+> > >>> [    0.807778] lr : pci_generic_config_read+0x24/0xe0
+> > >>> [    0.807779] sp : ffff80001003b7b0
+> > >>> [    0.807780] x29: ffff80001003b7b0 x28: ffff80001003ba74
+> > >>> [    0.807782] x27: ffff000971d96800 x26: ffff00096e77e0a8
+> > >>> [    0.807784] x25: ffff80001003b874 x24: ffff80001003b924
+> > >>> [    0.807786] x23: 0000000000000004 x22: 0000000000000000
+> > >>> [    0.807788] x21: 0000000000000000 x20: ffff80001003b874
+> > >>> [    0.807790] x19: 0000000000000004 x18: ffffffffffffffff
+> > >>> [    0.807791] x17: 00000000000000c0 x16: fffffe0025981840
+> > >>> [    0.807793] x15: ffffb94c75b69948 x14: 62203a383634203a
+> > >>> [    0.807795] x13: 666e6f635f726568 x12: 202c31203d207265
+> > >>> [    0.807797] x11: 626d756e3e2d7375 x10: 656877202c307830
+> > >>> [    0.807799] x9 : 203d206e66766564 x8 : 0000000000000908
+> > >>> [    0.807801] x7 : 0000000000000908 x6 : ffff800010900000
+> > >>> [    0.807802] x5 : ffff00096e77e080 x4 : 0000000000000000
+> > >>> [    0.807804] x3 : 0000000000000003 x2 : 84fa3440ff7e7000
+> > >>> [    0.807806] x1 : 0000000000000000 x0 : ffff800010034000
+> > >>> [    0.807808] Kernel panic - not syncing: Asynchronous SError
+> > Interrupt
+> > >>> [    0.807809] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+> > >> 5.9.0-rc5-next-20200914-00001-gf965d3ec86fa #67
+> > >>> [    0.807810] Hardware name: LS1046A RDB Board (DT)
+> > >>> [    0.807811] Call trace:
+> > >>> [    0.807812]  dump_backtrace+0x0/0x1c0
+> > >>> [    0.807813]  show_stack+0x18/0x28
+> > >>> [    0.807814]  dump_stack+0xd8/0x134
+> > >>> [    0.807814]  panic+0x180/0x398
+> > >>> [    0.807815]  add_taint+0x0/0xb0
+> > >>> [    0.807816]  arm64_serror_panic+0x78/0x88
+> > >>> [    0.807817]  do_serror+0x68/0x180
+> > >>> [    0.807818]  el1_error+0x84/0x100
+> > >>> [    0.807818]  pci_generic_config_read+0x3c/0xe0
+> > >>> [    0.807819]  dw_pcie_rd_other_conf+0x78/0x110
+> > >>> [    0.807820]  pci_bus_read_config_dword+0x88/0xe8
+> > >>> [    0.807821]  pci_bus_generic_read_dev_vendor_id+0x30/0x1b0
+> > >>> [    0.807822]  pci_bus_read_dev_vendor_id+0x4c/0x78
+> > >>> [    0.807823]  pci_scan_single_device+0x80/0x100
+> > >>> [    0.807824]  pci_scan_slot+0x38/0x130
+> > >>> [    0.807825]  pci_scan_child_bus_extend+0x54/0x2a0
+> > >>> [    0.807826]  pci_scan_child_bus+0x14/0x20
+> > >>> [    0.807827]  pci_scan_bridge_extend+0x230/0x570
+> > >>> [    0.807828]  pci_scan_child_bus_extend+0x134/0x2a0
+> > >>> [    0.807829]  pci_scan_root_bus_bridge+0x64/0xf0
+> > >>> [    0.807829]  pci_host_probe+0x18/0xc8
+> > >>> [    0.807830]  dw_pcie_host_init+0x220/0x378
+> > >>> [    0.807831]  ls_pcie_probe+0x104/0x140
+> > >>> [    0.807832]  platform_drv_probe+0x54/0xa8
+> > >>> [    0.807833]  really_probe+0x118/0x3e0
+> > >>> [    0.807834]  driver_probe_device+0x5c/0xc0
+> > >>> [    0.807835]  device_driver_attach+0x74/0x80
+> > >>> [    0.807835]  __driver_attach+0x8c/0xd8
+> > >>> [    0.807836]  bus_for_each_dev+0x7c/0xd8
+> > >>> [    0.807837]  driver_attach+0x24/0x30
+> > >>> [    0.807838]  bus_add_driver+0x154/0x200
+> > >>> [    0.807839]  driver_register+0x64/0x120
+> > >>> [    0.807839]  __platform_driver_probe+0x7c/0x148
+> > >>> [    0.807840]  ls_pcie_driver_init+0x24/0x30
+> > >>> [    0.807841]  do_one_initcall+0x60/0x1d8
+> > >>> [    0.807842]  kernel_init_freeable+0x1f4/0x24c
+> > >>> [    0.807843]  kernel_init+0x14/0x118
+> > >>> [    0.807843]  ret_from_fork+0x10/0x34
+> > >>> [    0.807854] SMP: stopping secondary CPUs
+> > >>> [    0.807855] Kernel Offset: 0x394c64080000 from
+> > 0xffff800010000000
+> > >>> [    0.807856] PHYS_OFFSET: 0xffff8bfd40000000
+> > >>> [    0.807856] CPU features: 0x0240022,21806000
+> > >>> [    0.807857] Memory Limit: none
+> > >>>
+> > >>> Fixes: c2b0c098fbd1 ("PCI: dwc: Use generic config accessors")
+> > >>> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >>> ---
+> > >>>  drivers/pci/controller/dwc/pcie-designware-host.c | 6 ++++++
+> > >>>  1 file changed, 6 insertions(+)
+> > >>>
+> > >>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > >>> b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > >>> index c01c9d2fb3f9..e82b518430c5 100644
+> > >>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > >>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > >>> @@ -442,6 +442,9 @@ static void __iomem
+> > >> *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
+> > >>>  	struct pcie_port *pp = bus->sysdata;
+> > >>>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > >>>
+> > >>> +	if (!dw_pcie_link_up(pci))
+> > >>> +		return NULL;
+> > >>> +
+> > >>>  	busdev = PCIE_ATU_BUS(bus->number) |
+> > >> PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+> > >>>  		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+> > >>>
+> > >>> --
+> > >>> 2.17.1
+> > >>>
