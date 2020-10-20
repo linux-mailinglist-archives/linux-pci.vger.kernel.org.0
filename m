@@ -2,216 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91610293695
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 10:16:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23D0E2936F7
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 10:45:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbgJTIQX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 04:16:23 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47830 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbgJTIQW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 04:16:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 09K8G6Ng053466;
-        Tue, 20 Oct 2020 03:16:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1603181766;
-        bh=5/s9j3Ob5eJZaHs5Srca0Co8+TevhNJfJIAUERIj7tk=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=EKshNLkON095RcIhp/C6mMEaqrvLAFlf3xcfoix1230vJCg+Zx8i9H89un+qKZFrL
-         SR++07m4426mw7jKdCx+V9xW1HEEyllzV45UKX8OYO+YiEYFkEm23fZzP2ruvHz2i8
-         F3vB/yVBEtNlZ6OuHu7vnHV8patmKQvBwSZ8oPAk=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 09K8G6v7096187
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Oct 2020 03:16:06 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 20
- Oct 2020 03:16:06 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 20 Oct 2020 03:16:06 -0500
-Received: from [10.250.234.189] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 09K8FqWG111796;
-        Tue, 20 Oct 2020 03:15:54 -0500
-Subject: Re: [PATCH v7 00/18] Implement NTB Controller using multiple PCI EP
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-References: <20200930153519.7282-1-kishon@ti.com>
- <fe2db298-2116-7f52-80bd-a3d01a9a1521@ti.com>
-Message-ID: <72ebe7db-86cd-6827-03ff-bde32c10dc7e@ti.com>
-Date:   Tue, 20 Oct 2020 13:45:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726877AbgJTIpi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 04:45:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34490 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389435AbgJTIph (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Oct 2020 04:45:37 -0400
+IronPort-SDR: 560gkOrOJTCPb43+O30oP+eZ4WZuX9JexQV+UITnCCn5Cb4JArR9iztLtw2WVwenl+IdvOuAk8
+ 4s0Is8X+NbEA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9779"; a="184802130"
+X-IronPort-AV: E=Sophos;i="5.77,396,1596524400"; 
+   d="scan'208";a="184802130"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2020 01:45:36 -0700
+IronPort-SDR: ORPhOITlYzviuvhGUGezGT3WcuBH4RNtfbXo3pjGJAHby+iyF1Ia9h04Olv9gsBWizCr0w9AaA
+ SeM8KCefgI3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,396,1596524400"; 
+   d="scan'208";a="422444617"
+Received: from lkp-server02.sh.intel.com (HELO 5d721fc6b6d3) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Oct 2020 01:45:35 -0700
+Received: from kbuild by 5d721fc6b6d3 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kUnGx-00001c-2q; Tue, 20 Oct 2020 08:45:35 +0000
+Date:   Tue, 20 Oct 2020 16:44:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 2b1568a6f12c0289662a2c564ca23aac475d4475
+Message-ID: <5f8ea38a.NZUJq3L7ROiFhcil%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <fe2db298-2116-7f52-80bd-a3d01a9a1521@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 2b1568a6f12c0289662a2c564ca23aac475d4475  Merge branch 'remotes/lorenzo/pci/xilinx'
 
-On 05/10/20 11:27 am, Kishon Vijay Abraham I wrote:
-> Hi Jon Mason, Allen Hubbe, Dave Jiang,
-> 
-> On 30/09/20 9:05 pm, Kishon Vijay Abraham I wrote:
->> This series is about implementing SW defined Non-Transparent Bridge (NTB)
->> using multiple endpoint (EP) instances. This series has been tested using
->> 2 endpoint instances in J7 connected to J7 board on one end and DRA7 board
->> on the other end. However there is nothing platform specific for the NTB
->> functionality.
-> 
-> This series has two patches that adds to drivers/ntb/ directory.
-> [PATCH v7 15/18] NTB: Add support for EPF PCI-Express Non-Transparent
-> Bridge and [PATCH v7 16/18] NTB: tool: Enable the NTB/PCIe link on the
-> local or remote side of bridge.
-> 
-> If you can review and Ack the above patches, Lorenzo can queue it along
-> with the rest of the series.
-> 
-> Thanks for your help in advance.
+elapsed time: 720m
 
-Gentle ping on this series.
+configs tested: 94
+configs skipped: 2
 
-Thanks
-Kishon
-> 
-> Best Regards,
-> Kishon
-> 
->>
->> This was presented in Linux Plumbers Conference. Link to presentation
->> and video can be found @ [1]
->>
->> RFC patch series can be found @ [2]
->> v1 patch series can be found @ [3]
->> v2 patch series can be found @ [4]
->> v3 patch series can be found @ [5]
->> v4 patch series can be found @ [6]
->> v5 patch series can be found @ [7]
->> v6 patch series can be found @ [8]
->>
->> Changes from v6:
->> 1) Fixed issues when multiple NTB devices are creating using multiple
->>    functions
->> 2) Fixed issue with writing scratchpad register
->> 3) Created a video demo @ [9]
->>
->> Changes from v5:
->> 1) Fixed a formatting issue in Kconfig pointed out by Randy
->> 2) Checked for Error or Null in pci_epc_add_epf()
->>
->> Changes from v4:
->> 1) Fixed error condition checks in pci_epc_add_epf()
->>
->> Changes from v3:
->> 1) Fixed Documentation edits suggested by Randy Dunlap <rdunlap@infradead.org>
->>
->> Changes from v2:
->> 1) Add support for the user to create sub-directory of 'EPF Device'
->>    directory (for endpoint function specific configuration using
->>    configfs).
->> 2) Add documentation for NTB specific attributes in configfs
->> 3) Check for PCI_CLASS_MEMORY_RAM (PCIe class) before binding ntb_hw_epf
->>    driver
->> 4) Other documentation fixes
->>
->> Changes from v1:
->> 1) As per Rob's comment, removed support for creating NTB function
->>    device from DT
->> 2) Add support to create NTB EPF device using configfs (added support in
->>    configfs to associate primary and secondary EPC with EPF.
->>
->> Changes from RFC:
->> 1) Converted the DT binding patches to YAML schema and merged the
->>    DT binding patches together
->> 2) NTB documentation is converted to .rst
->> 3) One HOST can now interrupt the other HOST using MSI-X interrupts
->> 4) Added support for teardown of memory window and doorbell
->>    configuration
->> 5) Add support to provide support 64-bit memory window size from
->>    DT
->>
->> [1] -> https://linuxplumbersconf.org/event/4/contributions/395/
->> [2] -> http://lore.kernel.org/r/20190926112933.8922-1-kishon@ti.com
->> [3] -> http://lore.kernel.org/r/20200514145927.17555-1-kishon@ti.com
->> [4] -> http://lore.kernel.org/r/20200611130525.22746-1-kishon@ti.com
->> [5] -> http://lore.kernel.org/r/20200904075052.8911-1-kishon@ti.com
->> [6] -> http://lore.kernel.org/r/20200915042110.3015-1-kishon@ti.com
->> [7] -> http://lore.kernel.org/r/20200918064227.1463-1-kishon@ti.com
->> [8] -> http://lore.kernel.org/r/20200924092519.17082-1-kishon@ti.com
->> [9] -> https://youtu.be/dLKKxrg5-rY
->>
->> Kishon Vijay Abraham I (18):
->>   Documentation: PCI: Add specification for the *PCI NTB* function
->>     device
->>   PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
->>     BAR
->>   PCI: endpoint: Add helper API to get the 'next' unreserved BAR
->>   PCI: endpoint: Make *_free_bar() to return error codes on failure
->>   PCI: endpoint: Remove unused pci_epf_match_device()
->>   PCI: endpoint: Add support to associate secondary EPC with EPF
->>   PCI: endpoint: Add support in configfs to associate two EPCs with EPF
->>   PCI: endpoint: Add pci_epc_ops to map MSI irq
->>   PCI: endpoint: Add pci_epf_ops for epf drivers to expose function
->>     specific attrs
->>   PCI: endpoint: Allow user to create sub-directory of 'EPF Device'
->>     directory
->>   PCI: cadence: Implement ->msi_map_irq() ops
->>   PCI: cadence: Configure LM_EP_FUNC_CFG based on epc->function_num_map
->>   PCI: endpoint: Add EP function driver to provide NTB functionality
->>   PCI: Add TI J721E device to pci ids
->>   NTB: Add support for EPF PCI-Express Non-Transparent Bridge
->>   NTB: tool: Enable the NTB/PCIe link on the local or remote side of
->>     bridge
->>   Documentation: PCI: Add configfs binding documentation for pci-ntb
->>     endpoint function
->>   Documentation: PCI: Add userguide for PCI endpoint NTB function
->>
->>  .../PCI/endpoint/function/binding/pci-ntb.rst |   38 +
->>  Documentation/PCI/endpoint/index.rst          |    3 +
->>  .../PCI/endpoint/pci-endpoint-cfs.rst         |   10 +
->>  .../PCI/endpoint/pci-ntb-function.rst         |  351 +++
->>  Documentation/PCI/endpoint/pci-ntb-howto.rst  |  160 ++
->>  drivers/misc/pci_endpoint_test.c              |    1 -
->>  drivers/ntb/hw/Kconfig                        |    1 +
->>  drivers/ntb/hw/Makefile                       |    1 +
->>  drivers/ntb/hw/epf/Kconfig                    |    6 +
->>  drivers/ntb/hw/epf/Makefile                   |    1 +
->>  drivers/ntb/hw/epf/ntb_hw_epf.c               |  755 ++++++
->>  drivers/ntb/test/ntb_tool.c                   |    1 +
->>  .../pci/controller/cadence/pcie-cadence-ep.c  |   60 +-
->>  drivers/pci/endpoint/functions/Kconfig        |   12 +
->>  drivers/pci/endpoint/functions/Makefile       |    1 +
->>  drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2114 +++++++++++++++++
->>  drivers/pci/endpoint/functions/pci-epf-test.c |   13 +-
->>  drivers/pci/endpoint/pci-ep-cfs.c             |  176 +-
->>  drivers/pci/endpoint/pci-epc-core.c           |  130 +-
->>  drivers/pci/endpoint/pci-epf-core.c           |  105 +-
->>  include/linux/pci-epc.h                       |   39 +-
->>  include/linux/pci-epf.h                       |   28 +-
->>  include/linux/pci_ids.h                       |    1 +
->>  23 files changed, 3934 insertions(+), 73 deletions(-)
->>  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-ntb.rst
->>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
->>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
->>  create mode 100644 drivers/ntb/hw/epf/Kconfig
->>  create mode 100644 drivers/ntb/hw/epf/Makefile
->>  create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
->>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
->>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+nds32                            alldefconfig
+c6x                        evmc6457_defconfig
+powerpc                     redwood_defconfig
+parisc                generic-32bit_defconfig
+arm                     am200epdkit_defconfig
+nios2                         3c120_defconfig
+mips                      malta_kvm_defconfig
+arm                           sama5_defconfig
+sh                            migor_defconfig
+powerpc                      makalu_defconfig
+xtensa                generic_kc705_defconfig
+mips                           jazz_defconfig
+arm                        multi_v5_defconfig
+powerpc                        cell_defconfig
+arm                              alldefconfig
+powerpc                    socrates_defconfig
+c6x                        evmc6678_defconfig
+mips                     cu1000-neo_defconfig
+arm                           spitz_defconfig
+powerpc                     skiroot_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20201019
+i386                 randconfig-a005-20201019
+i386                 randconfig-a001-20201019
+i386                 randconfig-a003-20201019
+i386                 randconfig-a004-20201019
+i386                 randconfig-a002-20201019
+x86_64               randconfig-a004-20201019
+x86_64               randconfig-a002-20201019
+x86_64               randconfig-a006-20201019
+x86_64               randconfig-a003-20201019
+x86_64               randconfig-a005-20201019
+x86_64               randconfig-a001-20201019
+i386                 randconfig-a015-20201019
+i386                 randconfig-a013-20201019
+i386                 randconfig-a016-20201019
+i386                 randconfig-a012-20201019
+i386                 randconfig-a011-20201019
+i386                 randconfig-a014-20201019
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a016-20201019
+x86_64               randconfig-a015-20201019
+x86_64               randconfig-a012-20201019
+x86_64               randconfig-a013-20201019
+x86_64               randconfig-a011-20201019
+x86_64               randconfig-a014-20201019
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
