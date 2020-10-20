@@ -2,98 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94F3329360E
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 09:47:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DFD2293658
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 10:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgJTHrg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 03:47:36 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:44715 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgJTHrg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 03:47:36 -0400
-Received: by mail-oo1-f67.google.com with SMTP id f26so222506oou.11;
-        Tue, 20 Oct 2020 00:47:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mZfRGZ3//s1qcuqLzqM57pzqGS6K3zNVopnM07XfYzI=;
-        b=Ll5l6XiFIaIZYY8Y/1w9G2ioC1c09GWeoNWsVSOvVuHhGwJfp//GVbQt49nWaGI5zv
-         UNnFZ/yHg0bonyo0ofAyXeV3VVitLmCIggTsEhZ8nzdLRlw29WdqcgawsnYfTlCgN4rt
-         bTeYI2Ra2CDyPhvBwhOEYBwbXAnGCst6seDqNCtY60rZHl+psYTEvY8ZERK6aBv4ZeQA
-         GKCjNGPr/oTK7xIpH72QmQsMwO1bA7eoMwOp83u5X78zQ8Y2x8j4b//m7DTvwurPh47M
-         fFcpwtHhdy7U4VGh7o5G+TT5+9PnuKKCyoWxUxBNrfzcfuB436qP5T0iZkwfY+INTu0w
-         Hmgg==
-X-Gm-Message-State: AOAM531gBKg+9IlNqCbua00+sZDEwvg6ZghF1cA1YtvQK7/upoIarnBU
-        AjnE/16f0J5F3T2ha2FmUJkOvxA/A67PI3PHyCg=
-X-Google-Smtp-Source: ABdhPJwdvCyKKO7nBTthcpcBsBiy1BRcZeQBD3CKrwXsAowHIZfetULlAmnj8fyTSNm98oFsijMv/1WlHhdDaQanjcY=
-X-Received: by 2002:a4a:5d84:: with SMTP id w126mr907910ooa.1.1603180056753;
- Tue, 20 Oct 2020 00:47:36 -0700 (PDT)
+        id S1732547AbgJTICV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 04:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732545AbgJTICU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 04:02:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8C6C061755;
+        Tue, 20 Oct 2020 01:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=emL9IWe4Y71z9LCkV55HxG23Cm1SkPxtHPJIxCpbC9g=; b=eLNPTSevIa6QTDdIDPCSxF3Thr
+        YAYixkv7J4BRstFroqAgYcsagXWpgkmceC7GVFEyhiB8h67HBVP5cTfFCck8gDN5jqGd/plZuxRuN
+        EOKf6FuDPLtRmvQtd1Mf3UBg+Ptxov4jtef8OkEdS9HS3P3W4dVEc5imvGF4A36JvM4QH96CEGLR4
+        bo1Mo0x2Y4Ib3QlCGn/d/p1x8pztl2j7c++O1WZEnxMMqrGMe3Z0eabhwRnETdX3FUEiW0y1swD04
+        tPWJNJD6/BdSz6+cVCDH74SDWyHyzsgIdRXYEJ1jeoMWTFf6sAdK7xk1EFodH3UTs/WWIVfHpx94Q
+        8BQlQ/rA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kUmb5-0005VC-K1; Tue, 20 Oct 2020 08:02:19 +0000
+Date:   Tue, 20 Oct 2020 09:02:19 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: export pci_find_host_bridge() to fix MFD build error
+Message-ID: <20201020080219.GA21011@infradead.org>
+References: <20201019061453.32295-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-References: <20201016120431.7062-1-marek.vasut@gmail.com>
-In-Reply-To: <20201016120431.7062-1-marek.vasut@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 20 Oct 2020 09:47:25 +0200
-Message-ID: <CAMuHMdW3obrfdnt7=oTxrpav2+rXhNhDiJ3fWRP3aF0jZQYNNQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: rcar: Always allocate MSI addresses in 32bit space
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201019061453.32295-1-rdunlap@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Marek,
+On Sun, Oct 18, 2020 at 11:14:53PM -0700, Randy Dunlap wrote:
+> Fix a build error in drivers/mfd/ioc.o by exporting
+> pci_find_host_bridge().
+> 
+> ERROR: modpost: "pci_find_host_bridge" [drivers/mfd/ioc3.ko] undefined!
 
-On Fri, Oct 16, 2020 at 2:04 PM <marek.vasut@gmail.com> wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->
-> This fixes MSI operation on legacy PCI cards, which cannot issue 64bit MSIs.
-> The R-Car controller only has one MSI trigger address instead of two, one
-> for 64bit and one for 32bit MSI, set the address to 32bit PCIe space so that
-> legacy PCI cards can also trigger MSIs.
->
-> Fixes: 290c1fb35860 ("PCI: rcar: Add MSI support for PCIe")
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-
-Thanks for your patch!
-
-Seems to work, on both R-Car M2-W and M3-W, as
-virt_to_phys((void *)msi->pages) points to RAM below the 4 GiB limit, so
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/drivers/pci/controller/pcie-rcar-host.c
-> +++ b/drivers/pci/controller/pcie-rcar-host.c
-> @@ -753,7 +753,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
->         }
->
->         /* setup MSI data target */
-> -       msi->pages = __get_free_pages(GFP_KERNEL, 0);
-> +       msi->pages = __get_free_pages(GFP_KERNEL | GFP_DMA32, 0);
-
-BTW, can this fail, especially now this is allocated from a more
-limited pool?
-
->         rcar_pcie_hw_enable_msi(host);
->
->         return 0;
-
-Regardless:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I think the mfd code should be fixed to not depend on such an internal
+symbol instead.
