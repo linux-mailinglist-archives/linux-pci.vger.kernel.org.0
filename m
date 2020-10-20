@@ -2,194 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5446293D39
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 15:20:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2619293D3E
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 15:23:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406476AbgJTNUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 09:20:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:51822 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407440AbgJTNUm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Oct 2020 09:20:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C184931B;
-        Tue, 20 Oct 2020 06:20:41 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8C093F719;
-        Tue, 20 Oct 2020 06:20:39 -0700 (PDT)
-Date:   Tue, 20 Oct 2020 14:20:37 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        bhelgaas@google.com, amurray@thegoodpenguin.co.uk, robh@kernel.org,
-        treding@nvidia.com, jonathanh@nvidia.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH] PCI: dwc: Use ATU regions to map memory regions
-Message-ID: <20201020132037.GB25784@e121166-lin.cambridge.arm.com>
-References: <20201005121351.32516-1-vidyas@nvidia.com>
- <e633d496-0c4b-f6f5-00a9-c98fb3ed9f61@nvidia.com>
+        id S2406945AbgJTNXN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 09:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406939AbgJTNXN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 09:23:13 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197D6C061755
+        for <linux-pci@vger.kernel.org>; Tue, 20 Oct 2020 06:23:13 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id l2so2086511lfk.0
+        for <linux-pci@vger.kernel.org>; Tue, 20 Oct 2020 06:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YOStyH/7LuatejjFDX2j2ehpEVwT4LckE9LJLX9gUUQ=;
+        b=uB/FJSNOYhS3S8jPYL+7qgt2xhtyebbRsTieLjA3ZpFVNj5QvWgcYpE23lbGdj5YUu
+         xi5Tye6w8MY5qq4xss3oy53fDj9NdTOaq+K+vyGy+qC4XN22/2shDP1uWJIIQn8jeNmR
+         F67LVO4zmM+UCOwXGQtPLVLc17oEJcQYxPQPTWCT2rlaUmbGQJMAQeNFZ6Tks0k23coR
+         uXPdvCwo3iOeWBNcUIjcWRhRR+vxRgLrhMooW3XrTkODH26F4VReK6jdn7vAJMGaqx1J
+         UszwA+rzC0gyC064jfmy1+Um3u+ylyvFye1Vyefbm2W0M2h0ADkYVGSuFyfHSfzqrWJq
+         0NIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YOStyH/7LuatejjFDX2j2ehpEVwT4LckE9LJLX9gUUQ=;
+        b=iEwDUWuHgVePNGmD96MqvlwCdkAMAF6DAJ0YPtb5gNN5CPXMQJWeKYIk3+B+ACwLEM
+         qtBVu+zn3RTJdaphaPPslF10/rte7rQznxpsbINi9D8Z1qRn2+ZSQNwg98C3eTdk2cHM
+         fHQa5BxbSH4kKLiZKeTOSf/gC31x5rAyUmWK+qGJBNp1zW01CXsdL1GSffbEjtfr1Ssq
+         cJec8blamJkLOzdLU0wNJskefu1x+rkMJ6aCiYhcwzjk/2vPjXrXkjcyfqmVgABvJTDe
+         i9RW8Ftt3Z+E4qbl10d3u1m6KE6ZGQKuvf89X3ncea+cC4eejjGlp+6MVvfzUJ3sO2T5
+         yMJw==
+X-Gm-Message-State: AOAM531QWGE4d6LzD51hxgfW4SnEoCjwPzDXO4YnQabMdwEoh9Nh62pC
+        BG4yFZ+xWW8jFv6M/usZEkxF2VabWMJ2wYkcBc/dag==
+X-Google-Smtp-Source: ABdhPJzPznNapkqemojFnILkXX7OUt5oTt6d2sBb3JZu/G5I1LLzfHt8+HHjGDSLE4PWGLbE/3TBZ8Va7tqZImbCJC0=
+X-Received: by 2002:a19:191:: with SMTP id 139mr870209lfb.502.1603200191514;
+ Tue, 20 Oct 2020 06:23:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e633d496-0c4b-f6f5-00a9-c98fb3ed9f61@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20201019190249.7825-1-trix@redhat.com>
+In-Reply-To: <20201019190249.7825-1-trix@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 20 Oct 2020 15:23:00 +0200
+Message-ID: <CACRpkdb73_05OYb8Wu68+uw=p1edbnCfCSXOYL0fvDB2F=zL-Q@mail.gmail.com>
+Subject: Re: [PATCH] pci: remove unneeded break
+To:     trix@redhat.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 11:21:54AM +0530, Vidya Sagar wrote:
-> Hi Lorenzo, Rob, Gustavo,
-> Could you please review this change?
+On Mon, Oct 19, 2020 at 9:03 PM <trix@redhat.com> wrote:
 
-Next cycle - we are in the middle of the merge window and I am not
-queueing any more patches.
+> From: Tom Rix <trix@redhat.com>
+>
+> A break is not needed if it is preceded by a return
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-Thanks,
-Lorenzo
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> Thanks,
-> Vidya Sagar
-> 
-> On 10/5/2020 5:43 PM, Vidya Sagar wrote:
-> > Use ATU region-3 and region-0 to setup mapping for prefetchable and
-> > non-prefetchable memory regions respectively only if their respective CPU
-> > and bus addresses are different.
-> > 
-> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > ---
-> >   .../pci/controller/dwc/pcie-designware-host.c | 44 ++++++++++++++++---
-> >   drivers/pci/controller/dwc/pcie-designware.c  | 12 ++---
-> >   drivers/pci/controller/dwc/pcie-designware.h  |  4 +-
-> >   3 files changed, 48 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 317ff512f8df..cefde8e813e9 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -515,9 +515,40 @@ static struct pci_ops dw_pcie_ops = {
-> >   	.write = pci_generic_config_write,
-> >   };
-> > +static void dw_pcie_setup_mem_atu(struct pcie_port *pp,
-> > +				  struct resource_entry *win)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> > +
-> > +	if (win->res->flags & IORESOURCE_PREFETCH && pci->num_viewport >= 4 &&
-> > +	    win->offset) {
-> > +		dw_pcie_prog_outbound_atu(pci,
-> > +					  PCIE_ATU_REGION_INDEX3,
-> > +					  PCIE_ATU_TYPE_MEM,
-> > +					  win->res->start,
-> > +					  win->res->start - win->offset,
-> > +					  resource_size(win->res));
-> > +	} else if (win->res->flags & IORESOURCE_PREFETCH &&
-> > +		   pci->num_viewport < 4) {
-> > +		dev_warn(pci->dev,
-> > +			 "Insufficient ATU regions to map Prefetchable memory\n");
-> > +	} else if (win->offset) {
-> > +		if (upper_32_bits(resource_size(win->res)))
-> > +			dev_warn(pci->dev,
-> > +				 "Memory resource size exceeds max for 32 bits\n");
-> > +		dw_pcie_prog_outbound_atu(pci,
-> > +					  PCIE_ATU_REGION_INDEX0,
-> > +					  PCIE_ATU_TYPE_MEM,
-> > +					  win->res->start,
-> > +					  win->res->start - win->offset,
-> > +					  resource_size(win->res));
-> > +	}
-> > +}
-> > +
-> >   void dw_pcie_setup_rc(struct pcie_port *pp)
-> >   {
-> >   	u32 val, ctrl, num_ctrls;
-> > +	struct resource_entry *win;
-> >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> >   	/*
-> > @@ -572,13 +603,14 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
-> >   	 * ATU, so we should not program the ATU here.
-> >   	 */
-> >   	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
-> > -		struct resource_entry *entry =
-> > -			resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
-> > +		resource_list_for_each_entry(win, &pp->bridge->windows) {
-> > +			switch (resource_type(win->res)) {
-> > +			case IORESOURCE_MEM:
-> > +				dw_pcie_setup_mem_atu(pp, win);
-> > +				break;
-> > +			}
-> > +		}
-> > -		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
-> > -					  PCIE_ATU_TYPE_MEM, entry->res->start,
-> > -					  entry->res->start - entry->offset,
-> > -					  resource_size(entry->res));
-> >   		if (pci->num_viewport > 2)
-> >   			dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
-> >   						  PCIE_ATU_TYPE_IO, pp->io_base,
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 3c1f17c78241..6033689abb15 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -227,7 +227,7 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
-> >   static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
-> >   					     int index, int type,
-> >   					     u64 cpu_addr, u64 pci_addr,
-> > -					     u32 size)
-> > +					     u64 size)
-> >   {
-> >   	u32 retries, val;
-> >   	u64 limit_addr = cpu_addr + size - 1;
-> > @@ -244,8 +244,10 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
-> >   				 lower_32_bits(pci_addr));
-> >   	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> >   				 upper_32_bits(pci_addr));
-> > -	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
-> > -				 type | PCIE_ATU_FUNC_NUM(func_no));
-> > +	val = type | PCIE_ATU_FUNC_NUM(func_no);
-> > +	val = upper_32_bits(size - 1) ?
-> > +		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-> > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
-> >   	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
-> >   				 PCIE_ATU_ENABLE);
-> > @@ -266,7 +268,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
-> >   static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
-> >   					int index, int type, u64 cpu_addr,
-> > -					u64 pci_addr, u32 size)
-> > +					u64 pci_addr, u64 size)
-> >   {
-> >   	u32 retries, val;
-> > @@ -310,7 +312,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
-> >   }
-> >   void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
-> > -			       u64 cpu_addr, u64 pci_addr, u32 size)
-> > +			       u64 cpu_addr, u64 pci_addr, u64 size)
-> >   {
-> >   	__dw_pcie_prog_outbound_atu(pci, 0, index, type,
-> >   				    cpu_addr, pci_addr, size);
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index 97c7063b9e89..b81a1813cf9e 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -80,10 +80,12 @@
-> >   #define PCIE_ATU_VIEWPORT		0x900
-> >   #define PCIE_ATU_REGION_INBOUND		BIT(31)
-> >   #define PCIE_ATU_REGION_OUTBOUND	0
-> > +#define PCIE_ATU_REGION_INDEX3		0x3
-> >   #define PCIE_ATU_REGION_INDEX2		0x2
-> >   #define PCIE_ATU_REGION_INDEX1		0x1
-> >   #define PCIE_ATU_REGION_INDEX0		0x0
-> >   #define PCIE_ATU_CR1			0x904
-> > +#define PCIE_ATU_INCREASE_REGION_SIZE	BIT(13)
-> >   #define PCIE_ATU_TYPE_MEM		0x0
-> >   #define PCIE_ATU_TYPE_IO		0x2
-> >   #define PCIE_ATU_TYPE_CFG0		0x4
-> > @@ -295,7 +297,7 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci);
-> >   int dw_pcie_wait_for_link(struct dw_pcie *pci);
-> >   void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
-> >   			       int type, u64 cpu_addr, u64 pci_addr,
-> > -			       u32 size);
-> > +			       u64 size);
-> >   void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> >   				  int type, u64 cpu_addr, u64 pci_addr,
-> >   				  u32 size);
-> > 
+Yours,
+Linus Walleij
