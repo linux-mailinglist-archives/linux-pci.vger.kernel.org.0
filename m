@@ -2,68 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF4DF294021
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 18:03:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8D7C294028
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 18:04:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbgJTQDC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 12:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60756 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgJTQDC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Oct 2020 12:03:02 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CEC621534;
-        Tue, 20 Oct 2020 16:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603209781;
-        bh=oLsjpAWsvX9lEqIdEw4cReNHKVcbecgMUj8JTFgOKcc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=j01t9UdNehO5PH/noqaa6zZr6RXF+N+ORGyNUoAvGvyWjh1Cj01uxM2JjPUL1UvL0
-         ZU1aJRlTQBGhRHINcfJ5bBKWFnemlCSI9/hb2eA7OnTmVvlyc8kUBOH5njWx+aYxBp
-         h7x02L5NszTMPy39zJTutyrrsjBW1McDCFrIXZQQ=
-Date:   Tue, 20 Oct 2020 11:02:59 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     trix@redhat.com
-Cc:     linus.walleij@linaro.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: remove unneeded break
-Message-ID: <20201020160259.GA370179@bjorn-Precision-5520>
+        id S2437100AbgJTQEj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 12:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437099AbgJTQEj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 12:04:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5321DC061755;
+        Tue, 20 Oct 2020 09:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=MECigjgQ/weUzaLYQR4x9veFvTH5yieRfF6F9xLSQbQ=; b=Pff83xYYspyhuv+ihoFQXHIeZH
+        HL8AqWVLK9kpIUXUGryLQv0UQNR1ksU8O20C6CXWkaP9VozJtHMKqxNXrr8WZ+dZq+IDlFIVD12c+
+        otE7Rx/NuLnMWj9Pzq9sWwiP4lyr+D1bYXU3PS/t9qiw4MotAhX5K1l25j5FcE4lYyJlYmte7P/g/
+        IV9NOLyncu9lmfQDcDZ+kEgfkNPK+bQRfoh5ZWTMJLm9VfKDGytuin2NbjB/ZD1pgWRKeLveXFIAA
+        B5EaFMjUexbwTERDdt2TG6QWBzvqjXWOlL4UY+toTG3EtNRceyi4/lET5IEWHVIO/F+n6OV2GnaTT
+        67i0Wq5Q==;
+Received: from [2601:1c0:6280:3f0::507c]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kUu7n-0005WU-7I; Tue, 20 Oct 2020 16:04:36 +0000
+Subject: Re: [PATCH] PCI: export pci_find_host_bridge() to fix MFD build error
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>
+References: <20201019061453.32295-1-rdunlap@infradead.org>
+ <20201020080219.GA21011@infradead.org>
+ <45b16450-320b-86fd-603e-4fb311c6f4bd@infradead.org>
+ <84b55881-21ba-aa5b-7b56-7d8e411771f9@infradead.org>
+Message-ID: <2cdd59ba-4832-c25a-50e5-62766070675d@infradead.org>
+Date:   Tue, 20 Oct 2020 09:04:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201019190249.7825-1-trix@redhat.com>
+In-Reply-To: <84b55881-21ba-aa5b-7b56-7d8e411771f9@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 12:02:49PM -0700, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
+On 10/20/20 8:51 AM, Randy Dunlap wrote:
+> On 10/20/20 7:06 AM, Randy Dunlap wrote:
+>> On 10/20/20 1:02 AM, Christoph Hellwig wrote:
+>>> On Sun, Oct 18, 2020 at 11:14:53PM -0700, Randy Dunlap wrote:
+>>>> Fix a build error in drivers/mfd/ioc.o by exporting
+>>>> pci_find_host_bridge().
+>>>>
+>>>> ERROR: modpost: "pci_find_host_bridge" [drivers/mfd/ioc3.ko] undefined!
+>>>
+>>> I think the mfd code should be fixed to not depend on such an internal
+>>> symbol instead.
+>>>
+>>
+>> Thanks for commenting. and I am not surprised.
+>>
+>> Adding Cc: for Thomas and Lee.
 > 
-> A break is not needed if it is preceded by a return
+> BTW, if someone wants to use the MFD ioc3 driver now,
+> without any source code patches, they can just build it in
+> (SGI_MFD_IOC3=y) instead of building it as a loadable module.
 > 
-> Signed-off-by: Tom Rix <trix@redhat.com>
+> It builds successfully and can use pci_find_host_bridge().
+> pci_find_host_bridge() just isn't exported for loadable modules.
+> 
+> So this could be useful (PCI=y):
+> 
+> config SGI_MFD_IOC3
+> 	tristate "SGI IOC3 core driver"
+> 	depends on PCI=y && MIPS && 64BIT
+> 	select MFD_CORE
 
-Applied with Linus' reviewed-by to pci/misc for v5.10, thanks!
+Wow. That's not correct at all. Need more coffee.
 
-> ---
->  drivers/pci/controller/pci-v3-semi.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-> index 1f54334f09f7..154a5398633c 100644
-> --- a/drivers/pci/controller/pci-v3-semi.c
-> +++ b/drivers/pci/controller/pci-v3-semi.c
-> @@ -658,7 +658,6 @@ static int v3_get_dma_range_config(struct v3_pci *v3,
->  	default:
->  		dev_err(v3->dev, "illegal dma memory chunk size\n");
->  		return -EINVAL;
-> -		break;
->  	}
->  	val |= V3_PCI_MAP_M_REG_EN | V3_PCI_MAP_M_ENABLE;
->  	*pci_map = val;
-> -- 
-> 2.18.1
-> 
+Just set SGI_MFD_IOC3=y and it will be fine.
+
+-- 
+~Randy
+
