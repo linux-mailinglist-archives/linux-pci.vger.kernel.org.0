@@ -2,86 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E6CA293FEE
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 17:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8099A294019
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 17:59:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436884AbgJTPvm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 11:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436880AbgJTPvm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 11:51:42 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2670AC061755;
-        Tue, 20 Oct 2020 08:51:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=xVKeiMQ1XLylJ8rSbId/RCAy2iAQfbZGLGK+XA6rX94=; b=UtVJOPbFEz+23s9lduIazooL87
-        wyK5qqwT/ZkhpfUlFSF2AenPee7/3CibKkGNLxmaIDAvl9lFhYiKR/r9hulwNnAQyYEHbTO12ApcL
-        c2O4G2GaQtKYzJV6PSIJPUlzIeH+Agp8lsakx54ZRrVwopiPUi1oE8WpSRpATr1FekEHFVItUoRXQ
-        2i4DZyaw/Wq43wBLN3/e9eANpJZ0V9P+cnxiapGgazXjb4cUXQS3a4bF418vEArFtI5hs5xl0QbNg
-        h4JhiENXQjY7JIdWdcEK33KuDWKrn+mgr6btmjMs9YNVZLWGCK8FNuZ5YwByRjFfGU3SEMwPUBLLM
-        ln7AjsxQ==;
-Received: from [2601:1c0:6280:3f0::507c]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kUtvF-0004kW-AN; Tue, 20 Oct 2020 15:51:37 +0000
-Subject: Re: [PATCH] PCI: export pci_find_host_bridge() to fix MFD build error
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-References: <20201019061453.32295-1-rdunlap@infradead.org>
- <20201020080219.GA21011@infradead.org>
- <45b16450-320b-86fd-603e-4fb311c6f4bd@infradead.org>
-Message-ID: <84b55881-21ba-aa5b-7b56-7d8e411771f9@infradead.org>
-Date:   Tue, 20 Oct 2020 08:51:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S2437021AbgJTP7b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 11:59:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:53652 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436998AbgJTP7b (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Oct 2020 11:59:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37A961FB;
+        Tue, 20 Oct 2020 08:59:30 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D5733F66B;
+        Tue, 20 Oct 2020 08:59:28 -0700 (PDT)
+Date:   Tue, 20 Oct 2020 16:59:22 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        bhelgaas@google.com, amurray@thegoodpenguin.co.uk, robh@kernel.org,
+        treding@nvidia.com, jonathanh@nvidia.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: dwc: Use ATU regions to map memory regions
+Message-ID: <20201020155922.GA27985@e121166-lin.cambridge.arm.com>
+References: <20201005121351.32516-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <45b16450-320b-86fd-603e-4fb311c6f4bd@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201005121351.32516-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/20/20 7:06 AM, Randy Dunlap wrote:
-> On 10/20/20 1:02 AM, Christoph Hellwig wrote:
->> On Sun, Oct 18, 2020 at 11:14:53PM -0700, Randy Dunlap wrote:
->>> Fix a build error in drivers/mfd/ioc.o by exporting
->>> pci_find_host_bridge().
->>>
->>> ERROR: modpost: "pci_find_host_bridge" [drivers/mfd/ioc3.ko] undefined!
->>
->> I think the mfd code should be fixed to not depend on such an internal
->> symbol instead.
->>
+On Mon, Oct 05, 2020 at 05:43:51PM +0530, Vidya Sagar wrote:
+> Use ATU region-3 and region-0 to setup mapping for prefetchable and
+> non-prefetchable memory regions respectively only if their respective CPU
+> and bus addresses are different.
 > 
-> Thanks for commenting. and I am not surprised.
+
+The commit subject and log must be rewritten. You should describe
+why you are making this change, add a Link: tag to the discussion
+we had about this change and provide a reason why we are making it.
+
+Also, please add a Fixes: tag reference to the commit you are fixing.
+
+I think this is related to prefetchable handling in DT and dwc/tegra,
+we do need a link to those discussions here please.
+
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-host.c | 44 ++++++++++++++++---
+>  drivers/pci/controller/dwc/pcie-designware.c  | 12 ++---
+>  drivers/pci/controller/dwc/pcie-designware.h  |  4 +-
+>  3 files changed, 48 insertions(+), 12 deletions(-)
 > 
-> Adding Cc: for Thomas and Lee.
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 317ff512f8df..cefde8e813e9 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -515,9 +515,40 @@ static struct pci_ops dw_pcie_ops = {
+>  	.write = pci_generic_config_write,
+>  };
+>  
+> +static void dw_pcie_setup_mem_atu(struct pcie_port *pp,
+> +				  struct resource_entry *win)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +
+> +	if (win->res->flags & IORESOURCE_PREFETCH && pci->num_viewport >= 4 &&
+> +	    win->offset) {
+> +		dw_pcie_prog_outbound_atu(pci,
+> +					  PCIE_ATU_REGION_INDEX3,
+> +					  PCIE_ATU_TYPE_MEM,
+> +					  win->res->start,
+> +					  win->res->start - win->offset,
+> +					  resource_size(win->res));
+> +	} else if (win->res->flags & IORESOURCE_PREFETCH &&
+> +		   pci->num_viewport < 4) {
+> +		dev_warn(pci->dev,
+> +			 "Insufficient ATU regions to map Prefetchable memory\n");
+> +	} else if (win->offset) {
+> +		if (upper_32_bits(resource_size(win->res)))
+> +			dev_warn(pci->dev,
+> +				 "Memory resource size exceeds max for 32 bits\n");
+> +		dw_pcie_prog_outbound_atu(pci,
+> +					  PCIE_ATU_REGION_INDEX0,
+> +					  PCIE_ATU_TYPE_MEM,
+> +					  win->res->start,
+> +					  win->res->start - win->offset,
+> +					  resource_size(win->res));
+> +	}
 
-BTW, if someone wants to use the MFD ioc3 driver now,
-without any source code patches, they can just build it in
-(SGI_MFD_IOC3=y) instead of building it as a loadable module.
+This function logic must be explained - anyone else reading it should
+be able to understand it, I think it really deserves a comment.
 
-It builds successfully and can use pci_find_host_bridge().
-pci_find_host_bridge() just isn't exported for loadable modules.
+> +}
+> +
+>  void dw_pcie_setup_rc(struct pcie_port *pp)
+>  {
+>  	u32 val, ctrl, num_ctrls;
+> +	struct resource_entry *win;
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  
+>  	/*
+> @@ -572,13 +603,14 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	 * ATU, so we should not program the ATU here.
+>  	 */
+>  	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+> -		struct resource_entry *entry =
+> -			resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> +		resource_list_for_each_entry(win, &pp->bridge->windows) {
+> +			switch (resource_type(win->res)) {
+> +			case IORESOURCE_MEM:
+> +				dw_pcie_setup_mem_atu(pp, win);
+> +				break;
+> +			}
 
-So this could be useful (PCI=y):
+Nit: an if statement would do but that's not where the problem lies.
 
-config SGI_MFD_IOC3
-	tristate "SGI IOC3 core driver"
-	depends on PCI=y && MIPS && 64BIT
-	select MFD_CORE
-
--- 
-~Randy
-
+> +		}
+>  
+> -		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
+> -					  PCIE_ATU_TYPE_MEM, entry->res->start,
+> -					  entry->res->start - entry->offset,
+> -					  resource_size(entry->res));
+>  		if (pci->num_viewport > 2)
+>  			dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
+>  						  PCIE_ATU_TYPE_IO, pp->io_base,
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 3c1f17c78241..6033689abb15 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -227,7 +227,7 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+>  static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+>  					     int index, int type,
+>  					     u64 cpu_addr, u64 pci_addr,
+> -					     u32 size)
+> +					     u64 size)
+>  {
+>  	u32 retries, val;
+>  	u64 limit_addr = cpu_addr + size - 1;
+> @@ -244,8 +244,10 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+>  				 lower_32_bits(pci_addr));
+>  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+>  				 upper_32_bits(pci_addr));
+> -	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
+> -				 type | PCIE_ATU_FUNC_NUM(func_no));
+> +	val = type | PCIE_ATU_FUNC_NUM(func_no);
+> +	val = upper_32_bits(size - 1) ?
+> +		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
+> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+>  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+>  				 PCIE_ATU_ENABLE);
+>  
+> @@ -266,7 +268,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+>  
+>  static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+>  					int index, int type, u64 cpu_addr,
+> -					u64 pci_addr, u32 size)
+> +					u64 pci_addr, u64 size)
+>  {
+>  	u32 retries, val;
+>  
+> @@ -310,7 +312,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+>  }
+>  
+>  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> -			       u64 cpu_addr, u64 pci_addr, u32 size)
+> +			       u64 cpu_addr, u64 pci_addr, u64 size)
+>  {
+>  	__dw_pcie_prog_outbound_atu(pci, 0, index, type,
+>  				    cpu_addr, pci_addr, size);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 97c7063b9e89..b81a1813cf9e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -80,10 +80,12 @@
+>  #define PCIE_ATU_VIEWPORT		0x900
+>  #define PCIE_ATU_REGION_INBOUND		BIT(31)
+>  #define PCIE_ATU_REGION_OUTBOUND	0
+> +#define PCIE_ATU_REGION_INDEX3		0x3
+>  #define PCIE_ATU_REGION_INDEX2		0x2
+>  #define PCIE_ATU_REGION_INDEX1		0x1
+>  #define PCIE_ATU_REGION_INDEX0		0x0
+>  #define PCIE_ATU_CR1			0x904
+> +#define PCIE_ATU_INCREASE_REGION_SIZE	BIT(13)
+>  #define PCIE_ATU_TYPE_MEM		0x0
+>  #define PCIE_ATU_TYPE_IO		0x2
+>  #define PCIE_ATU_TYPE_CFG0		0x4
+> @@ -295,7 +297,7 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+>  int dw_pcie_wait_for_link(struct dw_pcie *pci);
+>  void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+>  			       int type, u64 cpu_addr, u64 pci_addr,
+> -			       u32 size);
+> +			       u64 size);
+>  void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+>  				  int type, u64 cpu_addr, u64 pci_addr,
+>  				  u32 size);
+> -- 
+> 2.17.1
+> 
