@@ -2,203 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D65B293D32
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 15:18:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5446293D39
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 15:20:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407400AbgJTNSw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 09:18:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:51764 "EHLO foss.arm.com"
+        id S2406476AbgJTNUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 09:20:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:51822 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407327AbgJTNSw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 20 Oct 2020 09:18:52 -0400
+        id S2407440AbgJTNUm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 20 Oct 2020 09:20:42 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEBA230E;
-        Tue, 20 Oct 2020 06:18:50 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C184931B;
+        Tue, 20 Oct 2020 06:20:41 -0700 (PDT)
 Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5FC33F719;
-        Tue, 20 Oct 2020 06:18:48 -0700 (PDT)
-Date:   Tue, 20 Oct 2020 14:18:43 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8C093F719;
+        Tue, 20 Oct 2020 06:20:39 -0700 (PDT)
+Date:   Tue, 20 Oct 2020 14:20:37 +0100
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
-Subject: Re: [PATCH v7 00/18] Implement NTB Controller using multiple PCI EP
-Message-ID: <20201020131843.GA25784@e121166-lin.cambridge.arm.com>
-References: <20200930153519.7282-1-kishon@ti.com>
- <fe2db298-2116-7f52-80bd-a3d01a9a1521@ti.com>
- <72ebe7db-86cd-6827-03ff-bde32c10dc7e@ti.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        bhelgaas@google.com, amurray@thegoodpenguin.co.uk, robh@kernel.org,
+        treding@nvidia.com, jonathanh@nvidia.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: dwc: Use ATU regions to map memory regions
+Message-ID: <20201020132037.GB25784@e121166-lin.cambridge.arm.com>
+References: <20201005121351.32516-1-vidyas@nvidia.com>
+ <e633d496-0c4b-f6f5-00a9-c98fb3ed9f61@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72ebe7db-86cd-6827-03ff-bde32c10dc7e@ti.com>
+In-Reply-To: <e633d496-0c4b-f6f5-00a9-c98fb3ed9f61@nvidia.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 20, 2020 at 01:45:45PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 05/10/20 11:27 am, Kishon Vijay Abraham I wrote:
-> > Hi Jon Mason, Allen Hubbe, Dave Jiang,
-> > 
-> > On 30/09/20 9:05 pm, Kishon Vijay Abraham I wrote:
-> >> This series is about implementing SW defined Non-Transparent Bridge (NTB)
-> >> using multiple endpoint (EP) instances. This series has been tested using
-> >> 2 endpoint instances in J7 connected to J7 board on one end and DRA7 board
-> >> on the other end. However there is nothing platform specific for the NTB
-> >> functionality.
-> > 
-> > This series has two patches that adds to drivers/ntb/ directory.
-> > [PATCH v7 15/18] NTB: Add support for EPF PCI-Express Non-Transparent
-> > Bridge and [PATCH v7 16/18] NTB: tool: Enable the NTB/PCIe link on the
-> > local or remote side of bridge.
-> > 
-> > If you can review and Ack the above patches, Lorenzo can queue it along
-> > with the rest of the series.
-> > 
-> > Thanks for your help in advance.
-> 
-> Gentle ping on this series.
+On Mon, Oct 19, 2020 at 11:21:54AM +0530, Vidya Sagar wrote:
+> Hi Lorenzo, Rob, Gustavo,
+> Could you please review this change?
 
-I am not queueing any more patches for this merge window - we postpone
-this series to v5.11 and in the interim it would be good to define some
-possible users.
+Next cycle - we are in the middle of the merge window and I am not
+queueing any more patches.
 
 Thanks,
 Lorenzo
 
-> Thanks
-> Kishon
+> Thanks,
+> Vidya Sagar
+> 
+> On 10/5/2020 5:43 PM, Vidya Sagar wrote:
+> > Use ATU region-3 and region-0 to setup mapping for prefetchable and
+> > non-prefetchable memory regions respectively only if their respective CPU
+> > and bus addresses are different.
 > > 
-> > Best Regards,
-> > Kishon
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > ---
+> >   .../pci/controller/dwc/pcie-designware-host.c | 44 ++++++++++++++++---
+> >   drivers/pci/controller/dwc/pcie-designware.c  | 12 ++---
+> >   drivers/pci/controller/dwc/pcie-designware.h  |  4 +-
+> >   3 files changed, 48 insertions(+), 12 deletions(-)
 > > 
-> >>
-> >> This was presented in Linux Plumbers Conference. Link to presentation
-> >> and video can be found @ [1]
-> >>
-> >> RFC patch series can be found @ [2]
-> >> v1 patch series can be found @ [3]
-> >> v2 patch series can be found @ [4]
-> >> v3 patch series can be found @ [5]
-> >> v4 patch series can be found @ [6]
-> >> v5 patch series can be found @ [7]
-> >> v6 patch series can be found @ [8]
-> >>
-> >> Changes from v6:
-> >> 1) Fixed issues when multiple NTB devices are creating using multiple
-> >>    functions
-> >> 2) Fixed issue with writing scratchpad register
-> >> 3) Created a video demo @ [9]
-> >>
-> >> Changes from v5:
-> >> 1) Fixed a formatting issue in Kconfig pointed out by Randy
-> >> 2) Checked for Error or Null in pci_epc_add_epf()
-> >>
-> >> Changes from v4:
-> >> 1) Fixed error condition checks in pci_epc_add_epf()
-> >>
-> >> Changes from v3:
-> >> 1) Fixed Documentation edits suggested by Randy Dunlap <rdunlap@infradead.org>
-> >>
-> >> Changes from v2:
-> >> 1) Add support for the user to create sub-directory of 'EPF Device'
-> >>    directory (for endpoint function specific configuration using
-> >>    configfs).
-> >> 2) Add documentation for NTB specific attributes in configfs
-> >> 3) Check for PCI_CLASS_MEMORY_RAM (PCIe class) before binding ntb_hw_epf
-> >>    driver
-> >> 4) Other documentation fixes
-> >>
-> >> Changes from v1:
-> >> 1) As per Rob's comment, removed support for creating NTB function
-> >>    device from DT
-> >> 2) Add support to create NTB EPF device using configfs (added support in
-> >>    configfs to associate primary and secondary EPC with EPF.
-> >>
-> >> Changes from RFC:
-> >> 1) Converted the DT binding patches to YAML schema and merged the
-> >>    DT binding patches together
-> >> 2) NTB documentation is converted to .rst
-> >> 3) One HOST can now interrupt the other HOST using MSI-X interrupts
-> >> 4) Added support for teardown of memory window and doorbell
-> >>    configuration
-> >> 5) Add support to provide support 64-bit memory window size from
-> >>    DT
-> >>
-> >> [1] -> https://linuxplumbersconf.org/event/4/contributions/395/
-> >> [2] -> http://lore.kernel.org/r/20190926112933.8922-1-kishon@ti.com
-> >> [3] -> http://lore.kernel.org/r/20200514145927.17555-1-kishon@ti.com
-> >> [4] -> http://lore.kernel.org/r/20200611130525.22746-1-kishon@ti.com
-> >> [5] -> http://lore.kernel.org/r/20200904075052.8911-1-kishon@ti.com
-> >> [6] -> http://lore.kernel.org/r/20200915042110.3015-1-kishon@ti.com
-> >> [7] -> http://lore.kernel.org/r/20200918064227.1463-1-kishon@ti.com
-> >> [8] -> http://lore.kernel.org/r/20200924092519.17082-1-kishon@ti.com
-> >> [9] -> https://youtu.be/dLKKxrg5-rY
-> >>
-> >> Kishon Vijay Abraham I (18):
-> >>   Documentation: PCI: Add specification for the *PCI NTB* function
-> >>     device
-> >>   PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
-> >>     BAR
-> >>   PCI: endpoint: Add helper API to get the 'next' unreserved BAR
-> >>   PCI: endpoint: Make *_free_bar() to return error codes on failure
-> >>   PCI: endpoint: Remove unused pci_epf_match_device()
-> >>   PCI: endpoint: Add support to associate secondary EPC with EPF
-> >>   PCI: endpoint: Add support in configfs to associate two EPCs with EPF
-> >>   PCI: endpoint: Add pci_epc_ops to map MSI irq
-> >>   PCI: endpoint: Add pci_epf_ops for epf drivers to expose function
-> >>     specific attrs
-> >>   PCI: endpoint: Allow user to create sub-directory of 'EPF Device'
-> >>     directory
-> >>   PCI: cadence: Implement ->msi_map_irq() ops
-> >>   PCI: cadence: Configure LM_EP_FUNC_CFG based on epc->function_num_map
-> >>   PCI: endpoint: Add EP function driver to provide NTB functionality
-> >>   PCI: Add TI J721E device to pci ids
-> >>   NTB: Add support for EPF PCI-Express Non-Transparent Bridge
-> >>   NTB: tool: Enable the NTB/PCIe link on the local or remote side of
-> >>     bridge
-> >>   Documentation: PCI: Add configfs binding documentation for pci-ntb
-> >>     endpoint function
-> >>   Documentation: PCI: Add userguide for PCI endpoint NTB function
-> >>
-> >>  .../PCI/endpoint/function/binding/pci-ntb.rst |   38 +
-> >>  Documentation/PCI/endpoint/index.rst          |    3 +
-> >>  .../PCI/endpoint/pci-endpoint-cfs.rst         |   10 +
-> >>  .../PCI/endpoint/pci-ntb-function.rst         |  351 +++
-> >>  Documentation/PCI/endpoint/pci-ntb-howto.rst  |  160 ++
-> >>  drivers/misc/pci_endpoint_test.c              |    1 -
-> >>  drivers/ntb/hw/Kconfig                        |    1 +
-> >>  drivers/ntb/hw/Makefile                       |    1 +
-> >>  drivers/ntb/hw/epf/Kconfig                    |    6 +
-> >>  drivers/ntb/hw/epf/Makefile                   |    1 +
-> >>  drivers/ntb/hw/epf/ntb_hw_epf.c               |  755 ++++++
-> >>  drivers/ntb/test/ntb_tool.c                   |    1 +
-> >>  .../pci/controller/cadence/pcie-cadence-ep.c  |   60 +-
-> >>  drivers/pci/endpoint/functions/Kconfig        |   12 +
-> >>  drivers/pci/endpoint/functions/Makefile       |    1 +
-> >>  drivers/pci/endpoint/functions/pci-epf-ntb.c  | 2114 +++++++++++++++++
-> >>  drivers/pci/endpoint/functions/pci-epf-test.c |   13 +-
-> >>  drivers/pci/endpoint/pci-ep-cfs.c             |  176 +-
-> >>  drivers/pci/endpoint/pci-epc-core.c           |  130 +-
-> >>  drivers/pci/endpoint/pci-epf-core.c           |  105 +-
-> >>  include/linux/pci-epc.h                       |   39 +-
-> >>  include/linux/pci-epf.h                       |   28 +-
-> >>  include/linux/pci_ids.h                       |    1 +
-> >>  23 files changed, 3934 insertions(+), 73 deletions(-)
-> >>  create mode 100644 Documentation/PCI/endpoint/function/binding/pci-ntb.rst
-> >>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
-> >>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
-> >>  create mode 100644 drivers/ntb/hw/epf/Kconfig
-> >>  create mode 100644 drivers/ntb/hw/epf/Makefile
-> >>  create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
-> >>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
-> >>
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > index 317ff512f8df..cefde8e813e9 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > @@ -515,9 +515,40 @@ static struct pci_ops dw_pcie_ops = {
+> >   	.write = pci_generic_config_write,
+> >   };
+> > +static void dw_pcie_setup_mem_atu(struct pcie_port *pp,
+> > +				  struct resource_entry *win)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +
+> > +	if (win->res->flags & IORESOURCE_PREFETCH && pci->num_viewport >= 4 &&
+> > +	    win->offset) {
+> > +		dw_pcie_prog_outbound_atu(pci,
+> > +					  PCIE_ATU_REGION_INDEX3,
+> > +					  PCIE_ATU_TYPE_MEM,
+> > +					  win->res->start,
+> > +					  win->res->start - win->offset,
+> > +					  resource_size(win->res));
+> > +	} else if (win->res->flags & IORESOURCE_PREFETCH &&
+> > +		   pci->num_viewport < 4) {
+> > +		dev_warn(pci->dev,
+> > +			 "Insufficient ATU regions to map Prefetchable memory\n");
+> > +	} else if (win->offset) {
+> > +		if (upper_32_bits(resource_size(win->res)))
+> > +			dev_warn(pci->dev,
+> > +				 "Memory resource size exceeds max for 32 bits\n");
+> > +		dw_pcie_prog_outbound_atu(pci,
+> > +					  PCIE_ATU_REGION_INDEX0,
+> > +					  PCIE_ATU_TYPE_MEM,
+> > +					  win->res->start,
+> > +					  win->res->start - win->offset,
+> > +					  resource_size(win->res));
+> > +	}
+> > +}
+> > +
+> >   void dw_pcie_setup_rc(struct pcie_port *pp)
+> >   {
+> >   	u32 val, ctrl, num_ctrls;
+> > +	struct resource_entry *win;
+> >   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> >   	/*
+> > @@ -572,13 +603,14 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> >   	 * ATU, so we should not program the ATU here.
+> >   	 */
+> >   	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+> > -		struct resource_entry *entry =
+> > -			resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> > +		resource_list_for_each_entry(win, &pp->bridge->windows) {
+> > +			switch (resource_type(win->res)) {
+> > +			case IORESOURCE_MEM:
+> > +				dw_pcie_setup_mem_atu(pp, win);
+> > +				break;
+> > +			}
+> > +		}
+> > -		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
+> > -					  PCIE_ATU_TYPE_MEM, entry->res->start,
+> > -					  entry->res->start - entry->offset,
+> > -					  resource_size(entry->res));
+> >   		if (pci->num_viewport > 2)
+> >   			dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
+> >   						  PCIE_ATU_TYPE_IO, pp->io_base,
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 3c1f17c78241..6033689abb15 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -227,7 +227,7 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+> >   static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+> >   					     int index, int type,
+> >   					     u64 cpu_addr, u64 pci_addr,
+> > -					     u32 size)
+> > +					     u64 size)
+> >   {
+> >   	u32 retries, val;
+> >   	u64 limit_addr = cpu_addr + size - 1;
+> > @@ -244,8 +244,10 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+> >   				 lower_32_bits(pci_addr));
+> >   	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+> >   				 upper_32_bits(pci_addr));
+> > -	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
+> > -				 type | PCIE_ATU_FUNC_NUM(func_no));
+> > +	val = type | PCIE_ATU_FUNC_NUM(func_no);
+> > +	val = upper_32_bits(size - 1) ?
+> > +		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
+> > +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+> >   	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+> >   				 PCIE_ATU_ENABLE);
+> > @@ -266,7 +268,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+> >   static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+> >   					int index, int type, u64 cpu_addr,
+> > -					u64 pci_addr, u32 size)
+> > +					u64 pci_addr, u64 size)
+> >   {
+> >   	u32 retries, val;
+> > @@ -310,7 +312,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+> >   }
+> >   void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+> > -			       u64 cpu_addr, u64 pci_addr, u32 size)
+> > +			       u64 cpu_addr, u64 pci_addr, u64 size)
+> >   {
+> >   	__dw_pcie_prog_outbound_atu(pci, 0, index, type,
+> >   				    cpu_addr, pci_addr, size);
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > index 97c7063b9e89..b81a1813cf9e 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -80,10 +80,12 @@
+> >   #define PCIE_ATU_VIEWPORT		0x900
+> >   #define PCIE_ATU_REGION_INBOUND		BIT(31)
+> >   #define PCIE_ATU_REGION_OUTBOUND	0
+> > +#define PCIE_ATU_REGION_INDEX3		0x3
+> >   #define PCIE_ATU_REGION_INDEX2		0x2
+> >   #define PCIE_ATU_REGION_INDEX1		0x1
+> >   #define PCIE_ATU_REGION_INDEX0		0x0
+> >   #define PCIE_ATU_CR1			0x904
+> > +#define PCIE_ATU_INCREASE_REGION_SIZE	BIT(13)
+> >   #define PCIE_ATU_TYPE_MEM		0x0
+> >   #define PCIE_ATU_TYPE_IO		0x2
+> >   #define PCIE_ATU_TYPE_CFG0		0x4
+> > @@ -295,7 +297,7 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+> >   int dw_pcie_wait_for_link(struct dw_pcie *pci);
+> >   void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+> >   			       int type, u64 cpu_addr, u64 pci_addr,
+> > -			       u32 size);
+> > +			       u64 size);
+> >   void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+> >   				  int type, u64 cpu_addr, u64 pci_addr,
+> >   				  u32 size);
+> > 
