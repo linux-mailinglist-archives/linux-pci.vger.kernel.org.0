@@ -2,168 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87EB2293DD8
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 15:56:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62826293E20
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 16:06:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407717AbgJTN4G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 09:56:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59599 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2407651AbgJTN4F (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 09:56:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603202163;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HyQ28xr5/lapv6azTtFCvHFT5XQ1+OzeHk+84iEm66Y=;
-        b=QUp+Tm/49C2D2ArfwdGiXcYEZLmxY3ITF9bXZyS+HEfcJJoqaGxmch+2EHiNHeADDWpHNz
-        Ouzap4oFcZixuWmorb4Ub+lRVmWRZDipZO+0tL8W1vnU06zVM/xfLz81/8VfcBPp80A1RW
-        EdBHqnK2mgm1gY9dzcmZeB2rW1Al8Fc=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-VSKfFrzMM5u7cxA3yBpDuw-1; Tue, 20 Oct 2020 09:56:01 -0400
-X-MC-Unique: VSKfFrzMM5u7cxA3yBpDuw-1
-Received: by mail-qk1-f198.google.com with SMTP id w126so1809181qka.5
-        for <linux-pci@vger.kernel.org>; Tue, 20 Oct 2020 06:56:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=HyQ28xr5/lapv6azTtFCvHFT5XQ1+OzeHk+84iEm66Y=;
-        b=YSAta3UjP+eRQhbF+5W6U9uEwnoxinrCHFo25CC2HfBG/HpQno5RZ5p8kZLjK8QC/V
-         +99pL4Tw8VwWgfjIV4MrvXaNbWbMw80KRqoMECzpkyDXp/jOKqlC/3sDQ4BZSFSmbsn1
-         1XSpmbCcjrqC8Mgyw6L9ETZ4nIJ/eI3H+4s2rtljWWoJyahU1iqgXKeTwQ/O/E2BGg9l
-         cVXBQ5xpik9PkEbe/fVtZ93ANc/DYapScVvr8mmNRu+NkVvkfN84vjgWLuO59qHWhANF
-         fHpkNSnXxzTor78TccV8yHddM3YVKTOGtu5GwGZL5QVR5qL+h2Qr38Itvc7pdB/MAHu6
-         2tCg==
-X-Gm-Message-State: AOAM530a4vps7n9cSuxYC8TKjU8Z0RnwGMVdrqlJAbByr3kB6nLSKhwA
-        P0lW1qX0YtSILPB63nJQkmEL/sT5+Px6ZpEHfmefMhj30Uu+t+dxwpo1Uzal8TtU5qLSnfxHOZh
-        UIgLYmytbSYR+pRORjMDl
-X-Received: by 2002:a05:6214:174f:: with SMTP id dc15mr3370452qvb.25.1603202160689;
-        Tue, 20 Oct 2020 06:56:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyLUAfqrAOJzxwKF3+voCBF5yQYNbMOvfOkDZhumkJj3bEnT15V4x8vUJ5iQ5pWt9KusIZtsQ==
-X-Received: by 2002:a05:6214:174f:: with SMTP id dc15mr3370377qvb.25.1603202160139;
-        Tue, 20 Oct 2020 06:56:00 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id b8sm775938qkn.133.2020.10.20.06.55.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Oct 2020 06:55:59 -0700 (PDT)
-Subject: Re: [RFC] treewide: cleanup unreachable breaks
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
-        storagedev@microchip.com, devel@driverdev.osuosl.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net,
-        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        bpf <bpf@vger.kernel.org>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        George Burgess <gbiv@google.com>, Joe Perches <joe@perches.com>
-References: <20201017160928.12698-1-trix@redhat.com>
- <20201018054332.GB593954@kroah.com>
- <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <ca1f50d6-1005-8e3d-8d5c-98c82a704338@redhat.com>
-Date:   Tue, 20 Oct 2020 06:55:52 -0700
+        id S2407793AbgJTOGj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 10:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407726AbgJTOGi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 10:06:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D886C061755;
+        Tue, 20 Oct 2020 07:06:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=JRvHlEJrGZFiOQKd1c2qmCNGUvUh3oAWJT1Un94riZY=; b=gvRL5jmqVlrSmqjtvh0XTnm3LD
+        56PFyUXzXu+eC4lCU08E0kxKs8Q/QA/WRfHBOm00tJjhrRZXpO1qjQqsT5JzYwi6qvhCO37cF+3vJ
+        H0jxwJjRpia5kUbKeSu3x5RbPTurkjqzcbJVRIgudqWxJzpcKVCafy2tR8NVho4grfwF5JXi9uZoQ
+        T2cYSdOWENtQIW7gGGUveU0tgHXwoYGyzr/ujhAMB0KW8GgGr1q+LopITW5r6mGYAcUUo1W+gx6t5
+        PkpXw7UABl4GafrQhHi37PsNqzJpSiX1DnfNZsHMbuYPZFM9E4p09sPMHp2G2NTw0D2Pam0ukZZoc
+        FknIoJLw==;
+Received: from [2601:1c0:6280:3f0::507c]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kUsHZ-0006kQ-VG; Tue, 20 Oct 2020 14:06:34 +0000
+Subject: Re: [PATCH] PCI: export pci_find_host_bridge() to fix MFD build error
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>
+References: <20201019061453.32295-1-rdunlap@infradead.org>
+ <20201020080219.GA21011@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <45b16450-320b-86fd-603e-4fb311c6f4bd@infradead.org>
+Date:   Tue, 20 Oct 2020 07:06:29 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+In-Reply-To: <20201020080219.GA21011@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 10/19/20 12:42 PM, Nick Desaulniers wrote:
-> On Sat, Oct 17, 2020 at 10:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->> On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
->>> From: Tom Rix <trix@redhat.com>
->>>
->>> This is a upcoming change to clean up a new warning treewide.
->>> I am wondering if the change could be one mega patch (see below) or
->>> normal patch per file about 100 patches or somewhere half way by collecting
->>> early acks.
->> Please break it up into one-patch-per-subsystem, like normal, and get it
->> merged that way.
+On 10/20/20 1:02 AM, Christoph Hellwig wrote:
+> On Sun, Oct 18, 2020 at 11:14:53PM -0700, Randy Dunlap wrote:
+>> Fix a build error in drivers/mfd/ioc.o by exporting
+>> pci_find_host_bridge().
 >>
->> Sending us a patch, without even a diffstat to review, isn't going to
->> get you very far...
-> Tom,
-> If you're able to automate this cleanup, I suggest checking in a
-> script that can be run on a directory.  Then for each subsystem you
-> can say in your commit "I ran scripts/fix_whatever.py on this subdir."
->  Then others can help you drive the tree wide cleanup.  Then we can
-> enable -Wunreachable-code-break either by default, or W=2 right now
-> might be a good idea.
+>> ERROR: modpost: "pci_find_host_bridge" [drivers/mfd/ioc3.ko] undefined!
+> 
+> I think the mfd code should be fixed to not depend on such an internal
+> symbol instead.
+> 
 
-I should have waited for Joe Perches's fixer addition to checkpatch :)
+Thanks for commenting. and I am not surprised.
 
-The easy fixes I did only cover about 1/2 of the problems.
+Adding Cc: for Thomas and Lee.
 
-Remaining are mostly nested switches, which from a complexity standpoint is bad.
-
->
-> Ah, George (gbiv@, cc'ed), did an analysis recently of
-> `-Wunreachable-code-loop-increment`, `-Wunreachable-code-break`, and
-> `-Wunreachable-code-return` for Android userspace.  From the review:
-> ```
-> Spoilers: of these, it seems useful to turn on
-> -Wunreachable-code-loop-increment and -Wunreachable-code-return by
-> default for Android
-
-In my simple add-a-cflag bot, i see there are about 250
-
-issues for -Wunreachable-code-return.
-
-I'll see about doing this one next.
-
-> ...
-> While these conventions about always having break arguably became
-> obsolete when we enabled -Wfallthrough, my sample turned up zero
-> potential bugs caught by this warning, and we'd need to put a lot of
-> effort into getting a clean tree. So this warning doesn't seem to be
-> worth it.
-> ```
-> Looks like there's an order of magnitude of `-Wunreachable-code-break`
-> than the other two.
->
-> We probably should add all 3 to W=2 builds (wrapped in cc-option).
-> I've filed https://github.com/ClangBuiltLinux/linux/issues/1180 to
-> follow up on.
-
-Yes, i think think these should be added.
-
-Tom
+-- 
+~Randy
 
