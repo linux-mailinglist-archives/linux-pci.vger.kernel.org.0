@@ -2,178 +2,218 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F00532942F5
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 21:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C70B2943A3
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Oct 2020 21:59:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438090AbgJTTYv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Oct 2020 15:24:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438088AbgJTTYu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 15:24:50 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BCB5C0613D1
-        for <linux-pci@vger.kernel.org>; Tue, 20 Oct 2020 12:24:50 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id v19so3032838edx.9
-        for <linux-pci@vger.kernel.org>; Tue, 20 Oct 2020 12:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0aSlO1W7vXD8wpvCCG7wGbAKM67BTQt/FrRx6zZmumc=;
-        b=MD9d7uz3cpra2FJBi9y1hEvF1r4hdy805N/H3qRtjanKJvvmB1oAnplnX1pvJFGw3p
-         u2TpNcRLfU2Z2DTbjohMDHA66MV8G90XBOBS8mILuZVE2Tl1fio+VP73xYJigeFrlIeI
-         thKNSd2wLZ0ZiU7v9+mZ7gKsBuhfO3C5IZPR0QUG037jFS7rG71K9DGNZPifpYw5Zb3j
-         jS/9m7X8sU7ej/VKCctxs5ZOZrMHQSjQz9JjI68haEWvlWCeAR9lPPGbS1DsHCzFD131
-         9coer59bAU/KEvj4fQv6K3nmuab06BfEXpdrDvwZLwzkJFQzfVDZxEo6uSKYeFUMVvag
-         pqMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0aSlO1W7vXD8wpvCCG7wGbAKM67BTQt/FrRx6zZmumc=;
-        b=IniQszQeg95lUgxMilGCc9mf+bm0kwCaD+SrpC1msw4c3wCcGfrcw7Yzp6aMOujvDd
-         EVhBqVpxsdxEeuKtx1PukixLeI8e/qsGs39f4mSWHgOTqNz5Rr++OrnMCs+RouRztxyq
-         vo/Uxit+pSTRpgoiU3F3//94w6LHqautbnUxlyZmiqzCXPrNj0oNav1NkjTcdC6gwBI4
-         t05muTgsucgIGm+ZWwF4AdZeVVVUsoyFhbNrewSQOWAGTPEg0oKmtnP+Y9TxOEFzyJjC
-         ZlEWsKrY6pNMdB8vURXU9LSRwG/UcHb90VvZT7bu9UammDLT7snLw3W61zwxBYS8y3wd
-         UkaQ==
-X-Gm-Message-State: AOAM532Bbj9BgzoxduDy6jZ2fp0MvB/j43loZ5z6p5Wovqh5qPgP7SNu
-        UpfI4HPeE4csdZ4lnuCKvkCSbOBbKv3Lbtgt9TXY0w==
-X-Google-Smtp-Source: ABdhPJyMOA23NnvKtSjkOLGiry9VkOkNifOIW4sa6w2YiQX+XkJh8M/nVDkTK78UH1bOaHTG4GNJ1uOJcZ3dDNt12gE=
-X-Received: by 2002:a50:88e5:: with SMTP id d92mr4494054edd.145.1603221888446;
- Tue, 20 Oct 2020 12:24:48 -0700 (PDT)
+        id S1733119AbgJTT7n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Oct 2020 15:59:43 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16717 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733111AbgJTT7n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Oct 2020 15:59:43 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f8f41510001>; Tue, 20 Oct 2020 12:58:09 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Oct
+ 2020 19:59:39 +0000
+Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Tue, 20 Oct 2020 19:59:35 +0000
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V2] PCI: dwc: Add support to handle prefetchable memory mapping
+Date:   Wed, 21 Oct 2020 01:29:31 +0530
+Message-ID: <20201020195931.12470-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201005121351.32516-1-vidyas@nvidia.com>
+References: <20201005121351.32516-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20201013003203.4168817-1-samitolvanen@google.com>
- <20201013003203.4168817-23-samitolvanen@google.com> <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
- <20201015102216.GB2611@hirez.programming.kicks-ass.net> <20201015203942.f3kwcohcwwa6lagd@treble>
- <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com> <20201020185217.ilg6w5l7ujau2246@treble>
-In-Reply-To: <20201020185217.ilg6w5l7ujau2246@treble>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 20 Oct 2020 12:24:37 -0700
-Message-ID: <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1603223889; bh=YrKgQJFgKpLpIV8ji6foeY6U+aKitqNhwNzyZefr8Pc=;
+        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+         References:X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Q3EBT5kWfZrjpKsOkH/w0fRu8ZnQrUKs1EQuFHqI4tpM2rpjLLbDkc74TZRJAcuUb
+         QkmA/P+WRqL4ADk6Empc1cTfzksCABSJpknuj7aMR3EEQy3A8i7VXWWOvaOTCNEaB+
+         ScrFZRHvgsr7rhMhUqKtoKmvnytIMsfekXzp/w37DOS14TK3vqOMyCHJHLk9ft2Cip
+         VE3Q3vHeXbEB6dA+br67lkmS4q0laTtGECXs++YXaDsNnHj5l+xWnslnmyiR59ysp0
+         IcILJ61jvN76ryDnXNkYAh3Pvp7nnIJrMvVyEUhubsiGzo0eDIJ0AxW+UGg7ClFwmO
+         SGq91+aeMZvUg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Oct 20, 2020 at 11:52 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Tue, Oct 20, 2020 at 09:45:06AM -0700, Sami Tolvanen wrote:
-> > On Thu, Oct 15, 2020 at 1:39 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > On Thu, Oct 15, 2020 at 12:22:16PM +0200, Peter Zijlstra wrote:
-> > > > On Thu, Oct 15, 2020 at 01:23:41AM +0200, Jann Horn wrote:
-> > > >
-> > > > > It would probably be good to keep LTO and non-LTO builds in sync about
-> > > > > which files are subjected to objtool checks. So either you should be
-> > > > > removing the OBJECT_FILES_NON_STANDARD annotations for anything that
-> > > > > is linked into the main kernel (which would be a nice cleanup, if that
-> > > > > is possible),
-> > > >
-> > > > This, I've had to do that for a number of files already for the limited
-> > > > vmlinux.o passes we needed for noinstr validation.
-> > >
-> > > Getting rid of OBJECT_FILES_NON_STANDARD is indeed the end goal, though
-> > > I'm not sure how practical that will be for some of the weirder edge
-> > > case.
-> > >
-> > > On a related note, I have some old crypto cleanups which need dusting
-> > > off.
-> >
-> > Building allyesconfig with this series and LTO enabled, I still see
-> > the following objtool warnings for vmlinux.o, grouped by source file:
-> >
-> > arch/x86/entry/entry_64.S:
-> > __switch_to_asm()+0x0: undefined stack state
-> > .entry.text+0xffd: sibling call from callable instruction with
-> > modified stack frame
-> > .entry.text+0x48: stack state mismatch: cfa1=7-8 cfa2=-1+0
->
-> Not sure what this one's about, there's no OBJECT_FILES_NON_STANDARD?
+DWC sub-system currently doesn't differentiate between prefetchable and
+non-prefetchable memory aperture entries in the 'ranges' property and
+provides ATU mapping only for the first memory aperture entry out of all
+the entries present. This was introduced by the
+commit 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources").
+Mapping for a memory apreture is required if its CPU address and the bus
+address are different and the current mechanism works only if the memory
+aperture which needs mapping happens to be the first entry. It doesn't
+work either if the memory aperture that needs mapping is not the first
+entry or if both prefetchable and non-prefetchable apertures need mapping.
 
-Correct, because with LTO, we won't have an ELF binary to process
-until we compile everything into vmlinux.o, and at that point we can
-no longer skip individual object files.
+This patch fixes this issue by differentiating between prefetchable and
+non-prefetchable apertures in the 'ranges' property there by removing the
+dependency on the order in which they are specified and adds support for
+mapping prefetchable aperture using ATU region-3 if required.
 
-The sibling call warning is in
-swapgs_restore_regs_and_return_to_usermode and the stack state
-mismatch in entry_SYSCALL_64_after_hwframe.
+Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
+Link: http://patchwork.ozlabs.org/project/linux-pci/patch/20200513190855.23318-1-vidyas@nvidia.com/
 
-> > arch/x86/entry/entry_64_compat.S:
-> > .entry.text+0x1754: unsupported instruction in callable function
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+V2:
+* Rewrote commit subject and description
+* Addressed review comments from Lorenzo
 
-This comes from a sysretl instruction in entry_SYSCALL_compat.
+ .../pci/controller/dwc/pcie-designware-host.c | 42 ++++++++++++++++---
+ drivers/pci/controller/dwc/pcie-designware.c  | 12 +++---
+ drivers/pci/controller/dwc/pcie-designware.h  |  4 +-
+ 3 files changed, 46 insertions(+), 12 deletions(-)
 
-> > .entry.text+0x1634: redundant CLD
-> > .entry.text+0x15fd: stack state mismatch: cfa1=7-8 cfa2=-1+0
-> > .entry.text+0x168c: stack state mismatch: cfa1=7-8 cfa2=-1+0
->
-> Ditto.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index db547ee6ff3a..dae6da39bb90 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -521,9 +521,42 @@ static struct pci_ops dw_pcie_ops = {
+ 	.write = pci_generic_config_write,
+ };
+ 
++static void dw_pcie_setup_mem_atu(struct pcie_port *pp,
++				  struct resource_entry *win)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++
++	/* Check for prefetchable memory aperture */
++	if (win->res->flags & IORESOURCE_PREFETCH && win->offset) {
++		/* Number of view ports must at least be 4 to enable mapping */
++		if (pci->num_viewport < 4) {
++			dev_warn(pci->dev,
++				 "Insufficient ATU regions to map Prefetchable memory\n");
++		} else {
++			dw_pcie_prog_outbound_atu(pci,
++						  PCIE_ATU_REGION_INDEX3,
++						  PCIE_ATU_TYPE_MEM,
++						  win->res->start,
++						  win->res->start - win->offset,
++						  resource_size(win->res));
++		}
++	} else if (win->offset) { /* Non-prefetchable memory aperture */
++		if (upper_32_bits(resource_size(win->res)))
++			dev_warn(pci->dev,
++				 "Memory resource size exceeds max for 32 bits\n");
++		dw_pcie_prog_outbound_atu(pci,
++					  PCIE_ATU_REGION_INDEX0,
++					  PCIE_ATU_TYPE_MEM,
++					  win->res->start,
++					  win->res->start - win->offset,
++					  resource_size(win->res));
++	}
++}
++
+ void dw_pcie_setup_rc(struct pcie_port *pp)
+ {
+ 	u32 val, ctrl, num_ctrls;
++	struct resource_entry *win;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 
+ 	/*
+@@ -578,13 +611,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	 * ATU, so we should not program the ATU here.
+ 	 */
+ 	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+-		struct resource_entry *entry =
+-			resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
++		resource_list_for_each_entry(win, &pp->bridge->windows)
++			if (resource_type(win->res) == IORESOURCE_MEM)
++				dw_pcie_setup_mem_atu(pp, win);
+ 
+-		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
+-					  PCIE_ATU_TYPE_MEM, entry->res->start,
+-					  entry->res->start - entry->offset,
+-					  resource_size(entry->res));
+ 		if (pci->num_viewport > 2)
+ 			dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
+ 						  PCIE_ATU_TYPE_IO, pp->io_base,
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index c2dea8fc97c8..b5e438b70cd5 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -228,7 +228,7 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 					     int index, int type,
+ 					     u64 cpu_addr, u64 pci_addr,
+-					     u32 size)
++					     u64 size)
+ {
+ 	u32 retries, val;
+ 	u64 limit_addr = cpu_addr + size - 1;
+@@ -245,8 +245,10 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 				 lower_32_bits(pci_addr));
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+ 				 upper_32_bits(pci_addr));
+-	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
+-				 type | PCIE_ATU_FUNC_NUM(func_no));
++	val = type | PCIE_ATU_FUNC_NUM(func_no);
++	val = upper_32_bits(size - 1) ?
++		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
++	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+ 				 PCIE_ATU_ENABLE);
+ 
+@@ -267,7 +269,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 
+ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ 					int index, int type, u64 cpu_addr,
+-					u64 pci_addr, u32 size)
++					u64 pci_addr, u64 size)
+ {
+ 	u32 retries, val;
+ 
+@@ -311,7 +313,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ }
+ 
+ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
+-			       u64 cpu_addr, u64 pci_addr, u32 size)
++			       u64 cpu_addr, u64 pci_addr, u64 size)
+ {
+ 	__dw_pcie_prog_outbound_atu(pci, 0, index, type,
+ 				    cpu_addr, pci_addr, size);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 9d2f511f13fa..21dd06831b50 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -80,10 +80,12 @@
+ #define PCIE_ATU_VIEWPORT		0x900
+ #define PCIE_ATU_REGION_INBOUND		BIT(31)
+ #define PCIE_ATU_REGION_OUTBOUND	0
++#define PCIE_ATU_REGION_INDEX3		0x3
+ #define PCIE_ATU_REGION_INDEX2		0x2
+ #define PCIE_ATU_REGION_INDEX1		0x1
+ #define PCIE_ATU_REGION_INDEX0		0x0
+ #define PCIE_ATU_CR1			0x904
++#define PCIE_ATU_INCREASE_REGION_SIZE	BIT(13)
+ #define PCIE_ATU_TYPE_MEM		0x0
+ #define PCIE_ATU_TYPE_IO		0x2
+ #define PCIE_ATU_TYPE_CFG0		0x4
+@@ -295,7 +297,7 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+ int dw_pcie_wait_for_link(struct dw_pcie *pci);
+ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
+ 			       int type, u64 cpu_addr, u64 pci_addr,
+-			       u32 size);
++			       u64 size);
+ void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+ 				  int type, u64 cpu_addr, u64 pci_addr,
+ 				  u32 size);
+-- 
+2.17.1
 
-These are all from entry_SYSENTER_compat_after_hwframe.
-
-> > arch/x86/kernel/head_64.S:
-> > .head.text+0xfb: unsupported instruction in callable function
->
-> Ditto.
-
-This is lretq in secondary_startup_64_no_verify.
-
-> > arch/x86/crypto/camellia-aesni-avx2-asm_64.S:
-> > camellia_cbc_dec_32way()+0xb3: stack state mismatch: cfa1=7+520 cfa2=7+8
-> > camellia_ctr_32way()+0x1a: stack state mismatch: cfa1=7+520 cfa2=7+8
->
-> I can clean off my patches for all the crypto warnings.
-
-Great, sounds good.
-
-> > arch/x86/lib/retpoline.S:
-> > __x86_retpoline_rdi()+0x10: return with modified stack frame
-> > __x86_retpoline_rdi()+0x0: stack state mismatch: cfa1=7+32 cfa2=7+8
-> > __x86_retpoline_rdi()+0x0: stack state mismatch: cfa1=7+32 cfa2=-1+0
->
-> Is this with upstream?  I thought we fixed that with
-> UNWIND_HINT_RET_OFFSET.
-
-Yes, and the UNWIND_HINT_RET_OFFSET is there.
-
-> > Josh, Peter, any thoughts on what would be the preferred way to fix
-> > these, or how to tell objtool to ignore this code?
->
-> One way or another, the patches need to be free of warnings before
-> getting merged.  I can help, though I'm traveling and only have limited
-> bandwidth for at least the rest of the month.
->
-> Ideally we'd want to have objtool understand everything, with no
-> whitelisting, but some cases (e.g. suspend code) can be tricky.
->
-> I wouldn't be opposed to embedding the whitelist in the binary, in a
-> discardable section.  It should be relatively easy, but as I mentioned I
-> may or may not have time to work on it for a bit.  I'm working half
-> days, and now the ocean beckons from the window of my camper.
-
-Something similar to STACK_FRAME_NON_STANDARD()? Using that seems to
-result in "BUG: why am I validating an ignored function?" warnings, so
-I suspect some additional changes are needed.
-
-Sami
