@@ -2,182 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 181F92949BE
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 10:57:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1197D294A2C
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 11:08:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441178AbgJUI5k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 04:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41470 "EHLO
+        id S2437207AbgJUJIs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 05:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502425AbgJUI5b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 04:57:31 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD61C0613A7
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 01:57:27 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id j7so2058943wrt.9
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 01:57:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ylZkHmK3aE1VlYRsGRUx3nUrnQWYBOnVeS+ToU4JUCI=;
-        b=D88rd5JfQWap5HZksMfg9cXMMl3QwJVhjS6+VSQvUjjDd24gp69dQjtY144venALwF
-         VsrNY/8fJu7KcREUK2gdnkvUKz4v4CFfNVYD7BE7l4swdssS9MrlGthSCyyUQikNqz1t
-         3VSJEkLS9OteyMKDcMhL8pGN2qtRl9K89wcCU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ylZkHmK3aE1VlYRsGRUx3nUrnQWYBOnVeS+ToU4JUCI=;
-        b=R/zfLzNQh5idhrEasnmhkn2havZjryswC8cglOlD+Y0jxD5y6xoUc0zMllJqj8bsU0
-         pUY7lBe+z4k0KqK3DdoWJ9fx0ZXnBwiEE3oyQHwlcyTzfUr/XHVEwyNTjtjPoOGkMPbI
-         +jOcB4JvV8Be6n2DvMEmrxzN1JHSDwtIWApUluIngta74ll7KB/xvuIfFxp75QVNxoxU
-         JglxM4m2qoROEUYiiZ/0BshF27jzxjdUTcWGHowtxinsuemKqRkJZEBKbKxIyUa181OG
-         jiT4nq+tPq4XUZne4+x44KV3MRppmCUASZT6tfPl0dLDPbd7os4k3+EO++pvg97fpb8O
-         4ucw==
-X-Gm-Message-State: AOAM532E8O+PGuZ5aUL4d0Zgw4VHXQ6nIxl8uNfTw9c8xIFbg4Q83e8Y
-        sZF/g6gFFmGnOKfss2IxEDm2GQ==
-X-Google-Smtp-Source: ABdhPJyRYpgvahsTCZYVhKWO7YaUqSYEiS71WxybX5MQOWBTVSJxRg21hOuSPVSQTJs5khc2TIcK9w==
-X-Received: by 2002:adf:f810:: with SMTP id s16mr3280019wrp.424.1603270646012;
-        Wed, 21 Oct 2020 01:57:26 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id q8sm2675939wro.32.2020.10.21.01.57.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2020 01:57:25 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
+        with ESMTP id S2437186AbgJUJIr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 05:08:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85279C0613CE;
+        Wed, 21 Oct 2020 02:08:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=eb1OL+P4JmUK1jhG+vTVWpbKbq0qkyHl8thry52FTQA=; b=rtIa9spk+eGaALa7gNwT0CJsKK
+        NjlQ0TaZClui6FNLaSH6sH410ckUEAUgWngz6KlxlBPFXfRsleXkZnz6ehdTlmAjGEDZ54LCQKjzW
+        mVkO6Qrz9t1ONh71M5vaOQ5etGEYUyqKkVWOoiOoxp1OWMTTQymeYA9Bq+58R1K92TY9eQDNJBhMo
+        j3j5B91C/arUdOUsfw/WJeofsIebuUbqnXHmWhjxv5BqEQh/x/dq8CROgLXRvJ7hEs8U3WUEjTr3U
+        sxRZjkXGtDIhLFLuspHPnxp/ilX5Zbg6Dkuh7PJ6uq/ocHYjHiAPX19862wtZObxjvIsngNw8WzZa
+        ycCtxeZA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kVA6W-00026P-MZ; Wed, 21 Oct 2020 09:08:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7B5E2304BAE;
+        Wed, 21 Oct 2020 11:08:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6997B2BB99C35; Wed, 21 Oct 2020 11:08:17 +0200 (CEST)
+Date:   Wed, 21 Oct 2020 11:08:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.com>
-Subject: [PATCH v3 16/16] PCI: Revoke mappings like devmem
-Date:   Wed, 21 Oct 2020 10:56:55 +0200
-Message-Id: <20201021085655.1192025-17-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
-References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201021090817.GU2651@hirez.programming.kicks-ass.net>
+References: <20201013003203.4168817-1-samitolvanen@google.com>
+ <20201013003203.4168817-23-samitolvanen@google.com>
+ <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
+ <20201015102216.GB2611@hirez.programming.kicks-ass.net>
+ <20201015203942.f3kwcohcwwa6lagd@treble>
+ <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
+ <20201020185217.ilg6w5l7ujau2246@treble>
+ <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-the region") /dev/kmem zaps ptes when the kernel requests exclusive
-acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-the default for all driver uses.
+On Wed, Oct 21, 2020 at 10:56:06AM +0200, Peter Zijlstra wrote:
 
-Except there's two more ways to access PCI BARs: sysfs and proc mmap
-support. Let's plug that hole.
+> The "falls through to next function" seems to be limited to things like:
+> 
+>   warning: objtool: setup_vq() falls through to next function setup_vq.cold()
+>   warning: objtool: e1000_xmit_frame() falls through to next function e1000_xmit_frame.cold()
+> 
+> So something's weird with the .cold thing on vmlinux.o runs.
 
-For revoke_devmem() to work we need to link our vma into the same
-address_space, with consistent vma->vm_pgoff. ->pgoff is already
-adjusted, because that's how (io_)remap_pfn_range works, but for the
-mapping we need to adjust vma->vm_file->f_mapping. The cleanest way is
-to adjust this at at ->open time:
+Shiny, check this:
 
-- for sysfs this is easy, now that binary attributes support this. We
-  just set bin_attr->mapping when mmap is supported
-- for procfs it's a bit more tricky, since procfs pci access has only
-  one file per device, and access to a specific resources first needs
-  to be set up with some ioctl calls. But mmap is only supported for
-  the same resources as sysfs exposes with mmap support, and otherwise
-  rejected, so we can set the mapping unconditionally at open time
-  without harm.
+$ nm defconfig-build/vmlinux.o | grep setup_vq
+00000000004d33a0 t setup_vq
+00000000004d4c20 t setup_vq
+000000000001edcc t setup_vq.cold
+000000000001ee31 t setup_vq.cold
+00000000004d3dc0 t vp_setup_vq
 
-A special consideration is for arch_can_pci_mmap_io() - we need to
-make sure that the ->f_mapping doesn't alias between ioport and iomem
-space. There's only 2 ways in-tree to support mmap of ioports: generic
-pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the single
-architecture hand-rolling. Both approach support ioport mmap through a
-special pfn range and not through magic pte attributes. Aliasing is
-therefore not a problem.
+$ nm defconfig-build/vmlinux.o | grep e1000_xmit_frame
+0000000000741490 t e1000_xmit_frame
+0000000000763620 t e1000_xmit_frame
+000000000002f579 t e1000_xmit_frame.cold
+0000000000032b6e t e1000_xmit_frame.cold
 
-The only difference in access checks left is that sysfs PCI mmap does
-not check for CAP_RAWIO. I'm not really sure whether that should be
-added or not.
+$ nm defconfig-build/vmlinux.o | grep e1000_diag_test
+000000000074c220 t e1000_diag_test
+000000000075eb70 t e1000_diag_test
+000000000002fc2a t e1000_diag_test.cold
+0000000000030880 t e1000_diag_test.cold
 
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.com>
---
-v2:
-- Totally new approach: Adjust filp->f_mapping at open time. Note that
-  this now works on all architectures, not just those support
-  ARCH_GENERIC_PCI_MMAP_RESOURCE
----
- drivers/pci/pci-sysfs.c | 4 ++++
- drivers/pci/proc.c      | 1 +
- 2 files changed, 5 insertions(+)
+I guess objtool goes sideways when there's multiple symbols with the
+same name in a single object file. This obvously never happens on single
+TU .o files.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6d78df981d41..cee38fcb4a86 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -928,6 +928,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_io->read = pci_read_legacy_io;
- 	b->legacy_io->write = pci_write_legacy_io;
- 	b->legacy_io->mmap = pci_mmap_legacy_io;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_io);
- 	error = device_create_bin_file(&b->dev, b->legacy_io);
- 	if (error)
-@@ -940,6 +941,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_mem->size = 1024*1024;
- 	b->legacy_mem->attr.mode = 0600;
- 	b->legacy_mem->mmap = pci_mmap_legacy_mem;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_mem);
- 	error = device_create_bin_file(&b->dev, b->legacy_mem);
- 	if (error)
-@@ -1155,6 +1157,8 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 			res_attr->mmap = pci_mmap_resource_uc;
- 		}
- 	}
-+	if (res_attr->mmap)
-+		res_attr->mapping = iomem_get_mapping();
- 	res_attr->attr.name = res_attr_name;
- 	res_attr->attr.mode = 0600;
- 	res_attr->size = pci_resource_len(pdev, num);
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 3a2f90beb4cb..9bab07302bbf 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -298,6 +298,7 @@ static int proc_bus_pci_open(struct inode *inode, struct file *file)
- 	fpriv->write_combine = 0;
- 
- 	file->private_data = fpriv;
-+	file->f_mapping = iomem_get_mapping();
- 
- 	return 0;
- }
--- 
-2.28.0
-
+Not sure what to do about that.
