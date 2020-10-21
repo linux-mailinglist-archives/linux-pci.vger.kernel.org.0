@@ -2,105 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFA41294F6B
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 17:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B42D294FA9
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 17:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443890AbgJUPBw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 11:01:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
+        id S2444117AbgJUPN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 11:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2443889AbgJUPBw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 11:01:52 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3113C0613D4
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 08:01:50 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id dg9so2866898edb.12
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 08:01:50 -0700 (PDT)
+        with ESMTP id S2443906AbgJUPNz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 11:13:55 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40107C0613CE
+        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 08:13:55 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id m65so2328836qte.11
+        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 08:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ue8Kphmgd/J9kkCdXQ6cXg3jN2T1s1VI/S6KEmBFYtA=;
-        b=tyuzf6egZNg0bmL3iIxfmvVeRFhdDnfbewBqqrw7rPk8s9ezG7HKGJBYpz7qsa0C3r
-         S3ppY6TNQS3s3qJ+E8SkywVt7v3Zd2bQYG9iNKkQ5ry9p4dyQxrKaJYxT3chX6RHizyC
-         +GySRMRyhkvGqRuGv8ic4+o/rQfFyDhJwmYxpx2ibC7icYfN3L7KTnwPZmkGNg6waxt+
-         /v0DHK/ocGmaG3hiyKz3lBsjXZFDm/NNr/l8Dh1bRHfhbCLOJwWvukIO73RcCWW7x5gT
-         F/vLxIv6fFnSA+AZM/O1jatbKn8McCq487pE+2ewPegXQiEjjWXHbjNbBW5V5tKGcGQh
-         Pzag==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9cFTuFdatbaYuigk9l9CABG/jzUgOpY0t/i9Osy6B3k=;
+        b=Dq8HyCXnjlFLiivieMejfqNvFko0IRtuvvtRMPLqBJU503Zw8AdmXj9PAYUvq+vrGw
+         tLWr/P2KX0xliFL4v7zLPYR93TGo1limVOCOZFomvItA47uQ8nJhdHWU27ngiu6ooAYG
+         WjN4a1HHzcaoYLAcnuo5e5/2eLC1r22+kDR6gTWfx0ZcGZTpX8rwEwqmUSs71ZqiLJX+
+         OUQrP6EnxmCsgNh+3+fwOT/kOJSDKYJueSTL+OCpFozN4nNmHro2xix1p70w/08ytcHi
+         qOQrid57zrk+FvzkIWYUgPoh4k6ET94WA33BXpQ3Dtpr1Jlt52u7OEBqAEPaddsrqv0i
+         gSbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ue8Kphmgd/J9kkCdXQ6cXg3jN2T1s1VI/S6KEmBFYtA=;
-        b=ZuW+RLj1/CPBl0kYiGwR6lXiTEhrohcJwvT6WHAhBulX1jGjSQ9yiQxXcOEZPgRa31
-         ZoVzpNBrk/kv2PkeZjd5z/Gdr9K4hrIfdx+VKev9T2cQwY0McPVsvrr+L32toNIGYXKu
-         i3m1ItEwoQgtzssXqtq1N6BlviaVK8/lk0geE7s3Cjpx9QvrZcIWz0TQSJkCFHiWGlEY
-         U5/TLnnqscWb0YQncoO5pm7lwVABUA9jvxPg9foUn5pPOaQPA3URmaiOhv7UIOCdQy7Z
-         r+MmW7iB6NFnvsePRo7n7frvoKJwc0Y8CTZapaheaXBWhHDmcivayLotgUMrQXxLFUUi
-         vSHQ==
-X-Gm-Message-State: AOAM531Q8SY4BHOgDJX7Tya4VOi+sfN2p+BxtDAIrrBiObEIj4nrUnJA
-        3Er6HfTo0R9rqPtHgrzVIONoAaNj+A465ge6AazevQ==
-X-Google-Smtp-Source: ABdhPJxLbzy0h2+Icd7LIsy6zh10BR+u5qt0ykST0OUv8CPsJiNxNv60HEOhNh7tmnifd2hka1h/GcVQRH2ORVgJ1P0=
-X-Received: by 2002:a05:6402:135a:: with SMTP id y26mr1563112edw.114.1603292509011;
- Wed, 21 Oct 2020 08:01:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201013003203.4168817-1-samitolvanen@google.com>
- <20201013003203.4168817-23-samitolvanen@google.com> <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
- <20201015102216.GB2611@hirez.programming.kicks-ass.net> <20201015203942.f3kwcohcwwa6lagd@treble>
- <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
- <20201020185217.ilg6w5l7ujau2246@treble> <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
- <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
-In-Reply-To: <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 21 Oct 2020 08:01:38 -0700
-Message-ID: <CABCJKuewXazmBpXz5irWgy+W537x1Lws5YAsFqMgo+Yio8iyRg@mail.gmail.com>
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jann Horn <jannh@google.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9cFTuFdatbaYuigk9l9CABG/jzUgOpY0t/i9Osy6B3k=;
+        b=W7Rs06/+wZOU+MgZEL+iYLaXMfOeKQSa07iLVFM860JH+KGA0TFYDKEIm5/gCa0W2p
+         vky/2JI8Y6xK5+6IdPGywW3w0cyGNu5EYJeCQXJkjDHduoP9aiCeQLXD6tMoZj52Thg1
+         8VrtW3voUeK7UQ65M2Fn86H7P5Q+mWc1xR3y+tf1euhJuCMaphPc/zq4jmYCTecviFOO
+         B19hN/joyw95XEwtKvSHw4DrcjFt3bNR8Ugg+t7G2mU9TuMXd+N0G2Oe0tThmJg217vK
+         Uji4lHB/5M1X8IaWMAdPbyptTgfcuI8erlGuZ2vRTW6weoCRZhoQve4Vh3Eoiqd2pA+b
+         3QmQ==
+X-Gm-Message-State: AOAM533nUlR/d3XFk8TUoTlyx5J+MAkgrvsY6gYBPAExLiztq8oTHJYd
+        l8P+AXtNw0T78owNNOQIkYR3sA==
+X-Google-Smtp-Source: ABdhPJxKUYsuh5jtMPkvFgL62ClnoaVVE83XzZ8FQCHOArCd8sBp94Ul/GCOzlaoYcDR7rbZz0mkwQ==
+X-Received: by 2002:ac8:8c7:: with SMTP id y7mr3515722qth.278.1603293234456;
+        Wed, 21 Oct 2020 08:13:54 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id b14sm1405612qkn.123.2020.10.21.08.13.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Oct 2020 08:13:53 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kVFoG-003XHy-SZ; Wed, 21 Oct 2020 12:13:52 -0300
+Date:   Wed, 21 Oct 2020 12:13:52 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.com>
+Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
+Message-ID: <20201021151352.GL36674@ziepe.ca>
+References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
+ <20201021085655.1192025-13-daniel.vetter@ffwll.ch>
+ <20201021125030.GK36674@ziepe.ca>
+ <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 1:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Oct 20, 2020 at 12:24:37PM -0700, Sami Tolvanen wrote:
-> > > > Building allyesconfig with this series and LTO enabled, I still see
-> > > > the following objtool warnings for vmlinux.o, grouped by source file:
-> > > >
-> > > > arch/x86/entry/entry_64.S:
-> > > > __switch_to_asm()+0x0: undefined stack state
-> > > > .entry.text+0xffd: sibling call from callable instruction with
-> > > > modified stack frame
-> > > > .entry.text+0x48: stack state mismatch: cfa1=7-8 cfa2=-1+0
-> > >
-> > > Not sure what this one's about, there's no OBJECT_FILES_NON_STANDARD?
-> >
-> > Correct, because with LTO, we won't have an ELF binary to process
-> > until we compile everything into vmlinux.o, and at that point we can
-> > no longer skip individual object files.
->
-> I think what Josh was trying to say is; this file is subject to objtool
-> on a normal build and does not generate warnings. So why would it
-> generate warnings when subject to objtool as result of a vmlinux run
-> (due to LTO or otherwise).
+On Wed, Oct 21, 2020 at 04:42:11PM +0200, Daniel Vetter wrote:
 
-Ah, right. It also doesn't generate warnings when I build defconfig
-with LTO, so clearly something confuses objtool here.
+> Uh yes. In drivers/gpu this isn't a problem because we only install
+> ptes from the vm_ops->fault handler. So no races. And I don't think
+> you can fix this otherwise through holding locks: mmap_sem we can't
+> hold because before vma_link we don't even know which mm_struct is
+> involved, so can't solve the race. Plus this would be worse that
+> mm_take_all_locks used by mmu notifier. And the address_space
+> i_mmap_lock is also no good since it's not held during the ->mmap
+> callback, when we write the ptes. And the resource locks is even less
+> useful, since we're not going to hold that at vma_link() time for
+> sure.
+> 
+> Hence delaying the pte writes after the vma_link, which means ->fault
+> time, looks like the only way to close this gap.
 
-Sami
+> Trouble is I have no idea how to do this cleanly ...
+
+How about add a vm_ops callback 'install_pages'/'prefault_pages' ?
+
+Call it after vm_link() - basically just move the remap_pfn, under
+some other lock, into there.
+
+Jason
