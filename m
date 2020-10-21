@@ -2,149 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2917C29542C
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 23:28:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C1B29542E
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 23:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506109AbgJUV2D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 17:28:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44520 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2506066AbgJUV2D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 17:28:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603315681;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=npHB1hy+ohfvs54PXo0mWCyiDRitVB3e4369uMWtO3E=;
-        b=J76nDGVIukA6uMeyl3dsBnuKUJyI8WyhAwV4xrdXkcLuC2XZHHEzh0pozoXIsdru68hxNA
-        fW4nBvQ7V5TeDZOrf1PEK+bR3f44uYbwrfX3nthM4l8RWYszlBQ+CRJRJIXhsn+SnBKfZN
-        rjWsxBtqH70UpNb7BcyeYUbcdqr+jTQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-584-YOTFvTwkO0i9giCn_eXxEQ-1; Wed, 21 Oct 2020 17:27:57 -0400
-X-MC-Unique: YOTFvTwkO0i9giCn_eXxEQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2506115AbgJUV2U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 17:28:20 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:56258 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2506102AbgJUV2U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 17:28:20 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C48045708C;
-        Wed, 21 Oct 2020 21:27:54 +0000 (UTC)
-Received: from treble (ovpn-115-237.rdu2.redhat.com [10.10.115.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 799F855760;
-        Wed, 21 Oct 2020 21:27:50 +0000 (UTC)
-Date:   Wed, 21 Oct 2020 16:27:47 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-Message-ID: <20201021212747.ofk74lugt4hhjdzg@treble>
-References: <20201013003203.4168817-1-samitolvanen@google.com>
- <20201013003203.4168817-23-samitolvanen@google.com>
- <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
- <20201015102216.GB2611@hirez.programming.kicks-ass.net>
- <20201015203942.f3kwcohcwwa6lagd@treble>
- <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
- <20201020185217.ilg6w5l7ujau2246@treble>
- <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
- <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
- <20201021093213.GV2651@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20201021093213.GV2651@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D79AF401D8;
+        Wed, 21 Oct 2020 21:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1603315699; bh=JYFScV9SdffGkhcxF4oYe3j7zFfnehqnn1E3sxkj/H8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YEObjLZ+AaCLU20P12YEg/TX12EpGr+X2/+wrMAnJqeAsZj4DC6o5msbiGLX3hWi5
+         Z7WIaxJDf4ueqqDCdcp/J8PlY93lcfH7HCzrh2O60vNtG+ohxn1k/sAeMIqgJ5q2I1
+         3XQbN8q0zBY2XYEQsRpXIFvyqM6Nj2vpWi6tCmE9PgikWZRuUj5cpcT7cO+ODeyWCK
+         XRZZVyFRaKsjGB2obxDvUMVKOp3HrONqEooDMOgZ0TjCDJ1HynExZjU9pet0j8pv2Z
+         0v+LvQbRlFy6Y9caTXpPi2MTstkBWq28kSLnIftPj0maXGE+uKKnhWr3lt5M6YSV2l
+         B5xXxjC85WJ9A==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 3B0AEA01F1;
+        Wed, 21 Oct 2020 21:28:16 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] misc: pci_endpoint_test: Remove unnecessary verification
+Date:   Wed, 21 Oct 2020 23:28:10 +0200
+Message-Id: <142cbbc215bed4243a219ea17b46f4256ceccb22.1603315690.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 11:32:13AM +0200, Peter Zijlstra wrote:
-> On Wed, Oct 21, 2020 at 10:56:06AM +0200, Peter Zijlstra wrote:
-> 
-> > I do not see these in particular, although I do see a lot of:
-> > 
-> >   "sibling call from callable instruction with modified stack frame"
-> 
-> defconfig-build/vmlinux.o: warning: objtool: msr_write()+0x10a: sibling call from callable instruction with modified stack frame
-> defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x99: (branch)
-> defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x3e: (branch)
-> defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x0: <=== (sym)
-> 
-> $ nm defconfig-build/vmlinux.o | grep msr_write
-> 0000000000043250 t msr_write
-> 00000000004289c0 T msr_write
-> 0000000000003056 t msr_write.cold
-> 
-> Below 'fixes' it. So this is also caused by duplicate symbols.
+The first condition of the if statement can never be true, because
+bar variable is an enum variable type defined between 0 and 5, and
+also bar variable acquires the value from arg function parameter which
+is an unsigned long variable.
 
-There's a new linker flag for renaming duplicates:
+The constant 5 was replaced the the equivalent enum type, in this case
+BAR_5.
 
-  https://sourceware.org/bugzilla/show_bug.cgi?id=26391
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+ drivers/misc/pci_endpoint_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But I guess that doesn't help us now.
-
-I don't have access to GCC 10 at the moment so I can't recreate it.
-Does this fix it?
-
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 4e1d7460574b..aecdf25b2381 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -217,11 +217,14 @@ struct symbol *find_func_containing(struct section *sec, unsigned long offset)
- 	return NULL;
- }
- 
-+#define for_each_possible_sym(elf, name, sym)				\
-+	elf_hash_for_each_possible(elf->symbol_name_hash, sym, name_hash, str_hash(name))
-+
- struct symbol *find_symbol_by_name(const struct elf *elf, const char *name)
- {
- 	struct symbol *sym;
- 
--	elf_hash_for_each_possible(elf->symbol_name_hash, sym, name_hash, str_hash(name))
-+	for_each_possible_sym(elf, name, sym)
- 		if (!strcmp(sym->name, name))
- 			return sym;
- 
-@@ -432,6 +435,8 @@ static int read_symbols(struct elf *elf)
- 		list_for_each_entry(sym, &sec->symbol_list, list) {
- 			char pname[MAX_NAME_LEN + 1];
- 			size_t pnamelen;
-+			struct symbol *psym;
-+
- 			if (sym->type != STT_FUNC)
- 				continue;
- 
-@@ -454,8 +459,14 @@ static int read_symbols(struct elf *elf)
- 
- 			strncpy(pname, sym->name, pnamelen);
- 			pname[pnamelen] = '\0';
--			pfunc = find_symbol_by_name(elf, pname);
--
-+			pfunc = NULL;
-+			for_each_possible_sym(elf, pname, psym) {
-+				if ((!psym->cfunc || psym->cfunc == psym) &&
-+				    !strcmp(psym->name, pname)) {
-+					pfunc = psym;
-+					break;
-+				}
-+			}
- 			if (!pfunc) {
- 				WARN("%s(): can't find parent function",
- 				     sym->name);
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index e060796..b86f9f7 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -704,7 +704,7 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+ 	switch (cmd) {
+ 	case PCITEST_BAR:
+ 		bar = arg;
+-		if (bar < 0 || bar > 5)
++		if (bar > BAR_5)
+ 			goto ret;
+ 		if (is_am654_pci_dev(pdev) && bar == BAR_0)
+ 			goto ret;
+-- 
+2.7.4
 
