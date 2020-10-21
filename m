@@ -2,109 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D600B2952E0
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 21:24:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5774E295324
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 21:55:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504076AbgJUTYU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 15:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441903AbgJUTYU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 15:24:20 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29943C0613D2
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 12:24:20 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id i12so2898299ota.5
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 12:24:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sYM9cUyMSOj9mKCWCe707+J8b20m45BOShUil5OYiuY=;
-        b=UcRTFA71oa+ZohVvqr5nTk2VrlQIDJZuL8YbFFB6slZWA8umJ/bN/qbSbMlqTB7z0q
-         bIxgy64Kmi9zqOgOlY5HP3Sd823hLvIZ4IY3eeEDdvu0znOIz4Dey+GMkJlQfrWVVWss
-         6QNEH9JVNXJd4SlM1j+HDRzTJLUTR8870k28s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sYM9cUyMSOj9mKCWCe707+J8b20m45BOShUil5OYiuY=;
-        b=BRIua4MLqzWMtqKjheMQ+f2bDsnQUfbUnRx3/oecEfa4h1o18UXV0siqUsRlRORsPn
-         VvJ9zLYs8TOieWepmiDF8nSzaD9QtEGi4cXSiIwcXpy+t7M8NLWKdt91GQ6HHG9ZwoNz
-         ammi9udNvkuYk5rvzgOZ0ABGGsPKlk9fM0H+d14clNMxxgETWDpYqKwkmUIdZyU6Z8/b
-         0+Hythyo/7Bb+f1i2IpiRRVNUCW4fQ8lMEgUm9vYKu+o+5vM5N32Bm2RCOMVT0dZkk66
-         Y9ehO3cR0Q8Jwc5c3Z8u1EmpZHaQTU0tVBa1Bm1Sv7bHDY0o+HlrQoyg6ycNt3ObnQ1G
-         uLOw==
-X-Gm-Message-State: AOAM5306SxzXMri89ohxylmcIrbvUqRX/AEN5jWbsK0sURIFrLS3S/xa
-        ascTSXnL2nMajDOFqJeEpnKkS0Sg15xhMUbAt35JF+DkevpinA==
-X-Google-Smtp-Source: ABdhPJwJGiQE46eBJclvgjHXJJ+j87WJ+7cjHqpCSH7v0fZi8HkcRkC+gln/SdoBFVWEgA88/UYBf7mOSQSqgr0L7bk=
-X-Received: by 2002:a05:6830:1647:: with SMTP id h7mr3877970otr.281.1603308259478;
- Wed, 21 Oct 2020 12:24:19 -0700 (PDT)
+        id S2440773AbgJUTzH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 15:55:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43578 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2439094AbgJUTzG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Oct 2020 15:55:06 -0400
+IronPort-SDR: YkSbgy2/8SA5oTUGMLsbW3/Je3vYMpBzNiOwZHKuq2WaKPGsJMGk+7SP/Du01pt4cfof6f2TBA
+ Q3LMZDDFEuDg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="163935336"
+X-IronPort-AV: E=Sophos;i="5.77,402,1596524400"; 
+   d="scan'208";a="163935336"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 12:55:06 -0700
+IronPort-SDR: kvY5l9GDwpCuyiNTSbE8ChN1IZA6XYNY7AYqp/zbXBaK92nmoc4QRBykb+LnCTG9+jqndEcIrp
+ XmywqAcRqgNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,402,1596524400"; 
+   d="scan'208";a="316481043"
+Received: from irsmsx602.ger.corp.intel.com ([163.33.146.8])
+  by orsmga003.jf.intel.com with ESMTP; 21 Oct 2020 12:55:04 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ irsmsx602.ger.corp.intel.com (163.33.146.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 21 Oct 2020 20:55:03 +0100
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Wed, 21 Oct 2020 12:55:01 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "hch@lst.de" <hch@lst.de>, "x86@kernel.org" <x86@kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrzej.jakowski@linux.intel.com" <andrzej.jakowski@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Kalakota, SushmaX" <sushmax.kalakota@intel.com>
+Subject: Re: [PATCH 5/6] x86/apic/msi: Use Real PCI DMA device when
+ configuring IRTE
+Thread-Topic: [PATCH 5/6] x86/apic/msi: Use Real PCI DMA device when
+ configuring IRTE
+Thread-Index: AQHWZRquq8JGneVUfEO6lOcwn6JN/amh6dCAgABRyoCAABFQgIABJi4A
+Date:   Wed, 21 Oct 2020 19:55:01 +0000
+Message-ID: <10b74567985e3c03ac52b0eee58291eebf034444.camel@intel.com>
+References: <20201021022131.GA409218@bjorn-Precision-5520>
+In-Reply-To: <20201021022131.GA409218@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <59B7A34FEC056748A09DEBFF743E994E@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
- <20201021085655.1192025-13-daniel.vetter@ffwll.ch> <20201021125030.GK36674@ziepe.ca>
- <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
- <20201021151352.GL36674@ziepe.ca> <CAKMK7uGq0=ks7Zj1Et44k7x9FwE9u_ua4zANSqrLRri0v01V+Q@mail.gmail.com>
- <20201021163702.GM36674@ziepe.ca>
-In-Reply-To: <20201021163702.GM36674@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 21 Oct 2020 21:24:08 +0200
-Message-ID: <CAKMK7uEjE5sHUq0hV_bnYjPKRxYyBnty0sLre+owANGZjLJg9Q@mail.gmail.com>
-Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.com>
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 6:37 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Oct 21, 2020 at 05:54:54PM +0200, Daniel Vetter wrote:
->
-> > The trouble is that io_remap_pfn adjust vma->pgoff, so we'd need to
-> > split that. So ideally ->mmap would never set up any ptes.
->
-> /dev/mem makes pgoff == pfn so it doesn't get changed by remap.
->
-> pgoff doesn't get touched for MAP_SHARED either, so there are other
-> users that could work like this - eg anyone mmaping IO memory is
-> probably OK.
-
-I was more generally thinking for io_remap_pfn_users because of the
-mkwrite use-case we might have in fbdev emulation in drm.
-
-> > I guess one option would be if remap_pfn_range would steal the
-> > vma->vm_ops pointer for itself, then it could set up the correct
-> > ->install_ptes hook. But there's tons of callers for that, so not sure
-> > that's a bright idea.
->
-> The caller has to check that the mapping is still live, and I think
-> hold a lock across the remap? Auto-defering it doesn't seem feasible.
-
-Right auto-defering reopens the race, so making this work
-automatically is a bit much. I guess just splitting this into a
-setup/install part and then doing the install of all the ptes at first
-fault should be good enough. We don't really need a new install_pages
-for that, just an io_remap_pfn_range that's split in two parts.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+T24gVHVlLCAyMDIwLTEwLTIwIGF0IDIxOjIxIC0wNTAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBXZWQsIE9jdCAyMSwgMjAyMCBhdCAwMToyMDoyNEFNICswMDAwLCBEZXJyaWNrLCBKb25h
+dGhhbiB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMjAtMTAtMjAgYXQgMTU6MjYgLTA1MDAsIEJqb3Ju
+IEhlbGdhYXMgd3JvdGU6DQo+ID4gPiBPbiBUdWUsIEp1bCAyOCwgMjAyMCBhdCAwMTo0OTo0NFBN
+IC0wNjAwLCBKb24gRGVycmljayB3cm90ZToNCj4gPiA+ID4gVk1EIHJldHJhbnNtaXRzIGNoaWxk
+IGRldmljZSBNU0kvWCB3aXRoIHRoZSBWTUQgZW5kcG9pbnQncyByZXF1ZXN0ZXItaWQuDQo+ID4g
+PiA+IEluIG9yZGVyIHRvIHN1cHBvcnQgZGlyZWN0IGludGVycnVwdCByZW1hcHBpbmcgb2YgVk1E
+IGNoaWxkIGRldmljZXMsDQo+ID4gPiA+IGVuc3VyZSB0aGF0IHRoZSBJUlRFIGlzIHByb2dyYW1t
+ZWQgd2l0aCB0aGUgVk1EIGVuZHBvaW50J3MgcmVxdWVzdGVyLWlkDQo+ID4gPiA+IHVzaW5nIHBj
+aV9yZWFsX2RtYV9kZXYoKS4NCj4gPiA+ID4gDQo+ID4gPiA+IFJldmlld2VkLWJ5OiBBbmR5IFNo
+ZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCj4gPiA+ID4gU2lnbmVkLW9m
+Zi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29tPg0KPiA+ID4gDQo+
+ID4gPiBBcyBUaG9tYXMgKGFuZCBTdGVwaGVuKSBwb2ludGVkIG91dCwgdGhpcyBjb25mbGljdHMg
+d2l0aCA3Y2E0MzVjZjg1N2QNCj4gPiA+ICgieDg2L2lycTogQ2xlYW51cCB0aGUgYXJjaF8qX21z
+aV9pcnFzKCkgbGVmdG92ZXJzIiksIHdoaWNoIHJlbW92ZXMNCj4gPiA+IG5hdGl2ZV9zZXR1cF9t
+c2lfaXJxcygpLg0KPiA+ID4gDQo+ID4gPiBTdGVwaGVuIHJlc29sdmVkIHRoZSBjb25mbGljdCBi
+eSBkcm9wcGluZyB0aGlzIGh1bmsuICBJIHdvdWxkIHJhdGhlcg0KPiA+ID4ganVzdCBkcm9wIHRo
+aXMgcGF0Y2ggY29tcGxldGVseSBmcm9tIHRoZSBQQ0kgdHJlZS4gIElmIEkga2VlcCB0aGUNCj4g
+PiA+IHBhdGNoLCAoMSkgTGludXMgd2lsbCBoYXZlIHRvIHJlc29sdmUgdGhlIGNvbmZsaWN0LCBh
+bmQgd29yc2UsICgyKQ0KPiA+ID4gaXQncyBub3QgY2xlYXIgd2hhdCBoYXBwZW5lZCB0byB0aGUg
+dXNlIG9mIHBjaV9yZWFsX2RtYV9kZXYoKSBoZXJlLg0KPiA+ID4gSXQgd2lsbCBqdXN0IHZhbmlz
+aCBpbnRvIHRoZSBldGhlciB3aXRoIG5vIGV4cGxhbmF0aW9uIG90aGVyIHRoYW4NCj4gPiA+ICJ0
+aGlzIGZ1bmN0aW9uIHdhcyByZW1vdmVkLiINCj4gPiA+IA0KPiA+ID4gSXMgZHJvcHBpbmcgdGhp
+cyBwYXRjaCB0aGUgY29ycmVjdCB0aGluZyB0byBkbz8gIE9yIGRvIHlvdSBuZWVkIHRvIGFkZA0K
+PiA+ID4gcGNpX3JlYWxfZG1hX2RldigpIGVsc2V3aGVyZSB0byBjb21wZW5zYXRlPw0KPiA+IA0K
+PiA+IEl0IHdvdWxkIHN0aWxsIG5lZWQgdGhlIHBjaV9yZWFsX2RtYV9kZXYoKSBmb3IgSVJURSBw
+cm9ncmFtbWluZy4NCj4gPiANCj4gPiBJIHRoaW5rIGF0IHRoaXMgcG9pbnQgSSB3b3VsZCByYXRo
+ZXIgc2VlIDUrNiBkcm9wcGVkIGFuZCB0aGlzIGluY2x1ZGVkDQo+ID4gZm9yIFRHTCBlbmFibGVt
+ZW50Og0KPiA+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51eC1wY2kv
+cGF0Y2gvMjAyMDA5MTQxOTAxMjguNTExNC0xLWpvbmF0aGFuLmRlcnJpY2tAaW50ZWwuY29tLw0K
+PiANCj4gSXQncyB0b28gbGF0ZSB0byBhZGQgbmV3IHRoaW5ncyBmb3IgdjUuMTAuICBJJ2xsIGRy
+b3AgNSBhbmQgSSdsbCBiZQ0KPiBoYXBweSB0byBkcm9wIDYsIHRvbywgaWYgeW91IHdhbnQuICBJ
+IGhhdmUgc2V2ZXJhbCBjb21tZW50cy9xdWVzdGlvbnMNCj4gb24gNiBhbnl3YXkgdGhhdCBJIGhh
+dmVuJ3QgZmluaXNoZWQgd3JpdGluZyB1cC4NCj4gDQo+IEJ1dCBpZiB5b3UnZCByYXRoZXIgaGF2
+ZSAxLTQgKyA2IGluIHY1LjEwIGluc3RlYWQgb2YganVzdCAxLTQsIGxldCBtZQ0KPiBrbm93Lg0K
+PiANCj4gQmpvcm4NCg0KSGVyZSdzIHRoZSBwcm9wb3NlZCBuZXcgbG9jYXRpb24gZm9yIHBhdGNo
+IDUgZm9yIHBjaV9yZWFsX2RtYV9kZXYoKSwNCmJ1dCBJIGNhbid0IHRlc3QgdGhpcyBhdCB0aGUg
+bW9tZW50Og0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2FwaWMvbXNpLmMgYi9hcmNo
+L3g4Ni9rZXJuZWwvYXBpYy9tc2kuYw0KaW5kZXggNjMxM2YwYTA1ZGI3Li43MDc5NjhiMjM0ZTkg
+MTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9rZXJuZWwvYXBpYy9tc2kuYw0KKysrIGIvYXJjaC94ODYv
+a2VybmVsL2FwaWMvbXNpLmMNCkBAIC0xOTQsNiArMTk0LDcgQEAgaW50IHBjaV9tc2lfcHJlcGFy
+ZShzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluLA0Kc3RydWN0IGRldmljZSAqZGV2LCBpbnQgbnZl
+YywNCiAgICAgICAgICAgICAgICBhcmctPnR5cGUgPSBYODZfSVJRX0FMTE9DX1RZUEVfUENJX01T
+STsNCiAgICAgICAgICAgICAgICBhcmctPmZsYWdzIHw9IFg4Nl9JUlFfQUxMT0NfQ09OVElHVU9V
+U19WRUNUT1JTOw0KICAgICAgICB9DQorICAgICAgIGFyZy0+ZGV2aWQgPSBwY2lfcmVhbF9kbWFf
+ZGV2KHBkZXYpOw0KIA0KICAgICAgICByZXR1cm4gMDsNCiB9DQotLSANCjIuMTguMQ0KDQoNCk90
+aGVyd2lzZSBJIHdvdWxkIHdhbnQgdG8gZHJvcCA1ICYgNiBiZWNhdXNlIDYgd2lsbCBsaWtlbHkg
+YnJlYWsgVk1EDQp3aXRob3V0IHBhdGNoIDUgd2hlbiBJTyBBUElDIGlzIGluIHVzZQ0K
