@@ -2,233 +2,260 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27870294C14
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 13:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7518294C3A
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 14:06:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2442133AbgJUL7y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 07:59:54 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52658 "EHLO
+        id S2411221AbgJUMGO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 08:06:14 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54837 "EHLO
         mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442120AbgJUL7y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 07:59:54 -0400
+        with ESMTP id S2439994AbgJUMGN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 08:06:13 -0400
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20201021115935euoutp02cedfa7a2c1f232e88c1b528f8a62bf0f~AABlFX4mF2189121891euoutp02P
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 11:59:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20201021115935euoutp02cedfa7a2c1f232e88c1b528f8a62bf0f~AABlFX4mF2189121891euoutp02P
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20201021120555euoutp020a20ab7db457fd450b42a9411b647c70~AAHGyi-iv2687126871euoutp02H
+        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 12:05:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20201021120555euoutp020a20ab7db457fd450b42a9411b647c70~AAHGyi-iv2687126871euoutp02H
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1603281575;
-        bh=Dus0WFKWgtG3RUO35nNgNF6eLTL0Ew2Rvz62kIDSHnw=;
+        s=mail20170921; t=1603281955;
+        bh=X3kWCN2insXbfhyivHExtQ0c0hScyZQ29grQTMC6Jd4=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=HG6LlQMaxhn274r3LRlwEpP7DaTFR33sYPUBx9M1uNE2vDXIpAyiNVHeQSbCBazO9
-         DmU8cRWn4E/e08/bYqBqxbLmp9VEyTD3cxYvHggfpAA/q6zNmYqITv+w+0frbAw/Sm
-         4rVtDH4qrYaAjpZHTTxI4DXxSLAeXZzpk1UuRxnU=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20201021115927eucas1p12cf0c2125a7dccbcf6fe1329ad4ef4a3~AABdYpZx71597615976eucas1p1a;
-        Wed, 21 Oct 2020 11:59:27 +0000 (GMT)
+        b=aOViI/kkTaT+jTJcQIuMumypOe+Wg6z860rGnh25YkPjkTfmtqJ19Xm0ZTa4pkz0O
+         SXRZ5guRZEFLHPKQzvjLZ+bggHQVFer/K5GLq3XeLdz0sB/FqLVIMVd2m+ia6G3qqg
+         fn+KnF0ydNrJ/gG99Vt2tUr/YuMzblGbQ8Woaoxs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20201021120543eucas1p223b9fc6bcdd09141054312b4a0db507f~AAG7YIkMY1838718387eucas1p2b;
+        Wed, 21 Oct 2020 12:05:43 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 0F.A6.06456.F92209F5; Wed, 21
-        Oct 2020 12:59:27 +0100 (BST)
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A8.95.06318.714209F5; Wed, 21
+        Oct 2020 13:05:43 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20201021115927eucas1p15b4a43b951fe67b69374c87c97fdfdf9~AABc_p73D1597615976eucas1p1W;
-        Wed, 21 Oct 2020 11:59:27 +0000 (GMT)
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20201021120543eucas1p29d4affba97d6143a9e2f725c2f561ed9~AAG7A7ABU2093620936eucas1p2C;
+        Wed, 21 Oct 2020 12:05:43 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20201021115927eusmtrp1a5fd2918287d0dde791d195a4aeec1f7~AABc9yNuS3047130471eusmtrp1H;
-        Wed, 21 Oct 2020 11:59:27 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-b2-5f90229f6a38
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 00.BB.06314.E92209F5; Wed, 21
-        Oct 2020 12:59:26 +0100 (BST)
+        20201021120542eusmtrp12cb67e97e361efc4e23c768176845e2c~AAG690Bso0226702267eusmtrp1J;
+        Wed, 21 Oct 2020 12:05:42 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-52-5f9024171eeb
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5A.9C.06314.314209F5; Wed, 21
+        Oct 2020 13:05:39 +0100 (BST)
 Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20201021115926eusmtip15186f6fcb609855a43f53997117081a1~AABb6V0BI2328223282eusmtip1S;
-        Wed, 21 Oct 2020 11:59:25 +0000 (GMT)
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20201021120538eusmtip2e5d03d4cb5af5004b03051d7e7d31960~AAG2mj0ma0530205302eusmtip2d;
+        Wed, 21 Oct 2020 12:05:38 +0000 (GMT)
 Subject: Re: [PATCH 2/6] Documetation: dt-bindings: add the
  samsung,exynos-pcie binding
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Jaehoon Chung <jh80.chung@samsung.com>,
         Jingoo Han <jingoohan1@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
+        Kishon Vijay Abraham I <kishon@ti.com>
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <50b13de0-168b-3fad-1e84-cc86f1a376d8@samsung.com>
-Date:   Wed, 21 Oct 2020 13:59:25 +0200
+Message-ID: <b85e65bc-5a76-e9af-db59-6ea7539668ef@samsung.com>
+Date:   Wed, 21 Oct 2020 14:05:37 +0200
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0)
         Gecko/20100101 Thunderbird/78.3.3
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPcyruYQxcioPxGE8J8jS0Yey+09HpXxFgQm4f2w98s5cg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+X3w=1-_SpXPTdO_UGg5er9vU-XETT-NbS96LSfNLUVQ@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfyyUcRze99737n3dHK9DPqlJZxU2v1Lr3TShbPdPW7bW0vLj5N2xHLpz
-        fvWPCXGZH2XiJgwbSTEZTqPYcdnhjIWZMiZhifkxXIucl/Lf53mez/N9Ps/2JTHhANeejI5N
-        YOSxkhgRj4+39u0Y3CpEBWGejXoRXZMeRVdoh7j0hDGLS9dtlBL08PdcHm0wNBH0aEcZjx4s
-        1/HoEkMXh/75e4GgMzu1BK2Z+oz5mYsbyhuQWKP+Sogrm5Xi5vocnjivpR6JdRNtHPF6s8Mt
-        4h7/aiQTE53IyD18w/lRK9vzeHyVY3JR9yqehtZOqpAZCdQlmP3RilSITwqpOgRv8nYxFmwg
-        6JzUc1mwjqBYY8SOLPkfxg+FWgR7+d0EC1YQzE7XcVSIJK2pYJjsjTYZbCgXGP+zdWDAqC8Y
-        dBe1cEwCj/IC1bKKZ5oFlC/sqYzINOPUOcguLzngbakIGJlOJ9gdK+gvncNN75tRQVDdGmKi
-        MeoMtC2XYexsB5NzFRxTFlCLBPTPFxLs1Tfg1/uNwwbWsKRrOeRPg/5FLs4aniCYGXpLsCAX
-        wWh6CWK3fGBqyMgzJWP7dRo7PFjaHxqebhwUBsoCJpat2CMs4HnrS4ylBZCdJWS3z4Na9+5f
-        bPfwCFaAROpjzdTH6qiP1VH/z61EeD2yY5QKmZRReMUySe4KiUyhjJW6P4iTNaP9P6bf1a21
-        o82RiB5EkUhkLkjm5IcJuZJERYqsBwGJiWwEAYP6UKEgUpKSysjjwuTKGEbRg06RuMhO4F21
-        GCKkpJIE5iHDxDPyI5VDmtmnocguT//CHaKg7bY2xMG9xuoxXRpUPeaRtGWLZC4fBeG9jTnK
-        4uATwXcGiq9l7G56YzNI2ZS54NxQ5rt55dPYK41rp4NfvfHsIx8nLClGquG33Hyd7nu9b6na
-        LdCR0+6UvSoJjdB6XXT6VnsryyL5vuflC/2WGXdTA1eeOesDLLdFuCJK4uWKyRWSv17fhwFf
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLIsWRmVeSWpSXmKPExsVy+t/xu7rzlSbEG7Su5LBY0pRhMf/IOVaL
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRTm3b279youXpexg33R0r5IrezHhaIs+nFJotJILMpm3lTUJbta
+        OYLWSrMxdBiVLUuRKFtqtkalqeiyVgw3MxbDTAlWaTaLZkVfVvNq+e+c54PnPHAYQu6URjLZ
+        6gJeo1blKqlQ8s6jb+4YRZQpbYWvV8Fe0Wex1V0uKev9XiJl68Yu0GzPayPFut1NNPuspYpi
+        uy87KLbS3S5h3/8Yotniti6abe5/TCSEcfWX6xHXbH5JczXWQs5qOU1xZTYL4hzeuxIuYJ23
+        jd4VujaDz80+xGvi1u0LzfKUj9P5ZxcduXErWYea5hpQCAN4NQx8O0MbUCgjx3UIfIGPlLiM
+        IbC57k0uAQQPbg/QU5YObx0pEtcQ3O+4Kg0ScvwBwZBxpwExzEycCn0Ps4NwBI6Cprd9RFBP
+        YBcBrZ9GyCBB4ZVg8Buo4CzD6+DHb89EAImjwT/SMKGZhdOhd1BPi5pweHLBN4GH4O0w6NRN
+        eAk8H+76qwhxVkCfr1oSDAM8TMMlkx6JV2+C3hEbJc4z4Z3DNtlmDjjPGEnRcALBK1cDLS5G
+        BM/0lZPuNdDv+k4FqxF4KdxsiRPhDVB/akwShAHPAK8/XDxiBlTcOU+IsAxKS+SiehGYHY3/
+        Yjt7egkTUpqnVTNPq2OeVsf8P7cGkRak4AuFvExeiFfzh2MFVZ5QqM6M3X8wz4r+vphz3PH5
+        Hmr/mW5HmEHKMFkPWZ4ml6oOCUV5dgQMoYyQbex27pXLMlRFWl5zME1TmMsLdjSbIZUKWXzt
+        8B45zlQV8Dk8n89rplgJExKpQ+nxozlt8oLk19Efvy4v73rBJ110XB94078iIcmTs2fzuQj9
+        +q2a0d3aDJOs+mzigYr0yt+lmvwyqqHVbdrL3Rw/HhPwQc2qxTuFRHttJ5fiO/Yp5fCv21rD
+        lpNlv2xHn4dZFnTv0I1rl3zxpDztjhLeFju1C6skm7Y2ShNT6ztblaSQpVq5jNAIqj9jIiFP
+        XgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRmVeSWpSXmKPExsVy+t/xe7rCKhPiDXacZbFY0pRhMf/IOVaL
         G7/aWC1WfJnJbnHhaQ+bxfnzG9gtLu+aw2Zxdt5xNosZ5/cxWbz5/YLdonXvEXaLnXdOMDvw
         eKyZt4bRY+esu+weCzaVemxa1cnm0bdlFaPH8RvbmTw+b5ILYI/SsynKLy1JVcjILy6xVYo2
-        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy3j/4xlLwSKFiikHP7A0MH6S7GLk
-        5JAQMJHo332dtYuRi0NIYCmjxK8d75ggEjISJ6c1sELYwhJ/rnWxgdhCAm8ZJY48T+pi5OAQ
-        FoiUuHU0EyQsIqApcf3vd7A5zALXmSXudK1nhhi6kUli+b25LCBVbAKGEl1vIQbxCthJ/O/6
-        xQhiswioSnTMmwEWFxVIkth/4iYLRI2gxMmZT1hAlnEKBEos3hYLEmYWMJOYt/khM4QtL7H9
-        7RwoW1zi1pP5TBMYhWYh6Z6FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93E
-        CIzabcd+bt7BeGlj8CFGAQ5GJR7eCyz98UKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1JrKxKLcqP
-        LyrNSS0+xGgK9NtEZinR5HxgQskriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBa
-        BNPHxMEp1cCoJvXt95OKWo3/TfsESv+bvzixa5roq3tzzl6TKXx54yoTX9Yh6f9WYhP3Pqmf
-        bfD37gtLAXUH794che01nv+M+E0Y7UTFzwvMz98/RzVvjZHGe6lA2SlFPtNrZiQGNC9fcrd1
-        /a+bCrumbPyftuO3eJzDq419/akbT29tiNHWPp2nM3PtbaZgJZbijERDLeai4kQADjeQvfAC
-        AAA=
-X-CMS-MailID: 20201021115927eucas1p15b4a43b951fe67b69374c87c97fdfdf9
+        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy7ja/4+9YKpaxeqNwQ2MG2S7GDk5
+        JARMJA7cWMHSxcjFISSwlFFi77u/TBAJGYmT0xpYIWxhiT/Xutggit4ySvRMbwLq4OAQFoiU
+        uHU0E6RGREBFYsPzW8wgNcwC55glTn29wAjR0MMk8XnWfDaQKjYBQ4mut11gNq+AncTv/1fZ
+        QWwWAVWJt6/XsoDYogJJEvtP3GSBqBGUODnzCZjNKRAocf90A1gvs4CZxLzND5khbHmJ7W/n
+        QNniEreezGeawCg0C0n7LCQts5C0zELSsoCRZRWjSGppcW56brGhXnFibnFpXrpecn7uJkZg
+        3G479nPzDsZLG4MPMQpwMCrx8F5g6Y8XYk0sK67MPcQowcGsJMLrdPZ0nBBvSmJlVWpRfnxR
+        aU5q8SFGU6DnJjJLiSbnA1NKXkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKY
+        PiYOTqkGxmkPDBe+P5xprPnV9kjuuxUct85td+rJuCl3vz+2POSuoeyN60xqc5SO26yb9XH/
+        za3Ht0e6c0aqd7ZPvX5g72yfLSr8B5eyMn5bct5838LaG2YC76TXPLCeup7VdKFSTse35mQ+
+        HTV+s8PzHnLdZ38ketf0wTQvvoVaOltWPT0qtmiRc2mGWYwSS3FGoqEWc1FxIgASbYMc8QIA
+        AA==
+X-CMS-MailID: 20201021120543eucas1p29d4affba97d6143a9e2f725c2f561ed9
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-RootMTR: 20201019094739eucas1p18cd4c7e5a0197393d2e7c5c6fcc2777d
 X-EPHeader: CA
 CMS-TYPE: 201P
 X-CMS-RootMailID: 20201019094739eucas1p18cd4c7e5a0197393d2e7c5c6fcc2777d
-References: <20201019094715.15343-1-m.szyprowski@samsung.com>
-        <CGME20201019094739eucas1p18cd4c7e5a0197393d2e7c5c6fcc2777d@eucas1p1.samsung.com>
+References: <CGME20201019094739eucas1p18cd4c7e5a0197393d2e7c5c6fcc2777d@eucas1p1.samsung.com>
+        <20201019094715.15343-1-m.szyprowski@samsung.com>
         <20201019094715.15343-3-m.szyprowski@samsung.com>
-        <20201019101233.GB51073@kozik-lap>
-        <CAJKOXPcyruYQxcioPxGE8J8jS0Yey+09HpXxFgQm4f2w98s5cg@mail.gmail.com>
+        <CAL_Jsq+X3w=1-_SpXPTdO_UGg5er9vU-XETT-NbS96LSfNLUVQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Krzysztof,
+Hi Rob,
 
-On 19.10.2020 12:18, Krzysztof Kozlowski wrote:
-> On Mon, 19 Oct 2020 at 12:12, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On Mon, Oct 19, 2020 at 11:47:11AM +0200, Marek Szyprowski wrote:
->>> From: Jaehoon Chung <jh80.chung@samsung.com>
->>>
->>> Add dt-bindings for the Samsung Exynos PCIe controller (Exynos5433
->>> variant).
->> The title has typo and actually entire "Doc" should be dropped. Just
->> "dt-bindings: pci:".  This applies to all DT patches.
+On 19.10.2020 15:38, Rob Herring wrote:
+> On Mon, Oct 19, 2020 at 4:47 AM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+>> From: Jaehoon Chung <jh80.chung@samsung.com>
 >>
->>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>> [mszyprow: updated the binding to latest driver changes, rewrote it in yaml,
->>>           rewrote commit message]
->> If you wrote them in YAML it should be a new patch of yours. It is the
->> same then as converting TXT to YAML.
+>> Add dt-bindings for the Samsung Exynos PCIe controller (Exynos5433
+>> variant).
 >>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> ---
->>>   .../bindings/pci/samsung,exynos-pcie.yaml     | 106 ++++++++++++++++++
->>>   1 file changed, 106 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
->>> new file mode 100644
->>> index 000000000000..48fb569c238c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
->>> @@ -0,0 +1,104 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: https://protect2.fireeye.com/v1/url?k=a6caf3f8-fb18e55d-a6cb78b7-0cc47a31bee8-bb3776dee0a03bbb&q=1&e=5f1b0c1e-e4d1-4ae2-b527-8cd5ec52695f&u=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fpci%2Fsamsung%2Cexynos-pcie.yaml%23
->>> +$schema: https://protect2.fireeye.com/v1/url?k=591573a2-04c76507-5914f8ed-0cc47a31bee8-bd08b2eac7a5040d&q=1&e=5f1b0c1e-e4d1-4ae2-b527-8cd5ec52695f&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23
->>> +
->>> +title: Samsung SoC series PCIe Host Controller Device Tree Bindings
->>> +
->>> +maintainers:
->>> +  - Jaehoon Chung <jh80.chung@samsung.com>
->>> +
->>> +description: |+
->>> +  Exynos5433 SoC PCIe host controller is based on the Synopsys DesignWare
->>> +  PCIe IP and thus inherits all the common properties defined in
->>> +  designware-pcie.txt.
->>> +
->>> +allOf:
->>> +  - $ref: /schemas/pci/pci-bus.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    enum:
->>> +      - samsung,exynos5433-pcie
->> const, not enum
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> [mszyprow: updated the binding to latest driver changes, rewrote it in yaml,
+>>             rewrote commit message]
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>   .../bindings/pci/samsung,exynos-pcie.yaml     | 106 ++++++++++++++++++
+>>   1 file changed, 106 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
 >>
->>> +
->>> +  reg:
->>> +    items:
->>> +      - description: External Local Bus interface (ELBI) registers.
->>> +      - description: Data Bus Interface (DBI) registers.
->>> +      - description: PCIe configuration space region.
->>> +
->>> +  reg-names:
->>> +    items:
->>> +      - const: elbi
->>> +      - const: bdi
->>> +      - const: config
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +  clocks:
->>> +    items:
->>> +      - description: PCIe bridge clock
->>> +      - description: PCIe bus clock
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: pcie
->>> +      - const: pcie_bus
->>> +
->>> +  phys:
->>> +    maxItems: 1
->>> +
->>> +  phy-names:
->>> +    const: pcie-phy
->>> +
->>> +  vdd10-supply:
->>> +    description:
->>> +      Phandle to a regulator that provides 1.0V power to the PCIe block.
->>> +
->>> +  vdd18-supply:
->>> +    description:
->>> +      Phandle to a regulator that provides 1.8V power to the PCIe block.
->>> +
->>> +required:
->>> +  - reg
->>> +  - reg-names
->>> +  - interrupts
->>> +  - interrupt-names
->>> +  - clocks
->>> +  - clock-names
->>> +  - phys
->>> +  - phy-names
->>> +  - vdd10-supply
->> additionalProperties: false
-> This can be unevaluatedProperties, since you include pci-bus schema.
-> However still you should either include designware schema or include
-> it's properties here.
+>> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..48fb569c238c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
+>> @@ -0,0 +1,104 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: https://protect2.fireeye.com/v1/url?k=3dfd0348-6067aaeb-3dfc8807-002590f5b904-a68fd848316a7cc4&q=1&e=261ae2d1-4457-43b7-8727-35f3cfbc45c0&u=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fpci%2Fsamsung%2Cexynos-pcie.yaml%23
+>> +$schema: https://protect2.fireeye.com/v1/url?k=ab825ba1-f618f202-ab83d0ee-002590f5b904-4aba44c12cb70753&q=1&e=261ae2d1-4457-43b7-8727-35f3cfbc45c0&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23
+>> +
+>> +title: Samsung SoC series PCIe Host Controller Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Jaehoon Chung <jh80.chung@samsung.com>
+>> +
+>> +description: |+
+>> +  Exynos5433 SoC PCIe host controller is based on the Synopsys DesignWare
+>> +  PCIe IP and thus inherits all the common properties defined in
+>> +  designware-pcie.txt.
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/pci/pci-bus.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - samsung,exynos5433-pcie
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: External Local Bus interface (ELBI) registers.
+>> +      - description: Data Bus Interface (DBI) registers.
+>> +      - description: PCIe configuration space region.
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: elbi
+>> +      - const: bdi
+> dbi
+>
+>> +      - const: config
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: PCIe bridge clock
+>> +      - description: PCIe bus clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: pcie
+>> +      - const: pcie_bus
+>> +
+>> +  phys:
+>> +    maxItems: 1
+>> +
+>> +  phy-names:
+>> +    const: pcie-phy
+> Kind of a pointless name.
 
-Frankly, I would like to include designware-pci bindling/schema, but it 
-has not been converted to yaml yet. I don't feel that I know PCI enough 
-to do that conversion...
+Most of the other PCI(e) drivers uses such:
 
+# git grep "phy-names =" Documentation/devicetree/bindings/pci/
+
+Do you want me to change it to simple "pcie"?
+
+>> +
+>> +  vdd10-supply:
+>> +    description:
+>> +      Phandle to a regulator that provides 1.0V power to the PCIe block.
+>> +
+>> +  vdd18-supply:
+>> +    description:
+>> +      Phandle to a regulator that provides 1.8V power to the PCIe block.
+>> +
+>> +required:
+>> +  - reg
+>> +  - reg-names
+>> +  - interrupts
+>> +  - interrupt-names
+>> +  - clocks
+>> +  - clock-names
+>> +  - phys
+>> +  - phy-names
+>> +  - vdd10-supply
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/clock/exynos5433.h>
+>> +
+>> +    pcie: pcie@15700000 {
+>> +        compatible = "samsung,exynos5433-pcie";
+>> +        reg = <0x156b0000 0x1000>, <0x15700000 0x1000>, <0x0c000000 0x1000>;
+>> +        reg-names = "elbi", "dbi", "config";
+>> +        #address-cells = <3>;
+>> +        #size-cells = <2>;
+>> +        #interrupt-cells = <1>;
+>> +        device_type = "pci";
+>> +        interrupts = <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>;
+>> +        clocks = <&cmu_fsys CLK_PCIE>, <&cmu_fsys CLK_PCLK_PCIE_PHY>;
+>> +        clock-names = "pcie", "pcie_bus";
+>> +        phys = <&pcie_phy>;
+>> +        phy-names = "pcie-phy";
+>> +        pinctrl-names = "default";
+>> +        pinctrl-0 = <&pcie_bus &pcie_wlanen>;
+>> +        num-lanes = <1>;
+>> +        bus-range = <0x00 0xff>;
+>> +        ranges = <0x81000000 0 0         0x0c001000 0 0x00010000>,
+>> +                 <0x82000000 0 0x0c011000 0x0c011000 0 0x03feefff>;
+>> +        vdd10-supply = <&ldo6_reg>;
+>> +        vdd18-supply = <&ldo7_reg>;
+>> +        iterrupt-map-mask = <0 0 0 0>;
+> typo
+>
+>> +        interrupt-map = <0 0 0 0 &gic GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>;
+>> +    };
+>> --
+>> 2.17.1
+>>
 Best regards
-
 -- 
 Marek Szyprowski, PhD
 Samsung R&D Institute Poland
