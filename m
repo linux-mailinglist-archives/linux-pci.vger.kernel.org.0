@@ -2,159 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B019C294EF1
-	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 16:42:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA41294F6B
+	for <lists+linux-pci@lfdr.de>; Wed, 21 Oct 2020 17:01:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443125AbgJUOmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 10:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38920 "EHLO
+        id S2443890AbgJUPBw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 11:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2442125AbgJUOmZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 10:42:25 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBCCC0613CF
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 07:42:23 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id f19so598227oot.4
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 07:42:23 -0700 (PDT)
+        with ESMTP id S2443889AbgJUPBw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 11:01:52 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3113C0613D4
+        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 08:01:50 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id dg9so2866898edb.12
+        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 08:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AfTAgHtdVyrAaS1/nhVnFIFYQUqkwRIKER1d/mcr31s=;
-        b=OFfWjJvd0e4xoMAnKosQZX6u4yueJkvQajrGY1gnJgHtnDIJWFT6fq0RgYnrDwWRw+
-         gRHeZQoM62EreIDByRy+hh+RB9j+SqRdJPUlf5qW1UjkGm+tTrGcfzuZz+PumuavbfPc
-         b7fWM4FcGBuAVp+/h1VQnDUxVv4jkFf54gZSo=
+         :cc;
+        bh=ue8Kphmgd/J9kkCdXQ6cXg3jN2T1s1VI/S6KEmBFYtA=;
+        b=tyuzf6egZNg0bmL3iIxfmvVeRFhdDnfbewBqqrw7rPk8s9ezG7HKGJBYpz7qsa0C3r
+         S3ppY6TNQS3s3qJ+E8SkywVt7v3Zd2bQYG9iNKkQ5ry9p4dyQxrKaJYxT3chX6RHizyC
+         +GySRMRyhkvGqRuGv8ic4+o/rQfFyDhJwmYxpx2ibC7icYfN3L7KTnwPZmkGNg6waxt+
+         /v0DHK/ocGmaG3hiyKz3lBsjXZFDm/NNr/l8Dh1bRHfhbCLOJwWvukIO73RcCWW7x5gT
+         F/vLxIv6fFnSA+AZM/O1jatbKn8McCq487pE+2ewPegXQiEjjWXHbjNbBW5V5tKGcGQh
+         Pzag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AfTAgHtdVyrAaS1/nhVnFIFYQUqkwRIKER1d/mcr31s=;
-        b=iKiI3B8PwwxJXMSD3pAYoVHsbjfv3FHLyZ/cZw+FkKZ/4JFsb3NlHikhKJHfPKUfnf
-         0XwWBad3LdNMi6RVFN5+X9PXazs/HRp5HRJsueh/2IS3gQge3W100tsqjszy9drEfr6M
-         K4RoAKwYDwRD8HQk0vxkFX5ZMn/eHDRizbhvqtVy0XL0nGKXJ3B8gnQjRyOskg0pLD5f
-         XjtZhy6MCkvr06qy4kgL4Je/TYK27paiuPIZdVbhAfQfK49v39R7cnFSTJBzdT296xD1
-         MgkRsf46T+5FbK1OiRdD/1e5M+6Ut8C0hRnr6w0cSTNmj9XXtbKuGL7JsiC7Jw3TbAM/
-         wZmA==
-X-Gm-Message-State: AOAM5310p0ZsJ+svgl+ygWwasHoSMy2G+/BSmZqDof+OIu7dSe3x0dOT
-        +vXATk9tY0KKejuQ1JzFPVTQbu8g01fgX4p9nL1wlw==
-X-Google-Smtp-Source: ABdhPJycyct2TB9wVg2Ih3Z02FAHwtZsXVwJzQ0pYxum/KMQuFJw++9YeXuYFSUooQTyT8GemxYhpDCSqAKwx53jYrg=
-X-Received: by 2002:a4a:e1d7:: with SMTP id n23mr2839407oot.85.1603291342907;
- Wed, 21 Oct 2020 07:42:22 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ue8Kphmgd/J9kkCdXQ6cXg3jN2T1s1VI/S6KEmBFYtA=;
+        b=ZuW+RLj1/CPBl0kYiGwR6lXiTEhrohcJwvT6WHAhBulX1jGjSQ9yiQxXcOEZPgRa31
+         ZoVzpNBrk/kv2PkeZjd5z/Gdr9K4hrIfdx+VKev9T2cQwY0McPVsvrr+L32toNIGYXKu
+         i3m1ItEwoQgtzssXqtq1N6BlviaVK8/lk0geE7s3Cjpx9QvrZcIWz0TQSJkCFHiWGlEY
+         U5/TLnnqscWb0YQncoO5pm7lwVABUA9jvxPg9foUn5pPOaQPA3URmaiOhv7UIOCdQy7Z
+         r+MmW7iB6NFnvsePRo7n7frvoKJwc0Y8CTZapaheaXBWhHDmcivayLotgUMrQXxLFUUi
+         vSHQ==
+X-Gm-Message-State: AOAM531Q8SY4BHOgDJX7Tya4VOi+sfN2p+BxtDAIrrBiObEIj4nrUnJA
+        3Er6HfTo0R9rqPtHgrzVIONoAaNj+A465ge6AazevQ==
+X-Google-Smtp-Source: ABdhPJxLbzy0h2+Icd7LIsy6zh10BR+u5qt0ykST0OUv8CPsJiNxNv60HEOhNh7tmnifd2hka1h/GcVQRH2ORVgJ1P0=
+X-Received: by 2002:a05:6402:135a:: with SMTP id y26mr1563112edw.114.1603292509011;
+ Wed, 21 Oct 2020 08:01:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
- <20201021085655.1192025-13-daniel.vetter@ffwll.ch> <20201021125030.GK36674@ziepe.ca>
-In-Reply-To: <20201021125030.GK36674@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 21 Oct 2020 16:42:11 +0200
-Message-ID: <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
+References: <20201013003203.4168817-1-samitolvanen@google.com>
+ <20201013003203.4168817-23-samitolvanen@google.com> <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
+ <20201015102216.GB2611@hirez.programming.kicks-ass.net> <20201015203942.f3kwcohcwwa6lagd@treble>
+ <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
+ <20201020185217.ilg6w5l7ujau2246@treble> <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+In-Reply-To: <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Wed, 21 Oct 2020 08:01:38 -0700
+Message-ID: <CABCJKuewXazmBpXz5irWgy+W537x1Lws5YAsFqMgo+Yio8iyRg@mail.gmail.com>
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jann Horn <jannh@google.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.com>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 2:50 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+On Wed, Oct 21, 2020 at 1:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Wed, Oct 21, 2020 at 10:56:51AM +0200, Daniel Vetter wrote:
-> > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
-> > files, and the old proc interface. Two check against
-> > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
-> > this starts to matter, since we don't want random userspace having
-> > access to PCI BARs while a driver is loaded and using it.
+> On Tue, Oct 20, 2020 at 12:24:37PM -0700, Sami Tolvanen wrote:
+> > > > Building allyesconfig with this series and LTO enabled, I still see
+> > > > the following objtool warnings for vmlinux.o, grouped by source file:
+> > > >
+> > > > arch/x86/entry/entry_64.S:
+> > > > __switch_to_asm()+0x0: undefined stack state
+> > > > .entry.text+0xffd: sibling call from callable instruction with
+> > > > modified stack frame
+> > > > .entry.text+0x48: stack state mismatch: cfa1=7-8 cfa2=-1+0
+> > >
+> > > Not sure what this one's about, there's no OBJECT_FILES_NON_STANDARD?
 > >
-> > Fix this by adding the same iomem_is_exclusive() check we already have
-> > on the sysfs side in pci_mmap_resource().
-> >
-> > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: linux-mm@kvack.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-samsung-soc@vger.kernel.org
-> > Cc: linux-media@vger.kernel.org
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: linux-pci@vger.kernel.org
-> > Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.com>
+> > Correct, because with LTO, we won't have an ELF binary to process
+> > until we compile everything into vmlinux.o, and at that point we can
+> > no longer skip individual object files.
 >
-> Maybe not for fixing in this series, but this access to
-> IORESOURCE_BUSY doesn't have any locking.
->
-> The write side holds the resource_lock at least..
->
-> >       ret =3D pci_mmap_page_range(dev, i, vma,
-> >                                 fpriv->mmap_state, write_combine);
->
-> At this point the vma isn't linked into the address space, so doesn't
-> this happen?
->
->      CPU 0                                  CPU1
->  mmap_region()
->    vma =3D vm_area_alloc
->    proc_bus_pci_mmap
->     iomem_is_exclusive
->     pci_mmap_page_range
->                                             revoke_devmem
->                                              unmap_mapping_range()
->      // vma is not linked to the address space here,
->      // unmap doesn't find it
->   vma_link()
->   !!! The VMA gets mapped with the revoked PTEs
->
-> I couldn't find anything that prevents it at least, no mmap_sem on the
-> unmap side, just the i_mmap_lock
->
-> Not seeing how address space and pre-populating during mmap work
-> together? Did I miss locking someplace?
->
-> Not something to be fixed for this series, this is clearly an
-> improvement, but seems like another problem to tackle?
+> I think what Josh was trying to say is; this file is subject to objtool
+> on a normal build and does not generate warnings. So why would it
+> generate warnings when subject to objtool as result of a vmlinux run
+> (due to LTO or otherwise).
 
-Uh yes. In drivers/gpu this isn't a problem because we only install
-ptes from the vm_ops->fault handler. So no races. And I don't think
-you can fix this otherwise through holding locks: mmap_sem we can't
-hold because before vma_link we don't even know which mm_struct is
-involved, so can't solve the race. Plus this would be worse that
-mm_take_all_locks used by mmu notifier. And the address_space
-i_mmap_lock is also no good since it's not held during the ->mmap
-callback, when we write the ptes. And the resource locks is even less
-useful, since we're not going to hold that at vma_link() time for
-sure.
+Ah, right. It also doesn't generate warnings when I build defconfig
+with LTO, so clearly something confuses objtool here.
 
-Hence delaying the pte writes after the vma_link, which means ->fault
-time, looks like the only way to close this gap.
-
-Trouble is I have no idea how to do this cleanly ...
--Daniel
-
-
-
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Sami
