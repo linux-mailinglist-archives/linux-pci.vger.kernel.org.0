@@ -2,41 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 706712956ED
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 05:44:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1942956EC
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 05:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443485AbgJVDoF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 23:44:05 -0400
+        id S2895527AbgJVDoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 23:44:04 -0400
 Received: from mga03.intel.com ([134.134.136.65]:13235 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2443491AbgJVDoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S2443118AbgJVDoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 21 Oct 2020 23:44:04 -0400
-IronPort-SDR: vZyPImRN9jIB1kxI/0FqHV0wUlR+7Je8XvkvrQ0HvREKMRB21o4ikUOEpXT0uP6kTDwW0ZVt+Q
- bP474wYUr54w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="167564737"
+IronPort-SDR: PX6bfcDKWGTQEMWdkh5LtdYne9eSIP7HI/5iG6jcS7PTWLGUhJd/5dcOZheXCQinC9KFPmeZOY
+ ttxvHo1rhhLA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="167564736"
 X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
-   d="scan'208";a="167564737"
+   d="scan'208";a="167564736"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 20:44:02 -0700
-IronPort-SDR: WudeIgQnKAvDPLKTJryDi/dZTODM7poQF28K2QGWsZht2fyhK0FDvwkkqLCdiOegSQ+2Ibe8+Z
- YUn+b+WSbSgA==
+IronPort-SDR: HaTR/+0d8yUfRTjmK8K9IpYZYO3zuHvz+5vCz4FfyLokNwgUI3wwDj9zT95NTNYt+o0CNs6T/Y
+ NTcZZbT9DzJw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
-   d="scan'208";a="348578833"
+   d="scan'208";a="321233812"
 Received: from lkp-server02.sh.intel.com (HELO 911c2f167757) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Oct 2020 20:44:01 -0700
+  by orsmga006.jf.intel.com with ESMTP; 21 Oct 2020 20:44:01 -0700
 Received: from kbuild by 911c2f167757 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kVRWD-0000Fz-2J; Thu, 22 Oct 2020 03:44:01 +0000
-Date:   Thu, 22 Oct 2020 11:43:10 +0800
+        id 1kVRWD-0000G1-2j; Thu, 22 Oct 2020 03:44:01 +0000
+Date:   Thu, 22 Oct 2020 11:43:12 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:v5.10-merge] BUILD SUCCESS
- f81f8dad8fc839e7d6eb48ea1d5cc542496e75d2
-Message-ID: <5f90ffce.66CdavBP0H66WYpA%lkp@intel.com>
+Subject: [pci:next] BUILD SUCCESS 28e34e751f6c50098d9bcecb30c97634b6126730
+Message-ID: <5f90ffd0.ceb90yTpmtvmkYoa%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,12 +44,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  v5.10-merge
-branch HEAD: f81f8dad8fc839e7d6eb48ea1d5cc542496e75d2  Merge branch 'next' into v5.10-merge
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 28e34e751f6c50098d9bcecb30c97634b6126730  Merge branch 'remotes/lorenzo/pci/xilinx'
 
 elapsed time: 724m
 
-configs tested: 147
+configs tested: 142
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -96,11 +95,6 @@ powerpc                         ps3_defconfig
 sh                         ap325rxa_defconfig
 mips                        maltaup_defconfig
 powerpc                     stx_gp3_defconfig
-powerpc                   motionpro_defconfig
-mips                     loongson1b_defconfig
-arm                            lart_defconfig
-m68k                       m5275evb_defconfig
-m68k                           sun3_defconfig
 arm                         hackkit_defconfig
 sh                ecovec24-romimage_defconfig
 arm                           u8500_defconfig
