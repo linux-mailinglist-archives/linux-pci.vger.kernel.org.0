@@ -2,111 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA201295F4F
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 15:04:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C29FA295FDA
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 15:22:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2899247AbgJVNE1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Oct 2020 09:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2507448AbgJVNE0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Oct 2020 09:04:26 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E950C0613D4
-        for <linux-pci@vger.kernel.org>; Thu, 22 Oct 2020 06:04:26 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id i12so1404822ota.5
-        for <linux-pci@vger.kernel.org>; Thu, 22 Oct 2020 06:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZyNrxU7+apn6xOGNK6avkKI1+/ers9vOGia4XvYK0qo=;
-        b=hFupg462AQWF/3SYEGt7TdCBz7vmVV24cGf5H3PsZJ3NHOF7ARTtk1Xj9pQ6xHZuZX
-         osgTY+1RlCMoExun5CEMIKW0/Q22JFrGKszrr35SoM6z+n1XQ4DOZb0ztKWF8FqsQ0rj
-         YYO9Ror43OTX+8WLAdJnTsM4HmBRXtLFYIBBA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZyNrxU7+apn6xOGNK6avkKI1+/ers9vOGia4XvYK0qo=;
-        b=s2r+5ASe9IRv7QhjsC3YxQoKVCWhpYzU1Q47zuh51kbCIGSomrZSuxH+H4PWZO7JZ+
-         v5Vev/ri37a2W4rkh684M2jmoiIJ2nT5x04kR9RNUGG57s/cSpYHsGlVgcGLS6TCWfXm
-         GBCHw4JNAOCdxWnjpCp+9hBk1M3z3KNiNRcXq0+n/NaZ8tD+ZvdpQt9X/Sg0EueC9AGm
-         XgMAmJn3m6D87O+B3mEnS+bansa43t/GfEwPWVm/om5dbFncweoN8dM9Q3HEU3PME1Ex
-         MV5BMX3vMgjJdi/x143tCpAjhO8tOm1RatEAg5Ljbm8HOJdi5sXNQTnp8mg2kH48WlKY
-         ggOg==
-X-Gm-Message-State: AOAM530Dqxke5ikC++v2jQALyUB+trkz8dBzkPxc+ljHDoUENPAwFyt9
-        LQVvc2vrTNh9ymHxWgc/ON0fhyxFEkuZAJM5PBwYew==
-X-Google-Smtp-Source: ABdhPJx8bjchuHtk5X5j8AOy5uSsJ+M716njPCO+bint+3P1gD9xIsXgxoepgb7cnqWbI4FroPmfqz6vrX/g4fdQHsY=
-X-Received: by 2002:a05:6830:1647:: with SMTP id h7mr1916643otr.281.1603371865933;
- Thu, 22 Oct 2020 06:04:25 -0700 (PDT)
+        id S2507110AbgJVNWc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Oct 2020 09:22:32 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:22266 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2507080AbgJVNWb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Oct 2020 09:22:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1603372951; x=1634908951;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=NLfXWL4KmHeAdQGESXdGuAVG0outUMERCHn1ewac87Q=;
+  b=wYCB+fRouts9i5DRvDdtp8jtjJHz9fsRLihv/2zMREvBHh3Q4lX1tXiZ
+   hJKsMFG4yNfyKYVRv9jqvrxToPM/jRjSH/xumcu+R+RF69k0tLc23LeJ+
+   KSY8u8xceTEJzMD7owx6RxstKTbjA/cqyOmxPocWAkFMFrIafOk+nG0Qn
+   UwCJR7TxX+KiTvZH6eSZyMbuOX8QYMvImg1YSmxX9PFSGoiB3HrQmSzlw
+   xT1cwa03lP1yTPjVai47kDUHJ+cvzw2JTuJfEPjomiWmNo6xX0NkmkykL
+   UCrenf9DucZ5/aXkXFVK6nTOOAQj5YQRjRVqxXUqCIrfuTM4gd1jwuDZu
+   g==;
+IronPort-SDR: GbI151RDgx46gYkbTpk5KkOyyeakZFq826XQQkD+085pnFmuIb5yFAA3w2lCBBzVClJVEGO7en
+ pf6Gunxe3HojypJK9bx69x4pyx3Q7PkFn8Ke3gDoF8TBDw9oYUq3R8HpLothpqRsK0+Kqa8pb9
+ 8fnPdUXN4c8/AbwxHrJFj5fzDrX4vlbNTASBmQjZp5XcHsPPQqj5kkzk0HYKJT7sQKwB4RLoxW
+ X2QxPGhqegN9CElt2BFped71oFShS/SsOKhRKgbfa+DfIhr7tRmxiuk4PR29LhA9sp7j1q2DC4
+ eiU=
+X-IronPort-AV: E=Sophos;i="5.77,404,1596524400"; 
+   d="scan'208";a="91058327"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 22 Oct 2020 06:22:30 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 22 Oct 2020 06:22:30 -0700
+Received: from ryzen.microchip.com (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 22 Oct 2020 06:22:28 -0700
+From:   <daire.mcnamara@microchip.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <robh@kernel.org>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <david.abdurachmanov@gmail.com>
+CC:     Daire McNamara <daire.mcnamara@microchip.com>
+Subject: [PATCH v17 0/3] PCI: microchip: Add host driver for Microchip PCIe controller
+Date:   Thu, 22 Oct 2020 14:22:20 +0100
+Message-ID: <20201022132223.17789-1-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
- <20201021085655.1192025-13-daniel.vetter@ffwll.ch> <20201021125030.GK36674@ziepe.ca>
- <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
- <20201021151352.GL36674@ziepe.ca> <CAKMK7uGq0=ks7Zj1Et44k7x9FwE9u_ua4zANSqrLRri0v01V+Q@mail.gmail.com>
- <20201021163702.GM36674@ziepe.ca> <CAKMK7uEjE5sHUq0hV_bnYjPKRxYyBnty0sLre+owANGZjLJg9Q@mail.gmail.com>
- <20201021232022.GN36674@ziepe.ca> <CAKMK7uEkAK42+19KRo06XzJFuMCVriEEg0jxqXq8oAdt2ExLsQ@mail.gmail.com>
- <20201022114345.GO36674@ziepe.ca>
-In-Reply-To: <20201022114345.GO36674@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 22 Oct 2020 15:04:14 +0200
-Message-ID: <CAKMK7uHUufuyCXF5jUZG1zZ8SeaAFOi-9dA1sejc2R5fnLTJVA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 22, 2020 at 1:43 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Thu, Oct 22, 2020 at 09:00:44AM +0200, Daniel Vetter wrote:
-> > On Thu, Oct 22, 2020 at 1:20 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Wed, Oct 21, 2020 at 09:24:08PM +0200, Daniel Vetter wrote:
-> > > > On Wed, Oct 21, 2020 at 6:37 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > > > >
-> > > > > On Wed, Oct 21, 2020 at 05:54:54PM +0200, Daniel Vetter wrote:
-> > > > >
-> > > > > > The trouble is that io_remap_pfn adjust vma->pgoff, so we'd need to
-> > > > > > split that. So ideally ->mmap would never set up any ptes.
-> > > > >
-> > > > > /dev/mem makes pgoff == pfn so it doesn't get changed by remap.
-> > > > >
-> > > > > pgoff doesn't get touched for MAP_SHARED either, so there are other
-> > > > > users that could work like this - eg anyone mmaping IO memory is
-> > > > > probably OK.
-> > > >
-> > > > I was more generally thinking for io_remap_pfn_users because of the
-> > > > mkwrite use-case we might have in fbdev emulation in drm.
-> > >
-> > > You have a use case for MAP_PRIVATE and io_remap_pfn_range()??
-> >
-> > Uh no :-)
->
-> So it is fine, the pgoff mangling only happens for MAP_PRIVATE
+From: Daire McNamara <daire.mcnamara@microchip.com>
 
-Ah right I got confused, thanks for clarifying.
--Daniel
+This patchset adds support for the Microchip PCIe PolarFire PCIe
+controller when configured in host (Root Complex) mode.
+
+Updates since v16:
+* Patch needs CONFIG_PCI_HOST_COMMON.  Add this to Kconfig stanza
+
+Updates since v15:
+* Call platform_set_drvdata earlier in devm_pci_alloc_host_bridge()
+* Use host_common_probe() and an init function to set up hw windows
+* status is u32 in mc_pcie_isr()
+* Removed mask var in mc_mask_intx_irq(), mc_unmask_intx_irq()
+* irq var is now signed in mc_platform_init()
+
+Updates since v14:
+* Removed cfg_read/cfg_write inline functions
+* Updated to irq_data_get_irq_chip_data()
+* Updated to use devm_platform_ioremap_resource()
+* Replaced of_pci_range parsing to setup windows via bridge pointer.
+
+Updates since v13:
+* Refactored to use pci_host_common_probe()
+
+Updates since v12:
+* Capitalised commit messages.  Use specific subject line for dt-bindings
+
+Updates since v11:
+* Adjusted so yaml file passses make dt_binding_check
+
+Updates since v10:
+* Adjusted driver as per Rob Herring's comments, notably:
+  - use common PCI_MSI_FLAGS defines
+  - reduce storage of unnecessary vars in mc_pcie struct
+  - switched to read/write relaxed variants
+  - extended lock in msi_domain_alloc routine
+  - improved 32bit safety, switched from find_first_bit() to ilog2()
+  - removed unnecessary twiddle of eCAM config space
+
+Updates since v9:
+* Adjusted commit logs
+* make dt_bindings_check passes
+
+Updates since v8:
+* Refactored as per Rob Herring's comments:
+  - bindings in schema format
+  - Adjusted licence to GPLv2.0
+  - Refactored access to config space between driver and common eCAM code
+  - Adopted pci_host_probe()
+  - Miscellanous other improvements
+
+Updates since v7:
+* Build for 64bit RISCV architecture only
+
+Updates since v6:
+* Refactored to use common eCAM driver
+* Updated to CONFIG_PCIE_MICROCHIP_HOST etc
+* Formatting improvements
+* Removed code for selection between bridge 0 and 1
+
+Updates since v5:
+* Fixed Kconfig typo noted by Randy Dunlap
+* Updated with comments from Bjorn Helgaas
+
+Updates since v4:
+* Fix compile issues.
+
+Updates since v3:
+* Update all references to Microsemi to Microchip
+* Separate MSI functionality from legacy PCIe interrupt handling functionality
+
+Updates since v2:
+* Split out DT bindings and Vendor ID updates into their own patch
+  from PCIe driver.
+* Updated Change Log
+
+Updates since v1:
+* Incorporate feedback from Bjorn Helgaas
+
+Daire McNamara (3):
+  PCI: Call platform_set_drvdata earlier in devm_pci_alloc_host_bridge
+  dt-bindings: PCI: microchip: Add Microchip PolarFire host binding
+  PCI: microchip: Add host driver for Microchip PCIe controller
+
+ .../bindings/pci/microchip,pcie-host.yaml     |  93 +++
+ drivers/pci/controller/Kconfig                |  10 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pci-host-common.c      |   4 +-
+ drivers/pci/controller/pcie-microchip-host.c  | 541 ++++++++++++++++++
+ 5 files changed, 647 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+ create mode 100644 drivers/pci/controller/pcie-microchip-host.c
+
+
+base-commit: c4d6fe7311762f2e03b3c27ad38df7c40c80cc93
+prerequisite-patch-id: b98abc1ad412692a95e3eb3f7adfaff214750282
+prerequisite-patch-id: b77f4eea4090304b5c113e4ccc29e64fc82cdc45
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.25.1
+
