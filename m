@@ -2,52 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B1CF29659C
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 22:04:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B9A29666E
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 23:18:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S370542AbgJVUEY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Oct 2020 16:04:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S370522AbgJVUEP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 22 Oct 2020 16:04:15 -0400
-Subject: Re: [GIT PULL] PCI changes for v5.10
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603397055;
-        bh=frl2OYMoZ3nwHpGZk4Vq8/JvdbcJnyUeiL/E3TFNt2Y=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=c9/etLzNHyjEi0z7qdaXosxqCpWoF7ezJNUmdj8bv1hr9ZOKNVy/IBX7CgsZhhjrs
-         TjzG41MGlCq3J8vhdkywDfM4PfU7/FT4yXxKJ+lftZa8M0j4ZsuHpPotJUojBX+6Tq
-         SVg2H89/wCb+MOb22KBSV0l+FwKs/gDDVJygChcc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20201021212443.GA466346@bjorn-Precision-5520>
-References: <20201021212443.GA466346@bjorn-Precision-5520>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20201021212443.GA466346@bjorn-Precision-5520>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.10-changes
-X-PR-Tracked-Commit-Id: 28e34e751f6c50098d9bcecb30c97634b6126730
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 00937f36b09e89c74e4a059dbb8acbf4b971d5eb
-Message-Id: <160339705537.15216.3349175696210702383.pr-tracker-bot@kernel.org>
-Date:   Thu, 22 Oct 2020 20:04:15 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+        id S372238AbgJVVS1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Oct 2020 17:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S372233AbgJVVS1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Oct 2020 17:18:27 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1050C0613CE
+        for <linux-pci@vger.kernel.org>; Thu, 22 Oct 2020 14:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5cBekD3bplpW1a2zZ3pgYTutgTj4JBNLHTV3OzaHuJU=; b=17kwLpFuYiVPZJbGK3yWSFeXO
+        PmVqOwdFblibk4EatVN2ugDKsrOLe46oQ+6xhT9THep6pw9lTHPzL/JGX+05ymI3aQ7PIZ+D0jtGx
+        7Dxxy/8N4WG+Jyj7S2G0dAdc/qkjBx9QlHKX3+AjW/xW2Ot1qz1BwDDGUOOLRmbJK11TCx8+5vu8d
+        2OuNenrgksUXr1Y0V/xZcFcnaLYXSBm4UjBDwfU4VHWt9MGr47fuk5uiOfytcMWQYUP0Dx7xCPgC8
+        QqaERMEdM9pBLRRXLk5e0QVxpP3r6A8vdQU4YkKOiE9tlLiWXzeMKCZiFIZf7QpGKhIyBzgBkN8wp
+        CUXYy96AQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49674)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1kVhyZ-0002aB-4Q; Thu, 22 Oct 2020 22:18:23 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1kVhyX-0007k4-TW; Thu, 22 Oct 2020 22:18:21 +0100
+Date:   Thu, 22 Oct 2020 22:18:21 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: [BUG] PCIe on Armada 388 broken since 5.9
+Message-ID: <20201022211821.GU1551@shell.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Wed, 21 Oct 2020 16:24:43 -0500:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.10-changes
+It appears that PCIe on Armada 388 has been broken in 5.9. Here are
+the boot messages:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/00937f36b09e89c74e4a059dbb8acbf4b971d5eb
+mvebu-pcie soc:pcie: host bridge /soc/pcie ranges:
+mvebu-pcie soc:pcie:      MEM 0x00f1080000..0x00f1081fff -> 0x0000080000
+mvebu-pcie soc:pcie:      MEM 0x00f1040000..0x00f1041fff -> 0x0000040000
+mvebu-pcie soc:pcie:      MEM 0x00f1044000..0x00f1045fff -> 0x0000044000
+mvebu-pcie soc:pcie:      MEM 0x00f1048000..0x00f1049fff -> 0x0000048000
+mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0100000000
+mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0100000000
+mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0200000000
+mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0200000000
+mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0300000000
+mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0300000000
+mvebu-pcie soc:pcie:      MEM 0xffffffffffffffff..0x00fffffffe -> 0x0400000000
+mvebu-pcie soc:pcie:       IO 0xffffffffffffffff..0x00fffffffe -> 0x0400000000
+mvebu-pcie soc:pcie: resource collision: [mem 0xf1080000-0xf1081fff] conflicts with pcie [mem 0xf1080000-0xf1081fff]
+mvebu-pcie: probe of soc:pcie failed with error -16
 
-Thank you!
+This results in PCIe being entirely non-functional. At a guess, I'd
+say it's due to:
+
+commit c322fa0b3fa948010a278794e60c45ec860e4a1e
+Author: Rob Herring <robh@kernel.org>
+Date:   Fri May 22 17:48:19 2020 -0600
+
+    PCI: mvebu: Use struct pci_host_bridge.windows list directly
+
+    There's no need to create a temporary resource list and then splice it to
+    struct pci_host_bridge.windows list. Just use pci_host_bridge.windows
+    directly. The necessary clean-up is already handled by the PCI core.
+
+    Link: https://lore.kernel.org/r/20200522234832.954484-3-robh@kernel.org
+    Signed-off-by: Rob Herring <robh@kernel.org>
+    Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+    Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+    Cc: Jason Cooper <jason@lakedaemon.net>
+
+Any suggestions?
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
