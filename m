@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D70232956EE
+	by mail.lfdr.de (Postfix) with ESMTP id 706712956ED
 	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 05:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2443118AbgJVDoF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S2443485AbgJVDoF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 21 Oct 2020 23:44:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34898 "EHLO mga09.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:13235 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2443485AbgJVDoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S2443491AbgJVDoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 21 Oct 2020 23:44:04 -0400
-IronPort-SDR: 1bXBQTWxhq+vAASvovDFw26zsI5r40e3eacuQsuG8TTfQhBK2VRHBeHLBSKiNmy0nufYjEObCC
- E6cODZLYCjrg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="167588428"
+IronPort-SDR: vZyPImRN9jIB1kxI/0FqHV0wUlR+7Je8XvkvrQ0HvREKMRB21o4ikUOEpXT0uP6kTDwW0ZVt+Q
+ bP474wYUr54w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="167564737"
 X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
-   d="scan'208";a="167588428"
+   d="scan'208";a="167564737"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 20:44:03 -0700
-IronPort-SDR: 27AMViVmKfDi1kLKP9MpXq3JwBAbIa1498Q4yGHagdVdoWjpcuOnc87eQUaqFnqtYdRRFEg/lw
- V89sHsGbPLhg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 20:44:02 -0700
+IronPort-SDR: WudeIgQnKAvDPLKTJryDi/dZTODM7poQF28K2QGWsZht2fyhK0FDvwkkqLCdiOegSQ+2Ibe8+Z
+ YUn+b+WSbSgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
-   d="scan'208";a="359107021"
+   d="scan'208";a="348578833"
 Received: from lkp-server02.sh.intel.com (HELO 911c2f167757) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Oct 2020 20:44:01 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 21 Oct 2020 20:44:01 -0700
 Received: from kbuild by 911c2f167757 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kVRWD-0000G4-34; Thu, 22 Oct 2020 03:44:01 +0000
-Date:   Thu, 22 Oct 2020 11:43:08 +0800
+        id 1kVRWD-0000Fz-2J; Thu, 22 Oct 2020 03:44:01 +0000
+Date:   Thu, 22 Oct 2020 11:43:10 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/vmd] BUILD SUCCESS
- 852ba91dfaf4b2af7a760c5d083e17f8851ba157
-Message-ID: <5f90ffcc.dlE8hfuidWDFE3i6%lkp@intel.com>
+Subject: [pci:v5.10-merge] BUILD SUCCESS
+ f81f8dad8fc839e7d6eb48ea1d5cc542496e75d2
+Message-ID: <5f90ffce.66CdavBP0H66WYpA%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,12 +45,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/vmd
-branch HEAD: 852ba91dfaf4b2af7a760c5d083e17f8851ba157  PCI: vmd: Update VMD PM to correctly use generic PCI PM
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  v5.10-merge
+branch HEAD: f81f8dad8fc839e7d6eb48ea1d5cc542496e75d2  Merge branch 'next' into v5.10-merge
 
 elapsed time: 724m
 
-configs tested: 142
+configs tested: 147
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -96,6 +96,11 @@ powerpc                         ps3_defconfig
 sh                         ap325rxa_defconfig
 mips                        maltaup_defconfig
 powerpc                     stx_gp3_defconfig
+powerpc                   motionpro_defconfig
+mips                     loongson1b_defconfig
+arm                            lart_defconfig
+m68k                       m5275evb_defconfig
+m68k                           sun3_defconfig
 arm                         hackkit_defconfig
 sh                ecovec24-romimage_defconfig
 arm                           u8500_defconfig
