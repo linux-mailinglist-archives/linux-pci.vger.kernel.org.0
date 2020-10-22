@@ -2,109 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A47F4295518
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 01:20:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84857295564
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 02:02:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2507095AbgJUXU1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 19:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2507086AbgJUXU0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 19:20:26 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6447C0613D5
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 16:20:24 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id m65so3664458qte.11
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 16:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=b4cfx4QZgYz15NDTJwDbByQvqvRvpDxc8U181kXRfhk=;
-        b=CZio0pvjUOAZVmGpPYnoIJZ3k0VTIRDxHgnxsmYuQhsz2jEdpX7JlzXAa5B1lHI4hj
-         1dkeZm3vsuYQ0+al/4Q5F2/2IuJErhNsTuza+Audcu3R6UagNTTPFO2TOlLXvivwU2k/
-         TKA9JSMlFjnoXG+A2LL1MAujxpBHcxjoID0aD31L+i9KzL1iVOVlTBMfml1ncQpAA1Ef
-         K50QmLDH8932V/fZEd6cOcCwLbIUGXgj3Ry86gAn7SRneMoAL4zkD8ulKknh501sjbP8
-         vU0trDw7S+JXN+4tdtkGwNszgrrA7N4l+RnFY0GZRBBOKZJ2H2dSIxQhc+QJQE2SJt1m
-         cPcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b4cfx4QZgYz15NDTJwDbByQvqvRvpDxc8U181kXRfhk=;
-        b=NuQVkEPunxNBD3cvRsCgc5xhHVwWplfyFmtEzgLN2No56i3ZEVxJjt52jVW6iDq0fA
-         6GOwgiNVV+kj1uni+JhisI6VMjXBU/MkGG3ef8H/QOhK8JrAn7C0cA4jsBfWgLB6+/s0
-         +CFBbuZhN883pMiLH+C2RycoTsr0Q1t5roxctFtfNJYDp2NxKI7ZEh++jkjn4s4j5FA4
-         lteoCvXYpFJLaamnDvz2J9NV3Wi9LJX0N3UkZ62aBqhDYKIwy1XPjVPNkdyOMIu9+2kL
-         md3HwsmBLlnXRefK+rcgGYcw0iFBGMffYRLur7PzmnzEYu+RhjyQGIr0KYUpc7nrZDza
-         wKog==
-X-Gm-Message-State: AOAM533BmbCxmR9IlpmVsfuDuczvkYtu+Hdo9PcttmlTBNHt43U3H4JG
-        9GAIWObBCiJT6FMwaIjJKlVjbg==
-X-Google-Smtp-Source: ABdhPJylFppbCqYnSmCDnE4ueYGv0xNZzmWfiqeCGK69SNIht11gj1i8NPwvoXi//7kIPj5qPGxCVQ==
-X-Received: by 2002:ac8:1c39:: with SMTP id a54mr5530504qtk.344.1603322423832;
-        Wed, 21 Oct 2020 16:20:23 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id n63sm2410770qka.45.2020.10.21.16.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2020 16:20:23 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kVNP4-003k7m-9M; Wed, 21 Oct 2020 20:20:22 -0300
-Date:   Wed, 21 Oct 2020 20:20:22 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.com>
-Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
-Message-ID: <20201021232022.GN36674@ziepe.ca>
-References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
- <20201021085655.1192025-13-daniel.vetter@ffwll.ch>
- <20201021125030.GK36674@ziepe.ca>
- <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
- <20201021151352.GL36674@ziepe.ca>
- <CAKMK7uGq0=ks7Zj1Et44k7x9FwE9u_ua4zANSqrLRri0v01V+Q@mail.gmail.com>
- <20201021163702.GM36674@ziepe.ca>
- <CAKMK7uEjE5sHUq0hV_bnYjPKRxYyBnty0sLre+owANGZjLJg9Q@mail.gmail.com>
+        id S2507380AbgJVAC2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 20:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2507379AbgJVAC2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Oct 2020 20:02:28 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA8C42068E;
+        Thu, 22 Oct 2020 00:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603324947;
+        bh=3UPSINPAND/lqccE62eGQN/0o8y3xZbQAeiWy+GF/To=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Xi7ym5utmWSTIoAwg6r9dGp4x6QleovpXhk6RRUPw8uIK2epUTOTLeZqLsOBoTZ19
+         ELd7dNL9gY8j3J05Mxzer4ue+0NTsCSAEGuGanmBsKvABq5hoi8LfnAGOujo9faeNV
+         noUD3Q1gU/QxClDHx7T+3JvxvIM24UHqI5n5p3vc=
+Date:   Wed, 21 Oct 2020 17:02:24 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jiri@nvidia.com, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        lgoncalv@redhat.com, Dave Miller <davem@davemloft.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Saeed Mahameed <saeedm@nvidia.com>
+Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to
+ housekeeping CPUs
+Message-ID: <20201021170224.55aea948@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <877drj72cz.fsf@nanos.tec.linutronix.de>
+References: <20200928183529.471328-1-nitesh@redhat.com>
+        <20200928183529.471328-5-nitesh@redhat.com>
+        <87v9f57zjf.fsf@nanos.tec.linutronix.de>
+        <3bca9eb1-a318-1fc6-9eee-aacc0293a193@redhat.com>
+        <87lfg093fo.fsf@nanos.tec.linutronix.de>
+        <877drj72cz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uEjE5sHUq0hV_bnYjPKRxYyBnty0sLre+owANGZjLJg9Q@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 09:24:08PM +0200, Daniel Vetter wrote:
-> On Wed, Oct 21, 2020 at 6:37 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+On Wed, 21 Oct 2020 22:25:48 +0200 Thomas Gleixner wrote:
+> On Tue, Oct 20 2020 at 20:07, Thomas Gleixner wrote:
+> > On Tue, Oct 20 2020 at 12:18, Nitesh Narayan Lal wrote:  
+> >> However, IMHO we would still need a logic to prevent the devices from
+> >> creating excess vectors.  
 > >
-> > On Wed, Oct 21, 2020 at 05:54:54PM +0200, Daniel Vetter wrote:
+> > Managed interrupts are preventing exactly that by pinning the interrupts
+> > and queues to one or a set of CPUs, which prevents vector exhaustion on
+> > CPU hotplug.
 > >
-> > > The trouble is that io_remap_pfn adjust vma->pgoff, so we'd need to
-> > > split that. So ideally ->mmap would never set up any ptes.
-> >
-> > /dev/mem makes pgoff == pfn so it doesn't get changed by remap.
-> >
-> > pgoff doesn't get touched for MAP_SHARED either, so there are other
-> > users that could work like this - eg anyone mmaping IO memory is
-> > probably OK.
+> > Non-managed, yes that is and always was a problem. One of the reasons
+> > why managed interrupts exist.  
 > 
-> I was more generally thinking for io_remap_pfn_users because of the
-> mkwrite use-case we might have in fbdev emulation in drm.
+> But why is this only a problem for isolation? The very same problem
+> exists vs. CPU hotplug and therefore hibernation.
+> 
+> On x86 we have at max. 204 vectors available for device interrupts per
+> CPU. So assumed the only device interrupt in use is networking then any
+> machine which has more than 204 network interrupts (queues, aux ...)
+> active will prevent the machine from hibernation.
+> 
+> Aside of that it's silly to have multiple queues targeted at a single
+> CPU in case of hotplug. And that's not a theoretical problem.  Some
+> power management schemes shut down sockets when the utilization of a
+> system is low enough, e.g. outside of working hours.
+> 
+> The whole point of multi-queue is to have locality so that traffic from
+> a CPU goes through the CPU local queue. What's the point of having two
+> or more queues on a CPU in case of hotplug?
+> 
+> The right answer to this is to utilize managed interrupts and have
+> according logic in your network driver to handle CPU hotplug. When a CPU
+> goes down, then the queue which is associated to that CPU is quiesced
+> and the interrupt core shuts down the relevant interrupt instead of
+> moving it to an online CPU (which causes the whole vector exhaustion
+> problem on x86). When the CPU comes online again, then the interrupt is
+> reenabled in the core and the driver reactivates the queue.
 
-You have a use case for MAP_PRIVATE and io_remap_pfn_range()??
+I think Mellanox folks made some forays into managed irqs, but I don't
+remember/can't find the details now.
 
-Jason
+For networking the locality / queue per core does not always work,
+since the incoming traffic is usually spread based on a hash. Many
+applications perform better when network processing is done on a small
+subset of CPUs, and application doesn't get interrupted every 100us. 
+So we do need extra user control here.
+
+We have a bit of a uAPI problem since people had grown to depend on
+IRQ == queue == NAPI to configure their systems. "The right way" out
+would be a proper API which allows associating queues with CPUs rather
+than IRQs, then we can use managed IRQs and solve many other problems.
+
+Such new API has been in the works / discussions for a while now.
+
+(Magnus keep me honest here, if you disagree the queue API solves this.)
