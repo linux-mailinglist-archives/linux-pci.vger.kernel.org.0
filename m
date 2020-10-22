@@ -2,209 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A1F295575
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 02:23:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF67229557D
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 02:27:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2507448AbgJVAXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 20:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2507447AbgJVAXO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 21 Oct 2020 20:23:14 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32850C0613CE
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 17:23:12 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id ce10so5803546ejc.5
-        for <linux-pci@vger.kernel.org>; Wed, 21 Oct 2020 17:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p8Hwn4AXDi9NRjlCE0oMq1jAIKpEQWx4gCW/kuHDlnE=;
-        b=CNB4qwF8XdN3RdM9KJnNC7kYAWqE3MUa239/vjNlnFSdgbAxXNDSsHdvaAwxfoPYCf
-         9I5uTsOXqOSvDFVdPGNB9kuPiLcCYP+jICpfkw/SnOdN0UwneoOuRjcJRVYvzghyOZgY
-         XvPIaPv94GmuiwvhuOy99hxIOxFWyWcpXlhs/vEB8KesGnOR/boJ2sI/4woeV6i/72q/
-         p2uHWfix+2KfdBMVPBrl7fsMQncBxq0mhjoTIYiPInfd1v8q11VRdJI0fils5s9SxrwC
-         md6xgXZxNLh51IWZJpdkb57XW+oG+EDxRaAKOL98VAQ3pysJjVwuexGYN8bLRDJoVH0/
-         WSmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8Hwn4AXDi9NRjlCE0oMq1jAIKpEQWx4gCW/kuHDlnE=;
-        b=CSuAy9cmiFeQmjSrer5iprsk58kV4W8W45UgLPSs+x4EvEO/Ky+lHBdntI5+8ZMJb6
-         ijDpVnH5gJya49C/MNaciRTboh7b2Pnrf8tN1cjV3AFln1J0PCSwHaiH1Jk0mAa9wBGI
-         AmXuQqLtLvV8B98qltEEp++xsaKEzfQmojeAoH/RvrRS06INf72CmecpzL0qea+uGJQ3
-         njyYZKryIcvsX1qZDpxY/W7JOl5nvU7qDcip34WusNiPkruCPYW0ASnExT/zcEF5++WR
-         3hRSXNyUaxUMMFll9yVH9g2o1kQNX2UYUCb03t0Y87HGb2cjiBMe3yEgc+7sePVVirhE
-         bdsA==
-X-Gm-Message-State: AOAM531wM7Q2hnD3gAFz2JxPBhsUVrkiYSh5Rq2IgCVKAXJ1qWd14adG
-        mMSLRCq07iB1K6xF/kaWGoNRAhJxj6JYQSshHnuDKQ==
-X-Google-Smtp-Source: ABdhPJzLM1aM6spRLX8pXe/S9QIy6/o0GCiMeSkYufHnU7EzHfprw/1bO/qSLNeYe+3BVe+LcpDtiqX5V8eEHvsaeCo=
-X-Received: by 2002:a17:906:490d:: with SMTP id b13mr5925764ejq.122.1603326190426;
- Wed, 21 Oct 2020 17:23:10 -0700 (PDT)
+        id S2507485AbgJVA1e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 21 Oct 2020 20:27:34 -0400
+Received: from mga17.intel.com ([192.55.52.151]:26848 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2440647AbgJVA1e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 21 Oct 2020 20:27:34 -0400
+IronPort-SDR: c8K/DDwrquZrqYATLWcUgQWUIzZi5dL2koLTm+EwZCepV9pc6fzmujwjC/PSG8ItqACe4O3Lph
+ 2JslZEEpSQug==
+X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="147311327"
+X-IronPort-AV: E=Sophos;i="5.77,402,1596524400"; 
+   d="scan'208";a="147311327"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 17:27:31 -0700
+IronPort-SDR: 1Ma8nA7sjOvVStgOnzIylMyaFuV52Ohtj7fxjd8IkeVlQmA9SrnuaTHQBSN746g9c1VlsDbLrp
+ zHd9Be+NoaXQ==
+X-IronPort-AV: E=Sophos;i="5.77,402,1596524400"; 
+   d="scan'208";a="359067328"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.209.13.114]) ([10.209.13.114])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 17:27:24 -0700
+Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to housekeeping
+ CPUs
+To:     Jakub Kicinski <kuba@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        helgaas@kernel.org, jeffrey.t.kirsher@intel.com, jlelli@redhat.com,
+        hch@infradead.org, bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jiri@nvidia.com, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        lgoncalv@redhat.com, Dave Miller <davem@davemloft.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Saeed Mahameed <saeedm@nvidia.com>
+References: <20200928183529.471328-1-nitesh@redhat.com>
+ <20200928183529.471328-5-nitesh@redhat.com>
+ <87v9f57zjf.fsf@nanos.tec.linutronix.de>
+ <3bca9eb1-a318-1fc6-9eee-aacc0293a193@redhat.com>
+ <87lfg093fo.fsf@nanos.tec.linutronix.de>
+ <877drj72cz.fsf@nanos.tec.linutronix.de>
+ <20201021170224.55aea948@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <a1c6cdcd-7f89-5ed3-c869-ffec05929786@intel.com>
+Date:   Wed, 21 Oct 2020 17:27:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-References: <20201013003203.4168817-1-samitolvanen@google.com>
- <20201013003203.4168817-23-samitolvanen@google.com> <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
- <20201015102216.GB2611@hirez.programming.kicks-ass.net> <20201015203942.f3kwcohcwwa6lagd@treble>
- <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
- <20201020185217.ilg6w5l7ujau2246@treble> <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
- <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
-In-Reply-To: <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 21 Oct 2020 17:22:59 -0700
-Message-ID: <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jann Horn <jannh@google.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201021170224.55aea948@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 1:56 AM Peter Zijlstra <peterz@infradead.org> wrote:
+
+
+On 10/21/2020 5:02 PM, Jakub Kicinski wrote:
+> On Wed, 21 Oct 2020 22:25:48 +0200 Thomas Gleixner wrote:
+>> On Tue, Oct 20 2020 at 20:07, Thomas Gleixner wrote:
+>>> On Tue, Oct 20 2020 at 12:18, Nitesh Narayan Lal wrote:  
+>>>> However, IMHO we would still need a logic to prevent the devices from
+>>>> creating excess vectors.  
+>>>
+>>> Managed interrupts are preventing exactly that by pinning the interrupts
+>>> and queues to one or a set of CPUs, which prevents vector exhaustion on
+>>> CPU hotplug.
+>>>
+>>> Non-managed, yes that is and always was a problem. One of the reasons
+>>> why managed interrupts exist.  
+>>
+>> But why is this only a problem for isolation? The very same problem
+>> exists vs. CPU hotplug and therefore hibernation.
+>>
+>> On x86 we have at max. 204 vectors available for device interrupts per
+>> CPU. So assumed the only device interrupt in use is networking then any
+>> machine which has more than 204 network interrupts (queues, aux ...)
+>> active will prevent the machine from hibernation.
+>>
+>> Aside of that it's silly to have multiple queues targeted at a single
+>> CPU in case of hotplug. And that's not a theoretical problem.  Some
+>> power management schemes shut down sockets when the utilization of a
+>> system is low enough, e.g. outside of working hours.
+>>
+>> The whole point of multi-queue is to have locality so that traffic from
+>> a CPU goes through the CPU local queue. What's the point of having two
+>> or more queues on a CPU in case of hotplug?
+>>
+>> The right answer to this is to utilize managed interrupts and have
+>> according logic in your network driver to handle CPU hotplug. When a CPU
+>> goes down, then the queue which is associated to that CPU is quiesced
+>> and the interrupt core shuts down the relevant interrupt instead of
+>> moving it to an online CPU (which causes the whole vector exhaustion
+>> problem on x86). When the CPU comes online again, then the interrupt is
+>> reenabled in the core and the driver reactivates the queue.
+> 
+> I think Mellanox folks made some forays into managed irqs, but I don't
+> remember/can't find the details now.
+> 
+
+I remember looking into this a few years ago, and not getting very far
+either.
+
+> For networking the locality / queue per core does not always work,
+> since the incoming traffic is usually spread based on a hash. Many
+> applications perform better when network processing is done on a small
+> subset of CPUs, and application doesn't get interrupted every 100us. 
+> So we do need extra user control here.
+> 
+> We have a bit of a uAPI problem since people had grown to depend on
+> IRQ == queue == NAPI to configure their systems. "The right way" out
+> would be a proper API which allows associating queues with CPUs rather
+> than IRQs, then we can use managed IRQs and solve many other problems.
+> 
+
+I think we (Intel) hit some of the same issues you mention.
+
+I know I personally would like to see something that lets a lot of the
+current driver-specific policy be moved out. I think it should be
+possible to significantly simplify the abstraction used by the drivers.
+
+> Such new API has been in the works / discussions for a while now.
+> 
+> (Magnus keep me honest here, if you disagree the queue API solves this.)
 >
-> On Tue, Oct 20, 2020 at 12:24:37PM -0700, Sami Tolvanen wrote:
-> > > > Building allyesconfig with this series and LTO enabled, I still see
-> > > > the following objtool warnings for vmlinux.o, grouped by source file:
-> > > >
-> > > > arch/x86/entry/entry_64.S:
-> > > > __switch_to_asm()+0x0: undefined stack state
-> > > > .entry.text+0xffd: sibling call from callable instruction with
-> > > > modified stack frame
-> > > > .entry.text+0x48: stack state mismatch: cfa1=7-8 cfa2=-1+0
-> > >
-> > > Not sure what this one's about, there's no OBJECT_FILES_NON_STANDARD?
-> >
-> > Correct, because with LTO, we won't have an ELF binary to process
-> > until we compile everything into vmlinux.o, and at that point we can
-> > no longer skip individual object files.
->
-> I think what Josh was trying to say is; this file is subject to objtool
-> on a normal build and does not generate warnings. So why would it
-> generate warnings when subject to objtool as result of a vmlinux run
-> (due to LTO or otherwise).
->
-> In fact, when I build a x86_64-defconfig and then run:
->
->   $ objtool check -barf defconfig-build/vmlinux.o
-
-Note that I'm passing also --vmlinux and --duplicate to objtool when
-processing vmlinux.o, and this series has a patch to split noinstr
-validation from --vmlinux, so that's skipped.
-
-> I do not see these in particular, although I do see a lot of:
->
->   "sibling call from callable instruction with modified stack frame"
->   "falls through to next function"
->
-> that did not show up in the individual objtool runs during the build.
-
-I'm able to reproduce these warnings with gcc 9.3 + allyesconfig, with
-KASAN and GCOV_KERNEL disabled, as they are not enabled in LTO builds
-either. This is without the LTO series applied, so we also have the
-retpoline warnings:
-
-$ ./tools/objtool/objtool check -arfld vmlinux.o 2>&1 | grep -vE
-'(sibling|instr)'
-vmlinux.o: warning: objtool: wakeup_long64()+0x61: indirect jump found
-in RETPOLINE build
-vmlinux.o: warning: objtool: .text+0x826308a: indirect jump found in
-RETPOLINE build
-vmlinux.o: warning: objtool: .text+0x82630c5: indirect jump found in
-RETPOLINE build
-vmlinux.o: warning: objtool: .head.text+0x748: indirect jump found in
-RETPOLINE build
-vmlinux.o: warning: objtool:
-set_bringup_idt_handler.constprop.0()+0x0: undefined stack state
-vmlinux.o: warning: objtool: .entry.text+0x1634: redundant CLD
-vmlinux.o: warning: objtool: camellia_cbc_dec_32way()+0xb3: stack
-state mismatch: cfa1=7+520 cfa2=7+8
-vmlinux.o: warning: objtool: camellia_ctr_32way()+0x1a: stack state
-mismatch: cfa1=7+520 cfa2=7+8
-vmlinux.o: warning: objtool: aesni_gcm_init_avx_gen2()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: aesni_gcm_enc_update_avx_gen2()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: aesni_gcm_dec_update_avx_gen2()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: aesni_gcm_finalize_avx_gen2()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: aesni_gcm_init_avx_gen4()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: aesni_gcm_enc_update_avx_gen4()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: aesni_gcm_dec_update_avx_gen4()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: aesni_gcm_finalize_avx_gen4()+0x12:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: sha1_transform_avx2()+0xc: unsupported
-stack pointer realignment
-vmlinux.o: warning: objtool: sha1_ni_transform()+0x7: unsupported
-stack pointer realignment
-vmlinux.o: warning: objtool: sha256_transform_rorx()+0x13: unsupported
-stack pointer realignment
-vmlinux.o: warning: objtool: sha512_transform_ssse3()+0x14:
-unsupported stack pointer realignment
-vmlinux.o: warning: objtool: sha512_transform_avx()+0x14: unsupported
-stack pointer realignment
-vmlinux.o: warning: objtool: sha512_transform_rorx()+0x7: unsupported
-stack pointer realignment
-vmlinux.o: warning: objtool: __x86_retpoline_rdi()+0x10: return with
-modified stack frame
-vmlinux.o: warning: objtool: __x86_retpoline_rdi()+0x0: stack state
-mismatch: cfa1=7+32 cfa2=7+8
-vmlinux.o: warning: objtool: __x86_retpoline_rdi()+0x0: stack state
-mismatch: cfa1=7+32 cfa2=-1+0
-vmlinux.o: warning: objtool: reset_early_page_tables()+0x0: stack
-state mismatch: cfa1=7+8 cfa2=-1+0
-vmlinux.o: warning: objtool: .entry.text+0x48: stack state mismatch:
-cfa1=7-8 cfa2=-1+0
-vmlinux.o: warning: objtool: .entry.text+0x15fd: stack state mismatch:
-cfa1=7-8 cfa2=-1+0
-vmlinux.o: warning: objtool: .entry.text+0x168c: stack state mismatch:
-cfa1=7-8 cfa2=-1+0
-
-There are a couple of differences, like the first "undefined stack
-state" warning pointing to set_bringup_idt_handler.constprop.0()
-instead of __switch_to_asm(). I tried running this with --backtrace,
-but objtool segfaults at the first .entry.text warning:
-
-$ ./tools/objtool/objtool check -barfld vmlinux.o
-...
-vmlinux.o: warning: objtool:
-set_bringup_idt_handler.constprop.0()+0x0: undefined stack state
-vmlinux.o: warning: objtool:   xen_hypercall_set_trap_table()+0x0: <=== (sym)
-...
-vmlinux.o: warning: objtool: .entry.text+0xffd: sibling call from
-callable instruction with modified stack frame
-vmlinux.o: warning: objtool:   .entry.text+0xfcb: (branch)
-Segmentation fault
-
-Going back to the allyesconfig+LTO vmlinux.o, the "undefined stack
-state" warning looks quite similar:
-
-$ ./tools/objtool/objtool check -barlfd vmlinux.o
-vmlinux.o: warning: objtool: __switch_to_asm()+0x0: undefined stack state
-vmlinux.o: warning: objtool:   xen_hypercall_set_trap_table()+0x0: <=== (sym)
-vmlinux.o: warning: objtool: .entry.text+0xffd: sibling call from
-callable instruction with modified stack frame
-vmlinux.o: warning: objtool:   .entry.text+0xfcb: (branch)
-Segmentation fault
-
-Sami
