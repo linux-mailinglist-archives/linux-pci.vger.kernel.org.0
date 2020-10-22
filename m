@@ -2,205 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED1942956EC
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 05:44:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 391D529579E
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 07:07:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895527AbgJVDoE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 21 Oct 2020 23:44:04 -0400
-Received: from mga03.intel.com ([134.134.136.65]:13235 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2443118AbgJVDoE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 21 Oct 2020 23:44:04 -0400
-IronPort-SDR: PX6bfcDKWGTQEMWdkh5LtdYne9eSIP7HI/5iG6jcS7PTWLGUhJd/5dcOZheXCQinC9KFPmeZOY
- ttxvHo1rhhLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9781"; a="167564736"
-X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
-   d="scan'208";a="167564736"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2020 20:44:02 -0700
-IronPort-SDR: HaTR/+0d8yUfRTjmK8K9IpYZYO3zuHvz+5vCz4FfyLokNwgUI3wwDj9zT95NTNYt+o0CNs6T/Y
- NTcZZbT9DzJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,403,1596524400"; 
-   d="scan'208";a="321233812"
-Received: from lkp-server02.sh.intel.com (HELO 911c2f167757) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 21 Oct 2020 20:44:01 -0700
-Received: from kbuild by 911c2f167757 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kVRWD-0000G1-2j; Thu, 22 Oct 2020 03:44:01 +0000
-Date:   Thu, 22 Oct 2020 11:43:12 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 28e34e751f6c50098d9bcecb30c97634b6126730
-Message-ID: <5f90ffd0.ceb90yTpmtvmkYoa%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S2502365AbgJVFH5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Oct 2020 01:07:57 -0400
+Received: from mail-eopbgr60087.outbound.protection.outlook.com ([40.107.6.87]:51428
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2502363AbgJVFH5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Oct 2020 01:07:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GMHPYLwQ3QvpWxnTQK1a2vuIU21EkOxUBqQR6EeLBDJ9wD7LGgeh4sMYZIt5peocx+14myupAPSpWSFO1h5PB+4OttT93cTkrkdjnl/7+eCUw8p7ZCMRbQyvntIUe2aGeD98mByNluxpekbcSr+VtpwMI/s6V5I/onXmnoaVP3RwoCfqRWQB/Y2HZuKEnIVavWK67D1FHnr63VnD58B7VWwkYevTGIcSfyHBbEwukPdrufGeIGAwWMk+YaRc9rF5PnKD2fcGoutCfxfPPQRwwhNJccpfaR5z/pqHjMDoQieZa6O8gydLyNo8eKUOEFFjQ0pzlWVVhOjT+n2smQkiCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zhWzavHzUUf3Etfa6AUfZO/+ec8HBmp6Hu9AkAXnGAY=;
+ b=TPEr8pR6pjYaTJcyWTRTi9KNUkRGhoyBU74IrCiH6iCB6cNCq3xa4Zpyw6ViVzze+CecDzelHnILiuWQFx/k0r6VQZtbbQiuhY7X3cle+kSAhI7LojSPMV70UMVoLBVZP+vuCOkPMXX0waq7lH14hM7gkDGTE224/wp0Lfs+CigP66z6AKmsrZUICGbqxon8XC9aXmEBn9OEGyHNFkRnzilth7mPDUfPsS4Y9Pz1X+3Th6PNsCcC9y2Xk9PK4gj5TMhg1h02buEap1QxskC9KYrtkEGs6aVn2ZT7eUJyGJdiiefdHJud63P116jAIahfFILauWZil3/uaAMzNcrsOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zhWzavHzUUf3Etfa6AUfZO/+ec8HBmp6Hu9AkAXnGAY=;
+ b=bV+cgipDyki9UCtgjIysvgWERRjxmsvGZ429DaGU4Xh3KQs33yzFJe7F8gUeJ17t4d67j4EMmF/7MruGUeGtps32yHLhaMPA9z+noyzSHAXU7WuS5AyqlSA9ERZZ9zSg/4eOuztJlGiQMVOOP3UCjSHb/lPc21wMamuvsFsYxoo=
+Authentication-Results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB4960.eurprd04.prod.outlook.com (2603:10a6:803:57::21)
+ by VI1PR0402MB3358.eurprd04.prod.outlook.com (2603:10a6:803:11::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.28; Thu, 22 Oct
+ 2020 05:07:52 +0000
+Received: from VI1PR04MB4960.eurprd04.prod.outlook.com
+ ([fe80::b178:a37b:1f9e:3a6]) by VI1PR04MB4960.eurprd04.prod.outlook.com
+ ([fe80::b178:a37b:1f9e:3a6%3]) with mapi id 15.20.3477.028; Thu, 22 Oct 2020
+ 05:07:52 +0000
+From:   Sherry Sun <sherry.sun@nxp.com>
+To:     hch@infradead.org, sudeep.dutt@intel.com, ashutosh.dixit@intel.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org, kishon@ti.com,
+        lorenzo.pieralisi@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: [PATCH V3 0/4]  Change vring space from nomal memory to dma coherent memory
+Date:   Thu, 22 Oct 2020 13:06:34 +0800
+Message-Id: <20201022050638.29641-1-sherry.sun@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-Originating-IP: [119.31.174.71]
+X-ClientProxiedBy: SG2PR0601CA0012.apcprd06.prod.outlook.com (2603:1096:3::22)
+ To VI1PR04MB4960.eurprd04.prod.outlook.com (2603:10a6:803:57::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from nxp.ap.freescale.net (119.31.174.71) by SG2PR0601CA0012.apcprd06.prod.outlook.com (2603:1096:3::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Thu, 22 Oct 2020 05:07:49 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b13e4230-2286-4b58-d1d9-08d876486d7f
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3358:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB33586D665A44BCE7CCB79A98921D0@VI1PR0402MB3358.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s2vhPI0p4S/15UGCU7XBAi6D+Tean7vHKTS5RE3SvPDOcbi/JHs3R19fis45KjuBA6rhLM7aelMHyvm34avGZd46g0jU9iC0rr6vfmrua5sqCaJZXM4j2QF7LH9quBgaA4180I+GC8ZUAOkIi9A19pkM94gwM8kDBSoXIl6n6jZFXgSYcvnWScQcWIx7UwCeZbGeVDcFY7h7X3HQ7dctMRC2xwAWF6DMD3hGH7N6904gQ5a+vT7uUjWWShpdj9nWcRy4a/IW/fxBsSbBfjG04od7m6ozj6RfztrvYp3YeVbDUYXbLMfOLjGOxk9KIt1ubPoKb3G42l8LJyWX9t27KuC7xfwzSyF9/o5kjl84dG7yOaJdhl4M3h8bM7fxXHgrqYqx14PRNrsfbuie675t8w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4960.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(396003)(136003)(346002)(39860400002)(6486002)(6506007)(966005)(44832011)(2906002)(66476007)(66946007)(4326008)(83380400001)(86362001)(6512007)(316002)(2616005)(66556008)(956004)(1076003)(186003)(26005)(16526019)(478600001)(6666004)(8676002)(36756003)(52116002)(5660300002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 9BwRR5WBCx8bFuH7lbTdDdKJqKaCakGi4XWsGuPWfHxuPOfx/D688ERMaGVVlmS3m+8/dxZBETjh37yyVbeOcrSUYsx30l81r3h3PiInC5TsoBzNH4Mday6dLRIBxy3M/pu26fyrWNSfSgCLFfIuGE2cQsP3tMXSrNxxnPvjstnzOfw0a0o5nQkafkSg63NstcLQVRvw8S66FDOe/40xyNnj0+VyPeJfZRW4uvXidY9V87p4400zjinS/35qIbHZFK4Wz0oZvh4Iz53wCs1aNbRKG1q8wjr7x3p5wWGYVDei58UjkksrhV+/ImmSLqAgO6J4FmWjv6rt7+nsoFvwziHI1VPvUyDtczFgfxLbzMDu9Zw7VyCIOp+yR9Z0H/m7ja/cF7ZrDMDjxe6AZHv2AinEVhFGFjHjyvUQeyIfM3JAvR3p74GCX/V9JUrlGSDDuqxlXePDjERWvcGDmUocGk0VKZBItpI1op5h4XoatmmkPjzANIVrXXQqJDk7n7PmU/YG/SPPcFh7IDLv1EWwzSl8WSbIKBMLj+4x/VxPuzniFFfa8R6jxqs5MjdK+Noc010FbhGI/RAKHl9gg2ekO2nj1qJeA28hVTWtpSAmjsLN6OaxpFm0dY1CwTJxem9u//iC8OD4RbIp1BtgoXJWzw==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b13e4230-2286-4b58-d1d9-08d876486d7f
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4960.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2020 05:07:52.2639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 91kQnHyhFRE7x/NavKuU0TAUE5caZUuyoZosSL5VjMmGIKamOnhtlfGFaE+r0BrVu/4TRNFAg3x+N8VWWvub2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3358
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: 28e34e751f6c50098d9bcecb30c97634b6126730  Merge branch 'remotes/lorenzo/pci/xilinx'
+Changes in V3:
+1. Change the device page allocation method of the Intel mic layer in Patch 1 to
+align with the vring allocation. 
+2. Move the vring physical address changes in mmap callback from Prach 3 to 1.
+3. Use must_be_zero instead of directly deleting used_address_updated in
+Patch 2 to avoid the influence of ABI change.
+(I tried to use dma_mmap_coherent api in Patch 4 as Christoph suggested, but
+ met some issues explained here https://lore.kernel.org/patchwork/patch/1313327/,
+ so there is no change to Patch 4, and still can't find a better way than
+ patch 3)
 
-elapsed time: 724m
+The original vop driver only supports dma coherent device, as it allocates and
+maps vring by _get_free_pages and dma_map_single, but not use 
+dma_sync_single_for_cpu/device to sync the updates of device_page/vring between
+EP and RC, which will cause memory synchronization problem for device don't
+support hardware dma coherent.
 
-configs tested: 142
-configs skipped: 2
+And allocate vrings use dma_alloc_coherent is a common way in kernel, as the
+memory interacted between two systems should use consistent memory to avoid
+caching effects. So here add noncoherent platform support for vop driver.
+Also add some related dma changes to make sure noncoherent platform works
+well.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Sherry Sun (4):
+  misc: vop: change the way of allocating vring and device page
+  misc: vop: do not allocate and reassign the used ring
+  misc: vop: simply return the saved dma address instead of virt_to_phys
+  misc: vop: mapping kernel memory to user space as noncached
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                      ppc64e_defconfig
-powerpc                     sbc8548_defconfig
-mips                    maltaup_xpa_defconfig
-powerpc                     mpc5200_defconfig
-powerpc                    gamecube_defconfig
-arm                           tegra_defconfig
-sh                             shx3_defconfig
-um                            kunit_defconfig
-sh                        edosk7705_defconfig
-arm                         shannon_defconfig
-arm                       aspeed_g4_defconfig
-powerpc                       maple_defconfig
-arm                        cerfcube_defconfig
-arc                        nsimosci_defconfig
-arm                       mainstone_defconfig
-arm                        spear6xx_defconfig
-arm                            dove_defconfig
-arm                            mps2_defconfig
-arm                        multi_v7_defconfig
-sh                           se7721_defconfig
-alpha                            alldefconfig
-mips                      fuloong2e_defconfig
-mips                      pic32mzda_defconfig
-arm                         palmz72_defconfig
-powerpc                 mpc834x_mds_defconfig
-powerpc                    amigaone_defconfig
-arm                            xcep_defconfig
-powerpc                     sequoia_defconfig
-mips                        vocore2_defconfig
-mips                           ip22_defconfig
-powerpc                         ps3_defconfig
-sh                         ap325rxa_defconfig
-mips                        maltaup_defconfig
-powerpc                     stx_gp3_defconfig
-arm                         hackkit_defconfig
-sh                ecovec24-romimage_defconfig
-arm                           u8500_defconfig
-openrisc                 simple_smp_defconfig
-arm                             pxa_defconfig
-xtensa                    xip_kc705_defconfig
-mips                        qi_lb60_defconfig
-ia64                            zx1_defconfig
-xtensa                  cadence_csp_defconfig
-mips                     cu1830-neo_defconfig
-arm                          prima2_defconfig
-powerpc                   lite5200b_defconfig
-sh                           se7619_defconfig
-arm                    vt8500_v6_v7_defconfig
-powerpc                  mpc866_ads_defconfig
-sh                          urquell_defconfig
-arm                          gemini_defconfig
-alpha                               defconfig
-powerpc                     tqm8548_defconfig
-powerpc                 mpc836x_rdk_defconfig
-mips                          rm200_defconfig
-powerpc                      cm5200_defconfig
-arm                             rpc_defconfig
-parisc                generic-32bit_defconfig
-h8300                     edosk2674_defconfig
-powerpc                 mpc832x_rdb_defconfig
-sh                        sh7763rdp_defconfig
-powerpc                       holly_defconfig
-mips                       lemote2f_defconfig
-sh                             sh03_defconfig
-c6x                                 defconfig
-powerpc                          g5_defconfig
-m68k                        m5272c3_defconfig
-xtensa                           alldefconfig
-powerpc                     ksi8560_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a001-20201021
-x86_64               randconfig-a002-20201021
-x86_64               randconfig-a003-20201021
-x86_64               randconfig-a006-20201021
-x86_64               randconfig-a005-20201021
-x86_64               randconfig-a004-20201021
-i386                 randconfig-a002-20201021
-i386                 randconfig-a005-20201021
-i386                 randconfig-a003-20201021
-i386                 randconfig-a001-20201021
-i386                 randconfig-a006-20201021
-i386                 randconfig-a004-20201021
-i386                 randconfig-a016-20201021
-i386                 randconfig-a014-20201021
-i386                 randconfig-a015-20201021
-i386                 randconfig-a013-20201021
-i386                 randconfig-a012-20201021
-i386                 randconfig-a011-20201021
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+ drivers/misc/mic/bus/vop_bus.h     |  2 +
+ drivers/misc/mic/host/mic_boot.c   |  8 +++
+ drivers/misc/mic/host/mic_main.c   | 15 ++----
+ drivers/misc/mic/vop/vop_debugfs.c |  2 -
+ drivers/misc/mic/vop/vop_main.c    | 48 +++--------------
+ drivers/misc/mic/vop/vop_vringh.c  | 84 +++++++-----------------------
+ include/uapi/linux/mic_common.h    |  5 +-
+ 7 files changed, 42 insertions(+), 122 deletions(-)
 
-clang tested configs:
-x86_64               randconfig-a011-20201021
-x86_64               randconfig-a013-20201021
-x86_64               randconfig-a016-20201021
-x86_64               randconfig-a015-20201021
-x86_64               randconfig-a012-20201021
-x86_64               randconfig-a014-20201021
+-- 
+2.17.1
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
