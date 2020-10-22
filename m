@@ -2,110 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 175E82958B5
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 09:01:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F6F2295909
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 09:26:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504803AbgJVHA6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Oct 2020 03:00:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48658 "EHLO
+        id S2508493AbgJVH0W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Oct 2020 03:26:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2504736AbgJVHA5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Oct 2020 03:00:57 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16CCAC0613CE
-        for <linux-pci@vger.kernel.org>; Thu, 22 Oct 2020 00:00:56 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id s21so717036oij.0
-        for <linux-pci@vger.kernel.org>; Thu, 22 Oct 2020 00:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2r/6zOf2kRDD4tSmvaZuCPU8DwfuIowf0YjaeLwP4Nk=;
-        b=et6ZBeQFHerVGVhgtgtRrYMM/XKZjx8P9HBSzQAYN1qwBLnRqWCR1692Hd2N6mG2QH
-         DRodjxUs0g/udks4HbxzEysdS3iPEQ/WX4sYQzu415V2h1QQT1XnQSq/3dWFguLdKkzI
-         zrJA18zci4a+rkwc8KCUbQtvVEViy3ghNPANM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2r/6zOf2kRDD4tSmvaZuCPU8DwfuIowf0YjaeLwP4Nk=;
-        b=bAnDY/YV0SNM6JO49NU0Qj+RHRpW4bSYY4QuXoEj+bImsjJZGsEjSBbEZEOsoQ4Eb/
-         pR+2HSusDF3rwGXWdz7i93uJYlIf4w4hJImHvFpwiuVNtNs3k7YOl0LvnbGTOtmfFe1i
-         AZbAlHWQVZ9DetjtdUH3IPDx35xZrRyvjhIzaDB7FvLiQOFSgjxtTKWXsEH4XKGSRYPg
-         uuGGq5MJlzLHmOv0bPhQQ6OqwjuPYonDmY7L9Liof0rHV74mXw7g7E1FrDpedc8+sS++
-         zTSuBTE7ULsKfBjl1/lrqCzL3p2YD+MUgM+W/PaQ3s5UKTS16bohQQnD3gFUopG0TNo8
-         Hhfg==
-X-Gm-Message-State: AOAM533CozoJWU66aUV3M24GretaeH2AMCFMvYdlF28HdRnTuqd+yIGX
-        dun/yTGUa1Y8++jav6rstFPAyMrPC0lQNU2DuKxWeg==
-X-Google-Smtp-Source: ABdhPJw2FIAzZzMzBC6IGQ2084OMcZPDQegSMdZ1Ud1eEaxA84bu8yPrNPLWUQWDUUxTjx4XtxIOFs49Df+sZwbm0Kw=
-X-Received: by 2002:aca:cc01:: with SMTP id c1mr631463oig.128.1603350055185;
- Thu, 22 Oct 2020 00:00:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
- <20201021085655.1192025-13-daniel.vetter@ffwll.ch> <20201021125030.GK36674@ziepe.ca>
- <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
- <20201021151352.GL36674@ziepe.ca> <CAKMK7uGq0=ks7Zj1Et44k7x9FwE9u_ua4zANSqrLRri0v01V+Q@mail.gmail.com>
- <20201021163702.GM36674@ziepe.ca> <CAKMK7uEjE5sHUq0hV_bnYjPKRxYyBnty0sLre+owANGZjLJg9Q@mail.gmail.com>
- <20201021232022.GN36674@ziepe.ca>
-In-Reply-To: <20201021232022.GN36674@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 22 Oct 2020 09:00:44 +0200
-Message-ID: <CAKMK7uEkAK42+19KRo06XzJFuMCVriEEg0jxqXq8oAdt2ExLsQ@mail.gmail.com>
-Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
+        with ESMTP id S2508492AbgJVH0W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Oct 2020 03:26:22 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 161C3C0613CE;
+        Thu, 22 Oct 2020 00:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=h+rKHFkcR5k6QSt8CeK8lSdFFr+MaETwBr6Mxg4PDmU=; b=aUN68SfzWTPeVbTNit8fy/ZXb0
+        rRAYaTV5InvSpscM+g5V5UNuxxMIOSNNjdTrr9zBJwTDnIr7HB4kAtF5eelSvpZSzfzi0XB65k49y
+        fMhVyhLkrBDvMABUemD6zpOEa+Q8IzTJx4IZksVwvVIaYHLDJx476sb1mRX2HLMmaKAybchSbXO5G
+        h2Y+yNlzpY2780AC98N7ePm2EJ79MCEo33CoAfryNdBPReXIr4iTyNLwA3Ag8rPF1QkdzEXKCnmAv
+        01B8rB6S0TBGhXUXekjoFY4MHksCyJY7O4ahmGFdB9hvjhmJ+hNdIUNrUYqknMjnfiTaSOjgjEbDG
+        qxHU9c4w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kVUyy-0002dT-Ax; Thu, 22 Oct 2020 07:25:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8E3203010D2;
+        Thu, 22 Oct 2020 09:25:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7DE3B21463180; Thu, 22 Oct 2020 09:25:53 +0200 (CEST)
+Date:   Thu, 22 Oct 2020 09:25:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.com>
-Content-Type: text/plain; charset="UTF-8"
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201022072553.GN2628@hirez.programming.kicks-ass.net>
+References: <20201013003203.4168817-23-samitolvanen@google.com>
+ <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
+ <20201015102216.GB2611@hirez.programming.kicks-ass.net>
+ <20201015203942.f3kwcohcwwa6lagd@treble>
+ <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
+ <20201020185217.ilg6w5l7ujau2246@treble>
+ <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+ <20201021093213.GV2651@hirez.programming.kicks-ass.net>
+ <20201021212747.ofk74lugt4hhjdzg@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201021212747.ofk74lugt4hhjdzg@treble>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 22, 2020 at 1:20 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Oct 21, 2020 at 09:24:08PM +0200, Daniel Vetter wrote:
-> > On Wed, Oct 21, 2020 at 6:37 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Wed, Oct 21, 2020 at 05:54:54PM +0200, Daniel Vetter wrote:
-> > >
-> > > > The trouble is that io_remap_pfn adjust vma->pgoff, so we'd need to
-> > > > split that. So ideally ->mmap would never set up any ptes.
-> > >
-> > > /dev/mem makes pgoff == pfn so it doesn't get changed by remap.
-> > >
-> > > pgoff doesn't get touched for MAP_SHARED either, so there are other
-> > > users that could work like this - eg anyone mmaping IO memory is
-> > > probably OK.
-> >
-> > I was more generally thinking for io_remap_pfn_users because of the
-> > mkwrite use-case we might have in fbdev emulation in drm.
->
-> You have a use case for MAP_PRIVATE and io_remap_pfn_range()??
+On Wed, Oct 21, 2020 at 04:27:47PM -0500, Josh Poimboeuf wrote:
+> On Wed, Oct 21, 2020 at 11:32:13AM +0200, Peter Zijlstra wrote:
+> > On Wed, Oct 21, 2020 at 10:56:06AM +0200, Peter Zijlstra wrote:
+> > 
+> > > I do not see these in particular, although I do see a lot of:
+> > > 
+> > >   "sibling call from callable instruction with modified stack frame"
+> > 
+> > defconfig-build/vmlinux.o: warning: objtool: msr_write()+0x10a: sibling call from callable instruction with modified stack frame
+> > defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x99: (branch)
+> > defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x3e: (branch)
+> > defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x0: <=== (sym)
+> > 
+> > $ nm defconfig-build/vmlinux.o | grep msr_write
+> > 0000000000043250 t msr_write
+> > 00000000004289c0 T msr_write
+> > 0000000000003056 t msr_write.cold
+> > 
+> > Below 'fixes' it. So this is also caused by duplicate symbols.
+> 
+> There's a new linker flag for renaming duplicates:
+> 
+>   https://sourceware.org/bugzilla/show_bug.cgi?id=26391
+> 
+> But I guess that doesn't help us now.
 
-Uh no :-) But for ioremaps and keep track of which pages userspace has
-touched. Problem is that there's many displays where you need to
-explicitly upload the data, and in drm we have ioctl calls for that.
-fbdev mmap assumes this just magically happens. So you need to keep
-track of write faults, launch a delayed worker which first re-protects
-all ptes and then uploads the dirty pages. And ideally we wouldn't
-have to implement this everywhere just for fbdev, but could wrap it
-around an existing mmap implementation by just intercepting mkwrite.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Well, depends a bit if clang can do it; we only need this for LTO builds
+for now.
+
+> I don't have access to GCC 10 at the moment so I can't recreate it.
+> Does this fix it?
+
+Doesn't seem to do the trick :/ I'll try and have a poke later.
