@@ -2,54 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50D66296193
-	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 17:21:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CAB62961BE
+	for <lists+linux-pci@lfdr.de>; Thu, 22 Oct 2020 17:37:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2901370AbgJVPVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Oct 2020 11:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2901369AbgJVPVu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Oct 2020 11:21:50 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBCFC0613CE;
-        Thu, 22 Oct 2020 08:21:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sQ5Xmcg/9wGewf1aqsxbuSsff3EYWaYFXfjaMu6eJPM=; b=NHzfoahNst/RyH/HXY3XWvQcoI
-        Vq+uirgzYCYecuo5YW+6OmTEjT+55Qyp/2Up6lagOo/nNtQ349C956mJ1FkVCCOEhFWP7uZUs167p
-        x3XCj8ianvPUSNXz2S/IqlIxmTs/Z3n8s9oXN6Qs4umCe1uqIsZwzUKZRE/Qk8lq1HwYo4tyAahFn
-        7ItUOJkS9tM08SETI5p17l1yXKpP/i/7lyhpHz2kVxOqif34yrl8bZ8P+KaaaDdCmFS1qKM6DlOmg
-        +FM0OcPYlRipP70RLayf7Y4JQBVMygxyyyLa4dtf5qj1MAgD3oFUYa7tqPmBtTwQYP1fANdt6J2Wg
-        QLN1xOdg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kVcPU-0006bh-Cj; Thu, 22 Oct 2020 15:21:48 +0000
-Date:   Thu, 22 Oct 2020 16:21:48 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com
-Subject: Re: [PATCH 1/2] PCI: export pci_match_device()
-Message-ID: <20201022152148.GA23673@infradead.org>
-References: <20201021081030.160-1-zhenzhong.duan@gmail.com>
+        id S368662AbgJVPhy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Oct 2020 11:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S368660AbgJVPhx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Oct 2020 11:37:53 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF3872463D;
+        Thu, 22 Oct 2020 15:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603381073;
+        bh=uPaF1r+32uicP8P83cuSfWMAglDZBepM1O6/jnk56II=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IUKPemNVFH0djshP1sj+uUZ8WeelqvjmREgqtTdLj/3hprIRZLuEW0izNxeatQR9E
+         o1qd7+d4MfJIL64dAUwOHxrQOTVlIJvTb10fT9frLrY10i1V3zpxEMJcLeNSsD9+MD
+         6EHalyjEWT1jb7id8H/8mtGFFTAPHo/OBx7o5ezo=
+Date:   Thu, 22 Oct 2020 10:37:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: Re: [PATCH] Use maximum latency when determining L1 ASPM
+Message-ID: <20201022153750.GA503849@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201021081030.160-1-zhenzhong.duan@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CAA85sZufMEAieVgzxdPrbCzaPV0eM_NYX7idWkLVxQaJrYjC+A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 04:10:29PM +0800, Zhenzhong Duan wrote:
-> pci_match_id() is deprecated as it doesn't catch any dynamic ids that
-> a driver might want to check for.
-> 
-> Export pci_match_device() as a replacement which supports both dynamic
-> and static ids.
+On Sun, Oct 18, 2020 at 01:35:27PM +0200, Ian Kumlien wrote:
+> On Sat, Oct 17, 2020 at 12:41 AM Ian Kumlien <ian.kumlien@gmail.com> wrote:
+> > On Fri, Oct 16, 2020 at 11:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-You don't actually seems to add any user outside of the PCI core,
-so I think you only need to drop the static specifier and add a
-prototype.
+> > > Can you please, please, collect these on your system, Ian?  I assume
+> > > that you can easily collect it once without your patch, when you see
+> > > poor I211 NIC performance but the system is otherwise working.  And
+> > > you can collect it again *with* your patch.  Same Kconfig, same
+> > > *everything* except adding your patch.
+> >
+> > Yeah I can do that, but I would like the changes output from the
+> > latest patch suggestion
+> > running on Kai-Heng's system so we can actually see what it does...
+> 
+> Is:
+> https://bugzilla.kernel.org/show_bug.cgi?id=209725
+
+That's a great start.  Can you attach the patch to the bugzilla too,
+please, so it is self-contained?
+
+And also the analysis of the path from Root Port to Endpoint, with the
+exit latencies of each link, the acceptable latency of the endpoint
+and
+
+  (1) the computation done by the existing code that results in
+  "latency < acceptable" that means we can enable ASPM, and
+
+  (2) the correct computation per spec that results in
+  "latency > acceptable" so we cannot enable ASPM?
+
+This analysis will be the core of the commit log, and the bugzilla
+with lspci info is the supporting evidence.
+
+Bjorn
