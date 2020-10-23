@@ -2,42 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E47712970DA
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 15:46:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0455D297100
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 15:58:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1750081AbgJWNq2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Oct 2020 09:46:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48030 "EHLO
+        id S373981AbgJWN6w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Oct 2020 09:58:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26157 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1750079AbgJWNq2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 09:46:28 -0400
+        by vger.kernel.org with ESMTP id S373833AbgJWN6w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 09:58:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603460786;
+        s=mimecast20190719; t=1603461530;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=bMbYC/zCqZbbIovX/UBGMhtV/6MoWnfArGsAVrGbHuk=;
-        b=KZQ2hRikykKZ9LHOZWNFTmxn+q5yrG7Fl/YXFxu2wHyuMIppuEqd+NgLtk/ad6THym4+d2
-        sxuBcVW3KmChzniTXpB5TWRVooS0cJzGoja7obssuSqPWwGNILp4Zs/LoraUL2GG5pUoBi
-        66IkosjfBzI0e+iDiDQzQHkvvwKvCDg=
+        bh=/WCYXn37gQSCs9o7SNYGwIAcYD14xBtSSHAolMAhqvg=;
+        b=QgLeO1dCztfCjsoPaCydUHGaXXiDoKGo96uf+sOUjz5NHDN2oxNhasraoQcZjF1PVdsPcy
+        S5/uDMToJQJLdkuWKpGT1XzJm5nqgbD4Xr0W28knVAm1WbUwSB2jmKY+taVSsIivIjWudn
+        eHolajncQ/cM/AvuXYSVlyYqZFlS3JA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-igRD719ePpiUwjR6kNuFcw-1; Fri, 23 Oct 2020 09:46:24 -0400
-X-MC-Unique: igRD719ePpiUwjR6kNuFcw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-595-rYwI2ArmOKuhp6pFy78uNQ-1; Fri, 23 Oct 2020 09:58:45 -0400
+X-MC-Unique: rYwI2ArmOKuhp6pFy78uNQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1DFC1015DDF;
-        Fri, 23 Oct 2020 13:46:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD41B1052517;
+        Fri, 23 Oct 2020 13:58:30 +0000 (UTC)
 Received: from [10.10.113.74] (ovpn-113-74.rdu2.redhat.com [10.10.113.74])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A70276F7C4;
-        Fri, 23 Oct 2020 13:45:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CC92576643;
+        Fri, 23 Oct 2020 13:57:54 +0000 (UTC)
 Subject: Re: [PATCH v4 2/4] sched/isolation: Extend nohz_full to isolate
  managed IRQs
-To:     Peter Zijlstra <peterz@infradead.org>
+To:     Frederic Weisbecker <frederic@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        mtosatti@redhat.com, sassmann@redhat.com,
         jesse.brandeburg@intel.com, lihong.yang@intel.com,
         helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
         jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
@@ -49,6 +50,7 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
 References: <20200928183529.471328-1-nitesh@redhat.com>
  <20200928183529.471328-3-nitesh@redhat.com>
  <20201023132505.GZ2628@hirez.programming.kicks-ass.net>
+ <20201023132950.GA47962@lothringen>
 From:   Nitesh Narayan Lal <nitesh@redhat.com>
 Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
@@ -94,116 +96,86 @@ Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
  NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
  VujM7c/b4pps
 Organization: Red Hat Inc,
-Message-ID: <ef8fbae8-06e1-b947-30b1-281afd330f01@redhat.com>
-Date:   Fri, 23 Oct 2020 09:45:53 -0400
+Message-ID: <804569ba-a980-a4e7-59a7-3ef4ac8660de@redhat.com>
+Date:   Fri, 23 Oct 2020 09:57:53 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20201023132505.GZ2628@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20201023132950.GA47962@lothringen>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Authentication-Results: relay.mimecast.com;
         auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ"
+ boundary="2ktHMrMxseM9vEwdga0WayDwzTpUc1mvq"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ
-Content-Type: multipart/mixed; boundary="wdjsMI8fejvw0TA72zPZM8sdeudoQSyk5"
+--2ktHMrMxseM9vEwdga0WayDwzTpUc1mvq
+Content-Type: multipart/mixed; boundary="sV1FsSG3oRSUp4QUIelJW8R1co3r99GoG"
 
---wdjsMI8fejvw0TA72zPZM8sdeudoQSyk5
+--sV1FsSG3oRSUp4QUIelJW8R1co3r99GoG
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
 
 
-On 10/23/20 9:25 AM, Peter Zijlstra wrote:
-> On Mon, Sep 28, 2020 at 02:35:27PM -0400, Nitesh Narayan Lal wrote:
->> Extend nohz_full feature set to include isolation from managed IRQS. Thi=
-s
-> So you say it's for managed-irqs, the feature is actually called
-> MANAGED_IRQ, but, AFAICT, it does *NOT* in fact affect managed IRQs.
-
-Ah my bad! I should replace the managed IRQS with MANAGED_IRQ.
-I can send another version with this fixed.
-
+On 10/23/20 9:29 AM, Frederic Weisbecker wrote:
+> On Fri, Oct 23, 2020 at 03:25:05PM +0200, Peter Zijlstra wrote:
+>> On Mon, Sep 28, 2020 at 02:35:27PM -0400, Nitesh Narayan Lal wrote:
+>>> Extend nohz_full feature set to include isolation from managed IRQS. Th=
+is
+>> So you say it's for managed-irqs, the feature is actually called
+>> MANAGED_IRQ, but, AFAICT, it does *NOT* in fact affect managed IRQs.
+>>
+>> Also, as per Thomas' earlier points, managed-irqs are in fact perfectly
+>> fine and don't need help at at...
+>>
+>>> is required specifically for setups that only uses nohz_full and still
+>>> requires isolation for maintaining lower latency for the listed CPUs.
+>>>
+>>> Suggested-by: Frederic Weisbecker <frederic@kernel.org>
+> Ah and yes there is this tag :-p
 >
-> Also, as per Thomas' earlier points, managed-irqs are in fact perfectly
-> fine and don't need help at at...
+> So that's my bad, I really thought this thing was about managed IRQ.
+> The problem is that I can't find a single documentation about them so I'm
+> too clueless on that matter.
 
-Since the introduction of
-"genirq, sched/isolation: Isolate from handling managed interrupts"
+I am also confused with this terminology.
+So my bad for not taking care of this.
 
-Within irq_do_set_affinity(), it is ensured that for managed intrrupts as
-well, the isolated CPUs are removed from the affinity mask.
-
-Hence, IMHO before this change managed interrupts were affecting the
-isolated CPUs.
-
-My intent of having this change is to basically allow isolation for
-nohz_full CPUs even when we don't have something like isolcpus.
-Does that make sense?
-
-
->
->> is required specifically for setups that only uses nohz_full and still
->> requires isolation for maintaining lower latency for the listed CPUs.
->>
->> Suggested-by: Frederic Weisbecker <frederic@kernel.org>
->> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
->> ---
->>  kernel/sched/isolation.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
->> index 5a6ea03f9882..9df9598a9e39 100644
->> --- a/kernel/sched/isolation.c
->> +++ b/kernel/sched/isolation.c
->> @@ -141,7 +141,7 @@ static int __init housekeeping_nohz_full_setup(char =
-*str)
->>  =09unsigned int flags;
->> =20
->>  =09flags =3D HK_FLAG_TICK | HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU |
->> -=09=09HK_FLAG_MISC | HK_FLAG_KTHREAD;
->> +=09=09HK_FLAG_MISC | HK_FLAG_KTHREAD | HK_FLAG_MANAGED_IRQ;
->> =20
->>  =09return housekeeping_setup(str, flags);
->>  }
->> --=20
->> 2.18.2
->>
 --=20
+Thanks
 Nitesh
 
 
---wdjsMI8fejvw0TA72zPZM8sdeudoQSyk5--
+--sV1FsSG3oRSUp4QUIelJW8R1co3r99GoG--
 
---HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ
+--2ktHMrMxseM9vEwdga0WayDwzTpUc1mvq
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl+S3pEACgkQo4ZA3AYy
-ozmz/g/+NNlYNsGOBqRo+QTnk+ou/DfBVJmQBKlUzzd3Q2+duRldt2NPCXZfssJ9
-ISHUMQNNGLlzrIl2D1IBR8Or3ng6s+Ou/pSfUA0xUIS6JRAySF2tFpG3boJmqBvL
-kbE3ty2oZnfox5pdJ/diJK5DmKAFsT9SDeDlgLhybiUbn+YQxcw/8FSw9xt9wRjL
-RBIt+9rctdaYdZBoP1xx9eFCh+gO6SBDvXoMARDOJ0kPmxhDAbjYo7lQzRdWK0g6
-fXqzfRgK6kiwuh0LzJ95CzB1xh3Z4hiIQ/Q5N2JrB72sair3YaJMOnyeDIci8lCh
-p0YA95yjwS8fPDNRsWB6MMymrhhfZhvD9aVa3SjEBKgIHgg9QNnv+b0EAUDmLL5s
-yaqWePVxNS1vzq+/k4PgtTEBFlrxyxVzyTqOz7wDdYO9shTBt13C2sbCqjJGo5Rl
-utZXTYKN0vQTWxHoTlR0xgVAWrF+YmMYNAwkWKrybonmffemEEjJ8N2Slo4KJHr4
-XLx2OnCOWI8qJIh0Dm4HK3ZrABWgDHBCMnCaGQBL3U6Hq6QtZ83IFd6sMwk56ykH
-5ZXm7wFiiyIUNjjveWKJfEAV2ZheFrLh11CZfX7AwaRMeAbc45dVd/XB2CMAWCAB
-lgKtuvpwCEloPuRsPVPLtFgper6/El8FC0DYJoBNXh3BWvTM8vY=
-=evaw
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl+S4WEACgkQo4ZA3AYy
+ozmJIxAArjWqQ6WQ2t/TL7exwbOlYDx9CJmp6xiTVrQfq6w6GhtPemGgnnUbKjbD
++KR3FTarDxi4Iv6A6SMzZ5m16LIwB0GrCCjrTB+/1kKD1SY3LyYXYujcoq6al1aL
+3kcgdNt0cYTI8epiF3tuK/84IU1+tBkURSk8oYN1hQTDudmV/tvvwuSiWFsIT1wW
+0G0SXBw6sLDG6tytRrIy/vDvlFi4qhYZ4PDTFpP2O1Z31ghsgQ9+upsf+I6M9+a6
+yOhaEECXYGEXuXHFM3Be79qMQB2ho6soAG+v+n3ROEiHTf5dd7aiX8tJtxkntWXo
+q8dn1i4arIaYqRr1nIAHSQGNLMadLNq9DCbtn6RIRIf9axBfb816efJupsYv8pjc
+AYcTmDNVKFP8b+DWUKd61ATqhu1G51beoyy7PY7El26MIAtPLDIPn3KNBMJQqM/S
+lrpo63plXHjYlswlnCIRmXosOXgmLMPGQNxqjSQq+ZMQOAtBsTCOUj7+OIou/u0N
+YQhGp4Yoz2Y5ev7jmFHYn3UPL2UD3I8c2gh2cF5H7S7SlcbF+aB5aqV6W2supi5F
+Ece5FZDDJ0BnaSJAQbSZOi3Uog/JJUfULNC1Qf4MoHhcd4JGRPXLjPgDEssKKqCZ
+YWUDer6QxTH3Dygch0Rwi+QLMl6NlvjpEVyCWrngPXN5B1eW9nY=
+=u+sF
 -----END PGP SIGNATURE-----
 
---HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ--
+--2ktHMrMxseM9vEwdga0WayDwzTpUc1mvq--
 
