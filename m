@@ -2,201 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA96D2975F3
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 19:43:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86A44297611
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 19:48:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1753597AbgJWRn3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Oct 2020 13:43:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751933AbgJWRn3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 23 Oct 2020 13:43:29 -0400
-Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A151922201;
-        Fri, 23 Oct 2020 17:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603475008;
-        bh=sgH2q6mZaMDYm4k533vw6Fu49CHd3xbDICem7uJTAls=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i/+wcRaE5dApFO243145Paes5DlMIzIihxSs4mWWlKIaOiPSd1HOBHBqRa1rR5I7Y
-         CgEGPj/jDhE+TT/m/I0EIkUjCY8anAzlKsbBzx1jBGsN42l8DIcR2JWO9hnSN4BxTq
-         97qlmKGFFIpxRsuMiZXk9JrQVOUr8wyh0Nf4FQaI=
-Date:   Fri, 23 Oct 2020 12:43:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 23/56] PCI: fix kernel-doc markups
-Message-ID: <20201023174325.GA668264@bjorn-Precision-5520>
+        id S1753800AbgJWRsa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Oct 2020 13:48:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753797AbgJWRsa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 13:48:30 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06ACCC0613D4
+        for <linux-pci@vger.kernel.org>; Fri, 23 Oct 2020 10:48:30 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id l18so1838377pgg.0
+        for <linux-pci@vger.kernel.org>; Fri, 23 Oct 2020 10:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uHs6b4ooy0rgFnXBjoHTZU/MFzwidZAAr9PXWq9UsVk=;
+        b=h9H11cgbsiLIfnCVNg9C63PczJj6klub3nyQOP7k17qHXCkM3+IiRWUf+K8onV/M6f
+         cq6hpYWY5tijhMZOqe4vpxWnGOmq8cRM3qeYtsvRKEgPmJNNtDrmOS532+baO+0nsP5H
+         4oTZzToITDWX/+cRTyYkk0o02ppC4ZW2srP3cde+HPF1A0gWOS7McnJYg5AziS2A8+k5
+         FA/pfx2HXxsJo1PFtx/M/61rAc4BlJZES29IbLZRpqOuPDxsS+IoEvzMCqD9jME5DLTE
+         nrFqzJCCPwXyQB8C7frIf3mqYooXH89m8/kypUCqoZ0QyzM52bhO/vCOCMQcptgtC5Xq
+         D7GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uHs6b4ooy0rgFnXBjoHTZU/MFzwidZAAr9PXWq9UsVk=;
+        b=eoVLzI4xQuKs4D14PtpGFCHYIdmoIZEdNRe8J5JOGLmrjfSV58NvKa29ZCarOcTSiS
+         lCxP6dvvbU8p9BKnLAqs+vVRuqFWgEiF9obsR1S8Og9JpcAowmqmzXHaWyS1m2WskVBB
+         pVdjlvzRRsE345cJIS0UDRlPaLoN7k5BR/DfAqdDJZPw1w9ZBR7m8a4s12QKLPphJKjJ
+         4yyej751iA6vMYJ0lwBNSGcber/9Gp0ixXHbmjzO8LGwbQckIyjqYlmP1vH+PqDOizCN
+         zdsFR0ao+FfMnX/eCma410wOeYBR28z6DSHWokDZTXMz+XkgvwvmeMoxpBiRJ18saQt0
+         /qQA==
+X-Gm-Message-State: AOAM530WUo1Ji5zVaHBQvOIsEFhEVmf83DgpVQVuAZIr34cmDkPogDjj
+        4AAoD066KAmCUu3cD5xYYax4Ew==
+X-Google-Smtp-Source: ABdhPJyvkbZhNi51MOK3wMCs4cSy44OvLHixOCI7o3MOo/m8861HBGG5Vdka871MDYa0ozQesghZuQ==
+X-Received: by 2002:a17:90a:450d:: with SMTP id u13mr3848288pjg.148.1603475309279;
+        Fri, 23 Oct 2020 10:48:29 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id w6sm2555511pgw.28.2020.10.23.10.48.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Oct 2020 10:48:28 -0700 (PDT)
+Date:   Fri, 23 Oct 2020 10:48:22 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201023174822.GA2696347@google.com>
+References: <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
+ <20201015102216.GB2611@hirez.programming.kicks-ass.net>
+ <20201015203942.f3kwcohcwwa6lagd@treble>
+ <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
+ <20201020185217.ilg6w5l7ujau2246@treble>
+ <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+ <20201021093213.GV2651@hirez.programming.kicks-ass.net>
+ <20201021212747.ofk74lugt4hhjdzg@treble>
+ <20201022072553.GN2628@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f19caf7a68f8365c8b573a42b4ac89ec21925c73.1603469755.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20201022072553.GN2628@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If you have the opportunity, I would prefer to capitalize the subject
-to follow the drivers/pci convention, e.g.,
-
-  PCI: Fix ...
-
-On Fri, Oct 23, 2020 at 06:33:10PM +0200, Mauro Carvalho Chehab wrote:
-> Some identifiers have different names between their prototypes
-> and the kernel-doc markup.
-
-How did you find these?  I build with "make W=1", which finds some
-kernel-doc errors, but it didn't find these.  If there's a scanner for
-these, I could fix things like this before merging them.
-
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-I'd be happy to take this myself, but if you want to merge the whole
-series together:
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  drivers/pci/p2pdma.c     | 10 +++++-----
->  drivers/pci/pci-driver.c |  4 ++--
->  drivers/pci/pci.c        |  2 +-
->  drivers/pci/probe.c      |  4 ++--
->  drivers/pci/slot.c       |  5 +++--
->  5 files changed, 13 insertions(+), 12 deletions(-)
+On Thu, Oct 22, 2020 at 09:25:53AM +0200, Peter Zijlstra wrote:
+> On Wed, Oct 21, 2020 at 04:27:47PM -0500, Josh Poimboeuf wrote:
+> > On Wed, Oct 21, 2020 at 11:32:13AM +0200, Peter Zijlstra wrote:
+> > > On Wed, Oct 21, 2020 at 10:56:06AM +0200, Peter Zijlstra wrote:
+> > > 
+> > > > I do not see these in particular, although I do see a lot of:
+> > > > 
+> > > >   "sibling call from callable instruction with modified stack frame"
+> > > 
+> > > defconfig-build/vmlinux.o: warning: objtool: msr_write()+0x10a: sibling call from callable instruction with modified stack frame
+> > > defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x99: (branch)
+> > > defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x3e: (branch)
+> > > defconfig-build/vmlinux.o: warning: objtool:   msr_write()+0x0: <=== (sym)
+> > > 
+> > > $ nm defconfig-build/vmlinux.o | grep msr_write
+> > > 0000000000043250 t msr_write
+> > > 00000000004289c0 T msr_write
+> > > 0000000000003056 t msr_write.cold
+> > > 
+> > > Below 'fixes' it. So this is also caused by duplicate symbols.
+> > 
+> > There's a new linker flag for renaming duplicates:
+> > 
+> >   https://sourceware.org/bugzilla/show_bug.cgi?id=26391
+> > 
+> > But I guess that doesn't help us now.
 > 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index de1c331dbed4..bace04145c5f 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -609,7 +609,7 @@ bool pci_has_p2pmem(struct pci_dev *pdev)
->  EXPORT_SYMBOL_GPL(pci_has_p2pmem);
->  
->  /**
-> - * pci_p2pmem_find - find a peer-to-peer DMA memory device compatible with
-> + * pci_p2pmem_find_many - find a peer-to-peer DMA memory device compatible with
->   *	the specified list of clients and shortest distance (as determined
->   *	by pci_p2pmem_dma())
->   * @clients: array of devices to check (NULL-terminated)
-> @@ -674,7 +674,7 @@ struct pci_dev *pci_p2pmem_find_many(struct device **clients, int num_clients)
->  EXPORT_SYMBOL_GPL(pci_p2pmem_find_many);
->  
->  /**
-> - * pci_alloc_p2p_mem - allocate peer-to-peer DMA memory
-> + * pci_alloc_p2pmem - allocate peer-to-peer DMA memory
->   * @pdev: the device to allocate memory from
->   * @size: number of bytes to allocate
->   *
-> @@ -727,7 +727,7 @@ void pci_free_p2pmem(struct pci_dev *pdev, void *addr, size_t size)
->  EXPORT_SYMBOL_GPL(pci_free_p2pmem);
->  
->  /**
-> - * pci_virt_to_bus - return the PCI bus address for a given virtual
-> + * pci_p2pmem_virt_to_bus - return the PCI bus address for a given virtual
->   *	address obtained with pci_alloc_p2pmem()
->   * @pdev: the device the memory was allocated from
->   * @addr: address of the memory that was allocated
-> @@ -859,7 +859,7 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
->  }
->  
->  /**
-> - * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
-> + * pci_p2pdma_map_sg_attrs - map a PCI peer-to-peer scatterlist for DMA
->   * @dev: device doing the DMA request
->   * @sg: scatter list to map
->   * @nents: elements in the scatterlist
-> @@ -896,7 +896,7 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
->  EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
->  
->  /**
-> - * pci_p2pdma_unmap_sg - unmap a PCI peer-to-peer scatterlist that was
-> + * pci_p2pdma_unmap_sg_attrs - unmap a PCI peer-to-peer scatterlist that was
->   *	mapped with pci_p2pdma_map_sg()
->   * @dev: device doing the DMA request
->   * @sg: scatter list to map
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 8b587fc97f7b..591ab353844a 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -90,7 +90,7 @@ static void pci_free_dynids(struct pci_driver *drv)
->  }
->  
->  /**
-> - * store_new_id - sysfs frontend to pci_add_dynid()
-> + * new_id_store - sysfs frontend to pci_add_dynid()
->   * @driver: target device driver
->   * @buf: buffer for scanning device ID data
->   * @count: input size
-> @@ -158,7 +158,7 @@ static ssize_t new_id_store(struct device_driver *driver, const char *buf,
->  static DRIVER_ATTR_WO(new_id);
->  
->  /**
-> - * store_remove_id - remove a PCI device ID from this driver
-> + * remove_id_store - remove a PCI device ID from this driver
->   * @driver: target device driver
->   * @buf: buffer for scanning device ID data
->   * @count: input size
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6d4d5a2f923d..8b9bea8ba751 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3480,7 +3480,7 @@ bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
->  }
->  
->  /**
-> - * pci_acs_path_enable - test ACS flags from start to end in a hierarchy
-> + * pci_acs_path_enabled - test ACS flags from start to end in a hierarchy
->   * @start: starting downstream device
->   * @end: ending upstream device or NULL to search to the root bus
->   * @acs_flags: required flags
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4289030b0fff..eb1ec037f9e7 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -165,7 +165,7 @@ static inline unsigned long decode_bar(struct pci_dev *dev, u32 bar)
->  #define PCI_COMMAND_DECODE_ENABLE	(PCI_COMMAND_MEMORY | PCI_COMMAND_IO)
->  
->  /**
-> - * pci_read_base - Read a PCI BAR
-> + * __pci_read_base - Read a PCI BAR
->   * @dev: the PCI device
->   * @type: type of the BAR
->   * @res: resource buffer to be filled in
-> @@ -1612,7 +1612,7 @@ static bool pci_ext_cfg_is_aliased(struct pci_dev *dev)
->  }
->  
->  /**
-> - * pci_cfg_space_size - Get the configuration space size of the PCI device
-> + * pci_cfg_space_size_ext - Get the configuration space size of the PCI device
->   * @dev: PCI device
->   *
->   * Regular PCI devices have 256 bytes, but PCI-X 2 and PCI Express devices
-> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-> index 3861505741e6..bcc8b12ce5da 100644
-> --- a/drivers/pci/slot.c
-> +++ b/drivers/pci/slot.c
-> @@ -323,7 +323,7 @@ EXPORT_SYMBOL_GPL(pci_destroy_slot);
->  #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
->  #include <linux/pci_hotplug.h>
->  /**
-> - * pci_hp_create_link - create symbolic link to the hotplug driver module.
-> + * pci_hp_create_module_link - create symbolic link to the hotplug driver module.
->   * @pci_slot: struct pci_slot
->   *
->   * Helper function for pci_hotplug_core.c to create symbolic link to
-> @@ -349,7 +349,8 @@ void pci_hp_create_module_link(struct pci_slot *pci_slot)
->  EXPORT_SYMBOL_GPL(pci_hp_create_module_link);
->  
->  /**
-> - * pci_hp_remove_link - remove symbolic link to the hotplug driver module.
-> + * pci_hp_remove_module_link - remove symbolic link to the hotplug driver
-> + * 	module.
->   * @pci_slot: struct pci_slot
->   *
->   * Helper function for pci_hotplug_core.c to remove symbolic link to
-> -- 
-> 2.26.2
-> 
+> Well, depends a bit if clang can do it; we only need this for LTO builds
+> for now.
+
+LLD doesn't seem to support -z unique-symbol.
+
+Sami
