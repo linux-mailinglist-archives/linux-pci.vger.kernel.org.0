@@ -2,160 +2,208 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA57A2970A5
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 15:34:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E47712970DA
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 15:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S369365AbgJWNew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Oct 2020 09:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S464942AbgJWNeq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 09:34:46 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC6B1C0613CE
-        for <linux-pci@vger.kernel.org>; Fri, 23 Oct 2020 06:34:45 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id c15so2449468ejs.0
-        for <linux-pci@vger.kernel.org>; Fri, 23 Oct 2020 06:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ybxYfhP0qOoEv/Z3igcvaiaTXfddpdf7DoEgMqfdT7A=;
-        b=bNaAR+OjYmeeEzFzzZBJyzDKMbF4do7AhpOBiv9gsSMgNMqyq5/l4Ywkmo2cc+ESzz
-         lH05Ok9PCaR+wHbV3UtzXlRRA8JfrhwHMLbb0Zj4NWXmQ4eNylNbUcFPFq5iZJZ3HE4A
-         4A9t44PEBK+fF9Uz9ustwTwn9OxP5fS7OhuPeCnuRonbtMuE6/l3mFYgIYjLd95R3VaS
-         dpWDsX5QYk6s/5ms0m/fST6rb3d8AWD5vnd1IhI1k1i/p+mau+CZ/smjsHXHtkBLdSSy
-         daqTJeHfA9fXyZGQ5P3D3zhZtf8qMmTy+xx4KaAg3dJBOtHchBp51fOrGZD//kZ/nWsq
-         0QAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ybxYfhP0qOoEv/Z3igcvaiaTXfddpdf7DoEgMqfdT7A=;
-        b=H87tyjev91QdUYNlDPyCaxtzi0XqE03ycnxTVcXR/3A0V+85qf6HOa2jp4BzK2+aGl
-         4VCRb9bWRE+rBO+7J+ftwkZPrlC+KnRqTsQD8HB1BoS4PvjFYdzECr/914QfAELKhX+O
-         P7lZy67v9pEIMA/Jri0RA0SShw/5QClA7aXDtKrdE5ZFQZpCdGQlwarEJ0e1BHRmKfBZ
-         6Sz6tjsqWrccA6n6tOw0PRpxjtGvtCFsdj65IymIH/z4XpFp/siy/ybDuR54doMCi4XE
-         aphR5mI1lsKiPnPjKQgYSlwXVjkkIhZRIE640jcwSCX0ebMucsErMuQHHtadJZB0d0N5
-         2/CQ==
-X-Gm-Message-State: AOAM530iJm4vDLlsUtreVtyR+hQI+EYZ4Z4uclhUVN8FDECDumojmHF5
-        5bYI9S59zZyWk8mOVOhV8Rq9Dg==
-X-Google-Smtp-Source: ABdhPJyJrpSO/TA1CFzr7cbXy98qv9z9QsL9dllO7dHUBx35a7onv2rOqG2fNwzz8c08kIOaSfCzMQ==
-X-Received: by 2002:a17:906:1418:: with SMTP id p24mr1964123ejc.46.1603460084421;
-        Fri, 23 Oct 2020 06:34:44 -0700 (PDT)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id q3sm788808edv.17.2020.10.23.06.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Oct 2020 06:34:43 -0700 (PDT)
-Date:   Fri, 23 Oct 2020 15:34:23 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
-        zhangfei.gao@linaro.org, wangzhou1@hisilicon.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-accelerators@lists.ozlabs.org,
-        kevin.tian@intel.com, jacob.jun.pan@linux.intel.com,
-        linux-pci@vger.kernel.org, "Lu, Baolu" <baolu.lu@intel.com>,
-        Jacon Jun Pan <jacob.jun.pan@intel.com>
-Subject: Re: [RFC PATCH 0/2] iommu: Avoid unnecessary PRI queue flushes
-Message-ID: <20201023133423.GF2265982@myrica>
-References: <20201015090028.1278108-1-jean-philippe@linaro.org>
- <20201015182211.GA54780@otc-nc-03>
- <20201016075923.GB1309464@myrica>
- <20201017112525.GA47206@otc-nc-03>
- <20201019140824.GA1478235@myrica>
- <20201019211608.GA79633@otc-nc-03>
+        id S1750081AbgJWNq2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Oct 2020 09:46:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48030 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1750079AbgJWNq2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 09:46:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603460786;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=bMbYC/zCqZbbIovX/UBGMhtV/6MoWnfArGsAVrGbHuk=;
+        b=KZQ2hRikykKZ9LHOZWNFTmxn+q5yrG7Fl/YXFxu2wHyuMIppuEqd+NgLtk/ad6THym4+d2
+        sxuBcVW3KmChzniTXpB5TWRVooS0cJzGoja7obssuSqPWwGNILp4Zs/LoraUL2GG5pUoBi
+        66IkosjfBzI0e+iDiDQzQHkvvwKvCDg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-igRD719ePpiUwjR6kNuFcw-1; Fri, 23 Oct 2020 09:46:24 -0400
+X-MC-Unique: igRD719ePpiUwjR6kNuFcw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1DFC1015DDF;
+        Fri, 23 Oct 2020 13:46:07 +0000 (UTC)
+Received: from [10.10.113.74] (ovpn-113-74.rdu2.redhat.com [10.10.113.74])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A70276F7C4;
+        Fri, 23 Oct 2020 13:45:54 +0000 (UTC)
+Subject: Re: [PATCH v4 2/4] sched/isolation: Extend nohz_full to isolate
+ managed IRQs
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, mtosatti@redhat.com, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
+        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jiri@nvidia.com, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, lgoncalv@redhat.com,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200928183529.471328-1-nitesh@redhat.com>
+ <20200928183529.471328-3-nitesh@redhat.com>
+ <20201023132505.GZ2628@hirez.programming.kicks-ass.net>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <ef8fbae8-06e1-b947-30b1-281afd330f01@redhat.com>
+Date:   Fri, 23 Oct 2020 09:45:53 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201019211608.GA79633@otc-nc-03>
+In-Reply-To: <20201023132505.GZ2628@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nitesh@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 02:16:08PM -0700, Raj, Ashok wrote:
-> Hi Jean
-> 
-> On Mon, Oct 19, 2020 at 04:08:24PM +0200, Jean-Philippe Brucker wrote:
-> > On Sat, Oct 17, 2020 at 04:25:25AM -0700, Raj, Ashok wrote:
-> > > > For devices that *don't* use a stop marker, the PCIe spec says (10.4.1.2):
-> > > > 
-> > > >   To stop [using a PASID] without using a Stop Marker Message, the
-> > > >   function shall:
-> > > >   1. Stop queueing new Page Request Messages for this PASID.
-> > > 
-> > > The device driver would need to tell stop sending any new PR's.
-> > > 
-> > > >   2. Finish transmitting any multi-page Page Request Messages for this
-> > > >      PASID (i.e. send the Page Request Message with the L bit Set).
-> > > >   3. Wait for PRG Response Messages associated any outstanding Page
-> > > >      Request Messages for the PASID.
-> > > > 
-> > > > So they have to flush their PR themselves. And since the device driver
-> > > > completes this sequence before calling unbind(), then there shouldn't be
-> > > > any oustanding PR for the PASID, and unbind() doesn't need to flush,
-> > > > right?
-> > > 
-> > > I can see how the device can complete #2,3 above. But the device driver
-> > > isn't the one managing page-responses right. So in order for the device to
-> > > know the above sequence is complete, it would need to get some assist from
-> > > IOMMU driver?
-> > 
-> > No the device driver just waits for the device to indicate that it has
-> > completed the sequence. That's what the magic stop-PASID mechanism
-> > described by PCIe does. In 6.20.1 "Managing PASID TLP Prefix Usage" it
-> > says:
-> 
-> The goal is we do this when the device is in a messup up state. So we can't
-> take for granted the device is properly operating which is why we are going
-> to wack the device with a flr().
-> 
-> The only thing that's supposed to work without a brain freeze is the
-> invalidation logic. Spec requires devices to respond to invalidations even when
-> they are in the process of flr().
-> 
-> So when IOMMU does an invalidation wait with a Page-Drain, IOMMU waits till
-> the response for that arrives before completing the descriptor. Due to 
-> the posted semantics it will ensure any PR's issued and in the fabric are flushed 
-> out to memory. 
-> 
-> I suppose you can wait for the device to vouch for all responses, but that
-> is assuming the device is still functioning properly. Given that we use it
-> in two places,
-> 
-> * Reclaiming a PASID - only during a tear down sequence, skipping it
->   doesn't really buy us much.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ
+Content-Type: multipart/mixed; boundary="wdjsMI8fejvw0TA72zPZM8sdeudoQSyk5"
 
-Yes I was only wondering about normal PASID reclaim operations, in
-unbind(). Agreed that for FLR we need to properly clean the queue, though
-I do need to do more thinking about this.
+--wdjsMI8fejvw0TA72zPZM8sdeudoQSyk5
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
 
-Anyway, having a full priq drain in unbind() isn't harmful, just
-unnecessary delay in my opinion. I'll drop these patches for now but
-thanks for the discussion.
 
-Thanks,
-Jean
+On 10/23/20 9:25 AM, Peter Zijlstra wrote:
+> On Mon, Sep 28, 2020 at 02:35:27PM -0400, Nitesh Narayan Lal wrote:
+>> Extend nohz_full feature set to include isolation from managed IRQS. Thi=
+s
+> So you say it's for managed-irqs, the feature is actually called
+> MANAGED_IRQ, but, AFAICT, it does *NOT* in fact affect managed IRQs.
 
-> * During FLR this can't be skipped anyway due to the above sequence
->   requirement. 
-> 
-> > 
-> > "A Function must have a mechanism to request that it gracefully stop using
-> >  a specific PASID. This mechanism is device specific but must satisfy the
-> >  following rules:
-> >  [...]
-> >  * When the stop request mechanism indicates completion, the Function has:
-> >    [...]
-> >    * Complied with additional rules described in Address Translation
-> >      Services (Chapter 10 [10.4.1.2 quoted above]) if Address Translations
-> >      or Page Requests were issued on the behalf of this PASID."
-> > 
-> > So after the device driver initiates this mechanism in the device, the
-> > device must be able to indicate completion of the mechanism, which
-> > includes completing all in-flight Page Requests. At that point the device
-> > driver can call unbind() knowing there is no pending PR for this PASID.
-> > 
-> 
-> Cheers,
-> Ashok
+Ah my bad! I should replace the managed IRQS with MANAGED_IRQ.
+I can send another version with this fixed.
+
+>
+> Also, as per Thomas' earlier points, managed-irqs are in fact perfectly
+> fine and don't need help at at...
+
+Since the introduction of
+"genirq, sched/isolation: Isolate from handling managed interrupts"
+
+Within irq_do_set_affinity(), it is ensured that for managed intrrupts as
+well, the isolated CPUs are removed from the affinity mask.
+
+Hence, IMHO before this change managed interrupts were affecting the
+isolated CPUs.
+
+My intent of having this change is to basically allow isolation for
+nohz_full CPUs even when we don't have something like isolcpus.
+Does that make sense?
+
+
+>
+>> is required specifically for setups that only uses nohz_full and still
+>> requires isolation for maintaining lower latency for the listed CPUs.
+>>
+>> Suggested-by: Frederic Weisbecker <frederic@kernel.org>
+>> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+>> ---
+>>  kernel/sched/isolation.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+>> index 5a6ea03f9882..9df9598a9e39 100644
+>> --- a/kernel/sched/isolation.c
+>> +++ b/kernel/sched/isolation.c
+>> @@ -141,7 +141,7 @@ static int __init housekeeping_nohz_full_setup(char =
+*str)
+>>  =09unsigned int flags;
+>> =20
+>>  =09flags =3D HK_FLAG_TICK | HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU |
+>> -=09=09HK_FLAG_MISC | HK_FLAG_KTHREAD;
+>> +=09=09HK_FLAG_MISC | HK_FLAG_KTHREAD | HK_FLAG_MANAGED_IRQ;
+>> =20
+>>  =09return housekeeping_setup(str, flags);
+>>  }
+>> --=20
+>> 2.18.2
+>>
+--=20
+Nitesh
+
+
+--wdjsMI8fejvw0TA72zPZM8sdeudoQSyk5--
+
+--HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAl+S3pEACgkQo4ZA3AYy
+ozmz/g/+NNlYNsGOBqRo+QTnk+ou/DfBVJmQBKlUzzd3Q2+duRldt2NPCXZfssJ9
+ISHUMQNNGLlzrIl2D1IBR8Or3ng6s+Ou/pSfUA0xUIS6JRAySF2tFpG3boJmqBvL
+kbE3ty2oZnfox5pdJ/diJK5DmKAFsT9SDeDlgLhybiUbn+YQxcw/8FSw9xt9wRjL
+RBIt+9rctdaYdZBoP1xx9eFCh+gO6SBDvXoMARDOJ0kPmxhDAbjYo7lQzRdWK0g6
+fXqzfRgK6kiwuh0LzJ95CzB1xh3Z4hiIQ/Q5N2JrB72sair3YaJMOnyeDIci8lCh
+p0YA95yjwS8fPDNRsWB6MMymrhhfZhvD9aVa3SjEBKgIHgg9QNnv+b0EAUDmLL5s
+yaqWePVxNS1vzq+/k4PgtTEBFlrxyxVzyTqOz7wDdYO9shTBt13C2sbCqjJGo5Rl
+utZXTYKN0vQTWxHoTlR0xgVAWrF+YmMYNAwkWKrybonmffemEEjJ8N2Slo4KJHr4
+XLx2OnCOWI8qJIh0Dm4HK3ZrABWgDHBCMnCaGQBL3U6Hq6QtZ83IFd6sMwk56ykH
+5ZXm7wFiiyIUNjjveWKJfEAV2ZheFrLh11CZfX7AwaRMeAbc45dVd/XB2CMAWCAB
+lgKtuvpwCEloPuRsPVPLtFgper6/El8FC0DYJoBNXh3BWvTM8vY=
+=evaw
+-----END PGP SIGNATURE-----
+
+--HBIX5p6AJD4cCUtOGUhTn4euRVxpQy3ZZ--
+
