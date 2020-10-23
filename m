@@ -2,92 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28102296769
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 00:39:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F69F29682D
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 02:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S372986AbgJVWja (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 22 Oct 2020 18:39:30 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50106 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S372971AbgJVWj3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 22 Oct 2020 18:39:29 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1603406366;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SrnDQ4pBHMGHEMhYZ0N79a51WfK6iJHdrjE3kDgVDiI=;
-        b=iy4bIK/ZpYUnzYJlhG1X4xFIb08cTGDBQ+HlR6v5IxdhK7umkvHwCM+mPE40K9vypjbHfE
-        io4BMQy2A5SBBcVjsI76MvcSWRoHDgIWZpVprt99G0b31BAZFCe/eZc03927hcTrVhy2zj
-        ka0HpBxBsB3+1Ctwmx4ULj3/xBVV3wVakTbKJdu8z7y12AMtI30/PTVK71CE6RIrfI9zgM
-        yoK17mBSmBj6XQHXYYO9QBqtuHVlXg5CRwNXh/MbYPuEbZn2oMPyK5ihBSBLpGARixsoBQ
-        04jNkCIjrFrEr9bGMYI6+7ZmQ7G9zSkUr3ghrmkeXOxZ0L34xwJz3qETxpIQhw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1603406366;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SrnDQ4pBHMGHEMhYZ0N79a51WfK6iJHdrjE3kDgVDiI=;
-        b=4oNDdQ0Jz1ulYn3D+b0WK6DPec8o3QKBDso61BYhMIyNImFm1hDcbSdyP0ulQOGdcTp7p7
-        1WzNdwrla364OSDw==
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        helgaas@kernel.org, jeffrey.t.kirsher@intel.com,
-        jacob.e.keller@intel.com, jlelli@redhat.com, hch@infradead.org,
-        bhelgaas@google.com, mike.marciniszyn@intel.com,
-        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
-        jiri@nvidia.com, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        lgoncalv@redhat.com, Jakub Kicinski <kuba@kernel.org>,
-        Dave Miller <davem@davemloft.net>
-Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to housekeeping CPUs
-In-Reply-To: <20201022122849.GA148426@fuller.cnet>
-References: <20200928183529.471328-1-nitesh@redhat.com> <20200928183529.471328-5-nitesh@redhat.com> <87v9f57zjf.fsf@nanos.tec.linutronix.de> <3bca9eb1-a318-1fc6-9eee-aacc0293a193@redhat.com> <87lfg093fo.fsf@nanos.tec.linutronix.de> <877drj72cz.fsf@nanos.tec.linutronix.de> <20201022122849.GA148426@fuller.cnet>
-Date:   Fri, 23 Oct 2020 00:39:25 +0200
-Message-ID: <87pn596g2q.fsf@nanos.tec.linutronix.de>
+        id S374144AbgJWAvT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 22 Oct 2020 20:51:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S369289AbgJWAvT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 22 Oct 2020 20:51:19 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D3C024677
+        for <linux-pci@vger.kernel.org>; Fri, 23 Oct 2020 00:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603414278;
+        bh=XfPxZZsnlnwe8HX6W28fSTDlF5fPpXCjiiR0dFpqN/k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=06WVVUJ3KcfsK1wDUQSo94TvXxxEkpAEiT0GsulreDs57rJQswieOdha/rx316V55
+         OurZmTehW60xxE3whzpbpHWnfNIoo7HnlArEjF9F2yH+d3ZMZTRUToeHJa609Ds/nl
+         ShbeFgJ+MwXrf64MD+x2vHTmMxaEh2O3Bmh0JeVc=
+Received: by mail-ot1-f47.google.com with SMTP id t15so3423763otk.0
+        for <linux-pci@vger.kernel.org>; Thu, 22 Oct 2020 17:51:18 -0700 (PDT)
+X-Gm-Message-State: AOAM533VKkusCyZER1cPMj3m1OvnI73WytIVPlYVUreJJ1HNs8KngJNq
+        twwOrUk0EdYm6OR3tbHlBzl8B0ZEqKOIYGLvrw==
+X-Google-Smtp-Source: ABdhPJyx487CLhZhpSJBy9lYrsducrFaDu8WKfc8exzvRdK6lM3m/4hM6qip1R36Ep7l9QhVzREB2mnrBCVbHq6XqEw=
+X-Received: by 2002:a9d:5e14:: with SMTP id d20mr3424039oti.107.1603414277474;
+ Thu, 22 Oct 2020 17:51:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20201022220038.1339854-1-robh@kernel.org> <20201022220507.GW1551@shell.armlinux.org.uk>
+ <20201022220924.GX1551@shell.armlinux.org.uk>
+In-Reply-To: <20201022220924.GX1551@shell.armlinux.org.uk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 22 Oct 2020 19:51:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKzGK6sgRZMEEXVZQGbMsEOi86W-2CcJiWtsvHhiR7O7A@mail.gmail.com>
+Message-ID: <CAL_JsqKzGK6sgRZMEEXVZQGbMsEOi86W-2CcJiWtsvHhiR7O7A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mvebu: Fix duplicate resource requests
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        PCI <linux-pci@vger.kernel.org>, vtolkm@googlemail.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 22 2020 at 09:28, Marcelo Tosatti wrote:
-> On Wed, Oct 21, 2020 at 10:25:48PM +0200, Thomas Gleixner wrote:
->> The right answer to this is to utilize managed interrupts and have
->> according logic in your network driver to handle CPU hotplug. When a CPU
->> goes down, then the queue which is associated to that CPU is quiesced
->> and the interrupt core shuts down the relevant interrupt instead of
->> moving it to an online CPU (which causes the whole vector exhaustion
->> problem on x86). When the CPU comes online again, then the interrupt is
->> reenabled in the core and the driver reactivates the queue.
+On Thu, Oct 22, 2020 at 5:09 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 >
-> Aha... But it would be necessary to do that from userspace (for runtime
-> isolate/unisolate).
+> On Thu, Oct 22, 2020 at 11:05:07PM +0100, Russell King - ARM Linux admin wrote:
+> > > @@ -1001,9 +995,12 @@ static int mvebu_pcie_parse_request_resources(struct mvebu_pcie *pcie)
+> > >             pcie->realio.name = "PCI I/O";
+> > >
+> > >             pci_add_resource(&bridge->windows, &pcie->realio);
+> > > +           ret = devm_request_resource(dev, &iomem_resource, &pcie->realio);
+> >
+> > I think you're trying to claim this resource against the wrong parent.
+>
+> Fixing this to ioport_resource results in in working PCIe.
 
-For anything which uses managed interrupts this is a non-problem and
-userspace has absolutely no business with it.
+Copy-n-paste... Thanks for testing.
 
-Isolation does not shut down queues, at least not the block multi-queue
-ones which are only active when I/O is issued from that isolated CPU.
-
-So transitioning out of isolation requires no action at all.
-
-Transitioning in or changing the housekeeping mask needs some trivial
-tweak to handle the case where there is an overlap in the cpuset of a
-queue (housekeeping and isolated). This is handled already for setup and
-affinity changes, but of course not for runtime isolation mask changes,
-but that's a trivial thing to do.
-
-What's more interesting is how to deal with the network problem where
-there is no guarantee that the "response" ends up on the same queue as
-the "request" which is what the block people rely on. And that problem
-is not really an interrupt affinity problem in the first place.
-
-Thanks,
-
-        tglx
+Rob
