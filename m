@@ -2,75 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD8F296C13
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 11:27:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BDC8296C11
+	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 11:27:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S461342AbgJWJ0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Oct 2020 05:26:55 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33430 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S461149AbgJWJ0z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 05:26:55 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w23so898254edl.0;
-        Fri, 23 Oct 2020 02:26:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Twa6UWRVJhEeoSRAOmH5AvQNaRPLtaHALxjahIiGuSY=;
-        b=daKhNi8MQh+uRlQ9Tx0HToNPhrr+PGgqMVM9SKp3zM1bimb0AiF96bAvf6bv7NpujY
-         8cqTfb3CLFhvJDQkKyXGJTxlTeWP1oU+Sv9PBlKw+uf87xSeCyxApeJokWS0ZoUh2ci2
-         0NbzsF7lsMtdzqVlXi4mW910trmyBIGn+/fXie817eIizq6HaBFHBDPYpodin3d0uLXb
-         OkhyEHtnOuBOKFYaxySxXlYmgBOZ3M31ZZZEoWTUf/e2FWG20L8LAwo8bsZAoZpEIlln
-         /jQT/3b+O69cXYq1mxJGzhA8gsBhrPKaIqnM0fsF8xWN2/5xSJUfjx/jZK3YSOxTUJA9
-         1fTg==
-X-Gm-Message-State: AOAM531xYmY8LtHRWTCuqGZXF2eGKhnNjT7xHAZWye9ulx0LMrmJ9BMu
-        VMsvCXOTXizHTOn2rX+lUYgaDGIuBto=
-X-Google-Smtp-Source: ABdhPJwxFQX2v2rs+eNF9jt9s5CbifmdPA1NtE+iHwkC5sG80SLrmex/1EgIxmo2jMevupnnwQ/A2A==
-X-Received: by 2002:a50:e881:: with SMTP id f1mr1317562edn.58.1603445212897;
-        Fri, 23 Oct 2020 02:26:52 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.171])
-        by smtp.googlemail.com with ESMTPSA id b8sm463598edv.20.2020.10.23.02.26.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Oct 2020 02:26:51 -0700 (PDT)
-Date:   Fri, 23 Oct 2020 11:26:49 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: pci: add the samsung,exynos-pcie
- binding
-Message-ID: <20201023092649.GA19257@kozik-lap>
-References: <20201023075744.26200-1-m.szyprowski@samsung.com>
- <CGME20201023075755eucas1p290b7bc020e46b86fe5e7591877f87117@eucas1p2.samsung.com>
- <20201023075744.26200-3-m.szyprowski@samsung.com>
+        id S461431AbgJWJ05 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Oct 2020 05:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S461430AbgJWJ05 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 05:26:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D717EC0613CE;
+        Fri, 23 Oct 2020 02:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BKZIIgBf58AUlCS0IyOX4hD8ww+CQlcZeVUupxKyAS8=; b=SDjfhsVkH1skfqXSp285nlZJZZ
+        Jgum0mk7MCgh0ZXMWoqRKRfuKqMMSNANAwztx604THcb6qRJAmNzhBC7XspJTmFqj+KGcnez5xTwQ
+        EtauYCtW5yVOW9zKG/5I+49yTR8V6mPu2KYn1G7NuqTv9WWJ4zhExwJK3RVioZrDMX8aL64G0xhHC
+        lnVJKXmfsUIErlOXeU/VX/Ycymcv03GqpKcWdoXfB38jFtsBCLinrONdhO9jSjp1IPej19zEDvW5g
+        Y/VYRjSsxC5YHst5bD2EZoJn5rg19CQ/wnP3WIJttF6Is1khBp/iLAwkJ8NJE9nf5EcHGigpegRLx
+        icmHtRTw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kVtLW-0007yO-If; Fri, 23 Oct 2020 09:26:50 +0000
+Date:   Fri, 23 Oct 2020 10:26:50 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sherry Sun <sherry.sun@nxp.com>
+Cc:     hch@infradead.org, sudeep.dutt@intel.com, ashutosh.dixit@intel.com,
+        arnd@arndb.de, gregkh@linuxfoundation.org, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH V3 2/4] misc: vop: do not allocate and reassign the used
+ ring
+Message-ID: <20201023092650.GB29066@infradead.org>
+References: <20201022050638.29641-1-sherry.sun@nxp.com>
+ <20201022050638.29641-3-sherry.sun@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201023075744.26200-3-m.szyprowski@samsung.com>
+In-Reply-To: <20201022050638.29641-3-sherry.sun@nxp.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 23, 2020 at 09:57:40AM +0200, Marek Szyprowski wrote:
-> Add dt-bindings for the Samsung Exynos PCIe controller (Exynos5433
-> variant). Based on the text dt-binding posted by Jaehoon Chung.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  .../bindings/pci/samsung,exynos-pcie.yaml     | 114 ++++++++++++++++++
->  1 file changed, 114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> 
+On Thu, Oct 22, 2020 at 01:06:36PM +0800, Sherry Sun wrote:
+> We don't need to allocate and reassign the used ring here and remove the
+> used_address_updated flag.Since RC has allocated the entire vring,
+> including the used ring. Simply add the corresponding offset can get the
+> used ring address.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Someone needs to verify this vs the existing intel implementations.
 
-Best regards,
-Krzysztof
+> -	used = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
+> -					get_order(vdev->used_size[index]));
+> +	used = va + PAGE_ALIGN(sizeof(struct vring_desc) * le16_to_cpu(config.num) +
+
+This adds an over 80 char line.
+
+> +	vdev->used[index] = config.address + PAGE_ALIGN(sizeof(struct vring_desc) * le16_to_cpu(config.num) +
+
+Again.
+
