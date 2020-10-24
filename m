@@ -2,232 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FBE7297B36
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 09:30:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09659297E0C
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 21:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1759861AbgJXHaq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Oct 2020 03:30:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1759859AbgJXHaq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 24 Oct 2020 03:30:46 -0400
-Received: from coco.lan (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17A45208E4;
-        Sat, 24 Oct 2020 07:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603524645;
-        bh=SHiTKCGrkGwFF0ORlgvYKwNjJ4j0nggqLo79XV+7E5k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lfaY30C1cZvkHdbSkkIR4SXWW42YJs4+iJ6eu/6MaML4Dbd4A/M4CzSIlhfU591VP
-         J6eHwSLgA2xqc/HSbayeaBT+Jh16Vz3Rtk0ETCWphbNbizOWKTRIjLbhy2OinH4TKR
-         glIk2vx9Xfuh1vZkYZva+RB/K0YeSzln/m1ORAJk=
-Date:   Sat, 24 Oct 2020 09:30:41 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 23/56] PCI: fix kernel-doc markups
-Message-ID: <20201024093041.23ce7388@coco.lan>
-In-Reply-To: <20201023174325.GA668264@bjorn-Precision-5520>
-References: <f19caf7a68f8365c8b573a42b4ac89ec21925c73.1603469755.git.mchehab+huawei@kernel.org>
-        <20201023174325.GA668264@bjorn-Precision-5520>
-X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1763988AbgJXTFA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Oct 2020 15:05:00 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17161 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1763969AbgJXTFA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Oct 2020 15:05:00 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f947ae30000>; Sat, 24 Oct 2020 12:05:09 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 24 Oct
+ 2020 19:04:48 +0000
+Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Sat, 24 Oct 2020 19:04:44 +0000
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <hkallweit1@gmail.com>,
+        <wangxiongfeng2@huawei.com>, <mika.westerberg@linux.intel.com>,
+        <kai.heng.feng@canonical.com>, <chris.packham@alliedtelesis.co.nz>,
+        <yangyicong@hisilicon.com>, <lorenzo.pieralisi@arm.com>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH] PCI/ASPM: Save/restore ASPM-L1SS controls for suspend/resume
+Date:   Sun, 25 Oct 2020 00:34:42 +0530
+Message-ID: <20201024190442.871-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1603566309; bh=q2rN4AS7b8SyNIzcyTCEM5jUNZt8kPk2IuLGGIQak14=;
+        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:X-NVConfidentiality:
+         MIME-Version:Content-Type;
+        b=O03kuHT9/aA5qqzXwxazkq3CJx/dD0V4ccDAjRdrJVxDlIU77tVv0VR7ts0JFbUTW
+         VUSlYJYOFFummPeG4mUCDSzPrEIh5yCAxEnKHOdSyif0xNKJ7I1masWVI/LKDanGRa
+         m9HYg/Ohqc7zC7rnx5SvNe6WM8DVliXbr8cqLyVmzXeO3j6GfXePfsEVOEJn3TgzYk
+         AzuE/s6rOi05cPIiWNYlgB6lREp4TnFAtPZJ6fxWDm+HASQZBA2oY+Fw/CGlW26ipU
+         azhrr5LFzVXIus4AJA+yBRZsEi19J77gUjGw8PBnArO+D9SAbbgi0dJSiCaDDU5xSv
+         aJ1LdjQHbNZ/A==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Em Fri, 23 Oct 2020 12:43:25 -0500
-Bjorn Helgaas <helgaas@kernel.org> escreveu:
+Previously ASPM L1-Sub-States control registers (CTL1 and CTL2) weren't
+saved and restored during suspend/resume leading to ASPM-L1SS
+configuration being lost post resume.
 
-> If you have the opportunity, I would prefer to capitalize the subject
-> to follow the drivers/pci convention, e.g.,
-> 
->   PCI: Fix ...
+Save the ASPM-L1SS control registers so that the configuration is retained
+post resume.
 
-Ok. If you want to apply it directly, feel free to change it
-at the patch.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+v1:
+* It would be really good if someone can verify it on a non tegra194 platform
 
-Otherwise, I'll do it on a next rebase.
+ drivers/pci/pci.c       |  7 +++++++
+ drivers/pci/pci.h       |  4 ++++
+ drivers/pci/pcie/aspm.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 52 insertions(+)
 
-> 
-> On Fri, Oct 23, 2020 at 06:33:10PM +0200, Mauro Carvalho Chehab wrote:
-> > Some identifiers have different names between their prototypes
-> > and the kernel-doc markup.  
-> 
-> How did you find these?  I build with "make W=1", which finds some
-> kernel-doc errors, but it didn't find these.  If there's a scanner for
-> these, I could fix things like this before merging them.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a458c46d7e39..034497264bde 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1551,6 +1551,7 @@ int pci_save_state(struct pci_dev *dev)
+ 		return i;
+ 
+ 	pci_save_ltr_state(dev);
++	pci_save_aspm_l1ss_state(dev);
+ 	pci_save_dpc_state(dev);
+ 	pci_save_aer_state(dev);
+ 	return pci_save_vc_state(dev);
+@@ -1656,6 +1657,7 @@ void pci_restore_state(struct pci_dev *dev)
+ 	 * LTR itself (in the PCIe capability).
+ 	 */
+ 	pci_restore_ltr_state(dev);
++	pci_restore_aspm_l1ss_state(dev);
+ 
+ 	pci_restore_pcie_state(dev);
+ 	pci_restore_pasid_state(dev);
+@@ -3319,6 +3321,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+ 	if (error)
+ 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+ 
++	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
++					    2 * sizeof(u32));
++	if (error)
++		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
++
+ 	pci_allocate_vc_save_buffers(dev);
+ }
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index fa12f7cbc1a0..8d2135f61e36 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -565,11 +565,15 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+ void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
++void pci_save_aspm_l1ss_state(struct pci_dev *dev);
++void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
++static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
++static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
+ #endif
+ 
+ #ifdef CONFIG_PCIE_ECRC
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 253c30cc1967..d965bbc563ed 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -742,6 +742,47 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 				PCI_L1SS_CTL1_L1SS_MASK, val);
+ }
+ 
++void pci_save_aspm_l1ss_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++	int aspm_l1ss;
++	u32 *cap;
++
++	if (!pci_is_pcie(dev))
++		return;
++
++	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
++	if (!aspm_l1ss)
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
++	if (!save_state)
++		return;
++
++	cap = (u32 *)&save_state->cap.data[0];
++	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, cap++);
++	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, cap++);
++}
++
++void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
++{
++	struct pci_cap_saved_state *save_state;
++	int aspm_l1ss;
++	u32 *cap;
++
++	if (!pci_is_pcie(dev))
++		return;
++
++	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
++	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
++	if (!save_state || !aspm_l1ss)
++		return;
++
++	cap = (u32 *)&save_state->cap.data[0];
++	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++);
++	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
++}
++
+ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ {
+ 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+-- 
+2.17.1
 
-This is a new check. See patch 56/56.
-
-Right now, kernel-doc will just silently ignore the identifier
-from kernel-doc markup and use the one defined at the function
-or data struct prototype.
-
-Once all the issues gets fixed, patch 56/56 can be merged.
-
-> 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
-> 
-> I'd be happy to take this myself, but if you want to merge the whole
-> series together:
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Either way works for me, although IMO it should be simpler if
-you could pick it directly, as it will avoid potential
-merge conflicts if such patches go via their usual trees.
-
-> 
-> > ---
-> >  drivers/pci/p2pdma.c     | 10 +++++-----
-> >  drivers/pci/pci-driver.c |  4 ++--
-> >  drivers/pci/pci.c        |  2 +-
-> >  drivers/pci/probe.c      |  4 ++--
-> >  drivers/pci/slot.c       |  5 +++--
-> >  5 files changed, 13 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> > index de1c331dbed4..bace04145c5f 100644
-> > --- a/drivers/pci/p2pdma.c
-> > +++ b/drivers/pci/p2pdma.c
-> > @@ -609,7 +609,7 @@ bool pci_has_p2pmem(struct pci_dev *pdev)
-> >  EXPORT_SYMBOL_GPL(pci_has_p2pmem);
-> >  
-> >  /**
-> > - * pci_p2pmem_find - find a peer-to-peer DMA memory device compatible with
-> > + * pci_p2pmem_find_many - find a peer-to-peer DMA memory device compatible with
-> >   *	the specified list of clients and shortest distance (as determined
-> >   *	by pci_p2pmem_dma())
-> >   * @clients: array of devices to check (NULL-terminated)
-> > @@ -674,7 +674,7 @@ struct pci_dev *pci_p2pmem_find_many(struct device **clients, int num_clients)
-> >  EXPORT_SYMBOL_GPL(pci_p2pmem_find_many);
-> >  
-> >  /**
-> > - * pci_alloc_p2p_mem - allocate peer-to-peer DMA memory
-> > + * pci_alloc_p2pmem - allocate peer-to-peer DMA memory
-> >   * @pdev: the device to allocate memory from
-> >   * @size: number of bytes to allocate
-> >   *
-> > @@ -727,7 +727,7 @@ void pci_free_p2pmem(struct pci_dev *pdev, void *addr, size_t size)
-> >  EXPORT_SYMBOL_GPL(pci_free_p2pmem);
-> >  
-> >  /**
-> > - * pci_virt_to_bus - return the PCI bus address for a given virtual
-> > + * pci_p2pmem_virt_to_bus - return the PCI bus address for a given virtual
-> >   *	address obtained with pci_alloc_p2pmem()
-> >   * @pdev: the device the memory was allocated from
-> >   * @addr: address of the memory that was allocated
-> > @@ -859,7 +859,7 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
-> >  }
-> >  
-> >  /**
-> > - * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
-> > + * pci_p2pdma_map_sg_attrs - map a PCI peer-to-peer scatterlist for DMA
-> >   * @dev: device doing the DMA request
-> >   * @sg: scatter list to map
-> >   * @nents: elements in the scatterlist
-> > @@ -896,7 +896,7 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
-> >  EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
-> >  
-> >  /**
-> > - * pci_p2pdma_unmap_sg - unmap a PCI peer-to-peer scatterlist that was
-> > + * pci_p2pdma_unmap_sg_attrs - unmap a PCI peer-to-peer scatterlist that was
-> >   *	mapped with pci_p2pdma_map_sg()
-> >   * @dev: device doing the DMA request
-> >   * @sg: scatter list to map
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index 8b587fc97f7b..591ab353844a 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -90,7 +90,7 @@ static void pci_free_dynids(struct pci_driver *drv)
-> >  }
-> >  
-> >  /**
-> > - * store_new_id - sysfs frontend to pci_add_dynid()
-> > + * new_id_store - sysfs frontend to pci_add_dynid()
-> >   * @driver: target device driver
-> >   * @buf: buffer for scanning device ID data
-> >   * @count: input size
-> > @@ -158,7 +158,7 @@ static ssize_t new_id_store(struct device_driver *driver, const char *buf,
-> >  static DRIVER_ATTR_WO(new_id);
-> >  
-> >  /**
-> > - * store_remove_id - remove a PCI device ID from this driver
-> > + * remove_id_store - remove a PCI device ID from this driver
-> >   * @driver: target device driver
-> >   * @buf: buffer for scanning device ID data
-> >   * @count: input size
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 6d4d5a2f923d..8b9bea8ba751 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -3480,7 +3480,7 @@ bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
-> >  }
-> >  
-> >  /**
-> > - * pci_acs_path_enable - test ACS flags from start to end in a hierarchy
-> > + * pci_acs_path_enabled - test ACS flags from start to end in a hierarchy
-> >   * @start: starting downstream device
-> >   * @end: ending upstream device or NULL to search to the root bus
-> >   * @acs_flags: required flags
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 4289030b0fff..eb1ec037f9e7 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -165,7 +165,7 @@ static inline unsigned long decode_bar(struct pci_dev *dev, u32 bar)
-> >  #define PCI_COMMAND_DECODE_ENABLE	(PCI_COMMAND_MEMORY | PCI_COMMAND_IO)
-> >  
-> >  /**
-> > - * pci_read_base - Read a PCI BAR
-> > + * __pci_read_base - Read a PCI BAR
-> >   * @dev: the PCI device
-> >   * @type: type of the BAR
-> >   * @res: resource buffer to be filled in
-> > @@ -1612,7 +1612,7 @@ static bool pci_ext_cfg_is_aliased(struct pci_dev *dev)
-> >  }
-> >  
-> >  /**
-> > - * pci_cfg_space_size - Get the configuration space size of the PCI device
-> > + * pci_cfg_space_size_ext - Get the configuration space size of the PCI device
-> >   * @dev: PCI device
-> >   *
-> >   * Regular PCI devices have 256 bytes, but PCI-X 2 and PCI Express devices
-> > diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-> > index 3861505741e6..bcc8b12ce5da 100644
-> > --- a/drivers/pci/slot.c
-> > +++ b/drivers/pci/slot.c
-> > @@ -323,7 +323,7 @@ EXPORT_SYMBOL_GPL(pci_destroy_slot);
-> >  #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
-> >  #include <linux/pci_hotplug.h>
-> >  /**
-> > - * pci_hp_create_link - create symbolic link to the hotplug driver module.
-> > + * pci_hp_create_module_link - create symbolic link to the hotplug driver module.
-> >   * @pci_slot: struct pci_slot
-> >   *
-> >   * Helper function for pci_hotplug_core.c to create symbolic link to
-> > @@ -349,7 +349,8 @@ void pci_hp_create_module_link(struct pci_slot *pci_slot)
-> >  EXPORT_SYMBOL_GPL(pci_hp_create_module_link);
-> >  
-> >  /**
-> > - * pci_hp_remove_link - remove symbolic link to the hotplug driver module.
-> > + * pci_hp_remove_module_link - remove symbolic link to the hotplug driver
-> > + * 	module.
-> >   * @pci_slot: struct pci_slot
-> >   *
-> >   * Helper function for pci_hotplug_core.c to remove symbolic link to
-> > -- 
-> > 2.26.2
-> >   
-
-
-
-Thanks,
-Mauro
