@@ -2,174 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09659297E0C
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 21:05:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6E2D297E8D
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 22:55:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1763988AbgJXTFA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Oct 2020 15:05:00 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17161 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1763969AbgJXTFA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Oct 2020 15:05:00 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f947ae30000>; Sat, 24 Oct 2020 12:05:09 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 24 Oct
- 2020 19:04:48 +0000
-Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Sat, 24 Oct 2020 19:04:44 +0000
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <bhelgaas@google.com>, <hkallweit1@gmail.com>,
-        <wangxiongfeng2@huawei.com>, <mika.westerberg@linux.intel.com>,
-        <kai.heng.feng@canonical.com>, <chris.packham@alliedtelesis.co.nz>,
-        <yangyicong@hisilicon.com>, <lorenzo.pieralisi@arm.com>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH] PCI/ASPM: Save/restore ASPM-L1SS controls for suspend/resume
-Date:   Sun, 25 Oct 2020 00:34:42 +0530
-Message-ID: <20201024190442.871-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        id S1764537AbgJXUz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Oct 2020 16:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1764536AbgJXUz4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Oct 2020 16:55:56 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BA7C0613CE
+        for <linux-pci@vger.kernel.org>; Sat, 24 Oct 2020 13:55:55 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h20so5480046lji.9
+        for <linux-pci@vger.kernel.org>; Sat, 24 Oct 2020 13:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8hyL9oNr8H/MDAXfwjeewU2xEG5E9TY5x+M8oCEvG88=;
+        b=mUSZaQybR6UIq1VitNgzkASF++k0yN3aMCELYEDG+w45aggzWT+woJS3NjR+bk0+bl
+         E9bXnbbUieWNBL7lVNNYxjmDpQ+JQUXcXOJYzbOh+O6GoYpx+VgDjv8eC/Jr2B2bdwTI
+         vJt3XLS4Uw4XL3uxZsp6X/iDvoETYWEyK6uDfFaCWdujf4LD2Dwspmr1UXNH4jDyvETs
+         ljI5OWerrGdlL1/8HAj7JZxESchMHafIrdBiVRnv5L15S5oJFOYxao09Orz3GmJ+OV1T
+         wUqNuadCtjGRtun27AVDG9AAjJ88mhy/+cilpJUwOVf0QaaPZFjK1w5SBAqzyIWVXOfD
+         e9jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8hyL9oNr8H/MDAXfwjeewU2xEG5E9TY5x+M8oCEvG88=;
+        b=NfDYuQ46UWPpvfJ7h10C8I1hxDNbAxcz6a/L6NFiV/WqTFvQMfKz4tb07RbIAVSRPg
+         8TD0/p+JjiPeN4tXYXC6joP4aRNpSUlGV0pC5Z4EHJeUMtfWsL1ADPD/hkJbYKXgtSuH
+         dbajQho6qVGnA6t7bd76LQOk2jzCYn4kbXKA4bHP6BNQcML6RqWAXf2wNDld6wAjMU0R
+         N+PJkDtlHXLixkfvxROppsU5hSuqzITW1wbTkc6oSxByLZ3smHYRKncH0C0OblhEnawi
+         7U4lAlYdtntuBIsDx02DJj/nJcsXBr6YWvsHvvUQh8f/mAPShsl+dQuoFJOiHm0kzkbj
+         Zecg==
+X-Gm-Message-State: AOAM530YFHwYIqdvYNhQIWW53fH/A8gJaa/ENaM+TOPPXwZ3YEgLiSiW
+        F+Wu/h2Vwn0PGhYAzAJma3g=
+X-Google-Smtp-Source: ABdhPJzmtA7uXURgTxQlKNKVHborymXpt50XD4X7vRXsetRjIMPeiZcCZ+c+czDztfgPlirB4pgLeQ==
+X-Received: by 2002:a2e:8184:: with SMTP id e4mr3234602ljg.383.1603572954207;
+        Sat, 24 Oct 2020 13:55:54 -0700 (PDT)
+Received: from octa.pomac.com (c-f9c8225c.013-195-6c756e10.bbcust.telenor.se. [92.34.200.249])
+        by smtp.gmail.com with ESMTPSA id f26sm246815lfc.302.2020.10.24.13.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Oct 2020 13:55:53 -0700 (PDT)
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+To:     kai.heng.feng@canonical.com, linux-pci@vger.kernel.org,
+        alexander.duyck@gmail.com, refactormyself@gmail.com,
+        puranjay12@gmail.com
+Cc:     Ian Kumlien <ian.kumlien@gmail.com>
+Subject: [PATCH 1/3] PCI/ASPM: Use the path max in L1 ASPM latency check
+Date:   Sat, 24 Oct 2020 22:55:46 +0200
+Message-Id: <20201024205548.1837770-1-ian.kumlien@gmail.com>
+X-Mailer: git-send-email 2.29.1
+In-Reply-To: <20201022183030.GA513862@bjorn-Precision-5520>
+References: <20201022183030.GA513862@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1603566309; bh=q2rN4AS7b8SyNIzcyTCEM5jUNZt8kPk2IuLGGIQak14=;
-        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:X-NVConfidentiality:
-         MIME-Version:Content-Type;
-        b=O03kuHT9/aA5qqzXwxazkq3CJx/dD0V4ccDAjRdrJVxDlIU77tVv0VR7ts0JFbUTW
-         VUSlYJYOFFummPeG4mUCDSzPrEIh5yCAxEnKHOdSyif0xNKJ7I1masWVI/LKDanGRa
-         m9HYg/Ohqc7zC7rnx5SvNe6WM8DVliXbr8cqLyVmzXeO3j6GfXePfsEVOEJn3TgzYk
-         AzuE/s6rOi05cPIiWNYlgB6lREp4TnFAtPZJ6fxWDm+HASQZBA2oY+Fw/CGlW26ipU
-         azhrr5LFzVXIus4AJA+yBRZsEi19J77gUjGw8PBnArO+D9SAbbgi0dJSiCaDDU5xSv
-         aJ1LdjQHbNZ/A==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Previously ASPM L1-Sub-States control registers (CTL1 and CTL2) weren't
-saved and restored during suspend/resume leading to ASPM-L1SS
-configuration being lost post resume.
+Make pcie_aspm_check_latency comply with the PCIe spec, specifically:
+"5.4.1.2.2. Exit from the L1 State"
 
-Save the ASPM-L1SS control registers so that the configuration is retained
-post resume.
+Which makes it clear that each switch is required to initiate a
+transition within 1μs from receiving it, accumulating this latency and
+then we have to wait for the slowest link along the path before
+entering L0 state from L1.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+The current code doesn't take the maximum latency into account.
+
+From the example:
+   +----------------+
+   |                |
+   |  Root complex  |
+   |                |
+   |    +-----+     |
+   |    |32 μs|     |
+   +----------------+
+           |
+           |  Link 1
+           |
+   +----------------+
+   |     |8 μs|     |
+   |     +----+     |
+   |    Switch A    |
+   |     +----+     |
+   |     |8 μs|     |
+   +----------------+
+           |
+           |  Link 2
+           |
+   +----------------+
+   |    |32 μs|     |
+   |    +-----+     |
+   |    Switch B    |
+   |    +-----+     |
+   |    |32 μs|     |
+   +----------------+
+           |
+           |  Link 3
+           |
+   +----------------+
+   |     |8μs|      |
+   |     +---+      |
+   |   Endpoint C   |
+   |                |
+   |                |
+   +----------------+
+
+Links 1, 2 and 3 are all in L1 state - endpoint C initiates the
+transition to L0 at time T. Since switch B takes 32 μs to exit L1 on
+it's ports, Link 3 will transition to L0 at T+32 (longest time
+considering T+8 for endpoint C and T+32 for switch B).
+
+Switch B is required to initiate a transition from the L1 state on it's
+upstream port after no more than 1 μs from the beginning of the
+transition from L1 state on the downstream port. Therefore, transition from
+L1 to L0 will begin on link 2 at T+1, this will cascade up the path.
+
+The path will exit L1 at T+34.
+
+On my specific system:
+03:00.0 Ethernet controller: Intel Corporation I211 Gigabit Network Connection (rev 03)
+04:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. Device 816e (rev 1a)
+
+            Exit latency       Acceptable latency
+Tree:       L1       L0s       L1       L0s
+----------  -------  -----     -------  ------
+00:01.2     <32 us   -
+| 01:00.0   <32 us   -
+|- 02:03.0  <32 us   -
+| \03:00.0  <16 us   <2us      <64 us   <512ns
+|
+\- 02:04.0  <32 us   -
+  \04:00.0  <64 us   unlimited <64 us   <512ns
+
+04:00.0's latency is the same as the maximum it allows so as we walk the path
+the first switchs startup latency will pass the acceptable latency limit
+for the link, and as a side-effect it fixes my issues with 03:00.0.
+
+Without this patch, 03:00.0 misbehaves and only gives me ~40 mbit/s over
+links with 6 or more hops. With this patch I'm back to a maximum of ~933
+mbit/s.
+
+The original code path did:
+04:00:0-02:04.0 max latency 64    -> ok
+02:04.0-01:00.0 max latency 32 +1 -> ok
+01:00.0-00:01.2 max latency 32 +2 -> ok
+
+And thus didn't see any L1 ASPM latency issues.
+
+The new code does:
+04:00:0-02:04.0 max latency 64    -> ok
+02:04.0-01:00.0 max latency 64 +1 -> latency exceeded
+01:00.0-00:01.2 max latency 64 +2 -> latency exceeded
+
+It correctly identifies the issue.
+
+For reference, pcie information:
+https://bugzilla.kernel.org/show_bug.cgi?id=209725
+
+Kai-Heng Feng has a machine that will not boot with ASPM without this patch,
+information is documented here:
+https://bugzilla.kernel.org/show_bug.cgi?id=209671
+
+Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
-v1:
-* It would be really good if someone can verify it on a non tegra194 platform
+ drivers/pci/pcie/aspm.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
- drivers/pci/pci.c       |  7 +++++++
- drivers/pci/pci.h       |  4 ++++
- drivers/pci/pcie/aspm.c | 41 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 52 insertions(+)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a458c46d7e39..034497264bde 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1551,6 +1551,7 @@ int pci_save_state(struct pci_dev *dev)
- 		return i;
- 
- 	pci_save_ltr_state(dev);
-+	pci_save_aspm_l1ss_state(dev);
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
- 	return pci_save_vc_state(dev);
-@@ -1656,6 +1657,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	 * LTR itself (in the PCIe capability).
- 	 */
- 	pci_restore_ltr_state(dev);
-+	pci_restore_aspm_l1ss_state(dev);
- 
- 	pci_restore_pcie_state(dev);
- 	pci_restore_pasid_state(dev);
-@@ -3319,6 +3321,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
- 
-+	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
-+					    2 * sizeof(u32));
-+	if (error)
-+		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
-+
- 	pci_allocate_vc_save_buffers(dev);
- }
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index fa12f7cbc1a0..8d2135f61e36 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -565,11 +565,15 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
- void pcie_aspm_exit_link_state(struct pci_dev *pdev);
- void pcie_aspm_pm_state_change(struct pci_dev *pdev);
- void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-+void pci_save_aspm_l1ss_state(struct pci_dev *dev);
-+void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
- #else
- static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
- static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
-+static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
-+static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
- #endif
- 
- #ifdef CONFIG_PCIE_ECRC
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 253c30cc1967..d965bbc563ed 100644
+index 253c30cc1967..c03ead0f1013 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -742,6 +742,47 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 				PCI_L1SS_CTL1_L1SS_MASK, val);
- }
+@@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
  
-+void pci_save_aspm_l1ss_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	int aspm_l1ss;
-+	u32 *cap;
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
-+	if (!aspm_l1ss)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state)
-+		return;
-+
-+	cap = (u32 *)&save_state->cap.data[0];
-+	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, cap++);
-+	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, cap++);
-+}
-+
-+void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	int aspm_l1ss;
-+	u32 *cap;
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
-+	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state || !aspm_l1ss)
-+		return;
-+
-+	cap = (u32 *)&save_state->cap.data[0];
-+	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++);
-+	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
-+}
-+
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
  {
- 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+-	u32 latency, l1_switch_latency = 0;
++	u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+ 	struct aspm_latency *acceptable;
+ 	struct pcie_link_state *link;
+ 
+@@ -456,10 +456,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 		if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+ 		    (link->latency_dw.l0s > acceptable->l0s))
+ 			link->aspm_capable &= ~ASPM_STATE_L0S_DW;
++
+ 		/*
+ 		 * Check L1 latency.
+-		 * Every switch on the path to root complex need 1
+-		 * more microsecond for L1. Spec doesn't mention L0s.
++		 *
++		 * PCIe r5.0, sec 5.4.1.2.2 states:
++		 * A Switch is required to initiate an L1 exit transition on its
++		 * Upstream Port Link after no more than 1 μs from the beginning of an
++		 * L1 exit transition on any of its Downstream Port Links.
+ 		 *
+ 		 * The exit latencies for L1 substates are not advertised
+ 		 * by a device.  Since the spec also doesn't mention a way
+@@ -469,11 +473,13 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+ 		 * L1 exit latencies advertised by a device include L1
+ 		 * substate latencies (and hence do not do any check).
+ 		 */
+-		latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+-		if ((link->aspm_capable & ASPM_STATE_L1) &&
+-		    (latency + l1_switch_latency > acceptable->l1))
+-			link->aspm_capable &= ~ASPM_STATE_L1;
+-		l1_switch_latency += 1000;
++		if (link->aspm_capable & ASPM_STATE_L1) {
++			latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
++			l1_max_latency = max_t(u32, latency, l1_max_latency);
++			if (l1_max_latency + l1_switch_latency > acceptable->l1)
++				link->aspm_capable &= ~ASPM_STATE_L1;
++			l1_switch_latency += 1000;
++		}
+ 
+ 		link = link->parent;
+ 	}
 -- 
-2.17.1
+2.29.1
 
