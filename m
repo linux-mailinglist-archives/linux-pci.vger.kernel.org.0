@@ -2,80 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9998D297A7D
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 05:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8B66297A98
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 06:03:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1759322AbgJXDMp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Oct 2020 23:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35090 "EHLO
+        id S1726171AbgJXEDt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Oct 2020 00:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1759320AbgJXDMp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 23:12:45 -0400
+        with ESMTP id S1726073AbgJXEDt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Oct 2020 00:03:49 -0400
 Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48276C0613CE;
-        Fri, 23 Oct 2020 20:12:43 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id l2so236237pjt.5;
-        Fri, 23 Oct 2020 20:12:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D85C0613CE;
+        Fri, 23 Oct 2020 21:03:49 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id b6so122337pju.1;
+        Fri, 23 Oct 2020 21:03:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:thread-topic:thread-index:date:message-id
          :references:in-reply-to:accept-language:content-language
          :content-transfer-encoding:mime-version;
-        bh=zTBRtgT7pbWlqs1vi69+HR0XTTRLAETUhmExxew5NDo=;
-        b=ZpZKjdJtSqcsG89NdJQp0+s02MLtTNI1vpHpSP7oKzdakHEcSKkvY7CcHhj5zms+jS
-         l9y4mKUj4WTaUKiYUlGX5SdYjTKc3Aq4oSzUSPj3rdneVz3SyraFboXN4SX8mgI5XLLh
-         OPf15zn6cf/vEf1/lhFTbatI8uncx9PzX6wvpWEagn8Eo/3TPAoLoeBfyL03cgwEAft8
-         Ungpe1hhZmMvlxUyPODGJMX+hnlgfCXCSOKsoq2U+AYQbrz4AW3VesOhTKYzBWSnZ7JK
-         hVkUTsJbcnS/1qPyjMgloBhCg/zYdep+btUB7LEtGjiXQh6mi1pwh+s1+zhw6tCnGyy0
-         JAvQ==
+        bh=8b1gjZAvYNDWpjCtbAM+7Rxeawq1Vxd+qcM6g3MNCkE=;
+        b=D2OrAwxaKh5Qqn+u5eLsbufnFvStYXhf3/oZjt8lI03dqDTa/Zf+L6yslax9q7WEGz
+         rUkma2OqollEIj2tcTqBDnrzV3GmGKfoVOk3nsDCvtgIyqHxl49nNRAaklaXBXL0PJcQ
+         /dzEzge/aR/PwEVFIGY62R2Adol76iD80EfXkEShy5TO2b4WgEPqcwqUGAWYT6iVlQeI
+         hHc8ZORzsEsUMWehNvQ3Ie72NLp9rmxqf8SG60yPs9hHYWwDtCR6kqWeIsZuCDcW1nhZ
+         hYieeO8gjlD5BqA6p10yqY5/KSlfLxAyNGaQsUtTmWd5c3W2+vO9zyUJdhhYeBWDaVfl
+         oJZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
          :date:message-id:references:in-reply-to:accept-language
          :content-language:content-transfer-encoding:mime-version;
-        bh=zTBRtgT7pbWlqs1vi69+HR0XTTRLAETUhmExxew5NDo=;
-        b=h0NdEHSMPa8C39kL+8lG+TWvLiWu0Bx0KHDmgigpAQY1JIfakpNnuh0l4xsxeKqtf0
-         r3J/xHkeKlIDpOWpiNx/zFd6hNAdT3mYx9AWgv+JUOxebZArXM0ViIg+wcjL5iVDqFE8
-         le/W5W/dYfmwPUIMI7zWTCNn9/HF7oHozABXBtLMqtwSaeKdbbluc4Z8PAVUe3z1OZgJ
-         kHDTFxImthTxiQgl52ubOYP01VmKkSq1gPSBLHWKZm4dqDqnvFP/i+BIrASo2YNDnr/S
-         +Qoe/e2Ph8LeV8pw+FWI/a8KINiZfh5Y7hxPmMGn1JpRv7uX1zHbeQ/8V9GD+mdfYqnw
-         8c1A==
-X-Gm-Message-State: AOAM531gk+FA+gVpV3qFhfAkEGka7cPQIEfzpl56Z5bgES/dSe9y3Hhu
-        g4kBJwRMqWUGM058gIdPfOM=
-X-Google-Smtp-Source: ABdhPJzQmQEnxa9/l+9Lq4CzVsMG9+8m/ikAGTD954YrN3sd7D9wuPDi6xuu6zomPp9QihOAFq344g==
-X-Received: by 2002:a17:902:7c86:b029:d5:f680:f756 with SMTP id y6-20020a1709027c86b02900d5f680f756mr2165248pll.39.1603509162822;
-        Fri, 23 Oct 2020 20:12:42 -0700 (PDT)
+        bh=8b1gjZAvYNDWpjCtbAM+7Rxeawq1Vxd+qcM6g3MNCkE=;
+        b=O7Wcn4ydY5Xj+UG5IKFtywIfIqgzPf2DIAVgbnxZOmWFhey+5YR6u6VSGP96AA3Fng
+         kRFV1Ve5eodTtPLvSRtBQeQ92l9ZfBfznPK7Ngstn1Ld1E3UjqqrWgRCdSvRTkInyJyh
+         sFGqaLdbIcQ9zcqDuD1RBAMo3ZeNBWiBDAJQaUmGgwOJKAtu9QoRwWquXee7DyBvu5c5
+         fvaWWNdWLcn60NTTGiipRGWLRnKpY2YA+4P73ou2v74wNnLhet/eRk9itsLa06xmbmAW
+         9AOwxdcfNkp/l3cLbEU87+emswypNGg9+xST1HB8uc+hNzD1e/MBbzzvhDUzFOdqZXsH
+         anOg==
+X-Gm-Message-State: AOAM533WQQO7Jp3FFGigAP0yv94xInv2r8KWSgCxxPYfV7aSM/O/nxld
+        0tTPCAtk4jJzGJeVPM7l+9g=
+X-Google-Smtp-Source: ABdhPJwdgKMDbBGCWKPsKrJol5gWnsWL2uiqQQ+UGSn9R1RA1DhROVT2e68zqZJVVSFLSubipmjmZw==
+X-Received: by 2002:a17:90a:fe8:: with SMTP id 95mr5757972pjz.73.1603512228587;
+        Fri, 23 Oct 2020 21:03:48 -0700 (PDT)
 Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
-        by smtp.gmail.com with ESMTPSA id j12sm4204812pjs.21.2020.10.23.20.12.38
+        by smtp.gmail.com with ESMTPSA id b142sm3750675pfb.186.2020.10.23.21.03.44
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Oct 2020 20:12:41 -0700 (PDT)
+        Fri, 23 Oct 2020 21:03:47 -0700 (PDT)
 From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
         Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH v2 5/6] pci: dwc: pci-exynos: rework the driver to support
- Exynos5433 variant
-Thread-Topic: [PATCH v2 5/6] pci: dwc: pci-exynos: rework the driver to
- support Exynos5433 variant
-Thread-Index: ATYzNHA3LqEW/SeHeSezfbTZ8+mXqGl5LTQyaXktNDK6VWtTUg==
+Subject: Re: [PATCH 0/3] Add support to handle prefetchable memory
+Thread-Topic: [PATCH 0/3] Add support to handle prefetchable memory
+Thread-Index: AXN2NDUx+xc4qTmAG8JdKFtMo+BvkMZnDOSK
 X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Sat, 24 Oct 2020 03:12:35 +0000
-Message-ID: <SLXP216MB047790A7FD4D1E7304493343AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
-References: <20201023075744.26200-1-m.szyprowski@samsung.com>
- <CGME20201023075756eucas1p18765653e747842eef4b438aff32ef136@eucas1p1.samsung.com>
- <20201023075744.26200-6-m.szyprowski@samsung.com>
-In-Reply-To: <20201023075744.26200-6-m.szyprowski@samsung.com>
+Date:   Sat, 24 Oct 2020 04:03:41 +0000
+Message-ID: <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
+References: <20201023195655.11242-1-vidyas@nvidia.com>
+In-Reply-To: <20201023195655.11242-1-vidyas@nvidia.com>
 Accept-Language: ko-KR, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -89,56 +85,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/23/20, 3:58 AM, Marek Szyprowski wrote:
+On 10/23/20, 3:57 PM, Vidya Sagar wrote:
 >=20
-> From: Jaehoon Chung <jh80.chung@samsung.com>
+> This patch series adds support for configuring the DesignWare IP's ATU
+> region for prefetchable memory translations.
+> It first starts by flagging a warning if the size of non-prefetchable
+> aperture goes beyond 32-bit as PCIe spec doesn't allow it.
+> And then adds required support for programming the ATU to handle higher
+> (i.e. >4GB) sizes and then finally adds support for differentiating
+> between prefetchable and non-prefetchable regions and configuring one of
+> the ATU regions for prefetchable memory translations purpose.
 >
-> Exynos5440 SoC support has been dropped since commit 8c83315da1cf ("ARM:
-> dts: exynos: Remove Exynos5440"). Rework this driver to support DWC PCIe
-> variant found in the Exynos5433 SoCs.
->
-> The main difference in Exynos5433 variant is lack of the MSI support
-> (the MSI interrupt is not even routed to the CPU).
->
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> [mszyprow: reworked the driver to support only Exynos5433 variant,
->	   simplified code, rebased onto current kernel code, added
->	   regulator support, converted to the regular platform driver,
->	   removed MSI related code, rewrote commit message]
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/pci/controller/dwc/Kconfig      |   3 +-
->  drivers/pci/controller/dwc/pci-exynos.c | 358 ++++++++++--------------
->  drivers/pci/quirks.c                    |   1 +
->  3 files changed, 145 insertions(+), 217 deletions(-)
+> Vidya Sagar (3):
+>   PCI: of: Warn if non-prefetchable memory aperture size is > 32-bit
+>   PCI: dwc: Add support to program ATU for >4GB memory aperture sizes
+>   PCI: dwc: Add support to handle prefetchable memory mapping
 
-[....]
+For 2nd & 3rd,
+Acked-by: Jingoo <jingoohan1@gmail.com>
+But, I still want someone to ack 1st patch, not me.
 
-> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/contro=
-ller/dwc/pci-exynos.c
-> index 242683cde04a..58056fbdc2fa 100644
-> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> @@ -2,26 +2,23 @@
->  /*
->   * PCIe host controller driver for Samsung Exynos SoCs
->   *
-> - * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Copyright (C) 2013-2020 Samsung Electronics Co., Ltd.
->   *		https://www.samsung.com
->   *
->   * Author: Jingoo Han <jg1.han@samsung.com>
-> + *	   Jaehoon Chung <jh80.chung@samsung.com>
-
-Would you explain the reason why you add him as an author?
-If reasonable, I will accept it. Also, I want gentle discussion, not aggres=
-sive one.
+To Vidya,
+If possible, can you ask your coworker to give 'Tested-by'? It will be very=
+ helpful.
 Thank you.
 
 Best regards,
 Jingoo Han
 
->   */
 
-[....]
+>
+>  .../pci/controller/dwc/pcie-designware-host.c | 39 ++++++++++++++++---
+>  drivers/pci/controller/dwc/pcie-designware.c  | 12 +++---
+>  drivers/pci/controller/dwc/pcie-designware.h  |  4 +-
+>  drivers/pci/of.c                              |  5 +++
+>  4 files changed, 48 insertions(+), 12 deletions(-)
+>
+> --=20
+> 2.17.1
+
