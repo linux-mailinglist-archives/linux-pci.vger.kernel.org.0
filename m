@@ -2,125 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8B66297A98
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 06:03:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FBE7297B36
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 09:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbgJXEDt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Oct 2020 00:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgJXEDt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Oct 2020 00:03:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D85C0613CE;
-        Fri, 23 Oct 2020 21:03:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b6so122337pju.1;
-        Fri, 23 Oct 2020 21:03:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=8b1gjZAvYNDWpjCtbAM+7Rxeawq1Vxd+qcM6g3MNCkE=;
-        b=D2OrAwxaKh5Qqn+u5eLsbufnFvStYXhf3/oZjt8lI03dqDTa/Zf+L6yslax9q7WEGz
-         rUkma2OqollEIj2tcTqBDnrzV3GmGKfoVOk3nsDCvtgIyqHxl49nNRAaklaXBXL0PJcQ
-         /dzEzge/aR/PwEVFIGY62R2Adol76iD80EfXkEShy5TO2b4WgEPqcwqUGAWYT6iVlQeI
-         hHc8ZORzsEsUMWehNvQ3Ie72NLp9rmxqf8SG60yPs9hHYWwDtCR6kqWeIsZuCDcW1nhZ
-         hYieeO8gjlD5BqA6p10yqY5/KSlfLxAyNGaQsUtTmWd5c3W2+vO9zyUJdhhYeBWDaVfl
-         oJZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=8b1gjZAvYNDWpjCtbAM+7Rxeawq1Vxd+qcM6g3MNCkE=;
-        b=O7Wcn4ydY5Xj+UG5IKFtywIfIqgzPf2DIAVgbnxZOmWFhey+5YR6u6VSGP96AA3Fng
-         kRFV1Ve5eodTtPLvSRtBQeQ92l9ZfBfznPK7Ngstn1Ld1E3UjqqrWgRCdSvRTkInyJyh
-         sFGqaLdbIcQ9zcqDuD1RBAMo3ZeNBWiBDAJQaUmGgwOJKAtu9QoRwWquXee7DyBvu5c5
-         fvaWWNdWLcn60NTTGiipRGWLRnKpY2YA+4P73ou2v74wNnLhet/eRk9itsLa06xmbmAW
-         9AOwxdcfNkp/l3cLbEU87+emswypNGg9+xST1HB8uc+hNzD1e/MBbzzvhDUzFOdqZXsH
-         anOg==
-X-Gm-Message-State: AOAM533WQQO7Jp3FFGigAP0yv94xInv2r8KWSgCxxPYfV7aSM/O/nxld
-        0tTPCAtk4jJzGJeVPM7l+9g=
-X-Google-Smtp-Source: ABdhPJwdgKMDbBGCWKPsKrJol5gWnsWL2uiqQQ+UGSn9R1RA1DhROVT2e68zqZJVVSFLSubipmjmZw==
-X-Received: by 2002:a17:90a:fe8:: with SMTP id 95mr5757972pjz.73.1603512228587;
-        Fri, 23 Oct 2020 21:03:48 -0700 (PDT)
-Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
-        by smtp.gmail.com with ESMTPSA id b142sm3750675pfb.186.2020.10.23.21.03.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Oct 2020 21:03:47 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "treding@nvidia.com" <treding@nvidia.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH 0/3] Add support to handle prefetchable memory
-Thread-Topic: [PATCH 0/3] Add support to handle prefetchable memory
-Thread-Index: AXN2NDUx+xc4qTmAG8JdKFtMo+BvkMZnDOSK
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Sat, 24 Oct 2020 04:03:41 +0000
-Message-ID: <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
-References: <20201023195655.11242-1-vidyas@nvidia.com>
-In-Reply-To: <20201023195655.11242-1-vidyas@nvidia.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1759861AbgJXHaq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 24 Oct 2020 03:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1759859AbgJXHaq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 24 Oct 2020 03:30:46 -0400
+Received: from coco.lan (ip5f5ad5d6.dynamic.kabel-deutschland.de [95.90.213.214])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17A45208E4;
+        Sat, 24 Oct 2020 07:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603524645;
+        bh=SHiTKCGrkGwFF0ORlgvYKwNjJ4j0nggqLo79XV+7E5k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lfaY30C1cZvkHdbSkkIR4SXWW42YJs4+iJ6eu/6MaML4Dbd4A/M4CzSIlhfU591VP
+         J6eHwSLgA2xqc/HSbayeaBT+Jh16Vz3Rtk0ETCWphbNbizOWKTRIjLbhy2OinH4TKR
+         glIk2vx9Xfuh1vZkYZva+RB/K0YeSzln/m1ORAJk=
+Date:   Sat, 24 Oct 2020 09:30:41 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 23/56] PCI: fix kernel-doc markups
+Message-ID: <20201024093041.23ce7388@coco.lan>
+In-Reply-To: <20201023174325.GA668264@bjorn-Precision-5520>
+References: <f19caf7a68f8365c8b573a42b4ac89ec21925c73.1603469755.git.mchehab+huawei@kernel.org>
+        <20201023174325.GA668264@bjorn-Precision-5520>
+X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/23/20, 3:57 PM, Vidya Sagar wrote:
->=20
-> This patch series adds support for configuring the DesignWare IP's ATU
-> region for prefetchable memory translations.
-> It first starts by flagging a warning if the size of non-prefetchable
-> aperture goes beyond 32-bit as PCIe spec doesn't allow it.
-> And then adds required support for programming the ATU to handle higher
-> (i.e. >4GB) sizes and then finally adds support for differentiating
-> between prefetchable and non-prefetchable regions and configuring one of
-> the ATU regions for prefetchable memory translations purpose.
->
-> Vidya Sagar (3):
->   PCI: of: Warn if non-prefetchable memory aperture size is > 32-bit
->   PCI: dwc: Add support to program ATU for >4GB memory aperture sizes
->   PCI: dwc: Add support to handle prefetchable memory mapping
+Em Fri, 23 Oct 2020 12:43:25 -0500
+Bjorn Helgaas <helgaas@kernel.org> escreveu:
 
-For 2nd & 3rd,
-Acked-by: Jingoo <jingoohan1@gmail.com>
-But, I still want someone to ack 1st patch, not me.
+> If you have the opportunity, I would prefer to capitalize the subject
+> to follow the drivers/pci convention, e.g.,
+> 
+>   PCI: Fix ...
 
-To Vidya,
-If possible, can you ask your coworker to give 'Tested-by'? It will be very=
- helpful.
-Thank you.
+Ok. If you want to apply it directly, feel free to change it
+at the patch.
 
-Best regards,
-Jingoo Han
+Otherwise, I'll do it on a next rebase.
+
+> 
+> On Fri, Oct 23, 2020 at 06:33:10PM +0200, Mauro Carvalho Chehab wrote:
+> > Some identifiers have different names between their prototypes
+> > and the kernel-doc markup.  
+> 
+> How did you find these?  I build with "make W=1", which finds some
+> kernel-doc errors, but it didn't find these.  If there's a scanner for
+> these, I could fix things like this before merging them.
+
+This is a new check. See patch 56/56.
+
+Right now, kernel-doc will just silently ignore the identifier
+from kernel-doc markup and use the one defined at the function
+or data struct prototype.
+
+Once all the issues gets fixed, patch 56/56 can be merged.
+
+> 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> 
+> I'd be happy to take this myself, but if you want to merge the whole
+> series together:
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Either way works for me, although IMO it should be simpler if
+you could pick it directly, as it will avoid potential
+merge conflicts if such patches go via their usual trees.
+
+> 
+> > ---
+> >  drivers/pci/p2pdma.c     | 10 +++++-----
+> >  drivers/pci/pci-driver.c |  4 ++--
+> >  drivers/pci/pci.c        |  2 +-
+> >  drivers/pci/probe.c      |  4 ++--
+> >  drivers/pci/slot.c       |  5 +++--
+> >  5 files changed, 13 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> > index de1c331dbed4..bace04145c5f 100644
+> > --- a/drivers/pci/p2pdma.c
+> > +++ b/drivers/pci/p2pdma.c
+> > @@ -609,7 +609,7 @@ bool pci_has_p2pmem(struct pci_dev *pdev)
+> >  EXPORT_SYMBOL_GPL(pci_has_p2pmem);
+> >  
+> >  /**
+> > - * pci_p2pmem_find - find a peer-to-peer DMA memory device compatible with
+> > + * pci_p2pmem_find_many - find a peer-to-peer DMA memory device compatible with
+> >   *	the specified list of clients and shortest distance (as determined
+> >   *	by pci_p2pmem_dma())
+> >   * @clients: array of devices to check (NULL-terminated)
+> > @@ -674,7 +674,7 @@ struct pci_dev *pci_p2pmem_find_many(struct device **clients, int num_clients)
+> >  EXPORT_SYMBOL_GPL(pci_p2pmem_find_many);
+> >  
+> >  /**
+> > - * pci_alloc_p2p_mem - allocate peer-to-peer DMA memory
+> > + * pci_alloc_p2pmem - allocate peer-to-peer DMA memory
+> >   * @pdev: the device to allocate memory from
+> >   * @size: number of bytes to allocate
+> >   *
+> > @@ -727,7 +727,7 @@ void pci_free_p2pmem(struct pci_dev *pdev, void *addr, size_t size)
+> >  EXPORT_SYMBOL_GPL(pci_free_p2pmem);
+> >  
+> >  /**
+> > - * pci_virt_to_bus - return the PCI bus address for a given virtual
+> > + * pci_p2pmem_virt_to_bus - return the PCI bus address for a given virtual
+> >   *	address obtained with pci_alloc_p2pmem()
+> >   * @pdev: the device the memory was allocated from
+> >   * @addr: address of the memory that was allocated
+> > @@ -859,7 +859,7 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
+> >  }
+> >  
+> >  /**
+> > - * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
+> > + * pci_p2pdma_map_sg_attrs - map a PCI peer-to-peer scatterlist for DMA
+> >   * @dev: device doing the DMA request
+> >   * @sg: scatter list to map
+> >   * @nents: elements in the scatterlist
+> > @@ -896,7 +896,7 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+> >  EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
+> >  
+> >  /**
+> > - * pci_p2pdma_unmap_sg - unmap a PCI peer-to-peer scatterlist that was
+> > + * pci_p2pdma_unmap_sg_attrs - unmap a PCI peer-to-peer scatterlist that was
+> >   *	mapped with pci_p2pdma_map_sg()
+> >   * @dev: device doing the DMA request
+> >   * @sg: scatter list to map
+> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> > index 8b587fc97f7b..591ab353844a 100644
+> > --- a/drivers/pci/pci-driver.c
+> > +++ b/drivers/pci/pci-driver.c
+> > @@ -90,7 +90,7 @@ static void pci_free_dynids(struct pci_driver *drv)
+> >  }
+> >  
+> >  /**
+> > - * store_new_id - sysfs frontend to pci_add_dynid()
+> > + * new_id_store - sysfs frontend to pci_add_dynid()
+> >   * @driver: target device driver
+> >   * @buf: buffer for scanning device ID data
+> >   * @count: input size
+> > @@ -158,7 +158,7 @@ static ssize_t new_id_store(struct device_driver *driver, const char *buf,
+> >  static DRIVER_ATTR_WO(new_id);
+> >  
+> >  /**
+> > - * store_remove_id - remove a PCI device ID from this driver
+> > + * remove_id_store - remove a PCI device ID from this driver
+> >   * @driver: target device driver
+> >   * @buf: buffer for scanning device ID data
+> >   * @count: input size
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 6d4d5a2f923d..8b9bea8ba751 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -3480,7 +3480,7 @@ bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
+> >  }
+> >  
+> >  /**
+> > - * pci_acs_path_enable - test ACS flags from start to end in a hierarchy
+> > + * pci_acs_path_enabled - test ACS flags from start to end in a hierarchy
+> >   * @start: starting downstream device
+> >   * @end: ending upstream device or NULL to search to the root bus
+> >   * @acs_flags: required flags
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index 4289030b0fff..eb1ec037f9e7 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -165,7 +165,7 @@ static inline unsigned long decode_bar(struct pci_dev *dev, u32 bar)
+> >  #define PCI_COMMAND_DECODE_ENABLE	(PCI_COMMAND_MEMORY | PCI_COMMAND_IO)
+> >  
+> >  /**
+> > - * pci_read_base - Read a PCI BAR
+> > + * __pci_read_base - Read a PCI BAR
+> >   * @dev: the PCI device
+> >   * @type: type of the BAR
+> >   * @res: resource buffer to be filled in
+> > @@ -1612,7 +1612,7 @@ static bool pci_ext_cfg_is_aliased(struct pci_dev *dev)
+> >  }
+> >  
+> >  /**
+> > - * pci_cfg_space_size - Get the configuration space size of the PCI device
+> > + * pci_cfg_space_size_ext - Get the configuration space size of the PCI device
+> >   * @dev: PCI device
+> >   *
+> >   * Regular PCI devices have 256 bytes, but PCI-X 2 and PCI Express devices
+> > diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+> > index 3861505741e6..bcc8b12ce5da 100644
+> > --- a/drivers/pci/slot.c
+> > +++ b/drivers/pci/slot.c
+> > @@ -323,7 +323,7 @@ EXPORT_SYMBOL_GPL(pci_destroy_slot);
+> >  #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
+> >  #include <linux/pci_hotplug.h>
+> >  /**
+> > - * pci_hp_create_link - create symbolic link to the hotplug driver module.
+> > + * pci_hp_create_module_link - create symbolic link to the hotplug driver module.
+> >   * @pci_slot: struct pci_slot
+> >   *
+> >   * Helper function for pci_hotplug_core.c to create symbolic link to
+> > @@ -349,7 +349,8 @@ void pci_hp_create_module_link(struct pci_slot *pci_slot)
+> >  EXPORT_SYMBOL_GPL(pci_hp_create_module_link);
+> >  
+> >  /**
+> > - * pci_hp_remove_link - remove symbolic link to the hotplug driver module.
+> > + * pci_hp_remove_module_link - remove symbolic link to the hotplug driver
+> > + * 	module.
+> >   * @pci_slot: struct pci_slot
+> >   *
+> >   * Helper function for pci_hotplug_core.c to remove symbolic link to
+> > -- 
+> > 2.26.2
+> >   
 
 
->
->  .../pci/controller/dwc/pcie-designware-host.c | 39 ++++++++++++++++---
->  drivers/pci/controller/dwc/pcie-designware.c  | 12 +++---
->  drivers/pci/controller/dwc/pcie-designware.h  |  4 +-
->  drivers/pci/of.c                              |  5 +++
->  4 files changed, 48 insertions(+), 12 deletions(-)
->
-> --=20
-> 2.17.1
 
+Thanks,
+Mauro
