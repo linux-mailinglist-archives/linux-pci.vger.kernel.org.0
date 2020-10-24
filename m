@@ -2,133 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1159297898
-	for <lists+linux-pci@lfdr.de>; Fri, 23 Oct 2020 23:00:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E2F297A6A
+	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 04:59:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S460277AbgJWVA5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 23 Oct 2020 17:00:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
+        id S1759209AbgJXC7p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 23 Oct 2020 22:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S370824AbgJWVA5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 17:00:57 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94939C0613CE;
-        Fri, 23 Oct 2020 14:00:56 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1603486852;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0RSzWnnhjduTWCuacybUxNyH2jm/Ejki0DZB09ZfMEo=;
-        b=uC/F8SS7ceachXOn7laO0v51Jz5qp/rU44VpsVtuP1Na+r9KOVItKiq2MvIK91/vJKqdM/
-        Yon7/psKTWzxsjJayfT4a72WsiroXOtKf7tzvwjPn5Fri6uLj7pDlxOtFwe4DM4XqReG3m
-        QiPGbJhJac2HT/rR70hkUr0UOq7Pn6lKWKmgnTr40/2fMqKA7qiZguR2dxaaMgmmeJGHzC
-        bv6taa5peKBeMMjOF71Ta78FrppqLS9dSNpODsEjYibkDhoIylQ2mQwweYG4g9fc0pDJfr
-        qKrJ7YsxMLUrh+7aRcH/GMIBQYf42IvPRrPsiYLISmDrqKxG2zoiTpaIIwOLxg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1603486852;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0RSzWnnhjduTWCuacybUxNyH2jm/Ejki0DZB09ZfMEo=;
-        b=7RgxZS9baabbqKcQfsa0dn/XjSu7U/Vml4D0Og0NWaVNkzdzTSdGSZiL1/090nxRSD5pkh
-        LfLURkRpikZlX+Dg==
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>, helgaas@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
-        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
-        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        thomas.lendacky@amd.com, jiri@nvidia.com, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        lgoncalv@redhat.com
-Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to housekeeping CPUs
-In-Reply-To: <9ee77056-ef02-8696-5b96-46007e35ab00@redhat.com>
-References: <20200928183529.471328-5-nitesh@redhat.com> <20201016122046.GP2611@hirez.programming.kicks-ass.net> <79f382a7-883d-ff42-394d-ec4ce81fed6a@redhat.com> <20201019111137.GL2628@hirez.programming.kicks-ass.net> <20201019140005.GB17287@fuller.cnet> <20201020073055.GY2611@hirez.programming.kicks-ass.net> <078e659e-d151-5bc2-a7dd-fe0070267cb3@redhat.com> <20201020134128.GT2628@hirez.programming.kicks-ass.net> <6736e643-d4ae-9919-9ae1-a73d5f31463e@redhat.com> <260f4191-5b9f-6dc1-9f11-085533ac4f55@redhat.com> <20201023085826.GP2611@hirez.programming.kicks-ass.net> <9ee77056-ef02-8696-5b96-46007e35ab00@redhat.com>
-Date:   Fri, 23 Oct 2020 23:00:52 +0200
-Message-ID: <87ft6464jf.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        with ESMTP id S1759179AbgJXC7o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 23 Oct 2020 22:59:44 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE0BC0613CE;
+        Fri, 23 Oct 2020 19:59:44 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id c17so239448pjo.5;
+        Fri, 23 Oct 2020 19:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=2vJO8R3lZs4KpedqI0G36Uf0dGNihvDZe+9D8dSAvUk=;
+        b=I7VG7qH7hear8+HL3g53OvCclOzwH7gXPbvPT/WUxwHwMD3X+GbmkqCTFRPzNAyVeQ
+         DX0RvRndxBeA9YhBydG8ozgPuPVuUKQjPEa/8x+lI5ZQMc1elYRH21P5PQIoIK1kCUMi
+         iQij/7A+rcEHPG6wWogvWQkzUVN8deObkgP08Q0i1t6Fz963lv+VTe0+V/DHNVkkEr3a
+         ZAyE0egbZiRss14Dhku387/VjTf3LLErXBTwc6Gcl1WFMQmnOGbBe7zfkj3UNkb24JiZ
+         w+D0E49oRVVLHQo1nlHGp6B38uwGfx4VfwS/nFxrpNmYy7rA3rG+lyaRgjsNyeY5Yqvw
+         r2nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=2vJO8R3lZs4KpedqI0G36Uf0dGNihvDZe+9D8dSAvUk=;
+        b=YWCU7IAXu3K1i6PeTxiqEHf/0jsCKplBL7X81Ch/ilkAzOGXV/cXRzMqs04lBaqOMC
+         JlE+C7viuv5cLGIt67dn+j+bPpkbz9qqbjcCYEib/8IqiWMtCvFtgW2W7z03AyFPjSZS
+         JwR+eJpiUDSQwaOTFAtOsjS/EqAaPo8lb4ygOvo6RBcd3k4x/3V+tvUz6HH/XI6hZhTg
+         3A5/xrb3+EIcfl+YVGA4vcY+WtfZsqOPPAjgPw6C8n1o8wsG1HFXfEOpt0ixntNkx6qy
+         F4tixDh8Aa/QmfB9IyhttamzE4mqAu8bEaDy90dl/h3qgrIlr7oygRHFkrJuNyPgidVg
+         zJ0g==
+X-Gm-Message-State: AOAM532dUOKo20IPj2lSstab/3+QM9fKl+gGs1Pg3tjMwDOItmDW9Rjd
+        nzZ+HFN8jf/GsKgkxp1Aruo=
+X-Google-Smtp-Source: ABdhPJwkxgR2TVQfNecLbsAXUk8T3HUXZTbebd82ieEDo/zraOq9nJnpjvY8yYOk1gNK39/xE9ZxuQ==
+X-Received: by 2002:a17:902:6bc7:b029:d5:f149:f2e0 with SMTP id m7-20020a1709026bc7b02900d5f149f2e0mr2306673plt.34.1603508384266;
+        Fri, 23 Oct 2020 19:59:44 -0700 (PDT)
+Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
+        by smtp.gmail.com with ESMTPSA id 10sm4650998pjt.50.2020.10.23.19.59.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 23 Oct 2020 19:59:43 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: pci: drop samsung,exynos5440-pcie
+ binding
+Thread-Topic: [PATCH v2 1/6] dt-bindings: pci: drop samsung,exynos5440-pcie
+ binding
+Thread-Index: AWI0ZnA3zn//KNIhGksYxL11Iw2wX2l5LTQyaXktNDLiUwO1RQ==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Sat, 24 Oct 2020 02:59:38 +0000
+Message-ID: <SLXP216MB0477DC8CC4B46200B69BDE86AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
+References: <20201023075744.26200-1-m.szyprowski@samsung.com>
+ <CGME20201023075754eucas1p2a4c9c5467f25a575bec34984fe6bb43b@eucas1p2.samsung.com>
+ <20201023075744.26200-2-m.szyprowski@samsung.com>
+In-Reply-To: <20201023075744.26200-2-m.szyprowski@samsung.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 23 2020 at 09:10, Nitesh Narayan Lal wrote:
-> On 10/23/20 4:58 AM, Peter Zijlstra wrote:
->> On Thu, Oct 22, 2020 at 01:47:14PM -0400, Nitesh Narayan Lal wrote:
->> So shouldn't we then fix the drivers / interface first, to get rid of
->> this inconsistency?
->>
-> Considering we agree that excess vector is a problem that needs to be
-> solved across all the drivers and that you are comfortable with the other
-> three patches in the set. If I may suggest the following:
+On 10/23/20, 3:58 AM, Marek Szyprowski wrote:
+>=20
+> Exynos5440 SoC support has been dropped since commit 8c83315da1cf ("ARM:
+> dts: exynos: Remove Exynos5440"). Drop the obsolete bindings for
+> exynos5440-pcie.
 >
-> - We can pick those three patches for now, as that will atleast fix a
-> =C2=A0 driver that is currently impacting RT workloads. Is that a fair
-> =C2=A0 expectation?
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-No. Blindly reducing the maximum vectors to the number of housekeeping
-CPUs is patently wrong. The PCI core _cannot_ just nilly willy decide
-what the right number of interrupts for this situation is.
+Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
 
-Many of these drivers need more than queue interrupts, admin, error
-interrupt and some operate best with seperate RX/TX interrupts per
-queue. They all can "work" with a single PCI interrupt of course, but
-the price you pay is performance.
+Best regards,
+Jingoo Han
 
-An isolated setup, which I'm familiar with, has two housekeeping
-CPUs. So far I restricted the number of network queues with a module
-argument to two, which allocates two management interrupts for the
-device and two interrupts (RX/TX) per queue, i.e. a total of six.
-
-Now I reduced the number of available interrupts to two according to
-your hack, which makes it use one queue RX/TX combined and one
-management interrupt. Guess what happens? Network performance tanks to
-the points that it breaks a carefully crafted setup.
-
-The same applies to a device which is application specific and wants one
-channel including an interrupt per isolated application core. Today I
-can isolate 8 out of 12 CPUs and let the device create 8 channels and
-set one interrupt and channel affine to each isolated CPU. With your
-hack, I get only 4 interrupts and channels. Fail!
-
-You cannot declare that all this is perfectly fine, just because it does
-not matter for your particular use case.
-
-So without information from the driver which tells what the best number
-of interrupts is with a reduced number of CPUs, this cutoff will cause
-more problems than it solves. Regressions guaranteed.
-
-Managed interrupts base their interrupt allocation and spreading on
-information which is handed in by the individual driver and not on crude
-assumptions. They are not imposing restrictions on the use case.
-
-It's perfectly fine for isolated work to save a data set to disk after
-computation has finished and that just works with the per-cpu I/O queue
-which is otherwise completely silent. All isolated workers can do the
-same in parallel without trampling on each other toes by competing for a
-reduced number of queues which are affine to the housekeeper CPUs.
-
-Unfortunately network multi-queue is substantially different from block
-multi-queue (as I learned in this conversation), so the concept cannot
-be applied one-to-one to networking as is. But there are certainly part
-of it which can be reused.
-
-This needs a lot more thought than just these crude hacks.
-
-Especially under the aspect that there are talks about making isolation
-runtime switchable. Are you going to rmmod/insmod the i40e network
-driver to do so? That's going to work fine if you do that
-reconfiguration over network...
-
-Thanks,
-
-        tglx
+> ---
+>  .../bindings/pci/samsung,exynos5440-pcie.txt  | 58 -------------------
+>  1 file changed, 58 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos5=
+440-pcie.txt
+[.....]
