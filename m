@@ -2,850 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B88B298370
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Oct 2020 20:51:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F14EE298388
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Oct 2020 21:49:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1418643AbgJYTvv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 25 Oct 2020 15:51:51 -0400
-Received: from chronos.abteam.si ([46.4.99.117]:48767 "EHLO chronos.abteam.si"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1418642AbgJYTvt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 25 Oct 2020 15:51:49 -0400
-X-Greylist: delayed 349 seconds by postgrey-1.27 at vger.kernel.org; Sun, 25 Oct 2020 15:51:42 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by chronos.abteam.si (Postfix) with ESMTP id 28B755D0007A
-        for <linux-pci@vger.kernel.org>; Sun, 25 Oct 2020 20:45:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bstnet.org; h=
-        content-transfer-encoding:content-language:content-type
-        :content-type:mime-version:user-agent:date:date:message-id
-        :subject:subject:from:from; s=default; t=1603655151; x=
-        1605469552; bh=kgkvt46+u0RY9+RfdXJCVegwYOqYNbfPL2d32xKl+xU=; b=u
-        Ke6zcQDM0Bh1udxb+5A2jAhtF1n39ml5KE2+BmLX5MRTMBdArBioeSlI4SXU+AdO
-        A04IOnb8hzYZS+kwytn2Jw/JDhJ/GkDt0eqbNbQJ3Yh504kawMxwTk5jYNj3Jv20
-        f5aUVj8HPQhZVOI305nQkfurMM1ieMFmYtLKnUj+vo=
-Received: from chronos.abteam.si ([127.0.0.1])
-        by localhost (chronos.abteam.si [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id CmUpjfoMe-5v for <linux-pci@vger.kernel.org>;
-        Sun, 25 Oct 2020 20:45:51 +0100 (CET)
-Received: from bst-slack.bstnet.org (unknown [IPv6:2a00:ee2:4d00:602:55ba:eee4:b8b8:69b3])
-        (Authenticated sender: boris@abteam.si)
-        by chronos.abteam.si (Postfix) with ESMTPSA id 766635D00072
-        for <linux-pci@vger.kernel.org>; Sun, 25 Oct 2020 20:45:51 +0100 (CET)
-To:     linux-pci@vger.kernel.org
-From:   "Boris V." <borisvk@bstnet.org>
-Subject: Kernel 5.9 IOMMU groups regression/change
-Message-ID: <74aeea93-8a46-5f5a-343c-790d4c655da3@bstnet.org>
-Date:   Sun, 25 Oct 2020 20:45:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1418738AbgJYUt2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 25 Oct 2020 16:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409589AbgJYUt2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 25 Oct 2020 16:49:28 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12EEEC061755;
+        Sun, 25 Oct 2020 13:49:28 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w65so2183788pfd.3;
+        Sun, 25 Oct 2020 13:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=LguKRcbWckkgvDwu3bbwQd9I6/8cYuASCMO5kIuQCSM=;
+        b=LPTZpWAXXYsG+bcLPhJGse3KcUOB98133ysnXInBzKhkz/8fUHoZP3ObryFB0e34ep
+         Y5/e2h1Ls81JOO3c1hV6nfpWHLKDhHtU40Tolh+LAtjxJfASKQxHA6KUIoD2YxU2pEwN
+         lTDEY10xQc/jhjFZy/YwX9Jjakq6y+p0N3rV6Q4EWy4L0KVE7kn90eXTv5YqG5lPv5u0
+         cI63yzXTumYl6jPKJyzCbYkc4P9iONKHjLlHq58R29KR5hK+9PZHUHwtETmfDcTPj4f9
+         tH/C82xmDIUfTBuc6p4lsvpoK6hv6z6bOfcqN83fQSy6IWMXGN3UiExe+M38ASF43ddj
+         g2bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=LguKRcbWckkgvDwu3bbwQd9I6/8cYuASCMO5kIuQCSM=;
+        b=YUJiThZ4aVQrNvtbB7CZcbznOONJXNjVrpGYSEaLJTHNsqQuiZffMDlPyGfG65fiDS
+         AjPp20WvwhECkTvJwEyF6UnJdavNfiK3jFg65kiw8BQVF0QN84yBPCmfvltXkb0k1lKH
+         eAyc+tkxlxHDCwA010mMqg7w0b3vZtwQ8W0hix9fr5RnCauylrS2vlHRCHUMbmArUiMZ
+         KQQ3mAEw6exAytNM7Sta2ROJ+7mFG+8MusfZ4jU9jshWpz1XKyIV3qRKzKCOqtOOK35f
+         3P+bVFuV7CR1IwZjg3q98gd3iLembXr4ape+1zIqVQItGnaFdgXKJuCU07EJJCXKaf/O
+         MfEA==
+X-Gm-Message-State: AOAM530ie3LO5vTcAr9C+9qMWGfhGBa68eXCp36ScGNy4nwrADlwTpa7
+        E/LI4eumK6RoEeRNL30hR6E=
+X-Google-Smtp-Source: ABdhPJy+/x3gfuTDxQZ/lNLCRzfaD7Rm9ZtQRIBP7UI1bLRcZJsHklk+DdHhIkrt1SijucAbkH87mA==
+X-Received: by 2002:a65:684d:: with SMTP id q13mr13067243pgt.372.1603658967454;
+        Sun, 25 Oct 2020 13:49:27 -0700 (PDT)
+Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
+        by smtp.gmail.com with ESMTPSA id w19sm10087136pff.6.2020.10.25.13.49.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 25 Oct 2020 13:49:26 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH 2/2] PCI: dwc: Add support to configure for ECRC
+Thread-Topic: [PATCH 2/2] PCI: dwc: Add support to configure for ECRC
+Thread-Index: AQHWqqDjcEvvIfJZ20eYN0/hpzWvqamoy1qz
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Sun, 25 Oct 2020 20:49:20 +0000
+Message-ID: <SLXP216MB0477AAC31DF68862BE5BC3EEAA180@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
+References: <20201025073113.31291-1-vidyas@nvidia.com>
+ <20201025073113.31291-3-vidyas@nvidia.com>
+In-Reply-To: <20201025073113.31291-3-vidyas@nvidia.com>
+Accept-Language: ko-KR, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With upgrade to kernel 5.9 my VMs stopped working, because some devices=20
-can't be passed through.
-This is caused by different IOMMU groups and devices being in the same=20
-group.
+On 10/25/20, 3:31 AM, Vidya Sagar wrote:
+>=20
+> DesignWare core has a TLP digest (TD) override bit in one of the control
+> registers of ATU. This bit also needs to be programmed for proper ECRC
+> functionality. This is currently identified as an issue with DesignWare
+> IP version 4.90a. This patch does the required programming in ATU upon
+> querying the system policy for ECRC.
+>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
+>  drivers/pci/controller/dwc/pcie-designware.h | 2 ++
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/c=
+ontroller/dwc/pcie-designware.c
+> index b5e438b70cd5..810dcbdbe869 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -245,7 +245,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct d=
+w_pcie *pci, u8 func_no,
+>  				 lower_32_bits(pci_addr));
+>  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+>  				 upper_32_bits(pci_addr));
+> -	val =3D type | PCIE_ATU_FUNC_NUM(func_no);
+> +	val =3D type | PCIE_ATU_FUNC_NUM(func_no) | pci->td << PCIE_ATU_TD_SHIF=
+T;
+>  	val =3D upper_32_bits(size - 1) ?
+>  		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
+>  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+> @@ -295,7 +295,8 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pci=
+e *pci, u8 func_no,
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
+>  			   upper_32_bits(pci_addr));
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+> -			   PCIE_ATU_FUNC_NUM(func_no));
+> +			   PCIE_ATU_FUNC_NUM(func_no) |
+> +			   pci->td << PCIE_ATU_TD_SHIFT);
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+>
+>  	/*
+> @@ -565,6 +566,9 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  	dev_dbg(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
+>  		"enabled" : "disabled");
+>
+> +	if (pci->version =3D=3D 0x490A)
+> +		pci->td =3D pcie_is_ecrc_enabled();
+> +
+>  	if (pci->link_gen > 0)
+>  		dw_pcie_link_set_max_speed(pci, pci->link_gen);
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/c=
+ontroller/dwc/pcie-designware.h
+> index 21dd06831b50..d34723e42e79 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -90,6 +90,7 @@
+>  #define PCIE_ATU_TYPE_IO		0x2
+>  #define PCIE_ATU_TYPE_CFG0		0x4
+>  #define PCIE_ATU_TYPE_CFG1		0x5
+> +#define PCIE_ATU_TD_SHIFT		8
+>  #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
+>  #define PCIE_ATU_CR2			0x908
+>  #define PCIE_ATU_ENABLE			BIT(31)
+> @@ -276,6 +277,7 @@ struct dw_pcie {
+>  	int			num_lanes;
+>  	int			link_gen;
+>  	u8			n_fts[2];
+> +	bool			td;	/* TLP Digest (for ECRC purpose) */
 
-For ex. with kernel 5.8 this are IOMMU groups:
-IOMMU Group 40:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:01.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 09:00.0 Ethernet controller [=
-0200]: Intel Corporation I211=20
-Gigabit Network Connection [8086:1539] (rev 03)
-IOMMU Group 43:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0c:00.0 SATA controller [0106=
-]: ASMedia Technology Inc. ASM1062=20
-Serial ATA Controller [1b21:0612] (rev 02)
-IOMMU Group 44:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0d:00.0 USB controller [0c03]=
-: ASMedia Technology Inc. ASM1042A=20
-USB 3.0 Host Controller [1b21:1142]
+If possible, don't add a new variable to 'dw_pcie' structure.
+Please find a way to set TD bit without adding a new variable to 'dw_pcie' =
+structure'.
 
-Ethernet, SATA and USB controller in its own group.
+Best regards,
+Jingoo Han
 
-And with 5.9, everything is in one group:
-IOMMU Group 29:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.0 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #1 [8086:8d10] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.3 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #4 [8086:8d16] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.4 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #5 [8086:8d18] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.6 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #7 [8086:8d1c] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 07:00.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:01.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:03.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:04.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 09:00.0 Ethernet controller [=
-0200]: Intel Corporation I211=20
-Gigabit Network Connection [8086:1539] (rev 03)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0c:00.0 SATA controller [0106=
-]: ASMedia Technology Inc. ASM1062=20
-Serial ATA Controller [1b21:0612] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0d:00.0 USB controller [0c03]=
-: ASMedia Technology Inc. ASM1042A=20
-USB 3.0 Host Controller [1b21:1142]
-
-
-This seems to be caused by commit 52fbf5bdeeef415b28b8e6cdade1e48927927f6=
-0.
-commit 52fbf5bdeeef415b28b8e6cdade1e48927927f60
-Author: Rajat Jain <rajatja@google.com>
-Date:=C2=A0=C2=A0 Tue Jul 7 15:46:02 2020 -0700
-
- =C2=A0=C2=A0=C2=A0 PCI: Cache ACS capability offset in device
-
- =C2=A0=C2=A0=C2=A0 Currently the ACS capability is being looked up at a =
-number of=20
-places. Read
- =C2=A0=C2=A0=C2=A0 and store it once at enumeration so that it can be us=
-ed by all=20
-later.=C2=A0 No
- =C2=A0=C2=A0=C2=A0 functional change intended.
-
- =C2=A0=C2=A0=C2=A0 Link:=20
-https://lore.kernel.org/r/20200707224604.3737893-2-rajatja@google.com
- =C2=A0=C2=A0=C2=A0 Signed-off-by: Rajat Jain <rajatja@google.com>
- =C2=A0=C2=A0=C2=A0 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
- =C2=A0drivers/pci/p2pdma.c |=C2=A0 2 +-
- =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0 | 20 ++++++++++++++++----
- =C2=A0drivers/pci/pci.h=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
- =C2=A0drivers/pci/probe.c=C2=A0 |=C2=A0 2 +-
- =C2=A0drivers/pci/quirks.c |=C2=A0 8 ++++----
- =C2=A0include/linux/pci.h=C2=A0 |=C2=A0 1 +
- =C2=A06 files changed, 24 insertions(+), 11 deletions(-)
-
-
-If I revert this commit, I get back old groups.
-
-In commit log there is message 'No functional change intended'. But=20
-there is functional change.
-
-This is Intel Core i7-5930K CPU and X99 chipset. But I see the same=20
-thing on other Intel systems (didn't test on AMD).
-
-
-Below are full IOMMU groups.
-
-Kernel 5.8 or 5.9 with commit 52fbf5bdeeef415b28b8e6cdade1e48927927f60=20
-reverted:
-
-IOMMU Group 0:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0b.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring [8086:2f81] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0b.1 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring [8086:2f36] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0b.2 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring [8086:2f37] (rev 02)
-IOMMU Group 1:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe1] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe2] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe3] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe4] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe5] (rev 02)
-IOMMU Group 10:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f98] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f99] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f9a] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2fc0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f9c] (rev 02)
-IOMMU Group 11:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1f.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 VCU [8086:2f88] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1f.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 VCU [8086:2f8a] (rev 02)
-IOMMU Group 12:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:00.0 Host bridge [0600]: I=
-ntel Corporation Xeon E7 v3/Xeon=20
-E5 v3/Core i7 DMI2 [8086:2f00] (rev 02)
-IOMMU Group 13:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:01.0 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 1 [8086:2f02] (rev 02)
-IOMMU Group 14:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:01.1 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 1 [8086:2f03] (rev 02)
-IOMMU Group 15:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:02.0 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 2 [8086:2f04] (rev 02)
-IOMMU Group 16:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:03.0 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 3 [8086:2f08] (rev 02)
-IOMMU Group 17:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:03.2 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 3 [8086:2f0a] (rev 02)
-IOMMU Group 18:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Address Map, VTd_Misc, System Management=20
-[8086:2f28] (rev 02)
-IOMMU Group 19:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Hot Plug [8086:2f29] (rev 02)
-IOMMU Group 2:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Buffered Ring Agent [8086:2ff8] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Buffered Ring Agent [8086:2ff9] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers=20
-[8086:2ffc] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers=20
-[8086:2ffd] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers=20
-[8086:2ffe] (rev 02)
-IOMMU Group 20:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 RAS, Control Status and Global Errors [8086:2f2a]=20
-(rev 02)
-IOMMU Group 21:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.4 PIC [0800]: Intel Cor=
-poration Xeon E7 v3/Xeon E5=20
-v3/Core i7 I/O APIC [8086:2f2c] (rev 02)
-IOMMU Group 22:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:11.0 Unassigned class [ff0=
-0]: Intel Corporation C610/X99=20
-series chipset SPSR [8086:8d7c] (rev 05)
-IOMMU Group 23:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:11.4 SATA controller [0106=
-]: Intel Corporation C610/X99=20
-series chipset sSATA Controller [AHCI mode] [8086:8d62] (rev 05)
-IOMMU Group 24:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:14.0 USB controller [0c03]=
-: Intel Corporation C610/X99=20
-series chipset USB xHCI Host Controller [8086:8d31] (rev 05)
-IOMMU Group 25:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:16.0 Communication control=
-ler [0780]: Intel Corporation=20
-C610/X99 series chipset MEI Controller #1 [8086:8d3a] (rev 05)
-IOMMU Group 26:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:19.0 Ethernet controller [=
-0200]: Intel Corporation Ethernet=20
-Connection (2) I218-V [8086:15a1] (rev 05)
-IOMMU Group 27:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1a.0 USB controller [0c03]=
-: Intel Corporation C610/X99=20
-series chipset USB Enhanced Host Controller #2 [8086:8d2d] (rev 05)
-IOMMU Group 28:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1b.0 Audio device [0403]: =
-Intel Corporation C610/X99 series=20
-chipset HD Audio Controller [8086:8d20] (rev 05)
-IOMMU Group 29:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.0 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #1 [8086:8d10] (rev d5)
-IOMMU Group 3:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 PCIe Ring Interface [8086:2f1d] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.1 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 PCIe Ring Interface [8086:2f34] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers [8086:2f1e] (rev 0=
-2)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.6 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers [8086:2f7d] (rev 0=
-2)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers [8086:2f1f] (rev 0=
-2)
-IOMMU Group 30:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.3 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #4 [8086:8d16] (rev d5)
-IOMMU Group 31:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.4 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #5 [8086:8d18] (rev d5)
-IOMMU Group 32:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.6 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #7 [8086:8d1c] (rev d5)
-IOMMU Group 33:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1d.0 USB controller [0c03]=
-: Intel Corporation C610/X99=20
-series chipset USB Enhanced Host Controller #1 [8086:8d26] (rev 05)
-IOMMU Group 34:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1f.0 ISA bridge [0601]: In=
-tel Corporation C610/X99 series=20
-chipset LPC Controller [8086:8d47] (rev 05)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1f.2 SATA controller [0106=
-]: Intel Corporation C610/X99=20
-series chipset 6-Port SATA Controller [AHCI mode] [8086:8d02] (rev 05)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1f.3 SMBus [0c05]: Intel C=
-orporation C610/X99 series chipset=20
-SMBus Controller [8086:8d22] (rev 05)
-IOMMU Group 35:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 05:00.0 Non-Volatile memory c=
-ontroller [0108]: Samsung=20
-Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983 [144d:a808]
-IOMMU Group 36:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 03:00.0 VGA compatible contro=
-ller [0300]: NVIDIA Corporation=20
-GM204 [GeForce GTX 980] [10de:13c0] (rev a1)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 03:00.1 Audio device [0403]: =
-NVIDIA Corporation GM204 High=20
-Definition Audio Controller [10de:0fbb] (rev a1)
-IOMMU Group 37:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 02:00.0 Ethernet controller [=
-0200]: Mellanox Technologies=20
-MT27500 Family [ConnectX-3] [15b3:1003]
-IOMMU Group 38:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 01:00.0 VGA compatible contro=
-ller [0300]: NVIDIA Corporation=20
-GP107 [GeForce GTX 1050 Ti] [10de:1c82] (rev a1)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 01:00.1 Audio device [0403]: =
-NVIDIA Corporation GP107GL High=20
-Definition Audio Controller [10de:0fb9] (rev a1)
-IOMMU Group 39:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 07:00.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
-IOMMU Group 4:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:12.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Home Agent 0 [8086:2fa0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:12.1 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Home Agent 0 [8086:2f30] (rev 02)
-IOMMU Group 40:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:01.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 09:00.0 Ethernet controller [=
-0200]: Intel Corporation I211=20
-Gigabit Network Connection [8086:1539] (rev 03)
-IOMMU Group 41:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:03.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
-IOMMU Group 42:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:04.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
-IOMMU Group 43:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0c:00.0 SATA controller [0106=
-]: ASMedia Technology Inc. ASM1062=20
-Serial ATA Controller [1b21:0612] (rev 02)
-IOMMU Group 44:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0d:00.0 USB controller [0c03]=
-: ASMedia Technology Inc. ASM1042A=20
-USB 3.0 Host Controller [1b21:1142]
-IOMMU Group 5:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address,=20
-Thermal & RAS Registers [8086... (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address,=20
-Thermal & RAS Registers [8086... (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2faa] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2fab] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2fac] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2fad] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Channel 0/1 Broadcast [8086:2fae] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast [8086:2faf] (rev 02)
-IOMMU Group 6:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 Thermal=20
-Control [8086:2fb0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 Thermal=20
-Control [8086:2fb1] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 ERROR=20
-Registers [8086:2fb2] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 ERROR=20
-Registers [8086:2fb3] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbc] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbd] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbe] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbf] (rev 02)
-IOMMU Group 7:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 Thermal=20
-Control [8086:2fb4] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 Thermal=20
-Control [8086:2fb5] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 ERROR=20
-Registers [8086:2fb6] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 ERROR=20
-Registers [8086:2fb7] (rev 02)
-IOMMU Group 8:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:16.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Target Address,=20
-Thermal & RAS Registers [8086... (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:16.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Channel 2/3 Broadcast [8086:2f6e] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:16.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast [8086:2f6f] (rev 02)
-IOMMU Group 9:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Channel 0 Thermal=20
-Control [8086:2fd0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fb8] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fb9] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fba] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fbb] (rev 02)
-
-
-Kernel 5.9:
-
-IOMMU Group 0:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0b.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring [8086:2f81] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0b.1 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring [8086:2f36] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0b.2 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 R3 QPI Link 0 & 1 Monitoring [8086:2f37] (rev 02)
-IOMMU Group 1:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe1] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe2] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe3] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe4] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0c.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Unicast Registers [8086:2fe5] (rev 02)
-IOMMU Group 10:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f98] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f99] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f9a] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2fc0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1e.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Power Control Unit [8086:2f9c] (rev 02)
-IOMMU Group 11:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1f.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 VCU [8086:2f88] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:1f.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 VCU [8086:2f8a] (rev 02)
-IOMMU Group 12:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:00.0 Host bridge [0600]: I=
-ntel Corporation Xeon E7 v3/Xeon=20
-E5 v3/Core i7 DMI2 [8086:2f00] (rev 02)
-IOMMU Group 13:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:01.0 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 1 [8086:2f02] (rev 02)
-IOMMU Group 14:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:01.1 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 1 [8086:2f03] (rev 02)
-IOMMU Group 15:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:02.0 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 2 [8086:2f04] (rev 02)
-IOMMU Group 16:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:03.0 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 3 [8086:2f08] (rev 02)
-IOMMU Group 17:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:03.2 PCI bridge [0604]: In=
-tel Corporation Xeon E7 v3/Xeon E5=20
-v3/Core i7 PCI Express Root Port 3 [8086:2f0a] (rev 02)
-IOMMU Group 18:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Address Map, VTd_Misc, System Management=20
-[8086:2f28] (rev 02)
-IOMMU Group 19:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Hot Plug [8086:2f29] (rev 02)
-IOMMU Group 2:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Buffered Ring Agent [8086:2ff8] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Buffered Ring Agent [8086:2ff9] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers=20
-[8086:2ffc] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers=20
-[8086:2ffd] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:0f.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 System Address Decoder & Broadcast Registers=20
-[8086:2ffe] (rev 02)
-IOMMU Group 20:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 RAS, Control Status and Global Errors [8086:2f2a]=20
-(rev 02)
-IOMMU Group 21:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:05.4 PIC [0800]: Intel Cor=
-poration Xeon E7 v3/Xeon E5=20
-v3/Core i7 I/O APIC [8086:2f2c] (rev 02)
-IOMMU Group 22:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:11.0 Unassigned class [ff0=
-0]: Intel Corporation C610/X99=20
-series chipset SPSR [8086:8d7c] (rev 05)
-IOMMU Group 23:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:11.4 SATA controller [0106=
-]: Intel Corporation C610/X99=20
-series chipset sSATA Controller [AHCI mode] [8086:8d62] (rev 05)
-IOMMU Group 24:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:14.0 USB controller [0c03]=
-: Intel Corporation C610/X99=20
-series chipset USB xHCI Host Controller [8086:8d31] (rev 05)
-IOMMU Group 25:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:16.0 Communication control=
-ler [0780]: Intel Corporation=20
-C610/X99 series chipset MEI Controller #1 [8086:8d3a] (rev 05)
-IOMMU Group 26:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:19.0 Ethernet controller [=
-0200]: Intel Corporation Ethernet=20
-Connection (2) I218-V [8086:15a1] (rev 05)
-IOMMU Group 27:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1a.0 USB controller [0c03]=
-: Intel Corporation C610/X99=20
-series chipset USB Enhanced Host Controller #2 [8086:8d2d] (rev 05)
-IOMMU Group 28:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1b.0 Audio device [0403]: =
-Intel Corporation C610/X99 series=20
-chipset HD Audio Controller [8086:8d20] (rev 05)
-IOMMU Group 29:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.0 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #1 [8086:8d10] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.3 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #4 [8086:8d16] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.4 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #5 [8086:8d18] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1c.6 PCI bridge [0604]: In=
-tel Corporation C610/X99 series=20
-chipset PCI Express Root Port #7 [8086:8d1c] (rev d5)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 07:00.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:01.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:03.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 08:04.0 PCI bridge [0604]: AS=
-Media Technology Inc. Device=20
-[1b21:118f]
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 09:00.0 Ethernet controller [=
-0200]: Intel Corporation I211=20
-Gigabit Network Connection [8086:1539] (rev 03)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0c:00.0 SATA controller [0106=
-]: ASMedia Technology Inc. ASM1062=20
-Serial ATA Controller [1b21:0612] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0d:00.0 USB controller [0c03]=
-: ASMedia Technology Inc. ASM1042A=20
-USB 3.0 Host Controller [1b21:1142]
-IOMMU Group 3:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 PCIe Ring Interface [8086:2f1d] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.1 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 PCIe Ring Interface [8086:2f34] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers [8086:2f1e] (rev 0=
-2)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.6 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers [8086:2f7d] (rev 0=
-2)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:10.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Scratchpad & Semaphore Registers [8086:2f1f] (rev 0=
-2)
-IOMMU Group 30:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1d.0 USB controller [0c03]=
-: Intel Corporation C610/X99=20
-series chipset USB Enhanced Host Controller #1 [8086:8d26] (rev 05)
-IOMMU Group 31:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1f.0 ISA bridge [0601]: In=
-tel Corporation C610/X99 series=20
-chipset LPC Controller [8086:8d47] (rev 05)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1f.2 SATA controller [0106=
-]: Intel Corporation C610/X99=20
-series chipset 6-Port SATA Controller [AHCI mode] [8086:8d02] (rev 05)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 00:1f.3 SMBus [0c05]: Intel C=
-orporation C610/X99 series chipset=20
-SMBus Controller [8086:8d22] (rev 05)
-IOMMU Group 32:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 05:00.0 Non-Volatile memory c=
-ontroller [0108]: Samsung=20
-Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983 [144d:a808]
-IOMMU Group 33:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 03:00.0 VGA compatible contro=
-ller [0300]: NVIDIA Corporation=20
-GM204 [GeForce GTX 980] [10de:13c0] (rev a1)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 03:00.1 Audio device [0403]: =
-NVIDIA Corporation GM204 High=20
-Definition Audio Controller [10de:0fbb] (rev a1)
-IOMMU Group 34:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 02:00.0 Ethernet controller [=
-0200]: Mellanox Technologies=20
-MT27500 Family [ConnectX-3] [15b3:1003]
-IOMMU Group 35:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 01:00.0 VGA compatible contro=
-ller [0300]: NVIDIA Corporation=20
-GP107 [GeForce GTX 1050 Ti] [10de:1c82] (rev a1)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 01:00.1 Audio device [0403]: =
-NVIDIA Corporation GP107GL High=20
-Definition Audio Controller [10de:0fb9] (rev a1)
-IOMMU Group 4:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:12.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Home Agent 0 [8086:2fa0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:12.1 Performance counters =
-[1101]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Home Agent 0 [8086:2f30] (rev 02)
-IOMMU Group 5:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address,=20
-Thermal & RAS Registers [8086... (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Target Address,=20
-Thermal & RAS Registers [8086... (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2faa] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2fab] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2fac] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel Target=20
-Address Decoder [8086:2fad] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Channel 0/1 Broadcast [8086:2fae] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:13.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast [8086:2faf] (rev 02)
-IOMMU Group 6:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 Thermal=20
-Control [8086:2fb0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 Thermal=20
-Control [8086:2fb1] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 0 ERROR=20
-Registers [8086:2fb2] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 1 ERROR=20
-Registers [8086:2fb3] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbc] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbd] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbe] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:14.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 0 & 1 [8086:2fbf] (rev 02)
-IOMMU Group 7:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 Thermal=20
-Control [8086:2fb4] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.1 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 Thermal=20
-Control [8086:2fb5] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.2 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 2 ERROR=20
-Registers [8086:2fb6] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:15.3 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 0 Channel 3 ERROR=20
-Registers [8086:2fb7] (rev 02)
-IOMMU Group 8:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:16.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Target Address,=20
-Thermal & RAS Registers [8086... (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:16.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Channel 2/3 Broadcast [8086:2f6e] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:16.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO Global Broadcast [8086:2f6f] (rev 02)
-IOMMU Group 9:
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.0 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 Integrated Memory Controller 1 Channel 0 Thermal=20
-Control [8086:2fd0] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.4 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fb8] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.5 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fb9] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.6 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fba] (rev 02)
- =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ff:17.7 System peripheral [08=
-80]: Intel Corporation Xeon E7=20
-v3/Xeon E5 v3/Core i7 DDRIO (VMSE) 2 & 3 [8086:2fbb] (rev 02)
+>  };
+>
+>  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp=
+)
+> --=20
+> 2.17.1
 
