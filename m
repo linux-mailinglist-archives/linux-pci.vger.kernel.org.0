@@ -2,144 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F4C4297E8F
-	for <lists+linux-pci@lfdr.de>; Sat, 24 Oct 2020 22:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB7082980A7
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Oct 2020 08:31:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1764539AbgJXU4T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 24 Oct 2020 16:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1764536AbgJXU4T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 24 Oct 2020 16:56:19 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6391BC0613CE
-        for <linux-pci@vger.kernel.org>; Sat, 24 Oct 2020 13:56:03 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id i2so5472947ljg.4
-        for <linux-pci@vger.kernel.org>; Sat, 24 Oct 2020 13:56:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xZT+5FZe1JJratYtVvddwvaIyTNrCamHP4CwNxkpWBg=;
-        b=kksQsO+YLUDQhdI6/GTYGjAMlsX+XhJmP9nmjr55rRr8wFUGaT8J6R29s3rLdnoX0Y
-         Leijw7ntpumAcSwf+O+jEqqIa9ESP9ZhUgEHUtMsJS1H58uuhhtvEyLULSeLAB9wCNCL
-         zgsEwiqk+vzNcRtB5SRvpl4IXUbRFYTzXXoyQMBy6dj9qGsJjR6D4ngiuo77wWtFHZar
-         O73LHWPOReO070ZqnEBjiiXt4e2rj8+u8T0pgK8fuN1iTx3E3VwoaPbzYPuonX8xGxtL
-         pNVCfe4NRb0Y9JTHG144WaFdMHauoDVaKuT0+vvTk9U2DWKOhkZ6/qdGOztPJ0L/TOU1
-         6voQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xZT+5FZe1JJratYtVvddwvaIyTNrCamHP4CwNxkpWBg=;
-        b=ebJvZqcnxnGr/B2WLY5ZDYoLJjS4pqa7gsCOjkLt+j3C4PoM03HsFJaVVEr1N7QEsY
-         WRqWfAzB/z/AOouusMWiFd75uUCFrxe2zlcJMolhtNmUMPU6TY4W/8+2Tr8FjmicntPi
-         sq/yV6vDkYX9J+fKl6MsDz8qNf643AFvWWXZkVTibsQNJtigPuR8M8QPbGaoo/Z1EDpX
-         UZYkprN2thPlgCt0wSxChC1IWkuQ++yUkW8ZSNLSPdCRmbfhSC6tHtjW0yHN2s1vKrkl
-         AcMScxnd4lxKwFHAVZsIqc2EfGLVyhZ7rZmj5DypXsJ3Zd/4UeKni2DT6mVDB7vdiq/y
-         CtmQ==
-X-Gm-Message-State: AOAM531Vzj6+REpsmvkPpsPsjqTK1hzQg4pFHlXsLO6ns2HsN7hFAkRe
-        bK0UsIp5sw2RIieWCWKjuZ4=
-X-Google-Smtp-Source: ABdhPJzViab6/TRRJFUoCbURv6LeDvTlYJVhQGMCpzlZ+mt7l/aOfLSN/JWNCSlg0iJ/CIWO7AzAcQ==
-X-Received: by 2002:a2e:9905:: with SMTP id v5mr2965374lji.222.1603572961852;
-        Sat, 24 Oct 2020 13:56:01 -0700 (PDT)
-Received: from octa.pomac.com (c-f9c8225c.013-195-6c756e10.bbcust.telenor.se. [92.34.200.249])
-        by smtp.gmail.com with ESMTPSA id f26sm246815lfc.302.2020.10.24.13.56.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Oct 2020 13:56:01 -0700 (PDT)
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-To:     kai.heng.feng@canonical.com, linux-pci@vger.kernel.org,
-        alexander.duyck@gmail.com, refactormyself@gmail.com,
-        puranjay12@gmail.com
-Cc:     Ian Kumlien <ian.kumlien@gmail.com>
-Subject: [PATCH 3/3] [RFC] PCI/ASPM: Print L1/L0s latency messages per endpoint
-Date:   Sat, 24 Oct 2020 22:55:48 +0200
-Message-Id: <20201024205548.1837770-3-ian.kumlien@gmail.com>
-X-Mailer: git-send-email 2.29.1
-In-Reply-To: <20201024205548.1837770-1-ian.kumlien@gmail.com>
-References: <20201022183030.GA513862@bjorn-Precision-5520>
- <20201024205548.1837770-1-ian.kumlien@gmail.com>
+        id S1767792AbgJYHbV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 25 Oct 2020 03:31:21 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12799 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1767791AbgJYHbU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 25 Oct 2020 03:31:20 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f9529d00000>; Sun, 25 Oct 2020 00:31:28 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 25 Oct
+ 2020 07:31:20 +0000
+Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Sun, 25 Oct 2020 07:31:16 +0000
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH 0/2] Add support to configure DWC for ECRC
+Date:   Sun, 25 Oct 2020 13:01:11 +0530
+Message-ID: <20201025073113.31291-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1603611088; bh=Z7I/w0Qyshk5wSGbJUe74d+c8TI8tu2umpG5oTytpqc=;
+        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:X-NVConfidentiality:
+         MIME-Version:Content-Type;
+        b=eSzkpf5WzMAfMmZmfHFEhluMCG3ASNSTNZx3juOm9Yp95wvG66w/ic+0U9g2ZBZAb
+         1jZqM6jLZJZzud+zbIoWNK+mQNLxhioU3yyHRtJ+N0G4AV8IrqzUTy2AAq8wzcELCP
+         D+Bvhrx6xBhNYsLl014M4wS9j/+rJTzAp7O+GNVkgf0KrPXjQsYgovZTnOgqWH7hWy
+         Nu7683MK95koV43jm8BnPqxR3V4lUlF9hzrqvcLXFkqJZxt01I38WK4MBwJYlWPRg5
+         7rioP4mWa7qvkxIgHjlCSkgSbdyGN9PSjMF7f9x9dKzIgmnBqjDX5XgfSDoCsDGKN1
+         YJr2fQ08t/cuQ==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Print information on where along the path we disable L1 or L0s per
-endpoint. I think the infromation could be useful in the normal dmesg.
+This series has two patches.
 
-Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
----
- drivers/pci/pcie/aspm.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Patch-1: Adds a public API to query if the system has ECRC policty turned on.
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index dbe3ce60c1ff..8bec24119f3e 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -436,6 +436,7 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- {
- 	u32 latency, l1_max_latency = 0, l1_switch_latency = 0,
- 		l0s_latency_up = 0, l0s_latency_dw = 0;
-+	bool aspm_disable = 0;
- 	struct aspm_latency *acceptable;
- 	struct pcie_link_state *link;
- 
-@@ -447,19 +448,35 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- 	link = endpoint->bus->self->link_state;
- 	acceptable = &link->acceptable[PCI_FUNC(endpoint->devfn)];
- 
-+#define aspm_info(device, type, down, up) \
-+	if (!aspm_disable) \
-+	{ \
-+		pr_cont("pci %s: ASPM latency exceeded, disabling: %s:%s-%s", \
-+			pci_name(device), type, pci_name(down), pci_name(up)); \
-+		aspm_disable = 1; \
-+	} \
-+	else \
-+		pr_cont(", %s:%s-%s", type, pci_name(down), pci_name(up));
-+
- 	while (link) {
- 		/* Check upstream direction L0s latency */
- 		if (link->aspm_capable & ASPM_STATE_L0S_UP) {
- 			l0s_latency_up += link->latency_up.l0s;
- 			if (l0s_latency_up > acceptable->l0s)
-+			{
- 				link->aspm_capable &= ~ASPM_STATE_L0S_UP;
-+				aspm_info(endpoint, "L0s-up", link->downstream, link->pdev);
-+			}
- 		}
- 
- 		/* Check downstream direction L0s latency */
- 		if (link->aspm_capable & ASPM_STATE_L0S_DW) {
- 			l0s_latency_dw += link->latency_dw.l0s;
- 			if (l0s_latency_dw > acceptable->l0s)
-+			{
- 				link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-+				aspm_info(endpoint, "L0s-dw", link->downstream, link->pdev);
-+			}
- 		}
- 
- 		/*
-@@ -482,12 +499,18 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
- 			latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
- 			l1_max_latency = max_t(u32, latency, l1_max_latency);
- 			if (l1_max_latency + l1_switch_latency > acceptable->l1)
-+			{
- 				link->aspm_capable &= ~ASPM_STATE_L1;
-+				aspm_info(endpoint, "L1", link->downstream, link->pdev);
-+			}
- 			l1_switch_latency += 1000;
- 		}
- 
- 		link = link->parent;
- 	}
-+	if (aspm_disable)
-+		pr_cont("\n");
-+#undef aspm_info
- }
- 
- /*
+Patch-2: DesignWare core PCIe IP has a TLP Digest (TD) override bit in one of
+its control registers of ATU. This bit needs to be programmed for proper ECRC
+functionality. This is currently identified as an issue with DesignWare
+IP version 4.90a. DWC code queries the PCIe sub-system through the API added
+in Patch-1 to find out if ECRC is turned on or not and configures ATU
+accordingly.
+
+Vidya Sagar (2):
+  PCI/AER: Add pcie_is_ecrc_enabled() API
+  PCI: dwc: Add support to configure for ECRC
+
+ drivers/pci/controller/dwc/pcie-designware.c |  8 ++++++--
+ drivers/pci/controller/dwc/pcie-designware.h |  2 ++
+ drivers/pci/pci.h                            |  2 ++
+ drivers/pci/pcie/aer.c                       | 11 +++++++++++
+ 4 files changed, 21 insertions(+), 2 deletions(-)
+
 -- 
-2.29.1
+2.17.1
 
