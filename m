@@ -2,119 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 306932980AB
-	for <lists+linux-pci@lfdr.de>; Sun, 25 Oct 2020 08:31:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8583298267
+	for <lists+linux-pci@lfdr.de>; Sun, 25 Oct 2020 16:51:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1767812AbgJYHbg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 25 Oct 2020 03:31:36 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4358 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1767811AbgJYHbg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 25 Oct 2020 03:31:36 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f9529c20001>; Sun, 25 Oct 2020 00:31:14 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 25 Oct
- 2020 07:31:32 +0000
-Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Sun, 25 Oct 2020 07:31:29 +0000
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH 2/2] PCI: dwc: Add support to configure for ECRC
-Date:   Sun, 25 Oct 2020 13:01:13 +0530
-Message-ID: <20201025073113.31291-3-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201025073113.31291-1-vidyas@nvidia.com>
-References: <20201025073113.31291-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1414641AbgJYPvq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 25 Oct 2020 11:51:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgJYPvq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 25 Oct 2020 11:51:46 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60584C0613CE;
+        Sun, 25 Oct 2020 08:51:46 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id w25so6890236edx.2;
+        Sun, 25 Oct 2020 08:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ENM8NUlE+VbmDvxGv+dxsLS9+OxbsabhFcC8lexS+kg=;
+        b=fnE9KK2bm1iWLICzjnjJf2DlsTjFVGZOdG7lqDMAzsofkYTSiU7mi5GJQF59rChlg7
+         yHySxnocodqpVkhaPV7GYwEk7IHIOCXog1I6sBy47YJYhJZzy7hIVeK6Lcc6tBwy+IgU
+         KpMQpXGdGLE/SO18YcJez1cMEEBXmNgR/BKH/4C0aMZABtm8mvkqOd7TGYa6DMdTogL2
+         sJMvuWrrHph9U27TT6sgAWes8Yh2XmJ1kD5Uy1CQP9aRE3XZWPwZdbvmj6dnEeFGrlbM
+         yLk+b5An1UUN6dFkpu4RrX3VyVgP0YM+KnMMI1o4ehHbb5NXbeGcF/Yvmuoore1iSCsF
+         a/JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ENM8NUlE+VbmDvxGv+dxsLS9+OxbsabhFcC8lexS+kg=;
+        b=BZjsylWK1brJbVKAG77jszChveqIwbXqXYWqPPU4QbIWHcT8M5CUlCzYPEUCqFQ3Aa
+         nmGDMLDE/as0RJUEaQ0DhK0bztKIGP0DSvC9G+W32JHaNcMMcRjb36W9EDjNmuj0L8Je
+         9ZvTGK2tjmfg2MLly2+PjOJKp8e47PtFvszRma2bWlc/pg6BpzKgZvHCnwjVj7w0A25N
+         dHv/isYsKwYw3hUA43DL1hrstI3Rsyr3dJsRwoAyyANfLV95WMhsrZ2mXNu96eNfCrtT
+         svexUQo/l474BtzAhyXnRAEtHhEHdxXn94l4el6uF2FYnMrUkLcS85Vind/ew1wngkGI
+         5FKg==
+X-Gm-Message-State: AOAM532GjfBnSkYrbAcfd3botyDU2fH2dO51VbrRtMHr1CWCuxl62wtg
+        PoktSwbcPAuPq1Z4rw2CbPvIMiz1Btk=
+X-Google-Smtp-Source: ABdhPJyg4AURQQWoA5ScuhUpZnzNoyasJ3Md0JAcI6Gjkk6KRO7pJedOyZnQV/dozoHLiXNXrnZggg==
+X-Received: by 2002:a50:88e5:: with SMTP id d92mr12093424edd.145.1603641104733;
+        Sun, 25 Oct 2020 08:51:44 -0700 (PDT)
+Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
+        by smtp.gmail.com with ESMTPSA id p9sm4089326ejo.75.2020.10.25.08.51.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Oct 2020 08:51:43 -0700 (PDT)
+Subject: Re: [PATCH] PCI: rcar: Always allocate MSI addresses in 32bit space
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20201016120431.7062-1-marek.vasut@gmail.com>
+ <CAMuHMdW3obrfdnt7=oTxrpav2+rXhNhDiJ3fWRP3aF0jZQYNNQ@mail.gmail.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <5f056161-8adc-384f-9b60-842d9d7a3e8f@gmail.com>
+Date:   Sun, 25 Oct 2020 16:37:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1603611074; bh=O036KGB+W4I8DOqlF/uWVYjS/H3GA3LI6UfIhNnJWYs=;
-        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
-         References:X-NVConfidentiality:MIME-Version:Content-Type;
-        b=RY9bQ0GpGMzooH0UoiZTlY54yuC0kGsQACVcUWlEPsbKVH6+/viaVs9F3gfjSiEZo
-         UR7AnxS5eVa+65iEym6fLR5dzEFnw0+zr3JclmaGEz5TB75xoE5545bAJ3oSEc3WRV
-         dK+iQ68JaPPVLBK9IJmSYmE7feptqoVDstY0z/hODZy9vyi5YvY+qjvjHuTI7xWM0p
-         9AQQBJAeKkSCosE7eBv88D9xe+vXrb20nbtKpgUaN8E3PRJxQJyA4wYoibzBijAFM7
-         1A67hO71TyrKP+2eZSg4ihejuDrtLfww9WKNk4OLVcbhCjNkW82GFnZ5CFNpRwU58P
-         X5PJmJIyWfPTg==
+In-Reply-To: <CAMuHMdW3obrfdnt7=oTxrpav2+rXhNhDiJ3fWRP3aF0jZQYNNQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DesignWare core has a TLP digest (TD) override bit in one of the control
-registers of ATU. This bit also needs to be programmed for proper ECRC
-functionality. This is currently identified as an issue with DesignWare
-IP version 4.90a. This patch does the required programming in ATU upon
-querying the system policy for ECRC.
+On 10/20/20 9:47 AM, Geert Uytterhoeven wrote:
+> Hi Marek,
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
- drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
- drivers/pci/controller/dwc/pcie-designware.h | 2 ++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index b5e438b70cd5..810dcbdbe869 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -245,7 +245,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 				 lower_32_bits(pci_addr));
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
- 				 upper_32_bits(pci_addr));
--	val = type | PCIE_ATU_FUNC_NUM(func_no);
-+	val = type | PCIE_ATU_FUNC_NUM(func_no) | pci->td << PCIE_ATU_TD_SHIFT;
- 	val = upper_32_bits(size - 1) ?
- 		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
-@@ -295,7 +295,8 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
- 			   upper_32_bits(pci_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
--			   PCIE_ATU_FUNC_NUM(func_no));
-+			   PCIE_ATU_FUNC_NUM(func_no) |
-+			   pci->td << PCIE_ATU_TD_SHIFT);
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
- 
- 	/*
-@@ -565,6 +566,9 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 	dev_dbg(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
- 		"enabled" : "disabled");
- 
-+	if (pci->version == 0x490A)
-+		pci->td = pcie_is_ecrc_enabled();
-+
- 	if (pci->link_gen > 0)
- 		dw_pcie_link_set_max_speed(pci, pci->link_gen);
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 21dd06831b50..d34723e42e79 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -90,6 +90,7 @@
- #define PCIE_ATU_TYPE_IO		0x2
- #define PCIE_ATU_TYPE_CFG0		0x4
- #define PCIE_ATU_TYPE_CFG1		0x5
-+#define PCIE_ATU_TD_SHIFT		8
- #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
- #define PCIE_ATU_CR2			0x908
- #define PCIE_ATU_ENABLE			BIT(31)
-@@ -276,6 +277,7 @@ struct dw_pcie {
- 	int			num_lanes;
- 	int			link_gen;
- 	u8			n_fts[2];
-+	bool			td;	/* TLP Digest (for ECRC purpose) */
- };
- 
- #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
--- 
-2.17.1
+[...]
 
+>> --- a/drivers/pci/controller/pcie-rcar-host.c
+>> +++ b/drivers/pci/controller/pcie-rcar-host.c
+>> @@ -753,7 +753,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+>>         }
+>>
+>>         /* setup MSI data target */
+>> -       msi->pages = __get_free_pages(GFP_KERNEL, 0);
+>> +       msi->pages = __get_free_pages(GFP_KERNEL | GFP_DMA32, 0);
+> 
+> BTW, can this fail, especially now this is allocated from a more
+> limited pool?
+
+I am pretty sure this can fail on systems that don't have DRAM below 4
+GiB , but that is never the case on any hardware with this controller.
+
+[...]
