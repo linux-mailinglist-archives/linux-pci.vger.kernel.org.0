@@ -2,178 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 916E2298607
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 05:08:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 764F0298659
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 06:24:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgJZEIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Oct 2020 00:08:25 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46484 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgJZEIZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Oct 2020 00:08:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id x10so1850759plm.13;
-        Sun, 25 Oct 2020 21:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=WGPCTWXGaFEQAPnwBl3aSCOFQLjbIQTV4mrYNZQcNU4=;
-        b=cO30POYX/sxN9MDmzXtb087me5okMwPuXuVbzkxYNtKc/rLmzcOCszVtrj6+smGPJe
-         LEEfnZT1eNX4jNO9D7D3qkbJzkaPXPXFOokoRCKyBGZFHGNDwtsO3d34rFjOfyOg+vaW
-         /brioPH9sS7g24qKl+S37+iC5Tlz4v1M4KSq8MGOh+GlFTePvDvDSzYbh6/fh2IS2aRc
-         nVYLkH/xn+4EsLbzrwcuyEJmF0gQv2vBCfbbGsfYBkCdHs3qRsXThuAUpclayXRhio7n
-         grY/fVWYR6MDPvzbhj08LCZG1EejT8zL20mQTBu8qpe6UidX0fQevzouc9WTAfpZw34N
-         z9bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=WGPCTWXGaFEQAPnwBl3aSCOFQLjbIQTV4mrYNZQcNU4=;
-        b=JgherFLoUuH4AObvFUzT0IoZsocecWijmmnpdEmM6lvSxulNPLE4EzLnmibNo1QPiB
-         psVCg1DQln/yPC2LjyhB2yw86CJkIu8WporAXGxiIY1qNgBdJDmNDK3yz6G879MuYQnw
-         wq1YnrlVlL9GwzX5PIXlyoWvGguvz8bZiVNDCPJrwQDVsu5BxLaKWuBwuQVFpSGe7GRZ
-         Jw8Rh+7noiP4omd4NKkfEYp+Y16rEdFFNwaA8gc2Z+dT2RJD/dZaP5uWNx8mK3A5jtV4
-         vus5ayB0AYlbb5E6RdZ870I3Ztqt+CfEgNfQl1NZarcgRs3vJkXJwj7E0TsBznbKUUcN
-         7NRQ==
-X-Gm-Message-State: AOAM531VQtmYn2cXBxWxFCZFRJ0ocFy91u13Soc+3UFT4UYHPFzwq4SI
-        H0oiQkExQYlxAOHN6USPri4=
-X-Google-Smtp-Source: ABdhPJz4uoBcH8iQ3Jq7+hDNgHgEbVxJbHXvBh/D0NROP9jvA/n4NB2ojDnEdStx1jGXM3bhlMGCTQ==
-X-Received: by 2002:a17:90a:c388:: with SMTP id h8mr14628176pjt.100.1603685304291;
-        Sun, 25 Oct 2020 21:08:24 -0700 (PDT)
-Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
-        by smtp.gmail.com with ESMTPSA id x19sm10918981pjk.25.2020.10.25.21.08.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 25 Oct 2020 21:08:23 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Jaehoon Chung <jh80.chung@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH v2 5/6] pci: dwc: pci-exynos: rework the driver to support
- Exynos5433 variant
-Thread-Topic: [PATCH v2 5/6] pci: dwc: pci-exynos: rework the driver to
- support Exynos5433 variant
-Thread-Index: ATYzNHA3LqEW/SeHeSezfbTZ8+mXqGl5LTQyaXktNDK6VWtTUoADHkoAgAAV8aw=
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Mon, 26 Oct 2020 04:08:18 +0000
-Message-ID: <SLXP216MB0477275C0A8FFAE14274165FAA190@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
-References: <20201023075744.26200-1-m.szyprowski@samsung.com>
- <CGME20201023075756eucas1p18765653e747842eef4b438aff32ef136@eucas1p1.samsung.com>
- <20201023075744.26200-6-m.szyprowski@samsung.com>
- <SLXP216MB047790A7FD4D1E7304493343AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
- <29fa2071-dd4e-4528-d2db-dcd86e443794@samsung.com>
-In-Reply-To: <29fa2071-dd4e-4528-d2db-dcd86e443794@samsung.com>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1768394AbgJZFYW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Oct 2020 01:24:22 -0400
+Received: from mail-db8eur05on2075.outbound.protection.outlook.com ([40.107.20.75]:28609
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1768389AbgJZFYW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Oct 2020 01:24:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V96W+uUNddUJakmrLAk8CxffVJqyNAObvsw+AnaAZNaSz6/E0/0FMrC8cQh2O2/dsOsYGpEqIjvSvpjRhYvYVBG4TgODlqQ0SQXr36WRYakc/EidZIp2cWGcvm8ATg7MHUjzHzgXZi9u421VzgOd9+Hyyxu5AGQiYP3Qnyp+gZYO45XmjyOfgsV8qSqbJI1s/d7OBOFrUbRQhVAV+ZIrSPUE/3xL7HndVrSOCeSfjqjcPSasUixgOsNZBzK/G1Y1m2iXG210c2U1vTuhQF7ZsGIGn0LlKbgBTZZBgGNcnUtvVbO/2Hc8oMjJfmK+GVrTrBGtFW9fIQoqYW6xQpkwPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1O3qfUpw8LslTuiusux3tVKM04T/wwBJ54Yuo14m6HQ=;
+ b=kRPeD/RSGCwPp7DmNb9upk+So1uN09bQjhK2lcnirF4rZBE+M9EoK7sYiy1kFvdkFl06Tp7zN0ZHUZ1vqCiFRqI6/Vt7dG/QpLJU0/kpDYH60+Dwx1h6otzQqTqzB8LIQMmEYM1kCFL3B9cSsXK4EysJ66nsdAUKPtQFZIMZhEePrszvrE+agGiaoSkJhnT0F0aGehLYOJvs99itaHmPmcbV2pu+nOvT484SWMPOmHdFW1P8FPFHmI89dQP3pFWYgw6hoGIlFGApdABrDnhclcwiq2OF9vcyo0l5ANOTUOkyh2mEf8BPJ0n1NuVo+whodUzsZkjqP4rzw6E/s6H6RQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1O3qfUpw8LslTuiusux3tVKM04T/wwBJ54Yuo14m6HQ=;
+ b=YHDGdxlL2HSFKl9ciNJ5P5j2E9iWEZAMKz8kuJehDT51cNZhHgqre+41F5JZlJpoMM09K3cOK1CKpDG/12KYplFzzmbHL1HjbDvdMP4f6uMHj4byu7UonZegr1vGHFP4p/G6qekyN8MDKk3mw6b4nR+u2xL1MwQgi1YDEShNH1A=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
+ by HE1PR0401MB2299.eurprd04.prod.outlook.com (2603:10a6:3:24::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Mon, 26 Oct
+ 2020 05:24:19 +0000
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::f882:7106:de07:1e1e]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::f882:7106:de07:1e1e%4]) with mapi id 15.20.3477.028; Mon, 26 Oct 2020
+ 05:24:18 +0000
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        robh+dt@kernel.org, lorenzo.pieralisi@arm.com
+Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: pci: layerscape-pci: Add compatible strings for LX2160A rev2
+Date:   Mon, 26 Oct 2020 13:14:47 +0800
+Message-Id: <20201026051448.1913-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-Originating-IP: [119.31.174.73]
+X-ClientProxiedBy: SG2PR0302CA0018.apcprd03.prod.outlook.com
+ (2603:1096:3:2::28) To HE1PR0402MB3371.eurprd04.prod.outlook.com
+ (2603:10a6:7:85::27)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.73) by SG2PR0302CA0018.apcprd03.prod.outlook.com (2603:1096:3:2::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.8 via Frontend Transport; Mon, 26 Oct 2020 05:24:14 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: eda47b35-abb6-4592-4a83-08d8796f62ca
+X-MS-TrafficTypeDiagnostic: HE1PR0401MB2299:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR0401MB2299378B1B1C0F7C06A22A2184190@HE1PR0401MB2299.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EzxY65pd68qCOeNmL05/jNLp80VBjo4q5LR3rMkEtKcVKbiu6oC39jVVl8r8BmmnPtZWh0XkdLX/3IS/xpyibiDnUrBhfcpc/Gw0yXRkdqTe+xfItDcVEF7EU2x2tT9ctdtPhThxCH3kBqFzCSHCxcWG01GmYQ9s3XENbtj0bpElht7evA1SviAwNTm0MQdCEFoELKaSWpZntBRVrxTwb+k+owDNdy1JDX6U//mj3SZiIUrusXVF5SnKQ1UXrOhLTEvK9I+uRUmL/8mR65W5yFZwvVBBoNqkmQKiZJMYzE6DRAzMhnWK+Y2bQ36u7miOb8Ms0xz+CV7OxKjAEFNfNh0foPEODMgkeYRKbEPU+O0fuFsSyzZQmzWHRzL66a7d
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(346002)(39860400002)(396003)(136003)(26005)(86362001)(6666004)(66946007)(66556008)(16526019)(5660300002)(4326008)(6506007)(36756003)(316002)(52116002)(4744005)(2906002)(478600001)(186003)(69590400008)(66476007)(6512007)(956004)(8676002)(8936002)(1076003)(6486002)(2616005)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: rI0E9NAVBg3F1uB4HWTqsZQQj5xACds8NstgI433S7XWyrcOJJwxEi3Yiha3fTdPHoX197Q9zNhYy3mEvmxsTV84zBUT1k+IQMDA6xJ2Cwf9ZVbAr5KPuNvKhmr80fqE+QGRGoQhs+oh58CNOs+qO6vdT0Otj4TM5/0u04wMyJIAS1Uj4Lws/PzOyfqJlFe7BWpRo3m3DDlXV2PP0P9MgGxFQE6LH9beA9MVi+MYsz3Y4D9Z8rY+Soy/Msz4GPyEuVwy+VM5Fa44B45t7sCLNhHBw0evCyWyRQMo0HZvwEy7JpjeG0/qLYqZ1cizmBlbML9taA+LS0TAwG+YpaYRG5ZrDDK6rdFuN7+JaQhidL11zMSXWvUC+aLOQAX2m0uD1c2gWlUlXPbLBUf4akQ6n2lq5UEhSfl2iUYjM9sr/NPhSxllVCuTSXgLHua7/jvEgaeRi8N79EaqD2f3n4TA4l4gCOSONGuuvZwH6hd2mu1oYqR7lB4rTp4Tm7iGhMGxk8iOSml8TLKW/4/LtnCBEJuvSplDQmEzXKe+hXMVcqzFx2R4hDalsFE7JIJDShjS7JWBCU3nBLaOcQODYqjpcBnAk8dwLXxEpGsVf4Xs7vklQ+c2fP5lqs37w14a4n847U8gXGnjf5pwW7551PMf+w==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eda47b35-abb6-4592-4a83-08d8796f62ca
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2020 05:24:18.3127
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E7w7mENcfIdsOGTrQJH1ZSV8MBPCP04ZooSPZdfhQDO++w34us5khThKzzKyU246zNxOs97IZhI50TFT7G/9nQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2299
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/25/20, 10:49 PM, Jaehoon Chung wrote:
->=20
-> Dear Jingoo,
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Hi Jaehoon,
+Add PCIe Endpoint mode compatible string "fsl,lx2160ar2-pcie-ep"
 
-> On 10/24/20 12:12 PM, Jingoo Han wrote:
-> > On 10/23/20, 3:58 AM, Marek Szyprowski wrote:
-> >>
-> >> From: Jaehoon Chung <jh80.chung@samsung.com>
-> >>
-> >> Exynos5440 SoC support has been dropped since commit 8c83315da1cf ("AR=
-M:
-> >> dts: exynos: Remove Exynos5440"). Rework this driver to support DWC PC=
-Ie
-> >> variant found in the Exynos5433 SoCs.
-> >>
-> >> The main difference in Exynos5433 variant is lack of the MSI support
-> >> (the MSI interrupt is not even routed to the CPU).
-> >>
-> >> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> >> [mszyprow: reworked the driver to support only Exynos5433 variant,
-> >> 	   simplified code, rebased onto current kernel code, added
-> >> 	   regulator support, converted to the regular platform driver,
-> >> 	   removed MSI related code, rewrote commit message]
-> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >> ---
-> >>  drivers/pci/controller/dwc/Kconfig      |   3 +-
-> >>  drivers/pci/controller/dwc/pci-exynos.c | 358 ++++++++++-------------=
--
-> >>  drivers/pci/quirks.c                    |   1 +
-> >>  3 files changed, 145 insertions(+), 217 deletions(-)
-> >=20
-> > [....]
-> >=20
-> >> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/con=
-troller/dwc/pci-exynos.c
-> >> index 242683cde04a..58056fbdc2fa 100644
-> >> --- a/drivers/pci/controller/dwc/pci-exynos.c
-> >> +++ b/drivers/pci/controller/dwc/pci-exynos.c
-> >> @@ -2,26 +2,23 @@
-> >>  /*
-> >>   * PCIe host controller driver for Samsung Exynos SoCs
-> >>   *
-> >> - * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> >> + * Copyright (C) 2013-2020 Samsung Electronics Co., Ltd.
-> >>   *		https://www.samsung.com
-> >>   *
-> >>   * Author: Jingoo Han <jg1.han@samsung.com>
-> >> + *	   Jaehoon Chung <jh80.chung@samsung.com>
-> >=20
-> > Would you explain the reason why you add him as an author?
-> > If reasonable, I will accept it. Also, I want gentle discussion, not ag=
-gressive one.
-> > Thank you.
->
-> It's not important to add me as author. :)
-> If you don't want to accept it, i think it can be removed it.
-> I think that pci-exynos was supported on only exynos5440.
-> As you know, exynos5440 was not common as compared with other exynos SoC.
-> After this patch, pci-exynos is re-newed.
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Ah, I just  thought that you are not interested in Exynos PCIe anymore. How=
-ever, if you want
-to submit other patches for supporting other Exynos PCIe, adding you as an =
-author is ok.
-There are many Exynos SoCs that support PCIe IP. So, if someone like you wh=
-o have good
-experience on Exynos, helps submitting patches for Exynos PCIe, it would be=
- very helpful. :-)
-Thank you.
-
-Best regards,
-Jingoo Han
-
->
-> Best Regards,
-> Jaehoon Chung
->
-> >=20
-> > Best regards,
-> > Jingoo Han
-> >=20
-> >>   */
-> >=20
-> > [....]
-> >=20
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index daa99f7d4c3f..6d898dd4a8e2 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -26,6 +26,7 @@ Required properties:
+ 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+ 	"fsl,ls1088a-pcie-ep", "fsl,ls-pcie-ep"
+ 	"fsl,ls2088a-pcie-ep", "fsl,ls-pcie-ep"
++	"fsl,lx2160ar2-pcie-ep", "fsl,ls-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
+-- 
+2.17.1
 
