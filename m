@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB675299C08
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 00:56:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B19D8299CA9
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 01:00:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410433AbgJZXyZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Oct 2020 19:54:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60226 "EHLO mail.kernel.org"
+        id S2437218AbgJ0AAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Oct 2020 20:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410422AbgJZXyX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:54:23 -0400
+        id S2436512AbgJZX4i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Oct 2020 19:56:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35ED62151B;
-        Mon, 26 Oct 2020 23:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 760EA22202;
+        Mon, 26 Oct 2020 23:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603756462;
-        bh=C4PIAQgBy3IfY3Xai2seNrLsFrpCFjzfR4qzD5IFHJs=;
+        s=default; t=1603756596;
+        bh=E0Z63Y0VRC52VXc0olxiKOsbEdXdev5lmlnWQCUHEXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NgMyqevTVyQT0oPvnzu7Uxo+5hDor0yG35yE0lmz2xGuIEhfZFCBUi729AXLrqe6I
-         bFBqZPDQBNXXNGyLbtxjcmCHsqy2gvxRI1koTNGtEjyK1TmPyaSFf14F8lXWy2g/Tj
-         v9tlIZPmgn8fb5UUCSDntijAqieCUVNJCSGSQVeM=
+        b=OXpXC68PLKWrCikWhFk9mNpihcueEr1jfAAKzt5s0q4/EyPN7hH1f+bk0RG2dtkAR
+         rTp8js9fzjAbZFe/69SFlf71tsPnSkCrcuNQYMRrhS07t6nt0owqNgtJ4CAEHNLXlC
+         Faw41L1oeFmmjiC9Y/KBCuzwN/Po9GjeLhUwBiIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 111/132] PCI: dwc: Add link up check in dw_child_pcie_ops.map_bus()
-Date:   Mon, 26 Oct 2020 19:51:43 -0400
-Message-Id: <20201026235205.1023962-111-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 66/80] PCI: dwc: Add link up check in dw_child_pcie_ops.map_bus()
+Date:   Mon, 26 Oct 2020 19:55:02 -0400
+Message-Id: <20201026235516.1025100-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201026235205.1023962-1-sashal@kernel.org>
-References: <20201026235205.1023962-1-sashal@kernel.org>
+In-Reply-To: <20201026235516.1025100-1-sashal@kernel.org>
+References: <20201026235516.1025100-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -110,10 +110,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 11 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 0a4a5aa6fe469..d78222ff954ec 100644
+index fbcb211cceb43..152420b9d729c 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-host.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -526,6 +526,17 @@ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+@@ -536,6 +536,17 @@ static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
  	void __iomem *va_cfg_base;
  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
  
