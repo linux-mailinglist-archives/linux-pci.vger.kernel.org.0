@@ -2,135 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A95B298CEA
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 13:33:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 417C7298DEC
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 14:30:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1775171AbgJZMdB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Oct 2020 08:33:01 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12651 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1775169AbgJZMdB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Oct 2020 08:33:01 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f96c1e80000>; Mon, 26 Oct 2020 05:32:40 -0700
-Received: from localhost (10.124.1.5) by HQMAIL107.nvidia.com (172.20.187.13)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 26 Oct 2020 12:32:59
- +0000
-Date:   Mon, 26 Oct 2020 13:32:57 +0100
-From:   Thierry Reding <treding@nvidia.com>
-To:     Jingoo Han <jingoohan1@gmail.com>
-CC:     Vidya Sagar <vidyas@nvidia.com>,
+        id S1780075AbgJZNar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Oct 2020 09:30:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44913 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1780071AbgJZNaq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Oct 2020 09:30:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o3so6059931pgr.11;
+        Mon, 26 Oct 2020 06:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=bw06RF8opfZrnVp16GJxHsaxiwU6f+GI++IAs++GX/Y=;
+        b=pXg2Ikps2a2Au7+hpMUpVQNjod8cr4kjii3ciW6OrcFaSL3DqXVQaA9iV6OGq5eBZl
+         GBSTHdIztH3jYIYkIsytkL0HuHT2ZSqV4aZnd3GT1PA8yqaDTdS2KA5YQHRbUNQzHlSf
+         /0ofFd4JGJG2tYXu/2CFRHqqI7cFDcxC0tN0rcQd2O7PGfeosvuceB/7g/MYkDjT05Lo
+         uLW1D+vh7l+G7NPtfWfPOGEWjsNyyoL//fjBshdgAb8q+UHYvLa7CEoxFW1Z4AY2m7N3
+         pQfHCIaf4RCDrtHybXRBkP2u5qO3Zyi5j9+jRoTnR9y5lbopJOgAaUxAImRB1rCIUkRM
+         6GMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=bw06RF8opfZrnVp16GJxHsaxiwU6f+GI++IAs++GX/Y=;
+        b=b5+S6UY4P2XsakKs1cIJZUreLQ3FY/+vOUvHQ+TN800wbHmkm+lDX53wdvE5JAd/gi
+         76db13Z4aBj9Nnx3sW+pCeoafWB05TBSRl2j5vJ3ZMPlHjlWry2ckBJuNM/I6o6erqKd
+         dsh6bpjyvgbFznAbdcoPb5Go0C0UW9ow0RX6EDWD9k2i6krW8JFV9ajSecncWEjfIpUw
+         QiPPfpfJGu60ZDPRyXiJfTXWMlg8EgcHTaWRUV39dNxh+Q8crVXPheh0fX9Lq1gJREHK
+         iFaGwLY9L/o0/t6FOPSDkqFDCXMQUngxM3mhHdABaQtTkAw/F5QqH16gjzTta9L29bre
+         qyfw==
+X-Gm-Message-State: AOAM530UjM0PDdgTSB642pBZDbHy5ywALDncqjIgxFiUIhlxorJKUqBw
+        E7DhmGvH0pw+RyUVxBLMjkI=
+X-Google-Smtp-Source: ABdhPJwjSetJEVXZGIQMxLkr5pXFBeiZ2DOzdZScRmQqF5to2sxh+TRFRu6A41Jt7s+6OhVfIq4jTg==
+X-Received: by 2002:a62:54:0:b029:152:3212:f622 with SMTP id 81-20020a6200540000b02901523212f622mr13429407pfa.46.1603719045019;
+        Mon, 26 Oct 2020 06:30:45 -0700 (PDT)
+Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
+        by smtp.gmail.com with ESMTPSA id m13sm12431851pjl.45.2020.10.26.06.30.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 26 Oct 2020 06:30:43 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
         "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
         "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
         "robh@kernel.org" <robh@kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "kthota@nvidia.com" <kthota@nvidia.com>,
         "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: Re: [PATCH 0/3] Add support to handle prefetchable memory
-Message-ID: <20201026123012.GA356750@ulmo>
-References: <20201023195655.11242-1-vidyas@nvidia.com>
- <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH 2/2] PCI: dwc: Add support to configure for ECRC
+Thread-Topic: [PATCH 2/2] PCI: dwc: Add support to configure for ECRC
+Thread-Index: AQHWqqDjcEvvIfJZ20eYN0/hpzWvqamoy1qzgACqbwCAAG1Vvw==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Mon, 26 Oct 2020 13:30:39 +0000
+Message-ID: <SLXP216MB04779FE1F5D9EF958D834563AA190@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
+References: <20201025073113.31291-1-vidyas@nvidia.com>
+ <20201025073113.31291-3-vidyas@nvidia.com>
+ <SLXP216MB0477AAC31DF68862BE5BC3EEAA180@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
+ <ccec2428-0efe-101c-11be-28766738951d@nvidia.com>
+In-Reply-To: <ccec2428-0efe-101c-11be-28766738951d@nvidia.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Content-Disposition: inline
-In-Reply-To: <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.14.7 (2020-08-29)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1603715560; bh=sqQVLIGYKI42d425ac+GAGW1AQu2By70V9nvM0kyskI=;
-        h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-         Content-Type:Content-Disposition:In-Reply-To:X-NVConfidentiality:
-         User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=ELTAHRjXw6NZhL3cmV/vOeItQwvz16wHR+EgQHN7Cn3RCK2FLjI6K1lO8yEmE5ft8
-         xFFdKWLbdOk3fsWXLP/uS1MrvPrz4xRVVpKlRJCUxYhkVhHKzBK9NkxFOIopEBwTRX
-         RadntGYS0L5jHi8yyx+6C3DoSvg7y/xnDPAHr7LcVvbz1xxhY5CcXOsouRB3kUXaWq
-         60zAB2Q8twaRqYqqxxwBRDL0KC5M7Rh/JPZJVWZF2K8PrBrQzHGWQ5lVNVsWP6l7V/
-         Wok+UGT5u0CVFvxb4Lw6gkVvR1imCvdCgiAwl6eTtjDt33WOz/e/mFjmgYs5GhK5Ur
-         YPgDBo2aE574Q==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Oct 24, 2020 at 04:03:41AM +0000, Jingoo Han wrote:
-> On 10/23/20, 3:57 PM, Vidya Sagar wrote:
-> >=20
-> > This patch series adds support for configuring the DesignWare IP's ATU
-> > region for prefetchable memory translations.
-> > It first starts by flagging a warning if the size of non-prefetchable
-> > aperture goes beyond 32-bit as PCIe spec doesn't allow it.
-> > And then adds required support for programming the ATU to handle higher
-> > (i.e. >4GB) sizes and then finally adds support for differentiating
-> > between prefetchable and non-prefetchable regions and configuring one of
-> > the ATU regions for prefetchable memory translations purpose.
-> >
-> > Vidya Sagar (3):
-> >   PCI: of: Warn if non-prefetchable memory aperture size is > 32-bit
-> >   PCI: dwc: Add support to program ATU for >4GB memory aperture sizes
-> >   PCI: dwc: Add support to handle prefetchable memory mapping
->=20
-> For 2nd & 3rd,
-> Acked-by: Jingoo <jingoohan1@gmail.com>
-> But, I still want someone to ack 1st patch, not me.
->=20
-> To Vidya,
-> If possible, can you ask your coworker to give 'Tested-by'? It will be ve=
-ry helpful.
-> Thank you.
-
-On next-20201026 (but also going back quite a while) I'm seeing this
-during boot on Jetson AGX Xavier (Tegra194):
-
-[    3.493382] ahci 0001:01:00.0: version 3.0
-[    3.493889] ahci 0001:01:00.0: SSS flag set, parallel bus scan disabled
-[    4.497706] ahci 0001:01:00.0: controller reset failed (0xffffffff)
-[    4.498114] ahci: probe of 0001:01:00.0 failed with error -5
-
-After applying this series, AHCI over PCI is back to normal:
-
-[    3.543230] ahci 0001:01:00.0: AHCI 0001.0000 32 slots 1 ports 6 Gbps 0x=
-1 impl SATA mode
-[    3.550841] ahci 0001:01:00.0: flags: 64bit ncq sntf led only pmp fbs pi=
-o slum part sxs
-[    3.559747] scsi host0: ahci
-[    3.561998] ata1: SATA max UDMA/133 abar m512@0x1230010000 port 0x123001=
-0100 irq 63
-
-So for the series:
-
-Tested-by: Thierry Reding <treding@nvidia.com>
-
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+WwfkACgkQ3SOs138+
-s6GSZw//dofmlmsswCqSTbKwBiInkH2EyVwdddtYg43ZSc8uCDAIKtUTPr9o1O4P
-ae67pQ0Zwgr79ULbANWRr6KsgoAT+Pbd7qQoHT/X252IrvxmOG0mkgPCGvJcsZZa
-vgZvoQRSPNXPehVlcJBH/JX33NKJm+T01B9MAG4OdHG4PLQqdc6LLj7rskibQeom
-fIGkJsXQRvzMDyDxqYrqOop2V9ejV9EwAqbOrQpSTzNrfv1yy0HJVmL8S5qqWSRM
-tgvtZ+wLAuCq0jwDgKYiTXHnpltO4C3QyCc6FteZB6ykeJlOm4eTIy58oGjv1AQU
-XpHqOTRJs9SGxSIudrshjcvxyU09Ci9dGU/n/x/vznIl3z58FuK6Xp9eWgyVR4qg
-NrDViohHrj5c1VHqWwERUCDnbQINYF+l+g51xDzMRdYP2C46sHrnOQ/e73CicGny
-Ovs26S2H7UyYFwBNsYmDzA1f3SmkZLX490D8qM3vo65UENZ2cOsIFamBvGuiqn7C
-Z4zunXfySLRE7QTAWJuX76pFclfzM4NeUwlehpogSR+32C/sn3sJQgfr/zZd4RRd
-G456gCEA4Lg0W8TKkhqKDfbzS0EQ+6zvP/jvwU68IfH+Pmo94z0BsXu9+Ng7eXWZ
-CtceVfJDFqw/kmT+lH8OgIfLxrzFjJbPNiCY3t3GFGrqpvpwCXc=
-=JZ1w
------END PGP SIGNATURE-----
-
---uAKRQypu60I7Lcqm--
+DQoNCu+7v09uIDEwLzI2LzIwLCAyOjU5IEFNLCBWaWR5YSBTYWdhciB3cm90ZToNCj4gDQo+IE9u
+IDEwLzI2LzIwMjAgMjoxOSBBTSwgSmluZ29vIEhhbiB3cm90ZToNCj4gPiBFeHRlcm5hbCBlbWFp
+bDogVXNlIGNhdXRpb24gb3BlbmluZyBsaW5rcyBvciBhdHRhY2htZW50cw0KPiA+IA0KPiA+IA0K
+PiA+IE9uIDEwLzI1LzIwLCAzOjMxIEFNLCBWaWR5YSBTYWdhciB3cm90ZToNCj4gPj4NCj4gPj4g
+RGVzaWduV2FyZSBjb3JlIGhhcyBhIFRMUCBkaWdlc3QgKFREKSBvdmVycmlkZSBiaXQgaW4gb25l
+IG9mIHRoZSBjb250cm9sDQo+ID4+IHJlZ2lzdGVycyBvZiBBVFUuIFRoaXMgYml0IGFsc28gbmVl
+ZHMgdG8gYmUgcHJvZ3JhbW1lZCBmb3IgcHJvcGVyIEVDUkMNCj4gPj4gZnVuY3Rpb25hbGl0eS4g
+VGhpcyBpcyBjdXJyZW50bHkgaWRlbnRpZmllZCBhcyBhbiBpc3N1ZSB3aXRoIERlc2lnbldhcmUN
+Cj4gPj4gSVAgdmVyc2lvbiA0LjkwYS4gVGhpcyBwYXRjaCBkb2VzIHRoZSByZXF1aXJlZCBwcm9n
+cmFtbWluZyBpbiBBVFUgdXBvbg0KPiA+PiBxdWVyeWluZyB0aGUgc3lzdGVtIHBvbGljeSBmb3Ig
+RUNSQy4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogVmlkeWEgU2FnYXIgPHZpZHlhc0Budmlk
+aWEuY29tPg0KPiA+PiAtLS0NCj4gPj4gICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ll
+LWRlc2lnbndhcmUuYyB8IDggKysrKysrLS0NCj4gPj4gICBkcml2ZXJzL3BjaS9jb250cm9sbGVy
+L2R3Yy9wY2llLWRlc2lnbndhcmUuaCB8IDIgKysNCj4gPj4gICAyIGZpbGVzIGNoYW5nZWQsIDgg
+aW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5jIGIvZHJpdmVycy9wY2kv
+Y29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLmMNCj4gPj4gaW5kZXggYjVlNDM4YjcwY2Q1
+Li44MTBkY2JkYmU4NjkgMTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL3BjaWUtZGVzaWdud2FyZS5jDQo+ID4+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL3BjaWUtZGVzaWdud2FyZS5jDQo+ID4+IEBAIC0yNDUsNyArMjQ1LDcgQEAgc3RhdGljIHZv
+aWQgZHdfcGNpZV9wcm9nX291dGJvdW5kX2F0dV91bnJvbGwoc3RydWN0IGR3X3BjaWUgKnBjaSwg
+dTggZnVuY19ubywNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb3dlcl8z
+Ml9iaXRzKHBjaV9hZGRyKSk7DQo+ID4+ICAgICAgICBkd19wY2llX3dyaXRlbF9vYl91bnJvbGwo
+cGNpLCBpbmRleCwgUENJRV9BVFVfVU5SX1VQUEVSX1RBUkdFVCwNCj4gPj4gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB1cHBlcl8zMl9iaXRzKHBjaV9hZGRyKSk7DQo+ID4+IC0gICAg
+IHZhbCA9IHR5cGUgfCBQQ0lFX0FUVV9GVU5DX05VTShmdW5jX25vKTsNCj4gPj4gKyAgICAgdmFs
+ID0gdHlwZSB8IFBDSUVfQVRVX0ZVTkNfTlVNKGZ1bmNfbm8pIHwgcGNpLT50ZCA8PCBQQ0lFX0FU
+VV9URF9TSElGVDsNCj4gPj4gICAgICAgIHZhbCA9IHVwcGVyXzMyX2JpdHMoc2l6ZSAtIDEpID8N
+Cj4gPj4gICAgICAgICAgICAgICAgdmFsIHwgUENJRV9BVFVfSU5DUkVBU0VfUkVHSU9OX1NJWkUg
+OiB2YWw7DQo+ID4+ICAgICAgICBkd19wY2llX3dyaXRlbF9vYl91bnJvbGwocGNpLCBpbmRleCwg
+UENJRV9BVFVfVU5SX1JFR0lPTl9DVFJMMSwgdmFsKTsNCj4gPj4gQEAgLTI5NSw3ICsyOTUsOCBA
+QCBzdGF0aWMgdm9pZCBfX2R3X3BjaWVfcHJvZ19vdXRib3VuZF9hdHUoc3RydWN0IGR3X3BjaWUg
+KnBjaSwgdTggZnVuY19ubywNCj4gPj4gICAgICAgIGR3X3BjaWVfd3JpdGVsX2RiaShwY2ksIFBD
+SUVfQVRVX1VQUEVSX1RBUkdFVCwNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICB1cHBl
+cl8zMl9iaXRzKHBjaV9hZGRyKSk7DQo+ID4+ICAgICAgICBkd19wY2llX3dyaXRlbF9kYmkocGNp
+LCBQQ0lFX0FUVV9DUjEsIHR5cGUgfA0KPiA+PiAtICAgICAgICAgICAgICAgICAgICAgICAgUENJ
+RV9BVFVfRlVOQ19OVU0oZnVuY19ubykpOw0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+UENJRV9BVFVfRlVOQ19OVU0oZnVuY19ubykgfA0KPiA+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgcGNpLT50ZCA8PCBQQ0lFX0FUVV9URF9TSElGVCk7DQo+ID4+ICAgICAgICBkd19wY2llX3dy
+aXRlbF9kYmkocGNpLCBQQ0lFX0FUVV9DUjIsIFBDSUVfQVRVX0VOQUJMRSk7DQo+ID4+DQo+ID4+
+ICAgICAgICAvKg0KPiA+PiBAQCAtNTY1LDYgKzU2Niw5IEBAIHZvaWQgZHdfcGNpZV9zZXR1cChz
+dHJ1Y3QgZHdfcGNpZSAqcGNpKQ0KPiA+PiAgICAgICAgZGV2X2RiZyhwY2ktPmRldiwgImlBVFUg
+dW5yb2xsOiAlc1xuIiwgcGNpLT5pYXR1X3Vucm9sbF9lbmFibGVkID8NCj4gPj4gICAgICAgICAg
+ICAgICAgImVuYWJsZWQiIDogImRpc2FibGVkIik7DQo+ID4+DQo+ID4+ICsgICAgIGlmIChwY2kt
+PnZlcnNpb24gPT0gMHg0OTBBKQ0KPiA+PiArICAgICAgICAgICAgIHBjaS0+dGQgPSBwY2llX2lz
+X2VjcmNfZW5hYmxlZCgpOw0KPiA+PiArDQo+ID4+ICAgICAgICBpZiAocGNpLT5saW5rX2dlbiA+
+IDApDQo+ID4+ICAgICAgICAgICAgICAgIGR3X3BjaWVfbGlua19zZXRfbWF4X3NwZWVkKHBjaSwg
+cGNpLT5saW5rX2dlbik7DQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250
+cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuaCBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
+L3BjaWUtZGVzaWdud2FyZS5oDQo+ID4+IGluZGV4IDIxZGQwNjgzMWI1MC4uZDM0NzIzZTQyZTc5
+IDEwMDY0NA0KPiA+PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2ln
+bndhcmUuaA0KPiA+PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2ln
+bndhcmUuaA0KPiA+PiBAQCAtOTAsNiArOTAsNyBAQA0KPiA+PiAgICNkZWZpbmUgUENJRV9BVFVf
+VFlQRV9JTyAgICAgICAgICAgICAweDINCj4gPj4gICAjZGVmaW5lIFBDSUVfQVRVX1RZUEVfQ0ZH
+MCAgICAgICAgICAgMHg0DQo+ID4+ICAgI2RlZmluZSBQQ0lFX0FUVV9UWVBFX0NGRzEgICAgICAg
+ICAgIDB4NQ0KPiA+PiArI2RlZmluZSBQQ0lFX0FUVV9URF9TSElGVCAgICAgICAgICAgIDgNCj4g
+Pj4gICAjZGVmaW5lIFBDSUVfQVRVX0ZVTkNfTlVNKHBmKSAgICAgICAgICAgKChwZikgPDwgMjAp
+DQo+ID4+ICAgI2RlZmluZSBQQ0lFX0FUVV9DUjIgICAgICAgICAgICAgICAgIDB4OTA4DQo+ID4+
+ICAgI2RlZmluZSBQQ0lFX0FUVV9FTkFCTEUgICAgICAgICAgICAgICAgICAgICAgQklUKDMxKQ0K
+PiA+PiBAQCAtMjc2LDYgKzI3Nyw3IEBAIHN0cnVjdCBkd19wY2llIHsNCj4gPj4gICAgICAgIGlu
+dCAgICAgICAgICAgICAgICAgICAgIG51bV9sYW5lczsNCj4gPj4gICAgICAgIGludCAgICAgICAg
+ICAgICAgICAgICAgIGxpbmtfZ2VuOw0KPiA+PiAgICAgICAgdTggICAgICAgICAgICAgICAgICAg
+ICAgbl9mdHNbMl07DQo+ID4+ICsgICAgIGJvb2wgICAgICAgICAgICAgICAgICAgIHRkOyAgICAg
+LyogVExQIERpZ2VzdCAoZm9yIEVDUkMgcHVycG9zZSkgKi8NCj4gPiANCj4gPiBJZiBwb3NzaWJs
+ZSwgZG9uJ3QgYWRkIGEgbmV3IHZhcmlhYmxlIHRvICdkd19wY2llJyBzdHJ1Y3R1cmUuDQo+ID4g
+UGxlYXNlIGZpbmQgYSB3YXkgdG8gc2V0IFREIGJpdCB3aXRob3V0IGFkZGluZyBhIG5ldyB2YXJp
+YWJsZSB0byAnZHdfcGNpZScgc3RydWN0dXJlJy4NCj4NCj4gSSBjYW4gdXNlIHBjaWVfaXNfZWNy
+Y19lbmFibGVkKCkgZGlyZWN0bHkgaW4gcGxhY2Ugb2YgcGNpLT50ZC4gVGhhdCANCj4gc2hvdWxk
+IGJlIGZpbmUgcmlnaHQ/IEJUVywgY3VyaW91cyB0byBrbm93IGlmIHRoZXJlIGlzIGFueSBzcGVj
+aWZpYyANCj4gcmVhc29uIGJlaGluZCBhc2tpbmcgbm90IHRvIGFkZCBhbnkgbmV3IHZhcmlhYmxl
+cyB0byAnZHdfcGNpZScgc3RydWN0dXJlPw0KPg0KDQpWaWNlIHZlcnNhLCB3aGF0IGlzIHRoZSBy
+ZWFzb24gdG8gYWRkIGEgbmV3IHZhcmlhYmxlICd0ZCcgdG8gJ2R3X3BjaWUnIHN0cnVjdHVyZT8N
+Ckl0IGlzIG5vdCBnb29kIHRvIGFkZCBhIG5ldyB2YXJpYWJsZSB0byB0aGUgZ2xvYmFsIHN0cnVj
+dHVyZSB3aXRob3V0IGFueSBzcGVjaWZpYyByZWFzb24uDQoNCg0KPiA+IA0KPiBCZXN0IHJlZ2Fy
+ZHMsDQo+IEppbmdvbyBIYW4NCj4gDQo+PiAgIH07DQo+Pg0KPj4gICAjZGVmaW5lIHRvX2R3X3Bj
+aWVfZnJvbV9wcChwb3J0KSBjb250YWluZXJfb2YoKHBvcnQpLCBzdHJ1Y3QgZHdfcGNpZSwgcHAp
+DQo+PiAtLQ0KPj4gMi4xNy4xDQo+IA0K
