@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDDB4299F96
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 01:24:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5885629A113
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 01:47:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410362AbgJZXyN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Oct 2020 19:54:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        id S2411788AbgJ0AcG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Oct 2020 20:32:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410156AbgJZXyM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:54:12 -0400
+        id S2409378AbgJZXvU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Oct 2020 19:51:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8770B21655;
-        Mon, 26 Oct 2020 23:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4706520878;
+        Mon, 26 Oct 2020 23:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603756451;
+        s=default; t=1603756280;
         bh=VZVHPvdGvoauXFvYUP0vUslj5DObR0FlXbYEGzh0Xo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZeQl8IFPTIJNrobOTY5uJCoIOByecVfbvXeRgIcepUPoE5UIiFgkxxUYl+1cntlie
-         8UxwoG0vTwTrpqhJC4ud2Eq/xQOQPpwwTS+bCVEqydq1Iw7Im0O4gBEE1/uBaS2atX
-         VTMA7AYJvS4Y1Wf6f1iQUBELyQUcZSsONGn9seLk=
+        b=jHjHO6cMCMnxQC4D9t6Z6d6xhv6ZnrIRyoCWqhdbObgbIigRAYT+Qx0qDXU+ToP/p
+         kAuBuvp8VEJViVWMHdOV4Zp965hp5rofOfRJfMLoMsy7nx/3Wpf+Sv7FEX0WohR8Lk
+         3L3fqjYiRYGryUdutVplU/02AMegYUrwCjYPlK98=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 102/132] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
-Date:   Mon, 26 Oct 2020 19:51:34 -0400
-Message-Id: <20201026235205.1023962-102-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.9 110/147] PCI/ACPI: Add Ampere Altra SOC MCFG quirk
+Date:   Mon, 26 Oct 2020 19:48:28 -0400
+Message-Id: <20201026234905.1022767-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201026235205.1023962-1-sashal@kernel.org>
-References: <20201026235205.1023962-1-sashal@kernel.org>
+In-Reply-To: <20201026234905.1022767-1-sashal@kernel.org>
+References: <20201026234905.1022767-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
