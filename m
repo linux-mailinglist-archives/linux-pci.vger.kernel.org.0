@@ -2,180 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44B532993DC
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 18:31:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3A1729944E
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 18:51:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1774135AbgJZRbW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Oct 2020 13:31:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53587 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1734796AbgJZRbW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Oct 2020 13:31:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603733481;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fS08d8MBtu1ip55QD9RREObehqTj3BnkBGdOU4nJc8o=;
-        b=FJbkr3xdxKEHef3TDTn2R64jR0MZ5oZaWyiKpXQs/VaolmQOzy+ViqKGws54OmphUvVK3T
-        JL0uS35I9gQWJ/YAMxyYXiZrpJUtkAJHv1mKGkjYJgP+yvqSpgze936/UXlg1FXvOkpYdZ
-        GOClXPK46IvwAjrEqYkIz3Ja/4YdKAk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-6NgAv3PkPCycQ-VxP7BvvA-1; Mon, 26 Oct 2020 13:31:17 -0400
-X-MC-Unique: 6NgAv3PkPCycQ-VxP7BvvA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1788524AbgJZRvi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Oct 2020 13:51:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1788523AbgJZRvi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 26 Oct 2020 13:51:38 -0400
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AEEE0809DC0;
-        Mon, 26 Oct 2020 17:31:10 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 230DA19D6C;
-        Mon, 26 Oct 2020 17:31:03 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 2B9B0417F242; Mon, 26 Oct 2020 14:30:12 -0300 (-03)
-Date:   Mon, 26 Oct 2020 14:30:12 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, helgaas@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
-        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
-        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        thomas.lendacky@amd.com, jiri@nvidia.com, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        lgoncalv@redhat.com
-Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to
- housekeeping CPUs
-Message-ID: <20201026173012.GA377978@fuller.cnet>
-References: <20201019111137.GL2628@hirez.programming.kicks-ass.net>
- <20201019140005.GB17287@fuller.cnet>
- <20201020073055.GY2611@hirez.programming.kicks-ass.net>
- <078e659e-d151-5bc2-a7dd-fe0070267cb3@redhat.com>
- <20201020134128.GT2628@hirez.programming.kicks-ass.net>
- <6736e643-d4ae-9919-9ae1-a73d5f31463e@redhat.com>
- <260f4191-5b9f-6dc1-9f11-085533ac4f55@redhat.com>
- <20201023085826.GP2611@hirez.programming.kicks-ass.net>
- <9ee77056-ef02-8696-5b96-46007e35ab00@redhat.com>
- <87ft6464jf.fsf@nanos.tec.linutronix.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1491022265;
+        Mon, 26 Oct 2020 17:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603734698;
+        bh=ycDhgERsHoQyq9cNUaCcIi69dr9KE++0x92KKXAyabU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SwO2cTSvlzaHrha+TVspaL6LhFA+MZi+aEyncNNIK0/NpDnBHe9wSr+8O6N3pUe2L
+         jbHOYY4VjuD8PbI/tVk20DcEJ5c8mZ+8xsU/8fTR5AHdoXFoYU7OALHvHqq9nFDbaX
+         mxyQbLIsH3j+lB6OY19d50Gauo9/kObLAAtkKXjs=
+Received: by mail-oi1-f182.google.com with SMTP id f7so11345158oib.4;
+        Mon, 26 Oct 2020 10:51:38 -0700 (PDT)
+X-Gm-Message-State: AOAM531MgcpJr17Wjpex7k9ljudTMVNsCKXQSsdezRTT0z7vE9AukxO9
+        hXvRswqWcZDyuwJ1uD3/b6f1JxHtXrYjg1vGZg==
+X-Google-Smtp-Source: ABdhPJzWaopYItePKO4jsXGoWF1tzcV/wh6ehpHEzvFGlImIbktK18a5I1TKNHa/b6p36qFG0uYAlI15TDhRc8YSztU=
+X-Received: by 2002:aca:ccc7:: with SMTP id c190mr2045205oig.152.1603734697493;
+ Mon, 26 Oct 2020 10:51:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87ft6464jf.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20201023195655.11242-1-vidyas@nvidia.com> <20201023195655.11242-3-vidyas@nvidia.com>
+In-Reply-To: <20201023195655.11242-3-vidyas@nvidia.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 26 Oct 2020 12:51:26 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJj+G4B_yjx7JkPRGzDuVU1o9KWak7ceGu34KgWTX+Y0A@mail.gmail.com>
+Message-ID: <CAL_JsqJj+G4B_yjx7JkPRGzDuVU1o9KWak7ceGu34KgWTX+Y0A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: dwc: Add support to program ATU for >4GB memory
+ aperture sizes
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kthota@nvidia.com, Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        sagar.tv@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 23, 2020 at 11:00:52PM +0200, Thomas Gleixner wrote:
-> On Fri, Oct 23 2020 at 09:10, Nitesh Narayan Lal wrote:
-> > On 10/23/20 4:58 AM, Peter Zijlstra wrote:
-> >> On Thu, Oct 22, 2020 at 01:47:14PM -0400, Nitesh Narayan Lal wrote:
-> >> So shouldn't we then fix the drivers / interface first, to get rid of
-> >> this inconsistency?
-> >>
-> > Considering we agree that excess vector is a problem that needs to be
-> > solved across all the drivers and that you are comfortable with the other
-> > three patches in the set. If I may suggest the following:
-> >
-> > - We can pick those three patches for now, as that will atleast fix a
-> >   driver that is currently impacting RT workloads. Is that a fair
-> >   expectation?
-> 
-> No. Blindly reducing the maximum vectors to the number of housekeeping
-> CPUs is patently wrong. The PCI core _cannot_ just nilly willy decide
-> what the right number of interrupts for this situation is.
-> 
-> Many of these drivers need more than queue interrupts, admin, error
-> interrupt and some operate best with seperate RX/TX interrupts per
-> queue. They all can "work" with a single PCI interrupt of course, but
-> the price you pay is performance.
-> 
-> An isolated setup, which I'm familiar with, has two housekeeping
-> CPUs. So far I restricted the number of network queues with a module
-> argument to two, which allocates two management interrupts for the
-> device and two interrupts (RX/TX) per queue, i.e. a total of six.
-> 
-> Now I reduced the number of available interrupts to two according to
-> your hack, which makes it use one queue RX/TX combined and one
-> management interrupt. Guess what happens? Network performance tanks to
-> the points that it breaks a carefully crafted setup.
-> 
-> The same applies to a device which is application specific and wants one
-> channel including an interrupt per isolated application core. Today I
-> can isolate 8 out of 12 CPUs and let the device create 8 channels and
-> set one interrupt and channel affine to each isolated CPU. With your
-> hack, I get only 4 interrupts and channels. Fail!
+On Fri, Oct 23, 2020 at 2:57 PM Vidya Sagar <vidyas@nvidia.com> wrote:
+>
+> Add support to program the ATU to enable translations for >4GB sizes of
+> the prefetchable memory apertures.
+>
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 12 +++++++-----
+>  drivers/pci/controller/dwc/pcie-designware.h |  3 ++-
+>  2 files changed, 9 insertions(+), 6 deletions(-)
 
-Good point.
-
-> You cannot declare that all this is perfectly fine, just because it does
-> not matter for your particular use case.
-> 
-> So without information from the driver which tells what the best number
-> of interrupts is with a reduced number of CPUs, this cutoff will cause
-> more problems than it solves. Regressions guaranteed.
-
-One might want to move from one interrupt per isolated app core
-to zero, or vice versa. It seems that "best number of interrupts 
-is with reduced number of CPUs" information, is therefore in userspace, 
-not in driver...
-
-No?
-
-> Managed interrupts base their interrupt allocation and spreading on
-> information which is handed in by the individual driver and not on crude
-> assumptions. They are not imposing restrictions on the use case.
-> 
-> It's perfectly fine for isolated work to save a data set to disk after
-> computation has finished and that just works with the per-cpu I/O queue
-> which is otherwise completely silent. 
-
-Userspace could only change the mask of interrupts which are not 
-triggered by requests from the local CPU (admin, error, mgmt, etc),
-to avoid the vector exhaustion problem.
-
-However, there is no explicit way for userspace to know that, as far as
-i know.
-
- 130:      34845          0          0          0          0          0          0          0  IR-PCI-MSI 33554433-edge      nvme0q1
- 131:          0      27062          0          0          0          0          0          0  IR-PCI-MSI 33554434-edge      nvme0q2
- 132:          0          0      24393          0          0          0          0          0  IR-PCI-MSI 33554435-edge      nvme0q3
- 133:          0          0          0      24313          0          0          0          0  IR-PCI-MSI 33554436-edge      nvme0q4
- 134:          0          0          0          0      20608          0          0          0  IR-PCI-MSI 33554437-edge      nvme0q5
- 135:          0          0          0          0          0      22163          0          0  IR-PCI-MSI 33554438-edge      nvme0q6
- 136:          0          0          0          0          0          0      23020          0  IR-PCI-MSI 33554439-edge      nvme0q7
- 137:          0          0          0          0          0          0          0      24285  IR-PCI-MSI 33554440-edge      nvme0q8
-
-
-Can that be retrieved from PCI-MSI information, or drivers
-have to inform this? 
-
-> All isolated workers can do the
-> same in parallel without trampling on each other toes by competing for a
-> reduced number of queues which are affine to the housekeeper CPUs.
-> 
-> Unfortunately network multi-queue is substantially different from block
-> multi-queue (as I learned in this conversation), so the concept cannot
-> be applied one-to-one to networking as is. But there are certainly part
-> of it which can be reused.
-> 
-> This needs a lot more thought than just these crude hacks.
-> 
-> Especially under the aspect that there are talks about making isolation
-> runtime switchable. Are you going to rmmod/insmod the i40e network
-> driver to do so? That's going to work fine if you do that
-> reconfiguration over network...
-> 
-> Thanks,
-> 
->         tglx
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
