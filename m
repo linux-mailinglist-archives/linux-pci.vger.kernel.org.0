@@ -2,178 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F1C0298B15
-	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 12:00:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A95B298CEA
+	for <lists+linux-pci@lfdr.de>; Mon, 26 Oct 2020 13:33:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1772856AbgJZK6v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Oct 2020 06:58:51 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39058 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1772859AbgJZK6v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Oct 2020 06:58:51 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y12so11865195wrp.6
-        for <linux-pci@vger.kernel.org>; Mon, 26 Oct 2020 03:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rl2aV6v4BUOFD3sWM4dGPxjWFUFBHT1H6eKln2146qM=;
-        b=RdtN9nvqXygrqpRjlwyadHI2Akx5GphSp7V8MoSkao2AUFwNDdcs0pb2/4JjL395li
-         67V6FN5HHlmjn9vWJcOKZYD+h4GMXwH3UsicvAL/IRAbuzUTcqbK0mc+9nQX8VqJ0N1G
-         QvYjui1JxD/SV+BAqoPjDtW6UkWb8unscHOVc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rl2aV6v4BUOFD3sWM4dGPxjWFUFBHT1H6eKln2146qM=;
-        b=r+fjXPsn6rXLFjFo6pPrho8xG6gWa78Qw0yZHbB90ahMrzwX5604ipG4QdkBYDZ1oG
-         3KPVrAUHZHLW9wm3z/7cexLA0DPq1FYlI05cklAZZn25Q2ZenSr/316wluQJgSJuzXsn
-         ceDQujm1U803rMnjACJJ0ATeKvl+vPxjHd+CEnSv063Tl2yy4/WoDgoo8fmviNBawf0K
-         5W7hj7DmY1DWNHc2ffQT5RL7zXFesChVPlYKBmLuaWvtS4a0zX4e5kr+cA2GyuOcXgO/
-         DFM4Y8EhsMRPhoFl707J4nE++3r547iBcWU2Uch8N+3MoMH1OPjvVNJP5KtBef5BzM8E
-         ZaZA==
-X-Gm-Message-State: AOAM531zA6Mjam09hgMmWA9ptR62mJ8/tMg7mKsxPnuKPArM7z9rxtIm
-        BeAMLyfqWL37uWsM9PQVIIScig==
-X-Google-Smtp-Source: ABdhPJyJEgobhpYPgpR3deeCaVtbSbKMyoksav28TvwMmYamt9hp5XzgBWl2um1YOhVBMyiCN8BNmg==
-X-Received: by 2002:a5d:498a:: with SMTP id r10mr17440576wrq.106.1603709927066;
-        Mon, 26 Oct 2020 03:58:47 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id w83sm21165156wmg.48.2020.10.26.03.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 03:58:46 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v4 15/15] PCI: Revoke mappings like devmem
-Date:   Mon, 26 Oct 2020 11:58:18 +0100
-Message-Id: <20201026105818.2585306-16-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
-References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
+        id S1775171AbgJZMdB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Oct 2020 08:33:01 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12651 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1775169AbgJZMdB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 26 Oct 2020 08:33:01 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f96c1e80000>; Mon, 26 Oct 2020 05:32:40 -0700
+Received: from localhost (10.124.1.5) by HQMAIL107.nvidia.com (172.20.187.13)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 26 Oct 2020 12:32:59
+ +0000
+Date:   Mon, 26 Oct 2020 13:32:57 +0100
+From:   Thierry Reding <treding@nvidia.com>
+To:     Jingoo Han <jingoohan1@gmail.com>
+CC:     Vidya Sagar <vidyas@nvidia.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: Re: [PATCH 0/3] Add support to handle prefetchable memory
+Message-ID: <20201026123012.GA356750@ulmo>
+References: <20201023195655.11242-1-vidyas@nvidia.com>
+ <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+Content-Disposition: inline
+In-Reply-To: <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.14.7 (2020-08-29)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1603715560; bh=sqQVLIGYKI42d425ac+GAGW1AQu2By70V9nvM0kyskI=;
+        h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+         Content-Type:Content-Disposition:In-Reply-To:X-NVConfidentiality:
+         User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=ELTAHRjXw6NZhL3cmV/vOeItQwvz16wHR+EgQHN7Cn3RCK2FLjI6K1lO8yEmE5ft8
+         xFFdKWLbdOk3fsWXLP/uS1MrvPrz4xRVVpKlRJCUxYhkVhHKzBK9NkxFOIopEBwTRX
+         RadntGYS0L5jHi8yyx+6C3DoSvg7y/xnDPAHr7LcVvbz1xxhY5CcXOsouRB3kUXaWq
+         60zAB2Q8twaRqYqqxxwBRDL0KC5M7Rh/JPZJVWZF2K8PrBrQzHGWQ5lVNVsWP6l7V/
+         Wok+UGT5u0CVFvxb4Lw6gkVvR1imCvdCgiAwl6eTtjDt33WOz/e/mFjmgYs5GhK5Ur
+         YPgDBo2aE574Q==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-the region") /dev/kmem zaps ptes when the kernel requests exclusive
-acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-the default for all driver uses.
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Except there's two more ways to access PCI BARs: sysfs and proc mmap
-support. Let's plug that hole.
+On Sat, Oct 24, 2020 at 04:03:41AM +0000, Jingoo Han wrote:
+> On 10/23/20, 3:57 PM, Vidya Sagar wrote:
+> >=20
+> > This patch series adds support for configuring the DesignWare IP's ATU
+> > region for prefetchable memory translations.
+> > It first starts by flagging a warning if the size of non-prefetchable
+> > aperture goes beyond 32-bit as PCIe spec doesn't allow it.
+> > And then adds required support for programming the ATU to handle higher
+> > (i.e. >4GB) sizes and then finally adds support for differentiating
+> > between prefetchable and non-prefetchable regions and configuring one of
+> > the ATU regions for prefetchable memory translations purpose.
+> >
+> > Vidya Sagar (3):
+> >   PCI: of: Warn if non-prefetchable memory aperture size is > 32-bit
+> >   PCI: dwc: Add support to program ATU for >4GB memory aperture sizes
+> >   PCI: dwc: Add support to handle prefetchable memory mapping
+>=20
+> For 2nd & 3rd,
+> Acked-by: Jingoo <jingoohan1@gmail.com>
+> But, I still want someone to ack 1st patch, not me.
+>=20
+> To Vidya,
+> If possible, can you ask your coworker to give 'Tested-by'? It will be ve=
+ry helpful.
+> Thank you.
 
-For revoke_devmem() to work we need to link our vma into the same
-address_space, with consistent vma->vm_pgoff. ->pgoff is already
-adjusted, because that's how (io_)remap_pfn_range works, but for the
-mapping we need to adjust vma->vm_file->f_mapping. The cleanest way is
-to adjust this at at ->open time:
+On next-20201026 (but also going back quite a while) I'm seeing this
+during boot on Jetson AGX Xavier (Tegra194):
 
-- for sysfs this is easy, now that binary attributes support this. We
-  just set bin_attr->mapping when mmap is supported
-- for procfs it's a bit more tricky, since procfs pci access has only
-  one file per device, and access to a specific resources first needs
-  to be set up with some ioctl calls. But mmap is only supported for
-  the same resources as sysfs exposes with mmap support, and otherwise
-  rejected, so we can set the mapping unconditionally at open time
-  without harm.
+[    3.493382] ahci 0001:01:00.0: version 3.0
+[    3.493889] ahci 0001:01:00.0: SSS flag set, parallel bus scan disabled
+[    4.497706] ahci 0001:01:00.0: controller reset failed (0xffffffff)
+[    4.498114] ahci: probe of 0001:01:00.0 failed with error -5
 
-A special consideration is for arch_can_pci_mmap_io() - we need to
-make sure that the ->f_mapping doesn't alias between ioport and iomem
-space. There's only 2 ways in-tree to support mmap of ioports: generic
-pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the single
-architecture hand-rolling. Both approach support ioport mmap through a
-special pfn range and not through magic pte attributes. Aliasing is
-therefore not a problem.
+After applying this series, AHCI over PCI is back to normal:
 
-The only difference in access checks left is that sysfs PCI mmap does
-not check for CAP_RAWIO. I'm not really sure whether that should be
-added or not.
+[    3.543230] ahci 0001:01:00.0: AHCI 0001.0000 32 slots 1 ports 6 Gbps 0x=
+1 impl SATA mode
+[    3.550841] ahci 0001:01:00.0: flags: 64bit ncq sntf led only pmp fbs pi=
+o slum part sxs
+[    3.559747] scsi host0: ahci
+[    3.561998] ata1: SATA max UDMA/133 abar m512@0x1230010000 port 0x123001=
+0100 irq 63
 
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
---
-v2:
-- Totally new approach: Adjust filp->f_mapping at open time. Note that
-  this now works on all architectures, not just those support
-  ARCH_GENERIC_PCI_MMAP_RESOURCE
----
- drivers/pci/pci-sysfs.c | 4 ++++
- drivers/pci/proc.c      | 1 +
- 2 files changed, 5 insertions(+)
+So for the series:
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6d78df981d41..cee38fcb4a86 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -928,6 +928,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_io->read = pci_read_legacy_io;
- 	b->legacy_io->write = pci_write_legacy_io;
- 	b->legacy_io->mmap = pci_mmap_legacy_io;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_io);
- 	error = device_create_bin_file(&b->dev, b->legacy_io);
- 	if (error)
-@@ -940,6 +941,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_mem->size = 1024*1024;
- 	b->legacy_mem->attr.mode = 0600;
- 	b->legacy_mem->mmap = pci_mmap_legacy_mem;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_mem);
- 	error = device_create_bin_file(&b->dev, b->legacy_mem);
- 	if (error)
-@@ -1155,6 +1157,8 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 			res_attr->mmap = pci_mmap_resource_uc;
- 		}
- 	}
-+	if (res_attr->mmap)
-+		res_attr->mapping = iomem_get_mapping();
- 	res_attr->attr.name = res_attr_name;
- 	res_attr->attr.mode = 0600;
- 	res_attr->size = pci_resource_len(pdev, num);
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 3a2f90beb4cb..9bab07302bbf 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -298,6 +298,7 @@ static int proc_bus_pci_open(struct inode *inode, struct file *file)
- 	fpriv->write_combine = 0;
- 
- 	file->private_data = fpriv;
-+	file->f_mapping = iomem_get_mapping();
- 
- 	return 0;
- }
--- 
-2.28.0
+Tested-by: Thierry Reding <treding@nvidia.com>
 
+--uAKRQypu60I7Lcqm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+WwfkACgkQ3SOs138+
+s6GSZw//dofmlmsswCqSTbKwBiInkH2EyVwdddtYg43ZSc8uCDAIKtUTPr9o1O4P
+ae67pQ0Zwgr79ULbANWRr6KsgoAT+Pbd7qQoHT/X252IrvxmOG0mkgPCGvJcsZZa
+vgZvoQRSPNXPehVlcJBH/JX33NKJm+T01B9MAG4OdHG4PLQqdc6LLj7rskibQeom
+fIGkJsXQRvzMDyDxqYrqOop2V9ejV9EwAqbOrQpSTzNrfv1yy0HJVmL8S5qqWSRM
+tgvtZ+wLAuCq0jwDgKYiTXHnpltO4C3QyCc6FteZB6ykeJlOm4eTIy58oGjv1AQU
+XpHqOTRJs9SGxSIudrshjcvxyU09Ci9dGU/n/x/vznIl3z58FuK6Xp9eWgyVR4qg
+NrDViohHrj5c1VHqWwERUCDnbQINYF+l+g51xDzMRdYP2C46sHrnOQ/e73CicGny
+Ovs26S2H7UyYFwBNsYmDzA1f3SmkZLX490D8qM3vo65UENZ2cOsIFamBvGuiqn7C
+Z4zunXfySLRE7QTAWJuX76pFclfzM4NeUwlehpogSR+32C/sn3sJQgfr/zZd4RRd
+G456gCEA4Lg0W8TKkhqKDfbzS0EQ+6zvP/jvwU68IfH+Pmo94z0BsXu9+Ng7eXWZ
+CtceVfJDFqw/kmT+lH8OgIfLxrzFjJbPNiCY3t3GFGrqpvpwCXc=
+=JZ1w
+-----END PGP SIGNATURE-----
+
+--uAKRQypu60I7Lcqm--
