@@ -2,122 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 874FA29A880
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 10:56:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B7BB29A903
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 11:07:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896523AbgJ0J43 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Oct 2020 05:56:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27725 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2896507AbgJ0J43 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 05:56:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603792587;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JVIROt4xscPTv2bl+9dBZkGi/KmAAnHZ43ndwfcAS4s=;
-        b=bB+jRXhLlnKQCuJbpeOwsBh7oh+8kwGSocAoOAouv7s/xncBsWSuDeg7MNl8euVHHqFMRh
-        fUeHc8Jc2hNRpxJp6LIdOPdzTe20C8wxhRg4DFd7qt7qNoqNvqXiHIDWwBBfTfiREdxWae
-        4Owm2sYh7m97ZKtNum85/toKt2lax90=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-HcgxRTMQP4aCMXK2g1pL6A-1; Tue, 27 Oct 2020 05:56:23 -0400
-X-MC-Unique: HcgxRTMQP4aCMXK2g1pL6A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 883E2100CCFD;
-        Tue, 27 Oct 2020 09:56:20 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B3EC7367E;
-        Tue, 27 Oct 2020 09:55:56 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 00636417F242; Mon, 26 Oct 2020 16:11:07 -0300 (-03)
-Date:   Mon, 26 Oct 2020 16:11:07 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, helgaas@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        frederic@kernel.org, sassmann@redhat.com,
-        jesse.brandeburg@intel.com, lihong.yang@intel.com,
-        jeffrey.t.kirsher@intel.com, jacob.e.keller@intel.com,
-        jlelli@redhat.com, hch@infradead.org, bhelgaas@google.com,
-        mike.marciniszyn@intel.com, dennis.dalessandro@intel.com,
-        thomas.lendacky@amd.com, jiri@nvidia.com, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        lgoncalv@redhat.com
-Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to
- housekeeping CPUs
-Message-ID: <20201026191107.GA407524@fuller.cnet>
-References: <20201020073055.GY2611@hirez.programming.kicks-ass.net>
- <078e659e-d151-5bc2-a7dd-fe0070267cb3@redhat.com>
- <20201020134128.GT2628@hirez.programming.kicks-ass.net>
- <6736e643-d4ae-9919-9ae1-a73d5f31463e@redhat.com>
- <260f4191-5b9f-6dc1-9f11-085533ac4f55@redhat.com>
- <20201023085826.GP2611@hirez.programming.kicks-ass.net>
- <9ee77056-ef02-8696-5b96-46007e35ab00@redhat.com>
- <87ft6464jf.fsf@nanos.tec.linutronix.de>
- <20201026173012.GA377978@fuller.cnet>
- <875z6w4xt4.fsf@nanos.tec.linutronix.de>
+        id S2437642AbgJ0KGN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Oct 2020 06:06:13 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1930 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437637AbgJ0KGN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 06:06:13 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f97f11b0002>; Tue, 27 Oct 2020 03:06:19 -0700
+Received: from [10.40.203.191] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 27 Oct
+ 2020 10:06:01 +0000
+Subject: Re: [PATCH] PCI: dwc: Support multiple ATU memory regions
+To:     Rob Herring <robh@kernel.org>, <linux-pci@vger.kernel.org>
+CC:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20201026181652.418729-1-robh@kernel.org>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <a6410006-07a4-b9bd-ae04-a1db19e6ef9b@nvidia.com>
+Date:   Tue, 27 Oct 2020 15:35:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875z6w4xt4.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20201026181652.418729-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1603793179; bh=BYmc9SuVlwvevP7tGENc47z3yGiej1ioWCv5taZtDeI=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=f6LArQHb0MVr4sV+JjcS2iagwv/lPZUyfVdOp5MG0ubuChzV9bCf3oF03t3k/LTgi
+         kyt7REPvGMWK0KVarftxU68nY9YU4mz/gIuaJYjBFckplDzVcCO7NKy+CQEzyMibTr
+         CTNEbWTSUY+BSBean/Yw01rxsn9aVB3Xoch2TpkmYftqZ64Wa3Z2cC7LLA/KqR41f8
+         c3NxUQohIgXEWkIORg1NYy8m3puL45FRo+YXGXK7d36xxyKAx0r08kQ1CNRfErl6GK
+         Hmt4VTti0hcK2w5xplvWMhNbCOq9bcZRGMUKSsGEgSu0Yr2kW5aqu+84RVF+otnnpj
+         FnhDx7noj0I4w==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 08:00:39PM +0100, Thomas Gleixner wrote:
-> On Mon, Oct 26 2020 at 14:30, Marcelo Tosatti wrote:
-> > On Fri, Oct 23, 2020 at 11:00:52PM +0200, Thomas Gleixner wrote:
-> >> So without information from the driver which tells what the best number
-> >> of interrupts is with a reduced number of CPUs, this cutoff will cause
-> >> more problems than it solves. Regressions guaranteed.
-> >
-> > One might want to move from one interrupt per isolated app core
-> > to zero, or vice versa. It seems that "best number of interrupts 
-> > is with reduced number of CPUs" information, is therefore in userspace, 
-> > not in driver...
-> 
-> How does userspace know about the driver internals? Number of management
-> interrupts, optimal number of interrupts per queue?
-> 
-> >> Managed interrupts base their interrupt allocation and spreading on
-> >> information which is handed in by the individual driver and not on crude
-> >> assumptions. They are not imposing restrictions on the use case.
-> >> 
-> >> It's perfectly fine for isolated work to save a data set to disk after
-> >> computation has finished and that just works with the per-cpu I/O queue
-> >> which is otherwise completely silent. 
-> >
-> > Userspace could only change the mask of interrupts which are not 
-> > triggered by requests from the local CPU (admin, error, mgmt, etc),
-> > to avoid the vector exhaustion problem.
-> >
-> > However, there is no explicit way for userspace to know that, as far as
-> > i know.
-> >
-> >  130:      34845          0          0          0          0          0          0          0  IR-PCI-MSI 33554433-edge      nvme0q1
-> >  131:          0      27062          0          0          0          0          0          0  IR-PCI-MSI 33554434-edge      nvme0q2
-> >  132:          0          0      24393          0          0          0          0          0  IR-PCI-MSI 33554435-edge      nvme0q3
-> >  133:          0          0          0      24313          0          0          0          0  IR-PCI-MSI 33554436-edge      nvme0q4
-> >  134:          0          0          0          0      20608          0          0          0  IR-PCI-MSI 33554437-edge      nvme0q5
-> >  135:          0          0          0          0          0      22163          0          0  IR-PCI-MSI 33554438-edge      nvme0q6
-> >  136:          0          0          0          0          0          0      23020          0  IR-PCI-MSI 33554439-edge      nvme0q7
-> >  137:          0          0          0          0          0          0          0      24285  IR-PCI-MSI 33554440-edge      nvme0q8
-> >
-> > Can that be retrieved from PCI-MSI information, or drivers
-> > have to inform this?
-> 
-> The driver should use a different name for the admin queues.
 
-Works for me.
 
-Sounds more like a heuristic which can break, so documenting this 
-as an "interface" seems appropriate.
+On 10/26/2020 11:46 PM, Rob Herring wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> The current ATU setup only supports a single memory resource which
+> isn't sufficient if there are also prefetchable memory regions. In order
+> to support multiple memory regions, we need to move away from fixed ATU
+> slots and rework the assignment. As there's always an ATU entry for
+> config space, let's assign index 0 to config space. Then we assign
+> memory resources to index 1 and up. Finally, if we have an I/O region
+> and slots remaining, we assign the I/O region last. If there aren't
+> remaining slots, we keep the same config and I/O space sharing.
+> 
+> Cc: Vidya Sagar <vidyas@nvidia.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> For 5.11. This is based on the regression fix for 5.10 I sent[1].
+> 
+> Rob
+> 
+> [1] https://lore.kernel.org/linux-pci/20201026154852.221483-1-robh@kernel.org/
+> 
+>   .../pci/controller/dwc/pcie-designware-host.c | 54 +++++++++++--------
+>   drivers/pci/controller/dwc/pcie-designware.h  |  6 +--
+>   2 files changed, 34 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 44c2a6572199..a6ffab9b537e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -464,9 +464,7 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
+>                  type = PCIE_ATU_TYPE_CFG1;
+> 
+> 
+> -       dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+> -                                 type, pp->cfg0_base,
+> -                                 busdev, pp->cfg0_size);
+> +       dw_pcie_prog_outbound_atu(pci, 0, type, pp->cfg0_base, busdev, pp->cfg0_size);
+> 
+>          return pp->va_cfg0_base + where;
+>   }
+> @@ -480,9 +478,8 @@ static int dw_pcie_rd_other_conf(struct pci_bus *bus, unsigned int devfn,
+> 
+>          ret = pci_generic_config_read(bus, devfn, where, size, val);
+> 
+> -       if (!ret && pci->num_viewport <= 2)
+> -               dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+> -                                         PCIE_ATU_TYPE_IO, pp->io_base,
+> +       if (!ret && pci->io_cfg_atu_shared)
+> +               dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO, pp->io_base,
+>                                            pp->io_bus_addr, pp->io_size);
+> 
+>          return ret;
+> @@ -497,9 +494,8 @@ static int dw_pcie_wr_other_conf(struct pci_bus *bus, unsigned int devfn,
+> 
+>          ret = pci_generic_config_write(bus, devfn, where, size, val);
+> 
+> -       if (!ret && pci->num_viewport <= 2)
+> -               dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+> -                                         PCIE_ATU_TYPE_IO, pp->io_base,
+> +       if (!ret && pci->io_cfg_atu_shared)
+> +               dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO, pp->io_base,
+>                                            pp->io_bus_addr, pp->io_size);
+> 
+>          return ret;
+> @@ -586,21 +582,35 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>           * ATU, so we should not program the ATU here.
+>           */
+>          if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+> -               struct resource_entry *tmp, *entry = NULL;
+> +               int atu_idx = 0;
+> +               struct resource_entry *entry;
+> 
+>                  /* Get last memory resource entry */
+> -               resource_list_for_each_entry(tmp, &pp->bridge->windows)
+> -                       if (resource_type(tmp->res) == IORESOURCE_MEM)
+> -                               entry = tmp;
+> -
+> -               dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
+> -                                         PCIE_ATU_TYPE_MEM, entry->res->start,
+> -                                         entry->res->start - entry->offset,
+> -                                         resource_size(entry->res));
+> -               if (pci->num_viewport > 2)
+> -                       dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
+> -                                                 PCIE_ATU_TYPE_IO, pp->io_base,
+> -                                                 pp->io_bus_addr, pp->io_size);
+> +               resource_list_for_each_entry(entry, &pp->bridge->windows) {
+> +                       if (resource_type(entry->res) != IORESOURCE_MEM)
+> +                               continue;
+> +
+> +                       if (pci->num_viewport <= ++atu_idx)
+> +                               break;
+> +
+> +                       dw_pcie_prog_outbound_atu(pci, atu_idx,
+> +                                                 PCIE_ATU_TYPE_MEM, entry->res->start,
+> +                                                 entry->res->start - entry->offset,
+> +                                                 resource_size(entry->res));
+> +               }
+> +
+> +               if (pp->io_size) {
+> +                       if (pci->num_viewport > ++atu_idx)
+> +                               dw_pcie_prog_outbound_atu(pci, atu_idx,
+> +                                                         PCIE_ATU_TYPE_IO, pp->io_base,
+> +                                                         pp->io_bus_addr, pp->io_size);
+> +                       else
+> +                               pci->io_cfg_atu_shared = true;
+> +               }
+> +
+> +               if (pci->num_viewport <= atu_idx)
+> +                       dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)",
+> +                                pci->num_viewport);
+>          }
+> 
+>          dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 9d2f511f13fa..ed19c34dd0fe 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -80,9 +80,6 @@
+>   #define PCIE_ATU_VIEWPORT              0x900
+>   #define PCIE_ATU_REGION_INBOUND                BIT(31)
+>   #define PCIE_ATU_REGION_OUTBOUND       0
+> -#define PCIE_ATU_REGION_INDEX2         0x2
+> -#define PCIE_ATU_REGION_INDEX1         0x1
+> -#define PCIE_ATU_REGION_INDEX0         0x0
+>   #define PCIE_ATU_CR1                   0x904
+>   #define PCIE_ATU_TYPE_MEM              0x0
+>   #define PCIE_ATU_TYPE_IO               0x2
+> @@ -266,7 +263,6 @@ struct dw_pcie {
+>          /* Used when iatu_unroll_enabled is true */
+>          void __iomem            *atu_base;
+>          u32                     num_viewport;
+> -       u8                      iatu_unroll_enabled;
+>          struct pcie_port        pp;
+>          struct dw_pcie_ep       ep;
+>          const struct dw_pcie_ops *ops;
+> @@ -274,6 +270,8 @@ struct dw_pcie {
+>          int                     num_lanes;
+>          int                     link_gen;
+>          u8                      n_fts[2];
+> +       bool                    iatu_unroll_enabled: 1;
+> +       bool                    io_cfg_atu_shared: 1;
+>   };
+> 
+>   #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+> --
+> 2.25.1
+> 
+
+Reviewed and Verified it on Tegra194 and functionality is fine.
+Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+Tested-by: Vidya Sagar <vidyas@nvidia.com>
 
