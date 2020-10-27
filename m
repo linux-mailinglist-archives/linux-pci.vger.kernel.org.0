@@ -2,142 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDFBD29AA8C
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 12:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE61C29AB1B
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 12:48:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1749905AbgJ0L2N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Oct 2020 07:28:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39038 "EHLO
+        id S1750195AbgJ0LsV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Oct 2020 07:48:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34766 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1749898AbgJ0L2M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 07:28:12 -0400
+        by vger.kernel.org with ESMTP id S1750191AbgJ0LsV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 07:48:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603798089;
+        s=mimecast20190719; t=1603799298;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=688aZm0PD/3SiVRwK7iawCj1jbJr07QWKg/+VEWty/w=;
-        b=CYexGtVJsdZJD7HMAzLaQmv7ZRr2jOjbbyMwK6ht0uDWCG7ziY+wJj0hEilCoNyep+kWl1
-        n1t+wJvBwEwrEei8HkNPCKzPg0HNqxXu1JY0VPCDpVByBg5stmVLG8SysHG2bDi1XWnnt5
-        4otomaR6OZOrQc0KXsQKXdUYfq6DZfg=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-I6ehVw8AMKqBG0i2cAwy3Q-1; Tue, 27 Oct 2020 07:28:07 -0400
-X-MC-Unique: I6ehVw8AMKqBG0i2cAwy3Q-1
-Received: by mail-ej1-f69.google.com with SMTP id pk23so785603ejb.4
-        for <linux-pci@vger.kernel.org>; Tue, 27 Oct 2020 04:28:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=688aZm0PD/3SiVRwK7iawCj1jbJr07QWKg/+VEWty/w=;
-        b=dFduCyy5oaeL9oF7Vk1xw20EbsoosqRiHrtx+3a6a64IPlUjBU1IINfS3Cbh5e8qZj
-         G1FDRzODYUEZEKt4NWJzUUODVY+VV2E3sVhNC8cEUssH5DpXigtPxPrSEYm0wbg7YRs5
-         ywZNCcctTOJLDU8/K7F0n8tk8K8MfQAKkw+Cl3lUsDLJFaVVlFzcmGRG9/FaCUgYEmV6
-         +UvWL9J7KyX6y9tudENNYVnWSAGD2Qh2eH56gevWkOWj7X6HNhI9tU3jGxGmCILD4fi3
-         SBb0qND50ZR1xOK1lcjpXHiSmvTmRvlNnex4wiipNsaCR9usihM2xuUUsEW8//2vOxYk
-         db3w==
-X-Gm-Message-State: AOAM530Is37lCklPR+ODSoAxbWiTZqj1LJtTKIriU0vLLbWxHjIZ7Xwm
-        gZ63S5p2RmrnANXXr+1xEUzfvwmf49yiPbHZMqGrTJEKuJL//3+r9vc7cumHwJqLb0D3vhBVZPW
-        7FAOykbGb0/paUEC7LhfH
-X-Received: by 2002:aa7:c358:: with SMTP id j24mr1706685edr.265.1603798086278;
-        Tue, 27 Oct 2020 04:28:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwNks/irBNquuX2qqWze7N1uU8iJmXriG2IIP0ADY1uAEjDy9xgloHTRusFL49PMuOlbI5UNg==
-X-Received: by 2002:aa7:c358:: with SMTP id j24mr1706652edr.265.1603798085964;
-        Tue, 27 Oct 2020 04:28:05 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id yw17sm856915ejb.97.2020.10.27.04.28.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Oct 2020 04:28:05 -0700 (PDT)
-Subject: Re: [PATCH V8 0/5] Intel Platform Monitoring Technology
-To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
-        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexey.budankov@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20201003013123.20269-1-david.e.box@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2f17db4b-2988-7f0d-fd0e-9e5b621d24ec@redhat.com>
-Date:   Tue, 27 Oct 2020 12:28:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        bh=+/AgwzcCTvrWgzyfiV85FVL0zRQS/mR6Y//U0UAucMk=;
+        b=W0yewt5xkDLTu3Rl/gE1HKeA6rTIW6gVJ9TGIDWHF56cMzKMxaF0rJ8resMEwdT+ZpJs5J
+        VVGclMPtEAEa9xrbVbMoab3egFpk+BBl8aZOn5R9HPP0/M9zegiGYXOFXQNfKUQJfCN8Bl
+        bFsnr8qwhqKcuIi8GBA466m81o/VnyI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-i2czznU2M7Ou11EETDUbFw-1; Tue, 27 Oct 2020 07:48:15 -0400
+X-MC-Unique: i2czznU2M7Ou11EETDUbFw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C121186DD41;
+        Tue, 27 Oct 2020 11:48:12 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D65D55C1BB;
+        Tue, 27 Oct 2020 11:48:04 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id 59ADC416C894; Tue, 27 Oct 2020 08:47:39 -0300 (-03)
+Date:   Tue, 27 Oct 2020 08:47:39 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, helgaas@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        frederic@kernel.org, sassmann@redhat.com,
+        jesse.brandeburg@intel.com, lihong.yang@intel.com,
+        jeffrey.t.kirsher@intel.com, jlelli@redhat.com, hch@infradead.org,
+        bhelgaas@google.com, mike.marciniszyn@intel.com,
+        dennis.dalessandro@intel.com, thomas.lendacky@amd.com,
+        jiri@nvidia.com, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, lgoncalv@redhat.com,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH v4 4/4] PCI: Limit pci_alloc_irq_vectors() to
+ housekeeping CPUs
+Message-ID: <20201027114739.GA11336@fuller.cnet>
+References: <20201023085826.GP2611@hirez.programming.kicks-ass.net>
+ <9ee77056-ef02-8696-5b96-46007e35ab00@redhat.com>
+ <87ft6464jf.fsf@nanos.tec.linutronix.de>
+ <20201026173012.GA377978@fuller.cnet>
+ <875z6w4xt4.fsf@nanos.tec.linutronix.de>
+ <86f8f667-bda6-59c4-91b7-6ba2ef55e3db@intel.com>
+ <87v9ew3fzd.fsf@nanos.tec.linutronix.de>
+ <85b5f53e-5be2-beea-269a-f70029bea298@intel.com>
+ <87lffs3bd6.fsf@nanos.tec.linutronix.de>
+ <959997ee-f393-bab0-45c0-4144c37b9185@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20201003013123.20269-1-david.e.box@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <959997ee-f393-bab0-45c0-4144c37b9185@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 10/3/20 3:31 AM, David E. Box wrote:
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring capabilities on a device.
-> With customers increasingly asking for hardware telemetry, engineers not
-> only have to figure out how to measure and collect data, but also how to
-> deliver it and make it discoverable. The latter may be through some device
-> specific method requiring device specific tools to collect the data. This
-> in turn requires customers to manage a suite of different tools in order to
-> collect the differing assortment of monitoring data on their systems.  Even
-> when such information can be provided in kernel drivers, they may require
-> constant maintenance to update register mappings as they change with
-> firmware updates and new versions of hardware. PMT provides a solution for
-> discovering and reading telemetry from a device through a hardware agnostic
-> framework that allows for updates to systems without requiring patches to
-> the kernel or software tools.
+On Mon, Oct 26, 2020 at 06:22:29PM -0400, Nitesh Narayan Lal wrote:
 > 
-> PMT defines several capabilities to support collecting monitoring data from
-> hardware. All are discoverable as separate instances of the PCIE Designated
-> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
-> field uniquely identifies the capability. Each DVSEC also provides a BAR
-> offset to a header that defines capability-specific attributes, including
-> GUID, feature type, offset and length, as well as configuration settings
-> where applicable. The GUID uniquely identifies the register space of any
-> monitor data exposed by the capability. The GUID is associated with an XML
-> file from the vendor that describes the mapping of the register space along
-> with properties of the monitor data. This allows vendors to perform
-> firmware updates that can change the mapping (e.g. add new metrics) without
-> requiring any changes to drivers or software tools. The new mapping is
-> confirmed by an updated GUID, read from the hardware, which software uses
-> with a new XML.
+> On 10/26/20 5:50 PM, Thomas Gleixner wrote:
+> > On Mon, Oct 26 2020 at 14:11, Jacob Keller wrote:
+> >> On 10/26/2020 1:11 PM, Thomas Gleixner wrote:
+> >>> On Mon, Oct 26 2020 at 12:21, Jacob Keller wrote:
+> >>>> Are there drivers which use more than one interrupt per queue? I know
+> >>>> drivers have multiple management interrupts.. and I guess some drivers
+> >>>> do combined 1 interrupt per pair of Tx/Rx..  It's also plausible to to
+> >>>> have multiple queues for one interrupt .. I'm not sure how a single
+> >>>> queue with multiple interrupts would work though.
+> >>> For block there is always one interrupt per queue. Some Network drivers
+> >>> seem to have seperate RX and TX interrupts per queue.
+> >> That's true when thinking of Tx and Rx as a single queue. Another way to
+> >> think about it is "one rx queue" and "one tx queue" each with their own
+> >> interrupt...
+> >>
+> >> Even if there are devices which force there to be exactly queue pairs,
+> >> you could still think of them as separate entities?
+> > Interesting thought.
+> >
+> > But as Jakub explained networking queues are fundamentally different
+> > from block queues on the RX side. For block the request issued on queue
+> > X will raise the complete interrupt on queue X.
+> >
+> > For networking the TX side will raise the TX interrupt on the queue on
+> > which the packet was queued obviously or should I say hopefully. :)
 > 
-> The current capabilities defined by PMT are Telemetry, Watcher, and
-> Crashlog.  The Telemetry capability provides access to a continuous block
-> of read only data. The Watcher capability provides access to hardware
-> sampling and tracing features. Crashlog provides access to device crash
-> dumps.  While there is some relationship between capabilities (Watcher can
-> be configured to sample from the Telemetry data set) each exists as stand
-> alone features with no dependency on any other. The design therefore splits
-> them into individual, capability specific drivers. MFD is used to create
-> platform devices for each capability so that they may be managed by their
-> own driver. The PMT architecture is (for the most part) agnostic to the
-> type of device it can collect from. Software can determine which devices
-> support a PMT feature by searching through each device node entry in the
-> sysfs class folder. It can additionally determine if a particular device
-> supports a PMT feature by checking for a PMT class folder in the device
-> folder.
+> This is my impression as well.
 > 
-> This patch set provides support for the PMT framework, along with support
-> for Telemetry on Tiger Lake.
+> > But incoming packets will be directed to some receive queue based on a
+> > hash or whatever crystallball logic the firmware decided to implement.
+> >
+> > Which makes this not really suitable for the managed interrupt and
+> > spreading approach which is used by block-mq. Hrm...
+> >
+> > But I still think that for curing that isolation stuff we want at least
+> > some information from the driver. Alternative solution would be to grant
+> > the allocation of interrupts and queues and have some sysfs knob to shut
+> > down queues at runtime. If that shutdown results in releasing the queue
+> > interrupt (via free_irq()) then the vector exhaustion problem goes away.
+> 
+> I think this is close to what I and Marcelo were discussing earlier today
+> privately.
+> 
+> I don't think there is currently a way to control the enablement/disablement of
+> interrupts from the userspace.
 
-The entire series looks good to me, so you may add my:
+As long as the interrupt obeys the "trigger when request has been
+performed by local CPU" rule (#1) (for MSI type interrupts, where driver allocates
+one I/O interrupt per CPU), don't see a need for the interface.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+For other types of interrupts, interrupt controller should be programmed
+to not include the isolated CPU on its "destination CPU list".
 
-To the entire series.
+About the block VS network discussion, what we are trying to do at skb
+level (Paolo Abeni CC'ed, author of the suggestion) is to use RPS to
+avoid skbs from being queued to a CPU (on RX), and to queue skbs
+on housekeeping CPUs for processing (TX).
 
-Lee, in the discussion about previous versions you indicated that you
-would be happy to merge the entire series through the MFD tree.
+However, if per-CPU interrupts are not disabled, then the (for example)
+network device is free to include the CPU in its list of destinations.
+Which would require one to say, configure RPS (or whatever mechanism
+is distributing interrupts).
 
-From my pov this is ready for merging, so if you can pick up the entire
-series and then provide me with an immutable branch to merge into the
-pdx86 tree that would be great.
+Hum, it would feel safer (rather than trust the #1 rule to be valid
+in all cases) to ask the driver to disable the interrupt (after shutting
+down queue) for that particular CPU.
 
-Regards,
+BTW, Thomas, software is free to configure a particular MSI-X interrupt
+to point to any CPU:
 
-Hans
+10.11 MESSAGE SIGNALLED INTERRUPTS
+The PCI Local Bus Specification, Rev 2.2 (www.pcisig.com) introduces the concept of message signalled interrupts.
+As the specification indicates:
+“Message signalled interrupts (MSI) is an optional feature that enables PCI devices to request
+service by writing a system-specified message to a system-specified address (PCI DWORD memory
+write transaction). The transaction address specifies the message destination while the transaction
+data specifies the message. System software is expected to initialize the message destination and
+message during device configuration, allocating one or more non-shared messages to each MSI
+capable function.”
+
+Fields in the Message Address Register are as follows:
+1. Bits 31-20 — These bits contain a fixed value for interrupt messages (0FEEH). This value locates interrupts at
+the 1-MByte area with a base address of 4G – 18M. All accesses to this region are directed as interrupt
+messages. Care must to be taken to ensure that no other device claims the region as I/O space.
+2. Destination ID — This field contains an 8-bit destination ID. It identifies the message’s target processor(s).
+The destination ID corresponds to bits 63:56 of the I/O APIC Redirection Table Entry if the IOAPIC is used to
+dispatch the interrupt to the processor(s).
+
+---
+
+So taking the example where computation happens while isolated and later
+stored via block interface, aren't we restricting the usage scenarios
+by enforcing the "per-CPU queue has interrupt pointing to owner CPU" rule?
+
+> I think in terms of the idea we need something similar to what i40e does,
+> that is shutdown all IRQs when CPU is suspended and restores the interrupt
+> schema when the CPU is back online.
+> 
+> The two key difference will be that this API needs to be generic and also
+> needs to be exposed to the userspace through something like sysfs as you
+> have mentioned.
+
+
+> 
+> -- 
+> Thanks
+> Nitesh
+> 
+
+
 
