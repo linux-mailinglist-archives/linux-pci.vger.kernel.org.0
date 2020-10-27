@@ -2,411 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CBFF29A9E4
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 11:41:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDFBD29AA8C
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 12:28:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2898674AbgJ0KlA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Oct 2020 06:41:00 -0400
-Received: from casper.infradead.org ([90.155.50.34]:37504 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2898508AbgJ0Kk5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 06:40:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KlzPY9vg25KLuvhfk+bBCH8bxcpI80B4G13ok9fipjQ=; b=kJigX4tDZPqJ/+PbHE2cYWwrGK
-        6zek3pdtvGgT6HeBGfnF/d5gKLV8MbMTxSZoq/sHeGEZh74rKfdUeDoiGZuUMtaKDbwTeK3S5kFOy
-        tVPG8UEA1XZ4tCaBrRpow9xQiGlal3GaND7FBssyL0leAyCj4n4idUOf8WTM1o0qakoJhWMtdVbma
-        Z6f3sEiaKA6s2kWuz1CPzoUFy3+VjEAec0PQm/qTwOTnQdJ2bl6MNf4/bGJ9tFjAzFCCWCRc181lT
-        CxutKxa+trkU0vpWXXPxu+S/K3QgWh4gt4ufNX+HGfZWH1XAOfu//vCv+PAMkcBxMpFDkO1IRrfFc
-        op6XypOw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kXMP6-0002BU-PK; Tue, 27 Oct 2020 10:40:37 +0000
-Date:   Tue, 27 Oct 2020 10:40:36 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Sherry Sun <sherry.sun@nxp.com>
-Cc:     hch@infradead.org, gregkh@linuxfoundation.org,
-        sudeep.dutt@intel.com, ashutosh.dixit@intel.com, arnd@arndb.de,
-        kishon@ti.com, lorenzo.pieralisi@arm.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-imx@nxp.com, fugang.duan@nxp.com
-Subject: Re: [PATCH V4 1/2] misc: vop: change the way of allocating vring and
- device page
-Message-ID: <20201027104036.GA7054@infradead.org>
-References: <20201026085335.30048-1-sherry.sun@nxp.com>
- <20201026085335.30048-2-sherry.sun@nxp.com>
+        id S1749905AbgJ0L2N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Oct 2020 07:28:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39038 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1749898AbgJ0L2M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 07:28:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603798089;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=688aZm0PD/3SiVRwK7iawCj1jbJr07QWKg/+VEWty/w=;
+        b=CYexGtVJsdZJD7HMAzLaQmv7ZRr2jOjbbyMwK6ht0uDWCG7ziY+wJj0hEilCoNyep+kWl1
+        n1t+wJvBwEwrEei8HkNPCKzPg0HNqxXu1JY0VPCDpVByBg5stmVLG8SysHG2bDi1XWnnt5
+        4otomaR6OZOrQc0KXsQKXdUYfq6DZfg=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-I6ehVw8AMKqBG0i2cAwy3Q-1; Tue, 27 Oct 2020 07:28:07 -0400
+X-MC-Unique: I6ehVw8AMKqBG0i2cAwy3Q-1
+Received: by mail-ej1-f69.google.com with SMTP id pk23so785603ejb.4
+        for <linux-pci@vger.kernel.org>; Tue, 27 Oct 2020 04:28:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=688aZm0PD/3SiVRwK7iawCj1jbJr07QWKg/+VEWty/w=;
+        b=dFduCyy5oaeL9oF7Vk1xw20EbsoosqRiHrtx+3a6a64IPlUjBU1IINfS3Cbh5e8qZj
+         G1FDRzODYUEZEKt4NWJzUUODVY+VV2E3sVhNC8cEUssH5DpXigtPxPrSEYm0wbg7YRs5
+         ywZNCcctTOJLDU8/K7F0n8tk8K8MfQAKkw+Cl3lUsDLJFaVVlFzcmGRG9/FaCUgYEmV6
+         +UvWL9J7KyX6y9tudENNYVnWSAGD2Qh2eH56gevWkOWj7X6HNhI9tU3jGxGmCILD4fi3
+         SBb0qND50ZR1xOK1lcjpXHiSmvTmRvlNnex4wiipNsaCR9usihM2xuUUsEW8//2vOxYk
+         db3w==
+X-Gm-Message-State: AOAM530Is37lCklPR+ODSoAxbWiTZqj1LJtTKIriU0vLLbWxHjIZ7Xwm
+        gZ63S5p2RmrnANXXr+1xEUzfvwmf49yiPbHZMqGrTJEKuJL//3+r9vc7cumHwJqLb0D3vhBVZPW
+        7FAOykbGb0/paUEC7LhfH
+X-Received: by 2002:aa7:c358:: with SMTP id j24mr1706685edr.265.1603798086278;
+        Tue, 27 Oct 2020 04:28:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwNks/irBNquuX2qqWze7N1uU8iJmXriG2IIP0ADY1uAEjDy9xgloHTRusFL49PMuOlbI5UNg==
+X-Received: by 2002:aa7:c358:: with SMTP id j24mr1706652edr.265.1603798085964;
+        Tue, 27 Oct 2020 04:28:05 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id yw17sm856915ejb.97.2020.10.27.04.28.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Oct 2020 04:28:05 -0700 (PDT)
+Subject: Re: [PATCH V8 0/5] Intel Platform Monitoring Technology
+To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexey.budankov@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20201003013123.20269-1-david.e.box@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2f17db4b-2988-7f0d-fd0e-9e5b621d24ec@redhat.com>
+Date:   Tue, 27 Oct 2020 12:28:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201026085335.30048-2-sherry.sun@nxp.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20201003013123.20269-1-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This looks much better, but we need to be careful to restore the
-original vm_start / vm_end.  What do you think about the version below,
-which also simplifies vop_mmap a lot (completely untested):
+Hi,
 
----
-From 2de72bf7444ee187a7576962d746d482c5bdd593 Mon Sep 17 00:00:00 2001
-From: Sherry Sun <sherry.sun@nxp.com>
-Date: Mon, 26 Oct 2020 16:53:34 +0800
-Subject: misc: vop: change the way of allocating vring and device page
+On 10/3/20 3:31 AM, David E. Box wrote:
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring capabilities on a device.
+> With customers increasingly asking for hardware telemetry, engineers not
+> only have to figure out how to measure and collect data, but also how to
+> deliver it and make it discoverable. The latter may be through some device
+> specific method requiring device specific tools to collect the data. This
+> in turn requires customers to manage a suite of different tools in order to
+> collect the differing assortment of monitoring data on their systems.  Even
+> when such information can be provided in kernel drivers, they may require
+> constant maintenance to update register mappings as they change with
+> firmware updates and new versions of hardware. PMT provides a solution for
+> discovering and reading telemetry from a device through a hardware agnostic
+> framework that allows for updates to systems without requiring patches to
+> the kernel or software tools.
+> 
+> PMT defines several capabilities to support collecting monitoring data from
+> hardware. All are discoverable as separate instances of the PCIE Designated
+> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+> field uniquely identifies the capability. Each DVSEC also provides a BAR
+> offset to a header that defines capability-specific attributes, including
+> GUID, feature type, offset and length, as well as configuration settings
+> where applicable. The GUID uniquely identifies the register space of any
+> monitor data exposed by the capability. The GUID is associated with an XML
+> file from the vendor that describes the mapping of the register space along
+> with properties of the monitor data. This allows vendors to perform
+> firmware updates that can change the mapping (e.g. add new metrics) without
+> requiring any changes to drivers or software tools. The new mapping is
+> confirmed by an updated GUID, read from the hardware, which software uses
+> with a new XML.
+> 
+> The current capabilities defined by PMT are Telemetry, Watcher, and
+> Crashlog.  The Telemetry capability provides access to a continuous block
+> of read only data. The Watcher capability provides access to hardware
+> sampling and tracing features. Crashlog provides access to device crash
+> dumps.  While there is some relationship between capabilities (Watcher can
+> be configured to sample from the Telemetry data set) each exists as stand
+> alone features with no dependency on any other. The design therefore splits
+> them into individual, capability specific drivers. MFD is used to create
+> platform devices for each capability so that they may be managed by their
+> own driver. The PMT architecture is (for the most part) agnostic to the
+> type of device it can collect from. Software can determine which devices
+> support a PMT feature by searching through each device node entry in the
+> sysfs class folder. It can additionally determine if a particular device
+> supports a PMT feature by checking for a PMT class folder in the device
+> folder.
+> 
+> This patch set provides support for the PMT framework, along with support
+> for Telemetry on Tiger Lake.
 
-Allocate vrings use dma_alloc_coherent is a common way in kernel. As the
-memory interacted between two systems should use consistent memory to
-avoid caching effects, same as device page memory.
+The entire series looks good to me, so you may add my:
 
-The orginal way use __get_free_pages and dma_map_single to allocate and
-map vring, but not use dma_sync_single_for_cpu/device api to sync the
-changes of vring between EP and RC, which will cause memory
-synchronization problem for those devices which don't support hardware
-dma coherent.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Also change to use dma_mmap_coherent for mmap callback to map the device
-page and vring memory to userspace.
+To the entire series.
 
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
-Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
----
- drivers/misc/mic/bus/vop_bus.h    |   2 +
- drivers/misc/mic/host/mic_boot.c  |   9 ++
- drivers/misc/mic/host/mic_main.c  |  43 +++-------
- drivers/misc/mic/vop/vop_vringh.c | 135 ++++++++++++------------------
- 4 files changed, 77 insertions(+), 112 deletions(-)
+Lee, in the discussion about previous versions you indicated that you
+would be happy to merge the entire series through the MFD tree.
 
-diff --git a/drivers/misc/mic/bus/vop_bus.h b/drivers/misc/mic/bus/vop_bus.h
-index 4fa02808c1e27d..e21c06aeda7a31 100644
---- a/drivers/misc/mic/bus/vop_bus.h
-+++ b/drivers/misc/mic/bus/vop_bus.h
-@@ -75,6 +75,7 @@ struct vop_driver {
-  *                 node to add/remove/configure virtio devices.
-  * @get_dp: Get access to the virtio device page used by the self
-  *          node to add/remove/configure virtio devices.
-+ * @dp_mmap: Map the virtio device page to userspace.
-  * @send_intr: Send an interrupt to the peer node on a specified doorbell.
-  * @remap: Map a buffer with the specified DMA address and length.
-  * @unmap: Unmap a buffer previously mapped.
-@@ -92,6 +93,7 @@ struct vop_hw_ops {
- 	void (*ack_interrupt)(struct vop_device *vpdev, int num);
- 	void __iomem * (*get_remote_dp)(struct vop_device *vpdev);
- 	void * (*get_dp)(struct vop_device *vpdev);
-+	int (*dp_mmap)(struct vop_device *vpdev, struct vm_area_struct *vma);
- 	void (*send_intr)(struct vop_device *vpdev, int db);
- 	void __iomem * (*remap)(struct vop_device *vpdev,
- 				  dma_addr_t pa, size_t len);
-diff --git a/drivers/misc/mic/host/mic_boot.c b/drivers/misc/mic/host/mic_boot.c
-index 8cb85b8b3e199b..44ed918b49b4d2 100644
---- a/drivers/misc/mic/host/mic_boot.c
-+++ b/drivers/misc/mic/host/mic_boot.c
-@@ -89,6 +89,14 @@ static void *__mic_get_dp(struct vop_device *vpdev)
- 	return mdev->dp;
- }
- 
-+static int __mic_dp_mmap(struct vop_device *vpdev, struct vm_area_struct *vma)
-+{
-+	struct mic_device *mdev = vpdev_to_mdev(&vpdev->dev);
-+
-+	return dma_mmap_coherent(&mdev->pdev->dev, vma, mdev->dp,
-+				 mdev->dp_dma_addr, MIC_DP_SIZE);
-+}
-+
- static void __iomem *__mic_get_remote_dp(struct vop_device *vpdev)
- {
- 	return NULL;
-@@ -120,6 +128,7 @@ static struct vop_hw_ops vop_hw_ops = {
- 	.ack_interrupt = __mic_ack_interrupt,
- 	.next_db = __mic_next_db,
- 	.get_dp = __mic_get_dp,
-+	.dp_mmap = __mic_dp_mmap,
- 	.get_remote_dp = __mic_get_remote_dp,
- 	.send_intr = __mic_send_intr,
- 	.remap = __mic_ioremap,
-diff --git a/drivers/misc/mic/host/mic_main.c b/drivers/misc/mic/host/mic_main.c
-index ea4608527ea04d..fab87a72a9a4a5 100644
---- a/drivers/misc/mic/host/mic_main.c
-+++ b/drivers/misc/mic/host/mic_main.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/poll.h>
-+#include <linux/dma-mapping.h>
- 
- #include <linux/mic_common.h>
- #include "../common/mic_dev.h"
-@@ -45,33 +46,6 @@ MODULE_DEVICE_TABLE(pci, mic_pci_tbl);
- /* ID allocator for MIC devices */
- static struct ida g_mic_ida;
- 
--/* Initialize the device page */
--static int mic_dp_init(struct mic_device *mdev)
--{
--	mdev->dp = kzalloc(MIC_DP_SIZE, GFP_KERNEL);
--	if (!mdev->dp)
--		return -ENOMEM;
--
--	mdev->dp_dma_addr = mic_map_single(mdev,
--		mdev->dp, MIC_DP_SIZE);
--	if (mic_map_error(mdev->dp_dma_addr)) {
--		kfree(mdev->dp);
--		dev_err(&mdev->pdev->dev, "%s %d err %d\n",
--			__func__, __LINE__, -ENOMEM);
--		return -ENOMEM;
--	}
--	mdev->ops->write_spad(mdev, MIC_DPLO_SPAD, mdev->dp_dma_addr);
--	mdev->ops->write_spad(mdev, MIC_DPHI_SPAD, mdev->dp_dma_addr >> 32);
--	return 0;
--}
--
--/* Uninitialize the device page */
--static void mic_dp_uninit(struct mic_device *mdev)
--{
--	mic_unmap_single(mdev, mdev->dp_dma_addr, MIC_DP_SIZE);
--	kfree(mdev->dp);
--}
--
- /**
-  * mic_ops_init: Initialize HW specific operation tables.
-  *
-@@ -227,11 +201,16 @@ static int mic_probe(struct pci_dev *pdev,
- 
- 	pci_set_drvdata(pdev, mdev);
- 
--	rc = mic_dp_init(mdev);
--	if (rc) {
--		dev_err(&pdev->dev, "mic_dp_init failed rc %d\n", rc);
-+	mdev->dp = dma_alloc_coherent(&pdev->dev, MIC_DP_SIZE,
-+				      &mdev->dp_dma_addr, GFP_KERNEL);
-+	if (!mdev->dp) {
-+		dev_err(&pdev->dev, "failed to allocate device page\n");
- 		goto smpt_uninit;
- 	}
-+
-+	mdev->ops->write_spad(mdev, MIC_DPLO_SPAD, mdev->dp_dma_addr);
-+	mdev->ops->write_spad(mdev, MIC_DPHI_SPAD, mdev->dp_dma_addr >> 32);
-+
- 	mic_bootparam_init(mdev);
- 	mic_create_debug_dir(mdev);
- 
-@@ -244,7 +223,7 @@ static int mic_probe(struct pci_dev *pdev,
- 	return 0;
- cleanup_debug_dir:
- 	mic_delete_debug_dir(mdev);
--	mic_dp_uninit(mdev);
-+	dma_free_coherent(&pdev->dev, MIC_DP_SIZE, mdev->dp, mdev->dp_dma_addr);
- smpt_uninit:
- 	mic_smpt_uninit(mdev);
- free_interrupts:
-@@ -283,7 +262,7 @@ static void mic_remove(struct pci_dev *pdev)
- 
- 	cosm_unregister_device(mdev->cosm_dev);
- 	mic_delete_debug_dir(mdev);
--	mic_dp_uninit(mdev);
-+	dma_free_coherent(&pdev->dev, MIC_DP_SIZE, mdev->dp, mdev->dp_dma_addr);
- 	mic_smpt_uninit(mdev);
- 	mic_free_interrupts(mdev, pdev);
- 	iounmap(mdev->aper.va);
-diff --git a/drivers/misc/mic/vop/vop_vringh.c b/drivers/misc/mic/vop/vop_vringh.c
-index 7014ffe88632e5..6835648d577d57 100644
---- a/drivers/misc/mic/vop/vop_vringh.c
-+++ b/drivers/misc/mic/vop/vop_vringh.c
-@@ -298,9 +298,8 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
- 		mutex_init(&vvr->vr_mutex);
- 		vr_size = PAGE_ALIGN(round_up(vring_size(num, MIC_VIRTIO_RING_ALIGN), 4) +
- 			sizeof(struct _mic_vring_info));
--		vr->va = (void *)
--			__get_free_pages(GFP_KERNEL | __GFP_ZERO,
--					 get_order(vr_size));
-+		vr->va = dma_alloc_coherent(vop_dev(vdev), vr_size, &vr_addr,
-+					    GFP_KERNEL);
- 		if (!vr->va) {
- 			ret = -ENOMEM;
- 			dev_err(vop_dev(vdev), "%s %d err %d\n",
-@@ -310,15 +309,6 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
- 		vr->len = vr_size;
- 		vr->info = vr->va + round_up(vring_size(num, MIC_VIRTIO_RING_ALIGN), 4);
- 		vr->info->magic = cpu_to_le32(MIC_MAGIC + vdev->virtio_id + i);
--		vr_addr = dma_map_single(&vpdev->dev, vr->va, vr_size,
--					 DMA_BIDIRECTIONAL);
--		if (dma_mapping_error(&vpdev->dev, vr_addr)) {
--			free_pages((unsigned long)vr->va, get_order(vr_size));
--			ret = -ENOMEM;
--			dev_err(vop_dev(vdev), "%s %d err %d\n",
--				__func__, __LINE__, ret);
--			goto err;
--		}
- 		vqconfig[i].address = cpu_to_le64(vr_addr);
- 
- 		vring_init(&vr->vr, num, vr->va, MIC_VIRTIO_RING_ALIGN);
-@@ -339,11 +329,9 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
- 		dev_dbg(&vpdev->dev,
- 			"%s %d index %d va %p info %p vr_size 0x%x\n",
- 			__func__, __LINE__, i, vr->va, vr->info, vr_size);
--		vvr->buf = (void *)__get_free_pages(GFP_KERNEL,
--					get_order(VOP_INT_DMA_BUF_SIZE));
--		vvr->buf_da = dma_map_single(&vpdev->dev,
--					  vvr->buf, VOP_INT_DMA_BUF_SIZE,
--					  DMA_BIDIRECTIONAL);
-+		vvr->buf = dma_alloc_coherent(vop_dev(vdev),
-+					      VOP_INT_DMA_BUF_SIZE,
-+					      &vvr->buf_da, GFP_KERNEL);
- 	}
- 
- 	snprintf(irqname, sizeof(irqname), "vop%dvirtio%d", vpdev->index,
-@@ -382,10 +370,8 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
- 	for (j = 0; j < i; j++) {
- 		struct vop_vringh *vvr = &vdev->vvr[j];
- 
--		dma_unmap_single(&vpdev->dev, le64_to_cpu(vqconfig[j].address),
--				 vvr->vring.len, DMA_BIDIRECTIONAL);
--		free_pages((unsigned long)vvr->vring.va,
--			   get_order(vvr->vring.len));
-+		dma_free_coherent(vop_dev(vdev), vvr->vring.len, vvr->vring.va,
-+				  le64_to_cpu(vqconfig[j].address));
- 	}
- 	return ret;
- }
-@@ -433,17 +419,12 @@ static void vop_virtio_del_device(struct vop_vdev *vdev)
- 	for (i = 0; i < vdev->dd->num_vq; i++) {
- 		struct vop_vringh *vvr = &vdev->vvr[i];
- 
--		dma_unmap_single(&vpdev->dev,
--				 vvr->buf_da, VOP_INT_DMA_BUF_SIZE,
--				 DMA_BIDIRECTIONAL);
--		free_pages((unsigned long)vvr->buf,
--			   get_order(VOP_INT_DMA_BUF_SIZE));
-+		dma_free_coherent(vop_dev(vdev), VOP_INT_DMA_BUF_SIZE,
-+				  vvr->buf, vvr->buf_da);
- 		vringh_kiov_cleanup(&vvr->riov);
- 		vringh_kiov_cleanup(&vvr->wiov);
--		dma_unmap_single(&vpdev->dev, le64_to_cpu(vqconfig[i].address),
--				 vvr->vring.len, DMA_BIDIRECTIONAL);
--		free_pages((unsigned long)vvr->vring.va,
--			   get_order(vvr->vring.len));
-+		dma_free_coherent(vop_dev(vdev), vvr->vring.len, vvr->vring.va,
-+				  le64_to_cpu(vqconfig[i].address));
- 	}
- 	/*
- 	 * Order the type update with previous stores. This write barrier
-@@ -1042,13 +1023,27 @@ static __poll_t vop_poll(struct file *f, poll_table *wait)
- 	return mask;
- }
- 
--static inline int
--vop_query_offset(struct vop_vdev *vdev, unsigned long offset,
--		 unsigned long *size, unsigned long *pa)
-+/*
-+ * Maps the device page and virtio rings to user space for readonly access.
-+ */
-+static int vop_mmap(struct file *f, struct vm_area_struct *vma)
- {
--	struct vop_device *vpdev = vdev->vpdev;
--	unsigned long start = MIC_DP_SIZE;
--	int i;
-+	struct vop_vdev *vdev = f->private_data;
-+	struct mic_vqconfig *vqconfig = mic_vq_config(vdev->dd);
-+	unsigned long orig_start = vma->vm_start;
-+	unsigned long orig_end = vma->vm_end;
-+	int err, i;
-+	
-+	if (!vdev->vpdev->hw_ops->dp_mmap)
-+		return -EINVAL;
-+	if (vma->vm_pgoff)
-+		return -EINVAL;
-+	if (vma->vm_flags & VM_WRITE)
-+		return -EACCES;
-+
-+	err = vop_vdev_inited(vdev);
-+	if (err)
-+		return err;
- 
- 	/*
- 	 * MMAP interface is as follows:
-@@ -1057,58 +1052,38 @@ vop_query_offset(struct vop_vdev *vdev, unsigned long offset,
- 	 * 0x1000				first vring
- 	 * 0x1000 + size of 1st vring		second vring
- 	 * ....
-+	 *
-+	 * We manipulate vm_start/vm_end to trick dma_mmap_coherent into
-+	 * performing partial mappings, which is a bit of a hack, but safe
-+	 * while we are under mmap_lock().  Eventually this needs to be
-+	 * replaced by a proper DMA layer API.
- 	 */
--	if (!offset) {
--		*pa = virt_to_phys(vpdev->hw_ops->get_dp(vpdev));
--		*size = MIC_DP_SIZE;
--		return 0;
--	}
-+	vma->vm_end = vma->vm_start + MIC_DP_SIZE;
-+	err = vdev->vpdev->hw_ops->dp_mmap(vdev->vpdev, vma);
-+	if (err)
-+		goto out;
- 
- 	for (i = 0; i < vdev->dd->num_vq; i++) {
- 		struct vop_vringh *vvr = &vdev->vvr[i];
- 
--		if (offset == start) {
--			*pa = virt_to_phys(vvr->vring.va);
--			*size = vvr->vring.len;
--			return 0;
--		}
--		start += vvr->vring.len;
--	}
--	return -1;
--}
--
--/*
-- * Maps the device page and virtio rings to user space for readonly access.
-- */
--static int vop_mmap(struct file *f, struct vm_area_struct *vma)
--{
--	struct vop_vdev *vdev = f->private_data;
--	unsigned long offset = vma->vm_pgoff << PAGE_SHIFT;
--	unsigned long pa, size = vma->vm_end - vma->vm_start, size_rem = size;
--	int i, err;
-+		vma->vm_start = vma->vm_end;
-+		vma->vm_end += vvr->vring.len;
- 
--	err = vop_vdev_inited(vdev);
--	if (err)
--		goto ret;
--	if (vma->vm_flags & VM_WRITE) {
--		err = -EACCES;
--		goto ret;
--	}
--	while (size_rem) {
--		i = vop_query_offset(vdev, offset, &size, &pa);
--		if (i < 0) {
--			err = -EINVAL;
--			goto ret;
--		}
--		err = remap_pfn_range(vma, vma->vm_start + offset,
--				      pa >> PAGE_SHIFT, size,
--				      vma->vm_page_prot);
-+		err = -EINVAL;
-+		if (vma->vm_end > orig_end)
-+			goto out;
-+		err = dma_mmap_coherent(vop_dev(vdev), vma, vvr->vring.va,
-+					le64_to_cpu(vqconfig[i].address),
-+					vvr->vring.len);
- 		if (err)
--			goto ret;
--		size_rem -= size;
--		offset += size;
-+			goto out;
- 	}
--ret:
-+out:
-+	/*
-+	 * Restore the original vma parameters.
-+	 */
-+	vma->vm_start = orig_start;
-+	vma->vm_end = orig_end;
- 	return err;
- }
- 
--- 
-2.28.0
+From my pov this is ready for merging, so if you can pick up the entire
+series and then provide me with an immutable branch to merge into the
+pdx86 tree that would be great.
+
+Regards,
+
+Hans
 
