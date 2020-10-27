@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA9D129A2D7
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 03:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E98229A2D2
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 03:57:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409442AbgJ0C5a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 26 Oct 2020 22:57:30 -0400
-Received: from mga01.intel.com ([192.55.52.88]:23078 "EHLO mga01.intel.com"
+        id S2409133AbgJ0C5T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 26 Oct 2020 22:57:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:23076 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408658AbgJ0C5S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S2408806AbgJ0C5S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Mon, 26 Oct 2020 22:57:18 -0400
-IronPort-SDR: 2zdadd6EsFHcuoTHIJhSf0iImTX8jhPLaTMJsfFxZSfl3cWaWr5seqMAhMUHS4gefmJSpIE8CW
- zQaGmj1wtrGw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9786"; a="185753263"
+IronPort-SDR: o1rthQny/WtC5v+ucjXXJZCFnI52p/Tl2rKN2HLNtiOuDYG+Z5rzs2B+LGC6ISXlfwI1bfQcG/
+ E7Af1vquLcVg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9786"; a="185753266"
 X-IronPort-AV: E=Sophos;i="5.77,422,1596524400"; 
-   d="scan'208";a="185753263"
+   d="scan'208";a="185753266"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2020 19:57:16 -0700
-IronPort-SDR: kpiqhyOjYWodmdEeIpRH9DLr3Qxbp6geQwnMrQx7rhUhCrPBTq4H5qlau1hPpdewcjqF0bu2da
- vBA4bOfnxeOA==
+IronPort-SDR: LWZTcRAZ+pDIqrbRQdml2qafTZt+lXYOgUKnlnixVrCpE/KPPMy3/fZzDmYKmQhcAnQjlRO1zQ
+ IQJ41IOYFh9A==
 X-IronPort-AV: E=Sophos;i="5.77,422,1596524400"; 
-   d="scan'208";a="322772476"
+   d="scan'208";a="322772479"
 Received: from dhrubajy-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.254.101.53])
   by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2020 19:57:16 -0700
 From:   Kuppuswamy Sathyanarayanan 
@@ -32,9 +32,9 @@ To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
         knsathya@kernel.org
-Subject: [PATCH v11 3/5] ACPI/PCI: Ignore _OSC DPC negotiation result if pcie_ports_dpc_native is set.
-Date:   Mon, 26 Oct 2020 19:57:06 -0700
-Message-Id: <0ec11f2b7470070768886a138f2a755620725a06.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v11 4/5] PCI/portdrv: Remove redundant pci_aer_available() check in DPC enable logic
+Date:   Mon, 26 Oct 2020 19:57:07 -0700
+Message-Id: <2faef6f884aae9ae92e57e7c6a88a6195553c684.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -44,100 +44,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pcie_ports_dpc_native is set only if user requests native handling
-of PCIe DPC capability via pcie_port_setup command line option.
-User input takes precedence over _OSC based control negotiation
-result. So consider the _OSC negotiated result for DPC ownership
-only if pcie_ports_dpc_native is unset.
+In DPC service enable logic, check for
+services & PCIE_PORT_SERVICE_AER implies pci_aer_available()
+is true. So there is no need to explicitly check it again.
+
+Also, passing pcie_ports=dpc-native in kernel command line
+implies DPC needs to be enabled in native mode irrespective
+of AER ownership status. So checking for pci_aer_available()
+without checking for pcie_ports status is incorrect.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/acpi/pci_root.c         | 8 ++++++--
- drivers/pci/pcie/dpc.c          | 3 ++-
- drivers/pci/pcie/portdrv.h      | 2 --
- drivers/pci/pcie/portdrv_core.c | 2 +-
- include/linux/pci.h             | 2 ++
- 5 files changed, 11 insertions(+), 6 deletions(-)
+ drivers/pci/pcie/portdrv_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index a9e6b782622d..2e2bc80c42fe 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -933,8 +933,12 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 			  host_bridge->native_pme);
- 		OSC_OWNER(ctrl, OSC_PCI_EXPRESS_LTR_CONTROL,
- 			  host_bridge->native_ltr);
--		OSC_OWNER(ctrl, OSC_PCI_EXPRESS_DPC_CONTROL,
--			  host_bridge->native_dpc);
-+		if (pcie_ports_dpc_native)
-+			dev_warn(&bus->dev, "OS forcibly taking over DPC\n");
-+		else
-+			OSC_OWNER(ctrl, OSC_PCI_EXPRESS_DPC_CONTROL,
-+				  host_bridge->native_dpc);
-+
- 	}
- 
- 	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index e05aba86a317..21f77420632b 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -283,11 +283,12 @@ void pci_dpc_init(struct pci_dev *pdev)
- static int dpc_probe(struct pcie_device *dev)
- {
- 	struct pci_dev *pdev = dev->port;
-+	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
- 	struct device *device = &dev->device;
- 	int status;
- 	u16 ctl, cap;
- 
--	if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
-+	if (!pcie_aer_is_native(pdev) && !host->native_dpc)
- 		return -ENOTSUPP;
- 
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index af7cf237432a..0ac20feef24e 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -25,8 +25,6 @@
- 
- #define PCIE_PORT_DEVICE_MAXSERVICES   5
- 
--extern bool pcie_ports_dpc_native;
--
- #ifdef CONFIG_PCIEAER
- int pcie_aer_init(void);
- int pcie_aer_is_native(struct pci_dev *dev);
 diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index ccd5e0ce5605..2c0278f0fdcc 100644
+index 2c0278f0fdcc..e257a2ca3595 100644
 --- a/drivers/pci/pcie/portdrv_core.c
 +++ b/drivers/pci/pcie/portdrv_core.c
-@@ -253,7 +253,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+@@ -252,7 +252,6 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	 * permission to use AER.
  	 */
  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
- 	    pci_aer_available() &&
--	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-+	    (host->native_dpc || (services & PCIE_PORT_SERVICE_AER)))
+-	    pci_aer_available() &&
+ 	    (host->native_dpc || (services & PCIE_PORT_SERVICE_AER)))
  		services |= PCIE_PORT_SERVICE_DPC;
  
- 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 22207a79762c..388121ec88b5 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1559,9 +1559,11 @@ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
- #ifdef CONFIG_PCIEPORTBUS
- extern bool pcie_ports_disabled;
- extern bool pcie_ports_native;
-+extern bool pcie_ports_dpc_native;
- #else
- #define pcie_ports_disabled	true
- #define pcie_ports_native	false
-+#define pcie_ports_dpc_native	false
- #endif
- 
- #define PCIE_LINK_STATE_L0S		BIT(0)
 -- 
 2.17.1
 
