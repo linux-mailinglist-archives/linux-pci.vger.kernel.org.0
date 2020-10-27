@@ -2,133 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8654129AB8E
-	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 13:14:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2DBE29AC11
+	for <lists+linux-pci@lfdr.de>; Tue, 27 Oct 2020 13:29:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1750786AbgJ0MOg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Oct 2020 08:14:36 -0400
-Received: from mail-eopbgr1400130.outbound.protection.outlook.com ([40.107.140.130]:6072
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750752AbgJ0MOf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 27 Oct 2020 08:14:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DGbfHYutH3uQK6hcM+qdn/rbolOo8lZmTFfTHh9yNVcCWMuUtk/nOKSWmFv0AVAGg58gwUjHQaoL3r2n6a3h5kocH4pRTkVJxYudEm6k6wWy1jaUQyEDpFZGpZrMXHGwTmeAv2YoqqTfvv0UYjlgkOSnmZjn9KGfv2tRGB0zSPfrixtFNUBT6bHQOIY4IMOU+rJ9wC+YwxBT6tCerAew+PKhXaL/q/3GgS9hNBTvrVe4X22KZD5KCAByV46Knb9NBhhlxzpnam5cuop4cQcYl0FxcEq9mQKbdDzajqofB3xCWqKW9sCb8cooDOTewGg+wi9lBcjYRh+Erb3ezwdYYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Z4+HfJFeGYI3UCmB0paQL1xt5IW3PNwsd+lh75bO4g=;
- b=MSWVK0NjYoAc9B7973UNPuCpd10bfmrqulcfHDupIXCYVFPduOqI111Tdc2y+JzvXYwbq4VCMA/eCILpnY6+/276M+sp7KViTtyzncYeHtNgVSilEnWTQypxIqmAgd/bVox5y7QebIPkW102sQLP4GRKqUFsOWTxQ728AT/cCdbw+droihfm8PVFE1fUwkiqLmL4N9SOG4Ui15FmdHg8SBTyjcuLg0CS0J0LbWnwOP4SasLxnBs/NlG5xmdd6mfjN20G5Vp2hmjmhqnqTB2bl7tASt3aBbfSNR9CMsoR7V7sCHLhp6UEY4NMVYihIbSS912MPa8ufuYOMikJvc0Xhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Z4+HfJFeGYI3UCmB0paQL1xt5IW3PNwsd+lh75bO4g=;
- b=RXvWt+Cu8s/sye/J7MUk4Hboy0hTAsiOzpS2C2HygoZLMUFcfZHxXa927y1T60zZYIPabiLI/bewHIraqjWwWqvM/lovBgJ995ZKgja2iiYJzySSxDbKIWwoXRVAqZTJClsoNZcVvZ2rkIl0qYHB3aTCieYykkMEuHIghl4Xi0M=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TYAPR01MB3214.jpnprd01.prod.outlook.com (2603:1096:404:7f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.20; Tue, 27 Oct
- 2020 12:14:32 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::bcba:dccf:7d4c:c883]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::bcba:dccf:7d4c:c883%4]) with mapi id 15.20.3477.028; Tue, 27 Oct 2020
- 12:14:32 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        id S2899852AbgJ0M3X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 27 Oct 2020 08:29:23 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:52361 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2899850AbgJ0M3W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 08:29:22 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20201027122911euoutp0173c80ff166756407605dd4ae9556b651~B2TIDw3MP0162501625euoutp01a
+        for <linux-pci@vger.kernel.org>; Tue, 27 Oct 2020 12:29:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20201027122911euoutp0173c80ff166756407605dd4ae9556b651~B2TIDw3MP0162501625euoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1603801751;
+        bh=CjdMI1tmB90miqbqTksyvUXWDiO0ncL6v7W915kb7J4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=APFWvEkJvSt8uoFS9HJf3PG/KjYDSUPqtsIH6nr95eBnbtjnBSIBqyMzgyUdtYhsr
+         AUBJ+QokOK6xSNSITkr8laxh9bTlansTVFdrWgZMkolgqmE/o5ikcO/yJVDDa6GkDx
+         GRaqImSvBSOUDA3iHT5SRp+dvR132AAyn9WK7B/M=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20201027122906eucas1p194269e642811d06b63335e300de88ea4~B2TDRVZXo0881708817eucas1p1f;
+        Tue, 27 Oct 2020 12:29:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id F6.6B.05997.192189F5; Tue, 27
+        Oct 2020 12:29:05 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20201027122905eucas1p16ba9af9ea08ac43aed86970595a2ea78~B2TC95igX0038500385eucas1p1c;
+        Tue, 27 Oct 2020 12:29:05 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20201027122905eusmtrp25c498067e019f40f47c5e34f8297eaa2~B2TC8SiH92828528285eusmtrp2b;
+        Tue, 27 Oct 2020 12:29:05 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-e7-5f9812915051
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 65.C8.06314.882189F5; Tue, 27
+        Oct 2020 12:28:56 +0000 (GMT)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20201027122855eusmtip14adc70a2a031ac56fab75930dc378878~B2S5gyLQm2340823408eusmtip1V;
+        Tue, 27 Oct 2020 12:28:55 +0000 (GMT)
+Subject: Re: [PATCH v2 4/6] phy: samsung: phy-exynos-pcie: rework driver to
+ support Exynos5433 PCIe PHY
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: RE: [PATCH] PCI: pcie-rcar-host: Drop unused members from struct
- rcar_pcie_host
-Thread-Topic: [PATCH] PCI: pcie-rcar-host: Drop unused members from struct
- rcar_pcie_host
-Thread-Index: AQHWqVhmy3i7vhuEiUmg1JNmpIUU46mrYnUw
-Date:   Tue, 27 Oct 2020 12:14:32 +0000
-Message-ID: <TY2PR01MB3692BBBB69AFC4D782B5D0C3D8160@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <20201023162008.967-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20201023162008.967-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: bp.renesas.com; dkim=none (message not signed)
- header.d=none;bp.renesas.com; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ef4854b8-0e8c-4b8e-41ea-08d87a71dc99
-x-ms-traffictypediagnostic: TYAPR01MB3214:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB3214DA152A589F9F2919BD64D8160@TYAPR01MB3214.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gMGhfpNZ4JeegG0wfdYYqIRwPLWqlsjZFkT5E2w6wzPjl0JGanfSx+dFpfSAutqqmqAI89jc5Azfn1iNS9zU+FzBQJm2ogJwHX7+4dhobpiybCvSzbMphGmksak18PDPgVr1bEfYZJ+STAlgDagYIywjW/JMw1z8TUi7y1mM9va+KPJrL0oMF9W2tb1ZcgWNvIvjb5rO1UsYEEjHDsXXKv9CDnKPA04wCWYUzF6mfJGM0F57/HZWRY80OslSU/DfROkx5KgWT8H04kq0Q/U5dgqqcOdUqJ+kOGwtL2SpsfTeWqU3iMN/ZaCMPa1anhPUJAnRTYb5zLgbObY3vS2f7Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(2906002)(9686003)(86362001)(64756008)(76116006)(66556008)(66476007)(66946007)(66446008)(5660300002)(4744005)(33656002)(55016002)(7696005)(498600001)(26005)(71200400001)(6506007)(55236004)(8676002)(4326008)(8936002)(186003)(52536014)(110136005)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: kNwe+/CbbG3eE1COZhN41XzXP0BIzRc6sU/B9fAC1/pFqmJccg2e8JU6TjLbbRJZfs1qRVkRRQHvTV/dyEc4W69W9mLwcQUDGKhCsrhMacsNEVS+DkBcSemx5PAyscVli4k1mUbVVRcRMWbIUxDZH7MhDFOF9J3sSXWoGY2MjTsEJaOmG+3cRU2E7hdIs2wwDFY1KbvrsPM184ftp0Io9rZwhRPhcU2vnq04v/PdDdfnu+RFHIZ5JeeAGuBHWw2MzvndtoN0mPeh7noqUEhkeC2plD/TMP5i9S0Xf6W65JTYc67zEKoVjd2j64wwIsp6tHdLKCISHEwOJLmZrNtbVXgvIuK7n97ulVrqU/NMU2aVd57s8hpcHFxCJh7aXpZ8zohN+yH5B/PhS+HnbjQO+9ruGvI5UtPo3u+0jJwTGpoDqfpuVImb0K/I4oLZmEdvf8LbqtL2wILTyZjP5pNvYT8hc1Tc95J2qRxR1BEuOFKt9cFH7qTyeKYGj6wGHWBuqnhJqd/RFm9lVWAqWd0AtWmMlh471nOA3GddX2XwZwygaQW8IpLE4XYzJHfD+wDotxNLTQ0jsf7/Km3YE2EqBLJ2RaHltIDTVYNyJNCJNadKOZRuysQ59SGQXM3bHpsPt4VSbXrmQ7E9ir8NdJKkDw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <e2ba43d4-3991-e98e-6ec0-6ff3ad5d954b@samsung.com>
+Date:   Tue, 27 Oct 2020 13:28:55 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0)
+        Gecko/20100101 Thunderbird/78.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef4854b8-0e8c-4b8e-41ea-08d87a71dc99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Oct 2020 12:14:32.3040
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9WIlJwbiuc9yL1tOGGRr1ADY8IA0j7wSBxJoXfOazmr/PsWPLWx/YaxcfONRhSz3m4LLtypKDo5VPGK1F2RiogQDOjzfKQG0p1LC7fyaUee12ZOLYCRgsJT565Bt6f6v
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3214
+In-Reply-To: <CAL_JsqLUT7aLnQsLvcCOHCaoVAao9VSmEhoscBxu3ARXX33zrA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNKsWRmVeSWpSXmKPExsWy7djPc7oThWbEG9x8aGWxpCnDYv6Rc6wW
+        N361sVqs+DKT3eLC0x42i/PnN7BbXN41h83i7LzjbBYzzu9jsnjz+wW7ReveI+wWO++cYHbg
+        8Vgzbw2jx85Zd9k9Fmwq9di0qpPNo2/LKkaP4ze2M3l83iQXwB7FZZOSmpNZllqkb5fAlTHz
+        zlzWgtPqFd9f3mRvYLwk28XIwSEhYCLxuDmki5GLQ0hgBaPElNuPWLsYOYGcL4wS97b6QyQ+
+        M0rcXX2OESQB0rBwxXI2iMRyRoknkzsZIZz3jBJXn9xiAxkrLJAp0bLXAKRBREBFYsPzW8wg
+        NcwC55gl9nx6zQKSYBMwlOh628UGYvMK2EnsOL0ZLM4ioCqxr2UemC0qkCTx9/MfZogaQYmT
+        M5+AxTkFAiXWv/oOZjMLyEtsfzuHGcIWl7j1ZD4TyDIJgUfsEjtvrWCGONtFYsXVmVC2sMSr
+        41vYIWwZif87YRqaGSUenlvLDuH0MEpcbpoB9bS1xJ1zv8BeYxbQlFi/Sx8i7Cix4eBZNkhA
+        8knceCsIcQSfxKRt05khwrwSHW1CENVqErOOr4Nbe/DCJeYJjEqzkLw2C8k7s5C8Mwth7wJG
+        llWM4qmlxbnpqcVGeanlesWJucWleel6yfm5mxiBSez0v+NfdjDu+pN0iFGAg1GJh/fC22nx
+        QqyJZcWVuYcYJTiYlUR4nc6ejhPiTUmsrEotyo8vKs1JLT7EKM3BoiTOa7zoZayQQHpiSWp2
+        ampBahFMlomDU6qBMSxDrlna9MIEpdWHs+cIXLbyfdSip1YlemXP5dP/vW5lbDi+qs7g833u
+        6BMsX2ID1FVKVm+O+Kj4Nv5ReON2/40N31bEc0n8k8q91GW3p9/o8u2ly687vquzNHM6+F5r
+        4oWPamv/BwWrf/n5zHGuyNmg2jCDK2+bPmxPXartfGK23rwi+9upuUosxRmJhlrMRcWJAM4R
+        oQheAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRmVeSWpSXmKPExsVy+t/xu7odQjPiDeZv4LJY0pRhMf/IOVaL
+        G7/aWC1WfJnJbnHhaQ+bxfnzG9gtLu+aw2Zxdt5xNosZ5/cxWbz5/YLdonXvEXaLnXdOMDvw
+        eKyZt4bRY+esu+weCzaVemxa1cnm0bdlFaPH8RvbmTw+b5ILYI/SsynKLy1JVcjILy6xVYo2
+        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQy5h5Zy5rwWn1iu8vb7I3MF6S7WLk
+        5JAQMJFYuGI5G4gtJLCUUaK/XwsiLiNxcloDK4QtLPHnWhdQDRdQzVtGiZs/9jB2MXJwCAtk
+        SrTsNQCpERFQkdjw/BYzSA2zwDlmiVNfLzBCNPQwSfTtegw2iU3AUKLrbRfYNl4BO4kdpzez
+        gNgsAqoS+1rmgdmiAkkSLy9MZYKoEZQ4OfMJWJxTIFBi/avvYDazgJnEvM0PmSFseYntb+dA
+        2eISt57MZ5rAKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4mRmDc
+        bjv2c/MOxksbgw8xCnAwKvHwXng7LV6INbGsuDL3EKMEB7OSCK/T2dNxQrwpiZVVqUX58UWl
+        OanFhxhNgZ6byCwlmpwPTCl5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6
+        mDg4pRoY03/0Wt9eJ/5IallTb9uktxtXqvYEFfjPM5X/H3PkaNa69e6Wa/YyuL2xvvJUvOXk
+        z8Lcf00+l859Mbzhy6Xa+7eroynNQIDJYurnTX2nNeMPyqi0CcuWqM7uirl+Jru0dtvcu13+
+        K3SPLwqa6f5/0aQ9fDqeJw80h4nWh3tUTjr2Wm2Z4NHrSizFGYmGWsxFxYkAtzVddvECAAA=
+X-CMS-MailID: 20201027122905eucas1p16ba9af9ea08ac43aed86970595a2ea78
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20201023075756eucas1p2c27cc3e6372127d107e5b84c810ba98f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20201023075756eucas1p2c27cc3e6372127d107e5b84c810ba98f
+References: <CGME20201023075756eucas1p2c27cc3e6372127d107e5b84c810ba98f@eucas1p2.samsung.com>
+        <20201023075744.26200-1-m.szyprowski@samsung.com>
+        <20201023075744.26200-5-m.szyprowski@samsung.com>
+        <CAL_JsqLUT7aLnQsLvcCOHCaoVAao9VSmEhoscBxu3ARXX33zrA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lad,
+Hi Rob,
 
-> From: Lad Prabhakar, Sent: Saturday, October 24, 2020 1:20 AM
->=20
-> Drop unused members dev and base from struct rcar_pcie_host.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 26.10.2020 19:50, Rob Herring wrote:
+> On Fri, Oct 23, 2020 at 2:58 AM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+>> From: Jaehoon Chung <jh80.chung@samsung.com>
+>>
+>> Exynos5440 SoC support has been dropped since commit 8c83315da1cf ("ARM:
+>> dts: exynos: Remove Exynos5440"). Rework this driver to support PCIe PHY
+>> variant found in the Exynos5433 SoCs.
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> [mszyprow: reworked the driver to support only Exynos5433 variant, rebased
+>>             onto current kernel code, rewrote commit message]
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>>   drivers/phy/samsung/phy-exynos-pcie.c | 304 ++++++++++----------------
+>>   1 file changed, 112 insertions(+), 192 deletions(-)
+>>
+>> diff --git a/drivers/phy/samsung/phy-exynos-pcie.c b/drivers/phy/samsung/phy-exynos-pcie.c
+>> index 7e28b1aea0d1..d91de323dd0e 100644
+>> --- a/drivers/phy/samsung/phy-exynos-pcie.c
+>> +++ b/drivers/phy/samsung/phy-exynos-pcie.c
+>> @@ -4,70 +4,41 @@
+>>    *
+>>    * Phy provider for PCIe controller on Exynos SoC series
+>>    *
+>> - * Copyright (C) 2017 Samsung Electronics Co., Ltd.
+>> + * Copyright (C) 2017-2020 Samsung Electronics Co., Ltd.
+>>    * Jaehoon Chung <jh80.chung@samsung.com>
+>>    */
+>>
+>> -#include <linux/delay.h>
+>>   #include <linux/io.h>
+>> -#include <linux/iopoll.h>
+>> -#include <linux/init.h>
+>>   #include <linux/mfd/syscon.h>
+>> -#include <linux/of.h>
+>> -#include <linux/of_address.h>
+>>   #include <linux/of_platform.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/phy/phy.h>
+>>   #include <linux/regmap.h>
+>>
+>> -/* PCIe Purple registers */
+>> -#define PCIE_PHY_GLOBAL_RESET          0x000
+>> -#define PCIE_PHY_COMMON_RESET          0x004
+>> -#define PCIE_PHY_CMN_REG               0x008
+>> -#define PCIE_PHY_MAC_RESET             0x00c
+>> -#define PCIE_PHY_PLL_LOCKED            0x010
+>> -#define PCIE_PHY_TRSVREG_RESET         0x020
+>> -#define PCIE_PHY_TRSV_RESET            0x024
+>> -
+>> -/* PCIe PHY registers */
+>> -#define PCIE_PHY_IMPEDANCE             0x004
+>> -#define PCIE_PHY_PLL_DIV_0             0x008
+>> -#define PCIE_PHY_PLL_BIAS              0x00c
+>> -#define PCIE_PHY_DCC_FEEDBACK          0x014
+>> -#define PCIE_PHY_PLL_DIV_1             0x05c
+>> -#define PCIE_PHY_COMMON_POWER          0x064
+>> -#define PCIE_PHY_COMMON_PD_CMN         BIT(3)
+>> -#define PCIE_PHY_TRSV0_EMP_LVL         0x084
+>> -#define PCIE_PHY_TRSV0_DRV_LVL         0x088
+>> -#define PCIE_PHY_TRSV0_RXCDR           0x0ac
+>> -#define PCIE_PHY_TRSV0_POWER           0x0c4
+>> -#define PCIE_PHY_TRSV0_PD_TSV          BIT(7)
+>> -#define PCIE_PHY_TRSV0_LVCC            0x0dc
+>> -#define PCIE_PHY_TRSV1_EMP_LVL         0x144
+>> -#define PCIE_PHY_TRSV1_RXCDR           0x16c
+>> -#define PCIE_PHY_TRSV1_POWER           0x184
+>> -#define PCIE_PHY_TRSV1_PD_TSV          BIT(7)
+>> -#define PCIE_PHY_TRSV1_LVCC            0x19c
+>> -#define PCIE_PHY_TRSV2_EMP_LVL         0x204
+>> -#define PCIE_PHY_TRSV2_RXCDR           0x22c
+>> -#define PCIE_PHY_TRSV2_POWER           0x244
+>> -#define PCIE_PHY_TRSV2_PD_TSV          BIT(7)
+>> -#define PCIE_PHY_TRSV2_LVCC            0x25c
+>> -#define PCIE_PHY_TRSV3_EMP_LVL         0x2c4
+>> -#define PCIE_PHY_TRSV3_RXCDR           0x2ec
+>> -#define PCIE_PHY_TRSV3_POWER           0x304
+>> -#define PCIE_PHY_TRSV3_PD_TSV          BIT(7)
+>> -#define PCIE_PHY_TRSV3_LVCC            0x31c
+>> -
+>> -struct exynos_pcie_phy_data {
+>> -       const struct phy_ops    *ops;
+>> -};
+>> +#define PCIE_PHY_OFFSET(x)             ((x) * 0x4)
+>> +
+>> +/* Sysreg FSYS register offsets and bits for Exynos5433 */
+>> +#define PCIE_EXYNOS5433_PHY_MAC_RESET          0x0208
+>> +#define PCIE_MAC_RESET_MASK                    0xFF
+>> +#define PCIE_MAC_RESET                         BIT(4)
+>> +#define PCIE_EXYNOS5433_PHY_L1SUB_CM_CON       0x1010
+>> +#define PCIE_REFCLK_GATING_EN                  BIT(0)
+>> +#define PCIE_EXYNOS5433_PHY_COMMON_RESET       0x1020
+>> +#define PCIE_PHY_RESET                         BIT(0)
+>> +#define PCIE_EXYNOS5433_PHY_GLOBAL_RESET       0x1040
+>> +#define PCIE_GLOBAL_RESET                      BIT(0)
+> Resets, why is this block not a reset provider?
 
-Thank you for the patch!
+Because most of those registers need to be configured together with the 
+rest of the PHY registers. IMHO there is no simple "do the reset" logic 
+there. There is also PHY reference clock configuration there. This phy 
+driver is already Exynos5433 specific and I see no point in extracting 
+separate reset driver from it. Other Exynos PHY drivers also access PMU 
+and SYSREG via the respective regmaps and don't use any kind of reset 
+drivers.
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>> +#define PCIE_REFCLK                            BIT(1)
+>> +#define PCIE_REFCLK_MASK                       0x16
+>> +#define PCIE_APP_REQ_EXIT_L1_MODE              BIT(5)
 
-Best regards,
-Yoshihiro Shimoda
-
-> ---
->  drivers/pci/controller/pcie-rcar-host.c | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/contro=
-ller/pcie-rcar-host.c
-> index cdc0963f154e..4d1c4b24e537 100644
-> --- a/drivers/pci/controller/pcie-rcar-host.c
-> +++ b/drivers/pci/controller/pcie-rcar-host.c
-> @@ -50,9 +50,7 @@ static inline struct rcar_msi *to_rcar_msi(struct msi_c=
-ontroller *chip)
->  /* Structure representing the PCIe interface */
->  struct rcar_pcie_host {
->  	struct rcar_pcie	pcie;
-> -	struct device		*dev;
->  	struct phy		*phy;
-> -	void __iomem		*base;
->  	struct clk		*bus_clk;
->  	struct			rcar_msi msi;
->  	int			(*phy_init_fn)(struct rcar_pcie_host *host);
-> --
-> 2.17.1
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
