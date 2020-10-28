@@ -2,141 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CF8229DE66
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 01:54:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E3229DED7
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 01:57:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732312AbgJ1WTJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Oct 2020 18:19:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
+        id S1727917AbgJ2A4u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Oct 2020 20:56:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731783AbgJ1WRp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:17:45 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        id S1731628AbgJ1WRg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Oct 2020 18:17:36 -0400
+Received: from localhost (170.sub-72-107-125.myvzw.com [72.107.125.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4ABF246B1;
-        Wed, 28 Oct 2020 11:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F977246E8;
+        Wed, 28 Oct 2020 12:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603883579;
-        bh=RJ9ykVp5/VBMVYU2UaC4tSf7S71M609QGWBo1zd6fvU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fJtEWKRDcVR3PZzvaXM6+dpyvhhGPlwT5TeHV8luPiDQWAA3aI6KJ21c1c4U4wSRu
-         NjJNY5iYrVHN0iOpdRtyRyvQtkpDyovYKl4TVqWJmC/9be1nLEmgZ0mp7PpDpO3xe5
-         1WFpwyaAZ7KgaLhktVRT9qtImxzQIEEcLs92iTQs=
-Date:   Wed, 28 Oct 2020 12:13:51 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     Sherry Sun <sherry.sun@nxp.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "vincent.whitchurch@axis.com" <vincent.whitchurch@axis.com>,
-        "sudeep.dutt@intel.com" <sudeep.dutt@intel.com>,
-        "ashutosh.dixit@intel.com" <ashutosh.dixit@intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [EXT] Re: [PATCH V5 0/2] Change vring space from nomal memory to
- dma coherent memory
-Message-ID: <20201028111351.GA1964851@kroah.com>
-References: <20201028020305.10593-1-sherry.sun@nxp.com>
- <20201028055836.GA244690@kroah.com>
- <AM0PR04MB4947032368486CC9874C812692170@AM0PR04MB4947.eurprd04.prod.outlook.com>
- <20201028070712.GA1649838@kroah.com>
- <AM8PR04MB7315D583A9490E642ED13071FF170@AM8PR04MB7315.eurprd04.prod.outlook.com>
+        s=default; t=1603886816;
+        bh=c3/rdvftJ6JnKD8VUBIW4eoNR5VA7ESNHgN0Zlp4hJs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Untss5VPA7L1b4nTbLJJ9hEObyi+ldMQjQ+NARyLMYKn4NiGyFOPYFi/M8trh1iHI
+         n3hrChqGa9Gn63erK+GKqTPqX2Uh7401xdku3fJjEzww0qMhVcjTOby8evFYbY9mRz
+         zAbJ5BXJ9ZjqBG2Xid4JjZoQ7RD74txrYQfIYfTY=
+Date:   Wed, 28 Oct 2020 07:06:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "yue.wang@amlogic.com" <yue.wang@amlogic.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>
+Subject: Re: pci-meson covery issue #1442509
+Message-ID: <20201028120655.GA306101@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <AM8PR04MB7315D583A9490E642ED13071FF170@AM8PR04MB7315.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2020102810175892085918@amlogic.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 10:17:39AM +0000, Andy Duan wrote:
-> From: Greg KH <gregkh@linuxfoundation.org> Sent: Wednesday, October 28, 2020 3:07 PM
-> > On Wed, Oct 28, 2020 at 06:05:28AM +0000, Sherry Sun wrote:
-> > > Hi Greg,
-> > >
-> > > > Subject: Re: [PATCH V5 0/2] Change vring space from nomal memory to
-> > > > dma coherent memory
-> > > >
-> > > > On Wed, Oct 28, 2020 at 10:03:03AM +0800, Sherry Sun wrote:
-> > > > > Changes in V5:
-> > > > > 1. Reorganize the vop_mmap function code in patch 1, which is done
-> > > > > by
-> > > > Christoph.
-> > > > > 2. Completely remove the unnecessary code related to reassign the
-> > > > > used ring for card in patch 2.
-> > > > >
-> > > > > The original vop driver only supports dma coherent device, as it
-> > > > > allocates and maps vring by _get_free_pages and dma_map_single,
-> > > > > but not use dma_sync_single_for_cpu/device to sync the updates of
-> > > > > device_page/vring between EP and RC, which will cause memory
-> > > > > synchronization problem for device don't support hardware dma coherent.
-> > > > >
-> > > > > And allocate vrings use dma_alloc_coherent is a common way in
-> > > > > kernel, as the memory interacted between two systems should use
-> > > > > consistent memory to avoid caching effects. So here add
-> > > > > noncoherent platform
-> > > > support for vop driver.
-> > > > > Also add some related dma changes to make sure noncoherent
-> > > > > platform works well.
-> > > > >
-> > > > > Sherry Sun (2):
-> > > > >   misc: vop: change the way of allocating vrings and device page
-> > > > >   misc: vop: do not allocate and reassign the used ring
-> > > > >
-> > > > >  drivers/misc/mic/bus/vop_bus.h     |   2 +
-> > > > >  drivers/misc/mic/host/mic_boot.c   |   9 ++
-> > > > >  drivers/misc/mic/host/mic_main.c   |  43 ++------
-> > > > >  drivers/misc/mic/vop/vop_debugfs.c |   4 -
-> > > > >  drivers/misc/mic/vop/vop_main.c    |  70 +-----------
-> > > > >  drivers/misc/mic/vop/vop_vringh.c  | 166 ++++++++++-------------------
-> > > > >  include/uapi/linux/mic_common.h    |   9 +-
-> > > > >  7 files changed, 85 insertions(+), 218 deletions(-)
-> > > >
-> > > > Have you all seen:
-> > > >
-> > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%25
-> > > >
-> > 2Flore.kernel.org%2Fr%2F8c1443136563de34699d2c084df478181c205db4.16
-> > > >
-> > 03854416.git.sudeep.dutt%40intel.com&amp;data=04%7C01%7Csherry.sun%
-> > > >
-> > 40nxp.com%7Cc19c987667434969847e08d87b0685e8%7C686ea1d3bc2b4c6f
-> > > >
-> > a92cd99c5c301635%7C0%7C0%7C637394615238940323%7CUnknown%7CTW
-> > > >
-> > FpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJX
-> > > >
-> > VCI6Mn0%3D%7C1000&amp;sdata=Zq%2FtHWTq%2BuIVBYXFGoeBmq0JJzYd
-> > > > 9zDyv4NVN4TpC%2FU%3D&amp;reserved=0
-> > > >
-> > > > Looks like this code is asking to just be deleted, is that ok with you?
-> > >
-> > > Yes, I saw that patch. I'm ok with it.
-> > 
-> > Great, can you please provide a "Reviewed-by:" or "Acked-by:" for it?
-> > 
-> > thanks,
-> > 
-> > greg k-h
+It's best if you can reply with plain-text email, because I don't
+think multi-part MIME messages are accepted by the mailing lists:
+http://vger.kernel.org/majordomo-info.html
+
+On Wed, Oct 28, 2020 at 10:17:59AM +0800, yue.wang@amlogic.com wrote:
+> HI Bjorn,
 > 
-> Sherry took much effort on the features support on i.MX series like i.MX8QM/i.MX8QXP/i.MX8MM.
+> amlogic PCIE_CFG_STATUS17 register:
 > 
-> Now it is a pity to delete the vop code.
+> and bit7 mac_phy_rate :
 > 
-> One question, 
-> can we resubmit vop code by clean up, now only for i.MX series as Dutt's suggestion ?
-> Or we have to drop the design and switch to select other solutions ?
+> Amlogic pcie working mode is only GEN1 & GEN2，so mac_phy_rate is 0 or 1；
+> 
+> PM_CURRENT_STATE(state17)  is related to Amlogic pcie working mode，and  not  related to power management.
+> 
+> "PM_CURRENT_STATE(state17) < PCIE_GEN3"  is always true. 
 
-If this whole subsystem is being deleted because it is not used and
-never shipped, yes, please use a different solution.
+There's no point in making a comparision that's always true.  It just
+clutters the code without adding value.  IMO you should do something
+like the following.  If and when you actually *need* to check the
+mac_phy_rate and there's a possibility that it might not be OK, you
+can add it back.
 
-I don't understand why you were trying to piggy-back on this codebase if
-the hardware was totally different, for some reason I thought this was
-the same hardware.  What exactly is this?
+diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+index 1913dc2c8fa0..bb7a35c7c57f 100644
+--- a/drivers/pci/controller/dwc/pci-meson.c
++++ b/drivers/pci/controller/dwc/pci-meson.c
+@@ -35,9 +35,6 @@
+ #define IS_RDLH_LINK_UP(x)		((x) & (1 << 16))
+ #define IS_LTSSM_UP(x)			((((x) >> 10) & 0x1f) == 0x11)
+ 
+-#define PCIE_CFG_STATUS17		0x44
+-#define PM_CURRENT_STATE(x)		(((x) >> 7) & 0x1)
+-
+ #define WAIT_LINKUP_TIMEOUT		4000
+ #define PORT_CLK_RATE			100000000UL
+ #define MAX_PAYLOAD_SIZE		256
+@@ -341,30 +338,23 @@ static int meson_pcie_link_up(struct dw_pcie *pci)
+ {
+ 	struct meson_pcie *mp = to_meson_pcie(pci);
+ 	struct device *dev = pci->dev;
+-	u32 speed_okay = 0;
+ 	u32 cnt = 0;
+-	u32 state12, state17, smlh_up, ltssm_up, rdlh_up;
++	u32 state12, smlh_up, ltssm_up, rdlh_up;
+ 
+ 	do {
+ 		state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
+-		state17 = meson_cfg_readl(mp, PCIE_CFG_STATUS17);
+ 		smlh_up = IS_SMLH_LINK_UP(state12);
+ 		rdlh_up = IS_RDLH_LINK_UP(state12);
+ 		ltssm_up = IS_LTSSM_UP(state12);
+ 
+-		if (PM_CURRENT_STATE(state17) < PCIE_GEN3)
+-			speed_okay = 1;
+-
+ 		if (smlh_up)
+ 			dev_dbg(dev, "smlh_link_up is on\n");
+ 		if (rdlh_up)
+ 			dev_dbg(dev, "rdlh_link_up is on\n");
+ 		if (ltssm_up)
+ 			dev_dbg(dev, "ltssm_up is on\n");
+-		if (speed_okay)
+-			dev_dbg(dev, "speed_okay\n");
+ 
+-		if (smlh_up && rdlh_up && ltssm_up && speed_okay)
++		if (smlh_up && rdlh_up && ltssm_up)
+ 			return 1;
+ 
+ 		cnt++;
 
-thanks,
+> yue.wang@amlogic.com
+>  
+> From: Bjorn Helgaas
+> Date: 2020-10-28 00:40
+> To: Yue Wang
+> CC: linux-pci; Kevin Hilman; linux-amlogic
+> Subject: pci-meson covery issue #1442509
+> Hi Yue,
+>  
+> Please take a look at this issue reported by Coverity:
+>  
+> 340 static int meson_pcie_link_up(struct dw_pcie *pci)
+> 341 {
+> 342        struct meson_pcie *mp = to_meson_pcie(pci);
+> 343        struct device *dev = pci->dev;
+> 344        u32 speed_okay = 0;
+> 345        u32 cnt = 0;
+> 346        u32 state12, state17, smlh_up, ltssm_up, rdlh_up;
+> 347
+> 348        do {
+> 349                state12 = meson_cfg_readl(mp, PCIE_CFG_STATUS12);
+> 350                state17 = meson_cfg_readl(mp, PCIE_CFG_STATUS17);
+> 351                smlh_up = IS_SMLH_LINK_UP(state12);
+> 352                rdlh_up = IS_RDLH_LINK_UP(state12);
+> 353                ltssm_up = IS_LTSSM_UP(state12);
+> 354
+>  
+> CID 1442509 (#1 of 1): Operands don't affect result
+> (CONSTANT_EXPRESSION_RESULT) result_independent_of_operands: ((state17
+> >> 7) & 1) < PCIE_GEN3 is always true regardless of the values of its
+> operands. This occurs as the logical operand of if.
+>  
+> 355                if (PM_CURRENT_STATE(state17) < PCIE_GEN3)
+> 356                        speed_okay = 1;
+>  
+>  
+> "PM" seems like a funny name for a link speed.  It sounds more like
+> something related to power management, e.g., D0, D3.
+>  
 
-greg k-h
+
+
