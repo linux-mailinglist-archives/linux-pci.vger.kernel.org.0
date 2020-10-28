@@ -2,178 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E23B329D335
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Oct 2020 22:41:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 626F929D2DF
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Oct 2020 22:37:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725869AbgJ1Vlu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Oct 2020 17:41:50 -0400
-Received: from mail-vi1eur05on2040.outbound.protection.outlook.com ([40.107.21.40]:27048
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725951AbgJ1Vlt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:41:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImcNZ1oi3fb7STB3V5KOtAHQxxnvD6EeF0szUNy6L9zgtkzWpwTJe7YaF/isGdtAenktdYKhlBm3R5+P7LLjiZPDDCe0/Mn/aWWCxEoKb1Woz3Hs3QdwdSjJ29/71q5icCQ088TWZ1z2qGbs4gJ8J0Dueu0YIcOTayyLVIMzkg9wLfTlSWjVTQXPaoj0AscJP1knS1mTC2Y6ObDJFAxXZ72cldxLD/7P90zESfanrFVP29DbVqJE1V7dKulm3g0T8asnW456Hv07mlbBrcuoY+Df97xsBEy/8VYBbb9Hc6Q7FQIy3Ifn0/hWGJ/RrOorsrf7oi+qUAC3123vgiw5Hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A5haB6gIrwVUD3gFVfkoSk3H89DnYYChJFLaYOgmmRQ=;
- b=dwtVqouwMz8OvOBg+zan45+O6JQIUqM/o5bRAA8l20PPR/gRmA2JDFiN7b+ocepDJj2OaROtIOldlXL+/ral7Oajx4nmSAqxGZkmXPU6R2kp3B2D4fqQZ/wA0aPmNurIl7hd4ou7Bug1RUrfkUhNefFY3YhU3vc3Z+FB+hSAlKZ0bW0z5Q6s25pRBOULxupqv3oc9hJzBdQFRsySDNw1GfTuWGTbiqD1jnfsLHO+NlSlAU2DWpxBPRDbbPcVL4CEA+7/C4NpJCvwGDmJE70HjDWh6YCiLFNFj2kGfsYD07fDLUGkRvjQBsYCSZ4kRxZnfKTWrid0kmtvgpd9Ag0hVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A5haB6gIrwVUD3gFVfkoSk3H89DnYYChJFLaYOgmmRQ=;
- b=oCNOOzeGwwwnYooN7KyTFwppqlWu8rVOSqKuEUOT79yTZMHeYAGQAAcGpZTPJWBj7pP0U900CM1Wb95JEWC83/B4d0c2/O8SwA66yV1OwCDuWwzAq9K94vl7ZUAEF3Gch4ViCjSQDyoEewICPKoh5+e/Za6FvCI2X7qDePtS6hw=
-Received: from AM0PR04MB4947.eurprd04.prod.outlook.com (2603:10a6:208:c8::16)
- by AM8PR04MB7250.eurprd04.prod.outlook.com (2603:10a6:20b:1dc::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.19; Wed, 28 Oct
- 2020 07:11:37 +0000
-Received: from AM0PR04MB4947.eurprd04.prod.outlook.com
- ([fe80::2a:11b5:6807:7518]) by AM0PR04MB4947.eurprd04.prod.outlook.com
- ([fe80::2a:11b5:6807:7518%5]) with mapi id 15.20.3477.028; Wed, 28 Oct 2020
- 07:11:37 +0000
-From:   Sherry Sun <sherry.sun@nxp.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "hch@infradead.org" <hch@infradead.org>,
-        "vincent.whitchurch@axis.com" <vincent.whitchurch@axis.com>,
-        "sudeep.dutt@intel.com" <sudeep.dutt@intel.com>,
-        "ashutosh.dixit@intel.com" <ashutosh.dixit@intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Andy Duan <fugang.duan@nxp.com>
-Subject: RE: [PATCH V5 0/2] Change vring space from nomal memory to dma
- coherent memory
-Thread-Topic: [PATCH V5 0/2] Change vring space from nomal memory to dma
- coherent memory
-Thread-Index: AQHWrM6hrUxx3H5v+0a5i9aKIfcorqmshSIAgAABZvCAABHFAIAAAO0g
-Date:   Wed, 28 Oct 2020 07:11:37 +0000
-Message-ID: <AM0PR04MB49470703D53EAC2D5195FE3392170@AM0PR04MB4947.eurprd04.prod.outlook.com>
-References: <20201028020305.10593-1-sherry.sun@nxp.com>
- <20201028055836.GA244690@kroah.com>
- <AM0PR04MB4947032368486CC9874C812692170@AM0PR04MB4947.eurprd04.prod.outlook.com>
- <20201028070712.GA1649838@kroah.com>
-In-Reply-To: <20201028070712.GA1649838@kroah.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5575c0eb-c141-41c1-ffaa-08d87b10b5b7
-x-ms-traffictypediagnostic: AM8PR04MB7250:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM8PR04MB72501D1DD5FCA417DE19778492170@AM8PR04MB7250.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: c2vET90KCoQa/oP0qiVPc0fx368Ly1NadJkLFc+5GXO/i8bKvCeD/ieshb7gHSfy9M4R2E3+eyWzCtLRRRFgW8Oh6jqMQRAsojGBOKaViEL7KpTL7rwis5U+6lhdB+Mx65Amx2QfoIR48EA5YoU+kfNwZMdyUH1v+h3LNEvNWnbyHNjjL/XlMhNReWyWBm+qd9wqAQPOfoiUyMV31I9XCXlJi9Y9ZHhrGxJjlJE/9QeF26ay2BGl8koUXE4JomDxv+mQQ/OlW2r13DAovfwMZv0/rBxi1jWou8QyK3eTaOKQgPS9GLoI0AKQw7a0iBjLy9Qp4KbEG/LPzPa+3IJu+jzoA0bHv8mVkopyq2JQtg00LpRISwkBbNgSqBwOeM8jQyxEMdNihdkToB+uViKBdw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4947.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(366004)(376002)(39860400002)(136003)(7696005)(6916009)(33656002)(316002)(83380400001)(4326008)(71200400001)(186003)(7416002)(966005)(8676002)(44832011)(54906003)(8936002)(26005)(6506007)(45080400002)(55016002)(9686003)(86362001)(478600001)(66946007)(76116006)(64756008)(66446008)(66476007)(5660300002)(66556008)(52536014)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 6OKHzMgsOUuxBbFWMdDTu0o/OmZ0g8RfWdaCC9cKoUOPFeG1QbiSgKtOY8jjyYD7f9wyqcecgvkQcIR53yeLv56wN+S10kxI/ReHbJ2zukpRXRgXySQ58DhUKwsIVgIQUbSvbwU7g/HwRUKVW5P2VAVRvi5H3p8+L7x4Ez0iLMnTOQizfjsO57WofRd+qMLKk7qKcjrijVHVZDcVk657nTaeDuF0rxPV9meBFS0kK5tP/3E/qyoAzyqt0xsatx/Nov1pqLm0eeC2e6DeBSUCXv8gzaztUlJoOg/IzbXUOISaOVhnPO5Jle8wF6ucmOUCsUT68PRFD/Wn1UCVp0O2b4nT/RsMdgTV9AqNi41PbpJC64NR193lMKmDRJ9lFjxwsdNzuFlu2JEV9EeVTW5I61WN6aFZ3mW+URR39SymLY+3lOzZb7xRAKBo1OdvF3jACMBhu6SFbsUhX+GHXoM7FdOb5iXb4PF/Z4KOVTaBl3wqKOUP7fwy/GAuUXiipOcfvC/JZWaUzVt+O9piQdRu9rwbTAMmejgBuWZXMZNo5HKiUokrEXwPRlDAkeu/bafF2atc9MxnJ9TmlI9bWldOzOYDuUVzibj6D/3wCMR/tB4ZiyozGGyIC69X8lp6Jc0x4flPkK0vreU2MLyXTennNw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726929AbgJ1VhW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Oct 2020 17:37:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26130 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726886AbgJ1VhU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Oct 2020 17:37:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603921039;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2ieKfFfqFnN+m7eiFTYtg/05VZ570w2kYMSRpQ5oFNQ=;
+        b=GSYYGONGOoXlPTpLlh+Q2piGxzkI6whM7DjUf4Nn+DDNWWx80bxPeCKbHKhhFy/rcaLZw8
+        b0T0oAcdXdQ8VsZ1z06aa0g1CPUe+ea0ivkEekT43vcGpwjGshjZS20C/NRBJ439pGaE1b
+        w4AWa92gxyIVpJQgBzYKyoUJruavHZc=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-142-eU_4mMnoOKmNkxCMEu8u8g-1; Wed, 28 Oct 2020 09:36:17 -0400
+X-MC-Unique: eU_4mMnoOKmNkxCMEu8u8g-1
+Received: by mail-io1-f69.google.com with SMTP id a2so3317602iod.13
+        for <linux-pci@vger.kernel.org>; Wed, 28 Oct 2020 06:36:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=2ieKfFfqFnN+m7eiFTYtg/05VZ570w2kYMSRpQ5oFNQ=;
+        b=T4oUAGSacUkUoj7I5EtN7IcpEAs1OIKEvSmo5x281QvqEQSVLF3UTo4C3LEY6ZMonl
+         /ffwPLgLuoyOUMdFyYykBx+Ej0XERJeDMVy+OSsoun4kQxSnOQPP5gCneFkX5925tTg0
+         UtnuZQIcCsWKNRvuSXhG5jeM2KjRwtIavW5yg8p0EHXY30d+EzXDwZKs67014BiAXAIg
+         weJyQhALy5yUTGMP2BD10F3/lph3zK6J5VOuoOWJHElBLzeRpEup0XkCt1PLKQDF10+t
+         P/LwCzKtVvL3UMc5IgydQJo017qsaLTlwYX1X7jCecAUfaOcTCgWXxFcxh6zi/PLKTNS
+         KTpw==
+X-Gm-Message-State: AOAM532OnltRZNh7IB8Xr2dZqyDWf0kkrFqv+/F13wBxfed7RQlqn1Qz
+        A1rfE+Kb9sVp7dn7M1OtWTHhD4SOzks3VxCnJgC5s6pnngQfEJaLBYU4vzX3ao4cOGaUoQJhnJ7
+        ZhpEyFzXw5K8Wr34rRnE2
+X-Received: by 2002:a92:d104:: with SMTP id a4mr6163024ilb.231.1603892176655;
+        Wed, 28 Oct 2020 06:36:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzmRo3zYrjdZWgoMbi/XfF4AaqZxe95A22njWBaMCMRSP3zTeMMowpni0WPCRMLWI3eslRMrw==
+X-Received: by 2002:a92:d104:: with SMTP id a4mr6163006ilb.231.1603892176391;
+        Wed, 28 Oct 2020 06:36:16 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id l17sm2363709iol.30.2020.10.28.06.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2020 06:36:15 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id C9F40181CED; Wed, 28 Oct 2020 14:36:13 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        vtolkm@googlemail.com
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+In-Reply-To: <87ft5zwl8u.fsf@toke.dk>
+References: <20201027172006.GA186901@bjorn-Precision-5520>
+ <87ft5zwl8u.fsf@toke.dk>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 28 Oct 2020 14:36:13 +0100
+Message-ID: <87y2jqmq0i.fsf@toke.dk>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB4947.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5575c0eb-c141-41c1-ffaa-08d87b10b5b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2020 07:11:37.0593
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: m7wTFZ4x9pDLVyBrzR5K0zzcTxcxNkxsd3dcHU2Tcn06hqgmWza2nzSkNsytExrjM99dSH3K1jBmhsHUdyLaLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7250
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> writes:
 
-> Subject: Re: [PATCH V5 0/2] Change vring space from nomal memory to dma
-> coherent memory
->=20
-> On Wed, Oct 28, 2020 at 06:05:28AM +0000, Sherry Sun wrote:
-> > Hi Greg,
-> >
-> > > Subject: Re: [PATCH V5 0/2] Change vring space from nomal memory to
-> > > dma coherent memory
-> > >
-> > > On Wed, Oct 28, 2020 at 10:03:03AM +0800, Sherry Sun wrote:
-> > > > Changes in V5:
-> > > > 1. Reorganize the vop_mmap function code in patch 1, which is done
-> > > > by
-> > > Christoph.
-> > > > 2. Completely remove the unnecessary code related to reassign the
-> > > > used ring for card in patch 2.
-> > > >
-> > > > The original vop driver only supports dma coherent device, as it
-> > > > allocates and maps vring by _get_free_pages and dma_map_single,
-> > > > but not use dma_sync_single_for_cpu/device to sync the updates of
-> > > > device_page/vring between EP and RC, which will cause memory
-> > > > synchronization problem for device don't support hardware dma
-> coherent.
-> > > >
-> > > > And allocate vrings use dma_alloc_coherent is a common way in
-> > > > kernel, as the memory interacted between two systems should use
-> > > > consistent memory to avoid caching effects. So here add
-> > > > noncoherent platform
-> > > support for vop driver.
-> > > > Also add some related dma changes to make sure noncoherent
-> > > > platform works well.
-> > > >
-> > > > Sherry Sun (2):
-> > > >   misc: vop: change the way of allocating vrings and device page
-> > > >   misc: vop: do not allocate and reassign the used ring
-> > > >
-> > > >  drivers/misc/mic/bus/vop_bus.h     |   2 +
-> > > >  drivers/misc/mic/host/mic_boot.c   |   9 ++
-> > > >  drivers/misc/mic/host/mic_main.c   |  43 ++------
-> > > >  drivers/misc/mic/vop/vop_debugfs.c |   4 -
-> > > >  drivers/misc/mic/vop/vop_main.c    |  70 +-----------
-> > > >  drivers/misc/mic/vop/vop_vringh.c  | 166 ++++++++++---------------=
-----
-> > > >  include/uapi/linux/mic_common.h    |   9 +-
-> > > >  7 files changed, 85 insertions(+), 218 deletions(-)
-> > >
-> > > Have you all seen:
-> > >
-> 	https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%
-> 25
-> > >
-> 2Flore.kernel.org%2Fr%2F8c1443136563de34699d2c084df478181c205db4.16
-> > >
-> 03854416.git.sudeep.dutt%40intel.com&amp;data=3D04%7C01%7Csherry.sun%
-> > >
-> 40nxp.com%7Cc19c987667434969847e08d87b0685e8%7C686ea1d3bc2b4c6f
-> > >
-> a92cd99c5c301635%7C0%7C0%7C637394615238940323%7CUnknown%7CTW
-> > >
-> FpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJX
-> > >
-> VCI6Mn0%3D%7C1000&amp;sdata=3DZq%2FtHWTq%2BuIVBYXFGoeBmq0JJzYd
-> > > 9zDyv4NVN4TpC%2FU%3D&amp;reserved=3D0
-> > >
-> > > Looks like this code is asking to just be deleted, is that ok with yo=
-u?
-> >
-> > Yes, I saw that patch. I'm ok with it.
->=20
-> Great, can you please provide a "Reviewed-by:" or "Acked-by:" for it?
->=20
+> Bjorn Helgaas <helgaas@kernel.org> writes:
+>
+>> [+cc vtolkm]
+>>
+>> On Tue, Oct 27, 2020 at 04:43:20PM +0100, Toke H=C3=B8iland-J=C3=B8rgens=
+en wrote:
+>>> Hi everyone
+>>>=20
+>>> I'm trying to get a mainline kernel to run on my Turris Omnia, and am
+>>> having some trouble getting the PCI bus to work correctly. Specifically,
+>>> I'm running a 5.10-rc1 kernel (torvalds/master as of this moment), with
+>>> the resource request fix[0] applied on top.
+>>>=20
+>>> The kernel boots fine, and the patch in [0] makes the PCI devices show
+>>> up. But I'm still getting initialisation errors like these:
+>>>=20
+>>> [    1.632709] pci 0000:01:00.0: BAR 0: error updating (0xe0000004 !=3D=
+ 0xffffffff)
+>>> [    1.632714] pci 0000:01:00.0: BAR 0: error updating (high 0x000000 !=
+=3D 0xffffffff)
+>>> [    1.632745] pci 0000:02:00.0: BAR 0: error updating (0xe0200004 !=3D=
+ 0xffffffff)
+>>> [    1.632750] pci 0000:02:00.0: BAR 0: error updating (high 0x000000 !=
+=3D 0xffffffff)
+>>>=20
+>>> and the WiFi drivers fail to initialise with what appears to me to be
+>>> errors related to the bus rather than to the drivers themselves:
+>>>=20
+>>> [    3.509878] ath: phy0: Mac Chip Rev 0xfffc0.f is not supported by th=
+is driver
+>>> [    3.517049] ath: phy0: Unable to initialize hardware; initialization=
+ status: -95
+>>> [    3.524473] ath9k 0000:01:00.0: Failed to initialize device
+>>> [    3.530081] ath9k: probe of 0000:01:00.0 failed with error -95
+>>> [    3.536012] ath10k_pci 0000:02:00.0: of_irq_parse_pci: failed with r=
+c=3D134
+>>> [    3.543049] pci 0000:00:02.0: enabling device (0140 -> 0142)
+>>> [    3.548735] ath10k_pci 0000:02:00.0: can't change power state from D=
+3hot to D0 (config space inaccessible)
+>>> [    3.588592] ath10k_pci 0000:02:00.0: failed to wake up device : -110
+>>> [    3.595098] ath10k_pci: probe of 0000:02:00.0 failed with error -110
+>>>=20
+>>> lspci looks OK, though:
+>>>=20
+>>> # lspci
+>>> 00:01.0 PCI bridge: Marvell Technology Group Ltd. Device 6820 (rev 04)
+>>> 00:02.0 PCI bridge: Marvell Technology Group Ltd. Device 6820 (rev 04)
+>>> 00:03.0 PCI bridge: Marvell Technology Group Ltd. Device 6820 (rev 04)
+>>> 01:00.0 Network controller: Qualcomm Atheros AR9287 Wireless Network Ad=
+apter (PCI-Express) (rev 01)
+>>> 02:00.0 Network controller: Qualcomm Atheros QCA986x/988x 802.11ac Wire=
+less Network Adapter (rev ff)
+>>>=20
+>>> Does anyone have any clue what could be going on here? Is this a bug, or
+>>> did I miss something in my config or other initialisation? I've tried
+>>> with both the stock u-boot distributed with the board, and with an
+>>> upstream u-boot from latest master; doesn't seem to make any different.
+>>
+>> Can you try turning off CONFIG_PCIEASPM?  We had a similar recent
+>> report at https://bugzilla.kernel.org/show_bug.cgi?id=3D209833 but I
+>> don't think we have a fix yet.
+>
+> Yes! Turning that off does indeed help! Thanks a bunch :)
+>
+> You mention that bisecting this would be helpful - I can try that
+> tomorrow; any idea when this was last working?
 
-Sure.
+OK, so I tried to bisect this, but, erm, I couldn't find a working
+revision to start from? I went all the way back to 4.10 (which is the
+first version to include the device tree file for the Omnia), and even
+on that, the wireless cards were failing to initialise with ASPM
+enabled...
 
-Best regards
-Sherry
+Happy to run other tests, but I think I'm going to need some pointers -
+the PCI subsystem is not my home turf :)
 
-> thanks,
->=20
-> greg k-h
+-Toke
+
