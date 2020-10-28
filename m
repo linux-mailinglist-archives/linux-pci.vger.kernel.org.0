@@ -2,83 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 279C629E0E7
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 02:45:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE0EC29E130
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 02:54:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbgJ2BpS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Oct 2020 21:45:18 -0400
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:46716 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729212AbgJ2BpR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Oct 2020 21:45:17 -0400
-X-Greylist: delayed 12601 seconds by postgrey-1.27 at vger.kernel.org; Wed, 28 Oct 2020 21:45:16 EDT
-Received: from cpc98990-stkp12-2-0-cust216.10-2.cable.virginm.net ([86.26.12.217] helo=[192.168.0.10])
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1kXp8e-0000Cf-3h; Wed, 28 Oct 2020 17:21:32 +0000
-In-Reply-To: <20201022132223.17789-4-daire.mcnamara@microchip.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Daire McNamara <daire.mcnamara@microchip.com>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH v17 3/3] PCI: microchip: Add host driver for Microchip
- PCIe controller
-Organization: Codethink Limited.
-Message-ID: <587df2af-c59e-371a-230c-9c7a614824bd@codethink.co.uk>
-Date:   Wed, 28 Oct 2020 17:21:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1728898AbgJ2ByI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Oct 2020 21:54:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36621 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbgJ1V5M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Oct 2020 17:57:12 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y186so1173243oia.3;
+        Wed, 28 Oct 2020 14:57:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=VL29XNIWkQpzNWyeVNn88/4OaIX3OCW0yaXdyYkNuo0=;
+        b=r7JCFs0kyEJoyA2q9VA96bO2BOjWhy/BzrrEb+WIw0HYSdfSYi4G8HuvEwRO31vyiG
+         h+aCRtbLoB/1N19eeeYXbJNMswuEYOhQsxZha9PkBYNG3BTmeFvtBDR1PEkFTzQ4eBSf
+         bZZXrxyHCXWZ1VLXmQIye2iD8f2sTVKpEIFcwqt1RCcEV9YmHLiQn3H3wE7sNEw+1h0U
+         3GXDNqPGci92ck0I7fcAdGgP7m0eZFrWHQz+uXcgtpHSOVroHButq0BfnbeTKC40N8Q4
+         flMTzxh1rKfSU8asfg+3BEFkv+kiW6jXc8rZiNeRyPOzwjdEgPfOnt+/ywd5RX2NphCA
+         Tx+Q==
+X-Gm-Message-State: AOAM530Pk+0b22PAJxeNnRv6eBLtH54n/GGQ8yREZH/lLadWMDCYPc/F
+        UBYe3S4XJHhS9ZtCVh41+ndqRfp72w==
+X-Google-Smtp-Source: ABdhPJzWQKewEzrujtGvqB3VBlyo68Oonm1AIwSq3hCnepRvY1VGBxkJqbAEBgM3kZQckSIDnyed7g==
+X-Received: by 2002:aca:f0c:: with SMTP id 12mr636990oip.9.1603918022402;
+        Wed, 28 Oct 2020 13:47:02 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id t17sm116123oor.3.2020.10.28.13.47.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2020 13:47:01 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
+        linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Yue Wang <yue.wang@Amlogic.com>
+Subject: [PATCH 05/13] PCI: dwc: Ensure all outbound ATU windows are reset
+Date:   Wed, 28 Oct 2020 15:46:38 -0500
+Message-Id: <20201028204646.356535-6-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201028204646.356535-1-robh@kernel.org>
+References: <20201028204646.356535-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, I have tried applying these patches to the v5.6.16 yocto kernel
-supplied for the Icicle board. I've assumed this is a v5.9 patch set
-as they don't apply cleanly to v5.6.16 so rebased up to v5.9
+The Layerscape driver clears the ATU registers which may have been
+configured by the bootloader. Any driver could have the same issue
+and doing it for all drivers doesn't hurt, so let's move it into the
+common DWC code.
 
-The PCie is failing to initialise on the icicle board. Is there
-anything else needing to be done to get it working on this board?
+Cc: Minghuan Lian <minghuan.Lian@nxp.com>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>
+Cc: Roy Zang <roy.zang@nxp.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/controller/dwc/pci-layerscape.c       | 14 --------------
+ drivers/pci/controller/dwc/pcie-designware-host.c |  5 +++++
+ 2 files changed, 5 insertions(+), 14 deletions(-)
 
-Log excerpt from board boot:
-
-> [    2.435747] microchip-pcie e0000000.pci: host bridge /pci@E0000000 ranges:
-> [    2.442580] microchip-pcie e0000000.pci: Parsing ranges property...
-> [    2.442611] microchip-pcie e0000000.pci:      MEM 0x00e8000000..0x00efffffff -> 0x00e8000000
-> [    2.451177] microchip-pcie e0000000.pci: non-prefetchable memory resource required
-> [    2.460943] microchip-pcie e0000000.pci: ECAM at [mem 0xe0000000-0xe7ffffff] : ESC[Bfor [bus 00-7f]
-> [    2.469607] microchip-pcie e0000000.pci: PCI host bridge to bus 0000:00
-> [    2.476287] pci_bus 0000:00: root bus resource [bus 00-7f]
-> [    2.481724] pci_bus 0000:00: root bus resource [mem 0xe8000000-0xefffffff pre: ESC[Bf]
-> [    2.489186] pci_bus 0000:00: scanning bus
-> [    2.489283] pci 0000:00:00.0: [11aa:1556] type 01 class 0x040000
-> [    2.495328] pci 0000:00:00.0: reg 0x10: [mem 0x00000000-0x7fffffff 64bit pref: ESC[B]
-> [    2.502610] pci 0000:00:00.0: supports D1 D2
-> [    2.506942] pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-> [    2.513544] pci 0000:00:00.0: PME# disabled
-> [    2.514859] pci_bus 0000:00: fixups for bus
-> [    2.514882] pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 0
-> [    2.514900] pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
-> [    2.522847] pci 0000:00:00.0: scanning [bus 00-00] behind bridge, pass 1
-> [    2.522972] pci_bus 0000:01: scanning bus
-> [    2.573878] pci_bus 0000:01: fixups for bus
-> [    2.573897] pci_bus 0000:01: bus scan returning with max=01
-> [    2.573918] pci_bus 0000:01: busn_res: [bus 01-7f] end is updated to 01
-> [    2.580477] pci_bus 0000:00: bus scan returning with max=01
-> [    2.580530] pci 0000:00:00.0: BAR 0: no space for [mem size 0x80000000 64bit pref]
-> [    2.588195] pci 0000:00:00.0: BAR 0: failed to assign [mem size 0x80000000 64bit pref]
-> [    2.596168] pci 0000:00:00.0: BAR 8: no space for [mem size 0x00200000]
-> [    2.602782] pci 0000:00:00.0: BAR 8: failed to assign [mem size 0x00200000]
-> [    2.609887] pci 0000:00:00.0: BAR 9: assigned [mem 0xe8000000-0xe81fffff 64bit pref]
-> [    2.617692] pci 0000:00:00.0: BAR 7: no space for [io  size 0x1000]
-> [    2.624028] pci 0000:00:00.0: BAR 7: failed to assign [io  size 0x1000]
-> [    2.630646] pci 0000:00:00.0: PCI bridge to [bus 01]
->     2.635780] pci 0000:00:00.0:   bridge window [mem 0xe8000000-0xe81fffff 64bi: ESC[Bt pref]
-
-
+diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+index f24f79a70d9a..53e56d54c482 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape.c
++++ b/drivers/pci/controller/dwc/pci-layerscape.c
+@@ -83,14 +83,6 @@ static void ls_pcie_drop_msg_tlp(struct ls_pcie *pcie)
+ 	iowrite32(val, pci->dbi_base + PCIE_STRFMR1);
+ }
+ 
+-static void ls_pcie_disable_outbound_atus(struct ls_pcie *pcie)
+-{
+-	int i;
+-
+-	for (i = 0; i < PCIE_IATU_NUM; i++)
+-		dw_pcie_disable_atu(pcie->pci, i, DW_PCIE_REGION_OUTBOUND);
+-}
+-
+ static int ls1021_pcie_link_up(struct dw_pcie *pci)
+ {
+ 	u32 state;
+@@ -136,12 +128,6 @@ static int ls_pcie_host_init(struct pcie_port *pp)
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct ls_pcie *pcie = to_ls_pcie(pci);
+ 
+-	/*
+-	 * Disable outbound windows configured by the bootloader to avoid
+-	 * one transaction hitting multiple outbound windows.
+-	 * dw_pcie_setup_rc() will reconfigure the outbound windows.
+-	 */
+-	ls_pcie_disable_outbound_atus(pcie);
+ 	ls_pcie_fix_error_response(pcie);
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index cde45b2076ee..265a48f1a0ae 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -534,6 +534,7 @@ static struct pci_ops dw_pcie_ops = {
+ 
+ void dw_pcie_setup_rc(struct pcie_port *pp)
+ {
++	int i;
+ 	u32 val, ctrl, num_ctrls;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 
+@@ -583,6 +584,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+ 	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
+ 
++	/* Ensure all outbound windows are disabled so there are multiple matches */
++	for (i = 0; i < pci->num_viewport; i++)
++		dw_pcie_disable_atu(pci, i, DW_PCIE_REGION_OUTBOUND);
++
+ 	/*
+ 	 * If the platform provides its own child bus config accesses, it means
+ 	 * the platform uses its own address translation component rather than
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+2.25.1
 
-https://www.codethink.co.uk/privacy.html
