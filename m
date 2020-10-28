@@ -2,199 +2,336 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7167F29E1C3
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 03:03:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 574B329E30F
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 03:46:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgJ2CDT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Oct 2020 22:03:19 -0400
-Received: from mga01.intel.com ([192.55.52.88]:16308 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391222AbgJ2CDE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Oct 2020 22:03:04 -0400
-IronPort-SDR: 7hJw3C5G9Z9yys1RJ1YggkjmpGrgUA4mgMBPYySa1FLDZUE5otoBgNAxwWXlruY/I2xVO5zx8C
- /IRYnUcqhUbA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="186141793"
-X-IronPort-AV: E=Sophos;i="5.77,428,1596524400"; 
-   d="scan'208";a="186141793"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 19:03:02 -0700
-IronPort-SDR: tqrpv8I3IEA1nn7wWKgBLFVtp41QjLbgH06ev3ohSNiunUxB01fDyrJ7EELJslqQF3WOQQoqRK
- 3EbTTyQ1h5yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,428,1596524400"; 
-   d="scan'208";a="356118179"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Oct 2020 19:03:01 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 28 Oct 2020 19:03:01 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 28 Oct 2020 19:03:01 -0700
-Received: from orsmsx611.amr.corp.intel.com ([10.22.229.24]) by
- ORSMSX611.amr.corp.intel.com ([10.22.229.24]) with mapi id 15.01.1713.004;
- Wed, 28 Oct 2020 19:03:01 -0700
-From:   "Dutt, Sudeep" <sudeep.dutt@intel.com>
-To:     "sherry.sun@nxp.com" <sherry.sun@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "fugang.duan@nxp.com" <fugang.duan@nxp.com>
-CC:     "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "Dutt, Sudeep" <sudeep.dutt@intel.com>,
-        "Dixit, Ashutosh" <ashutosh.dixit@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "vincent.whitchurch@axis.com" <vincent.whitchurch@axis.com>
-Subject: Re: [EXT] Re: [PATCH V5 0/2] Change vring space from nomal memory to
- dma coherent memory
-Thread-Topic: [EXT] Re: [PATCH V5 0/2] Change vring space from nomal memory to
- dma coherent memory
-Thread-Index: AQHWrM6mI/n9i6M9302TMCnx4YlfCams+nsAgAAB6wCAABE/AIAANTaAgAAPtICAAEJUgIAACJgAgACqYgCAAAFZgA==
-Date:   Thu, 29 Oct 2020 02:03:00 +0000
-Message-ID: <8e6da51572b8e64cf89a1e76f06089e8fa181bc9.camel@intel.com>
-References: <20201028020305.10593-1-sherry.sun@nxp.com>
-         <20201028055836.GA244690@kroah.com>
-         <AM0PR04MB4947032368486CC9874C812692170@AM0PR04MB4947.eurprd04.prod.outlook.com>
-         <20201028070712.GA1649838@kroah.com>
-         <AM8PR04MB7315D583A9490E642ED13071FF170@AM8PR04MB7315.eurprd04.prod.outlook.com>
-         <20201028111351.GA1964851@kroah.com>
-         <AM8PR04MB731570801A528203647FAD0AFF170@AM8PR04MB7315.eurprd04.prod.outlook.com>
-         <20201028154200.GB2780014@kroah.com>
-         <VI1PR04MB49608E4DE25847CC3019A40092140@VI1PR04MB4960.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB49608E4DE25847CC3019A40092140@VI1PR04MB4960.eurprd04.prod.outlook.com>
-Reply-To: "Dutt, Sudeep" <sudeep.dutt@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <649B453F68255A4FBAC1BCE02270DDE3@intel.com>
-Content-Transfer-Encoding: base64
+        id S1726522AbgJ2Cox (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Oct 2020 22:44:53 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46643 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgJ1VeK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 28 Oct 2020 17:34:10 -0400
+Received: by mail-yb1-f194.google.com with SMTP id a4so378123ybq.13;
+        Wed, 28 Oct 2020 14:34:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hwxLk3GHgi36+ENbUsQRZSih41j7F1eNza5P11dbWyY=;
+        b=ZotwYlWWP1sUZsbyol8DnGU5lzSvnHMetd+046ehJps4MuOvYjazHw9P+SgMt9nDSF
+         GT/diaV4NiYwa8Y8yBhE+WmKIvFU6GjnefQCDCdTDl4m63NrVDpy7bT/GDsrOUF6Urwq
+         I82JHrheHZe2NArDayT9raS3rCAogkWpFYknmXgmlVOh3rSJlYeJWfMJ7n35OhmNP6Qk
+         HFQOERu6UAcP/CS7dUfD8ISFX7Nhs1+n9sD0IRvqqnPRlVVKfPl83YJHJx9XZpq7u6QM
+         C8tI2qHHYq/Uh+qHoX/xGx5kC4L/6egsCHbbQW564y8vyIGms/CUQbddW8p0KUF8/4Xh
+         1OrA==
+X-Gm-Message-State: AOAM531z0b0vw6vW/z0n3Zl9OPRXXP8Jc+N++tvHnm1GtU1Nskf8f0qy
+        p+nVAiCAJUTdhYPDXRv0tMOrE3/rfw==
+X-Google-Smtp-Source: ABdhPJzEcJbyDH5Jdd/gfoeQxWylqBhAxt5672gvJOxg+yKdgICAONZEh8Vzkszy1/5HA2DhQx5lMA==
+X-Received: by 2002:a4a:d8c1:: with SMTP id c1mr6068680oov.31.1603896539880;
+        Wed, 28 Oct 2020 07:48:59 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p10sm2521383oig.37.2020.10.28.07.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2020 07:48:59 -0700 (PDT)
+Received: (nullmailer pid 4000736 invoked by uid 1000);
+        Wed, 28 Oct 2020 14:48:58 -0000
+Date:   Wed, 28 Oct 2020 09:48:58 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     bhelgaas@google.com, marek.vasut+renesas@gmail.com,
+        prabhakar.mahadev-lad.rj@bp.renesas.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: pci: rcar-pci-host: convert bindings to
+ json-schema
+Message-ID: <20201028144858.GB3994930@bogus>
+References: <1603850751-32762-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1603850751-32762-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1603850751-32762-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTEwLTI5IGF0IDAxOjUxICswMDAwLCBTaGVycnkgU3VuIHdyb3RlOg0KPiBI
-aSBHcmVnLA0KPiANCj4gPiBTdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRDSCBWNSAwLzJdIENo
-YW5nZSB2cmluZyBzcGFjZSBmcm9tIG5vbWFsDQo+ID4gbWVtb3J5IHRvIGRtYSBjb2hlcmVudCBt
-ZW1vcnkNCj4gPiANCj4gPiBPbiBXZWQsIE9jdCAyOCwgMjAyMCBhdCAwMzoxMToxNVBNICswMDAw
-LCBBbmR5IER1YW4gd3JvdGU6DQo+ID4gPiBGcm9tOiBHcmVnIEtIIDxncmVna2hAbGludXhmb3Vu
-ZGF0aW9uLm9yZz4gU2VudDogV2VkbmVzZGF5LA0KPiA+ID4gT2N0b2Jlcg0KPiA+ID4gMjgsIDIw
-MjAgNzoxNCBQTQ0KPiA+ID4gPiBPbiBXZWQsIE9jdCAyOCwgMjAyMCBhdCAxMDoxNzozOUFNICsw
-MDAwLCBBbmR5IER1YW4gd3JvdGU6DQo+ID4gPiA+ID4gRnJvbTogR3JlZyBLSCA8Z3JlZ2toQGxp
-bnV4Zm91bmRhdGlvbi5vcmc+IFNlbnQ6IFdlZG5lc2RheSwNCj4gPiA+ID4gPiBPY3RvYmVyIDI4
-LCAyMDIwIDM6MDcgUE0NCj4gPiA+ID4gPiA+IE9uIFdlZCwgT2N0IDI4LCAyMDIwIGF0IDA2OjA1
-OjI4QU0gKzAwMDAsIFNoZXJyeSBTdW4gd3JvdGU6DQo+ID4gPiA+ID4gPiA+IEhpIEdyZWcsDQo+
-ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjUgMC8y
-XSBDaGFuZ2UgdnJpbmcgc3BhY2UgZnJvbQ0KPiA+ID4gPiA+ID4gPiA+IG5vbWFsDQo+ID4gPiA+
-ID4gPiA+ID4gbWVtb3J5IHRvIGRtYSBjb2hlcmVudCBtZW1vcnkNCj4gPiA+ID4gPiA+ID4gPiAN
-Cj4gPiA+ID4gPiA+ID4gPiBPbiBXZWQsIE9jdCAyOCwgMjAyMCBhdCAxMDowMzowM0FNICswODAw
-LCBTaGVycnkgU3VuDQo+ID4gPiA+ID4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gPiBD
-aGFuZ2VzIGluIFY1Og0KPiA+ID4gPiA+ID4gPiA+ID4gMS4gUmVvcmdhbml6ZSB0aGUgdm9wX21t
-YXAgZnVuY3Rpb24gY29kZSBpbiBwYXRjaCAxLA0KPiA+ID4gPiA+ID4gPiA+ID4gd2hpY2gNCj4g
-PiA+ID4gPiA+ID4gPiA+IGlzIGRvbmUgYnkNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+
-ID4gPiBDaHJpc3RvcGguDQo+ID4gPiA+ID4gPiA+ID4gPiAyLiBDb21wbGV0ZWx5IHJlbW92ZSB0
-aGUgdW5uZWNlc3NhcnkgY29kZSByZWxhdGVkIHRvDQo+ID4gPiA+ID4gPiA+ID4gPiByZWFzc2ln
-biB0aGUgdXNlZCByaW5nIGZvciBjYXJkIGluIHBhdGNoIDIuDQo+ID4gPiA+ID4gPiA+ID4gPiAN
-Cj4gPiA+ID4gPiA+ID4gPiA+IFRoZSBvcmlnaW5hbCB2b3AgZHJpdmVyIG9ubHkgc3VwcG9ydHMg
-ZG1hIGNvaGVyZW50DQo+ID4gPiA+ID4gPiA+ID4gPiBkZXZpY2UsDQo+ID4gPiA+ID4gPiA+ID4g
-PiBhcyBpdCBhbGxvY2F0ZXMgYW5kIG1hcHMgdnJpbmcgYnkgX2dldF9mcmVlX3BhZ2VzIGFuZA0K
-PiA+ID4gPiA+ID4gPiA+ID4gZG1hX21hcF9zaW5nbGUsIGJ1dCBub3QgdXNlDQo+ID4gPiA+ID4g
-PiA+ID4gPiBkbWFfc3luY19zaW5nbGVfZm9yX2NwdS9kZXZpY2UNCj4gPiA+ID4gPiA+ID4gPiA+
-IHRvIHN5bmMgdGhlIHVwZGF0ZXMgb2YgZGV2aWNlX3BhZ2UvdnJpbmcgYmV0d2VlbiBFUA0KPiA+
-ID4gPiA+ID4gPiA+ID4gYW5kDQo+ID4gPiA+ID4gPiA+ID4gPiBSQywgd2hpY2ggd2lsbCBjYXVz
-ZSBtZW1vcnkgc3luY2hyb25pemF0aW9uIHByb2JsZW0NCj4gPiA+ID4gPiA+ID4gPiA+IGZvcg0K
-PiA+ID4gPiA+ID4gPiA+ID4gZGV2aWNlIGRvbid0IHN1cHBvcnQNCj4gPiA+ID4gDQo+ID4gPiA+
-IGhhcmR3YXJlIGRtYSBjb2hlcmVudC4NCj4gPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-PiA+ID4gQW5kIGFsbG9jYXRlIHZyaW5ncyB1c2UgZG1hX2FsbG9jX2NvaGVyZW50IGlzIGENCj4g
-PiA+ID4gPiA+ID4gPiA+IGNvbW1vbiB3YXkNCj4gPiA+ID4gPiA+ID4gPiA+IGluIGtlcm5lbCwg
-YXMgdGhlIG1lbW9yeSBpbnRlcmFjdGVkIGJldHdlZW4gdHdvDQo+ID4gPiA+ID4gPiA+ID4gPiBz
-eXN0ZW1zDQo+ID4gPiA+ID4gPiA+ID4gPiBzaG91bGQgdXNlIGNvbnNpc3RlbnQgbWVtb3J5IHRv
-IGF2b2lkIGNhY2hpbmcNCj4gPiA+ID4gPiA+ID4gPiA+IGVmZmVjdHMuIFNvDQo+ID4gPiA+ID4g
-PiA+ID4gPiBoZXJlIGFkZCBub25jb2hlcmVudCBwbGF0Zm9ybQ0KPiA+ID4gPiA+ID4gPiA+IA0K
-PiA+ID4gPiA+ID4gPiA+IHN1cHBvcnQgZm9yIHZvcCBkcml2ZXIuDQo+ID4gPiA+ID4gPiA+ID4g
-PiBBbHNvIGFkZCBzb21lIHJlbGF0ZWQgZG1hIGNoYW5nZXMgdG8gbWFrZSBzdXJlDQo+ID4gPiA+
-ID4gPiA+ID4gPiBub25jb2hlcmVudA0KPiA+ID4gPiA+ID4gPiA+ID4gcGxhdGZvcm0gd29ya3Mg
-d2VsbC4NCj4gPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+ID4gU2hlcnJ5IFN1biAo
-Mik6DQo+ID4gPiA+ID4gPiA+ID4gPiAgIG1pc2M6IHZvcDogY2hhbmdlIHRoZSB3YXkgb2YgYWxs
-b2NhdGluZyB2cmluZ3MgYW5kDQo+ID4gPiA+ID4gPiA+ID4gPiBkZXZpY2UgcGFnZQ0KPiA+ID4g
-PiA+ID4gPiA+ID4gICBtaXNjOiB2b3A6IGRvIG5vdCBhbGxvY2F0ZSBhbmQgcmVhc3NpZ24gdGhl
-IHVzZWQNCj4gPiA+ID4gPiA+ID4gPiA+IHJpbmcNCj4gPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4g
-PiA+ID4gPiA+ID4gIGRyaXZlcnMvbWlzYy9taWMvYnVzL3ZvcF9idXMuaCAgICAgfCAgIDIgKw0K
-PiA+ID4gPiA+ID4gPiA+ID4gIGRyaXZlcnMvbWlzYy9taWMvaG9zdC9taWNfYm9vdC5jICAgfCAg
-IDkgKysNCj4gPiA+ID4gPiA+ID4gPiA+ICBkcml2ZXJzL21pc2MvbWljL2hvc3QvbWljX21haW4u
-YyAgIHwgIDQzICsrLS0tLS0tDQo+ID4gPiA+ID4gPiA+ID4gPiAgZHJpdmVycy9taXNjL21pYy92
-b3Avdm9wX2RlYnVnZnMuYyB8ICAgNCAtDQo+ID4gPiA+ID4gPiA+ID4gPiAgZHJpdmVycy9taXNj
-L21pYy92b3Avdm9wX21haW4uYyAgICB8ICA3MCArLS0tLS0tLS0NCj4gPiA+ID4gPiA+ID4gPiA+
-IC0tLQ0KPiA+ID4gPiA+ID4gPiA+ID4gIGRyaXZlcnMvbWlzYy9taWMvdm9wL3ZvcF92cmluZ2gu
-YyAgfCAxNjYgKysrKysrKysrKy0NCj4gPiA+ID4gPiA+ID4gPiA+IC0tLS0tLS0tLS0tLQ0KPiA+
-IA0KPiA+IC0tLS0tLQ0KPiA+ID4gPiA+ID4gPiA+ID4gIGluY2x1ZGUvdWFwaS9saW51eC9taWNf
-Y29tbW9uLmggICAgfCAgIDkgKy0NCj4gPiA+ID4gPiA+ID4gPiA+ICA3IGZpbGVzIGNoYW5nZWQs
-IDg1IGluc2VydGlvbnMoKyksIDIxOCBkZWxldGlvbnMoLSkNCj4gPiA+ID4gPiA+ID4gPiANCj4g
-PiA+ID4gPiA+ID4gPiBIYXZlIHlvdSBhbGwgc2VlbjoNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+
-ID4gPiA+ID4gPiANCmh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5j
-b20vP3VybD1odHRwcyUzQQ0KPiA+ID4gPiA+ID4gPiA+ICUyRiUyNQ0KPiA+ID4gPiA+ID4gPiA+
-IDI1DQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gDQo+ID4gMkZsb3JlLmtlcm5lbC5vcmclMkZyJTJG
-OGMxNDQzMTM2NTYzZGUzNDY5OWQyYzA4NGRmNDc4MTgxYzIwNWRiNC4xNg0KPiA+ID4gPiA+ID4g
-PiA+IA0KPiA+IA0KPiA+IDAzODU0NDE2LmdpdC5zdWRlZXAuZHV0dCU0MGludGVsLmNvbSZhbXA7
-ZGF0YT0wNCU3QzAxJTdDc2hlcnJ5LnN1biUNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiANCj4gPiA0
-MG54cC5jb20lN0NjMTljOTg3NjY3NDM0OTY5ODQ3ZTA4ZDg3YjA2ODVlOCU3QzY4NmVhMWQzYmMy
-YjRjNmYNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiANCj4gPiBhOTJjZDk5YzVjMzAxNjM1JTdDMCU3
-QzAlN0M2MzczOTQ2MTUyMzg5NDAzMjMlN0NVbmtub3duJTdDVFcNCj4gPiA+ID4gPiA+ID4gPiAN
-Cj4gPiANCj4gPiBGcGJHWnNiM2Q4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklp
-TENKQlRpSTZJazFoYVd3aUxDSlgNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiANCj4gPiBWQ0k2TW4w
-JTNEJTdDMTAwMCZhbXA7c2RhdGE9WnElMkZ0SFdUcSUyQnVJVkJZWEZHb2VCbXEwSkp6WWQNCj4g
-PiA+ID4gPiA+ID4gPiA5ekR5djROVk40VHBDJTJGVSUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+ID4g
-PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IExvb2tzIGxpa2UgdGhpcyBjb2RlIGlzIGFza2lu
-ZyB0byBqdXN0IGJlIGRlbGV0ZWQsIGlzDQo+ID4gPiA+ID4gPiA+ID4gdGhhdCBvayB3aXRoIHlv
-dT8NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IFllcywgSSBzYXcgdGhhdCBwYXRjaC4g
-SSdtIG9rIHdpdGggaXQuDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEdyZWF0LCBjYW4geW91
-IHBsZWFzZSBwcm92aWRlIGEgIlJldmlld2VkLWJ5OiIgb3IgIkFja2VkLQ0KPiA+ID4gPiA+ID4g
-Ynk6IiBmb3IgaXQ/DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IHRoYW5rcywNCj4gPiA+ID4g
-PiA+IA0KPiA+ID4gPiA+ID4gZ3JlZyBrLWgNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBTaGVycnkg
-dG9vayBtdWNoIGVmZm9ydCBvbiB0aGUgZmVhdHVyZXMgc3VwcG9ydCBvbiBpLk1YDQo+ID4gPiA+
-ID4gc2VyaWVzDQo+ID4gPiA+ID4gbGlrZQ0KPiA+ID4gPiANCj4gPiA+ID4gaS5NWDhRTS9pLk1Y
-OFFYUC9pLk1YOE1NLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IE5vdyBpdCBpcyBhIHBpdHkgdG8g
-ZGVsZXRlIHRoZSB2b3AgY29kZS4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBPbmUgcXVlc3Rpb24s
-DQo+ID4gPiA+ID4gY2FuIHdlIHJlc3VibWl0IHZvcCBjb2RlIGJ5IGNsZWFuIHVwLCBub3cgb25s
-eSBmb3IgaS5NWA0KPiA+ID4gPiA+IHNlcmllcyBhcw0KPiA+ID4gPiA+IER1dHQncw0KPiA+ID4g
-PiANCj4gPiA+ID4gc3VnZ2VzdGlvbiA/DQoNClJlc3VibWl0dGluZyB0aGUgVk9QIGNvZGUgd2l0
-aCBjbGVhbnVwcyB0YWlsb3JlZCBmb3IgaS5NWCBtYWtlcyBzZW5zZQ0KdG8gbWUuDQoNCj4gPiA+
-ID4gPiBPciB3ZSBoYXZlIHRvIGRyb3AgdGhlIGRlc2lnbiBhbmQgc3dpdGNoIHRvIHNlbGVjdCBv
-dGhlcg0KPiA+ID4gPiA+IHNvbHV0aW9ucyA/DQo+ID4gPiANCj4gPiA+IE9rYXksIHdlIHBsYW4g
-dG8gc3dpdGNoIHRvIE5UQiBzb2x1dGlvbi4NCj4gPiANCj4gPiBXaGF0IGlzIGEgIk5UQiBzb2x1
-dGlvbiIgZXhhY3RseT8NCj4gDQo+IFRoZSBkcml2ZXIgbG9jYXRlZCBhdCBkcml2ZXJzL250Yi8s
-IGl0IGFsc28gY2FuIHNldHVwIGEgcG9pbnQtdG8tDQo+IHBvaW50IFBDSS1FIGJ1cyBjb25uZWN0
-aW5nIGJldHdlZW4gdHdvIHN5c3RlbXMuDQo+IEJ1dCB3ZSBoYXZlbid0IGdvdCBhIGRlZXAgbG9v
-ayBvZiB0aGlzIGRyaXZlciB5ZXQsIHNvIHdlIGFyZSBub3Qgc3VyZQ0KPiB3aGV0aGVyIGl0IGNh
-biByZXBsYWNlIHRoZSB2b3AgZnJhbWV3b3JrLg0KPiANCj4gPiANCj4gPiA+IA0KPiA+ID4gPiBJ
-ZiB0aGlzIHdob2xlIHN1YnN5c3RlbSBpcyBiZWluZyBkZWxldGVkIGJlY2F1c2UgaXQgaXMgbm90
-IHVzZWQNCj4gPiA+ID4gYW5kDQo+ID4gPiA+IG5ldmVyIHNoaXBwZWQsIHllcywgcGxlYXNlIHVz
-ZSBhIGRpZmZlcmVudCBzb2x1dGlvbi4NCj4gPiA+ID4gDQo+ID4gPiA+IEkgZG9uJ3QgdW5kZXJz
-dGFuZCB3aHkgeW91IHdlcmUgdHJ5aW5nIHRvIHBpZ2d5LWJhY2sgb24gdGhpcw0KPiA+ID4gPiBj
-b2RlYmFzZSBpZiB0aGUgaGFyZHdhcmUgd2FzIHRvdGFsbHkgZGlmZmVyZW50LCBmb3Igc29tZSBy
-ZWFzb24NCj4gPiA+ID4gSQ0KPiA+ID4gPiB0aG91Z2h0IHRoaXMgd2FzIHRoZSBzYW1lIGhhcmR3
-YXJlLiAgV2hhdCBleGFjdGx5IGlzIHRoaXM/DQo+ID4gPiANCj4gPiA+IE5vdCB0aGUgd2hvbGUg
-Y29kZWJhc2UsIGp1c3QgdGhlIHZvcCBmcmFtZXdvcmsuDQo+ID4gDQo+ID4gVGhhdCBkaWRuJ3Qg
-YW5zd2VyIHRoZSBxdWVzdGlvbiBhdCBhbGwsIHdoYXQgYXJlIHlvdSBhbGwgdHJ5aW5nIHRvDQo+
-ID4gZG8gaGVyZSwgd2l0aA0KPiA+IHdoYXQgaGFyZHdhcmUsIHRoYXQgdGhlIFZPUCBjb2RlIHNl
-ZW1lZCBsaWtlIGEgZ29vZCBmaXQ/DQo+IA0KPiBWb3AgaXMgYSBjb21tb24gZnJhbWV3b3JrIHdo
-aWNoIGlzIGluZGVwZW5kZW50IG9mIHRoZSBJbnRlbCBNSUMNCj4gaGFyZHdhcmUuDQo+IFdlIHBs
-YW5lZCB0byByZXVzZSB2b3AgZnJhbWV3b3JrIG9uIHR3byBhcm02NCBhcmNoaXRlY3R1cmUgZGV2
-aWNlcywNCj4gdG8gc2V0dXAgdGhlIGNvbm5lY3Rpb24gYmV0d2VlbiB0d28gc3lzdGVtcyBiYXNl
-ZCBvbiB2aXJ0aW8gb3Zlcg0KPiBQQ0lFLg0KDQpZZXMsIHdlIHdhbnRlZCBWaXJ0aW8gT3ZlciBQ
-Q0llIChWT1ApIHRvIGJlIGluZGVwZW5kZW50IG9mIHRoZSBoYXJkd2FyZQ0KYXMgbXVjaCBhcyBw
-b3NzaWJsZS4gSXQgZGlkIGVuZCB1cCB1bmRlciB0aGUgbWljLyBkcml2ZXIgc3Vic3lzdGVtDQp0
-aG91Z2ggc28gaXQgd291bGQgYmUgZ29vZCB0byBhdHRlbXB0IHBsYWNpbmcgaXQgaW4gYSBnZW5l
-cmljIGZvbGRlcg0Kd2hpY2ggaXMgbm90IHRpZWQgdG8gYSBzcGVjaWZpYyBoYXJkd2FyZSBsYXll
-ciB0aGlzIHRpbWUgYXJvdW5kLg0KDQpSZWdhcmRzLA0KU3VkZWVwIER1dHQNCg==
+On Wed, Oct 28, 2020 at 11:05:49AM +0900, Yoshihiro Shimoda wrote:
+> Convert Renesas PCIe Host controller bindings documentation to
+> json-schema. Note that some compatible doesn't contain on
+> the original documantation so that incremental patches are required
+> for it.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../devicetree/bindings/pci/rcar-pci-host.yaml     | 146 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt |  72 ----------
+>  2 files changed, 146 insertions(+), 72 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
+> new file mode 100644
+> index 0000000..d286454
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
+> @@ -0,0 +1,146 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) 2020 Renesas Electronics Corp.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/rcar-pci-host.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas R-Car PCIe Host
+> +
+> +maintainers:
+> +  - Marek Vasut <marek.vasut+renesas@gmail.com>
+> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+allOf:
+  - $ref: pci-bus.yaml#
+
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - enum:
+> +            - renesas,pcie-r8a7742      # RZ/G1H
+> +            - renesas,pcie-r8a7743      # RZ/G1M
+> +            - renesas,pcie-r8a7744      # RZ/G1N
+> +            - renesas,pcie-r8a7790      # R-Car H2
+> +            - renesas,pcie-r8a7791      # R-Car M2-W
+> +            - renesas,pcie-r8a7793      # R-Car M2-N
+> +        - const: renesas,pcie-rcar-gen2 # R-Car Gen2 and RZ/G1
+> +      - items:
+> +        - enum:
+> +            - renesas,pcie-r8a774a1     # RZ/G2M
+> +            - renesas,pcie-r8a774b1     # RZ/G2N
+> +            - renesas,pcie-r8a774c0     # RZ/G2E
+> +            - renesas,pcie-r8a7795      # R-Car H3
+> +            - renesas,pcie-r8a7796      # R-Car M3-W
+> +            - renesas,pcie-r8a77961     # R-Car M3-W+
+> +            - renesas,pcie-r8a77980     # R-Car V3H
+> +            - renesas,pcie-r8a77990     # R-Car E3
+> +        - const: renesas,pcie-rcar-gen3 # R-Car Gen3 and RZ/G2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+
+> +  '#address-cells':
+> +    const: 3
+> +
+> +  '#size-cells':
+> +    const: 2
+
+No need to define these here as pci-bus.yaml does.
+
+> +
+> +  bus-range: true
+> +
+> +  device_type:
+> +    const: pci
+
+Same here.
+
+> +
+> +  ranges:
+> +    minItems: 4
+> +    maxItems: 4
+> +
+> +  dma-ranges:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+
+And this.
+
+> +
+> +  interrupt-map-mask: true
+> +
+> +  interrupt-map: true
+> +
+> +  clocks:
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pcie
+> +      - const: pcie_bus
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pcie
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+> +  - '#address-cells'
+> +  - '#size-cells'
+
+Already required by pci-bus.yaml
+
+> +  - bus-range
+
+This generally shouldn't be required if 0-255 is supported.
+
+> +  - device_type
+> +  - ranges
+
+Both already required by pci-bus.yaml
+
+> +  - dma-ranges
+> +  - interrupts
+
+> +  - '#interrupt-cells'
+> +  - interrupt-map-mask
+> +  - interrupt-map
+
+And these.
+
+> +  - clocks
+> +  - clock-names
+> +  - power-domains
+> +  - resets
+> +
+> +additionalProperties: false
+
+Use unevaluatedProperties instead.
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7791-cpg-mssr.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/r8a7791-sysc.h>
+> +
+> +    soc {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pcie: pcie@fe000000 {
+> +            compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-gen2";
+> +            reg = <0 0xfe000000 0 0x80000>;
+> +             #address-cells = <3>;
+> +             #size-cells = <2>;
+> +             bus-range = <0x00 0xff>;
+> +             device_type = "pci";
+> +             ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000>,
+> +                      <0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000>,
+> +                      <0x02000000 0 0x30000000 0 0x30000000 0 0x08000000>,
+> +                      <0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
+> +             dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>,
+> +                          <0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
+> +             interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> +                          <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+> +                          <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+> +             #interrupt-cells = <1>;
+> +             interrupt-map-mask = <0 0 0 0>;
+> +             interrupt-map = <0 0 0 0 &gic GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+> +             clocks = <&cpg CPG_MOD 319>, <&pcie_bus_clk>;
+> +             clock-names = "pcie", "pcie_bus";
+> +             power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+> +             resets = <&cpg 319>;
+> +             status = "disabled";
+
+Don't show status in examples.
+
+> +         };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> deleted file mode 100644
+> index 14d307d..0000000
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ /dev/null
+> @@ -1,72 +0,0 @@
+> -* Renesas R-Car PCIe interface
+> -
+> -Required properties:
+> -compatible: "renesas,pcie-r8a7742" for the R8A7742 SoC;
+> -	    "renesas,pcie-r8a7743" for the R8A7743 SoC;
+> -	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
+> -	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
+> -	    "renesas,pcie-r8a774b1" for the R8A774B1 SoC;
+> -	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
+> -	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
+> -	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
+> -	    "renesas,pcie-r8a7791" for the R8A7791 SoC;
+> -	    "renesas,pcie-r8a7793" for the R8A7793 SoC;
+> -	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
+> -	    "renesas,pcie-r8a7796" for the R8A77960 SoC;
+> -	    "renesas,pcie-r8a77961" for the R8A77961 SoC;
+> -	    "renesas,pcie-r8a77980" for the R8A77980 SoC;
+> -	    "renesas,pcie-r8a77990" for the R8A77990 SoC;
+> -	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
+> -				     RZ/G1 compatible device.
+> -	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 or
+> -				     RZ/G2 compatible device.
+> -
+> -	    When compatible with the generic version, nodes must list the
+> -	    SoC-specific version corresponding to the platform first
+> -	    followed by the generic version.
+> -
+> -- reg: base address and length of the PCIe controller registers.
+> -- #address-cells: set to <3>
+> -- #size-cells: set to <2>
+> -- bus-range: PCI bus numbers covered
+> -- device_type: set to "pci"
+> -- ranges: ranges for the PCI memory and I/O regions.
+> -- dma-ranges: ranges for the inbound memory regions.
+> -- interrupts: two interrupt sources for MSI interrupts, followed by interrupt
+> -	source for hardware related interrupts (e.g. link speed change).
+> -- #interrupt-cells: set to <1>
+> -- interrupt-map-mask and interrupt-map: standard PCI properties
+> -	to define the mapping of the PCIe interface to interrupt numbers.
+> -- clocks: from common clock binding: clock specifiers for the PCIe controller
+> -	and PCIe bus clocks.
+> -- clock-names: from common clock binding: should be "pcie" and "pcie_bus".
+> -
+> -Optional properties:
+> -- phys: from common PHY binding: PHY phandle and specifier (only make sense
+> -	for R-Car gen3 SoCs where the PCIe PHYs have their own register blocks).
+> -- phy-names: from common PHY binding: should be "pcie".
+> -
+> -Example:
+> -
+> -SoC-specific DT Entry:
+> -
+> -	pcie: pcie@fe000000 {
+> -		compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-gen2";
+> -		reg = <0 0xfe000000 0 0x80000>;
+> -		#address-cells = <3>;
+> -		#size-cells = <2>;
+> -		bus-range = <0x00 0xff>;
+> -		device_type = "pci";
+> -		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
+> -			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
+> -			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
+> -			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
+> -		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000
+> -			      0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
+> -		interrupts = <0 116 4>, <0 117 4>, <0 118 4>;
+> -		#interrupt-cells = <1>;
+> -		interrupt-map-mask = <0 0 0 0>;
+> -		interrupt-map = <0 0 0 0 &gic 0 116 4>;
+> -		clocks = <&mstp3_clks R8A7791_CLK_PCIE>, <&pcie_bus_clk>;
+> -		clock-names = "pcie", "pcie_bus";
+> -	};
+> -- 
+> 2.7.4
+> 
