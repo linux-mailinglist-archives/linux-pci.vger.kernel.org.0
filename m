@@ -2,65 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8936929CD83
-	for <lists+linux-pci@lfdr.de>; Wed, 28 Oct 2020 03:06:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A46CF29D547
+	for <lists+linux-pci@lfdr.de>; Wed, 28 Oct 2020 23:00:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725770AbgJ1CGC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 27 Oct 2020 22:06:02 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:3619 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725805AbgJ1CGC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 27 Oct 2020 22:06:02 -0400
-X-IronPort-AV: E=Sophos;i="5.77,425,1596466800"; 
-   d="scan'208";a="60779613"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 28 Oct 2020 11:06:00 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9BAD14178AB9;
-        Wed, 28 Oct 2020 11:06:00 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     bhelgaas@google.com, marek.vasut+renesas@gmail.com,
-        robh+dt@kernel.org
-Cc:     prabhakar.mahadev-lad.rj@bp.renesas.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 3/3] dt-bindings: pci: rcar-pci: Add device tree support for r8a774e1
-Date:   Wed, 28 Oct 2020 11:05:51 +0900
-Message-Id: <1603850751-32762-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        id S1729350AbgJ1V7q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Oct 2020 17:59:46 -0400
+Received: from mx.socionext.com ([202.248.49.38]:49812 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729325AbgJ1V7p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Oct 2020 17:59:45 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 28 Oct 2020 10:31:54 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id B7AE560058;
+        Wed, 28 Oct 2020 10:31:54 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 28 Oct 2020 10:31:54 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 00A931A0509;
+        Wed, 28 Oct 2020 10:31:53 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v8 0/3] PCI: uniphier: Add PME/AER support for UniPhier PCIe host controller
+Date:   Wed, 28 Oct 2020 10:31:40 +0900
+Message-Id: <1603848703-21099-1-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1603850751-32762-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1603850751-32762-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+The original subject up to v6 is
+"PCI: uniphier: Add features for UniPhier PCIe host controller".
 
-Add PCIe support for the RZ/G2H (a.k.a. R8A774E1).
+This adds a new function called by MSI handler in DesignWare PCIe framework,
+that invokes PME and AER funcions to detect the factor from SoC-dependent
+registers.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/pci/rcar-pci-host.yaml | 1 +
- 1 file changed, 1 insertion(+)
+The iATU patches is split from this series as
+"PCI: dwc: Move iATU register mapping to common framework".
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-index 1c6a03b..48dfec9 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-@@ -28,6 +28,7 @@ properties:
-             - renesas,pcie-r8a774a1     # RZ/G2M
-             - renesas,pcie-r8a774b1     # RZ/G2N
-             - renesas,pcie-r8a774c0     # RZ/G2E
-+            - renesas,pcie-r8a774e1     # RZ/G2H
-             - renesas,pcie-r8a7795      # R-Car H3
-             - renesas,pcie-r8a7796      # R-Car M3-W
-             - renesas,pcie-r8a77961     # R-Car M3-W+
+Changes since v7:
+- Add Reviewed-by: line to 1st and 3rd patches
+
+Changes since v6:
+- Separate patches for iATU and phy error from this series
+- Add Reviewed-by: line to dwc patch
+
+Changes since v5:
+- Add pcie_port_service_get_irq() function to pcie/portdrv
+- Call pcie_port_service_get_irq() to get vIRQ interrupt number for PME/AER
+- Rebase to the latest linux-next branch,
+  and remove devm_platform_ioremap_resource_byname() replacement patch
+
+Changes since v4:
+- Add Acked-by: line to dwc patch
+
+Changes since v3:
+- Move msi_host_isr() call into dw_handle_msi_irq()
+- Move uniphier_pcie_misc_isr() call into the guard of chained_irq
+- Use a bool argument is_msi instead of pci_msi_enabled()
+- Consolidate handler calls for the same interrupt
+- Fix typos in commit messages
+
+Changes since v2:
+- Avoid printing phy error message in case of EPROBE_DEFER
+- Fix iATU register mapping method
+- dt-bindings: Add Acked-by: line
+- Fix typos in commit messages
+- Use devm_platform_ioremap_resource_byname()
+
+Changes since v1:
+- Add check if struct resource is NULL
+- Fix warning in the type of dev_err() argument
+
+Kunihiko Hayashi (3):
+  PCI: portdrv: Add pcie_port_service_get_irq() function
+  PCI: dwc: Add msi_host_isr() callback
+  PCI: uniphier: Add misc interrupt handler to invoke PME and AER
+
+ drivers/pci/controller/dwc/pcie-designware-host.c |  3 +
+ drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c        | 77 +++++++++++++++++++----
+ drivers/pci/pcie/portdrv.h                        |  1 +
+ drivers/pci/pcie/portdrv_core.c                   | 16 +++++
+ 5 files changed, 87 insertions(+), 11 deletions(-)
+
 -- 
 2.7.4
 
