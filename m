@@ -2,167 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4927E29E078
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 02:22:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 464C629DF6E
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 02:02:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbgJ1WEw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Oct 2020 18:04:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50718 "EHLO mail.kernel.org"
+        id S1731461AbgJ1WRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 28 Oct 2020 18:17:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:58445 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728553AbgJ1WCY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:02:24 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72958247CA;
-        Wed, 28 Oct 2020 15:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603899668;
-        bh=zOJDHvxAOzkt5Os8SlOZ13QHa0aFK9IK3J1D0wsqnHA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/r+56tdl0xlwkYmlH+MWBq5lmWTQT7/pxd8Vwsb35WO0flZzuFApTEDboQM0KncS
-         B1SJbO0SnpL7IVwCeF/2eY30sxIitNa1+02swnmeBxVfQDpp7jSsOpCBss4dmdFMhG
-         cI/SQ1fIaZ5Ul3yxgIJp1E2SSusvDQFphdCmCpx8=
-Date:   Wed, 28 Oct 2020 16:42:00 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     Sherry Sun <sherry.sun@nxp.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "vincent.whitchurch@axis.com" <vincent.whitchurch@axis.com>,
-        "sudeep.dutt@intel.com" <sudeep.dutt@intel.com>,
-        "ashutosh.dixit@intel.com" <ashutosh.dixit@intel.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [EXT] Re: [PATCH V5 0/2] Change vring space from nomal memory to
- dma coherent memory
-Message-ID: <20201028154200.GB2780014@kroah.com>
-References: <20201028020305.10593-1-sherry.sun@nxp.com>
- <20201028055836.GA244690@kroah.com>
- <AM0PR04MB4947032368486CC9874C812692170@AM0PR04MB4947.eurprd04.prod.outlook.com>
- <20201028070712.GA1649838@kroah.com>
- <AM8PR04MB7315D583A9490E642ED13071FF170@AM8PR04MB7315.eurprd04.prod.outlook.com>
- <20201028111351.GA1964851@kroah.com>
- <AM8PR04MB731570801A528203647FAD0AFF170@AM8PR04MB7315.eurprd04.prod.outlook.com>
+        id S1731459AbgJ1WRH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Oct 2020 18:17:07 -0400
+IronPort-SDR: tTBMoPS/hCNOyFsZL3XBzSXqn956hNj6ObC4YkZVzzVjW45p3LYwVwzz14ahwVf3Tq3CdQxKwJ
+ 1s9f9dMckjqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="147581619"
+X-IronPort-AV: E=Sophos;i="5.77,427,1596524400"; 
+   d="scan'208";a="147581619"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 10:13:51 -0700
+IronPort-SDR: rdROUzDEGk2wo3Npe3je3eTrc3dLnV4UgVqN9FX4UpdDVebiBYWc2eO8G/wZ8eHuduCXAY4LF1
+ 92hA9IyS0fVQ==
+X-IronPort-AV: E=Sophos;i="5.77,427,1596524400"; 
+   d="scan'208";a="536311333"
+Received: from rramir3-mobl.amr.corp.intel.com (HELO [10.254.71.48]) ([10.254.71.48])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 10:13:50 -0700
+Subject: Re: [PATCH v11 4/5] PCI/portdrv: Remove redundant pci_aer_available()
+ check in DPC enable logic
+To:     Ethan Zhao <xerces.zhao@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>, knsathya@kernel.org
+References: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <2faef6f884aae9ae92e57e7c6a88a6195553c684.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <CAKF3qh1J=_nxFTztyEjMBJav_W+JY60gzf27dvantMeKU+Aatg@mail.gmail.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <ee679e38-dd8a-7d43-8715-a4e454664f89@linux.intel.com>
+Date:   Wed, 28 Oct 2020 10:13:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM8PR04MB731570801A528203647FAD0AFF170@AM8PR04MB7315.eurprd04.prod.outlook.com>
+In-Reply-To: <CAKF3qh1J=_nxFTztyEjMBJav_W+JY60gzf27dvantMeKU+Aatg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 03:11:15PM +0000, Andy Duan wrote:
-> From: Greg KH <gregkh@linuxfoundation.org> Sent: Wednesday, October 28, 2020 7:14 PM
-> > On Wed, Oct 28, 2020 at 10:17:39AM +0000, Andy Duan wrote:
-> > > From: Greg KH <gregkh@linuxfoundation.org> Sent: Wednesday, October
-> > > 28, 2020 3:07 PM
-> > > > On Wed, Oct 28, 2020 at 06:05:28AM +0000, Sherry Sun wrote:
-> > > > > Hi Greg,
-> > > > >
-> > > > > > Subject: Re: [PATCH V5 0/2] Change vring space from nomal memory
-> > > > > > to dma coherent memory
-> > > > > >
-> > > > > > On Wed, Oct 28, 2020 at 10:03:03AM +0800, Sherry Sun wrote:
-> > > > > > > Changes in V5:
-> > > > > > > 1. Reorganize the vop_mmap function code in patch 1, which is
-> > > > > > > done by
-> > > > > > Christoph.
-> > > > > > > 2. Completely remove the unnecessary code related to reassign
-> > > > > > > the used ring for card in patch 2.
-> > > > > > >
-> > > > > > > The original vop driver only supports dma coherent device, as
-> > > > > > > it allocates and maps vring by _get_free_pages and
-> > > > > > > dma_map_single, but not use dma_sync_single_for_cpu/device to
-> > > > > > > sync the updates of device_page/vring between EP and RC, which
-> > > > > > > will cause memory synchronization problem for device don't support
-> > hardware dma coherent.
-> > > > > > >
-> > > > > > > And allocate vrings use dma_alloc_coherent is a common way in
-> > > > > > > kernel, as the memory interacted between two systems should
-> > > > > > > use consistent memory to avoid caching effects. So here add
-> > > > > > > noncoherent platform
-> > > > > > support for vop driver.
-> > > > > > > Also add some related dma changes to make sure noncoherent
-> > > > > > > platform works well.
-> > > > > > >
-> > > > > > > Sherry Sun (2):
-> > > > > > >   misc: vop: change the way of allocating vrings and device page
-> > > > > > >   misc: vop: do not allocate and reassign the used ring
-> > > > > > >
-> > > > > > >  drivers/misc/mic/bus/vop_bus.h     |   2 +
-> > > > > > >  drivers/misc/mic/host/mic_boot.c   |   9 ++
-> > > > > > >  drivers/misc/mic/host/mic_main.c   |  43 ++------
-> > > > > > >  drivers/misc/mic/vop/vop_debugfs.c |   4 -
-> > > > > > >  drivers/misc/mic/vop/vop_main.c    |  70 +-----------
-> > > > > > >  drivers/misc/mic/vop/vop_vringh.c  | 166 ++++++++++-------------------
-> > > > > > >  include/uapi/linux/mic_common.h    |   9 +-
-> > > > > > >  7 files changed, 85 insertions(+), 218 deletions(-)
-> > > > > >
-> > > > > > Have you all seen:
-> > > > > >
-> > > > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%
-> > > > > > 25
-> > > > > >
-> > > >
-> > 2Flore.kernel.org%2Fr%2F8c1443136563de34699d2c084df478181c205db4.16
-> > > > > >
-> > > >
-> > 03854416.git.sudeep.dutt%40intel.com&amp;data=04%7C01%7Csherry.sun%
-> > > > > >
-> > > >
-> > 40nxp.com%7Cc19c987667434969847e08d87b0685e8%7C686ea1d3bc2b4c6f
-> > > > > >
-> > > >
-> > a92cd99c5c301635%7C0%7C0%7C637394615238940323%7CUnknown%7CTW
-> > > > > >
-> > > >
-> > FpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJX
-> > > > > >
-> > > >
-> > VCI6Mn0%3D%7C1000&amp;sdata=Zq%2FtHWTq%2BuIVBYXFGoeBmq0JJzYd
-> > > > > > 9zDyv4NVN4TpC%2FU%3D&amp;reserved=0
-> > > > > >
-> > > > > > Looks like this code is asking to just be deleted, is that ok with you?
-> > > > >
-> > > > > Yes, I saw that patch. I'm ok with it.
-> > > >
-> > > > Great, can you please provide a "Reviewed-by:" or "Acked-by:" for it?
-> > > >
-> > > > thanks,
-> > > >
-> > > > greg k-h
-> > >
-> > > Sherry took much effort on the features support on i.MX series like
-> > i.MX8QM/i.MX8QXP/i.MX8MM.
-> > >
-> > > Now it is a pity to delete the vop code.
-> > >
-> > > One question,
-> > > can we resubmit vop code by clean up, now only for i.MX series as Dutt's
-> > suggestion ?
-> > > Or we have to drop the design and switch to select other solutions ?
-> >
-> 
-> Okay, we plan to switch to NTB solution.
 
-What is a "NTB solution" exactly?
 
->  
-> > If this whole subsystem is being deleted because it is not used and never shipped,
-> > yes, please use a different solution.
-> > 
-> > I don't understand why you were trying to piggy-back on this codebase if the
-> > hardware was totally different, for some reason I thought this was the same
-> > hardware.  What exactly is this?
-> 
-> Not the whole codebase, just the vop framework.
+On 10/27/20 11:00 PM, Ethan Zhao wrote:
+> On Tue, Oct 27, 2020 at 10:00 PM Kuppuswamy Sathyanarayanan
+> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>>
+>> In DPC service enable logic, check for
+>> services & PCIE_PORT_SERVICE_AER implies pci_aer_available()
+> How about PCIE_PORT_SERVICE_AER is not configured, but
+> pcie_aer_disable == 0 ？
+Its not possible in current code flow. DPC service is configured
+following AER service configuration.
+>> is true. So there is no need to explicitly check it again.
+>>
+>> Also, passing pcie_ports=dpc-native in kernel command line
+>> implies DPC needs to be enabled in native mode irrespective
+>> of AER ownership status. So checking for pci_aer_available()
+>> without checking for pcie_ports status is incorrect.
+>>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/pcie/portdrv_core.c | 1 -
+>>   1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+>> index 2c0278f0fdcc..e257a2ca3595 100644
+>> --- a/drivers/pci/pcie/portdrv_core.c
+>> +++ b/drivers/pci/pcie/portdrv_core.c
+>> @@ -252,7 +252,6 @@ static int get_port_device_capability(struct pci_dev *dev)
+>>           * permission to use AER.
+>>           */
+>>          if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+>> -           pci_aer_available() &&
+>>              (host->native_dpc || (services & PCIE_PORT_SERVICE_AER)))
+>>                  services |= PCIE_PORT_SERVICE_DPC;
+>>
+>> --
+>> 2.17.1
+>>
 
-That didn't answer the question at all, what are you all trying to do
-here, with what hardware, that the VOP code seemed like a good fit?
-
-thanks,
-
-greg k-h
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
