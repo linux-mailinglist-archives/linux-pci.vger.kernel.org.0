@@ -2,99 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 834DB29F4A3
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 20:14:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2EEE29F540
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 20:30:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725931AbgJ2TOE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 15:14:04 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:45726 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725966AbgJ2TOB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 15:14:01 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1725863AbgJ2TaZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Oct 2020 15:30:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726374AbgJ2TaZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Oct 2020 15:30:25 -0400
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E4BFEC00A7;
-        Thu, 29 Oct 2020 19:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1603998841; bh=RO/8M1ouuGZ/BKWm6mH9mNZrmilurSWh3/7c5LQp898=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=YE3YxNgWpjbsd6DPPOk8lpRdb+O7t1s4k0Nc+/dowIgvIPez0clOaqyt26bjAaTxJ
-         humUSu6qp/9p2sThN4mZj1rivZwDtQ0CszH7vvVyfCBgRX3OfUEVspfFchFYoFECIM
-         6QN5JgShgPLpR00hTJemUxSi3bnNNe0ACXX0JZmg93FCUFBdv2+xoI+1fdET2+hl1T
-         LkSNSuJuCKZKX/GcC/aMHwy3krp3M+X/7w3Xh2JdleiGD93zP1Yfrrf0/aOVLRuLUU
-         FKz+fIl8fcUiAvpeuXbhQMEdFXxhnOIJpTgsQa+dlXn7SdWhNxnojkY6KRBEFe1HKO
-         774zVaerCQBgw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8C85DA01F0;
-        Thu, 29 Oct 2020 19:13:59 +0000 (UTC)
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] MAINTAINERS: Add Synopsys xData IP driver maintainer
-Date:   Thu, 29 Oct 2020 20:13:40 +0100
-Message-Id: <f8e5bba9f878e176668fe7e4fb2e790d9df8bc71.1603998630.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1603998630.git.gustavo.pimentel@synopsys.com>
-References: <cover.1603998630.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1603998630.git.gustavo.pimentel@synopsys.com>
-References: <cover.1603998630.git.gustavo.pimentel@synopsys.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id ED0D3204FD;
+        Thu, 29 Oct 2020 19:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603999824;
+        bh=MKfSe1ErAg1ensKCCgvIbXqQFpX3QbKj0Wf0wExX180=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LGGw3FyNE/xfEtfU/rXpitDOkY0ZfMTLXTYs/a8KLT1a8GuhRBUxbDvZUbaXUNegd
+         NRlvRDcdC9bYCHInrsKlOyoDyO3dynfK5Y3UJ8M0PNjvQkHz2fM44z1yUnZ2gaznkx
+         MReo3sAVrr2UfSvJOXuUpVz/KGYsPDG/m9vWKv2I=
+Date:   Thu, 29 Oct 2020 14:30:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>, vtolkm@gmail.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20201029193022.GA476048@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <871rhhmgkq.fsf@toke.dk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Synopsys xData IP driver maintainer.
+On Thu, Oct 29, 2020 at 12:12:21PM +0100, Toke Høiland-Jørgensen wrote:
+> Pali Rohár <pali@kernel.org> writes:
 
-This driver aims to support Synopsys xData IP and is normally distributed
-along with Synopsys PCIe EndPoint IP as a PCIe traffic generator (depends
-of the use and licensing agreement).
+> > I have been testing mainline kernel on Turris Omnia with two PCIe
+> > default cards (WLE200 and WLE900) and it worked fine. But I do not know
+> > if I had ASPM enabled or not.
+> >
+> > So it is working fine for you when CONFIG_PCIEASPM is disabled and whole
+> > issue is only when CONFIG_PCIEASPM is enabled?
+> 
+> Yup, exactly. And I'm also currently testing with the default WLE200/900
+> cards... I just tried sticking an MT76-based WiFi card into the third
+> PCI slot, and that doesn't come up either when I enable PCIEASPM.
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- Documentation/misc-devices/dw-xdata-pcie.rst | 4 ++--
- MAINTAINERS                                  | 7 +++++++
- 2 files changed, 9 insertions(+), 2 deletions(-)
+Huh.  So IIUC, the following cases all try to retrain the link and it
+fails to come up again:
 
-diff --git a/Documentation/misc-devices/dw-xdata-pcie.rst b/Documentation/misc-devices/dw-xdata-pcie.rst
-index 4d4616e..3d2981d 100644
---- a/Documentation/misc-devices/dw-xdata-pcie.rst
-+++ b/Documentation/misc-devices/dw-xdata-pcie.rst
-@@ -1,6 +1,6 @@
- .. SPDX-License-Identifier: GPL-2.0
- 
--===========================================================================w
-+===========================================================================
- Driver for Synopsys DesignWare PCIe traffic generator (also known as xData)
- ===========================================================================
- 
-@@ -40,4 +40,4 @@ Request PCIe link performance analysis:
- 	echo p > /sys/module/dw_xdata_pcie/parameters/command
-    - Output example:
- 	dw-xdata-pcie 0000:01.0: xData: requested performance analysis
--	dw-xdata-pcie 0000:01.0: xData: time=112000000us, read=0 MB/s, write=0 MB/s
-+	dw-xdata-pcie 0000:01.0: xData: time=100000000 us, write=0 MB/s, read=0 MB/s
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8671573..8856f6b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4983,6 +4983,13 @@ S:	Maintained
- F:	drivers/dma/dw-edma/
- F:	include/linux/dma/edma.h
- 
-+DESIGNWARE XDATA IP DRIVER
-+M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/misc-devices/dw-xdata-pcie.rst
-+F:	drivers/misc/dw-xdata-pcie.c
-+
- DESIGNWARE USB2 DRD IP DRIVER
- M:	Minas Harutyunyan <hminas@synopsys.com>
- L:	linux-usb@vger.kernel.org
--- 
-2.7.4
+  - aardvark + WLE900VX (see commit 43fc679ced18)
+  - mvebu + WLE200
+  - mvebu + WLE900
+  - mvebu + MT76
 
+In all these cases, Linux was able to enumerate the NIC, which means
+the link was up when firmware handed it off.
+
+I think Linux decided the Common Clock Configuration was wrong, so it
+tried to fix it and retrain the link, and the link didn't come back
+up.
+
+I don't have "lspci -vv" output from all of them, but in vtolkm's
+case, the firmware handed off with:
+
+  00:02.0 Root Port to [bus 02]  SlotClk+ CommClk+
+  02:00.0 QCA986x/988x NIC       SlotClk+ CommClk-
+
+Per spec (PCIe r5, sec 7.5.3.7), SlotClk is HwInit and CommClk is RW
+and should power up as 0.  If I'm reading the implementation note
+correctly, if SlotClk is set on both ends of the link, software should
+set CommClk, so the config above *does* look wrong, and CommClk+ on
+the Root Port suggests that firmware set it.
+
+I think both the aardvark and mvebu systems probably use U-Boot.  I
+don't know U-Boot at all, but I don't see anything in it that touches
+Link Control.  I'm curious what happens if you put one of these cards
+in a PC.  If anybody tries it, please collect the "sudo lspci -vv" and
+dmesg output.
+
+We could quirk these NICs to avoid the retrain, but since aardvark and
+mvebu have no obvious connection and WLE200/WLE900 and MT76 have no
+obvious connection, I doubt there's a simple hardware defect that
+explains all these.  
+
+Maybe we're doing something wrong in the retrain, but obviously the
+link came up in the first place.  AFAIK the only thing we're changing
+is the CommClk setting, and that looks legitimate per spec.
+
+Another experiment: build kernel without CONFIG_PCIEASPM, set $ROOT
+and $NIC appropriately, and try the following:
+
+  # Set $ROOT and $NIC (update to match your system):
+
+    # ROOT=00:02.0
+    # NIC=02:00.0
+
+  # Dump the Root Port and NIC Link registers:
+
+    # setpci -s$ROOT CAP_EXP+0xc.l              # Link Capabilities
+    # setpci -s$ROOT CAP_EXP+0x10.w             # Link Control
+    # setpci -s$ROOT CAP_EXP+0x12.w             # Link Status
+
+    # setpci -s$NIC  CAP_EXP+0xc.l              # Link Capabilities
+    # setpci -s$NIC  CAP_EXP+0x10.w             # Link Control
+    # setpci -s$NIC  CAP_EXP+0x12.w             # Link Status
+
+  # Retrain the link:
+
+    # setpci -s$ROOT CAP_EXP+0x10.w=0x0020      # Link Control Retrain Link
+    # sleep 1
+    # setpci -s$ROOT CAP_EXP+0x12.w             # Link Status
+    # setpci -s$NIC  CAP_EXP+0x12.w             # Link Status
+
+  # Set CommClk+ and retrain the link:
+
+    # setpci -s$NIC  CAP_EXP+0x10.w=0x0040      # Link Control Common Clock
+    # setpci -s$ROOT CAP_EXP+0x10.w=0x0040      # Link Control Common Clock
+    # setpci -s$ROOT CAP_EXP+0x10.w=0x0060      # Link Control RL + CC
+    # sleep 1
+    # setpci -s$ROOT CAP_EXP+0x12.w             # Link Status
+    # setpci -s$NIC  CAP_EXP+0x12.w             # Link Status
