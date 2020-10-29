@@ -2,112 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D86D829E68A
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 09:39:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02BF829E72D
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 10:24:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgJ2IjM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 04:39:12 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11552 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727747AbgJ2IjH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 04:39:07 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f9a55af0000>; Wed, 28 Oct 2020 22:39:59 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 29 Oct
- 2020 05:40:16 +0000
-Received: from vidyas-desktop.nvidia.com (172.20.13.39) by mail.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Thu, 29 Oct 2020 05:40:12 +0000
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
-Date:   Thu, 29 Oct 2020 11:09:59 +0530
-Message-ID: <20201029053959.31361-3-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201029053959.31361-1-vidyas@nvidia.com>
-References: <20201029053959.31361-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1725948AbgJ2JY6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Oct 2020 05:24:58 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63947 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725803AbgJ2JY5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 29 Oct 2020 05:24:57 -0400
+IronPort-SDR: 1zFzAifahJMs6YDUyQnW5fmrYYd2o3UsTSXqluptXGuuVvmjhLIa3YOSocdKSSysXoEAbqkkRl
+ pa/6M0dDBE/g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="147684965"
+X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
+   d="scan'208";a="147684965"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2020 02:24:57 -0700
+IronPort-SDR: 1qOSSQvFXfDbo33OAuDktFbq6SQGgfnxx762j56lkbDKoe/1c3hBoGHjSpN5SyCWLgyGR4cjcu
+ iasUSCHIBQcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,429,1596524400"; 
+   d="scan'208";a="536595407"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2020 02:24:54 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 5C0DB4E1; Thu, 29 Oct 2020 11:24:53 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Lukas Wunner <lukas@wunner.de>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Utkarsh Patel <utkarsh.h.patel@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        linux-pci@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH] PCI/PM: Do not generate wakeup event when runtime resuming bus
+Date:   Thu, 29 Oct 2020 12:24:53 +0300
+Message-Id: <20201029092453.69869-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1603949999; bh=OzLT6vpwwjR959ff9oUCGEtnW0TMQ/fO6AW9AajK7ew=;
-        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
-         References:X-NVConfidentiality:MIME-Version:Content-Type;
-        b=k/GTzF7bCXSeSArYLqgI7gzP4JB/MwmBxL1s31un3sJMwKd7xigDBbyswS4x8lH67
-         Q/BOBmA7yABnimvlSQREqoXGHNB7Bl9vCw9lOYmPPZ51y2v/BxBjVgrfF2+Tli07sh
-         lioFD93X0CYd3dnn261E4VDPs1XnQMWsdMWf+39v8ZqdIAFfLhm4cXj2OUlYiQ/UHZ
-         GcZcpR/29CB7jZQYKvsIrwJs8Er+vl/gYwQOHsIt9N8jvEGz4OFazYTNQyfSOADeUl
-         XapNj/zx9EIQL4GViGTpzr/D8rn11mbljBsfpIJUzSc9YrnZiuwb9y+mbLRF/OSzqQ
-         p3+6/JOsxTBGw==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DesignWare core has a TLP digest (TD) override bit in one of the control
-registers of ATU. This bit also needs to be programmed for proper ECRC
-functionality. This is currently identified as an issue with DesignWare
-IP version 4.90a. This patch does the required programming in ATU upon
-querying the system policy for ECRC.
+When a PCI bridge is runtime resumed from D3cold the underlying bus is
+walked and the attached devices are runtime resumed as well. However, in
+addition to that we also generate a wakeup event for these devices even
+though this actually is not a real wakeup event coming from the
+hardware.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
+Normally this does not cause problems but when combined with
+/sys/power/wakeup_count like using the steps below:
+
+  # count=$(cat /sys/power/wakeup_count)
+  # echo $count > /sys/power/wakeup_count
+  # echo mem > /sys/power/state
+
+The system suspend cycle might get aborted at this point if a PCI bridge
+that was runtime suspended (D3cold) was runtime resumed for any reason.
+The runtime resume calls pci_wakeup_bus() and that generates wakeup
+event increasing wakeup_count.
+
+Since this is not a real wakeup event we can prevent the above from
+happening by removing the call to pci_wakeup_event() in
+pci_wakeup_bus(). While there rename pci_wakeup_bus() to
+pci_resume_bus() to better reflect what it does.
+
+Reported-by: Utkarsh Patel <utkarsh.h.patel@intel.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
-V3:
-* Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
+ drivers/gpu/vga/vga_switcheroo.c |  2 +-
+ drivers/pci/pci.c                | 16 +++++-----------
+ include/linux/pci.h              |  2 +-
+ 3 files changed, 7 insertions(+), 13 deletions(-)
 
-V2:
-* Addressed Jingoo's review comment
-* Removed saving 'td' bit information in 'dw_pcie' structure
-
- drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
- drivers/pci/controller/dwc/pcie-designware.h | 1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index b5e438b70cd5..cbd651b219d2 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -246,6 +246,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
- 				 upper_32_bits(pci_addr));
- 	val = type | PCIE_ATU_FUNC_NUM(func_no);
-+	if (pci->version == 0x490A)
-+		val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
- 	val = upper_32_bits(size - 1) ?
- 		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
-@@ -294,8 +296,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 			   lower_32_bits(pci_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
- 			   upper_32_bits(pci_addr));
--	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
--			   PCIE_ATU_FUNC_NUM(func_no));
-+	val = type | PCIE_ATU_FUNC_NUM(func_no);
-+	if (pci->version == 0x490A)
-+		val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
-+	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
+index 087304b1a5d7..8843b078ad4e 100644
+--- a/drivers/gpu/vga/vga_switcheroo.c
++++ b/drivers/gpu/vga/vga_switcheroo.c
+@@ -1039,7 +1039,7 @@ static int vga_switcheroo_runtime_resume(struct device *dev)
+ 	mutex_lock(&vgasr_mutex);
+ 	vga_switcheroo_power_switch(pdev, VGA_SWITCHEROO_ON);
+ 	mutex_unlock(&vgasr_mutex);
+-	pci_wakeup_bus(pdev->bus);
++	pci_resume_bus(pdev->bus);
+ 	ret = dev->bus->pm->runtime_resume(dev);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 6d4d5a2f923d..b25dfa63eeb9 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1174,26 +1174,20 @@ int pci_platform_power_transition(struct pci_dev *dev, pci_power_t state)
+ }
+ EXPORT_SYMBOL_GPL(pci_platform_power_transition);
  
- 	/*
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index e7f441441db2..b01ef407fd52 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -89,6 +89,7 @@
- #define PCIE_ATU_TYPE_IO		0x2
- #define PCIE_ATU_TYPE_CFG0		0x4
- #define PCIE_ATU_TYPE_CFG1		0x5
-+#define PCIE_ATU_TD_SHIFT		8
- #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
- #define PCIE_ATU_CR2			0x908
- #define PCIE_ATU_ENABLE			BIT(31)
+-/**
+- * pci_wakeup - Wake up a PCI device
+- * @pci_dev: Device to handle.
+- * @ign: ignored parameter
+- */
+-static int pci_wakeup(struct pci_dev *pci_dev, void *ign)
++static int pci_resume_one(struct pci_dev *pci_dev, void *ign)
+ {
+-	pci_wakeup_event(pci_dev);
+ 	pm_request_resume(&pci_dev->dev);
+ 	return 0;
+ }
+ 
+ /**
+- * pci_wakeup_bus - Walk given bus and wake up devices on it
++ * pci_resume_bus - Walk given bus and runtime resume devices on it
+  * @bus: Top bus of the subtree to walk.
+  */
+-void pci_wakeup_bus(struct pci_bus *bus)
++void pci_resume_bus(struct pci_bus *bus)
+ {
+ 	if (bus)
+-		pci_walk_bus(bus, pci_wakeup, NULL);
++		pci_walk_bus(bus, pci_resume_one, NULL);
+ }
+ 
+ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+@@ -1256,7 +1250,7 @@ int pci_power_up(struct pci_dev *dev)
+ 		 * may be powered on into D0uninitialized state, resume them to
+ 		 * give them a chance to suspend again
+ 		 */
+-		pci_wakeup_bus(dev->subordinate);
++		pci_resume_bus(dev->subordinate);
+ 	}
+ 
+ 	return pci_raw_set_power_state(dev, PCI_D0);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 22207a79762c..9256ef2e4327 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1271,7 +1271,7 @@ bool pci_dev_run_wake(struct pci_dev *dev);
+ void pci_d3cold_enable(struct pci_dev *dev);
+ void pci_d3cold_disable(struct pci_dev *dev);
+ bool pcie_relaxed_ordering_enabled(struct pci_dev *dev);
+-void pci_wakeup_bus(struct pci_bus *bus);
++void pci_resume_bus(struct pci_bus *bus);
+ void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state);
+ 
+ /* For use by arch with custom probe code */
 -- 
-2.17.1
+2.28.0
 
