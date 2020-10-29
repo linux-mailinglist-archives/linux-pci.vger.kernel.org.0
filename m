@@ -2,135 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E41729EF84
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 16:16:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E31AA29F01E
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 16:37:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgJ2PQi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 11:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgJ2PQh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 11:16:37 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5DAC0613D2
-        for <linux-pci@vger.kernel.org>; Thu, 29 Oct 2020 08:16:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g12so3162068wrp.10
-        for <linux-pci@vger.kernel.org>; Thu, 29 Oct 2020 08:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=qGSa3lP6/VlSmTE6DEPynJHPtQdFaqjnszykI+jVN74=;
-        b=q0B83+221jC3LV3D0vJiIdNgLHOJz8koX0+RGRVI53uJfSwkJ8GhR4JugF+mZ5GPqb
-         ZVTDv8mDAYZYhPQ8hkXlcLD27dSXrp4lAJYYTgW5f0WQCB84W79ZgU2Iqx5VJfIKLCoE
-         jKK2eBSS/Lvzh1DUAeQluJM3KuX5ma/PcZKXUkSkL6f8sz81XxPhZc2UziaorPMUZwdA
-         xfhXKDLXC1lkj6AO73PtkssaMNoMDdcXSp9aRy13Of2jY4DRFx2YOa8plS0aX9VN8pho
-         cgWWv8sETb2CVIs0HkhFj2AqtPjo2Lpg4bUWFrHB8z4qz1kyKkBN1nrmHs2E/WkwPHMO
-         Wrqg==
+        id S1728211AbgJ2PfZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Oct 2020 11:35:25 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43484 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbgJ2PeG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 11:34:06 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x203so3567895oia.10;
+        Thu, 29 Oct 2020 08:34:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qGSa3lP6/VlSmTE6DEPynJHPtQdFaqjnszykI+jVN74=;
-        b=oF13u/AdRImeMSvWeHJdqQUCutavuvysfVDUZC7I6/X+iz5uVtsgfZd8OaxQ5BoJZI
-         jGjpplwtyg58o9rkespdUWJBUF02mlqEI5F/ARv7hwj4SxXSVxYIW4kQft2ZcJqNYLpa
-         99rMN4NL78nTvD7dfGzNyoL1Gev3q6H04lzErRK/QAKdtII+DfvsjqURtKoQ003ejBgD
-         Hccb9d7RKwvzacavOFxaHpLKPQWJAlrgru+1s74lmbXkKbAta7OWoVLo+qfa6YuOYoOj
-         sWF/v6eH798twGUVcvZLv6elwQu4YR7k9R6E+zFvgHg1LhiL+7EJsJPPQiSsWGo5VJYn
-         nlLA==
-X-Gm-Message-State: AOAM530MuVNQ1bA6PO8A3r2ILxFxVhmsVe40mG/c0jAC2WwbjSwYZTHr
-        ed9whJ5O9d/gsCxwcdiBE9iDYg==
-X-Google-Smtp-Source: ABdhPJzefw8uLArrouGi05ZGHK+szXIoFAAlfWsu5Gv8UCGIFVRyIWlIQoYW4wfLbmouL31sRTqYwg==
-X-Received: by 2002:a5d:694b:: with SMTP id r11mr6423143wrw.104.1603984596064;
-        Thu, 29 Oct 2020 08:16:36 -0700 (PDT)
-Received: from dell ([91.110.221.160])
-        by smtp.gmail.com with ESMTPSA id e3sm5702386wrn.32.2020.10.29.08.16.34
+         :mime-version:content-disposition:in-reply-to;
+        bh=2aK/szC9cuz0dkwowt7HBz66qxgW7H05J1XCoOJdmtI=;
+        b=RTRDv3osDih5WS33gx4crX+GwILnZA98bJXE1n+fblBAOYInIB/G7K1X1b93OEBGmA
+         oNr1VvztFjLupxCAZ1H38SKl7+H947lDpjIwst0NIM7EspqWwYic7sH1gE5ReacXUfFg
+         9i8T6p5l3/Mtlu2H9cuuEFbJDFxYii2nq1g+gJuhnuqkhURIfR2cey4ep/Qfc+11iTnz
+         R5lnJZhNEBJscXnLRGQzRs3vkMKVhThUwNMrxmolliz/I79jG3g9RCUsIB3hP3l/JhqJ
+         +7wgs0uS0WzdWHSOUBU1tAl7kmT42pU9UNxo5G49nXTGfYXob4YEUjWClJxH/KsfwJ8U
+         81Pg==
+X-Gm-Message-State: AOAM532idpb9Z1TfoQ6oLXDsVt7WnAvWF7xOcakm92NgdBCTS+stb+Z1
+        IFKWZpfETu5ydupRCU86gA==
+X-Google-Smtp-Source: ABdhPJxG7ICq8C1FIbSZZtWag6ID+Jd5bh+2TxqPf8GogPBGE65XxoIbK5S1tuOukAIbQd3RCoMMEw==
+X-Received: by 2002:aca:670b:: with SMTP id z11mr78596oix.116.1603985645332;
+        Thu, 29 Oct 2020 08:34:05 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i18sm733762oik.7.2020.10.29.08.34.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Oct 2020 08:16:35 -0700 (PDT)
-Date:   Thu, 29 Oct 2020 15:16:33 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com,
-        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH V9 0/5] Intel Platform Monitoring Technology
-Message-ID: <20201029151633.GB4127@dell>
-References: <20201029014449.14955-1-david.e.box@linux.intel.com>
+        Thu, 29 Oct 2020 08:34:04 -0700 (PDT)
+Received: (nullmailer pid 1912238 invoked by uid 1000);
+        Thu, 29 Oct 2020 15:34:04 -0000
+Date:   Thu, 29 Oct 2020 10:34:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, yong.wu@mediatek.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pci: mediatek: Modified the Device
+ tree bindings
+Message-ID: <20201029153404.GB1911637@bogus>
+References: <20201029081513.10562-1-chuanjia.liu@mediatek.com>
+ <20201029081513.10562-2-chuanjia.liu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201029014449.14955-1-david.e.box@linux.intel.com>
+In-Reply-To: <20201029081513.10562-2-chuanjia.liu@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 28 Oct 2020, David E. Box wrote:
-
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring capabilities on a device.
-> With customers increasingly asking for hardware telemetry, engineers not
-> only have to figure out how to measure and collect data, but also how to
-> deliver it and make it discoverable. The latter may be through some device
-> specific method requiring device specific tools to collect the data. This
-> in turn requires customers to manage a suite of different tools in order to
-> collect the differing assortment of monitoring data on their systems.  Even
-> when such information can be provided in kernel drivers, they may require
-> constant maintenance to update register mappings as they change with
-> firmware updates and new versions of hardware. PMT provides a solution for
-> discovering and reading telemetry from a device through a hardware agnostic
-> framework that allows for updates to systems without requiring patches to
-> the kernel or software tools.
+On Thu, 29 Oct 2020 16:15:10 +0800, Chuanjia Liu wrote:
+> Split the PCIe node and add pciecfg node to fix MSI issue.
 > 
-> PMT defines several capabilities to support collecting monitoring data from
-> hardware. All are discoverable as separate instances of the PCIE Designated
-> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
-> field uniquely identifies the capability. Each DVSEC also provides a BAR
-> offset to a header that defines capability-specific attributes, including
-> GUID, feature type, offset and length, as well as configuration settings
-> where applicable. The GUID uniquely identifies the register space of any
-> monitor data exposed by the capability. The GUID is associated with an XML
-> file from the vendor that describes the mapping of the register space along
-> with properties of the monitor data. This allows vendors to perform
-> firmware updates that can change the mapping (e.g. add new metrics) without
-> requiring any changes to drivers or software tools. The new mapping is
-> confirmed by an updated GUID, read from the hardware, which software uses
-> with a new XML.
+> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  .../bindings/pci/mediatek-pcie-cfg.yaml       |  39 ++++++
+>  .../devicetree/bindings/pci/mediatek-pcie.txt | 129 +++++++++++-------
+>  2 files changed, 118 insertions(+), 50 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml
 > 
-> The current capabilities defined by PMT are Telemetry, Watcher, and
-> Crashlog.  The Telemetry capability provides access to a continuous block
-> of read only data. The Watcher capability provides access to hardware
-> sampling and tracing features. Crashlog provides access to device crash
-> dumps.  While there is some relationship between capabilities (Watcher can
-> be configured to sample from the Telemetry data set) each exists as stand
-> alone features with no dependency on any other. The design therefore splits
-> them into individual, capability specific drivers. MFD is used to create
-> platform devices for each capability so that they may be managed by their
-> own driver. The PMT architecture is (for the most part) agnostic to the
-> type of device it can collect from. Software can determine which devices
-> support a PMT feature by searching through each device node entry in the
-> sysfs class folder. It can additionally determine if a particular device
-> supports a PMT feature by checking for a PMT class folder in the device
-> folder.
-> 
-> This patch set provides support for the PMT framework, along with support
-> for Telemetry on Tiger Lake.
-> 
-> Changes from V8:
->  	- Rebase on 5.10-rc1
-> 	- Add missing changes in MFD patch from V7 that were accidentally
-> 	  dropped in V8
 
-Which changes are those?
 
-Do I need to re-review?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> 	- Remove error message when unsupported capability found. Avoids
-> 	  unnecessary noise on some systems.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/mediatek-pcie-cfg.yaml:19:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+dtschema/dtc warnings/errors:
+
+
+See https://patchwork.ozlabs.org/patch/1389940
+
+The base for the patch is generally the last rc1. Any dependencies
+should be noted.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
