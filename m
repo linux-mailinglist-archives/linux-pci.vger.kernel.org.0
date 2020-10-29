@@ -2,96 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7015329E620
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 09:15:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5301129E693
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 09:40:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgJ2IPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 04:15:54 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:53579 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728513AbgJ2IPu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 04:15:50 -0400
-X-UUID: c559ab8950ab4ae0a56d513c5d28fb74-20201029
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=jRHkZTdg8apssmBzz5oFqjyf+DQFKqK4eJkHYPOIPPE=;
-        b=VFOykh2+IZrXDbWlGtr0/1F9ECMLxyx+8D72UwndgKVOXuW8sCubaOOC+5WDMtMEY/8SUpDgD/Jl1/H6vWQYCiBmGc3rRWtIcFXn862b5Sr0j+EMqFBzbEiE6i8jxuJjPXjRk0nN87keEjAmMyU0bV9q+W2X4N7USfkhKI3AR9c=;
-X-UUID: c559ab8950ab4ae0a56d513c5d28fb74-20201029
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 165975230; Thu, 29 Oct 2020 16:15:47 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 29 Oct 2020 16:15:43 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 29 Oct 2020 16:15:43 +0800
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>, <chuanjia.liu@mediatek.com>
-Subject: [PATCH v7 4/4] ARM: dts: mediatek: Modified MT7629 PCIe node
-Date:   Thu, 29 Oct 2020 16:15:13 +0800
-Message-ID: <20201029081513.10562-5-chuanjia.liu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20201029081513.10562-1-chuanjia.liu@mediatek.com>
-References: <20201029081513.10562-1-chuanjia.liu@mediatek.com>
+        id S1727555AbgJ2Ij6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Oct 2020 04:39:58 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18654 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729258AbgJ2Iiy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 04:38:54 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f9a50c00000>; Wed, 28 Oct 2020 22:18:56 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 29 Oct
+ 2020 05:18:52 +0000
+Received: from vidyas-desktop.nvidia.com (172.20.13.39) by mail.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Thu, 29 Oct 2020 05:18:48 +0000
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <amanharitsh123@gmail.com>,
+        <dinghao.liu@zju.edu.cn>, <kw@linux.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V2 1/4] PCI: tegra: Fix ASPM-L1SS advertisement disable code
+Date:   Thu, 29 Oct 2020 10:48:36 +0530
+Message-ID: <20201029051839.11245-2-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201029051839.11245-1-vidyas@nvidia.com>
+References: <20201029051839.11245-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 885291DBBB7B536A8EA9EC48C496567E09C22C21B6BAB1A250B99CE39C0A0D7C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1603948736; bh=u7cA/MfQqfQQ5BTRPJ65zvlJ3WLKc3dByk1zTUQnz+4=;
+        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+         References:X-NVConfidentiality:MIME-Version:Content-Type;
+        b=V+XmfIxFFMsLu58xOYbj/GwsDc2aN9ykBp5XEAMX77Oe4jAfscmM1gO17Z24l5+TU
+         f5MsiY53H7LT9mQl8sL9qfboUSzd3V8qZxBS5hj3Brk4XpQgOsACv1dsxw2Xb7hwqN
+         k9HM5bZAOgeZkFTgWxz6JP65Xr7lBgGDTC/DyjLM4GPR1bvxNoJln1ML6PoSAMpADc
+         ehM9zLTa8c5aTlE+WVlEkxpzcAWl96yPBm1+nsBZdPOvSqJ+55KmPSYzlKa0W4dS+N
+         DOzdUIQze27m/wuuydNk1EVNz6mzkVOee6YDQdycNwFwCqT/CLGjq9T/rT1tXxpYlE
+         f1OU8BjCoRa9g==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-UmVtb3ZlIHVudXNlZCBwcm9wZXJ0eSBhbmQgYWRkIHBjaWVjZmcgbm9kZS4NCg0KU2lnbmVkLW9m
-Zi1ieTogQ2h1YW5qaWEgTGl1IDxjaHVhbmppYS5saXVAbWVkaWF0ZWsuY29tPg0KQWNrZWQtYnk6
-IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL210NzYyOS1yZmIuZHRzIHwgIDMgKystDQogYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LmR0
-c2kgICAgfCAyMiArKysrKysrKysrKystLS0tLS0tLS0tDQogMiBmaWxlcyBjaGFuZ2VkLCAxNCBp
-bnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL210NzYyOS1yZmIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvbXQ3NjI5LXJmYi5kdHMN
-CmluZGV4IDk5ODBjMTBjNmUyOS4uZWI1MzZjYmViZDliIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvbXQ3NjI5LXJmYi5kdHMNCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyOS1y
-ZmIuZHRzDQpAQCAtMTQwLDkgKzE0MCwxMCBAQA0KIAl9Ow0KIH07DQogDQotJnBjaWUgew0KKyZw
-Y2llMSB7DQogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQogCXBpbmN0cmwtMCA9IDwmcGNp
-ZV9waW5zPjsNCisJc3RhdHVzID0gIm9rYXkiOw0KIH07DQogDQogJnBjaWVwaHkxIHsNCmRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9tdDc2MjkuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L210NzYyOS5kdHNpDQppbmRleCA1Y2JiM2QyNDRjNzUuLjZkNjM5N2YwYzJmYyAxMDA2NDQNCi0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL210NzYyOS5kdHNpDQorKysgYi9hcmNoL2FybS9ib290L2R0
-cy9tdDc2MjkuZHRzaQ0KQEAgLTM2MCwxNiArMzYwLDIwIEBADQogCQkJI3Jlc2V0LWNlbGxzID0g
-PDE+Ow0KIAkJfTsNCiANCi0JCXBjaWU6IHBjaWVAMWExNDAwMDAgew0KKwkJcGNpZWNmZzogcGNp
-ZWNmZ0AxYTE0MDAwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxnZW5lcmljLXBjaWVj
-ZmciLCAic3lzY29uIjsNCisJCQlyZWcgPSA8MHgxYTE0MDAwMCAweDEwMDA+Ow0KKwkJfTsNCisN
-CisJCXBjaWUxOiBwY2llQDFhMTQ1MDAwIHsNCiAJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10
-NzYyOS1wY2llIjsNCiAJCQlkZXZpY2VfdHlwZSA9ICJwY2kiOw0KLQkJCXJlZyA9IDwweDFhMTQw
-MDAwIDB4MTAwMD4sDQotCQkJICAgICAgPDB4MWExNDUwMDAgMHgxMDAwPjsNCi0JCQlyZWctbmFt
-ZXMgPSAic3Vic3lzIiwicG9ydDEiOw0KKwkJCXJlZyA9IDwweDFhMTQ1MDAwIDB4MTAwMD47DQor
-CQkJcmVnLW5hbWVzID0gInBvcnQxIjsNCiAJCQkjYWRkcmVzcy1jZWxscyA9IDwzPjsNCiAJCQkj
-c2l6ZS1jZWxscyA9IDwyPjsNCi0JCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTc2IElSUV9UWVBF
-X0xFVkVMX0xPVz4sDQotCQkJCSAgICAgPEdJQ19TUEkgMjI5IElSUV9UWVBFX0xFVkVMX0xPVz47
-DQorCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyOSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KKwkJ
-CWludGVycnVwdC1uYW1lcyA9ICJwY2llX2lycSI7DQogCQkJY2xvY2tzID0gPCZwY2llc3lzIENM
-S19QQ0lFX1AxX01BQ19FTj4sDQogCQkJCSA8JnBjaWVzeXMgQ0xLX1BDSUVfUDBfQUhCX0VOPiwN
-CiAJCQkJIDwmcGNpZXN5cyBDTEtfUENJRV9QMV9BVVhfRU4+LA0KQEAgLTM5MCwyMSArMzk0LDE5
-IEBADQogCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UNzYyMl9QT1dFUl9ET01BSU5fSElG
-MD47DQogCQkJYnVzLXJhbmdlID0gPDB4MDAgMHhmZj47DQogCQkJcmFuZ2VzID0gPDB4ODIwMDAw
-MDAgMCAweDIwMDAwMDAwIDB4MjAwMDAwMDAgMCAweDEwMDAwMDAwPjsNCisJCQlzdGF0dXMgPSAi
-ZGlzYWJsZWQiOw0KIA0KLQkJCXBjaWUxOiBwY2llQDEsMCB7DQotCQkJCWRldmljZV90eXBlID0g
-InBjaSI7DQorCQkJc2xvdDE6IHBjaWVAMSwwIHsNCiAJCQkJcmVnID0gPDB4MDgwMCAwIDAgMCAw
-PjsNCiAJCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQogCQkJCSNzaXplLWNlbGxzID0gPDI+Ow0K
-IAkJCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KIAkJCQlyYW5nZXM7DQotCQkJCW51bS1sYW5l
-cyA9IDwxPjsNCiAJCQkJaW50ZXJydXB0LW1hcC1tYXNrID0gPDAgMCAwIDc+Ow0KIAkJCQlpbnRl
-cnJ1cHQtbWFwID0gPDAgMCAwIDEgJnBjaWVfaW50YzEgMD4sDQogCQkJCQkJPDAgMCAwIDIgJnBj
-aWVfaW50YzEgMT4sDQogCQkJCQkJPDAgMCAwIDMgJnBjaWVfaW50YzEgMj4sDQogCQkJCQkJPDAg
-MCAwIDQgJnBjaWVfaW50YzEgMz47DQotDQogCQkJCXBjaWVfaW50YzE6IGludGVycnVwdC1jb250
-cm9sbGVyIHsNCiAJCQkJCWludGVycnVwdC1jb250cm9sbGVyOw0KIAkJCQkJI2FkZHJlc3MtY2Vs
-bHMgPSA8MD47DQotLSANCjIuMTguMA0K
+If the absence of CLKREQ# signal is indicated by the absence of
+"supports-clkreq" in the device-tree node, current driver is disabling
+the advertisement of ASPM-L1 Sub-States *before* the ASPM-L1 Sub-States
+offset is correctly initialized. Since default value of the ASPM-L1SS
+offset is zero, this is causing the Vendor-ID wrongly programmed to 0x10d2
+instead of Nvidia's 0x10de thereby the quirks applicable for Tegra194 are
+not being applied. This patch fixes this issue by refactoring the
+code that disables the ASPM-L1SS advertisement.
+
+Fixes: 56e15a238d92 ("PCI: tegra: Add Tegra194 PCIe support")
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+V2:
+* None
+
+ drivers/pci/controller/dwc/pcie-tegra194.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index aa511ec0d800..b172b1d49713 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -896,6 +896,12 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
+ 
+ 	init_host_aspm(pcie);
+ 
++	/* Disable ASPM-L1SS advertisement if there is no CLKREQ routing */
++	if (!pcie->supports_clkreq) {
++		disable_aspm_l11(pcie);
++		disable_aspm_l12(pcie);
++	}
++
+ 	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+ 	val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+ 	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
+@@ -1400,12 +1406,6 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+ 	pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
+ 						      PCI_CAP_ID_EXP);
+ 
+-	/* Disable ASPM-L1SS advertisement as there is no CLKREQ routing */
+-	if (!pcie->supports_clkreq) {
+-		disable_aspm_l11(pcie);
+-		disable_aspm_l12(pcie);
+-	}
+-
+ 	return ret;
+ 
+ fail_phy:
+-- 
+2.17.1
 
