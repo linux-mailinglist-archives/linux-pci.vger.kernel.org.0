@@ -2,163 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F07E29EF61
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 16:12:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E41729EF84
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 16:16:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgJ2PMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 11:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgJ2PMb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 29 Oct 2020 11:12:31 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70F7C20704
-        for <linux-pci@vger.kernel.org>; Thu, 29 Oct 2020 15:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603984350;
-        bh=lEKTu7tmIyRphoUFdoItAXU9H+bU93RmSlHwSSGKAg0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e8HJCzxhpLDvo1fX+lmYBhEOGLueGqJBsDeZEkykV02bPipaIKB1mlox5Szq74wE/
-         0Rk+nzvhOB23WY59XhIrLs4Gu7wQzDvBiNWYZNi2MExXk9fbTl2MvsorrZ1M7Ic/0n
-         Ske/GgDtEVso9Hw/sq3Lx/CZrwZyK3/WBBAdKL1A=
-Received: by mail-oi1-f177.google.com with SMTP id 9so3516454oir.5
-        for <linux-pci@vger.kernel.org>; Thu, 29 Oct 2020 08:12:30 -0700 (PDT)
-X-Gm-Message-State: AOAM531BVdH4l3PGUzE/0rSVc08/jgclewUS8GP4LCp2l4VV/aZD45j9
-        wUL9XHtpOmS92FBN+crBccBJHCMKiHjgFGq0ug==
-X-Google-Smtp-Source: ABdhPJxYHjV7pdnHuE83pId0udvukzjP63T3OfBqTOMLe4ThAZeGinLeDNJ2zAE3ClLXNziYJxetO1apNg4U12yExXk=
-X-Received: by 2002:aca:ccc7:: with SMTP id c190mr95502oig.152.1603984349622;
- Thu, 29 Oct 2020 08:12:29 -0700 (PDT)
+        id S1728160AbgJ2PQi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Oct 2020 11:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgJ2PQh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 11:16:37 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5DAC0613D2
+        for <linux-pci@vger.kernel.org>; Thu, 29 Oct 2020 08:16:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id g12so3162068wrp.10
+        for <linux-pci@vger.kernel.org>; Thu, 29 Oct 2020 08:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=qGSa3lP6/VlSmTE6DEPynJHPtQdFaqjnszykI+jVN74=;
+        b=q0B83+221jC3LV3D0vJiIdNgLHOJz8koX0+RGRVI53uJfSwkJ8GhR4JugF+mZ5GPqb
+         ZVTDv8mDAYZYhPQ8hkXlcLD27dSXrp4lAJYYTgW5f0WQCB84W79ZgU2Iqx5VJfIKLCoE
+         jKK2eBSS/Lvzh1DUAeQluJM3KuX5ma/PcZKXUkSkL6f8sz81XxPhZc2UziaorPMUZwdA
+         xfhXKDLXC1lkj6AO73PtkssaMNoMDdcXSp9aRy13Of2jY4DRFx2YOa8plS0aX9VN8pho
+         cgWWv8sETb2CVIs0HkhFj2AqtPjo2Lpg4bUWFrHB8z4qz1kyKkBN1nrmHs2E/WkwPHMO
+         Wrqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=qGSa3lP6/VlSmTE6DEPynJHPtQdFaqjnszykI+jVN74=;
+        b=oF13u/AdRImeMSvWeHJdqQUCutavuvysfVDUZC7I6/X+iz5uVtsgfZd8OaxQ5BoJZI
+         jGjpplwtyg58o9rkespdUWJBUF02mlqEI5F/ARv7hwj4SxXSVxYIW4kQft2ZcJqNYLpa
+         99rMN4NL78nTvD7dfGzNyoL1Gev3q6H04lzErRK/QAKdtII+DfvsjqURtKoQ003ejBgD
+         Hccb9d7RKwvzacavOFxaHpLKPQWJAlrgru+1s74lmbXkKbAta7OWoVLo+qfa6YuOYoOj
+         sWF/v6eH798twGUVcvZLv6elwQu4YR7k9R6E+zFvgHg1LhiL+7EJsJPPQiSsWGo5VJYn
+         nlLA==
+X-Gm-Message-State: AOAM530MuVNQ1bA6PO8A3r2ILxFxVhmsVe40mG/c0jAC2WwbjSwYZTHr
+        ed9whJ5O9d/gsCxwcdiBE9iDYg==
+X-Google-Smtp-Source: ABdhPJzefw8uLArrouGi05ZGHK+szXIoFAAlfWsu5Gv8UCGIFVRyIWlIQoYW4wfLbmouL31sRTqYwg==
+X-Received: by 2002:a5d:694b:: with SMTP id r11mr6423143wrw.104.1603984596064;
+        Thu, 29 Oct 2020 08:16:36 -0700 (PDT)
+Received: from dell ([91.110.221.160])
+        by smtp.gmail.com with ESMTPSA id e3sm5702386wrn.32.2020.10.29.08.16.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2020 08:16:35 -0700 (PDT)
+Date:   Thu, 29 Oct 2020 15:16:33 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com,
+        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH V9 0/5] Intel Platform Monitoring Technology
+Message-ID: <20201029151633.GB4127@dell>
+References: <20201029014449.14955-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-References: <20201028144209.GA315566@bjorn-Precision-5520> <87pn52mlqk.fsf@toke.dk>
-In-Reply-To: <87pn52mlqk.fsf@toke.dk>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 29 Oct 2020 10:12:18 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL0YZ+u6NXtTuZZJ=m0LqA4eWTCmMSsT5bVU9ZuL7wcBQ@mail.gmail.com>
-Message-ID: <CAL_JsqL0YZ+u6NXtTuZZJ=m0LqA4eWTCmMSsT5bVU9ZuL7wcBQ@mail.gmail.com>
-Subject: Re: PCI trouble on mvebu (Turris Omnia)
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        vtolkm@googlemail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201029014449.14955-1-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 10:08 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@red=
-hat.com> wrote:
->
-> Bjorn Helgaas <helgaas@kernel.org> writes:
->
-> > On Wed, Oct 28, 2020 at 02:36:13PM +0100, Toke H=C3=B8iland-J=C3=B8rgen=
-sen wrote:
-> >> Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com> writes:
-> >>
-> >> > Bjorn Helgaas <helgaas@kernel.org> writes:
-> >> >
-> >> >> [+cc vtolkm]
-> >> >>
-> >> >> On Tue, Oct 27, 2020 at 04:43:20PM +0100, Toke H=C3=B8iland-J=C3=B8=
-rgensen wrote:
-> >> >>> Hi everyone
-> >> >>>
-> >> >>> I'm trying to get a mainline kernel to run on my Turris Omnia, and=
- am
-> >> >>> having some trouble getting the PCI bus to work correctly. Specifi=
-cally,
-> >> >>> I'm running a 5.10-rc1 kernel (torvalds/master as of this moment),=
- with
-> >> >>> the resource request fix[0] applied on top.
-> >> >>>
-> >> >>> The kernel boots fine, and the patch in [0] makes the PCI devices =
-show
-> >> >>> up. But I'm still getting initialisation errors like these:
-> >> >>>
-> >> >>> [    1.632709] pci 0000:01:00.0: BAR 0: error updating (0xe0000004=
- !=3D 0xffffffff)
-> >> >>> [    1.632714] pci 0000:01:00.0: BAR 0: error updating (high 0x000=
-000 !=3D 0xffffffff)
-> >> >>> [    1.632745] pci 0000:02:00.0: BAR 0: error updating (0xe0200004=
- !=3D 0xffffffff)
-> >> >>> [    1.632750] pci 0000:02:00.0: BAR 0: error updating (high 0x000=
-000 !=3D 0xffffffff)
-> >> >>>
-> >> >>> and the WiFi drivers fail to initialise with what appears to me to=
- be
-> >> >>> errors related to the bus rather than to the drivers themselves:
-> >> >>>
-> >> >>> [    3.509878] ath: phy0: Mac Chip Rev 0xfffc0.f is not supported =
-by this driver
-> >> >>> [    3.517049] ath: phy0: Unable to initialize hardware; initializ=
-ation status: -95
-> >> >>> [    3.524473] ath9k 0000:01:00.0: Failed to initialize device
-> >> >>> [    3.530081] ath9k: probe of 0000:01:00.0 failed with error -95
-> >> >>> [    3.536012] ath10k_pci 0000:02:00.0: of_irq_parse_pci: failed w=
-ith rc=3D134
-> >> >>> [    3.543049] pci 0000:00:02.0: enabling device (0140 -> 0142)
-> >> >>> [    3.548735] ath10k_pci 0000:02:00.0: can't change power state f=
-rom D3hot to D0 (config space inaccessible)
-> >> >>> [    3.588592] ath10k_pci 0000:02:00.0: failed to wake up device :=
- -110
-> >> >>> [    3.595098] ath10k_pci: probe of 0000:02:00.0 failed with error=
- -110
-> >> >>>
-> >> >>> lspci looks OK, though:
-> >> >>>
-> >> >>> # lspci
-> >> >>> 00:01.0 PCI bridge: Marvell Technology Group Ltd. Device 6820 (rev=
- 04)
-> >> >>> 00:02.0 PCI bridge: Marvell Technology Group Ltd. Device 6820 (rev=
- 04)
-> >> >>> 00:03.0 PCI bridge: Marvell Technology Group Ltd. Device 6820 (rev=
- 04)
-> >> >>> 01:00.0 Network controller: Qualcomm Atheros AR9287 Wireless Netwo=
-rk Adapter (PCI-Express) (rev 01)
-> >> >>> 02:00.0 Network controller: Qualcomm Atheros QCA986x/988x 802.11ac=
- Wireless Network Adapter (rev ff)
-> >> >>>
-> >> >>> Does anyone have any clue what could be going on here? Is this a b=
-ug, or
-> >> >>> did I miss something in my config or other initialisation? I've tr=
-ied
-> >> >>> with both the stock u-boot distributed with the board, and with an
-> >> >>> upstream u-boot from latest master; doesn't seem to make any diffe=
-rent.
-> >> >>
-> >> >> Can you try turning off CONFIG_PCIEASPM?  We had a similar recent
-> >> >> report at https://bugzilla.kernel.org/show_bug.cgi?id=3D209833 but =
-I
-> >> >> don't think we have a fix yet.
-> >> >
-> >> > Yes! Turning that off does indeed help! Thanks a bunch :)
-> >> >
-> >> > You mention that bisecting this would be helpful - I can try that
-> >> > tomorrow; any idea when this was last working?
-> >>
-> >> OK, so I tried to bisect this, but, erm, I couldn't find a working
-> >> revision to start from? I went all the way back to 4.10 (which is the
-> >> first version to include the device tree file for the Omnia), and even
-> >> on that, the wireless cards were failing to initialise with ASPM
-> >> enabled...
-> >
-> > I have no personal experience with this device; all I know is that the
-> > bugzilla suggests that it worked in v5.4, which isn't much help.
-> >
-> > Possibly the apparent regression was really a .config change, i.e.,
-> > CONFIG_PCIEASPM was disabled in the v5.4 kernel vtolkm@ tested and it
-> > "worked" but got enabled later and it started failing?
->
-> Yeah, I suspect so. The OpenWrt config disables CONFIG_PCIEASPM by
-> default and only turns it on for specific targets. So I guess that it's
-> most likely that this has never worked...
+On Wed, 28 Oct 2020, David E. Box wrote:
 
-FYI, there's a bugzilla for this:
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring capabilities on a device.
+> With customers increasingly asking for hardware telemetry, engineers not
+> only have to figure out how to measure and collect data, but also how to
+> deliver it and make it discoverable. The latter may be through some device
+> specific method requiring device specific tools to collect the data. This
+> in turn requires customers to manage a suite of different tools in order to
+> collect the differing assortment of monitoring data on their systems.  Even
+> when such information can be provided in kernel drivers, they may require
+> constant maintenance to update register mappings as they change with
+> firmware updates and new versions of hardware. PMT provides a solution for
+> discovering and reading telemetry from a device through a hardware agnostic
+> framework that allows for updates to systems without requiring patches to
+> the kernel or software tools.
+> 
+> PMT defines several capabilities to support collecting monitoring data from
+> hardware. All are discoverable as separate instances of the PCIE Designated
+> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+> field uniquely identifies the capability. Each DVSEC also provides a BAR
+> offset to a header that defines capability-specific attributes, including
+> GUID, feature type, offset and length, as well as configuration settings
+> where applicable. The GUID uniquely identifies the register space of any
+> monitor data exposed by the capability. The GUID is associated with an XML
+> file from the vendor that describes the mapping of the register space along
+> with properties of the monitor data. This allows vendors to perform
+> firmware updates that can change the mapping (e.g. add new metrics) without
+> requiring any changes to drivers or software tools. The new mapping is
+> confirmed by an updated GUID, read from the hardware, which software uses
+> with a new XML.
+> 
+> The current capabilities defined by PMT are Telemetry, Watcher, and
+> Crashlog.  The Telemetry capability provides access to a continuous block
+> of read only data. The Watcher capability provides access to hardware
+> sampling and tracing features. Crashlog provides access to device crash
+> dumps.  While there is some relationship between capabilities (Watcher can
+> be configured to sample from the Telemetry data set) each exists as stand
+> alone features with no dependency on any other. The design therefore splits
+> them into individual, capability specific drivers. MFD is used to create
+> platform devices for each capability so that they may be managed by their
+> own driver. The PMT architecture is (for the most part) agnostic to the
+> type of device it can collect from. Software can determine which devices
+> support a PMT feature by searching through each device node entry in the
+> sysfs class folder. It can additionally determine if a particular device
+> supports a PMT feature by checking for a PMT class folder in the device
+> folder.
+> 
+> This patch set provides support for the PMT framework, along with support
+> for Telemetry on Tiger Lake.
+> 
+> Changes from V8:
+>  	- Rebase on 5.10-rc1
+> 	- Add missing changes in MFD patch from V7 that were accidentally
+> 	  dropped in V8
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D209833
+Which changes are those?
 
-Rob
+Do I need to re-review?
+
+> 	- Remove error message when unsupported capability found. Avoids
+> 	  unnecessary noise on some systems.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
