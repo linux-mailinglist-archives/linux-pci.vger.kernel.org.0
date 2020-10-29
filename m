@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1263B29F7EB
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 23:26:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CDA429F866
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 23:34:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgJ2W0b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 18:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55102 "EHLO
+        id S1725785AbgJ2WeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Oct 2020 18:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgJ2W0a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 18:26:30 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B189C0613CF;
-        Thu, 29 Oct 2020 15:26:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 15so3496112pgd.12;
-        Thu, 29 Oct 2020 15:26:30 -0700 (PDT)
+        with ESMTP id S1725891AbgJ2WeE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 18:34:04 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112A5C0613CF;
+        Thu, 29 Oct 2020 15:34:04 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t22so1987525plr.9;
+        Thu, 29 Oct 2020 15:34:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:thread-topic:thread-index:date:message-id
          :references:in-reply-to:accept-language:content-language
          :content-transfer-encoding:mime-version;
-        bh=mkEgROIngf3O0w1+XcYDyb5JIBk2dNaftiZ6UBvH2VU=;
-        b=Y9nHCkewbzooPqcIlQFiHkBNDQnXob8eGJMErBn5Kx5FzCfsDuykMaviTzO3vZ7Qnh
-         8zWQwRu8DPDT73CdsSIaxrCemeuUruBmPaHs6ieXkGYxgjSxFi/844DmgHOiojMnWXeQ
-         NajtcKpsAZ9W/cfZb9bzIkHwOP7aMyTJ4e/LGWa2RGc99u7NDIEplSRzWdGJuhjGU+2O
-         KKm4xeT85V500fvlJX8STmkmnn2dRn/OFxCbq1WY6zZ5uIl14OnSbjUgeNZZrEQ+THvZ
-         Z2vRyPIq5jyc1DFSExiBvPSOpvbduMcgnKoUE9ixwXQNytNE+9ahAJxbj7dzXASdEjpf
-         PsjA==
+        bh=odZpHbQegqT56U/cV/zJ1qrd6r3mGVChHF0VMSj69o0=;
+        b=gy+FevCWq3xOKFvYbDpwz/v/EbxdJwTn9QVRUJOTJih66PW1TK/3NCZSJDPw9s+lse
+         bkn74gnr4dgUfMBduEsxwTi2+ufO5e/+hUGIsMqkVs/R90SRyOZN7E7Oo/Uiz4+/kdKI
+         XSLd+pdpeS8hOp+w4CCkgtaXITBk3FeqS/Atf8ilvae/ogwHTlVc0Ego1liS94BkKlv+
+         1upTB8XaECpXOjZFIGOHsSRwFVRuMF4SuobL1D0hQWgog7GripUtaiOtQDlhGkAE3kHv
+         vTu7ty07GqlJzrf6WKLjk+wXp1xMQLRtLDu6cF6UfdcVzOs3s0GSgD61pl8eeKqYlUAH
+         skUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
          :date:message-id:references:in-reply-to:accept-language
          :content-language:content-transfer-encoding:mime-version;
-        bh=mkEgROIngf3O0w1+XcYDyb5JIBk2dNaftiZ6UBvH2VU=;
-        b=T9gudzojgkgwQB0GBD8qdwpYTO34CurHWzfOGUwC60gA3AYBTzDeYHjkUzle3GXYko
-         SZ3TEINX2ouoOGohIUWdftFRsFswxBCOTd20vTEKtbOGDH6wI069B/U3sJRG4AzmkcTP
-         O6N4yxvGaTyIt56xIaL3J7LxdpvD9zwF+juvdnm6F64am2jQPoTLiCIVMpqh8piZ/Rs8
-         dZGBv+wZFbBALjfRy/L83LbUqP+qChLJlJ2kTWI+MnSb1XuPdcOyuu3gSllvfK0txL4g
-         FZjf4u6XYmip0PM3iPmG3u6/NDtqYe/Mz2nshRlMX2avQ9bHOx1sdclXfxnpUdqcVq8X
-         SofA==
-X-Gm-Message-State: AOAM530pZQcECzMASC7JJ2nTJTXYANSbbrWW0iYYkf+6lJN/F/R6kguH
-        O/kzyY5rkhLL/+YsgobBV2A=
-X-Google-Smtp-Source: ABdhPJxLiaVskm2lyywheCpLlw6KpmmKQnxfOGZyB+6+99Bzc075kKu5TiLbCw/mexj2EE4uIqrGNg==
-X-Received: by 2002:a62:dd56:0:b029:155:8165:c6c2 with SMTP id w83-20020a62dd560000b02901558165c6c2mr6220236pff.3.1604010389698;
-        Thu, 29 Oct 2020 15:26:29 -0700 (PDT)
-Received: from SL2P216MB0475.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:19::5])
-        by smtp.gmail.com with ESMTPSA id q123sm3967727pfq.56.2020.10.29.15.26.20
+        bh=odZpHbQegqT56U/cV/zJ1qrd6r3mGVChHF0VMSj69o0=;
+        b=toCkpp2fJVNA4rWdPnuG+nMhgntKCah4QGwv7jEIc83MveQpIwSFD0vqdlSamua1S0
+         eFu0G6JGOzJ7IU9UaPRJnu55DCfG+liltECv3qI5I6Dwr1B/t+QRUebbjihJQotgLZ/A
+         LYlOya6TLmqppvRj2JWaCGYzGtTBDeHCj3+6Kkhr3lsqDFI1GztQvftKDzoc/riMtsQM
+         S3ngwsK82COrTYolZNfTe7L0qd6bv56VFwZlN2Dwqs4SWvCS/4STBVI4a7Pv1erP0ZHJ
+         Ub6zRCZHd5hM1NYFjRYl6uOXzjd2vuYJgU3mIxAlf1bMMY9RIVYjcAsjrnE7UQ6VLgmK
+         hzSQ==
+X-Gm-Message-State: AOAM531s7noa3lq1DpYbk8gxCs9fKcE+qlh/DYUINuFsCD4bBSKuk3iP
+        onfa5ga6HbuEZoR+YaQcUVs=
+X-Google-Smtp-Source: ABdhPJz+1FMPSkLVT3GNpxHHfWtt2o0ojp3jORJQkn1z2v1aWL9snq6p3aEN0mFkDfNYztLrINb5ag==
+X-Received: by 2002:a17:902:bd01:b029:d4:d73d:7644 with SMTP id p1-20020a170902bd01b02900d4d73d7644mr6117533pls.69.1604010843618;
+        Thu, 29 Oct 2020 15:34:03 -0700 (PDT)
+Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
+        by smtp.gmail.com with ESMTPSA id i24sm3912204pfd.7.2020.10.29.15.33.53
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Oct 2020 15:26:28 -0700 (PDT)
+        Thu, 29 Oct 2020 15:34:02 -0700 (PDT)
 From:   Jingoo Han <jingoohan1@gmail.com>
 To:     Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -97,15 +97,17 @@ CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         Yue Wang <yue.wang@Amlogic.com>,
         Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH 11/13] PCI: dwc: Move dw_pcie_msi_init() into core
-Thread-Topic: [PATCH 11/13] PCI: dwc: Move dw_pcie_msi_init() into core
-Thread-Index: AQHWrWuMH1iwupoOnEKPhemhbtsXGKmvKimM
+Subject: Re: [PATCH 12/13] PCI: dwc: Move dw_pcie_setup_rc() to DWC common
+ code
+Thread-Topic: [PATCH 12/13] PCI: dwc: Move dw_pcie_setup_rc() to DWC common
+ code
+Thread-Index: AQHWrWuNe0SVTqZ+qUiqNCgd41OCHamvKtka
 X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Thu, 29 Oct 2020 22:26:17 +0000
-Message-ID: <SL2P216MB0475B8EB98EF27395F5D381FAA140@SL2P216MB0475.KORP216.PROD.OUTLOOK.COM>
+Date:   Thu, 29 Oct 2020 22:29:06 +0000
+Message-ID: <SLXP216MB047727F5D8FE67D796651A8BAA140@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
 References: <20201028204646.356535-1-robh@kernel.org>
- <20201028204646.356535-12-robh@kernel.org>
-In-Reply-To: <20201028204646.356535-12-robh@kernel.org>
+ <20201028204646.356535-13-robh@kernel.org>
+In-Reply-To: <20201028204646.356535-13-robh@kernel.org>
 Accept-Language: ko-KR, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -121,8 +123,11 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 On 10/28/20, 4:47 PM, Rob Herring wrote:
 >=20
-> The host drivers which call dw_pcie_msi_init() are all the ones using
-> the built-in MSI controller, so let's move it into the common DWC code.
+> All RC complex drivers must call dw_pcie_setup_rc(). The ordering of the
+> call shouldn't be too important other than being after any RC resets.
+>
+> There's a few calls of dw_pcie_setup_rc() left as drivers implementing
+> suspend/resume need it.
 >
 > Cc: Kishon Vijay Abraham I <kishon@ti.com>
 > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
@@ -143,45 +148,49 @@ Jingoo Han
 > Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
 > Cc: Fabio Estevam <festevam@gmail.com>
 > Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: Murali Karicheri <m-karicheri2@ti.com>
+> Cc: Minghuan Lian <minghuan.Lian@nxp.com>
+> Cc: Mingkai Hu <mingkai.hu@nxp.com>
+> Cc: Roy Zang <roy.zang@nxp.com>
 > Cc: Yue Wang <yue.wang@Amlogic.com>
 > Cc: Kevin Hilman <khilman@baylibre.com>
 > Cc: Neil Armstrong <narmstrong@baylibre.com>
 > Cc: Jerome Brunet <jbrunet@baylibre.com>
 > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 > Cc: Jesper Nilsson <jesper.nilsson@axis.com>
 > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 > Cc: Xiaowei Song <songxiaowei@hisilicon.com>
 > Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Cc: Stanimir Varbanov <svarbanov@mm-sol.com>
 > Cc: Andy Gross <agross@kernel.org>
 > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Stanimir Varbanov <svarbanov@mm-sol.com>
 > Cc: Pratyush Anand <pratyush.anand@gmail.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
 > Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 > Cc: linux-omap@vger.kernel.org
 > Cc: linux-samsung-soc@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
 > Cc: linux-amlogic@lists.infradead.org
 > Cc: linux-arm-kernel@axis.com
 > Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
 > Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/pci/controller/dwc/pci-dra7xx.c           |  2 --
->  drivers/pci/controller/dwc/pci-exynos.c           |  4 ----
->  drivers/pci/controller/dwc/pci-imx6.c             |  1 -
->  drivers/pci/controller/dwc/pci-meson.c            |  1 -
->  drivers/pci/controller/dwc/pcie-artpec6.c         |  1 -
->  drivers/pci/controller/dwc/pcie-designware-host.c |  8 +++++---
->  drivers/pci/controller/dwc/pcie-designware-plat.c |  1 -
->  drivers/pci/controller/dwc/pcie-designware.h      | 10 ----------
->  drivers/pci/controller/dwc/pcie-histb.c           |  2 --
->  drivers/pci/controller/dwc/pcie-kirin.c           |  1 -
->  drivers/pci/controller/dwc/pcie-qcom.c            |  2 --
->  drivers/pci/controller/dwc/pcie-spear13xx.c       |  6 +-----
->  drivers/pci/controller/dwc/pcie-tegra194.c        |  2 --
->  drivers/pci/controller/dwc/pcie-uniphier.c        |  1 -
->  14 files changed, 6 insertions(+), 36 deletions(-)
+>  drivers/pci/controller/dwc/pci-dra7xx.c           | 1 -
+>  drivers/pci/controller/dwc/pci-exynos.c           | 1 -
+>  drivers/pci/controller/dwc/pci-imx6.c             | 1 -
+>  drivers/pci/controller/dwc/pci-keystone.c         | 2 --
+>  drivers/pci/controller/dwc/pci-layerscape.c       | 2 --
+>  drivers/pci/controller/dwc/pci-meson.c            | 2 --
+>  drivers/pci/controller/dwc/pcie-armada8k.c        | 2 --
+>  drivers/pci/controller/dwc/pcie-artpec6.c         | 1 -
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
+>  drivers/pci/controller/dwc/pcie-designware-plat.c | 8 --------
+>  drivers/pci/controller/dwc/pcie-histb.c           | 3 ---
+>  drivers/pci/controller/dwc/pcie-kirin.c           | 2 --
+>  drivers/pci/controller/dwc/pcie-qcom.c            | 1 -
+>  drivers/pci/controller/dwc/pcie-spear13xx.c       | 2 --
+>  drivers/pci/controller/dwc/pcie-uniphier.c        | 2 --
+>  15 files changed, 1 insertion(+), 30 deletions(-)
 
 [...]
