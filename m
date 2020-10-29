@@ -2,195 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CDA429F866
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 23:34:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7531A29F8F2
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 00:16:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725785AbgJ2WeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 18:34:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgJ2WeE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 18:34:04 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112A5C0613CF;
-        Thu, 29 Oct 2020 15:34:04 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t22so1987525plr.9;
-        Thu, 29 Oct 2020 15:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
-         :references:in-reply-to:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=odZpHbQegqT56U/cV/zJ1qrd6r3mGVChHF0VMSj69o0=;
-        b=gy+FevCWq3xOKFvYbDpwz/v/EbxdJwTn9QVRUJOTJih66PW1TK/3NCZSJDPw9s+lse
-         bkn74gnr4dgUfMBduEsxwTi2+ufO5e/+hUGIsMqkVs/R90SRyOZN7E7Oo/Uiz4+/kdKI
-         XSLd+pdpeS8hOp+w4CCkgtaXITBk3FeqS/Atf8ilvae/ogwHTlVc0Ego1liS94BkKlv+
-         1upTB8XaECpXOjZFIGOHsSRwFVRuMF4SuobL1D0hQWgog7GripUtaiOtQDlhGkAE3kHv
-         vTu7ty07GqlJzrf6WKLjk+wXp1xMQLRtLDu6cF6UfdcVzOs3s0GSgD61pl8eeKqYlUAH
-         skUw==
+        id S1725944AbgJ2XQF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 29 Oct 2020 19:16:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32426 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725765AbgJ2XQF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 19:16:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604013363;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pDzhIwz3SU8Sz2IfnKwo6SqdwTl4+6iL2g2rAqYfz8k=;
+        b=YK41PmfOljRYjR4MSPPUY9iSSJiUSkwBZFjZ/agLViEvFsPBXqIPN+6gCYB8kaJq8bvKtp
+        YzyeSqOEIXqMoreeE2DG+TMte2YChSdq3kt3bTZboXnrR89/s4wOFdz4ZJBcZ1GTFWJFan
+        O9QjOW8Xx7EjdPnOQKv7D0ArTCU7viI=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-UZAwYUwMOVe6oFmZQoB9QA-1; Thu, 29 Oct 2020 19:16:01 -0400
+X-MC-Unique: UZAwYUwMOVe6oFmZQoB9QA-1
+Received: by mail-io1-f70.google.com with SMTP id z18so3076244ioz.6
+        for <linux-pci@vger.kernel.org>; Thu, 29 Oct 2020 16:16:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
-         :date:message-id:references:in-reply-to:accept-language
-         :content-language:content-transfer-encoding:mime-version;
-        bh=odZpHbQegqT56U/cV/zJ1qrd6r3mGVChHF0VMSj69o0=;
-        b=toCkpp2fJVNA4rWdPnuG+nMhgntKCah4QGwv7jEIc83MveQpIwSFD0vqdlSamua1S0
-         eFu0G6JGOzJ7IU9UaPRJnu55DCfG+liltECv3qI5I6Dwr1B/t+QRUebbjihJQotgLZ/A
-         LYlOya6TLmqppvRj2JWaCGYzGtTBDeHCj3+6Kkhr3lsqDFI1GztQvftKDzoc/riMtsQM
-         S3ngwsK82COrTYolZNfTe7L0qd6bv56VFwZlN2Dwqs4SWvCS/4STBVI4a7Pv1erP0ZHJ
-         Ub6zRCZHd5hM1NYFjRYl6uOXzjd2vuYJgU3mIxAlf1bMMY9RIVYjcAsjrnE7UQ6VLgmK
-         hzSQ==
-X-Gm-Message-State: AOAM531s7noa3lq1DpYbk8gxCs9fKcE+qlh/DYUINuFsCD4bBSKuk3iP
-        onfa5ga6HbuEZoR+YaQcUVs=
-X-Google-Smtp-Source: ABdhPJz+1FMPSkLVT3GNpxHHfWtt2o0ojp3jORJQkn1z2v1aWL9snq6p3aEN0mFkDfNYztLrINb5ag==
-X-Received: by 2002:a17:902:bd01:b029:d4:d73d:7644 with SMTP id p1-20020a170902bd01b02900d4d73d7644mr6117533pls.69.1604010843618;
-        Thu, 29 Oct 2020 15:34:03 -0700 (PDT)
-Received: from SLXP216MB0477.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:9::5])
-        by smtp.gmail.com with ESMTPSA id i24sm3912204pfd.7.2020.10.29.15.33.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 29 Oct 2020 15:34:02 -0700 (PDT)
-From:   Jingoo Han <jingoohan1@gmail.com>
-To:     Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Han Jingoo <jingoohan1@gmail.com>
-Subject: Re: [PATCH 12/13] PCI: dwc: Move dw_pcie_setup_rc() to DWC common
- code
-Thread-Topic: [PATCH 12/13] PCI: dwc: Move dw_pcie_setup_rc() to DWC common
- code
-Thread-Index: AQHWrWuNe0SVTqZ+qUiqNCgd41OCHamvKtka
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date:   Thu, 29 Oct 2020 22:29:06 +0000
-Message-ID: <SLXP216MB047727F5D8FE67D796651A8BAA140@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
-References: <20201028204646.356535-1-robh@kernel.org>
- <20201028204646.356535-13-robh@kernel.org>
-In-Reply-To: <20201028204646.356535-13-robh@kernel.org>
-Accept-Language: ko-KR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator: 
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=pDzhIwz3SU8Sz2IfnKwo6SqdwTl4+6iL2g2rAqYfz8k=;
+        b=t/3PXqWp8BXm8akdr3MGzHGeTUEUbTH6Q1wjed5kMwdwlPP6/1NvTBgVx7yZsEHoS7
+         4XYwJ2XukgewPvtVd4Bl9zYu5k1aNNNF2UajmgZwIBq7STWLfSTh2s8imGshPOq/VkTI
+         hKRsVi1iF4iw302CpELBQN35euRhijSs9/2kpVbJy9bU2l281E+TSeqELSHIFzmi8XZ5
+         NWL3J16JsGhQjn49ctKPgGeOCcgpcRuYENaxzOHONfVBCqRv2VHbs+j9oYCGFP038Yeo
+         UO44gaoEnMHWrQ5GYUOybfQLGGJMD0ux5trk8gEx79IhQzMtrirhIdzJzTyPcEJq6lcn
+         fCNA==
+X-Gm-Message-State: AOAM533nrAFvg3zrvf/XyUkqFfLFQtvg7vcWb5NM0JeSBjJSOxRe79Kd
+        S+EKxjM/IRlEmmAolvZhfSsC4C3NKnL2WHo82dwdBuprMymzfV674HL9YWcYAty6pXSVZwZnJ1K
+        Ind4QNmZnUZI08U7jm3sv
+X-Received: by 2002:a02:a395:: with SMTP id y21mr5936803jak.58.1604013360966;
+        Thu, 29 Oct 2020 16:16:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz5Z4jlORGS3ePAxURBF+suifIZBQK75oOLjC+LuWqq0SFUHz2u3IzguJBFFDjrBwnqz6Bg0g==
+X-Received: by 2002:a02:a395:: with SMTP id y21mr5936789jak.58.1604013360813;
+        Thu, 29 Oct 2020 16:16:00 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id m66sm4690441ill.69.2020.10.29.16.15.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2020 16:16:00 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 6E1DD181AD1; Fri, 30 Oct 2020 00:15:57 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, vtolkm@gmail.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Marek =?utf-8?Q?Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+In-Reply-To: <20201029225409.2accead3@windsurf.home>
+References: <871rhhmgkq.fsf@toke.dk>
+ <20201029193022.GA476048@bjorn-Precision-5520>
+ <20201029225409.2accead3@windsurf.home>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Fri, 30 Oct 2020 00:15:57 +0100
+Message-ID: <877dr8oc7m.fsf@toke.dk>
 MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/28/20, 4:47 PM, Rob Herring wrote:
->=20
-> All RC complex drivers must call dw_pcie_setup_rc(). The ordering of the
-> call shouldn't be too important other than being after any RC resets.
+Thomas Petazzoni <thomas.petazzoni@bootlin.com> writes:
+
+> Hello,
 >
-> There's a few calls of dw_pcie_setup_rc() left as drivers implementing
-> suspend/resume need it.
+> On Thu, 29 Oct 2020 14:30:22 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Jingoo Han <jingoohan1@gmail.com>
+>> We could quirk these NICs to avoid the retrain, but since aardvark and
+>> mvebu have no obvious connection and WLE200/WLE900 and MT76 have no
+>> obvious connection, I doubt there's a simple hardware defect that
+>> explains all these.  
+>
+> aardvark and mvebu have one very strong connection: they are the only
+> two drivers making use of the PCI Bridge emulation logic in
+> drivers/pci/pci-bridge-emul.c:
+>
+> drivers/pci$ git grep pci-bridge-emul
+> akefile:obj-$(CONFIG_PCI_BRIDGE_EMUL)  += pci-bridge-emul.o
+> controller/pci-aardvark.c:#include "../pci-bridge-emul.h"
+> controller/pci-mvebu.c:#include "../pci-bridge-emul.h"
+> pci-bridge-emul.c:#include "pci-bridge-emul.h"
+>
+> I haven't read the whole thread, but it is important to keep in mind
+> that on those two platforms, the PCI Bridge seen by Linux is *not* a
+> real HW bridge. It is faked by the the pci-bridge-emul code. So if this
+> code has defects/bugs in how it emulates a PCI Bridge behavior, you
+> might see weird things.
 
-Acked-by: Jingoo Han <jingoohan1@gmail.com>
+Ohh, that's interesting. Why does it need to emulate it?
 
-Best regards,
-Jingoo Han
+And could this cause things weird interactions like what I'm seeing,
+where a somewhat buggy device in slot 2 affects the ability to retrain
+the link also in slot 1, but only if there's no device in slot 3?
 
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: Murali Karicheri <m-karicheri2@ti.com>
-> Cc: Minghuan Lian <minghuan.Lian@nxp.com>
-> Cc: Mingkai Hu <mingkai.hu@nxp.com>
-> Cc: Roy Zang <roy.zang@nxp.com>
-> Cc: Yue Wang <yue.wang@Amlogic.com>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Cc: Xiaowei Song <songxiaowei@hisilicon.com>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Stanimir Varbanov <svarbanov@mm-sol.com>
-> Cc: Pratyush Anand <pratyush.anand@gmail.com>
-> Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: linux-omap@vger.kernel.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-amlogic@lists.infradead.org
-> Cc: linux-arm-kernel@axis.com
-> Cc: linux-arm-msm@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c           | 1 -
->  drivers/pci/controller/dwc/pci-exynos.c           | 1 -
->  drivers/pci/controller/dwc/pci-imx6.c             | 1 -
->  drivers/pci/controller/dwc/pci-keystone.c         | 2 --
->  drivers/pci/controller/dwc/pci-layerscape.c       | 2 --
->  drivers/pci/controller/dwc/pci-meson.c            | 2 --
->  drivers/pci/controller/dwc/pcie-armada8k.c        | 2 --
->  drivers/pci/controller/dwc/pcie-artpec6.c         | 1 -
->  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
->  drivers/pci/controller/dwc/pcie-designware-plat.c | 8 --------
->  drivers/pci/controller/dwc/pcie-histb.c           | 3 ---
->  drivers/pci/controller/dwc/pcie-kirin.c           | 2 --
->  drivers/pci/controller/dwc/pcie-qcom.c            | 1 -
->  drivers/pci/controller/dwc/pcie-spear13xx.c       | 2 --
->  drivers/pci/controller/dwc/pcie-uniphier.c        | 2 --
->  15 files changed, 1 insertion(+), 30 deletions(-)
+-Toke
 
-[...]
