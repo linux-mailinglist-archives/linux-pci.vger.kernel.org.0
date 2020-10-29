@@ -2,95 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 464C629DF6E
-	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 02:02:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A6FD29E056
+	for <lists+linux-pci@lfdr.de>; Thu, 29 Oct 2020 02:21:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731461AbgJ1WRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 28 Oct 2020 18:17:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:58445 "EHLO mga12.intel.com"
+        id S2391053AbgJ2BVX convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 28 Oct 2020 21:21:23 -0400
+Received: from mail.nic.cz ([217.31.204.67]:56656 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731459AbgJ1WRH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:17:07 -0400
-IronPort-SDR: tTBMoPS/hCNOyFsZL3XBzSXqn956hNj6ObC4YkZVzzVjW45p3LYwVwzz14ahwVf3Tq3CdQxKwJ
- 1s9f9dMckjqQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="147581619"
-X-IronPort-AV: E=Sophos;i="5.77,427,1596524400"; 
-   d="scan'208";a="147581619"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 10:13:51 -0700
-IronPort-SDR: rdROUzDEGk2wo3Npe3je3eTrc3dLnV4UgVqN9FX4UpdDVebiBYWc2eO8G/wZ8eHuduCXAY4LF1
- 92hA9IyS0fVQ==
-X-IronPort-AV: E=Sophos;i="5.77,427,1596524400"; 
-   d="scan'208";a="536311333"
-Received: from rramir3-mobl.amr.corp.intel.com (HELO [10.254.71.48]) ([10.254.71.48])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 10:13:50 -0700
-Subject: Re: [PATCH v11 4/5] PCI/portdrv: Remove redundant pci_aer_available()
- check in DPC enable logic
-To:     Ethan Zhao <xerces.zhao@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>, knsathya@kernel.org
-References: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <2faef6f884aae9ae92e57e7c6a88a6195553c684.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAKF3qh1J=_nxFTztyEjMBJav_W+JY60gzf27dvantMeKU+Aatg@mail.gmail.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <ee679e38-dd8a-7d43-8715-a4e454664f89@linux.intel.com>
-Date:   Wed, 28 Oct 2020 10:13:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2391052AbgJ2BVX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 28 Oct 2020 21:21:23 -0400
+Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
+        by mail.nic.cz (Postfix) with ESMTPSA id 327281409C8;
+        Thu, 29 Oct 2020 02:21:18 +0100 (CET)
+Date:   Thu, 29 Oct 2020 02:21:11 +0100
+From:   Marek Behun <marek.behun@nic.cz>
+To:     "=?UTF-8?B?4oSi1p/imLvSh8ytING8INKJIMKu?=" <vtolkm@googlemail.com>
+Cc:     vtolkm@gmail.com,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20201029022111.50079f0d@nic.cz>
+In-Reply-To: <2fb69e2a-4423-2b04-cd0f-ca819092bc5f@gmail.com>
+References: <20201028144209.GA315566@bjorn-Precision-5520>
+        <87pn52mlqk.fsf@toke.dk>
+        <2fb69e2a-4423-2b04-cd0f-ca819092bc5f@gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAKF3qh1J=_nxFTztyEjMBJav_W+JY60gzf27dvantMeKU+Aatg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-100.0 required=5.9 tests=SHORTCIRCUIT,
+        USER_IN_WELCOMELIST,USER_IN_WHITELIST shortcircuit=ham
+        autolearn=disabled version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.nic.cz
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, 28 Oct 2020 16:40:00 +0000
+"™֟☻̭҇ Ѽ ҉ ®" <vtolkm@googlemail.com> wrote:
 
+> Found this patch
+> 
+> https://github.com/openwrt/openwrt/blob/7c0496f29bed87326f1bf591ca25ace82373cfc7/target/linux/mvebu/patches-5.4/405-PCI-aardvark-Improve-link-training.patch 
+> 
+> 
+> that mentions the Compex WLE900VX card, which reading the lspci verbose 
+> output from the bugtracker seems to the device being troubled.
 
-On 10/27/20 11:00 PM, Ethan Zhao wrote:
-> On Tue, Oct 27, 2020 at 10:00 PM Kuppuswamy Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->>
->> In DPC service enable logic, check for
->> services & PCIE_PORT_SERVICE_AER implies pci_aer_available()
-> How about PCIE_PORT_SERVICE_AER is not configured, but
-> pcie_aer_disable == 0 ？
-Its not possible in current code flow. DPC service is configured
-following AER service configuration.
->> is true. So there is no need to explicitly check it again.
->>
->> Also, passing pcie_ports=dpc-native in kernel command line
->> implies DPC needs to be enabled in native mode irrespective
->> of AER ownership status. So checking for pci_aer_available()
->> without checking for pcie_ports status is incorrect.
->>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/pcie/portdrv_core.c | 1 -
->>   1 file changed, 1 deletion(-)
->>
->> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
->> index 2c0278f0fdcc..e257a2ca3595 100644
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -252,7 +252,6 @@ static int get_port_device_capability(struct pci_dev *dev)
->>           * permission to use AER.
->>           */
->>          if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
->> -           pci_aer_available() &&
->>              (host->native_dpc || (services & PCIE_PORT_SERVICE_AER)))
->>                  services |= PCIE_PORT_SERVICE_DPC;
->>
->> --
->> 2.17.1
->>
+It seems mvebu driver in combination with compex card is similarily
+broken as aardvark was... :) Hopefully Pali will want to look into this.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Marek
