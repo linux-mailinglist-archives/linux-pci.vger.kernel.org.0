@@ -2,92 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 318B72A1070
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 22:42:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82CC62A1084
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 22:50:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgJ3Vmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Oct 2020 17:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        id S1725824AbgJ3VuG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Oct 2020 17:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbgJ3Vmg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 30 Oct 2020 17:42:36 -0400
+        id S1725780AbgJ3VuF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 30 Oct 2020 17:50:05 -0400
 Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7B6720727;
-        Fri, 30 Oct 2020 21:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E44620727;
+        Fri, 30 Oct 2020 21:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604094156;
-        bh=FLGiYQjqtVH2aslBOY7nSYcK0cB9crbhPXRL8Q0cq1o=;
+        s=default; t=1604094605;
+        bh=XBtI38gBY2LUs9T56LUuQiqKjYkDA984xK5MQgz6sw8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1wv2wLGN+g0K7oGs95DHFNZO5FFDG0V5jGwQCi5kB85WSeYFlOuC25m8IjUyhrMPD
-         cjpNzF7+OJkAn7+aYtt3w2cFW8dNh0+RJddFBjGQO2e70Z/6wDSQEt4aGPRm+W54z4
-         6r99VwLV+8eqPpftL5BIU1tBKMaLdhWL4VXhCEq4=
-Date:   Fri, 30 Oct 2020 16:42:34 -0500
+        b=UvoHZ10e9J8v+wrDIr001koO2sMM1ZUXczs7oxi3ableAcz3NP+ZvjgXtNRqFvZUd
+         909BTQ7KJQOErkJYhKlWD3aPFOz7UUCy7PyjIHwsjdJzI1NU7Fbrl0F1ErFXAnHVia
+         xERFyZPZ2p5MpQz4s2psmRolrIYl4PH7tWOGnERQ=
+Date:   Fri, 30 Oct 2020 16:50:03 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     linux-pci@vger.kernel.org, "Boris V." <borisvk@bstnet.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        rajatxjain@gmail.com, Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] PCI: Always call pci_enable_acs() regardless of
- pdev->acs_cap
-Message-ID: <20201030214234.GA606155@bjorn-Precision-5520>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
+        bhelgaas@google.com, tglx@linutronix.de,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201030215003.GA606323@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201028231545.4116866-1-rajatja@google.com>
+In-Reply-To: <71da5f66-e929-bab1-a1c6-a9ac9627a141@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Alex]
+On Fri, Oct 30, 2020 at 02:20:03PM -0700, Dave Jiang wrote:
+> 
+> 
+> On 10/30/2020 12:51 PM, Bjorn Helgaas wrote:
+> > On Fri, Oct 30, 2020 at 11:51:32AM -0700, Dave Jiang wrote:
+> > > Intel Scalable I/O Virtualization (SIOV) enables sharing of I/O devices
+> > > across isolated domains through PASID based sub-device partitioning.
+> > > Interrupt Message Storage (IMS) enables devices to store the interrupt
+> > > messages in a device-specific optimized manner without the scalability
+> > > restrictions of the PCIe defined MSI-X capability. IMS is one of the
+> > > features supported under SIOV.
+> > > 
+> > > Move SIOV detection code from Intel iommu driver code to common PCI. Making
+> > > the detection code common allows supported accelerator drivers to query the
+> > > PCI core for SIOV and IMS capabilities. The support code will add the
+> > > ability to query the PCI DVSEC capabilities for the SIOV cap.
+> > 
+> > This patch really does not include anything related to SIOV other than
+> > adding a little code to *find* the capability.  It doesn't add
+> > anything that actually *uses* it.  I think this patch should simply
+> > add pci_find_dvsec(), and it doesn't need any of this SIOV or IMS
+> > description.
+> 
+> Thanks for the review Bjorn! I'll carve out a patch with just find_dvsec()
+> and apply your comments and recommendations.
+> 
+> So the intel-iommu driver checks for the SIOV cap. And the idxd driver
+> checks for SIOV and IMS cap. There will be other upcoming drivers that will
+> check for such cap too. It is Intel vendor specific right now, but SIOV is
+> public and other vendors may implement to the spec. Is there a good place to
+> put the common capability check for that?
 
-On Wed, Oct 28, 2020 at 04:15:45PM -0700, Rajat Jain wrote:
-> Some devices may have have anomalies with the ACS cpability structure,
-> and they may be using quirks to support ACS functionality via other
-> registers. For such devices, it is important we always call
-> pci_enable_acs() to give the quirks a chance to enable ACS in other ways.
-> 
-> For Eg:
-> There seems a class of Intel devices quirked with *_intel_pch_acs_*
-> functions, that do not expose the standard ACS capability structure. But
-> these quirks help support ACS on these devices using other registers:
-> pci_quirk_enable_intel_pch_acs() -> doesn't use acs_cap to enable ACS
-> 
-> This has already been taken care of in the quirks, in the other direction
-> i.e. when checking if the ACS is enabled or not. So no need to do
-> anything there.
-> 
-> Reported-by: Boris V <borisvk@bstnet.org>
-> Fixes: 52fbf5bdeeef ("PCI: Cache ACS capability offset in device")
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+Let's wait and see what that code looks like and figure it out then.
+We can always move it to the PCI core if it turns out to be generic.
 
-Applied to for-linus for v5.10, thanks!
+Right now the code only finds a capability and checks a bit in it.
+None of that is anything the PCI core is interested in.
 
-> ---
->  drivers/pci/pci.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6d4d5a2f923d..ab398226c55e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3516,8 +3516,13 @@ void pci_acs_init(struct pci_dev *dev)
->  {
->  	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
->  
-> -	if (dev->acs_cap)
-> -		pci_enable_acs(dev);
-> +	/*
-> +	 * Attempt to enable ACS regardless of capability because some rootports
-> +	 * (e.g. the ones quirked with *_intel_pch_acs_*) may not expose
-> +	 * standard rootport capability structure, but still may support ACS via
-> +	 * those quirks.
-> +	 */
-> +	pci_enable_acs(dev);
->  }
->  
->  /**
-> -- 
-> 2.29.1.341.ge80a0c044ae-goog
-> 
+> There are some other fields in the SIOV dvsec cap, but presently they are
+> not being utilized. The idxd driver is only interested in making sure that
+> SIOV and IMS (sub feature) support are present at this point.
+
+I'm a little dubious about code that checks whether support is present
+but doesn't actually *do* anything with that support, but as long as
+it's outside the PCI core, that's up to you :)
+
+Bjorn
