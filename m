@@ -2,98 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC4DA29FA99
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 02:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEE7A29FCCC
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 05:46:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgJ3B2u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 29 Oct 2020 21:28:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:6935 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgJ3B2q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 29 Oct 2020 21:28:46 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4CMl7y5LW8z6xWj;
-        Fri, 30 Oct 2020 09:28:46 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 30 Oct 2020 09:28:36 +0800
-From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>
-Subject: [PATCH] PCI: v3: fix missing clk_disable_unprepare() on error in v3_pci_probe
-Date:   Fri, 30 Oct 2020 09:34:27 +0800
-Message-ID: <20201030013427.54086-1-miaoqinglang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726273AbgJ3EqR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Oct 2020 00:46:17 -0400
+Received: from mail-eopbgr1400121.outbound.protection.outlook.com ([40.107.140.121]:38448
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725771AbgJ3EqR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 30 Oct 2020 00:46:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MisLRynt8WSCFfXulEqDKQZilwQkzmn/KE+SRsfN/tL5o8XhXM3byuTQusBZh6d2CQvOfyHczS4F0C/L2E1vaHooRFzVng9IHgZ7wjVk/7B62GzbO49jNay0zKsFvbazHttar4XLyUpztKGL1jlOMT7QsUPaRRSGBV/vw9hGYxxAidUP96a6HzseC08Rc/XHbLuS06kBrMe/noGy/kXS1QGP92CHec1+F9+GJzefW0z/9jm5kWUnl3o1QTDamE45yEnrRaUj89vVK5Yu+c3fKitimOhCF4ySd2FtK4fEb7xR/6l0HV6XplQKbLZmM79lfvfhDHuK7nCl7kSqwzlOqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GDoBiVs0eWrlkJVRk5gg+Dc8D7jnQp6dpQzIJj4XSJ0=;
+ b=OI+BFD7R/+FHEa3ncRrDju8SbXW0ASd02IInAMtCTdfY7vRkEpb5YGFc/0l+9JxJySXHOdtlErNrow0GpZ1zddpJBCCHT2eGBumdaD+CC7B/W9MwBORWC7+xmInKrz+MR6Rq9J6LjtvOufxhV9g8PVdqFsLV6ns0JbWC0oENFHwHGDkvVKg1BtU6RkTyoalbt2gbesKycYxZ3r0fM+le8AE37WwOV3oqercPQ3qrXQN95fjHNXVedNXYN4zMVrLAm9l4q2bnfh6n3Z8wTgZY2RfrHe0sg6brfziqxZ0wTMU6NRmOKTvkGuNOr4Ug66SXyrO5ZchsFOLDOuF2UU6/2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GDoBiVs0eWrlkJVRk5gg+Dc8D7jnQp6dpQzIJj4XSJ0=;
+ b=T4Ace2xNvQsyPqEQBSDrP4srg+cBKcJ5qG8l0HpnTjAlhYqgG4vOL7NNYaYTlMmf7zO/ti4xbNlT/yUfpeLDzc/4PAYsQarVdyttZF8u/dnth6ppucHYa7ih1AWigzEnJjp4N1T2vJPfHbS9O4VdkDlimVSCCbAblt2l0YsBwa8=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TYAPR01MB2223.jpnprd01.prod.outlook.com (2603:1096:404:6::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.28; Fri, 30 Oct
+ 2020 04:46:12 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::bcba:dccf:7d4c:c883]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::bcba:dccf:7d4c:c883%4]) with mapi id 15.20.3477.028; Fri, 30 Oct 2020
+ 04:46:12 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH 1/3] dt-bindings: pci: rcar-pci-host: convert bindings to
+ json-schema
+Thread-Topic: [PATCH 1/3] dt-bindings: pci: rcar-pci-host: convert bindings to
+ json-schema
+Thread-Index: AQHWrM7jGTlGJy1Xq0qXxgEFYj7a+6mtGCWAgAJ57QA=
+Date:   Fri, 30 Oct 2020 04:46:12 +0000
+Message-ID: <TY2PR01MB3692F8530E52FA9332166D11D8150@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1603850751-32762-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1603850751-32762-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20201028144447.GA3994930@bogus>
+In-Reply-To: <20201028144447.GA3994930@bogus>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [240f:60:5f3e:1:1d1:f583:fc3b:d64f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 53557737-8619-4dcc-7f97-08d87c8eba5b
+x-ms-traffictypediagnostic: TYAPR01MB2223:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB2223BD635E46C6B9401B975FD8150@TYAPR01MB2223.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: kAd+dljgQvJDsbi82smG7ZE52RDj0g3dP6vI/I01jLMOC1lQ/cH6gRCHPfRcwc8A2oDv+ozIrJKEkkaL4I/TZ3bL5uuKct5/G/E3D8tPsDYExY9Li1xZZS231f2BBE6sNEXiT5syoP9WACzMWS9DnqWUdDhPznEKBIM+IG/yRPC/Pnw+eG5rQ/x5voVcEtDQnLpMLOZmuhnnam/6y3DakJQ8y3QLDhwa5y95+CzZGiNItQgu/Bp3olxff+z797hm8LCORCwKqj2G5W/7ozlwjwChE+jAAhtI+xLb0EfmxF58Xfvv6XhjgrWv9bmQ+j6pXxsVF4PgnN73YftkTkp21yr270HNAxd96zEMN3o9ThOweCm9KaMXPjLomO7EKnHsNapa6Evk79CG4BuyJgWsyA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(396003)(136003)(376002)(39860400002)(66446008)(71200400001)(5660300002)(76116006)(4326008)(2906002)(66476007)(64756008)(66556008)(66946007)(86362001)(316002)(54906003)(52536014)(83380400001)(6506007)(8676002)(7696005)(8936002)(9686003)(186003)(966005)(33656002)(478600001)(6916009)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: YVGgZg2CSx1MmN+Y+nq97BJl0D+HiKIsUTuBSvA+cSoYYmQaBNPNslOT+PPtVqETA5DdQtDGgSnQtcIGGmHCWGl+iBdZUUP56Xk8fZli3bbyTXTSWW289Jg3bY6TDp31v7vkcu1c2gHDmH9cRn9XzDiAap56znJl17RCPGHcmrU8hOrsAAqWGa3Qgfe8OCSDuJZGa9nKdSYQR0TcTljeJDZb1O+7QIlYba01wtYu9SO+iaZAH6hEPnUBJO/ARuBR4lFzHSC3QEDZgbyiVO+M/FdynxZIxn/+Gb/fTWg6OFZzXIEBvuZpCp6lcWqRXCh8IAl9h/JUVxA1hf1rDl5GCm022uQkeWuSUSrbhNP3243r2uUJHjVqPiJ4X2vuFBOXOrg/zlqf5qPvfBlD4J6IsQ1GwFhnmfgh5NMA04lI7nPK/xSVBJodFC61l8SDOASjQFwXgcGidmvpzyO/EFbmGZ1cHm8UmRzYZlMuQo5YK6OlS2q+phnwItZhuVJMsNXFvdVD2MFQTieLlTWF9fGeFmAuw6EvinRIWOjMo+20pafjPQhOhALmwG/WSr3qRFp6eiSChMQwPkkbbDH32Z8ieYnWDnhJNqwG9yxthOHYaGu4cCEts9VGrQ2zjRTV4E85mhEy7mjXWLPbUYd9fbY9nyES1MkKFS5a6+04vlY9YLUG+s0msArgdZCbwGxrPGpEoA8iYAxWwu4SYsmISKRlVg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53557737-8619-4dcc-7f97-08d87c8eba5b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Oct 2020 04:46:12.5954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZKr/LdsRK4FfNmQhTJFnOGBrMgXlbMY/+8mFeQvm9ppbru1Jmc89u5dJqjKSghy6PU2qweNCetrz/O8jKp1zo9Vf3E9/MmlflmQ5G2A5wfcvte1kwaOUUxstZFW2ShCO
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2223
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix the missing clk_disable_unprepare() before return
-from v3_pci_probe() in the error handling case.
+Hi Rob,
 
-Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
----
- drivers/pci/controller/pci-v3-semi.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+> From: Rob Herring, Sent: Wednesday, October 28, 2020 11:45 PM
+>=20
+> On Wed, 28 Oct 2020 11:05:49 +0900, Yoshihiro Shimoda wrote:
+> > Convert Renesas PCIe Host controller bindings documentation to
+> > json-schema. Note that some compatible doesn't contain on
+> > the original documantation so that incremental patches are required
+> > for it.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  .../devicetree/bindings/pci/rcar-pci-host.yaml     | 146 +++++++++++++=
+++++++++
+> >  Documentation/devicetree/bindings/pci/rcar-pci.txt |  72 ----------
+> >  2 files changed, 146 insertions(+), 72 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-host=
+.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
+> >
+>=20
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> yamllint warnings/errors:
+> ./Documentation/devicetree/bindings/pci/rcar-pci-host.yaml:18:9: [warning=
+] wrong indentation: expected 10 but found 8
+> (indentation)
+> ./Documentation/devicetree/bindings/pci/rcar-pci-host.yaml:27:9: [warning=
+] wrong indentation: expected 10 but found 8
+> (indentation)
+>=20
+> dtschema/dtc warnings/errors:
+>=20
+>=20
+> See
+> https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1603850751=
+-32762-2-git-send-email-yoshihiro.shimoda.uh@renesas.com/
+>=20
+> The base for the patch is generally the last rc1. Any dependencies
+> should be noted.
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>=20
+> pip3 install dtschema --upgrade
+>=20
+> Please check and re-submit.
 
-diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-index 154a53986..e24abc5b4 100644
---- a/drivers/pci/controller/pci-v3-semi.c
-+++ b/drivers/pci/controller/pci-v3-semi.c
-@@ -739,8 +739,10 @@ static int v3_pci_probe(struct platform_device *pdev)
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	v3->base = devm_ioremap_resource(dev, regs);
--	if (IS_ERR(v3->base))
-+	if (IS_ERR(v3->base)) {
-+		clk_disable_unprepare(clk);
- 		return PTR_ERR(v3->base);
-+	}
- 	/*
- 	 * The hardware has a register with the physical base address
- 	 * of the V3 controller itself, verify that this is the same
-@@ -754,17 +756,22 @@ static int v3_pci_probe(struct platform_device *pdev)
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 	if (resource_size(regs) != SZ_16M) {
- 		dev_err(dev, "config mem is not 16MB!\n");
-+		clk_disable_unprepare(clk);
- 		return -EINVAL;
- 	}
- 	v3->config_mem = regs->start;
- 	v3->config_base = devm_ioremap_resource(dev, regs);
--	if (IS_ERR(v3->config_base))
-+	if (IS_ERR(v3->config_base)) {
-+		clk_disable_unprepare(clk);
- 		return PTR_ERR(v3->config_base);
-+	}
- 
- 	/* Get and request error IRQ resource */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
-+	if (irq < 0) {
-+		clk_disable_unprepare(clk);
- 		return irq;
-+	}
- 
- 	ret = devm_request_irq(dev, irq, v3_irq, 0,
- 			"PCIv3 error", v3);
-@@ -772,6 +779,7 @@ static int v3_pci_probe(struct platform_device *pdev)
- 		dev_err(dev,
- 			"unable to request PCIv3 error IRQ %d (%d)\n",
- 			irq, ret);
-+		clk_disable_unprepare(clk);
- 		return ret;
- 	}
- 
--- 
-2.23.0
+Thank you for the information. I already ran 'make dt_binding_check',
+but didn't install yamllint so I didn't see the errors.
+I'll fix it.
+
+Best regards,
+Yoshihiro Shimoda
 
