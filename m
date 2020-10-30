@@ -2,164 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43C542A101E
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 22:27:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 318B72A1070
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 22:42:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgJ3V07 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Oct 2020 17:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgJ3V07 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Oct 2020 17:26:59 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F891C0613CF;
-        Fri, 30 Oct 2020 14:26:59 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604093217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lNbtlaZ/0LN/46kZovZUcDI1Xg+UKquiVqEtTjo0iIE=;
-        b=F7WuPLvWNOQWWuT91OMZTZb6yYnucYWeyyPUiS428UCfd2bZO6dDhRG8BDwU8MnIF7vUOU
-        1sqn+X3GtGZPdL+ShOtU+2eChvO8xaGX+f5L0BiWP3QjsDzso7wJxOueNyQ+hxcMjjHfIX
-        p/gv0UU56XSYSCG15oSvMUbWcbpaiiClzn/UFMYhNQRxIML+f1/LaBzdGHGdxR+uF5vqV2
-        Hgg5K8EmlskQ1gNgPbyqxh8oeq6+cl8tqKBzx+X2ix0cPd6xWNu9oB5XUoPks1OqPY7f8f
-        eCW+/6tDEokRzw1pDM+Qp1Nd6r5wHO88YE1bVVaAFBiJ3s9TkZamGFtykTJtoA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604093217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lNbtlaZ/0LN/46kZovZUcDI1Xg+UKquiVqEtTjo0iIE=;
-        b=WTQ+SiV5y1AeRGWEP4cuQams5PRsxX8WkWaldViC8HL7AEz5qVHF3GxJwZLTF4uT2feC8K
-        C6cmair8Fm+7QhCw==
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        jgg@mellanox.com, rafael@kernel.org, netanelg@mellanox.com,
-        shahafs@mellanox.com, yan.y.zhao@linux.intel.com,
-        pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com
-Cc:     Megha Dey <megha.dey@linux.intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v4 13/17] dmaengine: idxd: ims setup for the vdcm
-In-Reply-To: <160408393950.912050.6095700006969517668.stgit@djiang5-desk3.ch.intel.com>
-References: <160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com> <160408393950.912050.6095700006969517668.stgit@djiang5-desk3.ch.intel.com>
-Date:   Fri, 30 Oct 2020 22:26:57 +0100
-Message-ID: <875z6rmmla.fsf@nanos.tec.linutronix.de>
+        id S1727389AbgJ3Vmg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Oct 2020 17:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727152AbgJ3Vmg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 30 Oct 2020 17:42:36 -0400
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7B6720727;
+        Fri, 30 Oct 2020 21:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604094156;
+        bh=FLGiYQjqtVH2aslBOY7nSYcK0cB9crbhPXRL8Q0cq1o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1wv2wLGN+g0K7oGs95DHFNZO5FFDG0V5jGwQCi5kB85WSeYFlOuC25m8IjUyhrMPD
+         cjpNzF7+OJkAn7+aYtt3w2cFW8dNh0+RJddFBjGQO2e70Z/6wDSQEt4aGPRm+W54z4
+         6r99VwLV+8eqPpftL5BIU1tBKMaLdhWL4VXhCEq4=
+Date:   Fri, 30 Oct 2020 16:42:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     linux-pci@vger.kernel.org, "Boris V." <borisvk@bstnet.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        rajatxjain@gmail.com, Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Always call pci_enable_acs() regardless of
+ pdev->acs_cap
+Message-ID: <20201030214234.GA606155@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201028231545.4116866-1-rajatja@google.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 30 2020 at 11:52, Dave Jiang wrote:
-> Add setup for IMS enabling for the mediated device.
+[+cc Alex]
 
-....
+On Wed, Oct 28, 2020 at 04:15:45PM -0700, Rajat Jain wrote:
+> Some devices may have have anomalies with the ACS cpability structure,
+> and they may be using quirks to support ACS functionality via other
+> registers. For such devices, it is important we always call
+> pci_enable_acs() to give the quirks a chance to enable ACS in other ways.
+> 
+> For Eg:
+> There seems a class of Intel devices quirked with *_intel_pch_acs_*
+> functions, that do not expose the standard ACS capability structure. But
+> these quirks help support ACS on these devices using other registers:
+> pci_quirk_enable_intel_pch_acs() -> doesn't use acs_cap to enable ACS
+> 
+> This has already been taken care of in the quirks, in the other direction
+> i.e. when checking if the ACS is enabled or not. So no need to do
+> anything there.
+> 
+> Reported-by: Boris V <borisvk@bstnet.org>
+> Fixes: 52fbf5bdeeef ("PCI: Cache ACS capability offset in device")
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 
-> Register with the irq bypass manager in order to allow the IMS interrupt be
-> injected into the guest and bypass the host.
+Applied to for-linus for v5.10, thanks!
 
-Why is this part of the patch which adds IMS support? This are two
-completely different things.
-
-Again, Documentation/process/submitting-patches.rst is very clear about
-this:
-        Solve only one problem per patch.
-
-You want me to review the IMS related things. Why are you mixing that
-completely unrelated bypass stuff to it?
-
-> +void vidxd_free_ims_entries(struct vdcm_idxd *vidxd)
-> +{
-> +	struct irq_domain *irq_domain;
-> +	struct mdev_device *mdev = vidxd->vdev.mdev;
-> +	struct device *dev = mdev_dev(mdev);
-> +	int i;
-> +
-> +	for (i = 0; i < VIDXD_MAX_MSIX_VECS; i++)
-> +		vidxd->irq_entries[i].entry = NULL;
-
-See below.
-
-> +	irq_domain = dev_get_msi_domain(dev);
-> +	if (irq_domain)
-> +		msi_domain_free_irqs(irq_domain, dev);
-> +	else
-> +		dev_warn(dev, "No IMS irq domain.\n");
-
-How is the code even getting to this point if the domain allocation
-failed in the first place?
-
-> +int vidxd_setup_ims_entries(struct vdcm_idxd *vidxd)
-> +{
-> +	struct irq_domain *irq_domain;
-> +	struct idxd_device *idxd = vidxd->idxd;
-> +	struct mdev_device *mdev = vidxd->vdev.mdev;
-> +	struct device *dev = mdev_dev(mdev);
-> +	int vecs = VIDXD_MAX_MSIX_VECS - 1;
-
-Some sensible comment about the -1 is missing here.
-
-> +	struct msi_desc *entry;
-> +	struct ims_irq_entry *irq_entry;
-> +	int rc, i = 0;
-> +
-> +	irq_domain = idxd->ims_domain;
-> +	dev_set_msi_domain(dev, irq_domain);
-> +	rc = msi_domain_alloc_irqs(irq_domain, dev, vecs);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	for_each_msi_entry(entry, dev) {
-> +		irq_entry = &vidxd->irq_entries[i];
-> +		irq_entry->vidxd = vidxd;
-> +		irq_entry->entry = entry;
-
-What's the business with storing the MSI entry here? Just to do this:
-
-       ims_idx = vidxd->irq_entries[vidx - 1].entry->device_msi.hwirq;
-
-and this:
-
-      if (vidxd->irq_entries[i].entry->device_msi.hwirq == handle) {
-
-What's wrong with storing the hardware interrupt index right here
-instead of handing that pointer around? The usage sites have no reason
-to know about the entry itself.
-
-> +		irq_entry->id = i;
-
-Again, what is the point of storing the array offset in the array slot?
-If it _is_ useful then adding a comment is not too much asked for.
-
-So the place I found which uses it cannot compute the index obviously,
-but this:
-
-        vidxd_send_interrupt(irq_entry->vidxd, irq_entry->id + 1);
-
-is again just voodoo programming. Why can't you just provide a data set
-which contains data ready for consumption at the usage site?
-
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index c7e47c26cd90..89cf60a30803 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -536,6 +536,7 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> ---
+>  drivers/pci/pci.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 6d4d5a2f923d..ab398226c55e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3516,8 +3516,13 @@ void pci_acs_init(struct pci_dev *dev)
+>  {
+>  	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
 >  
->  	return ops->domain_alloc_irqs(domain, dev, nvec);
+> -	if (dev->acs_cap)
+> -		pci_enable_acs(dev);
+> +	/*
+> +	 * Attempt to enable ACS regardless of capability because some rootports
+> +	 * (e.g. the ones quirked with *_intel_pch_acs_*) may not expose
+> +	 * standard rootport capability structure, but still may support ACS via
+> +	 * those quirks.
+> +	 */
+> +	pci_enable_acs(dev);
 >  }
-> +EXPORT_SYMBOL(msi_domain_alloc_irqs);
-
-Sigh... This want's to be a preperatory patch and the export wants to be
-EXPORT_SYMBOL_GPL
-  
-Thanks,
-
-        tglx
+>  
+>  /**
+> -- 
+> 2.29.1.341.ge80a0c044ae-goog
+> 
