@@ -2,82 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53BB12A08E8
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 16:01:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34F4F2A0C5D
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 18:26:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgJ3PBM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Oct 2020 11:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgJ3PAa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Oct 2020 11:00:30 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DAFC0613F0
-        for <linux-pci@vger.kernel.org>; Fri, 30 Oct 2020 07:59:36 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b3so886659wrx.11
-        for <linux-pci@vger.kernel.org>; Fri, 30 Oct 2020 07:59:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=TjZDjTDUyG5IOPAjtKhDz6bJNm6DqwPh3GYjQnJOtk58Qe+VS+LrjG9D+UJTL89L5a
-         hPszd6YttBU2gVDN4Hgd0nVvKmUsgBGa0RfR9y4dU1VG6wqrOSeXXlqa/jT4b2a91QjD
-         sT+ma7QKBtdbME0ZKxl0kc6DEI2BSZsRxuMkNkQsvOWxO6URWAKkh65L3Tk879AJ4LqG
-         Bj9eXYFDUcjXqha9S32esb82rsLCjf9rEdFYrDoZfWxC18Um3HNxqbzetSufrWkdrmWB
-         Hgfuw2XlX0g8ZkLr3paRT5DvZbKL3ccSJq24BaLzNsiQWn1tArC4uUyPSHMQ3hVqPZo6
-         Sb9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=R1cH4+cHiPy39/sQc11+dKAnAhzAwCwPtDiid61pvs/u2s1EWkJ0Vv43frhe6dIJAf
-         LWhF5DDER3m8NZ0joLm/MONdqTq4+iWd6SF0QdUgYE7uTNFqnF8ATDGEIHK2lPrMAqUq
-         8xkfS3eMVPd3Nuv21kACs0hiBcBSN5IyDlAq6IZ9UhfM/WImz5UOvUoqGy3H8bXMino6
-         ktp1uLclmKmlODNcLAq7v5Z+P4EGjkF+O0XGHAnjhHk3LXrA+CbbfjqqkUBVyQaK7QTo
-         EBlfpHVwNNmiEsHkQYX3U7KGGzHs+26uCgMe7g/X+IH3WFrNBgdT+TehAtX7ukm4zr1K
-         q8Fw==
-X-Gm-Message-State: AOAM532wtQ8ExeQGBFjdM/mMysGMkK4EmouRcrTCAUH5BWahv1CBbd55
-        1A/rzVo5+VJpyzbWOG+tR1YqKcaYey5vOLkMI83NR1egSQ==
-X-Google-Smtp-Source: ABdhPJz0XXuJnPS5g3+lbBiW+XXmkDUqYoNBDu76t3os6QvlPQSI6Onyl30CWs+Md1o+E0r28qs03HXLpOQosKz8YWo=
-X-Received: by 2002:a50:f307:: with SMTP id p7mr2761574edm.235.1604069974505;
- Fri, 30 Oct 2020 07:59:34 -0700 (PDT)
+        id S1726815AbgJ3R0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Oct 2020 13:26:08 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57807 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726814AbgJ3R0H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 30 Oct 2020 13:26:07 -0400
+IronPort-SDR: ndwxYtgZMSpMB/VPiZ0p/eeYX4KBJ8xeU8Y+mOmgn0ri+b/poid6Y/+BxzglACJfGZ9U0yVsyw
+ dk66R9qeaQFg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9790"; a="230276204"
+X-IronPort-AV: E=Sophos;i="5.77,434,1596524400"; 
+   d="scan'208";a="230276204"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2020 10:26:06 -0700
+IronPort-SDR: PO9Rxe2POxWF8JKjpCzkqBGqSyYOm120Fdsm5hCO3NQFMgmgFT0/wVbXmYbf87NyIlpNH6flaA
+ JduKGRCFqlgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,434,1596524400"; 
+   d="scan'208";a="537135871"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2020 10:26:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 79A83567; Fri, 30 Oct 2020 19:26:03 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v3 3/6] resource: Introduce resource_union() for overlapping resources
+Date:   Fri, 30 Oct 2020 19:25:53 +0200
+Message-Id: <20201030172556.21686-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201030172556.21686-1-andriy.shevchenko@linux.intel.com>
+References: <20201030172556.21686-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Received: by 2002:a50:f14c:0:0:0:0:0 with HTTP; Fri, 30 Oct 2020 07:59:34
- -0700 (PDT)
-Reply-To: li.anable85@gmail.com
-From:   Liliane Abel <k.griest04@gmail.com>
-Date:   Fri, 30 Oct 2020 15:59:34 +0100
-Message-ID: <CABAZL7=b-NWks3DKb=fdDjnu_xt_-CcJCqf-F5s0yQCFVH73-A@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dearest
+Some already present users may utilize resource_union() helper.
+Provide it for them and for wider use in the future.
 
-Greeting my dear, I am Liliane Abel by name, The only daughter of late
-Mr.Benson Abel. My father is one of the top Politician in our country
-and my mother is a farmers and cocoa merchant when they were both
-alive. After the death of my mother, long ago, my father was
-controlling their business until he was poisoned by his business
-associates which he suffered and died.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+---
+ include/linux/ioport.h | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Before the death of my father, He told me about (two million five
-hundred thousand united states dollars) which he deposited in the bank
-in Lome-Togo, It was the money he intended to transfer overseas for
-investment before he was poisoned. He also instructed me that I should
-seek for foreign partners in any country of my choice who will assist
-me transfer this money in overseas account where the money will be
-wisely invested.
-I am seeking for your kind assistance in the following ways:  (1) to
-provide a safe bank account into where the money will be transferred
-for investment. (2) To serve as a guardian of this fund since I am a
-girl of 19 years old. (3) To make arrangement for me to come over to
-your country to further my education. This is my reason for writing to
-you. Please if you are willing to assist me I will offer you 25% of
-the total money. Reply if  you are interested
-Best regards.
-Liliane Abel.
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index df4581107536..40320eb5bc0e 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -10,9 +10,10 @@
+ #define _LINUX_IOPORT_H
+ 
+ #ifndef __ASSEMBLY__
++#include <linux/bits.h>
+ #include <linux/compiler.h>
++#include <linux/minmax.h>
+ #include <linux/types.h>
+-#include <linux/bits.h>
+ /*
+  * Resources are tree-like, allowing
+  * nesting etc..
+@@ -235,6 +236,16 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
+        return r1->start <= r2->end && r1->end >= r2->start;
+ }
+ 
++static inline bool
++resource_union(struct resource *r1, struct resource *r2, struct resource *r)
++{
++	if (!resource_overlaps(r1, r2))
++		return false;
++	r->start = min(r1->start, r2->start);
++	r->end = max(r1->end, r2->end);
++	return true;
++}
++
+ /* Convenience shorthand with allocation */
+ #define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
+ #define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
+-- 
+2.28.0
+
