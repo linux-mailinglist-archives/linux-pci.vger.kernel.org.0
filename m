@@ -2,105 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 234A429FDF1
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 07:45:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68D9029FF93
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 09:23:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbgJ3Gpl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Oct 2020 02:45:41 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2211 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgJ3Gpl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Oct 2020 02:45:41 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f9bb6970000>; Thu, 29 Oct 2020 23:45:43 -0700
-Received: from [10.40.204.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 30 Oct
- 2020 06:45:30 +0000
-Subject: Re: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "treding@nvidia.com" <treding@nvidia.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20201029053959.31361-1-vidyas@nvidia.com>
- <20201029053959.31361-3-vidyas@nvidia.com>
- <SL2P216MB04759A928ACAA6F411718E01AA140@SL2P216MB0475.KORP216.PROD.OUTLOOK.COM>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <3695ce8b-1635-750e-eb81-d453a828378d@nvidia.com>
-Date:   Fri, 30 Oct 2020 12:15:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+        id S1725905AbgJ3IXY convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 30 Oct 2020 04:23:24 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:43873 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgJ3IXY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Oct 2020 04:23:24 -0400
+X-Greylist: delayed 37750 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 04:23:23 EDT
+X-Originating-IP: 83.193.246.53
+Received: from windsurf.home (lfbn-bay-1-165-53.w83-193.abo.wanadoo.fr [83.193.246.53])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id AE53724000C;
+        Fri, 30 Oct 2020 08:23:19 +0000 (UTC)
+Date:   Fri, 30 Oct 2020 09:23:18 +0100
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>, vtolkm@gmail.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Marek =?UTF-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20201030092318.7c81a032@windsurf.home>
+In-Reply-To: <877dr8oc7m.fsf@toke.dk>
+References: <871rhhmgkq.fsf@toke.dk>
+        <20201029193022.GA476048@bjorn-Precision-5520>
+        <20201029225409.2accead3@windsurf.home>
+        <877dr8oc7m.fsf@toke.dk>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <SL2P216MB04759A928ACAA6F411718E01AA140@SL2P216MB0475.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604040343; bh=GWjtJhVGhiEd9MgQUBVrG6Pzm5milcqorcIchRc378U=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=hF1y2OpGXwlSUq4cllI7lJQq5AG/LWvWcYSYe4E6HeuV+5Hyid+cv2H9FTN3U2qZd
-         zmV0wpRlHSIFUBTHq5EVg0+OcCHheYRKCMJh6zNpkWJE8K5m6gctHd1EK0tnoII4eI
-         ir6OGvlWO6fyaWT5NFoNiQhJo2sVk32l+cWZYmKiILIi5IDxtPKwtx92Rt2wRKQCjo
-         8vaVQ6+n/QeoHb5K+e2m/AGC31rhSrS/plkvSY1CnaVrXPn/DYa3vOdMYYiF1/1PSD
-         ErgOnptwRsFhrrveQkb0SpOqeaNiEuA7xEnz/8E1pdswz81V1H2RmKKq+xHRh4FWHR
-         ha33MAr+YJ7YQ==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, 30 Oct 2020 00:15:57 +0100
+Toke Høiland-Jørgensen <toke@redhat.com> wrote:
 
+> > I haven't read the whole thread, but it is important to keep in mind
+> > that on those two platforms, the PCI Bridge seen by Linux is *not* a
+> > real HW bridge. It is faked by the the pci-bridge-emul code. So if this
+> > code has defects/bugs in how it emulates a PCI Bridge behavior, you
+> > might see weird things.  
+> 
+> Ohh, that's interesting. Why does it need to emulate it?
 
-On 10/30/2020 3:33 AM, Jingoo Han wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On 10/29/20, 1:40 AM, Vidya Sagar wrote:
->>
->> DesignWare core has a TLP digest (TD) override bit in one of the control
->> registers of ATU. This bit also needs to be programmed for proper ECRC
->> functionality. This is currently identified as an issue with DesignWare
->> IP version 4.90a. This patch does the required programming in ATU upon
->> querying the system policy for ECRC.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
-> 
-> No, it should be Acked-by. I gave you Acked-by, not Reviewed-by.
-> 
-> Acked-by: Jingoo Han <jingoohan1@gmail.com>
-Apologies. My bad. I saw the 'Reviewed-by' of the other patch (i.e. 
-PCI/AER: Add pcie_is_ecrc_enabled() API) and put that for this patch as 
-well. I'll update.
+Because the HW doesn't expose a standard PCI Bridge. On mvebu, the main
+initial motivation was to be able to configure MBus windows dynamically
+depending on PCI endpoints that are connected.
 
-> 
-> 
-> Best regards,
-> Jingoo Han
-> 
->> ---
->> V3:
->> * Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
->>
->> V2:
->> * Addressed Jingoo's review comment
->> * Removed saving 'td' bit information in 'dw_pcie' structure
->>
->>   drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
->>   drivers/pci/controller/dwc/pcie-designware.h | 1 +
->>   2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> [...]
-> 
+For AArdvark, the rationale is documented in commit
+8a3ebd8de328301aacbe328650a59253be2ac82c:
+
+commit 8a3ebd8de328301aacbe328650a59253be2ac82c
+Author: Zachary Zhang <zhangzg@marvell.com>
+Date:   Thu Oct 18 17:37:19 2018 +0200
+
+    PCI: aardvark: Implement emulated root PCI bridge config space
+    
+    The PCI controller in the Marvell Armada 3720 does not implement a
+    software-accessible root port PCI bridge configuration space. This
+    causes a number of problems when using PCIe switches or when the Max
+    Payload size needs to be aligned between the root complex and the
+    endpoint.
+    
+    Implementing an emulated root PCI bridge, like is already done in the
+    pci-mvebu driver for older Marvell platforms allows to solve those
+    issues, and also to support features such as ASR, PME, VC, HP.
+    
+    Signed-off-by: Zachary Zhang <zhangzg@marvell.com>
+    [Thomas: convert to the common emulated PCI bridge logic.]
+    Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+    Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
