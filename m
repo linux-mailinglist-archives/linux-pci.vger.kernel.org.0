@@ -2,44 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34F4F2A0C5D
-	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 18:26:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB1C92A0C60
+	for <lists+linux-pci@lfdr.de>; Fri, 30 Oct 2020 18:26:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgJ3R0I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Oct 2020 13:26:08 -0400
-Received: from mga06.intel.com ([134.134.136.31]:57807 "EHLO mga06.intel.com"
+        id S1726674AbgJ3R0J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 30 Oct 2020 13:26:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:49683 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgJ3R0H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 30 Oct 2020 13:26:07 -0400
-IronPort-SDR: ndwxYtgZMSpMB/VPiZ0p/eeYX4KBJ8xeU8Y+mOmgn0ri+b/poid6Y/+BxzglACJfGZ9U0yVsyw
- dk66R9qeaQFg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9790"; a="230276204"
+        id S1726829AbgJ3R0I (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 30 Oct 2020 13:26:08 -0400
+IronPort-SDR: XQx3ZIvQeCEAf9UqSLXoAkCNERzdkjRmhtdgXuO/V3wYjON6pUxItuob7YDR6oFn16K4SOnmcA
+ 65oZAw8aBXuQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9790"; a="148495157"
 X-IronPort-AV: E=Sophos;i="5.77,434,1596524400"; 
-   d="scan'208";a="230276204"
+   d="scan'208";a="148495157"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2020 10:26:06 -0700
-IronPort-SDR: PO9Rxe2POxWF8JKjpCzkqBGqSyYOm120Fdsm5hCO3NQFMgmgFT0/wVbXmYbf87NyIlpNH6flaA
- JduKGRCFqlgw==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2020 10:26:08 -0700
+IronPort-SDR: /apKCsT+9wpagEK7jwAuqEGV/TBMTTXX+fbzyMLO5PvbKvq/XujP2y12yWTIxhg3GH1VJykpU4
+ Z2jfmUCO383w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,434,1596524400"; 
-   d="scan'208";a="537135871"
+   d="scan'208";a="356654239"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 30 Oct 2020 10:26:04 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 30 Oct 2020 10:26:06 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 79A83567; Fri, 30 Oct 2020 19:26:03 +0200 (EET)
+        id 9092E62E; Fri, 30 Oct 2020 19:26:03 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v3 3/6] resource: Introduce resource_union() for overlapping resources
-Date:   Fri, 30 Oct 2020 19:25:53 +0200
-Message-Id: <20201030172556.21686-4-andriy.shevchenko@linux.intel.com>
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH v3 5/6] PCI/ACPI: Replace open coded variant of resource_union()
+Date:   Fri, 30 Oct 2020 19:25:55 +0200
+Message-Id: <20201030172556.21686-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201030172556.21686-1-andriy.shevchenko@linux.intel.com>
 References: <20201030172556.21686-1-andriy.shevchenko@linux.intel.com>
@@ -49,51 +49,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some already present users may utilize resource_union() helper.
-Provide it for them and for wider use in the future.
+Since we have resource_union() helper, let's utilize it here.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- include/linux/ioport.h | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/acpi/pci_root.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index df4581107536..40320eb5bc0e 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -10,9 +10,10 @@
- #define _LINUX_IOPORT_H
- 
- #ifndef __ASSEMBLY__
-+#include <linux/bits.h>
- #include <linux/compiler.h>
-+#include <linux/minmax.h>
- #include <linux/types.h>
--#include <linux/bits.h>
- /*
-  * Resources are tree-like, allowing
-  * nesting etc..
-@@ -235,6 +236,16 @@ static inline bool resource_overlaps(struct resource *r1, struct resource *r2)
-        return r1->start <= r2->end && r1->end >= r2->start;
- }
- 
-+static inline bool
-+resource_union(struct resource *r1, struct resource *r2, struct resource *r)
-+{
-+	if (!resource_overlaps(r1, r2))
-+		return false;
-+	r->start = min(r1->start, r2->start);
-+	r->end = max(r1->end, r2->end);
-+	return true;
-+}
-+
- /* Convenience shorthand with allocation */
- #define request_region(start,n,name)		__request_region(&ioport_resource, (start), (n), (name), 0)
- #define request_muxed_region(start,n,name)	__request_region(&ioport_resource, (start), (n), (name), IORESOURCE_MUXED)
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index c12b5fb3e8fb..0bf072cef6cf 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -722,9 +722,7 @@ static void acpi_pci_root_validate_resources(struct device *dev,
+ 			 * our resources no longer match the ACPI _CRS, but
+ 			 * the kernel resource tree doesn't allow overlaps.
+ 			 */
+-			if (resource_overlaps(res1, res2)) {
+-				res2->start = min(res1->start, res2->start);
+-				res2->end = max(res1->end, res2->end);
++			if (resource_union(res1, res2, res2)) {
+ 				dev_info(dev, "host bridge window expanded to %pR; %pR ignored\n",
+ 					 res2, res1);
+ 				free = true;
 -- 
 2.28.0
 
