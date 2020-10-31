@@ -2,106 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA8902A1324
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Oct 2020 03:50:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A2F52A13AC
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Oct 2020 06:35:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgJaCur (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 30 Oct 2020 22:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36998 "EHLO
+        id S1725848AbgJaFfJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 31 Oct 2020 01:35:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgJaCuq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 30 Oct 2020 22:50:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98468C0613D5;
-        Fri, 30 Oct 2020 19:50:46 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604112643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uApMClh8LgUA9+nJd9aotz4iVU4rrDChpNyqFIsKvVA=;
-        b=BTy3lFhBX7sA4VCntMKiVzzwk15jABSRHtryuyJx0+un+EmAEDlvBnsxWJN/WlLwW0AZtf
-        dgIPedgj2GGEjgGyhDuEhVmXnVNwJ6R2nQaqLpM2oQSdZsNeRblLHWV1fRJeXgirvSE5Cz
-        M/U9x6HLsQuAd7grINFE+wXsybNOiFGqeZ4aI6wY5qOnfcZanCDX3DbFOa8b/cHiCtwGnJ
-        QEbUT+UuCjF76GX1Eku7Ndj/2ocNBLRt5PYkolws6PuXIWsQylQzhlESmrDBr3VijobWxB
-        NSMTVPCrpbQzkdGGnAWLN4CHPuD1EQy3J/h0xxtVJ008KaTYvoCn0wcg1FwESA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604112643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uApMClh8LgUA9+nJd9aotz4iVU4rrDChpNyqFIsKvVA=;
-        b=A819AejM97rPxCwoMXgGJd+KHw/MTmbonbj8ZqfBkpxDATgoUcgnpq0ENP6nnXI3x/A5+P
-        UiUnecA3TerRblAA==
-To:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
-        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        dan.j.williams@intel.com, kwankhede@nvidia.com,
-        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
-        netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        Megha Dey <megha.dey@linux.intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 00/17] Add VFIO mediated device support and DEV-MSI support for the idxd driver
-In-Reply-To: <20201030204307.GA683@otc-nc-03>
-References: <160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com> <20201030185858.GI2620339@nvidia.com> <c9303df4-3e57-6959-a89c-5fc98397ac70@intel.com> <20201030191706.GK2620339@nvidia.com> <20201030192325.GA105832@otc-nc-03> <20201030193045.GM2620339@nvidia.com> <20201030204307.GA683@otc-nc-03>
-Date:   Sat, 31 Oct 2020 03:50:43 +0100
-Message-ID: <87h7qbkt18.fsf@nanos.tec.linutronix.de>
+        with ESMTP id S1725822AbgJaFfJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 31 Oct 2020 01:35:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A13FC0613D5
+        for <linux-pci@vger.kernel.org>; Fri, 30 Oct 2020 22:35:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=ZL3Qgzfq4nmBfTM49VNjh9sFuIDxZ0i94glXnFFtEmY=; b=HqGd0ktfB7kAQO4iZwthL0kscs
+        L35Zv87Sn/IZ2pDNzh3u4j28WoEprjWe6Elk3laCPouAc5jlfwcVkGgVSkMaEpJiiPy24t/JJitfl
+        XJtda0ftRvCaN0XhCIHVInJWWgn476U3akLOVUjsdsFz9rcMSyMV69YklVh4SAh66Y+1w59CnrXTl
+        VqGDoikIMixKKdwMsYuHHHdkF3rlMbOQYRGbpzlT0xqOxRyP3X+IxX5R0IzztJ2cjjX13VRDFzTHm
+        AbY6I3BXMNbqmXbrW9Rww/WLxvStMV8lHR1vnY2EpqfWFOffwMP3CnLCOipL/or1sZib9CQWaTbUE
+        ZHW+GLGw==;
+Received: from [2601:1c0:6280:3f0::371c]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kYjXd-0004zy-MQ; Sat, 31 Oct 2020 05:35:06 +0000
+Subject: Re: [PATCH] PCI: add helper function to find DVSEC
+To:     Dave Jiang <dave.jiang@intel.com>, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, david.e.box@intel.com,
+        sean.v.kelly@intel.com, ashok.raj@intel.com
+References: <160409768616.919324.13994867117217584719.stgit@djiang5-desk3.ch.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b742b19e-7ac6-901d-909a-15fb266ccffe@infradead.org>
+Date:   Fri, 30 Oct 2020 22:35:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <160409768616.919324.13994867117217584719.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ashok,
+On 10/30/20 3:42 PM, Dave Jiang wrote:
+> Add function that searches for DVSEC and returns the offset in PCI
+> configuration space for the interested DVSEC capability.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+> ---
+> 
+> The patch has dependency on David Box’s dvsec definition patch:
+> https://lore.kernel.org/linux-pci/bc5f059c5bae957daebde699945c80808286bf45.camel@linux.intel.com/T/#m1d0dc12e3b2c739e2c37106a45f325bb8f001774
+> 
+>  drivers/pci/pci.c   |   30 ++++++++++++++++++++++++++++++
+>  include/linux/pci.h |    3 +++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 6d4d5a2f923d..49e57b831509 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -589,6 +589,36 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_ext_capability);
+>  
+> +/**
+> + * pci_find_dvsec - return position of DVSEC with provided vendor and DVSEC ID
+> + * @dev: the PCI device
+> + * @vendor: vendor for the DVSEC
+> + * @id: the DVSEC capibility ID
 
-On Fri, Oct 30 2020 at 13:43, Ashok Raj wrote:
-> On Fri, Oct 30, 2020 at 04:30:45PM -0300, Jason Gunthorpe wrote:
->> On Fri, Oct 30, 2020 at 12:23:25PM -0700, Raj, Ashok wrote:
->> It is a different subsystem, different maintainer, and different
->> reviewers.
->> 
->> It is a development process problem, it doesn't matter what it is
->> doing.
+                     capability
 
-< skip a lot of non-sensical arguments>
+> + *
+> + * Return the offset of DVSEC on success or -ENOTSUPP if not found
 
-> I know you aren't going to give up, but there is little we can do. I want
-> the maintainers to make that call and I'm not add more noise to this.
+    * Return: the offset of DVSEC on success or -ENOTSUPP if not found
 
-Jason is absolutely right.
+> + */
+> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
+> +{
+> +	u16 dev_vendor, dev_id;
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return -ENOTSUPP;
+> +
+> +	while (pos) {
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &dev_vendor);
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &dev_id);
+> +		if (dev_vendor == vendor && dev_id == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return -ENOTSUPP;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_dvsec);
+> +
+>  /**
+>   * pci_get_dsn - Read and return the 8-byte Device Serial Number
+>   * @dev: PCI device to query
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 22207a79762c..6c692d32c82a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1069,6 +1069,7 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap);
+>  int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
+>  int pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
+>  int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap);
+> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id);
+>  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>  
+>  u64 pci_get_dsn(struct pci_dev *dev);
+> @@ -1726,6 +1727,8 @@ static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
+>  { return 0; }
+>  static inline int pci_find_ext_capability(struct pci_dev *dev, int cap)
+>  { return 0; }
+> +static inline int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
+> +{ return 0; }
 
-Just because there is historical precendence which does not care about
-the differentiation of subsystems is not an argument at all to make the
-same mistakes which have been made years ago.
+Why shouldn't this return -ENOTSUPP instead of 0?
 
-IDXD is just infrastructure which provides the base for a variety of
-different functionalities. Very similar to what multi function devices
-provide. In fact IDXD is pretty much a MFD facility.
+>  
+>  static inline u64 pci_get_dsn(struct pci_dev *dev)
+>  { return 0; }
+> 
+> 
 
-Sticking all of it into dmaengine is sloppy at best. The dma engine
-related part of IDXD is only a part of the overall functionality.
+-- 
+~Randy
 
-I'm well aware that it is conveniant to just throw everything into
-drivers/myturf/ but that does neither make it reviewable nor
-maintainable.
-
-What's the problem with restructuring your code in a way which makes it
-fit into existing subsystems?
-
-The whole thing - as I pointed out to Dave earlier - is based on 'works
-for me' wishful thinking with a blissful ignorance of the development
-process and the requirement to split a large problem into the proper
-bits and pieces aka. engineering 101.
-
-Thanks,
-
-        tglx
