@@ -2,82 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB6CD2A181C
-	for <lists+linux-pci@lfdr.de>; Sat, 31 Oct 2020 15:21:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA8C62A1AE1
+	for <lists+linux-pci@lfdr.de>; Sat, 31 Oct 2020 22:49:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgJaOVE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 31 Oct 2020 10:21:04 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.170]:44996 "EHLO
-        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727407AbgJaOVE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 31 Oct 2020 10:21:04 -0400
-X-Greylist: delayed 599 seconds by postgrey-1.27 at vger.kernel.org; Sat, 31 Oct 2020 10:21:03 EDT
-Received: from mxout3.routing.net (unknown [192.168.10.111])
-        by backup.mxwww.masterlogin.de (Postfix) with ESMTPS id 720EE2C522;
-        Sat, 31 Oct 2020 14:03:58 +0000 (UTC)
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-        by mxout3.routing.net (Postfix) with ESMTP id 7AA7D60131;
-        Sat, 31 Oct 2020 14:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1604153030;
+        id S1725880AbgJaVtR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 31 Oct 2020 17:49:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50284 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbgJaVtR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 31 Oct 2020 17:49:17 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1604180955;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=nnqpdwBRoGTj+JO7bkuaUY6oKrUxMavYYaV/d3fKDdQ=;
-        b=bVQemA238/wVSfo5rW9auRUYepbmAnKBqLrz9KJUXnluHpXQv3wtzei+B9qRorOmKRxj8B
-        C3e13ePdrdgOfaDFXlI2RPzevDEsoiN3L2pG8pCQAuiBmH1uBXPnRo2rbG8u1yHCBG5/9B
-        AMQAt6gYbCUhbPxmX1I9Uae1C1Z7/EE=
-Received: from localhost.localdomain (fttx-pool-217.61.156.230.bambit.de [217.61.156.230])
-        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id E134D360085;
-        Sat, 31 Oct 2020 14:03:43 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qkyGG23d8Oju/T6dnuYTqANlxTDymnqLTSvkubtS9gg=;
+        b=vsliVRntutM0GOE3hoVVmu/ViFK7VmgZQP2wNyCzCpGdrt0qNofOwIMEPXaJ8iQodzXlSk
+        HEjRYOxuR3Bc8odVZRARR9iZng+XdMVQ09CbkALJBnfTGAVpGC/SW6BRY591pzGCoSCS6j
+        XT8wZRRpGZRtFlWTr2roNQTditYoerX6nw0yjimKlqMwicO6Od1wxUxKeL+qsUtpCKybJ0
+        ckRRqM6s7y5PbyYodgT4K9CxJFKft0VtbF/oXj1I07SVDdLwG5lNv+aoCpW0+oBhc976d6
+        OpGPIXkyYsKi9E7in3lwwHurMXjvcVivPjnIXWQYSN3nHhiXatva6m7Gv31S8g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1604180955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qkyGG23d8Oju/T6dnuYTqANlxTDymnqLTSvkubtS9gg=;
+        b=ng5hsa/ui4rhHNPKLXo4Fp1L0eC1dpYDz4IzhYF9wy/FkMRl6UZ8zDMPm11TZFcaoAbz4Q
+        izrr+3daBzIRU/Dg==
+To:     Frank Wunderlich <linux@fw-web.de>, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         linux-pci@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH] pci: mediatek: fix warning in msi.h
-Date:   Sat, 31 Oct 2020 15:03:30 +0100
-Message-Id: <20201031140330.83768-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH] pci: mediatek: fix warning in msi.h
+In-Reply-To: <20201031140330.83768-1-linux@fw-web.de>
+References: <20201031140330.83768-1-linux@fw-web.de>
+Date:   Sat, 31 Oct 2020 22:49:14 +0100
+Message-ID: <878sbm9icl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+Frank,
 
-5.10 shows these warnings on bootup while enabling pcie
-at least on bananapi-r2:
+On Sat, Oct 31 2020 at 15:03, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+>
+> 5.10 shows these warnings on bootup while enabling pcie
+> at least on bananapi-r2:
+>
+> [    6.161730] WARNING: CPU: 2 PID: 73 at include/linux/msi.h:213 pci_msi_setup_
+> msi_irqs.constprop.0+0x78/0x80
+> ....
+> [    6.724607] WARNING: CPU: 2 PID: 73 at include/linux/msi.h:219 free_msi_irqs+
+>
+> fix this by selecting PCI_MSI_ARCH_FALLBACKS for MTK PCIe driver
 
-[    6.161730] WARNING: CPU: 2 PID: 73 at include/linux/msi.h:213 pci_msi_setup_
-msi_irqs.constprop.0+0x78/0x80
-....
-[    6.724607] WARNING: CPU: 2 PID: 73 at include/linux/msi.h:219 free_msi_irqs+
+That's not a fix. It's just supressing the warning.
 
-fix this by selecting PCI_MSI_ARCH_FALLBACKS for MTK PCIe driver
+PCI_MSI_ARCH_FALLBACKS is only valid for
 
-Fixes: 077ee78e3928 ("PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable")
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- drivers/pci/controller/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+  1) Architectures which implement the fallbacks
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 64e2f5e379aa..8345de010186 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -238,6 +238,7 @@ config PCIE_MEDIATEK
- 	depends on ARCH_MEDIATEK || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
-+	select PCI_MSI_ARCH_FALLBACKS
- 	help
- 	  Say Y here if you want to enable PCIe controller support on
- 	  MediaTek SoCs.
--- 
-2.25.1
+  2) Outdated PCI controller drivers on architectures without #1 which
+     implement the deprecated msi_controller mechanism. That is handled
+     in the weak arch fallback implementation.
+
+The mediatek PCIE driver does not qualify for #2. It's purely irq domain
+based.
+
+So there is something else going wrong. The PCI device which tries to
+allocate MSIs does not have an irq domain associated which makes it run
+into that warning.
+
+If you enable PCI_MSI_ARCH_FALLBACKS then the MSI allocation fails
+silently. So it's just papering over the underlying problem.
+
+So it needs to be figured out why the domain association is not there.
+
+Thanks,
+
+        tglx
+
+
+
+
 
