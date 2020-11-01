@@ -2,67 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECAC52A1D8E
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Nov 2020 12:17:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB1622A1DA4
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Nov 2020 12:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgKALRM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Nov 2020 06:17:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgKALRM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Nov 2020 06:17:12 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4801C0617A6;
-        Sun,  1 Nov 2020 03:17:11 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604229428;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Krt6T563zJwnx7DxUOm/kUcEp/J3bUFP7nrYHXCOXd0=;
-        b=XcEKVBjxXl0SEldDFHI0QsDBfa1MasLOx1JA+FAlyFQaf5+wRgC3TWvGFaa3eyC5b0Tuwp
-        JvB1evcozCgR7TezCNLGNHitoUQPYT9SDs+OBbUa2XA1nVbAGT7zaHvh7pTwOI3bHQZExF
-        V4nJv2sI5YsEFnddXD2GghwK/Q0wOocZQdWHfQQzOmYhIryE6dFtZclIAJwtmTw5MakPmo
-        bMNyaVkrd+vJFywJyz/Qpb9g2xVqvr4EvUXNFeG292VDy+zW3fH+3+ZdpkfOYwWPw1iUQJ
-        Q8C99zhUEIgvd3u9io5q+dhkBCUTNv3sa5ZDPTogpy4ytTwE9POWVPdiRlvP3w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604229428;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Krt6T563zJwnx7DxUOm/kUcEp/J3bUFP7nrYHXCOXd0=;
-        b=hR48/JUdYqfu6FBuA6Z6JWnzxr5tXeCygZMkUG6YXwTjqcH0225c9X9IyYpkIeArbvQYYt
-        ATuF7axR/bylv1Cg==
-To:     frank-w@public-files.de, linux-mediatek@lists.infradead.org,
+        id S1726367AbgKALnn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Nov 2020 06:43:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726159AbgKALnl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 1 Nov 2020 06:43:41 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E317C2084C;
+        Sun,  1 Nov 2020 11:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604231021;
+        bh=PhpQNQy+XASsokS0LS3hOuKswcWgDRgGPvFPoeNTMvM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Zj9Y9VprsvvS+btUkl87m1PqXpA7QJAe0IAQZhZr2fFJQj6K/eRsJxYMAO81id8bD
+         wI1bhj8kmbPzA0Ljc3kKPuSLFbQAfdCZct3Q6zNlIOW2CfL8L5lvpuNhyL6nLN01RW
+         CvYehVhTky4kpLi+/saB++2fPBhFXjB1dD7WnwVY=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1kZBlq-006PGE-Q5; Sun, 01 Nov 2020 11:43:38 +0000
+Date:   Sun, 01 Nov 2020 11:43:33 +0000
+Message-ID: <87lfflti8q.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     frank-w@public-files.de
+Cc:     linux-mediatek@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
         Frank Wunderlich <linux@fw-web.de>,
-        linux-kernel@vger.kernel.org
-Cc:     Ryder Lee <ryder.lee@mediatek.com>, Marc Zyngier <maz@kernel.org>,
+        linux-kernel@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
 Subject: Re: [PATCH] pci: mediatek: fix warning in msi.h
 In-Reply-To: <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
-References: <20201031140330.83768-1-linux@fw-web.de> <878sbm9icl.fsf@nanos.tec.linutronix.de> <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
-Date:   Sun, 01 Nov 2020 12:17:08 +0100
-Message-ID: <871rhd9vij.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+References: <20201031140330.83768-1-linux@fw-web.de>
+        <878sbm9icl.fsf@nanos.tec.linutronix.de>
+        <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: frank-w@public-files.de, linux-mediatek@lists.infradead.org, tglx@linutronix.de, linux@fw-web.de, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 01 2020 at 10:25, Frank Wunderlich wrote:
+On Sun, 01 Nov 2020 09:25:04 +0000,
+Frank Wunderlich <frank-w@public-files.de> wrote:
+> 
 > Am 31. Oktober 2020 22:49:14 MEZ schrieb Thomas Gleixner <tglx@linutronix.de>:
->
->>So it needs to be figured out why the domain association is not there.
->
+> 
+> >That's not a fix. It's just supressing the warning.
+> 
+> Ok sorry
+> 
+> >So it needs to be figured out why the domain association is not there.
+> 
 > It looks like for mt7623 there is no msi domain setup (done via
 > mtk_pcie_setup_irq callback + mtk_pcie_init_irq_domain) in mtk pcie
 > driver.
 
-Hrm. No idea how that is supposed to work. I defer that to the mt
-wizards then.
+Does this mean that this SoC never handled MSIs the first place? Which
+would explain the warning, as there is no MSI domain registered for
+the device, and we end-up falling back to arch_setup_msi_irqs().
 
-Thanks,
+If this system truly is unable to handle MSIs, one potential
+workaround would be to register a PCI-MSI domain that would always
+fail its allocation with -ENOSPC. It is really ugly, but would keep
+the horror localised. See the patchlet below, which I can't test.
 
-        tglx
+If this situation is more common than we expect, we may need something
+in core code instead.
+
+	M.
+
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index cf4c18f0c25a..52758b546d40 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -151,6 +151,7 @@ struct mtk_pcie_port;
+ struct mtk_pcie_soc {
+ 	bool need_fix_class_id;
+ 	bool need_fix_device_id;
++	bool no_msi;
+ 	unsigned int device_id;
+ 	struct pci_ops *ops;
+ 	int (*startup)(struct mtk_pcie_port *port);
+@@ -435,6 +436,9 @@ static int mtk_pcie_irq_domain_alloc(struct irq_domain *domain, unsigned int vir
+ 	struct mtk_pcie_port *port = domain->host_data;
+ 	unsigned long bit;
+ 
++	if (port->pcie->soc->no_msi)
++		return -ENOSPC;
++
+ 	WARN_ON(nr_irqs != 1);
+ 	mutex_lock(&port->lock);
+ 
+@@ -966,11 +970,13 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+ 	port->slot = slot;
+ 	port->pcie = pcie;
+ 
+-	if (pcie->soc->setup_irq) {
++	if (pcie->soc->setup_irq)
+ 		err = pcie->soc->setup_irq(port, node);
+-		if (err)
+-			return err;
+-	}
++	else
++		err = mtk_pcie_allocate_msi_domains(port);
++
++	if (err)
++		return err;
+ 
+ 	INIT_LIST_HEAD(&port->list);
+ 	list_add_tail(&port->list, &pcie->ports);
+@@ -1173,6 +1179,7 @@ static const struct dev_pm_ops mtk_pcie_pm_ops = {
+ };
+ 
+ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
++	.no_msi = true,
+ 	.ops = &mtk_pcie_ops,
+ 	.startup = mtk_pcie_startup_port,
+ };
+
+-- 
+Without deviation from the norm, progress is not possible.
