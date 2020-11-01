@@ -2,104 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38FEC2A21F1
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Nov 2020 22:47:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EDE42A222D
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Nov 2020 23:27:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgKAVr3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Nov 2020 16:47:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727284AbgKAVr3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 1 Nov 2020 16:47:29 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDC3621556;
-        Sun,  1 Nov 2020 21:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604267249;
-        bh=8S3wMtP+VFlBVcZ9n2fsYn9WTHET+KxjV5vyC/DTu88=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pDFSihJJ+3uGmK65I79KGSAWNgTRbsMqKkMWBUHLDeMlcA1hY+j5WLUuQmjj7tzy0
-         vX23s/USciVchrf0JHhApr310e6Z7jQZF2u5yHpmoSvWQcPFlDQIeISlObQZQT5nDR
-         UmQMp6LoWU9dmTsx3fILr0SNcBW1yNYAb+3S/woU=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1kZLCA-006VDT-FF; Sun, 01 Nov 2020 21:47:26 +0000
-Date:   Sun, 01 Nov 2020 21:47:25 +0000
-Message-ID: <87k0v4u4uq.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Frank Wunderlich <frank-w@public-files.de>
+        id S1727359AbgKAW1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Nov 2020 17:27:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbgKAW1V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Nov 2020 17:27:21 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D38C0617A6;
+        Sun,  1 Nov 2020 14:27:21 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1604269638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ptxTsFp2L6efDZ+NSsWwAuqOWnuRT3+qbc/ppVuKKyc=;
+        b=zrhVLZVBFb+q3hwt5X/nvPFMdsf4VVl0ZxIm6E9eDxZYf3tEfrB4GMorHj70CBSscXfA5q
+        7tO17wbxtYzyEztnPNpp6pQuRYCAeWfhc7Il6oGoD1aiHBTVutRnmhuHxyiWTlq68VnE58
+        w27URJOE8zqC0GDeT+YmTP5UZSmKvsdovTCAcCrGw2yE4gMtVEv+1ZBI/nIQsjtImf17A9
+        Z8Ov/wMPndW4hznqwyyx8pNQ/R/xQ/YDb/BcA+2d6aeBZoGbhd5JGWBYCzq/dgNYGItFzD
+        kCo8gVDp9I4LV4+AEt6/OCNhbW9bTtWPNdhpo7NJShn3Hlhb+E+zrRbzN8RcLQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1604269638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ptxTsFp2L6efDZ+NSsWwAuqOWnuRT3+qbc/ppVuKKyc=;
+        b=91YBEhR4RkDtGn4ekE0bM4GfC1r7cgSSnIrSGBCPZonjdRxEx8D8WPiVKEkZJtgtNmQJ3J
+        9Lpp8U5BuAPEbmAw==
+To:     Marc Zyngier <maz@kernel.org>,
+        Frank Wunderlich <frank-w@public-files.de>
 Cc:     Ryder Lee <ryder.lee@mediatek.com>,
         linux-mediatek@lists.infradead.org,
-        Thomas Gleixner <tglx@linutronix.de>,
         Frank Wunderlich <linux@fw-web.de>,
         linux-kernel@vger.kernel.org,
         Matthias Brugger <matthias.bgg@gmail.com>,
         linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
 Subject: Re: Aw: Re: [PATCH] pci: mediatek: fix warning in msi.h
-In-Reply-To: <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
-References: <20201031140330.83768-1-linux@fw-web.de>
-        <878sbm9icl.fsf@nanos.tec.linutronix.de>
-        <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
-        <87lfflti8q.wl-maz@kernel.org>
-        <1604253261.22363.0.camel@mtkswgap22>
-        <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: frank-w@public-files.de, ryder.lee@mediatek.com, linux-mediatek@lists.infradead.org, tglx@linutronix.de, linux@fw-web.de, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <87k0v4u4uq.wl-maz@kernel.org>
+References: <20201031140330.83768-1-linux@fw-web.de> <878sbm9icl.fsf@nanos.tec.linutronix.de> <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de> <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22> <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08> <87k0v4u4uq.wl-maz@kernel.org>
+Date:   Sun, 01 Nov 2020 23:27:17 +0100
+Message-ID: <87pn4w90hm.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 01 Nov 2020 18:27:13 +0000,
-Frank Wunderlich <frank-w@public-files.de> wrote:
-> 
-> > Gesendet: Sonntag, 01. November 2020 um 18:54 Uhr
-> > Von: "Ryder Lee" <ryder.lee@mediatek.com>
-> 
-> > Yea, mt7623 (mtk_pcie_soc_v1) does not support MSI, so that's a way to
-> > handle it.
-> >
-> > @Frank, could you help to test it?
-> >
-> > Ryder
-> 
-> compiles clean for mt7623/armhf and mt7622/aarch64 so far
-> 
-> at least bananapi-r2/mt7623 booting is clean now - no warning pcie
-> and sata/ahci seems still working as expected. I have a mt7615 card
-> in pcie-slot (firmware-load and init without errors) and hdd
-> connected to outer sata port (can access partitions witout errors)
-> 
-> booted r64 too, still see no warning, but have not yet connected
-> hdd/pcie-device, but i guess this should not break anything here
-> 
-> so Marc, if you post the patch separately, you can add my tested-by
-> ;) thank you for this
+On Sun, Nov 01 2020 at 21:47, Marc Zyngier wrote:
+> On Sun, 01 Nov 2020 18:27:13 +0000,
+> Frank Wunderlich <frank-w@public-files.de> wrote:
+> Thinking of it a bit more, I think this is the wrong solution.
+>
+> PCI MSIs are optional, and not a requirement. I can trivially spin a
+> VM with PCI devices and yet no MSI capability (yes, it is more
+> difficult with real HW), and this results in a bunch of warning, none
+> of which are actually indicative of anything being wrong.
 
-Thinking of it a bit more, I think this is the wrong solution.
+Well. No. 
 
-PCI MSIs are optional, and not a requirement. I can trivially spin a
-VM with PCI devices and yet no MSI capability (yes, it is more
-difficult with real HW), and this results in a bunch of warning, none
-of which are actually indicative of anything being wrong.
+The problem is that the device enumerates MSI capability, but the host
+bridge is not proving support for MSI. 
 
-I think the real fix is to get rid of the warnings altogether. If we
-could detect that there should be an MSI domain associated with the
-device and that it wasn't there, that'd be a good reason to scream.
-But on its own, the absence of a MSI domain is not an indication of
-anything being amiss.
+The host bridge fails to mark the bus with PCI_BUS_FLAGS_NO_MSI. That's
+the reason why this runs into this issue.
 
-	M.
+Something like the uncompiled hack below. I haven't found a way to hand
+that down to the probe function.
 
--- 
-Without deviation from the norm, progress is not possible.
+Thanks,
+
+        tglx
+---
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index cf4c18f0c25a..d91bdfea7329 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -143,6 +143,7 @@ struct mtk_pcie_port;
+  * struct mtk_pcie_soc - differentiate between host generations
+  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
+  * @need_fix_device_id: whether this host's device ID needed to be fixed or not
++ * @no_msi: Bridge has no MSI support
+  * @device_id: device ID which this host need to be fixed
+  * @ops: pointer to configuration access functions
+  * @startup: pointer to controller setting functions
+@@ -151,6 +152,7 @@ struct mtk_pcie_port;
+ struct mtk_pcie_soc {
+ 	bool need_fix_class_id;
+ 	bool need_fix_device_id;
++	bool no_msi;
+ 	unsigned int device_id;
+ 	struct pci_ops *ops;
+ 	int (*startup)(struct mtk_pcie_port *port);
+@@ -1089,6 +1091,9 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto put_resources;
+ 
++	if (!pcie->soc->no_msi)
++		host->bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
++
+ 	return 0;
+ 
+ put_resources:
+@@ -1173,6 +1178,7 @@ static const struct dev_pm_ops mtk_pcie_pm_ops = {
+ };
+ 
+ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
++	.no_msi = true,
+ 	.ops = &mtk_pcie_ops,
+ 	.startup = mtk_pcie_startup_port,
+ };
+
+
+
