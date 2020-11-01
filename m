@@ -2,104 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6459B2A20A7
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Nov 2020 18:54:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 260FF2A20C4
+	for <lists+linux-pci@lfdr.de>; Sun,  1 Nov 2020 19:27:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgKARyb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Nov 2020 12:54:31 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:44588 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727024AbgKARya (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Nov 2020 12:54:30 -0500
-X-UUID: 30b0bc9f02f942c0af83a2f2a99bce60-20201102
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=WsQvKHHWSLI7xF1JzIgcRmub4R8wiDN5c/q+ZOqQmyE=;
-        b=AkjdE5XrtjDDYnMDqjkVFruHTDFUA++eVqDg90UpavXqCy8kcB6I1x/e9GsnpxKdZBSQdNjY/C73R/PRHfdNS5XF8sa50vZHC3QHD8IAVoyGmyJHNDPhDsGXS/myvxOohv17gSCLNbK8DS8I2xMWCFDdpGMmSWkVYhoH/6+EU5k=;
-X-UUID: 30b0bc9f02f942c0af83a2f2a99bce60-20201102
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ryder.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1826245141; Mon, 02 Nov 2020 01:54:23 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 2 Nov 2020 01:54:20 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 2 Nov 2020 01:54:20 +0800
-Message-ID: <1604253261.22363.0.camel@mtkswgap22>
-Subject: Re: [PATCH] pci: mediatek: fix warning in msi.h
-From:   Ryder Lee <ryder.lee@mediatek.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <frank-w@public-files.de>, <linux-mediatek@lists.infradead.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Frank Wunderlich <linux@fw-web.de>,
-        <linux-kernel@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Date:   Mon, 2 Nov 2020 01:54:21 +0800
-In-Reply-To: <87lfflti8q.wl-maz@kernel.org>
-References: <20201031140330.83768-1-linux@fw-web.de>
-         <878sbm9icl.fsf@nanos.tec.linutronix.de>
-         <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
-         <87lfflti8q.wl-maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1727243AbgKAS1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 1 Nov 2020 13:27:38 -0500
+Received: from mout.gmx.net ([212.227.17.21]:50207 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727202AbgKAS1g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 1 Nov 2020 13:27:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1604255233;
+        bh=/L+w0lrholo1kMZ1eJSk7XoUYmf7kf9uAE6zDybJJI0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=L5KAIuUO81PNWC/Xk++LpHjA76nZTilRpxasjMgiFnoG4Su6U1tSvfMEy0KdVqud5
+         g3SZMC37zFZc0FNanqRetBNkJ/Yi0oi/9hbBXGMd5zm1tGKOoS29gQhRfA+YRuIagh
+         H3o3wGEu5Hg2FMSyc7rHn0FXASNgPygzCQTM1IBo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.144.204] ([217.61.144.204]) by web-mail.gmx.net
+ (3c-app-gmx-bap08.server.lan [172.19.172.78]) (via HTTP); Sun, 1 Nov 2020
+ 19:27:13 +0100
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: DFEE9065E4A27B1C12B5A3B4E528B0D7B43E8E7FB97307B71B385155CFFD21FE2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Message-ID: <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Ryder Lee <ryder.lee@mediatek.com>
+Cc:     Marc Zyngier <maz@kernel.org>, linux-mediatek@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frank Wunderlich <linux@fw-web.de>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Aw: Re: [PATCH] pci: mediatek: fix warning in msi.h
+Content-Type: text/plain; charset=UTF-8
+Date:   Sun, 1 Nov 2020 19:27:13 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <1604253261.22363.0.camel@mtkswgap22>
+References: <20201031140330.83768-1-linux@fw-web.de>
+ <878sbm9icl.fsf@nanos.tec.linutronix.de>
+ <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
+ <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:A5wNCGAfPYLBaq4vJipjLleYOK2TEelZNZEUKtqbujq6fXPEHUJyM0Zu35pMgzDT25BbJ
+ kpk2ZzBEXrgUPaVYwzUFA76f/1LV5/Bs+JrDAKdYH1bawVRT0MRsFyFVZdPcyeOsXSn9L7fExOIX
+ XxEjXxz+ZWo+j9fTFqBBUgwTjiYhn0iA6S+PyNuqe9r0f1zyFVmTHe8NJl8eI2SGUnp0efee215W
+ fa+BfNjD90nPZ7fAaHBqJcyJXTp2UarxGHzesQBU3Vp/1ipKQFfGvwgXifsrRfjVbOxitOaY/ner
+ Kc=
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JVV58eDgfxM=:/UUrFFmGUI3vP5RJJLYjN8
+ pNg+2F2WvIn0Ncgs6ZUNr0CrtEBo2UsgT2dn8AJiU2MnPwq0gtO7Q6ftfcUsCrPxMr64TVUBB
+ RW8cS1lQu1bt1aARV3Z60mRWOANmWMrfIoNnflSUMSBNEs5edbygyaznaCYVqXWXioE2W52je
+ oiFvBYQQEH3hVas6XS6P/airpdo3oe8QbA/T9cBktYSV4v7BzGe8GaVBrowkVc9ZtJuyYNzsf
+ mR/ZfkisM0M4H8FVNySlHBS7FCVfMllPYAJ5eb14yiU48eL6gfxHmMiTNsgU29v+VLSGOFDsK
+ mwtfnWljdb2gO3ClZ9kLDbDlmLOLpa1bJ6h6whyEpIa3ViBxsdzcvWTEJAPCSoFGsLWT8lV+P
+ AxTbYmyQl+aBr5EcoZm1ohkiMkIUC/DMU+1pEhp1LgwZR4352FeMemQpbhV1wz71kTKh46sxy
+ hQg9Ck0F/smm5ajfAs5DrxjwHrs/ftt1XSQ99Dc5qc7aHC0SD6Wm0efd0+AR5wcrhq9wTXixw
+ mPRfgdB6qN0FZhCkNzsmn1fvXGtBR7HuW7P515dAQ/O71Xe+bx7gMGu20P61hd0aJ4T3OY51V
+ X8HznK3PbfN5w=
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gU3VuLCAyMDIwLTExLTAxIGF0IDExOjQzICswMDAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6DQo+
-IE9uIFN1biwgMDEgTm92IDIwMjAgMDk6MjU6MDQgKzAwMDAsDQo+IEZyYW5rIFd1bmRlcmxpY2gg
-PGZyYW5rLXdAcHVibGljLWZpbGVzLmRlPiB3cm90ZToNCj4gPiANCj4gPiBBbSAzMS4gT2t0b2Jl
-ciAyMDIwIDIyOjQ5OjE0IE1FWiBzY2hyaWViIFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJv
-bml4LmRlPjoNCj4gPiANCj4gPiA+VGhhdCdzIG5vdCBhIGZpeC4gSXQncyBqdXN0IHN1cHJlc3Np
-bmcgdGhlIHdhcm5pbmcuDQo+ID4gDQo+ID4gT2sgc29ycnkNCj4gPiANCj4gPiA+U28gaXQgbmVl
-ZHMgdG8gYmUgZmlndXJlZCBvdXQgd2h5IHRoZSBkb21haW4gYXNzb2NpYXRpb24gaXMgbm90IHRo
-ZXJlLg0KPiA+IA0KPiA+IEl0IGxvb2tzIGxpa2UgZm9yIG10NzYyMyB0aGVyZSBpcyBubyBtc2kg
-ZG9tYWluIHNldHVwIChkb25lIHZpYQ0KPiA+IG10a19wY2llX3NldHVwX2lycSBjYWxsYmFjayAr
-IG10a19wY2llX2luaXRfaXJxX2RvbWFpbikgaW4gbXRrIHBjaWUNCj4gPiBkcml2ZXIuDQo+IA0K
-PiBEb2VzIHRoaXMgbWVhbiB0aGF0IHRoaXMgU29DIG5ldmVyIGhhbmRsZWQgTVNJcyB0aGUgZmly
-c3QgcGxhY2U/IFdoaWNoDQo+IHdvdWxkIGV4cGxhaW4gdGhlIHdhcm5pbmcsIGFzIHRoZXJlIGlz
-IG5vIE1TSSBkb21haW4gcmVnaXN0ZXJlZCBmb3INCj4gdGhlIGRldmljZSwgYW5kIHdlIGVuZC11
-cCBmYWxsaW5nIGJhY2sgdG8gYXJjaF9zZXR1cF9tc2lfaXJxcygpLg0KPiANCj4gSWYgdGhpcyBz
-eXN0ZW0gdHJ1bHkgaXMgdW5hYmxlIHRvIGhhbmRsZSBNU0lzLCBvbmUgcG90ZW50aWFsDQo+IHdv
-cmthcm91bmQgd291bGQgYmUgdG8gcmVnaXN0ZXIgYSBQQ0ktTVNJIGRvbWFpbiB0aGF0IHdvdWxk
-IGFsd2F5cw0KPiBmYWlsIGl0cyBhbGxvY2F0aW9uIHdpdGggLUVOT1NQQy4gSXQgaXMgcmVhbGx5
-IHVnbHksIGJ1dCB3b3VsZCBrZWVwDQo+IHRoZSBob3Jyb3IgbG9jYWxpc2VkLiBTZWUgdGhlIHBh
-dGNobGV0IGJlbG93LCB3aGljaCBJIGNhbid0IHRlc3QuDQo+IA0KPiBJZiB0aGlzIHNpdHVhdGlv
-biBpcyBtb3JlIGNvbW1vbiB0aGFuIHdlIGV4cGVjdCwgd2UgbWF5IG5lZWQgc29tZXRoaW5nDQo+
-IGluIGNvcmUgY29kZSBpbnN0ZWFkLg0KPiANCj4gCU0uDQo+IA0KWWVhLCBtdDc2MjMgKG10a19w
-Y2llX3NvY192MSkgZG9lcyBub3Qgc3VwcG9ydCBNU0ksIHNvIHRoYXQncyBhIHdheSB0bw0KaGFu
-ZGxlIGl0Lg0KDQpARnJhbmssIGNvdWxkIHlvdSBoZWxwIHRvIHRlc3QgaXQ/DQoNClJ5ZGVyDQoN
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRpYXRlay5jIGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLmMNCj4gaW5kZXggY2Y0YzE4ZjBj
-MjVhLi41Mjc1OGI1NDZkNDAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-cGNpZS1tZWRpYXRlay5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvcGNpZS1tZWRp
-YXRlay5jDQo+IEBAIC0xNTEsNiArMTUxLDcgQEAgc3RydWN0IG10a19wY2llX3BvcnQ7DQo+ICBz
-dHJ1Y3QgbXRrX3BjaWVfc29jIHsNCj4gIAlib29sIG5lZWRfZml4X2NsYXNzX2lkOw0KPiAgCWJv
-b2wgbmVlZF9maXhfZGV2aWNlX2lkOw0KPiArCWJvb2wgbm9fbXNpOw0KPiAgCXVuc2lnbmVkIGlu
-dCBkZXZpY2VfaWQ7DQo+ICAJc3RydWN0IHBjaV9vcHMgKm9wczsNCj4gIAlpbnQgKCpzdGFydHVw
-KShzdHJ1Y3QgbXRrX3BjaWVfcG9ydCAqcG9ydCk7DQo+IEBAIC00MzUsNiArNDM2LDkgQEAgc3Rh
-dGljIGludCBtdGtfcGNpZV9pcnFfZG9tYWluX2FsbG9jKHN0cnVjdCBpcnFfZG9tYWluICpkb21h
-aW4sIHVuc2lnbmVkIGludCB2aXINCj4gIAlzdHJ1Y3QgbXRrX3BjaWVfcG9ydCAqcG9ydCA9IGRv
-bWFpbi0+aG9zdF9kYXRhOw0KPiAgCXVuc2lnbmVkIGxvbmcgYml0Ow0KPiAgDQo+ICsJaWYgKHBv
-cnQtPnBjaWUtPnNvYy0+bm9fbXNpKQ0KPiArCQlyZXR1cm4gLUVOT1NQQzsNCj4gKw0KPiAgCVdB
-Uk5fT04obnJfaXJxcyAhPSAxKTsNCj4gIAltdXRleF9sb2NrKCZwb3J0LT5sb2NrKTsNCj4gIA0K
-PiBAQCAtOTY2LDExICs5NzAsMTMgQEAgc3RhdGljIGludCBtdGtfcGNpZV9wYXJzZV9wb3J0KHN0
-cnVjdCBtdGtfcGNpZSAqcGNpZSwNCj4gIAlwb3J0LT5zbG90ID0gc2xvdDsNCj4gIAlwb3J0LT5w
-Y2llID0gcGNpZTsNCj4gIA0KPiAtCWlmIChwY2llLT5zb2MtPnNldHVwX2lycSkgew0KPiArCWlm
-IChwY2llLT5zb2MtPnNldHVwX2lycSkNCj4gIAkJZXJyID0gcGNpZS0+c29jLT5zZXR1cF9pcnEo
-cG9ydCwgbm9kZSk7DQo+IC0JCWlmIChlcnIpDQo+IC0JCQlyZXR1cm4gZXJyOw0KPiAtCX0NCj4g
-KwllbHNlDQo+ICsJCWVyciA9IG10a19wY2llX2FsbG9jYXRlX21zaV9kb21haW5zKHBvcnQpOw0K
-PiArDQo+ICsJaWYgKGVycikNCj4gKwkJcmV0dXJuIGVycjsNCj4gIA0KPiAgCUlOSVRfTElTVF9I
-RUFEKCZwb3J0LT5saXN0KTsNCj4gIAlsaXN0X2FkZF90YWlsKCZwb3J0LT5saXN0LCAmcGNpZS0+
-cG9ydHMpOw0KPiBAQCAtMTE3Myw2ICsxMTc5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZf
-cG1fb3BzIG10a19wY2llX3BtX29wcyA9IHsNCj4gIH07DQo+ICANCj4gIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgbXRrX3BjaWVfc29jIG10a19wY2llX3NvY192MSA9IHsNCj4gKwkubm9fbXNpID0gdHJ1
-ZSwNCj4gIAkub3BzID0gJm10a19wY2llX29wcywNCj4gIAkuc3RhcnR1cCA9IG10a19wY2llX3N0
-YXJ0dXBfcG9ydCwNCj4gIH07DQo+IA0KDQo=
+> Gesendet: Sonntag, 01. November 2020 um 18:54 Uhr
+> Von: "Ryder Lee" <ryder.lee@mediatek.com>
+
+> Yea, mt7623 (mtk_pcie_soc_v1) does not support MSI, so that's a way to
+> handle it.
+>
+> @Frank, could you help to test it?
+>
+> Ryder
+
+compiles clean for mt7623/armhf and mt7622/aarch64 so far
+
+at least bananapi-r2/mt7623 booting is clean now - no warning
+pcie and sata/ahci seems still working as expected. I have a mt7615 card i=
+n pcie-slot (firmware-load and init without errors) and hdd connected to o=
+uter sata port (can access partitions witout errors)
+
+booted r64 too, still see no warning, but have not yet connected hdd/pcie-=
+device, but i guess this should not break anything here
+
+so Marc, if you post the patch separately, you can add my tested-by ;) tha=
+nk you for this
+
+regards Frank
 
