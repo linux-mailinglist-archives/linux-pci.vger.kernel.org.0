@@ -2,120 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EDE42A222D
-	for <lists+linux-pci@lfdr.de>; Sun,  1 Nov 2020 23:27:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C10432A24C9
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 07:28:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgKAW1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 1 Nov 2020 17:27:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
+        id S1725955AbgKBG2B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 01:28:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbgKAW1V (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 1 Nov 2020 17:27:21 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D38C0617A6;
-        Sun,  1 Nov 2020 14:27:21 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604269638;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ptxTsFp2L6efDZ+NSsWwAuqOWnuRT3+qbc/ppVuKKyc=;
-        b=zrhVLZVBFb+q3hwt5X/nvPFMdsf4VVl0ZxIm6E9eDxZYf3tEfrB4GMorHj70CBSscXfA5q
-        7tO17wbxtYzyEztnPNpp6pQuRYCAeWfhc7Il6oGoD1aiHBTVutRnmhuHxyiWTlq68VnE58
-        w27URJOE8zqC0GDeT+YmTP5UZSmKvsdovTCAcCrGw2yE4gMtVEv+1ZBI/nIQsjtImf17A9
-        Z8Ov/wMPndW4hznqwyyx8pNQ/R/xQ/YDb/BcA+2d6aeBZoGbhd5JGWBYCzq/dgNYGItFzD
-        kCo8gVDp9I4LV4+AEt6/OCNhbW9bTtWPNdhpo7NJShn3Hlhb+E+zrRbzN8RcLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604269638;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ptxTsFp2L6efDZ+NSsWwAuqOWnuRT3+qbc/ppVuKKyc=;
-        b=91YBEhR4RkDtGn4ekE0bM4GfC1r7cgSSnIrSGBCPZonjdRxEx8D8WPiVKEkZJtgtNmQJ3J
-        9Lpp8U5BuAPEbmAw==
-To:     Marc Zyngier <maz@kernel.org>,
-        Frank Wunderlich <frank-w@public-files.de>
-Cc:     Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <linux@fw-web.de>,
-        linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: Aw: Re: [PATCH] pci: mediatek: fix warning in msi.h
-In-Reply-To: <87k0v4u4uq.wl-maz@kernel.org>
-References: <20201031140330.83768-1-linux@fw-web.de> <878sbm9icl.fsf@nanos.tec.linutronix.de> <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de> <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22> <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08> <87k0v4u4uq.wl-maz@kernel.org>
-Date:   Sun, 01 Nov 2020 23:27:17 +0100
-Message-ID: <87pn4w90hm.fsf@nanos.tec.linutronix.de>
+        with ESMTP id S1725208AbgKBG2B (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 01:28:01 -0500
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0E6C0617A6;
+        Sun,  1 Nov 2020 22:28:01 -0800 (PST)
+Received: by mail-ed1-x541.google.com with SMTP id w25so13230539edx.2;
+        Sun, 01 Nov 2020 22:28:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ykkvRrLGzz7yMDDHouHR6O5hFBvln1COnvhZIJyck9Y=;
+        b=PwmzWFKWGJJqk742eS4zmrsFiJPHCWdFEB21QLrd+Oz3IRHTPnzZyvy4PgYxoKHt4y
+         9rE47Ya4+lUZKT8bmKLhlMygQq67IEs3yBvtfgATOxgiN7mDYpE7hNWLiGJgRUTsR3DM
+         GWd0TnruemK3FgnMhNBjjkJ6tGENwhNmnrUhilf7CgD7WodryA6itasUaGHXkbL1I4sb
+         7W4gIaP5e9U/asQ4ntjQj+Sg64523ON2Pa26p400Om6gMUYxF+4Jv7833t4J8WzH4HIX
+         NtDnJhxQs25epoKu9VL07xZeufHrCWuBT8o1oYkwC8VlmhuqjddyUKUa7Q62Ja5i7tRy
+         qPmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ykkvRrLGzz7yMDDHouHR6O5hFBvln1COnvhZIJyck9Y=;
+        b=hD/xmlmdgZqNA2wSMdHLvKX1jIRo5J2XnoaagrkmaQ2Zkr59GsfIQuekhwwqCJphds
+         l20Fzc41YxQa2Dj7JCn0GjiklBrcFRjTMA4e7LSuqfGrKdg4Z/zQ3cIFq1QZJzfOsrvP
+         TzOqXCnYPeZMhWzfw5WF6KpNZLELmsg8PStiq5SAGiqKYPmr6hpZotPGEAeKHScmifc0
+         7KrwrRPpS16T//AHEPyXNmpefE6bD4TGupNX6IC5aChTmbCvuastmVkvXQTZ+ND0g2Ca
+         2dJTSv1T2KhhlkoVHUo0C7InmkJi2dkgpXTgcffnm1PApOeVnqDaeuDFRYh5fuxSTERs
+         h3aw==
+X-Gm-Message-State: AOAM5336STEBv3NTzx+VidwEeJCRQHl6gVfc+v8w/tmIEjwumLrzDFGA
+        utm6fbghbCAAJEEsgu6aEJFzDFt3nO8BdfCI+js=
+X-Google-Smtp-Source: ABdhPJyZBFlhUTtPi+C1pzaZxAVFw8V/x/K4iPT1u5TVfVsHBF/ZDnDBwr0WfymVVKxgiTbipmFz0xnnvPhfPVdtoZo=
+X-Received: by 2002:aa7:cb92:: with SMTP id r18mr15629682edt.13.1604298479700;
+ Sun, 01 Nov 2020 22:27:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20201030223443.165783-1-sean.v.kelley@intel.com>
+In-Reply-To: <20201030223443.165783-1-sean.v.kelley@intel.com>
+From:   Ethan Zhao <xerces.zhao@gmail.com>
+Date:   Mon, 2 Nov 2020 14:27:48 +0800
+Message-ID: <CAKF3qh3H6daTZtWLj=RjEFoaWazVCvQ=svGO2wGm84K7cnwv_g@mail.gmail.com>
+Subject: Re: [PATCH] AER: aer_root_reset() non-native handling
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, Jonathan.Cameron@huawei.com,
+        rafael.j.wysocki@intel.com, Ashok Raj <ashok.raj@intel.com>,
+        tony.luck@intel.com,
+        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>,
+        qiuxu.zhuo@intel.com, linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 01 2020 at 21:47, Marc Zyngier wrote:
-> On Sun, 01 Nov 2020 18:27:13 +0000,
-> Frank Wunderlich <frank-w@public-files.de> wrote:
-> Thinking of it a bit more, I think this is the wrong solution.
+On Sat, Oct 31, 2020 at 6:36 AM Sean V Kelley <sean.v.kelley@intel.com> wrote:
 >
-> PCI MSIs are optional, and not a requirement. I can trivially spin a
-> VM with PCI devices and yet no MSI capability (yes, it is more
-> difficult with real HW), and this results in a bunch of warning, none
-> of which are actually indicative of anything being wrong.
-
-Well. No. 
-
-The problem is that the device enumerates MSI capability, but the host
-bridge is not proving support for MSI. 
-
-The host bridge fails to mark the bus with PCI_BUS_FLAGS_NO_MSI. That's
-the reason why this runs into this issue.
-
-Something like the uncompiled hack below. I haven't found a way to hand
-that down to the probe function.
+> If an OS has not been granted AER control via _OSC, then
+> the OS should not make changes to PCI_ERR_ROOT_COMMAND and
+> PCI_ERR_ROOT_STATUS related registers. Per section 4.5.1 of
+> the System Firmware Intermediary (SFI) _OSC and DPC Updates
+> ECN [1], this bit also covers these aspects of the PCI
+> Express Advanced Error Reporting. Further, the handling of
+> clear/enable of PCI_ERROR_ROOT_COMMAND when wrapped around
+> PCI_ERR_ROOT_STATUS should have no effect and be removed.
+> Based on the above and earlier discussion [2], make the
+> following changes:
+>
+> Add a check for the native case (i.e., AER control via _OSC)
+> Re-order and remove some of the handling:
+> - clear PCI_ERR_ROOT_COMMAND ROOT_PORT_INTR_ON_MESG_MASK
+> - do reset
+> - clear PCI_ERR_ROOT_STATUS
+> - enable PCI_ERR_ROOT_COMMAND ROOT_PORT_INTR_ON_MESG_MASK
+>
+> to this:
+>
+> - clear PCI_ERR_ROOT_STATUS
+> - do reset
+>
+> The current "clear, reset, enable" order suggests that the reset
+> might cause errors that we should ignore. But I am unable to find a
+> reference and the clearing of PCI_ERR_ROOT_STATUS does not require them.
+>
+> [1] System Firmware Intermediary (SFI) _OSC and DPC Updates ECN, Feb 24,
+>     2020, affecting PCI Firmware Specification, Rev. 3.2
+>     https://members.pcisig.com/wg/PCI-SIG/document/14076
+> [2] https://lore.kernel.org/linux-pci/20201020162820.GA370938@bjorn-Precision-5520/
+>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> ---
+>  drivers/pci/pcie/aer.c | 21 ++++++---------------
+>  1 file changed, 6 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 65dff5f3457a..bbfb07842d89 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1361,23 +1361,14 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>         u32 reg32;
+>         int rc;
+>
+> -
+> -       /* Disable Root's interrupt in response to error messages */
+> -       pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+> -       reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+> -       pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+There may be some reasons to disable interrupt first and then do resetting,
+clear status and re-enable interrupt.
+Perhaps to avoid error noise,  what would happen if the resetting
+causes errors itself ?
 
 Thanks,
+Ethan
 
-        tglx
----
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index cf4c18f0c25a..d91bdfea7329 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -143,6 +143,7 @@ struct mtk_pcie_port;
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-  * @need_fix_device_id: whether this host's device ID needed to be fixed or not
-+ * @no_msi: Bridge has no MSI support
-  * @device_id: device ID which this host need to be fixed
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-@@ -151,6 +152,7 @@ struct mtk_pcie_port;
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
- 	bool need_fix_device_id;
-+	bool no_msi;
- 	unsigned int device_id;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
-@@ -1089,6 +1091,9 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	if (err)
- 		goto put_resources;
- 
-+	if (!pcie->soc->no_msi)
-+		host->bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
-+
- 	return 0;
- 
- put_resources:
-@@ -1173,6 +1178,7 @@ static const struct dev_pm_ops mtk_pcie_pm_ops = {
- };
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
-+	.no_msi = true,
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
- };
-
-
-
+> +       if (pcie_aer_is_native(dev)) {
+> +               /* Clear Root Error Status */
+> +               pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+> +               pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, reg32);
+> +       }
+>
+>         rc = pci_bus_error_reset(dev);
+> -       pci_info(dev, "Root Port link has been reset\n");
+> -
+> -       /* Clear Root Error Status */
+> -       pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+> -       pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, reg32);
+> -
+> -       /* Enable Root Port's interrupt in response to error messages */
+> -       pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+> -       reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
+> -       pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+> +       pci_info(dev, "Root Port link has been reset (%d)\n", rc);
+>
+>         return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>  }
+> --
+> 2.29.2
+>
