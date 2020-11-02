@@ -2,128 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB34A2A2B5C
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 14:22:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B97A2A2BA9
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 14:37:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgKBNWG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 08:22:06 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13440 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgKBNWF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 08:22:05 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa008010000>; Mon, 02 Nov 2020 05:22:09 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Nov
- 2020 13:22:02 +0000
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
- by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 2 Nov 2020 13:22:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EED55EXPmd+OphiJQWGeESG8yUm/V2Xq5TJJitYUsM/mGlRql1cDzMr6La+LFFuh18Meazfxiz1LZchffzP3BQL4QPp3gHaNmCdEJg7lySXCtPB0QE9rdNDo7kxYirDgSn97BaMSVnSMy4z9H07rYLE9c5MYQy3aaIEjS7MaveYTa/rv3qRgWUZk9VdNXCFwkuHp5Hw0DaaiwypFQ/ueNnnntY3OYh6wchR/EzJVODa+NTV0w4ZlduVRbPCwLpkC+3nn7Au7tYvcVsoGq73xFaCv6am4i1ItNU4/0rQs+mjxBbql46lemksjeDkUpeV6ZXcOH4nb5nybqoSYidhkxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GUYoVtIU02fFt28vDH50Q7a6CyGVgq4MIbit569l2sY=;
- b=EkyAvPDHYuM6MIliPGEvJuvaHLA86JCJHCu82N3HyXcnHreTdA93kfy+4OI+lHhcPxRfR91X2SQGsrmmM/uYhQ1gzvEh2+xk1NJOCEIrZ4322jEYYIdrcFwjW2F/vQ+smhjOEbDflyfIeQLd8XzRHz/W+KwOL60fJnPIPOP3NYL7DGt9qsnFphM2Ih/uGJQog1qRLLr7Pc9D/FEzMnOx+/sYgrk2/z2H+r0VrmyVpBeCc3LSAjhwmC9urqMBinkzDLD+ZokZILpHYK+qOT+M3eSH02Oj0QI/vIsAqS8DC2jgu/FRl54AWi0PbFzOsvXIpounjCwv3m2ibAvekCjn0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4810.namprd12.prod.outlook.com (2603:10b6:5:1f7::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.27; Mon, 2 Nov
- 2020 13:22:01 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.030; Mon, 2 Nov 2020
- 13:22:01 +0000
-Date:   Mon, 2 Nov 2020 09:21:58 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <vkoul@kernel.org>,
-        <megha.dey@intel.com>, <maz@kernel.org>, <bhelgaas@google.com>,
-        <tglx@linutronix.de>, <alex.williamson@redhat.com>,
-        <jacob.jun.pan@intel.com>, <ashok.raj@intel.com>,
-        <yi.l.liu@intel.com>, <baolu.lu@intel.com>, <kevin.tian@intel.com>,
-        <sanjay.k.kumar@intel.com>, <tony.luck@intel.com>,
-        <jing.lin@intel.com>, <dan.j.williams@intel.com>,
-        <kwankhede@nvidia.com>, <eric.auger@redhat.com>,
-        <parav@mellanox.com>, <rafael@kernel.org>, <netanelg@mellanox.com>,
-        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
-        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
-        <mona.hossain@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201102132158.GA3352700@nvidia.com>
-References: <20201030195159.GA589138@bjorn-Precision-5520>
- <71da5f66-e929-bab1-a1c6-a9ac9627a141@intel.com>
- <20201030224534.GN2620339@nvidia.com>
- <ec52cedf-3a99-5ca1-ffbb-d8f8c4f62395@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ec52cedf-3a99-5ca1-ffbb-d8f8c4f62395@intel.com>
-X-ClientProxiedBy: BL0PR0102CA0068.prod.exchangelabs.com
- (2603:10b6:208:25::45) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1725828AbgKBNhM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 08:37:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgKBNhM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 08:37:12 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B6B4C0617A6;
+        Mon,  2 Nov 2020 05:37:11 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id gn41so1620515ejc.4;
+        Mon, 02 Nov 2020 05:37:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oV0w8mEDkNAO6uiQf4/TZpEA5d4wbVYY+OmguRSwOE8=;
+        b=UZbZA608GbIsNV3azDV6u3iFKlQRgFBDJvNdTRceKDcZH8YePrGwoVg/mRvk/Kgwrb
+         bEBbqlC27geUxzLgR8XAlMuzKcbOg5AUo1W+otz+yIaeqrgmqYB/sPVk6KqW49IW1Y/1
+         eKjCAa+dG+AetAMtMT5dU3RJsJNLI+K8AhR/eTHY3BCp2Eaw8ze4npH/kdiMIKKcMLQ5
+         GumZ8G0WnEHXSyEJ4fRR+YL/6dM8Li2AkgTH9ypx2zs45XY8T+v2nWsFmZ33SviVJPwk
+         M2M1LKZLN5hY3xgXqGBCh2VSyp67DYE2cCksSfCuR9WgF88rGEM7FNAcfU2v+0R2x11H
+         8cDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oV0w8mEDkNAO6uiQf4/TZpEA5d4wbVYY+OmguRSwOE8=;
+        b=NnLUy5mIkYd3P8TmGHalf1riPINCfpjNmStll1RZx1QAGCYcqxUnh/G+0DKdnst3Ne
+         MqWq5nAJJNn+XgW03F09Np4gOsC/iZbd533XTmE7sGWe6+vf+sQFx3WnhIHpCyF2CDuV
+         QvRxVarsJiEsUVV6ufKUvqAeQWRz+T8eh5LZjioOS5ppOxQWoPntkHPBy1+hBm1iISGq
+         /WTDGo3qwGm9LtFCtTAN5RD9/cB7Ee9UZVcPuTSItel14zsiwMnMM1GuTr2LvYwcOZ9u
+         /7V7B722anZLTd5T/kQYQJ19DQvz/NqXK35I2N7L+RLxIVMiToJFuPKJtzDBTWMOpdww
+         lKGw==
+X-Gm-Message-State: AOAM5326zMx5WrWVx3mkJfQT7dURTx/g6dCu1kJpKOY6JjDBJVYw2tKU
+        VcPnmSK2ac0YOX3VTaPFAvj8dV6d/UE=
+X-Google-Smtp-Source: ABdhPJyNaaIlTf20F1tQ1eKRXUELesYB8KLK9pvJdtUhr5eMa2tr28eLVll3mHclHq2IiX4HvRlQpQ==
+X-Received: by 2002:a17:906:2a09:: with SMTP id j9mr15063534eje.355.1604324229295;
+        Mon, 02 Nov 2020 05:37:09 -0800 (PST)
+Received: from xws.fritz.box (pd9e5a73b.dip0.t-ipconnect.de. [217.229.167.59])
+        by smtp.gmail.com with ESMTPSA id p17sm10642538edw.10.2020.11.02.05.37.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2020 05:37:08 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     linux-acpi@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH] ACPI: Remove trailing whitespace
+Date:   Mon,  2 Nov 2020 14:36:41 +0100
+Message-Id: <20201102133641.474413-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR0102CA0068.prod.exchangelabs.com (2603:10b6:208:25::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Mon, 2 Nov 2020 13:22:00 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kZZmY-00F5qE-UL; Mon, 02 Nov 2020 09:21:58 -0400
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604323329; bh=GUYoVtIU02fFt28vDH50Q7a6CyGVgq4MIbit569l2sY=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=qtCgIBia4z+8te/t6cLhiw4Vw5DGlpCmodklokxK+k/9ri92A5AAg9zPE9pqNzAh2
-         7DJNDrNBRcQeknp+MS6eS4QTFpC9GkSJ495g7s/tumJb3FjYcmp4K4Bapo9LbO3HwB
-         mvyExe7k893RzIdSb4SfKI8QgDsqEjd/7OUp86bhaIDWQZ/Jq2dXAAqfA8g6WcPzja
-         nkh4ddFhVqkMzI4TlVKQ/lQwFMJp3OfqzEsxr+TGPL1lSyyUC2oCVeJuCMz0cxF1AV
-         kBlDmt4fiS0H4yz/WIH8nWeMmuRrN4iyXHKYbR3ngUz8r0JXgl+HmR7X82EmO99tPC
-         PcQvLnQPmFXig==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 03:49:22PM -0700, Dave Jiang wrote:
-> 
-> 
-> On 10/30/2020 3:45 PM, Jason Gunthorpe wrote:
-> > On Fri, Oct 30, 2020 at 02:20:03PM -0700, Dave Jiang wrote:
-> > > So the intel-iommu driver checks for the SIOV cap. And the idxd driver
-> > > checks for SIOV and IMS cap. There will be other upcoming drivers that will
-> > > check for such cap too. It is Intel vendor specific right now, but SIOV is
-> > > public and other vendors may implement to the spec. Is there a good place to
-> > > put the common capability check for that?
-> > 
-> > I'm still really unhappy with these SIOV caps. It was explained this
-> > is just a hack to make up for pci_ims_array_create_msi_irq_domain()
-> > succeeding in VM cases when it doesn't actually work.
-> > 
-> > Someday this is likely to get fixed, so tying platform behavior to PCI
-> > caps is completely wrong.
-> > 
-> > This needs to be solved in the platform code,
-> > pci_ims_array_create_msi_irq_domain() should not succeed in these
-> > cases.
-> 
-> That sounds reasonable. Are you asking that the IMS cap check should gate
-> the success/failure of pci_ims_array_create_msi_irq_domain() rather than the
-> driver?
+Remove trailing whitespace and fix some whitespace inconsitencies while
+at it.
 
-There shouldn't be an IMS cap at all
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ drivers/acpi/pci_irq.c           |  2 +-
+ drivers/acpi/pci_link.c          | 12 ++++++------
+ drivers/acpi/power.c             |  4 ++--
+ drivers/acpi/processor_perflib.c |  4 ++--
+ 4 files changed, 11 insertions(+), 11 deletions(-)
 
-As I understand, the problem here is the only way to establish new
-VT-d IRQ routing is by trapping and emulating MSI/MSI-X related
-activities and triggering routing of the vectors into the guest.
+diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+index dea8a60e18a4..14ee631cb7cf 100644
+--- a/drivers/acpi/pci_irq.c
++++ b/drivers/acpi/pci_irq.c
+@@ -175,7 +175,7 @@ static int acpi_pci_irq_check_entry(acpi_handle handle, struct pci_dev *dev,
+ 	 * configure the IRQ assigned to this slot|dev|pin.  The 'source_index'
+ 	 * indicates which resource descriptor in the resource template (of
+ 	 * the link device) this interrupt is allocated from.
+-	 * 
++	 *
+ 	 * NOTE: Don't query the Link Device for IRQ information at this time
+ 	 *       because Link Device enumeration may not have occurred yet
+ 	 *       (e.g. exists somewhere 'below' this _PRT entry in the ACPI
+diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+index 606da5d77ad3..fb4c5632a232 100644
+--- a/drivers/acpi/pci_link.c
++++ b/drivers/acpi/pci_link.c
+@@ -6,8 +6,8 @@
+  *  Copyright (C) 2001, 2002 Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
+  *  Copyright (C) 2002       Dominik Brodowski <devel@brodo.de>
+  *
+- * TBD: 
+- *      1. Support more than one IRQ resource entry per link device (index).
++ * TBD:
++ *	1. Support more than one IRQ resource entry per link device (index).
+  *	2. Implement start/stop mechanism and use ACPI Bus Driver facilities
+  *	   for IRQ management (e.g. start()->_SRS).
+  */
+@@ -249,8 +249,8 @@ static int acpi_pci_link_get_current(struct acpi_pci_link *link)
+ 		}
+ 	}
+ 
+-	/* 
+-	 * Query and parse _CRS to get the current IRQ assignment. 
++	/*
++	 * Query and parse _CRS to get the current IRQ assignment.
+ 	 */
+ 
+ 	status = acpi_walk_resources(link->device->handle, METHOD_NAME__CRS,
+@@ -396,7 +396,7 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+ /*
+  * "acpi_irq_balance" (default in APIC mode) enables ACPI to use PIC Interrupt
+  * Link Devices to move the PIRQs around to minimize sharing.
+- * 
++ *
+  * "acpi_irq_nobalance" (default in PIC mode) tells ACPI not to move any PIC IRQs
+  * that the BIOS has already set to active.  This is necessary because
+  * ACPI has no automatic means of knowing what ISA IRQs are used.  Note that
+@@ -414,7 +414,7 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+  *
+  * Note that PCI IRQ routers have a list of possible IRQs,
+  * which may not include the IRQs this table says are available.
+- * 
++ *
+  * Since this heuristic can't tell the difference between a link
+  * that no device will attach to, vs. a link which may be shared
+  * by multiple active devices -- it is not optimal.
+diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+index 837b875d075e..9c4c3196cb07 100644
+--- a/drivers/acpi/power.c
++++ b/drivers/acpi/power.c
+@@ -13,7 +13,7 @@
+  * 1. via "Device Specific (D-State) Control"
+  * 2. via "Power Resource Control".
+  * The code below deals with ACPI Power Resources control.
+- * 
++ *
+  * An ACPI "power resource object" represents a software controllable power
+  * plane, clock plane, or other resource depended on by a device.
+  *
+@@ -690,7 +690,7 @@ int acpi_device_sleep_wake(struct acpi_device *dev,
+ 
+ /*
+  * Prepare a wakeup device, two steps (Ref ACPI 2.0:P229):
+- * 1. Power on the power resources required for the wakeup device 
++ * 1. Power on the power resources required for the wakeup device
+  * 2. Execute _DSW (Device Sleep Wake) or (deprecated in ACPI 3.0) _PSW (Power
+  *    State Wake) for the device, if present
+  */
+diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
+index 5909e8fa4013..f00e66de6c53 100644
+--- a/drivers/acpi/processor_perflib.c
++++ b/drivers/acpi/processor_perflib.c
+@@ -627,7 +627,7 @@ int acpi_processor_preregister_performance(
+ 		goto err_ret;
+ 
+ 	/*
+-	 * Now that we have _PSD data from all CPUs, lets setup P-state 
++	 * Now that we have _PSD data from all CPUs, lets setup P-state
+ 	 * domain info.
+ 	 */
+ 	for_each_possible_cpu(i) {
+@@ -693,7 +693,7 @@ int acpi_processor_preregister_performance(
+ 			if (match_pdomain->domain != pdomain->domain)
+ 				continue;
+ 
+-			match_pr->performance->shared_type = 
++			match_pr->performance->shared_type =
+ 					pr->performance->shared_type;
+ 			cpumask_copy(match_pr->performance->shared_cpu_map,
+ 				     pr->performance->shared_cpu_map);
+-- 
+2.29.2
 
-There is a missing hypercall to allow the guest to do this on its own,
-presumably it will someday be fixed so IMS can work in guests.
-
-Until the hypercall is added pci_ims_array_create_msi_irq_domain()
-should simply fail in guests. No PCI cap check required.
-
-Jason
