@@ -2,96 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC622A35C7
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 22:07:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FE512A35DC
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 22:17:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgKBVHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 16:07:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbgKBVHo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 16:07:44 -0500
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5E8C0617A6;
-        Mon,  2 Nov 2020 13:07:44 -0800 (PST)
-Received: by mail-pg1-x543.google.com with SMTP id h6so11854294pgk.4;
-        Mon, 02 Nov 2020 13:07:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S6chzrEL1+q5/HgauCqurdMSLx7xx9lDVZhCmcZkHvI=;
-        b=i20qXrob8eGMOn++YWhc8yAwCQckMLo+ZPm91OcoTYfl+jq+woJXpCvWm/OOEBOtx2
-         9gm7lUogEu6BD2HCCHzZwe1wJuVEXcaxDXHaHO9ucDvVooLYG4tcIyk5HQUScWxPbNEx
-         TIyH0ztC4G7M7rKVjmGzuMnIg+tykKdGK9V4RXGHH5XUT6JG3c+7wfGZgsr3lIOxI85c
-         t2QBdiOVde3K8h++x37RRf66mbJadAQPy7ciwLyh7t7XbOiT4L9E12EgBR2jgmAoVztd
-         EWnZKr7xpnS6BQFUyYM6cZ2jnz+RWJHLL6teiMm4lithfBWRtCGxqeHc+/WYvPtWUpk3
-         +toQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S6chzrEL1+q5/HgauCqurdMSLx7xx9lDVZhCmcZkHvI=;
-        b=Yd5UwDfGKHz6E9YaC8Xf+RKf8seuGuZebaglfD5/jHIe+HggLd/53E8FocS67AShvZ
-         9Q+EMOa4jUzEWs1Yi8tS+f9gfCuJHDHIzKq2X0DMIHHRnB20IVHyMf0dNRHMY/0lNLuh
-         IndHXcRFBKFGkLr4Ri6eHgQTaerMDVyc2K2of2GZUxY8Q/PwmMbMSvsMi13qR2P8ixlu
-         o4izxYY+ROcNc6rDol+J16+8+l5/p8v98gRD2Ww+pLj4+ajMkOBeDsJxJZaRNv4aoe2D
-         Khw7RYYJ3Fi03X4gYqLh+WhchqaMZcgVSKNzRfzTOe8eC0SDhGRorwWVhClFW+4Nm/YC
-         z9TA==
-X-Gm-Message-State: AOAM531Xp0rMvH+tyTWVJzUpoFwAM21t+DCBopIS6RQCqffDMljayurZ
-        E7SlwkLA1X+GnthmKHmyLKze8JJMGEI=
-X-Google-Smtp-Source: ABdhPJwhwhWAg/9kMC4uwU1P0g1QPS9Bt7HIzzhx08xEMh/G2gJZAhWia0xLfQUhPM7oNFyIiWhIpg==
-X-Received: by 2002:aa7:8a01:0:b029:15c:de46:5b2f with SMTP id m1-20020aa78a010000b029015cde465b2fmr22706776pfa.81.1604351263613;
-        Mon, 02 Nov 2020 13:07:43 -0800 (PST)
-Received: from [10.230.28.234] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g4sm3802203pgu.81.2020.11.02.13.07.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Nov 2020 13:07:42 -0800 (PST)
-Subject: Re: [PATCH v1] PCI: brcmstb: variable is missing proper
- initialization
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20201102205712.23332-1-james.quinlan@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <ad4cbee6-c52e-cedc-fa79-3805e36377b4@gmail.com>
-Date:   Mon, 2 Nov 2020 13:07:38 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.4.0
+        id S1725983AbgKBVRF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 16:17:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgKBVRF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Nov 2020 16:17:05 -0500
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4844222226;
+        Mon,  2 Nov 2020 21:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604351824;
+        bh=oNpnntcDyVrLYKRlHioqPw1poBhI9/rRo+hwWS3Tb4M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kKTqwr5mq4YxOn0Ms7tZkxF79txZic0D95FTaGKR/y07ulDkLZUWBWjQbIWfwKljZ
+         eeMxPUdpcUBBJv7CVIqbpsy/fT+dRXJh8DWiQ22xs8vnMZVxyNEjClB3txItUExzoF
+         T3en6gE/32/LhZJZwtPMVaY/VQb95j5/URnA+sOE=
+Received: by mail-ot1-f49.google.com with SMTP id z16so8825819otq.6;
+        Mon, 02 Nov 2020 13:17:04 -0800 (PST)
+X-Gm-Message-State: AOAM530emNYn7ofNEBxpPNCeSfysJGF7t0xFuOdjjI4YzjQjkO2MrND7
+        cw5xmZGM5BYhAOikjqbxglP2edtC/wIHYiWozw==
+X-Google-Smtp-Source: ABdhPJzoJ9MDhf1ymImO2EyCAFKNOJ3ho+udeo3WVfDiniWzt57XAo2o8f1bZcUVpjwEhBUrDz97QhNB0xdXznjCqgg=
+X-Received: by 2002:a05:6830:2259:: with SMTP id t25mr5716057otd.192.1604351823479;
+ Mon, 02 Nov 2020 13:17:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201102205712.23332-1-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20201029053959.31361-1-vidyas@nvidia.com> <20201029053959.31361-3-vidyas@nvidia.com>
+ <CAL_Jsq+3Ek9SRbsTqEmjiZtszvi7Er=TNgOt8t=0OESva2=sTg@mail.gmail.com>
+ <902c0445-9fed-8e61-3aba-0e87988eb8df@nvidia.com> <DM5PR12MB18357E6BF282C9C65278460EDA100@DM5PR12MB1835.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB18357E6BF282C9C65278460EDA100@DM5PR12MB1835.namprd12.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 2 Nov 2020 15:16:52 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+jH_bwv2dQrY-O4PTD1kK=BMObLjH_NFmfG8kQUUpD8Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+jH_bwv2dQrY-O4PTD1kK=BMObLjH_NFmfG8kQUUpD8Q@mail.gmail.com>
+Subject: Re: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Thierry Reding <treding@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Nov 2, 2020 at 9:12 AM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+>
+> On Mon, Nov 2, 2020 at 14:27:9, Vidya Sagar <vidyas@nvidia.com> wrote:
+>
+> >
+> >
+> > On 11/2/2020 7:45 PM, Rob Herring wrote:
+> > > External email: Use caution opening links or attachments
+> > >
+> > >
+> > > On Thu, Oct 29, 2020 at 12:40 AM Vidya Sagar <vidyas@nvidia.com> wrote:
+> > >>
+> > >> DesignWare core has a TLP digest (TD) override bit in one of the control
+> > >> registers of ATU. This bit also needs to be programmed for proper ECRC
+> > >> functionality. This is currently identified as an issue with DesignWare
+> > >> IP version 4.90a. This patch does the required programming in ATU upon
+> > >> querying the system policy for ECRC.
+> > >>
+> > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > >> Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
+> > >> ---
+> > >> V3:
+> > >> * Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
+> > >>
+> > >> V2:
+> > >> * Addressed Jingoo's review comment
+> > >> * Removed saving 'td' bit information in 'dw_pcie' structure
+> > >>
+> > >>   drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
+> > >>   drivers/pci/controller/dwc/pcie-designware.h | 1 +
+> > >>   2 files changed, 7 insertions(+), 2 deletions(-)
+> > >>
+> > >> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > >> index b5e438b70cd5..cbd651b219d2 100644
+> > >> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > >> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > >> @@ -246,6 +246,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+> > >>          dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+> > >>                                   upper_32_bits(pci_addr));
+> > >>          val = type | PCIE_ATU_FUNC_NUM(func_no);
+> > >> +       if (pci->version == 0x490A)
+> > >> +               val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
+> > >>          val = upper_32_bits(size - 1) ?
+> > >>                  val | PCIE_ATU_INCREASE_REGION_SIZE : val;
+> > >>          dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+> > >> @@ -294,8 +296,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+> > >>                             lower_32_bits(pci_addr));
+> > >>          dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
+> > >>                             upper_32_bits(pci_addr));
+> > >> -       dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+> > >> -                          PCIE_ATU_FUNC_NUM(func_no));
+> > >> +       val = type | PCIE_ATU_FUNC_NUM(func_no);
+> > >> +       if (pci->version == 0x490A)
+> > >
+> > > Is this even possible? Are the non-unroll ATU registers available post 4.80?
+> > I'm not sure. Gustavo might have information about this. I made this
+> > change so that it is taken care off even if they available.
+>
+> The Synopsys DesignWare PCIe IP is highly configurable, therefore is
+> dependable on what the design team has configured for their solution.
+> Although Synopsys doesn't recommend the use of non-unroll ATU, the
+> customers are free to select what they want for their design.
 
+Okay, then there's a bug in the driver if the version is set to 0x480A
+or later and non-unroll is used:
 
-On 11/2/2020 12:57 PM, Jim Quinlan wrote:
-> The variable 'tmp' is used multiple times in the brcm_pcie_setup()
-> function.  One such usage did not initialize 'tmp' to the current value of
-> the target register.  By luck the mistake does not currently affect
-> behavior;  regardless 'tmp' is now initialized properly.
-> 
-> Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
-> Suggested-by: Rafał Miłecki <zajec5@gmail.com>
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+if (pci->version >= 0x480A || (!pci->version &&
+       dw_pcie_iatu_unroll_enabled(pci))) {
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Probably can just drop the version checking. The detection should always work.
+
+Rob
