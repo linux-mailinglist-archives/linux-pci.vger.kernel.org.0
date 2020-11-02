@@ -2,62 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36D892A2C90
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 15:20:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F10512A2DAD
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 16:10:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgKBOUR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 09:20:17 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7033 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgKBOUJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 09:20:09 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4CPw6X5scHzhdVF;
-        Mon,  2 Nov 2020 22:20:04 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 2 Nov 2020
- 22:20:00 +0800
-From:   Zhang Qilong <zhangqilong3@huawei.com>
-To:     <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>
-Subject: [PATCH] PCI: dwc: fix reference leak in pex_ep_event_pex_rst_deassert
-Date:   Mon, 2 Nov 2020 22:30:45 +0800
-Message-ID: <20201102143045.142121-1-zhangqilong3@huawei.com>
-X-Mailer: git-send-email 2.26.0.106.g9fadedd
+        id S1726043AbgKBPKM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 10:10:12 -0500
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:43094 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725817AbgKBPKM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 10:10:12 -0500
+Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A2F3R3W002229;
+        Mon, 2 Nov 2020 15:10:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
+ bh=bMsdKUsDbBtdRjs7iz+41iYksutZLHfpc65lqduc7hc=;
+ b=VFiYIZ4Ckd49NPOz3KIkheC3O+jZismG2wGmy8D6zodpj5Jep/Eae4THHtAReD/mQjj1
+ ZFZLLa0DYm69uaJBvjihX7itDdY3n38bhlUxxH3Bwbb+J6hFoq3dC4WHz1pAoHWT87dR
+ WQeW2cB6Vx05GbIEcGswyuJhLuDndWnuOhr0EKi/SpbVa8tEkCc6JOFnu896w2nPuOpg
+ lhVUlw+DUQalJ1q+1Qn2/S38uzvIN+f3AALHRWQfW52I8hGN2tuspu+uHsoFX1H8Z3kp
+ pZOcb7T52XDQZZE+mZY4VrdkISZl7GgLNJJ5WifufZMch2rIfuRDtbo2eAyFArv80OpQ 9A== 
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 34h0k1yhqp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Nov 2020 15:10:00 +0000
+Received: from sarge.linuxathome.me (unknown [16.29.176.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by g4t3427.houston.hpe.com (Postfix) with ESMTPS id CFC336C;
+        Mon,  2 Nov 2020 15:09:57 +0000 (UTC)
+From:   Hedi Berriche <hedi.berriche@hpe.com>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Russ Anderson <rja@hpe.com>, Joerg Roedel <jroedel@suse.com>,
+        Sinan Kaya <okaya@kernel.org>, stable@kernel.org
+Subject: [PATCH v4 0/1] PCI/ERR: fix regression introduced by 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+Date:   Mon,  2 Nov 2020 15:09:50 +0000
+Message-Id: <20201102150951.149893-1-hedi.berriche@hpe.com>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-02_09:2020-11-02,2020-11-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ clxscore=1015 mlxlogscore=999 lowpriorityscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 phishscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011020120
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pm_runtime_get_sync will increment pm usage counter even it
-failed. Forgetting to pm_runtime_put_noidle will result in
-reference leak in pex_ep_event_pex_rst_deassert, so we should
-fix it.
+This is essentially a resend of v3 as it failed to get enough traction;
+no code change, I only added Sinan Kaya's Reviewed-by.
 
-Fixes: c57247f940e8e ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
-Signed-off-by: Zhang Qilong <zhangqilong3@huawei.com>
+- Changes since v3:
+* added Sinan Kaya <okaya@kernel.org> Reviewed-by
+
+- Changes since v2:
+ * set status to PCI_ERS_RESULT_RECOVERED, in case of successful link
+   reset, if and only if the initial value of error status is
+   PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER.
+
+- Changes since v1:
+ * changed the commit message to clarify what broke post commit 6d2c89441571
+ * dropped the misnomer post_reset_status variable in favour of a more natural
+   approach that relies on a boolean to keep track of the outcome of reset_link()
+
+After commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+pcie_do_recovery() no longer calls ->slot_reset() in the case of a successful
+reset which breaks error recovery by breaking driver (re)initialisation.
+
+Cc: Russ Anderson <rja@hpe.com>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Joerg Roedel <jroedel@suse.com>
+Cc: Sinan Kaya <okaya@kernel.org>
+
+Cc: stable@kernel.org # v5.7+
+
 ---
- drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
- 1 file changed, 1 insertion(+)
+Hedi Berriche (1):
+  PCI/ERR: don't clobber status after reset_link()
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index f920e7efe118..936510b5c649 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1662,6 +1662,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
- 
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(dev);
- 		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
- 			ret);
- 		return;
+ drivers/pci/pcie/err.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
 -- 
-2.17.1
+2.28.0
 
