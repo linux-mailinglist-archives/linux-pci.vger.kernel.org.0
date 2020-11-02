@@ -2,155 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 913952A2E40
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 16:24:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 318BF2A2E9E
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 16:50:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbgKBPYH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 10:24:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34052 "EHLO mail.kernel.org"
+        id S1726070AbgKBPuo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 10:50:44 -0500
+Received: from mga05.intel.com ([192.55.52.43]:45943 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgKBPYH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Nov 2020 10:24:07 -0500
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 398D42222B;
-        Mon,  2 Nov 2020 15:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604330646;
-        bh=RnZzNGAnLLIjc/EuCst7D7QPRlFlRXZlglvbfb5ZJUM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Li9sxcf2WK0rftgkTcs7d49GpF5tvCamgjxLGJ/SIjg57aBbrHvsaNt9xDqvsBFag
-         hAbrWSEiITTeGQ2iG0exts1GsWQfcbJwC5zK/dc+o+k/wkzJbHEGha+GUwI+7fg9oP
-         A2xf+pA3lO0JCSy6Up48UzHGpwHDAxHgcxU3shpU=
-Received: by pali.im (Postfix)
-        id 9477112CC; Mon,  2 Nov 2020 16:24:03 +0100 (CET)
-Date:   Mon, 2 Nov 2020 16:24:03 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>
-Subject: Re: PCI trouble on mvebu (Turris Omnia)
-Message-ID: <20201102152403.4jlmcaqkqeivuypm@pali>
-References: <2fb69e2a-4423-2b04-cd0f-ca819092bc5f@gmail.com>
- <20201028231626.GA344207@bjorn-Precision-5520>
- <20201030112331.meqg6lvultyn6v54@pali>
- <87k0v7n9y9.fsf@toke.dk>
- <20201030142337.yushrdcuecycfhcu@pali>
- <b9683fc3-bb8d-3dac-4a5d-fe7fbf2f0177@gmail.com>
- <87zh42lfv6.fsf@toke.dk>
+        id S1725837AbgKBPuo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Nov 2020 10:50:44 -0500
+IronPort-SDR: uoN3wg8N2yGgffBLUPMx4yUgxETjK2P5uldLZ+MCcrJf5zldeSWENHZWeVhUo5oBrsfMOa69l9
+ fVU0/XzR0ptw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9793"; a="253612834"
+X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
+   d="scan'208";a="253612834"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 07:50:43 -0800
+IronPort-SDR: SiUGt6sTq+UirrfrqKaS73FIspwj0fSjeGyTBARGmipB8jNkWP/OeVVlr89k6dAMwixeR8DnQC
+ Z4EAe/4e2yuQ==
+X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
+   d="scan'208";a="336205894"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.132.252]) ([10.251.132.252])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 07:50:42 -0800
+Subject: Re: [PATCH] PCI: add helper function to find DVSEC
+To:     Randy Dunlap <rdunlap@infradead.org>, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, david.e.box@intel.com,
+        sean.v.kelly@intel.com, ashok.raj@intel.com
+References: <160409768616.919324.13994867117217584719.stgit@djiang5-desk3.ch.intel.com>
+ <b742b19e-7ac6-901d-909a-15fb266ccffe@infradead.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <cc84e2f1-b615-4c43-a338-2a782d8f7be1@intel.com>
+Date:   Mon, 2 Nov 2020 08:50:39 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <b742b19e-7ac6-901d-909a-15fb266ccffe@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87zh42lfv6.fsf@toke.dk>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Saturday 31 October 2020 13:49:49 Toke Høiland-Jørgensen wrote:
-> "™֟☻̭҇ Ѽ ҉ ®" <vtolkm@googlemail.com> writes:
+
+
+On 10/30/2020 10:35 PM, Randy Dunlap wrote:
+> On 10/30/20 3:42 PM, Dave Jiang wrote:
+>> Add function that searches for DVSEC and returns the offset in PCI
+>> configuration space for the interested DVSEC capability.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+>> ---
+>>
+>> The patch has dependency on David Box’s dvsec definition patch:
+>> https://lore.kernel.org/linux-pci/bc5f059c5bae957daebde699945c80808286bf45.camel@linux.intel.com/T/#m1d0dc12e3b2c739e2c37106a45f325bb8f001774
+>>
+>>   drivers/pci/pci.c   |   30 ++++++++++++++++++++++++++++++
+>>   include/linux/pci.h |    3 +++
+>>   2 files changed, 33 insertions(+)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index 6d4d5a2f923d..49e57b831509 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -589,6 +589,36 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap)
+>>   }
+>>   EXPORT_SYMBOL_GPL(pci_find_ext_capability);
+>>   
+>> +/**
+>> + * pci_find_dvsec - return position of DVSEC with provided vendor and DVSEC ID
+>> + * @dev: the PCI device
+>> + * @vendor: vendor for the DVSEC
+>> + * @id: the DVSEC capibility ID
 > 
-> > On 30/10/2020 15:23, Pali Rohár wrote:
-> >> On Friday 30 October 2020 14:02:22 Toke Høiland-Jørgensen wrote:
-> >>> Pali Rohár <pali@kernel.org> writes:
-> >>>> My experience with that WLE900VX card, aardvark driver and aspm code:
-> >>>>
-> >>>> Link training in GEN2 mode for this card succeed only once after reset.
-> >>>> Repeated link retraining fails and it fails even when aardvark is
-> >>>> reconfigured to GEN1 mode. Reset via PERST# signal is required to have
-> >>>> working link training.
-> >>>>
-> >>>> What I did in aardvark driver: Set mode to GEN2, do link training. If
-> >>>> success read "negotiated link speed" from "Link Control Status Register"
-> >>>> (for WLE900VX it is 0x1 - GEN1) and set it into aardvark. And then
-> >>>> retrain link again (for WLE900VX now it would be at GEN1). After that
-> >>>> card is stable and all future retraining (e.g. from aspm.c) also passes.
-> >>>>
-> >>>> If I do not change aardvark mode from GEN2 to GEN1 the second link
-> >>>> training fails. And if I change mode to GEN1 after this failed link
-> >>>> training then nothing happen, link training do not success.
-> >>>>
-> >>>> So just speculation now... In current setup initialization of card does
-> >>>> one link training at GEN2. Then aspm.c is called which is doing second
-> >>>> link retraining at GEN2. And if it fails then below patch issue third
-> >>>> link retraining at GEN1. If A38x/pci-mvebu has same problem as aardvark
-> >>>> then second link retraining must be at GEN1 (not GEN2) to workaround
-> >>>> this issue.
-> >>>>
-> >>>> Bjorn, Toke: what about trying to hack aspm.c code to never do link
-> >>>> retraining at GEN2 speed? And always force GEN1 speed prior link
-> >>>> training?
-> >>> Sounds like a plan. I poked around in aspm.c and must confess to being a
-> >>> bit lost in the soup of registers ;)
-> >>>
-> >>> So if one of you can cook up a patch, that would be most helpful!
-> >> I modified Bjorn's patch, explicitly set tls to 1 and added debug info
-> >> about cls (current link speed, that what is used by aardvark). It is
-> >> untested, I just tried to compile it.
-> >>
-> >> Can try it?
-> >>
-> >> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> >> index 253c30cc1967..f934c0b52f41 100644
-> >> --- a/drivers/pci/pcie/aspm.c
-> >> +++ b/drivers/pci/pcie/aspm.c
-> >> @@ -206,6 +206,27 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
-> >>   	unsigned long end_jiffies;
-> >>   	u16 reg16;
-> >>   
-> >> +	u32 lnkcap2;
-> >> +	u16 lnksta, lnkctl2, cls, tls;
-> >> +
-> >> +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &lnkcap2);
-> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &lnksta);
-> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &lnkctl2);
-> >> +	cls = lnksta & PCI_EXP_LNKSTA_CLS;
-> >> +	tls = lnkctl2 & PCI_EXP_LNKCTL2_TLS;
-> >> +
-> >> +	pci_info(parent, "lnkcap2 %#010x sls %#04x lnksta %#06x cls %#03x lnkctl2 %#06x tls %#03x\n",
-> >> +		lnkcap2, (lnkcap2 & 0x3F) >> 1,
-> >> +		lnksta, cls,
-> >> +		lnkctl2, tls);
-> >> +
-> >> +	tls = 1;
-> >> +	pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
-> >> +					PCI_EXP_LNKCTL2_TLS, tls);
-> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &lnkctl2);
-> >> +	pci_info(parent, "lnkctl2 %#010x new tls %#03x\n",
-> >> +		lnkctl2, tls);
-> >> +
-> >>   	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
-> >>   	reg16 |= PCI_EXP_LNKCTL_RL;
-> >>   	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
-> >> @@ -227,6 +248,8 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
-> >>   			break;
-> >>   		msleep(1);
-> >>   	} while (time_before(jiffies, end_jiffies));
-> >> +	pci_info(parent, "lnksta %#06x new cls %#03x\n",
-> >> +		lnksta, (cls & PCI_EXP_LNKSTA_CLS));
-> >>   	return !(reg16 & PCI_EXP_LNKSTA_LT);
-> >>   }
-> >>   
-> >
-> > Still exhibiting the BAR update error, run tested with next--20201030
+>                       capability
 > 
-> Yup, same for me :(
+>> + *
+>> + * Return the offset of DVSEC on success or -ENOTSUPP if not found
+> 
+>      * Return: the offset of DVSEC on success or -ENOTSUPP if not found
+> 
+>> + */
+>> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
+>> +{
+>> +	u16 dev_vendor, dev_id;
+>> +	int pos;
+>> +
+>> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+>> +	if (!pos)
+>> +		return -ENOTSUPP;
+>> +
+>> +	while (pos) {
+>> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &dev_vendor);
+>> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &dev_id);
+>> +		if (dev_vendor == vendor && dev_id == id)
+>> +			return pos;
+>> +
+>> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+>> +	}
+>> +
+>> +	return -ENOTSUPP;
+>> +}
+>> +EXPORT_SYMBOL_GPL(pci_find_dvsec);
+>> +
+>>   /**
+>>    * pci_get_dsn - Read and return the 8-byte Device Serial Number
+>>    * @dev: PCI device to query
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 22207a79762c..6c692d32c82a 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -1069,6 +1069,7 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap);
+>>   int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
+>>   int pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
+>>   int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap);
+>> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id);
+>>   struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>>   
+>>   u64 pci_get_dsn(struct pci_dev *dev);
+>> @@ -1726,6 +1727,8 @@ static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
+>>   { return 0; }
+>>   static inline int pci_find_ext_capability(struct pci_dev *dev, int cap)
+>>   { return 0; }
+>> +static inline int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
+>> +{ return 0; }
+> 
+> Why shouldn't this return -ENOTSUPP instead of 0?
 
-So then it is different issue and not similar to aardvark one.
+Actually looking at the other find cap functions. Should I be returning 0 for 
+all failures?
 
-Anyway, was ASPM working on some previous kernel version? Or was it
-always broken on Turris Omnia?
-
-And has somebody other Armada 385 device with mPCIe slots to test if
-ASPM is working? Or any other 32bit Marvell Armada SOC?
-
-I would like to know if this is issue only on Turris Omnia or also on
-other Armada 385 SOC device or even on any other device which uses
-pci-mvebu.c driver.
+> 
+>>   
+>>   static inline u64 pci_get_dsn(struct pci_dev *dev)
+>>   { return 0; }
+>>
+>>
+> 
