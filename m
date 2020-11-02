@@ -2,119 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B87F72A2BED
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 14:48:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 097AE2A2C35
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 14:58:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725789AbgKBNsV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 08:48:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47228 "EHLO mail.kernel.org"
+        id S1725798AbgKBN6t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 08:58:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbgKBNsV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Nov 2020 08:48:21 -0500
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725960AbgKBN6Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Nov 2020 08:58:16 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E06D223AB;
-        Mon,  2 Nov 2020 13:48:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D96092227F;
+        Mon,  2 Nov 2020 13:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604324900;
-        bh=CJTsLQImvQfuFZjjUnGfXg2U2qxElGBVkEH9ynb1egQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PkqwpfNCqhd4uS4Wm9PvCWSPL0/i0x8Q9AooNZNeR+C4BwIvfn9+Ytp7Z6/BbmOO/
-         PYFRnJC2+4QAfET4bOUDb4CTgsNF7In9lij+/qwBluiV/HEb7fkkDCWVIz0GvFQU3/
-         guv+rzev3rW1p1t37T4ndg/La53J+Lq6IxuWRrDA=
-Received: by mail-ot1-f42.google.com with SMTP id i18so7895541ots.0;
-        Mon, 02 Nov 2020 05:48:20 -0800 (PST)
-X-Gm-Message-State: AOAM533/Cdd+BArgdU2ZZDoOCRUDhAdyJkFrESISNuWN9mo+yQKcFoBc
-        jzjgU+n3DxZJ8de0dEh/m8nmjUW1D+wzjIek0A==
-X-Google-Smtp-Source: ABdhPJxantw0H+8iycxFV4C0S3O8mBInCbQ+9oEeSWpWGNQn6vdFocJsnsHpYIqRbXCrcMoeZMuiTdO0HlLiLliarfI=
-X-Received: by 2002:a9d:5e14:: with SMTP id d20mr11240944oti.107.1604324899397;
- Mon, 02 Nov 2020 05:48:19 -0800 (PST)
+        s=default; t=1604325495;
+        bh=4vBetSmkaAnipo22H++gE1vnC0urlGdr/4l9rZltXFE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b+8i5rz2fNvGL/J6h4wEUkI4ox8rsUkM8bbbQBOG71JqSsWi1gVwTT0Mo82faN1td
+         /KMhiFuGwK7cRt0J4BfT9L7nWYKypu8/fdn/U0HtQBjKJFeAB9BDprMjxJv47a4iue
+         6vtU7qZPCSdHWVnb29WtdnR5uM/nDL8Xv0AplhW0=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1kZaLc-006g2w-Bj; Mon, 02 Nov 2020 13:58:12 +0000
 MIME-Version: 1.0
-References: <20201030013427.54086-1-miaoqinglang@huawei.com>
-In-Reply-To: <20201030013427.54086-1-miaoqinglang@huawei.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 2 Nov 2020 07:48:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKRDBMXjkBLrJo1GGo-tM4s3gO0rASsTtXmO5b2_BO+qg@mail.gmail.com>
-Message-ID: <CAL_JsqKRDBMXjkBLrJo1GGo-tM4s3gO0rASsTtXmO5b2_BO+qg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: v3: fix missing clk_disable_unprepare() on error in v3_pci_probe
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 02 Nov 2020 13:58:12 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Frank Wunderlich <linux@fw-web.de>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Aw: Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
+In-Reply-To: <trinity-4313623b-1adf-4cc3-8b50-2d0593669995-1604318207058@3c-app-gmx-bap57>
+References: <20201031140330.83768-1-linux@fw-web.de>
+ <878sbm9icl.fsf@nanos.tec.linutronix.de>
+ <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
+ <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
+ <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
+ <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
+ <df5565a2f1e821041c7c531ad52a3344@kernel.org>
+ <trinity-4313623b-1adf-4cc3-8b50-2d0593669995-1604318207058@3c-app-gmx-bap57>
+User-Agent: Roundcube Webmail/1.4.9
+Message-ID: <336d6588567949029c52ecfbb87660c1@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: frank-w@public-files.de, tglx@linutronix.de, ryder.lee@mediatek.com, linux-mediatek@lists.infradead.org, linux@fw-web.de, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 8:28 PM Qinglang Miao <miaoqinglang@huawei.com> wrote:
->
-> Fix the missing clk_disable_unprepare() before return
-> from v3_pci_probe() in the error handling case.
->
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
-> ---
->  drivers/pci/controller/pci-v3-semi.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/controller/pci-v3-semi.c b/drivers/pci/controller/pci-v3-semi.c
-> index 154a53986..e24abc5b4 100644
-> --- a/drivers/pci/controller/pci-v3-semi.c
-> +++ b/drivers/pci/controller/pci-v3-semi.c
-> @@ -739,8 +739,10 @@ static int v3_pci_probe(struct platform_device *pdev)
->
->         regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         v3->base = devm_ioremap_resource(dev, regs);
-> -       if (IS_ERR(v3->base))
-> +       if (IS_ERR(v3->base)) {
-> +               clk_disable_unprepare(clk);
+On 2020-11-02 11:56, Frank Wunderlich wrote:
+> looks good on bananapi-r2, no warning, pcie-card and hdd recognized
 
-You can reorder things moving the clock enable later (after mapping
-resources, but before devm_request_irq) and avoid some of these. Also
-move this check down:
+Thanks for giving it a shot. Still needs a bit of tweaking, as I expect
+it to break configurations that select CONFIG_PCI_MSI_ARCH_FALLBACKS
+(we have to assume that MSIs can be handled until we hit the 
+arch-specific
+stuff).
 
-if (readl(v3->base + V3_LB_IO_BASE) != (regs->start >> 16))
+There is also a small nit in the way we allow userspace to mess with
+this flag via sysfs, and similar restrictions should probably apply.
 
+Updated patch below.
 
->                 return PTR_ERR(v3->base);
-> +       }
->         /*
->          * The hardware has a register with the physical base address
->          * of the V3 controller itself, verify that this is the same
-> @@ -754,17 +756,22 @@ static int v3_pci_probe(struct platform_device *pdev)
->         regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->         if (resource_size(regs) != SZ_16M) {
->                 dev_err(dev, "config mem is not 16MB!\n");
-> +               clk_disable_unprepare(clk);
->                 return -EINVAL;
->         }
->         v3->config_mem = regs->start;
->         v3->config_base = devm_ioremap_resource(dev, regs);
-> -       if (IS_ERR(v3->config_base))
-> +       if (IS_ERR(v3->config_base)) {
-> +               clk_disable_unprepare(clk);
->                 return PTR_ERR(v3->config_base);
-> +       }
->
->         /* Get and request error IRQ resource */
->         irq = platform_get_irq(pdev, 0);
-> -       if (irq < 0)
-> +       if (irq < 0) {
-> +               clk_disable_unprepare(clk);
->                 return irq;
-> +       }
->
->         ret = devm_request_irq(dev, irq, v3_irq, 0,
->                         "PCIv3 error", v3);
-> @@ -772,6 +779,7 @@ static int v3_pci_probe(struct platform_device *pdev)
->                 dev_err(dev,
->                         "unable to request PCIv3 error IRQ %d (%d)\n",
->                         irq, ret);
-> +               clk_disable_unprepare(clk);
->                 return ret;
+         M.
 
-You still leave the clock enabled if pci_host_probe() fails.
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index d15c881e2e7e..5bb1306162c7 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -387,10 +387,20 @@ static ssize_t msi_bus_store(struct device *dev, 
+struct device_attribute *attr,
+  		return count;
+  	}
 
-Rob
+-	if (val)
++	if (val) {
++		/*
++		 * If there is no possibility for this bus to deal with
++		 * MSIs, then allowing them to be requested would lead to
++		 * the kernel complaining loudly. In this situation, don't
++		 * let userspace mess things up.
++		 */
++		if (!pci_bus_is_msi_capable(subordinate))
++			return -EINVAL;
++
+  		subordinate->bus_flags &= ~PCI_BUS_FLAGS_NO_MSI;
+-	else
++	} else {
+  		subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
++	}
+
+  	dev_info(&subordinate->dev, "MSI/MSI-X %s for future drivers of 
+devices on this bus\n",
+  		 val ? "allowed" : "disallowed");
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 4289030b0fff..28861cc6435a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -871,6 +871,8 @@ static void pci_set_bus_msi_domain(struct pci_bus 
+*bus)
+  		d = pci_host_bridge_msi_domain(b);
+
+  	dev_set_msi_domain(&bus->dev, d);
++	if (!pci_bus_is_msi_capable(bus))
++		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+  }
+
+  static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 22207a79762c..6aadb863dff4 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2333,6 +2333,12 @@ pci_host_bridge_acpi_msi_domain(struct pci_bus 
+*bus) { return NULL; }
+  static inline bool pci_pr3_present(struct pci_dev *pdev) { return 
+false; }
+  #endif
+
++static inline bool pci_bus_is_msi_capable(struct pci_bus *bus)
++{
++	return (IS_ENABLED(CONFIG_PCI_MSI_ARCH_FALLBACKS) ||
++		dev_get_msi_domain(&bus->dev));
++}
++
+  #ifdef CONFIG_EEH
+  static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
+  {
+
+-- 
+Jazz is not dead. It just smells funny...
