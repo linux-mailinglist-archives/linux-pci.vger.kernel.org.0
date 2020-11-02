@@ -2,280 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8145C2A2DC7
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 16:12:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 913952A2E40
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 16:24:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgKBPMC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 10:12:02 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:57444 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726357AbgKBPMA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 10:12:00 -0500
-Received: from mailhost.synopsys.com (sv1-mailhost2.synopsys.com [10.205.2.132])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 69052C0344;
-        Mon,  2 Nov 2020 15:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1604329919; bh=7m4TzV+FWYpM2Q//OOneVvGCYowRTcrNNLUIm+eqZsM=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=dtfY80RlxPd7s5aPZNTzuRz5FaLcZXI9tEfP1dbhIeSaAg8Rp7MfyMW8cmOvCPJqX
-         8WzZUqqV9nhy8fKB+7VDHdtym6z+CV085Mdwai0zJDtN3R0Jmw2waOHWu80bFJi2eE
-         MHTa0zQn6UItc0K2vIJ6E0Ocd12IEbVpuu7TSkKbxVqhTlXSnkUKx2iUaiLLaT8VA2
-         n2FXm6XWaJbx9xkJuAuonCkrCZv8Ly9MAW4LE7cDe1Ql3/aHPX4YYBK9slnZ3v9eVj
-         7J8jccj8C0iBioGLjOfcKrHadXkDdRFaO8zdZDkyyqTNQpNcD7kJ3KZ1PeIPQSZ/ml
-         X0bDpOVGO/Z1A==
-Received: from o365relay-in.synopsys.com (sv2-o365relay3.synopsys.com [10.202.1.139])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 8EDA9A0072;
-        Mon,  2 Nov 2020 15:11:57 +0000 (UTC)
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2170.outbound.protection.outlook.com [104.47.58.170])
+        id S1726043AbgKBPYH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 10:24:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbgKBPYH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 2 Nov 2020 10:24:07 -0500
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 48D2940146;
-        Mon,  2 Nov 2020 15:11:56 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="jTeWNvah";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y8+Qb+gzl0+5XxzFftE6i33K3H4HFwdnKkok/DERIn9sZryo2zijhS7Sl5tsUcPcGvyxrAXFlao6DZIl6cKmlLkyVDVeRAgjLrOHpZlfTfkV3adZ074FySepr4InRZftIT1LIlvdTtcoZs3rbRBJeVK5+MYdS/vzpWILwB6MF3tilgLtpGQFT7fYyvz802ix/U2egsutZjMzx+p/d1qEhW2zaTwot34+u+CNSwfyO8H6dtGWyX++Bdgye2n6V6VCPYJeC1usMpYU6HGt6falz3c/3dFeLw5/76TlGFeFL9W2b4uvqmCZy4oLy5GIjvR4BJ2P/gCMHB4jE4rHbgW5nA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7m4TzV+FWYpM2Q//OOneVvGCYowRTcrNNLUIm+eqZsM=;
- b=VXgtFH6XHmW0Su2a3+cCpwJ/XBIoG6gG8fkzuuQuzP+9bEga17wVMAsATK3ZCRxTGMUsBf9bUiWSbRQRVwaS1hwpGVE4vGa31yUaC7FXRLROGmA8xekJiRFmbhg0XdeqqvK++av6D+NX/4uc3jIvpWXIUmxk/M7lNHe8ZJRgxlAT52K8uFvmY/k6BfPGwgs/riSSFS2rMvMtTYdg4b6r0uLRmZC/2XHjLjFvk8RBjrR3w6YRohbk71XcD2fxuEECcgwRN8hBHWFWZ58VT8TV4cDMU2JlnjBVqJVb5QfM1ART8FIyBk2NuGvtWvfjgECj8cXrY/Wj57AfahjNu+xs0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7m4TzV+FWYpM2Q//OOneVvGCYowRTcrNNLUIm+eqZsM=;
- b=jTeWNvahFvPh5JfhukyfdEV/Nt9qW/6MqLyXgEcKrskrK5uMqE9U2HWD8koCwWVZYTKgNWMitygvAtND2/sydsA9biOx1N6hfM54Mibs608XvIOq8PJB3ltT4nQjkxlSOpWELx0Q9UI+FWJF98TlwECnFeJ2IY8BIo0dOagADl0=
-Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
- DM5PR1201MB0219.namprd12.prod.outlook.com (2603:10b6:4:56::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3499.29; Mon, 2 Nov 2020 15:11:54 +0000
-Received: from DM5PR12MB1835.namprd12.prod.outlook.com
- ([fe80::48e2:11e1:d2f:d12f]) by DM5PR12MB1835.namprd12.prod.outlook.com
- ([fe80::48e2:11e1:d2f:d12f%8]) with mapi id 15.20.3499.030; Mon, 2 Nov 2020
- 15:11:54 +0000
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Vidya Sagar <vidyas@nvidia.com>, Rob Herring <robh@kernel.org>
-CC:     Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Thierry Reding <treding@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: RE: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
-Thread-Topic: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
-Thread-Index: AQHWrbX/k+XWRE5HlkCJXk3ApXY9lam06eWAgAADLYCAAAuOoA==
-Date:   Mon, 2 Nov 2020 15:11:53 +0000
-Message-ID: <DM5PR12MB18357E6BF282C9C65278460EDA100@DM5PR12MB1835.namprd12.prod.outlook.com>
-References: <20201029053959.31361-1-vidyas@nvidia.com>
- <20201029053959.31361-3-vidyas@nvidia.com>
- <CAL_Jsq+3Ek9SRbsTqEmjiZtszvi7Er=TNgOt8t=0OESva2=sTg@mail.gmail.com>
- <902c0445-9fed-8e61-3aba-0e87988eb8df@nvidia.com>
-In-Reply-To: <902c0445-9fed-8e61-3aba-0e87988eb8df@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV0ppWkRCak1qUTVMVEZrTVdRdE1URmxZaTA1T0dRMUxXWTRPVFJq?=
- =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnhpWW1Rd1l6STBZUzB4WkRGa0xURXha?=
- =?utf-8?B?V0l0T1Roa05TMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?TXhPREVpSUhROUlqRXpNalE0T0RBek5URXlNVGczT0RNME5TSWdhRDBpUm13?=
- =?utf-8?B?eFNWVnhlbWgxVVhjNU0xSkRXRGxvU2tWblNuVlBOMmQzUFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlFsRktRVUZDU2pGWE1TdExja2hYUVZSV2NqZEVSMkl4TlVaRlRs?=
- =?utf-8?B?ZDJjMDFhZGxoclZWRlBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGT2NsTldNMmRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
- =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
- =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
- =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
- =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
- =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
- =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
- =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
- =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
- =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
- =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [89.155.14.32]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1aa00a3-e642-4387-679c-08d87f41a21d
-x-ms-traffictypediagnostic: DM5PR1201MB0219:
-x-microsoft-antispam-prvs: <DM5PR1201MB02197F061AACF13379042515DA100@DM5PR1201MB0219.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xl/hMOGkaKXnG3BFAn5wjiJDESikBm05mcgbbeF5B6z529pIxsM7UT65SuWY5clcoib8r3hptJC3GK/2p9GBNep6ykL7G3UGxJwxmKzI+Dd4UEaF6XLhO+Cor/VYrwYf/MrxWpbZRHDHUVscbYteR3hJjAkpYF3q3QoCGE3LY+DF5VTQskGC4IKWyUyVYCRmzyQjt4nTOCrRfq7oz1boH0is03lx8ieu6LaPqbsJiULkw0NpAT6OCWC/uEhyDjagbxM14yYsRjwYdruMxu3gWAXpNsPe9dDOQbhVc3jqWCMUwU8bltaY090Hzp7dFh2N36Im+79d+EaPW2gsD3sQuA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(64756008)(54906003)(66556008)(6506007)(53546011)(66946007)(76116006)(66476007)(52536014)(2906002)(71200400001)(66446008)(5660300002)(7416002)(478600001)(4326008)(55016002)(9686003)(8936002)(110136005)(26005)(186003)(316002)(8676002)(86362001)(83380400001)(33656002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4LGigh8MQDAQ7b5VmaHF+43gW4c/bR3zxWOE1/cjbB0e5alJ2R4eBhsBTtHm4ZU9/YTFM9OPTZnHo608hTZ1jbU1QvQXxeEzpbWHNWPKyYexwbLoXS2m2+YOkW36adjbMymN/8gJKg34idKKp1iACyrJHnRokqLUaqpLKZN+6E8z0lLhVQPbraV5KzxjJTU/xlOtyebTeUssTejeJq+9AWb4C9c/bCkeTHv1oM7td87OgDkqyMwyZ8OAHzRGmNpHxoduQB26tu0dZvjFXYFLnbD/AD30nRPRHhOYPTbMaMO7hA8oSB6uSmphbP7BndAJ40wyY/YEZLK3SBX/aK+pZHqQapawUo2wIj4YJ/KTwMEOkHP07pZMoIyIF0cARRief9e4SrxwWlZHPeihKF9riArPlFwuusp1BO1aRFceQJvDsprJ4XXLHg2B70KfeX8Jb/WmWPcy/bzgUAI4Mv/uan950axK1OqRYDG0YCGw3aDYg1I0IKiemfp2kNHwLOZquz6J9Te1SS3vgZfSTI8WLzm4Zlzb3nqR+YIIQosDIpHpg3EE0BodJTx9ac5Vw4xUV3bYAyxx/T3eERaHyA1G4XYQEVQ5gGj5p76tvMTc1W6oVj8C+g+/6sqrQZP0rh3lNmTi8qkZTSYtbQJGrzFIkA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398D42222B;
+        Mon,  2 Nov 2020 15:24:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604330646;
+        bh=RnZzNGAnLLIjc/EuCst7D7QPRlFlRXZlglvbfb5ZJUM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Li9sxcf2WK0rftgkTcs7d49GpF5tvCamgjxLGJ/SIjg57aBbrHvsaNt9xDqvsBFag
+         hAbrWSEiITTeGQ2iG0exts1GsWQfcbJwC5zK/dc+o+k/wkzJbHEGha+GUwI+7fg9oP
+         A2xf+pA3lO0JCSy6Up48UzHGpwHDAxHgcxU3shpU=
+Received: by pali.im (Postfix)
+        id 9477112CC; Mon,  2 Nov 2020 16:24:03 +0100 (CET)
+Date:   Mon, 2 Nov 2020 16:24:03 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Cc:     vtolkm@gmail.com, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: PCI trouble on mvebu (Turris Omnia)
+Message-ID: <20201102152403.4jlmcaqkqeivuypm@pali>
+References: <2fb69e2a-4423-2b04-cd0f-ca819092bc5f@gmail.com>
+ <20201028231626.GA344207@bjorn-Precision-5520>
+ <20201030112331.meqg6lvultyn6v54@pali>
+ <87k0v7n9y9.fsf@toke.dk>
+ <20201030142337.yushrdcuecycfhcu@pali>
+ <b9683fc3-bb8d-3dac-4a5d-fe7fbf2f0177@gmail.com>
+ <87zh42lfv6.fsf@toke.dk>
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1aa00a3-e642-4387-679c-08d87f41a21d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2020 15:11:54.0054
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ewTfsXmF5cF0dJ29jeskp9QdzEnVB2DU3Ng4XPvX39vdNdDGs8KlEJ4oBgWGV5y9P0y3yvnPd5KmVA1qHgU8TQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0219
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87zh42lfv6.fsf@toke.dk>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCBOb3YgMiwgMjAyMCBhdCAxNDoyNzo5LCBWaWR5YSBTYWdhciA8dmlkeWFzQG52aWRp
-YS5jb20+IHdyb3RlOg0KDQo+IA0KPiANCj4gT24gMTEvMi8yMDIwIDc6NDUgUE0sIFJvYiBIZXJy
-aW5nIHdyb3RlOg0KPiA+IEV4dGVybmFsIGVtYWlsOiBVc2UgY2F1dGlvbiBvcGVuaW5nIGxpbmtz
-IG9yIGF0dGFjaG1lbnRzDQo+ID4gDQo+ID4gDQo+ID4gT24gVGh1LCBPY3QgMjksIDIwMjAgYXQg
-MTI6NDAgQU0gVmlkeWEgU2FnYXIgPHZpZHlhc0BudmlkaWEuY29tPiB3cm90ZToNCj4gPj4NCj4g
-Pj4gRGVzaWduV2FyZSBjb3JlIGhhcyBhIFRMUCBkaWdlc3QgKFREKSBvdmVycmlkZSBiaXQgaW4g
-b25lIG9mIHRoZSBjb250cm9sDQo+ID4+IHJlZ2lzdGVycyBvZiBBVFUuIFRoaXMgYml0IGFsc28g
-bmVlZHMgdG8gYmUgcHJvZ3JhbW1lZCBmb3IgcHJvcGVyIEVDUkMNCj4gPj4gZnVuY3Rpb25hbGl0
-eS4gVGhpcyBpcyBjdXJyZW50bHkgaWRlbnRpZmllZCBhcyBhbiBpc3N1ZSB3aXRoIERlc2lnbldh
-cmUNCj4gPj4gSVAgdmVyc2lvbiA0LjkwYS4gVGhpcyBwYXRjaCBkb2VzIHRoZSByZXF1aXJlZCBw
-cm9ncmFtbWluZyBpbiBBVFUgdXBvbg0KPiA+PiBxdWVyeWluZyB0aGUgc3lzdGVtIHBvbGljeSBm
-b3IgRUNSQy4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogVmlkeWEgU2FnYXIgPHZpZHlhc0Bu
-dmlkaWEuY29tPg0KPiA+PiBSZXZpZXdlZC1ieTogSmluZ29vIEhhbiA8amluZ29vaGFuMUBnbWFp
-bC5jb20+DQo+ID4+IC0tLQ0KPiA+PiBWMzoNCj4gPj4gKiBBZGRlZCAnUmV2aWV3ZWQtYnk6IEpp
-bmdvbyBIYW4gPGppbmdvb2hhbjFAZ21haWwuY29tPicNCj4gPj4NCj4gPj4gVjI6DQo+ID4+ICog
-QWRkcmVzc2VkIEppbmdvbydzIHJldmlldyBjb21tZW50DQo+ID4+ICogUmVtb3ZlZCBzYXZpbmcg
-J3RkJyBiaXQgaW5mb3JtYXRpb24gaW4gJ2R3X3BjaWUnIHN0cnVjdHVyZQ0KPiA+Pg0KPiA+PiAg
-IGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5jIHwgOCArKysrKyst
-LQ0KPiA+PiAgIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS5oIHwg
-MSArDQo+ID4+ICAgMiBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
-KC0pDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9w
-Y2llLWRlc2lnbndhcmUuYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdu
-d2FyZS5jDQo+ID4+IGluZGV4IGI1ZTQzOGI3MGNkNS4uY2JkNjUxYjIxOWQyIDEwMDY0NA0KPiA+
-PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuYw0KPiA+
-PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUuYw0KPiA+
-PiBAQCAtMjQ2LDYgKzI0Niw4IEBAIHN0YXRpYyB2b2lkIGR3X3BjaWVfcHJvZ19vdXRib3VuZF9h
-dHVfdW5yb2xsKHN0cnVjdCBkd19wY2llICpwY2ksIHU4IGZ1bmNfbm8sDQo+ID4+ICAgICAgICAg
-IGR3X3BjaWVfd3JpdGVsX29iX3Vucm9sbChwY2ksIGluZGV4LCBQQ0lFX0FUVV9VTlJfVVBQRVJf
-VEFSR0VULA0KPiA+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdXBwZXJfMzJf
-Yml0cyhwY2lfYWRkcikpOw0KPiA+PiAgICAgICAgICB2YWwgPSB0eXBlIHwgUENJRV9BVFVfRlVO
-Q19OVU0oZnVuY19ubyk7DQo+ID4+ICsgICAgICAgaWYgKHBjaS0+dmVyc2lvbiA9PSAweDQ5MEEp
-DQo+ID4+ICsgICAgICAgICAgICAgICB2YWwgPSB2YWwgfCBwY2llX2lzX2VjcmNfZW5hYmxlZCgp
-IDw8IFBDSUVfQVRVX1REX1NISUZUOw0KPiA+PiAgICAgICAgICB2YWwgPSB1cHBlcl8zMl9iaXRz
-KHNpemUgLSAxKSA/DQo+ID4+ICAgICAgICAgICAgICAgICAgdmFsIHwgUENJRV9BVFVfSU5DUkVB
-U0VfUkVHSU9OX1NJWkUgOiB2YWw7DQo+ID4+ICAgICAgICAgIGR3X3BjaWVfd3JpdGVsX29iX3Vu
-cm9sbChwY2ksIGluZGV4LCBQQ0lFX0FUVV9VTlJfUkVHSU9OX0NUUkwxLCB2YWwpOw0KPiA+PiBA
-QCAtMjk0LDggKzI5NiwxMCBAQCBzdGF0aWMgdm9pZCBfX2R3X3BjaWVfcHJvZ19vdXRib3VuZF9h
-dHUoc3RydWN0IGR3X3BjaWUgKnBjaSwgdTggZnVuY19ubywNCj4gPj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGxvd2VyXzMyX2JpdHMocGNpX2FkZHIpKTsNCj4gPj4gICAgICAgICAgZHdf
-cGNpZV93cml0ZWxfZGJpKHBjaSwgUENJRV9BVFVfVVBQRVJfVEFSR0VULA0KPiA+PiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgdXBwZXJfMzJfYml0cyhwY2lfYWRkcikpOw0KPiA+PiAtICAg
-ICAgIGR3X3BjaWVfd3JpdGVsX2RiaShwY2ksIFBDSUVfQVRVX0NSMSwgdHlwZSB8DQo+ID4+IC0g
-ICAgICAgICAgICAgICAgICAgICAgICAgIFBDSUVfQVRVX0ZVTkNfTlVNKGZ1bmNfbm8pKTsNCj4g
-Pj4gKyAgICAgICB2YWwgPSB0eXBlIHwgUENJRV9BVFVfRlVOQ19OVU0oZnVuY19ubyk7DQo+ID4+
-ICsgICAgICAgaWYgKHBjaS0+dmVyc2lvbiA9PSAweDQ5MEEpDQo+ID4gDQo+ID4gSXMgdGhpcyBl
-dmVuIHBvc3NpYmxlPyBBcmUgdGhlIG5vbi11bnJvbGwgQVRVIHJlZ2lzdGVycyBhdmFpbGFibGUg
-cG9zdCA0LjgwPw0KPiBJJ20gbm90IHN1cmUuIEd1c3Rhdm8gbWlnaHQgaGF2ZSBpbmZvcm1hdGlv
-biBhYm91dCB0aGlzLiBJIG1hZGUgdGhpcyANCj4gY2hhbmdlIHNvIHRoYXQgaXQgaXMgdGFrZW4g
-Y2FyZSBvZmYgZXZlbiBpZiB0aGV5IGF2YWlsYWJsZS4NCg0KVGhlIFN5bm9wc3lzIERlc2lnbldh
-cmUgUENJZSBJUCBpcyBoaWdobHkgY29uZmlndXJhYmxlLCB0aGVyZWZvcmUgaXMgDQpkZXBlbmRh
-YmxlIG9uIHdoYXQgdGhlIGRlc2lnbiB0ZWFtIGhhcyBjb25maWd1cmVkIGZvciB0aGVpciBzb2x1
-dGlvbi4NCkFsdGhvdWdoIFN5bm9wc3lzIGRvZXNuJ3QgcmVjb21tZW5kIHRoZSB1c2Ugb2Ygbm9u
-LXVucm9sbCBBVFUsIHRoZSANCmN1c3RvbWVycyBhcmUgZnJlZSB0byBzZWxlY3Qgd2hhdCB0aGV5
-IHdhbnQgZm9yIHRoZWlyIGRlc2lnbi4NCg0KLUd1c3Rhdm8NCg0KPiANCj4gPiANCj4gPiBSb2IN
-Cj4gPiANCg0KDQo=
+On Saturday 31 October 2020 13:49:49 Toke Høiland-Jørgensen wrote:
+> "™֟☻̭҇ Ѽ ҉ ®" <vtolkm@googlemail.com> writes:
+> 
+> > On 30/10/2020 15:23, Pali Rohár wrote:
+> >> On Friday 30 October 2020 14:02:22 Toke Høiland-Jørgensen wrote:
+> >>> Pali Rohár <pali@kernel.org> writes:
+> >>>> My experience with that WLE900VX card, aardvark driver and aspm code:
+> >>>>
+> >>>> Link training in GEN2 mode for this card succeed only once after reset.
+> >>>> Repeated link retraining fails and it fails even when aardvark is
+> >>>> reconfigured to GEN1 mode. Reset via PERST# signal is required to have
+> >>>> working link training.
+> >>>>
+> >>>> What I did in aardvark driver: Set mode to GEN2, do link training. If
+> >>>> success read "negotiated link speed" from "Link Control Status Register"
+> >>>> (for WLE900VX it is 0x1 - GEN1) and set it into aardvark. And then
+> >>>> retrain link again (for WLE900VX now it would be at GEN1). After that
+> >>>> card is stable and all future retraining (e.g. from aspm.c) also passes.
+> >>>>
+> >>>> If I do not change aardvark mode from GEN2 to GEN1 the second link
+> >>>> training fails. And if I change mode to GEN1 after this failed link
+> >>>> training then nothing happen, link training do not success.
+> >>>>
+> >>>> So just speculation now... In current setup initialization of card does
+> >>>> one link training at GEN2. Then aspm.c is called which is doing second
+> >>>> link retraining at GEN2. And if it fails then below patch issue third
+> >>>> link retraining at GEN1. If A38x/pci-mvebu has same problem as aardvark
+> >>>> then second link retraining must be at GEN1 (not GEN2) to workaround
+> >>>> this issue.
+> >>>>
+> >>>> Bjorn, Toke: what about trying to hack aspm.c code to never do link
+> >>>> retraining at GEN2 speed? And always force GEN1 speed prior link
+> >>>> training?
+> >>> Sounds like a plan. I poked around in aspm.c and must confess to being a
+> >>> bit lost in the soup of registers ;)
+> >>>
+> >>> So if one of you can cook up a patch, that would be most helpful!
+> >> I modified Bjorn's patch, explicitly set tls to 1 and added debug info
+> >> about cls (current link speed, that what is used by aardvark). It is
+> >> untested, I just tried to compile it.
+> >>
+> >> Can try it?
+> >>
+> >> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> >> index 253c30cc1967..f934c0b52f41 100644
+> >> --- a/drivers/pci/pcie/aspm.c
+> >> +++ b/drivers/pci/pcie/aspm.c
+> >> @@ -206,6 +206,27 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
+> >>   	unsigned long end_jiffies;
+> >>   	u16 reg16;
+> >>   
+> >> +	u32 lnkcap2;
+> >> +	u16 lnksta, lnkctl2, cls, tls;
+> >> +
+> >> +	pcie_capability_read_dword(parent, PCI_EXP_LNKCAP2, &lnkcap2);
+> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &lnksta);
+> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &lnkctl2);
+> >> +	cls = lnksta & PCI_EXP_LNKSTA_CLS;
+> >> +	tls = lnkctl2 & PCI_EXP_LNKCTL2_TLS;
+> >> +
+> >> +	pci_info(parent, "lnkcap2 %#010x sls %#04x lnksta %#06x cls %#03x lnkctl2 %#06x tls %#03x\n",
+> >> +		lnkcap2, (lnkcap2 & 0x3F) >> 1,
+> >> +		lnksta, cls,
+> >> +		lnkctl2, tls);
+> >> +
+> >> +	tls = 1;
+> >> +	pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL2,
+> >> +					PCI_EXP_LNKCTL2_TLS, tls);
+> >> +	pcie_capability_read_word(parent, PCI_EXP_LNKCTL2, &lnkctl2);
+> >> +	pci_info(parent, "lnkctl2 %#010x new tls %#03x\n",
+> >> +		lnkctl2, tls);
+> >> +
+> >>   	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
+> >>   	reg16 |= PCI_EXP_LNKCTL_RL;
+> >>   	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> >> @@ -227,6 +248,8 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
+> >>   			break;
+> >>   		msleep(1);
+> >>   	} while (time_before(jiffies, end_jiffies));
+> >> +	pci_info(parent, "lnksta %#06x new cls %#03x\n",
+> >> +		lnksta, (cls & PCI_EXP_LNKSTA_CLS));
+> >>   	return !(reg16 & PCI_EXP_LNKSTA_LT);
+> >>   }
+> >>   
+> >
+> > Still exhibiting the BAR update error, run tested with next--20201030
+> 
+> Yup, same for me :(
+
+So then it is different issue and not similar to aardvark one.
+
+Anyway, was ASPM working on some previous kernel version? Or was it
+always broken on Turris Omnia?
+
+And has somebody other Armada 385 device with mPCIe slots to test if
+ASPM is working? Or any other 32bit Marvell Armada SOC?
+
+I would like to know if this is issue only on Turris Omnia or also on
+other Armada 385 SOC device or even on any other device which uses
+pci-mvebu.c driver.
