@@ -2,90 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EB9D2A2A27
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 12:57:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67A2C2A2B58
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 14:20:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgKBL5N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 06:57:13 -0500
-Received: from mout.gmx.net ([212.227.17.22]:58425 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbgKBL5N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Nov 2020 06:57:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1604318207;
-        bh=ulH0yL49Zs5eNoVaKp+OGHU1yD5vDappgjihQPEn7Ks=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=WOPzX3clf18xjkG6cpbmvAufRSL4BLR7SHWar27PIxCzjzFD4OAWAbwOBaijiK7aF
-         yKvKL+BBepNKKPW0bg8OqzmUlcriOPZlfG6rbW+e26OwOHS7U3laNOv6lvuVS3IiMl
-         o3gkhAmcSMH3zLVcENL8ChVdjwx/i/zUndQbOJXA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.76.97.212] ([185.76.97.212]) by web-mail.gmx.net
- (3c-app-gmx-bap57.server.lan [172.19.172.127]) (via HTTP); Mon, 2 Nov 2020
- 12:56:47 +0100
+        id S1726889AbgKBNUo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 08:20:44 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13172 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgKBNUo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 08:20:44 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa007af0000>; Mon, 02 Nov 2020 05:20:47 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Nov
+ 2020 13:20:40 +0000
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 2 Nov 2020 13:20:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=obBG/vg4qh6Ngu/iY9HEmm/JmE9FC8/mEe8l3GRGdJXC5cyLmojrTR6PacWiLT4Wq8BtxEsnb2Wgs1THdFy68QY4uVv9Uw9s+aW7mF7c0Vh6P41c+AP7JVvZo9+8ZPn6Kpzyd/ejtg7vdTyy09z24/DwxnzmfBlsK6zZN9n4UUqwhFFk9xp43n6oj3kPIKJHPIRyQEiXPmKfmelrpkOmhAMLblzQf6JUGp8Kx2JP9VPr6RBaSS9Chirk0jx+8Obueek4fcK1tOAhHFyv9VDOt98IvEvjZrKRSwPoIjsximCRnmQvZab/B1Ro5F/ez3ih/AEM3XkNDKXZ+eOl290PdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CE6EA7NrZqctG4vMu3984r3VLejGChlS1r9sYWz4b1E=;
+ b=AlcxsD4zHum/d6ngFVHb2+g115vdPE1cIOifMB9o4D+X1IHfsSNTotua/DWv54AFIZK8PPbGwCQDxP9HeUeK30ZffLiquWsvPzDtQlYd8u52+6kKERMJed0G3n6YoIemJMlut340HchxbnqlAYuM3kWeAs9JQHc9/bb06Q1ugfgvRoTiCQujc++gfSxVhqDPZ3kxi2H6dS5kB0LPR/J66jBISN7tYXOkMKdd3kMYu7jWzgJnjKzOA24K9cOZjAqvoDgbmI7JAQtg7TvwPAaECOES7CGVXUcJteNqkO8zkmdTw8DXiJEjPAYi9px7y72mDVAqMGvBG1LUewk/IOv53w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB4810.namprd12.prod.outlook.com (2603:10b6:5:1f7::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.27; Mon, 2 Nov
+ 2020 13:20:38 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.030; Mon, 2 Nov 2020
+ 13:20:38 +0000
+Date:   Mon, 2 Nov 2020 09:20:36 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Dave Jiang <dave.jiang@intel.com>, <vkoul@kernel.org>,
+        <megha.dey@intel.com>, <maz@kernel.org>, <bhelgaas@google.com>,
+        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
+        <yi.l.liu@intel.com>, <baolu.lu@intel.com>, <kevin.tian@intel.com>,
+        <sanjay.k.kumar@intel.com>, <tony.luck@intel.com>,
+        <jing.lin@intel.com>, <dan.j.williams@intel.com>,
+        <kwankhede@nvidia.com>, <eric.auger@redhat.com>,
+        <parav@mellanox.com>, <rafael@kernel.org>, <netanelg@mellanox.com>,
+        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
+        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
+        <mona.hossain@intel.com>, Megha Dey <megha.dey@linux.intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 00/17] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+Message-ID: <20201102132036.GX2620339@nvidia.com>
+References: <160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com>
+ <20201030185858.GI2620339@nvidia.com>
+ <c9303df4-3e57-6959-a89c-5fc98397ac70@intel.com>
+ <20201030191706.GK2620339@nvidia.com> <20201030192325.GA105832@otc-nc-03>
+ <20201030193045.GM2620339@nvidia.com> <20201030204307.GA683@otc-nc-03>
+ <87h7qbkt18.fsf@nanos.tec.linutronix.de>
+ <20201031235359.GA23878@araj-mobl1.jf.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20201031235359.GA23878@araj-mobl1.jf.intel.com>
+X-ClientProxiedBy: BL1PR13CA0052.namprd13.prod.outlook.com
+ (2603:10b6:208:257::27) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Message-ID: <trinity-4313623b-1adf-4cc3-8b50-2d0593669995-1604318207058@3c-app-gmx-bap57>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <linux@fw-web.de>,
-        linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Aw: Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 2 Nov 2020 12:56:47 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <df5565a2f1e821041c7c531ad52a3344@kernel.org>
-References: <20201031140330.83768-1-linux@fw-web.de>
- <878sbm9icl.fsf@nanos.tec.linutronix.de>
- <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
- <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
- <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
- <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
- <df5565a2f1e821041c7c531ad52a3344@kernel.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:jYyejVeaj2brOcs4Q4UH22OqS7aiIjBeum4maSh2Zmyo+vBA0JlOayRM2AcnNYk4HcVN6
- p7yRyg/7PGHgiaviKxOOHfQIKOxIFhzucxw8UajnwnTy8ZanOEBLEXJ1b3V7MbnBnH6TmVOwOCV9
- xFUpNVFsnW996VhE7e7jSmHvVKSmVEo9neamw4RFiAWPSA3PB7CR68xGvQR7yoZiw4OeMyA/UYLv
- sLSpUt86s8JSawinnsQBP85qyWaXa2vF0Rr50ofRE7d5u9q9jY1q3GQ20290lUy5FL5mwCoEehs3
- X8=
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:S3IivwM+kT4=:xaI1fXywJdp+SJdYRytlKF
- Vn2q1E3VySGKmOtACNRSqAv7fHe1soTH1bRUgz6FC5P4twwJIDoXh16+fi+p1g22oCpY53E7+
- uzZgDn+b+T8GkGeZhEWUc/Tq4zg1pEQAxbnSuQCAiEKEwnHpT+BlVicNp9gymfp5H+QTwhCKo
- uPa3YmwBuxy7L0rBYmsJhNoLexBsfrDoSVpC38qpej84z351HXtTVt8AV4lFIsGYF9dMjsp4j
- AZUmjocOHKpFMXuxk8rH0bXm6MdZeyEQb43dt58yMVaO2m+eWjsLb2T0bpMU5AlJ1ncH2MpIp
- H9kPQd4afMChDz9YCUWXN47C1lINzhOW5HAc2PSJpnbKHNcMpOyvPFXbA+sNhs1CVCb6bDwkI
- cpFUtwTvXMmoM60df0UXNiDdJZsELiN67qXDgPhYiUmVrKUdS8X3TWv0j8dHyo2MO1FpobXN3
- 788r1lzrRT10QDBFK7Q2gdljLqROoofyJkHhIyZ/TKbLDcbZVoVzL3jNHhzuwETBI0hDxZ85R
- kd/Dxt8YpzqL7iJXBYoqWgW21Zk7CU5Q9xJQ6AghZeIUCpRPDaYN0A6pRabqjU2Di1+B524Ll
- F+/t3f787BOeE=
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL1PR13CA0052.namprd13.prod.outlook.com (2603:10b6:208:257::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.10 via Frontend Transport; Mon, 2 Nov 2020 13:20:37 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kZZlE-00F3f9-1s; Mon, 02 Nov 2020 09:20:36 -0400
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1604323247; bh=CE6EA7NrZqctG4vMu3984r3VLejGChlS1r9sYWz4b1E=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=U5FU+9RwPzwwsNCjR7GMWT5xiVesCaLxDXwprLuhkfTBlK7DgK098WVz+nbIQEdwz
+         Xfahi4xSeokx9cmQiYDDiZ8NSGoI35Ax3tPFzYGyITGqf7mAMaLlXK93fRwvTxGsd+
+         tYatqB924tl41D1cQo6L6NpFsYhHGeZjlsiwrokQmXA4WFJ33ad2KGCMVnOTO/dXN/
+         NthgO6q6x2Kn3Cjk8idyVskg4LAqLPat81Fsrrz2P6dQd8/xRFpyeGvOt1zmLGLUii
+         8VGZ0V54aAn4leHtBdbqkZop9SKI8HtE+pVY68OXFaUNFBII7m4UwIJAky0EQJQudD
+         Mr6eVBUfMpwxg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-looks good on bananapi-r2, no warning, pcie-card and hdd recognized
+On Sat, Oct 31, 2020 at 04:53:59PM -0700, Raj, Ashok wrote:
 
-regards Frank
+> If we are doing this just to improve review effectiveness, Now we would need
+> some parent driver, and these sub-drivers registering seemed like a bit of
+> over-engineering when these sub-drivers actually are an extension of the
+> base driver and offer nothing more than extending sub-device partitions
+> of IDXD for guest drivers. These look and feel like IDXD, not another device 
+> interface. In that sense if we move PF/VF mailboxes as
+> separate drivers i thought it feels a bit odd.
 
+You need this split anyhow, putting VFIO calls into the main idxd
+module is not OK.
 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4289030b0fff..bb363eb103a2 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -871,6 +871,8 @@ static void pci_set_bus_msi_domain(struct pci_bus
-> *bus)
->   		d =3D pci_host_bridge_msi_domain(b);
->
->   	dev_set_msi_domain(&bus->dev, d);
-> +	if (!d)
-> +		bus->bus_flags |=3D PCI_BUS_FLAGS_NO_MSI;
->   }
->
->   static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+Plugging in a PCI device should not auto-load VFIO modules.
 
+Jason
