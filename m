@@ -2,87 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA442A35BE
-	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 22:03:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FC622A35C7
+	for <lists+linux-pci@lfdr.de>; Mon,  2 Nov 2020 22:07:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgKBVDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 16:03:50 -0500
-Received: from mga03.intel.com ([134.134.136.65]:13122 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgKBVDu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 2 Nov 2020 16:03:50 -0500
-IronPort-SDR: FAPs1q039TcIJvoHedofd9Nry6pQhzSrM2NXbHhhbNQhU0lIaFDMXE1M8hVgrBXbfbzeXk/aaM
- Lbqwy6ZbmUgA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9793"; a="169054654"
-X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="169054654"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 13:03:49 -0800
-IronPort-SDR: cjrnBwfD6Cv0W1Cz1TfVFi4CFmmoEBQHoWx4+PHz5rGHbHzIDZrG0kqS3y+ykElKjFj1P9S+z/
- PRdK287dMjig==
-X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
-   d="scan'208";a="470521444"
-Received: from lginuga-mobl.amr.corp.intel.com (HELO [10.255.228.220]) ([10.255.228.220])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 13:03:49 -0800
-Subject: Re: [PATCH v4 5/6] PCI/ACPI: Replace open coded variant of
- resource_union()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-References: <20201102210025.53520-1-andriy.shevchenko@linux.intel.com>
- <20201102210025.53520-6-andriy.shevchenko@linux.intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <510543c4-0abe-7582-32cd-404656e818d8@linux.intel.com>
-Date:   Mon, 2 Nov 2020 13:03:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726104AbgKBVHo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 16:07:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbgKBVHo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 16:07:44 -0500
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5E8C0617A6;
+        Mon,  2 Nov 2020 13:07:44 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id h6so11854294pgk.4;
+        Mon, 02 Nov 2020 13:07:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=S6chzrEL1+q5/HgauCqurdMSLx7xx9lDVZhCmcZkHvI=;
+        b=i20qXrob8eGMOn++YWhc8yAwCQckMLo+ZPm91OcoTYfl+jq+woJXpCvWm/OOEBOtx2
+         9gm7lUogEu6BD2HCCHzZwe1wJuVEXcaxDXHaHO9ucDvVooLYG4tcIyk5HQUScWxPbNEx
+         TIyH0ztC4G7M7rKVjmGzuMnIg+tykKdGK9V4RXGHH5XUT6JG3c+7wfGZgsr3lIOxI85c
+         t2QBdiOVde3K8h++x37RRf66mbJadAQPy7ciwLyh7t7XbOiT4L9E12EgBR2jgmAoVztd
+         EWnZKr7xpnS6BQFUyYM6cZ2jnz+RWJHLL6teiMm4lithfBWRtCGxqeHc+/WYvPtWUpk3
+         +toQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S6chzrEL1+q5/HgauCqurdMSLx7xx9lDVZhCmcZkHvI=;
+        b=Yd5UwDfGKHz6E9YaC8Xf+RKf8seuGuZebaglfD5/jHIe+HggLd/53E8FocS67AShvZ
+         9Q+EMOa4jUzEWs1Yi8tS+f9gfCuJHDHIzKq2X0DMIHHRnB20IVHyMf0dNRHMY/0lNLuh
+         IndHXcRFBKFGkLr4Ri6eHgQTaerMDVyc2K2of2GZUxY8Q/PwmMbMSvsMi13qR2P8ixlu
+         o4izxYY+ROcNc6rDol+J16+8+l5/p8v98gRD2Ww+pLj4+ajMkOBeDsJxJZaRNv4aoe2D
+         Khw7RYYJ3Fi03X4gYqLh+WhchqaMZcgVSKNzRfzTOe8eC0SDhGRorwWVhClFW+4Nm/YC
+         z9TA==
+X-Gm-Message-State: AOAM531Xp0rMvH+tyTWVJzUpoFwAM21t+DCBopIS6RQCqffDMljayurZ
+        E7SlwkLA1X+GnthmKHmyLKze8JJMGEI=
+X-Google-Smtp-Source: ABdhPJwhwhWAg/9kMC4uwU1P0g1QPS9Bt7HIzzhx08xEMh/G2gJZAhWia0xLfQUhPM7oNFyIiWhIpg==
+X-Received: by 2002:aa7:8a01:0:b029:15c:de46:5b2f with SMTP id m1-20020aa78a010000b029015cde465b2fmr22706776pfa.81.1604351263613;
+        Mon, 02 Nov 2020 13:07:43 -0800 (PST)
+Received: from [10.230.28.234] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g4sm3802203pgu.81.2020.11.02.13.07.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Nov 2020 13:07:42 -0800 (PST)
+Subject: Re: [PATCH v1] PCI: brcmstb: variable is missing proper
+ initialization
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20201102205712.23332-1-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <ad4cbee6-c52e-cedc-fa79-3805e36377b4@gmail.com>
+Date:   Mon, 2 Nov 2020 13:07:38 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201102210025.53520-6-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20201102205712.23332-1-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 11/2/20 1:00 PM, Andy Shevchenko wrote:
-> Since we have resource_union() helper, let's utilize it here.
+On 11/2/2020 12:57 PM, Jim Quinlan wrote:
+> The variable 'tmp' is used multiple times in the brcm_pcie_setup()
+> function.  One such usage did not initialize 'tmp' to the current value of
+> the target register.  By luck the mistake does not currently affect
+> behavior;  regardless 'tmp' is now initialized properly.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->   drivers/acpi/pci_root.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> index c12b5fb3e8fb..0bf072cef6cf 100644
-> --- a/drivers/acpi/pci_root.c
-> +++ b/drivers/acpi/pci_root.c
-> @@ -722,9 +722,7 @@ static void acpi_pci_root_validate_resources(struct device *dev,
->   			 * our resources no longer match the ACPI _CRS, but
->   			 * the kernel resource tree doesn't allow overlaps.
->   			 */
-> -			if (resource_overlaps(res1, res2)) {
-> -				res2->start = min(res1->start, res2->start);
-> -				res2->end = max(res1->end, res2->end);
-> +			if (resource_union(res1, res2, res2)) {
->   				dev_info(dev, "host bridge window expanded to %pR; %pR ignored\n",
->   					 res2, res1);
->   				free = true;
-> 
+> Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
+> Suggested-by: Rafał Miłecki <zajec5@gmail.com>
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Florian
