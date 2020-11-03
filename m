@@ -2,71 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 828992A4665
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 14:29:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECF302A4669
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 14:29:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgKCN3D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Nov 2020 08:29:03 -0500
-Received: from m42-4.mailgun.net ([69.72.42.4]:63763 "EHLO m42-4.mailgun.net"
+        id S1729302AbgKCN3M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Nov 2020 08:29:12 -0500
+Received: from z5.mailgun.us ([104.130.96.5]:35548 "EHLO z5.mailgun.us"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbgKCN2m (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Nov 2020 08:28:42 -0500
+        id S1729210AbgKCN2Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Nov 2020 08:28:24 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1604410122; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=KbJ7uf5ba26n7iQKy0xxLg+5Abs5t9kAoaQgbJ0imWA=;
- b=mh9vCHo2jrQi2Q0CR/M3B4jGuEGBCc/oTk+aO2/ZGnVwssY2i8fZegfRR+iN8rkgYm/mKJaS
- 67dbQ1yDqsVbatgEgNV/OM/XQJUJlnXHyH91oeFR3BL7+BvavyKqXj7OceAcMl1vs/2Ty/nS
- qzntekb1wioeE9u8OZiszH+Cixs=
-X-Mailgun-Sending-Ip: 69.72.42.4
+ s=smtp; t=1604410103; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=bvAtK86qzMGJH9G/9rCYFInJ28k7Z3FFPLRcYF1MVg0=; b=ht3qVmJM1cunG0Pfuxa5Cp8BOX+Qp3Eso0YStNdO3HktMOFbmtv0Dgf7UNbNCE/BaMeOF6Ck
+ Vb5fy17oGCNsjr+wbejb0lbdxvPOOyf0z7/4VxPMov+h9+DDXfnZkpH0w1kRBeBkapq3/ZXS
+ AT+LtWWj0KmgbRVhXTQeMkmVeLk=
+X-Mailgun-Sending-Ip: 104.130.96.5
 X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5fa15af775bebe827a00145b (version=TLS1.2,
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5fa15af7978460d05b541871 (version=TLS1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 03 Nov 2020 13:28:23
  GMT
-Sender: cjhuang=codeaurora.org@mg.codeaurora.org
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 18F86C4344A; Tue,  3 Nov 2020 03:01:58 +0000 (UTC)
+        id E365EC4A5E2; Tue,  3 Nov 2020 06:49:11 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: cjhuang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6EEF9C433B1;
-        Tue,  3 Nov 2020 03:01:56 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 03 Nov 2020 11:01:56 +0800
-From:   Carl Huang <cjhuang@codeaurora.org>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79D45C384E4;
+        Tue,  3 Nov 2020 06:49:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79D45C384E4
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Govind Singh <govinds@codeaurora.org>,
-        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Devin Bayer <dev@doubly.so>,
+Cc:     Govind Singh <govinds@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-wireless@vger.kernel.org, Devin Bayer <dev@doubly.so>,
         Thomas Krause <thomaskrause@posteo.de>,
         ath11k@lists.infradead.org
 Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
-In-Reply-To: <20201102205752.GA34153@bjorn-Precision-5520>
 References: <20201102205752.GA34153@bjorn-Precision-5520>
-Message-ID: <ea5a2a1956ffd19ae61c42f895d90961@codeaurora.org>
-X-Sender: cjhuang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Date:   Tue, 03 Nov 2020 08:49:06 +0200
+In-Reply-To: <20201102205752.GA34153@bjorn-Precision-5520> (Bjorn Helgaas's
+        message of "Mon, 2 Nov 2020 14:57:52 -0600")
+Message-ID: <87k0v3szod.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-11-03 04:57, Bjorn Helgaas wrote:
+Bjorn Helgaas <helgaas@kernel.org> writes:
+
 > [+cc Govind, author of 5697a564d369 ("ath11k: pci: add MSI config
 > initialisation")]
-> 
+>
 > On Mon, Nov 02, 2020 at 08:49:51PM +0200, Kalle Valo wrote:
 >> + linux-wireless, linux-pci, devin
 >> 
@@ -98,65 +97,71 @@ On 2020-11-03 04:57, Bjorn Helgaas wrote:
 >> > 	Capabilities: [a00] Downstream Port Containment
 >> > 	Kernel driver in use: pcieport
 >> 
->> I don't know enough about PCI to say if the bridge is a problem or 
->> not.
-> 
+>> I don't know enough about PCI to say if the bridge is a problem or not.
+>
 > I don't think the bridge is an issue here.  AFAICT the bridge's I/O
 > and prefetchable memory windows are disabled, but the non-prefetchable
 > window *is* enabled and contains the space consumed by the ath11k
 > device:
-> 
+>
 >   00:1c.0 PCI bridge: Intel Corporation Device a0b8 (rev 20)
 > 	Bus: primary=00, secondary=56, subordinate=56, sec-latency=0
 > 	Memory behind bridge: 8c300000-8c3fffff [size=1M]
 >   56:00.0 Network controller: Qualcomm Device 1101 (rev 01)
 >      Region 0: Memory at 8c300000 (64-bit, non-prefetchable) [size=1M]
-> 
 
-Have you enabled VT-d from BIOS? This is required at least on some old 
-laptops.
-
+Good to know that the bridge shouldn't be the problem. Do you have any
+ideas how to make more vectors available to ath11k, besides
+CONFIG_IRQ_REMAP? Because QCA6390 works in Windows I doubt this is a
+hardware problem.
 
 >> To summarise: Thomas is reporting[1] a problem with ath11k on QCA6390
 >> PCI device where he is not having enough MSI vectors. ath11k needs 32
->> vectors but pci_alloc_irq_vectors() returns -ENOSPC. PCI support is 
->> new
+>> vectors but pci_alloc_irq_vectors() returns -ENOSPC. PCI support is new
 >> for ath11k and introduced in v5.10-rc1. The irq allocation code is in
 >> drivers/net/wireless/ath/ath11k/pci.c. [2]
-> 
+>
 > This code is needlessly complicated.  If you absolutely need
 > msi_config.total_vectors and can't settle for any less, you can do
 > this:
-> 
+>
 >   num_vectors = pci_alloc_irq_vectors(ab_pci->pdev,
 >                                       msi_config.total_vectors,
 >                                       msi_config.total_vectors,
 >                                       PCI_IRQ_MSI);
-> 
+>
 >   if (num_vectors < 0) {
 >     ath11k_err(ab, "failed to get %d MSI vectors (%d)\n",
 >                msi_config.total_vectors, num_vectors);
 >     return num_vectors;
 >   }
-> 
+
+True, this should be cleaned up. But of course this won't solve the
+actual problem.
+
 > But it seems a little greedy if the device can't operate at all unless
 > it gets 32 vectors.  Are you sure that's a hard requirement?  Most
 > devices can work with fewer vectors, even if it reduces performance.
-> 
->> I would first try with a full distro kernel config, just in case 
->> there's
+
+This was my first reaction as well when I saw the code for the first
+time. And the reply I got is that the firmware needs all 32 vectors, it
+won't work with less.
+
+>> I would first try with a full distro kernel config, just in case there's
 >> some another important kernel config missing.
 >> 
->> [1] 
->> http://lists.infradead.org/pipermail/ath11k/2020-October/000466.html
-> 
+>> [1] http://lists.infradead.org/pipermail/ath11k/2020-October/000466.html
+>
 > Tangent: have you considered getting this list archived on
 > https://lore.kernel.org/lists.html?
-> 
->> [2] 
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/wireless/ath/ath11k/pci.c#n633
->> 
->> --
->> https://patchwork.kernel.org/project/linux-wireless/list/
->> 
->> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
+Good point, actually I have not. I'll add both ath10k and ath11k lists
+to lore. It's even more important now that lists.infradead.org had a
+hard drive crash and lost years of archives.
+
+Thanks for the help!
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
