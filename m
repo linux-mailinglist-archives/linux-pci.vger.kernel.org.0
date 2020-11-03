@@ -2,128 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E6242A5A3F
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 23:44:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C61732A5A4C
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 23:51:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgKCWok (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Nov 2020 17:44:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        id S1729594AbgKCWvt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Nov 2020 17:51:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730606AbgKCWok (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Nov 2020 17:44:40 -0500
+        id S1729575AbgKCWvt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Nov 2020 17:51:49 -0500
 Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4779F21534;
-        Tue,  3 Nov 2020 22:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 532222074F;
+        Tue,  3 Nov 2020 22:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604443479;
-        bh=B0hofVyjbIarQN5JcfzWbRMadJujwsK3/oEFwLCaHaE=;
+        s=default; t=1604443908;
+        bh=ZTc1hgZLMSAMqmuiHXxbYJqFXykktHOtVDml/cKUNQI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aGJthRPHhGnUHt1ZdKqRmEtO85M2aHQ0EeBOkvpHEdxgqcV5i3Ard2wiJ81JAWc/6
-         kqheh439OJUiLwEjikfrm/596btquk1VT+KMzM6CPVKq/RwToIlXTv8sbNUy6UTy0i
-         BatF/rWkEZdP538Vqd3i+3FwP4h+TInyIqmAjSB8=
-Date:   Tue, 3 Nov 2020 16:44:37 -0600
+        b=K6DzT0ksd3lJgCr+h18+p8FlRdsdY5B8CYGfhGx6IshX9G71zdkA9OJEr5+v+WnDG
+         W3iKWYFFhiCFyIbrWhP2aLH+7d5F0y6cuF5faq3ECbKRZHQPrufds4Y6x+gApQdyqF
+         tJnQfARtjZ6R8PTljKHYcG1GsqgzSnRWzcTbsJOU=
+Date:   Tue, 3 Nov 2020 16:51:47 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Chuanjia Liu <chuanjia.liu@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 0/6] Add DW PCIe support for Exynos5433 SoCs
-Message-ID: <20201103224437.GA271545@bjorn-Precision-5520>
+        devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        linux-pci@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org, yong.wu@mediatek.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 4/4] ARM: dts: mediatek: Modified MT7629 PCIe node
+Message-ID: <20201103225147.GA272037@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201029134017.27400-1-m.szyprowski@samsung.com>
+In-Reply-To: <20201029081513.10562-5-chuanjia.liu@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 02:40:11PM +0100, Marek Szyprowski wrote:
-> Dear All,
-> 
-> This patchset is a resurrection of the DW PCIe support for the Exynos5433
-> SoCs posted long time ago here: https://lkml.org/lkml/2016/12/26/6 and
-> later here: https://lkml.org/lkml/2017/12/21/296 .
-> 
-> In meantime the support for the Exynos5440 SoCs has been completely
-> dropped from mainline kernel, as those SoCs never reached the market. The
-> PCIe driver for Exynos5440 variant however has not been removed yet. This
-> patchset simply reworks it to support the Exynos5433 variant. The lack of
-> the need to support both variants significantly simplifies the driver
-> code.
-> 
-> This patchset is based on the following branch:
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git pci-more-dwc-cleanup
-> 
-> Best regards,
-> Marek Szyprowski
-> 
-> 
-> Changelog:
-> 
-> v3:
-> - rebased onto "[00/13] PCI: dwc: Another round of clean-ups" patchset:
->   https://patchwork.kernel.org/project/linux-samsung-soc/cover/20201028204646.356535-1-robh@kernel.org/
-> - fixed issues pointed by Rob in the driver logic:
->   * removed DBI_RO_WR_EN register poking
->   * made driver a standard module
-> - fixed section mismatch issue
-> - added "num-viewport = <3>" property to dts and bindings to fix warning
-> 
-> v2: https://lore.kernel.org/linux-samsung-soc/20201023075744.26200-1-m.szyprowski@samsung.com/
-> - fixed issues in dt-bindings pointed by Krzysztof and Rob
-> 
-> v1: https://lore.kernel.org/linux-samsung-soc/20201019094715.15343-1-m.szyprowski@samsung.com/
-> - initial version of this resurrected patchset
-> 
-> 
-> Patch summary:
+This subject line is pointless.
 
-Please follow the subject line convention:
+Every patch modifies something.  Give us a hint about what you
+modified and why.
 
-  PCI: exynos: Rework to support Exynos5433 variant
-  arm64: dts: exynos: Add WiFi/PCIe support to TM2(e) boards
-  dt-bindings: PCI: exynos: Drop samsung,exynos5440-pcie binding
-  dt-bindings: PCI: exynos: Add samsung,exynos-pcie binding
-  dt-bindings: phy: exynos: Add samsung,exynos-pcie-phy binding
+And use the present tense verb, i.e., "Modify ...", not "Modified".
+Probably "Add" would be better than "Modify".  Or "Update" with some
+meaningful description of the update.
 
-You can save this trouble by running "git log --oneline" on the file
-(or directory, for new files) and copying the style.
+On Thu, Oct 29, 2020 at 04:15:13PM +0800, Chuanjia Liu wrote:
+> Remove unused property and add pciecfg node.
 
-> Jaehoon Chung (3):
->   phy: samsung: phy-exynos-pcie: rework driver to support Exynos5433
->     PCIe PHY
->   pci: dwc: pci-exynos: rework the driver to support Exynos5433 variant
->   arm64: dts: exynos: add the WiFi/PCIe support to TM2(e) boards
+Apparently this also removes "subsys" from the "reg" property.
+And removes an interrupt.  And adds "pcie_irq".
+
+> Signed-off-by: Chuanjia Liu <chuanjia.liu@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  arch/arm/boot/dts/mt7629-rfb.dts |  3 ++-
+>  arch/arm/boot/dts/mt7629.dtsi    | 22 ++++++++++++----------
+>  2 files changed, 14 insertions(+), 11 deletions(-)
 > 
-> Marek Szyprowski (3):
->   dt-bindings: pci: drop samsung,exynos5440-pcie binding
->   dt-bindings: pci: add the samsung,exynos-pcie binding
->   dt-bindings: phy: add the samsung,exynos-pcie-phy binding
-> 
->  .../bindings/pci/samsung,exynos-pcie.yaml     | 119 ++++++
->  .../bindings/pci/samsung,exynos5440-pcie.txt  |  58 ---
->  .../bindings/phy/samsung,exynos-pcie-phy.yaml |  51 +++
->  .../boot/dts/exynos/exynos5433-pinctrl.dtsi   |   2 +-
->  .../dts/exynos/exynos5433-tm2-common.dtsi     |  24 +-
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi    |  36 ++
->  drivers/pci/controller/dwc/Kconfig            |  10 +-
->  drivers/pci/controller/dwc/pci-exynos.c       | 353 +++++++-----------
->  drivers/pci/quirks.c                          |   1 +
->  drivers/phy/samsung/phy-exynos-pcie.c         | 304 ++++++---------
->  10 files changed, 489 insertions(+), 469 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos5440-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> 
+> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
+> index 9980c10c6e29..eb536cbebd9b 100644
+> --- a/arch/arm/boot/dts/mt7629-rfb.dts
+> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
+> @@ -140,9 +140,10 @@
+>  	};
+>  };
+>  
+> -&pcie {
+> +&pcie1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pcie_pins>;
+> +	status = "okay";
+>  };
+>  
+>  &pciephy1 {
+> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+> index 5cbb3d244c75..6d6397f0c2fc 100644
+> --- a/arch/arm/boot/dts/mt7629.dtsi
+> +++ b/arch/arm/boot/dts/mt7629.dtsi
+> @@ -360,16 +360,20 @@
+>  			#reset-cells = <1>;
+>  		};
+>  
+> -		pcie: pcie@1a140000 {
+> +		pciecfg: pciecfg@1a140000 {
+> +			compatible = "mediatek,generic-pciecfg", "syscon";
+> +			reg = <0x1a140000 0x1000>;
+> +		};
+> +
+> +		pcie1: pcie@1a145000 {
+>  			compatible = "mediatek,mt7629-pcie";
+>  			device_type = "pci";
+> -			reg = <0x1a140000 0x1000>,
+> -			      <0x1a145000 0x1000>;
+> -			reg-names = "subsys","port1";
+> +			reg = <0x1a145000 0x1000>;
+> +			reg-names = "port1";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+> -			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
+> -				     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
+> +			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
+> +			interrupt-names = "pcie_irq";
+>  			clocks = <&pciesys CLK_PCIE_P1_MAC_EN>,
+>  				 <&pciesys CLK_PCIE_P0_AHB_EN>,
+>  				 <&pciesys CLK_PCIE_P1_AUX_EN>,
+> @@ -390,21 +394,19 @@
+>  			power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
+>  			bus-range = <0x00 0xff>;
+>  			ranges = <0x82000000 0 0x20000000 0x20000000 0 0x10000000>;
+> +			status = "disabled";
+>  
+> -			pcie1: pcie@1,0 {
+> -				device_type = "pci";
+> +			slot1: pcie@1,0 {
+>  				reg = <0x0800 0 0 0 0>;
+>  				#address-cells = <3>;
+>  				#size-cells = <2>;
+>  				#interrupt-cells = <1>;
+>  				ranges;
+> -				num-lanes = <1>;
+>  				interrupt-map-mask = <0 0 0 7>;
+>  				interrupt-map = <0 0 0 1 &pcie_intc1 0>,
+>  						<0 0 0 2 &pcie_intc1 1>,
+>  						<0 0 0 3 &pcie_intc1 2>,
+>  						<0 0 0 4 &pcie_intc1 3>;
+> -
+>  				pcie_intc1: interrupt-controller {
+>  					interrupt-controller;
+>  					#address-cells = <0>;
 > -- 
-> 2.17.1
-> 
+> 2.18.0
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
