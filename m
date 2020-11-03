@@ -2,96 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8514C2A4082
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 10:44:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8749B2A40BF
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 10:54:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgKCJo3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Nov 2020 04:44:29 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6694 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgKCJo3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Nov 2020 04:44:29 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CQPxy1xWNz15QSh;
-        Tue,  3 Nov 2020 17:44:22 +0800 (CST)
-Received: from [10.174.179.182] (10.174.179.182) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 3 Nov 2020 17:44:22 +0800
-Subject: Re: [PATCH v4 0/6] resource: introduce union(), intersection() API
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "ACPI Devel Maling List" <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <20201102210025.53520-1-andriy.shevchenko@linux.intel.com>
- <1183267b-3e90-ab71-b1f6-7760ad0ca57c@huawei.com>
- <CAHp75VcEhdmU6NW8Dn-r7Aipden7vYda72nP3_LW09+jTFxOBg@mail.gmail.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <2c616805-6c35-8790-2e13-c18f0953edee@huawei.com>
-Date:   Tue, 3 Nov 2020 17:44:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726013AbgKCJy1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Nov 2020 04:54:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbgKCJy0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Nov 2020 04:54:26 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C3F2080C;
+        Tue,  3 Nov 2020 09:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604397266;
+        bh=+PMSBSh/qsbOxi/PGx0X2fcaxpuGi6w2e85VksrgH70=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=y5r7zekSZXihQG1+urqGj/cKRCuJEMUjeTlyba1YH27f4KbxZMsInaR1VZArSennh
+         s4+p3GyqFuCLDhCcYBUVK2Pn3at2pBqcf0ReYAzF8BMA/iqfIxvh6o4eA7yti2DJMy
+         AbyzLu2L9ZI0/yRbD45cLVXezL+6tqzn34eSfSrw=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1kZt1D-0075JQ-RE; Tue, 03 Nov 2020 09:54:23 +0000
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcEhdmU6NW8Dn-r7Aipden7vYda72nP3_LW09+jTFxOBg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.182]
-X-CFilter-Loop: Reflected
+Date:   Tue, 03 Nov 2020 09:54:23 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Frank Wunderlich <linux@fw-web.de>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Aw: Re: [PATCH] pci: mediatek: fix warning in msi.h
+In-Reply-To: <877dr38kt8.fsf@nanos.tec.linutronix.de>
+References: <20201031140330.83768-1-linux@fw-web.de>
+ <878sbm9icl.fsf@nanos.tec.linutronix.de>
+ <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
+ <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
+ <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
+ <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
+ <df5565a2f1e821041c7c531ad52a3344@kernel.org>
+ <87h7q791j8.fsf@nanos.tec.linutronix.de>
+ <877dr38kt8.fsf@nanos.tec.linutronix.de>
+User-Agent: Roundcube Webmail/1.4.9
+Message-ID: <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, frank-w@public-files.de, ryder.lee@mediatek.com, linux-mediatek@lists.infradead.org, linux@fw-web.de, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/11/3 16:31, Andy Shevchenko wrote:
-> On Tue, Nov 3, 2020 at 2:46 AM Hanjun Guo <guohanjun@huawei.com> wrote:
->>
->> On 2020/11/3 5:00, Andy Shevchenko wrote:
->>> Some users may want to use resource library to manage their own resources,
->>> besides existing users that open code union() and intersection()
->>> implementations.
->>>
->>> Provide a generic API for wider use.
->>>
->>> Changelog v4:
->>> - added Rb tag (Rafael)
->>> - Cc'ed to LKML and Greg (Rafael)
->>>
->>> Changelog v3:
->>> - rebased on top of v5.10-rc1
->>> - dropped upstreamed dependencies
->>> - added Rb tag to the last patch (Mika)
->>>
->>> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>> Cc: linux-pci@vger.kernel.org
->>>
->>> Andy Shevchenko (6):
->>>     resource: Simplify region_intersects() by reducing conditionals
->>>     resource: Group resource_overlaps() with other inline helpers
->>>     resource: Introduce resource_union() for overlapping resources
->>>     resource: Introduce resource_intersection() for overlapping resources
->>>     PCI/ACPI: Replace open coded variant of resource_union()
->>>     ACPI: watchdog: Replace open coded variant of resource_union()
->>>
->>>    drivers/acpi/acpi_watchdog.c |  6 +-----
->>>    drivers/acpi/pci_root.c      |  4 +---
->>>    include/linux/ioport.h       | 34 +++++++++++++++++++++++++++-------
->>>    kernel/resource.c            | 10 +++++-----
->>>    4 files changed, 34 insertions(+), 20 deletions(-)
->>
->> Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+On 2020-11-02 22:18, Thomas Gleixner wrote:
+> On Mon, Nov 02 2020 at 17:16, Thomas Gleixner wrote:
+>> On Mon, Nov 02 2020 at 11:30, Marc Zyngier wrote:
+>>> --- a/drivers/pci/probe.c
+>>> +++ b/drivers/pci/probe.c
+>>> @@ -871,6 +871,8 @@ static void pci_set_bus_msi_domain(struct pci_bus
+>>> *bus)
+>>>   		d = pci_host_bridge_msi_domain(b);
+>>> 
+>>>   	dev_set_msi_domain(&bus->dev, d);
+>>> +	if (!d)
+>>> +		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
+>> 
+>> Hrm, that might break legacy setups (no irqdomain support). I'd rather
+>> prefer to explicitly tell the pci core at host registration time.
 > 
-> Thanks. Is it for the entire series?
+> s/might break/ breaks /     Just validated :)
 
-Yes.
+For my own edification, can you point me to the failing case?
 
-By the way, I tested this patch set on a ARM64 machine booting
-with ACPI against 5.10-rc2, and no regressions with PCI, so feel
-free to add my Tested-by tag for patch [1,2,3,5/6].
+> So we really need some other solution and removing the warning is not 
+> an
+> option. If MSI is enabled then we want to get a warning when a PCI
+> device has no MSI domain associated. Explicitly expressing the PCIE
+> brigde misfeature of not supporting MSI is way better than silently
+> returning an error code which is swallowed anyway.
 
-Thanks
-Hanjun
+I don't disagree here, though the PCI_MSI_ARCH_FALLBACKS mechanism
+makes it more difficult to establish.
+
+> Whatever the preferred way is via flags at host probe time or flagging
+> it post probe I don't care much as long as it is consistent.
+
+Host probe time is going to require some changes in the core PCI api,
+as everything that checks for a MSI domain is based on the pci_bus
+structure, which is only allocated much later.
+
+I'll have a think.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
