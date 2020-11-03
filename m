@@ -2,91 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D4B2A3AE3
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 04:14:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4AEB2A3B04
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 04:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725980AbgKCDO0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 2 Nov 2020 22:14:26 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3655 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbgKCDOZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 22:14:25 -0500
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4CQFHx1QbzzXj8j;
-        Tue,  3 Nov 2020 11:14:21 +0800 (CST)
-Received: from dggema758-chm.china.huawei.com (10.1.198.200) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Tue, 3 Nov 2020 11:14:21 +0800
-Received: from dggema755-chm.china.huawei.com (10.1.198.197) by
- dggema758-chm.china.huawei.com (10.1.198.200) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 3 Nov 2020 11:14:21 +0800
-Received: from dggema755-chm.china.huawei.com ([10.1.198.197]) by
- dggema755-chm.china.huawei.com ([10.1.198.197]) with mapi id 15.01.1913.007;
- Tue, 3 Nov 2020 11:14:21 +0800
-From:   zhangqilong <zhangqilong3@huawei.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIFBDSTogZHdjOiBmaXggcmVmZXJlbmNlIGxlYWsg?=
- =?utf-8?B?aW4gcGV4X2VwX2V2ZW50X3BleF9yc3RfZGVhc3NlcnQ=?=
-Thread-Topic: [PATCH] PCI: dwc: fix reference leak in
- pex_ep_event_pex_rst_deassert
-Thread-Index: AQHWsYxe5e1btT8ehUO6I3qlOytw3Km1ttWA
-Date:   Tue, 3 Nov 2020 03:14:21 +0000
-Message-ID: <b1f6b6805a7746b48020d7cfaaa73fab@huawei.com>
-References: <20201102143045.142121-1-zhangqilong3@huawei.com>
- <f09c0801-d584-3c27-d3e7-ca59a64a30d1@nvidia.com>
-In-Reply-To: <f09c0801-d584-3c27-d3e7-ca59a64a30d1@nvidia.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.179.28]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725958AbgKCD1N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 2 Nov 2020 22:27:13 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1290 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725952AbgKCD1N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 2 Nov 2020 22:27:13 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa0ce140001>; Mon, 02 Nov 2020 19:27:16 -0800
+Received: from [10.40.203.207] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Nov
+ 2020 03:27:05 +0000
+Subject: Re: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20201102230234.GA62945@bjorn-Precision-5520>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ad86fd8c-ea49-fa87-b491-348503d0bd52@nvidia.com>
+Date:   Tue, 3 Nov 2020 08:57:01 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20201102230234.GA62945@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1604374036; bh=IniZ6GJAHwarEstcenywJVoAKKjjHxfTNPlPnHSSHME=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=ejfSv5e6hfJNa29i/k/TuIEjk256eOvSIF7S914aJsEvDv78qC67MvaCJLKOyPOd7
+         faSEQNhe/r9b+hxXgseUwvujyC2hFN2PVwSj0a9MCcQAgB9+rpqwaV9rWcTcDxmmlU
+         9PgnGQ8jfN/rkqWf01MTJQrt5g10k1cnU5+nQr28zdcnJ2FSe3aXVH5O15MiX8VLAh
+         0hv8xgPNycvdQgR6yqLvKxYiI/FUO9twH6Z7W5BmogQrn0IINmjF3OGnSn5GS4RSZJ
+         sUdzlefiSRDsG+DGxj4hU0bi66zJ8zSkKUMFEOkrarABLFsC4sF40DlmHcK1W92G7Z
+         CZo6edTmTiN5w==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkNCg0KPiANCj4gDQo+IE9uIDExLzIvMjAyMCA4OjAwIFBNLCBaaGFuZyBRaWxvbmcgd3JvdGU6
-DQo+ID4gRXh0ZXJuYWwgZW1haWw6IFVzZSBjYXV0aW9uIG9wZW5pbmcgbGlua3Mgb3IgYXR0YWNo
-bWVudHMNCj4gPg0KPiA+DQo+ID4gcG1fcnVudGltZV9nZXRfc3luYyB3aWxsIGluY3JlbWVudCBw
-bSB1c2FnZSBjb3VudGVyIGV2ZW4gaXQgZmFpbGVkLg0KPiA+IEZvcmdldHRpbmcgdG8gcG1fcnVu
-dGltZV9wdXRfbm9pZGxlIHdpbGwgcmVzdWx0IGluIHJlZmVyZW5jZSBsZWFrIGluDQo+ID4gcGV4
-X2VwX2V2ZW50X3BleF9yc3RfZGVhc3NlcnQsIHNvIHdlIHNob3VsZCBmaXggaXQuDQo+ID4NCj4g
-PiBGaXhlczogYzU3MjQ3Zjk0MGU4ZSAoIlBDSTogdGVncmE6IEFkZCBzdXBwb3J0IGZvciBQQ0ll
-IGVuZHBvaW50IG1vZGUNCj4gPiBpbiBUZWdyYTE5NCIpDQo+ID4gU2lnbmVkLW9mZi1ieTogWmhh
-bmcgUWlsb25nIDx6aGFuZ3FpbG9uZzNAaHVhd2VpLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZl
-cnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtdGVncmExOTQuYyB8IDEgKw0KPiA+ICAgMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpZS10ZWdyYTE5NC5jDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL2R3Yy9wY2llLXRlZ3JhMTk0LmMNCj4gPiBpbmRleCBmOTIwZTdlZmUxMTguLjkzNjUx
-MGI1YzY0OSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ll
-LXRlZ3JhMTk0LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLXRl
-Z3JhMTk0LmMNCj4gPiBAQCAtMTY2Miw2ICsxNjYyLDcgQEAgc3RhdGljIHZvaWQgcGV4X2VwX2V2
-ZW50X3BleF9yc3RfZGVhc3NlcnQoc3RydWN0DQo+ID4gdGVncmFfcGNpZV9kdyAqcGNpZSkNCj4g
-Pg0KPiA+ICAgICAgICAgIHJldCA9IHBtX3J1bnRpbWVfZ2V0X3N5bmMoZGV2KTsNCj4gPiAgICAg
-ICAgICBpZiAocmV0IDwgMCkgew0KPiA+ICsgICAgICAgICAgICAgICBwbV9ydW50aW1lX3B1dF9u
-b2lkbGUoZGV2KTsNCj4gV2h5IGNhbid0IHdlIGNhbGwgcG1fcnVudGltZV9wdXRfc3luYyhkZXYp
-IGFzIHRoYXQgaXMgd2hhdCBpcyBiZWluZyBjYWxsZWQgaW4NCj4gZmFpbHVyZSBjYXNlcyBhbnl3
-YXkgZnVydGhlciBkb3duIGluIHRoaXMgQVBJPw0KPiANCkJvdGggb2YgdGhlIHR3byBmdW5jdGlv
-bnMgYXJlIE9LLCB0aGUgZGlmZmVyZW5jZSBpcyB0aGF0LCB3aGVuIHBtX3J1bnRpbWVfcHV0X3N5
-bmMgZmFpbGVkKHJ1bnRpbWUgb2YgdGhlIGRldmljZSBoYXMgZXJyb3IsIHRoZSBkZXZpY2UgaXMg
-aW4gSW5hY2Nlc3NpYmxlIHN0YXRlIG9yIG90aGVyIGVycm9yIHN0YXRlLi4uKSwgaXQgb25seSBp
-bmNyZWFzZSB0aGUgdXNhZ2UgY291bnQgb2YgdGhlIHBvd2VyLCBhbmQgZG8gbm90aGluZyBlbHNl
-LiBXZSBtZXJlbHkgbmVlZCBjYWxsIHBtX3J1bnRpbWVfcHV0X25vaWRsZSB0byBkZWNyZWFzZSB0
-aGUgdXNhZ2UgY291bnQuIElmIHdlIGNhbGwgcG1fcnVudGltZV9wdXRfc3luYyB0byByZXNldCBp
-dCwgaXQgd2lsbCBub3RpZnkgZGV2aWNlIGJ1cyB0eXBlIGlmIHRoZSBkZXZpY2UgY2FuIGJlIHN1
-c3BlbmRlZCwgYW5kIHRoYXQgaXMgbWVhbmxlc3Mgd2hlbiBwbV9ydW50aW1lX3B1dF9zeW5jIGZh
-aWxlZC4NCg0KVGhhbmtzLCBiZXN0IHdpc2ghDQoNClpoYW5nIFFpbG9uZw0KPiA+ICAgICAgICAg
-ICAgICAgICAgZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZ2V0IHJ1bnRpbWUgc3luYyBmb3IgUENJ
-ZQ0KPiBkZXY6ICVkXG4iLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICByZXQpOw0KPiA+
-ICAgICAgICAgICAgICAgICAgcmV0dXJuOw0KPiA+IC0tDQo+ID4gMi4xNy4xDQo+ID4NCg==
+
+
+On 11/3/2020 4:32 AM, Bjorn Helgaas wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Thu, Oct 29, 2020 at 11:09:59AM +0530, Vidya Sagar wrote:
+>> DesignWare core has a TLP digest (TD) override bit in one of the control
+>> registers of ATU. This bit also needs to be programmed for proper ECRC
+>> functionality. This is currently identified as an issue with DesignWare
+>> IP version 4.90a. This patch does the required programming in ATU upon
+>> querying the system policy for ECRC.
+> 
+> I guess this is a hardware defect, right?
+Yes. This is common across all DWC implementations (version 4.90 precisely)
+
+> 
+> How much of a problem would it be if we instead added a "no_ecrc"
+> quirk for this hardware so we never enabled ECRC?
+Well, on Tegra for some of the high fidelity use cases, ECRC is required 
+to be turned on and if it can be done safely with these patches, why 
+shouldn't we not enable ECRC at all?
+
+> 
+> IIUC, the current Linux support of ECRC is a single choice at
+> boot-time: by default ECRC is not enabled, but if you boot with
+> "pci=ecrc=on", we turn on ECRC for every device.
+> 
+> That seems like the minimal support, but I think the spec allows ECRC
+> to be enabled selectively, on individual devices.  I can imagine a
+> sysfs knob that would allow us to enable/disable ECRC per-device at
+> run-time.
+> 
+> If we had such a sysfs knob, it would be pretty ugly and maybe
+> impractical to work around this hardware issue.  So I'm a little bit
+> hesitant to add functionality that might have to be removed in the
+> future.
+Agree with this. But since it is a boot-time choice at this point, I 
+think we can still go ahead with this approach to have a working ECRC 
+mechanism right? I don't see any sysfs knob for AER controlling at this 
+point.
+
+> 
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
+>> ---
+>> V3:
+>> * Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
+>>
+>> V2:
+>> * Addressed Jingoo's review comment
+>> * Removed saving 'td' bit information in 'dw_pcie' structure
+>>
+>>   drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
+>>   drivers/pci/controller/dwc/pcie-designware.h | 1 +
+>>   2 files changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>> index b5e438b70cd5..cbd651b219d2 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -246,6 +246,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+>>        dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+>>                                 upper_32_bits(pci_addr));
+>>        val = type | PCIE_ATU_FUNC_NUM(func_no);
+>> +     if (pci->version == 0x490A)
+>> +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
+>>        val = upper_32_bits(size - 1) ?
+>>                val | PCIE_ATU_INCREASE_REGION_SIZE : val;
+>>        dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+>> @@ -294,8 +296,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+>>                           lower_32_bits(pci_addr));
+>>        dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
+>>                           upper_32_bits(pci_addr));
+>> -     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+>> -                        PCIE_ATU_FUNC_NUM(func_no));
+>> +     val = type | PCIE_ATU_FUNC_NUM(func_no);
+>> +     if (pci->version == 0x490A)
+>> +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
+>> +     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
+>>        dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+>>
+>>        /*
+>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>> index e7f441441db2..b01ef407fd52 100644
+>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>> @@ -89,6 +89,7 @@
+>>   #define PCIE_ATU_TYPE_IO             0x2
+>>   #define PCIE_ATU_TYPE_CFG0           0x4
+>>   #define PCIE_ATU_TYPE_CFG1           0x5
+>> +#define PCIE_ATU_TD_SHIFT            8
+>>   #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
+>>   #define PCIE_ATU_CR2                 0x908
+>>   #define PCIE_ATU_ENABLE                      BIT(31)
+>> --
+>> 2.17.1
+>>
