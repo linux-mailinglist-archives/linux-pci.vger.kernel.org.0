@@ -2,163 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77EF02A5548
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 22:21:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10F5D2A5580
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 22:21:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388365AbgKCVH5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Nov 2020 16:07:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387894AbgKCVH4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Nov 2020 16:07:56 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 164C5205ED;
-        Tue,  3 Nov 2020 21:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604437675;
-        bh=kNkkSf7GPZiZAoqJ4K7JDQg+4mkspW6utqW9bsMXaRU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DBZAyCEzm0RNhkKpX+AaNvGVOqS0tWxzITpV2mfMXesSYXmDA3qzmQzZtjy0RoAKs
-         VQMnfwlCsfbxQrO7ISxXza9qO5LEIQJ5AUVtAkJGs/MxcvS3VXYimKr5744Y5WlSES
-         qZY5aZFyJYD09m4QBV9cj1Ua/WwKyvophPASsMnU=
-Date:   Tue, 3 Nov 2020 15:07:53 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        amurray@thegoodpenguin.co.uk, robh@kernel.org, treding@nvidia.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
-Message-ID: <20201103210753.GA264744@bjorn-Precision-5520>
+        id S2388495AbgKCVTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Nov 2020 16:19:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730841AbgKCVIv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Nov 2020 16:08:51 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD78C0613D1;
+        Tue,  3 Nov 2020 13:08:51 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1604437729;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kBxH7MvgDQDcJGNsmHI00dI0IJbHV88DGv1Zb6jgV0w=;
+        b=HqTVx6XEU5QLw14v6rxd0abZo9Fw5mtL6L7XEfEhvO/mofXcPg4/HiYYtbczvEu1vX/Koy
+        c5gLhY4DNnM/tbG4iFQn2TwFWz6C0F+jX5EXW5wERm/a3UmGLOmQhzpSphZPdPpCQOcZWG
+        p238DpzGiCdvusHshXVsg6DQcEl4GULNmfISIHcGvliQ3qBNrvFp5Jueltf/Bw01TP0+w0
+        XeeaHTswOw/Bvw0W7Q+sOo0T1vruTlIbqgjSCnNpEN3KhsMeYicDABpnWUzwLy9YRQGl1A
+        b3R3sglRTFlexx57Ykmg3MlHASqHG49mAriY1cNdCUzpv+tZG9l/ajUrmxDAzw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1604437729;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kBxH7MvgDQDcJGNsmHI00dI0IJbHV88DGv1Zb6jgV0w=;
+        b=n7e0DpalqzPLqkT6phOHCoNxibZ3vD/Q3LNuAHYIhAiYt6VgFnfvpJtrshHBvOKbZCQMqD
+        I/Lqj6Rw7JtcyGAQ==
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Govind Singh <govinds@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-wireless@vger.kernel.org, Devin Bayer <dev@doubly.so>,
+        Thomas Krause <thomaskrause@posteo.de>,
+        ath11k@lists.infradead.org, Christoph Hellwig <hch@lst.de>
+Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
+In-Reply-To: <20201103160838.GA246433@bjorn-Precision-5520>
+References: <20201103160838.GA246433@bjorn-Precision-5520>
+Date:   Tue, 03 Nov 2020 22:08:49 +0100
+Message-ID: <874km61732.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad86fd8c-ea49-fa87-b491-348503d0bd52@nvidia.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 03, 2020 at 08:57:01AM +0530, Vidya Sagar wrote:
-> On 11/3/2020 4:32 AM, Bjorn Helgaas wrote:
-> > On Thu, Oct 29, 2020 at 11:09:59AM +0530, Vidya Sagar wrote:
-> > > DesignWare core has a TLP digest (TD) override bit in one of the control
-> > > registers of ATU. This bit also needs to be programmed for proper ECRC
-> > > functionality. This is currently identified as an issue with DesignWare
-> > > IP version 4.90a. This patch does the required programming in ATU upon
-> > > querying the system policy for ECRC.
-> > 
-> > I guess this is a hardware defect, right?
-> Yes. This is common across all DWC implementations (version 4.90 precisely)
-> 
-> > How much of a problem would it be if we instead added a "no_ecrc"
-> > quirk for this hardware so we never enabled ECRC?
-> Well, on Tegra for some of the high fidelity use cases, ECRC is required to
-> be turned on and if it can be done safely with these patches, why shouldn't
-> we not enable ECRC at all?
-> 
-> > IIUC, the current Linux support of ECRC is a single choice at
-> > boot-time: by default ECRC is not enabled, but if you boot with
-> > "pci=ecrc=on", we turn on ECRC for every device.
-> > 
-> > That seems like the minimal support, but I think the spec allows ECRC
-> > to be enabled selectively, on individual devices.  I can imagine a
-> > sysfs knob that would allow us to enable/disable ECRC per-device at
-> > run-time.
-> > 
-> > If we had such a sysfs knob, it would be pretty ugly and maybe
-> > impractical to work around this hardware issue.  So I'm a little bit
-> > hesitant to add functionality that might have to be removed in the
-> > future.
+On Tue, Nov 03 2020 at 10:08, Bjorn Helgaas wrote:
+> On Tue, Nov 03, 2020 at 08:49:06AM +0200, Kalle Valo wrote:
+>> Bjorn Helgaas <helgaas@kernel.org> writes:
+>> > On Mon, Nov 02, 2020 at 08:49:51PM +0200, Kalle Valo wrote:
+>> >> Thomas Krause <thomaskrause@posteo.de> writes:
+>> >> 
+>> >> >> I had the same problem as well back in the days, for me enabling
+>> >> >> CONFIG_IRQ_REMAP helped. If it helps for you also I wonder if we should
+>> >> >> mention that in the ath11k warning above :)
+
+Interrupt remapping only helps when the device supports only MSI (not
+MSI-X) because x86 (kernel) does not support multiple MSI interrupts
+without remapping.
+
+So if only MSI is available then you get exactly _one_ MSI vector
+without remapping.
+
+>> >> > CONFIG_IRQ_REMAP did not do the trick.
+
+The config alone does not help. The hardware has to support it and the
+BIOS has to enable it.
+
+Check the BIOS for a switch which is named 'VT-d' or such. It might
+depend on 'Intel Virtualization Technology' or such.
+
+>> >   00:1c.0 PCI bridge: Intel Corporation Device a0b8 (rev 20)
+>> > 	Bus: primary=00, secondary=56, subordinate=56, sec-latency=0
+>> > 	Memory behind bridge: 8c300000-8c3fffff [size=1M]
+>> >   56:00.0 Network controller: Qualcomm Device 1101 (rev 01)
+>> >      Region 0: Memory at 8c300000 (64-bit, non-prefetchable) [size=1M]
+
+So I grabbed the PCI info from the link and it has:
+
+     Capabilities: [50] MSI: Enable- Count=1/32 Maskable+ 64bit-
+
+So no MSI-X, ergo only one MSI interrupt without remapping.
+ 
+>> >> To summarise: Thomas is reporting[1] a problem with ath11k on QCA6390
+>> >> PCI device where he is not having enough MSI vectors. ath11k needs 32
+>> >> vectors but pci_alloc_irq_vectors() returns -ENOSPC. PCI support is new
+>> >> for ath11k and introduced in v5.10-rc1. The irq allocation code is in
+>> >> drivers/net/wireless/ath/ath11k/pci.c. [2]
 >
-> Agree with this. But since it is a boot-time choice at this point, I think
-> we can still go ahead with this approach to have a working ECRC mechanism
-> right? I don't see any sysfs knob for AER controlling at this point.
+>> > But it seems a little greedy if the device can't operate at all unless
+>> > it gets 32 vectors.  Are you sure that's a hard requirement?  Most
+>> > devices can work with fewer vectors, even if it reduces performance.
 
-I don't want to do anything that will prevent us from adding
-per-device ECRC control in the future.
+Right, even most high end network cards work with one interrupt.
 
-My concern is that if we add a run-time sysfs knob in the future, the
-user experience on this hardware will be poor because there's no
-convenient path to twiddle the PCIE_ATU_TD bit when the generic code
-changes the AER Control bit.
+>> This was my first reaction as well when I saw the code for the first
+>> time. And the reply I got is that the firmware needs all 32 vectors, it
+>> won't work with less.
 
-What is the failure mode in these scenarios:
+Great design.
 
-  - User boots with defaults, ECRC is disabled.
-  - User enables ECRC via sysfs.
-  - What happens here?  ECRC is enabled via AER Control but not via
-    DWC TD bit.  I assume ECRC doesn't work.  Does it cause PCIe
-    errors (malformed TLP, etc)?
+> I do see a couple other drivers that are completely inflexible (they
+> request min==max).  But I don't know the system constraint you're
+> hitting.  CC'd Thomas & Christoph in case they have time to give us a
+> hint.
 
-Or this one:
+Can I have a full dmesg please?
 
-  - User boots with "pci=ecrc=on", ECRC is enabled.
-  - ECRC works fine.
-  - User disables ECRC via sysfs.
-  - What happens here?  ECRC is disabled via AER Control, but DWC TD
-    bit thinks it's still enabled.
+Please enable CONFIG_IRQ_REMAP and CONFIG_INTEL_IOMMU (not strictly
+required, but it's a Dell BIOS after all). Also set
+CONFIG_INTEL_IOMMU_DEFAULT_ON.
 
-If you enabled ECRC unconditionally on DWC and the sysfs knob had no
-effect, I'd be OK with that.  I'm more worried about what happens when
-the AER bit and the DWC TD bit are set so they don't match.  What is
-the failure mode there?
+Or simply try a distro kernel.
 
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
-> > > ---
-> > > V3:
-> > > * Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
-> > > 
-> > > V2:
-> > > * Addressed Jingoo's review comment
-> > > * Removed saving 'td' bit information in 'dw_pcie' structure
-> > > 
-> > >   drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
-> > >   drivers/pci/controller/dwc/pcie-designware.h | 1 +
-> > >   2 files changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index b5e438b70cd5..cbd651b219d2 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -246,6 +246,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
-> > >        dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> > >                                 upper_32_bits(pci_addr));
-> > >        val = type | PCIE_ATU_FUNC_NUM(func_no);
-> > > +     if (pci->version == 0x490A)
-> > > +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
-> > >        val = upper_32_bits(size - 1) ?
-> > >                val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-> > >        dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
-> > > @@ -294,8 +296,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
-> > >                           lower_32_bits(pci_addr));
-> > >        dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
-> > >                           upper_32_bits(pci_addr));
-> > > -     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> > > -                        PCIE_ATU_FUNC_NUM(func_no));
-> > > +     val = type | PCIE_ATU_FUNC_NUM(func_no);
-> > > +     if (pci->version == 0x490A)
-> > > +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
-> > > +     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
-> > >        dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
-> > > 
-> > >        /*
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > index e7f441441db2..b01ef407fd52 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > @@ -89,6 +89,7 @@
-> > >   #define PCIE_ATU_TYPE_IO             0x2
-> > >   #define PCIE_ATU_TYPE_CFG0           0x4
-> > >   #define PCIE_ATU_TYPE_CFG1           0x5
-> > > +#define PCIE_ATU_TD_SHIFT            8
-> > >   #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
-> > >   #define PCIE_ATU_CR2                 0x908
-> > >   #define PCIE_ATU_ENABLE                      BIT(31)
-> > > --
-> > > 2.17.1
-> > > 
+Thanks,
+
+        tglx
