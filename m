@@ -2,87 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04C3E2A4D02
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 18:32:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12C662A5025
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 20:30:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgKCRc5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Nov 2020 12:32:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34838 "EHLO mx2.suse.de"
+        id S1726660AbgKCTaF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Nov 2020 14:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbgKCRc5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Nov 2020 12:32:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 97210ADE3;
-        Tue,  3 Nov 2020 17:32:55 +0000 (UTC)
-Message-ID: <3b4b1d0765b39e96e4c4d1fc6f05e1178c486096.camel@suse.de>
-Subject: Re: [PATCH v1] PCI: brcmstb: variable is missing proper
- initialization
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Tue, 03 Nov 2020 18:32:54 +0100
-In-Reply-To: <ad4cbee6-c52e-cedc-fa79-3805e36377b4@gmail.com>
-References: <20201102205712.23332-1-james.quinlan@broadcom.com>
-         <ad4cbee6-c52e-cedc-fa79-3805e36377b4@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Y1BfcH8l7k1gAwSH6jtl"
-User-Agent: Evolution 3.36.5 
+        id S1725997AbgKCTaF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Nov 2020 14:30:05 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF5C20780;
+        Tue,  3 Nov 2020 19:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604431804;
+        bh=grK2q6oiVGZaixKgcppxuMLeWglZ3sIF8r9InnQHp2s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Snof0ZVlx721zv5dXxRe1TvaTZOV0s/frGBRV0qsUNRZETFfd0RjatkIEq6M0h7HD
+         LxBq/cxLq2MmPkWnlQsnjqUPlThZSyPQULddiSR2qZH/1KsZtRBAX3Jv/qx5nYuf7i
+         jFItiquI/DAnTdynpySXl9d3KWQM2xCvI0WzduTQ=
+Date:   Tue, 3 Nov 2020 13:30:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: dwc: Restore ATU memory resource setup to use last
+ entry
+Message-ID: <20201103193002.GA258037@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201026154852.221483-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Oct 26, 2020 at 10:48:52AM -0500, Rob Herring wrote:
+> Prior to commit 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI
+> resources"), the DWC driver was setting up the last memory resource
+> rather than the first memory resource. This doesn't matter for most
+> platforms which only have 1 memory resource, but it broke Tegra194 which
+> has a 2nd (prefetchable) memory region which requires an ATU entry. The
+> first region on Tegra194 relies on the default 1:1 pass-thru of outbound
+> transactions which doesn't need an ATU entry.
+> 
+> Fixes: 0f71c60ffd26 ("PCI: dwc: Remove storing of PCI resources")
+> Reported-by: Vidya Sagar <vidyas@nvidia.com>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
---=-Y1BfcH8l7k1gAwSH6jtl
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Applied with acks from Lorenzo and Jingoo to for-linus for v5.10,
+thanks!
 
-On Mon, 2020-11-02 at 13:07 -0800, Florian Fainelli wrote:
->=20
-> On 11/2/2020 12:57 PM, Jim Quinlan wrote:
-> > The variable 'tmp' is used multiple times in the brcm_pcie_setup()
-> > function.  One such usage did not initialize 'tmp' to the current value=
- of
-> > the target register.  By luck the mistake does not currently affect
-> > behavior;  regardless 'tmp' is now initialized properly.
-> >=20
-> > Fixes: c0452137034b ("PCI: brcmstb: Add Broadcom STB PCIe host controll=
-er driver")
-> > Suggested-by: Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-
---=-Y1BfcH8l7k1gAwSH6jtl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+hlEYACgkQlfZmHno8
-x/7UmQf/QEPoyFXEKqZEvSUKhQM/wfdxv7GdwSdzHkvNK1H0UhjOvBgJYgEz38So
-O3gjPjD9dhQjTzIk610uHdqhfX04slpJMKVsOKgyN6DOanBJsWrqBqlMuYVFjmnW
-7ucizmbyUAN6/sQEDCARzSFQTY6a6ddZYZyEVGSggZtuTNZhIiez1KmLtV1Kp+Ot
-yMp6XeMF7l6FHzqLXtmrkwbiBZsMxgDIgCJNFbmXqX7G8p1086bTHmBTq642Pz1B
-VNVKu1woPrjipQJGoqud4x9CbdFMwVeDgRvnu2nqA+z5GopEPecUGXcNSWs8FFxv
-CNYhiQXtY9xjyhUmhCEeQkbLLKJEqQ==
-=Ssc4
------END PGP SIGNATURE-----
-
---=-Y1BfcH8l7k1gAwSH6jtl--
-
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 674f32db85ca..44c2a6572199 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -586,8 +586,12 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	 * ATU, so we should not program the ATU here.
+>  	 */
+>  	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+> -		struct resource_entry *entry =
+> -			resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+> +		struct resource_entry *tmp, *entry = NULL;
+> +
+> +		/* Get last memory resource entry */
+> +		resource_list_for_each_entry(tmp, &pp->bridge->windows)
+> +			if (resource_type(tmp->res) == IORESOURCE_MEM)
+> +				entry = tmp;
+>  
+>  		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
+>  					  PCIE_ATU_TYPE_MEM, entry->res->start,
+> -- 
+> 2.25.1
+> 
