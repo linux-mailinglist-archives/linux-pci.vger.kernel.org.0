@@ -2,123 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F5D2A5580
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 22:21:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0F292A549E
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 22:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388495AbgKCVTP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Nov 2020 16:19:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730841AbgKCVIv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Nov 2020 16:08:51 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD78C0613D1;
-        Tue,  3 Nov 2020 13:08:51 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604437729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kBxH7MvgDQDcJGNsmHI00dI0IJbHV88DGv1Zb6jgV0w=;
-        b=HqTVx6XEU5QLw14v6rxd0abZo9Fw5mtL6L7XEfEhvO/mofXcPg4/HiYYtbczvEu1vX/Koy
-        c5gLhY4DNnM/tbG4iFQn2TwFWz6C0F+jX5EXW5wERm/a3UmGLOmQhzpSphZPdPpCQOcZWG
-        p238DpzGiCdvusHshXVsg6DQcEl4GULNmfISIHcGvliQ3qBNrvFp5Jueltf/Bw01TP0+w0
-        XeeaHTswOw/Bvw0W7Q+sOo0T1vruTlIbqgjSCnNpEN3KhsMeYicDABpnWUzwLy9YRQGl1A
-        b3R3sglRTFlexx57Ykmg3MlHASqHG49mAriY1cNdCUzpv+tZG9l/ajUrmxDAzw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604437729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kBxH7MvgDQDcJGNsmHI00dI0IJbHV88DGv1Zb6jgV0w=;
-        b=n7e0DpalqzPLqkT6phOHCoNxibZ3vD/Q3LNuAHYIhAiYt6VgFnfvpJtrshHBvOKbZCQMqD
-        I/Lqj6Rw7JtcyGAQ==
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Govind Singh <govinds@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Devin Bayer <dev@doubly.so>,
-        Thomas Krause <thomaskrause@posteo.de>,
-        ath11k@lists.infradead.org, Christoph Hellwig <hch@lst.de>
-Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
-In-Reply-To: <20201103160838.GA246433@bjorn-Precision-5520>
-References: <20201103160838.GA246433@bjorn-Precision-5520>
-Date:   Tue, 03 Nov 2020 22:08:49 +0100
-Message-ID: <874km61732.fsf@nanos.tec.linutronix.de>
+        id S2389105AbgKCVNK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Nov 2020 16:13:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389146AbgKCVNB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 3 Nov 2020 16:13:01 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61DED20757;
+        Tue,  3 Nov 2020 21:13:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604437980;
+        bh=upWyisctmfa/CJCkL30cnZl2vLFgPOoeXTJUMhzlavk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kNCephVWVCkQmD9RzbwVyxWWKg+uF9uDwjhdbm0HicbvDP5FhonRK5SubbCO6kL5h
+         RLhqC68YTMrZ5Xa+J2YN5F9ayHBjAcSU/9fzXCPlxI8bSPMAKYi/XAkhkiBTrYqfzb
+         5X5NoOwGKFsqCb8vRvJTssaOwXPEtizp6n7KzcaI=
+Date:   Tue, 3 Nov 2020 15:12:59 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ACPI: Remove trailing whitespace
+Message-ID: <20201103211259.GA265488@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201102133641.474413-1-luzmaximilian@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 03 2020 at 10:08, Bjorn Helgaas wrote:
-> On Tue, Nov 03, 2020 at 08:49:06AM +0200, Kalle Valo wrote:
->> Bjorn Helgaas <helgaas@kernel.org> writes:
->> > On Mon, Nov 02, 2020 at 08:49:51PM +0200, Kalle Valo wrote:
->> >> Thomas Krause <thomaskrause@posteo.de> writes:
->> >> 
->> >> >> I had the same problem as well back in the days, for me enabling
->> >> >> CONFIG_IRQ_REMAP helped. If it helps for you also I wonder if we should
->> >> >> mention that in the ath11k warning above :)
+On Mon, Nov 02, 2020 at 02:36:41PM +0100, Maximilian Luz wrote:
+> Remove trailing whitespace and fix some whitespace inconsitencies while
+> at it.
 
-Interrupt remapping only helps when the device supports only MSI (not
-MSI-X) because x86 (kernel) does not support multiple MSI interrupts
-without remapping.
+I'm OK with this as long as somebody fixes the
+s/inconsitencies/inconsistencies/
+above.  I assume you've scanned all of drivers/acpi/ for similar
+issues so they can all be fixed at once.
 
-So if only MSI is available then you get exactly _one_ MSI vector
-without remapping.
+This is up to Rafael, of course.
 
->> >> > CONFIG_IRQ_REMAP did not do the trick.
-
-The config alone does not help. The hardware has to support it and the
-BIOS has to enable it.
-
-Check the BIOS for a switch which is named 'VT-d' or such. It might
-depend on 'Intel Virtualization Technology' or such.
-
->> >   00:1c.0 PCI bridge: Intel Corporation Device a0b8 (rev 20)
->> > 	Bus: primary=00, secondary=56, subordinate=56, sec-latency=0
->> > 	Memory behind bridge: 8c300000-8c3fffff [size=1M]
->> >   56:00.0 Network controller: Qualcomm Device 1101 (rev 01)
->> >      Region 0: Memory at 8c300000 (64-bit, non-prefetchable) [size=1M]
-
-So I grabbed the PCI info from the link and it has:
-
-     Capabilities: [50] MSI: Enable- Count=1/32 Maskable+ 64bit-
-
-So no MSI-X, ergo only one MSI interrupt without remapping.
- 
->> >> To summarise: Thomas is reporting[1] a problem with ath11k on QCA6390
->> >> PCI device where he is not having enough MSI vectors. ath11k needs 32
->> >> vectors but pci_alloc_irq_vectors() returns -ENOSPC. PCI support is new
->> >> for ath11k and introduced in v5.10-rc1. The irq allocation code is in
->> >> drivers/net/wireless/ath/ath11k/pci.c. [2]
->
->> > But it seems a little greedy if the device can't operate at all unless
->> > it gets 32 vectors.  Are you sure that's a hard requirement?  Most
->> > devices can work with fewer vectors, even if it reduces performance.
-
-Right, even most high end network cards work with one interrupt.
-
->> This was my first reaction as well when I saw the code for the first
->> time. And the reply I got is that the firmware needs all 32 vectors, it
->> won't work with less.
-
-Great design.
-
-> I do see a couple other drivers that are completely inflexible (they
-> request min==max).  But I don't know the system constraint you're
-> hitting.  CC'd Thomas & Christoph in case they have time to give us a
-> hint.
-
-Can I have a full dmesg please?
-
-Please enable CONFIG_IRQ_REMAP and CONFIG_INTEL_IOMMU (not strictly
-required, but it's a Dell BIOS after all). Also set
-CONFIG_INTEL_IOMMU_DEFAULT_ON.
-
-Or simply try a distro kernel.
-
-Thanks,
-
-        tglx
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> ---
+>  drivers/acpi/pci_irq.c           |  2 +-
+>  drivers/acpi/pci_link.c          | 12 ++++++------
+>  drivers/acpi/power.c             |  4 ++--
+>  drivers/acpi/processor_perflib.c |  4 ++--
+>  4 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index dea8a60e18a4..14ee631cb7cf 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -175,7 +175,7 @@ static int acpi_pci_irq_check_entry(acpi_handle handle, struct pci_dev *dev,
+>  	 * configure the IRQ assigned to this slot|dev|pin.  The 'source_index'
+>  	 * indicates which resource descriptor in the resource template (of
+>  	 * the link device) this interrupt is allocated from.
+> -	 * 
+> +	 *
+>  	 * NOTE: Don't query the Link Device for IRQ information at this time
+>  	 *       because Link Device enumeration may not have occurred yet
+>  	 *       (e.g. exists somewhere 'below' this _PRT entry in the ACPI
+> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
+> index 606da5d77ad3..fb4c5632a232 100644
+> --- a/drivers/acpi/pci_link.c
+> +++ b/drivers/acpi/pci_link.c
+> @@ -6,8 +6,8 @@
+>   *  Copyright (C) 2001, 2002 Paul Diefenbaugh <paul.s.diefenbaugh@intel.com>
+>   *  Copyright (C) 2002       Dominik Brodowski <devel@brodo.de>
+>   *
+> - * TBD: 
+> - *      1. Support more than one IRQ resource entry per link device (index).
+> + * TBD:
+> + *	1. Support more than one IRQ resource entry per link device (index).
+>   *	2. Implement start/stop mechanism and use ACPI Bus Driver facilities
+>   *	   for IRQ management (e.g. start()->_SRS).
+>   */
+> @@ -249,8 +249,8 @@ static int acpi_pci_link_get_current(struct acpi_pci_link *link)
+>  		}
+>  	}
+>  
+> -	/* 
+> -	 * Query and parse _CRS to get the current IRQ assignment. 
+> +	/*
+> +	 * Query and parse _CRS to get the current IRQ assignment.
+>  	 */
+>  
+>  	status = acpi_walk_resources(link->device->handle, METHOD_NAME__CRS,
+> @@ -396,7 +396,7 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+>  /*
+>   * "acpi_irq_balance" (default in APIC mode) enables ACPI to use PIC Interrupt
+>   * Link Devices to move the PIRQs around to minimize sharing.
+> - * 
+> + *
+>   * "acpi_irq_nobalance" (default in PIC mode) tells ACPI not to move any PIC IRQs
+>   * that the BIOS has already set to active.  This is necessary because
+>   * ACPI has no automatic means of knowing what ISA IRQs are used.  Note that
+> @@ -414,7 +414,7 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
+>   *
+>   * Note that PCI IRQ routers have a list of possible IRQs,
+>   * which may not include the IRQs this table says are available.
+> - * 
+> + *
+>   * Since this heuristic can't tell the difference between a link
+>   * that no device will attach to, vs. a link which may be shared
+>   * by multiple active devices -- it is not optimal.
+> diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+> index 837b875d075e..9c4c3196cb07 100644
+> --- a/drivers/acpi/power.c
+> +++ b/drivers/acpi/power.c
+> @@ -13,7 +13,7 @@
+>   * 1. via "Device Specific (D-State) Control"
+>   * 2. via "Power Resource Control".
+>   * The code below deals with ACPI Power Resources control.
+> - * 
+> + *
+>   * An ACPI "power resource object" represents a software controllable power
+>   * plane, clock plane, or other resource depended on by a device.
+>   *
+> @@ -690,7 +690,7 @@ int acpi_device_sleep_wake(struct acpi_device *dev,
+>  
+>  /*
+>   * Prepare a wakeup device, two steps (Ref ACPI 2.0:P229):
+> - * 1. Power on the power resources required for the wakeup device 
+> + * 1. Power on the power resources required for the wakeup device
+>   * 2. Execute _DSW (Device Sleep Wake) or (deprecated in ACPI 3.0) _PSW (Power
+>   *    State Wake) for the device, if present
+>   */
+> diff --git a/drivers/acpi/processor_perflib.c b/drivers/acpi/processor_perflib.c
+> index 5909e8fa4013..f00e66de6c53 100644
+> --- a/drivers/acpi/processor_perflib.c
+> +++ b/drivers/acpi/processor_perflib.c
+> @@ -627,7 +627,7 @@ int acpi_processor_preregister_performance(
+>  		goto err_ret;
+>  
+>  	/*
+> -	 * Now that we have _PSD data from all CPUs, lets setup P-state 
+> +	 * Now that we have _PSD data from all CPUs, lets setup P-state
+>  	 * domain info.
+>  	 */
+>  	for_each_possible_cpu(i) {
+> @@ -693,7 +693,7 @@ int acpi_processor_preregister_performance(
+>  			if (match_pdomain->domain != pdomain->domain)
+>  				continue;
+>  
+> -			match_pr->performance->shared_type = 
+> +			match_pr->performance->shared_type =
+>  					pr->performance->shared_type;
+>  			cpumask_copy(match_pr->performance->shared_cpu_map,
+>  				     pr->performance->shared_cpu_map);
+> -- 
+> 2.29.2
+> 
