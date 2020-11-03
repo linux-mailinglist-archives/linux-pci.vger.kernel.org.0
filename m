@@ -2,101 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D1992A589C
-	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 22:54:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B89762A59B7
+	for <lists+linux-pci@lfdr.de>; Tue,  3 Nov 2020 23:09:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731209AbgKCVxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 3 Nov 2020 16:53:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733285AbgKCVxG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 3 Nov 2020 16:53:06 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1647420780;
-        Tue,  3 Nov 2020 21:53:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604440385;
-        bh=yoBMHGcgRu6treiQlSwNvpxiAT/18A01oukKu7Eg8Co=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vHJ3YSUnWQcayJDc4n52S8eMzMfoUSY4xVboDBfH25nai0+liUgeyDVB3BO+u/TFx
-         39fHwXM5ktxZFadWuWTVZzF4PLYNs6ne4tnbGC8oS8GinPMMyBH5F/FDJG4+U+OomR
-         lYriSuuiytYA+rr+KvvkgdR/AGK20v8r2wzGWJDM=
-Date:   Tue, 3 Nov 2020 15:53:03 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ryder Lee <ryder.lee@mediatek.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] pci: mediatek: fix wrong operator used
-Message-ID: <20201103215303.GA267664@bjorn-Precision-5520>
+        id S1730931AbgKCWJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 3 Nov 2020 17:09:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730639AbgKCWJs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 3 Nov 2020 17:09:48 -0500
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8020C061A48
+        for <linux-pci@vger.kernel.org>; Tue,  3 Nov 2020 14:09:47 -0800 (PST)
+Received: by mail-ed1-x544.google.com with SMTP id k9so20202177edo.5
+        for <linux-pci@vger.kernel.org>; Tue, 03 Nov 2020 14:09:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WO1e+L++wPESWfr9nzOE54SCt7afrEsmsB9fEuoYvbI=;
+        b=T+/A6+J62VDvQMKYPtVg2CtBW5xawhHVZqWOERIyixTczN4MfytqxhoJQJOcs2790L
+         sj4ZJgiKijp3n63RZQtMlQ3es9rYo1weSDlwxcJm5Ag+lH4tps5I28z8LxvfwKmYtzJJ
+         /7ODS6RyMh7GrhkYAYzKWrZUgtjo08ShY2d8lFIlqSiQY56zEC4lJ332rH1cpQ0Jikk9
+         7t5YiToX4pGXA3cBIa8hr/lWANYeeU9HgWErCB0IiUFAAt6bSVSfurD3RBJy3BliIelp
+         YL3WFMt/TsTNhYtMeHyiS4JaRXQkTDS7Em1++6Jk3gmVGF0kwFa501K00ou4nDd0zP9v
+         pO8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WO1e+L++wPESWfr9nzOE54SCt7afrEsmsB9fEuoYvbI=;
+        b=NxmSWeHzlVeqTwaudBn2Z1wrOe9h38Q9UQLdZ0/iTVhhTjV7PFCycPXm1oR9AZay7x
+         ZqTsKFMiFpp/0SIFvg6cM5bvJcbGn+XpPAaNnPaUBzGWSwPfk8a5SF4xtDa4whYmvOQy
+         aLareIu6rkmZexQKzPWrM4271aiG0MHwcsxKFDUgohHgi868f4Pgd0mArjjSX9RYFbTY
+         KirbyEKzEzCUcInfKTxVqjQsTm9rV1SVvtzni1NYt0k5j8fbxglYRKqJgUfOoSEl9tLn
+         YcZqcM+Bzh9Hvu5BF2ggfaUFyvAIyON92WR9kqfdu863trQ6vYSfQY5DAmKfEnqkPwC6
+         anXg==
+X-Gm-Message-State: AOAM533DxqkWjnQ1FW1vAjbW8PGNfrZLnZCAR14e3hiyocrtvxYDR4Ps
+        7SHLzCyLaFUe/CCzHktUgEHJDnypPeAH3D8JRyoIVw==
+X-Google-Smtp-Source: ABdhPJz1NDE7PM2O7672wRWt1a0mL/+PL68eDdfq2Oj69hckQbQldL+V0lbGY3zFDyAcHIRlbnAQxlg/ZySh5dCl9Ns=
+X-Received: by 2002:aa7:d843:: with SMTP id f3mr24583081eds.354.1604441386651;
+ Tue, 03 Nov 2020 14:09:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2418edb8c8c81bc646ce9c508939dc27e848dcd7.1603817008.git.ryder.lee@mediatek.com>
+References: <20201030100815.2269-12-daniel.vetter@ffwll.ch> <20201103212840.GA266427@bjorn-Precision-5520>
+In-Reply-To: <20201103212840.GA266427@bjorn-Precision-5520>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 3 Nov 2020 14:09:35 -0800
+Message-ID: <CAPcyv4jCGxWG0opLv4VzBRk5iLwu6CRse4DwF-otWkfXoGWe6A@mail.gmail.com>
+Subject: Re: [PATCH v5 11/15] PCI: Obey iomem restrictions for procfs mmap
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  $ git log --oneline drivers/pci/controller/pcie-mediatek.c
-  ...
-  0cccd42e6193 ("PCI: mediatek: Add controller support for MT7629")
-  6be22343cc54 ("PCI: mediatek: Get optional clocks with devm_clk_get_optional()")
-  ff7a5a0a8562 ("PCI: mediatek: Fix a leaked reference by adding missing of_node_put()")
-  cbe3a7728c7a ("PCI: mediatek: Enlarge PCIe2AHB window size to support 4GB DRAM")
+On Tue, Nov 3, 2020 at 1:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Oct 30, 2020 at 11:08:11AM +0100, Daniel Vetter wrote:
+> > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
+> > files, and the old proc interface. Two check against
+> > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
+> > this starts to matter, since we don't want random userspace having
+> > access to PCI BARs while a driver is loaded and using it.
+> >
+> > Fix this by adding the same iomem_is_exclusive() check we already have
+> > on the sysfs side in pci_mmap_resource().
+> >
+> > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+>
+> This is OK with me but it looks like IORESOURCE_EXCLUSIVE is currently
+> only used in a few places:
+>
+>   e1000_probe() calls pci_request_selected_regions_exclusive(),
+>   ne_pci_probe() calls pci_request_regions_exclusive(),
+>   vmbus_allocate_mmio() calls request_mem_region_exclusive()
+>
+> which raises the question of whether it's worth keeping
+> IORESOURCE_EXCLUSIVE at all.  I'm totally fine with removing it
+> completely.
 
-Make yours match in capitalization and sentence structure, e.g.,
-
-  PCI: mediatek: Fix ...
-
-On Wed, Oct 28, 2020 at 12:51:48AM +0800, Ryder Lee wrote:
-> Fix the issue reported by Coverity:
-> Wrong operator used (CONSTANT_EXPRESSION_RESULT) operator_confusion:
-> (port->slot << 3) & 7 is always 0 regardless of the values of its operands.
-> This occurs as an initializer.
-
-The important thing here is *not* fixing the Coverity warning.  The
-important thing is fixing the *bug*.
-
-The bug is that we computed "func" incorrectly.  The commit log should
-mention what bad things happened because "func" was incorrect.
-
-  #define PCI_FUNC(devfn)         ((devfn) & 0x07)
-
-  func = PCI_FUNC(port->slot << 3);
-
-So "func" was always 0 before, and from the code, it looks like that
-means we only configured FC credits and FTS for function 0, so any
-other functions may not have been configured correctly.
-
-And it looks like this only affects MT2701 and MT7623, since those are
-the only devices that use mtk_pcie_startup_port().
-
-This is all info that should be in the commit log so users can tell
-whether they are affected.
-
-It's nice to still *mention* Coverity since it gave us useful
-information, but all we need is a reference like this:
-
-  Addresses-Coverity-ID: 1437218 ("Wrong operator used")
-
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index cf4c18f0c25a..1980b01cee35 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -760,7 +760,7 @@ static struct pci_ops mtk_pcie_ops = {
->  static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
->  {
->  	struct mtk_pcie *pcie = port->pcie;
-> -	u32 func = PCI_FUNC(port->slot << 3);
-> +	u32 func = PCI_FUNC(port->slot);
->  	u32 slot = PCI_SLOT(port->slot << 3);
->  	u32 val;
->  	int err;
-> -- 
-> 2.18.0
+Now that CONFIG_IO_STRICT_DEVMEM upgrades IORESOURCE_BUSY to
+IORESOURCE_EXCLUSIVE semantics the latter has lost its meaning so I'd
+be in favor of removing it as well.
