@@ -2,264 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE4682A695B
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:22:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 852992A69C1
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:29:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbgKDQWh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 11:22:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56592 "EHLO mail.kernel.org"
+        id S1730877AbgKDQ3f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 11:29:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729676AbgKDQWh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Nov 2020 11:22:37 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        id S1727285AbgKDQ3f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 11:29:35 -0500
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1321D206D4;
-        Wed,  4 Nov 2020 16:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8448206D9;
+        Wed,  4 Nov 2020 16:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604506955;
-        bh=5T3o008IqLba0FOqaSx4iPCQuyKS97qNtxWoYeXR6Ro=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ellmeg/FtXoZGaFEkLfwCPCDcBXnQPy50bjuyL+V6V6gPKPzhty1CZiPYxN6mFAsb
-         kuCotLUEyDiqVVbP9BapsphgTxQLCjRNbhbWzrLHyyCeRLLjWZgOMx3MCbeeYaAIV1
-         no97ghsNuAJ7ba+i1teafW3wfohi+4rh76hdFGms=
-Date:   Wed, 4 Nov 2020 10:22:33 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        amurray@thegoodpenguin.co.uk, robh@kernel.org, treding@nvidia.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
-Message-ID: <20201104162233.GA341405@bjorn-Precision-5520>
+        s=default; t=1604507373;
+        bh=W/zuUY6HL7tKTX4bDA0QdJfN/9luaS/+K7ahTWi5/TE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Erv3SxF4Y8aQZOacF/5r+JUADxTk/dJIQX2wY+3rwkHNnamQwd1SXkLOwCdTWygeQ
+         Ouai02QaU3Gvkaigkoqwfg6vAGQjOzIiP3aKNqVT98ZPGHKPGLWMI3WEAuo5a3k85c
+         lqs3ooliteVG/lde9sBppUy/yN4dbseO7s9B8KuM=
+Received: by pali.im (Postfix)
+        id 4797653E; Wed,  4 Nov 2020 17:29:31 +0100 (CET)
+Date:   Wed, 4 Nov 2020 17:29:31 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, Yinghai Lu <yinghai@kernel.org>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
+Message-ID: <20201104162931.zplhflhvz53odkux@pali>
+References: <20201007161434.GA3247067@bjorn-Precision-5520>
+ <20201008195907.GA3359851@bjorn-Precision-5520>
+ <20201009080853.bxzyirmaja6detk4@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <eea9b090-b938-b5eb-e8da-0bf9d15238a3@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201009080853.bxzyirmaja6detk4@pali>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 05:13:07PM +0530, Vidya Sagar wrote:
-> On 11/4/2020 2:37 AM, Bjorn Helgaas wrote:
-> > On Tue, Nov 03, 2020 at 08:57:01AM +0530, Vidya Sagar wrote:
-> > > On 11/3/2020 4:32 AM, Bjorn Helgaas wrote:
-> > > > On Thu, Oct 29, 2020 at 11:09:59AM +0530, Vidya Sagar wrote:
-> > > > > DesignWare core has a TLP digest (TD) override bit in one of the control
-> > > > > registers of ATU. This bit also needs to be programmed for proper ECRC
-> > > > > functionality. This is currently identified as an issue with DesignWare
-> > > > > IP version 4.90a. This patch does the required programming in ATU upon
-> > > > > querying the system policy for ECRC.
+Hello Krzysztof!
+
+On Friday 09 October 2020 10:08:53 Pali Rohár wrote:
+> On Thursday 08 October 2020 14:59:07 Bjorn Helgaas wrote:
+> > On Wed, Oct 07, 2020 at 11:14:34AM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Oct 07, 2020 at 10:14:00AM +0200, Pali Rohár wrote:
+> > > > On Wednesday 07 October 2020 12:47:40 Oliver O'Halloran wrote:
+> > > > > On Wed, Oct 7, 2020 at 10:26 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > >
+> > > > > > I'm not really a fan of this because pci_sysfs_init() is a bit of a
+> > > > > > hack to begin with, and this makes it even more complicated.
+> > > > > >
+> > > > > > It's not obvious from the code why we need pci_sysfs_init(), but
+> > > > > > Yinghai hinted [1] that we need to create sysfs after assigning
+> > > > > > resources.  I experimented by removing pci_sysfs_init() and skipping
+> > > > > > the ROM BAR sizing.  In that case, we create sysfs files in
+> > > > > > pci_bus_add_device() and later assign space for the ROM BAR, so we
+> > > > > > fail to create the "rom" sysfs file.
+> > > > > >
+> > > > > > The current solution to that is to delay the sysfs files until
+> > > > > > pci_sysfs_init(), a late_initcall(), which runs after resource
+> > > > > > assignments.  But I think it would be better if we could create the
+> > > > > > sysfs file when we assign the BAR.  Then we could get rid of the
+> > > > > > late_initcall() and that implicit ordering requirement.
+> > > > > 
+> > > > > You could probably fix that by using an attribute_group to control
+> > > > > whether the attribute shows up in sysfs or not. The .is_visible() for
+> > > > > the group can look at the current state of the device and hide the rom
+> > > > > attribute if the BAR isn't assigned or doesn't exist. That way we
+> > > > > don't need to care when the actual assignment occurs.
 > > > > 
-> > > > I guess this is a hardware defect, right?
-> > > Yes. This is common across all DWC implementations (version 4.90 precisely)
+> > > > And cannot we just return e.g. -ENODATA (or other error code) for those
+> > > > problematic sysfs nodes until late_initcall() is called?
 > > > 
-> > > > How much of a problem would it be if we instead added a "no_ecrc"
-> > > > quirk for this hardware so we never enabled ECRC?
-> > > Well, on Tegra for some of the high fidelity use cases, ECRC is required to
-> > > be turned on and if it can be done safely with these patches, why shouldn't
-> > > we not enable ECRC at all?
+> > > I really like Oliver's idea and I think we should push on that to see
+> > > if it can be made to work.  If so, we can remove the late_initcall()
+> > > completely.
 > > > 
-> > > > IIUC, the current Linux support of ECRC is a single choice at
-> > > > boot-time: by default ECRC is not enabled, but if you boot with
-> > > > "pci=ecrc=on", we turn on ECRC for every device.
-> > > > 
-> > > > That seems like the minimal support, but I think the spec allows ECRC
-> > > > to be enabled selectively, on individual devices.  I can imagine a
-> > > > sysfs knob that would allow us to enable/disable ECRC per-device at
-> > > > run-time.
-> > > > 
-> > > > If we had such a sysfs knob, it would be pretty ugly and maybe
-> > > > impractical to work around this hardware issue.  So I'm a little bit
-> > > > hesitant to add functionality that might have to be removed in the
-> > > > future.
+> > > > > > But I haven't tried to code it up, so it's probably more complicated
+> > > > > > than this.  I guess ideally we would assign all the resources before
+> > > > > > pci_bus_add_device().  If we could do that, we could just remove
+> > > > > > pci_sysfs_init() and everything would just work, but I think that's a
+> > > > > > HUGE can of worms.
+> > > > > 
+> > > > > I was under the impression the whole point of pci_bus_add_device() was
+> > > > > to handle any initialisation that needed to be done after resources
+> > > > > were assigned. Is the ROM BAR being potentially unassigned an x86ism
+> > > > > or is there some bigger point I'm missing?
 > > > 
-> > > Agree with this. But since it is a boot-time choice at this point, I think
-> > > we can still go ahead with this approach to have a working ECRC mechanism
-> > > right? I don't see any sysfs knob for AER controlling at this point.
+> > > We can't assign resources for each device as we enumerate it because
+> > > we don't know what's in use by other devices yet to be enumerated.
+> > > That part is generic, not x86-specific.
+> > > 
+> > > The part that is x86-specific (or at least specific to systems using
+> > > ACPI) is that the ACPI core doesn't reserve resources used by ACPI
+> > > devices.  Sometimes those resources are included in the PCI host
+> > > bridge windows, and we don't want to assign them to PCI devices.
+> > > 
+> > > I didn't trace this all the way, but the pcibios_assign_resources()
+> > > and pnp_system_init() comments look relevant.  It's a little concerning
+> > > that they're both fs_initcalls() and the ordering looks important, but
+> > > it would only be by accident of link ordering that pnp_system_init()
+> > > happens first.
 > > 
-> > I don't want to do anything that will prevent us from adding
-> > per-device ECRC control in the future.
-> > 
-> > My concern is that if we add a run-time sysfs knob in the future, the
-> > user experience on this hardware will be poor because there's no
-> > convenient path to twiddle the PCIE_ATU_TD bit when the generic code
-> > changes the AER Control bit.
->
-> Agree.
-> Can we add it to the documentation that run time changing of ECRC settings
-> are not supported on this (i.e. Tegra194) platform (or for that matter on
-> any SoC with PCIe based on DesignWare core version 4.90A). By 'not
-> supported', I meant that the ECRC digest part may not work but the normal
-> functionality will continue to work without reporting any AER errors. I
-> tried to emulate the following scenarios on Tegra194 silicon and here are my
-> observations.
-> FWIW, I'm referring to the PCIe spec Rev 5.0 Ver 1.0 (22 May 2019)
+> > Pali, what's your thought on this?  Do you plan to work on this
+> > yourself?  If not and if you can live with your workaround a while
+> > longer, I think Krzysztof might be interested in taking a crack at it.
+> > I would just hate to see you guys duplicate each others' work :)
 > 
-> > What is the failure mode in these scenarios:
-> > 
-> >    - User boots with defaults, ECRC is disabled.
-> >    - User enables ECRC via sysfs.
-> >    - What happens here?  ECRC is enabled via AER Control but not via
-> >      DWC TD bit.  I assume ECRC doesn't work.  Does it cause PCIe
-> >      errors (malformed TLP, etc)?
->
-> Since DWC TD bit is not programmed, for all the transactions that go through
-> ATU, TLP Digest won't get generated (although AER registers indicate that
-> ECRC should get generated).
-> As per the spec section "2.7.1 ECRC Rules"
+> Hello Bjorn!
 > 
-> ---
-> If a device Function is enabled to generate ECRC, it must calculate and
-> apply ECRC for all TLPs originated by the Function
-> ---
+> If Krzysztof wants and would be working on this issue I can let it as is
+> for now.
+
+Krzysztof, as Bjorn wrote, do you want to take this issue?
+
+> But we should think how to deliver fix for this issue also into stable
+> kernels where this race condition is happening.
 > 
-> So the RP would be violating the PCIe spec, but it doesn't result in any
-> error because the same section has the following rule as well
+> I think that my workaround avoid those two race conditions and if proper
+> fix (= removal of pci_sysfs_init function) would take a long, what about
+> trying to workaround that race condition for now?
 > 
-> ---
-> If a device Function is enabled to check ECRC, it must do so for all TLPs
-> with ECRC where the device is the ultimate PCI Express Receiver
-> 	Note that it is still possible for the Function to receive TLPs without
-> ECRC, and these are processed normally - this is not an error
-> ---
+> My "fix" is relatively small and simple, so it should not be much hard
+> to review it.
 > 
-> so, even if the EP has ECRC check enabled, because of the above rule, it
-> just processes those packets without ECRC as normal packets.
-> Basically, whoever is enabling ECRC run time gets cheated as transactions
-> routed through ATU don't really have ECRC digest
-> 
-> > Or this one:
-> > 
-> >    - User boots with "pci=ecrc=on", ECRC is enabled.
-> >    - ECRC works fine.
-> >    - User disables ECRC via sysfs.
-> >    - What happens here?  ECRC is disabled via AER Control, but DWC TD
-> >      bit thinks it's still enabled.
->
-> In this case, the EP doesn't have ECRC check enabled but receives TLPs with
-> ECRC digest. This again won't result in any error because of the section
-> "2.2.3 TLP Digest Rules" which says
-> 
-> ---
-> If an intermediate or ultimate PCI Express Receiver of the TLP does not
-> support ECRC checking, the Receiver must ignore the TLP Digest
-> ---
-> 
-> So the EP just ignores the TLP Digest and process the TLP normally.
-> Although functionality wise there is no issue here, there could be some
-> impact on the perf because of the extra DWord data. This is again debatable
-> as the perf/data path is typically from EP's DMA engine to host system
-> memory and not config/BAR accesses.
-> > 
-> > If you enabled ECRC unconditionally on DWC and the sysfs knob had no
-> > effect, I'd be OK with that.  I'm more worried about what happens when
-> > the AER bit and the DWC TD bit are set so they don't match.  What is
-> > the failure mode there?
->
-> Based on the above experiments, we can as well keep the DWC TD bit
-> programmed unconditionally and it won't lead to any errors. As mentioned
-> before, the only downside of it is the extra DWord in each ATU routed TLP
-> which may load the bus (in downstream direction) with no real benefit as
-> such.
-
-IIUC the issue only affects traffic from the Root Port to the
-Endpoint, and traffic going upstream is unaffected.  Here's what I
-think happens based on the RP and EP settings, please correct me if
-wrong:
-
-  1)  RP TD+ ECRC_gen+       generates ECRC
-      EP     ECRC_check-     ignores ECRC
-      EP     ECRC_check+     checks ECRC
-
-  2)  RP TD+ ECRC_gen-       generates ECRC when it shouldn't (defect)
-      EP     ECRC_check-     ignores ECRC
-      EP     ECRC_check+     checks ECRC (may signal errors)
-
-  3)  RP TD- ECRC_gen+       fails to generate ECRC (defect)
-      EP     ECRC_check-     ignores ECRC
-      EP     ECRC_check+     handles TLPs without ECRC normally,
-                             but cannot detect ECRC errors
-
-  4)  RP TD- ECRC_gen-       no ECRC generated (as expected)
-      EP     ECRC_check-     ignores ECRC
-      EP     ECRC_check+     handles TLPs without ECRC normally
-
-If my assumptions above are correct, this defect never causes extra
-errors like Malformed TLP, etc, to be signaled regardless of the AER
-ECRC_check settings.
-
-The only functional problem is that in case 3, the EP *should* be able
-to check and signal ECRC errors, but it cannot because the RP doesn't
-generate ECRC.
-
-Case 2 is a performance issue because we add the extra dword in every
-TLP going downstream.  That doesn't seem unreasonable since this is
-just config and BAR accesses.  The EP may detect ECRC errors when we
-don't think the RP is even generating ECRC, but in general we won't
-enable checking in the EP unless we also enable generation in the RP.
-
-So I think setting the DWC TD bit unconditionally seems like a pretty
-good solution.
-
-> Please let me know where can we go from here.
-> I can push a different patch to keep DWC TD bit always programmed if that is
-> the best approach to take at this point.
-> > 
-> > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
-> > > > > ---
-> > > > > V3:
-> > > > > * Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
-> > > > > 
-> > > > > V2:
-> > > > > * Addressed Jingoo's review comment
-> > > > > * Removed saving 'td' bit information in 'dw_pcie' structure
-> > > > > 
-> > > > >    drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
-> > > > >    drivers/pci/controller/dwc/pcie-designware.h | 1 +
-> > > > >    2 files changed, 7 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > index b5e438b70cd5..cbd651b219d2 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > @@ -246,6 +246,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
-> > > > >         dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> > > > >                                  upper_32_bits(pci_addr));
-> > > > >         val = type | PCIE_ATU_FUNC_NUM(func_no);
-> > > > > +     if (pci->version == 0x490A)
-> > > > > +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
-> > > > >         val = upper_32_bits(size - 1) ?
-> > > > >                 val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-> > > > >         dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
-> > > > > @@ -294,8 +296,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
-> > > > >                            lower_32_bits(pci_addr));
-> > > > >         dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
-> > > > >                            upper_32_bits(pci_addr));
-> > > > > -     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> > > > > -                        PCIE_ATU_FUNC_NUM(func_no));
-> > > > > +     val = type | PCIE_ATU_FUNC_NUM(func_no);
-> > > > > +     if (pci->version == 0x490A)
-> > > > > +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
-> > > > > +     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
-> > > > >         dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
-> > > > > 
-> > > > >         /*
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > index e7f441441db2..b01ef407fd52 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > @@ -89,6 +89,7 @@
-> > > > >    #define PCIE_ATU_TYPE_IO             0x2
-> > > > >    #define PCIE_ATU_TYPE_CFG0           0x4
-> > > > >    #define PCIE_ATU_TYPE_CFG1           0x5
-> > > > > +#define PCIE_ATU_TD_SHIFT            8
-> > > > >    #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
-> > > > >    #define PCIE_ATU_CR2                 0x908
-> > > > >    #define PCIE_ATU_ENABLE                      BIT(31)
-> > > > > --
-> > > > > 2.17.1
-> > > > > 
+> Krzysztof, what do you think?
