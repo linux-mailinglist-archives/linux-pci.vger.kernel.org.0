@@ -2,115 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C11E2A5EE7
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 08:47:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F10232A5FCB
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 09:44:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgKDHrP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 02:47:15 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17978 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgKDHrO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 02:47:14 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa25c810001>; Tue, 03 Nov 2020 23:47:13 -0800
-Received: from [10.40.203.207] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Nov
- 2020 07:47:02 +0000
-Subject: Re: [PATCH 0/3] Add support to handle prefetchable memory
-To:     Thierry Reding <treding@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC:     "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20201023195655.11242-1-vidyas@nvidia.com>
- <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
- <20201026123012.GA356750@ulmo>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <53277a71-13e5-3e7e-7c51-aca367b99d31@nvidia.com>
-Date:   Wed, 4 Nov 2020 13:16:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+        id S1727883AbgKDIoT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 03:44:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgKDIoT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 03:44:19 -0500
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8429C040203
+        for <linux-pci@vger.kernel.org>; Wed,  4 Nov 2020 00:44:15 -0800 (PST)
+Received: by mail-oi1-x242.google.com with SMTP id j7so21354893oie.12
+        for <linux-pci@vger.kernel.org>; Wed, 04 Nov 2020 00:44:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ycqoIkcF9lPtiJBVMgjq7zwCX8Gyu6JCtVXT12jKTV8=;
+        b=SO6a9eIH6r+EzFThZ6MTARjwHEtx6LFHOpOvFgwKmnw7LjZXHcgycyhZfUmdSwXoni
+         9VPCbgc6ODqmZSPJVN4eXwn3IqpRr3uXKNjrMKGfBOBHLutZLHhso+mS3OiPqxM7Q6/l
+         K5a5NNqZWoxju2yJSN+OURI61y0XID3dk0Roo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ycqoIkcF9lPtiJBVMgjq7zwCX8Gyu6JCtVXT12jKTV8=;
+        b=Ciyt6m8Z+8LWyVBphsMyvTfYyfe3rNIh7YwINmRWKHl7XDH3fkYfaup2OxMRiytqQD
+         ro5gHSdgc98IEhP5p2fHLyvWDA/HXIcIMi3qjBWrJzm7RcOznNZUxHoiFQLonyQHPatJ
+         dncW9vOTDGEdN5pJsis7JV3USOcpxpg9XBbH4gm2+FyhN/tn2j+IM/2s7Sgj4DrvfLy4
+         BVR9FWANccE7A/f8EayntV3EFgFhkijGBdbOcrKiNZd22bO72Blgv00HbbySLmOAyGMW
+         dUZhTOo89SUZtf4c0rmUFywehOfVMNCHpf83HmPQxKgvm/VeYxLcBsC0etlGC39ZJnl6
+         lZeg==
+X-Gm-Message-State: AOAM532tXRAkIsyerVfM4sonSxR9AENePSoTXH4LA5Gnattu89y+y6QJ
+        1y3Mr1Deo6EX/tvHhARKXzzB1Q+9O+D47BdIkNJXJA==
+X-Google-Smtp-Source: ABdhPJzFeuCQlV5NJZ+3HUxdvXgtCAFGX/0rEF7qnn1uI6qUI3Z5/MsHqFAcH2CxUPAQE20CBPAAF7SeJ5phPHzYaRc=
+X-Received: by 2002:aca:b141:: with SMTP id a62mr1813813oif.101.1604479455139;
+ Wed, 04 Nov 2020 00:44:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201026123012.GA356750@ulmo>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604476033; bh=QeSqa6GvM+bf3uNLQi9VSfzj1po5EbjFmVrkNpp/7gA=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=Ifr6JUnC5B0NMRMUvYd+/WhhZXKPkWuzhCfs3e+itFu4MJSEU5ixIMKMSxduPdom6
-         iMu+6cSqqUssACAej8CuEl7tghcArGXURwtZSse9j4QNSAmOZRVtRyETY53B2FEpOQ
-         1oNnf1vdPWfzD/wXf1A5v/oLDuWaXhrBFa4cIglsmUXLarT4rFHiVb4nY3fkG0GYun
-         Odq3MJifchS403KcZ7QDrvv4qiwWn6dyitZ+ZG+e04Aqnh7PW2zT1hmFrMRSRJ0fq5
-         +xv+TGOjqKmKIvJkY2LQfAHQ2OYZfA/PLiPsRV5I29acgF1PSRbeumhQ5gxDQbvFKu
-         JWx8cuiOxBRWA==
+References: <20201030100815.2269-12-daniel.vetter@ffwll.ch>
+ <20201103212840.GA266427@bjorn-Precision-5520> <CAPcyv4jCGxWG0opLv4VzBRk5iLwu6CRse4DwF-otWkfXoGWe6A@mail.gmail.com>
+In-Reply-To: <CAPcyv4jCGxWG0opLv4VzBRk5iLwu6CRse4DwF-otWkfXoGWe6A@mail.gmail.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Wed, 4 Nov 2020 09:44:04 +0100
+Message-ID: <CAKMK7uF0QjesaNs97N-G8cZkXuAmFgcmTfHvoCP94br_WVcV6Q@mail.gmail.com>
+Subject: Re: [PATCH v5 11/15] PCI: Obey iomem restrictions for procfs mmap
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Lorenzo / Bjorn,
-Could you please review patches-1 & 2 in this series?
-For the third patch, we already went with Rob's patch @ 
-http://patchwork.ozlabs.org/project/linux-pci/patch/20201026154852.221483-1-robh@kernel.org/
+On Tue, Nov 3, 2020 at 11:09 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> On Tue, Nov 3, 2020 at 1:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Oct 30, 2020 at 11:08:11AM +0100, Daniel Vetter wrote:
+> > > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
+> > > files, and the old proc interface. Two check against
+> > > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
+> > > this starts to matter, since we don't want random userspace having
+> > > access to PCI BARs while a driver is loaded and using it.
+> > >
+> > > Fix this by adding the same iomem_is_exclusive() check we already have
+> > > on the sysfs side in pci_mmap_resource().
+> > >
+> > > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+> > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> >
+> > This is OK with me but it looks like IORESOURCE_EXCLUSIVE is currently
+> > only used in a few places:
+> >
+> >   e1000_probe() calls pci_request_selected_regions_exclusive(),
+> >   ne_pci_probe() calls pci_request_regions_exclusive(),
+> >   vmbus_allocate_mmio() calls request_mem_region_exclusive()
+> >
+> > which raises the question of whether it's worth keeping
+> > IORESOURCE_EXCLUSIVE at all.  I'm totally fine with removing it
+> > completely.
+>
+> Now that CONFIG_IO_STRICT_DEVMEM upgrades IORESOURCE_BUSY to
+> IORESOURCE_EXCLUSIVE semantics the latter has lost its meaning so I'd
+> be in favor of removing it as well.
 
-Thanks,
-Vidya Sagar
+Still has some value since it enforces exclusive access even if the
+config isn't enabled, and iirc e1000 had some fun with userspace tools
+clobbering the firmware and bricking the chip.
 
-On 10/26/2020 6:02 PM, Thierry Reding wrote:
-> On Sat, Oct 24, 2020 at 04:03:41AM +0000, Jingoo Han wrote:
->> On 10/23/20, 3:57 PM, Vidya Sagar wrote:
->>>
->>> This patch series adds support for configuring the DesignWare IP's ATU
->>> region for prefetchable memory translations.
->>> It first starts by flagging a warning if the size of non-prefetchable
->>> aperture goes beyond 32-bit as PCIe spec doesn't allow it.
->>> And then adds required support for programming the ATU to handle higher
->>> (i.e. >4GB) sizes and then finally adds support for differentiating
->>> between prefetchable and non-prefetchable regions and configuring one of
->>> the ATU regions for prefetchable memory translations purpose.
->>>
->>> Vidya Sagar (3):
->>>    PCI: of: Warn if non-prefetchable memory aperture size is > 32-bit
->>>    PCI: dwc: Add support to program ATU for >4GB memory aperture sizes
->>>    PCI: dwc: Add support to handle prefetchable memory mapping
->>
->> For 2nd & 3rd,
->> Acked-by: Jingoo <jingoohan1@gmail.com>
->> But, I still want someone to ack 1st patch, not me.
->>
->> To Vidya,
->> If possible, can you ask your coworker to give 'Tested-by'? It will be very helpful.
->> Thank you.
-> 
-> On next-20201026 (but also going back quite a while) I'm seeing this
-> during boot on Jetson AGX Xavier (Tegra194):
-> 
-> [    3.493382] ahci 0001:01:00.0: version 3.0
-> [    3.493889] ahci 0001:01:00.0: SSS flag set, parallel bus scan disabled
-> [    4.497706] ahci 0001:01:00.0: controller reset failed (0xffffffff)
-> [    4.498114] ahci: probe of 0001:01:00.0 failed with error -5
-> 
-> After applying this series, AHCI over PCI is back to normal:
-> 
-> [    3.543230] ahci 0001:01:00.0: AHCI 0001.0000 32 slots 1 ports 6 Gbps 0x1 impl SATA mode
-> [    3.550841] ahci 0001:01:00.0: flags: 64bit ncq sntf led only pmp fbs pio slum part sxs
-> [    3.559747] scsi host0: ahci
-> [    3.561998] ata1: SATA max UDMA/133 abar m512@0x1230010000 port 0x1230010100 irq 63
-> 
-> So for the series:
-> 
-> Tested-by: Thierry Reding <treding@nvidia.com>
-> 
+Another thing I kinda wondered, since pci maintainer is here: At least
+in drivers/gpu I see very few drivers explicitly requestion regions
+(this might be a historical artifact due to the shadow attach stuff
+before we had real modesetting drivers). And pci core doesn't do that
+either, even when a driver is bound. Is this intentional, or
+should/could we do better? Since drivers work happily without
+reserving regions I don't think "the drivers need to remember to do
+this" will ever really work out well.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
