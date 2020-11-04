@@ -2,103 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F01CA2A6BD3
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 18:36:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAB7B2A6BDD
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 18:37:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731629AbgKDRf7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 12:35:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730535AbgKDRf6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Nov 2020 12:35:58 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C06A208C7;
-        Wed,  4 Nov 2020 17:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604511357;
-        bh=xBqVEiblZ/XFubgQpaF4UPLcF4GdV6RkUUCEkB9cU+Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vevMdJI0PJyiPX7Yt4xjROXnhJrnfVhC8betd0HgLnksm8D7hNYo3JkX7M0TIhkKX
-         BBkxSPOg8A9xjCihNzK8vyALokAMGgB6yuBwL+cB0vXZuAZPnRnX//98aIhWlizS6Y
-         JVKjAKjF6GH7rpX6eXARNGmjL8jwn8ecLAKxZnA8=
-Date:   Wed, 4 Nov 2020 11:35:56 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, bp@alien8.de, lucas.demarchi@intel.com,
-        matthew.d.roper@intel.com, hariom.pandey@intel.com,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
-Message-ID: <20201104173556.GA359362@bjorn-Precision-5520>
+        id S1730254AbgKDRhO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 12:37:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729297AbgKDRhN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 12:37:13 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3E9C0613D3;
+        Wed,  4 Nov 2020 09:37:12 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id dk16so30321262ejb.12;
+        Wed, 04 Nov 2020 09:37:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1jUCo3qsGMmYf4isHasTOhehT8pNB9XWrj2LM2ACKFU=;
+        b=lBZxHWOuzf8o/ZJb1D8C8gGEf/iMab87JUEzptpHqxR9asnBXXaquqcB6M1z2+AocV
+         a0ON5FbhPEFNJIQCUOirWtbJl3jQl4y9+SQa6oEmRIE5a2PDa/gSfVTmWYZKeb2oKW8r
+         rVaNIuZOCNQy28QgMBFUGTscPb70FLX8Wtu8nAe+qr5Ib+jDA3Ux9K1jOgAmy2gOhGPU
+         CGASkDBhQF06XCprNCUJQK/1sJv0VqkZytccCi9DJt78YAaKnv6iKB2XEimQ8C5VoV/G
+         0na7LwFwcJT8b2t35nOjEjtZP6ACCHgUznADenUZ1Pq+eEqRw5Fvu9WE5AF/mVlqC+RK
+         5Yzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1jUCo3qsGMmYf4isHasTOhehT8pNB9XWrj2LM2ACKFU=;
+        b=gmfKR/Hmq75R1SgHUXwquhGCGlpUrJ+Q7K5liovcVUeLASNsVakAqIAXCN/dw8UKyd
+         MIINNyWCunbIqkSS1La/f/zb56YTOnZ83YD1agAJMPQS5yniCtAK1xdzuA7bfOhAcQr5
+         daYdYf9f+tAxP6F53JhcTlGS8Dww/FjKdfAkkh6vLxO/xWfIJygA7ZbNkL2Zvk8lgIEm
+         sZ2W4FCxoWezCM5psSkQ35seh9esY7DNJUo9e7GBfQ2d9jx8a0QYp5d/TinQlMphYBQm
+         BnQtkFQAFKozp/DSe7sWCiuUkAkz9eJWjKx27og5YFJBRfxho26D3rHhYCfx0jaujVHk
+         hWvQ==
+X-Gm-Message-State: AOAM532Zn8vpvn3zbhsZ18WEAqgG6hDL7gJwrtSkx814C4jf06EYGsCz
+        /xMuvoV+dAYcZK54o4UNrFM/6Q4lT0k=
+X-Google-Smtp-Source: ABdhPJxj4WRvrnY0lJfYQCokZRcGMpmXBd3gevBfjJegys1C+AC7mtt7lJZx/FlxaVBRHZ0+yUG8Ug==
+X-Received: by 2002:a17:906:b294:: with SMTP id q20mr9047175ejz.234.1604511430561;
+        Wed, 04 Nov 2020 09:37:10 -0800 (PST)
+Received: from [192.168.2.202] (pd9e5a482.dip0.t-ipconnect.de. [217.229.164.130])
+        by smtp.gmail.com with ESMTPSA id p4sm1317138ejw.101.2020.11.04.09.37.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Nov 2020 09:37:09 -0800 (PST)
+Subject: Re: [PATCH] ACPI: Remove trailing whitespace
+To:     Joe Perches <joe@perches.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20201103211259.GA265488@bjorn-Precision-5520>
+ <c92703e3-c964-b4a6-e3df-c4c0c28b44c1@gmail.com>
+ <6e392d099bd8aaba14223aa770361dbdeeab271b.camel@perches.com>
+ <6d888eb0-bfc5-28ff-c62f-9e769f77bc1f@gmail.com>
+ <57b77f3a36f56e2ae7ab8fe367865b5412d4e11f.camel@perches.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <0ec60af0-4ff2-a4ab-c904-96b149250f11@gmail.com>
+Date:   Wed, 4 Nov 2020 18:37:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201104120506.172447-1-tejaskumarx.surendrakumar.upadhyay@intel.com>
+In-Reply-To: <57b77f3a36f56e2ae7ab8fe367865b5412d4e11f.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Jani, Joonas, Rodrigo, David, Daniel]
+On 11/4/20 6:12 PM, Joe Perches wrote:
 
-On Wed, Nov 04, 2020 at 05:35:06PM +0530, Tejas Upadhyay wrote:
-> JSL re-uses the same stolen memory as ICL and EHL.
+[...]
+
+>> I'm not too sure about the comments, but I can find the time to look
+>> over the output and adjust that if that's something you'd want me to do.
 > 
-> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> Cc: Matt Roper <matthew.d.roper@intel.com>
-> Signed-off-by: Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
-
-I don't plan to do anything with this since previous similar patches
-have gone through some other tree, so this is just kibitzing.
-
-But the fact that we have this long list of Intel devices [1] that
-constantly needs updates [2] is a hint that something is wrong.
-
-IIUC the general idea is that we need to discover Intel gfx memory by
-looking at device-dependent config space and add it to the E820 map.
-Apparently the quirks discover this via PCI config registers like
-I830_ESMRAMC, I845_ESMRAMC, etc, and tell the driver about it via the
-global "intel_graphics_stolen_res"?
-
-That's not the way this should work.  There should some generic, non
-device-dependent PCI or ACPI method to discover the memory used, or at
-least some way to do it in the driver instead of early arch code.
-
-How is this *supposed* to work?  Is there something we can do in E820
-or other resource management that would make this easier?
-
-> ---
->  arch/x86/kernel/early-quirks.c | 1 +
->  1 file changed, 1 insertion(+)
+> Up to you.  I hardly looked at the output.
 > 
-> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> index a4b5af03dcc1..534cc3f78c6b 100644
-> --- a/arch/x86/kernel/early-quirks.c
-> +++ b/arch/x86/kernel/early-quirks.c
-> @@ -549,6 +549,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
->  	INTEL_CNL_IDS(&gen9_early_ops),
->  	INTEL_ICL_11_IDS(&gen11_early_ops),
->  	INTEL_EHL_IDS(&gen11_early_ops),
-> +	INTEL_JSL_IDS(&gen11_early_ops),
->  	INTEL_TGL_12_IDS(&gen11_early_ops),
->  	INTEL_RKL_IDS(&gen11_early_ops),
->  };
+> I'd generally prefer to use a single line comment like
+> 
+> /* AC Adapter Management */
+> 
+> but I don't know how often that dashed block is used in ACPI.
+> 
+> grep seems to show the texts are not correctly centered so it seems like
+> it was done by hand and not that some automation tool was used to create
+> those blocks.
+> 
+> Maybe a separate patch could be done to change those if desired.
+> But not by me.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/early-quirks.c?h=v5.10-rc2#n518
+I'm hesitant to touch those, mostly as you said because they're
+subjective (and I don't really see any big issues with them). Seems to
+be the prevalent style in the drivers/acpi, although there are other
+block-like separator comments at least in drivers/acpi/dock.c.
 
-[2]
-  May 2020 efbee021ad02 ("x86/gpu: add RKL stolen memory support")
-  Jul 2019 6b2436aeb945 ("x86/gpu: add TGL stolen memory support")
-  Mar 2019 d53fef0be4a5 ("x86/gpu: add ElkhartLake to gen11 early quirks")
-  May 2018 db0c8d8b031d ("x86/gpu: reserve ICL's graphics stolen memory")
-  Dec 2017 33aa69ed8aac ("x86/gpu: add CFL to early quirks")
-  Jul 2017 2e1e9d48939e ("x86/gpu: CNL uses the same GMS values as SKL")
-  Jan 2017 bc384c77e3bb ("x86/gpu: GLK uses the same GMS values as SKL")
-  Oct 2015 00ce5c8a66fb ("drm/i915/kbl: Kabylake uses the same GMS values as Skylake")
-  Mar 2015 31d4dcf705c3 ("drm/i915/bxt: Broxton uses the same GMS values as Skylake")
-  ...
+> As far as I know, acpi was once autogenerated from a common source tree
+> and whitespace changes were once frowned on, but maybe that's changed or
+> or perhaps that's only for files in drivers/acpi/acpica/.  I don't know.
+> 
+> https://acpica.org/downloads/linux
+
+Yeah, any changes to drivers/acpi/acpica would have to go through their
+repo.
+
+I'll go over the checkpatch output later and prepare a v2 that doesn't
+touch the comments, unless anyone has any issues with that.
+
+Regards,
+Max
