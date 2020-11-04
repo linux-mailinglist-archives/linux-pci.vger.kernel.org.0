@@ -2,76 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 637FA2A6BB8
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 18:33:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F01CA2A6BD3
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 18:36:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbgKDRcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 12:32:46 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:34674 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731534AbgKDRcp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 12:32:45 -0500
-X-Greylist: delayed 1916 seconds by postgrey-1.27 at vger.kernel.org; Wed, 04 Nov 2020 12:32:45 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=N2SOPoHvV67QYSDBorQI+Eny1/8pxEWrPXW/WFBv0+c=; b=jByByxLeD2jWOeF1OeD5LergUb
-        x9NqBqY5HMYmItZ7/h0PBJ13GF7wUQesel8515f/oOJYYevRUTj3bJ6ZlQJRROJrQ1Rre53BF6Zw0
-        SZajwdv93St9xVJOjqjS8QA4bejzTTfzPm5hDLnLCDpRrhJcOMm9KbBHX0P3Y1f5bH4p6z3l3gHWn
-        vZGmN3yHOMegh1PM0boFWFPGH/mvD3jxaUIVYAbeUovIAwr0z0EIStrvKmtoevRtM0B/TLNT7Es5L
-        CGznzxe0zDJdNeQusIaUhmUxKps947uNp5WAygFQC2nD/RRJ+4mGe0NqYBroMfDLxs9zmgd4epV8R
-        6i+qHfAQ==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1kaM9P-0001Ul-Li; Wed, 04 Nov 2020 10:00:48 -0700
-To:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-rdma@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <20201104095052.1222754-1-hch@lst.de>
- <20201104095052.1222754-4-hch@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <6396d3e3-c9a6-e86f-ab1c-df3561b6517a@deltatee.com>
-Date:   Wed, 4 Nov 2020 10:00:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1731629AbgKDRf7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 12:35:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730535AbgKDRf6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 12:35:58 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C06A208C7;
+        Wed,  4 Nov 2020 17:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604511357;
+        bh=xBqVEiblZ/XFubgQpaF4UPLcF4GdV6RkUUCEkB9cU+Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=vevMdJI0PJyiPX7Yt4xjROXnhJrnfVhC8betd0HgLnksm8D7hNYo3JkX7M0TIhkKX
+         BBkxSPOg8A9xjCihNzK8vyALokAMGgB6yuBwL+cB0vXZuAZPnRnX//98aIhWlizS6Y
+         JVKjAKjF6GH7rpX6eXARNGmjL8jwn8ecLAKxZnA8=
+Date:   Wed, 4 Nov 2020 11:35:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, bp@alien8.de, lucas.demarchi@intel.com,
+        matthew.d.roper@intel.com, hariom.pandey@intel.com,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
+Message-ID: <20201104173556.GA359362@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20201104095052.1222754-4-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, jgg@ziepe.ca, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.2
-Subject: Re: [PATCH 3/5] PCI/p2p: remove the DMA_VIRT_OPS hacks
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201104120506.172447-1-tejaskumarx.surendrakumar.upadhyay@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[+cc Jani, Joonas, Rodrigo, David, Daniel]
 
-
-
-On 2020-11-04 2:50 a.m., Christoph Hellwig wrote:
-> Now that all users of dma_virt_ops are gone we can remove the workaround
-> for it in the PCIe peer to peer code.
+On Wed, Nov 04, 2020 at 05:35:06PM +0530, Tejas Upadhyay wrote:
+> JSL re-uses the same stolen memory as ICL and EHL.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: Matt Roper <matthew.d.roper@intel.com>
+> Signed-off-by: Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
 
-The two P2PDMA patches look fine to me. Nice to get rid of that hack.
+I don't plan to do anything with this since previous similar patches
+have gone through some other tree, so this is just kibitzing.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+But the fact that we have this long list of Intel devices [1] that
+constantly needs updates [2] is a hint that something is wrong.
 
-Thanks,
+IIUC the general idea is that we need to discover Intel gfx memory by
+looking at device-dependent config space and add it to the E820 map.
+Apparently the quirks discover this via PCI config registers like
+I830_ESMRAMC, I845_ESMRAMC, etc, and tell the driver about it via the
+global "intel_graphics_stolen_res"?
 
-Logan
+That's not the way this should work.  There should some generic, non
+device-dependent PCI or ACPI method to discover the memory used, or at
+least some way to do it in the driver instead of early arch code.
+
+How is this *supposed* to work?  Is there something we can do in E820
+or other resource management that would make this easier?
+
+> ---
+>  arch/x86/kernel/early-quirks.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> index a4b5af03dcc1..534cc3f78c6b 100644
+> --- a/arch/x86/kernel/early-quirks.c
+> +++ b/arch/x86/kernel/early-quirks.c
+> @@ -549,6 +549,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
+>  	INTEL_CNL_IDS(&gen9_early_ops),
+>  	INTEL_ICL_11_IDS(&gen11_early_ops),
+>  	INTEL_EHL_IDS(&gen11_early_ops),
+> +	INTEL_JSL_IDS(&gen11_early_ops),
+>  	INTEL_TGL_12_IDS(&gen11_early_ops),
+>  	INTEL_RKL_IDS(&gen11_early_ops),
+>  };
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/early-quirks.c?h=v5.10-rc2#n518
+
+[2]
+  May 2020 efbee021ad02 ("x86/gpu: add RKL stolen memory support")
+  Jul 2019 6b2436aeb945 ("x86/gpu: add TGL stolen memory support")
+  Mar 2019 d53fef0be4a5 ("x86/gpu: add ElkhartLake to gen11 early quirks")
+  May 2018 db0c8d8b031d ("x86/gpu: reserve ICL's graphics stolen memory")
+  Dec 2017 33aa69ed8aac ("x86/gpu: add CFL to early quirks")
+  Jul 2017 2e1e9d48939e ("x86/gpu: CNL uses the same GMS values as SKL")
+  Jan 2017 bc384c77e3bb ("x86/gpu: GLK uses the same GMS values as SKL")
+  Oct 2015 00ce5c8a66fb ("drm/i915/kbl: Kabylake uses the same GMS values as Skylake")
+  Mar 2015 31d4dcf705c3 ("drm/i915/bxt: Broxton uses the same GMS values as Skylake")
+  ...
