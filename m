@@ -2,238 +2,228 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CCB12A6388
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 12:44:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5180C2A63D8
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 13:04:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgKDLoa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 06:44:30 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3430 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729263AbgKDLnV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 06:43:21 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa293da0002>; Wed, 04 Nov 2020 03:43:22 -0800
-Received: from [10.40.203.207] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Nov
- 2020 11:43:11 +0000
-Subject: Re: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
+        id S1728999AbgKDMEB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 07:04:01 -0500
+Received: from mga11.intel.com ([192.55.52.93]:2667 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728287AbgKDMEB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 07:04:01 -0500
+IronPort-SDR: oJqRPJlf7p4XzHB/i4flQkq2ga5LySWN4+8rT3GKUXmkLaZxuPpOz/1SUK33T+yV8vCSrnw5BS
+ smpD4aUup9bg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9794"; a="165698704"
+X-IronPort-AV: E=Sophos;i="5.77,450,1596524400"; 
+   d="scan'208";a="165698704"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 04:03:44 -0800
+IronPort-SDR: EncAUA+djlPzGfvppR3+adEi4rDQZ4ghraSlkWCMbyugJs89GWNBJqQKW+ZVrQaQpRG4i7uLLW
+ jzOWT2m/2Fow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,450,1596524400"; 
+   d="scan'208";a="471205045"
+Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
+  by orsmga004.jf.intel.com with ESMTP; 04 Nov 2020 04:03:44 -0800
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 4 Nov 2020 04:03:43 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 4 Nov 2020 04:03:42 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 4 Nov 2020 04:03:42 -0800
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.48) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Wed, 4 Nov 2020 04:03:42 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lG5NYQgKvaDBIuHmv9eBjJNcnDPjsVx+bcw8gvftHuju0iBcM8v/6/Yh8ss3uTdfc9IY8hPe3ZZ7oDxTqHy4JU1RPuIo+FPJ0sB2J/SYrKHboj5N9Zz1vmLQwvs7JkKcPOeIuJeu32NCeLmBNkii4TF2WZQpEIwPeWdDcADNpLp0+eeJeWrTbGUoMyeKOmx9G3h0aqGXV9EkgHneGM1fxhaiZ6mg0Aqv0q6ZFrsGZzAOKp2mB6kJxjwLmufN+4HwTkko3LLDfQDYtzK/IQfNs8jP1a01DHoOKBDwEFicSRtQ37WFYskMgbHn2RSNk8Xq6gKumlyElycTH5Viybljew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q8pZYvXH9OnrB8P9QVMUywwRaRJvU8ilF1OFkUu8XjU=;
+ b=A6aKsWl0vHTX7CJPhunlcoa0i/nhm7yr92FJiFTUKA9ZNIjLyH+tuSwqOhKNcXTYgNLs97a1t8KKheOfcGQhY1Xw874Yj0489tUWpCyBxj9Ykqw2V3n7o9FxCxM4W282gNJkcB3uO7nlVVpyNWhU8S3eaUO94qAT7igoa8H810OYSG8on7ouqqMUHWh5gZPThpqcR4AIlLuTv3oZ6nyQPnHiYJQn39mSTAijkkPo3jVbtGgvnvNgBdVepGDev+DI2m9qsuD6f8WVuq0H0zcQHxfYakgpjeljAGIb9+jGykXltwXgxBu+xpcKEepf3DAw42Mm7NiQp3sI+Z4T281h7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q8pZYvXH9OnrB8P9QVMUywwRaRJvU8ilF1OFkUu8XjU=;
+ b=TtYdxFS/AjFZZv2nEcLPiOFai0eJXkvX4/Fm6P3XpSeS/o4N2VENhfVYcuYfyusXN5spApjNOTu+vZgkyfuyKmrkt7WJZo6FFCX1B0Of0twMkAIGxT4Xc47Cf4ZUq9kaRQ59/BMz1LLnNR/s66T8opx7SRtASayZ24M4HjeYenc=
+Received: from DM6PR11MB3721.namprd11.prod.outlook.com (2603:10b6:5:142::10)
+ by DM6PR11MB4042.namprd11.prod.outlook.com (2603:10b6:5:197::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Wed, 4 Nov
+ 2020 12:03:39 +0000
+Received: from DM6PR11MB3721.namprd11.prod.outlook.com
+ ([fe80::5017:4139:6553:ded4]) by DM6PR11MB3721.namprd11.prod.outlook.com
+ ([fe80::5017:4139:6553:ded4%6]) with mapi id 15.20.3499.032; Wed, 4 Nov 2020
+ 12:03:39 +0000
+From:   "Wan Mohamad, Wan Ahmad Zainie" 
+        <wan.ahmad.zainie.wan.mohamad@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20201103210753.GA264744@bjorn-Precision-5520>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <eea9b090-b938-b5eb-e8da-0bf9d15238a3@nvidia.com>
-Date:   Wed, 4 Nov 2020 17:13:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
-MIME-Version: 1.0
-In-Reply-To: <20201103210753.GA264744@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>
+Subject: RE: [PATCH 2/2] PCI: keembay: Add support for Intel Keem Bay
+Thread-Topic: [PATCH 2/2] PCI: keembay: Add support for Intel Keem Bay
+Thread-Index: AQHWrCa/7JSqkgie50uK+30dhAeVBKm3B0yAgADdDoA=
+Date:   Wed, 4 Nov 2020 12:03:39 +0000
+Message-ID: <DM6PR11MB3721DE5452FA6C4CA3E23FC8DDEF0@DM6PR11MB3721.namprd11.prod.outlook.com>
+References: <20201027060011.25893-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20201103222223.GA269610@bjorn-Precision-5520>
+In-Reply-To: <20201103222223.GA269610@bjorn-Precision-5520>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604490202; bh=66l6IaSt2EQzvuhWgskE//8Zl/d1V1j9JoZAPdzM7TU=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=HRmI0ItTSKnsR5hHPxknTCgnKaukni5GqHJcrO1JtXoWTZrzZsMUG4RVJ6nTRGmIm
-         ygzC2e6EKgvM5ZsWeWOSZk+I0qbG0ApXsShQ1ZfQbvJ5wnFXs9CgXT9wV8gbjb7U4b
-         Su2sSs7yWemwlgox4hdmU6CzGHyCnbkvSVFbGvozg6QWQ12c/3M1dsVtIxfl4JtoiL
-         4d6ybzyqkbKj54kX7I+u2wXQjI6cFS1pKubdhk+rwrszHkahvveltT2OmsJELPWO6G
-         ktcOD/cl/u0DOvSVKS2U483+He5IfbV400K1tAZmkqEGy6oRowxvhyHranMbBb9luJ
-         gQEtGOj7Ls+OQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [14.1.225.240]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c23c41e2-3075-4995-ab4b-08d880b9aaf4
+x-ms-traffictypediagnostic: DM6PR11MB4042:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4042FC28788147CB1D3EA541DDEF0@DM6PR11MB4042.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: T+T2wURgJ/OV3cEERejVHWW01umCC6dq0OIjzXTLOJyfZVu4dbSbNE6WdkPQQqDQMQ+CZMnFMc/JEoyFBp3jFvG+bROifmLuqIlpN7nRIY/VNZkr9jZQr3wiwPxSXrPlCAnfrjoHH2Uh+ADkn47iYG/Un8h2FWoDClEFMm3gvnqeHK4j7GHpbArdw9UcYr6fY24/6dlzi/nMwyojvlQvrcJ1/Jer2XhviHDVGsDOtvo7O00oN0FyBzerUaayquJmF/uV/BbmxYRnLpgs0G577waUUCGHF0oTKJJTWXMfpv5wxZT/GcQNsP3k2I+UbUP9J+hgn/V9ecDssZuGpAdPeQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3721.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(33656002)(478600001)(8936002)(4326008)(2906002)(186003)(7696005)(86362001)(71200400001)(9686003)(66446008)(64756008)(5660300002)(66946007)(26005)(66476007)(66556008)(8676002)(52536014)(316002)(83380400001)(6916009)(53546011)(6506007)(54906003)(76116006)(55016002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: KTVUeAxS/5e+ZJh9Mv2DbhKQ6b1GRvQv1GA4XatkTopgePsWx8i/9pnjSBPX6eYkINcxxb9aDTU9z7K/DL4k3JWQG+8GT3bnGZsKSiK5DmgNmtZ3aKezSITPAi97h1dPeXmzNz4nDDiBFNbrWjSTLuz/btFQ5DVXuM03PNvWPMKQGjyVZOsYdHQdKCD+O+zy3zJ0nQEb9tnDidWGShlbuT4Z0LSu/0eCzwW6TQ2tsXIcxMEr3U8KPqEAQpKW5NUGiAF1t4tZOVtGl9fAqLTlkuGGSgFZ0FO1EjJun5fm47wzKWe7PDNQPKtG9+7ZW5ciTVnu1Cw7s8aXdBNrlG5Lsk/mZ/jcad1XnX1Ait8bz7TNDYU2HUsZ1TBdw7c6Ekg5OxCL4ruXm4k7yUDJAsP7nLUxcYMCbyNq81m48PM9OFEVrJvzGK5QonIQKHQSwq7wihB3OUITqOioeMqTptmfOxP1bovPs8StgtvXsTvwfdoikC57wlET56BGzON8YSj/VFReAa5STZHWU0CASw73wKrpSF5oOaGgoC3p990RgVq0EKZI/aMcsELkI70qEBDdrKpKOHP/F2suSCRef65YvvAXCi3RMAE1F23ocPreUBeldwl0cOhwt0MONUFcqTnBi4KuCoYE+XJBMQWYwzTncg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3721.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c23c41e2-3075-4995-ab4b-08d880b9aaf4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2020 12:03:39.6982
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DnFi+z1zgyXYyNf2nCJPo21fP/La9sNdnjbhvkK8atqDOmav1sN7gm1HFV1sHS3IFdLUM/b5UDXmOs4YbtGzJiGb46lZ5H2EbwbqddVajBycLmPeluGc4mJUywUPWAEX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4042
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Wednesday, November 4, 2020 6:22 AM
+> To: Wan Mohamad, Wan Ahmad Zainie
+> <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Cc: bhelgaas@google.com; robh+dt@kernel.org; lorenzo.pieralisi@arm.com;
+> linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+> andriy.shevchenko@linux.intel.com; mgross@linux.intel.com; Raja
+> Subramanian, Lakshmi Bai <lakshmi.bai.raja.subramanian@intel.com>
+> Subject: Re: [PATCH 2/2] PCI: keembay: Add support for Intel Keem Bay
+>=20
+> On Tue, Oct 27, 2020 at 02:00:11PM +0800, Wan Ahmad Zainie wrote:
+>=20
+> > +static int keembay_pcie_link_up(struct dw_pcie *pci) {
+> > +	struct keembay_pcie *pcie =3D dev_get_drvdata(pci->dev);
+> > +	u32 val, mask;
+> > +
+> > +	val =3D keembay_pcie_readl(pcie, PCIE_REGS_PCIE_SII_PM_STATE);
+> > +	mask =3D SMLH_LINK_UP | RDLH_LINK_UP;
+> > +
+> > +	return !!((val & mask) =3D=3D mask);
+>=20
+> I think the "!!" is redundant since you're applying it to a value that's =
+a boolean
+> already.  So you should be able to do:
+>=20
+>   return (val & mask) =3D=3D mask;
+>=20
+> But it seems like "mask" just obfuscates a little bit, too.
+> Personally I think it'd be easier to add something like:
+>=20
+>   #define PCIE_REGS_PCIE_SII_LINK_UP  (SMLH_LINK_UP | RDLH_LINK_UP)
+>=20
+> and then:
+>=20
+>   if ((val & PCIE_REGS_PCIE_SII_LINK_UP) =3D=3D PCIE_REGS_PCIE_SII_LINK_U=
+P)
+>     return 1;
+>   return 0;
 
+I will fix in v2, using the above as agreed by Andy.
 
-On 11/4/2020 2:37 AM, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Tue, Nov 03, 2020 at 08:57:01AM +0530, Vidya Sagar wrote:
->> On 11/3/2020 4:32 AM, Bjorn Helgaas wrote:
->>> On Thu, Oct 29, 2020 at 11:09:59AM +0530, Vidya Sagar wrote:
->>>> DesignWare core has a TLP digest (TD) override bit in one of the control
->>>> registers of ATU. This bit also needs to be programmed for proper ECRC
->>>> functionality. This is currently identified as an issue with DesignWare
->>>> IP version 4.90a. This patch does the required programming in ATU upon
->>>> querying the system policy for ECRC.
->>>
->>> I guess this is a hardware defect, right?
->> Yes. This is common across all DWC implementations (version 4.90 precisely)
->>
->>> How much of a problem would it be if we instead added a "no_ecrc"
->>> quirk for this hardware so we never enabled ECRC?
->> Well, on Tegra for some of the high fidelity use cases, ECRC is required to
->> be turned on and if it can be done safely with these patches, why shouldn't
->> we not enable ECRC at all?
->>
->>> IIUC, the current Linux support of ECRC is a single choice at
->>> boot-time: by default ECRC is not enabled, but if you boot with
->>> "pci=ecrc=on", we turn on ECRC for every device.
->>>
->>> That seems like the minimal support, but I think the spec allows ECRC
->>> to be enabled selectively, on individual devices.  I can imagine a
->>> sysfs knob that would allow us to enable/disable ECRC per-device at
->>> run-time.
->>>
->>> If we had such a sysfs knob, it would be pretty ugly and maybe
->>> impractical to work around this hardware issue.  So I'm a little bit
->>> hesitant to add functionality that might have to be removed in the
->>> future.
->>
->> Agree with this. But since it is a boot-time choice at this point, I think
->> we can still go ahead with this approach to have a working ECRC mechanism
->> right? I don't see any sysfs knob for AER controlling at this point.
-> 
-> I don't want to do anything that will prevent us from adding
-> per-device ECRC control in the future.
-> 
-> My concern is that if we add a run-time sysfs knob in the future, the
-> user experience on this hardware will be poor because there's no
-> convenient path to twiddle the PCIE_ATU_TD bit when the generic code
-> changes the AER Control bit.
-Agree.
-Can we add it to the documentation that run time changing of ECRC 
-settings are not supported on this (i.e. Tegra194) platform (or for that 
-matter on any SoC with PCIe based on DesignWare core version 4.90A). By 
-'not supported', I meant that the ECRC digest part may not work but the 
-normal functionality will continue to work without reporting any AER 
-errors. I tried to emulate the following scenarios on Tegra194 silicon 
-and here are my observations.
-FWIW, I'm referring to the PCIe spec Rev 5.0 Ver 1.0 (22 May 2019)
+>=20
+> or even:
+>=20
+>   return (val & PCIE_REGS_PCIE_SII_LINK_UP) =3D=3D
+> PCIE_REGS_PCIE_SII_LINK_UP;
+>=20
+> > +static int keembay_pcie_establish_link(struct dw_pcie *pci) {
+> > +	return 0;
+> > +}
+>=20
+> Are you sure you need this?  I see other cases where the .start_link poin=
+ter is
+> left NULL, e.g., pci-exynos.c, pci-imx6.c, dw_ls1021_pcie_ops, etc.
 
-> 
-> What is the failure mode in these scenarios:
-> 
->    - User boots with defaults, ECRC is disabled.
->    - User enables ECRC via sysfs.
->    - What happens here?  ECRC is enabled via AER Control but not via
->      DWC TD bit.  I assume ECRC doesn't work.  Does it cause PCIe
->      errors (malformed TLP, etc)?
-Since DWC TD bit is not programmed, for all the transactions that go 
-through ATU, TLP Digest won't get generated (although AER registers 
-indicate that ECRC should get generated).
-As per the spec section "2.7.1 ECRC Rules"
+Yes, as in endpoint mode, link initialization is done in boot firmware.
+Leaving it NULL will cause pcie-designware-ep.c::dw_pcie_ep_start()
+to return -EINVAL.
 
----
-If a device Function is enabled to generate ECRC, it must calculate and 
-apply ECRC for all TLPs originated by the Function
----
+Rob is refactoring DWC code and looks like .start_link is used in root comp=
+lex
+mode too. I will make changes to above function in v2, by renaming to
+keembay_pci2_start_link and add link initialization code for root complex
+mode.
 
-So the RP would be violating the PCIe spec, but it doesn't result in any 
-error because the same section has the following rule as well
+>=20
+> > +static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8
+> func_no,
+> > +				     enum pci_epc_irq_type type,
+> > +				     u16 interrupt_num)
+> > +{
+> > +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > +
+> > +	switch (type) {
+> > +	case PCI_EPC_IRQ_LEGACY:
+> > +		/* Legacy interrupts are not supported in Keem Bay */
+> > +		dev_err(pci->dev, "Unsupported IRQ type\n");
+>=20
+> Might be nice to mention "legacy" here.
 
----
-If a device Function is enabled to check ECRC, it must do so for all 
-TLPs with ECRC where the device is the ultimate PCI Express Receiver
-	Note that it is still possible for the Function to receive TLPs without 
-ECRC, and these are processed normally - this is not an error
----
+I will fix in v2, using string "Legacy IRQ is not supported".
 
-so, even if the EP has ECRC check enabled, because of the above rule, it 
-just processes those packets without ECRC as normal packets.
-Basically, whoever is enabling ECRC run time gets cheated as 
-transactions routed through ATU don't really have ECRC digest
+>=20
+> > +		return -EINVAL;
+> > +	case PCI_EPC_IRQ_MSI:
+> > +		return dw_pcie_ep_raise_msi_irq(ep, func_no,
+> interrupt_num);
+> > +	case PCI_EPC_IRQ_MSIX:
+> > +		return dw_pcie_ep_raise_msix_irq(ep, func_no,
+> interrupt_num);
+> > +	default:
+> > +		dev_err(pci->dev, "Unknown IRQ type\n");
+>=20
+> And maybe include the %d of "type"?
 
-> 
-> Or this one:
-> 
->    - User boots with "pci=ecrc=on", ECRC is enabled.
->    - ECRC works fine.
->    - User disables ECRC via sysfs.
->    - What happens here?  ECRC is disabled via AER Control, but DWC TD
->      bit thinks it's still enabled.
-In this case, the EP doesn't have ECRC check enabled but receives TLPs 
-with ECRC digest. This again won't result in any error because of the 
-section "2.2.3 TLP Digest Rules" which says
+I will fix in v2, to show the value of "type".
 
----
-If an intermediate or ultimate PCI Express Receiver of the TLP does not 
-support ECRC checking, the Receiver must ignore the TLP Digest
----
-
-So the EP just ignores the TLP Digest and process the TLP normally.
-Although functionality wise there is no issue here, there could be some 
-impact on the perf because of the extra DWord data. This is again 
-debatable as the perf/data path is typically from EP's DMA engine to 
-host system memory and not config/BAR accesses.
-> 
-> If you enabled ECRC unconditionally on DWC and the sysfs knob had no
-> effect, I'd be OK with that.  I'm more worried about what happens when
-> the AER bit and the DWC TD bit are set so they don't match.  What is
-> the failure mode there?
-Based on the above experiments, we can as well keep the DWC TD bit 
-programmed unconditionally and it won't lead to any errors. As mentioned 
-before, the only downside of it is the extra DWord in each ATU routed 
-TLP which may load the bus (in downstream direction) with no real 
-benefit as such.
-
-Please let me know where can we go from here.
-I can push a different patch to keep DWC TD bit always programmed if 
-that is the best approach to take at this point.
-> 
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
->>>> ---
->>>> V3:
->>>> * Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
->>>>
->>>> V2:
->>>> * Addressed Jingoo's review comment
->>>> * Removed saving 'td' bit information in 'dw_pcie' structure
->>>>
->>>>    drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
->>>>    drivers/pci/controller/dwc/pcie-designware.h | 1 +
->>>>    2 files changed, 7 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->>>> index b5e438b70cd5..cbd651b219d2 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->>>> @@ -246,6 +246,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
->>>>         dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
->>>>                                  upper_32_bits(pci_addr));
->>>>         val = type | PCIE_ATU_FUNC_NUM(func_no);
->>>> +     if (pci->version == 0x490A)
->>>> +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
->>>>         val = upper_32_bits(size - 1) ?
->>>>                 val | PCIE_ATU_INCREASE_REGION_SIZE : val;
->>>>         dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
->>>> @@ -294,8 +296,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
->>>>                            lower_32_bits(pci_addr));
->>>>         dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
->>>>                            upper_32_bits(pci_addr));
->>>> -     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
->>>> -                        PCIE_ATU_FUNC_NUM(func_no));
->>>> +     val = type | PCIE_ATU_FUNC_NUM(func_no);
->>>> +     if (pci->version == 0x490A)
->>>> +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
->>>> +     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
->>>>         dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
->>>>
->>>>         /*
->>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
->>>> index e7f441441db2..b01ef407fd52 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>> @@ -89,6 +89,7 @@
->>>>    #define PCIE_ATU_TYPE_IO             0x2
->>>>    #define PCIE_ATU_TYPE_CFG0           0x4
->>>>    #define PCIE_ATU_TYPE_CFG1           0x5
->>>> +#define PCIE_ATU_TD_SHIFT            8
->>>>    #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
->>>>    #define PCIE_ATU_CR2                 0x908
->>>>    #define PCIE_ATU_ENABLE                      BIT(31)
->>>> --
->>>> 2.17.1
->>>>
+Best regards,
+Zainie
