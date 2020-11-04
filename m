@@ -2,120 +2,238 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CE672A6328
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 12:18:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CCB12A6388
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 12:44:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbgKDLRx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 06:17:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729615AbgKDLR2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 06:17:28 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09BE6C0613D3
-        for <linux-pci@vger.kernel.org>; Wed,  4 Nov 2020 03:17:27 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id y12so21608750wrp.6
-        for <linux-pci@vger.kernel.org>; Wed, 04 Nov 2020 03:17:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=QwJRAenGdZ42PlyVXV73a6SJR/jbxK4qTgDqEtZcRKI=;
-        b=ZwFav17UiX7OB2VG0aiFLtzFz3I529oV9cElzmWVaa4Fki3EDEYq0iPllVsQgQPmMw
-         aepxl/tm88EQ8J5edcxCC1EiBmzWci/DkiJhpUumCiIJq8R4DJGzQubVQBE3eH0oURE1
-         zfmemkUAL9P7oo4gnjl3/646srMNRa7nnbkInjO0TAi+FLDq5li9Sf3S+GTbrw4k/jJx
-         vNotE/y0ZNZZ6GlIjGOK/LVX0YRmu52LwKEErEcevsAMZRgmtN5JVvEeJU1I6VROaMwH
-         Yo9XFaAhz+Ja2x8ENv8aRDaUMCMuVExWvUdKRGk/ONxGSw6p4Z1qS8yrr5ucY+rci7xv
-         /rig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QwJRAenGdZ42PlyVXV73a6SJR/jbxK4qTgDqEtZcRKI=;
-        b=G/0sGBOMMiZJrrPutLPPm15o1v1If1/WhRUTdUlLIDBOFPoigw6qVL+8OVxlpzH8vp
-         pPu93iH7JmzM5qm4vOT+ypTaITFPBJ6wCjrlCMgaZg+Z0zfAA1ErOsEAl9XaGEs4B5JL
-         gP9itCI7p0xSeEX6N73br3wGdZCOkj84D5QPsO1LeKIueDBIZWTU+MGGW05L04Msjrd6
-         VCR5uvQEWROhUc+9ED04iDlWH5bZvT2mEZlyQgUGQwwlGI+wqnBLhoj4P4ONY96DROI4
-         j9ZZyRH17iuqjQdGb3nont4a2/uX9qvzMo7yeZp1EZXER7nVriH3+Q8ZymenVdnvN4rL
-         H5Xg==
-X-Gm-Message-State: AOAM5333j5VH83W3DG/+kTrHaBEUQ+ANON8FsbRB7DUOLabRXi9ph2sw
-        0OwCiK67IQ0BZQjBCaY4n5ZNiQ==
-X-Google-Smtp-Source: ABdhPJylDyszvDYbcQVFZaKGr+c5qdRrKrG+v/xQYoBbfvNo7aVuD4qNL1hMyV3EIru6EViw62tYGQ==
-X-Received: by 2002:a05:6000:4c:: with SMTP id k12mr30555969wrx.278.1604488645803;
-        Wed, 04 Nov 2020 03:17:25 -0800 (PST)
-Received: from dell ([91.110.221.242])
-        by smtp.gmail.com with ESMTPSA id m14sm2090453wro.43.2020.11.04.03.17.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 03:17:25 -0800 (PST)
-Date:   Wed, 4 Nov 2020 11:17:23 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com,
-        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [GIT PULL] Immutable branch between MFD and x86 due for the v5.11
- merge window
-Message-ID: <20201104111723.GC4488@dell>
-References: <20201029014449.14955-1-david.e.box@linux.intel.com>
+        id S1729391AbgKDLoa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 06:44:30 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3430 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729263AbgKDLnV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 06:43:21 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa293da0002>; Wed, 04 Nov 2020 03:43:22 -0800
+Received: from [10.40.203.207] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Nov
+ 2020 11:43:11 +0000
+Subject: Re: [PATCH V3 2/2] PCI: dwc: Add support to configure for ECRC
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20201103210753.GA264744@bjorn-Precision-5520>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <eea9b090-b938-b5eb-e8da-0bf9d15238a3@nvidia.com>
+Date:   Wed, 4 Nov 2020 17:13:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201029014449.14955-1-david.e.box@linux.intel.com>
+In-Reply-To: <20201103210753.GA264744@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1604490202; bh=66l6IaSt2EQzvuhWgskE//8Zl/d1V1j9JoZAPdzM7TU=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=HRmI0ItTSKnsR5hHPxknTCgnKaukni5GqHJcrO1JtXoWTZrzZsMUG4RVJ6nTRGmIm
+         ygzC2e6EKgvM5ZsWeWOSZk+I0qbG0ApXsShQ1ZfQbvJ5wnFXs9CgXT9wV8gbjb7U4b
+         Su2sSs7yWemwlgox4hdmU6CzGHyCnbkvSVFbGvozg6QWQ12c/3M1dsVtIxfl4JtoiL
+         4d6ybzyqkbKj54kX7I+u2wXQjI6cFS1pKubdhk+rwrszHkahvveltT2OmsJELPWO6G
+         ktcOD/cl/u0DOvSVKS2U483+He5IfbV400K1tAZmkqEGy6oRowxvhyHranMbBb9luJ
+         gQEtGOj7Ls+OQ==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enjoy!
 
-The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
 
-  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+On 11/4/2020 2:37 AM, Bjorn Helgaas wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Tue, Nov 03, 2020 at 08:57:01AM +0530, Vidya Sagar wrote:
+>> On 11/3/2020 4:32 AM, Bjorn Helgaas wrote:
+>>> On Thu, Oct 29, 2020 at 11:09:59AM +0530, Vidya Sagar wrote:
+>>>> DesignWare core has a TLP digest (TD) override bit in one of the control
+>>>> registers of ATU. This bit also needs to be programmed for proper ECRC
+>>>> functionality. This is currently identified as an issue with DesignWare
+>>>> IP version 4.90a. This patch does the required programming in ATU upon
+>>>> querying the system policy for ECRC.
+>>>
+>>> I guess this is a hardware defect, right?
+>> Yes. This is common across all DWC implementations (version 4.90 precisely)
+>>
+>>> How much of a problem would it be if we instead added a "no_ecrc"
+>>> quirk for this hardware so we never enabled ECRC?
+>> Well, on Tegra for some of the high fidelity use cases, ECRC is required to
+>> be turned on and if it can be done safely with these patches, why shouldn't
+>> we not enable ECRC at all?
+>>
+>>> IIUC, the current Linux support of ECRC is a single choice at
+>>> boot-time: by default ECRC is not enabled, but if you boot with
+>>> "pci=ecrc=on", we turn on ECRC for every device.
+>>>
+>>> That seems like the minimal support, but I think the spec allows ECRC
+>>> to be enabled selectively, on individual devices.  I can imagine a
+>>> sysfs knob that would allow us to enable/disable ECRC per-device at
+>>> run-time.
+>>>
+>>> If we had such a sysfs knob, it would be pretty ugly and maybe
+>>> impractical to work around this hardware issue.  So I'm a little bit
+>>> hesitant to add functionality that might have to be removed in the
+>>> future.
+>>
+>> Agree with this. But since it is a boot-time choice at this point, I think
+>> we can still go ahead with this approach to have a working ECRC mechanism
+>> right? I don't see any sysfs knob for AER controlling at this point.
+> 
+> I don't want to do anything that will prevent us from adding
+> per-device ECRC control in the future.
+> 
+> My concern is that if we add a run-time sysfs knob in the future, the
+> user experience on this hardware will be poor because there's no
+> convenient path to twiddle the PCIE_ATU_TD bit when the generic code
+> changes the AER Control bit.
+Agree.
+Can we add it to the documentation that run time changing of ECRC 
+settings are not supported on this (i.e. Tegra194) platform (or for that 
+matter on any SoC with PCIe based on DesignWare core version 4.90A). By 
+'not supported', I meant that the ECRC digest part may not work but the 
+normal functionality will continue to work without reporting any AER 
+errors. I tried to emulate the following scenarios on Tegra194 silicon 
+and here are my observations.
+FWIW, I'm referring to the PCIe spec Rev 5.0 Ver 1.0 (22 May 2019)
 
-are available in the Git repository at:
+> 
+> What is the failure mode in these scenarios:
+> 
+>    - User boots with defaults, ECRC is disabled.
+>    - User enables ECRC via sysfs.
+>    - What happens here?  ECRC is enabled via AER Control but not via
+>      DWC TD bit.  I assume ECRC doesn't work.  Does it cause PCIe
+>      errors (malformed TLP, etc)?
+Since DWC TD bit is not programmed, for all the transactions that go 
+through ATU, TLP Digest won't get generated (although AER registers 
+indicate that ECRC should get generated).
+As per the spec section "2.7.1 ECRC Rules"
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-x86-v5.11
+---
+If a device Function is enabled to generate ECRC, it must calculate and 
+apply ECRC for all TLPs originated by the Function
+---
 
-for you to fetch changes up to 5ef9998c96b0c99c49c202054586967e609286d2:
+So the RP would be violating the PCIe spec, but it doesn't result in any 
+error because the same section has the following rule as well
 
-  platform/x86: Intel PMT Crashlog capability driver (2020-11-04 11:14:38 +0000)
+---
+If a device Function is enabled to check ECRC, it must do so for all 
+TLPs with ECRC where the device is the ultimate PCI Express Receiver
+	Note that it is still possible for the Function to receive TLPs without 
+ECRC, and these are processed normally - this is not an error
+---
 
-----------------------------------------------------------------
-Immutable branch between MFD and x86 due for the v5.11 merge window
+so, even if the EP has ECRC check enabled, because of the above rule, it 
+just processes those packets without ECRC as normal packets.
+Basically, whoever is enabling ECRC run time gets cheated as 
+transactions routed through ATU don't really have ECRC digest
 
-----------------------------------------------------------------
-Alexander Duyck (3):
-      platform/x86: Intel PMT class driver
-      platform/x86: Intel PMT Telemetry capability driver
-      platform/x86: Intel PMT Crashlog capability driver
+> 
+> Or this one:
+> 
+>    - User boots with "pci=ecrc=on", ECRC is enabled.
+>    - ECRC works fine.
+>    - User disables ECRC via sysfs.
+>    - What happens here?  ECRC is disabled via AER Control, but DWC TD
+>      bit thinks it's still enabled.
+In this case, the EP doesn't have ECRC check enabled but receives TLPs 
+with ECRC digest. This again won't result in any error because of the 
+section "2.2.3 TLP Digest Rules" which says
 
-David E. Box (2):
-      PCI: Add defines for Designated Vendor-Specific Extended Capability
-      mfd: Intel Platform Monitoring Technology support
+---
+If an intermediate or ultimate PCI Express Receiver of the TLP does not 
+support ECRC checking, the Receiver must ignore the TLP Digest
+---
 
- Documentation/ABI/testing/sysfs-class-intel_pmt | 119 +++++++++
- MAINTAINERS                                     |   6 +
- drivers/mfd/Kconfig                             |  10 +
- drivers/mfd/Makefile                            |   1 +
- drivers/mfd/intel_pmt.c                         | 223 ++++++++++++++++
- drivers/platform/x86/Kconfig                    |  34 +++
- drivers/platform/x86/Makefile                   |   3 +
- drivers/platform/x86/intel_pmt_class.c          | 297 +++++++++++++++++++++
- drivers/platform/x86/intel_pmt_class.h          |  52 ++++
- drivers/platform/x86/intel_pmt_crashlog.c       | 328 ++++++++++++++++++++++++
- drivers/platform/x86/intel_pmt_telemetry.c      | 160 ++++++++++++
- include/uapi/linux/pci_regs.h                   |   5 +
- 12 files changed, 1238 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt
- create mode 100644 drivers/mfd/intel_pmt.c
- create mode 100644 drivers/platform/x86/intel_pmt_class.c
- create mode 100644 drivers/platform/x86/intel_pmt_class.h
- create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
- create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
+So the EP just ignores the TLP Digest and process the TLP normally.
+Although functionality wise there is no issue here, there could be some 
+impact on the perf because of the extra DWord data. This is again 
+debatable as the perf/data path is typically from EP's DMA engine to 
+host system memory and not config/BAR accesses.
+> 
+> If you enabled ECRC unconditionally on DWC and the sysfs knob had no
+> effect, I'd be OK with that.  I'm more worried about what happens when
+> the AER bit and the DWC TD bit are set so they don't match.  What is
+> the failure mode there?
+Based on the above experiments, we can as well keep the DWC TD bit 
+programmed unconditionally and it won't lead to any errors. As mentioned 
+before, the only downside of it is the extra DWord in each ATU routed 
+TLP which may load the bus (in downstream direction) with no real 
+benefit as such.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Please let me know where can we go from here.
+I can push a different patch to keep DWC TD bit always programmed if 
+that is the best approach to take at this point.
+> 
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
+>>>> ---
+>>>> V3:
+>>>> * Added 'Reviewed-by: Jingoo Han <jingoohan1@gmail.com>'
+>>>>
+>>>> V2:
+>>>> * Addressed Jingoo's review comment
+>>>> * Removed saving 'td' bit information in 'dw_pcie' structure
+>>>>
+>>>>    drivers/pci/controller/dwc/pcie-designware.c | 8 ++++++--
+>>>>    drivers/pci/controller/dwc/pcie-designware.h | 1 +
+>>>>    2 files changed, 7 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>>>> index b5e438b70cd5..cbd651b219d2 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>>> @@ -246,6 +246,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+>>>>         dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+>>>>                                  upper_32_bits(pci_addr));
+>>>>         val = type | PCIE_ATU_FUNC_NUM(func_no);
+>>>> +     if (pci->version == 0x490A)
+>>>> +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
+>>>>         val = upper_32_bits(size - 1) ?
+>>>>                 val | PCIE_ATU_INCREASE_REGION_SIZE : val;
+>>>>         dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+>>>> @@ -294,8 +296,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+>>>>                            lower_32_bits(pci_addr));
+>>>>         dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
+>>>>                            upper_32_bits(pci_addr));
+>>>> -     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+>>>> -                        PCIE_ATU_FUNC_NUM(func_no));
+>>>> +     val = type | PCIE_ATU_FUNC_NUM(func_no);
+>>>> +     if (pci->version == 0x490A)
+>>>> +             val = val | pcie_is_ecrc_enabled() << PCIE_ATU_TD_SHIFT;
+>>>> +     dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
+>>>>         dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+>>>>
+>>>>         /*
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+>>>> index e7f441441db2..b01ef407fd52 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>>> @@ -89,6 +89,7 @@
+>>>>    #define PCIE_ATU_TYPE_IO             0x2
+>>>>    #define PCIE_ATU_TYPE_CFG0           0x4
+>>>>    #define PCIE_ATU_TYPE_CFG1           0x5
+>>>> +#define PCIE_ATU_TD_SHIFT            8
+>>>>    #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
+>>>>    #define PCIE_ATU_CR2                 0x908
+>>>>    #define PCIE_ATU_ENABLE                      BIT(31)
+>>>> --
+>>>> 2.17.1
+>>>>
