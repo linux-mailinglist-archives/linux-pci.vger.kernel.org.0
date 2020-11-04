@@ -2,105 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F28BC2A6AE6
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:53:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 910152A6A8E
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:51:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731548AbgKDQxZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 11:53:25 -0500
-Received: from mout.gmx.net ([212.227.15.18]:43387 "EHLO mout.gmx.net"
+        id S1731836AbgKDQvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 11:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731496AbgKDQtw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Nov 2020 11:49:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1604508572;
-        bh=itzpSSQZMzHTOjFQwaEjOIn3NoQnKY3T93SB2E0JxlU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Gsge5Zyc+RmE8Sl9apnpDqbBJ8G8EAQ/AP19g1QVh5rXrd+ZejDwLdDUnxKeIAWr1
-         IOACslAO3KuY9TuywV5nYTeOmXvP2Z5YJNyhDqHKu/q1jSSiviPw6GSaZCV9uakHG9
-         VhZTPhfyNdY0FrgMQ+DAI4UVtZIPc4KzxShuNETw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.75.74.195] ([185.75.74.195]) by web-mail.gmx.net
- (3c-app-gmx-bs02.server.lan [172.19.170.51]) (via HTTP); Wed, 4 Nov 2020
- 17:49:31 +0100
+        id S1731683AbgKDQuU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 11:50:20 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01712206CA;
+        Wed,  4 Nov 2020 16:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604508619;
+        bh=KzXcQsv6oXQiPT6pQbTFR35Ks2A09AmGg4NdOMxDZU4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=C3pX6cmo6q8mwyEj5GO30o1K3DmrMhjsd197OHFiySwAIRZVIm3gcmWDrE+eCPQYz
+         sPh4rcY/+zTADvqe8t10fQKgN6B/uva7r/Rm33jjbBhTlqD9gCI3SGCFFhZSFec0de
+         QvdkQtLCYpZ8r9E77lkRpGYf+6s0+xBDMYsFK0NQ=
+Date:   Wed, 4 Nov 2020 10:50:17 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v5 11/15] PCI: Obey iomem restrictions for procfs mmap
+Message-ID: <20201104165017.GA352206@bjorn-Precision-5520>
 MIME-Version: 1.0
-Message-ID: <trinity-1d7f8900-10db-40c0-a0aa-47bb99ed84cd-1604508571909@3c-app-gmx-bs02>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Marc Zyngier <maz@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <linux@fw-web.de>,
-        linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Aw: Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 4 Nov 2020 17:49:31 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <87o8ke7njb.fsf@nanos.tec.linutronix.de>
-References: <20201031140330.83768-1-linux@fw-web.de>
- <878sbm9icl.fsf@nanos.tec.linutronix.de>
- <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
- <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
- <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
- <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
- <df5565a2f1e821041c7c531ad52a3344@kernel.org>
- <87h7q791j8.fsf@nanos.tec.linutronix.de>
- <877dr38kt8.fsf@nanos.tec.linutronix.de>
- <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
- <87o8ke7njb.fsf@nanos.tec.linutronix.de>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:ICfh3WtogdrpOnkT/gXuEFWIaM4DIXYnB6COgVA3DMs2B7BYKR0IimJCA1wNt80BnphrN
- b6RXx+FWw4J8CmDkM5SfE7XkSYj865O3iXpD8zOrKFKQQqApmFLgevMu7mlJT4rnIK9z9x2oZa2z
- 9DigQch4XDeQoGUPG2OqhId4i0Jnzsfy6wHJoNc+0Mforeye4AWbl52RfriMaCuKpmXFmI0VoUfd
- f2khjJaTHIqxyagSS2C02FdjMC/t0s1y+KM6EZ2dNDyPMNbs0472YDr+il/FD/BM742DBSYF69XY
- po=
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:o7DDce+FsRY=:fDyjahd9aVh+82I0GoJ23v
- JW5+QemSWiUMZJTMvMGE5axjm1sY0mpUNeNy2Ls20p1D41mAOaBH32Kbeb/my7WAj2pSslnKC
- WOaCrq2NBU0ha6lQDJY1cHo4SyOoRYMGeUabvOZSpx9+al3OjhsWw6Mris1ZSZ8lbJuKIIUMK
- KG+0TNWpKWfgLbdcVX3mMWfnQhujuKATPJKp2yAnLAOe/faUjQ0/sueVoNNYWPrapgyrKjS3V
- BjN8/WNf5716FWqhQQoSRvlq/CUNHcGH0GPAhs0dtpPYT5onSAZavK1GUem8V7jFSy02T33d9
- pcZuybC/8DRT5Uerg5CtZzO7nZovo8ywB/p6Qf/CDlogLdijHzmxkwW3RbJITA6hM52QoOd2G
- j8XSBWqQkzONvW3Rwo3zsV0dsj1HyfIqWu/k0B6FjYiI+Qbr88xrQcTmJE41nV61ke10wVeIh
- PY62GVe8ezVCfwXxmGUr7F/J+KPh9dHc7CEuuyW46jGj02eAJsWEMknFkvZkP4uOY3ZpIlDwc
- JuJjpAuNiPBJo+3S0xSWNO8TGdezBXupyMNf3W//PYGIQtcB+jejYmoHpPIz20AQOiylrxCcH
- qTa/iS9HJTi/Q=
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uF0QjesaNs97N-G8cZkXuAmFgcmTfHvoCP94br_WVcV6Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Nov 04, 2020 at 09:44:04AM +0100, Daniel Vetter wrote:
+> On Tue, Nov 3, 2020 at 11:09 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> > On Tue, Nov 3, 2020 at 1:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, Oct 30, 2020 at 11:08:11AM +0100, Daniel Vetter wrote:
+> > > > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
+> > > > files, and the old proc interface. Two check against
+> > > > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
+> > > > this starts to matter, since we don't want random userspace having
+> > > > access to PCI BARs while a driver is loaded and using it.
+> > > >
+> > > > Fix this by adding the same iomem_is_exclusive() check we already have
+> > > > on the sysfs side in pci_mmap_resource().
+> > > >
+> > > > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+> > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > >
+> > > This is OK with me but it looks like IORESOURCE_EXCLUSIVE is currently
+> > > only used in a few places:
+> > >
+> > >   e1000_probe() calls pci_request_selected_regions_exclusive(),
+> > >   ne_pci_probe() calls pci_request_regions_exclusive(),
+> > >   vmbus_allocate_mmio() calls request_mem_region_exclusive()
+> > >
+> > > which raises the question of whether it's worth keeping
+> > > IORESOURCE_EXCLUSIVE at all.  I'm totally fine with removing it
+> > > completely.
+> >
+> > Now that CONFIG_IO_STRICT_DEVMEM upgrades IORESOURCE_BUSY to
+> > IORESOURCE_EXCLUSIVE semantics the latter has lost its meaning so I'd
+> > be in favor of removing it as well.
+> 
+> Still has some value since it enforces exclusive access even if the
+> config isn't enabled, and iirc e1000 had some fun with userspace tools
+> clobbering the firmware and bricking the chip.
 
-> Gesendet: Dienstag, 03. November 2020 um 11:16 Uhr
-> Von: "Thomas Gleixner" <tglx@linutronix.de>
-> Any architecture which selects PCI_MSI_ARCH_FALLBACKS and does not have
-> irqdomain support runs into:
->
-> 	if (!d)
-> 		bus->bus_flags |=3D PCI_BUS_FLAGS_NO_MSI;
->
-> which in turn makes pci_msi_supported() return 0 and consequently makes
-> pci_enable_msi[x]() fail.
+There's *some* value; I'm just skeptical since only three drivers use
+it.
 
-i'm not that deep into this, but just my thoughts...you are the experts :)
+IORESOURCE_EXCLUSIVE is from e8de1481fd71 ("resource: allow MMIO
+exclusivity for device drivers"), and the commit message says this is
+only active when CONFIG_STRICT_DEVMEM is set.  I didn't check to see
+whether that's still true.
 
-checking for PCI_MSI_ARCH_FALLBACKS here does not help?
+That commit adds a bunch of wrappers and "__"-prefixed functions to
+pass the IORESOURCE_EXCLUSIVE flag around.  That's a fair bit of
+uglification for three drivers.
 
-something like this:
+> Another thing I kinda wondered, since pci maintainer is here: At least
+> in drivers/gpu I see very few drivers explicitly requestion regions
+> (this might be a historical artifact due to the shadow attach stuff
+> before we had real modesetting drivers). And pci core doesn't do that
+> either, even when a driver is bound. Is this intentional, or
+> should/could we do better? Since drivers work happily without
+> reserving regions I don't think "the drivers need to remember to do
+> this" will ever really work out well.
 
-#ifndef PCI_MSI_ARCH_FALLBACKS
-	if (!d)
-		bus->bus_flags |=3D PCI_BUS_FLAGS_NO_MSI;
-#endif
-
-imho pci_enable_msi[x]() does not do anything if there is no msi-support (=
-or does not get called), so maybe check the PCI_BUS_FLAGS_NO_MSI before th=
-e call (if this is inside core) or inside the enable-function (if called f=
-rom outside)....
-
-or is this the issue marc talkes about (called before flag is set)?
-
-regards Frank
-
+You're right, many drivers don't call pci_request_regions().  Maybe we
+could do better, but I haven't looked into that recently.  There is a
+related note in Documentation/PCI/pci.rst that's been there for a long
+time (it refers to "pci_request_resources()", which has never existed
+AFAICT).  I'm certainly open to proposals.
