@@ -2,235 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ED222A5FE4
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 09:52:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B85B2A6091
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 10:33:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgKDIwQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 03:52:16 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2612 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbgKDIwQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 03:52:16 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa26bc10001>; Wed, 04 Nov 2020 00:52:17 -0800
-Received: from [10.40.203.207] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Nov
- 2020 08:52:04 +0000
-Subject: Re: [PATCH V2 4/4] PCI: tegra: Handle error conditions properly
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <lorenzo.pieralisi@arm.com>, <robh+dt@kernel.org>,
-        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <amanharitsh123@gmail.com>,
-        <dinghao.liu@zju.edu.cn>, <kw@linux.com>,
-        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20201103204835.GA262610@bjorn-Precision-5520>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <2a0536d2-8603-0e55-ac61-c21ef36847c2@nvidia.com>
-Date:   Wed, 4 Nov 2020 14:21:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+        id S1728623AbgKDJdw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 04:33:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgKDJdu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 04:33:50 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7926BC0613D3
+        for <linux-pci@vger.kernel.org>; Wed,  4 Nov 2020 01:33:49 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id a10so4517843edt.12
+        for <linux-pci@vger.kernel.org>; Wed, 04 Nov 2020 01:33:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1DyDheOb7hdP2j6+U4rmaA8px4hw4FKnG8K+MWzcbCY=;
+        b=EQSmu7gHVfLkVF8VHKlfv0z9wC3WTiS8thx/WbFlnXuy03FTmdr6eI7gSMK+hKzlOX
+         vzXdLk5eTEGMKBtye7uzKns5a1uXsQk7lWH2DdYAG9+bYlF2w9/MZ2e6ljk/mYqzjheB
+         Olzmy9gyhEiX/6VLDcVwgs0Kuq+TF92bkOXzRshy5jkEtiac+3anQExlCRjj0lcuyk2l
+         bRBKsOEM6ACzPe9fg5WRTAtzBUk1JKwQIdm2COAEQToBI8cSMpnuMkDNNSdThGhdp8wA
+         0RIm6Pt8ng8j6NtVGkN8ALssajF5YOmP3ktUcTM6jdAydebyKA9Mcf7CzAgNYMJX6urQ
+         fvHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1DyDheOb7hdP2j6+U4rmaA8px4hw4FKnG8K+MWzcbCY=;
+        b=MiSdWo8g57QjHOYLQMRceOrHXRUmzcz/rdsnrD2/j3ZTWTW8tSqbH6che0AwEs0hqG
+         Rxqt8O4AAMsWvjbGlj5SgK9Y9hVJBMQ6VXqRyYnfV2eItJaoKqdtTMG1jyw9fdESMTbo
+         4uyZziyx/ax6N99dPo2kkl8EYBUmljKfPEfDGIBVlq18DZQdHWCl8D8mhiMatmP1udgn
+         ogIBt0rIA+IzxfppQa5mlgAMHXKodRA7nU0tbJMH4GQzR/9LyrkxTzz06OEAALvlnlzU
+         K9NcBaJTkuANqpG2GKYmf8BsjbGjJQeAmRbmT3fLAzLrTZ61tF8dJP3lhavYP9xbrnuh
+         TAyw==
+X-Gm-Message-State: AOAM533tbyBPr9xqnhq3ua9fkJEePr/QqF1W6mnD85FarVNeipZzjLkD
+        D3JZvKXza4zCtKz04Q6c4XjbKw==
+X-Google-Smtp-Source: ABdhPJxwJwBOkJVz8J2LWuNKj/Ohtfm5+UYk8BmI+7+MjrwC4ykaiVvXA9wdH6bYcYvQ5FP9G4l5OQ==
+X-Received: by 2002:aa7:da44:: with SMTP id w4mr14267958eds.131.1604482428113;
+        Wed, 04 Nov 2020 01:33:48 -0800 (PST)
+Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id b12sm726638edn.86.2020.11.04.01.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Nov 2020 01:33:47 -0800 (PST)
+Date:   Wed, 4 Nov 2020 10:33:28 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Al Stone <ahs3@redhat.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        virtualization@lists.linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, jasowang@redhat.com, kevin.tian@intel.com,
+        sebastien.boeuf@intel.com, lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH v3 0/6] Add virtio-iommu built-in topology
+Message-ID: <20201104093328.GA505400@myrica>
+References: <20200821131540.2801801-1-jean-philippe@linaro.org>
+ <ab2a1668-e40c-c8f0-b77b-abadeceb4b82@redhat.com>
+ <20200924045958-mutt-send-email-mst@kernel.org>
+ <20200924092129.GH27174@8bytes.org>
+ <20200924053159-mutt-send-email-mst@kernel.org>
+ <d54b674e-2626-fc73-d663-136573c32b8a@redhat.com>
+ <20201002182348.GO138842@redhat.com>
+ <e8a37837-30d0-d7cc-496a-df4c12fff1da@redhat.com>
+ <20201103200904.GA1557194@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20201103204835.GA262610@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604479937; bh=rTCjxtFbP1G+cJExsSQw1wyNpkdSCr2zADoKrVTQuUg=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=L4jV1RBQN2+oJ6ztTd4GuS91gM6vZRNvnmHbd8xU8v5pPvpbrqb/wnkVNI95Y9txH
-         +t+EH+KxPaBF3j6r2/bCOGNxcWiobJRP+9/bOOdIc7wcYp+sFQ4o+rMN/vLlxJnQ3d
-         EVKEH9rZgMFCBe2ysucC+yvb6g+JncvWwWvJB/gTnnd3R0MtcON7ny2v6kfrq8Oe54
-         POWOy5qSrcfcUJBocRTuB4ADSihYoF9yac0COdUUQJkcqu4dSRLrbJx1Pv7lftpyKL
-         53raUbIOWiIU3+x7R7fm7Q3YAsQTjGjoJuRlHGcN308uPZmMjxYDOU3D4HSavGPuXL
-         7fU+7o1JNzupw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201103200904.GA1557194@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Al,
 
+On Tue, Nov 03, 2020 at 01:09:04PM -0700, Al Stone wrote:
+> So, there are some questions about the VIOT definition and I just
+> don't know enough to be able to answer them.  One of the ASWG members
+> is trying to understand the semantics behind the subtables.
 
-On 11/4/2020 2:18 AM, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> Hi Vidya,
-> 
-> Can you update the subject to replace "properly" with more details
-> about what the patch is doing?  "Properly" is really meaningless in
-> usages like this -- nobody writes patches to do the *wrong* thing, so
-> it goes without saying that every patch is intended to things
-> "properly".
-> 
-> It would also help to have some context.  My first thought was that
-> "error conditions" referred to PCIe errors like completion timeouts,
-> completer abort, etc.
-> 
-> Maybe something like:
-> 
->    PCI: tegra: Continue unconfig sequence even if parts fail
-Thanks for reviewing the change.
-Sure. I'll go with the above subject line.
+Thanks for the update. We dropped subtables a few versions ago, though, do
+you have the latest v8?
+https://jpbrucker.net/virtio-iommu/viot/viot-v8.pdf
 
->    PCI: tegra: Return init error (not unconfig error) on init failure
-> 
-> On Thu, Oct 29, 2020 at 10:48:39AM +0530, Vidya Sagar wrote:
->> Currently the driver checks for error value of different APIs during the
->> uninitialization sequence. It just returns from there if there is any error
->> observed for one of those calls. Comparatively it is better to continue the
->> uninitialization sequence irrespective of whether some of them are
->> returning error. That way, it is more closer to complete uninitialization.
->> It also adds checking return value for error for a cleaner exit path.
-> 
-> This paragraph uses "it" to refer to both "the driver" (second
-> sentence) and "this patch" (last sentence).  That's confusing.
-> There's no reason to refer to "this patch" at all.  I'd rather have
-> "Add checking ..." than "It adds checking ..."
-> 
-> I think that last sentence must be referring to the
-> tegra_pcie_init_controller() change to return the initialization error
-> rather than the error from __deinit_controller().  That seems right,
-> but should be a separate patch.
-Sure. I'll push a new patch for this.
+> Is there a particular set of people, or mailing lists, that I can
+> point to to get the questions answered?  Ideally it would be one
+> of the public lists where it has already been discussed, but an
+> individual would be fine, too.  No changes have been proposed, just
+> some questions asked.
 
-> 
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> V2:
->> * None
->>
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 45 ++++++++++------------
->>   1 file changed, 20 insertions(+), 25 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index 253d91033bc3..8c08998b9ce1 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -1422,43 +1422,32 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
->>        return ret;
->>   }
->>
->> -static int __deinit_controller(struct tegra_pcie_dw *pcie)
->> +static void tegra_pcie_unconfig_controller(struct tegra_pcie_dw *pcie)
->>   {
->>        int ret;
->>
->>        ret = reset_control_assert(pcie->core_rst);
->> -     if (ret) {
->> -             dev_err(pcie->dev, "Failed to assert \"core\" reset: %d\n",
->> -                     ret);
->> -             return ret;
->> -     }
->> +     if (ret)
->> +             dev_err(pcie->dev, "Failed to assert \"core\" reset: %d\n", ret);
->>
->>        tegra_pcie_disable_phy(pcie);
->>
->>        ret = reset_control_assert(pcie->core_apb_rst);
->> -     if (ret) {
->> +     if (ret)
->>                dev_err(pcie->dev, "Failed to assert APB reset: %d\n", ret);
->> -             return ret;
->> -     }
->>
->>        clk_disable_unprepare(pcie->core_clk);
->>
->>        ret = regulator_disable(pcie->pex_ctl_supply);
->> -     if (ret) {
->> +     if (ret)
->>                dev_err(pcie->dev, "Failed to disable regulator: %d\n", ret);
->> -             return ret;
->> -     }
->>
->>        tegra_pcie_disable_slot_regulators(pcie);
->>
->>        ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
->> -     if (ret) {
->> +     if (ret)
->>                dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
->>                        pcie->cid, ret);
->> -             return ret;
->> -     }
->> -
->> -     return ret;
->>   }
->>
->>   static int tegra_pcie_init_controller(struct tegra_pcie_dw *pcie)
->> @@ -1482,7 +1471,8 @@ static int tegra_pcie_init_controller(struct tegra_pcie_dw *pcie)
->>        return 0;
->>
->>   fail_host_init:
->> -     return __deinit_controller(pcie);
->> +     tegra_pcie_unconfig_controller(pcie);
->> +     return ret;
->>   }
->>
->>   static int tegra_pcie_try_link_l2(struct tegra_pcie_dw *pcie)
->> @@ -1551,13 +1541,12 @@ static void tegra_pcie_dw_pme_turnoff(struct tegra_pcie_dw *pcie)
->>        appl_writel(pcie, data, APPL_PINMUX);
->>   }
->>
->> -static int tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
->> +static void tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
->>   {
->>        tegra_pcie_downstream_dev_to_D0(pcie);
->>        dw_pcie_host_deinit(&pcie->pci.pp);
->>        tegra_pcie_dw_pme_turnoff(pcie);
->> -
->> -     return __deinit_controller(pcie);
->> +     tegra_pcie_unconfig_controller(pcie);
->>   }
->>
->>   static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->> @@ -1590,7 +1579,11 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->>                goto fail_pm_get_sync;
->>        }
->>
->> -     tegra_pcie_init_controller(pcie);
->> +     ret = tegra_pcie_init_controller(pcie);
->> +     if (ret < 0) {
->> +             dev_err(dev, "Failed to initialize controller: %d\n", ret);
->> +             goto fail_pm_get_sync;
->> +     }
->>
->>        pcie->link_state = tegra_pcie_dw_link_up(&pcie->pci);
->>        if (!pcie->link_state) {
->> @@ -2238,8 +2231,9 @@ static int tegra_pcie_dw_suspend_noirq(struct device *dev)
->>                                               PORT_LOGIC_MSI_CTRL_INT_0_EN);
->>        tegra_pcie_downstream_dev_to_D0(pcie);
->>        tegra_pcie_dw_pme_turnoff(pcie);
->> +     tegra_pcie_unconfig_controller(pcie);
->>
->> -     return __deinit_controller(pcie);
->> +     return 0;
->>   }
->>
->>   static int tegra_pcie_dw_resume_noirq(struct device *dev)
->> @@ -2267,7 +2261,8 @@ static int tegra_pcie_dw_resume_noirq(struct device *dev)
->>        return 0;
->>
->>   fail_host_init:
->> -     return __deinit_controller(pcie);
->> +     tegra_pcie_unconfig_controller(pcie);
->> +     return ret;
->>   }
->>
->>   static int tegra_pcie_dw_resume_early(struct device *dev)
->> @@ -2305,7 +2300,7 @@ static void tegra_pcie_dw_shutdown(struct platform_device *pdev)
->>                disable_irq(pcie->pci.pp.msi_irq);
->>
->>        tegra_pcie_dw_pme_turnoff(pcie);
->> -     __deinit_controller(pcie);
->> +     tegra_pcie_unconfig_controller(pcie);
->>   }
->>
->>   static const struct tegra_pcie_dw_of_data tegra_pcie_dw_rc_of_data = {
->> --
->> 2.17.1
->>
+For a public list, I suggest iommu@lists.linux-foundation.org if we should
+pick only one (otherwise add virtualization@lists.linux-foundation.org and
+virtio-dev@lists.oasis-open.org). I'm happy to answer any question, and
+the folks on here are a good set to Cc:
+
+eric.auger@redhat.com
+jean-philippe@linaro.org
+joro@8bytes.org
+kevin.tian@intel.com
+lorenzo.pieralisi@arm.com
+mst@redhat.com
+sebastien.boeuf@intel.com
+
+Thanks,
+Jean
