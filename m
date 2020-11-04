@@ -2,144 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6161E2A6E8B
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 21:11:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE912A6E93
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 21:12:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgKDULo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 15:11:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgKDULo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Nov 2020 15:11:44 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8980720759;
-        Wed,  4 Nov 2020 20:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604520702;
-        bh=BZuoiWNP5YUNV8L2knespd8jVS/WNI51dRzjtd+WsSo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XnZP0M0metvuOsf2SZW4yTqrtWx8Q/evxyeidLv9FTIihD7RxJRWPW//M6t6ARD5N
-         NmA8SYHJvPuHtv/uFJxqHvTy1ftZ7ASghK/28LrUxNvMHXtZWznyIv5BljWrw5pJkE
-         1RVAZff32p6TF0xC6LwF3xPhxb28/Gr+RZ2M0h90=
-Date:   Wed, 4 Nov 2020 14:11:41 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        david.e.box@intel.com, sean.v.kelley@intel.com,
-        ashok.raj@intel.com, rdunlap@infradead.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2] PCI: add helper function to find DVSEC
-Message-ID: <20201104201141.GA399378@bjorn-Precision-5520>
+        id S1731420AbgKDUM3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 15:12:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgKDUM2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 15:12:28 -0500
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 789A6C0613D3
+        for <linux-pci@vger.kernel.org>; Wed,  4 Nov 2020 12:12:28 -0800 (PST)
+Received: by mail-qt1-x842.google.com with SMTP id h12so13112981qtc.9
+        for <linux-pci@vger.kernel.org>; Wed, 04 Nov 2020 12:12:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rEEEXt1os4uvlr5FpRnmuBcc7L7msKpqjcsUXwjQF/c=;
+        b=DLnfeD9J1ORdQ1bfs5+3AntXSfjpW/03OlgMKpfMczcb0Yo31gAQmfKmU/MxwQ17Tz
+         p8ZagfXHFsC1dHS6FW5fSkhChMKNOPBoZuaf0P1ssilDHMYkmfYcvMK/N4bu0vQXK3wy
+         c2tGk1nId5n4tetbAX3T+IoXKixnSiRJU2P+RgF0i9/MzM9vLJQC4pR4SHkQIDhJjOCm
+         nI9uYdoL8DUDIOHzXzueS+XUGj/Xv/0E4OLEq6oqPKUHmkx/sfooqnKn5e06EiNpsCvu
+         pIeS4Ja9kfYHVEpTmDFGZ6rRJqSaQZ+CUMbWPT9DrPeXAPhB8c08+nN3zrd9Xy424Dsr
+         vK5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rEEEXt1os4uvlr5FpRnmuBcc7L7msKpqjcsUXwjQF/c=;
+        b=GWpAuyNqrwA3b6vb0fMVpLZ1JctUwuoVmJEZlrWiC2/AZlVBlSdh4BtRteyCHgJr1V
+         VABv0900r+jGim3qJwXKfpIEdZ9o185YOqsengBHAYQoLBo5mhH97gxRDhTY4vp05tkb
+         mZRNO047ZzuaYjsT0lVuV5zqceRbyF92N87VRtJ9hrn15pBpkFuvd4UlsyakuzEmuRzC
+         Uklf4OZhBQRuF7WCCRxGctYtlDUIHnIt0D/Hne4WBGOr6CTt/pPimBVHXy/gc//WKbi5
+         lnEhQTRi6W2hufsLSesr/ubUZvJOVvzlHU67PjZGzwGP8LWxTftqyLGSRoMtObimePGB
+         M2sQ==
+X-Gm-Message-State: AOAM530l8G3i9NozbEjtriAUrBgE6d35uNLPbutXnlNr03NriqjFWdVK
+        2+5ihElsFPYVPaFIM8zgT9VtQaP5Bufvg6pl+Kb4Wg==
+X-Google-Smtp-Source: ABdhPJyImQ0VMkgJ13gDdAbq5pEtNIjA5jffxfB/P+jRlJioL0jIF2z8jDtJ1zF31+FQiHcdLBXSWIzDRip6n19HrNg=
+X-Received: by 2002:ac8:4b79:: with SMTP id g25mr21823130qts.19.1604520747497;
+ Wed, 04 Nov 2020 12:12:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160441629367.1427673.8803864097727237280.stgit@djiang5-desk3.ch.intel.com>
+References: <CAKMK7uF0QjesaNs97N-G8cZkXuAmFgcmTfHvoCP94br_WVcV6Q@mail.gmail.com>
+ <20201104165017.GA352206@bjorn-Precision-5520>
+In-Reply-To: <20201104165017.GA352206@bjorn-Precision-5520>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 4 Nov 2020 12:12:15 -0800
+Message-ID: <CAPcyv4idORJzHVD2vCOnO3REqWHKVn_-otOzTBf0HhcWq4iJRQ@mail.gmail.com>
+Subject: Re: [PATCH v5 11/15] PCI: Obey iomem restrictions for procfs mmap
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 03, 2020 at 08:12:28AM -0700, Dave Jiang wrote:
-> Add function that searches for DVSEC and returns the offset in PCI
-> configuration space for the interested DVSEC capability.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+On Wed, Nov 4, 2020 at 8:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Nov 04, 2020 at 09:44:04AM +0100, Daniel Vetter wrote:
+> > On Tue, Nov 3, 2020 at 11:09 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > On Tue, Nov 3, 2020 at 1:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Fri, Oct 30, 2020 at 11:08:11AM +0100, Daniel Vetter wrote:
+> > > > > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
+> > > > > files, and the old proc interface. Two check against
+> > > > > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
+> > > > > this starts to matter, since we don't want random userspace having
+> > > > > access to PCI BARs while a driver is loaded and using it.
+> > > > >
+> > > > > Fix this by adding the same iomem_is_exclusive() check we already have
+> > > > > on the sysfs side in pci_mmap_resource().
+> > > > >
+> > > > > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+> > > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > > >
+> > > > This is OK with me but it looks like IORESOURCE_EXCLUSIVE is currently
+> > > > only used in a few places:
+> > > >
+> > > >   e1000_probe() calls pci_request_selected_regions_exclusive(),
+> > > >   ne_pci_probe() calls pci_request_regions_exclusive(),
+> > > >   vmbus_allocate_mmio() calls request_mem_region_exclusive()
+> > > >
+> > > > which raises the question of whether it's worth keeping
+> > > > IORESOURCE_EXCLUSIVE at all.  I'm totally fine with removing it
+> > > > completely.
+> > >
+> > > Now that CONFIG_IO_STRICT_DEVMEM upgrades IORESOURCE_BUSY to
+> > > IORESOURCE_EXCLUSIVE semantics the latter has lost its meaning so I'd
+> > > be in favor of removing it as well.
+> >
+> > Still has some value since it enforces exclusive access even if the
+> > config isn't enabled, and iirc e1000 had some fun with userspace tools
+> > clobbering the firmware and bricking the chip.
+>
+> There's *some* value; I'm just skeptical since only three drivers use
+> it.
+>
+> IORESOURCE_EXCLUSIVE is from e8de1481fd71 ("resource: allow MMIO
+> exclusivity for device drivers"), and the commit message says this is
+> only active when CONFIG_STRICT_DEVMEM is set.  I didn't check to see
+> whether that's still true.
+>
+> That commit adds a bunch of wrappers and "__"-prefixed functions to
+> pass the IORESOURCE_EXCLUSIVE flag around.  That's a fair bit of
+> uglification for three drivers.
+>
+> > Another thing I kinda wondered, since pci maintainer is here: At least
+> > in drivers/gpu I see very few drivers explicitly requestion regions
+> > (this might be a historical artifact due to the shadow attach stuff
+> > before we had real modesetting drivers). And pci core doesn't do that
+> > either, even when a driver is bound. Is this intentional, or
+> > should/could we do better? Since drivers work happily without
+> > reserving regions I don't think "the drivers need to remember to do
+> > this" will ever really work out well.
+>
+> You're right, many drivers don't call pci_request_regions().  Maybe we
+> could do better, but I haven't looked into that recently.  There is a
+> related note in Documentation/PCI/pci.rst that's been there for a long
+> time (it refers to "pci_request_resources()", which has never existed
+> AFAICT).  I'm certainly open to proposals.
 
-I'm sorry, I screwed this up.  I should have merged the
-PCI_EXT_CAP_ID_DVSEC definitions and pci_find_dvsec() for v5.11 to
-resolve the mess of dependencies, but I didn't.  Lee applied the
-#defines already [1], but I think we're going to have a similar
-problem with multiple features that want to add pci_find_dvsec() but
-be merged via different trees.
-
-I'm a simple-minded git user, and I don't want to mess with merging
-Lee's branch into my tree, so I think the easiest thing would be for
-each of these features to implement their own static version of
-pci_find_dvsec() (and the DVSEC #defines, if necessary) in the series
-that needs it.  That way all the series can be merged independently,
-and we can deduplicate them in a future cycle.
-
-So I'm going to drop this for now and assume you'll move it to the
-file that uses it and include it in that series.
-
-The patch itself looks good.  Thanks for changing the "not found"
-return value to 0.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/?h=ib-mfd-x86-5.11&id=1dc2da5cd51f648de6d1df87e2bc6ea13f72f19c
-
-> ---
-> 
-> v2:
-> - Comment fixups (Randy)
-> - Function return 0 on fail to be consistent with other find cap functions.  (Randy)
-> 
->  drivers/pci/pci.c   |   30 ++++++++++++++++++++++++++++++
->  include/linux/pci.h |    3 +++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6d4d5a2f923d..09208a31114a 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -589,6 +589,36 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap)
->  }
->  EXPORT_SYMBOL_GPL(pci_find_ext_capability);
->  
-> +/**
-> + * pci_find_dvsec - return position of DVSEC with provided vendor and DVSEC ID
-> + * @dev: the PCI device
-> + * @vendor: vendor for the DVSEC
-> + * @id: the DVSEC capability ID
-> + *
-> + * Return: the offset of DVSEC on success or 0 if not found
-> + */
-> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
-> +{
-> +	u16 dev_vendor, dev_id;
-> +	int pos;
-> +
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
-> +	if (!pos)
-> +		return 0;
-> +
-> +	while (pos) {
-> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &dev_vendor);
-> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &dev_id);
-> +		if (dev_vendor == vendor && dev_id == id)
-> +			return pos;
-> +
-> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_find_dvsec);
-> +
->  /**
->   * pci_get_dsn - Read and return the 8-byte Device Serial Number
->   * @dev: PCI device to query
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 22207a79762c..6c692d32c82a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1069,6 +1069,7 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap);
->  int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
->  int pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
->  int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap);
-> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id);
->  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
->  
->  u64 pci_get_dsn(struct pci_dev *dev);
-> @@ -1726,6 +1727,8 @@ static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
->  { return 0; }
->  static inline int pci_find_ext_capability(struct pci_dev *dev, int cap)
->  { return 0; }
-> +static inline int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
-> +{ return 0; }
->  
->  static inline u64 pci_get_dsn(struct pci_dev *dev)
->  { return 0; }
-> 
-> 
+It seems a bug that the kernel permits MMIO regions with side effects
+to be ioremap()'ed without request_mem_region() on the resource. I
+wonder how much log spam would happen if ioremap() reported whenever a
+non-IORESOURE_BUSY range was passed to it? The current state of
+affairs to trust *remap users to have claimed their remap target seems
+too ingrained to unwind now.
