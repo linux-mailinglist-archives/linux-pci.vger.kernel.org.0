@@ -2,66 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE652A69CD
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:31:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A5EF2A6A33
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:46:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730895AbgKDQbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 11:31:38 -0500
-Received: from verein.lst.de ([213.95.11.211]:43309 "EHLO verein.lst.de"
+        id S1731377AbgKDQqv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 11:46:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbgKDQbi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Nov 2020 11:31:38 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6C26768B02; Wed,  4 Nov 2020 17:31:35 +0100 (CET)
-Date:   Wed, 4 Nov 2020 17:31:35 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 2/5] RDMA/core: remove use of dma_virt_ops
-Message-ID: <20201104163135.GA15840@lst.de>
-References: <20201104095052.1222754-1-hch@lst.de> <20201104095052.1222754-3-hch@lst.de> <20201104134241.GP36674@ziepe.ca> <20201104140108.GA5674@lst.de> <20201104155255.GR36674@ziepe.ca>
+        id S1730987AbgKDQqu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 11:46:50 -0500
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD6A0206CA;
+        Wed,  4 Nov 2020 16:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604508410;
+        bh=8tGL6oAMB7wNHUqKWEHZkOjh160kXJWJi2X2a6dNbEQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hOgdTjs+nwzvdCfQagJ17N1ywbLm/ip4XjMB5SKjmGVacXB9WGZRdsYe8FHdQyPdf
+         vHNpC3mtnuUeXiozagw/6T4SaZxwTQRciQO+0b2ZF+53fkl69gGudVpfAJXdAsClWc
+         Tq8xDNYxuU4GSrtmbFC54Frj4gMkh1/H582iOvBw=
+Received: by pali.im (Postfix)
+        id 56D8A53E; Wed,  4 Nov 2020 17:46:47 +0100 (CET)
+Date:   Wed, 4 Nov 2020 17:46:47 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Yinghai Lu <yinghai@kernel.org>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
+Message-ID: <20201104164647.pctgyk2cbhjcq65z@pali>
+References: <20200909112850.hbtgkvwqy2rlixst@pali>
+ <20201006222222.GA3221382@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201104155255.GR36674@ziepe.ca>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20201006222222.GA3221382@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 11:52:55AM -0400, Jason Gunthorpe wrote:
-> It could work, I think a resonable ULP API would be to have some
+On Tuesday 06 October 2020 17:22:22 Bjorn Helgaas wrote:
+> It's not obvious from the code why we need pci_sysfs_init(), but
+> Yinghai hinted [1] that we need to create sysfs after assigning
+> resources.  I experimented by removing pci_sysfs_init() and skipping
+> the ROM BAR sizing.  In that case, we create sysfs files in
+> pci_bus_add_device() and later assign space for the ROM BAR, so we
+> fail to create the "rom" sysfs file.
 > 
->  rdma_fill_ib_sge_from_sgl()
->  rdma_map_sge_single()
->  etc etc
+> The current solution to that is to delay the sysfs files until
+> pci_sysfs_init(), a late_initcall(), which runs after resource
+> assignments.  But I think it would be better if we could create the
+> sysfs file when we assign the BAR.  Then we could get rid of the
+> late_initcall() and that implicit ordering requirement.
 > 
-> ie instead of wrappering the DMA API as-is we have a new API that
-> directly builds the ib_sge. It always fills the local_dma_lkey from
-> the pd, so it knows it is doing DMA from local kernel memory.
+> But I haven't tried to code it up, so it's probably more complicated
+> than this.  I guess ideally we would assign all the resources before
+> pci_bus_add_device().  If we could do that, we could just remove
+> pci_sysfs_init() and everything would just work, but I think that's a
+> HUGE can of worms.
+> 
+> [1] https://lore.kernel.org/linux-pci/CAE9FiQWBXHgz-gWCmpWLaBOfQQJwtRZemV6Ut9GVw_KJ-dTGTA@mail.gmail.com/
 
-Yeah.
+I found out that pci_sysfs_init() function was introduced in kernel
+version 2.6.10 by this historic commit:
 
-> Logically SW devices then have a local_dma_lkey MR that has an IOVA of
-> the CPU physical address space, not the DMA address space as HW
-> devices have. The ib_sge builders can know this detail and fill in
-> addr from either a cpu phyical or a dma map.
+https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/commit/?id=f6d553444da20cd1e44f2c4864c2d0c56c934e0a
 
-I don't think the builders are the right place to do it - it really
-should to be in the low-level drivers for a bunch of reasons:
-
- 1) this avoids doing the dma_map when no DMA is performed, e.g. for
-    mlx5 when send data is in the extended WQE
- 2) to deal with the fact that dma mapping reduces the number of SGEs.
-    When the system uses a modern IOMMU we'll always end up with a
-    single IOVA range no matter how many pages were mapped originally.
-    This means any MR process can actually be consolidated to use
-    a single SGE with the local lkey.
-
-Note that 2 implies a somewhat more complicated API, where the ULP
-attempts to create a MR, but the core/driver will tell it that it didn't
-need a MR at all.
+So it was really due to PCI ROM BAR and accessing it from sysfs.
