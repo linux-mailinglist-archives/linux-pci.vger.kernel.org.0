@@ -2,169 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F05A72A6116
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 11:04:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 695A52A61A1
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 11:32:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgKDKEH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 05:04:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbgKDKEG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 05:04:06 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70C1AC0613D3;
-        Wed,  4 Nov 2020 02:04:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=6i+ZQBC5XZcaf/YFDznwfiEdycwkjc1Y9jVRZuhej00=; b=EEsSY1SE1ycXZds8C5zXuT2rNU
-        wEt9xgUKkJC3uwssz+wbEBCbh2683NvuBQCvVxLGjNEajY7HYVdVD+901XY7qNQj0BAQLx6O3a1HC
-        +N5PBjEEUyS+7SUFUfpoPyjNtOeXNldty9ubIwwFp/EnDGJm5tkmw3KqsS4xX6r+CbWXe51Wsyd0n
-        IYEEydUpwYb+w6FtFSr67Yc5ncMpTzaRJkYHT6rbATHROsHhTkMpvPhYD6R8Lw+XdwzYbhG/To7Iz
-        6W4fZrDN13EHcgRek1qlmkbKng5ueKtK0OeZJKm4OLtGC9mRd7knjjxFTnE962dSptKetH0WPLdAg
-        RF+HS9/g==;
-Received: from 089144208145.atnat0017.highway.a1.net ([89.144.208.145] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kaFe6-0003Mp-Vm; Wed, 04 Nov 2020 10:04:03 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH 5/5] dma-mapping: remove dma_virt_ops
-Date:   Wed,  4 Nov 2020 10:50:52 +0100
-Message-Id: <20201104095052.1222754-6-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201104095052.1222754-1-hch@lst.de>
-References: <20201104095052.1222754-1-hch@lst.de>
+        id S1726344AbgKDKcE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 05:32:04 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59996 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728508AbgKDKb0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 05:31:26 -0500
+IronPort-SDR: g5UsEyUOfeEAJW+t6Vgxywz+GoqzdZoAb3zNqA6I4vw94fDFS0Yj9fYSARleU7G1efKG3XZ+w4
+ 0XgtaRDFBZkw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9794"; a="253907636"
+X-IronPort-AV: E=Sophos;i="5.77,450,1596524400"; 
+   d="scan'208";a="253907636"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 02:31:12 -0800
+IronPort-SDR: aax12skQtrBfQAaq3wCarPfb8QkO/i4mxrVOv9dQelhrfLLF8rzam1v8UXu2bdqtPFiDTFNQmv
+ rlMM6c9OQ5iA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,450,1596524400"; 
+   d="scan'208";a="426629389"
+Received: from lkp-server02.sh.intel.com (HELO e61783667810) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Nov 2020 02:31:11 -0800
+Received: from kbuild by e61783667810 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kaG4N-0000qA-4K; Wed, 04 Nov 2020 10:31:11 +0000
+Date:   Wed, 04 Nov 2020 18:30:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS WITH WARNING
+ 8f113d33e39f4a1a290f8d4557a0b853a1ab6753
+Message-ID: <5fa282db.SKusINSqqr6jZ2g8%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now that the RDMA core deals with devices that only do DMA mapping in
-lower layers properly, there is no user for dma_virt_ops and it can
-be removed.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
+branch HEAD: 8f113d33e39f4a1a290f8d4557a0b853a1ab6753  PCI: mvebu: Fix duplicate resource requests
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Warning in current branch:
+
+drivers/pci/controller/dwc/pcie-designware-host.c:597:27: warning: Possible null pointer dereference: entry [nullPointer]
+
+Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+`-- ia64-randconfig-p001-20201103
+    `-- drivers-pci-controller-dwc-pcie-designware-host.c:warning:Possible-null-pointer-dereference:entry-nullPointer
+
+elapsed time: 720m
+
+configs tested: 135
+configs skipped: 2
+
+gcc tested configs:
+arm                              allyesconfig
+arm                              allmodconfig
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                            zeus_defconfig
+powerpc                     tqm5200_defconfig
+ia64                          tiger_defconfig
+sh                         ecovec24_defconfig
+s390                          debug_defconfig
+arm                       aspeed_g5_defconfig
+powerpc64                        alldefconfig
+xtensa                  cadence_csp_defconfig
+mips                malta_kvm_guest_defconfig
+sh                                  defconfig
+m68k                       m5275evb_defconfig
+arm                          iop32x_defconfig
+ia64                      gensparse_defconfig
+mips                           gcw0_defconfig
+xtensa                    smp_lx200_defconfig
+sparc64                             defconfig
+powerpc                     tqm8555_defconfig
+arm                           h5000_defconfig
+arm                         orion5x_defconfig
+sh                           se7722_defconfig
+riscv                            allyesconfig
+powerpc                      katmai_defconfig
+sh                            hp6xx_defconfig
+microblaze                      mmu_defconfig
+mips                        vocore2_defconfig
+arm                          pxa3xx_defconfig
+arm                      tct_hammer_defconfig
+powerpc                      acadia_defconfig
+sh                  sh7785lcr_32bit_defconfig
+powerpc                      chrp32_defconfig
+mips                  decstation_64_defconfig
+riscv                          rv32_defconfig
+powerpc                     kilauea_defconfig
+mips                        nlm_xlp_defconfig
+mips                         rt305x_defconfig
+arm                          pcm027_defconfig
+arm                           stm32_defconfig
+sh                           se7780_defconfig
+xtensa                    xip_kc705_defconfig
+m68k                        mvme16x_defconfig
+powerpc                      cm5200_defconfig
+arc                              alldefconfig
+powerpc                     kmeter1_defconfig
+arm                         at91_dt_defconfig
+sh                           se7751_defconfig
+mips                malta_qemu_32r6_defconfig
+mips                        omega2p_defconfig
+x86_64                              defconfig
+arm                       omap2plus_defconfig
+sh                          sdk7786_defconfig
+sh                          r7785rp_defconfig
+mips                       bmips_be_defconfig
+arm                            u300_defconfig
+mips                        bcm63xx_defconfig
+arm                     am200epdkit_defconfig
+xtensa                          iss_defconfig
+arm                           viper_defconfig
+arm                           sunxi_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                               defconfig
+i386                                defconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20201103
+x86_64               randconfig-a005-20201103
+x86_64               randconfig-a003-20201103
+x86_64               randconfig-a002-20201103
+x86_64               randconfig-a006-20201103
+x86_64               randconfig-a001-20201103
+i386                 randconfig-a004-20201103
+i386                 randconfig-a006-20201103
+i386                 randconfig-a005-20201103
+i386                 randconfig-a001-20201103
+i386                 randconfig-a002-20201103
+i386                 randconfig-a003-20201103
+x86_64               randconfig-a012-20201104
+x86_64               randconfig-a015-20201104
+x86_64               randconfig-a013-20201104
+x86_64               randconfig-a011-20201104
+x86_64               randconfig-a014-20201104
+x86_64               randconfig-a016-20201104
+i386                 randconfig-a013-20201103
+i386                 randconfig-a015-20201103
+i386                 randconfig-a014-20201103
+i386                 randconfig-a016-20201103
+i386                 randconfig-a011-20201103
+i386                 randconfig-a012-20201103
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a012-20201103
+x86_64               randconfig-a015-20201103
+x86_64               randconfig-a011-20201103
+x86_64               randconfig-a013-20201103
+x86_64               randconfig-a014-20201103
+x86_64               randconfig-a016-20201103
+
 ---
- include/linux/dma-mapping.h |  2 --
- kernel/dma/Kconfig          |  5 ---
- kernel/dma/Makefile         |  1 -
- kernel/dma/virt.c           | 61 -------------------------------------
- 4 files changed, 69 deletions(-)
- delete mode 100644 kernel/dma/virt.c
-
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 956151052d4542..2aaed35b556df4 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -565,6 +565,4 @@ static inline int dma_mmap_wc(struct device *dev,
- int dma_direct_set_offset(struct device *dev, phys_addr_t cpu_start,
- 		dma_addr_t dma_start, u64 size);
- 
--extern const struct dma_map_ops dma_virt_ops;
--
- #endif /* _LINUX_DMA_MAPPING_H */
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index c99de4a2145889..fd2db2665fc691 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -75,11 +75,6 @@ config ARCH_HAS_DMA_PREP_COHERENT
- config ARCH_HAS_FORCE_DMA_UNENCRYPTED
- 	bool
- 
--config DMA_VIRT_OPS
--	bool
--	depends on HAS_DMA
--	select DMA_OPS
--
- config SWIOTLB
- 	bool
- 	select NEED_DMA_MAP_STATE
-diff --git a/kernel/dma/Makefile b/kernel/dma/Makefile
-index dc755ab68aabf9..cd1d86358a7a62 100644
---- a/kernel/dma/Makefile
-+++ b/kernel/dma/Makefile
-@@ -5,7 +5,6 @@ obj-$(CONFIG_DMA_OPS)			+= ops_helpers.o
- obj-$(CONFIG_DMA_OPS)			+= dummy.o
- obj-$(CONFIG_DMA_CMA)			+= contiguous.o
- obj-$(CONFIG_DMA_DECLARE_COHERENT)	+= coherent.o
--obj-$(CONFIG_DMA_VIRT_OPS)		+= virt.o
- obj-$(CONFIG_DMA_API_DEBUG)		+= debug.o
- obj-$(CONFIG_SWIOTLB)			+= swiotlb.o
- obj-$(CONFIG_DMA_COHERENT_POOL)		+= pool.o
-diff --git a/kernel/dma/virt.c b/kernel/dma/virt.c
-deleted file mode 100644
-index 59d32317dd574a..00000000000000
---- a/kernel/dma/virt.c
-+++ /dev/null
-@@ -1,61 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * DMA operations that map to virtual addresses without flushing memory.
-- */
--#include <linux/export.h>
--#include <linux/mm.h>
--#include <linux/dma-map-ops.h>
--#include <linux/scatterlist.h>
--
--static void *dma_virt_alloc(struct device *dev, size_t size,
--			    dma_addr_t *dma_handle, gfp_t gfp,
--			    unsigned long attrs)
--{
--	void *ret;
--
--	ret = (void *)__get_free_pages(gfp | __GFP_ZERO, get_order(size));
--	if (ret)
--		*dma_handle = (uintptr_t)ret;
--	return ret;
--}
--
--static void dma_virt_free(struct device *dev, size_t size,
--			  void *cpu_addr, dma_addr_t dma_addr,
--			  unsigned long attrs)
--{
--	free_pages((unsigned long)cpu_addr, get_order(size));
--}
--
--static dma_addr_t dma_virt_map_page(struct device *dev, struct page *page,
--				    unsigned long offset, size_t size,
--				    enum dma_data_direction dir,
--				    unsigned long attrs)
--{
--	return (uintptr_t)(page_address(page) + offset);
--}
--
--static int dma_virt_map_sg(struct device *dev, struct scatterlist *sgl,
--			   int nents, enum dma_data_direction dir,
--			   unsigned long attrs)
--{
--	int i;
--	struct scatterlist *sg;
--
--	for_each_sg(sgl, sg, nents, i) {
--		BUG_ON(!sg_page(sg));
--		sg_dma_address(sg) = (uintptr_t)sg_virt(sg);
--		sg_dma_len(sg) = sg->length;
--	}
--
--	return nents;
--}
--
--const struct dma_map_ops dma_virt_ops = {
--	.alloc			= dma_virt_alloc,
--	.free			= dma_virt_free,
--	.map_page		= dma_virt_map_page,
--	.map_sg			= dma_virt_map_sg,
--	.alloc_pages		= dma_common_alloc_pages,
--	.free_pages		= dma_common_free_pages,
--};
--EXPORT_SYMBOL(dma_virt_ops);
--- 
-2.28.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
