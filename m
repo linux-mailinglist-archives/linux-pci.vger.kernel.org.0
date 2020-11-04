@@ -2,93 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14CB42A6C82
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 19:11:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6161E2A6E8B
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 21:11:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbgKDSLA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 13:11:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730245AbgKDSLA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 13:11:00 -0500
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 136B6C0613D4
-        for <linux-pci@vger.kernel.org>; Wed,  4 Nov 2020 10:11:00 -0800 (PST)
-Received: by mail-qt1-x843.google.com with SMTP id f93so12824704qtb.10
-        for <linux-pci@vger.kernel.org>; Wed, 04 Nov 2020 10:11:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=k0O2tryRBN/txl6awTV8eKioqjAa/NAL5VwW/RaREWI=;
-        b=CrqhrkR7HAzUAGqSb60bOMK7qe5EIflczymnySw9Y5+bNjne9otfjktFQ6v+q7J5Bn
-         QkYEsfvJoF/V7dNVQyc6aFNIdKrN1rYxwz6brltfl3vKl7GrhGkHBfbp/rhIGXnZsDyO
-         q/iG27QnRKzRiEukn1JBcRUnjZMZ/Ak9n8ACm1EiTKdWPIltBuEFSSjrXyLFHI9ot/JV
-         8uBpfDuI13wJ7vALHBveYCdpbk+A19p4Bv4z46ArjZXEgsqRrdu1kwYS320gfNeLMlWW
-         W2r30op0NjtAJ7YPSSK/BVYOYThngPwmUNlHggeP4WiKmejHxYofVLU4IlsEUP8nocyW
-         gCZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k0O2tryRBN/txl6awTV8eKioqjAa/NAL5VwW/RaREWI=;
-        b=GuuycjHYYXPCIzVmMx+OKq4pllcsK5YWmN3AYyhwXjc19FWAny6y0gDmmQQ4fRpyiw
-         Nydn/7Y25hdCrZ9S62Rhd7WAGuOaHsArBbmnYHAsKAb15MI4JRSj8ekBr2h3iobScH7r
-         NAE1WfPn1Xg8DKI/olbUxEPNitGCobJqOC9fkaYvb2L3UQCAWjawnrPpctf3ccobDSRM
-         JuqhYKtbJhs1iQ0TM5YNEQg3lgd8DVqS/Rkd+mBqPSB3Q4WkmZQL9OQxKyu3+qsD+bdQ
-         4+VeY7sQk7lyBgOLFxUEcpqck2w88usxQ9drhzos/LjsM5W/8lNM4hktKcA+iX0whgEz
-         ci9w==
-X-Gm-Message-State: AOAM530ihQ9fw+V77LjdU7pLPq+YhsNn0EywPHej6nk6Rb/gJFLvjN3G
-        L7xmOBRZGNNP9kN9tDPyYBdE5BzIy02mHAEw
-X-Google-Smtp-Source: ABdhPJwkADJ1e/NwsQb+VIyXw9DQ2vEHkyjUPuy8BExU4QQfjYg+akP04U4TisV1zRg4p7BfBzttTQ==
-X-Received: by 2002:aed:2d82:: with SMTP id i2mr10942501qtd.10.1604513459358;
-        Wed, 04 Nov 2020 10:10:59 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id h65sm969050qkd.95.2020.11.04.10.10.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2020 10:10:58 -0800 (PST)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kaNFJ-00GaMz-NI; Wed, 04 Nov 2020 14:10:57 -0400
-Date:   Wed, 4 Nov 2020 14:10:57 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <BMT@zurich.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: Re: [PATCH 2/5] RDMA/core: remove use of dma_virt_ops
-Message-ID: <20201104181057.GT36674@ziepe.ca>
-References: <20201104140108.GA5674@lst.de>
- <20201104095052.1222754-1-hch@lst.de>
- <20201104095052.1222754-3-hch@lst.de>
- <20201104134241.GP36674@ziepe.ca>
- <OFFDBE80DE.245A259C-ON00258616.00528DDA-00258616.00533A9D@notes.na.collabserv.com>
+        id S1730274AbgKDULo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 15:11:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726825AbgKDULo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 15:11:44 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8980720759;
+        Wed,  4 Nov 2020 20:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604520702;
+        bh=BZuoiWNP5YUNV8L2knespd8jVS/WNI51dRzjtd+WsSo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XnZP0M0metvuOsf2SZW4yTqrtWx8Q/evxyeidLv9FTIihD7RxJRWPW//M6t6ARD5N
+         NmA8SYHJvPuHtv/uFJxqHvTy1ftZ7ASghK/28LrUxNvMHXtZWznyIv5BljWrw5pJkE
+         1RVAZff32p6TF0xC6LwF3xPhxb28/Gr+RZ2M0h90=
+Date:   Wed, 4 Nov 2020 14:11:41 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        david.e.box@intel.com, sean.v.kelley@intel.com,
+        ashok.raj@intel.com, rdunlap@infradead.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] PCI: add helper function to find DVSEC
+Message-ID: <20201104201141.GA399378@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <OFFDBE80DE.245A259C-ON00258616.00528DDA-00258616.00533A9D@notes.na.collabserv.com>
+In-Reply-To: <160441629367.1427673.8803864097727237280.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 03:09:04PM +0000, Bernard Metzler wrote:
-
-> lkey of zero to pass a physical buffer, only allowed for
-> kernel applications? Very nice idea I think.
-
-It already exists, it is called the local_dma_lkey, just set
-IB_DEVICE_LOCAL_DMA_LKEY and provide the value you want to use
-in device->local_dma_lkey
-
-> btw.
-> It would even get the vain blessing of the old IETF RDMA
-> verbs draft ;)
+On Tue, Nov 03, 2020 at 08:12:28AM -0700, Dave Jiang wrote:
+> Add function that searches for DVSEC and returns the offset in PCI
+> configuration space for the interested DVSEC capability.
 > 
-> https://tools.ietf.org/html/draft-hilland-rddp-verbs-00#page-90
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
 
-IBTA standadized this, they just didn't require HW to use 0 as the
-lkey.
+I'm sorry, I screwed this up.  I should have merged the
+PCI_EXT_CAP_ID_DVSEC definitions and pci_find_dvsec() for v5.11 to
+resolve the mess of dependencies, but I didn't.  Lee applied the
+#defines already [1], but I think we're going to have a similar
+problem with multiple features that want to add pci_find_dvsec() but
+be merged via different trees.
 
-Jason
+I'm a simple-minded git user, and I don't want to mess with merging
+Lee's branch into my tree, so I think the easiest thing would be for
+each of these features to implement their own static version of
+pci_find_dvsec() (and the DVSEC #defines, if necessary) in the series
+that needs it.  That way all the series can be merged independently,
+and we can deduplicate them in a future cycle.
+
+So I'm going to drop this for now and assume you'll move it to the
+file that uses it and include it in that series.
+
+The patch itself looks good.  Thanks for changing the "not found"
+return value to 0.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/?h=ib-mfd-x86-5.11&id=1dc2da5cd51f648de6d1df87e2bc6ea13f72f19c
+
+> ---
+> 
+> v2:
+> - Comment fixups (Randy)
+> - Function return 0 on fail to be consistent with other find cap functions.  (Randy)
+> 
+>  drivers/pci/pci.c   |   30 ++++++++++++++++++++++++++++++
+>  include/linux/pci.h |    3 +++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 6d4d5a2f923d..09208a31114a 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -589,6 +589,36 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_ext_capability);
+>  
+> +/**
+> + * pci_find_dvsec - return position of DVSEC with provided vendor and DVSEC ID
+> + * @dev: the PCI device
+> + * @vendor: vendor for the DVSEC
+> + * @id: the DVSEC capability ID
+> + *
+> + * Return: the offset of DVSEC on success or 0 if not found
+> + */
+> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
+> +{
+> +	u16 dev_vendor, dev_id;
+> +	int pos;
+> +
+> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DVSEC);
+> +	if (!pos)
+> +		return 0;
+> +
+> +	while (pos) {
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER1, &dev_vendor);
+> +		pci_read_config_word(dev, pos + PCI_DVSEC_HEADER2, &dev_id);
+> +		if (dev_vendor == vendor && dev_id == id)
+> +			return pos;
+> +
+> +		pos = pci_find_next_ext_capability(dev, pos, PCI_EXT_CAP_ID_DVSEC);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_dvsec);
+> +
+>  /**
+>   * pci_get_dsn - Read and return the 8-byte Device Serial Number
+>   * @dev: PCI device to query
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 22207a79762c..6c692d32c82a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1069,6 +1069,7 @@ int pci_find_ext_capability(struct pci_dev *dev, int cap);
+>  int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
+>  int pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
+>  int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap);
+> +int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id);
+>  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+>  
+>  u64 pci_get_dsn(struct pci_dev *dev);
+> @@ -1726,6 +1727,8 @@ static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
+>  { return 0; }
+>  static inline int pci_find_ext_capability(struct pci_dev *dev, int cap)
+>  { return 0; }
+> +static inline int pci_find_dvsec(struct pci_dev *dev, u16 vendor, u16 id)
+> +{ return 0; }
+>  
+>  static inline u64 pci_get_dsn(struct pci_dev *dev)
+>  { return 0; }
+> 
+> 
