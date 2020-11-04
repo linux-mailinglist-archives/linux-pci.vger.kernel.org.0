@@ -2,115 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 572702A6B85
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 18:20:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 637FA2A6BB8
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 18:33:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730906AbgKDRUS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 12:20:18 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42020 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbgKDRUS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 12:20:18 -0500
-Received: by mail-oi1-f196.google.com with SMTP id w145so17265961oie.9;
-        Wed, 04 Nov 2020 09:20:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QEgtaOk4Lm7njaeuUYPIlzlOOaGGZwPV3+RIUaq3hFo=;
-        b=FCkitBjH/UkpIhTM50sTNUJ6lsz1WVY0WFHYAVezGgicX87EBT8o2Kqn96p90O2Ftf
-         G0l+THTSV1F7gOVhBBxo6oFGENtRysB6wqlt0TEneUZGA8AACPVeBmrNZMGDMqpxxeBV
-         hbqsDqerTZhNKCju0Ry1aYBBoC9mfi4a/F+zxvDzhMdGHcct1p8m2vl1h8hLRWwxk40C
-         YA0d7wfCCjCPhm9+0HRMc/mq6N8SIwent6GkZ1+U62IKHUXxMw6jSalIJWKtORERC88I
-         cEtUO0XgU1socBpgYV3wUhkQ/QZ0p662yk+fw6S5zYXcH+kNVuXJLC3I+4i4ekNkpsSO
-         rrUg==
-X-Gm-Message-State: AOAM5302IVqXxHoaaO6CXRO0rbZyHM6jIEJqL22J+F317x7XWPtaZVAR
-        8rH42SS4u7+k2Yrm0wGvbpuFbHXUvCSbco+gOBk=
-X-Google-Smtp-Source: ABdhPJz9Abdd4/FrS49dRn7/l3S4TzmmUp3Tzqz1SpLe0sjmqSLkwv667jITZaISuklJVE4/8adcEtwNKHOBQOLz5Ik=
-X-Received: by 2002:aca:30d7:: with SMTP id w206mr3205561oiw.69.1604510417420;
- Wed, 04 Nov 2020 09:20:17 -0800 (PST)
+        id S1731571AbgKDRcq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 12:32:46 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:34674 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731534AbgKDRcp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 4 Nov 2020 12:32:45 -0500
+X-Greylist: delayed 1916 seconds by postgrey-1.27 at vger.kernel.org; Wed, 04 Nov 2020 12:32:45 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=N2SOPoHvV67QYSDBorQI+Eny1/8pxEWrPXW/WFBv0+c=; b=jByByxLeD2jWOeF1OeD5LergUb
+        x9NqBqY5HMYmItZ7/h0PBJ13GF7wUQesel8515f/oOJYYevRUTj3bJ6ZlQJRROJrQ1Rre53BF6Zw0
+        SZajwdv93St9xVJOjqjS8QA4bejzTTfzPm5hDLnLCDpRrhJcOMm9KbBHX0P3Y1f5bH4p6z3l3gHWn
+        vZGmN3yHOMegh1PM0boFWFPGH/mvD3jxaUIVYAbeUovIAwr0z0EIStrvKmtoevRtM0B/TLNT7Es5L
+        CGznzxe0zDJdNeQusIaUhmUxKps947uNp5WAygFQC2nD/RRJ+4mGe0NqYBroMfDLxs9zmgd4epV8R
+        6i+qHfAQ==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1kaM9P-0001Ul-Li; Wed, 04 Nov 2020 10:00:48 -0700
+To:     Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-rdma@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <20201104095052.1222754-1-hch@lst.de>
+ <20201104095052.1222754-4-hch@lst.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <6396d3e3-c9a6-e86f-ab1c-df3561b6517a@deltatee.com>
+Date:   Wed, 4 Nov 2020 10:00:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-References: <20201103211259.GA265488@bjorn-Precision-5520> <c92703e3-c964-b4a6-e3df-c4c0c28b44c1@gmail.com>
- <6e392d099bd8aaba14223aa770361dbdeeab271b.camel@perches.com>
- <6d888eb0-bfc5-28ff-c62f-9e769f77bc1f@gmail.com> <57b77f3a36f56e2ae7ab8fe367865b5412d4e11f.camel@perches.com>
-In-Reply-To: <57b77f3a36f56e2ae7ab8fe367865b5412d4e11f.camel@perches.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 4 Nov 2020 18:20:06 +0100
-Message-ID: <CAJZ5v0j3rboB1RmsEsuKJB38GwJDF-HjUMVZo=eTjWNMQRknRw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: Remove trailing whitespace
-To:     Joe Perches <joe@perches.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201104095052.1222754-4-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, bhelgaas@google.com, jgg@ziepe.ca, hch@lst.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: Re: [PATCH 3/5] PCI/p2p: remove the DMA_VIRT_OPS hacks
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 6:13 PM Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2020-11-04 at 16:48 +0100, Maximilian Luz wrote:
-> > On 11/4/20 6:13 AM, Joe Perches wrote:
-> >
-> > [...]
-> >
-> > > > Yes. I scanned drivers/acpi for trailing whitespaces after I noticed a
-> > > > couple of them. I did not explicitly scan for other stuff like spaces
-> > > > where there should be tabs, mostly because I haven't found a quick and
-> > > > reliable solution for that. I only noticed an inconsistent indentation
-> > > > when committing, so I fixed that too.
-> > >
-> > > You could try:
-> > >
-> > > $ git ls-files -- 'drivers/acpi/*.[ch]' | \
-> > >    xargs ./scripts/checkpatch.pl -f --fix-inplace --types=CODE_INDENT
-> >
-> > Thanks, that indeed looks like a decent solution.
-> >
-> > > Right now that produces:
-> > > ---
-> >
-> > [...]
-> >
-> > > diff --git a/drivers/acpi/ac.c b/drivers/acpi/ac.c
-> []
-> > > @@ -89,7 +89,7 @@ struct acpi_ac {
-> > >   #define to_acpi_ac(x) power_supply_get_drvdata(x)
-> > >
-> > >
-> > >   /* --------------------------------------------------------------------------
-> > > -                               AC Adapter Management
-> > > +                          AC Adapter Management
-> > >      -------------------------------------------------------------------------- */
-> >
-> > I'm not too sure about the comments, but I can find the time to look
-> > over the output and adjust that if that's something you'd want me to do.
->
-> Up to you.  I hardly looked at the output.
->
-> I'd generally prefer to use a single line comment like
->
-> /* AC Adapter Management */
->
-> but I don't know how often that dashed block is used in ACPI.
->
-> grep seems to show the texts are not correctly centered so it seems like
-> it was done by hand and not that some automation tool was used to create
-> those blocks.
->
-> Maybe a separate patch could be done to change those if desired.
 
-If anyone has a problem with them.
 
-> But not by me.
->
-> As far as I know, acpi was once autogenerated from a common source tree
-> and whitespace changes were once frowned on, but maybe that's changed or
-> or perhaps that's only for files in drivers/acpi/acpica/.
 
-The latter.
+On 2020-11-04 2:50 a.m., Christoph Hellwig wrote:
+> Now that all users of dma_virt_ops are gone we can remove the workaround
+> for it in the PCIe peer to peer code.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+The two P2PDMA patches look fine to me. Nice to get rid of that hack.
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Thanks,
+
+Logan
