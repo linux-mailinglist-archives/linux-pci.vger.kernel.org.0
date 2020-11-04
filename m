@@ -2,113 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 910152A6A8E
-	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30AE82A6B05
+	for <lists+linux-pci@lfdr.de>; Wed,  4 Nov 2020 17:54:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731836AbgKDQvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 11:51:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47120 "EHLO mail.kernel.org"
+        id S1731639AbgKDQx6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 4 Nov 2020 11:53:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731683AbgKDQuU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Nov 2020 11:50:20 -0500
+        id S1731453AbgKDQxz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 4 Nov 2020 11:53:55 -0500
 Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01712206CA;
-        Wed,  4 Nov 2020 16:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4EBE206FA;
+        Wed,  4 Nov 2020 16:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604508619;
-        bh=KzXcQsv6oXQiPT6pQbTFR35Ks2A09AmGg4NdOMxDZU4=;
+        s=default; t=1604508835;
+        bh=2AnCcDgCUl6mvSBgQ/DNDlhMjVmEBjE51au1El1BYuY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=C3pX6cmo6q8mwyEj5GO30o1K3DmrMhjsd197OHFiySwAIRZVIm3gcmWDrE+eCPQYz
-         sPh4rcY/+zTADvqe8t10fQKgN6B/uva7r/Rm33jjbBhTlqD9gCI3SGCFFhZSFec0de
-         QvdkQtLCYpZ8r9E77lkRpGYf+6s0+xBDMYsFK0NQ=
-Date:   Wed, 4 Nov 2020 10:50:17 -0600
+        b=ufgUb7fUuwShufuwOFMMiN+b9KhxmZPRjeacpooFT3rGtbvfpEYeTIDtR+8qbpybZ
+         ViNnVNVez79xeThoXkIgQLPNu1B162vS+R/Iws4UAxxNYredVESg2yvamgQAHpoXqg
+         QCtTCOr9+JeAYws//F1IQSU6/a4lEYyRNDJ8N6Ho=
+Date:   Wed, 4 Nov 2020 10:53:53 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v5 11/15] PCI: Obey iomem restrictions for procfs mmap
-Message-ID: <20201104165017.GA352206@bjorn-Precision-5520>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH 3/5] PCI/p2p: remove the DMA_VIRT_OPS hacks
+Message-ID: <20201104165353.GA357989@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uF0QjesaNs97N-G8cZkXuAmFgcmTfHvoCP94br_WVcV6Q@mail.gmail.com>
+In-Reply-To: <20201104095052.1222754-4-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 09:44:04AM +0100, Daniel Vetter wrote:
-> On Tue, Nov 3, 2020 at 11:09 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> > On Tue, Nov 3, 2020 at 1:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Oct 30, 2020 at 11:08:11AM +0100, Daniel Vetter wrote:
-> > > > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
-> > > > files, and the old proc interface. Two check against
-> > > > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
-> > > > this starts to matter, since we don't want random userspace having
-> > > > access to PCI BARs while a driver is loaded and using it.
-> > > >
-> > > > Fix this by adding the same iomem_is_exclusive() check we already have
-> > > > on the sysfs side in pci_mmap_resource().
-> > > >
-> > > > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-> > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > >
-> > > This is OK with me but it looks like IORESOURCE_EXCLUSIVE is currently
-> > > only used in a few places:
-> > >
-> > >   e1000_probe() calls pci_request_selected_regions_exclusive(),
-> > >   ne_pci_probe() calls pci_request_regions_exclusive(),
-> > >   vmbus_allocate_mmio() calls request_mem_region_exclusive()
-> > >
-> > > which raises the question of whether it's worth keeping
-> > > IORESOURCE_EXCLUSIVE at all.  I'm totally fine with removing it
-> > > completely.
-> >
-> > Now that CONFIG_IO_STRICT_DEVMEM upgrades IORESOURCE_BUSY to
-> > IORESOURCE_EXCLUSIVE semantics the latter has lost its meaning so I'd
-> > be in favor of removing it as well.
+s|PCI/p2p: remove|PCI/P2PDMA: Remove/
+to match history.
+
+On Wed, Nov 04, 2020 at 10:50:50AM +0100, Christoph Hellwig wrote:
+> Now that all users of dma_virt_ops are gone we can remove the workaround
+> for it in the PCIe peer to peer code.
+
+s/PCIe/PCI/
+We went to some trouble to make P2PDMA work on conventional PCI as
+well as PCIe.
+
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  drivers/pci/p2pdma.c | 20 --------------------
+>  1 file changed, 20 deletions(-)
 > 
-> Still has some value since it enforces exclusive access even if the
-> config isn't enabled, and iirc e1000 had some fun with userspace tools
-> clobbering the firmware and bricking the chip.
-
-There's *some* value; I'm just skeptical since only three drivers use
-it.
-
-IORESOURCE_EXCLUSIVE is from e8de1481fd71 ("resource: allow MMIO
-exclusivity for device drivers"), and the commit message says this is
-only active when CONFIG_STRICT_DEVMEM is set.  I didn't check to see
-whether that's still true.
-
-That commit adds a bunch of wrappers and "__"-prefixed functions to
-pass the IORESOURCE_EXCLUSIVE flag around.  That's a fair bit of
-uglification for three drivers.
-
-> Another thing I kinda wondered, since pci maintainer is here: At least
-> in drivers/gpu I see very few drivers explicitly requestion regions
-> (this might be a historical artifact due to the shadow attach stuff
-> before we had real modesetting drivers). And pci core doesn't do that
-> either, even when a driver is bound. Is this intentional, or
-> should/could we do better? Since drivers work happily without
-> reserving regions I don't think "the drivers need to remember to do
-> this" will ever really work out well.
-
-You're right, many drivers don't call pci_request_regions().  Maybe we
-could do better, but I haven't looked into that recently.  There is a
-related note in Documentation/PCI/pci.rst that's been there for a long
-time (it refers to "pci_request_resources()", which has never existed
-AFAICT).  I'm certainly open to proposals.
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index de1c331dbed43f..b07018af53876c 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -556,15 +556,6 @@ int pci_p2pdma_distance_many(struct pci_dev *provider, struct device **clients,
+>  		return -1;
+>  
+>  	for (i = 0; i < num_clients; i++) {
+> -#ifdef CONFIG_DMA_VIRT_OPS
+> -		if (clients[i]->dma_ops == &dma_virt_ops) {
+> -			if (verbose)
+> -				dev_warn(clients[i],
+> -					 "cannot be used for peer-to-peer DMA because the driver makes use of dma_virt_ops\n");
+> -			return -1;
+> -		}
+> -#endif
+> -
+>  		pci_client = find_parent_pci_dev(clients[i]);
+>  		if (!pci_client) {
+>  			if (verbose)
+> @@ -837,17 +828,6 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
+>  	phys_addr_t paddr;
+>  	int i;
+>  
+> -	/*
+> -	 * p2pdma mappings are not compatible with devices that use
+> -	 * dma_virt_ops. If the upper layers do the right thing
+> -	 * this should never happen because it will be prevented
+> -	 * by the check in pci_p2pdma_distance_many()
+> -	 */
+> -#ifdef CONFIG_DMA_VIRT_OPS
+> -	if (WARN_ON_ONCE(dev->dma_ops == &dma_virt_ops))
+> -		return 0;
+> -#endif
+> -
+>  	for_each_sg(sg, s, nents, i) {
+>  		paddr = sg_phys(s);
+>  
+> -- 
+> 2.28.0
+> 
