@@ -2,102 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1EFC2A8235
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 16:30:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC9FD2A840C
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 17:53:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730854AbgKEPaC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 10:30:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:35576 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731129AbgKEPaC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Nov 2020 10:30:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EB0514BF;
-        Thu,  5 Nov 2020 07:30:01 -0800 (PST)
-Received: from [10.57.54.223] (unknown [10.57.54.223])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 593BA3F718;
-        Thu,  5 Nov 2020 07:29:59 -0800 (PST)
-Subject: Re: [PATCH 1/6] RMDA/sw: don't allow drivers using dma_virt_ops on
- highmem configs
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@lst.de>
-Cc:     Zhu Yanjun <yanjunz@nvidia.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        iommu@lists.linux-foundation.org,
+        id S1731499AbgKEQxe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 11:53:34 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33930 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730862AbgKEQxe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 11:53:34 -0500
+Received: by mail-ot1-f67.google.com with SMTP id j14so2055335ots.1;
+        Thu, 05 Nov 2020 08:53:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t3AVzHZD6ysm61wCDKsw2GxAdZdrAdpsQuyAnywMmA8=;
+        b=FloI7jFfnSBrfP9iin2/p9mvVpSKLvUcIBnSugNAjvhNKZsfnkhgQ7zH15wVPxHEww
+         gr3ohOdcb+P98KkbcIThgn2slazQMVXBZSZAaII2VcQT+2Ef3lY25hTYHrO7oG4VEoGc
+         3iyBQdz4yS1vhrCyl9/gGj219swuUDD5Cc+YMAixZGHuJFJYzp1T5DMKFsnFS0HPcdYA
+         MlQaYD5eeq82pE4IO5F2lnbrmn687cpAm6C9TI8moxDTr7ybtxEN1/NEmXU/SJdSF6t1
+         /oXkTO1XrORzV0y/CApzBeYz4AtrRUcGVBzAx/3v/52IpRZHhUAljlyG40VaB0QovcHN
+         EE9A==
+X-Gm-Message-State: AOAM530Wojvl9SLB1hV/wrQJpIV0bxYMFByXVyGItLfv/SJsApRLhq7t
+        PFm+8eQ29P3YNElrl1g9/A==
+X-Google-Smtp-Source: ABdhPJwpxMxK2RU2lCjMIf/3ykx8mnbbYfhduNQtLMOq/fp5KWzV7Yg5tOP0ObyyKC/tySATtQayMQ==
+X-Received: by 2002:a05:6830:11a:: with SMTP id i26mr2170164otp.87.1604595212985;
+        Thu, 05 Nov 2020 08:53:32 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c64sm476495oia.49.2020.11.05.08.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2020 08:53:32 -0800 (PST)
+Received: (nullmailer pid 1470649 invoked by uid 1000);
+        Thu, 05 Nov 2020 16:53:31 -0000
+Date:   Thu, 5 Nov 2020 10:53:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nishanth Menon <nm@ti.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-References: <20201105074205.1690638-1-hch@lst.de>
- <20201105074205.1690638-2-hch@lst.de> <20201105144123.GB4142106@ziepe.ca>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <74729b8d-146f-803a-98a3-e8149bd97e34@arm.com>
-Date:   Thu, 5 Nov 2020 15:29:58 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Tero Kristo <t-kristo@ti.com>, Roger Quadros <rogerq@ti.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 8/8] arm64: dts: ti: k3-j721e-main: Fix PCIe maximum
+ outbound regions
+Message-ID: <20201105165331.GA55814@bogus>
+References: <20201102101154.13598-1-kishon@ti.com>
+ <20201102101154.13598-9-kishon@ti.com>
+ <20201102164137.ntl3v6gu274ek2r2@gauze>
 MIME-Version: 1.0
-In-Reply-To: <20201105144123.GB4142106@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201102164137.ntl3v6gu274ek2r2@gauze>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-11-05 14:41, Jason Gunthorpe wrote:
-> On Thu, Nov 05, 2020 at 08:42:00AM +0100, Christoph Hellwig wrote:
->> dma_virt_ops requires that all pages have a kernel virtual address.
->> Introduce a INFINIBAND_VIRT_DMA Kconfig symbol that depends on !HIGHMEM
->> and a large enough dma_addr_t, and make all three driver depend on the
->> new symbol.
->>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->>   drivers/infiniband/Kconfig           | 6 ++++++
->>   drivers/infiniband/sw/rdmavt/Kconfig | 3 ++-
->>   drivers/infiniband/sw/rxe/Kconfig    | 2 +-
->>   drivers/infiniband/sw/siw/Kconfig    | 1 +
->>   4 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
->> index 32a51432ec4f73..81acaf5fb5be67 100644
->> +++ b/drivers/infiniband/Kconfig
->> @@ -73,6 +73,12 @@ config INFINIBAND_ADDR_TRANS_CONFIGFS
->>   	  This allows the user to config the default GID type that the CM
->>   	  uses for each device, when initiaing new connections.
->>   
->> +config INFINIBAND_VIRT_DMA
->> +	bool
->> +	default y
-> 
-> Oh, I haven't seen this kconfig trick with default before..
+On Mon, Nov 02, 2020 at 10:41:37AM -0600, Nishanth Menon wrote:
+> On 15:41-20201102, Kishon Vijay Abraham I wrote:
+> > PCIe controller in J721E supports a maximum of 32 outbound regions.
+> > commit 4e5833884f66 ("arm64: dts: ti: k3-j721e-main: Add PCIe device tree
+> > nodes") incorrectly added maximum number of outbound regions to 16. Fix
+> > it here.
+> > 
+> > Fixes: 4e5833884f66 ("arm64: dts: ti: k3-j721e-main: Add PCIe device tree nodes")
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > ---
+> >  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> > index e2a96b2c423c..61b533130ed1 100644
+> > --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> > +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> > @@ -652,7 +652,7 @@
+> >  		power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
+> >  		clocks = <&k3_clks 239 1>;
+> >  		clock-names = "fck";
+> > -		cdns,max-outbound-regions = <16>;
+> > +		cdns,max-outbound-regions = <32>;
 
-It's commonly done using the "def_bool" shorthand. I fact, I think 
-simply "def_bool !HIGHMEM" would suffice for the fundamental definition 
-here.
+Can this be made detectable instead? Write to region registers and check 
+the write sticks? I'm doing this for the DWC controller.
 
->> +	depends on !HIGHMEM
->> +	depends on !64BIT || ARCH_DMA_ADDR_T_64BIT
->> +
->>   if INFINIBAND_USER_ACCESS || !INFINIBAND_USER_ACCESS
->>   source "drivers/infiniband/hw/mthca/Kconfig"
->>   source "drivers/infiniband/hw/qib/Kconfig"
->> diff --git a/drivers/infiniband/sw/rdmavt/Kconfig b/drivers/infiniband/sw/rdmavt/Kconfig
->> index 9ef5f5ce1ff6b0..c8e268082952b0 100644
->> +++ b/drivers/infiniband/sw/rdmavt/Kconfig
->> @@ -1,7 +1,8 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->>   config INFINIBAND_RDMAVT
->>   	tristate "RDMA verbs transport library"
->> -	depends on X86_64 && ARCH_DMA_ADDR_T_64BIT
->> +	depends on INFINIBAND_VIRT_DMA
-> 
-> Usually I would expect a non-menu item to be used with select not
-> 'depends on' - is the use of default avoiding that?
+Or make the property optional with the default being the max (32).
 
-A select wouldn't make any sense here - if the user chooses to enable 
-the subsystem it can't automatically pull in "the absence of highmem" 
-from the arch code; there's still a literal dependency on certain 
-conditions being met for the option to be available. The intermediate 
-config symbol just abstracts that set of conditions.
-
-Robin.
+Rob
