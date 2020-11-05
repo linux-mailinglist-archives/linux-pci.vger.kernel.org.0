@@ -2,123 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D43F52A8121
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 15:41:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4608C2A812D
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 15:44:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730676AbgKEOlZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 09:41:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730465AbgKEOlZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 09:41:25 -0500
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D7CAC0613CF
-        for <linux-pci@vger.kernel.org>; Thu,  5 Nov 2020 06:41:25 -0800 (PST)
-Received: by mail-qk1-x741.google.com with SMTP id y197so1328224qkb.7
-        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 06:41:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BRRBZT8ySKIFRsUMyPGRaPv+NMBfsy6kK0WAjQoESxI=;
-        b=BYnwWa1P88rlA3UDi6FSzwBMdDQPUUwP2XaWTm1vxRuPg19YVq+UV3c+8KvPaFJPIz
-         I0Z2FL/+WwSfaeV1hcTdPGRCiVmcZcu9Vr6A+4aRK6zpSsBA9FFB/5iDEny9p6YTU/Kz
-         KJb6K0ZjPjOHN6tbjYQNfYKmKJdjd06oWTwaPqk0oT/kG3E7yL+ouGO/Mbbb6T/60H4Z
-         nww6Q0xXCcrq4NEWGdEP01YUsw66Bxu7ZDq7ag5N1uvRx+p5RCTCCQbjS8dIvcGfTj6X
-         MVft2KMHswtIvmE7epRbA4kA1JJld+WMHXuCd3I4t29jX4TrD9Hi4HHQvuI0v7qWW1jz
-         O+bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BRRBZT8ySKIFRsUMyPGRaPv+NMBfsy6kK0WAjQoESxI=;
-        b=U7kJecCRAei9jGM9XsU2Ma9iOlYND8MUCqOS+jowke6IFTBlsa/edH17v7vj7cu76s
-         +pmigeGPlXeKjUmgoqQDvhzm0bxrBXwoheplosBuCCwNEG5zGNbrlDVOrVjxPARveqml
-         KSJ7ZWRK0AAIIAWopto0gMpOXVE+VL7x6Wm1TAx0AXZHxQeUy014ZBsv6j8+ta/5wYwD
-         Sl9RuCTzYbXbJD6lDbzGAQuhh481lqEe5HRmEVlRdyP7t85vFyRuLR41mc2pv6LgR1S5
-         Q4xasCVvI807XffdTiErfTeo5YZFfLKqvOhLjDtA4S8MFa7sn6oSM/X5AG3mFH9wQwtz
-         aRcw==
-X-Gm-Message-State: AOAM531H8LDcXbEw7l/bGzPXzKDBunHMZ6ex/4JHgnaeUOeAUb35tKq/
-        NUe1PweHhN+pgVpAzF1vsM0b8Q==
-X-Google-Smtp-Source: ABdhPJwFColY0yT1w1m9snQuiX4vEjEAvWqS1IYW9nZwAHU7eHJgA48cXdx+o3zYeJbmlaWlKFEdKw==
-X-Received: by 2002:a37:a903:: with SMTP id s3mr2319716qke.391.1604587284369;
-        Thu, 05 Nov 2020 06:41:24 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id 9sm1162119qkv.110.2020.11.05.06.41.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 06:41:23 -0800 (PST)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kagS3-00HNt1-1F; Thu, 05 Nov 2020 10:41:23 -0400
-Date:   Thu, 5 Nov 2020 10:41:23 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Zhu Yanjun <yanjunz@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 1/6] RMDA/sw: don't allow drivers using dma_virt_ops on
- highmem configs
-Message-ID: <20201105144123.GB4142106@ziepe.ca>
-References: <20201105074205.1690638-1-hch@lst.de>
- <20201105074205.1690638-2-hch@lst.de>
+        id S1730975AbgKEOoy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 09:44:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730461AbgKEOox (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Nov 2020 09:44:53 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F9A720936;
+        Thu,  5 Nov 2020 14:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604587492;
+        bh=5FiNUpBTWnS1+JvY0Wfv3Bkzj003q4PW+FPEf75maAM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fX9IGv8JC7Dgu3NaU2ko8n+eNJaA5s/NHK3pK5EX3h7SZrhcdkW+KT2H8X2MKeNRH
+         7PfKTrappw4QILDVRJ8PYcYaXtavJc8uwSP47KFdLP6+dSaqoe0Gvj7EEdRA+rfOOI
+         mE2kZDtNx1T1eLhWrEgU9FSmTUXdFLI4pUZVdLPA=
+Date:   Thu, 5 Nov 2020 08:44:51 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 23/56] PCI: fix kernel-doc markups
+Message-ID: <20201105144451.GA496849@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201105074205.1690638-2-hch@lst.de>
+In-Reply-To: <f19caf7a68f8365c8b573a42b4ac89ec21925c73.1603469755.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 05, 2020 at 08:42:00AM +0100, Christoph Hellwig wrote:
-> dma_virt_ops requires that all pages have a kernel virtual address.
-> Introduce a INFINIBAND_VIRT_DMA Kconfig symbol that depends on !HIGHMEM
-> and a large enough dma_addr_t, and make all three driver depend on the
-> new symbol.
+On Fri, Oct 23, 2020 at 06:33:10PM +0200, Mauro Carvalho Chehab wrote:
+> Some identifiers have different names between their prototypes
+> and the kernel-doc markup.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
->  drivers/infiniband/Kconfig           | 6 ++++++
->  drivers/infiniband/sw/rdmavt/Kconfig | 3 ++-
->  drivers/infiniband/sw/rxe/Kconfig    | 2 +-
->  drivers/infiniband/sw/siw/Kconfig    | 1 +
->  4 files changed, 10 insertions(+), 2 deletions(-)
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+Applied to pci/misc for v5.11, thanks!
+
+> ---
+>  drivers/pci/p2pdma.c     | 10 +++++-----
+>  drivers/pci/pci-driver.c |  4 ++--
+>  drivers/pci/pci.c        |  2 +-
+>  drivers/pci/probe.c      |  4 ++--
+>  drivers/pci/slot.c       |  5 +++--
+>  5 files changed, 13 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
-> index 32a51432ec4f73..81acaf5fb5be67 100644
-> +++ b/drivers/infiniband/Kconfig
-> @@ -73,6 +73,12 @@ config INFINIBAND_ADDR_TRANS_CONFIGFS
->  	  This allows the user to config the default GID type that the CM
->  	  uses for each device, when initiaing new connections.
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index de1c331dbed4..bace04145c5f 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -609,7 +609,7 @@ bool pci_has_p2pmem(struct pci_dev *pdev)
+>  EXPORT_SYMBOL_GPL(pci_has_p2pmem);
 >  
-> +config INFINIBAND_VIRT_DMA
-> +	bool
-> +	default y
-
-Oh, I haven't seen this kconfig trick with default before..
-
-> +	depends on !HIGHMEM
-> +	depends on !64BIT || ARCH_DMA_ADDR_T_64BIT
-> +
->  if INFINIBAND_USER_ACCESS || !INFINIBAND_USER_ACCESS
->  source "drivers/infiniband/hw/mthca/Kconfig"
->  source "drivers/infiniband/hw/qib/Kconfig"
-> diff --git a/drivers/infiniband/sw/rdmavt/Kconfig b/drivers/infiniband/sw/rdmavt/Kconfig
-> index 9ef5f5ce1ff6b0..c8e268082952b0 100644
-> +++ b/drivers/infiniband/sw/rdmavt/Kconfig
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  config INFINIBAND_RDMAVT
->  	tristate "RDMA verbs transport library"
-> -	depends on X86_64 && ARCH_DMA_ADDR_T_64BIT
-> +	depends on INFINIBAND_VIRT_DMA
-
-Usually I would expect a non-menu item to be used with select not
-'depends on' - is the use of default avoiding that?
-
-This looks nice
-
-Jason
+>  /**
+> - * pci_p2pmem_find - find a peer-to-peer DMA memory device compatible with
+> + * pci_p2pmem_find_many - find a peer-to-peer DMA memory device compatible with
+>   *	the specified list of clients and shortest distance (as determined
+>   *	by pci_p2pmem_dma())
+>   * @clients: array of devices to check (NULL-terminated)
+> @@ -674,7 +674,7 @@ struct pci_dev *pci_p2pmem_find_many(struct device **clients, int num_clients)
+>  EXPORT_SYMBOL_GPL(pci_p2pmem_find_many);
+>  
+>  /**
+> - * pci_alloc_p2p_mem - allocate peer-to-peer DMA memory
+> + * pci_alloc_p2pmem - allocate peer-to-peer DMA memory
+>   * @pdev: the device to allocate memory from
+>   * @size: number of bytes to allocate
+>   *
+> @@ -727,7 +727,7 @@ void pci_free_p2pmem(struct pci_dev *pdev, void *addr, size_t size)
+>  EXPORT_SYMBOL_GPL(pci_free_p2pmem);
+>  
+>  /**
+> - * pci_virt_to_bus - return the PCI bus address for a given virtual
+> + * pci_p2pmem_virt_to_bus - return the PCI bus address for a given virtual
+>   *	address obtained with pci_alloc_p2pmem()
+>   * @pdev: the device the memory was allocated from
+>   * @addr: address of the memory that was allocated
+> @@ -859,7 +859,7 @@ static int __pci_p2pdma_map_sg(struct pci_p2pdma_pagemap *p2p_pgmap,
+>  }
+>  
+>  /**
+> - * pci_p2pdma_map_sg - map a PCI peer-to-peer scatterlist for DMA
+> + * pci_p2pdma_map_sg_attrs - map a PCI peer-to-peer scatterlist for DMA
+>   * @dev: device doing the DMA request
+>   * @sg: scatter list to map
+>   * @nents: elements in the scatterlist
+> @@ -896,7 +896,7 @@ int pci_p2pdma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+>  EXPORT_SYMBOL_GPL(pci_p2pdma_map_sg_attrs);
+>  
+>  /**
+> - * pci_p2pdma_unmap_sg - unmap a PCI peer-to-peer scatterlist that was
+> + * pci_p2pdma_unmap_sg_attrs - unmap a PCI peer-to-peer scatterlist that was
+>   *	mapped with pci_p2pdma_map_sg()
+>   * @dev: device doing the DMA request
+>   * @sg: scatter list to map
+> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> index 8b587fc97f7b..591ab353844a 100644
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -90,7 +90,7 @@ static void pci_free_dynids(struct pci_driver *drv)
+>  }
+>  
+>  /**
+> - * store_new_id - sysfs frontend to pci_add_dynid()
+> + * new_id_store - sysfs frontend to pci_add_dynid()
+>   * @driver: target device driver
+>   * @buf: buffer for scanning device ID data
+>   * @count: input size
+> @@ -158,7 +158,7 @@ static ssize_t new_id_store(struct device_driver *driver, const char *buf,
+>  static DRIVER_ATTR_WO(new_id);
+>  
+>  /**
+> - * store_remove_id - remove a PCI device ID from this driver
+> + * remove_id_store - remove a PCI device ID from this driver
+>   * @driver: target device driver
+>   * @buf: buffer for scanning device ID data
+>   * @count: input size
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 6d4d5a2f923d..8b9bea8ba751 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3480,7 +3480,7 @@ bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
+>  }
+>  
+>  /**
+> - * pci_acs_path_enable - test ACS flags from start to end in a hierarchy
+> + * pci_acs_path_enabled - test ACS flags from start to end in a hierarchy
+>   * @start: starting downstream device
+>   * @end: ending upstream device or NULL to search to the root bus
+>   * @acs_flags: required flags
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 4289030b0fff..eb1ec037f9e7 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -165,7 +165,7 @@ static inline unsigned long decode_bar(struct pci_dev *dev, u32 bar)
+>  #define PCI_COMMAND_DECODE_ENABLE	(PCI_COMMAND_MEMORY | PCI_COMMAND_IO)
+>  
+>  /**
+> - * pci_read_base - Read a PCI BAR
+> + * __pci_read_base - Read a PCI BAR
+>   * @dev: the PCI device
+>   * @type: type of the BAR
+>   * @res: resource buffer to be filled in
+> @@ -1612,7 +1612,7 @@ static bool pci_ext_cfg_is_aliased(struct pci_dev *dev)
+>  }
+>  
+>  /**
+> - * pci_cfg_space_size - Get the configuration space size of the PCI device
+> + * pci_cfg_space_size_ext - Get the configuration space size of the PCI device
+>   * @dev: PCI device
+>   *
+>   * Regular PCI devices have 256 bytes, but PCI-X 2 and PCI Express devices
+> diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+> index 3861505741e6..bcc8b12ce5da 100644
+> --- a/drivers/pci/slot.c
+> +++ b/drivers/pci/slot.c
+> @@ -323,7 +323,7 @@ EXPORT_SYMBOL_GPL(pci_destroy_slot);
+>  #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
+>  #include <linux/pci_hotplug.h>
+>  /**
+> - * pci_hp_create_link - create symbolic link to the hotplug driver module.
+> + * pci_hp_create_module_link - create symbolic link to the hotplug driver module.
+>   * @pci_slot: struct pci_slot
+>   *
+>   * Helper function for pci_hotplug_core.c to create symbolic link to
+> @@ -349,7 +349,8 @@ void pci_hp_create_module_link(struct pci_slot *pci_slot)
+>  EXPORT_SYMBOL_GPL(pci_hp_create_module_link);
+>  
+>  /**
+> - * pci_hp_remove_link - remove symbolic link to the hotplug driver module.
+> + * pci_hp_remove_module_link - remove symbolic link to the hotplug driver
+> + * 	module.
+>   * @pci_slot: struct pci_slot
+>   *
+>   * Helper function for pci_hotplug_core.c to remove symbolic link to
+> -- 
+> 2.26.2
+> 
