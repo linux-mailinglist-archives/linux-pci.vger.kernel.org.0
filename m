@@ -2,179 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07BA42A7AA8
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 10:34:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42D0D2A7AF0
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 10:46:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgKEJeP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 04:34:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730983AbgKEJeO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 04:34:14 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE1BC0613D4
-        for <linux-pci@vger.kernel.org>; Thu,  5 Nov 2020 01:34:14 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id s13so879690wmh.4
-        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 01:34:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dhezt058VYAXUzsmT6wFAloMyt6Frs+cE6TCkSAcHPs=;
-        b=ST87g3boTQObR5JxsvDJGIfMAlcgsXvr+F3JKuft7VsNKm+GuZmFkRWYBz/N9m+nP5
-         gUOFOdjErnnQz3ZNReWuFokDdnl7uPc7ZMOj6kqNide21CEbt+Pus48kXLDRURvnNC2N
-         3RAKhoWa6Hje1zG3vURpcraCOdJW7Q+XZ+t28=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=dhezt058VYAXUzsmT6wFAloMyt6Frs+cE6TCkSAcHPs=;
-        b=fjtY0f6c64/YFkVvUEB30a6zHFL1JPx2utp1gKGdPLCUQ9QLhL/0LZM9Sub0JBnonP
-         k9WFEStMJct5PJgY/oWsHby9kwlzkr/bOeiUevNAJu05C/jmJ9rGArGauzf3q4vr7Bsu
-         2J7yuqGLgA/fQ2tY7d/USyO1TF1jjL+PDTplppuyXzo/QE29ESLqOoBTHmwFwCy2Pt38
-         NEfUhEZVsXKoWPl2DAFXIQhk/S+xTqOXJaizx9wHZjphA4qjbEMlntr6udrIV+WIRsb6
-         iV0CeZL17IWRhh/7sGgExvzkGriWGqdH1LLC4oamT2XLCpvyBsgN6w6ihjZXKaqyZLCa
-         KXnA==
-X-Gm-Message-State: AOAM532fOQOwWgrIr3a+P4mGa/J3RrFendlmLwgIlYFXWmkXRH957TFi
-        I5h3M2YYKGLikxtT5KbhxYqhwQ==
-X-Google-Smtp-Source: ABdhPJwBx2+thaZ4Z7KLrdw1GbhrDGTHyh3vgC78jGbXnmbFtcgLmot8B2SlqilS+tbAOr47w4H/Mg==
-X-Received: by 2002:a1c:21c1:: with SMTP id h184mr1802586wmh.106.1604568852772;
-        Thu, 05 Nov 2020 01:34:12 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id s202sm1648809wme.39.2020.11.05.01.34.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 01:34:11 -0800 (PST)
-Date:   Thu, 5 Nov 2020 10:34:09 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v5 11/15] PCI: Obey iomem restrictions for procfs mmap
-Message-ID: <20201105093409.GR401619@phenom.ffwll.local>
-Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, KVM list <kvm@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-References: <CAKMK7uF0QjesaNs97N-G8cZkXuAmFgcmTfHvoCP94br_WVcV6Q@mail.gmail.com>
- <20201104165017.GA352206@bjorn-Precision-5520>
- <CAPcyv4idORJzHVD2vCOnO3REqWHKVn_-otOzTBf0HhcWq4iJRQ@mail.gmail.com>
+        id S1727379AbgKEJqN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 5 Nov 2020 04:46:13 -0500
+Received: from mga02.intel.com ([134.134.136.20]:50768 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgKEJqN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Nov 2020 04:46:13 -0500
+IronPort-SDR: agtKEWIljey1dafuWpBBzmdWntsCFCfnri9FfTl6HuW9wmKbaJI8SwkdgDMnxN/1268OlOOGb0
+ GD+Ro8Cqf/QQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9795"; a="156346990"
+X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
+   d="scan'208";a="156346990"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 01:46:12 -0800
+IronPort-SDR: LP3YMUn310MILM2LDvZspBhNB/KJhExXuqSqz7IzDYrmcMu5Tsm9WiaGjAgcW1KhIl73EultN2
+ Wiug49oZe46A==
+X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
+   d="scan'208";a="471582971"
+Received: from mwaskox-mobl.ger.corp.intel.com (HELO localhost) ([10.252.10.106])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 01:46:09 -0800
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4idORJzHVD2vCOnO3REqWHKVn_-otOzTBf0HhcWq4iJRQ@mail.gmail.com>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20201104173556.GA359362@bjorn-Precision-5520>
+References: <20201104173556.GA359362@bjorn-Precision-5520>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
+From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, bp@alien8.de, lucas.demarchi@intel.com,
+        matthew.d.roper@intel.com, hariom.pandey@intel.com,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-ID: <160456956585.5393.4540325192433934522@jlahtine-mobl.ger.corp.intel.com>
+User-Agent: alot/0.8.1
+Date:   Thu, 05 Nov 2020 11:46:06 +0200
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 12:12:15PM -0800, Dan Williams wrote:
-> On Wed, Nov 4, 2020 at 8:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Wed, Nov 04, 2020 at 09:44:04AM +0100, Daniel Vetter wrote:
-> > > On Tue, Nov 3, 2020 at 11:09 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > On Tue, Nov 3, 2020 at 1:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > On Fri, Oct 30, 2020 at 11:08:11AM +0100, Daniel Vetter wrote:
-> > > > > > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
-> > > > > > files, and the old proc interface. Two check against
-> > > > > > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
-> > > > > > this starts to matter, since we don't want random userspace having
-> > > > > > access to PCI BARs while a driver is loaded and using it.
-> > > > > >
-> > > > > > Fix this by adding the same iomem_is_exclusive() check we already have
-> > > > > > on the sysfs side in pci_mmap_resource().
-> > > > > >
-> > > > > > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-> > > > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > > > >
-> > > > > This is OK with me but it looks like IORESOURCE_EXCLUSIVE is currently
-> > > > > only used in a few places:
-> > > > >
-> > > > >   e1000_probe() calls pci_request_selected_regions_exclusive(),
-> > > > >   ne_pci_probe() calls pci_request_regions_exclusive(),
-> > > > >   vmbus_allocate_mmio() calls request_mem_region_exclusive()
-> > > > >
-> > > > > which raises the question of whether it's worth keeping
-> > > > > IORESOURCE_EXCLUSIVE at all.  I'm totally fine with removing it
-> > > > > completely.
-> > > >
-> > > > Now that CONFIG_IO_STRICT_DEVMEM upgrades IORESOURCE_BUSY to
-> > > > IORESOURCE_EXCLUSIVE semantics the latter has lost its meaning so I'd
-> > > > be in favor of removing it as well.
-> > >
-> > > Still has some value since it enforces exclusive access even if the
-> > > config isn't enabled, and iirc e1000 had some fun with userspace tools
-> > > clobbering the firmware and bricking the chip.
-> >
-> > There's *some* value; I'm just skeptical since only three drivers use
-> > it.
-> >
-> > IORESOURCE_EXCLUSIVE is from e8de1481fd71 ("resource: allow MMIO
-> > exclusivity for device drivers"), and the commit message says this is
-> > only active when CONFIG_STRICT_DEVMEM is set.  I didn't check to see
-> > whether that's still true.
-> >
-> > That commit adds a bunch of wrappers and "__"-prefixed functions to
-> > pass the IORESOURCE_EXCLUSIVE flag around.  That's a fair bit of
-> > uglification for three drivers.
-> >
-> > > Another thing I kinda wondered, since pci maintainer is here: At least
-> > > in drivers/gpu I see very few drivers explicitly requestion regions
-> > > (this might be a historical artifact due to the shadow attach stuff
-> > > before we had real modesetting drivers). And pci core doesn't do that
-> > > either, even when a driver is bound. Is this intentional, or
-> > > should/could we do better? Since drivers work happily without
-> > > reserving regions I don't think "the drivers need to remember to do
-> > > this" will ever really work out well.
-> >
-> > You're right, many drivers don't call pci_request_regions().  Maybe we
-> > could do better, but I haven't looked into that recently.  There is a
-> > related note in Documentation/PCI/pci.rst that's been there for a long
-> > time (it refers to "pci_request_resources()", which has never existed
-> > AFAICT).  I'm certainly open to proposals.
+Quoting Bjorn Helgaas (2020-11-04 19:35:56)
+> [+cc Jani, Joonas, Rodrigo, David, Daniel]
 > 
-> It seems a bug that the kernel permits MMIO regions with side effects
-> to be ioremap()'ed without request_mem_region() on the resource. I
-> wonder how much log spam would happen if ioremap() reported whenever a
-> non-IORESOURE_BUSY range was passed to it? The current state of
-> affairs to trust *remap users to have claimed their remap target seems
-> too ingrained to unwind now.
+> On Wed, Nov 04, 2020 at 05:35:06PM +0530, Tejas Upadhyay wrote:
+> > JSL re-uses the same stolen memory as ICL and EHL.
+> > 
+> > Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> > Cc: Matt Roper <matthew.d.roper@intel.com>
+> > Signed-off-by: Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
+> 
+> I don't plan to do anything with this since previous similar patches
+> have gone through some other tree, so this is just kibitzing.
+> 
+> But the fact that we have this long list of Intel devices [1] that
+> constantly needs updates [2] is a hint that something is wrong.
 
-Yeah I think that's hopeless. I think the only feasible approach is if bus
-drivers claim resources by default when a driver is bound (it should nest,
-so if the driver claims again, I think that should all keep working), just
-using the driver name. Probably with some special casing for legacy io
-(vgaarb.c should claim these I guess). Still probably tons of fallout.
+We add an entry for every new integrated graphics platform. Once the
+platform is added, there have not been changes lately.
 
-Once that's rolled out to all bus drivers we could perhaps add the ioremap
-check without drowning in log spam. Still a multi-year project I think :-/
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> IIUC the general idea is that we need to discover Intel gfx memory by
+> looking at device-dependent config space and add it to the E820 map.
+> Apparently the quirks discover this via PCI config registers like
+> I830_ESMRAMC, I845_ESMRAMC, etc, and tell the driver about it via the
+> global "intel_graphics_stolen_res"?
+
+We discover what is called the graphics data stolen memory. It is regular
+system memory range that is not CPU accessible. It is accessible by the
+integrated graphics only.
+
+See: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/x86/kernel/early-quirks.c?h=v5.10-rc2&id=814c5f1f52a4beb3710317022acd6ad34fc0b6b9
+
+> That's not the way this should work.  There should some generic, non
+> device-dependent PCI or ACPI method to discover the memory used, or at
+> least some way to do it in the driver instead of early arch code.
+
+It's used by the early BIOS/UEFI code to set up initial framebuffer.
+Even if i915 driver is never loaded, the memory ranges still need to
+be fixed. They source of the problem is that the OEM BIOS which are
+not under our control get the programming wrong.
+
+We used to detect the memory region size again at i915 initialization
+but wanted to eliminate the code duplication and resulting subtle bugs
+that caused. Conclusion back then was that storing the struct resource
+in memory is the best trade-off.
+
+> How is this *supposed* to work?  Is there something we can do in E820
+> or other resource management that would make this easier?
+
+The code was added around Haswell (HSW) device generation to mitigate
+bugs in BIOS. It is traditionally hard to get all OEMs to fix their
+BIOS when things work for Windows. It's only later years when some
+laptop models are intended to be sold with Linux.
+
+The alternative would be to get all the OEM to fix their BIOS for Linux,
+but that is not very realistic given past experiences. So it seems
+a better choice to to add new line per platform generation to make
+sure the users can boot to Linux.
+
+Regards, Joonas
+
+> > ---
+> >  arch/x86/kernel/early-quirks.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> > index a4b5af03dcc1..534cc3f78c6b 100644
+> > --- a/arch/x86/kernel/early-quirks.c
+> > +++ b/arch/x86/kernel/early-quirks.c
+> > @@ -549,6 +549,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
+> >       INTEL_CNL_IDS(&gen9_early_ops),
+> >       INTEL_ICL_11_IDS(&gen11_early_ops),
+> >       INTEL_EHL_IDS(&gen11_early_ops),
+> > +     INTEL_JSL_IDS(&gen11_early_ops),
+> >       INTEL_TGL_12_IDS(&gen11_early_ops),
+> >       INTEL_RKL_IDS(&gen11_early_ops),
+> >  };
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/early-quirks.c?h=v5.10-rc2#n518
+> 
+> [2]
+>   May 2020 efbee021ad02 ("x86/gpu: add RKL stolen memory support")
+>   Jul 2019 6b2436aeb945 ("x86/gpu: add TGL stolen memory support")
+>   Mar 2019 d53fef0be4a5 ("x86/gpu: add ElkhartLake to gen11 early quirks")
+>   May 2018 db0c8d8b031d ("x86/gpu: reserve ICL's graphics stolen memory")
+>   Dec 2017 33aa69ed8aac ("x86/gpu: add CFL to early quirks")
+>   Jul 2017 2e1e9d48939e ("x86/gpu: CNL uses the same GMS values as SKL")
+>   Jan 2017 bc384c77e3bb ("x86/gpu: GLK uses the same GMS values as SKL")
+>   Oct 2015 00ce5c8a66fb ("drm/i915/kbl: Kabylake uses the same GMS values as Skylake")
+>   Mar 2015 31d4dcf705c3 ("drm/i915/bxt: Broxton uses the same GMS values as Skylake")
+>   ...
