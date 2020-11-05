@@ -2,73 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4AA62A85AC
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 19:06:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 221FA2A8607
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 19:22:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgKESGs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 13:06:48 -0500
-Received: from mga05.intel.com ([192.55.52.43]:28684 "EHLO mga05.intel.com"
+        id S1731350AbgKESWp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 13:22:45 -0500
+Received: from mout.gmx.net ([212.227.15.15]:53071 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgKESGs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Nov 2020 13:06:48 -0500
-IronPort-SDR: LqpQtIhIr/Etz69LhYiesmJA3VZ17ATZzhZGUNl/iVlzPNuWa468SRCqWRSC2471r1wGXCut4u
- AnaWSLL2IeGQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9796"; a="254138495"
-X-IronPort-AV: E=Sophos;i="5.77,454,1596524400"; 
-   d="scan'208";a="254138495"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 10:06:47 -0800
-IronPort-SDR: HFbDWWUYKKu2BPtEyB/CyyrNTeHoA6y9eTOMZjFeKolSt2AUmHHpKqem+7T10fxBo4lWCN+JRB
- QhCapuagznsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,454,1596524400"; 
-   d="scan'208";a="528058222"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Nov 2020 10:06:46 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A765A213; Thu,  5 Nov 2020 20:06:45 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        johan@kernel.org, linux-usb@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] PCI: Use predefined Pericom vendor ID
-Date:   Thu,  5 Nov 2020 20:06:44 +0200
-Message-Id: <20201105180644.42862-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201105180644.42862-1-andriy.shevchenko@linux.intel.com>
-References: <20201105180644.42862-1-andriy.shevchenko@linux.intel.com>
+        id S1729783AbgKESWo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Nov 2020 13:22:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1604600548;
+        bh=Pc5dbaOido24NXVb8HZQjU9gpMX01LN8EOHWxl80a84=;
+        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
+         CC:From;
+        b=BFWGCTu195qaD4Xv4Rn8gKgigHnyGgo/1Aqq/TAJFaynGfiIHy9Lw4lUQwZKj6Y6S
+         BIUO8eDrNfhFCc/av2fv+XZujyKclHLdJDDtV54nJk55bBzVCtaceROj1rY8KhxK72
+         SLw07C6KN2NaxSP3INreQTHfKbhqlKwM8uOEF6TM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from frank-s9 ([217.61.147.34]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MbzuH-1k3cD53Mkh-00dX4I; Thu, 05
+ Nov 2020 19:22:28 +0100
+Date:   Thu, 05 Nov 2020 19:22:25 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <c529dbfc066f4bda9b87edbdbf771f207e69b84e.1604510053.git.ryder.lee@mediatek.com>
+References: <c529dbfc066f4bda9b87edbdbf771f207e69b84e.1604510053.git.ryder.lee@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3] PCI: mediatek: Configure FC and FTS for functions other than 0
+Reply-to: frank-w@public-files.de
+To:     linux-mediatek@lists.infradead.org,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     linux-pci@vger.kernel.org
+From:   Frank Wunderlich <frank-w@public-files.de>
+Message-ID: <B6B7543F-E57F-469A-A4FB-C4B4E98345C0@public-files.de>
+X-Provags-ID: V03:K1:CcBqTaMual05Jcwtvw5hBu21DlgbPmbjcZcpR7jddnT/v//uArp
+ M8xkGEG+pb/dajrE0rlzGwzpP2IezhLUX5fdzjoLuWLuGeZO+jqWOHvgEdPc5A3LjyOmR6u
+ qzXnTdCNL0yDJaWJIkwHsSqhHFiHkzdGGH9giA181eA9Y2xB32Qemg72m9qTneTCJycKtSz
+ a+hjvSubA9bWs+T4aKgQQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F5MTwzFoSuI=:a9D71ezL6d0ls2dfKDUfi+
+ gEdLyxDg6omv2WsqNd6xYdG0k324fYXKZaOSY0ILES8cHy8OZDFiDt3atMNp2fCiwKllzJvUU
+ pj2Ej45bpEfRZj680ATurbAtgAKiYmi1qtBRnG6Lmdkg0xXr7sNAMoH5jLbXjcwd2U5NkBMB3
+ 9xwk91WAqp2uAM/aW7A/dXD9euexCRP/fkBRyo00CvO6I78rwtZot5muujx6lJPuqE/mHAzwy
+ NNagoeOZIKmq3MNjUSsXsD3QEWkAoJEYupYe2r69ke5Pn/sew9zL8Ev58cOszNbDOYHjEywoP
+ xfRY8cKRBnOYRY8bO5Rp+cxVsp/5DyxWg5vt+iNh7jXrbmty77fMuQDTteyUFct9zPx/TBWSz
+ Ar1wQ0y/V/dx22+DMnBzebZowUEFha5PwFLZjUDzv8PCRwYrANteX+7KtjAtHRkJmYJtwjjq3
+ aiDqZkQdtg6frSpfsQfERhvwmg1bpOFuT6X7/Bx9zuWY579WYFRDb0BptGHSVwKCPSaZJdl3C
+ xLZv6QvEAv05fdegKCz9x7UMr/rEPC5f4TPnjoAZoCz0Xk/VpicpbgISBkuMJO54aKpVM5si/
+ sXuhjmWz2WIWj1RPtaXRFMzU8ONfnnGzVose5rO8DQnyPAs7OJpnur8eTEpuezPYIjOkLU6dB
+ HJDA4BixbhBmeYDdz/5T1TzjapOHVMgKbro0MAjRlKwxTJ+EASzluLVTNW05NlQX+vF9l8edf
+ XVwVLdUfu0qqJbJCOTd6rx9PuVXkm8Qpafj50UULul8YHBSghK7uBOXgNmvmNyYuLtQ8z3WUU
+ 9aOKUBYHEgOstReZ4Gd7ir9OCyiGw8cA1vVyfe27MxurnbyHRG55vaiUaua7y+qgoBanmtWIl
+ j10B75qb1baRL+NVxM/w==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Pericom has predefined vendor ID, use it instead of hard coded value.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pci/quirks.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 7df7ae50618c..6fd5ce08d027 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2356,9 +2356,9 @@ static void quirk_enable_clear_retrain_link(struct pci_dev *dev)
- 	dev->clear_retrain_link = 1;
- 	pci_info(dev, "Enable PCIe Retrain Link quirk\n");
- }
--DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe110, quirk_enable_clear_retrain_link);
--DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe111, quirk_enable_clear_retrain_link);
--DECLARE_PCI_FIXUP_HEADER(0x12d8, 0xe130, quirk_enable_clear_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PERICOM, 0xe110, quirk_enable_clear_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PERICOM, 0xe111, quirk_enable_clear_retrain_link);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PERICOM, 0xe130, quirk_enable_clear_retrain_link);
- 
- static void fixup_rev1_53c810(struct pci_dev *dev)
- {
--- 
-2.28.0
-
+How can i verify (triggering bug without patch)?
+regards Frank
