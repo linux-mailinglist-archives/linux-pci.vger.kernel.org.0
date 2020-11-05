@@ -2,101 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 873CE2A8575
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 18:58:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26C372A85AE
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 19:06:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725998AbgKER6S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 12:58:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgKER6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 12:58:18 -0500
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14539C0613D2
-        for <linux-pci@vger.kernel.org>; Thu,  5 Nov 2020 09:58:18 -0800 (PST)
-Received: by mail-qk1-x744.google.com with SMTP id 140so2015229qko.2
-        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 09:58:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IV2pMAD0GDkCc858XzaHv7E4h3K+d+uW6Iv2k0uw7L8=;
-        b=E1HBlRXYwbDvEdNlW4RmkR7rTF1T1GLQXH1l6KDVxZadZr6pW2rmQlTxGBBVRuROLf
-         yi3XZGVa7/ZfRjpI2YW5sUs3BbknwOQL2gGRoLqZixEj7lh7JDdZTYjcQT0QxDvXCqYv
-         d8sQLyr8J1r5mlty6l39ypIuuYAhvrht+miISyAhXZWienxSWr5xZ6xhY/UwYYExZVk4
-         eUnzv/UqYLRYKEPSxdVPsxZezSeeMmKqUM9YfPkKpT+W2w85lrT0Jo8bmeK2rUn3xAqI
-         QDyxBcvY8IOa+RqgsRlDZnjd8jh+EtbKJWHLeljDmllAoV2ZNTd+c5g8cxbbZp2QWdf1
-         8Spw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IV2pMAD0GDkCc858XzaHv7E4h3K+d+uW6Iv2k0uw7L8=;
-        b=BJRqmWiI0OthcMDni7Sq0NU6ohbeTeWsXNoCu1u4ZRFr1ZdV/J4J1HrKHTB3sMRWm2
-         yBt1mY5MjRnd0eFjYlbCE2PR6+mbdZnlBZt0oxEFqr6FskylNWDqm7v2sHquP5Ywa2jI
-         IhR5846jxkfDJMx3Iru/AXm9LtVATuhioo7dnZ11yIwIJxNK2AwIO06cixNaKZdvm8bn
-         KTmY6iUZljxlwLGy2Cz4ftFcH7pBR45bJkYlJ8+yQHLsRsxFke6Bq6fLmzJeoRuAt5GQ
-         5gacm8MYoIPu4FhhJoJpSMoEGvICHqLV+WCbXF6Qch89j8o1NdTAq7URiuLKst/kNSdI
-         RUzA==
-X-Gm-Message-State: AOAM533RAcbR9tSvvGyu+EDItucbtgfqZCI6N08Y+cUXscwDzbLMfBO5
-        fj8faiidn75D9ZD7p+6+L1B0mQ==
-X-Google-Smtp-Source: ABdhPJxiXODJ6wdpxteKHXxL3pwnTfgdrXuumCF525zWmopkS6fq/JQpD8tKfMhxXjHU8eEOclMa9A==
-X-Received: by 2002:a05:620a:a09:: with SMTP id i9mr3033099qka.119.1604599097354;
-        Thu, 05 Nov 2020 09:58:17 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id f1sm1246044qtf.68.2020.11.05.09.58.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 09:58:16 -0800 (PST)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kajWa-0009LK-68; Thu, 05 Nov 2020 13:58:16 -0400
-Date:   Thu, 5 Nov 2020 13:58:16 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Zhu Yanjun <yanjunz@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 3/6] RDMA/core: remove use of dma_virt_ops
-Message-ID: <20201105175816.GH36674@ziepe.ca>
-References: <20201105074205.1690638-1-hch@lst.de>
- <20201105074205.1690638-4-hch@lst.de>
- <20201105175253.GA35235@nvidia.com>
+        id S1730973AbgKESGu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 13:06:50 -0500
+Received: from mga14.intel.com ([192.55.52.115]:30197 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgKESGu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Nov 2020 13:06:50 -0500
+IronPort-SDR: wbovFjzNNH+WyBZA7LQAAl122rRwzLh6P5ddc7kxRopL/tvc5JufX8ZUF8caZZYP/1ZDcLUF2N
+ gKoVpOVwt3Gw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9796"; a="168651704"
+X-IronPort-AV: E=Sophos;i="5.77,454,1596524400"; 
+   d="scan'208";a="168651704"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 10:06:49 -0800
+IronPort-SDR: TxdvLmJb7meR0XeBoC5g+PgJkpn6AENMe8P8XtSkC7QucRO6WSClaj/uTj/87kjzXHkIbLziye
+ sd5cKdhlZr3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,454,1596524400"; 
+   d="scan'208";a="326111687"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 05 Nov 2020 10:06:47 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 9EE0929A; Thu,  5 Nov 2020 20:06:45 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        johan@kernel.org, linux-usb@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        alberto.vignani@fastwebnet.it
+Subject: [PATCH v1 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
+Date:   Thu,  5 Nov 2020 20:06:43 +0200
+Message-Id: <20201105180644.42862-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201105175253.GA35235@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 05, 2020 at 01:52:53PM -0400, Jason Gunthorpe wrote:
-> On Thu, Nov 05, 2020 at 08:42:02AM +0100, Christoph Hellwig wrote:
-> > @@ -1341,7 +1322,14 @@ int ib_register_device(struct ib_device *device, const char *name,
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	setup_dma_device(device, dma_device);
-> > +	/*
-> > +	 * If the caller does not provide a DMA capable device then the IB core
-> > +	 * will set up ib_sge and scatterlist structures that stash the kernel
-> > +	 * virtual address into the address field.
-> > +	 */
-> > +	device->dma_device = dma_device;
-> > +	WARN_ON(dma_device && !dma_device->dma_parms);
-> 
-> I noticed there were a couple of places expecting dma_device to be set
-> to !NULL:
-> 
-> drivers/infiniband/core/umem.c:                 dma_get_max_seg_size(device->dma_device), sg, npages,
-> drivers/nvme/host/rdma.c:       ctrl->ctrl.numa_node = dev_to_node(ctrl->device->dev->dma_device);
+Pericom PCIe-USB adapter ambiguously advertises MSI, but documentation says
+"The MSI Function is not implemented on this device." in the chapters 7.3.27,
+7.3.29-7.3.31.
 
-Don't know much about NUMA, but do you think the ib device setup
-should autocopy the numa node from the dma_device to the ib_device and
-this usage should just refer to the ib_device?
+Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
+Datasheet: https://www.diodes.com/assets/Datasheets/PI7C9X440SL.pdf
+Reported-by: alberto.vignani@fastwebnet.it
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pci/quirks.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-Jason
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f70692ac79c5..7df7ae50618c 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5567,17 +5567,25 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
+ 
+ /*
+- * Device [12d8:0x400e] and [12d8:0x400f]
++ * Device 12d8:0x400e [OHCI] and 12d8:0x400f [EHCI]
++ *
+  * These devices advertise PME# support in all power states but don't
+  * reliably assert it.
++ *
++ * These devices ambiguously advertise MSI, but documentation (PI7C9X440SL.pdf)
++ * says "The MSI Function is not implemented on this device." in the chapters
++ * 7.3.27, 7.3.29-7.3.31.
+  */
+-static void pci_fixup_no_pme(struct pci_dev *dev)
++static void pci_fixup_no_msi_no_pme(struct pci_dev *dev)
+ {
++	pci_info(dev, "The MSI Function is not implemented on this device, disabling it\n");
++	dev->no_msi = 1;
++
+ 	pci_info(dev, "PME# is unreliable, disabling it\n");
+ 	dev->pme_support = 0;
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_msi_no_pme);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_msi_no_pme);
+ 
+ static void apex_pci_fixup_class(struct pci_dev *pdev)
+ {
+-- 
+2.28.0
+
