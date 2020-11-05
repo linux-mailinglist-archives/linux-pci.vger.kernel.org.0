@@ -2,181 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1952A8824
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 21:33:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C49042A8840
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 21:42:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731788AbgKEUc7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 15:32:59 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20412 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726801AbgKEUc7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 15:32:59 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A5KSn1v132865
-        for <linux-pci@vger.kernel.org>; Thu, 5 Nov 2020 15:32:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=in-reply-to : from : to
- : cc : date : mime-version : references : content-transfer-encoding :
- content-type : message-id : subject; s=pp1;
- bh=+cNySr7BIpCmfbWAk2jyZopLe5xWv2B9gDvRj+y56Ec=;
- b=WiwtWO0Bf9gr5vGCfiYa14uD43u/y2/XdQlMIPMorMOGPoxJUSN3SL/IXv4TPYhYCS8z
- Llq2LD0z/0mcOswCmRkDZD6YWJBpbM5HDVKJn0lYhHY7cxTxjSzEyRwtFl9De9BwtR2A
- aUFTDe8Iv1L5kNu2etC16S9KkstqG+7xSblo0HsqWlm89Xya4J50G9TH41WLdxNaQBes
- Txc8X5cwN3oqR/OlV3+f6Y6M4Mt+uet8vto8AQGXdi9F5cY3dlPTvKr+Bw+dhRt/y+re
- 21NqrR1jEDOKyzoJjyL6YNcq4j17pijjwrXLDB2XKLY76Esi/NrFmUefFSrEXpUlTSI/ Vg== 
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com [192.155.248.90])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34mn2rq5uh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 15:32:58 -0500
-Received: from localhost
-        by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
-        for <linux-pci@vger.kernel.org> from <BMT@zurich.ibm.com>;
-        Thu, 5 Nov 2020 20:32:57 -0000
-Received: from us1a3-smtp07.a3.dal06.isc4sb.com (10.146.103.14)
-        by smtp.notes.na.collabserv.com (10.106.227.141) with smtp.notes.na.collabserv.com ESMTP;
-        Thu, 5 Nov 2020 20:32:54 -0000
-Received: from us1a3-mail162.a3.dal06.isc4sb.com ([10.146.71.4])
-          by us1a3-smtp07.a3.dal06.isc4sb.com
-          with ESMTP id 2020110520325426-756408 ;
-          Thu, 5 Nov 2020 20:32:54 +0000 
-In-Reply-To: <20201105074205.1690638-2-hch@lst.de>
-From:   "Bernard Metzler" <BMT@zurich.ibm.com>
-To:     "Christoph Hellwig" <hch@lst.de>
-Cc:     "Jason Gunthorpe" <jgg@ziepe.ca>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Zhu Yanjun" <yanjunz@nvidia.com>,
-        "Logan Gunthorpe" <logang@deltatee.com>,
-        "Dennis Dalessandro" <dennis.dalessandro@cornelisnetworks.com>,
-        "Mike Marciniszyn" <mike.marciniszyn@cornelisnetworks.com>,
-        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Date:   Thu, 5 Nov 2020 20:32:54 +0000
+        id S1731234AbgKEUmI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 15:42:08 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:56052 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726214AbgKEUmH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 15:42:07 -0500
+Received: from cpc79921-stkp12-2-0-cust288.10-2.cable.virginm.net ([86.16.139.33] helo=[192.168.1.4])
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1kam56-0006I9-Pu; Thu, 05 Nov 2020 20:42:04 +0000
+Subject: Re: [PATCH v1 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        johan@kernel.org, linux-usb@vger.kernel.org
+Cc:     alberto.vignani@fastwebnet.it
+References: <20201105180644.42862-1-andriy.shevchenko@linux.intel.com>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <0c48dd87-82a2-3dfa-6b00-57ccf9d5dd0b@codethink.co.uk>
+Date:   Thu, 5 Nov 2020 20:42:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Sensitivity: 
-Importance: Normal
-X-Priority: 3 (Normal)
-References: <20201105074205.1690638-2-hch@lst.de>,<20201105074205.1690638-1-hch@lst.de>
-X-Mailer: IBM iNotes ($HaikuForm 1054.1) | IBM Domino Build
- SCN1812108_20180501T0841_FP65 April 15, 2020 at 09:48
-X-LLNOutbound: False
-X-Disclaimed: 39923
-X-TNEFEvaluated: 1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-x-cbid: 20110520-3649-0000-0000-00000459AADB
-X-IBM-SpamModules-Scores: BY=0.057312; FL=0; FP=0; FZ=0; HX=0; KW=0; PH=0;
- SC=0.40962; ST=0; TS=0; UL=0; ISC=; MB=0.000000
-X-IBM-SpamModules-Versions: BY=3.00014137; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000295; SDB=6.01459673; UDB=6.00785411; IPR=6.01242325;
- MB=3.00034882; MTD=3.00000008; XFM=3.00000015; UTC=2020-11-05 20:32:56
-X-IBM-AV-DETECTION: SAVI=unsuspicious REMOTE=unsuspicious XFE=unused
-X-IBM-AV-VERSION: SAVI=2020-11-05 18:00:52 - 6.00012035
-x-cbparentid: 20110520-3650-0000-0000-0000C15DD2EB
-Message-Id: <OF012640DA.380B447C-ON00258617.0070E025-00258617.0070E031@notes.na.collabserv.com>
-Subject: Re:  [PATCH 1/6] RMDA/sw: don't allow drivers using dma_virt_ops on highmem
- configs
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-05_14:2020-11-05,2020-11-05 signatures=0
-X-Proofpoint-Spam-Reason: orgsafe
+In-Reply-To: <20201105180644.42862-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
------"Christoph Hellwig" <hch@lst.de> wrote: -----
-
->To: "Jason Gunthorpe" <jgg@ziepe.ca>
->From: "Christoph Hellwig" <hch@lst.de>
->Date: 11/05/2020 08:46AM
->Cc: "Bjorn Helgaas" <bhelgaas@google.com>, "Bernard Metzler"
-><bmt@zurich.ibm.com>, "Zhu Yanjun" <yanjunz@nvidia.com>, "Logan
->Gunthorpe" <logang@deltatee.com>, "Dennis Dalessandro"
-><dennis.dalessandro@cornelisnetworks.com>, "Mike Marciniszyn"
-><mike.marciniszyn@cornelisnetworks.com>, linux-rdma@vger.kernel.org,
->linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org
->Subject: [EXTERNAL] [PATCH 1/6] RMDA/sw: don't allow drivers using
->dma=5Fvirt=5Fops on highmem configs
->
->dma=5Fvirt=5Fops requires that all pages have a kernel virtual address.
->Introduce a INFINIBAND=5FVIRT=5FDMA Kconfig symbol that depends on
->!HIGHMEM
->and a large enough dma=5Faddr=5Ft, and make all three driver depend on
->the
->new symbol.
->
->Signed-off-by: Christoph Hellwig <hch@lst.de>
->---
-> drivers/infiniband/Kconfig           | 6 ++++++
-> drivers/infiniband/sw/rdmavt/Kconfig | 3 ++-
-> drivers/infiniband/sw/rxe/Kconfig    | 2 +-
-> drivers/infiniband/sw/siw/Kconfig    | 1 +
-> 4 files changed, 10 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/infiniband/Kconfig b/drivers/infiniband/Kconfig
->index 32a51432ec4f73..81acaf5fb5be67 100644
->--- a/drivers/infiniband/Kconfig
->+++ b/drivers/infiniband/Kconfig
->@@ -73,6 +73,12 @@ config INFINIBAND=5FADDR=5FTRANS=5FCONFIGFS
-> 	  This allows the user to config the default GID type that the CM
-> 	  uses for each device, when initiaing new connections.
->=20
->+config INFINIBAND=5FVIRT=5FDMA
->+	bool
->+	default y
->+	depends on !HIGHMEM
->+	depends on !64BIT || ARCH=5FDMA=5FADDR=5FT=5F64BIT
->+
-> if INFINIBAND=5FUSER=5FACCESS || !INFINIBAND=5FUSER=5FACCESS
-> source "drivers/infiniband/hw/mthca/Kconfig"
-> source "drivers/infiniband/hw/qib/Kconfig"
->diff --git a/drivers/infiniband/sw/rdmavt/Kconfig
->b/drivers/infiniband/sw/rdmavt/Kconfig
->index 9ef5f5ce1ff6b0..c8e268082952b0 100644
->--- a/drivers/infiniband/sw/rdmavt/Kconfig
->+++ b/drivers/infiniband/sw/rdmavt/Kconfig
->@@ -1,7 +1,8 @@
-> # SPDX-License-Identifier: GPL-2.0-only
-> config INFINIBAND=5FRDMAVT
-> 	tristate "RDMA verbs transport library"
->-	depends on X86=5F64 && ARCH=5FDMA=5FADDR=5FT=5F64BIT
->+	depends on INFINIBAND=5FVIRT=5FDMA
->+	depends on X86=5F64
-> 	depends on PCI
-> 	select DMA=5FVIRT=5FOPS
-> 	help
->diff --git a/drivers/infiniband/sw/rxe/Kconfig
->b/drivers/infiniband/sw/rxe/Kconfig
->index a0c6c7dfc1814f..8810bfa680495a 100644
->--- a/drivers/infiniband/sw/rxe/Kconfig
->+++ b/drivers/infiniband/sw/rxe/Kconfig
->@@ -2,7 +2,7 @@
-> config RDMA=5FRXE
-> 	tristate "Software RDMA over Ethernet (RoCE) driver"
-> 	depends on INET && PCI && INFINIBAND
->-	depends on !64BIT || ARCH=5FDMA=5FADDR=5FT=5F64BIT
->+	depends on INFINIBAND=5FVIRT=5FDMA
-> 	select NET=5FUDP=5FTUNNEL
-> 	select CRYPTO=5FCRC32
-> 	select DMA=5FVIRT=5FOPS
->diff --git a/drivers/infiniband/sw/siw/Kconfig
->b/drivers/infiniband/sw/siw/Kconfig
->index b622fc62f2cd6d..3450ba5081df51 100644
->--- a/drivers/infiniband/sw/siw/Kconfig
->+++ b/drivers/infiniband/sw/siw/Kconfig
->@@ -1,6 +1,7 @@
-> config RDMA=5FSIW
-> 	tristate "Software RDMA over TCP/IP (iWARP) driver"
-> 	depends on INET && INFINIBAND && LIBCRC32C
->+	depends on INFINIBAND=5FVIRT=5FDMA
-> 	select DMA=5FVIRT=5FOPS
-> 	help
-> 	This driver implements the iWARP RDMA transport over
->--=20
->2.28.0
->
->
+On 05/11/2020 18:06, Andy Shevchenko wrote:
+> Pericom PCIe-USB adapter ambiguously advertises MSI, but documentation says
+> "The MSI Function is not implemented on this device." in the chapters 7.3.27,
+> 7.3.29-7.3.31.
+> 
+> Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
+> Datasheet: https://www.diodes.com/assets/Datasheets/PI7C9X440SL.pdf
+> Reported-by: alberto.vignani@fastwebnet.it
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   drivers/pci/quirks.c | 16 ++++++++++++----
+>   1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index f70692ac79c5..7df7ae50618c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5567,17 +5567,25 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
+>   
+>   /*
+> - * Device [12d8:0x400e] and [12d8:0x400f]
+> + * Device 12d8:0x400e [OHCI] and 12d8:0x400f [EHCI]
+> + *
+>    * These devices advertise PME# support in all power states but don't
+>    * reliably assert it.
+> + *
+> + * These devices ambiguously advertise MSI, but documentation (PI7C9X440SL.pdf)
+> + * says "The MSI Function is not implemented on this device." in the chapters
+> + * 7.3.27, 7.3.29-7.3.31.
+>    */
+> -static void pci_fixup_no_pme(struct pci_dev *dev)
+> +static void pci_fixup_no_msi_no_pme(struct pci_dev *dev)
+>   {
+> +	pci_info(dev, "The MSI Function is not implemented on this device, disabling it\n");
+> +	dev->no_msi = 1;
+> +
+>   	pci_info(dev, "PME# is unreliable, disabling it\n");
+>   	dev->pme_support = 0;
+>   }
 
 
-The complete patch set works for siw. Tested with siw as
-nvmef target.
+idea: one pci_info() print of:
 
-Tested-by: Bernard Metzler <bmt@zurich.ibm.com>
+pci_info(dev, "PME# is unreliable, MSI not implemented, disabling both\n");
 
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_msi_no_pme);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_msi_no_pme);
+>   
+>   static void apex_pci_fixup_class(struct pci_dev *pdev)
+>   {
+> 
+
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
