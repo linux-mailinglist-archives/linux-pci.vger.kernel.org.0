@@ -2,150 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 502202A8891
+	by mail.lfdr.de (Postfix) with ESMTP id C06C82A8893
 	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 22:12:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbgKEVME (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 16:12:04 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37072 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgKEVME (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 16:12:04 -0500
-Received: by mail-ot1-f66.google.com with SMTP id l36so2784555ota.4;
-        Thu, 05 Nov 2020 13:12:03 -0800 (PST)
+        id S1732233AbgKEVMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 16:12:06 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37784 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgKEVMF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 16:12:05 -0500
+Received: by mail-oi1-f196.google.com with SMTP id m17so3188054oie.4
+        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 13:12:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6kX9EfPGIe+vgEipGeuVSOOPuy47rKZgDC38PEky6/I=;
-        b=CrRfm9C5yK84aNS9TNuLdEnYRU0jVjTMmVteuSPDoRqnawZbMBmL2GwfLVFggx2p5f
-         3HV1iTZgxGbna50RyNsTwPQTPaTns0NK6EOQ4Gs12Y9RiduJvGNp72W1omqfnlmlWjdC
-         PBxAU9Mnjangp50Lb6y/XTaNYgQI+GN1na+Ep6sZnSoun0wsUG+sad5y31N9/6o7nrrQ
-         B2YrWxWbe68wbslxqHJibKXOAilgKlD7zHtSAl2egXJv4HfFg6ZcOIirkplgaYlPtda3
-         rV4RKHAf73aLI2pWBFCuETcqCmY3hEPe+k4n3hWqYr1QG+x7qncx5ATNuHLumdy488A8
-         gpZQ==
-X-Gm-Message-State: AOAM533JSSiLT+yYKOUVl1Kfv4Ie0Q5mqoDMNmZR+fo2v6qpMVAlYum2
-        P4ffGjTvK3tSNWticWi7fw==
-X-Google-Smtp-Source: ABdhPJxfRm6a7WlZFra36M/W0cF8B4tklW/+2/U/J4e/fwp/StQ3JtLqn3HUrYnVIqGDvSo8N+eI0w==
-X-Received: by 2002:a05:6830:22c9:: with SMTP id q9mr3230515otc.48.1604610722735;
-        Thu, 05 Nov 2020 13:12:02 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=u6R4H1g6vXOgAE77RIvtrXBSttU89rZUu0tXug8LN9Q=;
+        b=Z+3S/M70GKQ8GbvF1qYjQkbKdZpV538rBdtQyCo8G2YwT2tD/DwVSzOD3Cl9h8+HMx
+         OPwbz6LqrL1Q074yeTQBRWe8M1BuQvwGCM+bs/t9KHQ/PZp1mEInUxgHc0vLoDZZU4R6
+         6DGOg1sJMxFNMIqL/meTHXqfocFhpGq6SNC5kSQCRocP3V4duMhJ/2l05d7B+HnBjD93
+         cODLlov6I0+J/Abh1tm+c8c/iSa+xT8B9olNo/cKOEMpaWtec5edpl+bHr86VbRRcWnX
+         QJE6YZcXlgCkspqLI77j7pf65IB4D5M4tlnipLM3u4xhU2fMJzsmoHnIRZeLW9cFLOyI
+         Gqyg==
+X-Gm-Message-State: AOAM531HfbEkvMR/4DmR1oSxzDzr4YkEx4oucEh2OoVXXxn/l3CCVxEq
+        fVfTVlZ0E18z2/Es+KYW0VwI6C3/Duay
+X-Google-Smtp-Source: ABdhPJzRRgPYI228nYGhQP0KXdxEp7EmSKvVZtf3/2UUVia+C9yEJNc/ybenYHFl3pwJLWFsefoc3g==
+X-Received: by 2002:a54:4094:: with SMTP id i20mr930382oii.0.1604610723873;
+        Thu, 05 Nov 2020 13:12:03 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id z19sm622549ooi.32.2020.11.05.13.12.00
+        by smtp.googlemail.com with ESMTPSA id z19sm622549ooi.32.2020.11.05.13.12.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 13:12:01 -0800 (PST)
+        Thu, 05 Nov 2020 13:12:03 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Andy Gross <agross@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
         Jingoo Han <jingoohan1@gmail.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
-        linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Pratyush Anand <pratyush.anand@gmail.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: [PATCH v2 00/16] PCI: dwc: Another round of clean-ups
-Date:   Thu,  5 Nov 2020 15:11:43 -0600
-Message-Id: <20201105211159.1814485-1-robh@kernel.org>
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 01/16] PCI: dwc: Support multiple ATU memory regions
+Date:   Thu,  5 Nov 2020 15:11:44 -0600
+Message-Id: <20201105211159.1814485-2-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201105211159.1814485-1-robh@kernel.org>
+References: <20201105211159.1814485-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Here's another batch of DWC PCI host refactoring. This series primarily
-moves more of the MSI, link up, and resource handling to the core
-code. Beyond a couple of minor fixes, new in this version is runtime
-detection of iATU regions instead of using DT properties.
+The current ATU setup only supports a single memory resource which
+isn't sufficient if there are also prefetchable memory regions. In order
+to support multiple memory regions, we need to move away from fixed ATU
+slots and rework the assignment. As there's always an ATU entry for
+config space, let's assign index 0 to config space. Then we assign
+memory resources to index 1 and up. Finally, if we have an I/O region
+and slots remaining, we assign the I/O region last. If there aren't
+remaining slots, we keep the same config and I/O space sharing.
 
-No doubt I've probably broken something. Please test. I've run this thru
-kernelci and checked boards with DWC PCI which currently is just
-Layerscape boards (hint: add boards and/or enable PCI). A git branch is
-here[1].
+Cc: Vidya Sagar <vidyas@nvidia.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
+Tested-by: Vidya Sagar <vidyas@nvidia.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../pci/controller/dwc/pcie-designware-host.c | 54 +++++++++++--------
+ drivers/pci/controller/dwc/pcie-designware.h  |  6 +--
+ 2 files changed, 34 insertions(+), 26 deletions(-)
 
-This is dependent on "PCI: dwc: Restore ATU memory resource setup to use
-last entry" which will be in v5.10-rc3.
-
-Rob
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git pci-more-dwc-cleanup
-
-Rob Herring (16):
-  PCI: dwc: Support multiple ATU memory regions
-  PCI: dwc/intel-gw: Move ATU offset out of driver match data
-  PCI: dwc: Move "dbi", "dbi2", and "addr_space" resource setup into
-    common code
-  PCI: dwc/intel-gw: Remove some unneeded function wrappers
-  PCI: dwc: Ensure all outbound ATU windows are reset
-  PCI: dwc/dra7xx: Use the common MSI irq_chip
-  PCI: dwc: Drop the .set_num_vectors() host op
-  PCI: dwc: Move MSI interrupt setup into DWC common code
-  PCI: dwc: Rework MSI initialization
-  PCI: dwc: Move link handling into common code
-  PCI: dwc: Move dw_pcie_msi_init() into core
-  PCI: dwc: Move dw_pcie_setup_rc() to DWC common code
-  PCI: dwc: Remove unnecessary wrappers around dw_pcie_host_init()
-  Revert "PCI: dwc/keystone: Drop duplicated 'num-viewport'"
-  PCI: dwc: Move inbound and outbound windows to common struct
-  PCI: dwc: Detect number of iATU windows
-
- drivers/pci/controller/dwc/pci-dra7xx.c       | 141 +-----------------
- drivers/pci/controller/dwc/pci-exynos.c       |  50 ++-----
- drivers/pci/controller/dwc/pci-imx6.c         |  39 +----
- drivers/pci/controller/dwc/pci-keystone.c     |  79 ++--------
- .../pci/controller/dwc/pci-layerscape-ep.c    |  37 +----
- drivers/pci/controller/dwc/pci-layerscape.c   |  67 +--------
- drivers/pci/controller/dwc/pci-meson.c        |  53 ++-----
- drivers/pci/controller/dwc/pcie-al.c          |  29 +---
- drivers/pci/controller/dwc/pcie-armada8k.c    |  37 ++---
- drivers/pci/controller/dwc/pcie-artpec6.c     |  76 +---------
- .../pci/controller/dwc/pcie-designware-ep.c   |  58 +++----
- .../pci/controller/dwc/pcie-designware-host.c | 139 ++++++++++-------
- .../pci/controller/dwc/pcie-designware-plat.c |  70 +--------
- drivers/pci/controller/dwc/pcie-designware.c  |  93 +++++++++++-
- drivers/pci/controller/dwc/pcie-designware.h  |  24 +--
- drivers/pci/controller/dwc/pcie-histb.c       |  37 ++---
- drivers/pci/controller/dwc/pcie-intel-gw.c    |  67 ++-------
- drivers/pci/controller/dwc/pcie-kirin.c       |  62 +-------
- drivers/pci/controller/dwc/pcie-qcom.c        |  38 +----
- drivers/pci/controller/dwc/pcie-spear13xx.c   |  62 +++-----
- drivers/pci/controller/dwc/pcie-tegra194.c    |  41 +----
- drivers/pci/controller/dwc/pcie-uniphier-ep.c |  38 +----
- drivers/pci/controller/dwc/pcie-uniphier.c    |  51 +------
- 23 files changed, 356 insertions(+), 1032 deletions(-)
-
---
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 44c2a6572199..a6ffab9b537e 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -464,9 +464,7 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
+ 		type = PCIE_ATU_TYPE_CFG1;
+ 
+ 
+-	dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+-				  type, pp->cfg0_base,
+-				  busdev, pp->cfg0_size);
++	dw_pcie_prog_outbound_atu(pci, 0, type, pp->cfg0_base, busdev, pp->cfg0_size);
+ 
+ 	return pp->va_cfg0_base + where;
+ }
+@@ -480,9 +478,8 @@ static int dw_pcie_rd_other_conf(struct pci_bus *bus, unsigned int devfn,
+ 
+ 	ret = pci_generic_config_read(bus, devfn, where, size, val);
+ 
+-	if (!ret && pci->num_viewport <= 2)
+-		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+-					  PCIE_ATU_TYPE_IO, pp->io_base,
++	if (!ret && pci->io_cfg_atu_shared)
++		dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO, pp->io_base,
+ 					  pp->io_bus_addr, pp->io_size);
+ 
+ 	return ret;
+@@ -497,9 +494,8 @@ static int dw_pcie_wr_other_conf(struct pci_bus *bus, unsigned int devfn,
+ 
+ 	ret = pci_generic_config_write(bus, devfn, where, size, val);
+ 
+-	if (!ret && pci->num_viewport <= 2)
+-		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX1,
+-					  PCIE_ATU_TYPE_IO, pp->io_base,
++	if (!ret && pci->io_cfg_atu_shared)
++		dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO, pp->io_base,
+ 					  pp->io_bus_addr, pp->io_size);
+ 
+ 	return ret;
+@@ -586,21 +582,35 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 	 * ATU, so we should not program the ATU here.
+ 	 */
+ 	if (pp->bridge->child_ops == &dw_child_pcie_ops) {
+-		struct resource_entry *tmp, *entry = NULL;
++		int atu_idx = 0;
++		struct resource_entry *entry;
+ 
+ 		/* Get last memory resource entry */
+-		resource_list_for_each_entry(tmp, &pp->bridge->windows)
+-			if (resource_type(tmp->res) == IORESOURCE_MEM)
+-				entry = tmp;
+-
+-		dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX0,
+-					  PCIE_ATU_TYPE_MEM, entry->res->start,
+-					  entry->res->start - entry->offset,
+-					  resource_size(entry->res));
+-		if (pci->num_viewport > 2)
+-			dw_pcie_prog_outbound_atu(pci, PCIE_ATU_REGION_INDEX2,
+-						  PCIE_ATU_TYPE_IO, pp->io_base,
+-						  pp->io_bus_addr, pp->io_size);
++		resource_list_for_each_entry(entry, &pp->bridge->windows) {
++			if (resource_type(entry->res) != IORESOURCE_MEM)
++				continue;
++
++			if (pci->num_viewport <= ++atu_idx)
++				break;
++
++			dw_pcie_prog_outbound_atu(pci, atu_idx,
++						  PCIE_ATU_TYPE_MEM, entry->res->start,
++						  entry->res->start - entry->offset,
++						  resource_size(entry->res));
++		}
++
++		if (pp->io_size) {
++			if (pci->num_viewport > ++atu_idx)
++				dw_pcie_prog_outbound_atu(pci, atu_idx,
++							  PCIE_ATU_TYPE_IO, pp->io_base,
++							  pp->io_bus_addr, pp->io_size);
++			else
++				pci->io_cfg_atu_shared = true;
++		}
++
++		if (pci->num_viewport <= atu_idx)
++			dev_warn(pci->dev, "Resources exceed number of ATU entries (%d)",
++				 pci->num_viewport);
+ 	}
+ 
+ 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 9d2f511f13fa..ed19c34dd0fe 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -80,9 +80,6 @@
+ #define PCIE_ATU_VIEWPORT		0x900
+ #define PCIE_ATU_REGION_INBOUND		BIT(31)
+ #define PCIE_ATU_REGION_OUTBOUND	0
+-#define PCIE_ATU_REGION_INDEX2		0x2
+-#define PCIE_ATU_REGION_INDEX1		0x1
+-#define PCIE_ATU_REGION_INDEX0		0x0
+ #define PCIE_ATU_CR1			0x904
+ #define PCIE_ATU_TYPE_MEM		0x0
+ #define PCIE_ATU_TYPE_IO		0x2
+@@ -266,7 +263,6 @@ struct dw_pcie {
+ 	/* Used when iatu_unroll_enabled is true */
+ 	void __iomem		*atu_base;
+ 	u32			num_viewport;
+-	u8			iatu_unroll_enabled;
+ 	struct pcie_port	pp;
+ 	struct dw_pcie_ep	ep;
+ 	const struct dw_pcie_ops *ops;
+@@ -274,6 +270,8 @@ struct dw_pcie {
+ 	int			num_lanes;
+ 	int			link_gen;
+ 	u8			n_fts[2];
++	bool			iatu_unroll_enabled: 1;
++	bool			io_cfg_atu_shared: 1;
+ };
+ 
+ #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+-- 
 2.25.1
+
