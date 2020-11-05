@@ -2,86 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09E712A75E8
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 04:06:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38B902A7829
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 08:44:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgKEDGs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 4 Nov 2020 22:06:48 -0500
-Received: from mga06.intel.com ([134.134.136.31]:53758 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgKEDGs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 4 Nov 2020 22:06:48 -0500
-IronPort-SDR: J+ejqTi4MGwV/QDku4SOwSYqNhunle/7AAn+2ibXg+4zHVjTG7XUu6VVbDWhynF1jaJCYmvOYI
- X2/jJ5lsg5rw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9795"; a="230948029"
-X-IronPort-AV: E=Sophos;i="5.77,452,1596524400"; 
-   d="scan'208";a="230948029"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 19:06:47 -0800
-IronPort-SDR: creYzwqhMJxDfksMCcGn4+KlP1lLdD60rEDQd8BD0sBAeNAtvwVTkJdU23DOK2/pc8eEY+4l1r
- srSldrWFw+HQ==
-X-IronPort-AV: E=Sophos;i="5.77,452,1596524400"; 
-   d="scan'208";a="321036534"
-Received: from unknown (HELO [10.252.128.230]) ([10.252.128.230])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 19:06:47 -0800
-Subject: Re: [RFC PATCH] PCI/DPC: Fix info->id initialization in
- dpc_process_error()
-To:     Saheed Olayemi Bolarinwa <refactormyself@gmail.com>,
-        helgaas@kernel.org, linux-pci@vger.kernel.org
-References: <20201031100121.21391-1-refactormyself@gmail.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <0f4c022a-a669-096c-d318-1e202c9eebbf@linux.intel.com>
-Date:   Wed, 4 Nov 2020 19:06:44 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727046AbgKEHoa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 02:44:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbgKEHoa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 02:44:30 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9150C0613CF;
+        Wed,  4 Nov 2020 23:44:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=sdDqJs+tyRqodiImj9cA2noijaJPm3lpR9cgqXfZnTc=; b=ZY41Diy6e0toQAP1LxcHY6dYBZ
+        15YTUisplwNmkjfn3i8MJ1+CORNnL8XaNBpvaiOJnWiwIy6gRte5nTHGj1nT5ipDuV+I8GEQJfYSq
+        MqbY40NYK66JCTYO84IGJH71Jlh5fdlKwOWKRTBi6KonLRKvfAhPV6Jj9Q3bbmB3vrN3BtNski31P
+        81UvbgNgpEOHx4qAwuD5V+zfS7qJizXcOT1k3QKf2Hz0jTZZhsEn0oAJp3MTaHgMxGetRNOccmOI+
+        HZI98W3p5DNY1ryVfwFdvLovBJ3VIpcVY+DIf+/UxBwdS3fV63FKXOsSubiivoNCrLHF3I/SWxQ5m
+        q6oIQpwQ==;
+Received: from 089144208145.atnat0017.highway.a1.net ([89.144.208.145] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kaZwP-0004Ud-Jn; Thu, 05 Nov 2020 07:44:18 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Zhu Yanjun <yanjunz@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: remove dma_virt_ops v2
+Date:   Thu,  5 Nov 2020 08:41:59 +0100
+Message-Id: <20201105074205.1690638-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20201031100121.21391-1-refactormyself@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Jason,
 
+this series switches the RDMA core to opencode the special case of
+devices bypassing the DMA mapping in the RDMA ULPs.  The virt ops
+have caused a bit of trouble due to the P2P code node working with
+them due to the fact that we'd do two dma mapping iterations for a
+single I/O, but also are a bit of layering violation and lead to
+more code than necessary.
 
-On 10/31/20 3:01 AM, Saheed Olayemi Bolarinwa wrote:
-> From: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-> 
-> In the dpc_process_error() path, the error source ID is obtained
-> but not stored inside the aer_err_info object. So aer_print_error()
-> is not aware of the error source if it gets called.
-> 
-> Use the obtained valued to initialise info->id
-Is it useful for DPC case ? I don't think we set info->error_dev_num for
-DPC case right ?
+Tested with nvme-rdma over rxe.
 
-if (info->id && info->error_dev_num > 1 && info->id == id)
-  726                 pci_err(dev, "  Error of this Agent is reported first\n");
-
-> 
-> Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
-> ---
->   drivers/pci/pcie/dpc.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index e05aba86a317..9f8698812939 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -223,6 +223,7 @@ void dpc_process_error(struct pci_dev *pdev)
->   	else if (reason == 0 &&
->   		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
->   		 aer_get_device_error_info(pdev, &info)) {
-> +		info.id = source;
->   		aer_print_error(pdev, &info);
->   		pci_aer_clear_nonfatal_status(pdev);
->   		pci_aer_clear_fatal_status(pdev);
-> 
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Changes since v1:
+ - disable software RDMA drivers for highmem configs
+ - update the PCI commit logs
