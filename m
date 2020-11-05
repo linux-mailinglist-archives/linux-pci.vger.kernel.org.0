@@ -2,212 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB4922A7A54
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 10:20:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07BA42A7AA8
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 10:34:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgKEJUP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 04:20:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725827AbgKEJUP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Nov 2020 04:20:15 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 026F62071A;
-        Thu,  5 Nov 2020 09:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604568014;
-        bh=vG/q08mrtLO2gtgc71xNwaKrcP0h6Ke4lfzwwZebEmc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AizFHPUT+/8spelBt47bhLEK1RpLhRh3Y3KY85KCZsd6XlHvcO2B+F+Xgq2AHCNXQ
-         d9JrAkYC9bizE/R9I8f//2h+bd4nRuTJgJvrYyAEc4YFcevr5fVM3Y/OFNmcjq7Yfy
-         NjC1lvcaPJCGy9UEvGVNsPxGnscV95Ysew59zPP8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@kernel.org>)
-        id 1kabRD-007mhX-Pc; Thu, 05 Nov 2020 09:20:11 +0000
+        id S1730833AbgKEJeP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 04:34:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730983AbgKEJeO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 04:34:14 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE1BC0613D4
+        for <linux-pci@vger.kernel.org>; Thu,  5 Nov 2020 01:34:14 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id s13so879690wmh.4
+        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 01:34:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dhezt058VYAXUzsmT6wFAloMyt6Frs+cE6TCkSAcHPs=;
+        b=ST87g3boTQObR5JxsvDJGIfMAlcgsXvr+F3JKuft7VsNKm+GuZmFkRWYBz/N9m+nP5
+         gUOFOdjErnnQz3ZNReWuFokDdnl7uPc7ZMOj6kqNide21CEbt+Pus48kXLDRURvnNC2N
+         3RAKhoWa6Hje1zG3vURpcraCOdJW7Q+XZ+t28=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=dhezt058VYAXUzsmT6wFAloMyt6Frs+cE6TCkSAcHPs=;
+        b=fjtY0f6c64/YFkVvUEB30a6zHFL1JPx2utp1gKGdPLCUQ9QLhL/0LZM9Sub0JBnonP
+         k9WFEStMJct5PJgY/oWsHby9kwlzkr/bOeiUevNAJu05C/jmJ9rGArGauzf3q4vr7Bsu
+         2J7yuqGLgA/fQ2tY7d/USyO1TF1jjL+PDTplppuyXzo/QE29ESLqOoBTHmwFwCy2Pt38
+         NEfUhEZVsXKoWPl2DAFXIQhk/S+xTqOXJaizx9wHZjphA4qjbEMlntr6udrIV+WIRsb6
+         iV0CeZL17IWRhh/7sGgExvzkGriWGqdH1LLC4oamT2XLCpvyBsgN6w6ihjZXKaqyZLCa
+         KXnA==
+X-Gm-Message-State: AOAM532fOQOwWgrIr3a+P4mGa/J3RrFendlmLwgIlYFXWmkXRH957TFi
+        I5h3M2YYKGLikxtT5KbhxYqhwQ==
+X-Google-Smtp-Source: ABdhPJwBx2+thaZ4Z7KLrdw1GbhrDGTHyh3vgC78jGbXnmbFtcgLmot8B2SlqilS+tbAOr47w4H/Mg==
+X-Received: by 2002:a1c:21c1:: with SMTP id h184mr1802586wmh.106.1604568852772;
+        Thu, 05 Nov 2020 01:34:12 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id s202sm1648809wme.39.2020.11.05.01.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2020 01:34:11 -0800 (PST)
+Date:   Thu, 5 Nov 2020 10:34:09 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v5 11/15] PCI: Obey iomem restrictions for procfs mmap
+Message-ID: <20201105093409.GR401619@phenom.ffwll.local>
+Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, KVM list <kvm@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+References: <CAKMK7uF0QjesaNs97N-G8cZkXuAmFgcmTfHvoCP94br_WVcV6Q@mail.gmail.com>
+ <20201104165017.GA352206@bjorn-Precision-5520>
+ <CAPcyv4idORJzHVD2vCOnO3REqWHKVn_-otOzTBf0HhcWq4iJRQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 05 Nov 2020 09:20:11 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <linux@fw-web.de>,
-        linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: Aw: Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
-In-Reply-To: <87h7q4lnoz.fsf@nanos.tec.linutronix.de>
-References: <20201031140330.83768-1-linux@fw-web.de>
- <878sbm9icl.fsf@nanos.tec.linutronix.de>
- <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
- <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
- <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
- <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
- <df5565a2f1e821041c7c531ad52a3344@kernel.org>
- <87h7q791j8.fsf@nanos.tec.linutronix.de>
- <877dr38kt8.fsf@nanos.tec.linutronix.de>
- <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
- <87o8ke7njb.fsf@nanos.tec.linutronix.de>
- <trinity-1d7f8900-10db-40c0-a0aa-47bb99ed84cd-1604508571909@3c-app-gmx-bs02>
- <87h7q4lnoz.fsf@nanos.tec.linutronix.de>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <074d057910c3e834f4bd58821e8583b1@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, frank-w@public-files.de, ryder.lee@mediatek.com, linux-mediatek@lists.infradead.org, linux@fw-web.de, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4idORJzHVD2vCOnO3REqWHKVn_-otOzTBf0HhcWq4iJRQ@mail.gmail.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-11-04 23:14, Thomas Gleixner wrote:
-
-[...]
-
-> TBH, that's butt ugly. So after staring long enough into the PCI code I
-> came up with a way to transport that information to the probe code.
+On Wed, Nov 04, 2020 at 12:12:15PM -0800, Dan Williams wrote:
+> On Wed, Nov 4, 2020 at 8:50 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Wed, Nov 04, 2020 at 09:44:04AM +0100, Daniel Vetter wrote:
+> > > On Tue, Nov 3, 2020 at 11:09 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > On Tue, Nov 3, 2020 at 1:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Fri, Oct 30, 2020 at 11:08:11AM +0100, Daniel Vetter wrote:
+> > > > > > There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
+> > > > > > files, and the old proc interface. Two check against
+> > > > > > iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
+> > > > > > this starts to matter, since we don't want random userspace having
+> > > > > > access to PCI BARs while a driver is loaded and using it.
+> > > > > >
+> > > > > > Fix this by adding the same iomem_is_exclusive() check we already have
+> > > > > > on the sysfs side in pci_mmap_resource().
+> > > > > >
+> > > > > > References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+> > > > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > > > >
+> > > > > This is OK with me but it looks like IORESOURCE_EXCLUSIVE is currently
+> > > > > only used in a few places:
+> > > > >
+> > > > >   e1000_probe() calls pci_request_selected_regions_exclusive(),
+> > > > >   ne_pci_probe() calls pci_request_regions_exclusive(),
+> > > > >   vmbus_allocate_mmio() calls request_mem_region_exclusive()
+> > > > >
+> > > > > which raises the question of whether it's worth keeping
+> > > > > IORESOURCE_EXCLUSIVE at all.  I'm totally fine with removing it
+> > > > > completely.
+> > > >
+> > > > Now that CONFIG_IO_STRICT_DEVMEM upgrades IORESOURCE_BUSY to
+> > > > IORESOURCE_EXCLUSIVE semantics the latter has lost its meaning so I'd
+> > > > be in favor of removing it as well.
+> > >
+> > > Still has some value since it enforces exclusive access even if the
+> > > config isn't enabled, and iirc e1000 had some fun with userspace tools
+> > > clobbering the firmware and bricking the chip.
+> >
+> > There's *some* value; I'm just skeptical since only three drivers use
+> > it.
+> >
+> > IORESOURCE_EXCLUSIVE is from e8de1481fd71 ("resource: allow MMIO
+> > exclusivity for device drivers"), and the commit message says this is
+> > only active when CONFIG_STRICT_DEVMEM is set.  I didn't check to see
+> > whether that's still true.
+> >
+> > That commit adds a bunch of wrappers and "__"-prefixed functions to
+> > pass the IORESOURCE_EXCLUSIVE flag around.  That's a fair bit of
+> > uglification for three drivers.
+> >
+> > > Another thing I kinda wondered, since pci maintainer is here: At least
+> > > in drivers/gpu I see very few drivers explicitly requestion regions
+> > > (this might be a historical artifact due to the shadow attach stuff
+> > > before we had real modesetting drivers). And pci core doesn't do that
+> > > either, even when a driver is bound. Is this intentional, or
+> > > should/could we do better? Since drivers work happily without
+> > > reserving regions I don't think "the drivers need to remember to do
+> > > this" will ever really work out well.
+> >
+> > You're right, many drivers don't call pci_request_regions().  Maybe we
+> > could do better, but I haven't looked into that recently.  There is a
+> > related note in Documentation/PCI/pci.rst that's been there for a long
+> > time (it refers to "pci_request_resources()", which has never existed
+> > AFAICT).  I'm certainly open to proposals.
 > 
-> That allows a particular device to say 'I can't do MSI' and at the same
-> time keeps the warning machinery intact which tells us that a 
-> particular
-> host controller driver is broken.
-> 
-> Uncompiled and untested as usual :)
-> 
-> Thanks,
-> 
->         tglx
-> ---
->  drivers/pci/controller/pcie-mediatek.c |    4 ++++
->  drivers/pci/probe.c                    |    3 +++
->  include/linux/pci.h                    |    1 +
->  3 files changed, 8 insertions(+)
-> 
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -143,6 +143,7 @@ struct mtk_pcie_port;
->   * struct mtk_pcie_soc - differentiate between host generations
->   * @need_fix_class_id: whether this host's class ID needed to be fixed 
-> or not
->   * @need_fix_device_id: whether this host's device ID needed to be 
-> fixed or not
-> + * @no_msi: Bridge has no MSI support
->   * @device_id: device ID which this host need to be fixed
->   * @ops: pointer to configuration access functions
->   * @startup: pointer to controller setting functions
-> @@ -151,6 +152,7 @@ struct mtk_pcie_port;
->  struct mtk_pcie_soc {
->  	bool need_fix_class_id;
->  	bool need_fix_device_id;
-> +	bool no_msi;
->  	unsigned int device_id;
->  	struct pci_ops *ops;
->  	int (*startup)(struct mtk_pcie_port *port);
-> @@ -1084,6 +1086,7 @@ static int mtk_pcie_probe(struct platfor
-> 
->  	host->ops = pcie->soc->ops;
->  	host->sysdata = pcie;
-> +	host->no_msi = pcie->soc->no_msi;
-> 
->  	err = pci_host_probe(host);
->  	if (err)
-> @@ -1173,6 +1176,7 @@ static const struct dev_pm_ops mtk_pcie_
->  };
-> 
->  static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
-> +	.no_msi = true,
->  	.ops = &mtk_pcie_ops,
->  	.startup = mtk_pcie_startup_port,
->  };
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -889,6 +889,9 @@ static int pci_register_host_bridge(stru
->  	if (!bus)
->  		return -ENOMEM;
-> 
-> +	if (bridge->no_msi)
-> +		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
-> +
->  	bridge->bus = bus;
-> 
->  	/* Temporarily move resources off the list */
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -545,6 +545,7 @@ struct pci_host_bridge {
->  	unsigned int	native_dpc:1;		/* OS may use PCIe DPC */
->  	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
->  	unsigned int	size_windows:1;		/* Enable root bus sizing */
-> +	unsigned int	no_msi:1;		/* Bridge has no MSI support */
-> 
->  	/* Resource alignment requirements */
->  	resource_size_t (*align_resource)(struct pci_dev *dev,
+> It seems a bug that the kernel permits MMIO regions with side effects
+> to be ioremap()'ed without request_mem_region() on the resource. I
+> wonder how much log spam would happen if ioremap() reported whenever a
+> non-IORESOURE_BUSY range was passed to it? The current state of
+> affairs to trust *remap users to have claimed their remap target seems
+> too ingrained to unwind now.
 
-If that's the direction of travel, we also need something like this
-for configuration where the host bridge relies on an external MSI block
-that uses MSI domains (boot-tested in a GICv3 guest).
+Yeah I think that's hopeless. I think the only feasible approach is if bus
+drivers claim resources by default when a driver is bound (it should nest,
+so if the driver claims again, I think that should all keep working), just
+using the driver name. Probably with some special casing for legacy io
+(vgaarb.c should claim these I guess). Still probably tons of fallout.
 
-         M.
-
-diff --git a/drivers/pci/controller/pci-host-common.c 
-b/drivers/pci/controller/pci-host-common.c
-index 6ce34a1deecb..603f6fbbe68a 100644
---- a/drivers/pci/controller/pci-host-common.c
-+++ b/drivers/pci/controller/pci-host-common.c
-@@ -77,6 +77,7 @@ int pci_host_common_probe(struct platform_device 
-*pdev)
-
-  	bridge->sysdata = cfg;
-  	bridge->ops = (struct pci_ops *)&ops->pci_ops;
-+	bridge->msi_domain = true;
-
-  	platform_set_drvdata(pdev, bridge);
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 16fb150fbb8d..f421b2869bca 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -889,9 +889,6 @@ static int pci_register_host_bridge(struct 
-pci_host_bridge *bridge)
-  	if (!bus)
-  		return -ENOMEM;
-
--	if (bridge->no_msi)
--		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
--
-  	bridge->bus = bus;
-
-  	/* Temporarily move resources off the list */
-@@ -928,6 +925,9 @@ static int pci_register_host_bridge(struct 
-pci_host_bridge *bridge)
-  	device_enable_async_suspend(bus->bridge);
-  	pci_set_bus_of_node(bus);
-  	pci_set_bus_msi_domain(bus);
-+	if (bridge->no_msi ||
-+	    (bridge->msi_domain && !bus->dev.msi_domain))
-+		bus->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
-
-  	if (!parent)
-  		set_dev_node(bus->bridge, pcibus_to_node(bus));
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c2a0c1d471d6..81f72fd46e06 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -546,6 +546,7 @@ struct pci_host_bridge {
-  	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
-  	unsigned int	size_windows:1;		/* Enable root bus sizing */
-  	unsigned int	no_msi:1;		/* Bridge has no MSI support */
-+	unsigned int	msi_domain:1;		/* Bridge wants MSI domain */
-
-  	/* Resource alignment requirements */
-  	resource_size_t (*align_resource)(struct pci_dev *dev,
-
+Once that's rolled out to all bus drivers we could perhaps add the ioremap
+check without drowning in log spam. Still a multi-year project I think :-/
+-Daniel
 -- 
-Jazz is not dead. It just smells funny...
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
