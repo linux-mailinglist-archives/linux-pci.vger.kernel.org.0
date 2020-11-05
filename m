@@ -2,78 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF6132A803C
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 15:00:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B21612A809F
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 15:17:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbgKEOAN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 09:00:13 -0500
-Received: from mout.gmx.net ([212.227.17.20]:56087 "EHLO mout.gmx.net"
+        id S1730814AbgKEORn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 09:17:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726067AbgKEOAN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 5 Nov 2020 09:00:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1604584786;
-        bh=voomDKjD1D7OFb6dvnpVpguZn8+/Bj7qz4MAi/lSVa8=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=MFZUPIDDrlAcNE6Rc1XottMcZR3BIl3VWMREoMZVBWH0IsvMeS9A+16vnKKAYvUiq
-         23Qhhc8hKaF0iet+XuY9/U/VyVIAmmsN2+i9Np5S6HiW6Z6nZCs4ySVrk29xTHab2X
-         ZJbISFJre4VhSipDkcc77yxe7vVfV6aowBO+aoyw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.147.34] ([217.61.147.34]) by web-mail.gmx.net
- (3c-app-gmx-bap66.server.lan [172.19.172.66]) (via HTTP); Thu, 5 Nov 2020
- 14:59:46 +0100
+        id S1730775AbgKEORm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 5 Nov 2020 09:17:42 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B5052073A;
+        Thu,  5 Nov 2020 14:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604585861;
+        bh=UDvcaHDeHELwnGnyrjkWW1mbaEvMXe4JugAAo2sR0F4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=w2vObp5xH0DLOpaXZEb6+NvsINwM8w+Uar/SS+zqNrA1Q0cFtX5/ffgvGj4oLlwC8
+         r4lPR3vo69dRFY4CWXBMhPl5O6u5jY941QqwixESmMv51wWQBqUlw3qoB3+Ei0xNfV
+         pgpep30eoY+eeYPyICUOg9QD5lXLlx9K3szrZio0=
+Date:   Thu, 5 Nov 2020 08:17:39 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc:     Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, bp@alien8.de, lucas.demarchi@intel.com,
+        matthew.d.roper@intel.com, hariom.pandey@intel.com,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
+Message-ID: <20201105141739.GA493962@bjorn-Precision-5520>
 MIME-Version: 1.0
-Message-ID: <trinity-6e877df5-d3f5-434c-9723-20a1257ec1ca-1604584786441@3c-app-gmx-bap66>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <linux@fw-web.de>,
-        linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Aw: Re:  Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 5 Nov 2020 14:59:46 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <074d057910c3e834f4bd58821e8583b1@kernel.org>
-References: <20201031140330.83768-1-linux@fw-web.de>
- <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
- <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
- <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
- <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
- <df5565a2f1e821041c7c531ad52a3344@kernel.org>
- <87h7q791j8.fsf@nanos.tec.linutronix.de>
- <877dr38kt8.fsf@nanos.tec.linutronix.de>
- <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
- <87o8ke7njb.fsf@nanos.tec.linutronix.de>
- <trinity-1d7f8900-10db-40c0-a0aa-47bb99ed84cd-1604508571909@3c-app-gmx-bs02>
- <87h7q4lnoz.fsf@nanos.tec.linutronix.de>
- <074d057910c3e834f4bd58821e8583b1@kernel.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:GLUO7D/wO+tb37W5SZ5xe0Eu0qDFWwHPzFWW24p1mEWACj/z/qcwnTSCcoEwSXaB+14Nk
- 7wDTbnUHHVNZo6VPxDewR2/8VXujIgH030nqAs/Itv5DX4F5F0sSMTblaQKV7qZQ8z/VLkSrU7e8
- 3eDKoY//ms/KCmlzkD+IylD/pK5tSaw41J7P22MIif12lj2dpYAuAua3/Z0S4bUv1phFS/DP/vKa
- +1NLuzhw2pmKKW4I1R2ohLzqWDqKm/hfzeBr7nqZ6H5QYJaIH8GFl3tfh8d8j+vvVI9Acu0rAWfn
- rs=
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Va1155uyhes=:jW7Xw99631EbAyN4YqXhUt
- A6kc1A3xBXmyhPvQWp5gTojcxYr+l9OKQaAa6F6hSGlKGJKK3IjsbWH/E4QFrfO8QuZYk5l3t
- KTckb1BlI5CA64ULsOAzDQSjvA1Iq14Yvnj/U3gHVRqfy0xd1ZmGLAjOqw8Rh/Ut+p8dSC0bh
- ZFm+70EIqZxK0ifwlN8kAyedXD4dV7mycTDGSFEqcun7sFngFoILQkeMKuks53AbRv6WdnA6l
- 78v7pJp5nFIUP1iEMDIMA9YhIfUOwac5OQyhlLzEKEnHjoVp6aLKazAGVJPMy2N9DmO/7PaSX
- 8RHlg1YR14kS5H0x0Np6TcD19t6hopBGofdD7xrPwYFvAt61482BexBT1cBAZtnJ7ha0AZe77
- Mmb28JhVBD811f1D9N7Aq4N2s+jFI0NwU+zn/RexHbps4OQNDxAL60qD3xtznq0r3Y1NB9LBz
- M7Tqyomhxm1g7+3GskBthMsw3b9PfOH6d7YwiL5ZHJ3Q0gqCj1dwmTnY6oE62YPN+RxJZfa5x
- ynPITwwdy66fJyUtD0r5EK1IskA3LonAq1xWuVmM6Yd1NFW0g3Aihhopfl4CzmAEypjTM8Vjq
- MZfbHhvwEBs0w=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <160456956585.5393.4540325192433934522@jlahtine-mobl.ger.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Marc's Patch based on thomas' last one also seems to work well for r2, again no warning, PCI and AHCI (connected to pcie bus) working
+On Thu, Nov 05, 2020 at 11:46:06AM +0200, Joonas Lahtinen wrote:
+> Quoting Bjorn Helgaas (2020-11-04 19:35:56)
+> > [+cc Jani, Joonas, Rodrigo, David, Daniel]
+> > 
+> > On Wed, Nov 04, 2020 at 05:35:06PM +0530, Tejas Upadhyay wrote:
+> > > JSL re-uses the same stolen memory as ICL and EHL.
+> > > 
+> > > Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> > > Cc: Matt Roper <matthew.d.roper@intel.com>
+> > > Signed-off-by: Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
+> > 
+> > I don't plan to do anything with this since previous similar patches
+> > have gone through some other tree, so this is just kibitzing.
+> > 
+> > But the fact that we have this long list of Intel devices [1] that
+> > constantly needs updates [2] is a hint that something is wrong.
+> 
+> We add an entry for every new integrated graphics platform. Once the
+> platform is added, there have not been changes lately.
+> 
+> > IIUC the general idea is that we need to discover Intel gfx memory by
+> > looking at device-dependent config space and add it to the E820 map.
+> > Apparently the quirks discover this via PCI config registers like
+> > I830_ESMRAMC, I845_ESMRAMC, etc, and tell the driver about it via the
+> > global "intel_graphics_stolen_res"?
+> 
+> We discover what is called the graphics data stolen memory. It is regular
+> system memory range that is not CPU accessible. It is accessible by the
+> integrated graphics only.
+> 
+> See: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/x86/kernel/early-quirks.c?h=v5.10-rc2&id=814c5f1f52a4beb3710317022acd6ad34fc0b6b9
+> 
+> > That's not the way this should work.  There should some generic, non
+> > device-dependent PCI or ACPI method to discover the memory used, or at
+> > least some way to do it in the driver instead of early arch code.
+> 
+> It's used by the early BIOS/UEFI code to set up initial framebuffer.
+> Even if i915 driver is never loaded, the memory ranges still need to
+> be fixed. They source of the problem is that the OEM BIOS which are
+> not under our control get the programming wrong.
+> 
+> We used to detect the memory region size again at i915 initialization
+> but wanted to eliminate the code duplication and resulting subtle bugs
+> that caused. Conclusion back then was that storing the struct resource
+> in memory is the best trade-off.
+> 
+> > How is this *supposed* to work?  Is there something we can do in E820
+> > or other resource management that would make this easier?
+> 
+> The code was added around Haswell (HSW) device generation to mitigate
+> bugs in BIOS. It is traditionally hard to get all OEMs to fix their
+> BIOS when things work for Windows. It's only later years when some
+> laptop models are intended to be sold with Linux.
+> 
+> The alternative would be to get all the OEM to fix their BIOS for Linux,
+> but that is not very realistic given past experiences. So it seems
+> a better choice to to add new line per platform generation to make
+> sure the users can boot to Linux.
 
-regards Frank
+How does Windows do this?  Do they have to add similar code for each
+new platform?
+
+> > > ---
+> > >  arch/x86/kernel/early-quirks.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> > > index a4b5af03dcc1..534cc3f78c6b 100644
+> > > --- a/arch/x86/kernel/early-quirks.c
+> > > +++ b/arch/x86/kernel/early-quirks.c
+> > > @@ -549,6 +549,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
+> > >       INTEL_CNL_IDS(&gen9_early_ops),
+> > >       INTEL_ICL_11_IDS(&gen11_early_ops),
+> > >       INTEL_EHL_IDS(&gen11_early_ops),
+> > > +     INTEL_JSL_IDS(&gen11_early_ops),
+> > >       INTEL_TGL_12_IDS(&gen11_early_ops),
+> > >       INTEL_RKL_IDS(&gen11_early_ops),
+> > >  };
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/early-quirks.c?h=v5.10-rc2#n518
+> > 
+> > [2]
+> >   May 2020 efbee021ad02 ("x86/gpu: add RKL stolen memory support")
+> >   Jul 2019 6b2436aeb945 ("x86/gpu: add TGL stolen memory support")
+> >   Mar 2019 d53fef0be4a5 ("x86/gpu: add ElkhartLake to gen11 early quirks")
+> >   May 2018 db0c8d8b031d ("x86/gpu: reserve ICL's graphics stolen memory")
+> >   Dec 2017 33aa69ed8aac ("x86/gpu: add CFL to early quirks")
+> >   Jul 2017 2e1e9d48939e ("x86/gpu: CNL uses the same GMS values as SKL")
+> >   Jan 2017 bc384c77e3bb ("x86/gpu: GLK uses the same GMS values as SKL")
+> >   Oct 2015 00ce5c8a66fb ("drm/i915/kbl: Kabylake uses the same GMS values as Skylake")
+> >   Mar 2015 31d4dcf705c3 ("drm/i915/bxt: Broxton uses the same GMS values as Skylake")
+> >   ...
