@@ -2,44 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB5AF2A8897
-	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 22:12:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4C472A889B
+	for <lists+linux-pci@lfdr.de>; Thu,  5 Nov 2020 22:12:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbgKEVMJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 5 Nov 2020 16:12:09 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33672 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732264AbgKEVMJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 16:12:09 -0500
-Received: by mail-oi1-f195.google.com with SMTP id k26so3197515oiw.0
-        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 13:12:08 -0800 (PST)
+        id S1726801AbgKEVML (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 5 Nov 2020 16:12:11 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41874 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732284AbgKEVMK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 5 Nov 2020 16:12:10 -0500
+Received: by mail-ot1-f66.google.com with SMTP id n15so2770910otl.8
+        for <linux-pci@vger.kernel.org>; Thu, 05 Nov 2020 13:12:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IzJpgC50B1aEr5UEqZkrsDaDZthdlXtSVmgpDKQvfR0=;
-        b=DJ6oZ1MmIIYsSqNNin0ZtFzVn8lBDHbuWlmL6L4lcVgUoM3eaelDzXfI4BwIVY0GLa
-         ccet1oN3JSpwhZjoOI3t9Q84MOZnGRRljv+xJjJnopH0ZyqMmayHtuRM/cVHC/R+jEnT
-         sQmAaJ7JG5znNsNqdlc6jA1nFrO9ctJWl9INeqgszEBQhzuwi1w+Hu7eBp76GndAXuKV
-         pJxxScb+iyl1yCTF+l5/7GC+jQYtK4VORcQlEvoKiyxAY4VMSga0menNDJFo789se3fn
-         UsKt5FyM0tGpGwJbWuFLzpAgW/+jOk1oWp34ddwO1CBjagB0j8aD9w7WaEDKZMpgqunn
-         rowQ==
-X-Gm-Message-State: AOAM531WkmfFBE0qKPnG/ZaF+gQAoWUR6gs7F8Voxv4Eib8hGvPn+T1p
-        DllixK9mCQ0L1OqJ6PfC9EjJW2exZyPf
-X-Google-Smtp-Source: ABdhPJxQDTx5VKxcCHmYR60h+s8CT7slb9CRXBkC6RHPnSV4CDrv8J8PImzVZWY9c4MdH5eXIUG72w==
-X-Received: by 2002:aca:f1c6:: with SMTP id p189mr882003oih.18.1604610728217;
-        Thu, 05 Nov 2020 13:12:08 -0800 (PST)
+        bh=6joTqsvyj5X+/mMckRYOhYHQCTeXTFX8sI/b999CKSE=;
+        b=cA1/Gz2IMpBLmhvEWRei+OcA4j/JXgldIRqCodEEjHUdLxLvk4dYNSloApGfGxKzcF
+         /fp6VAN1Tn0vjC7N3L1JTrG9O33BmpdFg6U3XwWdXHlaDWiDh+gHA6bqfK/Se9Qf5lfl
+         ebRu/qtLa2xzZlnYxAt1ivlTruVIQsXQhVC97Lz1sSMdMtLc5xDQQQnkMrYiLVp3RtMN
+         zjToJ7PKdGlAgkC/eq+3XRIMx3E5bcvgV8JOxr29kca+SCBYcExb8vWbUWCWdD9nYGSf
+         /2x65Kz3TXXfXy1b7YJ2we3mUM98wToEVrB4UrmUPP5kh1fIYjLmOPXauJxvpexBVMvq
+         XJIg==
+X-Gm-Message-State: AOAM5331gGmeYWmWu517Zr1U/OeMa12LwGBABuh1C6ZQcZLkCA2xQdc8
+        5+Ik6IGbqxoUupNbjr0BN7ttg/XyKZt+
+X-Google-Smtp-Source: ABdhPJy703tWPiNw+Qqc8ucrmYgfKgqd7wtzHksUUpAdBdq/hY3pvYUxigfqVa2L2+navOGrdkxvaw==
+X-Received: by 2002:a9d:550a:: with SMTP id l10mr2713270oth.357.1604610729465;
+        Thu, 05 Nov 2020 13:12:09 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id z19sm622549ooi.32.2020.11.05.13.12.07
+        by smtp.googlemail.com with ESMTPSA id z19sm622549ooi.32.2020.11.05.13.12.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Nov 2020 13:12:07 -0800 (PST)
+        Thu, 05 Nov 2020 13:12:08 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 04/16] PCI: dwc/intel-gw: Remove some unneeded function wrappers
-Date:   Thu,  5 Nov 2020 15:11:47 -0600
-Message-Id: <20201105211159.1814485-5-robh@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH v2 05/16] PCI: dwc: Ensure all outbound ATU windows are reset
+Date:   Thu,  5 Nov 2020 15:11:48 -0600
+Message-Id: <20201105211159.1814485-6-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201105211159.1814485-1-robh@kernel.org>
 References: <20201105211159.1814485-1-robh@kernel.org>
@@ -50,123 +55,81 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove some of the pointless levels of functions that just wrap or group
-a series of other functions.
+The Layerscape driver clears the ATU registers which may have been
+configured by the bootloader. Any driver could have the same issue
+and doing it for all drivers doesn't hurt, so let's move it into the
+common DWC code.
 
+Cc: Minghuan Lian <minghuan.Lian@nxp.com>
+Cc: Mingkai Hu <mingkai.hu@nxp.com>
+Cc: Roy Zang <roy.zang@nxp.com>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-intel-gw.c | 47 ++++++++--------------
- 1 file changed, 16 insertions(+), 31 deletions(-)
+ drivers/pci/controller/dwc/pci-layerscape.c       | 14 --------------
+ drivers/pci/controller/dwc/pcie-designware-host.c |  5 +++++
+ 2 files changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
-index 88782653ed21..c562eb7454b1 100644
---- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-+++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-@@ -152,19 +152,6 @@ static void intel_pcie_init_n_fts(struct dw_pcie *pci)
- 	pci->n_fts[0] = PORT_AFR_N_FTS_GEN12_DFT;
+diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+index f24f79a70d9a..53e56d54c482 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape.c
++++ b/drivers/pci/controller/dwc/pci-layerscape.c
+@@ -83,14 +83,6 @@ static void ls_pcie_drop_msg_tlp(struct ls_pcie *pcie)
+ 	iowrite32(val, pci->dbi_base + PCIE_STRFMR1);
  }
  
--static void intel_pcie_rc_setup(struct intel_pcie_port *lpp)
+-static void ls_pcie_disable_outbound_atus(struct ls_pcie *pcie)
 -{
--	struct dw_pcie *pci = &lpp->pci;
+-	int i;
 -
--	pci->atu_base = pci->dbi_base + 0xC0000;
--
--	intel_pcie_ltssm_disable(lpp);
--	intel_pcie_link_setup(lpp);
--	intel_pcie_init_n_fts(pci);
--	dw_pcie_setup_rc(&pci->pp);
--	dw_pcie_upconfig_setup(pci);
+-	for (i = 0; i < PCIE_IATU_NUM; i++)
+-		dw_pcie_disable_atu(pcie->pci, i, DW_PCIE_REGION_OUTBOUND);
 -}
 -
- static int intel_pcie_ep_rst_init(struct intel_pcie_port *lpp)
+ static int ls1021_pcie_link_up(struct dw_pcie *pci)
  {
- 	struct device *dev = lpp->pci.dev;
-@@ -216,14 +203,6 @@ static void intel_pcie_device_rst_deassert(struct intel_pcie_port *lpp)
- 	gpiod_set_value_cansleep(lpp->reset_gpio, 0);
- }
+ 	u32 state;
+@@ -136,12 +128,6 @@ static int ls_pcie_host_init(struct pcie_port *pp)
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct ls_pcie *pcie = to_ls_pcie(pci);
  
--static int intel_pcie_app_logic_setup(struct intel_pcie_port *lpp)
--{
--	intel_pcie_device_rst_deassert(lpp);
--	intel_pcie_ltssm_enable(lpp);
--
--	return dw_pcie_wait_for_link(&lpp->pci);
--}
--
- static void intel_pcie_core_irq_disable(struct intel_pcie_port *lpp)
+-	/*
+-	 * Disable outbound windows configured by the bootloader to avoid
+-	 * one transaction hitting multiple outbound windows.
+-	 * dw_pcie_setup_rc() will reconfigure the outbound windows.
+-	 */
+-	ls_pcie_disable_outbound_atus(pcie);
+ 	ls_pcie_fix_error_response(pcie);
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index cde45b2076ee..265a48f1a0ae 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -534,6 +534,7 @@ static struct pci_ops dw_pcie_ops = {
+ 
+ void dw_pcie_setup_rc(struct pcie_port *pp)
  {
- 	pcie_app_wr(lpp, PCIE_APP_IRNEN, 0);
-@@ -273,11 +252,6 @@ static int intel_pcie_get_resources(struct platform_device *pdev)
- 	return 0;
- }
++	int i;
+ 	u32 val, ctrl, num_ctrls;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
  
--static void intel_pcie_deinit_phy(struct intel_pcie_port *lpp)
--{
--	phy_exit(lpp->phy);
--}
--
- static int intel_pcie_wait_l2(struct intel_pcie_port *lpp)
- {
- 	u32 value;
-@@ -314,6 +288,7 @@ static void intel_pcie_turn_off(struct intel_pcie_port *lpp)
- static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
- {
- 	int ret;
-+	struct dw_pcie *pci = &lpp->pci;
+@@ -583,6 +584,10 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+ 		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
+ 	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
  
- 	intel_pcie_core_rst_assert(lpp);
- 	intel_pcie_device_rst_assert(lpp);
-@@ -330,8 +305,18 @@ static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
- 		goto clk_err;
- 	}
- 
--	intel_pcie_rc_setup(lpp);
--	ret = intel_pcie_app_logic_setup(lpp);
-+	pci->atu_base = pci->dbi_base + 0xC0000;
++	/* Ensure all outbound windows are disabled so there are multiple matches */
++	for (i = 0; i < pci->num_viewport; i++)
++		dw_pcie_disable_atu(pci, i, DW_PCIE_REGION_OUTBOUND);
 +
-+	intel_pcie_ltssm_disable(lpp);
-+	intel_pcie_link_setup(lpp);
-+	intel_pcie_init_n_fts(pci);
-+	dw_pcie_setup_rc(&pci->pp);
-+	dw_pcie_upconfig_setup(pci);
-+
-+	intel_pcie_device_rst_deassert(lpp);
-+	intel_pcie_ltssm_enable(lpp);
-+
-+	ret = dw_pcie_wait_for_link(pci);
- 	if (ret)
- 		goto app_init_err;
- 
-@@ -345,7 +330,7 @@ static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
- 	clk_disable_unprepare(lpp->core_clk);
- clk_err:
- 	intel_pcie_core_rst_assert(lpp);
--	intel_pcie_deinit_phy(lpp);
-+	phy_exit(lpp->phy);
- 
- 	return ret;
- }
-@@ -356,7 +341,7 @@ static void __intel_pcie_remove(struct intel_pcie_port *lpp)
- 	intel_pcie_turn_off(lpp);
- 	clk_disable_unprepare(lpp->core_clk);
- 	intel_pcie_core_rst_assert(lpp);
--	intel_pcie_deinit_phy(lpp);
-+	phy_exit(lpp->phy);
- }
- 
- static int intel_pcie_remove(struct platform_device *pdev)
-@@ -380,7 +365,7 @@ static int __maybe_unused intel_pcie_suspend_noirq(struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	intel_pcie_deinit_phy(lpp);
-+	phy_exit(lpp->phy);
- 	clk_disable_unprepare(lpp->core_clk);
- 	return ret;
- }
+ 	/*
+ 	 * If the platform provides its own child bus config accesses, it means
+ 	 * the platform uses its own address translation component rather than
 -- 
 2.25.1
 
