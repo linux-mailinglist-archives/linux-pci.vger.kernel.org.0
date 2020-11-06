@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E31F2A9AFC
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 18:39:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 451972A9B06
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 18:42:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgKFRjh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 12:39:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
+        id S1727652AbgKFRm0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 12:42:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgKFRjg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 12:39:36 -0500
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A1CC0613CF
-        for <linux-pci@vger.kernel.org>; Fri,  6 Nov 2020 09:39:35 -0800 (PST)
-Received: by mail-qt1-x842.google.com with SMTP id g17so1324220qts.5
-        for <linux-pci@vger.kernel.org>; Fri, 06 Nov 2020 09:39:35 -0800 (PST)
+        with ESMTP id S1727458AbgKFRm0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 12:42:26 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C190FC0613D3
+        for <linux-pci@vger.kernel.org>; Fri,  6 Nov 2020 09:42:25 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id n132so707851qke.1
+        for <linux-pci@vger.kernel.org>; Fri, 06 Nov 2020 09:42:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=QqZ++Pt3MZPl0c26h7esX3kKVTLpDd4DLyuldQOeJ6E=;
-        b=aVspDJwpvtyG5+kighP26kbunhoVoDrk2g+dikuA78Pm3bA2qTEMgmEOIf1kZJzMIf
-         jREWUhSOExSA/q/FCxqA4XBVE24zI+bsJoB1MfEIxBjq2vdyDXVafteyCmFKOVp6mNFr
-         a+tx6++MRi2ULgDc9l1aIYs8bYmkHkHdREfE1OJi7rMzsOZFvHKvzXQ7XJqg4Rv2jtLq
-         /+Dlp7JoggqKZn8R6W1cCZQ0admWy+NkyCMZtOTh144o5mkYSgGm7bfVWOa4R1qrCUIm
-         0U96w1WKj0KdQqF8ogG0DBvSehQPHSPP+p8q7o2QpQF4H1UThgaq/hW1ayZpgvaa/xXc
-         nKQA==
+        bh=3buLvlWL+9G09nyEaJ7/3CqkDjgWFOdmZgEsg7qS7YA=;
+        b=MOCiBjSN2a1hPwUL+FJFYuzQlwO8wmt6NgCt9FaTyLzUmSuNFZ8pJFJjnpYDGgsQ26
+         a8j6AjUBHGPJgl1+H9vdmuYPkKU68pFmYfvE9HQawmCY4vIz+ZApkGBVOkd9dWhh0DXa
+         q56QEyRr53QyWSixEoTgaJPahFsdyxl3XbdZlglN7e+iI0rw/ar1o9FTO4zJteIHNrs9
+         fCSMQ6f2iYfcLKZJGeHkqKVzX2CdNVjmmqzCZDSDIw8FQ5JzVVCMMhMKmUFdxYZt2g0v
+         2SDXecJEMacL6cL9Se7kxpJ/LhH+/YR2QfiDFmQPiXf/MhTYpep4QtUSKXYnfiMtIam2
+         37AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=QqZ++Pt3MZPl0c26h7esX3kKVTLpDd4DLyuldQOeJ6E=;
-        b=nL/aKaTIsvo7xbEZrHgIZ8+fUZfgJF740ZCYhJfylB3WaPYEEu7KLbxFoCKivrjYIO
-         z5IS1MC7ORqcPdKvuU3tFIE9BQwt1K8fl4vywU3QeR/a/0M5sgiQVCZHHIgT0ViLyoOC
-         i6FN1NoXQA2wfSZE0DERBGe3StZw8z0nvLwLkaaXG18k+BeFlwmRQ/giHU0oM8Nc9JZm
-         VJV0OEfj1Ec2tvgBVPVforLGNyXiPLdqqGirA/p5ono0XUl9TkJess4EieTPcPkbCpSl
-         zgGyHBQellrcCo5/AAYqS+L3A75ayjWJYlaqrNx5PbXLFLz3mShxSAzusIxj4zuFfOMP
-         fifQ==
-X-Gm-Message-State: AOAM5319u8clp/TjElRQWLuXIuA3Vbl3tV+FddJ2sy0zMG0J+ktPPtWp
-        xkvk0+Wq0AUQymVEfgcUQeT5zQ==
-X-Google-Smtp-Source: ABdhPJwk/LVr/ux401xFB0f8tEBQvqxB/lNHOmPBnGlIZGn/taGrIczG0r9kVyPbYEVYIeCjEKrF7Q==
-X-Received: by 2002:ac8:1e84:: with SMTP id c4mr2651870qtm.340.1604684374450;
-        Fri, 06 Nov 2020 09:39:34 -0800 (PST)
+        bh=3buLvlWL+9G09nyEaJ7/3CqkDjgWFOdmZgEsg7qS7YA=;
+        b=E4laZpEI8ZQzw44mC+c58dBCd+Q7yW3DweP553h2inje747na5dHIx4tFxlmqJF9+X
+         xdrlxKBHsIWFUrIkgUQIYdfU1NIDXsYVPH++1uHvItGgsGVH+L2a9qKE+bKQWQM6fodH
+         dqzP7Cz9qW7QuBvRL0HDdMqiZEUQEHbOZ5TOl2n5bgtahnX3xIz3TlwIvS9PgQ3ldGfA
+         QGvguyh+6Uh33yvEYwsn83eOfQoyROCgm1scpWFX9ZbOpNbbX5YVwzEeyAAJoVj73EDX
+         Np7CXszQOH4pJYIwyJ+gJ3mKjKPRZllTuEBernOv8lIZLcKTnHBd2c1ebEbUHieLkSDa
+         cjHw==
+X-Gm-Message-State: AOAM533YtpMG6zEf2qu1zG/VHUk68Q6cK5LEzFSLi4MEWacALNvQyERb
+        iKnbdAdvMT9fv8sNiN4mfLwd+Q==
+X-Google-Smtp-Source: ABdhPJyPUMTPAlvbc5F9DgPZcTHH53XJriCxbWePpFu8+RK+GJP/zdnWVlnoJA0LQqWFmkayCjYz/g==
+X-Received: by 2002:a37:9441:: with SMTP id w62mr2652751qkd.474.1604684545012;
+        Fri, 06 Nov 2020 09:42:25 -0800 (PST)
 Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id o19sm1032238qko.3.2020.11.06.09.39.33
+        by smtp.gmail.com with ESMTPSA id t65sm1006283qkc.52.2020.11.06.09.42.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Nov 2020 09:39:33 -0800 (PST)
+        Fri, 06 Nov 2020 09:42:24 -0800 (PST)
 Received: from jgg by mlx with local (Exim 4.94)
         (envelope-from <jgg@ziepe.ca>)
-        id 1kb5i0-000zRk-Qy; Fri, 06 Nov 2020 13:39:32 -0400
-Date:   Fri, 6 Nov 2020 13:39:32 -0400
+        id 1kb5kl-000zVc-Ja; Fri, 06 Nov 2020 13:42:23 -0400
+Date:   Fri, 6 Nov 2020 13:42:23 -0400
 From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     Logan Gunthorpe <logang@deltatee.com>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
@@ -65,64 +65,63 @@ Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         Don Dutile <ddutile@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [RFC PATCH 15/15] nvme-pci: Allow mmaping the CMB in userspace
-Message-ID: <20201106173932.GT36674@ziepe.ca>
+Subject: Re: [RFC PATCH 14/15] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+Message-ID: <20201106174223.GU36674@ziepe.ca>
 References: <20201106170036.18713-1-logang@deltatee.com>
- <20201106170036.18713-16-logang@deltatee.com>
+ <20201106170036.18713-15-logang@deltatee.com>
+ <20201106172206.GS36674@ziepe.ca>
+ <b1e8dfce-d583-bed8-d04d-b7265a54c99f@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201106170036.18713-16-logang@deltatee.com>
+In-Reply-To: <b1e8dfce-d583-bed8-d04d-b7265a54c99f@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 06, 2020 at 10:00:36AM -0700, Logan Gunthorpe wrote:
-> Allow userspace to obtain CMB memory by mmaping the controller's
-> char device. The mmap call allocates and returns a hunk of CMB memory,
-> (the offset is ignored) so userspace does not have control over the
-> address within the CMB.
+On Fri, Nov 06, 2020 at 10:28:00AM -0700, Logan Gunthorpe wrote:
 > 
-> A VMA allocated in this way will only be usable by drivers that set
-> FOLL_PCI_P2PDMA when calling GUP. And inter-device support will be
-> checked the first time the pages are mapped for DMA.
 > 
-> Currently this is only supported by O_DIRECT to an PCI NVMe device
-> or through the NVMe passthrough IOCTL.
+> On 2020-11-06 10:22 a.m., Jason Gunthorpe wrote:
+> > On Fri, Nov 06, 2020 at 10:00:35AM -0700, Logan Gunthorpe wrote:
+> >> Introduce pci_mmap_p2pmem() which is a helper to allocate and mmap
+> >> a hunk of p2pmem into userspace.
+> >>
+> >> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>  drivers/pci/p2pdma.c       | 104 +++++++++++++++++++++++++++++++++++++
+> >>  include/linux/pci-p2pdma.h |   6 +++
+> >>  2 files changed, 110 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> >> index 9961e779f430..8eab53ac59ae 100644
+> >> +++ b/drivers/pci/p2pdma.c
+> >> @@ -16,6 +16,7 @@
+> >>  #include <linux/genalloc.h>
+> >>  #include <linux/memremap.h>
+> >>  #include <linux/percpu-refcount.h>
+> >> +#include <linux/pfn_t.h>
+> >>  #include <linux/random.h>
+> >>  #include <linux/seq_buf.h>
+> >>  #include <linux/xarray.h>
+> >> @@ -1055,3 +1056,106 @@ ssize_t pci_p2pdma_enable_show(char *page, struct pci_dev *p2p_dev,
+> >>  	return sprintf(page, "%s\n", pci_name(p2p_dev));
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(pci_p2pdma_enable_show);
+> >> +
+> >> +struct pci_p2pdma_map {
+> >> +	struct kref ref;
+> >> +	struct pci_dev *pdev;
+> >> +	void *kaddr;
+> >> +	size_t len;
+> >> +};
+> > 
+> > Why have this at all? Nothing uses it and no vm_operations ops are
+> > implemented?
 > 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->  drivers/nvme/host/core.c | 11 +++++++++++
->  drivers/nvme/host/nvme.h |  1 +
->  drivers/nvme/host/pci.c  |  9 +++++++++
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> index f14316c9b34a..fc642aba671d 100644
-> +++ b/drivers/nvme/host/core.c
-> @@ -3240,12 +3240,23 @@ static long nvme_dev_ioctl(struct file *file, unsigned int cmd,
->  	}
->  }
->  
-> +static int nvme_dev_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	struct nvme_ctrl *ctrl = file->private_data;
-> +
-> +	if (!ctrl->ops->mmap_cmb)
-> +		return -ENODEV;
-> +
-> +	return ctrl->ops->mmap_cmb(ctrl, vma);
-> +}
+> It's necessary to free the allocated p2pmem when the mapping is torn down.
 
-This needs to ensure that the VMA created is destroyed before the
-driver is unprobed - ie the struct pages backing the BAR memory is
-destroyed.
-
-I don't see anything that synchronizes this in the nvme_dev_release()?
-
-Many places do this by putting all the VMAs into an address space and
-zaping the address space when unprobing the driver to revoke the
-pages, but there is a tricky race here :\
-
-https://lore.kernel.org/dri-devel/20201021125030.GK36674@ziepe.ca/
+That's suspicious.. Once in a VMA the lifetime of the page must be
+controlled by the page refcount, it can't be put back into the genpool
+just because the vma was destroed.
 
 Jason
