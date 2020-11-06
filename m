@@ -2,104 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0BE92A983B
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 16:13:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D64442A98A5
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 16:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgKFPMT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 10:12:19 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46666 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727633AbgKFPLZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 10:11:25 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A6FBIC4005681;
-        Fri, 6 Nov 2020 09:11:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1604675478;
-        bh=+w+BvgepGqWvkDQjkbFxCvpUQOSLcIumtRNyUhWS6aA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=C2O5x+JMLdwDN//H2DjeC9kaO5INQ0EjkaA6ALeDnHwjwjcy52/VJK4YbV42wmrEQ
-         bVbztdaugnqEfBxoWwv1gFDkicQTFjb4Q9yZw6BZseS6LgQvnyA89PN8jzluzYfKEV
-         CijF7w3an3/EsIMXhirMm5AqydwIOL720yKQZHwE=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A6FBI7W019613
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 6 Nov 2020 09:11:18 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 6 Nov
- 2020 09:11:18 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 6 Nov 2020 09:11:18 -0600
-Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A6FB7Th092540;
-        Fri, 6 Nov 2020 09:11:14 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] PCI: cadence: Do not error if "cdns,max-outbound-regions" is not found
-Date:   Fri, 6 Nov 2020 20:41:07 +0530
-Message-ID: <20201106151107.3987-3-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201106151107.3987-1-kishon@ti.com>
-References: <20201106151107.3987-1-kishon@ti.com>
+        id S1726880AbgKFPkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 10:40:15 -0500
+Received: from mr014msr.fastwebnet.it ([85.18.95.110]:51252 "EHLO
+        mr014msr.fastwebnet.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbgKFPkP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 10:40:15 -0500
+X-Greylist: delayed 347 seconds by postgrey-1.27 at vger.kernel.org; Fri, 06 Nov 2020 10:40:14 EST
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgedujedruddtledgkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfetuffvhgfguedpucfqfgfvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkfffhrhfvufggtgfgihesthejtgdttddtjeenucfhrhhomhepoegrlhgsvghrthhordhvihhgnhgrnhhisehfrghsthifvggsnhgvthdrihhtqeenucggtffrrghtthgvrhhnpeelleevkeegteetkeelteelfffggfffieffhfelkeetteejtdeuhfdtjeekuddugeenucffohhmrghinheprhhnvghlrdhorhhgpdguihhouggvshdrtghomhenucfkphepuddtrdefuddrudejgedrvdefledpleefrdehtddrudekvddrudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohepphhrtddtiehmshhrpdhinhgvthepuddtrdefuddrudejgedrvdefledpmhgrihhlfhhrohhmpeeorghlsggvrhhtohdrvhhighhnrghnihesfhgrshhtfigvsghnvghtrdhitheqpdhrtghpthhtohepoegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmqedprhgtphhtthhopeeosghhvghlghgrrghssehgohhoghhlvgdrtghomheqpdhrtghpthhtohepoehjohhhrghnsehkvghrnhgvlhdrohhrgheqpdhrtghpthhtohepoehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhgqedprhgt
+        phhtthhopeeolhhinhhugidquhhssgesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from pr006msr (10.31.174.239) by mr014msr.fastwebnet.it (5.8.208)
+        id 5F56293C0334ED7B; Fri, 6 Nov 2020 16:34:25 +0100
+Message-ID: <33436598.119601604676865427.JavaMail.root@pr006msr>
+Date:   Fri, 6 Nov 2020 16:34:25 +0100 (CET)
+From:   <alberto.vignani@fastwebnet.it>
+Reply-To:  <alberto.vignani@fastwebnet.it>
+To:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <johan@kernel.org>, <linux-usb@vger.kernel.org>
+Subject: R: [PATCH v2 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
+Cc:     <andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain;charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: 93.50.182.19
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now that "cdns,max-outbound-regions" is made an optional property, do
-not error out if "cdns,max-outbound-regions" device tree property is
-not found.
+Tested-by: alberto.vignani@fastwebnet.it
 
-Link: http://lore.kernel.org/r/20201105165331.GA55814@bogus
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 9 +++------
- drivers/pci/controller/cadence/pcie-cadence.h    | 1 +
- 2 files changed, 4 insertions(+), 6 deletions(-)
+>----Messaggio originale----
+>Da: andriy.shevchenko@linux.intel.com
+>Data: 06/11/2020 11.05
+>A: "Bjorn Helgaas"<bhelgaas@google.com>, <linux-pci@vger.kernel.org>, <johan@ke
+rnel.org>, <linux-usb@vger.kernel.org>
+>Cc: "Andy Shevchenko"<andriy.shevchenko@linux.intel.com>, <alberto.vignani@fast
+webnet.it>
+>Ogg: [PATCH v2 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
+>
+>Pericom PCIe-USB adapter advertises MSI, but documentation says
+>"The MSI Function is not implemented on this device." in the chapters
+>7.3.27, 7.3.29-7.3.31.
+>
+>Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
+>Datasheet: https://www.diodes.com/assets/Datasheets/PI7C9X440SL.pdf
+>Reported-by: alberto.vignani@fastwebnet.it
+>Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>---
+>v2: dropped confusing word (David), added ifdeffery (Ben)
+> drivers/pci/quirks.c | 17 +++++++++++++----
+> 1 file changed, 13 insertions(+), 4 deletions(-)
+>
+>diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>index f70692ac79c5..e66e0cc8f99b 100644
+>--- a/drivers/pci/quirks.c
+>+++ b/drivers/pci/quirks.c
+>@@ -5567,17 +5567,26 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+> DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
+> 
+> /*
+>- * Device [12d8:0x400e] and [12d8:0x400f]
+>+ * Device 12d8:0x400e [OHCI] and 12d8:0x400f [EHCI]
+>+ *
+>  * These devices advertise PME# support in all power states but don't
+>  * reliably assert it.
+>+ *
+>+ * These devices advertise MSI, but documentation (PI7C9X440SL.pdf) says
+>+ * "The MSI Function is not implemented on this device." in the chapters
+>+ * 7.3.27, 7.3.29-7.3.31.
+>  */
+>-static void pci_fixup_no_pme(struct pci_dev *dev)
+>+static void pci_fixup_no_msi_no_pme(struct pci_dev *dev)
+> {
+>+#ifdef CONFIG_PCI_MSI
+>+	pci_info(dev, "The MSI is not implemented on this device, disabling it\n");
+>+	dev->no_msi = 1;
+>+#endif
+> 	pci_info(dev, "PME# is unreliable, disabling it\n");
+> 	dev->pme_support = 0;
+> }
+>-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
+>-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
+>+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_msi_no_pme
+);
+>+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_msi_no_pme
+);
+> 
+> static void apex_pci_fixup_class(struct pci_dev *pdev)
+> {
+>-- 
+>2.28.0
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index 254a3e1eff50..9a4195af958e 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -531,12 +531,9 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
- 	}
- 	pcie->mem_res = res;
- 
--	ret = of_property_read_u32(np, "cdns,max-outbound-regions",
--				   &ep->max_regions);
--	if (ret < 0) {
--		dev_err(dev, "missing \"cdns,max-outbound-regions\"\n");
--		return ret;
--	}
-+	ep->max_regions = CDNS_PCIE_MAX_OB;
-+	of_property_read_u32(np, "cdns,max-outbound-regions", &ep->max_regions);
-+
- 	ep->ob_addr = devm_kcalloc(dev,
- 				   ep->max_regions, sizeof(*ep->ob_addr),
- 				   GFP_KERNEL);
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index feed1e3038f4..30eba6cafe2c 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -197,6 +197,7 @@ enum cdns_pcie_rp_bar {
- };
- 
- #define CDNS_PCIE_RP_MAX_IB	0x3
-+#define CDNS_PCIE_MAX_OB	32
- 
- struct cdns_pcie_rp_ib_bar {
- 	u64 size;
--- 
-2.17.1
+
+
 
