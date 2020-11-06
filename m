@@ -2,134 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC83E2A90F4
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 09:04:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 063F32A9242
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 10:17:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgKFIEr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 03:04:47 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:60808 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgKFIEq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 03:04:46 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A683xbP066041;
-        Fri, 6 Nov 2020 08:04:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=OQ/5L/oc4/wCEiOu/3QR8Botu+fEhl2YqoR8s63vgq4=;
- b=CNrVNUJ30cGBaOtmhh6Svsq0E66IlgCSnOP7mcFcG8v39OSujJAC/B17S1eOk7Fsr5Ql
- tTqVAldVfjyPNOwjsA/M7p8hrhtwMD3QIldcFo/TV3/XtqdOpSI01bZf3/yVJiIIiB85
- NNhOvfLmrf60unt7H6y5XdUGSbtYxdAVFNfKgkSDWQzdK2zh5zgCN3Dnw/Uk/FiA5uWu
- RCZc+zb2uGJy0tjWeVqv+6knLMZFDkAWo3ru/aA9+MH87zSLp2Usv2/1b8AnUv+M19jO
- peMLpcRKiaC17yfSkwZDdoX7/wbAh7XVg0KjfkyEIWVZbwr2khGEN5z2NSqI2siijkLt jw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 34hhvcqqu7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 06 Nov 2020 08:04:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A67tqTY124113;
-        Fri, 6 Nov 2020 08:04:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 34hvs23x2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 06 Nov 2020 08:04:30 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A684SoJ007269;
-        Fri, 6 Nov 2020 08:04:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 06 Nov 2020 00:04:27 -0800
-Date:   Fri, 6 Nov 2020 11:04:19 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Colin King <colin.king@canonical.com>,
+        id S1725893AbgKFJR1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 04:17:27 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:55720 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgKFJRY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 04:17:24 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20201106091710euoutp01a3fb7590aca570993f4a71758223f76f~E4IVSALMF2336123361euoutp01e;
+        Fri,  6 Nov 2020 09:17:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20201106091710euoutp01a3fb7590aca570993f4a71758223f76f~E4IVSALMF2336123361euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1604654230;
+        bh=21wqxFY+rhYS7yfUh8u/AU7V25NfuFEGtP4GBPEKnXw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Y6h+CXqae5RH+BSOW3H1AtuM3Ioge/g5HLaAYmrFFhr5fSyXaZXINpWxkg8uJu/0c
+         ayH/ceU5wtWhh0HDBnCPv22xucBr3oWyd19XF28WZWA5Lwsg2bRH0BieE6r/D97TdV
+         KYCwGfsWoQoDQxliuzFQl4sJk11mQt0OVJmIpNlA=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20201106091710eucas1p2392018640bed2c247a4025f5a6516892~E4IVIS7PL0939709397eucas1p2S;
+        Fri,  6 Nov 2020 09:17:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id DE.08.06456.69415AF5; Fri,  6
+        Nov 2020 09:17:10 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20201106091709eucas1p10f775cacfc6a9cb543ddd3b2cb942ea3~E4IUrokrW1109811098eucas1p1p;
+        Fri,  6 Nov 2020 09:17:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20201106091709eusmtrp291c39170ab698e044b401f3d1e32edba~E4IUqMtjb1088010880eusmtrp29;
+        Fri,  6 Nov 2020 09:17:09 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-07-5fa5149652aa
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 74.EF.06017.59415AF5; Fri,  6
+        Nov 2020 09:17:09 +0000 (GMT)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20201106091707eusmtip2901eab6f443cb51ab65bf86ae986876a~E4ISgzA1o0792207922eusmtip24;
+        Fri,  6 Nov 2020 09:17:07 +0000 (GMT)
+Subject: Re: [PATCH v2 00/16] PCI: dwc: Another round of clean-ups
+To:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Andy Gross <agross@kernel.org>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: fix a potential uninitentional integer overflow
- issue
-Message-ID: <20201106080419.GC29398@kadam>
-References: <20201007123045.GS4282@kadam>
- <20201105222430.GA499522@bjorn-Precision-5520>
+        Fabio Estevam <festevam@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        linux-amlogic@lists.infradead.org, linux-arm-kernel@axis.com,
+        linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Pratyush Anand <pratyush.anand@gmail.com>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Vidya Sagar <vidyas@nvidia.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <7eb813b3-41cc-a88c-0261-ba31995aaeb4@samsung.com>
+Date:   Fri, 6 Nov 2020 10:17:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0)
+        Gecko/20100101 Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201105222430.GA499522@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9796 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 suspectscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011060056
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9796 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011060057
+In-Reply-To: <20201105211159.1814485-1-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxTZxTO23t776Vadq24vqvGLZ1ZsmUKDJKd6OKU7MdNjI7MuewjyCpe
+        PjKo2oobujhW6ia1KGimcGtr6WpABswVBMG6skJaGYE6UeyW4oRCBhPR8DECTB3lQsa/53nO
+        c95znpO8DKG4QKuYLO1BXqfVZKspGdngm+5afzbmYmrcUM0y6ArPkuA0ZEKHZ5SEvjvvQnPv
+        cRpagwYEQoMVwUh/GwF/eQUCKifKaDAKDhLu/TOGoOq7JhJOhR8QMP1tvQRuDpopCAQu03Df
+        +rsE7JZl4PFfkoAr3COFEk8nDaaZSwRYnKdI6LT5KSgN/CyBwgmBgtmpp1IYmR2i4WRRCwU+
+        RzsJJ1pT4cqJuxLwnvwEbCW3KXjmvjo3fsCB4Emji4SheiWMzAQJuO78AKabbSQUjozS0NMo
+        h8Cx0jn53jiCX64lbInlKm+apFxb9Q+Iq7ZVI+5ubTL3KHiM5mzVR7gmoZfm7K5cbrD4DM2F
+        rT/RnKuqkOJCPW6Kq3N+xQVKyxHn8pwluKKCUSr5+Y9lb+3ls7MO8brYzZ/KMg2OuP3+l74w
+        9LVK8lGVyoSiGMwm4sFuI2VCMkbBViJsra1ZIBMItza0kyIZR7guVI4WW4LFtyVioQLhi0U+
+        WiSPEC6abJeaEMOsZJNw6NzrkYYY9j3cfKOCiHgI9jyDA+Hr88++wP4mxQ+sdknERbHx2PTQ
+        REWwnN2MT98Ym9dJdh0u77YQEbyK3YOfjP9LiJ4VuL1sgIzgKPZNXDPZM68T7Iu44IplASvx
+        HwMX5lfFbJkMG7+eJMUM72Bj/2VCxCvx3/56WsRr8LOmxYYChPu6amiRmBHuNpQuXGATDnXN
+        UJGcBPsq/rE5VpS3Ys9j87yM2WgcfLhCXCIan244R4iyHB//RiG6X8GCv5YuRi8LS+IISyII
+        SyII/8+yI7IKKflcfU4Gr4/X8p9v0Gty9LnajA1p+3JcaO7bdDz1j11Fk7f2eBHLIPVyectH
+        zlSFVHNIn5fjRZgh1DHypM6O3Qr5Xk3eYV63L1WXm83rvWg1Q6qV8gTHcIqCzdAc5D/j+f28
+        brEqYaJU+QhZps5vS87aHppV3V/jW9t77UDa0R2Jq/I6hpcfUX6f3r/zy5SRyjNtLRkGqfHA
+        xpIdH65NcfmNCdFmefr2po7hX3fvzLszpUlrWWcu121cv8ubXKESDtftUm96Wzq1LZwpe//W
+        c0rfFkV67VH7G2OjUrevrNGdiB//qXXH5Rd3a5LUpD5TE/8aodNr/gNXvT04MgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxTVxiAd+69vffWreNaYJyxZTONicumLQWxL0YJMdm8+7FMZ7Ko4Loq
+        N5SMtqYfZm4/RnBOKCjgBoM2VCyVSEXnKkr5cNXiQMawJGqtTEiRGnGrbHNupjJlLXUJ/56c
+        8zznIzmHJaXn6Uy2VG8WjHpNmYxeQo08HZpc1ZB2TJ117+eVcGV6jgJXhRZGfLMUTF1/H3on
+        KhkYCFUgsJ1rQRC9fYmEu34bCccfNjPwpc1JweQ/DxC4G3ooqJ3+jYTYgS4Cxu7U0BAInGYg
+        3HKTgFb78+Ab6iDAMx0UQb1vlAHr4w4S7K5aCkYdQzQ0BX4goOqhjYa5R09FEJ2bYeDQwQs0
+        DDqHKageUMPZ6hsE+A8VgqP+Gg3z/d749hEngifdHgpmujIg+jhEwnnXhxDrdVBQFZ1lINgt
+        gcD+pvjw5F8ILvblFCj442NWEX+p8wTiOx2diL9xahP/e2g/wzs6P+d7bBMM3+qx8Hfqvmb4
+        6ZbvGd7jrqL5W8F+mj/j+oIPNB1FvMfXSPIH983Sm17aLl9nNFjMwjKtwWReLytUQrZcmQfy
+        7NV5cmWOasfa7FyZIn9dsVBWukcwKvI/lmsrnFm7h5Z9WjE1QJQjd6YViVnMrcahumuEFS1h
+        pdwxhJ94I2Ry4lU83FguSnIq/jdopZPSfYTH++YZK2LZVG4DvvXtyoSTxn2A+640ihIOyTlZ
+        3F4bXghe5q6KcLutjUzWVoQHOr9BiYTmlNh6P7GsmJVw+fjw5QdEgiluOT561b5wjHRuJ743
+        1kAknaV4uDlCJVjMqfDJv4MLDsmtwY4zU8/4dbzvrP0ZZ+DxyBGiDqXaFuW2RYltUWJblLQi
+        yo3SBItJV6IzZctNGp3Joi+R7zLoPCj+dM8Nxrq8yDq7xY84FslekFzY5lJLRZo9pr06P8Is
+        KUuTbBgd+UgqKdbs/UwwGtRGS5lg8qPc+OXqycz0XYb4R9Cb1cpcpQrylKocVc4akGVIKrmL
+        RVKuRGMWPhGE3YLx/45gxZnl6J2frq+Y7257e25HQeVzRT2PlntvC1ulO7eIs74qMihr7O7v
+        Ii+e3FZTvDHAehW9f2b9OjWoDKWM+WKqvjAV21zySrTUlbI0ZXPKa1oy4/CJFev54a3pf0wq
+        3girCl2rDsy89WM1FrV13A2PNm9ce+Td05d/kd7sL4D292SFxvGJRr2MMmk1yjdJo0nzH0ER
+        /SvQAwAA
+X-CMS-MailID: 20201106091709eucas1p10f775cacfc6a9cb543ddd3b2cb942ea3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20201105211208eucas1p29087cdd73805e670aff9f3a43f644e05
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20201105211208eucas1p29087cdd73805e670aff9f3a43f644e05
+References: <CGME20201105211208eucas1p29087cdd73805e670aff9f3a43f644e05@eucas1p2.samsung.com>
+        <20201105211159.1814485-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 05, 2020 at 04:24:30PM -0600, Bjorn Helgaas wrote:
-> On Wed, Oct 07, 2020 at 03:33:45PM +0300, Dan Carpenter wrote:
-> > On Wed, Oct 07, 2020 at 12:46:15PM +0100, Colin King wrote:
-> > > From: Colin Ian King <colin.king@canonical.com>
-> > > 
-> > > The shift of 1 by align_order is evaluated using 32 bit arithmetic
-> > > and the result is assigned to a resource_size_t type variable that
-> > > is a 64 bit unsigned integer on 64 bit platforms. Fix an overflow
-> > > before widening issue by using the BIT_ULL macro to perform the
-> > > shift.
-> > > 
-> > > Addresses-Coverity: ("Uninitentional integer overflow")
-> 
-> s/Uninitentional/Unintentional/
-> Also in subject (please also capitalize subject)
-> 
-> Doesn't Coverity also assign an ID number for this specific issue?
-> Can you include that as well, e.g.,
-> 
->   Addresses-Coverity-ID: 1226899 ("Unintentional integer overflow")
-> 
-> > > Fixes: 07d8d7e57c28 ("PCI: Make specifying PCI devices in kernel parameters reusable")
-> > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > > ---
-> > >  drivers/pci/pci.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 6d4d5a2f923d..1a5844d7af35 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -6209,7 +6209,7 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
-> > >  			if (align_order == -1)
-> > >  				align = PAGE_SIZE;
-> > >  			else
-> > > -				align = 1 << align_order;
-> > > +				align = BIT_ULL(align_order);
-> > 
-> > "align_order" comes from sscanf() so Smatch thinks it's not trusted.
-> > Anything above 63 is undefined behavior.  There should be a bounds check
-> > on this but I don't know what the valid values of "align" are.
-> 
-> The spec doesn't explicitly say what the size limit for 64-bit BARs
-> is, but it does say 32-bit BARs can support up to 2GB (2^31).  So I
-> infer that 2^63 would be the limit for 64-bit BARs.
-> 
-> What about something like the following?  To me, BIT_ULL doesn't seem
-> like an advantage over "1ULL << ", but maybe there's a reason to use
-> it.
+Hi Rob,
 
-The advantage of BIT_ULL() is that checkpatch and I think Coccinelle
-will suggest using it.  It's only recently where a few people have
-complained (actually you're probably the second person) that BIT() is
-sort of a weird thing to use for size variables.
+On 05.11.2020 22:11, Rob Herring wrote:
+> Here's another batch of DWC PCI host refactoring. This series primarily
+> moves more of the MSI, link up, and resource handling to the core
+> code. Beyond a couple of minor fixes, new in this version is runtime
+> detection of iATU regions instead of using DT properties.
 
-regards,
-dan carpenter
+iATU detection seems to work fine with 
+https://lore.kernel.org/linux-samsung-soc/20201029134017.27400-1-m.szyprowski@samsung.com/ 
+on top of your patchset on Samsung Exynos5433 SoC:
+
+exynos-pcie 15700000.pcie: host bridge /soc@0/pcie@15700000 ranges:
+exynos-pcie 15700000.pcie:       IO 0x000c001000..0x000c010fff -> 
+0x0000000000
+exynos-pcie 15700000.pcie:      MEM 0x000c011000..0x000ffffffe -> 
+0x000c011000
+exynos-pcie 15700000.pcie: iATU unroll: disabled
+exynos-pcie 15700000.pcie: Detected iATU regions: 3 outbound, 5 inbound
+exynos-pcie 15700000.pcie: Link up
+exynos-pcie 15700000.pcie: PCI host bridge to bus 0000:00
+
+Fell free to add my:
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+> No doubt I've probably broken something. Please test. I've run this thru
+> kernelci and checked boards with DWC PCI which currently is just
+> Layerscape boards (hint: add boards and/or enable PCI). A git branch is
+> here[1].
+>
+> This is dependent on "PCI: dwc: Restore ATU memory resource setup to use
+> last entry" which will be in v5.10-rc3.
+>
+> Rob
+>
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git pci-more-dwc-cleanup
+>
+> Rob Herring (16):
+>    PCI: dwc: Support multiple ATU memory regions
+>    PCI: dwc/intel-gw: Move ATU offset out of driver match data
+>    PCI: dwc: Move "dbi", "dbi2", and "addr_space" resource setup into
+>      common code
+>    PCI: dwc/intel-gw: Remove some unneeded function wrappers
+>    PCI: dwc: Ensure all outbound ATU windows are reset
+>    PCI: dwc/dra7xx: Use the common MSI irq_chip
+>    PCI: dwc: Drop the .set_num_vectors() host op
+>    PCI: dwc: Move MSI interrupt setup into DWC common code
+>    PCI: dwc: Rework MSI initialization
+>    PCI: dwc: Move link handling into common code
+>    PCI: dwc: Move dw_pcie_msi_init() into core
+>    PCI: dwc: Move dw_pcie_setup_rc() to DWC common code
+>    PCI: dwc: Remove unnecessary wrappers around dw_pcie_host_init()
+>    Revert "PCI: dwc/keystone: Drop duplicated 'num-viewport'"
+>    PCI: dwc: Move inbound and outbound windows to common struct
+>    PCI: dwc: Detect number of iATU windows
+>
+>   drivers/pci/controller/dwc/pci-dra7xx.c       | 141 +-----------------
+>   drivers/pci/controller/dwc/pci-exynos.c       |  50 ++-----
+>   drivers/pci/controller/dwc/pci-imx6.c         |  39 +----
+>   drivers/pci/controller/dwc/pci-keystone.c     |  79 ++--------
+>   .../pci/controller/dwc/pci-layerscape-ep.c    |  37 +----
+>   drivers/pci/controller/dwc/pci-layerscape.c   |  67 +--------
+>   drivers/pci/controller/dwc/pci-meson.c        |  53 ++-----
+>   drivers/pci/controller/dwc/pcie-al.c          |  29 +---
+>   drivers/pci/controller/dwc/pcie-armada8k.c    |  37 ++---
+>   drivers/pci/controller/dwc/pcie-artpec6.c     |  76 +---------
+>   .../pci/controller/dwc/pcie-designware-ep.c   |  58 +++----
+>   .../pci/controller/dwc/pcie-designware-host.c | 139 ++++++++++-------
+>   .../pci/controller/dwc/pcie-designware-plat.c |  70 +--------
+>   drivers/pci/controller/dwc/pcie-designware.c  |  93 +++++++++++-
+>   drivers/pci/controller/dwc/pcie-designware.h  |  24 +--
+>   drivers/pci/controller/dwc/pcie-histb.c       |  37 ++---
+>   drivers/pci/controller/dwc/pcie-intel-gw.c    |  67 ++-------
+>   drivers/pci/controller/dwc/pcie-kirin.c       |  62 +-------
+>   drivers/pci/controller/dwc/pcie-qcom.c        |  38 +----
+>   drivers/pci/controller/dwc/pcie-spear13xx.c   |  62 +++-----
+>   drivers/pci/controller/dwc/pcie-tegra194.c    |  41 +----
+>   drivers/pci/controller/dwc/pcie-uniphier-ep.c |  38 +----
+>   drivers/pci/controller/dwc/pcie-uniphier.c    |  51 +------
+>   23 files changed, 356 insertions(+), 1032 deletions(-)
+>
+> --
+> 2.25.1
+>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
