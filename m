@@ -2,79 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1098C2A937F
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 10:56:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B35932A9390
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 11:01:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgKFJ4d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 04:56:33 -0500
-Received: from mga03.intel.com ([134.134.136.65]:16239 "EHLO mga03.intel.com"
+        id S1726139AbgKFKBT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 05:01:19 -0500
+Received: from verein.lst.de ([213.95.11.211]:50944 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbgKFJ4d (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Nov 2020 04:56:33 -0500
-IronPort-SDR: ZVzZVOJi8qdcDLkvDN2x7HOIcR7JDPo9ByZhLb91bDTxmJlpk1M+5hM/gvsNHrQ9N6MFRmkDYK
- 8MQ7f0Uifo9w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9796"; a="169637066"
-X-IronPort-AV: E=Sophos;i="5.77,456,1596524400"; 
-   d="scan'208";a="169637066"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2020 01:56:32 -0800
-IronPort-SDR: TtwNFTBBvfR0+0Mhd2ChS+MDQxpr/8FCMIpGrGTcMWAS1062acKzBcCWlzfU/NLlIL7komJas9
- aFeW52Uhy3vQ==
-X-IronPort-AV: E=Sophos;i="5.77,456,1596524400"; 
-   d="scan'208";a="321542744"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2020 01:56:30 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kayUu-004Is0-QO; Fri, 06 Nov 2020 11:57:32 +0200
-Date:   Fri, 6 Nov 2020 11:57:32 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        johan@kernel.org, linux-usb@vger.kernel.org,
-        alberto.vignani@fastwebnet.it
-Subject: Re: [PATCH v1 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
-Message-ID: <20201106095732.GF4077@smile.fi.intel.com>
-References: <20201105180644.42862-1-andriy.shevchenko@linux.intel.com>
- <0c48dd87-82a2-3dfa-6b00-57ccf9d5dd0b@codethink.co.uk>
+        id S1726074AbgKFKBT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Nov 2020 05:01:19 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 96D3468B02; Fri,  6 Nov 2020 11:01:15 +0100 (CET)
+Date:   Fri, 6 Nov 2020 11:01:15 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Zhu Yanjun <yanjunz@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH 3/6] RDMA/core: remove use of dma_virt_ops
+Message-ID: <20201106100115.GA5951@lst.de>
+References: <20201105074205.1690638-1-hch@lst.de> <20201105074205.1690638-4-hch@lst.de> <20201105175253.GA35235@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c48dd87-82a2-3dfa-6b00-57ccf9d5dd0b@codethink.co.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20201105175253.GA35235@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 05, 2020 at 08:42:03PM +0000, Ben Dooks wrote:
-> On 05/11/2020 18:06, Andy Shevchenko wrote:
-> > Pericom PCIe-USB adapter ambiguously advertises MSI, but documentation says
-> > "The MSI Function is not implemented on this device." in the chapters 7.3.27,
-> > 7.3.29-7.3.31.
-
-Thanks for review.
-
-> > +	pci_info(dev, "The MSI Function is not implemented on this device, disabling it\n");
-> > +	dev->no_msi = 1;
-> > +
-> >   	pci_info(dev, "PME# is unreliable, disabling it\n");
-> >   	dev->pme_support = 0;
+On Thu, Nov 05, 2020 at 01:52:53PM -0400, Jason Gunthorpe wrote:
+> On Thu, Nov 05, 2020 at 08:42:02AM +0100, Christoph Hellwig wrote:
+> > @@ -1341,7 +1322,14 @@ int ib_register_device(struct ib_device *device, const char *name,
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	setup_dma_device(device, dma_device);
+> > +	/*
+> > +	 * If the caller does not provide a DMA capable device then the IB core
+> > +	 * will set up ib_sge and scatterlist structures that stash the kernel
+> > +	 * virtual address into the address field.
+> > +	 */
+> > +	device->dma_device = dma_device;
+> > +	WARN_ON(dma_device && !dma_device->dma_parms);
 > 
-> idea: one pci_info() print of:
+> I noticed there were a couple of places expecting dma_device to be set
+> to !NULL:
 > 
-> pci_info(dev, "PME# is unreliable, MSI not implemented, disabling both\n");
+> drivers/infiniband/core/umem.c:                 dma_get_max_seg_size(device->dma_device), sg, npages,
 
-I am not in favour of it. Perhaps I can do #ifdef CONFIG_PCI_MSI for those two.
+This needs to use ib_dma_max_seg_size.
 
-> > -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
-> > -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_msi_no_pme);
-> > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_msi_no_pme);
+> drivers/nvme/host/rdma.c:       ctrl->ctrl.numa_node = dev_to_node(ctrl->device->dev->dma_device);
 
--- 
-With Best Regards,
-Andy Shevchenko
+> Don't know much about NUMA, but do you think the ib device setup
+> should autocopy the numa node from the dma_device to the ib_device and
+> this usage should just refer to the ib_device?
 
+IMHO we could add a ib_device_get_numa_node API or something like that,
+which uses dev_to_node on the DMA device is present and otherwise returns
+-1.  If needed we can refine that later.
 
+> net/rds/ib.c:                                              device->dma_device,
+> 
+> No sure what to do about RDS..
+
+Yikes, this is completely broken.  We either need a wrapper for the
+dma_pool API, or get rid of it.  Let me dig into that.
