@@ -2,186 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47F562A92E8
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 10:39:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3B6B2A9305
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 10:44:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgKFJj3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 04:39:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgKFJj2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 04:39:28 -0500
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1558EC0613CF
-        for <linux-pci@vger.kernel.org>; Fri,  6 Nov 2020 01:39:28 -0800 (PST)
-Received: by mail-ot1-x344.google.com with SMTP id i18so723751ots.0
-        for <linux-pci@vger.kernel.org>; Fri, 06 Nov 2020 01:39:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hS2BcTK5z4a4yf5TkDGwLlw45N7VqY69EtqF7XSPepE=;
-        b=aMl4UYdBmBBIKNsYJIV0jBhnWVT+pm9PcFP3BxPdZOwCL0rBh51smgskvqWj7aK/vd
-         LYOxAaErD3aHyl/kFgQY/A/P071Y+eKaJWsBQl8ko04IeMqpGuOemz35JwMvIqXPz2l3
-         G0gFebo/yJp9cBkKo4VZWoGtOKdqYpsVxupdE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hS2BcTK5z4a4yf5TkDGwLlw45N7VqY69EtqF7XSPepE=;
-        b=LPUIw6HcktWbhkeGuSR2JxwjFpmueKr5gqYLy7ScqQDIVeifZJE2zaMTam0ocyxRHM
-         9DGPMTFn1D3z0hYqoouzNoS5qDbAoIuEXVKhPooXYWhhAnNwwEWXjI2zJI94H3bE3TUa
-         abS4Dooz/3gDZYrBYAv1ZGgjFBo6HemqN4k+MVN+T1BeZQ6NzjqkB/ldjG2B3uq5ahyv
-         62CK1xx7b13j5dwU8CHYZx2ihGGaM1pKMWWVk0c5kUEaBrh83jxMBv37NF5N5uScuiSB
-         4BtYziMr3xrji2/V3W1rllsiQcSecm2XGAd0fcz0MAQjmOLXMzA35h1++9NpmG50bOGn
-         zjxg==
-X-Gm-Message-State: AOAM5335V9Fybj+rNA2szuzH/JFMyhpImN9vbjZX7SzsJWhas9uL+dAK
-        6x7D1tj+GMvuX1f068bZZyTRzdcSAGuhikO59zxe9Q==
-X-Google-Smtp-Source: ABdhPJyOY2iais1PWyvYc8pE7etVO2yrqRvoAo9G5pG2lhAYCULriboO0tT8mJ7u1xjL+bzZW3VFJOvPjKrxE/4xZOo=
-X-Received: by 2002:a05:6830:1647:: with SMTP id h7mr599057otr.281.1604655567484;
- Fri, 06 Nov 2020 01:39:27 -0800 (PST)
+        id S1726739AbgKFJoC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 04:44:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgKFJoC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 6 Nov 2020 04:44:02 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37082208FE;
+        Fri,  6 Nov 2020 09:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604655841;
+        bh=Fq5vr3me39TgPqEdPyi7J1Ht4zHrZr1k7irqRaq3p58=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JWmwLNgx7xdjdSAA7Zt5fqF+ovmzxs/0PPUI0spUYDgAL+k9Xum41VvWegs8iucsj
+         SVPRgrKI+O+pbnCRnpWDGb4386+yawxrTdtdOQwLN3YfjC5dydIbh7WVK2neuchzrS
+         OHL8bJVRg2hvo00wckvyy8dTwS95VLRRdShu7h5s=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1kayHm-0088fx-75; Fri, 06 Nov 2020 09:43:58 +0000
 MIME-Version: 1.0
-References: <160456956585.5393.4540325192433934522@jlahtine-mobl.ger.corp.intel.com>
- <20201105141739.GA493962@bjorn-Precision-5520>
-In-Reply-To: <20201105141739.GA493962@bjorn-Precision-5520>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 6 Nov 2020 10:39:16 +0100
-Message-ID: <CAKMK7uFj+5p4XPUnd2Mc3R4i2Umja5-iGgDg+jVzRBhCW-6qbQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Matthew D Roper <matthew.d.roper@intel.com>,
-        hariom.pandey@intel.com, Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 06 Nov 2020 09:43:58 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Frank Wunderlich <linux@fw-web.de>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: Aw: Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
+In-Reply-To: <87blgbl887.fsf@nanos.tec.linutronix.de>
+References: <20201031140330.83768-1-linux@fw-web.de>
+ <878sbm9icl.fsf@nanos.tec.linutronix.de>
+ <EC02022C-64CF-4F4B-A0A2-215A0A49E826@public-files.de>
+ <87lfflti8q.wl-maz@kernel.org> <1604253261.22363.0.camel@mtkswgap22>
+ <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
+ <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
+ <df5565a2f1e821041c7c531ad52a3344@kernel.org>
+ <87h7q791j8.fsf@nanos.tec.linutronix.de>
+ <877dr38kt8.fsf@nanos.tec.linutronix.de>
+ <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
+ <87o8ke7njb.fsf@nanos.tec.linutronix.de>
+ <trinity-1d7f8900-10db-40c0-a0aa-47bb99ed84cd-1604508571909@3c-app-gmx-bs02>
+ <87h7q4lnoz.fsf@nanos.tec.linutronix.de>
+ <074d057910c3e834f4bd58821e8583b1@kernel.org>
+ <87blgbl887.fsf@nanos.tec.linutronix.de>
+User-Agent: Roundcube Webmail/1.4.9
+Message-ID: <c63d8d7d966c1dda82884f361d4691c3@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, frank-w@public-files.de, ryder.lee@mediatek.com, linux-mediatek@lists.infradead.org, linux@fw-web.de, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, bhelgaas@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 3:17 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Thu, Nov 05, 2020 at 11:46:06AM +0200, Joonas Lahtinen wrote:
-> > Quoting Bjorn Helgaas (2020-11-04 19:35:56)
-> > > [+cc Jani, Joonas, Rodrigo, David, Daniel]
-> > >
-> > > On Wed, Nov 04, 2020 at 05:35:06PM +0530, Tejas Upadhyay wrote:
-> > > > JSL re-uses the same stolen memory as ICL and EHL.
-> > > >
-> > > > Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-> > > > Cc: Matt Roper <matthew.d.roper@intel.com>
-> > > > Signed-off-by: Tejas Upadhyay <tejaskumarx.surendrakumar.upadhyay@intel.com>
-> > >
-> > > I don't plan to do anything with this since previous similar patches
-> > > have gone through some other tree, so this is just kibitzing.
-> > >
-> > > But the fact that we have this long list of Intel devices [1] that
-> > > constantly needs updates [2] is a hint that something is wrong.
-> >
-> > We add an entry for every new integrated graphics platform. Once the
-> > platform is added, there have not been changes lately.
-> >
-> > > IIUC the general idea is that we need to discover Intel gfx memory by
-> > > looking at device-dependent config space and add it to the E820 map.
-> > > Apparently the quirks discover this via PCI config registers like
-> > > I830_ESMRAMC, I845_ESMRAMC, etc, and tell the driver about it via the
-> > > global "intel_graphics_stolen_res"?
-> >
-> > We discover what is called the graphics data stolen memory. It is regular
-> > system memory range that is not CPU accessible. It is accessible by the
-> > integrated graphics only.
-> >
-> > See: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/x86/kernel/early-quirks.c?h=v5.10-rc2&id=814c5f1f52a4beb3710317022acd6ad34fc0b6b9
-> >
-> > > That's not the way this should work.  There should some generic, non
-> > > device-dependent PCI or ACPI method to discover the memory used, or at
-> > > least some way to do it in the driver instead of early arch code.
-> >
-> > It's used by the early BIOS/UEFI code to set up initial framebuffer.
-> > Even if i915 driver is never loaded, the memory ranges still need to
-> > be fixed. They source of the problem is that the OEM BIOS which are
-> > not under our control get the programming wrong.
-> >
-> > We used to detect the memory region size again at i915 initialization
-> > but wanted to eliminate the code duplication and resulting subtle bugs
-> > that caused. Conclusion back then was that storing the struct resource
-> > in memory is the best trade-off.
-> >
-> > > How is this *supposed* to work?  Is there something we can do in E820
-> > > or other resource management that would make this easier?
-> >
-> > The code was added around Haswell (HSW) device generation to mitigate
-> > bugs in BIOS. It is traditionally hard to get all OEMs to fix their
-> > BIOS when things work for Windows. It's only later years when some
-> > laptop models are intended to be sold with Linux.
-> >
-> > The alternative would be to get all the OEM to fix their BIOS for Linux,
-> > but that is not very realistic given past experiences. So it seems
-> > a better choice to to add new line per platform generation to make
-> > sure the users can boot to Linux.
->
-> How does Windows do this?  Do they have to add similar code for each
-> new platform?
+On 2020-11-05 23:00, Thomas Gleixner wrote:
+> On Thu, Nov 05 2020 at 09:20, Marc Zyngier wrote:
+>> On 2020-11-04 23:14, Thomas Gleixner wrote:
+>>>  	/* Resource alignment requirements */
+>>>  	resource_size_t (*align_resource)(struct pci_dev *dev,
+>> 
+>> If that's the direction of travel, we also need something like this
+>> for configuration where the host bridge relies on an external MSI 
+>> block
+>> that uses MSI domains (boot-tested in a GICv3 guest).
+> 
+> Some more context would be helpful. Brain fails to decode the logic
+> here.
 
-Windows is chicken and doesn't move any mmio bar around on its own.
-Except if the bios explicitly told it somehow (e.g. for the 64bit bar
-stuff amd recently announced for windows, that linux supports since
-years by moving the bar). So except if you want to preemptively
-disable the pci code that does this anytime there's an intel gpu, this
-is what we have to do.
+OK, let me try again.
 
-And given that this 64bit mmio bar support in windows still requires
-an explicit bios upgrade for the explicit opt in I don't think this
-will change anytime soon.
+The MSI controller, which is the thing that deals with MSIs in the 
+system
+(GICv2m, GICv3-ITS, and a number of others), is optional, is not part of 
+the
+host bridge (it has nothing to do with PCI at all), and the bridge 
+driver has
+absolutely no idea  whether:
 
-We have a similar ugly problem with kvm, since you can't use these
-ranges freely (they're very special in hw), and the kvm maintainers
-are equally annoyed that they have to keep supporting RRMR to block
-that range, just because of intel integrated graphics. Apparently
-windows is again totally fine with this.
--Daniel
+- there is something that provides MSI or not
+- that something has successfully been initialised or not (which 
+translates
+   into an MSI domain being present or not)
 
+This is the case for most ARM systems, and all KVM/arm guests. Booting a 
+VM
+without MSIs is absolutely trivial, and actually makes sense for some of 
+the
+smaller guests.
 
->
-> > > > ---
-> > > >  arch/x86/kernel/early-quirks.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> > > > index a4b5af03dcc1..534cc3f78c6b 100644
-> > > > --- a/arch/x86/kernel/early-quirks.c
-> > > > +++ b/arch/x86/kernel/early-quirks.c
-> > > > @@ -549,6 +549,7 @@ static const struct pci_device_id intel_early_ids[] __initconst = {
-> > > >       INTEL_CNL_IDS(&gen9_early_ops),
-> > > >       INTEL_ICL_11_IDS(&gen11_early_ops),
-> > > >       INTEL_EHL_IDS(&gen11_early_ops),
-> > > > +     INTEL_JSL_IDS(&gen11_early_ops),
-> > > >       INTEL_TGL_12_IDS(&gen11_early_ops),
-> > > >       INTEL_RKL_IDS(&gen11_early_ops),
-> > > >  };
-> > >
-> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kernel/early-quirks.c?h=v5.10-rc2#n518
-> > >
-> > > [2]
-> > >   May 2020 efbee021ad02 ("x86/gpu: add RKL stolen memory support")
-> > >   Jul 2019 6b2436aeb945 ("x86/gpu: add TGL stolen memory support")
-> > >   Mar 2019 d53fef0be4a5 ("x86/gpu: add ElkhartLake to gen11 early quirks")
-> > >   May 2018 db0c8d8b031d ("x86/gpu: reserve ICL's graphics stolen memory")
-> > >   Dec 2017 33aa69ed8aac ("x86/gpu: add CFL to early quirks")
-> > >   Jul 2017 2e1e9d48939e ("x86/gpu: CNL uses the same GMS values as SKL")
-> > >   Jan 2017 bc384c77e3bb ("x86/gpu: GLK uses the same GMS values as SKL")
-> > >   Oct 2015 00ce5c8a66fb ("drm/i915/kbl: Kabylake uses the same GMS values as Skylake")
-> > >   Mar 2015 31d4dcf705c3 ("drm/i915/bxt: Broxton uses the same GMS values as Skylake")
-> > >   ...
+In these conditions, your no_msi attribute doesn't work as is: we can't 
+decide
+on its value at probe time without extracting all of the OF/ACPI logic 
+that
+deals with MSI domains from the core code, and making it available to 
+the host
+bridge drivers for systems that follow that model.
 
+Using the flow you insist on requires parsing the topology twice:
 
+- once to find out whether there is actually a MSI provider registered
+   for the host bridge in order to set the no_msi flag
 
+- once to actually be able to store the domain into the pci_bus 
+structure,
+   as it isn't available at probe time.
+
+My last suggestion is to indicate to the core code that there is a 
+*possible*
+MSI controller available in the form of a MSI domain. This is still 
+suboptimal
+compared to checking the presence an MSI domain in core code (my initial
+suggestion), but the fallback stuff gets in the way (though I still 
+think it
+can be made to work).
+
+Anyway, this was my last attempt at addressing the problem. Most people
+won't see it. The couple of drivers that require the fallback hack are
+usually selected in distro kernels, and do a good job hiding the error.
+
+         M.
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Jazz is not dead. It just smells funny...
