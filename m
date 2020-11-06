@@ -2,71 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 012062A9E4F
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 20:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECA742A9E5D
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 21:03:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgKFTxo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 14:53:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728281AbgKFTxo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 14:53:44 -0500
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8DA7C0613D2
-        for <linux-pci@vger.kernel.org>; Fri,  6 Nov 2020 11:53:43 -0800 (PST)
-Received: by mail-qt1-x842.google.com with SMTP id 3so1624477qtx.3
-        for <linux-pci@vger.kernel.org>; Fri, 06 Nov 2020 11:53:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sU45ASLE3qTNEeDnzXy0mWmjw/B5hdl1YB3C1dRGzkI=;
-        b=FudZRGzAxEFk9lGKJUSPzsyZKArhHRwyzmRlvf+GFC+ATQPjzcBbVOeDLLB7moiVUf
-         ObxxpnS/zZJpTm82iWz+fyi9jGs/I9YeNae0ROJk7xm4ksGu3vErOwXPC3998pjQlR5p
-         4czYVsKEbRHoddebJV0noju3HQZREanU58l+vhPFj17Ta8rGMwytFISX8XsKNrHR+BX8
-         lRJNDwJeHT2t31rpqbAdGGp0+akczI7HoAc6Ksjc1BT3ksZah6pY+y3OqCayYTmpzL+D
-         Vcc6mEGa7A07b9rAWqQo7QjWrLXkk8WsSTWPLKnX0XjNAe7EuqN+sDQBd5I1lutR9Gx3
-         kmvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sU45ASLE3qTNEeDnzXy0mWmjw/B5hdl1YB3C1dRGzkI=;
-        b=m2awEoAPm5jQAz3M17v47SuBOAE3kPoJG0cNa/LWzkWuXGDTQBvdtlhm7mrLlOKYOs
-         ur0mtG9K11GXe7VQomdefNzuGdQiASttx9gr4UE9lPis6+LusMMmPhbhg8qcIdtOUr34
-         +ucSHwSbznJ09p5GIhx+WCZNWl1uLw2PF+5kUs4rA9k/y0to09mT3hwpUCAct/iJT4UD
-         ljeeHXsRc+Mt6c37e//41Pt1i+dHlKnfGBFV9MHep8hrluyjQYK7cy4B52MNxGsoSybr
-         ihZn/2yVmKTCnYck2LungWWT0RBV5dHHP47O18J0X5bFBBrdZvJf0QBv7pwqqB/aiE2f
-         34Ag==
-X-Gm-Message-State: AOAM533LowWhwKfFVX4kb/9bJ8qij/JGtG9U66/OxDNZ7AwrSesJVtOx
-        KtVDuu8L0etf4TotbMYbUbFoSw==
-X-Google-Smtp-Source: ABdhPJwcMytaU5RLKIBqp2abyuS1iVFiLHOqHqGF/QD5vN1zrtKnu5OM6Laul9BgJOP5lCmGBjWjKA==
-X-Received: by 2002:aed:32c7:: with SMTP id z65mr3146052qtd.266.1604692422443;
-        Fri, 06 Nov 2020 11:53:42 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id r41sm1239041qtj.23.2020.11.06.11.53.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Nov 2020 11:53:41 -0800 (PST)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kb7np-0011j7-5m; Fri, 06 Nov 2020 15:53:41 -0400
-Date:   Fri, 6 Nov 2020 15:53:41 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
+        id S1728154AbgKFUDi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 15:03:38 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:60262 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgKFUDi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 15:03:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=eezeT8sE0c+dvLmjvESICoKhAlzXaqNnjl5jvhsWtf0=; b=dA51HxqSCHR4JuZbkzzSmg3W+t
+        yWkoDic2Ka2INSPCZAs/OVNcm6A8oiWD4xs5cZOJI6JCJWoyIEcMFYQuwDXpEP94JRNOq4Jm597IW
+        zY9+kL0WMddHMYyhT16mkNx04/hEioF70ZnVXsKAV6asL35LsLIGi/hQcp4flbFRG6VUJKaDSYlQm
+        BxfqzK/sL5Uezm0Q9/fKyVYifXoPOzisxNKpvC7XUXwFcrIJEQsQ7vt00oqimgL0c3rksAR1njMyZ
+        RHfHxAGvibWkE0XP5Ny8DbZ0h152CMHqRJ4Aq7wirLss+0t12x4iriBT6mcS0XfaFdtJXuwn2twYA
+        onotgqBQ==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1kb7xI-0005Wu-TX; Fri, 06 Nov 2020 13:03:30 -0700
+To:     Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-mm@kvack.org, iommu@lists.linux-foundation.org,
         Stephen Bates <sbates@raithlin.com>,
         Christoph Hellwig <hch@lst.de>,
         Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
         Ira Weiny <iweiny@intel.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Don Dutile <ddutile@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [RFC PATCH 14/15] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
-Message-ID: <20201106195341.GA244516@ziepe.ca>
 References: <20201106170036.18713-1-logang@deltatee.com>
  <20201106170036.18713-15-logang@deltatee.com>
  <20201106172206.GS36674@ziepe.ca>
@@ -77,66 +51,93 @@ References: <20201106170036.18713-1-logang@deltatee.com>
  <09885400-36f8-bc1d-27f0-a8adcf6104d4@deltatee.com>
  <20201106193024.GW36674@ziepe.ca>
  <03032637-0826-da76-aec2-121902b1c166@deltatee.com>
+ <20201106195341.GA244516@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e6a99d54-b33a-0df1-ee33-4aa7a70124a6@deltatee.com>
+Date:   Fri, 6 Nov 2020 13:03:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03032637-0826-da76-aec2-121902b1c166@deltatee.com>
+In-Reply-To: <20201106195341.GA244516@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, iweiny@intel.com, christian.koenig@amd.com, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_FREE,NICE_REPLY_A autolearn=ham
+        autolearn_force=no version=3.4.2
+Subject: Re: [RFC PATCH 14/15] PCI/P2PDMA: Introduce pci_mmap_p2pmem()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 06, 2020 at 12:44:59PM -0700, Logan Gunthorpe wrote:
+
+
+
+On 2020-11-06 12:53 p.m., Jason Gunthorpe wrote:
+> On Fri, Nov 06, 2020 at 12:44:59PM -0700, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2020-11-06 12:30 p.m., Jason Gunthorpe wrote:
+>>>> I certainly can't make decisions for code that isn't currently
+>>>> upstream.
+>>>
+>>> The rdma drivers are all upstream, what are you thinking about?
+>>
+>> Really? I feel like you should know what I mean here...
+>>
+>> I mean upstream code that actually uses the APIs that I'd have to
+>> introduce. I can't say here's an API feature that no code uses but the
+>> already upstream rdma driver might use eventually. It's fairly easy to
+>> send patches that make the necessary changes when someone adds a use of
+>> those changes inside the rdma code.
 > 
+> Sure, but that doesn't mean you have to actively design things to be
+> unusable beyond this narrow case. The RDMA drivers are all there, all
+> upstream, if this work is accepted then the changes to insert P2P
+> pages into their existing mmap flows is a reasonable usecase to
+> consider at this point when building core code APIs.
 > 
-> On 2020-11-06 12:30 p.m., Jason Gunthorpe wrote:
-> >> I certainly can't make decisions for code that isn't currently
-> >> upstream.
-> > 
-> > The rdma drivers are all upstream, what are you thinking about?
+> You shouldn't add dead code, but at least have a design in mind for
+> what it needs to look like and some allowance.
+
+I don't see anything I've done that's at odds with that. You will still
+need to make changes to the p2pdma code to implement your use case.
+
+>>>> Ultimately, if you aren't using the genpool you will have to implement
+>>>> your own mmap operation that somehow allocates the pages and your own
+>>>> page_free hook. 
+>>>
+>>> Sure, the mlx5 driver already has a specialized alloctor for it's BAR
+>>> pages.
+>>
+>> So it *might* make sense to carve out a common helper to setup a VMA for
+>> P2PDMA to do the vm_flags check and set VM_MIXEDMAP... but besides that,
+>> there's no code that would be common to the two cases.
 > 
-> Really? I feel like you should know what I mean here...
-> 
-> I mean upstream code that actually uses the APIs that I'd have to
-> introduce. I can't say here's an API feature that no code uses but the
-> already upstream rdma driver might use eventually. It's fairly easy to
-> send patches that make the necessary changes when someone adds a use of
-> those changes inside the rdma code.
+> I think the whole insertion of P2PDMA pages into a VMA should be
+> similar to io_remap_pfn() so all the VM flags, pgprot_decrypted and
+> other subtle details are all in one place. (also it needs a
+> pgprot_decrypted before doing vmf_insert, I just learned that this
+> month)
 
-Sure, but that doesn't mean you have to actively design things to be
-unusable beyond this narrow case. The RDMA drivers are all there, all
-upstream, if this work is accepted then the changes to insert P2P
-pages into their existing mmap flows is a reasonable usecase to
-consider at this point when building core code APIs.
+I don't think a function like that will work for the p2pmem use case. In
+order to implement proper page freeing I expect I'll need a loop around
+the allocator and vm_insert_mixed()... Something roughly like:
 
-You shouldn't add dead code, but at least have a design in mind for
-what it needs to look like and some allowance.
+for (addr = vma->vm_start; addr < vma->vm_end; addr += PAGE_SIZE) {
+        vaddr = pci_alloc_p2pmem(pdev, PAGE_SIZE);
+	ret = vmf_insert_mixed(vma, addr,
+  		       __pfn_to_pfn_t(virt_to_pfn(vaddr), PFN_DEV | PFN_MAP));
+}
 
-> >> Ultimately, if you aren't using the genpool you will have to implement
-> >> your own mmap operation that somehow allocates the pages and your own
-> >> page_free hook. 
-> > 
-> > Sure, the mlx5 driver already has a specialized alloctor for it's BAR
-> > pages.
-> 
-> So it *might* make sense to carve out a common helper to setup a VMA for
-> P2PDMA to do the vm_flags check and set VM_MIXEDMAP... but besides that,
-> there's no code that would be common to the two cases.
+That way we can call pci_free_p2pmem() when a page's ref count goes to
+zero. I suspect your use case will need to do something similar.
 
-I think the whole insertion of P2PDMA pages into a VMA should be
-similar to io_remap_pfn() so all the VM flags, pgprot_decrypted and
-other subtle details are all in one place. (also it needs a
-pgprot_decrypted before doing vmf_insert, I just learned that this
-month)
-
-> >> I also don't expect this to be going upstream in the near term so don't
-> >> get too excited about using it.
-> > 
-> > I don't know, it is actually not that horrible, the GUP and IOMMU
-> > related changes are simpler than I expected
-> 
-> I think the deal breaker is the SGL hack and the fact that there are
-> important IOMMU implementations that won't have support.
-
-Yes, that is pretty hacky, maybe someone will have a better idea
-
-Jason
+Logan
