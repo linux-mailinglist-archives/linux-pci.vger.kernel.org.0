@@ -2,109 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B248E2AA077
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 23:40:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3B422AA182
+	for <lists+linux-pci@lfdr.de>; Sat,  7 Nov 2020 00:47:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgKFWkh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 17:40:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgKFWkg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 6 Nov 2020 17:40:36 -0500
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF0D02087E;
-        Fri,  6 Nov 2020 22:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604702435;
-        bh=LI7XGAY03yCtlMOYxKQUGueF89ZZGjsCxkyQXkTq7G0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kN7dCHr+StaLlgngJKnhsZEyAjmK88nsMt9bIFdPhTa1mebHCReIsb+KALOnxoj0V
-         zQQ2EivJ9Farp2NGyaxBTbIUDhKWq7UtcgyhESSy1UX7t904Edw1irx2vRdNTnUMNk
-         ax4+6ompNdw3ZvWrB8fZB/3IsL4+Vet6QpC6MINo=
-Received: by mail-ot1-f49.google.com with SMTP id g19so2758683otp.13;
-        Fri, 06 Nov 2020 14:40:35 -0800 (PST)
-X-Gm-Message-State: AOAM533Pj7SqStTm9YjtjO9n0lQ5vJJ58G13IP4ggPm0/f9KG8YEISep
-        YRyb7vM0Wo8daOFlT5M74W5HgwWr7GX09SD7fQ==
-X-Google-Smtp-Source: ABdhPJyuNqsPVz5i1YucSMzUyTw1SdNWOTv/PSIMy5Zh8qaXkc5DJe4UulbFNQMcx67z+8BfhjFKBOpIXnWtbMtqZlQ=
-X-Received: by 2002:a05:6830:2f8:: with SMTP id r24mr2355382ote.129.1604702435070;
- Fri, 06 Nov 2020 14:40:35 -0800 (PST)
+        id S1726880AbgKFXrO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 18:47:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727247AbgKFXrN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 18:47:13 -0500
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82031C0613D2
+        for <linux-pci@vger.kernel.org>; Fri,  6 Nov 2020 15:47:13 -0800 (PST)
+Received: by mail-ed1-x542.google.com with SMTP id v4so2968853edi.0
+        for <linux-pci@vger.kernel.org>; Fri, 06 Nov 2020 15:47:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ld/AFos27KlKPC12X38aMGZUocKXd6SaJrBUuNVGmN0=;
+        b=tkdRkau4k4qjSOcL+lCqzMeF+zlmlKnfIhzdIaXGkB93zPzYnQCCykbyAg5/beJ7x1
+         HgU3JBNk6olMLPuuM02azIWJ//sqvEgCfm3ZkRkYahGBfztBEZIuwB0a+2QXERVQpzZb
+         LQsrQk8z7NgBJNN1hwTtGdI2NqjcbW5QMvB/MXhBjVqRCt4Lugw2PNQV574teL+vJ8Gb
+         Rr47XEeICg3VZuwo9nltfAwQsb+AnZV93sF2wQ1ynN2NooVyHpU1Hje/5WOxFo9IPy+C
+         EKNk1Xh660oMB9+fPeQ1LRRC/oblHCBovC7ZPkhP5ZKEZoASeAS6xILfFyPOg4Y+PM7b
+         zEjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ld/AFos27KlKPC12X38aMGZUocKXd6SaJrBUuNVGmN0=;
+        b=COpSeAfNihs+csl71qP3iV8wYp+CUYWyNjK6BaLg4dzaYzhyZEk3l6uGxljKCf+rmP
+         A7o8pwAMDaL6Z3U0i41ak1uuYAQTZOOlxW+0qK3LmgtFd2hs3i4TmyBaEcPxqpGcJBar
+         Ac8+roW4c0E9BeLtY0lwelTzP4Gv4bm80AYVvtyaJTxkjY+ngP3Zh0h0uhlQVf9Y9qky
+         +Dkk0W+X/ml2sM3jergRqvHbx6b3FI+tYJJTZZTgQWcoPBZcq5lL0dciSns2vZwVmZQQ
+         4727yQo9mEz9TxCieiFg81pxhIN3m/zUtGF/GC4GoMMe8a57djqVj6hAVh7B3pOi1aRB
+         N9uA==
+X-Gm-Message-State: AOAM533jTy+NP9xZ/QO53ug8xatnA6mnSU/bZK1SC7CEeAkDvSxXpYPP
+        WMWLJdXoK5z4mpVPYCU1pu+XjZzJ2H+7Ho2eGfGgSw==
+X-Google-Smtp-Source: ABdhPJy/RVV3sqTqc4xE+GihNiS1eS50AdCrqwgYd+vRMib4fmp3nZlcH77SGQmU6AM1MQg85qDtVq7mK+6+ZFe4bSI=
+X-Received: by 2002:aa7:d843:: with SMTP id f3mr4792654eds.354.1604706432202;
+ Fri, 06 Nov 2020 15:47:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20201106031208.160334-1-miaoqinglang@huawei.com> <20201106034249.169996-1-miaoqinglang@huawei.com>
-In-Reply-To: <20201106034249.169996-1-miaoqinglang@huawei.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 6 Nov 2020 16:40:23 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+KYEYKqRcYvdy3CN+qLDq7MmMsQeQ_=RZ8+TT97wkgiA@mail.gmail.com>
-Message-ID: <CAL_Jsq+KYEYKqRcYvdy3CN+qLDq7MmMsQeQ_=RZ8+TT97wkgiA@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: v3: fix missing clk_disable_unprepare() on error
- in v3_pci_probe
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20201102132158.GA3352700@nvidia.com> <MWHPR11MB1645675ED03E23674A705DF68C110@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201103124351.GM2620339@nvidia.com> <MWHPR11MB164544C9CFCC3F162C1C6FC18CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201104124017.GW2620339@nvidia.com> <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201104135415.GX2620339@nvidia.com> <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com>
+In-Reply-To: <20201106175131.GW2620339@nvidia.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 6 Nov 2020 15:47:00 -0800
+Message-ID: <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "jing.lin@intel.com" <jing.lin@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 9:37 PM Qinglang Miao <miaoqinglang@huawei.com> wrote:
+On Fri, Nov 6, 2020 at 9:51 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
+[..]
+> > This is true for IMS as well. But probably not implemented in the kernel as
+> > such. From a HW point of view (take idxd for instance) the facility is
+> > available to native OS as well. The early RFC supported this for native.
 >
-> Fix the missing clk_disable_unprepare() before return
-> from v3_pci_probe() in the error handling case.
+> I can't follow what you are trying to say here.
+
+I'm having a hard time following the technical cruxes of this debate.
+I grokked your feedback on the original IMS proposal way back at the
+beginning of this effort (pre-COVID even!), so maybe I can mediate
+here as well. Although, SIOV is that much harder for me to spell than
+IMS, so bear with me.
+
+> Dave said the IMS cap was to indicate that the VMM supported emulation
+> of IMS so that the VMM can do the MSI addr/data translation as part of
+> the emulation.
 >
-> I also move the clock-enable function later to avoid some
-> fixes.
+> I'm saying emulation will be too horrible for our devices that don't
+> require *any* emulation.
+
+This part I think I understand, i.e. why spend any logic emulating IMS
+as MSI since the IMS capability can be a paravirtualized interface
+from guest to VMM with none of the compromises that MSI would enforce.
+Did I get that right?
+
+> It is a bad architecture. The platform needs to handle this globally
+> for all devices, not special hacky emulations things custom made for
+> every device out there.
+
+I confess I don't quite understand the shape of what "platform needs
+to handle this globally" means, but I understand the desired end
+result of "no emulation added where not needed". However, would this
+mean that the bare-metal idxd driver can not be used directly in the
+guest without modification? For example, as I understand from talking
+to Ashok, idxd has some device events like error notification hard
+wired to MSI while data patch interrupts are IMS. So even if the IMS
+side does not hook up MSI emulation doesn't idxd still need MSI
+emulation to reuse the bare metal driver directly?
+
+> > Native devices can have both MSIx and IMS capability. But as I
+> > understand this isn't how we have partitioned things in SW today. We
+> > left IMS only for mdev's. And I agree this would be very useful.
 >
-> Fixes: 68a15eb7bd0c ("PCI: v3-semi: Add V3 Semiconductor PCI host driver")
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
-> ---
->  v2: add commit causing this problem and add more error handling
->      cases which are not enough.
->  v3: 1. fix the wrong 'Fixes commit'.
->      2. use goto to clean up this patch.
->      3. cover all error handling cases.
->  v4: fix uncorresponding author name.
->  drivers/pci/controller/pci-v3-semi.c | 49 +++++++++++++++++-----------
->  1 file changed, 30 insertions(+), 19 deletions(-)
+> That split is just some decision idxd did, we are thinking about doing
+> other things in our devices.
 
-[...]
+Where does the collision happen between what you need for a clean
+implementation of an IMS-like capability (/me misses his "dev-msi"
+name that got thrown out in the Thomas rewrite), and emulation needed
+to not have VF special casing in the idxd driver.
 
-> @@ -889,7 +891,16 @@ static int v3_pci_probe(struct platform_device *pdev)
->         val |= V3_SYSTEM_M_LOCK;
->         writew(val, v3->base + V3_SYSTEM);
->
-> -       return pci_host_probe(host);
-> +       ret = pci_host_probe(host);
-> +       if (ret < 0)
-> +               goto err_clk;
-> +
-> +       return 0;
-
-Slightly simpler to do:
-
-    ret = pci_host_probe(host);
-    if (!ret)
-        return 0;
-
-err_clk:
-
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +
-> +err_clk:
-> +       clk_disable_unprepare(clk);
-> +
-> +       return ret;
->  }
->
->  static const struct of_device_id v3_pci_of_match[] = {
-> --
-> 2.23.0
->
+Also feel free to straighten me out (Jason or Ashok) if I've botched
+the understanding of this.
