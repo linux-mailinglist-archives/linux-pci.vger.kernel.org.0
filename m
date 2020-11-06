@@ -2,100 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BEBA2A9817
-	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 16:10:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 616D62A981E
+	for <lists+linux-pci@lfdr.de>; Fri,  6 Nov 2020 16:11:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgKFPKp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 6 Nov 2020 10:10:45 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53878 "EHLO
+        id S1727656AbgKFPL0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 6 Nov 2020 10:11:26 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53962 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbgKFPKp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 10:10:45 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A6FAcUY021603;
-        Fri, 6 Nov 2020 09:10:38 -0600
+        with ESMTP id S1727591AbgKFPLU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 6 Nov 2020 10:11:20 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A6FBBeH021847;
+        Fri, 6 Nov 2020 09:11:11 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1604675438;
-        bh=cYq9nLX08g+AS2pblkyYqwuEvgJAblM0udPTzaUKv8s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=h3b2DP/fx0Ig2ry7sgpgiEY3IygBp5SacsDDkQ3MQUDn4efxMU4wo8HyB8aDyH6l4
-         zfiQorUHqPWlcFLEXPXnV2ln185+sE1PUOcgjVXwOynWw8HwKji+dL9HGH3qlecvMC
-         vQUzfEJIxbBnIfz1b+tTbj1zf/zQIN8pasgSTnUE=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A6FAcBF129824
+        s=ti-com-17Q1; t=1604675471;
+        bh=8bodEtP5BVgRAK4fX0dXA+G6u/k3Ei6hrCIVOyhMj/Y=;
+        h=From:To:CC:Subject:Date;
+        b=CDl4hRbNqLQkjrVW6O81Ucqem5Mncz9CSedRfkzwN2ioRoFv+bKsCK4hVSjsF/t6j
+         yvS8Eo5Pw5EChwR5dUJZaWzxgi8kkdKKJQhxUZ7ernzfWkUcUTcGwNdSukccRIMpoI
+         F/J8XNUv1n5pazgAOGaVNl6i+mmOQfi+f3lMtMjA=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A6FBBUO010650
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 6 Nov 2020 09:10:38 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 6 Nov 2020 09:11:11 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 6 Nov
- 2020 09:10:37 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 09:11:11 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 6 Nov 2020 09:10:37 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A6FAYee002242;
-        Fri, 6 Nov 2020 09:10:34 -0600
-Subject: Re: [PATCH 8/8] arm64: dts: ti: k3-j721e-main: Fix PCIe maximum
- outbound regions
-To:     Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>
-CC:     Lee Jones <lee.jones@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Tero Kristo <t-kristo@ti.com>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20201102101154.13598-1-kishon@ti.com>
- <20201102101154.13598-9-kishon@ti.com>
- <20201102164137.ntl3v6gu274ek2r2@gauze> <20201105165331.GA55814@bogus>
+ Frontend Transport; Fri, 6 Nov 2020 09:11:11 -0600
+Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A6FB7Tf092540;
+        Fri, 6 Nov 2020 09:11:08 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <1825b8dc-89c4-f5e6-69f2-4b0f6f3e5944@ti.com>
-Date:   Fri, 6 Nov 2020 20:40:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] PCI: Make "cdns,max-outbound-regions" optional DT property
+Date:   Fri, 6 Nov 2020 20:41:05 +0530
+Message-ID: <20201106151107.3987-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20201105165331.GA55814@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+Make "cdns,max-outbound-regions" optional DT property in all the
+platforms using Cadence PCIe core.
 
-On 05/11/20 10:23 pm, Rob Herring wrote:
-> On Mon, Nov 02, 2020 at 10:41:37AM -0600, Nishanth Menon wrote:
->> On 15:41-20201102, Kishon Vijay Abraham I wrote:
->>> PCIe controller in J721E supports a maximum of 32 outbound regions.
->>> commit 4e5833884f66 ("arm64: dts: ti: k3-j721e-main: Add PCIe device tree
->>> nodes") incorrectly added maximum number of outbound regions to 16. Fix
->>> it here.
->>>
->>> Fixes: 4e5833884f66 ("arm64: dts: ti: k3-j721e-main: Add PCIe device tree nodes")
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> ---
->>>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 8 ++++----
->>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>> index e2a96b2c423c..61b533130ed1 100644
->>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>> @@ -652,7 +652,7 @@
->>>  		power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
->>>  		clocks = <&k3_clks 239 1>;
->>>  		clock-names = "fck";
->>> -		cdns,max-outbound-regions = <16>;
->>> +		cdns,max-outbound-regions = <32>;
-> 
-> Can this be made detectable instead? Write to region registers and check 
-> the write sticks? I'm doing this for the DWC controller.
-> 
-> Or make the property optional with the default being the max (32).
+Kishon Vijay Abraham I (2):
+  dt-bindings: PCI: Make "cdns,max-outbound-regions" optional property
+  PCI: cadence: Do not error if "cdns,max-outbound-regions" is not found
 
-okay, I'll make this an optional property and send a patch which removes
-cdns,max-outbound-regions in k3-j721e-main.dtsi.
+ Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml  | 3 ---
+ .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml         | 2 --
+ drivers/pci/controller/cadence/pcie-cadence-ep.c         | 9 +++------
+ drivers/pci/controller/cadence/pcie-cadence.h            | 1 +
+ 4 files changed, 4 insertions(+), 11 deletions(-)
 
-Thanks,
-Kishon
+-- 
+2.17.1
+
