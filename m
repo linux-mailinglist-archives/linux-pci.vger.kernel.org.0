@@ -2,117 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C44F62AAE76
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 01:05:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7BFD2AAEE3
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 03:00:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728006AbgKIAFy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Nov 2020 19:05:54 -0500
-Received: from mga11.intel.com ([192.55.52.93]:42925 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727929AbgKIAFy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 8 Nov 2020 19:05:54 -0500
-IronPort-SDR: 1PNKp56QX7RR0CChtw+IQvOeSdMGsp3PNdkPWD/g5+BkJIpowLaD+kGHSrShBl6uQQpKpHSk9O
- fMhoO2+GysMA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9799"; a="166223084"
-X-IronPort-AV: E=Sophos;i="5.77,462,1596524400"; 
-   d="scan'208";a="166223084"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2020 16:05:54 -0800
-IronPort-SDR: URKh91De8z8i9pU2NLA5haELAPH1gMBPE2wkq+dJOcFLNi2+xpsHt4aZiWgjHUNdthDm2aS59n
- kSvgbnkNGRKw==
-X-IronPort-AV: E=Sophos;i="5.77,462,1596524400"; 
-   d="scan'208";a="530506850"
-Received: from araj-mobl1.jf.intel.com ([10.255.228.179])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2020 16:05:52 -0800
-Date:   Sun, 8 Nov 2020 16:05:50 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201109000550.GD32074@araj-mobl1.jf.intel.com>
-References: <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201104135415.GX2620339@nvidia.com>
- <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201106131415.GT2620339@nvidia.com>
- <20201106164850.GA85879@otc-nc-03>
- <20201106175131.GW2620339@nvidia.com>
- <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
- <20201107001207.GA2620339@nvidia.com>
- <20201108181124.GA28173@araj-mobl1.jf.intel.com>
- <20201108234142.GD2620339@nvidia.com>
+        id S1728993AbgKICAr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Nov 2020 21:00:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728006AbgKICAr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Nov 2020 21:00:47 -0500
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E0CC0613CF;
+        Sun,  8 Nov 2020 18:00:47 -0800 (PST)
+Received: by mail-pf1-x444.google.com with SMTP id 10so6546472pfp.5;
+        Sun, 08 Nov 2020 18:00:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M/sHCb58C+UKR7j7ExiS+JKwi2VJLyH2lrJ3bqK2Gik=;
+        b=onmQXo42GH4QBPXq3aS2WWXLgb1MKDov2nWKuR1vw+Nqlex8CACmzk/QlKxG++KUid
+         CJA7WJSPZEXJCq0ujAL37aCvtd3bJzVMqnRib+YvHXGHIYzlSqtlR4quJNzItzfXgCBL
+         d+cO8T3QKbJanNEVf/B4EPcr1d6rDsKsrjcvD9bWNHmEZa0mZR4ypG8hcv9YQF5Y4mGE
+         KJ87qn3gPziQuuKPpaoL1dPA4mVp4zjX45aMJey4TAnL/erlTxn9QnlUGxroiWBlO9yX
+         X0PmPa/Pa9bpI2JrX99Rs0GJtaDE0U8514NYocm9F7skWCrh3wIRLYxW3EjSHtesCMLT
+         N3AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M/sHCb58C+UKR7j7ExiS+JKwi2VJLyH2lrJ3bqK2Gik=;
+        b=UOWo/uiJlenzDNEhb5DnDevGEwi1g1de2+gGK2suBNSLd5fo2O2wj6cBNuhfl/omkr
+         aDmowKyjuI5fwUx77MSHRCKheFnEMjd7HyhO461Ydt+KhBMJ+08XdSLZ1SN7FMcScgcT
+         RWfeIwRKZEHkzfztWhbtlNgfHOsI9kAFM//HdlnjR2yIZx8A8/vLh5n3TDpRcSZBj/5W
+         Yja7il9Q65dlR3bc5UKLfr0/CLabdFNiLnQbZYCc1Engv2vYco8xH17QFi7t9q0B0FI+
+         QsVp5wFTQgBSGmuLlhyNp5rZ9Az8h5NwqCeR32fUS/y4tC8W1dGuUvdT4HHSrZ4ApgOi
+         82tw==
+X-Gm-Message-State: AOAM531j8ADpR9XDYW0LajVXLBwsG/c0wwCa0da33SrU7HsAhadTsvr6
+        fU5lD/diXUZTjf+c/xlUjI8m8KZvQ+0=
+X-Google-Smtp-Source: ABdhPJwsjUXczI5pQLNZEYEICG7A/fqZLAkG1tWOGAjdaTFRBrMn0njnEaj292o6jWFTgZrDMlhhTA==
+X-Received: by 2002:a17:90b:1392:: with SMTP id hr18mr9783208pjb.116.1604887246258;
+        Sun, 08 Nov 2020 18:00:46 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id x26sm9123491pfn.178.2020.11.08.18.00.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Nov 2020 18:00:45 -0800 (PST)
+Subject: Re: [PATCH] PCI: brcmstb: Remove irq handler and data in one go
+To:     Martin Kaiser <martin@kaiser.cx>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20201108184208.19790-1-martin@kaiser.cx>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <29cf71bd-197a-36e1-e931-9b7a60cf5830@gmail.com>
+Date:   Sun, 8 Nov 2020 18:00:42 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201108234142.GD2620339@nvidia.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20201108184208.19790-1-martin@kaiser.cx>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jason
 
-On Sun, Nov 08, 2020 at 07:41:42PM -0400, Jason Gunthorpe wrote:
-> On Sun, Nov 08, 2020 at 10:11:24AM -0800, Raj, Ashok wrote:
-> 
-> > > On (kvm) virtualization the addr/data pair the IRQ domain hands out
-> > > doesn't work. It is some fake thing.
-> > 
-> > Is it really some fake thing? I thought the vCPU and vector are real
-> > for a guest, and VMM ensures when interrupts are delivered they are either.
-> 
-> It is fake in the sense it is programmed into no hardware.
->  
-> It is real in the sense it is an ABI contract with the VMM.
 
-Ah.. its clear now. That clears up my question below as well.
-
+On 11/8/2020 10:42 AM, Martin Kaiser wrote:
+> Replace the two separate calls for removing the irq handler and data with a
+> single irq_set_chained_handler_and_data() call.
 > 
-> Yes, no matter what the VMM has to know the guest wants an interrupt
-> routed in and setup the VMM part of the equation. With SRIOV this is
-> all done with the MSI trapping.
-> 
-> > What if the guest creates some addr in the 0xfee... range how do we
-> > take care of interrupt remapping and such without any VMM assist?
-> 
-> Not sure I understand this?
-> 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 
-My question was based on mis-conception that interrupt entries are directly
-written by guest OS for mlx*. My concern was about security isolation if guest OS
-has full control of device interrupt store. 
-
-I think you clarified it, that interrupts still are marshalled by the VMM
-and not in direct control of guest OS. That makes my question moot.
-
-Cheers,
-Ashok
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
