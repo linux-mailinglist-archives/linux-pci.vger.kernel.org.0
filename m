@@ -2,136 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59ECC2AB524
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 11:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E3072AB69A
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 12:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgKIKjl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Nov 2020 05:39:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51303 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727183AbgKIKjl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Nov 2020 05:39:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604918379;
+        id S1727774AbgKILV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Nov 2020 06:21:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50614 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgKILV0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Nov 2020 06:21:26 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1604920883;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sNz4CwdEBgDEFBS+cBSmmbQnCB5qRqllefFeVHk1v+Y=;
-        b=b7xXmfRyQwaiCMTh7+q4j72hbXmWHJCwyjic2NV7mnU9nO5/rCohYZlRYezNiFoKr30AdQ
-        dpNXa7525yjdnHGwVWDUNsLT7HnhCoCM+RUCpDl63MuWmiZ2FRs1ZUTudbJCKIKNbtPyTQ
-        xhRm+qz/Y1/ry/Pw3eQ++aURjH+ItMM=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-173-aDdVEqNLOQ2tfTbXE52i3A-1; Mon, 09 Nov 2020 05:39:38 -0500
-X-MC-Unique: aDdVEqNLOQ2tfTbXE52i3A-1
-Received: by mail-ed1-f70.google.com with SMTP id y8so2558584edj.5
-        for <linux-pci@vger.kernel.org>; Mon, 09 Nov 2020 02:39:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sNz4CwdEBgDEFBS+cBSmmbQnCB5qRqllefFeVHk1v+Y=;
-        b=pjelETPe7s5U50M7sv8dk9GIti3zwEtlDkYUTQc1XaJHu5/XA16KVWZoSzptB1jsJV
-         G0nvScsWZ3jZvnczur8rWpURyzA0twig7oloRNlUe5WRZGZEXo16iv58apS/DXSRxOqL
-         N/Dhl0KTWCe6RlHpbzlz/eZ4Lov+rkD9X0X9LCJ76hjca0+WwnSpdqWHIWqjW+tX5Zyb
-         uIFo0zh2LR2VcyQiBmuECIRUtJj68VmsJyMo4IWe2rGjf4ZWu4Oxl22flNmkPSEN2Ag3
-         DdDMLAW0SOvQrEfowRq4Qq6Ms8wZlHE6Xbwd2nrrBTNAaSxCiQ+kdC91Jzq6eISqCy1i
-         83Bw==
-X-Gm-Message-State: AOAM5321gquAfiRjnXiGF7OuNKQcmArj5ONTmEgFxaV052YMB1vEiA2I
-        6B+6axYIcz5uJ6JX+bqMXFkCIDyLfQhBaz9SF/Y1AGJcqomuLbJi6xh9Bb30mnbDVzLtL9+D6O4
-        KwPPM2xE9tZSWomFVFHBQ
-X-Received: by 2002:a17:906:389a:: with SMTP id q26mr14655310ejd.211.1604918376669;
-        Mon, 09 Nov 2020 02:39:36 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzVWP24PKWT9B6c5rAm9vB839w4Ouy2HSHzIwt9rcCZnr3Hht/K5F7miQWkdEyGYabOritcsQ==
-X-Received: by 2002:a17:906:389a:: with SMTP id q26mr14655295ejd.211.1604918376417;
-        Mon, 09 Nov 2020 02:39:36 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id k2sm8517627ejp.6.2020.11.09.02.39.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Nov 2020 02:39:35 -0800 (PST)
-Subject: Re: [GIT PULL] Immutable branch between MFD and x86 due for the v5.11
- merge window
-To:     Lee Jones <lee.jones@linaro.org>,
-        "David E. Box" <david.e.box@linux.intel.com>
-Cc:     mgross@linux.intel.com, bhelgaas@google.com,
-        alexey.budankov@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20201029014449.14955-1-david.e.box@linux.intel.com>
- <20201104111723.GC4488@dell>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <41c7e595-d529-8483-6766-e9906f407a09@redhat.com>
-Date:   Mon, 9 Nov 2020 11:39:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        bh=hxcVhqjKdQHN16Wn3gUojFzP/H3f36IpHuQYN7w2nQI=;
+        b=1B0+YQRFrSFk5OrFMiUeH3HdISYFobPGE4d3D+BkpzyRy38zuyERt09Rkm9uO2ZY3CY1NB
+        kyFSlEvTB2+DF9n0XWsfu2ElNP9IjzyWj/tyWlp4zJ6ButCB261QzJlXHR4xgSZf/wrvcs
+        yyFFG4OUniWs/03B4OJmQ/eZ4ORncR9qd361IVTMibsC4vk4A07EwQfQTZh7Yeqxhl3hWN
+        rR1Y+mVdRaaeGHSc+rTyvnKws59f/YKosQZedImPymYrHGwGMJkqpV0NWckzueLRGQUjwR
+        VdRpkPzgm1pv9i6uwL+G/uzLZmRZo350nTDrVDDqOtoWTMxWma7VoMgEqCSKdQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1604920883;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hxcVhqjKdQHN16Wn3gUojFzP/H3f36IpHuQYN7w2nQI=;
+        b=5Dsc74gZMaZXEqZt6OB04kg/o9ah6ktGvPF95Gk3AcboYZaDk6iZ/dHqSAWwoSdn1uFjk1
+        KN1GqptgfM4mZDDA==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "Dey\, Megha" <megha.dey@intel.com>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+In-Reply-To: <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+References: <20201104124017.GW2620339@nvidia.com> <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com> <20201104135415.GX2620339@nvidia.com> <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com> <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com> <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com> <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+Date:   Mon, 09 Nov 2020 12:21:22 +0100
+Message-ID: <874klykc7h.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20201104111723.GC4488@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Sun, Nov 08 2020 at 15:58, Ashok Raj wrote:
+> On Sun, Nov 08, 2020 at 07:47:24PM +0100, Thomas Gleixner wrote:
+>> 
+>> 
+>> Now if we look at the virtualization scenario and device hand through
+>> then the structure in the guest view is not any different from the basic
+>> case. This works with PCI-MSI[X] and the IDXD IMS variant because the
+>> hypervisor can trap the access to the storage and translate the message:
+>> 
+>>                    |
+>>                    |
+>>   [CPU]    -- [Bri | dge] -- Bus -- [Device]
+>>                    |
+>>   Alloc +
+>>   Compose                   Store     Use
+>>                              |
+>>                              | Trap
+>>                              v
+>>                              Hypervisor translates and stores
+>> 
+>
+> The above case, VMM is responsible for writing to the message
+> store. In both cases if its IMS or Legacy MSI/MSIx. VMM handles
+> the writes to the device interrupt region and to the IRTE tables.
 
-On 11/4/20 12:17 PM, Lee Jones wrote:
-> Enjoy!
-> 
-> The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
-> 
->   Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-x86-v5.11
-> 
-> for you to fetch changes up to 5ef9998c96b0c99c49c202054586967e609286d2:
-> 
->   platform/x86: Intel PMT Crashlog capability driver (2020-11-04 11:14:38 +0000)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between MFD and x86 due for the v5.11 merge window
+Yes, but that's just how it's done today and there is no real need to do
+so.
 
-Thank you I've merged this into my review-hans (future for-next) branch of:
-git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+>> Now the question which I can't answer is whether this can work correctly
+>> in terms of isolation. If the IMS storage is in guest memory (queue
+>> storage) then the guest driver can obviously write random crap into it
+>> which the device will happily send. (For MSI and IDXD style IMS it
+>> still can trap the store).
+>
+> The isolation problem is not just the guest memory being used as interrrupt
+> store right? If the Store to device region is not trapped and controlled by 
+> VMM, there is no gaurantee the guest OS has done the right thing?
+>
+> Thinking about it, guest memory might be more problematic since its not
+> trappable and VMM can't enforce what is written. This is something that
+> needs more attension. But for now the devices supporting memory on device
+> the trap and store by VMM seems to satisfy the security properties you
+> highlight here.
 
-Regards,
+That's not the problem at all. The VMM is not responsible for the
+correctness of the guest OS at all. All the VMM cares about is that the
+guest cannot access anything which does not belong to the guest.
 
-Hans
+If the guest OS screws up the message (by stupidity or malice), then the
+MSI sent from the passed through device has to be caught by the
+IOMMU/remap unit if an _only_ if it writes to something which it is not
+allowed to.
 
+If it overwrites the guests memory then so be it. The VMM cannot prevent
+the guest OS doing so by a stray pointer either. So why would it worry
+about the MSI going into guest owned lala land?
 
+>> Is the IOMMU/Interrupt remapping unit able to catch such messages which
+>> go outside the space to which the guest is allowed to signal to? If yes,
+>> problem solved. If no, then IMS storage in guest memory can't ever work.
+>
+> This can probably work for SRIOV devices where guest owns the entire device.
+> interrupt remap does have RID checks if interrupt arrives at an Interrupt handle
+> not allocated for that BDF.
+>
+> But for SIOV devices there is no PASID filtering at the remap level since
+> interrupt messages don't carry PASID in the TLP.
 
-> 
-> ----------------------------------------------------------------
-> Alexander Duyck (3):
->       platform/x86: Intel PMT class driver
->       platform/x86: Intel PMT Telemetry capability driver
->       platform/x86: Intel PMT Crashlog capability driver
-> 
-> David E. Box (2):
->       PCI: Add defines for Designated Vendor-Specific Extended Capability
->       mfd: Intel Platform Monitoring Technology support
-> 
->  Documentation/ABI/testing/sysfs-class-intel_pmt | 119 +++++++++
->  MAINTAINERS                                     |   6 +
->  drivers/mfd/Kconfig                             |  10 +
->  drivers/mfd/Makefile                            |   1 +
->  drivers/mfd/intel_pmt.c                         | 223 ++++++++++++++++
->  drivers/platform/x86/Kconfig                    |  34 +++
->  drivers/platform/x86/Makefile                   |   3 +
->  drivers/platform/x86/intel_pmt_class.c          | 297 +++++++++++++++++++++
->  drivers/platform/x86/intel_pmt_class.h          |  52 ++++
->  drivers/platform/x86/intel_pmt_crashlog.c       | 328 ++++++++++++++++++++++++
->  drivers/platform/x86/intel_pmt_telemetry.c      | 160 ++++++++++++
->  include/uapi/linux/pci_regs.h                   |   5 +
->  12 files changed, 1238 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt
->  create mode 100644 drivers/mfd/intel_pmt.c
->  create mode 100644 drivers/platform/x86/intel_pmt_class.c
->  create mode 100644 drivers/platform/x86/intel_pmt_class.h
->  create mode 100644 drivers/platform/x86/intel_pmt_crashlog.c
->  create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
-> 
+PASID is irrelevant here.
 
+If the device sends a message then the remap unit will see the requester
+ID of the device and if the message it sends is not matching the remap
+tables then it's caught and the guest is terminated. At least that's how
+it should be.
+
+>> But there's a catch:
+>> 
+>> This only works when the guest OS actually knows that it runs in a
+>> VM. If the guest can't figure that out, i.e. via CPUID, this cannot be
+>
+> Precicely!. It might work if the OS is new, but for legacy the trap-emulate
+> seems both safe and works for legacy as well?
+
+Again, trap emulate does not work for IMS when the IMS store is software
+managed guest memory and not part of the device. And that's the whole
+reason why we are discussing this.
+
+Thanks,
+
+        tglx
