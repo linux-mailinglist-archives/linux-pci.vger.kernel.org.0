@@ -2,84 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7BFD2AAEE3
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 03:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B39E62AAF95
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 03:44:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgKICAr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Nov 2020 21:00:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728006AbgKICAr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Nov 2020 21:00:47 -0500
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E0CC0613CF;
-        Sun,  8 Nov 2020 18:00:47 -0800 (PST)
-Received: by mail-pf1-x444.google.com with SMTP id 10so6546472pfp.5;
-        Sun, 08 Nov 2020 18:00:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M/sHCb58C+UKR7j7ExiS+JKwi2VJLyH2lrJ3bqK2Gik=;
-        b=onmQXo42GH4QBPXq3aS2WWXLgb1MKDov2nWKuR1vw+Nqlex8CACmzk/QlKxG++KUid
-         CJA7WJSPZEXJCq0ujAL37aCvtd3bJzVMqnRib+YvHXGHIYzlSqtlR4quJNzItzfXgCBL
-         d+cO8T3QKbJanNEVf/B4EPcr1d6rDsKsrjcvD9bWNHmEZa0mZR4ypG8hcv9YQF5Y4mGE
-         KJ87qn3gPziQuuKPpaoL1dPA4mVp4zjX45aMJey4TAnL/erlTxn9QnlUGxroiWBlO9yX
-         X0PmPa/Pa9bpI2JrX99Rs0GJtaDE0U8514NYocm9F7skWCrh3wIRLYxW3EjSHtesCMLT
-         N3AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M/sHCb58C+UKR7j7ExiS+JKwi2VJLyH2lrJ3bqK2Gik=;
-        b=UOWo/uiJlenzDNEhb5DnDevGEwi1g1de2+gGK2suBNSLd5fo2O2wj6cBNuhfl/omkr
-         aDmowKyjuI5fwUx77MSHRCKheFnEMjd7HyhO461Ydt+KhBMJ+08XdSLZ1SN7FMcScgcT
-         RWfeIwRKZEHkzfztWhbtlNgfHOsI9kAFM//HdlnjR2yIZx8A8/vLh5n3TDpRcSZBj/5W
-         Yja7il9Q65dlR3bc5UKLfr0/CLabdFNiLnQbZYCc1Engv2vYco8xH17QFi7t9q0B0FI+
-         QsVp5wFTQgBSGmuLlhyNp5rZ9Az8h5NwqCeR32fUS/y4tC8W1dGuUvdT4HHSrZ4ApgOi
-         82tw==
-X-Gm-Message-State: AOAM531j8ADpR9XDYW0LajVXLBwsG/c0wwCa0da33SrU7HsAhadTsvr6
-        fU5lD/diXUZTjf+c/xlUjI8m8KZvQ+0=
-X-Google-Smtp-Source: ABdhPJwsjUXczI5pQLNZEYEICG7A/fqZLAkG1tWOGAjdaTFRBrMn0njnEaj292o6jWFTgZrDMlhhTA==
-X-Received: by 2002:a17:90b:1392:: with SMTP id hr18mr9783208pjb.116.1604887246258;
-        Sun, 08 Nov 2020 18:00:46 -0800 (PST)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id x26sm9123491pfn.178.2020.11.08.18.00.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Nov 2020 18:00:45 -0800 (PST)
-Subject: Re: [PATCH] PCI: brcmstb: Remove irq handler and data in one go
-To:     Martin Kaiser <martin@kaiser.cx>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20201108184208.19790-1-martin@kaiser.cx>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <29cf71bd-197a-36e1-e931-9b7a60cf5830@gmail.com>
-Date:   Sun, 8 Nov 2020 18:00:42 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.4.1
+        id S1728191AbgKICo6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Nov 2020 21:44:58 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:27939 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727979AbgKICo5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Nov 2020 21:44:57 -0500
+X-UUID: ee819d81bb37440c9e56481ed25003e2-20201109
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SY3O4g5cCnAFIOujxdLpsvPadx+zid90DRWrx8369CE=;
+        b=AYBo7ISD44pylgaNwuLLM5jc9lMOwEQ0JicHVfyRvRYfByF5PqdhbXYY5WDhVOKBSGzYd0lbrcPJ5SyOZATQvfCXXYpWjAlEU5qCksSwwKBZREWqXhtNEqINZ5cBgImllf6VQ/MO7VbiRNZ4+zOtqbABsKsJDqBulwDs/YkaXJ8=;
+X-UUID: ee819d81bb37440c9e56481ed25003e2-20201109
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 551240028; Mon, 09 Nov 2020 10:44:52 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 9 Nov
+ 2020 10:44:49 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 9 Nov 2020 10:44:49 +0800
+Message-ID: <1604889888.8050.2.camel@mhfsdcap03>
+Subject: Re: [PATCH v7 1/4] dt-bindings: pci: mediatek: Modified the Device
+ tree bindings
+From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <yong.wu@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Date:   Mon, 9 Nov 2020 10:44:48 +0800
+In-Reply-To: <20201029153404.GB1911637@bogus>
+References: <20201029081513.10562-1-chuanjia.liu@mediatek.com>
+         <20201029081513.10562-2-chuanjia.liu@mediatek.com>
+         <20201029153404.GB1911637@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20201108184208.19790-1-martin@kaiser.cx>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 0B8DC20FA256E306737C32FE0F5BB9A804E6154DDD2C851826D6720B0E6762F92000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+T24gVGh1LCAyMDIwLTEwLTI5IGF0IDEwOjM0IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVGh1LCAyOSBPY3QgMjAyMCAxNjoxNToxMCArMDgwMCwgQ2h1YW5qaWEgTGl1IHdyb3RlOg0K
+PiA+IFNwbGl0IHRoZSBQQ0llIG5vZGUgYW5kIGFkZCBwY2llY2ZnIG5vZGUgdG8gZml4IE1TSSBp
+c3N1ZS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHVhbmppYSBMaXUgPGNodWFuamlhLmxp
+dUBtZWRpYXRlay5jb20+DQo+ID4gQWNrZWQtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlh
+dGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWNm
+Zy55YW1sICAgICAgIHwgIDM5ICsrKysrKw0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+Y2kvbWVkaWF0ZWstcGNpZS50eHQgfCAxMjkgKysrKysrKysrKystLS0tLS0tDQo+ID4gIDIgZmls
+ZXMgY2hhbmdlZCwgMTE4IGluc2VydGlvbnMoKyksIDUwIGRlbGV0aW9ucygtKQ0KPiA+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRp
+YXRlay1wY2llLWNmZy55YW1sDQo+ID4gDQo+IA0KPiANCj4gTXkgYm90IGZvdW5kIGVycm9ycyBy
+dW5uaW5nICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIG9uIHlvdXIgcGF0Y2g6DQo+IA0KPiB5YW1s
+bGludCB3YXJuaW5ncy9lcnJvcnM6DQo+IC4vRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BjaS9tZWRpYXRlay1wY2llLWNmZy55YW1sOjE5Ojc6IFt3YXJuaW5nXSB3cm9uZyBpbmRl
+bnRhdGlvbjogZXhwZWN0ZWQgNCBidXQgZm91bmQgNiAoaW5kZW50YXRpb24pDQo+IA0KPiBkdHNj
+aGVtYS9kdGMgd2FybmluZ3MvZXJyb3JzOg0KPiANCj4gDQo+IFNlZSBodHRwczovL3BhdGNod29y
+ay5vemxhYnMub3JnL3BhdGNoLzEzODk5NDANCj4gDQo+IFRoZSBiYXNlIGZvciB0aGUgcGF0Y2gg
+aXMgZ2VuZXJhbGx5IHRoZSBsYXN0IHJjMS4gQW55IGRlcGVuZGVuY2llcw0KPiBzaG91bGQgYmUg
+bm90ZWQuDQo+IA0KPiBJZiB5b3UgYWxyZWFkeSByYW4gJ21ha2UgZHRfYmluZGluZ19jaGVjaycg
+YW5kIGRpZG4ndCBzZWUgdGhlIGFib3ZlDQo+IGVycm9yKHMpLCB0aGVuIG1ha2Ugc3VyZSAneWFt
+bGxpbnQnIGlzIGluc3RhbGxlZCBhbmQgZHQtc2NoZW1hIGlzIHVwIHRvDQo+IGRhdGU6DQo+IA0K
+PiBwaXAzIGluc3RhbGwgZHRzY2hlbWEgLS11cGdyYWRlDQo+IA0KPiBQbGVhc2UgY2hlY2sgYW5k
+IHJlLXN1Ym1pdC4NCj4gDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudO+8jEFmdGVyIGluc3RhbGwg
+4oCYeWFtbGxpbnTigJkg77yMSSBjYW4gc2VlIHRoaXMNCndhcm5pbmcg77yMSSB3aWxsIGZpeCBp
+dCBhbmQgcmViYXNlIHRvIDUuMTAtcmMxIGluIG5leHQgdmVyc2lvbi4NCg==
 
-
-On 11/8/2020 10:42 AM, Martin Kaiser wrote:
-> Replace the two separate calls for removing the irq handler and data with a
-> single irq_set_chained_handler_and_data() call.
-> 
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
