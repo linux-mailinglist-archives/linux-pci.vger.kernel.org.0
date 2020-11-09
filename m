@@ -2,193 +2,234 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4AB92AC8C3
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 23:42:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA1D2AC91B
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 00:12:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgKIWmd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Nov 2020 17:42:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54086 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgKIWmd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Nov 2020 17:42:33 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604961750;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1z9VVm4SXFnU2lDoSHTfhVj4WS02FXiBfM7TibPl7tM=;
-        b=gv6V9waMvfQvNDKvhhA3p1Jhiex5y9NA8ZsEEZ1sbUrMZigd3WeMwV1gW0WUeiOgxD7FM6
-        GFtvGUGHSSFJHAC+LCM5baXBjwRvq1v/Hf7sV+yHGkhkmtIcgq1fYAWSZfBa/JT8Y9Zlkt
-        C2+7KgPDA4w7dwsXUwbua6kspktrNPuSl02ukjUfm1jp8yFrVnSSg11qb8BdH7kZHQcJJK
-        Mwc9mBi4AApzBznXZqBKN/HNzqOsO42HIiJ1h8UJwMdfonjZ2gUkVQZcVRHOTIF8KBwPvV
-        ZX/SDZkS3eJiC+XZjoDl+efXN/AViWOu6D86FAQU/p8Kp15igsdcVgx7foK0WQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604961750;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1z9VVm4SXFnU2lDoSHTfhVj4WS02FXiBfM7TibPl7tM=;
-        b=PGZ6AIOpNGkeoLmMZtTwEYJNEluUtRndUUua0A9Ig+sMIdYS4ym6WC/DtX5XCmbXt+IbQX
-        IUOxmz2U79FQy+DA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "Dey\, Megha" <megha.dey@intel.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-In-Reply-To: <20201109173034.GG2620339@nvidia.com>
-References: <20201104135415.GX2620339@nvidia.com> <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com> <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com> <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com> <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <20201108235852.GC32074@araj-mobl1.jf.intel.com> <874klykc7h.fsf@nanos.tec.linutronix.de> <20201109173034.GG2620339@nvidia.com>
-Date:   Mon, 09 Nov 2020 23:42:29 +0100
-Message-ID: <87pn4mi23u.fsf@nanos.tec.linutronix.de>
+        id S1730588AbgKIXLz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Nov 2020 18:11:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730395AbgKIXLy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Nov 2020 18:11:54 -0500
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EA9C0613CF
+        for <linux-pci@vger.kernel.org>; Mon,  9 Nov 2020 15:11:54 -0800 (PST)
+Received: by mail-ua1-x942.google.com with SMTP id h26so3351553uan.10
+        for <linux-pci@vger.kernel.org>; Mon, 09 Nov 2020 15:11:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JZQgZVi3YCvHDQb4j6S1eW+CN0G55HltfL6yQaxCZtw=;
+        b=t1l2R3SnFFVdfdQvYDlijrD+UPXk5ZGukiIRHbJTgQvkl7MTRTVczlXt06QVcmacOU
+         Vq3BUJUgAZO6+588P8OO1JRTe7UiwB49K2bkoIQ6w9PNfnSXY776+H/z2QNOD9pBtnZr
+         i05N8trMnBkez5wbwi+w6kBRSBw8LXuAVWvbCdU88nCrBKLfdQmj3N16FJBIDo9iCBjp
+         yFXmba2Ft4il4SYs0wKwBCCmZDmGe7YDt5JC6ZYcyK8Qw6xos9xkUlZyf3ZuAhZkYY+N
+         cX7DJc+SmToTO8Tnv/dbcYY1E0OJEJbMR39R6oZeEenW8DovERzm0Y6tVyJoIffqRt1v
+         xZzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JZQgZVi3YCvHDQb4j6S1eW+CN0G55HltfL6yQaxCZtw=;
+        b=ohCanRX4lb+26oV8PoyMaoZBafS6LD02bkjh+jnCY+hCSrSWdznx62AHgHodgy7ZEr
+         kurYPPrk5Kw9/eym0BBOE/w9pXU/WUQ6RGqMdOJNvM/oApU+bLaiHZGilIJPLG2K8UUd
+         ZPeu1cAbyimm/ATMQPegJrhihiwAlMngL9oTPOZFIJ2Pz3g1zS29Wg6hd5H92hbEMxzx
+         C9gdnMkprv9AZ50iMjVSKSOJgu1S9Yo27x6Jd2emt6eLEtalMI6cvRleHn+jFH9CQAd3
+         zQwfiskBa0MNiKVqJfcxCt3mDLaOzqfdxOiXKYrLBCnk8tYRZkuMsvlUZCSJeYp7bnvK
+         jn4Q==
+X-Gm-Message-State: AOAM533gjCaHWW8HNZYkfliIWG3fnODqRn4tSztA2/YqCImNg/e6rF+n
+        aWdGQ5K2nKLflArhXquXgPKqzwWmUHdiMmaGfdpRkQ==
+X-Google-Smtp-Source: ABdhPJzSnCy7R7CRJtXrWRQ8NOKgeJ6TkQkftDL443Gd1HeH/sey0RLyxXEmQPm/+B7rr2/os6cjJRBBWXYe+xD8OYU=
+X-Received: by 2002:ab0:186a:: with SMTP id j42mr8260179uag.52.1604963513337;
+ Mon, 09 Nov 2020 15:11:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20201013003203.4168817-1-samitolvanen@google.com>
+ <20201013003203.4168817-23-samitolvanen@google.com> <CAG48ez2baAvKDA0wfYLKy-KnM_1CdOwjU873VJGDM=CErjsv_A@mail.gmail.com>
+ <20201015102216.GB2611@hirez.programming.kicks-ass.net> <20201015203942.f3kwcohcwwa6lagd@treble>
+ <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
+ <20201020185217.ilg6w5l7ujau2246@treble> <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net> <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
+ <20201023173617.GA3021099@google.com>
+In-Reply-To: <20201023173617.GA3021099@google.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 9 Nov 2020 15:11:41 -0800
+Message-ID: <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, Jann Horn <jannh@google.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 09 2020 at 13:30, Jason Gunthorpe wrote:
-> On Mon, Nov 09, 2020 at 12:21:22PM +0100, Thomas Gleixner wrote:
->> >> Is the IOMMU/Interrupt remapping unit able to catch such messages whi=
-ch
->> >> go outside the space to which the guest is allowed to signal to? If y=
-es,
->> >> problem solved. If no, then IMS storage in guest memory can't ever
->> >> work.
-
-> The SIOV case is to take a single RID and split it to multiple
-> VMs and also to the hypervisor. All these things concurrently use the
-> same RID, and the IOMMU can't tell them apart.
+On Fri, Oct 23, 2020 at 10:36 AM Sami Tolvanen <samitolvanen@google.com> wr=
+ote:
 >
-> The hypervisor security domain owns TLPs with no PASID. Each PASID is
-> assigned to a VM.
+> On Wed, Oct 21, 2020 at 05:22:59PM -0700, Sami Tolvanen wrote:
+> > There are a couple of differences, like the first "undefined stack
+> > state" warning pointing to set_bringup_idt_handler.constprop.0()
+> > instead of __switch_to_asm(). I tried running this with --backtrace,
+> > but objtool segfaults at the first .entry.text warning:
 >
-> For interrupts, today, they are all generated, with no PASID, to the
-> same RID. There is no way for remapping to protect against a guest
-> without checking also PASID.
+> Looks like it segfaults when calling BT_FUNC() for an instruction that
+> doesn't have a section (?). Applying this patch allows objtool to finish
+> with --backtrace:
 >
-> The relavance of PASID is this:
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index c216dd4d662c..618b0c4f2890 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -2604,7 +2604,7 @@ static int validate_branch(struct objtool_file *fil=
+e, struct symbol *func,
+>                                 ret =3D validate_branch(file, func,
+>                                                       insn->jump_dest, st=
+ate);
+>                                 if (ret) {
+> -                                       if (backtrace)
+> +                                       if (backtrace && insn->sec)
+>                                                 BT_FUNC("(branch)", insn)=
+;
+>                                         return ret;
+>                                 }
 >
->> Again, trap emulate does not work for IMS when the IMS store is software
->> managed guest memory and not part of the device. And that's the whole
->> reason why we are discussing this.
 >
-> With PASID tagged interrupts and a IOMMU interrupt remapping
-> capability that can trigger on PASID, then the platform can provide
-> the same level of security as SRIOV - the above is no problem.
->
-> The device ensures that all DMAs and all interrupts program by the
-> guest are PASID tagged and the platform provides security by checking
-> the PASID when delivering the interrupt.
+> Running objtool -barfld on an allyesconfig+LTO vmlinux.o prints out the
+> following, ignoring the crypto warnings for now:
 
-Correct.
+OK, I spent some time looking at these warnings and the configs needed
+to reproduce them without building allyesconfig:
 
-> Intel IOMMU doesn't work this way today, but it makes alot of design
-> sense.
+CONFIG_XEN
 
-Right.
+__switch_to_asm()+0x0: undefined stack state
+  xen_hypercall_set_trap_table()+0x0: <=3D=3D=3D (sym)
 
-> Otherwise the interrupt is effectively delivered to the hypervisor. A
-> secure device can *never* allow a guest to specify an addr/data pair
-> for a non-PASID tagged TLP, so the device cannot offer IMS to the
-> guest.
+CONFIG_XEN_PV
 
-Ok. Let me summarize the current state of supported scenarios:
+.entry.text+0xffd: sibling call from callable instruction with
+modified stack frame
+  .entry.text+0xfcb: (branch)
+  .entry.text+0xfb5: (alt)
+  .entry.text+0xfb0: (alt)
+  .entry.text+0xf78: (branch)
+  .entry.text+0x9c: (branch)
+  xen_syscall_target()+0x15: (branch)
+  xen_syscall_target()+0x0: <=3D=3D=3D (sym)
+.entry.text+0x1754: unsupported instruction in callable function
+  .entry.text+0x171d: (branch)
+  .entry.text+0x1707: (alt)
+  .entry.text+0x1701: (alt)
+  xen_syscall32_target()+0x15: (branch)
+  xen_syscall32_target()+0x0: <=3D=3D=3D (sym)
+.entry.text+0x1634: redundant CLD
 
- 1) SRIOV works with any form of IMS storage because it does not require
-    PASID and the VF devices have unique requester ids, which allows the
-    remap unit to sanity check the message.
+Backtrace doesn=E2=80=99t print out anything useful for the =E2=80=9Credund=
+ant CLD=E2=80=9D
+error, but it occurs when validate_branch is looking at
+xen_sysenter_target.
 
- 2) SIOV with IMS when the hypervisor can manage the IMS store
-    exclusively.
+do_suspend_lowlevel()+0x116: sibling call from callable instruction
+with modified stack frame
+  do_suspend_lowlevel()+0x9a: (branch)
+  do_suspend_lowlevel()+0x0: <=3D=3D=3D (sym)
 
-So #2 prevents a device which handles IMS storage in queue memory to
-utilize IMS for SIOV in a guest because the hypervisor cannot manage the
-IMS message store and the guest can write arbitrary crap to it which
-violates the isolation principle.
+.entry.text+0x48: stack state mismatch: cfa1=3D7-8 cfa2=3D-1+0
+  .altinstr_replacement+0xffffffffffffffff: (branch)
+  .entry.text+0x21: (alt)
+  .entry.text+0x1c: (alt)
+  .entry.text+0x10: <=3D=3D=3D (hint)
+.entry.text+0x15fd: stack state mismatch: cfa1=3D7-8 cfa2=3D-1+0
+  .altinstr_replacement+0xffffffffffffffff: (branch)
+  .entry.text+0x15dc: (alt)
+  .entry.text+0x15d7: (alt)
+  .entry.text+0x15d0: <=3D=3D=3D (hint)
+.entry.text+0x168c: stack state mismatch: cfa1=3D7-8 cfa2=3D-1+0
+  .altinstr_replacement+0xffffffffffffffff: (branch)
+  .entry.text+0x166b: (alt)
+  .entry.text+0x1666: (alt)
+  .entry.text+0x1660: <=3D=3D=3D (hint)
 
-And here is the relevant part of the SIOV spec:
+It looks like the stack state mismatch warnings can be fixed by adding
+unwind hints also to entry_SYSCALL_64_after_hwframe,
+entry_SYSENTER_compat_after_hwframe, and
+entry_SYSCALL_compat_after_hwframe. Does that sound correct?
 
- "IMS is managed by host driver software and is not accessible directly
-  from guest or user-mode drivers.
+CONFIG_AMD_MEM_ENCRYPT
 
-  Within the device, IMS storage is not accessible from the ADIs. ADIs
-  can request interrupt generation only through the device=E2=80=99s =E2=80=
-=98Interrupt
-  Message Generation Logic=E2=80=99, which allows an ADI to only generate
-  interrupt messages that are associated with that specific ADI. These
-  restrictions ensure that the host driver has complete control over
-  which interrupt messages can be generated by each ADI.
+.head.text+0xfb: unsupported instruction in callable function
+  .head.text+0x207: (branch)
+  sev_es_play_dead()+0xff: (branch)
+  sev_es_play_dead()+0xd2: (branch)
+  sev_es_play_dead()+0xa8: (alt)
+  sev_es_play_dead()+0x144: (branch)
+  sev_es_play_dead()+0x10b: (branch)
+  sev_es_play_dead()+0x1f: (branch)
+  sev_es_play_dead()+0x0: <=3D=3D=3D (sym)
 
-  On Intel 64 architecture platforms, message signaled interrupts are
-  issued as DWORD size untranslated memory writes without a PASID TLP
-  Prefix, to address range 0xFEExxxxx. Since all memory requests
-  generated by ADIs include a PASID TLP Prefix, it is not possible for
-  an ADI to generate a DMA write that would be interpreted by the
-  platform as an interrupt message."
+This happens because sev_es_play_dead calls start_cpu0. It always has,
+but objtool hasn=E2=80=99t been able to follow the call when processing onl=
+y
+sev-es.o. Any thoughts on the preferred way to fix this one?
 
-That's the reductio ad absurdum for this sentence in the first paragraph
-of the preceding chapter describing the concept of IMS:
+CONFIG_CRYPTO_CRC32C_INTEL
 
-  "IMS enables devices to store the interrupt messages for ADIs in a
-   device-specific optimized manner without the scalability restrictions
-   of the PCI Express defined MSI-X capability."
+__x86_retpoline_rdi()+0x10: return with modified stack frame
+  __x86_retpoline_rdi()+0x0: (branch)
+  .altinstr_replacement+0x147: (branch)
+  .text+0xaf4c7: (alt)
+  .text+0xb03b0: (branch)
+  .text+0xaf482: (branch)
+  crc_pcl()+0x10: (branch)
+  crc_pcl()+0x0: <=3D=3D=3D (sym)
 
-"Device-specific optimized manner" is either wishful thinking or
-marketing induced verbal diarrhoea.
+__x86_retpoline_rdi()+0x0: stack state mismatch: cfa1=3D7+32 cfa2=3D7+8
+  .altinstr_replacement+0x265: (branch)
+  __x86_indirect_thunk_rdi()+0x0: (alt)
+  __x86_indirect_thunk_rdi()+0x0: <=3D=3D=3D (sym)
 
-The current specification puts massive restrictions on IMS storage which
-are _not_ allowing to optimize it in a device specific manner as
-demonstrated in this discussion.
+This is different from the warnings in the rest of the arch/x86/crypto
+code. Do we need some kind of a hint before the JMP_NOSPEC in crc_pcl?
 
-It also precludes obvious use cases like passing a full device to a
-guest and let the guest manage SIOV subdevices for containers or nested
-guests.
+CONFIG_FUNCTION_TRACER
 
-TBH, to me this is just another hastily cobbled together half thought
-out misfeature cast in silicon. The proposed software support is
-following the exactly same principle.
+__x86_retpoline_rdi()+0x0: stack state mismatch: cfa1=3D7+32 cfa2=3D-1+0
+  .altinstr_replacement+0x111: (branch)
+  .text+0x28a5: (alt)
+  .text+0x2880: <=3D=3D=3D (hint)
 
-So before we go anywhere with this, I want to see a proper way forward
-to support _all_ sensible use cases and to fulfil the promise of
-"device-specific optimized manner" at the conceptual and specification
-and also at the code level.
+This unwind hint is in return_to_handler. Removing it obviously stops
+the warning and doesn=E2=80=99t seem to result in any other complaints from
+objtool. Is this hint correct?
 
-I'm not at all interested to rush in support for a half baken Intel
-centric solution which other people have to clean up after the fact
-(again).
+The remaining warnings are all =E2=80=9Cunsupported stack pointer realignme=
+nt=E2=80=9D
+issues in the crypto code and can be reproduced with the following
+configs:
 
-IOW, it's time to go back to the drawing board.
+CONFIG_CRYPTO_AES_NI_INTEL
+CONFIG_CRYPTO_CAMELLIA_AESNI_AVX2_X86_64
+CONFIG_CRYPTO_SHA1_SSSE3
+CONFIG_CRYPTO_SHA256_SSSE3
+CONFIG_CRYPTO_SHA512_SSSE3
 
-Thanks,
+Josh, have you had a chance to look at the crypto patches you mentioned ear=
+lier?
 
-        tglx
-
+Sami
