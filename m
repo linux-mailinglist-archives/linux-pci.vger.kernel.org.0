@@ -2,92 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF43F2AC41F
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 19:48:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E45D42AC4EE
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 20:26:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgKISsh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Nov 2020 13:48:37 -0500
-Received: from m42-4.mailgun.net ([69.72.42.4]:34959 "EHLO m42-4.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730331AbgKISsg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 9 Nov 2020 13:48:36 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1604947716; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=58Mu0ASC/w5nguEqxIJa+k/Ebz+3T6IKxwh6iickRNk=; b=rDi52KWq4A43QgntTYUJaOzYWLLPrEflCAA5OOA5s9igbYrWcttAiJ/VJDd5Vs5IrybNIhL4
- B+gR5Lq5FR87nG9ysiuZ7d0khj0bQ5+bOe3MZSjaOhJzqY67H2cBAIiOWDCzy2YYp/WHuGZV
- Y68jvTu8LA+nba4W2XwC0mvwDNo=
-X-Mailgun-Sending-Ip: 69.72.42.4
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5fa98f030fe4be3f433f1183 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 09 Nov 2020 18:48:35
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E8797C433AF; Mon,  9 Nov 2020 18:48:34 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AE83AC43382;
-        Mon,  9 Nov 2020 18:48:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AE83AC43382
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Govind Singh <govinds@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Devin Bayer <dev@doubly.so>,
-        Christoph Hellwig <hch@lst.de>,
-        Thomas Krause <thomaskrause@posteo.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        ath11k@lists.infradead.org
-Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
-References: <20201103160838.GA246433@bjorn-Precision-5520>
-Date:   Mon, 09 Nov 2020 20:48:28 +0200
-In-Reply-To: <20201103160838.GA246433@bjorn-Precision-5520> (Bjorn Helgaas's
-        message of "Tue, 3 Nov 2020 10:08:38 -0600")
-Message-ID: <87wnyue58j.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        id S1729987AbgKIT0V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Nov 2020 14:26:21 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3514 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729697AbgKIT0V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Nov 2020 14:26:21 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa997e30000>; Mon, 09 Nov 2020 11:26:27 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Nov
+ 2020 19:26:20 +0000
+Received: from vidyas-desktop.nvidia.com (172.20.13.39) by mail.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Mon, 9 Nov 2020 19:26:16 +0000
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH] PCI: dwc: Add support to configure for ECRC
+Date:   Tue, 10 Nov 2020 00:56:11 +0530
+Message-ID: <20201109192611.16104-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1604949987; bh=WrdEdrC4gKX9JmfklZp1MKvc1216Jflc7mWH75n2yME=;
+        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:X-NVConfidentiality:
+         MIME-Version:Content-Type;
+        b=buvevUye8JLgge1U9Qh9jaUQW2eOluEogZuy2UhY11cnrrcQ3/hTa7m6yFbYlVG0x
+         TK/5lebcwlzcaiObsJdkPu8zJk/S9Bllaugdo3iNMzycpBz0bEr0dEFyBLRcDUY9Bs
+         t3TuIzCqJgI+G9VLOUYmacA7S4nD6MlcuRFjP3wi0toAW+xaNdo00SmgnrztJYS3pm
+         0QArYlZR5Bs+qfCdkKhtt9gsWUSQ9Up2uYzYOkgc/8ryaV+MrS/DDElHwgWvy9cdxH
+         V4LdvRciSUoiHa2R+ORw4h6oMc/HXP+cyclSeRzRxH5DsZXJxAT1Ntw9GqkLLlYRAS
+         RQxna6jhK6N9A==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
+DesignWare core has a TLP digest (TD) override bit in one of the control
+registers of ATU. This bit also needs to be programmed for proper ECRC
+functionality. This is currently identified as an issue with DesignWare
+IP version 4.90a.
 
->> > Tangent: have you considered getting this list archived on
->> > https://lore.kernel.org/lists.html?
->> 
->> Good point, actually I have not. I'll add both ath10k and ath11k lists
->> to lore. It's even more important now that lists.infradead.org had a
->> hard drive crash and lost years of archives.
->
-> Or you could just add linux-wireless, e.g.,
->
->   L:      ath11k@lists.infradead.org
->   L:      linux-wireless@vger.kernel.org
->
-> or even consider moving from ath10k and ath11k to
-> linux-wireless@vger.kernel.org.  I think there's some value in
-> consolidating low-volume lists.  It looks like ath11k had < 90
-> messages for all of October.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ drivers/pci/controller/dwc/pcie-designware.c | 50 ++++++++++++++++++--
+ drivers/pci/controller/dwc/pcie-designware.h |  1 +
+ 2 files changed, 47 insertions(+), 4 deletions(-)
 
-The background here is that linux-wireless is quite high volume list and
-not everyone have time to follow that, so having specific ath10k and
-ath11k lists make it easier for those people. So I'm hesitant to
-shutdown driver lists for that reason.
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index c2dea8fc97c8..ebdc37a58e94 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -225,6 +225,44 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+ 	dw_pcie_writel_atu(pci, offset + reg, val);
+ }
+ 
++static inline u32 dw_pcie_enable_ecrc(u32 val)
++{
++	/*
++	 *     DesignWare core version 4.90A has this strange design issue
++	 * where the 'TD' bit in the Control register-1 of the ATU outbound
++	 * region acts like an override for the ECRC setting i.e. the presence
++	 * of TLP Digest(ECRC) in the outgoing TLPs is solely determined by
++	 * this bit. This is contrary to the PCIe spec which says that the
++	 * enablement of the ECRC is solely determined by the AER registers.
++	 *     Because of this, even when the ECRC is enabled through AER
++	 * registers, the transactions going through ATU won't have TLP Digest
++	 * as there is no way the AER sub-system could program the TD bit which
++	 * is specific to DsignWare core.
++	 *    The best way to handle this scenario is to program the TD bit
++	 * always. It affects only the traffic from root port to downstream
++	 * devices.
++	 * At this point,
++	 *     When ECRC is enabled in AER registers, everything works
++	 * normally
++	 *     When ECRC is NOT enabled in AER registers, then,
++	 * on Root Port:- TLP Digest (DWord size) gets appended to each packet
++	 *                even through it is not required. Since downstream
++	 *                TLPs are mostly for configuration accesses and BAR
++	 *                accesses, they are not in critical path and won't
++	 *                have much negative effect on the performance.
++	 * on End Point:- TLP Digest is received for some/all the packets coming
++	 *                from the root port. TLP Digest is ignored because,
++	 *                as per the PCIe Spec r5.0 v1.0 section 2.2.3 "TLP Digest Rules",
++	 *                when an endpoint receives TLP Digest when its
++	 *                ECRC check functionality is disabled in AER registers,
++	 *                received TLP Digest is just ignored.
++	 * Since there is no issue or error reported either side, best way to
++	 * handle the scenario is to program TD bit by default.
++	 */
++
++	return val | PCIE_ATU_TD;
++}
++
+ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 					     int index, int type,
+ 					     u64 cpu_addr, u64 pci_addr,
+@@ -245,8 +283,10 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
+ 				 lower_32_bits(pci_addr));
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
+ 				 upper_32_bits(pci_addr));
+-	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
+-				 type | PCIE_ATU_FUNC_NUM(func_no));
++	val = type | PCIE_ATU_FUNC_NUM(func_no);
++	if (pci->version == 0x490A)
++		val = dw_pcie_enable_ecrc(val);
++	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
+ 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
+ 				 PCIE_ATU_ENABLE);
+ 
+@@ -292,8 +332,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
+ 			   lower_32_bits(pci_addr));
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
+ 			   upper_32_bits(pci_addr));
+-	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
+-			   PCIE_ATU_FUNC_NUM(func_no));
++	val = type | PCIE_ATU_FUNC_NUM(func_no);
++	if (pci->version == 0x490A)
++		val = dw_pcie_enable_ecrc(val);
++	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
+ 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+ 
+ 	/*
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 9d2f511f13fa..285c0ae364ae 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -88,6 +88,7 @@
+ #define PCIE_ATU_TYPE_IO		0x2
+ #define PCIE_ATU_TYPE_CFG0		0x4
+ #define PCIE_ATU_TYPE_CFG1		0x5
++#define PCIE_ATU_TD			BIT(8)
+ #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
+ #define PCIE_ATU_CR2			0x908
+ #define PCIE_ATU_ENABLE			BIT(31)
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.17.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
