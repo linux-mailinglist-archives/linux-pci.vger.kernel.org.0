@@ -2,151 +2,311 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D1DC2AAF9B
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 03:48:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E54E72AAF9D
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 03:53:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgKICsz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 8 Nov 2020 21:48:55 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:4195 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727979AbgKICsz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 8 Nov 2020 21:48:55 -0500
-X-UUID: edb108a108294843a9ad4292e9fef1ae-20201109
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=DVy3OJusU0Te+Te3wB8eaGJ4YgyB4I5WYq+v3KWwg3I=;
-        b=b3LUwCccP8CL0qzSrO0CACnc/q0ySI0NqR9NUlv7VY/ri+8kilJWEbA9uHanM88lF/ATTmp0hz6DSWVmgOTvFzM93ey78sg3gvekIiKyUT2KNL3cF9qWpk7wz8LUcJOOQH6yx4IjdG4/N7S08xvafEwTX0iQcKwQ/VEr5BX2MQ8=;
-X-UUID: edb108a108294843a9ad4292e9fef1ae-20201109
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 735998388; Mon, 09 Nov 2020 10:48:48 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 9 Nov
- 2020 10:48:46 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 9 Nov 2020 10:48:46 +0800
-Message-ID: <1604890126.8050.5.camel@mhfsdcap03>
-Subject: Re: [PATCH v7 1/4] dt-bindings: pci: mediatek: Modified the Device
- tree bindings
-From:   Chuanjia Liu <chuanjia.liu@mediatek.com>
+        id S1728866AbgKICxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 8 Nov 2020 21:53:39 -0500
+Received: from mail-mw2nam10on2086.outbound.protection.outlook.com ([40.107.94.86]:51520
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727979AbgKICxj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 8 Nov 2020 21:53:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UP1PwRnac0dQ+N7G3GRyaoRVi1QUYOg+GxLfNjEcE2B26J+iWzxGC56gvhWP8QpspOhNVaKwajjjJvoUkGR0hlkqtJybPB7DGPURmjK8tJp0DBV6kzQwyW6SdmVPMYLjIBqfypbxbfmCeUb6Ov+Q0OlM6xz+zeOUQ9ZVOKYObMqUdRwTlceFJS2V1Loh8sqA8AmiOZ0cj2dXWzyR+h1Cux+c9IAbFTW7dmN2ucSguP0ej/10iB1rpY/nfbG95OqMyt+y/yUd3vnSuHRkd6oS8NCdEORX+AWERgaJLXYq/Igkxk1hp8qopNWqJXikDVOeK/c3NGeVvyoiy+bjk69ihA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Efj8v9wZlJuoNzLSxa2/ToeNbeRBOJaawGMhjYYQwAE=;
+ b=n/yY7H+tQRGVSOrOxQG4dHvQvCHagfexT07PL+uh35hwqk4Wgnm0jMaRBYIsx+KhMR/ke1SZ5oSMIhiH8yJzjNPAC82nzwFlVXWcx6JHoTFXPl4jwtAlZUtE7T+KaoXBLy6JRezr40b2vrHDSvqSNwOboMmituO9DxX+34NK/Vwm2Z2urNmInJEBnOEIh0dE9GW+9EEtr4Iu2YcZvFI/lGftZkvtqN65KxAW2h74mMlpxKhn81bUVsRwjE3qu6QQseNxHpCXMHXiGWKTGxuzZTQ4JW9sIIYIebuXuAS0045o7VOIiLkv6TFWRShjiMLOs6gy425HSYWWqrdgoHTYUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Efj8v9wZlJuoNzLSxa2/ToeNbeRBOJaawGMhjYYQwAE=;
+ b=lt8gfcwN0U+s1PPrTPFOM+RfCKX9a/Qwq18KnyjPVmpxTwhCJ80rwMls+ZjT+ndYkr/mBNRt/8s2GsgCzDDie7FVRWixOVW/qymptg2DLwVs064KBAgbhudXXaX4JYkS7mVqU2wA/bVIqtcfDMSVu8mrJowsyzb7cwdh2RyIxMk=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=synaptics.com;
+Received: from SN2PR03MB2383.namprd03.prod.outlook.com (2603:10b6:804:d::23)
+ by SN6PR03MB4272.namprd03.prod.outlook.com (2603:10b6:805:c8::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.25; Mon, 9 Nov
+ 2020 02:53:35 +0000
+Received: from SN2PR03MB2383.namprd03.prod.outlook.com
+ ([fe80::49be:5ea3:8961:a22]) by SN2PR03MB2383.namprd03.prod.outlook.com
+ ([fe80::49be:5ea3:8961:a22%6]) with mapi id 15.20.3541.024; Mon, 9 Nov 2020
+ 02:53:35 +0000
+Date:   Mon, 9 Nov 2020 10:53:25 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 To:     Rob Herring <robh@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Date:   Mon, 9 Nov 2020 10:48:46 +0800
-In-Reply-To: <20201102161931.GA3985668@bogus>
-References: <20201029081513.10562-1-chuanjia.liu@mediatek.com>
-         <20201029081513.10562-2-chuanjia.liu@mediatek.com>
-         <20201102161931.GA3985668@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 09/16] PCI: dwc: Rework MSI initialization
+Message-ID: <20201109105325.68a22696@xhacker.debian>
+In-Reply-To: <20201105211159.1814485-10-robh@kernel.org>
+References: <20201105211159.1814485-1-robh@kernel.org>
+        <20201105211159.1814485-10-robh@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.147.44.204]
+X-ClientProxiedBy: BY5PR03CA0005.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::15) To SN2PR03MB2383.namprd03.prod.outlook.com
+ (2603:10b6:804:d::23)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 160B908C483B3CEA25F25AC0ED72F9B72602719CC011202B11B06C5B5B71DFB02000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (192.147.44.204) by BY5PR03CA0005.namprd03.prod.outlook.com (2603:10b6:a03:1e0::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21 via Frontend Transport; Mon, 9 Nov 2020 02:53:31 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d2b0e96d-9520-428a-c2e0-08d8845aa690
+X-MS-TrafficTypeDiagnostic: SN6PR03MB4272:
+X-Microsoft-Antispam-PRVS: <SN6PR03MB4272F0D9392629436E6D1471EDEA0@SN6PR03MB4272.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: b9FE9xGupzH4mfRpNwh2iUD9RblgvGbhEgWqKExFl0KizsZH55xRq5H0NB9au51f3kWWLrgJ0zvQ9bWddVrDc9xWWr02RTW2HWM0pSOiHMPfqn8Gv6CC7SaPUOK6czk+H4TPmo5CpSKIFRtmSD1KGJaK0XZEUgHVzvPdR9QmSOQzOxBIXvGaGXrxGCrl/MCsKKgB1HWYvssotYOMJNu4R3qECs5XAi0W/P4fnKdg8yrhGys1l4hhdYgI//aE+9khYsedU7D6aENji02/cvUHBGdfCjId7Cs8+e91Wfy59+e0WnbHEH2P+Z6WE5Ek6qIrPtnT3YC9hw5S3hCMLYwUkA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN2PR03MB2383.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39850400004)(396003)(346002)(366004)(136003)(956004)(7416002)(1076003)(6506007)(26005)(186003)(16526019)(7696005)(52116002)(6666004)(66946007)(5660300002)(66556008)(66476007)(8936002)(9686003)(2906002)(55016002)(4326008)(8676002)(83380400001)(6916009)(54906003)(316002)(86362001)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: uOXD8V7bapcLolQOTRbK5Yp7O3GKI/HLlJckVQa1Y3rRkot6OQ9/BlAkItHL5EwbKzyuODQw+CAwoY0+dEJ4oWTWwwkjzMRF3xSPPwKDq+HFxKYfolpXDl7PVzqkXBebRXd7z9DB8+RESlhzwcQgSvNeQkmN1UQbApoLaN60zqM5fg4Tt0krV14Kmim5BPLcY56NxQAJTxn0kkyO22eQzl5IdfhUBYl+Pg6VQoidsiwRBjqX2FLC30qt/UaX+VaDuIxXs/yU7qV70l9sa5FPwPK6r/XIFdtcC9x9xdXNZxUVeBEzKnNNkrtWji6JwDsVhG1cmcdH91fqXGoVO9XlI9ft7yBRBQoyOYse9IKpSg2EGlx5ciV/oWHZyG0ba43yE14BOxrZHNFjaMn2bMlCUGBkhs+RT6RAO1EIKYn0o2Gn77RgkwIHsyC3iGb8iVA1GedMU3Vp6I/6BninkvQf+FVCmlAJhYGJ4QQygGLlP49ZzOKzpvsRTERRw4OZ2w0c9SlU/Igs3jplovMkjRzJNFfATxcAUDSPlTP3CsBDHhYbUDGgSJzjEnbNgVPw0pPPBJogFD6z//3cX2ZmnoA4G5p1mJmp0r3+9TAi9FUK8MFYIraiFa5fpmd/udLi/PJqIxVG+gHNCs06HXcYIRsdcQ==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2b0e96d-9520-428a-c2e0-08d8845aa690
+X-MS-Exchange-CrossTenant-AuthSource: SN2PR03MB2383.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2020 02:53:35.1972
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x8eeCUY1+Gp2n514KMi5DDj7t46l1mY+9rEe/nRhjxK8YNdyrAQpNXtxaPuaaOlmJ28xMSrZ6lWZI8I5FcncdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR03MB4272
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTExLTAyIGF0IDEwOjE5IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCBPY3QgMjksIDIwMjAgYXQgMDQ6MTU6MTBQTSArMDgwMCwgQ2h1YW5qaWEgTGl1IHdy
-b3RlOg0KPiA+IFNwbGl0IHRoZSBQQ0llIG5vZGUgYW5kIGFkZCBwY2llY2ZnIG5vZGUgdG8gZml4
-IE1TSSBpc3N1ZS4NCj4gDQo+IEkgc3RpbGwgdGhpbmsgaWYgeW91IGFyZSBjaGFuZ2luZyB0aGUg
-YmluZGluZyB0aGlzIG11Y2gsIHRoZW4gZnVydGhlciANCj4gd29yayBzaG91bGQgYmUgZG9uZSBy
-ZW1vdmluZyB0aGUgc2xvdCBub2Rlcy4NCj4gDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQ2h1
-YW5qaWEgTGl1IDxjaHVhbmppYS5saXVAbWVkaWF0ZWsuY29tPg0KPiA+IEFja2VkLWJ5OiBSeWRl
-ciBMZWUgPHJ5ZGVyLmxlZUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9iaW5kaW5n
-cy9wY2kvbWVkaWF0ZWstcGNpZS1jZmcueWFtbCAgICAgICB8ICAzOSArKysrKysNCj4gPiAgLi4u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0IHwgMTI5ICsrKysrKysr
-KysrLS0tLS0tLQ0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDExOCBpbnNlcnRpb25zKCspLCA1MCBk
-ZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1jZmcueWFtbA0KPiA+IA0KPiA+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBj
-aWUtY2ZnLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlh
-dGVrLXBjaWUtY2ZnLnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAw
-MDAwMDAwMDAwMC4uZDNlY2JjZDAzMmEyDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1jZmcueWFt
-bA0KPiA+IEBAIC0wLDAgKzEsMzkgQEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
-R1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZQ0KPiA+ICslWUFNTCAxLjINCj4gPiArLS0tDQo+
-ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvcGNpL21lZGlhdGVrLXBjaWUt
-Y2ZnLnlhbWwjDQo+ID4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVt
-YXMvY29yZS55YW1sIw0KPiA+ICsNCj4gPiArdGl0bGU6IE1lZGlhdGVrIFBDSUVDRkcgY29udHJv
-bGxlcg0KPiA+ICsNCj4gPiArbWFpbnRhaW5lcnM6DQo+ID4gKyAgLSBDaHVhbmppYSBMaXUgPGNo
-dWFuamlhLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gKyAgLSBKaWFuanVuIFdhbmcgPGppYW5qdW4u
-d2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlvbjogfA0KPiA+ICsgIFRo
-ZSBNZWRpYVRlayBQQ0lFQ0ZHIGNvbnRyb2xsZXIgY29udHJvbHMgc29tZSBmZWF0dXJlIGFib3V0
-DQo+ID4gKyAgTFRTU00sIEFTUE0gYW5kIHNvIG9uLg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoN
-Cj4gPiArICBjb21wYXRpYmxlOg0KPiA+ICsgICAgICBpdGVtczoNCj4gPiArICAgICAgICAtIGVu
-dW06DQo+ID4gKyAgICAgICAgICAgIC0gbWVkaWF0ZWssZ2VuZXJpYy1wY2llY2ZnDQo+ID4gKyAg
-ICAgICAgLSBjb25zdDogc3lzY29uDQo+ID4gKw0KPiA+ICsgIHJlZzoNCj4gPiArICAgIG1heEl0
-ZW1zOiAxDQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiAr
-ICAtIHJlZw0KPiA+ICsNCj4gPiArYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gKw0K
-PiA+ICtleGFtcGxlczoNCj4gPiArICAtIHwNCj4gPiArICAgIHBjaWVjZmc6IHBjaWVjZmdAMWEx
-NDAwMDAgew0KPiA+ICsgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssZ2VuZXJpYy1wY2ll
-Y2ZnIiwgInN5c2NvbiI7DQo+ID4gKyAgICAgICAgcmVnID0gPDB4MWExNDAwMDAgMHgxMDAwPjsN
-Cj4gPiArICAgIH07DQo+ID4gKy4uLg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLnR4dA0KPiA+IGluZGV4IDc0Njhk
-NjY2NzYzYS4uYzE0YTI3NDVkZTM3IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS50eHQNCj4gPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUudHh0DQo+ID4gQEAg
-LTgsNyArOCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gIAkibWVkaWF0ZWssbXQ3NjIz
-LXBjaWUiDQo+ID4gIAkibWVkaWF0ZWssbXQ3NjI5LXBjaWUiDQo+ID4gIC0gZGV2aWNlX3R5cGU6
-IE11c3QgYmUgInBjaSINCj4gPiAtLSByZWc6IEJhc2UgYWRkcmVzc2VzIGFuZCBsZW5ndGhzIG9m
-IHRoZSBQQ0llIHN1YnN5cyBhbmQgcm9vdCBwb3J0cy4NCj4gPiArLSByZWc6IEJhc2UgYWRkcmVz
-c2VzIGFuZCBsZW5ndGhzIG9mIHRoZSByb290IHBvcnRzLg0KPiA+ICAtIHJlZy1uYW1lczogTmFt
-ZXMgb2YgdGhlIGFib3ZlIGFyZWFzIHRvIHVzZSBkdXJpbmcgcmVzb3VyY2UgbG9va3VwLg0KPiA+
-ICAtICNhZGRyZXNzLWNlbGxzOiBBZGRyZXNzIHJlcHJlc2VudGF0aW9uIGZvciByb290IHBvcnRz
-IChtdXN0IGJlIDMpDQo+ID4gIC0gI3NpemUtY2VsbHM6IFNpemUgcmVwcmVzZW50YXRpb24gZm9y
-IHJvb3QgcG9ydHMgKG11c3QgYmUgMikNCj4gPiBAQCAtMTQzLDU2ICsxNDMsNzEgQEAgRXhhbXBs
-ZXMgZm9yIE1UNzYyMzoNCj4gPiAgDQo+ID4gIEV4YW1wbGVzIGZvciBNVDI3MTI6DQo+ID4gIA0K
-PiA+IC0JcGNpZTogcGNpZUAxMTcwMDAwMCB7DQo+ID4gKwlwY2llMTogcGNpZUAxMTJmZjAwMCB7
-DQo+ID4gIAkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MTItcGNpZSI7DQo+ID4gIAkJZGV2
-aWNlX3R5cGUgPSAicGNpIjsNCj4gPiAtCQlyZWcgPSA8MCAweDExNzAwMDAwIDAgMHgxMDAwPiwN
-Cj4gPiAtCQkgICAgICA8MCAweDExMmZmMDAwIDAgMHgxMDAwPjsNCj4gPiAtCQlyZWctbmFtZXMg
-PSAicG9ydDAiLCAicG9ydDEiOw0KPiA+ICsJCXJlZyA9IDwwIDB4MTEyZmYwMDAgMCAweDEwMDA+
-Ow0KPiA+ICsJCXJlZy1uYW1lcyA9ICJwb3J0MSI7DQo+ID4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8
-Mz47DQo+ID4gIAkJI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gLQkJaW50ZXJydXB0cyA9IDxHSUNf
-U1BJIDExNSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiAtCQkJICAgICA8R0lDX1NQSSAxMTcg
-SVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gLQkJY2xvY2tzID0gPCZ0b3Bja2dlbiBDTEtfVE9Q
-X1BFMl9NQUNfUDBfU0VMPiwNCj4gPiAtCQkJIDwmdG9wY2tnZW4gQ0xLX1RPUF9QRTJfTUFDX1Ax
-X1NFTD4sDQo+ID4gLQkJCSA8JnBlcmljZmcgQ0xLX1BFUklfUENJRTA+LA0KPiA+ICsJCWludGVy
-cnVwdHMgPSA8R0lDX1NQSSAxMTcgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gKwkJaW50ZXJy
-dXB0LW5hbWVzID0gInBjaWVfaXJxIjsNCj4gPiArCQljbG9ja3MgPSA8JnRvcGNrZ2VuIENMS19U
-T1BfUEUyX01BQ19QMV9TRUw+LA0KPiA+ICAJCQkgPCZwZXJpY2ZnIENMS19QRVJJX1BDSUUxPjsN
-Cj4gPiAtCQljbG9jay1uYW1lcyA9ICJzeXNfY2swIiwgInN5c19jazEiLCAiYWhiX2NrMCIsICJh
-aGJfY2sxIjsNCj4gPiAtCQlwaHlzID0gPCZwY2llMF9waHkgUEhZX1RZUEVfUENJRT4sIDwmcGNp
-ZTFfcGh5IFBIWV9UWVBFX1BDSUU+Ow0KPiA+IC0JCXBoeS1uYW1lcyA9ICJwY2llLXBoeTAiLCAi
-cGNpZS1waHkxIjsNCj4gPiArCQljbG9jay1uYW1lcyA9ICJzeXNfY2sxIiwgImFoYl9jazEiOw0K
-PiA+ICsJCXBoeXMgPSA8JnUzcG9ydDEgUEhZX1RZUEVfUENJRT47DQo+ID4gKwkJcGh5LW5hbWVz
-ID0gInBjaWUtcGh5MSI7DQo+ID4gIAkJYnVzLXJhbmdlID0gPDB4MDAgMHhmZj47DQo+ID4gLQkJ
-cmFuZ2VzID0gPDB4ODIwMDAwMDAgMCAweDIwMDAwMDAwICAweDAgMHgyMDAwMDAwMCAgMCAweDEw
-MDAwMDAwPjsNCj4gPiArCQlyYW5nZXMgPSA8MHg4MjAwMDAwMCAwIDB4MTE0MDAwMDAgIDB4MCAw
-eDExNDAwMDAwICAwIDB4MzAwMDAwPjsNCj4gPiAgDQo+ID4gLQkJcGNpZTA6IHBjaWVAMCwwIHsN
-Cj4gPiAtCQkJcmVnID0gPDB4MDAwMCAwIDAgMCAwPjsNCj4gPiArCQlzbG90MTogcGNpZUAxLDAg
-ew0KPiANCj4gRG9lcyB0aGUgZHJpdmVyIHN0aWxsIHdvcmsgaWYgdGhpcyBpcyBkZXZmbiAwIGlu
-c3RlYWQgb2YgMSAob3Igc3dhcCAwIA0KPiBhbmQgMSBzbG90cyk/IEknbGwgYmV0IGl0IGRvZXMu
-IA0KPiANClRoZSBkcml2ZXIgc3RpbGwgd29yayB3aGVuIGRldmZuIDAgaW5zdGVhZCBvZiAx77yM
-YnV0IHRoZSBkcml2ZXIgYW5kIGR0c2kNCm5lZWQgc29tZSBjaGFuZ2UuQmVjYXVzZSBzb21lIHNl
-dHRpbmcgaW4gdGhlIGRyaXZlciBpcyBiYXNlZCBvbiBzbG90DQpudW1iZXIgdG8gZGV0ZXJtaW5l
-IG9mZnNldC4NCj4gVGhlIHJlYXNvbiBiZWluZyBpcyB0aGF0IEFGQUlDVCwgdGhlIE1lZGlhdGVr
-IFBDSSBjb250cm9sbGVyIGlzIA0KPiBEZXNpZ253YXJlIGJhc2VkLiBUaGUgcmVnaXN0ZXJzIGF0
-IDB4NzBjIGFuZCAweDczYyBhcmUgRFdDICdwb3J0IGxvZ2ljJyANCj4gcmVnaXN0ZXJzLiBUaGUg
-RFdDIFJDIGFsc28gaGFzIGEgcXVpcmsgdGhhdCBpdCBkb2Vzbid0IGZpbHRlciBjb25maWcgDQo+
-IGFjY2Vzc2VzIHRvIG9ubHkgZGV2Zm4gMCAoc2VlIHBjaV9kd192YWxpZF9kZXZpY2UoKSksIHNv
-IHlvdXIgY29uZmlnIA0KPiBhY2Nlc3NlcyB0byB0aGUgUlAgc2hvdWxkIHdvcmsgbm8gbWF0dGVy
-IHdoYXQgZGV2Zm4geW91IHVzZS4gWW91J2xsIGhhdmUgDQo+IHRvIGdldCByaWQgb2YgdGhlIHBv
-cnRzIGxpc3QgYW5kIGp1c3QgZ2V0IHRoZSBtdGtfcGNpZV9wb3J0IGZyb20gDQo+IGJ1cy0+c3lz
-ZGF0YSBpbnN0ZWFkLg0KSSBkb27igJl0IHVuZGVyc3RhbmQgd2h5IG11c3QgZ2V0IHJpZCBvZiB0
-aGUgcG9ydHMgbGlzdCBhbmQgZ2V0IHRoZQ0KbXRrX3BjaWVfcG9ydCBmcm9tIGJ1cy0+c3lzZGF0
-YSBpbnN0ZWFkLiBQb3J0cyBsaXN0IHdhcyByZXRhaW5lZCBmb3INCmNvbXBhdGliaWxpdHkgd2l0
-aCB0aGUgb2xkIERUUyBmb3JtYXQuIEFuZCBpbiBwY2ktdGVncmEuYyBhbmQNCnBjaS1tdmVidS5j
-ICx0aGV5IGFsc28gaGF2ZSBwb3J0cyBsaXN0IGFuZCBkZXZmbiBkb2Vzbid0IHN0YXJ0IGF0DQow
-LihlLmc6dGVncmEyMTAuZHRzaSwgYXJtYWRhLTM4NS5kdHNpKS4NCj4gDQoNCg==
+On Thu,  5 Nov 2020 15:11:52 -0600
+Rob Herring <robh@kernel.org> wrote:
 
+> CAUTION: Email originated externally, do not click links or open attachments unless you recognize the sender and know the content is safe.
+> 
+> 
+> There are 3 possible MSI implementations for the DWC host. The first is
+> using the built-in DWC MSI controller. The 2nd is a custom MSI
+> controller as part of the PCI host (keystone only). The 3rd is an
+> external MSI controller (typically GICv3 ITS). Currently, the last 2
+> are distinguished with a .msi_host_init() hook with the 3rd option using
+> an empty function. However we can detect the 3rd case with the presence
+> of 'msi-parent' or 'msi-map' properties, so let's do that instead and
+> remove the empty functions.
+> 
+> Cc: Murali Karicheri <m-karicheri2@ti.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Minghuan Lian <minghuan.Lian@nxp.com>
+> Cc: Mingkai Hu <mingkai.hu@nxp.com>
+> Cc: Roy Zang <roy.zang@nxp.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/dwc/pci-keystone.c     |  9 -------
+>  drivers/pci/controller/dwc/pci-layerscape.c   | 25 -------------------
+>  .../pci/controller/dwc/pcie-designware-host.c | 20 +++++++++------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+>  drivers/pci/controller/dwc/pcie-intel-gw.c    |  9 -------
+>  5 files changed, 13 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+> index 9cf14f13798b..784385ae6074 100644
+> --- a/drivers/pci/controller/dwc/pci-keystone.c
+> +++ b/drivers/pci/controller/dwc/pci-keystone.c
+> @@ -272,14 +272,6 @@ static void ks_pcie_handle_legacy_irq(struct keystone_pcie *ks_pcie,
+>         ks_pcie_app_writel(ks_pcie, IRQ_EOI, offset);
+>  }
+> 
+> -/*
+> - * Dummy function so that DW core doesn't configure MSI
+> - */
+> -static int ks_pcie_am654_msi_host_init(struct pcie_port *pp)
+> -{
+> -       return 0;
+> -}
+> -
+>  static void ks_pcie_enable_error_irq(struct keystone_pcie *ks_pcie)
+>  {
+>         ks_pcie_app_writel(ks_pcie, ERR_IRQ_ENABLE_SET, ERR_IRQ_ALL);
+> @@ -854,7 +846,6 @@ static const struct dw_pcie_host_ops ks_pcie_host_ops = {
+> 
+>  static const struct dw_pcie_host_ops ks_pcie_am654_host_ops = {
+>         .host_init = ks_pcie_host_init,
+> -       .msi_host_init = ks_pcie_am654_msi_host_init,
+>  };
+> 
+>  static irqreturn_t ks_pcie_err_irq_handler(int irq, void *priv)
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index 53e56d54c482..0d84986c4c16 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -168,37 +168,12 @@ static int ls1021_pcie_host_init(struct pcie_port *pp)
+>         return ls_pcie_host_init(pp);
+>  }
+> 
+> -static int ls_pcie_msi_host_init(struct pcie_port *pp)
+> -{
+> -       struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> -       struct device *dev = pci->dev;
+> -       struct device_node *np = dev->of_node;
+> -       struct device_node *msi_node;
+> -
+> -       /*
+> -        * The MSI domain is set by the generic of_msi_configure().  This
+> -        * .msi_host_init() function keeps us from doing the default MSI
+> -        * domain setup in dw_pcie_host_init() and also enforces the
+> -        * requirement that "msi-parent" exists.
+> -        */
+> -       msi_node = of_parse_phandle(np, "msi-parent", 0);
+> -       if (!msi_node) {
+> -               dev_err(dev, "failed to find msi-parent\n");
+> -               return -EINVAL;
+> -       }
+> -
+> -       of_node_put(msi_node);
+> -       return 0;
+> -}
+> -
+>  static const struct dw_pcie_host_ops ls1021_pcie_host_ops = {
+>         .host_init = ls1021_pcie_host_init,
+> -       .msi_host_init = ls_pcie_msi_host_init,
+>  };
+> 
+>  static const struct dw_pcie_host_ops ls_pcie_host_ops = {
+>         .host_init = ls_pcie_host_init,
+> -       .msi_host_init = ls_pcie_msi_host_init,
+>  };
+> 
+>  static const struct dw_pcie_ops dw_ls1021_pcie_ops = {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 95deef0eaadf..9b952639d020 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -365,6 +365,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                 pci->link_gen = of_pci_get_max_link_speed(np);
+> 
+>         if (pci_msi_enabled()) {
+> +               pp->has_msi_ctrl = !(pp->ops->msi_host_init ||
+> +                                    of_property_read_bool(np, "msi-parent") ||
+> +                                    of_property_read_bool(np, "msi-map"));
+> +
+>                 if (!pp->num_vectors) {
+>                         pp->num_vectors = MSI_DEF_NUM_VECTORS;
+>                 } else if (pp->num_vectors > MAX_MSI_IRQS) {
+> @@ -372,7 +376,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                         return -EINVAL;
+>                 }
+> 
+> -               if (!pp->ops->msi_host_init) {
+> +               if (pp->ops->msi_host_init) {
+> +                       ret = pp->ops->msi_host_init(pp);
+> +                       if (ret < 0)
+> +                               return ret;
+> +               } else if (pp->has_msi_ctrl) {
+>                         if (!pp->msi_irq) {
+>                                 pp->msi_irq = platform_get_irq_byname_optional(pdev, "msi");
+>                                 if (pp->msi_irq < 0) {
+> @@ -402,10 +410,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                                 pp->msi_data = 0;
+>                                 goto err_free_msi;
+>                         }
+> -               } else {
+> -                       ret = pp->ops->msi_host_init(pp);
+> -                       if (ret < 0)
+> -                               return ret;
+>                 }
+>         }
+> 
+> @@ -426,7 +430,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>                 return 0;
+> 
+>  err_free_msi:
+> -       if (pci_msi_enabled() && !pp->ops->msi_host_init)
+> +       if (pp->has_msi_ctrl)
+>                 dw_pcie_free_msi(pp);
+>         return ret;
+>  }
+> @@ -436,7 +440,7 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
+>  {
+>         pci_stop_root_bus(pp->bridge->bus);
+>         pci_remove_root_bus(pp->bridge->bus);
+> -       if (pci_msi_enabled() && !pp->ops->msi_host_init)
+> +       if (pp->has_msi_ctrl)
+>                 dw_pcie_free_msi(pp);
+>  }
+>  EXPORT_SYMBOL_GPL(dw_pcie_host_deinit);
+> @@ -544,7 +548,7 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> 
+>         dw_pcie_setup(pci);
+> 
+> -       if (pci_msi_enabled() && !pp->ops->msi_host_init) {
+> +       if (pp->has_msi_ctrl) {
+>                 num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+> 
+>                 /* Initialize IRQ Status array */
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 96382dcb2859..5d374bab10d1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -175,6 +175,7 @@ struct dw_pcie_host_ops {
+>  };
+> 
+>  struct pcie_port {
+> +       bool                    has_msi_ctrl:1;
+
+Can we relocate has_msi_ctrl? e.g put it at the end of the pcie_port structure.
+
+Thanks
+
+>         u64                     cfg0_base;
+>         void __iomem            *va_cfg0_base;
+>         u32                     cfg0_size;
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index c562eb7454b1..292b9de86532 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -385,14 +385,6 @@ static int intel_pcie_rc_init(struct pcie_port *pp)
+>         return intel_pcie_host_setup(lpp);
+>  }
+> 
+> -/*
+> - * Dummy function so that DW core doesn't configure MSI
+> - */
+> -static int intel_pcie_msi_init(struct pcie_port *pp)
+> -{
+> -       return 0;
+> -}
+> -
+>  static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+>  {
+>         return cpu_addr + BUS_IATU_OFFSET;
+> @@ -404,7 +396,6 @@ static const struct dw_pcie_ops intel_pcie_ops = {
+> 
+>  static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+>         .host_init =            intel_pcie_rc_init,
+> -       .msi_host_init =        intel_pcie_msi_init,
+>  };
+> 
+>  static const struct intel_pcie_soc pcie_data = {
+> --
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+>
