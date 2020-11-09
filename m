@@ -2,98 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17D2D2ABE3D
-	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 15:08:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 452A32ABE6E
+	for <lists+linux-pci@lfdr.de>; Mon,  9 Nov 2020 15:17:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbgKIOIT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 9 Nov 2020 09:08:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51470 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgKIOIT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Nov 2020 09:08:19 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604930897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Za9y7vEVZbcDkAkC7l7dzQWgdMKeP4nlkFK2BA7cwS8=;
-        b=hSDIbLVtm/ANSBZsSoQ0B1BPQJALf1e3Gm9+rr/beaSXG9ZhGPP36aaUEGXMKjCRg6N+px
-        0keE0c4Wnelx1v0FWQ1vkLYGusenOw61vdBfmdIsCZ2JfclTjyKTKsuemdGZMT/BK03BJX
-        yTr/cQEhWxRBSYR+ui5FmPFV7vt04XVhAvduv8WDSAUiyWXboZd3CA0/NKHEimulpxhiNy
-        u3b8izFPHXOqZX86NYlngvxMjUuYv6XZ4T9NH5vQKRQ9AQiqiSfIV8/9qdrioIk6B6D3le
-        Toe/vMFXsSuqXYYSS6k8rnEVZ4oKHh6LKqmG9uCHfNduQKQTXGcydgQbCAW0yA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604930897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Za9y7vEVZbcDkAkC7l7dzQWgdMKeP4nlkFK2BA7cwS8=;
-        b=29SYYngZN3K6tp0wh7XnzjkglnmzPe5zF+Bh/pZRJabS3DucWRsFYJrbFsVyaI0vJ7phI1
-        wQWk/joCQQXXJkBA==
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "Dey\, Megha" <megha.dey@intel.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-In-Reply-To: <draft-875z6ekcj5.fsf@nanos.tec.linutronix.de>
-References: <draft-875z6ekcj5.fsf@nanos.tec.linutronix.de>
-Date:   Mon, 09 Nov 2020 15:08:17 +0100
-Message-ID: <87y2jaipwu.fsf@nanos.tec.linutronix.de>
+        id S1730181AbgKIORY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 9 Nov 2020 09:17:24 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45062 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729776AbgKIORX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 9 Nov 2020 09:17:23 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A9EHC3K040249;
+        Mon, 9 Nov 2020 08:17:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1604931432;
+        bh=Wp7QEYjwDcoEzB1kc04C4YfUw/KaMcNtD5IHNJ49+2I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=w5IOp6b+6S2S8m33TlPJPrQZ/ldEjELgm9GAyYEsKY6rX1tC8tzR5myo/LSFJITxf
+         IvWCmEs1S8FCkLaVXFUe+ULRm0WEn5NGzRJSoID4/eiqDZoo2Uuf/bnWzgB5nUdAxs
+         DxJzI3NX66usNzWSEoBH7zw+IC3qdx4azVeSF/+c=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A9EHCMo025563
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Nov 2020 08:17:12 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 9 Nov
+ 2020 08:17:12 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 9 Nov 2020 08:17:12 -0600
+Received: from [10.250.213.167] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A9EH2Ol125926;
+        Mon, 9 Nov 2020 08:17:04 -0600
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: ti,j721e-system-controller.yaml:
+ Document "pcie-ctrl"
+To:     Rob Herring <robh@kernel.org>
+CC:     Lee Jones <lee.jones@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Roger Quadros <rogerq@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20201102101154.13598-1-kishon@ti.com>
+ <20201102101154.13598-2-kishon@ti.com> <20201105165459.GB55814@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <07d327c6-54c7-23f9-b65e-bfd3455de47f@ti.com>
+Date:   Mon, 9 Nov 2020 19:47:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20201105165459.GB55814@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 09 2020 at 12:14, Thomas Gleixner wrote:
-> On Sun, Nov 08 2020 at 15:58, Ashok Raj wrote:
->> On Sun, Nov 08, 2020 at 07:47:24PM +0100, Thomas Gleixner wrote:
->> But for SIOV devices there is no PASID filtering at the remap level since
->> interrupt messages don't carry PASID in the TLP.
->
-> Why do we need PASID for VMM integrity?
->
-> If the device sends a message then the remap unit will see the requester
-> ID of the device and if the message it sends is not 
+Hi Rob,
 
-That made me look at patch 4/17 which adds DEVMSI support to the
-remap code:
+On 05/11/20 10:24 pm, Rob Herring wrote:
+> On Mon, Nov 02, 2020 at 03:41:47PM +0530, Kishon Vijay Abraham I wrote:
+>> Add binding documentation for "pcie-ctrl" which should be a subnode of
+>> the system controller.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/mfd/ti,j721e-system-controller.yaml | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+>> index 19fcf59fd2fe..fd985794e419 100644
+>> --- a/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+>> +++ b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+>> @@ -50,6 +50,12 @@ patternProperties:
+>>        specified in
+>>        Documentation/devicetree/bindings/mux/reg-mux.txt
+>>  
+>> +  "^pcie-ctrl@[0-9a-f]+$":
+> 
+> Unit address, so it should have 'reg' too?
+> 
+> You don't need a node if there aren't any properties.
 
-> +       case X86_IRQ_ALLOC_TYPE_DEV_MSI:
-> +              irte_prepare_msg(msg, index, sub_handle);
->                break;
+The subnodes are again a syscon node. I'll fix this up in the next revision.
 
-It does not setup any requester-id filter in IRTE. How is that supposed
-to be correct?
-
-Thanks,
-
-        tglx
+Thank You,
+Kishon
