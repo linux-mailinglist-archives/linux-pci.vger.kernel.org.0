@@ -2,118 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 519472ADAAD
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 16:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ACF72ADB5C
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 17:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgKJPnH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 10:43:07 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37194 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730666AbgKJPnH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 10:43:07 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AAFgj1k082798;
-        Tue, 10 Nov 2020 09:42:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1605022965;
-        bh=kZ6NUVS0wH3f6crDKEWytDIJj/TB2GdUpTaec0L/68E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eEazoQaTmQCDD4IKrmGRCn5qEUpSRcBoevzBBGrMGDUZ81ThPKZN4WBRKzq4qL1hm
-         gxUbXjaRP0Zybvglj70M7ys5o0/fE1g0XGKBsmTpbha0i2jYBj4RFrY0I+MW/bPPVk
-         c7KBX0GPYOvdn4QyYC/g9+AI4nwtt5XPuFY/3fp4=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AAFgjfg031823
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Nov 2020 09:42:45 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 10
- Nov 2020 09:42:45 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 10 Nov 2020 09:42:44 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AAFgd1M009286;
-        Tue, 10 Nov 2020 09:42:40 -0600
-Subject: Re: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express
- Non-Transparent Bridge
-To:     Arnd Bergmann <arnd@kernel.org>
-CC:     Sherry Sun <sherry.sun@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "dave.jiang@intel.com" <dave.jiang@intel.com>,
-        "allenbh@gmail.com" <allenbh@gmail.com>,
-        "tjoseph@cadence.com" <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>
-References: <20200930153519.7282-16-kishon@ti.com>
- <VI1PR04MB496061EAB6F249F1C394F01092EA0@VI1PR04MB4960.eurprd04.prod.outlook.com>
- <d6d27475-3464-6772-2122-cc194b8ae022@ti.com>
- <VI1PR04MB49602D24F65E11FF1F14294F92E90@VI1PR04MB4960.eurprd04.prod.outlook.com>
- <30c8f7a1-baa5-1eb4-d2c2-9a13be896f0f@ti.com>
- <CAK8P3a38vBXbAWE09H+TSoZUTkFdYDcQmXX97foT4qXQc8t5ZQ@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <5a9115c8-322e-ffd4-6274-ae98c375b21d@ti.com>
-Date:   Tue, 10 Nov 2020 21:12:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1731068AbgKJQLt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 11:11:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50884 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731142AbgKJQLs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 11:11:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605024706;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jp+HmPlYtR2IGGTGzYIzvrsfgydKFOm7mlacIEpnzOM=;
+        b=ZAlCen6nBxHdvB++lXI9iB2wUc2fR7S1sn8a4M7aStoSiWD61XLeZlkFKBJm2qCKaL9c1n
+        jgzZQ1CjNuQ5h6tktn3PxLjqNQyuPR+ydGJYTBs9u3RYaHmDokPnhzLAi/0v9ufTLA68YW
+        bWCtGS5HDV+q2NdO1yrdq0ovrv6cEeU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-5kzcWzDFO8i3LtgKf7nZng-1; Tue, 10 Nov 2020 11:11:43 -0500
+X-MC-Unique: 5kzcWzDFO8i3LtgKf7nZng-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48EDA1084D61;
+        Tue, 10 Nov 2020 16:11:40 +0000 (UTC)
+Received: from treble (ovpn-120-104.rdu2.redhat.com [10.10.120.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EDA1C5C1D0;
+        Tue, 10 Nov 2020 16:11:30 +0000 (UTC)
+Date:   Tue, 10 Nov 2020 10:11:24 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201110161124.lztfgffqh2qrlwwv@treble>
+References: <20201015203942.f3kwcohcwwa6lagd@treble>
+ <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
+ <20201020185217.ilg6w5l7ujau2246@treble>
+ <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+ <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
+ <20201023173617.GA3021099@google.com>
+ <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
+ <20201110022924.tekltjo25wtrao7z@treble>
+ <CABCJKuc_-Sxj8HLajx4pKuBpU3AUdBtPv4uzQfMWqVHWwHS1iQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a38vBXbAWE09H+TSoZUTkFdYDcQmXX97foT4qXQc8t5ZQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CABCJKuc_-Sxj8HLajx4pKuBpU3AUdBtPv4uzQfMWqVHWwHS1iQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sherry, Arnd,
-
-On 10/11/20 8:29 pm, Arnd Bergmann wrote:
-> On Tue, Nov 10, 2020 at 3:20 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> On 10/11/20 7:55 am, Sherry Sun wrote:
+On Mon, Nov 09, 2020 at 08:48:01PM -0800, Sami Tolvanen wrote:
+> On Mon, Nov 9, 2020 at 6:29 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > How would I recreate all these warnings?
 > 
->>> But for VOP, only two boards are needed(one board as host and one board as card) to realize the
->>> communication between the two systems, so my question is what are the advantages of using NTB?
->>
->> NTB is a bridge that facilitates communication between two different
->> systems. So it by itself will not be source or sink of any data unlike a
->> normal EP to RP system (or the VOP) which will be source or sink of data.
->>
->>> Because I think the architecture of NTB seems more complicated. Many thanks!
->>
->> yeah, I think it enables a different use case all together. Consider you
->> have two x86 HOST PCs (having RP) and they have to be communicate using
->> PCIe. NTB can be used in such cases for the two x86 PCs to communicate
->> with each other over PCIe, which wouldn't be possible without NTB.
+> You can reproduce all of these using a normal gcc build without any of
+> the LTO patches by running objtool check -arfld vmlinux.o. However,
+> with gcc you'll see even more warnings due to duplicate symbol names,
+> as Peter pointed out elsewhere in the thread, so I looked at only the
+> warnings that objtool also prints with LTO.
 > 
-> I think for VOP, we should have an abstraction that can work on either NTB
-> or directly on the endpoint framework but provide an interface that then
-> lets you create logical devices the same way.
+> Note that the LTO series contains a patch to split noinstr validation
+> from --vmlinux, as we need to run objtool here even if
+> CONFIG_VMLINUX_VALIDATION isn't selected, so I have not looked at the
+> noinstr warnings. The latest LTO tree is available here:
 > 
-> Doing VOP based on NTB plus the new NTB_EPF driver would also
-> work and just move the abstraction somewhere else, but I guess it
-> would complicate setting it up for those users that only care about the
-> simpler endpoint case.
+> https://github.com/samitolvanen/linux/commits/clang-lto
+> 
+> > Here's the patch for hopefully making the warnings more helpful:
+> 
+> Thanks, I'll give it a try.
 
-I'm not sure if you've got a chance to look at [1], where I added
-support for RP<->EP system both running Linux, with EP configured using
-Linux EP framework (as well as HOST ports connected to NTB switch,
-patches 20 and 21, that uses the Linux NTB framework) to communicate
-using virtio over PCIe.
+Here's the version without the nonsensical debug warning :-)
 
-The cover-letter [1] shows a picture of the two use cases supported in
-that series.
+diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+index 4e1d7460574b..ced7e4754cba 100644
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -217,6 +217,21 @@ struct symbol *find_func_containing(struct section *sec, unsigned long offset)
+ 	return NULL;
+ }
+ 
++struct symbol *find_symbol_preceding(struct section *sec, unsigned long offset)
++{
++	struct symbol *sym;
++
++	/*
++	 * This is slow, but used for warning messages.
++	 */
++	while (1) {
++		sym = find_symbol_by_offset(sec, offset);
++		if (sym || !offset)
++			return sym;
++		offset--;
++	}
++}
++
+ struct symbol *find_symbol_by_name(const struct elf *elf, const char *name)
+ {
+ 	struct symbol *sym;
+diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
+index 807f8c670097..841902ed381e 100644
+--- a/tools/objtool/elf.h
++++ b/tools/objtool/elf.h
+@@ -136,10 +136,11 @@ struct symbol *find_func_by_offset(struct section *sec, unsigned long offset);
+ struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
+ struct symbol *find_symbol_by_name(const struct elf *elf, const char *name);
+ struct symbol *find_symbol_containing(const struct section *sec, unsigned long offset);
++struct symbol *find_func_containing(struct section *sec, unsigned long offset);
++struct symbol *find_symbol_preceding(struct section *sec, unsigned long offset);
+ struct reloc *find_reloc_by_dest(const struct elf *elf, struct section *sec, unsigned long offset);
+ struct reloc *find_reloc_by_dest_range(const struct elf *elf, struct section *sec,
+ 				     unsigned long offset, unsigned int len);
+-struct symbol *find_func_containing(struct section *sec, unsigned long offset);
+ int elf_rebuild_reloc_section(struct elf *elf, struct section *sec);
+ 
+ #define for_each_sec(file, sec)						\
+diff --git a/tools/objtool/warn.h b/tools/objtool/warn.h
+index 7799f60de80a..33da0f2ed9d5 100644
+--- a/tools/objtool/warn.h
++++ b/tools/objtool/warn.h
+@@ -22,6 +22,8 @@ static inline char *offstr(struct section *sec, unsigned long offset)
+ 	unsigned long name_off;
+ 
+ 	func = find_func_containing(sec, offset);
++	if (!func)
++		func = find_symbol_preceding(sec, offset);
+ 	if (func) {
+ 		name = func->name;
+ 		name_off = offset - func->offset;
 
-[1] -> http://lore.kernel.org/r/20200702082143.25259-1-kishon@ti.com
-
-Thank You,
-Kishon
