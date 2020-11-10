@@ -2,243 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 764C12AD8A1
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 15:21:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C422F2AD8AB
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 15:23:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgKJOV2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 09:21:28 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40032 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgKJOV1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 09:21:27 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AAEKodJ078900;
-        Tue, 10 Nov 2020 08:20:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1605018050;
-        bh=pQqJVekxwxzY6/yo6GdpANrmY7YmUyIXk2qF+yF/eNs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=U4Z3YKl4e5SsnpMWH+i8nXSWwSKNA1p04a5yqwROPdNMWWwSUtQYSskLjIAmXSGPC
-         InZf9Yy3CYrbiEwP5utU5s2wl89oefi0KvE2Huk52xQc9loyqYBFtMyASIoIgjgqXa
-         pS2GgSvHc/hX4gQju49evvotiEEg1rUF2ulbjPgs=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AAEKobb059779
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Nov 2020 08:20:50 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 10
- Nov 2020 08:20:50 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 10 Nov 2020 08:20:49 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AAEKiTC113678;
-        Tue, 10 Nov 2020 08:20:46 -0600
-Subject: Re: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express
- Non-Transparent Bridge
-To:     Sherry Sun <sherry.sun@nxp.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "dave.jiang@intel.com" <dave.jiang@intel.com>,
-        "allenbh@gmail.com" <allenbh@gmail.com>,
-        "tjoseph@cadence.com" <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        id S1730099AbgKJOXx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 09:23:53 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14706 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730059AbgKJOXx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 09:23:53 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5faaa27f0000>; Tue, 10 Nov 2020 06:23:59 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 10 Nov
+ 2020 14:23:48 +0000
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 10 Nov 2020 14:23:48 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KZJlzSCm0+TJUEqTqwbY3rnW+XQNRsIOu5f6lvTe7Oyf2HCSdN6h5lgV7QLpTWr3RByGYZr1Hf0Uo3+a+1JiHkuabjjT6YHbLU0IfKCpKwrGf43I73J0qXGFN6Q8i9ZW4IXiftxA+pxM+uFaCDASHBKpesYQF9AKmc5BFsor+6BH+M1u98ASQEovCEwjJ1pl5tZsAvxVLXsK5BN+SzNoukXYTfD83bqUQVVAPO8abbptlzhqc86fYxFML6Ix5Oj17Hnem3/qGgDbwifSEaoLLWfB8u8ZHBqw3tlQRyVb4oVm6/q8fccGflDqrRn1TcT2c445Ovfymm/LmmWSydPo+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5qEV/0XBn12mhJm5c4zAZGjhSfWLL9TPDZ1T+H9lCEY=;
+ b=kvtm1n8ktHXVBZHOUgk+GHj5j2e5AOs4OWS+gIpSiyPPIa7ucn/6QgFGf8/yVngbXWkAxzUw6x8idB9Al+0hD4+daDGw6wBmRqkpOqLsk2zAHQAvpTkt20vHd3LVpMb1WvkEFJ/n+7YvhbFWMr8w+tTxGx9w/c3WdSYEBr4HVD9qbmz2BAVXWq385QhgcgL1Vy69jIXZ/OyQEkvWUB6DLx5wANSRoCtRpkXXWD8xQvCKGH0BEOi4T8uQpKmaHbBkVS0HbjxsHm8Oz+4S8iNzFTAL3YoIlgpxp0jRcri8+HCp/I0udTQNJN9Vi2I6cBSNuZUTiMOzyJDWUXHmhCaRzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1753.namprd12.prod.outlook.com (2603:10b6:3:10d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Tue, 10 Nov
+ 2020 14:23:41 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Tue, 10 Nov 2020
+ 14:23:41 +0000
+Date:   Tue, 10 Nov 2020 10:23:40 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>
-References: <20200930153519.7282-16-kishon@ti.com>
- <VI1PR04MB496061EAB6F249F1C394F01092EA0@VI1PR04MB4960.eurprd04.prod.outlook.com>
- <d6d27475-3464-6772-2122-cc194b8ae022@ti.com>
- <VI1PR04MB49602D24F65E11FF1F14294F92E90@VI1PR04MB4960.eurprd04.prod.outlook.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <30c8f7a1-baa5-1eb4-d2c2-9a13be896f0f@ti.com>
-Date:   Tue, 10 Nov 2020 19:50:43 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201110142340.GP2620339@nvidia.com>
+References: <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
+ <20201107001207.GA2620339@nvidia.com>
+ <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
+ <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+ <874klykc7h.fsf@nanos.tec.linutronix.de>
+ <20201109173034.GG2620339@nvidia.com>
+ <87pn4mi23u.fsf@nanos.tec.linutronix.de> <20201110051412.GA20147@otc-nc-03>
+ <875z6dik1a.fsf@nanos.tec.linutronix.de> <20201110141323.GB22336@otc-nc-03>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20201110141323.GB22336@otc-nc-03>
+X-ClientProxiedBy: MN2PR08CA0027.namprd08.prod.outlook.com
+ (2603:10b6:208:239::32) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB49602D24F65E11FF1F14294F92E90@VI1PR04MB4960.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR08CA0027.namprd08.prod.outlook.com (2603:10b6:208:239::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21 via Frontend Transport; Tue, 10 Nov 2020 14:23:41 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kcUYe-002Qs2-Ag; Tue, 10 Nov 2020 10:23:40 -0400
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1605018239; bh=5qEV/0XBn12mhJm5c4zAZGjhSfWLL9TPDZ1T+H9lCEY=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=R/yLrdp123XabZQ3mY+IEk7tfYLVlJiMwKzFEdHLLWNMUS583A2Mu4v1XcDultkpF
+         STVJemWJ1/lAP/Wtyvf3ykuRl9hlZEO1qO+zgAP1HX7ezgZR++Z6+cPihPKcXbdrMe
+         D6Pef9hMDNVojWpRQjUypON5uuDIv7oTM7nPUrVrIpgf25PBMnRkp7rYDGNnkwL2Zw
+         vmTZyuIX4saWJ+ijxZ5MlP5LuRs0PBny60kLkxVSQshqW0RgGOZ7nG5LxV5Bw46TDu
+         4EYrEFeGP11owJMU4hE/GcB3RF1EApYIPb/V+CsfruKwB9UYb2PDtB9O/txFRifrtt
+         Ku852y/pikJdg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sherry,
+On Tue, Nov 10, 2020 at 06:13:23AM -0800, Raj, Ashok wrote:
 
-On 10/11/20 7:55 am, Sherry Sun wrote:
-> Hi Kishon,
-> 
->> Subject: Re: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express Non-
->> Transparent Bridge
->>
->> Hi Sherry,
->>
->> On 09/11/20 3:07 pm, Sherry Sun wrote:
->>> Hi Kishon,
->>>
->>>> Subject: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express Non-
->>>> Transparent Bridge
->>>>
->>>> From: Kishon Vijay Abraham I <kishon@ti.com>
->>>>
->>>> Add support for EPF PCI-Express Non-Transparent Bridge (NTB) device.
->>>> This driver is platform independent and could be used by any platform
->>>> which have multiple PCIe endpoint instances configured using the pci-epf-
->> ntb driver.
->>>> The driver connnects to the standard NTB sub-system interface. The
->>>> EPF NTB device has configurable number of memory windows (Max 4),
->>>> configurable number of doorbell (Max 32), and configurable number of
->>>> scratch-pad registers.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>  drivers/ntb/hw/Kconfig          |   1 +
->>>>  drivers/ntb/hw/Makefile         |   1 +
->>>>  drivers/ntb/hw/epf/Kconfig      |   6 +
->>>>  drivers/ntb/hw/epf/Makefile     |   1 +
->>>>  drivers/ntb/hw/epf/ntb_hw_epf.c | 755
->>>> ++++++++++++++++++++++++++++++++
->>>>  5 files changed, 764 insertions(+)
->>>>  create mode 100644 drivers/ntb/hw/epf/Kconfig  create mode 100644
->>>> drivers/ntb/hw/epf/Makefile  create mode 100644
->>>> drivers/ntb/hw/epf/ntb_hw_epf.c
->>>>
->>>> diff --git a/drivers/ntb/hw/Kconfig b/drivers/ntb/hw/Kconfig index
->>>> e77c587060ff..c325be526b80 100644
->>>> --- a/drivers/ntb/hw/Kconfig
->>>> +++ b/drivers/ntb/hw/Kconfig
->>>> @@ -2,4 +2,5 @@
->>>>  source "drivers/ntb/hw/amd/Kconfig"
->>>>  source "drivers/ntb/hw/idt/Kconfig"
->>>>  source "drivers/ntb/hw/intel/Kconfig"
->>>> +source "drivers/ntb/hw/epf/Kconfig"
->>>>  source "drivers/ntb/hw/mscc/Kconfig"
->>>> diff --git a/drivers/ntb/hw/Makefile b/drivers/ntb/hw/Makefile index
->>>> 4714d6238845..223ca592b5f9 100644
->>>> --- a/drivers/ntb/hw/Makefile
->>>> +++ b/drivers/ntb/hw/Makefile
->>>> @@ -2,4 +2,5 @@
->>>>  obj-$(CONFIG_NTB_AMD)	+= amd/
->>>>  obj-$(CONFIG_NTB_IDT)	+= idt/
->>>>  obj-$(CONFIG_NTB_INTEL)	+= intel/
->>>> +obj-$(CONFIG_NTB_EPF)	+= epf/
->>>>  obj-$(CONFIG_NTB_SWITCHTEC) += mscc/ diff --git
->>>> a/drivers/ntb/hw/epf/Kconfig b/drivers/ntb/hw/epf/Kconfig new file
->>>> mode 100644 index 000000000000..6197d1aab344
->>>> --- /dev/null
->>>> +++ b/drivers/ntb/hw/epf/Kconfig
->>>> @@ -0,0 +1,6 @@
->>>> +config NTB_EPF
->>>> +	tristate "Generic EPF Non-Transparent Bridge support"
->>>> +	depends on m
->>>> +	help
->>>> +	  This driver supports EPF NTB on configurable endpoint.
->>>> +	  If unsure, say N.
->>>> diff --git a/drivers/ntb/hw/epf/Makefile
->>>> b/drivers/ntb/hw/epf/Makefile new file mode 100644 index
->>>> 000000000000..2f560a422bc6
->>>> --- /dev/null
->>>> +++ b/drivers/ntb/hw/epf/Makefile
->>>> @@ -0,0 +1 @@
->>>> +obj-$(CONFIG_NTB_EPF) += ntb_hw_epf.o
->>>> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c
->>>> b/drivers/ntb/hw/epf/ntb_hw_epf.c new file mode 100644 index
->>>> 000000000000..0a144987851a
->>>> --- /dev/null
->>>> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
->>>> @@ -0,0 +1,755 @@
->>> ......
->>>> +static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
->>>> +			    struct pci_dev *pdev)
->>>> +{
->>>> +	struct device *dev = ndev->dev;
->>>> +	int ret;
->>>> +
->>>> +	pci_set_drvdata(pdev, ndev);
->>>> +
->>>> +	ret = pci_enable_device(pdev);
->>>> +	if (ret) {
->>>> +		dev_err(dev, "Cannot enable PCI device\n");
->>>> +		goto err_pci_enable;
->>>> +	}
->>>> +
->>>> +	ret = pci_request_regions(pdev, "ntb");
->>>> +	if (ret) {
->>>> +		dev_err(dev, "Cannot obtain PCI resources\n");
->>>> +		goto err_pci_regions;
->>>> +	}
->>>> +
->>>> +	pci_set_master(pdev);
->>>> +
->>>> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
->>>> +	if (ret) {
->>>> +		ret = dma_set_mask_and_coherent(dev,
->>>> DMA_BIT_MASK(32));
->>>> +		if (ret) {
->>>> +			dev_err(dev, "Cannot set DMA mask\n");
->>>> +			goto err_dma_mask;
->>>> +		}
->>>> +		dev_warn(&pdev->dev, "Cannot DMA highmem\n");
->>>> +	}
->>>> +
->>>> +	ndev->ctrl_reg = pci_iomap(pdev, 0, 0);
->>>
->>> The second parameter of pci_iomap should be ndev->ctrl_reg_bar instead
->> of the hardcode value 0, right?
->>>
->>>> +	if (!ndev->ctrl_reg) {
->>>> +		ret = -EIO;
->>>> +		goto err_dma_mask;
->>>> +	}
->>>> +
->>>> +	ndev->peer_spad_reg = pci_iomap(pdev, 1, 0);
->>>
->>> pci_iomap(pdev, ndev->peer_spad_reg_bar, 0);
->>>
->>>> +	if (!ndev->peer_spad_reg) {
->>>> +		ret = -EIO;
->>>> +		goto err_dma_mask;
->>>> +	}
->>>> +
->>>> +	ndev->db_reg = pci_iomap(pdev, 2, 0);
->>>
->>> pci_iomap(pdev, ndev->db_reg_bar, 0);
->>
->> Good catch. Will fix it and send. Thank you for reviewing.
-> 
-> You're welcome.
-> By the way, since I've studied VOP(virtio over pcie) before, and only recently learned
-> about NTB related code. I have some questions about NTB.
-> 
-> For NTB, in order to make two(or more) different systems to communicate with each other, 
-> seems at least three boards are required(two host boards and one board with multiple EP
-> instances as bridge), right?
+> This isn't just for idxd, as I mentioned earlier, there are vendors other
+> than Intel already working on this. In all cases the need for guest direct
+> manipulation of interrupt store hasn't come up. From the discussion, it
+> seems like there are devices today or in future that will require direct
+> manipulation of interrupt store in the guest. This needs additional work
+> in both the device hardware providing the right plumbing and OS work to
+> comprehend those.
 
-right, this series is about creating NTB bridge by configuring multiple
-EP instances in an SoC, however there are also dedicated HW NTB switches
-(internally they might as well use multiple EP instances).
+We'd want to see SRIOV's assigned to guests to be able to use
+IMS. This allows a SRIOV instance in a guest to spawn SIOV's which is
+useful.
 
-> But for VOP, only two boards are needed(one board as host and one board as card) to realize the
-> communication between the two systems, so my question is what are the advantages of using NTB? 
+SIOV's assigned to guests could use IMS, but the use cases we see in
+the short term can be handled by using SRIOV instead.
 
-NTB is a bridge that facilitates communication between two different
-systems. So it by itself will not be source or sink of any data unlike a
-normal EP to RP system (or the VOP) which will be source or sink of data.
-> Because I think the architecture of NTB seems more complicated. Many thanks!
+I would expect in general for SIOV to use MSI-X emulation to expose
+interrupts - it would be really weird for a SIOV emulator to do
+something else and we should probably discourage that.
 
-yeah, I think it enables a different use case all together. Consider you
-have two x86 HOST PCs (having RP) and they have to be communicate using
-PCIe. NTB can be used in such cases for the two x86 PCs to communicate
-with each other over PCIe, which wouldn't be possible without NTB.
-
-Regards,
-Kishon
+Jason
