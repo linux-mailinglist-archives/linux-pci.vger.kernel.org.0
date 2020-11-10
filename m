@@ -2,90 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBC142AD671
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 13:36:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44CA92AD867
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 15:13:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgKJMgo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 07:36:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42868 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgKJMgo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 07:36:44 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9D5C0613CF;
-        Tue, 10 Nov 2020 04:36:44 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id v22so2175603edt.9;
-        Tue, 10 Nov 2020 04:36:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Q5HlCtOV52Hds+JaJTmz3mdncZ2YT1jJ3ASVmrYmLg=;
-        b=XFaVsHnA4RUVQnjxcpM0XAqmDoj6orZlydUFT2qPtOOvDwmdCm6vinR2V4jepprFo7
-         pI4WtPRvYH4SUGmD/mvqhzm8TgyGn4op3995MnThWbLUB+p8ZaHVw6EXINwu4a7GCfzU
-         AxF6jWpweb2zP0CtsWlI+nyt9wSb6IJmjihUKYt4Vrq0Z2Nfe+3/X6+QaGERsaUf13dm
-         ZKqAJTKibH1FEYfULc7Qsg2wY5xTqYQ0Y9aClVD92la/xImf1XlMLDk5PArv11J0g8+Z
-         x1yixUrdrNaHCqFHZHK9dwRfpwdzSziKV+5/xjw0IHWQfk6NyH5eEXPNmvqqG1Yh0Rg2
-         dQpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Q5HlCtOV52Hds+JaJTmz3mdncZ2YT1jJ3ASVmrYmLg=;
-        b=ahQpDDKa9EU0ZBQ2JfHbxBeQeglSV+BKUv6M9QTq+qyw7+qEmf5ztRJUv30Q44l/3B
-         ZILt1r5n9B/0yPD3FKPv6VNQpKbxwLDZF2TuSwUmlVWOD8C8Ud7yQ7RRTvWrvMeirVeG
-         iQaRH2IQqu5CwKNmpDxjtOkY2oKWcdyKz3Do0Sscf3uLWvFI2Qhj3mq87HRHJay4q9h+
-         fS08UVMtWyNGsw+Bs3hTEcjiyXPseUT3EWpbYtR16efQEnYaZiFmzOUi3cq74e3yVjFu
-         SpbIFu1n19JtS029O2Y9WqD01M9nwGG97oTJ5slq/bdn+4Zo2TE9YvHPCFcSE/PSroPq
-         d9rQ==
-X-Gm-Message-State: AOAM53260NJXOQlvOerLSzRRsTgXd5rm4BltJ0dCf8Do7PenbA7J/xwr
-        rZFz1uCQAmzCEr+/vZN0WmiJndOkhg1nFPGp9VU=
-X-Google-Smtp-Source: ABdhPJwVAa7jp1mtnVm/MZSG2vdCiIRq1+l6veVG3OAiRoBGbz3WmvsUfue23mrYuC1+Y52ydyweC0bMWR1D0lukLCM=
-X-Received: by 2002:a05:6402:17b4:: with SMTP id j20mr21238603edy.24.1605011802891;
- Tue, 10 Nov 2020 04:36:42 -0800 (PST)
+        id S1732036AbgKJON1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 09:13:27 -0500
+Received: from mga07.intel.com ([134.134.136.100]:31730 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730880AbgKJON1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Nov 2020 09:13:27 -0500
+IronPort-SDR: sDxNWZ6Dcnc2hqF4qrmyvkHo7hcRftbQTh7g6Kl0D5XDSSg4f0sQrCJPt0yMXFeJErtz9Mrbrb
+ Czd8Rj0nwlBw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="234142628"
+X-IronPort-AV: E=Sophos;i="5.77,466,1596524400"; 
+   d="scan'208";a="234142628"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 06:13:25 -0800
+IronPort-SDR: jTy2oEcYHeqTR/PuPMFNJsuA1QGjArnEfzapc4ZoNFRvHno4UWo8YNp+R+4SMsBonNTOhF4qwE
+ 4QqFJu17y4OQ==
+X-IronPort-AV: E=Sophos;i="5.77,466,1596524400"; 
+   d="scan'208";a="308050541"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 06:13:24 -0800
+Date:   Tue, 10 Nov 2020 06:13:23 -0800
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201110141323.GB22336@otc-nc-03>
+References: <20201106175131.GW2620339@nvidia.com>
+ <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
+ <20201107001207.GA2620339@nvidia.com>
+ <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
+ <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+ <874klykc7h.fsf@nanos.tec.linutronix.de>
+ <20201109173034.GG2620339@nvidia.com>
+ <87pn4mi23u.fsf@nanos.tec.linutronix.de>
+ <20201110051412.GA20147@otc-nc-03>
+ <875z6dik1a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20201026035710.593-1-zhenzhong.duan@gmail.com> <20201027075217.GA30879@infradead.org>
-In-Reply-To: <20201027075217.GA30879@infradead.org>
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Date:   Tue, 10 Nov 2020 20:36:26 +0800
-Message-ID: <CAFH1YnNqu3DB2Ai48Dwme6uZS-8SOHa++6XGE-w=N50hw5AUCQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: check also dynamic IDs for duplicate in new_id_store()
-To:     Christoph Hellwig <hch@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875z6dik1a.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Thomas,
 
-This patch got reviewed-by, could you kindly check if it can be
-upstreamed? Thanks very much.
+With all these interrupt message storms ;-), I'm missing how to move towards
+an end goal.
 
-Zhenzhong
+On Tue, Nov 10, 2020 at 11:27:29AM +0100, Thomas Gleixner wrote:
+> Ashok,
+> 
+> On Mon, Nov 09 2020 at 21:14, Ashok Raj wrote:
+> > On Mon, Nov 09, 2020 at 11:42:29PM +0100, Thomas Gleixner wrote:
+> >> On Mon, Nov 09 2020 at 13:30, Jason Gunthorpe wrote:
+> > Approach to IMS is more of a phased approach. 
+> >
+> > #1 Allow physical device to scale beyond limits of PCIe MSIx
+> >    Follows current methodology for guest interrupt programming and
+> >    evolutionary changes rather than drastic.
+> 
+> Trapping MSI[X] writes is there because it allows to hand a device to an
+> unmodified guest OS and to handle the case where the MSI[X] entries
+> storage cannot be mapped exclusively to the guest.
+> 
+> But aside of this, it's not required if the storage can be mapped
+> exclusively, the guest is hypervisor aware and can get a host composed
+> message via a hypercall. That works for physical functions and SRIOV,
+> but not for SIOV.
 
-On Tue, Oct 27, 2020 at 3:52 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Mon, Oct 26, 2020 at 11:57:10AM +0800, Zhenzhong Duan wrote:
-> > When a device ID data is writen to /sys/bus/pci/drivers/.../new_id,
-> > only static ID table is checked for duplicate and multiple dynamic ID
-> > entries of same kind are allowed to exist in a dynamic linked list.
-> >
-> > Fix it by calling pci_match_device() which checks both dynamic and static
-> > IDs.
-> >
-> > After fix, it shows below result which is expected.
-> >
-> > echo "1af4:1000" > /sys/bus/pci/drivers/vfio-pci/new_id
-> > echo "1af4:1000" > /sys/bus/pci/drivers/vfio-pci/new_id
-> > -bash: echo: write error: File exists
-> >
-> > Drop the static specifier and add a prototype to avoid build error.
-> >
-> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
->
-> Looks good,
->
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+It would greatly help if you can put down what you see is blocking 
+to move forward in the following areas.
+
+Address Gaps in Spec: 
+
+Specs can accomodate change after review, as the number of ECN's that go on
+with PCIe ;-). Please add what you like to see in the spec if you beleive
+is a gap today.
+
+Hardware Gaps?
+- PASID tagged Interrupts.
+- IOMMU Support for PASID based IR.
+
+As i had called out, there are a lot of moving parts, and requires more
+attention.
+
+OS Gaps?
+- Lack of ability to identify if platform can use IMS.
+- Lack of hypercall.
+
+We will always have devices that have more interrupts but their use doesn't
+need IMS to be directly manipulated by the guest, or the fact those usages
+require more than what is allowed by PCIe in a guest. These devices can 
+scale by adding another sub-device and you get another block of 2048 if needed.
+
+This isn't just for idxd, as I mentioned earlier, there are vendors other
+than Intel already working on this. In all cases the need for guest direct
+manipulation of interrupt store hasn't come up. From the discussion, it
+seems like there are devices today or in future that will require direct
+manipulation of interrupt store in the guest. This needs additional work
+in both the device hardware providing the right plumbing and OS work to
+comprehend those.
+
+Cheers,
+Ashok
