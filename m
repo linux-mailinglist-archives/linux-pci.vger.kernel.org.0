@@ -2,162 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E840B2AE104
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 21:50:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5785A2AE117
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 21:54:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgKJUuX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 15:50:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58056 "EHLO mail.kernel.org"
+        id S1728272AbgKJUyk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 15:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgKJUuX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Nov 2020 15:50:23 -0500
+        id S1726307AbgKJUyk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Nov 2020 15:54:40 -0500
 Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6A0720674;
-        Tue, 10 Nov 2020 20:50:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DAD620665;
+        Tue, 10 Nov 2020 20:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605041422;
-        bh=WKPaItb7R+CrQbgIe5mDPrwwrDH4gEBxthXqj1ObDHA=;
+        s=default; t=1605041678;
+        bh=8kpsa4r/BRs2QEoPXMPzzCIoySjMMv+Iw5TZ2VJvq8U=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KG/CEcKIyD41PIkSQCVIPLNCKyz9sM1+gQsyb39IVrGL1d0ck3Wcilgz1hIZdsh2i
-         odeNlQ0qBCsqxqQcDIfFcWvpuRv+QTj+l/eo7EKEU0uIxYzYbpotc9X6W/xT9NkQeP
-         4W3+VrygmCBQGgfRn3OP63fC26zg+Pk1mRmIwGHs=
-Date:   Tue, 10 Nov 2020 14:50:20 -0600
+        b=Rb03Dp+6ZQpwg1CccJpHyrVMck3Wx80wpqcWNyV7umMj+4AUCZCRiI51xSgf1alvl
+         Q5jBGoF5pi6Kw9UFyKNZrIgLl564ysrMdtmW+tOn9lRhUazHzfSQWJfshG+8ZLZwuB
+         FDkf8+YksaW4koqhTVqa1r8kAEXO0o27Rt6N8Qyk=
+Date:   Tue, 10 Nov 2020 14:54:36 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        amurray@thegoodpenguin.co.uk, robh@kernel.org, treding@nvidia.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH] PCI: dwc: Add support to configure for ECRC
-Message-ID: <20201110205020.GA691818@bjorn-Precision-5520>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Colin King <colin.king@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] PCI: fix a potential uninitentional integer overflow
+ issue
+Message-ID: <20201110205436.GA692055@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201109192611.16104-1-vidyas@nvidia.com>
+In-Reply-To: <20201106080419.GC29398@kadam>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 12:56:11AM +0530, Vidya Sagar wrote:
-> DesignWare core has a TLP digest (TD) override bit in one of the control
-> registers of ATU. This bit also needs to be programmed for proper ECRC
-> functionality. This is currently identified as an issue with DesignWare
-> IP version 4.90a.
+On Fri, Nov 06, 2020 at 11:04:19AM +0300, Dan Carpenter wrote:
+> On Thu, Nov 05, 2020 at 04:24:30PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Oct 07, 2020 at 03:33:45PM +0300, Dan Carpenter wrote:
+> > > On Wed, Oct 07, 2020 at 12:46:15PM +0100, Colin King wrote:
+> > > > From: Colin Ian King <colin.king@canonical.com>
+> > > > 
+> > > > The shift of 1 by align_order is evaluated using 32 bit arithmetic
+> > > > and the result is assigned to a resource_size_t type variable that
+> > > > is a 64 bit unsigned integer on 64 bit platforms. Fix an overflow
+> > > > before widening issue by using the BIT_ULL macro to perform the
+> > > > shift.
+> > > > 
+> > > > Addresses-Coverity: ("Uninitentional integer overflow")
+> > 
+> > s/Uninitentional/Unintentional/
+> > Also in subject (please also capitalize subject)
+> > 
+> > Doesn't Coverity also assign an ID number for this specific issue?
+> > Can you include that as well, e.g.,
+> > 
+> >   Addresses-Coverity-ID: 1226899 ("Unintentional integer overflow")
+> > 
+> > > > Fixes: 07d8d7e57c28 ("PCI: Make specifying PCI devices in kernel parameters reusable")
+> > > > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > > > ---
+> > > >  drivers/pci/pci.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > > index 6d4d5a2f923d..1a5844d7af35 100644
+> > > > --- a/drivers/pci/pci.c
+> > > > +++ b/drivers/pci/pci.c
+> > > > @@ -6209,7 +6209,7 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+> > > >  			if (align_order == -1)
+> > > >  				align = PAGE_SIZE;
+> > > >  			else
+> > > > -				align = 1 << align_order;
+> > > > +				align = BIT_ULL(align_order);
+> > > 
+> > > "align_order" comes from sscanf() so Smatch thinks it's not trusted.
+> > > Anything above 63 is undefined behavior.  There should be a bounds check
+> > > on this but I don't know what the valid values of "align" are.
+> > 
+> > The spec doesn't explicitly say what the size limit for 64-bit BARs
+> > is, but it does say 32-bit BARs can support up to 2GB (2^31).  So I
+> > infer that 2^63 would be the limit for 64-bit BARs.
+> > 
+> > What about something like the following?  To me, BIT_ULL doesn't seem
+> > like an advantage over "1ULL << ", but maybe there's a reason to use
+> > it.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> The advantage of BIT_ULL() is that checkpatch and I think Coccinelle
+> will suggest using it.  It's only recently where a few people have
+> complained (actually you're probably the second person) that BIT() is
+> sort of a weird thing to use for size variables.
 
-Modulo typos/formatting comments below,
+If that's the only reason, I definitely prefer "1ULL << align_order".
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Thanks for working through this.
-
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 50 ++++++++++++++++++--
->  drivers/pci/controller/dwc/pcie-designware.h |  1 +
->  2 files changed, 47 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index c2dea8fc97c8..ebdc37a58e94 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -225,6 +225,44 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
->  	dw_pcie_writel_atu(pci, offset + reg, val);
->  }
->  
-> +static inline u32 dw_pcie_enable_ecrc(u32 val)
-> +{
-> +	/*
-> +	 *     DesignWare core version 4.90A has this strange design issue
-> +	 * where the 'TD' bit in the Control register-1 of the ATU outbound
-> +	 * region acts like an override for the ECRC setting i.e. the presence
-> +	 * of TLP Digest(ECRC) in the outgoing TLPs is solely determined by
-> +	 * this bit. This is contrary to the PCIe spec which says that the
-> +	 * enablement of the ECRC is solely determined by the AER registers.
-> +	 *     Because of this, even when the ECRC is enabled through AER
-> +	 * registers, the transactions going through ATU won't have TLP Digest
-> +	 * as there is no way the AER sub-system could program the TD bit which
-> +	 * is specific to DsignWare core.
-
-s/DsignWare/DesignWare/
-
-> +	 *    The best way to handle this scenario is to program the TD bit
-> +	 * always. It affects only the traffic from root port to downstream
-> +	 * devices.
-
-Convention is to separate paragraphs with blank lines, not to indent
-the first line.
-
-> +	 * At this point,
-> +	 *     When ECRC is enabled in AER registers, everything works
-> +	 * normally
-> +	 *     When ECRC is NOT enabled in AER registers, then,
-> +	 * on Root Port:- TLP Digest (DWord size) gets appended to each packet
-> +	 *                even through it is not required. Since downstream
-> +	 *                TLPs are mostly for configuration accesses and BAR
-> +	 *                accesses, they are not in critical path and won't
-> +	 *                have much negative effect on the performance.
-> +	 * on End Point:- TLP Digest is received for some/all the packets coming
-> +	 *                from the root port. TLP Digest is ignored because,
-> +	 *                as per the PCIe Spec r5.0 v1.0 section 2.2.3 "TLP Digest Rules",
-
-Wrap to fit in 80 columns.
-
-> +	 *                when an endpoint receives TLP Digest when its
-> +	 *                ECRC check functionality is disabled in AER registers,
-> +	 *                received TLP Digest is just ignored.
-> +	 * Since there is no issue or error reported either side, best way to
-> +	 * handle the scenario is to program TD bit by default.
-> +	 */
-> +
-> +	return val | PCIE_ATU_TD;
-> +}
-> +
->  static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
->  					     int index, int type,
->  					     u64 cpu_addr, u64 pci_addr,
-> @@ -245,8 +283,10 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
->  				 lower_32_bits(pci_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
->  				 upper_32_bits(pci_addr));
-> -	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
-> -				 type | PCIE_ATU_FUNC_NUM(func_no));
-> +	val = type | PCIE_ATU_FUNC_NUM(func_no);
-> +	if (pci->version == 0x490A)
-> +		val = dw_pcie_enable_ecrc(val);
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
->  				 PCIE_ATU_ENABLE);
->  
-> @@ -292,8 +332,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
->  			   lower_32_bits(pci_addr));
->  	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
->  			   upper_32_bits(pci_addr));
-> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> -			   PCIE_ATU_FUNC_NUM(func_no));
-> +	val = type | PCIE_ATU_FUNC_NUM(func_no);
-> +	if (pci->version == 0x490A)
-> +		val = dw_pcie_enable_ecrc(val);
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
->  	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
->  
->  	/*
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 9d2f511f13fa..285c0ae364ae 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -88,6 +88,7 @@
->  #define PCIE_ATU_TYPE_IO		0x2
->  #define PCIE_ATU_TYPE_CFG0		0x4
->  #define PCIE_ATU_TYPE_CFG1		0x5
-> +#define PCIE_ATU_TD			BIT(8)
->  #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
->  #define PCIE_ATU_CR2			0x908
->  #define PCIE_ATU_ENABLE			BIT(31)
-> -- 
-> 2.17.1
-> 
+BIT_ULL is just a pointless abstraction in this case.
