@@ -2,89 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 630D42ADD4E
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 18:46:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C3AC2ADDC0
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 19:07:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbgKJRqZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 12:46:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20115 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730986AbgKJRqY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 12:46:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605030382;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iLppkAldaglNseeA1mLxrkn09RICx19onIxN5TInB1E=;
-        b=GVGL4ZpAPVUPna9JI/Y/q5C0Djvv8sabIfR7/x/FMRUSdlq+mwCoEX+ZALnjnkkmZu3IuX
-        Gaaw77hNqZ7K0/xE/dmf69v7QbaLts1umh1tts5gmYWyz93dWBjCiTcM+gTM3mp9vE7ljL
-        c10TbKbgOEzTuFOGOFcLyPlb+W/uCLM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-k_d5_NtXO2qoXW_XbKINLw-1; Tue, 10 Nov 2020 12:46:18 -0500
-X-MC-Unique: k_d5_NtXO2qoXW_XbKINLw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C5FD804758;
-        Tue, 10 Nov 2020 17:46:15 +0000 (UTC)
-Received: from treble (ovpn-120-104.rdu2.redhat.com [10.10.120.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BAA52C31E;
-        Tue, 10 Nov 2020 17:46:09 +0000 (UTC)
-Date:   Tue, 10 Nov 2020 11:46:06 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-Message-ID: <20201110174606.mp5m33lgqksks4mt@treble>
-References: <20201015102216.GB2611@hirez.programming.kicks-ass.net>
- <20201015203942.f3kwcohcwwa6lagd@treble>
- <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
- <20201020185217.ilg6w5l7ujau2246@treble>
- <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
- <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
- <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
- <20201023173617.GA3021099@google.com>
- <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
- <20201110022924.tekltjo25wtrao7z@treble>
+        id S1726557AbgKJSHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 13:07:00 -0500
+Received: from mga07.intel.com ([134.134.136.100]:56468 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbgKJSHA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Nov 2020 13:07:00 -0500
+IronPort-SDR: 0zA6zNcxjRvIP9M/4krLs9m7neNw04/+fTgIKdBKSaXViF9b+dMJqsxOPiGTbERfAf0vWlOzEc
+ 6lR0o25MobfQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="234189632"
+X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
+   d="scan'208";a="234189632"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 10:06:53 -0800
+IronPort-SDR: /nfePAnqjQMI6cF0FnQ+JBblmL1nP/m91B+IUFee3M202qcuN6NkaC3M+Qu5UeYCMuh2ZRuiBn
+ qeJw7PPWPwCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
+   d="scan'208";a="356252584"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2020 10:06:53 -0800
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 86B9F58088D;
+        Tue, 10 Nov 2020 10:06:53 -0800 (PST)
+Message-ID: <c8b880d6ff609c79b18afd3d0b5a317b6d36f05f.camel@linux.intel.com>
+Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Darren Hart <dvhart@infradead.org>, andy@infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        alexey.budankov@linux.intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 10 Nov 2020 10:06:53 -0800
+In-Reply-To: <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
+References: <20201003013123.20269-1-david.e.box@linux.intel.com>
+         <20201003013123.20269-3-david.e.box@linux.intel.com>
+         <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20201110022924.tekltjo25wtrao7z@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 09, 2020 at 08:29:24PM -0600, Josh Poimboeuf wrote:
-> On Mon, Nov 09, 2020 at 03:11:41PM -0800, Sami Tolvanen wrote:
-> > CONFIG_XEN
+Hi Geert,
+
+On Tue, 2020-11-10 at 11:39 +0100, Geert Uytterhoeven wrote:
+> Hi David,
+> 
+> On Sat, Oct 3, 2020 at 3:32 AM David E. Box <
+> david.e.box@linux.intel.com> wrote:
+> > Intel Platform Monitoring Technology (PMT) is an architecture for
+> > enumerating and accessing hardware monitoring facilities. PMT
+> > supports
+> > multiple types of monitoring capabilities. This driver creates
+> > platform
+> > devices for each type so that they may be managed by capability
+> > specific
+> > drivers (to be introduced). Capabilities are discovered using PCIe
+> > DVSEC
+> > ids. Support is included for the 3 current capability types,
+> > Telemetry,
+> > Watcher, and Crashlog. The features are available on new Intel
+> > platforms
+> > starting from Tiger Lake for which support is added. This patch
+> > adds
+> > support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band
+> > Management
+> > Services Module (OOBMSM).
 > > 
-> > __switch_to_asm()+0x0: undefined stack state
-> >   xen_hypercall_set_trap_table()+0x0: <=== (sym)
+> > Also add a quirk mechanism for several early hardware differences
+> > and bugs.
+> > For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
+> > capabilities since they will not be compatible with future product.
+> > Also,
+> > fix use a quirk to fix the discovery table offset.
+> > 
+> > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
+> > >
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> Thanks for your patch, which is now commit 4f8217d5b0ca8ace ("mfd:
+> Intel
+> Platform Monitoring Technology support") in the mfd/for-mfd-next.
+> 
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
+> >           Register and P-unit access. In addition this creates
+> > devices
+> >           for iTCO watchdog and telemetry that are part of the PMC.
+> > 
+> > +config MFD_INTEL_PMT
+> > +       tristate "Intel Platform Monitoring Technology (PMT)
+> > support"
+> > +       depends on PCI
+> 
+> Does this need a "depend on X86 || COMPILE_TEST", to prevent the
+> question from showing up on platforms where the PMT cannot be
+> present?
 
-With your branch + GCC 9 I can recreate all the warnings except this
-one.
+Though not currently available on non X86 hardware it is not
+restricted. The use of PCIE Designated Vendor Specific Capability
+(DVSEC) was to specifically allow use of this IP by other vendors.
 
-Will do some digging on the others...
+> 
+> I see the TGL and ADL PCI IDs are also referenced from
+> drivers/platform/x86/intel_pmt_telemetry.c, which suggests this is
+> X86-only.
+> Perhaps the OOBMSM is a PCI device that can be used on non-X86
+> platforms?
 
--- 
-Josh
+TGL and AGL are only referenced in this driver because they require
+quirks.
+
+Thanks
+
+David
 
