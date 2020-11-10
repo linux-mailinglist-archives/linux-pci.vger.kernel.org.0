@@ -2,66 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47BE02AE279
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 23:05:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFC3A2AE2A5
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 23:11:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgKJWFY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 17:05:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732013AbgKJWFX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Nov 2020 17:05:23 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E45F2207D3;
-        Tue, 10 Nov 2020 22:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605045923;
-        bh=OK56oFWwVkcKE+6AzGee/yxbtlQFhNgROhdz63iRE14=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AdmKB44kjvL8C9A6l/M+SLE9CZQHJT4YiOe2uEevlDsHwM0Bgyex9VROLzpDoDALF
-         QWRm9X1vCxHy1NKeF9i6LpTD0Qj71h7hpQM7rDT613fTjc+aLMRnp2VkKHOctYFhH7
-         OErqm38iktt0OQ73+Dkgn1cob9E5z1atOOH7DU04=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Add function 1 DMA alias quirk for Marvell 9215 SATA controller
-Date:   Tue, 10 Nov 2020 16:05:16 -0600
-Message-Id: <20201110220516.697934-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S1732052AbgKJWK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 17:10:58 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:56092 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731657AbgKJWKz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 17:10:55 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1kcbqi-0005Ct-U2; Tue, 10 Nov 2020 22:10:49 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][V2] PCI: Fix a potential uninitentional integer overflow issue
+Date:   Tue, 10 Nov 2020 22:10:48 +0000
+Message-Id: <20201110221048.3411288-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Add function 1 DMA alias quirk for Marvell 88SS9215 PCIe SSD Controller.
+The shift of 1 by align_order is evaluated using 32 bit arithmetic
+and the result is assigned to a resource_size_t type variable that
+is a 64 bit unsigned integer on 64 bit platforms. Fix an overflow
+before widening issue by making the 1 a ULL.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135
-Reported-by: John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: 07d8d7e57c28 ("PCI: Make specifying PCI devices in kernel parameters reusable")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/pci/quirks.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f70692ac79c5..4d683a28b29f 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3998,6 +3998,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9183,
- /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c46 */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x91a0,
- 			 quirk_dma_func1_alias);
-+/* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135 */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9215,
-+			 quirk_dma_func1_alias);
- /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c127 */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9220,
- 			 quirk_dma_func1_alias);
+V2: Use ULL instead of BIT_ULL(), fix spelling mistake and capitalize first
+    word of patch subject.
+
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 3ef63a101fa1..248044a7ef8c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6214,7 +6214,7 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+ 			if (align_order == -1)
+ 				align = PAGE_SIZE;
+ 			else
+-				align = 1 << align_order;
++				align = 1ULL << align_order;
+ 			break;
+ 		} else if (ret < 0) {
+ 			pr_err("PCI: Can't parse resource_alignment parameter: %s\n",
 -- 
-2.25.1
+2.28.0
 
