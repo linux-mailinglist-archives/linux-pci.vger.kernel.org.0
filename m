@@ -2,118 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1A792ADEF4
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 20:00:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 022712ADF10
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 20:06:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730938AbgKJTAJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 14:00:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730174AbgKJTAI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 14:00:08 -0500
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F76C0613D3
-        for <linux-pci@vger.kernel.org>; Tue, 10 Nov 2020 11:00:08 -0800 (PST)
-Received: by mail-vs1-xe44.google.com with SMTP id b67so1152046vsc.3
-        for <linux-pci@vger.kernel.org>; Tue, 10 Nov 2020 11:00:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HQMWJ4qrTrrDaVP4fR8AYbnLL+HhbqUgRWbw+YSQ1PU=;
-        b=UAf9RqBB0qr82AsqOtHV2sesZ3cFzDvVPrFOFo9wUuuHJXryVnBngDsIrGvKaE6X19
-         0SqjoI+qK8F47wcovy/kBeCPJ4lIKLolgnCYTTAinI6LM/5ys2dh6HlhdigZSrVkC/rn
-         ShAlUOfI+vdr9rptwftYPxBYiTijHNtuYVGc3mYzd/3mrO/nNNPGBPmWtes0yy3EJX3R
-         sHQB4adTCc34sogEGEr66NVJxa45ZnJ2DpryOQ0DhgNiqen71LLeDBvfUdLT3d4QP0EK
-         CCvE4ObR4otzBFPgR6yeCqhZTLFHqyDs2Tr4Y5R18i3xk72lbdkEjxSGufRjUQd0yCL8
-         Ojbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HQMWJ4qrTrrDaVP4fR8AYbnLL+HhbqUgRWbw+YSQ1PU=;
-        b=VrECsZZ4rCgh0zALz7xBex0FBsTWOZxaxr0ngWU5POJBTOKUaw93p9Kpo5adsxqUl7
-         omlfqLxIMnTHzoQiynI0lFRUZMgFrd+5nJClu6iFQSZQ8687zKQKMbSXnBROM4axf9C+
-         n66gSjBN1bN8kDcpPR1fnbiUd1JVAC45W4QTLz4g2u6jxF0wLr5NC5aHSp3q5kSTGIX3
-         KAkLwryESjV8pk5utXj91852VkODu/aIC3+xOmoWFOAtogOXKXhyFx/WmeorcPCjkhjz
-         C32NMJBfBn78LdTDhX3C5ab90h8OzdJ51/sEa3eL93foe+pMlrPXaDJ3/ez22MdpmKE/
-         PFvw==
-X-Gm-Message-State: AOAM530X06o2HD47dzNVmDO+rzVv94NikbOB9QjjHAWxz/DuA5dCTt+M
-        pbxlL+zvb+GI/cX8jw+C0Ru97m/qC0oG0CvpuCnSMw==
-X-Google-Smtp-Source: ABdhPJw/xQbpb4nm+Nf8IkeXZp9mvPOXpptK1b90vfr96ZwBHQ1ynLFLCpnmKb8sXq4PoJSCYGgPJD2CoGITJLPmHok=
-X-Received: by 2002:a67:ee93:: with SMTP id n19mr12787183vsp.36.1605034807022;
- Tue, 10 Nov 2020 11:00:07 -0800 (PST)
+        id S1726400AbgKJTGM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 14:06:12 -0500
+Received: from mga05.intel.com ([192.55.52.43]:43400 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgKJTGM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Nov 2020 14:06:12 -0500
+IronPort-SDR: 3YLZgwffCzgNHTp10G8j/Fku1GMKGLNBZbKyW+DBsRK9JzhVV9RYttACOym3xbG+iOTocG2il+
+ inX5r0XVJcRw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="254742420"
+X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
+   d="scan'208";a="254742420"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 11:06:08 -0800
+IronPort-SDR: IaH+HE9t2G22HUKSwkQNrsAy3VYHjiHjXMp84LqTsXtIfg056+X2yVvSGJ8dXpBXHYsHzqFGD0
+ qlf2DwRiH7Bg==
+X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
+   d="scan'208";a="338816639"
+Received: from eevans-mobl1.amr.corp.intel.com (HELO ellie) ([10.212.97.1])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 11:06:07 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Miroslav Lichvar <mlichvar@redhat.com>
+Cc:     intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support
+ for PTP getcrosststamp()
+In-Reply-To: <20201110180719.GA1559650@localhost>
+References: <20201110061019.519589-1-vinicius.gomes@intel.com>
+ <20201110061019.519589-4-vinicius.gomes@intel.com>
+ <20201110180719.GA1559650@localhost>
+Date:   Tue, 10 Nov 2020 11:06:07 -0800
+Message-ID: <871rh19gm8.fsf@intel.com>
 MIME-Version: 1.0
-References: <20201015102216.GB2611@hirez.programming.kicks-ass.net>
- <20201015203942.f3kwcohcwwa6lagd@treble> <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
- <20201020185217.ilg6w5l7ujau2246@treble> <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
- <20201021085606.GZ2628@hirez.programming.kicks-ass.net> <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
- <20201023173617.GA3021099@google.com> <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
- <20201110022924.tekltjo25wtrao7z@treble> <20201110174606.mp5m33lgqksks4mt@treble>
-In-Reply-To: <20201110174606.mp5m33lgqksks4mt@treble>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Tue, 10 Nov 2020 10:59:55 -0800
-Message-ID: <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 9:46 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+Miroslav Lichvar <mlichvar@redhat.com> writes:
+
+> On Mon, Nov 09, 2020 at 10:10:19PM -0800, Vinicius Costa Gomes wrote:
+>> i225 has support for PCIe PTM, which allows us to implement support
+>> for the PTP_SYS_OFFSET_PRECISE ioctl(), implemented in the driver via
+>> the getcrosststamp() function.
 >
-> On Mon, Nov 09, 2020 at 08:29:24PM -0600, Josh Poimboeuf wrote:
-> > On Mon, Nov 09, 2020 at 03:11:41PM -0800, Sami Tolvanen wrote:
-> > > CONFIG_XEN
-> > >
-> > > __switch_to_asm()+0x0: undefined stack state
-> > >   xen_hypercall_set_trap_table()+0x0: <=== (sym)
+> Would it be possible to provide the PTM measurements with the
+> PTP_SYS_OFFSET_EXTENDED ioctl instead of PTP_SYS_OFFSET_PRECISE?
+
+That's a very interesting idea. I am liking it, need to play with it a
+bit, though.
+
+The only "annoying" part would be retrieving multiple samples, see
+below.
+
 >
-> With your branch + GCC 9 I can recreate all the warnings except this
-> one.
+> As I understand it, PTM is not cross timestamping. It's basically
+> NTP over PCIe, which provides four timestamps with each "dialog". From
+> the other constants added to the header file it looks like they could
+> all be obtained and then they could be converted to the triplets
+> returned by the EXTENDED ioctl.
+>
+> The main advantage would be that it would provide applications with
+> the round trip time, which is important to estimate the maximum error
+> in the measurement. As your example phc2sys output shows, with the
+> PRECISE ioctl the delay is 0, which is misleading here.
 
-In a gcc build this warning is replaced with a different one:
+I see your point, in my head the delay being 0 made sense, I took it to
+mean that both timestamps were obtained at the same time.
 
-vmlinux.o: warning: objtool: __startup_secondary_64()+0x7: return with
-modified stack frame
+>
+> I suspect the estimate would be valid only when the NIC is connected
+> directly to the PTM root (PCI root complex). Is it possible to get the
+> timestamps or delay from PTM-capable switches on the path between CPU
+> and NIC? Also, how frequent can be the PTM dialogs? Could they be
+> performed synchronously in the ioctl?
 
-This just seems to depend on which function is placed right after the
-code in xen-head.S. With gcc, the disassembly looks like this:
+Reading the PTM specs, it could work over PCIe switches (if they also
+support PTM).
 
-0000000000000000 <asm_cpu_bringup_and_idle>:
-       0:       e8 00 00 00 00          callq  5 <asm_cpu_bringup_and_idle+0x5>
-                        1: R_X86_64_PLT32       cpu_bringup_and_idle-0x4
-       5:       e9 f6 0f 00 00          jmpq   1000
-<xen_hypercall_set_trap_table>
-...
-0000000000001000 <xen_hypercall_set_trap_table>:
-        ...
-...
-0000000000002000 <__startup_secondary_64>:
+The NIC I have supports PTM cycles from every ~1ms to ~512ms, and from
+my tests it wants to be kept running "in background" always, i.e. set
+the cycles to run, and only report the data when necessary. Trying to
+only enable the cycles "on demand" was unreliable.
 
-With Clang+LTO, we end up with __switch_to_asm here instead of
-__startup_secondary_64.
+(so for the _EXTENDED case, I would need to accumulate multiple values
+in the driver, and report them later, a bit annoying, but not
+impossible)
 
-> Will do some digging on the others...
+So, no, on my experiments triggering the PTM dialogs and retrieving
+information from potentially multiple cycles synchronously with the
+ioctl don't seem like it would work.
 
-Thanks!
 
-Sami
+Cheers,
+-- 
+Vinicius
