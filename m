@@ -2,113 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C7092AD907
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 15:42:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23AC72AD98D
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 15:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgKJOmM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 09:42:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730059AbgKJOmL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 09:42:11 -0500
-Received: from twosheds.infradead.org (twosheds.infradead.org [IPv6:2001:8b0:10b:1:21d:7dff:fe04:dbe2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56C1C0613CF;
-        Tue, 10 Nov 2020 06:42:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=twosheds.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Cc:To:From:Subject:Date:References:In-Reply-To:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0dwxESZhE6qS0tRQVz8GERHRJWul6w0ygr/xjcdQRuo=; b=mZ0oOKzHKaYt5WTaP1PaQHA31
-        hJGt7ocnCK64bHABuSiLoI8hM12VVmUFEK8fMQgljLzb9F59hV65Yh5RJrPUF6WSwpcZZay6vVckf
-        5jFfVUBJY7+dbA4hix2kHzk49frDVnm/1Dyd2BbNruEvlV6+kZE2xvghEzd6G8HwJzYrWuEQzBLYM
-        KsoA/q6laDk4xYgXSR5gRc1NFrYS1StLyRtXqSsY/DYwvjlnEK3yPDC1UQ0IYlzOUGoSjOBVFSgrz
-        0vNdgd6lUIbXyflZPkrGx5B3HA5Gnyva/dZYHpHDnvr5P3cliTG4acFvyFJSYjyh99+8B/PRkqiGI
-        93+pqJqqA==;
-Received: from localhost ([127.0.0.1] helo=twosheds.infradead.org)
-        by twosheds.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kcUpw-00DNR9-Tz; Tue, 10 Nov 2020 14:41:33 +0000
-Received: from 2a01:4c8:1444:cb4a:7550:3916:282:2b3a
-        (SquirrelMail authenticated user dwmw2)
-        by twosheds.infradead.org with HTTP;
-        Tue, 10 Nov 2020 14:41:33 -0000
-Message-ID: <9d35d5ea113b4d917c1560906445a811.squirrel@twosheds.infradead.org>
-In-Reply-To: <20201110141928.GC22336@otc-nc-03>
-References: <20201104135415.GX2620339@nvidia.com>
-    <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
-    <20201106131415.GT2620339@nvidia.com>
-    <20201106164850.GA85879@otc-nc-03>
-    <20201106175131.GW2620339@nvidia.com>
-    <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
-    <20201107001207.GA2620339@nvidia.com>
-    <20201108181124.GA28173@araj-mobl1.jf.intel.com>
-    <20da76a4cd2e984a307d673e26f76ab73bd820f4.camel@infradead.org>
-    <20201108232557.GA32074@araj-mobl1.jf.intel.com>
-    <20201110141928.GC22336@otc-nc-03>
-Date:   Tue, 10 Nov 2020 14:41:33 -0000
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-From:   "David Woodhouse" <dwmw2@infradead.org>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     "David Woodhouse" <dwmw2@infradead.org>,
-        "Jason Gunthorpe" <jgg@nvidia.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "jing.lin@intel.com" <jing.lin@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-User-Agent: SquirrelMail/1.4.23 [SVN]-1.fc30.20190710
+        id S1730981AbgKJO7a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 09:59:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730917AbgKJO72 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 10 Nov 2020 09:59:28 -0500
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 768D7216C4;
+        Tue, 10 Nov 2020 14:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605020367;
+        bh=qvUn9qNX1M1Qx2QeznJUHEO4kgcTe0+DelhXJxEE0dw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O/3QTe6UPGl4+UBnrvNNeMglzQW4NaG0atUAknJXGKmiKlQ3jFAg466x/NwQrKu8/
+         gBOWhF2e4nqsUJikfZBNK85TbHjpqqfBqGUI/fPV3Q4vo0VU27Kg9mYaa1UZ+CPmR7
+         m6tDvxeghc9snLMuu1GE+vc1t3kZ5zdJ+r04K2GU=
+Received: by mail-ot1-f53.google.com with SMTP id f16so12745658otl.11;
+        Tue, 10 Nov 2020 06:59:27 -0800 (PST)
+X-Gm-Message-State: AOAM530/6H67dDL5PAJL3KAeHijbr+1XU2zLAQyWMFDyoERLp8rObvxD
+        Spis/dV5AB9DWng0pGXDXiFUAN1Kt1LNhA2hImg=
+X-Google-Smtp-Source: ABdhPJxoTX+rWXC9j2qbuOi17pSMpsm+frJ8yNOwZPIBGWBUEPxRNPsSN2Sgb5QTmR2TPMukZYJ0UGj/XW9Ewao913I=
+X-Received: by 2002:a9d:23a6:: with SMTP id t35mr13613677otb.210.1605020366593;
+ Tue, 10 Nov 2020 06:59:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-Priority: 3 (Normal)
-Importance: Normal
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by twosheds.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200930153519.7282-16-kishon@ti.com> <VI1PR04MB496061EAB6F249F1C394F01092EA0@VI1PR04MB4960.eurprd04.prod.outlook.com>
+ <d6d27475-3464-6772-2122-cc194b8ae022@ti.com> <VI1PR04MB49602D24F65E11FF1F14294F92E90@VI1PR04MB4960.eurprd04.prod.outlook.com>
+ <30c8f7a1-baa5-1eb4-d2c2-9a13be896f0f@ti.com>
+In-Reply-To: <30c8f7a1-baa5-1eb4-d2c2-9a13be896f0f@ti.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Tue, 10 Nov 2020 15:59:08 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a38vBXbAWE09H+TSoZUTkFdYDcQmXX97foT4qXQc8t5ZQ@mail.gmail.com>
+Message-ID: <CAK8P3a38vBXbAWE09H+TSoZUTkFdYDcQmXX97foT4qXQc8t5ZQ@mail.gmail.com>
+Subject: Re: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express
+ Non-Transparent Bridge
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Sherry Sun <sherry.sun@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "dave.jiang@intel.com" <dave.jiang@intel.com>,
+        "allenbh@gmail.com" <allenbh@gmail.com>,
+        "tjoseph@cadence.com" <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Nov 10, 2020 at 3:20 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> On 10/11/20 7:55 am, Sherry Sun wrote:
 
-
-> Hi David
+> > But for VOP, only two boards are needed(one board as host and one board as card) to realize the
+> > communication between the two systems, so my question is what are the advantages of using NTB?
 >
-> I did't follow the support for 32768 CPUs in guest without IR support.
+> NTB is a bridge that facilitates communication between two different
+> systems. So it by itself will not be source or sink of any data unlike a
+> normal EP to RP system (or the VOP) which will be source or sink of data.
 >
-> Can you tell me how that is done?
+> > Because I think the architecture of NTB seems more complicated. Many thanks!
+>
+> yeah, I think it enables a different use case all together. Consider you
+> have two x86 HOST PCs (having RP) and they have to be communicate using
+> PCIe. NTB can be used in such cases for the two x86 PCs to communicate
+> with each other over PCIe, which wouldn't be possible without NTB.
 
+I think for VOP, we should have an abstraction that can work on either NTB
+or directly on the endpoint framework but provide an interface that then
+lets you create logical devices the same way.
 
+Doing VOP based on NTB plus the new NTB_EPF driver would also
+work and just move the abstraction somewhere else, but I guess it
+would complicate setting it up for those users that only care about the
+simpler endpoint case.
 
-Using bits 11-5 of the MSI address bits (the other 7 bits of "Extended
-Destination ID" that aren't the Remappable Format indicator).
-
-And physical addressing mode, which is no loss for external interrupts
-since they're all unicast dest_Fixed these days anyway.
-
-
--- 
-dwmw2
-
+      Arnd
