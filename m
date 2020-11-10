@@ -2,136 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C3AC2ADDC0
-	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 19:07:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76C642ADDC9
+	for <lists+linux-pci@lfdr.de>; Tue, 10 Nov 2020 19:07:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgKJSHA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 13:07:00 -0500
-Received: from mga07.intel.com ([134.134.136.100]:56468 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbgKJSHA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Nov 2020 13:07:00 -0500
-IronPort-SDR: 0zA6zNcxjRvIP9M/4krLs9m7neNw04/+fTgIKdBKSaXViF9b+dMJqsxOPiGTbERfAf0vWlOzEc
- 6lR0o25MobfQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="234189632"
-X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
-   d="scan'208";a="234189632"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 10:06:53 -0800
-IronPort-SDR: /nfePAnqjQMI6cF0FnQ+JBblmL1nP/m91B+IUFee3M202qcuN6NkaC3M+Qu5UeYCMuh2ZRuiBn
- qeJw7PPWPwCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
-   d="scan'208";a="356252584"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2020 10:06:53 -0800
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 86B9F58088D;
-        Tue, 10 Nov 2020 10:06:53 -0800 (PST)
-Message-ID: <c8b880d6ff609c79b18afd3d0b5a317b6d36f05f.camel@linux.intel.com>
-Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Darren Hart <dvhart@infradead.org>, andy@infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alexey.budankov@linux.intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Nov 2020 10:06:53 -0800
-In-Reply-To: <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
-References: <20201003013123.20269-1-david.e.box@linux.intel.com>
-         <20201003013123.20269-3-david.e.box@linux.intel.com>
-         <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1731011AbgKJSH1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 10 Nov 2020 13:07:27 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54791 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726428AbgKJSH1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 10 Nov 2020 13:07:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605031646;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DhGEWOUCw6Y5w7w85ABenFAQ6PkZ6O0n2/ot5sVRJt4=;
+        b=QAKaE8eLiOjiJPeFyIPGisaCpvSfgnvUBWk2e70hgvA2E/arOr0yUo+pbFH+xD+Q0w7HXj
+        jT4dcy0AMF8ObsiehMTDK44i34a1CrAwW7///FthAhS5LbdgNIHTxWpHJu/HhiRXdI/JhK
+        fjskjNTQfjU7sG7prxXwHFLNudOMHp8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-IyGqkGDQN26k-Y3d0MYp8w-1; Tue, 10 Nov 2020 13:07:24 -0500
+X-MC-Unique: IyGqkGDQN26k-Y3d0MYp8w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD5051074654;
+        Tue, 10 Nov 2020 18:07:22 +0000 (UTC)
+Received: from localhost (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F1B55D9D2;
+        Tue, 10 Nov 2020 18:07:21 +0000 (UTC)
+Date:   Tue, 10 Nov 2020 19:07:19 +0100
+From:   Miroslav Lichvar <mlichvar@redhat.com>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support for
+ PTP getcrosststamp()
+Message-ID: <20201110180719.GA1559650@localhost>
+References: <20201110061019.519589-1-vinicius.gomes@intel.com>
+ <20201110061019.519589-4-vinicius.gomes@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201110061019.519589-4-vinicius.gomes@intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Geert,
+On Mon, Nov 09, 2020 at 10:10:19PM -0800, Vinicius Costa Gomes wrote:
+> i225 has support for PCIe PTM, which allows us to implement support
+> for the PTP_SYS_OFFSET_PRECISE ioctl(), implemented in the driver via
+> the getcrosststamp() function.
 
-On Tue, 2020-11-10 at 11:39 +0100, Geert Uytterhoeven wrote:
-> Hi David,
-> 
-> On Sat, Oct 3, 2020 at 3:32 AM David E. Box <
-> david.e.box@linux.intel.com> wrote:
-> > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > enumerating and accessing hardware monitoring facilities. PMT
-> > supports
-> > multiple types of monitoring capabilities. This driver creates
-> > platform
-> > devices for each type so that they may be managed by capability
-> > specific
-> > drivers (to be introduced). Capabilities are discovered using PCIe
-> > DVSEC
-> > ids. Support is included for the 3 current capability types,
-> > Telemetry,
-> > Watcher, and Crashlog. The features are available on new Intel
-> > platforms
-> > starting from Tiger Lake for which support is added. This patch
-> > adds
-> > support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band
-> > Management
-> > Services Module (OOBMSM).
-> > 
-> > Also add a quirk mechanism for several early hardware differences
-> > and bugs.
-> > For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
-> > capabilities since they will not be compatible with future product.
-> > Also,
-> > fix use a quirk to fix the discovery table offset.
-> > 
-> > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
-> > >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> Thanks for your patch, which is now commit 4f8217d5b0ca8ace ("mfd:
-> Intel
-> Platform Monitoring Technology support") in the mfd/for-mfd-next.
-> 
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
-> >           Register and P-unit access. In addition this creates
-> > devices
-> >           for iTCO watchdog and telemetry that are part of the PMC.
-> > 
-> > +config MFD_INTEL_PMT
-> > +       tristate "Intel Platform Monitoring Technology (PMT)
-> > support"
-> > +       depends on PCI
-> 
-> Does this need a "depend on X86 || COMPILE_TEST", to prevent the
-> question from showing up on platforms where the PMT cannot be
-> present?
+Would it be possible to provide the PTM measurements with the
+PTP_SYS_OFFSET_EXTENDED ioctl instead of PTP_SYS_OFFSET_PRECISE?
 
-Though not currently available on non X86 hardware it is not
-restricted. The use of PCIE Designated Vendor Specific Capability
-(DVSEC) was to specifically allow use of this IP by other vendors.
+As I understand it, PTM is not cross timestamping. It's basically
+NTP over PCIe, which provides four timestamps with each "dialog". From
+the other constants added to the header file it looks like they could
+all be obtained and then they could be converted to the triplets
+returned by the EXTENDED ioctl.
 
-> 
-> I see the TGL and ADL PCI IDs are also referenced from
-> drivers/platform/x86/intel_pmt_telemetry.c, which suggests this is
-> X86-only.
-> Perhaps the OOBMSM is a PCI device that can be used on non-X86
-> platforms?
+The main advantage would be that it would provide applications with
+the round trip time, which is important to estimate the maximum error
+in the measurement. As your example phc2sys output shows, with the
+PRECISE ioctl the delay is 0, which is misleading here.
 
-TGL and AGL are only referenced in this driver because they require
-quirks.
+I suspect the estimate would be valid only when the NIC is connected
+directly to the PTM root (PCI root complex). Is it possible to get the
+timestamps or delay from PTM-capable switches on the path between CPU
+and NIC? Also, how frequent can be the PTM dialogs? Could they be
+performed synchronously in the ioctl?
 
-Thanks
-
-David
+-- 
+Miroslav Lichvar
 
