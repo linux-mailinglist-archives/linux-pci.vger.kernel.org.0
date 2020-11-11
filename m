@@ -2,87 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCB002AFAF8
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 23:02:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 842952AFB0F
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 23:06:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726157AbgKKWCT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 17:02:19 -0500
-Received: from www84.your-server.de ([213.133.104.84]:46762 "EHLO
-        www84.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgKKWCT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 17:02:19 -0500
-Received: from ipbcc25655.dynamic.kabel-deutschland.de ([188.194.86.85] helo=[192.168.0.7])
-        by www84.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <stefani@seibold.net>)
-        id 1kcyBv-0002ur-Da; Wed, 11 Nov 2020 23:02:11 +0100
-Message-ID: <b2129a70db2b36c5015b4143a839f47dfc3153af.camel@seibold.net>
-Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
-From:   Stefani Seibold <stefani@seibold.net>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Thomas Krause <thomaskrause@posteo.de>
-Cc:     Govind Singh <govinds@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Devin Bayer <dev@doubly.so>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        ath11k@lists.infradead.org, David Woodhouse <dwmw@amazon.co.uk>,
-        wink@technolu.st
-Date:   Wed, 11 Nov 2020 23:02:07 +0100
-In-Reply-To: <87imab4slq.fsf@codeaurora.org>
-References: <20201103160838.GA246433@bjorn-Precision-5520>
-         <874km61732.fsf@nanos.tec.linutronix.de>
-         <fa26ac8b-ed48-7ea3-c21b-b133532716b8@posteo.de>
-         <87mtzxkus5.fsf@nanos.tec.linutronix.de> <87wnz0hr9k.fsf@codeaurora.org>
-         <87ft5hehlb.fsf@codeaurora.org>
-         <6b60c8f1-ec37-d601-92c2-97a485b73431@posteo.de>
-         <87v9ec9rk3.fsf@codeaurora.org> <87imab4slq.fsf@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 
+        id S1726901AbgKKWG2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 17:06:28 -0500
+Received: from mga12.intel.com ([192.55.52.136]:8979 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727010AbgKKWG1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Nov 2020 17:06:27 -0500
+IronPort-SDR: llxxzmw2uFArtAUgDvjHIshI58402TE5588t1fpcB77JsKry8IZuJ4ltvTxCPoMRx8edIRGhE3
+ eH3lX94fxP+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="149498458"
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="149498458"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:06:26 -0800
+IronPort-SDR: ac8RWsvq4E5LnlUMwOfsStZxjDxiRyEm3835faeb4v0xM7LBnH068ix2ZlsM0qM9Prri5rlKQY
+ kPINUensokMQ==
+X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
+   d="scan'208";a="366390856"
+Received: from fitchbe-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.129.43])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:06:26 -0800
+Date:   Wed, 11 Nov 2020 14:06:24 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 0/9] CXL 2.0 Support
+Message-ID: <20201111220624.gpzykl4k26vylfyy@intel.com>
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: stefani@seibold.net
-X-Virus-Scanned: Clear (ClamAV 0.102.4/25985/Wed Nov 11 14:18:01 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201111054356.793390-1-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2020-11-11 at 21:10 +0200, Kalle Valo wrote:
-> 
-> The proof of concept patch for v5.10-rc2 is here:
-> 
-> https://patchwork.kernel.org/project/linux-wireless/patch/1605121102-14352-1-git-send-email-kvalo@codeaurora.org/
-> 
-> Hopefully it makes it possible to boot the firmware now. But this is
-> a
-> quick hack and most likely buggy, so keep your expectations low :)
-> 
-> In case there are these warnings during firmware initialisation:
-> 
-> ath11k_pci 0000:05:00.0: qmi failed memory request, err = -110
-> ath11k_pci 0000:05:00.0: qmi failed to respond fw mem req:-110
-> 
-> Try reverting this commit:
-> 
-> 7fef431be9c9 mm/page_alloc: place pages to tail in
-> __free_pages_core()
-> 
-> That's another issue which is debugged here:
-> 
-> http://lists.infradead.org/pipermail/ath11k/2020-November/000550.html
-> 
+Adding a cross reference to the QEMU work since I sent those patches after this:
 
-Applying the patch and revert patch 7fef431be9c9 worked on the first
-glance.
+https://gitlab.com/bwidawsk/qemu/-/tree/cxl-2.0
+https://lists.nongnu.org/archive/html/qemu-devel/2020-11/msg02886.html
 
-After a couple of minutes the connection get broken. The kernel log
-shows the following error:
-
-ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-ath11k_pc
-i 0000:55:00.0: failed to enable PMF QOS: (-11
-
-It is also not possible to unload the ath11k_pci, rmmod will hang.
-
+[snip]
 
