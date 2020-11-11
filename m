@@ -2,124 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 600BB2AFB21
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 23:11:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8F442AFB35
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 23:16:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgKKWLM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 17:11:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56980 "EHLO mail.kernel.org"
+        id S1726618AbgKKWQm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 17:16:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgKKWLL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Nov 2020 17:11:11 -0500
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725933AbgKKWQl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Nov 2020 17:16:41 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A975208B8
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 22:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82FDB2087D;
+        Wed, 11 Nov 2020 22:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605132670;
-        bh=Zcg6vF0y0SO/L8/MjjmEXiMs8Ypu+7IV8EuXwJgTm78=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jGDAWtW43R5gFTKSaf+DBA+gfioW8LiJyZFUf0Exe4HxPiOd5C50zHJoaBYQlEVXJ
-         g/t89Ui2C0aXq3w7eGPA0tEbV/F9I8o5WsGyqAGZoou7Zi2Kws9leKuTLKjKq2ckgI
-         wSrbpnimdyJ4qDtkB9Miai4vfT+6bdOKhTMHlSoc=
-Received: by mail-oi1-f179.google.com with SMTP id t16so3947700oie.11
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 14:11:10 -0800 (PST)
-X-Gm-Message-State: AOAM532w9SYdcQWe+2KkmvdWtahAd9JNhkKr0qJmcoULdQ97DZXDjSHY
-        YGdZ5aFMDdKqsmlVjtpuHlwyktHbdRdLVY1aCw==
-X-Google-Smtp-Source: ABdhPJwznD6/6mWwmA0H0SueGAbbKfk5GHGB9TQQ3G3t3WVSMEbggmV4Iyls2C5gl/Ij+GaI23UbACwoWTbZPEgPCLQ=
-X-Received: by 2002:aca:5dc2:: with SMTP id r185mr3604563oib.106.1605132669269;
- Wed, 11 Nov 2020 14:11:09 -0800 (PST)
+        s=default; t=1605133000;
+        bh=FZoIL5kkoczQ08cE+5NFuJQjvnQXcPDad7/rPnvpuM8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OyYUE+sWkg5lC/BrEnbRDr2hQEyTSlpTIWkU8rEkXleT/ddF5+m/OqWTY0QE6KkZU
+         cZNMhDmrmscHakgy9rXjIJ2IJP2iyPNXu8ebZlLfx+gdXvk6ZDLSFeRU5hIbM2nKMj
+         f0R/Fed5vT0l4+pI9H8+OGi9/4xGHbBgyMq88nyY=
+Date:   Wed, 11 Nov 2020 16:16:39 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Martin Kaiser <martin@kaiser.cx>
+Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        rfi@lists.rocketboards.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] PCI: altera-msi: Remove irq handler and data in one go
+Message-ID: <20201111221639.GA973514@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <CAL_JsqJ4qVTyUGr3Stn2GaoaYpTJRhSTMw2KKdjVS1+H=uPVWA@mail.gmail.com>
- <20201111210651.GA967833@bjorn-Precision-5520>
-In-Reply-To: <20201111210651.GA967833@bjorn-Precision-5520>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 11 Nov 2020 16:10:57 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Yvykde12ECvFOyW_3bb3k71bC16=cuzX=f+UGRrz6gg@mail.gmail.com>
-Message-ID: <CAL_Jsq+Yvykde12ECvFOyW_3bb3k71bC16=cuzX=f+UGRrz6gg@mail.gmail.com>
-Subject: Re: New Defects reported by Coverity Scan for Linux
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201111214355.puinncgf3aksxh73@viti.kaiser.cx>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 3:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Nov 11, 2020 at 09:34:10AM -0600, Rob Herring wrote:
-> > On Tue, Nov 10, 2020 at 5:36 PM Gustavo Pimentel
-> > <Gustavo.Pimentel@synopsys.com> wrote:
-> > > On Tue, Nov 10, 2020 at 17:16:41, Bjorn Helgaas <helgaas@kernel.org>
-> > > wrote:
-> > >
-> > > > New Coverity complaint about v5.10-rc3, resulting from 9fff3256f93d
-> > > > ("PCI: dwc: Restore ATU memory resource setup to use last entry").
-> > > >
-> > > > I didn't try to figure out if this is real or a false positive, so
-> > > > just FYI.
-> > > >
-> > > > ----- Forwarded message from scan-admin@coverity.com -----
-> > > >
-> > > > Date: Mon, 09 Nov 2020 11:13:37 +0000 (UTC)
-> > > > From: scan-admin@coverity.com
-> > > > To: bjorn@helgaas.com
-> > > > Subject: New Defects reported by Coverity Scan for Linux
-> > > > Message-ID: <5fa924618fb3b_a62932acac7322f5033088@prd-scan-dashboard-0.mail>
-> > > >
-> > > > ** CID 1469110:  Null pointer dereferences  (FORWARD_NULL)
-> > > > /drivers/pci/controller/dwc/pcie-designware-host.c: 596 in dw_pcie_setup_rc()
-> > > >
-> > > > ________________________________________________________________________________________________________
-> > > > *** CID 1469110:  Null pointer dereferences  (FORWARD_NULL)
-> > > > /drivers/pci/controller/dwc/pcie-designware-host.c: 596 in dw_pcie_setup_rc()
-> > > > 590
-> > > > 591                   /* Get last memory resource entry */
-> > > > 592                   resource_list_for_each_entry(tmp, &pp->bridge->windows)
-> > > > 593                           if (resource_type(tmp->res) == IORESOURCE_MEM)
-> > >
-> > > Can the pp->bridge->windows list be empty in a typical use case?
-> >
-> > Only if the DT has missing/malformed 'ranges'. 'ranges' is required to
-> > have any memory or i/o space, so we would error out before this point.
->
-> There are a lot of paths that lead here, and it's an awful lot of work
-> to verify that they all correctly error out if 'ranges' is invalid.
+[+cc Thomas for handler/data order question at end]
 
-There used to be, but I've gotten rid of most. There's also only one
-caller of dw_pcie_setup_rc() in the probe path with my latest series
-of DWC cleanups that's not applied yet. The only other callers are
-from a couple of resume hooks (which I plan to define common functions
-for).
+On Wed, Nov 11, 2020 at 10:43:55PM +0100, Martin Kaiser wrote:
+> Thus wrote Bjorn Helgaas (helgaas@kernel.org):
+> > On Tue, Nov 10, 2020 at 03:21:36PM -0600, Bjorn Helgaas wrote:
+> > > On Sun, Nov 08, 2020 at 08:11:40PM +0100, Martin Kaiser wrote:
+> > > > Replace the two separate calls for removing the irq handler and data with a
+> > > > single irq_set_chained_handler_and_data() call.
+> 
+> > > This is similar to these:
+> 
+> > >   36f024ed8fc9 ("PCI/MSI: pci-xgene-msi: Consolidate chained IRQ handler install/remove")
+> > >   5168a73ce32d ("PCI/keystone: Consolidate chained IRQ handler install/remove")
+> > >   2cf5a03cb29d ("PCI/keystone: Fix race in installing chained IRQ handler")
+> 
+> > > and it seems potentially important that this removes the IRQ handler
+> > > and data *atomically*, i.e., both are done while holding
+> > > irq_get_desc_buslock().  
+> 
+> Ok, understood.
+> 
+> > > So I would use this:
+> 
+> > >   PCI: altera-msi: Fix race in installing chained IRQ handler
+> 
+> > >   Fix a race where a pending interrupt could be received and the handler
+> > >   called before the handler's data has been setup by converting to
+> > >   irq_set_chained_handler_and_data().
+> 
+> > >   See also 2cf5a03cb29d ("PCI/keystone: Fix race in installing chained
+> > >   IRQ handler").
+> 
+> > > to make it clear that this is actually a bug fix, not just a cleanup.
+> 
+> Thomas' commit 2cf5a03cb29d fixed a case where the handler was installed.
+> We're removing the handler here so his commit message doesn't really fit.
+> Anyway, I'll rewrite the commit message to clarify that this fixes a
+> race condition.
 
-The pci_host_bridge allocation/init fails if bridge->windows is not
-populated. But actually, 'windows' can never be NULL as it is a
-list_head. So it's pp or pp->bridge being NULL that's the complaint,
-but that doesn't really change things. The flow is like this:
+Oh, right, of course, I wasn't paying attention.  The altera case is
+removing and doing it in the correct order (removing handler, then
+data), so there shouldn't be a race even with the current code.
 
-dw_pcie_host_init()
-    -> devm_pci_alloc_host_bridge()
-    pp->bridge = bridge;
-    ...
-    -> dw_pcie_setup_rc()
+> > > Looks like this should also be done in dw_pcie_free_msi() and
+> 
+> I'll send a patch for this.
+> 
+> > > xgene_msi_hwirq_alloc() at the same time?
+> 
+> This function uses the error status from irq_set_handler_data().
+> irq_set_chained_handler_and_data() returns no such error status. Is it
+> ok to drop the error handling?
 
-> It would really be nice if we could structure this in such a way that
-> local analysis could show that we never dereference a null pointer
-> here.
+I'm not an IRQ expert, but I'd say it's OK to drop it.  Of the 40 or
+so callers, the only other caller that looks at the error status is
+ingenic_intc_of_init().
 
-I've considered making struct pcie_port and struct pci_host_bridge a
-single allocation. I'm not sure that's really worth doing though.
+Thomas, it looks like irq_domain_set_info() and msi_domain_ops_init()
+set the handler itself before setting the handler data:
 
-> I wouldn't want to uglify the code unnecessarily, but if a small code
-> change could avoid this false positive, I think it might be worth
-> doing.
+  irq_domain_set_info
+    irq_set_chip_and_handler_name(virq, chip, handler, ...)
+    irq_set_handler_data(virq, handler_data)
 
-Other than also passing in bridge ptr, not sure. Maybe if it is static
-which will happen with a common resume routine. That would just shift
-the problem though it would be a bit clearer that we really couldn't
-ever get to a resume callback with a NULL.
+  msi_domain_ops_init
+    __irq_set_handler(virq, info->handler, ...)
+    if (info->handler_data)
+      irq_set_handler_data(virq, info->handler_data)
 
-Rob
+That looks at least superficially similar to the race you fixed with
+2cf5a03cb29d ("PCI/keystone: Fix race in installing chained IRQ
+handler").
+
+Should irq_domain_set_info() and msi_domain_ops_init() swap the order,
+too?
