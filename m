@@ -2,133 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF1A62AF2C1
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 14:58:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C201B2AF4C7
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 16:34:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgKKN6l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 08:58:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbgKKN6K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 08:58:10 -0500
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74F24C0613D1
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 05:58:10 -0800 (PST)
-Received: by mail-wr1-x441.google.com with SMTP id p8so2627828wrx.5
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 05:58:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Bg58Nuvlkki+FL9k9rnhWH9yWYXQkDaY8dFISymQNf4=;
-        b=PX5YSlcxcGmSZg8r/sp2D0I5JTHOJyKFcuVZxLO1fiouCfjYWFBADilQDWAd0Zg9Sd
-         HIfJ/J4cOjkRzfvjnj1WMh/LKncrPEtfWeva76W8jYJ5GBV9QsvF6eKzhO5TLf58/h3Y
-         9SHRXS3ggYLKFZJgaiWZUr0gnAEq+xCsESwyC2lrlYNo+T1yDCho+DSiFZax7SLWk8Kc
-         qS+/kEN2EY8zDLbcFnyYa3Hzli6iLHqYJh3b8/FneQUgK84gqG6h1k7T94Ji4UfDLetv
-         p3Xs14pIjTNueMnPgMl2lVXzAS9+JjhDnXFy1NouXt6C7VZY0sEXk+8MnG75YWkKX/C+
-         MxRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bg58Nuvlkki+FL9k9rnhWH9yWYXQkDaY8dFISymQNf4=;
-        b=nQ+tA0C/ccbe6JRm4bDodeDm8vfXKwVV8L9WCeAqWBKWhkay5fvxxjiMZGUyUSOyXy
-         MEBhuEgRj9fvswFYclgxf9MSTQGZz8UDPETMWdqrRzhC6sDKaAA4GTr8fdCCwn+n8sdA
-         PymQ1rHUZ2ltYDCSyIw1EhjOJnGgQnJmtg0PRH0ppkMH13UU6TAOtTQ4l1qUcQiezdsr
-         dMB1IHdFP2rgfPhrKdPSKOr4BC/NIpWNki1zZ+MAQELPIpxMxNLn0yed9e6nLJF2dXSF
-         xf/g/O9MqQvEaWc+qATTyh5GDX6i7y4UUqoIUY1kRBePAiFjnwh6hPhyNFAfsWl3SZ4g
-         X4iw==
-X-Gm-Message-State: AOAM533bGt3ZsNtjrE0blT7Hb2+1Mq7e+LuNnNL+7rjV31y6dXdIkc2Z
-        PtAJioVvgfZNMZO8iR8ecMjTew==
-X-Google-Smtp-Source: ABdhPJw6IjBDWuhoEyhqDsHpEgNzVVOxVUrrMBm3b8SRWwCRsVl0IlzCByu/s34c5pnWmTrWJJOQPA==
-X-Received: by 2002:adf:f9cb:: with SMTP id w11mr26381611wrr.1.1605103089202;
-        Wed, 11 Nov 2020 05:58:09 -0800 (PST)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id b8sm2551407wmj.9.2020.11.11.05.58.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Nov 2020 05:58:08 -0800 (PST)
-Date:   Wed, 11 Nov 2020 14:57:50 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Xiang Zheng <zhengxiang9@huawei.com>
-Cc:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, fenghua.yu@intel.com, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, jgg@ziepe.ca,
-        catalin.marinas@arm.com, joro@8bytes.org, robin.murphy@arm.com,
-        hch@infradead.org, zhangfei.gao@linaro.org,
-        Jonathan.Cameron@huawei.com, felix.kuehling@amd.com,
-        xuzaibo@huawei.com, will@kernel.org, christian.koenig@amd.com,
-        baolu.lu@linux.intel.com, Wang Haibin <wanghaibin.wang@huawei.com>
-Subject: Re: [PATCH v7 04/24] iommu: Add a page fault handler
-Message-ID: <20201111135750.GA2617489@myrica>
-References: <20200519175502.2504091-1-jean-philippe@linaro.org>
- <20200519175502.2504091-5-jean-philippe@linaro.org>
- <422e84da-9ccb-5452-8cbf-f472d2ad16b5@huawei.com>
+        id S1726817AbgKKPeY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 10:34:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbgKKPeX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Nov 2020 10:34:23 -0500
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9C4F2074B
+        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 15:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605108863;
+        bh=EEJxUW6yBqL1lIySKM25rp6jvV/z7A66T3aGJ2g29SU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gxZOxzwEayji50MiEM0ROnPLxwpLkXHiNiJjN++gg6qRyWnZw3cDIGDLf286p02EU
+         wJ6KXKo6qfFcJ508NsgyXP5l2fSFAFw3Ey1Bh4rHPNzT9tc+wE7MwgWnAl5NFjGVSK
+         CckIWllrMAJoh86qjRABpjXgseYdib9fP75RQHqk=
+Received: by mail-oi1-f181.google.com with SMTP id u127so2592615oib.6
+        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 07:34:22 -0800 (PST)
+X-Gm-Message-State: AOAM533LiL56LLT5miat7zJRWkUoWHUW2+hHFWVcX3VhCgN292FnHRgs
+        r1FpCz9YipnCanxbKMz8QPCU1IgX3aC6+q896w==
+X-Google-Smtp-Source: ABdhPJwHbWkG/EXSCatCXbAkd6vgiZ2vjCqn/ERtEzb1kzv+bNfoZKBCyUdfoCP4XO+7PUhiQ0gOx+1xi0wWRhVDMYc=
+X-Received: by 2002:aca:5dc2:: with SMTP id r185mr2511412oib.106.1605108861919;
+ Wed, 11 Nov 2020 07:34:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <422e84da-9ccb-5452-8cbf-f472d2ad16b5@huawei.com>
+References: <20201110171641.GA679781@bjorn-Precision-5520> <DM5PR12MB183506CDEA67A7A65B0F1F29DAE90@DM5PR12MB1835.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB183506CDEA67A7A65B0F1F29DAE90@DM5PR12MB1835.namprd12.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 11 Nov 2020 09:34:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ4qVTyUGr3Stn2GaoaYpTJRhSTMw2KKdjVS1+H=uPVWA@mail.gmail.com>
+Message-ID: <CAL_JsqJ4qVTyUGr3Stn2GaoaYpTJRhSTMw2KKdjVS1+H=uPVWA@mail.gmail.com>
+Subject: Re: New Defects reported by Coverity Scan for Linux
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Xiang,
+On Tue, Nov 10, 2020 at 5:36 PM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+>
+> On Tue, Nov 10, 2020 at 17:16:41, Bjorn Helgaas <helgaas@kernel.org>
+> wrote:
+>
+> > New Coverity complaint about v5.10-rc3, resulting from 9fff3256f93d
+> > ("PCI: dwc: Restore ATU memory resource setup to use last entry").
+> >
+> > I didn't try to figure out if this is real or a false positive, so
+> > just FYI.
+> >
+> > ----- Forwarded message from scan-admin@coverity.com -----
+> >
+> > Date: Mon, 09 Nov 2020 11:13:37 +0000 (UTC)
+> > From: scan-admin@coverity.com
+> > To: bjorn@helgaas.com
+> > Subject: New Defects reported by Coverity Scan for Linux
+> > Message-ID: <5fa924618fb3b_a62932acac7322f5033088@prd-scan-dashboard-0.mail>
+> >
+> >
+> > ** CID 1469110:  Null pointer dereferences  (FORWARD_NULL)
+> > /drivers/pci/controller/dwc/pcie-designware-host.c: 596 in dw_pcie_setup_rc()
+> >
+> >
+> > ________________________________________________________________________________________________________
+> > *** CID 1469110:  Null pointer dereferences  (FORWARD_NULL)
+> > /drivers/pci/controller/dwc/pcie-designware-host.c: 596 in dw_pcie_setup_rc()
+> > 590
+> > 591                   /* Get last memory resource entry */
+> > 592                   resource_list_for_each_entry(tmp, &pp->bridge->windows)
+> > 593                           if (resource_type(tmp->res) == IORESOURCE_MEM)
+>
+> Can the pp->bridge->windows list be empty in a typical use case?
 
-Thank you for reviewing this. I forgot to send a reply, sorry for the
-delay.
+Only if the DT has missing/malformed 'ranges'. 'ranges' is required to
+have any memory or i/o space, so we would error out before this point.
 
-On Fri, May 29, 2020 at 05:18:27PM +0800, Xiang Zheng wrote:
-> Hi,
-> 
-> On 2020/5/20 1:54, Jean-Philippe Brucker wrote:
-> > Some systems allow devices to handle I/O Page Faults in the core mm. For
-> > example systems implementing the PCIe PRI extension or Arm SMMU stall
-> > model. Infrastructure for reporting these recoverable page faults was
-> > added to the IOMMU core by commit 0c830e6b3282 ("iommu: Introduce device
-> > fault report API"). Add a page fault handler for host SVA.
-> > 
-> > IOMMU driver can now instantiate several fault workqueues and link them
-> > to IOPF-capable devices. Drivers can choose between a single global
-> > workqueue, one per IOMMU device, one per low-level fault queue, one per
-> > domain, etc.
-> > 
-> > When it receives a fault event, supposedly in an IRQ handler, the IOMMU
-> > driver reports the fault using iommu_report_device_fault(), which calls
-> > the registered handler. The page fault handler then calls the mm fault
-> > handler, and reports either success or failure with iommu_page_response().
-> > When the handler succeeded, the IOMMU retries the access.
-> > 
-> > The iopf_param pointer could be embedded into iommu_fault_param. But
-> > putting iopf_param into the iommu_param structure allows us not to care
-> > about ordering between calls to iopf_queue_add_device() and
-> > iommu_register_device_fault_handler().
-> > 
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-[...]
-> > +/**
-> > + * iopf_queue_free - Free IOPF queue
-> > + * @queue: queue to free
-> > + *
-> > + * Counterpart to iopf_queue_alloc(). The driver must not be queuing faults or
-> > + * adding/removing devices on this queue anymore.
-> > + */
-> > +void iopf_queue_free(struct iopf_queue *queue)
-> > +{
-> > +	struct iopf_device_param *iopf_param, *next;
-> > +
-> > +	if (!queue)
-> > +		return;
-> > +
-> > +	list_for_each_entry_safe(iopf_param, next, &queue->devices, queue_list)
-> > +		iopf_queue_remove_device(queue, iopf_param->dev);
-> > +
-> > +	destroy_workqueue(queue->wq);
-> 
-> Do we need to free iopf_group(s) here in case the work queue of the group(s) are not
-> scheduled yet? If that occurs, we might leak memory here.
-
-Partial groups are freed by iopf_queue_remove_device(), and all other
-groups are freed when destroy_workqueue() executes the remaining work.
-
-Thanks,
-Jean
+Rob
