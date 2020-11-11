@@ -2,132 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AC9F2AFB79
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 23:38:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 539632AFB86
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 23:43:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgKKWiT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 17:38:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgKKWgS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 11 Nov 2020 17:36:18 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82A83208FE;
-        Wed, 11 Nov 2020 22:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605133778;
-        bh=nhL3zDC2cu9ECuf/EjEmddbUzNGl6XB+KcxciHyfxIg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WYbPxyGHItIogP9N/qogHFF0VxqqBTuxMmPzwcLW4niXK91oexIp5ZziWynNJ6zTn
-         y8s7LBfGEkQAKW5bImzSB4HYA6vkyGcyQD8VVvZLI7c/B4raCIMB6mscDhKlXKDD9p
-         xIAoQK+8xyxfEmpnyeMks0sLclWImx2BYPtlGf5w=
-Date:   Wed, 11 Nov 2020 16:29:37 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "treding@nvidia.com" <treding@nvidia.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: Re: [PATCH V2] PCI: dwc: Add support to configure for ECRC
-Message-ID: <20201111222937.GA977451@bjorn-Precision-5520>
+        id S1726731AbgKKWns (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 17:43:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgKKWln (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 17:41:43 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4030BC0401C7
+        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 14:41:04 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id s25so4956922ejy.6
+        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 14:41:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ALVcAvrDAuBZ3IPCrkjPwHAX8+DNa5pqM0afUjn5X6s=;
+        b=rTT49AnkhNr487K9n5NKwYO9WMUE3MNY/UrxCB1TueO1d+BsQebe1bVAjto6CnRmk/
+         RDpD3FTxsnpbumIEQX0xW8WRxu+N8dbL7+UlwJuliNYW4tOrjIHEsijjBDMt5SiFkT7W
+         qIC8M6dcNADqftbsDDTwdltE4fVgS48XJPqta990E5jyRjX44U9fYqfo3bpsnhM2g0J7
+         eynDKGo1p6EV/6yF+gGpA1ZpwHDZOUAKO9aCvylNPSLobnovjeE+6vOb7pc4GrNqOJdL
+         VpWgI5+VW1m4VWGcBZwG83xjGz4jrrCYOWJBRZrRhJgpclGLGZV4RXEKWrc44rurwU4I
+         eK6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ALVcAvrDAuBZ3IPCrkjPwHAX8+DNa5pqM0afUjn5X6s=;
+        b=UKn5Px1162Wty80EdVcIG827VJG3nsoCV4B0ZsISemWzKXwRZc2yErddUk1tplfA4O
+         MVXgl2ms01v2kldxwClQg+VxfGkrYLYf2s/GAgboKJaeNH9ZI18EnulGlCf3EBHzbw1Q
+         IvIpvBNuSKBvpT8soIl1BwwDXH/nhvk/M9mbz59E5FruJj3ahetCSRVNef0wSZ5zw04n
+         wQ0tlfl796yGcTJv6tYOoZgHVtfxX6XMP+OGGnJnhubQdMcA9bgQGhBv+vcc/vQMXy55
+         alh43fB+FnBZaDw06Kyv8k8u1GZYTqBN9tWTUSHgYUpNvehxr0YHwm1sVo/u8pSNW3pN
+         Y79g==
+X-Gm-Message-State: AOAM533nOnvhAfLcvlQ84ttlhml52M1XufymnYO6w6rfFvavBbEyM2Bs
+        4GTejUd3oqMi8TJzIeesaNEuDXmJFy3U5+cx8Tyo8Q==
+X-Google-Smtp-Source: ABdhPJxZkk2CPz2+JgnqesQh/6Q2toSIuomPC2gF0BhYxxkrw/FgNoCUwNXohjnwegJoJqNJZnPv//TQH98s+vGiwVw=
+X-Received: by 2002:a17:906:ad8e:: with SMTP id la14mr25980011ejb.264.1605134462866;
+ Wed, 11 Nov 2020 14:41:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b4a728e-bfa3-42a2-423d-e270e8993901@nvidia.com>
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+ <20201111054356.793390-4-ben.widawsky@intel.com> <20201111071231.GC7829@infradead.org>
+ <CAPcyv4iA_hNc=xdcbR-eb57W9o4br1BognSr5Sj4pAO3uMm69g@mail.gmail.com> <4a8b5a64-7ba0-a275-744f-6642f98e2213@infradead.org>
+In-Reply-To: <4a8b5a64-7ba0-a275-744f-6642f98e2213@infradead.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 11 Nov 2020 14:40:52 -0800
+Message-ID: <CAPcyv4gPwNj+aaRs++hxSxJke8H476hhppcn84t3KUBr0Ff2og@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 10:21:46PM +0530, Vidya Sagar wrote:
-> 
-> 
-> On 11/11/2020 9:57 PM, Jingoo Han wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On 11/11/20, 7:12 AM, Vidya Sagar wrote:
-> > > 
-> > > DesignWare core has a TLP digest (TD) override bit in one of the control
-> > > registers of ATU. This bit also needs to be programmed for proper ECRC
-> > > functionality. This is currently identified as an issue with DesignWare
-> > > IP version 4.90a.
-> > > 
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > ---
-> > > V2:
-> > > * Addressed Bjorn's comments
-> > > 
-> > >   drivers/pci/controller/dwc/pcie-designware.c | 52 ++++++++++++++++++--
-> > >   drivers/pci/controller/dwc/pcie-designware.h |  1 +
-> > >   2 files changed, 49 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > index c2dea8fc97c8..ec0d13ab6bad 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > @@ -225,6 +225,46 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
-> > >        dw_pcie_writel_atu(pci, offset + reg, val);
-> > >   }
-> > > 
-> > > +static inline u32 dw_pcie_enable_ecrc(u32 val)
-> > 
-> > What is the reason to use inline here?
+On Wed, Nov 11, 2020 at 1:42 PM Randy Dunlap <rdunlap@infradead.org> wrote:
 >
-> Actually, I wanted to move the programming part inside the respective APIs
-> but then I wanted to give some details as well in comments so to avoid
-> duplication, I came up with this function. But, I'm making it inline for
-> better code optimization by compiler.
+> On 11/11/20 9:17 AM, Dan Williams wrote:
+> > On Tue, Nov 10, 2020 at 11:12 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >>
+> >> On Tue, Nov 10, 2020 at 09:43:50PM -0800, Ben Widawsky wrote:
+> >>> +config CXL_MEM
+> >>> +        tristate "CXL.mem Device Support"
+> >>> +        depends on PCI && CXL_BUS_PROVIDER != n
+> >>
+> >> depend on PCI && CXL_BUS_PROVIDER
+> >>
+> >>> +        default m if CXL_BUS_PROVIDER
+> >>
+> >> Please don't set weird defaults for new code.  Especially not default
+> >> to module crap like this.
+> >
+> > This goes back to what people like Dave C. asked for LIBNVDIMM / DAX,
+> > a way to blanket turn on a subsystem without needing to go hunt down
+> > individual configs. All of CXL is "default n", but if someone turns on
+> > a piece of it they get all of it by default. The user can then opt-out
+> > on pieces after that first opt-in. If there's a better way to turn on
+> > suggested configs I'm open to switch to that style. As for the
+> > "default m" I was worried that it would be "default y" without the
+> > specificity, but I did not test that... will check. There have been
+> > times when I wished that distros defaulted bleeding edge new enabling
+> > to 'm' and putting that default in the Kconfig maybe saves me from
+> > needing to file individual config changes to distros after the fact.
+>
+> What we as developers put into mainline kernel Kconfig files has nothing
+> to do with what distros use in their distro config files.
+> Or at least it shouldn't.  Maybe your experience has been different.
 
-I don't really care either way, but I'd be surprised if the compiler
-didn't inline this all by itself even without the explicit "inline".
+I agree with that sentiment, but walk it back through the requirement
+I mentioned above... *if* we want a top-level CXL option (default n)
+that goes and enables many CXL sub-options the default for those
+sub-options is something that needs to be listed in the Kconfig. 'm'
+is more flexible than 'y', so if a user wants CXL at all, and doesn't
+care about how, I'd prefer it's 'm' rather than 'y'.
 
-> > > +{
-> > > +     /*
-> > > +      * DesignWare core version 4.90A has this strange design issue
-> > > +      * where the 'TD' bit in the Control register-1 of the ATU outbound
-> > > +      * region acts like an override for the ECRC setting i.e. the presence
-> > > +      * of TLP Digest(ECRC) in the outgoing TLPs is solely determined by
-> > > +      * this bit. This is contrary to the PCIe spec which says that the
-> > > +      * enablement of the ECRC is solely determined by the AER registers.
-> > > +      *
-> > > +      * Because of this, even when the ECRC is enabled through AER
-> > > +      * registers, the transactions going through ATU won't have TLP Digest
-> > > +      * as there is no way the AER sub-system could program the TD bit which
-> > > +      * is specific to DesignWare core.
-> > > +      *
-> > > +      * The best way to handle this scenario is to program the TD bit
-> > > +      * always. It affects only the traffic from root port to downstream
-> > > +      * devices.
-> > > +      *
-> > > +      * At this point,
-> > > +      * When ECRC is enabled in AER registers, everything works normally
-> > > +      * When ECRC is NOT enabled in AER registers, then,
-> > > +      * on Root Port:- TLP Digest (DWord size) gets appended to each packet
-> > > +      *                even through it is not required. Since downstream
-> > > +      *                TLPs are mostly for configuration accesses and BAR
-> > > +      *                accesses, they are not in critical path and won't
-> > > +      *                have much negative effect on the performance.
-> > > +      * on End Point:- TLP Digest is received for some/all the packets coming
-> > > +      *                from the root port. TLP Digest is ignored because,
-> > > +      *                as per the PCIe Spec r5.0 v1.0 section 2.2.3
-> > > +      *                "TLP Digest Rules", when an endpoint receives TLP
-> > > +      *                Digest when its ECRC check functionality is disabled
-> > > +      *                in AER registers, received TLP Digest is just ignored.
-> > > +      * Since there is no issue or error reported either side, best way to
-> > > +      * handle the scenario is to program TD bit by default.
-> > > +      */
-> > > +
-> > > +     return val | PCIE_ATU_TD;
-> > > +}
+I have had to go submit distro config fixes when Kconfig defaulted to
+'y' when 'm' was available, and the reasoning for why it was 'y' was
+"oh, that was the Kconfig default when I flipped this other option".
+
+
+> >>> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+> >>
+> >> Please don't use '//' for anything but the SPDX header.
+> >
+> > Ok, I find // following by /* */ a bit ugly, but I don't care enough to fight.
+> >
+>
+> Hm, it's not in coding-style AFAICT but Linus has OK-ed C99 style comments:
+> http://lkml.iu.edu/hypermail/linux/kernel/1607.1/00627.html
+>
+>
+> >>> +MODULE_AUTHOR("Intel Corporation");
+> >>
+> >> A module author is not a company.
+> >
+> > At least I don't have a copyright assignment clause, I don't agree
+> > with the vanity of listing multiple people here especially when
+> > MAINTAINERS has the contact info, and I don't want to maintain a list
+> > as people do drive-by contributions and we need to figure out at what
+> > level of contribution mandates a new MODULE_AUTHOR line. Now, that
+> > said I would be ok to duplicate the MAINTAINERS as MODULE_AUTHOR
+> > lines, but I otherwise expect MAINTAINERS is the central source for
+> > module contact info.
+>
+> Sure, MAINTAINERS is fine, but the MODULE_AUTHOR() above provides
+> no useful information.
+> Even saying (made up) linux-devel@linux.intel.com would be slightly better,
+> but some kind of contact info would be great. Otherwise just delete that line.
+
+True, if the goal is to allow random end users to email support
+questions about this module I'd rather not put my email there.
+Instead, if it's someone that has kernel development questions then
+they should be able to use MAINTAINERS for that contact.
