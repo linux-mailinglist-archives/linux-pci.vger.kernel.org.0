@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 991152AF4F3
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 16:37:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFE502AF4FD
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 16:37:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgKKPhF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 10:37:05 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59046 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbgKKPhE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 10:37:04 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFapjV124959;
-        Wed, 11 Nov 2020 09:36:51 -0600
+        id S1727489AbgKKPh3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 10:37:29 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38102 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbgKKPh2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 10:37:28 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFbDP8097719;
+        Wed, 11 Nov 2020 09:37:13 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1605109011;
-        bh=z3Tw9eXfcOK90ruy3aMeRyVdcSzDrEL/G+eXeTQ/vG0=;
+        s=ti-com-17Q1; t=1605109033;
+        bh=nm506Ttw75QB9g3i8XfbJHgDWMXVATaPs9Pwq9jcU6c=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xZnX7zYFNhlOJOkFnzhSggE2kSYWNa5EevrYJ6vldW4PobOMAPuKJPNmFPNEpN3xm
-         YjLtvzHeXAO8l8lA/kgV1TBi/yK56fzpgvKB6NqZAg0O2EtIxPBoiuu7ScjbumOhpO
-         e/HxM86lF/JjiVxoaBwOxvzfc5mhBzstvhsKY8K4=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0ABFapQ1093181
+        b=mNdZm4pWSsGuqdsRiw0zs5WjR+DtypUjj2wcReu4kY4nrStsHdJ8zlGmqXGEyd2Sw
+         H098/U133dF7Ca3fSiJWWdx3Hy5nuFL/ISkqgNNiGXdG1sjOBwfHIrZueInULNt/Hw
+         fUAwA5goeyRhX6qwxLys3w04Pk4EYzmETP3u7sKM=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0ABFbCnV113394
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Nov 2020 09:36:51 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Nov 2020 09:37:12 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 11
- Nov 2020 09:36:50 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2020 09:37:12 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 11 Nov 2020 09:36:50 -0600
+ Frontend Transport; Wed, 11 Nov 2020 09:37:12 -0600
 Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFa03w042109;
-        Wed, 11 Nov 2020 09:36:45 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFa03x042109;
+        Wed, 11 Nov 2020 09:37:07 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -48,9 +48,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-Subject: [PATCH v8 07/18] PCI: endpoint: Add support in configfs to associate two EPCs with EPF
-Date:   Wed, 11 Nov 2020 21:05:48 +0530
-Message-ID: <20201111153559.19050-8-kishon@ti.com>
+Subject: [PATCH v8 08/18] PCI: endpoint: Add pci_epc_ops to map MSI irq
+Date:   Wed, 11 Nov 2020 21:05:49 +0530
+Message-ID: <20201111153559.19050-9-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201111153559.19050-1-kishon@ti.com>
 References: <20201111153559.19050-1-kishon@ti.com>
@@ -61,222 +61,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Now that PCI endpoint core supports to add secondary endpoint
-controller (EPC) with endpoint function (EPF), Add support in configfs
-to associate two EPCs with EPF. This creates "primary" and "secondary"
-directory inside the directory created by users for EPF device. Users
-have to add a symlink of endpoint controller (pci_ep/controllers/) to
-"primary" or "secondary" directory to bind EPF to primary and secondary
-EPF interfaces respectively. Existing method of linking directory
-representing EPF device to directory representing EPC device to
-associate a single EPC device with a EPF device will continue to work.
+Add pci_epc_ops to map physical address to MSI address and return MSI
+data. The physical address is an address in the outbound region. This is
+required to implement doorbell functionality of NTB (non transparent
+bridge) wherein EPC on either side of the interface (primary and
+secondary) can directly write to the physical address (in outbound
+region) of the other interface to ring doorbell using MSI.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- .../PCI/endpoint/pci-endpoint-cfs.rst         |  10 ++
- drivers/pci/endpoint/pci-ep-cfs.c             | 147 ++++++++++++++++++
- 2 files changed, 157 insertions(+)
+ drivers/pci/endpoint/pci-epc-core.c | 41 +++++++++++++++++++++++++++++
+ include/linux/pci-epc.h             |  8 ++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-index 1bbd81ed06c8..696f8eeb4738 100644
---- a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-+++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-@@ -68,6 +68,16 @@ created)
- 				... subsys_vendor_id
- 				... subsys_id
- 				... interrupt_pin
-+                                ... primary/
-+			                ... <Symlink EPC Device1>/
-+                                ... secondary/
-+			                ... <Symlink EPC Device2>/
-+
-+If an EPF device has to be associated with 2 EPCs (like in the case of
-+Non-transparent bridge), symlink of endpoint controller connected to primary
-+interface should be added in 'primary' directory and symlink of endpoint
-+controller connected to secondary interface should be added in 'secondary'
-+directory.
- 
- EPC Device
- ==========
-diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-index 6ca9e2f92460..8f750961d6ab 100644
---- a/drivers/pci/endpoint/pci-ep-cfs.c
-+++ b/drivers/pci/endpoint/pci-ep-cfs.c
-@@ -21,6 +21,9 @@ static struct config_group *controllers_group;
- 
- struct pci_epf_group {
- 	struct config_group group;
-+	struct config_group primary_epc_group;
-+	struct config_group secondary_epc_group;
-+	struct delayed_work cfs_work;
- 	struct pci_epf *epf;
- 	int index;
- };
-@@ -41,6 +44,127 @@ static inline struct pci_epc_group *to_pci_epc_group(struct config_item *item)
- 	return container_of(to_config_group(item), struct pci_epc_group, group);
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 3693eca5b030..cc8f9eb2b177 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -230,6 +230,47 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
  }
+ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
  
-+static int pci_secondary_epc_epf_link(struct config_item *epf_item,
-+				      struct config_item *epc_item)
++/**
++ * pci_epc_map_msi_irq() - Map physical address to MSI address and return
++ *                         MSI data
++ * @epc: the EPC device which has the MSI capability
++ * @func_no: the physical endpoint function number in the EPC device
++ * @phys_addr: the physical address of the outbound region
++ * @interrupt_num: the MSI interrupt number
++ * @entry_size: Size of Outbound address region for each interrupt
++ * @msi_data: the data that should be written in order to raise MSI interrupt
++ *            with interrupt number as 'interrupt num'
++ * @msi_addr_offset: Offset of MSI address from the aligned outbound address
++ *                   to which the MSI address is mapped
++ *
++ * Invoke to map physical address to MSI address and return MSI data. The
++ * physical address should be an address in the outbound region. This is
++ * required to implement doorbell functionality of NTB wherein EPC on either
++ * side of the interface (primary and secondary) can directly write to the
++ * physical address (in outbound region) of the other interface to ring
++ * doorbell.
++ */
++int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, phys_addr_t phys_addr,
++			u8 interrupt_num, u32 entry_size, u32 *msi_data,
++			u32 *msi_addr_offset)
 +{
 +	int ret;
-+	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
-+	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
-+	struct pci_epc *epc = epc_group->epc;
-+	struct pci_epf *epf = epf_group->epf;
 +
-+	ret = pci_epc_add_epf(epc, epf, SECONDARY_INTERFACE);
-+	if (ret)
-+		return ret;
++	if (IS_ERR_OR_NULL(epc))
++		return -EINVAL;
 +
-+	ret = pci_epf_bind(epf);
-+	if (ret) {
-+		pci_epc_remove_epf(epc, epf, SECONDARY_INTERFACE);
-+		return ret;
-+	}
++	if (!epc->ops->map_msi_irq)
++		return -EINVAL;
 +
-+	return 0;
++	mutex_lock(&epc->lock);
++	ret = epc->ops->map_msi_irq(epc, func_no, phys_addr, interrupt_num,
++				    entry_size, msi_data, msi_addr_offset);
++	mutex_unlock(&epc->lock);
++
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(pci_epc_map_msi_irq);
 +
-+static void pci_secondary_epc_epf_unlink(struct config_item *epc_item,
-+					 struct config_item *epf_item)
-+{
-+	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
-+	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
-+	struct pci_epc *epc;
-+	struct pci_epf *epf;
-+
-+	WARN_ON_ONCE(epc_group->start);
-+
-+	epc = epc_group->epc;
-+	epf = epf_group->epf;
-+	pci_epf_unbind(epf);
-+	pci_epc_remove_epf(epc, epf, SECONDARY_INTERFACE);
-+}
-+
-+static struct configfs_item_operations pci_secondary_epc_item_ops = {
-+	.allow_link	= pci_secondary_epc_epf_link,
-+	.drop_link	= pci_secondary_epc_epf_unlink,
-+};
-+
-+static const struct config_item_type pci_secondary_epc_type = {
-+	.ct_item_ops	= &pci_secondary_epc_item_ops,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_group
-+*pci_ep_cfs_add_secondary_group(struct pci_epf_group *epf_group)
-+{
-+	struct config_group *secondary_epc_group;
-+
-+	secondary_epc_group = &epf_group->secondary_epc_group;
-+	config_group_init_type_name(secondary_epc_group, "secondary",
-+				    &pci_secondary_epc_type);
-+	configfs_register_group(&epf_group->group, secondary_epc_group);
-+
-+	return secondary_epc_group;
-+}
-+
-+static int pci_primary_epc_epf_link(struct config_item *epf_item,
-+				    struct config_item *epc_item)
-+{
-+	int ret;
-+	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
-+	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
-+	struct pci_epc *epc = epc_group->epc;
-+	struct pci_epf *epf = epf_group->epf;
-+
-+	ret = pci_epc_add_epf(epc, epf, PRIMARY_INTERFACE);
-+	if (ret)
-+		return ret;
-+
-+	ret = pci_epf_bind(epf);
-+	if (ret) {
-+		pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void pci_primary_epc_epf_unlink(struct config_item *epc_item,
-+				       struct config_item *epf_item)
-+{
-+	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
-+	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
-+	struct pci_epc *epc;
-+	struct pci_epf *epf;
-+
-+	WARN_ON_ONCE(epc_group->start);
-+
-+	epc = epc_group->epc;
-+	epf = epf_group->epf;
-+	pci_epf_unbind(epf);
-+	pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
-+}
-+
-+static struct configfs_item_operations pci_primary_epc_item_ops = {
-+	.allow_link	= pci_primary_epc_epf_link,
-+	.drop_link	= pci_primary_epc_epf_unlink,
-+};
-+
-+static const struct config_item_type pci_primary_epc_type = {
-+	.ct_item_ops	= &pci_primary_epc_item_ops,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_group
-+*pci_ep_cfs_add_primary_group(struct pci_epf_group *epf_group)
-+{
-+	struct config_group *primary_epc_group = &epf_group->primary_epc_group;
-+
-+	config_group_init_type_name(primary_epc_group, "primary",
-+				    &pci_primary_epc_type);
-+	configfs_register_group(&epf_group->group, primary_epc_group);
-+
-+	return primary_epc_group;
-+}
-+
- static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
- 				   size_t len)
- {
-@@ -372,6 +496,25 @@ static const struct config_item_type pci_epf_type = {
- 	.ct_owner	= THIS_MODULE,
- };
- 
-+static void pci_epf_cfs_work(struct work_struct *work)
-+{
-+	struct pci_epf_group *epf_group;
-+	struct config_group *group;
-+
-+	epf_group = container_of(work, struct pci_epf_group, cfs_work.work);
-+	group = pci_ep_cfs_add_primary_group(epf_group);
-+	if (IS_ERR(group)) {
-+		pr_err("failed to create 'primary' EPC interface\n");
-+		return;
-+	}
-+
-+	group = pci_ep_cfs_add_secondary_group(epf_group);
-+	if (IS_ERR(group)) {
-+		pr_err("failed to create 'secondary' EPC interface\n");
-+		return;
-+	}
-+}
-+
- static struct config_group *pci_epf_make(struct config_group *group,
- 					 const char *name)
- {
-@@ -414,6 +557,10 @@ static struct config_group *pci_epf_make(struct config_group *group,
- 
- 	kfree(epf_name);
- 
-+	INIT_DELAYED_WORK(&epf_group->cfs_work, pci_epf_cfs_work);
-+	queue_delayed_work(system_wq, &epf_group->cfs_work,
-+			   msecs_to_jiffies(1));
-+
- 	return &epf_group->group;
- 
- free_name:
+ /**
+  * pci_epc_get_msi() - get the number of MSI interrupt numbers allocated
+  * @epc: the EPC device to which MSI interrupts was requested
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index d9cb3944fb87..b82c9b100e97 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -55,6 +55,7 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
+  * @get_msix: ops to get the number of MSI-X interrupts allocated by the RC
+  *	     from the MSI-X capability register
+  * @raise_irq: ops to raise a legacy, MSI or MSI-X interrupt
++ * @map_msi_irq: ops to map physical address to MSI address and return MSI data
+  * @start: ops to start the PCI link
+  * @stop: ops to stop the PCI link
+  * @owner: the module owner containing the ops
+@@ -77,6 +78,10 @@ struct pci_epc_ops {
+ 	int	(*get_msix)(struct pci_epc *epc, u8 func_no);
+ 	int	(*raise_irq)(struct pci_epc *epc, u8 func_no,
+ 			     enum pci_epc_irq_type type, u16 interrupt_num);
++	int	(*map_msi_irq)(struct pci_epc *epc, u8 func_no,
++			       phys_addr_t phys_addr, u8 interrupt_num,
++			       u32 entry_size, u32 *msi_data,
++			       u32 *msi_addr_offset);
+ 	int	(*start)(struct pci_epc *epc);
+ 	void	(*stop)(struct pci_epc *epc);
+ 	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
+@@ -216,6 +221,9 @@ int pci_epc_get_msi(struct pci_epc *epc, u8 func_no);
+ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts,
+ 		     enum pci_barno, u32 offset);
+ int pci_epc_get_msix(struct pci_epc *epc, u8 func_no);
++int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no,
++			phys_addr_t phys_addr, u8 interrupt_num,
++			u32 entry_size, u32 *msi_data, u32 *msi_addr_offset);
+ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
+ 		      enum pci_epc_irq_type type, u16 interrupt_num);
+ int pci_epc_start(struct pci_epc *epc);
 -- 
 2.17.1
 
