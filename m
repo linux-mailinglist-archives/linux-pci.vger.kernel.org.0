@@ -2,148 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 539632AFB86
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 23:43:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D31882AFBF8
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 02:31:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgKKWns (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 17:43:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgKKWln (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 17:41:43 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4030BC0401C7
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 14:41:04 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id s25so4956922ejy.6
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 14:41:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ALVcAvrDAuBZ3IPCrkjPwHAX8+DNa5pqM0afUjn5X6s=;
-        b=rTT49AnkhNr487K9n5NKwYO9WMUE3MNY/UrxCB1TueO1d+BsQebe1bVAjto6CnRmk/
-         RDpD3FTxsnpbumIEQX0xW8WRxu+N8dbL7+UlwJuliNYW4tOrjIHEsijjBDMt5SiFkT7W
-         qIC8M6dcNADqftbsDDTwdltE4fVgS48XJPqta990E5jyRjX44U9fYqfo3bpsnhM2g0J7
-         eynDKGo1p6EV/6yF+gGpA1ZpwHDZOUAKO9aCvylNPSLobnovjeE+6vOb7pc4GrNqOJdL
-         VpWgI5+VW1m4VWGcBZwG83xjGz4jrrCYOWJBRZrRhJgpclGLGZV4RXEKWrc44rurwU4I
-         eK6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ALVcAvrDAuBZ3IPCrkjPwHAX8+DNa5pqM0afUjn5X6s=;
-        b=UKn5Px1162Wty80EdVcIG827VJG3nsoCV4B0ZsISemWzKXwRZc2yErddUk1tplfA4O
-         MVXgl2ms01v2kldxwClQg+VxfGkrYLYf2s/GAgboKJaeNH9ZI18EnulGlCf3EBHzbw1Q
-         IvIpvBNuSKBvpT8soIl1BwwDXH/nhvk/M9mbz59E5FruJj3ahetCSRVNef0wSZ5zw04n
-         wQ0tlfl796yGcTJv6tYOoZgHVtfxX6XMP+OGGnJnhubQdMcA9bgQGhBv+vcc/vQMXy55
-         alh43fB+FnBZaDw06Kyv8k8u1GZYTqBN9tWTUSHgYUpNvehxr0YHwm1sVo/u8pSNW3pN
-         Y79g==
-X-Gm-Message-State: AOAM533nOnvhAfLcvlQ84ttlhml52M1XufymnYO6w6rfFvavBbEyM2Bs
-        4GTejUd3oqMi8TJzIeesaNEuDXmJFy3U5+cx8Tyo8Q==
-X-Google-Smtp-Source: ABdhPJxZkk2CPz2+JgnqesQh/6Q2toSIuomPC2gF0BhYxxkrw/FgNoCUwNXohjnwegJoJqNJZnPv//TQH98s+vGiwVw=
-X-Received: by 2002:a17:906:ad8e:: with SMTP id la14mr25980011ejb.264.1605134462866;
- Wed, 11 Nov 2020 14:41:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-4-ben.widawsky@intel.com> <20201111071231.GC7829@infradead.org>
- <CAPcyv4iA_hNc=xdcbR-eb57W9o4br1BognSr5Sj4pAO3uMm69g@mail.gmail.com> <4a8b5a64-7ba0-a275-744f-6642f98e2213@infradead.org>
-In-Reply-To: <4a8b5a64-7ba0-a275-744f-6642f98e2213@infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 11 Nov 2020 14:40:52 -0800
-Message-ID: <CAPcyv4gPwNj+aaRs++hxSxJke8H476hhppcn84t3KUBr0Ff2og@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
+        id S1725996AbgKLBbS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 20:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgKKWnI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Nov 2020 17:43:08 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14B3A208B3;
+        Wed, 11 Nov 2020 22:43:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605134587;
+        bh=ziz9AD0L9QbcwYEV2l2JNVkufhqr9h+LE7Fz/YEme5Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Wy6TcWFvc+0oeRRsXdgQ7pdaOrmNpp0S9B9tyiyhRfDKo3Ys5o4pqbsF7Bzk8r7I3
+         ckMiWEQBhGkHXcZdZD61c+v9iLXT8DUSJrQLb85WgvqlT6ur0dx+PS2lATpjaMlkiQ
+         VZkJ+ZKPKwpbQOHugkPf8T5KCZjFmRCX3lRNVgPQ=
+Date:   Wed, 11 Nov 2020 16:43:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC PATCH 0/9] CXL 2.0 Support
+Message-ID: <20201111224305.GA977584@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201111054356.793390-1-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 1:42 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 11/11/20 9:17 AM, Dan Williams wrote:
-> > On Tue, Nov 10, 2020 at 11:12 PM Christoph Hellwig <hch@infradead.org> wrote:
-> >>
-> >> On Tue, Nov 10, 2020 at 09:43:50PM -0800, Ben Widawsky wrote:
-> >>> +config CXL_MEM
-> >>> +        tristate "CXL.mem Device Support"
-> >>> +        depends on PCI && CXL_BUS_PROVIDER != n
-> >>
-> >> depend on PCI && CXL_BUS_PROVIDER
-> >>
-> >>> +        default m if CXL_BUS_PROVIDER
-> >>
-> >> Please don't set weird defaults for new code.  Especially not default
-> >> to module crap like this.
-> >
-> > This goes back to what people like Dave C. asked for LIBNVDIMM / DAX,
-> > a way to blanket turn on a subsystem without needing to go hunt down
-> > individual configs. All of CXL is "default n", but if someone turns on
-> > a piece of it they get all of it by default. The user can then opt-out
-> > on pieces after that first opt-in. If there's a better way to turn on
-> > suggested configs I'm open to switch to that style. As for the
-> > "default m" I was worried that it would be "default y" without the
-> > specificity, but I did not test that... will check. There have been
-> > times when I wished that distros defaulted bleeding edge new enabling
-> > to 'm' and putting that default in the Kconfig maybe saves me from
-> > needing to file individual config changes to distros after the fact.
->
-> What we as developers put into mainline kernel Kconfig files has nothing
-> to do with what distros use in their distro config files.
-> Or at least it shouldn't.  Maybe your experience has been different.
+On Tue, Nov 10, 2020 at 09:43:47PM -0800, Ben Widawsky wrote:
+> ...
+> Ben Widawsky (5):
+>   cxl/mem: Map memory device registers
+>   cxl/mem: Find device capabilities
+>   cxl/mem: Initialize the mailbox interface
+>   cxl/mem: Implement polled mode mailbox
+>   MAINTAINERS: Add maintainers of the CXL driver
+> 
+> Dan Williams (2):
+>   cxl/mem: Add a driver for the type-3 mailbox
 
-I agree with that sentiment, but walk it back through the requirement
-I mentioned above... *if* we want a top-level CXL option (default n)
-that goes and enables many CXL sub-options the default for those
-sub-options is something that needs to be listed in the Kconfig. 'm'
-is more flexible than 'y', so if a user wants CXL at all, and doesn't
-care about how, I'd prefer it's 'm' rather than 'y'.
+To include important words first and use "Type 3" as in spec:
 
-I have had to go submit distro config fixes when Kconfig defaulted to
-'y' when 'm' was available, and the reasoning for why it was 'y' was
-"oh, that was the Kconfig default when I flipped this other option".
+  cxl/mem: Add Type 3 mailbox driver
 
+>   cxl/mem: Register CXL memX devices
+> 
+> Vishal Verma (2):
+>   cxl/acpi: Add an acpi_cxl module for the CXL interconnect
+>   cxl/acpi: add OSC support
 
-> >>> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> >>
-> >> Please don't use '//' for anything but the SPDX header.
-> >
-> > Ok, I find // following by /* */ a bit ugly, but I don't care enough to fight.
-> >
->
-> Hm, it's not in coding-style AFAICT but Linus has OK-ed C99 style comments:
-> http://lkml.iu.edu/hypermail/linux/kernel/1607.1/00627.html
->
->
-> >>> +MODULE_AUTHOR("Intel Corporation");
-> >>
-> >> A module author is not a company.
-> >
-> > At least I don't have a copyright assignment clause, I don't agree
-> > with the vanity of listing multiple people here especially when
-> > MAINTAINERS has the contact info, and I don't want to maintain a list
-> > as people do drive-by contributions and we need to figure out at what
-> > level of contribution mandates a new MODULE_AUTHOR line. Now, that
-> > said I would be ok to duplicate the MAINTAINERS as MODULE_AUTHOR
-> > lines, but I otherwise expect MAINTAINERS is the central source for
-> > module contact info.
->
-> Sure, MAINTAINERS is fine, but the MODULE_AUTHOR() above provides
-> no useful information.
-> Even saying (made up) linux-devel@linux.intel.com would be slightly better,
-> but some kind of contact info would be great. Otherwise just delete that line.
+For consistency:
 
-True, if the goal is to allow random end users to email support
-questions about this module I'd rather not put my email there.
-Instead, if it's someone that has kernel development questions then
-they should be able to use MAINTAINERS for that contact.
+  cxl/acpi: Add _OSC support
+
+It's conventional in drivers/acpi and drivers/pci to capitalize the
+"ACPI" and "PCI" initialisms except in actual C code.   Seems like
+you're mostly doing the same with "CXL", except in the subject lines
+above.  Since you're making a new directory, I guess you get to
+choose.
+
+I use "PCIe" (not "PCIE" or "PCI-E"; you have a mix) because that
+seems to be the official abbreviation.
