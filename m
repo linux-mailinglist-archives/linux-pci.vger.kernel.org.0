@@ -2,38 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DFD52AFBFC
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 02:31:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4555C2AFD6D
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 03:05:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgKLBb2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 20:31:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41558 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbgKLBNk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 20:13:40 -0500
+        id S1726316AbgKLBbT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 20:31:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgKKWqp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 17:46:45 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E12C061A04;
+        Wed, 11 Nov 2020 14:27:30 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605143617;
+        s=2020; t=1605133648;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=NC+uvhL2XYSO0lp2yao70R5XrrcbGD310dMy9lHjfk0=;
-        b=oMtBw1dK6hwnAziR1Sa8n0nrEDU67WCC95A9JQj6dM7qem4HR9yausWmN9pKdbDKCOa8Mv
-        +nrKwuVUTvpRAO87CKbY+AmPfqP2eQAjgoYG/QCJxYG7Xc7xcMQukj0Uo6EP/7v4FIwgI5
-        O6hlKMxqfK5T/XkbyK3dIP0W6jTM5udWg8ZL/QuHEuYgTsPeEC4A39q74mAp6eDAk+CNFh
-        He38a8YVfbtGVOQ68jieQy7DRRBnpZUdo3zV2Q5GzBSeY2eaCl4SGXbzFaUwbJxvaSPgYw
-        ORSXBbLnH22RYGtcWC85d+QSiDkulHsCIdI5W7W0+8ZcjUPYeVsQhVqUM+NTaw==
+        bh=/AJjHM4RdDlSJrBc4hxI1WObRemgRGA65few9eI9qhY=;
+        b=Yz4kBo6iYpJ8A4VQHynSbh4zW33QX2TNKzEpF1vlJPbmL+ZOD/van513qYoQjUoLfiANkU
+        /UcMuwr8ewQcOHJeACUHCPyaL/pQoU2Ye8qx5txQ5T1oPPOkUX8vJvzXHi6g0kwY67Itxa
+        zGBFaWBV6dWK7StOKa/6l5Nbqbq4uAESoYqm4i6BqxlZlwB+jx6IrPz3+6zW+VvZltQnya
+        H6MVzg9fXch2mIZ35bjtmv0EZ7F+FreuENigEmTzM8YVaGUms1dhyAjDYnVCbB2zUPKVcn
+        mhXkmwtjeC83I8oiQUHByMZkWQELU+8MltibUfrWk7rdaAe3ViEru5/B5/33mA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605143617;
+        s=2020e; t=1605133648;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=NC+uvhL2XYSO0lp2yao70R5XrrcbGD310dMy9lHjfk0=;
-        b=3z7QskZLwhekH6gqUujryf4f99GewEXIaxAyVy1SSUshTt6+NGvqmhEamYRXIm1BM35TBc
-        TIOmhz8YKbDE5oDA==
-To:     "Raj\, Ashok" <ashok.raj@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
+        bh=/AJjHM4RdDlSJrBc4hxI1WObRemgRGA65few9eI9qhY=;
+        b=0e9+v4yPq7Pamk3s9B1ZMn8Y1Q6geVARcMOWJtapXhxL5QALz7ZL4IJuvemVn9hGu0f1QI
+        Xasc43FTcv++sKCQ==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Dan Williams <dan.j.williams@intel.com>,
         "Tian\, Kevin" <kevin.tian@intel.com>,
@@ -66,113 +69,58 @@ Cc:     Christoph Hellwig <hch@infradead.org>,
         "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
         Ashok Raj <ashok.raj@intel.com>
 Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-In-Reply-To: <20201111230321.GC83266@otc-nc-03>
-References: <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com> <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com> <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <d69953378bd1fdcdda54a2fbe285f6c0b1484e8a.camel@infradead.org> <20201111154159.GA24059@infradead.org> <20201111160922.GA83266@otc-nc-03> <87k0uro7fz.fsf@nanos.tec.linutronix.de> <20201111230321.GC83266@otc-nc-03>
-Date:   Thu, 12 Nov 2020 02:13:36 +0100
-Message-ID: <877dqrnzr3.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20201111160922.GA83266@otc-nc-03>
+References: <20201104135415.GX2620339@nvidia.com> <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com> <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com> <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com> <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <d69953378bd1fdcdda54a2fbe285f6c0b1484e8a.camel@infradead.org> <20201111154159.GA24059@infradead.org> <20201111160922.GA83266@otc-nc-03>
+Date:   Wed, 11 Nov 2020 23:27:28 +0100
+Message-ID: <87k0uro7fz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Ashok,
-
-On Wed, Nov 11 2020 at 15:03, Ashok Raj wrote:
-> On Wed, Nov 11, 2020 at 11:27:28PM +0100, Thomas Gleixner wrote:
->> which is the obvious sane and safe logic. But sure, why am I asking for
->> sane and safe in the context of virtualization?
+On Wed, Nov 11 2020 at 08:09, Ashok Raj wrote:
+> On Wed, Nov 11, 2020 at 03:41:59PM +0000, Christoph Hellwig wrote:
+>> On Sun, Nov 08, 2020 at 07:36:34PM +0000, David Woodhouse wrote:
+>> > So it does look like we're going to need a hypercall interface to
+>> > compose an MSI message on behalf of the guest, for IMS to use. In fact
+>> > PCI devices assigned to a guest could use that too, and then we'd only
+>> > need to trap-and-remap any attempt to write a Compatibility Format MSI
+>> > to the device's MSI table, while letting Remappable Format messages get
+>> > written directly.
+>> > 
+>> > We'd also need a way for an OS running on bare metal to *know* that
+>> > it's on bare metal and can just compose MSI messages for itself. Since
+>> > we do expect bare metal to have an IOMMU, perhaps that is just a
+>> > feature flag on the IOMMU?
+>> 
+>> Have the platform firmware advertise if it needs native or virtualized
+>> IMS handling.  If it advertises neither don't support IMS?
 >
-> We can pick how to solve this, and just waiting for you to tell, what
-> mechanism you prefer that's less painful and architecturally acceptible for
-> virtualization and linux. We are all ears!
+> The platform hint can be easily accomplished via DMAR table flags. We could
+> have an IMS_OPTOUT(similart to x2apic optout flag) flag, when 0 its native 
+> and IMS is supported.
+>
+> When vIOMMU is presented to guest, virtual DMAR table will have this flag
+> set to 1. Indicates to GuestOS, native IMS isn't supported.
 
-Obviously we can't turn the time back. The point I was trying to make is
-that the general approach of just bolting things on top of the exiting
-maze is bad in general.
+These opt-out bits suck by definition. It comes all back to the fact
+that the whole virt thing didn't have a hardware defined way to tell
+that the OS runs in a VM and not on bare metal. It wouldn't have been
+rocket science to do so.
 
-Opt-out bits are error prone simply because anything which exists before
-that point does not know that it should set that bit. Obvious, right?
+And because that does not exist, we need magic opt-out bits for every
+other piece of functionality which gets added. Can we please stop this
+and provide a well defined way to tell the OS whether it runs on bare
+metal or not?
 
-CPUID bits are 'Feature available' and not 'Feature not longer
-available' for a reason.
+The point is that you really want opt-in bits so that decisions come
+down to
 
-So with the introduction of VT this stringent road was left and the
-approach was: Don't tell the guest OS that it's not running on bare
-metal.
+     if (!virt || virt->supports_X)
 
-That's a perfectly fine approach for running existing legacy OSes which
-do not care at all because they don't know about anything of this
-newfangled stuff.
-
-But it's a falls flat on it's nose for anything which comes past that
-point simply because there is no reliable way to tell in which context
-the OS runs.
-
-The VMM can decide not to set or is not having support for setting the
-software CPUID bit which tells the guest OS that it does NOT run on bare
-metal and still hand in new fangled PCI devices for which the guest OS
-happens to have a driver which then falls flat on it's nose because some
-magic functionality is not there.
-
-So we have the following matrix:
-
-VMM   		Guest OS
-Old             Old             -> Fine, does not support any of that
-New             Old             -> Fine, does not support any of that
-New             New             -> Fine, works as expected
-Old             New             -> FAIL
-
-To fix this we have to come up with heuristics again to figure out which
-context we are running in and whether some magic feature can be
-supported or not:
-
-probably_on_bare_metal()
-{
-        if (CPUID(FEATURE_HYPERVISOR))
-        	return false;
-       	if (dmi_match_hypervisor_vendor())
-        	return false;
-
-        return PROBABLY_RUNNING_ON_BARE_METAL;
-}
-
-Yes, it works probably in most cases, but it still works by chance and
-that's what I really hate about this; indeed 'hate' is not a strong
-enough word.
-
-Why on earth did VT not introduce a reliable way (instruction, CPUID
-leaf, MSR, whatever, which can't be manipulated by the VMM to let the OS
-figure out where it runs?)
-
-Just because the general approach to these problems is: We can fix that
-in software.
-
-No, you can't fix inconsistency in software at all.
-
-This is not the first time that we tell HW folks to stop this 'Fix this
-in software' attitude which has caused more problems than it solved.
-
-And you can argue in circles until you are blue, that inconsistency is
-not going away. 
-
-Everytime new (mis)features are added which need awareness of the OS
-whether it runs on bare-metal or in a VM we have this unsolvable dance
-of requiring that the underlying VMM has to tell the guest OS NOT to use
-it instead of having the guest OS making the simple decision:
-
-   if (!definitely_on_bare_metal())
-   	return -ENOTSUPP;
-
-or with a newer version of the guest OS:
-
-   if (!definitely_on_bare_metal() && !hypervisor->supportsthis())
-   	return -ENOTSUPP;
-
-I'm halfways content to go with the above probably_on_bare_metal()
-function as a replacement for definitely_on_bare_metal() to go forward,
-but only for the very simple reason that this is the only option we
-have.
+which is the obvious sane and safe logic. But sure, why am I asking for
+sane and safe in the context of virtualization?
 
 Thanks,
 
