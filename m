@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 103822AEEAE
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 11:23:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E0382AEEAF
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 11:23:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgKKKXL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 05:23:11 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7207 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgKKKXL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 05:23:11 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CWLQl1vPDzkfT1;
-        Wed, 11 Nov 2020 18:22:55 +0800 (CST)
+        id S1727109AbgKKKXn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 05:23:43 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:7882 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbgKKKXn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 05:23:43 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4CWLRR4qgWz75W4;
+        Wed, 11 Nov 2020 18:23:31 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 11 Nov 2020 18:22:59 +0800
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 11 Nov 2020 18:23:34 +0800
 From:   Yicong Yang <yangyicong@hisilicon.com>
 To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
 CC:     <linuxarm@huawei.dom>, <prime.zeng@huawei.com>,
         <yangyicong@hisilicon.com>
-Subject: [RESEND PATCH] PCI: Fix race condition between block_cfg_access and msi_enabled/msix_enabled
-Date:   Wed, 11 Nov 2020 18:21:28 +0800
-Message-ID: <1605090088-13960-1-git-send-email-yangyicong@hisilicon.com>
+Subject: [RESEND PATCH] PCI: Factor functions of PCI function reset
+Date:   Wed, 11 Nov 2020 18:22:03 +0800
+Message-ID: <1605090123-14243-1-git-send-email-yangyicong@hisilicon.com>
 X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -33,155 +33,150 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Previously we use bit field for block_cfg_access and
-msi_enabled/msix_enabled, which is non-atomic and they may race
-each other as they share the same memory region. A race condition
-is met between driver bind vs FLR through sysfs:
+Previosly we use pci_probe_reset_function() to probe whehter a function
+can be reset and use __pci_reset_function_locked() to perform a function
+reset. These two functions have lots of common lines.
 
-for driver bind side in thread 1:
-...
-device_lock()
-...
-  ->probe()
-    pci_alloc_irq_vectors_affinity()
-      __pci_enable_msi_range()
-        msi_capability_init()
-          dev->msi_enabled=1 <---set here
-    request_irq(pci_irq_vector(),...)
-
-when echo 1 > reset in thread 2:
-pci_reset_function()
-  pci_dev_lock()
-    pci_cfg_access_lock()
-      dev->block_cfg_access=1 <---may overwrite msi_enabled bit
-    device_lock()
-
-The msi_enabled bit may be overwritten to 0 and will trigger the WARN
-assert in pci_irq_vector(). A similar issue has been addressed in
-commit 44bda4b7d26e ("PCI: Fix is_added/is_busmaster race condition").
-
-Move the block_cfg_access to the pci_dev->priv_flags and use atomic
-bit operations to avoid the race condition.
+Factor the two functions and reduce the redundancy.
 
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/pci/access.c | 20 ++++++++++----------
- drivers/pci/pci.h    | 11 +++++++++++
- include/linux/pci.h  |  1 -
- 3 files changed, 21 insertions(+), 11 deletions(-)
+ drivers/pci/pci.c   | 61 ++++++++++++++++-------------------------------------
+ drivers/pci/pci.h   |  2 +-
+ drivers/pci/probe.c |  2 +-
+ 3 files changed, 20 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 4693569..5826962 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -208,9 +208,9 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e39c549..e3e5f0f 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5006,9 +5006,11 @@ static void pci_dev_restore(struct pci_dev *dev)
+ }
+
+ /**
+- * __pci_reset_function_locked - reset a PCI device function while holding
+- * the @dev mutex lock.
++ * pci_probe_reset_function - check whether the device can be safely reset
++ *                            or reset a PCI device function while holding
++ *                            the @dev mutex lock.
+  * @dev: PCI device to reset
++ * @probe: Probe or not whether the device can be reset.
+  *
+  * Some devices allow an individual function to be reset without affecting
+  * other functions in the same device.  The PCI device must be responsive
+@@ -5022,10 +5024,10 @@ static void pci_dev_restore(struct pci_dev *dev)
+  * device including MSI, bus mastering, BARs, decoding IO and memory spaces,
+  * etc.
+  *
+- * Returns 0 if the device function was successfully reset or negative if the
+- * device doesn't support resetting a single function.
++ * Returns 0 if the device function can be reset or was successfully reset.
++ * negative if the device doesn't support resetting a single function.
+  */
+-int __pci_reset_function_locked(struct pci_dev *dev)
++int pci_probe_reset_function(struct pci_dev *dev, int probe)
  {
- 	do {
- 		raw_spin_unlock_irq(&pci_lock);
--		wait_event(pci_cfg_wait, !dev->block_cfg_access);
-+		wait_event(pci_cfg_wait, !pci_dev_is_cfg_access_blocked(dev));
- 		raw_spin_lock_irq(&pci_lock);
--	} while (dev->block_cfg_access);
-+	} while (pci_dev_is_cfg_access_blocked(dev));
- }
+ 	int rc;
 
- /* Returns 0 on success, negative values indicate error. */
-@@ -223,7 +223,7 @@ int pci_user_read_config_##size						\
- 	if (PCI_##size##_BAD)						\
- 		return -EINVAL;						\
- 	raw_spin_lock_irq(&pci_lock);				\
--	if (unlikely(dev->block_cfg_access))				\
-+	if (unlikely(pci_dev_is_cfg_access_blocked(dev)))				\
- 		pci_wait_cfg(dev);					\
- 	ret = dev->bus->ops->read(dev->bus, dev->devfn,			\
- 					pos, sizeof(type), &data);	\
-@@ -242,7 +242,7 @@ int pci_user_write_config_##size					\
- 	if (PCI_##size##_BAD)						\
- 		return -EINVAL;						\
- 	raw_spin_lock_irq(&pci_lock);				\
--	if (unlikely(dev->block_cfg_access))				\
-+	if (unlikely(pci_dev_is_cfg_access_blocked(dev)))				\
- 		pci_wait_cfg(dev);					\
- 	ret = dev->bus->ops->write(dev->bus, dev->devfn,		\
- 					pos, sizeof(type), val);	\
-@@ -271,9 +271,9 @@ void pci_cfg_access_lock(struct pci_dev *dev)
- 	might_sleep();
-
- 	raw_spin_lock_irq(&pci_lock);
--	if (dev->block_cfg_access)
-+	if (pci_dev_is_cfg_access_blocked(dev))
- 		pci_wait_cfg(dev);
--	dev->block_cfg_access = 1;
-+	pci_dev_block_cfg_access(dev, true);
- 	raw_spin_unlock_irq(&pci_lock);
- }
- EXPORT_SYMBOL_GPL(pci_cfg_access_lock);
-@@ -292,10 +292,10 @@ bool pci_cfg_access_trylock(struct pci_dev *dev)
- 	bool locked = true;
-
- 	raw_spin_lock_irqsave(&pci_lock, flags);
--	if (dev->block_cfg_access)
-+	if (pci_dev_is_cfg_access_blocked(dev))
- 		locked = false;
- 	else
--		dev->block_cfg_access = 1;
-+		pci_dev_block_cfg_access(dev, true);
- 	raw_spin_unlock_irqrestore(&pci_lock, flags);
-
- 	return locked;
-@@ -318,9 +318,9 @@ void pci_cfg_access_unlock(struct pci_dev *dev)
- 	 * This indicates a problem in the caller, but we don't need
- 	 * to kill them, unlike a double-block above.
+@@ -5039,61 +5041,34 @@ int __pci_reset_function_locked(struct pci_dev *dev)
+ 	 * other error, we're also finished: this indicates that further
+ 	 * reset mechanisms might be broken on the device.
  	 */
--	WARN_ON(!dev->block_cfg_access);
-+	WARN_ON(!pci_dev_is_cfg_access_blocked(dev));
+-	rc = pci_dev_specific_reset(dev, 0);
++	rc = pci_dev_specific_reset(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+ 	if (pcie_has_flr(dev)) {
++		if (probe)
++			return 0;
+ 		rc = pcie_flr(dev);
+ 		if (rc != -ENOTTY)
+ 			return rc;
+ 	}
+-	rc = pci_af_flr(dev, 0);
++	rc = pci_af_flr(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	rc = pci_pm_reset(dev, 0);
++	rc = pci_pm_reset(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	rc = pci_dev_reset_slot_function(dev, 0);
++	rc = pci_dev_reset_slot_function(dev, probe);
+ 	if (rc != -ENOTTY)
+ 		return rc;
+-	return pci_parent_bus_reset(dev, 0);
++
++	return pci_parent_bus_reset(dev, probe);
+ }
+-EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
 
--	dev->block_cfg_access = 0;
-+	pci_dev_block_cfg_access(dev, false);
- 	raw_spin_unlock_irqrestore(&pci_lock, flags);
+-/**
+- * pci_probe_reset_function - check whether the device can be safely reset
+- * @dev: PCI device to reset
+- *
+- * Some devices allow an individual function to be reset without affecting
+- * other functions in the same device.  The PCI device must be responsive
+- * to PCI config space in order to use this function.
+- *
+- * Returns 0 if the device function can be reset or negative if the
+- * device doesn't support resetting a single function.
+- */
+-int pci_probe_reset_function(struct pci_dev *dev)
++int __pci_reset_function_locked(struct pci_dev *dev)
+ {
+-	int rc;
+-
+-	might_sleep();
+-
+-	rc = pci_dev_specific_reset(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	if (pcie_has_flr(dev))
+-		return 0;
+-	rc = pci_af_flr(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_pm_reset(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-	rc = pci_dev_reset_slot_function(dev, 1);
+-	if (rc != -ENOTTY)
+-		return rc;
+-
+-	return pci_parent_bus_reset(dev, 1);
++	return pci_probe_reset_function(dev, 0);
+ }
++EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
 
- 	wake_up_all(&pci_cfg_wait);
+ /**
+  * pci_reset_function - quiesce and reset a PCI device function
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 73740dd..1cf3122 100644
+index fa12f7c..73740dd 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -410,6 +410,7 @@ static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+@@ -39,7 +39,7 @@ enum pci_mmap_api {
+ int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
+ 		  enum pci_mmap_api mmap_api);
 
- /* pci_dev priv_flags */
- #define PCI_DEV_ADDED 0
-+#define PCI_DEV_BLOCK_CFG_ACCESS 1	/* Config space access blocked */
+-int pci_probe_reset_function(struct pci_dev *dev);
++int pci_probe_reset_function(struct pci_dev *dev, int probe);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
 
- static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
- {
-@@ -421,6 +422,16 @@ static inline bool pci_dev_is_added(const struct pci_dev *dev)
- 	return test_bit(PCI_DEV_ADDED, &dev->priv_flags);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 03d3712..793cc8a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2403,7 +2403,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+
+ 	pcie_report_downtraining(dev);
+
+-	if (pci_probe_reset_function(dev) == 0)
++	if (pci_probe_reset_function(dev, 1) == 0)
+ 		dev->reset_fn = 1;
  }
 
-+static inline void pci_dev_block_cfg_access(struct pci_dev *dev, bool block)
-+{
-+	assign_bit(PCI_DEV_BLOCK_CFG_ACCESS, &dev->priv_flags, block);
-+}
-+
-+static inline bool pci_dev_is_cfg_access_blocked(struct pci_dev *dev)
-+{
-+	return test_bit(PCI_DEV_BLOCK_CFG_ACCESS, &dev->priv_flags);
-+}
-+
- #ifdef CONFIG_PCIEAER
- #include <linux/aer.h>
-
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 8355306..4ffb588 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -406,7 +406,6 @@ struct pci_dev {
- 	unsigned int	is_busmaster:1;		/* Is busmaster */
- 	unsigned int	no_msi:1;		/* May not use MSI */
- 	unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
--	unsigned int	block_cfg_access:1;	/* Config space access blocked */
- 	unsigned int	broken_parity_status:1;	/* Generates false positive parity */
- 	unsigned int	irq_reroute_variant:2;	/* Needs IRQ rerouting variant */
- 	unsigned int	msi_enabled:1;
 --
 2.8.1
 
