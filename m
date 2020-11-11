@@ -2,32 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3A132AE8B3
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 07:17:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FF4F2AE8B7
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 07:17:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgKKGRU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 01:17:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40142 "EHLO
+        id S1725959AbgKKGRh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 01:17:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgKKGRU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 01:17:20 -0500
+        with ESMTP id S1725468AbgKKGRa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 01:17:30 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D993CC0613D1;
-        Tue, 10 Nov 2020 22:17:19 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447AEC0613D1;
+        Tue, 10 Nov 2020 22:17:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:Subject:From:Sender
         :Reply-To:Content-ID:Content-Description;
-        bh=kGYmI/Q6Qz0/0VlGhaOnBJBqjqnYbQCh0GWbtl2e1Es=; b=GBtVWmiIT0NgrhKoxSVkVZpC24
-        /97KAT4o4d0fOpB5PtVxfzOA8gEh1zZ7+3aezyHPpss6hSbIZ1Bs06njo7p+UBCviitngnjTX3m2M
-        AG65JPtruyeK8QU3HaPqIn0EgALUkx4Eqc3oj/oELOVNnBzOhm2ZRJGE68jWRCi0FrRUs1na9ushh
-        pAeU7QWFHb+/ig3ToybGI8CpcKJHTpyYJD3ZS1Y+usjF7QC+JUAD/iRmuyB/IL4ahTtVjYoirc19B
-        mRU6QzBhE991shqiXe9xYDAxJfPE4vnuf5vGhUaNTgjS1n38eXK05NjBnspS4lJsY3/0rTJWnOY7t
-        Sk9vuFbg==;
+        bh=LoX8aPc+86Ek8PIchP13rPox1xYYpOQiuiixZJROd8g=; b=KklLE+H+1gveGuiv88igAb1a6x
+        3eMIQIH7QwoFR0V3hw05TaxiIYPJXBpuAznT8X4IcsJuKpV8jogtOcvm3ah3zRWF86+/19Fe+pUgZ
+        VJW8IC7q0fwK+07iA2ZGLdMUySWTZfz2RDjDqP7n8jCPzQ34tIwcHA2R2xQvOdBU/q7b3b+YTUXv1
+        LAwkaGh6tDDj1Y9ddYd9+md/SNHWTh3OFFuk1Xah+M4+nf3z9wv0+4R6JzR8Xe+3O6sj9Rx2fDsUn
+        XfR0bMTAB8K9Ye3oEq+fskqA9/WK4MYyUawk6hDDk5XfHddvlOtrr11ScoMViZ9HwgpKmQabRKeoa
+        Slu0P4tw==;
 Received: from [2601:1c0:6280:3f0::662d]
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kcjRS-00080D-6G; Wed, 11 Nov 2020 06:17:14 +0000
-Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
+        id 1kcjRe-00080a-Vl; Wed, 11 Nov 2020 06:17:27 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [RFC PATCH 1/9] cxl/acpi: Add an acpi_cxl module for the CXL
+ interconnect
 To:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org,
@@ -38,14 +40,13 @@ Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-4-ben.widawsky@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1dbfc3a3-5f81-90b2-5b0b-5dcb99e2eecd@infradead.org>
-Date:   Tue, 10 Nov 2020 22:17:08 -0800
+ <20201111054356.793390-2-ben.widawsky@intel.com>
+Message-ID: <57238bdc-0dc0-f6df-19b7-cb5e5bc3fc28@infradead.org>
+Date:   Tue, 10 Nov 2020 22:17:23 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20201111054356.793390-4-ben.widawsky@intel.com>
+In-Reply-To: <20201111054356.793390-2-ben.widawsky@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -57,51 +58,62 @@ Hi,
 
 On 11/10/20 9:43 PM, Ben Widawsky wrote:
 > ---
->  drivers/cxl/Kconfig  | 20 +++++++++++
->  drivers/cxl/Makefile |  2 ++
->  drivers/cxl/mem.c    | 82 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/pci.h    | 15 ++++++++
->  4 files changed, 119 insertions(+)
+>  drivers/Kconfig       |   1 +
+>  drivers/Makefile      |   1 +
+>  drivers/cxl/Kconfig   |  30 +++++++++++
+>  drivers/cxl/Makefile  |   5 ++
+>  drivers/cxl/acpi.c    | 119 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/acpi.h    |  15 ++++++
+>  include/acpi/actbl1.h |  52 ++++++++++++++++++
+>  7 files changed, 223 insertions(+)
 
 > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index dd724bd364df..15548f5c77ff 100644
-> --- a/drivers/cxl/Kconfig
+> new file mode 100644
+> index 000000000000..dd724bd364df
+> --- /dev/null
 > +++ b/drivers/cxl/Kconfig
-> @@ -27,4 +27,24 @@ config CXL_ACPI
->  	  resources described by the CEDT (CXL Early Discovery Table)
->  
->  	  Say 'y' to enable CXL (Compute Express Link) drivers.
+> @@ -0,0 +1,30 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +menuconfig CXL_BUS
+> +	tristate "CXL (Compute Express Link) Devices Support"
+> +	help
+> +	  CXL is a bus that is electrically compatible with PCI-E, but layers
+> +	  three protocols on that signalling (CXL.io, CXL.cache, and CXL.mem). The
+> +	  CXL.cache protocol allows devices to hold cachelines locally, the
+> +	  CXL.mem protocol allows devices to be fully coherent memory targets, the
+> +	  CXL.io protocol is equivalent to PCI-E. Say 'y' to enable support for
+> +	  the configuration and management of devices supporting these protocols.
 > +
-> +config CXL_MEM
-> +        tristate "CXL.mem Device Support"
-> +        depends on PCI && CXL_BUS_PROVIDER != n
-> +        default m if CXL_BUS_PROVIDER
-
-The "if CXL_BUS_PROVIDER" should be redundant due to the "depends on" clause.
-However, having any default or 'm' or 'y' needs to be justified.
-
-> +        help
-> +          The CXL.mem protocol allows a device to act as a provider of
-> +          "System RAM" and/or "Persistent Memory" that is fully coherent
-> +          as if the memory was attached to the typical CPU memory
-> +          controller.
+> +if CXL_BUS
 > +
-> +          Say 'y/m' to enable a driver named "cxl_mem.ko" that will attach
-
-The builtin driver will not be named cxl-mem.ko.
-
-> +          to CXL.mem devices for configuration, provisioning, and health
-> +          monitoring, the so called "type-3 mailbox". Note, this driver
-> +          is required for dynamic provisioning of CXL.mem attached
-> +          memory, a pre-requisite for persistent memory support, but
-
-	               prerequisite
-
-> +          devices that provide volatile memory may be fully described by
-> +          existing platform firmware memory enumeration.
+> +config CXL_BUS_PROVIDER
+> +	tristate
 > +
-> +          If unsure say 'n'.
->  endif
+> +config CXL_ACPI
+> +	tristate "CXL Platform Support"
+> +	depends on ACPI
+> +	default CXL_BUS
+
+Please provide some justification for something other than the
+default default of 'n'. We try hard not to add drivers/modules that
+are not required for bootup.
+
+> +	select CXL_BUS_PROVIDER
+> +	help
+> +	  CXL Platform Support is a prerequisite for any CXL device driver that
+> +	  wants to claim ownership of the component register space. By default
+> +	  platform firmware assumes Linux is unaware of CXL capabilities and
+> +	  requires explicit opt-in. This platform component also mediates
+> +	  resources described by the CEDT (CXL Early Discovery Table)
+
+end sentence with '.'
+
+> +
+> +	  Say 'y' to enable CXL (Compute Express Link) drivers.
+
+	  or 'm'
+
+> +endif
 
 
 -- 
