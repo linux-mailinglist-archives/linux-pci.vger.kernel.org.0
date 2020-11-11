@@ -2,157 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71F312AE68F
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 03:49:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AF822AE84C
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 06:45:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725870AbgKKCtz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 10 Nov 2020 21:49:55 -0500
-Received: from mail-eopbgr60071.outbound.protection.outlook.com ([40.107.6.71]:38786
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725867AbgKKCtz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 10 Nov 2020 21:49:55 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P4G7YvV2FmQWzj49vRXVfiBCgxVzc77lHip5jraTQwuzYIJO1xr3Q/5bD23w7giIdEifNca9dPYgX6dmBxEvfIiriktiWYZQb+7bdsk+11voyTioETTq/SEzd8k2+g6esN4PCxZaGOqsu8DPzhysBRvLJfCezR6yIT2DVEy5p6X2c4yZl9gKa85j3MPUbh0IXspdTV0MROTF7/H0+s1nclH0H92jDs/A1mBFyxyME2KWqR61IDGkKETcCr1z73cMn/S4zQ/jpPhpBA7TpdDhbl/xz0D5L8AT53dEXXGyhPS9GiS6Gn37SnouxL9Zle58s/AvuA/zdV2dS/RW2p0d/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fEHs2q6ZI3w1ofByLcfEQkK5WovRYanb5/P9CzU3CTM=;
- b=MivCuOwUqQR4eJoDF68ywdxQ/rmCWbYB02kWkquOOGKZ8A2zsrlkvVLlx7qjAGN8jbEbjMYDtK6uie0wVpcNk6X53hlBWVTziXoQReqVkrHYjTEyuBZVbTZm6CnTFzfytBzhSTlLulfXAVXl4olYOOjpHn1w1mJqX8zyyDU9Djx2ghYKP8oJwZNONJsR85pORSVeamrn3E+7jeajyi2WYK9sEzejkJBvU4uliwEgFjE5Lv+/mLihjx/gWTxnQRtNpx/M0R4mhQEpu13E8aumQI2/A+MEyyXvLodY8R8jWiZ5MOzKFJoltg8NlE7+mck3xpqoikHrglC1Pr6wSWMCUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fEHs2q6ZI3w1ofByLcfEQkK5WovRYanb5/P9CzU3CTM=;
- b=S06+m5a7+iPhQpjQ3jUfPyQVSiFBe4k1WhVo9SjnmMscCqz0TWPs4ciQ8wQNXAXXwBagHP58XpVGkH/6jveNxSCYrwIg1cJJqFGjT42v6f9+Y1XczAF7AWMHIcZbBZIzEhXSrobBAxAiJn+FVCw1oJkw7wu6HDUopo4jKggHXUY=
-Received: from VI1PR04MB4960.eurprd04.prod.outlook.com (2603:10a6:803:57::21)
- by VE1PR04MB7453.eurprd04.prod.outlook.com (2603:10a6:800:1b0::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.23; Wed, 11 Nov
- 2020 02:49:51 +0000
-Received: from VI1PR04MB4960.eurprd04.prod.outlook.com
- ([fe80::b178:a37b:1f9e:3a6]) by VI1PR04MB4960.eurprd04.prod.outlook.com
- ([fe80::b178:a37b:1f9e:3a6%3]) with mapi id 15.20.3541.025; Wed, 11 Nov 2020
- 02:49:51 +0000
-From:   Sherry Sun <sherry.sun@nxp.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Arnd Bergmann <arnd@kernel.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "dave.jiang@intel.com" <dave.jiang@intel.com>,
-        "allenbh@gmail.com" <allenbh@gmail.com>,
-        "tjoseph@cadence.com" <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>
-Subject: RE: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express
- Non-Transparent Bridge
-Thread-Topic: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express
- Non-Transparent Bridge
-Thread-Index: AQHWtnmf1Fe2qKyugUaToCGM3cma6am/hnbQgABT4wCAAMJmMIAAz6aAgAAKvACAAAwhgIAAtS8g
-Date:   Wed, 11 Nov 2020 02:49:51 +0000
-Message-ID: <VI1PR04MB496067EB79873EEC9329B9B992E80@VI1PR04MB4960.eurprd04.prod.outlook.com>
-References: <20200930153519.7282-16-kishon@ti.com>
- <VI1PR04MB496061EAB6F249F1C394F01092EA0@VI1PR04MB4960.eurprd04.prod.outlook.com>
- <d6d27475-3464-6772-2122-cc194b8ae022@ti.com>
- <VI1PR04MB49602D24F65E11FF1F14294F92E90@VI1PR04MB4960.eurprd04.prod.outlook.com>
- <30c8f7a1-baa5-1eb4-d2c2-9a13be896f0f@ti.com>
- <CAK8P3a38vBXbAWE09H+TSoZUTkFdYDcQmXX97foT4qXQc8t5ZQ@mail.gmail.com>
- <5a9115c8-322e-ffd4-6274-ae98c375b21d@ti.com>
-In-Reply-To: <5a9115c8-322e-ffd4-6274-ae98c375b21d@ti.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 991f25b0-c315-4d9c-6849-08d885ec762a
-x-ms-traffictypediagnostic: VE1PR04MB7453:
-x-microsoft-antispam-prvs: <VE1PR04MB7453651A14CC9E51BA1F57EF92E80@VE1PR04MB7453.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YaGFLD+d+1xK35YKUmTFNKiHwXnULKfw9MxSCsXTbN9kPym2cUUgQNfXEmgLoyKkLR1BXmCXq8mMkdvEbjdVtg+vvn9mia3EFys79JtThm7+quTOP+4PmbMpvrFH0t6J6xBZepvnjlvYLRjjblDoqlyg2heMsAGwYF++QaNSTxDHOPiVZwuO02HvelQEa88iL7DRp/Ovl9H2SDZvCtSmLvfcNFHrunGUkmctzJ+VXnU1dyr0W1aV53E/34gz+Rayql0gWo5exvZ//X1IB0mEhkcUmxSvlOcAfFW1PoWr+k8C2xVNWVXJBYNeIcNSDb2dPVoL311QMr1jMOsSkW+mI7BacN7IbdT5GBD2VWsAnm5UkEpHh2giFLj77u3uBJ+S0GLTwAlohtunmmcULs8xqQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4960.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(366004)(39860400002)(376002)(136003)(66946007)(316002)(76116006)(66556008)(66446008)(110136005)(71200400001)(54906003)(83380400001)(52536014)(33656002)(9686003)(53546011)(7696005)(45080400002)(6506007)(66476007)(5660300002)(55016002)(478600001)(26005)(44832011)(186003)(7416002)(966005)(4326008)(8676002)(86362001)(8936002)(2906002)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: yNl0QGWc959BzH4IUTZL6QkAhY/0T9alVCvR+6mE+ETzehPza2lgMBzTfUrhrqAjtXL4kdwe7Pi4AWlnfrYgnk6XaTpbdn/5I7+tG1Ktik0QfcsCIX5SQwZOuNAIsw5lUONVuh0jqaz0vOe2xddZCq7vrFa1Mg38teISKVvUcSk5S9IvXrrpGDoixdHYuoDKczYRiEOw8by76v4NPiYWsHjhhhjlphhlIGVgFzxqUzwQN4gALWl3aaxZzrKSyQwYLQDfpcnhVY1SWvLA2HMTo8swODL1q+PJvKblrBzh9hwU60ok/qBOsJttPcUKWgr78r1slW16UYJ+Yk1B3rFxv6G2dHhPZ3Nx3TI8+QhoXULFROS0eZAr0NT66xyjD7Beo3G2NxH9UD1s6vDw6Qyqj/2LP1YWT6rTb11R6NqFG7QkFFhN25VtJPk5IeRVl+Pufu3VwC4Mtzaw98FdG9LGW+S54haHAcOh+zkF2e2AnF8Zv9oDfHLSUwz/Zx08aYkT3RwFEO89kGMP31072PU0v1Zor41ZcICrj31vVn8BN55ltDd2iqXGJkYaqJjHvIctpOsOXWEiUaF5eYHebdLawWGO7wIy/Yf44fVtsnZUfafi6DfRSVXs3sSZYAyyPw6R03EBVcDytYpy6zWUKNqwx8c6+PzOKJaVUmYFtVtOxhILPbyAkQKu6kydWuHdT24VG6hubIkKyBdDGezNATNZKBjkvDM2sHhZO60eFyvDTn/+QXdlQr7qaZu8i2Ok5buuNKVLxEiWYinFh9I2+dEisKhndq8Ov2ibMTezCZ3rD/+EwgQ8WTmIc4K+VvNPxfIXXCoHKKlbitiOS4ozFqbY9Uv+lxhgZxXMrGd+K5rD4EROLOBadPB5XZe9orz0M0Xf2Y5Bixny+F2cXHqJKAMqow==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1725922AbgKKFoH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 00:44:07 -0500
+Received: from mga12.intel.com ([192.55.52.136]:54150 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725899AbgKKFoF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 11 Nov 2020 00:44:05 -0500
+IronPort-SDR: m4g6k+Hl9pizKrSHdTFng7sP87acTx2nAlOFwLgBpXfBEW/fa1gJU5H+K1XPgCoBx+sCirt4i5
+ NizR6qDWBRLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="149372946"
+X-IronPort-AV: E=Sophos;i="5.77,468,1596524400"; 
+   d="scan'208";a="149372946"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 21:44:02 -0800
+IronPort-SDR: gQzIQInEA5r3owPoX3X4seS8dnk1b29gobwVFwNWfq2rezXEKm4VwbkgJ8IL1AwMLJl9xwB0Mg
+ n7lnMsH7/OPw==
+X-IronPort-AV: E=Sophos;i="5.77,468,1596524400"; 
+   d="scan'208";a="360414721"
+Received: from hccoutan-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.131.159])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 21:44:02 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>
+Subject: [RFC PATCH 0/9] CXL 2.0 Support
+Date:   Tue, 10 Nov 2020 21:43:47 -0800
+Message-Id: <20201111054356.793390-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4960.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 991f25b0-c315-4d9c-6849-08d885ec762a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2020 02:49:51.2832
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QT+xczaMI5k5vafZQYY3stf+mNSmIWHNSMkIMnmtP43/f8yNklmBdec0nJQl9Xfo5uycgsVLfUM31JUOy3QTtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7453
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgS2lzaG9uLA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMTUvMThdIE5UQjogQWRkIHN1
-cHBvcnQgZm9yIEVQRiBQQ0ktRXhwcmVzcyBOb24tDQo+IFRyYW5zcGFyZW50IEJyaWRnZQ0KPiAN
-Cj4gSGkgU2hlcnJ5LCBBcm5kLA0KPiANCj4gT24gMTAvMTEvMjAgODoyOSBwbSwgQXJuZCBCZXJn
-bWFubiB3cm90ZToNCj4gPiBPbiBUdWUsIE5vdiAxMCwgMjAyMCBhdCAzOjIwIFBNIEtpc2hvbiBW
-aWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+IHdyb3RlOg0KPiA+PiBPbiAxMC8xMS8y
-MCA3OjU1IGFtLCBTaGVycnkgU3VuIHdyb3RlOg0KPiA+DQo+ID4+PiBCdXQgZm9yIFZPUCwgb25s
-eSB0d28gYm9hcmRzIGFyZSBuZWVkZWQob25lIGJvYXJkIGFzIGhvc3QgYW5kIG9uZQ0KPiA+Pj4g
-Ym9hcmQgYXMgY2FyZCkgdG8gcmVhbGl6ZSB0aGUgY29tbXVuaWNhdGlvbiBiZXR3ZWVuIHRoZSB0
-d28gc3lzdGVtcywNCj4gc28gbXkgcXVlc3Rpb24gaXMgd2hhdCBhcmUgdGhlIGFkdmFudGFnZXMg
-b2YgdXNpbmcgTlRCPw0KPiA+Pg0KPiA+PiBOVEIgaXMgYSBicmlkZ2UgdGhhdCBmYWNpbGl0YXRl
-cyBjb21tdW5pY2F0aW9uIGJldHdlZW4gdHdvIGRpZmZlcmVudA0KPiA+PiBzeXN0ZW1zLiBTbyBp
-dCBieSBpdHNlbGYgd2lsbCBub3QgYmUgc291cmNlIG9yIHNpbmsgb2YgYW55IGRhdGENCj4gPj4g
-dW5saWtlIGEgbm9ybWFsIEVQIHRvIFJQIHN5c3RlbSAob3IgdGhlIFZPUCkgd2hpY2ggd2lsbCBi
-ZSBzb3VyY2Ugb3Igc2luaw0KPiBvZiBkYXRhLg0KPiA+Pg0KPiA+Pj4gQmVjYXVzZSBJIHRoaW5r
-IHRoZSBhcmNoaXRlY3R1cmUgb2YgTlRCIHNlZW1zIG1vcmUgY29tcGxpY2F0ZWQuIE1hbnkNCj4g
-dGhhbmtzIQ0KPiA+Pg0KPiA+PiB5ZWFoLCBJIHRoaW5rIGl0IGVuYWJsZXMgYSBkaWZmZXJlbnQg
-dXNlIGNhc2UgYWxsIHRvZ2V0aGVyLiBDb25zaWRlcg0KPiA+PiB5b3UgaGF2ZSB0d28geDg2IEhP
-U1QgUENzIChoYXZpbmcgUlApIGFuZCB0aGV5IGhhdmUgdG8gYmUgY29tbXVuaWNhdGUNCj4gPj4g
-dXNpbmcgUENJZS4gTlRCIGNhbiBiZSB1c2VkIGluIHN1Y2ggY2FzZXMgZm9yIHRoZSB0d28geDg2
-IFBDcyB0bw0KPiA+PiBjb21tdW5pY2F0ZSB3aXRoIGVhY2ggb3RoZXIgb3ZlciBQQ0llLCB3aGlj
-aCB3b3VsZG4ndCBiZSBwb3NzaWJsZQ0KPiB3aXRob3V0IE5UQi4NCj4gPg0KPiA+IEkgdGhpbmsg
-Zm9yIFZPUCwgd2Ugc2hvdWxkIGhhdmUgYW4gYWJzdHJhY3Rpb24gdGhhdCBjYW4gd29yayBvbiBl
-aXRoZXINCj4gPiBOVEIgb3IgZGlyZWN0bHkgb24gdGhlIGVuZHBvaW50IGZyYW1ld29yayBidXQg
-cHJvdmlkZSBhbiBpbnRlcmZhY2UNCj4gPiB0aGF0IHRoZW4gbGV0cyB5b3UgY3JlYXRlIGxvZ2lj
-YWwgZGV2aWNlcyB0aGUgc2FtZSB3YXkuDQo+ID4NCj4gPiBEb2luZyBWT1AgYmFzZWQgb24gTlRC
-IHBsdXMgdGhlIG5ldyBOVEJfRVBGIGRyaXZlciB3b3VsZCBhbHNvIHdvcmsgYW5kDQo+ID4ganVz
-dCBtb3ZlIHRoZSBhYnN0cmFjdGlvbiBzb21ld2hlcmUgZWxzZSwgYnV0IEkgZ3Vlc3MgaXQgd291
-bGQNCj4gPiBjb21wbGljYXRlIHNldHRpbmcgaXQgdXAgZm9yIHRob3NlIHVzZXJzIHRoYXQgb25s
-eSBjYXJlIGFib3V0IHRoZQ0KPiA+IHNpbXBsZXIgZW5kcG9pbnQgY2FzZS4NCj4gDQo+IEknbSBu
-b3Qgc3VyZSBpZiB5b3UndmUgZ290IGEgY2hhbmNlIHRvIGxvb2sgYXQgWzFdLCB3aGVyZSBJIGFk
-ZGVkIHN1cHBvcnQgZm9yDQo+IFJQPC0+RVAgc3lzdGVtIGJvdGggcnVubmluZyBMaW51eCwgd2l0
-aCBFUCBjb25maWd1cmVkIHVzaW5nIExpbnV4IEVQDQo+IGZyYW1ld29yayAoYXMgd2VsbCBhcyBI
-T1NUIHBvcnRzIGNvbm5lY3RlZCB0byBOVEIgc3dpdGNoLCBwYXRjaGVzIDIwIGFuZA0KPiAyMSwg
-dGhhdCB1c2VzIHRoZSBMaW51eCBOVEIgZnJhbWV3b3JrKSB0byBjb21tdW5pY2F0ZSB1c2luZyB2
-aXJ0aW8gb3Zlcg0KPiBQQ0llLg0KPiANCg0KSSBzYXcgeW91ciBwYXRjaGVzIGF0IFsxXSwgaGVy
-ZSB5b3UgdGFrZSBhIHJwbXNnIGFzIGFuIGV4YW1wbGUgdG8gY29tbXVuaWNhdGUgYmV0d2Vlbg0K
-dHdvIFNvQ3MgdXNpbmcgUENJZSBSQzwtPkVQIGFuZCBIT1NUMS1OVEItSE9TVDIgZm9yIGRpZmZl
-cmVudCB1c2VyY2FzZXMuDQpUaGUgVk9QIGNvZGUgd29ya3MgdW5kZXIgdGhlIFBDSWUgUkM8LT5F
-UCBmcmFtZXdvcmssIHdoaWNoIG1lYW5zIHRoYXQgd2UgY2FuIGFsc28NCm1ha2UgVk9QIHdvcmtz
-IHVuZGVyIHRoZSBMaW51eCBOVEIgZnJhbWV3b3JrLCBqdXN0IGxpa2UgdGhlIHJwbXNnIHdheSB5
-b3UgZGlkIGhlcmUsIHJpZ2h0Pw0KDQpCZXN0IHJlZ2FyZHMNClNoZXJyeQ0KDQo+IFRoZSBjb3Zl
-ci1sZXR0ZXIgWzFdIHNob3dzIGEgcGljdHVyZSBvZiB0aGUgdHdvIHVzZSBjYXNlcyBzdXBwb3J0
-ZWQgaW4gdGhhdA0KPiBzZXJpZXMuDQo+IA0KPiBbMV0gLT4NCj4gaHR0cHM6Ly9ldXIwMS5zYWZl
-bGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZsb3JlLmtlDQo+
-IHJuZWwub3JnJTJGciUyRjIwMjAwNzAyMDgyMTQzLjI1MjU5LTEtDQo+IGtpc2hvbiU0MHRpLmNv
-bSZhbXA7ZGF0YT0wNCU3QzAxJTdDc2hlcnJ5LnN1biU0MG54cC5jb20lN0M1ZDhiNw0KPiAzYTRi
-NzI5NDdiZWE2NWQwOGQ4ODU4ZjUwOTElN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYz
-NSU3DQo+IEMwJTdDMCU3QzYzNzQwNjE5Nzg2NTExOTk5MiU3Q1Vua25vd24lN0NUV0ZwYkdac2Iz
-ZDhleUpXSWpvaQ0KPiBNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazFoYVd3
-aUxDSlhWQ0k2TW4wJTNEJTdDMTAwDQo+IDAmYW1wO3NkYXRhPWlSckJ2UTl4am9PVVlVJTJGRGlk
-TUxaWnBXNlh1VTRJVFZYRkRBJTJCJTJGNHJKRlUNCj4gJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0K
-PiBUaGFuayBZb3UsDQo+IEtpc2hvbg0K
+Introduce support for “type-3” memory devices defined in the recently released
+Compute Express Link (CXL) 2.0 specification. Specifically, these are the memory
+devices defined by section 8.2.8.5 of the CXL 2.0 spec. A reference
+implementation emulating these devices is being submitted to the QEMU mailing
+list. “Type-3” is a CXL device that acts as a memory expander for RAM or PMEM.
+It might be interleaved with other CXL devices in a given physical address
+range.
+
+These changes allow for foundational enumeration of CXL 2.0 memory devices. The functionality present is:
+- Initial driver bring-up
+- Device enumeration and an initial sysfs representation
+- Submit a basic firmware command via ‘mailbox’ to an emulated memory device
+  with non-volatile capacity.
+
+Some of the functionality that is still missing includes:
+- Memory interleaving at the host bridge, root port, or switch level
+- CXL 1.1 Root Complex Integrated Endpoint Support
+- CXL 2.0 Hot plug support
+
+In addition to the core functionality of discovering the spec defined registers
+and resources, introduce a CXL device model that will be the foundation for
+translating CXL capabilities into existing Linux infrastructure for Persistent
+Memory and other memory devices. For now, this only includes support for the
+management command mailbox that type-3 devices surface. These control devices
+fill the role of “DIMMs” / nmemX memory-devices in LIBNVDIMM terms.
+
+Now, while implementing the driver some feedback for the specification was
+generated to cover perceived gaps and address conflicts. The feedback is
+presented as a reference implementation in the driver and QEMU emulation.
+Specifically the following concepts are original to the Linux implementation and
+feedback / collaboration is requested to develop these into specification
+proposals:
+1. Top level ACPI object (ACPI0017)
+2. HW imposed address space and interleave constraints
+3. _OSC UUID A4D1629D-FF52-4888-BE96-E5CADE548DB1
+
+ACPI0017
+--------
+Introduce a new ACPI namespace device with an _HID of ACPI0017. The purpose of
+this object is twofold, support a legacy OS with a set of out-of-tree CXL
+modules, and establish an attach point for a driver that knows about
+interleaving. Both of these boil down to the same point, to centralize Operating
+System support for resources described by the CXL Early Discovery Table (CEDT).
+
+The legacy OS problem stems from the spec's description of a host bridge,
+ACPI0016 is denoted as the _HID for host bridges, with a _CID of PNP0A08. In a
+CXL unaware version of Linux, the core ACPI subsystem will bind a driver to
+PNP0A08 and preclude a CXL-aware driver from binding to ACPI0016. An ACPI0017
+device allows a standalone CXL-aware driver to register for handling /
+coordinating CEDT and CXL-specific _OSC control.
+
+Similarly when managing interleaving there needs to be some management layer
+above the ACPI0016 device that is capable of assembling leaf nodes into
+interleave sets. As is the case with ACPI0012 that does this central
+coordination for NFIT defined resources, ACPI0017 does the same for CEDT
+described resources.
+
+Memory Windows
+-------
+For CXL.mem capable platforms, there is a need for a mechanism for platform
+firmware to make the Operating System aware of any restrictions that hardware
+might have in address space. For example, in a system with 4 host bridges all
+participating in an interleave set, the firmware needs to provide some
+description of this. That information is missing from the CXL 2.0 spec as of
+today and it also is not implemented in the driver. A variety of ACPI based
+mechanisms, for example _CRS fields on the ACPI0017 device, were considered.
+
+
+CXL Exclusive _OSC
+-----------------
+CXL 2.0 definition provides new fields to _OSC for host bridges to allow for new
+services provided by CXL - error handling, hot plug, capabilities, etc. This is
+built on top of PCIe _OSC via a new UUID. A CXL unaware OS will use the old UUID
+to configure the PCIe host bridge. The expectation is that a CXL aware OS uses
+the new UUID and to modify both CXL and PCIE capabilities in one shot. The issue
+arises when trying to define a standalone CXL driver. The core OS will configure
+the PCIe _OSC, but when the CXL driver attempts to set CXL _OSC the current
+definition makes that driver re-specify PCIE capabilities. An isolated CXL-only
+_OSC allows the PCIE core to be unchanged and let a CXL driver stack manage CXL
+_OSC without the possibility of clobbering / colliding with PCIE core OSC
+management.  The proposal moves the new _OSC dwords (SUPC and CTRC) to their own
+_OSC UUID.
+
+Next steps after this basic foundation is expanded command support and LIBNVDIMM
+integration. This is the initial “release early / release often” version of the
+Linux CXL enabling.
+
+
+Ben Widawsky (5):
+  cxl/mem: Map memory device registers
+  cxl/mem: Find device capabilities
+  cxl/mem: Initialize the mailbox interface
+  cxl/mem: Implement polled mode mailbox
+  MAINTAINERS: Add maintainers of the CXL driver
+
+Dan Williams (2):
+  cxl/mem: Add a driver for the type-3 mailbox
+  cxl/mem: Register CXL memX devices
+
+Vishal Verma (2):
+  cxl/acpi: Add an acpi_cxl module for the CXL interconnect
+  cxl/acpi: add OSC support
+
+ MAINTAINERS           |   9 +
+ drivers/Kconfig       |   1 +
+ drivers/Makefile      |   1 +
+ drivers/cxl/Kconfig   |  50 ++++
+ drivers/cxl/Makefile  |   9 +
+ drivers/cxl/acpi.c    | 325 ++++++++++++++++++++++
+ drivers/cxl/acpi.h    |  33 +++
+ drivers/cxl/bus.c     |  35 +++
+ drivers/cxl/bus.h     |   8 +
+ drivers/cxl/cxl.h     | 166 +++++++++++
+ drivers/cxl/mem.c     | 631 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/pci.h     |  21 ++
+ include/acpi/actbl1.h |  52 ++++
+ 13 files changed, 1341 insertions(+)
+ create mode 100644 drivers/cxl/Kconfig
+ create mode 100644 drivers/cxl/Makefile
+ create mode 100644 drivers/cxl/acpi.c
+ create mode 100644 drivers/cxl/acpi.h
+ create mode 100644 drivers/cxl/bus.c
+ create mode 100644 drivers/cxl/bus.h
+ create mode 100644 drivers/cxl/cxl.h
+ create mode 100644 drivers/cxl/mem.c
+ create mode 100644 drivers/cxl/pci.h
+
+-- 
+2.29.2
+
