@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DE032AF4EF
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 16:37:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 991152AF4F3
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Nov 2020 16:37:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbgKKPhD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 10:37:03 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38008 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbgKKPhA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 10:37:00 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFajXN097369;
-        Wed, 11 Nov 2020 09:36:45 -0600
+        id S1727479AbgKKPhF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 10:37:05 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59046 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbgKKPhE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 10:37:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFapjV124959;
+        Wed, 11 Nov 2020 09:36:51 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1605109005;
-        bh=rM/zpyHLYwR6kMK4GfVsk4cqjPUlNqYX8ihj39HgGU0=;
+        s=ti-com-17Q1; t=1605109011;
+        bh=z3Tw9eXfcOK90ruy3aMeRyVdcSzDrEL/G+eXeTQ/vG0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=FEj5U329DAheGwXea7399M4ZIm+sCt8c29vyUdbIkzm0HZA/cO7Gh3mLiAs5ldLI/
-         GGyBvwIo9QcEPtawY57UPpE5PtR21JX16dqeBxjn3mXDVoR5vby7Wddj1YkRCMeBZp
-         8zzqwV97Bls2BExrBnDd/7B7fchHAkyguAIczsmU=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0ABFajMF111994
+        b=xZnX7zYFNhlOJOkFnzhSggE2kSYWNa5EevrYJ6vldW4PobOMAPuKJPNmFPNEpN3xm
+         YjLtvzHeXAO8l8lA/kgV1TBi/yK56fzpgvKB6NqZAg0O2EtIxPBoiuu7ScjbumOhpO
+         e/HxM86lF/JjiVxoaBwOxvzfc5mhBzstvhsKY8K4=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0ABFapQ1093181
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Nov 2020 09:36:45 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Nov 2020 09:36:51 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 11
- Nov 2020 09:36:44 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2020 09:36:50 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 11 Nov 2020 09:36:44 -0600
+ Frontend Transport; Wed, 11 Nov 2020 09:36:50 -0600
 Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFa03v042109;
-        Wed, 11 Nov 2020 09:36:39 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0ABFa03w042109;
+        Wed, 11 Nov 2020 09:36:45 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -48,9 +48,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-Subject: [PATCH v8 06/18] PCI: endpoint: Add support to associate secondary EPC with EPF
-Date:   Wed, 11 Nov 2020 21:05:47 +0530
-Message-ID: <20201111153559.19050-7-kishon@ti.com>
+Subject: [PATCH v8 07/18] PCI: endpoint: Add support in configfs to associate two EPCs with EPF
+Date:   Wed, 11 Nov 2020 21:05:48 +0530
+Message-ID: <20201111153559.19050-8-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201111153559.19050-1-kishon@ti.com>
 References: <20201111153559.19050-1-kishon@ti.com>
@@ -61,389 +61,222 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In the case of standard endpoint functions, only one endpoint
-controller (EPC) will be associated with an endpoint function
-(EPF). However for providing NTB (non transparent bridge)
-functionality, two EPCs should be associated with a single EPF.
-Add support to associate secondary EPC with EPF. This is in
-preparation for adding NTB endpoint function driver.
+Now that PCI endpoint core supports to add secondary endpoint
+controller (EPC) with endpoint function (EPF), Add support in configfs
+to associate two EPCs with EPF. This creates "primary" and "secondary"
+directory inside the directory created by users for EPF device. Users
+have to add a symlink of endpoint controller (pci_ep/controllers/) to
+"primary" or "secondary" directory to bind EPF to primary and secondary
+EPF interfaces respectively. Existing method of linking directory
+representing EPF device to directory representing EPC device to
+associate a single EPC device with a EPF device will continue to work.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 11 ++--
- drivers/pci/endpoint/pci-ep-cfs.c             |  6 +-
- drivers/pci/endpoint/pci-epc-core.c           | 47 +++++++++++----
- drivers/pci/endpoint/pci-epf-core.c           | 57 +++++++++++++------
- include/linux/pci-epc.h                       | 25 +++++++-
- include/linux/pci-epf.h                       | 17 +++++-
- 6 files changed, 125 insertions(+), 38 deletions(-)
+ .../PCI/endpoint/pci-endpoint-cfs.rst         |  10 ++
+ drivers/pci/endpoint/pci-ep-cfs.c             | 147 ++++++++++++++++++
+ 2 files changed, 157 insertions(+)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 7a1f3abfde48..c0ac4e9cbe72 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -619,7 +619,8 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
+index 1bbd81ed06c8..696f8eeb4738 100644
+--- a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
++++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
+@@ -68,6 +68,16 @@ created)
+ 				... subsys_vendor_id
+ 				... subsys_id
+ 				... interrupt_pin
++                                ... primary/
++			                ... <Symlink EPC Device1>/
++                                ... secondary/
++			                ... <Symlink EPC Device2>/
++
++If an EPF device has to be associated with 2 EPCs (like in the case of
++Non-transparent bridge), symlink of endpoint controller connected to primary
++interface should be added in 'primary' directory and symlink of endpoint
++controller connected to secondary interface should be added in 'secondary'
++directory.
  
- 		if (epf_test->reg[bar]) {
- 			pci_epc_clear_bar(epc, epf->func_no, epf_bar);
--			pci_epf_free_space(epf, epf_test->reg[bar], bar);
-+			pci_epf_free_space(epf, epf_test->reg[bar], bar,
-+					   PRIMARY_INTERFACE);
- 		}
- 	}
- }
-@@ -651,7 +652,8 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
- 
- 		ret = pci_epc_set_bar(epc, epf->func_no, epf_bar);
- 		if (ret) {
--			pci_epf_free_space(epf, epf_test->reg[bar], bar);
-+			pci_epf_free_space(epf, epf_test->reg[bar], bar,
-+					   PRIMARY_INTERFACE);
- 			dev_err(dev, "Failed to set BAR%d\n", bar);
- 			if (bar == test_reg_bar)
- 				return ret;
-@@ -771,7 +773,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 	}
- 
- 	base = pci_epf_alloc_space(epf, test_reg_size, test_reg_bar,
--				   epc_features->align);
-+				   epc_features->align, PRIMARY_INTERFACE);
- 	if (!base) {
- 		dev_err(dev, "Failed to allocated register space\n");
- 		return -ENOMEM;
-@@ -789,7 +791,8 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 			continue;
- 
- 		base = pci_epf_alloc_space(epf, bar_size[bar], bar,
--					   epc_features->align);
-+					   epc_features->align,
-+					   PRIMARY_INTERFACE);
- 		if (!base)
- 			dev_err(dev, "Failed to allocate space for BAR%d\n",
- 				bar);
+ EPC Device
+ ==========
 diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-index 3710adf51912..6ca9e2f92460 100644
+index 6ca9e2f92460..8f750961d6ab 100644
 --- a/drivers/pci/endpoint/pci-ep-cfs.c
 +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-@@ -94,13 +94,13 @@ static int pci_epc_epf_link(struct config_item *epc_item,
- 	struct pci_epc *epc = epc_group->epc;
- 	struct pci_epf *epf = epf_group->epf;
+@@ -21,6 +21,9 @@ static struct config_group *controllers_group;
  
--	ret = pci_epc_add_epf(epc, epf);
-+	ret = pci_epc_add_epf(epc, epf, PRIMARY_INTERFACE);
- 	if (ret)
- 		return ret;
- 
- 	ret = pci_epf_bind(epf);
- 	if (ret) {
--		pci_epc_remove_epf(epc, epf);
-+		pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
- 		return ret;
- 	}
- 
-@@ -120,7 +120,7 @@ static void pci_epc_epf_unlink(struct config_item *epc_item,
- 	epc = epc_group->epc;
- 	epf = epf_group->epf;
- 	pci_epf_unbind(epf);
--	pci_epc_remove_epf(epc, epf);
-+	pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
+ struct pci_epf_group {
+ 	struct config_group group;
++	struct config_group primary_epc_group;
++	struct config_group secondary_epc_group;
++	struct delayed_work cfs_work;
+ 	struct pci_epf *epf;
+ 	int index;
+ };
+@@ -41,6 +44,127 @@ static inline struct pci_epc_group *to_pci_epc_group(struct config_item *item)
+ 	return container_of(to_config_group(item), struct pci_epc_group, group);
  }
  
- static struct configfs_item_operations pci_epc_item_ops = {
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index ea7e7465ce7a..3693eca5b030 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -493,21 +493,28 @@ EXPORT_SYMBOL_GPL(pci_epc_write_header);
-  * pci_epc_add_epf() - bind PCI endpoint function to an endpoint controller
-  * @epc: the EPC device to which the endpoint function should be added
-  * @epf: the endpoint function to be added
-+ * @type: Identifies if the EPC is connected to the primary or secondary
-+ *        interface of EPF
-  *
-  * A PCI endpoint device can have one or more functions. In the case of PCIe,
-  * the specification allows up to 8 PCIe endpoint functions. Invoke
-  * pci_epc_add_epf() to add a PCI endpoint function to an endpoint controller.
-  */
--int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
-+int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
-+		    enum pci_epc_interface_type type)
- {
-+	struct list_head *list;
- 	u32 func_no;
- 	int ret = 0;
- 
--	if (epf->epc)
-+	if (IS_ERR_OR_NULL(epc))
-+		return -EINVAL;
++static int pci_secondary_epc_epf_link(struct config_item *epf_item,
++				      struct config_item *epc_item)
++{
++	int ret;
++	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
++	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
++	struct pci_epc *epc = epc_group->epc;
++	struct pci_epf *epf = epf_group->epf;
 +
-+	if (type == PRIMARY_INTERFACE && epf->epc)
- 		return -EBUSY;
- 
--	if (IS_ERR(epc))
--		return -EINVAL;
-+	if (type == SECONDARY_INTERFACE && epf->sec_epc)
-+		return -EBUSY;
- 
- 	mutex_lock(&epc->lock);
- 	func_no = find_first_zero_bit(&epc->function_num_map,
-@@ -524,11 +531,17 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf)
- 	}
- 
- 	set_bit(func_no, &epc->function_num_map);
--	epf->func_no = func_no;
--	epf->epc = epc;
--
--	list_add_tail(&epf->list, &epc->pci_epf);
-+	if (type == PRIMARY_INTERFACE) {
-+		epf->func_no = func_no;
-+		epf->epc = epc;
-+		list = &epf->list;
-+	} else {
-+		epf->sec_epc_func_no = func_no;
-+		epf->sec_epc = epc;
-+		list = &epf->sec_epc_list;
-+	}
- 
-+	list_add_tail(list, &epc->pci_epf);
- ret:
- 	mutex_unlock(&epc->lock);
- 
-@@ -543,14 +556,26 @@ EXPORT_SYMBOL_GPL(pci_epc_add_epf);
-  *
-  * Invoke to remove PCI endpoint function from the endpoint controller.
-  */
--void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf)
-+void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
-+			enum pci_epc_interface_type type)
- {
-+	struct list_head *list;
-+	u32 func_no = 0;
++	ret = pci_epc_add_epf(epc, epf, SECONDARY_INTERFACE);
++	if (ret)
++		return ret;
 +
- 	if (!epc || IS_ERR(epc) || !epf)
- 		return;
- 
-+	if (type == PRIMARY_INTERFACE) {
-+		func_no = epf->func_no;
-+		list = &epf->list;
-+	} else {
-+		func_no = epf->sec_epc_func_no;
-+		list = &epf->sec_epc_list;
++	ret = pci_epf_bind(epf);
++	if (ret) {
++		pci_epc_remove_epf(epc, epf, SECONDARY_INTERFACE);
++		return ret;
 +	}
 +
- 	mutex_lock(&epc->lock);
--	clear_bit(epf->func_no, &epc->function_num_map);
--	list_del(&epf->list);
-+	clear_bit(func_no, &epc->function_num_map);
-+	list_del(list);
- 	epf->epc = NULL;
- 	mutex_unlock(&epc->lock);
- }
-diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-index e44a317a2a2a..79329ec6373c 100644
---- a/drivers/pci/endpoint/pci-epf-core.c
-+++ b/drivers/pci/endpoint/pci-epf-core.c
-@@ -74,24 +74,37 @@ EXPORT_SYMBOL_GPL(pci_epf_bind);
-  * @epf: the EPF device from whom to free the memory
-  * @addr: the virtual address of the PCI EPF register space
-  * @bar: the BAR number corresponding to the register space
-+ * @type: Identifies if the allocated space is for primary EPC or secondary EPC
-  *
-  * Invoke to free the allocated PCI EPF register space.
-  */
--void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar)
-+void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
-+			enum pci_epc_interface_type type)
- {
- 	struct device *dev = epf->epc->dev.parent;
-+	struct pci_epf_bar *epf_bar;
++	return 0;
++}
++
++static void pci_secondary_epc_epf_unlink(struct config_item *epc_item,
++					 struct config_item *epf_item)
++{
++	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
++	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
 +	struct pci_epc *epc;
- 
- 	if (!addr)
- 		return;
- 
--	dma_free_coherent(dev, epf->bar[bar].size, addr,
--			  epf->bar[bar].phys_addr);
-+	if (type == PRIMARY_INTERFACE) {
-+		epc = epf->epc;
-+		epf_bar = epf->bar;
-+	} else {
-+		epc = epf->sec_epc;
-+		epf_bar = epf->sec_epc_bar;
-+	}
++	struct pci_epf *epf;
 +
-+	dev = epc->dev.parent;
-+	dma_free_coherent(dev, epf_bar[bar].size, addr,
-+			  epf_bar[bar].phys_addr);
- 
--	epf->bar[bar].phys_addr = 0;
--	epf->bar[bar].addr = NULL;
--	epf->bar[bar].size = 0;
--	epf->bar[bar].barno = 0;
--	epf->bar[bar].flags = 0;
-+	epf_bar[bar].phys_addr = 0;
-+	epf_bar[bar].addr = NULL;
-+	epf_bar[bar].size = 0;
-+	epf_bar[bar].barno = 0;
-+	epf_bar[bar].flags = 0;
- }
- EXPORT_SYMBOL_GPL(pci_epf_free_space);
- 
-@@ -101,15 +114,18 @@ EXPORT_SYMBOL_GPL(pci_epf_free_space);
-  * @size: the size of the memory that has to be allocated
-  * @bar: the BAR number corresponding to the allocated register space
-  * @align: alignment size for the allocation region
-+ * @type: Identifies if the allocation is for primary EPC or secondary EPC
-  *
-  * Invoke to allocate memory for the PCI EPF register space.
-  */
- void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
--			  size_t align)
-+			  size_t align, enum pci_epc_interface_type type)
- {
--	void *space;
--	struct device *dev = epf->epc->dev.parent;
-+	struct pci_epf_bar *epf_bar;
- 	dma_addr_t phys_addr;
-+	struct pci_epc *epc;
-+	struct device *dev;
-+	void *space;
- 
- 	if (size < 128)
- 		size = 128;
-@@ -119,17 +135,26 @@ void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
- 	else
- 		size = roundup_pow_of_two(size);
- 
-+	if (type == PRIMARY_INTERFACE) {
-+		epc = epf->epc;
-+		epf_bar = epf->bar;
-+	} else {
-+		epc = epf->sec_epc;
-+		epf_bar = epf->sec_epc_bar;
-+	}
++	WARN_ON_ONCE(epc_group->start);
 +
-+	dev = epc->dev.parent;
- 	space = dma_alloc_coherent(dev, size, &phys_addr, GFP_KERNEL);
- 	if (!space) {
- 		dev_err(dev, "failed to allocate mem space\n");
- 		return NULL;
- 	}
- 
--	epf->bar[bar].phys_addr = phys_addr;
--	epf->bar[bar].addr = space;
--	epf->bar[bar].size = size;
--	epf->bar[bar].barno = bar;
--	epf->bar[bar].flags |= upper_32_bits(size) ?
-+	epf_bar[bar].phys_addr = phys_addr;
-+	epf_bar[bar].addr = space;
-+	epf_bar[bar].size = size;
-+	epf_bar[bar].barno = bar;
-+	epf_bar[bar].flags |= upper_32_bits(size) ?
- 				PCI_BASE_ADDRESS_MEM_TYPE_64 :
- 				PCI_BASE_ADDRESS_MEM_TYPE_32;
- 
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 88d311bad984..d9cb3944fb87 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -13,6 +13,12 @@
- 
- struct pci_epc;
- 
-+enum pci_epc_interface_type {
-+	UNKNOWN_INTERFACE = -1,
-+	PRIMARY_INTERFACE,
-+	SECONDARY_INTERFACE,
++	epc = epc_group->epc;
++	epf = epf_group->epf;
++	pci_epf_unbind(epf);
++	pci_epc_remove_epf(epc, epf, SECONDARY_INTERFACE);
++}
++
++static struct configfs_item_operations pci_secondary_epc_item_ops = {
++	.allow_link	= pci_secondary_epc_epf_link,
++	.drop_link	= pci_secondary_epc_epf_unlink,
 +};
 +
- enum pci_epc_irq_type {
- 	PCI_EPC_IRQ_UNKNOWN,
- 	PCI_EPC_IRQ_LEGACY,
-@@ -20,6 +26,19 @@ enum pci_epc_irq_type {
- 	PCI_EPC_IRQ_MSIX,
++static const struct config_item_type pci_secondary_epc_type = {
++	.ct_item_ops	= &pci_secondary_epc_item_ops,
++	.ct_owner	= THIS_MODULE,
++};
++
++static struct config_group
++*pci_ep_cfs_add_secondary_group(struct pci_epf_group *epf_group)
++{
++	struct config_group *secondary_epc_group;
++
++	secondary_epc_group = &epf_group->secondary_epc_group;
++	config_group_init_type_name(secondary_epc_group, "secondary",
++				    &pci_secondary_epc_type);
++	configfs_register_group(&epf_group->group, secondary_epc_group);
++
++	return secondary_epc_group;
++}
++
++static int pci_primary_epc_epf_link(struct config_item *epf_item,
++				    struct config_item *epc_item)
++{
++	int ret;
++	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
++	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
++	struct pci_epc *epc = epc_group->epc;
++	struct pci_epf *epf = epf_group->epf;
++
++	ret = pci_epc_add_epf(epc, epf, PRIMARY_INTERFACE);
++	if (ret)
++		return ret;
++
++	ret = pci_epf_bind(epf);
++	if (ret) {
++		pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void pci_primary_epc_epf_unlink(struct config_item *epc_item,
++				       struct config_item *epf_item)
++{
++	struct pci_epf_group *epf_group = to_pci_epf_group(epf_item->ci_parent);
++	struct pci_epc_group *epc_group = to_pci_epc_group(epc_item);
++	struct pci_epc *epc;
++	struct pci_epf *epf;
++
++	WARN_ON_ONCE(epc_group->start);
++
++	epc = epc_group->epc;
++	epf = epf_group->epf;
++	pci_epf_unbind(epf);
++	pci_epc_remove_epf(epc, epf, PRIMARY_INTERFACE);
++}
++
++static struct configfs_item_operations pci_primary_epc_item_ops = {
++	.allow_link	= pci_primary_epc_epf_link,
++	.drop_link	= pci_primary_epc_epf_unlink,
++};
++
++static const struct config_item_type pci_primary_epc_type = {
++	.ct_item_ops	= &pci_primary_epc_item_ops,
++	.ct_owner	= THIS_MODULE,
++};
++
++static struct config_group
++*pci_ep_cfs_add_primary_group(struct pci_epf_group *epf_group)
++{
++	struct config_group *primary_epc_group = &epf_group->primary_epc_group;
++
++	config_group_init_type_name(primary_epc_group, "primary",
++				    &pci_primary_epc_type);
++	configfs_register_group(&epf_group->group, primary_epc_group);
++
++	return primary_epc_group;
++}
++
+ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+ 				   size_t len)
+ {
+@@ -372,6 +496,25 @@ static const struct config_item_type pci_epf_type = {
+ 	.ct_owner	= THIS_MODULE,
  };
  
-+static inline const char *
-+pci_epc_interface_string(enum pci_epc_interface_type type)
++static void pci_epf_cfs_work(struct work_struct *work)
 +{
-+	switch (type) {
-+	case PRIMARY_INTERFACE:
-+		return "primary";
-+	case SECONDARY_INTERFACE:
-+		return "secondary";
-+	default:
-+		return "UNKNOWN interface";
++	struct pci_epf_group *epf_group;
++	struct config_group *group;
++
++	epf_group = container_of(work, struct pci_epf_group, cfs_work.work);
++	group = pci_ep_cfs_add_primary_group(epf_group);
++	if (IS_ERR(group)) {
++		pr_err("failed to create 'primary' EPC interface\n");
++		return;
++	}
++
++	group = pci_ep_cfs_add_secondary_group(epf_group);
++	if (IS_ERR(group)) {
++		pr_err("failed to create 'secondary' EPC interface\n");
++		return;
 +	}
 +}
 +
- /**
-  * struct pci_epc_ops - set of function pointers for performing EPC operations
-  * @write_header: ops to populate configuration space header
-@@ -175,10 +194,12 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 		 struct module *owner);
- void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc);
- void pci_epc_destroy(struct pci_epc *epc);
--int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf);
-+int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
-+		    enum pci_epc_interface_type type);
- void pci_epc_linkup(struct pci_epc *epc);
- void pci_epc_init_notify(struct pci_epc *epc);
--void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf);
-+void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
-+			enum pci_epc_interface_type type);
- int pci_epc_write_header(struct pci_epc *epc, u8 func_no,
- 			 struct pci_epf_header *hdr);
- int pci_epc_set_bar(struct pci_epc *epc, u8 func_no,
-diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-index f373a134ac04..1dc66824f5a8 100644
---- a/include/linux/pci-epf.h
-+++ b/include/linux/pci-epf.h
-@@ -14,6 +14,7 @@
- #include <linux/pci.h>
+ static struct config_group *pci_epf_make(struct config_group *group,
+ 					 const char *name)
+ {
+@@ -414,6 +557,10 @@ static struct config_group *pci_epf_make(struct config_group *group,
  
- struct pci_epf;
-+enum pci_epc_interface_type;
+ 	kfree(epf_name);
  
- enum pci_notify_event {
- 	CORE_INIT,
-@@ -119,6 +120,11 @@ struct pci_epf_bar {
-  * @list: to add pci_epf as a list of PCI endpoint functions to pci_epc
-  * @nb: notifier block to notify EPF of any EPC events (like linkup)
-  * @lock: mutex to protect pci_epf_ops
-+ * @sec_epc: the secondary EPC device to which this EPF device is bound
-+ * @sec_epc_list: to add pci_epf as list of PCI endpoint functions to secondary
-+ *   EPC device
-+ * @sec_epc_bar: represents the BAR of EPF device associated with secondary EPC
-+ * @sec_epc_func_no: unique (physical) function number within the secondary EPC
-  */
- struct pci_epf {
- 	struct device		dev;
-@@ -135,6 +141,12 @@ struct pci_epf {
- 	struct notifier_block   nb;
- 	/* mutex to protect against concurrent access of pci_epf_ops */
- 	struct mutex		lock;
++	INIT_DELAYED_WORK(&epf_group->cfs_work, pci_epf_cfs_work);
++	queue_delayed_work(system_wq, &epf_group->cfs_work,
++			   msecs_to_jiffies(1));
 +
-+	/* Below members are to attach secondary EPC to an endpoint function */
-+	struct pci_epc		*sec_epc;
-+	struct list_head	sec_epc_list;
-+	struct pci_epf_bar	sec_epc_bar[6];
-+	u8			sec_epc_func_no;
- };
+ 	return &epf_group->group;
  
- /**
-@@ -171,8 +183,9 @@ int __pci_epf_register_driver(struct pci_epf_driver *driver,
- 			      struct module *owner);
- void pci_epf_unregister_driver(struct pci_epf_driver *driver);
- void *pci_epf_alloc_space(struct pci_epf *epf, size_t size, enum pci_barno bar,
--			  size_t align);
--void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar);
-+			  size_t align, enum pci_epc_interface_type type);
-+void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
-+			enum pci_epc_interface_type type);
- int pci_epf_bind(struct pci_epf *epf);
- void pci_epf_unbind(struct pci_epf *epf);
- #endif /* __LINUX_PCI_EPF_H */
+ free_name:
 -- 
 2.17.1
 
