@@ -2,101 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 036722B0764
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 15:15:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BC312B076A
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 15:15:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgKLOPX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 09:15:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgKLOPX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 09:15:23 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E67C0613D1;
-        Thu, 12 Nov 2020 06:15:23 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605190521;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JDqpKAUrItpHlbE5XWwW32ZAnSVkMvadrlti6qz8qYg=;
-        b=VoYtF8BI7RLcnvT3P0hzVSJo32ng+9NyUF+JXWg9Pn+C/ZBbgYLROeCmx7sFdyFUT46rJ8
-        CMgvz9C2LahmdePRNxCLbS0p64AoaEaNgwcwXHWd1keRONGI8MFHJ3BTtaKmpHo4I0TWZ2
-        vAwHFQ7z9N2nz7aWk4kT7ClUADpdz1eCBBAilOODAeqO0AZvlmYSQAnqlKbuHY09FRhMD2
-        leUg6Jii4k/Ama8r+Y8t9/x03N3KxlA/ZHF/uovVa8YZaKOZmppCgQROOI9hCdwFYpcd5N
-        /gbLBb+JfH8XDmNEGF6gpfuInPulOkmBNtKHQDfQhVyp4CGcjfioiM8ZPO62Vw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605190521;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JDqpKAUrItpHlbE5XWwW32ZAnSVkMvadrlti6qz8qYg=;
-        b=rHy7YOjnh3ZoFKx73oTAYHW5ZZpTYL59dAo5H0GGx5XK+D91l/tZPlDTpXltpPSMTfhgqa
-        5GykZaJPuBPhNnCQ==
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Ziyad Atiyyeh <ziyadat@nvidia.com>,
-        Itay Aveksis <itayav@nvidia.com>,
-        Moshe Shemesh <moshe@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: REGRESSION: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
-In-Reply-To: <20201112125531.GA873287@nvidia.com>
-References: <20200826111628.794979401@linutronix.de> <20201112125531.GA873287@nvidia.com>
-Date:   Thu, 12 Nov 2020 15:15:21 +0100
-Message-ID: <87mtzmmzk6.fsf@nanos.tec.linutronix.de>
+        id S1727789AbgKLOPv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 09:15:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35056 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbgKLOPu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Nov 2020 09:15:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AAF7FAD80;
+        Thu, 12 Nov 2020 14:15:48 +0000 (UTC)
+Message-ID: <2a4cb4700b219ddd9a059cbf484b7715e8036409.camel@suse.de>
+Subject: Re: [PATCH] PCI: brcmstb: Restore initial fundamental reset
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Phil Elwell <phil@raspberrypi.com>, Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Date:   Thu, 12 Nov 2020 15:15:47 +0100
+In-Reply-To: <20201112131400.3775119-1-phil@raspberrypi.com>
+References: <20201112131400.3775119-1-phil@raspberrypi.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-kj56CaKwqrmu4j7oYRUw"
+User-Agent: Evolution 3.36.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jason,
 
-(trimmed CC list a bit)
+--=-kj56CaKwqrmu4j7oYRUw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 12 2020 at 08:55, Jason Gunthorpe wrote:
-> On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
-> They were unable to bisect further into the series because some of the
-> interior commits don't boot :(
->
-> When we try to load the mlx5 driver on a bare metal VF it gets this:
->
-> [Thu Oct 22 08:54:51 2020] DMAR: DRHD: handling fault status reg 2
-> [Thu Oct 22 08:54:51 2020] DMAR: [INTR-REMAP] Request device [42:00.2] fa=
-ult index 1600 [fault reason 37] Blocked a compatibility format interrupt r=
-equest
-> [Thu Oct 22 08:55:04 2020] mlx5_core 0000:42:00.1 eth4: Link down
-> [Thu Oct 22 08:55:11 2020] mlx5_core 0000:42:00.1 eth4: Link up
-> [Thu Oct 22 08:55:54 2020] mlx5_core 0000:42:00.2: mlx5_cmd_eq_recover:26=
-4:(pid 3390): Recovered 1 EQEs on cmd_eq
-> [Thu Oct 22 08:55:54 2020] mlx5_core 0000:42:00.2: wait_func_handle_exec_=
-timeout:1051:(pid 3390): cmd0: CREATE_EQ(0=C3=83=C2=97301) recovered after =
-timeout
-> [Thu Oct 22 08:55:54 2020] DMAR: DRHD: handling fault status reg 102
-> [Thu Oct 22 08:55:54 2020] DMAR: [INTR-REMAP] Request device [42:00.2] fa=
-ult index 1600 [fault reason 37] Blocked a compatibility format interrupt r=
-equest
->
-> If you have any idea Ziyad and Itay can run any debugging you like.
->
-> I suppose it is because this series is handing out compatability
-> addr/data pairs while the IOMMU is setup to only accept remap ones
-> from SRIOV VFs?
+On Thu, 2020-11-12 at 13:14 +0000, Phil Elwell wrote:
+> Commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+> replaced a single reset function with a pointer to one of two
+> implementations, but also removed the call asserting the reset
+> at the start of brcm_pcie_setup. Doing so breaks Raspberry Pis with
+> VL805 XHCI controllers lacking dedicated SPI EEPROMs, which have been
+> used for USB booting but then need to be reset so that the kernel
+> can reconfigure them. The lack of a reset causes the firmware's loading
+> of the EEPROM image to RAM to fail, breaking USB for the kernel.
+>=20
+> Fixes: commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+>=20
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> ---
 
-So the issue seems to be that the VF device has the default irq domain
-assigned and not the remapping domain. Let me stare into the code to see
-how these VF devices are set up and registered with the IOMMU/remap
-unit.
+Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Thanks,
+Thanks!
 
-        tglx
+>  drivers/pci/controller/pcie-brcmstb.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controll=
+er/pcie-brcmstb.c
+> index bea86899bd5d..a90d6f69c5a1 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -869,6 +869,8 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> =20
+>  	/* Reset the bridge */
+>  	pcie->bridge_sw_init_set(pcie, 1);
+> +	pcie->perst_set(pcie, 1);
+> +
+>  	usleep_range(100, 200);
+> =20
+>  	/* Take the bridge out of reset */
+
+
+--=-kj56CaKwqrmu4j7oYRUw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+tQ5MACgkQlfZmHno8
+x/6jWQgAk54thLEXBh49VbpBlLcQJWjMfIHzmdKb1gmPLYY1UgL1zvF/tj8rIcjK
+bF4il61p5btyIRi3eBAr9oyMyFauPSM/8h8gVcih02O4D9wTYRTuw4wkHUTlo0gl
+za+66vju2Qpp7biZOAY3r+uNeNCPUE8y7SKdNA/hkLED8jtkdhv/Ez2JixgNk48X
+zfCvShDayGS8NgNrIXJoEvIxde+Vo/sZupv9h2gf8Z/Q09+j6HK6oUtRUSN4rVUf
++10hcBvIWYidy5pJYrmYw/dhNeF390Cq5LXxBz+b5GqPpPQTUYXBpfxNE84fAUo4
+R4aGOe8IPQsscOA3ZoE+d4msduMDbQ==
+=9Y3S
+-----END PGP SIGNATURE-----
+
+--=-kj56CaKwqrmu4j7oYRUw--
 
