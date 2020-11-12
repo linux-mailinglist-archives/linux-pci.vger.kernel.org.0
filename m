@@ -2,98 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29FAE2B06FE
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 14:50:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 036722B0764
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 15:15:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgKLNup (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 08:50:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44728 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbgKLNup (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 08:50:45 -0500
+        id S1727646AbgKLOPX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 09:15:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgKLOPX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 09:15:23 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E67C0613D1;
+        Thu, 12 Nov 2020 06:15:23 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605189043;
+        s=2020; t=1605190521;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FExFbMkw7YXGcGUqIJagY/5g6Z8xr25fzIJwMw/oA+8=;
-        b=MeoVpkDz1oVajjmu0mVooQrH2IXUoUNSno/pUj5tQHdXTvLGERYdTJZrwcX2tSKBfexHbe
-        sWXuKqJ99lFSlWOdkJxPdcTfRoZsada82WL5lYzpkgKq4K1B7WUvfIHm8DOvM21lQ+ixMS
-        H63EWFAY2o6zTIxNEjXueBYBgundGlXdfMs2iumWaXdWoc3gEI7P5MpK2c1Uv6BCHPpHVC
-        OeQ5Gh6/y7JaH0PdVmgdVW0GVaujoZLI5ZwO1HJGYI1nJwPly4PtwJiyn8XeAq1U70CBYI
-        A5Ud2V44ZKF1AcXtO8awnUD0HujZAyfR3z4FRNguQEoBsimZcImscZ8oGrJazw==
+        bh=JDqpKAUrItpHlbE5XWwW32ZAnSVkMvadrlti6qz8qYg=;
+        b=VoYtF8BI7RLcnvT3P0hzVSJo32ng+9NyUF+JXWg9Pn+C/ZBbgYLROeCmx7sFdyFUT46rJ8
+        CMgvz9C2LahmdePRNxCLbS0p64AoaEaNgwcwXHWd1keRONGI8MFHJ3BTtaKmpHo4I0TWZ2
+        vAwHFQ7z9N2nz7aWk4kT7ClUADpdz1eCBBAilOODAeqO0AZvlmYSQAnqlKbuHY09FRhMD2
+        leUg6Jii4k/Ama8r+Y8t9/x03N3KxlA/ZHF/uovVa8YZaKOZmppCgQROOI9hCdwFYpcd5N
+        /gbLBb+JfH8XDmNEGF6gpfuInPulOkmBNtKHQDfQhVyp4CGcjfioiM8ZPO62Vw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605189043;
+        s=2020e; t=1605190521;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FExFbMkw7YXGcGUqIJagY/5g6Z8xr25fzIJwMw/oA+8=;
-        b=XsCo8U08uItnjSKD1IJmacqK42qPF59gfAAfMv9/OFwqCn6QPt/dvhQNEMWuw2SrmkayFD
-        p5ei960Oll/e/TCA==
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Martin Kaiser <martin@kaiser.cx>
-Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        bh=JDqpKAUrItpHlbE5XWwW32ZAnSVkMvadrlti6qz8qYg=;
+        b=rHy7YOjnh3ZoFKx73oTAYHW5ZZpTYL59dAo5H0GGx5XK+D91l/tZPlDTpXltpPSMTfhgqa
+        5GykZaJPuBPhNnCQ==
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Ziyad Atiyyeh <ziyadat@nvidia.com>,
+        Itay Aveksis <itayav@nvidia.com>,
+        Moshe Shemesh <moshe@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        rfi@lists.rocketboards.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] PCI: altera-msi: Remove irq handler and data in one go
-In-Reply-To: <87sg9en79m.fsf@nanos.tec.linutronix.de>
-References: <20201111221639.GA973514@bjorn-Precision-5520> <87sg9en79m.fsf@nanos.tec.linutronix.de>
-Date:   Thu, 12 Nov 2020 14:50:42 +0100
-Message-ID: <87pn4in0p9.fsf@nanos.tec.linutronix.de>
+        Marc Zyngier <maz@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: REGRESSION: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
+In-Reply-To: <20201112125531.GA873287@nvidia.com>
+References: <20200826111628.794979401@linutronix.de> <20201112125531.GA873287@nvidia.com>
+Date:   Thu, 12 Nov 2020 15:15:21 +0100
+Message-ID: <87mtzmmzk6.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 12 2020 at 12:28, Thomas Gleixner wrote:
-> On Wed, Nov 11 2020 at 16:16, Bjorn Helgaas wrote:
->> On Wed, Nov 11, 2020 at 10:43:55PM +0100, Martin Kaiser wrote:
->> Thomas, it looks like irq_domain_set_info() and msi_domain_ops_init()
->> set the handler itself before setting the handler data:
->>
->>   irq_domain_set_info
->>     irq_set_chip_and_handler_name(virq, chip, handler, ...)
->>     irq_set_handler_data(virq, handler_data)
->>
->>   msi_domain_ops_init
->>     __irq_set_handler(virq, info->handler, ...)
->>     if (info->handler_data)
->>       irq_set_handler_data(virq, info->handler_data)
->>
->> That looks at least superficially similar to the race you fixed with
->> 2cf5a03cb29d ("PCI/keystone: Fix race in installing chained IRQ
->> handler").
->>
->> Should irq_domain_set_info() and msi_domain_ops_init() swap the order,
->> too?
+Jason,
+
+(trimmed CC list a bit)
+
+On Thu, Nov 12 2020 at 08:55, Jason Gunthorpe wrote:
+> On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
+> They were unable to bisect further into the series because some of the
+> interior commits don't boot :(
 >
-> In theory yes. Practically it should not matter because that happens
-> during the allocation way before the interrupt can actually fire.  I'll
-> have a deeper look nevertheless.
+> When we try to load the mlx5 driver on a bare metal VF it gets this:
+>
+> [Thu Oct 22 08:54:51 2020] DMAR: DRHD: handling fault status reg 2
+> [Thu Oct 22 08:54:51 2020] DMAR: [INTR-REMAP] Request device [42:00.2] fa=
+ult index 1600 [fault reason 37] Blocked a compatibility format interrupt r=
+equest
+> [Thu Oct 22 08:55:04 2020] mlx5_core 0000:42:00.1 eth4: Link down
+> [Thu Oct 22 08:55:11 2020] mlx5_core 0000:42:00.1 eth4: Link up
+> [Thu Oct 22 08:55:54 2020] mlx5_core 0000:42:00.2: mlx5_cmd_eq_recover:26=
+4:(pid 3390): Recovered 1 EQEs on cmd_eq
+> [Thu Oct 22 08:55:54 2020] mlx5_core 0000:42:00.2: wait_func_handle_exec_=
+timeout:1051:(pid 3390): cmd0: CREATE_EQ(0=C3=83=C2=97301) recovered after =
+timeout
+> [Thu Oct 22 08:55:54 2020] DMAR: DRHD: handling fault status reg 102
+> [Thu Oct 22 08:55:54 2020] DMAR: [INTR-REMAP] Request device [42:00.2] fa=
+ult index 1600 [fault reason 37] Blocked a compatibility format interrupt r=
+equest
+>
+> If you have any idea Ziyad and Itay can run any debugging you like.
+>
+> I suppose it is because this series is handing out compatability
+> addr/data pairs while the IOMMU is setup to only accept remap ones
+> from SRIOV VFs?
 
-So I had a closer look and the reason why it only matters for the
-chained handler case is that
-
-   __irq_set_handler(..., is_chained = true, ...)
-
-starts up the interrupt immediately. So the order for this _must_ be:
-
-    set_handler_data() -> set_handler()
-
-For regular interrupts it's really the mapping and allocation code which
-does this long before the interrupt is started up. So the ordering does
-not matter because the handler can't be reached before the full
-setup is finished and the interrupt is actually started up.
+So the issue seems to be that the VF device has the default irq domain
+assigned and not the remapping domain. Let me stare into the code to see
+how these VF devices are set up and registered with the IOMMU/remap
+unit.
 
 Thanks,
 
         tglx
+
