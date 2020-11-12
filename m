@@ -2,186 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE212AFE8B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 06:39:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F26C2AFEB7
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 06:39:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgKLFjB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 00:39:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33102 "EHLO
+        id S1728751AbgKLFjC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 00:39:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbgKLCcM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 21:32:12 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B4DC0613D4
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 18:32:10 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id f23so5584208ejk.2
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 18:32:10 -0800 (PST)
+        with ESMTP id S1729046AbgKLEs5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 23:48:57 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087C5C0613D1
+        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 20:48:57 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id t191so4246511qka.4
+        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 20:48:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=technolu-st.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EUzPg8y73vRxlAHH+zIia8Krjs+sYU9K0sC28KymEQY=;
-        b=OFdfsyF59is2mlKKEZpxTJE38bU0jQpXcEKm0WKQv7bmSSLkS09VKmuD1R/V971ynM
-         S3kh+zrHT/CWrjm0Ok6zUt2BiFhf56JU6hrhTQ9DThImfqMzK6eiDFzLaDgD8+6sDkPs
-         dp64eW4FkOefdJbTYHBpvs2vRDNTyd1nvf5mkoRC5ijYPYziFUC2OemDikc/ZdvLPkSw
-         MMuibtWAT4mKpeYRH4Y4nQNRWs3Rn4HB1RTYO8aeZHMV8IzR0uxD1hM5JoFHIjXqNzeB
-         /licFcwyMdkqPLzMsrIyz5cvfcaMNZ0lebxqAla8KGzlHc545aPNvfysBlVFhPDMKTHP
-         JFFw==
+        bh=hYgDvr1bBvi/7JL23Rwf3pvljbbY3cllWNL7cd89QBU=;
+        b=n4uJK/AjV+JPQY9fOrfKFQbdBnf8l8LzV+NbtoXlSxdL2NsiNlwwQ7d//d2y/tL+0g
+         ogBQxQT3LQwKo//MiTsd/HTMJlvfMUPdN6a0HNm1OeWr4hVS0JlwCR/TY/15X9asl12G
+         9JazjKX72wd9PxK8qiweL44aZeRlGQN+r080fp8nLf3qu9CTqgtTD2nsr/8rMkQ1bj6x
+         ZrplJDI1WqzjHBMHL/tCMycfLhRaHCXLQ/y5sHIkjhQH9Sg6qGwO9J1FqjlgI2B02CDZ
+         hdrs4dH9+12PsGegxm3kOYKbwAGQZL7vopJo5HNis4+ae63xeuqIWosHfQndQ0SmUMJ/
+         zlfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EUzPg8y73vRxlAHH+zIia8Krjs+sYU9K0sC28KymEQY=;
-        b=sMqhePK9JszQG91F5CmUGPCij4IWYdjhef+QysypRsSBKIgTJ/QIuTsqNUrsQn7fa6
-         VDYK6x0IMxKco4wH+VL2th4WCrGDJLgP4fHVVUMBY6re5hgVDV6ofe1F06GBE9MN2NER
-         Txdag3QbbGM5ecOnXm/ol1sSUnJeb1HE4vWBYFLJLdE837D1s1CFBnXX3DIFlm1crZaX
-         dZHGjFX4SJUGqbW7gPTpjwbyPzMCfOd0+1lNtHVxXqAzsDNyrL1tMQ0Mj0LK6wLRf+54
-         RWCfly47oUOhArliWt9k5Szxl7uQRVABWOLmBwteNllPihRTst+TE0LdlPrE7+GPjnXe
-         QCXA==
-X-Gm-Message-State: AOAM530NikBxnqpgDS6/VkawKeopqfVEB4zd3X7iuRfnehpfwRZ/Nj6H
-        C43Zy2ace1pykgHv/vH7YvIDLDt4j24q6muTSXfbwg==
-X-Google-Smtp-Source: ABdhPJwknRlumIb+H14ad0cYTJI1zbP/rZ/TYVSzcwrQHSiyzy4KNPJ/xC5Llo26hk8i+tHzwh7VpyOhT3s2+ovFnvw=
-X-Received: by 2002:a17:906:4c41:: with SMTP id d1mr29697883ejw.485.1605148329262;
- Wed, 11 Nov 2020 18:32:09 -0800 (PST)
+        bh=hYgDvr1bBvi/7JL23Rwf3pvljbbY3cllWNL7cd89QBU=;
+        b=ljEMWAuKt7S8asV+4Dgk3NA0iRjA7Xu2PhCGxo40DYEuzaqYlAoehgPCabz8xD8QRf
+         0GUFg0uRetuF+egBwyYa4Ck8hCyaZy778XArNLJ5dWizY528H3iGA21u35iDnl9eK9x3
+         JnRDp0tu7giruw/3KLcl0AH4Ls2suGiy2uUtp0IOOChWoO1yiankzGRrgEkxF4kEGB/a
+         dKCGzgFgoGGRIZHQBMa/dPNfW/wgCvM+MWbfkly/SiE7jlf5a1U342j/F4Naf7C5QQNb
+         sUeoQp1aVS3lUIv1fFLzyapvpRbv5YF3t8t4Uxm6mbRq0t2QrQL4FoWI2ExFJ7ir0x1u
+         UXgg==
+X-Gm-Message-State: AOAM532kr4tNURrWfs9T+k/wahidPIyAdhkMtYKjl4SBGDbV1G0di72N
+        54ss4NnTRj9prFS8HFkEC4vIeH8DYay+3QWh+74+bZxsqwM=
+X-Google-Smtp-Source: ABdhPJz1kVjQNKWJb1wwo5p1LP8acl5WsO3zCvVoeptYH5O98z9el6DfmmMYkHMhnz1ABWtwTa1GsIXrM706qWOXm6E=
+X-Received: by 2002:a05:620a:c9a:: with SMTP id q26mr26159221qki.272.1605156536155;
+ Wed, 11 Nov 2020 20:48:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20201103160838.GA246433@bjorn-Precision-5520> <874km61732.fsf@nanos.tec.linutronix.de>
- <fa26ac8b-ed48-7ea3-c21b-b133532716b8@posteo.de> <87mtzxkus5.fsf@nanos.tec.linutronix.de>
- <87wnz0hr9k.fsf@codeaurora.org> <87ft5hehlb.fsf@codeaurora.org>
- <6b60c8f1-ec37-d601-92c2-97a485b73431@posteo.de> <87v9ec9rk3.fsf@codeaurora.org>
- <87imab4slq.fsf@codeaurora.org> <b2129a70db2b36c5015b4143a839f47dfc3153af.camel@seibold.net>
- <CAHUdJJVp5r55NtE+BNz5XGtnaks6mDKQBFodz63DdULBVhD0Lg@mail.gmail.com>
- <CAHUdJJXRDKs9NRugUAFgNr51DJ=OcssuiV8ST5CaV1CKiNTFfA@mail.gmail.com> <CAHUdJJUkvcShSXw4mkFUDcEh101xNQbOUc0YEv6-TyLdyTs4Og@mail.gmail.com>
-In-Reply-To: <CAHUdJJUkvcShSXw4mkFUDcEh101xNQbOUc0YEv6-TyLdyTs4Og@mail.gmail.com>
-From:   wi nk <wink@technolu.st>
-Date:   Thu, 12 Nov 2020 03:31:57 +0100
-Message-ID: <CAHUdJJWsCo6NJ6qr6kj=SASs+jO+fJFc3HhOO=fyek=OxSQa2Q@mail.gmail.com>
-Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
-To:     Stefani Seibold <stefani@seibold.net>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Thomas Krause <thomaskrause@posteo.de>,
-        Govind Singh <govinds@codeaurora.org>,
-        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Devin Bayer <dev@doubly.so>, Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        ath11k@lists.infradead.org, David Woodhouse <dwmw@amazon.co.uk>
+References: <20201110153735.58587-1-stuart.w.hayes@gmail.com> <20201111070528.GA7829@infradead.org>
+In-Reply-To: <20201111070528.GA7829@infradead.org>
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Date:   Wed, 11 Nov 2020 22:48:43 -0600
+Message-ID: <CAL5oW028rM75b+ROd09PkP9Q7FUdKQNJFTVmhC=m8CoRRuH3Fg@mail.gmail.com>
+Subject: Re: [PATCH v2] Expose PCIe SSD Status LED Management DSM in sysfs
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 2:11 AM wi nk <wink@technolu.st> wrote:
->
-> On Thu, Nov 12, 2020 at 2:10 AM wi nk <wink@technolu.st> wrote:
-> >
-> > I've yet to see any instability after 45 minutes of exercising it, I
-> > do see a couple of messages that came out of the driver:
-> >
-> > [    8.963389] ath11k_pci 0000:55:00.0: Unknown eventid: 0x16005
-> > [   11.342317] ath11k_pci 0000:55:00.0: Unknown eventid: 0x1d00a
-> >
-> > then when it associates:
-> >
-> > [   16.718895] wlp85s0: send auth to ec:08:6b:27:01:ea (try 1/3)
-> > [   16.722636] wlp85s0: authenticated
-> > [   16.724150] wlp85s0: associate with ec:08:6b:27:01:ea (try 1/3)
-> > [   16.726486] wlp85s0: RX AssocResp from ec:08:6b:27:01:ea
-> > (capab=0x411 status=0 aid=8)
-> > [   16.738443] wlp85s0: associated
-> > [   16.764966] IPv6: ADDRCONF(NETDEV_CHANGE): wlp85s0: link becomes ready
-> >
-> > The adapter is achieving around 500 mbps on my gigabit connection, my
-> > 2018 mbp sees around 650, so it's doing pretty well so far.
-> >
-> > Stefani - when you applied the patch that Kalle shared, which branch
-> > did you apply it to?  I applied it to ath11k-qca6390-bringup and when
-> > I revert 7fef431be9c9 there is a small merge conflict I needed to
-> > resolve.  I wonder if either the starting branch, or your chosen
-> > resolution are related to the instability you see (or I'm just lucky
-> > so far! :)).
-> >
-> > On Thu, Nov 12, 2020 at 1:24 AM wi nk <wink@technolu.st> wrote:
-> > >
-> > > On Wed, Nov 11, 2020 at 11:02 PM Stefani Seibold <stefani@seibold.net> wrote:
-> > > >
-> > > > On Wed, 2020-11-11 at 21:10 +0200, Kalle Valo wrote:
-> > > > >
-> > > > > The proof of concept patch for v5.10-rc2 is here:
-> > > > >
-> > > > > https://patchwork.kernel.org/project/linux-wireless/patch/1605121102-14352-1-git-send-email-kvalo@codeaurora.org/
-> > > > >
-> > > > > Hopefully it makes it possible to boot the firmware now. But this is
-> > > > > a
-> > > > > quick hack and most likely buggy, so keep your expectations low :)
-> > > > >
-> > > > > In case there are these warnings during firmware initialisation:
-> > > > >
-> > > > > ath11k_pci 0000:05:00.0: qmi failed memory request, err = -110
-> > > > > ath11k_pci 0000:05:00.0: qmi failed to respond fw mem req:-110
-> > > > >
-> > > > > Try reverting this commit:
-> > > > >
-> > > > > 7fef431be9c9 mm/page_alloc: place pages to tail in
-> > > > > __free_pages_core()
-> > > > >
-> > > > > That's another issue which is debugged here:
-> > > > >
-> > > > > http://lists.infradead.org/pipermail/ath11k/2020-November/000550.html
-> > > > >
-> > > >
-> > > > Applying the patch and revert patch 7fef431be9c9 worked on the first
-> > > > glance.
-> > > >
-> > > > After a couple of minutes the connection get broken. The kernel log
-> > > > shows the following error:
-> > > >
-> > > > ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-> > > > ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-> > > > ath11k_pc
-> > > > i 0000:55:00.0: failed to enable PMF QOS: (-11
-> > > >
-> > > > It is also not possible to unload the ath11k_pci, rmmod will hang.
-> > > >
-> > > >
-> > >
-> > > I can confirm the same behavior as Stefani so far.  After applying the
-> > > patch, and reverting commit 7fef431be9c9, I am able to connect to a
-> > > network.  It hasn't disconnected yet (I'm sending this email via that
-> > > connection).  I'll report what I find next.
-> > >
-> > > Thanks again for the help!
->
-> Sigh.... sorry for the top post again.  I'll now get a real email client.
+On 11/11/2020 1:05 AM, Christoph Hellwig wrote:
+ > On Tue, Nov 10, 2020 at 09:37:35AM -0600, Stuart Hayes wrote:
+ >> +Date:              October 2020
+ >> +Contact:   Stuart Hayes <stuart.w.hayes@gmail.com>
+ >> +Description:       If the device supports the ACPI _DSM method to
+control the
+ >> +           PCIe SSD LED states, ssdleds_supported_states (read only)
+ >> +           will show the LED states that are supported by the _DSM.
+ >> +
+ >> +What:              /sys/bus/pci/devices/.../ssdleds_current_state
+ >> +Date:              October 2020
+ >> +Contact:   Stuart Hayes <stuart.w.hayes@gmail.com>
+ >> +Description:       If the device supports the ACPI _DSM method to
+control the
+ >> +           PCIe SSD LED states, ssdleds_current_state will show or set
+ >> +           the current LED states that are active.
+ >
+ > Is the supported file really required?  Doesn't the current_state one
+ > also show which LEDs exist?
+ >
 
-So the connection remained super stable for a while, so I decided to
-tempt fate and suspend the laptop to see what would happen :).
+The current_state just shows which LED states are currently active, not
+which
+are supported by the system.  I guess you could try to set all the states in
+current_state and read it back to see which ones went on to see which states
+are supported, but I'm not 100% if that would work, plus it might result in
+the drive LEDs flashing in a strange way briefly.
 
-[ 5994.143715] PM: suspend exit
-[ 5997.260351] ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-[ 5997.260353] ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-[ 5997.260356] ath11k_pci 0000:55:00.0: failed to enable dynamic bw: -11
-[ 6000.332299] ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-[ 6000.332303] ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-[ 6000.332308] ath11k_pci 0000:55:00.0: failed to enable PMF QOS: (-11
-[ 6003.404365] ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-[ 6003.404368] ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-[ 6003.404373] ath11k_pci 0000:55:00.0: failed to enable PMF QOS: (-11
-[ 6016.204347] ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-[ 6016.204351] ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-[ 6016.204357] ath11k_pci 0000:55:00.0: failed to enable PMF QOS: (-11
-[ 6019.276319] ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-[ 6019.276323] ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-[ 6019.276329] ath11k_pci 0000:55:00.0: failed to enable PMF QOS: (-11
-[ 6031.052272] ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-[ 6031.052275] ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-[ 6031.052279] ath11k_pci 0000:55:00.0: failed to enable PMF QOS: (-11
-[ 6034.128257] ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-[ 6034.128261] ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-[ 6034.128265] ath11k_pci 0000:55:00.0: failed to enable PMF QOS: (-11
-[ 6039.500241] ath11k_pci 0000:55:00.0: qmi failed set mode request,
-mode: 4, err = -110
-[ 6039.500244] ath11k_pci 0000:55:00.0: qmi failed to send wlan mode off
+ >> +config PCI_SSDLEDS
+ >> +   def_bool y if (ACPI && PCI)
+ >> +   depends on PCI && ACPI
+ >
+ > We really should not default new code to y.
+ >
 
-I was able to remove the ath11k module using rmmod -f , and then
-modprobe ath11k + atk11k_pci and the device was able to reassociate
-and bring the connection back up.
+Good point, I agree.
+
+ >> +   if (dsm_output->status != 0 &&
+ >> +       !(dsm_output->status == 4 && dsm_output->function_specific_err
+== 1)) {
+ >
+ > overly longline.  But to make this a little more obvious, maybe you
+ > want to
+ >
+ >   a) switch on dsm_output->status
+ >   b) add symbolic names for the magic numbers
+ >
+
+Good feedback, thanks.
