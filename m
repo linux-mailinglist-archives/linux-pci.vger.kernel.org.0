@@ -2,150 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 217992AFBFD
+	by mail.lfdr.de (Postfix) with ESMTP id 0DFD52AFBFC
 	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 02:31:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgKLBb1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Nov 2020 20:31:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgKLBMc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 20:12:32 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56A9C061A48
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 17:11:27 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id o9so5379853ejg.1
-        for <linux-pci@vger.kernel.org>; Wed, 11 Nov 2020 17:11:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=technolu-st.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KFCtis8RMvpDH0LV6+B1UizWzLwWkm5y+UkEj7eA6fI=;
-        b=bsJw5TnHrOYGZ6z6koJHWMYr62oFDE2M9tzcNlHR4+NA9bAvX20jEo133dJu6sefRQ
-         SAozTyjA5ERI451RWiW1FfJBBgJJe+Kjybu2DIZfMN6M+6nxjvEr/jlJMivppghkYn7D
-         euGYQaRhOgYqdybdsP673IFrBa4zskDNANg7QboGdMXXlsbfVKPa6+e2rzEW5MT7Zc56
-         oCb3DUC4/owxfv+SFdqEOZhuhRxnWdra258h7HTiyXpzhuuO0xVrAIfcVVWNrLLSJ4Be
-         p+89SPXD81mNtHzdWh/g9Vtar5Va7NM6ziUJHtlxFGn7DUy3x5XOZgtp5JHMAAKqce7N
-         fqxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KFCtis8RMvpDH0LV6+B1UizWzLwWkm5y+UkEj7eA6fI=;
-        b=U+Ng+tGT4pCaRU3gobwNGGMtBMQgctGOO/bSTrS/Ywv5Ur9H7d1BLZg7T7ctCRwvMs
-         bWXlQBmA6qe6GL8GRwBZiPGJFBkZ2BlumGfInnFXrwJbXo1dMyAF/I/dxr7ObN/+dhsC
-         VF+qmKNKNeg+pFUKI+AaOeeh8qV5hlNErKJjXRGfm6MWuIk0exLiOIog/0OXW0I7wWGI
-         W7nWPDLwzXdDQEZ++187z6oL9vp0iXiJ8gb7NW40Tz2QY9HrO3oFp+jX9J9f3R0siWMI
-         sv2DywjOeUZDBNhqZPmpEjqJGqcFcKmDovar3NEZCja1Dk20r644S1G/Bf3rqPmf179Q
-         rdmA==
-X-Gm-Message-State: AOAM530O9G6oMLG/4/ABIPLLzT0Hc8OzTfTD7MSM9lCeKy85iJuoUmWk
-        FG4f2E99s9bSRw41otxCeohBMHKQ6wDnUxgo8CqktQ==
-X-Google-Smtp-Source: ABdhPJw8CbrtZOsD2SBgGSK03NgviwnC9hYlEHajxxXUANkdrm61lGkM9yqL3uG0jb6Co03N61vKRB0+1oFIsvgk1nw=
-X-Received: by 2002:a17:906:77c5:: with SMTP id m5mr28216170ejn.424.1605143486536;
- Wed, 11 Nov 2020 17:11:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20201103160838.GA246433@bjorn-Precision-5520> <874km61732.fsf@nanos.tec.linutronix.de>
- <fa26ac8b-ed48-7ea3-c21b-b133532716b8@posteo.de> <87mtzxkus5.fsf@nanos.tec.linutronix.de>
- <87wnz0hr9k.fsf@codeaurora.org> <87ft5hehlb.fsf@codeaurora.org>
- <6b60c8f1-ec37-d601-92c2-97a485b73431@posteo.de> <87v9ec9rk3.fsf@codeaurora.org>
- <87imab4slq.fsf@codeaurora.org> <b2129a70db2b36c5015b4143a839f47dfc3153af.camel@seibold.net>
- <CAHUdJJVp5r55NtE+BNz5XGtnaks6mDKQBFodz63DdULBVhD0Lg@mail.gmail.com> <CAHUdJJXRDKs9NRugUAFgNr51DJ=OcssuiV8ST5CaV1CKiNTFfA@mail.gmail.com>
-In-Reply-To: <CAHUdJJXRDKs9NRugUAFgNr51DJ=OcssuiV8ST5CaV1CKiNTFfA@mail.gmail.com>
-From:   wi nk <wink@technolu.st>
-Date:   Thu, 12 Nov 2020 02:11:15 +0100
-Message-ID: <CAHUdJJUkvcShSXw4mkFUDcEh101xNQbOUc0YEv6-TyLdyTs4Og@mail.gmail.com>
-Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
-To:     Stefani Seibold <stefani@seibold.net>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Thomas Krause <thomaskrause@posteo.de>,
-        Govind Singh <govinds@codeaurora.org>,
-        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Devin Bayer <dev@doubly.so>, Christoph Hellwig <hch@lst.de>,
+        id S1727012AbgKLBb2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Nov 2020 20:31:28 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41558 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbgKLBNk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Nov 2020 20:13:40 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1605143617;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NC+uvhL2XYSO0lp2yao70R5XrrcbGD310dMy9lHjfk0=;
+        b=oMtBw1dK6hwnAziR1Sa8n0nrEDU67WCC95A9JQj6dM7qem4HR9yausWmN9pKdbDKCOa8Mv
+        +nrKwuVUTvpRAO87CKbY+AmPfqP2eQAjgoYG/QCJxYG7Xc7xcMQukj0Uo6EP/7v4FIwgI5
+        O6hlKMxqfK5T/XkbyK3dIP0W6jTM5udWg8ZL/QuHEuYgTsPeEC4A39q74mAp6eDAk+CNFh
+        He38a8YVfbtGVOQ68jieQy7DRRBnpZUdo3zV2Q5GzBSeY2eaCl4SGXbzFaUwbJxvaSPgYw
+        ORSXBbLnH22RYGtcWC85d+QSiDkulHsCIdI5W7W0+8ZcjUPYeVsQhVqUM+NTaw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1605143617;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NC+uvhL2XYSO0lp2yao70R5XrrcbGD310dMy9lHjfk0=;
+        b=3z7QskZLwhekH6gqUujryf4f99GewEXIaxAyVy1SSUshTt6+NGvqmhEamYRXIm1BM35TBc
+        TIOmhz8YKbDE5oDA==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        ath11k@lists.infradead.org, David Woodhouse <dwmw@amazon.co.uk>
-Content-Type: text/plain; charset="UTF-8"
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "Dey\, Megha" <megha.dey@intel.com>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "jing.lin\@intel.com" <jing.lin@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+In-Reply-To: <20201111230321.GC83266@otc-nc-03>
+References: <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com> <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com> <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <d69953378bd1fdcdda54a2fbe285f6c0b1484e8a.camel@infradead.org> <20201111154159.GA24059@infradead.org> <20201111160922.GA83266@otc-nc-03> <87k0uro7fz.fsf@nanos.tec.linutronix.de> <20201111230321.GC83266@otc-nc-03>
+Date:   Thu, 12 Nov 2020 02:13:36 +0100
+Message-ID: <877dqrnzr3.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 2:10 AM wi nk <wink@technolu.st> wrote:
->
-> I've yet to see any instability after 45 minutes of exercising it, I
-> do see a couple of messages that came out of the driver:
->
-> [    8.963389] ath11k_pci 0000:55:00.0: Unknown eventid: 0x16005
-> [   11.342317] ath11k_pci 0000:55:00.0: Unknown eventid: 0x1d00a
->
-> then when it associates:
->
-> [   16.718895] wlp85s0: send auth to ec:08:6b:27:01:ea (try 1/3)
-> [   16.722636] wlp85s0: authenticated
-> [   16.724150] wlp85s0: associate with ec:08:6b:27:01:ea (try 1/3)
-> [   16.726486] wlp85s0: RX AssocResp from ec:08:6b:27:01:ea
-> (capab=0x411 status=0 aid=8)
-> [   16.738443] wlp85s0: associated
-> [   16.764966] IPv6: ADDRCONF(NETDEV_CHANGE): wlp85s0: link becomes ready
->
-> The adapter is achieving around 500 mbps on my gigabit connection, my
-> 2018 mbp sees around 650, so it's doing pretty well so far.
->
-> Stefani - when you applied the patch that Kalle shared, which branch
-> did you apply it to?  I applied it to ath11k-qca6390-bringup and when
-> I revert 7fef431be9c9 there is a small merge conflict I needed to
-> resolve.  I wonder if either the starting branch, or your chosen
-> resolution are related to the instability you see (or I'm just lucky
-> so far! :)).
->
-> On Thu, Nov 12, 2020 at 1:24 AM wi nk <wink@technolu.st> wrote:
-> >
-> > On Wed, Nov 11, 2020 at 11:02 PM Stefani Seibold <stefani@seibold.net> wrote:
-> > >
-> > > On Wed, 2020-11-11 at 21:10 +0200, Kalle Valo wrote:
-> > > >
-> > > > The proof of concept patch for v5.10-rc2 is here:
-> > > >
-> > > > https://patchwork.kernel.org/project/linux-wireless/patch/1605121102-14352-1-git-send-email-kvalo@codeaurora.org/
-> > > >
-> > > > Hopefully it makes it possible to boot the firmware now. But this is
-> > > > a
-> > > > quick hack and most likely buggy, so keep your expectations low :)
-> > > >
-> > > > In case there are these warnings during firmware initialisation:
-> > > >
-> > > > ath11k_pci 0000:05:00.0: qmi failed memory request, err = -110
-> > > > ath11k_pci 0000:05:00.0: qmi failed to respond fw mem req:-110
-> > > >
-> > > > Try reverting this commit:
-> > > >
-> > > > 7fef431be9c9 mm/page_alloc: place pages to tail in
-> > > > __free_pages_core()
-> > > >
-> > > > That's another issue which is debugged here:
-> > > >
-> > > > http://lists.infradead.org/pipermail/ath11k/2020-November/000550.html
-> > > >
-> > >
-> > > Applying the patch and revert patch 7fef431be9c9 worked on the first
-> > > glance.
-> > >
-> > > After a couple of minutes the connection get broken. The kernel log
-> > > shows the following error:
-> > >
-> > > ath11k_pci 0000:55:00.0: wmi command 16387 timeout
-> > > ath11k_pci 0000:55:00.0: failed to send WMI_PDEV_SET_PARAM cmd
-> > > ath11k_pc
-> > > i 0000:55:00.0: failed to enable PMF QOS: (-11
-> > >
-> > > It is also not possible to unload the ath11k_pci, rmmod will hang.
-> > >
-> > >
-> >
-> > I can confirm the same behavior as Stefani so far.  After applying the
-> > patch, and reverting commit 7fef431be9c9, I am able to connect to a
-> > network.  It hasn't disconnected yet (I'm sending this email via that
-> > connection).  I'll report what I find next.
-> >
-> > Thanks again for the help!
+Ashok,
 
-Sigh.... sorry for the top post again.  I'll now get a real email client.
+On Wed, Nov 11 2020 at 15:03, Ashok Raj wrote:
+> On Wed, Nov 11, 2020 at 11:27:28PM +0100, Thomas Gleixner wrote:
+>> which is the obvious sane and safe logic. But sure, why am I asking for
+>> sane and safe in the context of virtualization?
+>
+> We can pick how to solve this, and just waiting for you to tell, what
+> mechanism you prefer that's less painful and architecturally acceptible for
+> virtualization and linux. We are all ears!
+
+Obviously we can't turn the time back. The point I was trying to make is
+that the general approach of just bolting things on top of the exiting
+maze is bad in general.
+
+Opt-out bits are error prone simply because anything which exists before
+that point does not know that it should set that bit. Obvious, right?
+
+CPUID bits are 'Feature available' and not 'Feature not longer
+available' for a reason.
+
+So with the introduction of VT this stringent road was left and the
+approach was: Don't tell the guest OS that it's not running on bare
+metal.
+
+That's a perfectly fine approach for running existing legacy OSes which
+do not care at all because they don't know about anything of this
+newfangled stuff.
+
+But it's a falls flat on it's nose for anything which comes past that
+point simply because there is no reliable way to tell in which context
+the OS runs.
+
+The VMM can decide not to set or is not having support for setting the
+software CPUID bit which tells the guest OS that it does NOT run on bare
+metal and still hand in new fangled PCI devices for which the guest OS
+happens to have a driver which then falls flat on it's nose because some
+magic functionality is not there.
+
+So we have the following matrix:
+
+VMM   		Guest OS
+Old             Old             -> Fine, does not support any of that
+New             Old             -> Fine, does not support any of that
+New             New             -> Fine, works as expected
+Old             New             -> FAIL
+
+To fix this we have to come up with heuristics again to figure out which
+context we are running in and whether some magic feature can be
+supported or not:
+
+probably_on_bare_metal()
+{
+        if (CPUID(FEATURE_HYPERVISOR))
+        	return false;
+       	if (dmi_match_hypervisor_vendor())
+        	return false;
+
+        return PROBABLY_RUNNING_ON_BARE_METAL;
+}
+
+Yes, it works probably in most cases, but it still works by chance and
+that's what I really hate about this; indeed 'hate' is not a strong
+enough word.
+
+Why on earth did VT not introduce a reliable way (instruction, CPUID
+leaf, MSR, whatever, which can't be manipulated by the VMM to let the OS
+figure out where it runs?)
+
+Just because the general approach to these problems is: We can fix that
+in software.
+
+No, you can't fix inconsistency in software at all.
+
+This is not the first time that we tell HW folks to stop this 'Fix this
+in software' attitude which has caused more problems than it solved.
+
+And you can argue in circles until you are blue, that inconsistency is
+not going away. 
+
+Everytime new (mis)features are added which need awareness of the OS
+whether it runs on bare-metal or in a VM we have this unsolvable dance
+of requiring that the underlying VMM has to tell the guest OS NOT to use
+it instead of having the guest OS making the simple decision:
+
+   if (!definitely_on_bare_metal())
+   	return -ENOTSUPP;
+
+or with a newer version of the guest OS:
+
+   if (!definitely_on_bare_metal() && !hypervisor->supportsthis())
+   	return -ENOTSUPP;
+
+I'm halfways content to go with the above probably_on_bare_metal()
+function as a replacement for definitely_on_bare_metal() to go forward,
+but only for the very simple reason that this is the only option we
+have.
+
+Thanks,
+
+        tglx
