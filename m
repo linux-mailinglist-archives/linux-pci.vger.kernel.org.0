@@ -2,118 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70DF02B11F5
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 23:42:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8F242B12D7
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 00:46:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgKLWmu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 17:42:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:47642 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgKLWmt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 17:42:49 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605220967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PtB9NAxfiQap1pp3nxZvuOoDIPTo5gMSqFn75f0MaeA=;
-        b=CaP8VQrefkrhEsMv82YyMOkLUQLnQrgjnx+zJ0mgvuj2W68b+aHj4w6Uaodv2sbISHhEas
-        EKY0yrf/JpGwK2hS1KWrZDW6Xp5dqVNjjTeyUNvss4YGrBdQiJqqE37DCm7/K8oAoQLzBr
-        Pd9ohCrwCnEXl/ESMTycYl5A6wVkmXKpVqs/Xh1LB0ogHanr+wrfYxihrXxqucTvPhRA/5
-        VInbRhmTNOqRVCsxUnSgp1/MGYf5JkOozUpZq/b9FGw6fTPVgVhvLK6DTEM8nvL7jH946M
-        Km8pSZ2DHX1318zKHZie9/q1ZW3ZZXLZar/hLTI1KgwRp8i5S1JhNeWVNbn/2A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605220967;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PtB9NAxfiQap1pp3nxZvuOoDIPTo5gMSqFn75f0MaeA=;
-        b=Qf1JSP13w9S5KLD1yG48HF9wSR15pf//4+ooA3P81lwVidKykHYNwB9SX6zA8aqo5txh44
-        pJNl5CB8Ar/IsRBQ==
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>
-Cc:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams\, Dan J" <dan.j.williams@intel.com>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "Dey\, Megha" <megha.dey@intel.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-In-Reply-To: <20201112193253.GG19638@char.us.oracle.com>
-References: <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <20201108235852.GC32074@araj-mobl1.jf.intel.com> <874klykc7h.fsf@nanos.tec.linutronix.de> <20201109173034.GG2620339@nvidia.com> <87pn4mi23u.fsf@nanos.tec.linutronix.de> <20201110051412.GA20147@otc-nc-03> <875z6dik1a.fsf@nanos.tec.linutronix.de> <20201110141323.GB22336@otc-nc-03> <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com> <20201112193253.GG19638@char.us.oracle.com>
-Date:   Thu, 12 Nov 2020 23:42:46 +0100
-Message-ID: <877dqqmc2h.fsf@nanos.tec.linutronix.de>
+        id S1725977AbgKLXqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 18:46:14 -0500
+Received: from mga03.intel.com ([134.134.136.65]:27859 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgKLXqO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Nov 2020 18:46:14 -0500
+IronPort-SDR: +F/DkG6ljCxlkONaGv0bdO7fw7M2vY01Nz+xmX+07LScRIrA2ellVFK12HYgmvX0g8M5ibQ5Hs
+ KNOkC4gIujNA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9803"; a="170506673"
+X-IronPort-AV: E=Sophos;i="5.77,473,1596524400"; 
+   d="scan'208";a="170506673"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 15:46:13 -0800
+IronPort-SDR: jYVbLpAt3WxNi5IIIvZNfkVOuiGfuVOjBt5URs95iChHdOy3WkqwFELzs6IbfepfRv0yH2/YtA
+ PKpyOq1OWRqQ==
+X-IronPort-AV: E=Sophos;i="5.77,473,1596524400"; 
+   d="scan'208";a="542450074"
+Received: from jlee24-mobl1.amr.corp.intel.com (HELO ellie) ([10.212.177.92])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 15:46:13 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Miroslav Lichvar <mlichvar@redhat.com>
+Cc:     intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com, Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support
+ for PTP getcrosststamp()
+In-Reply-To: <20201112093203.GH1559650@localhost>
+References: <20201112093203.GH1559650@localhost>
+Date:   Thu, 12 Nov 2020 15:46:12 -0800
+Message-ID: <87pn4i6svv.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 12 2020 at 14:32, Konrad Rzeszutek Wilk wrote:
->> 4. Using CPUID to detect running as guest. But as Thomas pointed out, this
->> approach is less reliable as not all hypervisors do this way.
+Miroslav Lichvar <mlichvar@redhat.com> writes:
+
+> Considering how the existing applications work, ideally the
+> measurements would be performed on demand from the ioctl to minimize
+> the delay. If that's not possible, maybe it would be better to provide
+> the measurements on a descriptor at their own rate, which could be
+> polled by the applications, similarly to how the PTP_EXTTS_REQUEST
+> ioctl works?
+
+I wanted it so using PCIe PTM was transparent to applications, so adding
+another API wouldn't be my preference.
+
+That being said, having a trigger from the application to start/stop the
+PTM cycles doesn't sound too bad an idea. So, not too opposed to this
+idea.
+
+Richard, any opinions here?
+
+> That sounds like it could break in some specific conditions. Please
+> try slightly different -R values and when it's running, try inserting
+> a step with date -s '+0.1 sec' and see how reliable is the recovery.
+> You can also test it with a different servo: phc2sys -E linreg.
+
+Yeah, for some combinations, the disturbances make the recovery take
+more time. So, I have to increase the frequency that the PTM cycles are
+run. Thanks.
+
+> Is that the case even when there is a PTM-enabled switch between the
+> CPU and NIC? My understanding of the spec is that the switches are
+> supposed to have their own clocks and have separate PTM dialogs on
+> their upstream and downstream ports. In terms of PTP, are the switches
+> boundary or transparent clocks?
+
+Yeah, it seems that PCIe PTM switches are indeed more like boundary
+clocks i.e. they are Requesters for the Root Complex and Responders for
+the endpoints, and the Master time that they provide in their Responses
+are in relation to their own clocks.
+
 >
-> Is that truly true? It is the first time I see the argument that extra
-> steps are needed and that checking for X86_FEATURE_HYPERVISOR is not enough.
+> Yes, I think that would work, except the delay would need to be
+> doubled in the T3' calculation. The important thing is that the offset
+> and delay calculated from the timestamps don't change. It might be
+> better to shift the timestamps back to avoid the "post" timestamp
+> coming from future, which applications could drop as invalid. To not
+> shift the middlepoints in the conversion, this should work:
 >
-> Or is it more "Some hypervisor probably forgot about it, so lets make sure we patch
-> over that possible hole?"
+> T1' = (T2 + T3) / 2 - delay
+> T2' = (T1 + T4) / 2
+> T3' = (T2 + T3) / 2 + delay
 
-Nothing enforces that bit to be set. The bit is a pure software
-convention and was proposed by VMWare in 2008 with the following
-changelog:
+Makes total sense. Thanks a lot!
 
- "This patch proposes to use a cpuid interface to detect if we are
-  running on an hypervisor.
 
-  The discovery of a hypervisor is determined by bit 31 of CPUID#1_ECX,
-  which is defined to be "hypervisor present bit". For a VM, the bit is
-  1, otherwise it is set to 0. This bit is not officially documented by
-  either Intel/AMD yet, but they plan to do so some time soon, in the
-  meanwhile they have promised to keep it reserved for virtualization."
-
-The reserved promise seems to hold. AMDs APM has it documented. The
-Intel SDM not so.
-
-Also the kernel side of KVM does not enforce that bit, it's up to the user
-space management to set it.
-
-And yes, I've tripped over this with some hypervisors and even qemu KVM
-failed to set it in the early days because it was masked with host CPUID
-trimming as there the bit is obviously 0.
-
-DMI vendor name is pretty good final check when the bit is 0. The
-strings I'm aware of are:
-
-QEMU, Bochs, KVM, Xen, VMware, VMW, VMware Inc., innotek GmbH, Oracle
-Corporation, Parallels, BHYVE, Microsoft Corporation
-
-which is not complete but better than nothing ;)
-
-Thanks,
-
-        tglx
+Cheers,
+-- 
+Vinicius
