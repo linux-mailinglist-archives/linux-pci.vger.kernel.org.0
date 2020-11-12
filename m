@@ -2,128 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ED432B0A57
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 17:42:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86D192B0AA4
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 17:46:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgKLQmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 11:42:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbgKLQmj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 11:42:39 -0500
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D886C0613D1
-        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 08:42:39 -0800 (PST)
-Received: by mail-oi1-x244.google.com with SMTP id m143so7086047oig.7
-        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 08:42:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ba+PZWKOieEYiFlC81JrcbjzPFiIPb+iZaQxXkOtdxY=;
-        b=ZxWVMbFu6OlwjYN23554RnqCzda8mFXlz2Fu19cJSqtIxLkB74Jsj/uuAENdW5ui26
-         niAebijycFsJZQQ5tzVfPpaQ96qytXsTzWVxQv6b/LErguZkNPPqaCWsL+IalpOgV2rT
-         wwkQl3XeS5EDXVhXjNHrYfMzsEtfHpBd5rA/+cb1LnVNHPLANCavfmDwIJp8pE7HCnWy
-         sJ8SeTiZZbDJbQX2MZZI5b00U+nsaPw8W33tZsgZnMI3/dzNbcjmgW34JoaUOS87uHhn
-         cmfH/YMe14griForM8OZTcF2nXBPnhEnjZN4rgsHkFutfA8qOsAnOGpHYGbW0QWirpS9
-         Hpjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ba+PZWKOieEYiFlC81JrcbjzPFiIPb+iZaQxXkOtdxY=;
-        b=iLj/WdR95gwhrMwuBAOQAneBcU1qjSAEkWQNRzlF1AxbuOhip1fQJOJ+ZLX7g2NwQQ
-         Y0C3CDgaA/ejDR1UN34JlhXeS+FuV45UE0SADmlqBIBCDgWLvs0CzQGh6YB3OT8RgPe5
-         tKV11KoDZEWLbXo4uk7X0GuuOLnIz05iGcXI50YZotfKkZeqcEYz03ex/j2TQTTjqkiy
-         VQ1JWxBzVX1e+ZpsM6qXqcg+o5pqouVoJA4wJ1x0Sjcl6TGjHPzFCjNT55QxxAj2HMJp
-         upSHe4qN4z4g0pOKYNTf7Pui0QciB36pZ75hIzeUgF7l2VU3gVWoXd5KpPEX1HyyWyUt
-         vigw==
-X-Gm-Message-State: AOAM530/LWceOc3DC2V1hzXNpSzb5QDf1tnYsW94AoHJrv8YFBWmd3nu
-        mK1eQHp7BmKkReGXCsWc448ERZGI/J1gqM4hSx0znw==
-X-Google-Smtp-Source: ABdhPJxziDA4W2xe501D6AEvpGRuKZaRYItebggo0eCbbzEc48q9kwD7pq8nb1dCBXyJ7O/pXKI2lDAwUwhlRuo5rYI=
-X-Received: by 2002:aca:4797:: with SMTP id u145mr423566oia.0.1605199358924;
- Thu, 12 Nov 2020 08:42:38 -0800 (PST)
+        id S1728263AbgKLQqg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 11:46:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728757AbgKLQqg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 12 Nov 2020 11:46:36 -0500
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEAC922201;
+        Thu, 12 Nov 2020 16:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605199595;
+        bh=LLx0akF5qtEiY5VMQSlszIbWAgpb7UXLGfsyXCRK7Dk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jfNQTQ0hZkzr+YiJs7bsZrYRl7397sjcqsp9yCooKZ2UJqzJHhIozdq1Fg5EsJZ/n
+         9UksIUQQKLeTPp/Ugn927wly+H3VPFz3bkcKo6vheC3y4RlOXk5vP7VwtMWyukkVNw
+         RUttv7U/0u6I8GHmbbOg4v/PkVLNnT8q6GuxSEPw=
+Received: by mail-qt1-f175.google.com with SMTP id z3so824217qtw.9;
+        Thu, 12 Nov 2020 08:46:34 -0800 (PST)
+X-Gm-Message-State: AOAM531T37UqKnwaGl07ueuWgHSeAMtq2G2DrNZHzg74PnZlu0Q7F22Z
+        XGM8O7hX7BSPqCe1CuisDnzLPDQQvRkv3jSaJg==
+X-Google-Smtp-Source: ABdhPJxNTJyWMf6+brsvjbuORMB9At5nr5f9ABeu/u5b5DtZBs4UEdwvX6ofCVpyFPU2RsM96RURemzIhbtaljLRQts=
+X-Received: by 2002:aed:2aa5:: with SMTP id t34mr13728qtd.31.1605199593992;
+ Thu, 12 Nov 2020 08:46:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20201112131400.3775119-1-phil@raspberrypi.com>
- <883066bd-2a0c-f0d8-c556-7df0e73f0503@gmail.com> <CA+-6iNxc9UiEqFXj4jMJRXW1XAS7aB4hANa7mHRsK8++t2A18A@mail.gmail.com>
-In-Reply-To: <CA+-6iNxc9UiEqFXj4jMJRXW1XAS7aB4hANa7mHRsK8++t2A18A@mail.gmail.com>
-From:   Phil Elwell <phil@raspberrypi.com>
-Date:   Thu, 12 Nov 2020 16:42:28 +0000
-Message-ID: <CAMEGJJ12UT5KN6G2-xZ4oHn4Dpj=_k77DW=Hb324HYabUyw4pg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: brcmstb: Restore initial fundamental reset
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh@kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>
+References: <20201109170409.4498-1-kishon@ti.com> <20201109170409.4498-2-kishon@ti.com>
+ <20201111212857.GA2059063@bogus> <f6d1b886-5c78-842c-c33c-16b5b9325130@ti.com>
+In-Reply-To: <f6d1b886-5c78-842c-c33c-16b5b9325130@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 12 Nov 2020 10:46:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com>
+Message-ID: <CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: mfd: ti,j721e-system-controller.yaml:
+ Document "syscon"
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jim,
-
-On Thu, 12 Nov 2020 at 16:28, Jim Quinlan <james.quinlan@broadcom.com> wrote:
+On Wed, Nov 11, 2020 at 11:25 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >
-> On Thu, Nov 12, 2020 at 10:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Hi Rob,
+>
+> On 12/11/20 2:58 am, Rob Herring wrote:
+> > On Mon, Nov 09, 2020 at 10:34:03PM +0530, Kishon Vijay Abraham I wrote:
+> >> Add binding documentation for "syscon" which should be a subnode of
+> >> the system controller (scm-conf).
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  .../mfd/ti,j721e-system-controller.yaml       | 40 +++++++++++++++++++
+> >>  1 file changed, 40 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+> >> index 19fcf59fd2fe..0b115b707ab2 100644
+> >> --- a/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+> >> +++ b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
+> >> @@ -50,6 +50,38 @@ patternProperties:
+> >>        specified in
+> >>        Documentation/devicetree/bindings/mux/reg-mux.txt
+> >>
+> >> +  "^syscon@[0-9a-f]+$":
+> >> +    type: object
+> >> +    description: |
 > >
-> > +JimQ,
+> > Don't need '|' if there's no formatting.
+>
+> Okay, will fix this.
 > >
-> > On 11/12/2020 5:14 AM, Phil Elwell wrote:
-> > > Commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
-> > > replaced a single reset function with a pointer to one of two
-> > > implementations, but also removed the call asserting the reset
-> > > at the start of brcm_pcie_setup. Doing so breaks Raspberry Pis with
-> > > VL805 XHCI controllers lacking dedicated SPI EEPROMs, which have been
-> > > used for USB booting but then need to be reset so that the kernel
-> > > can reconfigure them. The lack of a reset causes the firmware's loading
-> > > of the EEPROM image to RAM to fail, breaking USB for the kernel.
-> > >
-> > > Fixes: commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
-> > >
-> > > Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> >> +      This is the system controller configuration required to configure PCIe
+> >> +      mode, lane width and speed.
+> >> +
+> >> +    properties:
+> >> +      compatible:
+> >> +        items:
+> >> +          - enum:
+> >> +              - ti,j721e-system-controller
+> >> +          - const: syscon
+> >> +          - const: simple-mfd
 > >
-> > This does indeed seem to have been lost during that commit, I will let
-> > JimQ comment on whether this was intentional or not. Please make sure
-> > you copy him, always, he wrote the driver after all.
-> Hello,
+> > Humm, then what are this node's sub-nodes? And the same compatible as
+> > the parent?
+> >
 >
-> This wasn't accidentally lost; I intentionally removed it.  I was
-> remiss in not mentioning this in comments, sorry.
-
-
-Yes, a comment would have been helpful.
-
->  The reason I took it out is because (a) it breaks certain STB SOCs and
-> (b) I considered it superfluous (see reason below).  At any rate, if
-> you must restore this line please add the following guard so
-> everyone's board will work :-)
+> This node doesn't have sub-nodes.
 >
->         if (pcie->type != BCM7278)
->                 brcm_pcie_perst_set(pcie, 1);
+> So one is the parent syscon node which has the entire system control
+> region and then sub-nodes for each of the modules. In this case the PCIe
+> in system control has only one 4 byte register that has to be configured.
 >
->
->
-> As for me considering that  this line is superfluous -- which
-> apparently it is not : AFAIK PERST# is always asserted from cold start
-> on all Brcm STB SOCs, and I expected the same on the RPi.  Asserting
-> PERST# at this point in time should be a no-op.  Is this not the case?
+> Both the parent node and sub-node are syscon, so given the same
+> compatible for both.
 
+'syscon' is just a hint. It doesn't define what any h/w is. IMO, we
+never should have added it.
 
-The reason it isn't superfluous here is that when using USB to boot,
-the Raspberry Pi BCM2711 firmware will already have configured the
-PCIe bus once, so another reset is necessary. Since the Linux driver
-used to always reset everything at start of day, regardless of the
-power-on reset state, there's no reason for the firmware to also reset
-it before handing over - and there could be some useful state in there
-when it comes to debugging.
+A compatible defines what the programming interface is for the node.
+This one should only ever appear more than once if you have multiple
+instances of the same block. So different registers, different
+compatible. What you have here is just completely broken.
 
-I'm happy to add a condition - not a BCM7278 sounds reasonable - and a
-comment, of course.
+I don't think you even need a child node here. Just have PCIe node
+point to the parent with an offset arg.
 
-Phil
+Rob
