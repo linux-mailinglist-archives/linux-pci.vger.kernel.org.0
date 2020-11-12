@@ -2,119 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 539D52B0AD5
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 17:59:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 018762B0AE7
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 18:02:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgKLQ7o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 11:59:44 -0500
-Received: from nat-hk.nvidia.com ([203.18.50.4]:53996 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgKLQ7n (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Nov 2020 11:59:43 -0500
-Received: from HKMAIL101.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fad69fd0000>; Fri, 13 Nov 2020 00:59:41 +0800
-Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL101.nvidia.com
- (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Nov
- 2020 16:59:41 +0000
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
- HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 12 Nov 2020 16:59:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fo5Fylpcqg1c1ICago8gt/nwxngqcg9pwCP0bbD+BLkp2jsR6iGi+ENnqZ+nQSAcxaoFHKAT9haAD9lDmwwTERdrR0gUe3cN0TMUPjwkx2EVNTHn6lFf4SBF18LK9nYfvA0SZW7khOeFL+Kq76OY26We/yxljzw6VVCIufvHFtywQimFw3LLsC0KrgdrKmzBZILVUhzAzZFrWJN1XsFqbHOXLpWtL+gz1rbExdv0+Hh27BRMAqw+mZPzWCg0nd0OIgLytsbnnmw9KrxHarajaR+WiUzqZ6r90qZ+PofZYQlEjdyGcJt0Vsrs7dYAbyQyOh0ZRZ7kV6fBmGyZEO6xLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mjYw2sGjcuhzNrZV2pwl3CFN9OypHf5Gzys0L+0bO88=;
- b=eDtReuw/trq0HvRSUcFSdVLzMQfhELH4HxfF0SpbKRFjiDOwMjpqAuYYMJzNWS5hrPFPdgqlRsephJ0+x15W4iKhfq42XOi3Zi4AYijBC0XWQQSx2ggw0NJeyuF6cBLEKYh2gioP12RzAeKeZzeeXi9tCsXPHr/9Q0Zb4365AuVjFOV5urvOxmxubiOLdM768UGuWaVMkdKK4uxraCaxwk7LLTmIStTmsMwyTPHHjrjdgVOCb/cr3rShpfE2b2TTwvV52hT8gN6bdW+VIDe74F9w8XIBgTYqye8LERz/RyyPaMUVmGbqjcoVds43YQazWxRCLZcYeo36kjfMcM07pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4042.namprd12.prod.outlook.com (2603:10b6:5:215::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Thu, 12 Nov
- 2020 16:59:37 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Thu, 12 Nov 2020
- 16:59:37 +0000
-Date:   Thu, 12 Nov 2020 12:59:35 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Zhu Yanjun <yanjunz@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        <linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
-        <linux-pci@vger.kernel.org>, <iommu@lists.linux-foundation.org>
-Subject: Re: remove dma_virt_ops v2
-Message-ID: <20201112165935.GA932629@nvidia.com>
-References: <20201106181941.1878556-1-hch@lst.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20201106181941.1878556-1-hch@lst.de>
-X-ClientProxiedBy: BL0PR02CA0078.namprd02.prod.outlook.com
- (2603:10b6:208:51::19) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1725972AbgKLRCw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 12:02:52 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16204 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgKLRCv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 12:02:51 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fad6abe0004>; Thu, 12 Nov 2020 09:02:54 -0800
+Received: from [10.25.78.175] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Nov
+ 2020 17:02:44 +0000
+Subject: Re: [PATCH V2] PCI: dwc: Add support to configure for ECRC
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+References: <20201111222937.GA977451@bjorn-Precision-5520>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <a2246e67-4874-f01c-d1bf-1d8a05ffa4b4@nvidia.com>
+Date:   Thu, 12 Nov 2020 22:32:40 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR02CA0078.namprd02.prod.outlook.com (2603:10b6:208:51::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.25 via Frontend Transport; Thu, 12 Nov 2020 16:59:37 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kdFwd-003ul0-PF; Thu, 12 Nov 2020 12:59:35 -0400
+In-Reply-To: <20201111222937.GA977451@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1605200381; bh=mjYw2sGjcuhzNrZV2pwl3CFN9OypHf5Gzys0L+0bO88=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType;
-        b=PolRm/+9iSArJhGLhQEUp/bdPhYEjooDTEC295gKwXUHVln7M7s9RORnhZwFicZxt
-         PncGptw0xN6WVnpE1Bowh2O1W1fTRSWFGW06Z097NJganQnSWr1AFPn17kJhcW1LaY
-         Xi/nL3UvYblGvNqK7wgy1A+y0uWNAIHJ0wtvChZce6i0nCIkyGh0PX3x2V9aZJUunc
-         +eXQFJiHo8w7cb6aPwHubTNUGraCHyOFi6eW/RljHNZgpyjL0/uAD3g3SuV+++q1a+
-         xKipKL9WrtvlzqQoEnB6d1p4Wv2f/sc/c98QFCZHMGrwfWdp9sZuxjxyr3qk6rfJk8
-         npTADLGoUnAtg==
+        t=1605200574; bh=kInUCH6c1KB06T3ANIWEowNtIdm1qtIvJWrdNWjxZNo=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=g5zdgc1SNj7udSGXKm19aUAe3fRIswOJjwp+0sBFISKleXRny3wF+RkkJL6TzI69M
+         ZtLuS/FnD0Fwu+KusQo1LuY6scF16NPlIFskUMiYp9SNVGm+lf1xVa/Evww6+olTdj
+         fjyp9qK7fbyoDlcmZTtGg04uJ2oaZK/sxr66P//slNCxPRswx/95lPFakJ+jPttipH
+         2SzdWFHJ6aenGXF0zp5ohwd21/Os3zda43QCQh4+wU7qWbNd2mjoYexsdkL4reTTvP
+         8c2DbDWBFxDZDQ8gt9OE1uRNj6bvzeDAUAXCa5YJhzlFzAm5FoZdkj0iK57g7BMz0J
+         H4NN75INLdvdw==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 06, 2020 at 07:19:31PM +0100, Christoph Hellwig wrote:
-> Hi Jason,
-> 
-> this series switches the RDMA core to opencode the special case of
-> devices bypassing the DMA mapping in the RDMA ULPs.  The virt ops
-> have caused a bit of trouble due to the P2P code node working with
-> them due to the fact that we'd do two dma mapping iterations for a
-> single I/O, but also are a bit of layering violation and lead to
-> more code than necessary.
-> 
-> Tested with nvme-rdma over rxe.
-> 
-> Note that the rds changes are untested, as I could not find any
-> simple rds test setup.
-> 
-> Changes since v2:
->  - simplify the INFINIBAND_VIRT_DMA dependencies
->  - add a ib_uses_virt_dma helper
->  - use ib_uses_virt_dma in nvmet-rdma to disable p2p for virt_dma devices
->  - use ib_dma_max_seg_size in umem
->  - stop using dmapool in rds
-> 
-> Changes since v1:
->  - disable software RDMA drivers for highmem configs
->  - update the PCI commit logs
 
-Lets give Santosh a little longer for RDS, I've grabbed the precursor
-parts to for-next for now:
 
- nvme-rdma: Use ibdev_to_node instead of dereferencing ->dma_device
- RDMA: Lift ibdev_to_node from rds to common code
- RDMA/core: Remove ib_dma_{alloc,free}_coherent
- RDMA/umem: Use ib_dma_max_seg_size instead of dma_get_max_seg_size
- RMDA/sw: Don't allow drivers using dma_virt_ops on highmem configs
+On 11/12/2020 3:59 AM, Bjorn Helgaas wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Wed, Nov 11, 2020 at 10:21:46PM +0530, Vidya Sagar wrote:
+>>
+>>
+>> On 11/11/2020 9:57 PM, Jingoo Han wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 11/11/20, 7:12 AM, Vidya Sagar wrote:
+>>>>
+>>>> DesignWare core has a TLP digest (TD) override bit in one of the control
+>>>> registers of ATU. This bit also needs to be programmed for proper ECRC
+>>>> functionality. This is currently identified as an issue with DesignWare
+>>>> IP version 4.90a.
+>>>>
+>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>> ---
+>>>> V2:
+>>>> * Addressed Bjorn's comments
+>>>>
+>>>>    drivers/pci/controller/dwc/pcie-designware.c | 52 ++++++++++++++++++--
+>>>>    drivers/pci/controller/dwc/pcie-designware.h |  1 +
+>>>>    2 files changed, 49 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>>>> index c2dea8fc97c8..ec0d13ab6bad 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>>> @@ -225,6 +225,46 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
+>>>>         dw_pcie_writel_atu(pci, offset + reg, val);
+>>>>    }
+>>>>
+>>>> +static inline u32 dw_pcie_enable_ecrc(u32 val)
+>>>
+>>> What is the reason to use inline here?
+>>
+>> Actually, I wanted to move the programming part inside the respective APIs
+>> but then I wanted to give some details as well in comments so to avoid
+>> duplication, I came up with this function. But, I'm making it inline for
+>> better code optimization by compiler.
+> 
+> I don't really care either way, but I'd be surprised if the compiler
+> didn't inline this all by itself even without the explicit "inline".
+I just checked it and you are right that compiler is indeed inlining it 
+without explicitly mentioning 'inline'.
+I hope it is ok to leave it that way.
 
-Will get the rest next week regardless.
-
-Thanks,
-Jason
+> 
+>>>> +{
+>>>> +     /*
+>>>> +      * DesignWare core version 4.90A has this strange design issue
+>>>> +      * where the 'TD' bit in the Control register-1 of the ATU outbound
+>>>> +      * region acts like an override for the ECRC setting i.e. the presence
+>>>> +      * of TLP Digest(ECRC) in the outgoing TLPs is solely determined by
+>>>> +      * this bit. This is contrary to the PCIe spec which says that the
+>>>> +      * enablement of the ECRC is solely determined by the AER registers.
+>>>> +      *
+>>>> +      * Because of this, even when the ECRC is enabled through AER
+>>>> +      * registers, the transactions going through ATU won't have TLP Digest
+>>>> +      * as there is no way the AER sub-system could program the TD bit which
+>>>> +      * is specific to DesignWare core.
+>>>> +      *
+>>>> +      * The best way to handle this scenario is to program the TD bit
+>>>> +      * always. It affects only the traffic from root port to downstream
+>>>> +      * devices.
+>>>> +      *
+>>>> +      * At this point,
+>>>> +      * When ECRC is enabled in AER registers, everything works normally
+>>>> +      * When ECRC is NOT enabled in AER registers, then,
+>>>> +      * on Root Port:- TLP Digest (DWord size) gets appended to each packet
+>>>> +      *                even through it is not required. Since downstream
+>>>> +      *                TLPs are mostly for configuration accesses and BAR
+>>>> +      *                accesses, they are not in critical path and won't
+>>>> +      *                have much negative effect on the performance.
+>>>> +      * on End Point:- TLP Digest is received for some/all the packets coming
+>>>> +      *                from the root port. TLP Digest is ignored because,
+>>>> +      *                as per the PCIe Spec r5.0 v1.0 section 2.2.3
+>>>> +      *                "TLP Digest Rules", when an endpoint receives TLP
+>>>> +      *                Digest when its ECRC check functionality is disabled
+>>>> +      *                in AER registers, received TLP Digest is just ignored.
+>>>> +      * Since there is no issue or error reported either side, best way to
+>>>> +      * handle the scenario is to program TD bit by default.
+>>>> +      */
+>>>> +
+>>>> +     return val | PCIE_ATU_TD;
+>>>> +}
