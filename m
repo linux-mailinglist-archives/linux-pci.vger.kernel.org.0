@@ -2,155 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 909982B053E
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 13:55:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6591F2B05C5
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 14:03:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgKLMzz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 07:55:55 -0500
-Received: from nat-hk.nvidia.com ([203.18.50.4]:13802 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgKLMzz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Nov 2020 07:55:55 -0500
-Received: from HKMAIL102.nvidia.com (Not Verified[10.18.92.9]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fad30d30000>; Thu, 12 Nov 2020 20:55:47 +0800
-Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL102.nvidia.com
- (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Nov
- 2020 12:55:36 +0000
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
- HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 12 Nov 2020 12:55:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KyIW7IOM0+++D4M++knuxpj7alhdYeaG22sc6dnPQJvngD6iTQvoKuFK3btnmgz2x5yqp2KUXW8gpJDEBdEvtEjNVEU+Zg1UHlyDVRTAXy/CRaAAshslESeA8XtvD9CNUSi5fQw1W/emZlcqGsBZni9eCp7dwc2n18TqXLtRVzzftvL8iAHZnki7/0gMua+yf1LU6I2Vi9Ryc9MtQ3bYLON/ejRZETiohSE8rkOel8ShqC5HGlLy5WVj5K49GrvhTwQ9bnRTURwNdW9PHm+9+Lm3Ds27QwQru7/BDW33MSTzo8ZlWlhMymu3rYrEycSfJsaw8+nCgsb+WHf+Hx7KEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=odkGYsTueGG1Oj1E5+/FEqJBoN5zCA2wnbKnOv3SBSE=;
- b=joeixh4hu5ooTwctsGDAchHhtySQy59tD6tksNFsMczPvsiyyWuzacJauPFFKPZyCHv0IzmOqJaVJq3IwPU71DE7W5hi4kyQEyR6pJIxlSE2XuQcPvjQ4yLf3y6AVksI30sPG4CH/p0/c42VC6zzDIaNOS3iyIN7a4GQHtRk45P0ZWoJCF7P/gyZpqD1uxRRmTdun+D7uF0L7uTvzzcjoMqR8cOI8o/r2s2Lw7FgyBfaTwc4uBJ21Wt1CdBu5vAuD3ZVNz5IjO6f4b1uqtB6rxz5Wi0BUV7nwqfmviq43rTvsR0bX8YHYEt8oDBApe84NJk4YnGpc9atCfbvSXNNhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1881.namprd12.prod.outlook.com (2603:10b6:3:10f::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Thu, 12 Nov
- 2020 12:55:33 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Thu, 12 Nov 2020
- 12:55:33 +0000
-Date:   Thu, 12 Nov 2020 08:55:31 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ziyad Atiyyeh <ziyadat@nvidia.com>,
-        Itay Aveksis <itayav@nvidia.com>,
-        Moshe Shemesh <moshe@nvidia.com>
-CC:     LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "Jon Derrick" <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Megha Dey" <megha.dey@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: REGRESSION: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare
- for device MSI
-Message-ID: <20201112125531.GA873287@nvidia.com>
-References: <20200826111628.794979401@linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200826111628.794979401@linutronix.de>
-X-ClientProxiedBy: MN2PR15CA0022.namprd15.prod.outlook.com
- (2603:10b6:208:1b4::35) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1728201AbgKLNDQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 08:03:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728181AbgKLNDP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 08:03:15 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FF5C0613D6
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:03:15 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id o15so5914685wru.6
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:03:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XoAG1pru+t0E0RGbZFAgVVNe78IlOrfO4ZdEb2/m39k=;
+        b=UphNYMQS/LN28Yxb1McSQM05xn0X1V0x7rJ0PnNKfQvzO7zSoSBhZ9CLBwJKzAgh16
+         17BMyTB6gytjqNUMMUrH82FFJY2PEIruw0bKT5P4mlmuWOAislyFW6xOumTDMAcADDJ/
+         3I+1KO/GAtkaunGBQ3cAe+TPQ8lRQuZK1Uk3iHPKADw+iRsHWUINdXk0j0p0aLmHWSQD
+         Lar/biWGCcmxYMOxn5/aO0uFOlgWdelEDWUgUAG103fCjfzlpWK4j4svUJKEmpdBgdzE
+         qnbdv6qFgKnizUAGgssYpzF9v1UwcuGMLi2IRXc/YY0k9b1cqi77VreSmTVMP/3andg7
+         tthQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XoAG1pru+t0E0RGbZFAgVVNe78IlOrfO4ZdEb2/m39k=;
+        b=MMvYeY1337LmPaQff3d9fdo5NQfZtQRy79Od2H7rSd9g1WG8MzSq/zRDuPDafbtiZ4
+         zJ0JkJGzPyov53KYd0Q6chuRiwIbKw7VTz4SxBhACpNXEYbMvZmG5MkXAujR+3GJQW9f
+         G/AHz84RrmaYJN0IfRvJTvs6/654bYz9j13e/Zi1GvJ3xO3FgRkDyXR+q+cDLZwvfafy
+         BZiDhEvzHu81UD9U5UuEMnmhpu4PkMDQlA2pJettUk/xSNPzO2GWfK1Pmaqqor2yY9F2
+         XTaKgFEgdYCQ7WQo0FSILwSS43lmF72Ehx7752dXfihTSTPxGQ1A0PlTfzl/M1iluDUE
+         8m+A==
+X-Gm-Message-State: AOAM533tpo69CXpC1C3+OFEU5N4PLUwLHfz3YFJ3keTL0IdBWaPRzvFW
+        zTc2L0nFWroBx7R0rDGJh+R4hQ==
+X-Google-Smtp-Source: ABdhPJxMBUohVh2fAAvMFdY17a6lP3nz140iaaxKiNjcDkvE3A2fsz0yM/aFafAdvuPkFa1NZKXESQ==
+X-Received: by 2002:adf:ce87:: with SMTP id r7mr4434152wrn.212.1605186194089;
+        Thu, 12 Nov 2020 05:03:14 -0800 (PST)
+Received: from localhost.localdomain ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id m22sm6877508wrb.97.2020.11.12.05.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2020 05:03:13 -0800 (PST)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     joro@8bytes.org, will@kernel.org, lorenzo.pieralisi@arm.com,
+        robh+dt@kernel.org
+Cc:     guohanjun@huawei.com, sudeep.holla@arm.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
+        Jonathan.Cameron@huawei.com, eric.auger@redhat.com,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, baolu.lu@linux.intel.com,
+        zhangfei.gao@linaro.org, shameerali.kolothum.thodi@huawei.com,
+        vivek.gautam@arm.com,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v8 0/9] iommu: I/O page faults for SMMUv3
+Date:   Thu, 12 Nov 2020 13:55:12 +0100
+Message-Id: <20201112125519.3987595-1-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.29.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR15CA0022.namprd15.prod.outlook.com (2603:10b6:208:1b4::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21 via Frontend Transport; Thu, 12 Nov 2020 12:55:32 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kdC8R-003fG5-Cp; Thu, 12 Nov 2020 08:55:31 -0400
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1605185747; bh=eQ25xNlY3rVx34V0CM4Bnq31qnmUxB4lNkLgF/NTCTU=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:Content-Transfer-Encoding:In-Reply-To:
-         X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=VsWoaT5gF6t9jiuouhEpEGN7Qg7rtC2IuOTe3e6QAc+/J5kvbsUGMZeN9Kt4v340c
-         KVbRoCH9TR2N9HqJF4VZ84B6k+51zu6l3inP6l0HJqan+cR7kEEn/+Cqpds/KwjSEr
-         BJf+0jPEtmRpSIm1ToZML8tn4g1PO1iVyJXs6pHwlKZwUso5Cn8iCe6LGFBRQ1tEUP
-         95Nt8mKzj2PmKuTTS2AowvWwB9kBFIAxLC7TFNHrpa0/KKU1hbM20l9NiG3hCradK7
-         hY1uGGNICjBrlcYzyYVoaC3ibvjfkHv7m8xxytVcHuVd6aNpu8YGZow8Vv5rsi+u+9
-         YDb6R/lLzsueQ==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
-> This is the second version of providing a base to support device MSI (non
-> PCI based) and on top of that support for IMS (Interrupt Message Storm)
-> based devices in a halfways architecture independent way.
+Add support for stall and PRI to the SMMUv3 driver, along with a common
+I/O Page Fault handler.
 
-Hi Thomas,
+These patches were last sent as part of v7 of the larger SVA series [1].
+Main changes since v7:
+* Dropped CONFIG_IOMMU_PAGE_FAULT, reuse CONFIG_IOMMU_SVA_LIB instead.
+* Extracted devicetree support into patch 4.
+* Added patch 5 for ACPI support.
+* Dropped event queue flush on unbind(). Since device drivers must
+  complete DMA transactions before calling unbind(), there cannot be any
+  pending stalled event.
+* A few small fixes.
 
-Our test team has been struggling with a regression on bare metal
-SRIOV VFs since -rc1 that they were able to bisect to this series
+The series depends on "iommu/sva: Add PASID helpers" [2], since it
+provides the function to search an mm_struct by PASID.
 
-This commit tests good:
+Has anyone been testing the PRI patches on hardware? I still only have a
+software model to test them, so as much as I'd like to cross this off my
+list, we could leave out patches 7-9 for now.
 
-5712c3ed549e ("Merge tag 'armsoc-fixes' of git://git.kernel.org/pub/scm/lin=
-ux/kernel/git/soc/soc")
+[1] https://lore.kernel.org/linux-iommu/20200519175502.2504091-1-jean-philippe@linaro.org/
+[2] https://lore.kernel.org/linux-iommu/20201106155048.997886-1-jean-philippe@linaro.org/
 
-This commit tests bad:
+Jean-Philippe Brucker (9):
+  iommu: Add a page fault handler
+  iommu/arm-smmu-v3: Maintain a SID->device structure
+  dt-bindings: document stall property for IOMMU masters
+  of/iommu: Support dma-can-stall property
+  ACPI/IORT: Enable stall support for platform devices
+  iommu/arm-smmu-v3: Add stall support for platform devices
+  PCI/ATS: Add PRI stubs
+  PCI/ATS: Export PRI functions
+  iommu/arm-smmu-v3: Add support for PRI
 
-981aa1d366bf ("PCI: MSI: Fix Kconfig dependencies for PCI_MSI_ARCH_FALLBACK=
-S")
+ drivers/iommu/Makefile                        |   1 +
+ .../devicetree/bindings/iommu/iommu.txt       |  18 +
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  69 +-
+ drivers/iommu/iommu-sva-lib.h                 |  53 ++
+ include/linux/iommu.h                         |   4 +
+ include/linux/pci-ats.h                       |   7 +
+ drivers/acpi/arm64/iort.c                     |   1 +
+ .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   |  52 +-
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   | 605 +++++++++++++++---
+ drivers/iommu/io-pgfault.c                    | 462 +++++++++++++
+ drivers/iommu/of_iommu.c                      |   5 +-
+ drivers/pci/ats.c                             |   4 +
+ 12 files changed, 1191 insertions(+), 90 deletions(-)
+ create mode 100644 drivers/iommu/io-pgfault.c
 
-They were unable to bisect further into the series because some of the
-interior commits don't boot :(
+-- 
+2.29.1
 
-When we try to load the mlx5 driver on a bare metal VF it gets this:
-
-[Thu Oct 22 08:54:51 2020] DMAR: DRHD: handling fault status reg 2
-[Thu Oct 22 08:54:51 2020] DMAR: [INTR-REMAP] Request device [42:00.2] faul=
-t index 1600 [fault reason 37] Blocked a compatibility format interrupt req=
-uest
-[Thu Oct 22 08:55:04 2020] mlx5_core 0000:42:00.1 eth4: Link down
-[Thu Oct 22 08:55:11 2020] mlx5_core 0000:42:00.1 eth4: Link up
-[Thu Oct 22 08:55:54 2020] mlx5_core 0000:42:00.2: mlx5_cmd_eq_recover:264:=
-(pid 3390): Recovered 1 EQEs on cmd_eq
-[Thu Oct 22 08:55:54 2020] mlx5_core 0000:42:00.2: wait_func_handle_exec_ti=
-meout:1051:(pid 3390): cmd0: CREATE_EQ(0=C3=83=C2=97301) recovered after ti=
-meout
-[Thu Oct 22 08:55:54 2020] DMAR: DRHD: handling fault status reg 102
-[Thu Oct 22 08:55:54 2020] DMAR: [INTR-REMAP] Request device [42:00.2] faul=
-t index 1600 [fault reason 37] Blocked a compatibility format interrupt req=
-uest
-
-If you have any idea Ziyad and Itay can run any debugging you like.
-
-I suppose it is because this series is handing out compatability
-addr/data pairs while the IOMMU is setup to only accept remap ones
-from SRIOV VFs?
-
-Thanks,
-Jason
