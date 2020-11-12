@@ -2,108 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D970A2B0D9C
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 20:15:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AC762B0E1E
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 20:31:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgKLTPF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 14:15:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46606 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbgKLTPE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 14:15:04 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605208502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VT0wgNNnYfg403e5d0pAs+2XCLbbkpVLyNxvOBCDBuE=;
-        b=ht3hNrDRCVGymMncVEg5pjAcDv08tWywC6nLFZ8yD77PdLFXCLO0Ue46Y1S68o/VtPYazI
-        Xmw6baNY48Jphh6gQVv9vgE9TnmXAKVbv1WXuWF15pzAwMHmYiy5o99xh6OH6bHDXqJrRW
-        Si3X+wwQUbexkqsUdkQPQruWfFCf7QsZcISN5ORskkgtGXEeh9lS2Tn5ub+GvZM0s7FhAB
-        5WQwYNqTWgh1xWwB6amImhyDfWZe2+NerCuq1n7RpJtn1AFHz0MVnXLWbfEzqvlbQ73/Ko
-        PEa8f6IIiyv00ZloSWluRID8KzI5Ao1lH2HdcNX/Nv8XcwK5ayWi8Bh83JwNfw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605208502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VT0wgNNnYfg403e5d0pAs+2XCLbbkpVLyNxvOBCDBuE=;
-        b=Az6qw/Q+kOFcEDQj8L6u+EJlRh4aQzhE/iNGjllYzvg/z9F90alZL2d95mOZbTNLrzOOjh
-        Ka4aBVfxaajGxqAg==
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Ziyad Atiyyeh <ziyadat@nvidia.com>,
-        Itay Aveksis <itayav@nvidia.com>,
-        Moshe Shemesh <moshe@nvidia.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: iommu/vt-d: Cure VF irqdomain hickup
-In-Reply-To: <87k0uqmwn4.fsf@nanos.tec.linutronix.de>
-References: <20200826111628.794979401@linutronix.de> <20201112125531.GA873287@nvidia.com> <87mtzmmzk6.fsf@nanos.tec.linutronix.de> <87k0uqmwn4.fsf@nanos.tec.linutronix.de>
-Date:   Thu, 12 Nov 2020 20:15:02 +0100
-Message-ID: <87d00imlop.fsf@nanos.tec.linutronix.de>
+        id S1726876AbgKLTbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 14:31:38 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:54418 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgKLTbh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 14:31:37 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ACJTxsW195978;
+        Thu, 12 Nov 2020 19:31:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=6HfsrYNb/JRE/UvOeFIYpxo+SvqK22p+Km4eenCvPr4=;
+ b=uxMIK1Usqh7aUQz30tp7nWpc2Df2kIhwT6CH01ooi0owmXtFuM419A28JHkhnkawOpb3
+ M86rB+R6j6XE6yeVvuElY4GY+IfRXqqFNXVLLIVtpUaZ8mbbjTfSH/hVEQKHjvsv7wX2
+ KW5DhuoDDPmalq17JZIyKOD9raSI/GFdVIoHwgXJFjbdFSm4MeE/CfXX9eBju9TE3v6r
+ Rer2yCpF5nwqJhKP5YM3iyDqAKpX92BNjl4GAqq/LJ2nJF7yMs1dYJb5diFVOp2ckyPN
+ ElS/gTW4RK0lRYvfy8403K6rSxWgO7WxB2QcZT1xZ1zxKS1kBiyb3OFpZ6rkUpW/tVmz 5Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 34nh3b7epn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Nov 2020 19:31:08 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ACJUHVZ021580;
+        Thu, 12 Nov 2020 19:31:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 34rtks9ybc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Nov 2020 19:31:07 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0ACJV4Vp029843;
+        Thu, 12 Nov 2020 19:31:04 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Nov 2020 11:31:04 -0800
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id E12FC6A0109; Thu, 12 Nov 2020 14:32:53 -0500 (EST)
+Date:   Thu, 12 Nov 2020 14:32:53 -0500
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201112193253.GG19638@char.us.oracle.com>
+References: <20201107001207.GA2620339@nvidia.com>
+ <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
+ <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+ <874klykc7h.fsf@nanos.tec.linutronix.de>
+ <20201109173034.GG2620339@nvidia.com>
+ <87pn4mi23u.fsf@nanos.tec.linutronix.de>
+ <20201110051412.GA20147@otc-nc-03>
+ <875z6dik1a.fsf@nanos.tec.linutronix.de>
+ <20201110141323.GB22336@otc-nc-03>
+ <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9803 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011120116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9803 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1011 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011120116
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The recent changes to store the MSI irqdomain pointer in struct device
-missed that Intel DMAR does not register virtual function devices.  Due to
-that a VF device gets the plain PCI-MSI domain assigned and then issues
-compat MSI messages which get caught by the interrupt remapping unit.
+.monster snip..
 
-Cure that by inheriting the irq domain from the physical function
-device.
+> 4. Using CPUID to detect running as guest. But as Thomas pointed out, this
+> approach is less reliable as not all hypervisors do this way.
 
-That's a temporary workaround. The correct fix is to inherit the irq domain
-from the bus, but that's a larger effort which needs quite some other
-changes to the way how x86 manages PCI and MSI domains.
+Is that truly true? It is the first time I see the argument that extra
+steps are needed and that checking for X86_FEATURE_HYPERVISOR is not enough.
 
-Fixes: 85a8dfc57a0b ("iommm/vt-d: Store irq domain in struct device")
-Reported-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- drivers/iommu/intel/dmar.c |   19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+Or is it more "Some hypervisor probably forgot about it, so lets make sure we patch
+over that possible hole?"
 
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -333,6 +333,11 @@ static void  dmar_pci_bus_del_dev(struct
- 	dmar_iommu_notify_scope_dev(info);
- }
- 
-+static inline void vf_inherit_msi_domain(struct pci_dev *pdev)
-+{
-+	dev_set_msi_domain(&pdev->dev, dev_get_msi_domain(&pdev->physfn->dev));
-+}
-+
- static int dmar_pci_bus_notifier(struct notifier_block *nb,
- 				 unsigned long action, void *data)
- {
-@@ -342,8 +347,20 @@ static int dmar_pci_bus_notifier(struct
- 	/* Only care about add/remove events for physical functions.
- 	 * For VFs we actually do the lookup based on the corresponding
- 	 * PF in device_to_iommu() anyway. */
--	if (pdev->is_virtfn)
-+	if (pdev->is_virtfn) {
-+		/*
-+		 * Note: This is a horrible hack and needs to be cleaned
-+		 * up by assigning the domain to the bus, but that's too
-+		 * big of a change for post rc3.
-+		 *
-+		 * Ensure that the VF device inherits the irq domain of the
-+		 * PF device:
-+		 */
-+		if (action == BUS_NOTIFY_ADD_DEVICE)
-+			vf_inherit_msi_domain(pdev);
- 		return NOTIFY_DONE;
-+	}
-+
- 	if (action != BUS_NOTIFY_ADD_DEVICE &&
- 	    action != BUS_NOTIFY_REMOVED_DEVICE)
- 		return NOTIFY_DONE;
+
+Also is there anything in this spec that precludes this from working
+on non-X86 architectures, say ARM systems?
