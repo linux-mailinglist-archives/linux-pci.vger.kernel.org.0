@@ -2,97 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AB82B0617
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 14:14:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 620A02B0660
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 14:24:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgKLNOp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 08:14:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47530 "EHLO
+        id S1728179AbgKLNYB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 08:24:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgKLNOp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 08:14:45 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC914C0613D1
-        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:14:44 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id 10so5238148wml.2
-        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:14:44 -0800 (PST)
+        with ESMTP id S1728322AbgKLNXz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 08:23:55 -0500
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39781C0613D4
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:23:55 -0800 (PST)
+Received: by mail-qk1-x72d.google.com with SMTP id t191so5163961qka.4
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:23:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kPufWXUvflZOkCQBFv9K24dsHX6XgFEqQ6+V4B+kMZI=;
-        b=thqnkAx1WSys1ZQMRFVAq+lQ3bPBJqFhNZSqbqs8AWCstc9x6z1TRCZTEXGSt4tbpD
-         WbqmnLnBmhNHew9f2dCN/qA2XPz5ZT3v+m1spBOqELBKraI4JFLTEz6eBGsAmA22YOoq
-         xKSMzS27VqpwAFqVAFcBVB6YpuQO11fv0W/2RiRT/iTXEIZcsJ1jg/8mMfPxo5VHPm1i
-         LuigQ1O9rgiMzx51F4/MucKz8+TQETcFV17z0BqumOeiiGOo+gwIV+UQE1TwKtvwjaDQ
-         jflabNeNPBF2FtOhdtj3MU2q139mLIHfV+7F2wJj8GAXdJ+JQEb6vvUlK7LmOYMxzGHO
-         x4gQ==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GgG+Zz++harjLdBXmMOeRXPhrbguvX47VfJimEaHELU=;
+        b=JwWcwOy5hNV6Hs44MXlDrQMT9b8rvnkfLKT5x15JkGlQAL2D/g3vkEXmtuyY73EX6o
+         0KEuYAaOT/zHSDTaNE7HmvJCG+FzAyx5YAhHwnfq5EOc4rgw+CffXgMVIFUESJNkl5os
+         9HmCYfhwC758cBhubKJFWsIAWeEJMVzEWhyjhj/Ht0TTcziWf3PPh5fFBeEdnrX+hs+1
+         XhbIXpcii4+DpBpk0gr5zFemIIzbRZ7tn5BuV/igI8xW0OJgEpL4cKXVyfBXb5JWlRaD
+         5jHm2vhwGsyCuWRLmRZmCBXacFxtj+qlmsQ+TsjCcSKL8ngO+dHatJ0AU9/jCmaP5A6C
+         9cog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kPufWXUvflZOkCQBFv9K24dsHX6XgFEqQ6+V4B+kMZI=;
-        b=mf7cSv0Au5fa55114bzn771qgW62GbFOil5m6I8bSEIn3OBgu6M49PuA4hAAowHjfZ
-         7MIlNmoslr35WmcOHRjJFF6Wh63CyyNngGUBGbV2lXhnuW1nsRjVw6i5LkcA5+njIF3y
-         27IRyRUKFSQpOjVDm4oTk8C6jWKXxnKYdBrFdwT3QhVFKxc013+8EKHct6UFjsxEtu5a
-         sY/qeGiPivnMJL99uL6MtLWgzULCG4LQWn5f+bDVEgz1EjBAcawSzObJ49bpCJjWn15/
-         efWef4RFndKAP5fMk8tKC8bjDY1YRMHwPt7Wenaydb3XW8w5f0I1BtRjZ2wkuJl7hWWO
-         Ks/g==
-X-Gm-Message-State: AOAM530iEaaYGFF1zdHibZZt00azGydfd579Uh5ilfzqDYiXt7Ke0fp3
-        vAKSdl48UPuKAh7may1BgVPUEQ==
-X-Google-Smtp-Source: ABdhPJy/Z7Q8Bq93Eb3xNGrwCULq9ucQIfuTWP+xhF+9b47D77XF4YLCvNgfwy5sXJbuIMCpQdLiMA==
-X-Received: by 2002:a7b:c453:: with SMTP id l19mr9419313wmi.2.1605186883687;
-        Thu, 12 Nov 2020 05:14:43 -0800 (PST)
-Received: from buildbot.pitowers.org ([2a00:1098:3142:14:ae1f:6bff:fedd:de54])
-        by smtp.gmail.com with ESMTPSA id x6sm6908363wmc.48.2020.11.12.05.14.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GgG+Zz++harjLdBXmMOeRXPhrbguvX47VfJimEaHELU=;
+        b=P7/ZLumR2TzssQMnp15ZTyqhtJbCOUCa/ijBU8BgynvdBalqhC1nj3qMfTCl4qdTR6
+         SK35Rl4o0HL/t6jMuCluG2nM0zhh5P4sxCUFJ2/IBYdlPrs/Hqqy7PPI5I8dlFl0IbnP
+         wXhJoGeLalBiDWna2VpwQNJ74lW5XLDmI7MekTkCazNoJajB9KyFq5Cmlj+NwFvNqKyh
+         n34PXU34mlg4t489LpJ2ViluoSxBXSB5s4B3IwxYXPUx8wvKG2GOsOyAKBn+73ZrLEp3
+         OWKE2fweOkTC8CPg6Gseo+Bly1H5MI/JwwK/oZW/fNndVfBjFgG7rVx/56DXBdq4uInc
+         e6Rg==
+X-Gm-Message-State: AOAM532RRN2IgH1QANAOj/BlqKg2WXZFuJyK8or+qxvRC1v7wrQaLVaF
+        3Gex3CYK5KyfSKI5lPlpJ6dEIA==
+X-Google-Smtp-Source: ABdhPJywkel8XB3mJwdENyyP8p0fxAGX2JW0meUrbieCppFxtts7eDEAYv3M6qnci9wS8irt7c69Bw==
+X-Received: by 2002:a37:2c85:: with SMTP id s127mr30634838qkh.381.1605187434481;
+        Thu, 12 Nov 2020 05:23:54 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id j16sm4820609qkg.26.2020.11.12.05.23.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Nov 2020 05:14:42 -0800 (PST)
-From:   Phil Elwell <phil@raspberrypi.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Cc:     Phil Elwell <phil@raspberrypi.com>
-Subject: [PATCH] PCI: brcmstb: Restore initial fundamental reset
-Date:   Thu, 12 Nov 2020 13:14:01 +0000
-Message-Id: <20201112131400.3775119-1-phil@raspberrypi.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 12 Nov 2020 05:23:53 -0800 (PST)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kdCZt-003foe-6x; Thu, 12 Nov 2020 09:23:53 -0400
+Date:   Thu, 12 Nov 2020 09:23:53 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Zhu Yanjun <yanjunz@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: remove dma_virt_ops v2
+Message-ID: <20201112132353.GQ244516@ziepe.ca>
+References: <20201106181941.1878556-1-hch@lst.de>
+ <20201112094030.GA19550@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201112094030.GA19550@lst.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
-replaced a single reset function with a pointer to one of two
-implementations, but also removed the call asserting the reset
-at the start of brcm_pcie_setup. Doing so breaks Raspberry Pis with
-VL805 XHCI controllers lacking dedicated SPI EEPROMs, which have been
-used for USB booting but then need to be reset so that the kernel
-can reconfigure them. The lack of a reset causes the firmware's loading
-of the EEPROM image to RAM to fail, breaking USB for the kernel.
+On Thu, Nov 12, 2020 at 10:40:30AM +0100, Christoph Hellwig wrote:
+> ping?
+> 
+> On Fri, Nov 06, 2020 at 07:19:31PM +0100, Christoph Hellwig wrote:
+> > Hi Jason,
+> > 
+> > this series switches the RDMA core to opencode the special case of
+> > devices bypassing the DMA mapping in the RDMA ULPs.  The virt ops
+> > have caused a bit of trouble due to the P2P code node working with
+> > them due to the fact that we'd do two dma mapping iterations for a
+> > single I/O, but also are a bit of layering violation and lead to
+> > more code than necessary.
+> > 
+> > Tested with nvme-rdma over rxe.
+> > 
+> > Note that the rds changes are untested, as I could not find any
+> > simple rds test setup.
+> > 
+> > Changes since v2:
+> >  - simplify the INFINIBAND_VIRT_DMA dependencies
+> >  - add a ib_uses_virt_dma helper
+> >  - use ib_uses_virt_dma in nvmet-rdma to disable p2p for virt_dma devices
+> >  - use ib_dma_max_seg_size in umem
+> >  - stop using dmapool in rds
+> > 
+> > Changes since v1:
+> >  - disable software RDMA drivers for highmem configs
+> >  - update the PCI commit logs
 
-Fixes: commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+Santosh can you please check the RDA parts??
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index bea86899bd5d..a90d6f69c5a1 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -869,6 +869,8 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 
- 	/* Reset the bridge */
- 	pcie->bridge_sw_init_set(pcie, 1);
-+	pcie->perst_set(pcie, 1);
-+
- 	usleep_range(100, 200);
- 
- 	/* Take the bridge out of reset */
--- 
-2.25.1
-
+Jason
