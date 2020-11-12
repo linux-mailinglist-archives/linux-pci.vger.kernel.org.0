@@ -2,115 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34EC92B0A1D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 17:37:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ED432B0A57
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 17:42:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgKLQhb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 11:37:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbgKLQha (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Nov 2020 11:37:30 -0500
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B73922249;
-        Thu, 12 Nov 2020 16:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605199049;
-        bh=yND8k4s+hFD4/3y6HwBUi/t7seijznnEvJcPu9dB1Bk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CbUsvZltzY36P3h97UnTDcNUL261L4stXjIHjE4HynxSoh3v532bXKDJVABXViL05
-         nDe0c7M935/dITkWRxPthR9NR79cXTSuQEZSrrEM8pFdMIQX39EdjicuZs1OVxd5py
-         cupHMaGjRcfmgwKn4PQg0PRgT0DDL7+lT2IbDEkY=
-Received: by mail-qv1-f52.google.com with SMTP id ec16so3064900qvb.0;
-        Thu, 12 Nov 2020 08:37:29 -0800 (PST)
-X-Gm-Message-State: AOAM531MRUv4EBBu/+HEhYVh5OPQrwy4iJgQK1AR2qWAJZSH8D8I7u9k
-        BXUheiJMQg5oiTtt5uwxx2ZCLWGEcxsphlWXfQ==
-X-Google-Smtp-Source: ABdhPJwHE1wdX0Dl9X4V0XJ3FOQYVJNlxFocV/dg95YBHaFOAmgTlSnSY9EzKWonUlG4KyHTUuCOxNo17TIjdqGqokE=
-X-Received: by 2002:a0c:aed2:: with SMTP id n18mr638707qvd.4.1605199048564;
- Thu, 12 Nov 2020 08:37:28 -0800 (PST)
+        id S1728643AbgKLQmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 11:42:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729020AbgKLQmj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 11:42:39 -0500
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D886C0613D1
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 08:42:39 -0800 (PST)
+Received: by mail-oi1-x244.google.com with SMTP id m143so7086047oig.7
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 08:42:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ba+PZWKOieEYiFlC81JrcbjzPFiIPb+iZaQxXkOtdxY=;
+        b=ZxWVMbFu6OlwjYN23554RnqCzda8mFXlz2Fu19cJSqtIxLkB74Jsj/uuAENdW5ui26
+         niAebijycFsJZQQ5tzVfPpaQ96qytXsTzWVxQv6b/LErguZkNPPqaCWsL+IalpOgV2rT
+         wwkQl3XeS5EDXVhXjNHrYfMzsEtfHpBd5rA/+cb1LnVNHPLANCavfmDwIJp8pE7HCnWy
+         sJ8SeTiZZbDJbQX2MZZI5b00U+nsaPw8W33tZsgZnMI3/dzNbcjmgW34JoaUOS87uHhn
+         cmfH/YMe14griForM8OZTcF2nXBPnhEnjZN4rgsHkFutfA8qOsAnOGpHYGbW0QWirpS9
+         Hpjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ba+PZWKOieEYiFlC81JrcbjzPFiIPb+iZaQxXkOtdxY=;
+        b=iLj/WdR95gwhrMwuBAOQAneBcU1qjSAEkWQNRzlF1AxbuOhip1fQJOJ+ZLX7g2NwQQ
+         Y0C3CDgaA/ejDR1UN34JlhXeS+FuV45UE0SADmlqBIBCDgWLvs0CzQGh6YB3OT8RgPe5
+         tKV11KoDZEWLbXo4uk7X0GuuOLnIz05iGcXI50YZotfKkZeqcEYz03ex/j2TQTTjqkiy
+         VQ1JWxBzVX1e+ZpsM6qXqcg+o5pqouVoJA4wJ1x0Sjcl6TGjHPzFCjNT55QxxAj2HMJp
+         upSHe4qN4z4g0pOKYNTf7Pui0QciB36pZ75hIzeUgF7l2VU3gVWoXd5KpPEX1HyyWyUt
+         vigw==
+X-Gm-Message-State: AOAM530/LWceOc3DC2V1hzXNpSzb5QDf1tnYsW94AoHJrv8YFBWmd3nu
+        mK1eQHp7BmKkReGXCsWc448ERZGI/J1gqM4hSx0znw==
+X-Google-Smtp-Source: ABdhPJxziDA4W2xe501D6AEvpGRuKZaRYItebggo0eCbbzEc48q9kwD7pq8nb1dCBXyJ7O/pXKI2lDAwUwhlRuo5rYI=
+X-Received: by 2002:aca:4797:: with SMTP id u145mr423566oia.0.1605199358924;
+ Thu, 12 Nov 2020 08:42:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20200528161510.31935-1-zhengdejin5@gmail.com> <CAMuHMdWXf-AB4ZKHkvpEKwTVj-qjV9TDk67QV2F+8X8dU8X5rA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWXf-AB4ZKHkvpEKwTVj-qjV9TDk67QV2F+8X8dU8X5rA@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 12 Nov 2020 10:37:17 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLYGFP1zLH539=agLsJ6kmSMD4HCKs_p3U7ZZhhZcQ_xA@mail.gmail.com>
-Message-ID: <CAL_JsqLYGFP1zLH539=agLsJ6kmSMD4HCKs_p3U7ZZhhZcQ_xA@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI: dwc: convert to devm_platform_ioremap_resource_byname()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20201112131400.3775119-1-phil@raspberrypi.com>
+ <883066bd-2a0c-f0d8-c556-7df0e73f0503@gmail.com> <CA+-6iNxc9UiEqFXj4jMJRXW1XAS7aB4hANa7mHRsK8++t2A18A@mail.gmail.com>
+In-Reply-To: <CA+-6iNxc9UiEqFXj4jMJRXW1XAS7aB4hANa7mHRsK8++t2A18A@mail.gmail.com>
+From:   Phil Elwell <phil@raspberrypi.com>
+Date:   Thu, 12 Nov 2020 16:42:28 +0000
+Message-ID: <CAMEGJJ12UT5KN6G2-xZ4oHn4Dpj=_k77DW=Hb324HYabUyw4pg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: brcmstb: Restore initial fundamental reset
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 8:22 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Dejin,
->
-> On Thu, May 28, 2020 at 6:18 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> > Use devm_platform_ioremap_resource_byname() to simplify codes.
-> > it contains platform_get_resource_byname() and devm_ioremap_resource().
-> >
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
->
-> Thanks for your patch, which is now commit 936fa5cd7b8e3e2a ("PCI: dwc:
-> Convert to devm_platform_ioremap_resource_byname()") in v5.9.
+Hi Jim,
 
-This is all changing again in my latest cleanups[1].
-
-> > --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> > +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> > @@ -593,13 +593,12 @@ static int __init dra7xx_add_pcie_ep(struct dra7xx_pcie *dra7xx,
-> >         ep = &pci->ep;
-> >         ep->ops = &pcie_ep_ops;
-> >
-> > -       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics");
-> > -       pci->dbi_base = devm_ioremap_resource(dev, res);
-> > +       pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "ep_dbics");
-> >         if (IS_ERR(pci->dbi_base))
-> >                 return PTR_ERR(pci->dbi_base);
-> >
-> > -       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ep_dbics2");
-> > -       pci->dbi_base2 = devm_ioremap_resource(dev, res);
-> > +       pci->dbi_base2 =
-> > +               devm_platform_ioremap_resource_byname(pdev, "ep_dbics2");
-> >         if (IS_ERR(pci->dbi_base2))
-> >                 return PTR_ERR(pci->dbi_base2);
+On Thu, 12 Nov 2020 at 16:28, Jim Quinlan <james.quinlan@broadcom.com> wrote:
 >
-> The part above looks fine.
->
-> > @@ -626,7 +625,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
-> >         struct dw_pcie *pci = dra7xx->pci;
-> >         struct pcie_port *pp = &pci->pp;
-> >         struct device *dev = pci->dev;
-> > -       struct resource *res;
+> On Thu, Nov 12, 2020 at 10:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
 > >
-> >         pp->irq = platform_get_irq(pdev, 1);
-> >         if (pp->irq < 0) {
-> > @@ -638,8 +636,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
-> >         if (ret < 0)
-> >                 return ret;
+> > +JimQ,
 > >
-> > -       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rc_dbics");
-> > -       pci->dbi_base = devm_ioremap_resource(dev, res);
-> > +       pci->dbi_base = devm_platform_ioremap_resource_byname(pdev, "rc_dbics");
+> > On 11/12/2020 5:14 AM, Phil Elwell wrote:
+> > > Commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+> > > replaced a single reset function with a pointer to one of two
+> > > implementations, but also removed the call asserting the reset
+> > > at the start of brcm_pcie_setup. Doing so breaks Raspberry Pis with
+> > > VL805 XHCI controllers lacking dedicated SPI EEPROMs, which have been
+> > > used for USB booting but then need to be reset so that the kernel
+> > > can reconfigure them. The lack of a reset causes the firmware's loading
+> > > of the EEPROM image to RAM to fail, breaking USB for the kernel.
+> > >
+> > > Fixes: commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+> > >
+> > > Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> >
+> > This does indeed seem to have been lost during that commit, I will let
+> > JimQ comment on whether this was intentional or not. Please make sure
+> > you copy him, always, he wrote the driver after all.
+> Hello,
 >
-> Are you sure this is equivalent?
-> Before, devm_ioremap_resource() was called on "dev" (= pci->dev),
-> after it is called on "&pdev->dev" .
+> This wasn't accidentally lost; I intentionally removed it.  I was
+> remiss in not mentioning this in comments, sorry.
 
-pci->dev is set to &pdev->dev in probe, so yes it's equivalent.
 
-Rob
+Yes, a comment would have been helpful.
 
-[1] https://lore.kernel.org/linux-pci/20201105211159.1814485-4-robh@kernel.org/
+>  The reason I took it out is because (a) it breaks certain STB SOCs and
+> (b) I considered it superfluous (see reason below).  At any rate, if
+> you must restore this line please add the following guard so
+> everyone's board will work :-)
+>
+>         if (pcie->type != BCM7278)
+>                 brcm_pcie_perst_set(pcie, 1);
+>
+>
+>
+> As for me considering that  this line is superfluous -- which
+> apparently it is not : AFAIK PERST# is always asserted from cold start
+> on all Brcm STB SOCs, and I expected the same on the RPi.  Asserting
+> PERST# at this point in time should be a no-op.  Is this not the case?
+
+
+The reason it isn't superfluous here is that when using USB to boot,
+the Raspberry Pi BCM2711 firmware will already have configured the
+PCIe bus once, so another reset is necessary. Since the Linux driver
+used to always reset everything at start of day, regardless of the
+power-on reset state, there's no reason for the firmware to also reset
+it before handing over - and there could be some useful state in there
+when it comes to debugging.
+
+I'm happy to add a condition - not a BCM7278 sounds reasonable - and a
+comment, of course.
+
+Phil
