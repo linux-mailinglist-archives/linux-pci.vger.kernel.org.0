@@ -2,124 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F3582B060A
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 14:10:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37AB82B0617
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 14:14:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgKLNKk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 08:10:40 -0500
-Received: from nat-hk.nvidia.com ([203.18.50.4]:63551 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgKLNKk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Nov 2020 08:10:40 -0500
-Received: from HKMAIL104.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fad344e0000>; Thu, 12 Nov 2020 21:10:38 +0800
-Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Nov
- 2020 13:10:33 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.173)
- by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 12 Nov 2020 13:10:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kVd01kg2tjyVBMaqiGnm6cOmaBJhx2N6YDH2z9U10K26yj3oJGMh2UTTxagRMyJnNaiQByG/Nb+IciZwXyV7L1Ltkf51FyTDRc8qh13srDUvH/nzwUhW+i+QrLNZaovNuky0yPMvyUvqlDqcOIYpFi+pMrZra6fDxAnzynpm4XRQ2kSC2pHVB+RSRl8t/h3KEYEbSmMFzB10P004UjwLda45gsnrVBY/ghwzW44EKBGosJ9vlPXnyoKFRFUEdTWJ6gAc3bPmZc1hgPwymPyNSMx8eV2iJl9tnaPHL6+u71GUuMYSnafdDJ8aOx0u+NU1B6QLUKaxYcheYOxxCeoLfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JDzWZV5PMJTQTEmEpY/tlijlKuercM8A1+TCvshb8xI=;
- b=DC2pfd+eLATVO72X1yeyT6pvq8lX5rzI51JgqRgzr+MxedKsDOXBwLN+h9YMPr+b6zGyhdKdlgT6h6taasUGhxVSHVN/PRSdHg5L7bGIp0nPV52XZjOcHzJryGkF7B1yXlkXWOd+mGNxNH45fRt4AlGkpbNBi0pu8fAyh8dtA8Beu8Osu8JBVjCxgJ5QHTX5ljf03f8qBLs/JG/mb+VgXGYntBkIyqNOudEpuXNcbahRuP9hkSRsJBy6Q0cX54Iw5qjajjZxA785dTk9Ct7reydj7yhMoffRTjwGHl/F2iDWOt8TMw66geU3LPsPUjq0Kb8IlsyiDaY09mLtMhu1Ew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4636.namprd12.prod.outlook.com (2603:10b6:5:161::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Thu, 12 Nov
- 2020 13:10:28 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Thu, 12 Nov 2020
- 13:10:28 +0000
-Date:   Thu, 12 Nov 2020 09:10:26 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "jing.lin@intel.com" <jing.lin@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201112131026.GB2620339@nvidia.com>
-References: <20201106164850.GA85879@otc-nc-03>
- <20201106175131.GW2620339@nvidia.com>
- <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
- <20201107001207.GA2620339@nvidia.com>
- <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
- <d69953378bd1fdcdda54a2fbe285f6c0b1484e8a.camel@infradead.org>
- <20201111154159.GA24059@infradead.org> <20201111160922.GA83266@otc-nc-03>
- <87k0uro7fz.fsf@nanos.tec.linutronix.de> <20201111230321.GC83266@otc-nc-03>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20201111230321.GC83266@otc-nc-03>
-X-ClientProxiedBy: MN2PR01CA0040.prod.exchangelabs.com (2603:10b6:208:23f::9)
- To DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+        id S1727827AbgKLNOp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 08:14:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgKLNOp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 08:14:45 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC914C0613D1
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:14:44 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id 10so5238148wml.2
+        for <linux-pci@vger.kernel.org>; Thu, 12 Nov 2020 05:14:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kPufWXUvflZOkCQBFv9K24dsHX6XgFEqQ6+V4B+kMZI=;
+        b=thqnkAx1WSys1ZQMRFVAq+lQ3bPBJqFhNZSqbqs8AWCstc9x6z1TRCZTEXGSt4tbpD
+         WbqmnLnBmhNHew9f2dCN/qA2XPz5ZT3v+m1spBOqELBKraI4JFLTEz6eBGsAmA22YOoq
+         xKSMzS27VqpwAFqVAFcBVB6YpuQO11fv0W/2RiRT/iTXEIZcsJ1jg/8mMfPxo5VHPm1i
+         LuigQ1O9rgiMzx51F4/MucKz8+TQETcFV17z0BqumOeiiGOo+gwIV+UQE1TwKtvwjaDQ
+         jflabNeNPBF2FtOhdtj3MU2q139mLIHfV+7F2wJj8GAXdJ+JQEb6vvUlK7LmOYMxzGHO
+         x4gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kPufWXUvflZOkCQBFv9K24dsHX6XgFEqQ6+V4B+kMZI=;
+        b=mf7cSv0Au5fa55114bzn771qgW62GbFOil5m6I8bSEIn3OBgu6M49PuA4hAAowHjfZ
+         7MIlNmoslr35WmcOHRjJFF6Wh63CyyNngGUBGbV2lXhnuW1nsRjVw6i5LkcA5+njIF3y
+         27IRyRUKFSQpOjVDm4oTk8C6jWKXxnKYdBrFdwT3QhVFKxc013+8EKHct6UFjsxEtu5a
+         sY/qeGiPivnMJL99uL6MtLWgzULCG4LQWn5f+bDVEgz1EjBAcawSzObJ49bpCJjWn15/
+         efWef4RFndKAP5fMk8tKC8bjDY1YRMHwPt7Wenaydb3XW8w5f0I1BtRjZ2wkuJl7hWWO
+         Ks/g==
+X-Gm-Message-State: AOAM530iEaaYGFF1zdHibZZt00azGydfd579Uh5ilfzqDYiXt7Ke0fp3
+        vAKSdl48UPuKAh7may1BgVPUEQ==
+X-Google-Smtp-Source: ABdhPJy/Z7Q8Bq93Eb3xNGrwCULq9ucQIfuTWP+xhF+9b47D77XF4YLCvNgfwy5sXJbuIMCpQdLiMA==
+X-Received: by 2002:a7b:c453:: with SMTP id l19mr9419313wmi.2.1605186883687;
+        Thu, 12 Nov 2020 05:14:43 -0800 (PST)
+Received: from buildbot.pitowers.org ([2a00:1098:3142:14:ae1f:6bff:fedd:de54])
+        by smtp.gmail.com with ESMTPSA id x6sm6908363wmc.48.2020.11.12.05.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Nov 2020 05:14:42 -0800 (PST)
+From:   Phil Elwell <phil@raspberrypi.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Cc:     Phil Elwell <phil@raspberrypi.com>
+Subject: [PATCH] PCI: brcmstb: Restore initial fundamental reset
+Date:   Thu, 12 Nov 2020 13:14:01 +0000
+Message-Id: <20201112131400.3775119-1-phil@raspberrypi.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR01CA0040.prod.exchangelabs.com (2603:10b6:208:23f::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21 via Frontend Transport; Thu, 12 Nov 2020 13:10:27 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kdCMs-003fVN-EB; Thu, 12 Nov 2020 09:10:26 -0400
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1605186638; bh=JDzWZV5PMJTQTEmEpY/tlijlKuercM8A1+TCvshb8xI=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=ocIcSCQRr32Jb5ucGC891UICEaV/T3IYesXRfdM0vAyHRpcHgaAxyDGHg5S1G32cM
-         lgvbLs2kGS0uv6okW4tjRGXHBoWtVeIcwd+T2DAO03rH6i5LewUI8b0Z4qbtnQ/GQK
-         phzWm/0JMnegWAjkGUJPMfbz9QnmmpsbDJF0rTM5BhbbsoNWjh5arl53O/oIOQ+tGq
-         e3QvooR7GwlfU645b+hxIklhgVcvr3JX8nRMaXszlUSFVrSYMqYegYcxeoZxsz5h4q
-         TljFci5TVPRAuZrDPa0YPuRj3wQfiac3bT9qARgXfsF7WBN4iU3SS1gJ+8W6HRlIuL
-         6zDsO4rgcYW7g==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 11, 2020 at 03:03:21PM -0800, Raj, Ashok wrote:
+Commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+replaced a single reset function with a pointer to one of two
+implementations, but also removed the call asserting the reset
+at the start of brcm_pcie_setup. Doing so breaks Raspberry Pis with
+VL805 XHCI controllers lacking dedicated SPI EEPROMs, which have been
+used for USB booting but then need to be reset so that the kernel
+can reconfigure them. The lack of a reset causes the firmware's loading
+of the EEPROM image to RAM to fail, breaking USB for the kernel.
 
-> By default the DVSEC is not presented to guest even when the full PF is
-> presented to guest. I believe VFIO only builds and presents known standard
-> capabilities and specific extended capabilities. I'm a bit weak but maybe
-> @AlexWilliamson can confirm if I'm off track.
+Fixes: commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
 
-This also need to work on Hyper-V and all other cases, you can't just
-assume everything is vfio and kvm.
+Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-It is horrible to ask people to go back an retroactively change their
-config space in a device just to work around all the design failings
-Thomas eloquantly describes :(
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index bea86899bd5d..a90d6f69c5a1 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -869,6 +869,8 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 
+ 	/* Reset the bridge */
+ 	pcie->bridge_sw_init_set(pcie, 1);
++	pcie->perst_set(pcie, 1);
++
+ 	usleep_range(100, 200);
+ 
+ 	/* Take the bridge out of reset */
+-- 
+2.25.1
 
-Jason
