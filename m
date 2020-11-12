@@ -2,101 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC80E2B01A3
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 10:07:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 441C52B01FD
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Nov 2020 10:32:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgKLJHg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Nov 2020 04:07:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38790 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbgKLJH2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 12 Nov 2020 04:07:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8D358AF0D;
-        Thu, 12 Nov 2020 09:07:26 +0000 (UTC)
-Message-ID: <77ba062d8ce103db81fcc7ac8b802e1b54befda8.camel@suse.de>
-Subject: Re: [PATCH v2] PCI: brcmstb: Fix race in removing chained IRQ
- handler
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Martin Kaiser <martin@kaiser.cx>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 12 Nov 2020 10:07:25 +0100
-In-Reply-To: <20201111215354.21961-1-martin@kaiser.cx>
-References: <20201108184208.19790-1-martin@kaiser.cx>
-         <20201111215354.21961-1-martin@kaiser.cx>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-nlC5Zykkv/JgdsEcxKIv"
-User-Agent: Evolution 3.36.5 
+        id S1727234AbgKLJcN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Nov 2020 04:32:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22176 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725928AbgKLJcM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Nov 2020 04:32:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605173530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=W4rr1GqJf/+uu0VkLhG4q2/u5hTt2/5s5Ib9+I3BFQE=;
+        b=RR+BQaQ+5tqBKD+Nd/KrYYoj/65jTvuy8gom/ZEjP+xz59eOqKR+5WSZGocCTCar+n5PoR
+        z6HV+SXR/iJ8VWIq3DpAnQGtd7qtQRAy9jD4b5WtICDy+e5h7s5ruPUE5qVZC6DSXCw2uH
+        1Ec4Nekbl+RmPIwODwOtLq+3wtnCwLM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-541-WnWs5QdYMI-kUdMBsptDIg-1; Thu, 12 Nov 2020 04:32:08 -0500
+X-MC-Unique: WnWs5QdYMI-kUdMBsptDIg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 938375705D;
+        Thu, 12 Nov 2020 09:32:06 +0000 (UTC)
+Received: from localhost (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0B6A91A92A;
+        Thu, 12 Nov 2020 09:32:04 +0000 (UTC)
+Date:   Thu, 12 Nov 2020 10:32:03 +0100
+From:   Miroslav Lichvar <mlichvar@redhat.com>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com, Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support for
+ PTP getcrosststamp()
+Message-ID: <20201112093203.GH1559650@localhost>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imab8l53.fsf@intel.com>
+ <87tutv8rdr.fsf@intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Nov 11, 2020 at 02:23:28PM -0800, Vinicius Costa Gomes wrote:
+> Miroslav Lichvar <mlichvar@redhat.com> writes:
+> > On Tue, Nov 10, 2020 at 11:06:07AM -0800, Vinicius Costa Gomes wrote:
+> >> The NIC I have supports PTM cycles from every ~1ms to ~512ms, and from
+> >> my tests it wants to be kept running "in background" always, i.e. set
+> >> the cycles to run, and only report the data when necessary. Trying to
+> >> only enable the cycles "on demand" was unreliable.
+> >
+> > I see. It does makes sense if the clocks need to be are synchronized.
+> > For the case of this ioctl, I think it would be better if it we could
+> > just collect the measurements and leave the clocks free running.
+> 
+> Not sure if I understand. This is what this series does, it only adds
+> support for starting the PTM cycles and reporting the measurements.
 
---=-nlC5Zykkv/JgdsEcxKIv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Ok, great. I meant that the apparent requirement to keep the
+measurements running periodically in background made sense if the
+clocks were synchronized by the hardware. Now I realize that wouldn't
+work for phc2sys unless there was a separate clock and something
+tracking the offset between the two clocks.
 
-On Wed, 2020-11-11 at 22:53 +0100, Martin Kaiser wrote:
-> Call irq_set_chained_handler_and_data() to clear the chained handler
-> and the handler's data under irq_desc->lock.
->=20
-> See also 2cf5a03cb29d ("PCI/keystone: Fix race in installing chained
-> IRQ handler").
->=20
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
+Considering how the existing applications work, ideally the
+measurements would be performed on demand from the ioctl to minimize
+the delay. If that's not possible, maybe it would be better to provide
+the measurements on a descriptor at their own rate, which could be
+polled by the applications, similarly to how the PTP_EXTTS_REQUEST
+ioctl works?
 
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > I suspect a bigger issue, for both the PRECISE and EXTENDED variants,
+> > is that it would return old data. I'm not sure if the existing
+> > applications are ready to deal with that. With high clock update
+> > rates, a delay of 50 milliseconds could cause an instability. You can
+> > try phc2sys -R 50 and see if it stays stable.
+> 
+> After a couple of hours of testing, with the current 50ms delay,
+> 'phc2sys -R 50' is stable, but I got the impression that it takes longer
+> (~10s) to get to ~10ns offset.
 
-Thanks!
+That sounds like it could break in some specific conditions. Please
+try slightly different -R values and when it's running, try inserting
+a step with date -s '+0.1 sec' and see how reliable is the recovery.
+You can also test it with a different servo: phc2sys -E linreg.
 
-> v2:
->  - rewrite the commit message to clarify that this is a bugfix
->=20
->  drivers/pci/controller/pcie-brcmstb.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controll=
-er/pcie-brcmstb.c
-> index bea86899bd5d..7c666f4deb47 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -606,8 +606,7 @@ static void brcm_msi_remove(struct brcm_pcie *pcie)
-> =20
->  	if (!msi)
->  		return;
-> -	irq_set_chained_handler(msi->irq, NULL);
-> -	irq_set_handler_data(msi->irq, NULL);
-> +	irq_set_chained_handler_and_data(msi->irq, NULL, NULL);
->  	brcm_free_domains(msi);
->  }
-> =20
+> There might be a problem, the PTM dialogs start from the device, the
+> protocol is more or less this:
+> 
+>  1. NIC sends "Request" message, takes T1 timestamp;
+>  2. Host receives "Request" message, takes T2 timestamp;
+>  3. Host sends "Response" message, takes T3 timestamp;
+>  4. NIC receives "Response" message, takes T4 timestamp;
+> 
+> So, T2 and T3 are "host" timestamps and T1 and T4 are NIC timestamps.
 
+Is that the case even when there is a PTM-enabled switch between the
+CPU and NIC? My understanding of the spec is that the switches are
+supposed to have their own clocks and have separate PTM dialogs on
+their upstream and downstream ports. In terms of PTP, are the switches
+boundary or transparent clocks?
 
---=-nlC5Zykkv/JgdsEcxKIv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> That means that the timestamps I have "as is" are a bit different than
+> the expectations of the EXTENDED ioctl().
+> 
+> Of course I could use T3 (as the "pre" timestamp), T4 as the device
+> timestamp, and calculate the delay[1], apply it to T3 and get something
+> T3' as the "post" timestamp (T3' = T3 + delay). But I feel that this
+> "massaging" would defeat the purpose of using the EXTENDED variant.
+> 
+> Does it make sense? Am I worrying too much?
+> 
+> [1] 
+> 	delay = ((T4 - T1) - (T3 - T2)) / 2
 
------BEGIN PGP SIGNATURE-----
+Yes, I think that would work, except the delay would need to be
+doubled in the T3' calculation. The important thing is that the offset
+and delay calculated from the timestamps don't change. It might be
+better to shift the timestamps back to avoid the "post" timestamp
+coming from future, which applications could drop as invalid. To not
+shift the middlepoints in the conversion, this should work:
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl+s+00ACgkQlfZmHno8
-x/7+Ggf/Zh+wMFcBh01rd+OOjl5oKxh2JrHjuK+wk3LOOacpflQn74tOURADGmC3
-hfrCxT2hKd5SwI6zFBYpzeMxf7TflZgg3UeeO/ITLEbX+Cp3whQJNXRSSxpXTXbF
-NJuYj12FpHDWJhYyBTGeKMDuH7eCZwnhK04zOTbCbIgQz9GvTzm+5LITfPy/Yj2W
-z+GIs0lKp4IkeTMNc9kBrzTkBrtNS7TazVV+wy2XDh5ps7boaMMSWuoVncjIEn7B
-hXwquankBQAo6hDocMlEvduR5SXN/gRNEFS9w1b/s8MdFMVjiRzj+31HMcCsOtKL
-ZbGNGHQ1jNHYGk/h3DzEMVsXdpkhcA==
-=We75
------END PGP SIGNATURE-----
+T1' = (T2 + T3) / 2 - delay
+T2' = (T1 + T4) / 2
+T3' = (T2 + T3) / 2 + delay
 
---=-nlC5Zykkv/JgdsEcxKIv--
+-- 
+Miroslav Lichvar
 
