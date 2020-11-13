@@ -2,99 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68EE52B244D
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 20:11:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F34C22B24F0
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 20:54:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgKMTLC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 14:11:02 -0500
-Received: from mga18.intel.com ([134.134.136.126]:60325 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgKMTLC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 14:11:02 -0500
-IronPort-SDR: MyIHhkDeBBkEfjK9ipXNQY8HOwQ6LMyOK0Mc3ignxiY+SLLzUl4DircCy/1rjZAmejz6fhkcQc
- qjjMsKKv1F2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="158295891"
-X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="158295891"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 11:11:01 -0800
-IronPort-SDR: 2ZUWuBsCzrCVLk1Fms9JjoxN5AUnawZsXeA3Qr8RIGcleHcszqlH9beDJgNO6SEDM0Vz5M2/c4
- WktQc6Zg9KFw==
-X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="532675890"
-Received: from ajdrisco-mobl.amr.corp.intel.com (HELO ellie) ([10.255.231.72])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 11:11:00 -0800
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
-        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        bhelgaas@google.com
-Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support
- for PTP getcrosststamp()
-In-Reply-To: <20201113032451.GB32138@hoboy.vegasvil.org>
-References: <20201112093203.GH1559650@localhost> <87pn4i6svv.fsf@intel.com>
- <20201113032451.GB32138@hoboy.vegasvil.org>
-Date:   Fri, 13 Nov 2020 11:10:58 -0800
-Message-ID: <87ima96pj1.fsf@intel.com>
+        id S1726166AbgKMTyY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 14:54:24 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:22733 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725866AbgKMTyX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 14:54:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605297261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yYOZqfS1DftClANj54I945kAOQfBrrvPepHj2JAwlgE=;
+        b=NeS9DVHzmLAdPHOeNRUQD6EDbKFfbZNU6RSnp3XdKpXlVfskFwjtpUjuvBqyNPm5ukC8YS
+        yct8R3ZLUYRtrAXewF7sSt1EyKBcC+26jkeEzVLxtXp/7TjRxm5mc8x2ALTtjsLRi4Zciq
+        ZhFSTqWB1k1T8cFEZy0px/T8ZPH6VHA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-o3eHZUV6NbaT1cJ-TJ4RWQ-1; Fri, 13 Nov 2020 14:54:18 -0500
+X-MC-Unique: o3eHZUV6NbaT1cJ-TJ4RWQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F5778730A8;
+        Fri, 13 Nov 2020 19:54:15 +0000 (UTC)
+Received: from treble (ovpn-112-111.rdu2.redhat.com [10.10.112.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 54ADF62A16;
+        Fri, 13 Nov 2020 19:54:11 +0000 (UTC)
+Date:   Fri, 13 Nov 2020 13:54:08 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201113195408.atbpjizijnhuinzy@treble>
+References: <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
+ <20201020185217.ilg6w5l7ujau2246@treble>
+ <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+ <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
+ <20201023173617.GA3021099@google.com>
+ <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
+ <20201110022924.tekltjo25wtrao7z@treble>
+ <20201110174606.mp5m33lgqksks4mt@treble>
+ <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Richard,
+On Tue, Nov 10, 2020 at 10:59:55AM -0800, Sami Tolvanen wrote:
+> On Tue, Nov 10, 2020 at 9:46 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Mon, Nov 09, 2020 at 08:29:24PM -0600, Josh Poimboeuf wrote:
+> > > On Mon, Nov 09, 2020 at 03:11:41PM -0800, Sami Tolvanen wrote:
+> > > > CONFIG_XEN
+> > > >
+> > > > __switch_to_asm()+0x0: undefined stack state
+> > > >   xen_hypercall_set_trap_table()+0x0: <=== (sym)
+> >
+> > With your branch + GCC 9 I can recreate all the warnings except this
+> > one.
+> 
+> In a gcc build this warning is replaced with a different one:
+> 
+> vmlinux.o: warning: objtool: __startup_secondary_64()+0x7: return with
+> modified stack frame
+> 
+> This just seems to depend on which function is placed right after the
+> code in xen-head.S. With gcc, the disassembly looks like this:
+> 
+> 0000000000000000 <asm_cpu_bringup_and_idle>:
+>        0:       e8 00 00 00 00          callq  5 <asm_cpu_bringup_and_idle+0x5>
+>                         1: R_X86_64_PLT32       cpu_bringup_and_idle-0x4
+>        5:       e9 f6 0f 00 00          jmpq   1000
+> <xen_hypercall_set_trap_table>
+> ...
+> 0000000000001000 <xen_hypercall_set_trap_table>:
+>         ...
+> ...
+> 0000000000002000 <__startup_secondary_64>:
+> 
+> With Clang+LTO, we end up with __switch_to_asm here instead of
+> __startup_secondary_64.
 
-Richard Cochran <richardcochran@gmail.com> writes:
+I still don't see this warning for some reason.
 
-> On Thu, Nov 12, 2020 at 03:46:12PM -0800, Vinicius Costa Gomes wrote:
->> I wanted it so using PCIe PTM was transparent to applications, so adding
->> another API wouldn't be my preference.
->> 
->> That being said, having a trigger from the application to start/stop the
->> PTM cycles doesn't sound too bad an idea. So, not too opposed to this
->> idea.
->> 
->> Richard, any opinions here?
->
-> Sorry, I only have the last two message from this thread, and so I'm
-> missing the backstory.
+Is it fixed by adding cpu_bringup_and_idle() to global_noreturns[] in
+tools/objtool/check.c?
 
-No worries. The not so short version of the story is this:
-
-I am proposing a series that adds support for PCIe PTM (for the igc
-driver), exporting the values via the PTP_SYS_OFFSET_PRECISE ioctl().
-
-The way PTM works in the NIC I have, kind of forces me to start the PTM
-dialogs during initialization, and they are kept running in background,
-what the _PRECISE ioctl() does is basically collecting the most recent
-measurement.
-
-Miroslav is suggesting that a new API, similar to PTP_EXTTS_REQUEST,
-would be a good idea.
-
-This new API idea has a few nice "pros":
- - I can use it to trigger starting the PTM cycles (instead of starting
- PTM during initialization), and the application would potentially have
- access to all the measurements;
- - Right now, keeping the PTM cycles always running would probably have
- an impact in power comsuption/number of wake-ups, with this new API,
- this price would only be paid when the user wants.
-
-The main "con" would be that it wouldn't be transparent to applications
-(phc2sys), as it would have to use another API if it wants to take
-advantage of PTM.
-
-And so question is, what is your opinion on this: export the PTM
-measurements using some "to be defined" new API or keep using some of
-the PTP_SYS_OFFSET_* ioctls?
-
-I think that's it. Miroslav, feel free to correct me if I missed
-something.
-
-
-Cheers,
 -- 
-Vinicius
+Josh
+
