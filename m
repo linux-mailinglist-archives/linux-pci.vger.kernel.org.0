@@ -2,112 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 187D32B279A
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 22:59:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40F682B287F
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:25:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgKMV7X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 16:59:23 -0500
-Received: from mga04.intel.com ([192.55.52.120]:27846 "EHLO mga04.intel.com"
+        id S1726166AbgKMWXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 17:23:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgKMV7V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 16:59:21 -0500
-IronPort-SDR: 7Ozt3vzOdvrKHqJy5BM1iHlHdIcjC1N+3g/M6STnBlZqFIZk/w/cEddRwE1ZW/gDH+L/0QcpGX
- oZ6MDgF7T4VA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="167960059"
-X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="167960059"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 13:59:20 -0800
-IronPort-SDR: 2doTmgaMPgKiG8rX2ERNX997i15GrFOVVteLJjoJDMDzviPPBp+uC59VFFKaBUkpXRddjIL8QB
- kFbmOLPsnKvg==
-X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="355680607"
-Received: from matownse-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.254.99.8])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 13:59:20 -0800
-Subject: Re: [PATCH v11 0/5] Simplify PCIe native ownership detection logic
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, knsathya@kernel.org
-References: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <2f89d5ba-4588-dfdd-2f97-a58ad029ccbf@linux.intel.com>
-Date:   Fri, 13 Nov 2020 13:59:19 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726107AbgKMWXm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 17:23:42 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1568207DE;
+        Fri, 13 Nov 2020 22:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605306221;
+        bh=GTuPcqEWVM+VGI2FMkFJFWknqieSxgBdfJx/huPl714=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=L9yhbjdstA2Y7+3ZeEDEsD9GjOfKd+YBOAqAQoYcnQYdDy9Bj3ETKsd0z4dh4uXyF
+         XcPXq47j39zuMAUg/64vMz4FnE63VM8/+mz1832k9E7s1MwLLJ/2XRICWkUkk/RuUy
+         qrj9/eZADLxzhLQA7F+AKMgKEzPkL5yKXL8flDtY=
+Date:   Fri, 13 Nov 2020 16:23:39 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, hkallweit1@gmail.com,
+        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
+        kai.heng.feng@canonical.com, chris.packham@alliedtelesis.co.nz,
+        yangyicong@hisilicon.com, lorenzo.pieralisi@arm.com,
+        treding@nvidia.com, jonathanh@nvidia.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI/ASPM: Save/restore ASPM-L1SS controls for
+ suspend/resume
+Message-ID: <20201113222339.GA1138933@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201024190442.871-1-vidyas@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Sun, Oct 25, 2020 at 12:34:42AM +0530, Vidya Sagar wrote:
+> Previously ASPM L1-Sub-States control registers (CTL1 and CTL2) weren't
+> saved and restored during suspend/resume leading to ASPM-L1SS
+> configuration being lost post resume.
+> 
+> Save the ASPM-L1SS control registers so that the configuration is retained
+> post resume.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-On 10/26/20 7:57 PM, Kuppuswamy Sathyanarayanan wrote:
-> Currently, PCIe capabilities ownership status is detected by
-> verifying the status of pcie_ports_native, pcie_ports_dpc_native
-> and _OSC negotiated results (cached in  struct pci_host_bridge
-> ->native_* members). But this logic can be simplified, and we can
-> use only struct pci_host_bridge ->native_* members to detect it.
-> 
-> This patchset removes the distributed checks for pcie_ports_native,
-> pcie_ports_dpc_native parameters.
-Any comments on this series?
-> 
-> Changes since v10:
->   * Addressed format issue reported by lkp test.
-> 
-> Changes since v9:
->   * Rebased on top of v5.10-rc1
-> 
-> Changes since v8:
->   * Simplified setting _OSC ownwership logic
->   * Moved bridge->native_ltr out of #ifdef CONFIG_PCIEPORTBUS.
-> 
-> Changes since v7:
->   * Fixed "fix array_size.cocci warnings".
-> 
-> Changes since v6:
->   * Created new patch for CONFIG_PCIEPORTBUS check in
->     pci_init_host_bridge().
->   * Added warning message for a case when pcie_ports_native
->     overrides _OSC negotiation result.
-> 
-> Changes since v5:
->   * Rebased on top of v5.8-rc1
-> 
-> Changes since v4:
->   * Changed the patch set title (Original link: https://lkml.org/lkml/2020/5/26/1710)
->   * Added AER/DPC dependency logic cleanup fixes.
->   
-> 
-> Kuppuswamy Sathyanarayanan (5):
->    PCI: Conditionally initialize host bridge native_* members
->    ACPI/PCI: Ignore _OSC negotiation result if pcie_ports_native is set.
->    ACPI/PCI: Ignore _OSC DPC negotiation result if pcie_ports_dpc_native
->      is set.
->    PCI/portdrv: Remove redundant pci_aer_available() check in DPC enable
->      logic
->    PCI/DPC: Move AER/DPC dependency checks out of DPC driver
-> 
->   drivers/acpi/pci_root.c           | 39 +++++++++++++++++++++++--------
->   drivers/pci/hotplug/pciehp_core.c |  2 +-
->   drivers/pci/pci-acpi.c            |  3 ---
->   drivers/pci/pcie/aer.c            |  2 +-
->   drivers/pci/pcie/dpc.c            |  3 ---
->   drivers/pci/pcie/portdrv.h        |  2 --
->   drivers/pci/pcie/portdrv_core.c   | 13 ++++-------
->   drivers/pci/probe.c               |  6 +++--
->   include/linux/acpi.h              |  2 ++
->   include/linux/pci.h               |  2 ++
->   10 files changed, 44 insertions(+), 30 deletions(-)
-> 
+Applied to pci/aspm for v5.11, thanks!
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I tidied up pci_restore_aspm_l1ss_state() so it does the checking the
+same way as pci_save_aspm_l1ss_state().
+
+> ---
+> v1:
+> * It would be really good if someone can verify it on a non tegra194 platform
+> 
+>  drivers/pci/pci.c       |  7 +++++++
+>  drivers/pci/pci.h       |  4 ++++
+>  drivers/pci/pcie/aspm.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 52 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index a458c46d7e39..034497264bde 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1551,6 +1551,7 @@ int pci_save_state(struct pci_dev *dev)
+>  		return i;
+>  
+>  	pci_save_ltr_state(dev);
+> +	pci_save_aspm_l1ss_state(dev);
+>  	pci_save_dpc_state(dev);
+>  	pci_save_aer_state(dev);
+>  	return pci_save_vc_state(dev);
+> @@ -1656,6 +1657,7 @@ void pci_restore_state(struct pci_dev *dev)
+>  	 * LTR itself (in the PCIe capability).
+>  	 */
+>  	pci_restore_ltr_state(dev);
+> +	pci_restore_aspm_l1ss_state(dev);
+>  
+>  	pci_restore_pcie_state(dev);
+>  	pci_restore_pasid_state(dev);
+> @@ -3319,6 +3321,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+>  	if (error)
+>  		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+>  
+> +	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
+> +					    2 * sizeof(u32));
+> +	if (error)
+> +		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
+> +
+>  	pci_allocate_vc_save_buffers(dev);
+>  }
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index fa12f7cbc1a0..8d2135f61e36 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -565,11 +565,15 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+> +void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+> +void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+>  #else
+>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+> +static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
+> +static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
+>  #endif
+>  
+>  #ifdef CONFIG_PCIE_ECRC
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 253c30cc1967..d965bbc563ed 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -742,6 +742,47 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+>  				PCI_L1SS_CTL1_L1SS_MASK, val);
+>  }
+>  
+> +void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+> +{
+> +	struct pci_cap_saved_state *save_state;
+> +	int aspm_l1ss;
+> +	u32 *cap;
+> +
+> +	if (!pci_is_pcie(dev))
+> +		return;
+> +
+> +	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
+> +	if (!aspm_l1ss)
+> +		return;
+> +
+> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+> +	if (!save_state)
+> +		return;
+> +
+> +	cap = (u32 *)&save_state->cap.data[0];
+> +	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, cap++);
+> +	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, cap++);
+> +}
+> +
+> +void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
+> +{
+> +	struct pci_cap_saved_state *save_state;
+> +	int aspm_l1ss;
+> +	u32 *cap;
+> +
+> +	if (!pci_is_pcie(dev))
+> +		return;
+> +
+> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+> +	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
+> +	if (!save_state || !aspm_l1ss)
+> +		return;
+> +
+> +	cap = (u32 *)&save_state->cap.data[0];
+> +	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++);
+> +	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
+> +}
+> +
+>  static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+>  {
+>  	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+> -- 
+> 2.17.1
+> 
