@@ -2,130 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A8CD2B28D7
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:56:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 075972B2904
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Nov 2020 00:14:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgKMW4c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 17:56:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60982 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726094AbgKMW4a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 17:56:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605308189;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PXuUO/jzK6PC0ArsPRfFmIFBybv98p5k0ll08mBK9vw=;
-        b=U9Pli40NwWQRepbitv4YCZsEAM77o6qhj1hOBLr3VZzEfI94FF5413vLM2wo4B1oS9Y6E7
-        v8SBULUFzVH5LYx9Q+rYqlBAHI7gl4zSyp3F7OGcgQGR0vUw2Br33b8H3SzYFGw+Ucn3Ep
-        aSzBT2suv+yDgl2rvpWoLceP8t8/Kpo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-562-gA0AbIuzMxWJynkYsYRo7A-1; Fri, 13 Nov 2020 17:56:25 -0500
-X-MC-Unique: gA0AbIuzMxWJynkYsYRo7A-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726248AbgKMXOd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 18:14:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbgKMXOW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 18:14:22 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C331A87309E;
-        Fri, 13 Nov 2020 22:56:22 +0000 (UTC)
-Received: from treble (ovpn-117-69.rdu2.redhat.com [10.10.117.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 47C611A3D6;
-        Fri, 13 Nov 2020 22:56:16 +0000 (UTC)
-Date:   Fri, 13 Nov 2020 16:56:14 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-Message-ID: <20201113225614.ry73o4knb6mvv4dq@treble>
-References: <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
- <20201023173617.GA3021099@google.com>
- <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
- <20201110022924.tekltjo25wtrao7z@treble>
- <20201110174606.mp5m33lgqksks4mt@treble>
- <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
- <20201113195408.atbpjizijnhuinzy@treble>
- <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
- <20201113223412.inono2ekrs7ky7rm@treble>
- <CABCJKufBEBcPPrUZcAvh1LXX_GwRG1S1sg2ED2DPZ53MPy_VbQ@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A5C722256;
+        Fri, 13 Nov 2020 23:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605309261;
+        bh=o0aH3JmdpLC8cCY0An4gxRn166tgYgLye5gA7I1JN9M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uHSORV4tEWIaYlRd991Lw6EdZg7IQDc7I8p8zyukS1eVZxYSWX2uwUMMCIBSLd4/L
+         R1N2dujrrva+2KruVehKxhlgwwcoVfdR9b0cHxJm/dF5JyzLCgzWAtfkTForm0nGGd
+         dzYYVIciD7vVfy3pIWd5IIBXmnbmo8HB90JJjB64=
+Date:   Fri, 13 Nov 2020 17:14:19 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 7/9] cxl/mem: Implement polled mode mailbox
+Message-ID: <20201113231419.GA1122445@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABCJKufBEBcPPrUZcAvh1LXX_GwRG1S1sg2ED2DPZ53MPy_VbQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20201111054356.793390-8-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 02:54:32PM -0800, Sami Tolvanen wrote:
-> On Fri, Nov 13, 2020 at 2:34 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Fri, Nov 13, 2020 at 12:24:32PM -0800, Sami Tolvanen wrote:
-> > > > I still don't see this warning for some reason.
-> > >
-> > > Do you have CONFIG_XEN enabled? I can reproduce this on ToT master as follows:
-> > >
-> > > $ git rev-parse HEAD
-> > > 585e5b17b92dead8a3aca4e3c9876fbca5f7e0ba
-> > > $ make defconfig && \
-> > > ./scripts/config -e HYPERVISOR_GUEST -e PARAVIRT -e XEN && \
-> > > make olddefconfig && \
-> > > make -j110
-> > > ...
-> > > $ ./tools/objtool/objtool check -arfld vmlinux.o 2>&1 | grep secondary
-> > > vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with
-> > > modified stack frame
-> > >
-> > > > Is it fixed by adding cpu_bringup_and_idle() to global_noreturns[] in
-> > > > tools/objtool/check.c?
-> > >
-> > > No, that didn't fix the warning. Here's what I tested:
-> >
-> > I think this fixes it:
-> >
-> > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Subject: [PATCH] x86/xen: Fix objtool vmlinux.o validation of xen hypercalls
-> >
-> > Objtool vmlinux.o validation is showing warnings like the following:
-> >
-> >   # tools/objtool/objtool check -barfld vmlinux.o
-> >   vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with modified stack frame
-> >   vmlinux.o: warning: objtool:   xen_hypercall_set_trap_table()+0x0: <=== (sym)
-> >
-> > Objtool falls through all the empty hypercall text and gets confused
-> > when it encounters the first real function afterwards.  The empty unwind
-> > hints in the hypercalls aren't working for some reason.  Replace them
-> > with a more straightforward use of STACK_FRAME_NON_STANDARD.
-> >
-> > Reported-by: Sami Tolvanen <samitolvanen@google.com>
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > ---
-> >  arch/x86/xen/xen-head.S | 9 ++++-----
-> >  include/linux/objtool.h | 8 ++++++++
-> >  2 files changed, 12 insertions(+), 5 deletions(-)
+On Tue, Nov 10, 2020 at 09:43:54PM -0800, Ben Widawsky wrote:
+> Create a function to handle sending a command, optionally with a
+> payload, to the memory device, polling on a result, and then optionally
+> copying out the payload. The algorithm for doing this come straight out
+> of the CXL 2.0 specification.
 > 
-> Confirmed, this fixes the warning, also in LTO builds. Thanks!
+> Primary mailboxes are capable of generating an interrupt when submitting
+> a command in the background. That implementation is saved for a later
+> time.
 > 
-> Tested-by: Sami Tolvanen <samitolvanen@google.com>
+> Secondary mailboxes aren't implemented at this time.
+> 
+> WARNING: This is untested with actual timeouts occurring.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/cxl.h |  16 +++++++
+>  drivers/cxl/mem.c | 107 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 123 insertions(+)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 482fc9cdc890..f49ab80f68bd 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -21,8 +21,12 @@
+>  #define CXLDEV_MB_CTRL 0x04
+>  #define   CXLDEV_MB_CTRL_DOORBELL BIT(0)
+>  #define CXLDEV_MB_CMD 0x08
+> +#define   CXLDEV_MB_CMD_PAYLOAD_LENGTH_SHIFT 16
+>  #define CXLDEV_MB_STATUS 0x10
+> +#define   CXLDEV_MB_STATUS_RET_CODE_SHIFT 32
+> +#define   CXLDEV_MB_STATUS_RET_CODE_MASK 0xffff
+>  #define CXLDEV_MB_BG_CMD_STATUS 0x18
+> +#define CXLDEV_MB_PAYLOAD 0x20
+>  
+>  /* Memory Device */
+>  #define CXLMDEV_STATUS 0
+> @@ -114,4 +118,16 @@ static inline u64 __cxl_raw_read_reg64(struct cxl_mem *cxlm, u32 reg)
+>  
+>  	return readq(reg_addr + reg);
+>  }
+> +
+> +static inline void cxl_mbox_payload_fill(struct cxl_mem *cxlm, u8 *input,
+> +					    unsigned int length)
+> +{
+> +	memcpy_toio(cxlm->mbox.regs + CXLDEV_MB_PAYLOAD, input, length);
+> +}
+> +
+> +static inline void cxl_mbox_payload_drain(struct cxl_mem *cxlm,
+> +					     u8 *output, unsigned int length)
+> +{
+> +	memcpy_fromio(output, cxlm->mbox.regs + CXLDEV_MB_PAYLOAD, length);
+> +}
+>  #endif /* __CXL_H__ */
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 9fd2d1daa534..08913360d500 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  // Copyright(c) 2020 Intel Corporation. All rights reserved.
 
-Good... I'll work through the rest of them.
+/* Copyright ... */
 
--- 
-Josh
+> +#include <linux/sched/clock.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/io.h>
+> @@ -7,6 +8,112 @@
+>  #include "pci.h"
+>  #include "cxl.h"
+>  
+> +struct mbox_cmd {
+> +	u16 cmd;
+> +	u8 *payload;
+> +	size_t payload_size;
+> +	u16 return_code;
+> +};
+> +
+> +static int cxldev_wait_for_doorbell(struct cxl_mem *cxlm)
+> +{
+> +	u64 start, now;
+> +	int cpu, ret, timeout = 2000000000;
 
+It'd be nice to have a hint about where this timeout comes from and
+what the units are.  local_clock(), sched_clock_cpu(), etc don't have
+any hints either and I got tired of following the chain.
+
+Several callers use ns_to_ktime(local_clock()), so I guess it must be
+in ns?
+
+> +	start = local_clock();
+> +	preempt_disable();
+> +	cpu = smp_processor_id();
+> +	for (;;) {
+> +		now = local_clock();
+> +		preempt_enable();
+> +		if ((cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CTRL) &
+> +		     CXLDEV_MB_CTRL_DOORBELL) == 0) {
+> +			ret = 0;
+> +			break;
+> +		}
+> +
+> +		if (now - start >= timeout) {
+> +			ret = -ETIMEDOUT;
+> +			break;
+> +		}
+> +
+> +		cpu_relax();
+> +		preempt_disable();
+> +		if (unlikely(cpu != smp_processor_id())) {
+> +			timeout -= (now - start);
+> +			cpu = smp_processor_id();
+> +			start = local_clock();
+> +		}
+> +	}
