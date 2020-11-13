@@ -2,72 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50F622B25CF
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 21:49:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B105C2B25E4
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 21:52:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgKMUtB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 15:49:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbgKMUtB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 15:49:01 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726112AbgKMUwg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 15:52:36 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40926 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726003AbgKMUwg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 15:52:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605300754;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BjbZK0zeIm65whn17k5UcYS2uZ9Kdra7izOdoHD5fpw=;
+        b=Vja5qVPNIORDTOqSTqSA1jcAlfT/9vrn5afRTuLTV2O+YzVDYdQDkZoL37/6A1pzb93pSt
+        eb+daRvz6lU/tMbAKzxYhO8jb90f8eR6wDYa+ixONXQWp9/6C6CtIDgp0SGNW3th3CrTwM
+        yiZn5KPlfqSCzNaHzf+p9LDCBY+kRcM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-302-6NjMwWGtNSa0dWipx0MBdw-1; Fri, 13 Nov 2020 15:52:30 -0500
+X-MC-Unique: 6NjMwWGtNSa0dWipx0MBdw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BE0D22201;
-        Fri, 13 Nov 2020 20:49:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605300540;
-        bh=V8CUFfeb4EQi81SuCDO7tdlAWKl1AreBu4pyYW1OYKg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TS6toXQyBXM1eLEDwMjRxXO4J9T3L2zzvoNWTKUwq4hukPxIYJtzG2bAWt8GfsRQy
-         iGIl7OFzizo3Q8homLJB9dZ0OutO0cxJQjZ6Wl7TlH+VCilerB5fQsTwEo1byLfwYg
-         tdUHt0YjqEbqk3bk46QSZ6NymntdrmsXDDdHcTV4=
-Date:   Fri, 13 Nov 2020 14:48:59 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: Add function 1 DMA alias quirk for Marvell 9215
- SATA controller
-Message-ID: <20201113204859.GA1134115@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E7A28015A8;
+        Fri, 13 Nov 2020 20:52:28 +0000 (UTC)
+Received: from treble (ovpn-117-69.rdu2.redhat.com [10.10.117.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6296B5B4A4;
+        Fri, 13 Nov 2020 20:52:24 +0000 (UTC)
+Date:   Fri, 13 Nov 2020 14:52:21 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201113205221.jybsu3himgjqd3tq@treble>
+References: <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+ <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
+ <20201023173617.GA3021099@google.com>
+ <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
+ <20201110022924.tekltjo25wtrao7z@treble>
+ <20201110174606.mp5m33lgqksks4mt@treble>
+ <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
+ <20201113195408.atbpjizijnhuinzy@treble>
+ <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201110220516.697934-1-helgaas@kernel.org>
+In-Reply-To: <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 04:05:16PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, Nov 13, 2020 at 12:24:32PM -0800, Sami Tolvanen wrote:
+> On Fri, Nov 13, 2020 at 11:54 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Tue, Nov 10, 2020 at 10:59:55AM -0800, Sami Tolvanen wrote:
+> > > On Tue, Nov 10, 2020 at 9:46 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > >
+> > > > On Mon, Nov 09, 2020 at 08:29:24PM -0600, Josh Poimboeuf wrote:
+> > > > > On Mon, Nov 09, 2020 at 03:11:41PM -0800, Sami Tolvanen wrote:
+> > > > > > CONFIG_XEN
+> > > > > >
+> > > > > > __switch_to_asm()+0x0: undefined stack state
+> > > > > >   xen_hypercall_set_trap_table()+0x0: <=== (sym)
+> > > >
+> > > > With your branch + GCC 9 I can recreate all the warnings except this
+> > > > one.
+> > >
+> > > In a gcc build this warning is replaced with a different one:
+> > >
+> > > vmlinux.o: warning: objtool: __startup_secondary_64()+0x7: return with
+> > > modified stack frame
+> > >
+> > > This just seems to depend on which function is placed right after the
+> > > code in xen-head.S. With gcc, the disassembly looks like this:
+> > >
+> > > 0000000000000000 <asm_cpu_bringup_and_idle>:
+> > >        0:       e8 00 00 00 00          callq  5 <asm_cpu_bringup_and_idle+0x5>
+> > >                         1: R_X86_64_PLT32       cpu_bringup_and_idle-0x4
+> > >        5:       e9 f6 0f 00 00          jmpq   1000
+> > > <xen_hypercall_set_trap_table>
+> > > ...
+> > > 0000000000001000 <xen_hypercall_set_trap_table>:
+> > >         ...
+> > > ...
+> > > 0000000000002000 <__startup_secondary_64>:
+> > >
+> > > With Clang+LTO, we end up with __switch_to_asm here instead of
+> > > __startup_secondary_64.
+> >
+> > I still don't see this warning for some reason.
 > 
-> Add function 1 DMA alias quirk for Marvell 88SS9215 PCIe SSD Controller.
+> Do you have CONFIG_XEN enabled? I can reproduce this on ToT master as follows:
 > 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135
-> Reported-by: John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> $ git rev-parse HEAD
+> 585e5b17b92dead8a3aca4e3c9876fbca5f7e0ba
+> $ make defconfig && \
+> ./scripts/config -e HYPERVISOR_GUEST -e PARAVIRT -e XEN && \
+> make olddefconfig && \
+> make -j110
+> ...
+> $ ./tools/objtool/objtool check -arfld vmlinux.o 2>&1 | grep secondary
+> vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with
+> modified stack frame
 
-Applied to for-linus for v5.10.
+Ok, I see it now on Linus' tree.  I just didn't see it on your clang-lto
+branch.
 
-> ---
->  drivers/pci/quirks.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index f70692ac79c5..4d683a28b29f 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3998,6 +3998,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9183,
->  /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c46 */
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x91a0,
->  			 quirk_dma_func1_alias);
-> +/* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135 */
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9215,
-> +			 quirk_dma_func1_alias);
->  /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c127 */
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9220,
->  			 quirk_dma_func1_alias);
-> -- 
-> 2.25.1
-> 
+-- 
+Josh
+
