@@ -2,151 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED8AB2B254D
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 21:24:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50F622B25CF
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 21:49:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgKMUYq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 15:24:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgKMUYq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 15:24:46 -0500
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A789AC061A04
-        for <linux-pci@vger.kernel.org>; Fri, 13 Nov 2020 12:24:45 -0800 (PST)
-Received: by mail-ua1-x942.google.com with SMTP id t15so3400296ual.6
-        for <linux-pci@vger.kernel.org>; Fri, 13 Nov 2020 12:24:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mU6UeGOfRQMRJwnHmGX5EKrd3fAZtibGBHai3RFBnJQ=;
-        b=SBgav/T3VzzEtf+XcGk0y2urSrYRSMZdZ/BSprOQYF07imi1ADQ6+bP8NVgkFIS13j
-         c29etEZPIosU9Ccq+aDvjNmW4gtV+RXjaLR5/iYKTteik7fkjmDnPZ3rLCzlNv2EYSEP
-         /f9Rq5iUQR0o7S1G9L2SZCAv7mAGSkXEUI5hN3rLrtsdHgPlxnpAG0v3MFSAKPbkQrae
-         WLoVYBLPEP79v4Y7OA8gXbcs08GtIihODPoDAmO+6mtoQqiccreuY2GcpYzaDeYkNLlF
-         n1WMuVFyGng50eB9Mmqa/6aQz5eygw2tOZp8M/jD01KJFVb5k1ymIpwXFEcj8xVZxzyy
-         nZxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mU6UeGOfRQMRJwnHmGX5EKrd3fAZtibGBHai3RFBnJQ=;
-        b=U+zlGnfXLsvVdt8J4yzfB8I7H4G1BEJ8q1ne1zEkyxPjDwVnFU1xnNQ2c1bRVp9l8s
-         6Gc68i8v+fcDovbFA9rgDAO2tvpaL+EwydRsmo+dlqzBQIwrrzoa8WAJYyeGZ/wSMnB4
-         wzDUrqXtF/6fAAoouAvjs/YORFMkHff3xOgsphaHJY+03PmffKwNBJSzJwkXT+lNfJI+
-         /g1xF1ARrNBiURMP/BAZSGe7GcsDQdKvJwvH/ZcsVWygOhu+Ejq9zFdeiE38zgnOvTIv
-         95yAlKoPMlDeFaAmHWJ6mcODkChmXR7KbMhzXuFF0v47IyDfwIo/st0QjgDtEST4Fxda
-         vacg==
-X-Gm-Message-State: AOAM533KUUq2DsGZCCZ3UatAmP/ZJEmQWp5w/ZR88CbPfCz/0BgdIV+l
-        mT/w4rmKFBpktyDeHoBUVSzLxw1y99lsehXlVSUCtw==
-X-Google-Smtp-Source: ABdhPJxQo6DF9jUnA2YJFoBq8ll7fJYetoimM/TRDoFpxZhBeNyAnbeYafJONZ4hmtReCz/v9xa11p0ayWmu2zwdpXo=
-X-Received: by 2002:ab0:6156:: with SMTP id w22mr2653091uan.122.1605299084290;
- Fri, 13 Nov 2020 12:24:44 -0800 (PST)
+        id S1726087AbgKMUtB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 15:49:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726003AbgKMUtB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 15:49:01 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE0D22201;
+        Fri, 13 Nov 2020 20:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605300540;
+        bh=V8CUFfeb4EQi81SuCDO7tdlAWKl1AreBu4pyYW1OYKg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TS6toXQyBXM1eLEDwMjRxXO4J9T3L2zzvoNWTKUwq4hukPxIYJtzG2bAWt8GfsRQy
+         iGIl7OFzizo3Q8homLJB9dZ0OutO0cxJQjZ6Wl7TlH+VCilerB5fQsTwEo1byLfwYg
+         tdUHt0YjqEbqk3bk46QSZ6NymntdrmsXDDdHcTV4=
+Date:   Fri, 13 Nov 2020 14:48:59 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: Add function 1 DMA alias quirk for Marvell 9215
+ SATA controller
+Message-ID: <20201113204859.GA1134115@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <CABCJKufDLmBCwmgGnfLcBw_B_4U8VY-R-dSNNp86TFfuMobPMw@mail.gmail.com>
- <20201020185217.ilg6w5l7ujau2246@treble> <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
- <20201021085606.GZ2628@hirez.programming.kicks-ass.net> <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
- <20201023173617.GA3021099@google.com> <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
- <20201110022924.tekltjo25wtrao7z@treble> <20201110174606.mp5m33lgqksks4mt@treble>
- <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com> <20201113195408.atbpjizijnhuinzy@treble>
-In-Reply-To: <20201113195408.atbpjizijnhuinzy@treble>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 13 Nov 2020 12:24:32 -0800
-Message-ID: <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201110220516.697934-1-helgaas@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 11:54 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Tue, Nov 10, 2020 at 10:59:55AM -0800, Sami Tolvanen wrote:
-> > On Tue, Nov 10, 2020 at 9:46 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > On Mon, Nov 09, 2020 at 08:29:24PM -0600, Josh Poimboeuf wrote:
-> > > > On Mon, Nov 09, 2020 at 03:11:41PM -0800, Sami Tolvanen wrote:
-> > > > > CONFIG_XEN
-> > > > >
-> > > > > __switch_to_asm()+0x0: undefined stack state
-> > > > >   xen_hypercall_set_trap_table()+0x0: <=== (sym)
-> > >
-> > > With your branch + GCC 9 I can recreate all the warnings except this
-> > > one.
-> >
-> > In a gcc build this warning is replaced with a different one:
-> >
-> > vmlinux.o: warning: objtool: __startup_secondary_64()+0x7: return with
-> > modified stack frame
-> >
-> > This just seems to depend on which function is placed right after the
-> > code in xen-head.S. With gcc, the disassembly looks like this:
-> >
-> > 0000000000000000 <asm_cpu_bringup_and_idle>:
-> >        0:       e8 00 00 00 00          callq  5 <asm_cpu_bringup_and_idle+0x5>
-> >                         1: R_X86_64_PLT32       cpu_bringup_and_idle-0x4
-> >        5:       e9 f6 0f 00 00          jmpq   1000
-> > <xen_hypercall_set_trap_table>
-> > ...
-> > 0000000000001000 <xen_hypercall_set_trap_table>:
-> >         ...
-> > ...
-> > 0000000000002000 <__startup_secondary_64>:
-> >
-> > With Clang+LTO, we end up with __switch_to_asm here instead of
-> > __startup_secondary_64.
->
-> I still don't see this warning for some reason.
+On Tue, Nov 10, 2020 at 04:05:16PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Add function 1 DMA alias quirk for Marvell 88SS9215 PCIe SSD Controller.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135
+> Reported-by: John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Do you have CONFIG_XEN enabled? I can reproduce this on ToT master as follows:
+Applied to for-linus for v5.10.
 
-$ git rev-parse HEAD
-585e5b17b92dead8a3aca4e3c9876fbca5f7e0ba
-$ make defconfig && \
-./scripts/config -e HYPERVISOR_GUEST -e PARAVIRT -e XEN && \
-make olddefconfig && \
-make -j110
-...
-$ ./tools/objtool/objtool check -arfld vmlinux.o 2>&1 | grep secondary
-vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with
-modified stack frame
-
-> Is it fixed by adding cpu_bringup_and_idle() to global_noreturns[] in
-> tools/objtool/check.c?
-
-No, that didn't fix the warning. Here's what I tested:
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index c6ab44543c92..f1f65f5688cf 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -156,6 +156,7 @@ static bool __dead_end_function(struct
-objtool_file *file, struct symbol *func,
-                "machine_real_restart",
-                "rewind_stack_do_exit",
-                "kunit_try_catch_throw",
-+               "cpu_bringup_and_idle",
-        };
-
-        if (!func)
-
-Sami
+> ---
+>  drivers/pci/quirks.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index f70692ac79c5..4d683a28b29f 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3998,6 +3998,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9183,
+>  /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c46 */
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x91a0,
+>  			 quirk_dma_func1_alias);
+> +/* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135 */
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9215,
+> +			 quirk_dma_func1_alias);
+>  /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c127 */
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9220,
+>  			 quirk_dma_func1_alias);
+> -- 
+> 2.25.1
+> 
