@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB3312B2385
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 19:17:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48A2A2B23A8
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 19:26:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgKMSRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 13:17:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57984 "EHLO mail.kernel.org"
+        id S1726146AbgKMS0H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 13:26:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgKMSRf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 13:17:35 -0500
+        id S1726291AbgKMS0G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 13:26:06 -0500
 Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C539B2074B;
-        Fri, 13 Nov 2020 18:17:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35CC5206FB;
+        Fri, 13 Nov 2020 18:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605291454;
-        bh=FwNxJBVYLmY0I7UT2gwMeGvnRBxnjf3Vj6esUleM+bE=;
+        s=default; t=1605291965;
+        bh=fDi9mgIGTBupdmiWZEHRi2yYZozpJQMyVVHzaWsP1+0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uuOXqaI5HlGmp9yRBHllON2jZ2TxrmP0ubmXp7A8iJCuQeYBofMwtXDBz/TeAi4WX
-         FDYMLLQaenDuEVLjGYoK55MMKKZ/EoSHDpNYsdtUQnXBrkhiFphK3XXn4Ycp3QGUTj
-         a+NlQl2PSILp/e0v6nq82qhLq2V9SGqFiQI5gz+U=
-Date:   Fri, 13 Nov 2020 12:17:32 -0600
+        b=2OHEKMNeZC5cH7NsCGLurv4S7uBQoF1vi1qK8CjGNtcOVISY3xeuGIDL2UfJg4mVp
+         3SvNyXHgsIjMEThN4dbu51oUoIq8m8jsrswffAVQc/FTXgjEz+lsMU7McEvOFOV5PF
+         xKi14KNY9Xx+CtQO+iFe8T24BMQs1xkOCY2JXVzo=
+Date:   Fri, 13 Nov 2020 12:26:03 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -34,183 +34,231 @@ Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 4/9] cxl/mem: Map memory device registers
-Message-ID: <20201113181732.GA1121121@bjorn-Precision-5520>
+Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
+Message-ID: <20201113182603.GA1121815@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201111054356.793390-5-ben.widawsky@intel.com>
+In-Reply-To: <20201111054356.793390-6-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 09:43:51PM -0800, Ben Widawsky wrote:
-> All the necessary bits are initialized in order to find and map the
-> register space for CXL Memory Devices. This is accomplished by using the
-> Register Locator DVSEC (CXL 2.0 - 8.1.9.1) to determine which PCI BAR to
-> use, and how much of an offset from that BAR should be added.
-
-"Initialize the necessary bits ..." to use the usual imperative
-sentence structure, as you did in the subject.
-
-> If the memory device registers are found and mapped a new internal data
-> structure tracking device state is allocated.
-
-"Allocate device state if we find device registers" or similar.
-
+On Tue, Nov 10, 2020 at 09:43:52PM -0800, Ben Widawsky wrote:
+> CXL devices contain an array of capabilities that describe the
+> interactions software can interact with the device, or firmware running
+> on the device. A CXL compliant device must implement the device status
+> and the mailbox capability. A CXL compliant memory device must implement
+> the memory device capability.
+> 
+> Each of the capabilities can [will] provide an offset within the MMIO
+> region for interacting with the CXL device.
+> 
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > ---
->  drivers/cxl/mem.c | 68 +++++++++++++++++++++++++++++++++++++++++++----
->  drivers/cxl/pci.h |  6 +++++
->  2 files changed, 69 insertions(+), 5 deletions(-)
+>  drivers/cxl/cxl.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/mem.c | 58 +++++++++++++++++++++++++++---
+>  2 files changed, 143 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/cxl/cxl.h
 > 
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index aa7d881fa47b..8d9b9ab6c5ea 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -7,9 +7,49 @@
->  #include "pci.h"
->  
->  struct cxl_mem {
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> new file mode 100644
+> index 000000000000..02858ae63d6d
+> --- /dev/null
+> +++ b/drivers/cxl/cxl.h
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+
+Fix comment usage (I think SPDX in .h needs "/* */")
+
+> +#ifndef __CXL_H__
+> +#define __CXL_H__
+> +
+> +/* Device */
+> +#define CXLDEV_CAP_ARRAY_REG 0x0
+> +#define CXLDEV_CAP_ARRAY_CAP_ID 0
+> +#define CXLDEV_CAP_ARRAY_ID(x) ((x) & 0xffff)
+> +#define CXLDEV_CAP_ARRAY_COUNT(x) (((x) >> 32) & 0xffff)
+> +
+> +#define CXL_CAPABILITIES_CAP_ID_DEVICE_STATUS 1
+> +#define CXL_CAPABILITIES_CAP_ID_PRIMARY_MAILBOX 2
+> +#define CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX 3
+> +#define CXL_CAPABILITIES_CAP_ID_MEMDEV 0x4000
+
+Strange that the first three are decimal and the last is hex.
+
+> +/* Mailbox */
+> +#define CXLDEV_MB_CAPS 0x00
+> +#define   CXLDEV_MB_CAP_PAYLOAD_SIZE(cap) ((cap) & 0x1F)
+
+Use upper- or lower-case hex consistently.  Add tabs to line things
+up.
+
+> +#define CXLDEV_MB_CTRL 0x04
+> +#define CXLDEV_MB_CMD 0x08
+> +#define CXLDEV_MB_STATUS 0x10
+> +#define CXLDEV_MB_BG_CMD_STATUS 0x18
+> +
+> +struct cxl_mem {
 > +	struct pci_dev *pdev;
->  	void __iomem *regs;
->  };
->  
-> +static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cxl_mem *cxlm;
 > +	void __iomem *regs;
-> +	u64 offset;
-> +	u8 bar;
-> +	int rc;
 > +
-> +	offset = ((u64)reg_hi << 32) | (reg_lo & 0xffff0000);
-> +	bar = reg_lo & 0x7;
+> +	/* Cap 0000h */
+> +	struct {
+> +		void __iomem *regs;
+> +	} status;
 > +
-> +	/* Basic sanity check that BAR is big enough */
-> +	if (pci_resource_len(pdev, bar) < offset) {
-> +		dev_err(dev, "bar%d: %pr: too small (offset: %#llx)\n",
-> +				bar, &pdev->resource[bar], (unsigned long long) offset);
+> +	/* Cap 0002h */
+> +	struct {
+> +		void __iomem *regs;
+> +		size_t payload_size;
+> +	} mbox;
+> +
+> +	/* Cap 0040h */
+> +	struct {
+> +		void __iomem *regs;
+> +	} mem;
+> +};
 
-s/bar/BAR/
+Maybe a note about why READ_ONCE() is required?
 
-> +		return ERR_PTR(-ENXIO);
+> +#define cxl_reg(type)                                                          \
+> +	static inline void cxl_write_##type##_reg32(struct cxl_mem *cxlm,      \
+> +						    u32 reg, u32 value)        \
+> +	{                                                                      \
+> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
+> +		writel(value, reg_addr + reg);                                 \
+> +	}                                                                      \
+> +	static inline void cxl_write_##type##_reg64(struct cxl_mem *cxlm,      \
+> +						    u32 reg, u64 value)        \
+> +	{                                                                      \
+> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
+> +		writeq(value, reg_addr + reg);                                 \
+> +	}                                                                      \
+> +	static inline u32 cxl_read_##type##_reg32(struct cxl_mem *cxlm,        \
+> +						  u32 reg)                     \
+> +	{                                                                      \
+> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
+> +		return readl(reg_addr + reg);                                  \
+> +	}                                                                      \
+> +	static inline u64 cxl_read_##type##_reg64(struct cxl_mem *cxlm,        \
+> +						  u32 reg)                     \
+> +	{                                                                      \
+> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
+> +		return readq(reg_addr + reg);                                  \
 > +	}
 > +
-> +	rc = pcim_iomap_regions(pdev, 1 << bar, pci_name(pdev));
-> +	if (rc != 0) {
-> +		dev_err(dev, "failed to map registers\n");
-> +		return ERR_PTR(-ENXIO);
-> +	}
+> +cxl_reg(status)
+> +cxl_reg(mbox)
 > +
-> +	cxlm = devm_kzalloc(&pdev->dev, sizeof(*cxlm), GFP_KERNEL);
-> +	if (!cxlm) {
-> +		dev_err(dev, "No memory available\n");
-> +		return ERR_PTR(-ENOMEM);
-> +	}
+> +static inline u32 __cxl_raw_read_reg32(struct cxl_mem *cxlm, u32 reg)
+> +{
+> +	void __iomem *reg_addr = READ_ONCE(cxlm->regs);
 > +
-> +	regs = pcim_iomap_table(pdev)[bar];
-> +	cxlm->pdev = pdev;
-> +	cxlm->regs = regs + offset;
-> +
-> +	dev_dbg(dev, "Mapped CXL Memory Device resource\n");
-> +	return cxlm;
+> +	return readl(reg_addr + reg);
 > +}
 > +
->  static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
->  {
->  	int pos;
-> @@ -34,9 +74,9 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
->  
->  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  {
-> +	struct cxl_mem *cxlm = ERR_PTR(-ENXIO);
->  	struct device *dev = &pdev->dev;
-> -	struct cxl_mem *cxlm;
+> +static inline u64 __cxl_raw_read_reg64(struct cxl_mem *cxlm, u32 reg)
+> +{
+> +	void __iomem *reg_addr = READ_ONCE(cxlm->regs);
+> +
+> +	return readq(reg_addr + reg);
+> +}
 
-The order was better before ("dev", then "clxm").  Oh, I suppose this
-is a "reverse Christmas tree" thing.
+Are the "__" prefixes here to leave space for something else in the
+future?  "__" typically means something like "raw", so right now it
+sort of reads like "raw cxl raw read".  So if you don't *need* the
+"__" prefix, I'd drop it.
 
-> -	int rc, regloc;
-> +	int rc, regloc, i;
+> +#endif /* __CXL_H__ */
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 8d9b9ab6c5ea..4109ef7c3ecb 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -5,11 +5,57 @@
+>  #include <linux/io.h>
+>  #include "acpi.h"
+>  #include "pci.h"
+> +#include "cxl.h"
 >  
->  	rc = cxl_bus_prepared(pdev);
->  	if (rc != 0) {
-> @@ -44,15 +84,33 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		return rc;
->  	}
->  
-> +	rc = pcim_enable_device(pdev);
-> +	if (rc)
-> +		return rc;
+> -struct cxl_mem {
+> -	struct pci_dev *pdev;
+> -	void __iomem *regs;
+> -};
+
+Probably nicer if you put "struct cxl_mem" in its ultimate destination
+(drivers/cxl/cxl.h) from the beginning.  Then it's easier to see what
+this patch adds because it's not moving at the same time.
+
+> +static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
+> +{
+> +	u64 cap_array;
+> +	int cap;
 > +
->  	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
->  	if (!regloc) {
->  		dev_err(dev, "register location dvsec not found\n");
->  		return -ENXIO;
->  	}
-> +	regloc += 0xc; /* Skip DVSEC + reserved fields */
+> +	cap_array = __cxl_raw_read_reg64(cxlm, CXLDEV_CAP_ARRAY_REG);
+> +	if (CXLDEV_CAP_ARRAY_ID(cap_array) != CXLDEV_CAP_ARRAY_CAP_ID)
+> +		return -ENODEV;
 > +
-> +	for (i = regloc; i < regloc + 0x24; i += 8) {
-> +		u32 reg_lo, reg_hi;
+> +	for (cap = 1; cap <= CXLDEV_CAP_ARRAY_COUNT(cap_array); cap++) {
+> +		void *__iomem register_block;
+> +		u32 offset;
+> +		u16 cap_id;
 > +
-> +		pci_read_config_dword(pdev, i, &reg_lo);
-> +		pci_read_config_dword(pdev, i + 4, &reg_hi);
+> +		cap_id = __cxl_raw_read_reg32(cxlm, cap * 0x10) & 0xffff;
+> +		offset = __cxl_raw_read_reg32(cxlm, cap * 0x10 + 0x4);
+> +		register_block = cxlm->regs + offset;
 > +
-> +		if (CXL_REGLOG_IS_MEMDEV(reg_lo)) {
-> +			cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
+> +		switch (cap_id) {
+> +		case CXL_CAPABILITIES_CAP_ID_DEVICE_STATUS:
+> +			dev_dbg(&cxlm->pdev->dev, "found Status capability\n");
+
+Consider including the address or offset in these messages to help
+debug?  Printing a completely constant string always seems like a
+missed opportunity to me.
+
+> +			cxlm->status.regs = register_block;
 > +			break;
+> +		case CXL_CAPABILITIES_CAP_ID_PRIMARY_MAILBOX:
+> +			dev_dbg(&cxlm->pdev->dev,
+> +				 "found Mailbox capability\n");
+> +			cxlm->mbox.regs = register_block;
+> +			cxlm->mbox.payload_size = CXLDEV_MB_CAP_PAYLOAD_SIZE(cap_id);
+> +			break;
+> +		case CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX:
+> +			dev_dbg(&cxlm->pdev->dev,
+> +				   "found UNSUPPORTED Secondary Mailbox capability\n");
+> +			break;
+> +		case CXL_CAPABILITIES_CAP_ID_MEMDEV:
+> +			dev_dbg(&cxlm->pdev->dev,
+> +				 "found Memory Device capability\n");
+> +			cxlm->mem.regs = register_block;
+> +			break;
+> +		default:
+> +			dev_err(&cxlm->pdev->dev, "Unknown cap ID: %d\n", cap_id);
+> +			return -ENXIO;
 > +		}
 > +	}
 > +
-> +	if (IS_ERR(cxlm))
+> +	if (!cxlm->status.regs || !cxlm->mbox.regs || !cxlm->mem.regs)
 > +		return -ENXIO;
-
-I think this would be easier to read if cxl_mem_create() returned NULL
-on failure (it prints error messages and we throw away
--ENXIO/-ENOMEM distinction here anyway) so you could do:
-
-  struct cxl_mem *cxlm = NULL;
-
-  for (...) {
-    if (...) {
-      cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
-      break;
-    }
-  }
-
-  if (!cxlm)
-    return -ENXIO;  /* -ENODEV might be more natural? */
-
-> -	cxlm = devm_kzalloc(dev, sizeof(*cxlm), GFP_KERNEL);
-> -	if (!cxlm)
-> -		return -ENOMEM;
-> +	pci_set_drvdata(pdev, cxlm);
+> +
+> +	return 0;
+> +}
+>  
+>  static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi)
+>  {
+> @@ -110,6 +156,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (IS_ERR(cxlm))
+>  		return -ENXIO;
+>  
+> +	rc = cxl_mem_setup_regs(cxlm);
+> +	if (rc)
+> +		return rc;
+> +
+>  	pci_set_drvdata(pdev, cxlm);
 >  
 >  	return 0;
->  }
-> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> index beb03921e6da..be87f62e9132 100644
-> --- a/drivers/cxl/pci.h
-> +++ b/drivers/cxl/pci.h
-> @@ -12,4 +12,10 @@
->  #define PCI_DVSEC_ID_CXL	0x0
->  #define PCI_DVSEC_ID_CXL_REGLOC	0x8
->  
-> +#define CXL_REGLOG_RBI_EMPTY 0
-> +#define CXL_REGLOG_RBI_COMPONENT 1
-> +#define CXL_REGLOG_RBI_VIRT 2
-> +#define CXL_REGLOG_RBI_MEMDEV 3
-
-Maybe line these values up.
-
-> +#define CXL_REGLOG_IS_MEMDEV(x) ((((x) >> 8) & 0xff) == CXL_REGLOG_RBI_MEMDEV)
-
-If these are only needed in cxl/mem.c, they could go there.  Do you
-expect code outside of drivers/cxl to need these?
-
->  #endif /* __CXL_PCI_H__ */
 > -- 
 > 2.29.2
 > 
