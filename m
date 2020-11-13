@@ -2,44 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63E4C2B2799
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 22:59:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 187D32B279A
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 22:59:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgKMV67 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 16:58:59 -0500
-Received: from mga09.intel.com ([134.134.136.24]:37631 "EHLO mga09.intel.com"
+        id S1726199AbgKMV7X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 16:59:23 -0500
+Received: from mga04.intel.com ([192.55.52.120]:27846 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgKMV66 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 16:58:58 -0500
-IronPort-SDR: VktBGymTB+01LhCxlE+YntDFhz5k/CIPZG1tU2d2LVESEb3ez2HUsZo3ZAjScGHt739N/NCGLp
- pxfSsnOQhhAA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="170708427"
+        id S1725885AbgKMV7V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 16:59:21 -0500
+IronPort-SDR: 7Ozt3vzOdvrKHqJy5BM1iHlHdIcjC1N+3g/M6STnBlZqFIZk/w/cEddRwE1ZW/gDH+L/0QcpGX
+ oZ6MDgF7T4VA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="167960059"
 X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="170708427"
+   d="scan'208";a="167960059"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 13:58:57 -0800
-IronPort-SDR: 7GIedGUUMHOxRhwMbuEkuuVVvmSeqxIqNe6yRE1UC0lMbaETe9XN+Q8bwHKmmMAiSZ8mHde6rZ
- 4Tz4UBSnuuvw==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 13:59:20 -0800
+IronPort-SDR: 2doTmgaMPgKiG8rX2ERNX997i15GrFOVVteLJjoJDMDzviPPBp+uC59VFFKaBUkpXRddjIL8QB
+ kFbmOLPsnKvg==
 X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="355680466"
+   d="scan'208";a="355680607"
 Received: from matownse-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.254.99.8])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 13:58:56 -0800
-Subject: Re: [PATCH v8 1/2] PCI/ERR: Call pci_bus_reset() before calling
- ->slot_reset() callback
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 13:59:20 -0800
+Subject: Re: [PATCH v11 0/5] Simplify PCIe native ownership detection logic
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, knsathya@kernel.org
-References: <b464e4c8b3022ce3e0c69e64456619fc86378c15.1603740826.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 From:   "Kuppuswamy, Sathyanarayanan" 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <6374efd8-cac9-ef76-1854-32862d16a84d@linux.intel.com>
-Date:   Fri, 13 Nov 2020 13:58:54 -0800
+Message-ID: <2f89d5ba-4588-dfdd-2f97-a58ad029ccbf@linux.intel.com>
+Date:   Fri, 13 Nov 2020 13:59:19 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <b464e4c8b3022ce3e0c69e64456619fc86378c15.1603740826.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <cover.1603766889.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -49,66 +48,64 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
 
-On 10/26/20 12:37 PM, Kuppuswamy Sathyanarayanan wrote:
-> Currently if report_error_detected() or report_mmio_enabled()
-> functions requests PCI_ERS_RESULT_NEED_RESET, current
-> pcie_do_recovery() implementation does not do the requested
-> explicit device reset, but instead just calls the
-> report_slot_reset() on all affected devices. Notifying about the
-> reset via report_slot_reset() without doing the actual device
-> reset is incorrect. So call pci_bus_reset() before triggering
-> ->slot_reset() callback.
+On 10/26/20 7:57 PM, Kuppuswamy Sathyanarayanan wrote:
+> Currently, PCIe capabilities ownership status is detected by
+> verifying the status of pcie_ports_native, pcie_ports_dpc_native
+> and _OSC negotiated results (cached in  struct pci_host_bridge
+> ->native_* members). But this logic can be simplified, and we can
+> use only struct pci_host_bridge ->native_* members to detect it.
+> 
+> This patchset removes the distributed checks for pcie_ports_native,
+> pcie_ports_dpc_native parameters.
 Any comments on this series?
 > 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Reviewed-by: Sinan Kaya <okaya@kernel.org>
-> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-> ---
->   Changes since v7:
->    * Rebased on top of v5.10-rc1.
+> Changes since v10:
+>   * Addressed format issue reported by lkp test.
 > 
->   Changes since v6:
->    * None.
+> Changes since v9:
+>   * Rebased on top of v5.10-rc1
 > 
->   Changes since v5:
->    * Added Ashok's Reviewed-by tag.
+> Changes since v8:
+>   * Simplified setting _OSC ownwership logic
+>   * Moved bridge->native_ltr out of #ifdef CONFIG_PCIEPORTBUS.
 > 
->   Changes since v4:
->    * Added check for pci_reset_bus() return value.
+> Changes since v7:
+>   * Fixed "fix array_size.cocci warnings".
 > 
->   drivers/pci/pcie/err.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
+> Changes since v6:
+>   * Created new patch for CONFIG_PCIEPORTBUS check in
+>     pci_init_host_bridge().
+>   * Added warning message for a case when pcie_ports_native
+>     overrides _OSC negotiation result.
 > 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index c543f419d8f9..315a4d559c4c 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -152,6 +152,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   {
->   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->   	struct pci_bus *bus;
-> +	int ret;
+> Changes since v5:
+>   * Rebased on top of v5.8-rc1
+> 
+> Changes since v4:
+>   * Changed the patch set title (Original link: https://lkml.org/lkml/2020/5/26/1710)
+>   * Added AER/DPC dependency logic cleanup fixes.
 >   
->   	/*
->   	 * Error recovery runs on all subordinates of the first downstream port.
-> @@ -181,11 +182,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	}
->   
->   	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> -		/*
-> -		 * TODO: Should call platform-specific
-> -		 * functions to reset slot before calling
-> -		 * drivers' slot_reset callbacks?
-> -		 */
-> +		ret = pci_reset_bus(dev);
-> +		if (ret < 0) {
-> +			pci_err(dev, "Failed to reset %d\n", ret);
-> +			status = PCI_ERS_RESULT_DISCONNECT;
-> +			goto failed;
-> +		}
->   		status = PCI_ERS_RESULT_RECOVERED;
->   		pci_dbg(dev, "broadcast slot_reset message\n");
->   		pci_walk_bus(bus, report_slot_reset, &status);
+> 
+> Kuppuswamy Sathyanarayanan (5):
+>    PCI: Conditionally initialize host bridge native_* members
+>    ACPI/PCI: Ignore _OSC negotiation result if pcie_ports_native is set.
+>    ACPI/PCI: Ignore _OSC DPC negotiation result if pcie_ports_dpc_native
+>      is set.
+>    PCI/portdrv: Remove redundant pci_aer_available() check in DPC enable
+>      logic
+>    PCI/DPC: Move AER/DPC dependency checks out of DPC driver
+> 
+>   drivers/acpi/pci_root.c           | 39 +++++++++++++++++++++++--------
+>   drivers/pci/hotplug/pciehp_core.c |  2 +-
+>   drivers/pci/pci-acpi.c            |  3 ---
+>   drivers/pci/pcie/aer.c            |  2 +-
+>   drivers/pci/pcie/dpc.c            |  3 ---
+>   drivers/pci/pcie/portdrv.h        |  2 --
+>   drivers/pci/pcie/portdrv_core.c   | 13 ++++-------
+>   drivers/pci/probe.c               |  6 +++--
+>   include/linux/acpi.h              |  2 ++
+>   include/linux/pci.h               |  2 ++
+>   10 files changed, 44 insertions(+), 30 deletions(-)
 > 
 
 -- 
