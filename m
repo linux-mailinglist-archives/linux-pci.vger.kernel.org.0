@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3592B2380
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 19:17:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB3312B2385
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 19:17:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgKMSRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 13:17:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
+        id S1726338AbgKMSRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 13:17:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbgKMSRb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 13:17:31 -0500
+        id S1726081AbgKMSRf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 13:17:35 -0500
 Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C813206CA;
-        Fri, 13 Nov 2020 18:17:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C539B2074B;
+        Fri, 13 Nov 2020 18:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605291450;
-        bh=5nrQeHPsrJ6CdbyW/B7NJ9dBG1ICdXJr6WbQzP/BDzg=;
+        s=default; t=1605291454;
+        bh=FwNxJBVYLmY0I7UT2gwMeGvnRBxnjf3Vj6esUleM+bE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=st7NXp5n827AI+wQjAKrJJWVR7UWe3aHHzUnyWDKdxq6t/nLslQN5L8VDmoRJnBid
-         3RHlWKPMF5DpdlQgqRKDqejA5rt7PA4eRw+Nt8eRe45A6zpkvjENRYtrIYrrb51GPG
-         psHRPGpx8tTQPaaxepSN6FFyyBvRAF1ZDJl5I7Qo=
-Date:   Fri, 13 Nov 2020 12:17:28 -0600
+        b=uuOXqaI5HlGmp9yRBHllON2jZ2TxrmP0ubmXp7A8iJCuQeYBofMwtXDBz/TeAi4WX
+         FDYMLLQaenDuEVLjGYoK55MMKKZ/EoSHDpNYsdtUQnXBrkhiFphK3XXn4Ycp3QGUTj
+         a+NlQl2PSILp/e0v6nq82qhLq2V9SGqFiQI5gz+U=
+Date:   Fri, 13 Nov 2020 12:17:32 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Ben Widawsky <ben.widawsky@intel.com>
 Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -34,231 +34,183 @@ Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
-Message-ID: <20201113181728.GA1119310@bjorn-Precision-5520>
+Subject: Re: [RFC PATCH 4/9] cxl/mem: Map memory device registers
+Message-ID: <20201113181732.GA1121121@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201111054356.793390-4-ben.widawsky@intel.com>
+In-Reply-To: <20201111054356.793390-5-ben.widawsky@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 09:43:50PM -0800, Ben Widawsky wrote:
-> From: Dan Williams <dan.j.williams@intel.com>
-> 
-> The CXL.mem protocol allows a device to act as a provider of "System
-> RAM" and/or "Persistent Memory" that is fully coherent as if the memory
-> was attached to the typical CPU memory controller.
-> 
-> The memory range exported by the device may optionally be described by
-> the platform firmware memory map, or by infrastructure like LIBNVDIMM to
-> provision persistent memory capacity from one, or more, CXL.mem devices.
-> 
-> A pre-requisite for Linux-managed memory-capacity provisioning is this
-> cxl_mem driver that can speak the "type-3 mailbox" protocol.
+On Tue, Nov 10, 2020 at 09:43:51PM -0800, Ben Widawsky wrote:
+> All the necessary bits are initialized in order to find and map the
+> register space for CXL Memory Devices. This is accomplished by using the
+> Register Locator DVSEC (CXL 2.0 - 8.1.9.1) to determine which PCI BAR to
+> use, and how much of an offset from that BAR should be added.
 
-"Type 3" to indicate that this is a proper adjective that can be
-looked up in the spec and to match the usage there.
+"Initialize the necessary bits ..." to use the usual imperative
+sentence structure, as you did in the subject.
 
-The r1.1 spec I have doesn't mention "mailbox".  Is that also
-something defined in the 2.0 spec?
+> If the memory device registers are found and mapped a new internal data
+> structure tracking device state is allocated.
 
-A URL or similar citation for the spec would be nice somewhere.
+"Allocate device state if we find device registers" or similar.
 
-> For now just land the driver boiler-plate and fill it in with
-> functionality in subsequent commits.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 > ---
->  drivers/cxl/Kconfig  | 20 +++++++++++
->  drivers/cxl/Makefile |  2 ++
->  drivers/cxl/mem.c    | 82 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/pci.h    | 15 ++++++++
->  4 files changed, 119 insertions(+)
->  create mode 100644 drivers/cxl/mem.c
->  create mode 100644 drivers/cxl/pci.h
+>  drivers/cxl/mem.c | 68 +++++++++++++++++++++++++++++++++++++++++++----
+>  drivers/cxl/pci.h |  6 +++++
+>  2 files changed, 69 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index dd724bd364df..15548f5c77ff 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -27,4 +27,24 @@ config CXL_ACPI
->  	  resources described by the CEDT (CXL Early Discovery Table)
->  
->  	  Say 'y' to enable CXL (Compute Express Link) drivers.
-> +
-> +config CXL_MEM
-> +        tristate "CXL.mem Device Support"
-> +        depends on PCI && CXL_BUS_PROVIDER != n
-> +        default m if CXL_BUS_PROVIDER
-> +        help
-> +          The CXL.mem protocol allows a device to act as a provider of
-> +          "System RAM" and/or "Persistent Memory" that is fully coherent
-> +          as if the memory was attached to the typical CPU memory
-> +          controller.
-> +
-> +          Say 'y/m' to enable a driver named "cxl_mem.ko" that will attach
-> +          to CXL.mem devices for configuration, provisioning, and health
-> +          monitoring, the so called "type-3 mailbox". Note, this driver
-
-"Type 3"
-
-> +          is required for dynamic provisioning of CXL.mem attached
-> +          memory, a pre-requisite for persistent memory support, but
-> +          devices that provide volatile memory may be fully described by
-> +          existing platform firmware memory enumeration.
-> +
-> +          If unsure say 'n'.
->  endif
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> index d38cd34a2582..97fdffb00f2d 100644
-> --- a/drivers/cxl/Makefile
-> +++ b/drivers/cxl/Makefile
-> @@ -1,5 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> +obj-$(CONFIG_CXL_MEM) += cxl_mem.o
->  
->  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
->  cxl_acpi-y := acpi.o
-> +cxl_mem-y := mem.o
 > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> new file mode 100644
-> index 000000000000..aa7d881fa47b
-> --- /dev/null
+> index aa7d881fa47b..8d9b9ab6c5ea 100644
+> --- a/drivers/cxl/mem.c
 > +++ b/drivers/cxl/mem.c
-> @@ -0,0 +1,82 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/io.h>
-> +#include "acpi.h"
-> +#include "pci.h"
-> +
-> +struct cxl_mem {
-> +	void __iomem *regs;
-> +};
-
-Unused, maybe move it to the patch that adds the use?
-
-> +static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> +{
-> +	int pos;
-> +
-> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
-> +	if (!pos)
-> +		return 0;
-> +
-> +	while (pos) {
-> +		u16 vendor, id;
-> +
-> +		pci_read_config_word(pdev, pos + PCI_DVSEC_VENDOR_OFFSET, &vendor);
-> +		pci_read_config_word(pdev, pos + PCI_DVSEC_ID_OFFSET, &id);
-> +		if (vendor == PCI_DVSEC_VENDOR_CXL && dvsec == id)
-> +			return pos;
-> +
-> +		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-> +	}
-> +
-> +	return 0;
-> +}
-
-I assume we'll refactor and move this into the PCI core after we
-resolve the several places this is needed.  When we do that, the
-vendor would be passed in, so maybe we should do that here to make it
-simpler to move this to the PCI core.
-
-> +static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> @@ -7,9 +7,49 @@
+>  #include "pci.h"
+>  
+>  struct cxl_mem {
+> +	struct pci_dev *pdev;
+>  	void __iomem *regs;
+>  };
+>  
+> +static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi)
 > +{
 > +	struct device *dev = &pdev->dev;
 > +	struct cxl_mem *cxlm;
-> +	int rc, regloc;
+> +	void __iomem *regs;
+> +	u64 offset;
+> +	u8 bar;
+> +	int rc;
 > +
-> +	rc = cxl_bus_prepared(pdev);
+> +	offset = ((u64)reg_hi << 32) | (reg_lo & 0xffff0000);
+> +	bar = reg_lo & 0x7;
+> +
+> +	/* Basic sanity check that BAR is big enough */
+> +	if (pci_resource_len(pdev, bar) < offset) {
+> +		dev_err(dev, "bar%d: %pr: too small (offset: %#llx)\n",
+> +				bar, &pdev->resource[bar], (unsigned long long) offset);
+
+s/bar/BAR/
+
+> +		return ERR_PTR(-ENXIO);
+> +	}
+> +
+> +	rc = pcim_iomap_regions(pdev, 1 << bar, pci_name(pdev));
 > +	if (rc != 0) {
-> +		dev_err(dev, "failed to acquire interface\n");
+> +		dev_err(dev, "failed to map registers\n");
+> +		return ERR_PTR(-ENXIO);
+> +	}
+> +
+> +	cxlm = devm_kzalloc(&pdev->dev, sizeof(*cxlm), GFP_KERNEL);
+> +	if (!cxlm) {
+> +		dev_err(dev, "No memory available\n");
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	regs = pcim_iomap_table(pdev)[bar];
+> +	cxlm->pdev = pdev;
+> +	cxlm->regs = regs + offset;
+> +
+> +	dev_dbg(dev, "Mapped CXL Memory Device resource\n");
+> +	return cxlm;
+> +}
+> +
+>  static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+>  {
+>  	int pos;
+> @@ -34,9 +74,9 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+>  
+>  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+> +	struct cxl_mem *cxlm = ERR_PTR(-ENXIO);
+>  	struct device *dev = &pdev->dev;
+> -	struct cxl_mem *cxlm;
 
-Interesting naming: apparently when cxl_bus_prepared() returns a
-non-zero ("true") value, it is actually *not* prepared?
+The order was better before ("dev", then "clxm").  Oh, I suppose this
+is a "reverse Christmas tree" thing.
 
+> -	int rc, regloc;
+> +	int rc, regloc, i;
+>  
+>  	rc = cxl_bus_prepared(pdev);
+>  	if (rc != 0) {
+> @@ -44,15 +84,33 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  		return rc;
+>  	}
+>  
+> +	rc = pcim_enable_device(pdev);
+> +	if (rc)
 > +		return rc;
+> +
+>  	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
+>  	if (!regloc) {
+>  		dev_err(dev, "register location dvsec not found\n");
+>  		return -ENXIO;
+>  	}
+> +	regloc += 0xc; /* Skip DVSEC + reserved fields */
+> +
+> +	for (i = regloc; i < regloc + 0x24; i += 8) {
+> +		u32 reg_lo, reg_hi;
+> +
+> +		pci_read_config_dword(pdev, i, &reg_lo);
+> +		pci_read_config_dword(pdev, i + 4, &reg_hi);
+> +
+> +		if (CXL_REGLOG_IS_MEMDEV(reg_lo)) {
+> +			cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
+> +			break;
+> +		}
 > +	}
 > +
-> +	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
-> +	if (!regloc) {
-> +		dev_err(dev, "register location dvsec not found\n");
+> +	if (IS_ERR(cxlm))
 > +		return -ENXIO;
-> +	}
-> +
-> +	cxlm = devm_kzalloc(dev, sizeof(*cxlm), GFP_KERNEL);
-> +	if (!cxlm)
-> +		return -ENOMEM;
 
-Unused.  And [4/9] removes it before it's *ever* used :)
+I think this would be easier to read if cxl_mem_create() returned NULL
+on failure (it prints error messages and we throw away
+-ENXIO/-ENOMEM distinction here anyway) so you could do:
 
-> +	return 0;
-> +}
-> +
-> +static void cxl_mem_remove(struct pci_dev *pdev)
-> +{
-> +}
-> +
-> +static const struct pci_device_id cxl_mem_pci_tbl[] = {
-> +	/* PCI class code for CXL.mem Type-3 Devices */
-> +	{ PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-> +	  PCI_CLASS_MEMORY_CXL, 0xffffff, 0 },
-> +	{ /* terminate list */ },
-> +};
-> +MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
-> +
-> +static struct pci_driver cxl_mem_driver = {
-> +	.name			= KBUILD_MODNAME,
-> +	.id_table		= cxl_mem_pci_tbl,
-> +	.probe			= cxl_mem_probe,
-> +	.remove			= cxl_mem_remove,
-> +};
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Intel Corporation");
-> +module_pci_driver(cxl_mem_driver);
-> +MODULE_IMPORT_NS(CXL);
+  struct cxl_mem *cxlm = NULL;
+
+  for (...) {
+    if (...) {
+      cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
+      break;
+    }
+  }
+
+  if (!cxlm)
+    return -ENXIO;  /* -ENODEV might be more natural? */
+
+> -	cxlm = devm_kzalloc(dev, sizeof(*cxlm), GFP_KERNEL);
+> -	if (!cxlm)
+> -		return -ENOMEM;
+> +	pci_set_drvdata(pdev, cxlm);
+>  
+>  	return 0;
+>  }
 > diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> new file mode 100644
-> index 000000000000..beb03921e6da
-> --- /dev/null
-
+> index beb03921e6da..be87f62e9132 100644
+> --- a/drivers/cxl/pci.h
 > +++ b/drivers/cxl/pci.h
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+> @@ -12,4 +12,10 @@
+>  #define PCI_DVSEC_ID_CXL	0x0
+>  #define PCI_DVSEC_ID_CXL_REGLOC	0x8
+>  
+> +#define CXL_REGLOG_RBI_EMPTY 0
+> +#define CXL_REGLOG_RBI_COMPONENT 1
+> +#define CXL_REGLOG_RBI_VIRT 2
+> +#define CXL_REGLOG_RBI_MEMDEV 3
 
-/* SPDX-... */
-/* Copyright ...*/
+Maybe line these values up.
 
-The SPDX rules are a bit arcane and annoyingly hard to grep for, but
-I found them in Documentation/process/license-rules.rst
+> +#define CXL_REGLOG_IS_MEMDEV(x) ((((x) >> 8) & 0xff) == CXL_REGLOG_RBI_MEMDEV)
 
-> +#ifndef __CXL_PCI_H__
-> +#define __CXL_PCI_H__
-> +
-> +#define PCI_CLASS_MEMORY_CXL	0x050210
-> +
-> +#define PCI_EXT_CAP_ID_DVSEC	0x23
-> +#define PCI_DVSEC_VENDOR_CXL	0x1E98
-> +#define PCI_DVSEC_VENDOR_OFFSET	0x4
-> +#define PCI_DVSEC_ID_OFFSET	0x8
-> +#define PCI_DVSEC_ID_CXL	0x0
-> +#define PCI_DVSEC_ID_CXL_REGLOC	0x8
+If these are only needed in cxl/mem.c, they could go there.  Do you
+expect code outside of drivers/cxl to need these?
 
-I assume these will go in include/linux/pci_ids.h (PCI_CLASS_...) and
-include/uapi/linux/pci_regs.h (the rest) eventually, after we get the
-merge issues sorted out.  But if they're only used in cxl/mem.c, I'd
-put them there for now.
-
-> +#endif /* __CXL_PCI_H__ */
+>  #endif /* __CXL_PCI_H__ */
 > -- 
 > 2.29.2
 > 
