@@ -2,176 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40F682B287F
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:25:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 401D22B2896
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:34:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgKMWXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 17:23:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbgKMWXm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 17:23:42 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726020AbgKMWed (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 17:34:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21410 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726189AbgKMWea (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 17:34:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605306868;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8Rq1SwLUmuk5yTiT3dYLgLhG1v7f4gsVqDXVvnML+kQ=;
+        b=HHZHs8oAPhAgKaCArEN5SwF8DPfVSX25N5UBC8yDVSLZcRa386K7GOa0SXuzjZCTQViJAt
+        NTaw2gAMLvbamzJMQNULLsSNGm6Bl6Z+70lK7EPNnryt+Vt9tbhlx5B9qq0pUmwBEsBUys
+        hfSoxN1cUdA2HJjZ4URu4TJHPdJnNW4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-508-kgiX0vPEOgWkK_HzwNLmJg-1; Fri, 13 Nov 2020 17:34:24 -0500
+X-MC-Unique: kgiX0vPEOgWkK_HzwNLmJg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1568207DE;
-        Fri, 13 Nov 2020 22:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605306221;
-        bh=GTuPcqEWVM+VGI2FMkFJFWknqieSxgBdfJx/huPl714=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=L9yhbjdstA2Y7+3ZeEDEsD9GjOfKd+YBOAqAQoYcnQYdDy9Bj3ETKsd0z4dh4uXyF
-         XcPXq47j39zuMAUg/64vMz4FnE63VM8/+mz1832k9E7s1MwLLJ/2XRICWkUkk/RuUy
-         qrj9/eZADLxzhLQA7F+AKMgKEzPkL5yKXL8flDtY=
-Date:   Fri, 13 Nov 2020 16:23:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, hkallweit1@gmail.com,
-        wangxiongfeng2@huawei.com, mika.westerberg@linux.intel.com,
-        kai.heng.feng@canonical.com, chris.packham@alliedtelesis.co.nz,
-        yangyicong@hisilicon.com, lorenzo.pieralisi@arm.com,
-        treding@nvidia.com, jonathanh@nvidia.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH] PCI/ASPM: Save/restore ASPM-L1SS controls for
- suspend/resume
-Message-ID: <20201113222339.GA1138933@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11ACD186DD33;
+        Fri, 13 Nov 2020 22:34:22 +0000 (UTC)
+Received: from treble (ovpn-117-69.rdu2.redhat.com [10.10.117.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 71FFA5D707;
+        Fri, 13 Nov 2020 22:34:15 +0000 (UTC)
+Date:   Fri, 13 Nov 2020 16:34:12 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+Message-ID: <20201113223412.inono2ekrs7ky7rm@treble>
+References: <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
+ <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
+ <20201023173617.GA3021099@google.com>
+ <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
+ <20201110022924.tekltjo25wtrao7z@treble>
+ <20201110174606.mp5m33lgqksks4mt@treble>
+ <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
+ <20201113195408.atbpjizijnhuinzy@treble>
+ <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201024190442.871-1-vidyas@nvidia.com>
+In-Reply-To: <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Oct 25, 2020 at 12:34:42AM +0530, Vidya Sagar wrote:
-> Previously ASPM L1-Sub-States control registers (CTL1 and CTL2) weren't
-> saved and restored during suspend/resume leading to ASPM-L1SS
-> configuration being lost post resume.
+On Fri, Nov 13, 2020 at 12:24:32PM -0800, Sami Tolvanen wrote:
+> > I still don't see this warning for some reason.
 > 
-> Save the ASPM-L1SS control registers so that the configuration is retained
-> post resume.
+> Do you have CONFIG_XEN enabled? I can reproduce this on ToT master as follows:
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> $ git rev-parse HEAD
+> 585e5b17b92dead8a3aca4e3c9876fbca5f7e0ba
+> $ make defconfig && \
+> ./scripts/config -e HYPERVISOR_GUEST -e PARAVIRT -e XEN && \
+> make olddefconfig && \
+> make -j110
+> ...
+> $ ./tools/objtool/objtool check -arfld vmlinux.o 2>&1 | grep secondary
+> vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with
+> modified stack frame
+> 
+> > Is it fixed by adding cpu_bringup_and_idle() to global_noreturns[] in
+> > tools/objtool/check.c?
+> 
+> No, that didn't fix the warning. Here's what I tested:
 
-Applied to pci/aspm for v5.11, thanks!
+I think this fixes it:
 
-I tidied up pci_restore_aspm_l1ss_state() so it does the checking the
-same way as pci_save_aspm_l1ss_state().
+From: Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] x86/xen: Fix objtool vmlinux.o validation of xen hypercalls
 
-> ---
-> v1:
-> * It would be really good if someone can verify it on a non tegra194 platform
-> 
->  drivers/pci/pci.c       |  7 +++++++
->  drivers/pci/pci.h       |  4 ++++
->  drivers/pci/pcie/aspm.c | 41 +++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 52 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index a458c46d7e39..034497264bde 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1551,6 +1551,7 @@ int pci_save_state(struct pci_dev *dev)
->  		return i;
->  
->  	pci_save_ltr_state(dev);
-> +	pci_save_aspm_l1ss_state(dev);
->  	pci_save_dpc_state(dev);
->  	pci_save_aer_state(dev);
->  	return pci_save_vc_state(dev);
-> @@ -1656,6 +1657,7 @@ void pci_restore_state(struct pci_dev *dev)
->  	 * LTR itself (in the PCIe capability).
->  	 */
->  	pci_restore_ltr_state(dev);
-> +	pci_restore_aspm_l1ss_state(dev);
->  
->  	pci_restore_pcie_state(dev);
->  	pci_restore_pasid_state(dev);
-> @@ -3319,6 +3321,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
->  	if (error)
->  		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
->  
-> +	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
-> +					    2 * sizeof(u32));
-> +	if (error)
-> +		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
-> +
->  	pci_allocate_vc_save_buffers(dev);
->  }
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index fa12f7cbc1a0..8d2135f61e36 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -565,11 +565,15 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
->  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
->  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
->  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-> +void pci_save_aspm_l1ss_state(struct pci_dev *dev);
-> +void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
->  #else
->  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
-> +static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
-> +static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
->  #endif
->  
->  #ifdef CONFIG_PCIE_ECRC
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 253c30cc1967..d965bbc563ed 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -742,6 +742,47 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
->  				PCI_L1SS_CTL1_L1SS_MASK, val);
->  }
->  
-> +void pci_save_aspm_l1ss_state(struct pci_dev *dev)
-> +{
-> +	struct pci_cap_saved_state *save_state;
-> +	int aspm_l1ss;
-> +	u32 *cap;
-> +
-> +	if (!pci_is_pcie(dev))
-> +		return;
-> +
-> +	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
-> +	if (!aspm_l1ss)
-> +		return;
-> +
-> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
-> +	if (!save_state)
-> +		return;
-> +
-> +	cap = (u32 *)&save_state->cap.data[0];
-> +	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, cap++);
-> +	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, cap++);
-> +}
-> +
-> +void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
-> +{
-> +	struct pci_cap_saved_state *save_state;
-> +	int aspm_l1ss;
-> +	u32 *cap;
-> +
-> +	if (!pci_is_pcie(dev))
-> +		return;
-> +
-> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
-> +	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
-> +	if (!save_state || !aspm_l1ss)
-> +		return;
-> +
-> +	cap = (u32 *)&save_state->cap.data[0];
-> +	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++);
-> +	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
-> +}
-> +
->  static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
->  {
->  	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
-> -- 
-> 2.17.1
-> 
+Objtool vmlinux.o validation is showing warnings like the following:
+
+  # tools/objtool/objtool check -barfld vmlinux.o
+  vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with modified stack frame
+  vmlinux.o: warning: objtool:   xen_hypercall_set_trap_table()+0x0: <=== (sym)
+
+Objtool falls through all the empty hypercall text and gets confused
+when it encounters the first real function afterwards.  The empty unwind
+hints in the hypercalls aren't working for some reason.  Replace them
+with a more straightforward use of STACK_FRAME_NON_STANDARD.
+
+Reported-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/x86/xen/xen-head.S | 9 ++++-----
+ include/linux/objtool.h | 8 ++++++++
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
+index 2d7c8f34f56c..3c538b1ff4a6 100644
+--- a/arch/x86/xen/xen-head.S
++++ b/arch/x86/xen/xen-head.S
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/elfnote.h>
+ #include <linux/init.h>
++#include <linux/objtool.h>
+ 
+ #include <asm/boot.h>
+ #include <asm/asm.h>
+@@ -67,14 +68,12 @@ SYM_CODE_END(asm_cpu_bringup_and_idle)
+ .pushsection .text
+ 	.balign PAGE_SIZE
+ SYM_CODE_START(hypercall_page)
+-	.rept (PAGE_SIZE / 32)
+-		UNWIND_HINT_EMPTY
+-		.skip 32
+-	.endr
++	.skip PAGE_SIZE
+ 
+ #define HYPERCALL(n) \
+ 	.equ xen_hypercall_##n, hypercall_page + __HYPERVISOR_##n * 32; \
+-	.type xen_hypercall_##n, @function; .size xen_hypercall_##n, 32
++	.type xen_hypercall_##n, @function; .size xen_hypercall_##n, 32; \
++	STACK_FRAME_NON_STANDARD xen_hypercall_##n
+ #include <asm/xen-hypercalls.h>
+ #undef HYPERCALL
+ SYM_CODE_END(hypercall_page)
+diff --git a/include/linux/objtool.h b/include/linux/objtool.h
+index 577f51436cf9..746617265236 100644
+--- a/include/linux/objtool.h
++++ b/include/linux/objtool.h
+@@ -109,6 +109,12 @@ struct unwind_hint {
+ 	.popsection
+ .endm
+ 
++.macro STACK_FRAME_NON_STANDARD func:req
++	.pushsection .discard.func_stack_frame_non_standard
++		.long \func - .
++	.popsection
++.endm
++
+ #endif /* __ASSEMBLY__ */
+ 
+ #else /* !CONFIG_STACK_VALIDATION */
+@@ -123,6 +129,8 @@ struct unwind_hint {
+ .macro UNWIND_HINT sp_reg:req sp_offset=0 type:req end=0
+ .endm
+ #endif
++.macro STACK_FRAME_NON_STANDARD func:req
++.endm
+ 
+ #endif /* CONFIG_STACK_VALIDATION */
+ 
+-- 
+2.25.4
+
