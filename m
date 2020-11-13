@@ -2,137 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D5DF2B28C2
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:47:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 230912B28D1
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:55:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbgKMWr1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 17:47:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgKMWrZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 17:47:25 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F6F2222F;
-        Fri, 13 Nov 2020 22:47:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605307644;
-        bh=SVQcSQz/sZnsL3KN+ixJwKoq7zz3V8wfN8RLKz+T52E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nxCWuT/UIgu9izJ4MasMwYrxyg2dl3KXKBEYjNc84j+TQIQL8/WByyFDIU1AJ96P3
-         zYV8qBOYNJJ4lBQ0Cy8/IkuEzxNy2xKjTkDSIWvkSK4xgPgGcb8HwF5Ys0AOmVb54v
-         x879ckeuZRllQfHmE9w2q/UT/d02WATWiaDkyWyU=
-Date:   Fri, 13 Nov 2020 16:47:23 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, hch@infradead.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH v2] PCI: check also dynamic IDs for duplicate in
- new_id_store()
-Message-ID: <20201113224723.GA1139246@bjorn-Precision-5520>
+        id S1726230AbgKMWyr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 17:54:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgKMWyq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 17:54:46 -0500
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37AA7C0617A7
+        for <linux-pci@vger.kernel.org>; Fri, 13 Nov 2020 14:54:45 -0800 (PST)
+Received: by mail-vk1-xa43.google.com with SMTP id i62so2477307vkb.7
+        for <linux-pci@vger.kernel.org>; Fri, 13 Nov 2020 14:54:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x7PN1px9ytV6KoYCs0MN8nIig7IfEqAMiUFMKSdwj8o=;
+        b=E/DaHCUsxm9boUEUHR77XASfe1K99YXKl7duBooJylavKxm0tOGa/ZPK6xjyi2fAmj
+         OYWDrTJOnFXwWt5S1pKJ6s8UxL+U3rZbepSwCXbZJRMhsO/oaNcGV6l2VgGjr5evZtSz
+         yye6NpoiB+nakm0oK6uQ3sQViWHFOTTwEdtfu1R5mD/VgZzVhriCR2Y85MJT5y8nazB0
+         NR1BZldS24JnVXgr+Ovb7PrDJwr+3Atcw4eToXXk9DLqZMzDtjrCymZ+KKaYr49Oz2wG
+         03mdefjS8C7FER66kGpwiyb+EPHalvUWh8ADfLZXcOqSslaUx80S/cRhipC8ekjXSqmD
+         cGOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x7PN1px9ytV6KoYCs0MN8nIig7IfEqAMiUFMKSdwj8o=;
+        b=jxAtVuaa1mu2sEt+Inveaz+gmZJpRJuu+ANY4opfWo5f//sk57wlqT++k/gax2nEdJ
+         SqatXwrg/oWNNSDLmoKwZr9GlJvL9ENJ+2oDYgAlEADlueunuJZiT1hdK7NyLR/cctY0
+         9whIBUjAA1k5RvwRa1NTv2NPydonR2w55nxarYOS4hC2JV2Z3mt4pQMPfTqTKzLZM1lg
+         UyW+/agdK/C4cvrhsNKUUduaRvJN+4bAuEpvbPqzQ3BY47oCARVZnDWLy9CVnncLnrEF
+         XUlG5+0lkIgXQ+PInNvt2s7w6kw5N6fyn2RBYPUGrYp0jcixXoUjWnoQLIEuXEIcE/qt
+         CRqQ==
+X-Gm-Message-State: AOAM531RuNykLyDZMyapleX0avi38p5ba5u8JWQIZJ8aMWuhCbgzA1lM
+        JGrrNHFzhHsMLVKaj8vIdx+N5NPmnX/z9fcrV1E4Bg==
+X-Google-Smtp-Source: ABdhPJygwOP2IUwJzonbqdQUEI4r2KfzeUcxt3t9CVTdz7Ir0TADwtgbrh1R8/xsj+WLPbsqPnxXtDMz7YsGC5N32I8=
+X-Received: by 2002:a1f:3655:: with SMTP id d82mr3109788vka.22.1605308083978;
+ Fri, 13 Nov 2020 14:54:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201026035710.593-1-zhenzhong.duan@gmail.com>
+References: <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
+ <20201021085606.GZ2628@hirez.programming.kicks-ass.net> <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
+ <20201023173617.GA3021099@google.com> <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
+ <20201110022924.tekltjo25wtrao7z@treble> <20201110174606.mp5m33lgqksks4mt@treble>
+ <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
+ <20201113195408.atbpjizijnhuinzy@treble> <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
+ <20201113223412.inono2ekrs7ky7rm@treble>
+In-Reply-To: <20201113223412.inono2ekrs7ky7rm@treble>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 13 Nov 2020 14:54:32 -0800
+Message-ID: <CABCJKufBEBcPPrUZcAvh1LXX_GwRG1S1sg2ED2DPZ53MPy_VbQ@mail.gmail.com>
+Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Alex, Cornelia in case VFIO cares about new_id/remove_id
-semantics]
-
-On Mon, Oct 26, 2020 at 11:57:10AM +0800, Zhenzhong Duan wrote:
-> When a device ID data is writen to /sys/bus/pci/drivers/.../new_id,
-> only static ID table is checked for duplicate and multiple dynamic ID
-> entries of same kind are allowed to exist in a dynamic linked list.
-
-This doesn't quite say what the problem is.
-
-I see that currently new_id_store() uses pci_match_id() to see if the
-new device ID is in the static id_table, so adding the same ID twice
-adds multiple entries to the dynids list.  That does seem wrong, and I
-think we should fix it.
-
-But I would like to clarify this commit log so we know whether the
-current behavior causes user-visible broken behavior.  The dynids list
-is mostly used by pci_match_device(), and it looks like duplicate
-entries shouldn't cause it a problem.
-
-I guess remove_id_store() will only remove one of the duplicate
-entries, so if we add an ID several times, we would have to remove it
-the same number of times before it's completely gone.
-
-> Fix it by calling pci_match_device() which checks both dynamic and static
-> IDs.
-> 
-> After fix, it shows below result which is expected.
-> 
-> echo "1af4:1000" > /sys/bus/pci/drivers/vfio-pci/new_id
-> echo "1af4:1000" > /sys/bus/pci/drivers/vfio-pci/new_id
-> -bash: echo: write error: File exists
-> 
-> Drop the static specifier and add a prototype to avoid build error.
-
-I don't get this part.  You added a prototype in include/linux/pci.h,
-which means you expect callers outside drivers/pci.  But there aren't
-any.
-
-In fact, you're only adding a call in the same file where
-pci_match_device() is defined.  The usual way to resolve that is to
-move the pci_match_device() definition before the call, so no forward
-declaration is needed and the function can remain static.
-
-I think pci_match_id() and pci_match_device() should both be moved so
-they remain together.  It would be nice if the move itself were a
-no-op patch separate from the one that changes new_id_store().
-
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+On Fri, Nov 13, 2020 at 2:34 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Fri, Nov 13, 2020 at 12:24:32PM -0800, Sami Tolvanen wrote:
+> > > I still don't see this warning for some reason.
+> >
+> > Do you have CONFIG_XEN enabled? I can reproduce this on ToT master as follows:
+> >
+> > $ git rev-parse HEAD
+> > 585e5b17b92dead8a3aca4e3c9876fbca5f7e0ba
+> > $ make defconfig && \
+> > ./scripts/config -e HYPERVISOR_GUEST -e PARAVIRT -e XEN && \
+> > make olddefconfig && \
+> > make -j110
+> > ...
+> > $ ./tools/objtool/objtool check -arfld vmlinux.o 2>&1 | grep secondary
+> > vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with
+> > modified stack frame
+> >
+> > > Is it fixed by adding cpu_bringup_and_idle() to global_noreturns[] in
+> > > tools/objtool/check.c?
+> >
+> > No, that didn't fix the warning. Here's what I tested:
+>
+> I think this fixes it:
+>
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+> Subject: [PATCH] x86/xen: Fix objtool vmlinux.o validation of xen hypercalls
+>
+> Objtool vmlinux.o validation is showing warnings like the following:
+>
+>   # tools/objtool/objtool check -barfld vmlinux.o
+>   vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with modified stack frame
+>   vmlinux.o: warning: objtool:   xen_hypercall_set_trap_table()+0x0: <=== (sym)
+>
+> Objtool falls through all the empty hypercall text and gets confused
+> when it encounters the first real function afterwards.  The empty unwind
+> hints in the hypercalls aren't working for some reason.  Replace them
+> with a more straightforward use of STACK_FRAME_NON_STANDARD.
+>
+> Reported-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 > ---
-> v2: revert the export of pci_match_device() per Christoph
->     combind PATCH1 and PATCH2 into one.
-> 
->  drivers/pci/pci-driver.c | 4 ++--
->  include/linux/pci.h      | 2 ++
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 8b587fc..cdc7d13 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -125,7 +125,7 @@ static ssize_t new_id_store(struct device_driver *driver, const char *buf,
->  		pdev->subsystem_device = subdevice;
->  		pdev->class = class;
->  
-> -		if (pci_match_id(pdrv->id_table, pdev))
-> +		if (pci_match_device(pdrv, pdev))
->  			retval = -EEXIST;
->  
->  		kfree(pdev);
-> @@ -250,7 +250,7 @@ const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
->   * system is in its list of supported devices.  Returns the matching
->   * pci_device_id structure or %NULL if there is no match.
->   */
-> -static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
-> +const struct pci_device_id *pci_match_device(struct pci_driver *drv,
->  						    struct pci_dev *dev)
->  {
->  	struct pci_dynid *dynid;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 22207a7..ec57312 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1409,6 +1409,8 @@ int pci_add_dynid(struct pci_driver *drv,
->  		  unsigned long driver_data);
->  const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
->  					 struct pci_dev *dev);
-> +const struct pci_device_id *pci_match_device(struct pci_driver *drv,
-> +					     struct pci_dev *dev);
->  int pci_scan_bridge(struct pci_bus *bus, struct pci_dev *dev, int max,
->  		    int pass);
->  
-> -- 
-> 1.8.3.1
-> 
+>  arch/x86/xen/xen-head.S | 9 ++++-----
+>  include/linux/objtool.h | 8 ++++++++
+>  2 files changed, 12 insertions(+), 5 deletions(-)
+
+Confirmed, this fixes the warning, also in LTO builds. Thanks!
+
+Tested-by: Sami Tolvanen <samitolvanen@google.com>
+
+Sami
