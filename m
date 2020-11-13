@@ -2,117 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7D3E2B1FC9
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 17:12:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 894DE2B20C0
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 17:46:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgKMQMm convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 13 Nov 2020 11:12:42 -0500
-Received: from mga09.intel.com ([134.134.136.24]:9889 "EHLO mga09.intel.com"
+        id S1726310AbgKMQql (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 11:46:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbgKMQMl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 11:12:41 -0500
-IronPort-SDR: 2JCoDOsGs5Ui6G3G+2dCVYHCJkBW34L6tlE2HLqKIt8tbtLiyYg+QVNQqkf6Und6ltFjiCHhtu
- 65kK4cz9bgYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="170663097"
-X-IronPort-AV: E=Sophos;i="5.77,475,1596524400"; 
-   d="scan'208";a="170663097"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 08:12:40 -0800
-IronPort-SDR: /EpiTz+ObiUYe2Tt61ei7Ih9ue4JXLvOFzFoszIGlTLqqqn3EIvramoTCldkoiD6eB957e0ac+
- RaNWbkQmbfHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,475,1596524400"; 
-   d="scan'208";a="309655009"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Nov 2020 08:12:40 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Nov 2020 08:12:39 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Nov 2020 08:12:39 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Fri, 13 Nov 2020 08:12:39 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Wilk, Konrad" <konrad.wilk@oracle.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: RE: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Thread-Topic: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Thread-Index: AQHWru2wVqYDq8zCAUGd/W1dOZWHUKmxA7+AgAAYm4CAABfkAIAAARAAgAQpOgCAAOGcgIAAphOAgAD60ICAAJaGgIAADwsAgAAFn4CAAuAFAIAAOXiAgAA79ACAABGDgIAAY1MAgAAHBICAAsnwAIAAVwYAgAC+sACAAGcnAIAAVyaAgABtcgCAAFeIgIAAPx6AgAEdLoCAAmDAgIAANQ0AgABC2gCAALXJAP//pWBA
-Date:   Fri, 13 Nov 2020 16:12:39 +0000
-Message-ID: <30928722afe64104b5abba09de4f74dd@intel.com>
-References: <20201107001207.GA2620339@nvidia.com>
- <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
- <20201108235852.GC32074@araj-mobl1.jf.intel.com>
- <874klykc7h.fsf@nanos.tec.linutronix.de>
- <20201109173034.GG2620339@nvidia.com>
- <87pn4mi23u.fsf@nanos.tec.linutronix.de> <20201110051412.GA20147@otc-nc-03>
- <875z6dik1a.fsf@nanos.tec.linutronix.de> <20201110141323.GB22336@otc-nc-03>
- <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201112193253.GG19638@char.us.oracle.com>
- <877dqqmc2h.fsf@nanos.tec.linutronix.de>
- <MWHPR11MB1645F27808F1F5E79646A3A88CE60@MWHPR11MB1645.namprd11.prod.outlook.com>
- <874kltmlfr.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kltmlfr.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726270AbgKMQql (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 11:46:41 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF2C72137B;
+        Fri, 13 Nov 2020 16:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605286000;
+        bh=H6g8Ry6LF3fT3Mg+983j+AekkcPTRIYeNjaYhL8NFMM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=VFWTK7lpIZBSonIj/NuBM3/IvkQlu/kmCs26BehXS+9c+JMJyMy+BAyAQ9BCKeKGx
+         k7mOFHyGZMokejPSCrDUZWaDAJKw/gTqVJn+fP4qWUdrLN45XnqbddpfFrfq5318ft
+         IWFT1JiweMqIanVdDN5AnSuvbApEFMhwwIO+jfQU=
+Date:   Fri, 13 Nov 2020 10:46:38 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     tglx@linutronix.de, linux-pci@vger.kernel.org,
+        kexec@lists.infradead.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, andi@firstfloor.org,
+        lukas@wunner.de, okaya@kernel.org, kernelfans@gmail.com,
+        ddstreet@canonical.com, gavin.guo@canonical.com,
+        jay.vosburgh@canonical.com, kernel@gpiccoli.net,
+        shan.gavin@linux.alibaba.com
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+Message-ID: <20201113164638.GA1019448@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <684cf38f-3977-4ec2-c4a6-7c4c31f9851a@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> Of course is this not only an x86 problem. Every architecture which
-> supports virtualization has the same issue. ARM(64) has no way to tell
-> for sure whether the machine runs bare metal either. No idea about the
-> other architectures.
+On Fri, Nov 06, 2020 at 10:14:14AM -0300, Guilherme G. Piccoli wrote:
+> On 23/10/2018 14:03, Bjorn Helgaas wrote:
+> > On Mon, Oct 22, 2018 at 05:35:06PM -0300, Guilherme G. Piccoli wrote:
+> >> On 18/10/2018 19:15, Bjorn Helgaas wrote:
+> >>> On Thu, Oct 18, 2018 at 03:37:19PM -0300, Guilherme G. Piccoli wrote:
+> >>> [...] 
+> >> I understand your point, but I think this is inherently an architecture
+> >> problem. No matter what solution we decide for, it'll need to be applied
+> >> in early boot time, like before the PCI layer gets initialized.
+> > 
+> > This is the part I want to know more about.  Apparently there's some
+> > event X between early_quirks() and the PCI device enumeration, and we
+> > must disable MSIs before X:
+> > 
+> >   setup_arch()
+> >       early_quirks()                     # arch/x86/kernel/early-quirks.c
+> >       early_pci_clear_msi()
+> >   ...
+> >   X
+> >   ...
+> >   pci_scan_root_bus_bridge()
+> >     ...
+> >     DECLARE_PCI_FIXUP_EARLY              # drivers/pci/quirks.c
+> > 
+> > I want to know specifically what X is.  If we don't know what X is and
+> > all we know is "we have to disable MSIs earlier than PCI init", then
+> > we're likely to break things again in the future by changing the order
+> > of disabling MSIs and whatever X is.
+> 
+> Hi Bjorn (and all CCed), I'm sorry to necro-bump a thread >2 years
+> later, but recent discussions led to a better understanding of this 'X'
+> point, thanks to Thomas!
+> 
+> For those that deleted this thread from their email clients, it's
+> available in [0] - the summary is that we faced an IRQ storm really
+> early in boot, due to a bogus PCIe device MSI behavior, when booting a
+> kdump kernel. This led the machine to get stuck in the boot and we
+> couldn't kdump. The solution hereby proposed is to clear MSI interrupts
+> early in x86, if a parameter is provided. I don't have the reproducer
+> anymore and it was pretty hard to reproduce in virtual environments.
+> 
+> So, about the 'X' Bjorn, in another recent thread about IRQ storms [1],
+> Thomas clarified that and after a brief discussion, it seems there's no
+> better way to prevent the MSI storm other than clearing the MSI
+> capability early in boot. As discussed both here and in thread [1], this
+> is indeed a per-architecture issue (powerpc is not subject to that, due
+> to a better FW reset mechanism), so I think we still could benefit in
+> having this idea implemented upstream, at least in x86 (we could expand
+> to other architectures if desired, in the future).
+> 
+> As a "test" data point, this was implemented in Ubuntu (same 3 patches
+> present in this series) for ~2 years and we haven't received bug reports
+> - I'm saying that because I understand your concerns about expanding the
+> early PCI quirks scope.
+> 
+> Let me know your thoughts. I'd suggest all to read thread [1], which
+> addresses a similar issue but in a different "moment" of the system boot
+> and provides some more insight on why the early MSI clearing seems to
+> make sense.
 
-Sounds like a hypervisor problem. If the VMM provides perfect emulation
-of every weird quirk of h/w, then it is OK to let the guest believe that it is
-running on bare metal.
+I guess Thomas' patch [2] (from thread [1]) doesn't solve this
+problem?
 
-If it isn't perfect, then it should make sure the guest knows *for sure*, so that
-the guest can take appropriate actions to avoid the sharp edges.
+I think [0] proposes using early_quirks() to disable MSIs at
+boot-time.  That doesn't seem like a robust solution because (a) the
+problem affects all arches but early_quirks() is x86-specific and (b)
+even on x86 early_quirks() only works for PCI segment 0 because it
+relies on the 0xCF8/0xCFC I/O ports.
 
--Tony
+If I understand Thomas' email correctly, the IRQ storm occurs here:
+
+  start_kernel
+    setup_arch
+      early_quirks               # x86-only
+        ...
+          read_pci_config_16(num, slot, func, PCI_VENDOR_ID)
+            outl(..., 0xcf8)     # PCI segment 0 only
+            inw(0xcfc)
+    local_irq_enable
+      ...
+        native_irq_enable
+          asm("sti")             # <-- enable IRQ, storm occurs
+
+native_irq_enable() happens long before we discover PCI host bridges
+and run the normal PCI quirks, so those would be too late to disable
+MSIs.
+
+It doesn't seem practical to disable MSIs in the kdump kernel at the
+PCI level.  I was hoping we could disable them somewhere in the IRQ
+code, e.g., at IOAPICs, but I think Thomas is saying that's not
+feasible.
+
+It seems like the only option left is to disable MSIs before the
+kexec.  We used to clear the MSI/MSI-X Enable bits in
+pci_device_shutdown(), but that broke console devices that relied on
+MSI and caused "nobody cared" warnings when the devices fell back to
+using INTx, so fda78d7a0ead ("PCI/MSI: Stop disabling MSI/MSI-X in
+pci_device_shutdown()") left them unchanged.
+
+pci_device_shutdown() still clears the Bus Master Enable bit if we're
+doing a kexec and the device is in D0-D3hot, which should also disable
+MSI/MSI-X.  Why doesn't this solve the problem?  Is this because the
+device causing the storm was in PCI_UNKNOWN state?
+
+> [0] https://lore.kernel.org/linux-pci/20181018183721.27467-1-gpiccoli@canonical.com
+> 
+> [1] https://lore.kernel.org/lkml/87y2js3ghv.fsf@nanos.tec.linutronix.de
+
+[2] https://lore.kernel.org/lkml/87tuueftou.fsf@nanos.tec.linutronix.de/
+
+Notes to my future self about related changes:
+
+  2008-04-23 d52877c7b1af ("pci/irq: let pci_device_shutdown to call pci_msi_shutdown v2")
+    Disable MSI before kexec because new kernel isn't prepared for MSI
+
+  2011-10-17 d5dea7d95c48 ("PCI: msi: Disable msi interrupts when we initialize a pci device")
+    Disable MSI/MSI-X at boot; only works for new kernels with
+    CONFIG_PCI_MSI=y
+
+  2012-04-27 b566a22c2332 ("PCI: disable Bus Master on PCI device shutdown")
+    Disable bus mastering on shutdown (if enable/disable nested correctly)
+
+  2013-02-04 7897e6022761 ("PCI: Disable Bus Master unconditionally in pci_device_shutdown()")
+    Disable bus mastering unconditionally (ignore nested enable/disable)
+
+  2013-03-14 6e0eda3c3898 ("PCI: Don't try to disable Bus Master on disconnected PCI devices")
+    Don't touch bus mastering for D3cold or unknown state
+
+  2015-05-07 1851617cd2da ("PCI/MSI: Disable MSI at enumeration even if kernel doesn't support MSI")
+    Disable MSI/MSI-X at boot even without CONFIG_PCI_MSI=y; broke
+    Open Firmware arches
+
+  2015-10-21 e80e7edc55ba ("PCI/MSI: Initialize MSI capability for all architectures")
+    Disable MSI/MSI-X at boot for all arches, including Open Firmware
+
+  2017-01-26 fda78d7a0ead ("PCI/MSI: Stop disabling MSI/MSI-X in pci_device_shutdown()")
+    Leave MSI enabled before kexec; disabling causes device to use INTx,
+    which drivers aren't prepared for, causing "nobody cared" warnings
