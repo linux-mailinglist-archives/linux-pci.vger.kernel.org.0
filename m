@@ -2,263 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48A2A2B23A8
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 19:26:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68EE52B244D
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 20:11:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgKMS0H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 13:26:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
+        id S1726156AbgKMTLC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 14:11:02 -0500
+Received: from mga18.intel.com ([134.134.136.126]:60325 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgKMS0G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 13 Nov 2020 13:26:06 -0500
-Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35CC5206FB;
-        Fri, 13 Nov 2020 18:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605291965;
-        bh=fDi9mgIGTBupdmiWZEHRi2yYZozpJQMyVVHzaWsP1+0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2OHEKMNeZC5cH7NsCGLurv4S7uBQoF1vi1qK8CjGNtcOVISY3xeuGIDL2UfJg4mVp
-         3SvNyXHgsIjMEThN4dbu51oUoIq8m8jsrswffAVQc/FTXgjEz+lsMU7McEvOFOV5PF
-         xKi14KNY9Xx+CtQO+iFe8T24BMQs1xkOCY2JXVzo=
-Date:   Fri, 13 Nov 2020 12:26:03 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
-Message-ID: <20201113182603.GA1121815@bjorn-Precision-5520>
+        id S1725866AbgKMTLC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 13 Nov 2020 14:11:02 -0500
+IronPort-SDR: MyIHhkDeBBkEfjK9ipXNQY8HOwQ6LMyOK0Mc3ignxiY+SLLzUl4DircCy/1rjZAmejz6fhkcQc
+ qjjMsKKv1F2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="158295891"
+X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
+   d="scan'208";a="158295891"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 11:11:01 -0800
+IronPort-SDR: 2ZUWuBsCzrCVLk1Fms9JjoxN5AUnawZsXeA3Qr8RIGcleHcszqlH9beDJgNO6SEDM0Vz5M2/c4
+ WktQc6Zg9KFw==
+X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
+   d="scan'208";a="532675890"
+Received: from ajdrisco-mobl.amr.corp.intel.com (HELO ellie) ([10.255.231.72])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 11:11:00 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support
+ for PTP getcrosststamp()
+In-Reply-To: <20201113032451.GB32138@hoboy.vegasvil.org>
+References: <20201112093203.GH1559650@localhost> <87pn4i6svv.fsf@intel.com>
+ <20201113032451.GB32138@hoboy.vegasvil.org>
+Date:   Fri, 13 Nov 2020 11:10:58 -0800
+Message-ID: <87ima96pj1.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201111054356.793390-6-ben.widawsky@intel.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 09:43:52PM -0800, Ben Widawsky wrote:
-> CXL devices contain an array of capabilities that describe the
-> interactions software can interact with the device, or firmware running
-> on the device. A CXL compliant device must implement the device status
-> and the mailbox capability. A CXL compliant memory device must implement
-> the memory device capability.
-> 
-> Each of the capabilities can [will] provide an offset within the MMIO
-> region for interacting with the CXL device.
-> 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/cxl.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/mem.c | 58 +++++++++++++++++++++++++++---
->  2 files changed, 143 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/cxl/cxl.h
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> new file mode 100644
-> index 000000000000..02858ae63d6d
-> --- /dev/null
-> +++ b/drivers/cxl/cxl.h
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+Hi Richard,
 
-Fix comment usage (I think SPDX in .h needs "/* */")
+Richard Cochran <richardcochran@gmail.com> writes:
 
-> +#ifndef __CXL_H__
-> +#define __CXL_H__
-> +
-> +/* Device */
-> +#define CXLDEV_CAP_ARRAY_REG 0x0
-> +#define CXLDEV_CAP_ARRAY_CAP_ID 0
-> +#define CXLDEV_CAP_ARRAY_ID(x) ((x) & 0xffff)
-> +#define CXLDEV_CAP_ARRAY_COUNT(x) (((x) >> 32) & 0xffff)
-> +
-> +#define CXL_CAPABILITIES_CAP_ID_DEVICE_STATUS 1
-> +#define CXL_CAPABILITIES_CAP_ID_PRIMARY_MAILBOX 2
-> +#define CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX 3
-> +#define CXL_CAPABILITIES_CAP_ID_MEMDEV 0x4000
+> On Thu, Nov 12, 2020 at 03:46:12PM -0800, Vinicius Costa Gomes wrote:
+>> I wanted it so using PCIe PTM was transparent to applications, so adding
+>> another API wouldn't be my preference.
+>> 
+>> That being said, having a trigger from the application to start/stop the
+>> PTM cycles doesn't sound too bad an idea. So, not too opposed to this
+>> idea.
+>> 
+>> Richard, any opinions here?
+>
+> Sorry, I only have the last two message from this thread, and so I'm
+> missing the backstory.
 
-Strange that the first three are decimal and the last is hex.
+No worries. The not so short version of the story is this:
 
-> +/* Mailbox */
-> +#define CXLDEV_MB_CAPS 0x00
-> +#define   CXLDEV_MB_CAP_PAYLOAD_SIZE(cap) ((cap) & 0x1F)
+I am proposing a series that adds support for PCIe PTM (for the igc
+driver), exporting the values via the PTP_SYS_OFFSET_PRECISE ioctl().
 
-Use upper- or lower-case hex consistently.  Add tabs to line things
-up.
+The way PTM works in the NIC I have, kind of forces me to start the PTM
+dialogs during initialization, and they are kept running in background,
+what the _PRECISE ioctl() does is basically collecting the most recent
+measurement.
 
-> +#define CXLDEV_MB_CTRL 0x04
-> +#define CXLDEV_MB_CMD 0x08
-> +#define CXLDEV_MB_STATUS 0x10
-> +#define CXLDEV_MB_BG_CMD_STATUS 0x18
-> +
-> +struct cxl_mem {
-> +	struct pci_dev *pdev;
-> +	void __iomem *regs;
-> +
-> +	/* Cap 0000h */
-> +	struct {
-> +		void __iomem *regs;
-> +	} status;
-> +
-> +	/* Cap 0002h */
-> +	struct {
-> +		void __iomem *regs;
-> +		size_t payload_size;
-> +	} mbox;
-> +
-> +	/* Cap 0040h */
-> +	struct {
-> +		void __iomem *regs;
-> +	} mem;
-> +};
+Miroslav is suggesting that a new API, similar to PTP_EXTTS_REQUEST,
+would be a good idea.
 
-Maybe a note about why READ_ONCE() is required?
+This new API idea has a few nice "pros":
+ - I can use it to trigger starting the PTM cycles (instead of starting
+ PTM during initialization), and the application would potentially have
+ access to all the measurements;
+ - Right now, keeping the PTM cycles always running would probably have
+ an impact in power comsuption/number of wake-ups, with this new API,
+ this price would only be paid when the user wants.
 
-> +#define cxl_reg(type)                                                          \
-> +	static inline void cxl_write_##type##_reg32(struct cxl_mem *cxlm,      \
-> +						    u32 reg, u32 value)        \
-> +	{                                                                      \
-> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
-> +		writel(value, reg_addr + reg);                                 \
-> +	}                                                                      \
-> +	static inline void cxl_write_##type##_reg64(struct cxl_mem *cxlm,      \
-> +						    u32 reg, u64 value)        \
-> +	{                                                                      \
-> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
-> +		writeq(value, reg_addr + reg);                                 \
-> +	}                                                                      \
-> +	static inline u32 cxl_read_##type##_reg32(struct cxl_mem *cxlm,        \
-> +						  u32 reg)                     \
-> +	{                                                                      \
-> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
-> +		return readl(reg_addr + reg);                                  \
-> +	}                                                                      \
-> +	static inline u64 cxl_read_##type##_reg64(struct cxl_mem *cxlm,        \
-> +						  u32 reg)                     \
-> +	{                                                                      \
-> +		void __iomem *reg_addr = READ_ONCE(cxlm->type.regs);           \
-> +		return readq(reg_addr + reg);                                  \
-> +	}
-> +
-> +cxl_reg(status)
-> +cxl_reg(mbox)
-> +
-> +static inline u32 __cxl_raw_read_reg32(struct cxl_mem *cxlm, u32 reg)
-> +{
-> +	void __iomem *reg_addr = READ_ONCE(cxlm->regs);
-> +
-> +	return readl(reg_addr + reg);
-> +}
-> +
-> +static inline u64 __cxl_raw_read_reg64(struct cxl_mem *cxlm, u32 reg)
-> +{
-> +	void __iomem *reg_addr = READ_ONCE(cxlm->regs);
-> +
-> +	return readq(reg_addr + reg);
-> +}
+The main "con" would be that it wouldn't be transparent to applications
+(phc2sys), as it would have to use another API if it wants to take
+advantage of PTM.
 
-Are the "__" prefixes here to leave space for something else in the
-future?  "__" typically means something like "raw", so right now it
-sort of reads like "raw cxl raw read".  So if you don't *need* the
-"__" prefix, I'd drop it.
+And so question is, what is your opinion on this: export the PTM
+measurements using some "to be defined" new API or keep using some of
+the PTP_SYS_OFFSET_* ioctls?
 
-> +#endif /* __CXL_H__ */
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 8d9b9ab6c5ea..4109ef7c3ecb 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -5,11 +5,57 @@
->  #include <linux/io.h>
->  #include "acpi.h"
->  #include "pci.h"
-> +#include "cxl.h"
->  
-> -struct cxl_mem {
-> -	struct pci_dev *pdev;
-> -	void __iomem *regs;
-> -};
+I think that's it. Miroslav, feel free to correct me if I missed
+something.
 
-Probably nicer if you put "struct cxl_mem" in its ultimate destination
-(drivers/cxl/cxl.h) from the beginning.  Then it's easier to see what
-this patch adds because it's not moving at the same time.
 
-> +static int cxl_mem_setup_regs(struct cxl_mem *cxlm)
-> +{
-> +	u64 cap_array;
-> +	int cap;
-> +
-> +	cap_array = __cxl_raw_read_reg64(cxlm, CXLDEV_CAP_ARRAY_REG);
-> +	if (CXLDEV_CAP_ARRAY_ID(cap_array) != CXLDEV_CAP_ARRAY_CAP_ID)
-> +		return -ENODEV;
-> +
-> +	for (cap = 1; cap <= CXLDEV_CAP_ARRAY_COUNT(cap_array); cap++) {
-> +		void *__iomem register_block;
-> +		u32 offset;
-> +		u16 cap_id;
-> +
-> +		cap_id = __cxl_raw_read_reg32(cxlm, cap * 0x10) & 0xffff;
-> +		offset = __cxl_raw_read_reg32(cxlm, cap * 0x10 + 0x4);
-> +		register_block = cxlm->regs + offset;
-> +
-> +		switch (cap_id) {
-> +		case CXL_CAPABILITIES_CAP_ID_DEVICE_STATUS:
-> +			dev_dbg(&cxlm->pdev->dev, "found Status capability\n");
-
-Consider including the address or offset in these messages to help
-debug?  Printing a completely constant string always seems like a
-missed opportunity to me.
-
-> +			cxlm->status.regs = register_block;
-> +			break;
-> +		case CXL_CAPABILITIES_CAP_ID_PRIMARY_MAILBOX:
-> +			dev_dbg(&cxlm->pdev->dev,
-> +				 "found Mailbox capability\n");
-> +			cxlm->mbox.regs = register_block;
-> +			cxlm->mbox.payload_size = CXLDEV_MB_CAP_PAYLOAD_SIZE(cap_id);
-> +			break;
-> +		case CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX:
-> +			dev_dbg(&cxlm->pdev->dev,
-> +				   "found UNSUPPORTED Secondary Mailbox capability\n");
-> +			break;
-> +		case CXL_CAPABILITIES_CAP_ID_MEMDEV:
-> +			dev_dbg(&cxlm->pdev->dev,
-> +				 "found Memory Device capability\n");
-> +			cxlm->mem.regs = register_block;
-> +			break;
-> +		default:
-> +			dev_err(&cxlm->pdev->dev, "Unknown cap ID: %d\n", cap_id);
-> +			return -ENXIO;
-> +		}
-> +	}
-> +
-> +	if (!cxlm->status.regs || !cxlm->mbox.regs || !cxlm->mem.regs)
-> +		return -ENXIO;
-> +
-> +	return 0;
-> +}
->  
->  static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi)
->  {
-> @@ -110,6 +156,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (IS_ERR(cxlm))
->  		return -ENXIO;
->  
-> +	rc = cxl_mem_setup_regs(cxlm);
-> +	if (rc)
-> +		return rc;
-> +
->  	pci_set_drvdata(pdev, cxlm);
->  
->  	return 0;
-> -- 
-> 2.29.2
-> 
+Cheers,
+-- 
+Vinicius
