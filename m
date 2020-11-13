@@ -2,177 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 401D22B2896
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:34:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F2B22B289B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Nov 2020 23:37:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgKMWed (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Nov 2020 17:34:33 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21410 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726189AbgKMWea (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 17:34:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605306868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8Rq1SwLUmuk5yTiT3dYLgLhG1v7f4gsVqDXVvnML+kQ=;
-        b=HHZHs8oAPhAgKaCArEN5SwF8DPfVSX25N5UBC8yDVSLZcRa386K7GOa0SXuzjZCTQViJAt
-        NTaw2gAMLvbamzJMQNULLsSNGm6Bl6Z+70lK7EPNnryt+Vt9tbhlx5B9qq0pUmwBEsBUys
-        hfSoxN1cUdA2HJjZ4URu4TJHPdJnNW4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-508-kgiX0vPEOgWkK_HzwNLmJg-1; Fri, 13 Nov 2020 17:34:24 -0500
-X-MC-Unique: kgiX0vPEOgWkK_HzwNLmJg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726177AbgKMWhf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Nov 2020 17:37:35 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:56096 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726042AbgKMWhd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Nov 2020 17:37:33 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 11ACD186DD33;
-        Fri, 13 Nov 2020 22:34:22 +0000 (UTC)
-Received: from treble (ovpn-117-69.rdu2.redhat.com [10.10.117.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 71FFA5D707;
-        Fri, 13 Nov 2020 22:34:15 +0000 (UTC)
-Date:   Fri, 13 Nov 2020 16:34:12 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 219AD40461;
+        Fri, 13 Nov 2020 22:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1605307050; bh=jjkOVwgDQT6TA0CdHPVWIovLMbPvZdCCS0xgiauS52c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NhVuex5bcOfR4Fb0kZDp4b+3vLXu6139yYIyeGqed66ruvf/SHZqnJOx5Bbh+Sddr
+         9rrDQuBNPYm7RdoB5+rea1KlFdkJnVclwW0nisvyJNp0QWe0BuhMkNaMopJfXeuDr6
+         kLBuwoqll84UStVSAgAB0ykqoWefQCqTd1etSV4TaxRIQCwljY5YU++HQF1dIuyrnW
+         nCQRytX8Hgoo1mIUycfQOqTWx7B0xpKA2Rzi6HKZ1mCtfthMW4y3qPYi1/s+dWxkNQ
+         o5FAkHuBtAkRKxq1zaGl2aOF/vfCzQM5YBvFqTLs+hAPpNUp83FHkiMJeaoLynIots
+         /SY/KtExiRtvw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 873D2A005D;
+        Fri, 13 Nov 2020 22:37:27 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 22/25] x86/asm: annotate indirect jumps
-Message-ID: <20201113223412.inono2ekrs7ky7rm@treble>
-References: <CABCJKucVjFtrOsw58kn4OnW5kdkUh8G7Zs4s6QU9s6O7soRiAA@mail.gmail.com>
- <20201021085606.GZ2628@hirez.programming.kicks-ass.net>
- <CABCJKufL6=FiaeD8T0P+mK4JeR9J80hhjvJ6Z9S-m9UnCESxVA@mail.gmail.com>
- <20201023173617.GA3021099@google.com>
- <CABCJKuee7hUQSiksdRMYNNx05bW7pWaDm4fQ__znGQ99z9-dEw@mail.gmail.com>
- <20201110022924.tekltjo25wtrao7z@treble>
- <20201110174606.mp5m33lgqksks4mt@treble>
- <CABCJKuf+Ev=hpCUfDpCFR_wBACr-539opJsSFrDcpDA9Ctp7rg@mail.gmail.com>
- <20201113195408.atbpjizijnhuinzy@treble>
- <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABCJKufA-aOcsOqb1NiMQeBGm9Q-JxjoPjsuNpHh0kL4LzfO0w@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Date:   Fri, 13 Nov 2020 23:37:11 +0100
+Message-Id: <cover.1605306931.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 12:24:32PM -0800, Sami Tolvanen wrote:
-> > I still don't see this warning for some reason.
-> 
-> Do you have CONFIG_XEN enabled? I can reproduce this on ToT master as follows:
-> 
-> $ git rev-parse HEAD
-> 585e5b17b92dead8a3aca4e3c9876fbca5f7e0ba
-> $ make defconfig && \
-> ./scripts/config -e HYPERVISOR_GUEST -e PARAVIRT -e XEN && \
-> make olddefconfig && \
-> make -j110
-> ...
-> $ ./tools/objtool/objtool check -arfld vmlinux.o 2>&1 | grep secondary
-> vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with
-> modified stack frame
-> 
-> > Is it fixed by adding cpu_bringup_and_idle() to global_noreturns[] in
-> > tools/objtool/check.c?
-> 
-> No, that didn't fix the warning. Here's what I tested:
+This patch series adds a new driver called xData-pcie for the Synopsys
+DesignWare PCIe prototype.
 
-I think this fixes it:
+The driver configures and enables the Synopsys DesignWare PCIe traffic
+generator IP inside of prototype Endpoint which will generate upstream
+and downstream PCIe traffic. This allows to quickly test the PCIe link
+throughput speed and check is the prototype solution has some limitation
+or not.
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] x86/xen: Fix objtool vmlinux.o validation of xen hypercalls
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Objtool vmlinux.o validation is showing warnings like the following:
+Changes:
+ V2: Rework driver according to Greg Kroah-Hartman feedback 
 
-  # tools/objtool/objtool check -barfld vmlinux.o
-  vmlinux.o: warning: objtool: __startup_secondary_64()+0x2: return with modified stack frame
-  vmlinux.o: warning: objtool:   xen_hypercall_set_trap_table()+0x0: <=== (sym)
+Gustavo Pimentel (5):
+  misc: Add Synopsys DesignWare xData IP driver
+  misc: Add Synopsys DesignWare xData IP driver to Makefile
+  misc: Add Synopsys DesignWare xData IP driver to Kconfig
+  Documentation: misc-devices: Add Documentation for dw-xdata-pcie
+    driver
+  MAINTAINERS: Add Synopsys xData IP driver maintainer
 
-Objtool falls through all the empty hypercall text and gets confused
-when it encounters the first real function afterwards.  The empty unwind
-hints in the hypercalls aren't working for some reason.  Replace them
-with a more straightforward use of STACK_FRAME_NON_STANDARD.
+ Documentation/misc-devices/dw-xdata-pcie.rst |  40 +++
+ MAINTAINERS                                  |   7 +
+ drivers/misc/Kconfig                         |  11 +
+ drivers/misc/Makefile                        |   1 +
+ drivers/misc/dw-xdata-pcie.c                 | 390 +++++++++++++++++++++++++++
+ 5 files changed, 449 insertions(+)
+ create mode 100644 Documentation/misc-devices/dw-xdata-pcie.rst
+ create mode 100644 drivers/misc/dw-xdata-pcie.c
 
-Reported-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- arch/x86/xen/xen-head.S | 9 ++++-----
- include/linux/objtool.h | 8 ++++++++
- 2 files changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-index 2d7c8f34f56c..3c538b1ff4a6 100644
---- a/arch/x86/xen/xen-head.S
-+++ b/arch/x86/xen/xen-head.S
-@@ -6,6 +6,7 @@
- 
- #include <linux/elfnote.h>
- #include <linux/init.h>
-+#include <linux/objtool.h>
- 
- #include <asm/boot.h>
- #include <asm/asm.h>
-@@ -67,14 +68,12 @@ SYM_CODE_END(asm_cpu_bringup_and_idle)
- .pushsection .text
- 	.balign PAGE_SIZE
- SYM_CODE_START(hypercall_page)
--	.rept (PAGE_SIZE / 32)
--		UNWIND_HINT_EMPTY
--		.skip 32
--	.endr
-+	.skip PAGE_SIZE
- 
- #define HYPERCALL(n) \
- 	.equ xen_hypercall_##n, hypercall_page + __HYPERVISOR_##n * 32; \
--	.type xen_hypercall_##n, @function; .size xen_hypercall_##n, 32
-+	.type xen_hypercall_##n, @function; .size xen_hypercall_##n, 32; \
-+	STACK_FRAME_NON_STANDARD xen_hypercall_##n
- #include <asm/xen-hypercalls.h>
- #undef HYPERCALL
- SYM_CODE_END(hypercall_page)
-diff --git a/include/linux/objtool.h b/include/linux/objtool.h
-index 577f51436cf9..746617265236 100644
---- a/include/linux/objtool.h
-+++ b/include/linux/objtool.h
-@@ -109,6 +109,12 @@ struct unwind_hint {
- 	.popsection
- .endm
- 
-+.macro STACK_FRAME_NON_STANDARD func:req
-+	.pushsection .discard.func_stack_frame_non_standard
-+		.long \func - .
-+	.popsection
-+.endm
-+
- #endif /* __ASSEMBLY__ */
- 
- #else /* !CONFIG_STACK_VALIDATION */
-@@ -123,6 +129,8 @@ struct unwind_hint {
- .macro UNWIND_HINT sp_reg:req sp_offset=0 type:req end=0
- .endm
- #endif
-+.macro STACK_FRAME_NON_STANDARD func:req
-+.endm
- 
- #endif /* CONFIG_STACK_VALIDATION */
- 
 -- 
-2.25.4
+2.7.4
 
