@@ -2,117 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B3712B30FC
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Nov 2020 22:20:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E652B3102
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Nov 2020 22:22:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgKNVSm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 Nov 2020 16:18:42 -0500
-Received: from mga04.intel.com ([192.55.52.120]:48977 "EHLO mga04.intel.com"
+        id S1726172AbgKNVWR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 14 Nov 2020 16:22:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbgKNVSm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 14 Nov 2020 16:18:42 -0500
-IronPort-SDR: RpTANA/y6l8jtiUNhPkYq70jfMKBYviL656tSgR8UYwStWT4AZlnH5p0jXbeqgrkuFdXtkmK7r
- /UxlrDu7e+jg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9805"; a="168023215"
-X-IronPort-AV: E=Sophos;i="5.77,479,1596524400"; 
-   d="scan'208";a="168023215"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2020 13:18:40 -0800
-IronPort-SDR: ExfAj2ZqQvzsSiNuKMtVo6WieFeeXJ168W7jZs9Qdz4+f3GfpjUoT5EJ2RTRob4+CIraLP6pnb
- PP9+UvpuOieg==
-X-IronPort-AV: E=Sophos;i="5.77,479,1596524400"; 
-   d="scan'208";a="475070935"
-Received: from araj-mobl1.jf.intel.com ([10.251.4.217])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2020 13:18:39 -0800
-Date:   Sat, 14 Nov 2020 13:18:37 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201114211837.GB12197@araj-mobl1.jf.intel.com>
-References: <874klykc7h.fsf@nanos.tec.linutronix.de>
- <20201109173034.GG2620339@nvidia.com>
- <87pn4mi23u.fsf@nanos.tec.linutronix.de>
- <20201110051412.GA20147@otc-nc-03>
- <875z6dik1a.fsf@nanos.tec.linutronix.de>
- <20201110141323.GB22336@otc-nc-03>
- <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201112193253.GG19638@char.us.oracle.com>
- <877dqqmc2h.fsf@nanos.tec.linutronix.de>
- <20201114103430.GA9810@infradead.org>
+        id S1726112AbgKNVWR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 14 Nov 2020 16:22:17 -0500
+Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688BC2240B;
+        Sat, 14 Nov 2020 21:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605388936;
+        bh=U+w0akawZaU6a1+oFAjGYagwhHnCG8PqAfvSWaWCkEo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=zj6IGCEauGEvVOfSfq/G9CmGrwnf22AFECJo3La1cAKC6tvbg0z/n+iVqlDYDHLN3
+         /9faAf5KUrLqBYplxFHsgz657aacU8RbUZ4o2CcE8VA3TCkxfxAm0Lx+Cp+0bKSipQ
+         bzj9Zn20mpEiaIsQHCjwo6JiqhYhIbzFixJI1QtI=
+Date:   Sat, 14 Nov 2020 15:22:15 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, andi@firstfloor.org,
+        lukas@wunner.de, okaya@kernel.org, kernelfans@gmail.com,
+        ddstreet@canonical.com, gavin.guo@canonical.com,
+        jay.vosburgh@canonical.com, kernel@gpiccoli.net,
+        shan.gavin@linux.alibaba.com,
+        Eric Biederman <ebiederm@xmission.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+Message-ID: <20201114212215.GA1194074@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201114103430.GA9810@infradead.org>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <87h7prac67.fsf@nanos.tec.linutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 14, 2020 at 10:34:30AM +0000, Christoph Hellwig wrote:
-> On Thu, Nov 12, 2020 at 11:42:46PM +0100, Thomas Gleixner wrote:
-> > DMI vendor name is pretty good final check when the bit is 0. The
-> > strings I'm aware of are:
-> > 
-> > QEMU, Bochs, KVM, Xen, VMware, VMW, VMware Inc., innotek GmbH, Oracle
-> > Corporation, Parallels, BHYVE, Microsoft Corporation
-> > 
-> > which is not complete but better than nothing ;)
+[+cc Rafael for question about ACPI method for PCI host bridge reset]
+
+On Sat, Nov 14, 2020 at 09:58:08PM +0100, Thomas Gleixner wrote:
+> On Sat, Nov 14 2020 at 14:39, Bjorn Helgaas wrote:
+> > On Sat, Nov 14, 2020 at 12:40:10AM +0100, Thomas Gleixner wrote:
+> >> On Sat, Nov 14 2020 at 00:31, Thomas Gleixner wrote:
+> >> > On Fri, Nov 13 2020 at 10:46, Bjorn Helgaas wrote:
+> >> >> pci_device_shutdown() still clears the Bus Master Enable bit if we're
+> >> >> doing a kexec and the device is in D0-D3hot, which should also disable
+> >> >> MSI/MSI-X.  Why doesn't this solve the problem?  Is this because the
+> >> >> device causing the storm was in PCI_UNKNOWN state?
+> >> >
+> >> > That's indeed a really good question.
+> >> 
+> >> So we do that on kexec, but is that true when starting a kdump kernel
+> >> from a kernel crash? I doubt it.
+> >
+> > Ah, right, I bet that's it, thanks.  The kdump path is basically this:
+> >
+> >   crash_kexec
+> >     machine_kexec
+> >
+> > while the usual kexec path is:
+> >
+> >   kernel_kexec
+> >     kernel_restart_prepare
+> >       device_shutdown
+> >         while (!list_empty(&devices_kset->list))
+> >           dev->bus->shutdown
+> >             pci_device_shutdown            # pci_bus_type.shutdown
+> >     machine_kexec
+> >
+> > So maybe we need to explore doing some or all of device_shutdown() in
+> > the crash_kexec() path as well as in the kernel_kexec() path.
 > 
-> Which is why I really think we need explicit opt-ins for "native"
-> SIOV handling and for paravirtualized SIOV handling, with the kernel
-> not offering support at all without either or a manual override on
-> the command line.
+> The problem is that if the machine crashed anything you try to attempt
+> before starting the crash kernel is reducing the chance that the crash
+> kernel actually starts.
 
-opt-in by device or kernel? The way we are planning to support this is:
+Right.
 
-Device support for IMS - Can discover in device specific means
-Kernel support for IMS. - Supported by IOMMU driver.
+> Is there something at the root bridge level which allows to tell the
+> underlying busses to shut up, reset or go into a defined state? That
+> might avoid chasing lists which might be already unreliable.
 
-each driver can check 
+Maybe we need some kind of crash_device_shutdown() that does the
+minimal thing to protect the kdump kernel from devices.
 
-if (dev_supports_ims() && iommu_supports_ims()) {
-	/* Then IMS is supported in the platform.*/
-}
+The programming model for conventional PCI host bridges and PCIe Root
+Complexes is device-specific since they're outside the PCI domain.
+There probably *are* ways to do those things, but you would need a
+native host bridge driver or something like an ACPI method.  I'm not
+aware of an ACPI way to do this, but I added Rafael in case he is.
 
+A crash_device_shutdown() could do something at the host bridge level
+if that's possible, or reset/disable bus mastering/disable MSI/etc on
+individual PCI devices if necessary.
 
-until we have vIOMMU support or a hypercall, iommu_supports_ims() will
-check if X86_FEATURE_HYPERVISOR in addition to the platform id's Thomas
-mentioned. or on intel platform check for cap.caching_mode=1 and return false.
-
-When we add support for getting a native interrupt handle then we will plumb that
-appropriately.
-
-Does this match what you wanted?
+Bjorn
