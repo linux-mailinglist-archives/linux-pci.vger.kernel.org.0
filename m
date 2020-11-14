@@ -2,107 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1E652B3102
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Nov 2020 22:22:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67FE72B3112
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Nov 2020 22:54:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726172AbgKNVWR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 Nov 2020 16:22:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38906 "EHLO mail.kernel.org"
+        id S1726177AbgKNVxd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 14 Nov 2020 16:53:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgKNVWR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 14 Nov 2020 16:22:17 -0500
+        id S1726112AbgKNVxc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 14 Nov 2020 16:53:32 -0500
 Received: from localhost (230.sub-72-107-127.myvzw.com [72.107.127.230])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688BC2240B;
-        Sat, 14 Nov 2020 21:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134B7222C4;
+        Sat, 14 Nov 2020 21:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605388936;
-        bh=U+w0akawZaU6a1+oFAjGYagwhHnCG8PqAfvSWaWCkEo=;
+        s=default; t=1605390811;
+        bh=WdC99Ui7j78TQnjRKV46T0si0K88h60EbmiXZrTtfqw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=zj6IGCEauGEvVOfSfq/G9CmGrwnf22AFECJo3La1cAKC6tvbg0z/n+iVqlDYDHLN3
-         /9faAf5KUrLqBYplxFHsgz657aacU8RbUZ4o2CcE8VA3TCkxfxAm0Lx+Cp+0bKSipQ
-         bzj9Zn20mpEiaIsQHCjwo6JiqhYhIbzFixJI1QtI=
-Date:   Sat, 14 Nov 2020 15:22:15 -0600
+        b=DQ894+DXIkElALKvr/Wo3J8IJFzLm8ZL/N/VlrXTg+Bgmk1su4AYNWiP1m74RViU9
+         CHgV2hCGqz2NKvjNL72SQAQXMiQMaQ+sU5eu38E7YOFZXaXksK29BTwPF1zK7mLPQL
+         jwVABdx73y0v9PdVATI6pVxbqBZeOB1VkQ1vcE8Q=
+Date:   Sat, 14 Nov 2020 15:53:29 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, andi@firstfloor.org,
-        lukas@wunner.de, okaya@kernel.org, kernelfans@gmail.com,
-        ddstreet@canonical.com, gavin.guo@canonical.com,
-        jay.vosburgh@canonical.com, kernel@gpiccoli.net,
-        shan.gavin@linux.alibaba.com,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
-Message-ID: <20201114212215.GA1194074@bjorn-Precision-5520>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH][V2] PCI: Fix a potential uninitentional integer overflow
+ issue
+Message-ID: <20201114215329.GA1197070@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h7prac67.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20201110221048.3411288-1-colin.king@canonical.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael for question about ACPI method for PCI host bridge reset]
+[+cc Dan]
 
-On Sat, Nov 14, 2020 at 09:58:08PM +0100, Thomas Gleixner wrote:
-> On Sat, Nov 14 2020 at 14:39, Bjorn Helgaas wrote:
-> > On Sat, Nov 14, 2020 at 12:40:10AM +0100, Thomas Gleixner wrote:
-> >> On Sat, Nov 14 2020 at 00:31, Thomas Gleixner wrote:
-> >> > On Fri, Nov 13 2020 at 10:46, Bjorn Helgaas wrote:
-> >> >> pci_device_shutdown() still clears the Bus Master Enable bit if we're
-> >> >> doing a kexec and the device is in D0-D3hot, which should also disable
-> >> >> MSI/MSI-X.  Why doesn't this solve the problem?  Is this because the
-> >> >> device causing the storm was in PCI_UNKNOWN state?
-> >> >
-> >> > That's indeed a really good question.
-> >> 
-> >> So we do that on kexec, but is that true when starting a kdump kernel
-> >> from a kernel crash? I doubt it.
-> >
-> > Ah, right, I bet that's it, thanks.  The kdump path is basically this:
-> >
-> >   crash_kexec
-> >     machine_kexec
-> >
-> > while the usual kexec path is:
-> >
-> >   kernel_kexec
-> >     kernel_restart_prepare
-> >       device_shutdown
-> >         while (!list_empty(&devices_kset->list))
-> >           dev->bus->shutdown
-> >             pci_device_shutdown            # pci_bus_type.shutdown
-> >     machine_kexec
-> >
-> > So maybe we need to explore doing some or all of device_shutdown() in
-> > the crash_kexec() path as well as in the kernel_kexec() path.
+On Tue, Nov 10, 2020 at 10:10:48PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> The problem is that if the machine crashed anything you try to attempt
-> before starting the crash kernel is reducing the chance that the crash
-> kernel actually starts.
+> The shift of 1 by align_order is evaluated using 32 bit arithmetic
+> and the result is assigned to a resource_size_t type variable that
+> is a 64 bit unsigned integer on 64 bit platforms. Fix an overflow
+> before widening issue by making the 1 a ULL.
+> 
+> Addresses-Coverity: ("Unintentional integer overflow")
+> Fixes: 07d8d7e57c28 ("PCI: Make specifying PCI devices in kernel parameters reusable")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Right.
+Applied to pci/misc for v5.11 with Logan's Reviewed-by and also the
+Fixes: correction.
 
-> Is there something at the root bridge level which allows to tell the
-> underlying busses to shut up, reset or go into a defined state? That
-> might avoid chasing lists which might be already unreliable.
+I first applied the patch below to bounds-check the alignment as noted
+by Dan.
 
-Maybe we need some kind of crash_device_shutdown() that does the
-minimal thing to protect the kdump kernel from devices.
+> ---
+> 
+> V2: Use ULL instead of BIT_ULL(), fix spelling mistake and capitalize first
+>     word of patch subject.
+> 
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 3ef63a101fa1..248044a7ef8c 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6214,7 +6214,7 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+>  			if (align_order == -1)
+>  				align = PAGE_SIZE;
+>  			else
+> -				align = 1 << align_order;
+> +				align = 1ULL << align_order;
+>  			break;
+>  		} else if (ret < 0) {
+>  			pr_err("PCI: Can't parse resource_alignment parameter: %s\n",
 
-The programming model for conventional PCI host bridges and PCIe Root
-Complexes is device-specific since they're outside the PCI domain.
-There probably *are* ways to do those things, but you would need a
-native host bridge driver or something like an ACPI method.  I'm not
-aware of an ACPI way to do this, but I added Rafael in case he is.
+commit d6ca242c448f ("PCI: Bounds-check command-line resource alignment requests")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Thu Nov 5 14:51:36 2020 -0600
 
-A crash_device_shutdown() could do something at the host bridge level
-if that's possible, or reset/disable bus mastering/disable MSI/etc on
-individual PCI devices if necessary.
+    PCI: Bounds-check command-line resource alignment requests
+    
+    32-bit BARs are limited to 2GB size (2^31).  By extension, I assume 64-bit
+    BARs are limited to 2^63 bytes.  Limit the alignment requested by the
+    "pci=resource_alignment=" command-line parameter to 2^63.
+    
+    Link: https://lore.kernel.org/r/20201007123045.GS4282@kadam
+    Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Bjorn
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8b9bea8ba751..26c1b2d0bacd 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6197,19 +6197,21 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
+ 	while (*p) {
+ 		count = 0;
+ 		if (sscanf(p, "%d%n", &align_order, &count) == 1 &&
+-							p[count] == '@') {
++		    p[count] == '@') {
+ 			p += count + 1;
++			if (align_order > 63) {
++				pr_err("PCI: Invalid requested alignment (order %d)\n",
++				       align_order);
++				align_order = PAGE_SHIFT;
++			}
+ 		} else {
+-			align_order = -1;
++			align_order = PAGE_SHIFT;
+ 		}
+ 
+ 		ret = pci_dev_str_match(dev, p, &p);
+ 		if (ret == 1) {
+ 			*resize = true;
+-			if (align_order == -1)
+-				align = PAGE_SIZE;
+-			else
+-				align = 1 << align_order;
++			align = 1 << align_order;
+ 			break;
+ 		} else if (ret < 0) {
+ 			pr_err("PCI: Can't parse resource_alignment parameter: %s\n",
