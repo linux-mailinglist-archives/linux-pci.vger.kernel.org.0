@@ -2,99 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8DE22B30D8
-	for <lists+linux-pci@lfdr.de>; Sat, 14 Nov 2020 21:59:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B3712B30FC
+	for <lists+linux-pci@lfdr.de>; Sat, 14 Nov 2020 22:20:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726459AbgKNU6L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 14 Nov 2020 15:58:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60582 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgKNU6L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 14 Nov 2020 15:58:11 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605387489;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AgmO+ovXS0H7Vz5OGOh347PfWQu+2lZpnKeHesuoCow=;
-        b=ZKD0Ij3HgOCb3u6Q/mbn8OHp2fgVYQAOJfF6A922uc6bzYnZxpw687nnt6anZvCZokEsyX
-        KfgVW2WX9Uqm7IXFqlC5w14q4xLIJIY3j/XS4rQBT2IRMdgd/WnOsCCJlUkXQQPOAZ0IPt
-        f+pxLgdqaR05gsaUP9Mq1VOl/U80rVeErHz1C1g9r/NJr2p2eInbNJ4/g1aWnVXJmhXKY7
-        8Rrb9zgmfbQjbf20cdi7dYxhmr+bhbAckMaez6MT/jEhT2c4N+X2rCNgYgmqdqJ80Z1Sty
-        f5bnufQLUsefIUiXSQIr6Rq5cWMzaTJt2Ka4hVfEOgc5A03P8z/HJykm2PUcqA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605387489;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AgmO+ovXS0H7Vz5OGOh347PfWQu+2lZpnKeHesuoCow=;
-        b=3oZ5BSjO6nypbaQiWCHWpwDRjhngAoRaslwLtC/9AuSl8rLOdS2X9/Lef9/i4AldUOTw5h
-        4W5C2SBXlNc68dAg==
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, andi@firstfloor.org,
-        lukas@wunner.de, okaya@kernel.org, kernelfans@gmail.com,
-        ddstreet@canonical.com, gavin.guo@canonical.com,
-        jay.vosburgh@canonical.com, kernel@gpiccoli.net,
-        shan.gavin@linux.alibaba.com,
-        Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
-In-Reply-To: <20201114203925.GA1182595@bjorn-Precision-5520>
-References: <20201114203925.GA1182595@bjorn-Precision-5520>
-Date:   Sat, 14 Nov 2020 21:58:08 +0100
-Message-ID: <87h7prac67.fsf@nanos.tec.linutronix.de>
+        id S1726189AbgKNVSm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 14 Nov 2020 16:18:42 -0500
+Received: from mga04.intel.com ([192.55.52.120]:48977 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbgKNVSm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 14 Nov 2020 16:18:42 -0500
+IronPort-SDR: RpTANA/y6l8jtiUNhPkYq70jfMKBYviL656tSgR8UYwStWT4AZlnH5p0jXbeqgrkuFdXtkmK7r
+ /UxlrDu7e+jg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9805"; a="168023215"
+X-IronPort-AV: E=Sophos;i="5.77,479,1596524400"; 
+   d="scan'208";a="168023215"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2020 13:18:40 -0800
+IronPort-SDR: ExfAj2ZqQvzsSiNuKMtVo6WieFeeXJ168W7jZs9Qdz4+f3GfpjUoT5EJ2RTRob4+CIraLP6pnb
+ PP9+UvpuOieg==
+X-IronPort-AV: E=Sophos;i="5.77,479,1596524400"; 
+   d="scan'208";a="475070935"
+Received: from araj-mobl1.jf.intel.com ([10.251.4.217])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2020 13:18:39 -0800
+Date:   Sat, 14 Nov 2020 13:18:37 -0800
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201114211837.GB12197@araj-mobl1.jf.intel.com>
+References: <874klykc7h.fsf@nanos.tec.linutronix.de>
+ <20201109173034.GG2620339@nvidia.com>
+ <87pn4mi23u.fsf@nanos.tec.linutronix.de>
+ <20201110051412.GA20147@otc-nc-03>
+ <875z6dik1a.fsf@nanos.tec.linutronix.de>
+ <20201110141323.GB22336@otc-nc-03>
+ <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201112193253.GG19638@char.us.oracle.com>
+ <877dqqmc2h.fsf@nanos.tec.linutronix.de>
+ <20201114103430.GA9810@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201114103430.GA9810@infradead.org>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
+On Sat, Nov 14, 2020 at 10:34:30AM +0000, Christoph Hellwig wrote:
+> On Thu, Nov 12, 2020 at 11:42:46PM +0100, Thomas Gleixner wrote:
+> > DMI vendor name is pretty good final check when the bit is 0. The
+> > strings I'm aware of are:
+> > 
+> > QEMU, Bochs, KVM, Xen, VMware, VMW, VMware Inc., innotek GmbH, Oracle
+> > Corporation, Parallels, BHYVE, Microsoft Corporation
+> > 
+> > which is not complete but better than nothing ;)
+> 
+> Which is why I really think we need explicit opt-ins for "native"
+> SIOV handling and for paravirtualized SIOV handling, with the kernel
+> not offering support at all without either or a manual override on
+> the command line.
 
-On Sat, Nov 14 2020 at 14:39, Bjorn Helgaas wrote:
-> On Sat, Nov 14, 2020 at 12:40:10AM +0100, Thomas Gleixner wrote:
->> On Sat, Nov 14 2020 at 00:31, Thomas Gleixner wrote:
->> > On Fri, Nov 13 2020 at 10:46, Bjorn Helgaas wrote:
->> >> pci_device_shutdown() still clears the Bus Master Enable bit if we're
->> >> doing a kexec and the device is in D0-D3hot, which should also disable
->> >> MSI/MSI-X.  Why doesn't this solve the problem?  Is this because the
->> >> device causing the storm was in PCI_UNKNOWN state?
->> >
->> > That's indeed a really good question.
->> 
->> So we do that on kexec, but is that true when starting a kdump kernel
->> from a kernel crash? I doubt it.
->
-> Ah, right, I bet that's it, thanks.  The kdump path is basically this:
->
->   crash_kexec
->     machine_kexec
->
-> while the usual kexec path is:
->
->   kernel_kexec
->     kernel_restart_prepare
->       device_shutdown
->         while (!list_empty(&devices_kset->list))
->           dev->bus->shutdown
->             pci_device_shutdown            # pci_bus_type.shutdown
->     machine_kexec
->
-> So maybe we need to explore doing some or all of device_shutdown() in
-> the crash_kexec() path as well as in the kernel_kexec() path.
+opt-in by device or kernel? The way we are planning to support this is:
 
-The problem is that if the machine crashed anything you try to attempt
-before starting the crash kernel is reducing the chance that the crash
-kernel actually starts.
+Device support for IMS - Can discover in device specific means
+Kernel support for IMS. - Supported by IOMMU driver.
 
-Is there something at the root bridge level which allows to tell the
-underlying busses to shut up, reset or go into a defined state? That
-might avoid chasing lists which might be already unreliable.
+each driver can check 
 
-Thanks,
+if (dev_supports_ims() && iommu_supports_ims()) {
+	/* Then IMS is supported in the platform.*/
+}
 
-        tglx
+
+until we have vIOMMU support or a hypercall, iommu_supports_ims() will
+check if X86_FEATURE_HYPERVISOR in addition to the platform id's Thomas
+mentioned. or on intel platform check for cap.caching_mode=1 and return false.
+
+When we add support for getting a native interrupt handle then we will plumb that
+appropriately.
+
+Does this match what you wanted?
