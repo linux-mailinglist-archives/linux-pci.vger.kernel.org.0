@@ -2,120 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B7752B349B
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 12:26:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C85E2B34CC
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 13:10:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgKOL0Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Nov 2020 06:26:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgKOL0Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Nov 2020 06:26:24 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77A6C0613D1;
-        Sun, 15 Nov 2020 03:26:24 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605439583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=saojbe8LdPKGDAiEz1jquPkUf3s7kcI/f55Y0htbe4s=;
-        b=gX6z1dqvU6cHYqV4K37jeiKwqt9/r5FZtOrjMklEE164vtcEPLoskDnhjpLpkwXVi/mkok
-        a0d3XbPvOVslLTwHh5GyzUkLTfx2n4KWvHpAVhPYjeH4g4YvKYP0EjeSz8THofHULnMrVa
-        gjV8K9OelqUuMEpkTClS3sMIbflOe1yTG9xANj0CWOZL2KrvdPM0UkjA39dmqiKi7NdffM
-        b19/rbwfkxLIcJaXvwaaVtU+ThIhr5bLyWhfZsHD/PKKOoh64RBlWJLQVlfWnBT7RsuzSF
-        y+KdnS+0d2STzdiulCS6F9rjlC51PGr76OwksQDHNYj0DzPMurPxgPyTyy+f5Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605439583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=saojbe8LdPKGDAiEz1jquPkUf3s7kcI/f55Y0htbe4s=;
-        b=uDucKq0Zw4iyNGZ4Yc4IghjkqXIuPJiROE8suqA7ipywdSIASEW260Z8Nix9NpRG3KHIS/
-        ECkoErT6aeUjNVBg==
-To:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams\, Dan J" <dan.j.williams@intel.com>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
+        id S1727040AbgKOMKE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Nov 2020 07:10:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726871AbgKOMKD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 15 Nov 2020 07:10:03 -0500
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D359222EC;
+        Sun, 15 Nov 2020 12:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605442203;
+        bh=QsIrZBuvI5xBIr0SPWqsD8yJWMDcUtttLcZHvx9qZy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=02NSveCnpM4A+nkdk5R52mOxVqOo51QeFJD9RznhoT2Kg6P55rtO09fgKkPknFkLi
+         Xg66SteinLfGdn1/A5dBUjv6uXcvCHMesa1Wt3jgwm0hddVXdj5gfMER9LYReLP8wC
+         8wyrsGwmXaWqqnqDPzyLMQmMpio2qtADGDu9eK5Y=
+Received: by pali.im (Postfix)
+        id 2FA38745; Sun, 15 Nov 2020 13:10:01 +0100 (CET)
+Date:   Sun, 15 Nov 2020 13:10:01 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Oliver O'Halloran <oohall@gmail.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "Dey\, Megha" <megha.dey@intel.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-In-Reply-To: <20201114211837.GB12197@araj-mobl1.jf.intel.com>
-References: <874klykc7h.fsf@nanos.tec.linutronix.de> <20201109173034.GG2620339@nvidia.com> <87pn4mi23u.fsf@nanos.tec.linutronix.de> <20201110051412.GA20147@otc-nc-03> <875z6dik1a.fsf@nanos.tec.linutronix.de> <20201110141323.GB22336@otc-nc-03> <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com> <20201112193253.GG19638@char.us.oracle.com> <877dqqmc2h.fsf@nanos.tec.linutronix.de> <20201114103430.GA9810@infradead.org> <20201114211837.GB12197@araj-mobl1.jf.intel.com>
-Date:   Sun, 15 Nov 2020 12:26:22 +0100
-Message-ID: <877dqmamjl.fsf@nanos.tec.linutronix.de>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, Yinghai Lu <yinghai@kernel.org>
+Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
+Message-ID: <20201115121001.s23hpgeu4r5bbswt@pali>
+References: <20201007161434.GA3247067@bjorn-Precision-5520>
+ <20201008195907.GA3359851@bjorn-Precision-5520>
+ <20201009080853.bxzyirmaja6detk4@pali>
+ <20201104162931.zplhflhvz53odkux@pali>
+ <X7DIeE2tPqnDoYXP@rocinante>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <X7DIeE2tPqnDoYXP@rocinante>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 14 2020 at 13:18, Ashok Raj wrote:
-> On Sat, Nov 14, 2020 at 10:34:30AM +0000, Christoph Hellwig wrote:
->> On Thu, Nov 12, 2020 at 11:42:46PM +0100, Thomas Gleixner wrote:
->> Which is why I really think we need explicit opt-ins for "native"
->> SIOV handling and for paravirtualized SIOV handling, with the kernel
->> not offering support at all without either or a manual override on
->> the command line.
->
-> opt-in by device or kernel? The way we are planning to support this is:
->
-> Device support for IMS - Can discover in device specific means
-> Kernel support for IMS. - Supported by IOMMU driver.
+On Sunday 15 November 2020 07:19:36 Krzysztof Wilczyński wrote:
+> Hello Pali!
+> 
+> Sincere apologies for taking a long time to get back to you.
+> 
+> On 20-11-04 17:29:31, Pali Rohár wrote:
+> 
+> [...]
+> > 
+> > Krzysztof, as Bjorn wrote, do you want to take this issue?
+> > 
+> [...]
+> 
+> Yes.  I already talked to Bjorn about this briefly, and thus I am more
+> than happy to take care about this.  Most definitely.
+> 
+> Krzysztof
 
-And why exactly do we have to enforce IOMMU support? Please stop looking
-at IMS purely from the IDXD perspective. We are talking about the
-general concept here and not about the restricted Intel universe.
+Hello Krzysztof!
 
-> each driver can check 
->
-> if (dev_supports_ims() && iommu_supports_ims()) {
-> 	/* Then IMS is supported in the platform.*/
-> }
+Thank you very much. I have there some patches for pci aardvard driver
+which decrease boot time but trigger this race condition more often. So
+they are not suitable for upstreaming yet.
 
-Please forget this 'each driver can check'. That's just wrong.
-
-The only thing the driver has to check is whether the device supports
-IMS or not. Everything else has to be handled by the underlying
-infrastructure.
-
-That's pretty much the same thing like PCI/MSI[X]. The driver does not
-have to check 'device_has_msix() && platform_supports_msix()'. Enabling
-MSI[X] will simply fail if it's not supported.
-
-So for IMS creating the underlying irqdomain has to fail when the
-platform does not support it and the driver can act upon the fail and
-fallback to MSI[X] or just refuse to load when IMS is required for the
-device to be functional.
-
-Thanks,
-
-        tglx
+Once you you have a fix for it, let me know and I could test it with my
+aardvark patches.
