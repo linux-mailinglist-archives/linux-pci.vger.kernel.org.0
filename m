@@ -2,66 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6026D2B32B7
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 07:39:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B7752B349B
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 12:26:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgKOGi7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Nov 2020 01:38:59 -0500
-Received: from mail-io1-f48.google.com ([209.85.166.48]:45927 "EHLO
-        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgKOGi6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Nov 2020 01:38:58 -0500
-Received: by mail-io1-f48.google.com with SMTP id u21so13964691iol.12
-        for <linux-pci@vger.kernel.org>; Sat, 14 Nov 2020 22:38:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=621cyGWiiZs6Vj0tRrBiG0e3tmbixDYQfyQ4RYNoGzQ=;
-        b=Y5hWaUFPk+Ervd1JbVAn/tx2we+dBd9khx8f/OrN9ecOuQXPIDtPrgu+MzuFIQ6RkX
-         TEZ+wrlH/++RFiLiZtpD5xI4diovpxo/jxtSB1pUqKFjstliKdrJLdygYxqmaNfoXWUI
-         jkBFbFa1t67cohDR0o2/plaUFJVMSe78drZr5VsoiSvAcpIqtiDNu3GczNQDHdBwu38h
-         N5IhEXaSB4QMvSC/MksWv6VSQfeXxCocOsYH30Z570MmaZmh+6Jn7kyAndbI7wuY2S1/
-         oh/dKnG8aotdMfTomjRsrXyohHUXxT1E7Xo9dJWAVEQuIJw9+mjJ7bgzWkutfia6mT6A
-         qfXw==
-X-Gm-Message-State: AOAM531VWBVwRwMMFumhsLqn1ktMiJ9er9d7S6gauynGtDczd76atRqJ
-        krouxyIUtTJ/gR3+nhGB/Eo=
-X-Google-Smtp-Source: ABdhPJzkUkX6mq0yEpqhSXi5gxBN3tSlcycL+i66WJnGUjMDqtEyFj0P8hLkfPhzIzjTag4eHuCf1A==
-X-Received: by 2002:a02:cb8d:: with SMTP id u13mr7596743jap.110.1605422338235;
-        Sat, 14 Nov 2020 22:38:58 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id v15sm8332186ile.37.2020.11.14.22.38.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2020 22:38:57 -0800 (PST)
-Date:   Sun, 15 Nov 2020 07:38:54 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] Expose PCIe SSD Status LED Management DSM in sysfs
-Message-ID: <X7DM/hTfyYdw2jlO@rocinante>
-References: <20201110153735.58587-1-stuart.w.hayes@gmail.com>
+        id S1726891AbgKOL0Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Nov 2020 06:26:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgKOL0Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Nov 2020 06:26:24 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77A6C0613D1;
+        Sun, 15 Nov 2020 03:26:24 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1605439583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=saojbe8LdPKGDAiEz1jquPkUf3s7kcI/f55Y0htbe4s=;
+        b=gX6z1dqvU6cHYqV4K37jeiKwqt9/r5FZtOrjMklEE164vtcEPLoskDnhjpLpkwXVi/mkok
+        a0d3XbPvOVslLTwHh5GyzUkLTfx2n4KWvHpAVhPYjeH4g4YvKYP0EjeSz8THofHULnMrVa
+        gjV8K9OelqUuMEpkTClS3sMIbflOe1yTG9xANj0CWOZL2KrvdPM0UkjA39dmqiKi7NdffM
+        b19/rbwfkxLIcJaXvwaaVtU+ThIhr5bLyWhfZsHD/PKKOoh64RBlWJLQVlfWnBT7RsuzSF
+        y+KdnS+0d2STzdiulCS6F9rjlC51PGr76OwksQDHNYj0DzPMurPxgPyTyy+f5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1605439583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=saojbe8LdPKGDAiEz1jquPkUf3s7kcI/f55Y0htbe4s=;
+        b=uDucKq0Zw4iyNGZ4Yc4IghjkqXIuPJiROE8suqA7ipywdSIASEW260Z8Nix9NpRG3KHIS/
+        ECkoErT6aeUjNVBg==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "Dey\, Megha" <megha.dey@intel.com>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+In-Reply-To: <20201114211837.GB12197@araj-mobl1.jf.intel.com>
+References: <874klykc7h.fsf@nanos.tec.linutronix.de> <20201109173034.GG2620339@nvidia.com> <87pn4mi23u.fsf@nanos.tec.linutronix.de> <20201110051412.GA20147@otc-nc-03> <875z6dik1a.fsf@nanos.tec.linutronix.de> <20201110141323.GB22336@otc-nc-03> <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com> <20201112193253.GG19638@char.us.oracle.com> <877dqqmc2h.fsf@nanos.tec.linutronix.de> <20201114103430.GA9810@infradead.org> <20201114211837.GB12197@araj-mobl1.jf.intel.com>
+Date:   Sun, 15 Nov 2020 12:26:22 +0100
+Message-ID: <877dqmamjl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20201110153735.58587-1-stuart.w.hayes@gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Stuart,
+On Sat, Nov 14 2020 at 13:18, Ashok Raj wrote:
+> On Sat, Nov 14, 2020 at 10:34:30AM +0000, Christoph Hellwig wrote:
+>> On Thu, Nov 12, 2020 at 11:42:46PM +0100, Thomas Gleixner wrote:
+>> Which is why I really think we need explicit opt-ins for "native"
+>> SIOV handling and for paravirtualized SIOV handling, with the kernel
+>> not offering support at all without either or a manual override on
+>> the command line.
+>
+> opt-in by device or kernel? The way we are planning to support this is:
+>
+> Device support for IMS - Can discover in device specific means
+> Kernel support for IMS. - Supported by IOMMU driver.
 
-On 20-11-10 09:37:35, Stuart Hayes wrote:
+And why exactly do we have to enforce IOMMU support? Please stop looking
+at IMS purely from the IDXD perspective. We are talking about the
+general concept here and not about the restricted Intel universe.
 
-[...]
-> +
-> +	scnprintf(buf, PAGE_SIZE, "%#x\n", dsm_output->state);
-> +
-> +	ACPI_FREE(out_obj);
-> +
-> +	return strlen(buf) > 0 ? strlen(buf) : -EIO;
+> each driver can check 
+>
+> if (dev_supports_ims() && iommu_supports_ims()) {
+> 	/* Then IMS is supported in the platform.*/
+> }
 
-Question to you - since scnprintf() returns the number of characters
-written into a buffer, maybe it be possible to use this return value
-instead of using strlen(), what do you think?
+Please forget this 'each driver can check'. That's just wrong.
 
-Krzysztof
+The only thing the driver has to check is whether the device supports
+IMS or not. Everything else has to be handled by the underlying
+infrastructure.
+
+That's pretty much the same thing like PCI/MSI[X]. The driver does not
+have to check 'device_has_msix() && platform_supports_msix()'. Enabling
+MSI[X] will simply fail if it's not supported.
+
+So for IMS creating the underlying irqdomain has to fail when the
+platform does not support it and the driver can act upon the fail and
+fallback to MSI[X] or just refuse to load when IMS is required for the
+device to be functional.
+
+Thanks,
+
+        tglx
