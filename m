@@ -2,113 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F4E62B32A5
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 06:52:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5E102B32AC
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 07:09:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgKOFvC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Nov 2020 00:51:02 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40590 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgKOFvC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Nov 2020 00:51:02 -0500
-Received: by mail-wr1-f66.google.com with SMTP id 33so14752945wrl.7
-        for <linux-pci@vger.kernel.org>; Sat, 14 Nov 2020 21:51:00 -0800 (PST)
+        id S1726531AbgKOGIa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Nov 2020 01:08:30 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52854 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgKOGI3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Nov 2020 01:08:29 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 10so20429135wml.2;
+        Sat, 14 Nov 2020 22:08:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0Ar1HS0TIigbtEbbtbsrbeVh6VW06RBSYq0BlrEFWlQ=;
-        b=sgkm1xLOZig6QWGEPSj/OBqZT3xXDgH6/SXFU+Z7XE+E3SICAgmcSN1+mYjg0NTUfF
-         20KnRF+xgMESjgJXpc1SkSrulnixqMit27XfkUDPgcFqZo7uAJzGDPZ8kMdKVF/KbNzV
-         W4Pwce2yZEdCGLVNmcyDOVc2d408iQJKF1/67EGTQumKdTs7pZ+0DqIOUY7Ueaqh5oLe
-         ZiNBMZVmmoL7ebcLz1qGwD5bXXhValW9gzfI4fcXXxwrw1Er2MLYWta5edReZTxXLxBL
-         SWNJyFQ9QRES3jkAoDr7M6tgtUtF8CNaj4kPHSmoMjKrQIMF4jrC1+Iuy/qL2a2aQjWG
-         XOMw==
-X-Gm-Message-State: AOAM531hWfZwTjjR6bGAFTbr2vAk/8YyHG6JecpTD/saXqYjdUXxuJsB
-        1h2I8I16KZv0V3Zg4YEGIOk=
-X-Google-Smtp-Source: ABdhPJyyWlqOi881rwwar8nssPXB4LzlZhjcTUAVcp2Ix24BVuoPkzt7VIFoWPh+xOxI1NRrikiLUw==
-X-Received: by 2002:a05:6000:345:: with SMTP id e5mr12059182wre.333.1605419460016;
-        Sat, 14 Nov 2020 21:51:00 -0800 (PST)
+        bh=40+jqrpUK0SdtJrAhDUEaChrJidmD54kAPTtU1C47qo=;
+        b=Cn/crLZ/86wlHl2pn47qsZ/dmPoq8PZ5bgDcODhsJV1LuM2/VMJgfgjBxVLI7v36hn
+         5UviatLq3ASh6QmeI0emoayyl/nFtIw3+0vSBQVSTBXvLFs7wgZ6RSGL4cjUaxq55xDx
+         kWtoObawTJgedQ+o34yBsX6Rmw6MUApy5HCYp+jagDD83nt+kjR2/If6re4zaCHOf1Nd
+         7xDYoG7ct/zCSuuVe1SJTQ43y9LeSBdCpOZhwFIO8kDNY5vR0fLDD2gJEYh4ah3XLAnC
+         FL1hlFgDBapXnBAE6IooaeghjnSFAxJQZx0kFDirwbXyC8iZ/9gJRotJnL4W09Ii87Xv
+         BRCw==
+X-Gm-Message-State: AOAM531ntoI4ce174+306+WQJdjBP3t1JPqqHcVmVAEn4peBygRrFt4H
+        vCorRIkCNAUCwxg+CH6/fI0=
+X-Google-Smtp-Source: ABdhPJzq7wZGr68QEkaHFWYnyTRaGZ6ymFeh8oRhcoAygQgSzThA1MOAPEm+0mJu/rYb+cPSt9X0Zw==
+X-Received: by 2002:a1c:87:: with SMTP id 129mr9600178wma.34.1605420506956;
+        Sat, 14 Nov 2020 22:08:26 -0800 (PST)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id g11sm17547121wrq.7.2020.11.14.21.50.57
+        by smtp.gmail.com with ESMTPSA id q5sm13801290wrf.41.2020.11.14.22.08.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2020 21:50:59 -0800 (PST)
-Date:   Sun, 15 Nov 2020 06:50:57 +0100
+        Sat, 14 Nov 2020 22:08:26 -0800 (PST)
+Date:   Sun, 15 Nov 2020 07:08:25 +0100
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rockchip@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v4] PCI: Unify ECAM constants in native PCI Express
- drivers
-Message-ID: <X7DBwZ5cJrbQspM+@rocinante>
-References: <20201005003805.465057-1-kw@linux.com>
- <429099a8-5186-40c3-f5c0-f219b3e79f01@gmail.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for PCI device power state
+Message-ID: <X7DF2ZyVnyIFjdC1@rocinante>
+References: <20201102141520.831630-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <429099a8-5186-40c3-f5c0-f219b3e79f01@gmail.com>
+In-Reply-To: <20201102141520.831630-1-luzmaximilian@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20-10-04 19:53:06, Florian Fainelli wrote:
+Hi Maximilian,
 
-Hi Florian,
+On 20-11-02 15:15:20, Maximilian Luz wrote:
+> While most PCI power-states can be queried from user-space via lspci,
+> this has some limits. Specifically, lspci fails to provide an accurate
+> value when the device is in D3cold as it has to resume the device before
+> it can access its power state via the configuration space, leading to it
+> reporting D0 or another on-state. Thus lspci can, for example, not be
+> used to diagnose power-consumption issues for devices that can enter
+> D3cold or to ensure that devices properly enter D3cold at all.
+> 
+> To alleviate this issue, introduce a new sysfs device attribute for the
+> PCI power state, showing the current power state as seen by the kernel.
 
-Sorry for taking a long time to get back to you.
+Very nice!  Thank you for adding this.
 
 [...]
-> This appears to be correct, so:
-> 
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Thank you!
- 
-> however, I would have defined a couple of additional helper macros and do:
-> 
-> 	idx = PCIE_ECAM_BUS(bus->number) | PCIE_ECAM_DEV(devfn) |
-> PCIE_ECAM_FUN(devfn);
-> 
-> for clarity.
-> 
+> +/* PCI power state */
+> +static ssize_t power_state_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> +	pci_power_t state = READ_ONCE(pci_dev->current_state);
+> +
+> +	return sprintf(buf, "%s\n", pci_power_name(state));
+> +}
+> +static DEVICE_ATTR_RO(power_state);
 [...]
-> For instance, adding these two:
-> 
-> #define PCIE_ECAM_DEV(x)		(((x) & 0x1f) << PCIE_ECAM_DEV_SHIFT)
-> #define PCIE_ECAM_FUN(x)		(((x) & 0x7) << PCIE_ECAM_FUN_SHIFT)
-> 
-> may be clearer for use in drivers like pcie-brcmstb.c that used to treat the
-> device function in terms of device and function (though it was called slot
-> there).
 
-Regarding the suggestion above - it has been like that initially, albeit
-Bjorn suggested that there is no need to reply on the macros that use
-PCI_SLOT() and PCI_FUNC() macros, see:
-
-https://lore.kernel.org/linux-pci/20200922232715.GA2238688@bjorn-Precision-5520/
-
-I would be happy to put the macros back if there is a value in having
-the extra macros added - perhaps for clarify, as you suggest.
+Curious, why did you decide to use the READ_ONCE() macro here?  Some
+other drivers exposing data through sysfs use, but certainly not all.
 
 Krzysztof
