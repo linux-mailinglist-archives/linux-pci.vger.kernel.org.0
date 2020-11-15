@@ -2,77 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B91362B32B0
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 07:20:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6026D2B32B7
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Nov 2020 07:39:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgKOGTl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Nov 2020 01:19:41 -0500
-Received: from mail-wm1-f47.google.com ([209.85.128.47]:51205 "EHLO
-        mail-wm1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgKOGTl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Nov 2020 01:19:41 -0500
-Received: by mail-wm1-f47.google.com with SMTP id 19so20448464wmf.1;
-        Sat, 14 Nov 2020 22:19:39 -0800 (PST)
+        id S1726534AbgKOGi7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Nov 2020 01:38:59 -0500
+Received: from mail-io1-f48.google.com ([209.85.166.48]:45927 "EHLO
+        mail-io1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgKOGi6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Nov 2020 01:38:58 -0500
+Received: by mail-io1-f48.google.com with SMTP id u21so13964691iol.12
+        for <linux-pci@vger.kernel.org>; Sat, 14 Nov 2020 22:38:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m2k+jXkCTT8AyJtZmh8dXLdTOAO5+++5VuzTxxdVjaA=;
-        b=stn6go7mLtOxEj43cm1lGzCLhEaVk1ovK0HsslXF5DG2Db7hEOntlAcR8tzgeNWPeX
-         dMz6fIZCW0Mp0JghNp40eqeMa3Ay3ULL3kywhW4rKvYeStvHJPcNA9hXsoX641M/nW1n
-         3KbRk/rnuQyDmMZWGHIshrafR5x5WB95EWFNVHKLjwA+exv0zcHXbRblRMorsbNYxz7m
-         AOq0hD+JO6yRQqAo3mza912SR3qqliobNb3zwHzdv0yppmzD90/xkBnKBDxNo1FV/0G7
-         dHW/DWLJrNN1dK4aY6lk0rILFt7E0lVw2u62HB6qBHAbjqYxa3g6Gvp/vKIPgn2T8cUj
-         lW7w==
-X-Gm-Message-State: AOAM533iQ7/rc+nfvAdH2l1BHMMSUlKwPpAfPcZRXh3CpFh37HVgnCJP
-        WpM4hMNjHX7RaWxDuB/FSns=
-X-Google-Smtp-Source: ABdhPJxlnhRokfdT7Ykzm/yBO4HrN33xEkq6Ahv6bP8YU7Hn7OqIVw9WeM9man48fIGe3vgzPRIIcA==
-X-Received: by 2002:a7b:c3c7:: with SMTP id t7mr9966222wmj.114.1605421178486;
-        Sat, 14 Nov 2020 22:19:38 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to;
+        bh=621cyGWiiZs6Vj0tRrBiG0e3tmbixDYQfyQ4RYNoGzQ=;
+        b=Y5hWaUFPk+Ervd1JbVAn/tx2we+dBd9khx8f/OrN9ecOuQXPIDtPrgu+MzuFIQ6RkX
+         TEZ+wrlH/++RFiLiZtpD5xI4diovpxo/jxtSB1pUqKFjstliKdrJLdygYxqmaNfoXWUI
+         jkBFbFa1t67cohDR0o2/plaUFJVMSe78drZr5VsoiSvAcpIqtiDNu3GczNQDHdBwu38h
+         N5IhEXaSB4QMvSC/MksWv6VSQfeXxCocOsYH30Z570MmaZmh+6Jn7kyAndbI7wuY2S1/
+         oh/dKnG8aotdMfTomjRsrXyohHUXxT1E7Xo9dJWAVEQuIJw9+mjJ7bgzWkutfia6mT6A
+         qfXw==
+X-Gm-Message-State: AOAM531VWBVwRwMMFumhsLqn1ktMiJ9er9d7S6gauynGtDczd76atRqJ
+        krouxyIUtTJ/gR3+nhGB/Eo=
+X-Google-Smtp-Source: ABdhPJzkUkX6mq0yEpqhSXi5gxBN3tSlcycL+i66WJnGUjMDqtEyFj0P8hLkfPhzIzjTag4eHuCf1A==
+X-Received: by 2002:a02:cb8d:: with SMTP id u13mr7596743jap.110.1605422338235;
+        Sat, 14 Nov 2020 22:38:58 -0800 (PST)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id g4sm17131135wrp.0.2020.11.14.22.19.37
+        by smtp.gmail.com with ESMTPSA id v15sm8332186ile.37.2020.11.14.22.38.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Nov 2020 22:19:37 -0800 (PST)
-Date:   Sun, 15 Nov 2020 07:19:36 +0100
+        Sat, 14 Nov 2020 22:38:57 -0800 (PST)
+Date:   Sun, 15 Nov 2020 07:38:54 +0100
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, Yinghai Lu <yinghai@kernel.org>
-Subject: Re: PCI: Race condition in pci_create_sysfs_dev_files
-Message-ID: <X7DIeE2tPqnDoYXP@rocinante>
-References: <20201007161434.GA3247067@bjorn-Precision-5520>
- <20201008195907.GA3359851@bjorn-Precision-5520>
- <20201009080853.bxzyirmaja6detk4@pali>
- <20201104162931.zplhflhvz53odkux@pali>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] Expose PCIe SSD Status LED Management DSM in sysfs
+Message-ID: <X7DM/hTfyYdw2jlO@rocinante>
+References: <20201110153735.58587-1-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201104162931.zplhflhvz53odkux@pali>
+In-Reply-To: <20201110153735.58587-1-stuart.w.hayes@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Pali!
+Hi Stuart,
 
-Sincere apologies for taking a long time to get back to you.
-
-On 20-11-04 17:29:31, Pali Rohár wrote:
+On 20-11-10 09:37:35, Stuart Hayes wrote:
 
 [...]
-> 
-> Krzysztof, as Bjorn wrote, do you want to take this issue?
-> 
-[...]
+> +
+> +	scnprintf(buf, PAGE_SIZE, "%#x\n", dsm_output->state);
+> +
+> +	ACPI_FREE(out_obj);
+> +
+> +	return strlen(buf) > 0 ? strlen(buf) : -EIO;
 
-Yes.  I already talked to Bjorn about this briefly, and thus I am more
-than happy to take care about this.  Most definitely.
+Question to you - since scnprintf() returns the number of characters
+written into a buffer, maybe it be possible to use this return value
+instead of using strlen(), what do you think?
 
 Krzysztof
