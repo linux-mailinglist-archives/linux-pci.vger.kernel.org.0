@@ -2,103 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEDF32B4404
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 13:52:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83F302B44EE
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 14:47:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgKPMus (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 07:50:48 -0500
-Received: from mga06.intel.com ([134.134.136.31]:53938 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgKPMus (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Nov 2020 07:50:48 -0500
-IronPort-SDR: RBIuWte6u/jJtvuXJLAh4MS1aHuXA2973tglz7BTxbixHdD/y4PVFNlWzZnU5Yj1h4BdnIBqgd
- PB69dAaS8ryg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9806"; a="232356595"
-X-IronPort-AV: E=Sophos;i="5.77,482,1596524400"; 
-   d="scan'208";a="232356595"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2020 04:50:41 -0800
-IronPort-SDR: pjbCtcfsqxuDEzk4ztyIKCUi9dy3iW0ILklBigT8tTdytW+E8PG9A1yk/KJqKaM1OE+uXZe2oq
- gFgJn9gqbffg==
-X-IronPort-AV: E=Sophos;i="5.77,482,1596524400"; 
-   d="scan'208";a="358453174"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.215.59]) ([10.254.215.59])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2020 04:50:38 -0800
-Cc:     baolu.lu@linux.intel.com, Itay Aveksis <itayav@nvidia.com>,
-        Ziyad Atiyyeh <ziyadat@nvidia.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Moshe Shemesh <moshe@nvidia.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: iommu/vt-d: Cure VF irqdomain hickup
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200826111628.794979401@linutronix.de>
- <20201112125531.GA873287@nvidia.com> <87mtzmmzk6.fsf@nanos.tec.linutronix.de>
- <87k0uqmwn4.fsf@nanos.tec.linutronix.de>
- <87d00imlop.fsf@nanos.tec.linutronix.de>
- <CAMuHMdXA7wfJovmfSH2nbAhN0cPyCiFHodTvg4a8Hm9rx5Dj-w@mail.gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <686f0416-e408-7e6b-0fc1-8cddcd479bb6@linux.intel.com>
-Date:   Mon, 16 Nov 2020 20:50:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.3
+        id S1726416AbgKPNp5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 08:45:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgKPNp4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 08:45:56 -0500
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D55CC0613CF;
+        Mon, 16 Nov 2020 05:45:56 -0800 (PST)
+Received: by mail-pg1-x542.google.com with SMTP id 62so13255187pgg.12;
+        Mon, 16 Nov 2020 05:45:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2xltnhArQ46zPt1AhUH7/HjKCFSGIMeJZ2ZE626Cb4k=;
+        b=JrVsFEPbaP7qtjZTl0SaHhYi0aQajdxebrHZeCx+I/FBKSSY2cdWFUT3tAvbUPaLao
+         AizGgOZ7y2IBjwQynHChCnwHKMe17K9/TnKK6KTiWEbfHb9U4pw+jdhJySRwEY3mtyqm
+         PSIzz17l2ctPjTw1XlIAxyLMesds8eDW+VqUUaVAG0lZX/aIuhPa7lSz4UTzg79Wj5at
+         24KWPPJM94hrIp5t2/NrviPa263GJyvvNf0qF9M4mYdn/nJSLhnb9MxGufkYNJMu9qeR
+         tja+74BNb4s1G0ofn83Yb+6tw+SGm+OJqodGqo+C3Zm5FqBj0BMeCqba4wqqdHqcOEXj
+         Ip8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2xltnhArQ46zPt1AhUH7/HjKCFSGIMeJZ2ZE626Cb4k=;
+        b=mMFGwQRCOvoGe9mx1reyxo9/CAxOoF4cBLFmSnsSQtWtyMDR69qwwydJFEUb8HIoSD
+         4AbObRgNzGN4aeR/bwiiGmxkuG9rPWkb0VF8I9JEaFu0OKPt3uhmyU8pZ8m9XV8tSMlw
+         w5Hx/8/4gadIimhaBemipZTFTj59AFwA8OiIJdzjlFVO00CFaqqYyyewlWl3rSb9X4wN
+         P64RpZD7s0iMP0LHoC6SCaTIco8Ls/r5cGNeWh2mA5/7Nq5CMCTXO32F0ItczKV20gkp
+         ijKqUwh/6+0JRDKrciVS0ufXREjA3fHhm95Zojjdrb1ydUE09MdAWPtQl/BbDsexlUPj
+         S8Xw==
+X-Gm-Message-State: AOAM5326C9GDhjVM+RcUAMA10pC+o/JbxNusX2roGYf0H6PFUGBpKvs8
+        +PO/kx+HWvVQ0VjMfufpwc7dcA8ciR/Yc2nqtwo=
+X-Google-Smtp-Source: ABdhPJytXcRS+PUZHr+vY/FY2mP+eW3iwttP1o2/6RewHYJEWGUN2isHUzPIgRAsot9cE92t7RGb0n50eC0wENn9ag8=
+X-Received: by 2002:a63:3e05:: with SMTP id l5mr12624254pga.74.1605534356088;
+ Mon, 16 Nov 2020 05:45:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXA7wfJovmfSH2nbAhN0cPyCiFHodTvg4a8Hm9rx5Dj-w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20201116094644.GP4077@smile.fi.intel.com> <20201116123735.GA1273179@bjorn-Precision-5520>
+In-Reply-To: <20201116123735.GA1273179@bjorn-Precision-5520>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 16 Nov 2020 15:46:44 +0200
+Message-ID: <CAHp75VdYg+u5jhb9aA4w=f4WbqQLD8aUaf1MRCWp2c+CHOr67A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        USB <linux-usb@vger.kernel.org>, alberto.vignani@fastwebnet.it
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020/11/16 17:47, Geert Uytterhoeven wrote:
-> Hi Thomas,
-> 
-> On Thu, Nov 12, 2020 at 8:16 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->> The recent changes to store the MSI irqdomain pointer in struct device
->> missed that Intel DMAR does not register virtual function devices.  Due to
->> that a VF device gets the plain PCI-MSI domain assigned and then issues
->> compat MSI messages which get caught by the interrupt remapping unit.
->>
->> Cure that by inheriting the irq domain from the physical function
->> device.
->>
->> That's a temporary workaround. The correct fix is to inherit the irq domain
->> from the bus, but that's a larger effort which needs quite some other
->> changes to the way how x86 manages PCI and MSI domains.
->>
->> Fixes: 85a8dfc57a0b ("iommm/vt-d: Store irq domain in struct device")
->> Reported-by: Jason Gunthorpe <jgg@nvidia.com>
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> ---
->>   drivers/iommu/intel/dmar.c |   19 ++++++++++++++++++-
->>   1 file changed, 18 insertions(+), 1 deletion(-)
->>
->> --- a/drivers/iommu/intel/dmar.c
->> +++ b/drivers/iommu/intel/dmar.c
->> @@ -333,6 +333,11 @@ static void  dmar_pci_bus_del_dev(struct
->>          dmar_iommu_notify_scope_dev(info);
->>   }
->>
->> +static inline void vf_inherit_msi_domain(struct pci_dev *pdev)
->> +{
->> +       dev_set_msi_domain(&pdev->dev, dev_get_msi_domain(&pdev->physfn->dev));
-> 
-> If CONFIG_PCI_ATS is not set:
-> 
->      error: 'struct pci_dev' has no member named 'physfn'
-> 
-> http://kisskb.ellerman.id.au/kisskb/buildresult/14400927/
+On Mon, Nov 16, 2020 at 2:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Mon, Nov 16, 2020 at 11:46:44AM +0200, Andy Shevchenko wrote:
+> > On Fri, Nov 13, 2020 at 05:21:38PM -0600, Bjorn Helgaas wrote:
+> > > On Fri, Nov 06, 2020 at 12:05:25PM +0200, Andy Shevchenko wrote:
+> > > > Pericom PCIe-USB adapter advertises MSI, but documentation says
+> > > > "The MSI Function is not implemented on this device." in the chapters
+> > > > 7.3.27, 7.3.29-7.3.31.
+> > > >
+> > > > Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
+> > > > Datasheet: https://www.diodes.com/assets/Datasheets/PI7C9X440SL.pdf
+> > > > Reported-by: alberto.vignani@fastwebnet.it
+> > >
+> > > Is there a URL to a problem report we can include here?
+> >
+> > You mean URL to email archives or something else?
+>
+> Yes.  URL to lore email archive, bugzilla, or any other report of the
+> problem this caused, i.e., how Alberto noticed something wrong.
 
-Maybe pci_physfn() helper should be used here.
+Okay, I'll include in v3.
 
-Best regards,
-baolu
+-- 
+With Best Regards,
+Andy Shevchenko
