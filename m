@@ -2,93 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1D2C2B4B79
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 17:42:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15D522B4B94
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 17:47:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgKPQmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 11:42:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729689AbgKPQmC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Nov 2020 11:42:02 -0500
-Received: from localhost (189.sub-72-105-114.myvzw.com [72.105.114.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A6AD206D9;
-        Mon, 16 Nov 2020 16:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605544922;
-        bh=TgH1abjAGKm1AI19eKqktN7to1FFPzXHleFxcxbkKI8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sQ5aXPh3snFjQmczM+VPazL8s/aZevGo5eKBMXnrsHdeK2P4LWLWwhRgrP+4tjo8v
-         fW5whkpjlstLvmNNEO8dlnYlFNu6k+v/nUNQX7WySZoxfEoEU88ZimYtMLQAhFVB1f
-         GulmiaLGww5TeaexigJXCTBgVktebrIBLAsYafiM=
-Date:   Mon, 16 Nov 2020 10:41:59 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
+        id S1729849AbgKPQqG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 11:46:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727499AbgKPQqG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 11:46:06 -0500
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29A7C0613CF;
+        Mon, 16 Nov 2020 08:46:05 -0800 (PST)
+Received: by mail-wm1-x344.google.com with SMTP id m125so12937392wmm.3;
+        Mon, 16 Nov 2020 08:46:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UxQzYGybcAbsNf4mOByFctsQCkAbGLdmDSJjJAk7FOc=;
+        b=ApjATx2it5+m4cfmlx0/VFH1Oix0L++GsWH3Jt951tXd10nY70CorcEPPaThqVwWq2
+         fT2KrKebl0yOldf6DdUpGgrLiqTVNpk4tX6KlUyc3MF9pA/q7SqaWjFKfsoaf5Ghpf3G
+         aTjxKGeKkEstLxdXSpCtFzxmxLtHEJ1yqW3x6Zhk/GJkqThe99sW+lSiU6akIXRajDxZ
+         CZ9wURHzr3MzVIsdgwxywUTOXYQxALvzAqY55X95MbLNue3E2/U1BacyiTlQUBnT+Tp9
+         cdwkt5T8eWDclJkOVlbL5ZoyNnN82zAUovBKn2MFl+k2H9gyvT9uAHD0aWVn/K0q0V1e
+         iOGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UxQzYGybcAbsNf4mOByFctsQCkAbGLdmDSJjJAk7FOc=;
+        b=YHmOvQcNhQl2FJuNrAbEV+i9NH/2qWeaVf29uikpYm8fWG8nN7ZzIT/2skGlyTLvuc
+         H6Z2qmrb4e4atnVWkbXxTcacF5qjwCf5CHxXYtV+MdE/yatskZH0DGoBPVLptkoZVVdi
+         gmhZBw5z7CpEcKgEtJZS4UkbghL8ThDaEmvgtxCjkym++uxx6l1FpcxkdO3uN3Pz0eHj
+         xEze964911w2l5LTYjDmvND8ngu41x/x5XPT+h2Ge2CGIlo7/mMksjpp42vjnZJwgUKw
+         7P5oNdxoYjVlSD1xsWwEWV7Fh9f0q8q62uxcUdOKFbUTK8pBW3q1irPIlkJO0OwcpLRd
+         MRJw==
+X-Gm-Message-State: AOAM5315MdxuypGa9gCy5aiX8INMe1FT4rpF65C2yviRjTRPycBfZWVC
+        yRIbDNQHWAqmPuZEUu8QhaQ=
+X-Google-Smtp-Source: ABdhPJwD1s7s/I8WEIMIvIvEQxdYCZHJSKfLtVGLhAA/ktz7sT7W5D/wq39cv78EJFhYAfeMr8CHIg==
+X-Received: by 2002:a1c:9ec9:: with SMTP id h192mr16265589wme.8.1605545164609;
+        Mon, 16 Nov 2020 08:46:04 -0800 (PST)
+Received: from localhost.localdomain (host-92-5-241-147.as43234.net. [92.5.241.147])
+        by smtp.gmail.com with ESMTPSA id g23sm20465568wmh.21.2020.11.16.08.46.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Nov 2020 08:46:04 -0800 (PST)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Xiaowei Song <songxiaowei@hisilicon.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Johan Jonker <jbx6244@gmail.com>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI: rockchip: make ep_gpio optional
-Message-ID: <20201116164159.GA1282970@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201116075215.15303-2-wens@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-safety@lists.elisa.tech,
+        linux-pci@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] PCI: dwc: kirin: Use PTR_ERR_OR_ZERO
+Date:   Mon, 16 Nov 2020 16:44:03 +0000
+Message-Id: <20201116164403.25289-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Run "git log --oneline drivers/pci/controller/pcie-rockchip.c" (or
-even just look at the Fixes: commits you mention) and follow the
-convention, e.g.,
+Coccinelle suggested using PTR_ERR_OR_ZERO() and looking at the code,
+we can use PTR_ERR_OR_ZERO() instead of checking IS_ERR() and then
+doing 'return 0'.
 
-  PCI: rockchip: Make 'ep-gpios' DT property optional
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-kirin.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Also, you used 'ep_gpio' (singular, with an underline) in the subject
-but 'ep-gpios' (plural, with hyphen) in the commit log.  The error
-message and Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-both say 'ep-gpios' (plural, with hyphen).
+diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+index d0a6a2dee6f5..cf1379a8b950 100644
+--- a/drivers/pci/controller/dwc/pcie-kirin.c
++++ b/drivers/pci/controller/dwc/pcie-kirin.c
+@@ -138,10 +138,8 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+ 		return PTR_ERR(kirin_pcie->apb_sys_clk);
+ 
+ 	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
+-	if (IS_ERR(kirin_pcie->pcie_aclk))
+-		return PTR_ERR(kirin_pcie->pcie_aclk);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(kirin_pcie->pcie_aclk);
+ }
+ 
+ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+@@ -169,10 +167,8 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+ 
+ 	kirin_pcie->sysctrl =
+ 		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
+-	if (IS_ERR(kirin_pcie->sysctrl))
+-		return PTR_ERR(kirin_pcie->sysctrl);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(kirin_pcie->sysctrl);
+ }
+ 
+ static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
+-- 
+2.11.0
 
-Please fix so this is all consistent.  Details matter.
-
-On Mon, Nov 16, 2020 at 03:52:12PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> The Rockchip PCIe controller DT binding clearly states that ep-gpios is
-> an optional property. And indeed there are boards that don't require it.
-> 
-> Make the driver follow the binding by using devm_gpiod_get_optional()
-> instead of devm_gpiod_get().
-> 
-> Fixes: e77f847df54c ("PCI: rockchip: Add Rockchip PCIe controller support")
-> Fixes: 956cd99b35a8 ("PCI: rockchip: Separate common code from RC driver")
-> Fixes: 964bac9455be ("PCI: rockchip: Split out rockchip_pcie_parse_dt() to parse DT")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  drivers/pci/controller/pcie-rockchip.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-> index 904dec0d3a88..c95950e9004f 100644
-> --- a/drivers/pci/controller/pcie-rockchip.c
-> +++ b/drivers/pci/controller/pcie-rockchip.c
-> @@ -118,7 +118,7 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
->  	}
->  
->  	if (rockchip->is_rc) {
-> -		rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
-> +		rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep", GPIOD_OUT_HIGH);
->  		if (IS_ERR(rockchip->ep_gpio)) {
->  			dev_err(dev, "missing ep-gpios property in node\n");
->  			return PTR_ERR(rockchip->ep_gpio);
-> -- 
-> 2.29.1
-> 
