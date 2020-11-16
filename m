@@ -2,109 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66C152B4E92
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 18:55:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7015A2B4EAA
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 18:59:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388165AbgKPRxV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 12:53:21 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43406 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732758AbgKPRxV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 12:53:21 -0500
-Received: by mail-ot1-f66.google.com with SMTP id y22so16846139oti.10;
-        Mon, 16 Nov 2020 09:53:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l7+Z3mrIb8Sp0oVQFXi8OYd9zBdaHaRXhlQ8/Dy+0xg=;
-        b=Ryru2wbXXLNUWNAzbJoowtDcA3rIoCtvzq+d6RI51iTi9x2HN6U51B8sjI8SL5C1X5
-         4RL5QcRY0gHZY4tGfn4/Ql+EcEv0ke95qdMfCLM5gc+nYXBbtjH+yWPqQIjbzyiEIrg9
-         GOWe+a2N569WEYeufSuXIYC5ykHkA+jLYD1Fo1bk7Oe4n1z5xEJ2BuWNUVOgfUT/yXjx
-         81veXU1KG626WOauEgLizN+B78Iulj5KWrMLt5/uIJjFblb4HVwiOhZtY64d8hfNd9R2
-         KgbFN7eIuvBouIGrIKGaXhN1xZOkW6nILqlbNjiVBbzn8b7YCcP/pxuelus4CzKm8POC
-         XlsQ==
-X-Gm-Message-State: AOAM532EgA8GbM0IRe/DUGQB8jJSwfxwz/O6AXthgplbzr4Owb2qFzX1
-        ttT6oBgwwmlYnhT3QJiLIA1NaSZ9pvQUU/yGs9k=
-X-Google-Smtp-Source: ABdhPJxc7w+YIJgU/sF8DM8t4ZQPGnBVp2AsN1ZOK0nspYoAfne633B/qNgtj2Qq+5bp4UroC0ZID28fsOp812JpIB4=
-X-Received: by 2002:a9d:171a:: with SMTP id i26mr345705ota.260.1605549200640;
- Mon, 16 Nov 2020 09:53:20 -0800 (PST)
+        id S2387714AbgKPR4f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 12:56:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387513AbgKPR4e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 12:56:34 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC33AC0613CF;
+        Mon, 16 Nov 2020 09:56:34 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1605549393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/4Dj4H4h07T3HAdVoU3L0DmQaoeq12MkqX6wjjZOegA=;
+        b=nBGp3JNgdM2ohDkTTKJk3iDoHDePjcC35N1cE/kHdVkfINkXyyDrvHUtP/WpveXZe5BFgW
+        C5NsffljQAIk3bx4ZPB/QKt2B4n1PKGZKDwVLMr80B07vhBNNrdSvcTDRLVhip02c2EykS
+        C0yJ+BbYBfpc97IFvpks8xyZ1Pl+VSIwJvHj3MlZ7I0177vAtCom12kyEH/h0JvOHu7a+F
+        SpOl07nr6kv/+P47LGoE9cSZehjaOGqrtUYgzL7D9GJIZxO2ZPtalnUvv72o09gWFKqLXZ
+        yrFK5EgLGLYWCWQGi27BLzkhXCdD/dU3CUM4lu/7psDSHvE6jPhvBylg5/a1yQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1605549393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/4Dj4H4h07T3HAdVoU3L0DmQaoeq12MkqX6wjjZOegA=;
+        b=xxLH7da1/bbkHaKVfEDfUOMlDxTKQrHyxLLt/pKG4NijVWYaDvU4EIFGsiDWcmWfVFWpqV
+        OMKDOAshoXel6PDg==
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>
+Cc:     "Raj\, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Wilk\, Konrad" <konrad.wilk@oracle.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "Dey\, Megha" <megha.dey@intel.com>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+In-Reply-To: <20201116154635.GK917484@nvidia.com>
+References: <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com> <20201112193253.GG19638@char.us.oracle.com> <877dqqmc2h.fsf@nanos.tec.linutronix.de> <20201114103430.GA9810@infradead.org> <20201114211837.GB12197@araj-mobl1.jf.intel.com> <877dqmamjl.fsf@nanos.tec.linutronix.de> <20201115193156.GB14750@araj-mobl1.jf.intel.com> <875z665kz4.fsf@nanos.tec.linutronix.de> <20201116002232.GA2440@araj-mobl1.jf.intel.com> <MWHPR11MB164539B8FDE63D5CBDA300E18CE30@MWHPR11MB1645.namprd11.prod.outlook.com> <20201116154635.GK917484@nvidia.com>
+Date:   Mon, 16 Nov 2020 18:56:33 +0100
+Message-ID: <87y2j1xk1a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <CAJZ5v0gRph3UMffWqUVqTnDE149Ai-SbzmhjzZU1x=QOzAZeZA@mail.gmail.com>
- <20201007171024.GA3252529@bjorn-Precision-5520>
-In-Reply-To: <20201007171024.GA3252529@bjorn-Precision-5520>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 16 Nov 2020 18:53:09 +0100
-Message-ID: <CAJZ5v0gwSe=o_Ta0MR6XTn4BmHjs=ewTVJHe6OTp18ho+5h1Eg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Disable PTM during suspend on Intel PCI bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <len.brown@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 7:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Mon, Nov 16 2020 at 11:46, Jason Gunthorpe wrote:
+
+> On Mon, Nov 16, 2020 at 07:31:49AM +0000, Tian, Kevin wrote:
 >
-> On Wed, Oct 07, 2020 at 06:53:16PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Oct 7, 2020 at 6:49 PM David E. Box <david.e.box@linux.intel.com> wrote:
-> > >
-> > > On Intel Platform Controller Hubs (PCH) since Cannon Lake, the Precision
-> > > Time Measurement (PTM) capability can prevent PCIe root ports from power
-> > > gating during suspend-to-idle, causing increased power consumption on
-> > > systems that suspend using Low Power S0 Idle [1]. The issue is yet to be
-> > > root caused but believed to be coming from a race condition in the suspend
-> > > flow as the incidence rate varies for different platforms on Linux but the
-> > > issue does not occur at all in other operating systems. For now, disable
-> > > the feature on suspend on all Intel root ports and enable again on resume.
-> >
-> > IMV it should also be noted that there is no particular reason why PTM
-> > would need to be enabled while the whole system is suspended.  At
-> > least it doesn't seem to be particularly useful in that state.
+>> > The subdevices require PASID & IOMMU in native, but inside the guest there
+>> > is no
+>> > need for IOMMU unless you want to build SVM on top. subdevices work
+>> > without
+>> > any vIOMMU or hypercall in the guest. Only because they look like normal
+>> > PCI devices we could map interrupts to legacy MSIx.
+>> 
+>> Guest managed subdevices on PF/VF requires vIOMMU. 
 >
-> Is this a hardware erratum?  If not, and this is working as designed,
-> it sounds like we'd need to apply this quirk to every device that
-> supports PTM.  That's not really practical.
+> Why? I've never heard we need vIOMMU for our existing SRIOV flows in
+> VMs??
 
-Why not?
+Handing PF/VF into the guest does not require it.
 
-It looks like the capability should be saved by pci_save_state() (it
-isn't ATM, which appears to be a mistake) and restored by
-pci_restore_state(), so if that is implemented, the saving can be
-combined with the disabling in principle.
+But if the PF/VF driver in the guest wants to create and manage the
+magic mdev subdevices which require PASID support then you surely need
+it.
 
-> The bugzilla says "there is no erratum as this does not affect
-> Windows," but that doesn't answer the question.  What I want to know
-> is whether this is a *hardware* defect and whether it will be fixed in
-> future hardware.
+Thanks,
 
-I cannot answer this question, sorry.
-
-ATM we only know that certain SoCs may not enter the deepest idle
-state if PTM is enabled on some PCIe root ports during suspend.
-
-Disabling PTM on those ports while suspending helps and hence the patch.
-
-It doesn't appear to qualify as a "hardware defect".
-
-> If it's a "wont-fix" hardware issue, we can just disable PTM
-> completely on Intel hardware and we won't have to worry about it
-> during suspend.
-
-I'm not following the logic here, sorry again.
-
-First of all, there are systems that never suspend, so why would they
-be affected by the remedy (whatever it is)?
-
-Second, it is not about the suspend failing entirely.  It's about
-being able to make the system draw less power while suspended.
-
-Generally, if someone said "I can make the system draw less power
-while suspended if I disable PCIe feature X during suspend", would you
-disregard that?
+        tglx
