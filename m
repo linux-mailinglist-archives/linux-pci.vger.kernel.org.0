@@ -2,91 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B48A2B4BCC
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 17:56:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB62B2B4BD0
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 17:56:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732261AbgKPQ4L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 11:56:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39258 "EHLO
+        id S1731073AbgKPQ4Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 11:56:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729841AbgKPQ4L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 11:56:11 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE3D5C0613CF;
-        Mon, 16 Nov 2020 08:56:10 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id m6so2258630wrg.7;
-        Mon, 16 Nov 2020 08:56:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rgqx75mWHRgXFv0CwsRMCHA+Jcb7vaejQXT/lvk4loI=;
-        b=R4iHLOz/BtXQffuiBz0GFIa0q6Lg5X2oAtQfBOGQDXzIe7Mk9aRwyl4IuT2aiNOTER
-         uCgxNsY75kHGqbARXkCeKliXExFRpdBRzqZa4znrXAPHSI8Q08RQibOiZMCFaBx4+WZZ
-         vCqpygSaD+QLP0HOcqTAQWgXVV/tyPRdk4VJtt0GNJhh6g3/SfLMdGpl7XggqqWYWA6N
-         ZGtawuIpnNbLiWV0LJguJir7mP5dYJxNB3gVDbMzYJII9YfOWHD0SfsMcu6OMwY02wES
-         U7dx4hXvHUEa9XDUjv0lwv/DQXHrMlE5mc7YPavRRfP9PHiN5yjotVvZ9VQah3U357aQ
-         hDJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rgqx75mWHRgXFv0CwsRMCHA+Jcb7vaejQXT/lvk4loI=;
-        b=PRPP8OctNcP1Sv5F9oHUZZwND5F38cejGLB7auF5EGS1ZeGd2wxV9WixVQeScn9Jd3
-         uUGmBxHfTicbHtelqEPSzlTHxD69oUyi0XsCyEjfFiGCFR+XOurOeAcfPyxG2qG+fXkm
-         lyCKJ4NKLg6MhEEDIFRR0fSiJyDHX+WkcOQl1Dt2WSfMXsnuQ35iLaE2BpoUb2H1O8R4
-         ik1yxQ2ta4ENfrjuwji9X8df5hMVK45Yjk30tlWwQrtwGf8zH4DThXcdSe3uT5DCqjDD
-         zALwzYczqjjGOBTkEs1VBF4vYneXklYic6UiS/+7XfpUzB4bl7Od7O+Zp97X81gVYjzs
-         gzDA==
-X-Gm-Message-State: AOAM530pa+sHvVkujolv5LpiFtZ82KIVQV4Brnskt+87tktdF/+UnM6J
-        rvvGSUw5xoAAZ0RHKxCj0PK0HWcgtoIjow==
-X-Google-Smtp-Source: ABdhPJxU6kxyRt4iLAsiDSGX2pIkswZYteymqDmfvEZ7u7/u0Yo6zB0NJQktTFsMB/UVTXHFnHIElQ==
-X-Received: by 2002:adf:ea91:: with SMTP id s17mr20593129wrm.349.1605545769524;
-        Mon, 16 Nov 2020 08:56:09 -0800 (PST)
-Received: from localhost.localdomain (host-92-5-241-147.as43234.net. [92.5.241.147])
-        by smtp.gmail.com with ESMTPSA id d2sm19314593wra.73.2020.11.16.08.56.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Nov 2020 08:56:09 -0800 (PST)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S1729841AbgKPQ4Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 11:56:24 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CB8C0613CF;
+        Mon, 16 Nov 2020 08:56:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ez/r2/t/kaF/FI46SV1LmO29yACb2u0s7Czy4NzcvE4=; b=kHsGrYZx3pXNKiKe3+8BlasjBW
+        /ZgYNui94kDLwShlww2me1+1fA4ohcU1nTMG85WRNbyMRPoOQPx+S9zKAlfQuvxKVwd+6GuqrZCl7
+        NTIQc7+ZTB6ssHPk8RT7yF3ufRM0rOvmKByQ6wBPZcypkiNt6+eBX73VqR2BLS9eoYFCvQcVPfDIb
+        rDlGRMSQ6n91vNZ38kfhhWPquKS9z/Q+pnuCzdDgzMQrCtNXPBNMeZ39vH4tKWiH6N9GFZh5Zi+Gi
+        ok7Prt96LS1TzyORkJiN/vVnb7x+BtXvQKO6pPfQb0bj0RUITHw2K84UVxvdKTG2xR1Cq0q0gnyOb
+        oCpYy1Dw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kehnj-0006G5-3G; Mon, 16 Nov 2020 16:56:23 +0000
+Date:   Mon, 16 Nov 2020 16:56:23 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, linux-safety@lists.elisa.tech,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] PCI: tegra: Use PTR_ERR_OR_ZERO
-Date:   Mon, 16 Nov 2020 16:54:07 +0000
-Message-Id: <20201116165407.8050-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
+Message-ID: <20201116165623.GA23268@infradead.org>
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+ <20201111054356.793390-4-ben.widawsky@intel.com>
+ <20201111071231.GC7829@infradead.org>
+ <CAPcyv4iA_hNc=xdcbR-eb57W9o4br1BognSr5Sj4pAO3uMm69g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iA_hNc=xdcbR-eb57W9o4br1BognSr5Sj4pAO3uMm69g@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Coccinelle suggested using PTR_ERR_OR_ZERO() and looking at the code,
-we can use PTR_ERR_OR_ZERO() instead of checking IS_ERR() and then
-doing 'return 0'.
+On Wed, Nov 11, 2020 at 09:17:37AM -0800, Dan Williams wrote:
+> > > +config CXL_MEM
+> > > +        tristate "CXL.mem Device Support"
+> > > +        depends on PCI && CXL_BUS_PROVIDER != n
+> >
+> > depend on PCI && CXL_BUS_PROVIDER
+> >
+> > > +        default m if CXL_BUS_PROVIDER
+> >
+> > Please don't set weird defaults for new code.  Especially not default
+> > to module crap like this.
+> 
+> This goes back to what people like Dave C. asked for LIBNVDIMM / DAX,
+> a way to blanket turn on a subsystem without needing to go hunt down
+> individual configs.
 
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
- drivers/pci/controller/pci-tegra.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Then at least do a
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 8fcabed7c6a6..4c52b2d58645 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -1308,10 +1308,8 @@ static int tegra_pcie_resets_get(struct tegra_pcie *pcie)
- 		return PTR_ERR(pcie->afi_rst);
- 
- 	pcie->pcie_xrst = devm_reset_control_get_exclusive(dev, "pcie_x");
--	if (IS_ERR(pcie->pcie_xrst))
--		return PTR_ERR(pcie->pcie_xrst);
- 
--	return 0;
-+	return PTR_ERR_OR_ZERO(pcie->pcie_xrst);
- }
- 
- static int tegra_pcie_phys_get_legacy(struct tegra_pcie *pcie)
--- 
-2.11.0
+   default CXL_BUS_PROVIDER
 
+but we really don't do this elsewhere.  E.g. we don't default the scsi
+disk driver on if there is some host adapter selected.
+
+
+> > > +MODULE_AUTHOR("Intel Corporation");
+> >
+> > A module author is not a company.
+> 
+> At least I don't have a copyright assignment clause, I don't agree
+> with the vanity of listing multiple people here especially when
+> MAINTAINERS has the contact info, and I don't want to maintain a list
+> as people do drive-by contributions and we need to figure out at what
+> level of contribution mandates a new MODULE_AUTHOR line. Now, that
+> said I would be ok to duplicate the MAINTAINERS as MODULE_AUTHOR
+> lines, but I otherwise expect MAINTAINERS is the central source for
+> module contact info.
+
+IMHO MODULE_AUTHOR is completely pointless.  I haven't used for ~15
+years.  Especially as the concept that a module has a single author
+is a rather strange one.
