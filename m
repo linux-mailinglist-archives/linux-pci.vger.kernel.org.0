@@ -2,223 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBB462B54DB
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 00:20:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C67E12B54E6
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 00:23:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgKPXTy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 18:19:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgKPXTy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 18:19:54 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DFDC0617A6
-        for <linux-pci@vger.kernel.org>; Mon, 16 Nov 2020 15:19:54 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id oq3so26808247ejb.7
-        for <linux-pci@vger.kernel.org>; Mon, 16 Nov 2020 15:19:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rDdIk6WlWEtTD2Qka3gH6AjvLJ6me8YyVBGtt6+aSYw=;
-        b=tOVwTthF+oRBzodNyAt892de12QeK9YVh1NmdZDEO+ofR5XYuXmTL3i9RBUf1+aETa
-         RFVLgVUdfHsJXcJtqXevWAzkAtkndhrk79ZB22Fl8dcQotGg81UcrLrkDgUhpDOaSjHh
-         qf30FSMAco1R758G8XGSN9+HqOguswlRzXbLpMVGufhvficKr1nnXpS/BeLzuW5kOZ6H
-         uijgCE4hItLT9gGhIkQTXdNWeJkMYVAtXYtoOwJfCr6bcEYae5leuL9ItdATzLxakHVQ
-         4Rgjwz3eq5uaVsvwQM3cUacE/x49Pg3gkJjvuwNG3Ko7T9/bynZN8PNor+wMDpL/mDkz
-         6ZuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rDdIk6WlWEtTD2Qka3gH6AjvLJ6me8YyVBGtt6+aSYw=;
-        b=UByx3wo7yTqJ2W2qPrOb4Xg4Oe0+1sXO8aG5wSZcC3aM00gnLS0mn+sEPwDB4EMg7p
-         LA4hFQpwXNrrYDasoJ/0writGMQo7Na1vomqgOXImCh3Gb0HmKsgoD43jk6ImNZswomc
-         KdtfeAoMP6EhBHzScwFTTOnt3FywzbJW9/23cjd214PhMUFw7/1uYMfUAMvMgjm50xZ4
-         OrdU/qwYDvrcGW4LmczM7GNL1l1uEzppB/xZoRnAHzIRBYpib9sApWuoFhdto02rOUGy
-         mwdno9IE16rfEc4H/mgOEwpGeEX7G0GppRICZFfIqHpAiBoU8gqE3lXSK63J9h8gqj+p
-         3RfQ==
-X-Gm-Message-State: AOAM530kJH7K8WUepUCHfm4VHWV39ITxB2bBGaAK45+lG5Kybn4bdO58
-        EhU7XxNHnIAwVxT/I7jLnNagdPikDcSQ1P0VmxK5tQ==
-X-Google-Smtp-Source: ABdhPJzPQBGGcW9pfRJd5nLo2pEUfKE5CqOYKsFWCIec639zZd/SeYHb1n/2m2TEOfzs9ZAm9D9yHborvu9fdysdK2A=
-X-Received: by 2002:a17:906:241b:: with SMTP id z27mr16049093eja.418.1605568792690;
- Mon, 16 Nov 2020 15:19:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20201111054356.793390-5-ben.widawsky@intel.com>
- <20201113181732.GA1121121@bjorn-Precision-5520> <20201114011225.lzhrbk3sszw2a7m6@intel.com>
-In-Reply-To: <20201114011225.lzhrbk3sszw2a7m6@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 16 Nov 2020 15:19:41 -0800
-Message-ID: <CAPcyv4j+zbns+WhnxWXCdoxa=QN40BFXUpmb=04q36H1sX-aBw@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/9] cxl/mem: Map memory device registers
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        id S1728814AbgKPXW3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 18:22:29 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8084 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgKPXW2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 18:22:28 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fb309be0000>; Mon, 16 Nov 2020 15:22:38 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Nov
+ 2020 23:22:28 +0000
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
+ by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 16 Nov 2020 23:22:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XqMYJ3fND+xM6LmnJxncZTLAlrRw9rzJcf5ESjpromsEzuW9YrpErmxWwU8kWcUlBkMw4fB8YirPGTH9znM6TzNmfZtFNzA6+c7CLcv8Ucco6aIAdF9SoxrHknF+gZ8JFiWVSwnKZDizvdKaJ0A6TXDBumGaHPg+sSsiPhyEBGQTj2KFLcyC/6T+Hn6tQf/3Z/s6PiYBN4ZdtFTEL1SWHnq2cWz3YW+wemeqK8Sc7dU80+z0IJ6QeYoWSR9fYGc56cbX6+r//eXG4vVpG1f+5uH48cQSo6NKjCjfLevEt/wHhHeh8XRFkPKZZig0qY8W4vlZzTwkOal5l25i0W8xGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=509+VmkLlEPOxe/lQoQ9OAnAIf0urLi7ZvhTpP11KWo=;
+ b=iktqZ6+edGq54JTXYpvhvxwZ75TDHFiTlLlXoCunEbF1hnXeUj8e9UTU64NY6u8n5VaeG11Fp/tclotuA7D14puuC+XqWDlIK68/59gvpnrBXFxRGlItOdA+1VTn2BzfxP5DxbK5QqFjDSsnssiK3nfXNr7QMg4fvGCTmCIcS98Dsmps70GbJf8e4EZ3ouuia5egb7KTKzAUwOk52takcIappFJXjTpao/A8wxOZ8/1QAUmnjI0GpFLAKAYyD0SKnKrU/l2mxS+k3NvVIB2DYE28cTDDj2s0WYZg19kGs8ftYc6l1HTl3TzAZIX8tLWov1g9jMnQ0rMWT/ZuFaVJYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB4619.namprd12.prod.outlook.com (2603:10b6:5:7c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28; Mon, 16 Nov
+ 2020 23:22:23 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::e40c:730c:156c:2ef9]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::e40c:730c:156c:2ef9%7]) with mapi id 15.20.3564.028; Mon, 16 Nov 2020
+ 23:22:23 +0000
+Date:   Mon, 16 Nov 2020 19:22:21 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Ziyad Atiyyeh <ziyadat@nvidia.com>,
+        Itay Aveksis <itayav@nvidia.com>,
+        Moshe Shemesh <moshe@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        <iommu@lists.linux-foundation.org>, <linux-pci@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Marc Zyngier <maz@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: iommu/vt-d: Cure VF irqdomain hickup
+Message-ID: <20201116232221.GS917484@nvidia.com>
+References: <20200826111628.794979401@linutronix.de>
+ <20201112125531.GA873287@nvidia.com> <87mtzmmzk6.fsf@nanos.tec.linutronix.de>
+ <87k0uqmwn4.fsf@nanos.tec.linutronix.de>
+ <87d00imlop.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87d00imlop.fsf@nanos.tec.linutronix.de>
+X-ClientProxiedBy: BL0PR0102CA0068.prod.exchangelabs.com
+ (2603:10b6:208:25::45) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR0102CA0068.prod.exchangelabs.com (2603:10b6:208:25::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28 via Frontend Transport; Mon, 16 Nov 2020 23:22:23 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kenpF-006rGb-Sg; Mon, 16 Nov 2020 19:22:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1605568958; bh=509+VmkLlEPOxe/lQoQ9OAnAIf0urLi7ZvhTpP11KWo=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType;
+        b=jllMDa00p/VQ6l3K63jHe96kycEVYbHGAN3FIs4kqwAHWQ2KK4OJl2a96Otea+zIX
+         MGxCNp3a0sGWNh8Y2KRH+Za1PW7uhWV7oZiE3iqwvdaQve1ZzItDjv4UCRfUa37Ps8
+         AKmMOrzuKITRp4g+Or64aT+lxillBOkoDud5wwts8fARCN8+1S2J8lUMo0UwUTzJN3
+         9wgnHClx7YaU2M+c4kHe4gi7dhtcq5tk1R5ghbmbr8bBV0/+D5MBaiN116vbKAPLCr
+         l306GhyMI3EW6VCnKvOsss4ltHS/mI62hkv+abTRt0w0nlCR33iGA7jUnM2qFmtocJ
+         gUnmk2qKETcWg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 5:12 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 20-11-13 12:17:32, Bjorn Helgaas wrote:
-> > On Tue, Nov 10, 2020 at 09:43:51PM -0800, Ben Widawsky wrote:
-> > > All the necessary bits are initialized in order to find and map the
-> > > register space for CXL Memory Devices. This is accomplished by using the
-> > > Register Locator DVSEC (CXL 2.0 - 8.1.9.1) to determine which PCI BAR to
-> > > use, and how much of an offset from that BAR should be added.
-> >
-> > "Initialize the necessary bits ..." to use the usual imperative
-> > sentence structure, as you did in the subject.
-> >
-> > > If the memory device registers are found and mapped a new internal data
-> > > structure tracking device state is allocated.
-> >
-> > "Allocate device state if we find device registers" or similar.
-> >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > ---
-> > >  drivers/cxl/mem.c | 68 +++++++++++++++++++++++++++++++++++++++++++----
-> > >  drivers/cxl/pci.h |  6 +++++
-> > >  2 files changed, 69 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > index aa7d881fa47b..8d9b9ab6c5ea 100644
-> > > --- a/drivers/cxl/mem.c
-> > > +++ b/drivers/cxl/mem.c
-> > > @@ -7,9 +7,49 @@
-> > >  #include "pci.h"
-> > >
-> > >  struct cxl_mem {
-> > > +   struct pci_dev *pdev;
-> > >     void __iomem *regs;
-> > >  };
-> > >
-> > > +static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi)
-> > > +{
-> > > +   struct device *dev = &pdev->dev;
-> > > +   struct cxl_mem *cxlm;
-> > > +   void __iomem *regs;
-> > > +   u64 offset;
-> > > +   u8 bar;
-> > > +   int rc;
-> > > +
-> > > +   offset = ((u64)reg_hi << 32) | (reg_lo & 0xffff0000);
-> > > +   bar = reg_lo & 0x7;
-> > > +
-> > > +   /* Basic sanity check that BAR is big enough */
-> > > +   if (pci_resource_len(pdev, bar) < offset) {
-> > > +           dev_err(dev, "bar%d: %pr: too small (offset: %#llx)\n",
-> > > +                           bar, &pdev->resource[bar], (unsigned long long) offset);
-> >
-> > s/bar/BAR/
-> >
-> > > +           return ERR_PTR(-ENXIO);
-> > > +   }
-> > > +
-> > > +   rc = pcim_iomap_regions(pdev, 1 << bar, pci_name(pdev));
-> > > +   if (rc != 0) {
-> > > +           dev_err(dev, "failed to map registers\n");
-> > > +           return ERR_PTR(-ENXIO);
-> > > +   }
-> > > +
-> > > +   cxlm = devm_kzalloc(&pdev->dev, sizeof(*cxlm), GFP_KERNEL);
-> > > +   if (!cxlm) {
-> > > +           dev_err(dev, "No memory available\n");
-> > > +           return ERR_PTR(-ENOMEM);
-> > > +   }
-> > > +
-> > > +   regs = pcim_iomap_table(pdev)[bar];
-> > > +   cxlm->pdev = pdev;
-> > > +   cxlm->regs = regs + offset;
-> > > +
-> > > +   dev_dbg(dev, "Mapped CXL Memory Device resource\n");
-> > > +   return cxlm;
-> > > +}
-> > > +
-> > >  static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> > >  {
-> > >     int pos;
-> > > @@ -34,9 +74,9 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> > >
-> > >  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > >  {
-> > > +   struct cxl_mem *cxlm = ERR_PTR(-ENXIO);
-> > >     struct device *dev = &pdev->dev;
-> > > -   struct cxl_mem *cxlm;
-> >
-> > The order was better before ("dev", then "clxm").  Oh, I suppose this
-> > is a "reverse Christmas tree" thing.
-> >
->
-> I don't actually care either way as long as it's consistent. I tend to do
-> reverse Christmas tree for no particular reason.
+On Thu, Nov 12, 2020 at 08:15:02PM +0100, Thomas Gleixner wrote:
+> The recent changes to store the MSI irqdomain pointer in struct device
+> missed that Intel DMAR does not register virtual function devices.  Due to
+> that a VF device gets the plain PCI-MSI domain assigned and then issues
+> compat MSI messages which get caught by the interrupt remapping unit.
+> 
+> Cure that by inheriting the irq domain from the physical function
+> device.
+> 
+> That's a temporary workaround. The correct fix is to inherit the irq domain
+> from the bus, but that's a larger effort which needs quite some other
+> changes to the way how x86 manages PCI and MSI domains.
+> 
+> Fixes: 85a8dfc57a0b ("iommm/vt-d: Store irq domain in struct device")
+> Reported-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  drivers/iommu/intel/dmar.c |   19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 
-Yeah, reverse Christmas tree for no particular reason.
+Our QA says it solves the issue:
 
->
-> > > -   int rc, regloc;
-> > > +   int rc, regloc, i;
-> > >
-> > >     rc = cxl_bus_prepared(pdev);
-> > >     if (rc != 0) {
-> > > @@ -44,15 +84,33 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > >             return rc;
-> > >     }
-> > >
-> > > +   rc = pcim_enable_device(pdev);
-> > > +   if (rc)
-> > > +           return rc;
-> > > +
-> > >     regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
-> > >     if (!regloc) {
-> > >             dev_err(dev, "register location dvsec not found\n");
-> > >             return -ENXIO;
-> > >     }
-> > > +   regloc += 0xc; /* Skip DVSEC + reserved fields */
-> > > +
-> > > +   for (i = regloc; i < regloc + 0x24; i += 8) {
-> > > +           u32 reg_lo, reg_hi;
-> > > +
-> > > +           pci_read_config_dword(pdev, i, &reg_lo);
-> > > +           pci_read_config_dword(pdev, i + 4, &reg_hi);
-> > > +
-> > > +           if (CXL_REGLOG_IS_MEMDEV(reg_lo)) {
-> > > +                   cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
-> > > +                   break;
-> > > +           }
-> > > +   }
-> > > +
-> > > +   if (IS_ERR(cxlm))
-> > > +           return -ENXIO;
-> >
-> > I think this would be easier to read if cxl_mem_create() returned NULL
-> > on failure (it prints error messages and we throw away
-> > -ENXIO/-ENOMEM distinction here anyway) so you could do:
-> >
-> >   struct cxl_mem *cxlm = NULL;
-> >
-> >   for (...) {
-> >     if (...) {
-> >       cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
-> >       break;
-> >     }
-> >   }
-> >
-> >   if (!cxlm)
-> >     return -ENXIO;  /* -ENODEV might be more natural? */
-> >
->
-> I agree on both counts. Both of these came from Dan, so I will let him explain.
+Tested-by: Itay Aveksis <itayav@nvidia.com>
 
-I'm not attached to differentiating -ENOMEM from -ENXIO and am ok to
-drop the ERR_PTR() return. I do tend to use -ENXIO for failure to
-perform an initialization action vs failure to even find the device,
-but if -ENODEV seems more idiomatic to Bjorn, I won't argue.
+Thanks,
+Jason
