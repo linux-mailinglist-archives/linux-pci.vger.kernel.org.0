@@ -2,231 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 840B22B3AB9
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 01:23:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C6C12B3C5E
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 06:19:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgKPAWi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Nov 2020 19:22:38 -0500
-Received: from mga02.intel.com ([134.134.136.20]:23253 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727701AbgKPAWi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 15 Nov 2020 19:22:38 -0500
-IronPort-SDR: gm6AEstgj4Q0/ZOPUsBsFpkZwRwNq6nYWNdCjFCSc3T41eKvjQRIJd/inLqZAdcWk6UckaCNyx
- i/qidrFK2D0Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9806"; a="157711128"
-X-IronPort-AV: E=Sophos;i="5.77,481,1596524400"; 
-   d="scan'208";a="157711128"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2020 16:22:37 -0800
-IronPort-SDR: PKeX57EzPGiFkket3HnFMlFWqaOFsr9vMVuHtHETuDPonv3uV0Rp1Nu+1QlgotdAcda/SXbjOu
- 0eemmdBGIiug==
-X-IronPort-AV: E=Sophos;i="5.77,481,1596524400"; 
-   d="scan'208";a="543393873"
-Received: from araj-mobl1.jf.intel.com ([10.251.19.79])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2020 16:22:34 -0800
-Date:   Sun, 15 Nov 2020 16:22:32 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
+        id S1726035AbgKPFTb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 00:19:31 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56876 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgKPFTa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 00:19:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AG5JCok040603;
+        Sun, 15 Nov 2020 23:19:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1605503952;
+        bh=3oB89CbTYHpl2o9ZDiCY/Ic+iLDClTkUpWMbGhciyBQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GYfchMo9v/DfW6ccVCdckXt4QZKgJrL3G5GMw28kA7JYyz4+K1RKIyv2vPK3lbKr3
+         ZLOzNKKyuxJCbpJx4GQD2KGQllnePA8bn5omu05e5fUJZ3DmF/xYaSYt6Z7lwzQI5/
+         6COYbZey3qpLaDR0yZjxfqZmD5s4S0UJ76Pf1zq8=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AG5JB5Y049190
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 15 Nov 2020 23:19:12 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 15
+ Nov 2020 23:19:11 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 15 Nov 2020 23:19:11 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AG5J6v5020556;
+        Sun, 15 Nov 2020 23:19:07 -0600
+Subject: Re: [PATCH v7 15/18] NTB: Add support for EPF PCI-Express
+ Non-Transparent Bridge
+To:     Arnd Bergmann <arnd@kernel.org>
+CC:     Sherry Sun <sherry.sun@nxp.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "dave.jiang@intel.com" <dave.jiang@intel.com>,
+        "allenbh@gmail.com" <allenbh@gmail.com>,
+        "tjoseph@cadence.com" <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201116002232.GA2440@araj-mobl1.jf.intel.com>
-References: <875z6dik1a.fsf@nanos.tec.linutronix.de>
- <20201110141323.GB22336@otc-nc-03>
- <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201112193253.GG19638@char.us.oracle.com>
- <877dqqmc2h.fsf@nanos.tec.linutronix.de>
- <20201114103430.GA9810@infradead.org>
- <20201114211837.GB12197@araj-mobl1.jf.intel.com>
- <877dqmamjl.fsf@nanos.tec.linutronix.de>
- <20201115193156.GB14750@araj-mobl1.jf.intel.com>
- <875z665kz4.fsf@nanos.tec.linutronix.de>
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>
+References: <20200930153519.7282-16-kishon@ti.com>
+ <VI1PR04MB496061EAB6F249F1C394F01092EA0@VI1PR04MB4960.eurprd04.prod.outlook.com>
+ <d6d27475-3464-6772-2122-cc194b8ae022@ti.com>
+ <VI1PR04MB49602D24F65E11FF1F14294F92E90@VI1PR04MB4960.eurprd04.prod.outlook.com>
+ <30c8f7a1-baa5-1eb4-d2c2-9a13be896f0f@ti.com>
+ <CAK8P3a38vBXbAWE09H+TSoZUTkFdYDcQmXX97foT4qXQc8t5ZQ@mail.gmail.com>
+ <5a9115c8-322e-ffd4-6274-ae98c375b21d@ti.com>
+ <CAK8P3a33XSvenqBhuQpGmtLbYydyzY2OQh73150TJtpzW24DTw@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c720de5b-bf76-162f-24cb-07f6fe670bd2@ti.com>
+Date:   Mon, 16 Nov 2020 10:49:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875z665kz4.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <CAK8P3a33XSvenqBhuQpGmtLbYydyzY2OQh73150TJtpzW24DTw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 15, 2020 at 11:11:27PM +0100, Thomas Gleixner wrote:
-> On Sun, Nov 15 2020 at 11:31, Ashok Raj wrote:
-> > On Sun, Nov 15, 2020 at 12:26:22PM +0100, Thomas Gleixner wrote:
-> >> > opt-in by device or kernel? The way we are planning to support this is:
-> >> >
-> >> > Device support for IMS - Can discover in device specific means
-> >> > Kernel support for IMS. - Supported by IOMMU driver.
-> >> 
-> >> And why exactly do we have to enforce IOMMU support? Please stop looking
-> >> at IMS purely from the IDXD perspective. We are talking about the
-> >> general concept here and not about the restricted Intel universe.
-> >
-> > I think you have mentioned it almost every reply :-)..Got that! Point taken
-> > several emails ago!! :-)
-> 
-> You sure? I _try_ to not mention it again then. No promise though. :)
+Hi Arnd,
 
-Hey.. anything that's entertaining go for it :-)
+On 12/11/20 6:54 pm, Arnd Bergmann wrote:
+> On Tue, Nov 10, 2020 at 4:42 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> On 10/11/20 8:29 pm, Arnd Bergmann wrote:
+>>> On Tue, Nov 10, 2020 at 3:20 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>> On 10/11/20 7:55 am, Sherry Sun wrote:
+>>>
+>>>>> But for VOP, only two boards are needed(one board as host and one board as card) to realize the
+>>>>> communication between the two systems, so my question is what are the advantages of using NTB?
+>>>>
+>>>> NTB is a bridge that facilitates communication between two different
+>>>> systems. So it by itself will not be source or sink of any data unlike a
+>>>> normal EP to RP system (or the VOP) which will be source or sink of data.
+>>>>
+>>>>> Because I think the architecture of NTB seems more complicated. Many thanks!
+>>>>
+>>>> yeah, I think it enables a different use case all together. Consider you
+>>>> have two x86 HOST PCs (having RP) and they have to be communicate using
+>>>> PCIe. NTB can be used in such cases for the two x86 PCs to communicate
+>>>> with each other over PCIe, which wouldn't be possible without NTB.
+>>>
+>>> I think for VOP, we should have an abstraction that can work on either NTB
+>>> or directly on the endpoint framework but provide an interface that then
+>>> lets you create logical devices the same way.
+>>>
+>>> Doing VOP based on NTB plus the new NTB_EPF driver would also
+>>> work and just move the abstraction somewhere else, but I guess it
+>>> would complicate setting it up for those users that only care about the
+>>> simpler endpoint case.
+>>
+>> I'm not sure if you've got a chance to look at [1], where I added
+>> support for RP<->EP system both running Linux, with EP configured using
+>> Linux EP framework (as well as HOST ports connected to NTB switch,
+>> patches 20 and 21, that uses the Linux NTB framework) to communicate
+>> using virtio over PCIe.
+>>
+>> The cover-letter [1] shows a picture of the two use cases supported in
+>> that series.
+>>
+>> [1] -> http://lore.kernel.org/r/20200702082143.25259-1-kishon@ti.com
+> 
+> No, I missed, that, thanks for pointing me to it!
+> 
+> This looks very  promising indeed, I need to read up on the whole
+> discussion there. I also see your slides at [1]  that help do explain some
+> of it. I have one fundamental question that I can't figure out from
+> the description, maybe you can help me here:
+> 
+> How is the configuration managed, taking the EP case as an
+> example? Your UseCase1 example sounds like the system that owns
+> the EP hardware is the one that turns the EP into a vhost device,
+> and creates a vhost-rpmsg device on top, while the RC side would
+> probe the pci-vhost and then detect a virtio-rpmsg device to talk to.
 
-> 
-> > I didn't mean just for idxd, I said for *ANY* device driver that wants to
-> > use IMS.
-> 
-> Which is wrong. Again:
-> 
-> A) For PF/VF on bare metal there is absolutely no IOMMU dependency
->    because it does not have a PASID requirement. It's just an
->    alternative solution to MSI[X], which allows optimizations like
->    storing the message in driver manages queue memory or lifting the
->    restriction of 2048 interrupts per device. Nothing else.
+That's correct. Slide no 9 in [1] should give the layering details.
 
-You are right.. my eyes were clouded by virtualization.. no dependency for
-native absolutely.
+> Can it also do the opposite, so you end up with e.g. a virtio-net
+> device on the EP side and vhost-net on the RC?
 
-> 
-> B) For PF/VF in a guest the IOMMU dependency of IMS is a red herring.
->    There is no direct dependency on the IOMMU.
-> 
->    The problem is the inability of the VMM to trap the message write to
->    the IMS storage if the storage is in guest driver managed memory.
->    This can be solved with either
-> 
->    - a hypercall which translates the guest MSI message
->    or
->    - a vIOMMU which uses a hypercall or whatever to translate the guest
->      MSI message
-> 
-> C) Subdevices ala mdev are a different story. They require PASID which
->    enforces IOMMU and the IMS part is not managed by the users anyway.
+Unfortunately no. Again referring slide 9 in [1], we only have
+vhost-pci-epf on the EP side which only creates a "vhost_dev" to deal
+with vhost side of things. For doing the opposite, we'd need to create
+virtio-pci-epf for EP side that interacts with core virtio (and also the
+corresponding vhost back end on PCI host).
 
-You are right again :)
-
-The subdevices require PASID & IOMMU in native, but inside the guest there is no
-need for IOMMU unless you want to build SVM on top. subdevices work without
-any vIOMMU or hypercall in the guest. Only because they look like normal
-PCI devices we could map interrupts to legacy MSIx.
-
-> 
-> So we have a couple of problems to solve:
-> 
->   1) Figure out whether the OS runs on bare metal
-> 
->      There is no reliable answer to that, so we either:
-> 
->       - Use heuristics and assume that failure is unlikely and in case
->         of failure blame the incompetence of VMM authors and/or
->         sysadmins
-> 
->      or
->      
->       - Default to IMS disabled and let the sysadmin enable it via
->         command line option.
-> 
->         If the kernel detects to run in a VM it yells and disables it
->         unless the OS and the hypervisor agree to provide support for
->         that scenario (see #2).
-> 
->         That's fails as well if the sysadmin does so when the OS runs on
->         a VMM which is not identifiable, but at least we can rightfully
->         blame the sysadmin in that case.
-
-cmdline isn't nice, best to have this functional out of box.
+Thanks
+Kishon
 
 > 
->      or
+>      Arnd
 > 
->       - Declare that IMS always depends on IOMMU
-
-As you had mentioned IMS has no real dependency on IOMMU in native.
-
-we just need to make sure if running in guest we have support for it
-plumbed.
-
+> [1] https://linuxplumbersconf.org/event/7/contributions/849/attachments/642/1175/Virtio_for_PCIe_RC_EP_NTB.pdf
 > 
->         I personaly don't care, but people working on these kind of
->         device already said, that they want to avoid it when possible.
->         
->         If you want to go that route, then please talk to those folks
->         and ask them to agree in public.
-> 
->      You also need to take into account that this must work on all
->      architectures which support virtualization because IMS is
->      architecture independent.
-
-What you suggest makes perfect sense. We can certainly get buy in from
-iommu list and have this co-ordinated between all existing iommu varients.
-
-> 
->   2) Guest support for PF/VF
-> 
->      Again we have several scenarios depending on the IMS storage
->      type.
-> 
->       - If the storage type is device memory then it's pretty much the
->         same as MSI[X] just a different location.
-
-True, but still need to have some special handling for trapping those mmio
-access. Unlike for MSIx VFIO already traps them and everything is
-pre-plummbed. It isn't seamless as its for MSIx.
-
-> 
->       - If the storage is in driver managed memory then this needs
->         #1 plus guest OS and hypervisor support (hypercall/vIOMMU)
-
-Violent agreement here :-)
-
->         
->   3) Guest support for PF/VF and guest managed subdevice (mdev)
-> 
->      Depends on #1 and #2 and is an orthogonal problem if I'm not
->      missing something.
-> 
-> To move forward we need to make a decision about #1 and #2 now.
-
-Mostly in agreement. Except for mdev (current considered use case) have no
-need for IMS in the guest. (Don't get me wrong, I'm not saying some odd
-device managing sub-devices would need IMS in addition and that the 2048
-MSIx emulation. 
-> 
-> This needs to be well thought out as changing it after the fact is
-> going to be a nightmare.
-> 
-> /me grudgingly refrains from mentioning the obvious once more.
-> 
-
-So this isn't an idxd and Intel only thing :-)... 
-
-Cheers,
-Ashok
