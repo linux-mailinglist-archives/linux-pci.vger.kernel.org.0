@@ -2,73 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CC032B4A65
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 17:13:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A74A02B4AE3
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 17:25:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgKPQMw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 11:12:52 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:54586 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729729AbgKPQMw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 11:12:52 -0500
-Received: from 89-64-89-143.dynamic.chello.pl (89.64.89.143) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.520)
- id 06351fb59e3410d6; Mon, 16 Nov 2020 17:06:09 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+        id S1731631AbgKPQYM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 11:24:12 -0500
+Received: from mga12.intel.com ([192.55.52.136]:40548 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728717AbgKPQYM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Nov 2020 11:24:12 -0500
+IronPort-SDR: Xf1BhS9lx3wrJr92vxlhBM4MvvAC01etbe0BUhM4GQPYl+zuFyrSra5bjCCE0eUq+QS+WMwM/p
+ 5l9DumnoWcBg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9807"; a="150041643"
+X-IronPort-AV: E=Sophos;i="5.77,483,1596524400"; 
+   d="scan'208";a="150041643"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2020 08:23:57 -0800
+IronPort-SDR: GtuH+I6HYItS7UqaRCt245pQcfvTU/6rrqcQ1uzd+CnBLE13FvRtFsHswUSMU9UgSvsTwGlOYI
+ YncQTj1vMkdA==
+X-IronPort-AV: E=Sophos;i="5.77,483,1596524400"; 
+   d="scan'208";a="475578324"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2020 08:23:54 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kehJI-0076bT-93; Mon, 16 Nov 2020 18:24:56 +0200
+Date:   Mon, 16 Nov 2020 18:24:56 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Utkarsh Patel <utkarsh.h.patel@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Do not generate wakeup event when runtime resuming bus
-Date:   Mon, 16 Nov 2020 17:06:08 +0100
-Message-ID: <2582211.lb15P8fMpq@kreacher>
-In-Reply-To: <20201113063745.GH2495@lahna.fi.intel.com>
-References: <20201029092453.69869-1-mika.westerberg@linux.intel.com> <20201113063745.GH2495@lahna.fi.intel.com>
+        linux-pci <linux-pci@vger.kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        USB <linux-usb@vger.kernel.org>, alberto.vignani@fastwebnet.it
+Subject: Re: [PATCH v2 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
+Message-ID: <20201116162456.GD4077@smile.fi.intel.com>
+References: <20201116094644.GP4077@smile.fi.intel.com>
+ <20201116123735.GA1273179@bjorn-Precision-5520>
+ <CAHp75VdYg+u5jhb9aA4w=f4WbqQLD8aUaf1MRCWp2c+CHOr67A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdYg+u5jhb9aA4w=f4WbqQLD8aUaf1MRCWp2c+CHOr67A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday, November 13, 2020 7:37:45 AM CET Mika Westerberg wrote:
-> Hi,
+On Mon, Nov 16, 2020 at 03:46:44PM +0200, Andy Shevchenko wrote:
+> On Mon, Nov 16, 2020 at 2:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Mon, Nov 16, 2020 at 11:46:44AM +0200, Andy Shevchenko wrote:
+> > > On Fri, Nov 13, 2020 at 05:21:38PM -0600, Bjorn Helgaas wrote:
+> > > > On Fri, Nov 06, 2020 at 12:05:25PM +0200, Andy Shevchenko wrote:
+> > > > > Pericom PCIe-USB adapter advertises MSI, but documentation says
+> > > > > "The MSI Function is not implemented on this device." in the chapters
+> > > > > 7.3.27, 7.3.29-7.3.31.
+> > > > >
+> > > > > Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
+> > > > > Datasheet: https://www.diodes.com/assets/Datasheets/PI7C9X440SL.pdf
+> > > > > Reported-by: alberto.vignani@fastwebnet.it
+> > > >
+> > > > Is there a URL to a problem report we can include here?
+> > >
+> > > You mean URL to email archives or something else?
+> >
+> > Yes.  URL to lore email archive, bugzilla, or any other report of the
+> > problem this caused, i.e., how Alberto noticed something wrong.
 > 
-> On Thu, Oct 29, 2020 at 12:24:53PM +0300, Mika Westerberg wrote:
-> > When a PCI bridge is runtime resumed from D3cold the underlying bus is
-> > walked and the attached devices are runtime resumed as well. However, in
-> > addition to that we also generate a wakeup event for these devices even
-> > though this actually is not a real wakeup event coming from the
-> > hardware.
-> > 
-> > Normally this does not cause problems but when combined with
-> > /sys/power/wakeup_count like using the steps below:
-> > 
-> >   # count=$(cat /sys/power/wakeup_count)
-> >   # echo $count > /sys/power/wakeup_count
-> >   # echo mem > /sys/power/state
-> > 
-> > The system suspend cycle might get aborted at this point if a PCI bridge
-> > that was runtime suspended (D3cold) was runtime resumed for any reason.
-> > The runtime resume calls pci_wakeup_bus() and that generates wakeup
-> > event increasing wakeup_count.
-> > 
-> > Since this is not a real wakeup event we can prevent the above from
-> > happening by removing the call to pci_wakeup_event() in
-> > pci_wakeup_bus(). While there rename pci_wakeup_bus() to
-> > pci_resume_bus() to better reflect what it does.
-> 
-> Any comments on this?
+> Okay, I'll include in v3.
 
-I've missed it, sorry.
+I may not include that. It misses archives probably due to some footer in the message.
+Closest what I have found is [1].
+Do you still want me to include that link?
 
-Now replied with a R-by, thanks!
+[1]: https://lore.kernel.org/linux-usb/20201030134826.GP4077@smile.fi.intel.com/
 
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
