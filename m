@@ -2,112 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D74752B4C00
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 18:04:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC4592B4C40
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 18:13:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbgKPRBx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 12:01:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
+        id S1731765AbgKPRKd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 12:10:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730829AbgKPRBw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 12:01:52 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6570CC0613CF;
-        Mon, 16 Nov 2020 09:01:52 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id a65so24279785wme.1;
-        Mon, 16 Nov 2020 09:01:52 -0800 (PST)
+        with ESMTP id S1730994AbgKPRKd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 12:10:33 -0500
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A07C0613D1
+        for <linux-pci@vger.kernel.org>; Mon, 16 Nov 2020 09:10:32 -0800 (PST)
+Received: by mail-qt1-x842.google.com with SMTP id m65so13344689qte.11
+        for <linux-pci@vger.kernel.org>; Mon, 16 Nov 2020 09:10:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c3CTpkaJK+UixnUEvBg65ZoBUOSpxaDhzbHcJ5DEGNI=;
-        b=CuLldi5UDBDN2rTF1hkcZa6Ezpl6ewm/TY1Mtyupsu6d0arVIzH1H26nFGzuHgiO59
-         2ZByKjRKOR3joy83M35Y2k4U9RqRJ4AMYs7qshl6R1sYwHTbcdWxKIrCNbXxuvnt0v+e
-         4s+17RD2KoZdgIAD1pAvbG9V+fLTi1vTWXoxPPj6jw0neMzW3S9LitqrEeTDvNvZChXz
-         t20IvU0E02z0Ln4TLcbLlX8TGXQ8+5HbTHTdETDDTjAkv8vjkpXW86GFMpxdzNPJI5dk
-         UolUxpwbxi/cnbeRm7bUCA5Zlkvr+CVmPBMWbng/u6RtxcrYu6/QKhAqgP6T9ezsOzuW
-         FynA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=x72RPnvcZQrq4B1bODPljxMr+0GZzaGWEw6swyrl9Wk=;
+        b=zGq4R32CvDspJZ028Zj0Uh4j9cx+kgs6/j/Fnvn6ifCfz8cmDKZDlMvu15Dlh6o0MO
+         p1FhmaRxZofqzbqw3C9rsTOSFljfou6jqgNp71Wc0u2LjXwayZ6jGBCR/9SEuTAIik+1
+         cj/uEIYHSjnjebNplDNICFwPO4EGke9tKhmQ2G0ZC9jwrZ0D8mg4aXoG3xJx4gdIoSkz
+         hyEyXoxWCkdwVtJ22KCrWLCfHDgB+vCoit/BoKp+FvS2PVn/QWVupdb9OR/i1yuirqZw
+         lBUGWrP+wNz6IexMjv/125n6jU6YkV9RpAeirYFEZE40AsuY4BOmxhQDkuVgkVn3yyQR
+         kypg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c3CTpkaJK+UixnUEvBg65ZoBUOSpxaDhzbHcJ5DEGNI=;
-        b=a+f4YBXGSEF6XY5FnuN/E+TQWXpLanmz6J//BIABRyoha8atF8FRDB5yWeWtMMJfwQ
-         1vJixCuFWv1q8zzsfcZIYuZFFrEAsAr91fxn5Q+ZX0bvGdssvwIP4C1WzPkqyUyV+c1m
-         1B6EjBZ4+6aZcP2NJWbW1FSBDejSh2hfx9dKSHfemkiEQsDLV5BTvOGnM5aUZ4VSxfp9
-         eDbaKQKdxcu5PJY+zaSNA6JBboBQq3LdN1alj12cV3pFFswe3ZbJfUvl91SZs9G+jXGn
-         EzfwaApBFsfdm1a19M6CiAJqdzNoDsJqMVZkFvlIWXMP8K4yQt5NzONSzsjNEcECFlPA
-         q20Q==
-X-Gm-Message-State: AOAM533RSny7kJ63X6/n4PLCyrfHrFOQshH84f1fCspX/LfK/0QA4mnY
-        p+dTehvg5cv/iO6yv2FPDyDUcZOgBfM=
-X-Google-Smtp-Source: ABdhPJzI6XAZ9igUYwWvC227Lh/pGF/9AZ8r1Lo0t64282p84UhM0xX65sPVYICkN7HZC6IeMKV9ow==
-X-Received: by 2002:a1c:c286:: with SMTP id s128mr16426739wmf.88.1605546110875;
-        Mon, 16 Nov 2020 09:01:50 -0800 (PST)
-Received: from localhost ([217.111.27.204])
-        by smtp.gmail.com with ESMTPSA id d134sm20299429wmd.8.2020.11.16.09.01.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2020 09:01:49 -0800 (PST)
-Date:   Mon, 16 Nov 2020 18:01:48 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-safety@lists.elisa.tech,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: tegra: Use PTR_ERR_OR_ZERO
-Message-ID: <20201116170137.GA2587640@ulmo>
-References: <20201116165407.8050-1-sudipm.mukherjee@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=x72RPnvcZQrq4B1bODPljxMr+0GZzaGWEw6swyrl9Wk=;
+        b=KlngqVDaXRXdk378c86KY/resEtLDoRxxZpRQlID9aPDuViidy65UXCKxSyrL6Ov07
+         ulyfnaTlmlwyrRMSodim++6eg4MzAuDrEzcv7DrlU4L7iZjdAbNV8KKtJJCp32IeAkQi
+         hy2OgsPDCZvdWEV4h/TD10RAKuSTK+Y/ZqTuz6kmVmLrr9pYx/vMFcnn6X2HhFQ00Hab
+         5iLtuZj/8vCJuEHEtM23hZ8UlZTIOGcWz0cheK99mV5zm5B1zuClIyBwABQDPCZi8S63
+         w4rG47Feqs414bo1HujIlG+OzOX7bpsvnJxr32UwrRXrs70EUkBH5Fi0OP9Y4Tsr/5d+
+         gkRQ==
+X-Gm-Message-State: AOAM532Qk7Ps8HcN2YEHvjchNV02DppODLhuXQAInwU83iJnj6a4f/kA
+        KWFbu2K1NrRBCHp/st8SrWXtag==
+X-Google-Smtp-Source: ABdhPJz5CyKQHXsmSQHjq5fTsnlBef8Fon2OcyViVRMVHrBOVIHsi49nThD+kCb+Zjp33aVbIsOCLw==
+X-Received: by 2002:ac8:5ccc:: with SMTP id s12mr14807102qta.309.1605546632041;
+        Mon, 16 Nov 2020 09:10:32 -0800 (PST)
+Received: from [192.168.1.100] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id q32sm8068247qtb.71.2020.11.16.09.10.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Nov 2020 09:10:31 -0800 (PST)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        xerces.zhao@gmail.com, rafael.j.wysocki@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@intel.com, qiuxu.zhuo@intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] AER: aer_root_reset() non-native handling
+Date:   Mon, 16 Nov 2020 09:10:28 -0800
+X-Mailer: MailMate (1.13.2r5673)
+Message-ID: <43FBC4C0-BAC1-468A-AE59-173C8447F630@intel.com>
+In-Reply-To: <20201114153718.GA1170994@bjorn-Precision-5520>
+References: <20201114153718.GA1170994@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
-Content-Disposition: inline
-In-Reply-To: <20201116165407.8050-1-sudipm.mukherjee@gmail.com>
-User-Agent: Mutt/1.14.7 (2020-08-29)
+Content-Type: text/plain; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 14 Nov 2020, at 7:37, Bjorn Helgaas wrote:
 
---TRYliJ5NKNqkz5bu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Nov 04, 2020 at 03:22:44PM -0800, Sean V Kelley wrote:
+>> If an OS has not been granted AER control via _OSC, then
+>> the OS should not make changes to PCI_ERR_ROOT_COMMAND and
+>> PCI_ERR_ROOT_STATUS related registers. Per section 4.5.1 of
+>> the System Firmware Intermediary (SFI) _OSC and DPC Updates
+>> ECN [1], this bit also covers these aspects of the PCI
+>> Express Advanced Error Reporting. Based on the above and
+>> earlier discussion [2], make the following changes:
+>>
+>> Add a check for the native case (i.e., AER control via _OSC)
+>>
+>> Note that the current "clear, reset, enable" order suggests that the
+>> reset might cause errors that we should ignore. Lacking historical
+>> context, these will be retained.
+>>
+>> [1] System Firmware Intermediary (SFI) _OSC and DPC Updates ECN, Feb =
 
-On Mon, Nov 16, 2020 at 04:54:07PM +0000, Sudip Mukherjee wrote:
-> Coccinelle suggested using PTR_ERR_OR_ZERO() and looking at the code,
-> we can use PTR_ERR_OR_ZERO() instead of checking IS_ERR() and then
-> doing 'return 0'.
->=20
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> ---
->  drivers/pci/controller/pci-tegra.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>> 24,
+>>     2020, affecting PCI Firmware Specification, Rev. 3.2
+>>     https://members.pcisig.com/wg/PCI-SIG/document/14076
+>> [2] =
 
-This has been proposed multiple times in the past and Bjorn and I have
-agreed every time that this is not an improvement, so sorry, but NAK.
+>> https://lore.kernel.org/linux-pci/20201020162820.GA370938@bjorn-Precis=
+ion-5520/
+>>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>
+> What do I do with this patch in combination with "[PATCH v10 00/16]
+> Add RCEC handling to PCI/AER"?  I tried applying this and the RCEC
+> series on top, but they conflict.
+>
+> I was thinking it would be easiest to include this as the first patch
+> in the series so I wouldn't have to resolve the conflicts, but maybe
+> you had something else in mind?
 
-Thierry
+It originally did rebase but the last minute %s/root/dev changes may =
 
---TRYliJ5NKNqkz5bu
-Content-Type: application/pgp-signature; name="signature.asc"
+have broke the rebase.
+Will fix and submit as the first patch in the RCEC series.
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+ysHsACgkQ3SOs138+
-s6GC7xAAnSsYlESiX6ESGZs1qV+dr+SktWx1QxMTKlk4fG43Mryvctb5YZb8vq2F
-YZSf0Z/c1W9TbPrn2OLF3ZGi9dZanU5VsRzIiiCXXUF1NPLIdELn2Nes0WpBD9i2
-6ZoUqRG4n3+8av6H3m3VJdbGElBOdFpGDcrzw1v7RQFjkBRYBtCKV7GxJo7so7u5
-FgSBoJB/qL5+DVxa/6DJNtmiYqBk4ZGKpiTOVPzTgN1Fb3ZKoz/KPuql7cmunwxV
-BbB2Xnibu3yJDW/TxaHin7+xUGTc9J9HAtIOKmY2ZnBeVDW6NC9e31x9i13efMLe
-nLFLfw0KNdsHiex4aRgdEHqtZxYOCBUWA0vbMuzG5dnzCkZTZzqvn+Nvw/wntAv8
-O7v/SK2j4cuo8g9V2alT8PKU99xALK9K4sxnZaN18sluR0Kx3JwLNnyT7Mqnpdwn
-hwrvcHC34nNGAgrVri/SPzFPQt7zUrJHYlCjad5CS4G/sX+dr+AtnJ3gSAEFKo5R
-+7YGVow03aIon+34KSyM+WBZrl+xwWxUlc04lr48UwavftC2Bp52Trup/yOaEUpi
-3jOmv3hel97NrRun3JZA1SxD86wGuVUWRlDSAbTR6BDgau5bGViGRCobqRYGbA/w
-nwgs2ETztkeL2jlyI5nVufNgQJ77SdECYl5Zm3Ga1xqMKZHaOK8=
-=hvDV
------END PGP SIGNATURE-----
+>
+>> ---
+>> Changes since V2 :
+>>
+>> Fixed an unfortunate copy/paste error.
+>>
+>> Changes since V1 [1]:
+>>
+>> Noted lack of historical context on isolation of both the
+>> pci_bus_error_reset() and the clearing of Root Error Status. In fact,
+>> the call to aer_enable_rootport() likewise disables system error =
 
---TRYliJ5NKNqkz5bu--
+>> generation
+>> in response to error messages around the clearing of the error =
+
+>> status. So
+>> retained the wrapping of the  "clear, reset, enable".
+>>
+>> [1] =
+
+>> https://lore.kernel.org/linux-pci/20201030223443.165783-1-sean.v.kelle=
+y@intel.com/
+>>
+>> Thanks,
+>>
+>> Sean
+>> ---
+>>  drivers/pci/pcie/aer.c | 31 +++++++++++++++++--------------
+>>  1 file changed, 17 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index 65dff5f3457a..4ab379fa1506 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -1358,26 +1358,29 @@ static int aer_probe(struct pcie_device *dev)
+>>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>>  {
+>>  	int aer =3D dev->aer_cap;
+>> +	int rc =3D 0;
+>
+> Unnecessary init, I think.
+
+Will remove init.
+
+Thanks,
+
+Sean
+
+>
+>>  	u32 reg32;
+>> -	int rc;
+>> -
+>>
+>> -	/* Disable Root's interrupt in response to error messages */
+>> -	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+>> -	reg32 &=3D ~ROOT_PORT_INTR_ON_MESG_MASK;
+>> -	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+>> +	if (pcie_aer_is_native(dev)) {
+>> +		/* Disable Root's interrupt in response to error messages */
+>> +		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+>> +		reg32 &=3D ~ROOT_PORT_INTR_ON_MESG_MASK;
+>> +		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+>> +	}
+>>
+>>  	rc =3D pci_bus_error_reset(dev);
+>> -	pci_info(dev, "Root Port link has been reset\n");
+>> +	pci_info(dev, "Root Port link has been reset (%d)\n", rc);
+>>
+>> -	/* Clear Root Error Status */
+>> -	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+>> -	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, reg32);
+>> +	if (pcie_aer_is_native(dev)) {
+>> +		/* Clear Root Error Status */
+>> +		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+>> +		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, reg32);
+>>
+>> -	/* Enable Root Port's interrupt in response to error messages */
+>> -	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+>> -	reg32 |=3D ROOT_PORT_INTR_ON_MESG_MASK;
+>> -	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+>> +		/* Enable Root Port's interrupt in response to error messages */
+>> +		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+>> +		reg32 |=3D ROOT_PORT_INTR_ON_MESG_MASK;
+>> +		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+>> +	}
+>>
+>>  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>>  }
+>> --
+>> 2.29.2
+>>
