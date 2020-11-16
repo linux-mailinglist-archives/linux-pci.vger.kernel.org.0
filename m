@@ -2,405 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A00E2B4EBC
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 19:02:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAEAF2B4ECA
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Nov 2020 19:04:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387689AbgKPR71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 12:59:27 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2108 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731742AbgKPR70 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 12:59:26 -0500
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4CZcHN4tVpz67DQk;
-        Tue, 17 Nov 2020 01:57:52 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Mon, 16 Nov 2020 18:59:24 +0100
-Received: from localhost (10.52.125.36) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 16 Nov
- 2020 17:59:23 +0000
-Date:   Mon, 16 Nov 2020 17:59:16 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 1/9] cxl/acpi: Add an acpi_cxl module for the CXL
- interconnect
-Message-ID: <20201116175916.000008bc@Huawei.com>
-In-Reply-To: <20201111054356.793390-2-ben.widawsky@intel.com>
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
-        <20201111054356.793390-2-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S2388169AbgKPSCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 13:02:55 -0500
+Received: from nat-hk.nvidia.com ([203.18.50.4]:35096 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731246AbgKPSCy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 16 Nov 2020 13:02:54 -0500
+Received: from HKMAIL102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fb2becc0000>; Tue, 17 Nov 2020 02:02:52 +0800
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL102.nvidia.com
+ (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Nov
+ 2020 18:02:48 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.171)
+ by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 16 Nov 2020 18:02:48 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BG2AL4HpLrMD0VGigJwuNI/rTVeB1LeNHXGT62ezyeHvHaP9OXt85YpuPYFF5NSZomsa/TvlOGd3CEbAxuvSu+PbLrnac8fC7uBtZg5Y0Q5+sXvshd6yAXk8zVzFldo8+BeD/hWKGRaDbcKVPbF4ZTBO8KHubm4kyT41bOWX/twG7wcZnGuPOde54Y77ej4LEXzxECI28FoOscIR1EmkMrBH9zT4RHkcTJnmJRvwwzIWM4FxcUVCQ0bHGcZs3HPYDph2mYKl8ZsSAibBapPv/Kfs27MczOpbfWtCwydO5eIQQw/lksPPuQVarKxaMJgKiMZg9AuuXi4dX1Mo0roQyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gctU42yzXtZmjACsW2kwDKYFXJUjOeLjhgXDkGb+56M=;
+ b=NBc8RsQPE+TB/nnB1l4GX5q8HIY3cVZ/DfpDCOViUxPVH89DDwSpVHSxb8wUbXhjzdFxtwFY8K9IioEPSOX+AprS46cTmgYOIJ4jV1DT+ZCMGvXZBg1UB+Ts793NvTwguVb5ltuG5vGc1epw1lQwafFKYOL3L30jkAA/0+GoI8ti0suEje4xJt69jxfsvqZ+TFH5Kv2n20wO466k3dSAxmVfBZCcFvYaFEzD0+NXvrILVB4YBHCR8htWKfdOijB/ig1TLWtvD2HCey9wu2wRWYzp0tdL0U+a6w2vbo2ZSUUgYEhz2MIAi3DSxQGnKwHTK5FrZCFCf0GDPzd0cy+qxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB2487.namprd12.prod.outlook.com (2603:10b6:4:af::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28; Mon, 16 Nov
+ 2020 18:02:44 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::e40c:730c:156c:2ef9]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::e40c:730c:156c:2ef9%7]) with mapi id 15.20.3564.028; Mon, 16 Nov 2020
+ 18:02:43 +0000
+Date:   Mon, 16 Nov 2020 14:02:41 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Wilk, Konrad" <konrad.wilk@oracle.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201116180241.GP917484@nvidia.com>
+References: <877dqqmc2h.fsf@nanos.tec.linutronix.de>
+ <20201114103430.GA9810@infradead.org>
+ <20201114211837.GB12197@araj-mobl1.jf.intel.com>
+ <877dqmamjl.fsf@nanos.tec.linutronix.de>
+ <20201115193156.GB14750@araj-mobl1.jf.intel.com>
+ <875z665kz4.fsf@nanos.tec.linutronix.de>
+ <20201116002232.GA2440@araj-mobl1.jf.intel.com>
+ <MWHPR11MB164539B8FDE63D5CBDA300E18CE30@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201116154635.GK917484@nvidia.com> <87y2j1xk1a.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87y2j1xk1a.fsf@nanos.tec.linutronix.de>
+X-ClientProxiedBy: BL0PR03CA0020.namprd03.prod.outlook.com
+ (2603:10b6:208:2d::33) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.125.36]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR03CA0020.namprd03.prod.outlook.com (2603:10b6:208:2d::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.25 via Frontend Transport; Mon, 16 Nov 2020 18:02:43 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1keipt-006LE4-Rv; Mon, 16 Nov 2020 14:02:41 -0400
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1605549772; bh=gctU42yzXtZmjACsW2kwDKYFXJUjOeLjhgXDkGb+56M=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=ZQgW9Ek1MAQdv1H5vhuPRp9uzLSPLBlRmllGTf5kT6x0gDlbk2wDQ4IPcotg/aHg5
+         pK5djhjl0/yDPHCVoKWsLLrHl7HL/5I9BR08B1Ii6FvMeUNyERaqt92/MgrvQ9XaIt
+         XIQQfOjVg82/s5FtqNsR6pn2JobWhCf0jUlkqRa2uj4EqXYZBWP/f7TjewemKVXSOt
+         keVbZrd1sqjEa41qapwrsjKUioqYzT1HlPInLXigFGcDze56UOnwCxMO9bnLXe37xh
+         RupXtuhwHr7FIPvXQolrxt80Byvdaa5L0wldZ00arhCwiqQZVPsOuWHTCDd0fnEbVi
+         qdNouGZAffTEQ==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 10 Nov 2020 21:43:48 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> From: Vishal Verma <vishal.l.verma@intel.com>
+On Mon, Nov 16, 2020 at 06:56:33PM +0100, Thomas Gleixner wrote:
+> On Mon, Nov 16 2020 at 11:46, Jason Gunthorpe wrote:
 > 
-> Add an acpi_cxl module to coordinate the ACPI portions of the CXL
-> (Compute eXpress Link) interconnect. This driver binds to ACPI0017
-> objects in the ACPI tree, and coordinates access to the resources
-> provided by the ACPI CEDT (CXL Early Discovery Table).
-
-I think the qemu series notes that this ACPI0017 is just a proposal at
-this stage. Please make sure that's highlighted here as well unless
-that status is out of date.
-
+> > On Mon, Nov 16, 2020 at 07:31:49AM +0000, Tian, Kevin wrote:
+> >
+> >> > The subdevices require PASID & IOMMU in native, but inside the guest there
+> >> > is no
+> >> > need for IOMMU unless you want to build SVM on top. subdevices work
+> >> > without
+> >> > any vIOMMU or hypercall in the guest. Only because they look like normal
+> >> > PCI devices we could map interrupts to legacy MSIx.
+> >> 
+> >> Guest managed subdevices on PF/VF requires vIOMMU. 
+> >
+> > Why? I've never heard we need vIOMMU for our existing SRIOV flows in
+> > VMs??
 > 
-> It also coordinates operations of the root port _OSC object to notify
-> platform firmware that the OS has native support for the CXL
-> capabilities of endpoints.
+> Handing PF/VF into the guest does not require it.
 > 
-> Note: the actbl1.h changes are speculative. The expectation is that they
-> will arrive through the ACPICA tree in due time.
-> 
-> Cc: Ben Widawsky <ben.widawsky@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/Kconfig       |   1 +
->  drivers/Makefile      |   1 +
->  drivers/cxl/Kconfig   |  30 +++++++++++
->  drivers/cxl/Makefile  |   5 ++
->  drivers/cxl/acpi.c    | 119 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/acpi.h    |  15 ++++++
->  include/acpi/actbl1.h |  52 ++++++++++++++++++
->  7 files changed, 223 insertions(+)
->  create mode 100644 drivers/cxl/Kconfig
->  create mode 100644 drivers/cxl/Makefile
->  create mode 100644 drivers/cxl/acpi.c
->  create mode 100644 drivers/cxl/acpi.h
-> 
-> diff --git a/drivers/Kconfig b/drivers/Kconfig
-> index dcecc9f6e33f..62c753a73651 100644
-> --- a/drivers/Kconfig
-> +++ b/drivers/Kconfig
-> @@ -6,6 +6,7 @@ menu "Device Drivers"
->  source "drivers/amba/Kconfig"
->  source "drivers/eisa/Kconfig"
->  source "drivers/pci/Kconfig"
-> +source "drivers/cxl/Kconfig"
->  source "drivers/pcmcia/Kconfig"
->  source "drivers/rapidio/Kconfig"
->  
-> diff --git a/drivers/Makefile b/drivers/Makefile
-> index c0cd1b9075e3..5dad349de73b 100644
-> --- a/drivers/Makefile
-> +++ b/drivers/Makefile
-> @@ -73,6 +73,7 @@ obj-$(CONFIG_NVM)		+= lightnvm/
->  obj-y				+= base/ block/ misc/ mfd/ nfc/
->  obj-$(CONFIG_LIBNVDIMM)		+= nvdimm/
->  obj-$(CONFIG_DAX)		+= dax/
-> +obj-$(CONFIG_CXL_BUS)		+= cxl/
->  obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
->  obj-$(CONFIG_NUBUS)		+= nubus/
->  obj-y				+= macintosh/
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> new file mode 100644
-> index 000000000000..dd724bd364df
-> --- /dev/null
-> +++ b/drivers/cxl/Kconfig
-> @@ -0,0 +1,30 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +menuconfig CXL_BUS
-> +	tristate "CXL (Compute Express Link) Devices Support"
-> +	help
-> +	  CXL is a bus that is electrically compatible with PCI-E, but layers
-> +	  three protocols on that signalling (CXL.io, CXL.cache, and CXL.mem). The
-> +	  CXL.cache protocol allows devices to hold cachelines locally, the
-> +	  CXL.mem protocol allows devices to be fully coherent memory targets, the
-> +	  CXL.io protocol is equivalent to PCI-E. Say 'y' to enable support for
-> +	  the configuration and management of devices supporting these protocols.
-> +
-> +if CXL_BUS
-> +
-> +config CXL_BUS_PROVIDER
-> +	tristate
-> +
-> +config CXL_ACPI
-> +	tristate "CXL Platform Support"
-> +	depends on ACPI
-> +	default CXL_BUS
-> +	select CXL_BUS_PROVIDER
-> +	help
-> +	  CXL Platform Support is a prerequisite for any CXL device driver that
-> +	  wants to claim ownership of the component register space. By default
-> +	  platform firmware assumes Linux is unaware of CXL capabilities and
-> +	  requires explicit opt-in. This platform component also mediates
-> +	  resources described by the CEDT (CXL Early Discovery Table)
-> +
-> +	  Say 'y' to enable CXL (Compute Express Link) drivers.
-> +endif
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> new file mode 100644
-> index 000000000000..d38cd34a2582
-> --- /dev/null
-> +++ b/drivers/cxl/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> +
-> +ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-> +cxl_acpi-y := acpi.o
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> new file mode 100644
-> index 000000000000..26e4f73838a7
-> --- /dev/null
-> +++ b/drivers/cxl/acpi.c
-> @@ -0,0 +1,119 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright(c) 2020 Intel Corporation. All rights reserved.
-> + */
-> +#include <linux/list_sort.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/list.h>
-> +#include <linux/acpi.h>
-> +#include <linux/sort.h>
-> +#include <linux/pci.h>
-> +#include "acpi.h"
-> +
-> +static void acpi_cxl_desc_init(struct acpi_cxl_desc *acpi_desc, struct device *dev)
-> +{
-> +	dev_set_drvdata(dev, acpi_desc);
+> But if the PF/VF driver in the guest wants to create and manage the
+> magic mdev subdevices which require PASID support then you surely need
+> it.
 
-No need to have this wrapper + it hides the fact you are not just initialsing
-the acpi_desc structure.
+'magic mdevs' are only one reason to use IMS in a guest. On mlx5 we
+might want to use IMS for VPDA devices. mlx5 can spawn a VDPA device
+in a guest, against a 'ADI', without ever requiring an IOMMU to do it.
 
-> +	acpi_desc->dev = dev;
-> +}
-> +
-> +static void acpi_cedt_put_table(void *table)
-> +{
-> +	acpi_put_table(table);
-> +}
-> +
-> +static int acpi_cxl_add(struct acpi_device *adev)
-> +{
-> +	struct acpi_cxl_desc *acpi_desc;
-> +	struct device *dev = &adev->dev;
-> +	struct acpi_table_header *tbl;
-> +	acpi_status status = AE_OK;
+We don't even need IOMMU in the hypervisor to create the ADI, mlx5 has
+an internal secure IOMMU that can be used instead of the platform
+IOMMU.
 
-Set below, so don't do it here.
+Not saying this is a major use case, or a reason not to link things to
+IOMMU detection, but lets be clear that a hard need for IOMMU is a
+another IDXD thing, not general.
 
-> +	acpi_size sz;
-> +	int rc = 0;
-
-Set in paths in which it's used so don't do it here.
-
-> +
-> +	status = acpi_get_table(ACPI_SIG_CEDT, 0, &tbl);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err(dev, "failed to find CEDT at startup\n");
-> +		return 0;
-> +	}
-> +
-> +	rc = devm_add_action_or_reset(dev, acpi_cedt_put_table, tbl);
-> +	if (rc)
-> +		return rc;
-
-blank line here preferred for readability (do something, then check errors as
-block)
-
-> +	sz = tbl->length;
-> +	dev_info(dev, "found CEDT at startup: %lld bytes\n", sz);
-> +
-> +	acpi_desc = devm_kzalloc(dev, sizeof(*acpi_desc), GFP_KERNEL);
-> +	if (!acpi_desc)
-> +		return -ENOMEM;
-
-blank line here slightly helps readability.
-
-> +	acpi_cxl_desc_init(acpi_desc, &adev->dev);
-> +
-> +	acpi_desc->acpi_header = *tbl;
-> +
-> +	return 0;
-> +}
-> +
-> +static int acpi_cxl_remove(struct acpi_device *adev)
-> +{
-> +	return 0;
-
-Don't think empty remove is needed.
-
-
-> +}
-> +
-> +static const struct acpi_device_id acpi_cxl_ids[] = {
-> +	{ "ACPI0017", 0 },
-> +	{ "", 0 },
-> +};
-> +MODULE_DEVICE_TABLE(acpi, acpi_cxl_ids);
-> +
-> +static struct acpi_driver acpi_cxl_driver = {
-> +	.name = KBUILD_MODNAME,
-> +	.ids = acpi_cxl_ids,
-> +	.ops = {
-> +		.add = acpi_cxl_add,
-> +		.remove = acpi_cxl_remove,
-> +	},
-> +};
-> +
-> +/*
-> + * If/when CXL support is defined by other platform firmware the kernel
-> + * will need a mechanism to select between the platform specific version
-> + * of this routine, until then, hard-code ACPI assumptions
-> + */
-> +int cxl_bus_prepared(struct pci_dev *pdev)
-> +{
-> +	struct acpi_device *adev;
-> +	struct pci_dev *root_port;
-> +	struct device *root;
-> +
-> +	root_port = pcie_find_root_port(pdev);
-> +	if (!root_port)
-> +		return -ENXIO;
-> +
-> +	root = root_port->dev.parent;
-> +	if (!root)
-> +		return -ENXIO;
-> +
-> +	adev = ACPI_COMPANION(root);
-> +	if (!adev)
-> +		return -ENXIO;
-> +
-> +	/* TODO: OSC enabling */
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(cxl_bus_prepared);
-> +
-> +static __init int acpi_cxl_init(void)
-> +{
-> +	return acpi_bus_register_driver(&acpi_cxl_driver);
-> +}
-> +
-> +static __exit void acpi_cxl_exit(void)
-> +{
-> +	acpi_bus_unregister_driver(&acpi_cxl_driver);
-> +}
-> +
-> +module_init(acpi_cxl_init);
-> +module_exit(acpi_cxl_exit);
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Intel Corporation");
-> diff --git a/drivers/cxl/acpi.h b/drivers/cxl/acpi.h
-> new file mode 100644
-> index 000000000000..011505475cc6
-> --- /dev/null
-> +++ b/drivers/cxl/acpi.h
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> +
-> +#ifndef __CXL_ACPI_H__
-> +#define __CXL_ACPI_H__
-> +#include <linux/acpi.h>
-> +
-> +struct acpi_cxl_desc {
-> +	struct acpi_table_header acpi_header;
-> +	struct device *dev;
-> +};
-> +
-> +int cxl_bus_prepared(struct pci_dev *pci_dev);
-> +
-> +#endif	/* __CXL_ACPI_H__ */
-> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-> index 43549547ed3e..70f745f526e3 100644
-> --- a/include/acpi/actbl1.h
-> +++ b/include/acpi/actbl1.h
-> @@ -28,6 +28,7 @@
->  #define ACPI_SIG_BERT           "BERT"	/* Boot Error Record Table */
->  #define ACPI_SIG_BGRT           "BGRT"	/* Boot Graphics Resource Table */
->  #define ACPI_SIG_BOOT           "BOOT"	/* Simple Boot Flag Table */
-> +#define ACPI_SIG_CEDT           "CEDT"	/* CXL Early Discovery Table */
->  #define ACPI_SIG_CPEP           "CPEP"	/* Corrected Platform Error Polling table */
->  #define ACPI_SIG_CSRT           "CSRT"	/* Core System Resource Table */
->  #define ACPI_SIG_DBG2           "DBG2"	/* Debug Port table type 2 */
-> @@ -1624,6 +1625,57 @@ struct acpi_ibft_target {
->  	u16 reverse_chap_secret_offset;
->  };
->  
-> +/*******************************************************************************
-> + *
-> + * CEDT - CXL Early Discovery Table (ACPI 6.4)
-> + *        Version 1
-> + *
-> + ******************************************************************************/
-> +
-> +struct acpi_table_cedt {
-> +	struct acpi_table_header header;	/* Common ACPI table header */
-> +	u32 reserved;
-> +};
-> +
-> +/* Values for CEDT structure types */
-> +
-> +enum acpi_cedt_type {
-> +	ACPI_CEDT_TYPE_HOST_BRIDGE = 0, /* CHBS - CXL Host Bridge Structure */
-> +	ACPI_CEDT_TYPE_CFMWS = 1, 	/* CFMWS - CXL Fixed Memory Window Structure */
-
-This isn't in the 2.0 spec, so I guess also part of some proposed changes.
-
-> +};
-> +
-> +struct acpi_cedt_structure {
-> +	u8 type;
-> +	u8 reserved;
-> +	u16 length;
-> +};
-> +
-> +/*
-> + * CEDT Structures, correspond to Type in struct acpi_cedt_structure
-> + */
-> +
-> +/* 0: CXL Host Bridge Structure */
-> +
-> +struct acpi_cedt_chbs {
-> +	struct acpi_cedt_structure header;
-> +	u32 uid;
-> +	u32 version;
-> +	u32 reserved1;
-> +	u64 base;
-> +	u32 length;
-> +	u32 reserved2;
-> +};
-> +
-> +/* Values for version field above */
-> +
-> +#define ACPI_CEDT_CHBS_VERSION_CXL11    (0)
-> +#define ACPI_CEDT_CHBS_VERSION_CXL20    (1)
-> +
-> +/* Values for length field above */
-> +
-> +#define ACPI_CEDT_CHBS_LENGTH_CXL11     (0x2000)
-> +#define ACPI_CEDT_CHBS_LENGTH_CXL20     (0x10000)
-> +
->  /* Reset to default packing */
->  
->  #pragma pack()
-
+Jason
