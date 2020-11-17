@@ -2,143 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD49B2B58E0
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 05:41:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0E4A2B5970
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 06:44:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgKQEit (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 23:38:49 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3039 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgKQEis (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 23:38:48 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fb353e20001>; Mon, 16 Nov 2020 20:38:58 -0800
-Received: from [10.25.99.52] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Nov
- 2020 04:38:39 +0000
-Subject: Re: [PATCH 0/3] Add support to handle prefetchable memory
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Thierry Reding <treding@nvidia.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-CC:     "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-References: <20201023195655.11242-1-vidyas@nvidia.com>
- <SLXP216MB04777D651A59246A60D036A8AA1B0@SLXP216MB0477.KORP216.PROD.OUTLOOK.COM>
- <20201026123012.GA356750@ulmo>
- <53277a71-13e5-3e7e-7c51-aca367b99d31@nvidia.com>
-Message-ID: <92d5ead4-a3d2-42ba-a542-3e305f3d5523@nvidia.com>
-Date:   Tue, 17 Nov 2020 10:08:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.2
+        id S1725747AbgKQFox (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 00:44:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgKQFow (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 00:44:52 -0500
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373FDC0613CF;
+        Mon, 16 Nov 2020 21:44:51 -0800 (PST)
+Received: by mail-pl1-x641.google.com with SMTP id y22so9640751plr.6;
+        Mon, 16 Nov 2020 21:44:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i94+E5h3prUpXJMLneKcuPsyNNdqYemplY0Whp5G7XE=;
+        b=n7cbm+F7wxT7QRUDDlFn02n5oPgODXXyRwLHHU9eEXGlQ7IDZh0CcAVlQV1kATKqTw
+         H58E65s+wRaxqDLSdPkxPKV68X5w31FUcQTpbtblCEZijfJe/sV3QVV8B73O9BlrVYks
+         MDP3VIbPbhQckBRmsG0ljQrDpe2Q3YErgmmtkoSwRh0t6Y5iFmzt6Y70/O7kzn4iTkMy
+         b+hoMUKgdetTT4nbKKS6tbhNeRZmT5HmTa/jWys0zctoIyf4XeTfACMod+EbSgmZNiam
+         KtxoeSg2aXSC3EXzAmqesRG7fWr+T062rlqe0hf6ctQg9kQnytdwWvVoivqPv28Gj3mN
+         dQow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i94+E5h3prUpXJMLneKcuPsyNNdqYemplY0Whp5G7XE=;
+        b=NDxCFbKe3thka1E0K1SPKx5cUCLqpzD7lpMi4bYXIC19UHHCvT5z3pORgCi++zRT/2
+         XXoLhbVdVPsXn97IEDetGtDFk8uvkFYxwVQ0pbcWtVb4zkYID67yl/Xx7RqvOF3sb5q9
+         F4WiEw530EUZOHB2qSojIkez9tEs4app4SzWyTMbmB3TTDwUePc4dMLQO16at+FPAiZ+
+         Z3G2PWc0yOTa4ChAOquGHYrG21xYC1BqsF/MUjOK9yaHZW53kW3wvGvY9J1p5E+yxdpP
+         Vn0o692Er5US+CaxhIV2XaAiNSZE5Q9RXAyZQuFzctx4pE0SXwsGHNVId28tJDhcK4Fk
+         A2Tw==
+X-Gm-Message-State: AOAM531GdYcUZdvVObHpyQ1HJyBnCd/GCEJvZk+Q6ZfjDEVOqUzRyn0s
+        y7BPqdx2glc/yzZGkBuAVbfXqDdY3rY=
+X-Google-Smtp-Source: ABdhPJybx6TXlKHXnkj+hcsxwuOi4RxfcHWiP/ORYDGNSK3qTLO2GPMP7ruRi+2bfSVSqd3QsgTPOw==
+X-Received: by 2002:a17:902:ab98:b029:d8:c5e8:978a with SMTP id f24-20020a170902ab98b02900d8c5e8978amr15686488plr.56.1605591890348;
+        Mon, 16 Nov 2020 21:44:50 -0800 (PST)
+Received: from ZB-PF0YQ8ZU.360buyad.local ([137.116.162.235])
+        by smtp.gmail.com with ESMTPSA id m3sm20392462pfd.217.2020.11.16.21.44.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2020 21:44:49 -0800 (PST)
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, hch@infradead.org,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Subject: [PATCH v3 0/2] avoid inserting duplicate IDs in dynids list
+Date:   Tue, 17 Nov 2020 13:44:07 +0800
+Message-Id: <20201117054409.3428-1-zhenzhong.duan@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <53277a71-13e5-3e7e-7c51-aca367b99d31@nvidia.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1605587938; bh=LWTX7EIE05huuVD68czK2CHeNKaLvf8HX1JxbzKZqZ4=;
-        h=Subject:From:To:CC:References:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=hlMpZPVK5IWiVWi4hFo60n3Z5dQl78lATnhNAnJ6T8ZAUJCg+LOqptVJJ5zF7HB/4
-         QOG09llSqyX93OQQgYSeTt+N6Gd78USCu7AZABR4UvTSJkMccU4JpfEzdJq9G88Xkh
-         tIHxJFAUw6A642o59EgP8Pm+jdDbQ2q8JXfIOo9qRBz0wwrwciuOqe54/e8KbSm/r5
-         WBn7qK/ogKGiLBLlUipVBv5rlMsezqqpHUsxbgDHRTrWXK9zJod+WludPVsmSbEj0/
-         o2TZVJbXJOhgwq8ZdyVbnh4Fse4WDSMIlac7hoOufMLxLRQnI+hOPOLpRGHPfgcaJo
-         jYemra8sL9H9g==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lorenzo & Bjorn,
-Sorry to bother you.
-Could you please take a look at the patches-1 & 2 from this series?
+vfio-pci and pci-stub use new_id to bind devices. But one can add same IDs
+multiple times, for example:
 
-Thanks,
-Vidya Sagar
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
+-bash: echo: write error: No such device
 
-On 11/4/2020 1:16 PM, Vidya Sagar wrote:
-> External email: Use caution opening links or attachments
->=20
->=20
-> Lorenzo / Bjorn,
-> Could you please review patches-1 & 2 in this series?
-> For the third patch, we already went with Rob's patch @
-> http://patchwork.ozlabs.org/project/linux-pci/patch/20201026154852.221483=
--1-robh@kernel.org/=20
->=20
->=20
-> Thanks,
-> Vidya Sagar
->=20
-> On 10/26/2020 6:02 PM, Thierry Reding wrote:
->> On Sat, Oct 24, 2020 at 04:03:41AM +0000, Jingoo Han wrote:
->>> On 10/23/20, 3:57 PM, Vidya Sagar wrote:
->>>>
->>>> This patch series adds support for configuring the DesignWare IP's ATU
->>>> region for prefetchable memory translations.
->>>> It first starts by flagging a warning if the size of non-prefetchable
->>>> aperture goes beyond 32-bit as PCIe spec doesn't allow it.
->>>> And then adds required support for programming the ATU to handle highe=
-r
->>>> (i.e. >4GB) sizes and then finally adds support for differentiating
->>>> between prefetchable and non-prefetchable regions and configuring=20
->>>> one of
->>>> the ATU regions for prefetchable memory translations purpose.
->>>>
->>>> Vidya Sagar (3):
->>>> =A0=A0 PCI: of: Warn if non-prefetchable memory aperture size is > 32-=
-bit
->>>> =A0=A0 PCI: dwc: Add support to program ATU for >4GB memory aperture s=
-izes
->>>> =A0=A0 PCI: dwc: Add support to handle prefetchable memory mapping
->>>
->>> For 2nd & 3rd,
->>> Acked-by: Jingoo <jingoohan1@gmail.com>
->>> But, I still want someone to ack 1st patch, not me.
->>>
->>> To Vidya,
->>> If possible, can you ask your coworker to give 'Tested-by'? It will=20
->>> be very helpful.
->>> Thank you.
->>
->> On next-20201026 (but also going back quite a while) I'm seeing this
->> during boot on Jetson AGX Xavier (Tegra194):
->>
->> [=A0=A0=A0 3.493382] ahci 0001:01:00.0: version 3.0
->> [=A0=A0=A0 3.493889] ahci 0001:01:00.0: SSS flag set, parallel bus scan=
-=20
->> disabled
->> [=A0=A0=A0 4.497706] ahci 0001:01:00.0: controller reset failed (0xfffff=
-fff)
->> [=A0=A0=A0 4.498114] ahci: probe of 0001:01:00.0 failed with error -5
->>
->> After applying this series, AHCI over PCI is back to normal:
->>
->> [=A0=A0=A0 3.543230] ahci 0001:01:00.0: AHCI 0001.0000 32 slots 1 ports =
-6=20
->> Gbps 0x1 impl SATA mode
->> [=A0=A0=A0 3.550841] ahci 0001:01:00.0: flags: 64bit ncq sntf led only p=
-mp=20
->> fbs pio slum part sxs
->> [=A0=A0=A0 3.559747] scsi host0: ahci
->> [=A0=A0=A0 3.561998] ata1: SATA max UDMA/133 abar m512@0x1230010000 port=
-=20
->> 0x1230010100 irq 63
->>
->> So for the series:
->>
->> Tested-by: Thierry Reding <treding@nvidia.com>
->>
+This doesn't cause user-visible broken behavior, but not user friendly.
+he has to remove same IDs same times to ensure it's completely gone.
+
+Changed to only allow one dynamic entry of the same kind, after fix:
+
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
+-bash: echo: write error: File exists
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
+# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
+-bash: echo: write error: No such device
+
+
+v3: add a separate patch to process dependency issue per Bjorn
+    make commit log more clear per Bjorn
+v2: revert the export of pci_match_device() per Christoph
+    combind PATCH1 and PATCH2 into one.
+
+v2 link:https://lkml.org/lkml/2020/10/25/347
+
+Zhenzhong Duan (2):
+  PCI: move pci_match_device() ahead of new_id_store()
+  PCI: avoid duplicate IDs in dynamic IDs list
+
+ drivers/pci/pci-driver.c | 146 +++++++++++++++++++++++------------------------
+ 1 file changed, 73 insertions(+), 73 deletions(-)
+
+-- 
+1.8.3.1
+
+
+Zhenzhong Duan (2):
+  PCI: move pci_match_device() ahead of new_id_store()
+  PCI: avoid duplicate IDs in dynamic IDs list
+
+ drivers/pci/pci-driver.c | 146 +++++++++++++++++++++++------------------------
+ 1 file changed, 73 insertions(+), 73 deletions(-)
+
+-- 
+1.8.3.1
+
