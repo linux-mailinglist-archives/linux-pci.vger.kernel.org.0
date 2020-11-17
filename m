@@ -2,82 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 605322B7114
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 22:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BE512B7123
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 22:59:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgKQVpd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 16:45:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgKQVpc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 16:45:32 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928B0C0617A6
-        for <linux-pci@vger.kernel.org>; Tue, 17 Nov 2020 13:45:32 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id t11so24035384edj.13
-        for <linux-pci@vger.kernel.org>; Tue, 17 Nov 2020 13:45:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5lBVBDWK8SCqKzaHy0L/+mLoij0OAwknWiLnXgPeJSM=;
-        b=FBb5z0wFGOiQbc45dE0niLuV0rybunP/wEU/0k6b783EPVbzDuRuejCVpDauBALHfc
-         +lc+d6XRbgwNlOlzPZ80uZOVCFXlW1F2ThVz/PgWXDMr5Qk2qXUzVeV/mkMEpA6NGBWJ
-         /r6IhOXal5Ashs5MZqCi+/Cclekpk1N7Hu9Viof3LXHIYVpqGBDN2fBwVFtEcO1Bg3xL
-         tzN0ffs5tPZJKxTNR/PuvOabZJbNfgH+ytvBghZkwTb90HvxcpdUGn1dX3oNF3/DPg4V
-         t49QQpzkPhLWrGwW9cDwq4Kw7uQG5EcgkdpwrzO/HDHONv+D/N6z78dNpCEiwy/lcNpB
-         TB3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5lBVBDWK8SCqKzaHy0L/+mLoij0OAwknWiLnXgPeJSM=;
-        b=Qty+gdWFn7N4uV8APdLXOzuKUZfc+zmL0/U3YpwsdNR95w/yzPJS5jkODmCOeUNfHi
-         arIHTaCP9MLn4dpwlhpz2hJvdldlKw7rmmcDCLLtu231XKEl49ajmg4kfyoO7ELXo6Io
-         +76fsEgGo2bvGZYQa5+HclafPkyuKFLanfJowdXVr1SfTYWtcwuNuWmpH1cle/kyrdsW
-         V/8eLhHaAfCzOw6L1eNA0XR5CO47bQwNkLYnVEvRS08TEbDGD1pvaVV6+WsquFR2O9aG
-         juyOE0h45FUBXBzLMzWAidku2j5IdCvofdPUaz/a/HOUW+5EHVWY166N2UYa6SVK6DEG
-         wciA==
-X-Gm-Message-State: AOAM530DXRpLWwmQLfx23rUj4nkXrm6l53bxDTwXDPoAE/EVmVK99JNe
-        d8DkCklR9MPv4/FhfaqHZlywOrIlu69kqUwKfsKe4Q==
-X-Google-Smtp-Source: ABdhPJyqTIqMdYQYBJBwXDLjTJrIAYOVAjbbvPmUH0FRy9zTiej41mBWzaPPONfsn2ZvoadeWtEkbQOTbaDmxU63dbg=
-X-Received: by 2002:a05:6402:b35:: with SMTP id bo21mr24193805edb.52.1605649531304;
- Tue, 17 Nov 2020 13:45:31 -0800 (PST)
+        id S1726297AbgKQV6l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 16:58:41 -0500
+Received: from mga17.intel.com ([192.55.52.151]:9888 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726182AbgKQV6l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Nov 2020 16:58:41 -0500
+IronPort-SDR: UiWoy1hIrgGpOmricjRR5QzIY2YkgALuutVAKtR3xnmhRVuuyP0wXN14p4mKu4LYvdg+0PgC5t
+ W5bPerDA5pGg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9808"; a="150867407"
+X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
+   d="scan'208";a="150867407"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2020 13:58:38 -0800
+IronPort-SDR: B+xFNCS5/yZL0R++PpXTVj+Yc9brAxYzIpD1yhxmH35WmaW8UnLPODj3VEHMNPrmPMLZ6i1EXT
+ 9AiEosLdczMQ==
+X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
+   d="scan'208";a="544223980"
+Received: from chimtrax-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.254.101.222])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2020 13:58:37 -0800
+Subject: Re: [PATCH v11 07/16] PCI/ERR: Simplify by computing pci_pcie_type()
+ once
+To:     Sean V Kelley <sean.v.kelley@intel.com>, bhelgaas@google.com,
+        Jonathan.Cameron@huawei.com, xerces.zhao@gmail.com,
+        rafael.j.wysocki@intel.com, ashok.raj@intel.com,
+        tony.luck@intel.com, sathyanarayanan.kuppuswamy@intel.com,
+        qiuxu.zhuo@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201117191954.1322844-1-sean.v.kelley@intel.com>
+ <20201117191954.1322844-8-sean.v.kelley@intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <248d4a59-fa56-60cc-edb1-e3871431664d@linux.intel.com>
+Date:   Tue, 17 Nov 2020 13:58:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-2-ben.widawsky@intel.com> <CAJZ5v0i7fcoBe5o-J7q5fYW_1nUYJ-QdshWOBV5fFf85rD_sDA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i7fcoBe5o-J7q5fYW_1nUYJ-QdshWOBV5fFf85rD_sDA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 17 Nov 2020 13:45:20 -0800
-Message-ID: <CAPcyv4i6MCu6RmLCyE+K-j3bbtrYeA+hJXL4+Zy_Tfhmwv2ErA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/9] cxl/acpi: Add an acpi_cxl module for the CXL interconnect
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201117191954.1322844-8-sean.v.kelley@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 6:33 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-[..]
-> > +static struct acpi_driver acpi_cxl_driver = {
->
-> First of all, no new acpi_driver instances, pretty please!
->
-> acpi_default_enumeration() should create a platform device with the
-> ACPI0017 ID for you.  Can't you provide a driver for this one?
->
+Hi,
 
-Ah, yes, I recall we had this discussion around the time the ACPI0012
-NFIT driver was developed. IIRC the reason ACPI0012 remaining an
-acpi_driver was due to a need to handle ACPI notifications, is that
-the deciding factor? ACPI0017 does not have any notifications so it
-seems like platform driver is the way to go.
+On 11/17/20 11:19 AM, Sean V Kelley wrote:
+> Instead of calling pci_pcie_type(dev) twice, call it once and save the
+> result.  No functional change intended.
+
+Same optimization can be applied to drivers/pci/pcie/portdrv_pci.c and
+drivers/pci/pcie/aer.c.
+
+Can you fix them together ?
+
+> 
+> [bhelgaas: split to separate patch]
+> Link: https://lore.kernel.org/r/20201002184735.1229220-6-seanvk.dev@oregontracks.org
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>   drivers/pci/pcie/err.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 05f61da5ed9d..7a5af873d8bc 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -150,6 +150,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   		pci_channel_state_t state,
+>   		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev))
+>   {
+> +	int type = pci_pcie_type(dev);
+>   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>   	struct pci_bus *bus;
+>   
+> @@ -157,8 +158,8 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   	 * Error recovery runs on all subordinates of the first downstream port.
+>   	 * If the downstream port detected the error, it is cleared at the end.
+>   	 */
+> -	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> +	if (!(type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	      type == PCI_EXP_TYPE_DOWNSTREAM))
+>   		dev = pci_upstream_bridge(dev);
+>   	bus = dev->subordinate;
+>   
+> 
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
