@@ -2,101 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D566B2B685C
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 16:12:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D0142B686B
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 16:16:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgKQPLX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 10:11:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbgKQPLX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Nov 2020 10:11:23 -0500
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1DFA2466D;
-        Tue, 17 Nov 2020 15:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605625882;
-        bh=C4yS4FgGZ20hDfC8vb6+iWWOh9UGXCtT+oSCVv0lIc4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pMmlPRXqfc4CNOJBE61Lq46N8AufvzV0juXIToPXF9eSdyh+5jf+xJwAuxBifBWRn
-         6xKCPPS9lE6kx/zKjAtyEzngPlkHYG0JMLJEq4ZfJ1VDicVVXbhkveW3gzSbRKzNf0
-         wO5JS4ODDm/If1lwxEtd6+2d4bHy7AmDOsh/yK9s=
-Received: by mail-ot1-f48.google.com with SMTP id j14so19727971ots.1;
-        Tue, 17 Nov 2020 07:11:22 -0800 (PST)
-X-Gm-Message-State: AOAM5326iwHhqA8Lc02HqF3qRljUSkBAWL3tN4Q99hfmMWygNxA+FWty
-        ZCCRvwWJmPOGkXlhi20xU6I2cMszPEnUuANPvwg=
-X-Google-Smtp-Source: ABdhPJzPDDDU77Y0ooUlA2nKsjWglmGXsBwnC46xjWewyrbSPbTP1FKa46jAA1eQXgiQ5xjfh5Pjb9fXC8wikOToY/s=
-X-Received: by 2002:a05:6830:22d2:: with SMTP id q18mr3025922otc.305.1605625881933;
- Tue, 17 Nov 2020 07:11:21 -0800 (PST)
+        id S1728546AbgKQPPb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 10:15:31 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2119 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgKQPPa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 10:15:30 -0500
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Cb8bl3L3bz67FF8;
+        Tue, 17 Nov 2020 23:13:55 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Tue, 17 Nov 2020 16:15:28 +0100
+Received: from localhost (10.47.31.177) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 17 Nov
+ 2020 15:15:27 +0000
+Date:   Tue, 17 Nov 2020 15:15:19 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
+Message-ID: <20201117151519.000069d2@Huawei.com>
+In-Reply-To: <20201111054356.793390-6-ben.widawsky@intel.com>
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+        <20201111054356.793390-6-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <cover.1605306931.git.gustavo.pimentel@synopsys.com>
- <CAK8P3a3TpnQmcWFkBJyi7CxdzgyyzxXzA3mokYvcem6yEh7Bdg@mail.gmail.com> <DM5PR12MB18352E62E07B9FBDDB89F1A9DAE20@DM5PR12MB1835.namprd12.prod.outlook.com>
-In-Reply-To: <DM5PR12MB18352E62E07B9FBDDB89F1A9DAE20@DM5PR12MB1835.namprd12.prod.outlook.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Tue, 17 Nov 2020 16:11:06 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2Tmr6XsmPbO4JT_kcogk8C7m6wyPwv+t1a2_4oaysy-A@mail.gmail.com>
-Message-ID: <CAK8P3a2Tmr6XsmPbO4JT_kcogk8C7m6wyPwv+t1a2_4oaysy-A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] misc: Add Add Synopsys DesignWare xData IP driver
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.31.177]
+X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 3:53 PM Gustavo Pimentel
-<Gustavo.Pimentel@synopsys.com> wrote:
-> On Tue, Nov 17, 2020 at 14:4:49, Arnd Bergmann <arnd@kernel.org> wrote:
-> > On Fri, Nov 13, 2020 at 11:37 PM Gustavo Pimentel <Gustavo.Pimentel@synopsys.com> wrote:
-> > >
-> > > This patch series adds a new driver called xData-pcie for the Synopsys
-> > > DesignWare PCIe prototype.
-> > >
-> > > The driver configures and enables the Synopsys DesignWare PCIe traffic
-> > > generator IP inside of prototype Endpoint which will generate upstream
-> > > and downstream PCIe traffic. This allows to quickly test the PCIe link
-> > > throughput speed and check is the prototype solution has some limitation
-> > > or not.
-> >
-> > I don't quite understand what this hardware is, based on your description.
-> > Is this a specific piece of hardware that only serves as a traffic generator,
-> > or a particular hardware feature of the DesignWare endpoint, or is it
-> > software running on a SoC in endpoint mode while plugged into a Linux
-> > system running this driver on the host?
->
-> Firstly you have to have in mind that we are talking about an HW
-> prototype based on FPGA. This PCIe Endpoint HW prototype from Synopsys
-> might have multiple HW blocks inside (depends on the HW design), in this
-> particular prototype case, it has an HW block is called xData (available
-> internally to Synopsys only) which is a PCIe traffic generator, this
-> block has no practical usage, unless for HW validation and testing new
-> designs that push forward new PCIe speeds.
+On Tue, 10 Nov 2020 21:43:52 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-Ok, got it. Thanks for the explanation.
+> CXL devices contain an array of capabilities that describe the
+> interactions software can interact with the device, or firmware running
+> on the device. A CXL compliant device must implement the device status
+> and the mailbox capability. A CXL compliant memory device must implement
+> the memory device capability.
+> 
+> Each of the capabilities can [will] provide an offset within the MMIO
+> region for interacting with the CXL device.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-> > My feeling is that this should be located more closely to drivers/pci/,
-> > but that depends on what it actually does.
->
-> I thought to put on /misc because the purpose is very limited and doesn't
-> fit in a normal case.
+A few really minor things in this one.
 
-Makes sense. I usually try to ensure we don't add anything to drivers/misc
-that could reasonably be grouped with related code elsewhere, but
-I agree there isn't much that fits into this category today, so let's leave
-it there unless someone comes up with a better idea.
+Jonathan
 
-The only alternative I could see would be drivers/pci/testing/
+> ---
+>  drivers/cxl/cxl.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/mem.c | 58 +++++++++++++++++++++++++++---
+>  2 files changed, 143 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/cxl/cxl.h
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> new file mode 100644
+> index 000000000000..02858ae63d6d
+> --- /dev/null
+> +++ b/drivers/cxl/cxl.h
+> @@ -0,0 +1,89 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+> +
+> +#ifndef __CXL_H__
+> +#define __CXL_H__
+> +
+> +/* Device */
+> +#define CXLDEV_CAP_ARRAY_REG 0x0
+> +#define CXLDEV_CAP_ARRAY_CAP_ID 0
+> +#define CXLDEV_CAP_ARRAY_ID(x) ((x) & 0xffff)
+> +#define CXLDEV_CAP_ARRAY_COUNT(x) (((x) >> 32) & 0xffff)
+> +
+> +#define CXL_CAPABILITIES_CAP_ID_DEVICE_STATUS 1
 
-      Arnd
+I'm not sure what you can do about consistent naming, but
+perhaps this really does need to be 
+CXLDEV_CAP_CAP_ID_x  however silly that looks.
+
+It's a funny exercise I've only seen done once in a spec, but
+I wish everyone would try working out what their fully expanded
+field names will end up as and make sure the long form naming shortens
+to something sensible.  It definitely helps with clarity!
+
+> +#define CXL_CAPABILITIES_CAP_ID_PRIMARY_MAILBOX 2
+> +#define CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX 3
+> +#define CXL_CAPABILITIES_CAP_ID_MEMDEV 0x4000
+> +
+> +/* Mailbox */
+> +#define CXLDEV_MB_CAPS 0x00
+
+Elsewhere you've used _OFFSET postfix. That's useful so I'd do it here
+as well.  Cross references to the spec section always appreciated as well!
+
+> +#define   CXLDEV_MB_CAP_PAYLOAD_SIZE(cap) ((cap) & 0x1F)
+> +#define CXLDEV_MB_CTRL 0x04
+> +#define CXLDEV_MB_CMD 0x08
+> +#define CXLDEV_MB_STATUS 0x10
+> +#define CXLDEV_MB_BG_CMD_STATUS 0x18
+> +
+> +struct cxl_mem {
+> +	struct pci_dev *pdev;
+> +	void __iomem *regs;
+> +
+> +	/* Cap 0000h */
+
+What are the numbers here?  These capabilities have too
+many indexes associated with them in different ways for it
+to be obvious, so perhaps more detail in the comments?
+
+> +	struct {
+> +		void __iomem *regs;
+> +	} status;
+> +
+> +	/* Cap 0002h */
+> +	struct {
+> +		void __iomem *regs;
+> +		size_t payload_size;
+> +	} mbox;
+> +
+> +	/* Cap 0040h */
+> +	struct {
+> +		void __iomem *regs;
+> +	} mem;
+> +};
