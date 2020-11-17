@@ -2,85 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8692D2B6EBF
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 20:35:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 209DF2B6EF2
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 20:43:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgKQTe0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 14:34:26 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50236 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgKQTeZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 14:34:25 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605641663;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zPOq2Gof25KoyGTbil/CYi0lyxMBn0WxrZqz+oT1E5A=;
-        b=PQPRExsKgi88p9KsUpyG9up506cAUOROacfRqMm62eqdoAvUKx6i7yr+Yp3eZtfo1xWdBk
-        pUuw2OHDqm+vX9HTNAjal5MUuOF2sBs2M5/0JkLsdzpYxbkbz6bXMrGZyjSm2kkATLdOBY
-        HYcuiVNlNHjIChCDf4gtFy0dpBbBDuO+DpKqHVUGrbWPTvPWabxVU7so4G0Gt6lV8WFtom
-        Jo+MYPrgKPZLLuhkDERYqXDmmGF29Exte52haBdjBv5Zw5Bp5dT5IjAd7C+OEGgr85+fvQ
-        T0jTpKf++eb3tkq4jPfViasWN/08q54fAT0lFEE1u8JqETnvOrR52LhSQtE0Rw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605641663;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zPOq2Gof25KoyGTbil/CYi0lyxMBn0WxrZqz+oT1E5A=;
-        b=/SsNrCoqoGbx8Sxq048YeIHsiS2Dnfzgqok1cMtqOL8LNNePCmP53qWrQT6beORsfmlCKB
-        cucJM1rH7pGwCcDw==
-To:     David Woodhouse <dwmw2@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>, lukas@wunner.de,
-        linux-pci@vger.kernel.org, kernelfans@gmail.com,
-        andi@firstfloor.org, hpa@zytor.com, bhe@redhat.com, x86@kernel.org,
-        okaya@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com,
-        dyoung@redhat.com, gavin.guo@canonical.com, bp@alien8.de,
-        bhelgaas@google.com, Guowen Shan <gshan@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, kernel@gpiccoli.net,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ddstreet@canonical.com, vgoyal@redhat.com
-Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
-In-Reply-To: <f0d35834054cc1ac77ac0e6b68e84d62de3c48f7.camel@infradead.org>
-References: <20201117001907.GA1342260@bjorn-Precision-5520> <87h7poeqqn.fsf@x220.int.ebiederm.org> <873618xqaa.fsf@nanos.tec.linutronix.de> <f0d35834054cc1ac77ac0e6b68e84d62de3c48f7.camel@infradead.org>
-Date:   Tue, 17 Nov 2020 20:34:23 +0100
-Message-ID: <87wnyjwzeo.fsf@nanos.tec.linutronix.de>
+        id S1730412AbgKQTle (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 14:41:34 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2849 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730396AbgKQTld (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 14:41:33 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fb427640000>; Tue, 17 Nov 2020 11:41:24 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Nov
+ 2020 19:41:33 +0000
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
+ HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 17 Nov 2020 19:41:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R8S/mZQbZ+wSJMwed2tnC83wffG4dhfa638mkJURcO74siBaCip6+xrI+TIielfXy5J2/mbod8JpoLhv+azB7BwyKE7RoiDpnBuVDjGShv9NhRuUzBsVeIGh1v3ZEKnarto9zbx1jQ2YJJM5cbhOzNyWhiwaSbXFyHyGMhlyi4wtxnPGoe+y/i0YV3m8tHGfFEL85gBIN12Eios6I6hX4+JDp5dSGueOsehL3ZAut5jYsW/nqd0nFFLMhwas+zhiE+WamQ/kyBS71myPRyftfZjKrXs2sbJCXVZVI2uH28YbuGIMT7kaW7CLZVLxGZSO6ZV8NAuj9thyg/vYgrovpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jJM5Y9H78KXYKRCnnVEEJagbt01lS64k9Cqs2QVudZA=;
+ b=etF8OHVJvidJtM3r/DGme97xNALnpTmWeikLd37mvgrfGiYsj7JrxzSZGgsJ5nK+r5AY9n8SksWMjR8zRQBYvS7j7XNmfMmc63AK6Am77AAKeeYUfV0p6q+3JsZv0GGCsvYJJsr/RGkB2VXMZ3aUIUSGhBoTt9v1Ie1coLEw1AaeQG/h+nWZ8JDCvFccmZcwTuPe/6+5TbYF44ET96uKIRtssotP4cdzxTM3VXREAzwnLgsqCssDMZEa5RmXFAEmjRRGZhpEHnVjds3W2fNJFYWEgEhu8HeL5FomBcdxLgsfL68jpSFDnb2JIZxNSKrhmCsqzkgGWEgAvyL1rH6YZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB3305.namprd12.prod.outlook.com (2603:10b6:5:189::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28; Tue, 17 Nov
+ 2020 19:41:32 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::e40c:730c:156c:2ef9]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::e40c:730c:156c:2ef9%7]) with mapi id 15.20.3564.028; Tue, 17 Nov 2020
+ 19:41:31 +0000
+Date:   Tue, 17 Nov 2020 15:41:29 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Zhu Yanjun <yanjunz@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        <linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
+        <linux-pci@vger.kernel.org>, <iommu@lists.linux-foundation.org>
+Subject: Re: remove dma_virt_ops v2
+Message-ID: <20201117194129.GA1757698@nvidia.com>
+References: <20201106181941.1878556-1-hch@lst.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20201106181941.1878556-1-hch@lst.de>
+X-ClientProxiedBy: MN2PR19CA0067.namprd19.prod.outlook.com
+ (2603:10b6:208:19b::44) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by MN2PR19CA0067.namprd19.prod.outlook.com (2603:10b6:208:19b::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.20 via Frontend Transport; Tue, 17 Nov 2020 19:41:31 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kf6r3-007NGx-I0; Tue, 17 Nov 2020 15:41:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1605642084; bh=jJM5Y9H78KXYKRCnnVEEJagbt01lS64k9Cqs2QVudZA=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType;
+        b=GE2QgNvnRwvZKRhh8TudXZKfjJl7PAfGgQx6aB9j7Yp+dW7iLeQI8L82ARv56ftOw
+         w8a4q4CoNRLZqpWtNQZj8QUKbcWByvf8r4E5Jz4KXAPfrzFDnhUT9K6XiufMS7nHc/
+         zsIW9ht2GbCcbw+NLPl0lFAgfUCVChDXhUCEPiFGvkY+SSfRlf7EmMzjIFU6ND9ENL
+         iOC9obDWE2b2srpib4KwJaMI/MXXR+eMoUf+SazDOPICEo6E6HjDq91lu3Etn162Hv
+         j+ZZ68UK1QO3rhV8FquSwZMOnhgYAAd4GDOSfPssuxA+EmOGUpnGu94le8xZJCgyPK
+         DZuw3DTw+WGKA==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 17 2020 at 12:19, David Woodhouse wrote:
-> On Tue, 2020-11-17 at 10:53 +0100, Thomas Gleixner wrote:
->> But that does not solve the problem either simply because then the IOMMU
->> will catch the rogue MSIs and you get an interrupt storm on the IOMMU
->> error interrupt.
->
-> Not if you can tell the IOMMU to stop reporting those errors.
->
-> We can easily do it per-device for DMA errors; not quite sure what
-> granularity we have for interrupts. Perhaps the Intel IOMMU only lets
-> you set the Fault Processing Disable bit per IRTE entry, and you still
-> get faults for Compatibility Format interrupts? Not sure about AMD...
+On Fri, Nov 06, 2020 at 07:19:31PM +0100, Christoph Hellwig wrote:
+> Hi Jason,
+> 
+> this series switches the RDMA core to opencode the special case of
+> devices bypassing the DMA mapping in the RDMA ULPs.  The virt ops
+> have caused a bit of trouble due to the P2P code node working with
+> them due to the fact that we'd do two dma mapping iterations for a
+> single I/O, but also are a bit of layering violation and lead to
+> more code than necessary.
+> 
+> Tested with nvme-rdma over rxe.
+> 
+> Note that the rds changes are untested, as I could not find any
+> simple rds test setup.
+> 
+> Changes since v2:
+>  - simplify the INFINIBAND_VIRT_DMA dependencies
+>  - add a ib_uses_virt_dma helper
+>  - use ib_uses_virt_dma in nvmet-rdma to disable p2p for virt_dma devices
+>  - use ib_dma_max_seg_size in umem
+>  - stop using dmapool in rds
+> 
+> Changes since v1:
+>  - disable software RDMA drivers for highmem configs
+>  - update the PCI commit logs
 
-It looks like the fault (DMAR) and event (AMD) interrupts can be
-disabled in the IOMMU. That might help to bridge the gap until the PCI
-bus is scanned in full glory and the devices can be shut up for real.
+All applied to for-next, thanks everyone
 
-If we make this conditional for a crash dump kernel that might do the
-trick.
-
-Lot's of _might_ there :)
-
-Thanks
-
-        tglx
-
-
-
-
-
+Jason
