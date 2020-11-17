@@ -2,272 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3A0B2B5DB1
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 12:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B3A72B5D4A
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 11:55:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgKQK7m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 05:59:42 -0500
-Received: from fralinode-sdnproxy-1.icoremail.net ([172.104.134.221]:23356
-        "HELO fralinode-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1725774AbgKQK7m (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 05:59:42 -0500
-X-Greylist: delayed 763 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Nov 2020 05:59:38 EST
-Received: from localhost (unknown [218.77.105.7])
-        by c1app9 (Coremail) with SMTP id CQINCgAHHZ8UqrNf2GxnAA--.1812S3;
-        Tue, 17 Nov 2020 18:46:44 +0800 (CST)
-From:   Chen Baozi <chenbaozi@phytium.com.cn>
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [RFC PATCH] acpi/irq: Add stacked IRQ domain support to PCI interrupt link
-Date:   Tue, 17 Nov 2020 18:46:40 +0800
-Message-Id: <20201117104640.25227-1-chenbaozi@phytium.com.cn>
-X-Mailer: git-send-email 2.28.0
+        id S1727218AbgKQKxJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 05:53:09 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:44644 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgKQKxI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 05:53:08 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AHAhpBN075294;
+        Tue, 17 Nov 2020 10:52:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=IodeTKUioP4hbL7In6IGk5dfNg6p9XSvZPTeUJHk8iQ=;
+ b=G03gADzwfGRenrT8dFA0l2VmOREmlXjdG74vu4Fq3k1Hi0GKB4v+Yo0OCpL0/LREIIRK
+ yW5VuvjYGg5HK85nif3NorlRM21NA/ti+hFEipEivbFulRQ9Wjbr9kqqmvdI/ujVwFFA
+ zqOVSaP1pXfhPWrw8yPRKP2rCFzDjdytH7N+cVQENYZVPyNvdyntzBR6p9AZyq7t8FzR
+ RM3bE6iol5VL3Yk2ZRC9z0j7r3c48Rkl+JS+t4SzPsQ+bAA55UgO483aSr2sA7XbQTJb
+ tya1bTQBJ+dtoPhiJhK5xlvkltjhuJc0jY1HtbZbt2TVFrsAlu0A5keE+JVo1S85uzT/ ig== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 34t7vn1u99-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Nov 2020 10:52:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AHAjajW150840;
+        Tue, 17 Nov 2020 10:50:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 34uspt77s7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Nov 2020 10:50:50 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AHAnRlt160283;
+        Tue, 17 Nov 2020 10:50:49 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 34uspt77r2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Nov 2020 10:50:49 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AHAoiFu027667;
+        Tue, 17 Nov 2020 10:50:44 GMT
+Received: from [10.159.144.149] (/10.159.144.149)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Nov 2020 02:50:43 -0800
+Subject: Re: remove dma_virt_ops v2
+To:     santosh.shilimkar@oracle.com, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Zhu Yanjun <yanjunz@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <20201106181941.1878556-1-hch@lst.de>
+ <20201112094030.GA19550@lst.de> <20201112132353.GQ244516@ziepe.ca>
+ <2f644747-4a4f-7e03-d857-c2d7879054dd@oracle.com>
+From:   Ka-Cheong Poon <ka-cheong.poon@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <6da0d3b0-2db7-4c7e-145a-8f76733e9978@oracle.com>
+Date:   Tue, 17 Nov 2020 18:50:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <2f644747-4a4f-7e03-d857-c2d7879054dd@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: CQINCgAHHZ8UqrNf2GxnAA--.1812S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxuw13uFyxXF47Wry8WF1kGrg_yoW3uFyUpF
-        Wxt3WUArW8Xr4UWrs8Aa1rAF9xXa4jkrWUK3y3C3sIqanIgryrtF17CFyUAw1Ykws8Way2
-        vr1UAF18GF9rZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkab7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8twCF04k2
-        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
-        AIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
-        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bOlk3UUUUU=
-X-CM-SenderInfo: hfkh0updr2xqxsk13x1xpou0fpof0/1tbiDADfP17uHvQfYQAAsI
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9807 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 spamscore=0
+ adultscore=0 mlxscore=0 priorityscore=1501 phishscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011170079
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some PCIe designs require software to do extra acknowledgements for
-legacy INTx interrupts. If the driver is written only for device tree,
-things are simple. In that case, a new driver can be written under
-driver/pci/controller/ with a DT node of PCIe host written like:
+On 11/13/20 1:36 AM, santosh.shilimkar@oracle.com wrote:
+> + Ka-Cheong
+> 
+> On 11/12/20 5:23 AM, Jason Gunthorpe wrote:
+>> On Thu, Nov 12, 2020 at 10:40:30AM +0100, Christoph Hellwig wrote:
+>>> ping?
+>>>
+>>> On Fri, Nov 06, 2020 at 07:19:31PM +0100, Christoph Hellwig wrote:
+>>>> Hi Jason,
+>>>>
+>>>> this series switches the RDMA core to opencode the special case of
+>>>> devices bypassing the DMA mapping in the RDMA ULPs.  The virt ops
+>>>> have caused a bit of trouble due to the P2P code node working with
+>>>> them due to the fact that we'd do two dma mapping iterations for a
+>>>> single I/O, but also are a bit of layering violation and lead to
+>>>> more code than necessary.
+>>>>
+>>>> Tested with nvme-rdma over rxe.
+>>>>
+>>>> Note that the rds changes are untested, as I could not find any
+>>>> simple rds test setup.
+>>>>
+>>>> Changes since v2:
+>>>>   - simplify the INFINIBAND_VIRT_DMA dependencies
+>>>>   - add a ib_uses_virt_dma helper
+>>>>   - use ib_uses_virt_dma in nvmet-rdma to disable p2p for virt_dma devices
+>>>>   - use ib_dma_max_seg_size in umem
+>>>>   - stop using dmapool in rds
+>>>>
+>>>> Changes since v1:
+>>>>   - disable software RDMA drivers for highmem configs
+>>>>   - update the PCI commit logs
+>>
+>> Santosh can you please check the RDA parts??
+>>
+> 
+> Hi Ka-Cheong,
+> 
+> Can you please check Christoph change [1] which clean-up
+> dma-pool API to use ib_dma_* and slab allocator ? This was added
+> as part of your "net/rds: Use DMA memory pool allocation for rds_header"
+> commit.
 
-  pcie {
-    ...
-    interrupt-map = <0 0 0  1  &pcie_intc 0>,
-                    <0 0 0  2  &pcie_intc 1>,
-                    <0 0 0  3  &pcie_intc 2>,
-                    <0 0 0  4  &pcie_intc 3>;
 
-    pcie_intc: legacy-interrupt-controller {
-      interrupt-controller;
-      #interrupt-cells = <1>;
-      interrupt-parent = <&gic>;
-      interrupts = <0 226 4>;
-    };
-  };
+I applied the patch and ran some basic testing.  And it seems to
+work fine.
 
-Similar designs can be found on Aardvark, MediaTek Gen2 and Socionext
-UniPhier PCIe controller at the moment. Essentially, those designs are
-supported by inserting an extra interrupt controller between PCIe host
-and GIC and parse the topology in a DT-based PCI controller driver.
-As we turn to ACPI, All the PCIe hosts are described the same ID of
-"PNP0A03" and share driver/acpi/pci_root.c. It comes to be a problem
-to make this kind of PCI INTx work under ACPI.
+Thanks.
 
-Therefore, we introduce an stacked IRQ domain support to PCI interrupt
-link for ACPI. With this support, we can populate the ResourceSource
-to refer to a device object that describes an interrupt controller.
-That would allow us to refer to a dedicated driver which implements
-the logic needed to manage the interrupt state.
 
-Signed-off-by: Chen Baozi <chenbaozi@phytium.com.cn>
----
- drivers/acpi/irq.c          | 22 +++++++++++++++++++++-
- drivers/acpi/pci_irq.c      |  6 ++++--
- drivers/acpi/pci_link.c     | 17 +++++++++++++++--
- include/acpi/acpi_drivers.h |  2 +-
- include/linux/acpi.h        |  4 ++++
- 5 files changed, 45 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
-index e209081d644b..e78a44815c44 100644
---- a/drivers/acpi/irq.c
-+++ b/drivers/acpi/irq.c
-@@ -81,6 +81,25 @@ void acpi_unregister_gsi(u32 gsi)
- }
- EXPORT_SYMBOL_GPL(acpi_unregister_gsi);
- 
-+int acpi_register_irq(struct device *dev, u32 irq, int trigger,
-+		      int polarity, struct fwnode_handle *domain_id)
-+{
-+	struct irq_fwspec fwspec;
-+
-+	if (WARN_ON(!domain_id)) {
-+		pr_warn("GSI: No registered irqchip, giving up\n");
-+		return -EINVAL;
-+	}
-+
-+	fwspec.fwnode = domain_id;
-+	fwspec.param[0] = irq;
-+	fwspec.param[1] = acpi_dev_get_irq_type(trigger, polarity);
-+	fwspec.param_count = 2;
-+
-+	return irq_create_fwspec_mapping(&fwspec);
-+}
-+EXPORT_SYMBOL_GPL(acpi_register_irq);
-+
- /**
-  * acpi_get_irq_source_fwhandle() - Retrieve fwhandle from IRQ resource source.
-  * @source: acpi_resource_source to use for the lookup.
-@@ -92,7 +111,7 @@ EXPORT_SYMBOL_GPL(acpi_unregister_gsi);
-  * Return:
-  * The referenced device fwhandle or NULL on failure
-  */
--static struct fwnode_handle *
-+struct fwnode_handle *
- acpi_get_irq_source_fwhandle(const struct acpi_resource_source *source)
- {
- 	struct fwnode_handle *result;
-@@ -115,6 +134,7 @@ acpi_get_irq_source_fwhandle(const struct acpi_resource_source *source)
- 	acpi_bus_put_acpi_device(device);
- 	return result;
- }
-+EXPORT_SYMBOL_GPL(acpi_get_irq_source_fwhandle);
- 
- /*
-  * Context for the resource walk used to lookup IRQ resources.
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index 14ee631cb7cf..19296d70c95c 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -410,6 +410,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 	char *link = NULL;
- 	char link_desc[16];
- 	int rc;
-+	struct fwnode_handle *irq_domain;
- 
- 	pin = dev->pin;
- 	if (!pin) {
-@@ -438,7 +439,8 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 			gsi = acpi_pci_link_allocate_irq(entry->link,
- 							 entry->index,
- 							 &triggering, &polarity,
--							 &link);
-+							 &link,
-+							 &irq_domain);
- 		else
- 			gsi = entry->index;
- 	} else
-@@ -462,7 +464,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 		return 0;
- 	}
- 
--	rc = acpi_register_gsi(&dev->dev, gsi, triggering, polarity);
-+	rc = acpi_register_irq(&dev->dev, gsi, triggering, polarity, irq_domain);
- 	if (rc < 0) {
- 		dev_warn(&dev->dev, "PCI INT %c: failed to register GSI\n",
- 			 pin_name(pin));
-diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-index fb4c5632a232..219a644d739a 100644
---- a/drivers/acpi/pci_link.c
-+++ b/drivers/acpi/pci_link.c
-@@ -59,6 +59,7 @@ struct acpi_pci_link_irq {
- 	u8 resource_type;
- 	u8 possible_count;
- 	u32 possible[ACPI_PCI_LINK_MAX_POSSIBLE];
-+	struct acpi_resource_source resource_source;
- 	u8 initialized:1;
- 	u8 reserved:7;
- };
-@@ -120,6 +121,8 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
- 		{
- 			struct acpi_resource_extended_irq *p =
- 			    &resource->data.extended_irq;
-+			struct acpi_resource_source *rs =
-+			    &link->irq.resource_source;
- 			if (!p || !p->interrupt_count) {
- 				printk(KERN_WARNING PREFIX
- 					      "Blank _PRS EXT IRQ resource\n");
-@@ -140,6 +143,12 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
- 			link->irq.triggering = p->triggering;
- 			link->irq.polarity = p->polarity;
- 			link->irq.resource_type = ACPI_RESOURCE_TYPE_EXTENDED_IRQ;
-+			if (p->resource_source.string_length) {
-+				rs->index = p->resource_source.index;
-+				rs->string_length = p->resource_source.string_length;
-+				rs->string_ptr = kmalloc(rs->string_length, GFP_KERNEL);
-+				strcpy(rs->string_ptr, p->resource_source.string_ptr);
-+			}
- 			break;
- 		}
- 	default:
-@@ -326,7 +335,8 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
- 			resource->res.data.extended_irq.shareable = ACPI_SHARED;
- 		resource->res.data.extended_irq.interrupt_count = 1;
- 		resource->res.data.extended_irq.interrupts[0] = irq;
--		/* ignore resource_source, it's optional */
-+		resource->res.data.extended_irq.resource_source =
-+			link->irq.resource_source;
- 		break;
- 	default:
- 		printk(KERN_ERR PREFIX "Invalid Resource_type %d\n", link->irq.resource_type);
-@@ -612,7 +622,7 @@ static int acpi_pci_link_allocate(struct acpi_pci_link *link)
-  * failure: return -1
-  */
- int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
--			       int *polarity, char **name)
-+			       int *polarity, char **name, struct fwnode_handle **irq_domain)
- {
- 	int result;
- 	struct acpi_device *device;
-@@ -656,6 +666,9 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
- 		*polarity = link->irq.polarity;
- 	if (name)
- 		*name = acpi_device_bid(link->device);
-+	if (irq_domain)
-+		*irq_domain = acpi_get_irq_source_fwhandle(&link->irq.resource_source);
-+
- 	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
- 			  "Link %s is referenced\n",
- 			  acpi_device_bid(link->device)));
-diff --git a/include/acpi/acpi_drivers.h b/include/acpi/acpi_drivers.h
-index 5eb175933a5b..6ff1ea76d476 100644
---- a/include/acpi/acpi_drivers.h
-+++ b/include/acpi/acpi_drivers.h
-@@ -68,7 +68,7 @@
- 
- int acpi_irq_penalty_init(void);
- int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
--			       int *polarity, char **name);
-+			       int *polarity, char **name, struct fwnode_handle **irq_domain);
- int acpi_pci_link_free_irq(acpi_handle handle);
- 
- /* ACPI PCI Device Binding (pci_bind.c) */
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 39263c6b52e1..5f1d7d3192fb 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -324,6 +324,8 @@ extern int sbf_port;
- extern unsigned long acpi_realmode_flags;
- 
- int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity);
-+int acpi_register_irq(struct device *dev, u32 gsi, int trigger,
-+		      int polarity, struct fwnode_handle *domain_id);
- int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
- int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
- 
-@@ -336,6 +338,8 @@ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
- 					     const struct irq_domain_ops *ops,
- 					     void *host_data);
- 
-+struct fwnode_handle *acpi_get_irq_source_fwhandle(const struct acpi_resource_source *source);
-+
- #ifdef CONFIG_X86_IO_APIC
- extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
- #else
 -- 
-2.28.0
+K. Poon
+ka-cheong.poon@oracle.com
+
 
