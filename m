@@ -2,142 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 931212B6E25
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 20:11:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53B7D2B6E4C
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 20:17:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbgKQTLD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 14:11:03 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:46734 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725771AbgKQTLD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 14:11:03 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AHJAJ4t181401;
-        Tue, 17 Nov 2020 19:10:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=SAUprEBsvlCQjFy54O1Y1idjlN/31+XevpP98p8fqMY=;
- b=w3gB8wAfcz/F94CTrwRG8znvibTdOVM0LVMqT83ZxODjtyeBYq91dhzwNAU94UDuJPd9
- bmjd/gIKnXBWSMQnj4BA5gH4MLALozd/U1gu97QxC0A38PFsBf+9SkxMlKm1CDNWXA/d
- ZJE+vOZkOc/kXqeBnLhMwRjPGmyQBw7PAUyYhWm8bWKXGjlnTgsJjX6s8BsoYApV/3ET
- dx8akrYCQxNhCc7ZJ9aZS+20vLKSxorRop8wFu5jXJbtMy72BDfxkS+t6kR5H/wAhidR
- EiEFtZ9i2XRWy7N+k1QWt1usTX4O6Z27OHhS/XDJzEx/TnINJS/4cHN4UQ/6zm6m2llM MA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 34t4ravf45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Nov 2020 19:10:46 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AHJ1USB045244;
-        Tue, 17 Nov 2020 19:10:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 34ts0rakgu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Nov 2020 19:10:46 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AHJAjUX078579;
-        Tue, 17 Nov 2020 19:10:45 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 34ts0rakg9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Nov 2020 19:10:45 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AHJAdcr017336;
-        Tue, 17 Nov 2020 19:10:39 GMT
-Received: from [10.98.138.20] (/10.98.138.20)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 17 Nov 2020 11:10:39 -0800
-Subject: Re: remove dma_virt_ops v2
-To:     Ka-Cheong Poon <ka-cheong.poon@oracle.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Zhu Yanjun <yanjunz@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org
-References: <20201106181941.1878556-1-hch@lst.de>
- <20201112094030.GA19550@lst.de> <20201112132353.GQ244516@ziepe.ca>
- <2f644747-4a4f-7e03-d857-c2d7879054dd@oracle.com>
- <6da0d3b0-2db7-4c7e-145a-8f76733e9978@oracle.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <f748d99e-aa4d-5f8d-debd-da2a3cd007e7@oracle.com>
-Date:   Tue, 17 Nov 2020 11:10:37 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        id S1726852AbgKQTRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 14:17:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgKQTRb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 14:17:31 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C73FC0613CF
+        for <linux-pci@vger.kernel.org>; Tue, 17 Nov 2020 11:17:31 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id g19so800638pji.0
+        for <linux-pci@vger.kernel.org>; Tue, 17 Nov 2020 11:17:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dpv3Vtg5vqLA90R+rlo2PRGIMTldlcoURJnFcnkg+9k=;
+        b=DacGbQXhvF2/oDJarOOitDPGudRYd96K+W+S1yovH+/ox64CHWmxpR3BEw7znXZkA5
+         W6p6zEHHo/n1rrJ08Zw7KGJRKS/D2eTupcWl65sLIRGNcPMmTei4guy1wc683nnztGXp
+         BUQsy7/BTuToGRZ0VSGZWd4iXtJWRGXJ1wUoH/Nuj2BXmJ/AoM1kMZZ77TmCAZMUCMpw
+         EArVKlCB4uFE40DiV3lTco82OcZrFmUxHZ9jajTqbf2son8ZaRZp8QiORpK4GM/N3yYH
+         7Fsi/g/en4mzNAdf5cYUCr6J0/Sqg5IhE5qtg5G8I0FEvzk9WxDLSHOyJ2WKG0wpI4Rs
+         cemg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Dpv3Vtg5vqLA90R+rlo2PRGIMTldlcoURJnFcnkg+9k=;
+        b=I+yCvvKASwto+NlNf6D2kYGjovv6XwjfyeuGjbA1ZfD9nuhxHklQbJPruCYlx0VcpU
+         cTZeUIrbZsj2LsVGmgi3PybAUyj18sSAVp7ydcruSGNc/1kLJkVoN6q8Z94zb/GhgtG8
+         uHcuzhYPWu+4yKAMkjraXwrAOjyy7QU1iYBhPa4ScthM9nh8i4ozJF8+JMglX4t3jJ11
+         dNc83JswgJSeVumWi6HMHuvf52i3PSBfBRLZVcIUkkYsRDIMl8nisO6zfkGjbzbYTGnL
+         a13wLz1H8+2WS/g+vUToe2TPVYFTSyxS/2AfdroLDnnXP88tWcPis/knQ9InILWsQR6Y
+         kebA==
+X-Gm-Message-State: AOAM5309pu06B5trIpVQtYPcj+FmUGlVWfoPDrETttHWIggisnN2bpx3
+        2RFa2LQJatC8yfNCeVr3+uY=
+X-Google-Smtp-Source: ABdhPJwI+d0YvJcqf66Hvd4PP8z2uKvhci/ij+wUKUE1p4ue/199Os3b70gjnUU6HpF8YYb9gTvtkw==
+X-Received: by 2002:a17:902:c3c9:b029:d6:7e88:cfa9 with SMTP id j9-20020a170902c3c9b02900d67e88cfa9mr891301plj.64.1605640649174;
+        Tue, 17 Nov 2020 11:17:29 -0800 (PST)
+Received: from localhost.localdomain ([210.56.123.179])
+        by smtp.googlemail.com with ESMTPSA id h32sm19073591pgl.36.2020.11.17.11.17.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Nov 2020 11:17:28 -0800 (PST)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     bjorn@helgaas.com
+Cc:     Puranjay Mohan <puranjay12@gmail.com>, linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH] PCI: Change return type of pci_find_capability()
+Date:   Wed, 18 Nov 2020 00:47:18 +0530
+Message-Id: <20201117191718.17885-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <6da0d3b0-2db7-4c7e-145a-8f76733e9978@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9808 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 phishscore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011170138
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/17/20 2:50 AM, Ka-Cheong Poon wrote:
-> On 11/13/20 1:36 AM, santosh.shilimkar@oracle.com wrote:
->> + Ka-Cheong
->>
->> On 11/12/20 5:23 AM, Jason Gunthorpe wrote:
->>> On Thu, Nov 12, 2020 at 10:40:30AM +0100, Christoph Hellwig wrote:
->>>> ping?
->>>>
->>>> On Fri, Nov 06, 2020 at 07:19:31PM +0100, Christoph Hellwig wrote:
->>>>> Hi Jason,
->>>>>
->>>>> this series switches the RDMA core to opencode the special case of
->>>>> devices bypassing the DMA mapping in the RDMA ULPs.  The virt ops
->>>>> have caused a bit of trouble due to the P2P code node working with
->>>>> them due to the fact that we'd do two dma mapping iterations for a
->>>>> single I/O, but also are a bit of layering violation and lead to
->>>>> more code than necessary.
->>>>>
->>>>> Tested with nvme-rdma over rxe.
->>>>>
->>>>> Note that the rds changes are untested, as I could not find any
->>>>> simple rds test setup.
->>>>>
->>>>> Changes since v2:
->>>>>   - simplify the INFINIBAND_VIRT_DMA dependencies
->>>>>   - add a ib_uses_virt_dma helper
->>>>>   - use ib_uses_virt_dma in nvmet-rdma to disable p2p for virt_dma 
->>>>> devices
->>>>>   - use ib_dma_max_seg_size in umem
->>>>>   - stop using dmapool in rds
->>>>>
->>>>> Changes since v1:
->>>>>   - disable software RDMA drivers for highmem configs
->>>>>   - update the PCI commit logs
->>>
->>> Santosh can you please check the RDA parts??
->>>
->>
->> Hi Ka-Cheong,
->>
->> Can you please check Christoph change [1] which clean-up
->> dma-pool API to use ib_dma_* and slab allocator ? This was added
->> as part of your "net/rds: Use DMA memory pool allocation for rds_header"
->> commit.
-> 
-> 
-> I applied the patch and ran some basic testing.  And it seems to
-> work fine.
-> 
-Thanks Ka-Cheong.
+PCI Capabilities are linked in a list that must appear in the first 256 bytes of config space.
+The Capabilities Pointer register at 0x34 contains the address of the first Capability in the list.
+Each Capability contains an 8 bit "Next Capability Pointer" that is set to 0x00 in the last item of the list.
 
-Jason, Feel free to add ack for the RDS part.
+Change the return type of pci_find_capability() from int to u8 to match the specification.
 
-Regards,
-Santosh
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+ drivers/pci/pci.c   | 4 ++--
+ include/linux/pci.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 6d4d5a2f923d..05ac8a493e6b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -477,9 +477,9 @@ static int __pci_bus_find_cap_start(struct pci_bus *bus,
+  *  %PCI_CAP_ID_PCIX         PCI-X
+  *  %PCI_CAP_ID_EXP          PCI Express
+  */
+-int pci_find_capability(struct pci_dev *dev, int cap)
++u8 pci_find_capability(struct pci_dev *dev, int cap)
+ {
+-	int pos;
++	u8 pos;
+ 
+ 	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
+ 	if (pos)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 22207a79762c..19a817702ea9 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1063,7 +1063,7 @@ void pci_sort_breadthfirst(void);
+ 
+ /* Generic PCI functions exported to card drivers */
+ 
+-int pci_find_capability(struct pci_dev *dev, int cap);
++u8 pci_find_capability(struct pci_dev *dev, int cap);
+ int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
+ int pci_find_ext_capability(struct pci_dev *dev, int cap);
+ int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
+@@ -1719,7 +1719,7 @@ static inline int __pci_register_driver(struct pci_driver *drv,
+ static inline int pci_register_driver(struct pci_driver *drv)
+ { return 0; }
+ static inline void pci_unregister_driver(struct pci_driver *drv) { }
+-static inline int pci_find_capability(struct pci_dev *dev, int cap)
++static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
+ { return 0; }
+ static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
+ 					   int cap)
+-- 
+2.27.0
 
