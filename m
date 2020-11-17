@@ -2,96 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F412B5BB1
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 10:22:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 981FD2B5C51
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 10:54:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgKQJV4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 04:21:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50712 "EHLO
+        id S1727661AbgKQJxw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 04:53:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgKQJVz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 04:21:55 -0500
+        with ESMTP id S1727656AbgKQJxv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 04:53:51 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84ACCC0613CF;
-        Tue, 17 Nov 2020 01:21:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6765C0613CF;
+        Tue, 17 Nov 2020 01:53:51 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605604913;
+        s=2020; t=1605606830;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=+oNN0MQgkiBnCbtfwugoj2ueCMN1m2mxEsnINrDLEe0=;
-        b=DwBmeWJShTfSxI7/bv9yMVNbyXuplY6dNWaJqhWyEBj0NEoUnDzm/Q61zBRx/jvfVqMab3
-        YqSSqciJOklmsPQhLhvFcAhDaCgdtLjlgDx1WVoEJhofYrTb+HZOhHdBmFYZ8sOC2J+3rF
-        kkEshToFTkEciOfblmWCrEZp5P6IbtwlfRxWHlsTJbeLlyWYtXZ7SdaRZeP8Ae+vxzSOqK
-        eStnMibR6Ryujt1YDKfPzB2cupuDgeXiLMpjrk89EkPjUsUGpsAGsIueuBeEINhXacrsmY
-        QdeJkh0tBpaCWJVw6wHbr0zQo5UbpJ4Qszu9RndP91TowUjpuEanGAb23BvW1w==
+        bh=w88X9FArUN9Ckqzryj/SEcOf2eejeb528XBdbye6pQE=;
+        b=zSRv/+sh88Dr/9rk83MdKS6DgvvEHpDnOQI56HgqewdzAknFs2efNxcR65h4YMsxaGcpK7
+        gH3ikqXPE9y85lFTK/k080y7gE9CGp1EH4LTE/imwJuLN7ZV9I43/iinHvcjMbdI6SaVS1
+        2a+cB3WfHEkM6T3A1lvCqVLgt3mCSVRZUAntkbkq+oGyXzA45k3JOA0uPfBuBSBkFAkV3Z
+        GGxS3A2FKc5sslgWbRqR0tI+AZDV2Ad8D3gBEOZ+glgJyGHYdo0iqwEVMx7qp9zW2RAoQC
+        EIHKhV+/iUGMOdEtZZxR6UJyfI0PW53BpC+LpJXa1I4GLgm3n8qZF1ewD8ix3Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605604913;
+        s=2020e; t=1605606830;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=+oNN0MQgkiBnCbtfwugoj2ueCMN1m2mxEsnINrDLEe0=;
-        b=YCVL+0Qrok4yb6+AmGU6uun36CXW4zeVISlAXjUYay+MYF25xqVx1q5xsECe4BULShPhcB
-        gQiiXXhWd1DZjrAg==
-To:     "Tian\, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Wilk\, Konrad" <konrad.wilk@oracle.com>,
-        "Williams\, Dan J" <dan.j.williams@intel.com>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "Dey\, Megha" <megha.dey@intel.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-In-Reply-To: <MWHPR11MB1645E87DBEFFCC017C4849CC8CE30@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <877dqqmc2h.fsf@nanos.tec.linutronix.de> <20201114103430.GA9810@infradead.org> <20201114211837.GB12197@araj-mobl1.jf.intel.com> <877dqmamjl.fsf@nanos.tec.linutronix.de> <20201115193156.GB14750@araj-mobl1.jf.intel.com> <875z665kz4.fsf@nanos.tec.linutronix.de> <20201116002232.GA2440@araj-mobl1.jf.intel.com> <MWHPR11MB164539B8FDE63D5CBDA300E18CE30@MWHPR11MB1645.namprd11.prod.outlook.com> <20201116154635.GK917484@nvidia.com> <87y2j1xk1a.fsf@nanos.tec.linutronix.de> <20201116180241.GP917484@nvidia.com> <MWHPR11MB1645E87DBEFFCC017C4849CC8CE30@MWHPR11MB1645.namprd11.prod.outlook.com>
-Date:   Tue, 17 Nov 2020 10:21:52 +0100
-Message-ID: <875z64xrrj.fsf@nanos.tec.linutronix.de>
+        bh=w88X9FArUN9Ckqzryj/SEcOf2eejeb528XBdbye6pQE=;
+        b=nZwJf4bFj/fTcUvLbJX3tMEZeH04pRYlzZCgpjdvmfWziaeYnqbVXpXy88KSEJnqy8Ny0W
+        ugc7/yMp0qHYPzAw==
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>, lukas@wunner.de,
+        linux-pci@vger.kernel.org, kernelfans@gmail.com,
+        andi@firstfloor.org, hpa@zytor.com, bhe@redhat.com, x86@kernel.org,
+        okaya@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com,
+        dyoung@redhat.com, gavin.guo@canonical.com, bp@alien8.de,
+        bhelgaas@google.com, Guowen Shan <gshan@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, kernel@gpiccoli.net,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ddstreet@canonical.com, vgoyal@redhat.com
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+In-Reply-To: <87h7poeqqn.fsf@x220.int.ebiederm.org>
+References: <20201117001907.GA1342260@bjorn-Precision-5520> <87h7poeqqn.fsf@x220.int.ebiederm.org>
+Date:   Tue, 17 Nov 2020 10:53:49 +0100
+Message-ID: <873618xqaa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 16 2020 at 23:51, Kevin Tian wrote:
->> From: Jason Gunthorpe <jgg@nvidia.com>
-> btw Jason/Thomas, how do you think about the proposal down in this
-> thread (ims=[auto|on|off])? Does it sound a good tradeoff to move forward?
+On Mon, Nov 16 2020 at 19:06, Eric W. Biederman wrote:
+> Bjorn Helgaas <helgaas@kernel.org> writes:
+> My two top candidates are poking the IOMMUs early to shut things off,
+> and figuring out if we can delay enabling interrupts until we have
+> initialized pci.
 
-What does it solve? It defaults to auto and then you still need to solve
-the problem of figuring out whether it's safe to use it or not.
+Keeping interrupts disabled post PCI initialization would be nice, but
+that requires feeding the whole init machinery through a shredder and
+collecting the bits and pieces.
 
-The command line option is not a solution per se. It's the last resort
-when the logic which decides whether IMS can be used or not fails to do
-the right thing. Nothing more.
+> Poking at IOMMUs early should work for most systems with ``enterprise''
+> hardware.  Systems where people care about kdump the most.
 
-We clearly have outlined what needs to be done and you can come up with
-as many magic bullets you want, they won't make the real problems go
-away.
+The IOMMU IRQ remapping part _is_ initialized early and _before_
+interrupts are enabled.
+
+But that does not solve the problem either simply because then the IOMMU
+will catch the rogue MSIs and you get an interrupt storm on the IOMMU
+error interrupt.
+
+This one is not going to be turned off because the IOMMU error interrupt
+handler will handle each of them and tell the core code that everything
+is under control.
+
+As I explained several times now, the only way to shut this up reliably
+is at the source. Curing the symptom is almost never a good solution.
 
 Thanks,
 
