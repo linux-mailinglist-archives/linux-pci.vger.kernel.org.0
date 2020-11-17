@@ -2,116 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E4A2B5970
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 06:44:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF25E2B5972
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 06:45:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725747AbgKQFox (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 00:44:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45530 "EHLO
+        id S1726302AbgKQFo4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 00:44:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgKQFow (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 00:44:52 -0500
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 373FDC0613CF;
-        Mon, 16 Nov 2020 21:44:51 -0800 (PST)
-Received: by mail-pl1-x641.google.com with SMTP id y22so9640751plr.6;
-        Mon, 16 Nov 2020 21:44:51 -0800 (PST)
+        with ESMTP id S1725355AbgKQFoy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 00:44:54 -0500
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD433C0613CF;
+        Mon, 16 Nov 2020 21:44:53 -0800 (PST)
+Received: by mail-pg1-x542.google.com with SMTP id 34so12085875pgp.10;
+        Mon, 16 Nov 2020 21:44:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i94+E5h3prUpXJMLneKcuPsyNNdqYemplY0Whp5G7XE=;
-        b=n7cbm+F7wxT7QRUDDlFn02n5oPgODXXyRwLHHU9eEXGlQ7IDZh0CcAVlQV1kATKqTw
-         H58E65s+wRaxqDLSdPkxPKV68X5w31FUcQTpbtblCEZijfJe/sV3QVV8B73O9BlrVYks
-         MDP3VIbPbhQckBRmsG0ljQrDpe2Q3YErgmmtkoSwRh0t6Y5iFmzt6Y70/O7kzn4iTkMy
-         b+hoMUKgdetTT4nbKKS6tbhNeRZmT5HmTa/jWys0zctoIyf4XeTfACMod+EbSgmZNiam
-         KtxoeSg2aXSC3EXzAmqesRG7fWr+T062rlqe0hf6ctQg9kQnytdwWvVoivqPv28Gj3mN
-         dQow==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aM+Nm6mpUW3MCGzLuyldKTZgaVA5NUmu8kqnaySSbTA=;
+        b=jiHoeTH2eVzDH2nroMQlXXEfsqWUlT8XzPEP5m3GuE9cJMD7d+qaWujwIVrgYF0gI9
+         /VyXhVAb+sduQ/t69Ze3j70EhmFxvhCQE2vAupTY2aFk6sDItUlGCr2ie8ti13GTfZj3
+         QsVxhh+0q/helyaH0W802fEacqAlaTct5lir81NQkfdvzlXXPbKZeMCuXgaHB8vv4A71
+         4gLMt4yIzMfPPHiM8cvCJwDmxyOtm4aBYcixN+5DB1bYbSp0FC0MUzB1xqlDmMKCYCLv
+         R2n+OyOu9pnO4aI+w9PUsykVos8Ft+czGGakYfVS/8ClJn1ZIOwLvCYdUk8LxkmmCO2X
+         ogDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i94+E5h3prUpXJMLneKcuPsyNNdqYemplY0Whp5G7XE=;
-        b=NDxCFbKe3thka1E0K1SPKx5cUCLqpzD7lpMi4bYXIC19UHHCvT5z3pORgCi++zRT/2
-         XXoLhbVdVPsXn97IEDetGtDFk8uvkFYxwVQ0pbcWtVb4zkYID67yl/Xx7RqvOF3sb5q9
-         F4WiEw530EUZOHB2qSojIkez9tEs4app4SzWyTMbmB3TTDwUePc4dMLQO16at+FPAiZ+
-         Z3G2PWc0yOTa4ChAOquGHYrG21xYC1BqsF/MUjOK9yaHZW53kW3wvGvY9J1p5E+yxdpP
-         Vn0o692Er5US+CaxhIV2XaAiNSZE5Q9RXAyZQuFzctx4pE0SXwsGHNVId28tJDhcK4Fk
-         A2Tw==
-X-Gm-Message-State: AOAM531GdYcUZdvVObHpyQ1HJyBnCd/GCEJvZk+Q6ZfjDEVOqUzRyn0s
-        y7BPqdx2glc/yzZGkBuAVbfXqDdY3rY=
-X-Google-Smtp-Source: ABdhPJybx6TXlKHXnkj+hcsxwuOi4RxfcHWiP/ORYDGNSK3qTLO2GPMP7ruRi+2bfSVSqd3QsgTPOw==
-X-Received: by 2002:a17:902:ab98:b029:d8:c5e8:978a with SMTP id f24-20020a170902ab98b02900d8c5e8978amr15686488plr.56.1605591890348;
-        Mon, 16 Nov 2020 21:44:50 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aM+Nm6mpUW3MCGzLuyldKTZgaVA5NUmu8kqnaySSbTA=;
+        b=NJaUmXXOv511wqVx0QnWUNeCj3d/iDccHAnzrsgVMQtvtMmaFJ/yyyngZCmc9+DKiy
+         eBfTNnM1OoXjNieTDu1TdVO6s4W0tlmt6f6hOZJDutK1uPJ/U2SASVv7FFREYZNPiZ8F
+         NciJ1QWXm0V7YfkiPAGUKaPnPJxYvzjii7Wsn8w5XSgrx/CS96qrHyF8hNfjvdJlySZB
+         xn6vioAosGPC98NGxGgkvnRooqnCdEmvgFm7OBxsrWrJyO2KWBM1lW0/E0tGMCFFzUKx
+         8Ne5L0z0flrPGpfvUxLvoNPBlhgkXtu91H2VomPNvsvsrXbqzLMsk7oDrxQB/1fAkFnw
+         jaNQ==
+X-Gm-Message-State: AOAM532MXsar4Bt7soJ8zTjmyAK9ZiL/FbxoEZIVyEMHUm8KVnXwxJw8
+        NDNudIXiYbG3elIPR4oPMF9agevHEUc=
+X-Google-Smtp-Source: ABdhPJwa+OrOSzwQxKXEOfmfS5BX/pQuhVXNnXY51685hG9SSZRcujXe79iUorqYOwh3EurcVdU1Nw==
+X-Received: by 2002:a63:a57:: with SMTP id z23mr2161811pgk.404.1605591893124;
+        Mon, 16 Nov 2020 21:44:53 -0800 (PST)
 Received: from ZB-PF0YQ8ZU.360buyad.local ([137.116.162.235])
-        by smtp.gmail.com with ESMTPSA id m3sm20392462pfd.217.2020.11.16.21.44.47
+        by smtp.gmail.com with ESMTPSA id m3sm20392462pfd.217.2020.11.16.21.44.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2020 21:44:49 -0800 (PST)
+        Mon, 16 Nov 2020 21:44:52 -0800 (PST)
 From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, hch@infradead.org,
         alex.williamson@redhat.com, cohuck@redhat.com,
         Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Subject: [PATCH v3 0/2] avoid inserting duplicate IDs in dynids list
-Date:   Tue, 17 Nov 2020 13:44:07 +0800
-Message-Id: <20201117054409.3428-1-zhenzhong.duan@gmail.com>
+Subject: [PATCH v3 1/2] PCI: move pci_match_device() ahead of new_id_store()
+Date:   Tue, 17 Nov 2020 13:44:08 +0800
+Message-Id: <20201117054409.3428-2-zhenzhong.duan@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201117054409.3428-1-zhenzhong.duan@gmail.com>
+References: <20201117054409.3428-1-zhenzhong.duan@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-vfio-pci and pci-stub use new_id to bind devices. But one can add same IDs
-multiple times, for example:
+Move pci_match_device() and it's dependencies (pci_match_id() and
+pci_device_id_any) ahead of new_id_store().
 
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
--bash: echo: write error: No such device
+This is preparation work for calling pci_match_device() in new_id_store().
+No functional changes.
 
-This doesn't cause user-visible broken behavior, but not user friendly.
-he has to remove same IDs same times to ensure it's completely gone.
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+---
+ drivers/pci/pci-driver.c | 144 +++++++++++++++++++++++------------------------
+ 1 file changed, 72 insertions(+), 72 deletions(-)
 
-Changed to only allow one dynamic entry of the same kind, after fix:
-
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
--bash: echo: write error: File exists
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-# echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
--bash: echo: write error: No such device
-
-
-v3: add a separate patch to process dependency issue per Bjorn
-    make commit log more clear per Bjorn
-v2: revert the export of pci_match_device() per Christoph
-    combind PATCH1 and PATCH2 into one.
-
-v2 link:https://lkml.org/lkml/2020/10/25/347
-
-Zhenzhong Duan (2):
-  PCI: move pci_match_device() ahead of new_id_store()
-  PCI: avoid duplicate IDs in dynamic IDs list
-
- drivers/pci/pci-driver.c | 146 +++++++++++++++++++++++------------------------
- 1 file changed, 73 insertions(+), 73 deletions(-)
-
--- 
-1.8.3.1
-
-
-Zhenzhong Duan (2):
-  PCI: move pci_match_device() ahead of new_id_store()
-  PCI: avoid duplicate IDs in dynamic IDs list
-
- drivers/pci/pci-driver.c | 146 +++++++++++++++++++++++------------------------
- 1 file changed, 73 insertions(+), 73 deletions(-)
-
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 8b587fc..e928cfa 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -90,6 +90,78 @@ static void pci_free_dynids(struct pci_driver *drv)
+ }
+ 
+ /**
++ * pci_match_id - See if a pci device matches a given pci_id table
++ * @ids: array of PCI device id structures to search in
++ * @dev: the PCI device structure to match against.
++ *
++ * Used by a driver to check whether a PCI device present in the
++ * system is in its list of supported devices.  Returns the matching
++ * pci_device_id structure or %NULL if there is no match.
++ *
++ * Deprecated, don't use this as it will not catch any dynamic ids
++ * that a driver might want to check for.
++ */
++const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
++					 struct pci_dev *dev)
++{
++	if (ids) {
++		while (ids->vendor || ids->subvendor || ids->class_mask) {
++			if (pci_match_one_device(ids, dev))
++				return ids;
++			ids++;
++		}
++	}
++	return NULL;
++}
++EXPORT_SYMBOL(pci_match_id);
++
++static const struct pci_device_id pci_device_id_any = {
++	.vendor = PCI_ANY_ID,
++	.device = PCI_ANY_ID,
++	.subvendor = PCI_ANY_ID,
++	.subdevice = PCI_ANY_ID,
++};
++
++/**
++ * pci_match_device - Tell if a PCI device structure has a matching PCI device id structure
++ * @drv: the PCI driver to match against
++ * @dev: the PCI device structure to match against
++ *
++ * Used by a driver to check whether a PCI device present in the
++ * system is in its list of supported devices.  Returns the matching
++ * pci_device_id structure or %NULL if there is no match.
++ */
++static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
++						    struct pci_dev *dev)
++{
++	struct pci_dynid *dynid;
++	const struct pci_device_id *found_id = NULL;
++
++	/* When driver_override is set, only bind to the matching driver */
++	if (dev->driver_override && strcmp(dev->driver_override, drv->name))
++		return NULL;
++
++	/* Look at the dynamic ids first, before the static ones */
++	spin_lock(&drv->dynids.lock);
++	list_for_each_entry(dynid, &drv->dynids.list, node) {
++		if (pci_match_one_device(&dynid->id, dev)) {
++			found_id = &dynid->id;
++			break;
++		}
++	}
++	spin_unlock(&drv->dynids.lock);
++
++	if (!found_id)
++		found_id = pci_match_id(drv->id_table, dev);
++
++	/* driver_override will always match, send a dummy id */
++	if (!found_id && dev->driver_override)
++		found_id = &pci_device_id_any;
++
++	return found_id;
++}
++
++/**
+  * store_new_id - sysfs frontend to pci_add_dynid()
+  * @driver: target device driver
+  * @buf: buffer for scanning device ID data
+@@ -208,78 +280,6 @@ static ssize_t remove_id_store(struct device_driver *driver, const char *buf,
+ };
+ ATTRIBUTE_GROUPS(pci_drv);
+ 
+-/**
+- * pci_match_id - See if a pci device matches a given pci_id table
+- * @ids: array of PCI device id structures to search in
+- * @dev: the PCI device structure to match against.
+- *
+- * Used by a driver to check whether a PCI device present in the
+- * system is in its list of supported devices.  Returns the matching
+- * pci_device_id structure or %NULL if there is no match.
+- *
+- * Deprecated, don't use this as it will not catch any dynamic ids
+- * that a driver might want to check for.
+- */
+-const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
+-					 struct pci_dev *dev)
+-{
+-	if (ids) {
+-		while (ids->vendor || ids->subvendor || ids->class_mask) {
+-			if (pci_match_one_device(ids, dev))
+-				return ids;
+-			ids++;
+-		}
+-	}
+-	return NULL;
+-}
+-EXPORT_SYMBOL(pci_match_id);
+-
+-static const struct pci_device_id pci_device_id_any = {
+-	.vendor = PCI_ANY_ID,
+-	.device = PCI_ANY_ID,
+-	.subvendor = PCI_ANY_ID,
+-	.subdevice = PCI_ANY_ID,
+-};
+-
+-/**
+- * pci_match_device - Tell if a PCI device structure has a matching PCI device id structure
+- * @drv: the PCI driver to match against
+- * @dev: the PCI device structure to match against
+- *
+- * Used by a driver to check whether a PCI device present in the
+- * system is in its list of supported devices.  Returns the matching
+- * pci_device_id structure or %NULL if there is no match.
+- */
+-static const struct pci_device_id *pci_match_device(struct pci_driver *drv,
+-						    struct pci_dev *dev)
+-{
+-	struct pci_dynid *dynid;
+-	const struct pci_device_id *found_id = NULL;
+-
+-	/* When driver_override is set, only bind to the matching driver */
+-	if (dev->driver_override && strcmp(dev->driver_override, drv->name))
+-		return NULL;
+-
+-	/* Look at the dynamic ids first, before the static ones */
+-	spin_lock(&drv->dynids.lock);
+-	list_for_each_entry(dynid, &drv->dynids.list, node) {
+-		if (pci_match_one_device(&dynid->id, dev)) {
+-			found_id = &dynid->id;
+-			break;
+-		}
+-	}
+-	spin_unlock(&drv->dynids.lock);
+-
+-	if (!found_id)
+-		found_id = pci_match_id(drv->id_table, dev);
+-
+-	/* driver_override will always match, send a dummy id */
+-	if (!found_id && dev->driver_override)
+-		found_id = &pci_device_id_any;
+-
+-	return found_id;
+-}
+-
+ struct drv_dev_and_id {
+ 	struct pci_driver *drv;
+ 	struct pci_dev *dev;
 -- 
 1.8.3.1
 
