@@ -2,126 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B56D2B5666
+	by mail.lfdr.de (Postfix) with ESMTP id DD0FF2B5667
 	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 02:49:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgKQBt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Nov 2020 20:49:27 -0500
-Received: from mail-bn8nam11on2047.outbound.protection.outlook.com ([40.107.236.47]:19841
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725730AbgKQBt1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 16 Nov 2020 20:49:27 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YRhyZQDZ6xNEofKsreCvbIX34ISupQnJ64X8wVFrqf0CloyOBXzXxHOLVKVCNi4R+F+1Y50EpLYoi0hthcs7N9glCUwK/vGqKGWVl9zGS4wLYqH/q5Ccl9KSkc8PsRmGXs9Jcvp7z+M5BT/gswGSu5m1BSNfvjjQjL3hfv6g5ns6cTgyfP+PS41lAB1vxWKTFlNnfiJmEPm+vAAbVGL08LNXGsJzbJKovaLEENSOEeWOdgBoyFBdirdBsTiXFxOwG7HSSr153hJQv3ZQFZeOxmsR/Od+jhsUev7zv1jHotiGCEV4znOOq7Yn92AJ35lAo1O8CbniqDt6tgW53JmIKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N/u9+jdfD+9lq3lPfYrSWCF4ykvqjLdKEGZSKZr7L7k=;
- b=GyCsSoFOLHYeKN013UcXBxr45eveKcCHJG/CfL8ePbzCMavMU6yli4BN/y08/MaHDEw3sM4Qju1FPt53O8trwVfOhl9UnZEMLUxnsOfcM/D6fDHSHrb0Spl4UWoilzV+9NbrEGECaikyX2O15oGap9Pl86HZ0/u/l5iez1w27vRKE0sfvlHPBiNsAx1Q+4Kyn+E2viADdTv5pUFxYxyel70Q/hKnOZI7rNo5mzMwiLzWGefCZ6wdegxQIOQrgkdKYcN1s4OlyGdD3QappDIL6ZSD+62ynnFJJLfRJWmZSKX2ID9XdbF/o8C11K2LuZjHZ1/GSMkxJQ0ZI4ExXXIKUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        id S1726803AbgKQBtb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Nov 2020 20:49:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgKQBta (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Nov 2020 20:49:30 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877D3C0613CF;
+        Mon, 16 Nov 2020 17:49:30 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id v12so15925834pfm.13;
+        Mon, 16 Nov 2020 17:49:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N/u9+jdfD+9lq3lPfYrSWCF4ykvqjLdKEGZSKZr7L7k=;
- b=NLu4YyeRi40w0g8vXKtSIDLkfLDdYYZ7meyPEY+NAnlhSwN8Fbez0DxluFx2sleylFpwczQUsnqVolzlOCw3vGI6tx97jkGT+2rZ/Z1aYkE165yxfRhT6uckYr8OBlR5iG004zRNyOKp1W/Htj4ul2KjWUsUQ2VTiYbiAUsbeAc=
-Authentication-Results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=synaptics.com;
-Received: from SN2PR03MB2383.namprd03.prod.outlook.com (2603:10b6:804:d::23)
- by SN2PR03MB2205.namprd03.prod.outlook.com (2603:10b6:804:b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.25; Tue, 17 Nov
- 2020 01:49:20 +0000
-Received: from SN2PR03MB2383.namprd03.prod.outlook.com
- ([fe80::412b:8366:f594:a39]) by SN2PR03MB2383.namprd03.prod.outlook.com
- ([fe80::412b:8366:f594:a39%9]) with mapi id 15.20.3564.028; Tue, 17 Nov 2020
- 01:49:20 +0000
-Date:   Tue, 17 Nov 2020 09:49:06 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: dwc: fix error return code in dw_pcie_host_init()
-Message-ID: <20201117094906.6e196cac@xhacker.debian>
-In-Reply-To: <20201116135023.57321-1-wanghai38@huawei.com>
-References: <20201116135023.57321-1-wanghai38@huawei.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.147.44.204]
-X-ClientProxiedBy: BY3PR05CA0004.namprd05.prod.outlook.com
- (2603:10b6:a03:254::9) To SN2PR03MB2383.namprd03.prod.outlook.com
- (2603:10b6:804:d::23)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qVlMrW/TYBHLQQxRZjCiFsfg0UaJrVYq50hk7EVwNTc=;
+        b=CwKKHbTAbA9eRasruBLt5R49ZKjD9W11itiye3oGBbg6WbpVdMtSV7X4ADgqA08cVC
+         AlYl096vNNQITnhdw/Bx+Dsbw4EyGHxIoRraox6xge9OqaFJqudfImT+6BkUow0v9I2U
+         jmB7MovNElHNNOnGwOtwVMxM/QQXIdGlb9iwsVL/TS+gvIlAE/vP4HHxIKiFdSdBvtgp
+         4cwbNblDGogluFOEtzPlIw4BUj9I+FosMqrrSkoGyMpPlEsHANszCB2eMK6JIYCOOoMy
+         1UutzUqsbeJ5kEOGz16zDyJ7twmfaUw0PyDSrN3wWjUAEnWuGNGnvZO1zJztfXOZFKjb
+         zlaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qVlMrW/TYBHLQQxRZjCiFsfg0UaJrVYq50hk7EVwNTc=;
+        b=SNRURmTEm7LwiYiYQABS+mm72AZlEd5gqIVp1r8quv4i457nDPfPjbEwtuswWNO+hv
+         mr77PyzQc0NKGOgL774VmKDxrEkBeUb2laGLeC5/P9MRIab8LkhhpMHZdgDIKRvSlY+M
+         UmqjpQ7i1P3CWX86JgGC4sP+INknjHins0EVGS7vUQd5X+zhlXw/8c0S2fZVq7J5Wqdn
+         l+dNhoigOLY1mTPjIycP+jstzqnbgDtsr8eQ65fl7mPytl/+GSK3Ql2AbyX/KP6s6X+M
+         9fWtkwwOFunan281kStpFCiwswLcCLSFZDDy9a4flv+t1BYjEd6CQyz1ixBiJsRwxSEu
+         YTiw==
+X-Gm-Message-State: AOAM5333dEVgZxwkJQwPUZNNMygVk/uCXlKfTB95nYHaghwp4eui68Vg
+        hwqahPhBkFkkQSZKQTcC1gM=
+X-Google-Smtp-Source: ABdhPJwgNjCXHUARq5qV1yIwzmK+tclFLwSQJ83ewczMR+FyB/eIGq90Nr+1wccTZGeCviNQsBsp7A==
+X-Received: by 2002:a17:90a:5c86:: with SMTP id r6mr1877972pji.235.1605577769978;
+        Mon, 16 Nov 2020 17:49:29 -0800 (PST)
+Received: from hoboy.vegasvil.org (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id u197sm19850353pfc.127.2020.11.16.17.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2020 17:49:29 -0800 (PST)
+Date:   Mon, 16 Nov 2020 17:49:26 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support for
+ PTP getcrosststamp()
+Message-ID: <20201117014926.GA26272@hoboy.vegasvil.org>
+References: <20201114025704.GA15240@hoboy.vegasvil.org>
+ <874klo7pwp.fsf@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (192.147.44.204) by BY3PR05CA0004.namprd05.prod.outlook.com (2603:10b6:a03:254::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.16 via Frontend Transport; Tue, 17 Nov 2020 01:49:17 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 65b00ab2-5cf8-4489-c225-08d88a9b0049
-X-MS-TrafficTypeDiagnostic: SN2PR03MB2205:
-X-Microsoft-Antispam-PRVS: <SN2PR03MB2205CFD102C280CBB2C49299EDE20@SN2PR03MB2205.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hm/C/m0PW55H2J1iC92nGnz22df2ytjaWHZqNdpWZsHfOv/wTm91j69CbiftYOTeNz9C+0LSuobgCa0InoKDkyaC5Hi+DbXGfqUib6+lHyUmXyr6pqnNNFlhL9EcU44vkRgQ3/iNEzF2CfBtP/wvZLbuL++kxkdmA4ap1vhwgkKZkkmjPGAQZiRWDhrKzIYOink/8f81s5e0T9lLxwUyGmMTkS2ge3h7m4CuSsK0sz3qxio7K73EOF3c5vNWN73IlJQ46UTP2adZ6TIWyTtXUZl4dnL3PNvui/ObDe53v57ECi9apdzQtSc6+xlrLVHuqQPu8HPrp/kE+86gOHprUg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN2PR03MB2383.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(366004)(136003)(396003)(346002)(316002)(66476007)(66946007)(86362001)(66556008)(55016002)(9686003)(54906003)(83380400001)(6666004)(2906002)(186003)(8676002)(956004)(8936002)(5660300002)(52116002)(478600001)(1076003)(6506007)(7696005)(6916009)(4326008)(16526019)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: V41mY8exDevIU31AxbXNDpgHiU3Cuhz+/eC7Zv7aMDccjhCfGNaOqz/Czi3eEbFU9QU27CTne99+u/d1R0cEaW3SlSxx6GNMwh0GWHCodUvn6tJZVtYUl3kCTs0Ef3pNwsHHXYfsRaVJDT+kL2k4QFfkt00vw1lUqziOBq1/I2Pi0O3sg23ha17mSxyi5rNIpEVIjxS3s6eipZE44O02012UPkH92JxRc0orFkfo7T5CKMsXqM0g2P8gh/aHWE9oL4q/Hn+JQ2vzuY9hU/NU7OXZ2GnfqQLKsUrIQBTgA+7rPgSWcOElPj+GsPBdb4tjjBKLBapMKZRpXI+cA1C5NybWLhbXNZrZsWA3+BRftwc+ZAkZ9sAxSGpBJpWBVomuN0K19jr/hginajijneANBwQsbKY+/xZLQUUOLk19ycaUdlv6c6sUuR+Bn2NSAKcVkSn/wmvlkD51BSyO788upF2QWOJqSsHQQGYLqVpPkFoN7Lp3MWh3YmWPJAFd/7UEgHr4Q4vAe8V9JqR1b2nNgNdcOvHziYuBQmwAHlgtK7jB0dyV5tzVBBO7CrGsyDL8uutwpCCtDIZUiq63r94ioWIHtfFCINHJYn6hfXfwbVALuhpqBEnCpUwLHOTxlmomG5XAf+6qcqryGGhynqS5kw==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65b00ab2-5cf8-4489-c225-08d88a9b0049
-X-MS-Exchange-CrossTenant-AuthSource: SN2PR03MB2383.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2020 01:49:20.4681
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UMpSz8YVcfvzXmX/OlNh/BMoVJbKty3No0HJYXLInFYBBrbRGkVVWBgRq90zTGnqSlpNOoAvYe+nmQcoBUkdMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR03MB2205
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874klo7pwp.fsf@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 16 Nov 2020 21:50:23 +0800 Wang Hai wrote:
-
+On Mon, Nov 16, 2020 at 05:06:30PM -0800, Vinicius Costa Gomes wrote:
+> The PTM dialogs are a pair of messages: a Request from the endpoint (in
+> my case, the NIC) to the PCIe root (or switch), and a Response from the
+> other side (this message includes the Master Root Time, and the
+> calculated propagation delay).
 > 
-> 
-> Fix to return a negative error code from the error handling
-> case instead of 0, as done elsewhere in this function.
+> The interface exposed by the NIC I have allows basically to start/stop
+> these PTM dialogs (I was calling them PTM cycles) and to configure the
+> interval between each cycle (~1ms - ~512ms).
 
-good catch.
+Ah, now I am starting to understand...
 
-> 
-> Fixes: 07940c369a6b ("PCI: dwc: Fix MSI page leakage in suspend/resume")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 44c2a6572199..7b3c91c6ae02 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -395,6 +395,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->                         if (dma_mapping_error(pci->dev, pp->msi_data)) {
->                                 dev_err(pci->dev, "Failed to map MSI data\n");
->                                 pp->msi_data = 0;
-> +                               ret = -ENOMEM;
+Just to be clear, this is yet another time measurement over PCIe,
+different than the cross time stamp that we already have, right?
 
-what about use the return value of dma_maping_error()? I.E
+Also, what is the point of providing time measurements every 1
+millisecond?
 
-ret = dma_mapping_error()
-if (ret) {
-....
-}
+> Another thing of note, is that trying to start the PTM dialogs "on
+> demand" syncronously with the ioctl() doesn't seem too reliable, it
+> seems to want to be kept running for a longer time.
 
->                                 goto err_free_msi;
->                         }
->                 } else {
-> --
-> 2.17.1
-> 
+So, I think the simplest thing would be to have a one-shot
+measurement, if possible.  Then you could use the existing API and let
+the user space trigger the time stamps.
 
+Thanks,
+Richard
