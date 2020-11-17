@@ -2,270 +2,259 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D2392B67E1
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 15:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D78D2B67F3
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Nov 2020 15:55:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgKQOtt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 09:49:49 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2117 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728894AbgKQOts (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 09:49:48 -0500
-Received: from fraeml712-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Cb81K08n6z67D2G;
-        Tue, 17 Nov 2020 22:47:33 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml712-chm.china.huawei.com (10.206.15.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 17 Nov 2020 15:49:44 +0100
-Received: from localhost (10.47.31.177) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 17 Nov
- 2020 14:49:43 +0000
-Date:   Tue, 17 Nov 2020 14:49:35 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
-Message-ID: <20201117144935.00006dee@Huawei.com>
-In-Reply-To: <20201111054356.793390-4-ben.widawsky@intel.com>
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
-        <20201111054356.793390-4-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1729369AbgKQOx5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 09:53:57 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:47840 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728718AbgKQOx4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Nov 2020 09:53:56 -0500
+Received: from mailhost.synopsys.com (sv1-mailhost1.synopsys.com [10.205.2.131])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2100EC0097;
+        Tue, 17 Nov 2020 14:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1605624836; bh=UdE9Ys5vKdUGNnl2lgzFi32iWrdWobTjlzC+zVovX2E=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=JJVjsKKnfEayKTjNN5LxSq45nL/OR/tNNlTVhngBZf7omVAHNIZs90r2X6oPe/4Kj
+         a/MitlLNkCX+fdILsIaC1ruu3XTXzMbeacQYoQHLkyK+q9KVdq1KHDPOkzjFWmOpWs
+         zK0l2pQNKLVp6Vv1dmYaW7qwhdD40sbdl1/Yvy0GsFxxH0a12DvHiQ/zP3FbuxwdPX
+         W2B0cbZgTIDMML+Z4M0dHT9baslW7RfNkU19+igdlyx68e024P8jhRbuGCRZ7IAC8X
+         Tpu15vtiLFHhXQpBZ61pj95CYjSl/QAz8/88aRIkME8gxj8aMbcQ/p3d6zwo2aa0IW
+         9XN/QQLpCR7AA==
+Received: from o365relay-in.synopsys.com (sv2-o365relay3.synopsys.com [10.202.1.139])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id D9442A0068;
+        Tue, 17 Nov 2020 14:53:53 +0000 (UTC)
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2104.outbound.protection.outlook.com [104.47.55.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 6E32C4014E;
+        Tue, 17 Nov 2020 14:53:52 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="mfzKMcya";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m6YDzUyt2/KiHyRPvpmKn04AXkKW2fcx4/5+e/ktQHKVvogG9/gqXH6ZWkpnw4Py2VkIpfF5hheJL/5XD9sHztEktCtI3j8vLiha7dfFJX1AD4E5CZHdtK44WaFgDxxTfGq1yOSSRamPltDbMFgX4ao2JK4RD6F+UjUs8KxQtkgGm4fSG0iALQF16uBQaqU8y4RRXzTYGIApg0oFbEU7wayRwnLQWH8JQMno4mahgvzTJWmKXceXSvoySzRq4msSVwI2kjXEouJNdxWs+2/bZs5Q8mdfa3rcon2KQQdSv9Pn8xGWIR4Ee+M65RDGTtcw2ByeFeWbr3TZQfCkoHKIaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UdE9Ys5vKdUGNnl2lgzFi32iWrdWobTjlzC+zVovX2E=;
+ b=W2/23QVrvHrpQz/dqBsRsDn4lhdh6Uva2jtsekDyf3Snot6SOjfXdn5zV2OUGBymRoACDOHI6StOeHrl2t0EQIWEynhB/Y4JGst+mBivPk/EKEaRA7BriY2sTiVZSeH86SxIZwEeqILiF9KMPU7VCFeHBjfxwpaWhMNsq371I//CqPq2zrGFfO/rnSHP49Z2/FBxxagITWZ+mXxMcKD2aToKOnysAsF7wpNkcFac/+h2TEgttMeN+dJBMo5oAQJNxJc78ISpRFTCZqhrqRgAUULcH752mEKNX8hBE6qX1rG4aehDB9Ga3vtjKT0MWe3xIPNoUjztDvYMQFG2lmCFsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UdE9Ys5vKdUGNnl2lgzFi32iWrdWobTjlzC+zVovX2E=;
+ b=mfzKMcyakR3dZepOtD5kJHjjPjXR2ilTT25p8BoSGIOIvp0RThLjCEPQ3oOWdCKDyL6oNsuImY2sTL4kIlIBbUS3vykVjueW6AC4CHdzI4kpzB7e2ZrFu5xR7DATowKHLQ2CceyGQ+AFVdvGBea82SiLKaHRU/wIJ3s0iNlqHLA=
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
+ DM6PR12MB3083.namprd12.prod.outlook.com (2603:10b6:5:11d::28) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3589.20; Tue, 17 Nov 2020 14:53:51 +0000
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::48e2:11e1:d2f:d12f]) by DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::48e2:11e1:d2f:d12f%8]) with mapi id 15.20.3541.029; Tue, 17 Nov 2020
+ 14:53:51 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: RE: [PATCH v2 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Thread-Topic: [PATCH v2 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Thread-Index: AQHWug2TeWr4BS5IckeqT2UDQaL4QqnMYR6AgAACE4A=
+Date:   Tue, 17 Nov 2020 14:53:51 +0000
+Message-ID: <DM5PR12MB18352E62E07B9FBDDB89F1A9DAE20@DM5PR12MB1835.namprd12.prod.outlook.com>
+References: <cover.1605306931.git.gustavo.pimentel@synopsys.com>
+ <CAK8P3a3TpnQmcWFkBJyi7CxdzgyyzxXzA3mokYvcem6yEh7Bdg@mail.gmail.com>
+In-Reply-To: <CAK8P3a3TpnQmcWFkBJyi7CxdzgyyzxXzA3mokYvcem6yEh7Bdg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MV0l4WldSbE9HVXhMVEk0WlRRdE1URmxZaTA1T0dRM0xXWTRPVFJq?=
+ =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnhpTVdWa1pUaGxNaTB5T0dVMExURXha?=
+ =?utf-8?B?V0l0T1Roa055MW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?SXhNVGNpSUhROUlqRXpNalV3TURrNE5ESTRNelUwT0RZME1DSWdhRDBpUVdw?=
+ =?utf-8?B?RFNtaG1TMmg0YUc1cE0wcFJSR2RDTlZOMGVrNWlNMHR2UFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZFWjFNMWVEQTRZbnBYUVZjMlFuVklhalJVSzBaT1lt?=
+ =?utf-8?B?OUhOR1ZRYUZBMFZUQlBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGT2NsTldNMmRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [89.155.14.32]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ef2f3de-e268-49e9-cd9d-08d88b0898d8
+x-ms-traffictypediagnostic: DM6PR12MB3083:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB3083196629404E00CFDC61E7DAE20@DM6PR12MB3083.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ax4Mt8qbcVZqiVsizM+kq2tZhiEAhnJBl6Vw+sYrhyBoiabfxPl3sF/UpXjfRh56V+0kn/DYxtGuRN7X1smi5AD41Jd0FckTtHlhdacCC0+wzpGA4MeLg0RG6IcNijP8ulbXqdjPddyoH9uw912tTIGiUxkMiI7H3fOa6twdUPT4jg39mIMrO4uXNvZ/5Fd0rvlhj8sWQ4p2kk1jzFodd3Tzr7bMyrVuSmKTsNnVQ5APGd6E4W0ZsQ+YOgEJFJCZHie5K5/fADHWVEtbRmMgIo21PJchFM0LbLwzitvc+FADaqMQc9wxIGcBhEtm7VtkpGzzPpGIFLJwbbxy8nBLKg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(5660300002)(52536014)(7696005)(9686003)(55016002)(83380400001)(76116006)(64756008)(66556008)(66476007)(66946007)(53546011)(7416002)(6506007)(478600001)(66446008)(186003)(26005)(8936002)(33656002)(86362001)(4326008)(6916009)(2906002)(8676002)(316002)(54906003)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: D3For7MjMkfL0H/hN5gORBk5L8dS0eKlWV6aUAHtv2v4Zp/xQK3uA7qsQN8D34XwEZ6IIEc9PkshQARjC3OFedH0PnsQFSUbvrVZNazxDCrxeZTpUmvr90XHLBH/JuwgFXRX8E1YDds257OAqHBHnTZ9sXzbI2oAg4oElDZXz7csCoI4JEIkRx5ia8io9+k0qdP0grgyKNV/XdoA3bBFiiXmNqotrCeeDQe/rQA4ngY2GLeGq0LmUeUSk6XouFXh++h627QS5p5B3P7/RuhqYjNRhJqv7LnSvL7CpyL6dfAjR3UycxoN0CD/VUE8nvdThyk3UWmoGjudfsh6B316cqc9Ug6kYjOluT/iXI/euR47P4pybSAqIQrTgInoHwh1WO/GbR9Ngl4zNWK12IRVGNKKaPpyetS4AFIC2JdDXD6w6P0qhsbio1wmifMFvs5UWFVk8odYCUahWoh82ML9jssP9Zgh1Wh9zjnhP5DPhBrne1vfEkMMOg8mf9RvMRU6zmJTTrTPVpUtUnVtfJKNXjzcaxK8uU+XIAqffE5oX+KrbOASIpbmO8CCVFbBMso5C4AGGJNpi7K6XXY4yJLdzt37Dj5fAHuecbwqchCT3dcLeCj5LDuTEDDalf+34ABA3JQh7H2/sxcxkOn65S5rWQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.31.177]
-X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ef2f3de-e268-49e9-cd9d-08d88b0898d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Nov 2020 14:53:51.1910
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 09WBYeCjtkMzaLAcxDSrE+XherU8HctNujjhMghAQyrgeU73cSJ/Wk93I4GX+XhbbCWDJxeHIlPUrxZ1Q9EyJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3083
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 10 Nov 2020 21:43:50 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
-
-> From: Dan Williams <dan.j.williams@intel.com>
-> 
-> The CXL.mem protocol allows a device to act as a provider of "System
-> RAM" and/or "Persistent Memory" that is fully coherent as if the memory
-> was attached to the typical CPU memory controller.
-> 
-> The memory range exported by the device may optionally be described by
-> the platform firmware memory map, or by infrastructure like LIBNVDIMM to
-> provision persistent memory capacity from one, or more, CXL.mem devices.
-> 
-> A pre-requisite for Linux-managed memory-capacity provisioning is this
-> cxl_mem driver that can speak the "type-3 mailbox" protocol.
-> 
-> For now just land the driver boiler-plate and fill it in with
-> functionality in subsequent commits.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-
-I've tried to avoid repeats, so mostly this is me moaning about naming!
-
-Jonathan
-
-> ---
->  drivers/cxl/Kconfig  | 20 +++++++++++
->  drivers/cxl/Makefile |  2 ++
->  drivers/cxl/mem.c    | 82 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/pci.h    | 15 ++++++++
->  4 files changed, 119 insertions(+)
->  create mode 100644 drivers/cxl/mem.c
->  create mode 100644 drivers/cxl/pci.h
-> 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index dd724bd364df..15548f5c77ff 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -27,4 +27,24 @@ config CXL_ACPI
->  	  resources described by the CEDT (CXL Early Discovery Table)
->  
->  	  Say 'y' to enable CXL (Compute Express Link) drivers.
-> +
-> +config CXL_MEM
-> +        tristate "CXL.mem Device Support"
-> +        depends on PCI && CXL_BUS_PROVIDER != n
-> +        default m if CXL_BUS_PROVIDER
-> +        help
-> +          The CXL.mem protocol allows a device to act as a provider of
-> +          "System RAM" and/or "Persistent Memory" that is fully coherent
-> +          as if the memory was attached to the typical CPU memory
-> +          controller.
-> +
-> +          Say 'y/m' to enable a driver named "cxl_mem.ko" that will attach
-> +          to CXL.mem devices for configuration, provisioning, and health
-> +          monitoring, the so called "type-3 mailbox". Note, this driver
-> +          is required for dynamic provisioning of CXL.mem attached
-> +          memory, a pre-requisite for persistent memory support, but
-> +          devices that provide volatile memory may be fully described by
-> +          existing platform firmware memory enumeration.
-> +
-> +          If unsure say 'n'.
->  endif
-> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> index d38cd34a2582..97fdffb00f2d 100644
-> --- a/drivers/cxl/Makefile
-> +++ b/drivers/cxl/Makefile
-> @@ -1,5 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> +obj-$(CONFIG_CXL_MEM) += cxl_mem.o
->  
->  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
->  cxl_acpi-y := acpi.o
-> +cxl_mem-y := mem.o
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> new file mode 100644
-> index 000000000000..aa7d881fa47b
-> --- /dev/null
-> +++ b/drivers/cxl/mem.c
-> @@ -0,0 +1,82 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/io.h>
-> +#include "acpi.h"
-> +#include "pci.h"
-> +
-> +struct cxl_mem {
-> +	void __iomem *regs;
-> +};
-> +
-> +static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> +{
-> +	int pos;
-> +
-> +	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
-> +	if (!pos)
-> +		return 0;
-> +
-> +	while (pos) {
-> +		u16 vendor, id;
-> +
-> +		pci_read_config_word(pdev, pos + PCI_DVSEC_VENDOR_OFFSET, &vendor);
-> +		pci_read_config_word(pdev, pos + PCI_DVSEC_ID_OFFSET, &id);
-> +		if (vendor == PCI_DVSEC_VENDOR_CXL && dvsec == id)
-> +			return pos;
-> +
-> +		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-
-This is good generic code and wouldn't cause much backport effort (even if needed
-to bring in a local copy), so perhaps make it a generic function and move to
-core PCI code?
-
-Mind you I guess that can happen the 'second' time someone wants to find a DVSEC.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct cxl_mem *cxlm;
-> +	int rc, regloc;
-> +
-> +	rc = cxl_bus_prepared(pdev);
-> +	if (rc != 0) {
-> +		dev_err(dev, "failed to acquire interface\n");
-> +		return rc;
-> +	}
-> +
-> +	regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
-> +	if (!regloc) {
-> +		dev_err(dev, "register location dvsec not found\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	cxlm = devm_kzalloc(dev, sizeof(*cxlm), GFP_KERNEL);
-> +	if (!cxlm)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +static void cxl_mem_remove(struct pci_dev *pdev)
-> +{
-> +}
-
-I'd bring this in only when needed in later patch.
-
-> +
-> +static const struct pci_device_id cxl_mem_pci_tbl[] = {
-> +	/* PCI class code for CXL.mem Type-3 Devices */
-> +	{ PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-> +	  PCI_CLASS_MEMORY_CXL, 0xffffff, 0 },
-> +	{ /* terminate list */ },
-> +};
-> +MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
-> +
-> +static struct pci_driver cxl_mem_driver = {
-> +	.name			= KBUILD_MODNAME,
-> +	.id_table		= cxl_mem_pci_tbl,
-> +	.probe			= cxl_mem_probe,
-> +	.remove			= cxl_mem_remove,
-> +};
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Intel Corporation");
-> +module_pci_driver(cxl_mem_driver);
-> +MODULE_IMPORT_NS(CXL);
-> diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
-> new file mode 100644
-> index 000000000000..beb03921e6da
-> --- /dev/null
-> +++ b/drivers/cxl/pci.h
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> +#ifndef __CXL_PCI_H__
-> +#define __CXL_PCI_H__
-> +
-> +#define PCI_CLASS_MEMORY_CXL	0x050210
-> +
-> +#define PCI_EXT_CAP_ID_DVSEC	0x23
-> +#define PCI_DVSEC_VENDOR_CXL	0x1E98
-
-Hmm. The magic question of what to call a vendor ID that isn't a vendor
-ID but just a magic number that talks like a duck and quacks like a duck
-(for anyone wondering what I'm talking about, there is a nice bit of legal
-boilerplate on this in the CXL spec)
-
-This name is definitely not accurate however.
-
-PCI_UNIQUE_VALUE_CXL maybe?  It is used for other things than DVSEC (VDMs etc),
-though possibly this is the only software visible use.
-
-
-> +#define PCI_DVSEC_VENDOR_OFFSET	0x4
-> +#define PCI_DVSEC_ID_OFFSET	0x8
-
-Put a line break here perhaps and maybe a spec reference to where to find
-the various DVSEC IDs.
-
-> +#define PCI_DVSEC_ID_CXL	0x0
-
-That's definitely a confusing name as well.
-
-PCI_DEVSEC_ID_CXL_DEVICE maybe?
-
-
-> +#define PCI_DVSEC_ID_CXL_REGLOC	0x8
-> +
-> +#endif /* __CXL_PCI_H__ */
-
+T24gVHVlLCBOb3YgMTcsIDIwMjAgYXQgMTQ6NDo0OSwgQXJuZCBCZXJnbWFubiA8YXJuZEBrZXJu
+ZWwub3JnPiB3cm90ZToNCg0KPiBPbiBGcmksIE5vdiAxMywgMjAyMCBhdCAxMTozNyBQTSBHdXN0
+YXZvIFBpbWVudGVsDQo+IDxHdXN0YXZvLlBpbWVudGVsQHN5bm9wc3lzLmNvbT4gd3JvdGU6DQo+
+ID4NCj4gPiBUaGlzIHBhdGNoIHNlcmllcyBhZGRzIGEgbmV3IGRyaXZlciBjYWxsZWQgeERhdGEt
+cGNpZSBmb3IgdGhlIFN5bm9wc3lzDQo+ID4gRGVzaWduV2FyZSBQQ0llIHByb3RvdHlwZS4NCj4g
+Pg0KPiA+IFRoZSBkcml2ZXIgY29uZmlndXJlcyBhbmQgZW5hYmxlcyB0aGUgU3lub3BzeXMgRGVz
+aWduV2FyZSBQQ0llIHRyYWZmaWMNCj4gPiBnZW5lcmF0b3IgSVAgaW5zaWRlIG9mIHByb3RvdHlw
+ZSBFbmRwb2ludCB3aGljaCB3aWxsIGdlbmVyYXRlIHVwc3RyZWFtDQo+ID4gYW5kIGRvd25zdHJl
+YW0gUENJZSB0cmFmZmljLiBUaGlzIGFsbG93cyB0byBxdWlja2x5IHRlc3QgdGhlIFBDSWUgbGlu
+aw0KPiA+IHRocm91Z2hwdXQgc3BlZWQgYW5kIGNoZWNrIGlzIHRoZSBwcm90b3R5cGUgc29sdXRp
+b24gaGFzIHNvbWUgbGltaXRhdGlvbg0KPiA+IG9yIG5vdC4NCj4gDQo+IEkgZG9uJ3QgcXVpdGUg
+dW5kZXJzdGFuZCB3aGF0IHRoaXMgaGFyZHdhcmUgaXMsIGJhc2VkIG9uIHlvdXIgZGVzY3JpcHRp
+b24uDQo+IElzIHRoaXMgYSBzcGVjaWZpYyBwaWVjZSBvZiBoYXJkd2FyZSB0aGF0IG9ubHkgc2Vy
+dmVzIGFzIGEgdHJhZmZpYyBnZW5lcmF0b3IsDQo+IG9yIGEgcGFydGljdWxhciBoYXJkd2FyZSBm
+ZWF0dXJlIG9mIHRoZSBEZXNpZ25XYXJlIGVuZHBvaW50LCBvciBpcyBpdA0KPiBzb2Z0d2FyZSBy
+dW5uaW5nIG9uIGEgU29DIGluIGVuZHBvaW50IG1vZGUgd2hpbGUgcGx1Z2dlZCBpbnRvIGEgTGlu
+dXgNCj4gc3lzdGVtIHJ1bm5pbmcgdGhpcyBkcml2ZXIgb24gdGhlIGhvc3Q/DQoNCkhpIEFybmQs
+DQoNCkZpcnN0bHkgeW91IGhhdmUgdG8gaGF2ZSBpbiBtaW5kIHRoYXQgd2UgYXJlIHRhbGtpbmcg
+YWJvdXQgYW4gSFcgDQpwcm90b3R5cGUgYmFzZWQgb24gRlBHQS4gVGhpcyBQQ0llIEVuZHBvaW50
+IEhXIHByb3RvdHlwZSBmcm9tIFN5bm9wc3lzIA0KbWlnaHQgaGF2ZSBtdWx0aXBsZSBIVyBibG9j
+a3MgaW5zaWRlIChkZXBlbmRzIG9uIHRoZSBIVyBkZXNpZ24pLCBpbiB0aGlzIA0KcGFydGljdWxh
+ciBwcm90b3R5cGUgY2FzZSwgaXQgaGFzIGFuIEhXIGJsb2NrIGlzIGNhbGxlZCB4RGF0YSAoYXZh
+aWxhYmxlIA0KaW50ZXJuYWxseSB0byBTeW5vcHN5cyBvbmx5KSB3aGljaCBpcyBhIFBDSWUgdHJh
+ZmZpYyBnZW5lcmF0b3IsIHRoaXMgDQpibG9jayBoYXMgbm8gcHJhY3RpY2FsIHVzYWdlLCB1bmxl
+c3MgZm9yIEhXIHZhbGlkYXRpb24gYW5kIHRlc3RpbmcgbmV3IA0KZGVzaWducyB0aGF0IHB1c2gg
+Zm9yd2FyZCBuZXcgUENJZSBzcGVlZHMuDQoNCj4gDQo+IE1vc3QgaW1wb3J0YW50bHk7IElzIHRo
+ZXJlIGFueSByZWxhdGlvbiBiZXR3ZWVuIHRoaXMgZHJpdmVyIGFuZCB0aGUgZHJpdmVyDQo+IHdl
+IGhhdmUgZm9yIHRoZSBEZXNpZ25XYXJlIFBDSWUgZW5kcG9pbnQgaXRzZWxmPw0KDQpUaGUgc2Nv
+cGVzIGFyZSBkaWZmZXJlbnQuIFRoZSBEZXNpZ25XYXJlIFBDSWUgZW5kcG9pbnQgaXMgYSBmcmFt
+ZXdvcmsgDQp0aGF0IGFsbG93cyB0byB0ZXN0IHNvbWUgUENJZSBnZW5lcmljIGZ1bmN0aW9uYWxp
+dGllcyAobm90IHJlbGF0ZWQgdG8gDQp4RGF0YSkgdXNpbmcgcGNpdGVzdC4NCg0KPiANCj4gTXkg
+ZmVlbGluZyBpcyB0aGF0IHRoaXMgc2hvdWxkIGJlIGxvY2F0ZWQgbW9yZSBjbG9zZWx5IHRvIGRy
+aXZlcnMvcGNpLywNCj4gYnV0IHRoYXQgZGVwZW5kcyBvbiB3aGF0IGl0IGFjdHVhbGx5IGRvZXMu
+DQoNCkkgdGhvdWdodCB0byBwdXQgb24gL21pc2MgYmVjYXVzZSB0aGUgcHVycG9zZSBpcyB2ZXJ5
+IGxpbWl0ZWQgYW5kIGRvZXNuJ3QgDQpmaXQgaW4gYSBub3JtYWwgY2FzZS4NCg0KLUd1c3Rhdm8N
+Cg0KPiANCj4gICAgICBBcm5kDQoNCg0K
