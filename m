@@ -2,76 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ED142B82A1
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 18:07:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF6092B835D
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 18:49:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgKRREK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 12:04:10 -0500
-Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:34620 "EHLO
-        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727207AbgKRREK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 12:04:10 -0500
-Received: from cpc79921-stkp12-2-0-cust288.10-2.cable.virginm.net ([86.16.139.33] helo=[192.168.0.18])
-        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1kfQsK-0006Rw-5c; Wed, 18 Nov 2020 17:04:08 +0000
-Subject: Re: [PATCH v17 3/3] PCI: microchip: Add host driver for Microchip
- PCIe controller
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Daire.McNamara@microchip.com, linux-pci@vger.kernel.org
-References: <20201022132223.17789-4-daire.mcnamara@microchip.com>
- <587df2af-c59e-371a-230c-9c7a614824bd@codethink.co.uk>
- <MN2PR11MB426909C2B84E95AF301C404B96100@MN2PR11MB4269.namprd11.prod.outlook.com>
- <2eee84c9-aa24-2587-5ced-1c2fe30a1d50@codethink.co.uk>
- <20201118163931.GB32004@e121166-lin.cambridge.arm.com>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <557a37d9-3694-ede1-d7b0-adfba4345fc0@codethink.co.uk>
-Date:   Wed, 18 Nov 2020 17:04:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1728102AbgKRRtg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 12:49:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728056AbgKRRtg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Nov 2020 12:49:36 -0500
+Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F9522202;
+        Wed, 18 Nov 2020 17:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605721775;
+        bh=V9hoDkikNLt3innAFfk0lqfO39GVuqkZCQSPO7aCGpw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ID7wPFo9iwRjGTcVVkaYzl+dLnC4NkUYQHulrcnywnco7pThZgASeJXUbXAXwTqSw
+         I6bhERtcR7btwt9e0TOoDsH6nMVM469Sw9aSmjkj5ddje0F9goZ3I3iVtZKBk02Oii
+         xMdaW/TIBWQWqtz5AwqNz9opZA5jjQ/A70Uvbu3A=
+Date:   Wed, 18 Nov 2020 11:49:33 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for PCI device power state
+Message-ID: <20201118174933.GA21165@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20201118163931.GB32004@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96da5aa3-a6ff-aeee-430b-bc9958f5aefa@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/11/2020 16:39, Lorenzo Pieralisi wrote:
-> On Mon, Nov 02, 2020 at 11:15:25AM +0000, Ben Dooks wrote:
->> On 02/11/2020 10:39, Daire.McNamara@microchip.com wrote:
->>> Hi Ben,
->>>
->>> Yes, we've become aware of an issue that's cropped up with latest design file on Icicle with PCIe.  We're working through it and we'll update once we have resolved it.
->>
+On Sun, Nov 15, 2020 at 10:19:22PM +0100, Maximilian Luz wrote:
+> On 11/15/20 9:27 PM, Bjorn Helgaas wrote:
 > 
-> Message above did not make it to linux-pci (list rejects anything that
-> is not plain text), this was a public discussion and must have stayed
-> so, thanks to Ben for posting back.
+> [...]
 > 
->> Thanks for looking at this.
->>
->> We could really do with this working as we need faster storage
->> and graphics options for what we want to do with these boards.
->>
->> I am happy to reinstall or rebuild images, i've got a v5.9 that
->> works to an extent on the icicles.
+> > I think something read from sysfs is a snapshot with no guarantee
+> > about how long it will remain valid, so I don't see a problem with the
+> > value being stale by the time userspace consumes it.
 > 
-> Where's the fix for this ? It would be good to merge the driver with
-> no known regressions.
+> I agree on this, and the READ_ONCE won't protect against it. The
+> READ_ONCE would only protect against future changes, e.g. something like
+> 
+>     const char *state_names[] = { ... };
+> 
+>     // check if state is invalid
+>     if (READ(pci_dev->current_state) >= ARRAY_SIZE(state_names))
+>             return sprintf(..., "invalid");
+>     else    // look state up in table
+>             return sprintf(..., state_names[READ(pci_dev->current_state)])
+> 
+> Note that I've explicitly marked the problematic reads here: If those
+> are done separately, the invalidity check may pass, but by the time the
+> state name is looked up, the value may have changed and may be invalid.
+> 
+> Note further that if we have something like
+> 
+>     pci_power_t state = pci_dev->current_state;
+> 
+> the compiler is, in theory, free to replace each access to "state" with
+> a read to pci_dev->current_state. As far as I can tell, the whole point
+> of READ_ONCE is to prevent that and ensure that there is only one read.
+> 
+> Note also that something like this could be easily introduced by
+> changing the code in pci_power_name(), as that is likely inlined by the
+> compiler. I'm not entirely sure, but I think that the compiler is allowed
+> to, at least theoretically, split that into two reads here and inlining
+> might be done before further optimization.
+> 
+> On the other hand, the changes that could lead to issues above are
+> fairly unlikely to cause them as the compiler will _probably_ read the
+> value only once anyways.
 
-I don't know yet, I managed to get the icicle 5.6 up to 5.9 to allow
-mering this series on. However it does not get to detect a PCIe card.
+Well, OK, I see your point.  But I'm not convinced it's worth
+cluttering the code for this.  There must be dozens of similar cases,
+and if we do need to worry about this, I'd like to do it
+systematically for all of drivers/pci/ instead of doing it piecemeal.
 
-I can try and get some dmesg logs if that would be useful. The root
-port seems to get seen and shows up in lspci.
+I do think it's probably worth making sure we can't set
+dev->current_state to something that's invalid, and also taking a look
+at the PCI core interfaces that take a pci_power_t, i.e., those in
+include/linux/pci.h, to make sure they do the right thing if a driver
+supplies garbage.
 
-I can't currently get to the boards physically due to the lockdown
-and issues with getting to our offices.
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+> > If there's a downside to doing two separate reads, we could mention
+> > that in the commit log or a comment.
+> > 
+> > If there's not a specific reason for using READ_ONCE(), I think we
+> > should omit it because using it in one place but not others suggests
+> > that there's something special about this place.
+> 
+> I'd argue that there is indeed something special about this place:
+> current_state is accessed without holding the device lock (unless I'm
+> mistaken and sysfs attributes do acquire the device lock automatically)
+> and the state is normally only accessed/changed under it.
+> 
+> Apart from (hopefully) preventing somewhat unlikely future issues and
+> highlighting that it is (somewhat of a) special case, the READ_ONCE does
+> not serve any purpose here. As the code is now, omitting it will not
+> cause any issues (or really should not make any difference in produced
+> code).
+> 
+> All in all, I'm not entirely sure that it's a good idea to drop the
+> READ_ONCE, but I'll defer to you for that judgement.
+> 
+> Regards,
+> Max
