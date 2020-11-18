@@ -2,307 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 888502B7AB4
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 10:51:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33A6E2B7B26
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 11:25:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgKRJvi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 04:51:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:49966 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgKRJvh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Nov 2020 04:51:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46522D6E;
-        Wed, 18 Nov 2020 01:51:36 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 096373F719;
-        Wed, 18 Nov 2020 01:51:34 -0800 (PST)
-Date:   Wed, 18 Nov 2020 09:51:29 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Chen Baozi <chenbaozi@phytium.com.cn>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH V2] acpi/irq: Add stacked IRQ domain support to PCI
- interrupt link
-Message-ID: <20201118095129.GA20571@e121166-lin.cambridge.arm.com>
-References: <20201117134214.970-1-chenbaozi@phytium.com.cn>
+        id S1725947AbgKRKWw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 05:22:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbgKRKWw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 05:22:52 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F26AEC0613D4
+        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 02:22:51 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id oq3so1977002ejb.7
+        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 02:22:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=technolu-st.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sI3Qvd5uSLh3sTc/bNorfEjSUnZKG4TO/HsxvppIaZs=;
+        b=O66dkVEEL0lYSTNUrP73tZdheyh1PKoIQOIeGGNJKTcXlGCHk+2z2sWtCiYCwLiFaZ
+         IdpCa/yRZXMNOEPMIT+xyVoW6j8S6leF7lmIGmkbn1RkZFmDuool/XHtT91vJyxi9ad9
+         YLdgEGRQRUV8hGPpfmt6Z222LrPpnb9WN1QdiMMYpnTsHFx+I+d0Scvd+4GTT8sz8DBO
+         q0JatXZz2CHHBBX3gQfjHruhIseHRaswiEGhm96mdjrsruiXDbo1XZLT+ynUkKUOuMTM
+         c+4w6dn2km/WwRCUUlWAxudAnOALVF/HZhorvCV3CAkK5CZc/VRvlMr+MlJdC4SSubqK
+         gppw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sI3Qvd5uSLh3sTc/bNorfEjSUnZKG4TO/HsxvppIaZs=;
+        b=rTdj6/MUS9IxGa0D/dU1NKEo8N8bfsmKz4vyJ0v2LDW0+3DGP1fjUkV3OOKDilvfsD
+         vx3K8ae2xGRmAnaAe/WSX70DK728A8hVBC5LFKlkFJF0xPkH/BleashOCfiiL6VljkzN
+         WTjzpXw/dNaeSpq7sgNKifc7OvvmjU3l7T+1vMr3bQYoLD+/+vmMPJ94MS5Fpqw0LABx
+         Qmw0KGsl3SkuBlmBKnWFgqGmCqFiFWru/0MKuzW0LAjlkoAHj3bhaQt9tGL2LCM5TmOh
+         ok4DQPMYZWkQFPHy7lgsVm6UhScfVG1OJT3Ta7RePt8ti05YTWUXnxsF8cbwgRPTQATF
+         41PA==
+X-Gm-Message-State: AOAM5302FbmDsyhL2D9xcfjztoccdpmdDlwroY0q5hN+uC5K4YZpWqCg
+        uG/wIVUD8CGu6UjNRkFEDVKxzYn9g66tGQxy3tF40Q==
+X-Google-Smtp-Source: ABdhPJyYoZxPNz6y2iodXwBUE3ZT3AdI2dooDEciJ94egjPWhps05OUlkOAqmhcZsjXgSoTvit49QvWIp8fz9lWH+vg=
+X-Received: by 2002:a17:906:b53:: with SMTP id v19mr22603373ejg.136.1605694970684;
+ Wed, 18 Nov 2020 02:22:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201117134214.970-1-chenbaozi@phytium.com.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20201103160838.GA246433@bjorn-Precision-5520> <874km61732.fsf@nanos.tec.linutronix.de>
+ <fa26ac8b-ed48-7ea3-c21b-b133532716b8@posteo.de> <87mtzxkus5.fsf@nanos.tec.linutronix.de>
+ <87wnz0hr9k.fsf@codeaurora.org> <87ft5hehlb.fsf@codeaurora.org>
+ <6b60c8f1-ec37-d601-92c2-97a485b73431@posteo.de> <87v9ec9rk3.fsf@codeaurora.org>
+ <87imab4slq.fsf@codeaurora.org> <b2129a70db2b36c5015b4143a839f47dfc3153af.camel@seibold.net>
+ <CAHUdJJVp5r55NtE+BNz5XGtnaks6mDKQBFodz63DdULBVhD0Lg@mail.gmail.com>
+ <CAHUdJJXRDKs9NRugUAFgNr51DJ=OcssuiV8ST5CaV1CKiNTFfA@mail.gmail.com>
+ <0b58872b4f27dbf5aad2a39f5ec4a066e080d806.camel@seibold.net>
+ <875z6b3v22.fsf@codeaurora.org> <CAHUdJJVK1vH2_9YkCQ99n5mak3oGN09422gG0APkWwcy=ZDQ-Q@mail.gmail.com>
+ <87pn4j2bna.fsf@codeaurora.org> <CAHUdJJXpfkNikreQ_JdpKDkwjEGN0oY8PyYT=aWsw1armz83Kw@mail.gmail.com>
+ <e4ba4457-bd08-42fe-ade7-32059367701a@posteo.de> <CAHUdJJVoi2_BnubtADpdLQoe1xAuHCvkPF-RMX=dnY3nXoTm5g@mail.gmail.com>
+ <CAHUdJJXy4FvmTeO648QMst9-bm1asqjZz=ktkps3ug4Hw=UweQ@mail.gmail.com> <87sg97wvgr.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87sg97wvgr.fsf@nanos.tec.linutronix.de>
+From:   wi nk <wink@technolu.st>
+Date:   Wed, 18 Nov 2020 11:22:39 +0100
+Message-ID: <CAHUdJJUYNgyiE1C5y0rGYoHFv62D--5X9c-+E1c9g3aByRb1ow@mail.gmail.com>
+Subject: Re: pci_alloc_irq_vectors fails ENOSPC for XPS 13 9310
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Thomas Krause <thomaskrause@posteo.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Govind Singh <govinds@codeaurora.org>,
+        linux-pci@vger.kernel.org, Stefani Seibold <stefani@seibold.net>,
+        linux-wireless@vger.kernel.org, Devin Bayer <dev@doubly.so>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <helgaas@kernel.org>, ath11k@lists.infradead.org,
+        David Woodhouse <dwmw@amazon.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 09:42:14PM +0800, Chen Baozi wrote:
-> Some PCIe designs require software to do extra acknowledgements for
-> legacy INTx interrupts. If the driver is written only for device tree,
-> things are simple. In that case, a new driver can be written under
-> driver/pci/controller/ with a DT node of PCIe host written like:
-> 
->   pcie {
->     ...
->     interrupt-map = <0 0 0  1  &pcie_intc 0>,
->                     <0 0 0  2  &pcie_intc 1>,
->                     <0 0 0  3  &pcie_intc 2>,
->                     <0 0 0  4  &pcie_intc 3>;
-> 
->     pcie_intc: legacy-interrupt-controller {
->       interrupt-controller;
->       #interrupt-cells = <1>;
->       interrupt-parent = <&gic>;
->       interrupts = <0 226 4>;
->     };
->   };
-> 
-> Similar designs can be found on Aardvark, MediaTek Gen2 and Socionext
-> UniPhier PCIe controller at the moment. Essentially, those designs are
-> supported by inserting an extra interrupt controller between PCIe host
-> and GIC and parse the topology in a DT-based PCI controller driver.
-> As we turn to ACPI, All the PCIe hosts are described the same ID of
-> "PNP0A03" and share driver/acpi/pci_root.c. It comes to be a problem
-> to make this kind of PCI INTx work under ACPI.
-
-In this respect this patch is a minor detail. The major detail is how
-those host controllers are going to probe and initialize with ACPI and I
-am against merging this patch stand alone with no user before
-understanding what you really want to do with those host controller
-drivers in the ACPI world.
-
-Side note, there is ongoing work for a generic interrupt MUX:
-
-https://bugzilla.tianocore.org/show_bug.cgi?id=2995
-
-If we ever come to support those MUXes with ACPI that must be a
-starting point, the binding above can be your first "user".
-
-I still have reservations about bootstrapping the host controllers
-you mentioned in platforms with no firmware support whatsoever for
-PCI initialization (eg address decoders, link bring-up, etc. - the
-ACPI host bridge model relies on FW to carry out that initialization)
-with ACPI - I would like to see the whole picture first.
-
-Lorenzo
-
-> Therefore, we introduce an stacked IRQ domain support to PCI interrupt
-> link for ACPI. With this support, we can populate the ResourceSource
-> to refer to a device object that describes an interrupt controller.
-> That would allow us to refer to a dedicated driver which implements
-> the logic needed to manage the interrupt state. With this patch,
-> those PCI interrupt links can be supported by describing the INTx
-> in ACPI table as the following example:
-> 
->   Device (IXIU) {
->     ...
->   }
-> 
->   Device(LINKA) {
->     Name(_HID, EISAID("PNP0C0F"))
->     Name(_PRS, ResourceTemplate(){
->       Interrupt(ResourceProducer, Level, ActiveHigh, Exclusive, 0, "\\SB.IXIU")
->         { 60 }
->     })
->     ...
->   }
-> 
->   Device(PCI0) {
->     ...
->     Name(_PRT, Package{
->       Package{ 0x0000FFFF, 0, LINKA, 0 }
->       ...
->     })
->   }
-> 
-> Signed-off-by: Chen Baozi <chenbaozi@phytium.com.cn>
+On Tue, Nov 17, 2020 at 9:59 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Tue, Nov 17 2020 at 16:49, wi nk wrote:
+> > On Sun, Nov 15, 2020 at 8:55 PM wi nk <wink@technolu.st> wrote:
+> > So up until this point, everything is working without issues.
+> > Everything seems to spiral out of control a couple of seconds later
+> > when my system attempts to actually bring up the adapter.  In most of
+> > the crash states I will see this:
+> >
+> > [   31.286725] wlp85s0: send auth to ec:08:6b:27:01:ea (try 1/3)
+> > [   31.390187] wlp85s0: send auth to ec:08:6b:27:01:ea (try 2/3)
+> > [   31.391928] wlp85s0: authenticated
+> > [   31.394196] wlp85s0: associate with ec:08:6b:27:01:ea (try 1/3)
+> > [   31.396513] wlp85s0: RX AssocResp from ec:08:6b:27:01:ea
+> > (capab=0x411 status=0 aid=6)
+> > [   31.407730] wlp85s0: associated
+> > [   31.434354] IPv6: ADDRCONF(NETDEV_CHANGE): wlp85s0: link becomes ready
+> >
+> > And then either somewhere in that pile of messages, or a second or two
+> > after this my machine will start to stutter as I mentioned before, and
+> > then it either hangs, or I see this message (I'm truncating the
+> > timestamp):
+> >
+> > [   35.xxxx ] sched: RT throttling activated
+>
+> As this driver uses threaded interrupts, this looks like an interrupt
+> storm and the interrupt thread consumes the CPU fully. The RT throttler
+> limits the RT runtime of it which allows other tasks make some
+> progress. That's what you observe as stutter.
+>
+> You can apply the hack below so the irq thread(s) run in the SCHED_OTHER
+> class which prevents them from monopolizing the CPU. That might make the
+> problem simpler to debug.
+>
+> Thanks,
+>
+>         tglx
 > ---
->  drivers/acpi/irq.c          | 22 +++++++++++++++++++++-
->  drivers/acpi/pci_irq.c      |  6 ++++--
->  drivers/acpi/pci_link.c     | 17 +++++++++++++++--
->  include/acpi/acpi_drivers.h |  2 +-
->  include/linux/acpi.h        |  4 ++++
->  5 files changed, 45 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
-> index e209081d644b..e78a44815c44 100644
-> --- a/drivers/acpi/irq.c
-> +++ b/drivers/acpi/irq.c
-> @@ -81,6 +81,25 @@ void acpi_unregister_gsi(u32 gsi)
->  }
->  EXPORT_SYMBOL_GPL(acpi_unregister_gsi);
->  
-> +int acpi_register_irq(struct device *dev, u32 irq, int trigger,
-> +		      int polarity, struct fwnode_handle *domain_id)
-> +{
-> +	struct irq_fwspec fwspec;
-> +
-> +	if (WARN_ON(!domain_id)) {
-> +		pr_warn("GSI: No registered irqchip, giving up\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	fwspec.fwnode = domain_id;
-> +	fwspec.param[0] = irq;
-> +	fwspec.param[1] = acpi_dev_get_irq_type(trigger, polarity);
-> +	fwspec.param_count = 2;
-> +
-> +	return irq_create_fwspec_mapping(&fwspec);
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_register_irq);
-> +
->  /**
->   * acpi_get_irq_source_fwhandle() - Retrieve fwhandle from IRQ resource source.
->   * @source: acpi_resource_source to use for the lookup.
-> @@ -92,7 +111,7 @@ EXPORT_SYMBOL_GPL(acpi_unregister_gsi);
->   * Return:
->   * The referenced device fwhandle or NULL on failure
->   */
-> -static struct fwnode_handle *
-> +struct fwnode_handle *
->  acpi_get_irq_source_fwhandle(const struct acpi_resource_source *source)
->  {
->  	struct fwnode_handle *result;
-> @@ -115,6 +134,7 @@ acpi_get_irq_source_fwhandle(const struct acpi_resource_source *source)
->  	acpi_bus_put_acpi_device(device);
->  	return result;
->  }
-> +EXPORT_SYMBOL_GPL(acpi_get_irq_source_fwhandle);
->  
->  /*
->   * Context for the resource walk used to lookup IRQ resources.
-> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-> index 14ee631cb7cf..19296d70c95c 100644
-> --- a/drivers/acpi/pci_irq.c
-> +++ b/drivers/acpi/pci_irq.c
-> @@ -410,6 +410,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->  	char *link = NULL;
->  	char link_desc[16];
->  	int rc;
-> +	struct fwnode_handle *irq_domain;
->  
->  	pin = dev->pin;
->  	if (!pin) {
-> @@ -438,7 +439,8 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->  			gsi = acpi_pci_link_allocate_irq(entry->link,
->  							 entry->index,
->  							 &triggering, &polarity,
-> -							 &link);
-> +							 &link,
-> +							 &irq_domain);
->  		else
->  			gsi = entry->index;
->  	} else
-> @@ -462,7 +464,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
->  		return 0;
->  	}
->  
-> -	rc = acpi_register_gsi(&dev->dev, gsi, triggering, polarity);
-> +	rc = acpi_register_irq(&dev->dev, gsi, triggering, polarity, irq_domain);
->  	if (rc < 0) {
->  		dev_warn(&dev->dev, "PCI INT %c: failed to register GSI\n",
->  			 pin_name(pin));
-> diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-> index fb4c5632a232..219a644d739a 100644
-> --- a/drivers/acpi/pci_link.c
-> +++ b/drivers/acpi/pci_link.c
-> @@ -59,6 +59,7 @@ struct acpi_pci_link_irq {
->  	u8 resource_type;
->  	u8 possible_count;
->  	u32 possible[ACPI_PCI_LINK_MAX_POSSIBLE];
-> +	struct acpi_resource_source resource_source;
->  	u8 initialized:1;
->  	u8 reserved:7;
->  };
-> @@ -120,6 +121,8 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
->  		{
->  			struct acpi_resource_extended_irq *p =
->  			    &resource->data.extended_irq;
-> +			struct acpi_resource_source *rs =
-> +			    &link->irq.resource_source;
->  			if (!p || !p->interrupt_count) {
->  				printk(KERN_WARNING PREFIX
->  					      "Blank _PRS EXT IRQ resource\n");
-> @@ -140,6 +143,12 @@ static acpi_status acpi_pci_link_check_possible(struct acpi_resource *resource,
->  			link->irq.triggering = p->triggering;
->  			link->irq.polarity = p->polarity;
->  			link->irq.resource_type = ACPI_RESOURCE_TYPE_EXTENDED_IRQ;
-> +			if (p->resource_source.string_length) {
-> +				rs->index = p->resource_source.index;
-> +				rs->string_length = p->resource_source.string_length;
-> +				rs->string_ptr = kmalloc(rs->string_length, GFP_KERNEL);
-> +				strcpy(rs->string_ptr, p->resource_source.string_ptr);
-> +			}
->  			break;
->  		}
->  	default:
-> @@ -326,7 +335,8 @@ static int acpi_pci_link_set(struct acpi_pci_link *link, int irq)
->  			resource->res.data.extended_irq.shareable = ACPI_SHARED;
->  		resource->res.data.extended_irq.interrupt_count = 1;
->  		resource->res.data.extended_irq.interrupts[0] = irq;
-> -		/* ignore resource_source, it's optional */
-> +		resource->res.data.extended_irq.resource_source =
-> +			link->irq.resource_source;
->  		break;
->  	default:
->  		printk(KERN_ERR PREFIX "Invalid Resource_type %d\n", link->irq.resource_type);
-> @@ -612,7 +622,7 @@ static int acpi_pci_link_allocate(struct acpi_pci_link *link)
->   * failure: return -1
->   */
->  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
-> -			       int *polarity, char **name)
-> +			       int *polarity, char **name, struct fwnode_handle **irq_domain)
->  {
->  	int result;
->  	struct acpi_device *device;
-> @@ -656,6 +666,9 @@ int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
->  		*polarity = link->irq.polarity;
->  	if (name)
->  		*name = acpi_device_bid(link->device);
-> +	if (irq_domain)
-> +		*irq_domain = acpi_get_irq_source_fwhandle(&link->irq.resource_source);
-> +
->  	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
->  			  "Link %s is referenced\n",
->  			  acpi_device_bid(link->device)));
-> diff --git a/include/acpi/acpi_drivers.h b/include/acpi/acpi_drivers.h
-> index 5eb175933a5b..6ff1ea76d476 100644
-> --- a/include/acpi/acpi_drivers.h
-> +++ b/include/acpi/acpi_drivers.h
-> @@ -68,7 +68,7 @@
->  
->  int acpi_irq_penalty_init(void);
->  int acpi_pci_link_allocate_irq(acpi_handle handle, int index, int *triggering,
-> -			       int *polarity, char **name);
-> +			       int *polarity, char **name, struct fwnode_handle **irq_domain);
->  int acpi_pci_link_free_irq(acpi_handle handle);
->  
->  /* ACPI PCI Device Binding (pci_bind.c) */
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 39263c6b52e1..5f1d7d3192fb 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -324,6 +324,8 @@ extern int sbf_port;
->  extern unsigned long acpi_realmode_flags;
->  
->  int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity);
-> +int acpi_register_irq(struct device *dev, u32 gsi, int trigger,
-> +		      int polarity, struct fwnode_handle *domain_id);
->  int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
->  int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
->  
-> @@ -336,6 +338,8 @@ struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
->  					     const struct irq_domain_ops *ops,
->  					     void *host_data);
->  
-> +struct fwnode_handle *acpi_get_irq_source_fwhandle(const struct acpi_resource_source *source);
-> +
->  #ifdef CONFIG_X86_IO_APIC
->  extern int acpi_get_override_irq(u32 gsi, int *trigger, int *polarity);
->  #else
-> -- 
-> 2.28.0
-> 
+> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> index c460e0496006..8473ecacac7a 100644
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -1320,7 +1320,7 @@ setup_irq_thread(struct irqaction *new, unsigned int irq, bool secondary)
+>         if (IS_ERR(t))
+>                 return PTR_ERR(t);
+>
+> -       sched_set_fifo(t);
+> +       //sched_set_fifo(t);
+>
+>         /*
+>          * We keep the reference to the task struct even if
+
+I was able to apply this patch and play a little bit.  Unfortunately,
+whatever is still going on is mostly the same.  It seems this patch
+extends the 'stuttering' I see a little bit, but the end result is
+still an unresponsive machine.  I didn't get tons of time to play yet,
+so the extra time may make it possible to finally get sysrq-c issued
+and get a vmcore dump.  I also tried to replicate a google android
+patch I found to basically BUG() on the rt throttling activating
+(https://groups.google.com/a/chromium.org/g/chromium-os-reviews/c/NDyPucYrvRY)
+but that path hasn't activated for me since I booted it.  I'll
+hopefully have a chance again this evening.
