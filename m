@@ -2,85 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50B0D2B84F0
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 20:35:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF0B2B8642
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 22:06:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgKRTdF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 14:33:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
+        id S1726466AbgKRVFT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 16:05:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgKRTdE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Nov 2020 14:33:04 -0500
+        id S1726316AbgKRVFT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Nov 2020 16:05:19 -0500
 Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B23052225B;
-        Wed, 18 Nov 2020 19:33:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE9322201;
+        Wed, 18 Nov 2020 21:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605727984;
-        bh=gDzooGw4/SrS1GfnVlMfA1o1rZNcQ5Gr93Abm/EVJ9U=;
+        s=default; t=1605733518;
+        bh=5C5bEY+DL1ajImtxJCjy6ztNOGvMs4VuL3KEnsvaNuM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mzhCnQec1LNOarC3zNqY6xxfEoSh4hT5Aq9/DNLohnCYnpg7doakHwnKLyZ6wf7P5
-         OuHhgu3s8VZY4LPbxFBD1CoOmuBMcADjCQc/iiP3/43QHlJ+y3857phQ03Ly/jNoEh
-         l5gpTI7+XqFrHfP00zI3iJx4vuQtrWsDsuxWoUkE=
-Date:   Wed, 18 Nov 2020 13:33:01 -0600
+        b=S7vc3UyU7jkYzPtyuPMZfQxF2kmU3r/lzlPDcchA+1j/P0sSl/eNsttrf+ByA3JP6
+         uwnMU2iuy7rqXDGfdm25JP5uP204UG9k+imVWjbMi+haLlDOaWHmxPlzSk0ZTk+hPK
+         ZtkISZMA42yM2mS3DkKumxgXbSZxfAgin69KZFFc=
+Date:   Wed, 18 Nov 2020 15:05:16 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Saheed Olayemi Bolarinwa <refactormyself@gmail.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH] PCI/DPC: Fix info->id initialization in
- dpc_process_error()
-Message-ID: <20201118193301.GA75328@bjorn-Precision-5520>
+To:     Guilherme Piccoli <gpiccoli@canonical.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>, lukas@wunner.de,
+        linux-pci@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
+        andi@firstfloor.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Baoquan He <bhe@redhat.com>, x86@kernel.org,
+        Sinan Kaya <okaya@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Dave Young <dyoung@redhat.com>,
+        Gavin Guo <gavin.guo@canonical.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Guowen Shan <gshan@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
+        kexec mailing list <kexec@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Streetman <ddstreet@canonical.com>,
+        Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+Message-ID: <20201118210516.GA76543@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0f4c022a-a669-096c-d318-1e202c9eebbf@linux.intel.com>
+In-Reply-To: <CAHD1Q_zS9Hs8mUsm=q0Ei0kQ+y+wQhkroD+M2eCPKo2xLO6hBw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 07:06:44PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> On 10/31/20 3:01 AM, Saheed Olayemi Bolarinwa wrote:
-> > From: "Saheed O. Bolarinwa" <refactormyself@gmail.com>
-> > 
-> > In the dpc_process_error() path, the error source ID is obtained
-> > but not stored inside the aer_err_info object. So aer_print_error()
-> > is not aware of the error source if it gets called.
-> > 
-> > Use the obtained valued to initialise info->id
+On Tue, Nov 17, 2020 at 09:04:07AM -0300, Guilherme Piccoli wrote:
 
-> Is it useful for DPC case ? I don't think we set info->error_dev_num for
-> DPC case right ?
-> 
-> if (info->id && info->error_dev_num > 1 && info->id == id)
->  726                 pci_err(dev, "  Error of this Agent is reported first\n");
+> Also, taking here the opportunity to clarify my understanding about
+> the limitations of that approach: Bjorn, in our reproducer machine we
+> had 3 parents in the PCI tree (as per lspci -t), 0000:00, 0000:ff and
+> 0000:80 - are those all under "segment 0" as per your verbiage?
 
-It's true that we only assign to info->error_dev_num in aer.c.  That
-looks like another defect.
-
-We're passing "info" to aer_print_error() when both info->id and
-info->error_dev_num are stack junk.
-
-> > Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
-> > ---
-> >   drivers/pci/pcie/dpc.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > index e05aba86a317..9f8698812939 100644
-> > --- a/drivers/pci/pcie/dpc.c
-> > +++ b/drivers/pci/pcie/dpc.c
-> > @@ -223,6 +223,7 @@ void dpc_process_error(struct pci_dev *pdev)
-> >   	else if (reason == 0 &&
-> >   		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
-> >   		 aer_get_device_error_info(pdev, &info)) {
-> > +		info.id = source;
-> >   		aer_print_error(pdev, &info);
-> >   		pci_aer_clear_nonfatal_status(pdev);
-> >   		pci_aer_clear_fatal_status(pdev);
-> > 
-> 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
+Yes.  The "0000" is the PCI segment (or "domain" in the Linux PCI core).
+It's common on x86 to have multiple host bridges in segment 0000.
