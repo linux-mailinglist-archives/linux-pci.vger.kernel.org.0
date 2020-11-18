@@ -2,135 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FCA12B7FBE
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 15:46:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00ABA2B8146
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 16:56:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgKROqt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 09:46:49 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5362 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgKROqt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 09:46:49 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fb533cf0002>; Wed, 18 Nov 2020 06:46:39 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Nov
- 2020 14:46:44 +0000
-Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Nov 2020 14:46:40 +0000
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V2 2/2] PCI: dwc: Add support to program ATU for >4GB memory
-Date:   Wed, 18 Nov 2020 20:16:26 +0530
-Message-ID: <20201118144626.32189-3-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201118144626.32189-1-vidyas@nvidia.com>
-References: <20201118144626.32189-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        id S1726500AbgKRPzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 10:55:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726304AbgKRPzg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Nov 2020 10:55:36 -0500
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D1A9247B3;
+        Wed, 18 Nov 2020 15:55:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605714936;
+        bh=r0CDRoFkB8BgLEPaa2ssyralnP0p6N+L5jBhaOttndg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S9JnTs5f0QJFKzgr4+uG12DR9Qr/gWbsLxpvqU4dEzKQl32h8l4FGCWOQCE4rgoiY
+         M8MH8Yy0aAw5aULGjQx4lSGrYy9xH1+s+58XL2ZZN+MtkBVsFpsHa1hSk7CO0Jhfnb
+         O/q7DH9DjQa741gdG0QQFw9Wf1hDnUMCWBHyuyFg=
+Date:   Wed, 18 Nov 2020 07:55:34 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     Richard Cochran <richardcochran@gmail.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support
+ for PTP getcrosststamp()
+Message-ID: <20201118075534.2a5e63c4@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <87d00b5uj7.fsf@intel.com>
+References: <20201114025704.GA15240@hoboy.vegasvil.org>
+        <874klo7pwp.fsf@intel.com>
+        <20201117014926.GA26272@hoboy.vegasvil.org>
+        <87d00b5uj7.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1605710799; bh=rSXbDpuOWjEQHv80DVTDi8A2/+Bh99CifSSN70Mfna0=;
-        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
-         References:X-NVConfidentiality:MIME-Version:Content-Type;
-        b=nDxYDjgrFA1hcURPPXLub8CuYRupvgLeBNMRCkO9ytYtTIALOPt+ABIvye3wjksUR
-         o+78P/H/bEzCNADn2njBJlVf7LfJhllA8/yUIkDReDjGUbwq5M5ubT5FGCQ8UUvF/i
-         WKum8ab3g4Nb8hJGrNAdr6p4Xsy64QRlgrsk8gQPoXx+fqRX/tkpNzAglc7XO9VpMI
-         AQJfCf0hsqD8GzhmNuXsPZZVSrrAXzJtSvdCpk9uFFpVnpceGZ0lkJpTaS8hGFA63G
-         QNnBFmhRkVXekBA3JYc0ZuW/qD+kX4E0KG1d1a9qI6t1FMeqEea8j+duZOZOKKRY5r
-         NuFTtH3r96kMw==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to program the ATU to enable translations for >4GB sizes of
-the prefetchable memory apertures.
+On Tue, 17 Nov 2020 17:21:48 -0800 Vinicius Costa Gomes wrote:
+> > Also, what is the point of providing time measurements every 1
+> > millisecond?  
+> 
+> I sincerely have no idea. I had no power on how the hardware was
+> designed, and how PTM was implemented in HW.
 
-Tested-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Jingoo <jingoohan1@gmail.com>
----
-V2:
-* Added 'Tested-by', 'Reviewed-by' and 'Acked-by'
-
- drivers/pci/controller/dwc/pcie-designware.c | 12 +++++++-----
- drivers/pci/controller/dwc/pcie-designware.h |  3 ++-
- 2 files changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index c2dea8fc97c8..b5e438b70cd5 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -228,7 +228,7 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
- static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 					     int index, int type,
- 					     u64 cpu_addr, u64 pci_addr,
--					     u32 size)
-+					     u64 size)
- {
- 	u32 retries, val;
- 	u64 limit_addr = cpu_addr + size - 1;
-@@ -245,8 +245,10 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 				 lower_32_bits(pci_addr));
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
- 				 upper_32_bits(pci_addr));
--	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1,
--				 type | PCIE_ATU_FUNC_NUM(func_no));
-+	val = type | PCIE_ATU_FUNC_NUM(func_no);
-+	val = upper_32_bits(size - 1) ?
-+		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-+	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
- 				 PCIE_ATU_ENABLE);
- 
-@@ -267,7 +269,7 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 
- static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 					int index, int type, u64 cpu_addr,
--					u64 pci_addr, u32 size)
-+					u64 pci_addr, u64 size)
- {
- 	u32 retries, val;
- 
-@@ -311,7 +313,7 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- }
- 
- void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
--			       u64 cpu_addr, u64 pci_addr, u32 size)
-+			       u64 cpu_addr, u64 pci_addr, u64 size)
- {
- 	__dw_pcie_prog_outbound_atu(pci, 0, index, type,
- 				    cpu_addr, pci_addr, size);
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ed19c34dd0fe..f9a20ce9ab9a 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -81,6 +81,7 @@
- #define PCIE_ATU_REGION_INBOUND		BIT(31)
- #define PCIE_ATU_REGION_OUTBOUND	0
- #define PCIE_ATU_CR1			0x904
-+#define PCIE_ATU_INCREASE_REGION_SIZE	BIT(13)
- #define PCIE_ATU_TYPE_MEM		0x0
- #define PCIE_ATU_TYPE_IO		0x2
- #define PCIE_ATU_TYPE_CFG0		0x4
-@@ -293,7 +294,7 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci);
- int dw_pcie_wait_for_link(struct dw_pcie *pci);
- void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
- 			       int type, u64 cpu_addr, u64 pci_addr,
--			       u32 size);
-+			       u64 size);
- void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
- 				  int type, u64 cpu_addr, u64 pci_addr,
- 				  u32 size);
--- 
-2.17.1
-
+Is the PTMed latency not dependent on how busy the bus is?
+That'd make 1ms more reasonable.
