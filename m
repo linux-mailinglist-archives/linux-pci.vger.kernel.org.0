@@ -2,95 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5BF12B727C
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 00:32:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B02EE2B73B7
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 02:25:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgKQXcz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Nov 2020 18:32:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58820 "EHLO mail.kernel.org"
+        id S1728063AbgKRBVv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Nov 2020 20:21:51 -0500
+Received: from mga03.intel.com ([134.134.136.65]:40896 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgKQXcz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 17 Nov 2020 18:32:55 -0500
-Received: from localhost (189.sub-72-105-114.myvzw.com [72.105.114.189])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07823222E9;
-        Tue, 17 Nov 2020 23:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605655974;
-        bh=F85FPfaEMeTqj4QbSsa0bWrg7O9YPVayE7SXkfK4SA4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cziEFupjhFZcHgYnqrEvbe6SaAz6oQ+qOqxTqFAaUIxqrPgS9vZ9ceIHjW9T8Y8+z
-         t1sdYv7ETJsZJlXiAN2a5J24tAiJR1peifvoUF7QhGTVX7wT/f6+lwOfIyKOnzCHmT
-         N6NNITOPum+fU/6gjZsqvENGY/BgEKIgHbCUR3sk=
-Date:   Tue, 17 Nov 2020 17:32:52 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        johan@kernel.org, linux-usb@vger.kernel.org,
-        alberto.vignani@fastwebnet.it
-Subject: Re: [PATCH v2 1/2] PCI: Disable MSI for Pericom PCIe-USB adapter
-Message-ID: <20201117233252.GA21051@bjorn-Precision-5520>
+        id S1727359AbgKRBVv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 17 Nov 2020 20:21:51 -0500
+IronPort-SDR: sFbfgEnJFJrYLy5VkkuTF9B/+JPlb8jsM4gh606QZn119y9aUKpf7GuVF5TCF/JD3CpmlmV75+
+ RGDNhVKKYR9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9808"; a="171143594"
+X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
+   d="scan'208";a="171143594"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2020 17:21:50 -0800
+IronPort-SDR: FPn8pfqeTRrllz4kT4hF5E0RLenEnVSifImz/pmSo4YJt2hHf9eKLbdu8kWBnMfv3mG/I1Rvo2
+ jTzrVO4Lvidw==
+X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
+   d="scan'208";a="310403267"
+Received: from pnoll-mobl.amr.corp.intel.com (HELO ellie) ([10.255.230.106])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2020 17:21:49 -0800
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support
+ for PTP getcrosststamp()
+In-Reply-To: <20201117014926.GA26272@hoboy.vegasvil.org>
+References: <20201114025704.GA15240@hoboy.vegasvil.org>
+ <874klo7pwp.fsf@intel.com> <20201117014926.GA26272@hoboy.vegasvil.org>
+Date:   Tue, 17 Nov 2020 17:21:48 -0800
+Message-ID: <87d00b5uj7.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201106100526.17726-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 06, 2020 at 12:05:25PM +0200, Andy Shevchenko wrote:
-> Pericom PCIe-USB adapter advertises MSI, but documentation says
-> "The MSI Function is not implemented on this device." in the chapters
-> 7.3.27, 7.3.29-7.3.31.
-> 
-> Fixes: 306c54d0edb6 ("usb: hcd: Try MSI interrupts on PCI devices")
-> Datasheet: https://www.diodes.com/assets/Datasheets/PI7C9X440SL.pdf
-> Reported-by: alberto.vignani@fastwebnet.it
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Richard Cochran <richardcochran@gmail.com> writes:
 
-I added the URL you sent and applied both of these, thanks!
+> On Mon, Nov 16, 2020 at 05:06:30PM -0800, Vinicius Costa Gomes wrote:
+>> The PTM dialogs are a pair of messages: a Request from the endpoint (in
+>> my case, the NIC) to the PCIe root (or switch), and a Response from the
+>> other side (this message includes the Master Root Time, and the
+>> calculated propagation delay).
+>> 
+>> The interface exposed by the NIC I have allows basically to start/stop
+>> these PTM dialogs (I was calling them PTM cycles) and to configure the
+>> interval between each cycle (~1ms - ~512ms).
+>
+> Ah, now I am starting to understand...
+>
+> Just to be clear, this is yet another time measurement over PCIe,
+> different than the cross time stamp that we already have, right?
+>
 
-> ---
-> v2: dropped confusing word (David), added ifdeffery (Ben)
->  drivers/pci/quirks.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index f70692ac79c5..e66e0cc8f99b 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5567,17 +5567,26 @@ static void pci_fixup_no_d0_pme(struct pci_dev *dev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
->  
->  /*
-> - * Device [12d8:0x400e] and [12d8:0x400f]
-> + * Device 12d8:0x400e [OHCI] and 12d8:0x400f [EHCI]
-> + *
->   * These devices advertise PME# support in all power states but don't
->   * reliably assert it.
-> + *
-> + * These devices advertise MSI, but documentation (PI7C9X440SL.pdf) says
-> + * "The MSI Function is not implemented on this device." in the chapters
-> + * 7.3.27, 7.3.29-7.3.31.
->   */
-> -static void pci_fixup_no_pme(struct pci_dev *dev)
-> +static void pci_fixup_no_msi_no_pme(struct pci_dev *dev)
->  {
-> +#ifdef CONFIG_PCI_MSI
-> +	pci_info(dev, "The MSI is not implemented on this device, disabling it\n");
-> +	dev->no_msi = 1;
-> +#endif
->  	pci_info(dev, "PME# is unreliable, disabling it\n");
->  	dev->pme_support = 0;
->  }
-> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_pme);
-> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_pme);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400e, pci_fixup_no_msi_no_pme);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_PERICOM, 0x400f, pci_fixup_no_msi_no_pme);
->  
->  static void apex_pci_fixup_class(struct pci_dev *pdev)
->  {
-> -- 
-> 2.28.0
-> 
+Not so different. This series implement the getcrosststamp() function in
+the igc driver, the difference from e1000e (another NIC driver that
+supports getcrosststamp()) is that e1000e uses the fact that it has more
+or less direct access to the CPU clock. In my case the access is less
+direct as it happens via standardized PCIe PTM.
+
+> Also, what is the point of providing time measurements every 1
+> millisecond?
+
+I sincerely have no idea. I had no power on how the hardware was
+designed, and how PTM was implemented in HW.
+
+>
+>> Another thing of note, is that trying to start the PTM dialogs "on
+>> demand" syncronously with the ioctl() doesn't seem too reliable, it
+>> seems to want to be kept running for a longer time.
+>
+> So, I think the simplest thing would be to have a one-shot
+> measurement, if possible.  Then you could use the existing API and let
+> the user space trigger the time stamps.
+
+Agreed that would be easiest/simplest. But what I have in hand seems to
+not like it, i.e. I have an earlier series implementing this "one shot" way
+and it's not reliable over long periods of time or against having the
+system time adjusted.
+
+So I think I am stuck with proposing a new API, if I am reading this
+right.
+
+Something like PTP_EXTTS_REQUEST is what was suggested, so
+PTP_CROSSTS_REQUEST?
+
+struct ptp_crossts_request {
+	unsigned int index;
+        struct ptp_clock_time period; /* Desired period, zero means disable */
+	unsigned int flags;
+	unsigned int rsv[2]; 
+};
+
+And a new event type, something like:
+
+struct ptp_extts_event {
+	struct ptp_clock_time hostts;
+	struct ptp_clock_time devicets;
+	unsigned int index;      
+	unsigned int flags;      
+};
+
+
+Cheers,
+-- 
+Vinicius
