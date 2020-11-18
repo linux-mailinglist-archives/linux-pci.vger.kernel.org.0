@@ -2,100 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 135932B7D99
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 13:27:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE6452B7DEE
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 13:57:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgKRM0E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 07:26:04 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34547 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgKRM0D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 07:26:03 -0500
-Received: by mail-ot1-f65.google.com with SMTP id j14so1553667ots.1;
-        Wed, 18 Nov 2020 04:26:01 -0800 (PST)
+        id S1726481AbgKRMyz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 07:54:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgKRMyy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 07:54:54 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A931EC0613D4;
+        Wed, 18 Nov 2020 04:54:54 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id ei22so1062248pjb.2;
+        Wed, 18 Nov 2020 04:54:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wy/KEppnAdk/cNOgtsabIIPwjqGYS6CaxiiJ4TMK5i8=;
+        b=o3bTqWP+TZ6TijALWjM2TG4Nt4leqd6UyHEbZEHS3zmgNBhbotf9NwQf/wUDONyJ+z
+         uF3pGFjnrjPQmCCix8o7sCCPacZGz7QdRSCibdXY59vRNYdNT2cxlLBNlswwTHwh+i4m
+         057MmUeMzex70xACaYwprcXTs0w2cWmZVwqJrOjo0ehhXv2gfLCWMdBgu9Ab8NGYKdn+
+         mHmGc0dklaUGgegLLjmIzjwtTNLUO437szgfypD9E/MYGiFgKHOds3GiP1QHoE43OUSr
+         JQWxeCnNryeB7SO7hGJE20goJZewE9XfPPy1xxk7QJjYJlbR9WssytuKLX6gB3+eQ2HR
+         /oNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PiA+hYcssZWHOVn8FUP0jNEzq1o0bLIoAhov7HTRa3s=;
-        b=FhXiut2BdlaNbRz4GLN4QeL7bHmOhrVLxBNtOC2CobR8RpJwTenI1Xr6G/Z/BH5XTo
-         o9VzSibPEI1YJfL/yfxPMngmvPaVHmd0mcg+lrS3DLcTMijAGgOMEaqAWp3AhySwOD3E
-         BPmCOQClB3LcL+lQJWpjsuXFB0uiwBmmH8kgf0TfOVy7NBNteYPc9e6SVmvemzL7RxSO
-         G6gIW4hbs9o1xtqbwFrwiRbCNSLLGuThNi4/NpcxnTnumbWsqFXnSvsM/57hm7ZEO4ma
-         PJZ7715lrMFJOERyGsID+vfGRCoZZrYCYLQr8vy02r3XQ72/jxnDbvLbbxDJWGNQfAQN
-         pICQ==
-X-Gm-Message-State: AOAM532EM9+pMbw+TgbcyuS0A4J2af9AbC33rlTdKK85YL9oZufxNVVZ
-        YvcBgCT/GsZ3I+oMpc081HyqnXvnuG9c4BmSYmY=
-X-Google-Smtp-Source: ABdhPJzoeLJSnBwU2uet5BoMgaxg6p2GPAzJTKIfrW4HwcWnUV0X+T3Z2xvmIMz+HD3psO6w0GaKCsVc5AjXi/P4qGw=
-X-Received: by 2002:a9d:16f:: with SMTP id 102mr6592389otu.206.1605702361517;
- Wed, 18 Nov 2020 04:26:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wy/KEppnAdk/cNOgtsabIIPwjqGYS6CaxiiJ4TMK5i8=;
+        b=Fs1b75d6zTSDJcUlF/kMRONlRFPEl5Kkd7GRnTPE8NH0DLCCJyrYeLyggHjKPrQimD
+         2aqQomXtjcixPv9zHLKzvtXPT4rdM3ETyy+gNq97Bn3rQOZwTQsAPG79aSs4FIhEZnax
+         ty/KjsTw1t1xEarrqiYaT9RdvM/8ivaUvRmQxb6QHLwYCewuJDWaUnzBF4BJaIBOYX7S
+         WglJSRWbRqUATzOy5nXF/TtMiMMvRtAz4ZZc3K25l2i70jefd+wrbXvWAoXIZkrWIfoF
+         fDvWvmaqfaKja8cQDDp/JnnhzjPaMZ3GNhQBNygo9r5ydcuiKM/n5EFgWiD9VT3j1A95
+         oJGw==
+X-Gm-Message-State: AOAM5322qEFp5UHBWzpAe429B0V6dQjUK8WbZ3X1NKA5cTuNZbswy+o2
+        SeJ9nOwQXZvCnlVh2C8o9E4=
+X-Google-Smtp-Source: ABdhPJymCFNey6f4iesj7Ck4E+dXHQMDg5Y6qwOw35FTo8NqA7iy/BgTEAB3A040esLfdt2ku8wwKQ==
+X-Received: by 2002:a17:90a:fb54:: with SMTP id iq20mr1929878pjb.111.1605704094325;
+        Wed, 18 Nov 2020 04:54:54 -0800 (PST)
+Received: from hoboy.vegasvil.org (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id t200sm3692106pfc.143.2020.11.18.04.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Nov 2020 04:54:53 -0800 (PST)
+Date:   Wed, 18 Nov 2020 04:54:51 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support for
+ PTP getcrosststamp()
+Message-ID: <20201118125451.GC23320@hoboy.vegasvil.org>
+References: <20201114025704.GA15240@hoboy.vegasvil.org>
+ <874klo7pwp.fsf@intel.com>
+ <20201117014926.GA26272@hoboy.vegasvil.org>
+ <87d00b5uj7.fsf@intel.com>
 MIME-Version: 1.0
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-3-ben.widawsky@intel.com> <20201116175909.00007e53@Huawei.com>
- <CAPcyv4h_kSYhcGAdZshFPFbGPgZKCvUh9q7M=jMMRaEauUPzaQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4h_kSYhcGAdZshFPFbGPgZKCvUh9q7M=jMMRaEauUPzaQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 18 Nov 2020 13:25:49 +0100
-Message-ID: <CAJZ5v0ibEXVC5vsjCfougJqp_ZbENUKmbTkCjbxVTen-gsONXA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/9] cxl/acpi: add OSC support
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d00b5uj7.fsf@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 12:26 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Mon, Nov 16, 2020 at 10:00 AM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> >
-> > On Tue, 10 Nov 2020 21:43:49 -0800
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > > From: Vishal Verma <vishal.l.verma@intel.com>
-> > >
-> > > Add support to advertise OS capabilities, and request OS control for CXL
-> > > features using the ACPI _OSC mechanism. Advertise support for all
-> > > possible CXL features, and attempt to request control too for all
-> > > possible features.
-> > >
-> > > Based on a patch by Sean Kelley.
-> > >
-> > > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> >
-> > I guess unsurprisingly a lot of this is cut and paste from PCIe
-> > so can we share some of the code?
-> >
->
-> I do not see a refactoring effort for these bit being all that
-> fruitful.
+On Tue, Nov 17, 2020 at 05:21:48PM -0800, Vinicius Costa Gomes wrote:
+> Agreed that would be easiest/simplest. But what I have in hand seems to
+> not like it, i.e. I have an earlier series implementing this "one shot" way
+> and it's not reliable over long periods of time or against having the
+> system time adjusted.
 
-Well, that depends on how much code duplication could be avoided this way.
+Before we go inventing a new API, I think we should first understand
+why the one shot thing fails.
 
-> The backport pressure for this driver stack I expect will be
-> higher than most, so I'm sensitive to avoiding unnecessary core
-> entanglements.
+If there is problem with the system time being adjusted during PTM,
+then that needs solving in any case!
 
-If two pieces of code are based on the same underlying common code, it
-is immediately clear to the reader how similar to each other they are.
-Otherwise, they need to be carefully compared with each other to find
-out what the differences are and whether or not they are arbitrary or
-vitally important.  That is essential both from the revirem
-perspective today and to anyone wanting to understand the given code
-in the future (possibly in order to modify it without breaking it).
-It outweighs the convenience by far IMV, with all due respect.
-
-Recall how much effort it took to combine x86 with x86_64 and why it
-turned out to be necessary to do that work, for one example.
+Thanks,
+Richard
