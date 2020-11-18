@@ -2,167 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EDBB2B8685
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 22:22:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93C312B86F7
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 22:44:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgKRVWH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 16:22:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgKRVWD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Nov 2020 16:22:03 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74647246B8;
-        Wed, 18 Nov 2020 21:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605734521;
-        bh=zILhvrQoYAz7OjxdXXHg+YYLX1dSAjdTpAWhMSuGpRU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=xv0R4wDw5UYvFlKaXTZ/pwPU2S8HZLWn40RJFrpkSyCAFWD8DpTSXBOZAYe3eLAP7
-         JJSHRXMgVUrN/M5bTiTK/pqfYvcwEhuMptAXowfw0lpVMBnoF/iek5Oux1hH5tBL5n
-         Mbjl5XC6Tfal25K6TnVBXWDbM4kg9ezZf28q9QkY=
-Date:   Wed, 18 Nov 2020 15:22:00 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Lukas Wunner <lukas@wunner.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Utkarsh Patel <utkarsh.h.patel@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+        id S1725948AbgKRVn5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 16:43:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47658 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725879AbgKRVn4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 16:43:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605735834;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kj+T92G6A6K+o1IZ4t+vCMxhoP7c5ZhdFJiFe+XOOlQ=;
+        b=WrRZqOVTiDVXpf8q0RSSRRx49taJbN/qe+CnevSOpA9lwJGKCKzsi7SukEDzfQFcLvRA4K
+        DTYlYGyEEktUxhuzpDCJDKoBOJ1Irmu9IHsVFQT41naLiyJOXB54Ne93kKKeTiIqzFEBnv
+        njadv9tzbNtbU5KBle63k7i16nVn0B8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-uoZFNPXUOfySh_rYsP3d0Q-1; Wed, 18 Nov 2020 16:43:52 -0500
+X-MC-Unique: uoZFNPXUOfySh_rYsP3d0Q-1
+Received: by mail-ed1-f70.google.com with SMTP id s7so1445416eds.17
+        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 13:43:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kj+T92G6A6K+o1IZ4t+vCMxhoP7c5ZhdFJiFe+XOOlQ=;
+        b=esJvlZSRl+hIJ3pdjrCYf01aAo7rLSsSW+qiD+zkk9hHfl1pSl/ov/XFp86eu7XdyZ
+         rvlvYSDTAq87ikDZVd/uD9PPJhrAFdqtvb9WshZLKFLpjuLm9xAwD+ILx2ocUPg2N0IL
+         EuUmRmhuE5gqjPB2/Ld985Sp/Buq8ANu0Hax+wb5ZTckFsuiI4cI0Rpw0PzBV4rOP9M5
+         BJQNtvZI4BUseyN9NSPNSMrGUQRSKZGr5EmOSx7MEwuToSnSNvTqAdPUV+BeBDjPtRTW
+         wYIbanJEYJCDRYOKJZViif+UtTtVporibPVUj2B/CXD0FmdcVAjg91LD66jQjfY2I2th
+         6SQw==
+X-Gm-Message-State: AOAM530MC4jmwTKS7auYITIFLt7OgJ7g20PSZL1bn9XBVibyZ8qpZqgV
+        1VoKm6L1zU8qS1CaYYA93SB+C+yYeySTf7WwIRtxl4fWZWUoIDufuTjpCspOgfpRQN30S/JSzN4
+        Pa5j8J/BjzrXBIDAi/FkyPPsIXl8f0cn0CcN+t8+Zx+1m5cpuF6WCT7OsYi55rCR75Kmru4CF
+X-Received: by 2002:a17:906:6d13:: with SMTP id m19mr26056415ejr.345.1605735831356;
+        Wed, 18 Nov 2020 13:43:51 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzpVTOf712ePIqYNELgIb8+P2/JMA5z4qnKUkPQe6/OfuUT8AvEkwzkF3JEh0SALlmcAFbsSg==
+X-Received: by 2002:a17:906:6d13:: with SMTP id m19mr26056392ejr.345.1605735831110;
+        Wed, 18 Nov 2020 13:43:51 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
+        by smtp.gmail.com with ESMTPSA id a26sm14131213edt.74.2020.11.18.13.43.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Nov 2020 13:43:50 -0800 (PST)
+Subject: Re: 5.10 regression, many XHCI swiotlb buffer is full / DMAR: Device
+ bounce map failed errors on thunderbolt connected XHCI controller
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Do not generate wakeup event when runtime
- resuming bus
-Message-ID: <20201118212200.GA80972@bjorn-Precision-5520>
+References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com>
+Message-ID: <a2dd7f53-aeff-bf4d-67a7-5eb5f809da8b@redhat.com>
+Date:   Wed, 18 Nov 2020 22:43:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201029092453.69869-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 12:24:53PM +0300, Mika Westerberg wrote:
-> When a PCI bridge is runtime resumed from D3cold the underlying bus is
-> walked and the attached devices are runtime resumed as well. However, in
-> addition to that we also generate a wakeup event for these devices even
-> though this actually is not a real wakeup event coming from the
-> hardware.
-> 
-> Normally this does not cause problems but when combined with
-> /sys/power/wakeup_count like using the steps below:
-> 
->   # count=$(cat /sys/power/wakeup_count)
->   # echo $count > /sys/power/wakeup_count
->   # echo mem > /sys/power/state
-> 
-> The system suspend cycle might get aborted at this point if a PCI bridge
-> that was runtime suspended (D3cold) was runtime resumed for any reason.
-> The runtime resume calls pci_wakeup_bus() and that generates wakeup
-> event increasing wakeup_count.
-> 
-> Since this is not a real wakeup event we can prevent the above from
-> happening by removing the call to pci_wakeup_event() in
-> pci_wakeup_bus(). While there rename pci_wakeup_bus() to
-> pci_resume_bus() to better reflect what it does.
-> 
-> Reported-by: Utkarsh Patel <utkarsh.h.patel@intel.com>
+Hi All,
 
-Is there a URL to a report on a mailing list or a bugzilla that we can
-include here?  What was the actual user-visible issue?  If we can
-mention it here, it may be useful to others who encounter the same
-issue.  I guess maybe a system suspend fails?
-
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/gpu/vga/vga_switcheroo.c |  2 +-
->  drivers/pci/pci.c                | 16 +++++-----------
->  include/linux/pci.h              |  2 +-
->  3 files changed, 7 insertions(+), 13 deletions(-)
+On 11/10/20 12:36 PM, Hans de Goede wrote:
+> Hi All,
 > 
-> diff --git a/drivers/gpu/vga/vga_switcheroo.c b/drivers/gpu/vga/vga_switcheroo.c
-> index 087304b1a5d7..8843b078ad4e 100644
-> --- a/drivers/gpu/vga/vga_switcheroo.c
-> +++ b/drivers/gpu/vga/vga_switcheroo.c
-> @@ -1039,7 +1039,7 @@ static int vga_switcheroo_runtime_resume(struct device *dev)
->  	mutex_lock(&vgasr_mutex);
->  	vga_switcheroo_power_switch(pdev, VGA_SWITCHEROO_ON);
->  	mutex_unlock(&vgasr_mutex);
-> -	pci_wakeup_bus(pdev->bus);
-> +	pci_resume_bus(pdev->bus);
->  	ret = dev->bus->pm->runtime_resume(dev);
->  	if (ret)
->  		return ret;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6d4d5a2f923d..b25dfa63eeb9 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1174,26 +1174,20 @@ int pci_platform_power_transition(struct pci_dev *dev, pci_power_t state)
->  }
->  EXPORT_SYMBOL_GPL(pci_platform_power_transition);
->  
-> -/**
-> - * pci_wakeup - Wake up a PCI device
-> - * @pci_dev: Device to handle.
-> - * @ign: ignored parameter
-> - */
-> -static int pci_wakeup(struct pci_dev *pci_dev, void *ign)
-> +static int pci_resume_one(struct pci_dev *pci_dev, void *ign)
->  {
-> -	pci_wakeup_event(pci_dev);
-
-IIUC this is the critical change, and all the rest of this patch is
-no-op renames.  Can you split this into two patches so the important
-change is more obvious?
-
-Then the obvious questions will be why it is safe to remove this, and
-where the desired call for the real wakeup is.
-
->  	pm_request_resume(&pci_dev->dev);
->  	return 0;
->  }
->  
->  /**
-> - * pci_wakeup_bus - Walk given bus and wake up devices on it
-> + * pci_resume_bus - Walk given bus and runtime resume devices on it
->   * @bus: Top bus of the subtree to walk.
->   */
-> -void pci_wakeup_bus(struct pci_bus *bus)
-> +void pci_resume_bus(struct pci_bus *bus)
->  {
->  	if (bus)
-> -		pci_walk_bus(bus, pci_wakeup, NULL);
-> +		pci_walk_bus(bus, pci_resume_one, NULL);
->  }
->  
->  static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-> @@ -1256,7 +1250,7 @@ int pci_power_up(struct pci_dev *dev)
->  		 * may be powered on into D0uninitialized state, resume them to
->  		 * give them a chance to suspend again
->  		 */
-> -		pci_wakeup_bus(dev->subordinate);
-> +		pci_resume_bus(dev->subordinate);
->  	}
->  
->  	return pci_raw_set_power_state(dev, PCI_D0);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 22207a79762c..9256ef2e4327 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1271,7 +1271,7 @@ bool pci_dev_run_wake(struct pci_dev *dev);
->  void pci_d3cold_enable(struct pci_dev *dev);
->  void pci_d3cold_disable(struct pci_dev *dev);
->  bool pcie_relaxed_ordering_enabled(struct pci_dev *dev);
-> -void pci_wakeup_bus(struct pci_bus *bus);
-> +void pci_resume_bus(struct pci_bus *bus);
->  void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state);
->  
->  /* For use by arch with custom probe code */
-> -- 
-> 2.28.0
+> Not sure if this is a XHCI driver problem at all, but I needed to start
+> somewhere with reporting this so I went with:
 > 
+> scripts/get_maintainer.pl -f drivers/usb/host/xhci-pci.c
+> 
+> And added a Cc: linux-pci@vger.kernel.org as bonus.
+> 
+> I'm seeing the following errors and very slow network performance with
+> the USB NIC in a Lenovo Thunderbolt gen 2 dock.
+> 
+> Note that the USB NIC is connected to the XHCI controller which is
+> embedded inside the dock and is connected over thunderbolt!
+
+Ping? This is still happening and although the errors are not fatal,
+outgoing network performance is very bad.
+
+I know a lot of Linux users use thunderbolt docks and for some
+reason almost all thunderbolt docks seem to be using USB attached
+nics inside, so this is going to hit a lot of users if we do not
+get this fixed before 5.10 gets released!
+
+Regards,
+
+Hans
+
+
+
+
+
+> So the errors are:
+> 
+> [ 1148.744205] swiotlb_tbl_map_single: 6 callbacks suppressed
+> [ 1148.744210] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1148.744218] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 16ea@1411c0000 dir 1 --- failed
+> [ 1148.744226] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1148.744368] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1148.744375] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 16ea@10aabc000 dir 1 --- failed
+> [ 1148.744381] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1148.745141] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1148.745148] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 118e@1411c0000 dir 1 --- failed
+> [ 1148.745155] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1148.951282] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1148.951388] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 118e@140988000 dir 1 --- failed
+> [ 1148.951420] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1151.013342] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1151.013357] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 1d2a@1411c0000 dir 1 --- failed
+> [ 1151.013373] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1151.018660] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 18 (slots)
+> [ 1151.018696] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 11da@1411c0000 dir 1 --- failed
+> [ 1151.018711] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1151.223022] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1151.223102] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 11da@10aabc000 dir 1 --- failed
+> [ 1151.223133] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1151.228810] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1151.228870] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 11da@10aabc000 dir 1 --- failed
+> [ 1151.228898] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> [ 1151.234792] xhci_hcd 0000:0a:00.0: swiotlb buffer is full (sz: 8192 bytes), total 32768 (slots), used 16 (slots)
+> [ 1151.234852] xhci_hcd 0000:0a:00.0: DMAR: Device bounce map: 11da@10aabc000 dir 1 --- failed
+> [ 1151.234882] r8152 4-2.1.2:1.0 ens1u2u1u2: failed tx_urb -11
+> 
+> etc.
+> 
+> This happens as soon as I generate any serious amount of outgoing network traffic. E.g. rsyncing files
+> to another machine.
+> 
+> Regards,
+> 
+> Hans
+> 
+
