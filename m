@@ -2,54 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D18292B873D
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 23:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B4D72B8783
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 23:08:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgKRWHg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 17:07:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
+        id S1726881AbgKRWHh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 17:07:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbgKRWHf (ORCPT
+        with ESMTP id S1727171AbgKRWHf (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 17:07:35 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CFC1C061A48
-        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 14:07:34 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id c9so4517461ybs.8
-        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 14:07:33 -0800 (PST)
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA4EC061A4D
+        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 14:07:35 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id z29so4476701ybi.23
+        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 14:07:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=RLGcqGrpsLlRbzosDVd0xMcJRplKck51D58hnCA0m40=;
-        b=FEACl+hPLvLCehd5Y1IKJBTJMbR0QNknmx7JyEdblpLzyJtFGWeraZl9sfry0j3+TK
-         kM1Ew0qwvXu8KiNhkl6/Lts6lfNP0QOtRmYpgESW0VKFUjrDc5GbVOF5mwwP/eHkKFsy
-         FofVx9oGp4zsyD83lrr4uaPQAiM/oxp3HRLr27hBWDGyYPHGds3tdIhKnE0AUSYvkx+1
-         TwEFXYs+aBQvHKOt2LEYwCaN+5eXT83BFAe3QJVAC6b+iFUY+dDobgfDt2BlWuLx2V4z
-         3XbU9NTi2LeOeIv8rGJ6XXsrxQN/svzHG1smnTQhehYdm8prrKq5jKeMSosG+9Wvmj5x
-         VHGw==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=kod53Z9Bn/oLp+88TnQNrWTDZiAkcCd5b++0bm6KqDA=;
+        b=Oq8r6SCNamOHoS7iSUmJRRev5DGFdlnvFFu0GIi+STeDi/2VxvM9bYiQjKuTfjLCAf
+         X7p4TRLUESowZaZNgKuuIfZO5b2odS7+x2ubT/aFKQrV+o/bQpkDUCuuQ+uEb1OdNofk
+         gyWDaXNvo32HCUdIUsKJKgTCnCmshX/5gGSe7kgfDUd1vWxv/fIYYnYCLUe7y1UiwEPL
+         1HPFqlQKwycMl+fWUgllMc17t4YP4tBatTmTzNly75QmRLVXHG+shI6tsS1/2JjB03hV
+         mCttBb9qsBFxYfJBfWt4guKh937AQ44YGt8peZ1CR7fqFHZAN5cE3N1fTS63ad9uCbFi
+         kp1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=RLGcqGrpsLlRbzosDVd0xMcJRplKck51D58hnCA0m40=;
-        b=mQ75fhLB5ozUW0g+TKiSTiX88FrztKpK+238dxCJvrrWkRAKa0WNE9uyPh2gRHaHmW
-         vkI2jt6IWm81G5iSKRsqCZHOnTYqSt+ZT7dwiJ6PnyazhI9NuhDZNVNr9YUyYBgpL5o4
-         EGKJc5XkkSd1qPyiuHo2leRJ+2jIyfeIM+uqRF6KnCc1mERom+8wRER1K+t0Q7julXk3
-         wjUsvz4qPhyLwHjvG5jy95FRM/pxdItolkaFphtGUSg5Pwimgg9EJBIqqDdebvQ94p1k
-         JXo940U7zNR/JZ3a8zCrOns7wJ/ifDm2BRWWyuAIUKKHtel63jkxO2pE+ti5jTaYaDva
-         75bA==
-X-Gm-Message-State: AOAM5316eFii1MoG64EFsfg+5j9ALhjh0YGlj4EsV1nI+PHgjgea4K2F
-        1rM0Ct+9VucxTHrO8lLloW9JISkxytEm5H/Nai4=
-X-Google-Smtp-Source: ABdhPJweJ21RzDAwp/tDBtJMRIUdyZdQmeb2yPsOyAN1xKpWf0eVIsvADvmRn84CHCirimlOu0esu246TN+ciGuGs0Q=
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=kod53Z9Bn/oLp+88TnQNrWTDZiAkcCd5b++0bm6KqDA=;
+        b=H3eKMGYWm4MwR4YqMJn8vKVS/lpc/Ar2b5FIEtDr9ObCrA3TsiFnbPUX7/PCAUSpuM
+         hooDMvW9OoFcRpokAYYS2JcrY3rK7aHTOiZLckNvAWh5PGpRNlSpm0NzZnB9uDg9XIya
+         9YDz+/Clja57ZVNpwnVSqBIome6OfHeXQ8p1x/ZhJw6H1CK1yAlFjw1ickojIgq9TGxT
+         mlqC+FJ0BXsMvIUNI43tFGpbwjvT2u7M0yYAdIJz4sfvomlCMjbfyB9cSyO2CH0sxPJx
+         gMlEIUSrJq4LMk4EGWQZYh492Vep1iNTCGgvauNn4XZw05ktNMIfy0HlLQfu9aySSvSP
+         Z6Jg==
+X-Gm-Message-State: AOAM530KxWnNA7zL+hanonMzfDSfQPJSKBqAbIp4rzm1wGo9CNDqbhcu
+        RVqDkusFrRUlFHJkwVxh2UmZk37Y+30v7BX5Znw=
+X-Google-Smtp-Source: ABdhPJzJieOsn4JuNK/fNek5dpK0KwEKnqVJ5VjcmWHbrJqO30ArGzOEitVj3onNlAiY/AvgfqfGAcAMvdZ4a69M8d0=
 Sender: "samitolvanen via sendgmr" 
         <samitolvanen@samitolvanen1.mtv.corp.google.com>
 X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
- (user=samitolvanen job=sendgmr) by 2002:a25:cb11:: with SMTP id
- b17mr8848931ybg.236.1605737253032; Wed, 18 Nov 2020 14:07:33 -0800 (PST)
-Date:   Wed, 18 Nov 2020 14:07:14 -0800
-Message-Id: <20201118220731.925424-1-samitolvanen@google.com>
+ (user=samitolvanen job=sendgmr) by 2002:a25:830e:: with SMTP id
+ s14mr10156827ybk.213.1605737254956; Wed, 18 Nov 2020 14:07:34 -0800 (PST)
+Date:   Wed, 18 Nov 2020 14:07:15 -0800
+In-Reply-To: <20201118220731.925424-1-samitolvanen@google.com>
+Message-Id: <20201118220731.925424-2-samitolvanen@google.com>
 Mime-Version: 1.0
+References: <20201118220731.925424-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.29.2.454.gaff20da3a2-goog
-Subject: [PATCH v7 00/17] Add support for Clang LTO
+Subject: [PATCH v7 01/17] tracing: move function tracer options to Kconfig
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -70,181 +73,117 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch series adds support for building the kernel with Clang's
-Link Time Optimization (LTO). In addition to performance, the primary
-motivation for LTO is to allow Clang's Control-Flow Integrity (CFI) to
-be used in the kernel. Google has shipped millions of Pixel devices
-running three major kernel versions with LTO+CFI since 2018.
+Move function tracer options to Kconfig to make it easier to add
+new methods for generating __mcount_loc, and to make the options
+available also when building kernel modules.
 
-Most of the patches are build system changes for handling LLVM bitcode,
-which Clang produces with LTO instead of ELF object files, postponing
-ELF processing until a later stage, and ensuring initcall ordering.
+Note that FTRACE_MCOUNT_USE_* options are updated on rebuild and
+therefore, work even if the .config was generated in a different
+environment.
 
-Note that v7 brings back arm64 support as Will has now staged the
-prerequisite memory ordering patches [1], and drops x86_64 while we work
-on fixing the remaining objtool warnings [2].
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/lto
-[2] https://lore.kernel.org/lkml/20201114004911.aip52eimk6c2uxd4@treble/
-
-You can also pull this series from
-
-  https://github.com/samitolvanen/linux.git lto-v7
-
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 ---
-Changes in v7:
+ Makefile               | 20 ++++++++------------
+ kernel/trace/Kconfig   | 16 ++++++++++++++++
+ scripts/Makefile.build |  6 ++----
+ 3 files changed, 26 insertions(+), 16 deletions(-)
 
-  - Rebased to master again.
-
-  - Added back arm64 patches as the prerequisites are now staged,
-    and dropped x86_64 support until the remaining objtool issues
-    are resolved.
-
-  - Dropped ifdefs from module.lds.S.
-
-Changes in v6:
-
-  - Added the missing --mcount flag to patch 5.
-
-  - Dropped the arm64 patches from this series and will repost them
-    later.
-
-Changes in v5:
-
-  - Rebased on top of tip/master.
-
-  - Changed the command line for objtool to use --vmlinux --duplicate
-    to disable warnings about retpoline thunks and to fix .orc_unwind
-    generation for vmlinux.o.
-
-  - Added --noinstr flag to objtool, so we can use --vmlinux without
-    also enabling noinstr validation.
-
-  - Disabled objtool's unreachable instruction warnings with LTO to
-    disable false positives for the int3 padding in vmlinux.o.
-
-  - Added ANNOTATE_RETPOLINE_SAFE annotations to the indirect jumps
-    in x86 assembly code to fix objtool warnings with retpoline.
-
-  - Fixed modpost warnings about missing version information with
-    CONFIG_MODVERSIONS.
-
-  - Included Makefile.lib into Makefile.modpost for ld_flags. Thanks
-    to Sedat for pointing this out.
-
-  - Updated the help text for ThinLTO to better explain the trade-offs.
-
-  - Updated commit messages with better explanations.
-
-Changes in v4:
-
-  - Fixed a typo in Makefile.lib to correctly pass --no-fp to objtool.
-
-  - Moved ftrace configs related to generating __mcount_loc to Kconfig,
-    so they are available also in Makefile.modfinal.
-
-  - Dropped two prerequisite patches that were merged to Linus' tree.
-
-Changes in v3:
-
-  - Added a separate patch to remove the unused DISABLE_LTO treewide,
-    as filtering out CC_FLAGS_LTO instead is preferred.
-
-  - Updated the Kconfig help to explain why LTO is behind a choice
-    and disabled by default.
-
-  - Dropped CC_FLAGS_LTO_CLANG, compiler-specific LTO flags are now
-    appended directly to CC_FLAGS_LTO.
-
-  - Updated $(AR) flags as KBUILD_ARFLAGS was removed earlier.
-
-  - Fixed ThinLTO cache handling for external module builds.
-
-  - Rebased on top of Masahiro's patch for preprocessing modules.lds,
-    and moved the contents of module-lto.lds to modules.lds.S.
-
-  - Moved objtool_args to Makefile.lib to avoid duplication of the
-    command line parameters in Makefile.modfinal.
-
-  - Clarified in the commit message for the initcall ordering patch
-    that the initcall order remains the same as without LTO.
-
-  - Changed link-vmlinux.sh to use jobserver-exec to control the
-    number of jobs started by generate_initcall_ordering.pl.
-
-  - Dropped the x86/relocs patch to whitelist L4_PAGE_OFFSET as it's
-    no longer needed with ToT kernel.
-
-  - Disabled LTO for arch/x86/power/cpu.c to work around a Clang bug
-    with stack protector attributes.
-
-Changes in v2:
-
-  - Fixed -Wmissing-prototypes warnings with W=1.
-
-  - Dropped cc-option from -fsplit-lto-unit and added .thinlto-cache
-    scrubbing to make distclean.
-
-  - Added a comment about Clang >=11 being required.
-
-  - Added a patch to disable LTO for the arm64 KVM nVHE code.
-
-  - Disabled objtool's noinstr validation with LTO unless enabled.
-
-  - Included Peter's proposed objtool mcount patch in the series
-    and replaced recordmcount with the objtool pass to avoid
-    whitelisting relocations that are not calls.
-
-  - Updated several commit messages with better explanations.
-
-
-Sami Tolvanen (17):
-  tracing: move function tracer options to Kconfig
-  kbuild: add support for Clang LTO
-  kbuild: lto: fix module versioning
-  kbuild: lto: limit inlining
-  kbuild: lto: merge module sections
-  kbuild: lto: remove duplicate dependencies from .mod files
-  init: lto: ensure initcall ordering
-  init: lto: fix PREL32 relocations
-  PCI: Fix PREL32 relocations for LTO
-  modpost: lto: strip .lto from module names
-  scripts/mod: disable LTO for empty.c
-  efi/libstub: disable LTO
-  drivers/misc/lkdtm: disable LTO for rodata.o
-  arm64: vdso: disable LTO
-  KVM: arm64: disable LTO for the nVHE directory
-  arm64: disable recordmcount with DYNAMIC_FTRACE_WITH_REGS
-  arm64: allow LTO_CLANG and THINLTO to be selected
-
- .gitignore                            |   1 +
- Makefile                              |  45 +++--
- arch/Kconfig                          |  74 +++++++
- arch/arm64/Kconfig                    |   4 +
- arch/arm64/kernel/vdso/Makefile       |   3 +-
- arch/arm64/kvm/hyp/nvhe/Makefile      |   4 +-
- drivers/firmware/efi/libstub/Makefile |   2 +
- drivers/misc/lkdtm/Makefile           |   1 +
- include/asm-generic/vmlinux.lds.h     |  11 +-
- include/linux/init.h                  |  79 +++++++-
- include/linux/pci.h                   |  19 +-
- kernel/trace/Kconfig                  |  16 ++
- scripts/Makefile.build                |  50 ++++-
- scripts/Makefile.lib                  |   6 +-
- scripts/Makefile.modfinal             |   9 +-
- scripts/Makefile.modpost              |  25 ++-
- scripts/generate_initcall_order.pl    | 270 ++++++++++++++++++++++++++
- scripts/link-vmlinux.sh               |  70 ++++++-
- scripts/mod/Makefile                  |   1 +
- scripts/mod/modpost.c                 |  16 +-
- scripts/mod/modpost.h                 |   9 +
- scripts/mod/sumversion.c              |   6 +-
- scripts/module.lds.S                  |  24 +++
- 23 files changed, 677 insertions(+), 68 deletions(-)
- create mode 100755 scripts/generate_initcall_order.pl
-
-
-base-commit: 0fa8ee0d9ab95c9350b8b84574824d9a384a9f7d
+diff --git a/Makefile b/Makefile
+index e2c3f65c4721..8c8feb4245a6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -851,12 +851,8 @@ KBUILD_CFLAGS += $(DEBUG_CFLAGS)
+ export DEBUG_CFLAGS
+ 
+ ifdef CONFIG_FUNCTION_TRACER
+-ifdef CONFIG_FTRACE_MCOUNT_RECORD
+-  # gcc 5 supports generating the mcount tables directly
+-  ifeq ($(call cc-option-yn,-mrecord-mcount),y)
+-    CC_FLAGS_FTRACE	+= -mrecord-mcount
+-    export CC_USING_RECORD_MCOUNT := 1
+-  endif
++ifdef CONFIG_FTRACE_MCOUNT_USE_CC
++  CC_FLAGS_FTRACE	+= -mrecord-mcount
+   ifdef CONFIG_HAVE_NOP_MCOUNT
+     ifeq ($(call cc-option-yn, -mnop-mcount),y)
+       CC_FLAGS_FTRACE	+= -mnop-mcount
+@@ -864,6 +860,12 @@ ifdef CONFIG_FTRACE_MCOUNT_RECORD
+     endif
+   endif
+ endif
++ifdef CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT
++  ifdef CONFIG_HAVE_C_RECORDMCOUNT
++    BUILD_C_RECORDMCOUNT := y
++    export BUILD_C_RECORDMCOUNT
++  endif
++endif
+ ifdef CONFIG_HAVE_FENTRY
+   ifeq ($(call cc-option-yn, -mfentry),y)
+     CC_FLAGS_FTRACE	+= -mfentry
+@@ -873,12 +875,6 @@ endif
+ export CC_FLAGS_FTRACE
+ KBUILD_CFLAGS	+= $(CC_FLAGS_FTRACE) $(CC_FLAGS_USING)
+ KBUILD_AFLAGS	+= $(CC_FLAGS_USING)
+-ifdef CONFIG_DYNAMIC_FTRACE
+-	ifdef CONFIG_HAVE_C_RECORDMCOUNT
+-		BUILD_C_RECORDMCOUNT := y
+-		export BUILD_C_RECORDMCOUNT
+-	endif
+-endif
+ endif
+ 
+ # We trigger additional mismatches with less inlining
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a4020c0b4508..927ad004888a 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -595,6 +595,22 @@ config FTRACE_MCOUNT_RECORD
+ 	depends on DYNAMIC_FTRACE
+ 	depends on HAVE_FTRACE_MCOUNT_RECORD
+ 
++config FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
++	bool
++	depends on FTRACE_MCOUNT_RECORD
++
++config FTRACE_MCOUNT_USE_CC
++	def_bool y
++	depends on $(cc-option,-mrecord-mcount)
++	depends on !FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
++	depends on FTRACE_MCOUNT_RECORD
++
++config FTRACE_MCOUNT_USE_RECORDMCOUNT
++	def_bool y
++	depends on !FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
++	depends on !FTRACE_MCOUNT_USE_CC
++	depends on FTRACE_MCOUNT_RECORD
++
+ config TRACING_MAP
+ 	bool
+ 	depends on ARCH_HAVE_NMI_SAFE_CMPXCHG
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index ae647379b579..2175ddb1ee0c 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -178,8 +178,7 @@ cmd_modversions_c =								\
+ 	fi
+ endif
+ 
+-ifdef CONFIG_FTRACE_MCOUNT_RECORD
+-ifndef CC_USING_RECORD_MCOUNT
++ifdef CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT
+ # compiler will not generate __mcount_loc use recordmcount or recordmcount.pl
+ ifdef BUILD_C_RECORDMCOUNT
+ ifeq ("$(origin RECORDMCOUNT_WARN)", "command line")
+@@ -206,8 +205,7 @@ recordmcount_source := $(srctree)/scripts/recordmcount.pl
+ endif # BUILD_C_RECORDMCOUNT
+ cmd_record_mcount = $(if $(findstring $(strip $(CC_FLAGS_FTRACE)),$(_c_flags)),	\
+ 	$(sub_cmd_record_mcount))
+-endif # CC_USING_RECORD_MCOUNT
+-endif # CONFIG_FTRACE_MCOUNT_RECORD
++endif # CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT
+ 
+ ifdef CONFIG_STACK_VALIDATION
+ ifneq ($(SKIP_STACK_VALIDATION),1)
 -- 
 2.29.2.299.gdc1121823c-goog
 
