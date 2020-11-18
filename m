@@ -2,125 +2,185 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 953032B8374
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 18:59:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 711AA2B84D4
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 20:22:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgKRR6Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 12:58:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbgKRR6Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Nov 2020 12:58:24 -0500
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B869FC0613D6
-        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 09:58:23 -0800 (PST)
-Received: by mail-ej1-x643.google.com with SMTP id f23so4046998ejk.2
-        for <linux-pci@vger.kernel.org>; Wed, 18 Nov 2020 09:58:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CUfbbHmtoDuKn7TpUZ579udEm3PcirZfq0eQV5TKq9o=;
-        b=tvpfEwP+ZZMkMQ93Mh1f6j5FKNXm5M2Ak6FsBNIIN8BiaV0BTYVl+2KI363P4pPGhk
-         4XCHCy6c/5qihFsPbRNd1ryg08ayiY0WUlMRJ7tsItKKpdl+0gXny2bzA4Yc7BDDciiF
-         lm0yCD7b8wCqJOooSmMwFcwAUUnlD0g20c5tSUb4HBEO3d+SZUI228DolNZjs7b8A2Gb
-         2/lhmqWLg3vKRpt8+5DeljAmd22yWaWMCTaw2KqeGnVRMXy3rZs5tI/ni2Qe2EHepKE+
-         o1al2whOOjuL2T1TY5X7PNOayGhFCs+jfIlZ3vTJ4lgvHtGKFbdbUxJeUDrWuKJFi6l/
-         S4Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CUfbbHmtoDuKn7TpUZ579udEm3PcirZfq0eQV5TKq9o=;
-        b=ktTaUkv103HnPwmeOzJHBwYmkzeAaXRlOX1QmbZbKscHqMYkvuMhTi9MAgNvS+vkAc
-         ugrVjhlInFLW7ty8sQMHr+Lm4qRF3OTZWoDVegBUcwteOEsav8jRO6q52leYpKXPRcrf
-         JFX6zcBQ0ymIpZTchvfY6J2yl3D79z5rRBgiX3Tr85sN5iWgFmur0nlRtpi3jlVJ8SKi
-         sN5+ZckzTXFI8zEo4sBqGjM+bh9UVUjtGehzEIZsM+RsyhLIiOeumXTQ+KTcfyfiu7tO
-         p0pqZ0FI6ad/Tzzt9n4hASiM8FPo4bi+ZEzRgGyhuPRmwLon2K42wGwzjw2i9FFdxf6u
-         Zcqw==
-X-Gm-Message-State: AOAM532Sds53nAKJo3ZKhUHIo8L9fH5L3tE4u+eEOmbTocnhxfWOWd0M
-        fPc6irD2G6aIDzmpntkYf/751xh7oC/jtwmCXxjbP+P4Lz8=
-X-Google-Smtp-Source: ABdhPJzAo7X20AwJvG1rn3bcJsj4ua9pJG670rFxHdWk1YJl4d0tkmXpxpdfWZiNhtz2BTcFoV1XlqYQxL6b9QgLA2M=
-X-Received: by 2002:a17:906:ad8e:: with SMTP id la14mr21620775ejb.264.1605722302429;
- Wed, 18 Nov 2020 09:58:22 -0800 (PST)
+        id S1727389AbgKRTTs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 14:19:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35506 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbgKRTTr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Nov 2020 14:19:47 -0500
+Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E57492220B;
+        Wed, 18 Nov 2020 19:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605727186;
+        bh=+vCg2cTrD1FXbmMLSvG1YF4SqbXakoCgibjeJ3KjlP8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=poiuzvtHd/JMBekZ2gJQCGvhVMGOID7A9y5s/zmLnmpix57OBUrI3gXFZ7mU+gWto
+         J4fVU1IzX9TPZQhAhUThZd6Xb/2s0rIzIbbw8tV9xw6bcWZHPoCA1Mqo1RYX7L4aki
+         O2CaL8ZJQcvkyQiAs5Jc0VKFlQcV46cUi8OnszEA=
+Date:   Wed, 18 Nov 2020 13:19:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH] PCI: Add sysfs attribute for PCI device power state
+Message-ID: <20201118191944.GA74259@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-3-ben.widawsky@intel.com> <20201116175909.00007e53@Huawei.com>
- <CAPcyv4h_kSYhcGAdZshFPFbGPgZKCvUh9q7M=jMMRaEauUPzaQ@mail.gmail.com> <CAJZ5v0ibEXVC5vsjCfougJqp_ZbENUKmbTkCjbxVTen-gsONXA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0ibEXVC5vsjCfougJqp_ZbENUKmbTkCjbxVTen-gsONXA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 18 Nov 2020 09:58:11 -0800
-Message-ID: <CAPcyv4ixeG9Puoob5yKRe3UDgehzJKPA32aiurZi-55-G-U17A@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/9] cxl/acpi: add OSC support
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201102141520.831630-1-luzmaximilian@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 4:26 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Nov 17, 2020 at 12:26 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Mon, Nov 16, 2020 at 10:00 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:
-> > >
-> > > On Tue, 10 Nov 2020 21:43:49 -0800
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > > From: Vishal Verma <vishal.l.verma@intel.com>
-> > > >
-> > > > Add support to advertise OS capabilities, and request OS control for CXL
-> > > > features using the ACPI _OSC mechanism. Advertise support for all
-> > > > possible CXL features, and attempt to request control too for all
-> > > > possible features.
-> > > >
-> > > > Based on a patch by Sean Kelley.
-> > > >
-> > > > Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > I guess unsurprisingly a lot of this is cut and paste from PCIe
-> > > so can we share some of the code?
-> > >
-> >
-> > I do not see a refactoring effort for these bit being all that
-> > fruitful.
->
-> Well, that depends on how much code duplication could be avoided this way.
->
-> > The backport pressure for this driver stack I expect will be
-> > higher than most, so I'm sensitive to avoiding unnecessary core
-> > entanglements.
->
-> If two pieces of code are based on the same underlying common code, it
-> is immediately clear to the reader how similar to each other they are.
-> Otherwise, they need to be carefully compared with each other to find
-> out what the differences are and whether or not they are arbitrary or
-> vitally important.  That is essential both from the revirem
-> perspective today and to anyone wanting to understand the given code
-> in the future (possibly in order to modify it without breaking it).
-> It outweighs the convenience by far IMV, with all due respect.
->
-> Recall how much effort it took to combine x86 with x86_64 and why it
-> turned out to be necessary to do that work, for one example.
+[+cc Krzysztof, Rafael in case you have a suggestion about the
+filename (or anythnig else :))]
 
-I agree with above, but the degree of potential code sharing and
-refactoring for CXL is nowhere near approaching the x86_64 situation.
-There's also the counter example in ext3 and ext4 where a split is
-maintained for good reason. All I'm saying is that let's judge patches
-and not theory when it comes to refactoring CXL, my expectation is
-that those opportunities will be few and far between. CXL is a
-superset of PCIE functionality so it should not put much pressure on
-common core PCIE code to change vs incremental CXL extensions.
+On Mon, Nov 02, 2020 at 03:15:20PM +0100, Maximilian Luz wrote:
+> While most PCI power-states can be queried from user-space via lspci,
+> this has some limits. Specifically, lspci fails to provide an accurate
+> value when the device is in D3cold as it has to resume the device before
+> it can access its power state via the configuration space, leading to it
+> reporting D0 or another on-state. Thus lspci can, for example, not be
+> used to diagnose power-consumption issues for devices that can enter
+> D3cold or to ensure that devices properly enter D3cold at all.
+> 
+> To alleviate this issue, introduce a new sysfs device attribute for the
+> PCI power state, showing the current power state as seen by the kernel.
+> 
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+
+Applied as below to pci/pm for v5.11.
+
+> ---
+>  Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
+>  drivers/pci/pci-sysfs.c                 | 12 ++++++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index 450296cc7948..881040af2611 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -360,3 +360,12 @@ Contact:	Heiner Kallweit <hkallweit1@gmail.com>
+>  Description:	If ASPM is supported for an endpoint, these files can be
+>  		used to disable or enable the individual power management
+>  		states. Write y/1/on to enable, n/0/off to disable.
+> +
+> +What:		/sys/bus/pci/devices/.../power_state
+
+I guess this will be alongside the existing "power/" directory.
+Rafael, is there any precedent we should be following here?
+
+> +Date:		November 2020
+> +Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
+> +Description:
+> +		This file contains the current PCI power state of the device.
+> +		The value comes from the PCI kernel device state and can be one
+> +		of: "unknown", "error", "D0", D1", "D2", "D3hot", "D3cold".
+> +		The file is read only.
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index d15c881e2e7e..b15f754e6346 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -124,6 +124,17 @@ static ssize_t cpulistaffinity_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(cpulistaffinity);
+>  
+> +/* PCI power state */
+> +static ssize_t power_state_show(struct device *dev,
+> +				struct device_attribute *attr, char *buf)
+> +{
+> +	struct pci_dev *pci_dev = to_pci_dev(dev);
+> +	pci_power_t state = READ_ONCE(pci_dev->current_state);
+> +
+> +	return sprintf(buf, "%s\n", pci_power_name(state));
+> +}
+> +static DEVICE_ATTR_RO(power_state);
+> +
+>  /* show resources */
+>  static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
+>  			     char *buf)
+> @@ -581,6 +592,7 @@ static ssize_t driver_override_show(struct device *dev,
+>  static DEVICE_ATTR_RW(driver_override);
+>  
+>  static struct attribute *pci_dev_attrs[] = {
+> +	&dev_attr_power_state.attr,
+>  	&dev_attr_resource.attr,
+>  	&dev_attr_vendor.attr,
+>  	&dev_attr_device.attr,
+
+commit 9f1c0ebea21a ("PCI: Add sysfs attribute for device power state")
+Author: Maximilian Luz <luzmaximilian@gmail.com>
+Date:   Mon Nov 2 15:15:20 2020 +0100
+
+    PCI: Add sysfs attribute for device power state
+    
+    While PCI power states D0-D3hot can be queried from user-space via lspci,
+    D3cold cannot.  lspci cannot provide an accurate value when the device is
+    in D3cold as it has to restore the device to D0 before it can access its
+    power state via the configuration space, leading to it reporting D0 or
+    another on-state. Thus lspci cannot be used to diagnose power consumption
+    issues for devices that can enter D3cold or to ensure that devices properly
+    enter D3cold at all.
+    
+    Add a new sysfs device attribute for the PCI power state, showing the
+    current power state as seen by the kernel.
+    
+    [bhelgaas: drop READ_ONCE(), see discussion at the link]
+    Link: https://lore.kernel.org/r/20201102141520.831630-1-luzmaximilian@gmail.com
+    Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index 450296cc7948..881040af2611 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -360,3 +360,12 @@ Contact:	Heiner Kallweit <hkallweit1@gmail.com>
+ Description:	If ASPM is supported for an endpoint, these files can be
+ 		used to disable or enable the individual power management
+ 		states. Write y/1/on to enable, n/0/off to disable.
++
++What:		/sys/bus/pci/devices/.../power_state
++Date:		November 2020
++Contact:	Linux PCI developers <linux-pci@vger.kernel.org>
++Description:
++		This file contains the current PCI power state of the device.
++		The value comes from the PCI kernel device state and can be one
++		of: "unknown", "error", "D0", D1", "D2", "D3hot", "D3cold".
++		The file is read only.
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index d15c881e2e7e..fb072f4b3176 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -124,6 +124,15 @@ static ssize_t cpulistaffinity_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(cpulistaffinity);
+ 
++static ssize_t power_state_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++
++	return sprintf(buf, "%s\n", pci_power_name(pdev->current_state));
++}
++static DEVICE_ATTR_RO(power_state);
++
+ /* show resources */
+ static ssize_t resource_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
+@@ -581,6 +590,7 @@ static ssize_t driver_override_show(struct device *dev,
+ static DEVICE_ATTR_RW(driver_override);
+ 
+ static struct attribute *pci_dev_attrs[] = {
++	&dev_attr_power_state.attr,
+ 	&dev_attr_resource.attr,
+ 	&dev_attr_vendor.attr,
+ 	&dev_attr_device.attr,
