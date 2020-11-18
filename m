@@ -2,29 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA5D2B76C4
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 08:18:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D0EC2B76C6
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Nov 2020 08:18:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbgKRHRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1726724AbgKRHRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 18 Nov 2020 02:17:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54506 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgKRHRf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1726698AbgKRHRf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Wed, 18 Nov 2020 02:17:35 -0500
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214002223D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 473CF2467A;
         Wed, 18 Nov 2020 07:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1605683854;
-        bh=VyAejFb2EqXRXHkA5q6udJdyr3L4QQLG2oyoewoKR0E=;
+        bh=AQ/Sx1u+bYD4zoGriANF0/uI3pWLqX2+CyXLECxBBZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KsaRGMUQauyvl8NNreR0qukDZHZi99mssukp+kYZvXjxs+v7NIas1XTsqui98laES
-         Cff1S6602tqQr1yzKztvxwGLpvSkewlalseP+ElbPahDFx84M4lFQ8uVTRQsZpW/U+
-         jIH0fVYL/mZ9K+LwYNB9trFynqI6YA6VYk+FYmKk=
+        b=kl0OBN5c7oqPQZtM5/3Y8jkB2MPA6nc0A6hfq6bRrXp342xtQ+lYfotLa7gUu3ZXZ
+         HHdqly/VpzlbJnRQDshj7AqjXy07krYR4xCD4LS6wIGu5f3329+AtIdpvNOfIwMwcr
+         xORywiOSYczE3Yh/f9XTuI1YxDi5GsgYSHvX9ObI=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 982CE5FD44; Wed, 18 Nov 2020 15:17:31 +0800 (CST)
+        id 9F9715FF27; Wed, 18 Nov 2020 15:17:31 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -36,9 +36,9 @@ Cc:     Chen-Yu Tsai <wens@csie.org>, Robin Murphy <robin.murphy@arm.com>,
         linux-rockchip@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 3/4] arm64: dts: rockchip: nanopi4: Move ep-gpios property to nanopc-t4
-Date:   Wed, 18 Nov 2020 15:17:23 +0800
-Message-Id: <20201118071724.4866-4-wens@kernel.org>
+Subject: [PATCH v2 4/4] arm64: dts: rockchip: rk3399: Add NanoPi M4B
+Date:   Wed, 18 Nov 2020 15:17:24 +0800
+Message-Id: <20201118071724.4866-5-wens@kernel.org>
 X-Mailer: git-send-email 2.29.1
 In-Reply-To: <20201118071724.4866-1-wens@kernel.org>
 References: <20201118071724.4866-1-wens@kernel.org>
@@ -50,53 +50,105 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Only the NanoPC T4 hs the PCIe reset pin routed to the SoC. For the
-NanoPi M4 family, no such signal is routed to the expansion header on
-the base board.
+The NanoPi M4B is a minor revision of the original M4.
 
-As the schematics for the expansion board were not released, it is
-unclear how this is handled, but the likely answer is that the signal
-is always pulled high.
+The differences against the original Nanopi M4 that are common with the
+other M4V2 revision include:
 
-Move the ep-gpios property from the common nanopi4.dtsi file to the
-board level nanopc-t4.dts file. This makes the nanopi-m4 lack ep-gpios,
-matching the board design.
+  - microphone header removed
+  - power button added
+  - recovery button added
 
-A companion patch "PCI: rockchip: make ep_gpio optional" for the Linux
-driver is required, as the driver currently requires the property to be
-present.
+Additional changes specific to the M4B:
 
-Fixes: e7a095908227 ("arm64: dts: rockchip: Add devicetree for NanoPC-T4")
+  - USB 3.0 hub removed; board now has 2x USB 3.0 type-A ports and 2x
+    USB 2.0 ports
+  - ADB toggle switch added; this changes the top USB 3.0 host port to
+    a peripheral port
+  - Type-C port no longer supports data or PD
+  - WiFi/Bluetooth combo chip switched to AP6256, which supports BT 5.0
+    but only 1T1R (down from 2T2R) for WiFi
+
+Add a new dts file for the new board revision that shows the difference
+against the original.
+
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts | 1 +
- arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi  | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ .../boot/dts/rockchip/rk3399-nanopi-m4b.dts   | 52 +++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-index e0d75617bb7e..452728b82e42 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-@@ -95,6 +95,7 @@ map3 {
- };
- 
- &pcie0 {
-+	ep-gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
- 	num-lanes = <4>;
- 	vpcie3v3-supply = <&vcc3v3_sys>;
- };
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-index 76a8b40a93c6..48ed4aaa37f3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-@@ -504,7 +504,6 @@ &pcie_phy {
- };
- 
- &pcie0 {
--	ep-gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
- 	max-link-speed = <2>;
- 	num-lanes = <2>;
- 	vpcie0v9-supply = <&vcca0v9_s3>;
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 5a53979b7057..fd47414e40eb 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -32,6 +32,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-kobol-helios64.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-leez-p710.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4b.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
+new file mode 100644
+index 000000000000..72182c58cc46
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * FriendlyElec NanoPi M4B board device tree source
++ *
++ * Copyright (c) 2020 Chen-Yu Tsai <wens@csie.org>
++ */
++
++/dts-v1/;
++#include "rk3399-nanopi-m4.dts"
++
++/ {
++	model = "FriendlyElec NanoPi M4B";
++	compatible = "friendlyarm,nanopi-m4b", "rockchip,rk3399";
++
++	adc-keys {
++		compatible = "adc-keys";
++		io-channels = <&saradc 1>;
++		io-channel-names = "buttons";
++		keyup-threshold-microvolt = <1500000>;
++		poll-interval = <100>;
++
++		recovery {
++			label = "Recovery";
++			linux,code = <KEY_VENDOR>;
++			press-threshold-microvolt = <18000>;
++		};
++	};
++};
++
++/* No USB type-C PD power manager */
++/delete-node/ &fusb0;
++
++&i2c4 {
++	status = "disabled";
++};
++
++&u2phy0_host {
++	phy-supply = <&vcc5v0_usb2>;
++};
++
++&u2phy0_otg {
++	phy-supply = <&vbus_typec>;
++};
++
++&u2phy1_otg {
++	phy-supply = <&vcc5v0_usb1>;
++};
++
++&vbus_typec {
++	enable-active-high;
++	gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
++};
 -- 
 2.29.1
 
