@@ -2,142 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 465AE2B9A83
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 19:20:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 863D02B9AD9
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 19:47:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgKSSTR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 13:19:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51706 "EHLO mail.kernel.org"
+        id S1729478AbgKSSpK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Nov 2020 13:45:10 -0500
+Received: from mga07.intel.com ([134.134.136.100]:25223 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgKSSTR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Nov 2020 13:19:17 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D297F22248;
-        Thu, 19 Nov 2020 18:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605809956;
-        bh=pdN07KfFepAiIg0a4V4k+BFudMXTpaC64OLF7rj1IYU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bSy7fAIDgF+/P5DMTXrkR8NZOdkOphMtAYFCcJjUVdoPghWjkOU+w9K+6mvNcaoFH
-         GVm3F3SX2dipFo1YVUCG7UBLsTFT1Mys9FZlAF6d/Hoj6q3CoIwLYF1nZw6KaLn9wj
-         djmiD2FJFrVOXQv+XGoyYwNzMoY8rD1ABC3dTpZ0=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] x86/PCI: Convert force_disable_hpet() to standard quirk
-Date:   Thu, 19 Nov 2020 12:19:04 -0600
-Message-Id: <20201119181904.149129-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S1729144AbgKSSpJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Nov 2020 13:45:09 -0500
+IronPort-SDR: GBWO/+WbKODWnFbaOEwn/gqgwaOny0cbRu1f6hoB/FFiLqNjsQyKDdi9f5q/nfRb71939kXKXG
+ 6UeTJ6BfRWSQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9810"; a="235491570"
+X-IronPort-AV: E=Sophos;i="5.78,354,1599548400"; 
+   d="scan'208";a="235491570"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2020 10:45:09 -0800
+IronPort-SDR: yh9piQpQSgO8wT3JH8WIiWvgiaWW6enCV7b29cum+AWjIBmbaDbAz2EhEDsOKLKznNiXfu6Ioy
+ 5lYlUAcvCBbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,354,1599548400"; 
+   d="scan'208";a="476923249"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga004.jf.intel.com with ESMTP; 19 Nov 2020 10:45:08 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 19 Nov 2020 10:45:08 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 19 Nov 2020 10:45:07 -0800
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Thu, 19 Nov 2020 10:45:07 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "andrzej.jakowski@linux.intel.com" <andrzej.jakowski@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "Fugate, David" <david.fugate@intel.com>
+Subject: Re: [PATCH 0/2] VMD subdevice secondary bus resets
+Thread-Topic: [PATCH 0/2] VMD subdevice secondary bus resets
+Thread-Index: AQHWlTZZLk5RmVMwykyLB3Ij6tP5k6nQLFeAgAB3igA=
+Date:   Thu, 19 Nov 2020 18:45:07 +0000
+Message-ID: <2aa5ecc7449c6ae3f203f9ca72a1e1f70c5f235f.camel@intel.com>
+References: <20200928010557.5324-1-jonathan.derrick@intel.com>
+         <20201119113715.GC19942@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20201119113715.GC19942@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F348ECB3D4EC4D47BD1B152D76743C6E@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
-
-62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail
-platform") implemented force_disable_hpet() as a special early quirk.
-These run before the PCI core is initialized and depend on the
-x86/pci/early.c accessors that use I/O ports 0xcf8 and 0xcfc.
-
-But force_disable_hpet() doesn't need to be one of these special early
-quirks.  It merely sets "boot_hpet_disable", which is tested by
-is_hpet_capable(), which is only used by hpet_enable() and hpet_disable().
-hpet_enable() is an fs_initcall(), so it runs after the PCI core is
-initialized.
-
-Convert force_disable_hpet() to the standard PCI quirk mechanism.
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- arch/x86/kernel/early-quirks.c | 24 ------------------------
- arch/x86/pci/fixup.c           | 25 +++++++++++++++++++++++++
- 2 files changed, 25 insertions(+), 24 deletions(-)
-
-diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index a4b5af03dcc1..674967fc1071 100644
---- a/arch/x86/kernel/early-quirks.c
-+++ b/arch/x86/kernel/early-quirks.c
-@@ -604,14 +604,6 @@ static void __init intel_graphics_quirks(int num, int slot, int func)
- 	}
- }
- 
--static void __init force_disable_hpet(int num, int slot, int func)
--{
--#ifdef CONFIG_HPET_TIMER
--	boot_hpet_disable = true;
--	pr_info("x86/hpet: Will disable the HPET for this platform because it's not reliable\n");
--#endif
--}
--
- #define BCM4331_MMIO_SIZE	16384
- #define BCM4331_PM_CAP		0x40
- #define bcma_aread32(reg)	ioread32(mmio + 1 * BCMA_CORE_SIZE + reg)
-@@ -701,22 +693,6 @@ static struct chipset early_qrk[] __initdata = {
- 	  PCI_BASE_CLASS_BRIDGE, 0, intel_remapping_check },
- 	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, PCI_CLASS_DISPLAY_VGA, PCI_ANY_ID,
- 	  QFLAG_APPLY_ONCE, intel_graphics_quirks },
--	/*
--	 * HPET on the current version of the Baytrail platform has accuracy
--	 * problems: it will halt in deep idle state - so we disable it.
--	 *
--	 * More details can be found in section 18.10.1.3 of the datasheet:
--	 *
--	 *    http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/atom-z8000-datasheet-vol-1.pdf
--	 */
--	{ PCI_VENDOR_ID_INTEL, 0x0f00,
--		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
--	{ PCI_VENDOR_ID_INTEL, 0x3e20,
--		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
--	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
--		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
--	{ PCI_VENDOR_ID_INTEL, 0x8a12,
--		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
- 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
- 	{}
-diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-index 0a0e168be1cb..865bc3c5188b 100644
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -780,3 +780,28 @@ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x15b1, pci_amd_enable_64bit_bar);
- DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_AMD, 0x1601, pci_amd_enable_64bit_bar);
- 
- #endif
-+
-+/*
-+ * HPET on the current version of the Baytrail platform has accuracy
-+ * problems: it will halt in deep idle state - so we disable it.
-+ *
-+ * More details can be found in section 18.10.1.3 of the datasheet
-+ * (Intel Document Number 332065-003, March 2016):
-+ *
-+ *    http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/atom-z8000-datasheet-vol-1.pdf
-+ */
-+static void force_disable_hpet(struct pci_dev *dev)
-+{
-+#ifdef CONFIG_HPET_TIMER
-+	boot_hpet_disable = true;
-+	pci_info(dev, "x86/hpet: Will disable the HPET for this platform because it's not reliable\n");
-+#endif
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_INTEL, 0x0f00,
-+			      PCI_CLASS_BRIDGE_HOST, 8, force_disable_hpet);
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_INTEL, 0x3e20,
-+			      PCI_CLASS_BRIDGE_HOST, 8, force_disable_hpet);
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_INTEL, 0x3ec4,
-+			      PCI_CLASS_BRIDGE_HOST, 8, force_disable_hpet);
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_INTEL, 0x8a12,
-+			      PCI_CLASS_BRIDGE_HOST, 8, force_disable_hpet);
--- 
-2.25.1
-
+T24gVGh1LCAyMDIwLTExLTE5IGF0IDExOjM3ICswMDAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
+ZToNCj4gT24gU3VuLCBTZXAgMjcsIDIwMjAgYXQgMDk6MDU6NTVQTSAtMDQwMCwgSm9uIERlcnJp
+Y2sgd3JvdGU6DQo+ID4gVGhpcyBzZXQgYWRkcyBzb21lIHJlc2V0cyBmb3IgVk1ELiBJdCdzIHZl
+cnkgY29tbW9uIGNvZGUgYnV0IGRvZXNuJ3QNCj4gPiBzZWVtIHRvIGZpdCB3ZWxsIGFueXdoZXJl
+IHRoYXQgY2FuIGFsc28gYmUgZXhwb3J0ZWQgaWYgVk1EIGlzIGJ1aWx0IGFzIGENCj4gPiBtb2R1
+bGUuDQo+ID4gDQo+ID4gSm9uIERlcnJpY2sgKDIpOg0KPiA+ICAgUENJOiB2bWQ6IFJlc2V0IHRo
+ZSBWTUQgc3ViZGV2aWNlIGRvbWFpbiBvbiBwcm9iZQ0KPiA+ICAgUENJOiBBZGQgYSByZXNldCBx
+dWlyayBmb3IgVk1EDQo+ID4gDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMgfCAz
+MiArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy9wY2kvcXVpcmtzLmMgICAg
+ICAgICB8IDQ4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAyIGZp
+bGVzIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKykNCj4gDQo+IEkgY2FuIHF1ZXVlIGl0IHVwIGJ1
+dCBJIG5lZWQgQmpvcm4ncyBBQ0sgb24gcGF0Y2ggKDIpLg0KPiANCj4gTG9yZW56bw0KDQpJIGp1
+c3Qgbm90aWNlZCAyLzIgZml4ZXMgc29tZXRoaW5nIGluIDEvMiwgc28gSSB3aWxsIHNlbmQgYSB2
+MiBmb3IgdGhpcw0Kc2V0Lg0K
