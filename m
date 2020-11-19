@@ -2,80 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 863D02B9AD9
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 19:47:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36A7E2B9B27
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 20:12:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbgKSSpK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 13:45:10 -0500
-Received: from mga07.intel.com ([134.134.136.100]:25223 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729144AbgKSSpJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Nov 2020 13:45:09 -0500
-IronPort-SDR: GBWO/+WbKODWnFbaOEwn/gqgwaOny0cbRu1f6hoB/FFiLqNjsQyKDdi9f5q/nfRb71939kXKXG
- 6UeTJ6BfRWSQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9810"; a="235491570"
-X-IronPort-AV: E=Sophos;i="5.78,354,1599548400"; 
-   d="scan'208";a="235491570"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2020 10:45:09 -0800
-IronPort-SDR: yh9piQpQSgO8wT3JH8WIiWvgiaWW6enCV7b29cum+AWjIBmbaDbAz2EhEDsOKLKznNiXfu6Ioy
- 5lYlUAcvCBbw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,354,1599548400"; 
-   d="scan'208";a="476923249"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga004.jf.intel.com with ESMTP; 19 Nov 2020 10:45:08 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 19 Nov 2020 10:45:08 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 19 Nov 2020 10:45:07 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Thu, 19 Nov 2020 10:45:07 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "andrzej.jakowski@linux.intel.com" <andrzej.jakowski@linux.intel.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "Fugate, David" <david.fugate@intel.com>
-Subject: Re: [PATCH 0/2] VMD subdevice secondary bus resets
-Thread-Topic: [PATCH 0/2] VMD subdevice secondary bus resets
-Thread-Index: AQHWlTZZLk5RmVMwykyLB3Ij6tP5k6nQLFeAgAB3igA=
-Date:   Thu, 19 Nov 2020 18:45:07 +0000
-Message-ID: <2aa5ecc7449c6ae3f203f9ca72a1e1f70c5f235f.camel@intel.com>
-References: <20200928010557.5324-1-jonathan.derrick@intel.com>
-         <20201119113715.GC19942@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20201119113715.GC19942@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F348ECB3D4EC4D47BD1B152D76743C6E@intel.com>
-Content-Transfer-Encoding: base64
+        id S1727267AbgKSTEx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Nov 2020 14:04:53 -0500
+Received: from mail-03.mail-europe.com ([91.134.188.129]:59308 "EHLO
+        mail-03.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbgKSTEv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 14:04:51 -0500
+Date:   Thu, 19 Nov 2020 19:04:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1605812687; bh=mGRxcfYAolC/NAFMZCqEsZ2XXtf/Sf6e5ygXw0wgKUk=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=MEvmfNVu1l/+M20A+8ShDsCBsLr3t1Is6Icz36mhsLHKeha+urkYFvIxxi4H4kuTm
+         LOJs7Bn5M8NQ+EGt1LHHPoj1HxZJ/NcFvQY2DK2aDYLx028jtyy9PYjymdLx9dr89q
+         Us/fH6fD4mNdUTbq6HdRrYGlM2OZxtmZiRlgijTKkLpDcwl06Wp0jQqQIxJ5q1ezES
+         yk0AioPpW7PtAVr6cn8FQiNH7z0eyDjhO8j5ZiOE4Hp3xu5xhkA9Yf5wu7v+u7/T9F
+         Lm44VJfG6ZFGxLx6l8Gv18rhNNOLLNMUP89GCYhRKURqMk+C0eUCCX7+A0YC/hPm/1
+         GBAnwv1cAcHRw==
+To:     Bjorn Helgaas <bhelgaas@google.com>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Lobakin <alobakin@pm.me>
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: [PATCH pci-next] pci: remap: keep both device name and resource name for config space
+Message-ID: <JvyOzv8K8n5CCdP1xfLOdOWh4AbFrXdMMOEExr6em8@cp4-web-036.plabs.ch>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF shortcircuit=no
+        autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        mailout.protonmail.ch
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTExLTE5IGF0IDExOjM3ICswMDAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gU3VuLCBTZXAgMjcsIDIwMjAgYXQgMDk6MDU6NTVQTSAtMDQwMCwgSm9uIERlcnJp
-Y2sgd3JvdGU6DQo+ID4gVGhpcyBzZXQgYWRkcyBzb21lIHJlc2V0cyBmb3IgVk1ELiBJdCdzIHZl
-cnkgY29tbW9uIGNvZGUgYnV0IGRvZXNuJ3QNCj4gPiBzZWVtIHRvIGZpdCB3ZWxsIGFueXdoZXJl
-IHRoYXQgY2FuIGFsc28gYmUgZXhwb3J0ZWQgaWYgVk1EIGlzIGJ1aWx0IGFzIGENCj4gPiBtb2R1
-bGUuDQo+ID4gDQo+ID4gSm9uIERlcnJpY2sgKDIpOg0KPiA+ICAgUENJOiB2bWQ6IFJlc2V0IHRo
-ZSBWTUQgc3ViZGV2aWNlIGRvbWFpbiBvbiBwcm9iZQ0KPiA+ICAgUENJOiBBZGQgYSByZXNldCBx
-dWlyayBmb3IgVk1EDQo+ID4gDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMgfCAz
-MiArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy9wY2kvcXVpcmtzLmMgICAg
-ICAgICB8IDQ4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAyIGZp
-bGVzIGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKykNCj4gDQo+IEkgY2FuIHF1ZXVlIGl0IHVwIGJ1
-dCBJIG5lZWQgQmpvcm4ncyBBQ0sgb24gcGF0Y2ggKDIpLg0KPiANCj4gTG9yZW56bw0KDQpJIGp1
-c3Qgbm90aWNlZCAyLzIgZml4ZXMgc29tZXRoaW5nIGluIDEvMiwgc28gSSB3aWxsIHNlbmQgYSB2
-MiBmb3IgdGhpcw0Kc2V0Lg0K
+Follow the rule taken in commit 35bd8c07db2c
+("devres: keep both device name and resource name in pretty name")
+and keep both device and resource names while requesting memory
+regions for PCI config space to prettify e.g. /proc/iomem output:
+
+Before (DWC Host Controller):
+
+18b00000-18b01fff : dbi
+18b10000-18b11fff : config
+18b20000-18b21fff : dbi
+18b30000-18b31fff : config
+19000000-19ffffff : pci@18b00000
+  19000000-190fffff : PCI Bus 0000:01
+    19000000-1900ffff : 0000:01:00.0
+  19100000-191fffff : PCI Bus 0000:01
+1a000000-1affffff : pci@18b20000
+  1a000000-1a0fffff : PCI Bus 0001:01
+    1a000000-1a00ffff : 0001:01:00.0
+  1a100000-1a1fffff : PCI Bus 0001:01
+
+After:
+
+18b00000-18b01fff : 18b00000.pci dbi
+18b10000-18b11fff : 18b00000.pci config
+18b20000-18b21fff : 18b20000.pci dbi
+18b30000-18b31fff : 18b20000.pci config
+19000000-19ffffff : pci@18b00000
+  19000000-190fffff : PCI Bus 0000:01
+    19000000-1900ffff : 0000:01:00.0
+  19100000-191fffff : PCI Bus 0000:01
+1a000000-1affffff : pci@18b20000
+  1a000000-1a0fffff : PCI Bus 0001:01
+    1a000000-1a00ffff : 0001:01:00.0
+  1a100000-1a1fffff : PCI Bus 0001:01
+
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+---
+ drivers/pci/pci.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e578d34095e9..0716691f7d14 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4188,7 +4188,14 @@ void __iomem *devm_pci_remap_cfg_resource(struct dev=
+ice *dev,
+ =09}
+=20
+ =09size =3D resource_size(res);
+-=09name =3D res->name ?: dev_name(dev);
++
++=09if (res->name)
++=09=09name =3D devm_kasprintf(dev, GFP_KERNEL, "%s %s", dev_name(dev),
++=09=09=09=09      res->name);
++=09else
++=09=09name =3D devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
++=09if (!name)
++=09=09return IOMEM_ERR_PTR(-ENOMEM);
+=20
+ =09if (!devm_request_mem_region(dev, res->start, size, name)) {
+ =09=09dev_err(dev, "can't request region for resource %pR\n", res);
+--=20
+2.29.2
+
+
