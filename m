@@ -2,76 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8056A2B9472
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 15:23:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 973C22B954C
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 15:52:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgKSORj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 09:17:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727408AbgKSORj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 19 Nov 2020 09:17:39 -0500
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BFA724199;
-        Thu, 19 Nov 2020 14:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605795458;
-        bh=tRhzgdnm49wLGYBksavMXrneoZPG3bG+rYPWCGwty94=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=an3c4i3/DR0eegqVhBgJASPzCAUqbuw0i6yqXdVFm63zrutAXecwqwhxsbd2T8/+0
-         Vx/sUvWnGfyrMTxDMmD/Cgj6e7pKor/xTDNlebSCRfoSUH/8F3gCMMq02UxVNnIfR2
-         BmmSwsaYs1PtAhkC1J3iX5IKxqJijwUETa+7QiH8=
-Received: by mail-oi1-f170.google.com with SMTP id s18so5313016oih.1;
-        Thu, 19 Nov 2020 06:17:38 -0800 (PST)
-X-Gm-Message-State: AOAM530jMBODYN8FFCMWLHWdGAbh703z8CDQzJc3EnBnIwRNYtHjO0IB
-        DWlYVf+xsx9pxg/BL0MdUKZkGmby+EYoWgfCtQ==
-X-Google-Smtp-Source: ABdhPJy5aycKt4bA/mJAKjfO7Q4kZb+EgCZ07oXCa+mWpPC51S/i92s2ptkiAs0/ZTKg40x95hPXeAYFk9BQvyQfpiw=
-X-Received: by 2002:aca:fdd4:: with SMTP id b203mr3032696oii.152.1605795457466;
- Thu, 19 Nov 2020 06:17:37 -0800 (PST)
+        id S1728399AbgKSOnI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Nov 2020 09:43:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728291AbgKSOmK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 09:42:10 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941D0C061A4F
+        for <linux-pci@vger.kernel.org>; Thu, 19 Nov 2020 06:42:09 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id l1so6657285wrb.9
+        for <linux-pci@vger.kernel.org>; Thu, 19 Nov 2020 06:42:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rOg+qp39SVj5WC86VkdFnTzL9jP06PEcpQhmqKQ3t14=;
+        b=VdR4TRQWQACxogAeI8bpxISw4lYuZMDpigTJtM/VpnCefzKALSPbEG99bZ5Wbe+gKp
+         gTbBqPkoFOSHKBnAtnkpkRQRBwBUcqVexaUuZzvjGnAeBUC4W8Sgv2HdBZTVCRr0iXOw
+         AVEvBuq1VDgLMzYgPJsacfSZW0w7f2MUd4t1c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rOg+qp39SVj5WC86VkdFnTzL9jP06PEcpQhmqKQ3t14=;
+        b=mwTiPhFhmD5ut8tT2whhVnk6kDuy0kqq2MLHDHjl3m+IpWJe+dDy/ywRlbCDilUFpV
+         uN307dpuBefGJmy69gkD9Nv7XTTsbHMbAmDd5XecddA75UE7EMunG+EljCUXvqaN8yFp
+         0KHr3jbpSdfCUOQZ5H3Lttf6DZCLx0YNm6sgFN4lP+mkymvNv+1mTQNwhVPdwpvJQWq/
+         G+rmbMvioDanh92QH8smN4oa8mY5FvRLkLWqByeA20B9qGzRA/Mqzfy+HvtqxGfmkl9y
+         rkPrktsHlZtbj604Mef/TUm7f+Sm7uru1z942VRDdr09M0CZDBiWJk0VBN+j6jm1tHWm
+         dIjA==
+X-Gm-Message-State: AOAM530vEDLlotsqg+Tr03grz1VfU+MScc1z35VOpFkmYmMJAwDMMozV
+        29rZsLPfHS5E5iysvJEgJ6LtMzjmnOJEdg==
+X-Google-Smtp-Source: ABdhPJxkxIZb1Dvgqd+l4qpBOUdvHL2JTzWDAAwF5TWOoMRtyTV7FCLmBVro+JG8yHOq0sr6nntY2g==
+X-Received: by 2002:a05:6000:372:: with SMTP id f18mr11447766wrf.149.1605796928322;
+        Thu, 19 Nov 2020 06:42:08 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id x63sm51292wmb.48.2020.11.19.06.42.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Nov 2020 06:42:07 -0800 (PST)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, linux-pci@vger.kernel.org
+Subject: [PATCH v6 11/17] PCI: Obey iomem restrictions for procfs mmap
+Date:   Thu, 19 Nov 2020 15:41:40 +0100
+Message-Id: <20201119144146.1045202-12-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20201119144146.1045202-1-daniel.vetter@ffwll.ch>
+References: <20201119144146.1045202-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-References: <20200921074953.25289-1-narmstrong@baylibre.com>
- <CAL_JsqLZzxXcvoqd29NM45UjL-mbSiHphTO_zOwbCwPKd+jWEw@mail.gmail.com> <20201119111201.GA19942@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20201119111201.GA19942@e121166-lin.cambridge.arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 19 Nov 2020 08:17:26 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKxLxijhcG7SHEqfA3j6xM6cJpv-3fT2r1Nysst_8ireg@mail.gmail.com>
-Message-ID: <CAL_JsqKxLxijhcG7SHEqfA3j6xM6cJpv-3fT2r1Nysst_8ireg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: dwc/meson: do not fail on wait linkup timeout
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 5:12 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Tue, Sep 22, 2020 at 11:30:30AM -0600, Rob Herring wrote:
-> > On Mon, Sep 21, 2020 at 1:50 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> > >
-> > > When establish link timeouts, probe fails but the error is unrelated since
-> > > the PCIe controller has been probed succesfully.
-> > >
-> > > Align with most of the other dw-pcie drivers and ignore return of
-> > > dw_pcie_wait_for_link() in the host_init callback.
-> >
-> > I think all, not most DWC drivers should be aligned. Plus the code
-> > here is pretty much the same, so I'm working on moving all this to the
-> > common DWC code. Drivers that need to bring up the link will need to
-> > implement .start_link() (currently only used for EP mode). Most of the
-> > time that is just setting the LTSSM bit which Synopsys thought letting
-> > every vendor do their own register for was a good idea. Sigh.
->
-> Should I drop this patch then ?
+There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
+files, and the old proc interface. Two check against
+iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
+this starts to matter, since we don't want random userspace having
+access to PCI BARs while a driver is loaded and using it.
 
-Yes, this is done by my series.
+Fix this by adding the same iomem_is_exclusive() check we already have
+on the sysfs side in pci_mmap_resource().
 
-Rob
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-mm@kvack.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+--
+v2: Improve commit message (Bjorn)
+---
+ drivers/pci/proc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+index d35186b01d98..3a2f90beb4cb 100644
+--- a/drivers/pci/proc.c
++++ b/drivers/pci/proc.c
+@@ -274,6 +274,11 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
+ 		else
+ 			return -EINVAL;
+ 	}
++
++	if (dev->resource[i].flags & IORESOURCE_MEM &&
++	    iomem_is_exclusive(dev->resource[i].start))
++		return -EINVAL;
++
+ 	ret = pci_mmap_page_range(dev, i, vma,
+ 				  fpriv->mmap_state, write_combine);
+ 	if (ret < 0)
+-- 
+2.29.2
+
