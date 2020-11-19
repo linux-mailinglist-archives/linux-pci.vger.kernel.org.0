@@ -2,95 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 432882B93C4
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 14:41:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8056A2B9472
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 15:23:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgKSNlE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 08:41:04 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46270 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgKSNlE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 08:41:04 -0500
-Received: by mail-ot1-f68.google.com with SMTP id g19so5244713otp.13;
-        Thu, 19 Nov 2020 05:41:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pWdGWfb4zpjGFZh1QfFXdieL2Mv6UxsoCvWj7emmjHU=;
-        b=pp+D3NH74vAZEOdu7M8Kboz0FZqhhGO9ZPa96X2zvwh+2cAjbIOvO8i4uHvMTKiVE8
-         XENrBXwG82dTCE5hcbvj7WqFdrgNkGVIzv1dENZ8grJDurpZtJomoCBfuJE4zYmXzlya
-         xqVjT0kc30JqBYkYoWQfvThK9P13Tvsc+Pl7gr24OIgxc9gfvw6kxyY8SwRQYkcBtaXV
-         ynJnO0bO/iPdzux75P+5fgzX+sw9iB7RSTYs+YurEwv+QM7OvcH/petpSH56xkovsF6i
-         PYCT0N8X0w9a1s1Pl3+fUybwvCCJBoJ9fLOPxL135jvt5YWK3mDOLoYA/9PwKfWYN4/B
-         erEw==
-X-Gm-Message-State: AOAM531asHOeaRXHTwqyIG+h3lSgSqI2P3oJaaNWUG82SB6l5jEfYZeg
-        Mqi6cD34b1A6gS5fvAJTqg==
-X-Google-Smtp-Source: ABdhPJwY0cOrzBmWr+JQmUb/kibZ8NUexFRKYvq1K3uR9TZzGyI5uyHE1FlS5y39c5cQ+p+HjUB+IQ==
-X-Received: by 2002:a9d:3ef7:: with SMTP id b110mr9685285otc.333.1605793263242;
-        Thu, 19 Nov 2020 05:41:03 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r3sm8531611otn.67.2020.11.19.05.41.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Nov 2020 05:41:02 -0800 (PST)
-Received: (nullmailer pid 3148367 invoked by uid 1000);
-        Thu, 19 Nov 2020 13:41:01 -0000
-Date:   Thu, 19 Nov 2020 07:41:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pci: ti, j721e: Fix "ti,
- syscon-pcie-ctrl" to take argument
-Message-ID: <20201119134101.GA3148079@bogus>
-References: <20201116173141.31873-1-kishon@ti.com>
- <20201116173141.31873-2-kishon@ti.com>
+        id S1727431AbgKSORj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Nov 2020 09:17:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727408AbgKSORj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Nov 2020 09:17:39 -0500
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BFA724199;
+        Thu, 19 Nov 2020 14:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605795458;
+        bh=tRhzgdnm49wLGYBksavMXrneoZPG3bG+rYPWCGwty94=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=an3c4i3/DR0eegqVhBgJASPzCAUqbuw0i6yqXdVFm63zrutAXecwqwhxsbd2T8/+0
+         Vx/sUvWnGfyrMTxDMmD/Cgj6e7pKor/xTDNlebSCRfoSUH/8F3gCMMq02UxVNnIfR2
+         BmmSwsaYs1PtAhkC1J3iX5IKxqJijwUETa+7QiH8=
+Received: by mail-oi1-f170.google.com with SMTP id s18so5313016oih.1;
+        Thu, 19 Nov 2020 06:17:38 -0800 (PST)
+X-Gm-Message-State: AOAM530jMBODYN8FFCMWLHWdGAbh703z8CDQzJc3EnBnIwRNYtHjO0IB
+        DWlYVf+xsx9pxg/BL0MdUKZkGmby+EYoWgfCtQ==
+X-Google-Smtp-Source: ABdhPJy5aycKt4bA/mJAKjfO7Q4kZb+EgCZ07oXCa+mWpPC51S/i92s2ptkiAs0/ZTKg40x95hPXeAYFk9BQvyQfpiw=
+X-Received: by 2002:aca:fdd4:: with SMTP id b203mr3032696oii.152.1605795457466;
+ Thu, 19 Nov 2020 06:17:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201116173141.31873-2-kishon@ti.com>
+References: <20200921074953.25289-1-narmstrong@baylibre.com>
+ <CAL_JsqLZzxXcvoqd29NM45UjL-mbSiHphTO_zOwbCwPKd+jWEw@mail.gmail.com> <20201119111201.GA19942@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20201119111201.GA19942@e121166-lin.cambridge.arm.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 19 Nov 2020 08:17:26 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKxLxijhcG7SHEqfA3j6xM6cJpv-3fT2r1Nysst_8ireg@mail.gmail.com>
+Message-ID: <CAL_JsqKxLxijhcG7SHEqfA3j6xM6cJpv-3fT2r1Nysst_8ireg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc/meson: do not fail on wait linkup timeout
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 16 Nov 2020 23:01:39 +0530, Kishon Vijay Abraham I wrote:
-> Fix binding documentation of "ti,syscon-pcie-ctrl" to take phandle with
-> argument. The argument is the register offset within "syscon" used to
-> configure PCIe controller.
-> 
-> Link: Link: http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml     | 12 ++++++++----
->  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml   | 12 ++++++++----
->  2 files changed, 16 insertions(+), 8 deletions(-)
-> 
+On Thu, Nov 19, 2020 at 5:12 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Tue, Sep 22, 2020 at 11:30:30AM -0600, Rob Herring wrote:
+> > On Mon, Sep 21, 2020 at 1:50 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> > >
+> > > When establish link timeouts, probe fails but the error is unrelated since
+> > > the PCIe controller has been probed succesfully.
+> > >
+> > > Align with most of the other dw-pcie drivers and ignore return of
+> > > dw_pcie_wait_for_link() in the host_init callback.
+> >
+> > I think all, not most DWC drivers should be aligned. Plus the code
+> > here is pretty much the same, so I'm working on moving all this to the
+> > common DWC code. Drivers that need to bring up the link will need to
+> > implement .start_link() (currently only used for EP mode). Most of the
+> > time that is just setting the LTSSM bit which Synopsys thought letting
+> > every vendor do their own register for was a good idea. Sigh.
+>
+> Should I drop this patch then ?
 
+Yes, this is done by my series.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml:36:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
-./Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml:36:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
-
-dtschema/dtc warnings/errors:
-
-
-See https://patchwork.ozlabs.org/patch/1401067
-
-The base for the patch is generally the last rc1. Any dependencies
-should be noted.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Rob
