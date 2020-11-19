@@ -2,116 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A55C2B91FC
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 13:05:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 260502B9217
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 13:10:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgKSMCG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 07:02:06 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38051 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbgKSMCF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 07:02:05 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 92so1955653otd.5;
-        Thu, 19 Nov 2020 04:02:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c3FCDKE+VCsRM90JSTxE2dzcCsYyWKuHRdMqId4kHQ0=;
-        b=ddvSt8bDVXC/a+MI2Ud1pMpK0iOBNtKzDnkSbj8fOr5TCbOy5AOddrzmHKvg9HZG3l
-         5axMKW9ODpuwCtZWKZ9lE6EAk6gWM6k9cpQYK08gPy6/1dDAwLVNPSRUUnq5ghdr+Wco
-         W8cZlAl4j+LdoKbIlgeVjyviw4AlKRUuCwjF8H2ePsqM3Ad6I8PmrhqcSSsXj+2pWPir
-         bL/43ILHm5Ogc1Tk3+EHBPs6H8HKnJ/ESc6DeBJLMZH5xq80estjjnAQ8UpXDzZBaAay
-         wVov9cIRV8pJkXxRytQOoWpmVdNSeD1J7aQD+HXi67yCRuGwFd56JM97ZsN0BIAehTyz
-         4rww==
-X-Gm-Message-State: AOAM530LkUMHQDawZpdQW+vIb0uc8MMsLcmP6gGOXnDPGOU6sL/s4RLS
-        dE3ovKvOW5CcFSqChKySWw+5fGAbcO1ZvZE3H4U8/d7XIoo=
-X-Google-Smtp-Source: ABdhPJyRp3fyzE1WZZOCwmhxBDBzTTJ0WkBzWa5ibJ9UMkHcMlS1dDyvr3/08rWmlFUd+L+mZ1WkpxWtLlt5+pVs9OQ=
-X-Received: by 2002:a9d:222f:: with SMTP id o44mr10096245ota.321.1605787324203;
- Thu, 19 Nov 2020 04:02:04 -0800 (PST)
+        id S1726886AbgKSMGZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Nov 2020 07:06:25 -0500
+Received: from mga11.intel.com ([192.55.52.93]:23874 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726644AbgKSMGZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Nov 2020 07:06:25 -0500
+IronPort-SDR: gQFFKXV37b2xn93jtPh/OWexRDgcybwwHz1ISet+VEp2fU6WIf+1JPPT+decHPJSROY0tb4I6W
+ bJF1l7su2JjQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9809"; a="167766733"
+X-IronPort-AV: E=Sophos;i="5.77,490,1596524400"; 
+   d="scan'208";a="167766733"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2020 04:06:24 -0800
+IronPort-SDR: oYAmTi/X22WUP+zvDAuxsJJdjLSuhbTAAeqdR0MxikNOsITnY6X0yTMogL9bLageRQpmos3Byz
+ 6UmDznAJ5fnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,490,1596524400"; 
+   d="scan'208";a="544984792"
+Received: from lkp-server01.sh.intel.com (HELO 1b817e3f8ad2) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 19 Nov 2020 04:06:22 -0800
+Received: from kbuild by 1b817e3f8ad2 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kfihN-00001k-Io; Thu, 19 Nov 2020 12:06:01 +0000
+Date:   Thu, 19 Nov 2020 20:05:21 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/pm] BUILD SUCCESS
+ 9f1c0ebea21a68a2f31ab2743bbb2c60013e35fe
+Message-ID: <5fb65f81.6RjVsvV3PK9+ORKg%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20201119001822.31617-1-david.e.box@linux.intel.com> <20201119001822.31617-2-david.e.box@linux.intel.com>
-In-Reply-To: <20201119001822.31617-2-david.e.box@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 19 Nov 2020 13:01:53 +0100
-Message-ID: <CAJZ5v0hGhyPySUdabwW5_LhyAKC3A4zdgj7H=55R=Xk3jvt3Yw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PCI: Disable Precision Time Measurement during suspend
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 1:17 AM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> On Intel client platforms that support suspend-to-idle, like Ice Lake,
-> root ports that have Precision Time Management (PTM) enabled can prevent
-> the port from being fully power gated, causing higher power consumption
-> while suspended.  To prevent this, after saving the PTM control register,
-> disable the feature.  The feature will be returned to its previous state
-> during restore.
->
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209361
-> Reported-by: Len Brown <len.brown@intel.com>
-> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/pci/pci.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6fd4ae910a88..a2b40497d443 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -21,6 +21,7 @@
->  #include <linux/module.h>
->  #include <linux/spinlock.h>
->  #include <linux/string.h>
-> +#include <linux/suspend.h>
->  #include <linux/log2.h>
->  #include <linux/logic_pio.h>
->  #include <linux/pm_wakeup.h>
-> @@ -1543,7 +1544,7 @@ static void pci_save_ptm_state(struct pci_dev *dev)
->  {
->         int ptm;
->         struct pci_cap_saved_state *save_state;
-> -       u16 *cap;
-> +       u16 *cap, ctrl;
->
->         if (!pci_is_pcie(dev))
->                 return;
-> @@ -1560,6 +1561,17 @@ static void pci_save_ptm_state(struct pci_dev *dev)
->
->         cap = (u16 *)&save_state->cap.data[0];
->         pci_read_config_word(dev, ptm + PCI_PTM_CTRL, cap);
-> +
-> +       /*
-> +        * On Intel systems that support suspend-to-idle, additional
-> +        * power savings can be gained by disabling PTM on root ports,
-> +        * as this allows the port to enter a deeper pm state.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/pm
+branch HEAD: 9f1c0ebea21a68a2f31ab2743bbb2c60013e35fe  PCI: Add sysfs attribute for device power state
 
-I would say "There are systems (for example, ...) where the power
-drawn while suspended can be significantly reduced by disabling PTM on
-PCIe root ports, as this allows the port to enter a lower-power PM
-state and the SoC to reach a lower-power idle state as a whole".
+elapsed time: 772m
 
-> +        */
-> +       if (pm_suspend_target_state == PM_SUSPEND_TO_IDLE &&
+configs tested: 167
+configs skipped: 2
 
-AFAICS the target sleep state doesn't matter here, so I'd skip the
-check above, but otherwise it LGTM.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +           pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
-> +               ctrl = *cap & ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
-> +               pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
-> +       }
->  }
->
->  static void pci_restore_ptm_state(struct pci_dev *dev)
-> --
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+mips                         mpc30x_defconfig
+sh                           se7780_defconfig
+powerpc                    socrates_defconfig
+um                           x86_64_defconfig
+powerpc                        fsp2_defconfig
+powerpc                      ppc6xx_defconfig
+arm                            mps2_defconfig
+nios2                               defconfig
+mips                        workpad_defconfig
+sh                         ap325rxa_defconfig
+powerpc                 mpc8560_ads_defconfig
+arm                           sunxi_defconfig
+powerpc                     akebono_defconfig
+powerpc                 linkstation_defconfig
+arm                            xcep_defconfig
+arc                     nsimosci_hs_defconfig
+arm                     davinci_all_defconfig
+powerpc                    klondike_defconfig
+arm                            mmp2_defconfig
+arm                          pcm027_defconfig
+parisc                generic-32bit_defconfig
+arm                         shannon_defconfig
+arc                          axs101_defconfig
+mips                         db1xxx_defconfig
+m68k                          amiga_defconfig
+sh                ecovec24-romimage_defconfig
+powerpc                     rainier_defconfig
+xtensa                           alldefconfig
+powerpc                     stx_gp3_defconfig
+sh                           se7206_defconfig
+powerpc                   lite5200b_defconfig
+powerpc                          g5_defconfig
+arm                           omap1_defconfig
+arm                       versatile_defconfig
+sh                            hp6xx_defconfig
+mips                     loongson1c_defconfig
+mips                        jmr3927_defconfig
+arm                        oxnas_v6_defconfig
+powerpc                       maple_defconfig
+arm                       cns3420vb_defconfig
+sh                         ecovec24_defconfig
+arm                         nhk8815_defconfig
+sh                           se7712_defconfig
+sh                   sh7770_generic_defconfig
+sh                        apsh4ad0a_defconfig
+powerpc                 mpc85xx_cds_defconfig
+arm                    vt8500_v6_v7_defconfig
+nios2                         10m50_defconfig
+sh                          sdk7786_defconfig
+sparc                            alldefconfig
+arc                            hsdk_defconfig
+ia64                      gensparse_defconfig
+arm                  colibri_pxa300_defconfig
+arm                        magician_defconfig
+powerpc                     kmeter1_defconfig
+xtensa                  cadence_csp_defconfig
+powerpc                 mpc836x_mds_defconfig
+mips                   sb1250_swarm_defconfig
+sh                        sh7763rdp_defconfig
+arm                           u8500_defconfig
+arm                         lubbock_defconfig
+arm                       multi_v4t_defconfig
+powerpc                 mpc834x_mds_defconfig
+arm                       aspeed_g4_defconfig
+powerpc                 mpc8540_ads_defconfig
+sparc                               defconfig
+sh                        sh7757lcr_defconfig
+mips                         tb0287_defconfig
+sh                          kfr2r09_defconfig
+sh                            titan_defconfig
+sparc64                             defconfig
+mips                            gpr_defconfig
+powerpc                     skiroot_defconfig
+powerpc                   motionpro_defconfig
+xtensa                    xip_kc705_defconfig
+m68k                        mvme16x_defconfig
+powerpc                         wii_defconfig
+m68k                           sun3_defconfig
+powerpc                    ge_imp3a_defconfig
+powerpc               mpc834x_itxgp_defconfig
+arm                        spear6xx_defconfig
+arc                    vdk_hs38_smp_defconfig
+h8300                    h8300h-sim_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20201118
+x86_64               randconfig-a003-20201118
+x86_64               randconfig-a004-20201118
+x86_64               randconfig-a002-20201118
+x86_64               randconfig-a006-20201118
+x86_64               randconfig-a001-20201118
+i386                 randconfig-a006-20201119
+i386                 randconfig-a005-20201119
+i386                 randconfig-a002-20201119
+i386                 randconfig-a001-20201119
+i386                 randconfig-a003-20201119
+i386                 randconfig-a004-20201119
+x86_64               randconfig-a015-20201119
+x86_64               randconfig-a014-20201119
+x86_64               randconfig-a011-20201119
+x86_64               randconfig-a013-20201119
+x86_64               randconfig-a016-20201119
+x86_64               randconfig-a012-20201119
+i386                 randconfig-a012-20201119
+i386                 randconfig-a014-20201119
+i386                 randconfig-a016-20201119
+i386                 randconfig-a011-20201119
+i386                 randconfig-a013-20201119
+i386                 randconfig-a015-20201119
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a005-20201119
+x86_64               randconfig-a003-20201119
+x86_64               randconfig-a004-20201119
+x86_64               randconfig-a002-20201119
+x86_64               randconfig-a006-20201119
+x86_64               randconfig-a001-20201119
+x86_64               randconfig-a015-20201118
+x86_64               randconfig-a014-20201118
+x86_64               randconfig-a011-20201118
+x86_64               randconfig-a013-20201118
+x86_64               randconfig-a016-20201118
+x86_64               randconfig-a012-20201118
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
