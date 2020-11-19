@@ -2,73 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 443F02B8E74
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 10:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C391A2B8E9A
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 10:23:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgKSJM2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 04:12:28 -0500
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:35748 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgKSJM1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 04:12:27 -0500
-Received: by mail-wr1-f46.google.com with SMTP id k2so5658361wrx.2;
-        Thu, 19 Nov 2020 01:12:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ghQatJV2M5BRcgigmzEkdEj1L3L/t40fnfIoSb+yJJM=;
-        b=WnfyOxRwhV826cYSNurRxaYYLg6R9GjUALJuIF1Xx2W7AOZy/9qIZLda+2SOvDGfM0
-         BVPqO73s2UgYW01Huag+UktCV4h3FmbLMJvuLy3n5GHfxV10iqOYgROe/PVJZoIrGh+F
-         8X0klO49+r4p8OUWJE2k+bECN1hpH7vMDX1HdYc/3wZ5PFYavik8natlDRhzTtFZj2go
-         h6J0s+2Cb4y0/YWdIDqeWJWfb92uWQB1r49tyww2D7SzwysgYtowrR3F6P0SpAeR1RIO
-         JXIKRXA4sAndnPQIgEz48I/WmtIAGvW7rn6TJ593iOB9+Dqus2CK568G4admkWeuljTJ
-         03jA==
-X-Gm-Message-State: AOAM533bRClw6334T7ZL0kSe7EmPobvQ31tdWJR7gFpCZwjFq9KUnNjc
-        SUsI2NXcpvPZgf4OAJ/iYtU=
-X-Google-Smtp-Source: ABdhPJzzcgaiwcSqyP0kF1k1oISICrFDm+KRxUbhiFBADz8WMUdOrLoI5pRgpbX5hJStLDu/MkhukA==
-X-Received: by 2002:a5d:514f:: with SMTP id u15mr8651782wrt.385.1605777146080;
-        Thu, 19 Nov 2020 01:12:26 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id h15sm37495915wrw.15.2020.11.19.01.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Nov 2020 01:12:25 -0800 (PST)
-Date:   Thu, 19 Nov 2020 10:12:24 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Decode PCIe 64 GT/s link speed
-Message-ID: <X7Y2+DvRmAxvobtR@rocinante>
-References: <aaaab33fe18975e123a84aebce2adb85f44e2bbe.1605739760.git.gustavo.pimentel@synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aaaab33fe18975e123a84aebce2adb85f44e2bbe.1605739760.git.gustavo.pimentel@synopsys.com>
+        id S1726743AbgKSJUA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Nov 2020 04:20:00 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:45650 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725915AbgKSJT6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 04:19:58 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0E609402EA;
+        Thu, 19 Nov 2020 09:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1605777598; bh=sOtLmZx5lFn7Nsome2jU6ze9w/hsZktv2ZBpyTUq5b4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FNzbJ7q2ovxYy3nhVRk3UDb/j7Klnc+jjnhCaD+pxh9XVrcKYnkW/N32m5Y5e32zT
+         YXJ1kFQIBcWKe0HHvcHXBJQG9BN0yrbENVboeuvrlvVUkB9arZKt9xlFBr/u4+0FOz
+         zLXtNxWyKVVDIo0VfMyUggQ78fh6usHN6kix644bqqDiL+mBtDtwbYjikzzOF0ON71
+         9HY+U+EupqZVn8fYUnlUmMWvDft0vLKAYPgNp4hRAfGwOHVVY/3+mhJSd2E7yy6s5f
+         kciVFW3hR3LYwVSx+eGh85zmTq8TcpTbzFfTTsf3ibRQnWk+Y9w3nPqCB76lBJFJGW
+         K0NPqM5T0dq/Q==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id D50C2A005D;
+        Thu, 19 Nov 2020 09:19:55 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Date:   Thu, 19 Nov 2020 10:19:37 +0100
+Message-Id: <cover.1605777306.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Gustavo,
+This patch series adds a new driver called xData-pcie for the Synopsys
+DesignWare PCIe prototype.
 
-> PCIe r6.0, sec 7.5.3.18, defines a new 64.0 GT/s bit in the Supported
-> Link Speeds Vector of Link Capabilities 2.
+The driver configures and enables the Synopsys DesignWare PCIe traffic
+generator IP inside of prototype Endpoint which will generate upstream
+and downstream PCIe traffic. This allows to quickly test the PCIe link
+throughput speed and check is the prototype solution has some limitation
+or not.
 
-64 GT/s already, nice.
- 
-> This does not affect the speed of the link, which should be negotiated
-> automatically by the hardware; it only adds decoding when showing the
-> speed to the user.
-> 
-> This patch adds the decoding of this new speed, previously, reading the
-> speed of a link operating at this speed showed "Unknown speed" instead
-> of "64.0 GT/s".
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Looks good!  Thank you for taking care about this.
+Changes:
+ V2: Rework driver according to Greg Kroah-Hartman feedback 
+ V3: Fixed issues detected while running on 64 bits platforms
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+Gustavo Pimentel (5):
+  misc: Add Synopsys DesignWare xData IP driver
+  misc: Add Synopsys DesignWare xData IP driver to Makefile
+  misc: Add Synopsys DesignWare xData IP driver to Kconfig
+  Documentation: misc-devices: Add Documentation for dw-xdata-pcie
+    driver
+  MAINTAINERS: Add Synopsys xData IP driver maintainer
 
-Krzysztof
+ Documentation/misc-devices/dw-xdata-pcie.rst |  40 +++
+ MAINTAINERS                                  |   7 +
+ drivers/misc/Kconfig                         |  11 +
+ drivers/misc/Makefile                        |   1 +
+ drivers/misc/dw-xdata-pcie.c                 | 379 +++++++++++++++++++++++++++
+ 5 files changed, 438 insertions(+)
+ create mode 100644 Documentation/misc-devices/dw-xdata-pcie.rst
+ create mode 100644 drivers/misc/dw-xdata-pcie.c
+
+-- 
+2.7.4
+
