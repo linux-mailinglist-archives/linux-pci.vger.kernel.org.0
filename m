@@ -2,137 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C77782B88FB
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 01:19:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C91752B88F9
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Nov 2020 01:19:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgKSARk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Nov 2020 19:17:40 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23260 "EHLO mga03.intel.com"
+        id S1726086AbgKSARg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Nov 2020 19:17:36 -0500
+Received: from mga04.intel.com ([192.55.52.120]:42527 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgKSARk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 18 Nov 2020 19:17:40 -0500
-IronPort-SDR: rOM0dF1zMSKYTdaDmRXQxGKVFJR9jrljXRmtan0rIOqDNvJGZ2CtpHzXzRq3uNjdodnbgSLPGm
- UfC7A4T5B/Kg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9809"; a="171305805"
+        id S1725947AbgKSARg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 18 Nov 2020 19:17:36 -0500
+IronPort-SDR: xVmg+ZTE45vTjaA1Z12DM1lrGJwEsccig8ip4gjq9uQgNzJJH261aXSHtjh9EVVOX7YiEhNIOk
+ xEW1xo+QxdmA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9809"; a="168636023"
 X-IronPort-AV: E=Sophos;i="5.77,488,1596524400"; 
-   d="scan'208";a="171305805"
+   d="scan'208";a="168636023"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2020 16:17:38 -0800
-IronPort-SDR: WkNLjActaftn3S33vHtSNX+0spN//6sH8osv7Nk+VHGbETzOlKxQuwItZMRQlvkKSM56Y2bKU2
- 0UQedZQ8Covg==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2020 16:17:36 -0800
+IronPort-SDR: K0yjAZy610D6k9RTK94qF0OPB+3/hO7QSMCyxoZ+6lbEMfm5eu7RIxWukRyc/CU0x/sZOJJ5BT
+ vasYfCf1i1Tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,488,1596524400"; 
-   d="scan'208";a="532952519"
+   d="scan'208";a="368559667"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2020 16:17:35 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Nov 2020 16:17:36 -0800
 Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id BDE67580689;
+        by linux.intel.com (Postfix) with ESMTP id CDAC458088D;
         Wed, 18 Nov 2020 16:17:35 -0800 (PST)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     bhelgaas@google.com, rafael@kernel.org, len.brown@intel.com
 Cc:     "David E. Box" <david.e.box@linux.intel.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] PCI: Add save/restore of Precision Time Measurement capability
-Date:   Wed, 18 Nov 2020 16:18:21 -0800
-Message-Id: <20201119001822.31617-1-david.e.box@linux.intel.com>
+Subject: [PATCH 2/2] PCI: Disable Precision Time Measurement during suspend
+Date:   Wed, 18 Nov 2020 16:18:22 -0800
+Message-Id: <20201119001822.31617-2-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20201119001822.31617-1-david.e.box@linux.intel.com>
+References: <20201119001822.31617-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCI subsystem does not currently save and restore the configuration
-space for the Precision Time Measurement (PTM) PCIe extended capability
-leading to the feature returning disabled on S3 resume. This has been
-observed on Intel Coffee Lake desktops. Add save/restore of the PTM control
-register. This saves the PTM Enable, Root Select, and Effective Granularity
-bits.
+On Intel client platforms that support suspend-to-idle, like Ice Lake,
+root ports that have Precision Time Management (PTM) enabled can prevent
+the port from being fully power gated, causing higher power consumption
+while suspended.  To prevent this, after saving the PTM control register,
+disable the feature.  The feature will be returned to its previous state
+during restore.
 
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209361
+Reported-by: Len Brown <len.brown@intel.com>
 Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/pci/pci.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/pci/pci.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e578d34095e9..6fd4ae910a88 100644
+index 6fd4ae910a88..a2b40497d443 100644
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -1539,6 +1539,44 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
- 	pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++);
- }
+@@ -21,6 +21,7 @@
+ #include <linux/module.h>
+ #include <linux/spinlock.h>
+ #include <linux/string.h>
++#include <linux/suspend.h>
+ #include <linux/log2.h>
+ #include <linux/logic_pio.h>
+ #include <linux/pm_wakeup.h>
+@@ -1543,7 +1544,7 @@ static void pci_save_ptm_state(struct pci_dev *dev)
+ {
+ 	int ptm;
+ 	struct pci_cap_saved_state *save_state;
+-	u16 *cap;
++	u16 *cap, ctrl;
  
-+static void pci_save_ptm_state(struct pci_dev *dev)
-+{
-+	int ptm;
-+	struct pci_cap_saved_state *save_state;
-+	u16 *cap;
+ 	if (!pci_is_pcie(dev))
+ 		return;
+@@ -1560,6 +1561,17 @@ static void pci_save_ptm_state(struct pci_dev *dev)
+ 
+ 	cap = (u16 *)&save_state->cap.data[0];
+ 	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, cap);
 +
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!ptm)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!save_state) {
-+		pci_err(dev, "no suspend buffer for PTM\n");
-+		return;
++	/*
++	 * On Intel systems that support suspend-to-idle, additional
++	 * power savings can be gained by disabling PTM on root ports,
++	 * as this allows the port to enter a deeper pm state.
++	 */
++	if (pm_suspend_target_state == PM_SUSPEND_TO_IDLE &&
++	    pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
++		ctrl = *cap & ~(PCI_PTM_CTRL_ENABLE | PCI_PTM_CTRL_ROOT);
++		pci_write_config_word(dev, ptm + PCI_PTM_CTRL, ctrl);
 +	}
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, cap);
-+}
-+
-+static void pci_restore_ptm_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	int ptm;
-+	u16 *cap;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
-+	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!save_state || !ptm)
-+		return;
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
-+}
-+
- /**
-  * pci_save_state - save the PCI configuration space of a device before
-  *		    suspending
-@@ -1566,6 +1604,7 @@ int pci_save_state(struct pci_dev *dev)
- 	pci_save_ltr_state(dev);
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
-+	pci_save_ptm_state(dev);
- 	return pci_save_vc_state(dev);
- }
- EXPORT_SYMBOL(pci_save_state);
-@@ -1677,6 +1716,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	pci_restore_vc_state(dev);
- 	pci_restore_rebar_state(dev);
- 	pci_restore_dpc_state(dev);
-+	pci_restore_ptm_state(dev);
- 
- 	pci_aer_clear_status(dev);
- 	pci_restore_aer_state(dev);
-@@ -3332,6 +3372,10 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
- 
-+	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_PTM, sizeof(u16));
-+	if (error)
-+		pci_err(dev, "unable to allocate suspend buffer for PTM\n");
-+
- 	pci_allocate_vc_save_buffers(dev);
  }
  
+ static void pci_restore_ptm_state(struct pci_dev *dev)
 -- 
 2.20.1
 
