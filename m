@@ -2,85 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DA962BA15F
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 05:06:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D9F22BA1B0
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 06:11:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgKTEEj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 23:04:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40750 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725944AbgKTEEi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 23:04:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605845077;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=o2KUuc5wwsBwxaFKsqE+AT6g8ZgQDPHa1BC4D1RcHko=;
-        b=QAJ7dC+jIYsdyzBghu3FHiqv+OL8V9WfweQXvabDm0BuyD2fUVodeXv9ZSzivR3XgbNV/9
-        zHJUJxTdFwFOenytSIrWixG0LeCLX+vakVbyd9H9RKRHaz7jpzN0vIdQ84bnrJGoWlABzE
-        7UQhpSn87Kq+F1ruZxfdoTXRYHzCfsc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-yDf3VGw1POqCQOhtPJpkwQ-1; Thu, 19 Nov 2020 23:04:33 -0500
-X-MC-Unique: yDf3VGw1POqCQOhtPJpkwQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 126894236B;
-        Fri, 20 Nov 2020 04:04:31 +0000 (UTC)
-Received: from treble (ovpn-119-150.rdu2.redhat.com [10.10.119.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 90D3019C47;
-        Fri, 20 Nov 2020 04:04:27 +0000 (UTC)
-Date:   Thu, 19 Nov 2020 22:04:24 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 00/17] Add support for Clang LTO
-Message-ID: <20201120040424.a3wctajzft4ufoiw@treble>
-References: <20201118220731.925424-1-samitolvanen@google.com>
+        id S1726159AbgKTFKG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 00:10:06 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35350 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgKTFKF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 00:10:05 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AK59kZl029627;
+        Thu, 19 Nov 2020 23:09:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1605848986;
+        bh=X/EWUuQhSX3KVvXb+jMyhnoo1Rzdq4wVldJ2FGPNEBs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=stSIJwAhUprFRf8ffvPyY7QS3zdWchmAmNDzZMLnkdSF4BkAN1FL9HC0WlL20SEwv
+         5Ik/aKnofJYANe86G9zrDoC73gXIv+cm4AEmgEuMb5D2CW5ZClSAwtE84OtOIJJCFD
+         owSNshkvSyIZXDIAJGBlxOKpDYmvQV6BpkRg6QC0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AK59ki8123135
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Nov 2020 23:09:46 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 19
+ Nov 2020 23:09:45 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 19 Nov 2020 23:09:45 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AK59SOx116902;
+        Thu, 19 Nov 2020 23:09:29 -0600
+Subject: Re: [PATCH 1/3] dt-bindings: pci: ti,j721e: Fix "ti,syscon-pcie-ctrl"
+ to take argument
+To:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20201116173141.31873-1-kishon@ti.com>
+ <20201116173141.31873-2-kishon@ti.com> <20201118211139.GA1815279@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <1e9b0b56-a42d-bea0-704b-6209532b1abe@ti.com>
+Date:   Fri, 20 Nov 2020 10:39:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20201118220731.925424-1-samitolvanen@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20201118211139.GA1815279@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 02:07:14PM -0800, Sami Tolvanen wrote:
-> This patch series adds support for building the kernel with Clang's
-> Link Time Optimization (LTO). In addition to performance, the primary
-> motivation for LTO is to allow Clang's Control-Flow Integrity (CFI) to
-> be used in the kernel. Google has shipped millions of Pixel devices
-> running three major kernel versions with LTO+CFI since 2018.
+Hi Rob,
+
+On 19/11/20 2:41 am, Rob Herring wrote:
+> On Mon, Nov 16, 2020 at 11:01:39PM +0530, Kishon Vijay Abraham I wrote:
+>> Fix binding documentation of "ti,syscon-pcie-ctrl" to take phandle with
+>> argument. The argument is the register offset within "syscon" used to
+>> configure PCIe controller.
+>>
+>> Link: Link: http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
 > 
-> Most of the patches are build system changes for handling LLVM bitcode,
-> which Clang produces with LTO instead of ELF object files, postponing
-> ELF processing until a later stage, and ensuring initcall ordering.
+> Link: Link: ?
 > 
-> Note that v7 brings back arm64 support as Will has now staged the
-> prerequisite memory ordering patches [1], and drops x86_64 while we work
-> on fixing the remaining objtool warnings [2].
+> AIUI, 'Link' is supposed to be a link to this patch. I guess more than 1 
+> Link would be okay though.
 
-Sami,
+Two Links was a typo, will fix it in the next revision. Nishanth as well
+was asking about using "Link:" tag for a mailing list discussion.
 
-Here are some patches to fix the objtool issues (other than crypto which
-I'll work on next).
+I started using it after Lorenzo had asked me to use Link tag for
+mailing list discussion here sometime back.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git objtool-vmlinux
+https://patchwork.kernel.org/project/linux-pci/patch/20171219083627.7904-1-kishon@ti.com/#21350261
 
--- 
-Josh
+> 
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml     | 12 ++++++++----
+>>  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml   | 12 ++++++++----
+>>  2 files changed, 16 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> index 3ae3e1a2d4b0..e9685c0bdc3e 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+>> @@ -29,9 +29,13 @@ properties:
+>>        - const: mem
+>>  
+>>    ti,syscon-pcie-ctrl:
+>> -    description: Phandle to the SYSCON entry required for configuring PCIe mode
+>> -                 and link speed.
+>> -    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    allOf:
+> 
+> You no longer need allOf here.
 
+hmm, don't we need it for specifying phandle with fixed cells? FWIW, I
+was referring
+
+https://github.com/devicetree-org/dt-schema/blob/master/test/schemas/good-example.yaml#L187
+
+Thank You,
+Kishon
