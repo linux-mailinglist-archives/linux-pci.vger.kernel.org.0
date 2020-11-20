@@ -2,630 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FE42BA03D
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 03:16:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 338562BA061
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 03:28:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgKTCQd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Nov 2020 21:16:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgKTCQc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Nov 2020 21:16:32 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CCAC061A04
-        for <linux-pci@vger.kernel.org>; Thu, 19 Nov 2020 18:16:32 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id o9so10813964ejg.1
-        for <linux-pci@vger.kernel.org>; Thu, 19 Nov 2020 18:16:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v6kLUxlrKe6tnwhUJzi6NamX51UgS0+NJLjXPjBDOQ8=;
-        b=GTk6xKkIjTs8BkIaJ8yxh+sRqm4h1lxe4HiZV7HrxkJVdZ2s8vAY6RBoS7CCCDGVQi
-         pYjr+IYWhteMFgsj46qrXE5sq7yBDi1bjQEEe4WAARjgM1HDl+kqTK2XZBltVFPS+VmE
-         kwO9KM9BfxWpBay9EMMIV7TJKEDa5FWUQ99IKlzyo7agvyvXCJ4lqrQ76nMTmJkQwas9
-         KuoVYRDlMQgraNYeJVD1C4FajJyymR/Y31xcE2D1242nAmjPMD9Tap0A7uhQLn+bBjTH
-         C3FuvvQj20dU2J+GqSEiy8yC/4GpZ/r3bh1BcHWz0ZiUXbOguvQ+vCqOcdqbx2JH6isN
-         TBAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v6kLUxlrKe6tnwhUJzi6NamX51UgS0+NJLjXPjBDOQ8=;
-        b=kDDO+ey7qqeF+zXPToZB0dDLKreGQROICQgRLY6Kb0SAJEwUIhOc+0kBgHToMiYExK
-         yLaTm4SSKWL0wL5OEnAfzCknUwLw1Bgv2r13ZEzjYimDd3tdxgkWwZSVrJ2Y6cOi4fXZ
-         6iiROevqZC5LCQ4SexwaVnL2b01GElEO16x2v5UbQhLTxCis/9dKnUvk/VlhJSOVyH+S
-         PqM50cyv16EooLAEXxTWwxjJ6lmw3BgVrJ5ifm1Vka3l7npFV2H/nw77ORix21DOnr+9
-         1gGfALbFcHBCNXNVw9yTwRz3smOynJ/JGMsDm4wTkGq7aSW49H0lKg3WJJ7mVoBPOdEh
-         MscA==
-X-Gm-Message-State: AOAM531+NBJrMajD7CMVNz9p5Ddskok8ZlJymNOVn5O8L/mpU3sg4LAB
-        nHheKQ5XeHWP7ev0svqaVKH5igZvUUGbhiHjESCD7fBojj2cKw==
-X-Google-Smtp-Source: ABdhPJyOicP7FQBm83dZ9vUP5jh7FdIU6Px81J0mmc95avfiLVhwPymz2qeYoySeBILMsrvE51C9kZYWct1b+Y+MGQc=
-X-Received: by 2002:a17:906:241b:: with SMTP id z27mr29560299eja.418.1605838590447;
- Thu, 19 Nov 2020 18:16:30 -0800 (PST)
+        id S1727040AbgKTC1h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Nov 2020 21:27:37 -0500
+Received: from mga02.intel.com ([134.134.136.20]:56518 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbgKTC1g (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 19 Nov 2020 21:27:36 -0500
+IronPort-SDR: L5DmQv0bS2yUl7p+x1jWtfRkiHzmOH36yq9qVHL364+PBjGAxL9W8scJpRgnPiIbCFzT39G7O2
+ q8A9lubNCGaA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9810"; a="158439724"
+X-IronPort-AV: E=Sophos;i="5.78,354,1599548400"; 
+   d="scan'208";a="158439724"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2020 18:27:35 -0800
+IronPort-SDR: GCsNC5324xNn3e1e0l4mzIH43IFqSP0tXJNKZB6tRZny7weAkHSpqzFXuFILmW+YDuKCs66S52
+ 29aAdeg0cb6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,354,1599548400"; 
+   d="scan'208";a="369017625"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Nov 2020 18:27:35 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 19 Nov 2020 18:27:34 -0800
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 19 Nov 2020 18:27:34 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 19 Nov 2020 18:27:34 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.104)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Thu, 19 Nov 2020 18:27:31 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B1Zn92VlADeK07MdH4INS+1WUUKsLprj+vAg64qQ81r+ufAtGhs9iP4RFV2SymXHQfziN2a2xz+WlYLN3vqgV+Oi0CVOg51BXOropt30oC9RT7ui1gxSZ4aLpjoErNu4PFk662ssYb4TqY84femh6uAQqDna5MWKhRmVyNizSnsvx/hR+wDvzvWZQjlWw4UZD/oThO0g7Qf9xnZbeby3MHraVsHEo7/spbXd/fXTDQps7mHBX5335P6jVlkz09bDqfARe0KID4e1eKvaMKlyBAG/HJ51NOtXAjlKeoSMf/7gg1FnYOmPPASbMRq5AarCNvN1kM6oRh9lXKox0JbhoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nBE13Wm8y4TTqmHf7OwfKBc2nZ64a0LU5e/9BmAelTY=;
+ b=fgn4miqEf3CIQ8imA0Woqyr0iOXP2/iNUoqOCRpmp+k/Qy6pY1MUIHe6t2z/KiJ8sWAY2eyPVysLAOXLBHrsl6pQ6t1rPkQ1NZjNhWynkdym9Epko8RXkge7pH+SQUGJ8/yvVnYQ7sncV6tMdsomd+D1Ww4UZsdtEqBEHplIskaMQxjyAENvEWbiLOhrbMuGmwrXN4mV+K/IDLYxOqfz0YeMo+dybOWNL5IPWmW4y1DIsz3X0HwgAcVxpwVIfZ62upYiAgiAeM5wfLl/+lbTsAgD7N4VQbOQJNwpeX43bMfBwvnrb25Za5wftHbb9weLuQK7IDAtAOINsTNZHdDY7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nBE13Wm8y4TTqmHf7OwfKBc2nZ64a0LU5e/9BmAelTY=;
+ b=DNzOjNuGD+t3XsXxNf55SAiiNiTiooVfAtlDQcVfDxBO6DThdUzibIrFyFQ3f2ZHzdS9ub3+gvSeAj9p9a6PtczMutKpcHDCDpvbdeueLwfNpqyzjVa4shj1dl5Ex+cYwZ33JdDZmxS3S9WinEq+7piY9YoEAt6nIk0GW4D6+dw=
+Received: from MWHPR11MB0048.namprd11.prod.outlook.com (2603:10b6:301:6a::31)
+ by CO1PR11MB4961.namprd11.prod.outlook.com (2603:10b6:303:93::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.20; Fri, 20 Nov
+ 2020 02:27:30 +0000
+Received: from MWHPR11MB0048.namprd11.prod.outlook.com
+ ([fe80::ed62:6d3c:c9aa:4c4d]) by MWHPR11MB0048.namprd11.prod.outlook.com
+ ([fe80::ed62:6d3c:c9aa:4c4d%5]) with mapi id 15.20.3541.028; Fri, 20 Nov 2020
+ 02:27:30 +0000
+From:   "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: RE: [PATCH] PCI/PM: Do not generate wakeup event when runtime
+ resuming bus
+Thread-Topic: [PATCH] PCI/PM: Do not generate wakeup event when runtime
+ resuming bus
+Thread-Index: AQHWrdVjYz1N2Nb9/0q7Dw3u06fJnKnOhgkAgACxEACAAS5pUA==
+Date:   Fri, 20 Nov 2020 02:27:30 +0000
+Message-ID: <MWHPR11MB0048CB7CB12D12838604C08BA9FF0@MWHPR11MB0048.namprd11.prod.outlook.com>
+References: <20201029092453.69869-1-mika.westerberg@linux.intel.com>
+ <20201118212200.GA80972@bjorn-Precision-5520>
+ <20201119075544.GZ2495@lahna.fi.intel.com>
+In-Reply-To: <20201119075544.GZ2495@lahna.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [134.134.136.193]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9993a5b9-f83d-4ab4-0982-08d88cfbd4c5
+x-ms-traffictypediagnostic: CO1PR11MB4961:
+x-microsoft-antispam-prvs: <CO1PR11MB4961DACCFC8D25202D34B907A9FF0@CO1PR11MB4961.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gc1OwGb5OpEEuxqUetXXCG62EDyQfozXOalwDTkrfV/5sP0TmkV3jhZpa8LFpJX3nW6uxN674xQl19bq5ko2CH5hoEC2pkF4J3OX3preUaSRwTju+Q1tA+9GpcU8hjQlHAUQibR2qbYRlF10SJ4o3Q5An9d4Gmt7CbwBdOqQr1vszgVfcR4lor1DUmytJxQATT6xAKNJeRdB3JViRmSyGp9fsLjU/DJQtw0qUkaJAdlBMITAfwfcycZGvzrwQ2ugOPeWO/sY3UZsNwqVeZd6x2FOJEf/QAsHOOCPognnh3PlgbGIrKlO4/6HNPeRCpyuX/mdUjElB9K7q4iSNIpDWXlnKdmbzoYICcWpHN18YuRJmPrj1baobF34fZdYQjIY/TgrsD+0kQ4j4bq3DHGNsQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB0048.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(54906003)(66556008)(83380400001)(2906002)(53546011)(66476007)(76116006)(26005)(86362001)(5660300002)(64756008)(7416002)(186003)(66946007)(4326008)(71200400001)(478600001)(66446008)(9686003)(110136005)(7696005)(55016002)(316002)(52536014)(6506007)(8936002)(33656002)(966005)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: Xp+OkIlQUwG+4p/+ZSTfb9w0fQwUD9JVt+Fp5K+YUpUGCZM4fVWfka0TCRH2HjmtZtrym6CltskZlKyCAmheRDWlrL47ZUVFzkm7r+q/SCZGZPGeXcNjFpLdR9vjLEdL1g0hi2Qimc9LptEfVb/9PhupUriZyp7G2KUK2wbpmefn48IxDxBPZI7fWdOYkXBVwbYbU9ssPWqmrL43bElMkmceEPfMDqYQzweRkv4Af2Il1qGBjKmvHi9OnBgUDsj8k1QCj2TGQHrL3XesBS0rC2yP44SMn4Ucd3rOVruejq8URFZq24N6lkkZePto5y+gfnUuSfsizQEoVZPL0zqJ4/jWGRAREu7PhiiCDPjtIA+ls2ZMD86S2qxLi8Cm/mWmxlSi5/HVk6LNWvpvbv68/jtFyOipfOZw8SW7BmZLcOgRHB+t1jVI9CtZmdLmXXjXcxPykdsKUPz2r60bZ8FCbhd0a6h6ULT1Udw28pRkw5S0iVpnNuXFL0ZILI3mb0lVRTQoilnuTXFvbvrPYYsiPuoZipGKazjYP9esW07a/nlRj+oUZmn9ZJx3tSLpjafZRk8x7sQT0WoMj+J5pjONh3zpV+RfrdOB9Nfy2WE8hxqdO7l2/Kqg88OGoB4lUz94VQnA+howrpbF+wc46xgS7aKc8Q5Jk6jYTGfORzDFruyXXxAJpgLwTiP7vB29/cRq18KSaR9JpXB08HBL4Fn75TdAS3ApEpvur9IU5ZbBpCc9+EjHt0S7nH4AhE4FY0qKyGK+0IvJlkIrBEfjVZuwuP0hvoSsGjhh8JWpn526aUNpOLEuvrKqVM/R9VcmIHWFM6GCG8VcA0sHh0qzREWW13NFcQipm/i65izkE50TUv6SnLQZC0QF52gjNbuYUATsJ+fFi7tuK7q0Cp/8WK7mGw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-9-ben.widawsky@intel.com> <20201117155651.0000368b@Huawei.com>
-In-Reply-To: <20201117155651.0000368b@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 19 Nov 2020 18:16:19 -0800
-Message-ID: <CAPcyv4ifDfzN=NTNZTh+xU_-b5Rm4jNOLiakQv-DPQa+6hfRaQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 8/9] cxl/mem: Register CXL memX devices
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB0048.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9993a5b9-f83d-4ab4-0982-08d88cfbd4c5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2020 02:27:30.6318
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: j0khKKFlk8yAopCTN82U8zVBT8bO/PXNYcOAdzhuztFvOONL4Hy6/VtqO7h+8O8NZmGlOWljwqtasYJNMFUuPqvbzTZ+rc5iYsRu0ysocZI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4961
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 7:57 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Tue, 10 Nov 2020 21:43:55 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> > From: Dan Williams <dan.j.williams@intel.com>
+Hi Mika and Bjorn,
+
+> -----Original Message-----
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Sent: Wednesday, November 18, 2020 11:56 PM
+> To: Bjorn Helgaas <helgaas@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>; Rafael J. Wysocki
+> <rjw@rjwysocki.net>; Lukas Wunner <lukas@wunner.de>; David Airlie
+> <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>; Patel, Utkarsh H
+> <utkarsh.h.patel@intel.com>; Maarten Lankhorst
+> <maarten.lankhorst@linux.intel.com>; Maxime Ripard <mripard@kernel.org>;
+> Thomas Zimmermann <tzimmermann@suse.de>; linux-pci@vger.kernel.org
+> Subject: Re: [PATCH] PCI/PM: Do not generate wakeup event when runtime
+> resuming bus
+>=20
+> Hi Bjorn,
+>=20
+> On Wed, Nov 18, 2020 at 03:22:00PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Oct 29, 2020 at 12:24:53PM +0300, Mika Westerberg wrote:
+> > > When a PCI bridge is runtime resumed from D3cold the underlying bus
+> > > is walked and the attached devices are runtime resumed as well.
+> > > However, in addition to that we also generate a wakeup event for
+> > > these devices even though this actually is not a real wakeup event
+> > > coming from the hardware.
+> > >
+> > > Normally this does not cause problems but when combined with
+> > > /sys/power/wakeup_count like using the steps below:
+> > >
+> > >   # count=3D$(cat /sys/power/wakeup_count)
+> > >   # echo $count > /sys/power/wakeup_count
+> > >   # echo mem > /sys/power/state
+> > >
+> > > The system suspend cycle might get aborted at this point if a PCI
+> > > bridge that was runtime suspended (D3cold) was runtime resumed for an=
+y
+> reason.
+> > > The runtime resume calls pci_wakeup_bus() and that generates wakeup
+> > > event increasing wakeup_count.
+> > >
+> > > Since this is not a real wakeup event we can prevent the above from
+> > > happening by removing the call to pci_wakeup_event() in
+> > > pci_wakeup_bus(). While there rename pci_wakeup_bus() to
+> > > pci_resume_bus() to better reflect what it does.
+> > >
+> > > Reported-by: Utkarsh Patel <utkarsh.h.patel@intel.com>
 > >
-> > Create the /sys/bus/cxl hierarchy to enumerate memory devices
-> > (per-endpoint control devices), memory address space devices (platform
-> > address ranges with interleaving, performance, and persistence
-> > attributes), and memory regions (active provisioned memory from an
-> > address space device that is in use as System RAM or delegated to
-> > libnvdimm as Persistent Memory regions).
+> > Is there a URL to a report on a mailing list or a bugzilla that we can
+> > include here?  What was the actual user-visible issue?  If we can
+> > mention it here, it may be useful to others who encounter the same
+> > issue.  I guess maybe a system suspend fails?
+>=20
+> I'm not sure if there is bugzilla entry about this. There might be a Goog=
+le
+> partner bug but not sure if it is public.
+>=20
+> @Utkarsh, if there is one can you share that link with Bjorn?
+
+This is reported only Google partner bug which is private and I am not sure=
+ if I can share the link here.=20
+
+>=20
+> There are two user visible issues, first is that if you do the above step=
+s
+> manually the suspend gets aborted (as the above commit log tries to expla=
+in).
+>=20
+> The second "user visible" issue is that the ChromeOS suspend stress test
+> script below fails (as it does the same steps):
+>=20
+>=20
+> https://chromium.googlesource.com/chromiumos/platform/power_manager/
+> +/refs/heads/master/tools/suspend_stress_test
+>=20
+> > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > ---
+> > >  drivers/gpu/vga/vga_switcheroo.c |  2 +-
+> > >  drivers/pci/pci.c                | 16 +++++-----------
+> > >  include/linux/pci.h              |  2 +-
+> > >  3 files changed, 7 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/vga/vga_switcheroo.c
+> > > b/drivers/gpu/vga/vga_switcheroo.c
+> > > index 087304b1a5d7..8843b078ad4e 100644
+> > > --- a/drivers/gpu/vga/vga_switcheroo.c
+> > > +++ b/drivers/gpu/vga/vga_switcheroo.c
+> > > @@ -1039,7 +1039,7 @@ static int
+> vga_switcheroo_runtime_resume(struct device *dev)
+> > >  	mutex_lock(&vgasr_mutex);
+> > >  	vga_switcheroo_power_switch(pdev, VGA_SWITCHEROO_ON);
+> > >  	mutex_unlock(&vgasr_mutex);
+> > > -	pci_wakeup_bus(pdev->bus);
+> > > +	pci_resume_bus(pdev->bus);
+> > >  	ret =3D dev->bus->pm->runtime_resume(dev);
+> > >  	if (ret)
+> > >  		return ret;
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index
+> > > 6d4d5a2f923d..b25dfa63eeb9 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -1174,26 +1174,20 @@ int pci_platform_power_transition(struct
+> > > pci_dev *dev, pci_power_t state)  }
+> > > EXPORT_SYMBOL_GPL(pci_platform_power_transition);
+> > >
+> > > -/**
+> > > - * pci_wakeup - Wake up a PCI device
+> > > - * @pci_dev: Device to handle.
+> > > - * @ign: ignored parameter
+> > > - */
+> > > -static int pci_wakeup(struct pci_dev *pci_dev, void *ign)
+> > > +static int pci_resume_one(struct pci_dev *pci_dev, void *ign)
+> > >  {
+> > > -	pci_wakeup_event(pci_dev);
 > >
-> > For now, only the per-endpoint control devices are registered on the
-> > 'cxl' bus.
->
-> Reviewing ABI without documentation is challenging even when it's simple
-> so please add that for v2.
->
-> This patch feels somewhat unpolished, but I guess it is mainly here to
-> give an illustration of how stuff might fit together rather than
-> any expectation of detailed review.
+> > IIUC this is the critical change, and all the rest of this patch is
+> > no-op renames.  Can you split this into two patches so the important
+> > change is more obvious?
+>=20
+> Sure.
+>=20
+> > Then the obvious questions will be why it is safe to remove this, and
+> > where the desired call for the real wakeup is.
+>=20
+> This is only called on runtime resume path to turn on devices below this =
+one.
+> However, wakeup is only relevant on system sleep path.
+>=20
+> For ACPI backed devices the real wakeup is handled in the
+> pci_acpi_wake_dev() and in case of PME it is pcie_pme_handle_request().
+> And then there is the pme_poll thread as well.
 
-Yeah, this is definitely an early look in the spirit of "Release early
-/ release often".
-
->
-> So in that spirit I've just pointed out stuff that jumped out at me
-> during a quick read through.
->
-> Thanks,
->
-> Jonathan
->
->
-> >
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> >  drivers/cxl/Makefile |   2 +
-> >  drivers/cxl/bus.c    |  35 ++++++
-> >  drivers/cxl/bus.h    |   8 ++
-> >  drivers/cxl/cxl.h    |  33 +++++
-> >  drivers/cxl/mem.c    | 287 ++++++++++++++++++++++++++++++++++++++++++-
-> >  5 files changed, 359 insertions(+), 6 deletions(-)
-> >  create mode 100644 drivers/cxl/bus.c
-> >  create mode 100644 drivers/cxl/bus.h
-> >
-> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-> > index 97fdffb00f2d..1cc032092852 100644
-> > --- a/drivers/cxl/Makefile
-> > +++ b/drivers/cxl/Makefile
-> > @@ -1,7 +1,9 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
-> >  obj-$(CONFIG_CXL_MEM) += cxl_mem.o
-> > +obj-$(CONFIG_CXL_BUS_PROVIDER) += cxl_bus.o
-> >
-> >  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-> >  cxl_acpi-y := acpi.o
-> >  cxl_mem-y := mem.o
-> > +cxl_bus-y := bus.o
-> > diff --git a/drivers/cxl/bus.c b/drivers/cxl/bus.c
-> > new file mode 100644
-> > index 000000000000..8594366955f7
-> > --- /dev/null
-> > +++ b/drivers/cxl/bus.c
-> > @@ -0,0 +1,35 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +
-> > +static struct bus_type cxl_bus_type = {
-> > +     .name = "cxl",
-> > +};
-> > +
-> > +int cxl_register(struct device *dev)
-> > +{
-> > +     int rc;
-> > +
-> > +     dev->bus = &cxl_bus_type;
-> > +     rc = device_add(dev);
-> > +     if (rc)
-> > +             put_device(dev);
-> > +     return rc;
-> > +}
-> > +EXPORT_SYMBOL_GPL(cxl_register);
-> > +
-> > +static __init int cxl_bus_init(void)
-> > +{
-> > +     return bus_register(&cxl_bus_type);
-> > +}
-> > +
-> > +static void cxl_bus_exit(void)
-> > +{
-> > +     bus_unregister(&cxl_bus_type);
-> > +}
-> > +
-> > +module_init(cxl_bus_init);
-> > +module_exit(cxl_bus_exit);
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_AUTHOR("Intel Corporation");
-> > diff --git a/drivers/cxl/bus.h b/drivers/cxl/bus.h
-> > new file mode 100644
-> > index 000000000000..fe2bea2bbc3c
-> > --- /dev/null
-> > +++ b/drivers/cxl/bus.h
-> > @@ -0,0 +1,8 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> > +#ifndef __CXL_BUS_H__
-> > +#define __CXL_BUS_H__
-> > +
-> > +int cxl_register(struct device *dev);
-> > +
-> > +#endif /* __CXL_BUS_H__ */
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index f49ab80f68bd..cef5fd9ea68b 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -3,6 +3,7 @@
-> >
-> >  #ifndef __CXL_H__
-> >  #define __CXL_H__
-> > +#include <linux/range.h>
-> >
-> >  /* Device */
-> >  #define CXLDEV_CAP_ARRAY_REG 0x0
-> > @@ -52,12 +53,24 @@
-> >  #define CXLMDEV_RESET_NEEDED_HOT 3
-> >  #define CXLMDEV_RESET_NEEDED_CXL 4
-> >
-> > +struct cxl_memdev;
-> >  struct cxl_mem {
-> >       struct pci_dev *pdev;
-> >       void __iomem *regs;
-> > +     struct cxl_memdev *cxlmd;
-> >
-> >       spinlock_t mbox_lock; /* Protects device mailbox and firmware */
-> >
-> > +     struct {
-> > +             struct range range;
-> > +     } pmem;
-> > +
-> > +     struct {
-> > +             struct range range;
-> > +     } ram;
-> > +
-> > +     char firmware_version[0x10];
-> > +
-> >       /* Cap 0000h */
-> >       struct {
-> >               void __iomem *regs;
-> > @@ -130,4 +143,24 @@ static inline void cxl_mbox_payload_drain(struct cxl_mem *cxlm,
-> >  {
-> >       memcpy_fromio(output, cxlm->mbox.regs + CXLDEV_MB_PAYLOAD, length);
-> >  }
-> > +
-> > +#define CXL_MBOX_IDENTIFY 0x4000
-> > +
-> > +struct cxl_mbox_identify {
-> > +     char fw_revision[0x10];
-> > +     __le64 total_capacity;
-> > +     __le64 volatile_capacity;
-> > +     __le64 persistent_capacity;
-> > +     __le64 partition_align;
-> > +     __le16 info_event_log_size;
-> > +     __le16 warning_event_log_size;
-> > +     __le16 failure_event_log_size;
-> > +     __le16 fatal_event_log_size;
-> > +     __le32 lsa_size;
-> > +     u8 poison_list_max_mer[3];
-> > +     __le16 inject_poison_limit;
-> > +     u8 poison_caps;
-> > +     u8 qos_telemetry_caps;
-> > +} __packed;
-> > +
-> >  #endif /* __CXL_H__ */
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index 08913360d500..54743d196feb 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -2,11 +2,15 @@
-> >  // Copyright(c) 2020 Intel Corporation. All rights reserved.
-> >  #include <linux/sched/clock.h>
-> >  #include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/cdev.h>
-> > +#include <linux/idr.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/io.h>
-> >  #include "acpi.h"
-> >  #include "pci.h"
-> >  #include "cxl.h"
-> > +#include "bus.h"
-> >
-> >  struct mbox_cmd {
-> >       u16 cmd;
-> > @@ -15,6 +19,53 @@ struct mbox_cmd {
-> >       u16 return_code;
-> >  };
-> >
-> > +/*
-> > + * An entire PCI topology full of devices should be enough for any
-> > + * config
-> > + */
-> > +#define CXL_MEM_MAX_DEVS 65536
-> > +
-> > +struct cxl_memdev {
-> > +     struct device dev;
-> > +     struct cxl_mem *cxlm;
-> > +     int id;
-> > +};
-> > +
-> > +static int cxl_mem_major;
-> > +static struct cdev cxl_mem_cdev;
-> > +static DEFINE_IDR(cxl_mem_idr);
-> > +static DEFINE_MUTEX(cxl_memdev_lock);
->
-> Define scope of this lock with a comment.
-
-Will do.
-
->
-> > +
-> > +static int cxl_mem_open(struct inode *inode, struct file *file)
-> > +{
-> > +     long minor = iminor(inode);
-> > +     struct cxl_memdev *cxlmd;
-> > +
-> > +     rcu_read_lock();
-> > +     cxlmd = idr_find(&cxl_mem_idr, minor);
-> > +     rcu_read_unlock();
-> > +
-> > +     if (!cxlmd)
-> > +             return -ENXIO;
-> > +
-> > +     file->private_data = cxlmd;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> > +{
-> > +     return -ENOTTY;
-> > +}
-> > +
-> > +static const struct file_operations cxl_mem_fops = {
-> > +     .owner = THIS_MODULE,
-> > +     .open = cxl_mem_open,
-> > +     .unlocked_ioctl = cxl_mem_ioctl,
-> > +     .compat_ioctl = compat_ptr_ioctl,
-> > +     .llseek = noop_llseek,
-> > +};
-> > +
-> >  static int cxldev_wait_for_doorbell(struct cxl_mem *cxlm)
-> >  {
-> >       u64 start, now;
-> > @@ -53,7 +104,7 @@ static int cxldev_wait_for_doorbell(struct cxl_mem *cxlm)
-> >   * Returns 0 if the doorbell transaction was successful from a protocol level.
-> >   * Caller should check the return code in @mbox_cmd to make sure it succeeded.
-> >   */
-> > -static int __maybe_unused cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, struct mbox_cmd *mbox_cmd)
-> > +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, struct mbox_cmd *mbox_cmd)
-> >  {
-> >       u64 cmd, status;
-> >       int rc;
-> > @@ -277,10 +328,185 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> >       return 0;
-> >  }
-> >
-> > +static struct cxl_memdev *to_cxl_memdev(struct device *dev)
-> > +{
-> > +     return container_of(dev, struct cxl_memdev, dev);
-> > +}
-> > +
-> > +static void cxl_memdev_release(struct device *dev)
-> > +{
-> > +     struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +
-> > +     mutex_lock(&cxl_memdev_lock);
-> > +     idr_remove(&cxl_mem_idr, cxlmd->id);
-> > +     mutex_unlock(&cxl_memdev_lock);
-> > +
-> > +     kfree(cxlmd);
-> > +}
-> > +
-> > +static char *cxl_memdev_devnode(struct device *dev, umode_t *mode, kuid_t *uid, kgid_t *gid)
-> > +{
-> > +     return kasprintf(GFP_KERNEL, "cxl/%s", dev_name(dev));
-> > +}
-> > +
-> > +static ssize_t firmware_version_show(struct device *dev, struct device_attribute *attr, char *buf)
-> > +{
-> > +     struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +     struct cxl_mem *cxlm = cxlmd->cxlm;
-> > +
-> > +     return sprintf(buf, "%.16s\n", cxlm->firmware_version);
-> > +}
-> > +static DEVICE_ATTR_RO(firmware_version);
-> > +
-> > +static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr, char *buf)
-> > +{
-> > +     struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +     struct cxl_mem *cxlm = cxlmd->cxlm;
-> > +
-> > +     return sprintf(buf, "%#llx\n", (unsigned long long) range_len(&cxlm->ram.range));
-> > +}
-> > +static struct device_attribute dev_attr_ram_size = __ATTR(size, 0444, ram_size_show, NULL);
-> > +
-> > +static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr, char *buf)
-> > +{
-> > +     struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-> > +     struct cxl_mem *cxlm = cxlmd->cxlm;
-> > +
-> > +     return sprintf(buf, "%#llx\n", (unsigned long long) range_len(&cxlm->pmem.range));
-> > +}
-> > +static struct device_attribute dev_attr_pmem_size = __ATTR(size, 0444, pmem_size_show, NULL);
-> > +
-> > +static struct attribute *cxl_memdev_attributes[] = {
-> > +     &dev_attr_firmware_version.attr,
-> > +     NULL,
-> > +};
-> > +
-> > +static struct attribute *cxl_memdev_pmem_attributes[] = {
-> > +     &dev_attr_pmem_size.attr,
->
-> It's simple, but should still have docs in Documentation/ABI/testing/sysfs...
-
-Agree.
-
->
-> > +     NULL,
-> > +};
-> > +
-> > +static struct attribute *cxl_memdev_ram_attributes[] = {
-> > +     &dev_attr_ram_size.attr,
-> > +     NULL,
-> > +};
-> > +
-> > +static struct attribute_group cxl_memdev_attribute_group = {
-> > +     .attrs = cxl_memdev_attributes,
-> > +};
-> > +
-> > +static struct attribute_group cxl_memdev_ram_attribute_group = {
-> > +     .name = "ram",
-> > +     .attrs = cxl_memdev_ram_attributes,
-> > +};
-> > +
-> > +static struct attribute_group cxl_memdev_pmem_attribute_group = {
-> > +     .name = "pmem",
-> > +     .attrs = cxl_memdev_pmem_attributes,
-> > +};
-> > +
-> > +static const struct attribute_group *cxl_memdev_attribute_groups[] = {
-> > +     &cxl_memdev_attribute_group,
-> > +     &cxl_memdev_ram_attribute_group,
-> > +     &cxl_memdev_pmem_attribute_group,
-> > +     NULL,
-> > +};
-> > +
-> > +static const struct device_type cxl_memdev_type = {
-> > +     .name = "cxl_memdev",
-> > +     .release = cxl_memdev_release,
-> > +     .devnode = cxl_memdev_devnode,
-> > +     .groups = cxl_memdev_attribute_groups,
-> > +};
-> > +
-> > +static struct cxl_memdev *cxl_mem_add_memdev(struct cxl_mem *cxlm)
-> > +{
-> > +     struct pci_dev *pdev = cxlm->pdev;
-> > +     struct cxl_memdev *cxlmd;
-> > +     struct device *dev;
-> > +     int id, rc;
-> > +
-> > +     cxlmd = kzalloc(sizeof(*cxlmd), GFP_KERNEL);
->
-> Maybe I missed it, but I'm not seeing this freed anywhere.
-
-See: cxl_memdev_release()
-
->
-> > +     if (!cxlmd)
-> > +             return ERR_PTR(-ENOMEM);
-> > +
-> > +     cxlmd->cxlm = cxlm;
-> > +     cxlm->cxlmd = cxlmd;
-> > +
-> > +     mutex_lock(&cxl_memdev_lock);
-> > +     id = idr_alloc(&cxl_mem_idr, cxlmd, 0, CXL_MEM_MAX_DEVS, GFP_KERNEL);
-> > +     mutex_unlock(&cxl_memdev_lock);
-> > +     if (id < 0) {
-> > +             rc = id;
-> > +             goto err_idr;
-> > +     }
-> > +
-> > +     cxlmd->id = id;
-> > +
-> > +     dev = &cxlmd->dev;
-> > +
-> > +     device_initialize(dev);
-> > +     dev->parent = &pdev->dev;
-> > +     dev->devt = MKDEV(cxl_mem_major, id);
-> > +     dev->type = &cxl_memdev_type;
-> > +     dev_set_name(dev, "mem%d", id);
->
-> blank line here
-
-ok
-
->
-> > +     rc = cxl_register(dev);
-> > +     if (rc)
-> > +             return ERR_PTR(rc);
-> > +
-> > +     return cxlmd;
-> > +
-> > +err_idr:
-> > +     kfree(cxlmd);
-> > +
-> > +     return ERR_PTR(rc);
-> > +}
-> > +
->
-> ...
->
-> >  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  {
-> >       struct cxl_mem *cxlm = ERR_PTR(-ENXIO);
-> >       struct device *dev = &pdev->dev;
-> > +     struct cxl_memdev *cxlmd;
-> >       int rc, regloc, i;
-> >
-> >       rc = cxl_bus_prepared(pdev);
-> > @@ -319,20 +545,31 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >       if (rc)
-> >               return rc;
-> >
-> > -     /* Check that hardware "looks" okay. */
-> > -     rc = cxl_mem_mbox_get(cxlm);
-> > +     rc = cxl_mem_identify(cxlm);
-> >       if (rc)
-> >               return rc;
-> > -
-> > -     cxl_mem_mbox_put(cxlm);
->
-> It was kind of nice to see the flow earlier, but I'm also thinking it made
-> a slightly harder to read patch.  Hmm.  Maybe just drop the version earlier
-> in favour of a todo comment that you then do here?
-
-Not sure I follow, but I think you're saying don't bother with an
-initial patch introducing just doing the raw cxl_mem_mbox_get() in
-this path, jump straight to cxl_mem_identify()?
-
->
-> >       dev_dbg(&pdev->dev, "CXL Memory Device Interface Up\n");
-> > +
->
-> Nice to tidy that up by moving to earlier patch.
-
-Sure.
-
->
-> >       pci_set_drvdata(pdev, cxlm);
-> >
-> > +     cxlmd = cxl_mem_add_memdev(cxlm);
-> > +     if (IS_ERR(cxlmd))
-> > +             return PTR_ERR(cxlmd);
->
-> Given we don't actually use cxlmd perhaps a simple return value
-> of 0 or error would be better from cxl_mem_add_memdev()
->
-> (I guess you may have follow up patches that do something with it
->  here, though it feels wrong to ever do so given it is now registered
->  and hence exposed to the system).
-
-It's not added if IS_ERR() is true, but it would be simpler to just
-have cxl_mem_add_memdev() return an int since ->probe() doesn't use
-it.
-
->
-> > +
-> >       return 0;
-> >  }
-> >
-> >  static void cxl_mem_remove(struct pci_dev *pdev)
-> >  {
-> > +     struct cxl_mem *cxlm = pci_get_drvdata(pdev);
-> > +     struct cxl_memdev *cxlmd = cxlm->cxlmd;
-> > +
-> > +     device_lock(&cxlmd->dev);
-> > +     cxlm->cxlmd = NULL;
-> > +     cxlmd->cxlm = NULL;
-> > +     device_unlock(&cxlmd->dev);
-> > +
-> > +     device_unregister(&cxlmd->dev);
->
-> Why device_unregister last? Normally removing exposure to the
-> system is the first thing you do in a remove() call.
-> Particularly as you'll get NULL ptr dereferences if anyone
-> manages a sysfs read between the pointers being set to NULL above
-> and the device_unregister() taking away the sysfs files.
-
-Yes, the unregister should be before the invalidation in this case. In
-fact I'll likely drop the invalidation or do some other
-synchronization requirement for any races between the ioctl path and
-the remove path.
-
->
->
->
-> >  }
-> >
-> >  static const struct pci_device_id cxl_mem_pci_tbl[] = {
-> > @@ -350,7 +587,45 @@ static struct pci_driver cxl_mem_driver = {
-> >       .remove                 = cxl_mem_remove,
-> >  };
-> >
-> > +static __init int cxl_mem_init(void)
-> > +{
-> > +     int rc;
-> > +     dev_t devt;
-> > +
-> > +     rc = alloc_chrdev_region(&devt, 0, CXL_MEM_MAX_DEVS, "cxl");
-> > +     if (rc)
-> > +             return rc;
-> > +
-> > +     cxl_mem_major = MAJOR(devt);
-> > +
-> > +     cdev_init(&cxl_mem_cdev, &cxl_mem_fops);
-> > +     rc = cdev_add(&cxl_mem_cdev, MKDEV(cxl_mem_major, 0), CXL_MEM_MAX_DEVS);
-> > +     if (rc)
-> > +             goto err_cdev;
-> > +
-> > +     rc = pci_register_driver(&cxl_mem_driver);
-> > +     if (rc)
-> > +             goto err_driver;
-> > +
-> > +     return 0;
-> > +
-> > +err_driver:
-> > +     cdev_del(&cxl_mem_cdev);
-> > +err_cdev:
-> > +     unregister_chrdev_region(MKDEV(cxl_mem_major, 0), CXL_MEM_MAX_DEVS);
-> > +
-> > +     return rc;
-> > +}
-> > +
-> > +static __exit void cxl_mem_exit(void)
-> > +{
-> > +     pci_unregister_driver(&cxl_mem_driver);
-> > +     unregister_chrdev_region(MKDEV(cxl_mem_major, 0), CXL_MEM_MAX_DEVS);
-> > +     cdev_del(&cxl_mem_cdev);
->
-> Ordering?  cdev_dev should be before unregister_chrdev_region to match
-> error handling in init()
-
-Yes.
-
-Thanks for taking a look!
+Sincerely,
+Utkarsh Patel.=20
