@@ -2,117 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 472032BABB7
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 15:17:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F7602BAEC3
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 16:24:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725942AbgKTOQ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 09:16:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgKTOQ0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 09:16:26 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14168C0613CF;
-        Fri, 20 Nov 2020 06:16:25 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id 10so7980751pfp.5;
-        Fri, 20 Nov 2020 06:16:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KEjEGhmEzvhfjxAnQoE9R0iga9goTRtUqlUhzJyg2qQ=;
-        b=rmu5CylR6oML6jLJKaGGZylZYDXpFUleODzdx8ODXqkwL5ZbtvJrM7cTSVI8T8uVxE
-         P+Unb1Nhc/bMtsDzbttn263z0bjakrJ8R0D1Xcs16DM2HZUdYI/dUfeiJGJYY0P3hhu1
-         odVny6iLsWsR70vTyW5khgYoMf8rap8qAD7SxwU3kSiCTcthD6k7fQDL2ZDYB1EWjzzx
-         xlxXFTC9DpGqALn7JBUNdJHRlmo/MQtKB7pZ9yCvZSeNG7CAbG/hAFrUfByLlc+md6uw
-         xprRB8DTj6TdDZRK/9q/8dpwUdawbsq6TK8Wj5qwnOt0SCObdL4cj3ciw3/jScClA8H1
-         9F6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KEjEGhmEzvhfjxAnQoE9R0iga9goTRtUqlUhzJyg2qQ=;
-        b=GRdcfvtjhRnlZRbBg67VKOTEauJ5ByMMjtoxnw92DCmGXWkn1TQtui40CYHY4ButUz
-         d0oXlj5MpVjjoEeo7n/H6Z3v59iByZrvn+o8aAFhR5+QXPNH/InhLrOabwsjq7dB27zn
-         ZwlvFiameFkwbvmhJHZ+fjY86ITC2/1v2Hu+Rdqo5VlCr+yErPFZCWXOO/Ugis6/DhAg
-         vwmdCVo54uQjMu6Bi/RrvbWsDGXqPcTANdIP/bJxHlAnyJzVJXq4aewkKgVzdia04xAN
-         cY0qa0+1lR4myGuRWBSvMSj3dLv2yUeBJuaf6SW0cv8kfjhriF0FH5Dty1rU8SiYdlq6
-         7yKQ==
-X-Gm-Message-State: AOAM530rBGKlXtuTVF7lNt+p/3lhGIKiH7H77+QE/Q5cHZDMD3XjMSdn
-        49RZ0y4EqyTfkhwkSBsRoU+fyBxQ2jc=
-X-Google-Smtp-Source: ABdhPJwSl/mRXdT+kWI2/PMGP7CwOB4vp2FCA92dJObq/nTTfL/VbZmWq8QnHEv9bdX+qhsZ+aCKxw==
-X-Received: by 2002:a63:ca0a:: with SMTP id n10mr17143580pgi.326.1605881784581;
-        Fri, 20 Nov 2020 06:16:24 -0800 (PST)
-Received: from hoboy.vegasvil.org (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id kr2sm3984871pjb.31.2020.11.20.06.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2020 06:16:23 -0800 (PST)
-Date:   Fri, 20 Nov 2020 06:16:21 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc:     Miroslav Lichvar <mlichvar@redhat.com>,
-        intel-wired-lan@lists.osuosl.org, andre.guedes@intel.com,
-        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        bhelgaas@google.com
-Subject: Re: [Intel-wired-lan] [PATCH next-queue v2 3/3] igc: Add support for
- PTP getcrosststamp()
-Message-ID: <20201120141621.GC7027@hoboy.vegasvil.org>
-References: <20201114025704.GA15240@hoboy.vegasvil.org>
- <874klo7pwp.fsf@intel.com>
- <20201117014926.GA26272@hoboy.vegasvil.org>
- <87d00b5uj7.fsf@intel.com>
- <20201118125451.GC23320@hoboy.vegasvil.org>
- <87wnyi2o1e.fsf@intel.com>
+        id S1729602AbgKTPUj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 10:20:39 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2137 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728618AbgKTPUj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 10:20:39 -0500
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Cd0Yl512Gz67D59;
+        Fri, 20 Nov 2020 23:18:35 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 20 Nov 2020 16:20:31 +0100
+Received: from localhost (10.47.69.87) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Fri, 20 Nov
+ 2020 15:20:30 +0000
+Date:   Fri, 20 Nov 2020 15:20:18 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Ben Widawsky <ben.widawsky@intel.com>, <linux-cxl@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 8/9] cxl/mem: Register CXL memX devices
+Message-ID: <20201120152018.00006121@Huawei.com>
+In-Reply-To: <CAPcyv4ifDfzN=NTNZTh+xU_-b5Rm4jNOLiakQv-DPQa+6hfRaQ@mail.gmail.com>
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+        <20201111054356.793390-9-ben.widawsky@intel.com>
+        <20201117155651.0000368b@Huawei.com>
+        <CAPcyv4ifDfzN=NTNZTh+xU_-b5Rm4jNOLiakQv-DPQa+6hfRaQ@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wnyi2o1e.fsf@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.69.87]
+X-ClientProxiedBy: lhreml705-chm.china.huawei.com (10.201.108.54) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 04:22:37PM -0800, Vinicius Costa Gomes wrote:
+On Thu, 19 Nov 2020 18:16:19 -0800
+Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Talking with the hardware folks, they recommended using the periodic
-> method, the one shot method was implemented as a debug/evaluation aid.
+> On Tue, Nov 17, 2020 at 7:57 AM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Tue, 10 Nov 2020 21:43:55 -0800
+> > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >  
+> > > From: Dan Williams <dan.j.williams@intel.com>
+> > >
+> > > Create the /sys/bus/cxl hierarchy to enumerate memory devices
+> > > (per-endpoint control devices), memory address space devices (platform
+> > > address ranges with interleaving, performance, and persistence
+> > > attributes), and memory regions (active provisioned memory from an
+> > > address space device that is in use as System RAM or delegated to
+> > > libnvdimm as Persistent Memory regions).
+> > >
+> > > For now, only the per-endpoint control devices are registered on the
+> > > 'cxl' bus.  
+> >
+> > Reviewing ABI without documentation is challenging even when it's simple
+> > so please add that for v2.
+> >
+> > This patch feels somewhat unpolished, but I guess it is mainly here to
+> > give an illustration of how stuff might fit together rather than
+> > any expectation of detailed review.  
+> 
+> Yeah, this is definitely an early look in the spirit of "Release early
+> / release often".
+> 
 
-I'm guessing ...
-
-The HW generates pairs of time stamps, right?
-
-And these land in the device driver by means of an interrupt, right?
-
-If that is so, then maybe the best way to expose the pair to user
-space is to have a readable character device, like we have for the
-PTP_EXTTS_REQUEST2.  The ioctl to enable reporting could also set the
-message rate.
-
-Although it will be a bit clunky, it looks like we have reserved room
-enough for a second, eight-byte time stamp.
-
-
-	struct ptp_clock_time {
-		__s64 sec;  /* seconds */
-		__u32 nsec; /* nanoseconds */
-		__u32 reserved;
-// four here
-	};
-
-	struct ptp_extts_event {
-		struct ptp_clock_time t; /* Time event occured. */
-		unsigned int index;      /* Which channel produced the event. */
-		unsigned int flags;      /* Reserved for future use. */
-		unsigned int rsv[2];     /* Reserved for future use. */
-// eight here
-	};
+Definitely a good idea.
 
 
-You could set 'flags' to mark this as a time stamp pair, and then
-stuff the system time stamp into rsv[2].
+...
 
-Thoughts?
+> >  
+> > >  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > >  {
+> > >       struct cxl_mem *cxlm = ERR_PTR(-ENXIO);
+> > >       struct device *dev = &pdev->dev;
+> > > +     struct cxl_memdev *cxlmd;
+> > >       int rc, regloc, i;
+> > >
+> > >       rc = cxl_bus_prepared(pdev);
+> > > @@ -319,20 +545,31 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > >       if (rc)
+> > >               return rc;
+> > >
+> > > -     /* Check that hardware "looks" okay. */
+> > > -     rc = cxl_mem_mbox_get(cxlm);
+> > > +     rc = cxl_mem_identify(cxlm);
+> > >       if (rc)
+> > >               return rc;
+> > > -
+> > > -     cxl_mem_mbox_put(cxlm);  
+> >
+> > It was kind of nice to see the flow earlier, but I'm also thinking it made
+> > a slightly harder to read patch.  Hmm.  Maybe just drop the version earlier
+> > in favour of a todo comment that you then do here?  
+> 
+> Not sure I follow, but I think you're saying don't bother with an
+> initial patch introducing just doing the raw cxl_mem_mbox_get() in
+> this path, jump straight to cxl_mem_identify()?
 
-Richard
+Exactly.
+
+> 
+> >  
+> > >       dev_dbg(&pdev->dev, "CXL Memory Device Interface Up\n");
+> > > +  
+> >
+> > Nice to tidy that up by moving to earlier patch.  
+> 
+> Sure.
+> 
+> >  
+> > >       pci_set_drvdata(pdev, cxlm);
+> > >
+> > > +     cxlmd = cxl_mem_add_memdev(cxlm);
+> > > +     if (IS_ERR(cxlmd))
+> > > +             return PTR_ERR(cxlmd);  
+> >
+> > Given we don't actually use cxlmd perhaps a simple return value
+> > of 0 or error would be better from cxl_mem_add_memdev()
+> >
+> > (I guess you may have follow up patches that do something with it
+> >  here, though it feels wrong to ever do so given it is now registered
+> >  and hence exposed to the system).  
+> 
+> It's not added if IS_ERR() is true, but it would be simpler to just
+> have cxl_mem_add_memdev() return an int since ->probe() doesn't use
+> it.
+
+Agreed.
+
+> 
+> >  
+> > > +
+> > >       return 0;
+> > >  }
+> > >
+
+...
+
 
 
