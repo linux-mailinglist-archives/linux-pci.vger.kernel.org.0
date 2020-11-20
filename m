@@ -2,92 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B1D2BB5A1
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 20:40:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7604F2BB5D4
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 20:50:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgKTTdq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 14:33:46 -0500
-Received: from mga02.intel.com ([134.134.136.20]:12079 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgKTTdp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Nov 2020 14:33:45 -0500
-IronPort-SDR: udjQMAVt19rO1Tq9lNLsghmmZSwm7uUnUzwleajjCaLOEYXuP2tMb6AUUVLjvMB6ldsp/SDR7r
- bAh2H9uDxhnQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="158570705"
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="158570705"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 11:33:41 -0800
-IronPort-SDR: WoO+Obmn5/ED39/fgvTEcyrPaElg84xz/tFCYOXkZd+sVDw8mAQdHmUnOtJ6tNMTTtBVZCuGcw
- Jm3eQ69RBFUA==
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="545559814"
-Received: from jalynchx-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.254.69.108])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 11:33:41 -0800
-Subject: Re: [PATCH 1/1] pci: pciehp: Handle MRL interrupts to enable slot for
- hotplug.
-To:     "Raj, Ashok" <ashok.raj@intel.com>, Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20200925230138.29011-1-ashok.raj@intel.com>
- <20201119075120.GA542@wunner.de> <20201119220807.GB102444@otc-nc-03>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <6fc4bb9e-d46b-062e-1731-69a165e6fb35@linux.intel.com>
-Date:   Fri, 20 Nov 2020 11:33:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729684AbgKTTrZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 14:47:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728816AbgKTTrZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 14:47:25 -0500
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3B4C0613CF
+        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 11:47:23 -0800 (PST)
+Received: by mail-pf1-x444.google.com with SMTP id a18so8873394pfl.3
+        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 11:47:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=elr/neHdSPND1QBbHYVTIKRGGtBg1vE7OdThIsRU5pI=;
+        b=XzoPI1crChRR6wLQGUnQdTruNmuVNj0hkcwU6yjn8xXrOzmnTuw8bZwNjYOSUMiNjn
+         EBV38WHid50TNovyKvDuuqOK6ny2jvmInIM/dgDYVmxiGIxn7be54rsKduzrLe/jMV3q
+         ANWN/74SZ1EEZvtawKD5ujXQl6B2YxxD3r8JI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=elr/neHdSPND1QBbHYVTIKRGGtBg1vE7OdThIsRU5pI=;
+        b=i+K/CHx0bE3puPw04v8fNqhj5AzE5Z0cZgftvilfN5xPEavqjpGI1h0FFCN9ud7maJ
+         7+TVXpov/XkHLUy/i6iCf7RDliiuELx/nMN8NqPUGD+4lbgQp9w4JCWJ0zG3rR3hgmpK
+         8YCbS7aaqTTJFvXsJEXGOAOYFRrF6QPUJ+l4hlZQUQuuWVfUC5S4EGK+NT/atWiYNugQ
+         slubkajdqGbQlre5BGoxyCs/Q7SKm8TNlLEXkB9suAhHYkP70ZeNRj8HfSLQl1u1a+5M
+         y6PGbfUUwjpR3/LJ/npxZl6JDvdNq2B6hUV/7FXMKg890k0Ph4zmjMcOMxUm/9yru5Rz
+         xedA==
+X-Gm-Message-State: AOAM530ZZguj3xCrNB9iQKa5isJ0nCogouMkAKpFHBGoHFw5pk1257Et
+        5vqF+4jN8qz4NT4gY/7I3Fj0Rw==
+X-Google-Smtp-Source: ABdhPJwnsGzh6rI5stQsBcWRn8N0h8Ns8b+OJp9DPF9o8s3fODKrXmSZ/a2sub1vz+HM8LuYBAXNBw==
+X-Received: by 2002:a62:ea09:0:b029:197:bad4:1e78 with SMTP id t9-20020a62ea090000b0290197bad41e78mr8311744pfh.22.1605901643516;
+        Fri, 20 Nov 2020 11:47:23 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h16sm4507596pfo.185.2020.11.20.11.47.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Nov 2020 11:47:22 -0800 (PST)
+Date:   Fri, 20 Nov 2020 11:47:21 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 02/17] kbuild: add support for Clang LTO
+Message-ID: <202011201144.3F2BB70C@keescook>
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <20201118220731.925424-3-samitolvanen@google.com>
+ <CAKwvOdnYTMzaahnBqdNYPz3KMdnkp=jZ4hxiqkTYzM5+BBdezA@mail.gmail.com>
+ <CABCJKucj_jUwoiLc35R7qFe+cNKTWgT+gsCa5pPiY66+1--3Lg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20201119220807.GB102444@otc-nc-03>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKucj_jUwoiLc35R7qFe+cNKTWgT+gsCa5pPiY66+1--3Lg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Fri, Nov 20, 2020 at 08:23:11AM -0800, Sami Tolvanen wrote:
+> Changing the ThinLTO config to a choice and moving it after the main
+> LTO config sounds like a good idea to me. I'll see if I can change
+> this in v8. Thanks!
 
-On 11/19/20 2:08 PM, Raj, Ashok wrote:
->> If an Attention Button is present, the current behavior is to bring up
->> the hotplug slot as soon as presence or link is detected.  We don't wait
->> for a button press.  This is intended as a convience feature to bring up
->> slots as quickly as possible, but the behavior can be changed if the
->> button press and 5 second delay is preferred.
-> No personal preference, I thought that is how the code in Linux was
-> earlier.
->
-> Looks like we still don't subscribe to PDC if ATTN is present? So you don't
-> get an event until someone presses the button to process hotplug right?
->
-> pciehp_hpc.c:pcie_enable_notification()
-> {
-> ....
->
->           * Always enable link events: thus link-up and link-down shall
->           * always be treated as hotplug and unplug respectively. Enable
->           * presence detect only if Attention Button is not present.
->           */
->          cmd = PCI_EXP_SLTCTL_DLLSCE;
->          if (ATTN_BUTTN(ctrl))
->                  cmd |= PCI_EXP_SLTCTL_ABPE;
->          else
->                  cmd |= PCI_EXP_SLTCTL_PDCE;
-> ....
-> }
->
->
-> Looks like we still wait for button press to process. When you don't have a
-> power control yes the DLLSC would kick in and we would process them. but if
-> you have power control, you won't turn on until the button press?
->
-Yes, as per current logic, if attention button is present, then we don't
-subscribe to PDC event changes. we wait for button press  to turn on/off
-the slot.
+Originally, I thought this might be a bit ugly once GCC LTO is added,
+but this could be just a choice like we're done for the stack
+initialization. Something like an "LTO" choice of NONE, CLANG_FULL,
+CLANG_THIN, and in the future GCC, etc.
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+Kees Cook
