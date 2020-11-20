@@ -2,251 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B35712BB976
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 23:55:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE5522BBA32
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 00:31:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgKTWv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 17:51:58 -0500
-Received: from mga04.intel.com ([192.55.52.120]:15001 "EHLO mga04.intel.com"
+        id S1728604AbgKTXap (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 18:30:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbgKTWv5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Nov 2020 17:51:57 -0500
-IronPort-SDR: zdgG7ANR0ViG3dQXMr4vu+XapDxgR1o/+deN02h5zTRAA9wCKe80bLV82gbP9oLFnnTGfZceaA
- VyftQ/8lu1/Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="168985737"
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="168985737"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 14:51:57 -0800
-IronPort-SDR: mV0Cu6xvUcP88u7sUFxqy/KRA/NGv8ikhRyiLo/RtntHQRLtxLubgJe1yX/AiQeDczj11yJlo3
- urCvfbqKGAkA==
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="357852122"
-Received: from sabakhle-mobl1.amr.corp.intel.com (HELO jderrick-mobl.amr.corp.intel.com) ([10.213.165.80])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 14:51:56 -0800
-From:   Jon Derrick <jonathan.derrick@intel.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Nirmal Patel <nirmal.patel@intel.com>,
-        Sushma Kalakota <sushmax.kalakota@intel.com>,
-        Jon Derrick <jonathan.derrick@intel.com>
-Subject: [PATCH 5/5] PCI: vmd: Add legacy guest passthrough mode
-Date:   Fri, 20 Nov 2020 15:51:44 -0700
-Message-Id: <20201120225144.15138-6-jonathan.derrick@intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20201120225144.15138-1-jonathan.derrick@intel.com>
-References: <20201120225144.15138-1-jonathan.derrick@intel.com>
+        id S1726719AbgKTXap (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Nov 2020 18:30:45 -0500
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E21D92240B;
+        Fri, 20 Nov 2020 23:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605915044;
+        bh=pAOPOCc79X5vSW6IJcHVGfCdHUlnqpSzr+lv+zQxwCc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RZzdH79P6J5urfJDjwQdKxx5LnTEOmSru+Pngr2whnPMGGF/5iys8b3oGoRp3fiC2
+         B9zPEK+hV1YvwzBAM2H5HZymjsteXPWwOamkRpmbJpb2YTeAXwp7dY7auSdWBrz/F2
+         /N80r04AHKKCoaM6D2sPwvKPyEcCtIgwahDH+KeA=
+Received: by mail-oi1-f171.google.com with SMTP id a130so4261361oif.7;
+        Fri, 20 Nov 2020 15:30:43 -0800 (PST)
+X-Gm-Message-State: AOAM533pXk4s93Kp6xS5SPeBjmQHE6F7HrGLtTmGW9MvJrhvPJEB/PXB
+        Igq2Kgez7AHQx295Eujy15HDa2XxY6dtvlnIMBk=
+X-Google-Smtp-Source: ABdhPJydXVeIwFrz87ExsApybJ0EuK40nIe6165egNvLnhUN+I4Xd9fvkCEU5QPaIxetxiAiYULX8LNHUT5DTI1cr7A=
+X-Received: by 2002:aca:5c82:: with SMTP id q124mr8196235oib.33.1605915043305;
+ Fri, 20 Nov 2020 15:30:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <CAKwvOd=5PhCTZ-yHr08gPYNEsGEjZa=rDY0-unhkhofjXhqwLQ@mail.gmail.com>
+ <CAMj1kXEVzDi5=uteUAzG5E=j+aTCHEbMxwDfor-s=DthpREpyw@mail.gmail.com> <CAKwvOdmpBNx9iSguGXivjJ03FaN5rgv2oaXZUQxYPdRccQmdyQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdmpBNx9iSguGXivjJ03FaN5rgv2oaXZUQxYPdRccQmdyQ@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 21 Nov 2020 00:30:32 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEoPEd6GzjL1XuxTPwitbR03BiBEXpAGtUytMj-h=vCkg@mail.gmail.com>
+Message-ID: <CAMj1kXEoPEd6GzjL1XuxTPwitbR03BiBEXpAGtUytMj-h=vCkg@mail.gmail.com>
+Subject: Re: [PATCH v7 00/17] Add support for Clang LTO
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Alistair Delva <adelva@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some hypervisors allow passthrough of VMD to guests, but don't supply
-the emulated vendor-specific capability. VMD users currently
-passing-through VMD rely on a preconfiguration of the VMD Root Ports to
-inform the guest of the physical addresses for offset mapping the bridge
-windows.
+On Fri, 20 Nov 2020 at 21:19, Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> On Fri, Nov 20, 2020 at 2:30 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Thu, 19 Nov 2020 at 00:42, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > >
+> > > Thanks for continuing to drive this series Sami.  For the series,
+> > >
+> > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > >
+> > > I did virtualized boot tests with the series applied to aarch64
+> > > defconfig without CONFIG_LTO, with CONFIG_LTO_CLANG, and a third time
+> > > with CONFIG_THINLTO.  If you make changes to the series in follow ups,
+> > > please drop my tested by tag from the modified patches and I'll help
+> > > re-test.  Some minor feedback on the Kconfig change, but I'll post it
+> > > off of that patch.
+> > >
+> >
+> > When you say 'virtualized" do you mean QEMU on x86? Or actual
+> > virtualization on an AArch64 KVM host?
+>
+> aarch64 guest on x86_64 host.  If you have additional configurations
+> that are important to you, additional testing help would be
+> appreciated.
+>
 
-This patch adds a non-visible module parameter to activate host or guest
-passthrough mode. In host mode, this patch will write out the VMD MEMBAR
-information into the root ports on module unload. Guest mode will use
-the direct-assign hints, saving the host-supplied root port information
-on VMD module load and restore on exit. It uses this information in the
-offset calculation for bridge windows.
+Could you run this on an actual phone? Or does Android already ship
+with this stuff?
 
-This is enabled by non-visible module parameter because it is
-non-standard use case for certain users for a legacy behavior.
 
-Link: https://lore.kernel.org/linux-pci/20200706091625.GA26377@e121166-lin.cambridge.arm.com/
-Signed-off-by: Sushma Kalakota <sushmax.kalakota@intel.com>
-Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
----
- drivers/pci/controller/vmd.c | 127 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 126 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 71aa002..711bbee 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -35,6 +35,19 @@
- #define MB2_SHADOW_OFFSET	0x2000
- #define MB2_SHADOW_SIZE		16
- 
-+enum legacy_da_mode {
-+	VMD_DA_NONE,
-+	VMD_DA_HOST,
-+	VMD_DA_GUEST,
-+};
-+
-+static int legacy_da_mode;
-+static char legacy_da_mode_str[sizeof("guest")];
-+module_param_string(legacy_da_mode, legacy_da_mode_str,
-+		    sizeof(legacy_da_mode_str), 0);
-+MODULE_PARM_DESC(legacy_da_mode,
-+	"use legacy host-provided addressing hints in Root Ports to assist guest passthrough (off, host, guest)");
-+
- enum vmd_features {
- 	/*
- 	 * Device may contain registers which hint the physical location of the
-@@ -97,6 +110,12 @@ struct vmd_irq_list {
- 	unsigned int		count;
- };
- 
-+struct root_port_addr {
-+	int port;
-+	u64 membase;
-+	u64 pref_membase;
-+};
-+
- struct vmd_dev {
- 	struct pci_dev		*dev;
- 
-@@ -112,6 +131,7 @@ struct vmd_dev {
- 	struct pci_bus		*bus;
- 	u8			busn_start;
- 	u8			first_vec;
-+	struct root_port_addr	rp_addr;
- };
- 
- static inline struct vmd_dev *vmd_from_bus(struct pci_bus *bus)
-@@ -483,6 +503,97 @@ static int vmd_find_free_domain(void)
- 	return domain + 1;
- }
- 
-+#define VMD_RP_BASE(vmd, port) ((vmd)->cfgbar + (port) * 8 * 4096)
-+static void vmd_save_root_port_info(struct vmd_dev *vmd)
-+{
-+	resource_size_t physical = 0;
-+	char __iomem *addr;
-+	int port;
-+
-+	if (upper_32_bits(pci_resource_start(vmd->dev, VMD_MEMBAR1)))
-+		return;
-+
-+	for (port = 0; port < 4; port++) {
-+		u32 membase;
-+
-+		addr = VMD_RP_BASE(vmd, port) + PCI_MEMORY_BASE;
-+		membase = readl(addr);
-+
-+		/* Break on first found root port */
-+		if ((membase != 0xffffffff) && (membase != 0) &&
-+		    (membase != 0x0000fff0))
-+			break;
-+	}
-+
-+	if (port >= 4)
-+		return;
-+
-+	vmd->rp_addr.port = port;
-+
-+	/* Only save the first root port index in host mode */
-+	if (legacy_da_mode == VMD_DA_HOST)
-+		return;
-+
-+	addr = VMD_RP_BASE(vmd, port) + PCI_MEMORY_BASE;
-+	physical = ((u64)readw(addr) & 0xfff0) << 16;
-+	vmd->rp_addr.membase = physical;
-+
-+	addr = VMD_RP_BASE(vmd, port) + PCI_PREF_BASE_UPPER32;
-+	physical = ((u64)readl(addr)) << 32;
-+	vmd->rp_addr.pref_membase = physical;
-+
-+	addr = VMD_RP_BASE(vmd, port) + PCI_PREF_MEMORY_BASE;
-+	physical |= ((u64)readw(addr) & 0xfff0) << 16;
-+	vmd->rp_addr.pref_membase |= physical;
-+
-+	writel(0, VMD_RP_BASE(vmd, port) + PCI_MEMORY_BASE);
-+	writel(0, VMD_RP_BASE(vmd, port) + PCI_PREF_BASE_UPPER32);
-+	writel(0, VMD_RP_BASE(vmd, port) + PCI_PREF_MEMORY_BASE);
-+	writel(0, VMD_RP_BASE(vmd, port) + PCI_PREF_MEMORY_LIMIT);
-+}
-+
-+static void vmd_restore_root_port_info(struct vmd_dev *vmd)
-+{
-+	resource_size_t	phyaddr;
-+	char __iomem *addr;
-+	u32 val;
-+	int port;
-+
-+	port = vmd->rp_addr.port;
-+	if (legacy_da_mode == VMD_DA_HOST) {
-+		/* Write the MEMBAR information to prepare the guest */
-+		phyaddr = pci_resource_start(vmd->dev, VMD_MEMBAR1);
-+		if (upper_32_bits(phyaddr))
-+			return;
-+
-+		addr = VMD_RP_BASE(vmd, port) + PCI_MEMORY_BASE;
-+		val = (phyaddr >> 16) & 0xfff0;
-+		writew(val, addr);
-+
-+		phyaddr = pci_resource_start(vmd->dev, VMD_MEMBAR2);
-+		addr = VMD_RP_BASE(vmd, port) + PCI_PREF_BASE_UPPER32;
-+		val = phyaddr >> 32;
-+		writel(val, addr);
-+
-+		addr = VMD_RP_BASE(vmd, port) + PCI_PREF_MEMORY_BASE;
-+		val = (phyaddr >> 16) & 0xfff0;
-+		writew(val, addr);
-+	} else if (legacy_da_mode == VMD_DA_GUEST) {
-+		/* Restore information provided by Host */
-+		addr = VMD_RP_BASE(vmd, port) + PCI_MEMORY_BASE;
-+		val = (vmd->rp_addr.membase >> 16) & 0xfff0;
-+		writew(val, addr);
-+
-+		addr = VMD_RP_BASE(vmd, port) + PCI_PREF_BASE_UPPER32;
-+		val = vmd->rp_addr.pref_membase >> 32;
-+		writel(val, addr);
-+
-+		addr = VMD_RP_BASE(vmd, port) + PCI_PREF_MEMORY_BASE;
-+		val = (vmd->rp_addr.pref_membase >> 16) & 0xfff0;
-+		writew(val, addr);
-+	}
-+}
-+
- static void vmd_phys_to_offset(struct vmd_dev *vmd, u64 phys1, u64 phys2,
- 				 resource_size_t *offset1,
- 				 resource_size_t *offset2)
-@@ -500,7 +611,19 @@ static int vmd_get_phys_offsets(struct vmd_dev *vmd, unsigned long features,
- 	struct pci_dev *dev = vmd->dev;
- 	u64 phys1, phys2;
- 
--	if (features & VMD_FEAT_HAS_MEMBAR_SHADOW) {
-+	if (!strncmp(legacy_da_mode_str, "host", 4))
-+		legacy_da_mode = VMD_DA_HOST;
-+	else if (!strncmp(legacy_da_mode_str, "guest", 5))
-+		legacy_da_mode = VMD_DA_GUEST;
-+
-+	if (legacy_da_mode != VMD_DA_NONE) {
-+		vmd_save_root_port_info(vmd);
-+		if (legacy_da_mode == VMD_DA_GUEST) {
-+			vmd_phys_to_offset(vmd, vmd->rp_addr.membase,
-+					   vmd->rp_addr.pref_membase,
-+					   offset1, offset2);
-+		}
-+	} else if (features & VMD_FEAT_HAS_MEMBAR_SHADOW) {
- 		u32 vmlock;
- 		int ret;
- 
-@@ -732,6 +855,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	if (!vmd->bus) {
- 		pci_free_resource_list(&resources);
- 		vmd_remove_irq_domain(vmd);
-+		vmd_restore_root_port_info(vmd);
- 		return -ENODEV;
- 	}
- 
-@@ -821,6 +945,7 @@ static void vmd_remove(struct pci_dev *dev)
- 	vmd_cleanup_srcu(vmd);
- 	vmd_detach_resources(vmd);
- 	vmd_remove_irq_domain(vmd);
-+	vmd_restore_root_port_info(vmd);
- }
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-1.8.3.1
-
+> >
+> > The distinction is important here, given the potential impact of LTO
+> > on things that QEMU simply does not model when it runs in TCG mode on
+> > a foreign host architecture.
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
