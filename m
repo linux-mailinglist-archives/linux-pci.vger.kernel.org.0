@@ -2,104 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 546B52BB760
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 21:42:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BF5D2BB766
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 21:42:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730726AbgKTUir (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 15:38:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33250 "EHLO
+        id S1731626AbgKTUix (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 15:38:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731537AbgKTUir (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 15:38:47 -0500
+        with ESMTP id S1731606AbgKTUix (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 15:38:53 -0500
 Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E043C0613CF
-        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 12:38:47 -0800 (PST)
-Received: by mail-pg1-x543.google.com with SMTP id q28so8317580pgk.1
-        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 12:38:47 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4623FC061A04
+        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 12:38:53 -0800 (PST)
+Received: by mail-pg1-x543.google.com with SMTP id t37so8220086pga.7
+        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 12:38:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=jEfasRJIvgVS0P+tdXtNTnS+cAlHt6bJ5xoXaJUctnc=;
-        b=Xr66UyJB82f/FbYw0uMSJWHrM3KQFqndK90gmFnucf8st++PywkaGu7OsWd2WxH0ON
-         icBuM9jNCJ9yRbu2UaijrTP94mvvhhaOzvg9KBDOVeTtf87rYj5UqTRanmZg6ZiDLk6s
-         hh302Vr9c0CABhd9v2i05UkNDUsmCdsc/Np4w=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=s3JFM6+R/fz9a6e/9WK19OMBhtmUak5nMtuY/8voL+8=;
+        b=X8TXokEnPDbqhWscmro+RZhPfPL/eX8RNpMrmVCnik6AQoW841E6pfgKfCGAs8naBS
+         FJLSFKhFmvRa2VmZ+LEDOXPhwILF7O4L9oDutWeWhZH3zBcCW4pcAxTmy1/VER7mXwd2
+         CbVY2FGEU9CJpUBP+OzeRuDCBT8VyzdO3Jddc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jEfasRJIvgVS0P+tdXtNTnS+cAlHt6bJ5xoXaJUctnc=;
-        b=AN3n/knySgdcd5JlmIV04KVEZ+ejc30BChD2iIih1+XcTVaXHR1XR18ZnD6ecHjmmF
-         SA928HdO5euiPRenl466EEXfaKv+UupI5yvik9kLbxc4xrD9VJ3WW6vtZxg1ffX8N9jC
-         c72O0ZpD+XgctxUlkaL5gdppY54/7h1V7Z87f0l4a42tBjdh96hTjcG2bIOKk032Nv0v
-         v+2Ve9D+UROsVmnwYTjJJX3nQdJ+bNzMtZ/YUbs7g8ncfywa5muNO09kXDU5Bh9wMIAM
-         kftBn6a4nezpcfJ87y6r7CvWZYhSBjbe4+LOXXqlHJvUNXHKB45GumqPOOdaYhe8jjAw
-         4U9g==
-X-Gm-Message-State: AOAM5315gwDLnRhcxijinopZZqKW3FfgT8vWAPX4LOgBduggh/ag11eJ
-        mALp47pmOicwMeqGt5nZmUb6aw==
-X-Google-Smtp-Source: ABdhPJxZU//+FSBVvYvqK8K9Q4lfvShlOy9LHsWRVX8RU3poGc8UVYda1wO0lq2LvWXHcOprDFjucA==
-X-Received: by 2002:a62:d11b:0:b029:18b:b3e:95aa with SMTP id z27-20020a62d11b0000b029018b0b3e95aamr15125681pfg.3.1605904726735;
-        Fri, 20 Nov 2020 12:38:46 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=s3JFM6+R/fz9a6e/9WK19OMBhtmUak5nMtuY/8voL+8=;
+        b=jkZyRwqAzERMcJjWhUuhY3rj0hVgobH8SFYG4hz+RC0QrzohxQHBtNcTWzBCeTBlOD
+         j9oLSS47QDgTjXZUXFdyx1JP4mRgUvtSWw+EDiZOcGywOn+dUWM1xzG03F9fd1baqQmn
+         6cpsmtgcWzz6cz7eXR3sH3xJ/Mvrn+j9ofe/aq4/qUwRhOAcwwMuYrm3DXmCJPtbxsvf
+         S14Gb/yvM51mqs9zE/oLsqVEaMl5H/OAbzOauOxCOtCg2v99bLsnJrlpP8poTCzOejHk
+         EqUD59oKcR7Aqvj80R/a7LIwVGR3sNyGobQH7QTbBD5hZKi7BwwSJg79QKzEFQnpSZGF
+         uImw==
+X-Gm-Message-State: AOAM530+D2SUtrYV6brPKVJQ2w57uCsTLgiAz4dUYMLEPEeoJvt0RbCG
+        Y/I4quCce4DiG1qiueqLBB6yhg==
+X-Google-Smtp-Source: ABdhPJyCb06pnuP8D6Cf41I+031AQMEbTnmOzn7yWU2AlmC8OFb17e4hnV/cP3Dv4H4OrXVUCdkSAw==
+X-Received: by 2002:a17:90a:4410:: with SMTP id s16mr12814484pjg.173.1605904732749;
+        Fri, 20 Nov 2020 12:38:52 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id gx24sm4838688pjb.38.2020.11.20.12.38.44
+        by smtp.gmail.com with ESMTPSA id gx24sm4838688pjb.38.2020.11.20.12.38.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2020 12:38:45 -0800 (PST)
+        Fri, 20 Nov 2020 12:38:51 -0800 (PST)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Hans de Goede <hdegoede@redhat.com>,
         Jens Axboe <axboe@kernel.dk>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list),
         linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
-        ENDPOINT DRIVERS),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE), Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 0/2] ata: ahci_brcm: Fix use of BCM7216 reset controller
-Date:   Fri, 20 Nov 2020 15:38:37 -0500
-Message-Id: <20201120203840.35139-1-james.quinlan@broadcom.com>
+        ENDPOINT DRIVERS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 2/2] PCI: brcmstb: use reset/rearm instead of deassert/assert
+Date:   Fri, 20 Nov 2020 15:38:39 -0500
+Message-Id: <20201120203840.35139-3-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201120203840.35139-1-james.quinlan@broadcom.com>
+References: <20201120203840.35139-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000cc87a405b48fd493"
+        boundary="000000000000284d2005b48fd581"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000cc87a405b48fd493
+--000000000000284d2005b48fd581
 
-v3 -- discard commit from v2; instead relay on the new function
-      reset_control_rearm provided in a recent commit [1] applied
-      to reset/next.
-   -- New commit to correct pcie-brcmstb.c usage of a reset controller
-      to use reset/rearm verses deassert/assert.
+The Brcmstb PCIe RC uses a reset control "rescal" for certain chips.  This
+reset implements a "pulse reset" so it matches more the reset/rearm
+calls instead of the deassert/assert calls.
 
-v2 -- refactor rescal-reset driver to implement assert/deassert rather than
-      reset because the reset call only fires once per lifetime and we need
-      to reset after every resume from S2 or S3.
-   -- Split the use of "ahci" and "rescal" controllers in separate fields
-      to keep things simple.
+Also, add reset_control calls in suspend/resume functions.
 
-v1 -- original
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-
-[1] Applied commit "reset: make shared pulsed reset controls re-triggerable"
-    found at git://git.pengutronix.de/git/pza/linux.git
-    branch reset/shared-retrigger
-
-Jim Quinlan (2):
-  ata: ahci_brcm: Fix use of BCM7216 reset controller
-  PCI: brcmstb: use reset/rearm instead of deassert/assert
-
- drivers/ata/ahci_brcm.c               | 46 +++++++++++++--------------
- drivers/pci/controller/pcie-brcmstb.c | 19 +++++++----
- 2 files changed, 36 insertions(+), 29 deletions(-)
-
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index bea86899bd5d..b9745ac2ee0b 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1138,6 +1138,7 @@ static int brcm_pcie_suspend(struct device *dev)
+ 
+ 	brcm_pcie_turn_off(pcie);
+ 	ret = brcm_phy_stop(pcie);
++	reset_control_rearm(pcie->rescal);
+ 	clk_disable_unprepare(pcie->clk);
+ 
+ 	return ret;
+@@ -1153,9 +1154,13 @@ static int brcm_pcie_resume(struct device *dev)
+ 	base = pcie->base;
+ 	clk_prepare_enable(pcie->clk);
+ 
++	ret = reset_control_reset(pcie->rescal);
++	if (ret)
++		goto err0;
++
+ 	ret = brcm_phy_start(pcie);
+ 	if (ret)
+-		goto err;
++		goto err1;
+ 
+ 	/* Take bridge out of reset so we can access the SERDES reg */
+ 	pcie->bridge_sw_init_set(pcie, 0);
+@@ -1170,14 +1175,16 @@ static int brcm_pcie_resume(struct device *dev)
+ 
+ 	ret = brcm_pcie_setup(pcie);
+ 	if (ret)
+-		goto err;
++		goto err1;
+ 
+ 	if (pcie->msi)
+ 		brcm_msi_set_regs(pcie->msi);
+ 
+ 	return 0;
+ 
+-err:
++err1:
++	reset_control_rearm(pcie->rescal);
++err0:
+ 	clk_disable_unprepare(pcie->clk);
+ 	return ret;
+ }
+@@ -1187,7 +1194,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+ 	brcm_msi_remove(pcie);
+ 	brcm_pcie_turn_off(pcie);
+ 	brcm_phy_stop(pcie);
+-	reset_control_assert(pcie->rescal);
++	reset_control_rearm(pcie->rescal);
+ 	clk_disable_unprepare(pcie->clk);
+ }
+ 
+@@ -1262,13 +1269,13 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 		return PTR_ERR(pcie->rescal);
+ 	}
+ 
+-	ret = reset_control_deassert(pcie->rescal);
++	ret = reset_control_reset(pcie->rescal);
+ 	if (ret)
+ 		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
+ 
+ 	ret = brcm_phy_start(pcie);
+ 	if (ret) {
+-		reset_control_assert(pcie->rescal);
++		reset_control_rearm(pcie->rescal);
+ 		clk_disable_unprepare(pcie->clk);
+ 		return ret;
+ 	}
 -- 
 2.17.1
 
 
---000000000000cc87a405b48fd493
+--000000000000284d2005b48fd581
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -169,14 +229,14 @@ V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
 lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
 5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
 di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
-AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIKdvQOJ8LnRu
-gzi5MlkTjcFQFOmHUnZDKyf3U03bhycKMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTIwMTEyMDIwMzg0N1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIOn/fkMFQVzS
+gyEjslT8O2EmkVHBewUvwxT4kOSOwXXeMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMTEyMDIwMzg1M1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
 YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDGsRGW520Q6odQkPFlaB1G3QEBZNvT
-tFAY9leAKN5ds5XXQO+6sXgjolRV1PyEXED9nkCxTPXurxJ1d/QE4UKdFTdlPt/Yr8GMO3JfUvXO
-xkYQ7m8Wk5Qi3Wj7s0S2zFoRTfgasMLQeITc1O41CTE5bxAO7o3Ns604TMzYeaAqp4pDX0wEXZP0
-EfAskLEuu6wIOqlKFKsHSUQL0o3XvlYs2TYKHxlKIcWvchYAq7D/d3MQ3B0Iqxvcou4y4SuawoEt
-F6nKJvAeO3e0zA1xTg+psdnFLREcmJGuXb887YSnG3jVBoC5kDcq8UpzBEwUKnRnLMk9uO4rXXWV
-ie88TrXj
---000000000000cc87a405b48fd493--
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDX1FEXIJ2yKjYKnlhVEoAdUmP7XLJ3
+2+ZoeiPB8jA/hzUEPWkui2P4nKhDAn6+k+pu7oAghKZNxQ/DUa4TcQbxMJgz+n7w/WfZpyfdOBtR
+n+FCL9Zao9EsRQbcBMHYy/8BsmOd2d2xkYH/ORPDOaQ42dLI3EgsgeNTByoscXq1O8Jadsd9VCpD
+EvfCpNWFWQj1tya/s3wpiM4v0vrLiamfrrPLEJ8si4e95dkImrGw3KAMsPVUuZ/a5501vr28Axbo
+XQNFSh5cBHgVzkp1rf4hCXWod1IaJfxAQndON1rsz43Qk53XoxW9VHt0hh7CuwF/97l4EqbHoIs4
+onSYEMhd
+--000000000000284d2005b48fd581--
