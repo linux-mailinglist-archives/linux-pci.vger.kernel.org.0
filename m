@@ -2,60 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91A252BB14E
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 18:21:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00D3E2BB15D
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 18:26:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgKTRUl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 12:20:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:52674 "EHLO foss.arm.com"
+        id S1728396AbgKTRYh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 12:24:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:52724 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727281AbgKTRUl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Nov 2020 12:20:41 -0500
+        id S1726640AbgKTRYg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Nov 2020 12:24:36 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BD091042;
-        Fri, 20 Nov 2020 09:20:40 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 449501042;
+        Fri, 20 Nov 2020 09:24:36 -0800 (PST)
 Received: from red-moon.arm.com (unknown [10.57.59.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE8103F70D;
-        Fri, 20 Nov 2020 09:20:38 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 530213F70D;
+        Fri, 20 Nov 2020 09:24:34 -0800 (PST)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        robh+dt@kernel.org, marek.vasut+renesas@gmail.com,
-        bhelgaas@google.com
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-pci@vger.kernel.org, prabhakar.mahadev-lad.rj@bp.renesas.com
-Subject: Re: [PATCH v3 0/3] dt-bindings: PCI: rcar-pci-host: Convert bindings to json-schema
-Date:   Fri, 20 Nov 2020 17:20:32 +0000
-Message-Id: <160589281011.7698.914867341349617347.b4-ty@arm.com>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] PCI: Make "cdns,max-outbound-regions" optional DT property
+Date:   Fri, 20 Nov 2020 17:24:28 +0000
+Message-Id: <160589305028.9644.11702297245351250409.b4-ty@arm.com>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <1604455096-13923-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1604455096-13923-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20201106151107.3987-1-kishon@ti.com>
+References: <20201106151107.3987-1-kishon@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 4 Nov 2020 10:58:13 +0900, Yoshihiro Shimoda wrote:
-> Convert bindings of rcar-pci.txt to json-schema. Also, document
-> r8a77965 and r8a774e1 to the yaml file.
+On Fri, 6 Nov 2020 20:41:05 +0530, Kishon Vijay Abraham I wrote:
+> Make "cdns,max-outbound-regions" optional DT property in all the
+> platforms using Cadence PCIe core.
 > 
-> Changes from v2:
->  - Fix the subjects of all patches which Bjorn pointed it out:
->  https://patchwork.kernel.org/project/linux-renesas-soc/cover/1604035745-22095-1-git-send-email-yoshihiro.shimoda.uh@renesas.com/#23734117
->  - Minor fix the description in the patch 3/3.
->  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=373695
+> Kishon Vijay Abraham I (2):
+>   dt-bindings: PCI: Make "cdns,max-outbound-regions" optional property
+>   PCI: cadence: Do not error if "cdns,max-outbound-regions" is not found
 > 
 > [...]
 
-Applied to pci/rcar, thanks!
+Applied to pci/cadence, thanks!
 
-[1/3] dt-bindings: PCI: rcar-pci-host: Convert bindings to json-schema
-      https://git.kernel.org/lpieralisi/pci/c/0d69ce3c2c
-[2/3] dt-bindings: PCI: rcar-pci-host: Document r8a77965 bindings
-      https://git.kernel.org/lpieralisi/pci/c/2228af8093
-[3/3] dt-bindings: PCI: rcar-pci-host: Document r8a774e1 bindings
-      https://git.kernel.org/lpieralisi/pci/c/64fc0a0309
+[1/2] dt-bindings: PCI: Make "cdns,max-outbound-regions" optional property
+      https://git.kernel.org/lpieralisi/pci/c/4a2b9125c9
+[2/2] PCI: cadence: Do not error if "cdns,max-outbound-regions" is not found
+      https://git.kernel.org/lpieralisi/pci/c/e87d17ca6a
 
 Thanks,
 Lorenzo
