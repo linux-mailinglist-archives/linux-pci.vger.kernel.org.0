@@ -2,97 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ACEF2BB8A1
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 22:58:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA5862BB970
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Nov 2020 23:51:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgKTV5N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 16:57:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54146 "EHLO mail.kernel.org"
+        id S1729064AbgKTWvx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 17:51:53 -0500
+Received: from mga04.intel.com ([192.55.52.120]:15001 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbgKTV5N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Nov 2020 16:57:13 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972AF22254;
-        Fri, 20 Nov 2020 21:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605909432;
-        bh=EyJHD0We1WD+DYetjzdtwyxC7yClq4qfKpddxgRnFP0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l8Mty+qAlU7C9g5t5MxjDLq+M0w2JXOYxy4O6cEBf9T481CGAuFcaBimpgrJeaU8i
-         Frti8zwOeDY3M3nDLCEsoXpCS4wPxiHpL6NeOq9vB/w5tX8FS1TfYMVvqwna2GheM6
-         J+kzZMeud15nfXIoyE887+ZvhUkvldStjaZkB8Kk=
-Date:   Fri, 20 Nov 2020 15:57:11 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, hch@infradead.org, alex.williamson@redhat.com,
-        cohuck@redhat.com
-Subject: Re: [PATCH v3 0/2] avoid inserting duplicate IDs in dynids list
-Message-ID: <20201120215711.GA281372@bjorn-Precision-5520>
+        id S1728905AbgKTWvw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Nov 2020 17:51:52 -0500
+IronPort-SDR: O4H6Dpsqjc0Ud7oUSb/LsJ2hQi19pGIBmsD21K/Z3yN4SiwHYFXL7l/f+C09dmWuGxD5A9vbEE
+ L/lDFxTR98Lg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="168985721"
+X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
+   d="scan'208";a="168985721"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 14:51:52 -0800
+IronPort-SDR: 7y8T8eA5IJdQ/X6fdwMO4Qj1W9BmIt6xg8/zadBIFEe77f3kuJ7ycPwBF8spdejYULlLYYrB1s
+ /eUiqiuST1GQ==
+X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
+   d="scan'208";a="357852053"
+Received: from sabakhle-mobl1.amr.corp.intel.com (HELO jderrick-mobl.amr.corp.intel.com) ([10.213.165.80])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 14:51:51 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     <linux-pci@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        Nirmal Patel <nirmal.patel@intel.com>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH 0/5] Legacy direct-assign mode
+Date:   Fri, 20 Nov 2020 15:51:39 -0700
+Message-Id: <20201120225144.15138-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201117054409.3428-1-zhenzhong.duan@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 17, 2020 at 01:44:07PM +0800, Zhenzhong Duan wrote:
-> vfio-pci and pci-stub use new_id to bind devices. But one can add same IDs
-> multiple times, for example:
-> 
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-> -bash: echo: write error: No such device
-> 
-> This doesn't cause user-visible broken behavior, but not user friendly.
-> he has to remove same IDs same times to ensure it's completely gone.
-> 
-> Changed to only allow one dynamic entry of the same kind, after fix:
-> 
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/new_id
-> -bash: echo: write error: File exists
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-> # echo "1af4 1041" > /sys/bus/pci/drivers/vfio-pci/remove_id
-> -bash: echo: write error: No such device
-> 
-> 
-> v3: add a separate patch to process dependency issue per Bjorn
->     make commit log more clear per Bjorn
-> v2: revert the export of pci_match_device() per Christoph
->     combind PATCH1 and PATCH2 into one.
-> 
-> v2 link:https://lkml.org/lkml/2020/10/25/347
-> 
-> Zhenzhong Duan (2):
->   PCI: move pci_match_device() ahead of new_id_store()
->   PCI: avoid duplicate IDs in dynamic IDs list
-> 
->  drivers/pci/pci-driver.c | 146 +++++++++++++++++++++++------------------------
->  1 file changed, 73 insertions(+), 73 deletions(-)
-> 
-> -- 
-> 1.8.3.1
-> 
-> 
-> Zhenzhong Duan (2):
->   PCI: move pci_match_device() ahead of new_id_store()
->   PCI: avoid duplicate IDs in dynamic IDs list
-> 
->  drivers/pci/pci-driver.c | 146 +++++++++++++++++++++++------------------------
->  1 file changed, 73 insertions(+), 73 deletions(-)
+This set adds a legacy direct-assign mode. Newer enterprise hardware has
+physical addressing hints to assist device passthrough to guests that needs to
+correctly program bridge windows with physical addresses. Some customers are
+using a legacy method that relies on the VMD subdevice domain's root port
+windows to be written with the physical addresses. This method also allows
+other hypervisors besides QEMU/KVM to perform guest passthrough.
 
-I corrected the subject lines:
+This patchset adds a host and guest mode to write the physical address
+information to the root port registers in the host and read them in the guest,
+and restore them in both cases on module unload.
 
-  PCI: Move pci_match_device() ahead of new_id_store()
-  PCI: Avoid duplicate IDs in driver dynamic IDs list
+This patchset also folds in the VMD subdevice domain secondary bus reset
+patchset [1] to clear the domain prior to guest passthrough.
 
-and applied both to pci/enumeration for v5.11, thanks!
+[1] https://patchwork.kernel.org/project/linux-pci/cover/20200928010557.5324-1-jonathan.derrick@intel.com/
+
+Jon Derrick (5):
+  PCI: vmd: Reset the VMD subdevice domain on probe
+  PCI: Add a reset quirk for VMD
+  PCI: vmd: Add offset translation helper
+  PCI: vmd: Pass features to vmd_get_phys_offsets()
+  PCI: vmd: Add legacy guest passthrough mode
+
+ drivers/pci/controller/vmd.c | 200 ++++++++++++++++++++++++++++++++++++++-----
+ drivers/pci/quirks.c         |  48 +++++++++++
+ 2 files changed, 227 insertions(+), 21 deletions(-)
+
+-- 
+1.8.3.1
+
