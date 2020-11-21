@@ -2,157 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70E392BBC9D
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 04:14:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8F842BBCF7
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 05:27:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbgKUDON (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 22:14:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgKUDOM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 22:14:12 -0500
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A4CCC0613CF;
-        Fri, 20 Nov 2020 19:14:12 -0800 (PST)
-Received: by mail-qt1-x841.google.com with SMTP id e10so1289579qte.4;
-        Fri, 20 Nov 2020 19:14:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MnceUBKO5CKDULZmr15ARJRXunPRBIoWz0MuHJiULrg=;
-        b=gsNR/CpmvNQ3U+ijqCwO8esji7bm1QnpPb+gjcQIHmOVilGJtCH7wljw5OuoR2+ByD
-         Eu3ArHbg0KOX4QqUwemDaTkU/zaCmVz9NXecmCRSJQykGNIqev281MSCPFW6iyFfCalh
-         OXU5NgKpKUUxeSGcDHdTDiB+8xUj7RQbdjIsa52m2B9JAVMTC4wE43lynK1gJnIiNcfD
-         9l3VbICmSeaGwxXVG1ypIdI92hsCdUXBe06U+zSDwzqwaBADLFUpJVMg61p6t8YeCIac
-         RAunoKa4yJRKwIKPoTystOV6bK3iAFZIuzfr8A4Wxoe8TDYQp/m8PUNb++rax2JElIaq
-         lP0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MnceUBKO5CKDULZmr15ARJRXunPRBIoWz0MuHJiULrg=;
-        b=EgbDUOfMxzfU4Cj+0mbak3nJaclCFNOiwP1R5ABmxMSKucFyaViGAZsqXmZj5pgiJL
-         R0l0ePWME+9XeTbwBclsEevSzCB3FuN8okiwSI5xt/htcgjjEfzOFKn7lhXK9ZOjOmde
-         qCPy4+lwCSzfJvK+/rOHIy9t7Ic5QQCd2Do29dH9co8QEYAK9N1WbusYoj1R6JizEM6t
-         P1+XRpLwhSftomTz5OioeRzqDSwyEXXY+rlg/micHbnciLX3L69l1chOP28von0uyKAy
-         ncwp1gwjghzYth7T0IOq+af9GG3Y/UIFZey65Oun6wL2AiRNksR+LT/9TJWKRRdrA4YE
-         /cfw==
-X-Gm-Message-State: AOAM532N2ds0qWRc/xPpf9pcEIxG35BVEqWzsmLBLROllNi7gE25wdm6
-        RvnbzrdEwpHO55J7RdNIbOU=
-X-Google-Smtp-Source: ABdhPJwFM1Zex8JyH4dWcYr9Ean4nPf9JBfv8fPcfexg+IsjIR+dtwfqcokR9OMKLw5/d/3ypGQmrg==
-X-Received: by 2002:a05:622a:1cd:: with SMTP id t13mr19064421qtw.39.1605928451613;
-        Fri, 20 Nov 2020 19:14:11 -0800 (PST)
-Received: from ubuntu-m3-large-x86 ([2604:1380:45f1:1d00::1])
-        by smtp.gmail.com with ESMTPSA id o9sm3406683qte.35.2020.11.20.19.14.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Nov 2020 19:14:10 -0800 (PST)
-Date:   Fri, 20 Nov 2020 20:14:09 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v7 00/17] Add support for Clang LTO
-Message-ID: <20201121031409.GA2282710@ubuntu-m3-large-x86>
-References: <20201118220731.925424-1-samitolvanen@google.com>
- <CAKwvOd=5PhCTZ-yHr08gPYNEsGEjZa=rDY0-unhkhofjXhqwLQ@mail.gmail.com>
- <CAMj1kXEVzDi5=uteUAzG5E=j+aTCHEbMxwDfor-s=DthpREpyw@mail.gmail.com>
+        id S1726117AbgKUE1C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 23:27:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725935AbgKUE1B (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Nov 2020 23:27:01 -0500
+Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A70E20882;
+        Sat, 21 Nov 2020 04:27:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605932820;
+        bh=gEATBb+DQrKj2BE7dJdalbyOAhad9Yp1pFfW39/l+4o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SaZlUOfLMXbiv5Tb1ZbtlR/U2s6OsNysQcE+mWwh+7Snildi+xYeme+Z7J4Sd67zz
+         fn49ZQ790B0SJyqlETJ7uM4Q5UvpjL6DEGowRuQHKOXdxwDXa0Gf3OUMGwrg2X7mmy
+         bxjQ9+yBvifqYW75+Bjj4KkIgNfchwTBjPCeat5Q=
+Date:   Fri, 20 Nov 2020 22:26:58 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        xerces.zhao@gmail.com, rafael.j.wysocki@intel.com,
+        ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@intel.com, qiuxu.zhuo@intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 00/15] Add RCEC handling to PCI/AER
+Message-ID: <20201121042658.GA299315@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXEVzDi5=uteUAzG5E=j+aTCHEbMxwDfor-s=DthpREpyw@mail.gmail.com>
+In-Reply-To: <20201121001036.8560-1-sean.v.kelley@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 11:29:51AM +0100, Ard Biesheuvel wrote:
-> On Thu, 19 Nov 2020 at 00:42, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
-> > On Wed, Nov 18, 2020 at 2:07 PM Sami Tolvanen <samitolvanen@google.com> wrote:
-> > >
-> > > This patch series adds support for building the kernel with Clang's
-> > > Link Time Optimization (LTO). In addition to performance, the primary
-> > > motivation for LTO is to allow Clang's Control-Flow Integrity (CFI) to
-> > > be used in the kernel. Google has shipped millions of Pixel devices
-> > > running three major kernel versions with LTO+CFI since 2018.
-> > >
-> > > Most of the patches are build system changes for handling LLVM bitcode,
-> > > which Clang produces with LTO instead of ELF object files, postponing
-> > > ELF processing until a later stage, and ensuring initcall ordering.
-> > >
-> > > Note that v7 brings back arm64 support as Will has now staged the
-> > > prerequisite memory ordering patches [1], and drops x86_64 while we work
-> > > on fixing the remaining objtool warnings [2].
-> > >
-> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/lto
-> > > [2] https://lore.kernel.org/lkml/20201114004911.aip52eimk6c2uxd4@treble/
-> > >
-> > > You can also pull this series from
-> > >
-> > >   https://github.com/samitolvanen/linux.git lto-v7
-> >
-> > Thanks for continuing to drive this series Sami.  For the series,
-> >
-> > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-> >
-> > I did virtualized boot tests with the series applied to aarch64
-> > defconfig without CONFIG_LTO, with CONFIG_LTO_CLANG, and a third time
-> > with CONFIG_THINLTO.  If you make changes to the series in follow ups,
-> > please drop my tested by tag from the modified patches and I'll help
-> > re-test.  Some minor feedback on the Kconfig change, but I'll post it
-> > off of that patch.
-> >
+On Fri, Nov 20, 2020 at 04:10:21PM -0800, Sean V Kelley wrote:
+> Changes since v11 [1] and based on pci/master tree [2]:
 > 
-> When you say 'virtualized" do you mean QEMU on x86? Or actual
-> virtualization on an AArch64 KVM host?
+> - No functional changes. Tested with aer injection.
 > 
-> The distinction is important here, given the potential impact of LTO
-> on things that QEMU simply does not model when it runs in TCG mode on
-> a foreign host architecture.
+> - Merge RCEC class code and extended capability patch with usage.
+> - Apply same optimization for pci_pcie_type(dev) calls in
+> drivers/pci/pcie/portdrv_pci.c and drivers/pci/pcie/aer.c.
+> (Kuppuswamy Sathyanarayanan)
+> 
+> [1] https://lore.kernel.org/linux-pci/20201117191954.1322844-1-sean.v.kelley@intel.com/
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/
+> 
+> 
+> Root Complex Event Collectors (RCEC) provide support for terminating error
+> and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
+> resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
+> a single bus. An RCEC will explicitly declare supported RCiEPs through the
+> Root Complex Endpoint Association Extended Capability.
+> 
+> (See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+> 
+> The kernel lacks handling for these RCECs and the error messages received
+> from their respective associated RCiEPs. More recently, a new CPU
+> interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
+> purposes of error messaging from CXL 1.1 supported RCiEP devices.
+> 
+> DocLink: https://www.computeexpresslink.org/
+> 
+> This use case is not limited to CXL. Existing hardware today includes
+> support for RCECs, such as the Denverton microserver product
+> family. Future hardware will be forthcoming.
+> 
+> (See Intel Document, Order number: 33061-003US)
+> 
+> So services such as AER or PME could be associated with an RCEC driver.
+> In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
+> platform's RCEC it shall signal PME and AER error conditions through that
+> RCEC.
+> 
+> Towards the above use cases, add the missing RCEC class and extend the
+> PCIe Root Port and service drivers to allow association of RCiEPs to their
+> respective parent RCEC and facilitate handling of terminating error and PME
+> messages.
+> 
+> Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #non-native/no RCEC
+> 
+> 
+> Qiuxu Zhuo (3):
+>   PCI/RCEC: Bind RCEC devices to the Root Port driver
+>   PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
+>   PCI/AER: Add RCEC AER error injection support
+> 
+> Sean V Kelley (12):
+>   AER: aer_root_reset() non-native handling
+>   PCI/RCEC: Cache RCEC capabilities in pci_init_capabilities()
+>   PCI/ERR: Rename reset_link() to reset_subordinates()
+>   PCI/ERR: Simplify by using pci_upstream_bridge()
+>   PCI/ERR: Simplify by computing pci_pcie_type() once
+>   PCI/ERR: Use "bridge" for clarity in pcie_do_recovery()
+>   PCI/ERR: Avoid negated conditional for clarity
+>   PCI/ERR: Add pci_walk_bridge() to pcie_do_recovery()
+>   PCI/ERR: Limit AER resets in pcie_do_recovery()
+>   PCI/RCEC: Add pcie_link_rcec() to associate RCiEPs
+>   PCI/AER: Add pcie_walk_rcec() to RCEC AER handling
+>   PCI/PME: Add pcie_walk_rcec() to RCEC PME handling
+> 
+>  drivers/pci/pci.h               |  29 ++++-
+>  drivers/pci/pcie/Makefile       |   2 +-
+>  drivers/pci/pcie/aer.c          |  89 +++++++++++----
+>  drivers/pci/pcie/aer_inject.c   |   5 +-
+>  drivers/pci/pcie/err.c          |  93 +++++++++++-----
+>  drivers/pci/pcie/pme.c          |  16 ++-
+>  drivers/pci/pcie/portdrv_core.c |   9 +-
+>  drivers/pci/pcie/portdrv_pci.c  |  13 ++-
+>  drivers/pci/pcie/rcec.c         | 190 ++++++++++++++++++++++++++++++++
+>  drivers/pci/probe.c             |   2 +
+>  include/linux/pci.h             |   5 +
+>  include/linux/pci_ids.h         |   1 +
+>  include/uapi/linux/pci_regs.h   |   7 ++
+>  13 files changed, 393 insertions(+), 68 deletions(-)
+>  create mode 100644 drivers/pci/pcie/rcec.c
 
-I have booted this series on my Raspberry Pi 4 (ARCH=arm64 defconfig).
+Good timing, I was just tidying up v11 :)
 
-$ uname -r
-5.10.0-rc4-00108-g830200082c74
+Anyway, I applied this to pci/err for v5.11, thanks!
 
-$ zgrep LTO /proc/config.gz
-CONFIG_LTO=y
-CONFIG_ARCH_SUPPORTS_LTO_CLANG=y
-CONFIG_ARCH_SUPPORTS_THINLTO=y
-CONFIG_THINLTO=y
-# CONFIG_LTO_NONE is not set
-CONFIG_LTO_CLANG=y
-# CONFIG_HID_WALTOP is not set
+Now I see a Tested-by from Jonathan above; this cover letter doesn't
+become part of the git history, so probably I should add that to each
+individual patch, or maybe just the relevant ones if there are some
+that it wouldn't apply to.  I'll tidy that up next week.
 
-and I have taken that same kernel and booted it under QEMU with
-'-enable-kvm' without any visible issues.
+Minor procedural things I fixed up already because I think they're a
+consequence of you building on a previous branch I published: patches
+you post shouldn't include Signed-off-by; you should add your own when
+you write the patch or are part of the delivery path, but you
+shouldn't add *mine*.  I add that when I apply them.
 
-I have tested four combinations:
-
-clang 12 @ f9f0a4046e11c2b4c130640f343e3b2b5db08c1:
-    * CONFIG_THINLTO=y
-    * CONFIG_THINLTO=n
-
-clang 11.0.0
-    * CONFIG_THINLTO=y
-    * CONFIG_THINLTO=n
-
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Cheers,
-Nathan
+I also removed the first Link: tags since they also look like they're
+from an older version.  You don't need to add those; I add those
+automatically so they point to the mailing list message where the
+patch was posted.
