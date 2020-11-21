@@ -2,179 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 410FE2BBD6D
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 06:32:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C39B2BBDD7
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 08:37:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgKUFbz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Nov 2020 00:31:55 -0500
-Received: from mga17.intel.com ([192.55.52.151]:41740 "EHLO mga17.intel.com"
+        id S1727087AbgKUHfq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Nov 2020 02:35:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbgKUFby (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Nov 2020 00:31:54 -0500
-IronPort-SDR: pSwTJ3qCHSsNmN31L8M66Tuh8Z6aUU0RDk5fu0vovmd7C1iVQdwiCuBuZ0IEDhnTDC1bG24u2K
- S7VWfQk+/Xbw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="151420737"
-X-IronPort-AV: E=Sophos;i="5.78,358,1599548400"; 
-   d="scan'208";a="151420737"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 21:31:54 -0800
-IronPort-SDR: vk8fFDr9VKEApaCTMqRnQvYbJSQgkHAZT2sFLihfy7vExWpGiCzDWkBL3H8yd9qdLcykBOM7p3
- DHkUDXAgT7Kw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,358,1599548400"; 
-   d="scan'208";a="326593280"
-Received: from lkp-server01.sh.intel.com (HELO 00bc34107a07) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 20 Nov 2020 21:31:52 -0800
-Received: from kbuild by 00bc34107a07 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kgLV2-0000DZ-8X; Sat, 21 Nov 2020 05:31:52 +0000
-Date:   Sat, 21 Nov 2020 13:31:39 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 3e1f5615aa510f21ba88d2f9c804bd9ad099ac5c
-Message-ID: <5fb8a63b.3dkCaPrxCdTZvI5z%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726161AbgKUHfp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 21 Nov 2020 02:35:45 -0500
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A43012224A;
+        Sat, 21 Nov 2020 07:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605944144;
+        bh=JIOyIP3Z1qYK7PEjNX1ygOHQ10RRXlMdlRpxuOVqaF4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NBoERCzx0bOfs1Spi/qI4Jr4R9gR8nafDvLzNl5y954yhL+AaVOlArn46YJkANI7T
+         7abJYj5XFHRgl30rA/lbg/rqlMovYayapPUq/NdCriwpLmDqbHGPoFB/SLz/cLTFne
+         1lltJvXcAoTRU2aCkyn4SJsnZCZs0Biim543HgXo=
+Received: by mail-oi1-f177.google.com with SMTP id c80so13347823oib.2;
+        Fri, 20 Nov 2020 23:35:44 -0800 (PST)
+X-Gm-Message-State: AOAM533XGJRslAI2T+3QpkpO+RvNRSTokXUTYapch7qFcAvRgtNw5gjL
+        pF3r1REgFKT6pLRKz68m5wAup7lQ0Now8fP87ps=
+X-Google-Smtp-Source: ABdhPJx40jOdwbcNKyqzBINwkmCmwPpkhWi97MwgNpvEdbPfdyMgPT4NA53Xt6JomdsOtV9RsBYuyUMJZVUA9Le699M=
+X-Received: by 2002:aca:d4d5:: with SMTP id l204mr7701517oig.174.1605944144026;
+ Fri, 20 Nov 2020 23:35:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <CAKwvOd=5PhCTZ-yHr08gPYNEsGEjZa=rDY0-unhkhofjXhqwLQ@mail.gmail.com>
+ <CAMj1kXEVzDi5=uteUAzG5E=j+aTCHEbMxwDfor-s=DthpREpyw@mail.gmail.com>
+ <CAKwvOdmpBNx9iSguGXivjJ03FaN5rgv2oaXZUQxYPdRccQmdyQ@mail.gmail.com>
+ <CAMj1kXEoPEd6GzjL1XuxTPwitbR03BiBEXpAGtUytMj-h=vCkg@mail.gmail.com> <CAKwvOdmk1D0dLDOHEWX=jHpUxUT2JbwgnF62Qv3Rv=coNPadHg@mail.gmail.com>
+In-Reply-To: <CAKwvOdmk1D0dLDOHEWX=jHpUxUT2JbwgnF62Qv3Rv=coNPadHg@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 21 Nov 2020 08:35:33 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHTtXqssica=ADMOrA+7mhBQv=nGBsR-XR0+LAKk_-dWA@mail.gmail.com>
+Message-ID: <CAMj1kXHTtXqssica=ADMOrA+7mhBQv=nGBsR-XR0+LAKk_-dWA@mail.gmail.com>
+Subject: Re: [PATCH v7 00/17] Add support for Clang LTO
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Alistair Delva <adelva@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: 3e1f5615aa510f21ba88d2f9c804bd9ad099ac5c  Merge branch 'remotes/lorenzo/pci/misc'
+On Sat, 21 Nov 2020 at 00:53, Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> On Fri, Nov 20, 2020 at 3:30 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Fri, 20 Nov 2020 at 21:19, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > >
+> > > On Fri, Nov 20, 2020 at 2:30 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > >
+> > > > On Thu, 19 Nov 2020 at 00:42, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > > > >
+> > > > > Thanks for continuing to drive this series Sami.  For the series,
+> > > > >
+> > > > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > > >
+> > > > > I did virtualized boot tests with the series applied to aarch64
+> > > > > defconfig without CONFIG_LTO, with CONFIG_LTO_CLANG, and a third time
+> > > > > with CONFIG_THINLTO.  If you make changes to the series in follow ups,
+> > > > > please drop my tested by tag from the modified patches and I'll help
+> > > > > re-test.  Some minor feedback on the Kconfig change, but I'll post it
+> > > > > off of that patch.
+> > > > >
+> > > >
+> > > > When you say 'virtualized" do you mean QEMU on x86? Or actual
+> > > > virtualization on an AArch64 KVM host?
+> > >
+> > > aarch64 guest on x86_64 host.  If you have additional configurations
+> > > that are important to you, additional testing help would be
+> > > appreciated.
+> > >
+> >
+> > Could you run this on an actual phone? Or does Android already ship
+> > with this stuff?
+>
+> By `this`, if you mean "the LTO series", it has been shipping on
+> Android phones for years now, I think it's even required in the latest
+> release.
+>
+> If you mean "the LTO series + mainline" on a phone, well there's the
+> android-mainline of https://android.googlesource.com/kernel/common/,
+> in which this series was recently removed in order to facilitate
+> rebasing Android's patches on ToT-mainline until getting the series
+> landed upstream.  Bit of a chicken and the egg problem there.
+>
+> If you mean "the LTO series + mainline + KVM" on a phone; I don't know
+> the precise state of aarch64 KVM and Android (Will or Marc would
+> know).  We did experiment recently with RockPI's for aach64 KVM, IIRC;
+> I think Android is tricky as it still requires A64+A32/T32 chipsets,
+> Alistair would know more.  Might be interesting to boot a virtualized
+> (or paravirtualized?) guest built with LTO in a host built with LTO
+> for sure, but I don't know if we have tried that yet (I think we did
+> try LTO guests of android kernels, but I think they were on the stock
+> RockPI host BSP image IIRC).
+>
 
-elapsed time: 723m
-
-configs tested: 116
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                 mpc836x_rdk_defconfig
-arm                            qcom_defconfig
-arm                     eseries_pxa_defconfig
-powerpc                      walnut_defconfig
-mips                          rm200_defconfig
-arm                       netwinder_defconfig
-arm                             mxs_defconfig
-powerpc                     mpc83xx_defconfig
-mips                           ip32_defconfig
-arm                          badge4_defconfig
-powerpc                     tqm8540_defconfig
-sh                           se7721_defconfig
-arc                        vdk_hs38_defconfig
-sh                   sh7724_generic_defconfig
-powerpc                 mpc8540_ads_defconfig
-riscv                          rv32_defconfig
-openrisc                            defconfig
-mips                     loongson1c_defconfig
-arm                            hisi_defconfig
-arm                         assabet_defconfig
-sh                   rts7751r2dplus_defconfig
-powerpc                     mpc5200_defconfig
-arm                           corgi_defconfig
-powerpc                     powernv_defconfig
-mips                      pic32mzda_defconfig
-arm                       cns3420vb_defconfig
-arm                     am200epdkit_defconfig
-powerpc                     ppa8548_defconfig
-sh                           se7780_defconfig
-arm                      footbridge_defconfig
-arm                          tango4_defconfig
-powerpc                 mpc834x_mds_defconfig
-openrisc                 simple_smp_defconfig
-c6x                                 defconfig
-alpha                               defconfig
-sh                           se7750_defconfig
-powerpc                      obs600_defconfig
-mips                        maltaup_defconfig
-arm                           tegra_defconfig
-xtensa                              defconfig
-arm                           omap1_defconfig
-ia64                      gensparse_defconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                 mpc836x_mds_defconfig
-ia64                             allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20201120
-x86_64               randconfig-a003-20201120
-x86_64               randconfig-a004-20201120
-x86_64               randconfig-a005-20201120
-x86_64               randconfig-a001-20201120
-x86_64               randconfig-a002-20201120
-i386                 randconfig-a004-20201120
-i386                 randconfig-a003-20201120
-i386                 randconfig-a002-20201120
-i386                 randconfig-a005-20201120
-i386                 randconfig-a001-20201120
-i386                 randconfig-a006-20201120
-i386                 randconfig-a012-20201120
-i386                 randconfig-a013-20201120
-i386                 randconfig-a011-20201120
-i386                 randconfig-a016-20201120
-i386                 randconfig-a014-20201120
-i386                 randconfig-a015-20201120
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a015-20201120
-x86_64               randconfig-a011-20201120
-x86_64               randconfig-a014-20201120
-x86_64               randconfig-a016-20201120
-x86_64               randconfig-a012-20201120
-x86_64               randconfig-a013-20201120
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+I don't think testing under KVM gives us more confidence or coverage
+than testing on bare metal. I was just pointing out that 'virtualized'
+is misleading, and if you test things under QEMU/x86 + TCG, it is
+better to be clear about this, and refer to it as 'under emulation'.
