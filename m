@@ -2,85 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F06A2BBAA5
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 01:13:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C59F2BBB50
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 01:52:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgKUAKq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 19:10:46 -0500
-Received: from mga02.intel.com ([134.134.136.20]:34309 "EHLO mga02.intel.com"
+        id S1728275AbgKUAwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 19:52:12 -0500
+Received: from mga18.intel.com ([134.134.136.126]:13882 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbgKUAKp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Nov 2020 19:10:45 -0500
-IronPort-SDR: /Awp1QBwpze6qkLZW3L7ySeBPgqfWescSFWOEkxbBc+uleMAL8tvl45XRCgNDUbU8nICFcaDA1
- cWsjkI6MTs2g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="158601597"
+        id S1727808AbgKUAwM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 20 Nov 2020 19:52:12 -0500
+IronPort-SDR: U+Z/uY9ONmk6/ieUNyBtkT2+X5vqw8TwY7dUgmnlWql5LrCJUF74YYLS2TXvGA65LgBKC05fyZ
+ 5N70VTvLAilg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="159332982"
 X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="158601597"
+   d="scan'208";a="159332982"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 16:10:44 -0800
-IronPort-SDR: ZjNlmnti1lkyM+nfXCx92q105tkNxV3vs80opNdb5IuRzCnHLO7IxbJBQ/WdIavyTFYl/bpUpt
- SzsMtz/jn5Rg==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 16:52:11 -0800
+IronPort-SDR: cEu7a6iI/DcjvPMAf/YEuY9XJ/9021XKLwr+E+KnD8dQtfXfTzsYVhMRGPi7XW2mcCn4gOGymV
+ EguoJ/iVlurQ==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="369387338"
-Received: from unknown (HELO arch-ashland-svkelley.intel.com) ([10.212.171.128])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 16:10:44 -0800
-From:   Sean V Kelley <sean.v.kelley@intel.com>
-To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        xerces.zhao@gmail.com, rafael.j.wysocki@intel.com,
-        ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@intel.com, qiuxu.zhuo@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: [PATCH v12 15/15] PCI/AER: Add RCEC AER error injection support
-Date:   Fri, 20 Nov 2020 16:10:36 -0800
-Message-Id: <20201121001036.8560-16-sean.v.kelley@intel.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201121001036.8560-1-sean.v.kelley@intel.com>
-References: <20201121001036.8560-1-sean.v.kelley@intel.com>
+   d="scan'208";a="545661741"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2020 16:52:11 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 20 Nov 2020 16:52:10 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 20 Nov 2020 16:52:10 -0800
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Fri, 20 Nov 2020 16:52:10 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "jhp@endlessos.org" <jhp@endlessos.org>
+Subject: Re: [PATCH v4] PCI: vmd: Offset Client VMD MSI-X vectors
+Thread-Topic: [PATCH v4] PCI: vmd: Offset Client VMD MSI-X vectors
+Thread-Index: AQHWsWavZW28YxCz6U22Le5fNljzRqnSZGOA
+Date:   Sat, 21 Nov 2020 00:52:10 +0000
+Message-ID: <e7946ec9ac1a425dc8ccccd506770ba89a48a98a.camel@intel.com>
+References: <20201102222223.92978-1-jonathan.derrick@intel.com>
+In-Reply-To: <20201102222223.92978-1-jonathan.derrick@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FADCE9975D20154C85EDD15D9379C056@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-
-Root Complex Event Collectors (RCEC) appear as peers to Root Ports and may
-also have the AER capability.
-
-Add RCEC support to the AER error injection driver.
-
-Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-Link: https://lore.kernel.org/r/20201002184735.1229220-15-seanvk.dev@oregontracks.org
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
----
- drivers/pci/pcie/aer_inject.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-index c2cbf425afc5..767f8859b99b 100644
---- a/drivers/pci/pcie/aer_inject.c
-+++ b/drivers/pci/pcie/aer_inject.c
-@@ -333,8 +333,11 @@ static int aer_inject(struct aer_error_inj *einj)
- 	if (!dev)
- 		return -ENODEV;
- 	rpdev = pcie_find_root_port(dev);
-+	/* If Root Port not found, try to find an RCEC */
-+	if (!rpdev)
-+		rpdev = dev->rcec;
- 	if (!rpdev) {
--		pci_err(dev, "Root port not found\n");
-+		pci_err(dev, "Neither Root Port nor RCEC found\n");
- 		ret = -ENODEV;
- 		goto out_put;
- 	}
--- 
-2.29.2
-
+SGkgTG9yZW56bw0KDQpQbGVhc2UgZG9uJ3QgZm9yZ2V0IHRoaXMgb25lDQoNClRoYW5rcw0KDQpP
+biBNb24sIDIwMjAtMTEtMDIgYXQgMTU6MjIgLTA3MDAsIEpvbiBEZXJyaWNrIHdyb3RlOg0KPiBD
+bGllbnQgVk1EIHBsYXRmb3JtcyBoYXZlIGEgc29mdHdhcmUtdHJpZ2dlcmVkIE1TSS1YIHZlY3Rv
+ciAwIHRoYXQgd2lsbA0KPiBub3QgZm9yd2FyZCBoYXJkd2FyZS1yZW1hcHBlZCBNU0kgZnJvbSB0
+aGUgc3ViLWRldmljZSBkb21haW4uIFRoaXMNCj4gY2F1c2VzIGFuIGlzc3VlIHdpdGggVk1EIHBs
+YXRmb3JtcyB0aGF0IHVzZSBBSENJIGJlaGluZCBWTUQgYW5kIGhhdmUgYQ0KPiBzaW5nbGUgTVNJ
+LVggdmVjdG9yIHJlbWFwcGVkIHRvIFZNRCB2ZWN0b3IgMC4gQWRkIGEgVk1EIE1TSS1YIHZlY3Rv
+cg0KPiBvZmZzZXQgZm9yIHRoZXNlIHBsYXRmb3Jtcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpv
+biBEZXJyaWNrIDxqb25hdGhhbi5kZXJyaWNrQGludGVsLmNvbT4NCj4gVGVzdGVkLWJ5OiBKaWFu
+LUhvbmcgUGFuIDxqaHBAZW5kbGVzc29zLm9yZz4NCj4gLS0tDQo+IHYzLT52NDogUmViYXNlIGZv
+ciB2NS4xMA0KPiANCj4gZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYyB8IDM3ICsrKysrKysr
+KysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2Vy
+dGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNp
+L2NvbnRyb2xsZXIvdm1kLmMgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+IGluZGV4
+IGYzNzVjMjFjZWViMS4uYzMxZTRkNWNiMTQ2IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BjaS9j
+b250cm9sbGVyL3ZtZC5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMNCj4g
+QEAgLTUzLDYgKzUzLDEyIEBAIGVudW0gdm1kX2ZlYXR1cmVzIHsNCj4gIAkgKiB2ZW5kb3Itc3Bl
+Y2lmaWMgY2FwYWJpbGl0eSBzcGFjZQ0KPiAgCSAqLw0KPiAgCVZNRF9GRUFUX0hBU19NRU1CQVJf
+U0hBRE9XX1ZTQ0FQCT0gKDEgPDwgMiksDQo+ICsNCj4gKwkvKg0KPiArCSAqIERldmljZSBtYXkg
+dXNlIE1TSS1YIHZlY3RvciAwIGZvciBzb2Z0d2FyZSB0cmlnZ2VyaW5nIGFuZCB3aWxsIG5vdA0K
+PiArCSAqIGJlIHVzZWQgZm9yIE1TSSByZW1hcHBpbmcNCj4gKwkgKi8NCj4gKwlWTURfRkVBVF9P
+RkZTRVRfRklSU1RfVkVDVE9SCQk9ICgxIDw8IDMpLA0KPiAgfTsNCj4gIA0KPiAgLyoNCj4gQEAg
+LTEwNCw2ICsxMTAsNyBAQCBzdHJ1Y3Qgdm1kX2RldiB7DQo+ICAJc3RydWN0IGlycV9kb21haW4J
+KmlycV9kb21haW47DQo+ICAJc3RydWN0IHBjaV9idXMJCSpidXM7DQo+ICAJdTgJCQlidXNuX3N0
+YXJ0Ow0KPiArCXU4CQkJZmlyc3RfdmVjOw0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGlubGluZSBz
+dHJ1Y3Qgdm1kX2RldiAqdm1kX2Zyb21fYnVzKHN0cnVjdCBwY2lfYnVzICpidXMpDQo+IEBAIC0x
+OTksMTEgKzIwNiwxMSBAQCBzdGF0aWMgaXJxX2h3X251bWJlcl90IHZtZF9nZXRfaHdpcnEoc3Ry
+dWN0IG1zaV9kb21haW5faW5mbyAqaW5mbywNCj4gICAqLw0KPiAgc3RhdGljIHN0cnVjdCB2bWRf
+aXJxX2xpc3QgKnZtZF9uZXh0X2lycShzdHJ1Y3Qgdm1kX2RldiAqdm1kLCBzdHJ1Y3QgbXNpX2Rl
+c2MgKmRlc2MpDQo+ICB7DQo+IC0JaW50IGksIGJlc3QgPSAxOw0KPiAgCXVuc2lnbmVkIGxvbmcg
+ZmxhZ3M7DQo+ICsJaW50IGksIGJlc3Q7DQo+ICANCj4gLQlpZiAodm1kLT5tc2l4X2NvdW50ID09
+IDEpDQo+IC0JCXJldHVybiAmdm1kLT5pcnFzWzBdOw0KPiArCWlmICh2bWQtPm1zaXhfY291bnQg
+PT0gMSArIHZtZC0+Zmlyc3RfdmVjKQ0KPiArCQlyZXR1cm4gJnZtZC0+aXJxc1t2bWQtPmZpcnN0
+X3ZlY107DQo+ICANCj4gIAkvKg0KPiAgCSAqIFdoaXRlIGxpc3QgZm9yIGZhc3QtaW50ZXJydXB0
+IGhhbmRsZXJzLiBBbGwgb3RoZXJzIHdpbGwgc2hhcmUgdGhlDQo+IEBAIC0yMTMsMTEgKzIyMCwx
+MiBAQCBzdGF0aWMgc3RydWN0IHZtZF9pcnFfbGlzdCAqdm1kX25leHRfaXJxKHN0cnVjdCB2bWRf
+ZGV2ICp2bWQsIHN0cnVjdCBtc2lfZGVzYyAqZA0KPiAgCWNhc2UgUENJX0NMQVNTX1NUT1JBR0Vf
+RVhQUkVTUzoNCj4gIAkJYnJlYWs7DQo+ICAJZGVmYXVsdDoNCj4gLQkJcmV0dXJuICZ2bWQtPmly
+cXNbMF07DQo+ICsJCXJldHVybiAmdm1kLT5pcnFzW3ZtZC0+Zmlyc3RfdmVjXTsNCj4gIAl9DQo+
+ICANCj4gIAlyYXdfc3Bpbl9sb2NrX2lycXNhdmUoJmxpc3RfbG9jaywgZmxhZ3MpOw0KPiAtCWZv
+ciAoaSA9IDE7IGkgPCB2bWQtPm1zaXhfY291bnQ7IGkrKykNCj4gKwliZXN0ID0gdm1kLT5maXJz
+dF92ZWMgKyAxOw0KPiArCWZvciAoaSA9IGJlc3Q7IGkgPCB2bWQtPm1zaXhfY291bnQ7IGkrKykN
+Cj4gIAkJaWYgKHZtZC0+aXJxc1tpXS5jb3VudCA8IHZtZC0+aXJxc1tiZXN0XS5jb3VudCkNCj4g
+IAkJCWJlc3QgPSBpOw0KPiAgCXZtZC0+aXJxc1tiZXN0XS5jb3VudCsrOw0KPiBAQCAtNTUwLDgg
+KzU1OCw4IEBAIHN0YXRpYyBpbnQgdm1kX2FsbG9jX2lycXMoc3RydWN0IHZtZF9kZXYgKnZtZCkN
+Cj4gIAlpZiAodm1kLT5tc2l4X2NvdW50IDwgMCkNCj4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ICAN
+Cj4gLQl2bWQtPm1zaXhfY291bnQgPSBwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoZGV2LCAxLCB2bWQt
+Pm1zaXhfY291bnQsDQo+IC0JCQkJCQlQQ0lfSVJRX01TSVgpOw0KPiArCXZtZC0+bXNpeF9jb3Vu
+dCA9IHBjaV9hbGxvY19pcnFfdmVjdG9ycyhkZXYsIHZtZC0+Zmlyc3RfdmVjICsgMSwNCj4gKwkJ
+CQkJCXZtZC0+bXNpeF9jb3VudCwgUENJX0lSUV9NU0lYKTsNCj4gIAlpZiAodm1kLT5tc2l4X2Nv
+dW50IDwgMCkNCj4gIAkJcmV0dXJuIHZtZC0+bXNpeF9jb3VudDsNCj4gIA0KPiBAQCAtNzE5LDYg
+KzcyNyw3IEBAIHN0YXRpYyBpbnQgdm1kX2VuYWJsZV9kb21haW4oc3RydWN0IHZtZF9kZXYgKnZt
+ZCwgdW5zaWduZWQgbG9uZyBmZWF0dXJlcykNCj4gIA0KPiAgc3RhdGljIGludCB2bWRfcHJvYmUo
+c3RydWN0IHBjaV9kZXYgKmRldiwgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQ0KPiAg
+ew0KPiArCXVuc2lnbmVkIGxvbmcgZmVhdHVyZXMgPSAodW5zaWduZWQgbG9uZykgaWQtPmRyaXZl
+cl9kYXRhOw0KPiAgCXN0cnVjdCB2bWRfZGV2ICp2bWQ7DQo+ICAJaW50IGVycjsNCj4gIA0KPiBA
+QCAtNzQzLDEzICs3NTIsMTYgQEAgc3RhdGljIGludCB2bWRfcHJvYmUoc3RydWN0IHBjaV9kZXYg
+KmRldiwgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQ0KPiAgCSAgICBkbWFfc2V0X21h
+c2tfYW5kX2NvaGVyZW50KCZkZXYtPmRldiwgRE1BX0JJVF9NQVNLKDMyKSkpDQo+ICAJCXJldHVy
+biAtRU5PREVWOw0KPiAgDQo+ICsJaWYgKGZlYXR1cmVzICYgVk1EX0ZFQVRfT0ZGU0VUX0ZJUlNU
+X1ZFQ1RPUikNCj4gKwkJdm1kLT5maXJzdF92ZWMgPSAxOw0KPiArDQo+ICAJZXJyID0gdm1kX2Fs
+bG9jX2lycXModm1kKTsNCj4gIAlpZiAoZXJyKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgDQo+ICAJ
+c3Bpbl9sb2NrX2luaXQoJnZtZC0+Y2ZnX2xvY2spOw0KPiAgCXBjaV9zZXRfZHJ2ZGF0YShkZXYs
+IHZtZCk7DQo+IC0JZXJyID0gdm1kX2VuYWJsZV9kb21haW4odm1kLCAodW5zaWduZWQgbG9uZykg
+aWQtPmRyaXZlcl9kYXRhKTsNCj4gKwllcnIgPSB2bWRfZW5hYmxlX2RvbWFpbih2bWQsIGZlYXR1
+cmVzKTsNCj4gIAlpZiAoZXJyKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgDQo+IEBAIC04MTgsMTMg
+KzgzMCwxNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgdm1kX2lkc1tdID0g
+ew0KPiAgCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVTVFJJQ1RJT05TLH0sDQo+ICAJe1BDSV9ERVZJ
+Q0UoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NjdmKSwNCj4gIAkJLmRyaXZlcl9kYXRhID0gVk1E
+X0ZFQVRfSEFTX01FTUJBUl9TSEFET1dfVlNDQVAgfA0KPiAtCQkJCVZNRF9GRUFUX0hBU19CVVNf
+UkVTVFJJQ1RJT05TLH0sDQo+ICsJCQkJVk1EX0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMgfA0K
+PiArCQkJCVZNRF9GRUFUX09GRlNFVF9GSVJTVF9WRUNUT1IsfSwNCj4gIAl7UENJX0RFVklDRShQ
+Q0lfVkVORE9SX0lEX0lOVEVMLCAweDRjM2QpLA0KPiAgCQkuZHJpdmVyX2RhdGEgPSBWTURfRkVB
+VF9IQVNfTUVNQkFSX1NIQURPV19WU0NBUCB8DQo+IC0JCQkJVk1EX0ZFQVRfSEFTX0JVU19SRVNU
+UklDVElPTlMsfSwNCj4gKwkJCQlWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUyB8DQo+ICsJ
+CQkJVk1EX0ZFQVRfT0ZGU0VUX0ZJUlNUX1ZFQ1RPUix9LA0KPiAgCXtQQ0lfREVWSUNFKFBDSV9W
+RU5ET1JfSURfSU5URUwsIFBDSV9ERVZJQ0VfSURfSU5URUxfVk1EXzlBMEIpLA0KPiAgCQkuZHJp
+dmVyX2RhdGEgPSBWTURfRkVBVF9IQVNfTUVNQkFSX1NIQURPV19WU0NBUCB8DQo+IC0JCQkJVk1E
+X0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMsfSwNCj4gKwkJCQlWTURfRkVBVF9IQVNfQlVTX1JF
+U1RSSUNUSU9OUyB8DQo+ICsJCQkJVk1EX0ZFQVRfT0ZGU0VUX0ZJUlNUX1ZFQ1RPUix9LA0KPiAg
+CXswLH0NCj4gIH07DQo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKHBjaSwgdm1kX2lkcyk7DQo=
