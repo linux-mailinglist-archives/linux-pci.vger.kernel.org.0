@@ -2,83 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 990512BC06F
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 17:13:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E65892BC1F3
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 21:11:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgKUQN3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Nov 2020 11:13:29 -0500
-Received: from mout.gmx.net ([212.227.15.18]:39553 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbgKUQN2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Nov 2020 11:13:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1605975168;
-        bh=5XWucgV8E35bUAw4aZcK+RdQSdGH0BbK0144kscnzcI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=WQolZIuuxEiDb/4MIogv7qWitrEDh9yZwc21+uMJ8+WIOE/ed1OKqJoypw6F/kbvl
-         39WotD6bjU87mQ5cmeTjoXAKZPL+PjeUve69J1kCDVxTd/HqW77CA2MEvSXyNrz9AR
-         /cCVn5tv+VYz93V1lWMNOrSuYpy4Y2N4jnQOLp24=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.75.72.182] ([185.75.72.182]) by web-mail.gmx.net
- (3c-app-gmx-bs42.server.lan [172.19.170.94]) (via HTTP); Sat, 21 Nov 2020
- 17:12:48 +0100
+        id S1728444AbgKUUL2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Nov 2020 15:11:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728443AbgKUUL2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Nov 2020 15:11:28 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294AEC061A4A
+        for <linux-pci@vger.kernel.org>; Sat, 21 Nov 2020 12:11:28 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id n137so1131836pfd.3
+        for <linux-pci@vger.kernel.org>; Sat, 21 Nov 2020 12:11:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2E/G1+BC++eqc5/VVuVWg3zAaLSLEIJOC7i/xjg7VSs=;
+        b=d6GrwcPvUVOPqv9gOqNrM/bSP2HBSSL4qRmWjJIA4m3hlxWzzEj5T+lfuVhxoorPwR
+         NB2BxSopAcepiomrLE56aIQhqr6iGtiFG6DXeV6iIvBvUM0uetc94YKKaGPVURg9KuKK
+         wPaVmZ+dITTlnTfMDAnpXhgP+pbbnBqLxnBaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2E/G1+BC++eqc5/VVuVWg3zAaLSLEIJOC7i/xjg7VSs=;
+        b=BgVHFnkRqK3UMxdZ1bo0bZtc8tN+yfjYSxMak0PBeT5ZJQO2VR2KLXXCTh0dWJ/EeX
+         Otbzjzwa/hqrPKKODLMPK1KLFPYAnziVppQei0xGQfd4gO9on7ffvHy3YQXuuor0hud9
+         UXv+RrfQr1bnuwQk+GCYKhVsLxcZ4dI9ucI6rX3mHENXWIw7e/Mh0juLvtQR/F2LJH5j
+         B/pxZr0kCV+CWK1QNOz7p5cMTFCiyvvzXR42mLMk9V5ffuv28lN7gESQmY2IRBYcU7rp
+         dLLv3qqb5PueWmHha9ojwsVzRQJlElbTJP32TC62uPlEG5de+uHBdXRrkftqy/kiVgx5
+         40sQ==
+X-Gm-Message-State: AOAM531VQm+8vzAFKjM+k6sKYVpO36X23/f6f6zuhxr1D8QhRrQbfBr3
+        UpgK8rHXcG013luSHlgBvKmyjQ==
+X-Google-Smtp-Source: ABdhPJxD+jcfx423cWLQ4O6Da2CSyrYt2pnWQlkBVEKwXqI/6a+7t8fMpRLZBlqwuFIT6m30Fbuv4Q==
+X-Received: by 2002:a17:90a:f406:: with SMTP id ch6mr15105294pjb.134.1605989487549;
+        Sat, 21 Nov 2020 12:11:27 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y10sm8724624pjm.34.2020.11.21.12.11.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2020 12:11:26 -0800 (PST)
+Date:   Sat, 21 Nov 2020 12:11:25 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 02/17] kbuild: add support for Clang LTO
+Message-ID: <202011211204.211E2B12@keescook>
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <20201118220731.925424-3-samitolvanen@google.com>
+ <CAKwvOdnYTMzaahnBqdNYPz3KMdnkp=jZ4hxiqkTYzM5+BBdezA@mail.gmail.com>
+ <CABCJKucj_jUwoiLc35R7qFe+cNKTWgT+gsCa5pPiY66+1--3Lg@mail.gmail.com>
+ <202011201144.3F2BB70C@keescook>
+ <20201120202935.GA1220359@ubuntu-m3-large-x86>
+ <202011201241.B159562D7@keescook>
+ <CABCJKucJ87wa73YJkN_dYUyE7foQT+12gdWJZw1PgZ_decFr4w@mail.gmail.com>
+ <202011201556.3B910EF@keescook>
+ <CABCJKudy5xFfjBFpFPR255-NAb1yOSuVqsL4fFUwJGGWKDnmQQ@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <trinity-79472418-bec7-4097-9612-fa7a79c27620-1605975168396@3c-app-gmx-bs42>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <linux@fw-web.de>,
-        linux-kernel@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Aw: Re:  Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
-Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 21 Nov 2020 17:12:48 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <c63d8d7d966c1dda82884f361d4691c3@kernel.org>
-References: <20201031140330.83768-1-linux@fw-web.de>
- <1604253261.22363.0.camel@mtkswgap22>
- <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
- <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
- <df5565a2f1e821041c7c531ad52a3344@kernel.org>
- <87h7q791j8.fsf@nanos.tec.linutronix.de>
- <877dr38kt8.fsf@nanos.tec.linutronix.de>
- <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
- <87o8ke7njb.fsf@nanos.tec.linutronix.de>
- <trinity-1d7f8900-10db-40c0-a0aa-47bb99ed84cd-1604508571909@3c-app-gmx-bs02>
- <87h7q4lnoz.fsf@nanos.tec.linutronix.de>
- <074d057910c3e834f4bd58821e8583b1@kernel.org>
- <87blgbl887.fsf@nanos.tec.linutronix.de>
- <c63d8d7d966c1dda82884f361d4691c3@kernel.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:0WIPfXZNx+COWrzO6EWqhIOYRhYsuaEetPZRHGICmDa5l4cTCVnVnw0NbFHdi/ukfb57B
- 6Lxz2OgLXMSr5/sLZ9j0KeqQe9najHHMVgLiJavcBw1i28PIl+j0IgRbSTL8Th60ZpqaRZYhyRIK
- QjWgVE5drMTBYjDwVBLFA4kAa/3ZuKPVy1/qTV/Hh7g5rsFwX6y5eGEE+zxoF6Sv9oDXvsEC2oDj
- DZkqXXREa2aW5ClACLGG2C2cD7q4q7NS0LHGaoTWc8wnipzl4h9m3r17XTbZcvlS5ciH6UT3Hxwp
- Cc=
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eADDipfb3v0=:KBRN9L8eDneVATspJUwmja
- XPTN2pmGNuR+KRj/6s7kAKPPo6YhEbChm8G0MtP+rjsnpBZCOXSjBbTUS+gE0zLVh3XhqGHRs
- gwQopYWXCPmE+LUThjau41VJI8mrH9VyebUy2hiWKLfCkoZiqQNAWiGi4X49zFS9+pY3pABs2
- FF1ikYXvw90kdUxYZnc1V0vli/ebkvfnAvX3Hy07dUbXZMoANVO8le7DL5x4jdLS3SR8Ffrcz
- x9DNglGD0SdwwoOWazBCLvBDD6Tiyk4a38OYvjStb777J3XegwXEBO/YCgKCLJK6W+LTtkIJZ
- TClV2KG0egtTMd5P0Wg7IsyHPvMd9+38wAcHJFTMnfC9u6pLpWZU1z4OY970dhJfTJFC1aGAK
- Caxwvu8Wp0aQ06xJdPvocBRh88WAOum2QjOQKnILjCi95/KaSZoWuCLKCDQAPVRbGADYhgPKh
- w7fpVLoH9BI4ThFZQ0Rdt5uro74R4XbRP8YtNonBHiND+KoLYdOBBRKVKZL8CZyrHC5+VGjGj
- cqRIhWV/R92vXLQcpvkuI+irJc576bjainFPKd+C6+xouBNIvH7my3NiJF+CRBwvegJ5kekcT
- 7LSM9o73dxXyw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKudy5xFfjBFpFPR255-NAb1yOSuVqsL4fFUwJGGWKDnmQQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Fri, Nov 20, 2020 at 05:46:44PM -0800, Sami Tolvanen wrote:
+> Sure, this looks good to me, I'll use this in v8. The only minor
+> concern I have is that ThinLTO cannot be set as the default LTO mode,
+> but I assume anyone who selects LTO is also capable of deciding which
+> mode is better for them.
 
-any new state here?
+It could be re-arranged similar to what you had before, but like:
 
-last fix works, but i have not seen it approved by anyone for merge or sent as separate Patch
+config LTO
+	bool "..."
+	depends on HAS_LTO
+	help
+	  ...
 
-regards Frank
+choice
+	prompt "LTO mode" if LTO
+	default LTO_GCC if HAS_LTO_GCC
+	default LTO_CLANG_THIN if HAS_LTO_CLANG
+	default LTO_CLANG_FULL
+	help
+	  ...
+
+	config LTO_CLANG_THIN
+	...
+
+	config LTO_CLANG_FULL
+endchoice
+
+Then the LTO is top-level yes/no, but depends on detected capabilities,
+and the mode is visible if LTO is chosen, etc.
+
+I'm not really sure which is better...
+
+> > +config LTO_CLANG_THIN
+> > +       bool "Clang ThinLTO (EXPERIMENTAL)"
+> > +       depends on ARCH_SUPPORTS_LTO_CLANG_THIN
+> > +       select LTO_CLANG
+> > +       help
+> > +         This option enables Clang's ThinLTO, which allows for parallel
+> > +         optimization and faster incremental compiles compared to the
+> > +         CONFIG_LTO_CLANG_FULL option. More information can be found
+> > +         from Clang's documentation:
+> > +
+> > +           https://clang.llvm.org/docs/ThinLTO.html
+> > +
+> > +         If unsure, say Y.
+> >  endchoice
+> 
+> The two LTO_CLANG_* options need to depend on HAS_LTO_CLANG, of course.
+
+Whoops, yes. Thanks for catching that. :)
+
+-- 
+Kees Cook
