@@ -2,41 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7AD72BBD6C
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 06:32:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 410FE2BBD6D
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 06:32:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbgKUFby (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Nov 2020 00:31:54 -0500
-Received: from mga18.intel.com ([134.134.136.126]:21303 "EHLO mga18.intel.com"
+        id S1725968AbgKUFbz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Nov 2020 00:31:55 -0500
+Received: from mga17.intel.com ([192.55.52.151]:41740 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725968AbgKUFby (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1726047AbgKUFby (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Sat, 21 Nov 2020 00:31:54 -0500
-IronPort-SDR: PTTumCud/892dTAoCMThb509zsxaJzew8U7f1cdxTQLmFhgoxZYbmCF96AOxl4eEK7d090vF1L
- Wu52eS9kAD+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="159344856"
+IronPort-SDR: pSwTJ3qCHSsNmN31L8M66Tuh8Z6aUU0RDk5fu0vovmd7C1iVQdwiCuBuZ0IEDhnTDC1bG24u2K
+ S7VWfQk+/Xbw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="151420737"
 X-IronPort-AV: E=Sophos;i="5.78,358,1599548400"; 
-   d="scan'208";a="159344856"
+   d="scan'208";a="151420737"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 21:31:54 -0800
-IronPort-SDR: K+kz/ZQYVpdMvvfCo8EfRR5rqSE3hEb/NlG/nT09S/a5BsXuQsk1d1tfIIS0i23zm/rnfO6Kkv
- 5C1Rs0SAZhpw==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 21:31:54 -0800
+IronPort-SDR: vk8fFDr9VKEApaCTMqRnQvYbJSQgkHAZT2sFLihfy7vExWpGiCzDWkBL3H8yd9qdLcykBOM7p3
+ DHkUDXAgT7Kw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,358,1599548400"; 
-   d="scan'208";a="545726758"
+   d="scan'208";a="326593280"
 Received: from lkp-server01.sh.intel.com (HELO 00bc34107a07) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2020 21:31:52 -0800
+  by orsmga003.jf.intel.com with ESMTP; 20 Nov 2020 21:31:52 -0800
 Received: from kbuild by 00bc34107a07 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kgLV2-0000DW-7L; Sat, 21 Nov 2020 05:31:52 +0000
-Date:   Sat, 21 Nov 2020 13:31:34 +0800
+        id 1kgLV2-0000DZ-8X; Sat, 21 Nov 2020 05:31:52 +0000
+Date:   Sat, 21 Nov 2020 13:31:39 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- cce14622a7031ec9a9a62cf09edd67dcbfb0d063
-Message-ID: <5fb8a636.fvF3yYgQ/O8stvNS%lkp@intel.com>
+Subject: [pci:next] BUILD SUCCESS 3e1f5615aa510f21ba88d2f9c804bd9ad099ac5c
+Message-ID: <5fb8a63b.3dkCaPrxCdTZvI5z%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,12 +44,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  for-linus
-branch HEAD: cce14622a7031ec9a9a62cf09edd67dcbfb0d063  PCI: Add function 1 DMA alias quirk for Marvell 9215 SATA controller
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 3e1f5615aa510f21ba88d2f9c804bd9ad099ac5c  Merge branch 'remotes/lorenzo/pci/misc'
 
 elapsed time: 723m
 
-configs tested: 121
+configs tested: 116
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -87,11 +86,6 @@ powerpc                     mpc5200_defconfig
 arm                           corgi_defconfig
 powerpc                     powernv_defconfig
 mips                      pic32mzda_defconfig
-arm                         hackkit_defconfig
-mips                      fuloong2e_defconfig
-arm                          simpad_defconfig
-arm                        trizeps4_defconfig
-arc                        nsimosci_defconfig
 arm                       cns3420vb_defconfig
 arm                     am200epdkit_defconfig
 powerpc                     ppa8548_defconfig
@@ -160,12 +154,12 @@ i386                 randconfig-a011-20201120
 i386                 randconfig-a016-20201120
 i386                 randconfig-a014-20201120
 i386                 randconfig-a015-20201120
+riscv                    nommu_k210_defconfig
 riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
 riscv                             allnoconfig
 riscv                               defconfig
 riscv                            allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
 x86_64                                   rhel
 x86_64                           allyesconfig
 x86_64                    rhel-7.6-kselftests
