@@ -2,145 +2,251 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C59F2BBB50
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 01:52:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CB542BBBAA
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 02:47:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgKUAwM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Nov 2020 19:52:12 -0500
-Received: from mga18.intel.com ([134.134.136.126]:13882 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727808AbgKUAwM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 20 Nov 2020 19:52:12 -0500
-IronPort-SDR: U+Z/uY9ONmk6/ieUNyBtkT2+X5vqw8TwY7dUgmnlWql5LrCJUF74YYLS2TXvGA65LgBKC05fyZ
- 5N70VTvLAilg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9811"; a="159332982"
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="159332982"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Nov 2020 16:52:11 -0800
-IronPort-SDR: cEu7a6iI/DcjvPMAf/YEuY9XJ/9021XKLwr+E+KnD8dQtfXfTzsYVhMRGPi7XW2mcCn4gOGymV
- EguoJ/iVlurQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,357,1599548400"; 
-   d="scan'208";a="545661741"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2020 16:52:11 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 20 Nov 2020 16:52:10 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 20 Nov 2020 16:52:10 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Fri, 20 Nov 2020 16:52:10 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "jhp@endlessos.org" <jhp@endlessos.org>
-Subject: Re: [PATCH v4] PCI: vmd: Offset Client VMD MSI-X vectors
-Thread-Topic: [PATCH v4] PCI: vmd: Offset Client VMD MSI-X vectors
-Thread-Index: AQHWsWavZW28YxCz6U22Le5fNljzRqnSZGOA
-Date:   Sat, 21 Nov 2020 00:52:10 +0000
-Message-ID: <e7946ec9ac1a425dc8ccccd506770ba89a48a98a.camel@intel.com>
-References: <20201102222223.92978-1-jonathan.derrick@intel.com>
-In-Reply-To: <20201102222223.92978-1-jonathan.derrick@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FADCE9975D20154C85EDD15D9379C056@intel.com>
-Content-Transfer-Encoding: base64
+        id S1725935AbgKUBq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Nov 2020 20:46:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgKUBq5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Nov 2020 20:46:57 -0500
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5356EC061A47
+        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 17:46:57 -0800 (PST)
+Received: by mail-vs1-xe42.google.com with SMTP id x11so6055343vsx.12
+        for <linux-pci@vger.kernel.org>; Fri, 20 Nov 2020 17:46:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v8J7ye6KqEOqzvSxgHSVDOvhErTqxQnjIzQcu9TjNgY=;
+        b=gxEj26AyhbRPRwqI4nRtVKE+oYSAVh0zKiN7CirbrkbRNHePoBQ5EYK/6EpmHgONJ6
+         rDzEI9xmd2qIIpAUwbpr8Q0yverWthQEp5Gqcylo5sKUIhwtfUGoz4tRuCQbcZaqkKAW
+         oOidkmqwHF6T/d09/hXg1sRnsEGdmWMfeAH42QOzSzvfH/8ZXoiPcEUHHvnMMpdidxdk
+         SBLmbP4NBAr0IyhZ6Aqnke827HaJix7UCMkkb3BI4YYVtQZ/NJlRBUzgqsBFXQMQhe2Z
+         Gl9SL1sbqejJ1I1r/vXI0aht45bXxB+2OmXIeoLxJEhKfDetrsMJexh+NAMprZAZTUbp
+         CUEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v8J7ye6KqEOqzvSxgHSVDOvhErTqxQnjIzQcu9TjNgY=;
+        b=doisAB6rjK++oTIHmwOeA7HltPzR/vdcTICBemqmLfLRc3M2h0VGtH/C4v+4mTGJUw
+         wq2cQwQQuNPCOY4b7B2jD2Tzkwe3KVBZ4oOCre5/OeaSdqyEQoy1gepZrB7CXv2a/SK0
+         r49TbkCC9ZIMSqN8v+DUe+jrvzZnwPZuKdZQvFS1V/avUGy0r1qebMp5lfZAMOWMhg35
+         D5nt6chG/PkfjI7ZyVTPLa3E305WiF/6tHapyM1W5GVvatQHE8TExXUILaEHjJIxlTdw
+         xDv6q0T58nvM0fFQ2JCmlbYqplr+jAoSlMZHCKEuLksHdOkQYhsMtBS8YWHy36zuxBjg
+         ZhXQ==
+X-Gm-Message-State: AOAM532p6TdmADA8fi+3gPqIiHoi7RGWnesAli7OXOMlZmuOSdMEKkJK
+        XvMy1fDKjbaJM9x458To2lXPHMwX4QbiJzRFIWtCrA==
+X-Google-Smtp-Source: ABdhPJyTZdzEFSb+AU0Lwcx6MYiAxc0oJWnFWkG3BjzA7DDhZM3ZvjUPYcoVlJfRzxNMLq+BKHVW1Pwga5taQXZN+BE=
+X-Received: by 2002:a05:6102:22da:: with SMTP id a26mr15670580vsh.13.1605923216073;
+ Fri, 20 Nov 2020 17:46:56 -0800 (PST)
 MIME-Version: 1.0
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <20201118220731.925424-3-samitolvanen@google.com> <CAKwvOdnYTMzaahnBqdNYPz3KMdnkp=jZ4hxiqkTYzM5+BBdezA@mail.gmail.com>
+ <CABCJKucj_jUwoiLc35R7qFe+cNKTWgT+gsCa5pPiY66+1--3Lg@mail.gmail.com>
+ <202011201144.3F2BB70C@keescook> <20201120202935.GA1220359@ubuntu-m3-large-x86>
+ <202011201241.B159562D7@keescook> <CABCJKucJ87wa73YJkN_dYUyE7foQT+12gdWJZw1PgZ_decFr4w@mail.gmail.com>
+ <202011201556.3B910EF@keescook>
+In-Reply-To: <202011201556.3B910EF@keescook>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Fri, 20 Nov 2020 17:46:44 -0800
+Message-ID: <CABCJKudy5xFfjBFpFPR255-NAb1yOSuVqsL4fFUwJGGWKDnmQQ@mail.gmail.com>
+Subject: Re: [PATCH v7 02/17] kbuild: add support for Clang LTO
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgTG9yZW56bw0KDQpQbGVhc2UgZG9uJ3QgZm9yZ2V0IHRoaXMgb25lDQoNClRoYW5rcw0KDQpP
-biBNb24sIDIwMjAtMTEtMDIgYXQgMTU6MjIgLTA3MDAsIEpvbiBEZXJyaWNrIHdyb3RlOg0KPiBD
-bGllbnQgVk1EIHBsYXRmb3JtcyBoYXZlIGEgc29mdHdhcmUtdHJpZ2dlcmVkIE1TSS1YIHZlY3Rv
-ciAwIHRoYXQgd2lsbA0KPiBub3QgZm9yd2FyZCBoYXJkd2FyZS1yZW1hcHBlZCBNU0kgZnJvbSB0
-aGUgc3ViLWRldmljZSBkb21haW4uIFRoaXMNCj4gY2F1c2VzIGFuIGlzc3VlIHdpdGggVk1EIHBs
-YXRmb3JtcyB0aGF0IHVzZSBBSENJIGJlaGluZCBWTUQgYW5kIGhhdmUgYQ0KPiBzaW5nbGUgTVNJ
-LVggdmVjdG9yIHJlbWFwcGVkIHRvIFZNRCB2ZWN0b3IgMC4gQWRkIGEgVk1EIE1TSS1YIHZlY3Rv
-cg0KPiBvZmZzZXQgZm9yIHRoZXNlIHBsYXRmb3Jtcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEpv
-biBEZXJyaWNrIDxqb25hdGhhbi5kZXJyaWNrQGludGVsLmNvbT4NCj4gVGVzdGVkLWJ5OiBKaWFu
-LUhvbmcgUGFuIDxqaHBAZW5kbGVzc29zLm9yZz4NCj4gLS0tDQo+IHYzLT52NDogUmViYXNlIGZv
-ciB2NS4xMA0KPiANCj4gZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYyB8IDM3ICsrKysrKysr
-KysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2Vy
-dGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvdm1kLmMgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+IGluZGV4
-IGYzNzVjMjFjZWViMS4uYzMxZTRkNWNiMTQ2IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BjaS9j
-b250cm9sbGVyL3ZtZC5jDQo+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1kLmMNCj4g
-QEAgLTUzLDYgKzUzLDEyIEBAIGVudW0gdm1kX2ZlYXR1cmVzIHsNCj4gIAkgKiB2ZW5kb3Itc3Bl
-Y2lmaWMgY2FwYWJpbGl0eSBzcGFjZQ0KPiAgCSAqLw0KPiAgCVZNRF9GRUFUX0hBU19NRU1CQVJf
-U0hBRE9XX1ZTQ0FQCT0gKDEgPDwgMiksDQo+ICsNCj4gKwkvKg0KPiArCSAqIERldmljZSBtYXkg
-dXNlIE1TSS1YIHZlY3RvciAwIGZvciBzb2Z0d2FyZSB0cmlnZ2VyaW5nIGFuZCB3aWxsIG5vdA0K
-PiArCSAqIGJlIHVzZWQgZm9yIE1TSSByZW1hcHBpbmcNCj4gKwkgKi8NCj4gKwlWTURfRkVBVF9P
-RkZTRVRfRklSU1RfVkVDVE9SCQk9ICgxIDw8IDMpLA0KPiAgfTsNCj4gIA0KPiAgLyoNCj4gQEAg
-LTEwNCw2ICsxMTAsNyBAQCBzdHJ1Y3Qgdm1kX2RldiB7DQo+ICAJc3RydWN0IGlycV9kb21haW4J
-KmlycV9kb21haW47DQo+ICAJc3RydWN0IHBjaV9idXMJCSpidXM7DQo+ICAJdTgJCQlidXNuX3N0
-YXJ0Ow0KPiArCXU4CQkJZmlyc3RfdmVjOw0KPiAgfTsNCj4gIA0KPiAgc3RhdGljIGlubGluZSBz
-dHJ1Y3Qgdm1kX2RldiAqdm1kX2Zyb21fYnVzKHN0cnVjdCBwY2lfYnVzICpidXMpDQo+IEBAIC0x
-OTksMTEgKzIwNiwxMSBAQCBzdGF0aWMgaXJxX2h3X251bWJlcl90IHZtZF9nZXRfaHdpcnEoc3Ry
-dWN0IG1zaV9kb21haW5faW5mbyAqaW5mbywNCj4gICAqLw0KPiAgc3RhdGljIHN0cnVjdCB2bWRf
-aXJxX2xpc3QgKnZtZF9uZXh0X2lycShzdHJ1Y3Qgdm1kX2RldiAqdm1kLCBzdHJ1Y3QgbXNpX2Rl
-c2MgKmRlc2MpDQo+ICB7DQo+IC0JaW50IGksIGJlc3QgPSAxOw0KPiAgCXVuc2lnbmVkIGxvbmcg
-ZmxhZ3M7DQo+ICsJaW50IGksIGJlc3Q7DQo+ICANCj4gLQlpZiAodm1kLT5tc2l4X2NvdW50ID09
-IDEpDQo+IC0JCXJldHVybiAmdm1kLT5pcnFzWzBdOw0KPiArCWlmICh2bWQtPm1zaXhfY291bnQg
-PT0gMSArIHZtZC0+Zmlyc3RfdmVjKQ0KPiArCQlyZXR1cm4gJnZtZC0+aXJxc1t2bWQtPmZpcnN0
-X3ZlY107DQo+ICANCj4gIAkvKg0KPiAgCSAqIFdoaXRlIGxpc3QgZm9yIGZhc3QtaW50ZXJydXB0
-IGhhbmRsZXJzLiBBbGwgb3RoZXJzIHdpbGwgc2hhcmUgdGhlDQo+IEBAIC0yMTMsMTEgKzIyMCwx
-MiBAQCBzdGF0aWMgc3RydWN0IHZtZF9pcnFfbGlzdCAqdm1kX25leHRfaXJxKHN0cnVjdCB2bWRf
-ZGV2ICp2bWQsIHN0cnVjdCBtc2lfZGVzYyAqZA0KPiAgCWNhc2UgUENJX0NMQVNTX1NUT1JBR0Vf
-RVhQUkVTUzoNCj4gIAkJYnJlYWs7DQo+ICAJZGVmYXVsdDoNCj4gLQkJcmV0dXJuICZ2bWQtPmly
-cXNbMF07DQo+ICsJCXJldHVybiAmdm1kLT5pcnFzW3ZtZC0+Zmlyc3RfdmVjXTsNCj4gIAl9DQo+
-ICANCj4gIAlyYXdfc3Bpbl9sb2NrX2lycXNhdmUoJmxpc3RfbG9jaywgZmxhZ3MpOw0KPiAtCWZv
-ciAoaSA9IDE7IGkgPCB2bWQtPm1zaXhfY291bnQ7IGkrKykNCj4gKwliZXN0ID0gdm1kLT5maXJz
-dF92ZWMgKyAxOw0KPiArCWZvciAoaSA9IGJlc3Q7IGkgPCB2bWQtPm1zaXhfY291bnQ7IGkrKykN
-Cj4gIAkJaWYgKHZtZC0+aXJxc1tpXS5jb3VudCA8IHZtZC0+aXJxc1tiZXN0XS5jb3VudCkNCj4g
-IAkJCWJlc3QgPSBpOw0KPiAgCXZtZC0+aXJxc1tiZXN0XS5jb3VudCsrOw0KPiBAQCAtNTUwLDgg
-KzU1OCw4IEBAIHN0YXRpYyBpbnQgdm1kX2FsbG9jX2lycXMoc3RydWN0IHZtZF9kZXYgKnZtZCkN
-Cj4gIAlpZiAodm1kLT5tc2l4X2NvdW50IDwgMCkNCj4gIAkJcmV0dXJuIC1FTk9ERVY7DQo+ICAN
-Cj4gLQl2bWQtPm1zaXhfY291bnQgPSBwY2lfYWxsb2NfaXJxX3ZlY3RvcnMoZGV2LCAxLCB2bWQt
-Pm1zaXhfY291bnQsDQo+IC0JCQkJCQlQQ0lfSVJRX01TSVgpOw0KPiArCXZtZC0+bXNpeF9jb3Vu
-dCA9IHBjaV9hbGxvY19pcnFfdmVjdG9ycyhkZXYsIHZtZC0+Zmlyc3RfdmVjICsgMSwNCj4gKwkJ
-CQkJCXZtZC0+bXNpeF9jb3VudCwgUENJX0lSUV9NU0lYKTsNCj4gIAlpZiAodm1kLT5tc2l4X2Nv
-dW50IDwgMCkNCj4gIAkJcmV0dXJuIHZtZC0+bXNpeF9jb3VudDsNCj4gIA0KPiBAQCAtNzE5LDYg
-KzcyNyw3IEBAIHN0YXRpYyBpbnQgdm1kX2VuYWJsZV9kb21haW4oc3RydWN0IHZtZF9kZXYgKnZt
-ZCwgdW5zaWduZWQgbG9uZyBmZWF0dXJlcykNCj4gIA0KPiAgc3RhdGljIGludCB2bWRfcHJvYmUo
-c3RydWN0IHBjaV9kZXYgKmRldiwgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQ0KPiAg
-ew0KPiArCXVuc2lnbmVkIGxvbmcgZmVhdHVyZXMgPSAodW5zaWduZWQgbG9uZykgaWQtPmRyaXZl
-cl9kYXRhOw0KPiAgCXN0cnVjdCB2bWRfZGV2ICp2bWQ7DQo+ICAJaW50IGVycjsNCj4gIA0KPiBA
-QCAtNzQzLDEzICs3NTIsMTYgQEAgc3RhdGljIGludCB2bWRfcHJvYmUoc3RydWN0IHBjaV9kZXYg
-KmRldiwgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmlkKQ0KPiAgCSAgICBkbWFfc2V0X21h
-c2tfYW5kX2NvaGVyZW50KCZkZXYtPmRldiwgRE1BX0JJVF9NQVNLKDMyKSkpDQo+ICAJCXJldHVy
-biAtRU5PREVWOw0KPiAgDQo+ICsJaWYgKGZlYXR1cmVzICYgVk1EX0ZFQVRfT0ZGU0VUX0ZJUlNU
-X1ZFQ1RPUikNCj4gKwkJdm1kLT5maXJzdF92ZWMgPSAxOw0KPiArDQo+ICAJZXJyID0gdm1kX2Fs
-bG9jX2lycXModm1kKTsNCj4gIAlpZiAoZXJyKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgDQo+ICAJ
-c3Bpbl9sb2NrX2luaXQoJnZtZC0+Y2ZnX2xvY2spOw0KPiAgCXBjaV9zZXRfZHJ2ZGF0YShkZXYs
-IHZtZCk7DQo+IC0JZXJyID0gdm1kX2VuYWJsZV9kb21haW4odm1kLCAodW5zaWduZWQgbG9uZykg
-aWQtPmRyaXZlcl9kYXRhKTsNCj4gKwllcnIgPSB2bWRfZW5hYmxlX2RvbWFpbih2bWQsIGZlYXR1
-cmVzKTsNCj4gIAlpZiAoZXJyKQ0KPiAgCQlyZXR1cm4gZXJyOw0KPiAgDQo+IEBAIC04MTgsMTMg
-KzgzMCwxNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgdm1kX2lkc1tdID0g
-ew0KPiAgCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVTVFJJQ1RJT05TLH0sDQo+ICAJe1BDSV9ERVZJ
-Q0UoUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHg0NjdmKSwNCj4gIAkJLmRyaXZlcl9kYXRhID0gVk1E
-X0ZFQVRfSEFTX01FTUJBUl9TSEFET1dfVlNDQVAgfA0KPiAtCQkJCVZNRF9GRUFUX0hBU19CVVNf
-UkVTVFJJQ1RJT05TLH0sDQo+ICsJCQkJVk1EX0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMgfA0K
-PiArCQkJCVZNRF9GRUFUX09GRlNFVF9GSVJTVF9WRUNUT1IsfSwNCj4gIAl7UENJX0RFVklDRShQ
-Q0lfVkVORE9SX0lEX0lOVEVMLCAweDRjM2QpLA0KPiAgCQkuZHJpdmVyX2RhdGEgPSBWTURfRkVB
-VF9IQVNfTUVNQkFSX1NIQURPV19WU0NBUCB8DQo+IC0JCQkJVk1EX0ZFQVRfSEFTX0JVU19SRVNU
-UklDVElPTlMsfSwNCj4gKwkJCQlWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUyB8DQo+ICsJ
-CQkJVk1EX0ZFQVRfT0ZGU0VUX0ZJUlNUX1ZFQ1RPUix9LA0KPiAgCXtQQ0lfREVWSUNFKFBDSV9W
-RU5ET1JfSURfSU5URUwsIFBDSV9ERVZJQ0VfSURfSU5URUxfVk1EXzlBMEIpLA0KPiAgCQkuZHJp
-dmVyX2RhdGEgPSBWTURfRkVBVF9IQVNfTUVNQkFSX1NIQURPV19WU0NBUCB8DQo+IC0JCQkJVk1E
-X0ZFQVRfSEFTX0JVU19SRVNUUklDVElPTlMsfSwNCj4gKwkJCQlWTURfRkVBVF9IQVNfQlVTX1JF
-U1RSSUNUSU9OUyB8DQo+ICsJCQkJVk1EX0ZFQVRfT0ZGU0VUX0ZJUlNUX1ZFQ1RPUix9LA0KPiAg
-CXswLH0NCj4gIH07DQo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKHBjaSwgdm1kX2lkcyk7DQo=
+On Fri, Nov 20, 2020 at 3:59 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Nov 20, 2020 at 12:58:41PM -0800, Sami Tolvanen wrote:
+> > On Fri, Nov 20, 2020 at 12:43 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Fri, Nov 20, 2020 at 01:29:35PM -0700, Nathan Chancellor wrote:
+> > > > On Fri, Nov 20, 2020 at 11:47:21AM -0800, Kees Cook wrote:
+> > > > > On Fri, Nov 20, 2020 at 08:23:11AM -0800, Sami Tolvanen wrote:
+> > > > > > Changing the ThinLTO config to a choice and moving it after the main
+> > > > > > LTO config sounds like a good idea to me. I'll see if I can change
+> > > > > > this in v8. Thanks!
+> > > > >
+> > > > > Originally, I thought this might be a bit ugly once GCC LTO is added,
+> > > > > but this could be just a choice like we're done for the stack
+> > > > > initialization. Something like an "LTO" choice of NONE, CLANG_FULL,
+> > > > > CLANG_THIN, and in the future GCC, etc.
+> > > >
+> > > > Having two separate choices might be a little bit cleaner though? One
+> > > > for the compiler (LTO_CLANG versus LTO_GCC) and one for the type
+> > > > (THINLTO versus FULLLTO). The type one could just have a "depends on
+> > > > CC_IS_CLANG" to ensure it only showed up when needed.
+> > >
+> > > Right, that's how the stack init choice works. Kconfigs that aren't
+> > > supported by the compiler won't be shown. I.e. after Sami's future
+> > > patch, the only choice for GCC will be CONFIG_LTO_NONE. But building
+> > > under Clang, it would offer CONFIG_LTO_NONE, CONFIG_LTO_CLANG_FULL,
+> > > CONFIG_LTO_CLANG_THIN, or something.
+> > >
+> > > (and I assume  CONFIG_LTO would be def_bool y, depends on !LTO_NONE)
+> >
+> > I'm fine with adding ThinLTO as another option to the LTO choice, but
+> > it would duplicate the dependencies and a lot of the help text. I
+> > suppose we could add another config for the dependencies and have both
+> > LTO options depend on that instead.
+>
+> How about something like this? This separates the arch support, compiler
+> support, and user choice into three separate Kconfig areas, which I
+> think should work.
+
+Sure, this looks good to me, I'll use this in v8. The only minor
+concern I have is that ThinLTO cannot be set as the default LTO mode,
+but I assume anyone who selects LTO is also capable of deciding which
+mode is better for them.
+
+> diff --git a/Makefile b/Makefile
+> index e397c4caec1b..af902718e882 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -897,7 +897,7 @@ export CC_FLAGS_SCS
+>  endif
+>
+>  ifdef CONFIG_LTO_CLANG
+> -ifdef CONFIG_THINLTO
+> +ifdef CONFIG_LTO_CLANG_THIN
+>  CC_FLAGS_LTO   += -flto=thin -fsplit-lto-unit
+>  KBUILD_LDFLAGS += --thinlto-cache-dir=$(extmod-prefix).thinlto-cache
+>  else
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index cdd29b5fdb56..5c22e10e4c12 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -600,6 +600,14 @@ config SHADOW_CALL_STACK
+>
+>  config LTO
+>         bool
+> +       help
+> +         Selected if the kernel will be built using the compiler's LTO feature.
+> +
+> +config LTO_CLANG
+> +       bool
+> +       select LTO
+> +       help
+> +         Selected if the kernel will be built using Clang's LTO feature.
+>
+>  config ARCH_SUPPORTS_LTO_CLANG
+>         bool
+> @@ -609,28 +617,25 @@ config ARCH_SUPPORTS_LTO_CLANG
+>           - compiling inline assembly with Clang's integrated assembler,
+>           - and linking with LLD.
+>
+> -config ARCH_SUPPORTS_THINLTO
+> +config ARCH_SUPPORTS_LTO_CLANG_THIN
+>         bool
+>         help
+> -         An architecture should select this option if it supports Clang's
+> -         ThinLTO.
+> +         An architecture should select this option if it can supports Clang's
+> +         ThinLTO mode.
+>
+> -config THINLTO
+> -       bool "Clang ThinLTO"
+> -       depends on LTO_CLANG && ARCH_SUPPORTS_THINLTO
+> -       default y
+> +config HAS_LTO_CLANG
+> +       def_bool y
+> +       # Clang >= 11: https://github.com/ClangBuiltLinux/linux/issues/510
+> +       depends on CC_IS_CLANG && CLANG_VERSION >= 110000 && LD_IS_LLD
+> +       depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
+> +       depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
+> +       depends on ARCH_SUPPORTS_LTO_CLANG
+> +       depends on !FTRACE_MCOUNT_USE_RECORDMCOUNT
+> +       depends on !KASAN
+> +       depends on !GCOV_KERNEL
+>         help
+> -         This option enables Clang's ThinLTO, which allows for parallel
+> -         optimization and faster incremental compiles. More information
+> -         can be found from Clang's documentation:
+> -
+> -           https://clang.llvm.org/docs/ThinLTO.html
+> -
+> -         If you say N here, the compiler will use full LTO, which may
+> -         produce faster code, but building the kernel will be significantly
+> -         slower as the linker won't efficiently utilize multiple threads.
+> -
+> -         If unsure, say Y.
+> +         The compiler and Kconfig options support building with Clang's
+> +         LTO.
+>
+>  choice
+>         prompt "Link Time Optimization (LTO)"
+> @@ -644,20 +649,14 @@ choice
+>
+>  config LTO_NONE
+>         bool "None"
+> +       help
+> +         Build the kernel normally, without Link Time Optimization (LTO).
+>
+> -config LTO_CLANG
+> -       bool "Clang's Link Time Optimization (EXPERIMENTAL)"
+> -       # Clang >= 11: https://github.com/ClangBuiltLinux/linux/issues/510
+> -       depends on CC_IS_CLANG && CLANG_VERSION >= 110000 && LD_IS_LLD
+> -       depends on $(success,$(NM) --help | head -n 1 | grep -qi llvm)
+> -       depends on $(success,$(AR) --help | head -n 1 | grep -qi llvm)
+> -       depends on ARCH_SUPPORTS_LTO_CLANG
+> -       depends on !FTRACE_MCOUNT_USE_RECORDMCOUNT
+> -       depends on !KASAN
+> -       depends on !GCOV_KERNEL
+> -       select LTO
+> +config LTO_CLANG_FULL
+> +       bool "Clang Full LTO (EXPERIMENTAL)"
+> +       select LTO_CLANG
+>         help
+> -          This option enables Clang's Link Time Optimization (LTO), which
+> +          This option enables Clang's full Link Time Optimization (LTO), which
+>            allows the compiler to optimize the kernel globally. If you enable
+>            this option, the compiler generates LLVM bitcode instead of ELF
+>            object files, and the actual compilation from bitcode happens at
+> @@ -667,9 +666,22 @@ config LTO_CLANG
+>
+>             https://llvm.org/docs/LinkTimeOptimization.html
+>
+> -         To select this option, you also need to use LLVM tools to handle
+> -         the bitcode by passing LLVM=1 to make.
+> +         During link time, this option can use a large amount of RAM, and
+> +         may take much longer than the ThinLTO option.
+>
+> +config LTO_CLANG_THIN
+> +       bool "Clang ThinLTO (EXPERIMENTAL)"
+> +       depends on ARCH_SUPPORTS_LTO_CLANG_THIN
+> +       select LTO_CLANG
+> +       help
+> +         This option enables Clang's ThinLTO, which allows for parallel
+> +         optimization and faster incremental compiles compared to the
+> +         CONFIG_LTO_CLANG_FULL option. More information can be found
+> +         from Clang's documentation:
+> +
+> +           https://clang.llvm.org/docs/ThinLTO.html
+> +
+> +         If unsure, say Y.
+>  endchoice
+
+The two LTO_CLANG_* options need to depend on HAS_LTO_CLANG, of course.
+
+Sami
