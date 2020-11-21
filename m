@@ -2,127 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 138ED2BBEE7
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 13:26:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 990512BC06F
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Nov 2020 17:13:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgKUMZU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Nov 2020 07:25:20 -0500
-Received: from disco-boy.misterjones.org ([51.254.78.96]:37550 "EHLO
-        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgKUMZU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Nov 2020 07:25:20 -0500
-X-Greylist: delayed 2676 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Nov 2020 07:25:18 EST
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94)
-        (envelope-from <maz@misterjones.org>)
-        id 1kgRFo-00CVLU-BN; Sat, 21 Nov 2020 11:40:32 +0000
+        id S1726444AbgKUQN3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Nov 2020 11:13:29 -0500
+Received: from mout.gmx.net ([212.227.15.18]:39553 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgKUQN2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 21 Nov 2020 11:13:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1605975168;
+        bh=5XWucgV8E35bUAw4aZcK+RdQSdGH0BbK0144kscnzcI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=WQolZIuuxEiDb/4MIogv7qWitrEDh9yZwc21+uMJ8+WIOE/ed1OKqJoypw6F/kbvl
+         39WotD6bjU87mQ5cmeTjoXAKZPL+PjeUve69J1kCDVxTd/HqW77CA2MEvSXyNrz9AR
+         /cCVn5tv+VYz93V1lWMNOrSuYpy4Y2N4jnQOLp24=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.75.72.182] ([185.75.72.182]) by web-mail.gmx.net
+ (3c-app-gmx-bs42.server.lan [172.19.170.94]) (via HTTP); Sat, 21 Nov 2020
+ 17:12:48 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 21 Nov 2020 11:40:32 +0000
-From:   Marc Zyngier <maz@misterjones.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Alistair Delva <adelva@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v7 00/17] Add support for Clang LTO
-In-Reply-To: <CAKwvOdmk1D0dLDOHEWX=jHpUxUT2JbwgnF62Qv3Rv=coNPadHg@mail.gmail.com>
-References: <20201118220731.925424-1-samitolvanen@google.com>
- <CAKwvOd=5PhCTZ-yHr08gPYNEsGEjZa=rDY0-unhkhofjXhqwLQ@mail.gmail.com>
- <CAMj1kXEVzDi5=uteUAzG5E=j+aTCHEbMxwDfor-s=DthpREpyw@mail.gmail.com>
- <CAKwvOdmpBNx9iSguGXivjJ03FaN5rgv2oaXZUQxYPdRccQmdyQ@mail.gmail.com>
- <CAMj1kXEoPEd6GzjL1XuxTPwitbR03BiBEXpAGtUytMj-h=vCkg@mail.gmail.com>
- <CAKwvOdmk1D0dLDOHEWX=jHpUxUT2JbwgnF62Qv3Rv=coNPadHg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <a578025ea33108773fe9f3f6e1f180b5@misterjones.org>
-X-Sender: maz@misterjones.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: ndesaulniers@google.com, ardb@kernel.org, linux-arch@vger.kernel.org, adelva@google.com, keescook@chromium.org, paulmck@kernel.org, kernel-hardening@lists.openwall.com, peterz@infradead.org, gregkh@linuxfoundation.org, masahiroy@kernel.org, linux-kbuild@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org, clang-built-linux@googlegroups.com, samitolvanen@google.com, jpoimboe@redhat.com, will@kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@misterjones.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Message-ID: <trinity-79472418-bec7-4097-9612-fa7a79c27620-1605975168396@3c-app-gmx-bs42>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Frank Wunderlich <linux@fw-web.de>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Aw: Re:  Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
+Content-Type: text/plain; charset=UTF-8
+Date:   Sat, 21 Nov 2020 17:12:48 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <c63d8d7d966c1dda82884f361d4691c3@kernel.org>
+References: <20201031140330.83768-1-linux@fw-web.de>
+ <1604253261.22363.0.camel@mtkswgap22>
+ <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
+ <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
+ <df5565a2f1e821041c7c531ad52a3344@kernel.org>
+ <87h7q791j8.fsf@nanos.tec.linutronix.de>
+ <877dr38kt8.fsf@nanos.tec.linutronix.de>
+ <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
+ <87o8ke7njb.fsf@nanos.tec.linutronix.de>
+ <trinity-1d7f8900-10db-40c0-a0aa-47bb99ed84cd-1604508571909@3c-app-gmx-bs02>
+ <87h7q4lnoz.fsf@nanos.tec.linutronix.de>
+ <074d057910c3e834f4bd58821e8583b1@kernel.org>
+ <87blgbl887.fsf@nanos.tec.linutronix.de>
+ <c63d8d7d966c1dda82884f361d4691c3@kernel.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:0WIPfXZNx+COWrzO6EWqhIOYRhYsuaEetPZRHGICmDa5l4cTCVnVnw0NbFHdi/ukfb57B
+ 6Lxz2OgLXMSr5/sLZ9j0KeqQe9najHHMVgLiJavcBw1i28PIl+j0IgRbSTL8Th60ZpqaRZYhyRIK
+ QjWgVE5drMTBYjDwVBLFA4kAa/3ZuKPVy1/qTV/Hh7g5rsFwX6y5eGEE+zxoF6Sv9oDXvsEC2oDj
+ DZkqXXREa2aW5ClACLGG2C2cD7q4q7NS0LHGaoTWc8wnipzl4h9m3r17XTbZcvlS5ciH6UT3Hxwp
+ Cc=
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eADDipfb3v0=:KBRN9L8eDneVATspJUwmja
+ XPTN2pmGNuR+KRj/6s7kAKPPo6YhEbChm8G0MtP+rjsnpBZCOXSjBbTUS+gE0zLVh3XhqGHRs
+ gwQopYWXCPmE+LUThjau41VJI8mrH9VyebUy2hiWKLfCkoZiqQNAWiGi4X49zFS9+pY3pABs2
+ FF1ikYXvw90kdUxYZnc1V0vli/ebkvfnAvX3Hy07dUbXZMoANVO8le7DL5x4jdLS3SR8Ffrcz
+ x9DNglGD0SdwwoOWazBCLvBDD6Tiyk4a38OYvjStb777J3XegwXEBO/YCgKCLJK6W+LTtkIJZ
+ TClV2KG0egtTMd5P0Wg7IsyHPvMd9+38wAcHJFTMnfC9u6pLpWZU1z4OY970dhJfTJFC1aGAK
+ Caxwvu8Wp0aQ06xJdPvocBRh88WAOum2QjOQKnILjCi95/KaSZoWuCLKCDQAPVRbGADYhgPKh
+ w7fpVLoH9BI4ThFZQ0Rdt5uro74R4XbRP8YtNonBHiND+KoLYdOBBRKVKZL8CZyrHC5+VGjGj
+ cqRIhWV/R92vXLQcpvkuI+irJc576bjainFPKd+C6+xouBNIvH7my3NiJF+CRBwvegJ5kekcT
+ 7LSM9o73dxXyw=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-11-20 23:53, Nick Desaulniers wrote:
-> On Fri, Nov 20, 2020 at 3:30 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->> 
->> On Fri, 20 Nov 2020 at 21:19, Nick Desaulniers 
->> <ndesaulniers@google.com> wrote:
->> >
->> > On Fri, Nov 20, 2020 at 2:30 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->> > >
->> > > On Thu, 19 Nov 2020 at 00:42, Nick Desaulniers <ndesaulniers@google.com> wrote:
->> > > >
->> > > > Thanks for continuing to drive this series Sami.  For the series,
->> > > >
->> > > > Tested-by: Nick Desaulniers <ndesaulniers@google.com>
->> > > >
->> > > > I did virtualized boot tests with the series applied to aarch64
->> > > > defconfig without CONFIG_LTO, with CONFIG_LTO_CLANG, and a third time
->> > > > with CONFIG_THINLTO.  If you make changes to the series in follow ups,
->> > > > please drop my tested by tag from the modified patches and I'll help
->> > > > re-test.  Some minor feedback on the Kconfig change, but I'll post it
->> > > > off of that patch.
->> > > >
->> > >
->> > > When you say 'virtualized" do you mean QEMU on x86? Or actual
->> > > virtualization on an AArch64 KVM host?
->> >
->> > aarch64 guest on x86_64 host.  If you have additional configurations
->> > that are important to you, additional testing help would be
->> > appreciated.
->> >
->> 
->> Could you run this on an actual phone? Or does Android already ship
->> with this stuff?
-> 
-> By `this`, if you mean "the LTO series", it has been shipping on
-> Android phones for years now, I think it's even required in the latest
-> release.
-> 
-> If you mean "the LTO series + mainline" on a phone, well there's the
-> android-mainline of https://android.googlesource.com/kernel/common/,
-> in which this series was recently removed in order to facilitate
-> rebasing Android's patches on ToT-mainline until getting the series
-> landed upstream.  Bit of a chicken and the egg problem there.
-> 
-> If you mean "the LTO series + mainline + KVM" on a phone; I don't know
-> the precise state of aarch64 KVM and Android (Will or Marc would
-> know).
+Hi,
 
-If you are lucky enough to have an Android system booting at EL2,
-KVM should just works [1], though I haven't tried with this series.
+any new state here?
 
-> We did experiment recently with RockPI's for aach64 KVM, IIRC;
-> I think Android is tricky as it still requires A64+A32/T32 chipsets,
+last fix works, but i have not seen it approved by anyone for merge or sent as separate Patch
 
-Which is about 100% of the Android systems at the moment (I don't think
-any of the asymmetric SoCs are in the wild yet). It doesn't really 
-affect
-KVM anyway.
-
-          M.
-
-[1] with the broken firmware gotchas that I believed to be erradicated
-8 years ago, but are still prevalent in the Android world: laughable
-PSCI implementation, invalid CNTFRQ_EL0...
--- 
-Who you jivin' with that Cosmik Debris?
+regards Frank
