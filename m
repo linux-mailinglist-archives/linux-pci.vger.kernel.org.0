@@ -2,136 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 525C12BC46A
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Nov 2020 08:37:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF8542BC498
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Nov 2020 10:09:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbgKVHgE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Nov 2020 02:36:04 -0500
-Received: from lonlinode-sdnproxy-1.icoremail.net ([139.162.193.133]:56634
-        "HELO lonlinode-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1726461AbgKVHgE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Nov 2020 02:36:04 -0500
-Received: from localhost (unknown [113.247.217.134])
-        by c1app12 (Coremail) with SMTP id DAINCgBH+haiFLpfNmawAA--.39220S3;
-        Sun, 22 Nov 2020 15:34:58 +0800 (CST)
-From:   Chen Baozi <chenbaozi@phytium.com.cn>
-To:     Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [RFC PATCH v3 2/2] ACPI: Advertise Interrupt ResourceSource support
-Date:   Sun, 22 Nov 2020 15:34:53 +0800
-Message-Id: <20201122073453.5758-2-chenbaozi@phytium.com.cn>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201122073453.5758-1-chenbaozi@phytium.com.cn>
-References: <20201122073453.5758-1-chenbaozi@phytium.com.cn>
+        id S1727334AbgKVJI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Nov 2020 04:08:58 -0500
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:51837 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727317AbgKVJI6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Nov 2020 04:08:58 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 00E7B100E417C;
+        Sun, 22 Nov 2020 10:08:51 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 4D14923339E; Sun, 22 Nov 2020 10:08:52 +0100 (CET)
+Date:   Sun, 22 Nov 2020 10:08:52 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Ashok Raj <ashok.raj@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2 1/1] PCI: pciehp: Add support for handling MRL events
+Message-ID: <20201122090852.GA29616@wunner.de>
+References: <20201122014203.4706-1-ashok.raj@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DAINCgBH+haiFLpfNmawAA--.39220S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrW8Cw1DZw45Wr1ktw4rGrg_yoW5uF48pa
-        n293W5CrWkZa98Aa4kCw4rXFy5Ja1aka42grWDGa43Zay0kF1DJr47tFyUWa4j9F43GFWY
-        qrnIqFZ8Kas8uaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvmb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka
-        0xkIwI1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-        UI43ZEXa7IU890ePUUUUU==
-X-Originating-IP: [113.247.217.134]
-X-CM-SenderInfo: hfkh0updr2xqxsk13x1xpou0fpof0/1tbiDALkP17uHyEOYAABs0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201122014203.4706-1-ashok.raj@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As mentioned in ACPI v6.3, Table 6-200, the platform will indicate
-to the OS whether or not it supports usage of ResourceSource. If
-not set, the OS may choose to ignore the ResourceSource parameter
-in the extended interrupt descriptor. Since we support parsing
-ResoureSource field of interrupts both for platform devices and
-PCI Interrupt Link devices now, this patch sets the relevant OSC
-bit and checks the capability as described in ACPI specification.
+On Sat, Nov 21, 2020 at 05:42:03PM -0800, Ashok Raj wrote:
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>  void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  {
+>  	int present, link_active;
+> +	u8 getstatus = 0;
+>  
+>  	/*
+>  	 * If the slot is on and presence or link has changed, turn it off.
+> @@ -246,6 +259,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  		if (events & PCI_EXP_SLTSTA_PDC)
+>  			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>  				  slot_name(ctrl));
+> +		if (events & PCI_EXP_SLTSTA_MRLSC)
+> +			ctrl_info(ctrl, "Slot(%s): Latch %s\n",
+> +				  slot_name(ctrl), getstatus ? "Open" : "Closed");
 
-Signed-off-by: Chen Baozi <chenbaozi@phytium.com.cn>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/acpi/bus.c   | 5 +++++
- drivers/acpi/irq.c   | 3 ++-
- include/linux/acpi.h | 4 +++-
- 3 files changed, 10 insertions(+), 2 deletions(-)
+This message will currently always be "Latch closed".  It should be
+"Latch open" instead because if the slot was up, the latch must have
+been closed.  So an MRLSC event can only mean that the latch is now open.
+The "getstatus" variable can be removed.
 
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index 1682f8b454a2..a6af1270bea6 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -281,6 +281,8 @@ bool osc_sb_apei_support_acked;
- bool osc_pc_lpi_support_confirmed;
- EXPORT_SYMBOL_GPL(osc_pc_lpi_support_confirmed);
- 
-+bool osc_sb_intr_ressrc_support_confirmed;
-+
- static u8 sb_uuid_str[] = "0811B06E-4A27-44F9-8D60-3CBBC22E7B48";
- static void acpi_bus_osc_support(void)
- {
-@@ -303,6 +305,7 @@ static void acpi_bus_osc_support(void)
- 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_HOTPLUG_OST_SUPPORT;
- 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_PCLPI_SUPPORT;
- 
-+	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_INTR_RESSRC_SUPPORT;
- #ifdef CONFIG_ARM64
- 	capbuf[OSC_SUPPORT_DWORD] |= OSC_SB_GENERIC_INITIATOR_SUPPORT;
- #endif
-@@ -328,6 +331,8 @@ static void acpi_bus_osc_support(void)
- 				capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_APEI_SUPPORT;
- 			osc_pc_lpi_support_confirmed =
- 				capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_PCLPI_SUPPORT;
-+			osc_sb_intr_ressrc_support_confirmed =
-+				capbuf_ret[OSC_SUPPORT_DWORD] & OSC_SB_INTR_RESSRC_SUPPORT;
- 		}
- 		kfree(context.ret.pointer);
- 	}
-diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
-index 2fff5401c3f3..649e09bbd612 100644
---- a/drivers/acpi/irq.c
-+++ b/drivers/acpi/irq.c
-@@ -106,7 +106,8 @@ acpi_get_irq_source_fwhandle(const struct acpi_resource_source *source)
- 	acpi_handle handle;
- 	acpi_status status;
- 
--	if (!source->string_length)
-+	if (!osc_sb_intr_ressrc_support_confirmed ||
-+	    !source->string_length)
- 		return acpi_gsi_domain_id;
- 
- 	status = acpi_get_handle(NULL, source->string_ptr, &handle);
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index b182a267fe66..f9ca8e117f31 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -555,10 +555,12 @@ acpi_status acpi_run_osc(acpi_handle handle, struct acpi_osc_context *context);
- #define OSC_SB_PCLPI_SUPPORT			0x00000080
- #define OSC_SB_OSLPI_SUPPORT			0x00000100
- #define OSC_SB_CPC_DIVERSE_HIGH_SUPPORT		0x00001000
--#define OSC_SB_GENERIC_INITIATOR_SUPPORT	0x00002000
-+#define OSC_SB_INTR_RESSRC_SUPPORT		0x00002000
-+#define OSC_SB_GENERIC_INITIATOR_SUPPORT	0x00020000
- 
- extern bool osc_sb_apei_support_acked;
- extern bool osc_pc_lpi_support_confirmed;
-+extern bool osc_sb_intr_ressrc_support_confirmed;
- 
- /* PCI Host Bridge _OSC: Capabilities DWORD 2: Support Field */
- #define OSC_PCI_EXT_CONFIG_SUPPORT		0x00000001
--- 
-2.28.0
 
+> +		/*
+> +		 * PCIe Base Spec 5.0 Chapter 6.7.1.3 states.
+> +		 *
+> +		 * If an MRL Sensor is implemented without a corresponding MRL Sensor input
+> +		 * on the Hot-Plug Controller, it is recommended that the MRL Sensor be
+> +		 * routed to power fault input of the Hot-Plug Controller.
+> +		 * This allows an active adapter to be powered off when the MRL is opened."
+> +		 *
+> +		 * This seems to suggest that the slot should be brought down as soon as MRL
+> +		 * is opened.
+> +		 */
+>  		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>  		break;
+
+The code comment is not wrapped at 80 chars and a bit long.
+I'd move it to the commit message and keep only a shortened version here.
+
+The "SURPRISE_REMOVAL" may now be problematic because the card may still
+be in the slot (both presence and link still up) with only the MRL open.
+My suggestion would be to add a local variable "bool safe_removal"
+which is initialized to "SAFE_REMOVAL".  In the two if-clauses for
+DLLSC and PDC, it is set to SURPRISE_REMOVAL.
+
+
+> @@ -275,6 +302,13 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  		if (link_active)
+>  			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>  				  slot_name(ctrl));
+> +		/*
+> +		 * If slot is closed && ATTN button exists
+> +		 * don't continue, let the ATTN button
+> +		 * drive the hot-plug
+> +		 */
+> +		if (((events & PCI_EXP_SLTSTA_MRLSC) && ATTN_BUTTN(ctrl)))
+> +			return;
+>  		ctrl->request_result = pciehp_enable_slot(ctrl);
+>  		break;
+
+Hm, if the Attention Button is pressed with MRL still open, the slot is
+not brought up.  If the MRL is subsequently closed, it is still not
+brought up.  I guess the slot keeps blinking and one has to push the
+button to abort the operation, then press it once more to attempt
+another slot bringup.  The spec doesn't seem to say how such a situation
+should be handled. Oh well.
+
+I'm wondering if this is the right place to bail out:  Immediately
+before the above hunk, the button_work is canceled, so it can't later
+trigger bringup of the slot.  Shouldn't the above check be in the
+code block with the "Turn the slot on if it's occupied or link is up"
+comment?
+
+You're also not unlocking the state_lock here before bailing out of
+the function.
+
+
+> @@ -710,8 +710,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+>  	down_read(&ctrl->reset_lock);
+>  	if (events & DISABLE_SLOT)
+>  		pciehp_handle_disable_request(ctrl);
+> -	else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC))
+> +	else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC |
+> +			   PCI_EXP_SLTSTA_MRLSC))
+>  		pciehp_handle_presence_or_link_change(ctrl, events);
+> +
+>  	up_read(&ctrl->reset_lock);
+
+Unnecessary newline added.
+
+
+> @@ -768,6 +770,14 @@ static void pcie_enable_notification(struct controller *ctrl)
+>  		cmd |= PCI_EXP_SLTCTL_ABPE;
+>  	else
+>  		cmd |= PCI_EXP_SLTCTL_PDCE;
+> +
+> +	/*
+> +	 * If MRL sensor is present, then subscribe for MRL
+> +	 * Changes to be notified as well.
+> +	 */
+> +	if (MRL_SENS(ctrl))
+> +		cmd |= PCI_EXP_SLTCTL_MRLSCE;
+> +
+
+The code comment doesn't add much information, so can probably be
+dropped.
+
+You need to add PCI_EXP_SLTCTL_MRLSCE to the "mask" variable in this
+function (before PFDE, as in pcie_disable_notification()).
+I don't think the interrupt is enabled at all if it's not added to
+"mask", has this patch been tested at all?
+
+Something else:  When pciehp probes, it should check whether the slot
+is up even though MRL is open.  (E.g. the machine is booted, the card
+in the slot was enumerated but the latch is open.)  I think in that
+case we need to bring down the slot.  I suggest adding a check to
+pciehp_check_presence() whether the latch is open.  If so,
+a PCI_EXP_SLTSTA_MRLSC event should be synthesized.  You could rename
+the latch_closed() function to pciehp_latch_closed() and remove its
+"static" attribute so that you can call it from pciehp_core.c.
+
+Thanks,
+
+Lukas
