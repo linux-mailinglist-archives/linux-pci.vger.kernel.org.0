@@ -2,155 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C81C92BC324
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Nov 2020 03:21:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 381402BC383
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Nov 2020 05:12:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgKVCVX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Nov 2020 21:21:23 -0500
-Received: from mga07.intel.com ([134.134.136.100]:53709 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726544AbgKVCVX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Nov 2020 21:21:23 -0500
-IronPort-SDR: WbWodC1KA2u4RRvUWLJi71rJpvdabPEPsYowJYbhqd7X8QtSaUNsvu/mF27JmkuLpdZ7EFW3ky
- w+kr/mORTH0A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9812"; a="235767019"
-X-IronPort-AV: E=Sophos;i="5.78,360,1599548400"; 
-   d="scan'208";a="235767019"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2020 18:21:22 -0800
-IronPort-SDR: AsXskUrGkNhgLXm6rtdqrCVrLga6taE/Gdmsyq8qwzvM1hGVxU3G0JnKcCkl8w1q/nVxa79j7d
- MzYzVoQX3F0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,360,1599548400"; 
-   d="scan'208";a="369626308"
-Received: from lkp-server01.sh.intel.com (HELO ce8054c7261d) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Nov 2020 18:21:21 -0800
-Received: from kbuild by ce8054c7261d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kgf0C-000012-Lr; Sun, 22 Nov 2020 02:21:20 +0000
-Date:   Sun, 22 Nov 2020 10:20:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/err] BUILD SUCCESS
- 4513f3a6cfb1e95fe3c108f007254729eedf309c
-Message-ID: <5fb9caec.MvGDIfpuS2ebxud6%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727220AbgKVELB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Nov 2020 23:11:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbgKVELA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Nov 2020 23:11:00 -0500
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991DCC0613D3
+        for <linux-pci@vger.kernel.org>; Sat, 21 Nov 2020 20:11:00 -0800 (PST)
+Received: by mail-ot1-x342.google.com with SMTP id f16so12778091otl.11
+        for <linux-pci@vger.kernel.org>; Sat, 21 Nov 2020 20:11:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Z5iasv0Tn+EAgqcCTW+28/WJrxDWlSK3B7pN57OlmRg=;
+        b=b5l7i4HfOFDcEGL1OPYUNQ49HaBHuvNwRdgP5IA11zLsYWI8Z/0MbyawwNBcqip2aj
+         Ytf2nfhNU07LE2CZpq9wyXUhDmj9l0+IfqPwXxq5jRmB9bczfpdo93BsvE9NQp/ZLpSW
+         Lk6fu0CvGnI3Vrg4crRAZ3F7qz/xEhZYpVeP8b01ClIvb+w7bQyaPNBfJFCHG84oOs+Y
+         ZaIljSE9jW9/lqMMxdEqPUn1MASCAcwl40/dUy7k69vZCXYhUi1s/DcgRirkm6SkysAK
+         kwX8KPtJFwts0J1sf/ykuAqAFJCsT/BuuYOj8c54NX/IOB8npe6QYT99WivdjsW7lRHg
+         Q16g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z5iasv0Tn+EAgqcCTW+28/WJrxDWlSK3B7pN57OlmRg=;
+        b=jX1FyrTPkUOam66XHTPjEbo+WNJiAa7ooeHJU6huF8+SnYWwl4SQeCIgccCGRjYrrm
+         JNVsAwMW/pEWr+yNqG48Ihw8GlfDl/iJCmSi+UerJZvc3giqAns+X2gxZglSigGE57uC
+         /ltKOVW/d6EtMLkmbax6HUn9xEzjCbR4bTveJ0bR5kz1WtslYS5F73vSz+z6KiS7GZxm
+         TpSDPmjCLbuDHoA/fhCoGHUOeaIbOijs4cWcmvDK6XRr3MFNlyK8DeDtI2EgIH4TPJm6
+         dqca594erWl4CMLr8oZBeYVVCuUl0H3bEODxZE+/06LtMRVhGnKVpClpANb3ivFWugtf
+         ifYg==
+X-Gm-Message-State: AOAM5303W4WY7k0HsgGTPktw6+CPteph1rhrIL7taPNeBxIuXI18LfiG
+        cUHE3TApYIjJcqTJ9iSlmBJULg==
+X-Google-Smtp-Source: ABdhPJz8F5yoRLWdQiuXZgXwodrkuPDhzHULObQCiPwxXX5bRQuDSrqRaao+RiP2JtvjvAjUvy4jsA==
+X-Received: by 2002:a9d:7855:: with SMTP id c21mr11213697otm.218.1606018259837;
+        Sat, 21 Nov 2020 20:10:59 -0800 (PST)
+Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id l184sm4720513oih.27.2020.11.21.20.10.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Nov 2020 20:10:59 -0800 (PST)
+Date:   Sat, 21 Nov 2020 22:10:57 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     agross@kernel.org, kishon@ti.com, vkoul@kernel.org,
+        robh@kernel.org, svarbanov@mm-sol.com, bhelgaas@google.com,
+        lorenzo.pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mgautam@codeaurora.org, devicetree@vger.kernel.org,
+        truong@codeaurora.org
+Subject: Re: [PATCH v5 3/5] dt-bindings: pci: qcom: Document PCIe bindings
+ for SM8250 SoC
+Message-ID: <20201122041057.GC95182@builder.lan>
+References: <20201027170033.8475-1-manivannan.sadhasivam@linaro.org>
+ <20201027170033.8475-4-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20201027170033.8475-4-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/err
-branch HEAD: 4513f3a6cfb1e95fe3c108f007254729eedf309c  PCI/AER: Add RCEC AER error injection support
+On Tue 27 Oct 12:00 CDT 2020, Manivannan Sadhasivam wrote:
 
-elapsed time: 720m
+> Document the PCIe DT bindings for SM8250 SoC. The PCIe IP is similar to
+> the one used on SDM845, hence just add the compatible along with the
+> optional "atu" register region.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-configs tested: 91
-configs skipped: 2
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                       omap2plus_defconfig
-sh                          polaris_defconfig
-sh                        edosk7760_defconfig
-powerpc                 mpc836x_mds_defconfig
-arm                        spear3xx_defconfig
-powerpc                       holly_defconfig
-sh                           sh2007_defconfig
-arm                      integrator_defconfig
-sh                        sh7785lcr_defconfig
-sh                   rts7751r2dplus_defconfig
-xtensa                  cadence_csp_defconfig
-c6x                                 defconfig
-sh                           se7750_defconfig
-powerpc                      obs600_defconfig
-mips                        maltaup_defconfig
-i386                                defconfig
-arm                           tegra_defconfig
-xtensa                              defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20201121
-i386                 randconfig-a003-20201121
-i386                 randconfig-a002-20201121
-i386                 randconfig-a005-20201121
-i386                 randconfig-a001-20201121
-i386                 randconfig-a006-20201121
-x86_64               randconfig-a015-20201121
-x86_64               randconfig-a011-20201121
-x86_64               randconfig-a014-20201121
-x86_64               randconfig-a016-20201121
-x86_64               randconfig-a012-20201121
-x86_64               randconfig-a013-20201121
-i386                 randconfig-a012-20201121
-i386                 randconfig-a013-20201121
-i386                 randconfig-a011-20201121
-i386                 randconfig-a016-20201121
-i386                 randconfig-a014-20201121
-i386                 randconfig-a015-20201121
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a006-20201121
-x86_64               randconfig-a003-20201121
-x86_64               randconfig-a004-20201121
-x86_64               randconfig-a005-20201121
-x86_64               randconfig-a002-20201121
-x86_64               randconfig-a001-20201121
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> index 02bc81bb8b2d..3b55310390a0 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -13,6 +13,7 @@
+>  			- "qcom,pcie-ipq8074" for ipq8074
+>  			- "qcom,pcie-qcs404" for qcs404
+>  			- "qcom,pcie-sdm845" for sdm845
+> +			- "qcom,pcie-sm8250" for sm8250
+>  
+>  - reg:
+>  	Usage: required
+> @@ -27,6 +28,7 @@
+>  			- "dbi"	   DesignWare PCIe registers
+>  			- "elbi"   External local bus interface registers
+>  			- "config" PCIe configuration space
+> +			- "atu"    ATU address space (optional)
+>  
+>  - device_type:
+>  	Usage: required
+> @@ -131,7 +133,7 @@
+>  			- "slave_bus"	AXI Slave clock
+>  
+>  -clock-names:
+> -	Usage: required for sdm845
+> +	Usage: required for sdm845 and sm8250
+>  	Value type: <stringlist>
+>  	Definition: Should contain the following entries
+>  			- "aux"		Auxiliary clock
+> @@ -206,7 +208,7 @@
+>  			- "ahb"			AHB reset
+>  
+>  - reset-names:
+> -	Usage: required for sdm845
+> +	Usage: required for sdm845 and sm8250
+>  	Value type: <stringlist>
+>  	Definition: Should contain the following entries
+>  			- "pci"			PCIe core reset
+> -- 
+> 2.17.1
+> 
