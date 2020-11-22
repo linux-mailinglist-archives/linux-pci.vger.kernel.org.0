@@ -2,195 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F15CF2BC303
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Nov 2020 02:42:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C81C92BC324
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Nov 2020 03:21:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgKVBmJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Nov 2020 20:42:09 -0500
-Received: from mga14.intel.com ([192.55.52.115]:45385 "EHLO mga14.intel.com"
+        id S1726674AbgKVCVX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Nov 2020 21:21:23 -0500
+Received: from mga07.intel.com ([134.134.136.100]:53709 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726862AbgKVBmI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 21 Nov 2020 20:42:08 -0500
-IronPort-SDR: sDTV7WweHfdSQM85vxyNYjlncRk//DNif8/thokN8mUKwIH7wmLHjY38cf+c2JdBMiItkJXr98
- heeTxHMvLmsA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9812"; a="170839150"
+        id S1726544AbgKVCVX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 21 Nov 2020 21:21:23 -0500
+IronPort-SDR: WbWodC1KA2u4RRvUWLJi71rJpvdabPEPsYowJYbhqd7X8QtSaUNsvu/mF27JmkuLpdZ7EFW3ky
+ w+kr/mORTH0A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9812"; a="235767019"
 X-IronPort-AV: E=Sophos;i="5.78,360,1599548400"; 
-   d="scan'208";a="170839150"
+   d="scan'208";a="235767019"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2020 17:42:07 -0800
-IronPort-SDR: x8rt2gW6FNs0ErfjroCYGoJpVzrM2RBK4de4OXfXGz5U7g4bX0C24d6jwx1FJZ3YxBHZ9HBfE+
- OPVx365BLahA==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2020 18:21:22 -0800
+IronPort-SDR: AsXskUrGkNhgLXm6rtdqrCVrLga6taE/Gdmsyq8qwzvM1hGVxU3G0JnKcCkl8w1q/nVxa79j7d
+ MzYzVoQX3F0w==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,360,1599548400"; 
-   d="scan'208";a="360961567"
-Received: from araj-mobl1.jf.intel.com (HELO localhost) ([10.252.131.178])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2020 17:42:07 -0800
-From:   Ashok Raj <ashok.raj@intel.com>
-To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [Patch v2 1/1] PCI: pciehp: Add support for handling MRL events
-Date:   Sat, 21 Nov 2020 17:42:03 -0800
-Message-Id: <20201122014203.4706-1-ashok.raj@intel.com>
-X-Mailer: git-send-email 2.13.6
+   d="scan'208";a="369626308"
+Received: from lkp-server01.sh.intel.com (HELO ce8054c7261d) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Nov 2020 18:21:21 -0800
+Received: from kbuild by ce8054c7261d with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kgf0C-000012-Lr; Sun, 22 Nov 2020 02:21:20 +0000
+Date:   Sun, 22 Nov 2020 10:20:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/err] BUILD SUCCESS
+ 4513f3a6cfb1e95fe3c108f007254729eedf309c
+Message-ID: <5fb9caec.MvGDIfpuS2ebxud6%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When Mechanical Retention Lock (MRL) is present, Linux doesn't process
-those change events.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/err
+branch HEAD: 4513f3a6cfb1e95fe3c108f007254729eedf309c  PCI/AER: Add RCEC AER error injection support
 
-Support for these can be found starting Icelake Server.
+elapsed time: 720m
 
-The following changes need to be enabled when MRL is present.
+configs tested: 91
+configs skipped: 2
 
-1. Subscribe to MRL change events in SlotControl.
-2. When MRL is closed,
-   - If there is no ATTN button, then POWER on the slot.
-   - If there is ATTN button, and an MRL event pending, ignore
-     Presence Detect. Since we want ATTN button to drive the
-     hotplug event.
-   - If currently slot is powered on, but MRL is open,
-     PCIe Base Spec 5.0 Chapter 6.7.1.3 states.
-     If an MRL Sensor is implemented without a corresponding
-     MRL Sensor input on the Hot-Plug Controller, it is recommended
-     that the MRL Sensor be routed to power fault input of the Hot-Plug
-     Controller. This allows an active adapter to be powered off when the
-     MRL is opened."
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-     This seems to suggest that the slot should be brought
-     down as soon as MRL is opened.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                       omap2plus_defconfig
+sh                          polaris_defconfig
+sh                        edosk7760_defconfig
+powerpc                 mpc836x_mds_defconfig
+arm                        spear3xx_defconfig
+powerpc                       holly_defconfig
+sh                           sh2007_defconfig
+arm                      integrator_defconfig
+sh                        sh7785lcr_defconfig
+sh                   rts7751r2dplus_defconfig
+xtensa                  cadence_csp_defconfig
+c6x                                 defconfig
+sh                           se7750_defconfig
+powerpc                      obs600_defconfig
+mips                        maltaup_defconfig
+i386                                defconfig
+arm                           tegra_defconfig
+xtensa                              defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a004-20201121
+i386                 randconfig-a003-20201121
+i386                 randconfig-a002-20201121
+i386                 randconfig-a005-20201121
+i386                 randconfig-a001-20201121
+i386                 randconfig-a006-20201121
+x86_64               randconfig-a015-20201121
+x86_64               randconfig-a011-20201121
+x86_64               randconfig-a014-20201121
+x86_64               randconfig-a016-20201121
+x86_64               randconfig-a012-20201121
+x86_64               randconfig-a013-20201121
+i386                 randconfig-a012-20201121
+i386                 randconfig-a013-20201121
+i386                 randconfig-a011-20201121
+i386                 randconfig-a016-20201121
+i386                 randconfig-a014-20201121
+i386                 randconfig-a015-20201121
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+clang tested configs:
+x86_64               randconfig-a006-20201121
+x86_64               randconfig-a003-20201121
+x86_64               randconfig-a004-20201121
+x86_64               randconfig-a005-20201121
+x86_64               randconfig-a002-20201121
+x86_64               randconfig-a001-20201121
+
 ---
-Changes since v1:
-- Changes suggested by Lucas Wunner
-  https://lore.kernel.org/linux-pci/20201119223749.GA103783@otc-nc-03/T/#m1f661ae901e7dedad73dea370bb63abd52c610eb
-  - Consolidate MRL handling in pciehp_handle_presence_or_link_change()
-  - Added helped latch_closed()
-  - Add comments why MRL open should function as hot-remove.
-  - Don't nuke PDC, it might mask a button PUSH synthesized event after 5
-    secs.
-- Bjorn: Fix Subject to be consistent with other commits.
----
- drivers/pci/hotplug/pciehp_ctrl.c | 36 +++++++++++++++++++++++++++++++++++-
- drivers/pci/hotplug/pciehp_hpc.c  | 14 ++++++++++++--
- 2 files changed, 47 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 9f85815b4f53..aa8b187ff769 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -224,9 +224,22 @@ void pciehp_handle_disable_request(struct controller *ctrl)
- 	ctrl->request_result = pciehp_disable_slot(ctrl, SAFE_REMOVAL);
- }
- 
-+static bool latch_closed(struct controller *ctrl)
-+{
-+	u8 getstatus = 0;
-+
-+	if (!MRL_SENS(ctrl))
-+		return true;
-+
-+	pciehp_get_latch_status(ctrl, &getstatus);
-+
-+	return (getstatus == 0 ? true : false);
-+}
-+
- void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- {
- 	int present, link_active;
-+	u8 getstatus = 0;
- 
- 	/*
- 	 * If the slot is on and presence or link has changed, turn it off.
-@@ -246,6 +259,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 		if (events & PCI_EXP_SLTSTA_PDC)
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+		if (events & PCI_EXP_SLTSTA_MRLSC)
-+			ctrl_info(ctrl, "Slot(%s): Latch %s\n",
-+				  slot_name(ctrl), getstatus ? "Open" : "Closed");
-+		/*
-+		 * PCIe Base Spec 5.0 Chapter 6.7.1.3 states.
-+		 *
-+		 * If an MRL Sensor is implemented without a corresponding MRL Sensor input
-+		 * on the Hot-Plug Controller, it is recommended that the MRL Sensor be
-+		 * routed to power fault input of the Hot-Plug Controller.
-+		 * This allows an active adapter to be powered off when the MRL is opened."
-+		 *
-+		 * This seems to suggest that the slot should be brought down as soon as MRL
-+		 * is opened.
-+		 */
- 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
- 		break;
- 	default:
-@@ -257,7 +284,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	mutex_lock(&ctrl->state_lock);
- 	present = pciehp_card_present(ctrl);
- 	link_active = pciehp_check_link_active(ctrl);
--	if (present <= 0 && link_active <= 0) {
-+	if ((present <= 0 && link_active <= 0) || !latch_closed(ctrl)) {
- 		mutex_unlock(&ctrl->state_lock);
- 		return;
- 	}
-@@ -275,6 +302,13 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 		if (link_active)
- 			ctrl_info(ctrl, "Slot(%s): Link Up\n",
- 				  slot_name(ctrl));
-+		/*
-+		 * If slot is closed && ATTN button exists
-+		 * don't continue, let the ATTN button
-+		 * drive the hot-plug
-+		 */
-+		if (((events & PCI_EXP_SLTSTA_MRLSC) && ATTN_BUTTN(ctrl)))
-+			return;
- 		ctrl->request_result = pciehp_enable_slot(ctrl);
- 		break;
- 	default:
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 53433b37e181..7cfa27bcf951 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -605,7 +605,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 	 */
- 	status &= PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
- 		  PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
--		  PCI_EXP_SLTSTA_DLLSC;
-+		  PCI_EXP_SLTSTA_DLLSC | PCI_EXP_SLTSTA_MRLSC;
- 
- 	/*
- 	 * If we've already reported a power fault, don't report it again
-@@ -710,8 +710,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 	down_read(&ctrl->reset_lock);
- 	if (events & DISABLE_SLOT)
- 		pciehp_handle_disable_request(ctrl);
--	else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC))
-+	else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC |
-+			   PCI_EXP_SLTSTA_MRLSC))
- 		pciehp_handle_presence_or_link_change(ctrl, events);
-+
- 	up_read(&ctrl->reset_lock);
- 
- 	ret = IRQ_HANDLED;
-@@ -768,6 +770,14 @@ static void pcie_enable_notification(struct controller *ctrl)
- 		cmd |= PCI_EXP_SLTCTL_ABPE;
- 	else
- 		cmd |= PCI_EXP_SLTCTL_PDCE;
-+
-+	/*
-+	 * If MRL sensor is present, then subscribe for MRL
-+	 * Changes to be notified as well.
-+	 */
-+	if (MRL_SENS(ctrl))
-+		cmd |= PCI_EXP_SLTCTL_MRLSCE;
-+
- 	if (!pciehp_poll_mode)
- 		cmd |= PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_CCIE;
- 
--- 
-2.7.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
