@@ -2,70 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB852C04DA
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Nov 2020 12:47:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6943E2C0C15
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Nov 2020 14:57:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgKWLqy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Nov 2020 06:46:54 -0500
-Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:46228 "EHLO
-        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728957AbgKWLqy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Nov 2020 06:46:54 -0500
-Received: from cpc79921-stkp12-2-0-cust288.10-2.cable.virginm.net ([86.16.139.33] helo=[192.168.0.18])
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1khAJ0-0004vP-Us; Mon, 23 Nov 2020 11:46:50 +0000
-Subject: Re: [PATCH v17 3/3] PCI: microchip: Add host driver for Microchip
- PCIe controller
-To:     Daire.McNamara@microchip.com, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org,
-        =?UTF-8?Q?Javier_Jard=c3=b3n?= <javier.jardon@codethink.co.uk>,
-        Sam Bishop <sam.bishop@codethink.co.uk>
-References: <20201022132223.17789-4-daire.mcnamara@microchip.com>
- <587df2af-c59e-371a-230c-9c7a614824bd@codethink.co.uk>
- <MN2PR11MB426909C2B84E95AF301C404B96100@MN2PR11MB4269.namprd11.prod.outlook.com>
- <2eee84c9-aa24-2587-5ced-1c2fe30a1d50@codethink.co.uk>
- <20201118163931.GB32004@e121166-lin.cambridge.arm.com>
- <557a37d9-3694-ede1-d7b0-adfba4345fc0@codethink.co.uk>
- <MN2PR11MB42693A7C10C71C327763FA8B96E00@MN2PR11MB4269.namprd11.prod.outlook.com>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <17dca2c7-18b0-1530-bbc0-f8f92e968a45@codethink.co.uk>
-Date:   Mon, 23 Nov 2020 11:46:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1730077AbgKWNoR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Nov 2020 08:44:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729939AbgKWNoR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 23 Nov 2020 08:44:17 -0500
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813D7206F1;
+        Mon, 23 Nov 2020 13:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606139056;
+        bh=DB3QEZuy+Fe1QR9eYhfJo9ZD6woPmMFGSzD2JXS+9+Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Cmr9EANzmv4bIP3wlI7Dhllj0uIjXveZ90qem2GkU4WVQzSmKOzQa17Jtu/YyEH21
+         6rY+XVs4S0KSTvniAUG26veNWwMmaTW6qg/+TwvFiVqkb1o2hn2yDfVJWQINFzb3AW
+         Oeqsv8YlMpF+tsbFbkDG9c2VnTzlXdI7XCvO/z6U=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Edgar Merger <Edgar.Merger@emerson.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH] PCI: Mark AMD Raven iGPU ATS as broken
+Date:   Mon, 23 Nov 2020 13:44:10 +0000
+Message-Id: <20201123134410.10648-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <MN2PR11MB42693A7C10C71C327763FA8B96E00@MN2PR11MB4269.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23/11/2020 10:04, Daire.McNamara@microchip.com wrote:
-> Hi Ben, Lorenzo,
-> 
-> We're working through a few issues with our FPGA design file to get PCIe working on our Icicle Kit board.  FYI, PCIe on PolarFire SoC is not directly connected the CPU complex, instead, it is routed through the FPGA fabric.  We believe we have resolved these issues around enabling/disabling clocks to FPGA fabric and memory protection layers and have been propagating the fixes through to our public facing FPGA and software repositories along with other unrelated improvements.  All going well, these changes will arrive shortly.
+Edgar Merger reports that the AMD Raven GPU does not work reliably on
+his system when the IOMMU is enabled:
 
-Thanks for looking a tthis.
+  | [drm:amdgpu_job_timedout [amdgpu]] *ERROR* ring gfx timeout, signaled seq=1, emitted seq=3
+  | [...]
+  | amdgpu 0000:0b:00.0: GPU reset begin!
+  | AMD-Vi: Completion-Wait loop timed out
+  | iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=0b:00.0 address=0x38edc0970]
 
-> Ben, if you just want to use PCIe on Icicle Kit, the easiest path is probably to keep an eye on the README in our yocto-based repository @ https://github.com/polarfire-soc/meta-polarfire-soc-yocto-bsp
-> [https://avatars1.githubusercontent.com/u/51128733?s=400&v=4]<https://github.com/polarfire-soc/meta-polarfire-soc-yocto-bsp>
-> GitHub - polarfire-soc/meta-polarfire-soc-yocto-bsp: PolarFire SoC yocto Board Support Package<https://github.com/polarfire-soc/meta-polarfire-soc-yocto-bsp>
-> Microchip PolarFire SoC Yocto BSP. Microchip Polarfire-SoC Yocto 'Board Support Package' (BSP) is based on OpenEmbedded (OE). The 'Polarfire SoC Yocto BSP' layer is build on top of the RISC-V Architectural layer (meta-riscv) to provide hardware specific features and additional disk images.
-> github.com
-> 
-> Lorenzo, I'll post v18 of the driver, based on v5.10rc1, and roll up any fixes needed for this PFGA design file shortly. I'll also add MAINTAINERS section.
+This is indicative of a hardware/platform configuration issue so, since
+disabling ATS has been shown to resolve the problem, add a quirk to
+match this particular device while Edgar follows-up with AMD for more
+information.
 
-Is there any way the pcie driver could detect any of these issues and
-flag up user facing message saying "FPGA configuration required for PCIe" ?
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: Edgar Merger <Edgar.Merger@emerson.com>
+Suggested-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/linux-iommu/MWHPR10MB1310F042A30661D4158520B589FC0@MWHPR10MB1310.namprd10.prod.outlook.com
+Signed-off-by: Will Deacon <will@kernel.org>
+---
 
-I will keep an eye on the yocto repo, the USB is also not working
-under Linux yet.
+Hi all,
 
+Since Joerg is away at the moment, I'm posting this to try to make some
+progress with the thread in the Link: tag.
 
+Cheers,
+
+Will
+
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f70692ac79c5..3911b0ec57ba 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5176,6 +5176,8 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
+ /* AMD Navi14 dGPU */
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
++/* AMD Raven platform iGPU */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x15d8, quirk_amd_harvest_no_ats);
+ #endif /* CONFIG_PCI_ATS */
+ 
+ /* Freescale PCIe doesn't support MSI in RC mode */
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+2.29.2.454.gaff20da3a2-goog
 
-https://www.codethink.co.uk/privacy.html
