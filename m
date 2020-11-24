@@ -2,103 +2,290 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1200F2C3175
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 20:54:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CDB22C3195
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 21:04:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgKXTxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Nov 2020 14:53:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727731AbgKXTxH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Nov 2020 14:53:07 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729978AbgKXUD0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Nov 2020 15:03:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38299 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729967AbgKXUDY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 15:03:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606248201;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=DOLfU9QYMGrspYJyzvFCDSDoj+0Yb7d+LpKKWf0+TiU=;
+        b=FAqw2zibwqARE/mKyw8PpUsExVJWr+RQLftTsMlJ43XmW31CBdpTrbHWV8PGvWA+sls5x0
+        I0HOWHrFkI/Ieyoc2p81LIaDaehX0IWsP3OIiHcIxuvkew283nFpQFoVuqP1nnHa1KWGsj
+        XDRdL+O+hmPKC8+QAIT22q2QkbKPFQI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-6_d5NO5PPCy6SULvgRXZBQ-1; Tue, 24 Nov 2020 15:03:19 -0500
+X-MC-Unique: 6_d5NO5PPCy6SULvgRXZBQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28F9C206D4;
-        Tue, 24 Nov 2020 19:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606247587;
-        bh=zE+2MmKDRI9sbrGlq7BkuT6Mkm+WrAFVxPD0rd7A6wU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=1yYpmRyq/UEAZAec4JEVeWrxcK3k4oEXBlVgKHW3hukB0gmcv5/OfqVAgY8jKeM9r
-         Xpk7upd2rteVBwLSny6HTcY4FazU/l89Me9l6GEh5dPQUgQCfnkbrK9xPqwoglU2O7
-         zj45MJgXq/FUUcQ15AYuEzjnBiAn6uR+wEbNK+P8=
-Date:   Tue, 24 Nov 2020 13:53:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Puranjay Mohan <puranjay12@gmail.com>
-Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: Re: [PATCH] PCI: Change return type of pci_find_capability()
-Message-ID: <20201124195305.GA584380@bjorn-Precision-5520>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F411107AD88;
+        Tue, 24 Nov 2020 20:03:17 +0000 (UTC)
+Received: from thinkpad.redhat.com (ovpn-113-83.ams2.redhat.com [10.36.113.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B80705D6AB;
+        Tue, 24 Nov 2020 20:03:09 +0000 (UTC)
+From:   Laurent Vivier <lvivier@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-block@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Marc Zyngier <maz@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Laurent Vivier <lvivier@redhat.com>
+Subject: [PATCH 0/2] powerpc/pseries: fix MSI/X IRQ affinity on pseries
+Date:   Tue, 24 Nov 2020 21:03:06 +0100
+Message-Id: <20201124200308.1110744-1-lvivier@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201117191718.17885-1-puranjay12@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 18, 2020 at 12:47:18AM +0530, Puranjay Mohan wrote:
-> PCI Capabilities are linked in a list that must appear in the first 256 bytes of config space.
-> The Capabilities Pointer register at 0x34 contains the address of the first Capability in the list.
-> Each Capability contains an 8 bit "Next Capability Pointer" that is set to 0x00 in the last item of the list.
-> 
-> Change the return type of pci_find_capability() from int to u8 to match the specification.
+With virtio, in multiqueue case, each queue IRQ is normally=0D
+bound to a different CPU using the affinity mask.=0D
+=0D
+This works fine on x86_64 but totally ignored on pseries.=0D
+=0D
+This is not obvious at first look because irqbalance is doing=0D
+some balancing to improve that.=0D
+=0D
+It appears that the "managed" flag set in the MSI entry=0D
+is never copied to the system IRQ entry.=0D
+=0D
+This series passes the affinity mask from rtas_setup_msi_irqs()=0D
+to irq_domain_alloc_descs() by adding an affinity parameter to=0D
+irq_create_mapping().=0D
+=0D
+The first patch adds the parameter (no functional change), the=0D
+second patch passes the actual affinity mask to irq_create_mapping()=0D
+in rtas_setup_msi_irqs().=0D
+=0D
+For instance, with 32 CPUs VM and 32 queues virtio-scsi interface:=0D
+=0D
+... -smp 32 -device virtio-scsi-pci,id=3Dvirtio_scsi_pci0,num_queues=3D32=0D
+=0D
+for IRQ in $(grep virtio2-request /proc/interrupts |cut -d: -f1); do=0D
+    for file in /proc/irq/$IRQ/ ; do=0D
+        echo -n "IRQ: $(basename $file) CPU: " ; cat $file/smp_affinity_lis=
+t=0D
+    done=0D
+done=0D
+=0D
+Without the patch (and without irqbalanced)=0D
+=0D
+IRQ: 268 CPU: 0-31=0D
+IRQ: 269 CPU: 0-31=0D
+IRQ: 270 CPU: 0-31=0D
+IRQ: 271 CPU: 0-31=0D
+IRQ: 272 CPU: 0-31=0D
+IRQ: 273 CPU: 0-31=0D
+IRQ: 274 CPU: 0-31=0D
+IRQ: 275 CPU: 0-31=0D
+IRQ: 276 CPU: 0-31=0D
+IRQ: 277 CPU: 0-31=0D
+IRQ: 278 CPU: 0-31=0D
+IRQ: 279 CPU: 0-31=0D
+IRQ: 280 CPU: 0-31=0D
+IRQ: 281 CPU: 0-31=0D
+IRQ: 282 CPU: 0-31=0D
+IRQ: 283 CPU: 0-31=0D
+IRQ: 284 CPU: 0-31=0D
+IRQ: 285 CPU: 0-31=0D
+IRQ: 286 CPU: 0-31=0D
+IRQ: 287 CPU: 0-31=0D
+IRQ: 288 CPU: 0-31=0D
+IRQ: 289 CPU: 0-31=0D
+IRQ: 290 CPU: 0-31=0D
+IRQ: 291 CPU: 0-31=0D
+IRQ: 292 CPU: 0-31=0D
+IRQ: 293 CPU: 0-31=0D
+IRQ: 294 CPU: 0-31=0D
+IRQ: 295 CPU: 0-31=0D
+IRQ: 296 CPU: 0-31=0D
+IRQ: 297 CPU: 0-31=0D
+IRQ: 298 CPU: 0-31=0D
+IRQ: 299 CPU: 0-31=0D
+=0D
+With the patch:=0D
+=0D
+IRQ: 265 CPU: 0=0D
+IRQ: 266 CPU: 1=0D
+IRQ: 267 CPU: 2=0D
+IRQ: 268 CPU: 3=0D
+IRQ: 269 CPU: 4=0D
+IRQ: 270 CPU: 5=0D
+IRQ: 271 CPU: 6=0D
+IRQ: 272 CPU: 7=0D
+IRQ: 273 CPU: 8=0D
+IRQ: 274 CPU: 9=0D
+IRQ: 275 CPU: 10=0D
+IRQ: 276 CPU: 11=0D
+IRQ: 277 CPU: 12=0D
+IRQ: 278 CPU: 13=0D
+IRQ: 279 CPU: 14=0D
+IRQ: 280 CPU: 15=0D
+IRQ: 281 CPU: 16=0D
+IRQ: 282 CPU: 17=0D
+IRQ: 283 CPU: 18=0D
+IRQ: 284 CPU: 19=0D
+IRQ: 285 CPU: 20=0D
+IRQ: 286 CPU: 21=0D
+IRQ: 287 CPU: 22=0D
+IRQ: 288 CPU: 23=0D
+IRQ: 289 CPU: 24=0D
+IRQ: 290 CPU: 25=0D
+IRQ: 291 CPU: 26=0D
+IRQ: 292 CPU: 27=0D
+IRQ: 293 CPU: 28=0D
+IRQ: 294 CPU: 29=0D
+IRQ: 295 CPU: 30=0D
+IRQ: 299 CPU: 31=0D
+=0D
+This matches what we have on an x86_64 system.=0D
+=0D
+Laurent Vivier (2):=0D
+  genirq: add an affinity parameter to irq_create_mapping()=0D
+  powerpc/pseries: pass MSI affinity to irq_create_mapping()=0D
+=0D
+ arch/arc/kernel/intc-arcv2.c                  | 4 ++--=0D
+ arch/arc/kernel/mcip.c                        | 2 +-=0D
+ arch/arm/common/sa1111.c                      | 2 +-=0D
+ arch/arm/mach-s3c/irq-s3c24xx.c               | 3 ++-=0D
+ arch/arm/plat-orion/gpio.c                    | 2 +-=0D
+ arch/mips/ath25/ar2315.c                      | 4 ++--=0D
+ arch/mips/ath25/ar5312.c                      | 4 ++--=0D
+ arch/mips/lantiq/irq.c                        | 2 +-=0D
+ arch/mips/pci/pci-ar2315.c                    | 3 ++-=0D
+ arch/mips/pic32/pic32mzda/time.c              | 2 +-=0D
+ arch/mips/ralink/irq.c                        | 2 +-=0D
+ arch/powerpc/kernel/pci-common.c              | 2 +-=0D
+ arch/powerpc/kvm/book3s_xive.c                | 2 +-=0D
+ arch/powerpc/platforms/44x/ppc476.c           | 4 ++--=0D
+ arch/powerpc/platforms/cell/interrupt.c       | 4 ++--=0D
+ arch/powerpc/platforms/cell/iommu.c           | 3 ++-=0D
+ arch/powerpc/platforms/cell/pmu.c             | 2 +-=0D
+ arch/powerpc/platforms/cell/spider-pic.c      | 2 +-=0D
+ arch/powerpc/platforms/cell/spu_manage.c      | 6 +++---=0D
+ arch/powerpc/platforms/maple/pci.c            | 2 +-=0D
+ arch/powerpc/platforms/pasemi/dma_lib.c       | 5 +++--=0D
+ arch/powerpc/platforms/pasemi/msi.c           | 2 +-=0D
+ arch/powerpc/platforms/pasemi/setup.c         | 4 ++--=0D
+ arch/powerpc/platforms/powermac/pci.c         | 2 +-=0D
+ arch/powerpc/platforms/powermac/pic.c         | 2 +-=0D
+ arch/powerpc/platforms/powermac/smp.c         | 2 +-=0D
+ arch/powerpc/platforms/powernv/opal-irqchip.c | 5 +++--=0D
+ arch/powerpc/platforms/powernv/pci.c          | 2 +-=0D
+ arch/powerpc/platforms/powernv/vas.c          | 2 +-=0D
+ arch/powerpc/platforms/ps3/interrupt.c        | 2 +-=0D
+ arch/powerpc/platforms/pseries/ibmebus.c      | 2 +-=0D
+ arch/powerpc/platforms/pseries/msi.c          | 2 +-=0D
+ arch/powerpc/sysdev/fsl_mpic_err.c            | 2 +-=0D
+ arch/powerpc/sysdev/fsl_msi.c                 | 2 +-=0D
+ arch/powerpc/sysdev/mpic.c                    | 3 ++-=0D
+ arch/powerpc/sysdev/mpic_u3msi.c              | 2 +-=0D
+ arch/powerpc/sysdev/xics/xics-common.c        | 2 +-=0D
+ arch/powerpc/sysdev/xive/common.c             | 2 +-=0D
+ arch/sh/boards/mach-se/7343/irq.c             | 2 +-=0D
+ arch/sh/boards/mach-se/7722/irq.c             | 2 +-=0D
+ arch/sh/boards/mach-x3proto/gpio.c            | 2 +-=0D
+ arch/xtensa/kernel/perf_event.c               | 2 +-=0D
+ arch/xtensa/kernel/smp.c                      | 2 +-=0D
+ arch/xtensa/kernel/time.c                     | 2 +-=0D
+ drivers/ata/pata_macio.c                      | 2 +-=0D
+ drivers/base/regmap/regmap-irq.c              | 2 +-=0D
+ drivers/bus/moxtet.c                          | 2 +-=0D
+ drivers/clocksource/ingenic-timer.c           | 2 +-=0D
+ drivers/clocksource/timer-riscv.c             | 2 +-=0D
+ drivers/extcon/extcon-max8997.c               | 3 ++-=0D
+ drivers/gpio/gpio-bcm-kona.c                  | 2 +-=0D
+ drivers/gpio/gpio-brcmstb.c                   | 2 +-=0D
+ drivers/gpio/gpio-davinci.c                   | 2 +-=0D
+ drivers/gpio/gpio-em.c                        | 3 ++-=0D
+ drivers/gpio/gpio-grgpio.c                    | 2 +-=0D
+ drivers/gpio/gpio-mockup.c                    | 2 +-=0D
+ drivers/gpio/gpio-mpc8xxx.c                   | 2 +-=0D
+ drivers/gpio/gpio-mvebu.c                     | 2 +-=0D
+ drivers/gpio/gpio-tb10x.c                     | 2 +-=0D
+ drivers/gpio/gpio-tegra.c                     | 2 +-=0D
+ drivers/gpio/gpio-wm831x.c                    | 2 +-=0D
+ drivers/gpio/gpiolib.c                        | 2 +-=0D
+ drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c       | 3 ++-=0D
+ drivers/gpu/ipu-v3/ipu-common.c               | 2 +-=0D
+ drivers/hid/hid-rmi.c                         | 2 +-=0D
+ drivers/i2c/busses/i2c-cht-wc.c               | 2 +-=0D
+ drivers/i2c/i2c-core-base.c                   | 2 +-=0D
+ drivers/i2c/muxes/i2c-mux-pca954x.c           | 2 +-=0D
+ drivers/ide/pmac.c                            | 2 +-=0D
+ drivers/iio/dummy/iio_dummy_evgen.c           | 3 ++-=0D
+ drivers/input/rmi4/rmi_bus.c                  | 2 +-=0D
+ drivers/irqchip/irq-ath79-misc.c              | 3 ++-=0D
+ drivers/irqchip/irq-bcm2835.c                 | 3 ++-=0D
+ drivers/irqchip/irq-csky-mpintc.c             | 2 +-=0D
+ drivers/irqchip/irq-eznps.c                   | 2 +-=0D
+ drivers/irqchip/irq-mips-gic.c                | 8 +++++---=0D
+ drivers/irqchip/irq-mmp.c                     | 4 ++--=0D
+ drivers/irqchip/irq-versatile-fpga.c          | 2 +-=0D
+ drivers/irqchip/irq-vic.c                     | 2 +-=0D
+ drivers/macintosh/macio_asic.c                | 2 +-=0D
+ drivers/memory/omap-gpmc.c                    | 2 +-=0D
+ drivers/mfd/ab8500-core.c                     | 2 +-=0D
+ drivers/mfd/arizona-irq.c                     | 5 +++--=0D
+ drivers/mfd/db8500-prcmu.c                    | 2 +-=0D
+ drivers/mfd/mfd-core.c                        | 2 +-=0D
+ drivers/mfd/stmpe.c                           | 5 +++--=0D
+ drivers/mfd/tc3589x.c                         | 2 +-=0D
+ drivers/mfd/tps6586x.c                        | 2 +-=0D
+ drivers/mfd/wm8994-irq.c                      | 5 +++--=0D
+ drivers/misc/cxl/irq.c                        | 2 +-=0D
+ drivers/misc/ocxl/afu_irq.c                   | 2 +-=0D
+ drivers/misc/ocxl/link.c                      | 2 +-=0D
+ drivers/net/dsa/mv88e6xxx/chip.c              | 2 +-=0D
+ drivers/net/dsa/mv88e6xxx/global2.c           | 2 +-=0D
+ drivers/net/dsa/qca/ar9331.c                  | 2 +-=0D
+ drivers/net/dsa/rtl8366rb.c                   | 3 ++-=0D
+ drivers/net/ethernet/ibm/ibmvnic.c            | 4 ++--=0D
+ drivers/net/usb/lan78xx.c                     | 2 +-=0D
+ drivers/pci/controller/pci-ftpci100.c         | 2 +-=0D
+ drivers/pci/controller/pci-tegra.c            | 2 +-=0D
+ drivers/pci/controller/pcie-rcar-host.c       | 2 +-=0D
+ drivers/pci/controller/pcie-xilinx-cpm.c      | 4 ++--=0D
+ drivers/pci/controller/pcie-xilinx.c          | 2 +-=0D
+ drivers/pinctrl/mediatek/mtk-eint.c           | 2 +-=0D
+ drivers/pinctrl/nomadik/pinctrl-abx500.c      | 3 ++-=0D
+ drivers/pinctrl/pinctrl-at91-pio4.c           | 3 ++-=0D
+ drivers/pinctrl/pinctrl-rockchip.c            | 2 +-=0D
+ drivers/pinctrl/samsung/pinctrl-samsung.c     | 2 +-=0D
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 2 +-=0D
+ drivers/power/supply/lp8788-charger.c         | 2 +-=0D
+ drivers/rtc/rtc-lp8788.c                      | 2 +-=0D
+ drivers/rtc/rtc-max8997.c                     | 3 ++-=0D
+ drivers/rtc/rtc-max8998.c                     | 3 ++-=0D
+ drivers/scsi/cxlflash/ocxl_hw.c               | 2 +-=0D
+ drivers/ssb/driver_gpio.c                     | 4 ++--=0D
+ drivers/staging/hikey9xx/hi6421-spmi-pmic.c   | 2 +-=0D
+ drivers/staging/octeon-usb/octeon-hcd.c       | 2 +-=0D
+ drivers/tty/hvc/hvsi.c                        | 2 +-=0D
+ drivers/tty/serial/pmac_zilog.c               | 6 +++---=0D
+ drivers/watchdog/octeon-wdt-main.c            | 2 +-=0D
+ include/linux/irqdomain.h                     | 3 ++-=0D
+ kernel/irq/irqdomain.c                        | 8 +++++---=0D
+ sound/soc/codecs/rt5677.c                     | 2 +-=0D
+ 123 files changed, 171 insertions(+), 146 deletions(-)=0D
+=0D
+-- =0D
+2.28.0=0D
+=0D
 
-Nits: Be more specific in subject, e.g., "Return u8 from
-pci_find_capability()".   Wrap commit log to fit in 78 columns.  Add
-blank lines between paragraphs.  The 0x34 address is accurate but not
-relevant to this patch.
-
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> ---
->  drivers/pci/pci.c   | 4 ++--
->  include/linux/pci.h | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 6d4d5a2f923d..05ac8a493e6b 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -477,9 +477,9 @@ static int __pci_bus_find_cap_start(struct pci_bus *bus,
->   *  %PCI_CAP_ID_PCIX         PCI-X
->   *  %PCI_CAP_ID_EXP          PCI Express
->   */
-> -int pci_find_capability(struct pci_dev *dev, int cap)
-> +u8 pci_find_capability(struct pci_dev *dev, int cap)
->  {
-> -	int pos;
-> +	u8 pos;
->  
->  	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
-
-Also change the signatures of __pci_bus_find_cap_start(),
-__pci_find_next_cap(), __pci_find_next_cap_ttl() to match.
-
->  	if (pos)
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 22207a79762c..19a817702ea9 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1063,7 +1063,7 @@ void pci_sort_breadthfirst(void);
->  
->  /* Generic PCI functions exported to card drivers */
->  
-> -int pci_find_capability(struct pci_dev *dev, int cap);
-> +u8 pci_find_capability(struct pci_dev *dev, int cap);
->  int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
->  int pci_find_ext_capability(struct pci_dev *dev, int cap);
->  int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
-> @@ -1719,7 +1719,7 @@ static inline int __pci_register_driver(struct pci_driver *drv,
->  static inline int pci_register_driver(struct pci_driver *drv)
->  { return 0; }
->  static inline void pci_unregister_driver(struct pci_driver *drv) { }
-> -static inline int pci_find_capability(struct pci_dev *dev, int cap)
-> +static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
->  { return 0; }
->  static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
->  					   int cap)
-> -- 
-> 2.27.0
-> 
