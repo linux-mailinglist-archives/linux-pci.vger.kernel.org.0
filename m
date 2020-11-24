@@ -2,71 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 366132C33B0
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 23:10:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7360E2C33C7
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 23:19:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388466AbgKXWJb convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 24 Nov 2020 17:09:31 -0500
-Received: from webmail.de-moe.org ([202.205.109.204]:50958 "EHLO eol.com.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731823AbgKXWJb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Nov 2020 17:09:31 -0500
-X-Greylist: delayed 487 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Nov 2020 17:09:31 EST
-Received: from mail.eol.com.cn (unknown [216.172.109.126])
-        by mail-109-204 (Coremail) with SMTP id AQAAfwCHj0Mdgr1f3RVrAQ--.2528S27;
-        Wed, 25 Nov 2020 05:59:10 +0800 (CST)
-From:   ddp@eol.com.cn
-To:     linux-pci@vger.kernel.org
-Subject: Notification
-Date:   24 Nov 2020 16:01:23 -0600
-Message-ID: <20201124160122.2E2A463CA112ED51@eol.com.cn>
+        id S1731395AbgKXWTu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Nov 2020 17:19:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:46036 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgKXWTu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 17:19:50 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1606256388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UQPfZ1J61H/ekBBAaR7V+BMvtX4EMI5nVnNHoIml4cY=;
+        b=KTCOU6z7nYzCZBSY4aJF/Aw1YsI/0XmAB81NTW165bZxAvN6oPmLaSaBFZhUZVWjynlOxq
+        nCqWsnt4RieChFXuP867sMeXaPnmW8u9fsV/Gbn1BRdJFB0VNGb0IMyJuyKWV5fpQyC6Jt
+        Q2+/iL9J5edexGyDWyELgePpPZ/YShwU3DYFxcjZYOgjnfc4gYsnB7RdcnNPrWff7unbZG
+        ZaY9pqTia2ITN3vQpLhyzkscxHZNhl11PdmcdDEZzzZQZGjxDtppP10EiOsvCL4XOkbx9r
+        wAODJhjVw1jxFk0zsJcwnnxhVVX+iuhSgj/FNYp2v3UlVTFEEzGMaR8nasrQfg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1606256388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UQPfZ1J61H/ekBBAaR7V+BMvtX4EMI5nVnNHoIml4cY=;
+        b=r3f45/W7npRZRZ1ON6VohbAgkqBJpwE8zrsNWH62oAgAok6llT9gv4Vwh4nOwx5LB/Q3g3
+        Ri3BgRrqGnP3aaDw==
+To:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-block@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Marc Zyngier <maz@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Laurent Vivier <lvivier@redhat.com>
+Subject: Re: [PATCH 1/2] genirq: add an affinity parameter to irq_create_mapping()
+In-Reply-To: <20201124200308.1110744-2-lvivier@redhat.com>
+References: <20201124200308.1110744-1-lvivier@redhat.com> <20201124200308.1110744-2-lvivier@redhat.com>
+Date:   Tue, 24 Nov 2020 23:19:47 +0100
+Message-ID: <87h7pel7ng.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-CM-TRANSID: AQAAfwCHj0Mdgr1f3RVrAQ--.2528S27
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrWxuw43tFy8tFy3tFWfAFb_yoW8uFyxpF
-        WF934Yyr18JFn5G348Ww17JFyjvr95G345Crn5GryDA3Z8Ga4Igr1SkrWFyFW7Zrn3K3yj
-        qryvvw1UC3WYqaDanT9S1TB71UUjAfUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
-X-CM-SenderInfo: xggsqv1roou0fpof0/
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hey!
+On Tue, Nov 24 2020 at 21:03, Laurent Vivier wrote:
+> This parameter is needed to pass it to irq_domain_alloc_descs().
+>
+> This seems to have been missed by
+> o06ee6d571f0e ("genirq: Add affinity hint to irq allocation")
 
-Unfortunately, I have some bad news for you.
-Several months ago, I got access to the device you are using to browse the internet.
-Since that time, I have been monitoring your internet activity.
+No, this has not been missed at all. There was and is no reason to do
+this.
 
-Being a regular visitor of adult websites, I can confirm that it is you who is responsible for this.
-To keep it simple, the websites you visited provided me with access to your data.
+> This is needed to implement proper support for multiqueue with
+> pseries.
 
-I've uploaded a Trojan horse on the driver basis that updates its signature several times per day, to make it impossible for antivirus to detect it. Additionally, it gives me access to your camera and microphone.
-Moreover, I have backed-up all the data, including photos, social media, chats and contacts.
+And because pseries needs this _all_ callers need to be changed?
 
-Just recently, I came up with an awesome idea to create the video where you cum in one part of the screen, while the video was simultaneously playing on another screen. That was fun!
+>  123 files changed, 171 insertions(+), 146 deletions(-)
 
-Rest assured that I can easily send this video to all your contacts with a few clicks, and I assume that you would like to prevent this scenario.
+Lots of churn for nothing. 99% of the callers will never need that.
 
-With that in mind, here is my proposal:
-Transfer the amount equivalent to 1200 USD to my Bitcoin wallet, and I will forget about the entire thing. I will also delete all data and videos permanently.
+What's wrong with simply adding an interface which takes that parameter,
+make the existing one an inline wrapper and and leave the rest alone?
 
-In my opinion, this is a somewhat modest price for my work.
-You can figure out how to purchase Bitcoins using search engines like Google or Bing, seeing that it's not very difficult.
+Thanks,
 
-My Bitcoin wallet (BTC): 1F2PWXxHWB74h1h5XV2cTK43oCjGW5dCrk
+        tglx
 
-You have 48 hours to reply and you should also bear the following in mind:
 
-It makes no sense to reply me - the address has been generated automatically.
-It makes no sense to complain either, since the letter along with my Bitcoin wallet cannot be tracked.
-Everything has been orchestrated precisely.
-
-If I ever detect that you mentioned anything about this letter to anyone - the video will be immediately shared, and your contacts will be the first to receive it. Following that, the video will be posted on the web!
-
-P.S. The time will start once you open this letter. (This program has a built-in timer).
-
-Good luck and take it easy! It was just bad luck, next time please be careful.
 
