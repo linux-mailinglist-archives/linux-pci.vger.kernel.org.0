@@ -2,178 +2,311 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2BBC2C3247
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 22:05:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAE8B2C3252
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 22:08:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgKXVCb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Nov 2020 16:02:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729237AbgKXVCb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Nov 2020 16:02:31 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9706A206E0;
-        Tue, 24 Nov 2020 21:02:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606251749;
-        bh=Vv6gJogUgiKM0cCB+Vjosc+BGKDTw/FrAd25jTAaBq4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=c6o9EoPqlr8xKPTXMLa0X2gzGR2WMvhH01H7jmbjyq+c7EGNPSURQ+rcOgs5Cbg2x
-         W4YalLf8/k1lNpYGrfzrzOIzxUaLyjd8wgo+IeQ1yxlO5tK5E1ZQhk7C6O3Odm8KLL
-         bLY/uSObwrYGlYl3CAyWpFSOqfd2YnzymUz89x9I=
-Date:   Tue, 24 Nov 2020 15:02:28 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "treding@nvidia.com" <treding@nvidia.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: Re: [PATCH V2] PCI: dwc: Add support to configure for ECRC
-Message-ID: <20201124210228.GA589610@bjorn-Precision-5520>
+        id S1728312AbgKXVIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Nov 2020 16:08:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28413 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729545AbgKXVIR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 16:08:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606252094;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9WuJKBZA7v6dln/Ze4aIM10HFqbp/pynhdLtgpd/B4c=;
+        b=glYak2h2DMEMmDW9mgxjUvL0rBtDb/AYYaW282+4iRoFlYQ2TKNO4FkiBirKo52rqXtE9J
+        D7WciuuZbfxbWQWmwV1SsWDhUN9Go2+H4aVEkyN74DFxKo/nXQ7btEtnNZl8IR+dGe77jt
+        x8UAA/OJt7uNQRCI1k7DBWRTKUm/2gg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-568-slgOeBP6OGirFlwc_pXDmw-1; Tue, 24 Nov 2020 16:08:12 -0500
+X-MC-Unique: slgOeBP6OGirFlwc_pXDmw-1
+Received: by mail-wr1-f70.google.com with SMTP id i7so688766wro.6
+        for <linux-pci@vger.kernel.org>; Tue, 24 Nov 2020 13:08:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9WuJKBZA7v6dln/Ze4aIM10HFqbp/pynhdLtgpd/B4c=;
+        b=LeYXuTEIjcSPQ5zA+7Z1jEzqV49zb088I7b40EDLm/DwD65I106D8iuoQWJyjcOVX5
+         AgD7Z6LAr3+x3Vp88RdKPxRi4B1bOYoZ81K8WXM3BkYPuXURAoGMME2ags5YynQtVt6V
+         hH6KbAnfR+6eUx9qeph2mds8M1xsP1KprJV4LP579Re1YP8E1CMcllIV1m2z88hzJoMS
+         6mpuHs39tdMcR4eqQViD6OIo7gCiqahQNhc5F2HZYQGRvwlw8bEiWGjRZG48TQj7GVtr
+         OIvUk6o+XLfss7TtBlagu6aMSH2gkVlIhz7nXDdJY+ygtaggakJ6h8aa9ZuzcoIGzUKb
+         XyQA==
+X-Gm-Message-State: AOAM5318nk+dw0Pvol0d4z68uDjhsH2cxcksHNPs/q+QAcAwXHTnnTp1
+        cQeuxjiQypXKC95v5PHF4AS7rXFi0EIB02lCDajXtWsRN2IAAL7ZfWGQFYiYY04mFXUgW69nSai
+        hmAUA1DejcR44KRhvbt0K
+X-Received: by 2002:a5d:570d:: with SMTP id a13mr381872wrv.193.1606252090787;
+        Tue, 24 Nov 2020 13:08:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzoKIBssI4HGDyzY0qu85iBHGqHaEokuLsbgGjIwpz+g5/1A4bY+pROXvrDQETbZQrYR4rQSg==
+X-Received: by 2002:a5d:570d:: with SMTP id a13mr381855wrv.193.1606252090578;
+        Tue, 24 Nov 2020 13:08:10 -0800 (PST)
+Received: from redhat.com (bzq-79-176-44-197.red.bezeqint.net. [79.176.44.197])
+        by smtp.gmail.com with ESMTPSA id w3sm193480wma.3.2020.11.24.13.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Nov 2020 13:08:09 -0800 (PST)
+Date:   Tue, 24 Nov 2020 16:08:06 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Laurent Vivier <lvivier@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-block@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 0/2] powerpc/pseries: fix MSI/X IRQ affinity on pseries
+Message-ID: <20201124160747-mutt-send-email-mst@kernel.org>
+References: <20201124200308.1110744-1-lvivier@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <40a89fcd-7f8f-fd68-2a01-4008be345c32@nvidia.com>
+In-Reply-To: <20201124200308.1110744-1-lvivier@redhat.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 03:50:01PM +0530, Vidya Sagar wrote:
-> Hi Bjorn,
-> Please let me know if this patch needs any further modifications
+On Tue, Nov 24, 2020 at 09:03:06PM +0100, Laurent Vivier wrote:
+> With virtio, in multiqueue case, each queue IRQ is normally
+> bound to a different CPU using the affinity mask.
+> 
+> This works fine on x86_64 but totally ignored on pseries.
+> 
+> This is not obvious at first look because irqbalance is doing
+> some balancing to improve that.
+> 
+> It appears that the "managed" flag set in the MSI entry
+> is never copied to the system IRQ entry.
+> 
+> This series passes the affinity mask from rtas_setup_msi_irqs()
+> to irq_domain_alloc_descs() by adding an affinity parameter to
+> irq_create_mapping().
+> 
+> The first patch adds the parameter (no functional change), the
+> second patch passes the actual affinity mask to irq_create_mapping()
+> in rtas_setup_msi_irqs().
+> 
+> For instance, with 32 CPUs VM and 32 queues virtio-scsi interface:
+> 
+> ... -smp 32 -device virtio-scsi-pci,id=virtio_scsi_pci0,num_queues=32
+> 
+> for IRQ in $(grep virtio2-request /proc/interrupts |cut -d: -f1); do
+>     for file in /proc/irq/$IRQ/ ; do
+>         echo -n "IRQ: $(basename $file) CPU: " ; cat $file/smp_affinity_list
+>     done
+> done
+> 
+> Without the patch (and without irqbalanced)
+> 
+> IRQ: 268 CPU: 0-31
+> IRQ: 269 CPU: 0-31
+> IRQ: 270 CPU: 0-31
+> IRQ: 271 CPU: 0-31
+> IRQ: 272 CPU: 0-31
+> IRQ: 273 CPU: 0-31
+> IRQ: 274 CPU: 0-31
+> IRQ: 275 CPU: 0-31
+> IRQ: 276 CPU: 0-31
+> IRQ: 277 CPU: 0-31
+> IRQ: 278 CPU: 0-31
+> IRQ: 279 CPU: 0-31
+> IRQ: 280 CPU: 0-31
+> IRQ: 281 CPU: 0-31
+> IRQ: 282 CPU: 0-31
+> IRQ: 283 CPU: 0-31
+> IRQ: 284 CPU: 0-31
+> IRQ: 285 CPU: 0-31
+> IRQ: 286 CPU: 0-31
+> IRQ: 287 CPU: 0-31
+> IRQ: 288 CPU: 0-31
+> IRQ: 289 CPU: 0-31
+> IRQ: 290 CPU: 0-31
+> IRQ: 291 CPU: 0-31
+> IRQ: 292 CPU: 0-31
+> IRQ: 293 CPU: 0-31
+> IRQ: 294 CPU: 0-31
+> IRQ: 295 CPU: 0-31
+> IRQ: 296 CPU: 0-31
+> IRQ: 297 CPU: 0-31
+> IRQ: 298 CPU: 0-31
+> IRQ: 299 CPU: 0-31
+> 
+> With the patch:
+> 
+> IRQ: 265 CPU: 0
+> IRQ: 266 CPU: 1
+> IRQ: 267 CPU: 2
+> IRQ: 268 CPU: 3
+> IRQ: 269 CPU: 4
+> IRQ: 270 CPU: 5
+> IRQ: 271 CPU: 6
+> IRQ: 272 CPU: 7
+> IRQ: 273 CPU: 8
+> IRQ: 274 CPU: 9
+> IRQ: 275 CPU: 10
+> IRQ: 276 CPU: 11
+> IRQ: 277 CPU: 12
+> IRQ: 278 CPU: 13
+> IRQ: 279 CPU: 14
+> IRQ: 280 CPU: 15
+> IRQ: 281 CPU: 16
+> IRQ: 282 CPU: 17
+> IRQ: 283 CPU: 18
+> IRQ: 284 CPU: 19
+> IRQ: 285 CPU: 20
+> IRQ: 286 CPU: 21
+> IRQ: 287 CPU: 22
+> IRQ: 288 CPU: 23
+> IRQ: 289 CPU: 24
+> IRQ: 290 CPU: 25
+> IRQ: 291 CPU: 26
+> IRQ: 292 CPU: 27
+> IRQ: 293 CPU: 28
+> IRQ: 294 CPU: 29
+> IRQ: 295 CPU: 30
+> IRQ: 299 CPU: 31
+> 
+> This matches what we have on an x86_64 system.
 
-I'm fine with it, but of course Lorenzo will take care of it.
 
-> On 11/12/2020 10:32 PM, Vidya Sagar wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On 11/12/2020 3:59 AM, Bjorn Helgaas wrote:
-> > > External email: Use caution opening links or attachments
-> > > 
-> > > 
-> > > On Wed, Nov 11, 2020 at 10:21:46PM +0530, Vidya Sagar wrote:
-> > > > 
-> > > > 
-> > > > On 11/11/2020 9:57 PM, Jingoo Han wrote:
-> > > > > External email: Use caution opening links or attachments
-> > > > > 
-> > > > > 
-> > > > > On 11/11/20, 7:12 AM, Vidya Sagar wrote:
-> > > > > > 
-> > > > > > DesignWare core has a TLP digest (TD) override bit in
-> > > > > > one of the control
-> > > > > > registers of ATU. This bit also needs to be programmed for proper ECRC
-> > > > > > functionality. This is currently identified as an issue
-> > > > > > with DesignWare
-> > > > > > IP version 4.90a.
-> > > > > > 
-> > > > > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > ---
-> > > > > > V2:
-> > > > > > * Addressed Bjorn's comments
-> > > > > > 
-> > > > > >    drivers/pci/controller/dwc/pcie-designware.c | 52
-> > > > > > ++++++++++++++++++--
-> > > > > >    drivers/pci/controller/dwc/pcie-designware.h |  1 +
-> > > > > >    2 files changed, 49 insertions(+), 4 deletions(-)
-> > > > > > 
-> > > > > > diff --git
-> > > > > > a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > > b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > > index c2dea8fc97c8..ec0d13ab6bad 100644
-> > > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > > @@ -225,6 +225,46 @@ static void
-> > > > > > dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index,
-> > > > > > u32 reg,
-> > > > > >         dw_pcie_writel_atu(pci, offset + reg, val);
-> > > > > >    }
-> > > > > > 
-> > > > > > +static inline u32 dw_pcie_enable_ecrc(u32 val)
-> > > > > 
-> > > > > What is the reason to use inline here?
-> > > > 
-> > > > Actually, I wanted to move the programming part inside the
-> > > > respective APIs
-> > > > but then I wanted to give some details as well in comments so to avoid
-> > > > duplication, I came up with this function. But, I'm making it inline for
-> > > > better code optimization by compiler.
-> > > 
-> > > I don't really care either way, but I'd be surprised if the compiler
-> > > didn't inline this all by itself even without the explicit "inline".
-> > I just checked it and you are right that compiler is indeed inlining it
-> > without explicitly mentioning 'inline'.
-> > I hope it is ok to leave it that way.
-> > 
-> > > 
-> > > > > > +{
-> > > > > > +     /*
-> > > > > > +      * DesignWare core version 4.90A has this strange design issue
-> > > > > > +      * where the 'TD' bit in the Control register-1 of
-> > > > > > the ATU outbound
-> > > > > > +      * region acts like an override for the ECRC
-> > > > > > setting i.e. the presence
-> > > > > > +      * of TLP Digest(ECRC) in the outgoing TLPs is
-> > > > > > solely determined by
-> > > > > > +      * this bit. This is contrary to the PCIe spec
-> > > > > > which says that the
-> > > > > > +      * enablement of the ECRC is solely determined by
-> > > > > > the AER registers.
-> > > > > > +      *
-> > > > > > +      * Because of this, even when the ECRC is enabled through AER
-> > > > > > +      * registers, the transactions going through ATU
-> > > > > > won't have TLP Digest
-> > > > > > +      * as there is no way the AER sub-system could
-> > > > > > program the TD bit which
-> > > > > > +      * is specific to DesignWare core.
-> > > > > > +      *
-> > > > > > +      * The best way to handle this scenario is to program the TD bit
-> > > > > > +      * always. It affects only the traffic from root
-> > > > > > port to downstream
-> > > > > > +      * devices.
-> > > > > > +      *
-> > > > > > +      * At this point,
-> > > > > > +      * When ECRC is enabled in AER registers,
-> > > > > > everything works normally
-> > > > > > +      * When ECRC is NOT enabled in AER registers, then,
-> > > > > > +      * on Root Port:- TLP Digest (DWord size) gets
-> > > > > > appended to each packet
-> > > > > > +      *                even through it is not required.
-> > > > > > Since downstream
-> > > > > > +      *                TLPs are mostly for
-> > > > > > configuration accesses and BAR
-> > > > > > +      *                accesses, they are not in
-> > > > > > critical path and won't
-> > > > > > +      *                have much negative effect on the performance.
-> > > > > > +      * on End Point:- TLP Digest is received for
-> > > > > > some/all the packets coming
-> > > > > > +      *                from the root port. TLP Digest
-> > > > > > is ignored because,
-> > > > > > +      *                as per the PCIe Spec r5.0 v1.0 section 2.2.3
-> > > > > > +      *                "TLP Digest Rules", when an
-> > > > > > endpoint receives TLP
-> > > > > > +      *                Digest when its ECRC check
-> > > > > > functionality is disabled
-> > > > > > +      *                in AER registers, received TLP
-> > > > > > Digest is just ignored.
-> > > > > > +      * Since there is no issue or error reported
-> > > > > > either side, best way to
-> > > > > > +      * handle the scenario is to program TD bit by default.
-> > > > > > +      */
-> > > > > > +
-> > > > > > +     return val | PCIE_ATU_TD;
-> > > > > > +}
+Makes sense to me. FWIW
+
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+
+> Laurent Vivier (2):
+>   genirq: add an affinity parameter to irq_create_mapping()
+>   powerpc/pseries: pass MSI affinity to irq_create_mapping()
+> 
+>  arch/arc/kernel/intc-arcv2.c                  | 4 ++--
+>  arch/arc/kernel/mcip.c                        | 2 +-
+>  arch/arm/common/sa1111.c                      | 2 +-
+>  arch/arm/mach-s3c/irq-s3c24xx.c               | 3 ++-
+>  arch/arm/plat-orion/gpio.c                    | 2 +-
+>  arch/mips/ath25/ar2315.c                      | 4 ++--
+>  arch/mips/ath25/ar5312.c                      | 4 ++--
+>  arch/mips/lantiq/irq.c                        | 2 +-
+>  arch/mips/pci/pci-ar2315.c                    | 3 ++-
+>  arch/mips/pic32/pic32mzda/time.c              | 2 +-
+>  arch/mips/ralink/irq.c                        | 2 +-
+>  arch/powerpc/kernel/pci-common.c              | 2 +-
+>  arch/powerpc/kvm/book3s_xive.c                | 2 +-
+>  arch/powerpc/platforms/44x/ppc476.c           | 4 ++--
+>  arch/powerpc/platforms/cell/interrupt.c       | 4 ++--
+>  arch/powerpc/platforms/cell/iommu.c           | 3 ++-
+>  arch/powerpc/platforms/cell/pmu.c             | 2 +-
+>  arch/powerpc/platforms/cell/spider-pic.c      | 2 +-
+>  arch/powerpc/platforms/cell/spu_manage.c      | 6 +++---
+>  arch/powerpc/platforms/maple/pci.c            | 2 +-
+>  arch/powerpc/platforms/pasemi/dma_lib.c       | 5 +++--
+>  arch/powerpc/platforms/pasemi/msi.c           | 2 +-
+>  arch/powerpc/platforms/pasemi/setup.c         | 4 ++--
+>  arch/powerpc/platforms/powermac/pci.c         | 2 +-
+>  arch/powerpc/platforms/powermac/pic.c         | 2 +-
+>  arch/powerpc/platforms/powermac/smp.c         | 2 +-
+>  arch/powerpc/platforms/powernv/opal-irqchip.c | 5 +++--
+>  arch/powerpc/platforms/powernv/pci.c          | 2 +-
+>  arch/powerpc/platforms/powernv/vas.c          | 2 +-
+>  arch/powerpc/platforms/ps3/interrupt.c        | 2 +-
+>  arch/powerpc/platforms/pseries/ibmebus.c      | 2 +-
+>  arch/powerpc/platforms/pseries/msi.c          | 2 +-
+>  arch/powerpc/sysdev/fsl_mpic_err.c            | 2 +-
+>  arch/powerpc/sysdev/fsl_msi.c                 | 2 +-
+>  arch/powerpc/sysdev/mpic.c                    | 3 ++-
+>  arch/powerpc/sysdev/mpic_u3msi.c              | 2 +-
+>  arch/powerpc/sysdev/xics/xics-common.c        | 2 +-
+>  arch/powerpc/sysdev/xive/common.c             | 2 +-
+>  arch/sh/boards/mach-se/7343/irq.c             | 2 +-
+>  arch/sh/boards/mach-se/7722/irq.c             | 2 +-
+>  arch/sh/boards/mach-x3proto/gpio.c            | 2 +-
+>  arch/xtensa/kernel/perf_event.c               | 2 +-
+>  arch/xtensa/kernel/smp.c                      | 2 +-
+>  arch/xtensa/kernel/time.c                     | 2 +-
+>  drivers/ata/pata_macio.c                      | 2 +-
+>  drivers/base/regmap/regmap-irq.c              | 2 +-
+>  drivers/bus/moxtet.c                          | 2 +-
+>  drivers/clocksource/ingenic-timer.c           | 2 +-
+>  drivers/clocksource/timer-riscv.c             | 2 +-
+>  drivers/extcon/extcon-max8997.c               | 3 ++-
+>  drivers/gpio/gpio-bcm-kona.c                  | 2 +-
+>  drivers/gpio/gpio-brcmstb.c                   | 2 +-
+>  drivers/gpio/gpio-davinci.c                   | 2 +-
+>  drivers/gpio/gpio-em.c                        | 3 ++-
+>  drivers/gpio/gpio-grgpio.c                    | 2 +-
+>  drivers/gpio/gpio-mockup.c                    | 2 +-
+>  drivers/gpio/gpio-mpc8xxx.c                   | 2 +-
+>  drivers/gpio/gpio-mvebu.c                     | 2 +-
+>  drivers/gpio/gpio-tb10x.c                     | 2 +-
+>  drivers/gpio/gpio-tegra.c                     | 2 +-
+>  drivers/gpio/gpio-wm831x.c                    | 2 +-
+>  drivers/gpio/gpiolib.c                        | 2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c       | 3 ++-
+>  drivers/gpu/ipu-v3/ipu-common.c               | 2 +-
+>  drivers/hid/hid-rmi.c                         | 2 +-
+>  drivers/i2c/busses/i2c-cht-wc.c               | 2 +-
+>  drivers/i2c/i2c-core-base.c                   | 2 +-
+>  drivers/i2c/muxes/i2c-mux-pca954x.c           | 2 +-
+>  drivers/ide/pmac.c                            | 2 +-
+>  drivers/iio/dummy/iio_dummy_evgen.c           | 3 ++-
+>  drivers/input/rmi4/rmi_bus.c                  | 2 +-
+>  drivers/irqchip/irq-ath79-misc.c              | 3 ++-
+>  drivers/irqchip/irq-bcm2835.c                 | 3 ++-
+>  drivers/irqchip/irq-csky-mpintc.c             | 2 +-
+>  drivers/irqchip/irq-eznps.c                   | 2 +-
+>  drivers/irqchip/irq-mips-gic.c                | 8 +++++---
+>  drivers/irqchip/irq-mmp.c                     | 4 ++--
+>  drivers/irqchip/irq-versatile-fpga.c          | 2 +-
+>  drivers/irqchip/irq-vic.c                     | 2 +-
+>  drivers/macintosh/macio_asic.c                | 2 +-
+>  drivers/memory/omap-gpmc.c                    | 2 +-
+>  drivers/mfd/ab8500-core.c                     | 2 +-
+>  drivers/mfd/arizona-irq.c                     | 5 +++--
+>  drivers/mfd/db8500-prcmu.c                    | 2 +-
+>  drivers/mfd/mfd-core.c                        | 2 +-
+>  drivers/mfd/stmpe.c                           | 5 +++--
+>  drivers/mfd/tc3589x.c                         | 2 +-
+>  drivers/mfd/tps6586x.c                        | 2 +-
+>  drivers/mfd/wm8994-irq.c                      | 5 +++--
+>  drivers/misc/cxl/irq.c                        | 2 +-
+>  drivers/misc/ocxl/afu_irq.c                   | 2 +-
+>  drivers/misc/ocxl/link.c                      | 2 +-
+>  drivers/net/dsa/mv88e6xxx/chip.c              | 2 +-
+>  drivers/net/dsa/mv88e6xxx/global2.c           | 2 +-
+>  drivers/net/dsa/qca/ar9331.c                  | 2 +-
+>  drivers/net/dsa/rtl8366rb.c                   | 3 ++-
+>  drivers/net/ethernet/ibm/ibmvnic.c            | 4 ++--
+>  drivers/net/usb/lan78xx.c                     | 2 +-
+>  drivers/pci/controller/pci-ftpci100.c         | 2 +-
+>  drivers/pci/controller/pci-tegra.c            | 2 +-
+>  drivers/pci/controller/pcie-rcar-host.c       | 2 +-
+>  drivers/pci/controller/pcie-xilinx-cpm.c      | 4 ++--
+>  drivers/pci/controller/pcie-xilinx.c          | 2 +-
+>  drivers/pinctrl/mediatek/mtk-eint.c           | 2 +-
+>  drivers/pinctrl/nomadik/pinctrl-abx500.c      | 3 ++-
+>  drivers/pinctrl/pinctrl-at91-pio4.c           | 3 ++-
+>  drivers/pinctrl/pinctrl-rockchip.c            | 2 +-
+>  drivers/pinctrl/samsung/pinctrl-samsung.c     | 2 +-
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c         | 2 +-
+>  drivers/power/supply/lp8788-charger.c         | 2 +-
+>  drivers/rtc/rtc-lp8788.c                      | 2 +-
+>  drivers/rtc/rtc-max8997.c                     | 3 ++-
+>  drivers/rtc/rtc-max8998.c                     | 3 ++-
+>  drivers/scsi/cxlflash/ocxl_hw.c               | 2 +-
+>  drivers/ssb/driver_gpio.c                     | 4 ++--
+>  drivers/staging/hikey9xx/hi6421-spmi-pmic.c   | 2 +-
+>  drivers/staging/octeon-usb/octeon-hcd.c       | 2 +-
+>  drivers/tty/hvc/hvsi.c                        | 2 +-
+>  drivers/tty/serial/pmac_zilog.c               | 6 +++---
+>  drivers/watchdog/octeon-wdt-main.c            | 2 +-
+>  include/linux/irqdomain.h                     | 3 ++-
+>  kernel/irq/irqdomain.c                        | 8 +++++---
+>  sound/soc/codecs/rt5677.c                     | 2 +-
+>  123 files changed, 171 insertions(+), 146 deletions(-)
+> 
+> -- 
+> 2.28.0
+> 
+
