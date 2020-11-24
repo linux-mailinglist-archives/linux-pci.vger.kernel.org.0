@@ -2,147 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B15F2C332A
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 22:40:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 366132C33B0
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 23:10:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgKXVkX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Nov 2020 16:40:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732867AbgKXVkX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Nov 2020 16:40:23 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FE09206E5;
-        Tue, 24 Nov 2020 21:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606254022;
-        bh=Tc13627qaGoJFHj+rlNukdlF3YFb+U3BeasxgtFq7cU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KbWcyt8kt2/6OUMLenaAiS43p4Gf0eEKzXpZJAn0sUiHQWR40Ka6YaVcVozMQeCux
-         3mc9t4DDzmv+aP4Q/WuxmkpuIcWlcvGZN1WhtcexV9e/z7Os9M8yXNj5Qf6BwyZ/+B
-         GwTuZUR1qBM/TzjFtD+k5Gvv7+dx38ydUhQZPx+A=
-Date:   Tue, 24 Nov 2020 15:40:20 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jon Derrick <jonathan.derrick@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Nirmal Patel <nirmal.patel@intel.com>,
-        Sushma Kalakota <sushmax.kalakota@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH 2/5] PCI: Add a reset quirk for VMD
-Message-ID: <20201124214020.GA590491@bjorn-Precision-5520>
+        id S2388466AbgKXWJb convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 24 Nov 2020 17:09:31 -0500
+Received: from webmail.de-moe.org ([202.205.109.204]:50958 "EHLO eol.com.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731823AbgKXWJb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Nov 2020 17:09:31 -0500
+X-Greylist: delayed 487 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Nov 2020 17:09:31 EST
+Received: from mail.eol.com.cn (unknown [216.172.109.126])
+        by mail-109-204 (Coremail) with SMTP id AQAAfwCHj0Mdgr1f3RVrAQ--.2528S27;
+        Wed, 25 Nov 2020 05:59:10 +0800 (CST)
+From:   ddp@eol.com.cn
+To:     linux-pci@vger.kernel.org
+Subject: Notification
+Date:   24 Nov 2020 16:01:23 -0600
+Message-ID: <20201124160122.2E2A463CA112ED51@eol.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201120225144.15138-3-jonathan.derrick@intel.com>
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-CM-TRANSID: AQAAfwCHj0Mdgr1f3RVrAQ--.2528S27
+X-Coremail-Antispam: 1UD129KBjvJXoWxJrWxuw43tFy8tFy3tFWfAFb_yoW8uFyxpF
+        WF934Yyr18JFn5G348Ww17JFyjvr95G345Crn5GryDA3Z8Ga4Igr1SkrWFyFW7Zrn3K3yj
+        qryvvw1UC3WYqaDanT9S1TB71UUjAfUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UUUUUUUUU==
+X-CM-SenderInfo: xggsqv1roou0fpof0/
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Alex]
+Hey!
 
-On Fri, Nov 20, 2020 at 03:51:41PM -0700, Jon Derrick wrote:
-> VMD domains should be reset in-between special attachment such as VFIO
-> users. VMD does not offer a reset, however the subdevice domain itself
-> can be reset starting at the Root Bus. Add a Secondary Bus Reset on each
-> of the individual root port devices immediately downstream of the VMD
-> root bus.
-> 
-> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> ---
->  drivers/pci/quirks.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index f70692a..ee58b51 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -3744,6 +3744,49 @@ static int reset_ivb_igd(struct pci_dev *dev, int probe)
->  	return 0;
->  }
->  
-> +/* Issues SBR to VMD domain to clear PCI configuration */
-> +static int reset_vmd_sbr(struct pci_dev *dev, int probe)
-> +{
-> +	char __iomem *cfgbar, *base;
-> +	int rp;
-> +	u16 ctl;
-> +
-> +	if (probe)
-> +		return 0;
-> +
-> +	if (dev->dev.driver)
-> +		return 0;
+Unfortunately, I have some bad news for you.
+Several months ago, I got access to the device you are using to browse the internet.
+Since that time, I have been monitoring your internet activity.
 
-I guess "dev" here is the VMD endpoint?  And if the vmd.c driver is
-bound to it, you return success without doing anything?
+Being a regular visitor of adult websites, I can confirm that it is you who is responsible for this.
+To keep it simple, the websites you visited provided me with access to your data.
 
-If there's no driver for the VMD device, who is trying to reset it?
+I've uploaded a Trojan horse on the driver basis that updates its signature several times per day, to make it impossible for antivirus to detect it. Additionally, it gives me access to your camera and microphone.
+Moreover, I have backed-up all the data, including photos, social media, chats and contacts.
 
-I guess I don't quite understand how VMD works.  I would have thought
-that if vmd.c isn't bound to the VMD device, the devices behind the
-VMD would be inaccessible and there'd be no point in a reset.
+Just recently, I came up with an awesome idea to create the video where you cum in one part of the screen, while the video was simultaneously playing on another screen. That was fun!
 
-> +	cfgbar = pci_iomap(dev, 0, 0);
-> +	if (!cfgbar)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * Subdevice config space is mapped linearly using 4k config space
-> +	 * increments. Use increments of 0x8000 to locate root port devices.
-> +	 */
-> +	for (rp = 0; rp < 4; rp++) {
-> +		base = cfgbar + rp * 0x8000;
+Rest assured that I can easily send this video to all your contacts with a few clicks, and I assume that you would like to prevent this scenario.
 
-I really don't like this part -- iomapping BAR 0 (apparently
-VMD_CFGBAR), and making up the ECAM-ish addresses and basically
-open-coding ECAM accesses below.  I guess this assumes Root Ports are
-only on functions .0, .2, .4, .6?
+With that in mind, here is my proposal:
+Transfer the amount equivalent to 1200 USD to my Bitcoin wallet, and I will forget about the entire thing. I will also delete all data and videos permanently.
 
-Is it all open-coded here because this reset path is only of interest
-when vmd.c is NOT bound to the the VMD device, so you can't use
-vmd->cfgbar, etc?
+In my opinion, this is a somewhat modest price for my work.
+You can figure out how to purchase Bitcoins using search engines like Google or Bing, seeing that it's not very difficult.
 
-What about the case when vmd.c IS bound?  We don't do anything here,
-so does that mean we instead use the usual case of asserting SBR on
-the Root Ports behind the VMD?
+My Bitcoin wallet (BTC): 1F2PWXxHWB74h1h5XV2cTK43oCjGW5dCrk
 
-> +		if (readl(base + PCI_COMMAND) == 0xFFFFFFFF)
-> +			continue;
-> +
-> +		/* pci_reset_secondary_bus() */
-> +		ctl = readw(base + PCI_BRIDGE_CONTROL);
-> +		ctl |= PCI_BRIDGE_CTL_BUS_RESET;
-> +		writew(ctl, base + PCI_BRIDGE_CONTROL);
-> +		readw(base + PCI_BRIDGE_CONTROL);
-> +		msleep(2);
-> +
-> +		ctl &= ~PCI_BRIDGE_CTL_BUS_RESET;
-> +		writew(ctl, base + PCI_BRIDGE_CONTROL);
-> +		readw(base + PCI_BRIDGE_CONTROL);
-> +	}
-> +
-> +	ssleep(1);
-> +	pci_iounmap(dev, cfgbar);
-> +	return 0;
-> +}
-> +
->  /* Device-specific reset method for Chelsio T4-based adapters */
->  static int reset_chelsio_generic_dev(struct pci_dev *dev, int probe)
->  {
-> @@ -3919,6 +3962,11 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
->  		reset_ivb_igd },
->  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IVB_M2_VGA,
->  		reset_ivb_igd },
-> +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D, reset_vmd_sbr },
-> +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0, reset_vmd_sbr },
-> +	{ PCI_VENDOR_ID_INTEL, 0x467f, reset_vmd_sbr },
-> +	{ PCI_VENDOR_ID_INTEL, 0x4c3d, reset_vmd_sbr },
-> +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B, reset_vmd_sbr },
->  	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
->  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
->  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
-> -- 
-> 1.8.3.1
-> 
+You have 48 hours to reply and you should also bear the following in mind:
+
+It makes no sense to reply me - the address has been generated automatically.
+It makes no sense to complain either, since the letter along with my Bitcoin wallet cannot be tracked.
+Everything has been orchestrated precisely.
+
+If I ever detect that you mentioned anything about this letter to anyone - the video will be immediately shared, and your contacts will be the first to receive it. Following that, the video will be posted on the web!
+
+P.S. The time will start once you open this letter. (This program has a built-in timer).
+
+Good luck and take it easy! It was just bad luck, next time please be careful.
+
