@@ -2,215 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DF9B2C2E4B
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 18:19:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E65A2C2E9C
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 18:33:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390759AbgKXRRt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Nov 2020 12:17:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390255AbgKXRRs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Nov 2020 12:17:48 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 963B8206F7;
-        Tue, 24 Nov 2020 17:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606238268;
-        bh=yKPTzHntmG3todINsm3YIWKJ8EZMzP+0TRmukNQeEfg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Ys7p0VlQ3pSBuRRJRSuUng9/D09E8iVuacSyIy0hvqVf6+t1nlP86rjurboVbNh9e
-         ItJ4XbG5t/tV3NjccYTOEQwrpsVCK4serhVxryId/m6iN49yj2FXjdMbEKxJ/ngDrt
-         tG/478uOA6oD01Z/UljAP+YQ8qNsMcdkdP25dUGs=
-Date:   Tue, 24 Nov 2020 11:17:46 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kelley, Sean V" <sean.v.kelley@intel.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "xerces.zhao@gmail.com" <xerces.zhao@gmail.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        id S2390805AbgKXRcI convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 24 Nov 2020 12:32:08 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33889 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390803AbgKXRcF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 12:32:05 -0500
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1khcAd-00026a-0s
+        for linux-pci@vger.kernel.org; Tue, 24 Nov 2020 17:32:03 +0000
+Received: by mail-pl1-f198.google.com with SMTP id f3so14071003plb.11
+        for <linux-pci@vger.kernel.org>; Tue, 24 Nov 2020 09:32:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=c59NXUKfsVeXI+YuJz0D1TteRrVfduhKNfg9Shm/UEo=;
+        b=eP68XhmuwkVweVTESg4YAvjVOK3DMComU+vo7VzdwDjx6HopZf6fpaxE+56nQ2O5rh
+         ejldXS2WpKCXBGW6AfV6sr/O0PnyJq4ELpWk771CtpfzZi3Mb1C9rCHTjuAUVkfEjJLL
+         Le6bOR7neQozRrPN0OPoo31BhPRSiUw5mGtJZ0e5+s9VOGqlUDh81xBkDOqaMZagTyTF
+         PtEeECTvf9+WWHGENBIFeprKaLPm5CG2+OXtEM8hi8r8480k0JAYqaGpK+43qDYvEudH
+         ygIf4IbSLaF9YQ14VEK6pfOpbSRin+V0ysVj4zPF7P4nCgbNdRbk1MRtqueX8Oh6raLl
+         Sx5A==
+X-Gm-Message-State: AOAM530835ek8k7sXdO8lT6eZFNT6Csne/HFg1k2xE54JRl0Op0wnG8h
+        GicD+qBMdmLnMw6FDo9De4RhRrKhJ6wQpUoo7WpdpOmK7bUJrPvRJtBN0skx9TYSspFb7m26kHx
+        LqT+/iLO8A41lYMNCSU+FWG21exqrlW4KdU3rMQ==
+X-Received: by 2002:a63:381:: with SMTP id 123mr4637089pgd.112.1606239121626;
+        Tue, 24 Nov 2020 09:32:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx2Ads5zFsLVXiIPD2kWrJR/q50fAinLP4yUQdTy8kjuq6L2IaVbpgGPMCL1AESAO1jbkKzgQ==
+X-Received: by 2002:a63:381:: with SMTP id 123mr4637060pgd.112.1606239121217;
+        Tue, 24 Nov 2020 09:32:01 -0800 (PST)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id c22sm15239170pfo.211.2020.11.24.09.31.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Nov 2020 09:32:00 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.20.0.2.21\))
+Subject: Re: [PATCH] ACPI: PM: Re-enable ACPI GPE if it's already enabled
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <CAJZ5v0iJ_x5oXL9gG_TvCriNnPwzZYvGkkEK6_HWrH4fmCqBxQ@mail.gmail.com>
+Date:   Wed, 25 Nov 2020 01:31:56 +0800
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 10/15] PCI/ERR: Limit AER resets in pcie_do_recovery()
-Message-ID: <20201124171746.GA565099@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <93D815E0-3100-4AAC-B9EE-AA6736A0419F@intel.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <90E54BA3-FC3A-4538-ACD0-4C4DDF570C7C@canonical.com>
+References: <20201124073619.771940-1-kai.heng.feng@canonical.com>
+ <CAJZ5v0iJ_x5oXL9gG_TvCriNnPwzZYvGkkEK6_HWrH4fmCqBxQ@mail.gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+X-Mailer: Apple Mail (2.3654.20.0.2.21)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 11:57:35PM +0000, Kelley, Sean V wrote:
-> > On Nov 23, 2020, at 3:28 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Nov 20, 2020 at 04:10:31PM -0800, Sean V Kelley wrote:
-> >> In some cases a bridge may not exist as the hardware controlling may be
-> >> handled only by firmware and so is not visible to the OS. This scenario is
-> >> also possible in future use cases involving non-native use of RCECs by
-> >> firmware.
-> >> 
-> >> Explicitly apply conditional logic around these resets by limiting them to
-> >> Root Ports and Downstream Ports.
-> > 
-> > Can you help me understand this?  The subject says "Limit AER resets"
-> > and here you say "limit them to RPs and DPs", but it's not completely
-> > obvious how the resets are being limited, i.e., the patch doesn't add
-> > anything like:
-> > 
-> > +  if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> > +      type == PCI_EXP_TYPE_DOWNSTREAM)
-> >      reset_subordinates(bridge);
-> > 
-> > It *does* add checks around pcie_clear_device_status(), but that also
-> > includes RC_EC.  And that's not a reset, so I don't think that's
-> > explicitly mentioned in the commit log.
+
+
+> On Nov 24, 2020, at 22:00, Rafael J. Wysocki <rafael@kernel.org> wrote:
 > 
-> The subject should have referred to the clearing of the device status rather than resets.
-> It originally came from this simpler patch in which I made use of reset instead of clear:
+> On Tue, Nov 24, 2020 at 8:36 AM Kai-Heng Feng
+> <kai.heng.feng@canonical.com> wrote:
+>> 
+>> Dell Precision 5550 fails to detect Thunderbolt device hotplug events,
+>> once the Thunderbolt device and its root port are runtime-suspended to
+>> D3cold.
+>> 
+>> While putting the entire hierarchy to D3cold, the root port ACPI GPE is
+>> enabled via acpi_pci_propagate_wakeup() when suspending Thunderbolt
+>> bridges/switches. So when putting the root port to D3cold as last step,
+>> ACPI GPE is untouched as it's already enabled.
+>> 
+>> However, platform may need PCI devices to be in D3hot or PME enabled
+>> prior enabling GPE to make it work.
 > 
-> https://lore.kernel.org/linux-pci/20201002184735.1229220-8-seanvk.dev@oregontracks.org/
+> What platforms and why.
+
+Dell Precision 5550. Its thunderbolt port can't detect newly plugged thunderbolt devices.
+
 > 
-> So a rephrase of clearing in place of resets would be more appropriate.
+>> So re-enable ACPI GPE to address this.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> drivers/acpi/device_pm.c | 13 ++++++-------
+>> 1 file changed, 6 insertions(+), 7 deletions(-)
+>> 
+>> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+>> index 94d91c67aeae..dc25d9d204ae 100644
+>> --- a/drivers/acpi/device_pm.c
+>> +++ b/drivers/acpi/device_pm.c
+>> @@ -757,11 +757,10 @@ static int __acpi_device_wakeup_enable(struct acpi_device *adev,
+>> 
+>>        mutex_lock(&acpi_wakeup_lock);
+>> 
+>> -       if (wakeup->enable_count >= max_count)
+>> -               goto out;
+>> -
+>> -       if (wakeup->enable_count > 0)
+>> -               goto inc;
+>> +       if (wakeup->enable_count > 0) {
+>> +               acpi_disable_gpe(wakeup->gpe_device, wakeup->gpe_number);
+>> +               acpi_disable_wakeup_device_power(adev);
+>> +       }
 > 
-> Then we added the notion of bridges…below
+> An event occurring at this point may be lost after this patch.
+
+Yes, so this approach is not optimal.
+
 > 
-> > 
-> > Also see the question below.
-> > 
-> >> Link: https://lore.kernel.org/r/20201002184735.1229220-8-seanvk.dev@oregontracks.org
-> >> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> >> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >> ---
-> >> drivers/pci/pcie/err.c | 31 +++++++++++++++++++++++++------
-> >> 1 file changed, 25 insertions(+), 6 deletions(-)
-> >> 
-> >> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> >> index 8b53aecdb43d..7883c9791562 100644
-> >> --- a/drivers/pci/pcie/err.c
-> >> +++ b/drivers/pci/pcie/err.c
-> >> @@ -148,13 +148,17 @@ static int report_resume(struct pci_dev *dev, void *data)
-> >> 
-> >> /**
-> >>  * pci_walk_bridge - walk bridges potentially AER affected
-> >> - * @bridge:	bridge which may be a Port
-> >> + * @bridge:	bridge which may be a Port, an RCEC with associated RCiEPs,
-> >> + *		or an RCiEP associated with an RCEC
-> >>  * @cb:		callback to be called for each device found
-> >>  * @userdata:	arbitrary pointer to be passed to callback
-> >>  *
-> >>  * If the device provided is a bridge, walk the subordinate bus, including
-> >>  * any bridged devices on buses under this bus.  Call the provided callback
-> >>  * on each device found.
-> >> + *
-> >> + * If the device provided has no subordinate bus, call the callback on the
-> >> + * device itself.
-> >>  */
-> >> static void pci_walk_bridge(struct pci_dev *bridge,
-> >> 			    int (*cb)(struct pci_dev *, void *),
-> >> @@ -162,6 +166,8 @@ static void pci_walk_bridge(struct pci_dev *bridge,
-> >> {
-> >> 	if (bridge->subordinate)
-> >> 		pci_walk_bus(bridge->subordinate, cb, userdata);
-> >> +	else
-> >> +		cb(bridge, userdata);
-> >> }
-> >> 
-> >> pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >> @@ -174,10 +180,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >> 
-> >> 	/*
-> >> 	 * Error recovery runs on all subordinates of the bridge.  If the
-> >> -	 * bridge detected the error, it is cleared at the end.
-> >> +	 * bridge detected the error, it is cleared at the end.  For RCiEPs
-> >> +	 * we should reset just the RCiEP itself.
-> >> 	 */
-> >> 	if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> >> -	    type == PCI_EXP_TYPE_DOWNSTREAM)
-> >> +	    type == PCI_EXP_TYPE_DOWNSTREAM ||
-> >> +	    type == PCI_EXP_TYPE_RC_EC ||
-> >> +	    type == PCI_EXP_TYPE_RC_END)
-> >> 		bridge = dev;
-> >> 	else
-> >> 		bridge = pci_upstream_bridge(dev);
-> >> @@ -185,6 +194,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >> 	pci_dbg(bridge, "broadcast error_detected message\n");
-> >> 	if (state == pci_channel_io_frozen) {
-> >> 		pci_walk_bridge(bridge, report_frozen_detected, &status);
-> >> +		if (type == PCI_EXP_TYPE_RC_END) {
-> >> +			pci_warn(dev, "subordinate device reset not possible for RCiEP\n");
-> >> +			status = PCI_ERS_RESULT_NONE;
-> >> +			goto failed;
-> >> +		}
-> >> +
-> >> 		status = reset_subordinates(bridge);
-> >> 		if (status != PCI_ERS_RESULT_RECOVERED) {
-> >> 			pci_warn(bridge, "subordinate device reset failed\n");
-> >> @@ -217,9 +232,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> >> 	pci_dbg(bridge, "broadcast resume message\n");
-> >> 	pci_walk_bridge(bridge, report_resume, &status);
-> >> 
-> >> -	if (pcie_aer_is_native(bridge))
-> >> -		pcie_clear_device_status(bridge);
-> >> -	pci_aer_clear_nonfatal_status(bridge);
-> >> +	if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> >> +	    type == PCI_EXP_TYPE_DOWNSTREAM ||
-> >> +	    type == PCI_EXP_TYPE_RC_EC) {
-> >> +		if (pcie_aer_is_native(bridge))
-> >> +			pcie_clear_device_status(bridge);
-> >> +		pci_aer_clear_nonfatal_status(bridge);
-> > 
-> > This is hard to understand because "type" is from "dev", but "bridge"
-> > is not necessarily the same device.  Should it be this?
-> > 
-> >  type = pci_pcie_type(bridge);
-> >  if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> >      ...)
+> It looks like you are trying to work around a hardware issue.  
+
+Windows doesn't have this issue. So I don't think it's hardware issue.
+
+> Can you
+> please describe that issue in detail?
+
+The GPE used by Thunderbolt root port, was previously enabled by Thunderbolt switches/bridges.
+So when the GPE is already enabled when Thunderbolt root port is suspended.
+However, the GPE needs to be enabled after root port is suspended, and that's the approach this patch takes.
+
+Is there any actual hardware benefits from acpi_pci_propagate_wakeup()?
+If there's no actual device benefits from it, we can remove it and only enable GPE for the root port.
+Otherwise we need to quirk off Thunderbolt bridges/switches, since their native PME just work without the need to enable root port GPE.
+
+Kai-Heng
+
 > 
-> Correct, it would be better if the type was based on the ‘bridge’.
+>> 
+>>        error = acpi_enable_wakeup_device_power(adev, target_state);
+>>        if (error)
+>> @@ -777,8 +776,8 @@ static int __acpi_device_wakeup_enable(struct acpi_device *adev,
+>>        acpi_handle_debug(adev->handle, "GPE%2X enabled for wakeup\n",
+>>                          (unsigned int)wakeup->gpe_number);
+>> 
+>> -inc:
+>> -       wakeup->enable_count++;
+>> +       if (wakeup->enable_count < max_count)
+>> +               wakeup->enable_count++;
+>> 
+>> out:
+>>        mutex_unlock(&acpi_wakeup_lock);
+>> --
+>> 2.29.2
 
-OK.  This is similar to
-https://lore.kernel.org/linux-pci/20201002184735.1229220-8-seanvk.dev@oregontracks.org/,
-which you cited above except for the bridge/dev question and the
-addition here of RC_EC.
-
-I tried to split that back into its own patch and started with the
-commit message from that patch.  But I got stuck on the commit
-message.  I got as far as:
-
-  In some cases an error may be reported by a device not visible to
-  the OS, e.g., if firmware manages the device and passes error
-  information to the OS via ACPI APEI.
-
-But I still can't quite connect that to the patch.  "bridge" is
-clearly a device visible to Linux.
-
-I guess we're trying to assert that if "bridge" is not a Root Port,
-Downstream Port, or RCEC, we shouldn't clear the error status because 
-the error came from a device Linux doesn't know about.  But I think
-"bridge" is *always* either a Root Port or a Downstream Port:
-
-  if (type == PCI_EXP_TYPE_ROOT_PORT ||
-      type == PCI_EXP_TYPE_DOWNSTREAM)
-	  bridge = dev;
-  else
-	  bridge = pci_upstream_bridge(dev);
-
-pci_upstream_bridge() returns either NULL (in which case previous uses
-dereference a NULL pointer), or dev->bus->self, which is always a Root
-Port, Switch Downstream Port, or Switch Upstream Port (or NULL for the
-special case of VFs).
-
-> >> +	}
-> >> 	pci_info(bridge, "device recovery successful\n");
-> >> 	return status;
-> >> 
-> >> -- 
-> >> 2.29.2
-> 
