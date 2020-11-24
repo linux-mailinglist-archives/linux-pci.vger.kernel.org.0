@@ -2,107 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8776F2C22F7
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 11:32:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0B5E2C2346
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 11:52:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731910AbgKXKbJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Nov 2020 05:31:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52949 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731904AbgKXKbI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 05:31:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606213867;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h+X/QM3LIRfUSG0/Ck2rlt3TvdbGoFO5E2DZVLdsfOw=;
-        b=SsuKR54dhpLYIOQjkHN4FTxtlTiKSCWtbHuGgHaQBFI3JXFdautdiDuI/rQAj1aav5ZwAM
-        61rneSo0bN2mnF+Pdc8ZmAjN6eH7zpFyYFqFIF9G0v+XLm5R9F4KnEAdZvVLIexoEr4t4W
-        wTehctBxOVXVd9iyPGVNiV0adev4S0A=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-2Q8HcDq0M5-cvYHn9XRrXw-1; Tue, 24 Nov 2020 05:31:04 -0500
-X-MC-Unique: 2Q8HcDq0M5-cvYHn9XRrXw-1
-Received: by mail-ej1-f71.google.com with SMTP id y10so2124600ejg.3
-        for <linux-pci@vger.kernel.org>; Tue, 24 Nov 2020 02:31:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h+X/QM3LIRfUSG0/Ck2rlt3TvdbGoFO5E2DZVLdsfOw=;
-        b=NhHaJd7rGZeMxY4LxIhTOB2TxkCe8IMoZl5Eht35HcXGnxsNDDGe0cbiYGSEDNt4Xy
-         6C/BkZe3SA+RHIILTvNuCSepuhoYm6cyhoeP+pCQ3h9PGlK10ATFeTtA4gEy6fDE899T
-         YT5CwN8TcbBlPz9PKfJQTduEg9FC9WwJkdCvVSd8GRDfrWErn35nly8bxr94lWCqOUS0
-         3uajaIPd81WXRne/b8jvO9h2ZYcrzgnWtHx3LEnhtcMZz6INiPBx3+p7IE6QeVGgIbxC
-         ZCK7s2ikUFBdRhpNGqHmhok5ulzsOHx8hHtuPaO7Cf2VjLTt4VR52VMHcn766dNCW9AH
-         BksA==
-X-Gm-Message-State: AOAM533iBG3aaCOrowGnJJS/JfYg6e2X7KLRjuhhEM2QmSB/ewr8B1EE
-        p6RFy+5uKHhWzz9isQuadYHC27inyjY0XotuV3K7fKQz+GP7yc3LfJwVzIOl6dsVbKXVpWG4HFx
-        OZo9DYsBDxYMLkyVLyple8u3kPwE+rCBD+7qei1JsfPjx+FcaWPliScG0Xldcl2YMKHjGLGSo
-X-Received: by 2002:a50:b584:: with SMTP id a4mr3303667ede.301.1606213863572;
-        Tue, 24 Nov 2020 02:31:03 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx1j1BZSeJJvNp43wSQVFfTRwJU5DVEOcEbiKgJSh1BIM/Fcda7aNMf+62DHflzA3z3suVNBw==
-X-Received: by 2002:a50:b584:: with SMTP id a4mr3303648ede.301.1606213863382;
-        Tue, 24 Nov 2020 02:31:03 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id i13sm6517717ejv.84.2020.11.24.02.31.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 02:31:02 -0800 (PST)
-Subject: Re: 5.10 regression, many XHCI swiotlb buffer is full / DMAR: Device
- bounce map failed errors on thunderbolt connected XHCI controller
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com>
- <be031d15-201f-0e5c-8b0f-be030077141f@redhat.com>
- <20201124102715.GA16983@lst.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f1bd62b4-a746-6b1c-08ee-6dd1982722b6@redhat.com>
-Date:   Tue, 24 Nov 2020 11:31:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1728419AbgKXKuo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Nov 2020 05:50:44 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7772 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727781AbgKXKuo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 05:50:44 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fbce5860000>; Tue, 24 Nov 2020 02:50:46 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 24 Nov
+ 2020 10:50:41 +0000
+Received: from vidyas-desktop.nvidia.com (10.124.1.5) by mail.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Tue, 24 Nov 2020 10:50:38 +0000
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V2] PCI/MSI: Set device flag indicating only 32-bit MSI support
+Date:   Tue, 24 Nov 2020 16:20:35 +0530
+Message-ID: <20201124105035.24573-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201117145728.4516-1-vidyas@nvidia.com>
+References: <20201117145728.4516-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20201124102715.GA16983@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1606215046; bh=3JBsQO4wFUzjO27TheH1pFiQ6ly/QM6C3KH95EJK6Eg=;
+        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
+         References:X-NVConfidentiality:MIME-Version:Content-Type;
+        b=C56xgmlYh26LbnSdnf3nF/F3dfpAv2FsKvR19HHYd1r3UjHOJbtc2QsPTW20RruQ6
+         JySyFKQCQ/rucKxME9Z9YZ987L0o1FlLZ65M+5vFTDixXIlaBF27FCkA7mjnUA1zSZ
+         l/5JmMk+X8BFdniJrFavfXxoXRz7Al6y7ua9OP6DuA8KXaaUCO2DTfPdx0uBZFAkVb
+         cI3XsT8GWAcxIRU5geI8iMxN2yF91jZ4IN7jZdvDpvqaIfguA0Vap+vaUmxuxDIrgA
+         atjlIjWyJtKH4dSDtwmRf19KvuCy3dCFdq7IvR3JM+P/+kBd3Pt197GkeS3+cgLEbp
+         Uex0+7N+J0m1Q==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+There are devices (Ex:- Marvell SATA controller) that don't support
+64-bit MSIs and the same is advertised through their MSI capability
+register. Set no_64bit_msi flag explicitly for such devices in the
+MSI setup code so that the msi_verify_entries() API would catch
+if the MSI arch code tries to use 64-bit MSI.
 
-On 11/24/20 11:27 AM, Christoph Hellwig wrote:
-> On Mon, Nov 23, 2020 at 03:49:09PM +0100, Hans de Goede wrote:
->> Hi,
->>
->> +Cc Christoph Hellwig <hch@lst.de>
->>
->> Christoph, this is still an issue, so I've been looking around a bit and think this
->> might have something to do with the dma-mapping-5.10 changes.
->>
->> Do you have any suggestions to debug this, or is it time to do a git bisect
->> on this before 5.10 ships with regression?
-> 
-> Given that DMAR prefix this seems to be about using intel-iommu + bounce
-> buffering for external devices.  I can't really think of anything specific
-> in 5.10 related to that, so maybe you'll need to bisect.
-> 
-> I doub this means we are actually leaking swiotlb buffers, so while
-> I'm pretty sure we broke something in lower layers this also means
-> xhci doesn't handle swiotlb operation very gracefully in general.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+V2:
+* Addressed Bjorn's comment and changed the error message
 
-Ok, I've re-arranged my schedule a bit so that I have time to bisect this
-tomorrow, so with some luck I will be able to provide info on which commit
-introduced this issue tomorrow around the end of the day.
+ drivers/pci/msi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Regards,
-
-Hans
+diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+index d52d118979a6..8de5ba6b4a59 100644
+--- a/drivers/pci/msi.c
++++ b/drivers/pci/msi.c
+@@ -581,10 +581,12 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+ 	entry->msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
+ 	entry->msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
+ 
+-	if (control & PCI_MSI_FLAGS_64BIT)
++	if (control & PCI_MSI_FLAGS_64BIT) {
+ 		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
+-	else
++	} else {
+ 		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_32;
++		dev->no_64bit_msi = 1;
++	}
+ 
+ 	/* Save the initial mask status */
+ 	if (entry->msi_attrib.maskbit)
+@@ -602,8 +604,9 @@ static int msi_verify_entries(struct pci_dev *dev)
+ 	for_each_pci_msi_entry(entry, dev) {
+ 		if (!dev->no_64bit_msi || !entry->msg.address_hi)
+ 			continue;
+-		pci_err(dev, "Device has broken 64-bit MSI but arch"
+-			" tried to assign one above 4G\n");
++		pci_err(dev, "Device has either broken 64-bit MSI or "
++			"only 32-bit MSI support but "
++			"arch tried to assign one above 4G\n");
+ 		return -EIO;
+ 	}
+ 	return 0;
+-- 
+2.17.1
 
