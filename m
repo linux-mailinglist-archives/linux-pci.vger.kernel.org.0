@@ -2,132 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 002BB2C2579
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 13:16:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF0792C28EA
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 15:02:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbgKXMPo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Nov 2020 07:15:44 -0500
-Received: from mga01.intel.com ([192.55.52.88]:51266 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbgKXMPn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 24 Nov 2020 07:15:43 -0500
-IronPort-SDR: Nl98d9mc30xxl8+VbSEIRgqJf3UMON4AiPnZXqaBqduIjYnmD435A8RcZYyJVPYJWA4QpWu8Jj
- VKtkgL/Uwc1A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9814"; a="190058333"
-X-IronPort-AV: E=Sophos;i="5.78,366,1599548400"; 
-   d="scan'208";a="190058333"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2020 04:15:42 -0800
-IronPort-SDR: SnqItwkNss3sSl0xXg7d/eT1Uv0Fj9I4JA9ArHMwB/nUwED8x8Iu/7Du3ZfZlMk1T1sSrCmttC
- CSi4huXtA30A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,366,1599548400"; 
-   d="scan'208";a="478479488"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga004.jf.intel.com with ESMTP; 24 Nov 2020 04:15:40 -0800
-Subject: Re: 5.10 regression, many XHCI swiotlb buffer is full / DMAR: Device
- bounce map failed errors on thunderbolt connected XHCI controller
-To:     Hans de Goede <hdegoede@redhat.com>, Christoph Hellwig <hch@lst.de>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org
-References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com>
- <be031d15-201f-0e5c-8b0f-be030077141f@redhat.com>
- <20201124102715.GA16983@lst.de>
- <f1bd62b4-a746-6b1c-08ee-6dd1982722b6@redhat.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <868671fc-a4a4-9b38-b2f3-162f69f34493@linux.intel.com>
-Date:   Tue, 24 Nov 2020 14:17:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728888AbgKXOB1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Nov 2020 09:01:27 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37602 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbgKXOAy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 09:00:54 -0500
+Received: by mail-oi1-f193.google.com with SMTP id j15so18536072oih.4;
+        Tue, 24 Nov 2020 06:00:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MMxyaPdI5i63a9I9pY9fTE+BbPQuigoaoOJPLNSYJ2s=;
+        b=r9DZAJNjWR07M8ZzEueuffHZZw86lPP5fZ/RhtKHHktB8PF+eWNBvVHUD7XkDxqKVv
+         EjblOXGhGUQ9yU7cAR0qJBX9fFYwfc2gN16RC352V6DsSV7nfnn+niwMQeSBSZE8Ys1v
+         hwCveN0VLWNqYFBrc18Kl/BpjrM+gybwAaD5FuG8YKn0cbgfpYry/NCVs6qDP8LDgInr
+         b7MpAf5PnMIMzGzuNXH69exJlrrRek2i5rEcZgkyaNpS/j1fphdEdaxqS3HwkEagwnv8
+         BReqLZDzceA7+wXK/jEa2SyVjp2haNW10tYg8h8G3pJpzC4Ap4POSirpZM5y1mlIZiIZ
+         U1aA==
+X-Gm-Message-State: AOAM530WxwyMQ92QprmD/qHZXanMjdEnTMXeKtMQudUfUBcKNrHdGNXi
+        mXdEacZDjJMyrtVeKeCuIsL7xbNcObKYT/43RmNv7ZzgWyU=
+X-Google-Smtp-Source: ABdhPJw+ybHJH61zUKzHZFG6zHwAKsK1g7zJuox9jKv1ibbKo8nJt3lqKI9LJt2PJtbi4zSUuqZma0bWsSidJ8pPupo=
+X-Received: by 2002:aca:5a42:: with SMTP id o63mr2758594oib.69.1606226452885;
+ Tue, 24 Nov 2020 06:00:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <f1bd62b4-a746-6b1c-08ee-6dd1982722b6@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20201124073619.771940-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20201124073619.771940-1-kai.heng.feng@canonical.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 24 Nov 2020 15:00:41 +0100
+Message-ID: <CAJZ5v0iJ_x5oXL9gG_TvCriNnPwzZYvGkkEK6_HWrH4fmCqBxQ@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: PM: Re-enable ACPI GPE if it's already enabled
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24.11.2020 12.31, Hans de Goede wrote:
-> Hi,
-> 
-> On 11/24/20 11:27 AM, Christoph Hellwig wrote:
->> On Mon, Nov 23, 2020 at 03:49:09PM +0100, Hans de Goede wrote:
->>> Hi,
->>>
->>> +Cc Christoph Hellwig <hch@lst.de>
->>>
->>> Christoph, this is still an issue, so I've been looking around a bit and think this
->>> might have something to do with the dma-mapping-5.10 changes.
->>>
->>> Do you have any suggestions to debug this, or is it time to do a git bisect
->>> on this before 5.10 ships with regression?
->>
->> Given that DMAR prefix this seems to be about using intel-iommu + bounce
->> buffering for external devices.  I can't really think of anything specific
->> in 5.10 related to that, so maybe you'll need to bisect.
->>
->> I doub this means we are actually leaking swiotlb buffers, so while
->> I'm pretty sure we broke something in lower layers this also means
->> xhci doesn't handle swiotlb operation very gracefully in general.
+On Tue, Nov 24, 2020 at 8:36 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> Dell Precision 5550 fails to detect Thunderbolt device hotplug events,
+> once the Thunderbolt device and its root port are runtime-suspended to
+> D3cold.
+>
+> While putting the entire hierarchy to D3cold, the root port ACPI GPE is
+> enabled via acpi_pci_propagate_wakeup() when suspending Thunderbolt
+> bridges/switches. So when putting the root port to D3cold as last step,
+> ACPI GPE is untouched as it's already enabled.
+>
+> However, platform may need PCI devices to be in D3hot or PME enabled
+> prior enabling GPE to make it work.
 
-Can't think of any xhci change since 5.9 that would cause this.
-It's possible there's some underlying xhci issue the 5.10 dma-mapping
-changes reveal.
+What platforms and why.
 
-> 
-> Ok, I've re-arranged my schedule a bit so that I have time to bisect this
-> tomorrow, so with some luck I will be able to provide info on which commit
-> introduced this issue tomorrow around the end of the day.
+> So re-enable ACPI GPE to address this.
+>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/acpi/device_pm.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+> index 94d91c67aeae..dc25d9d204ae 100644
+> --- a/drivers/acpi/device_pm.c
+> +++ b/drivers/acpi/device_pm.c
+> @@ -757,11 +757,10 @@ static int __acpi_device_wakeup_enable(struct acpi_device *adev,
+>
+>         mutex_lock(&acpi_wakeup_lock);
+>
+> -       if (wakeup->enable_count >= max_count)
+> -               goto out;
+> -
+> -       if (wakeup->enable_count > 0)
+> -               goto inc;
+> +       if (wakeup->enable_count > 0) {
+> +               acpi_disable_gpe(wakeup->gpe_device, wakeup->gpe_number);
+> +               acpi_disable_wakeup_device_power(adev);
+> +       }
 
-Thanks for looking into it.
+An event occurring at this point may be lost after this patch.
 
--Mathias
+It looks like you are trying to work around a hardware issue.  Can you
+please describe that issue in detail?
 
+>
+>         error = acpi_enable_wakeup_device_power(adev, target_state);
+>         if (error)
+> @@ -777,8 +776,8 @@ static int __acpi_device_wakeup_enable(struct acpi_device *adev,
+>         acpi_handle_debug(adev->handle, "GPE%2X enabled for wakeup\n",
+>                           (unsigned int)wakeup->gpe_number);
+>
+> -inc:
+> -       wakeup->enable_count++;
+> +       if (wakeup->enable_count < max_count)
+> +               wakeup->enable_count++;
+>
+>  out:
+>         mutex_unlock(&acpi_wakeup_lock);
+> --
+> 2.29.2
+>
