@@ -2,111 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF8CC2C3144
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 20:49:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1200F2C3175
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 20:54:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgKXTqz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Nov 2020 14:46:55 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51424 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgKXTqw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Nov 2020 14:46:52 -0500
-Received: from 89-64-86-188.dynamic.chello.pl (89.64.86.188) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.520)
- id 4da66d67e8e81342; Tue, 24 Nov 2020 20:46:48 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v1 2/2] PM: ACPI: Refresh wakeup device power configuration every time
-Date:   Tue, 24 Nov 2020 20:46:38 +0100
-Message-ID: <1717218.WU8ttdIIEu@kreacher>
-In-Reply-To: <27714988.CF3CpBaniU@kreacher>
-References: <27714988.CF3CpBaniU@kreacher>
+        id S1728910AbgKXTxI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Nov 2020 14:53:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727731AbgKXTxH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 24 Nov 2020 14:53:07 -0500
+Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28F9C206D4;
+        Tue, 24 Nov 2020 19:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606247587;
+        bh=zE+2MmKDRI9sbrGlq7BkuT6Mkm+WrAFVxPD0rd7A6wU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1yYpmRyq/UEAZAec4JEVeWrxcK3k4oEXBlVgKHW3hukB0gmcv5/OfqVAgY8jKeM9r
+         Xpk7upd2rteVBwLSny6HTcY4FazU/l89Me9l6GEh5dPQUgQCfnkbrK9xPqwoglU2O7
+         zj45MJgXq/FUUcQ15AYuEzjnBiAn6uR+wEbNK+P8=
+Date:   Tue, 24 Nov 2020 13:53:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: Re: [PATCH] PCI: Change return type of pci_find_capability()
+Message-ID: <20201124195305.GA584380@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201117191718.17885-1-puranjay12@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, Nov 18, 2020 at 12:47:18AM +0530, Puranjay Mohan wrote:
+> PCI Capabilities are linked in a list that must appear in the first 256 bytes of config space.
+> The Capabilities Pointer register at 0x34 contains the address of the first Capability in the list.
+> Each Capability contains an 8 bit "Next Capability Pointer" that is set to 0x00 in the last item of the list.
+> 
+> Change the return type of pci_find_capability() from int to u8 to match the specification.
 
-When wakeup signaling is enabled for a bridge for the second (or every
-next) time in a row, its existing device wakeup power configuration
-may not match the new conditions.  For example, some devices below
-it may have been put into low-power states and that changes the
-device wakeup power conditions or similar.  This causes functional
-problems to appear on some systems (for example,  because of it the
-Thunderbolt port on Dell Precision 5550 cannot detect devices plugged
-in after it has been suspended).
+Nits: Be more specific in subject, e.g., "Return u8 from
+pci_find_capability()".   Wrap commit log to fit in 78 columns.  Add
+blank lines between paragraphs.  The 0x34 address is accurate but not
+relevant to this patch.
 
-For this reason, modify __acpi_device_wakeup_enable() to refresh the
-device wakeup power configuration of the target device on every
-invocation, not just when it is called for that device first time
-in a row.
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>  drivers/pci/pci.c   | 4 ++--
+>  include/linux/pci.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 6d4d5a2f923d..05ac8a493e6b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -477,9 +477,9 @@ static int __pci_bus_find_cap_start(struct pci_bus *bus,
+>   *  %PCI_CAP_ID_PCIX         PCI-X
+>   *  %PCI_CAP_ID_EXP          PCI Express
+>   */
+> -int pci_find_capability(struct pci_dev *dev, int cap)
+> +u8 pci_find_capability(struct pci_dev *dev, int cap)
+>  {
+> -	int pos;
+> +	u8 pos;
+>  
+>  	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/acpi/device_pm.c |   27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+Also change the signatures of __pci_bus_find_cap_start(),
+__pci_find_next_cap(), __pci_find_next_cap_ttl() to match.
 
-Index: linux-pm/drivers/acpi/device_pm.c
-===================================================================
---- linux-pm.orig/drivers/acpi/device_pm.c
-+++ linux-pm/drivers/acpi/device_pm.c
-@@ -757,16 +757,26 @@ static int __acpi_device_wakeup_enable(s
- 
- 	mutex_lock(&acpi_wakeup_lock);
- 
--	if (wakeup->enable_count >= INT_MAX) {
--		acpi_handle_info(adev->handle, "Wakeup enable count out of bounds!\n");
--		goto out;
--	}
-+	/*
-+	 * If the device wakeup power is already enabled, disable it and enable
-+	 * it again in case it depends on the configuration of subordinate
-+	 * devices and the conditions have changed since it was enabled last
-+	 * time.
-+	 */
- 	if (wakeup->enable_count > 0)
--		goto inc;
-+		acpi_disable_wakeup_device_power(adev);
- 
- 	error = acpi_enable_wakeup_device_power(adev, target_state);
--	if (error)
-+	if (error) {
-+		if (wakeup->enable_count > 0) {
-+			acpi_disable_gpe(wakeup->gpe_device, wakeup->gpe_number);
-+			wakeup->enable_count = 0;
-+		}
- 		goto out;
-+	}
-+
-+	if (wakeup->enable_count > 0)
-+		goto inc;
- 
- 	status = acpi_enable_gpe(wakeup->gpe_device, wakeup->gpe_number);
- 	if (ACPI_FAILURE(status)) {
-@@ -779,7 +789,10 @@ static int __acpi_device_wakeup_enable(s
- 			  (unsigned int)wakeup->gpe_number);
- 
- inc:
--	wakeup->enable_count++;
-+	if (wakeup->enable_count < INT_MAX)
-+		wakeup->enable_count++;
-+	else
-+		acpi_handle_info(adev->handle, "Wakeup enable count out of bounds!\n");
- 
- out:
- 	mutex_unlock(&acpi_wakeup_lock);
-
-
-
+>  	if (pos)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 22207a79762c..19a817702ea9 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1063,7 +1063,7 @@ void pci_sort_breadthfirst(void);
+>  
+>  /* Generic PCI functions exported to card drivers */
+>  
+> -int pci_find_capability(struct pci_dev *dev, int cap);
+> +u8 pci_find_capability(struct pci_dev *dev, int cap);
+>  int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
+>  int pci_find_ext_capability(struct pci_dev *dev, int cap);
+>  int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
+> @@ -1719,7 +1719,7 @@ static inline int __pci_register_driver(struct pci_driver *drv,
+>  static inline int pci_register_driver(struct pci_driver *drv)
+>  { return 0; }
+>  static inline void pci_unregister_driver(struct pci_driver *drv) { }
+> -static inline int pci_find_capability(struct pci_dev *dev, int cap)
+> +static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
+>  { return 0; }
+>  static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
+>  					   int cap)
+> -- 
+> 2.27.0
+> 
