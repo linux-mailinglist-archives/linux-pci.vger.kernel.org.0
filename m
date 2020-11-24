@@ -2,152 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 649B62C19DE
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 01:19:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B444E2C1C57
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Nov 2020 04:58:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgKXAR6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Nov 2020 19:17:58 -0500
-Received: from mga07.intel.com ([134.134.136.100]:22729 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgKXAR6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 23 Nov 2020 19:17:58 -0500
-IronPort-SDR: h/P8m5SANIsheky63hBHV2HCKKlCQg6Xo5qxkC2nXcmfYR8EmXlGxmx89R02SJA2fWG4h9C0lA
- CkFGkI8caFZw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9814"; a="236005070"
-X-IronPort-AV: E=Sophos;i="5.78,364,1599548400"; 
-   d="scan'208";a="236005070"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 16:17:56 -0800
-IronPort-SDR: qbW+WwGzLA8+eSg5GGNT6me0DMfLWg1G8/paGswTGz2dXhdExFobeq/Qb6sf6WTrtqCA5F8SfF
- k+MwQe1cGyhw==
-X-IronPort-AV: E=Sophos;i="5.78,364,1599548400"; 
-   d="scan'208";a="546615424"
-Received: from laloy-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.133.93])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2020 16:17:56 -0800
-Date:   Mon, 23 Nov 2020 16:17:54 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH 5/9] cxl/mem: Find device capabilities
-Message-ID: <20201124001754.465xfzv5r2q4l52o@intel.com>
-References: <20201111054356.793390-1-ben.widawsky@intel.com>
- <20201111054356.793390-6-ben.widawsky@intel.com>
- <20201117151519.000069d2@Huawei.com>
+        id S1727041AbgKXD5T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Nov 2020 22:57:19 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16324 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726295AbgKXD5T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Nov 2020 22:57:19 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fbc849f0001>; Mon, 23 Nov 2020 19:57:19 -0800
+Received: from [10.40.101.31] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 24 Nov
+ 2020 03:57:11 +0000
+Subject: Re: [PATCH] PCI/MSI: Set device flag indicating only 32-bit MSI
+ support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20201120213036.GA278887@bjorn-Precision-5520>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <a11f7fb2-6512-484f-70f8-bd9493ab7766@nvidia.com>
+Date:   Tue, 24 Nov 2020 09:27:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201117151519.000069d2@Huawei.com>
+In-Reply-To: <20201120213036.GA278887@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1606190239; bh=tw/iAw+vbSDGofDACoQ9Ai9A4bgTac58Miq7w2/0VPY=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=brxhgsxwG2qvo3vLJIq4+l1u16J9irnZMeNKS2e8RQNKs91OYStlqeCsNH6dQHG6G
+         RfuQ5nS1RhS2z4SOvwqX9wWq6y0Q48R4723ohQ+oK45CoZ+TDNIqh+MAgfFLZQeMUT
+         4G5Q4wPN1751jsoZAEslHiBpcS0/IaMF0v1EEtzw9jlqijfUF5VywkpBUg9o2XoZc6
+         yuigXwp/HrItaz9DnWMo21kt2+i4hPDaVCIedspzBzhVXYrp4WRhCJTFjdApckz7k7
+         lbFNmFX5YtWA8KgeLCFI5DqIDQMgCgiWKmw1qCPSE2cqnEpsZG6EZUUrvid3FMj0qO
+         cW54w2t05XJ2g==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20-11-17 15:15:19, Jonathan Cameron wrote:
-> On Tue, 10 Nov 2020 21:43:52 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > CXL devices contain an array of capabilities that describe the
-> > interactions software can interact with the device, or firmware running
-> > on the device. A CXL compliant device must implement the device status
-> > and the mailbox capability. A CXL compliant memory device must implement
-> > the memory device capability.
-> > 
-> > Each of the capabilities can [will] provide an offset within the MMIO
-> > region for interacting with the CXL device.
-> > 
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> 
-> A few really minor things in this one.
-> 
-> Jonathan
-> 
-> > ---
-> >  drivers/cxl/cxl.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/mem.c | 58 +++++++++++++++++++++++++++---
-> >  2 files changed, 143 insertions(+), 4 deletions(-)
-> >  create mode 100644 drivers/cxl/cxl.h
-> > 
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > new file mode 100644
-> > index 000000000000..02858ae63d6d
-> > --- /dev/null
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -0,0 +1,89 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
-> > +
-> > +#ifndef __CXL_H__
-> > +#define __CXL_H__
-> > +
-> > +/* Device */
-> > +#define CXLDEV_CAP_ARRAY_REG 0x0
-> > +#define CXLDEV_CAP_ARRAY_CAP_ID 0
-> > +#define CXLDEV_CAP_ARRAY_ID(x) ((x) & 0xffff)
-> > +#define CXLDEV_CAP_ARRAY_COUNT(x) (((x) >> 32) & 0xffff)
-> > +
-> > +#define CXL_CAPABILITIES_CAP_ID_DEVICE_STATUS 1
-> 
-> I'm not sure what you can do about consistent naming, but
-> perhaps this really does need to be 
-> CXLDEV_CAP_CAP_ID_x  however silly that looks.
-> 
-> It's a funny exercise I've only seen done once in a spec, but
-> I wish everyone would try working out what their fully expanded
-> field names will end up as and make sure the long form naming shortens
-> to something sensible.  It definitely helps with clarity!
-> 
-> > +#define CXL_CAPABILITIES_CAP_ID_PRIMARY_MAILBOX 2
-> > +#define CXL_CAPABILITIES_CAP_ID_SECONDARY_MAILBOX 3
-> > +#define CXL_CAPABILITIES_CAP_ID_MEMDEV 0x4000
-> > +
-> > +/* Mailbox */
-> > +#define CXLDEV_MB_CAPS 0x00
-> 
-> Elsewhere you've used _OFFSET postfix. That's useful so I'd do it here
-> as well.  Cross references to the spec section always appreciated as well!
-> 
-> > +#define   CXLDEV_MB_CAP_PAYLOAD_SIZE(cap) ((cap) & 0x1F)
-> > +#define CXLDEV_MB_CTRL 0x04
-> > +#define CXLDEV_MB_CMD 0x08
-> > +#define CXLDEV_MB_STATUS 0x10
-> > +#define CXLDEV_MB_BG_CMD_STATUS 0x18
-> > +
-> > +struct cxl_mem {
-> > +	struct pci_dev *pdev;
-> > +	void __iomem *regs;
-> > +
-> > +	/* Cap 0000h */
-> 
-> What are the numbers here?  These capabilities have too
-> many indexes associated with them in different ways for it
-> to be obvious, so perhaps more detail in the comments?
 
-This comment was a bug. The cap is 0001h actually. I've added the hash define
-for its cap id as part of the comment.
 
-Everything else is accepted.
+On 11/21/2020 3:00 AM, Bjorn Helgaas wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Tue, Nov 17, 2020 at 08:27:28PM +0530, Vidya Sagar wrote:
+>> There are devices (Ex:- Marvell SATA controller) that don't support
+>> 64-bit MSIs and the same is advertised through their MSI capability
+>> register.
+> 
+> I *think* you're saying these devices behave correctly per spec: they
+> don't support 64-bit MSI, and they don't advertise support for 64-bit
+> MSI.  Right?
+Yes. That is what I intended to say.
 
 > 
-> > +	struct {
-> > +		void __iomem *regs;
-> > +	} status;
-> > +
-> > +	/* Cap 0002h */
-> > +	struct {
-> > +		void __iomem *regs;
-> > +		size_t payload_size;
-> > +	} mbox;
-> > +
-> > +	/* Cap 0040h */
-> > +	struct {
-> > +		void __iomem *regs;
-> > +	} mem;
-> > +};
+>> Set no_64bit_msi flag explicitly for such devices in the
+>> MSI setup code so that the msi_verify_entries() API would catch
+>> if the MSI arch code tries to use 64-bit MSI.
+> 
+> And you want msi_verify_entries() to catch attempts by the arch code
+> to assign a 64-bit MSI address?
+Yes.
+
+> 
+> That sounds OK, but the error message ("Device has broken 64-bit MSI")
+> is not appropriate if the device is actually *not* broken.
+Ok. I didn't change the existing error message. I'll change it to cover 
+both the scenarios i.e. either the device is broken or the device 
+doesn't really support 64-bit MSI.
+
+> 
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>>   drivers/pci/msi.c | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+>> index d52d118979a6..af49da28854e 100644
+>> --- a/drivers/pci/msi.c
+>> +++ b/drivers/pci/msi.c
+>> @@ -581,10 +581,12 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+>>        entry->msi_attrib.multi_cap     = (control & PCI_MSI_FLAGS_QMASK) >> 1;
+>>        entry->msi_attrib.multiple      = ilog2(__roundup_pow_of_two(nvec));
+>>
+>> -     if (control & PCI_MSI_FLAGS_64BIT)
+>> +     if (control & PCI_MSI_FLAGS_64BIT) {
+>>                entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
+>> -     else
+>> +     } else {
+>>                entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_32;
+>> +             dev->no_64bit_msi = 1;
+>> +     }
+>>
+>>        /* Save the initial mask status */
+>>        if (entry->msi_attrib.maskbit)
+>> --
+>> 2.17.1
+>>
