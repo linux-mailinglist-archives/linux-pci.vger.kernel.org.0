@@ -2,202 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B4C02C46DC
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 18:34:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E85FC2C470E
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 18:52:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbgKYReL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 12:34:11 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:39880 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730455AbgKYReL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 12:34:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606325650;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W7NiL6tAav7XnNXNaLXFHj7hlsEMUdR6HMTlgfmIVEw=;
-        b=VkgdMLxnXLaaqQulPsvSYm/45jjh5fDQs2CjGPEKV9f5+7na2bV27Z+sL476eHS9+8O9is
-        KZt1XSSUWdpjy5jTA98fpOnoYowJtLhNC3uwVYtEBLsN7uGxFqCB+6bq8ZzOjnDjUWjz1Y
-        cukBgFGFguSdwCtjFYioajw8vXhj/Cg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-1C9VISFDPn2wbfOdvO5isQ-1; Wed, 25 Nov 2020 12:34:08 -0500
-X-MC-Unique: 1C9VISFDPn2wbfOdvO5isQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B608D185E489;
-        Wed, 25 Nov 2020 17:34:06 +0000 (UTC)
-Received: from w520.home (ovpn-112-213.phx2.redhat.com [10.3.112.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DDCE5C1A3;
-        Wed, 25 Nov 2020 17:34:05 +0000 (UTC)
-Date:   Wed, 25 Nov 2020 10:34:05 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "helgaas@kernel.org" <helgaas@kernel.org>,
-        "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Patel, Nirmal" <nirmal.patel@intel.com>
-Subject: Re: [PATCH 2/5] PCI: Add a reset quirk for VMD
-Message-ID: <20201125103405.19f792e1@w520.home>
-In-Reply-To: <57d28cdc12734c38b09f18ccd493a4b60b1e9031.camel@intel.com>
-References: <20201124214020.GA590491@bjorn-Precision-5520>
-        <57d28cdc12734c38b09f18ccd493a4b60b1e9031.camel@intel.com>
+        id S1730457AbgKYRv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 12:51:58 -0500
+Received: from 1.mo52.mail-out.ovh.net ([178.32.96.117]:58771 "EHLO
+        1.mo52.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgKYRv6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 12:51:58 -0500
+Received: from mxplan5.mail.ovh.net (unknown [10.109.156.21])
+        by mo52.mail-out.ovh.net (Postfix) with ESMTPS id 3A81A217625;
+        Wed, 25 Nov 2020 18:34:19 +0100 (CET)
+Received: from kaod.org (37.59.142.105) by DAG8EX1.mxp5.local (172.16.2.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Wed, 25 Nov
+ 2020 18:34:18 +0100
+Authentication-Results: garm.ovh; auth=pass (GARM-105G006b56b7170-7741-40ac-97e5-c5413baab032,
+                    13817E1CA0648EB9EE095497159C33290D197662) smtp.auth=groug@kaod.org
+Date:   Wed, 25 Nov 2020 18:34:12 +0100
+From:   Greg Kurz <groug@kaod.org>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Laurent Vivier <lvivier@redhat.com>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Paul Mackerras <paulus@samba.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        <linux-block@vger.kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH v3 2/2] powerpc/pseries: pass MSI affinity to
+ irq_create_mapping()
+Message-ID: <20201125183412.351c96ee@bahia.lan>
+In-Reply-To: <5419d1790c9ea0d9d7791ae887794285@kernel.org>
+References: <20201125150932.1150619-1-lvivier@redhat.com>
+        <20201125150932.1150619-3-lvivier@redhat.com>
+        <CAOJe8K1Q7sGf67bdj-2Mthkj4XNR4fOSskV1dyh62AdzefhpAQ@mail.gmail.com>
+        <7184880b-0351-ae18-d2e1-fab7b79fc864@redhat.com>
+        <5419d1790c9ea0d9d7791ae887794285@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Originating-IP: [37.59.142.105]
+X-ClientProxiedBy: DAG6EX2.mxp5.local (172.16.2.52) To DAG8EX1.mxp5.local
+ (172.16.2.71)
+X-Ovh-Tracer-GUID: d6bac3c7-d957-44cb-8e9b-55ca8dec327a
+X-Ovh-Tracer-Id: 10779928659030088123
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedujedrudehtddguddtfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgfgihesthejredtredtvdenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepfedutdeijeejveehkeeileetgfelteekteehtedtieefffevhffflefftdefleejnecukfhppedtrddtrddtrddtpdefjedrheelrddugedvrddutdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehgrhhouhhgsehkrghougdrohhrghdprhgtphhtthhopehmshhtsehrvgguhhgrthdrtghomh
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 25 Nov 2020 17:22:05 +0000
-"Derrick, Jonathan" <jonathan.derrick@intel.com> wrote:
+On Wed, 25 Nov 2020 16:42:30 +0000
+Marc Zyngier <maz@kernel.org> wrote:
 
-> Hi Bjorn,
+> On 2020-11-25 16:24, Laurent Vivier wrote:
+> > On 25/11/2020 17:05, Denis Kirjanov wrote:
+> >> On 11/25/20, Laurent Vivier <lvivier@redhat.com> wrote:
+> >>> With virtio multiqueue, normally each queue IRQ is mapped to a CPU.
+> >>> 
+> >>> But since commit 0d9f0a52c8b9f ("virtio_scsi: use virtio IRQ 
+> >>> affinity")
+> >>> this is broken on pseries.
+> >> 
+> >> Please add "Fixes" tag.
+> > 
+> > In fact, the code in commit 0d9f0a52c8b9f is correct.
+> > 
+> > The problem is with MSI/X irq affinity and pseries. So this patch
+> > fixes more than virtio_scsi. I put this information because this
+> > commit allows to clearly show the problem. Perhaps I should remove
+> > this line in fact?
 > 
-> On Tue, 2020-11-24 at 15:40 -0600, Bjorn Helgaas wrote:
-> > [+cc Alex]
-> > 
-> > On Fri, Nov 20, 2020 at 03:51:41PM -0700, Jon Derrick wrote:  
-> > > VMD domains should be reset in-between special attachment such as VFIO
-> > > users. VMD does not offer a reset, however the subdevice domain itself
-> > > can be reset starting at the Root Bus. Add a Secondary Bus Reset on each
-> > > of the individual root port devices immediately downstream of the VMD
-> > > root bus.
-> > > 
-> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> > > ---
-> > >  drivers/pci/quirks.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 48 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index f70692a..ee58b51 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -3744,6 +3744,49 @@ static int reset_ivb_igd(struct pci_dev *dev, int probe)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +/* Issues SBR to VMD domain to clear PCI configuration */
-> > > +static int reset_vmd_sbr(struct pci_dev *dev, int probe)
-> > > +{
-> > > +	char __iomem *cfgbar, *base;
-> > > +	int rp;
-> > > +	u16 ctl;
-> > > +
-> > > +	if (probe)
-> > > +		return 0;
-> > > +
-> > > +	if (dev->dev.driver)
-> > > +		return 0;  
-> > 
-> > I guess "dev" here is the VMD endpoint?  And if the vmd.c driver is
-> > bound to it, you return success without doing anything?
-> > 
-> > If there's no driver for the VMD device, who is trying to reset it?
-> > 
-> > I guess I don't quite understand how VMD works.  I would have thought
-> > that if vmd.c isn't bound to the VMD device, the devices behind the
-> > VMD would be inaccessible and there'd be no point in a reset.  
+> This patch does not fix virtio_scsi at all, which as you noticed, is
+> correct. It really fixes the PPC MSI setup, which is starting to show
+> its age. So getting rid of the reference seems like the right thing to 
+> do.
 > 
-> This is basically the idea behind this reset - allow the user to reset
-> VMD if there is no driver bound to it, but prevent the reset from
-> deenumerating the domain if there is a driver.
+> I'm also not keen on the BugId thing. It should really be a lore link.
+> I also cannot find any such tag in the kernel, nor is it a documented
+> practice. The last reference to a Bugzilla entry seems to have happened
+> with 786b5219081ff16 (five years ago).
 > 
-> If this is an unusual/unexpected use case, we can drop it.
 
-I don't understand how this improves the vfio use case as claimed in
-the commit log, are you expecting the device to be unbound from all
-drivers and reset via pci-sysfs between uses?  vfio would not be able
-to perform the reset itself with this behavior, including between
-resets of a VM or between separate users without external manual
-unbinding and reset.
+My bad, I suggested BugId to Laurent but the intent was actually BugLink,
+which seems to be commonly used in the kernel.
 
-   
-> > > +	cfgbar = pci_iomap(dev, 0, 0);
-> > > +	if (!cfgbar)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	/*
-> > > +	 * Subdevice config space is mapped linearly using 4k config space
-> > > +	 * increments. Use increments of 0x8000 to locate root port devices.
-> > > +	 */
-> > > +	for (rp = 0; rp < 4; rp++) {
-> > > +		base = cfgbar + rp * 0x8000;  
-> > 
-> > I really don't like this part -- iomapping BAR 0 (apparently
-> > VMD_CFGBAR), and making up the ECAM-ish addresses and basically
-> > open-coding ECAM accesses below.  I guess this assumes Root Ports are
-> > only on functions .0, .2, .4, .6?  
-> 
-> The Root Ports are Devices xx:00.0, xx:01.0, xx:02.0, and xx:03.0
-> (corresponding to PCIE_EXT_SLOT_SHIFT = 15)
-> 
-> 
-> > 
-> > Is it all open-coded here because this reset path is only of interest
-> > when vmd.c is NOT bound to the the VMD device, so you can't use
-> > vmd->cfgbar, etc?  
-> 
-> That's correct, but as mentioned above it might be an unusual code path
-> so is not as important as the reset within the driver in patch 1/5.
-> 
-> > 
-> > What about the case when vmd.c IS bound?  We don't do anything here,
-> > so does that mean we instead use the usual case of asserting SBR on
-> > the Root Ports behind the VMD?  
-> 
-> It uses the standard Linux reset code paths for Root Port devices
-> 
-> >   
-> > > +		if (readl(base + PCI_COMMAND) == 0xFFFFFFFF)
-> > > +			continue;
-> > > +
-> > > +		/* pci_reset_secondary_bus() */
-> > > +		ctl = readw(base + PCI_BRIDGE_CONTROL);
-> > > +		ctl |= PCI_BRIDGE_CTL_BUS_RESET;
-> > > +		writew(ctl, base + PCI_BRIDGE_CONTROL);
-> > > +		readw(base + PCI_BRIDGE_CONTROL);
-> > > +		msleep(2);
-> > > +
-> > > +		ctl &= ~PCI_BRIDGE_CTL_BUS_RESET;
-> > > +		writew(ctl, base + PCI_BRIDGE_CONTROL);
-> > > +		readw(base + PCI_BRIDGE_CONTROL);
+Cheers,
 
-We're performing an SBR of the internal root ports here, is the config
-space of the affected endpoints handled via save+restore of the code
-that calls this?  I'm a little rusty on VMD again.  Thanks,
+--
+Greg
 
-Alex
-
-
-> > > +	}
-> > > +
-> > > +	ssleep(1);
-> > > +	pci_iounmap(dev, cfgbar);
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  /* Device-specific reset method for Chelsio T4-based adapters */
-> > >  static int reset_chelsio_generic_dev(struct pci_dev *dev, int probe)
-> > >  {
-> > > @@ -3919,6 +3962,11 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
-> > >  		reset_ivb_igd },
-> > >  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IVB_M2_VGA,
-> > >  		reset_ivb_igd },
-> > > +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D, reset_vmd_sbr },
-> > > +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0, reset_vmd_sbr },
-> > > +	{ PCI_VENDOR_ID_INTEL, 0x467f, reset_vmd_sbr },
-> > > +	{ PCI_VENDOR_ID_INTEL, 0x4c3d, reset_vmd_sbr },
-> > > +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B, reset_vmd_sbr },
-> > >  	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
-> > >  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
-> > >  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
-> > > -- 
-> > > 1.8.3.1
-> > >   
+> Thanks,
+> 
+>          M.
 
