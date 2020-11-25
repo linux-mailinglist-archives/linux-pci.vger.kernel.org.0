@@ -2,104 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E85FC2C470E
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 18:52:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E9502C4721
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 18:58:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbgKYRv6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 12:51:58 -0500
-Received: from 1.mo52.mail-out.ovh.net ([178.32.96.117]:58771 "EHLO
-        1.mo52.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgKYRv6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 12:51:58 -0500
-Received: from mxplan5.mail.ovh.net (unknown [10.109.156.21])
-        by mo52.mail-out.ovh.net (Postfix) with ESMTPS id 3A81A217625;
-        Wed, 25 Nov 2020 18:34:19 +0100 (CET)
-Received: from kaod.org (37.59.142.105) by DAG8EX1.mxp5.local (172.16.2.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Wed, 25 Nov
- 2020 18:34:18 +0100
-Authentication-Results: garm.ovh; auth=pass (GARM-105G006b56b7170-7741-40ac-97e5-c5413baab032,
-                    13817E1CA0648EB9EE095497159C33290D197662) smtp.auth=groug@kaod.org
-Date:   Wed, 25 Nov 2020 18:34:12 +0100
-From:   Greg Kurz <groug@kaod.org>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Laurent Vivier <lvivier@redhat.com>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Mackerras <paulus@samba.org>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        <linux-block@vger.kernel.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v3 2/2] powerpc/pseries: pass MSI affinity to
- irq_create_mapping()
-Message-ID: <20201125183412.351c96ee@bahia.lan>
-In-Reply-To: <5419d1790c9ea0d9d7791ae887794285@kernel.org>
-References: <20201125150932.1150619-1-lvivier@redhat.com>
-        <20201125150932.1150619-3-lvivier@redhat.com>
-        <CAOJe8K1Q7sGf67bdj-2Mthkj4XNR4fOSskV1dyh62AdzefhpAQ@mail.gmail.com>
-        <7184880b-0351-ae18-d2e1-fab7b79fc864@redhat.com>
-        <5419d1790c9ea0d9d7791ae887794285@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1729964AbgKYR5O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 12:57:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729631AbgKYR5O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 12:57:14 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004BAC0613D4;
+        Wed, 25 Nov 2020 09:57:13 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id l1so2758638wrb.9;
+        Wed, 25 Nov 2020 09:57:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=q76sCAQCkbjrxEHa/bTijZbpnPeUzggOKoo+w3D3/HM=;
+        b=n5OYgJGV8H6PWOguZUEL23o87v2w0KJvjoG+jc6amL3kRcDtzk7+LbgjCFg1o/F6fk
+         HoDsjw3QlIZgPqSgRLIFMZT/fZj2ZeZ1kHmrCDJZaBzMyVQs1oceX+nE2qOE0BFGlDlJ
+         SEm/EbxKf+NwYil3vkaegA6yob0vnH5DHRgr9SCKvYyKPZ9bPE2BVb7PeeZgRgxxumY1
+         ++cVG5nhbtkE8Ci9uDNH8Zi/cqUgQ3/0/RnWc5uLtWLK8SAYbrRiZVSQp1jcixmYqYZ6
+         xSRqJAcQDdLWUVn6mOcCJ9+DIJ10ntsKBLGvvJxS09K/w5L8wfp5YKg0/KnBkoM1tyUB
+         W0lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q76sCAQCkbjrxEHa/bTijZbpnPeUzggOKoo+w3D3/HM=;
+        b=h5iPK+T6s7Kh3jFMnxzfrBNDRYAfHELhj0QPbvBcWgdsghabnnlTbXMXz0itdClU74
+         C7VD1ihAIjkO31f5SBmeuiuY9kKm+zwnHVPg8Mk9x9u0XaS1zB+ur8B1TxG+c9fXLrN6
+         5MSM75meptcBwrePjIEG5tQ0oKPKqEAWDmsKmgY848s1tF93pPOM8hRT/gxeVE6E8nl5
+         ahCFyIuB89MxK8fdXHsDFhEoYGegLuA1kAPPrGNBYq9gpj2Br9ty1Vrk1oNGVGHOFFr2
+         nNsXLlvWa5KYEVvMZR6H8djI/dThoLBV8sZ9BlV/DHlB6hIsYciFSzxfiuhJuse6wQqk
+         e6OQ==
+X-Gm-Message-State: AOAM531VoTxKj9yERQ9vm9ddGimQFjH67yAYweQaQKZfCJQXsL/j9pma
+        w8ByiDDIiobjXnjsk9dwKZ4=
+X-Google-Smtp-Source: ABdhPJwa7NIE+RcUsUdPvZObLxpIFG/9Y9a3ASL99KFq/0C/ef7BT+f2k2yWIftSiz0/aTmv6RRD9A==
+X-Received: by 2002:a5d:474d:: with SMTP id o13mr5468292wrs.178.1606327032727;
+        Wed, 25 Nov 2020 09:57:12 -0800 (PST)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id 6sm7363753wrn.72.2020.11.25.09.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Nov 2020 09:57:11 -0800 (PST)
+Date:   Wed, 25 Nov 2020 18:57:09 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org, bhelgaas@google.com,
+        jonathanh@nvidia.com, amanharitsh123@gmail.com,
+        dinghao.liu@zju.edu.cn, kw@linux.com, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 0/6] Enhancements to Tegra194 PCIe driver
+Message-ID: <20201125175709.GA1274379@ulmo>
+References: <20201109171937.28326-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [37.59.142.105]
-X-ClientProxiedBy: DAG6EX2.mxp5.local (172.16.2.52) To DAG8EX1.mxp5.local
- (172.16.2.71)
-X-Ovh-Tracer-GUID: d6bac3c7-d957-44cb-8e9b-55ca8dec327a
-X-Ovh-Tracer-Id: 10779928659030088123
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedujedrudehtddguddtfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgfgihesthejredtredtvdenucfhrhhomhepifhrvghgucfmuhhriicuoehgrhhouhhgsehkrghougdrohhrgheqnecuggftrfgrthhtvghrnhepfedutdeijeejveehkeeileetgfelteekteehtedtieefffevhffflefftdefleejnecukfhppedtrddtrddtrddtpdefjedrheelrddugedvrddutdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepmhigphhlrghnhedrmhgrihhlrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehgrhhouhhgsehkrghougdrohhrghdprhgtphhtthhopehmshhtsehrvgguhhgrthdrtghomh
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Content-Disposition: inline
+In-Reply-To: <20201109171937.28326-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.14.7 (2020-08-29)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 25 Nov 2020 16:42:30 +0000
-Marc Zyngier <maz@kernel.org> wrote:
 
-> On 2020-11-25 16:24, Laurent Vivier wrote:
-> > On 25/11/2020 17:05, Denis Kirjanov wrote:
-> >> On 11/25/20, Laurent Vivier <lvivier@redhat.com> wrote:
-> >>> With virtio multiqueue, normally each queue IRQ is mapped to a CPU.
-> >>> 
-> >>> But since commit 0d9f0a52c8b9f ("virtio_scsi: use virtio IRQ 
-> >>> affinity")
-> >>> this is broken on pseries.
-> >> 
-> >> Please add "Fixes" tag.
-> > 
-> > In fact, the code in commit 0d9f0a52c8b9f is correct.
-> > 
-> > The problem is with MSI/X irq affinity and pseries. So this patch
-> > fixes more than virtio_scsi. I put this information because this
-> > commit allows to clearly show the problem. Perhaps I should remove
-> > this line in fact?
-> 
-> This patch does not fix virtio_scsi at all, which as you noticed, is
-> correct. It really fixes the PPC MSI setup, which is starting to show
-> its age. So getting rid of the reference seems like the right thing to 
-> do.
-> 
-> I'm also not keen on the BugId thing. It should really be a lore link.
-> I also cannot find any such tag in the kernel, nor is it a documented
-> practice. The last reference to a Bugzilla entry seems to have happened
-> with 786b5219081ff16 (five years ago).
-> 
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My bad, I suggested BugId to Laurent but the intent was actually BugLink,
-which seems to be commonly used in the kernel.
+On Mon, Nov 09, 2020 at 10:49:31PM +0530, Vidya Sagar wrote:
+> This series of patches do some enhancements and some bug fixes to the
+> Tegra194 PCIe platform driver like
+> - Fix Vendor-ID corruption
+> - Map DBI space correctly
+> - Update DWC IP version
+> - Continue with uninitialization sequence even if parts fail
+> - Check return value of tegra_pcie_init_controller()
+>=20
+> V4:
+> * Added a new patch to address link-up issues with some of the cards
+>=20
+> V3:
+> * Addressed Bjorn's review comments
+> * Split earlier patch-4 into two
+>   - Continue with the uninitialization sequence even if some parts fail
+>   - Check return value of tegra_pcie_init_controller() and exit according=
+ly
+>=20
+> V2:
+> * Addressed Rob's comments. Changed 'Strongly Ordered' to 'nGnRnE'
+>=20
+> Vidya Sagar (6):
+>   PCI: tegra: Fix ASPM-L1SS advertisement disable code
+>   PCI: tegra: Map configuration space as nGnRnE
+>   PCI: tegra: Set DesignWare IP version
+>   PCI: tegra: Continue unconfig sequence even if parts fail
+>   PCI: tegra: Check return value of tegra_pcie_init_controller()
+>   PCI: tegra: Disable LTSSM during L2 entry
+>=20
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 78 +++++++++++-----------
+>  1 file changed, 39 insertions(+), 39 deletions(-)
 
-Cheers,
+I was going to test this series, but then I noticed that PCI is causing
+a crash on linux-next (as of fairly recently). So I tried applying this
+on top of v5.10-rc1, but that gives me the following:
 
---
-Greg
+	[    3.595161] ahci 0001:01:00.0: version 3.0
+	[    3.595726] ahci 0001:01:00.0: SSS flag set, parallel bus scan disabled
+	[    4.609923] ahci 0001:01:00.0: controller reset failed (0xffffffff)
+	[    4.610343] ahci: probe of 0001:01:00.0 failed with error -5
 
-> Thanks,
-> 
->          M.
+So the device enumerates fine, but it's not able to reset the SATA
+controller. That said, this seems to happen regardless of this patch
+series, so plain v5.10-rc1 also shows the above.
 
+Given the above, I think we should hold off on applying this series
+until we've fixed PCI on linux-next and made sure that SATA also works
+properly, otherwise we don't have a known good baseline to test this
+against.
+
+Thierry
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl++mvIACgkQ3SOs138+
+s6EVyA//ZYXqrHEduwNS64esp1K3n48t+o8TCFlc26DLQCic8L/f8Ee8RbhoEbBn
+lOliWwSmJZQYKU23LH061nTmJu/cWfoGOAPaWLegGwd+fKo+EZgw9IA0ofbWBYDd
+Mbty8mDQ4+SXw/QwatP3LES9riqBqNoeJAQ7ZaT1HpdK1DNR75kHMs5DZnayLO55
+re/aTEX5kV+qIW/+E5PKAwoU27r/3kf+GwuKkSHGjIWtOUhYCqmLWolCpielF1Br
+2TelZqoQz+BBVAHmW9Z1ecdOfPtUZuubx0pGcboW7uNUEi5P++a2TZg7WiMPYjX6
+WJboe62zo12+46le9alchetsgfN4Nlo5VuOlM/EqCJ7+wCcsifFoTIK+EvuNLX2a
+nd6TlJPLFsdzv4jFoRfgdRiBASjMFTXSmBqSYFd741jF5XZaIkL8dVWVN92k7BZf
+b7BZAkDP+qiCizwsBQF0klJb/qzeZS4IYn5zEZj25mQ+mgqEDy85bk2puvlPqeXM
+l+Koqd4YpqPo53HFxGUdF4nSVlfjDzIfVEyordGskZcB/a8KXaJdCGEcRngRPGqQ
+h176Hzgo+uG8YGod4bwkQE992XEhkSl8oB/nvXCatFRq/inZOjP1Ni5juGfyhsTI
+USuJLwSc75rq8zX0vHdr2ZrazFx0i3nVxLF370nxBFoBFUs/okU=
+=ddHn
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
