@@ -2,95 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D86882C482A
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 20:25:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37C352C482D
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 20:25:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgKYTYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 14:24:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57914 "EHLO
+        id S1727468AbgKYTYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 14:24:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbgKYTYb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 14:24:31 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 579E6C0613D4
-        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:31 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id x15so1604356pll.2
-        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:31 -0800 (PST)
+        with ESMTP id S1727440AbgKYTYe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 14:24:34 -0500
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240DAC0613D4
+        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:34 -0800 (PST)
+Received: by mail-pl1-x643.google.com with SMTP id bj5so1601672plb.4
+        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0MLpFxzb3aimdr3DdIq0/EB2Fv2/Wh2SlrOtnK9cn0E=;
-        b=X9AyFSdEZwLKChMwi6MFDGFd1XjnjIv+cbE2jGw0obzF+O9K9TwQdakakZ8PrrSyeL
-         7Gk+24zCzz87qYt9x0FLJJGoHf2rFb0cJMbWakxduj/LoNoaQI29sK7KBox+RBiHuSxb
-         sLmyoECqGBFlzMNddCVYVg8ZtHWq10fvFz3rE=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=X2BciFTBNQh+5keBn/0j7kOgDK11dj9Kh5HRhyPm5OA=;
+        b=McUPBIgwXP0qtgPre/p1PQEuymXo1iJpwbxIPU4Jxh1LRlUvY1FAwveG1WY9eUo9DR
+         FMg6YueGxf7ZAE8tuxiZw7okNhooOfFMONSnaDOAbokrdNItZfzM11no5KxN+nOxH/G7
+         whxoBb0emGiAsq0gbRkySIsod+Og9gFH+VS4c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0MLpFxzb3aimdr3DdIq0/EB2Fv2/Wh2SlrOtnK9cn0E=;
-        b=oeZWRs8gWG3a0U8y09Q8+Ju4zmZ9f8GGOHeyBAqfnyWEo+HmS4a+6gNcs0RMSbIwD7
-         928pkMwRPA+Q7Zgizi3F9aKIz9IzTRt5N0TUtIP2j4YKXw2ynB8HEQLWhLZz7W4vyyMy
-         dG33xM4dwUFrx5RqfoGBebCoAoUzKMSUdjTNbbrO1YHKaLkmhZvZg2WJTPqQMHYfzWcf
-         uzcLNIy0B1bluDiaYpW4LxBHTGS8v7c7EX8t9pt+ah2CQeJmhrg2UPKg6+uBuvHJWYjz
-         loP681KqIh0B+dkNw2Ik1887T1ytxfwR4RgU1lFfICIw5kKjFuQ6Je8UHkQIH7kz7340
-         chdw==
-X-Gm-Message-State: AOAM5313WAEFCirNeaOFmd45QQ21KQvZtanAS8XbASqoHzpLta6qN3if
-        4T6uNAQc5b2SOKLRcKjHcmE75VwYG9tkGzhosuAgagt8mY/N9A+l6TJPQeIuhSOrC9mRsBRxhiA
-        Pa6v8v+gcvn5qwnN+CFxLq7eEeYSJvzd7zigTXnVtDDk/nfy2DQw1+zRH6Iu59zW6kBRq3ktQbP
-        vWNZie
-X-Google-Smtp-Source: ABdhPJw0fcZZwPoQnkVfedOn0Ia+qW5JMRBB6SKEHp1hLZHYEMILbdgmuzisDaVR5WJEu+ShT5I+pA==
-X-Received: by 2002:a17:902:bd02:b029:da:8fd:af6b with SMTP id p2-20020a170902bd02b02900da08fdaf6bmr4496369pls.7.1606332270343;
-        Wed, 25 Nov 2020 11:24:30 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=X2BciFTBNQh+5keBn/0j7kOgDK11dj9Kh5HRhyPm5OA=;
+        b=pMfokWq/B96a2NT9lgDYpf+jp7Hz3rfTOCFUbQKZfnL+9ubwKBeTJaQayAVYN2whOy
+         0UOSJTCeOGLzF4WavXZaPjFuHTY1Os7aZyEvfXFUMwXJ/eTviKh2s6ynrzXimLJGRAe0
+         FDRFDkBqCbG45m0RxqygEdUikDEdB8ISUkZPhgm60fTNL6JwdH8Tk8ckzUwWMxtHsb1O
+         jYuyUb+w56P3dlL275B6veFw0vRa6a3EU204hATrB4+fSwffk+bhJi1IiI4E9c8olgRQ
+         7Fm1w9Xqw61MaUxUqkUehos8Hq7U5qV4nSQ1u8EyoKYCAmE6O0aUAg1I7ZBeKZcxwN1T
+         1seQ==
+X-Gm-Message-State: AOAM5329n0PlhJpJaEk6M1KSjAd3OPw++qVcuW+Kq30rQnBp5NVaiwPG
+        whrkLM0D2WUeFgAKcceMJywC/FZi9nJogAerMbf8KHKr6SlvXcUXL2sziyt7eU3GFnCn1/fd7V0
+        pYjw6Mrc3knCwEnHOrAM2SB4j4fsUbTMZIxcnttFZ3zGrc4XLzfQoWWoOc61qx+uBe6d4eI2Rj6
+        i189OL
+X-Google-Smtp-Source: ABdhPJxPLxZb3s/ES5uemueP4EenbHb5P3Owo/n9t/o0K7PrsAAD+FMxSpKgJJODQecG/h9GSI7t7Q==
+X-Received: by 2002:a17:902:a608:b029:d6:a1fc:ab75 with SMTP id u8-20020a170902a608b02900d6a1fcab75mr4249463plq.18.1606332273173;
+        Wed, 25 Nov 2020 11:24:33 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j69sm2574885pfd.37.2020.11.25.11.24.28
+        by smtp.gmail.com with ESMTPSA id j69sm2574885pfd.37.2020.11.25.11.24.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2020 11:24:29 -0800 (PST)
+        Wed, 25 Nov 2020 11:24:32 -0800 (PST)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE), Rob Herring <robh@kernel.org>
-Subject: [PATCH v1 0/6] PCI: brcmstb: add EP regulators and panic handler
-Date:   Wed, 25 Nov 2020 14:24:17 -0500
-Message-Id: <20201125192424.14440-1-james.quinlan@broadcom.com>
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
+Date:   Wed, 25 Nov 2020 14:24:18 -0500
+Message-Id: <20201125192424.14440-2-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201125192424.14440-1-james.quinlan@broadcom.com>
+References: <20201125192424.14440-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="00000000000065383005b4f3602e"
+        boundary="0000000000008fe1ab05b4f360fd"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---00000000000065383005b4f3602e
+--0000000000008fe1ab05b4f360fd
 
-v1 -- Bindings are added for fixed regulators that may power the EP device.
-   -- The brcmstb RC driver is modified to control these regulators
-      during probe, suspend, and resume.
-   -- 7216 type SOCs have additional error reporting HW and a
-      panic handler is added to dump its info.
-   -- A missing return value check is added.
+Quite similar to the regulator bindings found in "rockchip-pcie-host.txt",
+this allows optional regulators to be attached and controlled by the
+PCIe RC driver.
 
-Jim Quinlan (6):
-  dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
-  PCI: brcmstb: Add control of EP voltage regulator(s)
-  PCI: brcmstb: Do not turn off regulators if EP can wake up
-  PCI: brcmstb: Give 7216 SOCs their own config type
-  PCI: brcmstb: Add panic/die handler to RC driver
-  PCI: brcmstb: check return value of clk_prepare_enable()
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+---
+ .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
- .../bindings/pci/brcm,stb-pcie.yaml           |  12 +
- drivers/pci/controller/pcie-brcmstb.c         | 247 +++++++++++++++++-
- 2 files changed, 257 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 807694b4f41f..baacc3d7ec87 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -85,6 +85,18 @@ properties:
+       minItems: 1
+       maxItems: 3
+ 
++  vpcie12v-supply:
++    description: 12v regulator phandle for the endpoint device
++
++  vpcie3v3-supply:
++    description: 3.3v regulator phandle for the endpoint device
++
++  vpcie1v8-supply:
++    description: 1.8v regulator phandle for the endpoint device
++
++  vpcie0v9-supply:
++    description: 0.9v regulator phandle for the endpoint device
++
+ required:
+   - reg
+   - ranges
 -- 
 2.17.1
 
 
---00000000000065383005b4f3602e
+--0000000000008fe1ab05b4f360fd
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -160,14 +178,14 @@ V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
 lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
 5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
 di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
-AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIL41oSF5uYnf
-ZxQTt4QOjVIA48kNQ/4WXT7HZ1kNfyi2MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTIwMTEyNTE5MjQzMFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIHZ682fwVMlJ
+Jlzxa97Bd4tt+xrNv/m/eieyNuutpUQNMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMTEyNTE5MjQzM1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
 YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDZwOnkLwN6CTWI9lGIyEJi+kJqWd1X
-8uKh4MCa5kwxzkUGNhVnfxqoTTgJIq4Z+CHejFydJXdt5j9h5tFzXPufKcG+txfF9YZsA/dNu3jg
-5t1l6LT66SxLU5iNTYIDsYH6wm7i8mGbosup54+atqsSWlzBiOlKtuGxo29m5c/mL7tCcA9iXQBn
-zwTFOzHz/MlphjrCrSMtyidhNx1zYpLccrbBApmBQC8JMLv9eRZjubTcLbo5FV/GrSFmkJCZrOJo
-ETCUeTJhuEsjfm3w84C2hvwqs0mkl3kx7lqcV2LaW64wg5TJFL9dLYxn3ZM/uZolMnBy8+DinQ2l
-n8RHhOGB
---00000000000065383005b4f3602e--
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDnOVi28sdaULeyLYfUhKdVHuLffnXD
+gJ+PeN2MLTlKIYShMX+/Jn6CqcgII473RsH0FSYCFSvFSMfTNfByLb9N7v9VaurIhjBDCeKKZVvX
+jxFG8KUAlSwIB/g1MKOpcXZNGthMqkhFDdzfQNHrP0mYffWeVuWU/Do1hznnIgnqHXBsD9GKvzyY
+pdE1yp9ljRdW1j37yDVXzknbQJGAIJ5ecVxxkX/7jAR7Tl50/hMw51BAm0VfR9oFFaEFlurhK3Kj
+ae8CDjSLqNrRbzh+w1EMZsxLOeAb4Mzp5NKOCuA90IDJ4qP+uJRvOI6dALzzGM1kDpx3WLF5wzLJ
+9sbv/a7z
+--0000000000008fe1ab05b4f360fd--
