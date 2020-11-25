@@ -2,91 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCD112C4075
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 13:47:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A7262C4082
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 13:50:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgKYMq0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 07:46:26 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49906 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbgKYMqZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 07:46:25 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1606308384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ibGRAofmpl9csf99vMYbZAHCMGSI9TUViH/xR4MjRrw=;
-        b=bgZmMtYXBZ31xn7nMCdGVgPuqyvz1QfI2g/2UEvONVPv+o71mXKp/VitDAIRERi++BeKlI
-        8KCEMZiNgDFIHfw2jJ9lIKJjlTDZVz7lMeHECAk6IK0bNndcCR471VM4W7DdgNK3W9OtXu
-        DJAeC5ude0jLgxaoBd5Lr5wOEIyFrfiqI0RRn2c/2joP2mjPcF5VyALkBrmSn6u1kT//9D
-        yQ62+mr2FFyqH3QJsGcOI5i10WYpX0SlVxb/m7yMHlxnhbxPopkBRt4QfXJjA5JTIu8HOL
-        A9BfJbxWSknPT58MenHFRqUUmvfa5XlWBme8uX3Cl6TBGa7azx4jvOhGl182zg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1606308384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ibGRAofmpl9csf99vMYbZAHCMGSI9TUViH/xR4MjRrw=;
-        b=xMrSwdMxci0rTF1/bkbt9xVPZBPqmu3Tl7I/QMA692+ixO+NPSsE0lPf+cLINk77lsQ6Ay
-        x6ttygEAjKMpXRDA==
-To:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Feng Tang <feng.tang@intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH] x86/PCI: Convert force_disable_hpet() to standard quirk
-In-Reply-To: <20201119181904.149129-1-helgaas@kernel.org>
-References: <20201119181904.149129-1-helgaas@kernel.org>
-Date:   Wed, 25 Nov 2020 13:46:23 +0100
-Message-ID: <87v9dtk3j4.fsf@nanos.tec.linutronix.de>
+        id S1728515AbgKYMtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 07:49:24 -0500
+Received: from mga17.intel.com ([192.55.52.151]:33353 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbgKYMtY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Nov 2020 07:49:24 -0500
+IronPort-SDR: qOW7RAAlj0jLBfbthCbI003M9yXBxyy/zqb3wBB7eH8UjFc4Okc2RZ9wW3Uy+sFJbXW6Cdq4j4
+ 2sgQdNCUUUuA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9815"; a="151962510"
+X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
+   d="scan'208";a="151962510"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2020 04:49:23 -0800
+IronPort-SDR: 6hZ35s4rjiOEGh+W1c99saRoDD+kLVgCfLEmD9bpNrNuoI7dUnIuQv1IsM+YC1UF9dck/BzpDo
+ bzX30BQShAUw==
+X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
+   d="scan'208";a="536902709"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2020 04:49:21 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1khuFb-009cUu-0u; Wed, 25 Nov 2020 14:50:23 +0200
+Date:   Wed, 25 Nov 2020 14:50:23 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        mgross@linux.intel.com, lakshmi.bai.raja.subramanian@intel.com
+Subject: Re: [PATCH v2 2/2] PCI: keembay: Add support for Intel Keem Bay
+Message-ID: <20201125125023.GS4077@smile.fi.intel.com>
+References: <20201125101152.5326-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20201125101152.5326-3-wan.ahmad.zainie.wan.mohamad@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201125101152.5326-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 19 2020 at 12:19, Bjorn Helgaas wrote:
-> 62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail
-> platform") implemented force_disable_hpet() as a special early quirk.
-> These run before the PCI core is initialized and depend on the
-> x86/pci/early.c accessors that use I/O ports 0xcf8 and 0xcfc.
->
-> But force_disable_hpet() doesn't need to be one of these special early
-> quirks.  It merely sets "boot_hpet_disable", which is tested by
-> is_hpet_capable(), which is only used by hpet_enable() and hpet_disable().
-> hpet_enable() is an fs_initcall(), so it runs after the PCI core is
-> initialized.
+On Wed, Nov 25, 2020 at 06:11:52PM +0800, Wan Ahmad Zainie wrote:
+> Add driver for Intel Keem Bay SoC PCIe controller. This controller
+> is based on DesignWare PCIe core.
+> 
+> In root complex mode, only internal reference clock is possible for
+> Keem Bay A0. For Keem Bay B0, external reference clock can be used
+> and will be the default configuration. Currently, keembay_pcie_of_data
+> structure has one member. It will be expanded later to handle this
+> difference.
+> 
+> Endpoint mode link initialization is handled by the boot firmware.
 
-hpet_enable() is not an fs_initcall(). hpet_late_init() is and that
-invokes hpet_enable() only for the case that ACPI did not advertise it
-and the force_hpet quirk provided a base address.
+...
 
-But hpet_enable() is also invoked via:
+> +	switch (pcie->mode) {
+> +	case DW_PCIE_RC_TYPE:
+> +		if (!IS_ENABLED(CONFIG_PCIE_KEEMBAY_HOST))
+> +			return -ENODEV;
+> +
 
- start_kernel()
-   late_time_init()
-     x86_late_time_init()
-       hpet_time_init()
+> +		ret = keembay_pcie_add_pcie_port(pcie, pdev);
+> +		if (ret < 0)
+> +			return ret;
+> +		break;
 
-which is way before the PCI core is available and we really don't want
-to set it up there if it's known to be broken :)
+		return keembay_pcie_add_pcie_port(pcie, pdev);
 
-Now the more interesting question is why this needs to be a PCI quirk in
-the first place. Can't we just disable the HPET based on family/model
-quirks?
+> +	case DW_PCIE_EP_TYPE:
+> +		if (!IS_ENABLED(CONFIG_PCIE_KEEMBAY_EP))
+> +			return -ENODEV;
+> +
+> +		pci->ep.ops = &keembay_pcie_ep_ops;
+> +		return dw_pcie_ep_init(&pci->ep);
+> +	default:
+> +		dev_err(dev, "Invalid device type %d\n", pcie->mode);
+> +		return -ENODEV;
+> +	}
 
-e0748539e3d5 ("x86/intel: Disable HPET on Intel Ice Lake platforms")
-f8edbde885bb ("x86/intel: Disable HPET on Intel Coffee Lake H platforms")
-fc5db58539b4 ("x86/quirks: Disable HPET on Intel Coffe Lake platforms")
-62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail platform")
+> +	return 0;
 
-I might be missing something here, but in general on anything modern
-HPET is mostly useless.
+...and drop this one.
 
-Thanks,
+> +}
 
-        tglx
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
