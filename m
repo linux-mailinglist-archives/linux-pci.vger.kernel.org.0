@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 032FD2C4831
+	by mail.lfdr.de (Postfix) with ESMTP id DE1052C4833
 	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 20:25:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgKYTYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 14:24:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        id S1727666AbgKYTYn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 14:24:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbgKYTYk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 14:24:40 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC18C0613D4
-        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:40 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id t3so3257331pgi.11
-        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:40 -0800 (PST)
+        with ESMTP id S1727652AbgKYTYm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 14:24:42 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6332C0617A7
+        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:42 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id w6so3291771pfu.1
+        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=A+TdoEe84TyXxxNLvQK1rzO9ngN0cZFReBOzLFbELZw=;
-        b=GH9vzEQSbsM8OKZax5/QzWZ4kDUVidAHV8AfehlcY0X+qD9Jik2FeoZKxYN3Ebg3Hq
-         De6/f0V7JJa0APB7aTRoMLMA6SLKwbw4YKYHExVVqmnJ+JiP/rIllvJ74YC2gQ0dHin9
-         6y8EB2+V9aNCDV7wNMzFYqv/xzVI/Ywe206Ic=
+        bh=PNWFWow9BMSEQ33XGIIu2VFtrCr4MG/+/TzLim/ysUA=;
+        b=RqP2ENWe35FJ+fpPKFMca6jW5aSQxNbXBxUpYmsP5rmyNUHoZAcBHmNH9sWcQVnDDD
+         HFyAlAI730jdreP3Q1kLJaGOx3BlDp8OCuumfTUd5bQoYAZcaJiewZYH7IpHrp74+fph
+         /ztaAD1zt0fMT0OJYp0tnwkF0+EfAiZu2YBkY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=A+TdoEe84TyXxxNLvQK1rzO9ngN0cZFReBOzLFbELZw=;
-        b=fCxOp8oFc7ukhH2hOYQli3cdfy8kGKC90j+3hOz4a4VZU1XchypGI8L/htH2wVjpX2
-         wrEVUEs4GC+jahYXGwBuhdT82mIs66WKssT+UEbP4lz+n4VKlotw2IEokCssZmgfaIxD
-         dlMz/QKm/DmgKWjPddnXVSLxb+MsNBuqdbH7KUZd8DURYnoexJQ9FMciqGrBNe9BLLie
-         ezDfjkOU5I+NYdgzDdKVH1I1ureEXfE62n8PrbrWgXCwukbF3Hqmr2GbkOhb+asviHkC
-         ZHVk65XFjTgD05cLaxRHuVRHPE7pycVDicHv6MnfBrQDoYZ7hLobgX8BEWqFSwPmHvOW
-         3euA==
-X-Gm-Message-State: AOAM530bOE/rLvseZjW3t8XKoJZa6dtrECpXy1wcam3tr/raPqYZimMV
-        FgtAKcoXpY2AZbZ7TLZ1kaNAPNb0HArgFmGIvAEkfHhfdXB+1gRcAi+gi/XiHjfelPmHTxXCU2X
-        5D9BMJTeZwwmbsPhOl7MAWqUm91O12qaNE1OccZJGZvZLQc28sbUNSgz6x6oiHj1UgNVtalv81O
-        7eB5nT
-X-Google-Smtp-Source: ABdhPJwposgK3ASJeROd0YtGbYiFsiVaMVGhH8Nra5JbCSHskmj72aQKwqEp1e3OKGMKsuVf8Y0gmg==
-X-Received: by 2002:a62:768b:0:b029:197:dea6:586e with SMTP id r133-20020a62768b0000b0290197dea6586emr1054436pfc.44.1606332279039;
-        Wed, 25 Nov 2020 11:24:39 -0800 (PST)
+        bh=PNWFWow9BMSEQ33XGIIu2VFtrCr4MG/+/TzLim/ysUA=;
+        b=HLujz2vjZ/1IQ9h6M3SA5/L3kkN1kmdixd+xMy+4URNOWhvbNbDGezzJ5E7fQIhdqM
+         HrqiMe0vcRv4SE20q4GUj6xw7AyF/1YCLGzz7OjGqjka0kZ/i19tTDnBv7av1xQ6nfi0
+         azuXqjojoGIU8abfQ+fH0Pq2IvQYYIDVfN5XUM72Cy+MIo/8XA0lUISGYmJG9WiWFK29
+         FwfeLXHKvi9SCvx14S5URC1qbCh6KC69DJmzF+aZBY24AAngH3nqrj3XGf1gVI6wPXsJ
+         umy1hVNiKk18tIldL2AAjubvxPAEHTU1VuycCnQ4idrgtQi2US89eyU87e1WthKr8lJl
+         Q3GQ==
+X-Gm-Message-State: AOAM530tSZTAPB32USDWP70Jbf843trnOJHOD2DKPH9uolCKVsF2qxT1
+        V+WY1Y5mAAyYvtT1N7IGEA8pkpguqhoSAcwi9919iCaCae7hd/G7l3NYembRUzcynP4S2BSU10E
+        R3OLYzOdyCxetsa8TSqEhGA+xPr6BzeM2SVB67GVg0Lr+y0L4ABLVV+reQmy87Ot/nXFsBBhkU2
+        WGGil3
+X-Google-Smtp-Source: ABdhPJxmwsEH5Ovf3XcqoVcZ7u8ynG5VfIqXXe29N/D0KNNuLm418XkTPxyuYMw+tKAdJcn8nbUYhw==
+X-Received: by 2002:a63:7943:: with SMTP id u64mr4212799pgc.139.1606332281763;
+        Wed, 25 Nov 2020 11:24:41 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j69sm2574885pfd.37.2020.11.25.11.24.36
+        by smtp.gmail.com with ESMTPSA id j69sm2574885pfd.37.2020.11.25.11.24.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2020 11:24:38 -0800 (PST)
+        Wed, 25 Nov 2020 11:24:41 -0800 (PST)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
@@ -58,152 +58,59 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v1 3/6] PCI: brcmstb: Do not turn off regulators if EP can wake up
-Date:   Wed, 25 Nov 2020 14:24:20 -0500
-Message-Id: <20201125192424.14440-4-james.quinlan@broadcom.com>
+Subject: [PATCH v1 4/6] PCI: brcmstb: Give 7216 SOCs their own config type
+Date:   Wed, 25 Nov 2020 14:24:21 -0500
+Message-Id: <20201125192424.14440-5-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201125192424.14440-1-james.quinlan@broadcom.com>
 References: <20201125192424.14440-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000e8f3a205b4f3608a"
+        boundary="00000000000013867605b4f36112"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000e8f3a205b4f3608a
+--00000000000013867605b4f36112
 
-If any downstream device may wake up during S2/S3 suspend, we do not want
-to turn off its power when suspending.
+This distinction is required for an imminent commit.
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 56 ++++++++++++++++++++++++---
- 1 file changed, 50 insertions(+), 6 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 34d6bad07b66..9b888846f0bc 100644
+index 9b888846f0bc..e39bd93790d0 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -193,6 +193,7 @@ static inline void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32
- static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val);
- static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val);
- static inline void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val);
-+static bool brcm_pcie_link_up(struct brcm_pcie *pcie);
- 
- enum {
- 	RGR1_SW_INIT_1,
-@@ -302,6 +303,7 @@ struct brcm_pcie {
- 	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
- 	struct regulator	*regulators[PCIE_REGULATORS_MAX];
- 	int			num_regulators;
-+	bool			ep_wakeup_capable;
+@@ -264,6 +264,13 @@ static const struct pcie_cfg_data bcm2711_cfg = {
+ 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
  };
  
- static int brcm_parse_regulators(struct brcm_pcie *pcie)
-@@ -324,18 +326,60 @@ static int brcm_parse_regulators(struct brcm_pcie *pcie)
- 	return 0;
- }
- 
--static void brcm_set_regulators(struct brcm_pcie *pcie, bool on)
-+static int pci_dev_may_wakeup(struct pci_dev *dev, void *data)
- {
-+	bool *ret = data;
-+
-+	if (device_may_wakeup(&dev->dev)) {
-+		*ret = true;
-+		dev_dbg(&dev->dev, "disable cancelled for wake-up device\n");
-+	}
-+	return (int) *ret;
-+}
-+
-+enum {
-+	TURN_OFF,		/* Turn egulators off, unless an EP is wakeup-capable */
-+	TURN_OFF_ALWAYS,	/* Turn Regulators off, no exceptions */
-+	TURN_ON,		/* Turn regulators on, unless pcie->ep_wakeup_capable */
++static const struct pcie_cfg_data bcm7216_cfg = {
++	.offsets	= pcie_offset_bcm7278,
++	.type		= BCM7278,
++	.perst_set	= brcm_pcie_perst_set_7278,
++	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_7278,
 +};
 +
-+static void brcm_set_regulators(struct brcm_pcie *pcie, int how)
-+{
-+	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
- 	struct device *dev = pcie->dev;
- 	int ret, i;
- 
- 	if (pcie->num_regulators == 0)
- 		return;
- 
-+	if (how == TURN_ON) {
-+		if (pcie->ep_wakeup_capable) {
-+			/*
-+			 * We are resuming from a suspend.  In the
-+			 * previous suspend we did not disable the power
-+			 * supplies, so there is no need to enable them
-+			 * (and falsely increase their usage count).
-+			 */
-+			pcie->ep_wakeup_capable = false;
-+			return;
-+		}
-+	} else if (how == TURN_OFF) {
-+		/*
-+		 * If at least one device on this bus is enabled as a
-+		 * wake-up source, do not turn off regulators.
-+		 */
-+		pcie->ep_wakeup_capable = false;
-+		if (bridge->bus && brcm_pcie_link_up(pcie)) {
-+			pci_walk_bus(bridge->bus, pci_dev_may_wakeup, &pcie->ep_wakeup_capable);
-+			if (pcie->ep_wakeup_capable)
-+				return;
-+		}
-+	}
-+
- 	for (i = 0; i < PCIE_REGULATORS_MAX; i++) {
- 		if (!pcie->regulators[i])
- 			continue;
--		if (on) {
-+		if (how == TURN_ON) {
- 			ret = regulator_enable(pcie->regulators[i]);
- 			dev_dbg(dev, "enable regulator %s (%s)\n",
- 				ep_regulator_names[i], ret ? "fail" : "pass");
-@@ -1197,7 +1241,7 @@ static int brcm_pcie_suspend(struct device *dev)
- 	brcm_pcie_turn_off(pcie);
- 	ret = brcm_phy_stop(pcie);
- 	clk_disable_unprepare(pcie->clk);
--	brcm_set_regulators(pcie, false);
-+	brcm_set_regulators(pcie, TURN_OFF);
- 
- 	return ret;
- }
-@@ -1210,7 +1254,7 @@ static int brcm_pcie_resume(struct device *dev)
- 	int ret;
- 
- 	base = pcie->base;
--	brcm_set_regulators(pcie, true);
-+	brcm_set_regulators(pcie, TURN_ON);
- 	clk_prepare_enable(pcie->clk);
- 
- 	ret = brcm_phy_start(pcie);
-@@ -1249,7 +1293,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
- 	brcm_phy_stop(pcie);
- 	reset_control_assert(pcie->rescal);
- 	clk_disable_unprepare(pcie->clk);
--	brcm_set_regulators(pcie, false);
-+	brcm_set_regulators(pcie, TURN_OFF_ALWAYS);
- }
- 
- static int brcm_pcie_remove(struct platform_device *pdev)
-@@ -1338,7 +1382,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	brcm_set_regulators(pcie, true);
-+	brcm_set_regulators(pcie, TURN_ON);
- 	ret = brcm_pcie_setup(pcie);
- 	if (ret)
- 		goto fail;
+ struct brcm_msi {
+ 	struct device		*dev;
+ 	void __iomem		*base;
+@@ -1312,7 +1319,7 @@ static const struct of_device_id brcm_pcie_match[] = {
+ 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
+ 	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
+ 	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
+-	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
++	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7216_cfg },
+ 	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
+ 	{},
+ };
 -- 
 2.17.1
 
 
---000000000000e8f3a205b4f3608a
+--00000000000013867605b4f36112
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -273,14 +180,14 @@ V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
 lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
 5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
 di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
-AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIMUUJdc2xH7j
-PJMU8Iy6ABigqAfi4coHC3egl22EEgFnMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTIwMTEyNTE5MjQzOVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIP2aOxHsiDHD
+dS0LB94fuQ68eaYsRSk7/BxQZp2EBDuqMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMTEyNTE5MjQ0MlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
 YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQB+vHOE91aTPNUZyyfDXKtM5f8HiCn6
-VmdENfMTPX8SQCYK9JfJxwgYTixu2OMEOJU7kImUiMrSdQiLbRaVg9oJZzUFM3+9PzFOx8QxWJrb
-BuIJRHpWZ5hnJxM8lyvCCgfJ1zRWzdrE1wtj2SyMbQdaapsp/UAjjAi2Q7hveyZ/F5lMey9ovJf8
-uawQ9Dtf4ndPHdKGYLaU+woqHaa4syhPHZl8/C8ANoZVwCrYrGnUceTe5pKIZ+NiFpogItxgDzsc
-YydEEtagsCJgAuGppv4ShZRZXyBsq5GkwvR0+CMkbmImAleM/Na7iZer3yJXfDVmxONahgFe7c/y
-sZm5OY1s
---000000000000e8f3a205b4f3608a--
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCQ5d2Kf/824T6MzFVRwD8EEz5D/fx5
+CHQi/x3EAz/VfUOUDJd4yzDZoCfzdIlo7TWsqh0os+ZdjPiogoMTAC+udmZ622YTqgZYI7GTE4S9
+XG/ePuTbr4KawgSzwW5GQveuIORu8qDz+GTMQCvJVmjDscS4owK1IGfE+2WfKhicuULHIW3rrKe/
+vkGMxOfuAvpoC26yCwxeHdQlJrUbbjWcuKxf8tNOAwqD0TGaRD4sjIQMtPCtSNkPnNPA5b3lAPm6
+RRQgb1kFQiKK8CWojR6sIxe2H/Psi/rRnTxcA4JSwr4MfCyD6O3A+AM8gh6CRWKAXeZ3ywqst2Hf
+tywB+Yht
+--00000000000013867605b4f36112--
