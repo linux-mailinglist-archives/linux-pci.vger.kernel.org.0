@@ -2,224 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5400E2C3F2F
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 12:38:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F37402C3F5F
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 12:55:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgKYLhx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 06:37:53 -0500
-Received: from mga18.intel.com ([134.134.136.126]:3649 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727441AbgKYLhx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Nov 2020 06:37:53 -0500
-IronPort-SDR: AvHommXP5tmJjNUzadlWzRRdBiVrJbXz9Wnens+7t6zidEDfpqlRSY9N04gQCUsMgbI755oqTo
- sPiTycrH4/iA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9815"; a="159884064"
-X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
-   d="scan'208";a="159884064"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2020 03:37:51 -0800
-IronPort-SDR: 9ajKVQhqWmSTxckQHwBW+GK6M/LueCSszePm3es6+JsEe6iO1b87pwY9t+taBBV0swQLads6x/
- fABUBTlhj0eQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
-   d="scan'208";a="312918781"
-Received: from lkp-server01.sh.intel.com (HELO f59a693d3a73) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Nov 2020 03:37:50 -0800
-Received: from kbuild by f59a693d3a73 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kht7N-00005C-Kr; Wed, 25 Nov 2020 11:37:49 +0000
-Date:   Wed, 25 Nov 2020 19:37:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- cb72fddc79a6a48bb6305ffff9ef5e4f26a73357
-Message-ID: <5fbe41f2.ui4rUPCtQ1YSLe1v%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727349AbgKYLyo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 06:54:44 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49652 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgKYLyo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 06:54:44 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1606305281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r4HNcEhYd2VgvyfBGtCMGm1chw2/6OizpvW8l9Q1z+M=;
+        b=ywQ8QxOvwDbvJE9c9JPJzdHwfBCFRH3928DMITp+dq6S9GRoV/xjLwkQeLiEne8RKqkllG
+        iKVa1fAyiQhkE2K7EL2ZNXg5qcjEmYm4NNClmpSikNsbWuCiNyB7kThBL538GP24uhK34p
+        QLNAWIcOQX73qxCvPL3M6lrU4JZWg+HY4PluhL+athGxq2jX1pMZjDobYjGsk4N6lh7QCk
+        IxdDzTsWYNI32jzPQhMjuO8WcLU/ZQGWEWO4eGfvD9Q1iMHcmUc2+NbbedEoH3fn7wqymB
+        HN09hyC9SnRqW+yBncQcahkJ+xgGcPQH17GwsQge1MhyUAAW3rxRYCuGLaAkYQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1606305281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r4HNcEhYd2VgvyfBGtCMGm1chw2/6OizpvW8l9Q1z+M=;
+        b=f+/u2xvQDCOr/gl/tvrYOTM09dSlbIXP+gm/q5P2/5ke+AusnJMy2GxaO+M4gwP2xdULK6
+        Mv04xdkGQIaP7zCQ==
+To:     Stefan =?utf-8?Q?B=C3=BChler?= 
+        <stefan.buehler@tik.uni-stuttgart.de>,
+        sean.v.kelley@linux.intel.com
+Cc:     bhelgaas@google.com, bp@alien8.de, corbet@lwn.net,
+        kar.hin.ong@ni.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mingo@redhat.com, sassmann@kpanic.de, x86@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: boot interrupt quirk (also in 4.19.y) breaks serial ports (was: [PATCH v2 0/2] pci: Add boot interrupt quirk mechanism for Xeon chipsets)
+In-Reply-To: <b2da25c8-121a-b241-c028-68e49bab0081@tik.uni-stuttgart.de>
+References: <20200220192930.64820-1-sean.v.kelley@linux.intel.com> <b2da25c8-121a-b241-c028-68e49bab0081@tik.uni-stuttgart.de>
+Date:   Wed, 25 Nov 2020 12:54:41 +0100
+Message-ID: <87zh35k5xa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/misc
-branch HEAD: cb72fddc79a6a48bb6305ffff9ef5e4f26a73357  x86/PCI: Convert force_disable_hpet() to standard quirk
+Stefan,
 
-elapsed time: 728m
+On Wed, Sep 16 2020 at 12:12, Stefan B=C3=BChler wrote:
 
-configs tested: 160
-configs skipped: 4
+sorry for the delay. This fell through the cracks.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> this quirk breaks our serial ports PCIe card (i.e. we don't see any=20
+> output from the connected devices; no idea whether anything we send=20
+> reaches them):
+>
+> 05:00.0 PCI bridge: PLX Technology, Inc. PEX8112 x1 Lane PCI Express-to-P=
+CI Bridge (rev aa)
+> 06:00.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad 1695=
+0 UART) function 0 (Uart)
+> 06:00.1 Bridge: Oxford Semiconductor Ltd OX16PCI954 (Quad 16950 UART) fun=
+ction 0 (Disabled)
+> 06:01.0 Serial controller: Oxford Semiconductor Ltd OX16PCI954 (Quad 1695=
+0 UART) function 0 (Uart)
+> 06:01.1 Bridge: Oxford Semiconductor Ltd OX16PCI954 (Quad 16950 UART)
+> function 0 (Disabled)
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                      tqm8xx_defconfig
-m68k                       m5475evb_defconfig
-mips                           jazz_defconfig
-c6x                        evmc6474_defconfig
-powerpc                      makalu_defconfig
-sh                         ap325rxa_defconfig
-arm                         at91_dt_defconfig
-m68k                        mvme147_defconfig
-sh                        dreamcast_defconfig
-powerpc                     kmeter1_defconfig
-m68k                       m5249evb_defconfig
-sparc                            alldefconfig
-arm                  colibri_pxa270_defconfig
-arm                          ixp4xx_defconfig
-arm                           corgi_defconfig
-powerpc               mpc834x_itxgp_defconfig
-sh                               allmodconfig
-powerpc                     ep8248e_defconfig
-powerpc                   lite5200b_defconfig
-ia64                          tiger_defconfig
-nios2                         3c120_defconfig
-powerpc                      pasemi_defconfig
-arm                           sama5_defconfig
-mips                          rm200_defconfig
-powerpc                  iss476-smp_defconfig
-arc                        vdk_hs38_defconfig
-mips                         db1xxx_defconfig
-arm                          prima2_defconfig
-powerpc                  storcenter_defconfig
-arm                             ezx_defconfig
-sh                           se7722_defconfig
-arm                      tct_hammer_defconfig
-sh                           se7721_defconfig
-mips                      maltaaprp_defconfig
-arm                         nhk8815_defconfig
-arm                       aspeed_g4_defconfig
-sh                           se7724_defconfig
-powerpc                 mpc8313_rdb_defconfig
-s390                             alldefconfig
-sh                     sh7710voipgw_defconfig
-sh                         microdev_defconfig
-ia64                         bigsur_defconfig
-mips                            ar7_defconfig
-sh                            titan_defconfig
-powerpc                     mpc83xx_defconfig
-powerpc                          allmodconfig
-m68k                        stmark2_defconfig
-m68k                         apollo_defconfig
-mips                           rs90_defconfig
-nios2                               defconfig
-riscv                               defconfig
-arm                            pleb_defconfig
-x86_64                           alldefconfig
-arm                        neponset_defconfig
-sh                            migor_defconfig
-s390                                defconfig
-sh                          rsk7203_defconfig
-arm                        mvebu_v7_defconfig
-mips                 decstation_r4k_defconfig
-parisc                           alldefconfig
-sh                   sh7770_generic_defconfig
-powerpc                    gamecube_defconfig
-arm                        trizeps4_defconfig
-powerpc                 mpc836x_mds_defconfig
-powerpc                 mpc834x_itx_defconfig
-arm                            qcom_defconfig
-arc                            hsdk_defconfig
-m68k                       m5275evb_defconfig
-arm                        multi_v5_defconfig
-sh                           se7780_defconfig
-mips                  cavium_octeon_defconfig
-sh                 kfr2r09-romimage_defconfig
-arm                         mv78xx0_defconfig
-mips                      maltasmvp_defconfig
-m68k                                defconfig
-arm                       imx_v4_v5_defconfig
-arm                         ebsa110_defconfig
-powerpc                        fsp2_defconfig
-mips                        jmr3927_defconfig
-arc                        nsim_700_defconfig
-h8300                            alldefconfig
-powerpc                      walnut_defconfig
-powerpc                     sbc8548_defconfig
-mips                           ip27_defconfig
-powerpc                     mpc512x_defconfig
-sh                          rsk7201_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-sparc                               defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20201125
-i386                 randconfig-a003-20201125
-i386                 randconfig-a002-20201125
-i386                 randconfig-a005-20201125
-i386                 randconfig-a001-20201125
-i386                 randconfig-a006-20201125
-x86_64               randconfig-a015-20201125
-x86_64               randconfig-a011-20201125
-x86_64               randconfig-a014-20201125
-x86_64               randconfig-a016-20201125
-x86_64               randconfig-a012-20201125
-x86_64               randconfig-a013-20201125
-i386                 randconfig-a012-20201124
-i386                 randconfig-a013-20201124
-i386                 randconfig-a011-20201124
-i386                 randconfig-a016-20201124
-i386                 randconfig-a014-20201124
-i386                 randconfig-a015-20201124
-i386                 randconfig-a012-20201125
-i386                 randconfig-a013-20201125
-i386                 randconfig-a011-20201125
-i386                 randconfig-a016-20201125
-i386                 randconfig-a014-20201125
-i386                 randconfig-a015-20201125
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Can you please provide the output of:
 
-clang tested configs:
-x86_64               randconfig-a006-20201125
-x86_64               randconfig-a003-20201125
-x86_64               randconfig-a004-20201125
-x86_64               randconfig-a005-20201125
-x86_64               randconfig-a002-20201125
-x86_64               randconfig-a001-20201125
+ for ID in 05:00.0 06:00.0 06:00.1 06:01.0 06:01.1; do lspci -s $ID -vvv; d=
+one
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks,
+
+        tglx
