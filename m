@@ -2,90 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C487B2C3A21
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 08:31:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2574D2C3A79
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 09:07:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgKYHaV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 02:30:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24530 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725308AbgKYHaV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 02:30:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606289420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D3DSrYj+gqE7fmTGGcLGiNd0q/oeDN1ODN+0Xluwkpc=;
-        b=dsl+i09RZAdJ1lSShUGzc/UxlseV3QU7WIkHDBRIP0wK9BkkmrYpsgoEqc/RL5YWGYwAdM
-        0NnM01Qk53ZU7gI4gJvvF+mgPPToSU4g0GH+I/LEwdVNqQUCPSkfDYmz0H9erALoryJR+0
-        f2/9duKW/EdZ8O2LDeJG7+0wI9OCPUY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-HGAXgTQcP7C0r00a5_OLvQ-1; Wed, 25 Nov 2020 02:30:15 -0500
-X-MC-Unique: HGAXgTQcP7C0r00a5_OLvQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 161A618C89E0;
-        Wed, 25 Nov 2020 07:30:13 +0000 (UTC)
-Received: from [10.36.113.83] (ovpn-113-83.ams2.redhat.com [10.36.113.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DDFAF10023B0;
-        Wed, 25 Nov 2020 07:30:06 +0000 (UTC)
-Subject: Re: [PATCH 1/2] genirq: add an affinity parameter to
- irq_create_mapping()
-To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc:     Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-block@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Marc Zyngier <maz@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>
-References: <20201124200308.1110744-1-lvivier@redhat.com>
- <20201124200308.1110744-2-lvivier@redhat.com>
- <87h7pel7ng.fsf@nanos.tec.linutronix.de>
-From:   Laurent Vivier <lvivier@redhat.com>
-Message-ID: <8e9002d0-086f-1e7d-4b94-45b6d49f7917@redhat.com>
-Date:   Wed, 25 Nov 2020 08:30:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1726612AbgKYIHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 03:07:08 -0500
+Received: from mga09.intel.com ([134.134.136.24]:65092 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbgKYIHI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 25 Nov 2020 03:07:08 -0500
+IronPort-SDR: 0LxcttN07aAYUtUiTtigLEC5/gAp+Rnp2NTYdQl4Vw+7WFFTURcle6pL7aauFFPoS89Ve8/vtA
+ 6Tl569TnMDyQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9815"; a="172244065"
+X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
+   d="scan'208";a="172244065"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2020 00:07:05 -0800
+IronPort-SDR: i8smOXMHi2IWQtJp5vzRd/iYtOun9bTO172CUBgV17TJhR9iQnXIDS5/Zc/5MhBzDdn62x/UR4
+ j3oauEfYsRoQ==
+X-IronPort-AV: E=Sophos;i="5.78,368,1599548400"; 
+   d="scan'208";a="332892300"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2020 00:07:02 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 25 Nov 2020 10:06:59 +0200
+Date:   Wed, 25 Nov 2020 10:06:59 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: [PATCH v1 1/2] PM: ACPI: PCI: Drop acpi_pm_set_bridge_wakeup()
+Message-ID: <20201125080659.GB2532@lahna.fi.intel.com>
+References: <27714988.CF3CpBaniU@kreacher>
+ <2261308.G18gbxz5ee@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <87h7pel7ng.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2261308.G18gbxz5ee@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24/11/2020 23:19, Thomas Gleixner wrote:
-> On Tue, Nov 24 2020 at 21:03, Laurent Vivier wrote:
->> This parameter is needed to pass it to irq_domain_alloc_descs().
->>
->> This seems to have been missed by
->> o06ee6d571f0e ("genirq: Add affinity hint to irq allocation")
+On Tue, Nov 24, 2020 at 08:44:00PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> No, this has not been missed at all. There was and is no reason to do
-> this.
+> The idea behind acpi_pm_set_bridge_wakeup() was to allow bridges to
+> be reference counted for wakeup enabling, because they may be enabled
+> to signal wakeup on behalf of their subordinate devices and that
+> may happen for multiple times in a row, whereas for the other devices
+> it only makes sense to enable wakeup signaling once.
 > 
->> This is needed to implement proper support for multiqueue with
->> pseries.
+> However, this becomes problematic if the bridge itself is suspended,
+> because it is treated as a "regular" device in that case and the
+> reference counting doesn't work.
 > 
-> And because pseries needs this _all_ callers need to be changed?
+> For instance, suppose that there are two devices below a bridge and
+> they both can signal wakeup.  Every time one of them is suspended,
+> wakeup signaling is enabled for the bridge, so when they both have
+> been suspended, the bridge's wakeup reference counter value is 2.
 > 
->>  123 files changed, 171 insertions(+), 146 deletions(-)
+> Say that the bridge is suspended subsequently and acpi_pci_wakeup()
+> is called for it.  Because the bridge can signal wakeup, that
+> function will invoke acpi_pm_set_device_wakeup() to configure it
+> and __acpi_pm_set_device_wakeup() will be called with the last
+> argument equal to 1.  This causes __acpi_device_wakeup_enable()
+> invoked by it to omit the reference counting, because the reference
+> counter of the target device (the bridge) is 2 at that time.
 > 
-> Lots of churn for nothing. 99% of the callers will never need that.
+> Now say that the bridge resumes and one of the device below it
+> resumes too, so the bridge's reference counter becomes 0 and
+> wakeup signaling is disabled for it, but there is still the other
+> suspended device which may need the bridge to signal wakeup on its
+> behalf and that is not going to work.
 > 
-> What's wrong with simply adding an interface which takes that parameter,
-> make the existing one an inline wrapper and and leave the rest alone?
+> To address this scenario, use wakeup enable reference counting for
+> all devices, not just for bridges, so drop the last argument from
+> __acpi_device_wakeup_enable() and __acpi_pm_set_device_wakeup(),
+> which causes acpi_pm_set_device_wakeup() and
+> acpi_pm_set_bridge_wakeup() to become identical, so drop the latter
+> and use the former instead of it everywhere.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Nothing. I'm going to do like that.
-
-Thank you for your comment.
-
-Laurent
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
