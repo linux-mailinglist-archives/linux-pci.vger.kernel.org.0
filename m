@@ -2,148 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EBE52C468F
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 18:23:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B4C02C46DC
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 18:34:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731256AbgKYRWL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 12:22:11 -0500
-Received: from mga17.intel.com ([192.55.52.151]:61737 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730567AbgKYRWL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 25 Nov 2020 12:22:11 -0500
-IronPort-SDR: Ll6oxsOVPjMnZdFadIPqERtfLIXssLKo+9SugkBIIZCg6OXl1K2xRBRVn8adRa5ez3VzG/car0
- 3BZuG0epq+iQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9816"; a="152007787"
-X-IronPort-AV: E=Sophos;i="5.78,369,1599548400"; 
-   d="scan'208";a="152007787"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2020 09:22:06 -0800
-IronPort-SDR: AizFAFFhIEZkU+cBuVzV+PEXxQ5vgvHtAFTYsURMPHovQ2ULshQoxAkF8ToaGGhdTLJJKb05PO
- T26WpSEt/oLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,369,1599548400"; 
-   d="scan'208";a="433032323"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Nov 2020 09:22:06 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 25 Nov 2020 09:22:06 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 25 Nov 2020 09:22:06 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Wed, 25 Nov 2020 09:22:06 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
+        id S1731999AbgKYReL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 12:34:11 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:39880 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730455AbgKYReL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 12:34:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606325650;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W7NiL6tAav7XnNXNaLXFHj7hlsEMUdR6HMTlgfmIVEw=;
+        b=VkgdMLxnXLaaqQulPsvSYm/45jjh5fDQs2CjGPEKV9f5+7na2bV27Z+sL476eHS9+8O9is
+        KZt1XSSUWdpjy5jTA98fpOnoYowJtLhNC3uwVYtEBLsN7uGxFqCB+6bq8ZzOjnDjUWjz1Y
+        cukBgFGFguSdwCtjFYioajw8vXhj/Cg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-64-1C9VISFDPn2wbfOdvO5isQ-1; Wed, 25 Nov 2020 12:34:08 -0500
+X-MC-Unique: 1C9VISFDPn2wbfOdvO5isQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B608D185E489;
+        Wed, 25 Nov 2020 17:34:06 +0000 (UTC)
+Received: from w520.home (ovpn-112-213.phx2.redhat.com [10.3.112.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DDCE5C1A3;
+        Wed, 25 Nov 2020 17:34:05 +0000 (UTC)
+Date:   Wed, 25 Nov 2020 10:34:05 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "helgaas@kernel.org" <helgaas@kernel.org>,
+        "Kalakota, SushmaX" <sushmax.kalakota@intel.com>,
         "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Patel, Nirmal" <nirmal.patel@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+        "Patel, Nirmal" <nirmal.patel@intel.com>
 Subject: Re: [PATCH 2/5] PCI: Add a reset quirk for VMD
-Thread-Topic: [PATCH 2/5] PCI: Add a reset quirk for VMD
-Thread-Index: AQHWv4++6qsNAgRtSUy537ctw5YhrqnYW8wAgAFKLoA=
-Date:   Wed, 25 Nov 2020 17:22:05 +0000
-Message-ID: <57d28cdc12734c38b09f18ccd493a4b60b1e9031.camel@intel.com>
+Message-ID: <20201125103405.19f792e1@w520.home>
+In-Reply-To: <57d28cdc12734c38b09f18ccd493a4b60b1e9031.camel@intel.com>
 References: <20201124214020.GA590491@bjorn-Precision-5520>
-In-Reply-To: <20201124214020.GA590491@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <291B33B46B03D243BA1010BC75CB2E58@intel.com>
-Content-Transfer-Encoding: base64
+        <57d28cdc12734c38b09f18ccd493a4b60b1e9031.camel@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgQmpvcm4sDQoNCk9uIFR1ZSwgMjAyMC0xMS0yNCBhdCAxNTo0MCAtMDYwMCwgQmpvcm4gSGVs
-Z2FhcyB3cm90ZToNCj4gWytjYyBBbGV4XQ0KPiANCj4gT24gRnJpLCBOb3YgMjAsIDIwMjAgYXQg
-MDM6NTE6NDFQTSAtMDcwMCwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4gVk1EIGRvbWFpbnMgc2hv
-dWxkIGJlIHJlc2V0IGluLWJldHdlZW4gc3BlY2lhbCBhdHRhY2htZW50IHN1Y2ggYXMgVkZJTw0K
-PiA+IHVzZXJzLiBWTUQgZG9lcyBub3Qgb2ZmZXIgYSByZXNldCwgaG93ZXZlciB0aGUgc3ViZGV2
-aWNlIGRvbWFpbiBpdHNlbGYNCj4gPiBjYW4gYmUgcmVzZXQgc3RhcnRpbmcgYXQgdGhlIFJvb3Qg
-QnVzLiBBZGQgYSBTZWNvbmRhcnkgQnVzIFJlc2V0IG9uIGVhY2gNCj4gPiBvZiB0aGUgaW5kaXZp
-ZHVhbCByb290IHBvcnQgZGV2aWNlcyBpbW1lZGlhdGVseSBkb3duc3RyZWFtIG9mIHRoZSBWTUQN
-Cj4gPiByb290IGJ1cy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb24gRGVycmljayA8am9u
-YXRoYW4uZGVycmlja0BpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNpL3F1aXJr
-cy5jIHwgNDggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcGNpL3F1aXJrcy5jIGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiBp
-bmRleCBmNzA2OTJhLi5lZTU4YjUxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL3F1aXJr
-cy5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvcXVpcmtzLmMNCj4gPiBAQCAtMzc0NCw2ICszNzQ0
-LDQ5IEBAIHN0YXRpYyBpbnQgcmVzZXRfaXZiX2lnZChzdHJ1Y3QgcGNpX2RldiAqZGV2LCBpbnQg
-cHJvYmUpDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICANCj4gPiArLyogSXNzdWVzIFNC
-UiB0byBWTUQgZG9tYWluIHRvIGNsZWFyIFBDSSBjb25maWd1cmF0aW9uICovDQo+ID4gK3N0YXRp
-YyBpbnQgcmVzZXRfdm1kX3NicihzdHJ1Y3QgcGNpX2RldiAqZGV2LCBpbnQgcHJvYmUpDQo+ID4g
-K3sNCj4gPiArCWNoYXIgX19pb21lbSAqY2ZnYmFyLCAqYmFzZTsNCj4gPiArCWludCBycDsNCj4g
-PiArCXUxNiBjdGw7DQo+ID4gKw0KPiA+ICsJaWYgKHByb2JlKQ0KPiA+ICsJCXJldHVybiAwOw0K
-PiA+ICsNCj4gPiArCWlmIChkZXYtPmRldi5kcml2ZXIpDQo+ID4gKwkJcmV0dXJuIDA7DQo+IA0K
-PiBJIGd1ZXNzICJkZXYiIGhlcmUgaXMgdGhlIFZNRCBlbmRwb2ludD8gIEFuZCBpZiB0aGUgdm1k
-LmMgZHJpdmVyIGlzDQo+IGJvdW5kIHRvIGl0LCB5b3UgcmV0dXJuIHN1Y2Nlc3Mgd2l0aG91dCBk
-b2luZyBhbnl0aGluZz8NCj4gDQo+IElmIHRoZXJlJ3Mgbm8gZHJpdmVyIGZvciB0aGUgVk1EIGRl
-dmljZSwgd2hvIGlzIHRyeWluZyB0byByZXNldCBpdD8NCj4gDQo+IEkgZ3Vlc3MgSSBkb24ndCBx
-dWl0ZSB1bmRlcnN0YW5kIGhvdyBWTUQgd29ya3MuICBJIHdvdWxkIGhhdmUgdGhvdWdodA0KPiB0
-aGF0IGlmIHZtZC5jIGlzbid0IGJvdW5kIHRvIHRoZSBWTUQgZGV2aWNlLCB0aGUgZGV2aWNlcyBi
-ZWhpbmQgdGhlDQo+IFZNRCB3b3VsZCBiZSBpbmFjY2Vzc2libGUgYW5kIHRoZXJlJ2QgYmUgbm8g
-cG9pbnQgaW4gYSByZXNldC4NCg0KVGhpcyBpcyBiYXNpY2FsbHkgdGhlIGlkZWEgYmVoaW5kIHRo
-aXMgcmVzZXQgLSBhbGxvdyB0aGUgdXNlciB0byByZXNldA0KVk1EIGlmIHRoZXJlIGlzIG5vIGRy
-aXZlciBib3VuZCB0byBpdCwgYnV0IHByZXZlbnQgdGhlIHJlc2V0IGZyb20NCmRlZW51bWVyYXRp
-bmcgdGhlIGRvbWFpbiBpZiB0aGVyZSBpcyBhIGRyaXZlci4NCg0KSWYgdGhpcyBpcyBhbiB1bnVz
-dWFsL3VuZXhwZWN0ZWQgdXNlIGNhc2UsIHdlIGNhbiBkcm9wIGl0Lg0KDQoNCj4gDQo+ID4gKwlj
-ZmdiYXIgPSBwY2lfaW9tYXAoZGV2LCAwLCAwKTsNCj4gPiArCWlmICghY2ZnYmFyKQ0KPiA+ICsJ
-CXJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4gPiArCS8qDQo+ID4gKwkgKiBTdWJkZXZpY2UgY29u
-ZmlnIHNwYWNlIGlzIG1hcHBlZCBsaW5lYXJseSB1c2luZyA0ayBjb25maWcgc3BhY2UNCj4gPiAr
-CSAqIGluY3JlbWVudHMuIFVzZSBpbmNyZW1lbnRzIG9mIDB4ODAwMCB0byBsb2NhdGUgcm9vdCBw
-b3J0IGRldmljZXMuDQo+ID4gKwkgKi8NCj4gPiArCWZvciAocnAgPSAwOyBycCA8IDQ7IHJwKysp
-IHsNCj4gPiArCQliYXNlID0gY2ZnYmFyICsgcnAgKiAweDgwMDA7DQo+IA0KPiBJIHJlYWxseSBk
-b24ndCBsaWtlIHRoaXMgcGFydCAtLSBpb21hcHBpbmcgQkFSIDAgKGFwcGFyZW50bHkNCj4gVk1E
-X0NGR0JBUiksIGFuZCBtYWtpbmcgdXAgdGhlIEVDQU0taXNoIGFkZHJlc3NlcyBhbmQgYmFzaWNh
-bGx5DQo+IG9wZW4tY29kaW5nIEVDQU0gYWNjZXNzZXMgYmVsb3cuICBJIGd1ZXNzIHRoaXMgYXNz
-dW1lcyBSb290IFBvcnRzIGFyZQ0KPiBvbmx5IG9uIGZ1bmN0aW9ucyAuMCwgLjIsIC40LCAuNj8N
-Cg0KVGhlIFJvb3QgUG9ydHMgYXJlIERldmljZXMgeHg6MDAuMCwgeHg6MDEuMCwgeHg6MDIuMCwg
-YW5kIHh4OjAzLjANCihjb3JyZXNwb25kaW5nIHRvIFBDSUVfRVhUX1NMT1RfU0hJRlQgPSAxNSkN
-Cg0KDQo+IA0KPiBJcyBpdCBhbGwgb3Blbi1jb2RlZCBoZXJlIGJlY2F1c2UgdGhpcyByZXNldCBw
-YXRoIGlzIG9ubHkgb2YgaW50ZXJlc3QNCj4gd2hlbiB2bWQuYyBpcyBOT1QgYm91bmQgdG8gdGhl
-IHRoZSBWTUQgZGV2aWNlLCBzbyB5b3UgY2FuJ3QgdXNlDQo+IHZtZC0+Y2ZnYmFyLCBldGM/DQoN
-ClRoYXQncyBjb3JyZWN0LCBidXQgYXMgbWVudGlvbmVkIGFib3ZlIGl0IG1pZ2h0IGJlIGFuIHVu
-dXN1YWwgY29kZSBwYXRoDQpzbyBpcyBub3QgYXMgaW1wb3J0YW50IGFzIHRoZSByZXNldCB3aXRo
-aW4gdGhlIGRyaXZlciBpbiBwYXRjaCAxLzUuDQoNCj4gDQo+IFdoYXQgYWJvdXQgdGhlIGNhc2Ug
-d2hlbiB2bWQuYyBJUyBib3VuZD8gIFdlIGRvbid0IGRvIGFueXRoaW5nIGhlcmUsDQo+IHNvIGRv
-ZXMgdGhhdCBtZWFuIHdlIGluc3RlYWQgdXNlIHRoZSB1c3VhbCBjYXNlIG9mIGFzc2VydGluZyBT
-QlIgb24NCj4gdGhlIFJvb3QgUG9ydHMgYmVoaW5kIHRoZSBWTUQ/DQoNCkl0IHVzZXMgdGhlIHN0
-YW5kYXJkIExpbnV4IHJlc2V0IGNvZGUgcGF0aHMgZm9yIFJvb3QgUG9ydCBkZXZpY2VzDQoNCj4g
-DQo+ID4gKwkJaWYgKHJlYWRsKGJhc2UgKyBQQ0lfQ09NTUFORCkgPT0gMHhGRkZGRkZGRikNCj4g
-PiArCQkJY29udGludWU7DQo+ID4gKw0KPiA+ICsJCS8qIHBjaV9yZXNldF9zZWNvbmRhcnlfYnVz
-KCkgKi8NCj4gPiArCQljdGwgPSByZWFkdyhiYXNlICsgUENJX0JSSURHRV9DT05UUk9MKTsNCj4g
-PiArCQljdGwgfD0gUENJX0JSSURHRV9DVExfQlVTX1JFU0VUOw0KPiA+ICsJCXdyaXRldyhjdGws
-IGJhc2UgKyBQQ0lfQlJJREdFX0NPTlRST0wpOw0KPiA+ICsJCXJlYWR3KGJhc2UgKyBQQ0lfQlJJ
-REdFX0NPTlRST0wpOw0KPiA+ICsJCW1zbGVlcCgyKTsNCj4gPiArDQo+ID4gKwkJY3RsICY9IH5Q
-Q0lfQlJJREdFX0NUTF9CVVNfUkVTRVQ7DQo+ID4gKwkJd3JpdGV3KGN0bCwgYmFzZSArIFBDSV9C
-UklER0VfQ09OVFJPTCk7DQo+ID4gKwkJcmVhZHcoYmFzZSArIFBDSV9CUklER0VfQ09OVFJPTCk7
-DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJc3NsZWVwKDEpOw0KPiA+ICsJcGNpX2lvdW5tYXAoZGV2
-LCBjZmdiYXIpOw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gIC8qIERldmlj
-ZS1zcGVjaWZpYyByZXNldCBtZXRob2QgZm9yIENoZWxzaW8gVDQtYmFzZWQgYWRhcHRlcnMgKi8N
-Cj4gPiAgc3RhdGljIGludCByZXNldF9jaGVsc2lvX2dlbmVyaWNfZGV2KHN0cnVjdCBwY2lfZGV2
-ICpkZXYsIGludCBwcm9iZSkNCj4gPiAgew0KPiA+IEBAIC0zOTE5LDYgKzM5NjIsMTEgQEAgc3Rh
-dGljIGludCBkZWxheV8yNTBtc19hZnRlcl9mbHIoc3RydWN0IHBjaV9kZXYgKmRldiwgaW50IHBy
-b2JlKQ0KPiA+ICAJCXJlc2V0X2l2Yl9pZ2QgfSwNCj4gPiAgCXsgUENJX1ZFTkRPUl9JRF9JTlRF
-TCwgUENJX0RFVklDRV9JRF9JTlRFTF9JVkJfTTJfVkdBLA0KPiA+ICAJCXJlc2V0X2l2Yl9pZ2Qg
-fSwNCj4gPiArCXsgUENJX1ZFTkRPUl9JRF9JTlRFTCwgUENJX0RFVklDRV9JRF9JTlRFTF9WTURf
-MjAxRCwgcmVzZXRfdm1kX3NiciB9LA0KPiA+ICsJeyBQQ0lfVkVORE9SX0lEX0lOVEVMLCBQQ0lf
-REVWSUNFX0lEX0lOVEVMX1ZNRF8yOEMwLCByZXNldF92bWRfc2JyIH0sDQo+ID4gKwl7IFBDSV9W
-RU5ET1JfSURfSU5URUwsIDB4NDY3ZiwgcmVzZXRfdm1kX3NiciB9LA0KPiA+ICsJeyBQQ0lfVkVO
-RE9SX0lEX0lOVEVMLCAweDRjM2QsIHJlc2V0X3ZtZF9zYnIgfSwNCj4gPiArCXsgUENJX1ZFTkRP
-Ul9JRF9JTlRFTCwgUENJX0RFVklDRV9JRF9JTlRFTF9WTURfOUEwQiwgcmVzZXRfdm1kX3NiciB9
-LA0KPiA+ICAJeyBQQ0lfVkVORE9SX0lEX1NBTVNVTkcsIDB4YTgwNCwgbnZtZV9kaXNhYmxlX2Fu
-ZF9mbHIgfSwNCj4gPiAgCXsgUENJX1ZFTkRPUl9JRF9JTlRFTCwgMHgwOTUzLCBkZWxheV8yNTBt
-c19hZnRlcl9mbHIgfSwNCj4gPiAgCXsgUENJX1ZFTkRPUl9JRF9DSEVMU0lPLCBQQ0lfQU5ZX0lE
-LA0KPiA+IC0tIA0KPiA+IDEuOC4zLjENCj4gPiANCg==
+On Wed, 25 Nov 2020 17:22:05 +0000
+"Derrick, Jonathan" <jonathan.derrick@intel.com> wrote:
+
+> Hi Bjorn,
+> 
+> On Tue, 2020-11-24 at 15:40 -0600, Bjorn Helgaas wrote:
+> > [+cc Alex]
+> > 
+> > On Fri, Nov 20, 2020 at 03:51:41PM -0700, Jon Derrick wrote:  
+> > > VMD domains should be reset in-between special attachment such as VFIO
+> > > users. VMD does not offer a reset, however the subdevice domain itself
+> > > can be reset starting at the Root Bus. Add a Secondary Bus Reset on each
+> > > of the individual root port devices immediately downstream of the VMD
+> > > root bus.
+> > > 
+> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > > ---
+> > >  drivers/pci/quirks.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 48 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > index f70692a..ee58b51 100644
+> > > --- a/drivers/pci/quirks.c
+> > > +++ b/drivers/pci/quirks.c
+> > > @@ -3744,6 +3744,49 @@ static int reset_ivb_igd(struct pci_dev *dev, int probe)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +/* Issues SBR to VMD domain to clear PCI configuration */
+> > > +static int reset_vmd_sbr(struct pci_dev *dev, int probe)
+> > > +{
+> > > +	char __iomem *cfgbar, *base;
+> > > +	int rp;
+> > > +	u16 ctl;
+> > > +
+> > > +	if (probe)
+> > > +		return 0;
+> > > +
+> > > +	if (dev->dev.driver)
+> > > +		return 0;  
+> > 
+> > I guess "dev" here is the VMD endpoint?  And if the vmd.c driver is
+> > bound to it, you return success without doing anything?
+> > 
+> > If there's no driver for the VMD device, who is trying to reset it?
+> > 
+> > I guess I don't quite understand how VMD works.  I would have thought
+> > that if vmd.c isn't bound to the VMD device, the devices behind the
+> > VMD would be inaccessible and there'd be no point in a reset.  
+> 
+> This is basically the idea behind this reset - allow the user to reset
+> VMD if there is no driver bound to it, but prevent the reset from
+> deenumerating the domain if there is a driver.
+> 
+> If this is an unusual/unexpected use case, we can drop it.
+
+I don't understand how this improves the vfio use case as claimed in
+the commit log, are you expecting the device to be unbound from all
+drivers and reset via pci-sysfs between uses?  vfio would not be able
+to perform the reset itself with this behavior, including between
+resets of a VM or between separate users without external manual
+unbinding and reset.
+
+   
+> > > +	cfgbar = pci_iomap(dev, 0, 0);
+> > > +	if (!cfgbar)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	/*
+> > > +	 * Subdevice config space is mapped linearly using 4k config space
+> > > +	 * increments. Use increments of 0x8000 to locate root port devices.
+> > > +	 */
+> > > +	for (rp = 0; rp < 4; rp++) {
+> > > +		base = cfgbar + rp * 0x8000;  
+> > 
+> > I really don't like this part -- iomapping BAR 0 (apparently
+> > VMD_CFGBAR), and making up the ECAM-ish addresses and basically
+> > open-coding ECAM accesses below.  I guess this assumes Root Ports are
+> > only on functions .0, .2, .4, .6?  
+> 
+> The Root Ports are Devices xx:00.0, xx:01.0, xx:02.0, and xx:03.0
+> (corresponding to PCIE_EXT_SLOT_SHIFT = 15)
+> 
+> 
+> > 
+> > Is it all open-coded here because this reset path is only of interest
+> > when vmd.c is NOT bound to the the VMD device, so you can't use
+> > vmd->cfgbar, etc?  
+> 
+> That's correct, but as mentioned above it might be an unusual code path
+> so is not as important as the reset within the driver in patch 1/5.
+> 
+> > 
+> > What about the case when vmd.c IS bound?  We don't do anything here,
+> > so does that mean we instead use the usual case of asserting SBR on
+> > the Root Ports behind the VMD?  
+> 
+> It uses the standard Linux reset code paths for Root Port devices
+> 
+> >   
+> > > +		if (readl(base + PCI_COMMAND) == 0xFFFFFFFF)
+> > > +			continue;
+> > > +
+> > > +		/* pci_reset_secondary_bus() */
+> > > +		ctl = readw(base + PCI_BRIDGE_CONTROL);
+> > > +		ctl |= PCI_BRIDGE_CTL_BUS_RESET;
+> > > +		writew(ctl, base + PCI_BRIDGE_CONTROL);
+> > > +		readw(base + PCI_BRIDGE_CONTROL);
+> > > +		msleep(2);
+> > > +
+> > > +		ctl &= ~PCI_BRIDGE_CTL_BUS_RESET;
+> > > +		writew(ctl, base + PCI_BRIDGE_CONTROL);
+> > > +		readw(base + PCI_BRIDGE_CONTROL);
+
+We're performing an SBR of the internal root ports here, is the config
+space of the affected endpoints handled via save+restore of the code
+that calls this?  I'm a little rusty on VMD again.  Thanks,
+
+Alex
+
+
+> > > +	}
+> > > +
+> > > +	ssleep(1);
+> > > +	pci_iounmap(dev, cfgbar);
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  /* Device-specific reset method for Chelsio T4-based adapters */
+> > >  static int reset_chelsio_generic_dev(struct pci_dev *dev, int probe)
+> > >  {
+> > > @@ -3919,6 +3962,11 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+> > >  		reset_ivb_igd },
+> > >  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IVB_M2_VGA,
+> > >  		reset_ivb_igd },
+> > > +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_201D, reset_vmd_sbr },
+> > > +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0, reset_vmd_sbr },
+> > > +	{ PCI_VENDOR_ID_INTEL, 0x467f, reset_vmd_sbr },
+> > > +	{ PCI_VENDOR_ID_INTEL, 0x4c3d, reset_vmd_sbr },
+> > > +	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_9A0B, reset_vmd_sbr },
+> > >  	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
+> > >  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
+> > >  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+> > > -- 
+> > > 1.8.3.1
+> > >   
+
