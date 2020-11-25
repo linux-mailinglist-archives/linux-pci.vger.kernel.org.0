@@ -2,36 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DA8C2C42A3
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 16:10:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1C9A2C42A7
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 16:10:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgKYPJq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 10:09:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45572 "EHLO
+        id S1729747AbgKYPJu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 10:09:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:29466 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729265AbgKYPJq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 10:09:46 -0500
+        by vger.kernel.org with ESMTP id S1730000AbgKYPJu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 10:09:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606316984;
+        s=mimecast20190719; t=1606316989;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KjQv5P7PRIrY0L8Xs58Fh8UAYQad1MiPuDtp8tpbsOc=;
-        b=Bnk7sNRw/sU3ACWUFwHa5aBFum9RYKOyribRUDHGJ4xbaY3N92sqxm9Zpv2naTsZR/phni
-        ioyK35Fg88xkig3f32S61pwcl8Rtpd1mVrPyJ14sXgz04//RdYABx2QUr6+K/hvylyJVYo
-        OgHfONFuLXs5GeGreQIM4o8DhhwAIEU=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nYWk5jzHxLGFoIevTIg8NOOjqLX1QGlqnK2/2OZh2eA=;
+        b=hDUp2qWJTCp4jRo6vBtTzjfDNe5JxQdxD+0DuiDlugMlni6kqIsdkZFlpWoqK7XHpUqhbQ
+        qjxy3BOcGJ2S95g0wOh/DL4qq05rOMPfABs4HphtLqypAP45I0giXLaplEMMUl/Rh8qwR3
+        W1fJjbFw6E8RCqzXm26k4VI3dlhtpvE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-q316MsHQNwq40zLS7Z4FTQ-1; Wed, 25 Nov 2020 10:09:40 -0500
-X-MC-Unique: q316MsHQNwq40zLS7Z4FTQ-1
+ us-mta-314-j_iamyF2NrOLaaCW_Q-iNg-1; Wed, 25 Nov 2020 10:09:44 -0500
+X-MC-Unique: j_iamyF2NrOLaaCW_Q-iNg-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14AA3107AFA9;
-        Wed, 25 Nov 2020 15:09:39 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A49F2107AFA5;
+        Wed, 25 Nov 2020 15:09:42 +0000 (UTC)
 Received: from thinkpad.redhat.com (ovpn-113-83.ams2.redhat.com [10.36.113.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 099ED5C1B4;
-        Wed, 25 Nov 2020 15:09:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7285B5C1A3;
+        Wed, 25 Nov 2020 15:09:39 +0000 (UTC)
 From:   Laurent Vivier <lvivier@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
@@ -44,134 +45,108 @@ Cc:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         "Michael S . Tsirkin" <mst@redhat.com>,
         Marc Zyngier <maz@kernel.org>,
         Laurent Vivier <lvivier@redhat.com>
-Subject: [PATCH v3 0/2] powerpc/pseries: fix MSI/X IRQ affinity on pseries
-Date:   Wed, 25 Nov 2020 16:09:30 +0100
-Message-Id: <20201125150932.1150619-1-lvivier@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Subject: [PATCH v3 1/2] genirq/irqdomain: Add an irq_create_mapping_affinity() function
+Date:   Wed, 25 Nov 2020 16:09:31 +0100
+Message-Id: <20201125150932.1150619-2-lvivier@redhat.com>
+In-Reply-To: <20201125150932.1150619-1-lvivier@redhat.com>
+References: <20201125150932.1150619-1-lvivier@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With virtio, in multiqueue case, each queue IRQ is normally=0D
-bound to a different CPU using the affinity mask.=0D
-=0D
-This works fine on x86_64 but totally ignored on pseries.=0D
-=0D
-This is not obvious at first look because irqbalance is doing=0D
-some balancing to improve that.=0D
-=0D
-It appears that the "managed" flag set in the MSI entry=0D
-is never copied to the system IRQ entry.=0D
-=0D
-This series passes the affinity mask from rtas_setup_msi_irqs()=0D
-to irq_domain_alloc_descs() by adding an affinity parameter to=0D
-irq_create_mapping().=0D
-=0D
-The first patch adds the parameter (no functional change), the=0D
-second patch passes the actual affinity mask to irq_create_mapping()=0D
-in rtas_setup_msi_irqs().=0D
-=0D
-For instance, with 32 CPUs VM and 32 queues virtio-scsi interface:=0D
-=0D
-... -smp 32 -device virtio-scsi-pci,id=3Dvirtio_scsi_pci0,num_queues=3D32=0D
-=0D
-for IRQ in $(grep virtio2-request /proc/interrupts |cut -d: -f1); do=0D
-    for file in /proc/irq/$IRQ/ ; do=0D
-        echo -n "IRQ: $(basename $file) CPU: " ; cat $file/smp_affinity_lis=
-t=0D
-    done=0D
-done=0D
-=0D
-Without the patch (and without irqbalanced)=0D
-=0D
-IRQ: 268 CPU: 0-31=0D
-IRQ: 269 CPU: 0-31=0D
-IRQ: 270 CPU: 0-31=0D
-IRQ: 271 CPU: 0-31=0D
-IRQ: 272 CPU: 0-31=0D
-IRQ: 273 CPU: 0-31=0D
-IRQ: 274 CPU: 0-31=0D
-IRQ: 275 CPU: 0-31=0D
-IRQ: 276 CPU: 0-31=0D
-IRQ: 277 CPU: 0-31=0D
-IRQ: 278 CPU: 0-31=0D
-IRQ: 279 CPU: 0-31=0D
-IRQ: 280 CPU: 0-31=0D
-IRQ: 281 CPU: 0-31=0D
-IRQ: 282 CPU: 0-31=0D
-IRQ: 283 CPU: 0-31=0D
-IRQ: 284 CPU: 0-31=0D
-IRQ: 285 CPU: 0-31=0D
-IRQ: 286 CPU: 0-31=0D
-IRQ: 287 CPU: 0-31=0D
-IRQ: 288 CPU: 0-31=0D
-IRQ: 289 CPU: 0-31=0D
-IRQ: 290 CPU: 0-31=0D
-IRQ: 291 CPU: 0-31=0D
-IRQ: 292 CPU: 0-31=0D
-IRQ: 293 CPU: 0-31=0D
-IRQ: 294 CPU: 0-31=0D
-IRQ: 295 CPU: 0-31=0D
-IRQ: 296 CPU: 0-31=0D
-IRQ: 297 CPU: 0-31=0D
-IRQ: 298 CPU: 0-31=0D
-IRQ: 299 CPU: 0-31=0D
-=0D
-With the patch:=0D
-=0D
-IRQ: 265 CPU: 0=0D
-IRQ: 266 CPU: 1=0D
-IRQ: 267 CPU: 2=0D
-IRQ: 268 CPU: 3=0D
-IRQ: 269 CPU: 4=0D
-IRQ: 270 CPU: 5=0D
-IRQ: 271 CPU: 6=0D
-IRQ: 272 CPU: 7=0D
-IRQ: 273 CPU: 8=0D
-IRQ: 274 CPU: 9=0D
-IRQ: 275 CPU: 10=0D
-IRQ: 276 CPU: 11=0D
-IRQ: 277 CPU: 12=0D
-IRQ: 278 CPU: 13=0D
-IRQ: 279 CPU: 14=0D
-IRQ: 280 CPU: 15=0D
-IRQ: 281 CPU: 16=0D
-IRQ: 282 CPU: 17=0D
-IRQ: 283 CPU: 18=0D
-IRQ: 284 CPU: 19=0D
-IRQ: 285 CPU: 20=0D
-IRQ: 286 CPU: 21=0D
-IRQ: 287 CPU: 22=0D
-IRQ: 288 CPU: 23=0D
-IRQ: 289 CPU: 24=0D
-IRQ: 290 CPU: 25=0D
-IRQ: 291 CPU: 26=0D
-IRQ: 292 CPU: 27=0D
-IRQ: 293 CPU: 28=0D
-IRQ: 294 CPU: 29=0D
-IRQ: 295 CPU: 30=0D
-IRQ: 299 CPU: 31=0D
-=0D
-This matches what we have on an x86_64 system.=0D
-=0D
-v3: update changelog of PATCH 1 with comments from Thomas Gleixner and=0D
-    Marc Zyngier.=0D
-v2: add a wrapper around original irq_create_mapping() with the=0D
-    affinity parameter. Update comments=0D
-=0D
-Laurent Vivier (2):=0D
-  genirq/irqdomain: Add an irq_create_mapping_affinity() function=0D
-  powerpc/pseries: pass MSI affinity to irq_create_mapping()=0D
-=0D
- arch/powerpc/platforms/pseries/msi.c |  3 ++-=0D
- include/linux/irqdomain.h            | 12 ++++++++++--=0D
- kernel/irq/irqdomain.c               | 13 ++++++++-----=0D
- 3 files changed, 20 insertions(+), 8 deletions(-)=0D
-=0D
--- =0D
-2.28.0=0D
-=0D
+There is currently no way to convey the affinity of an interrupt
+via irq_create_mapping(), which creates issues for devices that
+expect that affinity to be managed by the kernel.
+
+In order to sort this out, rename irq_create_mapping() to
+irq_create_mapping_affinity() with an additional affinity parameter
+that can conveniently passed down to irq_domain_alloc_descs().
+
+irq_create_mapping() is then re-implemented as a wrapper around
+irq_create_mapping_affinity().
+
+Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+Reviewed-by: Greg Kurz <groug@kaod.org>
+---
+ include/linux/irqdomain.h | 12 ++++++++++--
+ kernel/irq/irqdomain.c    | 13 ++++++++-----
+ 2 files changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 71535e87109f..ea5a337e0f8b 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -384,11 +384,19 @@ extern void irq_domain_associate_many(struct irq_domain *domain,
+ extern void irq_domain_disassociate(struct irq_domain *domain,
+ 				    unsigned int irq);
+ 
+-extern unsigned int irq_create_mapping(struct irq_domain *host,
+-				       irq_hw_number_t hwirq);
++extern unsigned int irq_create_mapping_affinity(struct irq_domain *host,
++				      irq_hw_number_t hwirq,
++				      const struct irq_affinity_desc *affinity);
+ extern unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec);
+ extern void irq_dispose_mapping(unsigned int virq);
+ 
++static inline unsigned int irq_create_mapping(struct irq_domain *host,
++					      irq_hw_number_t hwirq)
++{
++	return irq_create_mapping_affinity(host, hwirq, NULL);
++}
++
++
+ /**
+  * irq_linear_revmap() - Find a linux irq from a hw irq number.
+  * @domain: domain owning this hardware interrupt
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index cf8b374b892d..e4ca69608f3b 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -624,17 +624,19 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
+ EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
+ 
+ /**
+- * irq_create_mapping() - Map a hardware interrupt into linux irq space
++ * irq_create_mapping_affinity() - Map a hardware interrupt into linux irq space
+  * @domain: domain owning this hardware interrupt or NULL for default domain
+  * @hwirq: hardware irq number in that domain space
++ * @affinity: irq affinity
+  *
+  * Only one mapping per hardware interrupt is permitted. Returns a linux
+  * irq number.
+  * If the sense/trigger is to be specified, set_irq_type() should be called
+  * on the number returned from that call.
+  */
+-unsigned int irq_create_mapping(struct irq_domain *domain,
+-				irq_hw_number_t hwirq)
++unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
++				       irq_hw_number_t hwirq,
++				       const struct irq_affinity_desc *affinity)
+ {
+ 	struct device_node *of_node;
+ 	int virq;
+@@ -660,7 +662,8 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+ 	}
+ 
+ 	/* Allocate a virtual interrupt number */
+-	virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node), NULL);
++	virq = irq_domain_alloc_descs(-1, 1, hwirq, of_node_to_nid(of_node),
++				      affinity);
+ 	if (virq <= 0) {
+ 		pr_debug("-> virq allocation failed\n");
+ 		return 0;
+@@ -676,7 +679,7 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+ 
+ 	return virq;
+ }
+-EXPORT_SYMBOL_GPL(irq_create_mapping);
++EXPORT_SYMBOL_GPL(irq_create_mapping_affinity);
+ 
+ /**
+  * irq_create_strict_mappings() - Map a range of hw irqs to fixed linux irqs
+-- 
+2.28.0
 
