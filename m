@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D4962C482F
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 20:25:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 032FD2C4831
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Nov 2020 20:25:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725989AbgKYTYj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Nov 2020 14:24:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
+        id S1727648AbgKYTYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Nov 2020 14:24:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbgKYTYh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 14:24:37 -0500
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59021C0613D4
-        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:37 -0800 (PST)
-Received: by mail-pf1-x441.google.com with SMTP id q10so3293977pfn.0
-        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:37 -0800 (PST)
+        with ESMTP id S1727611AbgKYTYk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Nov 2020 14:24:40 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC18C0613D4
+        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:40 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id t3so3257331pgi.11
+        for <linux-pci@vger.kernel.org>; Wed, 25 Nov 2020 11:24:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KKmFfBwuIWT55bKRM4j920gs/IVGV1OenbheXaATZBc=;
-        b=g4JerMbgsWtBPU4socehCD1XPAp68kaRVKP+M0epvyN9J7pfljsUI9K2Ccfs07RzL3
-         ocS6ZLp0CWmYKIxHo7HC5us9b18zl71WlyNQ/bYAAoiYsAjMnJbDqwwqQmaqYPxXHw5m
-         DqsAcxiEbEPmGQAjQMXCwfprAvnCVzNrFOejM=
+        bh=A+TdoEe84TyXxxNLvQK1rzO9ngN0cZFReBOzLFbELZw=;
+        b=GH9vzEQSbsM8OKZax5/QzWZ4kDUVidAHV8AfehlcY0X+qD9Jik2FeoZKxYN3Ebg3Hq
+         De6/f0V7JJa0APB7aTRoMLMA6SLKwbw4YKYHExVVqmnJ+JiP/rIllvJ74YC2gQ0dHin9
+         6y8EB2+V9aNCDV7wNMzFYqv/xzVI/Ywe206Ic=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KKmFfBwuIWT55bKRM4j920gs/IVGV1OenbheXaATZBc=;
-        b=U6dCdg14aLtoTII0SUdeAAhIKLZCL1DrvuH369jczG22H+NKIwltQzV/hS73BHcsh3
-         EZfQAgTEfHmLV8PLRmtPONQkZc6oIqZKSvPJ0WXU5gGPlPW5f0n1yyJoqOdTPAxK0q8i
-         MTXIujEhXDW8KdrZoKktv0hvCgxW+i1cMEZMo43tSm75b2aWy2q8DgkpF+Eh17FatP6u
-         TUA2XKeRY/vadyLvlXkvGVaHm6jkvv3WGdO7K/GGpLYptlqSFz/uKZy93Lxwzq8nJHNg
-         iCjVnTwkFQPfuf2vW/zsbyswsaRf4xcGXTMKaMfRd7nq8M2ypqynGh2MKinGdDdhjzx1
-         1TMg==
-X-Gm-Message-State: AOAM530AdnihMYS5p1F1dLQJYqrj05LPrY4K/WmekWW3LX8zz/Y10R6V
-        dy/Ex50Rri5sYaNXL9SIIgSv/l54dQHjGsBGYzKLfpvG+CrUNXovoz2F3wnRocxFZsbpVLguRIj
-        82HDKbY6whdj3IK5BIppgBD938g8l0tuPjIm9gx2ILdu46HIpTAV3OI5FT8bJmakbIhV7uPl7KL
-        uqte0J
-X-Google-Smtp-Source: ABdhPJz6vVcoWrR8yqtqLYtufwlOsd1CczIE/cfJgEho7SPEEGDIbysVzY9piHcqK/7KbaAapHOebg==
-X-Received: by 2002:aa7:9e88:0:b029:18b:c1b7:a8cd with SMTP id p8-20020aa79e880000b029018bc1b7a8cdmr4480957pfq.21.1606332276224;
-        Wed, 25 Nov 2020 11:24:36 -0800 (PST)
+        bh=A+TdoEe84TyXxxNLvQK1rzO9ngN0cZFReBOzLFbELZw=;
+        b=fCxOp8oFc7ukhH2hOYQli3cdfy8kGKC90j+3hOz4a4VZU1XchypGI8L/htH2wVjpX2
+         wrEVUEs4GC+jahYXGwBuhdT82mIs66WKssT+UEbP4lz+n4VKlotw2IEokCssZmgfaIxD
+         dlMz/QKm/DmgKWjPddnXVSLxb+MsNBuqdbH7KUZd8DURYnoexJQ9FMciqGrBNe9BLLie
+         ezDfjkOU5I+NYdgzDdKVH1I1ureEXfE62n8PrbrWgXCwukbF3Hqmr2GbkOhb+asviHkC
+         ZHVk65XFjTgD05cLaxRHuVRHPE7pycVDicHv6MnfBrQDoYZ7hLobgX8BEWqFSwPmHvOW
+         3euA==
+X-Gm-Message-State: AOAM530bOE/rLvseZjW3t8XKoJZa6dtrECpXy1wcam3tr/raPqYZimMV
+        FgtAKcoXpY2AZbZ7TLZ1kaNAPNb0HArgFmGIvAEkfHhfdXB+1gRcAi+gi/XiHjfelPmHTxXCU2X
+        5D9BMJTeZwwmbsPhOl7MAWqUm91O12qaNE1OccZJGZvZLQc28sbUNSgz6x6oiHj1UgNVtalv81O
+        7eB5nT
+X-Google-Smtp-Source: ABdhPJwposgK3ASJeROd0YtGbYiFsiVaMVGhH8Nra5JbCSHskmj72aQKwqEp1e3OKGMKsuVf8Y0gmg==
+X-Received: by 2002:a62:768b:0:b029:197:dea6:586e with SMTP id r133-20020a62768b0000b0290197dea6586emr1054436pfc.44.1606332279039;
+        Wed, 25 Nov 2020 11:24:39 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j69sm2574885pfd.37.2020.11.25.11.24.33
+        by smtp.gmail.com with ESMTPSA id j69sm2574885pfd.37.2020.11.25.11.24.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Nov 2020 11:24:35 -0800 (PST)
+        Wed, 25 Nov 2020 11:24:38 -0800 (PST)
 From:   Jim Quinlan <james.quinlan@broadcom.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
@@ -53,162 +53,149 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v1 2/6] PCI: brcmstb: Add control of EP voltage regulator(s)
-Date:   Wed, 25 Nov 2020 14:24:19 -0500
-Message-Id: <20201125192424.14440-3-james.quinlan@broadcom.com>
+Subject: [PATCH v1 3/6] PCI: brcmstb: Do not turn off regulators if EP can wake up
+Date:   Wed, 25 Nov 2020 14:24:20 -0500
+Message-Id: <20201125192424.14440-4-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201125192424.14440-1-james.quinlan@broadcom.com>
 References: <20201125192424.14440-1-james.quinlan@broadcom.com>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000bfa0b605b4f360e2"
+        boundary="000000000000e8f3a205b4f3608a"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000bfa0b605b4f360e2
+--000000000000e8f3a205b4f3608a
 
-Control of EP regulators by the RC is needed because of the chicken-and-egg
-situation: although the regulator is "owned" by the EP and would be best
-handled on its driver, the EP cannot be discovered and probed unless its
-regulator is already turned on.
+If any downstream device may wake up during S2/S3 suspend, we do not want
+to turn off its power when suspending.
 
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 66 +++++++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 56 ++++++++++++++++++++++++---
+ 1 file changed, 50 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index bea86899bd5d..34d6bad07b66 100644
+index 34d6bad07b66..9b888846f0bc 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -23,6 +23,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/printk.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-@@ -210,6 +211,18 @@ enum pcie_type {
- 	BCM2711,
- };
+@@ -193,6 +193,7 @@ static inline void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32
+ static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val);
+ static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val);
+ static inline void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val);
++static bool brcm_pcie_link_up(struct brcm_pcie *pcie);
  
-+enum pcie_regulators {
-+	VPCIE12V,
-+	VPCIE3V3,
-+	VPCIE1V8,
-+	VPCIE0V9,
-+	PCIE_REGULATORS_MAX,
-+};
-+
-+static const char *ep_regulator_names[PCIE_REGULATORS_MAX] = {
-+	"vpcie12v", "vpcie3v3", "vpcie1v8", "vpcie0v9",
-+};
-+
- struct pcie_cfg_data {
- 	const int *offsets;
- 	const enum pcie_type type;
-@@ -287,8 +300,53 @@ struct brcm_pcie {
- 	u32			hw_rev;
- 	void			(*perst_set)(struct brcm_pcie *pcie, u32 val);
+ enum {
+ 	RGR1_SW_INIT_1,
+@@ -302,6 +303,7 @@ struct brcm_pcie {
  	void			(*bridge_sw_init_set)(struct brcm_pcie *pcie, u32 val);
-+	struct regulator	*regulators[PCIE_REGULATORS_MAX];
-+	int			num_regulators;
+ 	struct regulator	*regulators[PCIE_REGULATORS_MAX];
+ 	int			num_regulators;
++	bool			ep_wakeup_capable;
  };
  
-+static int brcm_parse_regulators(struct brcm_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	struct regulator *ep_reg;
-+	int i;
+ static int brcm_parse_regulators(struct brcm_pcie *pcie)
+@@ -324,18 +326,60 @@ static int brcm_parse_regulators(struct brcm_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static void brcm_set_regulators(struct brcm_pcie *pcie, bool on)
++static int pci_dev_may_wakeup(struct pci_dev *dev, void *data)
+ {
++	bool *ret = data;
 +
-+	for (i = 0; i < PCIE_REGULATORS_MAX; i++) {
-+		ep_reg = devm_regulator_get_optional(dev, ep_regulator_names[i]);
-+		if (IS_ERR(ep_reg)) {
-+			if (PTR_ERR(ep_reg) == -ENODEV)
-+				continue;
-+			dev_err(dev, "failed to get regulator %s\n", ep_regulator_names[i]);
-+			return PTR_ERR(ep_reg);
-+		}
-+		pcie->regulators[i] = ep_reg;
-+		pcie->num_regulators++;
++	if (device_may_wakeup(&dev->dev)) {
++		*ret = true;
++		dev_dbg(&dev->dev, "disable cancelled for wake-up device\n");
 +	}
-+	return 0;
++	return (int) *ret;
 +}
 +
-+static void brcm_set_regulators(struct brcm_pcie *pcie, bool on)
++enum {
++	TURN_OFF,		/* Turn egulators off, unless an EP is wakeup-capable */
++	TURN_OFF_ALWAYS,	/* Turn Regulators off, no exceptions */
++	TURN_ON,		/* Turn regulators on, unless pcie->ep_wakeup_capable */
++};
++
++static void brcm_set_regulators(struct brcm_pcie *pcie, int how)
 +{
-+	struct device *dev = pcie->dev;
-+	int ret, i;
-+
-+	if (pcie->num_regulators == 0)
-+		return;
-+
-+	for (i = 0; i < PCIE_REGULATORS_MAX; i++) {
-+		if (!pcie->regulators[i])
-+			continue;
-+		if (on) {
-+			ret = regulator_enable(pcie->regulators[i]);
-+			dev_dbg(dev, "enable regulator %s (%s)\n",
-+				ep_regulator_names[i], ret ? "fail" : "pass");
-+		} else {
-+			ret = regulator_disable(pcie->regulators[i]);
-+			dev_dbg(dev, "disable regulator %s (%s)\n",
-+				ep_regulator_names[i], ret ? "fail" : "pass");
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+ 	struct device *dev = pcie->dev;
+ 	int ret, i;
+ 
+ 	if (pcie->num_regulators == 0)
+ 		return;
+ 
++	if (how == TURN_ON) {
++		if (pcie->ep_wakeup_capable) {
++			/*
++			 * We are resuming from a suspend.  In the
++			 * previous suspend we did not disable the power
++			 * supplies, so there is no need to enable them
++			 * (and falsely increase their usage count).
++			 */
++			pcie->ep_wakeup_capable = false;
++			return;
++		}
++	} else if (how == TURN_OFF) {
++		/*
++		 * If at least one device on this bus is enabled as a
++		 * wake-up source, do not turn off regulators.
++		 */
++		pcie->ep_wakeup_capable = false;
++		if (bridge->bus && brcm_pcie_link_up(pcie)) {
++			pci_walk_bus(bridge->bus, pci_dev_may_wakeup, &pcie->ep_wakeup_capable);
++			if (pcie->ep_wakeup_capable)
++				return;
 +		}
 +	}
-+}
 +
- /*
-  * This is to convert the size of the inbound "BAR" region to the
-  * non-linear values of PCIE_X_MISC_RC_BAR[123]_CONFIG_LO.SIZE
-@@ -1139,6 +1197,7 @@ static int brcm_pcie_suspend(struct device *dev)
+ 	for (i = 0; i < PCIE_REGULATORS_MAX; i++) {
+ 		if (!pcie->regulators[i])
+ 			continue;
+-		if (on) {
++		if (how == TURN_ON) {
+ 			ret = regulator_enable(pcie->regulators[i]);
+ 			dev_dbg(dev, "enable regulator %s (%s)\n",
+ 				ep_regulator_names[i], ret ? "fail" : "pass");
+@@ -1197,7 +1241,7 @@ static int brcm_pcie_suspend(struct device *dev)
  	brcm_pcie_turn_off(pcie);
  	ret = brcm_phy_stop(pcie);
  	clk_disable_unprepare(pcie->clk);
-+	brcm_set_regulators(pcie, false);
+-	brcm_set_regulators(pcie, false);
++	brcm_set_regulators(pcie, TURN_OFF);
  
  	return ret;
  }
-@@ -1151,6 +1210,7 @@ static int brcm_pcie_resume(struct device *dev)
+@@ -1210,7 +1254,7 @@ static int brcm_pcie_resume(struct device *dev)
  	int ret;
  
  	base = pcie->base;
-+	brcm_set_regulators(pcie, true);
+-	brcm_set_regulators(pcie, true);
++	brcm_set_regulators(pcie, TURN_ON);
  	clk_prepare_enable(pcie->clk);
  
  	ret = brcm_phy_start(pcie);
-@@ -1189,6 +1249,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
+@@ -1249,7 +1293,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
  	brcm_phy_stop(pcie);
  	reset_control_assert(pcie->rescal);
  	clk_disable_unprepare(pcie->clk);
-+	brcm_set_regulators(pcie, false);
+-	brcm_set_regulators(pcie, false);
++	brcm_set_regulators(pcie, TURN_OFF_ALWAYS);
  }
  
  static int brcm_pcie_remove(struct platform_device *pdev)
-@@ -1238,6 +1299,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	pcie->perst_set = data->perst_set;
- 	pcie->bridge_sw_init_set = data->bridge_sw_init_set;
- 
-+	ret = brcm_parse_regulators(pcie);
-+	if (ret)
-+		return ret;
-+
- 	pcie->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pcie->base))
- 		return PTR_ERR(pcie->base);
-@@ -1273,6 +1338,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+@@ -1338,7 +1382,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
  		return ret;
  	}
  
-+	brcm_set_regulators(pcie, true);
+-	brcm_set_regulators(pcie, true);
++	brcm_set_regulators(pcie, TURN_ON);
  	ret = brcm_pcie_setup(pcie);
  	if (ret)
  		goto fail;
@@ -216,7 +203,7 @@ index bea86899bd5d..34d6bad07b66 100644
 2.17.1
 
 
---000000000000bfa0b605b4f360e2
+--000000000000e8f3a205b4f3608a
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -286,14 +273,14 @@ V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
 lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
 5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
 di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
-AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIPJSaSjVos6D
-VF93O715wZI/1Dv2+prLaufCJIuAJyiAMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTIwMTEyNTE5MjQzNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIMUUJdc2xH7j
+PJMU8Iy6ABigqAfi4coHC3egl22EEgFnMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMTEyNTE5MjQzOVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
 YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAx3zxDuGFQO05Ds4LeA9IXdz8tyS5r
-GsLQ0GXu/XdawJyWP14g78UAqWRuJI0wY2LnyTqhMN+Oahenvfwch1g4bkkSBqnUrj3E9Ybti6W3
-wIL0XIkKJIrd4CbGUsZLO2dxTNg9CwpbWh3xds5fGiqhmtXwE/8B/kV0lHjxoX27J94ALlYrt5ui
-QlnCkFeb+/HAuNbZSqhHAruqpDCWTa1Il3R2IiFWnzlF5tqecj/Lgw4yNPN5m0QDFTsONiWzPWzI
-zKWHk3R6oliWHn/a2xy1xMg+U7TCBt6Cio/mu591bwxh6q1LXqCU6g2qWquvPpM0NA6YpZdFeXxE
-Uy5unH6r
---000000000000bfa0b605b4f360e2--
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQB+vHOE91aTPNUZyyfDXKtM5f8HiCn6
+VmdENfMTPX8SQCYK9JfJxwgYTixu2OMEOJU7kImUiMrSdQiLbRaVg9oJZzUFM3+9PzFOx8QxWJrb
+BuIJRHpWZ5hnJxM8lyvCCgfJ1zRWzdrE1wtj2SyMbQdaapsp/UAjjAi2Q7hveyZ/F5lMey9ovJf8
+uawQ9Dtf4ndPHdKGYLaU+woqHaa4syhPHZl8/C8ANoZVwCrYrGnUceTe5pKIZ+NiFpogItxgDzsc
+YydEEtagsCJgAuGppv4ShZRZXyBsq5GkwvR0+CMkbmImAleM/Na7iZer3yJXfDVmxONahgFe7c/y
+sZm5OY1s
+--000000000000e8f3a205b4f3608a--
