@@ -2,66 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06ABF2C526B
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Nov 2020 11:54:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63F642C52F8
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Nov 2020 12:31:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbgKZKv3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Nov 2020 05:51:29 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45938 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgKZKv2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Nov 2020 05:51:28 -0500
-Received: by mail-ot1-f67.google.com with SMTP id k3so1486510otp.12;
-        Thu, 26 Nov 2020 02:51:26 -0800 (PST)
+        id S2389065AbgKZLaM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Nov 2020 06:30:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388808AbgKZLaM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Nov 2020 06:30:12 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE60C0613D4;
+        Thu, 26 Nov 2020 03:30:11 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id s8so1748077wrw.10;
+        Thu, 26 Nov 2020 03:30:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Xg3ChPxHBLzC8XSHVd6gyVWVYNsBjJ8+ii6EObsboRw=;
+        b=vLhO5gc72sNDeMLmAyYhqT0Ah94gB76AqnxnDR/7M96dW3ASzUSktS0WK0J8s0/k4N
+         BMyJT8yC8soDPtgJ9bUfgBSbCBzuwA6zTwRS+S4NARX2JVlBGrk+nhLBeep1X6lGX1eG
+         ehwRW8+HTVFOzuEZtpElTi2MZPrTlERjgz+nOgjnl/NhKuU2Sb14T+cqspIuZsNPQFMx
+         dRkIcQCQE4rtE+mn9RK5ppupwC/LvWppkMCIyvXR90C62EcL5Tp2ikok42I+Vtc+e2Rd
+         XX0cJ3Rh/4828sKoZ8DdWTQVgegFsu9LMdfvGnjUmG+Dn076Q6wOzEAgIKxYN+d8wj/R
+         qzPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MKsnqNHLPjfzJEz+LOz9b4IyVMWHOQQVeFeqeTFluRM=;
-        b=t7UJ+DPZvpjdYgd0jmb1WyZyrlJ3Kcvg62FtGbwxoKhZk2Xy+ir7y43yS7Iq3vb8TE
-         7V3+E8sLKwiif4Yo58zw8xzEQedal+6sdjTrlNuHl8aHS7QoC4KZllUp7KdUC98PwCJs
-         e/E8dk0sG1BAuGqjTGB5YeYbk1mWYWWYx2yNTYPJBh6AC9leRJOAgnZFOXkfwCOlK1a6
-         4hMTPzi5VjGJjsRmz0/vwXHYFNNCAj3GCDBx4SaftCuvGVfjdGIgQfDwUA78fB11oob2
-         o0r/5Hiz+Gc2TpfFzQc3X9Nc14fcf73d0r3RDTEHRMbdXs5u36VMeM9/Cv3OWoF5f++s
-         peng==
-X-Gm-Message-State: AOAM532ameRQCD9k5VLWYIrVrFDfOv5DBGl4JYVknErbIFjGHInzhwXn
-        JSRPhfl+6IYTtm4NXgvv60haxjMmM01Zzx6y85s1J0PZYUo=
-X-Google-Smtp-Source: ABdhPJxjtblWrr1n26nJp4tQDVTYSnquxSVHhmkmB6z1QxpqadgNFEOGxbonsoJaFaUa3BMwTjR/nUCfuovN7HTCbWM=
-X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr1831584otc.145.1606387886190;
- Thu, 26 Nov 2020 02:51:26 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xg3ChPxHBLzC8XSHVd6gyVWVYNsBjJ8+ii6EObsboRw=;
+        b=b0BGM7nZXzIsbNDlA8mH8O5Mgxwf8CI89Lito6Hg6if/6nLs+I74f/N7nH8OEISVr9
+         k8gb4EwsTlVcb9ov6eHovF9AQBTf5zPrlZca00R4uFAZgoJaSmI7nAN9xq3IA5Km7VWZ
+         j7viFFjDy3PXkW4Yvf2B1+f4NWm31jh9d1/+cfFUZd+Qfzc5Jf3TVLVw5muEicNArHP6
+         gaTY+opfrVzDjeRmEVL2Hfv32TCkCTX5CbSiIpjH+WKb5HODarCXCCIh3KWOyQgufxrL
+         s4SO70ro0XnPIpX9Jh0iopIQPdlriJqmhFOOdWcVHZcVtnLQ4w2aJSJq+PoTlGwPypKW
+         G9ng==
+X-Gm-Message-State: AOAM531fnmRkjMrS8HtA5s7INTYb8sfa99mSosZNr+zszO7qNJiCUfPC
+        ot/tsF7YdWI5TPVR7CZ7n9wnCTUTmK0=
+X-Google-Smtp-Source: ABdhPJyWAMOkzlh2+FXquc7q0hVfUCgbmPH8Kn7rvnJu071pXWCM+0BnQFjABEXy+VnkqFHpr8mPYg==
+X-Received: by 2002:adf:dec3:: with SMTP id i3mr3242324wrn.263.1606390210598;
+        Thu, 26 Nov 2020 03:30:10 -0800 (PST)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id h20sm7916651wmb.29.2020.11.26.03.30.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Nov 2020 03:30:09 -0800 (PST)
+Date:   Thu, 26 Nov 2020 12:30:07 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        jonathanh@nvidia.com, jingoohan1@gmail.com, kw@linux.com,
+        gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH] PCI: tegra: Move "dbi" accesses to post common DWC
+ initialization
+Message-ID: <X7+Rv8iK84k/lWlc@ulmo>
+References: <20201125192234.2270-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <20201125073303.19057-1-yuya.hamamachi.sx@renesas.com> <20201125073303.19057-2-yuya.hamamachi.sx@renesas.com>
-In-Reply-To: <20201125073303.19057-2-yuya.hamamachi.sx@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 26 Nov 2020 11:51:15 +0100
-Message-ID: <CAMuHMdVGMcEPOkofqBmwsHPGvLohYbXQ4KKvVzXd9ty1KR2K8w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: rcar-pci-ep: Document r8a7795
-To:     Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uRpyf/ZCw+A6MDI4"
+Content-Disposition: inline
+In-Reply-To: <20201125192234.2270-1-vidyas@nvidia.com>
+User-Agent: Mutt/2.0.2 (d9268908) (2020-11-20)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 8:45 AM Yuya Hamamachi
-<yuya.hamamachi.sx@renesas.com> wrote:
-> Document the support for R-Car PCIe EP on R8A7795 SoC device.
->
-> Signed-off-by: Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--uRpyf/ZCw+A6MDI4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gr{oetje,eeting}s,
+On Thu, Nov 26, 2020 at 12:52:34AM +0530, Vidya Sagar wrote:
+> commit a0fd361db8e5 ("PCI: dwc: Move "dbi", "dbi2", and "addr_space"
+> resource setup into common code") moved the code that sets up dbi_base
+> to DWC common code thereby creating a requirement to not access the "dbi"
+> region before calling common DWC initialization code. But, Tegra194
+> already had some code that programs some of the "dbi" registers resulting
+> in system crash. This patch addresses that issue by refactoring the code
+> to have accesses to the "dbi" region only after common DWC initialization.
+>=20
+> Fixes: a0fd361db8e5 ("PCI: dwc: Move "dbi", "dbi2", and "addr_space" reso=
+urce setup into common code")
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 
-                        Geert
+This, together with your other patch fixes Tegra194 PCI on top of
+next-20201126 for me, so:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Tested-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--uRpyf/ZCw+A6MDI4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl+/kbsACgkQ3SOs138+
+s6Fk1w/+Mq+/FnR7JB8L8JAdeYVHpnSPDhRK2/CIhYAjkL8BC5MOu6+d/0f3yeE/
+UV4jBmvKO+bGV386mBWMtCYxEDPgMh5D6Fem3EVs2y5siekXvDSiIsH0vbcPAbNM
+B4XU0eTzINlrQN+la5MWHCVbb/RapCbdL8F1ygKbMxVXNKfnzEP03QQpYNhvRjTX
+ys5TJY0ds3ILTL3mQ2aCy8Rk8c+wYafNk5yqgxDTvMTkYVfGeSuUECyM23rFe3Le
+6TpOPQ/ZpaSa7jjxzkkGLAkVnJB2MPv4FyguMrrRy9pUGQfqxvyrpRlQ8l9y5dyK
+O6hGQclhyAM5biNuCntcGZpr2mLvCp43lYiZs0QVNPsiiZeC1Xgt9TtkiEyb64Ko
+azW8gwo4O8zGTGOq6YKeQXpUOrcOSqysaldxQKB4cyLtrL5K5digBTdzLL9LdOXd
+ZbuyeTQeGElYMjKGCniriofPmI1TLYiTMPLm83kk6SAFKrAa1a4aVyp/6VyRENou
+U/fC2ko6cWQo/r6Hvr/is6d8QB89f4ekj4e2YEnpX4//t6GqixM7Qmxe31u3kR0F
+PQjaeUpmk1r3qdYH9O3fYSjwhZMj+sy+zNzOy8NHZD0EHUdCpqXHfB6bVUxC98jq
+IsctYY9Ij52LNQW8d9EW8+XFrhgluiWuUepM545GsYLSZKce07Y=
+=qg65
+-----END PGP SIGNATURE-----
+
+--uRpyf/ZCw+A6MDI4--
