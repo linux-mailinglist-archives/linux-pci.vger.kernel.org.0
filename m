@@ -2,140 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AE382C5E23
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 00:27:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DEF82C5E4A
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 00:46:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391939AbgKZX1j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Nov 2020 18:27:39 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59446 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391933AbgKZX1j (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Nov 2020 18:27:39 -0500
+        id S2388662AbgKZXqC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Nov 2020 18:46:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729501AbgKZXqC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Nov 2020 18:46:02 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B993AC0613D4;
+        Thu, 26 Nov 2020 15:46:01 -0800 (PST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1606433255;
+        s=2020; t=1606434359;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eBVhEzk7XlmTATSUpd0ZUCNVKjbzeV4u/WeZy8k6QSE=;
-        b=BUAsYzDmbBK9GP5mJvG6z312SvdOBxxt+8rHMij02fImgVcGGRpsyfI9TeoKSX92O25DR0
-        N+E3C27Y5fX/whqcHjVqf2dp3CfojJ/QRo+H5zichl2CwMoDQAY3kizHBws9HLoJWDuv6T
-        uWNIlekfTm/NfLQ4UcGpufXADZpToMEXxkcl8qbXDtF1x10n6JqfCcQF8ustciIZpUC009
-        jSqxgIlLZxMXyJPT38BZptMi05Y7MmCjVsJssWiyKpyjbbkb4BQgAhtY2evBP7JU1xtTS9
-        V2cCmr386UdKu56TaNURzzOlzSNC1xkHYUxbsuZtXhwPUw4f6/X1rKgB8xfBEg==
+        bh=jm3trDZs2718Nq5qmyX6yF17hhp4QM/wTJbnNLUJFxM=;
+        b=iZi1qo83o5fs+vlu4+dekBXqIV8GFGw7W/dxJXPxjlj8pJbInC3lHg44oYBn4uF8lQegya
+        XEnbgxLmQcBDq25U6kmKG+svIACh4OdheTYNY7zq6PnSgYvCz13lloj8xIhk+0oHD24BTG
+        oqzucwF40KrXG8F6fEMG250XrKzEONUnl7l6ecvxV/6NXQ2es2nKydtlKnDBpETYYVGI+M
+        v7Zp8dbvogMn7AES0KszTsLHC13i/oFpOuA6joxchtavJH7hfGgoFVMj29Ase2nXpuOEfs
+        oBVqWW1/zLyqxCujAPWlEn00+njmCPvMRHylWtNCNmigolvRPl7tVhIw05Qogg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1606433255;
+        s=2020e; t=1606434359;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eBVhEzk7XlmTATSUpd0ZUCNVKjbzeV4u/WeZy8k6QSE=;
-        b=x1GABIcVYN9LeOdipeyJuWVbE15/hWvOTSR0jXplMvulINu6oNPfvgf1+YpMUXYCEX+fw8
-        21I1ffpCrqOSlcCQ==
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        rui.zhang@intel.com, len.brown@intel.com
-Subject: Re: [PATCH] x86/PCI: Convert force_disable_hpet() to standard quirk
-In-Reply-To: <20201126012421.GA92582@shbuild999.sh.intel.com>
-References: <20201119181904.149129-1-helgaas@kernel.org> <87v9dtk3j4.fsf@nanos.tec.linutronix.de> <20201126012421.GA92582@shbuild999.sh.intel.com>
-Date:   Fri, 27 Nov 2020 00:27:34 +0100
-Message-ID: <87eekfk8bd.fsf@nanos.tec.linutronix.de>
+        bh=jm3trDZs2718Nq5qmyX6yF17hhp4QM/wTJbnNLUJFxM=;
+        b=py+qfo2WlcnagPSLxEU+AK7kCxekA8q6QytsGP4WVywQr+Sk4nJZJ7lHNK4tVBBq3kzISq
+        eLF7TLoc/rRGikDQ==
+To:     Stefan =?utf-8?Q?B=C3=BChler?= 
+        <stefan.buehler@tik.uni-stuttgart.de>,
+        sean.v.kelley@linux.intel.com
+Cc:     bhelgaas@google.com, bp@alien8.de, corbet@lwn.net,
+        kar.hin.ong@ni.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        mingo@redhat.com, sassmann@kpanic.de, x86@kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: boot interrupt quirk (also in 4.19.y) breaks serial ports (was: [PATCH v2 0/2] pci: Add boot interrupt quirk mechanism for Xeon chipsets)
+In-Reply-To: <d512469f-de04-2f66-ca42-21ec3c5331ba@tik.uni-stuttgart.de>
+References: <20200220192930.64820-1-sean.v.kelley@linux.intel.com> <b2da25c8-121a-b241-c028-68e49bab0081@tik.uni-stuttgart.de> <87zh35k5xa.fsf@nanos.tec.linutronix.de> <d512469f-de04-2f66-ca42-21ec3c5331ba@tik.uni-stuttgart.de>
+Date:   Fri, 27 Nov 2020 00:45:59 +0100
+Message-ID: <87blfjk7go.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Feng,
+Stefan,
 
-On Thu, Nov 26 2020 at 09:24, Feng Tang wrote:
-> On Wed, Nov 25, 2020 at 01:46:23PM +0100, Thomas Gleixner wrote:
->> Now the more interesting question is why this needs to be a PCI quirk in
->> the first place. Can't we just disable the HPET based on family/model
->> quirks?
->> 
->> e0748539e3d5 ("x86/intel: Disable HPET on Intel Ice Lake platforms")
->> f8edbde885bb ("x86/intel: Disable HPET on Intel Coffee Lake H platforms")
->> fc5db58539b4 ("x86/quirks: Disable HPET on Intel Coffe Lake platforms")
->> 62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail platform")
-
-> I added this commit, and I can explain some for Baytrail. There was
-> some discussion about the way to disable it:
-> https://lore.kernel.org/lkml/20140328073718.GA12762@feng-snb/t/
+On Wed, Nov 25 2020 at 14:41, Stefan B=C3=BChler wrote:
+> On 11/25/20 12:54 PM, Thomas Gleixner wrote:
+>> On Wed, Sep 16 2020 at 12:12, Stefan B=C3=BChler wrote:
+>> Can you please provide the output of:
+>>=20
+>>  for ID in 05:00.0 06:00.0 06:00.1 06:01.0 06:01.1; do lspci -s $ID -vvv=
+; done
 >
-> It uses PCI ID early quirk in the hope that later Baytrail stepping
-> doesn't have the problem. And later on, there was official document
-> (section 18.10.1.3 http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/atom-z8000-datasheet-vol-1.pdf)
-> stating Baytrail's HPET halts in deep idle. So I think your way of 
-> using CPUID to disable Baytrail HPET makes more sense.
-
-Correct.
-
->> I might be missing something here, but in general on anything modern
->> HPET is mostly useless.
+> See attachment.
 >
-> IIUC, nowdays HPET's main use is as a clocksource watchdog monitor.
+> Also I boot the affected systems now with "pci=3Dnoioapicquirk", which
+> "solves" the issue too (instead of patching the kernel).
 
-Plus for the TSC refined calibration, where it is really better than
-anything else we have _if_ it is functional.
+Yes, it skips the quirks.
 
-> And in one debug case, we found it still useful. The debug platform has 
-> early serial console which prints many messages in early boot phase,
-> when the HPET is disabled, the software 'jiffies' clocksource will
-> be used as the monitor. Early printk will disable interrupt will
-> printing message, and this could be quite long for a slow 115200
-> device, and cause the periodic HW timer interrupt get missed, and
-> make the 'jiffies' clocksource not accurate, which will in turn
-> judge the TSC clocksrouce inaccurate, and disablt it. (Adding Rui,
-> Len for more details)
+> 05:00.0 PCI bridge: PLX Technology, Inc. PEX8112 x1 Lane PCI Express-to-P=
+CI Bridge (rev aa) (prog-if 00 [Normal decode])
+> 	Physical Slot: 1
+> 	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Step=
+ping- SERR+ FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbort=
+- <MAbort- >SERR- <PERR- INTx-
+> 	Latency: 0, Cache Line Size: 32 bytes
+> 	Interrupt: pin A routed to IRQ 16
+> 	NUMA node: 0
+> 	Bus: primary=3D05, secondary=3D06, subordinate=3D06, sec-latency=3D64
+> 	I/O behind bridge: 0000e000-0000efff
+> 	Memory behind bridge: fb400000-fb4fffff
+> 	Prefetchable memory behind bridge: fff00000-000fffff
+> 	Secondary status: 66MHz+ FastB2B- ParErr- DEVSEL=3Dmedium >TAbort- <TAbo=
+rt- <MAbort+ <SERR- <PERR-
+> 	BridgeCtl: Parity- SERR+ NoISA- VGA- MAbort- >Reset- FastB2B-
+> 		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+> 	Capabilities: <access denied>
 
-Yes, that can happen. But OTOH, we should start to think about the
-requirements for using the TSC watchdog.
-
-I'm inclined to lift that requirement when the CPU has:
-
-    1) X86_FEATURE_CONSTANT_TSC
-    2) X86_FEATURE_NONSTOP_TSC
-    3) X86_FEATURE_NONSTOP_TSC_S3
-    4) X86_FEATURE_TSC_ADJUST
-    
-    5) At max. 4 sockets
-
-After two decades of horrors we're finally at a point where TSC seems to
-be halfways reliable and less abused by BIOS tinkerers. TSC_ADJUST was
-really key as we can now detect even small modifications reliably and
-the important point is that we can cure them as well (not pretty but
-better than all other options).
-
-The only nasty one in the list above is #5 because AFAIK there is still
-no architecural guarantee for TSCs being synchronized on machines with
-more than 4 sockets. I might be wrong, but then nobody told me.
-
-The only reason I hate to disable HPET upfront at least during boot is
-that HPET is the best mechanism for the refined TSC calibration. PMTIMER
-sucks because it's slow and wraps around pretty quick.
-
-So we could do the following even on platforms where HPET stops in some
-magic PC? state:
-
-  - Register it during early boot as clocksource
-
-  - Prevent the enablement as clockevent and the chardev hpet timer muck
-
-  - Prevent the magic PC? state up to the point where the refined
-    TSC calibration is finished.
-
-  - Unregister it once the TSC has taken over as system clocksource and
-    enable the magic PC? state in which HPET gets disfunctional.
-
-Hmm?
+Can you please run this as root so the Capabilities are accessible?
 
 Thanks,
 
         tglx
-
-
-
