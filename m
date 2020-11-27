@@ -2,124 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DCB32C5E92
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 02:48:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EEA42C5FF6
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 07:11:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392137AbgK0Brv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Nov 2020 20:47:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbgK0Bru (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Nov 2020 20:47:50 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 911E3C0613D4;
-        Thu, 26 Nov 2020 17:47:50 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id lt17so5421390ejb.3;
-        Thu, 26 Nov 2020 17:47:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TH1ugCiizifOLOya1BWGmhh3l5zdn0yT/6/5FRCAhqM=;
-        b=LsycItdgqAudg+ZZyX4TzvWnfqwoBxg5TiM7PFZbr7EVt+T0mze5yYEi1tvqwPpNqk
-         2cB+6xwRR4H2oNK3lbLxHwuVC7uVJspP5Z4tl23P1LayAMbqqA8WX4tgB3n6Q4luH9e6
-         J5xWyn3MLgx4KuwNA4ema750bSJ0GJR0FMzbq656+CRehO2iSR5GTVRu5QNdgLskpjKq
-         OFPXyOOYlngIVFRT8G5syxQgYAyShH+Xnmj1RG1sop14W4pIts+fFz0AUnVow15aV5Ic
-         D0LRtgbEi+0WwGopFl5ZGmS2Fu2mYyQmHKlvm1jVrqudsyG22qGfjdUUzZ1awTlQgjCF
-         fG9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TH1ugCiizifOLOya1BWGmhh3l5zdn0yT/6/5FRCAhqM=;
-        b=U/woaoeFwzogZwQ2LEJOydtNATfbjRhenBA7X2vCQhBA/rmekzaq88qXMEtdQ0uFyu
-         sakNW/0g2QQFp7eM8PA8deeTGcu80A68UZCBS8JDQIsMHnzdcQB+RZWNaS1Vz++KYyC0
-         jkP4CKkS97rejQgvY6NmBmc+5m6uyM3UWNpo+hrRwKGbcXLDnMMjUyRgyhAGM53JBbCa
-         8Odn1Y/zc59R3r61wWAZrbHdX1jwoNWUh/N4sgEd3aX7UhSTMfVdFliqJI8KhoMtOkGp
-         yx1yRMYB6toplZTgYDyWb1JjbSjpZwiWmJMpJsUAkh1vdwG++WcXExTdDfIDncusNco5
-         eIAg==
-X-Gm-Message-State: AOAM530jZr10AB2lXr8sXf6Fn0lhwEdE7hPgFZDhUXDvvAJrB69mGxSR
-        7cb8HsPmlrFEnUR1BeI2OrbS6cTCHzn25cH8VN0=
-X-Google-Smtp-Source: ABdhPJzQATMFG/XfORq7/Zk2KQzfa7mmP89oZeVU4Vs6Fq5jyM8zgUdiaPNGHBYzVpGYEwYughHTEvtUDQoDO6MEGTg=
-X-Received: by 2002:a17:906:94ca:: with SMTP id d10mr3805902ejy.62.1606441669237;
- Thu, 26 Nov 2020 17:47:49 -0800 (PST)
+        id S2392536AbgK0GLg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Nov 2020 01:11:36 -0500
+Received: from mga12.intel.com ([192.55.52.136]:17080 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392534AbgK0GLg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Nov 2020 01:11:36 -0500
+IronPort-SDR: u7upJnnBwpSz2VftdbitE9uZsb2uWuZkE77Bw9KmBumAfI53oP11WbF/6aiTTEtsHWr45hTd5S
+ ofpS8S3rAuyA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9817"; a="151612401"
+X-IronPort-AV: E=Sophos;i="5.78,373,1599548400"; 
+   d="scan'208";a="151612401"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2020 22:11:35 -0800
+IronPort-SDR: uHGVGAOjkyJ4ApbHIf6yu/RmYkcjGgPhUcbrMs9Cap5pR5ODcduVWkkj5PsvF9ZAmKGirAIS0n
+ RR4MvVmEzPzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,373,1599548400"; 
+   d="scan'208";a="479584662"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.98])
+  by orsmga004.jf.intel.com with ESMTP; 26 Nov 2020 22:11:32 -0800
+Date:   Fri, 27 Nov 2020 14:11:31 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        rui.zhang@intel.com, len.brown@intel.com
+Subject: Re: [PATCH] x86/PCI: Convert force_disable_hpet() to standard quirk
+Message-ID: <20201127061131.GB105524@shbuild999.sh.intel.com>
+References: <20201119181904.149129-1-helgaas@kernel.org>
+ <87v9dtk3j4.fsf@nanos.tec.linutronix.de>
+ <20201126012421.GA92582@shbuild999.sh.intel.com>
+ <87eekfk8bd.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <6349d22f-cf49-bab4-ad0f-a928e65622af@canonical.com>
-In-Reply-To: <6349d22f-cf49-bab4-ad0f-a928e65622af@canonical.com>
-From:   Ethan Zhao <xerces.zhao@gmail.com>
-Date:   Fri, 27 Nov 2020 09:47:37 +0800
-Message-ID: <CAKF3qh11ZO75verB+SqefvCfPDPjee3f-1=GJZoR3CdkAtzH_g@mail.gmail.com>
-Subject: Re: [PATCH v7 1/2] PCI/ERR: Call pci_bus_reset() before calling
- ->slot_reset() callback
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>, knsathya@kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Ethan Zhao <haifeng.zhao@intel.com>,
-        chris.newcomer@canonical.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eekfk8bd.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 2:47 AM Guilherme G. Piccoli
-<gpiccoli@canonical.com> wrote:
->
-> Hi Kuppuswamy Sathyanarayanan (and all involved here), thanks for the
-> patch! I'd like to ask what is the status of this patchset - I just
-> "parachuted" in the issue, and by tracking the linux-pci ML, I found
-> this V7 (and all previous versions since V2). Also, noticed that Jay's
-> email might have gotten lost in translation (he's not CCed in latest
-> versions of the patchset).
->
-> I was able to find even another interesting thread that might be
-> related, Ethan's patchset. So, if any of the developers can clarify the
+Hi Thomas,
 
-Thank you for asking.
+On Fri, Nov 27, 2020 at 12:27:34AM +0100, Thomas Gleixner wrote:
+> Feng,
+> 
+> On Thu, Nov 26 2020 at 09:24, Feng Tang wrote:
+> > On Wed, Nov 25, 2020 at 01:46:23PM +0100, Thomas Gleixner wrote:
+> >> Now the more interesting question is why this needs to be a PCI quirk in
+> >> the first place. Can't we just disable the HPET based on family/model
+> >> quirks?
+> >> 
+> >> e0748539e3d5 ("x86/intel: Disable HPET on Intel Ice Lake platforms")
+> >> f8edbde885bb ("x86/intel: Disable HPET on Intel Coffee Lake H platforms")
+> >> fc5db58539b4 ("x86/quirks: Disable HPET on Intel Coffe Lake platforms")
+> >> 62187910b0fc ("x86/intel: Add quirk to disable HPET for the Baytrail platform")
+> 
+> > I added this commit, and I can explain some for Baytrail. There was
+> > some discussion about the way to disable it:
+> > https://lore.kernel.org/lkml/20140328073718.GA12762@feng-snb/t/
+> >
+> > It uses PCI ID early quirk in the hope that later Baytrail stepping
+> > doesn't have the problem. And later on, there was official document
+> > (section 18.10.1.3 http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/atom-z8000-datasheet-vol-1.pdf)
+> > stating Baytrail's HPET halts in deep idle. So I think your way of 
+> > using CPUID to disable Baytrail HPET makes more sense.
+> 
+> Correct.
+> 
+> >> I might be missing something here, but in general on anything modern
+> >> HPET is mostly useless.
+> >
+> > IIUC, nowdays HPET's main use is as a clocksource watchdog monitor.
+> 
+> Plus for the TSC refined calibration, where it is really better than
+> anything else we have _if_ it is functional.
+> 
+> > And in one debug case, we found it still useful. The debug platform has 
+> > early serial console which prints many messages in early boot phase,
+> > when the HPET is disabled, the software 'jiffies' clocksource will
+> > be used as the monitor. Early printk will disable interrupt will
+> > printing message, and this could be quite long for a slow 115200
+> > device, and cause the periodic HW timer interrupt get missed, and
+> > make the 'jiffies' clocksource not accurate, which will in turn
+> > judge the TSC clocksrouce inaccurate, and disablt it. (Adding Rui,
+> > Len for more details)
+> 
+> Yes, that can happen. But OTOH, we should start to think about the
+> requirements for using the TSC watchdog.
+> 
+> I'm inclined to lift that requirement when the CPU has:
+> 
+>     1) X86_FEATURE_CONSTANT_TSC
+>     2) X86_FEATURE_NONSTOP_TSC
 
-> current status of this patchset or if the functionality hereby proposed
-> ended-up being implemented in another patch, I appreciate a lot.
->
-> Thanks in advance! Below, some references to lore archives.
-> Cheers,
->
->
-> Guilherme
->
->
-> References:
->
-> This V7 link:
-> https://lore.kernel.org/linux-pci/546d346644654915877365b19ea534378db0894d.1602788209.git.sathyanarayanan.kuppuswamy@linux.intel.com/
->
-> V6:
-> https://lore.kernel.org/linux-pci/546d346644654915877365b19ea534378db0894d.1602663397.git.sathyanarayanan.kuppuswamy@linux.intel.com/#t
->
-> V5:
-> https://lore.kernel.org/linux-pci/162495c76c391de6e021919e2b69c5cd2dbbc22a.1602632140.git.sathyanarayanan.kuppuswamy@linux.intel.com/
->
-> V4:
-> https://lore.kernel.org/linux-pci/5c5bca0bdb958e456176fe6ede10ba8f838fbafc.1602263264.git.sathyanarayanan.kuppuswamy@linux.intel.com/
->
-> V3:
-> https://lore.kernel.org/linux-pci/cbba08a5e9ca62778c8937f44eda2192a2045da7.1595617529.git.sathyanarayanan.kuppuswamy@linux.intel.com/
->
-> V2:
-> https://lore.kernel.org/linux-pci/ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com/#t
->
-> Ethan's related(?) patchset, V8 :
-> https://lore.kernel.org/linux-pci/20201007113158.48933-1-haifeng.zhao@intel.com/#t
+>     3) X86_FEATURE_NONSTOP_TSC_S3
+IIUC, this feature exists for several generations of Atom platforms,
+and it is always coupled with 1) and 2), so it could be skipped for
+the checking.
+	
+>     4) X86_FEATURE_TSC_ADJUST
+>     
+>     5) At max. 4 sockets
+> 
+> After two decades of horrors we're finally at a point where TSC seems to
+> be halfways reliable and less abused by BIOS tinkerers. TSC_ADJUST was
+> really key as we can now detect even small modifications reliably and
+> the important point is that we can cure them as well (not pretty but
+> better than all other options).
+> 
+> The only nasty one in the list above is #5 because AFAIK there is still
+> no architecural guarantee for TSCs being synchronized on machines with
+> more than 4 sockets. I might be wrong, but then nobody told me.
+> 
+> The only reason I hate to disable HPET upfront at least during boot is
+> that HPET is the best mechanism for the refined TSC calibration. PMTIMER
+> sucks because it's slow and wraps around pretty quick.
+> 
+> So we could do the following even on platforms where HPET stops in some
+> magic PC? state:
+> 
+>   - Register it during early boot as clocksource
+> 
+>   - Prevent the enablement as clockevent and the chardev hpet timer muck
+> 
+>   - Prevent the magic PC? state up to the point where the refined
+>     TSC calibration is finished.
+> 
+>   - Unregister it once the TSC has taken over as system clocksource and
+>     enable the magic PC? state in which HPET gets disfunctional.
 
-This patchset I think need more discussion and maintainer's (Bjorn's)
-suggestion or advice.
-You are welcome to try it and give me the feedback.
+This looks reasonable to me. 
+
+I have thought about lowering the hpet rating to lower than PMTIMER, so it
+still contributes in early boot phase, and fades out after PMTIMER is
+initialised.
 
 Thanks,
-Ethan
+Feng
 
->
+> Hmm?
+> 
+> Thanks,
+> 
+>         tglx
+> 
+> 
