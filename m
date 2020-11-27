@@ -2,184 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA25B2C69C9
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 17:45:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F5732C6B6A
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 19:12:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbgK0QmQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Nov 2020 11:42:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731848AbgK0QmP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Nov 2020 11:42:15 -0500
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090D5C061A47
-        for <linux-pci@vger.kernel.org>; Fri, 27 Nov 2020 08:42:15 -0800 (PST)
-Received: by mail-wr1-x444.google.com with SMTP id z7so6207394wrn.3
-        for <linux-pci@vger.kernel.org>; Fri, 27 Nov 2020 08:42:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bZLO6vEx95nUtx6CuKWTcHXqu7slblRq/asiF9n4R9Q=;
-        b=bfdMAxwy52rgRxtwprlTR36vbL/WuJBHR7YFD1aEFvUfH365MSxsaWLSUxCKD/m3HH
-         9nXqhdkr9snvldILUH6ADf93IxhnUGSuGEHBM8xxC+qAhJxpphHYwfOeuyQBEI6wKeux
-         /HawjaGC1sroDImXZqjz7mDR8TMDzj7/0OJ0A=
+        id S1733041AbgK0SMU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Nov 2020 13:12:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:47459 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732755AbgK0SMU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Nov 2020 13:12:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606500738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PvVVh2WZkbAnSX5t/B+zX/WRWvJt82nXnXEMvGPZevw=;
+        b=ggsuuNciBXcWl6cOu0VynewOhZ5UZSpOcLeBgAAc/AhwEg2kD40wJMwistswKpQhaGs6gl
+        PfixS6RrCk7I67zaNcPqfGA6r1JKRzeZgkYDST49BwH8UhcszZRCnulQjOSJThVKWxVI0o
+        TdWOWSQ8bjbq5S6vx3VKKNS60F1EPYg=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-562-r8td5SadPcey54Dca-T_pA-1; Fri, 27 Nov 2020 13:12:16 -0500
+X-MC-Unique: r8td5SadPcey54Dca-T_pA-1
+Received: by mail-ej1-f70.google.com with SMTP id pv11so2236709ejb.5
+        for <linux-pci@vger.kernel.org>; Fri, 27 Nov 2020 10:12:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bZLO6vEx95nUtx6CuKWTcHXqu7slblRq/asiF9n4R9Q=;
-        b=AIJTGxoAHzwDenEopKNIhv6yfGlfZXyvhqHtnQXIjVvcedVBEPoExv0WPtkeiIG4Et
-         qheBgiaabzcEskkWttn81Dms1LaBfwaIeFLSQD5t8xpYRh4c2MmenhElDZUCm4gtV1ws
-         SASPoXu7MJRCJDbe4VTL5nUe638KBXffYxzWej88yNArliH9hc8G2awKLbwAyynluI0i
-         Vif+YibEi6jiMFMxq4l/dyp7c1SM5tixRq+Qi54vQ1KCvCFHATtdxnA4cGqNQ4Cgdots
-         x/mHo2OHdzI3iuMtPb/0sbMRjpPfLUnuv3PqqFPaeKCb72Lqc7lCy9aSxiougBonAyXK
-         mVIA==
-X-Gm-Message-State: AOAM532KRhfbmpXXYr1DMmNxuqNh5OvLM0yKUEzM5H5sJO6aQQPO+30Y
-        C/VlE/TL6RIA8l77Nq6C3In4QA==
-X-Google-Smtp-Source: ABdhPJxUCkQ6HFi0cbvCMkW5tNlgAvvq7bqvbKRVoYW9jxmRXl8bRVyZY0G/0QWerxBubewFkTik7A==
-X-Received: by 2002:adf:f8d2:: with SMTP id f18mr11408583wrq.379.1606495333818;
-        Fri, 27 Nov 2020 08:42:13 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id q12sm14859078wrx.86.2020.11.27.08.42.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Nov 2020 08:42:13 -0800 (PST)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PvVVh2WZkbAnSX5t/B+zX/WRWvJt82nXnXEMvGPZevw=;
+        b=O1xgGPAnd3fDgDSCZl42CuGW0rr/jWzIVdoVfFT0MlgCkzkLpVSottz/VZImzws+tE
+         omJ6oWNGJAsInp2eA9d6S9yva01idt7yWSX3AY9F/E2oqh4ObuOqq6zq5BYrUTljnkZE
+         vN6aRtIezplOvQqLO/JOM/qf8Nry7or1kBbJVKoG+bL0IixKqSqTTMSKkd6iqgRZmKbn
+         yMuRprZT9fWZju1xEIxkLs5V9VxwpSXZXf82d+gJMxxykDn0a4dUbJK5OkXsY+UyYQmO
+         S2T4/+qi9EdA+GCqHeS6eZGG5Q/nfbBRS9LitjquNqO4mxG50xlRoA6GJe7vUyXs1l4h
+         FxtQ==
+X-Gm-Message-State: AOAM532tifh456tH0Vf6yZ3C7K9bE0WhXhvAps1CWavjacaJr8C7k/sh
+        QQJy4cmScESfssl0yQrWZesc/7PlzhezWEFBf88rpE5No3st6kFuLh2zV1qqm4wQE/kjO+G+5oC
+        h6v0/lacSgEDOcUz/9CPH
+X-Received: by 2002:a17:906:8617:: with SMTP id o23mr4696780ejx.274.1606500735282;
+        Fri, 27 Nov 2020 10:12:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwyZU3HmLRRmc6hevuC7dKusx9uLm+xbnlpO5CjCfhATeXbQ9o9xALNF+99u8lVyGz2dxLcYQ==
+X-Received: by 2002:a17:906:8617:: with SMTP id o23mr4696763ejx.274.1606500735127;
+        Fri, 27 Nov 2020 10:12:15 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id lc18sm1454700ejb.77.2020.11.27.10.12.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Nov 2020 10:12:14 -0800 (PST)
+Subject: Re: 5.10 regression caused by: "uas: fix sdev->host->dma_dev": many
+ XHCI swiotlb buffer is full / DMAR: Device bounce map failed errors on
+ thunderbolt connected XHCI controller
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Tom Yan <tom.ty89@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v7 12/17] PCI: Revoke mappings like devmem
-Date:   Fri, 27 Nov 2020 17:41:26 +0100
-Message-Id: <20201127164131.2244124-13-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201127164131.2244124-1-daniel.vetter@ffwll.ch>
-References: <20201127164131.2244124-1-daniel.vetter@ffwll.ch>
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com>
+ <be031d15-201f-0e5c-8b0f-be030077141f@redhat.com>
+ <20201124102715.GA16983@lst.de>
+ <fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com>
+ <8a52e868-0ca1-55b7-5ad2-ddb0cbb5e45d@redhat.com>
+ <20201127161900.GA10986@lst.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <fded04e2-f2e9-de92-ab1f-5aa088904e90@redhat.com>
+Date:   Fri, 27 Nov 2020 19:12:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201127161900.GA10986@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-the region") /dev/kmem zaps ptes when the kernel requests exclusive
-acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-the default for all driver uses.
+Hi,
 
-Except there's two more ways to access PCI BARs: sysfs and proc mmap
-support. Let's plug that hole.
+On 11/27/20 5:19 PM, Christoph Hellwig wrote:
+> On Fri, Nov 27, 2020 at 01:32:16PM +0100, Hans de Goede wrote:
+>> I ran some more tests, I can confirm that reverting:
+>>
+>> 5df7ef7d32fe "uas: bump hw_max_sectors to 2048 blocks for SS or faster drives"
+>> 558033c2828f "uas: fix sdev->host->dma_dev"
+>>
+>> Makes the problem go away while running a 5.10 kernel. I also tried doubling
+>> the swiotlb size by adding: swiotlb=65536 to the kernel commandline but that
+>> does not help.
+>>
+>> Some more observations:
+>>
+>> 1. The usb-storage driver does not cause this issue, even though it has a
+>> very similar change.
+>>
+>> 2. The problem does not happen until I plug an UAS decvice into the dock.
+>>
+>> 3. The problem continues to happen even after I unplug the UAS device and
+>> rmmod the uas module
+>>
+>> 3. made me take a bit closer look to the troublesome commit, it passes:
+>> udev->bus->sysdev, which I assume is the XHCI controller itself as device
+>> to scsi_add_host_with_dma, which in turn seems to cause permanent changes
+>> to the dma settings for the XHCI controller. I'm not all that familiar with
+>> the DMA APIs but I'm getting the feeling that passing the actual XHCI-controller's
+>> device as dma-device to scsi_add_host_with_dma is simply the wrong thing to
+>> do; and that the intended effects (honor XHCI dma limits, but do not cause
+>> any changes the XHCI dma settings) should be achieved differently.
+>>
+>> Note that if this is indeed wrong, the matching usb-storage change should
+>> likely also be dropped.
+> 
+> One problem in this area is that the clamping of the DMA size through
+> dma_max_mapping_size mentioned in the commit log doesn't work when
+> swiotlb is called from intel-iommu. I think we need to wire up those
+> calls there as well.
 
-For revoke_devmem() to work we need to link our vma into the same
-address_space, with consistent vma->vm_pgoff. ->pgoff is already
-adjusted, because that's how (io_)remap_pfn_range works, but for the
-mapping we need to adjust vma->vm_file->f_mapping. The cleanest way is
-to adjust this at at ->open time:
+Ok, but that does not sound like a quick last minute fix for 5.10, so maybe
+for 5.10 we should just revert the uas and usb-storage changes which trigger
+this problem and then retry those for 5.11 ?
 
-- for sysfs this is easy, now that binary attributes support this. We
-  just set bin_attr->mapping when mmap is supported
-- for procfs it's a bit more tricky, since procfs pci access has only
-  one file per device, and access to a specific resources first needs
-  to be set up with some ioctl calls. But mmap is only supported for
-  the same resources as sysfs exposes with mmap support, and otherwise
-  rejected, so we can set the mapping unconditionally at open time
-  without harm.
+Regards,
 
-A special consideration is for arch_can_pci_mmap_io() - we need to
-make sure that the ->f_mapping doesn't alias between ioport and iomem
-space. There's only 2 ways in-tree to support mmap of ioports: generic
-pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the single
-architecture hand-rolling. Both approach support ioport mmap through a
-special pfn range and not through magic pte attributes. Aliasing is
-therefore not a problem.
-
-The only difference in access checks left is that sysfs PCI mmap does
-not check for CAP_RAWIO. I'm not really sure whether that should be
-added or not.
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
---
-v2:
-- Totally new approach: Adjust filp->f_mapping at open time. Note that
-  this now works on all architectures, not just those support
-  ARCH_GENERIC_PCI_MMAP_RESOURCE
----
- drivers/pci/pci-sysfs.c | 4 ++++
- drivers/pci/proc.c      | 1 +
- 2 files changed, 5 insertions(+)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index d15c881e2e7e..3f1c31bc0b7c 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -929,6 +929,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_io->read = pci_read_legacy_io;
- 	b->legacy_io->write = pci_write_legacy_io;
- 	b->legacy_io->mmap = pci_mmap_legacy_io;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_io);
- 	error = device_create_bin_file(&b->dev, b->legacy_io);
- 	if (error)
-@@ -941,6 +942,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_mem->size = 1024*1024;
- 	b->legacy_mem->attr.mode = 0600;
- 	b->legacy_mem->mmap = pci_mmap_legacy_mem;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_mem);
- 	error = device_create_bin_file(&b->dev, b->legacy_mem);
- 	if (error)
-@@ -1156,6 +1158,8 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 			res_attr->mmap = pci_mmap_resource_uc;
- 		}
- 	}
-+	if (res_attr->mmap)
-+		res_attr->mapping = iomem_get_mapping();
- 	res_attr->attr.name = res_attr_name;
- 	res_attr->attr.mode = 0600;
- 	res_attr->size = pci_resource_len(pdev, num);
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 3a2f90beb4cb..9bab07302bbf 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -298,6 +298,7 @@ static int proc_bus_pci_open(struct inode *inode, struct file *file)
- 	fpriv->write_combine = 0;
- 
- 	file->private_data = fpriv;
-+	file->f_mapping = iomem_get_mapping();
- 
- 	return 0;
- }
--- 
-2.29.2
+Hans 
 
