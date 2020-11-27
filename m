@@ -2,127 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B9532C65DA
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 13:44:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD11D2C694E
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Nov 2020 17:22:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgK0Mn0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Nov 2020 07:43:26 -0500
-Received: from mx.socionext.com ([202.248.49.38]:52991 "EHLO mx.socionext.com"
+        id S1731440AbgK0QTE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Nov 2020 11:19:04 -0500
+Received: from verein.lst.de ([213.95.11.211]:38050 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728013AbgK0Mn0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 27 Nov 2020 07:43:26 -0500
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 27 Nov 2020 21:43:25 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 0A07E180B37;
-        Fri, 27 Nov 2020 21:43:25 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 27 Nov 2020 21:43:43 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id BA8291A0506;
-        Fri, 27 Nov 2020 21:43:24 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Rob Herring <robh@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH] PCI: designware-ep: Fix the pci->num_{ib,ob}_windows reference before they are set
-Date:   Fri, 27 Nov 2020 21:43:22 +0900
-Message-Id: <1606481002-17154-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        id S1731437AbgK0QTE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 27 Nov 2020 11:19:04 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3D1E668B05; Fri, 27 Nov 2020 17:19:00 +0100 (CET)
+Date:   Fri, 27 Nov 2020 17:19:00 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Tom Yan <tom.ty89@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: 5.10 regression caused by: "uas: fix sdev->host->dma_dev":
+ many XHCI swiotlb buffer is full / DMAR: Device bounce map failed
+ errors on thunderbolt connected XHCI controller
+Message-ID: <20201127161900.GA10986@lst.de>
+References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com> <be031d15-201f-0e5c-8b0f-be030077141f@redhat.com> <20201124102715.GA16983@lst.de> <fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com> <8a52e868-0ca1-55b7-5ad2-ddb0cbb5e45d@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a52e868-0ca1-55b7-5ad2-ddb0cbb5e45d@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The commit 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows") gets
-the values of pci->num_ib_windows and pci->num_ob_windows from iATU
-registers instead of DT properties.
+On Fri, Nov 27, 2020 at 01:32:16PM +0100, Hans de Goede wrote:
+> I ran some more tests, I can confirm that reverting:
+> 
+> 5df7ef7d32fe "uas: bump hw_max_sectors to 2048 blocks for SS or faster drives"
+> 558033c2828f "uas: fix sdev->host->dma_dev"
+> 
+> Makes the problem go away while running a 5.10 kernel. I also tried doubling
+> the swiotlb size by adding: swiotlb=65536 to the kernel commandline but that
+> does not help.
+> 
+> Some more observations:
+> 
+> 1. The usb-storage driver does not cause this issue, even though it has a
+> very similar change.
+> 
+> 2. The problem does not happen until I plug an UAS decvice into the dock.
+> 
+> 3. The problem continues to happen even after I unplug the UAS device and
+> rmmod the uas module
+> 
+> 3. made me take a bit closer look to the troublesome commit, it passes:
+> udev->bus->sysdev, which I assume is the XHCI controller itself as device
+> to scsi_add_host_with_dma, which in turn seems to cause permanent changes
+> to the dma settings for the XHCI controller. I'm not all that familiar with
+> the DMA APIs but I'm getting the feeling that passing the actual XHCI-controller's
+> device as dma-device to scsi_add_host_with_dma is simply the wrong thing to
+> do; and that the intended effects (honor XHCI dma limits, but do not cause
+> any changes the XHCI dma settings) should be achieved differently.
+> 
+> Note that if this is indeed wrong, the matching usb-storage change should
+> likely also be dropped.
 
-However, before the values are set, the allocations in dw_pcie_ep_init()
-refer them to determine the sizes of window_map. It's necessary to refer
-the values after they are set in dw_pcie_setup().
-
-Cc: Rob Herring <robh@kernel.org>
-Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 41 ++++++++++++-------------
- 1 file changed, 20 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index bcd1cd9..adc7ca5 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -638,6 +638,7 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct device *dev = pci->dev;
- 	unsigned int offset;
- 	unsigned int nbars;
- 	u8 hdr_type;
-@@ -669,6 +670,25 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 	dw_pcie_setup(pci);
- 	dw_pcie_dbi_ro_wr_dis(pci);
- 
-+	ep->ib_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ib_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ib_window_map)
-+		return -ENOMEM;
-+
-+	ep->ob_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ob_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ob_window_map)
-+		return -ENOMEM;
-+
-+	ep->outbound_addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-+			    GFP_KERNEL);
-+	if (!ep->outbound_addr)
-+		return -ENOMEM;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
-@@ -676,7 +696,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
- int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- {
- 	int ret;
--	void *addr;
- 	u8 func_no;
- 	struct resource *res;
- 	struct pci_epc *epc;
-@@ -714,26 +733,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	ep->phys_base = res->start;
- 	ep->addr_size = resource_size(res);
- 
--	ep->ib_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ib_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ib_window_map)
--		return -ENOMEM;
--
--	ep->ob_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ob_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ob_window_map)
--		return -ENOMEM;
--
--	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
--			    GFP_KERNEL);
--	if (!addr)
--		return -ENOMEM;
--	ep->outbound_addr = addr;
--
- 	if (pci->link_gen < 1)
- 		pci->link_gen = of_pci_get_max_link_speed(np);
- 
--- 
-2.7.4
-
+One problem in this area is that the clamping of the DMA size through
+dma_max_mapping_size mentioned in the commit log doesn't work when
+swiotlb is called from intel-iommu. I think we need to wire up those
+calls there as well.
