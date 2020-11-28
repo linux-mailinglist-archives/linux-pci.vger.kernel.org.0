@@ -2,156 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F9792C72BA
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Nov 2020 23:09:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C6D2C72A9
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Nov 2020 23:09:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbgK1VuQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Nov 2020 16:50:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27186 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731008AbgK1Sqt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Nov 2020 13:46:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606589122;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mOG1PEw7cXjSDVLm0frOBHIziQMwzgcOSI2ySbmS6LQ=;
-        b=anufJHNTFRlP6tnsjo6qdfxVwQeSx5NVabADL5SJHUZZ8t2jED1aE96dyjgGwsZF2bBWsk
-        yn2BndnSgKISwBTCyMvn8Gz8a676KL9D0+Zjxf87/O4qcSBoqA12OWrSdFr8+rDjZE0q5Y
-        Z/welwAMVxZebLMsfKTqp3fpd5g3MYM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-w1_OS8fYOEiUrXFhZYE-IQ-1; Sat, 28 Nov 2020 05:43:24 -0500
-X-MC-Unique: w1_OS8fYOEiUrXFhZYE-IQ-1
-Received: by mail-ej1-f70.google.com with SMTP id p18so3097110ejl.14
-        for <linux-pci@vger.kernel.org>; Sat, 28 Nov 2020 02:43:24 -0800 (PST)
+        id S1727716AbgK1VuO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Nov 2020 16:50:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733296AbgK1SRx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Nov 2020 13:17:53 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CFDCC0258DE;
+        Sat, 28 Nov 2020 07:49:04 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id s63so6698201pgc.8;
+        Sat, 28 Nov 2020 07:49:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dkZK75RDOqVvghIzMCSRWV8KKsXjayA5613tB1J4VCY=;
+        b=cecqxIdtNnXvYHZvKvSn+cJXABfzKkTd/GDrzvYRbiHDb1BP6cgaR7272scbX2PZDc
+         s66qMOjTi5VEweErH+bMB1Pj8cjOqt25SzDMIlrVeGTpanXxTB5mJgNvRvPP694wmVss
+         qg7iiVp+pUApFLXHQwv4ryBbj9qKQwxt/B8Z+e/KKQJxs3lXn3gQEn07+vDXsFiGTPRI
+         sRjHUmIRtEsC4mMUdZka+dgHGh7mVTPLsE/NLNEKybr2y6OnxMm7mTlJssmKQdqfRox5
+         oUdKAHsRIFzpD9vvII/060Sr2DeTQWOkGcNTyRCT8+AluWdxESQb3hETpkyh4XtkWtyE
+         HKrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mOG1PEw7cXjSDVLm0frOBHIziQMwzgcOSI2ySbmS6LQ=;
-        b=EI+McKa1aQjiuKsE4zYKAx3x0ftCm5Ywl7tw6/4gKa4m5/DVWMAskqjorDYf9aqBPR
-         9ngeCeQkqSuPCMC+y9BKERLIh2tCJFwrpG0KXVVtIcqfIApy3nPOUDO3MgSvl/Mjj838
-         bsekKIGjTyxde2Jr8KWCDPtT2nAmbtFYGoOqqwMMjtwAzWwN/rP4p2Z6lF8baIhaVSY2
-         4v/4op6CrEV209Bx2wp7X7CFCsswgero8DaYTYP45256iru6ybotDGjrozUbDN473LQ5
-         d4IoRppCwVQIAgOURal5YY9BCZjijSzTNVD6g8MUndTNkeXTexBPdyofzNvxC25gkllL
-         IFgw==
-X-Gm-Message-State: AOAM533NUWHUg8GD/H9bVzj2eAFjGVlQ/TXSEhs8gbJgCGHj0PiJiBzg
-        YCTTs2BSjD1HF4F5cw+l7qRlu9ao30xgBEDSlv3qpgtk7T2zaOjdgYFUb1VNh0oDm9LOPx5T1P8
-        9jY3s+/GTo/fc39AbQvqU
-X-Received: by 2002:a05:6402:1714:: with SMTP id y20mr12701503edu.306.1606560203064;
-        Sat, 28 Nov 2020 02:43:23 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz+U5XpbHLZUjMy5NtlxgvOGgJl2y1xXiCB0jHm13k7iQXRLvVbwaS3AVMB7MU3TDS324BvUQ==
-X-Received: by 2002:a05:6402:1714:: with SMTP id y20mr12701494edu.306.1606560202843;
-        Sat, 28 Nov 2020 02:43:22 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id t11sm5992608ejx.68.2020.11.28.02.43.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Nov 2020 02:43:22 -0800 (PST)
-Subject: Re: 5.10 regression caused by: "uas: fix sdev->host->dma_dev": many
- XHCI swiotlb buffer is full / DMAR: Device bounce map failed errors on
- thunderbolt connected XHCI controller
-To:     Tom Yan <tom.ty89@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com>
- <be031d15-201f-0e5c-8b0f-be030077141f@redhat.com>
- <20201124102715.GA16983@lst.de>
- <fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com>
- <8a52e868-0ca1-55b7-5ad2-ddb0cbb5e45d@redhat.com>
- <20201127161900.GA10986@lst.de>
- <fded04e2-f2e9-de92-ab1f-5aa088904e90@redhat.com>
- <CAGnHSEmyrw=r56ocLCkia+sYT0tmcCScZitBi=G+DY=gRBy+sg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <09992cec-65e4-2757-aae6-8fb02a42f961@redhat.com>
-Date:   Sat, 28 Nov 2020 11:43:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dkZK75RDOqVvghIzMCSRWV8KKsXjayA5613tB1J4VCY=;
+        b=LixzY83ScElPUx+fjFaxjrup9IhUOmaxEe548wMseQA0+zhSbcsM0CzBBokWa2RsOR
+         F9JyflgUFAtIn8z3rjJwd0XQMOpGrxz25VSP+NBdvhp/9M5Iq9av8Y7uFTgK345i675B
+         /9mjqgK+K7tQ8kcA7aeWLhWvSSZtPplLF1AGKftRfCjJhX+YKPs+JsH4qZds+Lsh+5s5
+         X6uambP2skDksGmrQVveKhEGRexFRQ4DrGjkjcFFse7NR/zycdv1TJ4fgSYQKGZrSj19
+         EcWdaQ6zkO6RWhd8bHCwmTC796o5eFIexF2Y8yg95moyP4kgLHNg1ogEVrOpv3EDreIZ
+         VahQ==
+X-Gm-Message-State: AOAM531DlqC2hk5o+ZeY/C1sflW1kjmrVw3V9lSaTosqlC3Q2QSrD7WA
+        YOzBz1m/21SrLgxSH4XGvKQ=
+X-Google-Smtp-Source: ABdhPJxmSOateiAz2GwhjpxS1UWqa0G3kgwj0mii+pRLrVC3xY7iiTOsznBLTadT7na7xjXeVwo86w==
+X-Received: by 2002:a17:90b:19cf:: with SMTP id nm15mr15844023pjb.63.1606578543746;
+        Sat, 28 Nov 2020 07:49:03 -0800 (PST)
+Received: from localhost.localdomain ([161.81.68.216])
+        by smtp.gmail.com with ESMTPSA id r15sm15633028pjp.51.2020.11.28.07.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Nov 2020 07:49:03 -0800 (PST)
+From:   Tom Yan <tom.ty89@gmail.com>
+To:     hdegoede@redhat.com, hch@lst.de, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org
+Cc:     mathias.nyman@intel.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, baolu.lu@linux.intel.com,
+        Tom Yan <tom.ty89@gmail.com>
+Subject: [PATCH 1/2] uas: revert from scsi_add_host_with_dma() to scsi_add_host()
+Date:   Sat, 28 Nov 2020 23:48:48 +0800
+Message-Id: <20201128154849.3193-1-tom.ty89@gmail.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <09992cec-65e4-2757-aae6-8fb02a42f961@redhat.com>
+References: <09992cec-65e4-2757-aae6-8fb02a42f961@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAGnHSEmyrw=r56ocLCkia+sYT0tmcCScZitBi=G+DY=gRBy+sg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Tom,
+Apparently the former (with the chosen dma_dev) may cause problem in certain
+case (e.g. where thunderbolt dock and intel iommu are involved). The error
+observed was:
 
-On 11/28/20 2:25 AM, Tom Yan wrote:
-> Should we still be clamping max_sectors to dma_max_mapping_size(dev)
-> (for now)? with dev being us->pusb_dev->bus->sysdev and
-> devinfo->udev->bus->sysdev respectively (i.e. revert only
-> scsi_add_host_with_dma() to scsi_add_host())?
+XHCI swiotlb buffer is full / DMAR: Device bounce map failed
 
-I would expect that to work / avoid the regression, so yes that is
-a good option.
+For now we retain the clamp for hw_max_sectors against the dma_max_mapping_size.
+Since the device/size for the clamp that is applied when the scsi request queue
+is initialized/allocated is different than the one used here, we invalidate the
+early clamping by making a fallback blk_queue_max_hw_sectors() call.
 
-If you can provide me with a patch doing that, then I can test it to
-make sure it does indeed fix the regression.
+Signed-off-by: Tom Yan <tom.ty89@gmail.com>
+---
+ drivers/usb/storage/uas.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Regards,
-
-Hans
-
-
-> 
-> On Sat, 28 Nov 2020 at 02:12, Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 11/27/20 5:19 PM, Christoph Hellwig wrote:
->>> On Fri, Nov 27, 2020 at 01:32:16PM +0100, Hans de Goede wrote:
->>>> I ran some more tests, I can confirm that reverting:
->>>>
->>>> 5df7ef7d32fe "uas: bump hw_max_sectors to 2048 blocks for SS or faster drives"
->>>> 558033c2828f "uas: fix sdev->host->dma_dev"
->>>>
->>>> Makes the problem go away while running a 5.10 kernel. I also tried doubling
->>>> the swiotlb size by adding: swiotlb=65536 to the kernel commandline but that
->>>> does not help.
->>>>
->>>> Some more observations:
->>>>
->>>> 1. The usb-storage driver does not cause this issue, even though it has a
->>>> very similar change.
->>>>
->>>> 2. The problem does not happen until I plug an UAS decvice into the dock.
->>>>
->>>> 3. The problem continues to happen even after I unplug the UAS device and
->>>> rmmod the uas module
->>>>
->>>> 3. made me take a bit closer look to the troublesome commit, it passes:
->>>> udev->bus->sysdev, which I assume is the XHCI controller itself as device
->>>> to scsi_add_host_with_dma, which in turn seems to cause permanent changes
->>>> to the dma settings for the XHCI controller. I'm not all that familiar with
->>>> the DMA APIs but I'm getting the feeling that passing the actual XHCI-controller's
->>>> device as dma-device to scsi_add_host_with_dma is simply the wrong thing to
->>>> do; and that the intended effects (honor XHCI dma limits, but do not cause
->>>> any changes the XHCI dma settings) should be achieved differently.
->>>>
->>>> Note that if this is indeed wrong, the matching usb-storage change should
->>>> likely also be dropped.
->>>
->>> One problem in this area is that the clamping of the DMA size through
->>> dma_max_mapping_size mentioned in the commit log doesn't work when
->>> swiotlb is called from intel-iommu. I think we need to wire up those
->>> calls there as well.
->>
->> Ok, but that does not sound like a quick last minute fix for 5.10, so maybe
->> for 5.10 we should just revert the uas and usb-storage changes which trigger
->> this problem and then retry those for 5.11 ?
->>
->> Regards,
->>
->> Hans
->>
-> 
+diff --git a/drivers/usb/storage/uas.c b/drivers/usb/storage/uas.c
+index c8a577309e8f..5db1325cea20 100644
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -843,18 +843,21 @@ static int uas_slave_alloc(struct scsi_device *sdev)
+ static int uas_slave_configure(struct scsi_device *sdev)
+ {
+ 	struct uas_dev_info *devinfo = sdev->hostdata;
+-	struct device *dev = sdev->host->dma_dev;
++	struct usb_device *udev = devinfo->udev;
+ 
+ 	if (devinfo->flags & US_FL_MAX_SECTORS_64)
+ 		blk_queue_max_hw_sectors(sdev->request_queue, 64);
+ 	else if (devinfo->flags & US_FL_MAX_SECTORS_240)
+ 		blk_queue_max_hw_sectors(sdev->request_queue, 240);
+-	else if (devinfo->udev->speed >= USB_SPEED_SUPER)
++	else if (udev->speed >= USB_SPEED_SUPER)
+ 		blk_queue_max_hw_sectors(sdev->request_queue, 2048);
++	else
++		blk_queue_max_hw_sectors(sdev->request_queue,
++					 SCSI_DEFAULT_MAX_SECTORS);
+ 
+ 	blk_queue_max_hw_sectors(sdev->request_queue,
+ 		min_t(size_t, queue_max_hw_sectors(sdev->request_queue),
+-		      dma_max_mapping_size(dev) >> SECTOR_SHIFT));
++		      dma_max_mapping_size(udev->bus->sysdev) >> SECTOR_SHIFT));
+ 
+ 	if (devinfo->flags & US_FL_NO_REPORT_OPCODES)
+ 		sdev->no_report_opcodes = 1;
+@@ -1040,7 +1043,7 @@ static int uas_probe(struct usb_interface *intf, const struct usb_device_id *id)
+ 	shost->can_queue = devinfo->qdepth - 2;
+ 
+ 	usb_set_intfdata(intf, shost);
+-	result = scsi_add_host_with_dma(shost, &intf->dev, udev->bus->sysdev);
++	result = scsi_add_host(shost, &intf->dev);
+ 	if (result)
+ 		goto free_streams;
+ 
+-- 
+2.29.2
 
