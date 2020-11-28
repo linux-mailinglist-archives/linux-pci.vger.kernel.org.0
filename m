@@ -2,51 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2055D2C72B0
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Nov 2020 23:09:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D0822C72B2
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Nov 2020 23:09:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727748AbgK1VuP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1729000AbgK1VuP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Sat, 28 Nov 2020 16:50:15 -0500
-Received: from verein.lst.de ([213.95.11.211]:40023 "EHLO verein.lst.de"
+Received: from vps0.lunn.ch ([185.16.172.187]:54508 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729983AbgK1Sdm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 28 Nov 2020 13:33:42 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9163A68AFE; Sat, 28 Nov 2020 18:15:01 +0100 (CET)
-Date:   Sat, 28 Nov 2020 18:15:00 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Tom Yan <tom.ty89@gmail.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: 5.10 regression caused by: "uas: fix sdev->host->dma_dev":
- many XHCI swiotlb buffer is full / DMAR: Device bounce map failed
- errors on thunderbolt connected XHCI controller
-Message-ID: <20201128171500.GA3550@lst.de>
-References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com> <be031d15-201f-0e5c-8b0f-be030077141f@redhat.com> <20201124102715.GA16983@lst.de> <fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com> <8a52e868-0ca1-55b7-5ad2-ddb0cbb5e45d@redhat.com> <20201127161900.GA10986@lst.de> <fded04e2-f2e9-de92-ab1f-5aa088904e90@redhat.com>
+        id S1729460AbgK1S1V (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 28 Nov 2020 13:27:21 -0500
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kj4vY-009HAv-Mx; Sat, 28 Nov 2020 19:26:32 +0100
+Date:   Sat, 28 Nov 2020 19:26:32 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, kernel-team@android.com,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] MAINTAINERS: Move Jason Cooper to CREDITS
+Message-ID: <20201128182632.GC2191767@lunn.ch>
+References: <20201128103707.332874-1-maz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fded04e2-f2e9-de92-ab1f-5aa088904e90@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20201128103707.332874-1-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Can you give this one-liner a spin?
+On Sat, Nov 28, 2020 at 10:37:07AM +0000, Marc Zyngier wrote:
+> Jason's email address has now been bouncing for weeks, and no
+> reply was received when trying to reach out on other addresses.
+> 
+> We really hope he is OK. But until we hear of his whereabouts,
+> let's move him to the CREDITS file so that people stop Cc-ing
+> him.
+> 
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index c6622011d4938c..e889111b55c71d 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4007,6 +4007,7 @@ static const struct dma_map_ops bounce_dma_ops = {
- 	.alloc_pages		= dma_common_alloc_pages,
- 	.free_pages		= dma_common_free_pages,
- 	.dma_supported		= dma_direct_supported,
-+	.max_mapping_size	= swiotlb_max_mapping_size,
- };
- 
- static inline int iommu_domain_cache_init(void)
+Thanks Marc.
+
+Acked-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
