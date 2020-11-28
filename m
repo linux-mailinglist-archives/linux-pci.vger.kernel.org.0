@@ -2,137 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D95962C72AB
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Nov 2020 23:09:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1193D2C72B8
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Nov 2020 23:09:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgK1VuO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Nov 2020 16:50:14 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8214 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730482AbgK1SEI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Nov 2020 13:04:08 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Cjh6s0k8SzkhJb;
-        Sat, 28 Nov 2020 14:15:01 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 28 Nov 2020 14:15:20 +0800
-From:   Chiqijun <chiqijun@huawei.com>
-To:     <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <zengweiliang.zengweiliang@huawei.com>, <chenlizhong@huawei.com>
-Subject: [PATCH] PCI: Add pci reset quirk for Huawei Intelligent NIC virtual function
-Date:   Sat, 28 Nov 2020 14:18:25 +0800
-Message-ID: <20201128061825.2629-1-chiqijun@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        id S2389275AbgK1VuQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Nov 2020 16:50:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732231AbgK1S7i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 28 Nov 2020 13:59:38 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C98222EA;
+        Sat, 28 Nov 2020 10:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606559870;
+        bh=ElFuI/yPzYiGjePDtZkN0gYaY20kahcwihMuI8AchqM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EUKbch1JzQWJVAmirG5SwTwjCYttSzWvcHpW3lEKWXNw9c+yQs/nGbGquMNkNh9S9
+         V1UExUe2hrGYref6vwwC/deRqluLCKbCdW/my5EHP8c80NnxkSfqaetGhoHWoO7hAe
+         yWWaqLdZj7HCt7nAlg5BR/x478YrVuV7vvmGo4/0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1kixbw-00EGNC-BB; Sat, 28 Nov 2020 10:37:48 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org
+Cc:     kernel-team@android.com, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH] MAINTAINERS: Move Jason Cooper to CREDITS
+Date:   Sat, 28 Nov 2020 10:37:07 +0000
+Message-Id: <20201128103707.332874-1-maz@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, kernel-team@android.com, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com, tglx@linutronix.de, thomas.petazzoni@bootlin.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When multiple VFs do FLR at the same time, the firmware is
-processed serially, resulting in some VF FLRs being delayed more
-than 100ms, when the virtual machine restarts and the device
-driver is loaded, the firmware is doing the corresponding VF
-FLR, causing the driver to fail to load.
+Jason's email address has now been bouncing for weeks, and no
+reply was received when trying to reach out on other addresses.
 
-To solve this problem, add host and firmware status synchronization
-during FLR.
+We really hope he is OK. But until we hear of his whereabouts,
+let's move him to the CREDITS file so that people stop Cc-ing
+him.
 
-Signed-off-by: Chiqijun <chiqijun@huawei.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/quirks.c | 67 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ CREDITS     | 5 +++++
+ MAINTAINERS | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f70692ac79c5..bd6236ea9064 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3912,6 +3912,71 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
- 	return 0;
- }
+diff --git a/CREDITS b/CREDITS
+index 8592e45e3932..cf112d3e9382 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -740,6 +740,11 @@ S: (ask for current address)
+ S: Portland, Oregon
+ S: USA
  
-+#define PCI_DEVICE_ID_HINIC_VF  0x375E
-+#define HINIC_VF_FLR_TYPE       0x1000
-+#define HINIC_VF_OP             0xE80
-+#define HINIC_OPERATION_TIMEOUT 15000
++N: Jason Cooper
++D: ARM/Marvell SOC co-maintainer
++D: irqchip co-maintainer
++D: MVEBU PCI DRIVER co-maintainer
 +
-+/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
-+static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
-+{
-+	unsigned long timeout;
-+	void __iomem *bar;
-+	u16 old_command;
-+	u32 val;
-+
-+	if (probe)
-+		return 0;
-+
-+	bar = pci_iomap(pdev, 0, 0);
-+	if (!bar)
-+		return -ENOTTY;
-+
-+	pci_read_config_word(pdev, PCI_COMMAND, &old_command);
-+
-+	/*
-+	 * FLR cap bit bit30, FLR ACK bit: bit18, to avoid big-endian conversion
-+	 * the big-endian bit6, bit10 is directly operated here
-+	 */
-+	val = readl(bar + HINIC_VF_FLR_TYPE);
-+	if (!(val & (1UL << 6))) {
-+		pci_iounmap(pdev, bar);
-+		return -ENOTTY;
-+	}
-+
-+	val = readl(bar + HINIC_VF_OP);
-+	val = val | (1UL << 10);
-+	writel(val, bar + HINIC_VF_OP);
-+
-+	/* Perform the actual device function reset */
-+	pcie_flr(pdev);
-+
-+	pci_write_config_word(pdev, PCI_COMMAND,
-+			      old_command | PCI_COMMAND_MEMORY);
-+
-+	/* Waiting for device reset complete */
-+	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
-+	do {
-+		val = readl(bar + HINIC_VF_OP);
-+		if (!(val & (1UL << 10)))
-+			goto reset_complete;
-+		msleep(20);
-+	} while (time_before(jiffies, timeout));
-+
-+	val = readl(bar + HINIC_VF_OP);
-+	if (!(val & (1UL << 10)))
-+		goto reset_complete;
-+
-+	pci_warn(pdev, "Reset dev timeout, flr ack reg: %x\n",
-+		 be32_to_cpu(val));
-+
-+reset_complete:
-+	pci_write_config_word(pdev, PCI_COMMAND, old_command);
-+	pci_iounmap(pdev, bar);
-+
-+	return 0;
-+}
-+
- static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
- 		 reset_intel_82599_sfp_virtfn },
-@@ -3923,6 +3988,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
- 	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
- 		reset_chelsio_generic_dev },
-+	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
-+		reset_hinic_vf_dev },
- 	{ 0 }
- };
+ N: Robin Cornelius
+ E: robincornelius@users.sourceforge.net
+ D: Ralink rt2x00 WLAN driver
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e451dcce054f..7ba26942a573 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2012,7 +2012,6 @@ M:	Philipp Zabel <philipp.zabel@gmail.com>
+ S:	Maintained
  
+ ARM/Marvell Dove/MV78xx0/Orion SOC support
+-M:	Jason Cooper <jason@lakedaemon.net>
+ M:	Andrew Lunn <andrew@lunn.ch>
+ M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+ M:	Gregory Clement <gregory.clement@bootlin.com>
+@@ -2029,7 +2028,6 @@ F:	arch/arm/plat-orion/
+ F:	drivers/soc/dove/
+ 
+ ARM/Marvell Kirkwood and Armada 370, 375, 38x, 39x, XP, 3700, 7K/8K, CN9130 SOC support
+-M:	Jason Cooper <jason@lakedaemon.net>
+ M:	Andrew Lunn <andrew@lunn.ch>
+ M:	Gregory Clement <gregory.clement@bootlin.com>
+ M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+@@ -9255,7 +9253,6 @@ F:	kernel/irq/
+ 
+ IRQCHIP DRIVERS
+ M:	Thomas Gleixner <tglx@linutronix.de>
+-M:	Jason Cooper <jason@lakedaemon.net>
+ M:	Marc Zyngier <maz@kernel.org>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+@@ -13405,7 +13402,6 @@ F:	drivers/pci/controller/mobiveil/pcie-mobiveil*
+ 
+ PCI DRIVER FOR MVEBU (Marvell Armada 370 and Armada XP SOC support)
+ M:	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+-M:	Jason Cooper <jason@lakedaemon.net>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
 -- 
-2.17.1
+2.29.2
 
