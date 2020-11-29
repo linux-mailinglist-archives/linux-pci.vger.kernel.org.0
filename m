@@ -2,158 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A83BB2C794D
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Nov 2020 14:12:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0ED02C797F
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Nov 2020 15:08:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgK2NGw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Nov 2020 08:06:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgK2NGw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 08:06:52 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97A7C0613D2;
-        Sun, 29 Nov 2020 05:06:11 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id n24so9374179edb.4;
-        Sun, 29 Nov 2020 05:06:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8ozyxPkGPRLOCY4epEaLOpOsyLKUOueRcL5FH3Vv3/8=;
-        b=ZmcOr77zVJRsSj82yYGfOvtadmiXd4o0fx50M8S02caC3WGSZSGvp+XOHV5K4du69K
-         LGlttJWxamoE5i+1YyHwpvzP7yuZO9ilRO7gG6/lm5ijxw3gHN9pW7MSdeTXlyl5o7/x
-         0SyK1aeVpEl/iS9iK17bmnft+3O0ZP4lt40m92ma/jcJ/0RgzDcWDLo04/XvMt0bAoEX
-         kmM5H2nGHZ/HRgbFOdhD0Q8cvvTOewHA9gxrrloCE7GwIk5txidf8s1v3wvQeX4CCm43
-         ksGefa55aQ4CmBTCSC2ZjbYln4p5rssJvUhNCLe4y/w4XUfMyLczyhjEDFeHxbpwO+Ir
-         HTHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8ozyxPkGPRLOCY4epEaLOpOsyLKUOueRcL5FH3Vv3/8=;
-        b=iyRw5c8uLQ2TwHMUVAIB3rzhX3x5rLPMMSQeZShNbei5x47tFeuzlJg6Ysf9HNlrHu
-         GohXg5e7ja1QrgwGsVHJNRhlYADVMsEIaWaiuNo8fj4ZkHPFJS4r4ztcIbV1uBUkXbF4
-         md5v4qzy3oFFUWRcppKPTspYj1RXyFqripdJLuMJfoCWnXG3QsEfNnh8vsdBwv8/8pme
-         BU0Jrtnlp9Xwod4A1+hyTNGti/V8q4QGPlVygvthpr6UuH0cLH25I7/YLgVubVhlrMAj
-         E8gKSBqKWqI0cIdRxvRtILQXMNc+MeegznBN9oEy0s2aqxCfGZRQ1leIzpteiOjtfk1Y
-         /ZOg==
-X-Gm-Message-State: AOAM530nnHpekXS0WH6O2HwcXrgKLR4Wf+RxUu+aw+82n756cB2ESryP
-        8F+TKUG0RPH0ZVtZzdmnZl8+okxyFMP6uw==
-X-Google-Smtp-Source: ABdhPJytY2KngnmcztguyMY+9nYNz3lusXsRTcJY7xB9HAtluK9KvfdcbtztpXwGSiIEnl7pqx/I2Q==
-X-Received: by 2002:a05:6402:21a:: with SMTP id t26mr17400269edv.173.1606655170148;
-        Sun, 29 Nov 2020 05:06:10 -0800 (PST)
-Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id lj14sm3363089ejb.16.2020.11.29.05.06.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Nov 2020 05:06:09 -0800 (PST)
-Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-References: <20201016120416.7008-1-marek.vasut@gmail.com>
- <20201119173553.GB23852@e121166-lin.cambridge.arm.com>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <57358982-ef8c-ed91-c011-00b8a48c4ebd@gmail.com>
-Date:   Sun, 29 Nov 2020 14:05:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        id S1725882AbgK2OHw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Nov 2020 09:07:52 -0500
+Received: from mga12.intel.com ([192.55.52.136]:64544 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbgK2OHw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Nov 2020 09:07:52 -0500
+IronPort-SDR: mIdKUWbJL2TrDj2CN1CEHo2f/p4gJEXdjzjmfsvlgbUfcYh55EVHBQpwQr+56d4hBML9ZzKtXM
+ b3C1gzN07Wzg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9819"; a="151787337"
+X-IronPort-AV: E=Sophos;i="5.78,379,1599548400"; 
+   d="scan'208";a="151787337"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2020 06:07:10 -0800
+IronPort-SDR: WdDkHio/hbamSa5Q55XNyRU+UdmERkFCe4jgvZ2x/oWlWNtFTzsjUKYh+PW4cK6kXLTr3E+ZYz
+ 8LlN9qGPNGcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,379,1599548400"; 
+   d="scan'208";a="548721962"
+Received: from lkp-server01.sh.intel.com (HELO 3082e074203f) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 29 Nov 2020 06:07:08 -0800
+Received: from kbuild by 3082e074203f with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kjNM4-00006z-9z; Sun, 29 Nov 2020 14:07:08 +0000
+Date:   Sun, 29 Nov 2020 22:06:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:wip/osc] BUILD SUCCESS
+ d52af95c186dcb81afc0700fbd4d508f979f9dbc
+Message-ID: <5fc3aaea.aGvhBWyRStbwpYtL%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20201119173553.GB23852@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/19/20 6:35 PM, Lorenzo Pieralisi wrote:
->> +#ifdef CONFIG_ARM
->> +/*
->> + * Here we keep a static copy of the remapped PCIe controller address.
->> + * This is only used on aarch32 systems, all of which have one single
->> + * PCIe controller, to provide quick access to the PCIe controller in
->> + * the L1 link state fixup function, called from the ARM fault handler.
->> + */
->> +static void __iomem *pcie_base;
->> +/*
->> + * Static copy of bus clock pointer, so we can check whether the clock
->> + * is enabled or not.
->> + */
->> +static struct clk *pcie_bus_clk;
->> +#endif
-> 
-> Don't think you can have multiple host bridges in a given platform,
-> if it is a possible configuration this won't work.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  wip/osc
+branch HEAD: d52af95c186dcb81afc0700fbd4d508f979f9dbc  PCI/portdrv: Reorder native PCIe feature testing
 
-Correct, all the affected platforms have only one host bridge.
+elapsed time: 725m
 
->>   static inline struct rcar_msi *to_rcar_msi(struct msi_controller *chip)
->>   {
->>   	return container_of(chip, struct rcar_msi, chip);
->> @@ -804,6 +820,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
->>   	}
->>   	host->msi.irq2 = i;
->>   
->> +#ifdef CONFIG_ARM
->> +	/* Cache static copy for L1 link state fixup hook on aarch32 */
->> +	pcie_base = pcie->base;
->> +	pcie_bus_clk = host->bus_clk;
->> +#endif
->> +
->>   	return 0;
->>   
->>   err_irq2:
->> @@ -1050,4 +1072,58 @@ static struct platform_driver rcar_pcie_driver = {
->>   	},
->>   	.probe = rcar_pcie_probe,
->>   };
->> +
->> +#ifdef CONFIG_ARM
->> +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
->> +		unsigned int fsr, struct pt_regs *regs)
->> +{
->> +	u32 pmsr;
->> +
->> +	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk))
->> +		return 1;
->> +
->> +	pmsr = readl(pcie_base + PMSR);
->> +
->> +	/*
->> +	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
->> +	 * the PCIe controller is not in L1 link state. If true, apply
->> +	 * fix, which will put the controller into L1 link state, from
->> +	 * which it can return to L0s/L0 on its own.
->> +	 */
->> +	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
->> +		writel(L1IATN, pcie_base + PMCTLR);
->> +		while (!(readl(pcie_base + PMSR) & L1FAEG))
->> +			;
->> +		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
->> +		return 0;
->> +	}
-> 
-> I suppose a fault on multiple cores can happen simultaneously, if it
-> does this may not work well either - I assume all config/io/mem would
-> trigger a fault.
-> 
-> As I mentioned in my reply to v1, is there a chance we can move
-> this quirk into config accessors (if the PM_ENTER_L1_DLLP is
-> subsequent to a write into PMCSR to programme a D state) ?
+configs tested: 88
+configs skipped: 2
 
-I don't think we can, since the userspace can do such a config space 
-write with e.g. setpci and then this fixup is still needed.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> Config access is serialized but I suspect as I said above that this
-> triggers on config/io/mem alike.
-> 
-> Just asking to try to avoid a fault handler if possible.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+c6x                        evmc6472_defconfig
+arm                       multi_v4t_defconfig
+powerpc                        cell_defconfig
+powerpc                      makalu_defconfig
+riscv                    nommu_k210_defconfig
+arm                             mxs_defconfig
+riscv                    nommu_virt_defconfig
+ia64                            zx1_defconfig
+sh                   rts7751r2dplus_defconfig
+arm                      tct_hammer_defconfig
+arm                        vexpress_defconfig
+arm                         axm55xx_defconfig
+sh                          rsk7269_defconfig
+arm                        shmobile_defconfig
+powerpc                    socrates_defconfig
+sh                             sh03_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a004-20201129
+i386                 randconfig-a003-20201129
+i386                 randconfig-a002-20201129
+i386                 randconfig-a005-20201129
+i386                 randconfig-a001-20201129
+i386                 randconfig-a006-20201129
+x86_64               randconfig-a015-20201129
+x86_64               randconfig-a011-20201129
+x86_64               randconfig-a016-20201129
+x86_64               randconfig-a014-20201129
+x86_64               randconfig-a012-20201129
+x86_64               randconfig-a013-20201129
+i386                 randconfig-a012-20201129
+i386                 randconfig-a013-20201129
+i386                 randconfig-a011-20201129
+i386                 randconfig-a016-20201129
+i386                 randconfig-a014-20201129
+i386                 randconfig-a015-20201129
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-See above, I doubt we can fully avoid this workaround.
+clang tested configs:
+x86_64               randconfig-a003-20201129
+x86_64               randconfig-a006-20201129
+x86_64               randconfig-a004-20201129
+x86_64               randconfig-a005-20201129
+x86_64               randconfig-a002-20201129
+x86_64               randconfig-a001-20201129
 
-[...]
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
