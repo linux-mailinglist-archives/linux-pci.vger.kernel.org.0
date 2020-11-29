@@ -2,136 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F36A2C7A0F
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Nov 2020 17:47:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21BE02C7BE6
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 00:08:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgK2QrT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Nov 2020 11:47:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgK2QrS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 11:47:18 -0500
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C7DC0613CF
-        for <linux-pci@vger.kernel.org>; Sun, 29 Nov 2020 08:46:38 -0800 (PST)
-Received: by mail-pf1-x442.google.com with SMTP id w6so8793183pfu.1
-        for <linux-pci@vger.kernel.org>; Sun, 29 Nov 2020 08:46:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ePbNVNuf2h+BXgSDx7rTfQZRRCtnCpZLYv1u6UwyijE=;
-        b=LxXgVcAvuYRMX8jRzkuJygJWPYX0Vxzy+sAyq65jEYJWpqJH0b48mTNasd+tcJLf1f
-         uYZcDhZ+mmSxsxNRIvnrzvFZSXYQJRukmHGz5KYNtpAGKlO3B6d4SA3iISK2OmRMjXbS
-         V5WFnI7p5ZMMHs+kSYCNLuzXJXM4Y0D3OdXk5RitjOXew0H/5x749hQVd8HKG9G5Phvz
-         I7p40g7iSBNMsdxapQEBa0OyS8NU3s2qM24HOkktUiveIbT3MgvQgyZH1ls9Ys2pIVZE
-         10RNt+q1gsyWSZVZzdC+Jmy38NWHHwC44gbbrioSvMK4b/j4w/1Ffp6OIuxAoJkFL03t
-         Jubw==
+        id S1727144AbgK2XI3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Nov 2020 18:08:29 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43263 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbgK2XI2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 18:08:28 -0500
+Received: by mail-wr1-f65.google.com with SMTP id s8so13044030wrw.10
+        for <linux-pci@vger.kernel.org>; Sun, 29 Nov 2020 15:08:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=ePbNVNuf2h+BXgSDx7rTfQZRRCtnCpZLYv1u6UwyijE=;
-        b=uGydCmbmdHc/wHjBUDFXRLaw/L3QhS94xySkju4fdDSYmfTFw06HEOqDr0H9ok/KT2
-         tmNoTrej45kQLTn5L3T3RyaLWz9Q34gRcQ3uLedsSMSUYY9TM5rHyQ9tVnAaAgwn7R1A
-         aJmLq9N+u8Qq9q37MUtRjSDjSxst4PmgI7feVlOaP5MEPVhrdy9+Kd4j6cyB5JklOdeV
-         EJDgbYhy9ycJfN1yrUzVDBdFrK6Q7rS8XgOhMN18UW6OCQaSwptjB99FjOcJjf7scYN9
-         fOByaBKkDhgnMBct9OBsgsO08VVF22MxXYf+vnGn4Qva6WeY+ZFdBNOpI28MRvmvNKgU
-         IuxA==
-X-Gm-Message-State: AOAM533Oi2zOtzmxzZekKhmJh4Smyg8Ocv7psFLaEHg+EVGBlNf1iBMC
-        zSbABBSWCX9EjTY3majpcPI=
-X-Google-Smtp-Source: ABdhPJxWtS3E6RQcvY/kw2ez6XNN8zvQWUDwtVFRi7Nt2jkvWBFj0NAMTap7505ZCOvyGANk6l56XQ==
-X-Received: by 2002:a17:90a:8d86:: with SMTP id d6mr21906563pjo.120.1606668398125;
-        Sun, 29 Nov 2020 08:46:38 -0800 (PST)
-Received: from localhost.localdomain ([124.253.118.66])
-        by smtp.googlemail.com with ESMTPSA id g16sm13684476pfb.201.2020.11.29.08.46.35
+        bh=dIsjLfFDP99Dz5MgIeEC3kYmopeb//2rrPq0h43VXLw=;
+        b=pLdnU9bezPeA2JhSnJBcT97LtvGRcF1hYvhcChY2W/JH1ribhm2vnw3QN5yCJbADjE
+         7blyaa2AHYr18Qj9/y3XgZpOMt2nSewWN+ZRSw2UFQNmtcV1/wz+dwA9nDX8IPQIgUJx
+         nPfUvm0ZbIbfZzFR7s3+oIzqXmrnn8P59dOMi4JMO/a3k7wAUtiH4553KyOYUkDG1nDw
+         oLL2QzTAw8b8uEIQmcES9CGmTO+fbn+OMGlAG+qyUPt4EsMYz3Jw+GMXXI2KKLl35nJc
+         POppXuo4LpYcvsZTsCAsn2MTwf96PFpNXCXswkVNYcZgNj121JGoefNFGjk4HVGEoGDQ
+         Ce3Q==
+X-Gm-Message-State: AOAM5339grpovN1C8Qsl2PWHcJU7oEktQsZyNHdknl3JLdOvLLOG9gYS
+        2075xWbbTfykAAahlcGy8w8=
+X-Google-Smtp-Source: ABdhPJz/dkK+2g8rJ248iKa8tTMH3iMxLDK3ZiUyWbXRCDA7ANZkmFRz+HppIcBOB0AKWrROKjqraw==
+X-Received: by 2002:a5d:4892:: with SMTP id g18mr18707990wrq.365.1606691266382;
+        Sun, 29 Nov 2020 15:07:46 -0800 (PST)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id d2sm24831005wrn.43.2020.11.29.15.07.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 08:46:37 -0800 (PST)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     bjorn@helgaas.com
-Cc:     Puranjay Mohan <puranjay12@gmail.com>, linux-pci@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1] PCI: Return u8 from pci_find_capability()
-Date:   Sun, 29 Nov 2020 22:16:26 +0530
-Message-Id: <20201129164626.12887-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 29 Nov 2020 15:07:45 -0800 (PST)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-rockchip@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH v6 0/5] PCI: Unify ECAM constants in native PCI Express drivers
+Date:   Sun, 29 Nov 2020 23:07:38 +0000
+Message-Id: <20201129230743.3006978-1-kw@linux.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI Capabilities are linked in a list that must appear in the first 256
-bytes of config space. The pointer to capabilities is of 8 bits.
+Unify ECAM-related constants into a single set of standard constants
+defining memory address shift values for the byte-level address that can
+be used when accessing the PCI Express Configuration Space, and then
+move native PCI Express controller drivers to use newly introduced
+definitions retiring any driver-specific ones.
 
-Change the return type of pci_find_capability() and supporting
-functions from int to u8 to match the specification.
+The ECAM ("Enhanced Configuration Access Mechanism") is defined by the
+PCI Express specification (see PCI Express Base Specification, Revision
+5.0, Version 1.0, Section 7.2.2, p. 676), thus most hardware should
+implement it the same way.
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
-v1 - change return types of supporting functions of pci_find_capability.
----
- drivers/pci/pci.c   | 8 ++++----
- include/linux/pci.h | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Most of the native PCI Express controller drivers define their ECAM-related
+constants, many of these could be shared, or use open-coded values when
+setting the ".bus_shift" field of the "struct pci_ecam_ops".
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e578d34095e9..5caae09e0d20 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -399,7 +399,7 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
- 	return 1;
- }
- 
--static int __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
-+static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
- 				   u8 pos, int cap, int *ttl)
- {
- 	u8 id;
-@@ -438,7 +438,7 @@ int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
- }
- EXPORT_SYMBOL_GPL(pci_find_next_capability);
- 
--static int __pci_bus_find_cap_start(struct pci_bus *bus,
-+static u8 __pci_bus_find_cap_start(struct pci_bus *bus,
- 				    unsigned int devfn, u8 hdr_type)
- {
- 	u16 status;
-@@ -477,9 +477,9 @@ static int __pci_bus_find_cap_start(struct pci_bus *bus,
-  *  %PCI_CAP_ID_PCIX         PCI-X
-  *  %PCI_CAP_ID_EXP          PCI Express
-  */
--int pci_find_capability(struct pci_dev *dev, int cap)
-+u8 pci_find_capability(struct pci_dev *dev, int cap)
- {
--	int pos;
-+	u8 pos;
- 
- 	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
- 	if (pos)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 22207a79762c..19a817702ea9 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1063,7 +1063,7 @@ void pci_sort_breadthfirst(void);
- 
- /* Generic PCI functions exported to card drivers */
- 
--int pci_find_capability(struct pci_dev *dev, int cap);
-+u8 pci_find_capability(struct pci_dev *dev, int cap);
- int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
- int pci_find_ext_capability(struct pci_dev *dev, int cap);
- int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
-@@ -1719,7 +1719,7 @@ static inline int __pci_register_driver(struct pci_driver *drv,
- static inline int pci_register_driver(struct pci_driver *drv)
- { return 0; }
- static inline void pci_unregister_driver(struct pci_driver *drv) { }
--static inline int pci_find_capability(struct pci_dev *dev, int cap)
-+static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
- { return 0; }
- static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
- 					   int cap)
+All of the newly added constants should remove ambiguity and reduce the
+number of open-coded values, and also correlate more strongly with the
+descriptions in the aforementioned specification (see Table 7-1
+"Enhanced Configuration Address Mapping", p. 677).
+
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+
+--- 
+Changed in v6:
+  Converted single patch into a series.
+  Dropped changes related to PPC 4xx platform.
+  Refactored pci_ecam_map_bus() so that bus, device function and offset
+  are correctly masked, limiting offset to 4K as per the PCI Express
+  Specification.  After the refactor this function will now use sensible
+  defaults allowing for removal of the ".bus_shit" initialiser from all
+  the users of the "ecam_ops" structure who do not use a non-standard
+  ECAM bus shit values.
+
+Changed in v5:
+  Removed unused constant "PCIE_ECAM_DEV_SHIFT".
+  Refactored ppc4xx_pciex_get_config_base() so that the "offset"
+  parameter can be passed to so that the PCIE_ECAM_OFFSET() macro
+  can be used.
+  Used the ALIGN_DOWN() macro where 32 bit alignment is required
+  instead using the 0xffc mask.
+  Added CFG_ADDR_CFG_TYPE_1 macro to pci/controller/pcie-iproc.c to
+  denote that this is a configuration type 1 address and access type.
+  Refactored boundary check in pci/controller/vmd.c as used by the
+  vmd_cfg_addr() function following addition of the PCIE_ECAM_OFFSET()
+  macro.
+  Changed the "bus->number" to simply pass the "bus" argument in the
+  PCIE_ECAM_OFFSET() macro.
+
+Changed in v4:
+  Removed constants related to "CAM".
+  Added more platforms and devices that can use new ECAM macros and
+  constants.
+  Removed unused ".bus_shift" initialisers from pci-xgene.c as
+  xgene_pcie_map_bus() did not use these.
+
+Changes in v3:
+  Updated commit message wording.
+  Updated regarding custom ECAM bus shift values and concerning PCI base
+  configuration space access for Type 1 access.
+  Refactored rockchip_pcie_rd_other_conf() and rockchip_pcie_wr_other_conf()
+  and removed the "busdev" variable.
+  Removed surplus "relbus" variable from nwl_pcie_map_bus() and
+  xilinx_pcie_map_bus().
+  Renamed the PCIE_ECAM_ADDR() macro to PCIE_ECAM_OFFSET().
+
+Changes in v2:
+  Use PCIE_ECAM_ADDR macro when computing ECAM address offset, but drop
+  PCI_SLOT and PCI_FUNC macros from the PCIE_ECAM_ADDR macro in favour
+  of using a single value for the device/function.
+
+Krzysztof Wilczyński (5):
+  PCI: Unify ECAM constants in native PCI Express drivers
+  PCI: thunder-pem: Add constant for custom ".bus_shit" initialiser
+  PCI: iproc: Convert to use the new ECAM constants
+  PCI: vmd: Update type of the __iomem pointers
+  PCI: xgene: Removed unused ".bus_shift" initialisers from pci-xgene.c
+
+ drivers/pci/controller/dwc/pcie-al.c        | 12 ++------
+ drivers/pci/controller/dwc/pcie-hisi.c      |  2 --
+ drivers/pci/controller/pci-aardvark.c       | 13 ++-------
+ drivers/pci/controller/pci-host-generic.c   |  1 -
+ drivers/pci/controller/pci-thunder-ecam.c   |  1 -
+ drivers/pci/controller/pci-thunder-pem.c    | 13 +++++++--
+ drivers/pci/controller/pci-xgene.c          |  2 --
+ drivers/pci/controller/pcie-brcmstb.c       | 16 ++---------
+ drivers/pci/controller/pcie-iproc.c         | 31 ++++++---------------
+ drivers/pci/controller/pcie-rockchip-host.c | 27 +++++++++---------
+ drivers/pci/controller/pcie-rockchip.h      |  8 +-----
+ drivers/pci/controller/pcie-tango.c         |  1 -
+ drivers/pci/controller/pcie-xilinx-nwl.c    |  9 ++----
+ drivers/pci/controller/pcie-xilinx.c        | 11 ++------
+ drivers/pci/controller/vmd.c                | 19 ++++++-------
+ drivers/pci/ecam.c                          | 23 ++++++++++-----
+ include/linux/pci-ecam.h                    | 27 ++++++++++++++++++
+ 17 files changed, 96 insertions(+), 120 deletions(-)
+
 -- 
-2.27.0
+2.29.2
 
