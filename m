@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D18E2C7BE8
+	by mail.lfdr.de (Postfix) with ESMTP id E9E6A2C7BE9
 	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 00:08:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgK2XId (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Nov 2020 18:08:33 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44538 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgK2XId (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 18:08:33 -0500
-Received: by mail-wr1-f68.google.com with SMTP id 64so13064696wra.11
-        for <linux-pci@vger.kernel.org>; Sun, 29 Nov 2020 15:08:16 -0800 (PST)
+        id S1727991AbgK2XIf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Nov 2020 18:08:35 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43275 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbgK2XIe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 18:08:34 -0500
+Received: by mail-wr1-f67.google.com with SMTP id s8so13044292wrw.10
+        for <linux-pci@vger.kernel.org>; Sun, 29 Nov 2020 15:08:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=w7DrLBT8KBYKfbvtR7994XDirbE4jnXzlQLSoJlL9lc=;
-        b=Z14E7mDO1eaRmbZRdiA2D93K66tckvBISHxzDbVb6Z/uL59Ueb+JqDs47RIkbng6Tq
-         MLSoR8ZiCX505+I1qvKSK+czeLoK3nUQg/xeagijmEF//SuVyRmYIdCajQQqwwB1fs1/
-         aB8nxWwzoPsArDFoNIDhC2newJjn/VHM8rGhrCRbAI4oneCzWDl8y4P/JsCaYDgK+ejs
-         GxHt7LZ1e4z4GndWNKipwVIE6r53PJQMlUtimDL1PfnPoT4/ABPpeZaqzUPq+ZlX9yfc
-         1XP+07+Wmy6SxJT6DLEId5Ta3oNO8JT7l3TG0XXy7rQpTccNNEvpPSnN3LVoUJLjM8Vy
-         Yf4w==
-X-Gm-Message-State: AOAM530+Ud6ySUKsS0FLTcNTDwvFQTzYHDpFZUQ9buGcSc1qqPEzTWYB
-        TKFQE+5X1qfZccoBJZ9EP74=
-X-Google-Smtp-Source: ABdhPJwdjGj7iDsGU1B5WR1LxkaOGB+ic6Eu0jtLWAlHXS2/EdXYuqT/jY33YywMRM935NcuXWVL6A==
-X-Received: by 2002:a5d:65ca:: with SMTP id e10mr24605112wrw.42.1606691270924;
-        Sun, 29 Nov 2020 15:07:50 -0800 (PST)
+        bh=Ff6pKCmLg5oT72OgCOHiIPYU12IbKoKvOXqEEVgg4cU=;
+        b=BQSY1Wx1OF/kE0yEuF9Lx4nr2X8eBJWZTTBJxignI/KtQlrvbzEc+RZDzHwJTWEpKS
+         7VEcXjoF2LwbKMf3iV2PAKVJFNS0sMuc4KMJOohQOSlueRJnPU6YE67lqR1g/mxS/PAw
+         pmi7DhhiPb9NZjRVVMHS62p9XJQ4EGNlJkWS4TxFeKhNIcn538aPD3RnN5BuwS1KRJeq
+         eIcP4zbDzGW670X2HGemuGDyiSweERli4g02DjqF+NoYxf1sNArOvt0Bb8ahrGMIcenz
+         szu4R8HZjJoMD0xKnBE2x+mrK2Q6c2aWOUdyTDAB50skbMF4qt4fvEGVyFd49ZyK3c1W
+         89OQ==
+X-Gm-Message-State: AOAM532fjcdOpk+iKv/VL8jedrsHPK3nm9e+JfLTxN6wANITCqqU2lB/
+        c+7qCdFdFgrJytuNeTIZKjM=
+X-Google-Smtp-Source: ABdhPJzHI72BcK2gh0kFjWjYjgwPhW5lYayUpFmk6eoZtDqknP6gOkv3hmwsP0YHAvHXiiV7ZOzodw==
+X-Received: by 2002:adf:f9c5:: with SMTP id w5mr24603230wrr.69.1606691272550;
+        Sun, 29 Nov 2020 15:07:52 -0800 (PST)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id d2sm24831005wrn.43.2020.11.29.15.07.49
+        by smtp.gmail.com with ESMTPSA id d2sm24831005wrn.43.2020.11.29.15.07.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 15:07:50 -0800 (PST)
+        Sun, 29 Nov 2020 15:07:52 -0800 (PST)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Rob Herring <robh@kernel.org>,
@@ -59,9 +59,9 @@ Cc:     Rob Herring <robh@kernel.org>,
         linuxppc-dev@lists.ozlabs.org, linux-rockchip@lists.infradead.org,
         linux-rpi-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH v6 3/5] PCI: iproc: Convert to use the new ECAM constants
-Date:   Sun, 29 Nov 2020 23:07:41 +0000
-Message-Id: <20201129230743.3006978-4-kw@linux.com>
+Subject: [PATCH v6 4/5] PCI: vmd: Update type of the __iomem pointers
+Date:   Sun, 29 Nov 2020 23:07:42 +0000
+Message-Id: <20201129230743.3006978-5-kw@linux.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201129230743.3006978-1-kw@linux.com>
 References: <20201129230743.3006978-1-kw@linux.com>
@@ -72,113 +72,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Change interface of the function iproc_pcie_map_ep_cfg_reg() so that use
-of PCI_SLOT() and PCI_FUNC() macros and most of the local ECAM-specific
-constants can be dropped, and the new PCIE_ECAM_OFFSET() macro can be
-used instead.  Use the ALIGN_DOWN() macro to ensure that PCI Express
-ECAM offset is always 32 bit aligned.
+Use "void __iomem" instead "char __iomem" pointer type when working with
+the accessor functions (with names like readb() or writel(), etc.) to
+better match a given accessor function signature where commonly the
+address pointing to an I/O memory region would be a "void __iomem"
+pointer.
+
+Related:
+  https://lwn.net/Articles/102232/
 
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/controller/pcie-iproc.c | 31 ++++++++---------------------
- 1 file changed, 8 insertions(+), 23 deletions(-)
+ drivers/pci/controller/vmd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-index 905e93808243..503662380ff8 100644
---- a/drivers/pci/controller/pcie-iproc.c
-+++ b/drivers/pci/controller/pcie-iproc.c
-@@ -6,6 +6,7 @@
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 1361a79bd1e7..59fa9a94860f 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -95,7 +95,7 @@ struct vmd_dev {
+ 	struct pci_dev		*dev;
  
- #include <linux/kernel.h>
- #include <linux/pci.h>
-+#include <linux/pci-ecam.h>
- #include <linux/msi.h>
- #include <linux/clk.h>
- #include <linux/module.h>
-@@ -39,16 +40,8 @@
+ 	spinlock_t		cfg_lock;
+-	char __iomem		*cfgbar;
++	void __iomem		*cfgbar;
  
- #define CFG_IND_ADDR_MASK		0x00001ffc
- 
--#define CFG_ADDR_BUS_NUM_SHIFT		20
--#define CFG_ADDR_BUS_NUM_MASK		0x0ff00000
--#define CFG_ADDR_DEV_NUM_SHIFT		15
--#define CFG_ADDR_DEV_NUM_MASK		0x000f8000
--#define CFG_ADDR_FUNC_NUM_SHIFT		12
--#define CFG_ADDR_FUNC_NUM_MASK		0x00007000
--#define CFG_ADDR_REG_NUM_SHIFT		2
- #define CFG_ADDR_REG_NUM_MASK		0x00000ffc
--#define CFG_ADDR_CFG_TYPE_SHIFT		0
--#define CFG_ADDR_CFG_TYPE_MASK		0x00000003
-+#define CFG_ADDR_CFG_TYPE_1		1
- 
- #define SYS_RC_INTX_MASK		0xf
- 
-@@ -459,19 +452,15 @@ static inline void iproc_pcie_apb_err_disable(struct pci_bus *bus,
- 
- static void __iomem *iproc_pcie_map_ep_cfg_reg(struct iproc_pcie *pcie,
- 					       unsigned int busno,
--					       unsigned int slot,
--					       unsigned int fn,
-+					       unsigned int devfn,
- 					       int where)
- {
- 	u16 offset;
- 	u32 val;
- 
- 	/* EP device access */
--	val = (busno << CFG_ADDR_BUS_NUM_SHIFT) |
--		(slot << CFG_ADDR_DEV_NUM_SHIFT) |
--		(fn << CFG_ADDR_FUNC_NUM_SHIFT) |
--		(where & CFG_ADDR_REG_NUM_MASK) |
--		(1 & CFG_ADDR_CFG_TYPE_MASK);
-+	val = ALIGN_DOWN(PCIE_ECAM_OFFSET(busno, devfn, where), 4) |
-+		CFG_ADDR_CFG_TYPE_1;
- 
- 	iproc_pcie_write_reg(pcie, IPROC_PCIE_CFG_ADDR, val);
- 	offset = iproc_pcie_reg_offset(pcie, IPROC_PCIE_CFG_DATA);
-@@ -574,8 +563,6 @@ static int iproc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
- 				  int where, int size, u32 *val)
- {
- 	struct iproc_pcie *pcie = iproc_data(bus);
--	unsigned int slot = PCI_SLOT(devfn);
--	unsigned int fn = PCI_FUNC(devfn);
- 	unsigned int busno = bus->number;
- 	void __iomem *cfg_data_p;
- 	unsigned int data;
-@@ -590,7 +577,7 @@ static int iproc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
- 		return ret;
+ 	int msix_count;
+ 	struct vmd_irq_list	*irqs;
+@@ -326,7 +326,7 @@ static void vmd_remove_irq_domain(struct vmd_dev *vmd)
  	}
- 
--	cfg_data_p = iproc_pcie_map_ep_cfg_reg(pcie, busno, slot, fn, where);
-+	cfg_data_p = iproc_pcie_map_ep_cfg_reg(pcie, busno, devfn, where);
- 
- 	if (!cfg_data_p)
- 		return PCIBIOS_DEVICE_NOT_FOUND;
-@@ -631,13 +618,11 @@ static void __iomem *iproc_pcie_map_cfg_bus(struct iproc_pcie *pcie,
- 					    int busno, unsigned int devfn,
- 					    int where)
- {
--	unsigned slot = PCI_SLOT(devfn);
--	unsigned fn = PCI_FUNC(devfn);
- 	u16 offset;
- 
- 	/* root complex access */
- 	if (busno == 0) {
--		if (slot > 0 || fn > 0)
-+		if (PCIE_ECAM_DEVFN(devfn) > 0)
- 			return NULL;
- 
- 		iproc_pcie_write_reg(pcie, IPROC_PCIE_CFG_IND_ADDR,
-@@ -649,7 +634,7 @@ static void __iomem *iproc_pcie_map_cfg_bus(struct iproc_pcie *pcie,
- 			return (pcie->base + offset);
- 	}
- 
--	return iproc_pcie_map_ep_cfg_reg(pcie, busno, slot, fn, where);
-+	return iproc_pcie_map_ep_cfg_reg(pcie, busno, devfn, where);
  }
  
- static void __iomem *iproc_pcie_bus_map_cfg_bus(struct pci_bus *bus,
+-static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
++static void __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
+ 				  unsigned int devfn, int reg, int len)
+ {
+ 	unsigned int busnr_ecam = bus->number - vmd->busn_start;
+@@ -346,7 +346,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+ 			int len, u32 *value)
+ {
+ 	struct vmd_dev *vmd = vmd_from_bus(bus);
+-	char __iomem *addr = vmd_cfg_addr(vmd, bus, devfn, reg, len);
++	void __iomem *addr = vmd_cfg_addr(vmd, bus, devfn, reg, len);
+ 	unsigned long flags;
+ 	int ret = 0;
+ 
+@@ -381,7 +381,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+ 			 int len, u32 value)
+ {
+ 	struct vmd_dev *vmd = vmd_from_bus(bus);
+-	char __iomem *addr = vmd_cfg_addr(vmd, bus, devfn, reg, len);
++	void __iomem *addr = vmd_cfg_addr(vmd, bus, devfn, reg, len);
+ 	unsigned long flags;
+ 	int ret = 0;
+ 
 -- 
 2.29.2
 
