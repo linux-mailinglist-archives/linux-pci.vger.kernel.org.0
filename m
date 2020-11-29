@@ -2,70 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC0742C794B
-	for <lists+linux-pci@lfdr.de>; Sun, 29 Nov 2020 14:12:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A83BB2C794D
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Nov 2020 14:12:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgK2NGu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Nov 2020 08:06:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39958 "EHLO
+        id S1726961AbgK2NGw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Nov 2020 08:06:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgK2NGu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 08:06:50 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D1AC0613CF;
-        Sun, 29 Nov 2020 05:06:09 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id pg6so5043622ejb.6;
-        Sun, 29 Nov 2020 05:06:09 -0800 (PST)
+        with ESMTP id S1725830AbgK2NGw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 08:06:52 -0500
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97A7C0613D2;
+        Sun, 29 Nov 2020 05:06:11 -0800 (PST)
+Received: by mail-ed1-x543.google.com with SMTP id n24so9374179edb.4;
+        Sun, 29 Nov 2020 05:06:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OBNusARSTeLEehMn2hSY6WmWfYAsy9+6IC5LvcZopzc=;
-        b=txiM1fETGKw0MZ1dmLODyhfeCQBWEq1MB0t97XDuMQpdyD9WrXNcgMpJWs6oxdiZWH
-         nMjY18Kj9oad/j4zT5IO+QgTmrvlG3t08frQ0NsPHumUEy4NKWMJgtVoQTiCRAA8Du0A
-         kbR88YOSApxsTLrzrr1EHpRNChRnK1DbsZB8ULsyz0ba33hhzqvbn9DQ6kXrB80cn6YQ
-         tXRjRyoi/VK6BV8YDMe2vW6DQJC4ix5LOFSU6zIYeGxiW1WsILnHW48fjiDyMfSV2+ni
-         UZ2i/XNG3vBaZQyyWucsnG+u11CxFS7d74xnjB/aFuvKJz95D5QWDSATFmsnilOSkGGp
-         UbeA==
+        bh=8ozyxPkGPRLOCY4epEaLOpOsyLKUOueRcL5FH3Vv3/8=;
+        b=ZmcOr77zVJRsSj82yYGfOvtadmiXd4o0fx50M8S02caC3WGSZSGvp+XOHV5K4du69K
+         LGlttJWxamoE5i+1YyHwpvzP7yuZO9ilRO7gG6/lm5ijxw3gHN9pW7MSdeTXlyl5o7/x
+         0SyK1aeVpEl/iS9iK17bmnft+3O0ZP4lt40m92ma/jcJ/0RgzDcWDLo04/XvMt0bAoEX
+         kmM5H2nGHZ/HRgbFOdhD0Q8cvvTOewHA9gxrrloCE7GwIk5txidf8s1v3wvQeX4CCm43
+         ksGefa55aQ4CmBTCSC2ZjbYln4p5rssJvUhNCLe4y/w4XUfMyLczyhjEDFeHxbpwO+Ir
+         HTHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=OBNusARSTeLEehMn2hSY6WmWfYAsy9+6IC5LvcZopzc=;
-        b=EZ6eMUwKjQodU1B9k1ecSAYamKnLtGALtTQRxKPxegccMiTRC0q04RxXT+Q4QfW9Ke
-         pq8z1WcM3BhKbHevnNU+WlXWu5+ITyp6azBk5/71S3XcK/hObgzqXjpBiPXgXaCGdntQ
-         4OnLgKy1sKN43k9sJLilkXz2Uex6f93KxJQ9N5OIP68clYD944XC4N/d4rwFj0CjQhHg
-         6yrbRNQQUUasKHKODDcnrwcz1+nIBH+MuFmw2kY7VCufSit8Mo4AHTRaKTF7Ky6EsHYx
-         EmsGYhZrswO5/bzBJ1DW96wTMv65+oqQWstrPfpzpwWeFZLQnjj8DP+jfh+wOqtsix+j
-         qRhg==
-X-Gm-Message-State: AOAM5332lgB8fii+g75Zbr95dwq/vtFcbq/boreyz/qeMsvHi7bzTq7+
-        07fAk65VuGsI0YoBWbo75fAf3T5MvsE1mQ==
-X-Google-Smtp-Source: ABdhPJxU9yksuV1C+LRDbd905yWQeWN71zpG6SFxcuKZ8wwZjVZe4Oc2R12cntDM074WGJ06Pv6mqA==
-X-Received: by 2002:a17:906:52d9:: with SMTP id w25mr16086446ejn.504.1606655168026;
-        Sun, 29 Nov 2020 05:06:08 -0800 (PST)
+        bh=8ozyxPkGPRLOCY4epEaLOpOsyLKUOueRcL5FH3Vv3/8=;
+        b=iyRw5c8uLQ2TwHMUVAIB3rzhX3x5rLPMMSQeZShNbei5x47tFeuzlJg6Ysf9HNlrHu
+         GohXg5e7ja1QrgwGsVHJNRhlYADVMsEIaWaiuNo8fj4ZkHPFJS4r4ztcIbV1uBUkXbF4
+         md5v4qzy3oFFUWRcppKPTspYj1RXyFqripdJLuMJfoCWnXG3QsEfNnh8vsdBwv8/8pme
+         BU0Jrtnlp9Xwod4A1+hyTNGti/V8q4QGPlVygvthpr6UuH0cLH25I7/YLgVubVhlrMAj
+         E8gKSBqKWqI0cIdRxvRtILQXMNc+MeegznBN9oEy0s2aqxCfGZRQ1leIzpteiOjtfk1Y
+         /ZOg==
+X-Gm-Message-State: AOAM530nnHpekXS0WH6O2HwcXrgKLR4Wf+RxUu+aw+82n756cB2ESryP
+        8F+TKUG0RPH0ZVtZzdmnZl8+okxyFMP6uw==
+X-Google-Smtp-Source: ABdhPJytY2KngnmcztguyMY+9nYNz3lusXsRTcJY7xB9HAtluK9KvfdcbtztpXwGSiIEnl7pqx/I2Q==
+X-Received: by 2002:a05:6402:21a:: with SMTP id t26mr17400269edv.173.1606655170148;
+        Sun, 29 Nov 2020 05:06:10 -0800 (PST)
 Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id n23sm1251104edv.12.2020.11.29.05.06.06
+        by smtp.gmail.com with ESMTPSA id lj14sm3363089ejb.16.2020.11.29.05.06.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Nov 2020 05:06:07 -0800 (PST)
-Subject: Re: [PATCH] PCI: rcar: Add L1 link state fix into data abort hook
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
+        Sun, 29 Nov 2020 05:06:09 -0800 (PST)
+Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Wolfram Sang <wsa@the-dreams.de>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         linux-renesas-soc@vger.kernel.org
-References: <20200912211853.15321-1-marek.vasut@gmail.com>
- <20200913172207.GA1194428@bjorn-Precision-5520>
- <20201119162508.GA23852@e121166-lin.cambridge.arm.com>
+References: <20201016120416.7008-1-marek.vasut@gmail.com>
+ <20201119173553.GB23852@e121166-lin.cambridge.arm.com>
 From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <092d664e-098d-2f51-9d47-4a60a8bd9bb6@gmail.com>
-Date:   Sun, 29 Nov 2020 14:02:42 +0100
+Message-ID: <57358982-ef8c-ed91-c011-00b8a48c4ebd@gmail.com>
+Date:   Sun, 29 Nov 2020 14:05:08 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.0
 MIME-Version: 1.0
-In-Reply-To: <20201119162508.GA23852@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20201119173553.GB23852@e121166-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,31 +71,89 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/19/20 5:25 PM, Lorenzo Pieralisi wrote:
+On 11/19/20 6:35 PM, Lorenzo Pieralisi wrote:
+>> +#ifdef CONFIG_ARM
+>> +/*
+>> + * Here we keep a static copy of the remapped PCIe controller address.
+>> + * This is only used on aarch32 systems, all of which have one single
+>> + * PCIe controller, to provide quick access to the PCIe controller in
+>> + * the L1 link state fixup function, called from the ARM fault handler.
+>> + */
+>> +static void __iomem *pcie_base;
+>> +/*
+>> + * Static copy of bus clock pointer, so we can check whether the clock
+>> + * is enabled or not.
+>> + */
+>> +static struct clk *pcie_bus_clk;
+>> +#endif
+> 
+> Don't think you can have multiple host bridges in a given platform,
+> if it is a possible configuration this won't work.
+
+Correct, all the affected platforms have only one host bridge.
+
+>>   static inline struct rcar_msi *to_rcar_msi(struct msi_controller *chip)
+>>   {
+>>   	return container_of(chip, struct rcar_msi, chip);
+>> @@ -804,6 +820,12 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
+>>   	}
+>>   	host->msi.irq2 = i;
+>>   
+>> +#ifdef CONFIG_ARM
+>> +	/* Cache static copy for L1 link state fixup hook on aarch32 */
+>> +	pcie_base = pcie->base;
+>> +	pcie_bus_clk = host->bus_clk;
+>> +#endif
+>> +
+>>   	return 0;
+>>   
+>>   err_irq2:
+>> @@ -1050,4 +1072,58 @@ static struct platform_driver rcar_pcie_driver = {
+>>   	},
+>>   	.probe = rcar_pcie_probe,
+>>   };
+>> +
+>> +#ifdef CONFIG_ARM
+>> +static int rcar_pcie_aarch32_abort_handler(unsigned long addr,
+>> +		unsigned int fsr, struct pt_regs *regs)
+>> +{
+>> +	u32 pmsr;
+>> +
+>> +	if (!pcie_base || !__clk_is_enabled(pcie_bus_clk))
+>> +		return 1;
+>> +
+>> +	pmsr = readl(pcie_base + PMSR);
+>> +
+>> +	/*
+>> +	 * Test if the PCIe controller received PM_ENTER_L1 DLLP and
+>> +	 * the PCIe controller is not in L1 link state. If true, apply
+>> +	 * fix, which will put the controller into L1 link state, from
+>> +	 * which it can return to L0s/L0 on its own.
+>> +	 */
+>> +	if ((pmsr & PMEL1RX) && ((pmsr & PMSTATE) != PMSTATE_L1)) {
+>> +		writel(L1IATN, pcie_base + PMCTLR);
+>> +		while (!(readl(pcie_base + PMSR) & L1FAEG))
+>> +			;
+>> +		writel(L1FAEG | PMEL1RX, pcie_base + PMSR);
+>> +		return 0;
+>> +	}
+> 
+> I suppose a fault on multiple cores can happen simultaneously, if it
+> does this may not work well either - I assume all config/io/mem would
+> trigger a fault.
+> 
+> As I mentioned in my reply to v1, is there a chance we can move
+> this quirk into config accessors (if the PM_ENTER_L1_DLLP is
+> subsequent to a write into PMCSR to programme a D state) ?
+
+I don't think we can, since the userspace can do such a config space 
+write with e.g. setpci and then this fixup is still needed.
+
+> Config access is serialized but I suspect as I said above that this
+> triggers on config/io/mem alike.
+> 
+> Just asking to try to avoid a fault handler if possible.
+
+See above, I doubt we can fully avoid this workaround.
+
 [...]
->>> The R-Car PCIe controller is capable of handling L0s/L1 link states.
->>> While the controller can enter and exit L0s link state, and exit L1
->>> link state, without any additional action from the driver, to enter
->>> L1 link state, the driver must complete the link state transition by
->>> issuing additional commands to the controller.
->>
->> So IIUC an R-Car Root Port can't enter L1 without help from the
->> driver?  That *sounds* like a hardware defect, since ASPM is supposed
->> to be "hardware-autonomous" once configured.
-> 
-> Sorry for the late feedback, starting to queue patches for v5.11.
-
-Same here.
-
-> Is this issue ASPM related (ie is it supported by the host controller) ?
-> 
-> *Or* it is related to kernel driven device D-{1,2,3} L1 entry ?
-> 
-> I am asking because if it is only related to D-{1,2,3} device state
-> entry we could intercept the PMCSR write and move the quirk in config
-> space accessors.
-
-I don't think you can always intercept the entry into L1 state (e.g. if 
-userspace triggers it), but you should be able to recover from such a 
-state (this controller does permit you to do so), so I would say this is 
-a third option.
