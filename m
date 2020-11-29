@@ -2,105 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62C522C7BEA
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 00:08:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABCE62C7BF8
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 00:18:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbgK2XIg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Nov 2020 18:08:36 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44542 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbgK2XIg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Nov 2020 18:08:36 -0500
-Received: by mail-wr1-f67.google.com with SMTP id 64so13064877wra.11
-        for <linux-pci@vger.kernel.org>; Sun, 29 Nov 2020 15:08:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uPxJqe/4fqAvPeHEi4PXiRImG9ouLArz1SvUbqNRaMU=;
-        b=hGrfin1D0q77H+dg3iPBziXYB6ZFv56ENF6lWRLEWZ/MzorBS8X+nyx3yzSE/Wp4nc
-         enKueNXsB8nQ8GCvFiZ+gqyu/qevU5wgSJ15GKA0bc6OLmAc5ULKsP8Hfu7ZG1cmu8FE
-         AvXU6Bpk9n2LQWMGfvtQDAEh/UFxTpDAFYZyBZwu+ZsMWh3P7i6hGepGAwRnBv24h0oO
-         MMCuNN6PslescoPtme3Ufz3YqQZ2N4Gl30vmeVsw08ClkDmOkpoWJAHgBCPO5kxBWZR6
-         FQlBkRY+sGQdziB2xPZy2tgqyM6ZDv0uKI61/lUraxXRzYPM2vMKhimfQZMBwEbpS2f8
-         ww2Q==
-X-Gm-Message-State: AOAM533z0uPO2f4UijwypxtzfMHi89KET3D85tn5KlVNNfxLlSK0Bm7d
-        qJiMLXatg/aoomaG75Qw3Ts=
-X-Google-Smtp-Source: ABdhPJxBybijJQjc+K6GS3b05hGcfYGidU+rzn/2+1RrcEs/rkLFlqp5WDEDRPkMUSgp4rfySiTCfA==
-X-Received: by 2002:adf:e912:: with SMTP id f18mr24033599wrm.79.1606691274071;
-        Sun, 29 Nov 2020 15:07:54 -0800 (PST)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id d2sm24831005wrn.43.2020.11.29.15.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 15:07:53 -0800 (PST)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rockchip@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH v6 5/5] PCI: xgene: Removed unused ".bus_shift" initialisers from pci-xgene.c
-Date:   Sun, 29 Nov 2020 23:07:43 +0000
-Message-Id: <20201129230743.3006978-6-kw@linux.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201129230743.3006978-1-kw@linux.com>
-References: <20201129230743.3006978-1-kw@linux.com>
+        id S1726512AbgK2XSZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Nov 2020 18:18:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726304AbgK2XSY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 29 Nov 2020 18:18:24 -0500
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112912076C;
+        Sun, 29 Nov 2020 23:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606691864;
+        bh=UvFn/A9Lhl6h/HurzfA5JdUxziEQn3qtGTpb20WsY6I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bspa2U/Ap8tZ1jfyB6+xdKT/lg5kDu6sDGQLH0q4VS62XFvpkOjWDiBN3VlbFEL9g
+         TtcfJviWttGWpimnhVB8Tt3rBmdbwehLOUXkZRIsS+4isIH5pdxhDyln4rsZMADUsA
+         lpYLW1cHwg3cUr9Ac2j7JMhbgyzeUX7ch/EInZT0=
+Received: by pali.im (Postfix)
+        id E048B765; Mon, 30 Nov 2020 00:17:41 +0100 (CET)
+Date:   Mon, 30 Nov 2020 00:17:41 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Update comment about disabling link
+ training
+Message-ID: <20201129231741.yfhf3y42mfnbp4xb@pali>
+References: <20200924084618.12442-1-pali@kernel.org>
+ <20200924151106.GA2319992@bjorn-Precision-5520>
+ <20200924152232.ecoxpmxdc5iyrz76@pali>
+ <20201011172149.x7crspugv2xne6ui@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201011172149.x7crspugv2xne6ui@pali>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Removed unused ".bus_shift" initialisers from pci-xgene.c as
-xgene_pcie_map_bus() did not use these.
+On Sunday 11 October 2020 19:21:49 Pali Rohár wrote:
+> On Thursday 24 September 2020 17:22:32 Pali Rohár wrote:
+> > On Thursday 24 September 2020 10:11:06 Bjorn Helgaas wrote:
+> > > On Thu, Sep 24, 2020 at 10:46:18AM +0200, Pali Rohár wrote:
+> > > > It is not HW bug or workaround for some cards but it is requirement by PCI
+> > > > Express spec. After fundamental reset is needed 100ms delay prior enabling
+> > > > link training. So update comment in code to reflect this requirement.
+> > > > 
+> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > ---
+> > > >  drivers/pci/controller/pci-aardvark.c | 7 ++++++-
+> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > > index 50ab6d7519ae..19b9b79226e5 100644
+> > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > @@ -259,7 +259,12 @@ static void advk_pcie_issue_perst(struct advk_pcie *pcie)
+> > > >  	if (!pcie->reset_gpio)
+> > > >  		return;
+> > > >  
+> > > > -	/* PERST does not work for some cards when link training is enabled */
+> > > > +	/*
+> > > > +	 * As required by PCI Express spec a delay for at least 100ms after
+> > > > +	 * de-asserting PERST# signal is needed before link training is enabled.
+> > > > +	 * So ensure that link training is disabled prior de-asserting PERST#
+> > > > +	 * signal to fulfill that PCI Express spec requirement.
+> > > 
+> > > Can you please include the spec citation here?  In the PCIe base spec,
+> > > PERST# is only mentioned in PCIe r5.0, sec 6.6.1, and I don't see the
+> > > connection there to 100ms between de-assert of PERST# and enabling
+> > > link training.
+> > 
+> > Hello! I copied this "comment" from other place in pci-aardvark.c where
+> > that timeout 100ms is already applied. Timeout with explanation comment
+> > was introduced in following commit:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f4c7d053d7f7
+> > 
+> > Here are links to discussions about that patch:
+> > 
+> > https://lore.kernel.org/linux-pci/20190313213752.1246-1-repk@triplefau.lt/T/#u
+> > https://lore.kernel.org/linux-pci/20190522213351.21366-2-repk@triplefau.lt/T/#u
+> 
+> Bjorn or Lorenzo, do you need something else for this patch? It just
+> updates comment and basically clarify why PERST does not work for some
+> cards when link training is enabled.
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/pci-xgene.c | 2 --
- 1 file changed, 2 deletions(-)
+PING?
 
-diff --git a/drivers/pci/controller/pci-xgene.c b/drivers/pci/controller/pci-xgene.c
-index 8e0db84f089d..85e7c98265e8 100644
---- a/drivers/pci/controller/pci-xgene.c
-+++ b/drivers/pci/controller/pci-xgene.c
-@@ -257,7 +257,6 @@ static int xgene_v1_pcie_ecam_init(struct pci_config_window *cfg)
- }
- 
- const struct pci_ecam_ops xgene_v1_pcie_ecam_ops = {
--	.bus_shift	= 16,
- 	.init		= xgene_v1_pcie_ecam_init,
- 	.pci_ops	= {
- 		.map_bus	= xgene_pcie_map_bus,
-@@ -272,7 +271,6 @@ static int xgene_v2_pcie_ecam_init(struct pci_config_window *cfg)
- }
- 
- const struct pci_ecam_ops xgene_v2_pcie_ecam_ops = {
--	.bus_shift	= 16,
- 	.init		= xgene_v2_pcie_ecam_init,
- 	.pci_ops	= {
- 		.map_bus	= xgene_pcie_map_bus,
--- 
-2.29.2
-
+> > > Sec 6.1.1 does talk about 100ms before sending config requests (for
+> > > ports that support <= 5 GT/s), and 100ms after link training completes
+> > > (for ports that support > 5 GT/s).
+> > > 
+> > > Maybe there's more language in a form-factor spec or something?
+> > > 
+> > > > +	 */
+> > > >  	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
+> > > >  	reg &= ~LINK_TRAINING_EN;
+> > > >  	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
+> > > > -- 
+> > > > 2.20.1
+> > > > 
