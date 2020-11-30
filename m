@@ -2,203 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE12B2C8007
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 09:34:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E75B22C803E
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 09:46:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgK3Idi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 03:33:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgK3Idh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 03:33:37 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268EEC0613D4;
-        Mon, 30 Nov 2020 00:32:57 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id y10so16472995ljc.7;
-        Mon, 30 Nov 2020 00:32:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HyXbdo2hXDjhZebrj1MjXRgu3sgvcOhu5l8NPDQBwRI=;
-        b=WJ5AxPuYwLEAJRDdmAsTi8cZHbG2C1sDtyObblBhGXjJJFHcpe6gjSskGed2AgSZdp
-         d3YXocVCwGt8ep0xsYgz+r91onJh4GnwdmcK/6L1TlxZpzqb8RToXnYBQAEaHS8EWiwy
-         QXslelUKLHG8HoMC0RxM97yiEW4aQe9sJmwBYt/xFvgB2p3S7sH/vlvebBW0C8a6G5LH
-         Ljvv7PbpnTg2YjPL6Jv0TXjXC9Of2SA9M5cVmWUCJ+9l2YXrGc7sjXoIHpBCfPtXya+L
-         uddgtiygw7Gs3KtO/cTNZBILyXLw8dBtFd1pfN3tSb+Zt7V3BpqFBtdessu5Ml1zKm/W
-         LOYQ==
+        id S1727258AbgK3Ipb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 03:45:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51183 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726474AbgK3Ipb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 03:45:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606725844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ey1C0d9PZ+jC1SeRokoRwtQYfI7PDl+5m30mISh+nx8=;
+        b=H6pThWSefJwCShdlBzZQCVSBiPVPY/SVaLtp081yHea4W2E36QRBYVuxQlQPAtwBDJPabz
+        JVAyBNz3VTrKRpKJbuKEL1nS5tYvJr7fO7XrgUfICM3kDL4mMKgBaOwXLjpHu9k6f2h/UQ
+        3KiCSAXOvYok8cUgAwEvg6VFw95EGVE=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-Si6iPO4jPWKEMjvmLNcWsQ-1; Mon, 30 Nov 2020 03:44:01 -0500
+X-MC-Unique: Si6iPO4jPWKEMjvmLNcWsQ-1
+Received: by mail-ed1-f71.google.com with SMTP id g1so6371730edk.0
+        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 00:44:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HyXbdo2hXDjhZebrj1MjXRgu3sgvcOhu5l8NPDQBwRI=;
-        b=OGCGVCCecIbFlAfpwocVRm57zvjhqeUkZ5ycS13pXlPF8DApBdFUUW78wJHIbooqmt
-         sa2rM3rfUwSvb/cNXfr1IzOuPmA6FoaRwiAYzi49COlf39+znSLWist+I6hDhfalqQ17
-         C4/zRNdjcxKfq8DitHrbSlYYCD/dAj84Ma45S8yfMaEX5ZVjAk/rs8rq0XgxsScDQAQk
-         vs5x+6KYbppdzIvJadG0MSQiI3PCV9m+KxKL0X5kNXX/BFFGFzBsAQ+d2L4pDUwxtnLZ
-         OfpzYaAGFHkQz9SOw5ibJpEvbA9emOQrwzMNmy74xKePfkwJb+wsnjuMdnY99n6vTcrU
-         YSiw==
-X-Gm-Message-State: AOAM530mcS9KNDbJkrSO0SY9Btrmclzyi/W6wZ1m2Hf8UTrloXY8rYZW
-        szVuThRSemOwq+XWpY+xwLFHiRYIkTE=
-X-Google-Smtp-Source: ABdhPJy6IT6LoolcCk/kaXobihraCsDZDLQCY0VHa91NksmJz9Ctv3qa0cg9dS2PCZswndkINvIVQQ==
-X-Received: by 2002:a05:651c:c7:: with SMTP id 7mr8636307ljr.116.1606725175530;
-        Mon, 30 Nov 2020 00:32:55 -0800 (PST)
-Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id y81sm2355420lfc.100.2020.11.30.00.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Nov 2020 00:32:54 -0800 (PST)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2 2/2] PCI: brcmstb: support BCM4908 with external PERST# signal controller
-Date:   Mon, 30 Nov 2020 09:32:23 +0100
-Message-Id: <20201130083223.32594-3-zajec5@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20201130083223.32594-1-zajec5@gmail.com>
-References: <20201130083223.32594-1-zajec5@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ey1C0d9PZ+jC1SeRokoRwtQYfI7PDl+5m30mISh+nx8=;
+        b=pWusUZgw3E6TgosWYQQtdgAqlHRxqnzFaXmiTRXnIJirOiom2OsSc2okCIkT1BcGQz
+         CFPBhfsnrVYbp9+QUFTQ5UyZbLXiV5lTPRPeolxhdf4VqLzJKWNuG4x1nRXskuAOBd1w
+         EQM6hu2mOrKoFLRLPO3PXk9LzscQYzoxBv0MELZ1A+RG+Uvj1VrIlo4l6pMDykqIFm+9
+         tSEF9wRvz5collBSJh2cVgNMdBSWNURhhY3ZP9oV0TxSMWGurIApVWdI1sBYRu52/JcA
+         aXat5IeqaOci7o/vM8Aip2v0ChC7C9VZZ9PrZ6On0wmS+t0uRXiIcfpf+YI7+vPcMn4x
+         p4Iw==
+X-Gm-Message-State: AOAM532njn2BtcUWUV+4IGP/5I8GEHWE3BXwWq7FSkQYjgwm4DTKLsOB
+        Mkzd2tIDft2i00tSsRZNTnEWyUTrCFDhYNORny2x3x+mo67Qi0peslgiYmt/tg2+MlUQM9Xzcsy
+        YQsuDw9kRNx1FOlZXbJdh
+X-Received: by 2002:a17:906:aac1:: with SMTP id kt1mr567769ejb.329.1606725840171;
+        Mon, 30 Nov 2020 00:44:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxs3ln5Efn41CjmIOtYUTR38V2LHcxx3XUgPY7qefkj2/Jh8zpB5MhDtTGr1Nse7RBqGNLFPA==
+X-Received: by 2002:a17:906:aac1:: with SMTP id kt1mr567760ejb.329.1606725840030;
+        Mon, 30 Nov 2020 00:44:00 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id d10sm7897462ejc.39.2020.11.30.00.43.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Nov 2020 00:43:59 -0800 (PST)
+Subject: Re: 5.10 regression caused by: "uas: fix sdev->host->dma_dev": many
+ XHCI swiotlb buffer is full / DMAR: Device bounce map failed errors on
+ thunderbolt connected XHCI controller
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Tom Yan <tom.ty89@gmail.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+References: <b046dd04-ac4f-3c69-0602-af810fb1b365@redhat.com>
+ <be031d15-201f-0e5c-8b0f-be030077141f@redhat.com>
+ <20201124102715.GA16983@lst.de>
+ <fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com>
+ <8a52e868-0ca1-55b7-5ad2-ddb0cbb5e45d@redhat.com>
+ <20201127161900.GA10986@lst.de>
+ <fded04e2-f2e9-de92-ab1f-5aa088904e90@redhat.com>
+ <20201128171500.GA3550@lst.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a84974a8-514b-690b-480b-c82c0617fec0@redhat.com>
+Date:   Mon, 30 Nov 2020 09:43:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201128171500.GA3550@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+Hi,
 
-BCM4908 uses external MISC block for controlling PERST# signal. Use it
-as a reset controller.
+On 11/28/20 6:15 PM, Christoph Hellwig wrote:
+> Can you give this one-liner a spin?
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index c6622011d4938c..e889111b55c71d 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -4007,6 +4007,7 @@ static const struct dma_map_ops bounce_dma_ops = {
+>  	.alloc_pages		= dma_common_alloc_pages,
+>  	.free_pages		= dma_common_free_pages,
+>  	.dma_supported		= dma_direct_supported,
+> +	.max_mapping_size	= swiotlb_max_mapping_size,
+>  };
+>  
+>  static inline int iommu_domain_cache_init(void)
+> 
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-V2: Reorder BCM4908 in the enum pcie_type
-    Use devm_reset_control_get_optional_exclusive()
-    Don't move hw_rev read up in the code
----
- drivers/pci/controller/Kconfig        |  2 +-
- drivers/pci/controller/pcie-brcmstb.c | 32 +++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 1 deletion(-)
+I'm afraid that this does not help.
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 64e2f5e379aa..d44c70bb88f6 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -273,7 +273,7 @@ config VMD
- 
- config PCIE_BRCMSTB
- 	tristate "Broadcom Brcmstb PCIe host controller"
--	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM4908 || COMPILE_TEST
- 	depends on OF
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	default ARCH_BRCMSTB
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 9c3d2982248d..98536cf3af58 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -96,6 +96,7 @@
- 
- #define PCIE_MISC_REVISION				0x406c
- #define  BRCM_PCIE_HW_REV_33				0x0303
-+#define  BRCM_PCIE_HW_REV_3_20				0x0320
- 
- #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT		0x4070
- #define  PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_LIMIT_MASK	0xfff00000
-@@ -190,6 +191,7 @@
- struct brcm_pcie;
- static inline void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32 val);
- static inline void brcm_pcie_bridge_sw_init_set_generic(struct brcm_pcie *pcie, u32 val);
-+static inline void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val);
- static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val);
- static inline void brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val);
- 
-@@ -206,6 +208,7 @@ enum {
- 
- enum pcie_type {
- 	GENERIC,
-+	BCM4908,
- 	BCM7278,
- 	BCM2711,
- };
-@@ -230,6 +233,13 @@ static const struct pcie_cfg_data generic_cfg = {
- 	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
- };
- 
-+static const struct pcie_cfg_data bcm4908_cfg = {
-+	.offsets	= pcie_offsets,
-+	.type		= BCM4908,
-+	.perst_set	= brcm_pcie_perst_set_4908,
-+	.bridge_sw_init_set = brcm_pcie_bridge_sw_init_set_generic,
-+};
-+
- static const int pcie_offset_bcm7278[] = {
- 	[RGR1_SW_INIT_1] = 0xc010,
- 	[EXT_CFG_INDEX] = 0x9000,
-@@ -282,6 +292,7 @@ struct brcm_pcie {
- 	const int		*reg_offsets;
- 	enum pcie_type		type;
- 	struct reset_control	*rescal;
-+	struct reset_control	*perst_reset;
- 	int			num_memc;
- 	u64			memc_size[PCIE_BRCM_MAX_MEMC];
- 	u32			hw_rev;
-@@ -747,6 +758,17 @@ static inline void brcm_pcie_bridge_sw_init_set_7278(struct brcm_pcie *pcie, u32
- 	writel(tmp, pcie->base + PCIE_RGR1_SW_INIT_1(pcie));
- }
- 
-+static inline void brcm_pcie_perst_set_4908(struct brcm_pcie *pcie, u32 val)
-+{
-+	if (WARN_ONCE(!pcie->perst_reset, "missing PERST# reset controller\n"))
-+		return;
-+
-+	if (val)
-+		reset_control_assert(pcie->perst_reset);
-+	else
-+		reset_control_deassert(pcie->perst_reset);
-+}
-+
- static inline void brcm_pcie_perst_set_7278(struct brcm_pcie *pcie, u32 val)
- {
- 	u32 tmp;
-@@ -1206,6 +1228,7 @@ static int brcm_pcie_remove(struct platform_device *pdev)
- 
- static const struct of_device_id brcm_pcie_match[] = {
- 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
-+	{ .compatible = "brcm,bcm4908-pcie", .data = &bcm4908_cfg },
- 	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
- 	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
- 	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
-@@ -1262,6 +1285,11 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		clk_disable_unprepare(pcie->clk);
- 		return PTR_ERR(pcie->rescal);
- 	}
-+	pcie->perst_reset = devm_reset_control_get_optional_exclusive(&pdev->dev, "perst");
-+	if (IS_ERR(pcie->perst_reset)) {
-+		clk_disable_unprepare(pcie->clk);
-+		return PTR_ERR(pcie->perst_reset);
-+	}
- 
- 	ret = reset_control_deassert(pcie->rescal);
- 	if (ret)
-@@ -1279,6 +1307,10 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		goto fail;
- 
- 	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
-+	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
-+		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
-+		goto fail;
-+	}
- 
- 	msi_np = of_parse_phandle(pcie->np, "msi-parent", 0);
- 	if (pci_msi_enabled() && msi_np == pcie->np) {
--- 
-2.26.2
+Also I still find it somewhat wrong that the use of scsi_add_host_with_dma()
+in uas.c, which then passed the XHCI controller as dma-dev is causing changes
+to the DMA settings of the XHCI controller, impacting *other* USB devices
+and these changes also are permanent, they stay around even after unbinding
+the uas driver.
+
+This just feels wrong on many levels. If some changes to the XHCI controllers
+DMA settings are necessary for better uas performance then these changes
+really should be made inside the XHCI driver, so that they always apply and
+not have this weirdness going on where binding one USB driver permanently
+changes the behavior of the entire USB bus (until rebooted).
+
+Querying the DMA settings of the XHCI controller in the uas driver is fine,
+but changing them seems like a big nono to me.
+
+Regards,
+
+Hans
 
