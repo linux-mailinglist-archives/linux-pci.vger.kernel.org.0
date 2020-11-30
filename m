@@ -2,132 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83B2F2C88F4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 17:07:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CC9B2C8919
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 17:14:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgK3QGo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 11:06:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50622 "EHLO mail.kernel.org"
+        id S1727805AbgK3QNo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 11:13:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgK3QGo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Nov 2020 11:06:44 -0500
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+        id S1726213AbgK3QNo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Nov 2020 11:13:44 -0500
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A445420855;
-        Mon, 30 Nov 2020 16:06:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8EF22087C;
+        Mon, 30 Nov 2020 16:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606752363;
-        bh=1GPOYWKEqPNGZW+D562IP8XHFWfvy0me5bE6J0pU+d8=;
+        s=default; t=1606752783;
+        bh=wuan7nT2b3j/ysuAroybQAZQ8NB/ed1lLmOF9ZpUHhQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2HEFFHdTywl4CAx/p1hd7QiYvhS8NPF2Ea8lnZGgE9ImRRreBXzRmxXufDNlcLYC8
-         GTq3r6CtCLehaJ7DLWvw0+E5NwB5M45pzGg+/S0+ZPz59nYqfmjftDVq7XgZ6CTrQr
-         sIDgmoTV5zhOunGNY9jfhnDbbBTAN2guug6UW26g=
-Received: by mail-ej1-f44.google.com with SMTP id s13so7438772ejr.1;
-        Mon, 30 Nov 2020 08:06:02 -0800 (PST)
-X-Gm-Message-State: AOAM533MrOXqaiiL2XxEK0sS8Nm7gL5dGczBBXsoNwIyacd0IWyJIcqh
-        J4EoXsGg5LElePIk5FCbQU7XA/5vk4hnKOpaPw==
-X-Google-Smtp-Source: ABdhPJxfgVyP4bnFkAOZrDfHIcdnZWjZa+nSBKw43ABRjzDjIuoZF/30uk3bcc5ez7+cDtG5GS+Y7unmH8ERNOmZGjc=
-X-Received: by 2002:a17:907:2718:: with SMTP id w24mr15879083ejk.525.1606752361083;
- Mon, 30 Nov 2020 08:06:01 -0800 (PST)
+        b=fdzM643DQwdapNgIL/8Foi9Rmb5HM+BBBgjOdQutwpztsTTQCu5+nxKdiLubyqXEU
+         LW4ZNZFMrTA7AHxizzx8FkkCmdnl7tW+GPI7Obm1Ws6I2qqvd9g/KyoCec44zIarnQ
+         ygy7FGFb53obaRZwHl2I/2tcwjVVFUJnjslrRUwU=
+Received: by mail-ed1-f46.google.com with SMTP id l5so16871281edq.11;
+        Mon, 30 Nov 2020 08:13:02 -0800 (PST)
+X-Gm-Message-State: AOAM5324kHn43P7frKY/qU7i1xkHALflRkV4EXQnvnOj8aa16Imyfj74
+        fzst/tMe+Pu3og+u6jQQ/u7QCyeXF/Ni6Xd65g==
+X-Google-Smtp-Source: ABdhPJylQOreCp8QimYarFnXM0CzQZutwGrXF+ZC9QHOflV9bqRy//RSzC3ueRaJOgroSqkF2n7fEAmlFy9T4oMcBMk=
+X-Received: by 2002:aa7:c816:: with SMTP id a22mr5805431edt.373.1606752781185;
+ Mon, 30 Nov 2020 08:13:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20201119202825.GA197305@bjorn-Precision-5520> <1606113913.14736.37.camel@mhfsdcap03>
-In-Reply-To: <1606113913.14736.37.camel@mhfsdcap03>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 30 Nov 2020 09:05:48 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqLdqCE-sVb8T6p2E5Zf1b3pvPBtapZ8dsQGFDW3GsArjQ@mail.gmail.com>
-Message-ID: <CAL_JsqLdqCE-sVb8T6p2E5Zf1b3pvPBtapZ8dsQGFDW3GsArjQ@mail.gmail.com>
-Subject: Re: [v4,2/3] PCI: mediatek: Add new generation controller support
-To:     Jianjun Wang <jianjun.wang@mediatek.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        PCI <linux-pci@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+References: <20201116173141.31873-1-kishon@ti.com> <20201116173141.31873-2-kishon@ti.com>
+ <20201118211139.GA1815279@bogus> <1e9b0b56-a42d-bea0-704b-6209532b1abe@ti.com>
+ <1ed82ab5-6171-108d-9b92-a18389044174@ti.com>
+In-Reply-To: <1ed82ab5-6171-108d-9b92-a18389044174@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Nov 2020 09:12:49 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqKWx2qSjEVFEC4vLASLonHhQfDbHnq+rTeEZ3F-g_LRKA@mail.gmail.com>
+Message-ID: <CAL_JsqKWx2qSjEVFEC4vLASLonHhQfDbHnq+rTeEZ3F-g_LRKA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pci: ti,j721e: Fix "ti,syscon-pcie-ctrl"
+ to take argument
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Youlin Pei <youlin.pei@mediatek.com>,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>,
-        qizhong.cheng@mediatek.com, sin_jieyang@mediatek.com
+        devicetree@vger.kernel.org, PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 22, 2020 at 11:45 PM Jianjun Wang <jianjun.wang@mediatek.com> wrote:
+On Thu, Nov 26, 2020 at 5:53 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
 >
-> On Thu, 2020-11-19 at 14:28 -0600, Bjorn Helgaas wrote:
-> > "Add new generation" really contains no information.  And "mediatek"
-> > is already used for the pcie-mediatek.c driver, so we should have a
-> > new tag for this new driver.  Include useful information in the
-> > subject, e.g.,
-> >
-> >   PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
-> >
-> > On Wed, Nov 18, 2020 at 04:29:34PM +0800, Jianjun Wang wrote:
-> > > MediaTek's PCIe host controller has three generation HWs, the new
-> > > generation HW is an individual bridge, it supoorts Gen3 speed and
-> > > up to 256 MSI interrupt numbers for multi-function devices.
-> >
-> > s/supoorts/supports/
-> >
-> > > Add support for new Gen3 controller which can be found on MT8192.
-> > >
-> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-
-[...]
-
-> > > +static int mtk_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
-> > > +                               int where, int size, u32 *val)
-> > > +{
-> > > +   struct mtk_pcie_port *port = bus->sysdata;
-> > > +   int bytes;
-> > > +
-> > > +   bytes = ((1 << size) - 1) << (where & 0x3);
-> >
-> > This seems like some unusual bit twiddling; at least, I don't remember
-> > seeing this before.  Can you skim other drivers and see if others do
-> > the same thing, and adopt a common style if they do?
+> Hi Rob,
 >
-> Hi Bjorn,
+> On 20/11/20 10:39 am, Kishon Vijay Abraham I wrote:
+> > Hi Rob,
+> >
+> > On 19/11/20 2:41 am, Rob Herring wrote:
+> >> On Mon, Nov 16, 2020 at 11:01:39PM +0530, Kishon Vijay Abraham I wrote:
+> >>> Fix binding documentation of "ti,syscon-pcie-ctrl" to take phandle with
+> >>> argument. The argument is the register offset within "syscon" used to
+> >>> configure PCIe controller.
+> >>>
+> >>> Link: Link: http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
+> >>
+> >> Link: Link: ?
+> >>
+> >> AIUI, 'Link' is supposed to be a link to this patch. I guess more than 1
+> >> Link would be okay though.
+> >
+> > Two Links was a typo, will fix it in the next revision. Nishanth as well
+> > was asking about using "Link:" tag for a mailing list discussion.
+> >
+> > I started using it after Lorenzo had asked me to use Link tag for
+> > mailing list discussion here sometime back.
+> >
+> > https://patchwork.kernel.org/project/linux-pci/patch/20171219083627.7904-1-kishon@ti.com/#21350261
+> >
+> >>
+> >>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >>> ---
+> >>>  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml     | 12 ++++++++----
+> >>>  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml   | 12 ++++++++----
+> >>>  2 files changed, 16 insertions(+), 8 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> >>> index 3ae3e1a2d4b0..e9685c0bdc3e 100644
+> >>> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> >>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> >>> @@ -29,9 +29,13 @@ properties:
+> >>>        - const: mem
+> >>>
+> >>>    ti,syscon-pcie-ctrl:
+> >>> -    description: Phandle to the SYSCON entry required for configuring PCIe mode
+> >>> -                 and link speed.
+> >>> -    $ref: /schemas/types.yaml#/definitions/phandle
+> >>> +    allOf:
+> >>
+> >> You no longer need allOf here.
+> >
+> > hmm, don't we need it for specifying phandle with fixed cells? FWIW, I
+> > was referring
+> >
+> > https://github.com/devicetree-org/dt-schema/blob/master/test/schemas/good-example.yaml#L187
 >
-> Thanks for your review, I will fix it in the next version.
-> >
-> > > +   writel(PCIE_CFG_HEADER_FORCE_BE(devfn, bus->number, bytes),
-> > > +          port->base + PCIE_CFGNUM_REG);
-> > > +
-> > > +   *val = readl(port->base + PCIE_CFG_OFFSET_ADDR + (where & ~0x3));
-> >
-> > These look like they need to be atomic, since you need a writel()
-> > followed by a readl().
-> >
-> > pci_lock_config() (used in pci_bus_read_config_*(), etc) uses the
-> > global pci_lock for this unless CONFIG_PCI_LOCKLESS_CONFIG is set.
-> >
-> > But I would like to eventually move away from this implicit dependency
-> > on pci_lock.  If you need to make this atomic, can you add the
-> > explicit locking here, so there's a clear connection between the lock
-> > and the things it protects?
->
-> Sure, I will split it to a map_bus() function and use the standard
-> pci_generic_config_read32/write32 functions as Rob's suggestion. I think
-> the potential risks of atomic read/write can be avoided.
+> Can you clarify this please?
 
-The generic functions have no effect on atomicity, but using them does
-make it easier to find the non-atomic cases.
-
-I'm not sure that having host drivers do their own locking is the best
-approach. That's a recipe for more cleanups. It's a common enough
-issue that I think it's better if we have locking done in 1 place.
-Then host drivers can simply say if they need locking or not via some
-bus flag.
+We are now using json-schema v2019.09 syntax which doesn't ignore
+keywords in addition to a $ref as draft7 and earlier did. The old way
+with 'allOf' still works though. I just haven't updated the above test
+cases.
 
 Rob
