@@ -2,613 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5EA62C82E6
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 12:11:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C46042C838E
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 12:54:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgK3LJv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 06:09:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:52526 "EHLO foss.arm.com"
+        id S1728905AbgK3LxL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 06:53:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgK3LJv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Nov 2020 06:09:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AB4E30E;
-        Mon, 30 Nov 2020 03:09:04 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 037733F66B;
-        Mon, 30 Nov 2020 03:09:00 -0800 (PST)
-Date:   Mon, 30 Nov 2020 11:08:58 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Robert Richter <rrichter@marvell.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-rockchip@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v6 1/5] PCI: Unify ECAM constants in native PCI Express
- drivers
-Message-ID: <20201130110858.GB16758@e121166-lin.cambridge.arm.com>
-References: <20201129230743.3006978-1-kw@linux.com>
- <20201129230743.3006978-2-kw@linux.com>
+        id S1726137AbgK3LxJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Nov 2020 06:53:09 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C24982074A;
+        Mon, 30 Nov 2020 11:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606737148;
+        bh=ZiZagQtRbUz77A0qHJ/6d4tgOyHKNO+y3elnQs2W+xw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MnNpDy1IneXFXP/lQupOBnMLxBRe5aJE3S3AeMbB5b0qt3ZR65WOmJaShZf3bd0Xx
+         wt8jX8yj5HEw/l01qC8cRnrqIuZ7ah7LMJfsVUDMV4xuXzrh4/7bKTGlnvKmeAcGnj
+         WiTprgJ8Vio2K37i3mmw4xbiu/TLHBswxaM7XYfk=
+Date:   Mon, 30 Nov 2020 11:52:22 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 14/17] arm64: vdso: disable LTO
+Message-ID: <20201130115222.GC24563@willie-the-truck>
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <20201118220731.925424-15-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201129230743.3006978-2-kw@linux.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20201118220731.925424-15-samitolvanen@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Nov 29, 2020 at 11:07:39PM +0000, Krzysztof Wilczyński wrote:
-> Add ECAM-related constants to provide a set of standard constants
-> defining memory address shift values to the byte-level address that can
-> be used to access the PCI Express Configuration Space, and then move
-> native PCI Express controller drivers to use the newly introduced
-> definitions retiring driver-specific ones.
+On Wed, Nov 18, 2020 at 02:07:28PM -0800, Sami Tolvanen wrote:
+> Disable LTO for the vDSO by filtering out CC_FLAGS_LTO, as there's no
+> point in using link-time optimization for the small about of C code.
+
+"about" => "amount" ?
+
 > 
-> Refactor pci_ecam_map_bus() function to use newly added constants so
-> that limits to the bus, device function and offset (now limited to 4K as
-> per the specification) are in place to prevent the defective or
-> malicious caller from supplying incorrect configuration offset and thus
-> targeting the wrong device when accessing extended configuration space.
-> This refactor also allows for the ".bus_shit" initialisers to be dropped
-                                          ^^^^
-
-Nice typo, I'd fix it while applying it though if you don't mind ;-),
-no need to resend it.
-
-Jokes aside, nice piece of work, thanks for that.
-
-> when the user is not using a custom value as a default value will be
-> used as per the PCI Express Specification.
-> 
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-
-I think Bjorn's reviewed-by still stands so I will apply it.
-
-Thanks !
-Lorenzo
-
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/pci/controller/dwc/pcie-al.c        | 12 ++-------
->  drivers/pci/controller/dwc/pcie-hisi.c      |  2 --
->  drivers/pci/controller/pci-aardvark.c       | 13 +++-------
->  drivers/pci/controller/pci-host-generic.c   |  1 -
->  drivers/pci/controller/pci-thunder-ecam.c   |  1 -
->  drivers/pci/controller/pcie-brcmstb.c       | 16 ++----------
->  drivers/pci/controller/pcie-rockchip-host.c | 27 ++++++++++-----------
->  drivers/pci/controller/pcie-rockchip.h      |  8 +-----
->  drivers/pci/controller/pcie-tango.c         |  1 -
->  drivers/pci/controller/pcie-xilinx-nwl.c    |  9 ++-----
->  drivers/pci/controller/pcie-xilinx.c        | 11 ++-------
->  drivers/pci/controller/vmd.c                | 11 ++++-----
->  drivers/pci/ecam.c                          | 23 ++++++++++++------
->  include/linux/pci-ecam.h                    | 27 +++++++++++++++++++++
->  14 files changed, 73 insertions(+), 89 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-> index f973fbca90cf..af9e51ab1af8 100644
-> --- a/drivers/pci/controller/dwc/pcie-al.c
-> +++ b/drivers/pci/controller/dwc/pcie-al.c
-> @@ -76,7 +76,6 @@ static int al_pcie_init(struct pci_config_window *cfg)
->  }
->  
->  const struct pci_ecam_ops al_pcie_ops = {
-> -	.bus_shift    = 20,
->  	.init         =  al_pcie_init,
->  	.pci_ops      = {
->  		.map_bus    = al_pcie_map_bus,
-> @@ -138,8 +137,6 @@ struct al_pcie {
->  	struct al_pcie_target_bus_cfg target_bus_cfg;
->  };
->  
-> -#define PCIE_ECAM_DEVFN(x)		(((x) & 0xff) << 12)
-> -
->  #define to_al_pcie(x)		dev_get_drvdata((x)->dev)
->  
->  static inline u32 al_pcie_controller_readl(struct al_pcie *pcie, u32 offset)
-> @@ -226,11 +223,6 @@ static void __iomem *al_pcie_conf_addr_map_bus(struct pci_bus *bus,
->  	struct al_pcie_target_bus_cfg *target_bus_cfg = &pcie->target_bus_cfg;
->  	unsigned int busnr_ecam = busnr & target_bus_cfg->ecam_mask;
->  	unsigned int busnr_reg = busnr & target_bus_cfg->reg_mask;
-> -	void __iomem *pci_base_addr;
-> -
-> -	pci_base_addr = (void __iomem *)((uintptr_t)pp->va_cfg0_base +
-> -					 (busnr_ecam << 20) +
-> -					 PCIE_ECAM_DEVFN(devfn));
->  
->  	if (busnr_reg != target_bus_cfg->reg_val) {
->  		dev_dbg(pcie->pci->dev, "Changing target bus busnum val from 0x%x to 0x%x\n",
-> @@ -241,7 +233,7 @@ static void __iomem *al_pcie_conf_addr_map_bus(struct pci_bus *bus,
->  				       target_bus_cfg->reg_mask);
->  	}
->  
-> -	return pci_base_addr + where;
-> +	return pp->va_cfg0_base + PCIE_ECAM_OFFSET(busnr_ecam, devfn, where);
->  }
->  
->  static struct pci_ops al_child_pci_ops = {
-> @@ -264,7 +256,7 @@ static void al_pcie_config_prepare(struct al_pcie *pcie)
->  
->  	target_bus_cfg = &pcie->target_bus_cfg;
->  
-> -	ecam_bus_mask = (pcie->ecam_size >> 20) - 1;
-> +	ecam_bus_mask = (pcie->ecam_size >> PCIE_ECAM_BUS_SHIFT) - 1;
->  	if (ecam_bus_mask > 255) {
->  		dev_warn(pcie->dev, "ECAM window size is larger than 256MB. Cutting off at 256\n");
->  		ecam_bus_mask = 255;
-> diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
-> index 5ca86796d43a..8fc5960faf28 100644
-> --- a/drivers/pci/controller/dwc/pcie-hisi.c
-> +++ b/drivers/pci/controller/dwc/pcie-hisi.c
-> @@ -100,7 +100,6 @@ static int hisi_pcie_init(struct pci_config_window *cfg)
->  }
->  
->  const struct pci_ecam_ops hisi_pcie_ops = {
-> -	.bus_shift    = 20,
->  	.init         =  hisi_pcie_init,
->  	.pci_ops      = {
->  		.map_bus    = hisi_pcie_map_bus,
-> @@ -135,7 +134,6 @@ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
->  }
->  
->  static const struct pci_ecam_ops hisi_pcie_platform_ops = {
-> -	.bus_shift    = 20,
->  	.init         =  hisi_pcie_platform_init,
->  	.pci_ops      = {
->  		.map_bus    = hisi_pcie_map_bus,
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 0be485a25327..1043e54c73bd 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  #include <linux/init.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
-> @@ -164,14 +165,6 @@
->  #define PCIE_CONFIG_WR_TYPE0			0xa
->  #define PCIE_CONFIG_WR_TYPE1			0xb
->  
-> -#define PCIE_CONF_BUS(bus)			(((bus) & 0xff) << 20)
-> -#define PCIE_CONF_DEV(dev)			(((dev) & 0x1f) << 15)
-> -#define PCIE_CONF_FUNC(fun)			(((fun) & 0x7)	<< 12)
-> -#define PCIE_CONF_REG(reg)			((reg) & 0xffc)
-> -#define PCIE_CONF_ADDR(bus, devfn, where)	\
-> -	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
-> -	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
-> -
->  #define PIO_RETRY_CNT			500
->  #define PIO_RETRY_DELAY			2 /* 2 us*/
->  
-> @@ -687,7 +680,7 @@ static int advk_pcie_rd_conf(struct pci_bus *bus, u32 devfn,
->  	advk_writel(pcie, reg, PIO_CTRL);
->  
->  	/* Program the address registers */
-> -	reg = PCIE_CONF_ADDR(bus->number, devfn, where);
-> +	reg = ALIGN_DOWN(PCIE_ECAM_OFFSET(bus->number, devfn, where), 4);
->  	advk_writel(pcie, reg, PIO_ADDR_LS);
->  	advk_writel(pcie, 0, PIO_ADDR_MS);
->  
-> @@ -748,7 +741,7 @@ static int advk_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
->  	advk_writel(pcie, reg, PIO_CTRL);
->  
->  	/* Program the address registers */
-> -	reg = PCIE_CONF_ADDR(bus->number, devfn, where);
-> +	reg = ALIGN_DOWN(PCIE_ECAM_OFFSET(bus->number, devfn, where), 4);
->  	advk_writel(pcie, reg, PIO_ADDR_LS);
->  	advk_writel(pcie, 0, PIO_ADDR_MS);
->  
-> diff --git a/drivers/pci/controller/pci-host-generic.c b/drivers/pci/controller/pci-host-generic.c
-> index b51977abfdf1..63865aeb636b 100644
-> --- a/drivers/pci/controller/pci-host-generic.c
-> +++ b/drivers/pci/controller/pci-host-generic.c
-> @@ -49,7 +49,6 @@ static void __iomem *pci_dw_ecam_map_bus(struct pci_bus *bus,
->  }
->  
->  static const struct pci_ecam_ops pci_dw_ecam_bus_ops = {
-> -	.bus_shift	= 20,
->  	.pci_ops	= {
->  		.map_bus	= pci_dw_ecam_map_bus,
->  		.read		= pci_generic_config_read,
-> diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
-> index 7e8835fee5f7..f964fd26f7e0 100644
-> --- a/drivers/pci/controller/pci-thunder-ecam.c
-> +++ b/drivers/pci/controller/pci-thunder-ecam.c
-> @@ -346,7 +346,6 @@ static int thunder_ecam_config_write(struct pci_bus *bus, unsigned int devfn,
->  }
->  
->  const struct pci_ecam_ops pci_thunder_ecam_ops = {
-> -	.bus_shift	= 20,
->  	.pci_ops	= {
->  		.map_bus        = pci_ecam_map_bus,
->  		.read           = thunder_ecam_config_read,
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index bea86899bd5d..7fc80fd6f13f 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of_pci.h>
->  #include <linux/of_platform.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  #include <linux/printk.h>
->  #include <linux/reset.h>
->  #include <linux/sizes.h>
-> @@ -127,11 +128,7 @@
->  #define  MSI_INT_MASK_CLR		0x14
->  
->  #define PCIE_EXT_CFG_DATA				0x8000
-> -
->  #define PCIE_EXT_CFG_INDEX				0x9000
-> -#define  PCIE_EXT_BUSNUM_SHIFT				20
-> -#define  PCIE_EXT_SLOT_SHIFT				15
-> -#define  PCIE_EXT_FUNC_SHIFT				12
->  
->  #define  PCIE_RGR1_SW_INIT_1_PERST_MASK			0x1
->  #define  PCIE_RGR1_SW_INIT_1_PERST_SHIFT		0x0
-> @@ -695,15 +692,6 @@ static bool brcm_pcie_link_up(struct brcm_pcie *pcie)
->  	return dla && plu;
->  }
->  
-> -/* Configuration space read/write support */
-> -static inline int brcm_pcie_cfg_index(int busnr, int devfn, int reg)
-> -{
-> -	return ((PCI_SLOT(devfn) & 0x1f) << PCIE_EXT_SLOT_SHIFT)
-> -		| ((PCI_FUNC(devfn) & 0x07) << PCIE_EXT_FUNC_SHIFT)
-> -		| (busnr << PCIE_EXT_BUSNUM_SHIFT)
-> -		| (reg & ~3);
-> -}
-> -
->  static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
->  					int where)
->  {
-> @@ -716,7 +704,7 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
->  		return PCI_SLOT(devfn) ? NULL : base + where;
->  
->  	/* For devices, write to the config space index register */
-> -	idx = brcm_pcie_cfg_index(bus->number, devfn, 0);
-> +	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
->  	writel(idx, pcie->base + PCIE_EXT_CFG_INDEX);
->  	return base + PCIE_EXT_CFG_DATA + where;
->  }
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index 9705059523a6..f1d08a1b1591 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -157,12 +157,11 @@ static int rockchip_pcie_rd_other_conf(struct rockchip_pcie *rockchip,
->  				       struct pci_bus *bus, u32 devfn,
->  				       int where, int size, u32 *val)
->  {
-> -	u32 busdev;
-> +	void __iomem *addr;
->  
-> -	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
-> -				PCI_FUNC(devfn), where);
-> +	addr = rockchip->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
->  
-> -	if (!IS_ALIGNED(busdev, size)) {
-> +	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->  		*val = 0;
->  		return PCIBIOS_BAD_REGISTER_NUMBER;
->  	}
-> @@ -175,11 +174,11 @@ static int rockchip_pcie_rd_other_conf(struct rockchip_pcie *rockchip,
->  						AXI_WRAPPER_TYPE1_CFG);
->  
->  	if (size == 4) {
-> -		*val = readl(rockchip->reg_base + busdev);
-> +		*val = readl(addr);
->  	} else if (size == 2) {
-> -		*val = readw(rockchip->reg_base + busdev);
-> +		*val = readw(addr);
->  	} else if (size == 1) {
-> -		*val = readb(rockchip->reg_base + busdev);
-> +		*val = readb(addr);
->  	} else {
->  		*val = 0;
->  		return PCIBIOS_BAD_REGISTER_NUMBER;
-> @@ -191,11 +190,11 @@ static int rockchip_pcie_wr_other_conf(struct rockchip_pcie *rockchip,
->  				       struct pci_bus *bus, u32 devfn,
->  				       int where, int size, u32 val)
->  {
-> -	u32 busdev;
-> +	void __iomem *addr;
->  
-> -	busdev = PCIE_ECAM_ADDR(bus->number, PCI_SLOT(devfn),
-> -				PCI_FUNC(devfn), where);
-> -	if (!IS_ALIGNED(busdev, size))
-> +	addr = rockchip->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
-> +
-> +	if (!IS_ALIGNED((uintptr_t)addr, size))
->  		return PCIBIOS_BAD_REGISTER_NUMBER;
->  
->  	if (pci_is_root_bus(bus->parent))
-> @@ -206,11 +205,11 @@ static int rockchip_pcie_wr_other_conf(struct rockchip_pcie *rockchip,
->  						AXI_WRAPPER_TYPE1_CFG);
->  
->  	if (size == 4)
-> -		writel(val, rockchip->reg_base + busdev);
-> +		writel(val, addr);
->  	else if (size == 2)
-> -		writew(val, rockchip->reg_base + busdev);
-> +		writew(val, addr);
->  	else if (size == 1)
-> -		writeb(val, rockchip->reg_base + busdev);
-> +		writeb(val, addr);
->  	else
->  		return PCIBIOS_BAD_REGISTER_NUMBER;
->  
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index c7d0178fc8c2..1650a5087450 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -13,6 +13,7 @@
->  
->  #include <linux/kernel.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  
->  /*
->   * The upper 16 bits of PCIE_CLIENT_CONFIG are a write mask for the lower 16
-> @@ -178,13 +179,6 @@
->  #define MIN_AXI_ADDR_BITS_PASSED		8
->  #define PCIE_RC_SEND_PME_OFF			0x11960
->  #define ROCKCHIP_VENDOR_ID			0x1d87
-> -#define PCIE_ECAM_BUS(x)			(((x) & 0xff) << 20)
-> -#define PCIE_ECAM_DEV(x)			(((x) & 0x1f) << 15)
-> -#define PCIE_ECAM_FUNC(x)			(((x) & 0x7) << 12)
-> -#define PCIE_ECAM_REG(x)			(((x) & 0xfff) << 0)
-> -#define PCIE_ECAM_ADDR(bus, dev, func, reg) \
-> -	  (PCIE_ECAM_BUS(bus) | PCIE_ECAM_DEV(dev) | \
-> -	   PCIE_ECAM_FUNC(func) | PCIE_ECAM_REG(reg))
->  #define PCIE_LINK_IS_L2(x) \
->  	(((x) & PCIE_CLIENT_DEBUG_LTSSM_MASK) == PCIE_CLIENT_DEBUG_LTSSM_L2)
->  #define PCIE_LINK_UP(x) \
-> diff --git a/drivers/pci/controller/pcie-tango.c b/drivers/pci/controller/pcie-tango.c
-> index d093a8ce4bb1..62a061f1d62e 100644
-> --- a/drivers/pci/controller/pcie-tango.c
-> +++ b/drivers/pci/controller/pcie-tango.c
-> @@ -208,7 +208,6 @@ static int smp8759_config_write(struct pci_bus *bus, unsigned int devfn,
->  }
->  
->  static const struct pci_ecam_ops smp8759_ecam_ops = {
-> -	.bus_shift	= 20,
->  	.pci_ops	= {
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= smp8759_config_read,
-> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-> index f3cf7d61924f..7f29c2fdcd51 100644
-> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> @@ -18,6 +18,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/of_irq.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  #include <linux/platform_device.h>
->  #include <linux/irqchip/chained_irq.h>
->  
-> @@ -124,8 +125,6 @@
->  #define E_ECAM_CR_ENABLE		BIT(0)
->  #define E_ECAM_SIZE_LOC			GENMASK(20, 16)
->  #define E_ECAM_SIZE_SHIFT		16
-> -#define ECAM_BUS_LOC_SHIFT		20
-> -#define ECAM_DEV_LOC_SHIFT		12
->  #define NWL_ECAM_VALUE_DEFAULT		12
->  
->  #define CFG_DMA_REG_BAR			GENMASK(2, 0)
-> @@ -240,15 +239,11 @@ static void __iomem *nwl_pcie_map_bus(struct pci_bus *bus, unsigned int devfn,
->  				      int where)
->  {
->  	struct nwl_pcie *pcie = bus->sysdata;
-> -	int relbus;
->  
->  	if (!nwl_pcie_valid_device(bus, devfn))
->  		return NULL;
->  
-> -	relbus = (bus->number << ECAM_BUS_LOC_SHIFT) |
-> -			(devfn << ECAM_DEV_LOC_SHIFT);
-> -
-> -	return pcie->ecam_base + relbus + where;
-> +	return pcie->ecam_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
->  }
->  
->  /* PCIe operations */
-> diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-> index 8523be61bba5..fa5baeb82653 100644
-> --- a/drivers/pci/controller/pcie-xilinx.c
-> +++ b/drivers/pci/controller/pcie-xilinx.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/of_irq.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  #include <linux/platform_device.h>
->  
->  #include "../pci.h"
-> @@ -86,10 +87,6 @@
->  /* Phy Status/Control Register definitions */
->  #define XILINX_PCIE_REG_PSCR_LNKUP	BIT(11)
->  
-> -/* ECAM definitions */
-> -#define ECAM_BUS_NUM_SHIFT		20
-> -#define ECAM_DEV_NUM_SHIFT		12
-> -
->  /* Number of MSI IRQs */
->  #define XILINX_NUM_MSI_IRQS		128
->  
-> @@ -183,15 +180,11 @@ static void __iomem *xilinx_pcie_map_bus(struct pci_bus *bus,
->  					 unsigned int devfn, int where)
->  {
->  	struct xilinx_pcie_port *port = bus->sysdata;
-> -	int relbus;
->  
->  	if (!xilinx_pcie_valid_device(bus, devfn))
->  		return NULL;
->  
-> -	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-> -		 (devfn << ECAM_DEV_NUM_SHIFT);
-> -
-> -	return port->reg_base + relbus + where;
-> +	return port->reg_base + PCIE_ECAM_OFFSET(bus->number, devfn, where);
->  }
->  
->  /* PCIe operations */
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index f375c21ceeb1..1361a79bd1e7 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -11,6 +11,7 @@
->  #include <linux/module.h>
->  #include <linux/msi.h>
->  #include <linux/pci.h>
-> +#include <linux/pci-ecam.h>
->  #include <linux/srcu.h>
->  #include <linux/rculist.h>
->  #include <linux/rcupdate.h>
-> @@ -328,15 +329,13 @@ static void vmd_remove_irq_domain(struct vmd_dev *vmd)
->  static char __iomem *vmd_cfg_addr(struct vmd_dev *vmd, struct pci_bus *bus,
->  				  unsigned int devfn, int reg, int len)
->  {
-> -	char __iomem *addr = vmd->cfgbar +
-> -			     ((bus->number - vmd->busn_start) << 20) +
-> -			     (devfn << 12) + reg;
-> +	unsigned int busnr_ecam = bus->number - vmd->busn_start;
-> +	u32 offset = PCIE_ECAM_OFFSET(busnr_ecam, devfn, reg);
->  
-> -	if ((addr - vmd->cfgbar) + len >=
-> -	    resource_size(&vmd->dev->resource[VMD_CFGBAR]))
-> +	if (offset + len >= resource_size(&vmd->dev->resource[VMD_CFGBAR]))
->  		return NULL;
->  
-> -	return addr;
-> +	return vmd->cfgbar + offset;
->  }
->  
->  /*
-> diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-> index b54d32a31669..59f91d434859 100644
-> --- a/drivers/pci/ecam.c
-> +++ b/drivers/pci/ecam.c
-> @@ -131,25 +131,36 @@ void __iomem *pci_ecam_map_bus(struct pci_bus *bus, unsigned int devfn,
->  			       int where)
->  {
->  	struct pci_config_window *cfg = bus->sysdata;
-> +	unsigned int bus_shift = cfg->ops->bus_shift;
->  	unsigned int devfn_shift = cfg->ops->bus_shift - 8;
->  	unsigned int busn = bus->number;
->  	void __iomem *base;
-> +	u32 bus_offset, devfn_offset;
->  
->  	if (busn < cfg->busr.start || busn > cfg->busr.end)
->  		return NULL;
->  
->  	busn -= cfg->busr.start;
-> -	if (per_bus_mapping)
-> +	if (per_bus_mapping) {
->  		base = cfg->winp[busn];
-> -	else
-> -		base = cfg->win + (busn << cfg->ops->bus_shift);
-> -	return base + (devfn << devfn_shift) + where;
-> +		busn = 0;
-> +	} else
-> +		base = cfg->win;
-> +
-> +	if (cfg->ops->bus_shift) {
-> +		bus_offset = (busn & PCIE_ECAM_BUS_MASK) << bus_shift;
-> +		devfn_offset = (devfn & PCIE_ECAM_DEVFN_MASK) << devfn_shift;
-> +		where &= PCIE_ECAM_REG_MASK;
-> +
-> +		return base + (bus_offset | devfn_offset | where);
-> +	}
-> +
-> +	return base + PCIE_ECAM_OFFSET(busn, devfn, where);
->  }
->  EXPORT_SYMBOL_GPL(pci_ecam_map_bus);
->  
->  /* ECAM ops */
->  const struct pci_ecam_ops pci_generic_ecam_ops = {
-> -	.bus_shift	= 20,
->  	.pci_ops	= {
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read,
-> @@ -161,7 +172,6 @@ EXPORT_SYMBOL_GPL(pci_generic_ecam_ops);
->  #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
->  /* ECAM ops for 32-bit access only (non-compliant) */
->  const struct pci_ecam_ops pci_32b_ops = {
-> -	.bus_shift	= 20,
->  	.pci_ops	= {
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read32,
-> @@ -171,7 +181,6 @@ const struct pci_ecam_ops pci_32b_ops = {
->  
->  /* ECAM ops for 32-bit read only (non-compliant) */
->  const struct pci_ecam_ops pci_32b_read_ops = {
-> -	.bus_shift	= 20,
->  	.pci_ops	= {
->  		.map_bus	= pci_ecam_map_bus,
->  		.read		= pci_generic_config_read32,
-> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-> index 033ce74f02e8..65d3d83015c3 100644
-> --- a/include/linux/pci-ecam.h
-> +++ b/include/linux/pci-ecam.h
-> @@ -9,6 +9,33 @@
->  #include <linux/kernel.h>
->  #include <linux/platform_device.h>
->  
-> +/*
-> + * Memory address shift values for the byte-level address that
-> + * can be used when accessing the PCI Express Configuration Space.
-> + */
-> +
-> +/*
-> + * Enhanced Configuration Access Mechanism (ECAM)
-> + *
-> + * See PCI Express Base Specification, Revision 5.0, Version 1.0,
-> + * Section 7.2.2, Table 7-1, p. 677.
-> + */
-> +#define PCIE_ECAM_BUS_SHIFT	20 /* Bus number */
-> +#define PCIE_ECAM_DEVFN_SHIFT	12 /* Device and Function number */
-> +
-> +#define PCIE_ECAM_BUS_MASK	0xff
-> +#define PCIE_ECAM_DEVFN_MASK	0xff
-> +#define PCIE_ECAM_REG_MASK	0xfff /* Limit offset to a maximum of 4K */
-> +
-> +#define PCIE_ECAM_BUS(x)	(((x) & PCIE_ECAM_BUS_MASK) << PCIE_ECAM_BUS_SHIFT)
-> +#define PCIE_ECAM_DEVFN(x)	(((x) & PCIE_ECAM_DEVFN_MASK) << PCIE_ECAM_DEVFN_SHIFT)
-> +#define PCIE_ECAM_REG(x)	((x) & PCIE_ECAM_REG_MASK)
-> +
-> +#define PCIE_ECAM_OFFSET(bus, devfn, where) \
-> +	(PCIE_ECAM_BUS(bus) | \
-> +	 PCIE_ECAM_DEVFN(devfn) | \
-> +	 PCIE_ECAM_REG(where))
-> +
->  /*
->   * struct to hold pci ops and bus shift of the config window
->   * for a PCI controller.
-> -- 
-> 2.29.2
-> 
+>  arch/arm64/kernel/vdso/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+
+With the typo fixed:
+
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
