@@ -2,113 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABCE62C7BF8
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 00:18:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E92B92C8003
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 09:34:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgK2XSZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 29 Nov 2020 18:18:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbgK2XSY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 29 Nov 2020 18:18:24 -0500
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 112912076C;
-        Sun, 29 Nov 2020 23:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606691864;
-        bh=UvFn/A9Lhl6h/HurzfA5JdUxziEQn3qtGTpb20WsY6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bspa2U/Ap8tZ1jfyB6+xdKT/lg5kDu6sDGQLH0q4VS62XFvpkOjWDiBN3VlbFEL9g
-         TtcfJviWttGWpimnhVB8Tt3rBmdbwehLOUXkZRIsS+4isIH5pdxhDyln4rsZMADUsA
-         lpYLW1cHwg3cUr9Ac2j7JMhbgyzeUX7ch/EInZT0=
-Received: by pali.im (Postfix)
-        id E048B765; Mon, 30 Nov 2020 00:17:41 +0100 (CET)
-Date:   Mon, 30 Nov 2020 00:17:41 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Update comment about disabling link
- training
-Message-ID: <20201129231741.yfhf3y42mfnbp4xb@pali>
-References: <20200924084618.12442-1-pali@kernel.org>
- <20200924151106.GA2319992@bjorn-Precision-5520>
- <20200924152232.ecoxpmxdc5iyrz76@pali>
- <20201011172149.x7crspugv2xne6ui@pali>
+        id S1727353AbgK3Idd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 03:33:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727094AbgK3Idc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 03:33:32 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845D9C0613D2;
+        Mon, 30 Nov 2020 00:32:52 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id d20so19856157lfe.11;
+        Mon, 30 Nov 2020 00:32:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ClilvVMD2tJwffd8c7E32QkN5iyGyLKhnLofRhHkx8o=;
+        b=coCwTFLIURYzAqQ+hJgwYw/cJWD5nVvcij3P2Ghzycv8m+IWfUsun9lAFw6yUFG8bL
+         7ym1Q4DQEeOo7sOhHIBBy0MrhSkYKSNzocakhmsK83DfI7CvOLvZoTX1sguFOLeR7kJc
+         ckTetdBXR1L3ohX6ZLFyjLlXNZHvctPyZadZocBYYB5LDuZp8ebj68lJtwopJ3HUOWwJ
+         G/XMgHC/VFuqq5ELdnHVNqCWIkc4hyRHqQE/Ow/6rZcMsD/vOH1rCz43tQeE0xgprfT0
+         fpSXB9reArgi0i7/5BbVl7Kup06tCXZOHYa1c68ZjlikMBxy/7H3pwwJ9ddsp3l2AsWD
+         de0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ClilvVMD2tJwffd8c7E32QkN5iyGyLKhnLofRhHkx8o=;
+        b=YY+pDtycloOHavD3poeLlDsnadfelulIWutCIGQDbv2WvLReEZ6BDPIWBgfZoPfXUc
+         Ysk4ghOFCp8XF7AQd2YLAleyXjp5FtlPFWsb226vcZwXpJuV/70tV2QH0YjoYNWAOGS5
+         z7jgdZArIFodfWN/yYlFP1qy/qCA0d7zkFLdZ8O5UhyeF4PItS4ZuUaYaMor9l69+5ct
+         4xMmrEG/RZjQWdkyesK5/3FNOYfXaijZVsH4xnzrLubpaUGM2J53nEZOhEu+PbYikxI8
+         4K2hG9EBlZU6F3p/a5t/GHb+trXuLkOxQPHy/rCZpOwqnTNOQ2EPoKdekms9vU87mKkE
+         5GGg==
+X-Gm-Message-State: AOAM533P031bXVcBNIU6GLswG9EbQGikRY0PKH74G86p4s3QCDOYL2f7
+        buRQPUH/v/fOMOMqGS/+Agw=
+X-Google-Smtp-Source: ABdhPJx9nfT7AThLEG2ZaKttdKqqE63vSdmMCVAdV76InzuzBVoV0VtnGu5+6BqvoX/Qu+QnHml7ZA==
+X-Received: by 2002:a19:c8ca:: with SMTP id y193mr8624445lff.150.1606725171006;
+        Mon, 30 Nov 2020 00:32:51 -0800 (PST)
+Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id y81sm2355420lfc.100.2020.11.30.00.32.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Nov 2020 00:32:50 -0800 (PST)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH V2 0/2] brcmstb: initial work on BCM4908
+Date:   Mon, 30 Nov 2020 09:32:21 +0100
+Message-Id: <20201130083223.32594-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201011172149.x7crspugv2xne6ui@pali>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sunday 11 October 2020 19:21:49 Pali Rohár wrote:
-> On Thursday 24 September 2020 17:22:32 Pali Rohár wrote:
-> > On Thursday 24 September 2020 10:11:06 Bjorn Helgaas wrote:
-> > > On Thu, Sep 24, 2020 at 10:46:18AM +0200, Pali Rohár wrote:
-> > > > It is not HW bug or workaround for some cards but it is requirement by PCI
-> > > > Express spec. After fundamental reset is needed 100ms delay prior enabling
-> > > > link training. So update comment in code to reflect this requirement.
-> > > > 
-> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > ---
-> > > >  drivers/pci/controller/pci-aardvark.c | 7 ++++++-
-> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > index 50ab6d7519ae..19b9b79226e5 100644
-> > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > @@ -259,7 +259,12 @@ static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-> > > >  	if (!pcie->reset_gpio)
-> > > >  		return;
-> > > >  
-> > > > -	/* PERST does not work for some cards when link training is enabled */
-> > > > +	/*
-> > > > +	 * As required by PCI Express spec a delay for at least 100ms after
-> > > > +	 * de-asserting PERST# signal is needed before link training is enabled.
-> > > > +	 * So ensure that link training is disabled prior de-asserting PERST#
-> > > > +	 * signal to fulfill that PCI Express spec requirement.
-> > > 
-> > > Can you please include the spec citation here?  In the PCIe base spec,
-> > > PERST# is only mentioned in PCIe r5.0, sec 6.6.1, and I don't see the
-> > > connection there to 100ms between de-assert of PERST# and enabling
-> > > link training.
-> > 
-> > Hello! I copied this "comment" from other place in pci-aardvark.c where
-> > that timeout 100ms is already applied. Timeout with explanation comment
-> > was introduced in following commit:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f4c7d053d7f7
-> > 
-> > Here are links to discussions about that patch:
-> > 
-> > https://lore.kernel.org/linux-pci/20190313213752.1246-1-repk@triplefau.lt/T/#u
-> > https://lore.kernel.org/linux-pci/20190522213351.21366-2-repk@triplefau.lt/T/#u
-> 
-> Bjorn or Lorenzo, do you need something else for this patch? It just
-> updates comment and basically clarify why PERST does not work for some
-> cards when link training is enabled.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-PING?
+BCM4908 uses very similar hardware to the STB one. It still requires
+some tweaks but this initial work allows accessing hardware without:
 
-> > > Sec 6.1.1 does talk about 100ms before sending config requests (for
-> > > ports that support <= 5 GT/s), and 100ms after link training completes
-> > > (for ports that support > 5 GT/s).
-> > > 
-> > > Maybe there's more language in a form-factor spec or something?
-> > > 
-> > > > +	 */
-> > > >  	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-> > > >  	reg &= ~LINK_TRAINING_EN;
-> > > >  	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-> > > > -- 
-> > > > 2.20.1
-> > > > 
+Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP                                                                                                                                                                                                          
+
+Rafał Miłecki (2):
+  dt-bindings: PCI: brcmstb: add BCM4908 binding
+  PCI: brcmstb: support BCM4908 with external PERST# signal controller
+
+ .../bindings/pci/brcm,stb-pcie.yaml           | 30 +++++++++++++++--
+ drivers/pci/controller/Kconfig                |  2 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 32 +++++++++++++++++++
+ 3 files changed, 61 insertions(+), 3 deletions(-)
+
+-- 
+2.26.2
+
