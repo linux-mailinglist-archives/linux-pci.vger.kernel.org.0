@@ -2,193 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D76CA2C8F4A
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 21:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B2E32C8FAB
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 22:12:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgK3Ug7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 15:36:59 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:57811 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729290AbgK3Ug7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 15:36:59 -0500
-Received: (qmail 977332 invoked by uid 1000); 30 Nov 2020 15:36:18 -0500
-Date:   Mon, 30 Nov 2020 15:36:18 -0500
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Tom Yan <tom.ty89@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        SCSI development list <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH 2/2] usb-storage: revert from scsi_add_host_with_dma() to
- scsi_add_host()
-Message-ID: <20201130203618.GB975529@rowland.harvard.edu>
-References: <20201128154849.3193-2-tom.ty89@gmail.com>
- <5e62c383-22ea-6df6-5acc-5e9f381d4632@redhat.com>
- <CAGnHSEnetAJNqUEW-iuq7eVyU6VnP84cv9+OVL4C5Z2ZK_eM0A@mail.gmail.com>
- <186eb035-4bc4-ff72-ee41-aeb6d81888e3@redhat.com>
- <X8T0E2qvF2cgADl+@kroah.com>
- <dd557c38-a919-5e5e-ab3b-17a235f17139@redhat.com>
- <20201130172004.GA966032@rowland.harvard.edu>
- <abb0a79d-63a0-6f3d-4812-f828283cd47c@redhat.com>
- <CAGnHSEk1GixNK71CJMymwLE=MyedjCkiG5Ubq1=O_wFxBBM0GQ@mail.gmail.com>
- <CAGnHSEmPpbDokAfGkeCkvo3JuYfnosVt8H+TK7ZWFNsdyWAfYQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGnHSEmPpbDokAfGkeCkvo3JuYfnosVt8H+TK7ZWFNsdyWAfYQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728178AbgK3VMi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 16:12:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54102 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729243AbgK3VMg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 16:12:36 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03BF7C0613D3
+        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 13:11:56 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id m9so10862094pgb.4
+        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 13:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=qMgB8usSBwyEogyGsMziFs4UuTCNB2pcZ/WPEIOccA0=;
+        b=YsvxNkkQAdXoSFhxPDR5wHwf0d9EHjezlN6CHTFwropGKIMxMVW4lpXOkY4FRJxvRX
+         n1htlGIFhEQ/boiwRzLGg0iwEnck6uzwVmgf6RSQQvhE0xTJfqy8poZ6gYHM9uNMU82X
+         FclgDZ/ytH1gQgYjZ9PfKBYxQXuACfkbCZxZM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qMgB8usSBwyEogyGsMziFs4UuTCNB2pcZ/WPEIOccA0=;
+        b=JqD+zbPM4YLxmIr/8tM5D0r3C3OfMwFtO29qOboJVjiLIT4J/fyuY2ehKiwRWtEzJy
+         VKmX/tSa/5hlKWwcWmWxGkZXV2jxVSMJnSyIHJz4Sg/HVdWqLGoEKSJfupXVWOBC/3G5
+         mhrnCPKgHcaTg7zutcq194KjSc5A/WMo/7aSD+gVwprDB+xi/CLYSuGRPkx+lCJ9v9Nx
+         UCfG5ufTwAPvkIQ91lfSTJ3pcGryTKfZ8yEvRP1Rj4Oewe8DnzWsJcHV6Le8yW/pLWS+
+         TpWiEaF/R5u8V6/s3O7y/rVV8EalJxLgBTrfsaA+epeNW+k46N6QovsnNRX3O6eDHt+D
+         kQ0g==
+X-Gm-Message-State: AOAM531l1q9iCQv/DvRpiL9kV16UNDAtyUCLpIKS1jV+Aw3HBqGIG9AG
+        pckC8nEWcrkUVDt1bd966ODcekyizsIq6PSeDWXkI0hD2hz6qIfOHcUiZj9yvKU7xtO3/ps13NT
+        FIbGFy0e1OSPG1EN3SM7W2ErbztE7oeXyP6kAS0CWSZbDG9rxOXV6v0wYIXARu2MsQOXn/Gm4wT
+        TzdlU7
+X-Google-Smtp-Source: ABdhPJxd4yJEv3hQRv/8j06c/RxanWnkUmo9Ev/BhEeCZHHVPk7YAsqLxNa+8EFM/Lvz99JZpgALJg==
+X-Received: by 2002:a65:42c7:: with SMTP id l7mr4671889pgp.438.1606770714916;
+        Mon, 30 Nov 2020 13:11:54 -0800 (PST)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id m7sm18320441pfh.72.2020.11.30.13.11.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Nov 2020 13:11:54 -0800 (PST)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        broonie@kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com
+Cc:     devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE), Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 0/6] brcmstb: add EP regulators and panic handler
+Date:   Mon, 30 Nov 2020 16:11:37 -0500
+Message-Id: <20201130211145.3012-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000bb203a05b559759d"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Added linux-scsi to CC: list.  When discussing code in a particular 
-subsystem, it's a good idea to include that subsystem's mailing list in 
-the CC:.]
+--000000000000bb203a05b559759d
 
-On Tue, Dec 01, 2020 at 03:01:56AM +0800, Tom Yan wrote:
-> For the record,
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/scsi/scsi_host.h?h=v5.10-rc6#n753
-> 
-> On Tue, 1 Dec 2020 at 02:57, Tom Yan <tom.ty89@gmail.com> wrote:
-> >
-> > This maybe? https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/scsi_lib.c?h=v5.10-rc6#n1816
-> >
-> > UAS:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/usb/storage/uas.c?h=v5.10-rc6#n918
-> > BOT (AFAICT):
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/hosts.c?h=v5.10-rc6#n466
-> >
-> > It would explain why the issue is only triggered with UAS drives.
+v2 -- Use regulator bulk API rather than multiple calls (MarkB).
 
-In brief, a recent change -- calling scsi_add_host_with_dma rather than 
-scsi_add_host -- in the USB uas driver has caused a regression in 
-performance.  (Note that the shost->dma_dev value is set differently as 
-a result of this change.)  Hans has determined that the problem seems 
-to be related to permanent changes in the dma_dev's settings caused by 
-scsi_add_host_with_dma.
+v1 -- Bindings are added for fixed regulators that may power the EP device.
+   -- The brcmstb RC driver is modified to control these regulators
+      during probe, suspend, and resume.
+   -- 7216 type SOCs have additional error reporting HW and a
+      panic handler is added to dump its info.
+   -- A missing return value check is added.
 
-Tom pointed out that __scsi_init_queue contains a couple of questionable 
-assignments:
 
-	dma_set_seg_boundary(dev, shost->dma_boundary);
+Jim Quinlan (6):
+  dt-bindings: PCI: Add bindings for Brcmstb EP voltage regulators
+  PCI: brcmstb: Add control of EP voltage regulator(s)
+  PCI: brcmstb: Do not turn off regulators if EP can wake up
+  PCI: brcmstb: Give 7216 SOCs their own config type
+  PCI: brcmstb: Add panic/die handler to RC driver
+  PCI: brcmstb: check return value of clk_prepare_enable()
 
-and
+ .../bindings/pci/brcm,stb-pcie.yaml           |  12 +
+ drivers/pci/controller/pcie-brcmstb.c         | 219 +++++++++++++++++-
+ 2 files changed, 228 insertions(+), 3 deletions(-)
 
-	dma_set_max_seg_size(dev, queue_max_segment_size(q));
+-- 
+2.17.1
 
-where dev = shost->dma_dev -- in this case, a USB host controller.
 
-So an important question is why decisions related to a particular SCSI 
-host should affect the DMA settings of a device somewhere else in the 
-heirarchy?  Sure, the properties of the USB controller should constrain 
-the settings available to the SCSI host, but there doesn't seem to be 
-any good reason for restrictions to go in the other direction.
+--000000000000bb203a05b559759d
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Doesn't the way we handle DMA permit a child device to impose additional 
-restrictions (such as a smaller max segment size) beyond those of the 
-parent device which actually performs the DMA transfer?
-
-> > The questions (from me) are:
-> > 1. From the scsi layer POV (as per what __scsi_init_queue() does),
-> > what/which should we use as dma_dev?
-
-We should be using the USB host controller, because it is the device 
-which actually performs the DMA transfers.
-
-> > 2. Do we really need to set dma_boundary in the UAS host template (to
-> > PAGE_SIZE - 1)?
-
-I don't know.  But in theory it should be possible to have settings 
-(like this one) which affect only the transfers carried out by the SCSI 
-host, not the transfers carred out by other drivers which might use the 
-same USB controller.
-
-> > 3. Kind of the same question as #1: when we clamp hw_max_sectors to
-> > dma max mapping size, should the size actually be "the smaller one
-> > among dev and sysdev"? Or is one of the two sizes *always* the smaller
-> > one?
-
-I assume you're referring to code in the uas driver.  There the value of 
-dev is meaningless as far as DMA is concerned.  Only sysdev matters.
-
-Alan Stern
-
-> > On Tue, 1 Dec 2020 at 02:19, Hans de Goede <hdegoede@redhat.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On 11/30/20 6:20 PM, Alan Stern wrote:
-> > > > On Mon, Nov 30, 2020 at 02:36:38PM +0100, Hans de Goede wrote:
-> > > >> Hi,
-> > > >>
-> > > >> On 11/30/20 2:30 PM, Greg KH wrote:
-> > > >>> On Mon, Nov 30, 2020 at 02:23:48PM +0100, Hans de Goede wrote:
-> > > >>>> Hi,
-> > > >>>>
-> > > >>>> On 11/30/20 1:58 PM, Tom Yan wrote:
-> > > >>>>> It's merely a moving of comment moving for/and a no-behavioral-change
-> > > >>>>> adaptation for the reversion.>
-> > > >>>>
-> > > >>>> IMHO the revert of the troublesome commit and the other/new changes really
-> > > >>>> should be 2 separate commits. But I will let Alan and Greg have the final
-> > > >>>> verdict on this.
-> > > >>>
-> > > >>> I would prefer to just revert the commits and not do anything
-> > > >>> different/special here so late in the release cycle.
-> > > >>>
-> > > >>> So, if Alan agrees, I'll be glad to do them on my end, I just need the
-> > > >>> commit ids for them.
-> > > >>
-> > > >> The troublesome commit are (in reverse, so revert, order):
-> > > >>
-> > > >> 5df7ef7d32fe ("uas: bump hw_max_sectors to 2048 blocks for SS or faster drives")
-> > > >> 558033c2828f ("uas: fix sdev->host->dma_dev")
-> > > >> 0154012f8018 ("usb-storage: fix sdev->host->dma_dev")
-> > > >>
-> > > >> Alan, the reason for reverting these is that using scsi_add_host_with_dma() as the
-> > > >> last 2 patches do, with the dmadev argument of that call pointing to the device
-> > > >> for the XHCI controller is causing changes to the DMA settings of the XHCI controller
-> > > >> itself which is causing regressions in 5.10, see this email thread:
-> > > >>
-> > > >> https://lore.kernel.org/linux-usb/fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com/T/#t
-> > > >
-> > > > It's hard to go wrong with reverting, so it's okay with me.
-> > > >
-> > > > Still, Hans, have you checked out the difference between the
-> > > > scsi_add_host() and scsi_add_host_with_dma() calls?  It's just a matter
-> > > > of using dev vs. sysdev.  In particular, have you checked to see what
-> > > > those two devices are on your system?
-> > >
-> > > Its not just dev vs sysdev, its iface->dev vs bus->sysdev, and I assume
-> > > that the latter is actually the XHCI controller.
-> > >
-> > > my vote goes to reverting to avoid the regression for 5.10, esp. since
-> > > this is a clean revert of 3 patches with nothing depending / building
-> > > on top of the reverted commits.
-> > >
-> > > Then for 5.11 we can retry to introduce similar changes. I would be happy
-> > > to try a new patch-set for 5.11.
-> > >
-> > > > It seems likely that if one of those calls messes up some DMA settings,
-> > > > the other one does too -- just maybe not settings that matter much.
-> > >
-> > > I'm not very familiar with all the DMA mapping / mask code, but AFAIK making
-> > > changes to the DMA settings of a child will not influence the parent.
-> > >
-> > > Where as when passing bus->sysdev, then changes are made to a device
-> > > which is shared with other devices on the bus, which is why we see
-> > > a regression in an USB NIC driver being triggered by the UAS driver
-> > > binding to a device (on the same bus).
-> > >
-> > > At least that is my interpretation of this. I bisected the regression
-> > > and that pointed at the UAS DMA change and reverting it fixes things,
-> > > confirming that I did not make any mistakes during the bisect.
-> > >
-> > > Regards,
-> > >
-> > > Hans
-> > >
+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
+mOxPm7sNHsn0TVdPryi9+T2d8fVC/kUmuEdTYP/Hdu4W4b4T9BcW57fInYrmaJ+uotS6X59rAgMB
+AAGjggHRMIIBzTAOBgNVHQ8BAf8EBAMCBaAwgZ4GCCsGAQUFBwEBBIGRMIGOME0GCCsGAQUFBzAC
+hkFodHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc3BlcnNvbmFsc2lnbjJzaGEy
+ZzNvY3NwLmNydDA9BggrBgEFBQcwAYYxaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL2dzcGVy
+c29uYWxzaWduMnNoYTJnMzBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYm
+aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBEBgNVHR8E
+PTA7MDmgN6A1hjNodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzcGVyc29uYWxzaWduMnNoYTJn
+My5jcmwwJQYDVR0RBB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYI
+KwYBBQUHAwQwHwYDVR0jBBgwFoAUaXKCYjFnlUSFd5GAxAQ2SZ17C2EwHQYDVR0OBBYEFNYm4GDl
+4WOt3laB3gNKFfYyaM8bMA0GCSqGSIb3DQEBCwUAA4IBAQBD+XYEgpG/OqeRgXAgDF8sa+lQ/00T
+wCP/3nBzwZPblTyThtDE/iaL/YZ5rdwqXwdCnSFh9cMhd/bnA+Eqw89clgTixvz9MdL9Vuo8LACI
+VpHO+sxZ2Cu3bO5lpK+UVCyr21y1zumOICsOuu4MJA5mtkpzBXQiA7b/ogjGxG+5iNjt9FAMX4JP
+V6GuAMmRknrzeTlxPy40UhUcRKk6Nm8mxl3Jh4KB68z7NFVpIx8G5w5I7S5ar1mLGNRjtFZ0RE4O
+lcCwKVGUXRaZMgQGrIhxGVelVgrcBh2vjpndlv733VI2VKE/TvV5MxMGU18RnogYSm66AEFA/Zb+
+5ztz1AtIMYICbzCCAmsCAQEwbTBdMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
+di1zYTEzMDEGA1UEAxMqR2xvYmFsU2lnbiBQZXJzb25hbFNpZ24gMiBDQSAtIFNIQTI1NiAtIEcz
+AgwTv2xmtR4KOmK4QvMwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEINOHYfVw9Vsa
+tCVvgTGiWhac1TmPEVLAZZcws7pXBG1QMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTIwMTEzMDIxMTE1NVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
+YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
+AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCI2DZ0QQRl0Xrfxa0dyGaLGjp45YTy
+Gqlggfu6pkkcypKemcdwJoGhZJ4VouWTQOyASESnoMndK3eVRThm/sySqfQfHNZWqiUBqGzFgQL5
+T41TP4Rmi3VFPybxBUbiJ9Ov7R0pezeb0YbgUrYZPKDMuHCujWUKJD/vdqI/S7x1yOW8tfblVI+X
+N3eL/HU/Nixv2EyeUxDOpriumPJYrT/8PY2U8B2DIYEBPzoxhBJGNvr2A/4wiub3LbULaPZovZkj
+3YoKm11X6oXnLZM2ZK33w8wRtgfdmeGaTKDp4cwemeD2mXtkzYP5nPoMvmRos1Q3AG52Vl6IQUa6
+NJnlpOnX
+--000000000000bb203a05b559759d--
