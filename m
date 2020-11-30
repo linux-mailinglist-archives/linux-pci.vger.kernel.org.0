@@ -2,87 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4A282C8AB2
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 18:21:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 807982C8ABF
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 18:21:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgK3RUq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 12:20:46 -0500
-Received: from netrider.rowland.org ([192.131.102.5]:44127 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728692AbgK3RUq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 12:20:46 -0500
-Received: (qmail 967969 invoked by uid 1000); 30 Nov 2020 12:20:04 -0500
-Date:   Mon, 30 Nov 2020 12:20:04 -0500
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, Tom Yan <tom.ty89@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 2/2] usb-storage: revert from scsi_add_host_with_dma() to
- scsi_add_host()
-Message-ID: <20201130172004.GA966032@rowland.harvard.edu>
-References: <09992cec-65e4-2757-aae6-8fb02a42f961@redhat.com>
- <20201128154849.3193-1-tom.ty89@gmail.com>
- <20201128154849.3193-2-tom.ty89@gmail.com>
- <5e62c383-22ea-6df6-5acc-5e9f381d4632@redhat.com>
- <CAGnHSEnetAJNqUEW-iuq7eVyU6VnP84cv9+OVL4C5Z2ZK_eM0A@mail.gmail.com>
- <186eb035-4bc4-ff72-ee41-aeb6d81888e3@redhat.com>
- <X8T0E2qvF2cgADl+@kroah.com>
- <dd557c38-a919-5e5e-ab3b-17a235f17139@redhat.com>
+        id S1727836AbgK3RVl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 12:21:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728337AbgK3RVk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Nov 2020 12:21:40 -0500
+Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E7372074A;
+        Mon, 30 Nov 2020 17:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606756859;
+        bh=CbyJZAykpCyvjLTpCkzzfJ9pt8bGnYt3xwR2qqUfoI0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TGw3iJHvgbb+g7diOKMOugr/nuC73+5xTFsD9rPkDlD83W1yHAv7Z9v4H3q8I+h2c
+         xfiTLITVOpwfI8mn+Ad8xB8BJQI4zSsYIJBr4W2mHE1j1LovJTR5pfq9Lf1A6rY2iM
+         aagN+CcdLl1BicBBB0tVOwQNrEZ9ea5LezYWYgRc=
+Date:   Mon, 30 Nov 2020 11:20:58 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Krzysztof =?utf-8?Q?Wilczy=C5=84ski'?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Robert Richter <rrichter@marvell.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v6 4/5] PCI: vmd: Update type of the __iomem pointers
+Message-ID: <20201130172058.GA1088391@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dd557c38-a919-5e5e-ab3b-17a235f17139@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <81f4ddc2f0524b4b80c8a0bfa2df57fe@AcuMS.aculab.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 02:36:38PM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 11/30/20 2:30 PM, Greg KH wrote:
-> > On Mon, Nov 30, 2020 at 02:23:48PM +0100, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 11/30/20 1:58 PM, Tom Yan wrote:
-> >>> It's merely a moving of comment moving for/and a no-behavioral-change
-> >>> adaptation for the reversion.>
-> >>
-> >> IMHO the revert of the troublesome commit and the other/new changes really
-> >> should be 2 separate commits. But I will let Alan and Greg have the final
-> >> verdict on this.
+On Mon, Nov 30, 2020 at 09:06:56AM +0000, David Laight wrote:
+> From: Krzysztof Wilczynski
+> > Sent: 29 November 2020 23:08
 > > 
-> > I would prefer to just revert the commits and not do anything
-> > different/special here so late in the release cycle.
-> > 
-> > So, if Alan agrees, I'll be glad to do them on my end, I just need the
-> > commit ids for them.
+> > Use "void __iomem" instead "char __iomem" pointer type when working with
+> > the accessor functions (with names like readb() or writel(), etc.) to
+> > better match a given accessor function signature where commonly the
+> > address pointing to an I/O memory region would be a "void __iomem"
+> > pointer.
 > 
-> The troublesome commit are (in reverse, so revert, order):
+> ISTM that is heading in the wrong direction.
 > 
-> 5df7ef7d32fe ("uas: bump hw_max_sectors to 2048 blocks for SS or faster drives")
-> 558033c2828f ("uas: fix sdev->host->dma_dev")
-> 0154012f8018 ("usb-storage: fix sdev->host->dma_dev")
+> I think (form the variable names etc) that these are pointers
+> to specific registers.
 > 
-> Alan, the reason for reverting these is that using scsi_add_host_with_dma() as the
-> last 2 patches do, with the dmadev argument of that call pointing to the device
-> for the XHCI controller is causing changes to the DMA settings of the XHCI controller
-> itself which is causing regressions in 5.10, see this email thread:
-> 
-> https://lore.kernel.org/linux-usb/fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com/T/#t
+> So what you ought to have is a type for that register block.
+> Typically this is actually a structure - to give some type
+> checking that the offsets are being used with the correct
+> base address.
 
-It's hard to go wrong with reverting, so it's okay with me.
+In this case, "cfgbar" is not really a pointer to a register; it's the
+address of memory-mapped config space.  The VMD hardware turns
+accesses to that space into PCI config transactions on its secondary
+side.  xgene_pcie_get_cfg_base() and brcm_pcie_map_conf() are similar
+situations and use "void *".
 
-Still, Hans, have you checked out the difference between the 
-scsi_add_host() and scsi_add_host_with_dma() calls?  It's just a matter 
-of using dev vs. sysdev.  In particular, have you checked to see what 
-those two devices are on your system?
-
-It seems likely that if one of those calls messes up some DMA settings, 
-the other one does too -- just maybe not settings that matter much.
-
-Alan Stern
+Bjorn
