@@ -2,97 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BACC32C8093
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 10:08:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 757AA2C80C4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 10:18:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgK3JIh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 04:08:37 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:38842 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726249AbgK3JIg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 04:08:36 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-80-IWcXTuCBM3uUJIkbSzc7wQ-1; Mon, 30 Nov 2020 09:06:57 +0000
-X-MC-Unique: IWcXTuCBM3uUJIkbSzc7wQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 30 Nov 2020 09:06:56 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 30 Nov 2020 09:06:56 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     =?utf-8?B?J0tyenlzenRvZiBXaWxjennFhHNraSc=?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "Michal Simek" <michal.simek@xilinx.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: RE: [PATCH v6 4/5] PCI: vmd: Update type of the __iomem pointers
-Thread-Topic: [PATCH v6 4/5] PCI: vmd: Update type of the __iomem pointers
-Thread-Index: AQHWxqWOFrNLxNoH9E63s2U4AbPR/6ngYYng
-Date:   Mon, 30 Nov 2020 09:06:56 +0000
-Message-ID: <81f4ddc2f0524b4b80c8a0bfa2df57fe@AcuMS.aculab.com>
-References: <20201129230743.3006978-1-kw@linux.com>
- <20201129230743.3006978-5-kw@linux.com>
-In-Reply-To: <20201129230743.3006978-5-kw@linux.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S1727836AbgK3JRX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 04:17:23 -0500
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:43736 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgK3JRX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 04:17:23 -0500
+Received: by mail-oi1-f170.google.com with SMTP id t143so13420398oif.10;
+        Mon, 30 Nov 2020 01:17:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UpFsmKHMxP9g9q5APyn1icsD+ymXQt4NPSq031N1NNI=;
+        b=WSrp/PyOB4L9ORnsszYo+I4K2SIz1/wJvFA1s/5m8MZVPiZ4melDWHVnxfqKIw2xpr
+         odlBczevnikx2AgQZ1mI7OYLuNLOjWgC1tRw6v/4Ao0F1BNkOiHDJC/CCx9SJcDJkSKe
+         AR3tMA03ly/5yXdFmrpsLpm2YkGri6N//vKec1SUY/cr5BMMhLSMmGW++odDT/5zhkRV
+         K8hr+9l8ZlOvPy5uHrYd1LHLZxUhrIM7tUuj0wHUNvRCCf+Zzgux1zBSYIQCvMvFrKAE
+         NxL20bAFqecuTclGBHLRh+1n1/zyYDOU9a15jM+Sjf00z+lc2+0zImHcQSmbNN1Z9JHL
+         MTgw==
+X-Gm-Message-State: AOAM533FVcx4kDXJ/Uipq+k8tnq0t5cBRUEE6lXYKQ67TIpihDEWgRSh
+        FF7Go04FXiObu+WLc0fDYodrtbTUudvEYl2XjQeoZ1+DRvE=
+X-Google-Smtp-Source: ABdhPJzeINpx9GMKwjhKFTAHXMl7bD1gJfOA2/3YLUwKSuBIptgaIj//KON2S18pSW1vwn1PxT6uD5Ljvsv/bbYS8tk=
+X-Received: by 2002:aca:1c0f:: with SMTP id c15mr13811815oic.54.1606727802158;
+ Mon, 30 Nov 2020 01:16:42 -0800 (PST)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20201126115927.4089838-1-geert@linux-m68k.org>
+In-Reply-To: <20201126115927.4089838-1-geert@linux-m68k.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 30 Nov 2020 10:16:31 +0100
+Message-ID: <CAMuHMdXPrfEvFUDEU72odcS6S8e0GS_XRcrcDsQMvSHxMcxwYg@mail.gmail.com>
+Subject: Re: [PATCH/RFC] dt-bindings: pci: rcar-pci-ep: Document missing
+ interrupts property
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogS3J6eXN6dG9mIFdpbGN6eW5za2kNCj4gU2VudDogMjkgTm92ZW1iZXIgMjAyMCAyMzow
-OA0KPiANCj4gVXNlICJ2b2lkIF9faW9tZW0iIGluc3RlYWQgImNoYXIgX19pb21lbSIgcG9pbnRl
-ciB0eXBlIHdoZW4gd29ya2luZyB3aXRoDQo+IHRoZSBhY2Nlc3NvciBmdW5jdGlvbnMgKHdpdGgg
-bmFtZXMgbGlrZSByZWFkYigpIG9yIHdyaXRlbCgpLCBldGMuKSB0bw0KPiBiZXR0ZXIgbWF0Y2gg
-YSBnaXZlbiBhY2Nlc3NvciBmdW5jdGlvbiBzaWduYXR1cmUgd2hlcmUgY29tbW9ubHkgdGhlDQo+
-IGFkZHJlc3MgcG9pbnRpbmcgdG8gYW4gSS9PIG1lbW9yeSByZWdpb24gd291bGQgYmUgYSAidm9p
-ZCBfX2lvbWVtIg0KPiBwb2ludGVyLg0KDQpJU1RNIHRoYXQgaXMgaGVhZGluZyBpbiB0aGUgd3Jv
-bmcgZGlyZWN0aW9uLg0KDQpJIHRoaW5rIChmb3JtIHRoZSB2YXJpYWJsZSBuYW1lcyBldGMpIHRo
-YXQgdGhlc2UgYXJlIHBvaW50ZXJzDQp0byBzcGVjaWZpYyByZWdpc3RlcnMuDQoNClNvIHdoYXQg
-eW91IG91Z2h0IHRvIGhhdmUgaXMgYSB0eXBlIGZvciB0aGF0IHJlZ2lzdGVyIGJsb2NrLg0KVHlw
-aWNhbGx5IHRoaXMgaXMgYWN0dWFsbHkgYSBzdHJ1Y3R1cmUgLSB0byBnaXZlIHNvbWUgdHlwZQ0K
-Y2hlY2tpbmcgdGhhdCB0aGUgb2Zmc2V0cyBhcmUgYmVpbmcgdXNlZCB3aXRoIHRoZSBjb3JyZWN0
-DQpiYXNlIGFkZHJlc3MuDQoNCklmIHRoZSBjb2RlIGlzIHVzaW5nIG51bWVyaWMgb2Zmc2V0cyAo
-aGFyZHdhcmUgZW5naW5lZXJzIGxpa2UNCm51bWVyaWMgb2Zmc2V0cykgdGhlbiB5b3UgY2FuIGdl
-dCBzb21lIHR5cGUgcHJvdGVjdGlvbiBieSB1c2luZw0KYSBzdHJ1Y3R1cmUgdGhhdCBvbmx5IGNv
-bnRhaW5zIGEgc2luZ2xlIGZpZWxkIChjaGFyIGluIHRoaXMgY2FzZSkuDQoNCglEYXZpZA0KDQot
-DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
-TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
-ZXMpDQo=
+On Thu, Nov 26, 2020 at 3:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> The R-Car PCIe controller does not use interrupts when configured
+> for endpoint mode, hence the bindings do not document the interrupt
+> property.  However, all DTS files provide interrupts properties, and
+> thus fail to validate.
+>
+> Fix this by documenting the interrupts property.
+>
+> Fixes: 5be478f9c24fbdf8 ("dt-bindings: Another round of adding missing 'additionalProperties'")
+> Fixes: 4c0f80920923f103 ("dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint controller")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
+Oops, this should have been geert+renesas@glider.be.
+
+> ---
+> Alternatively, the interrupts properties should be removed from the
+> corresponding device nodes in the DTS files.  Obviously they should be
+> retained in the device nodes representing PCIe controllers configured in
+> host mode, which describe the same hardware...
+
+Anyway, waiting for your comments ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
