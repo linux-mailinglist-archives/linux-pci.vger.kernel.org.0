@@ -2,54 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7013F2C8FF5
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 22:25:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 566442C8FF7
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 22:25:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbgK3VZL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 16:25:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56038 "EHLO
+        id S2388553AbgK3VZO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 16:25:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388485AbgK3VZK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 16:25:10 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E776C0613D2;
-        Mon, 30 Nov 2020 13:24:30 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id r2so7229728pls.3;
-        Mon, 30 Nov 2020 13:24:30 -0800 (PST)
+        with ESMTP id S2388485AbgK3VZN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 16:25:13 -0500
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DA4C0613D3;
+        Mon, 30 Nov 2020 13:24:33 -0800 (PST)
+Received: by mail-pl1-x644.google.com with SMTP id l1so7224817pld.5;
+        Mon, 30 Nov 2020 13:24:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8kmpDktJoo+tgdDQX4wx7doucidziNB384DjMU2vgfU=;
-        b=OECFAO2Z4EXAK273apV4X6gtv5Igmme0KM1JkZfGxtLkos7GUSVPNpATZvVr/dMu+J
-         9+bqK7zJzhwiDXM1ik2B2FOTNSnCSz0hZvcMXNKfExNy10aRW9eGE3WxK2Gl4RRm154Q
-         NnmN8ilWx/kDES/Hb8ezdOp0Qsmo4Zac+wxim83OJMFxQucPGM625oYwrcwm0LpJSEnv
-         pyREbKkS/X1/6m2nrunKLh28Aww46dVVr/Q9Ft0Ak98g5VHhE2qSjpv4UdYGd00Zff7T
-         RD3wkiZHptotqafo9iPT/bg8RwaP6qoquBHKvICU05LtfqDRanXSw8rXJKtVJTeOB6n+
-         8XeQ==
+        bh=Ll2JJaksjzE8Q6Nr6NYfNRZN8P9gxZMqcK/4uDsQ2cU=;
+        b=WGMIzm2UNInaLcEcugm4RjJXyGX06d/YZO9WhikAIqkzYvgJ8DptfBKK9OFrK4VYDn
+         E37+AMhTvPIM9E0eOb7LJURoPNsEwaNSwMDFOmLJ8FJ06N1BKP0Mrq+FyH4VAf2XCKnU
+         rpdSbkQUt5DxhuK5POfeS5yf0tc1OnuY3wX+ctj431uhwdEXWyamnwHKo9c1fMg9p6YP
+         Ybj+JMOy/qnDVxuNfRH/x85nkcvls/Ok7RpbJh160xUOVWRxkK26r5HSEVtbKsVs/gUB
+         F8vnGIPj7k+WfhFr0Wv8OycIPWqXugd4/RxwAyKhoGyIFHoz4mfs/y8ncerUDMd5DOxD
+         fGrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=8kmpDktJoo+tgdDQX4wx7doucidziNB384DjMU2vgfU=;
-        b=My1YpcTiSGg4bazNttsxcD1Z+lzQ+FvkPGW2C7iIvnU3PjdCkPaK8r9ixfW4F9djj5
-         58VGHrKyspV4N7nIM+O+lYV/1nR+nbYKkLmsP6Klm0YRKD8B+/vMJ1okU64pyjpjBSaZ
-         g9sD6NTdk+JuCScCC30d5wgsVq7dyithX0wC1mzf957NJdHR06z5i1GoSGmT3EPJu68V
-         ACu8VEHJrLKK/L4bBWsIKcmjPQXHypxHhkH5lrDjrZfBPbSF61+qRTab/lJAH9g3y22T
-         R1TUw5FSfDyP6Hf0wanXT+C+ys6vVHGkQcBghhXQyYtflAy/faIc4Oe1od5xaB9OHGu/
-         1+Jw==
-X-Gm-Message-State: AOAM533Wf8ztWdZlbET5Ouqo5KFw3p1knbwsbbpyR5SPZect70MV0VlW
-        HwiUXccYOchstqroHQqcrsTB2OSK724=
-X-Google-Smtp-Source: ABdhPJxA7fhHW1/ofDc7MRmxzqtQV6aW3jzgbVKACSS+8SoPHoQDTyjNo7IF4Y5xLzVIRinmrAP7Vg==
-X-Received: by 2002:a17:90b:1183:: with SMTP id gk3mr873137pjb.191.1606771469424;
-        Mon, 30 Nov 2020 13:24:29 -0800 (PST)
+        bh=Ll2JJaksjzE8Q6Nr6NYfNRZN8P9gxZMqcK/4uDsQ2cU=;
+        b=ub4JbQfWsSc+pw40JcfbjwmbXpXaq+TPBmW04WCKBzHUdSkRVXxHi2GSHGygSYmYWJ
+         s7PbqyENr1+WLc8XkIfMbsRxJ1QSqttt7VUlCjhpoA2c5zrO8XjH4d6EBBVRsrGE3JAK
+         zf5g86+yDij4Geehid354bxcCp/Vq6HYkl4clCKxTuuPnLwmrmvqzRBB5ESh/2lkQ+Q4
+         aj6MzM0YQks22ahwXGTkXS1ET6odDwwOWbUPsCnjbJHrhoRCCTnRt/Y9/Ye88HC9Nirg
+         7zN+OjGhVc3ks6MNw26RrRG14Uh5REGYrD1uxxx3YnGN1/jD5BgpX9t5uwWoO/8J1VHH
+         9OXQ==
+X-Gm-Message-State: AOAM532mcMJjgU0SEGF+9NGWyzQCOn6QTawjJ/fLMn42wod+0CQf42yI
+        fFnX5PIcaH8UNj9nAFgNvdcO388UlFk=
+X-Google-Smtp-Source: ABdhPJyisv9RK/82Z0H0ALstOMpckeodpsMq45LzVBMC1qlFaYY8lFI/ICKZqu2GrubA5MHSitairw==
+X-Received: by 2002:a17:90a:7e0f:: with SMTP id i15mr835634pjl.77.1606771472700;
+        Mon, 30 Nov 2020 13:24:32 -0800 (PST)
 Received: from [10.230.28.242] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id e23sm17741675pfd.64.2020.11.30.13.24.27
+        by smtp.gmail.com with ESMTPSA id q29sm18176330pfg.146.2020.11.30.13.24.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Nov 2020 13:24:28 -0800 (PST)
-Subject: Re: [PATCH v2 6/6] PCI: brcmstb: check return value of
- clk_prepare_enable()
+        Mon, 30 Nov 2020 13:24:31 -0800 (PST)
+Subject: Re: [PATCH v2 4/6] PCI: brcmstb: Give 7216 SOCs their own config type
 To:     Jim Quinlan <james.quinlan@broadcom.com>,
         linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
@@ -63,14 +62,14 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>
 References: <20201130211145.3012-1-james.quinlan@broadcom.com>
- <20201130211145.3012-7-james.quinlan@broadcom.com>
+ <20201130211145.3012-5-james.quinlan@broadcom.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <f2e23cc0-5e74-790e-ee85-6ff36f420b26@gmail.com>
-Date:   Mon, 30 Nov 2020 13:24:26 -0800
+Message-ID: <833b8ff3-978d-7d3f-da6b-93f86835b2ce@gmail.com>
+Date:   Mon, 30 Nov 2020 13:24:29 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Firefox/78.0 Thunderbird/78.5.0
 MIME-Version: 1.0
-In-Reply-To: <20201130211145.3012-7-james.quinlan@broadcom.com>
+In-Reply-To: <20201130211145.3012-5-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,11 +80,10 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 11/30/2020 1:11 PM, Jim Quinlan wrote:
-> The check was missing on PCIe resume.
+> This distinction is required for an imminent commit.
 > 
 > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Fixes: 8195b7417018 ("PCI: brcmstb: Add suspend and resume pm_ops")
 -- 
 Florian
