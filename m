@@ -2,186 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DDCB2C8893
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 16:49:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B2F2C88F4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 17:07:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgK3Psp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 10:48:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33080 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726339AbgK3Psp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 10:48:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606751238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/2cfl5p+/dsT1o38syXwn2awNxPJz7kQnbcKay1wI6o=;
-        b=YXhHp9bqenrB6Et9QiDohMxn3Rt69Jz9De0/7VlkQTWeUbL3QKbsq/xJ06qWiKkMUWG07R
-        uigcEWdDBfwl6Ei3vDuuumBniTJ1PuZOPzdkyLxMJ23FLAiaRnICP0dUp1c1RZBD0DwhQD
-        0kvECIIPyZHGOWcKObCYsiYFuDAUyno=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-UvQ6Pl1bOp2HNYlzvAMwmw-1; Mon, 30 Nov 2020 10:46:59 -0500
-X-MC-Unique: UvQ6Pl1bOp2HNYlzvAMwmw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726376AbgK3QGo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 11:06:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725933AbgK3QGo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Nov 2020 11:06:44 -0500
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A230E803658;
-        Mon, 30 Nov 2020 15:46:23 +0000 (UTC)
-Received: from w520.home (ovpn-112-10.phx2.redhat.com [10.3.112.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C58960C93;
-        Mon, 30 Nov 2020 15:46:22 +0000 (UTC)
-Date:   Mon, 30 Nov 2020 08:46:22 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Chiqijun <chiqijun@huawei.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yin.yinshi@huawei.com, cloud.wangxiaoyun@huawei.com,
-        zengweiliang.zengweiliang@huawei.com, chenlizhong@huawei.com
-Subject: Re: [PATCH] PCI: Add pci reset quirk for Huawei Intelligent NIC
- virtual function
-Message-ID: <20201130084622.0b71d526@w520.home>
-In-Reply-To: <20201128232919.GA929748@bjorn-Precision-5520>
-References: <20201128061825.2629-1-chiqijun@huawei.com>
-        <20201128232919.GA929748@bjorn-Precision-5520>
+        by mail.kernel.org (Postfix) with ESMTPSA id A445420855;
+        Mon, 30 Nov 2020 16:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606752363;
+        bh=1GPOYWKEqPNGZW+D562IP8XHFWfvy0me5bE6J0pU+d8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2HEFFHdTywl4CAx/p1hd7QiYvhS8NPF2Ea8lnZGgE9ImRRreBXzRmxXufDNlcLYC8
+         GTq3r6CtCLehaJ7DLWvw0+E5NwB5M45pzGg+/S0+ZPz59nYqfmjftDVq7XgZ6CTrQr
+         sIDgmoTV5zhOunGNY9jfhnDbbBTAN2guug6UW26g=
+Received: by mail-ej1-f44.google.com with SMTP id s13so7438772ejr.1;
+        Mon, 30 Nov 2020 08:06:02 -0800 (PST)
+X-Gm-Message-State: AOAM533MrOXqaiiL2XxEK0sS8Nm7gL5dGczBBXsoNwIyacd0IWyJIcqh
+        J4EoXsGg5LElePIk5FCbQU7XA/5vk4hnKOpaPw==
+X-Google-Smtp-Source: ABdhPJxfgVyP4bnFkAOZrDfHIcdnZWjZa+nSBKw43ABRjzDjIuoZF/30uk3bcc5ez7+cDtG5GS+Y7unmH8ERNOmZGjc=
+X-Received: by 2002:a17:907:2718:: with SMTP id w24mr15879083ejk.525.1606752361083;
+ Mon, 30 Nov 2020 08:06:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20201119202825.GA197305@bjorn-Precision-5520> <1606113913.14736.37.camel@mhfsdcap03>
+In-Reply-To: <1606113913.14736.37.camel@mhfsdcap03>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Nov 2020 09:05:48 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqLdqCE-sVb8T6p2E5Zf1b3pvPBtapZ8dsQGFDW3GsArjQ@mail.gmail.com>
+Message-ID: <CAL_JsqLdqCE-sVb8T6p2E5Zf1b3pvPBtapZ8dsQGFDW3GsArjQ@mail.gmail.com>
+Subject: Re: [v4,2/3] PCI: mediatek: Add new generation controller support
+To:     Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        PCI <linux-pci@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Youlin Pei <youlin.pei@mediatek.com>,
+        Chuanjia Liu <chuanjia.liu@mediatek.com>,
+        qizhong.cheng@mediatek.com, sin_jieyang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 28 Nov 2020 17:29:19 -0600
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Sun, Nov 22, 2020 at 11:45 PM Jianjun Wang <jianjun.wang@mediatek.com> wrote:
+>
+> On Thu, 2020-11-19 at 14:28 -0600, Bjorn Helgaas wrote:
+> > "Add new generation" really contains no information.  And "mediatek"
+> > is already used for the pcie-mediatek.c driver, so we should have a
+> > new tag for this new driver.  Include useful information in the
+> > subject, e.g.,
+> >
+> >   PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+> >
+> > On Wed, Nov 18, 2020 at 04:29:34PM +0800, Jianjun Wang wrote:
+> > > MediaTek's PCIe host controller has three generation HWs, the new
+> > > generation HW is an individual bridge, it supoorts Gen3 speed and
+> > > up to 256 MSI interrupt numbers for multi-function devices.
+> >
+> > s/supoorts/supports/
+> >
+> > > Add support for new Gen3 controller which can be found on MT8192.
+> > >
+> > > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> > > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 
-> [+cc Alex]
-> 
-> On Sat, Nov 28, 2020 at 02:18:25PM +0800, Chiqijun wrote:
-> > When multiple VFs do FLR at the same time, the firmware is
-> > processed serially, resulting in some VF FLRs being delayed more
-> > than 100ms, when the virtual machine restarts and the device
-> > driver is loaded, the firmware is doing the corresponding VF
-> > FLR, causing the driver to fail to load.
-> > 
-> > To solve this problem, add host and firmware status synchronization
-> > during FLR.  
-> 
-> Is this because the Huawei Intelligent NIC isn't following the spec,
-> or is it because Linux isn't correctly waiting for the FLR to
-> complete?
+[...]
 
-Seems like a spec compliance issue, I don't recall anything in the spec
-about coordinating FLR between VFs.
- 
-> If this is a Huawei Intelligent NIC defect, is there documentation
-> somewhere (errata) that you can reference?  Will it be fixed in future
-> designs, so we don't have to add future Device IDs to the quirk?
-> 
-> > Signed-off-by: Chiqijun <chiqijun@huawei.com>
-> > ---
-> >  drivers/pci/quirks.c | 67 ++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> > 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index f70692ac79c5..bd6236ea9064 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -3912,6 +3912,71 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
-> >  	return 0;
-> >  }
-> >  
-> > +#define PCI_DEVICE_ID_HINIC_VF  0x375E
-> > +#define HINIC_VF_FLR_TYPE       0x1000
-> > +#define HINIC_VF_OP             0xE80
-> > +#define HINIC_OPERATION_TIMEOUT 15000
-> > +
-> > +/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
-> > +static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
-> > +{
-> > +	unsigned long timeout;
-> > +	void __iomem *bar;
-> > +	u16 old_command;
-> > +	u32 val;
-> > +
-> > +	if (probe)
-> > +		return 0;
-> > +
-> > +	bar = pci_iomap(pdev, 0, 0);
-> > +	if (!bar)
-> > +		return -ENOTTY;
-> > +
-> > +	pci_read_config_word(pdev, PCI_COMMAND, &old_command);
-> > +
-> > +	/*
-> > +	 * FLR cap bit bit30, FLR ACK bit: bit18, to avoid big-endian conversion
-> > +	 * the big-endian bit6, bit10 is directly operated here
-> > +	 */
-> > +	val = readl(bar + HINIC_VF_FLR_TYPE);
-> > +	if (!(val & (1UL << 6))) {
-> > +		pci_iounmap(pdev, bar);
-> > +		return -ENOTTY;
-> > +	}
+> > > +static int mtk_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+> > > +                               int where, int size, u32 *val)
+> > > +{
+> > > +   struct mtk_pcie_port *port = bus->sysdata;
+> > > +   int bytes;
+> > > +
+> > > +   bytes = ((1 << size) - 1) << (where & 0x3);
+> >
+> > This seems like some unusual bit twiddling; at least, I don't remember
+> > seeing this before.  Can you skim other drivers and see if others do
+> > the same thing, and adopt a common style if they do?
+>
+> Hi Bjorn,
+>
+> Thanks for your review, I will fix it in the next version.
+> >
+> > > +   writel(PCIE_CFG_HEADER_FORCE_BE(devfn, bus->number, bytes),
+> > > +          port->base + PCIE_CFGNUM_REG);
+> > > +
+> > > +   *val = readl(port->base + PCIE_CFG_OFFSET_ADDR + (where & ~0x3));
+> >
+> > These look like they need to be atomic, since you need a writel()
+> > followed by a readl().
+> >
+> > pci_lock_config() (used in pci_bus_read_config_*(), etc) uses the
+> > global pci_lock for this unless CONFIG_PCI_LOCKLESS_CONFIG is set.
+> >
+> > But I would like to eventually move away from this implicit dependency
+> > on pci_lock.  If you need to make this atomic, can you add the
+> > explicit locking here, so there's a clear connection between the lock
+> > and the things it protects?
+>
+> Sure, I will split it to a map_bus() function and use the standard
+> pci_generic_config_read32/write32 functions as Rob's suggestion. I think
+> the potential risks of atomic read/write can be avoided.
 
+The generic functions have no effect on atomicity, but using them does
+make it easier to find the non-atomic cases.
 
-I don't know exactly what this is testing, but it seems like a
-feature/capability test that can fail, why is it not done as part of
-the probe?  Can we define bit 6 with a macro?  Same for bit 10 in the
-VF op register below.
+I'm not sure that having host drivers do their own locking is the best
+approach. That's a recipe for more cleanups. It's a common enough
+issue that I think it's better if we have locking done in 1 place.
+Then host drivers can simply say if they need locking or not via some
+bus flag.
 
-> > +
-> > +	val = readl(bar + HINIC_VF_OP);
-> > +	val = val | (1UL << 10);
-> > +	writel(val, bar + HINIC_VF_OP);
-> > +
-> > +	/* Perform the actual device function reset */
-> > +	pcie_flr(pdev);
-> > +
-> > +	pci_write_config_word(pdev, PCI_COMMAND,
-> > +			      old_command | PCI_COMMAND_MEMORY);
-> > +
-> > +	/* Waiting for device reset complete */
-> > +	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
-
-Yikes, 15s timeout!
-
-> > +	do {
-> > +		val = readl(bar + HINIC_VF_OP);
-> > +		if (!(val & (1UL << 10)))
-> > +			goto reset_complete;
-> > +		msleep(20);
-> > +	} while (time_before(jiffies, timeout));
-> > +
-> > +	val = readl(bar + HINIC_VF_OP);
-> > +	if (!(val & (1UL << 10)))
-> > +		goto reset_complete;
-> > +
-> > +	pci_warn(pdev, "Reset dev timeout, flr ack reg: %x\n",
-> > +		 be32_to_cpu(val));
-> > +
-> > +reset_complete:
-> > +	pci_write_config_word(pdev, PCI_COMMAND, old_command);
-> > +	pci_iounmap(pdev, bar);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
-> >  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
-> >  		 reset_intel_82599_sfp_virtfn },
-> > @@ -3923,6 +3988,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
-> >  	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
-> >  	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
-> >  		reset_chelsio_generic_dev },
-> > +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
-> > +		reset_hinic_vf_dev },
-> >  	{ 0 }
-> >  };
-> >  
-> > -- 
-> > 2.17.1
-> >   
-> 
-
+Rob
