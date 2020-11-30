@@ -2,207 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95F472C8BD4
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 18:57:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79E102C8C8F
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 19:20:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgK3Rzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 12:55:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgK3Rzn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 12:55:43 -0500
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6AEC0613D2
-        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 09:55:02 -0800 (PST)
-Received: by mail-pl1-x643.google.com with SMTP id s2so6883698plr.9
-        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 09:55:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=4b4lxoDH30x3EACz4QBf2OMZMciYFDpovFuFRmgRoGc=;
-        b=F/rRZC7XnAVbEs6rQ1sAhe8i5JUZfgqa3jZpOVPCu0Yxu334J70DTavZUwloI79HxK
-         G2fTbp2Kcqs65SwGKLMQIWV0aBA0NDFr82mEge0a9Scn8+97sVmeUk12lIEIJQujM69y
-         nIt8+w76DFUP41SuroAgxmegm2iq6fQI0ApI4=
+        id S1727990AbgK3SUa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 13:20:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26570 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729446AbgK3SUa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 13:20:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606760343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vpk6I40VopO59OgCMYgesz1THx7bQXJvIwP+xEc7HEQ=;
+        b=FeYcTxqwMEq9e5lS+ygKvmlX8Tmc0QT1MPwSdqSuklvXLqeHoizjAsN2iQtpeuDfk+HshH
+        pA4Bp0NAE9AKdzdDOeAzJHT2642Et16twpVKYtcPhziKkBep15w4Jxj4dnyAxqmMqTbbpz
+        NhTbPSxOXv+1IZn5P2gi+4778h/Lpr8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-lVhHRMCROL2F-nQn6XOrZw-1; Mon, 30 Nov 2020 13:19:01 -0500
+X-MC-Unique: lVhHRMCROL2F-nQn6XOrZw-1
+Received: by mail-ej1-f71.google.com with SMTP id h17so315024ejk.21
+        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 10:19:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=4b4lxoDH30x3EACz4QBf2OMZMciYFDpovFuFRmgRoGc=;
-        b=WF4s+dCOHxaD6+B2CWJEHdnOKZ6tjxm0vg5DePU5p8ifbGndUg4rK9KBv9UACEY2E1
-         RdoNBDNI1Lx8bBkOkgwM37JWVJc+ujZ0LUr0fURE2CST15Kfc2glwwz0tj7140enzmTm
-         F5zyUZziKLyFIih7a9+PAguZcqFnIAjHvUCEBXWP3EkSnf3cE3kCAoigEUBCHaaVYNIi
-         5uFKSmO25hQRiTRNnfW4ZGfN7WCdLleoOOHojDmQcIbfVvAbkscWTnvU4tj56mVjBdkx
-         UHDgYWy02nDcGC9YxNwSr6pc6qg7hrPpRAA7pzsjqEUeuX9AxVe2MlEt/4VVyTAR2U+y
-         7W7w==
-X-Gm-Message-State: AOAM533JjPQYdP0oWkhfkqJu5lFizQekk5XijtT3E9q29O7rVnLjyFl6
-        aCy4l2L1w8LVaCjl0BkDCo5cCw==
-X-Google-Smtp-Source: ABdhPJyPh1KO8PK7DOHk6GZl96mzdqldqA9dZ71w4G53Ozpj6SgT2UiREiVvX7A6MvDEU3SJVK+HTA==
-X-Received: by 2002:a17:90a:e64a:: with SMTP id ep10mr9237212pjb.60.1606758902249;
-        Mon, 30 Nov 2020 09:55:02 -0800 (PST)
-Received: from [10.230.182.181] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id w11sm17176940pfj.212.2020.11.30.09.54.59
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vpk6I40VopO59OgCMYgesz1THx7bQXJvIwP+xEc7HEQ=;
+        b=Qbo837vtY1/NVn5hyCkrh+1dIj/Q6xMBQr1iulvcvcgP3hjG5mr65XqD62a7lmva+4
+         38drJWC2xTSzljg0YxZQas+QJF9GAfLhyLUkvXUEc8unbzUUaNbA897eAcrLeNMmHPY+
+         1ZEcRxbafupWKAucGA0igQjANhIvtWzH3ZsXzJufHEmZKniF1bQ0CqRgmVDy8wFzSsE/
+         9SS04+xsxENUiN/J7TjcSusBE1Lnuq+yBVxYrl3CLr533mkon1BWQ5bZBkTxwfVG0oJp
+         NER4r8OtB8Z5K2M2hHRslhwancarqNVKPEXRDjzh8jXvX53PeD5aTCCsRqw7Ho3uHfBd
+         3G1w==
+X-Gm-Message-State: AOAM530G16WHrhbMfea6GRqLe8MIz4lu6qjkWPBSDEn0iJciK2wMIsi5
+        D3vUWlgDt+RY6m4WXkwcs+qqvZ6h9qVzFTOIVEwHrayXu6Lw/fTct/jkc0N4pBrkpSXLk5DcI9v
+        EU7x5WzK1Q/8ghQeVzzfY
+X-Received: by 2002:a50:da84:: with SMTP id q4mr22690798edj.377.1606760339743;
+        Mon, 30 Nov 2020 10:18:59 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz7e7Ny+dw3Vzt5jfmMjutla+i8r+BmbQoRbN9bFKPNsr2tG0kTRoVsYpfwnF7+UlTe+2pGXg==
+X-Received: by 2002:a50:da84:: with SMTP id q4mr22690625edj.377.1606760337762;
+        Mon, 30 Nov 2020 10:18:57 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id pj5sm6029636ejb.60.2020.11.30.10.18.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Nov 2020 09:55:00 -0800 (PST)
-Subject: Re: [PATCH v3 0/3] PCI: iproc: Add fixes to pcie iproc
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20201001060054.6616-1-srinath.mannam@broadcom.com>
- <20201130121947.GD16758@e121166-lin.cambridge.arm.com>
- <de561113-7df5-2424-3920-1627b7ec9e24@broadcom.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <afcc9e9d-a73c-620d-c6a1-df63937fcc57@broadcom.com>
-Date:   Mon, 30 Nov 2020 09:54:57 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.3
+        Mon, 30 Nov 2020 10:18:56 -0800 (PST)
+Subject: Re: [PATCH 2/2] usb-storage: revert from scsi_add_host_with_dma() to
+ scsi_add_host()
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, Tom Yan <tom.ty89@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+References: <09992cec-65e4-2757-aae6-8fb02a42f961@redhat.com>
+ <20201128154849.3193-1-tom.ty89@gmail.com>
+ <20201128154849.3193-2-tom.ty89@gmail.com>
+ <5e62c383-22ea-6df6-5acc-5e9f381d4632@redhat.com>
+ <CAGnHSEnetAJNqUEW-iuq7eVyU6VnP84cv9+OVL4C5Z2ZK_eM0A@mail.gmail.com>
+ <186eb035-4bc4-ff72-ee41-aeb6d81888e3@redhat.com>
+ <X8T0E2qvF2cgADl+@kroah.com>
+ <dd557c38-a919-5e5e-ab3b-17a235f17139@redhat.com>
+ <20201130172004.GA966032@rowland.harvard.edu>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <abb0a79d-63a0-6f3d-4812-f828283cd47c@redhat.com>
+Date:   Mon, 30 Nov 2020 19:18:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <de561113-7df5-2424-3920-1627b7ec9e24@broadcom.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000a2deb705b556b5c2"
+In-Reply-To: <20201130172004.GA966032@rowland.harvard.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---000000000000a2deb705b556b5c2
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Hi,
 
-
-
-On 11/30/2020 9:39 AM, Scott Branden wrote:
-> 
-> 
-> On 2020-11-30 4:19 a.m., Lorenzo Pieralisi wrote:
->> On Thu, Oct 01, 2020 at 11:30:51AM +0530, Srinath Mannam wrote:
->>> This patch series contains fixes and improvements to pcie iproc driver.
->>>
->>> This patch set is based on Linux-5.9.0-rc2.
->>>
->>> Changes from v2:
->>>   - Addressed Bjorn's review comments
->>>      - Corrected subject line and commit message of Patches 1 and 2.
->>>      
->>> Changes from v1:
->>>   - Addressed Bjorn's review comments
->>>      - pcie_print_link_status is used to print Link information.
->>>      - Added IARR1/IMAP1 window map definition.
->>>
->>> Bharat Gooty (1):
->>>   PCI: iproc: Fix out-of-bound array accesses
->>>
->>> Roman Bacik (1):
->>>   PCI: iproc: Invalidate correct PAXB inbound windows
->>>
->>> Srinath Mannam (1):
->>>   PCI: iproc: Display PCIe Link information
->>>
->>>  drivers/pci/controller/pcie-iproc.c | 29 ++++++++++++++++++++++-------
->>>  1 file changed, 22 insertions(+), 7 deletions(-)
->> I need Ray a/o Scott ACK to proceed.
-> Let's see if Ray has anything to add.
-> 
-> Acked-by: Scott Branden <scott.branden@broadcom.com>
-
-I reviewed them internally before they were sent out. I just reviewed
-them again and yes they look fine to me.
-
-1/3 and 2/3 are critical fixes for kernel crash and boot up issue in
-corner cases (Fixes tag already applied and should be picked up by LTS
-once merged).
-
-Thanks.
-
-Acked-by: Ray Jui <ray.jui@broadcom.com>
-
+On 11/30/20 6:20 PM, Alan Stern wrote:
+> On Mon, Nov 30, 2020 at 02:36:38PM +0100, Hans de Goede wrote:
+>> Hi,
 >>
->> Thanks,
->> Lorenzo
+>> On 11/30/20 2:30 PM, Greg KH wrote:
+>>> On Mon, Nov 30, 2020 at 02:23:48PM +0100, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 11/30/20 1:58 PM, Tom Yan wrote:
+>>>>> It's merely a moving of comment moving for/and a no-behavioral-change
+>>>>> adaptation for the reversion.>
+>>>>
+>>>> IMHO the revert of the troublesome commit and the other/new changes really
+>>>> should be 2 separate commits. But I will let Alan and Greg have the final
+>>>> verdict on this.
+>>>
+>>> I would prefer to just revert the commits and not do anything
+>>> different/special here so late in the release cycle.
+>>>
+>>> So, if Alan agrees, I'll be glad to do them on my end, I just need the
+>>> commit ids for them.
+>>
+>> The troublesome commit are (in reverse, so revert, order):
+>>
+>> 5df7ef7d32fe ("uas: bump hw_max_sectors to 2048 blocks for SS or faster drives")
+>> 558033c2828f ("uas: fix sdev->host->dma_dev")
+>> 0154012f8018 ("usb-storage: fix sdev->host->dma_dev")
+>>
+>> Alan, the reason for reverting these is that using scsi_add_host_with_dma() as the
+>> last 2 patches do, with the dmadev argument of that call pointing to the device
+>> for the XHCI controller is causing changes to the DMA settings of the XHCI controller
+>> itself which is causing regressions in 5.10, see this email thread:
+>>
+>> https://lore.kernel.org/linux-usb/fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com/T/#t
 > 
+> It's hard to go wrong with reverting, so it's okay with me.
+> 
+> Still, Hans, have you checked out the difference between the 
+> scsi_add_host() and scsi_add_host_with_dma() calls?  It's just a matter 
+> of using dev vs. sysdev.  In particular, have you checked to see what 
+> those two devices are on your system?
 
---000000000000a2deb705b556b5c2
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Its not just dev vs sysdev, its iface->dev vs bus->sysdev, and I assume
+that the latter is actually the XHCI controller.
 
-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
-Gp3tsmw0Vz7IMJs6DQIm7T8CfIzeId1IIHcH02MbpO7m1Btzyz625FoBWF8CAwEAAaOCAcswggHH
-MA4GA1UdDwEB/wQEAwIFoDCBngYIKwYBBQUHAQEEgZEwgY4wTQYIKwYBBQUHMAKGQWh0dHA6Ly9z
-ZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzcGVyc29uYWxzaWduMnNoYTJnM29jc3AuY3J0
-MD0GCCsGAQUFBzABhjFodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vZ3NwZXJzb25hbHNpZ24y
-c2hhMmczME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
-dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEQGA1UdHwQ9MDswOaA3oDWG
-M2h0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NwZXJzb25hbHNpZ24yc2hhMmczLmNybDAfBgNV
-HREEGDAWgRRyYXkuanVpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSME
-GDAWgBRpcoJiMWeVRIV3kYDEBDZJnXsLYTAdBgNVHQ4EFgQUvUTLkCwFvnpejW/KGvdaDA31b+sw
-DQYJKoZIhvcNAQELBQADggEBACMny/9Y1OPK7qwiBKBMt478eBgXnTlJ0J0HNebYcxN/l7fKIKMb
-/eX/AQKIDsHeshmV2ekPU4yY/04veXx3QTgmE1bb4ksKEFEbU0LXlVPrnlgNn8M75cPymegn/2yU
-r1+htd2eve3obmKc5Lrl0GP+4m72XxAOL687Aw5vRa4Lf294s+x4d+VRwUjoFTj9zyLhexWQuJv/
-yX1HjSkrlIsRwi6DN0/ieL04O9aD1UNPlCC6akGnv4tgwlESh51M564qhonlfSW6La+L/aTIuQc0
-88lq8s/VMBBGdc7176/v5TbNwEC/c5QYbp2n76rAmKKjhjwWmBk64yLT7CoIxk0xggJvMIICawIB
-ATBtMF0xCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTMwMQYDVQQDEypH
-bG9iYWxTaWduIFBlcnNvbmFsU2lnbiAyIENBIC0gU0hBMjU2IC0gRzMCDCUMagLNLily51ao1jAN
-BglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQg2ejyfRGCHsNAvoiHvKsdTuTWqD+OBrgj
-5NodeOXzUqQwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAxMTMw
-MTc1NTAyWjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJYIZI
-AWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIB
-MA0GCSqGSIb3DQEBAQUABIIBABHT4EemOcvVlaXt6sWcliSX73tfmmUCxPy+4G3xuodOOO3JyMuF
-SnMC2MycR4Rxw958jXUP1kOblasa2iEyZEfnYqzJOMa+QTVcM+o4V563wXJVE9ZnOHk9L1OVplHD
-duM5LxN/GCR6yXI8qxGkv2FE4XSXjLyV1jWa0cPzP0GS6o9lCUUacM1tDso70QTukEPE+jm4E4jD
-MHa4q7/No+n9xVHMa47tnGZT48w6jzigBBIxfMBCy3rrALyzWb9QmtFTh2vKoNbKDcnj6rJD6PjA
-QXb9GAYLM4zuRyAHMAtolEYT1mSm0sGWelW87NH2HusjHBMvKo2NnQhyzktkNr4=
---000000000000a2deb705b556b5c2--
+my vote goes to reverting to avoid the regression for 5.10, esp. since
+this is a clean revert of 3 patches with nothing depending / building
+on top of the reverted commits.
+
+Then for 5.11 we can retry to introduce similar changes. I would be happy
+to try a new patch-set for 5.11.
+
+> It seems likely that if one of those calls messes up some DMA settings, 
+> the other one does too -- just maybe not settings that matter much.
+
+I'm not very familiar with all the DMA mapping / mask code, but AFAIK making
+changes to the DMA settings of a child will not influence the parent.
+
+Where as when passing bus->sysdev, then changes are made to a device
+which is shared with other devices on the bus, which is why we see
+a regression in an USB NIC driver being triggered by the UAS driver
+binding to a device (on the same bus).
+
+At least that is my interpretation of this. I bisected the regression
+and that pointed at the UAS DMA change and reverting it fixes things,
+confirming that I did not make any mistakes during the bisect.
+
+Regards,
+
+Hans
+
