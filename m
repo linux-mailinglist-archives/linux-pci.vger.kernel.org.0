@@ -2,60 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86A042C8AE1
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 18:26:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7212C8B12
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 18:33:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387497AbgK3RYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 12:24:44 -0500
-Received: from verein.lst.de ([213.95.11.211]:45231 "EHLO verein.lst.de"
+        id S1729316AbgK3Rar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 12:30:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbgK3RYo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Nov 2020 12:24:44 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BA34C6736F; Mon, 30 Nov 2020 18:24:01 +0100 (CET)
-Date:   Mon, 30 Nov 2020 18:24:01 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Tom Yan <tom.ty89@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH 2/2] usb-storage: revert from scsi_add_host_with_dma()
- to scsi_add_host()
-Message-ID: <20201130172401.GA1735@lst.de>
-References: <09992cec-65e4-2757-aae6-8fb02a42f961@redhat.com> <20201128154849.3193-1-tom.ty89@gmail.com> <20201128154849.3193-2-tom.ty89@gmail.com> <5e62c383-22ea-6df6-5acc-5e9f381d4632@redhat.com> <CAGnHSEnetAJNqUEW-iuq7eVyU6VnP84cv9+OVL4C5Z2ZK_eM0A@mail.gmail.com> <186eb035-4bc4-ff72-ee41-aeb6d81888e3@redhat.com> <X8T0E2qvF2cgADl+@kroah.com> <dd557c38-a919-5e5e-ab3b-17a235f17139@redhat.com> <20201130172004.GA966032@rowland.harvard.edu>
+        id S1726897AbgK3Rar (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Nov 2020 12:30:47 -0500
+Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E9332076E;
+        Mon, 30 Nov 2020 17:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606757406;
+        bh=IToxAulcLFljIt9BT9SqHMDRczdFs12OnHYPP1zKJFA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jGfZDrX4SkWN1omKwJldR/43kCrQeKgACf5gruqhAT2JYzX1CpNNNLy/xqb4G3zyJ
+         OkymF/y5eo0iXBkXioJND067zPFbtxHvmI/h1vaab17xze4FZ2BU2XnReIqeI3vkat
+         xHw5rG76uTucS1eFYYk8eCHtbIMQhF5lj0hNpCiU=
+Date:   Mon, 30 Nov 2020 11:30:05 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        davem@davemloft.net, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
+        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
+        sin_jieyang@mediatek.com, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [v4,2/3] PCI: mediatek: Add new generation controller support
+Message-ID: <20201130173005.GA1088958@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201130172004.GA966032@rowland.harvard.edu>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1606113913.14736.37.camel@mhfsdcap03>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 12:20:04PM -0500, Alan Stern wrote:
-> > https://lore.kernel.org/linux-usb/fde7e11f-5dfc-8348-c134-a21cb1116285@redhat.com/T/#t
-> 
-> It's hard to go wrong with reverting, so it's okay with me.
-> 
-> Still, Hans, have you checked out the difference between the 
-> scsi_add_host() and scsi_add_host_with_dma() calls?  It's just a matter 
-> of using dev vs. sysdev.  In particular, have you checked to see what 
-> those two devices are on your system?
-> 
-> It seems likely that if one of those calls messes up some DMA settings, 
-> the other one does too -- just maybe not settings that matter much.
+[+cc Lukas, pciehp power control question]
 
-The effects from scsi_add_host_with_dma should be:
+On Mon, Nov 23, 2020 at 02:45:13PM +0800, Jianjun Wang wrote:
+> On Thu, 2020-11-19 at 14:28 -0600, Bjorn Helgaas wrote:
+> > "Add new generation" really contains no information.  And "mediatek"
+> > is already used for the pcie-mediatek.c driver, so we should have a
+> > new tag for this new driver.  Include useful information in the
+> > subject, e.g.,
+> > 
+> >   PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
 
- (1) picking which device is used for the SCSI dma map helpers
- (2) use dma_max_mapping_size() to limite the I/O size
+> > > +static int mtk_pcie_setup(struct mtk_pcie_port *port)
+> > > +{
+> > > +	struct device *dev = port->dev;
+> > > +	struct platform_device *pdev = to_platform_device(dev);
+> > > +	struct resource *regs;
+> > > +	int err;
+> > > +
+> > > +	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pcie-mac");
+> > > +	port->base = devm_ioremap_resource(dev, regs);
+> > > +	if (IS_ERR(port->base)) {
+> > > +		dev_notice(dev, "failed to map register base\n");
+> > > +		return PTR_ERR(port->base);
+> > > +	}
+> > > +
+> > > +	port->reg_base = regs->start;
+> > > +
+> > > +	/* Don't touch the hardware registers before power up */
+> > > +	err = mtk_pcie_power_up(port);
+> > > +	if (err)
+> > > +		return err;
+> > > +
+> > > +	/* Try link up */
+> > > +	err = mtk_pcie_startup_port(port);
+> > > +	if (err) {
+> > > +		dev_notice(dev, "PCIe link down\n");
+> > > +		goto err_setup;
+> > 
+> > Generally it should not be a fatal error if the link is not up at
+> > probe-time.  You may be able to hot-add a device, or the device may
+> > have some external power control that will power it up later.
+> 
+> This is for the power saving requirement. If there is no device
+> connected with the PCIe slot, the PCIe MAC and PHY should be powered
+> off.
+> 
+> Is there any standard flow to support power down the hardware at
+> probe-time if no device is connected and power it up when hot-add a
+> device?
 
-The helpers affected by (1) are not used by UAS (or usb-storage for that
-matter), while we do have a real bug in the intel-iommu with bounce
-buffering implementation used in the bug report.  So my clear bet is on
-(2) not limiting the size, but the patch that would have fixed this
-did not make a different for Hans, which leaves me a little confused.
+That's a good question.  I assume this looks like a standard PCIe
+hot-add event?
+
+When you hot-add a device, does the Root Port generate a Presence
+Detect Changed interrupt?  The pciehp driver should field that
+interrupt and turn on power to the slot via the Power Controller
+Control bit in the Slot Control register.
+
+Does your hardware require something more than that to control the MAC
+and PHY power?
+
+Bjorn
