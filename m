@@ -2,127 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BD1D2C83DE
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 13:08:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B848B2C83E4
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Nov 2020 13:11:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbgK3MHR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 07:07:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37620 "EHLO mail.kernel.org"
+        id S1728293AbgK3MK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 07:10:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:53558 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729033AbgK3MHQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 30 Nov 2020 07:07:16 -0500
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73896206D8;
-        Mon, 30 Nov 2020 12:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606737995;
-        bh=uzsewMbuRPvdcwhky3sUJyq7j9PBe57NmyVkNT2cuvY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wNDSXLoyY4LX33S/nf+hOeZePD9IsiUHgAiN971WF4LlQojCK5r4D0OUv9vOoA/e7
-         e8Ot9tl8Ka9G+TcRJJXUAGhbwylCwTYuF8VSlGNaG9dJRT0AjIMKGBXvj5lz3lQtdO
-         ELzIBYTdJkyMaXkHtTaRdNAUEsqlD1shmed+ptsY=
-Date:   Mon, 30 Nov 2020 12:06:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/6] PCI: brcmstb: Add control of EP voltage
- regulator(s)
-Message-ID: <20201130120606.GA4756@sirena.org.uk>
-References: <20201125192424.14440-1-james.quinlan@broadcom.com>
- <20201125192424.14440-3-james.quinlan@broadcom.com>
- <20201126114912.GA8506@sirena.org.uk>
- <CA+-6iNzJAf_bKVjbw8bkh3qmSU++m6-DoFKQvBTTZGonYJGXfg@mail.gmail.com>
+        id S1726385AbgK3MK5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 30 Nov 2020 07:10:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4B0730E;
+        Mon, 30 Nov 2020 04:10:11 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A0273F66B;
+        Mon, 30 Nov 2020 04:10:09 -0800 (PST)
+Date:   Mon, 30 Nov 2020 12:10:07 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     robh+dt@kernel.org, bhelgaas@google.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, amanharitsh123@gmail.com,
+        dinghao.liu@zju.edu.cn, kw@linux.com, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 4/6] PCI: tegra: Continue unconfig sequence even if
+ parts fail
+Message-ID: <20201130121007.GC16758@e121166-lin.cambridge.arm.com>
+References: <20201109171937.28326-1-vidyas@nvidia.com>
+ <20201109171937.28326-5-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+-6iNzJAf_bKVjbw8bkh3qmSU++m6-DoFKQvBTTZGonYJGXfg@mail.gmail.com>
-X-Cookie: Space is limited.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20201109171937.28326-5-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Nov 09, 2020 at 10:49:35PM +0530, Vidya Sagar wrote:
+> Currently the driver checks for error value of different APIs during the
+> uninitialization sequence. It just returns from there if there is any error
+> observed for one of those calls. Comparatively it is better to continue the
+> uninitialization sequence irrespective of whether some of them are
+> returning error. That way, it is more closer to complete uninitialization.
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Vidya, Thierry,
 
-On Fri, Nov 27, 2020 at 03:26:53PM -0500, Jim Quinlan wrote:
-> On Thu, Nov 26, 2020 at 6:49 AM Mark Brown <broonie@kernel.org> wrote:
+I can apply this series (dropping patches as suggested by Thierry),
+before though I wanted to ask you if this patch is really an
+improvement, it is hard to understand why skipping some error
+codes is OK for device correct operations to continue, maybe it
+is worth describing why some of those failures aren't really
+fatal.
 
-> > Does PCI allow supplies to be physically absent?  If not then the driver
-> > shouldn't be using regulator_get_optional() and much of the code here
-> > can be deleted.
+Please let me know, thanks.
 
-> First, as an aside, I'm  a little confused about the purpose of
-> devm_regulator_get_optional(...);  the other  xxx_get_optional() calls
-> I am familiar with (eg clock, reset, gpio) return NULL if the desired
-> item does not exist, and then NULL can be used as a valid pointer for
-> the rest of the API.  Not so here.
+Lorenzo
 
-The other APIs that cloned the regulator API don't have the dummy
-support that the regulator has and unfortunately changed the sense a bit
-there.
-
-> > > +static void brcm_set_regulators(struct brcm_pcie *pcie, bool on)
-> > > +{
-
-> > This is open coding the regulator bulk APIs.
-
-> Except that a bulk regulator "get"  requires that all supplies are
-> present.  I would have to first scan the node's properties for the
-> "-supply" properties and fill in the bulk regulator structure.  I'm
-> fine with doing that.
-
-No, you should never do that.  If the supplies can be physically absent
-then you should use regulator_get_optional() which allows you to do
-whatever needs doing to configure the hardware for the missing supply.
-If it's just that the supply may not be described in the DT but has to
-be there for the device to operate then the code should use the normal
-regualtor APIs - a dummy regulator will be provided if there's no supply
-described.
-
-> However, a previous incarnation of this  commit was reviewed by RobH,
-> and if I understood him correctly he wanted the actual names of the
-> possible regulators to be used and specified in the bindings doc.   I
-> just followed the example of "pcie-rockchip-host.c" whose bindings doc
-> was reviewed by RobH.
-
-That is just plain bad code, the binding may well be fine but I can't
-see any excuse for that driver to be using _optional() there.
-
-Another subsystem I'm going to have to keep an eye on :(
-
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl/E4C0ACgkQJNaLcl1U
-h9ASVAf/dAzCzBS05ZDDJT3IWk8wIMrO9CCPEMAfYPfqF2cDecsYmWGeMci5N1BK
-Psu0U9QMod0gBFody7uur6MDmWtta/yTvsXnxyoPOCxy2uyW+kOSXkv5czAevU5C
-ojaUWaKRi+jv1z4pnMnC3ujHjv3rz+j+PDRUSx5tFcYEk4l41jt9ROrroybhEdjT
-oWNz3aRq0ho06udUBLutr2rUChL4rVYx4menujiC93X9BPd/tDBqtdJgy/G56eBE
-lO1kno/55Epva9bnji0snGJCCGIh8n640TDHiDmWJjY649CwgoiaUw15fgMs2iV0
-UHhac7bZs7vk8VTGMuwDfHg577bmJQ==
-=vrSY
------END PGP SIGNATURE-----
-
---0OAP2g/MAC+5xKAE--
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V4:
+> * None
+> 
+> V3:
+> * Modified subject as per Bjorn's suggestion
+> * Removed tegra_pcie_init_controller()'s error checking part and pushed
+>   a separate patch for it
+> 
+> V2:
+> * None
+> 
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 39 +++++++++-------------
+>  1 file changed, 15 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 253d91033bc3..9be10c8953df 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -1422,43 +1422,32 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  	return ret;
+>  }
+>  
+> -static int __deinit_controller(struct tegra_pcie_dw *pcie)
+> +static void tegra_pcie_unconfig_controller(struct tegra_pcie_dw *pcie)
+>  {
+>  	int ret;
+>  
+>  	ret = reset_control_assert(pcie->core_rst);
+> -	if (ret) {
+> -		dev_err(pcie->dev, "Failed to assert \"core\" reset: %d\n",
+> -			ret);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		dev_err(pcie->dev, "Failed to assert \"core\" reset: %d\n", ret);
+>  
+>  	tegra_pcie_disable_phy(pcie);
+>  
+>  	ret = reset_control_assert(pcie->core_apb_rst);
+> -	if (ret) {
+> +	if (ret)
+>  		dev_err(pcie->dev, "Failed to assert APB reset: %d\n", ret);
+> -		return ret;
+> -	}
+>  
+>  	clk_disable_unprepare(pcie->core_clk);
+>  
+>  	ret = regulator_disable(pcie->pex_ctl_supply);
+> -	if (ret) {
+> +	if (ret)
+>  		dev_err(pcie->dev, "Failed to disable regulator: %d\n", ret);
+> -		return ret;
+> -	}
+>  
+>  	tegra_pcie_disable_slot_regulators(pcie);
+>  
+>  	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+> -	if (ret) {
+> +	if (ret)
+>  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+>  			pcie->cid, ret);
+> -		return ret;
+> -	}
+> -
+> -	return ret;
+>  }
+>  
+>  static int tegra_pcie_init_controller(struct tegra_pcie_dw *pcie)
+> @@ -1482,7 +1471,8 @@ static int tegra_pcie_init_controller(struct tegra_pcie_dw *pcie)
+>  	return 0;
+>  
+>  fail_host_init:
+> -	return __deinit_controller(pcie);
+> +	tegra_pcie_unconfig_controller(pcie);
+> +	return ret;
+>  }
+>  
+>  static int tegra_pcie_try_link_l2(struct tegra_pcie_dw *pcie)
+> @@ -1551,13 +1541,12 @@ static void tegra_pcie_dw_pme_turnoff(struct tegra_pcie_dw *pcie)
+>  	appl_writel(pcie, data, APPL_PINMUX);
+>  }
+>  
+> -static int tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
+> +static void tegra_pcie_deinit_controller(struct tegra_pcie_dw *pcie)
+>  {
+>  	tegra_pcie_downstream_dev_to_D0(pcie);
+>  	dw_pcie_host_deinit(&pcie->pci.pp);
+>  	tegra_pcie_dw_pme_turnoff(pcie);
+> -
+> -	return __deinit_controller(pcie);
+> +	tegra_pcie_unconfig_controller(pcie);
+>  }
+>  
+>  static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
+> @@ -2238,8 +2227,9 @@ static int tegra_pcie_dw_suspend_noirq(struct device *dev)
+>  					       PORT_LOGIC_MSI_CTRL_INT_0_EN);
+>  	tegra_pcie_downstream_dev_to_D0(pcie);
+>  	tegra_pcie_dw_pme_turnoff(pcie);
+> +	tegra_pcie_unconfig_controller(pcie);
+>  
+> -	return __deinit_controller(pcie);
+> +	return 0;
+>  }
+>  
+>  static int tegra_pcie_dw_resume_noirq(struct device *dev)
+> @@ -2267,7 +2257,8 @@ static int tegra_pcie_dw_resume_noirq(struct device *dev)
+>  	return 0;
+>  
+>  fail_host_init:
+> -	return __deinit_controller(pcie);
+> +	tegra_pcie_unconfig_controller(pcie);
+> +	return ret;
+>  }
+>  
+>  static int tegra_pcie_dw_resume_early(struct device *dev)
+> @@ -2305,7 +2296,7 @@ static void tegra_pcie_dw_shutdown(struct platform_device *pdev)
+>  		disable_irq(pcie->pci.pp.msi_irq);
+>  
+>  	tegra_pcie_dw_pme_turnoff(pcie);
+> -	__deinit_controller(pcie);
+> +	tegra_pcie_unconfig_controller(pcie);
+>  }
+>  
+>  static const struct tegra_pcie_dw_of_data tegra_pcie_dw_rc_of_data = {
+> -- 
+> 2.17.1
+> 
