@@ -2,158 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AD8E2CA72A
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Dec 2020 16:38:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B90A12CA9BD
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Dec 2020 18:32:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391760AbgLAPe6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Dec 2020 10:34:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388042AbgLAPe6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 1 Dec 2020 10:34:58 -0500
-Received: from localhost (129.sub-72-107-112.myvzw.com [72.107.112.129])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B18620857;
-        Tue,  1 Dec 2020 15:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606836856;
-        bh=XBT5/ltEK2uv+12lKnJD+euGe8828rMdbJU2Ia2PNeE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iIChusIeEckwOdY1Jyn2xIpNr/xaKRiRCNzGHhMUo+xCuYTPbMShzbVjRIfEN1aBk
-         SUp6VOcEIkN/9+8d5RoD8SmhxEx0GkvwHorXzYtGErh537sylVgNg6LKo35ooMVbzk
-         SnYyU3E8EVt+GTJWGmqCPyA4dFaTa9DFooDYx/Ig=
-Date:   Tue, 1 Dec 2020 09:34:14 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     ashok.raj@intel.com, knsathya@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 1/5] PCI/DPC: Ignore devices with no AER Capability
-Message-ID: <20201201153414.GA1309306@bjorn-Precision-5520>
+        id S2404132AbgLARbo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Dec 2020 12:31:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390586AbgLARbn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Dec 2020 12:31:43 -0500
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A29DC0617A6
+        for <linux-pci@vger.kernel.org>; Tue,  1 Dec 2020 09:31:03 -0800 (PST)
+Received: by mail-pl1-x643.google.com with SMTP id u2so1508887pls.10
+        for <linux-pci@vger.kernel.org>; Tue, 01 Dec 2020 09:31:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fIhrXegmFXx4Y1S8YgnbVoZcP9r/eMN50vMQw7Htjj0=;
+        b=COBsdbubf4U1NB4bryhE6zpFJFlxC6tnZcSZU41etUauCccqXZsiquU+7Pg3YtVZk6
+         FaJj4o1AIWN+/OM9H6u8TAIFxZgoJVNQ/2jTBB5a/m2hHYR3qjgThVUzKnMTBTgmN/d+
+         qjZ/Lpe9hl7c2js/gywR+ayaeczGzpkDoU8ik=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fIhrXegmFXx4Y1S8YgnbVoZcP9r/eMN50vMQw7Htjj0=;
+        b=WRKS39ZvYmf0nD4Aj22MgPz71T9zE1EBUP7ftRqeyOExJ30z67wkvO8Lts+bcWor2N
+         Tt+PpRrHLCKi/pWQGrz9fOEE37aMNHYKO/u7jek6ysiSeeBHCstP3pcVWIfe2JjKpeSH
+         s9AjnHr0wcbh+XoF6FXEc/YZgYCPqmtweGyA3sTmmwgprn2LEt0lKdb9xxMb25+sOUsk
+         BaexjwQcSPSWu/BTzOv5CdSNIZSvCrVPPkChTHHsmJbIB12QZ1IJ5fgqNFSs4U7VfRAO
+         Q2awQiEma9ux8i2eH7oFnNXZcZk1Z8z0wPH7hwnUpzFoGQ8PT32EoPSNi04MRaHdaHXt
+         QTkg==
+X-Gm-Message-State: AOAM532ZQINl4o8X53h3sQG3n1qgA4Zz2Mb08M1lIROC84oz+Ws7Nwsi
+        YNxFxC2nqFJsIPkiN1YAan518w==
+X-Google-Smtp-Source: ABdhPJxNXrz8lyJzMPvVj7dGfW+IUsSemW9FmHsAZMwUW4pvNI4+h4MvkJF21vQXTZU3MgV3CsB+ag==
+X-Received: by 2002:a17:90b:224a:: with SMTP id hk10mr3671202pjb.81.1606843863156;
+        Tue, 01 Dec 2020 09:31:03 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j143sm400818pfd.20.2020.12.01.09.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Dec 2020 09:31:01 -0800 (PST)
+Date:   Tue, 1 Dec 2020 09:31:00 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 00/17] Add support for Clang LTO
+Message-ID: <202012010929.3788AF5@keescook>
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <20201130120130.GF24563@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58125a09-822f-8bda-e715-fd14451ef308@linux.intel.com>
+In-Reply-To: <20201130120130.GF24563@willie-the-truck>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Nov 28, 2020 at 08:32:32PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> On 11/28/20 3:25 PM, Bjorn Helgaas wrote:
-> > On Sat, Nov 28, 2020 at 01:56:23PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> > > On 11/28/20 1:53 PM, Bjorn Helgaas wrote:
-> > > > On Sat, Nov 28, 2020 at 01:49:46PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> > > > > On 11/28/20 12:24 PM, Bjorn Helgaas wrote:
-> > > > > > On Wed, Nov 25, 2020 at 06:01:57PM -0800, Kuppuswamy, Sathyanarayanan wrote:
-> > > > > > > On 11/25/20 5:18 PM, Bjorn Helgaas wrote:
-> > > > > > > > From: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > > > 
-> > > > > > > > Downstream Ports may support DPC regardless of whether they support AER
-> > > > > > > > (see PCIe r5.0, sec 6.2.10.2).  Previously, if the user booted with
-> > > > > > > > "pcie_ports=dpc-native", it was possible for dpc_probe() to succeed even if
-> > > > > > > > the device had no AER Capability, but dpc_get_aer_uncorrect_severity()
-> > > > > > > > depends on the AER Capability.
-> > > > > > > > 
-> > > > > > > > dpc_probe() previously failed if:
-> > > > > > > > 
-> > > > > > > >       !pcie_aer_is_native(pdev) && !pcie_ports_dpc_native
-> > > > > > > >       !(pcie_aer_is_native() || pcie_ports_dpc_native)    # by De Morgan's law
-> > > > > > > > 
-> > > > > > > > so it succeeded if:
-> > > > > > > > 
-> > > > > > > >       pcie_aer_is_native() || pcie_ports_dpc_native
-> > > > > > > > 
-> > > > > > > > Fail dpc_probe() if the device has no AER Capability.
-> > > > > > > > 
-> > > > > > > > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > > > Cc: Olof Johansson <olof@lixom.net>
-> > > > > > > > ---
-> > > > > > > >      drivers/pci/pcie/dpc.c | 3 +++
-> > > > > > > >      1 file changed, 3 insertions(+)
-> > > > > > > > 
-> > > > > > > > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > > > > > > > index e05aba86a317..ed0dbc43d018 100644
-> > > > > > > > --- a/drivers/pci/pcie/dpc.c
-> > > > > > > > +++ b/drivers/pci/pcie/dpc.c
-> > > > > > > > @@ -287,6 +287,9 @@ static int dpc_probe(struct pcie_device *dev)
-> > > > > > > >      	int status;
-> > > > > > > >      	u16 ctl, cap;
-> > > > > > > > +	if (!pdev->aer_cap)
-> > > > > > > > +		return -ENOTSUPP;
-> > > > > > > Don't we check aer_cap support in drivers/pci/pcie/portdrv_core.c ?
-> > > > > > > 
-> > > > > > > We don't enable DPC service, if AER service is not enabled. And AER
-> > > > > > > service is only enabled if AER capability is supported.
-> > > > > > > 
-> > > > > > > So dpc_probe() should not happen if AER capability is not supported?
-> > > > > > 
-> > > > > > I don't think that's always true.  If I'm reading this right, we have
-> > > > > > this:
-> > > > > > 
-> > > > > >      get_port_device_capability(...)
-> > > > > >      {
-> > > > > >      #ifdef CONFIG_PCIEAER
-> > > > > >        if (dev->aer_cap && ...)
-> > > > > >          services |= PCIE_PORT_SERVICE_AER;
-> > > > > >      #endif
-> > > > > > 
-> > > > > >        if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
-> > > > > >            pci_aer_available() &&
-> > > > > >            (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
-> > > > > >          services |= PCIE_PORT_SERVICE_DPC;
-> > > > > >      }
-> > > > > > 
-> > > > > > and in the case where:
-> > > > > > 
-> > > > > >      - CONFIG_PCIEAER=y
-> > > > > >      - booted with "pcie_ports=dpc-native" (pcie_ports_dpc_native is true)
-> > > > > >      - "dev" has no AER capability
-> > > > > >      - "dev" has DPC capability
-> > > > > > 
-> > > > > > I think we do enable PCIE_PORT_SERVICE_DPC.
-> > > > > Got it. But further looking into it, I am wondering whether
-> > > > > we should keep this dependency? Currently we just use it to
-> > > > > dump the error information. Do we need to create dependency
-> > > > > between DPC and AER (which is functionality not dependent) just
-> > > > > to see more details about the error?
-> > > > 
-> > > > That's a good question, but I don't really want to get into the actual
-> > > > operation of the AER and DPC drivers in this series, so maybe
-> > > > something we should explore later.
+On Mon, Nov 30, 2020 at 12:01:31PM +0000, Will Deacon wrote:
+> Hi Sami,
+> 
+> On Wed, Nov 18, 2020 at 02:07:14PM -0800, Sami Tolvanen wrote:
+> > This patch series adds support for building the kernel with Clang's
+> > Link Time Optimization (LTO). In addition to performance, the primary
+> > motivation for LTO is to allow Clang's Control-Flow Integrity (CFI) to
+> > be used in the kernel. Google has shipped millions of Pixel devices
+> > running three major kernel versions with LTO+CFI since 2018.
 > > 
-> > > In that case, can you move this check to
-> > > drivers/pci/pcie/portdrv_core.c?  I don't see the point of
-> > > distributed checks in both get_port_device_capability() and
-> > > dpc_probe().
+> > Most of the patches are build system changes for handling LLVM bitcode,
+> > which Clang produces with LTO instead of ELF object files, postponing
+> > ELF processing until a later stage, and ensuring initcall ordering.
 > > 
-> > I totally agree that these distributed checks are terrible, but my
-> > long-term hope is to get rid of portdrv and handle these "services"
-> > more like we handle other capabilities.  For example, maybe we can
-> > squash dpc_probe() into pci_dpc_init(), so I'd actually like to move
-> > things from get_port_device_capability() into dpc_probe().
-> Removing the service driver model will be a major overhaul. It would
-> affect even the error recovery drivers. You can find motivation
-> for service drivers in Documentation/PCI/pciebus-howto.rst.
+> > Note that v7 brings back arm64 support as Will has now staged the
+> > prerequisite memory ordering patches [1], and drops x86_64 while we work
+> > on fixing the remaining objtool warnings [2].
+> 
+> Sounds like you're going to post a v8, but that's the plan for merging
+> that? The arm64 parts look pretty good to me now.
 
-Part of that motivation for portdrv is to allow multiple service
-drivers to run simultaneously on the same PCIe port.  That is also
-part of the *problem* with portdrv.  There are several PCIe ports that
-implement device-specific functionality via their BARs, and there is
-currently no way for drivers to cleanly claim those ports because
-they're already claimed by portdrv.
+I haven't seen Masahiro comment on this in a while, so given the review
+history and its use (for years now) in Android, I will carry v8 (assuming
+all is fine with it) it in -next unless there are objections.
 
-> But till we fix this part, I recommend grouping all dependency checks
-> to one place (either dpc_probe() or portdrv service driver).
-
-I think they should go in the driver, e.g., dpc_probe().  The typical
-model is that bus drivers only match a device with the appropriate
-driver, and the device driver does more specialized checks.  For
-example, the PCI bus driver only looks at the Vendor ID, Device ID,
-and Class code.
-
-But we don't have to solve all of this right now.
-
-Bjorn
+-- 
+Kees Cook
