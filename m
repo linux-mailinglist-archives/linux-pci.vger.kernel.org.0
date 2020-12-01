@@ -2,83 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B9CB2C92F2
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Dec 2020 00:45:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B1D32C93C3
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Dec 2020 01:18:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388075AbgK3XpZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Nov 2020 18:45:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387873AbgK3XpZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 18:45:25 -0500
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAE4CC0613D3
-        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 15:44:44 -0800 (PST)
-Received: by mail-ua1-x942.google.com with SMTP id x4so3090472uac.11
-        for <linux-pci@vger.kernel.org>; Mon, 30 Nov 2020 15:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ja5iGBqziMZwVeGBVGC3tNT2ITsfFSrpoAOQrYPIRMQ=;
-        b=eIXhFNYrQLrGwHzLPxYGVzWJa/DjXZ3+RK17U4inbSIH8/cLDO1KD8N72OM/zUzB53
-         8yZIeDx97sYjz1uuAvgXJWY765o7D+jPAp3RstXWhEiYWpp6ZfWnqW3rRJRO93eLdG7N
-         2D9TsLZvw7lNns1x8kWHXquH6wydBNpMO2aUV+NR7F+6FAuRbZwFPyrw1V0DxEKSqnp1
-         vdA7qZ099dTy0qixQPzpa9880t8pAmy3P49uy+98kt3oenJTnRXEAx2MWqQdTsTmzPcS
-         FKM8rzdiYWV3COU/X3eovPeyZKHokoQStzQObR4NRJfYg5/2ZfrRz9fPrSbgCSdilzFy
-         91tw==
+        id S1729910AbgLAASM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Nov 2020 19:18:12 -0500
+Received: from mail-io1-f45.google.com ([209.85.166.45]:35433 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728704AbgLAASM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Nov 2020 19:18:12 -0500
+Received: by mail-io1-f45.google.com with SMTP id i9so13803368ioo.2;
+        Mon, 30 Nov 2020 16:17:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ja5iGBqziMZwVeGBVGC3tNT2ITsfFSrpoAOQrYPIRMQ=;
-        b=tRM1/kI9AKsdV8KaSCCWsVKcXNlsDeJMyhBDFaaLsAkn3Yf9YgQ9uG6Hk/f/5At7ZR
-         SyNRyWvBo1ANmRmbr3LI2Lv5VF7PlcR8OBsc2wvFnFeR98CNtWOKjrjv+KHY/VNsDAki
-         gY6w01fq2nlzfua/y/bhxs95aET2qGz1O89WLAs+cBdKBq23edBs5IL23t8lRb2RFGXd
-         ARPxCqWD8CWMKgCctozy2JIMVEBQWy3ndKqpqRGkBZoREpxjBMEPyhWHTwWxKnDCwiyV
-         l/BW+KUYJ/MqYYLTI6SI/PXf1Pvl4c6TPBuzLaytBzaCZr2RlsIgD3vgzROqBpBHuJvx
-         y5jQ==
-X-Gm-Message-State: AOAM533/aWLRvQmh1Qp3JjLFwvvgwtvIuCcTqN+zRGexVBgGI7CUzwpz
-        QX57kVR/T5rVxxFkaDrI5WUag7YgVjXZoOWY9WwoBw==
-X-Google-Smtp-Source: ABdhPJwCzKcJqz39IP46Bo7yz6o/13jgHbjOX0vtta6vuRLC/rbSBznCfSrqxtOCA/emfEwjuB/DVNaoOwhY3XJ9gtU=
-X-Received: by 2002:a9f:2595:: with SMTP id 21mr286471uaf.33.1606779883895;
- Mon, 30 Nov 2020 15:44:43 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3y5lHxw9L2sp4pKlDXYUK3THtSMZV6/5JS02mefxQ1I=;
+        b=tQkx+fi15+txXgY+eRgoJ3vniRgv33VLiU0HIFo1l161uURkTY9oidPrHUGMxCYa6F
+         NMjCAmbowEIAwxE5gL3Kfft9eNqWpS8sSG050wgWW4qSqkRYMfsKCLJxkfLQbmuDuttI
+         Wj7UjIgvocBaKfLXwWN6BlFC6STDGTa7GZENWwuyEbe/zGcegcxbOwIs9ieA5pTsp1zo
+         dezrSWoPZ/N4N4hbdfJq3VehFISMRx7RokNFc+VANi/8KWcozrKZ9dD8g3JydnL5yPQ9
+         vHlYGpq24zjkSd+yhJD4VSZVrJQwngPg9V2Qs9gnpzdfLgfl1WrV++BfdrfMhzetb7cS
+         TCpQ==
+X-Gm-Message-State: AOAM532EFHcBF4TuiiCjSLs3Kr6wmIxxb8iHoHU4wHhV94W31Evfb56I
+        AWc0bk7Y7cf0KgjcwOh48g==
+X-Google-Smtp-Source: ABdhPJzKuOpKkwZB80o5iMvuqLTVkadj8zW3lC1ulA9iHs8BZ0C9xSZEJ5zuRHbphCw/whh4wyplBw==
+X-Received: by 2002:a02:90c6:: with SMTP id c6mr321139jag.3.1606781851455;
+        Mon, 30 Nov 2020 16:17:31 -0800 (PST)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id f29sm116491ilg.3.2020.11.30.16.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Nov 2020 16:17:30 -0800 (PST)
+Received: (nullmailer pid 3321016 invoked by uid 1000);
+        Tue, 01 Dec 2020 00:17:26 -0000
+Date:   Mon, 30 Nov 2020 17:17:26 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     linux-pci@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Sj Huang <sj.huang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, sin_jieyang@mediatek.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        qizhong.cheng@mediatek.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        chuanjia.liu@mediatek.com, Philipp Zabel <p.zabel@pengutronix.de>,
+        davem@davemloft.net, devicetree@vger.kernel.org,
+        youlin.pei@mediatek.com
+Subject: Re: [v4,1/3] dt-bindings: PCI: mediatek: Add YAML schema
+Message-ID: <20201201001726.GA3320955@robh.at.kernel.org>
+References: <20201118082935.26828-1-jianjun.wang@mediatek.com>
+ <20201118082935.26828-2-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
-References: <20201118220731.925424-1-samitolvanen@google.com>
- <20201118220731.925424-15-samitolvanen@google.com> <20201130115222.GC24563@willie-the-truck>
-In-Reply-To: <20201130115222.GC24563@willie-the-truck>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 30 Nov 2020 15:44:32 -0800
-Message-ID: <CABCJKueSjSdpztOsDExCaLyQ+Pip+r6bY=Y1hR=VTOODmoSZMQ@mail.gmail.com>
-Subject: Re: [PATCH v7 14/17] arm64: vdso: disable LTO
-To:     Will Deacon <will@kernel.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201118082935.26828-2-jianjun.wang@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 3:52 AM Will Deacon <will@kernel.org> wrote:
->
-> On Wed, Nov 18, 2020 at 02:07:28PM -0800, Sami Tolvanen wrote:
-> > Disable LTO for the vDSO by filtering out CC_FLAGS_LTO, as there's no
-> > point in using link-time optimization for the small about of C code.
->
-> "about" => "amount" ?
+On Wed, 18 Nov 2020 16:29:33 +0800, Jianjun Wang wrote:
+> Add YAML schemas documentation for Gen3 PCIe controller on
+> MediaTek SoCs.
+> 
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  .../bindings/pci/mediatek-pcie-gen3.yaml      | 135 ++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> 
 
-Oops, I'll fix that in v8. Thanks!
-
-Sami
+Reviewed-by: Rob Herring <robh@kernel.org>
