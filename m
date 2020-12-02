@@ -2,115 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B69C02CB2D7
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Dec 2020 03:34:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C64702CB2F4
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Dec 2020 03:54:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgLBCem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 1 Dec 2020 21:34:42 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9088 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbgLBCem (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Dec 2020 21:34:42 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cm31D1hfWzLy1v;
-        Wed,  2 Dec 2020 10:33:20 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.20) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 2 Dec 2020 10:33:43 +0800
-From:   Jubin Zhong <zhongjubin@huawei.com>
-To:     <bhelgaas@google.com>
-CC:     <liuwenliang@huawei.com>, <wangfangpeng1@huawei.com>,
-        <nixiaoming@huawei.com>, <gregkh@linuxfoundation.org>,
-        <wu000273@umn.edu>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] PCI: Fix Oops caused by uninitialized slot->list in pci_slot_release()
-Date:   Wed, 2 Dec 2020 10:33:42 +0800
-Message-ID: <1606876422-117457-1-git-send-email-zhongjubin@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        id S1727738AbgLBCyn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 1 Dec 2020 21:54:43 -0500
+Received: from condef-01.nifty.com ([202.248.20.66]:16984 "EHLO
+        condef-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727590AbgLBCyn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 1 Dec 2020 21:54:43 -0500
+X-Greylist: delayed 396 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Dec 2020 21:54:42 EST
+Received: from conssluserg-03.nifty.com ([10.126.8.82])by condef-01.nifty.com with ESMTP id 0B22iHKQ013099;
+        Wed, 2 Dec 2020 11:44:17 +0900
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 0B22gx4q032295;
+        Wed, 2 Dec 2020 11:42:59 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0B22gx4q032295
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1606876979;
+        bh=//nWGYyIDtis41/3ZWUbaJfDU17XquHuh1VxESk+fpY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YhmiZCSWdh+h7s2WRTav0INDhIR0rcnW35LlnpIfVUtKyPSMmn+U17B/PK2aeTfa0
+         fTnIGUz3KTJn2M/uiSK20i3edyMDKfviF8pdQau6NsNFuR5b+RtdIG7+HHZ9VW1XBz
+         0GSmvELzZl434j3vtGAy0eAhTaGhMeqCKOAa5PHzgTqSpTWn8ylQtVj1qzI0S88FpS
+         5Qmc1v9gpgH4CSlyu1l3vJez8xoPDRUopIN9fnCrE1/m/NaN6WWHtUaRXetDnkb7Qh
+         ClAnpe17jQ5AWERHhKiobDQLrM8nw0OP1rORNoH9up9fs2A9pm23zlyZViLl2L/fJF
+         iti0WfF94tSpA==
+X-Nifty-SrcIP: [209.85.210.182]
+Received: by mail-pf1-f182.google.com with SMTP id y7so260820pfq.11;
+        Tue, 01 Dec 2020 18:42:59 -0800 (PST)
+X-Gm-Message-State: AOAM532sqHjnu2Q91CS7sGZ32cLRiVh074gCuaIH6ycxqvFH0zD3eZl0
+        lYqG4GbJRq0Bp/Odz0lqqnAuigEzabKBg/2cZxw=
+X-Google-Smtp-Source: ABdhPJzi9iDwIta7ZmCbotxfEvvd7Hv2CLzIMvLHO3nRGZI4HCgMqMJzj1Z+ul8DEREU6Yg0tTulHGqnbS5vWd1Hxg8=
+X-Received: by 2002:aa7:9606:0:b029:198:14c4:4f44 with SMTP id
+ q6-20020aa796060000b029019814c44f44mr748749pfg.80.1606876978646; Tue, 01 Dec
+ 2020 18:42:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.20]
-X-CFilter-Loop: Reflected
+References: <20201118220731.925424-1-samitolvanen@google.com>
+ <20201130120130.GF24563@willie-the-truck> <202012010929.3788AF5@keescook>
+In-Reply-To: <202012010929.3788AF5@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 2 Dec 2020 11:42:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASQPOGohtUyzBM6n54pzpLN35kDXC7VbvWzX8QWUmqq9g@mail.gmail.com>
+Message-ID: <CAK7LNASQPOGohtUyzBM6n54pzpLN35kDXC7VbvWzX8QWUmqq9g@mail.gmail.com>
+Subject: Re: [PATCH v7 00/17] Add support for Clang LTO
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Once kobject_init_and_add() failed, pci_slot_release() is called to
-delete slot->list from parent->slots. But slot->list is intialized
-afterwards, so we ran into the following crash:
+On Wed, Dec 2, 2020 at 2:31 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Nov 30, 2020 at 12:01:31PM +0000, Will Deacon wrote:
+> > Hi Sami,
+> >
+> > On Wed, Nov 18, 2020 at 02:07:14PM -0800, Sami Tolvanen wrote:
+> > > This patch series adds support for building the kernel with Clang's
+> > > Link Time Optimization (LTO). In addition to performance, the primary
+> > > motivation for LTO is to allow Clang's Control-Flow Integrity (CFI) to
+> > > be used in the kernel. Google has shipped millions of Pixel devices
+> > > running three major kernel versions with LTO+CFI since 2018.
+> > >
+> > > Most of the patches are build system changes for handling LLVM bitcode,
+> > > which Clang produces with LTO instead of ELF object files, postponing
+> > > ELF processing until a later stage, and ensuring initcall ordering.
+> > >
+> > > Note that v7 brings back arm64 support as Will has now staged the
+> > > prerequisite memory ordering patches [1], and drops x86_64 while we work
+> > > on fixing the remaining objtool warnings [2].
+> >
+> > Sounds like you're going to post a v8, but that's the plan for merging
+> > that? The arm64 parts look pretty good to me now.
+>
+> I haven't seen Masahiro comment on this in a while, so given the review
+> history and its use (for years now) in Android, I will carry v8 (assuming
+> all is fine with it) it in -next unless there are objections.
 
-  Unable to handle kernel NULL pointer dereference at virtual address
-00000000
-  ...
-  CPU: 10 PID: 1 Comm: swapper/0 Not tainted 4.4.240 #197
-  task: ffffeb398a45ef10 task.stack: ffffeb398a470000
-  PC is at __list_del_entry_valid+0x5c/0xb0
-  LR is at pci_slot_release+0x84/0xe4
-  ...
-  __list_del_entry_valid+0x5c/0xb0
-  pci_slot_release+0x84/0xe4
-  kobject_put+0x184/0x1c4
-  pci_create_slot+0x17c/0x1b4
-  __pci_hp_initialize+0x68/0xa4
-  pciehp_probe+0x1a4/0x2fc
-  pcie_port_probe_service+0x58/0x84
-  driver_probe_device+0x320/0x470
-  __driver_attach+0x54/0xb8
-  bus_for_each_dev+0xc8/0xf0
-  driver_attach+0x30/0x3c
-  bus_add_driver+0x1b0/0x24c
-  driver_register+0x9c/0xe0
-  pcie_port_service_register+0x64/0x7c
-  pcied_init+0x44/0xa4
-  do_one_initcall+0x1d0/0x1f0
-  kernel_init_freeable+0x24c/0x254
-  kernel_init+0x18/0xe8
-  ret_from_fork+0x10/0x20
 
-Fixes: 8a94644b440e ("PCI: Fix pci_create_slot() reference count leak")
-Signed-off-by: Jubin Zhong <zhongjubin@huawei.com>
-Cc: stable@vger.kernel.org #v4.4.235
+What I dislike about this implementation is
+it cannot drop any unreachable function/data.
+(and it is completely different from GCC LTO)
 
-----
-v2:
-  Since both slot memory and slot->list would be handled by
-pci_slot_release(), we need to make sure slot->list is properly
-initialized beforehand.
+This is not real LTO.
 
-v1: https://lore.kernel.org/lkml/1606288971-47927-1-git-send-email-zhongjubin@huawei.com/
-  Two things need to be cleaned up on pci_create_slot's error path:
-  1. free slot memory
-  2. remove slot->list from its parent->slots
-  This patch mistakenly took slot memory as unfreed (which is not), and
-would introduce double free problem.
----
- drivers/pci/slot.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index 3861505..ed2077e 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -272,6 +272,9 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 		goto err;
- 	}
- 
-+	INIT_LIST_HEAD(&slot->list);
-+	list_add(&slot->list, &parent->slots);
-+
- 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
- 				   "%s", slot_name);
- 	if (err) {
-@@ -279,9 +282,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 		goto err;
- 	}
- 
--	INIT_LIST_HEAD(&slot->list);
--	list_add(&slot->list, &parent->slots);
--
- 	down_read(&pci_bus_sem);
- 	list_for_each_entry(dev, &parent->devices, bus_list)
- 		if (PCI_SLOT(dev->devfn) == slot_nr)
+
+
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202012010929.3788AF5%40keescook.
+
+
+
 -- 
-1.8.5.6
-
+Best Regards
+Masahiro Yamada
