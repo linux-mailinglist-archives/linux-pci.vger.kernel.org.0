@@ -2,194 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01CF72CB5C6
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Dec 2020 08:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C1D42CB5CE
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Dec 2020 08:35:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgLBH3H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Dec 2020 02:29:07 -0500
-Received: from mga04.intel.com ([192.55.52.120]:55567 "EHLO mga04.intel.com"
+        id S1728704AbgLBHey (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Dec 2020 02:34:54 -0500
+Received: from mga12.intel.com ([192.55.52.136]:17853 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgLBH3H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Dec 2020 02:29:07 -0500
-IronPort-SDR: gDseQ8CfVFOtB1bxI5x9RCQ0NUlvsh3e7x6gT5SiF/1Hk0u7vYzIWIxe6HRP+BW/T05G7Z4ITH
- w2GnI1vTsU9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9822"; a="170401378"
+        id S1727641AbgLBHey (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Dec 2020 02:34:54 -0500
+IronPort-SDR: cVQxLnIWAFOQvTW3AGT51BLGJTU0fObL7trh86mj78tE1Sql1yUROI7U03QsnNTYn4lBdF90FI
+ o1UXFt2GZysA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9822"; a="152224035"
 X-IronPort-AV: E=Sophos;i="5.78,386,1599548400"; 
-   d="scan'208";a="170401378"
+   d="scan'208";a="152224035"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 23:28:24 -0800
-IronPort-SDR: 7mH0seCdsPXuu1tpBvetF0AtVMclhkS9y/i5PE+CsBlmPzxRD6uDZdryccNVE+q4d5pznRMog2
- uxwpGceSrZVg==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 23:33:54 -0800
+IronPort-SDR: 9XG+5Xzn3aFiIZC7Z4kx9Vd4Z3OckaGA/ZmZiu7ATFANpUcU0MIuxzAf88IwybPHXSrJZR8qAf
+ ZNmi1jzH2JWw==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,386,1599548400"; 
-   d="scan'208";a="549934606"
-Received: from qwu16-mobl1.ccr.corp.intel.com ([10.255.30.201])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2020 23:28:21 -0800
-Message-ID: <bd5b97f89ab2887543fc262348d1c7cafcaae536.camel@intel.com>
-Subject: Re: [PATCH] x86/PCI: Convert force_disable_hpet() to standard quirk
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Feng Tang <feng.tang@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        len.brown@intel.com
-Date:   Wed, 02 Dec 2020 15:28:18 +0800
-In-Reply-To: <87eekairc0.fsf@nanos.tec.linutronix.de>
-References: <20201119181904.149129-1-helgaas@kernel.org>
-         <87v9dtk3j4.fsf@nanos.tec.linutronix.de>
-         <20201126012421.GA92582@shbuild999.sh.intel.com>
-         <87eekfk8bd.fsf@nanos.tec.linutronix.de>
-         <20201127061131.GB105524@shbuild999.sh.intel.com>
-         <87eekairc0.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="335452091"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by orsmga006.jf.intel.com with ESMTP; 01 Dec 2020 23:33:50 -0800
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH v3 0/2] PCI: keembay: Add support for Intel Keem Bay
+Date:   Wed,  2 Dec 2020 15:31:54 +0800
+Message-Id: <20201202073156.5187-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 2020-11-30 at 20:21 +0100, Thomas Gleixner wrote:
-> Feng,
-> 
-> On Fri, Nov 27 2020 at 14:11, Feng Tang wrote:
-> > On Fri, Nov 27, 2020 at 12:27:34AM +0100, Thomas Gleixner wrote:
-> > > On Thu, Nov 26 2020 at 09:24, Feng Tang wrote:
-> > > Yes, that can happen. But OTOH, we should start to think about
-> > > the
-> > > requirements for using the TSC watchdog.
+Hi.
 
-My original proposal is to disable jiffies and refined-jiffies as the
-clocksource watchdog, because they are not reliable and it's better to
-use clocksource that has a hardware counter as watchdog, like the patch
-below, which I didn't sent out for upstream.
+The first patch is to document DT bindings for Keem Bay PCIe controller
+for both Root Complex and Endpoint modes.
 
-From cf9ce0ecab8851a3745edcad92e072022af3dbd9 Mon Sep 17 00:00:00 2001
-From: Zhang Rui <rui.zhang@intel.com>
-Date: Fri, 19 Jun 2020 22:03:23 +0800
-Subject: [RFC PATCH] time/clocksource: do not use refined-jiffies as watchdog
+The second patch is the driver file, a glue driver. Keem Bay PCIe
+controller is based on DesignWare PCIe IP.
 
-On IA platforms, if HPET is disabled, either via x86 early-quirks, or
-via kernel commandline, refined-jiffies will be used as clocksource
-watchdog in early boot phase, before acpi_pm timer registered.
+The patch was tested with Keem Bay evaluation module board, with A0
+stepping.
 
-This is not a problem if jiffies are accurate.
-But in some cases, for example, when serial console is enabled, it may
-take several milliseconds to write to the console, with irq disabled,
-frequently. Thus many ticks may become longer than it should be.
+Thank you.
 
-Using refined-jiffies as watchdog in this case breaks the system because
-a) duration calculated by refined-jiffies watchdog is always consistent
-   with the watchdog timeout issued using add_timer(), say, around 500ms.
-b) duration calculated by the running clocksource, usually TSC on IA
-   platforms, reflects the real time cost, which may be much larger.
-This results in the running clocksource being disabled erroneously.
+Best regards,
+Zainie
 
-This is reproduced on ICL because HPET is disabled in x86 early-quirks,
-and also reproduced on a KBL and a WHL platform when HPET is disabled
-via command line.
+Changes since v2:
+- In keembay_pcie_probe(), use return keembay_pcie_add_pcie_port(pcie,
+  pdev); statement and remove return 0; at the end of the function.
 
-BTW, commit fd329f276eca
-("x86/mtrr: Skip cache flushes on CPUs with cache self-snooping") is
-another example that refined-jiffies causes the same problem when ticks
-become slow for some other reason.
+Changes since v1:
+- In dt-bindings patch.
+  - Fixed indent warning for compatible property.
+  - Rename interrupt-names to pcie, pcie_ev, pcie_err and
+    pcie_mem_access, similar to the name used in datasheet.
+  - Remove device_type, #address-cells and #size-cells property.
+  - Remove num-viewport, num-ib-windows and num-ob-windows property.
+  - Replace additionalProperties with unevaluatedProperties, for RC
+    only.
+  - Add dbi2 and atu property.
+  - Remove description for regs and interrupts property.
+  - Change enum value for num-lanes to 1 and 2 only.
+- In driver patch.
+  - In Kconfig file, remove dependency on ARM64.
+  - Add new define, PCIE_REGS_PCIE_SII_LINK_UP.
+  - Remove PCIE_DBI2_MASK.
+  - In struct keembay_pcie, declare pci member as struct, not pointer.
+    And remove irq number members.
+  - Rename and rework keembay_pcie_establish_link(), to
+    keembay_pcie_start_link().
+  - Remove unneeded BAR disable steps.
+  - Remove unused interrupt handlers; keembay_pcie_ev_irq_handler(),
+    keembay_pcie_err_irq_handler().
+  - Remove keembay_pcie_enable_interrupts().
+  - Rework keembay_pcie_setup_irq() and call it from
+    keembay_pcie_probe().
+  - Remove keembay_pcie_host_init() and make keembay_pcie_host_ops
+    empty.
+  - Keep and rework keembay_pcie_add_pcie_port() a little.
+  - Remove keembay_pcie_add_pcie_ep() and call dw_pcie_ep_init() from
+    keembay_pcie_probe().
+  - In keembay_pcie_probe(), remove dbi setup as it will be handled in
+    dwc common code.
+  - In keembay_pcie_link_up(), use return (val &
+    PCIE_REGS_PCIE_SII_LINK_UP) == PCIE_REGS_PCIE_SII_LINK_UP.
+  - In keembay_pcie_ep_raise_irq(), rework error message for
+    PCI_EPC_IRQ_LEGACY and default cases.
+- Rebased to next-20201124, that has dwc pci refactoring,
+  https://lore.kernel.org/linux-pci/20201105211159.1814485-1-robh@kernel.org/.
 
-IMO, the right solution is to only use hardware clocksource as watchdog.
-Then even if ticks are slow, both the running clocksource and the watchdog
-returns real time cost, and they still match.
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- kernel/time/clocksource.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Wan Ahmad Zainie (2):
+  dt-bindings: PCI: Add Intel Keem Bay PCIe controller
+  PCI: keembay: Add support for Intel Keem Bay
 
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 02441ead3c3b..e7e703858fa6 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -364,6 +364,10 @@ static void clocksource_select_watchdog(bool fallback)
- 		watchdog = NULL;
- 
- 	list_for_each_entry(cs, &clocksource_list, list) {
-+		/* Do not use refined-jiffies as clocksource watchdog */
-+		if (cs->rating <= 2)
-+			continue;
-+
- 		/* cs is a clocksource to be watched. */
- 		if (cs->flags & CLOCK_SOURCE_MUST_VERIFY)
- 			continue;
+ .../bindings/pci/intel,keembay-pcie-ep.yaml   |  68 +++
+ .../bindings/pci/intel,keembay-pcie.yaml      |  96 ++++
+ drivers/pci/controller/dwc/Kconfig            |  24 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-keembay.c     | 500 ++++++++++++++++++
+ 5 files changed, 689 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-keembay.c
+
 -- 
 2.17.1
-
-> > > 
-> > > I'm inclined to lift that requirement when the CPU has:
-> > > 
-> > >     1) X86_FEATURE_CONSTANT_TSC
-> > >     2) X86_FEATURE_NONSTOP_TSC
-> > >     3) X86_FEATURE_NONSTOP_TSC_S3
-> > 
-> > IIUC, this feature exists for several generations of Atom
-> > platforms,
-> > and it is always coupled with 1) and 2), so it could be skipped for
-> > the checking.
-> 
-> Yes, we can ignore that bit as it's not widely available and not
-> required to solve the problem.
-> 
-> > >     4) X86_FEATURE_TSC_ADJUST
-> > >     
-> > >     5) At max. 4 sockets
-> > > 
-Should we consider some other corner cases like TSC is not used as
-clocksource? refined_jiffies watchdog can break any other hardware
-clocksource when it becomes inaccurate.
-
-> > > The only reason I hate to disable HPET upfront at least during
-> > > boot is
-> > > that HPET is the best mechanism for the refined TSC calibration.
-> > > PMTIMER
-> > > sucks because it's slow and wraps around pretty quick.
-> > > 
-> > > So we could do the following even on platforms where HPET stops
-> > > in some
-> > > magic PC? state:
-> > > 
-> > >   - Register it during early boot as clocksource
-> > > 
-> > >   - Prevent the enablement as clockevent and the chardev hpet
-> > > timer muck
-> > > 
-> > >   - Prevent the magic PC? state up to the point where the refined
-> > >     TSC calibration is finished.
-> > > 
-> > >   - Unregister it once the TSC has taken over as system
-> > > clocksource and
-> > >     enable the magic PC? state in which HPET gets disfunctional.
-> > 
-
-On the other side, for ICL, the HPET problem is observed on early
-samples, and I didn't reproduce the problem on new ones I have.
-But I need to confirm internally if it is safe to re-enable it first.
-
-thanks,
-rui
-> > This looks reasonable to me. 
-> > 
-> > I have thought about lowering the hpet rating to lower than
-> > PMTIMER, so it
-> > still contributes in early boot phase, and fades out after PMTIMER
-> > is
-> > initialised.
-> 
-> Not a good idea. pm_timer is initialized before the refined
-> calibration
-> finishes.
-> 
-> Thanks,
-> 
->         tglx
 
