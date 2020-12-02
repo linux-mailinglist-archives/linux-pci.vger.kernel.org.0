@@ -2,150 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B49562CBB93
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Dec 2020 12:35:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F8392CBE05
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Dec 2020 14:15:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgLBLca (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Dec 2020 06:32:30 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:8921 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgLBLc3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Dec 2020 06:32:29 -0500
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4CmGxz5DTJz76Jf;
-        Wed,  2 Dec 2020 19:31:19 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 2 Dec 2020 19:31:38 +0800
-From:   Chiqijun <chiqijun@huawei.com>
-To:     <bhelgaas@google.com>
+        id S1730013AbgLBNNk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Dec 2020 08:13:40 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:59352 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729987AbgLBNNk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Dec 2020 08:13:40 -0500
+X-UUID: 1cc52ee125884f6a8a2abb1045164c4a-20201202
+X-UUID: 1cc52ee125884f6a8a2abb1045164c4a-20201202
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1234060016; Wed, 02 Dec 2020 21:12:58 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 2 Dec 2020 21:12:54 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 2 Dec 2020 21:12:55 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
 CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <zengweiliang.zengweiliang@huawei.com>, <chenlizhong@huawei.com>
-Subject: [v2] PCI: Add pci reset quirk for Huawei Intelligent NIC virtual function
-Date:   Wed, 2 Dec 2020 19:34:50 +0800
-Message-ID: <20201202113450.2283-1-chiqijun@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <youlin.pei@mediatek.com>,
+        Sj Huang <sj.huang@mediatek.com>, <jianjun.wang@mediatek.com>
+Subject: [v1] PCI: Export pci_pio_to_address() for module use
+Date:   Wed, 2 Dec 2020 21:12:55 +0800
+Message-ID: <20201202131255.6541-1-jianjun.wang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When multiple VFs do FLR at the same time, the firmware is
-processed serially, resulting in some VF FLRs being delayed more
-than 100ms, when the virtual machine restarts and the device
-driver is loaded, the firmware is doing the corresponding VF
-FLR, causing the driver to fail to load.
+This interface will be used by PCI host drivers for PIO translation,
+export it to support compiling those drivers as kernel modules.
 
-To solve this problem, add host and firmware status synchronization
-during FLR.
-
-Signed-off-by: Chiqijun <chiqijun@huawei.com>
+Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
 ---
-v2:
- - Update comments
- - Use the HINIC_VF_FLR_CAP_BIT_SHIFT and HINIC_VF_FLR_PROC_BIT_SHIFT
-   macro instead of the magic number
----
- drivers/pci/quirks.c | 75 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ drivers/pci/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f70692ac79c5..c9ad55709d03 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3912,6 +3912,79 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
- 	return 0;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index a458c46d7e39..509008899182 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4003,6 +4003,7 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
+ 
+ 	return address;
  }
++EXPORT_SYMBOL(pci_pio_to_address);
  
-+#define PCI_DEVICE_ID_HINIC_VF      0x375E
-+#define HINIC_VF_FLR_TYPE           0x1000
-+#define HINIC_VF_FLR_CAP_BIT_SHIFT  6
-+#define HINIC_VF_OP                 0xE80
-+#define HINIC_VF_FLR_PROC_BIT_SHIFT 10
-+#define HINIC_OPERATION_TIMEOUT     15000
-+
-+/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
-+static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
-+{
-+	unsigned long timeout;
-+	void __iomem *bar;
-+	u16 old_command;
-+	u32 val;
-+
-+	if (probe)
-+		return 0;
-+
-+	bar = pci_iomap(pdev, 0, 0);
-+	if (!bar)
-+		return -ENOTTY;
-+
-+	pci_read_config_word(pdev, PCI_COMMAND, &old_command);
-+
-+	/*
-+	 * FLR cap bit bit30, FLR processing bit: bit18, to avoid big-endian
-+	 * conversion the big-endian bit6, bit10 is directly operated here.
-+	 *
-+	 * Get and check firmware capabilities.
-+	 */
-+	val = readl(bar + HINIC_VF_FLR_TYPE);
-+	if (!(val & (1UL << HINIC_VF_FLR_CAP_BIT_SHIFT))) {
-+		pci_iounmap(pdev, bar);
-+		return -ENOTTY;
-+	}
-+
-+	/*
-+	 * Set the processing bit for the start of FLR, which will be cleared
-+	 * by the firmware after FLR is completed.
-+	 */
-+	val = readl(bar + HINIC_VF_OP);
-+	val = val | (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT);
-+	writel(val, bar + HINIC_VF_OP);
-+
-+	/* Perform the actual device function reset */
-+	pcie_flr(pdev);
-+
-+	pci_write_config_word(pdev, PCI_COMMAND,
-+			      old_command | PCI_COMMAND_MEMORY);
-+
-+	/* Waiting for device reset complete */
-+	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
-+	do {
-+		val = readl(bar + HINIC_VF_OP);
-+		if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
-+			goto reset_complete;
-+		msleep(20);
-+	} while (time_before(jiffies, timeout));
-+
-+	val = readl(bar + HINIC_VF_OP);
-+	if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
-+		goto reset_complete;
-+
-+	pci_warn(pdev, "Reset dev timeout, flr ack reg: %x\n",
-+		 be32_to_cpu(val));
-+
-+reset_complete:
-+	pci_write_config_word(pdev, PCI_COMMAND, old_command);
-+	pci_iounmap(pdev, bar);
-+
-+	return 0;
-+}
-+
- static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
- 		 reset_intel_82599_sfp_virtfn },
-@@ -3923,6 +3996,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
- 	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
- 		reset_chelsio_generic_dev },
-+	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
-+		reset_hinic_vf_dev },
- 	{ 0 }
- };
- 
+ unsigned long __weak pci_address_to_pio(phys_addr_t address)
+ {
 -- 
-2.17.1
+2.25.1
 
