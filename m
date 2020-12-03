@@ -2,72 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 150442CCD72
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 04:51:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53BF32CCE2A
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 06:01:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgLCDtS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Dec 2020 22:49:18 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:51275 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726734AbgLCDtS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 2 Dec 2020 22:49:18 -0500
-X-UUID: abc59549ce8f44e1a23c93508b954a8a-20201203
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=egwE3BGfFnVU42RB8G4cDpSLIosNS6Hpw+CGdp7GE4A=;
-        b=JoFETGIITk3xxYGUSEELhsvLMpKEcfAQthxQIoAIJnguHQxvN3ThP/MFYtoRK3wDD4S9zuoyg6Sc+6HOA2XX0OOVF6P6+St0sx2GQxEb772Izjv9qvkD92s8OSKfnEWyh75sQC4/q6u+vrExbe78fKsk7stV56Kt6sDjDiIKQBM=;
-X-UUID: abc59549ce8f44e1a23c93508b954a8a-20201203
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 742371175; Thu, 03 Dec 2020 11:48:25 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 3 Dec
- 2020 11:48:18 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 3 Dec 2020 11:48:18 +0800
-Message-ID: <1606967298.14736.67.camel@mhfsdcap03>
-Subject: Re: [v1] PCI: Export pci_pio_to_address() for module use
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <youlin.pei@mediatek.com>,
-        Sj Huang <sj.huang@mediatek.com>
-Date:   Thu, 3 Dec 2020 11:48:18 +0800
-In-Reply-To: <20201202134903.GA1419281@bjorn-Precision-5520>
-References: <20201202134903.GA1419281@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S1726173AbgLCFA4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 00:00:56 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2585 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgLCFA4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 00:00:56 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fc870df0000>; Wed, 02 Dec 2020 21:00:15 -0800
+Received: from [10.25.75.116] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 3 Dec
+ 2020 05:00:09 +0000
+Subject: Re: [PATCH V2] PCI/MSI: Set device flag indicating only 32-bit MSI
+ support
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20201117145728.4516-1-vidyas@nvidia.com>
+ <20201124105035.24573-1-vidyas@nvidia.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <70d5309b-331e-b2e5-2786-57915382e1d1@nvidia.com>
+Date:   Thu, 3 Dec 2020 10:30:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.2
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B083340B9C9A9BFA0D69806F47BFEE28F5C6E5BE94BE9DD35B07D24188C0507B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20201124105035.24573-1-vidyas@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1606971615; bh=NaqYMrewzDBSWv4b2kjcoHYtxDnlc/xS2Lkoc7cGcKY=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=eri3OkUCRgxvyNxV2pxlsQ+INwudskvHev8fx77R+IzpurcZloEN1wgk4yYT/JZVp
+         S2ZCQc3i2AVDUsu95xse9CwOjCmrI+6m+toM9CihmRVVuQJ7ACdiX2nXeIk06oOr/0
+         zriyn9uttMnDl/ynksoQZ8IyzriV97E4IsMYnvhlt8bPxr/LEbzxcil3cwxk39TMbt
+         oOqfBy+qh0QN93mAMpB/MevEf4RK7Lo37t/Z2DEp6/+1V/vvwcI979cCUa2/JS7zYO
+         mP6DHS28d+zMgOiig+TZC0/EtQP1ag98GYIxAA7457IUCVpyWyoLcW77EYlNfJvQUV
+         Yf3qILGn+pfig==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTEyLTAyIGF0IDA3OjQ5IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBXZWQsIERlYyAwMiwgMjAyMCBhdCAwOToxMjo1NVBNICswODAwLCBKaWFuanVuIFdhbmcg
-d3JvdGU6DQo+ID4gVGhpcyBpbnRlcmZhY2Ugd2lsbCBiZSB1c2VkIGJ5IFBDSSBob3N0IGRyaXZl
-cnMgZm9yIFBJTyB0cmFuc2xhdGlvbiwNCj4gPiBleHBvcnQgaXQgdG8gc3VwcG9ydCBjb21waWxp
-bmcgdGhvc2UgZHJpdmVycyBhcyBrZXJuZWwgbW9kdWxlcy4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBKaWFuanVuIFdhbmcgPGppYW5qdW4ud2FuZ0BtZWRpYXRlay5jb20+DQo+IA0KPiBQbGVh
-c2UgaW5jbHVkZSB0aGlzIGluIGEgc2VyaWVzIHRoYXQgYWRkcyBhIG1vZHVsYXIgaG9zdCBkcml2
-ZXIgb3INCj4gY29udmVydHMgYW4gZXhpc3Rpbmcgb25lIHRvIGJlIG1vZHVsYXIuICBUaGF0IHdh
-eSB3ZSBrbm93IHdlIGhhdmUgYXQNCj4gbGVhc3Qgb25lIHVzZXIgYW5kIHRoaW5ncyBnZXQgbWVy
-Z2VkIGluIHRoZSByaWdodCBvcmRlci4NCg0KSGkgQmpvcm4sDQoNCk9LLCBJIHdpbGwgaW5jbHVk
-ZSB0aGlzIHBhdGNoIGluIHRoZSBuZXh0IHZlcnNpb24gb2YgcGNpZS1tZWRpYXRlay1nZW4zDQpz
-ZXJpZXMuDQoNCnRoYW5rcy4NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNpL3BjaS5jIHwg
-MSArDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+IA0KPiA+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL3BjaS9wY2kuYyBiL2RyaXZlcnMvcGNpL3BjaS5jDQo+ID4gaW5kZXgg
-YTQ1OGM0NmQ3ZTM5Li41MDkwMDg4OTkxODIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kv
-cGNpLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9wY2kuYw0KPiA+IEBAIC00MDAzLDYgKzQwMDMs
-NyBAQCBwaHlzX2FkZHJfdCBwY2lfcGlvX3RvX2FkZHJlc3ModW5zaWduZWQgbG9uZyBwaW8pDQo+
-ID4gIA0KPiA+ICAJcmV0dXJuIGFkZHJlc3M7DQo+ID4gIH0NCj4gPiArRVhQT1JUX1NZTUJPTChw
-Y2lfcGlvX3RvX2FkZHJlc3MpOw0KPiA+ICANCj4gPiAgdW5zaWduZWQgbG9uZyBfX3dlYWsgcGNp
-X2FkZHJlc3NfdG9fcGlvKHBoeXNfYWRkcl90IGFkZHJlc3MpDQo+ID4gIHsNCj4gPiAtLSANCj4g
-PiAyLjI1LjENCj4gPiANCg0K
+Hi Bjorn,
+Do you have any further comments for this patch?
 
+Thanks,
+Vidya Sagar
+
+On 11/24/2020 4:20 PM, Vidya Sagar wrote:
+> There are devices (Ex:- Marvell SATA controller) that don't support
+> 64-bit MSIs and the same is advertised through their MSI capability
+> register. Set no_64bit_msi flag explicitly for such devices in the
+> MSI setup code so that the msi_verify_entries() API would catch
+> if the MSI arch code tries to use 64-bit MSI.
+> 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V2:
+> * Addressed Bjorn's comment and changed the error message
+> 
+>   drivers/pci/msi.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index d52d118979a6..8de5ba6b4a59 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -581,10 +581,12 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+>   	entry->msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
+>   	entry->msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
+>   
+> -	if (control & PCI_MSI_FLAGS_64BIT)
+> +	if (control & PCI_MSI_FLAGS_64BIT) {
+>   		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
+> -	else
+> +	} else {
+>   		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_32;
+> +		dev->no_64bit_msi = 1;
+> +	}
+>   
+>   	/* Save the initial mask status */
+>   	if (entry->msi_attrib.maskbit)
+> @@ -602,8 +604,9 @@ static int msi_verify_entries(struct pci_dev *dev)
+>   	for_each_pci_msi_entry(entry, dev) {
+>   		if (!dev->no_64bit_msi || !entry->msg.address_hi)
+>   			continue;
+> -		pci_err(dev, "Device has broken 64-bit MSI but arch"
+> -			" tried to assign one above 4G\n");
+> +		pci_err(dev, "Device has either broken 64-bit MSI or "
+> +			"only 32-bit MSI support but "
+> +			"arch tried to assign one above 4G\n");
+>   		return -EIO;
+>   	}
+>   	return 0;
+> 
