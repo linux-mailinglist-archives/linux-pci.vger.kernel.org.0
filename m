@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 818DF2CD497
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 12:30:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA7712CD4A1
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 12:33:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbgLCLaC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 06:30:02 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2083 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728849AbgLCLaC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 06:30:02 -0500
-Received: from dggeme706-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4CmtrH5HfszVkdp;
-        Thu,  3 Dec 2020 19:28:31 +0800 (CST)
+        id S1726070AbgLCLct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 06:32:49 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2516 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgLCLct (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 06:32:49 -0500
+Received: from dggeme706-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Cmtvy0P4MzQn5c;
+        Thu,  3 Dec 2020 19:31:42 +0800 (CST)
 Received: from [10.174.60.228] (10.174.60.228) by
  dggeme706-chm.china.huawei.com (10.1.199.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 3 Dec 2020 19:29:17 +0800
+ 15.1.1913.5; Thu, 3 Dec 2020 19:32:05 +0800
 Subject: Re: [PATCH] PCI: Add pci reset quirk for Huawei Intelligent NIC
  virtual function
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -29,18 +29,14 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>,
         "Wangxiaoyun (Cloud)" <cloud.wangxiaoyun@huawei.com>,
         zengweiliang zengweiliang <zengweiliang.zengweiliang@huawei.com>,
         "Chenlizhong (IT Chip)" <chenlizhong@huawei.com>
-References: <20201128061825.2629-1-chiqijun@huawei.com>
- <20201128232919.GA929748@bjorn-Precision-5520>
- <20201130084622.0b71d526@w520.home>
- <9232bf61-8906-0848-8078-a2c6b6a78864@huawei.com>
- <20201202104617.0e388100@w520.home>
+References: <20201202201850.GA1467698@bjorn-Precision-5520>
 From:   Chiqijun <chiqijun@huawei.com>
-Message-ID: <abe4d926-cb1d-3a70-8cd6-1b011edbed3a@huawei.com>
-Date:   Thu, 3 Dec 2020 19:29:17 +0800
+Message-ID: <0fca5241-7f01-ded7-93be-4a108e502b97@huawei.com>
+Date:   Thu, 3 Dec 2020 19:32:05 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20201202104617.0e388100@w520.home>
+In-Reply-To: <20201202201850.GA1467698@bjorn-Precision-5520>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -54,16 +50,11 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2020/12/3 1:46, Alex Williamson wrote:
-> On Wed, 2 Dec 2020 17:18:12 +0800
-> Chiqijun <chiqijun@huawei.com> wrote:
-> 
+On 2020/12/3 4:18, Bjorn Helgaas wrote:
+> On Wed, Dec 02, 2020 at 05:18:12PM +0800, Chiqijun wrote:
 >> On 2020/11/30 23:46, Alex Williamson wrote:
 >>> On Sat, 28 Nov 2020 17:29:19 -0600
 >>> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>    
->>>> [+cc Alex]
->>>>
 >>>> On Sat, Nov 28, 2020 at 02:18:25PM +0800, Chiqijun wrote:
 >>>>> When multiple VFs do FLR at the same time, the firmware is
 >>>>> processed serially, resulting in some VF FLRs being delayed more
@@ -81,16 +72,32 @@ On 2020/12/3 1:46, Alex Williamson wrote:
 >>> Seems like a spec compliance issue, I don't recall anything in the spec
 >>> about coordinating FLR between VFs.
 >>
->> The spec stipulates that the FLR time of a single VF does not exceed
->> 100ms, but when multiple VMs are reset concurrently in Linux, there will
->> be multiple VF parallel FLRs, VF of Huawei Intelligent NIC
->>    FLR will exceed 100ms in this case.
->>
->>>      
+>> The spec stipulates that the FLR time of a single VF does not exceed 100ms,
+>> but when multiple VMs are reset concurrently in Linux, there will be
+>> multiple VF parallel FLRs, VF of Huawei Intelligent NIC
+>>   FLR will exceed 100ms in this case.
+> 
+> Can you somehow just serialize Huawei Intelligent NIC FLR and
+> otherwise use the normal FLR path instead of the iomap, PCI_COMMAND
+> fiddling, and huge timeout below?
+
+FLR triggering is not controlled by Huawei Intelligent NIC. For example, 
+multiple VFs are assigned to different VMs, one VM corresponds to a qemu 
+process, multiple VMs perform life cycle operations (such as reset) at 
+the same time, and FLR triggered by different Qemu processes will be 
+parallel.
+The FLR of a single VF of Huawei Intelligent NIC is within 100ms (for 
+example, 50ms), while the regular FLR process will sleep for 100ms. If 
+the VF FLR is forced to be serialized (for example, adding a lock), the 
+overall FLR time will become longer and the VF FLR between different 
+cards also become serial, the actual effect will be worse than setting 
+huge timeout.
+
+> 
 >>>> If this is a Huawei Intelligent NIC defect, is there documentation
 >>>> somewhere (errata) that you can reference?  Will it be fixed in future
 >>>> designs, so we don't have to add future Device IDs to the quirk?
->>>>   
+>>>>
 >>>>> Signed-off-by: Chiqijun <chiqijun@huawei.com>
 >>>>> ---
 >>>>>    drivers/pci/quirks.c | 67 ++++++++++++++++++++++++++++++++++++++++++++
@@ -103,7 +110,6 @@ On 2020/12/3 1:46, Alex Williamson wrote:
 >>>>> @@ -3912,6 +3912,71 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
 >>>>>    	return 0;
 >>>>>    }
->>>>>    
 >>>>> +#define PCI_DEVICE_ID_HINIC_VF  0x375E
 >>>>> +#define HINIC_VF_FLR_TYPE       0x1000
 >>>>> +#define HINIC_VF_OP             0xE80
@@ -142,34 +148,13 @@ On 2020/12/3 1:46, Alex Williamson wrote:
 >>> the probe?  Can we define bit 6 with a macro?  Same for bit 10 in the
 >>> VF op register below.
 >>
->> The firmware of Huawei Intelligent NIC does not support this feature in
->> the old version. here is the reading ability to determine whether the
->> firmware supports it.
->> In the next patch, I will add a comment here and replace bit 6 and bit
->> 10 with macro definitions.
-> 
-> 
-> The question remains why this is not done as part of the probe.  If the
-> device firmware doesn't support it, isn't it better to try a regular
-> FLR and have it return error if the time is exceeded rather than claim
-> we have a functional device specific reset quirk that will always fail
-> without ever attempting to FLR the VF?  Thanks,
-> 
-> Alex
-> 
-
-The firmware has always supported regular FLR. The regular FLR process 
-waits for 100ms after the FLR is triggered and the FLR is considered to 
-be completed, but the Huawei Intelligent NIC will exceed 100ms when the 
-VF FLR is parallel, so we now need to increase the host to confirm that 
-the firmware completes the FLR processing operation.
-So in the probe stage, we return to support FLR, but there is no place 
-to return whether the firmware supports FLR completion ack capability. 
-We need to add checks during FLR, If the firmware does not support FLR 
-completion ack capability, then return -ENOTTY, the kernel will still 
-execute the regular FLR process.
-
->   
+>> The firmware of Huawei Intelligent NIC does not support this feature in the
+>> old version. here is the reading ability to determine whether the firmware
+>> supports it.
+>> In the next patch, I will add a comment here and replace bit 6 and bit 10
+>> with macro definitions.
+>>
+>>>
 >>>>> +
 >>>>> +	val = readl(bar + HINIC_VF_OP);
 >>>>> +	val = val | (1UL << 10);
@@ -186,11 +171,11 @@ execute the regular FLR process.
 >>>
 >>> Yikes, 15s timeout!
 >>
->> Huawei Intelligent NIC supports a maximum of 496 VFs, so the total
->> timeout period is set to 15s, which will not reach the timeout time
->> under normal circumstances.
+>> Huawei Intelligent NIC supports a maximum of 496 VFs, so the total timeout
+>> period is set to 15s, which will not reach the timeout time under normal
+>> circumstances.
 >>
->>>    
+>>>
 >>>>> +	do {
 >>>>> +		val = readl(bar + HINIC_VF_OP);
 >>>>> +		if (!(val & (1UL << 10)))
@@ -223,15 +208,11 @@ execute the regular FLR process.
 >>>>> +		reset_hinic_vf_dev },
 >>>>>    	{ 0 }
 >>>>>    };
->>>>>    
 >>>>> -- 
 >>>>> 2.17.1
->>>>>       
->>>>   
+>>>>
 >>>
 >>> .
->>>    
->>
-> 
+>>>
 > .
 > 
