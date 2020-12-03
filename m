@@ -2,15 +2,15 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81BE22CDE0E
+	by mail.lfdr.de (Postfix) with ESMTP id EEB7B2CDE0F
 	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 19:52:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731724AbgLCSwG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1731721AbgLCSwG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Thu, 3 Dec 2020 13:52:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33340 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731649AbgLCSwE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Dec 2020 13:52:04 -0500
+        id S1731716AbgLCSwG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Dec 2020 13:52:06 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     Vidya Sagar <vidyas@nvidia.com>
@@ -21,9 +21,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Manikanta Maddireddy <mmaddireddy@nvidia.com>,
         Vidya Sagar <sagar.tv@gmail.com>, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v3 2/3] PCI/MSI: Move MSI/MSI-X flags updaters to msi.c
-Date:   Thu,  3 Dec 2020 12:51:09 -0600
-Message-Id: <20201203185110.1583077-3-helgaas@kernel.org>
+Subject: [PATCH v3 3/3] PCI/MSI: Set device flag indicating only 32-bit MSI support
+Date:   Thu,  3 Dec 2020 12:51:10 -0600
+Message-Id: <20201203185110.1583077-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201203185110.1583077-1-helgaas@kernel.org>
 References: <20201203185110.1583077-1-helgaas@kernel.org>
@@ -33,89 +33,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-pci_msi_set_enable() and pci_msix_clear_and_set_ctrl() are only used from
-msi.c, so move them from drivers/pci/pci.h to msi.c.  No functional change
-intended.
+The MSI-X Capability requires devices to support 64-bit Message Addresses,
+but the MSI Capability can support either 32- or 64-bit addresses.
 
+Previously, we set dev->no_64bit_msi for a few broken devices that
+advertise 64-bit MSI support but don't correctly support it.
+
+In addition, check the MSI "64-bit Address Capable" bit for all devices and
+set dev->no_64bit_msi for devices that don't advertise 64-bit support.
+This allows msi_verify_entries() to catch arch code defects that assign
+64-bit addresses when they're not supported.
+
+[bhelgaas: set no_64bit_msi in pci_msi_init(), commit log]
+Link: https://lore.kernel.org/r/20201124105035.24573-1-vidyas@nvidia.com
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/msi.c | 21 +++++++++++++++++++++
- drivers/pci/pci.h | 21 ---------------------
- 2 files changed, 21 insertions(+), 21 deletions(-)
+ drivers/pci/msi.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 555791c0ee1a..3e302ca8a96f 100644
+index 3e302ca8a96f..29baa81e7be9 100644
 --- a/drivers/pci/msi.c
 +++ b/drivers/pci/msi.c
-@@ -412,6 +412,17 @@ static void pci_intx_for_msi(struct pci_dev *dev, int enable)
- 		pci_intx(dev, enable);
- }
- 
-+static void pci_msi_set_enable(struct pci_dev *dev, int enable)
-+{
-+	u16 control;
-+
-+	pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &control);
-+	control &= ~PCI_MSI_FLAGS_ENABLE;
-+	if (enable)
-+		control |= PCI_MSI_FLAGS_ENABLE;
-+	pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, control);
-+}
-+
- static void __pci_restore_msi_state(struct pci_dev *dev)
- {
- 	u16 control;
-@@ -434,6 +445,16 @@ static void __pci_restore_msi_state(struct pci_dev *dev)
- 	pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, control);
- }
- 
-+static void pci_msix_clear_and_set_ctrl(struct pci_dev *dev, u16 clear, u16 set)
-+{
-+	u16 ctrl;
-+
-+	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
-+	ctrl &= ~clear;
-+	ctrl |= set;
-+	pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, ctrl);
-+}
-+
- static void __pci_restore_msix_state(struct pci_dev *dev)
- {
+@@ -623,11 +623,11 @@ static int msi_verify_entries(struct pci_dev *dev)
  	struct msi_desc *entry;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3f5f303775c4..5692f11bc146 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -187,27 +187,6 @@ void pci_no_msi(void);
- static inline void pci_no_msi(void) { }
- #endif
  
--static inline void pci_msi_set_enable(struct pci_dev *dev, int enable)
--{
--	u16 control;
--
--	pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &control);
--	control &= ~PCI_MSI_FLAGS_ENABLE;
--	if (enable)
--		control |= PCI_MSI_FLAGS_ENABLE;
--	pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, control);
--}
--
--static inline void pci_msix_clear_and_set_ctrl(struct pci_dev *dev, u16 clear, u16 set)
--{
--	u16 ctrl;
--
--	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
--	ctrl &= ~clear;
--	ctrl |= set;
--	pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, ctrl);
--}
--
- void pci_realloc_get_opt(char *);
+ 	for_each_pci_msi_entry(entry, dev) {
+-		if (!dev->no_64bit_msi || !entry->msg.address_hi)
+-			continue;
+-		pci_err(dev, "Device has broken 64-bit MSI but arch"
+-			" tried to assign one above 4G\n");
+-		return -EIO;
++		if (entry->msg.address_hi && dev->no_64bit_msi) {
++			pci_err(dev, "arch assigned 64-bit MSI address %#x%08x but device only supports 32 bits\n",
++				entry->msg.address_hi, entry->msg.address_lo);
++			return -EIO;
++		}
+ 	}
+ 	return 0;
+ }
+@@ -1619,6 +1619,9 @@ void pci_msi_init(struct pci_dev *dev)
+ 	if (ctrl & PCI_MSI_FLAGS_ENABLE)
+ 		pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS,
+ 				      ctrl & ~PCI_MSI_FLAGS_ENABLE);
++
++	if (!(ctrl & PCI_MSI_FLAGS_64BIT))
++		dev->no_64bit_msi = 1;
+ }
  
- static inline int pci_no_d1d2(struct pci_dev *dev)
+ void pci_msix_init(struct pci_dev *dev)
 -- 
 2.25.1
 
