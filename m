@@ -2,118 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C19D2CE21B
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 23:52:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDA7F2CE2DE
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 00:46:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgLCWwH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 17:52:07 -0500
-Received: from mga03.intel.com ([134.134.136.65]:14072 "EHLO mga03.intel.com"
+        id S1727199AbgLCXps (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 18:45:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgLCWwH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Dec 2020 17:52:07 -0500
-IronPort-SDR: 3MverBu/rPI8S7DO4A+62ZYkMTxXstXe+0xuSyI8WDDKQGz2fXVSFUln4xvlVEVwuDNH0kiZLv
- TH01vWPBIrhQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9824"; a="173385212"
-X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
-   d="scan'208";a="173385212"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2020 14:51:26 -0800
-IronPort-SDR: TM4RDT/k+PK8w41GMpuYNI8lUPwcXvCvGaSToq5ONb0PldAMpyVysGIpNYkEgv/MW21t6KJqzC
- xLoRUG3/OVQw==
-X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
-   d="scan'208";a="550697867"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2020 14:51:26 -0800
-Date:   Thu, 3 Dec 2020 14:51:24 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>,
-        linux-kernel@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [Patch v2 1/1] PCI: pciehp: Add support for handling MRL events
-Message-ID: <20201203225124.GA72369@otc-nc-03>
-References: <20201122014203.4706-1-ashok.raj@intel.com>
- <20201122090852.GA29616@wunner.de>
+        id S1726063AbgLCXps (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Dec 2020 18:45:48 -0500
+X-Gm-Message-State: AOAM531wNiFmzKNAmhJQL04hJ7NEE/fmRNZ3FV3kniBFewxJjnnt5AQ0
+        Jrc5gU4sw5pXHPhic6NYWqbQpnpVooRkAEbzUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607039107;
+        bh=GoCfv6yRa59sMk527Ilw/+P9dXejkhutWIlptCRT1hg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SqgvJerutN1qMoH8pYUzEcPSIsJ9sP8VFu+42eVKRdll6974434/9HJgEPzfPc2ut
+         sAcgaFzFWR5QGZqMBZlMUokIlcWqu6qGFNoOn8GBXiVfmB4ROkZ8ZMOIgkxC4d4eCi
+         zKG4bvUiCDa571GtN88AFHeT71Qn4jUlslXTPD2WyEi2FQRLvg5pwccKNT0De1ujaE
+         cTINc0vnHl481EIQ2tAlbTVCvNbdv2Vw+otqvpe3uTy/vZ4J31x9jAezv5V06Xbc+b
+         kg7WFxRP/hFvhp9EbFzqg35iBkhenG+PQAG9fa1OhZtdTjk2441kdV2AsE9Vb+6xoK
+         WwkSGmETCahFA==
+X-Google-Smtp-Source: ABdhPJzncl3GtBbyvGBWlJ5Po1um/61Va2O6Pd4oRqyNsS2Sfx5aBQoaKNXV6nCinRK8wYpb1ruoYB7s3oKHDjkSo6s=
+X-Received: by 2002:a05:620a:148c:: with SMTP id w12mr5439539qkj.311.1607039106330;
+ Thu, 03 Dec 2020 15:45:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201122090852.GA29616@wunner.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20201203121018.16432-4-daire.mcnamara@microchip.com> <20201203210748.GA1594918@bjorn-Precision-5520>
+In-Reply-To: <20201203210748.GA1594918@bjorn-Precision-5520>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 3 Dec 2020 16:44:54 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqK-TxRwmmP8qAQdwH__p53VzW4usY4o1z_Ee75QXa91tA@mail.gmail.com>
+Message-ID: <CAL_JsqK-TxRwmmP8qAQdwH__p53VzW4usY4o1z_Ee75QXa91tA@mail.gmail.com>
+Subject: Re: [PATCH v18 3/4] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        david.abdurachmanov@gmail.com, cyril.jean@microchip.com,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lukas and Bjorn
+On Thu, Dec 3, 2020 at 2:07 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Dec 03, 2020 at 12:10:17PM +0000, daire.mcnamara@microchip.com wrote:
+> > From: Daire McNamara <daire.mcnamara@microchip.com>
+> >
+> > Add support for the Microchip PolarFire PCIe controller when
+> > configured in host (Root Complex) mode.
+> >
+> > Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> > +static void mc_pcie_isr(struct irq_desc *desc)
+> > +{
+> > +     struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +     struct mc_port *port = irq_desc_get_handler_data(desc);
+> > +     struct device *dev = port->dev;
+> > +     struct mc_msi *msi = &port->msi;
+> > +     void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
+> > +     void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE1_CTRL_ADDR;
+> > +     u32 status;
+> > +     unsigned long intx_status;
+> > +     unsigned long msi_status;
+> > +     u32 bit;
+> > +     u32 virq;
+> > +
+> > +     /*
+> > +      * The core provides a single interrupt for both INTx/MSI messages.
+> > +      * So we'll read both INTx and MSI status.
+> > +      */
+> > +     chained_irq_enter(chip, desc);
+> > +
+> > +     status = readl_relaxed(ctrl_base_addr + MC_SEC_ERROR_INT);
+>
+> Other than a few in mc_setup_window(), it looks like all the accesses
+> in this driver are relaxed.
 
+I may have asked for that.
 
-On Sun, Nov 22, 2020 at 10:08:52AM +0100, Lukas Wunner wrote:
-> > @@ -275,6 +302,13 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
-> >  		if (link_active)
-> >  			ctrl_info(ctrl, "Slot(%s): Link Up\n",
-> >  				  slot_name(ctrl));
-> > +		/*
-> > +		 * If slot is closed && ATTN button exists
-> > +		 * don't continue, let the ATTN button
-> > +		 * drive the hot-plug
-> > +		 */
-> > +		if (((events & PCI_EXP_SLTSTA_MRLSC) && ATTN_BUTTN(ctrl)))
-> > +			return;
-> >  		ctrl->request_result = pciehp_enable_slot(ctrl);
-> >  		break;
-> 
-> Hm, if the Attention Button is pressed with MRL still open, the slot is
-> not brought up.  If the MRL is subsequently closed, it is still not
-> brought up.  I guess the slot keeps blinking and one has to push the
-> button to abort the operation, then press it once more to attempt
-> another slot bringup.  The spec doesn't seem to say how such a situation
-> should be handled. Oh well.
-> 
-> I'm wondering if this is the right place to bail out:  Immediately
-> before the above hunk, the button_work is canceled, so it can't later
-> trigger bringup of the slot.  Shouldn't the above check be in the
-> code block with the "Turn the slot on if it's occupied or link is up"
-> comment?
-> 
+> readl_relaxed() and writel_relaxed() are only used by a few of the
+> host bridge drivers.  I doubt this is because those devices behave
+> differently than all the rest, so I suspect there's a general rule
+> that they all should use.  I don't know what that rule is, but maybe
+> you do?
 
-I have a fix tested on the platform, but I'm wondering if that's exactly
-what you had in mind. 
+Generally, if the access doesn't need to be ordered with respect to
+DMA accesses relaxed can be used. I think relaxed variants should also
+not be used on PCI resources (long ago there was some debate that
+readl/writel was only for PCI). Most of the host bridge accesses
+aren't PCI accesses, but rather host bus accesses so relaxed should be
+correct.
 
-Currently we don't subscribe for PDC events when ATTN exists. So the
-behavior is almost similar to this MRL case after ATTN, but the slot is not
-ready for hot-add.
+> Per Documentation/memory-barriers.txt, the relaxed versions provide
+> weaker ordering guarantees, so the safest thing would be to use the
+> non-relaxed versions and include a little justification for when/why
+> it is safe to use the relaxed versions.
 
-- Press ATTN, 
-- Slot is empty
-- After 5 seconds synthetic PDC arrives.
-  but since no presence and no link active, we leave slot in 
-  BLINKINGON_STATE, and led keeps blinking
+The relaxed variant is newish, so we have a good mixture in the
+kernel. Usually, it's not performance critical, so it's really only
+new code that use relaxed variants.
 
-if someone were to add a card after the 5 seconds, no hot-add is processed
-since we don't get notifications for PDC events when ATTN exists.
+> A lot of uses are in non-performance paths where there's really no
+> benefit to using the relaxed versions.
 
-Can we automatically cancel the blinking and return slot back to OFF_STATE?
+Code size. Minimally, it's a barrier instruction on every access.
+There are cases on arm32 where the barrier also has an mmio access.
 
-This way we don't need another button press to first cancel, and restart
-add via another button press? 
+> Not asking you to do anything here, but in case you've analyzed this
+> and come to the conclusion that the relaxed versions are safe here,
+> but not in mc_setup_window(), that rationale might be useful to others
+> if you included it in the commit log or a brief comment in the code.
+>
+> > +static void mc_setup_window(void __iomem *bridge_base_addr, u32 index, phys_addr_t axi_addr,
+> > +                         phys_addr_t pci_addr, size_t size)
+> > +{
+> > +     u32 atr_sz = ilog2(size) - 1;
+> > +     u32 val;
+> > +
+> > +     if (index == 0)
+> > +             val = PCIE_CONFIG_INTERFACE;
+> > +     else
+> > +             val = PCIE_TX_RX_INTERFACE;
+> > +
+> > +     writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) + MC_ATR0_AXI4_SLV0_TRSL_PARAM);
 
-According to section 6.7.1.5 Attention Button.
-Once the power indicator begins blinking, a 5 second abort interval exists 
-during which a second depression of the attention button cancels the operation.
+Humm, I could see ordering mattering here, but a writel doesn't
+actually help. You might want an access (not using readl/writel) to
+the region being setup to work immediately after this writel. However,
+the barrier for writel is before the write.
 
-If the operation initiated by the attention button fails for any reason, it
-is recommended that system software present an error message explaining
-failure via a software user interface, or add the error message to system
-log.
+But these regions are also generally one-time, statically configured,
+so I'm not sure it's really worth spending more time analyzing
+theoretical problems.
 
-Seems like we can cancel the blinking and return back to power off state.
-Since the attention button press wasn't successful to add anything.?
-
-Alternately we can also choose to subscribe to PDC, but ignore if slot is
-in OFF_STATE. So we let ATTN drive the add. But if PDC happens and we are
-in BLINKINGON_STATE, then we can process the hot-add? Spec says a software
-recommendation, but i think the cancel after 5 seconds seems better?
-
-Cheers,
-Ashok
+Rob
