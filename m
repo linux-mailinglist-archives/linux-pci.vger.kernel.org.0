@@ -2,217 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA7712CD4A1
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 12:33:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8C552CD537
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 13:13:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgLCLct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 06:32:49 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2516 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgLCLct (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 06:32:49 -0500
-Received: from dggeme706-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Cmtvy0P4MzQn5c;
-        Thu,  3 Dec 2020 19:31:42 +0800 (CST)
-Received: from [10.174.60.228] (10.174.60.228) by
- dggeme706-chm.china.huawei.com (10.1.199.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 3 Dec 2020 19:32:05 +0800
-Subject: Re: [PATCH] PCI: Add pci reset quirk for Huawei Intelligent NIC
- virtual function
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Yinshi (Stone)" <yin.yinshi@huawei.com>,
-        "Wangxiaoyun (Cloud)" <cloud.wangxiaoyun@huawei.com>,
-        zengweiliang zengweiliang <zengweiliang.zengweiliang@huawei.com>,
-        "Chenlizhong (IT Chip)" <chenlizhong@huawei.com>
-References: <20201202201850.GA1467698@bjorn-Precision-5520>
-From:   Chiqijun <chiqijun@huawei.com>
-Message-ID: <0fca5241-7f01-ded7-93be-4a108e502b97@huawei.com>
-Date:   Thu, 3 Dec 2020 19:32:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1729290AbgLCMLq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 07:11:46 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:2743 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729247AbgLCMLq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 07:11:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1606997506; x=1638533506;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=QLD5ONWunMLZJL3jGQBpiCqmYmq6E0jPrkEC5wisJVM=;
+  b=RTWuOWyEUs+U9bHlvDG05z5wcfp4R5jED+q7Q4Eaj2N0Wl9yp04Cbnwl
+   4QDU4mIiyjtCht7pqrb6LAdwOh/FR2zGgHGUpzZBVunwVkrA8TuZkDmiL
+   a9ePsvGYMMUKO/qSRHj4FUgQ/+P8TpfsWx3sxHLvBLmpwa1BwMM9axp/z
+   1oWXxvkLAg8PCmiFBOVb7dVUw3QTfsd0t+koDf3pixagug4EGQ8Z7iFKv
+   EbXQYk+lRFKDBCJwM+4zTCqFpfchrpOxoms9/YoxLlHIxvyw672xodRd2
+   DaYnu80RFnnKGJBZuEQ/TXShZ3k3cNwygsosRTtbSH81pr1ghUJMGMlKq
+   g==;
+IronPort-SDR: YtRVcY0CYsKYlGpu8xWPzx2rqN0poWspN0aoYKa78ZRBAI7jE1I7qzUxIVHX5jcumiiYkocCPs
+ eM9Py3zflDmm+9Tbk4Eqti6EH1/rizznryWrxGPl+dQgITwBm0I82eLejJYBuvGILg6tejcPFk
+ XICHgLKlkcLfkxrSSDLEhuS7dimS+Y63eNb8GIEJXBBgoczPF60WA6+f25AF4KnzEz9mBAvps5
+ plRqRMXZ4TCn6YJ/1C93vpCFMRiw57NnHeDx6vsl/02n4l1+1cKQIq0jVQcHW1v8+H7MOwJz7M
+ y0A=
+X-IronPort-AV: E=Sophos;i="5.78,389,1599548400"; 
+   d="scan'208";a="101273943"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Dec 2020 05:10:40 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 3 Dec 2020 05:10:39 -0700
+Received: from ryzen.microchip.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Thu, 3 Dec 2020 05:10:37 -0700
+From:   <daire.mcnamara@microchip.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh@kernel.org>, <linux-pci@vger.kernel.org>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+CC:     <david.abdurachmanov@gmail.com>, <cyril.jean@microchip.com>,
+        <ben.dooks@codethink.co.uk>,
+        Daire McNamara <daire.mcnamara@microchip.com>
+Subject: [PATCH v18 0/4] PCI: microchip: Add host driver for Microchip PCIe controller
+Date:   Thu, 3 Dec 2020 12:10:14 +0000
+Message-ID: <20201203121018.16432-1-daire.mcnamara@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20201202201850.GA1467698@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.60.228]
-X-ClientProxiedBy: dggeme713-chm.china.huawei.com (10.1.199.109) To
- dggeme706-chm.china.huawei.com (10.1.199.102)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Daire McNamara <daire.mcnamara@microchip.com>
+
+This patchset adds support for the Microchip PCIe PolarFire PCIe
+controller when configured in host (Root Complex) mode.
+
+Updates since v17:
+* Regenerated to apply to v5.10rc1
+* Added self as maintainer
+* Added clock enables and extra interrupt handling
+
+Updates since v16:
+* Patch needs CONFIG_PCI_HOST_COMMON.  Add this to Kconfig stanza
+
+Updates since v15:
+* Call platform_set_drvdata earlier in devm_pci_alloc_host_bridge()
+* Use host_common_probe() and an init function to set up hw windows
+* status is u32 in mc_pcie_isr()
+* Removed mask var in mc_mask_intx_irq(), mc_unmask_intx_irq()
+* irq var is now signed in mc_platform_init()
+
+Updates since v14:
+* Removed cfg_read/cfg_write inline functions
+* Updated to irq_data_get_irq_chip_data()
+* Updated to use devm_platform_ioremap_resource()
+* Replaced of_pci_range parsing to setup windows via bridge pointer.
+
+Updates since v13:
+* Refactored to use pci_host_common_probe()
+
+Updates since v12:
+* Capitalised commit messages.  Use specific subject line for dt-bindings
+
+Updates since v11:
+* Adjusted so yaml file passses make dt_binding_check
+
+Updates since v10:
+* Adjusted driver as per Rob Herring's comments, notably:
+  - use common PCI_MSI_FLAGS defines
+  - reduce storage of unnecessary vars in mc_pcie struct
+  - switched to read/write relaxed variants
+  - extended lock in msi_domain_alloc routine
+  - improved 32bit safety, switched from find_first_bit() to ilog2()
+  - removed unnecessary twiddle of eCAM config space
+
+Updates since v9:
+* Adjusted commit logs
+* make dt_bindings_check passes
+
+Updates since v8:
+* Refactored as per Rob Herring's comments:
+  - bindings in schema format
+  - Adjusted licence to GPLv2.0
+  - Refactored access to config space between driver and common eCAM code
+  - Adopted pci_host_probe()
+  - Miscellanous other improvements
+
+Updates since v7:
+* Build for 64bit RISCV architecture only
+
+Updates since v6:
+* Refactored to use common eCAM driver
+* Updated to CONFIG_PCIE_MICROCHIP_HOST etc
+* Formatting improvements
+* Removed code for selection between bridge 0 and 1
+
+Updates since v5:
+* Fixed Kconfig typo noted by Randy Dunlap
+* Updated with comments from Bjorn Helgaas
+
+Updates since v4:
+* Fix compile issues.
+
+Updates since v3:
+* Update all references to Microsemi to Microchip
+* Separate MSI functionality from legacy PCIe interrupt handling functionality
+
+Updates since v2:
+* Split out DT bindings and Vendor ID updates into their own patch
+  from PCIe driver.
+* Updated Change Log
+
+Updates since v1:
+* Incorporate feedback from Bjorn Helgaas
+
+Daire McNamara (4):
+  PCI: Call platform_set_drvdata earlier in devm_pci_alloc_host_bridge
+  dt-bindings: PCI: microchip: Add Microchip PolarFire host binding
+  PCI: microchip: Add host driver for Microchip PCIe controller
+  Add Daire McNamara as maintainer for the Microchip PCIe driver
+
+ .../bindings/pci/microchip,pcie-host.yaml     |  93 +++
+ MAINTAINERS                                   |   7 +
+ drivers/pci/controller/Kconfig                |  10 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pci-host-common.c      |   4 +-
+ drivers/pci/controller/pcie-microchip-host.c  | 607 ++++++++++++++++++
+ 6 files changed, 720 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+ create mode 100644 drivers/pci/controller/pcie-microchip-host.c
 
 
-On 2020/12/3 4:18, Bjorn Helgaas wrote:
-> On Wed, Dec 02, 2020 at 05:18:12PM +0800, Chiqijun wrote:
->> On 2020/11/30 23:46, Alex Williamson wrote:
->>> On Sat, 28 Nov 2020 17:29:19 -0600
->>> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>> On Sat, Nov 28, 2020 at 02:18:25PM +0800, Chiqijun wrote:
->>>>> When multiple VFs do FLR at the same time, the firmware is
->>>>> processed serially, resulting in some VF FLRs being delayed more
->>>>> than 100ms, when the virtual machine restarts and the device
->>>>> driver is loaded, the firmware is doing the corresponding VF
->>>>> FLR, causing the driver to fail to load.
->>>>>
->>>>> To solve this problem, add host and firmware status synchronization
->>>>> during FLR.
->>>>
->>>> Is this because the Huawei Intelligent NIC isn't following the spec,
->>>> or is it because Linux isn't correctly waiting for the FLR to
->>>> complete?
->>>
->>> Seems like a spec compliance issue, I don't recall anything in the spec
->>> about coordinating FLR between VFs.
->>
->> The spec stipulates that the FLR time of a single VF does not exceed 100ms,
->> but when multiple VMs are reset concurrently in Linux, there will be
->> multiple VF parallel FLRs, VF of Huawei Intelligent NIC
->>   FLR will exceed 100ms in this case.
-> 
-> Can you somehow just serialize Huawei Intelligent NIC FLR and
-> otherwise use the normal FLR path instead of the iomap, PCI_COMMAND
-> fiddling, and huge timeout below?
+base-commit: 3650b228f83adda7e5ee532e2b90429c03f7b9ec
+-- 
+2.25.1
 
-FLR triggering is not controlled by Huawei Intelligent NIC. For example, 
-multiple VFs are assigned to different VMs, one VM corresponds to a qemu 
-process, multiple VMs perform life cycle operations (such as reset) at 
-the same time, and FLR triggered by different Qemu processes will be 
-parallel.
-The FLR of a single VF of Huawei Intelligent NIC is within 100ms (for 
-example, 50ms), while the regular FLR process will sleep for 100ms. If 
-the VF FLR is forced to be serialized (for example, adding a lock), the 
-overall FLR time will become longer and the VF FLR between different 
-cards also become serial, the actual effect will be worse than setting 
-huge timeout.
-
-> 
->>>> If this is a Huawei Intelligent NIC defect, is there documentation
->>>> somewhere (errata) that you can reference?  Will it be fixed in future
->>>> designs, so we don't have to add future Device IDs to the quirk?
->>>>
->>>>> Signed-off-by: Chiqijun <chiqijun@huawei.com>
->>>>> ---
->>>>>    drivers/pci/quirks.c | 67 ++++++++++++++++++++++++++++++++++++++++++++
->>>>>    1 file changed, 67 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>>>> index f70692ac79c5..bd6236ea9064 100644
->>>>> --- a/drivers/pci/quirks.c
->>>>> +++ b/drivers/pci/quirks.c
->>>>> @@ -3912,6 +3912,71 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
->>>>>    	return 0;
->>>>>    }
->>>>> +#define PCI_DEVICE_ID_HINIC_VF  0x375E
->>>>> +#define HINIC_VF_FLR_TYPE       0x1000
->>>>> +#define HINIC_VF_OP             0xE80
->>>>> +#define HINIC_OPERATION_TIMEOUT 15000
->>>>> +
->>>>> +/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
->>>>> +static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
->>>>> +{
->>>>> +	unsigned long timeout;
->>>>> +	void __iomem *bar;
->>>>> +	u16 old_command;
->>>>> +	u32 val;
->>>>> +
->>>>> +	if (probe)
->>>>> +		return 0;
->>>>> +
->>>>> +	bar = pci_iomap(pdev, 0, 0);
->>>>> +	if (!bar)
->>>>> +		return -ENOTTY;
->>>>> +
->>>>> +	pci_read_config_word(pdev, PCI_COMMAND, &old_command);
->>>>> +
->>>>> +	/*
->>>>> +	 * FLR cap bit bit30, FLR ACK bit: bit18, to avoid big-endian conversion
->>>>> +	 * the big-endian bit6, bit10 is directly operated here
->>>>> +	 */
->>>>> +	val = readl(bar + HINIC_VF_FLR_TYPE);
->>>>> +	if (!(val & (1UL << 6))) {
->>>>> +		pci_iounmap(pdev, bar);
->>>>> +		return -ENOTTY;
->>>>> +	}
->>>
->>>
->>> I don't know exactly what this is testing, but it seems like a
->>> feature/capability test that can fail, why is it not done as part of
->>> the probe?  Can we define bit 6 with a macro?  Same for bit 10 in the
->>> VF op register below.
->>
->> The firmware of Huawei Intelligent NIC does not support this feature in the
->> old version. here is the reading ability to determine whether the firmware
->> supports it.
->> In the next patch, I will add a comment here and replace bit 6 and bit 10
->> with macro definitions.
->>
->>>
->>>>> +
->>>>> +	val = readl(bar + HINIC_VF_OP);
->>>>> +	val = val | (1UL << 10);
->>>>> +	writel(val, bar + HINIC_VF_OP);
->>>>> +
->>>>> +	/* Perform the actual device function reset */
->>>>> +	pcie_flr(pdev);
->>>>> +
->>>>> +	pci_write_config_word(pdev, PCI_COMMAND,
->>>>> +			      old_command | PCI_COMMAND_MEMORY);
->>>>> +
->>>>> +	/* Waiting for device reset complete */
->>>>> +	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
->>>
->>> Yikes, 15s timeout!
->>
->> Huawei Intelligent NIC supports a maximum of 496 VFs, so the total timeout
->> period is set to 15s, which will not reach the timeout time under normal
->> circumstances.
->>
->>>
->>>>> +	do {
->>>>> +		val = readl(bar + HINIC_VF_OP);
->>>>> +		if (!(val & (1UL << 10)))
->>>>> +			goto reset_complete;
->>>>> +		msleep(20);
->>>>> +	} while (time_before(jiffies, timeout));
->>>>> +
->>>>> +	val = readl(bar + HINIC_VF_OP);
->>>>> +	if (!(val & (1UL << 10)))
->>>>> +		goto reset_complete;
->>>>> +
->>>>> +	pci_warn(pdev, "Reset dev timeout, flr ack reg: %x\n",
->>>>> +		 be32_to_cpu(val));
->>>>> +
->>>>> +reset_complete:
->>>>> +	pci_write_config_word(pdev, PCI_COMMAND, old_command);
->>>>> +	pci_iounmap(pdev, bar);
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>>    static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->>>>>    	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
->>>>>    		 reset_intel_82599_sfp_virtfn },
->>>>> @@ -3923,6 +3988,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->>>>>    	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
->>>>>    	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->>>>>    		reset_chelsio_generic_dev },
->>>>> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
->>>>> +		reset_hinic_vf_dev },
->>>>>    	{ 0 }
->>>>>    };
->>>>> -- 
->>>>> 2.17.1
->>>>
->>>
->>> .
->>>
-> .
-> 
