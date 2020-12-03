@@ -2,245 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D568F2CE1B4
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 23:33:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C19D2CE21B
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 23:52:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgLCWdI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 17:33:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731822AbgLCWdG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 17:33:06 -0500
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6860C061A4F
-        for <linux-pci@vger.kernel.org>; Thu,  3 Dec 2020 14:32:25 -0800 (PST)
-Received: by mail-pj1-x1042.google.com with SMTP id p21so2758403pjv.0
-        for <linux-pci@vger.kernel.org>; Thu, 03 Dec 2020 14:32:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TmvlHcKNE+BZSUGjT3sP+ZmkJmCYLaFZSs3K50hnDTw=;
-        b=gelHd6qaInh1+0Ext8zSHtUHA0CRpyIahoLn7HMwpL88FRPuaOJbHgbvpU/mPnv6rc
-         JDmq1lWcfLdHTHiW00ab84WZNWfxmRBQdMiRfwSCmhqVYfVK5BYC+jzJU7rzJIs63vlg
-         4t4kXgHOxFDqDGk0AKqezaMriyoNAl4vb9FOekxl0nHGJadf9FLoo96xUurzNHwNm/he
-         0anFKH0KDDy3IngDl5k0x78t3yl2R9D30RaM3UIfOXIHCdHKhpBCv6hJccxGRlABn5lT
-         y8E0+YuzIYohvblOUc1A6w+Ys1iicN7jTt9oKLgAVuIQuL86jUXOf77ZRXjMlrjWTfsp
-         eM7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TmvlHcKNE+BZSUGjT3sP+ZmkJmCYLaFZSs3K50hnDTw=;
-        b=og0P0cIZmNIvLaDrF66eMe++nmw4y29lxjSPslcryyuKS7IXD3UvkFNkOx0w+MpPwG
-         btPaJRFJZmBTxq1j39IPNKNlfpanEHyq4FpksC4sRlkOCMGUEoWW5yPacUHegDkmneNY
-         pyL1TE1pCRzgTb1W0uMSpeDbB2r4Bi1/tH5SXl55J51oTzmt7Qo8qSLbVal7mU1MhPmd
-         Y7S3w7+CaTPBdMAflU2f9sFBGMC6MJzJTHgaCQcJNEFLYz/tm1VpXjO0jd0pi51uWMe0
-         x4r+InfwuL2/h432cTT4koS0WvLR98BzjKq36vcSvgvUEsHLCYTfI4LgtvN2/4Q9jrlj
-         tJ2Q==
-X-Gm-Message-State: AOAM5327slPC18qtyPtek2HSzllhQxQQJZhWsHwl+mHD4NQOv89noy2W
-        VovE04afwE2rzRYaxQlcX2wEVQj+xJAyonkK/oJd5w==
-X-Google-Smtp-Source: ABdhPJzyYa88Ck16OMfiImWjHg1saqlns5SObijasI5cunzYv9BUS/0tCPp8OwEvAmWGMt4Qlfzg3sgkI3wzEjOJNX0=
-X-Received: by 2002:a17:90a:6fa1:: with SMTP id e30mr1244326pjk.32.1607034745179;
- Thu, 03 Dec 2020 14:32:25 -0800 (PST)
+        id S1727990AbgLCWwH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 17:52:07 -0500
+Received: from mga03.intel.com ([134.134.136.65]:14072 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgLCWwH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Dec 2020 17:52:07 -0500
+IronPort-SDR: 3MverBu/rPI8S7DO4A+62ZYkMTxXstXe+0xuSyI8WDDKQGz2fXVSFUln4xvlVEVwuDNH0kiZLv
+ TH01vWPBIrhQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9824"; a="173385212"
+X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
+   d="scan'208";a="173385212"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2020 14:51:26 -0800
+IronPort-SDR: TM4RDT/k+PK8w41GMpuYNI8lUPwcXvCvGaSToq5ONb0PldAMpyVysGIpNYkEgv/MW21t6KJqzC
+ xLoRUG3/OVQw==
+X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
+   d="scan'208";a="550697867"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2020 14:51:26 -0800
+Date:   Thu, 3 Dec 2020 14:51:24 -0800
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>,
+        linux-kernel@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [Patch v2 1/1] PCI: pciehp: Add support for handling MRL events
+Message-ID: <20201203225124.GA72369@otc-nc-03>
+References: <20201122014203.4706-1-ashok.raj@intel.com>
+ <20201122090852.GA29616@wunner.de>
 MIME-Version: 1.0
-References: <20201201213707.541432-1-samitolvanen@google.com>
- <20201203112622.GA31188@willie-the-truck> <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
- <20201203182252.GA32011@willie-the-truck>
-In-Reply-To: <20201203182252.GA32011@willie-the-truck>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 3 Dec 2020 14:32:13 -0800
-Message-ID: <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-To:     Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, Jian Cai <jiancai@google.com>,
-        Kristof Beyls <Kristof.Beyls@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201122090852.GA29616@wunner.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 3, 2020 at 10:23 AM Will Deacon <will@kernel.org> wrote:
->
-> On Thu, Dec 03, 2020 at 09:07:30AM -0800, Sami Tolvanen wrote:
-> > On Thu, Dec 3, 2020 at 3:26 AM Will Deacon <will@kernel.org> wrote:
-> > > I took this series for a spin, with my for-next/lto branch merged in but
-> > > I see a failure during the LTO stage with clang 11.0.5 because it doesn't
-> > > understand the '.arch_extension rcpc' directive we throw out in READ_ONCE().
-> >
-> > I just tested this with Clang 11.0.0, which I believe is the latest
-> > 11.x version, and the current Clang 12 development branch, and both
-> > work for me. Godbolt confirms that '.arch_extension rcpc' is supported
-> > by the integrated assembler starting with Clang 11 (the example fails
-> > with 10.0.1):
-> >
-> > https://godbolt.org/z/1csGcT
-> >
-> > What does running clang --version and ld.lld --version tell you?
->
-> I'm using some Android prebuilts I had kicking around:
->
-> Android (6875598, based on r399163b) clang version 11.0.5 (https://android.googlesource.com/toolchain/llvm-project 87f1315dfbea7c137aa2e6d362dbb457e388158d)
-> Target: x86_64-unknown-linux-gnu
-> Thread model: posix
-> InstalledDir: /usr/local/google/home/willdeacon/work/android/repo/android-kernel/prebuilts-master/clang/host/linux-x86/clang-r399163b/bin
->
-> and:
->
-> LLD 11.0.5 (/buildbot/tmp/tmpx1DlI_ 87f1315dfbea7c137aa2e6d362dbb457e388158d) (compatible with GNU linkers)
+Hi Lukas and Bjorn
 
-On Thu, Dec 3, 2020 at 10:22 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> 11.0.5 is AOSP's clang, which is behind the upstream 11.0.0 release so
-> it is most likely the case that it is missing the patch that added rcpc.
-> I think that a version based on the development branch (12.0.0) is in
-> the works but I am not sure.
 
-Yep, I have a lot of thoughts on the AOSP LLVM versioning scheme, but
-they're not for LKML.  That's yet another reason to prefer feature
-detection as opposed to brittle version checks.  Of course, as Will
-points out, if your feature detection is broken, that helps no
-one...more thoughts below.
+On Sun, Nov 22, 2020 at 10:08:52AM +0100, Lukas Wunner wrote:
+> > @@ -275,6 +302,13 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+> >  		if (link_active)
+> >  			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+> >  				  slot_name(ctrl));
+> > +		/*
+> > +		 * If slot is closed && ATTN button exists
+> > +		 * don't continue, let the ATTN button
+> > +		 * drive the hot-plug
+> > +		 */
+> > +		if (((events & PCI_EXP_SLTSTA_MRLSC) && ATTN_BUTTN(ctrl)))
+> > +			return;
+> >  		ctrl->request_result = pciehp_enable_slot(ctrl);
+> >  		break;
+> 
+> Hm, if the Attention Button is pressed with MRL still open, the slot is
+> not brought up.  If the MRL is subsequently closed, it is still not
+> brought up.  I guess the slot keeps blinking and one has to push the
+> button to abort the operation, then press it once more to attempt
+> another slot bringup.  The spec doesn't seem to say how such a situation
+> should be handled. Oh well.
+> 
+> I'm wondering if this is the right place to bail out:  Immediately
+> before the above hunk, the button_work is canceled, so it can't later
+> trigger bringup of the slot.  Shouldn't the above check be in the
+> code block with the "Turn the slot on if it's occupied or link is up"
+> comment?
+> 
 
-> > > We actually check that this extension is available before using it in
-> > > the arm64 Kconfig:
-> > >
-> > >         config AS_HAS_LDAPR
-> > >                 def_bool $(as-instr,.arch_extension rcpc)
-> > >
-> > > so this shouldn't happen. I then realised, I wasn't passing LLVM_IAS=1
-> > > on my Make command line; with that, then the detection works correctly
-> > > and the LTO step succeeds.
-> > >
-> > > Why is it necessary to pass LLVM_IAS=1 if LTO is enabled? I think it
-> > > would be _much_ better if this was implicit (or if LTO depended on it).
-> >
-> > Without LLVM_IAS=1, Clang uses two different assemblers when LTO is
-> > enabled: the external GNU assembler for stand-alone assembly, and
-> > LLVM's integrated assembler for inline assembly. as-instr tests the
-> > external assembler and makes an admittedly reasonable assumption that
-> > the test is also valid for inline assembly.
-> >
-> > I agree that it would reduce confusion in future if we just always
-> > enabled IAS with LTO. Nick, Nathan, any thoughts about this?
->
-> That works for me, although I'm happy with anything which means that the
-> assembler checks via as-instr apply to the assembler which will ultimately
-> be used.
+I have a fix tested on the platform, but I'm wondering if that's exactly
+what you had in mind. 
 
-I agree with Will.
+Currently we don't subscribe for PDC events when ATTN exists. So the
+behavior is almost similar to this MRL case after ATTN, but the slot is not
+ready for hot-add.
 
-I think interoperability of tools is important.  We should be able to
-mix tools from GNU and LLVM and produce working images. Specifically,
-combinations like gcc+llvm-nm+as+llvm-objcopy, or clang+nm+as+objcopy
-as two examples.  There's a combinatorial explosion of combinations to
-test/validate, which we're not doing today, but if for some reason
-someone wants to use some varied combination and it doesn't work, it's
-worthwhile to understand the differences and issues and try to fix
-them.  That is a win for optionality and loose coupling.
+- Press ATTN, 
+- Slot is empty
+- After 5 seconds synthetic PDC arrives.
+  but since no presence and no link active, we leave slot in 
+  BLINKINGON_STATE, and led keeps blinking
 
-That's not what's going on here though.
+if someone were to add a card after the 5 seconds, no hot-add is processed
+since we don't get notifications for PDC events when ATTN exists.
 
-While I think it's ok to select a compiler and assembler and linker
-etc from ecosystem or another, I think trying to support a build that
-mixes or uses different assemblers (or linkers, compilers, etc) from
-both for the same build is something we should draw a line in the sand
-and explicitly not support (except for the compat vdso's*...).  ie. if
-I say `make LD=ld.bfd` and ld.lld gets invoked somehow (or vice
-versa); I consider that a bug in KBUILD.
+Can we automatically cancel the blinking and return slot back to OFF_STATE?
 
-That is what's happening here, it's why as-instr feature detection is
-broken; because two different assemblers were used in the same build.
-One for inline asm, a different one for out of line asm.  At the very
-least, it violates the Principle of Least Surprise (or is it the Law
-of Equivalent Exchange, I forget).
+This way we don't need another button press to first cancel, and restart
+add via another button press? 
 
-In fact, lots of the work we've been doing to enable LLVM tools to
-build the kernel have been identifying places throughout KBUILD where
-tools were hardcoded rather than using what make was told to use, and
-we've been making progress fixing those.  The ultimate test of Linux
-kernel build hermiticity IMO is that I should be able to build a
-kernel in an environment that only has one version of either
-GCC/binutils or LLVM, and the kernel should build without failure.
-That's not the case today for all arch's; cross compiling compat vdsos
-again are a major pain point*, but we're making progress.  In that
-sense, the mixing of an individual GNU and LLVM utility is what I
-would consider a bug in KBUILD.  I want to emphasize that's distinct
-from mixing and matching tools when invoking make, which I consider
-OK, if under-tested.
+According to section 6.7.1.5 Attention Button.
+Once the power indicator begins blinking, a 5 second abort interval exists 
+during which a second depression of the attention button cancels the operation.
 
-Ok (mixes GNU and LLVM tools; gcc is the only compiler invoked, ld.lld
-is the only linker invoked):
-$ make CC=gcc LD=ld.lld
+If the operation initiated by the attention button fails for any reason, it
+is recommended that system software present an error message explaining
+failure via a software user interface, or add the error message to system
+log.
 
-Not ok (if ld.bfd or both are invoked)
-$ make LD=ld.lld
+Seems like we can cancel the blinking and return back to power off state.
+Since the attention button press wasn't successful to add anything.?
 
-Not ok (if ld.lld or both are invoked)
-$ make LD=ld.bfd
+Alternately we can also choose to subscribe to PDC, but ignore if slot is
+in OFF_STATE. So we let ATTN drive the add. But if PDC happens and we are
+in BLINKINGON_STATE, then we can process the hot-add? Spec says a software
+recommendation, but i think the cancel after 5 seconds seems better?
 
-Not ok (if clang's integrated assembler and GAS are invoked)
-$ ./scripts/config -e LTO_CLANG
-$ make LLVM=1 LLVM_IAS=1
-
-The mixing of GAS and clang's integrated assembler for kernel LTO
-builds is a relic of a time when this series was first written when
-Clang's integrated assembler was in no form ready to assemble the
-entire Linux kernel, but could handle the inline asm for aarch64.
-Fortunately, ARM's LLVM team has done great work to ensure the latest
-extensions like RCpc are supported and compatible, and Jian has done
-the hard work ironing out the last mile issues in clang's assembler to
-get the ball in the end zone.  Removing mixing GAS and clang's IA here
-ups the ante and removes a fallback/pressure relief valve, but I'm
-fine with that.  Requiring clang's integrated assembler here aligns
-incentives to keep this working and to continue investing here.
-
-Just because it's possible to mix the use of clang's integrated
-assembler with GNU assembler for LTO (for some combination of versions
-of these tools) doesn't mean we should support it, or encourage it,
-for all of the reasons above.  We should make this config depend on
-clang's integrated assembler, and not support the mixing of assemblers
-in one build.
-
-Thou shalt not support invoking of different tools than what's
-specified*.  Do not pass go, do not collect $200. Full stop.
-
-* The compat vdso's are again a special case; when cross compiling
-using GNU tools, a separate binary with a different target triple
-prefix will typically get invoked than what's used to build the rest
-of the kernel image.  This still doesn't cross the GNU/LLVM boundary
-though, and most importantly doesn't involve linking together object
-files that were built with distinct assemblers (for example).
-
-So I'd recommend to Sami to simply make the Kconfig also depend on
-clang's integrated assembler (not just llvm-nm and llvm-ar).  If
-someone cares about LTO with Clang as the compiler but GAS as the
-assembler, then we can revisit supporting that combination (and the
-changes to KCONFIG), but it shouldn't be something we consider Tier 1
-supported or a combination that need be supported in a minimum viable
-product. And at that point we should make it avoid clang's integrated
-assembler entirely (I suspect LTO won't work at all in that case, so
-maybe even considering it is a waste of time).
-
-One question I have to Will; if for aarch64 LTO will depend on RCpc,
-but RCpc is an ARMv8.3 extension, what are the implications for LTO on
-pre-ARMv8.3 aarch64 processors?
--- 
-Thanks,
-~Nick Desaulniers
+Cheers,
+Ashok
