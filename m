@@ -2,133 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45EE52CDCF7
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 19:03:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 087C52CDD46
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 19:24:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387561AbgLCSBa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 13:01:30 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:37912 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbgLCSBa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 13:01:30 -0500
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 0B3I09j7020577;
-        Fri, 4 Dec 2020 03:00:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0B3I09j7020577
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1607018410;
-        bh=Q8rUUiuQPCHtIjHKZ25iSma0yE471Wc2ZwPZ52EYpXA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=c8s94mdsXSLOpVko39GE94yfv+2gzeMV/HXHNgIMkxeaqs8gjTvHpyvc2Xc0x9pOj
-         AOo5icsDHKvZetFGaTQCnk0cKQ64JBO/QcME0MIpJmNR70qzQGBLDVLMQriKEtrf09
-         yv65KIKeqMTg7CQGAkp2+G7PJhG/gZuWBLu3nsI5/gRf3JF1p4iFNrgeogUg5sMZDX
-         OxZGYC0MUVzIDtPDfvYm6yrGA+cQgoxRX8vOCyoRkUFyfnh//b803fH+Mwg1ZMkR4k
-         +6+9QN+iT25bS1Wl0RaAhdLej2oBMXB47uOpVd1xqElr2bZakypeGE/bv0usqrCRg6
-         ibM489qfF/Jbg==
-X-Nifty-SrcIP: [209.85.216.53]
-Received: by mail-pj1-f53.google.com with SMTP id r9so1507333pjl.5;
-        Thu, 03 Dec 2020 10:00:09 -0800 (PST)
-X-Gm-Message-State: AOAM5302niKOsGTtmVehzsma3d7+g3OkyPv0KsbggUz8WKbmYHkZAHL4
-        QH1DVsIcf1jYWrDHa+pjcSqnX3WWMAbFlhr8Ano=
-X-Google-Smtp-Source: ABdhPJyWwlayA/XR+Bnh4a5mDodnSKw0H8nrbACrY1JSJtlwr6wE2FkK0g+IV8XwwRNT2lr2uJVlldeyzgyNeL0U9xo=
-X-Received: by 2002:a17:90a:fa0c:: with SMTP id cm12mr265364pjb.87.1607018409010;
- Thu, 03 Dec 2020 10:00:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20201013003203.4168817-1-samitolvanen@google.com>
- <20201013003203.4168817-15-samitolvanen@google.com> <202010141549.412F2BF0@keescook>
-In-Reply-To: <202010141549.412F2BF0@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 4 Dec 2020 02:59:31 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT350QjusoYCQEHDdoxAfTZjj82xp86O1qoNF=0u0PN-g@mail.gmail.com>
-Message-ID: <CAK7LNAT350QjusoYCQEHDdoxAfTZjj82xp86O1qoNF=0u0PN-g@mail.gmail.com>
-Subject: Re: [PATCH v6 14/25] kbuild: lto: remove duplicate dependencies from
- .mod files
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        id S1729005AbgLCSWo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 13:22:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgLCSWn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 13:22:43 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA2CC061A53;
+        Thu,  3 Dec 2020 10:22:03 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id y18so2977166qki.11;
+        Thu, 03 Dec 2020 10:22:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jSR8ftEy+ZPymQ2+ANnTCIcrdEyC6rgz8i/C+YFDrrs=;
+        b=Ic4QleiYjTsHIMM0On90To1JYUkzfryly4JE00oJVw6xM1knMCPDBhHTFqo48Us3e3
+         MF3QjiQL1yjayz+ETueVi50Cn9wqU1xj9ng0fJUbRI+swr7mmTUxDCH4/w/s1H+CN7nV
+         OMmtIxG/V/PGVXNAQ6+q7qtZP4eFDcBe5sneK8fRhFRpoA6Nvajm1Z7NHt4ZNxR64L+m
+         4StPiEoHrbNTyS5/bdTMBY7TWfxjJGh0p0nIYygOwtneo34JRlkXmRO2GZTSE3KheRhh
+         U93GV8FOoYr6XPNft2A1/QvVK5CEPDl6SJRZHBpQO5yh83pv4jtkzUzrLEyURHK7A70P
+         Dbgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jSR8ftEy+ZPymQ2+ANnTCIcrdEyC6rgz8i/C+YFDrrs=;
+        b=n4lwUmA/IT6z/B4P1qxuA54E5liT/VchDg3jRPAWlI1dVGrCy9h0GHWPXimcYocvD9
+         cfB0nq2ofWsssywl+/L/u8uRyAL36nOFGEsKzfPv2E1fdnRjgwPU2BAshr5XuyxpdMEV
+         GM/H/llEFasHqkiCTohs2hiET8xtLS7uA28Q7OhJBJQmjGJdTouRrQJNxhNq54zxfIi9
+         3WKCwa/eV6ZizoP+e0Uw6LHIrgOKKTwcnu8n9iazLEFHrgAC4WE7eBkoloKcMiyxkaww
+         OaoePkjvdtlQ4I531itHevpq79KGRnlub3GahIRxD1gVOY0f8+ivg1kfWLvvMEP+JfXf
+         JBCg==
+X-Gm-Message-State: AOAM5308u9USVSegQ7YA8mP5f1sxWkkr8O7tsM0DCVv91O4Gv5MOqwgK
+        m+zZ22ln9n07JZiugs0i0xg=
+X-Google-Smtp-Source: ABdhPJxLBGQRSAEg/JvKkC/BNSVvgOhlpSDC2EIcQCGCOFwysswuak0jbyXtVU7AXdFmRsqK6IIjeA==
+X-Received: by 2002:a05:620a:1489:: with SMTP id w9mr4240006qkj.43.1607019722685;
+        Thu, 03 Dec 2020 10:22:02 -0800 (PST)
+Received: from ubuntu-m3-large-x86 ([2604:1380:45f1:1d00::1])
+        by smtp.gmail.com with ESMTPSA id s8sm1812350qtw.61.2020.12.03.10.22.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Dec 2020 10:22:01 -0800 (PST)
+Date:   Thu, 3 Dec 2020 11:21:59 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
         clang-built-linux <clang-built-linux@googlegroups.com>,
         Kernel Hardening <kernel-hardening@lists.openwall.com>,
         linux-arch <linux-arch@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+Message-ID: <20201203182159.GA2104680@ubuntu-m3-large-x86>
+References: <20201201213707.541432-1-samitolvanen@google.com>
+ <20201203112622.GA31188@willie-the-truck>
+ <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Oct 15, 2020 at 7:50 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Oct 12, 2020 at 05:31:52PM -0700, Sami Tolvanen wrote:
-> > With LTO, llvm-nm prints out symbols for each archive member
-> > separately, which results in a lot of duplicate dependencies in the
-> > .mod file when CONFIG_TRIM_UNUSED_SYMS is enabled. When a module
-> > consists of several compilation units, the output can exceed the
-> > default xargs command size limit and split the dependency list to
-> > multiple lines, which results in used symbols getting trimmed.
+On Thu, Dec 03, 2020 at 09:07:30AM -0800, Sami Tolvanen wrote:
+> On Thu, Dec 3, 2020 at 3:26 AM Will Deacon <will@kernel.org> wrote:
 > >
-> > This change removes duplicate dependencies, which will reduce the
-> > probability of this happening and makes .mod files smaller and
-> > easier to read.
+> > Hi Sami,
 > >
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> Hi Masahiro,
->
-> This appears to be a general improvement as well. This looks like it can
-> land without depending on the rest of the series.
-
-It cannot.
-Adding "sort -u" is pointless without the rest of the series
-since the symbol duplication happens only with Clang LTO.
-
-This is not a solution.
-"reduce the probability of this happening" well describes it.
-
-I wrote a different patch.
-
-
-
-> -Kees
->
-> > ---
-> >  scripts/Makefile.build | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > On Tue, Dec 01, 2020 at 01:36:51PM -0800, Sami Tolvanen wrote:
+> > > This patch series adds support for building the kernel with Clang's
+> > > Link Time Optimization (LTO). In addition to performance, the primary
+> > > motivation for LTO is to allow Clang's Control-Flow Integrity (CFI)
+> > > to be used in the kernel. Google has shipped millions of Pixel
+> > > devices running three major kernel versions with LTO+CFI since 2018.
+> > >
+> > > Most of the patches are build system changes for handling LLVM
+> > > bitcode, which Clang produces with LTO instead of ELF object files,
+> > > postponing ELF processing until a later stage, and ensuring initcall
+> > > ordering.
+> > >
+> > > Note that arm64 support depends on Will's memory ordering patches
+> > > [1]. I will post x86_64 patches separately after we have fixed the
+> > > remaining objtool warnings [2][3].
 > >
-> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> > index ab0ddf4884fd..96d6c9e18901 100644
-> > --- a/scripts/Makefile.build
-> > +++ b/scripts/Makefile.build
-> > @@ -266,7 +266,7 @@ endef
+> > I took this series for a spin, with my for-next/lto branch merged in but
+> > I see a failure during the LTO stage with clang 11.0.5 because it doesn't
+> > understand the '.arch_extension rcpc' directive we throw out in READ_ONCE().
+> 
+> I just tested this with Clang 11.0.0, which I believe is the latest
+> 11.x version, and the current Clang 12 development branch, and both
+> work for me. Godbolt confirms that '.arch_extension rcpc' is supported
+> by the integrated assembler starting with Clang 11 (the example fails
+> with 10.0.1):
+> 
+> https://godbolt.org/z/1csGcT
+> 
+> What does running clang --version and ld.lld --version tell you?
+
+11.0.5 is AOSP's clang, which is behind the upstream 11.0.0 release so
+it is most likely the case that it is missing the patch that added rcpc.
+I think that a version based on the development branch (12.0.0) is in
+the works but I am not sure.
+
+> > We actually check that this extension is available before using it in
+> > the arm64 Kconfig:
 > >
-> >  # List module undefined symbols (or empty line if not enabled)
-> >  ifdef CONFIG_TRIM_UNUSED_KSYMS
-> > -cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | xargs echo
-> > +cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | sort -u | xargs echo
-> >  else
-> >  cmd_undef_syms = echo
-> >  endif
-> > --
-> > 2.28.0.1011.ga647a8990f-goog
+> >         config AS_HAS_LDAPR
+> >                 def_bool $(as-instr,.arch_extension rcpc)
 > >
->
-> --
-> Kees Cook
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202010141549.412F2BF0%40keescook.
+> > so this shouldn't happen. I then realised, I wasn't passing LLVM_IAS=1
+> > on my Make command line; with that, then the detection works correctly
+> > and the LTO step succeeds.
+> >
+> > Why is it necessary to pass LLVM_IAS=1 if LTO is enabled? I think it
+> > would be _much_ better if this was implicit (or if LTO depended on it).
+> 
+> Without LLVM_IAS=1, Clang uses two different assemblers when LTO is
+> enabled: the external GNU assembler for stand-alone assembly, and
+> LLVM's integrated assembler for inline assembly. as-instr tests the
+> external assembler and makes an admittedly reasonable assumption that
+> the test is also valid for inline assembly.
+> 
+> I agree that it would reduce confusion in future if we just always
+> enabled IAS with LTO. Nick, Nathan, any thoughts about this?
 
+I am personally fine with that. As far as I am aware, we are in a fairly
+good spot on arm64 and x86_64 when it comes to the integrated assembler.
+Should we make it so that the user has to pass LLVM_IAS=1 explicitly or
+we just make adding the no integrated assembler flag to CLANG_FLAGS
+depend on not LTO (although that will require extra handling because
+Kconfig is not available at that stage I think)?
 
-
--- 
-Best Regards
-Masahiro Yamada
+Cheers,
+Nathan
