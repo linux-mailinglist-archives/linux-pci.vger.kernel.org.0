@@ -2,287 +2,497 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B8B2CCB45
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 01:52:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 332E02CCD45
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 04:24:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgLCAw1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 2 Dec 2020 19:52:27 -0500
-Received: from mga01.intel.com ([192.55.52.88]:44059 "EHLO mga01.intel.com"
+        id S1728170AbgLCDXt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 2 Dec 2020 22:23:49 -0500
+Received: from mga17.intel.com ([192.55.52.151]:39830 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgLCAw0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 2 Dec 2020 19:52:26 -0500
-IronPort-SDR: 1rjeoFrrTbuXb2da6Ygw4tOY4EFrgRSzkJawMcU0pOwUx9MhD8FAA84j3ZYsuIPMIXTi69mwPp
- hFcZ4WH6syVQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9823"; a="191335504"
+        id S1728036AbgLCDXs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 2 Dec 2020 22:23:48 -0500
+IronPort-SDR: tzbSKmaj5ArnX6RYR/Yq4ybnA0NeL4DvAoLNerjT1UgIMI1Owuvw3r3Lyji55MgmLcdORc+8yD
+ ECzSPGTaL5JA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9823"; a="152953845"
 X-IronPort-AV: E=Sophos;i="5.78,388,1599548400"; 
-   d="scan'208";a="191335504"
+   d="scan'208";a="152953845"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 16:51:45 -0800
-IronPort-SDR: pKuMVCQr4/h8TA+Q0yffNtqeBz4+/p8jZH0MSqUbaLFkrlwxRZNoB2DDnnD2CNSK4zaWRtyVaQ
- 6caGughIRkbw==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 19:23:07 -0800
+IronPort-SDR: TkIkscBmeKXhP2ARQbP9YS1YmCUQMFfUAMMWje7w2+4z2/prozAygaIf3m1H2rEY9kk1lf/2sl
+ ROzA9CWlsA2g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,388,1599548400"; 
-   d="scan'208";a="373357539"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga007.jf.intel.com with ESMTP; 02 Dec 2020 16:51:45 -0800
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+   d="scan'208";a="330689441"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga003.jf.intel.com with ESMTP; 02 Dec 2020 19:23:07 -0800
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 2 Dec 2020 16:51:45 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ 15.1.1713.5; Wed, 2 Dec 2020 19:23:06 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 2 Dec 2020 16:51:45 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ via Frontend Transport; Wed, 2 Dec 2020 19:23:06 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Wed, 2 Dec 2020 16:51:45 -0800
+ 15.1.1713.5; Wed, 2 Dec 2020 19:23:06 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kFSEbPHOwnZvwp6TOgc0SIKhGMD6Lvsqs5TKuJiCclzrxXEtxULBD1UjsezmK9TWixUbBWF5oBTiuc6GV9AULoM6TEa5SvQBSi/hbu0+Zwh9AwYKgeLMwLhlCsADKVon5SzPN/mbhFkpXus2UuS6nA0NyTr+5EtRyv7jv9zsLWNCYZGZjGMNMDhe3Zcc10St5l8XOqTsedyNFj6U1tUr8ep1Xyo81DohwmrWdbGHB2hQB573gu0i0nyjWuXb3WhoQqk0/JjTeqsR6EGnSec+H3QWPzbOywlDBDkzvgT65aI9AN7FY+x8rwXiQVAY0ah1j9cWSBwqBofKHFNoILMLPg==
+ b=RDB/qn/6Z+zYPopTs1LoHjBgWfcum5QeT5vYEsN08dQnfqy4LK77iCSyUIjfyimnQqfagZRtTU9oUMfQTHDyyKGh0369Qx9xQQSl/6off+PirF64h/yZBHLZI8oEhTuvDe8o2ykj2fgSAP3QlX3mQTWsp69319c8ICuzX5qKtq+fWWIjPBtz8Myrm6CiL6bMlfhER1kvJDY5MstkrZAnomcIcTX1fdFb42vlcOl75lEjDfDvoLZ1I/ES7nyKQlxnde4FFTOscQwIUxdcKTfrEtrd45F4nfxNbMjIYaWq858L4KawucPspzIEbeMq7/6uFFwkQdIB3qYXE0nPvcvVlw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ynYVIhReo1MGgvUxTQ8rmVHN4CrDq2QGxoaMiabJ/X8=;
- b=Vrj1lEC72/NCxPsgliNoJpS5PksZ7990zSAQppsZ0VRat5qeoCfO9EmySBetfuR51nXlYyBDtXyHmJvEGqAp0BvYlZ1upXsxj0Ioc1l0+NKeeo4RtStb8shlxycN2HzYLA/xnOOypRUZwoHaiB8pTW8rPfIo234l9eGzTZlNlhPhWGikngIgYC9ldm5PON3UcfYNWOuDXF+Z6GVEltkmnr0gBtEET7gqfbxRi2alh26ntXJ4goC5ArtKmIAUMA+eW/rMQ1E//SbduCqS+WFN0dTi9EL/91NkR/OSziKXohN9XMWLgAKm+Hk9dsenskP/GBucEf43f21ILOTNAle2fA==
+ bh=8xY1kIx5pUUe1MEp+gYhiifqmSM/QU17vhGLZd8op7Y=;
+ b=ayIbhiVDM8AqJQ+XZXqVALhLLv+3P/sxLm0NzR7vLKfZy1B0Dq9VQ8yJHqQPBvohGxYLCDbfOS+PKlfCb38IpANN/n+QhB09S/TSxhaC21NnfLncuJX419vYnv6OjMhwLhl+rm/IFg2J7bwWvFRRqxMMcn84gcDHy3JwdaLPArKIPYL9NUVGZTjPwHONqaGen92YqonKsitLC/G1cXsGIQcGLvN2fOJxYu7gcxoKIoQP2gX/SjmL0IZ7LflIF1/9dzTqG29Gr0P6L8KEvKVk/JFQshKdm4Fetna+nEtXrwvmTq46HfRX47c45uXCrhDnCQBfbtszAvvmDtinJJUreQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
  s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ynYVIhReo1MGgvUxTQ8rmVHN4CrDq2QGxoaMiabJ/X8=;
- b=MnJr9jPpHcnNIhYcZYfDO7VwazJYz7SX5QgtlO/R1SSXrQtsj5MFQM35wIh7FwEEcoXICZEJo/kftNrCvxnkUSls20EkXYTQ0t2O/0TlVwDtHiNuOiuVR/EdEpajZt+ZyZTskOq6GLjGn40jHqSIZ8H2gISXUkobaWlH7Vp0AC4=
-Received: from BN6PR1101MB2243.namprd11.prod.outlook.com
- (2603:10b6:405:50::16) by BN6PR11MB1714.namprd11.prod.outlook.com
- (2603:10b6:404:47::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.17; Thu, 3 Dec
- 2020 00:51:40 +0000
-Received: from BN6PR1101MB2243.namprd11.prod.outlook.com
- ([fe80::bcaa:2da8:af5e:4b51]) by BN6PR1101MB2243.namprd11.prod.outlook.com
- ([fe80::bcaa:2da8:af5e:4b51%11]) with mapi id 15.20.3611.031; Thu, 3 Dec 2020
- 00:51:40 +0000
-From:   "Kelley, Sean V" <sean.v.kelley@intel.com>
+ bh=8xY1kIx5pUUe1MEp+gYhiifqmSM/QU17vhGLZd8op7Y=;
+ b=Ixuxb5JUB+RQlLUxoc0s81VrPjA0XA/YwpjEGILw0tVvhX89l2XkMjWvN7FqvZEqvE0Hv+fVaH5o199pVpJMRzcHzsnGi9RKzd6eR2bftypPNSO2subuHxfyDVnssUQVTinaotcoBuxlMeoa5ra3NLB4oAhJ2BiR2gB0t8B1iS0=
+Received: from SN6PR11MB3421.namprd11.prod.outlook.com (2603:10b6:805:cd::27)
+ by SA2PR11MB5097.namprd11.prod.outlook.com (2603:10b6:806:11a::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3611.20; Thu, 3 Dec
+ 2020 03:23:05 +0000
+Received: from SN6PR11MB3421.namprd11.prod.outlook.com
+ ([fe80::a975:345b:8dcc:50ff]) by SN6PR11MB3421.namprd11.prod.outlook.com
+ ([fe80::a975:345b:8dcc:50ff%6]) with mapi id 15.20.3611.025; Thu, 3 Dec 2020
+ 03:23:05 +0000
+From:   "Surendrakumar Upadhyay, TejaskumarX" 
+        <tejaskumarx.surendrakumar.upadhyay@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "xerces.zhao@gmail.com" <xerces.zhao@gmail.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+CC:     Jesse Barnes <jsbarnes@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Linux PCI <linux-pci@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 12/15] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Thread-Topic: [PATCH v12 12/15] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Thread-Index: AQHWv5rN3FuVUIpfDEeVuS6r9tww6ankiuyAgAASyYA=
-Date:   Thu, 3 Dec 2020 00:51:40 +0000
-Message-ID: <6E339ABE-2F55-486B-833A-BDDAF27A114D@intel.com>
-References: <20201202234425.GA1486740@bjorn-Precision-5520>
-In-Reply-To: <20201202234425.GA1486740@bjorn-Precision-5520>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "De Marchi, Lucas" <lucas.demarchi@intel.com>,
+        "Roper, Matthew D" <matthew.d.roper@intel.com>,
+        "Pandey, Hariom" <hariom.pandey@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>
+Subject: RE: [PATCH] x86/gpu: add JSL stolen memory support
+Thread-Topic: [PATCH] x86/gpu: add JSL stolen memory support
+Thread-Index: AQHWstDzxN2Pwg+4lUqs/o8gwa6wpqm5S1QAgABL34CAAUSNAIATRwMAgABjNQCAABWMgIAArfUAgACitgCAAC1YAIAQi95ggABnAACAAmNxkIAA/FuAgAB1KgA=
+Date:   Thu, 3 Dec 2020 03:23:05 +0000
+Message-ID: <SN6PR11MB34216FDFC6BA39C71B444707DFF20@SN6PR11MB3421.namprd11.prod.outlook.com>
+References: <SN6PR11MB3421F97AA179145AA86369B6DFF30@SN6PR11MB3421.namprd11.prod.outlook.com>
+ <20201202202253.GA1467966@bjorn-Precision-5520>
+In-Reply-To: <20201202202253.GA1467966@bjorn-Precision-5520>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.20.0.2.21)
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
 authentication-results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [24.20.148.49]
+x-originating-ip: [43.250.165.71]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 087870bd-81f5-4153-36ff-08d8972598a2
-x-ms-traffictypediagnostic: BN6PR11MB1714:
+x-ms-office365-filtering-correlation-id: 96f7d15b-305e-4c55-7ba1-08d8973abfc6
+x-ms-traffictypediagnostic: SA2PR11MB5097:
 x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR11MB17148D0B4B00D69F7C7BD4DCB2F20@BN6PR11MB1714.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <SA2PR11MB50975E44922527744E1F1F5FDFF20@SA2PR11MB5097.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1THnD+958AvvkX9oPPtgB+oLQYoRi+A0p006Kmp4Dfk39WgUzLu8KdqFX0gqb520b0KY8RO2VMmeLsa3zIwecpRljYoSBypnzcWOVWuWA6UFTUoakTyPktztbga8swSZ3GP35h1PTTdEwC6PZ854r8EvLaRkW2+eLwwei0/ms4O/MiS3gJdZcDBWnXYW4I5xyiyoYEM5ajVxFxe2zrCVOWP/IQx15HbNIGcI3XXiigN0se93RvjErGwHoeUbQTu5injjnsaxbsgDH6VzNzVxvD0z8kNllJFC6Q3npBJVCqAUg3kNnPbmZmGpHNKAyqrDnB+CTFW3csfw7Ep8wKVMhmr3sJJNg5IhK6+kgfQrYrcmwY2AfW6Gq3a9WeqmVnnlkl73zhqwsUhh8CNmjxvXVYYQQDUa615rbgSBvqOEbrJSBUHypii/8pt4OBNj7TzTZ0roXnxeff/UQ17YUmFd6g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1101MB2243.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(376002)(396003)(39860400002)(136003)(316002)(2906002)(71200400001)(966005)(6512007)(6506007)(53546011)(478600001)(8676002)(33656002)(6486002)(2616005)(8936002)(83380400001)(54906003)(6916009)(5660300002)(66446008)(64756008)(66946007)(91956017)(66556008)(66476007)(26005)(36756003)(186003)(86362001)(76116006)(4326008)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?ZXF1SjllbytBVEk0V1YralhVdWRvL0I5ZnlxOHhIVHM5UzN3UUFKRFRhcDhX?=
- =?utf-8?B?S1BnTGFvdjhEclBXQkdMK0NaRHFwd25vYzVNNTI2NWJlM2d2VFlXMXBVMjJQ?=
- =?utf-8?B?YzBMazNDUExOUzVvUFo5eG5RUlR2Q0VoZ2hiREZHd0Rnd2JmUW14QTkzUER6?=
- =?utf-8?B?RDJNR2pOeGl3dTcvWTUyMksxdlhBSmtzekduU3djOW1XblNPOE5rd29Bbi9E?=
- =?utf-8?B?ZWtEYnJtL09IUDFPL0ZvNWRsOTVtK3hucVNCcmtIeE4xUjkyWTF6ak50NG9F?=
- =?utf-8?B?bk5DSFZoTGU2ZEJicGd4Z3Rta3BuaTg5YW8wNE1jbHZ5WElRVHcwR3BHS1dU?=
- =?utf-8?B?by9uZ0VobTkwMi94RjdZWDBVYk9TdWlvUkY2SmRnS1gwNTRnZlplM1dibk5P?=
- =?utf-8?B?NndpbHdUZkxlVTVRclNyN0F1bXlYM1pDVEdXZURWdWo4QjZxeGNObWlnREJz?=
- =?utf-8?B?SW1NTUFzYzVrNkhXelB4bndJVjRoNjEwSzNtZ2xpSHd1V1dMNjZiangrTU1k?=
- =?utf-8?B?L2dGNlBDY3ZmZmROamlQRVIyTFl3a2VHQzVhYmJ6UHFSdkx4QUlzZDRjMFNL?=
- =?utf-8?B?YUI0eC9BU3F0VjRqVThBVG85OGpnU3YxSjh2dFlnWEtHNlNReHB6QU1lWUtG?=
- =?utf-8?B?TnJRcVZhQWRGckgrbVQzSGw3WFBMVW1ZTlB1dGlIb1ZTZVN2Q3cxSkNoR3FW?=
- =?utf-8?B?MUpnM2l1b2JZMVVmUEd0Wlk1Qnd3K3QzN0JJaWVQdGRUVmJndEx4MkZGU0t6?=
- =?utf-8?B?MVpleEJadUdKVHVWMGpIS1I5RnJMUllXcXM5NmxyeW1wSmZDakMxdWpqMFNS?=
- =?utf-8?B?Wmh0aVU5bXA4R0xaMUpIVkdhekNWTlp4OTdXTnVoelZuSlhzWU9LVzI3Zld0?=
- =?utf-8?B?V0VrWE9nSkVyM1l2ZGIwaVFjTHBVS2hGMXBHWERrcHI4QWkwZ1drMU5QZUkr?=
- =?utf-8?B?ZGYyR1ZuN1p3MTU0S0gwa0twV25QSXdwSHFBN0hPM25kZjNZY3VQU05Hd3F2?=
- =?utf-8?B?RkpxSFZZU2wwZm54Z2pQTDBFSkFrdkk1S0ZZMG4xYnBsR0J2am92eEdwdnRJ?=
- =?utf-8?B?clZmSUJRaXhOMFhSa2JTK01BLzhCM2g0SmFQelhnWUtSeUwvUURYM3ZQSDYy?=
- =?utf-8?B?K1AzMWlZZnU3Um54bTM0MTBoNXRZbHR4WlVVQm1ScnMzcFFTUC9LVXI0SEQ5?=
- =?utf-8?B?N0lSQlNwbFo5V24xMUFqMlRBZk5yR0JtNmZQMXp1QVM1ZjFReGJldFoxa09o?=
- =?utf-8?B?T2pFMlRReTVxOHR6QXdWOUVBU3VqL3RiQ2dBZmRnUERndUhybFpPZm9JQXBv?=
- =?utf-8?Q?CKKlVa2VXsJfnwyPMm7KS7thD0V8iyArU9?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6775B7D2DC0FE44A97A6CC52BEC830F0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: w3Ff3D9bsTJxM0h/w0G0kBmzxLxUn8dKagWx52CX6zUuxEKbXgAzgqiigdCUCdppOPnb1C5vmheIompB1T5kKXGnToRWq9GFyhFWSQ/TYHSODIpGqCNGPWoFtTJwhydbgV7Kil1rZZ/Fs7mk8TWR7eS/wtgxY4zacvIxYVac66EPJkBH/JkbjKFxs3Fsa2GuxWj+K/CeYPOXs7neMY51+QrpFR/3DFPmV+on5N422tFmlo3MGwA3G09eDaP6+7kIfApxwBdQ6yNT2BwrBKfrrwuXGEAOMtmE6t+3B4lEHfk3RsJJPGv029I8A5GMcbw8b2RD56fHYR+CW1B++bfDyNx1GEZk9D1i183z6OwOPpu+1Ky6Yz7h0+6y+yY9TnqRyZ8o7vQIFMy+POLGJtSPcA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3421.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(396003)(366004)(39860400002)(7696005)(4326008)(7416002)(6506007)(33656002)(83380400001)(6916009)(2906002)(54906003)(478600001)(71200400001)(9686003)(966005)(66556008)(316002)(86362001)(64756008)(8936002)(8676002)(5660300002)(76116006)(52536014)(66446008)(66946007)(186003)(55016002)(26005)(66476007)(30864003)(53546011);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?8dKV8nVz1PLGrEgcQLce8AO0xQKM5HLMuH98vYFDf8/Wjhp9zt2FaGkRV/p+?=
+ =?us-ascii?Q?1lUvKGzueZnyWygOAxMu+FDlQN52e2m4aYJfd2UC7xhTqURvgPbYiMcfBd7W?=
+ =?us-ascii?Q?B/SuKtQepdpOeJK90BA9MAq5gtlapKEAMRSOxMz0yk1LsBTMTLaxIKPa1Alm?=
+ =?us-ascii?Q?BnNKfHmdFRAqS4GzSsFAIhM8469NIjP87GmuC6PPoovFgvN3MRqBUufriD8c?=
+ =?us-ascii?Q?2e2rko/XECA82vgSjcGr4d9hJtnQHY/GKE9ycCMB0Y9gFB7/2IkGYnAzy3I3?=
+ =?us-ascii?Q?0UlDm42h6Fc40r2aWun1fdcRuHGXxnO1FN51qZ7uEgxvDRD3UgtpRfJFMzcr?=
+ =?us-ascii?Q?9+hPa30wkBDVKQME1ukgJ3D2cPrCK30wJ/uAW0DVI2gGFRhv4O43DscvXx2b?=
+ =?us-ascii?Q?8tPQzyTxYrae5bmm0zz9AzNjPUZkjFD3juxzJjqoISxezUidQwSxVmtJrt7a?=
+ =?us-ascii?Q?jvCVLIJ5XfiYTPf1VkDVeLYQ8pz1ieCF4DQlhDPl9ej+WaTYBdV4QV/cpOcb?=
+ =?us-ascii?Q?4HA6WnFJmjvnTflBVBmcqiMF73ROv8v9Ohr8z8rxTX+kVAJA5nlpTfYXOcSg?=
+ =?us-ascii?Q?dZOtPCWUwmwKa/mTo0Q1KRHZZSeEqWRMzo887TivGNizSMFDUkCl3EJEOKg2?=
+ =?us-ascii?Q?PNv5bGYNVzJL37YaEaZbsJDOL+aTwKJUm82EC3+f9qjIh075JwXvgE1NEGdi?=
+ =?us-ascii?Q?dlYaic7E/Zjcb+7MnlMZzLTSYMoqj25fsR8ADMJ4wLCzmBmG80aQxlR1CkRR?=
+ =?us-ascii?Q?uhnh4XV9Szkb5Vl6d3chbenl8TRo31YtNfqRVcBI2arG1CnvJvfrgZ2YQNkJ?=
+ =?us-ascii?Q?wKwPzuB7He43FuiPBdBiUnqcfaqFNfKaPUb81buAaLW9zdmziOCTx7Hx6hBt?=
+ =?us-ascii?Q?N6gK2b4Rzqyk7SkZ0XFPomYqWzhVNt8E4Jkmfb2C2AMWk9xLB4FlpV48lJmK?=
+ =?us-ascii?Q?pqax8k4mlJ0Dos210d8pTeaTcwIp0HJQjyzVIkiKYqY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR1101MB2243.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 087870bd-81f5-4153-36ff-08d8972598a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2020 00:51:40.1337
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3421.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96f7d15b-305e-4c55-7ba1-08d8973abfc6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2020 03:23:05.2219
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sOQJQTYpZhcX8RHPiXDeIx/vd2StbXr3W9r1P81OaxOZS3/CKsB7ynVJVkPpa2EOYfFZbFUOpXtV02UKL2XSwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1714
+X-MS-Exchange-CrossTenant-userprincipalname: WN6ojnZG0Hr4ktNdLczyqRdgccU1zsbBZWyE1V46Pq20MH1Sn1p0SL6PSPHvJjcQpA7hwyPXMa/NIdPLM51FpfdntHjat+b39283dETxat9WOnmKVoUbjvU04RqM8Utpvc+DzHovDvPyEXjHkrzuqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5097
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gT24gRGVjIDIsIDIwMjAsIGF0IDM6NDQgUE0sIEJqb3JuIEhlbGdhYXMgPGhlbGdhYXNA
-a2VybmVsLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBGcmksIE5vdiAyMCwgMjAyMCBhdCAwNDoxMDoz
-M1BNIC0wODAwLCBTZWFuIFYgS2VsbGV5IHdyb3RlOg0KPj4gRnJvbTogUWl1eHUgWmh1byA8cWl1
-eHUuemh1b0BpbnRlbC5jb20+DQo+PiANCj4+IFdoZW4gYXR0ZW1wdGluZyBlcnJvciByZWNvdmVy
-eSBmb3IgYW4gUkNpRVAgYXNzb2NpYXRlZCB3aXRoIGFuIFJDRUMgZGV2aWNlLA0KPj4gdGhlcmUg
-bmVlZHMgdG8gYmUgYSB3YXkgdG8gdXBkYXRlIHRoZSBSb290IEVycm9yIFN0YXR1cywgdGhlIFVu
-Y29ycmVjdGFibGUNCj4+IEVycm9yIFN0YXR1cyBhbmQgdGhlIFVuY29ycmVjdGFibGUgRXJyb3Ig
-U2V2ZXJpdHkgb2YgdGhlIHBhcmVudCBSQ0VDLiAgSW4NCj4+IHNvbWUgbm9uLW5hdGl2ZSBjYXNl
-cyBpbiB3aGljaCB0aGVyZSBpcyBubyBPUy12aXNpYmxlIGRldmljZSBhc3NvY2lhdGVkDQo+PiB3
-aXRoIHRoZSBSQ2lFUCwgdGhlcmUgaXMgbm90aGluZyB0byBhY3QgdXBvbiBhcyB0aGUgZmlybXdh
-cmUgaXMgYWN0aW5nDQo+PiBiZWZvcmUgdGhlIE9TLg0KPj4gDQo+PiBBZGQgaGFuZGxpbmcgZm9y
-IHRoZSBsaW5rZWQgUkNFQyBpbiBBRVIvRVJSIHdoaWxlIHRha2luZyBpbnRvIGFjY291bnQNCj4+
-IG5vbi1uYXRpdmUgY2FzZXMuDQo+PiANCj4+IENvLWRldmVsb3BlZC1ieTogU2VhbiBWIEtlbGxl
-eSA8c2Vhbi52LmtlbGxleUBpbnRlbC5jb20+DQo+PiBMaW5rOiBodHRwczovL2xvcmUua2VybmVs
-Lm9yZy9yLzIwMjAxMDAyMTg0NzM1LjEyMjkyMjAtMTItc2VhbnZrLmRldkBvcmVnb250cmFja3Mu
-b3JnDQo+PiBTaWduZWQtb2ZmLWJ5OiBTZWFuIFYgS2VsbGV5IDxzZWFuLnYua2VsbGV5QGludGVs
-LmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6IFFpdXh1IFpodW8gPHFpdXh1LnpodW9AaW50ZWwuY29t
-Pg0KPj4gU2lnbmVkLW9mZi1ieTogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4N
-Cj4+IFJldmlld2VkLWJ5OiBKb25hdGhhbiBDYW1lcm9uIDxKb25hdGhhbi5DYW1lcm9uQGh1YXdl
-aS5jb20+DQo+PiAtLS0NCj4+IGRyaXZlcnMvcGNpL3BjaWUvYWVyLmMgfCA0NiArKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4+IGRyaXZlcnMvcGNpL3BjaWUvZXJy
-LmMgfCAyMCArKysrKysrKystLS0tLS0tLS0NCj4+IDIgZmlsZXMgY2hhbmdlZCwgNDQgaW5zZXJ0
-aW9ucygrKSwgMjIgZGVsZXRpb25zKC0pDQo+PiANCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bj
-aS9wY2llL2Flci5jIGIvZHJpdmVycy9wY2kvcGNpZS9hZXIuYw0KPj4gaW5kZXggMGJhMGI0N2Fl
-NzUxLi41MTM4OWE2ZWU0Y2EgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3BjaS9wY2llL2Flci5j
-DQo+PiArKysgYi9kcml2ZXJzL3BjaS9wY2llL2Flci5jDQo+PiBAQCAtMTM1OCwyOSArMTM1OCw1
-MSBAQCBzdGF0aWMgaW50IGFlcl9wcm9iZShzdHJ1Y3QgcGNpZV9kZXZpY2UgKmRldikNCj4+ICAq
-Lw0KPj4gc3RhdGljIHBjaV9lcnNfcmVzdWx0X3QgYWVyX3Jvb3RfcmVzZXQoc3RydWN0IHBjaV9k
-ZXYgKmRldikNCj4+IHsNCj4+IC0JaW50IGFlciA9IGRldi0+YWVyX2NhcDsNCj4+ICsJaW50IHR5
-cGUgPSBwY2lfcGNpZV90eXBlKGRldik7DQo+PiArCXN0cnVjdCBwY2lfZGV2ICpyb290Ow0KPj4g
-KwlpbnQgYWVyID0gMDsNCj4+ICsJaW50IHJjID0gMDsNCj4+IAl1MzIgcmVnMzI7DQo+PiAtCWlu
-dCByYzsNCj4+IA0KPj4gLQlpZiAocGNpZV9hZXJfaXNfbmF0aXZlKGRldikpIHsNCj4+ICsJaWYg
-KHR5cGUgPT0gUENJX0VYUF9UWVBFX1JDX0VORCkNCj4+ICsJCS8qDQo+PiArCQkgKiBUaGUgcmVz
-ZXQgc2hvdWxkIG9ubHkgY2xlYXIgdGhlIFJvb3QgRXJyb3IgU3RhdHVzDQo+PiArCQkgKiBvZiB0
-aGUgUkNFQy4gT25seSBwZXJmb3JtIHRoaXMgZm9yIHRoZQ0KPj4gKwkJICogbmF0aXZlIGNhc2Us
-IGkuZS4sIGFuIFJDRUMgaXMgcHJlc2VudC4NCj4+ICsJCSAqLw0KPj4gKwkJcm9vdCA9IGRldi0+
-cmNlYzsNCj4+ICsJZWxzZQ0KPj4gKwkJcm9vdCA9IGRldjsNCj4+ICsNCj4+ICsJaWYgKHJvb3Qp
-DQo+PiArCQlhZXIgPSBkZXYtPmFlcl9jYXA7DQo+PiArDQo+PiArCWlmICgoYWVyKSAmJiBwY2ll
-X2Flcl9pc19uYXRpdmUoZGV2KSkgew0KPj4gCQkvKiBEaXNhYmxlIFJvb3QncyBpbnRlcnJ1cHQg
-aW4gcmVzcG9uc2UgdG8gZXJyb3IgbWVzc2FnZXMgKi8NCj4+IC0JCXBjaV9yZWFkX2NvbmZpZ19k
-d29yZChkZXYsIGFlciArIFBDSV9FUlJfUk9PVF9DT01NQU5ELCAmcmVnMzIpOw0KPj4gKwkJcGNp
-X3JlYWRfY29uZmlnX2R3b3JkKHJvb3QsIGFlciArIFBDSV9FUlJfUk9PVF9DT01NQU5ELCAmcmVn
-MzIpOw0KPj4gCQlyZWczMiAmPSB+Uk9PVF9QT1JUX0lOVFJfT05fTUVTR19NQVNLOw0KPj4gLQkJ
-cGNpX3dyaXRlX2NvbmZpZ19kd29yZChkZXYsIGFlciArIFBDSV9FUlJfUk9PVF9DT01NQU5ELCBy
-ZWczMik7DQo+PiArCQlwY2lfd3JpdGVfY29uZmlnX2R3b3JkKHJvb3QsIGFlciArIFBDSV9FUlJf
-Uk9PVF9DT01NQU5ELCByZWczMik7DQo+PiAJfQ0KPj4gDQo+PiAtCXJjID0gcGNpX2J1c19lcnJv
-cl9yZXNldChkZXYpOw0KPj4gLQlwY2lfaW5mbyhkZXYsICJSb290IFBvcnQgbGluayBoYXMgYmVl
-biByZXNldCAoJWQpXG4iLCByYyk7DQo+PiArCWlmICh0eXBlID09IFBDSV9FWFBfVFlQRV9SQ19F
-QyB8fCB0eXBlID09IFBDSV9FWFBfVFlQRV9SQ19FTkQpIHsNCj4+ICsJCWlmIChwY2llX2hhc19m
-bHIoZGV2KSkgew0KPj4gKwkJCXJjID0gcGNpZV9mbHIoZGV2KTsNCj4+ICsJCQlwY2lfaW5mbyhk
-ZXYsICJoYXMgYmVlbiByZXNldCAoJWQpXG4iLCByYyk7DQo+IA0KPiBNYXliZToNCj4gDQo+ICAr
-ICAgICAgICAgICAgIH0gZWxzZSB7DQo+ICArICAgICAgICAgICAgICAgICAgICAgcmMgPSAtRU5P
-VFRZOw0KPiAgKyAgICAgICAgICAgICAgICAgICAgIHBjaV9pbmZvKGRldiwgIm5vdCByZXNldCAo
-bm8gRkxSIHN1cHBvcnQpXG4iKTsNCj4gDQo+IE9yIGRvIHdlIHdhbnQgdG8gcHJldGVuZCB0aGUg
-ZGV2aWNlIHdhcyByZXNldCBhbmQgcmV0dXJuDQo+IFBDSV9FUlNfUkVTVUxUX1JFQ09WRVJFRD8N
-Cg0KV2UgYXJlIGN1cnJlbnRseSBkb2luZyB0aGUgbGF0dGVyIG5vdyB3aXRoIHRoZSBkZWZhdWx0
-IG9mIHJjID0gMCBhYm92ZSBhbmQgc28gIEnigJltIG5vdCBzdXJlIHRoZSBleHRyYSBkZXRhaWwg
-aGVyZSBvbiB0aGUgYWJzZW5jZSBvZiBGTFIgc3VwcG9ydCBpcyBvZiB2YWx1ZS4NCg0KDQo+IA0K
-Pj4gKwl9IGVsc2Ugew0KPj4gKwkJcmMgPSBwY2lfYnVzX2Vycm9yX3Jlc2V0KGRldik7DQo+PiAr
-CQlwY2lfaW5mbyhkZXYsICJSb290IFBvcnQgbGluayBoYXMgYmVlbiByZXNldCAoJWQpXG4iLCBy
-Yyk7DQo+PiArCX0NCj4+IA0KPj4gLQlpZiAocGNpZV9hZXJfaXNfbmF0aXZlKGRldikpIHsNCj4+
-ICsJaWYgKChhZXIpICYmIHBjaWVfYWVyX2lzX25hdGl2ZShkZXYpKSB7DQo+PiAJCS8qIENsZWFy
-IFJvb3QgRXJyb3IgU3RhdHVzICovDQo+PiAtCQlwY2lfcmVhZF9jb25maWdfZHdvcmQoZGV2LCBh
-ZXIgKyBQQ0lfRVJSX1JPT1RfU1RBVFVTLCAmcmVnMzIpOw0KPj4gLQkJcGNpX3dyaXRlX2NvbmZp
-Z19kd29yZChkZXYsIGFlciArIFBDSV9FUlJfUk9PVF9TVEFUVVMsIHJlZzMyKTsNCj4+ICsJCXBj
-aV9yZWFkX2NvbmZpZ19kd29yZChyb290LCBhZXIgKyBQQ0lfRVJSX1JPT1RfU1RBVFVTLCAmcmVn
-MzIpOw0KPj4gKwkJcGNpX3dyaXRlX2NvbmZpZ19kd29yZChyb290LCBhZXIgKyBQQ0lfRVJSX1JP
-T1RfU1RBVFVTLCByZWczMik7DQo+PiANCj4+IAkJLyogRW5hYmxlIFJvb3QgUG9ydCdzIGludGVy
-cnVwdCBpbiByZXNwb25zZSB0byBlcnJvciBtZXNzYWdlcyAqLw0KPj4gLQkJcGNpX3JlYWRfY29u
-ZmlnX2R3b3JkKGRldiwgYWVyICsgUENJX0VSUl9ST09UX0NPTU1BTkQsICZyZWczMik7DQo+PiAr
-CQlwY2lfcmVhZF9jb25maWdfZHdvcmQocm9vdCwgYWVyICsgUENJX0VSUl9ST09UX0NPTU1BTkQs
-ICZyZWczMik7DQo+PiAJCXJlZzMyIHw9IFJPT1RfUE9SVF9JTlRSX09OX01FU0dfTUFTSzsNCj4+
-IC0JCXBjaV93cml0ZV9jb25maWdfZHdvcmQoZGV2LCBhZXIgKyBQQ0lfRVJSX1JPT1RfQ09NTUFO
-RCwgcmVnMzIpOw0KPj4gKwkJcGNpX3dyaXRlX2NvbmZpZ19kd29yZChyb290LCBhZXIgKyBQQ0lf
-RVJSX1JPT1RfQ09NTUFORCwgcmVnMzIpOw0KPj4gCX0NCj4+IA0KPj4gCXJldHVybiByYyA/IFBD
-SV9FUlNfUkVTVUxUX0RJU0NPTk5FQ1QgOiBQQ0lfRVJTX1JFU1VMVF9SRUNPVkVSRUQ7DQo+PiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpZS9lcnIuYyBiL2RyaXZlcnMvcGNpL3BjaWUvZXJy
-LmMNCj4+IGluZGV4IDc4ODNjOTc5MTU2Mi4uY2JjNWFiZmU3NjdiIDEwMDY0NA0KPj4gLS0tIGEv
-ZHJpdmVycy9wY2kvcGNpZS9lcnIuYw0KPj4gKysrIGIvZHJpdmVycy9wY2kvcGNpZS9lcnIuYw0K
-Pj4gQEAgLTE0OCwxMCArMTQ4LDEwIEBAIHN0YXRpYyBpbnQgcmVwb3J0X3Jlc3VtZShzdHJ1Y3Qg
-cGNpX2RldiAqZGV2LCB2b2lkICpkYXRhKQ0KPj4gDQo+PiAvKioNCj4+ICAqIHBjaV93YWxrX2Jy
-aWRnZSAtIHdhbGsgYnJpZGdlcyBwb3RlbnRpYWxseSBBRVIgYWZmZWN0ZWQNCj4+IC0gKiBAYnJp
-ZGdlOglicmlkZ2Ugd2hpY2ggbWF5IGJlIGEgUG9ydCwgYW4gUkNFQyB3aXRoIGFzc29jaWF0ZWQg
-UkNpRVBzLA0KPj4gLSAqCQlvciBhbiBSQ2lFUCBhc3NvY2lhdGVkIHdpdGggYW4gUkNFQw0KPj4g
-LSAqIEBjYjoJCWNhbGxiYWNrIHRvIGJlIGNhbGxlZCBmb3IgZWFjaCBkZXZpY2UgZm91bmQNCj4+
-IC0gKiBAdXNlcmRhdGE6CWFyYml0cmFyeSBwb2ludGVyIHRvIGJlIHBhc3NlZCB0byBjYWxsYmFj
-aw0KPj4gKyAqIEBicmlkZ2UgICBicmlkZ2Ugd2hpY2ggbWF5IGJlIGFuIFJDRUMgd2l0aCBhc3Nv
-Y2lhdGVkIFJDaUVQcywNCj4+ICsgKiAgICAgICAgICAgb3IgYSBQb3J0Lg0KPj4gKyAqIEBjYiAg
-ICAgICBjYWxsYmFjayB0byBiZSBjYWxsZWQgZm9yIGVhY2ggZGV2aWNlIGZvdW5kDQo+PiArICog
-QHVzZXJkYXRhIGFyYml0cmFyeSBwb2ludGVyIHRvIGJlIHBhc3NlZCB0byBjYWxsYmFjay4NCj4+
-ICAqDQo+PiAgKiBJZiB0aGUgZGV2aWNlIHByb3ZpZGVkIGlzIGEgYnJpZGdlLCB3YWxrIHRoZSBz
-dWJvcmRpbmF0ZSBidXMsIGluY2x1ZGluZw0KPj4gICogYW55IGJyaWRnZWQgZGV2aWNlcyBvbiBi
-dXNlcyB1bmRlciB0aGlzIGJ1cy4gIENhbGwgdGhlIHByb3ZpZGVkIGNhbGxiYWNrDQo+PiBAQCAt
-MTY0LDggKzE2NCwxNCBAQCBzdGF0aWMgdm9pZCBwY2lfd2Fsa19icmlkZ2Uoc3RydWN0IHBjaV9k
-ZXYgKmJyaWRnZSwNCj4+IAkJCSAgICBpbnQgKCpjYikoc3RydWN0IHBjaV9kZXYgKiwgdm9pZCAq
-KSwNCj4+IAkJCSAgICB2b2lkICp1c2VyZGF0YSkNCj4+IHsNCj4+ICsJLyoNCj4+ICsJICogSW4g
-YSBub24tbmF0aXZlIGNhc2Ugd2hlcmUgdGhlcmUgaXMgbm8gT1MtdmlzaWJsZSByZXBvcnRpbmcN
-Cj4+ICsJICogZGV2aWNlIHRoZSBicmlkZ2Ugd2lsbCBiZSBOVUxMLCBpLmUuLCBubyBSQ0VDLCBu
-byBEb3duc3RyZWFtIFBvcnQuDQo+IA0KPiBJIGRvbid0IHF1aXRlIHVuZGVyc3RhbmQgdGhpcyBj
-b21tZW50LiAgSSBzZWUgdGhhdCBpbiB0aGUgbm9uLW5hdGl2ZQ0KPiBjYXNlLCB0aGUgcmVwb3J0
-aW5nIGRldmljZSBtYXkgbm90IGJlIE9TLXZpc2libGUuICBCdXQgSSBkb24ndA0KPiB1bmRlcnN0
-YW5kIHdoeSB0aGUgY29tbWVudCBpcyAqaGVyZSouDQo+IA0KPiBJZiAiYnJpZGdlIiBjYW4gYmUg
-TlVMTCBoZXJlLCB3ZSBzaG91bGQgdGVzdCB0aGF0IGJlZm9yZSBkZXJlZmVyZW5jaW5nDQo+ICJi
-cmlkZ2UtPnN1Ym9yZGluYXRlIi4NCg0KV3JvbmdseSB3b3JkZWQuICBUaGUgc3Vib3JkaW5hdGUg
-bWF5IGJlIE5VTEwgb3IgdGhlIGFzc29jaWF0ZWQgUkNFQyBtYXkgYmUgTlVMTCwgbm90IHRoZSDi
-gJxicmlkZ2XigJ0uDQpIb3dldmVyLCBwZXIgYmVsb3csIHdlIHNob3VsZCBub3QgYmUgdHJ5aW5n
-IHRvIGNhbGwgcmVwb3J0X2Zyb3plbl9kZXRlY3RlZCgpLCByZXBvcnRfbW1pb19lbmFibGVkKCkg
-dmlhDQp0aGUgYXNzb2NpYXRlZCBSQ0VD4oCZcyBkcml2ZXIsIGJ1dCByYXRoZXIgdGhlIENCIGZv
-ciB0aGUgUkNpRVAgaXRzZWxmLg0KDQpHb2luZyBiYWNrIHRvIHRoaXMgY29udmVyc2F0aW9uLA0K
-DQpodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1wY2kvMjAyMDEwMTYxNzIyMTAuR0E4NjE2
-OEBiam9ybi1QcmVjaXNpb24tNTUyMC8NCg0KIkxvb2tzIGxpa2UgKnRoaXMqIGlzIHRoZSBwYXRj
-aCB3aGVyZSB0aGUgIm5vIHN1Ym9yZGluYXRlIGJ1cyIgY2FzZQ0KYmVjb21lcyBwb3NzaWJsZT8g
-IElmIHlvdSBhZ3JlZSwgSSBjYW4ganVzdCBtb3ZlIHRoZSB0ZXN0IGhlcmUsIG5vDQpuZWVkIHRv
-IHJlcG9zdC7igJ0NCg0KSXQgaXMgYWN0dWFsbHkgdGhlIGNhc2Ugd2UgYXJlIG9ubHkgZGVhbGlu
-ZyB3aXRoIHRoZSBhYnNlbmNlIG9mIGEgc3Vib3JkaW5hdGUgYnVzLg0KDQo+IA0KPj4gCWlmIChi
-cmlkZ2UtPnN1Ym9yZGluYXRlKQ0KPj4gCQlwY2lfd2Fsa19idXMoYnJpZGdlLT5zdWJvcmRpbmF0
-ZSwgY2IsIHVzZXJkYXRhKTsNCj4+ICsJZWxzZSBpZiAoYnJpZGdlLT5yY2VjKQ0KPj4gKwkJY2Io
-YnJpZGdlLT5yY2VjLCB1c2VyZGF0YSk7DQo+IA0KPiBBbmQgSSBkb24ndCB1bmRlcnN0YW5kIHdo
-YXQncyBnb2luZyBvbiBoZXJlLiAgSW4gdGhpcyBjYXNlLCBJICp0aGluayoNCj4gImJyaWRnZSIg
-aXMgYW4gUkNpRVAgYW5kICJicmlkZ2UtPnJjZWMiIGlzIHRoZSByZWxhdGVkIFJDRUMsIHNvIGl0
-DQo+IGxvb2tzIGxpa2Ugd2UnbGwgY2FsbCByZXBvcnRfZnJvemVuX2RldGVjdGVkKCksIHJlcG9y
-dF9tbWlvX2VuYWJsZWQoKSwNCj4gZXRjIGZvciB0aGUgUkNFQyBkcml2ZXIuICBJIHdvdWxkIHRo
-aW5rIHdlJ2Qgd2FudCB0aGUgUkNpRVAgZHJpdmVyLg0KDQpJbmRlZWQsIHRoZSBicmlkZ2UtPnJj
-ZWMgaGVyZSBpcyB0aGUgZGV2LT5yY2VjIGluIHdoaWNoIHRoZSBkZXYgaXMgdGhlIFJDaUVQLg0K
-DQpBbmQgd2UgZG9u4oCZdCBuZWVkIHRoYXQgY29uZGl0aW9uYWwgaGVyZSwgaXQgc2hvdWxkIGp1
-c3QgaGl0IHRoZSBkZXZpY2UgZHJpdmVy4oCZcyByb3V0aW5lcy4NCg0KVGhpcyBpcyBhbiB1bmZv
-cnR1bmF0ZSBzaWRlIGVmZmVjdCBvZiB0aGUgUkNpRVAgYmVpbmcgc3Vib3JkaW5hdGUgdG8gdGhl
-IFJDRUMgYnV0IGZvcg0KIHB1cnBvc2VzIG9mIGxpbmtpbmcsIGl0IGdpdmVzIHRoZSBpbXByZXNz
-aW9uIG9mIHRoZSBvdGhlciB3YXkgYXJvdW5kLg0KDQoNCj4gDQo+IFNvcnJ5IGlmIEknbSBtaXNz
-aW5nIHRoZSBvYnZpb3VzLg0KDQpBY3R1YWxseSB5b3VyIG9ic2VydmF0aW9ucyBhcmUgb24gcG9p
-bnQuDQoNClRoYW5rcywNCg0KU2Vhbg0KDQo+IA0KPj4gCWVsc2UNCj4+IAkJY2IoYnJpZGdlLCB1
-c2VyZGF0YSk7DQo+PiB9DQo+PiBAQCAtMTk0LDEyICsyMDAsNiBAQCBwY2lfZXJzX3Jlc3VsdF90
-IHBjaWVfZG9fcmVjb3Zlcnkoc3RydWN0IHBjaV9kZXYgKmRldiwNCj4+IAlwY2lfZGJnKGJyaWRn
-ZSwgImJyb2FkY2FzdCBlcnJvcl9kZXRlY3RlZCBtZXNzYWdlXG4iKTsNCj4+IAlpZiAoc3RhdGUg
-PT0gcGNpX2NoYW5uZWxfaW9fZnJvemVuKSB7DQo+PiAJCXBjaV93YWxrX2JyaWRnZShicmlkZ2Us
-IHJlcG9ydF9mcm96ZW5fZGV0ZWN0ZWQsICZzdGF0dXMpOw0KPj4gLQkJaWYgKHR5cGUgPT0gUENJ
-X0VYUF9UWVBFX1JDX0VORCkgew0KPj4gLQkJCXBjaV93YXJuKGRldiwgInN1Ym9yZGluYXRlIGRl
-dmljZSByZXNldCBub3QgcG9zc2libGUgZm9yIFJDaUVQXG4iKTsNCj4+IC0JCQlzdGF0dXMgPSBQ
-Q0lfRVJTX1JFU1VMVF9OT05FOw0KPj4gLQkJCWdvdG8gZmFpbGVkOw0KPj4gLQkJfQ0KPj4gLQ0K
-Pj4gCQlzdGF0dXMgPSByZXNldF9zdWJvcmRpbmF0ZXMoYnJpZGdlKTsNCj4+IAkJaWYgKHN0YXR1
-cyAhPSBQQ0lfRVJTX1JFU1VMVF9SRUNPVkVSRUQpIHsNCj4+IAkJCXBjaV93YXJuKGJyaWRnZSwg
-InN1Ym9yZGluYXRlIGRldmljZSByZXNldCBmYWlsZWRcbiIpOw0KPj4gLS0gDQo+PiAyLjI5LjIN
-Cj4+IA0KDQo=
+I sent patch to fix https://gitlab.freedesktop.org/drm/intel/-/issues/2610 =
+issue.
+
+Thanks,
+Tejas
+
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: 03 December 2020 01:53
+> To: Surendrakumar Upadhyay, TejaskumarX
+> <tejaskumarx.surendrakumar.upadhyay@intel.com>
+> Cc: Jesse Barnes <jsbarnes@google.com>; Daniel Vetter <daniel@ffwll.ch>;
+> Joonas Lahtinen <joonas.lahtinen@linux.intel.com>; Linux PCI <linux-
+> pci@vger.kernel.org>; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>; X86 ML <x86@kernel.org>; Borislav Petkov
+> <bp@alien8.de>; De Marchi, Lucas <lucas.demarchi@intel.com>; Roper,
+> Matthew D <matthew.d.roper@intel.com>; Pandey, Hariom
+> <hariom.pandey@intel.com>; Jani Nikula <jani.nikula@linux.intel.com>; Viv=
+i,
+> Rodrigo <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>
+> Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
+>=20
+> On Wed, Dec 02, 2020 at 05:21:58AM +0000, Surendrakumar Upadhyay,
+> TejaskumarX wrote:
+> > Yes it fails all the tests which are allocating from this stolen
+> > memory bunch. For example IGT tests like "
+> > igt@kms_frontbuffer_tracking@-[fbc|fbcpsr].* |
+> > igt@kms_fbcon_fbt@fbc.* " are failing as they totally depend to work
+> > on stolen memory.
+>=20
+> I'm sure that means something to graphics developers, but I have no idea!
+> Do you have URLs for the test case source, outputs, dmesg log, lspci info=
+, bug
+> reports, etc?
+>=20
+> > > -----Original Message-----
+> > > From: Bjorn Helgaas <helgaas@kernel.org>
+> > > Sent: 30 November 2020 22:21
+> > > To: Surendrakumar Upadhyay, TejaskumarX
+> > > <tejaskumarx.surendrakumar.upadhyay@intel.com>
+> > > Cc: Jesse Barnes <jsbarnes@google.com>; Daniel Vetter
+> > > <daniel@ffwll.ch>; Joonas Lahtinen
+> > > <joonas.lahtinen@linux.intel.com>; Linux PCI <linux-
+> > > pci@vger.kernel.org>; Linux Kernel Mailing List <linux-
+> > > kernel@vger.kernel.org>; X86 ML <x86@kernel.org>; Borislav Petkov
+> > > <bp@alien8.de>; De Marchi, Lucas <lucas.demarchi@intel.com>; Roper,
+> > > Matthew D <matthew.d.roper@intel.com>; Pandey, Hariom
+> > > <hariom.pandey@intel.com>; Jani Nikula
+> > > <jani.nikula@linux.intel.com>; Vivi, Rodrigo
+> > > <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>
+> > > Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
+> > >
+> > > On Mon, Nov 30, 2020 at 10:44:14AM +0000, Surendrakumar Upadhyay,
+> > > TejaskumarX wrote:
+> > > > Hi All,
+> > > >
+> > > > Are we merging this patch in?
+> > >
+> > > Does it fix something?  If something is broken without this patch,
+> > > can we collect information about exactly what is broken and how it fa=
+ils?
+> > >
+> > > But I don't object if somebody else wants to apply this.
+> > >
+> > > > > -----Original Message-----
+> > > > > From: Jesse Barnes <jsbarnes@google.com>
+> > > > > Sent: 20 November 2020 03:32
+> > > > > To: Bjorn Helgaas <helgaas@kernel.org>
+> > > > > Cc: Daniel Vetter <daniel@ffwll.ch>; Joonas Lahtinen
+> > > > > <joonas.lahtinen@linux.intel.com>; Surendrakumar Upadhyay,
+> > > > > TejaskumarX <tejaskumarx.surendrakumar.upadhyay@intel.com>;
+> > > > > Linux PCI <linux- pci@vger.kernel.org>; Linux Kernel Mailing
+> > > > > List <linux- kernel@vger.kernel.org>; X86 ML <x86@kernel.org>;
+> > > > > Borislav Petkov <bp@alien8.de>; De Marchi, Lucas
+> > > > > <lucas.demarchi@intel.com>; Roper, Matthew D
+> > > > > <matthew.d.roper@intel.com>; Pandey, Hariom
+> > > > > <hariom.pandey@intel.com>; Jani Nikula
+> > > > > <jani.nikula@linux.intel.com>; Vivi, Rodrigo
+> > > > > <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>
+> > > > > Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
+> > > > >
+> > > > > On Thu, Nov 19, 2020 at 11:19 AM Bjorn Helgaas
+> > > > > <helgaas@kernel.org>
+> > > > > wrote:
+> > > > > >
+> > > > > > [+cc Jesse]
+> > > > > >
+> > > > > > On Thu, Nov 19, 2020 at 10:37:10AM +0100, Daniel Vetter wrote:
+> > > > > > > On Thu, Nov 19, 2020 at 12:14 AM Bjorn Helgaas
+> > > > > > > <helgaas@kernel.org>
+> > > > > wrote:
+> > > > > > > > On Wed, Nov 18, 2020 at 10:57:26PM +0100, Daniel Vetter
+> wrote:
+> > > > > > > > > On Wed, Nov 18, 2020 at 5:02 PM Bjorn Helgaas
+> > > > > <helgaas@kernel.org> wrote:
+> > > > > > > > > > On Fri, Nov 06, 2020 at 10:39:16AM +0100, Daniel Vetter
+> wrote:
+> > > > > > > > > > > On Thu, Nov 5, 2020 at 3:17 PM Bjorn Helgaas
+> > > > > <helgaas@kernel.org> wrote:
+> > > > > > > > > > > > On Thu, Nov 05, 2020 at 11:46:06AM +0200, Joonas
+> > > > > > > > > > > > Lahtinen
+> > > > > wrote:
+> > > > > > > > > > > > > Quoting Bjorn Helgaas (2020-11-04 19:35:56)
+> > > > > > > > > > > > > > [+cc Jani, Joonas, Rodrigo, David, Daniel]
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Wed, Nov 04, 2020 at 05:35:06PM +0530,
+> > > > > > > > > > > > > > Tejas Upadhyay
+> > > > > wrote:
+> > > > > > > > > > > > > > > JSL re-uses the same stolen memory as ICL and=
+ EHL.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Cc: Lucas De Marchi
+> > > > > > > > > > > > > > > <lucas.demarchi@intel.com>
+> > > > > > > > > > > > > > > Cc: Matt Roper <matthew.d.roper@intel.com>
+> > > > > > > > > > > > > > > Signed-off-by: Tejas Upadhyay
+> > > > > > > > > > > > > > > <tejaskumarx.surendrakumar.upadhyay@intel.co
+> > > > > > > > > > > > > > > m>
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > I don't plan to do anything with this since
+> > > > > > > > > > > > > > previous similar patches have gone through
+> > > > > > > > > > > > > > some other tree, so this is
+> > > > > just kibitzing.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > But the fact that we have this long list of
+> > > > > > > > > > > > > > Intel devices [1] that constantly needs
+> > > > > > > > > > > > > > updates [2] is a hint that
+> > > > > something is wrong.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > We add an entry for every new integrated
+> > > > > > > > > > > > > graphics platform. Once the platform is added,
+> > > > > > > > > > > > > there have not been
+> > > > > changes lately.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > > IIUC the general idea is that we need to
+> > > > > > > > > > > > > > discover Intel gfx memory by looking at
+> > > > > > > > > > > > > > device-dependent config
+> > > > > space and add it to the E820 map.
+> > > > > > > > > > > > > > Apparently the quirks discover this via PCI
+> > > > > > > > > > > > > > config registers like I830_ESMRAMC,
+> > > > > > > > > > > > > > I845_ESMRAMC, etc, and tell the driver about
+> > > > > > > > > > > > > > it via the global
+> > > > > "intel_graphics_stolen_res"?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > We discover what is called the graphics data
+> > > > > > > > > > > > > stolen memory. It is regular system memory range
+> > > > > > > > > > > > > that is not CPU accessible. It is accessible by
+> > > > > > > > > > > > > the integrated
+> > > graphics only.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > See:
+> > > > > > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/
+> > > > > > > > > > > > > torv
+> > > > > > > > > > > > > alds
+> > > > > > > > > > > > > /linux.git/commit/arch/x86/kernel/early-quirks.c
+> > > > > > > > > > > > > ?h=3Dv
+> > > > > > > > > > > > > 5.10
+> > > > > > > > > > > > > -rc2&id=3D814c5f1f52a4beb3710317022acd6ad34fc0b6b=
+9
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > > That's not the way this should work.  There
+> > > > > > > > > > > > > > should some generic, non device-dependent PCI
+> > > > > > > > > > > > > > or ACPI method to discover the memory used, or
+> > > > > > > > > > > > > > at least some way to do it in
+> > > > > the driver instead of early arch code.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > It's used by the early BIOS/UEFI code to set up
+> > > > > > > > > > > > > initial
+> > > > > framebuffer.
+> > > > > > > > > > > > > Even if i915 driver is never loaded, the memory
+> > > > > > > > > > > > > ranges still need to be fixed. They source of
+> > > > > > > > > > > > > the problem is that the OEM BIOS which are not
+> > > > > > > > > > > > > under our control get the
+> > > > > programming wrong.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > We used to detect the memory region size again
+> > > > > > > > > > > > > at
+> > > > > > > > > > > > > i915 initialization but wanted to eliminate the
+> > > > > > > > > > > > > code duplication and resulting subtle bugs that c=
+aused.
+> > > > > > > > > > > > > Conclusion back then was that storing the struct
+> > > > > > > > > > > > > resource in
+> > > > > memory is the best trade-off.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > > How is this *supposed* to work?  Is there
+> > > > > > > > > > > > > > something we can do in E820 or other resource
+> > > > > > > > > > > > > > management that would
+> > > > > make this easier?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > The code was added around Haswell (HSW) device
+> > > > > > > > > > > > > generation to mitigate bugs in BIOS. It is
+> > > > > > > > > > > > > traditionally hard to get all OEMs to fix their
+> > > > > > > > > > > > > BIOS when things work for Windows. It's only
+> > > > > > > > > > > > > later years when some laptop models
+> > > > > are intended to be sold with Linux.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > The alternative would be to get all the OEM to
+> > > > > > > > > > > > > fix their BIOS for Linux, but that is not very
+> > > > > > > > > > > > > realistic given past experiences. So it seems a
+> > > > > > > > > > > > > better choice to to add new line per platform
+> > > > > > > > > > > > > generation to make sure the users can
+> > > > > boot to Linux.
+> > > > > > > > > > > >
+> > > > > > > > > > > > How does Windows do this?  Do they have to add
+> > > > > > > > > > > > similar code for each new platform?
+> > > > > > > > > > >
+> > > > > > > > > > > Windows is chicken and doesn't move any mmio bar
+> > > > > > > > > > > around on its
+> > > > > own.
+> > > > > > > > > > > Except if the bios explicitly told it somehow (e.g.
+> > > > > > > > > > > for the 64bit bar stuff amd recently announced for
+> > > > > > > > > > > windows, that linux supports since years by moving
+> > > > > > > > > > > the bar). So except if you want to preemptively
+> > > > > > > > > > > disable the pci code that does this anytime there's
+> > > > > > > > > > > an intel gpu, this is what we
+> > > have to do.
+> > > > > > > > > >
+> > > > > > > > > > I think Windows *does* move BARs (they use the more
+> > > > > > > > > > generic terminology of "rebalancing PNP resources") in
+> > > > > > > > > > some cases [3,4].  Of course, I'm pretty sure Windows
+> > > > > > > > > > will only assign PCI resources inside the windows
+> > > > > > > > > > advertised in the host bridge
+> > > > > _CRS.
+> > > > > > > > > >
+> > > > > > > > > > Linux *used* to ignore that host bridge _CRS and could
+> > > > > > > > > > set BARs to addresses that appeared available but were
+> > > > > > > > > > in fact used by the platform somehow.  But Linux has
+> > > > > > > > > > been paying attention to host bridge _CRS for a long
+> > > > > > > > > > time now, so it should also only assign resources insid=
+e those
+> windows.
+> > > > > > > > >
+> > > > > > > > > If this behaviour is newer than the addition of these
+> > > > > > > > > quirks then yeah they're probably not needed anymore,
+> > > > > > > > > and we can move all this back into the driver. Do you
+> > > > > > > > > have the commit when pci core started observing _CRS on t=
+he
+> host bridge?
+> > > > > > > >
+> > > > > > > > I think the most relevant commit is this:
+> > > > > > > >
+> > > > > > > >   2010-02-23 7bc5e3f2be32 ("x86/PCI: use host bridge _CRS
+> > > > > > > > info by default on 2008 and newer machines")
+> > > > > > > >
+> > > > > > > > but the earliest quirk I found is over three years later:
+> > > > > > > >
+> > > > > > > >   2013-07-26 814c5f1f52a4 ("x86: add early quirk for
+> > > > > > > > reserving Intel graphics stolen memory v5")
+> > > > > > > >
+> > > > > > > > So there must be something else going on.  814c5f1f52a4
+> > > > > > > > mentions a couple bug reports.  The dmesg from 66726 [5]
+> > > > > > > > shows that we *are* observing the host bridge _CRS, but
+> > > > > > > > Linux just used the BIOS configuration without changing
+> anything:
+> > > > > > > >
+> > > > > > > >   BIOS-e820: [mem 0x000000007f49_f000-0x000000007f5f_ffff]
+> > > usable
+> > > > > > > >   BIOS-e820: [mem 0x00000000fec0_0000-0x00000000fec0_0fff]
+> > > > > reserved
+> > > > > > > >   PCI: Using host bridge windows from ACPI; if necessary,
+> > > > > > > > use
+> > > > > "pci=3Dnocrs" and report a bug
+> > > > > > > >   ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+> > > > > > > >   pci_bus 0000:00: root bus resource [mem 0x7f70_0000-
+> 0xffff_ffff]
+> > > > > > > >   pci 0000:00:1c.0: PCI bridge to [bus 01]
+> > > > > > > >   pci 0000:00:1c.0:   bridge window [io  0x1000-0x1fff]
+> > > > > > > >   pci 0000:00:1c.0:   bridge window [mem 0xfe90_0000-
+> 0xfe9f_ffff]
+> > > > > > > >   pci 0000:00:1c.0:   bridge window [mem 0x7f70_0000-
+> 0x7f8f_ffff
+> > > 64bit
+> > > > > pref]
+> > > > > > > >   pci 0000:01:00.0: [1814:3090] type 00 class 0x028000
+> > > > > > > >   pci 0000:01:00.0: reg 10: [mem 0xfe90_0000-0xfe90_ffff]
+> > > > > > > >   [drm:i915_stolen_to_physical] *ERROR* conflict detected
+> > > > > > > > with stolen region: [0x7f80_0000 - 0x8000_0000]
+> > > > > > > >
+> > > > > > > > So the BIOS programmed the 00:1c.0 bridge prefetchable
+> > > > > > > > window to [mem 0x7f70_0000-0x7f8f_ffff], and i915 thinks th=
+at's
+> a conflict.
+> > > > > > > >
+> > > > > > > > On this system, there are no PCI BARs in that range.
+> > > > > > > > 01:00.0 looks like a Ralink RT3090 Wireless 802.11n device
+> > > > > > > > that only has a non-prefetchable BAR at [mem 0xfe90_0000-
+> 0xfe90_ffff].
+> > > > > > > >
+> > > > > > > > I don't know the details of the conflict.  IIUC, Joonas
+> > > > > > > > said the stolen memory is accessible only by the
+> > > > > > > > integrated graphics, not by the CPU.  The bridge window is
+> > > > > > > > CPU accessible, of course, and the [mem
+> > > > > > > > 0x7f70_0000-0x7f8f_ffff] range contains the addresses the
+> > > > > > > > CPU uses for programmed I/O to
+> > > BARs below the bridge.
+> > > > > > > >
+> > > > > > > > The graphics accesses sound like they would be DMA in the
+> > > > > > > > *bus* address space, which is frequently, but not always,
+> > > > > > > > identical to the CPU address space.
+> > > > > > >
+> > > > > > > So apparently on some platforms the conflict is harmless
+> > > > > > > because the BIOS puts BARs and stuff over it from boot-up, an=
+d
+> things work:
+> > > > > > > 0b6d24c01932 ("drm/i915: Don't complain about stolen
+> > > > > > > conflicts on
+> > > > > > > gen3") But we also had conflict reports on other machines.
+> > > > > >
+> > > > > > The bug reports mentioned in 814c5f1f52a4 ("x86: add early
+> > > > > > quirk for reserving Intel graphics stolen memory v5") and
+> > > > > > 0b6d24c01932
+> > > > > > ("drm/i915: Don't complain about stolen conflicts on gen3")
+> > > > > > seem to be basically complaints about the *message*, not
+> > > > > > anything that's actually broken.
+> > > > > >
+> > > > > > Jesse's comment [6]:
+> > > > > >
+> > > > > >   Given the decode priority on our GMCHs, it's fine if the regi=
+ons
+> > > > > >   overlap.  However it doesn't look like there's a nice way to =
+detect
+> > > > > >   it.  In this case, part of the range occupied by the stolen s=
+pace is
+> > > > > >   simply "reserved" per the E820, but the rest of it is under t=
+he bus
+> > > > > >   0 range (which kind of makes sense too).
+> > > > > >
+> > > > > > sounds relevant but I don't know enough to interpret it.  I
+> > > > > > added Jesse in case he wants to comment.
+> > > > > >
+> > > > > > > GPU does all its access with CPU address space (after the
+> > > > > > > iommu, which is entirely integrated). So I'm not sure
+> > > > > > > whether we've seen something go boom or whether reserving
+> > > > > > > that resource was just precaution in
+> > > > > > > eaba1b8f3379 ("drm/i915: Verify that our stolen memory
+> > > > > > > doesn't conflict"), it's all a bit way back in history.
+> > > > > > >
+> > > > > > > So really not sure what to do here or what the risks are.
+> > > > > >
+> > > > > > I'm not either.  Seems like we're not really converging on
+> > > > > > anything useful we can do at this point.  The only thing I can
+> > > > > > think of would be to collect data about actual failures (not
+> > > > > > just warning
+> > > messages).
+> > > > > > That might lead to something we could improve in the future.
+> > > > >
+> > > > > I don't have any brilliant ideas here unfortunately.  Maybe it's
+> > > > > worth talking to some of the Windows folks internally to see how
+> > > > > these ranges are handled these days and matching it?
+> > > > > Historically this has been an area fraught with danger because
+> > > > > getting things wrong can lead to corruption of various kinds or b=
+oot
+> hangs.
+> > > > >
+> > > > > Jesse
