@@ -2,69 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C89A12CDB93
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 17:51:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEF912CDBE6
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 18:09:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgLCQv0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 11:51:26 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53642 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728734AbgLCQv0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Dec 2020 11:51:26 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 295D8AC2E;
-        Thu,  3 Dec 2020 16:50:45 +0000 (UTC)
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     lorenzo.pieralisi@arm.com, tjoseph@cadence.com
-Cc:     robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kishon@ti.com,
-        Mian Yousaf Kaukab <ykaukab@suse.de>, stable@vger.kernel.org
-Subject: [PATCH] PCI: cadence: Fix cdns_pcie_host_setup() error path
-Date:   Thu,  3 Dec 2020 17:49:44 +0100
-Message-Id: <20201203164944.2257-1-ykaukab@suse.de>
-X-Mailer: git-send-email 2.26.2
+        id S1731451AbgLCRIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 12:08:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731453AbgLCRIY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 12:08:24 -0500
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732CFC061A52
+        for <linux-pci@vger.kernel.org>; Thu,  3 Dec 2020 09:07:44 -0800 (PST)
+Received: by mail-lf1-x143.google.com with SMTP id j205so3783900lfj.6
+        for <linux-pci@vger.kernel.org>; Thu, 03 Dec 2020 09:07:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+MQyiUOcMt6gFRBNfnN0H07pYjhZgF4qm1+bZjvfjTY=;
+        b=Cx6oEw3asYjWnT8nYuCvr3UMa7sC7zqGfjZH+6NM/LRsctzlYBq4jWYT5t+CTuzy81
+         ufA/35gbWjoyI3GR4sHKJJ/dXIYNWsy/BxrQVF9OwKV8d6p4mG8Br2zZ9qAR1jhR1sR5
+         XFtBts/povF4EP6Ny/d1T5ZXYf5b7sm8jc1Iq+39jvlvaKhZ804pJUPhzTdzV+xw97qN
+         T4REXRSQqTMIj7T7Nw8GXA7uRLUe6tmfZ+hAOZ2AadWxtejiV4KjYgBy29l+9CK6RmgP
+         /m7bEmZBumCr+ghR9RTNKJtACi6yZ1mK18q6oD/IvZz6axncMy9glbpDQAxZ3Bj+bHAk
+         275w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+MQyiUOcMt6gFRBNfnN0H07pYjhZgF4qm1+bZjvfjTY=;
+        b=ahx52pKErtKYgx4m71Gsy6aS30XWBnxEHnfHjah3wCBho482jJU5ytwN3hkVnJ5EP6
+         FAo5vS2UJCLsUCFGUD+2iPA0QqU8Z3NkKV7glhxorn48hRquNfdvAmrnpb0gB5mmhd8y
+         lVHuk/mk4KNuCO0yFXaB6+4vclAZGJf4KbEfmZde1NrfhwylthH3fucJzsnKqClQWJy3
+         vNQl2u157Kfpp9k56147hAYhANXm90/xMtX+O9zVBLtzCZCVSfWvAI2zOdLtOTG4Tkzz
+         keZl17Wpmzv01EuvfDKwStnoavnmAlDQ8ziO8CaiuIVHMyzZaCK6IgQBXTh9EP8mT7Qt
+         GeaA==
+X-Gm-Message-State: AOAM532EDP2wGX+SuZB7E6ISWHiK4xZM/yNVuXBMVtf3+RqC+rig4YhY
+        rMpU1Mg4GFOtVLeAT54NH/cXtEubIv7JNxRihL7zQQ==
+X-Google-Smtp-Source: ABdhPJyeNpRimBzFqDhGioLOrE5ouq1kJk4Pby6GpAHMXjB75Cnj+2lIjlrUJWt+qddSs9EdyIaV3e9wcFRpPEdvaH8=
+X-Received: by 2002:a19:c815:: with SMTP id y21mr1656793lff.589.1607015262357;
+ Thu, 03 Dec 2020 09:07:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201201213707.541432-1-samitolvanen@google.com> <20201203112622.GA31188@willie-the-truck>
+In-Reply-To: <20201203112622.GA31188@willie-the-truck>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 3 Dec 2020 09:07:30 -0800
+Message-ID: <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+To:     Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-commit 19abcd790b51 ("PCI: cadence: Fix cdns_pcie_{host|ep}_setup() error
-path") removed pm_runtime_put_sync() call from the error path in
-cdns_pcie_{host|ep}_setup(). However, the hunk in cdns_pcie_host_setup()
-got lost.
+On Thu, Dec 3, 2020 at 3:26 AM Will Deacon <will@kernel.org> wrote:
+>
+> Hi Sami,
+>
+> On Tue, Dec 01, 2020 at 01:36:51PM -0800, Sami Tolvanen wrote:
+> > This patch series adds support for building the kernel with Clang's
+> > Link Time Optimization (LTO). In addition to performance, the primary
+> > motivation for LTO is to allow Clang's Control-Flow Integrity (CFI)
+> > to be used in the kernel. Google has shipped millions of Pixel
+> > devices running three major kernel versions with LTO+CFI since 2018.
+> >
+> > Most of the patches are build system changes for handling LLVM
+> > bitcode, which Clang produces with LTO instead of ELF object files,
+> > postponing ELF processing until a later stage, and ensuring initcall
+> > ordering.
+> >
+> > Note that arm64 support depends on Will's memory ordering patches
+> > [1]. I will post x86_64 patches separately after we have fixed the
+> > remaining objtool warnings [2][3].
+>
+> I took this series for a spin, with my for-next/lto branch merged in but
+> I see a failure during the LTO stage with clang 11.0.5 because it doesn't
+> understand the '.arch_extension rcpc' directive we throw out in READ_ONCE().
 
-Fix error path in cdns_pcie_host_setup() by removing pm_runtime_put_sync()
-call.
+I just tested this with Clang 11.0.0, which I believe is the latest
+11.x version, and the current Clang 12 development branch, and both
+work for me. Godbolt confirms that '.arch_extension rcpc' is supported
+by the integrated assembler starting with Clang 11 (the example fails
+with 10.0.1):
 
-Fixes: 24344226f66b ("PCI: cadence: Use struct pci_host_bridge.windows list directly")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+https://godbolt.org/z/1csGcT
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 811c1cb2e8de..6e2557653943 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -471,14 +471,5 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	if (!bridge->ops)
- 		bridge->ops = &cdns_pcie_host_ops;
- 
--	ret = pci_host_probe(bridge);
--	if (ret < 0)
--		goto err_init;
--
--	return 0;
--
-- err_init:
--	pm_runtime_put_sync(dev);
--
--	return ret;
-+	return pci_host_probe(bridge);
- }
--- 
-2.26.2
+What does running clang --version and ld.lld --version tell you?
 
+> We actually check that this extension is available before using it in
+> the arm64 Kconfig:
+>
+>         config AS_HAS_LDAPR
+>                 def_bool $(as-instr,.arch_extension rcpc)
+>
+> so this shouldn't happen. I then realised, I wasn't passing LLVM_IAS=1
+> on my Make command line; with that, then the detection works correctly
+> and the LTO step succeeds.
+>
+> Why is it necessary to pass LLVM_IAS=1 if LTO is enabled? I think it
+> would be _much_ better if this was implicit (or if LTO depended on it).
+
+Without LLVM_IAS=1, Clang uses two different assemblers when LTO is
+enabled: the external GNU assembler for stand-alone assembly, and
+LLVM's integrated assembler for inline assembly. as-instr tests the
+external assembler and makes an admittedly reasonable assumption that
+the test is also valid for inline assembly.
+
+I agree that it would reduce confusion in future if we just always
+enabled IAS with LTO. Nick, Nathan, any thoughts about this?
+
+Sami
