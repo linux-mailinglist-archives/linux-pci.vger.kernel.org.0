@@ -2,106 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BFA12CE053
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 22:08:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F243E2CE18B
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 23:26:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgLCVIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 16:08:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57882 "EHLO mail.kernel.org"
+        id S1728463AbgLCW0a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 17:26:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgLCVIb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Dec 2020 16:08:31 -0500
-Date:   Thu, 3 Dec 2020 15:07:48 -0600
+        id S1728375AbgLCW03 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Dec 2020 17:26:29 -0500
+Date:   Thu, 3 Dec 2020 16:25:46 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607029670;
-        bh=i/K4qM6rvvoGU+gBFZ6aU74Om1t2vhb7uve+DvEcHFM=;
+        s=k20201202; t=1607034348;
+        bh=yVGI5M3I+UaUj1E+WUU3WDgydAUggfjpWAyIFD8U8a0=;
         h=From:To:Cc:Subject:In-Reply-To:From;
-        b=P4ii/Gh6+neVmY9/6q+ywj+sJXBvga2TXFhv/k2ezogat6CHP60YWzHGnJCgFYJaA
-         Y1bIkDpSPTOHrZMN4C6hAFjQXDu9CRa328QDpsDyiaJ9ROMbENmGiIIq6Xfsjuq8EH
-         ekfLHG0ZAqMcyhUPoEdGssSEJFbMh79bB6TWmsBndAMxSCPPX6mYOIueVasrU0FQWM
-         M4bod0AA1EmDE/D4BJigwemql0SFZl9xjis8yrfr6rjXILJ1PfXJxnFl7uW9Zs7h/i
-         kDlHgm/S2yfcLSGtloXXdzxYLAPUnAf+6zKcVHlsR4dtPPf82+15Dm2qzlGeV2Ubpa
-         KEz6SWqwDJb8g==
+        b=gnJTeSyyvIGQsuiX/SRqFPYlTpyAxvF61lG4Fzo2zV21oYkSGG88LokJnP0Oqmsei
+         4DH0S3EA46iatrqA4Fq8J1MJZ1O43gmkPW5I94429Vi1hWRpyg/5EMeW05Qi7qTCWA
+         ENlVjSewzZzGnVvUA6Vcnp0AGqiVvQsvY8XDMh9+WFrjlSScThiNx0iDGPf3DMzR5b
+         5GSWPT6kNlbkLt8x4/TkcsUxC6m8GrpHM4DZVE2LCAMUnH1zUgaox5QXtANsxUD5I3
+         X/1/0JVVDYAhpIkdE6NI3Yp1hhr8VtH4ZFyZKOKOdNibnAcr6kmZrNFDlq70zGXP0K
+         Rsfk+DDONtQXg==
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     daire.mcnamara@microchip.com
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com,
-        cyril.jean@microchip.com, ben.dooks@codethink.co.uk
-Subject: Re: [PATCH v18 3/4] PCI: microchip: Add host driver for Microchip
- PCIe controller
-Message-ID: <20201203210748.GA1594918@bjorn-Precision-5520>
+To:     "Kelley, Sean V" <sean.v.kelley@intel.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "xerces.zhao@gmail.com" <xerces.zhao@gmail.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v12 05/15] PCI/ERR: Simplify by using
+ pci_upstream_bridge()
+Message-ID: <20201203222546.GA1600426@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201203121018.16432-4-daire.mcnamara@microchip.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BA95A917-CCFA-4A21-9146-0626716CAF65@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 12:10:17PM +0000, daire.mcnamara@microchip.com wrote:
-> From: Daire McNamara <daire.mcnamara@microchip.com>
+On Thu, Dec 03, 2020 at 06:45:00PM +0000, Kelley, Sean V wrote:
+> Just confirming that when switched from dev->bus->self to
+> pci_upstream_bridge() we’re okay with the NULL case:
 > 
-> Add support for the Microchip PolarFire PCIe controller when
-> configured in host (Root Complex) mode.
+> > On Nov 20, 2020, at 4:10 PM, Sean V Kelley <sean.v.kelley@intel.com> wrote:
+> > 
+> > Use pci_upstream_bridge() in place of dev->bus->self.  No functional change
+> > intended.
+> > 
+> > [bhelgaas: split to separate patch]
+> > Link: https://lore.kernel.org/r/20201002184735.1229220-6-seanvk.dev@oregontracks.org
+> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > ---
+> > drivers/pci/pcie/err.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> > index db149c6ce4fb..05f61da5ed9d 100644
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -159,7 +159,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> > 	 */
+> > 	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> > 	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> > -		dev = dev->bus->self;
+> > +		dev = pci_upstream_bridge(dev);
 > 
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> The only case where pci_upstream_bridge(dev) could be NULL is if
+> dev->bus is the root bus and we are being selective based on the
+> type.
 
-> +static void mc_pcie_isr(struct irq_desc *desc)
-> +{
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct mc_port *port = irq_desc_get_handler_data(desc);
-> +	struct device *dev = port->dev;
-> +	struct mc_msi *msi = &port->msi;
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
-> +	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE1_CTRL_ADDR;
-> +	u32 status;
-> +	unsigned long intx_status;
-> +	unsigned long msi_status;
-> +	u32 bit;
-> +	u32 virq;
-> +
-> +	/*
-> +	 * The core provides a single interrupt for both INTx/MSI messages.
-> +	 * So we'll read both INTx and MSI status.
-> +	 */
-> +	chained_irq_enter(chip, desc);
-> +
-> +	status = readl_relaxed(ctrl_base_addr + MC_SEC_ERROR_INT);
+Yes, pci_upstream_bridge(dev) returns NULL if dev is on a root bus.
+I think bus->self is NULL for root buses anyway, so I think this patch
+is OK at least at this point in the series.
 
-Other than a few in mc_setup_window(), it looks like all the accesses
-in this driver are relaxed.
+> Even later in this series when we actually add in RC_EC/RC_END we
+> maintain the conditional checks:
+> 
+> https://lore.kernel.org/linux-pci/20201121001036.8560-11-sean.v.kelley@intel.com/
+> 
+>  pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> 
+> @@ -174,10 +180,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> 
+>  
+>  	/*
+>  	 * Error recovery runs on all subordinates of the bridge.  If the
+> -	 * bridge detected the error, it is cleared at the end.
+> +	 * bridge detected the error, it is cleared at the end.  For RCiEPs
+> +	 * we should reset just the RCiEP itself.
+> 
+>  	 */
+>  	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> -	    type == PCI_EXP_TYPE_DOWNSTREAM)
+> +	    type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	    type == PCI_EXP_TYPE_RC_EC ||
+> +	    type == PCI_EXP_TYPE_RC_END)
+>  		bridge = dev;
+>  	else
+>  		bridge = pci_upstream_bridge(dev);
+> 
+> I believe we are okay here.
 
-readl_relaxed() and writel_relaxed() are only used by a few of the
-host bridge drivers.  I doubt this is because those devices behave
-differently than all the rest, so I suspect there's a general rule
-that they all should use.  I don't know what that rule is, but maybe
-you do?
+Well, I think we're at least no worse than today.  Today we keep
+"bridge == dev" for Root Ports and Downstream Ports, and use
+"bridge = dev->bus->self" for everything else.
 
-Per Documentation/memory-barriers.txt, the relaxed versions provide
-weaker ordering guarantees, so the safest thing would be to use the
-non-relaxed versions and include a little justification for when/why
-it is safe to use the relaxed versions.
+After this series we keep "bridge == dev" for RCEC and RCiEPs in
+addition.
 
-A lot of uses are in non-performance paths where there's really no
-benefit to using the relaxed versions.
+I'm not sure about PCI_EXP_TYPE_PCI_BRIDGE, which is a PCIe-to-PCI
+bridge.  According to the ancient "PCI Express to PCI/PCI-X Bridge
+Specification" r1.0 of July 14, 2003, sec 5.23, these bridges can have
+an AER Capability (with different format that I don't see mentioned
+elsewhere).
 
-Not asking you to do anything here, but in case you've analyzed this
-and come to the conclusion that the relaxed versions are safe here,
-but not in mc_setup_window(), that rationale might be useful to others
-if you included it in the commit log or a brief comment in the code.
+But this AER Capability doesn't have the Root registers, so I assume
+it would have to be below a Root Port in order to actually signal the
+errors, which would mean it could not be on a root bus.
 
-> +static void mc_setup_window(void __iomem *bridge_base_addr, u32 index, phys_addr_t axi_addr,
-> +			    phys_addr_t pci_addr, size_t size)
-> +{
-> +	u32 atr_sz = ilog2(size) - 1;
-> +	u32 val;
-> +
-> +	if (index == 0)
-> +		val = PCIE_CONFIG_INTERFACE;
-> +	else
-> +		val = PCIE_TX_RX_INTERFACE;
-> +
-> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) + MC_ATR0_AXI4_SLV0_TRSL_PARAM);
-> ...
+So I don't really *love* the fact that we use pci_upstream_bridge()
+and rely on these assumptions that the result will not be NULL, but I
+guess it's OK for now.
+
+> > 	bus = dev->subordinate;
+> > 
+> > 	pci_dbg(dev, "broadcast error_detected message\n");
+> > -- 
+> > 2.29.2
+> > 
+> > 
+> 
