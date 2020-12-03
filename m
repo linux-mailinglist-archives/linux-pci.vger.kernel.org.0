@@ -2,125 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B2CF2CDD4B
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 19:24:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D232CDD75
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 19:29:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbgLCSXl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 13:23:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
+        id S1731617AbgLCSZG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 13:25:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729508AbgLCSXk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 3 Dec 2020 13:23:40 -0500
-Date:   Thu, 3 Dec 2020 18:22:53 +0000
+        id S1731594AbgLCSZF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Dec 2020 13:25:05 -0500
+Date:   Thu, 3 Dec 2020 12:24:23 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607019780;
-        bh=5a8ME2oAXsKqPoeqJfEFvJGi2qwglFd3HcH42x+ZJqE=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j4tuv3canVKeGWPc00whrPf+yMo+rCeJBSSu9hQ8JKopGOeh22g/l4jLBxki+Q3S4
-         GSy6xiQfH2GEr5ORIucdbbEVNr0+FmT1NytvINuFt62ibIHSwQQe+XYxmKQbFUBoQm
-         Pe3O1nyWoKMJPEEb4rf10UT8GM0TMsNCoKs0CA1Y6VDqMD3Fa15DWO2+8KzDpouaH/
-         jk1NY9n6DPz7lGFPTSZZ3NhJoqHMrLxT9UBGdtIKfzs7C+/Z/dfeNnE5pmTpJgadKr
-         WuTbKHZQrQHeug6qVN5E7eo5w7WLqpt9nlELvChtCWZI3JyjnMxiQXEC4zYRHhnct0
-         /Nj+EdgBLhJYA==
-From:   Will Deacon <will@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-Message-ID: <20201203182252.GA32011@willie-the-truck>
-References: <20201201213707.541432-1-samitolvanen@google.com>
- <20201203112622.GA31188@willie-the-truck>
- <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
+        s=k20201202; t=1607019864;
+        bh=OSYjR3KU12Rh2mAMrwtk4wsx9Qj28rYM92rA8hzOoJk=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=obo0nDCtSHQuTaolGry8nmvcpThiQsMJPk4PCnntVYyIAtI6JPR3IBCF1yM/IAVuk
+         3jj5/DY6oaP4fr+gTNjC5tckZ0VmghCRZJ66FY8Djyu5Vz07IuhBBhVbR6jiC7XaYw
+         oKdoO+/XSHK/fqoK3o4xhc+8zGUEQpXBe+84oqGc5B6w1slXUd4wTrG+FppUsFyXjt
+         a+rViIG9dfLnxF7RftJqhq+1jhz+NNNC0lsg2TXU7tMxntgNrS5TCaRWPErz+TPckF
+         cj5dac5pi6Kp5NYnhjVvmWi9P+e0+AGs61834a+SIVRL9Z/zw4p7sBodOT1INkU/G9
+         VuvOe8s3owWWw==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2] PCI/MSI: Set device flag indicating only 32-bit MSI
+ support
+Message-ID: <20201203182423.GA1555592@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20201124105035.24573-1-vidyas@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 09:07:30AM -0800, Sami Tolvanen wrote:
-> On Thu, Dec 3, 2020 at 3:26 AM Will Deacon <will@kernel.org> wrote:
-> > On Tue, Dec 01, 2020 at 01:36:51PM -0800, Sami Tolvanen wrote:
-> > > This patch series adds support for building the kernel with Clang's
-> > > Link Time Optimization (LTO). In addition to performance, the primary
-> > > motivation for LTO is to allow Clang's Control-Flow Integrity (CFI)
-> > > to be used in the kernel. Google has shipped millions of Pixel
-> > > devices running three major kernel versions with LTO+CFI since 2018.
-> > >
-> > > Most of the patches are build system changes for handling LLVM
-> > > bitcode, which Clang produces with LTO instead of ELF object files,
-> > > postponing ELF processing until a later stage, and ensuring initcall
-> > > ordering.
-> > >
-> > > Note that arm64 support depends on Will's memory ordering patches
-> > > [1]. I will post x86_64 patches separately after we have fixed the
-> > > remaining objtool warnings [2][3].
-> >
-> > I took this series for a spin, with my for-next/lto branch merged in but
-> > I see a failure during the LTO stage with clang 11.0.5 because it doesn't
-> > understand the '.arch_extension rcpc' directive we throw out in READ_ONCE().
+On Tue, Nov 24, 2020 at 04:20:35PM +0530, Vidya Sagar wrote:
+> There are devices (Ex:- Marvell SATA controller) that don't support
+> 64-bit MSIs and the same is advertised through their MSI capability
+> register. Set no_64bit_msi flag explicitly for such devices in the
+> MSI setup code so that the msi_verify_entries() API would catch
+> if the MSI arch code tries to use 64-bit MSI.
+
+This seems good to me.  I'll post a possible revision to set
+dev->no_64bit_msi in the device enumeration path instead of in the IRQ
+allocation path, since it's really a property of the device, not of
+the msi_desc.
+
+I like the extra checking this gives us.  Was this prompted by
+tripping over something, or is it something you noticed by code
+reading?  If the former, a hint about what was wrong and how it's
+being fixed would be useful.
+
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V2:
+> * Addressed Bjorn's comment and changed the error message
 > 
-> I just tested this with Clang 11.0.0, which I believe is the latest
-> 11.x version, and the current Clang 12 development branch, and both
-> work for me. Godbolt confirms that '.arch_extension rcpc' is supported
-> by the integrated assembler starting with Clang 11 (the example fails
-> with 10.0.1):
+>  drivers/pci/msi.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
-> https://godbolt.org/z/1csGcT
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index d52d118979a6..8de5ba6b4a59 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -581,10 +581,12 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+>  	entry->msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
+>  	entry->msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
+>  
+> -	if (control & PCI_MSI_FLAGS_64BIT)
+> +	if (control & PCI_MSI_FLAGS_64BIT) {
+>  		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
+> -	else
+> +	} else {
+>  		entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_32;
+> +		dev->no_64bit_msi = 1;
+> +	}
+>  
+>  	/* Save the initial mask status */
+>  	if (entry->msi_attrib.maskbit)
+> @@ -602,8 +604,9 @@ static int msi_verify_entries(struct pci_dev *dev)
+>  	for_each_pci_msi_entry(entry, dev) {
+>  		if (!dev->no_64bit_msi || !entry->msg.address_hi)
+>  			continue;
+> -		pci_err(dev, "Device has broken 64-bit MSI but arch"
+> -			" tried to assign one above 4G\n");
+> +		pci_err(dev, "Device has either broken 64-bit MSI or "
+> +			"only 32-bit MSI support but "
+> +			"arch tried to assign one above 4G\n");
+>  		return -EIO;
+>  	}
+>  	return 0;
+> -- 
+> 2.17.1
 > 
-> What does running clang --version and ld.lld --version tell you?
-
-I'm using some Android prebuilts I had kicking around:
-
-Android (6875598, based on r399163b) clang version 11.0.5 (https://android.googlesource.com/toolchain/llvm-project 87f1315dfbea7c137aa2e6d362dbb457e388158d)
-Target: x86_64-unknown-linux-gnu
-Thread model: posix
-InstalledDir: /usr/local/google/home/willdeacon/work/android/repo/android-kernel/prebuilts-master/clang/host/linux-x86/clang-r399163b/bin
-
-and:
-
-LLD 11.0.5 (/buildbot/tmp/tmpx1DlI_ 87f1315dfbea7c137aa2e6d362dbb457e388158d) (compatible with GNU linkers)
-
-> > We actually check that this extension is available before using it in
-> > the arm64 Kconfig:
-> >
-> >         config AS_HAS_LDAPR
-> >                 def_bool $(as-instr,.arch_extension rcpc)
-> >
-> > so this shouldn't happen. I then realised, I wasn't passing LLVM_IAS=1
-> > on my Make command line; with that, then the detection works correctly
-> > and the LTO step succeeds.
-> >
-> > Why is it necessary to pass LLVM_IAS=1 if LTO is enabled? I think it
-> > would be _much_ better if this was implicit (or if LTO depended on it).
-> 
-> Without LLVM_IAS=1, Clang uses two different assemblers when LTO is
-> enabled: the external GNU assembler for stand-alone assembly, and
-> LLVM's integrated assembler for inline assembly. as-instr tests the
-> external assembler and makes an admittedly reasonable assumption that
-> the test is also valid for inline assembly.
-> 
-> I agree that it would reduce confusion in future if we just always
-> enabled IAS with LTO. Nick, Nathan, any thoughts about this?
-
-That works for me, although I'm happy with anything which means that the
-assembler checks via as-instr apply to the assembler which will ultimately
-be used.
-
-Will
