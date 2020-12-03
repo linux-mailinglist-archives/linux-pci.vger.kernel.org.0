@@ -2,130 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEF912CDBE6
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 18:09:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45EE52CDCF7
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Dec 2020 19:03:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbgLCRIZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 12:08:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731453AbgLCRIY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 12:08:24 -0500
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 732CFC061A52
-        for <linux-pci@vger.kernel.org>; Thu,  3 Dec 2020 09:07:44 -0800 (PST)
-Received: by mail-lf1-x143.google.com with SMTP id j205so3783900lfj.6
-        for <linux-pci@vger.kernel.org>; Thu, 03 Dec 2020 09:07:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+MQyiUOcMt6gFRBNfnN0H07pYjhZgF4qm1+bZjvfjTY=;
-        b=Cx6oEw3asYjWnT8nYuCvr3UMa7sC7zqGfjZH+6NM/LRsctzlYBq4jWYT5t+CTuzy81
-         ufA/35gbWjoyI3GR4sHKJJ/dXIYNWsy/BxrQVF9OwKV8d6p4mG8Br2zZ9qAR1jhR1sR5
-         XFtBts/povF4EP6Ny/d1T5ZXYf5b7sm8jc1Iq+39jvlvaKhZ804pJUPhzTdzV+xw97qN
-         T4REXRSQqTMIj7T7Nw8GXA7uRLUe6tmfZ+hAOZ2AadWxtejiV4KjYgBy29l+9CK6RmgP
-         /m7bEmZBumCr+ghR9RTNKJtACi6yZ1mK18q6oD/IvZz6axncMy9glbpDQAxZ3Bj+bHAk
-         275w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+MQyiUOcMt6gFRBNfnN0H07pYjhZgF4qm1+bZjvfjTY=;
-        b=ahx52pKErtKYgx4m71Gsy6aS30XWBnxEHnfHjah3wCBho482jJU5ytwN3hkVnJ5EP6
-         FAo5vS2UJCLsUCFGUD+2iPA0QqU8Z3NkKV7glhxorn48hRquNfdvAmrnpb0gB5mmhd8y
-         lVHuk/mk4KNuCO0yFXaB6+4vclAZGJf4KbEfmZde1NrfhwylthH3fucJzsnKqClQWJy3
-         vNQl2u157Kfpp9k56147hAYhANXm90/xMtX+O9zVBLtzCZCVSfWvAI2zOdLtOTG4Tkzz
-         keZl17Wpmzv01EuvfDKwStnoavnmAlDQ8ziO8CaiuIVHMyzZaCK6IgQBXTh9EP8mT7Qt
-         GeaA==
-X-Gm-Message-State: AOAM532EDP2wGX+SuZB7E6ISWHiK4xZM/yNVuXBMVtf3+RqC+rig4YhY
-        rMpU1Mg4GFOtVLeAT54NH/cXtEubIv7JNxRihL7zQQ==
-X-Google-Smtp-Source: ABdhPJyeNpRimBzFqDhGioLOrE5ouq1kJk4Pby6GpAHMXjB75Cnj+2lIjlrUJWt+qddSs9EdyIaV3e9wcFRpPEdvaH8=
-X-Received: by 2002:a19:c815:: with SMTP id y21mr1656793lff.589.1607015262357;
- Thu, 03 Dec 2020 09:07:42 -0800 (PST)
+        id S2387561AbgLCSBa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 13:01:30 -0500
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:37912 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbgLCSBa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 13:01:30 -0500
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 0B3I09j7020577;
+        Fri, 4 Dec 2020 03:00:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 0B3I09j7020577
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1607018410;
+        bh=Q8rUUiuQPCHtIjHKZ25iSma0yE471Wc2ZwPZ52EYpXA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c8s94mdsXSLOpVko39GE94yfv+2gzeMV/HXHNgIMkxeaqs8gjTvHpyvc2Xc0x9pOj
+         AOo5icsDHKvZetFGaTQCnk0cKQ64JBO/QcME0MIpJmNR70qzQGBLDVLMQriKEtrf09
+         yv65KIKeqMTg7CQGAkp2+G7PJhG/gZuWBLu3nsI5/gRf3JF1p4iFNrgeogUg5sMZDX
+         OxZGYC0MUVzIDtPDfvYm6yrGA+cQgoxRX8vOCyoRkUFyfnh//b803fH+Mwg1ZMkR4k
+         +6+9QN+iT25bS1Wl0RaAhdLej2oBMXB47uOpVd1xqElr2bZakypeGE/bv0usqrCRg6
+         ibM489qfF/Jbg==
+X-Nifty-SrcIP: [209.85.216.53]
+Received: by mail-pj1-f53.google.com with SMTP id r9so1507333pjl.5;
+        Thu, 03 Dec 2020 10:00:09 -0800 (PST)
+X-Gm-Message-State: AOAM5302niKOsGTtmVehzsma3d7+g3OkyPv0KsbggUz8WKbmYHkZAHL4
+        QH1DVsIcf1jYWrDHa+pjcSqnX3WWMAbFlhr8Ano=
+X-Google-Smtp-Source: ABdhPJyWwlayA/XR+Bnh4a5mDodnSKw0H8nrbACrY1JSJtlwr6wE2FkK0g+IV8XwwRNT2lr2uJVlldeyzgyNeL0U9xo=
+X-Received: by 2002:a17:90a:fa0c:: with SMTP id cm12mr265364pjb.87.1607018409010;
+ Thu, 03 Dec 2020 10:00:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20201201213707.541432-1-samitolvanen@google.com> <20201203112622.GA31188@willie-the-truck>
-In-Reply-To: <20201203112622.GA31188@willie-the-truck>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 3 Dec 2020 09:07:30 -0800
-Message-ID: <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-To:     Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+References: <20201013003203.4168817-1-samitolvanen@google.com>
+ <20201013003203.4168817-15-samitolvanen@google.com> <202010141549.412F2BF0@keescook>
+In-Reply-To: <202010141549.412F2BF0@keescook>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 4 Dec 2020 02:59:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT350QjusoYCQEHDdoxAfTZjj82xp86O1qoNF=0u0PN-g@mail.gmail.com>
+Message-ID: <CAK7LNAT350QjusoYCQEHDdoxAfTZjj82xp86O1qoNF=0u0PN-g@mail.gmail.com>
+Subject: Re: [PATCH v6 14/25] kbuild: lto: remove duplicate dependencies from
+ .mod files
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         clang-built-linux <clang-built-linux@googlegroups.com>,
         Kernel Hardening <kernel-hardening@lists.openwall.com>,
         linux-arch <linux-arch@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 3, 2020 at 3:26 AM Will Deacon <will@kernel.org> wrote:
+On Thu, Oct 15, 2020 at 7:50 AM Kees Cook <keescook@chromium.org> wrote:
 >
-> Hi Sami,
->
-> On Tue, Dec 01, 2020 at 01:36:51PM -0800, Sami Tolvanen wrote:
-> > This patch series adds support for building the kernel with Clang's
-> > Link Time Optimization (LTO). In addition to performance, the primary
-> > motivation for LTO is to allow Clang's Control-Flow Integrity (CFI)
-> > to be used in the kernel. Google has shipped millions of Pixel
-> > devices running three major kernel versions with LTO+CFI since 2018.
+> On Mon, Oct 12, 2020 at 05:31:52PM -0700, Sami Tolvanen wrote:
+> > With LTO, llvm-nm prints out symbols for each archive member
+> > separately, which results in a lot of duplicate dependencies in the
+> > .mod file when CONFIG_TRIM_UNUSED_SYMS is enabled. When a module
+> > consists of several compilation units, the output can exceed the
+> > default xargs command size limit and split the dependency list to
+> > multiple lines, which results in used symbols getting trimmed.
 > >
-> > Most of the patches are build system changes for handling LLVM
-> > bitcode, which Clang produces with LTO instead of ELF object files,
-> > postponing ELF processing until a later stage, and ensuring initcall
-> > ordering.
+> > This change removes duplicate dependencies, which will reduce the
+> > probability of this happening and makes .mod files smaller and
+> > easier to read.
 > >
-> > Note that arm64 support depends on Will's memory ordering patches
-> > [1]. I will post x86_64 patches separately after we have fixed the
-> > remaining objtool warnings [2][3].
+> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
 >
-> I took this series for a spin, with my for-next/lto branch merged in but
-> I see a failure during the LTO stage with clang 11.0.5 because it doesn't
-> understand the '.arch_extension rcpc' directive we throw out in READ_ONCE().
-
-I just tested this with Clang 11.0.0, which I believe is the latest
-11.x version, and the current Clang 12 development branch, and both
-work for me. Godbolt confirms that '.arch_extension rcpc' is supported
-by the integrated assembler starting with Clang 11 (the example fails
-with 10.0.1):
-
-https://godbolt.org/z/1csGcT
-
-What does running clang --version and ld.lld --version tell you?
-
-> We actually check that this extension is available before using it in
-> the arm64 Kconfig:
+> Hi Masahiro,
 >
->         config AS_HAS_LDAPR
->                 def_bool $(as-instr,.arch_extension rcpc)
+> This appears to be a general improvement as well. This looks like it can
+> land without depending on the rest of the series.
+
+It cannot.
+Adding "sort -u" is pointless without the rest of the series
+since the symbol duplication happens only with Clang LTO.
+
+This is not a solution.
+"reduce the probability of this happening" well describes it.
+
+I wrote a different patch.
+
+
+
+> -Kees
 >
-> so this shouldn't happen. I then realised, I wasn't passing LLVM_IAS=1
-> on my Make command line; with that, then the detection works correctly
-> and the LTO step succeeds.
+> > ---
+> >  scripts/Makefile.build | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> > index ab0ddf4884fd..96d6c9e18901 100644
+> > --- a/scripts/Makefile.build
+> > +++ b/scripts/Makefile.build
+> > @@ -266,7 +266,7 @@ endef
+> >
+> >  # List module undefined symbols (or empty line if not enabled)
+> >  ifdef CONFIG_TRIM_UNUSED_KSYMS
+> > -cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | xargs echo
+> > +cmd_undef_syms = $(NM) $< | sed -n 's/^  *U //p' | sort -u | xargs echo
+> >  else
+> >  cmd_undef_syms = echo
+> >  endif
+> > --
+> > 2.28.0.1011.ga647a8990f-goog
+> >
 >
-> Why is it necessary to pass LLVM_IAS=1 if LTO is enabled? I think it
-> would be _much_ better if this was implicit (or if LTO depended on it).
+> --
+> Kees Cook
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202010141549.412F2BF0%40keescook.
 
-Without LLVM_IAS=1, Clang uses two different assemblers when LTO is
-enabled: the external GNU assembler for stand-alone assembly, and
-LLVM's integrated assembler for inline assembly. as-instr tests the
-external assembler and makes an admittedly reasonable assumption that
-the test is also valid for inline assembly.
 
-I agree that it would reduce confusion in future if we just always
-enabled IAS with LTO. Nick, Nathan, any thoughts about this?
 
-Sami
+-- 
+Best Regards
+Masahiro Yamada
