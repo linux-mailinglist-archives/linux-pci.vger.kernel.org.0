@@ -2,161 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F1342CF34A
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 18:43:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54ADE2CF398
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 19:08:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbgLDRmv convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 4 Dec 2020 12:42:51 -0500
-Received: from server.avery-design.com ([198.57.169.184]:58476 "EHLO
-        server.avery-design.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729645AbgLDRmv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 12:42:51 -0500
-Received: from ool-944ab965.dyn.optonline.net ([148.74.185.101]:52265 helo=[192.168.1.180])
-        by server.avery-design.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <cbrowy@avery-design.com>)
-        id 1klF1E-0006B3-Jn; Fri, 04 Dec 2020 17:37:20 +0000
-User-Agent: Microsoft-MacOutlook/16.43.20110804
-Date:   Fri, 04 Dec 2020 12:40:03 -0500
-Subject: Re: [RFC PATCH 0/9] CXL 2.0 Support
-From:   Chris Browy <cbrowy@avery-design.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <bhelgaas@google.com>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>, <linux-acpi@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <rafael.j.wysocki@intel.com>,
-        <sean.v.kelley@intel.com>, <vishal.l.verma@intel.com>
-Message-ID: <F0ACA340-5BDE-4C17-80ED-DB7F5C5B8403@avery-design.com>
-Thread-Topic: [RFC PATCH 0/9] CXL 2.0 Support
-References: <FB00A034-7C6D-40B1-8452-318A3B052216@avery-design.com>
-In-Reply-To: <FB00A034-7C6D-40B1-8452-318A3B052216@avery-design.com>
-Mime-version: 1.0
-Content-type: text/plain;
-        charset="UTF-8"
-Content-transfer-encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.avery-design.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - avery-design.com
-X-Get-Message-Sender-Via: server.avery-design.com: authenticated_id: cbrowy@avery-design.com
-X-Authenticated-Sender: server.avery-design.com: cbrowy@avery-design.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        id S1727707AbgLDSG6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 13:06:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726775AbgLDSG6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Dec 2020 13:06:58 -0500
+Date:   Fri, 4 Dec 2020 12:06:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607105177;
+        bh=QS9EvxgSDBt+zlI3phsUbCb83smeF/LJi7Hz73NfY3w=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=jgIvb+yMl+m3ZUbHiYmVYtzLrr5JDIZ4aAcm2tcVepvnPNd0ycUoUTRjFCRhTwUWm
+         Qvl1lmBR37/xl2q8wccWlBK5nTEpYY3PTbs2kDlLauoje6jm8WZ85pz3DRpmR3j96n
+         /O5MK21ABp4Fsv2FiWLVEAH2sG7/s6wWLXD9GPnJ0CCOP6sfy1/a5wGnnzcRQXEeWT
+         sSDHDKDsczcFK6I6FtBXHWWRHZhHHki6I5kyLC04a32hL2VtVUGKh28H3chrbqySDa
+         7ig4JmkkKffuLlt8YUMTt2dZa1/gQPub7bxzQSzHhNIlsHVWUwjnC4pEBJyIvgt+RL
+         WEDKPheyH+m5g==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Loic Poulain <loic.poulain@linaro.org>
+Cc:     bhelgaas@google.com, ruscur@russell.cc, linux-pci@vger.kernel.org
+Subject: Re: [RFC] pci: aer: Disable corrected error reporting by default
+Message-ID: <20201204180615.GA1754610@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1607102932-10384-1-git-send-email-loic.poulain@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Ben,
+On Fri, Dec 04, 2020 at 06:28:52PM +0100, Loic Poulain wrote:
+> It appears to be very common that people complain about kernel log
+> (and irq) flooding because of reported corrected errors by AER.
 
-Trying to bring up the environment using the latest developments as follows:
+Do you have any pointers to these handy?
 
-1. Linux kernel baseline version is cloned using
-     git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-   Using master branch.  Merged the 9 CXL linux kernel patches manually and built kernel
+I'm pretty sure there's an issue in our AER handling where we don't
+clear the error correctly, so we keep complaining about the same error
+again and again.
 
-2. QEMU baseline version is cloned using
-     git clone https://gitlab.com/bwidawsk/qemu.git
+My preferences for how to handle this situation:
 
-3. UEFI baseline is cloned using
-     git clone https://github.com/tianocore/edk2.git
-   Using master and built
+  1) Fix our AER handling (if it's indeed broken; I could be wrong)
+  2) Automatically rate-limit corrected error reporting
+  3) As a last resort, some parameter like this patch
 
-4. Now can run qemu as follows:
-     The qcow2 we use is based on Ubuntu 20.10 with updated with kernel from 1) above
+Reports like https://bugzilla.kernel.org/show_bug.cgi?id=111601
+have been around for an embarrassingly long time, but I guess nobody
+has had time to really dig into them.
 
-     QEMU command:
+My theory about our AER problem is here:
+https://lore.kernel.org/linux-pci/20160215171423.GA12641@localhost/
 
-     sudo qemu-system-x86_64 -nic \
-     user,hostfwd=tcp::2222-:22,hostfwd=tcp::1234-:1234 -machine \
-     type=pc-q35-4.0,hmat=on,accel=kvm -enable-kvm -cpu host -smp \
-     6,cores=6,threads=1,sockets=1 -m 8G -boot order=d -k 'en-us' -vga virtio \
-     -drive file=/home/chris/Downloads/AQCXL/ubuntu_20.qcow,format=qcow2 -drive \
-     if=pflash,format=raw,readonly,file=/home/chris/OVMF_CODE.fd \
-     -drive if=pflash,format=raw,file=/home/chris/OVMF_VARS.fd \
-     -object memory-backend-file,id=cxl-mem1,share,mem-path=/tmp/cxl-test/cxl,size=512M \
-     -device pxb-cxl,id=cxl.0,bus=pcie.0,bus_nr=52,uid=0,len-window-base=1,\
-     window-base[0]=0x4c0000000,memdev[0]=cxl-mem1 \
-     -device cxl-rp,id=rp0,bus=cxl.0,addr=0.0,chassis=0,slot=0  \
-     -device cxl-type3,bus=rp0,memdev=cxl-mem1,id=cxl-pmem0,size=256M  2>&1 | tee -a \
-     /home/chris/Downloads/AQCXL/log/qemu.log
-
-   The qemu options are derived from looking at the tests/qtests/cxl-test.c
-   along with the -hmat=on which seemed to make sense.
-
-   The system boots and lspci -vvv shows the CXL device is enumerated.  But
-   no DOE capability register for CDAT access though (see below).  Otherwise the
-   DVSEC registers are present.
-
-   acpidump indicates the CXL0 and CXLM devices but no SRAT or HMAT tables are
-   in the dump which is curious.
-
-
-35:00.0 Memory controller [0502]: Intel Corporation Device 0d93 (rev 01) (prog-if 10)
-    Subsystem: Red Hat, Inc. Device 1100
-    Physical Slot: 0
-    Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-    Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-    Latency: 0
-    Region 0: Memory at c0a00000 (64-bit, non-prefetchable) [size=64K]
-    Region 2: Memory at c0a10000 (64-bit, non-prefetchable) [size=4K]
-    Capabilities: [80] Express (v2) Endpoint, MSI 00
-        DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s <64ns, L1 <1us
-            ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
-        DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
-            RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
-            MaxPayload 128 bytes, MaxReadReq 128 bytes
-        DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
-        LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s, Exit Latency L0s <64ns
-            ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-        LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
-            ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-        LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
-            TrErr- Train- SlotClk- DLActive+ BWMgmt- ABWMgmt-
-        DevCap2: Completion Timeout: Not Supported, TimeoutDis-, NROPrPrP-, LTR-
-             10BitTagComp-, 10BitTagReq-, OBFF Not Supported, ExtFmt+, EETLPPrefix+, MaxEETLPPrefixes 4
-               EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-             FRS-, TPHComp-, ExtTPHComp-
-             AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-        DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
-             AtomicOpsCtl: ReqEn-
-        LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
-             Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-             Compliance De-emphasis: -6dB
-        LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
-             EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
-    Capabilities: [100 v1] Designated Vendor-Specific <?>
-    Capabilities: [138 v1] Designated Vendor-Specific <?>
-    Kernel driver in use: cxl_mem
-
-Questions/Comments:
--------------------
-1. Linux
-  a. Is there a gitlab for the linux kernel patches for CXL?  This would
-     facilitate review and code modifications.
-
-2. UEFI (edk2 from tianocore)
-  a. seems to only support CXL 1.1 which means only method #1 (Device
-     option ROM) of Coherent Device Attribute Table_1.02 spec
-     for CDAT handling is possible now.
-
-     Does device option ROM need to be added to QEMU CXL setup?
-
-     Can we add a CXL 1.1 emulated device?
-
-  b. lspci doesn’t show the existence of the DOE extended capability register
-     in the CXL CT3D (needed to support method #2).  Are there more patches?
-
-3. Do you have example user programs to share or better yet the CXL 2.0
-   Sec 14.3.6.1 Application Layer/ Transaction layer test for CXL.mem?
-
-4. What are the userspace system APIs for targeting CXL HDM address domain?
-   Usually you can mmap a SPA if you know how to look it up.
-
-
-Best Regards,
-Chris Browy
-
-
-
+> An usual reply/solution is to completely disable aer with 'noaer' pci
+> parameter. This is a big hammer tip since it also prevents reporting of
+> 'real' non corrected PCI errors, that need to be handled by the kernel.
+> 
+> A PCI correctable error is an error corrected at hardware level by the
+> PCI protocol (e.g. with retry mechanism), the OS can then totally live
+> without being notified about that hardware event.
+> 
+> A simple change would then consist in not enabling correctable error
+> reporting at all, but it can remain useful in some cases, such as for
+> determining health of the PCI link.
+> 
+> This patch changes the default AER mask to not enable correctable error
+> reporting by default, and introduce a new pci parameter, 'aerfull' that
+> can be used to re-enable all error reports, including correctable ones.
+> 
+> Note: Alternatively, if changing the legacy behavior is not desirable,
+> that can be done the other way, with a 'noaer_correctable' parameter to
+> only disable correctable error reporting.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+> ---
+>  drivers/pci/pci.c      |  2 ++
+>  drivers/pci/pci.h      |  2 ++
+>  drivers/pci/pcie/aer.c | 12 +++++++++++-
+>  3 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 6d4d5a2..c67ec709 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6498,6 +6498,8 @@ static int __init pci_setup(char *str)
+>  				pcie_ats_disabled = true;
+>  			} else if (!strcmp(str, "noaer")) {
+>  				pci_no_aer();
+> +			} else if (!strcmp(str, "aerfull")) {
+> +				pci_aer_full();
+>  			} else if (!strcmp(str, "earlydump")) {
+>  				pci_early_dump = true;
+>  			} else if (!strncmp(str, "realloc=", 8)) {
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index f86cae9..36306a1 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -662,6 +662,7 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
+>  
+>  #ifdef CONFIG_PCIEAER
+>  void pci_no_aer(void);
+> +void pci_aer_full(void);
+>  void pci_aer_init(struct pci_dev *dev);
+>  void pci_aer_exit(struct pci_dev *dev);
+>  extern const struct attribute_group aer_stats_attr_group;
+> @@ -670,6 +671,7 @@ int pci_aer_clear_status(struct pci_dev *dev);
+>  int pci_aer_raw_clear_status(struct pci_dev *dev);
+>  #else
+>  static inline void pci_no_aer(void) { }
+> +static inline void pci_aer_full(void) { }
+>  static inline void pci_aer_init(struct pci_dev *d) { }
+>  static inline void pci_aer_exit(struct pci_dev *d) { }
+>  static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 65dff5f..e0ec7047 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -102,6 +102,7 @@ struct aer_stats {
+>  #define ERR_UNCOR_ID(d)			(d >> 16)
+>  
+>  static int pcie_aer_disable;
+> +static int pcie_aer_full;
+>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>  
+>  void pci_no_aer(void)
+> @@ -109,6 +110,11 @@ void pci_no_aer(void)
+>  	pcie_aer_disable = 1;
+>  }
+>  
+> +void pci_aer_full(void)
+> +{
+> +	pcie_aer_full = 1;
+> +}
+> +
+>  bool pci_aer_available(void)
+>  {
+>  	return !pcie_aer_disable && pci_msi_enabled();
+> @@ -224,12 +230,16 @@ int pcie_aer_is_native(struct pci_dev *dev)
+>  
+>  int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+>  {
+> +	u16 flags = PCI_EXP_AER_FLAGS;
+>  	int rc;
+>  
+>  	if (!pcie_aer_is_native(dev))
+>  		return -EIO;
+>  
+> -	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
+> +	if (!pcie_aer_full)
+> +		flags &= ~PCI_EXP_DEVCTL_CERE;
+> +
+> +	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, flags);
+>  	return pcibios_err_to_errno(rc);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
+> -- 
+> 2.7.4
+> 
