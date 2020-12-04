@@ -2,92 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56AEC2CF71F
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 23:53:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F2F22CF760
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Dec 2020 00:20:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgLDWxk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Dec 2020 17:53:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgLDWxk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 17:53:40 -0500
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A6AC061A51
-        for <linux-pci@vger.kernel.org>; Fri,  4 Dec 2020 14:52:54 -0800 (PST)
-Received: by mail-vs1-xe42.google.com with SMTP id q5so4198154vsg.0
-        for <linux-pci@vger.kernel.org>; Fri, 04 Dec 2020 14:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=APDwfrMJO9jpMmlvJs1QQfYlFxkBjLtMOQGI8Flupio=;
-        b=vlYT2PP85xGxgcq4Dr0LjAqfSnHTJbDN9Qw9s716INhVlK2qIKh97cH0so65YWekJV
-         ZkCddAaWBBeVyc79V1Qsk0bwBXFOYV/fbRRVmb3hqZ90wFkxjB6PyGd9Fl/4pFQAhhjZ
-         AM6IB7GFEBqHL1Jg9yyWo4W0Nb7mb6UJHeOQir6VApItA3LGKTPi0G3m3U6izolVWg8S
-         lneowIrUY4bLqR7zyKu8N2F2ZMtJSwvpwOZjKssZqamx23Iv78VtDQw/lQdiC6Po0aWG
-         caBNxURcOkyiTRCfZKEEQPiFtZ4Uo4eYHfBI8tK9v8an2dHQPAwNADLFINV3H5bQRJ9b
-         cZUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=APDwfrMJO9jpMmlvJs1QQfYlFxkBjLtMOQGI8Flupio=;
-        b=EpPviTkvFEllLbifTNcFjuFDD1KjufE75K9toTaIqgkqBYkOWNLz+3B2CqQ70rGpMM
-         wwOFLRW0bNg0je0L6Blz5NZVZUYdV/hosQnaxQ7tBbGa1Bp2ICS/d/+gyLhH/oQ6tRAH
-         pQ0PuCDgRv48nnEoQN3zmRVVqnnD2yS+m58jclr2NWyjJKy3U4/aj6w8rs8BST7KCiwj
-         cKkLAU5JgEe3XV7p5ufNuTDZTAmLhVgBLYP6qLh39hiHaUSgirw5nChoUzjh/K9unvRy
-         XG4X5AxkVKqT/PObDfeCjlqNa8Wy33+X+XvRUhJAMldCTukAHO8kQB2/6h+etG/KQqtA
-         QkJw==
-X-Gm-Message-State: AOAM533Mty2zmP5ga6Ga7SQ8l5V7iosEk6j6kZKXZh3zlaKQuVP09yxu
-        fpMl2oyc6j2qGunnwr/xmQjEpWjqKMmIkfoxZgl2ig==
-X-Google-Smtp-Source: ABdhPJyEOufu1IYsUQg6fXqokcGK+WOlACM5vK4uRoSLdaEQytBNywFXfXG2M7YwyvYjCJIK/G4zrq6Skn/z29jgixU=
-X-Received: by 2002:a67:ec3:: with SMTP id 186mr6679107vso.14.1607122373106;
- Fri, 04 Dec 2020 14:52:53 -0800 (PST)
+        id S1726134AbgLDXSq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 18:18:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725885AbgLDXSp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Dec 2020 18:18:45 -0500
+Date:   Fri, 4 Dec 2020 17:18:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607123885;
+        bh=g7wuX88Zhhxoge1jkZR8ojn4kv8t8SuxTncSSpCyyLE=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=qQ5eitA2y74ZA6Nbi9Lzhbwx33jqcDd/6GksB/4xh3xGbl14tn1jPndUdf1Pn2v7T
+         iNwxyoE16emim1SbXxSD98HcoyyrdBxOIWDJ76jJ/QK7iQLInPfz9EVqlLSR7NhmZF
+         K2si7bhKys3xYLR2Lf92sZVhOxlusVGpt5cAR4F0z9Nhs3FUCD55lnI3i4GwUm2xsE
+         ICHPN/zszaiJHg1Ko6S/0LIDQ/16uYLrD6Hy0q6otmXluyfMGF8ZCqxAxswDi68fg9
+         q37BowT3qHXbjUHleqGq7rIUfeITv4IbRgRBkiIEcCN+TXyy5Ma7f9ChKXVoris96y
+         wgZ2DQ1wQNVOA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Lukas Wunner <lukas@wunner.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Utkarsh Patel <utkarsh.h.patel@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] PCI/PM: Do not generate wakeup event when runtime
+ resuming bus
+Message-ID: <20201204231803.GA1980572@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20201201213707.541432-1-samitolvanen@google.com>
- <20201203112622.GA31188@willie-the-truck> <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
- <20201203182252.GA32011@willie-the-truck> <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
-In-Reply-To: <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Fri, 4 Dec 2020 14:52:41 -0800
-Message-ID: <CABCJKufgkq+k0DeYaXrzjXniy=T_N4sN1bxoK9=cUxTZN5xSVQ@mail.gmail.com>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, Jian Cai <jiancai@google.com>,
-        Kristof Beyls <Kristof.Beyls@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201125090733.77782-1-mika.westerberg@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 3, 2020 at 2:32 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> So I'd recommend to Sami to simply make the Kconfig also depend on
-> clang's integrated assembler (not just llvm-nm and llvm-ar).
+On Wed, Nov 25, 2020 at 12:07:32PM +0300, Mika Westerberg wrote:
+> When a PCI bridge is runtime resumed from D3cold the underlying bus is
+> walked and the attached devices are runtime resumed as well. However, in
+> addition to that we also generate a wakeup event for these devices even
+> though this actually is not a real wakeup event coming from the
+> hardware.
+> 
+> Normally this does not cause problems but when combined with
+> /sys/power/wakeup_count like using the steps below:
+> 
+>   # count=$(cat /sys/power/wakeup_count)
+>   # echo $count > /sys/power/wakeup_count
+>   # echo mem > /sys/power/state
+> 
+> The system suspend cycle might fail at this point if a PCI bridge that
+> was runtime suspended (D3cold) was runtime resumed for any reason. The
+> runtime resume calls pci_wakeup_bus() and that generates wakeup event
+> increasing wakeup_count.
+> 
+> Since this is not a real wakeup event we can prevent the above from
+> happening by removing the call to pci_wakeup_event() in
+> pci_wakeup_bus().
+> 
+> Reported-by: Utkarsh Patel <utkarsh.h.patel@intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Sure, sounds good to me. What's the preferred way to test for this in Kconfig?
+I reversed the order of these since I think it's more obvious that
+pci_wakeup_event() doesn't fit in pci_resume_one() and applied both to
+pci/pm for v5.11, thanks!
 
-It looks like actually trying to test if we have an LLVM assembler
-(e.g. using $(as-instr,.section
-".linker-options","e",@llvm_linker_options)) doesn't work as Kconfig
-doesn't pass -no-integrated-as to clang here. I could do something
-simple like $(success,echo $(LLVM) $(LLVM_IAS) | grep -q "1 1").
-
-Thoughts?
-
-Sami
+> ---
+> Previous version can be found here:
+> 
+>   https://www.spinics.net/lists/linux-pci/msg101083.html
+> 
+> Changes from the previous version:
+> 
+>   - Split the patch in two. The second patch only does the rename.
+>   - Tried to improve the commit message a bit
+>   - Added Rafael's reviewed-by tag
+> 
+>  drivers/pci/pci.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e578d34095e9..6f7b33998fbe 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1181,7 +1181,6 @@ EXPORT_SYMBOL_GPL(pci_platform_power_transition);
+>   */
+>  static int pci_wakeup(struct pci_dev *pci_dev, void *ign)
+>  {
+> -	pci_wakeup_event(pci_dev);
+>  	pm_request_resume(&pci_dev->dev);
+>  	return 0;
+>  }
+> -- 
+> 2.29.2
+> 
