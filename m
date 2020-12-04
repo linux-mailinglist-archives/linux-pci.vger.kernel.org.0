@@ -2,137 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8CD32CF6F9
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 23:39:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD3A22CF700
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 23:43:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388195AbgLDWjQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Dec 2020 17:39:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59986 "EHLO mail.kernel.org"
+        id S1726370AbgLDWmS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 17:42:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388191AbgLDWjQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Dec 2020 17:39:16 -0500
-Date:   Fri, 4 Dec 2020 16:38:34 -0600
+        id S1726041AbgLDWmS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Dec 2020 17:42:18 -0500
+Date:   Fri, 4 Dec 2020 16:41:35 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607121515;
-        bh=29mKW6TUQsdumXCa32bZLPWNoFlN8SPw3nQBmttE6BA=;
+        s=k20201202; t=1607121697;
+        bh=qiQD6O0CcX089MHWDBucfbDBjg5y9WFVZdTDvIoZspg=;
         h=From:To:Cc:Subject:In-Reply-To:From;
-        b=q+tJgVwskdsE4k+7/pyGtKLGBu6xx5XfmKPkO4m1JRgblFk26lvxXxjkJCvA4f5vz
-         Nma1J2Njn67QHnhyjPrfB3D4cZzN65gbwUQUdSf4i+rdA+N4somCfmQ8bjOIs+0lSg
-         YBESQV/znnwiyZfsHFfafPm+wDFW11hhXjF+fiIw+QLg003UKW41SfdA9HEcgqwxin
-         /whBYrRFfcJY5VNgidLnuuFCpWfrEt1uCUCy/epi66W8nItDMouTKMm4By8QQRMY7H
-         8JsLlVpqev5lK3cbxbLY67zXjY4GBwQpYDWAhB+hkkMSwanHZRVOoaL8KiYxoy5QkO
-         qS6v4FgqxwZ4w==
+        b=nXtsb7/Xwuhz/L5mBbYJFfiwpdai47Moj6nVCQI/lpEgEhwnNbPs+G/U+/OBhZ7lr
+         njNLQC6ibc+xSQJdKlzt5IKDQR1K19dJBsmgJCTmyF/6nZ3ZgrXCZgzmN8jVG2N70h
+         IFxUUa5lGEiUdBIGauV1/AY3iDPmsx6G5ScUpgyB8qCpXORNn1CpbRTIzPTwEzZx1F
+         iT9PbQ5O75Cwqwm+JvJnSzVhDGarEwX8JMjbqLGRFQOsEZ6wzQG1UDfGEyxbiUypCR
+         gjTSuJVx3oMTTiGRTLsj2u7b3yH55CvdX19OpIQdW3IZ+iR3pEvB/4QzHtb9GpHEtN
+         0jOe6Yya7HXYA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hinko Kocevar <Hinko.Kocevar@ess.eu>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: Recovering from AER: Uncorrected (Fatal) error
-Message-ID: <20201204223834.GA1970318@bjorn-Precision-5520>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Move Jason Cooper to CREDITS
+Message-ID: <20201204224135.GA1975685@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1a9f75f828c04130b16b7e0a3ae7f1e0@ess.eu>
+In-Reply-To: <20201128103707.332874-1-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 04, 2020 at 12:52:18PM +0000, Hinko Kocevar wrote:
-> Hi,
+On Sat, Nov 28, 2020 at 10:37:07AM +0000, Marc Zyngier wrote:
+> Jason's email address has now been bouncing for weeks, and no
+> reply was received when trying to reach out on other addresses.
 > 
-> I'm trying to figure out how to recover from Uncorrected (Fatal) error that is seen by the PCI root on a CPU PCIe controller:
+> We really hope he is OK. But until we hear of his whereabouts,
+> let's move him to the CREDITS file so that people stop Cc-ing
+> him.
 > 
-> Dec  1 02:16:37 bd-cpu18 kernel: pcieport 0000:00:01.0: AER: Uncorrected (Fatal) error received: id=0008
-> Dec  1 02:16:37 bd-cpu18 kernel: pcieport 0000:00:01.0: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, id=0008(Requester ID)
-> Dec  1 02:16:37 bd-cpu18 kernel: pcieport 0000:00:01.0:   device [8086:1901] error status/mask=00004000/00000000
-> Dec  1 02:16:37 bd-cpu18 kernel: pcieport 0000:00:01.0:    [14] Completion Timeout     (First)
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Gregory Clement <gregory.clement@bootlin.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+
+Applied to for-linus for v5.10 since there's no risk and the bounces
+are annoying.
+
+> ---
+>  CREDITS     | 5 +++++
+>  MAINTAINERS | 4 ----
+>  2 files changed, 5 insertions(+), 4 deletions(-)
 > 
-> This is the complete PCI device tree that I'm working with:
+> diff --git a/CREDITS b/CREDITS
+> index 8592e45e3932..cf112d3e9382 100644
+> --- a/CREDITS
+> +++ b/CREDITS
+> @@ -740,6 +740,11 @@ S: (ask for current address)
+>  S: Portland, Oregon
+>  S: USA
+>  
+> +N: Jason Cooper
+> +D: ARM/Marvell SOC co-maintainer
+> +D: irqchip co-maintainer
+> +D: MVEBU PCI DRIVER co-maintainer
+> +
+>  N: Robin Cornelius
+>  E: robincornelius@users.sourceforge.net
+>  D: Ralink rt2x00 WLAN driver
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e451dcce054f..7ba26942a573 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2012,7 +2012,6 @@ M:	Philipp Zabel <philipp.zabel@gmail.com>
+>  S:	Maintained
+>  
+>  ARM/Marvell Dove/MV78xx0/Orion SOC support
+> -M:	Jason Cooper <jason@lakedaemon.net>
+>  M:	Andrew Lunn <andrew@lunn.ch>
+>  M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>  M:	Gregory Clement <gregory.clement@bootlin.com>
+> @@ -2029,7 +2028,6 @@ F:	arch/arm/plat-orion/
+>  F:	drivers/soc/dove/
+>  
+>  ARM/Marvell Kirkwood and Armada 370, 375, 38x, 39x, XP, 3700, 7K/8K, CN9130 SOC support
+> -M:	Jason Cooper <jason@lakedaemon.net>
+>  M:	Andrew Lunn <andrew@lunn.ch>
+>  M:	Gregory Clement <gregory.clement@bootlin.com>
+>  M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> @@ -9255,7 +9253,6 @@ F:	kernel/irq/
+>  
+>  IRQCHIP DRIVERS
+>  M:	Thomas Gleixner <tglx@linutronix.de>
+> -M:	Jason Cooper <jason@lakedaemon.net>
+>  M:	Marc Zyngier <maz@kernel.org>
+>  L:	linux-kernel@vger.kernel.org
+>  S:	Maintained
+> @@ -13405,7 +13402,6 @@ F:	drivers/pci/controller/mobiveil/pcie-mobiveil*
+>  
+>  PCI DRIVER FOR MVEBU (Marvell Armada 370 and Armada XP SOC support)
+>  M:	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> -M:	Jason Cooper <jason@lakedaemon.net>
+>  L:	linux-pci@vger.kernel.org
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+> -- 
+> 2.29.2
 > 
-> $ sudo /usr/local/bin/pcicrawler -t
-> 00:01.0 root_port, "J6B2", slot 1, device present, speed 8GT/s, width x8
->  ├─01:00.0 upstream_port, PLX Technology, Inc. (10b5), device 8725
->  │  ├─02:01.0 downstream_port, slot 1, device present, power: Off, speed 8GT/s, width x4
->  │  │  └─03:00.0 upstream_port, PLX Technology, Inc. (10b5) PEX 8748 48-Lane, 12-Port PCI Express Gen 3 (8 GT/s) Switch, 27 x 27mm FCBGA (8748)
->  │  │     ├─04:00.0 downstream_port, slot 10, power: Off
->  │  │     ├─04:01.0 downstream_port, slot 4, device present, power: Off, speed 8GT/s, width x4
->  │  │     │  └─06:00.0 endpoint, Research Centre Juelich (1796), device 0024
->  │  │     ├─04:02.0 downstream_port, slot 9, power: Off
->  │  │     ├─04:03.0 downstream_port, slot 3, device present, power: Off, speed 8GT/s, width x4
->  │  │     │  └─08:00.0 endpoint, Research Centre Juelich (1796), device 0024
->  │  │     ├─04:08.0 downstream_port, slot 5, device present, power: Off, speed 8GT/s, width x4
->  │  │     │  └─09:00.0 endpoint, Research Centre Juelich (1796), device 0024
->  │  │     ├─04:09.0 downstream_port, slot 11, power: Off
->  │  │     ├─04:0a.0 downstream_port, slot 6, device present, power: Off, speed 8GT/s, width x4
->  │  │     │  └─0b:00.0 endpoint, Research Centre Juelich (1796), device 0024
->  │  │     ├─04:0b.0 downstream_port, slot 12, power: Off
->  │  │     ├─04:10.0 downstream_port, slot 8, power: Off
->  │  │     ├─04:11.0 downstream_port, slot 2, device present, power: Off, speed 2.5GT/s, width x1
->  │  │     │  └─0e:00.0 endpoint, Xilinx Corporation (10ee), device 7011
->  │  │     └─04:12.0 downstream_port, slot 7, power: Off
->  │  ├─02:02.0 downstream_port, slot 2
->  │  ├─02:08.0 downstream_port, slot 8
->  │  ├─02:09.0 downstream_port, slot 9, power: Off
->  │  └─02:0a.0 downstream_port, slot 10
->  ├─01:00.1 endpoint, PLX Technology, Inc. (10b5), device 87d0
->  ├─01:00.2 endpoint, PLX Technology, Inc. (10b5), device 87d0
->  ├─01:00.3 endpoint, PLX Technology, Inc. (10b5), device 87d0
->  └─01:00.4 endpoint, PLX Technology, Inc. (10b5), device 87d0
 > 
-> 00:01.0 is on a CPU board, The 03:00.0 and everything below that is
-> not on a CPU board (working with a micro TCA system here). I'm
-> working with FPGA based devices seen as endpoints here.  After the
-> error all the endpoints in the above list are not able to talk to
-> CPU anymore; register reads return 0xFFFFFFFF. At the same time PCI
-> config space looks sane and accessible for those devices.
-
-This could be caused by a reset.  We probably do a secondary bus reset
-on the Root Port, which resets all the devices below it.  After the
-reset, config space of those downstream devices would be accessible,
-but the PCI_COMMAND register may be cleared which means the device
-wouldn't respond to MMIO reads.
-
-None of this explains the original problem of the Completion Timeout,
-of course.  The error source of 0x8 (00:01.0) is the root port, which
-makes sense if it issued a request transaction and never got the
-completion.  The root port *should* log the header of the request and
-we should print it, but it looks like we didn't.  "lspci -vv" of the
-device would show whether it's capable of this logging.
-
-If you're talking to an FPGA, the most likely explanation is a bug in
-the FPGA programming where it doesn't respond when it should.
-
-A PCIe analyzer would show exactly what the problem is, but those are
-expensive and rare.  But if you're dealing with FPGAs, maybe you have
-access to one.
-
-> How can I debug this further? I'm getting the "I/O to channel is
-> blocked" (pci_channel_io_frozen) state reported to the the endpoint
-> devices I provide driver for.  Is there any way of telling if the
-> PCI switch devices between 00:01.0 ... 06:00.0 have all recovered ;
-> links up and running and similar? Is this information provided by
-> the Linux kernel somehow?
-> 
-> For reference, I've experimented with AER inject and my tests showed
-> that if the same type of error is injected in any other PCI device
-> in the path 01:00.0 ... 06:00.0, IOW not into 00:01.0, the link is
-> recovered successfully, and I can continue working with the endpoint
-> devices. In those cases the "I/O channel is in normal state"
-> (pci_channel_io_normal) state was reported; only error injection
-> into 00:01.0 reports pci_channel_io_frozen state. Recovery code in
-> the endpoint drivers I maintain is just calling the
-> pci_cleanup_aer_uncorrect_error_status() in error handler resume()
-> callback.
-> 
-> FYI, this is on 3.10.0-1160.6.1.el7.x86_64.debug CentOS7 kernel
-> which I believe is quite old. At the moment I can not use newer
-> kernel, but would be prepared to take that step if told that it
-> would help.
-
-It's really not practical for us to help debug a v3.10-based kernel;
-that's over seven years old and AER handling has changed significantly
-since then.  Also, CentOS is a distro kernel and includes many changes
-on top of the v3.10 upstream kernel.  Those changes might be
-theoretically open-source, but as a practical matter, the distro is a
-better place to start for support of their kernel.
-
-Bjorn
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
