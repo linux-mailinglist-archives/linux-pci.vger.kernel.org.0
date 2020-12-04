@@ -2,257 +2,392 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 760762CE33E
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 00:58:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DF412CE348
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 01:02:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbgLCX5y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 18:57:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27587 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729918AbgLCX5y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 18:57:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607039786;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o0Y5XLBZZgm1xLBlcuqy6bZggFKiOnfwPeyZXlyCKvk=;
-        b=HyccULDcESkPIF7RmZ7m2SLLxVQV3GRWNpTdKJRDUGeMcSzd7kd8GeuUPJVl459arUTn7K
-        Q65uO4xCJxOxs3pdcnvrOZl5Gi9ldAm37iFmcBjzhrg1Mm/+PkGEmdITjgC0Szb77zUAek
-        o3eN4aaRyFS9hjB0ckPNzNKeypaiRpo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-a-ivMIkFOxCN8gCwkSF29A-1; Thu, 03 Dec 2020 18:56:21 -0500
-X-MC-Unique: a-ivMIkFOxCN8gCwkSF29A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3ECEA180A086;
-        Thu,  3 Dec 2020 23:56:20 +0000 (UTC)
-Received: from w520.home (ovpn-112-10.phx2.redhat.com [10.3.112.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A115B5C1B4;
-        Thu,  3 Dec 2020 23:56:19 +0000 (UTC)
-Date:   Thu, 3 Dec 2020 16:56:19 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Chiqijun <chiqijun@huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Yinshi (Stone)" <yin.yinshi@huawei.com>,
-        "Wangxiaoyun (Cloud)" <cloud.wangxiaoyun@huawei.com>,
-        zengweiliang zengweiliang <zengweiliang.zengweiliang@huawei.com>,
-        "Chenlizhong (IT Chip)" <chenlizhong@huawei.com>
-Subject: Re: [PATCH] PCI: Add pci reset quirk for Huawei Intelligent NIC
- virtual function
-Message-ID: <20201203165619.38b8e099@w520.home>
-In-Reply-To: <abe4d926-cb1d-3a70-8cd6-1b011edbed3a@huawei.com>
-References: <20201128061825.2629-1-chiqijun@huawei.com>
-        <20201128232919.GA929748@bjorn-Precision-5520>
-        <20201130084622.0b71d526@w520.home>
-        <9232bf61-8906-0848-8078-a2c6b6a78864@huawei.com>
-        <20201202104617.0e388100@w520.home>
-        <abe4d926-cb1d-3a70-8cd6-1b011edbed3a@huawei.com>
+        id S1728240AbgLDABo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 3 Dec 2020 19:01:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728063AbgLDABo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 3 Dec 2020 19:01:44 -0500
+Date:   Thu, 3 Dec 2020 18:01:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607040062;
+        bh=TFeruPkgbrSDGbzzbRUgiuSOMyk5TmQH2Xk0ks8OuLI=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=RBVSuwd9iPqp64UZa1U3c9mdkVt2FhO1qP51apmg1x6OyvkCyZHF6eVJqgoEf89fX
+         YIp1+gLW9XwOttLDxf+D1upX29fddCE5bNFxXxgwrkzUwW9WoChor3KIuNYb+vgx3R
+         +TubFcCeoPmUZuvt5/rlCsM5nOjhDp+BR8SDOQOotJfhRXD3X0sAldAG9l00bcWqMp
+         fL2FIxljMNfBV+HHxoTHB3p0PlTzuQVoVKfkOZPYPjHGeiuHWBLTREMYFx+o/kLWfE
+         6zvBczfHDopnW7GOgOtahtRuHZ5Xw8t0biHSfKKmzP7tLBlUfVj6Y4gkZcfopli3a0
+         bb++lD5Jwo6ZA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kelley, Sean V" <sean.v.kelley@intel.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "xerces.zhao@gmail.com" <xerces.zhao@gmail.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 12/15] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
+Message-ID: <20201204000100.GA1606573@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6E339ABE-2F55-486B-833A-BDDAF27A114D@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 3 Dec 2020 19:29:17 +0800
-Chiqijun <chiqijun@huawei.com> wrote:
-
-> On 2020/12/3 1:46, Alex Williamson wrote:
-> > On Wed, 2 Dec 2020 17:18:12 +0800
-> > Chiqijun <chiqijun@huawei.com> wrote:
-> >   
-> >> On 2020/11/30 23:46, Alex Williamson wrote:  
-> >>> On Sat, 28 Nov 2020 17:29:19 -0600
-> >>> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>>      
-> >>>> [+cc Alex]
-> >>>>
-> >>>> On Sat, Nov 28, 2020 at 02:18:25PM +0800, Chiqijun wrote:  
-> >>>>> When multiple VFs do FLR at the same time, the firmware is
-> >>>>> processed serially, resulting in some VF FLRs being delayed more
-> >>>>> than 100ms, when the virtual machine restarts and the device
-> >>>>> driver is loaded, the firmware is doing the corresponding VF
-> >>>>> FLR, causing the driver to fail to load.
-> >>>>>
-> >>>>> To solve this problem, add host and firmware status synchronization
-> >>>>> during FLR.  
-> >>>>
-> >>>> Is this because the Huawei Intelligent NIC isn't following the spec,
-> >>>> or is it because Linux isn't correctly waiting for the FLR to
-> >>>> complete?  
-> >>>
-> >>> Seems like a spec compliance issue, I don't recall anything in the spec
-> >>> about coordinating FLR between VFs.  
-> >>
-> >> The spec stipulates that the FLR time of a single VF does not exceed
-> >> 100ms, but when multiple VMs are reset concurrently in Linux, there will
-> >> be multiple VF parallel FLRs, VF of Huawei Intelligent NIC
-> >>    FLR will exceed 100ms in this case.
-> >>  
-> >>>        
-> >>>> If this is a Huawei Intelligent NIC defect, is there documentation
-> >>>> somewhere (errata) that you can reference?  Will it be fixed in future
-> >>>> designs, so we don't have to add future Device IDs to the quirk?
-> >>>>     
-> >>>>> Signed-off-by: Chiqijun <chiqijun@huawei.com>
-> >>>>> ---
-> >>>>>    drivers/pci/quirks.c | 67 ++++++++++++++++++++++++++++++++++++++++++++
-> >>>>>    1 file changed, 67 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> >>>>> index f70692ac79c5..bd6236ea9064 100644
-> >>>>> --- a/drivers/pci/quirks.c
-> >>>>> +++ b/drivers/pci/quirks.c
-> >>>>> @@ -3912,6 +3912,71 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
-> >>>>>    	return 0;
-> >>>>>    }
-> >>>>>    
-> >>>>> +#define PCI_DEVICE_ID_HINIC_VF  0x375E
-> >>>>> +#define HINIC_VF_FLR_TYPE       0x1000
-> >>>>> +#define HINIC_VF_OP             0xE80
-> >>>>> +#define HINIC_OPERATION_TIMEOUT 15000
-> >>>>> +
-> >>>>> +/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
-> >>>>> +static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
-> >>>>> +{
-> >>>>> +	unsigned long timeout;
-> >>>>> +	void __iomem *bar;
-> >>>>> +	u16 old_command;
-> >>>>> +	u32 val;
-> >>>>> +
-> >>>>> +	if (probe)
-> >>>>> +		return 0;
-> >>>>> +
-> >>>>> +	bar = pci_iomap(pdev, 0, 0);
-> >>>>> +	if (!bar)
-> >>>>> +		return -ENOTTY;
-> >>>>> +
-> >>>>> +	pci_read_config_word(pdev, PCI_COMMAND, &old_command);
-> >>>>> +
-> >>>>> +	/*
-> >>>>> +	 * FLR cap bit bit30, FLR ACK bit: bit18, to avoid big-endian conversion
-> >>>>> +	 * the big-endian bit6, bit10 is directly operated here
-> >>>>> +	 */
-> >>>>> +	val = readl(bar + HINIC_VF_FLR_TYPE);
-> >>>>> +	if (!(val & (1UL << 6))) {
-> >>>>> +		pci_iounmap(pdev, bar);
-> >>>>> +		return -ENOTTY;
-> >>>>> +	}  
-> >>>
-> >>>
-> >>> I don't know exactly what this is testing, but it seems like a
-> >>> feature/capability test that can fail, why is it not done as part of
-> >>> the probe?  Can we define bit 6 with a macro?  Same for bit 10 in the
-> >>> VF op register below.  
-> >>
-> >> The firmware of Huawei Intelligent NIC does not support this feature in
-> >> the old version. here is the reading ability to determine whether the
-> >> firmware supports it.
-> >> In the next patch, I will add a comment here and replace bit 6 and bit
-> >> 10 with macro definitions.  
+On Thu, Dec 03, 2020 at 12:51:40AM +0000, Kelley, Sean V wrote:
+> > On Dec 2, 2020, at 3:44 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Nov 20, 2020 at 04:10:33PM -0800, Sean V Kelley wrote:
+> >> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> >> 
+> >> When attempting error recovery for an RCiEP associated with an RCEC device,
+> >> there needs to be a way to update the Root Error Status, the Uncorrectable
+> >> Error Status and the Uncorrectable Error Severity of the parent RCEC.  In
+> >> some non-native cases in which there is no OS-visible device associated
+> >> with the RCiEP, there is nothing to act upon as the firmware is acting
+> >> before the OS.
+> >> 
+> >> Add handling for the linked RCEC in AER/ERR while taking into account
+> >> non-native cases.
+> >> 
+> >> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> >> Link: https://lore.kernel.org/r/20201002184735.1229220-12-seanvk.dev@oregontracks.org
+> >> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> >> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> >> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> >> ---
+> >> drivers/pci/pcie/aer.c | 46 +++++++++++++++++++++++++++++++-----------
+> >> drivers/pci/pcie/err.c | 20 +++++++++---------
+> >> 2 files changed, 44 insertions(+), 22 deletions(-)
+> >> 
+> >> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> >> index 0ba0b47ae751..51389a6ee4ca 100644
+> >> --- a/drivers/pci/pcie/aer.c
+> >> +++ b/drivers/pci/pcie/aer.c
+> >> @@ -1358,29 +1358,51 @@ static int aer_probe(struct pcie_device *dev)
+> >>  */
+> >> static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+> >> {
+> >> -	int aer = dev->aer_cap;
+> >> +	int type = pci_pcie_type(dev);
+> >> +	struct pci_dev *root;
+> >> +	int aer = 0;
+> >> +	int rc = 0;
+> >> 	u32 reg32;
+> >> -	int rc;
+> >> 
+> >> -	if (pcie_aer_is_native(dev)) {
+> >> +	if (type == PCI_EXP_TYPE_RC_END)
+> >> +		/*
+> >> +		 * The reset should only clear the Root Error Status
+> >> +		 * of the RCEC. Only perform this for the
+> >> +		 * native case, i.e., an RCEC is present.
+> >> +		 */
+> >> +		root = dev->rcec;
+> >> +	else
+> >> +		root = dev;
+> >> +
+> >> +	if (root)
+> >> +		aer = dev->aer_cap;
+> >> +
+> >> +	if ((aer) && pcie_aer_is_native(dev)) {
+> >> 		/* Disable Root's interrupt in response to error messages */
+> >> -		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+> >> +		pci_read_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+> >> 		reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+> >> -		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+> >> +		pci_write_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, reg32);
+> >> 	}
+> >> 
+> >> -	rc = pci_bus_error_reset(dev);
+> >> -	pci_info(dev, "Root Port link has been reset (%d)\n", rc);
+> >> +	if (type == PCI_EXP_TYPE_RC_EC || type == PCI_EXP_TYPE_RC_END) {
+> >> +		if (pcie_has_flr(dev)) {
+> >> +			rc = pcie_flr(dev);
+> >> +			pci_info(dev, "has been reset (%d)\n", rc);
 > > 
+> > Maybe:
 > > 
-> > The question remains why this is not done as part of the probe.  If the
-> > device firmware doesn't support it, isn't it better to try a regular
-> > FLR and have it return error if the time is exceeded rather than claim
-> > we have a functional device specific reset quirk that will always fail
-> > without ever attempting to FLR the VF?  Thanks,
+> >  +             } else {
+> >  +                     rc = -ENOTTY;
+> >  +                     pci_info(dev, "not reset (no FLR support)\n");
 > > 
-> > Alex
-> >   
+> > Or do we want to pretend the device was reset and return
+> > PCI_ERS_RESULT_RECOVERED?
 > 
-> The firmware has always supported regular FLR. The regular FLR process 
-> waits for 100ms after the FLR is triggered and the FLR is considered to 
-> be completed, but the Huawei Intelligent NIC will exceed 100ms when the 
-> VF FLR is parallel, so we now need to increase the host to confirm that 
-> the firmware completes the FLR processing operation.
-> So in the probe stage, we return to support FLR, but there is no place 
-> to return whether the firmware supports FLR completion ack capability. 
-> We need to add checks during FLR, If the firmware does not support FLR 
-> completion ack capability, then return -ENOTTY, the kernel will still 
-> execute the regular FLR process.
+> We are currently doing the latter now with the default of rc = 0
+> above and so  I’m not sure the extra detail here on the absence of
+> FLR support is of value.
 
-I see, so we implicitly know the device supports FLR and even though
-it's the device specific reset that essentially acks support for a
-function level reset, we can still fall through to the base FLR reset
-when we're called in the non-probe case.  A bit inconsistent, but OK.
-Thanks,
+So to make sure I understand the proposal here, for RCECs and RCiEPs
+that don't support FLR, you're saying you want to continue silently
+and return PCI_ERS_RESULT_RECOVERED and let the drivers assume their
+device was reset when it was not?
 
-Alex
+> >> +	} else {
+> >> +		rc = pci_bus_error_reset(dev);
+> >> +		pci_info(dev, "Root Port link has been reset (%d)\n", rc);
+> >> +	}
+> >> 
+> >> -	if (pcie_aer_is_native(dev)) {
+> >> +	if ((aer) && pcie_aer_is_native(dev)) {
+> >> 		/* Clear Root Error Status */
+> >> -		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+> >> -		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, reg32);
+> >> +		pci_read_config_dword(root, aer + PCI_ERR_ROOT_STATUS, &reg32);
+> >> +		pci_write_config_dword(root, aer + PCI_ERR_ROOT_STATUS, reg32);
+> >> 
+> >> 		/* Enable Root Port's interrupt in response to error messages */
+> >> -		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+> >> +		pci_read_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+> >> 		reg32 |= ROOT_PORT_INTR_ON_MESG_MASK;
+> >> -		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+> >> +		pci_write_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, reg32);
+> >> 	}
+> >> 
+> >> 	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
 
+> >> @@ -164,8 +164,14 @@ static void pci_walk_bridge(struct pci_dev *bridge,
+> >> 			    int (*cb)(struct pci_dev *, void *),
+> >> 			    void *userdata)
+> >> {
+> >> +	/*
+> >> +	 * In a non-native case where there is no OS-visible reporting
+> >> +	 * device the bridge will be NULL, i.e., no RCEC, no Downstream Port.
+> > 
+> > I don't quite understand this comment.  I see that in the non-native
+> > case, the reporting device may not be OS-visible.  But I don't
+> > understand why the comment is *here*.
+> > 
+> > If "bridge" can be NULL here, we should test that before dereferencing
+> > "bridge->subordinate".
+> 
+> Wrongly worded.  The subordinate may be NULL or the associated RCEC
+> may be NULL, not the “bridge”.  However, per below, we should not be
+> trying to call report_frozen_detected(), report_mmio_enabled() via
+> the associated RCEC’s driver, but rather the CB for the RCiEP
+> itself.
+
+OK, so if we want a comment here, I assume it would be along the lines
+of:
+
+  If "bridge" has no subordinate bus, it's an RCEC or an RCiEP.  In
+  either of those cases, we want to call the callback on "bridge"
+  itself.
+
+> Going back to this conversation,
+> 
+> https://lore.kernel.org/linux-pci/20201016172210.GA86168@bjorn-Precision-5520/
+> 
+> "Looks like *this* is the patch where the "no subordinate bus" case
+> becomes possible?  If you agree, I can just move the test here, no
+> need to repost.”
+> 
+> It is actually the case we are only dealing with the absence of a
+> subordinate bus.
+> 
+> >> 	if (bridge->subordinate)
+> >> 		pci_walk_bus(bridge->subordinate, cb, userdata);
+> >> +	else if (bridge->rcec)
+> >> +		cb(bridge->rcec, userdata);
+> > 
+> > And I don't understand what's going on here.  In this case, I *think*
+> > "bridge" is an RCiEP and "bridge->rcec" is the related RCEC, so it
+> > looks like we'll call report_frozen_detected(), report_mmio_enabled(),
+> > etc for the RCEC driver.  I would think we'd want the RCiEP driver.
+> 
+> Indeed, the bridge->rcec here is the dev->rcec in which the dev is
+> the RCiEP.
+> 
+> And we don’t need that conditional here, it should just hit the
+> device driver’s routines.
+
+So IIUC, the code would be:
+
+  if (bridge->subordinate)
+    pci_walk_bus(bridge->subordinate, cb, userdata);
+  else
+    cb(bridge, userdata);    /* RCEC or RCiEP */
+
+Right?
+
+I pushed a pci/err branch
+(https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/err)
+with some tweaks in these areas.  Diff from your v12 posting appended
+below.  I split the RCEC/RCiEP error recovery pieces up a little bit
+differently than in your posting.  Let me know if you see anything
+that should be changed.  I dropped one of Jonathan's
+reviewed/tested-by but probably should have dropped others to avoid
+putting words in his mouth.
+
+Not sure we're completely done, but we'll get there yet.  I definitely
+want to make sure this happens this cycle.
+
+Bjorn
+
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index b86a92494345..4aa118edde35 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1366,33 +1366,38 @@ static int aer_probe(struct pcie_device *dev)
+ }
  
-> >>>>> +
-> >>>>> +	val = readl(bar + HINIC_VF_OP);
-> >>>>> +	val = val | (1UL << 10);
-> >>>>> +	writel(val, bar + HINIC_VF_OP);
-> >>>>> +
-> >>>>> +	/* Perform the actual device function reset */
-> >>>>> +	pcie_flr(pdev);
-> >>>>> +
-> >>>>> +	pci_write_config_word(pdev, PCI_COMMAND,
-> >>>>> +			      old_command | PCI_COMMAND_MEMORY);
-> >>>>> +
-> >>>>> +	/* Waiting for device reset complete */
-> >>>>> +	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);  
-> >>>
-> >>> Yikes, 15s timeout!  
-> >>
-> >> Huawei Intelligent NIC supports a maximum of 496 VFs, so the total
-> >> timeout period is set to 15s, which will not reach the timeout time
-> >> under normal circumstances.
-> >>  
-> >>>      
-> >>>>> +	do {
-> >>>>> +		val = readl(bar + HINIC_VF_OP);
-> >>>>> +		if (!(val & (1UL << 10)))
-> >>>>> +			goto reset_complete;
-> >>>>> +		msleep(20);
-> >>>>> +	} while (time_before(jiffies, timeout));
-> >>>>> +
-> >>>>> +	val = readl(bar + HINIC_VF_OP);
-> >>>>> +	if (!(val & (1UL << 10)))
-> >>>>> +		goto reset_complete;
-> >>>>> +
-> >>>>> +	pci_warn(pdev, "Reset dev timeout, flr ack reg: %x\n",
-> >>>>> +		 be32_to_cpu(val));
-> >>>>> +
-> >>>>> +reset_complete:
-> >>>>> +	pci_write_config_word(pdev, PCI_COMMAND, old_command);
-> >>>>> +	pci_iounmap(pdev, bar);
-> >>>>> +
-> >>>>> +	return 0;
-> >>>>> +}
-> >>>>> +
-> >>>>>    static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
-> >>>>>    	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
-> >>>>>    		 reset_intel_82599_sfp_virtfn },
-> >>>>> @@ -3923,6 +3988,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
-> >>>>>    	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
-> >>>>>    	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
-> >>>>>    		reset_chelsio_generic_dev },
-> >>>>> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
-> >>>>> +		reset_hinic_vf_dev },
-> >>>>>    	{ 0 }
-> >>>>>    };
-> >>>>>    
-> >>>>> -- 
-> >>>>> 2.17.1
-> >>>>>         
-> >>>>     
-> >>>
-> >>> .
-> >>>      
-> >>  
-> > 
-> > .
-> >   
-> 
-
+ /**
+- * aer_root_reset - reset link on Root Port
+- * @dev: pointer to Root Port's pci_dev data structure
++ * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
++ * @dev: pointer to Root Port, RCEC, or RCiEP
+  *
+- * Invoked by Port Bus driver when performing link reset at Root Port.
++ * Invoked by Port Bus driver when performing reset.
+  */
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+ {
+ 	int type = pci_pcie_type(dev);
+ 	struct pci_dev *root;
+-	int aer = 0;
+-	int rc = 0;
++	int aer;
++	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+ 	u32 reg32;
++	int rc;
+ 
++	/*
++	 * Only Root Ports and RCECs have AER Root Command and Root Status
++	 * registers.  If "dev" is an RCiEP, the relevant registers are in
++	 * the RCEC.
++	 */
+ 	if (type == PCI_EXP_TYPE_RC_END)
+-		/*
+-		 * The reset should only clear the Root Error Status
+-		 * of the RCEC. Only perform this for the
+-		 * native case, i.e., an RCEC is present.
+-		 */
+ 		root = dev->rcec;
+ 	else
+ 		root = dev;
+ 
+-	if (root)
+-		aer = dev->aer_cap;
++	/*
++	 * If the platform retained control of AER, an RCiEP may not have
++	 * an RCEC visible to us, so dev->rcec ("root") may be NULL.  In
++	 * that case, firmware is responsible for these registers.
++	 */
++	aer = root ? root->aer_cap : 0;
+ 
+-	if ((aer) && pcie_aer_is_native(dev)) {
++	if ((host->native_aer || pcie_ports_native) && aer) {
+ 		/* Disable Root's interrupt in response to error messages */
+ 		pci_read_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+ 		reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+@@ -1403,13 +1408,15 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+ 		if (pcie_has_flr(dev)) {
+ 			rc = pcie_flr(dev);
+ 			pci_info(dev, "has been reset (%d)\n", rc);
++		} else {
++			pci_info(dev, "not reset (no FLR support)\n");
+ 		}
+ 	} else {
+ 		rc = pci_bus_error_reset(dev);
+ 		pci_info(dev, "Root Port link has been reset (%d)\n", rc);
+ 	}
+ 
+-	if ((aer) && pcie_aer_is_native(dev)) {
++	if ((host->native_aer || pcie_ports_native) && aer) {
+ 		/* Clear Root Error Status */
+ 		pci_read_config_dword(root, aer + PCI_ERR_ROOT_STATUS, &reg32);
+ 		pci_write_config_dword(root, aer + PCI_ERR_ROOT_STATUS, reg32);
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index cbc5abfe767b..510f31f0ef6d 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -148,30 +148,23 @@ static int report_resume(struct pci_dev *dev, void *data)
+ 
+ /**
+  * pci_walk_bridge - walk bridges potentially AER affected
+- * @bridge   bridge which may be an RCEC with associated RCiEPs,
+- *           or a Port.
+- * @cb       callback to be called for each device found
+- * @userdata arbitrary pointer to be passed to callback.
++ * @bridge:	bridge which may be a Port, an RCEC, or an RCiEP
++ * @cb:		callback to be called for each device found
++ * @userdata:	arbitrary pointer to be passed to callback
+  *
+  * If the device provided is a bridge, walk the subordinate bus, including
+  * any bridged devices on buses under this bus.  Call the provided callback
+  * on each device found.
+  *
+- * If the device provided has no subordinate bus, call the callback on the
+- * device itself.
++ * If the device provided has no subordinate bus, e.g., an RCEC or RCiEP,
++ * call the callback on the device itself.
+  */
+ static void pci_walk_bridge(struct pci_dev *bridge,
+ 			    int (*cb)(struct pci_dev *, void *),
+ 			    void *userdata)
+ {
+-	/*
+-	 * In a non-native case where there is no OS-visible reporting
+-	 * device the bridge will be NULL, i.e., no RCEC, no Downstream Port.
+-	 */
+ 	if (bridge->subordinate)
+ 		pci_walk_bus(bridge->subordinate, cb, userdata);
+-	else if (bridge->rcec)
+-		cb(bridge->rcec, userdata);
+ 	else
+ 		cb(bridge, userdata);
+ }
+@@ -183,11 +176,16 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	int type = pci_pcie_type(dev);
+ 	struct pci_dev *bridge;
+ 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
++	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
+ 
+ 	/*
+-	 * Error recovery runs on all subordinates of the bridge.  If the
+-	 * bridge detected the error, it is cleared at the end.  For RCiEPs
+-	 * we should reset just the RCiEP itself.
++	 * If the error was detected by a Root Port, Downstream Port, RCEC,
++	 * or RCiEP, recovery runs on the device itself.  For Ports, that
++	 * also includes any subordinate devices.
++	 *
++	 * If it was detected by another device (Endpoint, etc), recovery
++	 * runs on the device and anything else under the same Port, i.e.,
++	 * everything under "bridge".
+ 	 */
+ 	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+ 	    type == PCI_EXP_TYPE_DOWNSTREAM ||
+@@ -232,11 +230,15 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(bridge, "broadcast resume message\n");
+ 	pci_walk_bridge(bridge, report_resume, &status);
+ 
+-	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+-	    type == PCI_EXP_TYPE_DOWNSTREAM ||
+-	    type == PCI_EXP_TYPE_RC_EC) {
+-		if (pcie_aer_is_native(bridge))
+-			pcie_clear_device_status(bridge);
++	/*
++	 * If we have native control of AER, clear error status in the Root
++	 * Port or Downstream Port that signaled the error.  If the
++	 * platform retained control of AER, it is responsible for clearing
++	 * this status.  In that case, the signaling device may not even be
++	 * visible to the OS.
++	 */
++	if (host->native_aer || pcie_ports_native) {
++		pcie_clear_device_status(bridge);
+ 		pci_aer_clear_nonfatal_status(bridge);
+ 	}
+ 	pci_info(bridge, "device recovery successful\n");
