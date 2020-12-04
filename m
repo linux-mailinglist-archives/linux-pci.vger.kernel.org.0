@@ -2,165 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BDE92CF310
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 18:23:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 623922CF336
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 18:41:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgLDRWe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Dec 2020 12:22:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728185AbgLDRWe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 12:22:34 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A480C0613D1
-        for <linux-pci@vger.kernel.org>; Fri,  4 Dec 2020 09:21:54 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id p8so6071335wrx.5
-        for <linux-pci@vger.kernel.org>; Fri, 04 Dec 2020 09:21:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=xGFSjpeH8g6dTBRTGYBKVkvKKh8j2BzTKXEerenCUTM=;
-        b=C2n5YngYMq6LCpba/WuAYv4KvOpP19BjYUUqF43/aspUsbd88RHJCmmLmiM5tVQ5Tg
-         r3VWkvXhoQVRj8K1ofJ8N2ei13+0ds/aGMNJrU26ZXADbl5BRbfeGfxNMV/NNmBTddHf
-         /QYBq709tVaZ8n7DPm1mVuzK9joewYLjYHLgxueIfl4GHhmibRRuMoYM7Tk+UxMOUOkh
-         m7jWcyyscDcpTYqgMvbAms9Vv4fiyk16Mw2i1ZvU9u3K52ALCBtkXqbzlx53yPUz0iZo
-         qaQKjdlmLku/iERDgXNY7x+JIbJJSx4hatvzEhAd36xMrbrT2G6CB9RygCfnrrNbhUkb
-         +9mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xGFSjpeH8g6dTBRTGYBKVkvKKh8j2BzTKXEerenCUTM=;
-        b=PgzdF94oSr5N6ziGTen9FULXf24oFCqZB5HQLluJnXtYIk1tMRZyl4flzfwP60Yyu6
-         3EMJASomP7mVOa7Mq1gQ1M5GcZHt056vSruudihERNEpwHJGYiJ7Hdx5tWu7TTiiY9CK
-         Ca7W+y7ognUfMThh+3rJ3B/1WpbVtbsgRb+SWF9IaJP9vlvsbB3Xn/x9sLoQP5oar1rj
-         zvL7KQQSjEw3CfOuDn+xDqg/DmlAtMHCNDsJVCCbEGxoQUe4g1+YJq/gQ+InXXEnJUiY
-         UJRpIQevoqQym/Fxc6DSVsYiaPNVg+uPxAohurec64nKbSwrpXZpp+/NR6vHmVS0doaK
-         xafw==
-X-Gm-Message-State: AOAM532VhpwXiHLJuFqJQSqE9b0Iw8Xyhp6j9JGAvLwbu5MilebhLrYm
-        AXGSOUO/dOeJ9lvz6abUO/YfJXwxSr2efouM
-X-Google-Smtp-Source: ABdhPJxoVL1ZVnc0Md6tYy3/wzSWlYkBTe/PPjk87BUQG4iIdNPupj38SGW3m9116eJZj88c8xZ/bA==
-X-Received: by 2002:adf:fdc7:: with SMTP id i7mr4328839wrs.398.1607102512800;
-        Fri, 04 Dec 2020 09:21:52 -0800 (PST)
-Received: from localhost.localdomain ([88.122.66.28])
-        by smtp.gmail.com with ESMTPSA id c2sm4729020wrf.68.2020.12.04.09.21.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Dec 2020 09:21:52 -0800 (PST)
-From:   Loic Poulain <loic.poulain@linaro.org>
-To:     bhelgaas@google.com, ruscur@russell.cc
-Cc:     linux-pci@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>
-Subject: [RFC] pci: aer: Disable corrected error reporting by default
-Date:   Fri,  4 Dec 2020 18:28:52 +0100
-Message-Id: <1607102932-10384-1-git-send-email-loic.poulain@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        id S1731196AbgLDRkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 12:40:20 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2211 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgLDRkU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 12:40:20 -0500
+Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Cnfzj1Y3sz67F7V;
+        Sat,  5 Dec 2020 01:37:37 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 4 Dec 2020 18:39:35 +0100
+Received: from localhost (10.47.77.242) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 4 Dec 2020
+ 17:39:34 +0000
+Date:   Fri, 4 Dec 2020 17:39:12 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Ben Widawsky <ben.widawsky@intel.com>, <linux-cxl@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Ira Weiny" <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
+Message-ID: <20201204173912.00005f7f@Huawei.com>
+In-Reply-To: <CAPcyv4j7iiJ7BMTiHKrtccH7K_mzvA67nNEcq8yT6k93bPnqow@mail.gmail.com>
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+        <20201111054356.793390-4-ben.widawsky@intel.com>
+        <20201117144935.00006dee@Huawei.com>
+        <CAPcyv4h1NQ_ctMAUv1Sc37uh6Mqnm-VL_+woKKAATGOuLCC0Uw@mail.gmail.com>
+        <CAPcyv4j7iiJ7BMTiHKrtccH7K_mzvA67nNEcq8yT6k93bPnqow@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.77.242]
+X-ClientProxiedBy: lhreml741-chm.china.huawei.com (10.201.108.191) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It appears to be very common that people complain about kernel log
-(and irq) flooding because of reported corrected errors by AER.
+...
 
-An usual reply/solution is to completely disable aer with 'noaer' pci
-parameter. This is a big hammer tip since it also prevents reporting of
-'real' non corrected PCI errors, that need to be handled by the kernel.
+> > > > +MODULE_IMPORT_NS(CXL);
+> > > > diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+> > > > new file mode 100644
+> > > > index 000000000000..beb03921e6da
+> > > > --- /dev/null
+> > > > +++ b/drivers/cxl/pci.h
+> > > > @@ -0,0 +1,15 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+> > > > +#ifndef __CXL_PCI_H__
+> > > > +#define __CXL_PCI_H__
+> > > > +
+> > > > +#define PCI_CLASS_MEMORY_CXL 0x050210
+> > > > +
+> > > > +#define PCI_EXT_CAP_ID_DVSEC 0x23
+> > > > +#define PCI_DVSEC_VENDOR_CXL 0x1E98  
+> > >
+> > > Hmm. The magic question of what to call a vendor ID that isn't a vendor
+> > > ID but just a magic number that talks like a duck and quacks like a duck
+> > > (for anyone wondering what I'm talking about, there is a nice bit of legal
+> > > boilerplate on this in the CXL spec)
+> > >
+> > > This name is definitely not accurate however.
+> > >
+> > > PCI_UNIQUE_VALUE_CXL maybe?  It is used for other things than DVSEC (VDMs etc),
+> > > though possibly this is the only software visible use.  
+> >
+> > Finally working my way back through this review to make the changes.
+> > If 0x1E98 becomes visible to software somewhere else then this can
+> > become something like the following:
+> >
+> > #define PCI_DVSEC_VENDOR_CXL PCI_UNIQUE_VALUE_CXL
+> >
+> > ...or whatever the generic name is, but this field per the
+> > specification is the DVSEC-vendor-id and calling it
+> > PCI_UNIQUE_VALUE_CXL does not have any basis in the spec.
 
-A PCI correctable error is an error corrected at hardware level by the
-PCI protocol (e.g. with retry mechanism), the OS can then totally live
-without being notified about that hardware event.
+There is a big statement about it as a footnote to 3.1.2 in CXL 2.0
+"The Unique Value that is provided in this specification for use in ...
+Designated Vendor Specific Extended Capabilities.."  And for extra
+amusement in the "Notice Regarding PCI-SIG Unique Value" that forms
+part of the click through
+https://www.computeexpresslink.org/download-the-specification
+(that's the only use of "PCI-SIG Unique Value" that Google finds
+ but I know of one other similar statement)
 
-A simple change would then consist in not enabling correctable error
-reporting at all, but it can remain useful in some cases, such as for
-determining health of the PCI link.
+However, I agree it's being used in DVSEC field only (from software
+point of view) so fair enough to name it after where it is used
+rather than what it is.
 
-This patch changes the default AER mask to not enable correctable error
-reporting by default, and introduce a new pci parameter, 'aerfull' that
-can be used to re-enable all error reports, including correctable ones.
+> >
+> > I will rename it though to:
+> >
+> > PCI_DVSEC_VENDOR_ID_CXL
+> >
+> > ...since include/linux/pci_ids.h includes the _ID_ part.
+> >  
+> > >
+> > >  
+> > > > +#define PCI_DVSEC_VENDOR_OFFSET      0x4
+> > > > +#define PCI_DVSEC_ID_OFFSET  0x8  
+> > >
+> > > Put a line break here perhaps and maybe a spec reference to where to find
+> > > the various DVSEC IDs.  
+> >
+> > Ok.
+> >  
+> > >  
+> > > > +#define PCI_DVSEC_ID_CXL     0x0  
+> > >
+> > > That's definitely a confusing name as well.  
+> >
+> > Yeah, should be PCI_DVSEC_DEVICE_ID_CXL  
+> 
+> Actually, no, the spec calls this the "DVSEC id" so PCI_DVSEC_ID_CXL
+> seems suitable to me. This is from:
+> 
+> Table 126. PCI Express DVSEC Register Settings for CXL Device
+> 
+> In the CXL 2.0 Specification.
 
-Note: Alternatively, if changing the legacy behavior is not desirable,
-that can be done the other way, with a 'noaer_correctable' parameter to
-only disable correctable error reporting.
+The DVSEC ID naming is straight from the PCI spec so that part is fine,
+my issue is this is one of a whole bunch of CXL related DVSEC ID so it
+needs a more specific name.
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
----
- drivers/pci/pci.c      |  2 ++
- drivers/pci/pci.h      |  2 ++
- drivers/pci/pcie/aer.c | 12 +++++++++++-
- 3 files changed, 15 insertions(+), 1 deletion(-)
+PCI_DVSEC_ID_CXL_DEVICE would work in line with table 124.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 6d4d5a2..c67ec709 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6498,6 +6498,8 @@ static int __init pci_setup(char *str)
- 				pcie_ats_disabled = true;
- 			} else if (!strcmp(str, "noaer")) {
- 				pci_no_aer();
-+			} else if (!strcmp(str, "aerfull")) {
-+				pci_aer_full();
- 			} else if (!strcmp(str, "earlydump")) {
- 				pci_early_dump = true;
- 			} else if (!strncmp(str, "realloc=", 8)) {
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index f86cae9..36306a1 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -662,6 +662,7 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
- 
- #ifdef CONFIG_PCIEAER
- void pci_no_aer(void);
-+void pci_aer_full(void);
- void pci_aer_init(struct pci_dev *dev);
- void pci_aer_exit(struct pci_dev *dev);
- extern const struct attribute_group aer_stats_attr_group;
-@@ -670,6 +671,7 @@ int pci_aer_clear_status(struct pci_dev *dev);
- int pci_aer_raw_clear_status(struct pci_dev *dev);
- #else
- static inline void pci_no_aer(void) { }
-+static inline void pci_aer_full(void) { }
- static inline void pci_aer_init(struct pci_dev *d) { }
- static inline void pci_aer_exit(struct pci_dev *d) { }
- static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 65dff5f..e0ec7047 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -102,6 +102,7 @@ struct aer_stats {
- #define ERR_UNCOR_ID(d)			(d >> 16)
- 
- static int pcie_aer_disable;
-+static int pcie_aer_full;
- static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
- 
- void pci_no_aer(void)
-@@ -109,6 +110,11 @@ void pci_no_aer(void)
- 	pcie_aer_disable = 1;
- }
- 
-+void pci_aer_full(void)
-+{
-+	pcie_aer_full = 1;
-+}
-+
- bool pci_aer_available(void)
- {
- 	return !pcie_aer_disable && pci_msi_enabled();
-@@ -224,12 +230,16 @@ int pcie_aer_is_native(struct pci_dev *dev)
- 
- int pci_enable_pcie_error_reporting(struct pci_dev *dev)
- {
-+	u16 flags = PCI_EXP_AER_FLAGS;
- 	int rc;
- 
- 	if (!pcie_aer_is_native(dev))
- 		return -EIO;
- 
--	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
-+	if (!pcie_aer_full)
-+		flags &= ~PCI_EXP_DEVCTL_CERE;
-+
-+	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, flags);
- 	return pcibios_err_to_errno(rc);
- }
- EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
--- 
-2.7.4
+I'm not that bothered though.
+
+Jonathan
+
 
