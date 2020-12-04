@@ -2,144 +2,311 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79D4B2CE5B4
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 03:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C27702CE893
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 08:23:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgLDC3b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 3 Dec 2020 21:29:31 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5469 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726316AbgLDC3b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 3 Dec 2020 21:29:31 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fc99ee20001>; Thu, 03 Dec 2020 18:28:50 -0800
-Received: from [10.25.75.116] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 4 Dec
- 2020 02:28:43 +0000
-Subject: Re: [PATCH V2] PCI/MSI: Set device flag indicating only 32-bit MSI
- support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20201203195404.GA1587879@bjorn-Precision-5520>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <43adb2d1-1fed-763d-c52f-152bee29f199@nvidia.com>
-Date:   Fri, 4 Dec 2020 07:58:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.2
+        id S1728474AbgLDHWt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 02:22:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgLDHWt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 02:22:49 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D86C061A52
+        for <linux-pci@vger.kernel.org>; Thu,  3 Dec 2020 23:22:09 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id a16so7246817ejj.5
+        for <linux-pci@vger.kernel.org>; Thu, 03 Dec 2020 23:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xh4rvfrXyDTv/4cuTVOcjiXdlndYmDqYPiu2hA78tl4=;
+        b=aZXHTMyMYhG8sNEPs0gInxJBvCd8V4cEqE5rO250SHcGm1LUcd9PRLUiooxGqssN4A
+         tR/zIV6vmJJCbOE2bUUlRUqm+kijnQfvXp8MATNmEOn9nCdcP96587vLtZiNh9Mqagf9
+         MiTXCUVPjkDvQF3wyeyRGRgmPxj2epsu4I8VK3bjhs7umMmZXl/2dK/+x7DYq8YKIhdW
+         Ap5X2HG9axieTm0JirEzrT+Ks45YHj+toFWm4swizKTWCD11AWQFpAkBkegwxStm9ll1
+         h7z7P4/UYbTCJElq14k/WBQgxvRuebH/T4lPkM0lWC5zNlhrecfOQ/+2QP6yBIEm7xiK
+         b+Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xh4rvfrXyDTv/4cuTVOcjiXdlndYmDqYPiu2hA78tl4=;
+        b=s7hZlLKLdqzG3aS/iFbcUydN8mq9zJegsAu2Sx9MUlUM4xzHWAkF0E9SC/VtMYpcIB
+         xr23PZVMuiR1H8Gc+BfMSFMg84i+/NbOKJ3HuHjuSx+rmIcBxXEQfAKtswTpof4bs9Lp
+         hqtJTNiK09B5j3l6bnnL2PBU2Hj8S/LaatY25qCQ3kl9RZO84wceHyM5kOkCcVE0UM7H
+         3hfD9N4h/3jhYbnYCftPkOOvTFyGoCFRyny1BF1qUftTpi0ZyvTurNkuXswFpzls2IxF
+         AcNDYb0nCR3Cb3+s2Wk9HVmYJhwmpUwE/kaLOTtggey8BbTNtUEN4XMnJXGze24dsT40
+         n9fw==
+X-Gm-Message-State: AOAM532B1ISeqeEOsx6CjQYhVE4D25DZDSfsZfPHzfSZv5VuJx+3Lw1z
+        Dpg9IPjzh837dyFWZ3uFhrW22QOMvLrRr1JdonxKfg==
+X-Google-Smtp-Source: ABdhPJxwbaBlIEOjGnGE5doWopyB4zo2D7MEsreVeUo6De1bMaYn2geUwuXaHHeTRK4+tbvm82zSx3XyjrCNQpnhQ7c=
+X-Received: by 2002:a17:906:518a:: with SMTP id y10mr5989113ejk.323.1607066527615;
+ Thu, 03 Dec 2020 23:22:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201203195404.GA1587879@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1607048930; bh=437wcV7/qjO1rE8/1idJpMKx2nxR8pdl6JPcxfFTyDA=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=ZjsJeLXLHoAMG/l16IYdrT0R3IQYxvDLOG1BKJOIJJHxrGK05m8l1irts7pAGbB64
-         mBOXOhk8QqdG8PP3+kf/URvaewALVXtwz/iXg4s6wCgQmFSa+8+2bW1VFAo6bE+t0s
-         5CO3cYbOrt4ScgmQz57n8FWrM2qsgOpbd7Owj/pYdV+TdiE90JXfda5ON1T7cJByab
-         GDDjnZIshGugT23zvzDO6Kx+4MMUqVotvWy9VkNjbo+gohRNzroiY1p+ymteqDDwP3
-         rtxqWUYHkh/5K2Z5ltC5igs2iiMJJl6UH/ZWQAMPhkbca5kRgaKnUmksxNT4jKxnvi
-         NmfK7OG9mecjQ==
+References: <20201111054356.793390-1-ben.widawsky@intel.com>
+ <20201111054356.793390-4-ben.widawsky@intel.com> <20201117144935.00006dee@Huawei.com>
+In-Reply-To: <20201117144935.00006dee@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 3 Dec 2020 23:22:04 -0800
+Message-ID: <CAPcyv4h1NQ_ctMAUv1Sc37uh6Mqnm-VL_+woKKAATGOuLCC0Uw@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/9] cxl/mem: Add a driver for the type-3 mailbox
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Nov 17, 2020 at 6:50 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Tue, 10 Nov 2020 21:43:50 -0800
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> > From: Dan Williams <dan.j.williams@intel.com>
+> >
+> > The CXL.mem protocol allows a device to act as a provider of "System
+> > RAM" and/or "Persistent Memory" that is fully coherent as if the memory
+> > was attached to the typical CPU memory controller.
+> >
+> > The memory range exported by the device may optionally be described by
+> > the platform firmware memory map, or by infrastructure like LIBNVDIMM to
+> > provision persistent memory capacity from one, or more, CXL.mem devices.
+> >
+> > A pre-requisite for Linux-managed memory-capacity provisioning is this
+> > cxl_mem driver that can speak the "type-3 mailbox" protocol.
+> >
+> > For now just land the driver boiler-plate and fill it in with
+> > functionality in subsequent commits.
+> >
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+>
+> I've tried to avoid repeats, so mostly this is me moaning about naming!
+>
+> Jonathan
+>
+> > ---
+> >  drivers/cxl/Kconfig  | 20 +++++++++++
+> >  drivers/cxl/Makefile |  2 ++
+> >  drivers/cxl/mem.c    | 82 ++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/pci.h    | 15 ++++++++
+> >  4 files changed, 119 insertions(+)
+> >  create mode 100644 drivers/cxl/mem.c
+> >  create mode 100644 drivers/cxl/pci.h
+> >
+> > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> > index dd724bd364df..15548f5c77ff 100644
+> > --- a/drivers/cxl/Kconfig
+> > +++ b/drivers/cxl/Kconfig
+> > @@ -27,4 +27,24 @@ config CXL_ACPI
+> >         resources described by the CEDT (CXL Early Discovery Table)
+> >
+> >         Say 'y' to enable CXL (Compute Express Link) drivers.
+> > +
+> > +config CXL_MEM
+> > +        tristate "CXL.mem Device Support"
+> > +        depends on PCI && CXL_BUS_PROVIDER != n
+> > +        default m if CXL_BUS_PROVIDER
+> > +        help
+> > +          The CXL.mem protocol allows a device to act as a provider of
+> > +          "System RAM" and/or "Persistent Memory" that is fully coherent
+> > +          as if the memory was attached to the typical CPU memory
+> > +          controller.
+> > +
+> > +          Say 'y/m' to enable a driver named "cxl_mem.ko" that will attach
+> > +          to CXL.mem devices for configuration, provisioning, and health
+> > +          monitoring, the so called "type-3 mailbox". Note, this driver
+> > +          is required for dynamic provisioning of CXL.mem attached
+> > +          memory, a pre-requisite for persistent memory support, but
+> > +          devices that provide volatile memory may be fully described by
+> > +          existing platform firmware memory enumeration.
+> > +
+> > +          If unsure say 'n'.
+> >  endif
+> > diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> > index d38cd34a2582..97fdffb00f2d 100644
+> > --- a/drivers/cxl/Makefile
+> > +++ b/drivers/cxl/Makefile
+> > @@ -1,5 +1,7 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+> > +obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+> >
+> >  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+> >  cxl_acpi-y := acpi.o
+> > +cxl_mem-y := mem.o
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > new file mode 100644
+> > index 000000000000..aa7d881fa47b
+> > --- /dev/null
+> > +++ b/drivers/cxl/mem.c
+> > @@ -0,0 +1,82 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/io.h>
+> > +#include "acpi.h"
+> > +#include "pci.h"
+> > +
+> > +struct cxl_mem {
+> > +     void __iomem *regs;
+> > +};
+> > +
+> > +static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+> > +{
+> > +     int pos;
+> > +
+> > +     pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DVSEC);
+> > +     if (!pos)
+> > +             return 0;
+> > +
+> > +     while (pos) {
+> > +             u16 vendor, id;
+> > +
+> > +             pci_read_config_word(pdev, pos + PCI_DVSEC_VENDOR_OFFSET, &vendor);
+> > +             pci_read_config_word(pdev, pos + PCI_DVSEC_ID_OFFSET, &id);
+> > +             if (vendor == PCI_DVSEC_VENDOR_CXL && dvsec == id)
+> > +                     return pos;
+> > +
+> > +             pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
+>
+> This is good generic code and wouldn't cause much backport effort (even if needed
+> to bring in a local copy), so perhaps make it a generic function and move to
+> core PCI code?
+>
+> Mind you I guess that can happen the 'second' time someone wants to find a DVSEC.
+>
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct cxl_mem *cxlm;
+> > +     int rc, regloc;
+> > +
+> > +     rc = cxl_bus_prepared(pdev);
+> > +     if (rc != 0) {
+> > +             dev_err(dev, "failed to acquire interface\n");
+> > +             return rc;
+> > +     }
+> > +
+> > +     regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
+> > +     if (!regloc) {
+> > +             dev_err(dev, "register location dvsec not found\n");
+> > +             return -ENXIO;
+> > +     }
+> > +
+> > +     cxlm = devm_kzalloc(dev, sizeof(*cxlm), GFP_KERNEL);
+> > +     if (!cxlm)
+> > +             return -ENOMEM;
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void cxl_mem_remove(struct pci_dev *pdev)
+> > +{
+> > +}
+>
+> I'd bring this in only when needed in later patch.
+>
+> > +
+> > +static const struct pci_device_id cxl_mem_pci_tbl[] = {
+> > +     /* PCI class code for CXL.mem Type-3 Devices */
+> > +     { PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+> > +       PCI_CLASS_MEMORY_CXL, 0xffffff, 0 },
+> > +     { /* terminate list */ },
+> > +};
+> > +MODULE_DEVICE_TABLE(pci, cxl_mem_pci_tbl);
+> > +
+> > +static struct pci_driver cxl_mem_driver = {
+> > +     .name                   = KBUILD_MODNAME,
+> > +     .id_table               = cxl_mem_pci_tbl,
+> > +     .probe                  = cxl_mem_probe,
+> > +     .remove                 = cxl_mem_remove,
+> > +};
+> > +
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_AUTHOR("Intel Corporation");
+> > +module_pci_driver(cxl_mem_driver);
+> > +MODULE_IMPORT_NS(CXL);
+> > diff --git a/drivers/cxl/pci.h b/drivers/cxl/pci.h
+> > new file mode 100644
+> > index 000000000000..beb03921e6da
+> > --- /dev/null
+> > +++ b/drivers/cxl/pci.h
+> > @@ -0,0 +1,15 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +// Copyright(c) 2020 Intel Corporation. All rights reserved.
+> > +#ifndef __CXL_PCI_H__
+> > +#define __CXL_PCI_H__
+> > +
+> > +#define PCI_CLASS_MEMORY_CXL 0x050210
+> > +
+> > +#define PCI_EXT_CAP_ID_DVSEC 0x23
+> > +#define PCI_DVSEC_VENDOR_CXL 0x1E98
+>
+> Hmm. The magic question of what to call a vendor ID that isn't a vendor
+> ID but just a magic number that talks like a duck and quacks like a duck
+> (for anyone wondering what I'm talking about, there is a nice bit of legal
+> boilerplate on this in the CXL spec)
+>
+> This name is definitely not accurate however.
+>
+> PCI_UNIQUE_VALUE_CXL maybe?  It is used for other things than DVSEC (VDMs etc),
+> though possibly this is the only software visible use.
 
+Finally working my way back through this review to make the changes.
+If 0x1E98 becomes visible to software somewhere else then this can
+become something like the following:
 
-On 12/4/2020 1:24 AM, Bjorn Helgaas wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Fri, Dec 04, 2020 at 12:33:45AM +0530, Vidya Sagar wrote:
->> On 12/3/2020 11:54 PM, Bjorn Helgaas wrote:
->>> On Tue, Nov 24, 2020 at 04:20:35PM +0530, Vidya Sagar wrote:
->>>> There are devices (Ex:- Marvell SATA controller) that don't support
->>>> 64-bit MSIs and the same is advertised through their MSI capability
->>>> register. Set no_64bit_msi flag explicitly for such devices in the
->>>> MSI setup code so that the msi_verify_entries() API would catch
->>>> if the MSI arch code tries to use 64-bit MSI.
->>>
->>> This seems good to me.  I'll post a possible revision to set
->>> dev->no_64bit_msi in the device enumeration path instead of in the IRQ
->>> allocation path, since it's really a property of the device, not of
->>> the msi_desc.
->>>
->>> I like the extra checking this gives us.  Was this prompted by
->>> tripping over something, or is it something you noticed by code
->>> reading?  If the former, a hint about what was wrong and how it's
->>> being fixed would be useful.
->> I observed functionality issue with Marvell SATA controller (1b4b:9171) when
->> the allocated MSI target address was a 64-bit address. I mentioned the
->> Marvell SATA controller as an example in the commit message.
-> 
-> I know you mentioned the Marvell controller, but apparently that
-> device is working perfectly correctly: it does not support 64-bit MSI,
-> and it does not advertise support for 64-bit MSI.
-> 
-> So if there's a functionality issue, that means something is wrong in
-> Linux that caused us to assign a 64-bit MSI address to it.  *That*
-> issue is what I want to know about.  Your patch only warns about the
-> issue; it doesn't fix it.
-The issue is in the DWC code. I pushed a generic patch to fix that issue 
-by specifying the limit of MSI target address to 32-bit region. Patch is 
-up for review at 
-http://patchwork.ozlabs.org/project/linux-pci/patch/20201117165312.25847-1-vidyas@nvidia.com/
+#define PCI_DVSEC_VENDOR_CXL PCI_UNIQUE_VALUE_CXL
 
-> 
-> I don't think there's any point in specifically mentioning the Marvell
-> device if it is working correctly, because the same issue should
-> affect *any* device that doesn't support 64-bit MSI.  But if there's
-> some arch code that incorrectly assigns a 64-bit address, it would
-> definitely be useful to specify the arch.  And hopefully there's a fix
-> for that arch code, too.
-> 
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> ---
->>>> V2:
->>>> * Addressed Bjorn's comment and changed the error message
->>>>
->>>>    drivers/pci/msi.c | 11 +++++++----
->>>>    1 file changed, 7 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
->>>> index d52d118979a6..8de5ba6b4a59 100644
->>>> --- a/drivers/pci/msi.c
->>>> +++ b/drivers/pci/msi.c
->>>> @@ -581,10 +581,12 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
->>>>         entry->msi_attrib.multi_cap     = (control & PCI_MSI_FLAGS_QMASK) >> 1;
->>>>         entry->msi_attrib.multiple      = ilog2(__roundup_pow_of_two(nvec));
->>>>
->>>> -     if (control & PCI_MSI_FLAGS_64BIT)
->>>> +     if (control & PCI_MSI_FLAGS_64BIT) {
->>>>                 entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_64;
->>>> -     else
->>>> +     } else {
->>>>                 entry->mask_pos = dev->msi_cap + PCI_MSI_MASK_32;
->>>> +             dev->no_64bit_msi = 1;
->>>> +     }
->>>>
->>>>         /* Save the initial mask status */
->>>>         if (entry->msi_attrib.maskbit)
->>>> @@ -602,8 +604,9 @@ static int msi_verify_entries(struct pci_dev *dev)
->>>>         for_each_pci_msi_entry(entry, dev) {
->>>>                 if (!dev->no_64bit_msi || !entry->msg.address_hi)
->>>>                         continue;
->>>> -             pci_err(dev, "Device has broken 64-bit MSI but arch"
->>>> -                     " tried to assign one above 4G\n");
->>>> +             pci_err(dev, "Device has either broken 64-bit MSI or "
->>>> +                     "only 32-bit MSI support but "
->>>> +                     "arch tried to assign one above 4G\n");
->>>>                 return -EIO;
->>>>         }
->>>>         return 0;
->>>> --
->>>> 2.17.1
->>>>
+...or whatever the generic name is, but this field per the
+specification is the DVSEC-vendor-id and calling it
+PCI_UNIQUE_VALUE_CXL does not have any basis in the spec.
+
+I will rename it though to:
+
+PCI_DVSEC_VENDOR_ID_CXL
+
+...since include/linux/pci_ids.h includes the _ID_ part.
+
+>
+>
+> > +#define PCI_DVSEC_VENDOR_OFFSET      0x4
+> > +#define PCI_DVSEC_ID_OFFSET  0x8
+>
+> Put a line break here perhaps and maybe a spec reference to where to find
+> the various DVSEC IDs.
+
+Ok.
+
+>
+> > +#define PCI_DVSEC_ID_CXL     0x0
+>
+> That's definitely a confusing name as well.
+
+Yeah, should be PCI_DVSEC_DEVICE_ID_CXL
+
+>
+> PCI_DEVSEC_ID_CXL_DEVICE maybe?
+>
+>
+> > +#define PCI_DVSEC_ID_CXL_REGLOC      0x8
+> > +
+> > +#endif /* __CXL_PCI_H__ */
+>
