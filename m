@@ -2,56 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C15A22CF7C1
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Dec 2020 01:06:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A3872CF83E
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Dec 2020 01:48:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgLEAFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Dec 2020 19:05:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50692 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgLEAFu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 19:05:50 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1607126708;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hdu+2+gVxGM9DRgyWR7T6Z+kkEunl6zKsXAanmgGQJs=;
-        b=RPqSoVzm5R9+At5P1ODCEDVEaB0WEw2cO4aTb7yso55swtfYBJAtEj7Ogg33mXVemb9QiI
-        RemFqX9r1xdVI4amHO7KhrOo0qHB4yrXlLWIvp1ZWf8l1qpS7YV70vBkZsBb4a7Pwlc9+v
-        pg4FCRvHX5QbwNHw4HGIvCe2bY7hOBkn/lTE6e640ifpuhH0Ni0e+d9EBkGj5l1ZuqMhWV
-        mHE5HXQN8CSQUY9CHPf55XcmYlGnl3USuk5dD5hyasje2f/Hyc8d7al4/LLIAkgBJEKrwn
-        kATCiDyKncKkWkrbuuhSaVNlZJEW6pS+aR9pabcZYgITkXP4EsZ+WmW1s2j5vg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1607126708;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hdu+2+gVxGM9DRgyWR7T6Z+kkEunl6zKsXAanmgGQJs=;
-        b=WaUih28wxhsPc9lXt/1kuuX57g8Y0qeeP0xxlhL460dqj4p2yfoBEjpo0U4VB7E+XG+Y5W
-        0/mhpEHr6GWGwHDA==
-To:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        kernel-team@android.com,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Move Jason Cooper to CREDITS
-In-Reply-To: <20201204224135.GA1975685@bjorn-Precision-5520>
-References: <20201204224135.GA1975685@bjorn-Precision-5520>
-Date:   Sat, 05 Dec 2020 01:05:08 +0100
-Message-ID: <875z5h9ky3.fsf@nanos.tec.linutronix.de>
+        id S1731083AbgLEArD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 19:47:03 -0500
+Received: from vsm-gw.hyogo-dai.ac.jp ([202.244.76.12]:49526 "EHLO
+        vsm-gw.hyogo-dai.ac.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726485AbgLEAq5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 19:46:57 -0500
+X-Greylist: delayed 14573 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Dec 2020 19:46:41 EST
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [202.244.77.11])
+        by vsm-gw.hyogo-dai.ac.jp (Postfix) with ESMTP id 274A31A5589;
+        Sat,  5 Dec 2020 04:44:55 +0900 (JST)
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [127.0.0.1])
+        by postfix.imss71 (Postfix) with ESMTP id E5C39838858;
+        Sat,  5 Dec 2020 04:44:54 +0900 (JST)
+Received: from hyogo-dai.ac.jp (unknown [202.244.77.11])
+        by humans-kc.hyogo-dai.ac.jp (Postfix) with SMTP id B84F6838260;
+        Sat,  5 Dec 2020 04:44:54 +0900 (JST)
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <20201204194454.00002B21.0147@hyogo-dai.ac.jp>
+Date:   Sat, 05 Dec 2020 04:44:54 +0900
+From:   "Dr.Raymond" <tabata@hyogo-dai.ac.jp>
+To:     <infocarferr1@aim.com>
+Reply-To: <infocarfer@aim.com>
+Subject: I am Vice Chairman of Hang Seng Bank, Dr. Raymond Chien
+         Kuo Fung I have Important Matter to Discuss with you concerning
+         my late client. Died without a NEXT OF KIN. Send me your private
+         email for full details information. 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MAILER: Active! mail
+X-TM-AS-MML: disable
+X-TM-AS-Product-Ver: IMSS-7.1.0.1808-8.2.0.1013-25446.007
+X-TM-AS-Result: No--4.326-5.0-31-10
+X-imss-scan-details: No--4.326-5.0-31-10
+X-TM-AS-User-Approved-Sender: No
+X-TMASE-MatchedRID: +T4Z3mpR0x5ITndh1lLRASsOycAMAhSTkCM77ifYafsBLhz6t76Ce/bj
+        Enpjm61/Gf23dqZJjE4Erxo5p8V1/E1+zyfzlN7y/sToY2qzpx7w5nZ/qYg41XEWw1TkKAjcYff
+        qdBtG2ocgOkCKsW/kbuunGEBqPil++coAzulIP8gMTyJMXCOBhj9BWL7GG0LsKrauXd3MZDUZaR
+        NzIP3XI5u3uLPgwbAMH5RdHnhWfwyq9gpuf+A6coDeeVSgzszVDx5n520Z3eZyT7DDRtYlKaWBy
+        ZE9nSaC/rhfyjvqkZu/pNa4BidtZEMMprcbiest
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 04 2020 at 16:41, Bjorn Helgaas wrote:
->
-> Applied to for-linus for v5.10 since there's no risk and the bounces
-> are annoying.
+infocarfer@aim.com
 
-It's queued in tip irq/urgent already and going to Linus for rc7 :)
+
+
