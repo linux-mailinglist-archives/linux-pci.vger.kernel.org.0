@@ -2,86 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2499A2CF316
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 18:26:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BDE92CF310
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 18:23:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgLDRZl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Dec 2020 12:25:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727639AbgLDRZl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Dec 2020 12:25:41 -0500
-Date:   Fri, 4 Dec 2020 11:24:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607102701;
-        bh=iTGJnJveZ1JPdxHDy4lgNoqXVSHErcta5MseI1687Es=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=at1vtv1jRXO7DNFHV5M3AMYymgp8qmqMYd/OeyrVj5ylPI+BQnNx2vDcu0qymlQ1I
-         +GeXe3MCitxTaao8BbcZhj2knF17YNgXaCNMDGSrDnhecv6bZXf6ZXLw9JeC0tLgTt
-         dtwRTsqHxdd6wSaM9DGHOCXXkoY1Z6Ss/2/5pSwKXYqEfQBLYWqDq0CPH9lFYz7ZYz
-         YPE7NPgBrbIy5mElw0W+H/PA0+fV6P67klRAHBloNKWXHXtk20celWDObhAnrmEsLw
-         wXfRJRoHvNbrJhzEsdRlQYOz5aIffSJkSdeDC1tjQRvKdkfC5JXwWDSA9fCDlFDGJc
-         diP6xV/XFY19A==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kelley, Sean V" <sean.v.kelley@intel.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "xerces.zhao@gmail.com" <xerces.zhao@gmail.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 12/15] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Message-ID: <20201204172459.GA1694978@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4FD8E577-2F6A-4829-B92F-45D5E13BF9A4@intel.com>
+        id S1729274AbgLDRWe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 12:22:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbgLDRWe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 12:22:34 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A480C0613D1
+        for <linux-pci@vger.kernel.org>; Fri,  4 Dec 2020 09:21:54 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id p8so6071335wrx.5
+        for <linux-pci@vger.kernel.org>; Fri, 04 Dec 2020 09:21:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=xGFSjpeH8g6dTBRTGYBKVkvKKh8j2BzTKXEerenCUTM=;
+        b=C2n5YngYMq6LCpba/WuAYv4KvOpP19BjYUUqF43/aspUsbd88RHJCmmLmiM5tVQ5Tg
+         r3VWkvXhoQVRj8K1ofJ8N2ei13+0ds/aGMNJrU26ZXADbl5BRbfeGfxNMV/NNmBTddHf
+         /QYBq709tVaZ8n7DPm1mVuzK9joewYLjYHLgxueIfl4GHhmibRRuMoYM7Tk+UxMOUOkh
+         m7jWcyyscDcpTYqgMvbAms9Vv4fiyk16Mw2i1ZvU9u3K52ALCBtkXqbzlx53yPUz0iZo
+         qaQKjdlmLku/iERDgXNY7x+JIbJJSx4hatvzEhAd36xMrbrT2G6CB9RygCfnrrNbhUkb
+         +9mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xGFSjpeH8g6dTBRTGYBKVkvKKh8j2BzTKXEerenCUTM=;
+        b=PgzdF94oSr5N6ziGTen9FULXf24oFCqZB5HQLluJnXtYIk1tMRZyl4flzfwP60Yyu6
+         3EMJASomP7mVOa7Mq1gQ1M5GcZHt056vSruudihERNEpwHJGYiJ7Hdx5tWu7TTiiY9CK
+         Ca7W+y7ognUfMThh+3rJ3B/1WpbVtbsgRb+SWF9IaJP9vlvsbB3Xn/x9sLoQP5oar1rj
+         zvL7KQQSjEw3CfOuDn+xDqg/DmlAtMHCNDsJVCCbEGxoQUe4g1+YJq/gQ+InXXEnJUiY
+         UJRpIQevoqQym/Fxc6DSVsYiaPNVg+uPxAohurec64nKbSwrpXZpp+/NR6vHmVS0doaK
+         xafw==
+X-Gm-Message-State: AOAM532VhpwXiHLJuFqJQSqE9b0Iw8Xyhp6j9JGAvLwbu5MilebhLrYm
+        AXGSOUO/dOeJ9lvz6abUO/YfJXwxSr2efouM
+X-Google-Smtp-Source: ABdhPJxoVL1ZVnc0Md6tYy3/wzSWlYkBTe/PPjk87BUQG4iIdNPupj38SGW3m9116eJZj88c8xZ/bA==
+X-Received: by 2002:adf:fdc7:: with SMTP id i7mr4328839wrs.398.1607102512800;
+        Fri, 04 Dec 2020 09:21:52 -0800 (PST)
+Received: from localhost.localdomain ([88.122.66.28])
+        by smtp.gmail.com with ESMTPSA id c2sm4729020wrf.68.2020.12.04.09.21.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Dec 2020 09:21:52 -0800 (PST)
+From:   Loic Poulain <loic.poulain@linaro.org>
+To:     bhelgaas@google.com, ruscur@russell.cc
+Cc:     linux-pci@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>
+Subject: [RFC] pci: aer: Disable corrected error reporting by default
+Date:   Fri,  4 Dec 2020 18:28:52 +0100
+Message-Id: <1607102932-10384-1-git-send-email-loic.poulain@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 04, 2020 at 05:17:58PM +0000, Kelley, Sean V wrote:
-> On Dec 3, 2020, at 4:01 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+It appears to be very common that people complain about kernel log
+(and irq) flooding because of reported corrected errors by AER.
 
-> > OK, so if we want a comment here, I assume it would be along the lines
-> > of:
-> > 
-> >  If "bridge" has no subordinate bus, it's an RCEC or an RCiEP.  In
-> >  either of those cases, we want to call the callback on "bridge"
-> >  itself.
-> 
-> Correct.
+An usual reply/solution is to completely disable aer with 'noaer' pci
+parameter. This is a big hammer tip since it also prevents reporting of
+'real' non corrected PCI errors, that need to be handled by the kernel.
 
-OK, good.  I think the function comment now captures this.
+A PCI correctable error is an error corrected at hardware level by the
+PCI protocol (e.g. with retry mechanism), the OS can then totally live
+without being notified about that hardware event.
 
-> > So IIUC, the code would be:
-> > 
-> >  if (bridge->subordinate)
-> >    pci_walk_bus(bridge->subordinate, cb, userdata);
-> >  else
-> >    cb(bridge, userdata);    /* RCEC or RCiEP */
-> > 
-> > Right?
-> 
-> Right, as before.
+A simple change would then consist in not enabling correctable error
+reporting at all, but it can remain useful in some cases, such as for
+determining health of the PCI link.
 
-Updated to match this.
+This patch changes the default AER mask to not enable correctable error
+reporting by default, and introduce a new pci parameter, 'aerfull' that
+can be used to re-enable all error reports, including correctable ones.
 
-> > I pushed a pci/err branch
-> > (https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/err)
-> > with some tweaks in these areas.  Diff from your v12 posting appended
-> > below.  I split the RCEC/RCiEP error recovery pieces up a little bit
-> > differently than in your posting.  Let me know if you see anything
-> > that should be changed.  I dropped one of Jonathan's
-> > reviewed/tested-by but probably should have dropped others to avoid
-> > putting words in his mouth.
-> 
-> Thanks very much for doing this update.  It looks good to me.
+Note: Alternatively, if changing the legacy behavior is not desirable,
+that can be done the other way, with a 'noaer_correctable' parameter to
+only disable correctable error reporting.
 
-I just updated this for the "rc used before initialization" error.
-Current head f74d7cf9f2bc ("PCI/AER: Add RCEC AER error injection
-support").
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+---
+ drivers/pci/pci.c      |  2 ++
+ drivers/pci/pci.h      |  2 ++
+ drivers/pci/pcie/aer.c | 12 +++++++++++-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 6d4d5a2..c67ec709 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6498,6 +6498,8 @@ static int __init pci_setup(char *str)
+ 				pcie_ats_disabled = true;
+ 			} else if (!strcmp(str, "noaer")) {
+ 				pci_no_aer();
++			} else if (!strcmp(str, "aerfull")) {
++				pci_aer_full();
+ 			} else if (!strcmp(str, "earlydump")) {
+ 				pci_early_dump = true;
+ 			} else if (!strncmp(str, "realloc=", 8)) {
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index f86cae9..36306a1 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -662,6 +662,7 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
+ 
+ #ifdef CONFIG_PCIEAER
+ void pci_no_aer(void);
++void pci_aer_full(void);
+ void pci_aer_init(struct pci_dev *dev);
+ void pci_aer_exit(struct pci_dev *dev);
+ extern const struct attribute_group aer_stats_attr_group;
+@@ -670,6 +671,7 @@ int pci_aer_clear_status(struct pci_dev *dev);
+ int pci_aer_raw_clear_status(struct pci_dev *dev);
+ #else
+ static inline void pci_no_aer(void) { }
++static inline void pci_aer_full(void) { }
+ static inline void pci_aer_init(struct pci_dev *d) { }
+ static inline void pci_aer_exit(struct pci_dev *d) { }
+ static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 65dff5f..e0ec7047 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -102,6 +102,7 @@ struct aer_stats {
+ #define ERR_UNCOR_ID(d)			(d >> 16)
+ 
+ static int pcie_aer_disable;
++static int pcie_aer_full;
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+ 
+ void pci_no_aer(void)
+@@ -109,6 +110,11 @@ void pci_no_aer(void)
+ 	pcie_aer_disable = 1;
+ }
+ 
++void pci_aer_full(void)
++{
++	pcie_aer_full = 1;
++}
++
+ bool pci_aer_available(void)
+ {
+ 	return !pcie_aer_disable && pci_msi_enabled();
+@@ -224,12 +230,16 @@ int pcie_aer_is_native(struct pci_dev *dev)
+ 
+ int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+ {
++	u16 flags = PCI_EXP_AER_FLAGS;
+ 	int rc;
+ 
+ 	if (!pcie_aer_is_native(dev))
+ 		return -EIO;
+ 
+-	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
++	if (!pcie_aer_full)
++		flags &= ~PCI_EXP_DEVCTL_CERE;
++
++	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, flags);
+ 	return pcibios_err_to_errno(rc);
+ }
+ EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
+-- 
+2.7.4
+
