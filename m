@@ -2,94 +2,251 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C133C2CF4FB
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 20:46:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03B512CF612
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 22:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgLDTqU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Dec 2020 14:46:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgLDTqU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 14:46:20 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0518C061A4F
-        for <linux-pci@vger.kernel.org>; Fri,  4 Dec 2020 11:45:39 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id lt17so10392549ejb.3
-        for <linux-pci@vger.kernel.org>; Fri, 04 Dec 2020 11:45:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AD0IzZHnsxcGiXN64Y6L0qkMgIS2YHimQXlXQZyApjo=;
-        b=kUoDpbKxpm+YdrWJl/SlPW2GaESXSnrKM26FHNq4RpsQ8nG8oihOgGCISNJRsxiUg8
-         mrlE2iZ8/l529sBJaKbxQpA1gGqW4/a0EVuT1e7p2hAk+nv5UANLtoEdTOuhLIDZcbYQ
-         eemdj0fUMdpwrI/vWzWSZj2YS8Qh/oBZxTPusdsl7dVjLn+12WdBD2EHu6krOzGETuNO
-         qz1+aGgf+1gJ4K/HYS6n4tB6ADE7hJDG0KiFd71kkJ4ECTwvjXXfybLFsFowsrZETEIv
-         rq0anna6yKGWCcTVFitNNjnqIgPYkopLAcq6WKtcGG9d0FY7R51oS2eceCJo8CDl85J3
-         tPbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AD0IzZHnsxcGiXN64Y6L0qkMgIS2YHimQXlXQZyApjo=;
-        b=J451Lhg37HfYdshPbKjLuAASOabmszfPJA+0pHPXTwZz88eP868VFQRKe2TiFqKHh3
-         A6MvOo+ltYp5vX3MUNr5RtGkOB97Zd4YOA2utqyuS5O9R17g5JAGv5ThcK6WdfokJ4gh
-         PXgV60E7KZiv/fLdOl2lvaZPRVbpt51zWuXa6dE493dvi9b6oVGT9rPDUSbo7FZMIbeE
-         uojuX89f//ReXQnMBuTqy8Gt9dazkoT+amEcqdQafGAlS/Bzxz8tVZExMYVJX3VN/H71
-         0ZdQ7ZRGlkKqiYHOSjDLMCU6yXhcgX3+MkcIPYSj2UHLPkfWARje0VEvpuBmxjoVaGBK
-         gc8w==
-X-Gm-Message-State: AOAM533sWge528XPz7ghMNFe6VKO9CYSe0xzKY16azuZOvL7R7fYAv/w
-        wJB3rLbJOZc1xrClEhY1EgRzEtQxFsIxjXZJDL+Jhg==
-X-Google-Smtp-Source: ABdhPJzqqPz+AOjJ0g3TsYDaAG13gjaFaniKh+NAJ5rtKyHI8OloVQx2oO8nO3ar2qelyR99M7S3q1+9VQiHENb5Yn4=
-X-Received: by 2002:a17:906:2707:: with SMTP id z7mr3056063ejc.418.1607111138435;
- Fri, 04 Dec 2020 11:45:38 -0800 (PST)
+        id S1729954AbgLDVWV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 16:22:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726832AbgLDVWU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 4 Dec 2020 16:22:20 -0500
+Date:   Fri, 4 Dec 2020 15:21:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607116900;
+        bh=+cQ20Aye7Du+rqn66yfaPs/eLsuRfR7chMfSPtXu/PU=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=FoAtDBHKHkYM7LzgEQQ5yYzrQJubH4YhnSgvovhr02IWlTOhoCnhLYUT5o1aCAZtf
+         TJWHU0ukWHMUoq2WB8pdcouMX8DvzA125TS9OBQ0TZoycYRuaQR+WzlMaC9Fa2hi3y
+         ALvLpN+J61vmGc1heMrqi5EXC+MsD3eG50SMNZGn4M6UEiSbRiocLkCfejQYtNCYAM
+         2QqgKrz+ewL958TiOeXxkdm3cpDWP8fse2U/2pe37ALZEVRXswGARY+P10VFbQCkwm
+         9bvf9GskeDomHuym7aStRsYauHJbZhQSKPz2iXtkg/MYIRwpszoG3rklrDrGQR907e
+         QGe+I/E/E8GGA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: Re: [PATCH v1] PCI: Return u8 from pci_find_capability()
+Message-ID: <20201204212138.GA1964378@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <FB00A034-7C6D-40B1-8452-318A3B052216@avery-design.com>
- <F0ACA340-5BDE-4C17-80ED-DB7F5C5B8403@avery-design.com> <20201204181217.n3cm7gqujaqlcp2h@intel.com>
- <1878cd93df75dc8c1b35eab7b7aaaed243f9129e.camel@intel.com>
-In-Reply-To: <1878cd93df75dc8c1b35eab7b7aaaed243f9129e.camel@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 4 Dec 2020 11:45:34 -0800
-Message-ID: <CAPcyv4groMFbh6bc7FV0bi_tbH1KgJe6i8cbN9te3OT3HFKhMA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/9] CXL 2.0 Support
-To:     "Verma, Vishal L" <vishal.l.verma@intel.com>
-Cc:     "Widawsky, Ben" <ben.widawsky@intel.com>,
-        "cbrowy@avery-design.com" <cbrowy@avery-design.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201129164626.12887-1-puranjay12@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 4, 2020 at 11:26 AM Verma, Vishal L
-<vishal.l.verma@intel.com> wrote:
->
-> On Fri, 2020-12-04 at 10:12 -0800, Ben Widawsky wrote:
-> > Hi Chris.
-> >
-> > On 20-12-04 12:40:03, Chris Browy wrote:
-> [..]
-> >
-> > >    acpidump indicates the CXL0 and CXLM devices but no SRAT or HMAT tables are
-> > >    in the dump which is curious.
-> >
-> > I don't typically use HMAT, but I do have an SRAT in mine, so that's strange.
-> > You should also have a CEDT.
-> >
-> I suspect an SRAT is only added if you have distinct numa nodes. Adding
-> a few '-numa node' bits to the qemu command line should be enough to
-> make that happen.
+On Sun, Nov 29, 2020 at 10:16:26PM +0530, Puranjay Mohan wrote:
+> PCI Capabilities are linked in a list that must appear in the first 256
+> bytes of config space. The pointer to capabilities is of 8 bits.
+> 
+> Change the return type of pci_find_capability() and supporting
+> functions from int to u8 to match the specification.
+> 
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
 
-For CXL-2.0-Type-3, BIOS is responsible for retrieving CDATs and
-synthesizing SRAT/SLIT/HMAT tables for the CXL.mem that is mapped by
-platform firmware. For CXL.mem that is mapped by the OS, there is no
-requirement to publish updated ACPI tables. CXL.mem mapped by the OS
-need only support native CXL memory enumeration and leave ACPI only
-for static platform resources.
+Applied to pci/enumeration for v5.11, thanks!
+
+I added a few more related changes and some whitespace and typo fixes.
+Interdiff from your posting below.
+
+> ---
+> v1 - change return types of supporting functions of pci_find_capability.
+> ---
+>  drivers/pci/pci.c   | 8 ++++----
+>  include/linux/pci.h | 4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e578d34095e9..5caae09e0d20 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -399,7 +399,7 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
+>  	return 1;
+>  }
+>  
+> -static int __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+> +static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+>  				   u8 pos, int cap, int *ttl)
+>  {
+>  	u8 id;
+> @@ -438,7 +438,7 @@ int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_find_next_capability);
+>  
+> -static int __pci_bus_find_cap_start(struct pci_bus *bus,
+> +static u8 __pci_bus_find_cap_start(struct pci_bus *bus,
+>  				    unsigned int devfn, u8 hdr_type)
+>  {
+>  	u16 status;
+> @@ -477,9 +477,9 @@ static int __pci_bus_find_cap_start(struct pci_bus *bus,
+>   *  %PCI_CAP_ID_PCIX         PCI-X
+>   *  %PCI_CAP_ID_EXP          PCI Express
+>   */
+> -int pci_find_capability(struct pci_dev *dev, int cap)
+> +u8 pci_find_capability(struct pci_dev *dev, int cap)
+>  {
+> -	int pos;
+> +	u8 pos;
+>  
+>  	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
+>  	if (pos)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 22207a79762c..19a817702ea9 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1063,7 +1063,7 @@ void pci_sort_breadthfirst(void);
+>  
+>  /* Generic PCI functions exported to card drivers */
+>  
+> -int pci_find_capability(struct pci_dev *dev, int cap);
+> +u8 pci_find_capability(struct pci_dev *dev, int cap);
+>  int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
+>  int pci_find_ext_capability(struct pci_dev *dev, int cap);
+>  int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
+> @@ -1719,7 +1719,7 @@ static inline int __pci_register_driver(struct pci_driver *drv,
+>  static inline int pci_register_driver(struct pci_driver *drv)
+>  { return 0; }
+>  static inline void pci_unregister_driver(struct pci_driver *drv) { }
+> -static inline int pci_find_capability(struct pci_dev *dev, int cap)
+> +static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
+>  { return 0; }
+>  static inline int pci_find_next_capability(struct pci_dev *dev, u8 post,
+>  					   int cap)
+> -- 
+> 2.27.0
+
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 5caae09e0d20..b3761e98377b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -400,7 +400,7 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
+ }
+ 
+ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+-				   u8 pos, int cap, int *ttl)
++				  u8 pos, int cap, int *ttl)
+ {
+ 	u8 id;
+ 	u16 ent;
+@@ -423,15 +423,15 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+ 	return 0;
+ }
+ 
+-static int __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+-			       u8 pos, int cap)
++static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
++			      u8 pos, int cap)
+ {
+ 	int ttl = PCI_FIND_CAP_TTL;
+ 
+ 	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
+ }
+ 
+-int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
++u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
+ {
+ 	return __pci_find_next_cap(dev->bus, dev->devfn,
+ 				   pos + PCI_CAP_LIST_NEXT, cap);
+@@ -502,10 +502,9 @@ EXPORT_SYMBOL(pci_find_capability);
+  * device's PCI configuration space or 0 in case the device does not
+  * support it.
+  */
+-int pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap)
++u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap)
+ {
+-	int pos;
+-	u8 hdr_type;
++	u8 hdr_type, pos;
+ 
+ 	pci_bus_read_config_byte(bus, devfn, PCI_HEADER_TYPE, &hdr_type);
+ 
+@@ -623,7 +622,7 @@ u64 pci_get_dsn(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(pci_get_dsn);
+ 
+-static int __pci_find_next_ht_cap(struct pci_dev *dev, int pos, int ht_cap)
++static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+ {
+ 	int rc, ttl = PCI_FIND_CAP_TTL;
+ 	u8 cap, mask;
+@@ -650,11 +649,12 @@ static int __pci_find_next_ht_cap(struct pci_dev *dev, int pos, int ht_cap)
+ 
+ 	return 0;
+ }
++
+ /**
+- * pci_find_next_ht_capability - query a device's Hypertransport capabilities
++ * pci_find_next_ht_capability - query a device's HyperTransport capabilities
+  * @dev: PCI device to query
+  * @pos: Position from which to continue searching
+- * @ht_cap: Hypertransport capability code
++ * @ht_cap: HyperTransport capability code
+  *
+  * To be used in conjunction with pci_find_ht_capability() to search for
+  * all capabilities matching @ht_cap. @pos should always be a value returned
+@@ -663,26 +663,26 @@ static int __pci_find_next_ht_cap(struct pci_dev *dev, int pos, int ht_cap)
+  * NB. To be 100% safe against broken PCI devices, the caller should take
+  * steps to avoid an infinite loop.
+  */
+-int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap)
++u8 pci_find_next_ht_capability(struct pci_dev *dev, u8 pos, int ht_cap)
+ {
+ 	return __pci_find_next_ht_cap(dev, pos + PCI_CAP_LIST_NEXT, ht_cap);
+ }
+ EXPORT_SYMBOL_GPL(pci_find_next_ht_capability);
+ 
+ /**
+- * pci_find_ht_capability - query a device's Hypertransport capabilities
++ * pci_find_ht_capability - query a device's HyperTransport capabilities
+  * @dev: PCI device to query
+- * @ht_cap: Hypertransport capability code
++ * @ht_cap: HyperTransport capability code
+  *
+- * Tell if a device supports a given Hypertransport capability.
++ * Tell if a device supports a given HyperTransport capability.
+  * Returns an address within the device's PCI configuration space
+  * or 0 in case the device does not support the request capability.
+  * The address points to the PCI capability, of type PCI_CAP_ID_HT,
+- * which has a Hypertransport capability matching @ht_cap.
++ * which has a HyperTransport capability matching @ht_cap.
+  */
+-int pci_find_ht_capability(struct pci_dev *dev, int ht_cap)
++u8 pci_find_ht_capability(struct pci_dev *dev, int ht_cap)
+ {
+-	int pos;
++	u8 pos;
+ 
+ 	pos = __pci_bus_find_cap_start(dev->bus, dev->devfn, dev->hdr_type);
+ 	if (pos)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 19a817702ea9..7c5749ad37ca 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1063,12 +1063,13 @@ void pci_sort_breadthfirst(void);
+ 
+ /* Generic PCI functions exported to card drivers */
+ 
++u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap);
+ u8 pci_find_capability(struct pci_dev *dev, int cap);
+-int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
++u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
++u8 pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
++u8 pci_find_next_ht_capability(struct pci_dev *dev, u8 pos, int ht_cap);
+ int pci_find_ext_capability(struct pci_dev *dev, int cap);
+ int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
+-int pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
+-int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap);
+ struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+ 
+ u64 pci_get_dsn(struct pci_dev *dev);
+@@ -1279,7 +1280,6 @@ void set_pcie_port_type(struct pci_dev *pdev);
+ void set_pcie_hotplug_bridge(struct pci_dev *pdev);
+ 
+ /* Functions for PCI Hotplug drivers to use */
+-int pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap);
+ unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
+ unsigned int pci_rescan_bus(struct pci_bus *bus);
+ void pci_lock_rescan_remove(void);
