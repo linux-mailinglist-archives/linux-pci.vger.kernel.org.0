@@ -2,98 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 594D62CEB03
-	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 10:36:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1DD12CECB5
+	for <lists+linux-pci@lfdr.de>; Fri,  4 Dec 2020 12:06:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgLDJgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 4 Dec 2020 04:36:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgLDJgY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 4 Dec 2020 04:36:24 -0500
-Date:   Fri, 4 Dec 2020 09:35:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607074543;
-        bh=KiPYOwivri/c/ItidAb+vtLMDjOCyhBGcMSitc7cncU=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GjN8UC0To43FRm/tsZr8kvb4HKDZZt6WfrVN1DsurESfPe+l2A94uzzhu1vPpsxIE
-         SWXV209qIxN9vnROEFL2hbNTbFoFDX2aTz789bdBU7n8IEYjja66swjjuutShEenPk
-         HdAj42XjCW4qxd/vLG1PP2j/ZzWjMZOk5uAeayL+wv+giLCOA8bxFRjVaGRHLozHTh
-         YlQwRVBgo7c4uojoeCTTzDC1zQLC8umPbJxt9odbBalrhfUgV5LSzI9t2Ue27J/55s
-         xclSHIhMn7kaICKKuX/AMEWHc4UQCP5TBXKhUl7az+NuJaijbxMdBxQnu8hmWKcpH/
-         GkZxlHDT8oL8A==
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, Jian Cai <jiancai@google.com>,
-        Kristof Beyls <Kristof.Beyls@arm.com>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-Message-ID: <20201204093535.GB461@willie-the-truck>
-References: <20201201213707.541432-1-samitolvanen@google.com>
- <20201203112622.GA31188@willie-the-truck>
- <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
- <20201203182252.GA32011@willie-the-truck>
- <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
+        id S1727414AbgLDLGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 4 Dec 2020 06:06:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbgLDLF7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 4 Dec 2020 06:05:59 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D009C0613D1;
+        Fri,  4 Dec 2020 03:05:19 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id 7so8132913ejm.0;
+        Fri, 04 Dec 2020 03:05:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MwGzR1Y28JX67nWNoCvzrPLy/dODrJVdWJSsCQE6qHk=;
+        b=Zj+TtVYtA+yGfOZlb+PYiCbxi5CfWudF6F8OFqrCpfrYfdIF5VtkZ2dsjUVQbp1Hgu
+         UbvcvA7idCnSl7CIYHA9oJoegkR9e90knPTu2xDjqubPYiMPOP7kmd9xTeiCKzHKXwKW
+         uuq5kTtDXktodf2Q9rSfd2CILoLx3IUbcb0IiTmC5yQvU1eHGgBvhWhpqLbczZ5bRdJi
+         IUryE/712YRdQLpUlYebR3m61+BPZLFTkoyfq5n1HTqL47fLEqgKBVJ+YXbU5yf6wVUq
+         L8qSX5jP4xBju5SZcfAf/DCymLVeiC2LGfM/xRlwHn3L819n7gFuRpgqQkvvB67+5DZg
+         0Y7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MwGzR1Y28JX67nWNoCvzrPLy/dODrJVdWJSsCQE6qHk=;
+        b=BleJWi8p+sHkkaEoqvjcS4JylojzpCNTinCPQX6LfRSMI8+1OUdliBWo8Vs2bUzSFz
+         FuLmrW8VgmrHJctCqEsncPcungYKcJ0YWCVWrGtWSuT6ub3XjZ3B7OsL4tEimGxPmqS+
+         HUgCzNYnqfJQ69x8+ELU1JuCXgT7GqMVTq1JYopfXJKsvbfQXclctllqjT3a/0nxX3nw
+         0/R/RAMCyftp8QHvW2LSu4cO6rRMXaoLORCTVsZzNqgVgnbuGfsHqDZS0Dw4gE+tDclQ
+         zuvT2IFx29MP3XUlA5fWV32BL6LkR9eJi2EuVQqxK4cxW9lEWTqoom/KVnS18bR8Q4my
+         NApg==
+X-Gm-Message-State: AOAM530aMprxo6BHPQBq5CH0TrtqAQnB/vLi6ZvKw1eUOAY8ff2i345X
+        dONXecaAunT8rC0vG89Il8g=
+X-Google-Smtp-Source: ABdhPJw9rcNBp67mh5SB4w7LqkCdkTY63HZyzW2/ujSbu9V0qKNt4EM3J5yoKjbXghVLjlIHyllI2w==
+X-Received: by 2002:a17:906:d931:: with SMTP id rn17mr6376898ejb.308.1607079917996;
+        Fri, 04 Dec 2020 03:05:17 -0800 (PST)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id a10sm2601878ejk.92.2020.12.04.03.05.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Dec 2020 03:05:16 -0800 (PST)
+Date:   Fri, 4 Dec 2020 12:05:15 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Krishna Kishore <kthota@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        Vidya Sagar <sagar.tv@gmail.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 1/3] PCI/MSI: Move MSI/MSI-X init to msi.c
+Message-ID: <X8oX61zRwV7ykLAy@ulmo>
+References: <20201203185110.1583077-1-helgaas@kernel.org>
+ <20201203185110.1583077-2-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c381iuSK8tOo+HzI"
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20201203185110.1583077-2-helgaas@kernel.org>
+User-Agent: Mutt/2.0.2 (d9268908) (2020-11-20)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 02:32:13PM -0800, Nick Desaulniers wrote:
-> On Thu, Dec 3, 2020 at 10:23 AM Will Deacon <will@kernel.org> wrote:
-> > On Thu, Dec 03, 2020 at 09:07:30AM -0800, Sami Tolvanen wrote:
-> > > Without LLVM_IAS=1, Clang uses two different assemblers when LTO is
-> > > enabled: the external GNU assembler for stand-alone assembly, and
-> > > LLVM's integrated assembler for inline assembly. as-instr tests the
-> > > external assembler and makes an admittedly reasonable assumption that
-> > > the test is also valid for inline assembly.
-> > >
-> > > I agree that it would reduce confusion in future if we just always
-> > > enabled IAS with LTO. Nick, Nathan, any thoughts about this?
-> >
-> > That works for me, although I'm happy with anything which means that the
-> > assembler checks via as-instr apply to the assembler which will ultimately
-> > be used.
-> 
-> I agree with Will.
 
-[...]
+--c381iuSK8tOo+HzI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> So I'd recommend to Sami to simply make the Kconfig also depend on
-> clang's integrated assembler (not just llvm-nm and llvm-ar).  If
-> someone cares about LTO with Clang as the compiler but GAS as the
-> assembler, then we can revisit supporting that combination (and the
-> changes to KCONFIG), but it shouldn't be something we consider Tier 1
-> supported or a combination that need be supported in a minimum viable
-> product. And at that point we should make it avoid clang's integrated
-> assembler entirely (I suspect LTO won't work at all in that case, so
-> maybe even considering it is a waste of time).
-> 
-> One question I have to Will; if for aarch64 LTO will depend on RCpc,
-> but RCpc is an ARMv8.3 extension, what are the implications for LTO on
-> pre-ARMv8.3 aarch64 processors?
+On Thu, Dec 03, 2020 at 12:51:08PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Move pci_msi_setup_pci_dev(), which disables MSI and MSI-X interrupts, fr=
+om
+> probe.c to msi.c so it's with all the other MSI code and more consistent
+> with other capability initialization.  This means we must compile msi.c
+> always, even without CONFIG_PCI_MSI, so wrap the rest of msi.c in an #ifd=
+ef
+> and adjust the Makefile accordingly.  No functional change intended.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/Makefile |  3 +--
+>  drivers/pci/msi.c    | 36 ++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h    |  2 ++
+>  drivers/pci/probe.c  | 21 ++-------------------
+>  4 files changed, 41 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 522d2b974e91..11cc79411e2d 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -5,7 +5,7 @@
+>  obj-$(CONFIG_PCI)		+=3D access.o bus.o probe.o host-bridge.o \
+>  				   remove.o pci.o pci-driver.o search.o \
+>  				   pci-sysfs.o rom.o setup-res.o irq.o vpd.o \
+> -				   setup-bus.o vc.o mmap.o setup-irq.o
+> +				   setup-bus.o vc.o mmap.o setup-irq.o msi.o
+> =20
+>  obj-$(CONFIG_PCI)		+=3D pcie/
+> =20
+> @@ -18,7 +18,6 @@ endif
+>  obj-$(CONFIG_OF)		+=3D of.o
+>  obj-$(CONFIG_PCI_QUIRKS)	+=3D quirks.o
+>  obj-$(CONFIG_HOTPLUG_PCI)	+=3D hotplug/
+> -obj-$(CONFIG_PCI_MSI)		+=3D msi.o
+>  obj-$(CONFIG_PCI_ATS)		+=3D ats.o
+>  obj-$(CONFIG_PCI_IOV)		+=3D iov.o
+>  obj-$(CONFIG_PCI_BRIDGE_EMUL)	+=3D pci-bridge-emul.o
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index d52d118979a6..555791c0ee1a 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -26,6 +26,8 @@
+> =20
+>  #include "pci.h"
+> =20
+> +#ifdef CONFIG_MSI
+> +
+>  static int pci_msi_enable =3D 1;
+>  int pci_msi_ignore_mask;
+> =20
+> @@ -1577,3 +1579,37 @@ bool pci_dev_has_special_msi_domain(struct pci_dev=
+ *pdev)
+>  }
+> =20
+>  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
+> +#endif /* CONFIG_PCI_MSI */
+> +
+> +void pci_msi_init(struct pci_dev *dev)
+> +{
+> +	u16 ctrl;
+> +
+> +	/*
+> +	 * Disable the MSI hardware to avoid screaming interrupts
+> +	 * during boot.  This is the power on reset default so
+> +	 * usually this should be a noop.
+> +	 */
+> +	dev->msi_cap =3D pci_find_capability(dev, PCI_CAP_ID_MSI);
+> +	if (!dev->msi_cap)
+> +		return;
+> +
+> +	pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &ctrl);
+> +	if (ctrl & PCI_MSI_FLAGS_ENABLE)
+> +		pci_write_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS,
+> +				      ctrl & ~PCI_MSI_FLAGS_ENABLE);
+> +}
 
-It doesn't depend on RCpc -- we just emit a more expensive instruction
-(an RCsc acquire) if the RCpc one is not supported by both the toolchain
-and the CPU. So the implication for those processors is that READ_ONCE()
-may be more expensive.
+The old code used the pci_msi_set_enable() helper here...
 
-Will
+> +
+> +void pci_msix_init(struct pci_dev *dev)
+> +{
+> +	u16 ctrl;
+> +
+> +	dev->msix_cap =3D pci_find_capability(dev, PCI_CAP_ID_MSIX);
+> +	if (!dev->msix_cap)
+> +		return;
+> +
+> +	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
+> +	if (ctrl & PCI_MSIX_FLAGS_ENABLE)
+> +		pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS,
+> +				      ctrl & ~PCI_MSIX_FLAGS_ENABLE);
+> +}
+
+=2E.. and pci_msix_clear_and_set_ctrl() here. I like your version here
+better because it avoids the unnecessary write in case the flag isn't
+set. But it got me thinking if perhaps the helpers aren't very useful
+and perhaps should be dropped in favour of open-coded variants.
+Especially since there seem to be only 4 and 6 occurrences of them after
+this patch.
+
+Anyway, this patch looks correct to me and is a nice improvement, so:
+
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+--c381iuSK8tOo+HzI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl/KF+gACgkQ3SOs138+
+s6F4uQ/8C2+QVUpFTfG5aaAddWNsh4xfZDlWQPPSw9HeOsh5lU9W3yRi/11bTFOY
+3W1pLmCP/WdVli6Qen3bOLQKOqin6WPg0U1uBs17HPHFVC++CaJVJhtt8hRWcBCA
+wCHNn15XDFM2QvDlhkLXZzFFTilgHfIG3W53d5IxxLRx6ShZEmlhK6zKzgSuIIT+
+nvYe8XIUnqwYLk5Tkj7l+M/1YVkfLQE2vRqaP99IUpiuYj/KKUIYTAqEeDIf2fqw
+XhgroNY2SRWGt6Wl/+/Go+CkwGrDYHvbV7guhRtj432vX8PWmvpOoEHZSL93FzAu
+wKtgHkXavsDvP6XTju/zAF+dGVGsW9+K2LNsyJUI/JUb9+DcykOu+7msGnWuu31Z
+uPeUrULqPvl3nxMKmiDVAUoDSYHcX7ZbXwGSlY7mS/aYY33JaMoXE4ChddFJ0TMx
+iLwxC5Alw149ecYJ485bd4NDJS9/rqceoQTLhqzqKSy0hHw01FY85OrfrHYtoYxa
+/fxmkT4ck6tsGfODBrHAIb26hQ/Qa4thAAcQ7SJetudqaUO2ymUB/uwJCfyWN114
+I9x+j5lVpLl5lZxVlJRLXfAlPZp8jFfeXGOilZVj26mxpZUjj6ltlW1Oilbe3RWR
+29lY++h/2LX8kJM59jyf2zh72nuiHVOPioEqbWEWZXGC6t5TClo=
+=4zX2
+-----END PGP SIGNATURE-----
+
+--c381iuSK8tOo+HzI--
