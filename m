@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE57F2CF9B4
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Dec 2020 06:28:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 327582CF9FE
+	for <lists+linux-pci@lfdr.de>; Sat,  5 Dec 2020 07:24:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgLEF1p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Dec 2020 00:27:45 -0500
-Received: from mga04.intel.com ([192.55.52.120]:50101 "EHLO mga04.intel.com"
+        id S1727218AbgLEGYA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 5 Dec 2020 01:24:00 -0500
+Received: from mga11.intel.com ([192.55.52.93]:40739 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgLEF1p (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Dec 2020 00:27:45 -0500
-IronPort-SDR: ePkAMx5QQ9cSYfUoYXFTpnEJy7I9Or33EOsUp5F5ukls/STlmdS6YOtRVB2UTDGRJFdLzTWhvt
- XfSrouaoNYfw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9825"; a="170923433"
+        id S1726841AbgLEGYA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 5 Dec 2020 01:24:00 -0500
+IronPort-SDR: l8flmcbzdD2VZHPDOOKVwssqChHCnhwstsMd+IF74Q9XwaYYuM8b3pdYInnZZLMOpf7Lcn+Yaa
+ Z+J/K+INYlkw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9825"; a="169984764"
 X-IronPort-AV: E=Sophos;i="5.78,394,1599548400"; 
-   d="scan'208";a="170923433"
+   d="scan'208";a="169984764"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2020 21:27:04 -0800
-IronPort-SDR: kjfZOfp+C/RUoIjfeSV8+dfnXndQwvLM2xkKIoiuBe2aWkhXUear3tzdv9QLv7+OQrTW0P6JDz
- ljgVvcxebrTg==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2020 22:23:15 -0800
+IronPort-SDR: KsAVS6TqfXTyZF93u41cfI3DoS80NBJHipbbtsen006X0Tg+Cia5V8b5esvA0JSpdPVCAlT8MM
+ /LL+Yq7FTd1A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,394,1599548400"; 
-   d="scan'208";a="366567514"
+   d="scan'208";a="346826979"
 Received: from lkp-server01.sh.intel.com (HELO 47754f1311fc) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Dec 2020 21:27:03 -0800
+  by orsmga002.jf.intel.com with ESMTP; 04 Dec 2020 22:23:13 -0800
 Received: from kbuild by 47754f1311fc with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1klQ62-00008C-W2; Sat, 05 Dec 2020 05:27:02 +0000
-Date:   Sat, 05 Dec 2020 13:26:54 +0800
+        id 1klQyO-0000AB-Vi; Sat, 05 Dec 2020 06:23:12 +0000
+Date:   Sat, 05 Dec 2020 14:22:24 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/err] BUILD SUCCESS
- f74d7cf9f2bcbb2de85c5cd3bd985b9c0c82f18f
-Message-ID: <5fcb1a1e.YN1POhmiY24HFHys%lkp@intel.com>
+Subject: [pci:pci/msi] BUILD SUCCESS
+ 2053230af11dc651ee3024682df12668496adad2
+Message-ID: <5fcb2720.UtylFX/0y2K6WBl8%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -45,12 +45,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/err
-branch HEAD: f74d7cf9f2bcbb2de85c5cd3bd985b9c0c82f18f  PCI/AER: Add RCEC AER error injection support
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/msi
+branch HEAD: 2053230af11dc651ee3024682df12668496adad2  PCI/MSI: Set device flag indicating only 32-bit MSI support
 
-elapsed time: 725m
+elapsed time: 721m
 
-configs tested: 137
+configs tested: 144
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -62,6 +62,13 @@ arm64                            allyesconfig
 arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
+nios2                            alldefconfig
+arc                        vdk_hs38_defconfig
+powerpc                      cm5200_defconfig
+arm                          tango4_defconfig
+mips                 decstation_r4k_defconfig
+powerpc                     tqm8555_defconfig
+sh                           se7721_defconfig
 m68k                          amiga_defconfig
 sh                          r7785rp_defconfig
 sh                         microdev_defconfig
@@ -93,7 +100,6 @@ ia64                             alldefconfig
 arc                         haps_hs_defconfig
 arm                           spitz_defconfig
 arm                          exynos_defconfig
-nios2                            alldefconfig
 powerpc                     redwood_defconfig
 powerpc                          g5_defconfig
 powerpc                 mpc836x_mds_defconfig
@@ -103,10 +109,6 @@ openrisc                         alldefconfig
 powerpc                      mgcoge_defconfig
 arm                         s3c2410_defconfig
 openrisc                    or1ksim_defconfig
-powerpc                    amigaone_defconfig
-powerpc               mpc834x_itxgp_defconfig
-sparc                               defconfig
-arm                        spear3xx_defconfig
 arm                         at91_dt_defconfig
 powerpc                       ebony_defconfig
 powerpc                 mpc8272_ads_defconfig
@@ -120,6 +122,10 @@ arm                           omap1_defconfig
 arm                        mini2440_defconfig
 m68k                            q40_defconfig
 sparc64                             defconfig
+m68k                        m5307c3_defconfig
+arm                      tct_hammer_defconfig
+m68k                       bvme6000_defconfig
+arm                        keystone_defconfig
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                             allyesconfig
@@ -144,6 +150,7 @@ parisc                           allyesconfig
 s390                                defconfig
 i386                             allyesconfig
 sparc                            allyesconfig
+sparc                               defconfig
 i386                               tinyconfig
 i386                                defconfig
 mips                             allyesconfig
@@ -170,11 +177,11 @@ i386                 randconfig-a015-20201204
 i386                 randconfig-a012-20201204
 i386                 randconfig-a016-20201204
 riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
 riscv                    nommu_virt_defconfig
 riscv                             allnoconfig
 riscv                               defconfig
 riscv                          rv32_defconfig
-riscv                            allyesconfig
 riscv                            allmodconfig
 x86_64                                   rhel
 x86_64                           allyesconfig
