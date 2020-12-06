@@ -2,115 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71AA32D070D
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 21:10:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C3292D0710
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 21:13:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgLFUKY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Dec 2020 15:10:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40592 "EHLO
+        id S1727474AbgLFULX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Dec 2020 15:11:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgLFUKY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 15:10:24 -0500
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C965BC0613D1
-        for <linux-pci@vger.kernel.org>; Sun,  6 Dec 2020 12:09:43 -0800 (PST)
-Received: by mail-ua1-x942.google.com with SMTP id t15so3789030ual.6
-        for <linux-pci@vger.kernel.org>; Sun, 06 Dec 2020 12:09:43 -0800 (PST)
+        with ESMTP id S1727427AbgLFULW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 15:11:22 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7192C0613D0;
+        Sun,  6 Dec 2020 12:10:42 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id lb18so3605648pjb.5;
+        Sun, 06 Dec 2020 12:10:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iz05We4T6eIjQaXBvxz0eSpPimwSlGMKW8WGflLLLgw=;
-        b=iS/yxV/uv33bWygYcp3w94mm68WCg/cooZBDHGRBRFCb+HEVGfBEws+dpr/6P25Mqk
-         CGF0txaBIDtDjqi1yLxaRHzbKNu312tAIiWry1c6H2XUemwifDXDJ3xgms3nJQh018Ju
-         tSfem3j42gdxUipuE2UCBGdP6HbCXjgyA35rk3ybR2x5sUXsvaX34+w/11PCnDP3wUw3
-         VXU3d3GrfxpXDM3mNsWNN8WzS04oerefikrSUgI3Sa41DzU+d/SyYsbVuDLVrcBbBAFd
-         TPfpfk+LViEDwCmkthUfnAh26cBtd4O/zl0ILiNY2vgWj3ccwdwRthGGUZbaHtAB4IuL
-         4E/g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IYFrpSzggTewyuDDpq2534UTmRK88ibp9VGJZsjw6YQ=;
+        b=dqxQuKG05rzMFQ6s97c9hCXa/gYpjCkspUbT4s8VqHatPwGIBehoto2SrnaZ+0eFOp
+         E5YxRXRgt4fm3+yh4e6hYR1EnLfqiJvDGFZzuWxbov5eUbgz9pqC3RoCzViMiBOwbjNe
+         JiPDh2dWOePCnSv2XeUssajbQ9wW4O6uUgGEkNCIPiWFseN8EnQIbhQ2BRvyWq13BadJ
+         +yJgBwGL2FVaTRIoYc0B3CqZozpFEjtZWsKz7HFH79RvbfuPJVoTnbusp+QcoqG3uhia
+         a0V9pxvKIZr1YRyzoE0vi8pUMhdHrNWqVAO4jave+Qt4F1LLjE66SuhnP8u12dLZQLBK
+         GwKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iz05We4T6eIjQaXBvxz0eSpPimwSlGMKW8WGflLLLgw=;
-        b=JCaGXoF0Q0XcgE/3iakFZmIqZExDumFxkayxw9RwELuNHCZKafRH0mgDxozajo8T/t
-         M7HYGUaV9S72CAErNCqgEdtlLLyTAUWI3fZ2hUM7C3J2Um7WLBNF5okg1x1oZP5Vyua0
-         A1ZUYoP2tGMqgsk0BAbIhHwdipdxji1kDB+AfpRiTB3lUNCpHAs8SJe71KqPl/Ci4KZd
-         dMBsKo/v3i+/C3QdxfayLGbtce/pXkZCxeTsBWMqcl2V5U981++V+51hK78QJE0KYaFi
-         vl3SBzvc4rtAhVbkGm8apR3KetlPApbyZnYy07y5uJ166qxjykXXUZSNzjdrimxmECyQ
-         rhbQ==
-X-Gm-Message-State: AOAM533/93XlC2jHJomTNdPIWbP0iPnDx5uGR4ro5TvxZzLz/FPJAh2x
-        4bqSrCCMjcttN3p2s3F0puhY9ChmXUuC/CQmEvZDUQ==
-X-Google-Smtp-Source: ABdhPJyKCb8VYAdpRAyuT9QnDEa4WUbLFAwf7yIvP0eytyeCFIBxggFhwRm1Itv8d1sjhOU4I4dMU+iMqgn79bJuOn0=
-X-Received: by 2002:ab0:6f0f:: with SMTP id r15mr3484878uah.52.1607285382144;
- Sun, 06 Dec 2020 12:09:42 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IYFrpSzggTewyuDDpq2534UTmRK88ibp9VGJZsjw6YQ=;
+        b=b8WEIyR5DFy5/RqqEtfKYKpJv/XjL6h1bVioxZDU3zJK3PvGIcDj0unfbuTyQr9tdA
+         EnXabaerlCg0Sxx4kX3deYIbiqSOxmhsWHLBD4iCDPETUu5XhR3pdloNajNhKNvAWhzR
+         xq/2aU3jPMnAznQpwTCbPiA3+MATcm9tPCSeN5zDJsSD3a6dIRM3mH/szmWI0KkMuxf7
+         W9rgzg+8wbazXk5dxcMRNJ6cO/gG0E0z3Ruf5RMFb5tlLfNAcu9L2try/0bsvB9KijzM
+         ukarNEqD95hH32/8C7wJTuoW52Y44hSTXwytvOHWWCSogZfFWIOMAKjxIp5+0s2hoM1b
+         JRGA==
+X-Gm-Message-State: AOAM532bNfO7VnUqUrLtSZRP/unTs9rcwHlY9SsqDkk2ufPyUHyKdyQz
+        TWsr2Pl6QMrNCEe21WMx6DQx/pV+PILARIas
+X-Google-Smtp-Source: ABdhPJz/gfzHDtFsSUOTU3BeW3EUnFL8sMRicfRNBJ7REjfLB1mxujyffMqTtwR6aPHLsPsWk9xaUg==
+X-Received: by 2002:a17:90a:b110:: with SMTP id z16mr7234190pjq.167.1607285442127;
+        Sun, 06 Dec 2020 12:10:42 -0800 (PST)
+Received: from localhost.localdomain ([124.253.53.149])
+        by smtp.googlemail.com with ESMTPSA id y6sm21188295pjl.0.2020.12.06.12.10.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Dec 2020 12:10:41 -0800 (PST)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     siva.kallam@broadcom.com, prashant@broadcom.com,
+        mchan@broadcom.com, kuba@kernel.org, netdev@vger.kernel.org,
+        bjorn@helgaas.com, linux-pci@vger.kernel.org
+Cc:     Puranjay Mohan <puranjay12@gmail.com>
+Subject: [PATCH] drivers: broadcom: save return value of pci_find_capability() in u8
+Date:   Mon,  7 Dec 2020 01:40:33 +0530
+Message-Id: <20201206201033.21823-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20201201213707.541432-1-samitolvanen@google.com>
- <20201203112622.GA31188@willie-the-truck> <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
- <20201203182252.GA32011@willie-the-truck> <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
- <CABCJKufgkq+k0DeYaXrzjXniy=T_N4sN1bxoK9=cUxTZN5xSVQ@mail.gmail.com> <20201206065028.GA2819096@ubuntu-m3-large-x86>
-In-Reply-To: <20201206065028.GA2819096@ubuntu-m3-large-x86>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Sun, 6 Dec 2020 12:09:31 -0800
-Message-ID: <CABCJKue9TJnhge6TVPj9vfZXPGD4RW2JYiN3kNwVKNovTCq8ZA@mail.gmail.com>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, Jian Cai <jiancai@google.com>,
-        Kristof Beyls <Kristof.Beyls@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 5, 2020 at 10:50 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Fri, Dec 04, 2020 at 02:52:41PM -0800, Sami Tolvanen wrote:
-> > On Thu, Dec 3, 2020 at 2:32 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > >
-> > > So I'd recommend to Sami to simply make the Kconfig also depend on
-> > > clang's integrated assembler (not just llvm-nm and llvm-ar).
-> >
-> > Sure, sounds good to me. What's the preferred way to test for this in Kconfig?
-> >
-> > It looks like actually trying to test if we have an LLVM assembler
-> > (e.g. using $(as-instr,.section
-> > ".linker-options","e",@llvm_linker_options)) doesn't work as Kconfig
-> > doesn't pass -no-integrated-as to clang here.
+Callers of pci_find_capability() should save the return value in u8.
+change the type of pcix_cap from int to u8, to match the specification.
 
-After a closer look, that's actually not correct, this seems to work
-with Clang+LLD no matter which assembler is used. I suppose we could
-test for .gasversion. to detect GNU as, but that's hardly ideal.
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+ drivers/net/ethernet/broadcom/tg3.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >I could do something
-> > simple like $(success,echo $(LLVM) $(LLVM_IAS) | grep -q "1 1").
-> >
-> > Thoughts?
-> >
-> > Sami
->
-> I think
->
->     depends on $(success,test $(LLVM_IAS) -eq 1)
->
-> should work, at least according to my brief test.
+diff --git a/drivers/net/ethernet/broadcom/tg3.h b/drivers/net/ethernet/broadcom/tg3.h
+index 1000c894064f..f1781d2dce0b 100644
+--- a/drivers/net/ethernet/broadcom/tg3.h
++++ b/drivers/net/ethernet/broadcom/tg3.h
+@@ -3268,7 +3268,7 @@ struct tg3 {
+ 
+ 	int				pci_fn;
+ 	int				msi_cap;
+-	int				pcix_cap;
++	u8				pcix_cap;
+ 	int				pcie_readrq;
+ 
+ 	struct mii_bus			*mdio_bus;
+-- 
+2.27.0
 
-Sure, looks good to me. However, I think we should also test for
-LLVM=1 to avoid possible further issues with mismatched toolchains
-instead of only checking for llvm-nm and llvm-ar.
-
-Sami
