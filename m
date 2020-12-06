@@ -2,76 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B15AE2D068B
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 19:47:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBE5F2D06F7
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 20:44:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgLFSqs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Dec 2020 13:46:48 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42438 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgLFSqs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 13:46:48 -0500
-Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-         client-signature RSA-PSS (1024 bits) client-digest SHA256)
-        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
-        by jabberwock.ucw.cz (Postfix) with ESMTPS id 0CE311C0B7F
-        for <linux-pci@vger.kernel.org>; Sun,  6 Dec 2020 19:45:50 +0100 (CET)
-Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
-        id AD9411A0889; Sun,  6 Dec 2020 19:45:49 +0100 (CET)
-Date:   Sun, 6 Dec 2020 19:45:49 +0100
-From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH] lspci: Add PCIe 6.0 data rate (64 GT/s) support
-Message-ID: <mj+md-20201206.184541.56867.albireo@ucw.cz>
-References: <ad286025549e42030bc75ef9f99af9c92071a205.1605740212.git.gustavo.pimentel@synopsys.com>
+        id S1727605AbgLFTnx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Dec 2020 14:43:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgLFTnx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 14:43:53 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBF7C0613D1;
+        Sun,  6 Dec 2020 11:43:13 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id lb18so3578395pjb.5;
+        Sun, 06 Dec 2020 11:43:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=afZwwcHhODhEELbSogSIEDzs2XPcSL3i8voMpfmKBek=;
+        b=tRbaPDXRnBV7LdMI2Sow36OGyhLx5mHSlWyqUd6qSQhWk2TTiISI+udo+cemnqQ9NY
+         SjoWLjY1wYCnhcyqo3F6EQdiUHwqju0lG6qp09T61qi7njyaofz7IRyA4Cadm+cGnVKm
+         wrX/kz3Mg/SfQx2rtp9eFP5dobHbckVjhaeaRY2lVbC9+23ONoqdSaiI6pfsPCKv32S4
+         3jFk9dkD3d+qajtTglHgTzECREZDHM/8XLTUAYmwXFX+KT1S0Azd58/s8kfTp6U+SfBX
+         1H/4C1hfY2UeC0pHxw/fbcs9tTRTZZHJfsGgUq03r7XGaAImZKSxpAy7wvN15IfasGYg
+         xR1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=afZwwcHhODhEELbSogSIEDzs2XPcSL3i8voMpfmKBek=;
+        b=IPCxMHK7keOuKMGarHhqhT2275pPDiycMSW0HeGnOygrBCHLG15eND/Ziuld1QKGr5
+         DO1N/iFhsujSldQ9FqsqDY2UuYG0d+0A2S+vOn3HaOFVbak1XBoSCZ3ecc1KUvbGgqAA
+         iYtP2y3te5yiF4ucqUs66iVk8zaMhbRCjUtH5KoMec2hhiT1KpxJ92qIElZkgGm7Y6tF
+         iFi4n0Wt3BT423xYONNou5j6EhOIoCN8jNV929+76/mwF12HZStxINLmcWe0lfmh+0MF
+         ydA8UXU5XutFZUMsYBQFW8H6hBf1GFX9mkk7FT5OzPaYRiX7VLkXDFKxHL5ikEEy5zDy
+         AokA==
+X-Gm-Message-State: AOAM531/czBL3PF+HgCDF8bBIMQLF8il6QsxDZl12xXfazM7ELDVB9G3
+        DygM7iIDV8LEYzc3/YJh27g=
+X-Google-Smtp-Source: ABdhPJzlRdP2+zLopwV9THTotrdB2IPM6ImH2yk+RsnD8LVd3bbzPjS4+lSmQuCxVu0d1Uz6UboU7w==
+X-Received: by 2002:a17:90b:4a81:: with SMTP id lp1mr13705677pjb.55.1607283792720;
+        Sun, 06 Dec 2020 11:43:12 -0800 (PST)
+Received: from localhost.localdomain ([124.253.53.149])
+        by smtp.googlemail.com with ESMTPSA id o2sm9765125pgi.60.2020.12.06.11.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Dec 2020 11:43:12 -0800 (PST)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Damien.LeMoal@wdc.com, linux-block@vger.kernel.org,
+        bjorn@helgaas.com, linux-pci@vger.kernel.org
+Cc:     Puranjay Mohan <puranjay12@gmail.com>
+Subject: [PATCH] drivers: block: save return value of pci_find_capability() in u8
+Date:   Mon,  7 Dec 2020 01:13:00 +0530
+Message-Id: <20201206194300.14221-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad286025549e42030bc75ef9f99af9c92071a205.1605740212.git.gustavo.pimentel@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Rspamd-Queue-Id: 0CE311C0B7F
-X-Spam-Status: No, score=-0.80
-X-Spamd-Result: default: False [-0.80 / 15.00];
-         ARC_NA(0.00)[];
-         BAYES_HAM(-3.00)[99.99%];
-         FROM_HAS_DN(0.00)[];
-         RCPT_COUNT_THREE(0.00)[4];
-         TO_DN_SOME(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         SENDER_REP_HAM(0.00)[asn: 51744(0.11), country: CZ(-0.00), ip: 91.219.245.20(-0.53)];
-         HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
-         AUTH_NA(1.00)[];
-         HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
-         TO_MATCH_ENVRCPT_SOME(0.00)[];
-         DMARC_NA(0.00)[ucw.cz];
-         NEURAL_HAM(-0.00)[-0.992];
-         R_SPF_NA(0.00)[no SPF record];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         R_DKIM_NA(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
-         MID_RHS_MATCH_FROM(0.00)[];
-         TAGGED_FROM(0.00)[f-061220,linux-pci=vger.kernel.org]
-Authentication-Results: jabberwock.ucw.cz;
-        dkim=none;
-        dmarc=none;
-        spf=none (jabberwock.ucw.cz: domain of mj@ucw.cz has no SPF policy when checking 91.219.245.20) smtp.mailfrom=mj@ucw.cz
-X-Spamd-Bar: /
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+Callers of pci_find_capability should save the return value in u8.
+change type of variables from int to u8 to match the specification.
 
-> This enables "lspci" to show PCIe 6.0 data rate (64 GT/s) properly
-> according to the contents in register PCI_EXP_LNKCAP, PCI_EXP_LNKSTA
-> and PCI_EXP_LNKCTL2.
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+ drivers/block/mtip32xx/mtip32xx.c | 2 +-
+ drivers/block/skd_main.c          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Thanks, applied.
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index 153e2cdecb4d..da57d37c6d20 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -3936,7 +3936,7 @@ static DEFINE_HANDLER(7);
+ 
+ static void mtip_disable_link_opts(struct driver_data *dd, struct pci_dev *pdev)
+ {
+-	int pos;
++	u8 pos;
+ 	unsigned short pcie_dev_ctrl;
+ 
+ 	pos = pci_find_capability(pdev, PCI_CAP_ID_EXP);
+diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+index a962b4551bed..16d59569129b 100644
+--- a/drivers/block/skd_main.c
++++ b/drivers/block/skd_main.c
+@@ -3136,7 +3136,7 @@ MODULE_DEVICE_TABLE(pci, skd_pci_tbl);
+ 
+ static char *skd_pci_info(struct skd_device *skdev, char *str)
+ {
+-	int pcie_reg;
++	u8 pcie_reg;
+ 
+ 	strcpy(str, "PCIe (");
+ 	pcie_reg = pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
+-- 
+2.27.0
 
-				Martin
