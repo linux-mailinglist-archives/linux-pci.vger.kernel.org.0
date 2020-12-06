@@ -2,87 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C3292D0710
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 21:13:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E552E2D0717
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 21:18:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbgLFULX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Dec 2020 15:11:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbgLFULW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 15:11:22 -0500
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7192C0613D0;
-        Sun,  6 Dec 2020 12:10:42 -0800 (PST)
-Received: by mail-pj1-x1044.google.com with SMTP id lb18so3605648pjb.5;
-        Sun, 06 Dec 2020 12:10:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IYFrpSzggTewyuDDpq2534UTmRK88ibp9VGJZsjw6YQ=;
-        b=dqxQuKG05rzMFQ6s97c9hCXa/gYpjCkspUbT4s8VqHatPwGIBehoto2SrnaZ+0eFOp
-         E5YxRXRgt4fm3+yh4e6hYR1EnLfqiJvDGFZzuWxbov5eUbgz9pqC3RoCzViMiBOwbjNe
-         JiPDh2dWOePCnSv2XeUssajbQ9wW4O6uUgGEkNCIPiWFseN8EnQIbhQ2BRvyWq13BadJ
-         +yJgBwGL2FVaTRIoYc0B3CqZozpFEjtZWsKz7HFH79RvbfuPJVoTnbusp+QcoqG3uhia
-         a0V9pxvKIZr1YRyzoE0vi8pUMhdHrNWqVAO4jave+Qt4F1LLjE66SuhnP8u12dLZQLBK
-         GwKw==
+        id S1727874AbgLFURg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Dec 2020 15:17:36 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38866 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgLFURf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 15:17:35 -0500
+Received: by mail-pj1-f66.google.com with SMTP id j13so6234151pjz.3
+        for <linux-pci@vger.kernel.org>; Sun, 06 Dec 2020 12:17:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IYFrpSzggTewyuDDpq2534UTmRK88ibp9VGJZsjw6YQ=;
-        b=b8WEIyR5DFy5/RqqEtfKYKpJv/XjL6h1bVioxZDU3zJK3PvGIcDj0unfbuTyQr9tdA
-         EnXabaerlCg0Sxx4kX3deYIbiqSOxmhsWHLBD4iCDPETUu5XhR3pdloNajNhKNvAWhzR
-         xq/2aU3jPMnAznQpwTCbPiA3+MATcm9tPCSeN5zDJsSD3a6dIRM3mH/szmWI0KkMuxf7
-         W9rgzg+8wbazXk5dxcMRNJ6cO/gG0E0z3Ruf5RMFb5tlLfNAcu9L2try/0bsvB9KijzM
-         ukarNEqD95hH32/8C7wJTuoW52Y44hSTXwytvOHWWCSogZfFWIOMAKjxIp5+0s2hoM1b
-         JRGA==
-X-Gm-Message-State: AOAM532bNfO7VnUqUrLtSZRP/unTs9rcwHlY9SsqDkk2ufPyUHyKdyQz
-        TWsr2Pl6QMrNCEe21WMx6DQx/pV+PILARIas
-X-Google-Smtp-Source: ABdhPJz/gfzHDtFsSUOTU3BeW3EUnFL8sMRicfRNBJ7REjfLB1mxujyffMqTtwR6aPHLsPsWk9xaUg==
-X-Received: by 2002:a17:90a:b110:: with SMTP id z16mr7234190pjq.167.1607285442127;
-        Sun, 06 Dec 2020 12:10:42 -0800 (PST)
-Received: from localhost.localdomain ([124.253.53.149])
-        by smtp.googlemail.com with ESMTPSA id y6sm21188295pjl.0.2020.12.06.12.10.38
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R+rjdl/kMmpfvATyyiBKTTDC7/ADOrYG2LQ26ycg4ts=;
+        b=Fg5iNSadCdU0fE3KrYMtyWfsM7NrcfzglTVn0Nc8EsPkxuGpfn1nEXi2Jjvyat+dV9
+         6D8pEsfdgDt15WHyOrgl2yt6aCT3ie5cYQJZ5EJPJ7r29qs3gX0Sg96to4lTEWOkx4W5
+         ZQr28/EDjZ75bHaBkVaj38yuBzwuAfW/lrvG33K/csWEiPOfSjWlPXz7J+EU1FR/h/ax
+         k/DyzvT0jKD0T8nOVaVjM01kwKfhH2nMZbfnv0JK0Rjp0TR3C5V/58MuOxUnB5NzJ6Hv
+         KdWNkLlxNaib26Sc5l/byCeCJTLKHFeGkfix8znQaxoDH7aeJoFFbZbmVGC4DXOXQ1G6
+         Rjsg==
+X-Gm-Message-State: AOAM532OJbgoYlcm8+r5qmErUBHNnQIFdVW9ome2KKyvItbwL5h5+mYm
+        zMI/2Fb9n2txIblIprf4sns=
+X-Google-Smtp-Source: ABdhPJxpA9QCLH2CckDZiO4WQ7tusbQz3TsQfr9LJIt6xF7N6IQbRIyD2evK2VHZgjLCDBw3mAerWw==
+X-Received: by 2002:a17:90a:990a:: with SMTP id b10mr2206383pjp.87.1607285815024;
+        Sun, 06 Dec 2020 12:16:55 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id w11sm12784288pfi.162.2020.12.06.12.16.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Dec 2020 12:10:41 -0800 (PST)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     siva.kallam@broadcom.com, prashant@broadcom.com,
-        mchan@broadcom.com, kuba@kernel.org, netdev@vger.kernel.org,
-        bjorn@helgaas.com, linux-pci@vger.kernel.org
-Cc:     Puranjay Mohan <puranjay12@gmail.com>
-Subject: [PATCH] drivers: broadcom: save return value of pci_find_capability() in u8
-Date:   Mon,  7 Dec 2020 01:40:33 +0530
-Message-Id: <20201206201033.21823-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 06 Dec 2020 12:16:54 -0800 (PST)
+Date:   Sun, 6 Dec 2020 21:16:36 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jonathan Derrick <jonathan.derrick@intel.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-rockchip@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v6 1/5] PCI: Unify ECAM constants in native PCI Express
+ drivers
+Message-ID: <X808JJGeIREwqIjb@rocinante>
+References: <20201129230743.3006978-1-kw@linux.com>
+ <20201129230743.3006978-2-kw@linux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20201129230743.3006978-2-kw@linux.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Callers of pci_find_capability() should save the return value in u8.
-change the type of pcix_cap from int to u8, to match the specification.
+Hello Nicolas, Florian and Florian,
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- drivers/net/ethernet/broadcom/tg3.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[...]
+> -/* Configuration space read/write support */
+> -static inline int brcm_pcie_cfg_index(int busnr, int devfn, int reg)
+> -{
+> -	return ((PCI_SLOT(devfn) & 0x1f) << PCIE_EXT_SLOT_SHIFT)
+> -		| ((PCI_FUNC(devfn) & 0x07) << PCIE_EXT_FUNC_SHIFT)
+> -		| (busnr << PCIE_EXT_BUSNUM_SHIFT)
+> -		| (reg & ~3);
+> -}
+> -
+>  static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
+>  					int where)
+>  {
+> @@ -716,7 +704,7 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
+>  		return PCI_SLOT(devfn) ? NULL : base + where;
+>  
+>  	/* For devices, write to the config space index register */
+> -	idx = brcm_pcie_cfg_index(bus->number, devfn, 0);
+> +	idx = PCIE_ECAM_OFFSET(bus->number, devfn, 0);
+>  	writel(idx, pcie->base + PCIE_EXT_CFG_INDEX);
+>  	return base + PCIE_EXT_CFG_DATA + where;
+>  }
+[...]
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.h b/drivers/net/ethernet/broadcom/tg3.h
-index 1000c894064f..f1781d2dce0b 100644
---- a/drivers/net/ethernet/broadcom/tg3.h
-+++ b/drivers/net/ethernet/broadcom/tg3.h
-@@ -3268,7 +3268,7 @@ struct tg3 {
- 
- 	int				pci_fn;
- 	int				msi_cap;
--	int				pcix_cap;
-+	u8				pcix_cap;
- 	int				pcie_readrq;
- 
- 	struct mii_bus			*mdio_bus;
--- 
-2.27.0
+Passing the hard-coded 0 as the "reg" argument here never actually did
+anything, thus the 32 bit alignment was never correctly enforced.
 
+My question would be: should this be 32 bit aligned?  It seems like the
+intention was to perhaps make the alignment?  I am sadly not intimately
+familiar with his hardware, so I am not sure if there is something to
+fix here or not.
+
+Also, I wonder whether it would be safe to pass the offset (the "where"
+variable) rather than hard-coded 0?
+
+Thank you for help in advance!
+
+Bjorn also asked the same question:
+  https://lore.kernel.org/linux-pci/20201120203428.GA272511@bjorn-Precision-5520/
+
+Krzysztof
