@@ -2,165 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9CD62CFF3C
-	for <lists+linux-pci@lfdr.de>; Sat,  5 Dec 2020 22:32:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0B5A2D0154
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 07:53:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbgLEVbV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 5 Dec 2020 16:31:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgLEVbU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 5 Dec 2020 16:31:20 -0500
-Date:   Sat, 5 Dec 2020 15:30:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607203839;
-        bh=08ajMu/SVS32zG1XETlIFJODw1n6pbDvQdzFGcZLX94=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=AFKy+nRBJTlczOp+IAcz3vgMUPmqk2kycHBY4czn/Dr+JVDs8jjYp51+s1tRsBK5X
-         WJ6anBCgcMFafy+NvQ0mIOB/9c1V1fB08NE3mEv0gQGhWHwHhLRypDP1kCQtAHvB6q
-         jKcZVZRF5xFZJXb/9dUVkd6BlFRMyn7U/yF+edvE2rPunYknBv3bg3DCI6diYrJ2Sv
-         EiP9FfC626HNlM0DhIKGWRu33ItA0KBD1JiXO8A5Grfs/XcqB87yuZUCxz9owi4OB5
-         FaahramUZ6aIvEAhUdbjMOgnLtNTSUxVTzfY1B6uu0HLwvaAEzlVnXduHh9WYBcz6t
-         mjQgVlN11OeFg==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Kelley, Sean V" <sean.v.kelley@intel.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "xerces.zhao@gmail.com" <xerces.zhao@gmail.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 12/15] PCI/RCEC: Add RCiEP's linked RCEC to AER/ERR
-Message-ID: <20201205213038.GA2093063@bjorn-Precision-5520>
+        id S1725945AbgLFGvT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Dec 2020 01:51:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgLFGvS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 01:51:18 -0500
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFAA8C0613D0;
+        Sat,  5 Dec 2020 22:50:32 -0800 (PST)
+Received: by mail-io1-xd41.google.com with SMTP id r9so10168285ioo.7;
+        Sat, 05 Dec 2020 22:50:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xEFX9m1tSvdSJQ3/EiaRpiuUqPA/jqJsIXCgLkJIHTI=;
+        b=DzK6LtMphXGVMKUPACceGTUsVVmN1cNs/QClR/+YjCKMnWe4BnLQBIJsKr7tKxkNyY
+         w8fYOkrp4AJry9LpefYGu1ZK0PRDfStCJRHpd340BZOhkyFknzV9Qv1a8xkVOdyY9zFf
+         gj6zMq1tQBs9MJGB2si/iNyk8qcAPb1OkxqdQ0kknvb2P9OxzdM9jt0tLWQNa3/KRgUW
+         26EXDEONiip05JtUgT3RheVciiRVzO2cil6qzk6OBDikvUihqXg+enkPIQLrcSwu//N1
+         F9oG7BK1bIa+jJndHBOVysL6/gUrP1m+nsgJWeLkzCRdImG92pho9jGdEKn0kHXouQT4
+         KWgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xEFX9m1tSvdSJQ3/EiaRpiuUqPA/jqJsIXCgLkJIHTI=;
+        b=U7GtvkKDm7TRWA95HV5KbJYsyVb4eET/SBEyYuQLmyureDm5cZADZuMXbBgmIYXBzZ
+         Tse6wUSKxXp7ymv3aS2rEwRPj7FvZZ0nEq4zKclEixBKBypaYe84eTWsCB3sD20X1o/k
+         cA5Cj/mo6A1HqWx+B4NPis5EEuvvLa44XxVqom8UrznYcFORrPus3tMPWM25FuWaPd/E
+         jOWkC+GWS7HMeK/BpmYSUn+H+cB5G8aGFu79QLKSDCom76sutIV4eLrDG/BCCDHbOXKz
+         ahdxoS2XzW/skNbjSgtrqZQ6bLtgxSSTGrgEpXxgdtbhyl7dTqPTdZeGImOcktzHazCf
+         BSHQ==
+X-Gm-Message-State: AOAM533MFKHfzni8Ou4ZDNIP/0pIL9jOZxihVn0KYQp4A0JH13aZTyP5
+        FpnsihFuMpI2HrqphV8xPkI=
+X-Google-Smtp-Source: ABdhPJwZVi5tRrvxZ13o7P0VRkdeEgYwBAdwWzBfj6NClRTOtnOrrhmD5vISX/qn43sceqJ+Sz+PdQ==
+X-Received: by 2002:a5d:958b:: with SMTP id a11mr13034197ioo.160.1607237432100;
+        Sat, 05 Dec 2020 22:50:32 -0800 (PST)
+Received: from ubuntu-m3-large-x86 ([2604:1380:45f1:1d00::1])
+        by smtp.gmail.com with ESMTPSA id v23sm4068308iol.21.2020.12.05.22.50.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Dec 2020 22:50:30 -0800 (PST)
+Date:   Sat, 5 Dec 2020 23:50:28 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, Jian Cai <jiancai@google.com>,
+        Kristof Beyls <Kristof.Beyls@arm.com>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+Message-ID: <20201206065028.GA2819096@ubuntu-m3-large-x86>
+References: <20201201213707.541432-1-samitolvanen@google.com>
+ <20201203112622.GA31188@willie-the-truck>
+ <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
+ <20201203182252.GA32011@willie-the-truck>
+ <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
+ <CABCJKufgkq+k0DeYaXrzjXniy=T_N4sN1bxoK9=cUxTZN5xSVQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4FD8E577-2F6A-4829-B92F-45D5E13BF9A4@intel.com>
+In-Reply-To: <CABCJKufgkq+k0DeYaXrzjXniy=T_N4sN1bxoK9=cUxTZN5xSVQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 04, 2020 at 05:17:58PM +0000, Kelley, Sean V wrote:
-> > On Dec 3, 2020, at 4:01 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Dec 03, 2020 at 12:51:40AM +0000, Kelley, Sean V wrote:
-> >>> On Dec 2, 2020, at 3:44 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>> On Fri, Nov 20, 2020 at 04:10:33PM -0800, Sean V Kelley wrote:
-> >>>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >>>> 
-> >>>> When attempting error recovery for an RCiEP associated with an RCEC device,
-> >>>> there needs to be a way to update the Root Error Status, the Uncorrectable
-> >>>> Error Status and the Uncorrectable Error Severity of the parent RCEC.  In
-> >>>> some non-native cases in which there is no OS-visible device associated
-> >>>> with the RCiEP, there is nothing to act upon as the firmware is acting
-> >>>> before the OS.
-> >>>> 
-> >>>> Add handling for the linked RCEC in AER/ERR while taking into account
-> >>>> non-native cases.
-> >>>> 
-> >>>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> >>>> Link: https://lore.kernel.org/r/20201002184735.1229220-12-seanvk.dev@oregontracks.org
-> >>>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> >>>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >>>> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> >>>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >>>> ---
-> >>>> drivers/pci/pcie/aer.c | 46 +++++++++++++++++++++++++++++++-----------
-> >>>> drivers/pci/pcie/err.c | 20 +++++++++---------
-> >>>> 2 files changed, 44 insertions(+), 22 deletions(-)
-> >>>> 
-> >>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> >>>> index 0ba0b47ae751..51389a6ee4ca 100644
-> >>>> --- a/drivers/pci/pcie/aer.c
-> >>>> +++ b/drivers/pci/pcie/aer.c
-> >>>> @@ -1358,29 +1358,51 @@ static int aer_probe(struct pcie_device *dev)
-> >>>> */
-> >>>> static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
-> >>>> {
-> >>>> -	int aer = dev->aer_cap;
-> >>>> +	int type = pci_pcie_type(dev);
-> >>>> +	struct pci_dev *root;
-> >>>> +	int aer = 0;
-> >>>> +	int rc = 0;
-> >>>> 	u32 reg32;
-> >>>> -	int rc;
-> >>>> 
-> >>>> -	if (pcie_aer_is_native(dev)) {
-> >>>> +	if (type == PCI_EXP_TYPE_RC_END)
-> >>>> +		/*
-> >>>> +		 * The reset should only clear the Root Error Status
-> >>>> +		 * of the RCEC. Only perform this for the
-> >>>> +		 * native case, i.e., an RCEC is present.
-> >>>> +		 */
-> >>>> +		root = dev->rcec;
-> >>>> +	else
-> >>>> +		root = dev;
-> >>>> +
-> >>>> +	if (root)
-> >>>> +		aer = dev->aer_cap;
-> >>>> +
-> >>>> +	if ((aer) && pcie_aer_is_native(dev)) {
-> >>>> 		/* Disable Root's interrupt in response to error messages */
-> >>>> -		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> >>>> +		pci_read_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> >>>> 		reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
-> >>>> -		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> >>>> +		pci_write_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> >>>> 	}
-> >>>> 
-> >>>> -	rc = pci_bus_error_reset(dev);
-> >>>> -	pci_info(dev, "Root Port link has been reset (%d)\n", rc);
-> >>>> +	if (type == PCI_EXP_TYPE_RC_EC || type == PCI_EXP_TYPE_RC_END) {
-> >>>> +		if (pcie_has_flr(dev)) {
-> >>>> +			rc = pcie_flr(dev);
-> >>>> +			pci_info(dev, "has been reset (%d)\n", rc);
-> >>> 
-> >>> Maybe:
-> >>> 
-> >>> +             } else {
-> >>> +                     rc = -ENOTTY;
-> >>> +                     pci_info(dev, "not reset (no FLR support)\n");
-> >>> 
-> >>> Or do we want to pretend the device was reset and return
-> >>> PCI_ERS_RESULT_RECOVERED?
-> >> 
-> >> We are currently doing the latter now with the default of rc = 0
-> >> above and so  I’m not sure the extra detail here on the absence of
-> >> FLR support is of value.
-> > 
-> > So to make sure I understand the proposal here, for RCECs and RCiEPs
-> > that don't support FLR, you're saying you want to continue silently
-> > and return PCI_ERS_RESULT_RECOVERED and let the drivers assume their
-> > device was reset when it was not?
+On Fri, Dec 04, 2020 at 02:52:41PM -0800, Sami Tolvanen wrote:
+> On Thu, Dec 3, 2020 at 2:32 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > So I'd recommend to Sami to simply make the Kconfig also depend on
+> > clang's integrated assembler (not just llvm-nm and llvm-ar).
 > 
-> The setting of the ‘rc’ on the FLR support is fine to add to the
-> else condition.  I had simply recalled in earlier discussion that
-> pcie_has_flr() was needed due to quirky behavior in some hardware
-> and so was not sure that detail of having or not having flr was in
-> fact consitent/accurate.
+> Sure, sounds good to me. What's the preferred way to test for this in Kconfig?
+> 
+> It looks like actually trying to test if we have an LLVM assembler
+> (e.g. using $(as-instr,.section
+> ".linker-options","e",@llvm_linker_options)) doesn't work as Kconfig
+> doesn't pass -no-integrated-as to clang here. I could do something
+> simple like $(success,echo $(LLVM) $(LLVM_IAS) | grep -q "1 1").
+> 
+> Thoughts?
+> 
+> Sami
 
-I think we should do the following, unless you object:
+I think
 
-    if (type == PCI_EXP_TYPE_RC_EC || type == PCI_EXP_TYPE_RC_END) {
-	    if (pcie_has_flr(dev)) {
-		    rc = pcie_flr(dev);
-		    pci_info(dev, "has been reset (%d)\n", rc);
-	    } else {
-		    pci_info(dev, "not reset (no FLR support)\n");
-		    rc = -ENOTTY;
-	    }
-    } else {
-	    rc = pci_bus_error_reset(dev);
-	    pci_info(dev, "Root Port link has been reset (%d)\n", rc);
-    }
-    ...
-    return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+    depends on $(success,test $(LLVM_IAS) -eq 1)
 
-Sorry, I should have done that in the proposed patch earlier; it's
-what I was *thinking* but didn't get it transcribed into the code.
+should work, at least according to my brief test.
 
-Bjorn
+Cheers,
+Nathan
