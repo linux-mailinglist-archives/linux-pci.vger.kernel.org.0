@@ -2,89 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0536C2D06FC
-	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 20:52:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71AA32D070D
+	for <lists+linux-pci@lfdr.de>; Sun,  6 Dec 2020 21:10:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgLFTwQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 6 Dec 2020 14:52:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
+        id S1726731AbgLFUKY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 6 Dec 2020 15:10:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgLFTwP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 14:52:15 -0500
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506DAC0613D0;
-        Sun,  6 Dec 2020 11:51:35 -0800 (PST)
-Received: by mail-pj1-x1042.google.com with SMTP id v1so6121051pjr.2;
-        Sun, 06 Dec 2020 11:51:35 -0800 (PST)
+        with ESMTP id S1726780AbgLFUKY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 6 Dec 2020 15:10:24 -0500
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C965BC0613D1
+        for <linux-pci@vger.kernel.org>; Sun,  6 Dec 2020 12:09:43 -0800 (PST)
+Received: by mail-ua1-x942.google.com with SMTP id t15so3789030ual.6
+        for <linux-pci@vger.kernel.org>; Sun, 06 Dec 2020 12:09:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fd5P7q0rI4oDoc+47wcHKFhpJRqmuT+fxaUAHCBA4oA=;
-        b=aQEYGzFX4rTSAZVOV1fMGZBro9GuSiCt2y0iLKiTuFABXuQS+pBn5Z7SrLjJh+0Lht
-         l1vCCPaPT5LssevzCOVWsiOUqJA6805amZ4sKNCV/12XNpZIhNBByyRj1Q7qPCwqRWhQ
-         8xkdkbflYPLx/FdB4lciRI4inpr3DP6twb5lcngjITT5H861RcDq7RFow133gD1xwKmy
-         RtQkxVpU6xJPCkCJImI25iz0BBQD+YpUbxGKgVofGR9TablVv46gLqhz3zi27NebixK5
-         QwFrDldH+qV2hZgNZURgIblo9ruYtifMDcqtc9B61tg1sM03uN1MJ6MtRbMSnssU1wn1
-         8r9Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iz05We4T6eIjQaXBvxz0eSpPimwSlGMKW8WGflLLLgw=;
+        b=iS/yxV/uv33bWygYcp3w94mm68WCg/cooZBDHGRBRFCb+HEVGfBEws+dpr/6P25Mqk
+         CGF0txaBIDtDjqi1yLxaRHzbKNu312tAIiWry1c6H2XUemwifDXDJ3xgms3nJQh018Ju
+         tSfem3j42gdxUipuE2UCBGdP6HbCXjgyA35rk3ybR2x5sUXsvaX34+w/11PCnDP3wUw3
+         VXU3d3GrfxpXDM3mNsWNN8WzS04oerefikrSUgI3Sa41DzU+d/SyYsbVuDLVrcBbBAFd
+         TPfpfk+LViEDwCmkthUfnAh26cBtd4O/zl0ILiNY2vgWj3ccwdwRthGGUZbaHtAB4IuL
+         4E/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fd5P7q0rI4oDoc+47wcHKFhpJRqmuT+fxaUAHCBA4oA=;
-        b=ABQsfbK4nHBCBzLbqiDLpiN/uzYruU1IFzfJiWqwy9x0hllQsrpntRw+daLeabAM2C
-         tbHo0TTnAkgmAvP7ZNvrsHEc4EN5H6uQYbl7NdPxiYR2rcO7weWC2HTqfIQY1XHpmPBb
-         t+u781nWM89vkjN/AYIJw7flqNT9swGHzpT15wCWDXN+qc7ljn6IBOxbK8vvat1nkViN
-         6WPaKQyE2T1dGLBq+NFncjLUVbGg3MH5GNekcSzHLsbRW3420BZx3fsmC0G6IbdoYu+z
-         H8EtsbIeuSNda4UdcotOXJSYC5DUeRSkr3XHLEGcAR/7TDsWwL++0cKYrO0WGFYBvsDj
-         lokQ==
-X-Gm-Message-State: AOAM530pXX028KelWEiGj04IQ7c7+7ioizoKNIx0Qkb8QuSfcp6VD71t
-        nikjpy+crYtwyKuFlA7zdhs=
-X-Google-Smtp-Source: ABdhPJzPs6oJqrasesO4k/CwvX7Yvh8LCKDdokLNNL1brp7OQ83D7vxznagJ4YTQlnHSJ7o9NsDlCw==
-X-Received: by 2002:a17:90a:e005:: with SMTP id u5mr13315860pjy.64.1607284294612;
-        Sun, 06 Dec 2020 11:51:34 -0800 (PST)
-Received: from localhost.localdomain ([124.253.53.149])
-        by smtp.googlemail.com with ESMTPSA id v22sm11244239pff.48.2020.12.06.11.51.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Dec 2020 11:51:33 -0800 (PST)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        bjorn@helgaas.com, linux-pci@vger.kernel.org
-Cc:     Puranjay Mohan <puranjay12@gmail.com>
-Subject: [PATCH] drivers: infiniband: save return value of pci_find_capability() in u8
-Date:   Mon,  7 Dec 2020 01:21:20 +0530
-Message-Id: <20201206195120.18413-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iz05We4T6eIjQaXBvxz0eSpPimwSlGMKW8WGflLLLgw=;
+        b=JCaGXoF0Q0XcgE/3iakFZmIqZExDumFxkayxw9RwELuNHCZKafRH0mgDxozajo8T/t
+         M7HYGUaV9S72CAErNCqgEdtlLLyTAUWI3fZ2hUM7C3J2Um7WLBNF5okg1x1oZP5Vyua0
+         A1ZUYoP2tGMqgsk0BAbIhHwdipdxji1kDB+AfpRiTB3lUNCpHAs8SJe71KqPl/Ci4KZd
+         dMBsKo/v3i+/C3QdxfayLGbtce/pXkZCxeTsBWMqcl2V5U981++V+51hK78QJE0KYaFi
+         vl3SBzvc4rtAhVbkGm8apR3KetlPApbyZnYy07y5uJ166qxjykXXUZSNzjdrimxmECyQ
+         rhbQ==
+X-Gm-Message-State: AOAM533/93XlC2jHJomTNdPIWbP0iPnDx5uGR4ro5TvxZzLz/FPJAh2x
+        4bqSrCCMjcttN3p2s3F0puhY9ChmXUuC/CQmEvZDUQ==
+X-Google-Smtp-Source: ABdhPJyKCb8VYAdpRAyuT9QnDEa4WUbLFAwf7yIvP0eytyeCFIBxggFhwRm1Itv8d1sjhOU4I4dMU+iMqgn79bJuOn0=
+X-Received: by 2002:ab0:6f0f:: with SMTP id r15mr3484878uah.52.1607285382144;
+ Sun, 06 Dec 2020 12:09:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201201213707.541432-1-samitolvanen@google.com>
+ <20201203112622.GA31188@willie-the-truck> <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
+ <20201203182252.GA32011@willie-the-truck> <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
+ <CABCJKufgkq+k0DeYaXrzjXniy=T_N4sN1bxoK9=cUxTZN5xSVQ@mail.gmail.com> <20201206065028.GA2819096@ubuntu-m3-large-x86>
+In-Reply-To: <20201206065028.GA2819096@ubuntu-m3-large-x86>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Sun, 6 Dec 2020 12:09:31 -0800
+Message-ID: <CABCJKue9TJnhge6TVPj9vfZXPGD4RW2JYiN3kNwVKNovTCq8ZA@mail.gmail.com>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, Jian Cai <jiancai@google.com>,
+        Kristof Beyls <Kristof.Beyls@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Callers of pci_find_capability should save the return value in u8.
-change type of variables from int to u8 to match the specification.
+On Sat, Dec 5, 2020 at 10:50 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Fri, Dec 04, 2020 at 02:52:41PM -0800, Sami Tolvanen wrote:
+> > On Thu, Dec 3, 2020 at 2:32 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > >
+> > > So I'd recommend to Sami to simply make the Kconfig also depend on
+> > > clang's integrated assembler (not just llvm-nm and llvm-ar).
+> >
+> > Sure, sounds good to me. What's the preferred way to test for this in Kconfig?
+> >
+> > It looks like actually trying to test if we have an LLVM assembler
+> > (e.g. using $(as-instr,.section
+> > ".linker-options","e",@llvm_linker_options)) doesn't work as Kconfig
+> > doesn't pass -no-integrated-as to clang here.
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- drivers/infiniband/hw/mthca/mthca_reset.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+After a closer look, that's actually not correct, this seems to work
+with Clang+LLD no matter which assembler is used. I suppose we could
+test for .gasversion. to detect GNU as, but that's hardly ideal.
 
-diff --git a/drivers/infiniband/hw/mthca/mthca_reset.c b/drivers/infiniband/hw/mthca/mthca_reset.c
-index 2a6979e4ae1c..1b6ec870bd47 100644
---- a/drivers/infiniband/hw/mthca/mthca_reset.c
-+++ b/drivers/infiniband/hw/mthca/mthca_reset.c
-@@ -45,9 +45,9 @@ int mthca_reset(struct mthca_dev *mdev)
- 	u32 *hca_header    = NULL;
- 	u32 *bridge_header = NULL;
- 	struct pci_dev *bridge = NULL;
--	int bridge_pcix_cap = 0;
-+	u8 bridge_pcix_cap = 0;
- 	int hca_pcie_cap = 0;
--	int hca_pcix_cap = 0;
-+	u8 hca_pcix_cap = 0;
- 
- 	u16 devctl;
- 	u16 linkctl;
--- 
-2.27.0
+> >I could do something
+> > simple like $(success,echo $(LLVM) $(LLVM_IAS) | grep -q "1 1").
+> >
+> > Thoughts?
+> >
+> > Sami
+>
+> I think
+>
+>     depends on $(success,test $(LLVM_IAS) -eq 1)
+>
+> should work, at least according to my brief test.
 
+Sure, looks good to me. However, I think we should also test for
+LLVM=1 to avoid possible further issues with mismatched toolchains
+instead of only checking for llvm-nm and llvm-ar.
+
+Sami
