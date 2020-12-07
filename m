@@ -2,110 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E38062D18A5
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 19:40:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12F292D18D6
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 19:58:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgLGSi6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Dec 2020 13:38:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgLGSi6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Dec 2020 13:38:58 -0500
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3A9C061793
-        for <linux-pci@vger.kernel.org>; Mon,  7 Dec 2020 10:38:18 -0800 (PST)
-Received: by mail-io1-xd41.google.com with SMTP id 81so14311767ioc.13
-        for <linux-pci@vger.kernel.org>; Mon, 07 Dec 2020 10:38:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ap2qxN6BOul2pmYmDW8E/QTAvkM/sjmNOpbAx5lPosQ=;
-        b=BExsAT9ruZE3CdNfziLeexgNze4CyxBizTUORsz4vOFpKRIx2hkljXvrF/6kNPduhW
-         2aEsvC1meMIU5XPzCjU9koH+Nf4zq2kifMRRV5r2Ud+m37WzlYNmjAphK2YXE/nzyfvB
-         5jn2e2zX6oUT0tISBid+70N7qoD3+DU7ADnMbduKo/UjRv3rJKy9JN7v/DgFeamrgs6Y
-         7muypf05dyju2z+pYX9SAR0cH1pxhUIF2/cvNivhrcRasDFtbo9NaPbAhUVQcdwDM6gx
-         rO74X45oKmIVequnhJDHOzS+ejjJTiveXwb+FmjfgGFNPC5FiWSRJgiIM2aHgDulX6G1
-         vtaw==
+        id S1726328AbgLGS4o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Dec 2020 13:56:44 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43667 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgLGS4o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Dec 2020 13:56:44 -0500
+Received: by mail-ot1-f66.google.com with SMTP id q25so1692643otn.10;
+        Mon, 07 Dec 2020 10:56:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ap2qxN6BOul2pmYmDW8E/QTAvkM/sjmNOpbAx5lPosQ=;
-        b=CBQi5xVuXPmLstM9cBDqePgLfm2SSZTQ5jtz3FHdvG8HPa3LXmP9KRhP2z/RJvfwQm
-         9EENnlo+jktmKDZkvoHPdCkhetpUIOhDSY+4bB1kc/mDmjZmuOnEUz43WsmRJSJRdF9G
-         btXo2Tq+Czs7/kuAOFvooBHcD0kJfIDKM8tD64zaCUwNZSrFzsOulIhZsJLN2DAnrlao
-         9xK32cUEKkN1DVEEiwNgb84wZb+QYYiDSBOBl6OVTKZ116QNU4MIZVRcFYSzgspXcoLb
-         s6XV1NLUyRLiTxOO6hMu/MjoX1Tya1V03P7y7svhaYDjfwsMTP/VLs93Vc5Q+kwp1dR/
-         OPlg==
-X-Gm-Message-State: AOAM5317dFbzJ9Ng4h6cHe8Qlr7lerku5fWeN6BQ2QsM3LGvD7DueEu4
-        RClN5/62+vIXJxKv4xmJWHgUlEe+nm2yqQ==
-X-Google-Smtp-Source: ABdhPJwpvN2ezgTd+AVie4cdurNQGQgQcUTEb+sA/4B0cMp15ME5nbdlPfJHYpui3vrT9Mdc6t7nZQ==
-X-Received: by 2002:a5d:84c4:: with SMTP id z4mr20942487ior.26.1607366297332;
-        Mon, 07 Dec 2020 10:38:17 -0800 (PST)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id z18sm7821377ilb.26.2020.12.07.10.38.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Dec 2020 10:38:16 -0800 (PST)
-Subject: Re: [PATCH] drivers: block: save return value of
- pci_find_capability() in u8
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "bjorn@helgaas.com" <bjorn@helgaas.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20201207012600.GA2238381@bjorn-Precision-5520>
- <CH2PR04MB65228D22105F039C046096A6E7CE0@CH2PR04MB6522.namprd04.prod.outlook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <7fa99c5f-6f0b-4cd6-7af2-db5877b1857a@kernel.dk>
-Date:   Mon, 7 Dec 2020 11:38:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jYKdPSvZjpIiPbVZhXmqc2j76RFh4wXSWnm0PlBYAnE=;
+        b=Z39OpqLW8DFiyjS998uYGx7yV9CaoJ6CB3vqIhUR7AoKj4b94CowyDILTxij5oy+FD
+         dtUjSBjWIrNiqQUrBAmTd+uFYhm67Ukb3yRymUn/x8+8/wVA0LQusZzmA9HDixnR0Xyi
+         3Piapd4vLNiSNtKQofK9rJ3vHdOv/+Hct0dJYLn9rnTGaRNL+dlunk2d4XQWeBMqmB7D
+         LiIdUPhqxnsw1HkGcbEsAV973nFhqA3CO0zYnBDKjl0eTlSn6MPo6S/Px43lVUm2ewE6
+         o17v6elkCNWIm/vl/iE25do+AyvSob1yEOR1OZPSyeHAPcvv2lG4Bhhc3Rxi4RGCE11o
+         4lcQ==
+X-Gm-Message-State: AOAM533otl+9OCHicf0q08pMd/6D0HRkJ0tHop0CMUjqoPLHEwpQQglg
+        q5N8COSX8iZo+pHVpnge4XW7CsWb+g==
+X-Google-Smtp-Source: ABdhPJz/ljYtKFGmvSgmn4Lys4Ug3P+P2nQy5R4djRcCMl2NVsn0vyrFdDgT0CIZTb6Yp59q9uNiOw==
+X-Received: by 2002:a9d:7a97:: with SMTP id l23mr13992794otn.232.1607367363221;
+        Mon, 07 Dec 2020 10:56:03 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i4sm2780609oos.31.2020.12.07.10.56.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Dec 2020 10:56:01 -0800 (PST)
+Received: (nullmailer pid 617149 invoked by uid 1000);
+        Mon, 07 Dec 2020 18:56:00 -0000
+Date:   Mon, 7 Dec 2020 12:56:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/6] dt-bindings: PCI: pci-ep: Add binding to specify
+ virtual function
+Message-ID: <20201207185600.GA609331@robh.at.kernel.org>
+References: <20201112175358.2653-1-kishon@ti.com>
+ <20201112175358.2653-2-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CH2PR04MB65228D22105F039C046096A6E7CE0@CH2PR04MB6522.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201112175358.2653-2-kishon@ti.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/6/20 6:30 PM, Damien Le Moal wrote:
-> On 2020/12/07 10:26, Bjorn Helgaas wrote:
->> On Sun, Dec 06, 2020 at 11:08:14PM +0000, Chaitanya Kulkarni wrote:
->>> On 12/6/20 11:45, Puranjay Mohan wrote:
->>>> Callers of pci_find_capability should save the return value in u8.
->>>> change type of variables from int to u8 to match the specification.
->>>
->>> I did not understand this, pci_find_capability() does not return u8. 
->>>
->>> what is it that we are achieving by changing the variable type ?
->>>
->>> This patch will probably also generate type mismatch warning with
->>>
->>> certain static analyzers.
->>
->> There's a patch pending via the PCI tree to change the return type to
->> u8.  We can do one of:
->>
->>   - Ignore this.  It only changes something on the stack, so no real
->>     space saving and there's no problem assigning the u8 return value
->>     to the "int".
->>
->>   - The maintainer could ack it and I could merge it via the PCI tree
->>     so it happens in the correct order (after the interface change).
+On Thu, Nov 12, 2020 at 11:23:53PM +0530, Kishon Vijay Abraham I wrote:
+> Add binding to specify virtual function (associated with each physical
+> function) in endpoint mode.
 > 
-> That works for me. But this driver changes generally go through Jens block tree.
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/pci/pci-ep.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Jens,
+> diff --git a/Documentation/devicetree/bindings/pci/pci-ep.yaml b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> index 7847bbcd4a03..90c85a0c44a1 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/pci-ep.yaml
+> @@ -23,6 +23,15 @@ properties:
+>      default: 1
+>      maximum: 255
+>  
+> +  max-virtual-functions:
+> +    description: Maximum number of virtual functions that can be configured
+
+Need to say what each element of the array corresponds to.
+
+> +    allOf:
+
+Can drop 'allOf' here.
+
+> +      - $ref: /schemas/types.yaml#/definitions/uint8-array
+> +    minItems: 0
+
+minItems should never be 0. That's no property present.
+
+> +    maxItems: 255
+> +    items:
+> +      maximum: 255
+> +
+>    max-link-speed:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      enum: [ 1, 2, 3, 4 ]
+> -- 
+> 2.17.1
 > 
-> Is this OK with you if Bjorn takes the patch through the PCI tree ?
-
-Yep that's fine, if that makes it easier to handle.
-
--- 
-Jens Axboe
-
