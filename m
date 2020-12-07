@@ -2,101 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C71262D1A92
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 21:35:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B30F2D1AAD
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 21:41:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgLGUdF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Dec 2020 15:33:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:32982 "EHLO foss.arm.com"
+        id S1726733AbgLGUiN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Dec 2020 15:38:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbgLGUdE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Dec 2020 15:33:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32D9531B;
-        Mon,  7 Dec 2020 12:32:19 -0800 (PST)
-Received: from [10.57.61.6] (unknown [10.57.61.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A3EE3F66B;
-        Mon,  7 Dec 2020 12:32:17 -0800 (PST)
-Subject: Re: [PATCH] PCI: dwc: Set 32-bit DMA mask for MSI target address
- allocation
-To:     Vidya Sagar <vidyas@nvidia.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, robh@kernel.org, treding@nvidia.com,
-        jonathanh@nvidia.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20201117165312.25847-1-vidyas@nvidia.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a5d8c24b-c605-8753-b022-ab959cf52340@arm.com>
-Date:   Mon, 7 Dec 2020 20:32:16 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S1726247AbgLGUiN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Dec 2020 15:38:13 -0500
+Date:   Mon, 7 Dec 2020 14:37:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607373452;
+        bh=mfwi2/EKkZUNhWL82rdthYNiJlGRQHrM44be9bTSWXU=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=iNqTPnxLZcNUWOaIqo/lY3PV8PrM4IHqYvEj1vXEY0Xup/vDV3dM7KrSc30fzE68u
+         y63KWqvsTxcomng4S5ITEHCRlRcDQONTnZuRC/MsmGpp6xmrsWvx2rkp1SbmljSBku
+         uWLYXkblMU6dsQdge0/xTHkYBqMohd00HeMtCKs6OpRM9iW0rlgICXMef6CZfNh4Fs
+         SSaCAQEmBxhRUsCueVA126SkH3UNKCOLtZOqINf/EIpHY7teoEKseZQ0Sk3QTAJM+6
+         AgVrK9A3jbVzfbU4YvbC5fOf4J+SuEadQtumWuPzH1Mc2WrvozgaTXqDG9qWIYKm+2
+         cp+aW62e883Rw==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org, bhelgaas@google.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        amanharitsh123@gmail.com, dinghao.liu@zju.edu.cn, kw@linux.com,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Disable LTSSM during L2 entry
+Message-ID: <20201207203730.GA2289423@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20201117165312.25847-1-vidyas@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201203133451.17716-6-vidyas@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-11-17 16:53, Vidya Sagar wrote:
-> Set DMA mask to 32-bit while allocating the MSI target address so that
-> the address is usable for both 32-bit and 64-bit MSI capable devices.
-> Throw a warning if it fails to set the mask to 32-bit to alert that
-> devices that are only 32-bit MSI capable may not work properly.
+[+cc Jingoo, Gustavo]
 
-This is slightly wacky, but no more so than the rest of the not-DMA 
-shenanigans here... Ultimately it probably is the least-worst way to 
-avoid the issue, so in terms of functionality,
+On Thu, Dec 03, 2020 at 07:04:51PM +0530, Vidya Sagar wrote:
+> PCIe cards like Marvell SATA controller and some of the Samsung NVMe
+> drives don't support taking the link to L2 state. When the link doesn't
+> go to L2 state, Tegra194 requires the LTSSM to be disabled to allow PHY
+> to start the next link up process cleanly during suspend/resume sequence.
+> Failing to disable LTSSM results in the PCIe link not coming up in the
+> next resume cycle.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Is this a Tegra194-specific issue, or will other DWC-based controllers
+need a similar change?
 
+> Tested-by: Thierry Reding <treding@nvidia.com>
 > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
 > ---
-> Given the other patch that I've pushed to the MSI sub-system
-> http://patchwork.ozlabs.org/project/linux-pci/patch/20201117145728.4516-1-vidyas@nvidia.com/
-> which is going to catch any mismatch between MSI capability (32-bit) of the
-> device and system's inability to allocate the required MSI target address,
-> I'm not sure how much sense is this patch going to be make. But, I can
-> certainly say that if the memory allocation mechanism gives the addresses
-> from 64-bit pool by default, this patch at least makes sure that MSI target
-> address is allocated from 32-bit pool.
-
-Note that this doesn't change where anything is allocated as such, it 
-just means that on systems with most of their RAM above 4GB, those few 
-bytes of private data that you map "for free" will be copied into the 
-SWIOTLB buffer and hog 2KB of its typical 64MB capacity effectively for 
-ever.
-
->   drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
+> V5:
+> * Added Tested-by and Acked-by from Thierry Reding
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 44c2a6572199..e6a230eddf66 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -388,6 +388,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->   							    dw_chained_msi_isr,
->   							    pp);
->   
-> +			ret = dma_set_mask(pci->dev, DMA_BIT_MASK(32));
-> +			if (!ret) {
-> +				dev_warn(pci->dev,
-> +					 "Failed to set DMA mask to 32-bit. "
-> +					 "Devices with only 32-bit MSI support"
-> +					 " may not work properly\n");
-> +			}
-
-Ironically, the only real reason for that dma_set_mask() to ever fail is 
-if the system had no 32-bit addressable memory, in which case you could 
-likely pick any 32-bit doorbell address with impunity, just not via this 
-mechanism (although whether it would be worthwhile is another matter).
-
-Robin.
-
+> V4:
+> * New patch in this series
+> 
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index f4109d71f20b..5597b2a49598 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -1506,6 +1506,14 @@ static void tegra_pcie_dw_pme_turnoff(struct tegra_pcie_dw *pcie)
+>  		data &= ~APPL_PINMUX_PEX_RST;
+>  		appl_writel(pcie, data, APPL_PINMUX);
+>  
+> +		/*
+> +		 * Some cards do not go to detect state even after de-asserting
+> +		 * PERST#. So, de-assert LTSSM to bring link to detect state.
+> +		 */
+> +		data = readl(pcie->appl_base + APPL_CTRL);
+> +		data &= ~APPL_CTRL_LTSSM_EN;
+> +		writel(data, pcie->appl_base + APPL_CTRL);
 > +
->   			pp->msi_data = dma_map_single_attrs(pci->dev, &pp->msi_msg,
->   						      sizeof(pp->msi_msg),
->   						      DMA_FROM_DEVICE,
+>  		err = readl_poll_timeout_atomic(pcie->appl_base + APPL_DEBUG,
+>  						data,
+>  						((data &
+> @@ -1513,14 +1521,8 @@ static void tegra_pcie_dw_pme_turnoff(struct tegra_pcie_dw *pcie)
+>  						APPL_DEBUG_LTSSM_STATE_SHIFT) ==
+>  						LTSSM_STATE_PRE_DETECT,
+>  						1, LTSSM_TIMEOUT);
+> -		if (err) {
+> +		if (err)
+>  			dev_info(pcie->dev, "Link didn't go to detect state\n");
+> -		} else {
+> -			/* Disable LTSSM after link is in detect state */
+> -			data = appl_readl(pcie, APPL_CTRL);
+> -			data &= ~APPL_CTRL_LTSSM_EN;
+> -			appl_writel(pcie, data, APPL_CTRL);
+> -		}
+>  	}
+>  	/*
+>  	 * DBI registers may not be accessible after this as PLL-E would be
+> -- 
+> 2.17.1
 > 
