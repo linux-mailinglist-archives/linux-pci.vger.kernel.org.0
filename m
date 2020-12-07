@@ -2,114 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1E02D17C4
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 18:48:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0DF2D17E8
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 18:55:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbgLGRqJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Dec 2020 12:46:09 -0500
-Received: from mga11.intel.com ([192.55.52.93]:39122 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgLGRqJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Dec 2020 12:46:09 -0500
-IronPort-SDR: 6Sdb+hBa6PfEtWIws/R/7BGw3ERGeJPmHkP+Cepvqun5M/FZAtIWKkV4eC+dYeeTa5efwzQmH3
- CTBEwbkb2DEw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9828"; a="170233171"
-X-IronPort-AV: E=Sophos;i="5.78,400,1599548400"; 
-   d="scan'208";a="170233171"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2020 09:44:23 -0800
-IronPort-SDR: TImwrDxpD+lTqqwCKWBLXUGiSMULU6r2XFc4UJRoAELo4kzpsbipwrEdm5fpW39JWMDlKoFXM6
- ceDTmnWZN5pQ==
-X-IronPort-AV: E=Sophos;i="5.78,400,1599548400"; 
-   d="scan'208";a="317271565"
-Received: from unknown (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.209.92.217])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2020 09:44:23 -0800
-Subject: Re: pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <084ea8e2-baae-0e2d-c60d-73fb055bdc1d@molgen.mpg.de>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <672a0bc2-717a-2545-6a19-8ca7e209c523@linux.intel.com>
-Date:   Mon, 7 Dec 2020 09:44:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725863AbgLGRyF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Dec 2020 12:54:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbgLGRyE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Dec 2020 12:54:04 -0500
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683E4C061793;
+        Mon,  7 Dec 2020 09:53:18 -0800 (PST)
+Received: by mail-lf1-x144.google.com with SMTP id z21so19296982lfe.12;
+        Mon, 07 Dec 2020 09:53:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E8G4LYnNwxuCXfhf4gYNHbwhjYAITksu5+6g315if4w=;
+        b=Y1LcgZti3DNwD10J5wHf+Kgo+08202OXzrrmRglhTCPjGbp9NQEJuIvEmsJjCY6cRf
+         9XeZWE3kDPP+muUwtGFyioVKnjErRcmeUbowOdExgZe9/NpZn0BQCaanE5RdO+E90h3h
+         ajHAymlZD8z5B7p9t4+OaGQ/ADMl/hOdtC1YO4okYKZqo2obNlicGpEkrprs4cNrYcs1
+         vVKo8FasiP8k+jCMMIfHiLKeszkFwsxzeU5wlyVpe1kPVBmn4FPAWcmOI5Bob/x6S81S
+         puN9svkRCPBYMwGoU9AKsVtFZ1tdJALqD382k3lPvCluzcg6gEFyeypIptTlNU+YfGAT
+         JJcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E8G4LYnNwxuCXfhf4gYNHbwhjYAITksu5+6g315if4w=;
+        b=gTWoLeplPfbK4OHv40qQOkqQVj9UO4FRTdD+19iLCugSE+HPyf4N9+u7oLe4j/Kp8i
+         zfYvN3xwKqpdr1sUtE0NKAxWZYUxKI2omSB7yo3yLyGibXFMyr0PenpflcycUodlQnU8
+         nhF8T/xR2dn8MShfzJbTGv9wxyavhzYTPlxf+80tInZ5K0OE+V9vJucqvlV2gSlQzFVg
+         9d3i1nyQwR0leCHh1Ju4+7tRXgJaxnIw/Pf35TbGmz7garlS2fi0ACuUOmSPSBLSqdlf
+         Tr2MBYVx5WyprpZJWEEyKDX3CymKJjDs4GsRexejVUrXvrNP+HQka6TAU3YeqYvGinKb
+         j9xA==
+X-Gm-Message-State: AOAM5334yTwA/haGC3wGe+wgssEtjIj6B0/a90qE5+v8IPj9YMOR/oWS
+        ZmtW2y67Or0rsnWC81JclfGJfyJ5GI6IdEhhLMTlIgYU/HcPFrDd
+X-Google-Smtp-Source: ABdhPJzprrm7/EaeY0yBGSvRTH8B/M4j7E5+MD895W+M0tXQJFB7tId1YohOWX6O7JXBaKFPfYR4u+bDDSJO8W8ySaY=
+X-Received: by 2002:ac2:5503:: with SMTP id j3mr8818154lfk.94.1607363596782;
+ Mon, 07 Dec 2020 09:53:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <084ea8e2-baae-0e2d-c60d-73fb055bdc1d@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20201206194300.14221-1-puranjay12@gmail.com> <20201207145258.GA16899@infradead.org>
+In-Reply-To: <20201207145258.GA16899@infradead.org>
+From:   Puranjay Mohan <puranjay12@gmail.com>
+Date:   Mon, 7 Dec 2020 23:23:03 +0530
+Message-ID: <CANk7y0jqS+Crf4Z3k82DXh2qxn1JO9KAO_CJGrpqH6xAJYU6Qw@mail.gmail.com>
+Subject: Re: [PATCH] drivers: block: save return value of pci_find_capability()
+ in u8
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Damien.LeMoal@wdc.com, linux-block@vger.kernel.org,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Mon, Dec 7, 2020 at 8:23 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> Can we take a step back?  I think in general drivers should not bother
+> with pci_find_capability.  Both mtip32xx and skd want to find out if
+> the devices are PCIe devices, skd then just prints the link speed for
+> which we have much better helpers, mtip32xx than messes with DEVCTL
+> which seems actively dangerous to me.
 
-On 12/7/20 5:08 AM, Paul Menzel wrote:
-> [Bringing the issue up on the list in case the Linux Bugzilla is not monitored/used.]
-> 
-> 
-> Dear Linux folks,
-> 
-> 
-> On Intel Tiger Lake Dell laptop, Linux logs the error below [1].
-> 
->      [    0.507307] pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid
->      [    0.508835] pci 0000:00:07.2: DPC: RP PIO log size 0 is invalid
-> 
->      $ lspci -nn -s 00:07
->      00:07.0 PCI bridge [0604]: Intel Corporation Tiger Lake-LP Thunderbolt PCI Express Root Port #0 
-> [8086:9a23] (rev 01)
->      00:07.2 PCI bridge [0604]: Intel Corporation Tiger Lake-LP Thunderbolt PCI Express Root Port #2 
-> [8086:9a27] (rev 01)
-> 
-> Commit 2700561817 (PCI/DPC: Cache DPC capabilities in pci_init_capabilities()) [1] probably 
-> introduced it in Linux 5.7.
-> 
-> What does this error actually mean?
-> 
->      pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
->      if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
->          pci_err(pdev, "RP PIO log size %u is invalid\n",
->              pdev->dpc_rp_log_size);
->          pdev->dpc_rp_log_size = 0;
-As per PCIe spec r5.0, sec 7.9.15.2, valid RP log size is 4 or greater. Please see
-the text copied from spec
+The skd driver uses pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
+to check if the device is PCIe, it can use pci_is_pcie() to do that.
+After that it uses pci_read_config_word(skdev->pdev, pcie_reg,
+&pcie_lstat); to read the Link Status Register, I think
+it should use pcie_capability_read_word(skdev->pdev, PCI_EXP_LNKSTA,
+&pcie_lstat);
 
-- - - -
-RP PIO Log Size - This field indicates how many DWORDs are allocated for the RP
-PIO log registers, comprised by the RP PIO Header Log, the RP PIO ImpSpec Log,
-and RP PIO TLP Prefix Log. If the Root Port supports RP Extensions for DPC, the
-value of this field must be 4 or greater; otherwise, the value of
-this field must be 0. See Section 7.9.15.11 , Section 7.9.15.12 , and Section 7.9.15.13 .
-- - - -
-
-In this case, since "(!(cap & PCI_EXP_DPC_CAP_RP_EXT))" condition is false, RP
-EXT is supported. If RP EXT is supported, valid log size should be at-least 4.
-
-
->      }
-> 
-> (I guess `cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE` is zero too?)
-> 
-> Is it a firmware issue or a hardware issue?
-I think this could be hardware issue.
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=209943
->       "pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid"
-> [2]: 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=27005618178ef9e9bf9c42fd91101771c92e9308 
-> 
-
+Please let me know if the above changes are correct so I may send a patch.
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Thanks and Regards
+
+Yours Truly,
+
+Puranjay Mohan
