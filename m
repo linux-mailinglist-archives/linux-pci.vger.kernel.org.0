@@ -2,63 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89AC32D13CD
-	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 15:32:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B85F22D1405
+	for <lists+linux-pci@lfdr.de>; Mon,  7 Dec 2020 15:50:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbgLGOb6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Dec 2020 09:31:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42256 "EHLO mail.kernel.org"
+        id S1726803AbgLGOtw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Dec 2020 09:49:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbgLGOb5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Dec 2020 09:31:57 -0500
-X-Gm-Message-State: AOAM531c+iUJKW3LpnDerJO3ozmy9tziAJeuSilzdlq/HvcfKwKnwpwv
-        aUqCdQO9EevvP2WlMyWjVdw0HQIinfxvjxnJpw==
+        id S1726136AbgLGOtw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Dec 2020 09:49:52 -0500
+X-Gm-Message-State: AOAM530ecnSqT59fZ5m+k4Nm9KsR+ZG0Jrj5+auErwkbhba9ZRhjgFct
+        akDK6gXzTTv2g6JqEaXMOuaOMXnxIZ9YSDVVuxg=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607351477;
-        bh=cqmik7jy/N0+j77CAEYBbsCVlpLDCXBvftlMySKxxnU=;
+        s=k20201202; t=1607352551;
+        bh=/7uV17ZjcWZRBQZBsaxXCvaCcx8EDJrzmSGwZfIHZBI=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=joNQwW4k75s1SI5D4e6g0TztrAHAhKpjiF8Yt+8uhHtm5fg3FoLp8ES+Azq9YpwSk
-         i7BzInVYVGmdTmTCRpL/IPbZL0JtxfUiPpw4zccr8IwMBdY7Bdn8Nxqk2qk9RehAD7
-         FNaTgDthAKfYRw23JVBsQaRbyqHfxhUDEXdVG3F8Gf/EXvjVaT1zU/7T7NjjZ7nfe2
-         fvz9g0U00IPi5uOTJOz0KcjBD+ot2AUisbbInqahxDNSpskyBFmIjkxRkyx0DgtAVj
-         lS1dvwffs5GDNjG0bRTbzfJ0rR5htQzFnom9OuwLLy1bEp5UY+wCjuP472MISQ1udq
-         HzLeRL7Kv5oiw==
-X-Google-Smtp-Source: ABdhPJwmyrtH4XAio3O5k76Jb95ok7SNMUoEBjz5jd8M5vNtApkguuzQTNM9mDekCLe+iZdI+HFg332uIKzofj6eSvM=
-X-Received: by 2002:a50:ab47:: with SMTP id t7mr20559440edc.289.1607351475832;
- Mon, 07 Dec 2020 06:31:15 -0800 (PST)
+        b=Z3B5NqZCUFukUOspe1ucdNJwSWpbKS1a3OEv7qGiI+AY5ORP39F5PVuoye/LBPICS
+         teTcw177mtPE15AMkM0+fPHaQLBOVJONa6TkjWV9JSWYjPPTGZyrbSrNUT0vbDWHjH
+         akxCIblLuwb9qhcZ4zQ7Mz2EUB2+k8sJC3rMQynkNKZbWuCzHaizMsWPnK5SmJBAZl
+         9E27x6WEF90tFbsTXEncNltMefT5e5QWoRS766VlwIvl6THvmMjVoaS+4npaAnAU7s
+         0bHD4Ce1PZYmbhxZTCdWu+Su3tIQK/g+j8icvylhE4CHe5wZhz3vSCFA+2Pt/kCgYK
+         bDfcHgHznI9qQ==
+X-Google-Smtp-Source: ABdhPJzazfYYPi5tQ9qZHGKKTiqRYg1UwkAMXPK70lDr0uNGzI5KsYWNMuHafXqRdFME11jw4UVOwQTvauB6kYEvQ1s=
+X-Received: by 2002:a9d:7a4b:: with SMTP id z11mr9525803otm.305.1607352550928;
+ Mon, 07 Dec 2020 06:49:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20201204075117.10430-1-kishon@ti.com> <20201204075117.10430-4-kishon@ti.com>
-In-Reply-To: <20201204075117.10430-4-kishon@ti.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 7 Dec 2020 08:31:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLkDu_rm1H7OQRxgRdUEKaB4_O8sNOCvAL29Q3Vj-h8qw@mail.gmail.com>
-Message-ID: <CAL_JsqLkDu_rm1H7OQRxgRdUEKaB4_O8sNOCvAL29Q3Vj-h8qw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: ti: k3-j721e-main: Remove "syscon"
- nodes added for pcieX_ctrl
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>, Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>
+References: <20201204165841.3845589-1-arnd@kernel.org> <CAL_JsqLCWK99AXzCWXpPsRxA+X5OKsHEGZtBhAsaVFhXoeRb9g@mail.gmail.com>
+In-Reply-To: <CAL_JsqLCWK99AXzCWXpPsRxA+X5OKsHEGZtBhAsaVFhXoeRb9g@mail.gmail.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Mon, 7 Dec 2020 15:48:54 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1UH1O2kWOkHGAmFQ4Ys7MKBiC2OoDs96Ba4yWSf7vyTg@mail.gmail.com>
+Message-ID: <CAK8P3a1UH1O2kWOkHGAmFQ4Ys7MKBiC2OoDs96Ba4yWSf7vyTg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: exynos: add back MSI dependency
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Dilip Kota <eswara.kota@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 4, 2020 at 1:52 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+On Mon, Dec 7, 2020 at 3:23 PM Rob Herring <robh@kernel.org> wrote:
+> On Fri, Dec 4, 2020 at 10:58 AM Arnd Bergmann <arnd@kernel.org> wrote:
+> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > index 020101b58155..e403bb2eeb4c 100644
+> > --- a/drivers/pci/controller/dwc/Kconfig
+> > +++ b/drivers/pci/controller/dwc/Kconfig
+> > @@ -85,6 +85,7 @@ config PCIE_DW_PLAT_EP
+> >  config PCI_EXYNOS
+> >         tristate "Samsung Exynos PCIe controller"
+> >         depends on ARCH_EXYNOS || COMPILE_TEST
+> > +       depends on PCI && PCI_MSI_IRQ_DOMAIN
 >
-> Remove "syscon" nodes added for pcieX_ctrl and have the PCIe node
-> point to the parent with an offset argument. This change is as discussed in [1]
->
-> [1] -> http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
->
-> Fixes: 4e5833884f66 ("arm64: dts: ti: k3-j721e-main: Add PCIe device tree nodes")
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 48 ++++-------------------
->  1 file changed, 8 insertions(+), 40 deletions(-)
+> PCI isn't needed here.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ah right. I had copied this from PCIE_DW_PLAT_HOST, and
+I'm fairly sure it used to be needed at some point in the past,
+but the Kconfig file has been changed enough over time that
+it clearly is not needed any more, as the entire menu depends on
+PCI nowadays, i.e. you can no longer have an endpoint-only
+configuration.
+
+      Arnd
