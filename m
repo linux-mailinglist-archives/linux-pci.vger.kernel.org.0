@@ -2,80 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C8872D1DFD
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 00:02:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F8962D1E2F
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 00:15:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726474AbgLGXBQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Dec 2020 18:01:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49670 "EHLO mail.kernel.org"
+        id S1728204AbgLGXOk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Dec 2020 18:14:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgLGXBQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 7 Dec 2020 18:01:16 -0500
-Date:   Mon, 7 Dec 2020 17:00:34 -0600
+        id S1726563AbgLGXOk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 7 Dec 2020 18:14:40 -0500
+Date:   Mon, 7 Dec 2020 17:13:57 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607382035;
-        bh=fyhd+76aHwPWrk0CPR1KnYMh5mRTqJka/mLial7gWeo=;
+        s=k20201202; t=1607382839;
+        bh=cXfHp8rY0otTmdq70U0JaHFS3z/C6N9ZE5vVO206Cp8=;
         h=From:To:Cc:Subject:In-Reply-To:From;
-        b=B/+Hf8Qey+Ll7oUSZ/eNdnDP7LrALPR0oAwsEilG/2BPImOfqYrgywfv5LgcDXoNI
-         2eFRv2q8O1M2rlYeqwWohOiA6akXdCKg4wIhTv4+KXdPayrmE2H0s1y+/0ccwUNTaO
-         //hSMsUNnDRIz6bfd83nFcyAGLpNNJCDeODL4oIAN9pZn8FCMEfMhxyI9gO7f8qu/X
-         c/J9cLX3pK7EdSWndKf7p5wKf5B94UIsJvoDi+fB8R93vGrmbEBlWCnOxTLHh25TQ1
-         uQWrH/gM1F/rAE04p8VO0PeeDPOwDf4JYlCmDlY73BIkoWKLxg5GYzJbs9kwP9dgbJ
-         5A3yO+NwAdBRg==
+        b=qbNB9JoW4ZS/8QtEILp4RhBYsRb5HjzhEjioX48IF8m3VrzOcJ8ezW4i+tUFQ4as9
+         O4ZUxrjn5HKeeV8mh/UxEAysDRXW00fqrTKwnb8P9rba6Oa2NfAQ6lWapsr4KR2jHL
+         vu65r0vWyZJaU+FOyC9+Grr205v6na0HZPuLJSTJ9Waf17DnMHo0Dwc1i5VaHGIZt3
+         Qza1Jy+dZ+30XgpAtzgXwiLXjHEXmpg7PRZSqHNjKZ8r01ERCjdVs54v05skU4Va1c
+         RoSX/wHf2WWkriqdgzFht8so6P0E0B+C6Lt70Pbh5E8B4/AD46w1572ctuqEGXOD+x
+         v3dTYO7TyKsnA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Puranjay Mohan <puranjay12@gmail.com>
-Cc:     siva.kallam@broadcom.com, prashant@broadcom.com,
-        mchan@broadcom.com, kuba@kernel.org, netdev@vger.kernel.org,
-        bjorn@helgaas.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] drivers: broadcom: save return value of
- pci_find_capability() in u8
-Message-ID: <20201207230034.GA2298434@bjorn-Precision-5520>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid
+Message-ID: <20201207231357.GA2310757@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20201206201033.21823-1-puranjay12@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <672a0bc2-717a-2545-6a19-8ca7e209c523@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 07, 2020 at 01:40:33AM +0530, Puranjay Mohan wrote:
-> Callers of pci_find_capability() should save the return value in u8.
-> change the type of pcix_cap from int to u8, to match the specification.
+On Mon, Dec 07, 2020 at 09:44:20AM -0800, Kuppuswamy, Sathyanarayanan wrote:
+> On 12/7/20 5:08 AM, Paul Menzel wrote:
+> > [Bringing the issue up on the list in case the Linux Bugzilla is not monitored/used.]
+> > 
+> > 
+> > Dear Linux folks,
+> > 
+> > 
+> > On Intel Tiger Lake Dell laptop, Linux logs the error below [1].
+> > 
+> >      [    0.507307] pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid
+> >      [    0.508835] pci 0000:00:07.2: DPC: RP PIO log size 0 is invalid
+> > 
+> >      $ lspci -nn -s 00:07
+> >      00:07.0 PCI bridge [0604]: Intel Corporation Tiger Lake-LP
+> > Thunderbolt PCI Express Root Port #0 [8086:9a23] (rev 01)
+> >      00:07.2 PCI bridge [0604]: Intel Corporation Tiger Lake-LP
+> > Thunderbolt PCI Express Root Port #2 [8086:9a27] (rev 01)
+> > 
+> > Commit 2700561817 (PCI/DPC: Cache DPC capabilities in
+> > pci_init_capabilities()) [1] probably introduced it in Linux 5.7.
+> > 
+> > What does this error actually mean?
+> > 
+> >      pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+> >      if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
+> >          pci_err(pdev, "RP PIO log size %u is invalid\n",
+> >              pdev->dpc_rp_log_size);
+> >          pdev->dpc_rp_log_size = 0;
+> As per PCIe spec r5.0, sec 7.9.15.2, valid RP log size is 4 or greater. Please see
+> the text copied from spec
 > 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> ---
->  drivers/net/ethernet/broadcom/tg3.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> - - - -
+> RP PIO Log Size - This field indicates how many DWORDs are allocated for the RP
+> PIO log registers, comprised by the RP PIO Header Log, the RP PIO ImpSpec Log,
+> and RP PIO TLP Prefix Log. If the Root Port supports RP Extensions for DPC, the
+> value of this field must be 4 or greater; otherwise, the value of
+> this field must be 0. See Section 7.9.15.11 , Section 7.9.15.12 , and Section 7.9.15.13 .
+> - - - -
 > 
-> diff --git a/drivers/net/ethernet/broadcom/tg3.h b/drivers/net/ethernet/broadcom/tg3.h
-> index 1000c894064f..f1781d2dce0b 100644
-> --- a/drivers/net/ethernet/broadcom/tg3.h
-> +++ b/drivers/net/ethernet/broadcom/tg3.h
-> @@ -3268,7 +3268,7 @@ struct tg3 {
->  
->  	int				pci_fn;
->  	int				msi_cap;
-> -	int				pcix_cap;
-> +	u8				pcix_cap;
+> In this case, since "(!(cap & PCI_EXP_DPC_CAP_RP_EXT))" condition is false, RP
+> EXT is supported. If RP EXT is supported, valid log size should be at-least 4.
+> 
+> 
+> >      }
+> > 
+> > (I guess `cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE` is zero too?)
+> > 
+> > Is it a firmware issue or a hardware issue?
+> I think this could be hardware issue.
 
-msi_cap is also a u8.
+I agree, it looks like a hardware issue.  I posted this to the
+bugzilla before I saw this email:
 
-But I don't think it's worth changing either of these unless we take a
-broader look and see whether they're needed at all.
+  I assume the only problem is the "DPC: RP PIO log size 0 is invalid"
+  message itself?
 
-msi_cap is used to restore the MSI enable bit after a highly
-device-specific reset.
+  It sure looks like the device is out of spec because PCIe r5.0, sec
+  7.9.15.2, says
 
-pcix_cap is used for some PCI-X configuration that really should be
-done via pcix_set_mmrbc() and possibly some sort of quirk for
-PCI_X_CMD_MAX_SPLIT.
+    RP PIO Log Size - This field indicates how many DWORDs are
+    allocated for the RP PIO log registers, comprised by the RP PIO
+    Header Log, the RP PIO ImpSpec Log, and RP PIO TLP Prefix Log. If
+    the Root Port supports RP Extensions for DPC, the value of this
+    field must be 4 or greater; otherwise, the value of this field
+    must be 0.
 
-But that's all pretty messy and I doubt it's worth doing it at this
-point, since PCI-X is pretty much ancient history.
+  Maybe we just need to tone down the message to pci_info()?  It looks
+  like dpc_process_rp_pio_error() would do the right thing even when
+  dpc_rp_log_size == 0.
 
->  	int				pcie_readrq;
->  
->  	struct mii_bus			*mdio_bus;
+  In the attached messages, the firmware retains control of AER, so
+  Linux never tries to use DPC itself anyway.
+
+> > [1]: https://bugzilla.kernel.org/show_bug.cgi?id=209943
+> >       "pci 0000:00:07.0: DPC: RP PIO log size 0 is invalid"
+> > [2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=27005618178ef9e9bf9c42fd91101771c92e9308
+> > 
+> 
 > -- 
-> 2.27.0
-> 
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
