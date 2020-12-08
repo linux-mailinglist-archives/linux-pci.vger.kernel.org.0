@@ -2,57 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B51A2D2AB4
+	by mail.lfdr.de (Postfix) with ESMTP id B81DA2D2AB5
 	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 13:26:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgLHM0g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 07:26:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46738 "EHLO
+        id S1728636AbgLHM0h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 07:26:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbgLHM0g (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 07:26:36 -0500
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCCFC0613D6
-        for <linux-pci@vger.kernel.org>; Tue,  8 Dec 2020 04:25:55 -0800 (PST)
-Received: by mail-wm1-x342.google.com with SMTP id q75so2191187wme.2
-        for <linux-pci@vger.kernel.org>; Tue, 08 Dec 2020 04:25:55 -0800 (PST)
+        with ESMTP id S1727258AbgLHM0h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 07:26:37 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DD2DC061793
+        for <linux-pci@vger.kernel.org>; Tue,  8 Dec 2020 04:25:57 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id t4so16000574wrr.12
+        for <linux-pci@vger.kernel.org>; Tue, 08 Dec 2020 04:25:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
          :content-transfer-encoding;
-        bh=Znwzn0QHUv1W/0i/MR/Gyl3ZEiE2RiHMIRIM72jgdb0=;
-        b=UZBjAYSuA8LXZ5KU+r9IYGP5NS2yFyKgXjYLCKZdyZ2POg2dbw4TGoq+TCVuWdttA9
-         +k7iYFPxmgd6vbleXu5bVbQEpftYjHEgVU4gjjSROjnuxf2b0PNrieaJfd1a71aYnX2p
-         lkCVKKpXcKPtxVuK4Xj5DctCj6dApp5MB2KkkG55kclXRwKI8/cTtOSV6qn7SgS3dyDA
-         JXGnrwxDDzkGFk4iFBrs2pjvbix8TUh1nJ2/g3wOs2LVZDfnzSgPFvEsH7rLv0zL5JzB
-         M0wJgellu6vIyg5kRH6YonS5gmPadj9xyvLyovE766ksC2/7nD3fXE39wW84EarjPnEq
-         RqFQ==
+        bh=5smxybzdNqxuKrC+BBuXRw8M7U1qM/sbfnyqES1mr5c=;
+        b=A4CajI+tBrwLM2s75q2bpmtFYA6/9V4tMk2Lbl952mkHeTyOjjkuSzgebkOI/iGXFT
+         zTOy62ujB48XCBj/eDWUB5+zUGT+x9LqqEQ6FG1GgJDdYYV41dlDGWOPwiQ1m43jgqn6
+         +1lM7vcHL2UKzy0YzKYaQHp5xmiTbCfi8u6WwmZr7rk61qINBDYBrABPOm1Qk+y1ZLTl
+         VDJ08ev3ZC74aXA4nTvQibx9E5Za5zl18sBrjXVKLLc8H59YAjKFD3+wwN+zdX6Q8/4/
+         XUznNdt2TJ+Pl4S6qqgtvdH/uoJnz4zPt6cUFAk/qXbQs8yTtNKxtLa0DeRP0HtWHMQ/
+         Ot9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
          :mime-version:content-transfer-encoding;
-        bh=Znwzn0QHUv1W/0i/MR/Gyl3ZEiE2RiHMIRIM72jgdb0=;
-        b=EHpFDDBOV3zelauGPiaRQG5TbLSHaLynXjq2X1lexaJXko8LIRFls9pzcoXn3mxR+1
-         kafgDuSZkA7wNQLtvjmIWDn5ccaQK/klZ6jKYRmwTiQe7ZG5LZ8AJfRRHZ2TGYkUoQmq
-         ucVUo8nyrReT7IEcP1MWC8blKD35gE/Ww6JbnZco+Q+BvJ5ZsItZd24Nb0EzINDV/dMR
-         YeFzwkcbLKftm+35JG/iiOzw9nBD1vGQz4TmRiPXAIIEa17OvcFT5nBuS9zfX2F3o0WU
-         bgkjwKCCrXNLnRkymeNmuURI7VijJvE/Jm+G/O/6GwgTRxFyGxM0kIHDIXYzgUJIvNBO
-         aR6w==
-X-Gm-Message-State: AOAM5306FfLspZOtwNKQUgzjJ1ZFgmt9MFE2j89vRNR9by+DQwtAjfkl
-        MDzO1AY/1QBs9sOAQxKzeDnDyl4v0j4=
-X-Google-Smtp-Source: ABdhPJxh4Uhw/B914mHzHHIUXaPUUHExUELh7MfP0n4aS+yZtYn1EF1g5APiPwaSKxVMU7HRU6+iZg==
-X-Received: by 2002:a1c:a185:: with SMTP id k127mr3801681wme.23.1607430354381;
-        Tue, 08 Dec 2020 04:25:54 -0800 (PST)
+        bh=5smxybzdNqxuKrC+BBuXRw8M7U1qM/sbfnyqES1mr5c=;
+        b=Bm044PEppJ9/2ulYVEOfti32KrEXpbUoRl7eE73UKt6KD+5/2ljZyLw8Sh8gmmVIqF
+         BredtbJ1SvQCR4NZTRks9aDD7cfr6y+ZdKk/2P6Qhbv4K0/zqRz0W2P/j5uLplw46HEv
+         8HIQEq+2ltVtV5DnfYFdYuZ2afc/PIF8Y3sKkkutwCw82SutU5z6YXNR3nxqe4dDWZ/g
+         tl+xBwYncQgrnc1KiiSp/T5RHTO08rgjKuipEJ5JAWXMxqNg1dolSLdsavN4MTcZ98T9
+         j4zQX7lJbo9lxTvH6c9ezCaW/EZgt4ofjGE/ALe3yaixW2KnkCHmlib7HXxEivJ/iYDv
+         813g==
+X-Gm-Message-State: AOAM532pVihFB6fTRxvDsLRZeq+7b6mD7AdQx/xqyWFXuY+P+E7qRMr1
+        8lyurWKSXGQzft8/yjd3mk7OyhH83y8=
+X-Google-Smtp-Source: ABdhPJzmLMdqZFlElFF25rwU+cORKR2jbWJmA42TcqEZN+qWJPNBkj+gOPtnWRFxdDK6BMVrxJz1Fw==
+X-Received: by 2002:adf:e7d0:: with SMTP id e16mr25610434wrn.114.1607430355849;
+        Tue, 08 Dec 2020 04:25:55 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f06:5500:580f:b429:3aa2:f8b1? (p200300ea8f065500580fb4293aa2f8b1.dip0.t-ipconnect.de. [2003:ea:8f06:5500:580f:b429:3aa2:f8b1])
-        by smtp.googlemail.com with ESMTPSA id l13sm19765035wrm.24.2020.12.08.04.25.53
+        by smtp.googlemail.com with ESMTPSA id a18sm19483214wrr.20.2020.12.08.04.25.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Dec 2020 04:25:53 -0800 (PST)
+        Tue, 08 Dec 2020 04:25:55 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PCI: Don't bother PCIe devices with trying to set MWI
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] PCI: Remove unused HAVE_PCI_SET_MWI
-Message-ID: <03f20cac-708d-7897-c7c7-cb4e63cfd991@gmail.com>
-Date:   Tue, 8 Dec 2020 13:16:22 +0100
+Message-ID: <86740fb7-5257-881c-e83a-7753f3b4badd@gmail.com>
+Date:   Tue, 8 Dec 2020 13:16:36 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
@@ -62,25 +62,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove unused HAVE_PCI_SET_MWI.
+Don't bother PCIe devices with trying to set MWI.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- include/linux/pci.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/pci.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index e007bc3e8..de75f6a4d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1191,7 +1191,6 @@ void pci_clear_master(struct pci_dev *dev);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9c49b96c2..b7f0883d6 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4347,6 +4347,9 @@ int pci_set_mwi(struct pci_dev *dev)
+ 	int rc;
+ 	u16 cmd;
  
- int pci_set_pcie_reset_state(struct pci_dev *dev, enum pcie_reset_state state);
- int pci_set_cacheline_size(struct pci_dev *dev);
--#define HAVE_PCI_SET_MWI
- int __must_check pci_set_mwi(struct pci_dev *dev);
- int __must_check pcim_set_mwi(struct pci_dev *dev);
- int pci_try_set_mwi(struct pci_dev *dev);
++	if (pci_is_pcie(dev))
++		return 0;
++
+ 	rc = pci_set_cacheline_size(dev);
+ 	if (rc)
+ 		return rc;
+@@ -4374,6 +4377,9 @@ int pcim_set_mwi(struct pci_dev *dev)
+ {
+ 	struct pci_devres *dr;
+ 
++	if (pci_is_pcie(dev))
++		return 0;
++
+ 	dr = find_pci_dr(dev);
+ 	if (!dr)
+ 		return -ENOMEM;
+@@ -4413,6 +4419,9 @@ void pci_clear_mwi(struct pci_dev *dev)
+ #ifndef PCI_DISABLE_MWI
+ 	u16 cmd;
+ 
++	if (pci_is_pcie(dev))
++		return;
++
+ 	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 	if (cmd & PCI_COMMAND_INVALIDATE) {
+ 		cmd &= ~PCI_COMMAND_INVALIDATE;
 -- 
 2.29.2
 
