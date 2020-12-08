@@ -2,84 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B07FD2D3661
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 23:41:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 017AC2D3714
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 00:45:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgLHWkS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 17:40:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgLHWkS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 17:40:18 -0500
-Date:   Tue, 8 Dec 2020 16:39:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607467177;
-        bh=s4Tp2AuMSwCWrrWKuGICh1cer33TDsIcdnhZ6OEZzcA=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=lZ2UnChpx34jg61wbnOlKZ9IkoZnXwNt6qD4FcGKZz30X2E6pIuuXW7c3nhYp14Qo
-         XVleVdYxZzfAxbMvGzwKpFHYg+UFZeJpXGXG6Hr8//NeIicg10NWZtQj9sfS9PxL+0
-         Ko9G78HQ6HXFWAvSk1Is2V3tio+TgBhZbf/2EkgG7hYyzC3I8TWCCp+dtLYq6+w4Qk
-         t8XZUVsd6L3HFBT37LWinDc0nagKENir3AB7CvsPalwhnJXbEeFHnbNspP1s2pf2T/
-         NXLcjweY/qSyCklF5vwrMxCCDnd6jER+ZTI9U/rIWXc4PNGzla8r4tAQWxMl7xANgY
-         hko7wM6Jkh24w==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Change message to debug level in
- pci_set_cacheline_size
-Message-ID: <20201208223936.GA2427660@bjorn-Precision-5520>
+        id S1728899AbgLHXpV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 18:45:21 -0500
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:43277 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgLHXpV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 18:45:21 -0500
+Received: by mail-oo1-f68.google.com with SMTP id h10so27296ooi.10;
+        Tue, 08 Dec 2020 15:45:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2KQe3ieI4VGx3q64G5WEEcvcuIvQWP0JOsj4euuGCD4=;
+        b=OrX9GHZvCfHAknB9P2X54ECdmKgSGpFoTcORlCVnCS23nW4ulRdLJgNSKmKAPCF6Or
+         5v5fZaoWNGKtKQIemtgLsSVm1qZ+ikbWtNIaehq+j9n+06cBg60J2cnBGV/kWZfhEx/L
+         bYzI6R+RU/gxho/Y0ulweO8L7dMYt3+WZB74NqNZjI8+YLhg/7UxEnbcusLXGHoaCsZp
+         hTrWo94vNTBItCLC4B0YqBLKn5aeGE0IgRDzUF56f4piBWWvj7BwyGuU5VQBw2t3Wyuy
+         JsFjOF0xeC2+zFk7yxYZudwq6m2eG1Jb0KghqeQziv/8Zm4CSxr+5BP2j8PUB5E9Kyyh
+         dd+g==
+X-Gm-Message-State: AOAM531zIxo6IxMD6HGYh9d4/MblUTrEWZpmF+H0iI5qkGKravAF+F+r
+        Vikj5mnbeA1UiYmgnI+XQy+OdKqGYw==
+X-Google-Smtp-Source: ABdhPJyAVXhvxZdVU1wfFlHBFF7RuBp3jz769lshkAFJpz5/IO3/3ARnwahnkYM01JE3/w3Me5Gluw==
+X-Received: by 2002:a4a:8606:: with SMTP id v6mr367244ooh.37.1607471080259;
+        Tue, 08 Dec 2020 15:44:40 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y35sm81148otb.5.2020.12.08.15.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Dec 2020 15:44:39 -0800 (PST)
+Received: (nullmailer pid 3339100 invoked by uid 1000);
+        Tue, 08 Dec 2020 23:44:37 -0000
+Date:   Tue, 8 Dec 2020 17:44:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH V2 1/2] dt-bindings: PCI: brcmstb: add BCM4908 binding
+Message-ID: <20201208234437.GA3334335@robh.at.kernel.org>
+References: <20201130083223.32594-1-zajec5@gmail.com>
+ <20201130083223.32594-2-zajec5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <be1ed3a2-98b9-ee1d-20b8-477f3d93961d@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201130083223.32594-2-zajec5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 06:57:02PM +0100, Heiner Kallweit wrote:
-> Drivers like ehci_hcd and xhci_hcd use pci_set_mwi() and emit an
-> annnoying message like the following that results in user questions
-> whether something is broken.
-> xhci_hcd 0000:00:15.0: cache line size of 64 is not supported
+On Mon, Nov 30, 2020 at 09:32:22AM +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
 > 
-> Root cause of the message is that on several (most?) chips the
-> cache line size register is hard-wired to 0.
-
-Interesting.  Per spec, for PCIe, I think the Cache Line Size is
-supposed to be read/write except on virtual functions, where it is RO
-Zero (and the example above doesn't look like a VF).  It doesn't *do*
-anything for most PCIe devices, but it's still supposed to be
-writable.
-
-But it's not completely clear for conventional PCI -- PCI r3.0, sec
-6.2.4, says the register "must be implemented by master devices that
-can generate the Memory Write and Invalidate command."  So I guess if
-a device doesn't support MWI, maybe it doesn't have to be writable.
-
-Applied to pci/misc for v5.11, thanks!
-
-> Change this message to debug level, an interested caller can still
-> inform the user (if deemed helpful) based on the return code.
+> BCM4908 is a SoC family with PCIe controller sharing design with the one
+> for STB. BCM4908 has different power management and memory controller so
+> few tweaks are required.
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> PERST# signal on BCM4908 is handled by an external MISC block so it
+> needs specifying a reset phandle.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  drivers/pci/pci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 30 +++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b7f0883d6..9a5500287 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4324,7 +4324,7 @@ int pci_set_cacheline_size(struct pci_dev *dev)
->  	if (cacheline_size == pci_cache_line_size)
->  		return 0;
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 807694b4f41f..d3ab9e22f97c 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -14,6 +14,7 @@ properties:
+>      items:
+>        - enum:
+>            - brcm,bcm2711-pcie # The Raspberry Pi 4
+> +          - brcm,bcm4908-pcie
+>            - brcm,bcm7211-pcie # Broadcom STB version of RPi4
+>            - brcm,bcm7278-pcie # Broadcom 7278 Arm
+>            - brcm,bcm7216-pcie # Broadcom 7216 Arm
+> @@ -64,8 +65,6 @@ properties:
+>    aspm-no-l0s: true
 >  
-> -	pci_info(dev, "cache line size of %d is not supported\n",
-> +	pci_dbg(dev, "cache line size of %d is not supported\n",
->  		   pci_cache_line_size << 2);
+>    resets:
+> -    description: for "brcm,bcm7216-pcie", must be a valid reset
+> -      phandle pointing to the RESCAL reset controller provider node.
+>      $ref: "/schemas/types.yaml#/definitions/phandle"
+
+This should really just be 'maxItems: 1'. 'resets' already has a type.
+
 >  
->  	return -EINVAL;
+>    reset-names:
+> @@ -98,12 +97,39 @@ required:
+>  
+>  allOf:
+>    - $ref: /schemas/pci/pci-bus.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: brcm,bcm4908-pcie
+> +    then:
+> +      properties:
+> +        resets:
+> +          items:
+> +            - description: reset controller handling the PERST# signal
+> +
+> +        reset-names:
+> +          items:
+> +            - const: perst
+> +
+> +      required:
+> +        - resets
+> +        - reset-names
+>    - if:
+>        properties:
+>          compatible:
+>            contains:
+>              const: brcm,bcm7216-pcie
+>      then:
+> +      properties:
+> +        resets:
+> +          items:
+> +            - description: phandle pointing to the RESCAL reset controller
+> +
+> +        reset-names:
+> +          items:
+> +            - const: rescal
+> +
+>        required:
+>          - resets
+>          - reset-names
 > -- 
-> 2.29.2
+> 2.26.2
 > 
