@@ -2,144 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B582A2D1F4B
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 01:48:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A75052D1F4D
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 01:48:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgLHArn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 7 Dec 2020 19:47:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        id S1728848AbgLHArr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 7 Dec 2020 19:47:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728822AbgLHArm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Dec 2020 19:47:42 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F564C0611CC
-        for <linux-pci@vger.kernel.org>; Mon,  7 Dec 2020 16:46:25 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id a9so20758532lfh.2
-        for <linux-pci@vger.kernel.org>; Mon, 07 Dec 2020 16:46:24 -0800 (PST)
+        with ESMTP id S1728824AbgLHArr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 7 Dec 2020 19:47:47 -0500
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D16C061749;
+        Mon,  7 Dec 2020 16:47:03 -0800 (PST)
+Received: by mail-qt1-x842.google.com with SMTP id c14so1308207qtn.0;
+        Mon, 07 Dec 2020 16:47:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=E1u2DTU35s5v+QWW65SOSmEBZUXo9vu5arDprO0wJOA=;
-        b=dcQseYuw7NM3r+BpBn+94yioXxvgEj7JjteLVNUbY4ju4Nj1OcmD8P0o36iAIVeeEP
-         QMUSqLLUqPAD4O22umC6HWafugMbpJNrebl3/H/PJtw08jkrp2jQBPn7E10cD2ewDU1p
-         W/eY+lERpIDQ6CEAUsdmRxjQlAuKg5hrTZ5FMVL6B+EPP4bm1WmMZz94ramYuFsIxgDB
-         cDYn2sZTfjxqhGxsniUDBZJjcrJezPPeRNVS5wYl7X1CD91dmtKhcTFKj6nZBb+C17b3
-         cY30nZ31+oPNBC3xuJrHgKML//5uZAvwn0tM5MrENT8qfzwgmfbVh6F24PLwKGa2u5QD
-         YHDQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VZHUufd0g6UdJFDVTYdblkgbgMRwbf0Y/fHI7mLRtWU=;
+        b=l8tTsbTg21o1/hkJDil01QyPt1S+hNNQArxmXVMWZl+14KG3cwUPD9yhA9zz5er/OS
+         WYmStLyhnHG81FxqOu7c5y430buEHIvhm1Kow/NQKRBzNLmEZELihteVRg5vdXuLfAHG
+         rCoL22aDgnYFYdg61Z5cuWrNOH2SbjzbnuSM9xLI1c/BWw55NcLnaGoD4ziICgb+XXXK
+         ZeF6QVt5WjFDXfuParnupBwgMVJIt4Nk49/ME1JGFmKbptXtgpSroyIdGE0tbGMqLfhi
+         B0JM0p8wI/gGSE0p8C1IQpscG2TL91p7V58n7vS9habhu8GuNnQ8wlQktv+vR8fmUA6f
+         4RyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=E1u2DTU35s5v+QWW65SOSmEBZUXo9vu5arDprO0wJOA=;
-        b=J94+tPO9snSOE465FwC0jyPJYbvFOkiboSbC4utZSEV/z3GYE1+nhxwTTCg4UvmkJh
-         SKc2KCWOlgh+YdDPm/Qa4agbgckqQ7naiP2PXzjmT7U8hf9Fe0egZrZaHdxM1sbaXDNY
-         6JAIC0t9XpoP3ohTVugARcddqrMjtNoXLcwsfQ800+MKYyRA5qXEYVs+rwjpuPdDTAao
-         ePiZ5xe/w7z2QDjgw26uxNWlJFqfvK3fhOPbdDttP2xE9HZwk3ipvJoNGvJ75/8iWIbN
-         H+MS851LfaT3qpsX17+DK0LJD7WfwKOkLrBaeMIWrzHNVurlIiKTP2rLuRTMigD6CpKm
-         fpww==
-X-Gm-Message-State: AOAM532dhEAOtgsB/3PX4DuELJey9C1VZXSlEN4FurStXodNflne4XuO
-        NaPoOp2OX/Gcnz/IyWMsvqVxTw==
-X-Google-Smtp-Source: ABdhPJwaTOpDQ7/S3gKxSJua9cBbl4t8nVqLhDrZe1Ov3wtb/BRHF3LA6qT8PFrsj/wxI53HmhkBvg==
-X-Received: by 2002:ac2:5a47:: with SMTP id r7mr8683699lfn.525.1607388383609;
-        Mon, 07 Dec 2020 16:46:23 -0800 (PST)
-Received: from eriador.lumag.spb.ru ([94.25.229.141])
-        by smtp.gmail.com with ESMTPSA id d3sm3028229lfj.206.2020.12.07.16.46.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VZHUufd0g6UdJFDVTYdblkgbgMRwbf0Y/fHI7mLRtWU=;
+        b=SRGbrW0SIzqsr+RLBdHk1qe54LmJtlZUTuSdDq32ZhX/qSt382FeH7cHaDOVR2ULIO
+         +9QC52fS5tcfJGXO5NuaRAssTgmN9qGBaL/F1fVw64O0FWphC68EkgkZ2yFW3wGnYyMh
+         5k7o4p/3DTyZ9oOUbPrnr4iEjXbySPqI+v29gBCxAonPmfLKv5AoK/bA8qh8oprUZEBj
+         3jhaYSjR6qdL8euMWpQwY47CDVOURDoOsyt6GcpBBJDIR61c5zMWQNVsTp1e2zG+tFLC
+         RA+q7LewQCZuoOmb1oSgW4HC2NBUP7uev7QO0MNd85qT6c23uzAwUiZs0lDr9fS1SnwA
+         x8Hw==
+X-Gm-Message-State: AOAM532JHV4ENlJKXhyq/SwsONxn00CgplUokizYTLOmhWKGZ5fHQcAO
+        L9/NG0yViZHvZ9yBSoq6LyM=
+X-Google-Smtp-Source: ABdhPJxkqh2BZJT/hzS1hsNzGm89wAIBgMDItnp0jBYXVFcXuYuBQBr+FGcdnMvIwDpLuGTDZMUazw==
+X-Received: by 2002:ac8:51d8:: with SMTP id d24mr14423965qtn.73.1607388422238;
+        Mon, 07 Dec 2020 16:47:02 -0800 (PST)
+Received: from ubuntu-m3-large-x86 ([2604:1380:45f1:1d00::1])
+        by smtp.gmail.com with ESMTPSA id x28sm11544785qtv.8.2020.12.07.16.47.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Dec 2020 16:46:23 -0800 (PST)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: qcom: sm8250: add ddrss_sf_tbu clock to PCIe device nodes
-Date:   Tue,  8 Dec 2020 03:46:13 +0300
-Message-Id: <20201208004613.1472278-4-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201208004613.1472278-1-dmitry.baryshkov@linaro.org>
-References: <20201208004613.1472278-1-dmitry.baryshkov@linaro.org>
+        Mon, 07 Dec 2020 16:47:01 -0800 (PST)
+Date:   Mon, 7 Dec 2020 17:46:59 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>, Jian Cai <jiancai@google.com>,
+        Kristof Beyls <Kristof.Beyls@arm.com>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+Message-ID: <20201208004659.GA587492@ubuntu-m3-large-x86>
+References: <20201201213707.541432-1-samitolvanen@google.com>
+ <20201203112622.GA31188@willie-the-truck>
+ <CABCJKueby8pUoN7f5=6RoyLSt4PgWNx8idUej0sNwAi0F3Xqzw@mail.gmail.com>
+ <20201203182252.GA32011@willie-the-truck>
+ <CAKwvOdnvq=L=gQMv9MHaStmKMOuD5jvffzMedhp3gytYB6R7TQ@mail.gmail.com>
+ <CABCJKufgkq+k0DeYaXrzjXniy=T_N4sN1bxoK9=cUxTZN5xSVQ@mail.gmail.com>
+ <20201206065028.GA2819096@ubuntu-m3-large-x86>
+ <CABCJKue9TJnhge6TVPj9vfZXPGD4RW2JYiN3kNwVKNovTCq8ZA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABCJKue9TJnhge6TVPj9vfZXPGD4RW2JYiN3kNwVKNovTCq8ZA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On SM8250 additional clock is required for PCIe devices to access NOC.
-Add this clock to PCIe devices nodes.
+On Sun, Dec 06, 2020 at 12:09:31PM -0800, Sami Tolvanen wrote:
+> Sure, looks good to me. However, I think we should also test for
+> LLVM=1 to avoid possible further issues with mismatched toolchains
+> instead of only checking for llvm-nm and llvm-ar.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+It might still be worth testing for $(AR) and $(NM) because in theory, a
+user could say 'make AR=ar LLVM=1'. Highly unlikely I suppose but worth
+considering.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index deed186b1a84..4a6e11e78b35 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -1345,14 +1345,16 @@ pcie0: pci@1c00000 {
- 				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
- 				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
- 				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
--				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-+				 <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>;
- 			clock-names = "pipe",
- 				      "aux",
- 				      "cfg",
- 				      "bus_master",
- 				      "bus_slave",
- 				      "slave_q2a",
--				      "tbu";
-+				      "tbu",
-+				      "ddrss_sf_tbu";
- 
- 			iommus = <&apps_smmu 0x1c00 0x7f>;
- 			iommu-map = <0x0   &apps_smmu 0x1c00 0x1>,
-@@ -1437,7 +1439,8 @@ pcie1: pci@1c08000 {
- 				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
- 				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
- 				 <&gcc GCC_PCIE_WIGIG_CLKREF_EN>,
--				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-+				 <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>;
- 			clock-names = "pipe",
- 				      "aux",
- 				      "cfg",
-@@ -1445,7 +1448,8 @@ pcie1: pci@1c08000 {
- 				      "bus_slave",
- 				      "slave_q2a",
- 				      "ref",
--				      "tbu";
-+				      "tbu",
-+				      "ddrss_sf_tbu";
- 
- 			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
- 			assigned-clock-rates = <19200000>;
-@@ -1535,7 +1539,8 @@ pcie2: pci@1c10000 {
- 				 <&gcc GCC_PCIE_2_SLV_AXI_CLK>,
- 				 <&gcc GCC_PCIE_2_SLV_Q2A_AXI_CLK>,
- 				 <&gcc GCC_PCIE_MDM_CLKREF_EN>,
--				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
-+				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>,
-+				 <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>;
- 			clock-names = "pipe",
- 				      "aux",
- 				      "cfg",
-@@ -1543,7 +1548,8 @@ pcie2: pci@1c10000 {
- 				      "bus_slave",
- 				      "slave_q2a",
- 				      "ref",
--				      "tbu";
-+				      "tbu",
-+				      "ddrss_sf_tbu";
- 
- 			assigned-clocks = <&gcc GCC_PCIE_2_AUX_CLK>;
- 			assigned-clock-rates = <19200000>;
--- 
-2.29.2
-
+Cheers,
+Nathan
