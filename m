@@ -2,106 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67CC02D3625
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 23:25:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B07FD2D3661
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 23:41:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbgLHWVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 17:21:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57940 "EHLO mail.kernel.org"
+        id S1729429AbgLHWkS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 17:40:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbgLHWVa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 17:21:30 -0500
-X-Gm-Message-State: AOAM532h2v33jj/ubi53QxOUS4fO7/pvhVPw/mMsXnFce50Kmd5ELYid
-        4E+0vELTZQp/AU7Zgt4HCB7IWyvCVmDSd3Uu5yE=
+        id S1725940AbgLHWkS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Dec 2020 17:40:18 -0500
+Date:   Tue, 8 Dec 2020 16:39:36 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607466049;
-        bh=8y0P41eu0vrpOJeHzaBUZ9o4sOukFpEZzShJXEuuTDY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gSkizAjGxLc0+AVGqS+JixiihOGYSXdfGwlEEthB3lNE4PHMREDewI5VO81wOOddC
-         3/AanEtVisMBlpZzZHNsMKbl9KV69BN0lodxF98JeLKqaNJ7xzaDngsmmOqXoQYsFp
-         g+I6B7Cm3sXq8gq473wvzBgECIOpHQc2b75rFjatHNedzz13rnSjS4GkaneyiCEwsm
-         g5zNg+sOgHPqdTVvL+X2Tx0fK0gHGPA4NfA09S2rehUYcmT3dTle9N9lKm0IPuPccy
-         teMFgzt8NUgSGKdVxOAGq1K3T0ScBVdYlwcaYh27/WhCtNUXpgwp8eu8LfCPOqrGlI
-         2TxPXiU/wR52A==
-X-Google-Smtp-Source: ABdhPJzqw4tXGHeHAKru+pZFdngSW7KLUcvLigOek1gd95JlX3PyzWo9iAppGBwNF2Oi7ti6Jouun7qgJJV39N2XE+k=
-X-Received: by 2002:a9d:be1:: with SMTP id 88mr215992oth.210.1607466049167;
- Tue, 08 Dec 2020 14:20:49 -0800 (PST)
+        s=k20201202; t=1607467177;
+        bh=s4Tp2AuMSwCWrrWKuGICh1cer33TDsIcdnhZ6OEZzcA=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=lZ2UnChpx34jg61wbnOlKZ9IkoZnXwNt6qD4FcGKZz30X2E6pIuuXW7c3nhYp14Qo
+         XVleVdYxZzfAxbMvGzwKpFHYg+UFZeJpXGXG6Hr8//NeIicg10NWZtQj9sfS9PxL+0
+         Ko9G78HQ6HXFWAvSk1Is2V3tio+TgBhZbf/2EkgG7hYyzC3I8TWCCp+dtLYq6+w4Qk
+         t8XZUVsd6L3HFBT37LWinDc0nagKENir3AB7CvsPalwhnJXbEeFHnbNspP1s2pf2T/
+         NXLcjweY/qSyCklF5vwrMxCCDnd6jER+ZTI9U/rIWXc4PNGzla8r4tAQWxMl7xANgY
+         hko7wM6Jkh24w==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: Change message to debug level in
+ pci_set_cacheline_size
+Message-ID: <20201208223936.GA2427660@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20201201213707.541432-1-samitolvanen@google.com>
- <CAK8P3a1WEAo2SEgKUEs3SB7n7QeeHa0=cx_nO==rDK0jjDArow@mail.gmail.com>
- <CABCJKueCHo2RYfx_A21m+=d1gQLR9QsOOxCsHFeicCqyHkb-Kg@mail.gmail.com>
- <CAK8P3a1Xfpt7QLkvxjtXKcgzcWkS8g9bmxD687+rqjTafTzKrg@mail.gmail.com> <CAKwvOd=hL=Vt1ATYqky9jmv+tM5hpTnLRuZudG-7ki0EYoFGJQ@mail.gmail.com>
-In-Reply-To: <CAKwvOd=hL=Vt1ATYqky9jmv+tM5hpTnLRuZudG-7ki0EYoFGJQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Tue, 8 Dec 2020 23:20:32 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1k_cq3NOUeuQC4-uKDBaGq49GSjAMSiS_M9AVMBxv51g@mail.gmail.com>
-Message-ID: <CAK8P3a1k_cq3NOUeuQC4-uKDBaGq49GSjAMSiS_M9AVMBxv51g@mail.gmail.com>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be1ed3a2-98b9-ee1d-20b8-477f3d93961d@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 10:10 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> On Tue, Dec 8, 2020 at 1:00 PM Arnd Bergmann <arnd@kernel.org> wrote:
-> >
-> > On Tue, Dec 8, 2020 at 5:43 PM 'Sami Tolvanen' via Clang Built Linux
-> > <clang-built-linux@googlegroups.com> wrote:
-> > >
-> > > On Tue, Dec 8, 2020 at 4:15 AM Arnd Bergmann <arnd@kernel.org> wrote:
-> > > >
-> > > > - one build seems to take even longer to link. It's currently at 35GB RAM
-> > > >   usage and 40 minutes into the final link, but I'm worried it might
-> > > > not complete
-> > > >   before it runs out of memory.  I only have 128GB installed, and google-chrome
-> > > >   uses another 30GB of that, and I'm also doing some other builds in parallel.
-> > > >   Is there a minimum recommended amount of memory for doing LTO builds?
-> > >
-> > > When building arm64 defconfig, the maximum memory usage I measured
-> > > with ThinLTO was 3.5 GB, and with full LTO 20.3 GB. I haven't measured
-> > > larger configurations, but I believe LLD can easily consume 3-4x that
-> > > much with full LTO allyesconfig.
-> >
-> > Ok, that's not too bad then. Is there actually a reason to still
-> > support full-lto
-> > in your series? As I understand it, full LTO was the initial approach and
-> > used to work better, but thin LTO is actually what we want to use in the
-> > long run. Perhaps dropping the full LTO option from your series now
-> > that thin LTO works well enough and uses less resources would help
-> > avoid some of the problems.
->
-> While all developers agree that ThinLTO is a much more palatable
-> experience than full LTO; our product teams prefer the excessive build
-> time and memory high water mark (at build time) costs in exchange for
-> slightly better performance than ThinLTO in <benchmarks that I've been
-> told are important>.  Keeping support for full LTO in tree would help
-> our product teams reduce the amount of out of tree code they have.  As
-> long as <benchmarks that I've been told are important> help
-> sell/differentiate phones, I suspect our product teams will continue
-> to ship full LTO in production.
+On Tue, Dec 08, 2020 at 06:57:02PM +0100, Heiner Kallweit wrote:
+> Drivers like ehci_hcd and xhci_hcd use pci_set_mwi() and emit an
+> annnoying message like the following that results in user questions
+> whether something is broken.
+> xhci_hcd 0000:00:15.0: cache line size of 64 is not supported
+> 
+> Root cause of the message is that on several (most?) chips the
+> cache line size register is hard-wired to 0.
 
-Ok, fair enough. How about marking FULL_LTO as 'depends on
-!COMPILE_TEST' then? I'll do that locally for my randconfig tests,
-but it would help the other build bots that also force-enable
-COMPILE_TEST.
+Interesting.  Per spec, for PCIe, I think the Cache Line Size is
+supposed to be read/write except on virtual functions, where it is RO
+Zero (and the example above doesn't look like a VF).  It doesn't *do*
+anything for most PCIe devices, but it's still supposed to be
+writable.
 
-       Arnd
+But it's not completely clear for conventional PCI -- PCI r3.0, sec
+6.2.4, says the register "must be implemented by master devices that
+can generate the Memory Write and Invalidate command."  So I guess if
+a device doesn't support MWI, maybe it doesn't have to be writable.
+
+Applied to pci/misc for v5.11, thanks!
+
+> Change this message to debug level, an interested caller can still
+> inform the user (if deemed helpful) based on the return code.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b7f0883d6..9a5500287 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4324,7 +4324,7 @@ int pci_set_cacheline_size(struct pci_dev *dev)
+>  	if (cacheline_size == pci_cache_line_size)
+>  		return 0;
+>  
+> -	pci_info(dev, "cache line size of %d is not supported\n",
+> +	pci_dbg(dev, "cache line size of %d is not supported\n",
+>  		   pci_cache_line_size << 2);
+>  
+>  	return -EINVAL;
+> -- 
+> 2.29.2
+> 
