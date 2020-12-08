@@ -2,138 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A703F2D35EA
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 23:13:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67CC02D3625
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 23:25:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731211AbgLHWIl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 17:08:41 -0500
-Received: from mga07.intel.com ([134.134.136.100]:64697 "EHLO mga07.intel.com"
+        id S1730776AbgLHWVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 17:21:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730642AbgLHWIl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 17:08:41 -0500
-IronPort-SDR: Ow0DvqHaBadhUZKwf7BR4VPlFLOXjpUuoie/eaVCIz63v7olKEqdSZyDOdNYbOJpXyRF0elfwT
- KLpP/RzF8RPA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="238082160"
-X-IronPort-AV: E=Sophos;i="5.78,403,1599548400"; 
-   d="scan'208";a="238082160"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 14:06:54 -0800
-IronPort-SDR: 30DHLwQpeUuMVPS8yd5UTrCG6PKd1p9XMno5WDAOwNsaVyTWQYsngpLvf7SapawTmnp5dN7Ry5
- Nah4YwUaxRHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,403,1599548400"; 
-   d="scan'208";a="542170725"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Dec 2020 14:06:53 -0800
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 92A1D58066D;
-        Tue,  8 Dec 2020 14:06:53 -0800 (PST)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     bhelgaas@google.com, rafael@kernel.org
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Save/restore L1 PM Substate extended capability registers
-Date:   Tue,  8 Dec 2020 14:06:24 -0800
-Message-Id: <20201208220624.21877-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1730678AbgLHWVa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Dec 2020 17:21:30 -0500
+X-Gm-Message-State: AOAM532h2v33jj/ubi53QxOUS4fO7/pvhVPw/mMsXnFce50Kmd5ELYid
+        4E+0vELTZQp/AU7Zgt4HCB7IWyvCVmDSd3Uu5yE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607466049;
+        bh=8y0P41eu0vrpOJeHzaBUZ9o4sOukFpEZzShJXEuuTDY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gSkizAjGxLc0+AVGqS+JixiihOGYSXdfGwlEEthB3lNE4PHMREDewI5VO81wOOddC
+         3/AanEtVisMBlpZzZHNsMKbl9KV69BN0lodxF98JeLKqaNJ7xzaDngsmmOqXoQYsFp
+         g+I6B7Cm3sXq8gq473wvzBgECIOpHQc2b75rFjatHNedzz13rnSjS4GkaneyiCEwsm
+         g5zNg+sOgHPqdTVvL+X2Tx0fK0gHGPA4NfA09S2rehUYcmT3dTle9N9lKm0IPuPccy
+         teMFgzt8NUgSGKdVxOAGq1K3T0ScBVdYlwcaYh27/WhCtNUXpgwp8eu8LfCPOqrGlI
+         2TxPXiU/wR52A==
+X-Google-Smtp-Source: ABdhPJzqw4tXGHeHAKru+pZFdngSW7KLUcvLigOek1gd95JlX3PyzWo9iAppGBwNF2Oi7ti6Jouun7qgJJV39N2XE+k=
+X-Received: by 2002:a9d:be1:: with SMTP id 88mr215992oth.210.1607466049167;
+ Tue, 08 Dec 2020 14:20:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20201201213707.541432-1-samitolvanen@google.com>
+ <CAK8P3a1WEAo2SEgKUEs3SB7n7QeeHa0=cx_nO==rDK0jjDArow@mail.gmail.com>
+ <CABCJKueCHo2RYfx_A21m+=d1gQLR9QsOOxCsHFeicCqyHkb-Kg@mail.gmail.com>
+ <CAK8P3a1Xfpt7QLkvxjtXKcgzcWkS8g9bmxD687+rqjTafTzKrg@mail.gmail.com> <CAKwvOd=hL=Vt1ATYqky9jmv+tM5hpTnLRuZudG-7ki0EYoFGJQ@mail.gmail.com>
+In-Reply-To: <CAKwvOd=hL=Vt1ATYqky9jmv+tM5hpTnLRuZudG-7ki0EYoFGJQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Tue, 8 Dec 2020 23:20:32 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1k_cq3NOUeuQC4-uKDBaGq49GSjAMSiS_M9AVMBxv51g@mail.gmail.com>
+Message-ID: <CAK8P3a1k_cq3NOUeuQC4-uKDBaGq49GSjAMSiS_M9AVMBxv51g@mail.gmail.com>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Intel systems that support ACPI Low Power Idle it has been observed
-that the L1 Substate capability can return disabled after a s2idle
-cycle. This causes the loss of L1 Substate support during runtime
-leading to higher power consumption. Add save/restore of the L1SS
-control registers.
+On Tue, Dec 8, 2020 at 10:10 PM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+>
+> On Tue, Dec 8, 2020 at 1:00 PM Arnd Bergmann <arnd@kernel.org> wrote:
+> >
+> > On Tue, Dec 8, 2020 at 5:43 PM 'Sami Tolvanen' via Clang Built Linux
+> > <clang-built-linux@googlegroups.com> wrote:
+> > >
+> > > On Tue, Dec 8, 2020 at 4:15 AM Arnd Bergmann <arnd@kernel.org> wrote:
+> > > >
+> > > > - one build seems to take even longer to link. It's currently at 35GB RAM
+> > > >   usage and 40 minutes into the final link, but I'm worried it might
+> > > > not complete
+> > > >   before it runs out of memory.  I only have 128GB installed, and google-chrome
+> > > >   uses another 30GB of that, and I'm also doing some other builds in parallel.
+> > > >   Is there a minimum recommended amount of memory for doing LTO builds?
+> > >
+> > > When building arm64 defconfig, the maximum memory usage I measured
+> > > with ThinLTO was 3.5 GB, and with full LTO 20.3 GB. I haven't measured
+> > > larger configurations, but I believe LLD can easily consume 3-4x that
+> > > much with full LTO allyesconfig.
+> >
+> > Ok, that's not too bad then. Is there actually a reason to still
+> > support full-lto
+> > in your series? As I understand it, full LTO was the initial approach and
+> > used to work better, but thin LTO is actually what we want to use in the
+> > long run. Perhaps dropping the full LTO option from your series now
+> > that thin LTO works well enough and uses less resources would help
+> > avoid some of the problems.
+>
+> While all developers agree that ThinLTO is a much more palatable
+> experience than full LTO; our product teams prefer the excessive build
+> time and memory high water mark (at build time) costs in exchange for
+> slightly better performance than ThinLTO in <benchmarks that I've been
+> told are important>.  Keeping support for full LTO in tree would help
+> our product teams reduce the amount of out of tree code they have.  As
+> long as <benchmarks that I've been told are important> help
+> sell/differentiate phones, I suspect our product teams will continue
+> to ship full LTO in production.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/pci/pci.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+Ok, fair enough. How about marking FULL_LTO as 'depends on
+!COMPILE_TEST' then? I'll do that locally for my randconfig tests,
+but it would help the other build bots that also force-enable
+COMPILE_TEST.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e578d34095e9..beee3d9952a6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1539,6 +1539,48 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
- 	pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++);
- }
- 
-+static void pci_save_l1ss_state(struct pci_dev *dev)
-+{
-+	int l1ss;
-+	struct pci_cap_saved_state *save_state;
-+	u16 *cap;
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
-+	if (!l1ss)
-+		return;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state) {
-+		pci_err(dev, "no suspend buffer for L1 Substates\n");
-+		return;
-+	}
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	pci_read_config_word(dev, l1ss + PCI_L1SS_CTL1, cap++);
-+	pci_read_config_word(dev, l1ss + PCI_L1SS_CTL1 + 2, cap++);
-+	pci_read_config_word(dev, l1ss + PCI_L1SS_CTL2, cap++);
-+}
-+
-+static void pci_restore_l1ss_state(struct pci_dev *dev)
-+{
-+	struct pci_cap_saved_state *save_state;
-+	int l1ss;
-+	u16 *cap;
-+
-+	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
-+	l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
-+	if (!save_state || !l1ss)
-+		return;
-+
-+	cap = (u16 *)&save_state->cap.data[0];
-+	pci_write_config_word(dev, l1ss + PCI_L1SS_CTL1, *cap++);
-+	pci_write_config_word(dev, l1ss + PCI_L1SS_CTL1 + 2, *cap++);
-+	pci_write_config_word(dev, l1ss + PCI_L1SS_CTL2, *cap++);
-+}
-+
- /**
-  * pci_save_state - save the PCI configuration space of a device before
-  *		    suspending
-@@ -1563,6 +1605,7 @@ int pci_save_state(struct pci_dev *dev)
- 	if (i != 0)
- 		return i;
- 
-+	pci_save_l1ss_state(dev);
- 	pci_save_ltr_state(dev);
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
-@@ -1670,6 +1713,7 @@ void pci_restore_state(struct pci_dev *dev)
- 	 */
- 	pci_restore_ltr_state(dev);
- 
-+	pci_restore_l1ss_state(dev);
- 	pci_restore_pcie_state(dev);
- 	pci_restore_pasid_state(dev);
- 	pci_restore_pri_state(dev);
-@@ -3332,6 +3376,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
- 
-+	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
-+					    3 * sizeof(u16));
-+	if (error)
-+		pci_err(dev, "unable to allocate suspend buffer for L1 Substates\n");
-+
- 	pci_allocate_vc_save_buffers(dev);
- }
- 
--- 
-2.20.1
-
+       Arnd
