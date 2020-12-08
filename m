@@ -2,90 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9635F2D2C50
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 14:56:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D40332D2C5E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 14:58:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgLHNzw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 08:55:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58018 "EHLO mail.kernel.org"
+        id S1729572AbgLHN41 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 08:56:27 -0500
+Received: from mga18.intel.com ([134.134.136.126]:24358 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgLHNzw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 08:55:52 -0500
-X-Gm-Message-State: AOAM531vd5GLJ17BIhllutjkE+6n48AniZDMzZN4ItSIvtDTIS7W8Z9L
-        5oWC82bBr16v2Ax/S/G/pXGTP2skjhWDLM+BhGQ=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607435711;
-        bh=aMUeJmcHjLR1mxPMY4lSg5wm08l9vr2Dq3J8KhZCHss=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=N6+VRiKj1w/sHG04FJYJajgruVEl0d0kXpByOymHxPthCNLPJiukFzJ0fV2Fks4F3
-         f3OYCjwUjrh0Mlf1Q4sJGjiuG+CSXHTbFZTkrqCv+RKCMWkLCdkoGeXDRPUxmeCutZ
-         PvCcGNK3GKImyzLMtrB2yTw7+GoV0yDqsIR4dn7IMy5VKyojDA4DfYN2ZEygwOrw5h
-         yf899Lyg8XrtlHlrasiYJQpQD5/jtisPkmLxhy3aBeoCxaov7xm4Im/ELWLRl42Ocw
-         cizq88EGMi2nzasl/XChEgEAvqZzmNujCnkYUHPFgAM4zpJ9J9XBeHGGlR89vy8Yhi
-         rTnMXtxRGJrBQ==
-X-Google-Smtp-Source: ABdhPJw84bKjNW6pc9lV2J+47WEe1njStGFQFPiO39biuyycOb/7NnBSKOzxngL0mEe4vYZqUHtN+LSV3ssbam6y5lc=
-X-Received: by 2002:a1c:b4c4:: with SMTP id d187mr3984205wmf.38.1607435710266;
- Tue, 08 Dec 2020 05:55:10 -0800 (PST)
+        id S1729600AbgLHN40 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Dec 2020 08:56:26 -0500
+IronPort-SDR: WLAz+O3tjO9mSTRmqRXn1qctEvG5e8O0IKdwPF2M8tiR7Wxjy4UP1yo/tSGVfO648uzy/ixc7l
+ WXj7GdiWwILQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9828"; a="161653597"
+X-IronPort-AV: E=Sophos;i="5.78,402,1599548400"; 
+   d="scan'208";a="161653597"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 05:55:45 -0800
+IronPort-SDR: RT5cQcqfEXmUkXPyZTJWpI/ic2YykKL1nm/f2bHs5TaP70R4p4AszkTn1mrhP6mFWBSri9KDW8
+ R9S+ZAUVLTHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,402,1599548400"; 
+   d="scan'208";a="437376871"
+Received: from lkp-server01.sh.intel.com (HELO c88bd47c8831) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Dec 2020 05:55:44 -0800
+Received: from kbuild by c88bd47c8831 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kmdSx-0000Fk-Vp; Tue, 08 Dec 2020 13:55:43 +0000
+Date:   Tue, 08 Dec 2020 21:55:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 2f378db5c89464cc00adaa755b6c04a54230edf2
+Message-ID: <5fcf85de.HGG7Sj1SsI2aW+sP%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20201201213707.541432-1-samitolvanen@google.com> <CAK8P3a1WEAo2SEgKUEs3SB7n7QeeHa0=cx_nO==rDK0jjDArow@mail.gmail.com>
-In-Reply-To: <CAK8P3a1WEAo2SEgKUEs3SB7n7QeeHa0=cx_nO==rDK0jjDArow@mail.gmail.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Tue, 8 Dec 2020 14:54:28 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0AyciKoHzrgtaLxP9boo8WqZCe8YfPBzGPQ14PW_2KgQ@mail.gmail.com>
-Message-ID: <CAK8P3a0AyciKoHzrgtaLxP9boo8WqZCe8YfPBzGPQ14PW_2KgQ@mail.gmail.com>
-Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 1:15 PM Arnd Bergmann <arnd@kernel.org> wrote:
-> On Tue, Dec 1, 2020 at 10:37 PM 'Sami Tolvanen' via Clang Built Linux <clang-built-linux@googlegroups.com> wrote:
->
-> - many builds complain about thousands of duplicate symbols in the kernel, e.g.
->   ld.lld: error: duplicate symbol: qrtr_endpoint_post
->  >>> defined in net/qrtr/qrtr.lto.o
->  >>> defined in net/qrtr/qrtr.o
->  ld.lld: error: duplicate symbol: init_module
->  >>> defined in crypto/842.lto.o
->  >>> defined in crypto/842.o
->  ld.lld: error: duplicate symbol: init_module
->  >>> defined in net/netfilter/nfnetlink_log.lto.o
->  >>> defined in net/netfilter/nfnetlink_log.o
->  ld.lld: error: duplicate symbol: vli_from_be64
->  >>> defined in crypto/ecc.lto.o
->  >>> defined in crypto/ecc.o
->  ld.lld: error: duplicate symbol: __mod_of__plldig_clk_id_device_table
->  >>> defined in drivers/clk/clk-plldig.lto.o
->  >>> defined in drivers/clk/clk-plldig.o
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 2f378db5c89464cc00adaa755b6c04a54230edf2  Merge branch 'remotes/lorenzo/pci/misc'
 
-A small update here: I see this behavior with every single module
-build, including 'tinyconfig' with one module enabled, and 'defconfig'.
+elapsed time: 723m
 
-I tuned the randconfig setting using KCONFIG_PROBABILITY=2:2:1
-now, which only enables a few symbols. With this I see faster build
-times (obvioulsy), aroudn 30 seconds per kernel, and all small builds
-with CONFIG_MODULES disabled so far succeed.
-It appears that the problems I saw originally only happen for larger
-configurations, or possibly a combination of Kconfig options that don't
-happen that often on randconfig builds with low
-KCONFIG_PROBABILITY.
+configs tested: 89
+configs skipped: 2
 
-      Arnd
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                               defconfig
+sparc64                             defconfig
+sparc                       sparc64_defconfig
+arm                     am200epdkit_defconfig
+mips                        nlm_xlr_defconfig
+powerpc                      pmac32_defconfig
+sh                     sh7710voipgw_defconfig
+mips                      bmips_stb_defconfig
+powerpc                      bamboo_defconfig
+powerpc                     tqm8555_defconfig
+powerpc                      ppc44x_defconfig
+powerpc                      tqm8xx_defconfig
+csky                             alldefconfig
+ia64                         bigsur_defconfig
+arm                  colibri_pxa270_defconfig
+powerpc                     tqm8560_defconfig
+mips                         tb0219_defconfig
+arc                                 defconfig
+mips                           ip27_defconfig
+powerpc                     tqm8548_defconfig
+ia64                      gensparse_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20201208
+i386                 randconfig-a013-20201208
+i386                 randconfig-a014-20201208
+i386                 randconfig-a011-20201208
+i386                 randconfig-a015-20201208
+i386                 randconfig-a012-20201208
+i386                 randconfig-a016-20201208
+x86_64               randconfig-a004-20201208
+x86_64               randconfig-a006-20201208
+x86_64               randconfig-a005-20201208
+x86_64               randconfig-a001-20201208
+x86_64               randconfig-a002-20201208
+x86_64               randconfig-a003-20201208
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                           allyesconfig
+
+clang tested configs:
+x86_64               randconfig-a016-20201208
+x86_64               randconfig-a012-20201208
+x86_64               randconfig-a013-20201208
+x86_64               randconfig-a014-20201208
+x86_64               randconfig-a015-20201208
+x86_64               randconfig-a011-20201208
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
