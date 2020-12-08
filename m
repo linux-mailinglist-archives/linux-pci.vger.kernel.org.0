@@ -2,107 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DA9E2D30CC
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 18:19:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB0D2D3170
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 18:46:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbgLHRTT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 12:19:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35740 "EHLO
+        id S1730766AbgLHRqS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 12:46:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730436AbgLHRTT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 12:19:19 -0500
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06D7C061793;
-        Tue,  8 Dec 2020 09:18:38 -0800 (PST)
-Received: by mail-ed1-x544.google.com with SMTP id k4so18408529edl.0;
-        Tue, 08 Dec 2020 09:18:38 -0800 (PST)
+        with ESMTP id S1730646AbgLHRqS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 12:46:18 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0870C061749;
+        Tue,  8 Dec 2020 09:45:37 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id x16so25783687ejj.7;
+        Tue, 08 Dec 2020 09:45:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=YsRTsMesCTliRWq4glF76HNwn9ElWJpIdmHckoW2bvo=;
-        b=C6rysrLLV7sfxL+MVzuGx2dgpynoaKZwkG5aZ+HfF+/4msF1fH8Xam/Rm/CJWSwFmO
-         88pVRExhJ9bYiRSmD5noxb6tqNsZVnaRKHFQhBi46KliVnzSkyXxFp0Utd03rVh9HZr2
-         JbE/0mvw+PnMIl2HuB+rXqehij9oUY1LSyXIBclOeFtvHy+GsW0vFK6BOXHPw/5hgRxU
-         g509UkB/dWzQyXPk+zVIh07+JliwiT2A1g+fFo0Fll5CyKSn4BqVhI/wDf9eWccBEu3g
-         v4O7d6AYBUXLtWUGkZurD1PXupxAwqP0lBivwg+AVU+OKHpI7jrgFWhBRc+VuDFBRrZe
-         S4Mg==
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yvzI8/WCuRpDQuxHVx4+pIV6+cQEeFhC2G2HqUdaLy4=;
+        b=GPMdvwivc3GbSV7jQ6gNgrNcjP65ZYTJaqIFKzHv/RVfLUD9mZhcdEV+VEnw9IEgI2
+         OdUUTPyU0xdXyGTZVXn932T3CWYTZjLcC21saMyfI9as9iocRXWKWFWe2RmpNXfK94fu
+         S61x2tsaWGpA1uQBVF8KeQ6hP/T9iL+/INu/eLZmK+NwiApRTkNVXDzuJCX0s+XjJgWC
+         q6d3Gt3miR7yAuLaHNgRz/GEEv5pInh51PWTl+SSxIlmMxw1ImOvKvCZwzyVJf1oLBv9
+         ca86Vob24hk1IjyN5j7mnd0DMJQEePEA9pJXVSCGmtTUg2SFBfZy0pigswYTBaDH2lFG
+         kR9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=YsRTsMesCTliRWq4glF76HNwn9ElWJpIdmHckoW2bvo=;
-        b=qgu5YK4SFAeoBEffn9nNcYaCRrF3A248gghwatWkRy7nibI/oPPxNkVfLAlvCzMR4z
-         Xi6eDUyTUJJcdFcH2umsZnbgGFbp/lerTfwtkn6Twut5gxCHq1ByYZzctv45EVCSVkVr
-         C6DT6g41HBfiTxy3vCroe6RJcxwuCy5bgEVAHnUZA9FWBB3Mn/Hu8A9C5RMEl27nPsQl
-         Wc2oRcaj6a5B7UkoPA1z0kLcrpFzqo36Eq8Uk2ZLJ1FzrcLm2eEfNqbRXzd7RhiuAVrH
-         xEkc4j8ycXIJ8XsztxvUTDnNsUJ4eI0Uoey0Rkk5sQNiptsJNsh8csqsVIr01XmR50mB
-         HssA==
-X-Gm-Message-State: AOAM531ANcsjeQcAO8B13+CerG1n13+zqp49An0sSycWsJxFV/sURAfG
-        3FQX8CQMZ32LU7Ura0TtATopK/8Z+dc=
-X-Google-Smtp-Source: ABdhPJxFJFhmprL9FiUn3tPn/fQwnmKhZr5/OMewcYe2zAlrGaCBV56eF5K/klQt3ixGkdieNipNXQ==
-X-Received: by 2002:a05:6402:8cc:: with SMTP id d12mr25266684edz.0.1607447917370;
-        Tue, 08 Dec 2020 09:18:37 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:580f:b429:3aa2:f8b1? (p200300ea8f065500580fb4293aa2f8b1.dip0.t-ipconnect.de. [2003:ea:8f06:5500:580f:b429:3aa2:f8b1])
-        by smtp.googlemail.com with ESMTPSA id ef11sm3659979ejb.15.2020.12.08.09.18.36
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yvzI8/WCuRpDQuxHVx4+pIV6+cQEeFhC2G2HqUdaLy4=;
+        b=nw4IYubMhcRQe6B06Xh+8wicOhgoYvx1mMp60clVnakTLA4RyPRVgBajKkdIThfT/z
+         ngGKLd2dM3V0vbfJZht/M3j+4jyAzZPH3uh1mWLs575tCikPfLGvrWdPNImuRHuorSao
+         dDhc9p92Um/LBc7bQ3rJ6CCQIOnP0tSLF4TAtJgor7+AgPQSUhlYdhpEYzSc4FJkJVjc
+         0QcGUEHKwH4SgYxzBxb91iKIrGuSuOVadwe87ctVMGlBXwvfd8iAopDRMhmPoOVUF4ed
+         1QP94EohMqhMGlvN+n8hzqwxppljWXgiVCvyy2qgL/yWxtmi57MssmcYn+UoFgE1C9nU
+         8nLQ==
+X-Gm-Message-State: AOAM533qN4hfWYv00tQ7rRvIP1HjtWA3pdRoMFMhPNbpxc/fb08xoSao
+        KGZ2hVUMOV13JpPFDr7JsPSo8Nxby4gqPg==
+X-Google-Smtp-Source: ABdhPJyCTLVlXyRMGgkSW1b2JaYZGDsPsPyWNurIsaCqKg4YMeEs+L54Cyy0pCr6Hkq82hLwq7CQ2Q==
+X-Received: by 2002:a17:907:447d:: with SMTP id oo21mr24494172ejb.367.1607449536353;
+        Tue, 08 Dec 2020 09:45:36 -0800 (PST)
+Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
+        by smtp.gmail.com with ESMTPSA id a12sm17466699edu.89.2020.12.08.09.45.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Dec 2020 09:18:36 -0800 (PST)
-Subject: Re: [PATCH 2/2] PCI/ASPM: Use capability to override ASPM via sysfs
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20201208082534.2460215-1-kai.heng.feng@canonical.com>
- <20201208082534.2460215-2-kai.heng.feng@canonical.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <d47544b3-b9a0-609c-fc97-527c9416f9a0@gmail.com>
-Date:   Tue, 8 Dec 2020 18:18:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+        Tue, 08 Dec 2020 09:45:35 -0800 (PST)
+Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+References: <20201016120416.7008-1-marek.vasut@gmail.com>
+ <20201119173553.GB23852@e121166-lin.cambridge.arm.com>
+ <57358982-ef8c-ed91-c011-00b8a48c4ebd@gmail.com>
+ <20201208101823.GA30579@e121166-lin.cambridge.arm.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <529ff24a-dcb5-6c9e-2825-b2fbd0fbcd70@gmail.com>
+Date:   Tue, 8 Dec 2020 18:45:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <20201208082534.2460215-2-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20201208101823.GA30579@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 08.12.2020 um 09:25 schrieb Kai-Heng Feng:
-> If we are to use sysfs to change ASPM settings, we may want to override
-> the default ASPM policy.
+On 12/8/20 11:18 AM, Lorenzo Pieralisi wrote:
+[...]
+>>> I suppose a fault on multiple cores can happen simultaneously, if it
+>>> does this may not work well either - I assume all config/io/mem would
+>>> trigger a fault.
+>>>
+>>> As I mentioned in my reply to v1, is there a chance we can move
+>>> this quirk into config accessors (if the PM_ENTER_L1_DLLP is
+>>> subsequent to a write into PMCSR to programme a D state) ?
+>>
+>> I don't think we can, since the userspace can do such a config space write
+>> with e.g. setpci and then this fixup is still needed.
 > 
-> So use ASPM capability, instead of default policy, to be able to use all
-> possible ASPM states.
 > 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/pci/pcie/aspm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 2ea9fddadfad..326da7bbc84d 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1239,8 +1239,7 @@ static ssize_t aspm_attr_store_common(struct device *dev,
->  
->  		link->aspm_disable |= state;
->  	}
-> -
-> -	pcie_config_aspm_link(link, policy_to_aspm_state(link));
-> +	pcie_config_aspm_link(link, link->aspm_capable);
->  
-I like the idea, because the policy can be changed by the user anyway.
-Therefore I don't see it as a hard system limit.
+> Userspace goes via the kernel config accessors anyway, right ?
 
-However I think this change is not sufficient. Each call to
-pcie_config_aspm_link(link, policy_to_aspm_state(link)), e.g. in path
-pcie_aspm_pm_state_change -> pcie_config_aspm_path will reset the
-enabled states to the policy.
+As far as I can tell, you can just write the register with devmem, so 
+no. You cannot assume everything will go through the accessors. I don't 
+think setpci does either.
 
->  	mutex_unlock(&aspm_lock);
->  	up_read(&pci_bus_sem);
-> 
+> I would like to avoid having arch specific hooks in PCI drivers so
+> if we can work around it somehow it is much better.
 
+I think we had this discussion before, which ultimately led to hiding 
+the workaround in ATF on Gen3. On Gen2, there is no ATF, so the work 
+around must be in Linux.
+
+> I can still merge this patch this week but I would like to explore
+> alternatives before committing it.
+
+Please merge it as-is.
