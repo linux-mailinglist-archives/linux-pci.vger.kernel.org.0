@@ -2,61 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26C162D2D7F
-	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 15:49:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 641E02D2E7E
+	for <lists+linux-pci@lfdr.de>; Tue,  8 Dec 2020 16:43:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgLHOtS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 09:49:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:50044 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbgLHOtS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 09:49:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5605830E;
-        Tue,  8 Dec 2020 06:48:32 -0800 (PST)
-Received: from red-moon.arm.com (unknown [10.57.35.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D39B3F718;
-        Tue,  8 Dec 2020 06:48:30 -0800 (PST)
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        svarbanov@mm-sol.com, devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        truong@codeaurora.org, bjorn.andersson@linaro.org,
-        bhelgaas@google.com, agross@kernel.org
-Subject: Re: [PATCH v6 0/3] Add PCIe support for SM8250 SoC
-Date:   Tue,  8 Dec 2020 14:48:23 +0000
-Message-Id: <160743888873.26304.531428152524309821.b4-ty@arm.com>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20201208121402.178011-1-mani@kernel.org>
-References: <20201208121402.178011-1-mani@kernel.org>
+        id S1730178AbgLHPmt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 10:42:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730167AbgLHPms (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 10:42:48 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7960C0617A7
+        for <linux-pci@vger.kernel.org>; Tue,  8 Dec 2020 07:42:07 -0800 (PST)
+Received: from mwalle01.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:fa59:71ff:fe9b:b851])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 5C6E922EE4;
+        Tue,  8 Dec 2020 16:41:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1607442124;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9yBisYyB2bD6gn1VWn1SFtDRL1C9CgXOzAYJOZvXGWw=;
+        b=lSBFmq85KbtIM/ZE5UIxiNa9nSxwcIoHUikj2utoZfMdugGpDtwVkJDBJD8Ez+uD8XWebu
+        VpjEFoiWbOCaUD2g83EBaO6mbaWmcQ3Gb0cl0mSnFOziRM/aDg7B9bSUNvrhhyXHJSkHmc
+        UQK1q8csk8ShhCcQ/QMI2sobEHbavFs=
+From:   Michael Walle <michael@walle.cc>
+To:     lorenzo.pieralisi@arm.com
+Cc:     Jonathan.Cameron@huawei.com, bcm-kernel-feedback-list@broadcom.com,
+        benh@kernel.crashing.org, bhelgaas@google.com,
+        f.fainelli@gmail.com, heiko@sntech.de, jonathan.derrick@intel.com,
+        jonnyc@amazon.com, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, michal.simek@xilinx.com,
+        mpe@ellerman.id.au, nsaenzjulienne@suse.de, paulus@samba.org,
+        rjui@broadcom.com, robh@kernel.org, rrichter@marvell.com,
+        sbranden@broadcom.com, shawn.lin@rock-chips.com,
+        thomas.petazzoni@bootlin.com, toan@os.amperecomputing.com,
+        wangzhou1@hisilicon.com, will@kernel.org,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v6 0/5] PCI: Unify ECAM constants in native PCI Express drivers
+Date:   Tue,  8 Dec 2020 16:41:50 +0100
+Message-Id: <20201208154150.20978-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <160683676668.20365.13565676178464743008.b4-ty@arm.com>
+References: <160683676668.20365.13565676178464743008.b4-ty@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 8 Dec 2020 17:43:59 +0530, Manivannan Sadhasivam wrote:
-> This series adds PCIe support for Qualcomm SM8250 SoC with relevant PHYs.
-> There are 3 PCIe instances on this SoC each with different PHYs. The PCIe
-> controller and PHYs are mostly comaptible with the ones found on SDM845
-> SoC, hence the old drivers are modified to add the support.
-> 
-> This series has been tested on RB5 board with QCA6391 chipset connected
-> onboard.
-> 
-> [...]
+Hi Lorenzo, Krzysztof,
 
-Applied to pci/dwc, thanks!
+>On Sun, 29 Nov 2020 23:07:38 +0000, Krzysztof Wilczyński wrote:
+>> Unify ECAM-related constants into a single set of standard constants
+>> defining memory address shift values for the byte-level address that can
+>> be used when accessing the PCI Express Configuration Space, and then
+>> move native PCI Express controller drivers to use newly introduced
+>> definitions retiring any driver-specific ones.
+>> 
+>> The ECAM ("Enhanced Configuration Access Mechanism") is defined by the
+>> PCI Express specification (see PCI Express Base Specification, Revision
+>> 5.0, Version 1.0, Section 7.2.2, p. 676), thus most hardware should
+>> implement it the same way.
+>> 
+>> [...]
+>
+>Applied to pci/ecam, thanks!
+>
+>[1/5] PCI: Unify ECAM constants in native PCI Express drivers
+>      https://git.kernel.org/lpieralisi/pci/c/f3c07cf692
+>[2/5] PCI: thunder-pem: Add constant for custom ".bus_shift" initialiser
+>      https://git.kernel.org/lpieralisi/pci/c/3c38579263
+>[3/5] PCI: iproc: Convert to use the new ECAM constants
+>      https://git.kernel.org/lpieralisi/pci/c/333ec9d3cc
+>[4/5] PCI: vmd: Update type of the __iomem pointers
+>      https://git.kernel.org/lpieralisi/pci/c/89094c12ea
+>[5/5] PCI: xgene: Removed unused ".bus_shift" initialisers from pci-xgene.c
+>      https://git.kernel.org/lpieralisi/pci/c/3dc62532a5
 
-[1/3] dt-bindings: pci: qcom: Document PCIe bindings for SM8250 SoC
-      https://git.kernel.org/lpieralisi/pci/c/458168247c
-[2/3] PCI: qcom: Add SM8250 SoC support
-      https://git.kernel.org/lpieralisi/pci/c/e1dd639e37
-[3/3] PCI: qcom: Add support for configuring BDF to SID mapping for SM8250
-      https://git.kernel.org/lpieralisi/pci/c/1c6072c743
+Patch 1/5 breaks LS1028A boards:
 
-Thanks,
-Lorenzo
+[..]
+[    1.144426] pci-host-generic 1f0000000.pcie: host bridge /soc/pcie@1f0000000 ranges:
+[    1.152276] pci-host-generic 1f0000000.pcie:      MEM 0x01f8000000..0x01f815ffff -> 0x0000000000
+[    1.161161] pci-host-generic 1f0000000.pcie:      MEM 0x01f8160000..0x01f81cffff -> 0x0000000000
+[    1.170043] pci-host-generic 1f0000000.pcie:      MEM 0x01f81d0000..0x01f81effff -> 0x0000000000
+[    1.178924] pci-host-generic 1f0000000.pcie:      MEM 0x01f81f0000..0x01f820ffff -> 0x0000000000
+[    1.187805] pci-host-generic 1f0000000.pcie:      MEM 0x01f8210000..0x01f822ffff -> 0x0000000000
+[    1.196686] pci-host-generic 1f0000000.pcie:      MEM 0x01f8230000..0x01f824ffff -> 0x0000000000
+[    1.205562] pci-host-generic 1f0000000.pcie:      MEM 0x01fc000000..0x01fc3fffff -> 0x0000000000
+[    1.214465] pci-host-generic 1f0000000.pcie: ECAM at [mem 0x1f0000000-0x1f00fffff] for [bus 00]
+[    1.223318] pci-host-generic 1f0000000.pcie: PCI host bridge to bus 0000:00
+[    1.230350] pci_bus 0000:00: root bus resource [bus 00]
+[    1.235625] pci_bus 0000:00: root bus resource [mem 0x1f8000000-0x1f815ffff] (bus address [0x00000000-0x0015ffff])
+[    1.246077] pci_bus 0000:00: root bus resource [mem 0x1f8160000-0x1f81cffff pref] (bus address [0x00000000-0x0006ffff])
+[    1.256969] pci_bus 0000:00: root bus resource [mem 0x1f81d0000-0x1f81effff] (bus address [0x00000000-0x0001ffff])
+[    1.267427] pci_bus 0000:00: root bus resource [mem 0x1f81f0000-0x1f820ffff pref] (bus address [0x00000000-0x0001ffff])
+[    1.278326] pci_bus 0000:00: root bus resource [mem 0x1f8210000-0x1f822ffff] (bus address [0x00000000-0x0001ffff])
+[    1.288779] pci_bus 0000:00: root bus resource [mem 0x1f8230000-0x1f824ffff pref] (bus address [0x00000000-0x0001ffff])
+[    1.299669] pci_bus 0000:00: root bus resource [mem 0x1fc000000-0x1fc3fffff] (bus address [0x00000000-0x003fffff])
+[    1.310138] pci 0000:00:00.0: [1957:e100] type 00 class 0x020001
+[    1.316234] pci 0000:00:00.0: BAR 0: [mem 0x1f8000000-0x1f803ffff 64bit] (from Enhanced Allocation, properties 0x0)
+[    1.326776] pci 0000:00:00.0: BAR 2: [mem 0x1f8160000-0x1f816ffff 64bit pref] (from Enhanced Allocation, properties 0x1)
+[    1.337759] pci 0000:00:00.0: VF BAR 0: [mem 0x1f81d0000-0x1f81dffff 64bit] (from Enhanced Allocation, properties 0x4)
+[    1.348563] pci 0000:00:00.0: VF BAR 2: [mem 0x1f81f0000-0x1f81fffff 64bit pref] (from Enhanced Allocation, properties 0x3)
+[    1.359821] pci 0000:00:00.0: PME# supported from D0 D3hot
+[    1.365368] pci 0000:00:00.0: VF(n) BAR0 space: [mem 0x1f81d0000-0x1f81effff 64bit] (contains BAR0 for 2 VFs)
+[    1.375381] pci 0000:00:00.0: VF(n) BAR2 space: [mem 0x1f81f0000-0x1f820ffff 64bit pref] (contains BAR2 for 2 VFs)
+[    1.385983] Unable to handle kernel paging request at virtual address ffff800012132000
+[    1.393972] Mem abort info:
+[    1.396783]   ESR = 0x96000007
+[    1.399859]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.405215]   SET = 0, FnV = 0
+[    1.408290]   EA = 0, S1PTW = 0
+[    1.411453] Data abort info:
+[    1.414352]   ISV = 0, ISS = 0x00000007
+[    1.418216]   CM = 0, WnR = 0
+[    1.421205] swapper pgtable: 4k pages, 48-bit VAs, pgdp=000000008369c000
+[    1.427966] [ffff800012132000] pgd=00000020fffff003, p4d=00000020fffff003, pud=00000020ffffe003, pmd=00000020ffffa003, pte=0000000000000000
+[    1.440618] Internal error: Oops: 96000007 [#1] PREEMPT SMP
+[    1.446239] Modules linked in:
+[    1.449320] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.10.0-rc3-00101-g2f378db5c89 #191
+[    1.457484] Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 carrier (DT)
+[    1.465827] pstate: 20000085 (nzCv daIf -PAN -UAO -TCO BTYPE=--)
+[    1.471892] pc : pci_generic_config_read+0x38/0xe0
+[    1.476723] lr : pci_generic_config_read+0x24/0xe0
+[    1.481553] sp : ffff80001211b920
+[    1.484891] x29: ffff80001211b920 x28: 0000000000000000 
+[    1.490252] x27: ffff8000116a04bc x26: 0000000000000000 
+[    1.495612] x25: 0000000000000001 x24: ffff80001211ba54 
+[    1.500972] x23: ffff0020009c3800 x22: 0000000000000000 
+[    1.506332] x21: 0000000000000087 x20: ffff80001211b994 
+[    1.511692] x19: 0000000000000004 x18: 0000000000000000 
+[    1.517052] x17: 0000000000000000 x16: 00000000d5edfbc1 
+[    1.522412] x15: ffffffffffffffff x14: ffff800011cf9948 
+[    1.527772] x13: ffff002000305a1c x12: 0000000000000030 
+[    1.533132] x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f 
+[    1.538491] x9 : 2c6b7173626d686f x8 : 000000000000ea60 
+[    1.543851] x7 : ffff80001211ba54 x6 : 0000000000000000 
+[    1.549211] x5 : 0000000000000000 x4 : ffff800012131000 
+[    1.554570] x3 : 0000000000000000 x2 : 0000000000000000 
+[    1.559930] x1 : 0000000000001000 x0 : ffff800012132000 
+[    1.565290] Call trace:
+[    1.567752]  pci_generic_config_read+0x38/0xe0
+[    1.572233]  pci_bus_read_config_dword+0x84/0xd8
+[    1.576890]  pci_bus_generic_read_dev_vendor_id+0x34/0x1b0
+[    1.582423]  pci_bus_read_dev_vendor_id+0x4c/0x70
+[    1.587167]  pci_scan_single_device+0x84/0xe0
+[    1.591559]  pci_scan_slot+0x6c/0x120
+[    1.595250]  pci_scan_child_bus_extend+0x54/0x298
+[    1.599994]  pci_scan_root_bus_bridge+0xd4/0xf0
+[    1.604562]  pci_host_probe+0x18/0xb0
+[    1.608254]  pci_host_common_probe+0x13c/0x1a0
+[    1.612735]  platform_drv_probe+0x54/0xa8
+[    1.616777]  really_probe+0xe4/0x3b8
+[    1.620380]  driver_probe_device+0x58/0xb8
+[    1.624509]  device_driver_attach+0x74/0x80
+[    1.628725]  __driver_attach+0x58/0xe0
+[    1.632503]  bus_for_each_dev+0x74/0xc8
+[    1.636369]  driver_attach+0x24/0x30
+[    1.639972]  bus_add_driver+0x18c/0x1f0
+[    1.643838]  driver_register+0x64/0x120
+[    1.647704]  __platform_driver_register+0x48/0x58
+[    1.652449]  gen_pci_driver_init+0x1c/0x28
+[    1.656580]  do_one_initcall+0x4c/0x2c0
+[    1.660447]  kernel_init_freeable+0x1e4/0x250
+[    1.664840]  kernel_init+0x14/0x118
+[    1.668355]  ret_from_fork+0x10/0x34
+[    1.671961] Code: 7100067f 540001c0 71000a7f 54000300 (b9400001) 
+[    1.678114] ---[ end trace 0aca1b048661e8b3 ]---
+[    1.682770] note: swapper/0[1] exited with preempt_count 1
+[    1.688305] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[    1.696031] SMP: stopping secondary CPUs
+[    1.699989] Kernel Offset: disabled
+[    1.703503] CPU features: 0x0240022,61006008
+[    1.707806] Memory Limit: none
+[    1.710884] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+
+There is a LS1028A eval board in kernelci here:
+https://lavalab.nxp.com/scheduler/job/170566
+
+I actually have this board which also have a LS1028A SoC:
+https://lavalab.kontron.com/scheduler/job/1771
+
+But in the latter you won't see much because earlycon isn't active. [I'm
+about to fix that.]
+
+By reverting patch 1/5, the board will work again.
+
+-michael
