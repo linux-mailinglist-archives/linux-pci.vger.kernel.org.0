@@ -2,150 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 930CB2D3E8F
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 10:23:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6EA72D3F63
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 11:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgLIJXK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 04:23:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729087AbgLIJXK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Dec 2020 04:23:10 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A4FC061794
-        for <linux-pci@vger.kernel.org>; Wed,  9 Dec 2020 01:22:29 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id k10so785266wmi.3
-        for <linux-pci@vger.kernel.org>; Wed, 09 Dec 2020 01:22:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Mx+SSux44r2ybzN5uouGLt8Nyz1sei2BYkCtNp5/Q1U=;
-        b=BrjxDVk7vGKmI9PkGvFwQ3GU2hA8fRK99GdYe9yoQ15TohZrTt4oqHD6OJjC7O2Y29
-         Chb5nVLxZZJ763fumMNZyor5i0DCuYNiOyFihpca10BMIb1ohsXsz09u0P1vg/3Y4wru
-         /HosQ+j/nJKg+Kb+VfMQ6iRzO9Ksrxt4boRjpyTNIDUxJxpoaP7HSd/o8wqF6tKHpXWD
-         E9/XDzI1UQLDSZoCAoiupyT5JBoQJV5od2iZrHzUHJs78vFF3R+ebTCCmlvtW6+qeIJY
-         pc8bEy4zn9Rx1qyn/Mz6/xDVOGssQXFa05U5P1JqV/VRBQNo6n94KA9rzgGhjXo1uV4o
-         a5jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Mx+SSux44r2ybzN5uouGLt8Nyz1sei2BYkCtNp5/Q1U=;
-        b=f0m8hxeDMaFEipP+ni8fqAwQ6ajVH1biPSse7/171+DtxP04dBSNko/hRguU7/cik/
-         XU5062RwxUem2RqfcXxAoFWnTGZay+AT5heaXsAh/ntrY5RYnYNCxVtoE8wkbpWDpy2q
-         tGZbBfT3thWrnClBCOL19GWgN8sPyHkrEGjzIQ4SiFj7L7CBKtO6nHzFtEwXB5lXf9f8
-         zBrCxHUclzt5B0XObv1wWkmfnF5eMR/Oh0oLgX6kv3r0eM0RNjcVH4AvD1DUxocb7Zz1
-         32vwoSJyTBLKW0u5Fbz5DxRVrZtuZUyb7YBHukubiWlCAPQBQF4qa6IkaPGTPoDtU6hH
-         djxQ==
-X-Gm-Message-State: AOAM531EwkNgA04KyefuZGAkPNe0t6OOAkX+3zc3QP26a3D3noq/2JqF
-        +cUZtY184v7yvs+ves2HkHLypQ==
-X-Google-Smtp-Source: ABdhPJxTlBVIxgjkiki4YjzApRPAYuKQcRCroZoMD5M27K7cz8VwDwS82eqt/XFzqMY5viPlsgQuUQ==
-X-Received: by 2002:a1c:40c:: with SMTP id 12mr1687015wme.40.1607505748074;
-        Wed, 09 Dec 2020 01:22:28 -0800 (PST)
-Received: from dell ([91.110.221.209])
-        by smtp.gmail.com with ESMTPSA id z8sm2247120wmg.17.2020.12.09.01.22.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 01:22:27 -0800 (PST)
-Date:   Wed, 9 Dec 2020 09:22:24 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Ion Badulescu <ionut@badula.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-parisc@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Remove pci_try_set_mwi
-Message-ID: <20201209092224.GU4801@dell>
-References: <4d535d35-6c8c-2bd8-812b-2b53194ce0ec@gmail.com>
+        id S1728631AbgLIJ7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Dec 2020 04:59:08 -0500
+Received: from mga06.intel.com ([134.134.136.31]:60898 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729007AbgLIJ7C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Dec 2020 04:59:02 -0500
+IronPort-SDR: Pj2vNBTlyfw2w73DHgMbdLw6KSsTD475Dab+DjPdca4A0kUlMP7qiYBzprT+il+J+Vq2iuxOIL
+ yU5QClXF9FEA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="235649173"
+X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
+   d="scan'208";a="235649173"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2020 01:58:08 -0800
+IronPort-SDR: ZFOQawTSN+Kz9FwSEECJjkhtis6Un6LGYTAd8UdmnJLkHFTpQOpKK7ZtmU/mFVHoa/yDfcskfK
+ 4h3Nav6y1CJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
+   d="scan'208";a="407992430"
+Received: from lkp-server01.sh.intel.com (HELO 2bbb63443648) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 09 Dec 2020 01:58:07 -0800
+Received: from kbuild by 2bbb63443648 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kmwEZ-0000DY-0w; Wed, 09 Dec 2020 09:58:07 +0000
+Date:   Wed, 09 Dec 2020 17:57:37 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 171bbcf1e05f0ce5e7ae0a6313c2e2ebee2aad63
+Message-ID: <5fd09f91.J0jQ3EVbSCaDFt8P%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4d535d35-6c8c-2bd8-812b-2b53194ce0ec@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 09 Dec 2020, Heiner Kallweit wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 171bbcf1e05f0ce5e7ae0a6313c2e2ebee2aad63  Merge branch 'remotes/lorenzo/pci/misc'
 
-> pci_set_mwi() and pci_try_set_mwi() do exactly the same, just that the
-> former one is declared as __must_check. However also some callers of
-> pci_set_mwi() have a comment that it's an optional feature. I don't
-> think there's much sense in this separation and the use of
-> __must_check. Therefore remove pci_try_set_mwi() and remove the
-> __must_check attribute from pci_set_mwi().
-> I don't expect either function to be used in new code anyway.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
-> patch applies on top of pci/misc for v5.11
-> ---
->  Documentation/PCI/pci.rst                     |  5 +----
->  drivers/ata/pata_cs5530.c                     |  2 +-
->  drivers/ata/sata_mv.c                         |  2 +-
->  drivers/dma/dw/pci.c                          |  2 +-
->  drivers/dma/hsu/pci.c                         |  2 +-
->  drivers/ide/cs5530.c                          |  2 +-
+elapsed time: 720m
 
->  drivers/mfd/intel-lpss-pci.c                  |  2 +-
+configs tested: 105
+configs skipped: 2
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->  drivers/net/ethernet/adaptec/starfire.c       |  2 +-
->  drivers/net/ethernet/alacritech/slicoss.c     |  2 +-
->  drivers/net/ethernet/dec/tulip/tulip_core.c   |  5 +----
->  drivers/net/ethernet/sun/cassini.c            |  4 ++--
->  drivers/net/wireless/intersil/p54/p54pci.c    |  2 +-
->  .../intersil/prism54/islpci_hotplug.c         |  3 +--
->  .../wireless/realtek/rtl818x/rtl8180/dev.c    |  2 +-
->  drivers/pci/pci.c                             | 19 -------------------
->  drivers/scsi/3w-9xxx.c                        |  4 ++--
->  drivers/scsi/3w-sas.c                         |  4 ++--
->  drivers/scsi/csiostor/csio_init.c             |  2 +-
->  drivers/scsi/lpfc/lpfc_init.c                 |  2 +-
->  drivers/scsi/qla2xxx/qla_init.c               |  8 ++++----
->  drivers/scsi/qla2xxx/qla_mr.c                 |  2 +-
->  drivers/tty/serial/8250/8250_lpss.c           |  2 +-
->  drivers/usb/chipidea/ci_hdrc_pci.c            |  2 +-
->  drivers/usb/gadget/udc/amd5536udc_pci.c       |  2 +-
->  drivers/usb/gadget/udc/net2280.c              |  2 +-
->  drivers/usb/gadget/udc/pch_udc.c              |  2 +-
->  include/linux/pci.h                           |  5 ++---
->  27 files changed, 33 insertions(+), 60 deletions(-)
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                          g5_defconfig
+powerpc                     skiroot_defconfig
+sh                   rts7751r2dplus_defconfig
+sh                     magicpanelr2_defconfig
+powerpc                       maple_defconfig
+arm                             rpc_defconfig
+parisc                generic-32bit_defconfig
+arm                   milbeaut_m10v_defconfig
+powerpc                        warp_defconfig
+sh                          lboxre2_defconfig
+sh                         apsh4a3a_defconfig
+x86_64                           alldefconfig
+powerpc                         wii_defconfig
+powerpc                     mpc83xx_defconfig
+mips                     cu1830-neo_defconfig
+sh                           se7751_defconfig
+arm                            lart_defconfig
+powerpc                mpc7448_hpc2_defconfig
+sh                           se7721_defconfig
+mips                      bmips_stb_defconfig
+arm                          ep93xx_defconfig
+mips                  decstation_64_defconfig
+powerpc                      mgcoge_defconfig
+arc                            hsdk_defconfig
+xtensa                              defconfig
+powerpc                      pmac32_defconfig
+sh                           se7724_defconfig
+powerpc64                           defconfig
+arm                           omap1_defconfig
+h8300                               defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20201208
+x86_64               randconfig-a006-20201208
+x86_64               randconfig-a005-20201208
+x86_64               randconfig-a001-20201208
+x86_64               randconfig-a002-20201208
+x86_64               randconfig-a003-20201208
+i386                 randconfig-a004-20201208
+i386                 randconfig-a005-20201208
+i386                 randconfig-a001-20201208
+i386                 randconfig-a002-20201208
+i386                 randconfig-a006-20201208
+i386                 randconfig-a003-20201208
+i386                 randconfig-a013-20201208
+i386                 randconfig-a014-20201208
+i386                 randconfig-a011-20201208
+i386                 randconfig-a015-20201208
+i386                 randconfig-a012-20201208
+i386                 randconfig-a016-20201208
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+clang tested configs:
+x86_64               randconfig-a016-20201208
+x86_64               randconfig-a012-20201208
+x86_64               randconfig-a013-20201208
+x86_64               randconfig-a014-20201208
+x86_64               randconfig-a015-20201208
+x86_64               randconfig-a011-20201208
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
