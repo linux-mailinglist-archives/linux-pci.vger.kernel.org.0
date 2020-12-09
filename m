@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4240F2D4BEF
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 21:33:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24D962D4C35
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 21:52:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbgLIUc2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 15:32:28 -0500
-Received: from halon.esss.lu.se ([194.47.240.54]:18714 "EHLO halon.esss.lu.se"
+        id S1726777AbgLIUvZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Dec 2020 15:51:25 -0500
+Received: from halon.esss.lu.se ([194.47.240.54]:51950 "EHLO halon.esss.lu.se"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730742AbgLIUc2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Dec 2020 15:32:28 -0500
+        id S1726558AbgLIUvZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Dec 2020 15:51:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ess.eu; s=dec2019;
         h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
          message-id:from:references:cc:to:subject:from;
-        bh=mGmnO1nOZXDsejHanJbIquVXkwwApHCBStaZS1RkHw8=;
-        b=nh3C2wgSND5TnZDMVwA2/hR3iBO/LnI6WeT8U+lPlvRuXcyW6ftoMCC8asZWDJkc9NmPg38eMoat2
-         sOoewxYPX5HRM9pVhlSrBVXhznE+/EdW3TIU5jaGhRTNSLc2FfXS26PukxM2Uxi59Faup5GrYu5Cib
-         PA1pHN+Q1s4LJBjQM+EsbwUxXOQ2vOI3ojffxsFEpqst9lmvdA+ob3GMWeCahazQJ3gFAKdZaRjJkG
-         W8gLUd7JJfZ+QlFbNUR0HPF7Phv95tz6cUiJ68eS6+0d/U4Z0H9JhLFuvF3TtTZPEOJzYswW2Z1ElW
-         HK9ZQpk8HbENZWK5CWd9XvZIHF1Oa5g==
+        bh=Tjm3FkicaED3MPgsW+Ngd3BkwOE6yQExScaHa4hPP/U=;
+        b=d27pRZFBxnl1vk23jbMkGxnfdukFk1zzDQSQ1whNzOXYfksXWynuKOATMOZt+oejU+tmvAPi9uAu8
+         iSRQdY5jSsUBNlHernGtaPu/j+IZYMttHrX4eNExi8UYiWwIMiIZgl8K66yaNOGR1OQKwOeAaJaDoI
+         LF1ilQo8BUfoqzdJpJ141KUc5KTuE3xsDWkzAiiRqHZOLuRUpedwF85Xpkf8xMR9rhdX1QHBmK6mC5
+         fh1fhk4jZwIUhUJAhXDalEQ/VZSxbjKQgaJgwjP8W8LphXG4EhZ+0u8XTAHJfsVOI3qVp7wpNTb3J/
+         GDEtP+0RvZ8H00uW7YT56uBMK3McrZQ==
 Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
         by halon.esss.lu.se (Halon) with ESMTPS
-        id 7e702d99-3a5d-11eb-93c8-005056a66d10;
-        Wed, 09 Dec 2020 21:31:19 +0100 (CET)
+        id 239ae6fc-3a60-11eb-93c8-005056a66d10;
+        Wed, 09 Dec 2020 21:50:15 +0100 (CET)
 Received: from [192.168.0.9] (194.47.241.248) by it-exch16-4.esss.lu.se
  (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Wed, 9 Dec 2020
- 21:31:22 +0100
+ 21:50:18 +0100
 Subject: Re: Recovering from AER: Uncorrected (Fatal) error
 To:     Bjorn Helgaas <helgaas@kernel.org>
 CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 References: <20201209174009.GA2532473@bjorn-Precision-5520>
 From:   Hinko Kocevar <hinko.kocevar@ess.eu>
-Message-ID: <9d234658-2ce5-593f-aff7-d524dc89a382@ess.eu>
-Date:   Wed, 9 Dec 2020 21:31:21 +0100
+Message-ID: <d1ad4c01-ce73-dcc0-99b1-5fe45a984800@ess.eu>
+Date:   Wed, 9 Dec 2020 21:50:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
@@ -44,7 +44,7 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [194.47.241.248]
-X-ClientProxiedBy: IT-Exch16-1.esss.lu.se (10.0.42.131) To
+X-ClientProxiedBy: it-exch16-4.esss.lu.se (10.0.42.134) To
  it-exch16-4.esss.lu.se (10.0.42.134)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
@@ -59,6 +59,7 @@ On 12/9/20 6:40 PM, Bjorn Helgaas wrote:
 
 Apologies. Probably due to the web MUA I used. Hopefully this will be 
 better now.
+
 
 > On Wed, Dec 09, 2020 at 10:02:10AM +0000, Hinko Kocevar wrote:
 >> ________________________________________
@@ -138,7 +139,10 @@ better now.
 > 
 > It should not.  The secondary bus should still work after the reset.
 
+
 I was hoping to hear that!
+
+
 > 
 >> After upgrading my pciutils I get a bit more output from lspci -vv for the Root port. It seems it is capable of logging the errors:
 >>
@@ -255,6 +259,231 @@ I was hoping to hear that!
 > secondary/subordinate bus registers and window registers get reset to
 > 0 ("lspci -vv" would show that) so config/mem/io space below it is
 > accessible.
+
+I guess the save/restore of the switch registers would be in the core 
+PCI(e) code; and not a switch vendor/part specific.
+
+I still have interest in getting this to work. With my limited knowledge 
+of the PCI code base, is there anything I could do to help? Is there a 
+particular code base area where you expect this should be managed; pci.c 
+or pcie/aer.c or maybe hotplug/ source? I can try and tinker with it..
+
+
+Here is the 'lspci -vv' of the 01:00.0 device at the time after the reset:
+
+01:00.0 PCI bridge: PLX Technology, Inc. Device 8725 (rev ca) (prog-if 
+00 [Normal decode])
+         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- 
+ParErr- Stepping- SERR- FastB2B- DisINTx-
+         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+         Interrupt: pin A routed to IRQ 128
+         Region 0: Memory at df200000 (32-bit, non-prefetchable) 
+[virtual] [size=256K]
+         Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
+         I/O behind bridge: 0000f000-00000fff [disabled]
+         Memory behind bridge: fff00000-000fffff [disabled]
+         Prefetchable memory behind bridge: 
+00000000fff00000-00000000000fffff [disabled]
+         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- <SERR- <PERR-
+         BridgeCtl: Parity- SERR- NoISA- VGA- VGA16- MAbort- >Reset- 
+FastB2B-
+                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+         Capabilities: [40] Power Management version 3
+                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
+PME(D0+,D1-,D2-,D3hot+,D3cold+)
+                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+         Capabilities: [48] MSI: Enable- Count=1/8 Maskable+ 64bit+
+                 Address: 0000000000000000  Data: 0000
+                 Masking: 00000000  Pending: 00000000
+         Capabilities: [68] Express (v2) Upstream Port, MSI 00
+                 DevCap: MaxPayload 1024 bytes, PhantFunc 0
+                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ 
+SlotPowerLimit 75.000W
+                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+                         MaxPayload 128 bytes, MaxReadReq 128 bytes
+                 DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq+ 
+AuxPwr- TransPend-
+                 LnkCap: Port #0, Speed 8GT/s, Width x8, ASPM L1, Exit 
+Latency L1 <4us
+                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+                 LnkCtl: ASPM Disabled; Disabled- CommClk-
+                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+                 LnkSta: Speed 8GT/s (ok), Width x8 (ok)
+                         TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+                 DevCap2: Completion Timeout: Not Supported, TimeoutDis- 
+NROPrPrP- LTR+
+                          10BitTagComp- 10BitTagReq- OBFF Via message, 
+ExtFmt- EETLPPrefix-
+                          EmergencyPowerReduction Not Supported, 
+EmergencyPowerReductionInit-
+                          FRS-
+                          AtomicOpsCap: Routing+ 32bit- 64bit- 128bitCAS-
+                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- 
+LTR- OBFF Disabled,
+                          AtomicOpsCtl: EgressBlck-
+                 LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink+ 
+Retimer- 2Retimers- DRS-
+                 LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- 
+SpeedDis-
+                          Transmit Margin: Normal Operating Range, 
+EnterModifiedCompliance- ComplianceSOS-
+                          Compliance De-emphasis: -6dB
+                 LnkSta2: Current De-emphasis Level: -6dB, 
+EqualizationComplete+ EqualizationPhase1+
+                          EqualizationPhase2+ EqualizationPhase3+ 
+LinkEqualizationRequest-
+                          Retimer- 2Retimers- CrosslinkRes: unsupported
+         Capabilities: [a4] Subsystem: PLX Technology, Inc. Device 8725
+         Capabilities: [100 v1] Device Serial Number ca-87-00-10-b5-df-0e-00
+         Capabilities: [fb4 v1] Advanced Error Reporting
+                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- 
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- 
+UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- 
+UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- 
+AdvNonFatalErr+
+                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- 
+AdvNonFatalErr+
+                 AERCap: First Error Pointer: 1f, ECRCGenCap+ ECRCGenEn- 
+ECRCChkCap+ ECRCChkEn-
+                         MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+                 HeaderLog: 00000000 00000000 00000000 00000000
+         Capabilities: [138 v1] Power Budgeting <?>
+         Capabilities: [10c v1] Secondary PCI Express
+                 LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+                 LaneErrStat: 0
+         Capabilities: [148 v1] Virtual Channel
+                 Caps:   LPEVC=1 RefClk=100ns PATEntryBits=8
+                 Arb:    Fixed- WRR32- WRR64- WRR128-
+                 Ctrl:   ArbSelect=Fixed
+                 Status: InProgress-
+                 VC0:    Caps:   PATOffset=03 MaxTimeSlots=1 RejSnoopTrans-
+                         Arb:    Fixed- WRR32- WRR64+ WRR128- TWRR128- 
+WRR256-
+                         Ctrl:   Enable+ ID=0 ArbSelect=WRR64 TC/VC=ff
+                         Status: NegoPending- InProgress-
+                         Port Arbitration Table <?>
+                 VC1:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+                         Arb:    Fixed+ WRR32- WRR64- WRR128- TWRR128- 
+WRR256-
+                         Ctrl:   Enable- ID=1 ArbSelect=Fixed TC/VC=00
+                         Status: NegoPending+ InProgress-
+         Capabilities: [e00 v1] Multicast
+                 McastCap: MaxGroups 64, ECRCRegen+
+                 McastCtl: NumGroups 1, Enable-
+                 McastBAR: IndexPos 0, BaseAddr 0000000000000000
+                 McastReceiveVec:      0000000000000000
+                 McastBlockAllVec:     0000000000000000
+                 McastBlockUntransVec: 0000000000000000
+                 McastOverlayBAR: OverlaySize 0 (disabled), BaseAddr 
+0000000000000000
+         Capabilities: [b00 v1] Latency Tolerance Reporting
+                 Max snoop latency: 0ns
+                 Max no snoop latency: 0ns
+         Capabilities: [b70 v1] Vendor Specific Information: ID=0001 
+Rev=0 Len=010 <?>
+         Kernel driver in use: pcieport
+
+
+And here is the diff of the lspci of 01:00.0 between the before and 
+after the reset:
+
+  01:00.0 PCI bridge: PLX Technology, Inc. Device 8725 (rev ca) (prog-if 
+00 [Normal decode])
+-	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
+Stepping- SERR- FastB2B- DisINTx+
++	Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- 
+Stepping- SERR- FastB2B- DisINTx-
+  	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- >SERR- <PERR- INTx-
+-	Latency: 0, Cache Line Size: 64 bytes
+  	Interrupt: pin A routed to IRQ 128
+-	Region 0: Memory at df200000 (32-bit, non-prefetchable) [size=256K]
+-	Bus: primary=01, secondary=02, subordinate=13, sec-latency=0
++	Region 0: Memory at df200000 (32-bit, non-prefetchable) [virtual] 
+[size=256K]
++	Bus: primary=00, secondary=00, subordinate=00, sec-latency=0
+  	I/O behind bridge: 0000f000-00000fff [disabled]
+-	Memory behind bridge: df000000-df1fffff [size=2M]
+-	Prefetchable memory behind bridge: 0000000090000000-00000000923fffff 
+[size=36M]
++	Memory behind bridge: fff00000-000fffff [disabled]
++	Prefetchable memory behind bridge: 00000000fff00000-00000000000fffff 
+[disabled]
+  	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- 
+<TAbort- <MAbort- <SERR- <PERR-
+-	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16+ MAbort- >Reset- FastB2B-
++	BridgeCtl: Parity- SERR- NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+  		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+  	Capabilities: [40] Power Management version 3
+  		Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA 
+PME(D0+,D1-,D2-,D3hot+,D3cold+)
+  		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+-	Capabilities: [48] MSI: Enable+ Count=1/8 Maskable+ 64bit+
+-		Address: 00000000fee00338  Data: 0000
+-		Masking: 000000ff  Pending: 00000000
++	Capabilities: [48] MSI: Enable- Count=1/8 Maskable+ 64bit+
++		Address: 0000000000000000  Data: 0000
++		Masking: 00000000  Pending: 00000000
+  	Capabilities: [68] Express (v2) Upstream Port, MSI 00
+  		DevCap:	MaxPayload 1024 bytes, PhantFunc 0
+  			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ SlotPowerLimit 75.000W
+  		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+  			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+-			MaxPayload 256 bytes, MaxReadReq 128 bytes
++			MaxPayload 128 bytes, MaxReadReq 128 bytes
+  		DevSta:	CorrErr+ NonFatalErr- FatalErr- UnsupReq+ AuxPwr- TransPend-
+  		LnkCap:	Port #0, Speed 8GT/s, Width x8, ASPM L1, Exit Latency L1 <4us
+  			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+@@ -376,7 +375,7 @@
+  			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+  			 FRS-
+  			 AtomicOpsCap: Routing+ 32bit- 64bit- 128bitCAS-
+-		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR+ OBFF 
+Disabled,
++		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF 
+Disabled,
+  			 AtomicOpsCtl: EgressBlck-
+  		LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink+ Retimer- 
+2Retimers- DRS-
+  		LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+@@ -402,7 +401,7 @@
+  		LaneErrStat: 0
+  	Capabilities: [148 v1] Virtual Channel
+  		Caps:	LPEVC=1 RefClk=100ns PATEntryBits=8
+-		Arb:	Fixed+ WRR32- WRR64- WRR128-
++		Arb:	Fixed- WRR32- WRR64- WRR128-
+  		Ctrl:	ArbSelect=Fixed
+  		Status:	InProgress-
+  		VC0:	Caps:	PATOffset=03 MaxTimeSlots=1 RejSnoopTrans-
+@@ -423,20 +422,20 @@
+  		McastBlockUntransVec: 0000000000000000
+  		McastOverlayBAR: OverlaySize 0 (disabled), BaseAddr 0000000000000000
+  	Capabilities: [b00 v1] Latency Tolerance Reporting
+-		Max snoop latency: 71680ns
+-		Max no snoop latency: 71680ns
++		Max snoop latency: 0ns
++		Max no snoop latency: 0ns
+  	Capabilities: [b70 v1] Vendor Specific Information: ID=0001 Rev=0 
+Len=010 <?>
+  	Kernel driver in use: pcieport
+
+
+Looks like many fields have been zeroed out. Should a bare restoration 
+of the previous registers values be enough or does some other magic 
+(i.e. calling PCI functions/performing initialization tasks/etc) needs 
+to happen to get that port back to sanity?
+
+
+Thanks!
+//hinko
+
+
 > 
 > I didn't have much confidence in our error handling to begin with, and
 > it's eroding ;)
