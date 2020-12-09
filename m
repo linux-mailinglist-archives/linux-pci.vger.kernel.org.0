@@ -2,195 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 674922D3892
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 03:07:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 870BE2D3898
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 03:11:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgLICFR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 21:05:17 -0500
-Received: from mga05.intel.com ([192.55.52.43]:1226 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726311AbgLICFR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 21:05:17 -0500
-IronPort-SDR: ZHcsU2dswODrr0lkU6OXRykTsXod43gWKKw1doJBaMgn023gyO2w8e6QvefvZvtYDlzVQhULly
- n4UsVb0+Qptg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="258713491"
-X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="258713491"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 18:04:36 -0800
-IronPort-SDR: pEF+4jwnPNNPZXCpXf8tnJ+XSDoPyC8r0uGqcsoJNwzexXjimlnjSlv+yS+bBbFAeqr/ZV8Ik0
- wcbmwj8smCvQ==
-X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="437608882"
-Received: from mlubyani-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.137.9])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 18:04:35 -0800
-Date:   Tue, 8 Dec 2020 18:04:33 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [RFC PATCH 12/14] cxl: Add basic debugging
-Message-ID: <20201209020433.bzsuqudbgtpbtggk@intel.com>
-References: <20201209002418.1976362-1-ben.widawsky@intel.com>
- <20201209002418.1976362-13-ben.widawsky@intel.com>
- <CAPcyv4gW8H1wNVDFhSt1SFbU=mcNZFKBve4xG24rGJaJg1wQZA@mail.gmail.com>
+        id S1725911AbgLICJL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 21:09:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgLICJL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 21:09:11 -0500
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210D8C061793
+        for <linux-pci@vger.kernel.org>; Tue,  8 Dec 2020 18:08:31 -0800 (PST)
+Received: by mail-pl1-x644.google.com with SMTP id u4so109791plr.12
+        for <linux-pci@vger.kernel.org>; Tue, 08 Dec 2020 18:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KsToaui+c4tLuJA6o1UPV0Iqu/q3rNtPcLmVbxkIOGw=;
+        b=RJ6lMMlQN9Q0FB0pHRGZ64OYsdGDDdSVADApCttmcfF4htYVJMxmSAltyG/V8saCKc
+         QZGbx/qM+zInZxM71xW/sodC3WFVd282yqUZ0AZFwoGVeI54E7D4RkLla/BLmi6wAzKX
+         T9pQPPOiiqP60jUIFqzTuHr+qr3XldiH7LuIDlEOJ2J2u4f1utR2dzNrj7FMIhErpXiS
+         X2TqHZs6xuGapmX4P8hKkYrpkATpftIHcnCdZUx4q2oQGUbQZffjtkecO/uC4L/bwS0Q
+         W2Yq4uCnuV5i2w7yUu5nP45E/IL6UyDn6TQyhxpqV+PAVoDkCTwUnvx5fffUqvibou2P
+         aGsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KsToaui+c4tLuJA6o1UPV0Iqu/q3rNtPcLmVbxkIOGw=;
+        b=ZPQ/z7+AVBVuJQDfZttqHKcTeurSa9WDDL6U1mD02coloYHvDqKnOffmBP1GZt9i9f
+         AVLxMQXMN04vvf+YRCXEatvBiTaYOnCn4bLpfgkjGVowJbBR5rnSig4Oi9WrNZcoZ4Or
+         KFQpaABvjDUNA/iebC2nkCAWyYa9iISeXKXVBw7VoBivvZauTiPyqBWTRdypAyaAT+pS
+         4eCoMVogUs3IMS6VxH83kqIi1bag0WtTZIICL3LFxjtPgEDVx+HWfbtgpBp4oeACv6w6
+         osBml6pjYn7j7qk46b12AQqkM9WzKzf9WmRZ2n1l3cQhGMM9gctxf4Ktzy82ywr0592F
+         X3YA==
+X-Gm-Message-State: AOAM5330VbArPgPICpKJtWkujX13WOFysYF5lPEmzE+x//T4h1wIixsS
+        CHFxnftxoP6yNKr6wvMPwW85
+X-Google-Smtp-Source: ABdhPJxj0eU9WE1ZTHGb/qUkwS/+6BVHvEAcCmVgSiHdqU6TtAIpJiZarmMQ4W509vuXhJi9mV3w0A==
+X-Received: by 2002:a17:90b:350b:: with SMTP id ls11mr82922pjb.193.1607479710395;
+        Tue, 08 Dec 2020 18:08:30 -0800 (PST)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.gmail.com with ESMTPSA id az19sm89046pjb.24.2020.12.08.18.08.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Dec 2020 18:08:29 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+To:     lorenzo.pieralisi@arm.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        svarbanov@mm-sol.com, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        truong@codeaurora.org, Manivannan Sadhasivam <mani@kernel.org>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] PCI: qcom: Fix using uninitialized smmu_sid_base variable
+Date:   Wed,  9 Dec 2020 07:38:17 +0530
+Message-Id: <20201209020817.12776-1-mani@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gW8H1wNVDFhSt1SFbU=mcNZFKBve4xG24rGJaJg1wQZA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 20-12-08 17:17:36, Dan Williams wrote:
-> On Tue, Dec 8, 2020 at 4:24 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > Provide a standard debug function for use throughout the driver.
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > ---
-> >  drivers/cxl/cxl.h |  3 +++
-> >  drivers/cxl/mem.c | 26 +++++++++++++++++++++++++-
-> >  2 files changed, 28 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 77c2dee6843c..e5afb89dab0b 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -9,6 +9,9 @@
-> >  #include <linux/bitops.h>
-> >  #include <linux/io.h>
-> >
-> > +#define cxl_debug(fmt, ...)                                                    \
-> > +       pr_debug("CXL DEBUG: %s: " fmt, __func__, ##__VA_ARGS__)
-> > +
-> 
-> This should be dev_dbg(), then you don't need the CXL DEBUG prefix. In
-> fact you don't need a cxl_debug() macro at all in that case. cxl_mem
-> might need a ->dev attribute for this purpose.
-> 
+smmu_sid_base should hold the base of SMMU SID extracted from the first
+entry of iommu-map. This value will be used to extract the successive SMMU
+SID values. Fix it by assigning the first SMMU SID base before for loop.
 
-I really like the ability to turn specific messages on and off at will. (FWIW,
-__func__ is also redundant because pr_debug allows you to specify a flag to
-always print the function name). While it's not very frequent events here, in
-the future it likely will be and I think it can be really helpful to be able to
-have that level of control.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If you want to avoid creating a new debug functionality, I'm okay with that, but
-I'd really like to use pr_debug instead of dev_dbg for those messages going
-forward. Once you take that step, it seems giving contributors a macro named
-'cxl_debug' so they don't have to figure out when to use what, makes sense. My
-mental separation is, dev_* is useful primarily for errors and initialization
-debug messaging, pr_debug/trace_printk is for runtime things.
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 8ba3e6b29196..affa2713bf80 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1297,6 +1297,9 @@ static int qcom_pcie_config_sid_sm8250(struct qcom_pcie *pcie)
+ 	/* Registers need to be zero out first */
+ 	memset_io(bdf_to_sid_base, 0, CRC8_TABLE_SIZE * sizeof(u32));
+ 
++	/* Extract the SMMU SID base from the first entry of iommu-map */
++	smmu_sid_base = map[0].smmu_sid;
++
+ 	/* Look for an available entry to hold the mapping */
+ 	for (i = 0; i < nr_map; i++) {
+ 		u16 bdf_be = cpu_to_be16(map[i].bdf);
+-- 
+2.25.1
 
-I probably should have put that in the commit message...
-
-> >  #define CXL_SET_FIELD(value, field)                                            \
-> >         ({                                                                     \
-> >                 WARN_ON(!FIELD_FIT(field##_MASK, value));                      \
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index a2cea7ac7cc6..6b2f8d3776b5 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -122,9 +122,12 @@ static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> >  {
-> >         const int timeout = msecs_to_jiffies(2000);
-> >         const unsigned long start = jiffies;
-> > +       unsigned long end = start;
-> >
-> >         while (cxl_doorbell_busy(cxlm)) {
-> > -               if (time_after(jiffies, start + timeout)) {
-> > +               end = jiffies;
-> > +
-> > +               if (time_after(end, start + timeout)) {
-> >                         /* Check again in case preempted before timeout test */
-> >                         if (!cxl_doorbell_busy(cxlm))
-> >                                 break;
-> > @@ -133,6 +136,8 @@ static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> >                 cpu_relax();
-> >         }
-> >
-> > +       cxl_debug("Doorbell wait took %dms",
-> > +                 jiffies_to_msecs(end) - jiffies_to_msecs(start));
-> >         return 0;
-> >  }
-> >
-> > @@ -180,6 +185,8 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
-> >         }
-> >
-> >         /* #4 */
-> > +       cxl_debug("Sending command to %s\n",
-> > +                 dev_driver_string(&cxlm->pdev->dev));
-> 
-> dev_dbg() already includes dev_driver_string().
-> 
-> >         cxl_write_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET,
-> >                              CXLDEV_MB_CTRL_DOORBELL);
-> >
-> > @@ -308,6 +315,8 @@ static int cxl_mem_open(struct inode *inode, struct file *file)
-> >         if (!cxlmd)
-> >                 return -ENXIO;
-> >
-> > +       cxl_debug("Opened %pD\n", file);
-> > +
-> >         file->private_data = cxlmd;
-> >
-> >         return 0;
-> > @@ -383,6 +392,10 @@ static int handle_mailbox_cmd_from_user(struct cxl_memdev *cxlmd,
-> >                 .size_in = cmd->info.size_in,
-> >                 .size_out = size_out,
-> >         };
-> > +       cxl_debug("Submitting command for user\n"
-> > +                 "\topcode: %x\n"
-> > +                 "\tsize: %zub/%zub\n",
-> > +                 mbox_cmd.opcode, mbox_cmd.size_in, mbox_cmd.size_out);
-> >         rc = cxl_mem_mbox_send_cmd(cxlmd->cxlm, &mbox_cmd);
-> >         cxl_mem_mbox_put(cxlmd->cxlm);
-> >         if (rc)
-> > @@ -479,6 +492,8 @@ static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg
-> >                 u32 n_commands;
-> >                 int i, j;
-> >
-> > +               cxl_debug("Query IOCTL\n");
-> > +
-> >                 if (get_user(n_commands, (u32 __user *)arg))
-> >                         return -EFAULT;
-> >
-> > @@ -511,6 +526,8 @@ static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg
-> >                 struct cxl_mem_command c;
-> >                 int rc;
-> >
-> > +               cxl_debug("Send IOCTL\n");
-> > +
-> >                 rc = cxl_validate_cmd_from_user(u, &c);
-> >                 if (rc)
-> >                         return rc;
-> > @@ -843,6 +860,13 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
-> >
-> >         id = (struct cxl_mbox_identify *)mbox_cmd.payload;
-> >
-> > +       cxl_debug("Driver identify command\n"
-> > +                 "\tFirmware Version: %s\n"
-> > +                 "\tTotal Capacity: %llu (%llu persistent)\n"
-> > +                 "\tLSA size: %u\n",
-> > +                 id->fw_revision, id->total_capacity, id->persistent_capacity,
-> > +                 id->lsa_size);
-> > +
-> 
-> Seems not necessary for details that are published in sysfs?
-
-I was thinking for cases where driver doesn't bind, seeing the identify
-information could be useful. This is one case where dev_dbg would also serve
-IMO.
