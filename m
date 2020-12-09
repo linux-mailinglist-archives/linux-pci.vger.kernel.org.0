@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6345D2D37AB
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 01:30:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3A9B2D37C5
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 01:30:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731911AbgLIAZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 19:25:50 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16961 "EHLO mga09.intel.com"
+        id S1731896AbgLIA2R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 19:28:17 -0500
+Received: from mga09.intel.com ([134.134.136.24]:16959 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731904AbgLIAZp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 19:25:45 -0500
-IronPort-SDR: nKsPyJrtzlMuGTrRLXwi0Wzd6YZlB5J/IUThH3K3pkIGekTo3gk9YnXWCGI/2zx7QhP18kaBRj
- vhWytIb43fzA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142086"
+        id S1731930AbgLIAZ7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Dec 2020 19:25:59 -0500
+IronPort-SDR: Vbbf5Yyriz45L+TTe97gXCRqCa8l4alyyM3LT+6vagJYBn/POSMD+F7lNTiQu/X5n46HBNZVbW
+ +fNorpOBFxZQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142089"
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="174142086"
+   d="scan'208";a="174142089"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:27 -0800
-IronPort-SDR: IyagmM6YphAdnhiC/3dmwsf+MDtEyk230VaBiaCRDIUI2k9U7XiAmlB6kOO2UU+ggoTJPgtYVx
- yAv65dau3WJw==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:28 -0800
+IronPort-SDR: vy0dthkPfL/gcxo52372VSggCr9CVKXZICPtYVNpoOJaYj/GUPeSKxYXAxc3lyPpo/6SgCyhm7
+ tHDJ9SRsvrsA==
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="407838503"
+   d="scan'208";a="407838506"
 Received: from mlubyani-mobl2.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.137.9])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:26 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:27 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
         Rafael Wysocki <rafael.j.wysocki@intel.com>,
@@ -39,9 +39,9 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>
-Subject: [RFC PATCH v2 08/14] cxl/mem: Register CXL memX devices
-Date:   Tue,  8 Dec 2020 16:24:12 -0800
-Message-Id: <20201209002418.1976362-9-ben.widawsky@intel.com>
+Subject: [RFC PATCH 09/14] cxl/mem: Add basic IOCTL interface
+Date:   Tue,  8 Dec 2020 16:24:13 -0800
+Message-Id: <20201209002418.1976362-10-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201209002418.1976362-1-ben.widawsky@intel.com>
 References: <20201209002418.1976362-1-ben.widawsky@intel.com>
@@ -51,491 +51,273 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+Add a straightforward IOCTL that provides a mechanism for userspace to
+query the supported memory device commands.
 
-Create the /sys/bus/cxl hierarchy to enumerate memory devices
-(per-endpoint control devices), memory address space devices (platform
-address ranges with interleaving, performance, and persistence
-attributes), and memory regions (active provisioned memory from an
-address space device that is in use as System RAM or delegated to
-libnvdimm as Persistent Memory regions).
+Memory device commands are specified in 8.2.9 of the CXL 2.0
+specification. They are submitted through a mailbox mechanism specified
+in 8.2.8.4.
 
-For now, only the per-endpoint control devices are registered on the
-'cxl' bus.
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+
+I did attempt to use the same struct for querying commands as well as
+sending commands (upcoming patch). The number of unused fields between
+the two made for a bad fit IMO.
+
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl |  26 +++
- Documentation/cxl/memory-devices.rst    |   3 +
- drivers/cxl/Makefile                    |   2 +
- drivers/cxl/bus.c                       |  54 +++++
- drivers/cxl/bus.h                       |   8 +
- drivers/cxl/cxl.h                       |   3 +
- drivers/cxl/mem.c                       | 249 +++++++++++++++++++++++-
- 7 files changed, 343 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-cxl
- create mode 100644 drivers/cxl/bus.c
- create mode 100644 drivers/cxl/bus.h
+ Documentation/cxl/memory-devices.rst |   9 +++
+ drivers/cxl/mem.c                    |  89 +++++++++++++++++++++++
+ include/uapi/linux/cxl_mem.h         | 102 +++++++++++++++++++++++++++
+ 3 files changed, 200 insertions(+)
+ create mode 100644 include/uapi/linux/cxl_mem.h
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-new file mode 100644
-index 000000000000..fe7b87eba988
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -0,0 +1,26 @@
-+What:		/sys/bus/cxl/devices/memX/firmware_version
-+Date:		December, 2020
-+KernelVersion:	v5.12
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) "FW Revision" string as reported by the Identify
-+		Memory Device Output Payload in the CXL-2.0
-+		specification.
-+
-+What:		/sys/bus/cxl/devices/memX/ram/size
-+Date:		December, 2020
-+KernelVersion:	v5.12
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) "Volatile Only Capacity" as reported by the
-+		Identify Memory Device Output Payload in the CXL-2.0
-+		specification.
-+
-+What:		/sys/bus/cxl/devices/memX/pmem/size
-+Date:		December, 2020
-+KernelVersion:	v5.12
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) "Persistent Only Capacity" as reported by the
-+		Identify Memory Device Output Payload in the CXL-2.0
-+		specification.
 diff --git a/Documentation/cxl/memory-devices.rst b/Documentation/cxl/memory-devices.rst
-index 134c9b6b4ff4..5f723c25382b 100644
+index 5f723c25382b..ec54674b3822 100644
 --- a/Documentation/cxl/memory-devices.rst
 +++ b/Documentation/cxl/memory-devices.rst
-@@ -37,3 +37,6 @@ External Interfaces
+@@ -32,6 +32,15 @@ CXL Memory Device
+ .. kernel-doc:: drivers/cxl/mem.c
+    :internal:
  
- .. kernel-doc:: drivers/cxl/acpi.c
-    :export:
++CXL IOCTL Interface
++-------------------
 +
-+.. kernel-doc:: drivers/cxl/bus.c
-+   :export:
-diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
-index 97fdffb00f2d..f9baaeb94bda 100644
---- a/drivers/cxl/Makefile
-+++ b/drivers/cxl/Makefile
-@@ -1,7 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_CXL_BUS_PROVIDER) += cxl_bus.o
- obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
- obj-$(CONFIG_CXL_MEM) += cxl_mem.o
- 
- ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
-+cxl_bus-y := bus.o
- cxl_acpi-y := acpi.o
- cxl_mem-y := mem.o
-diff --git a/drivers/cxl/bus.c b/drivers/cxl/bus.c
-new file mode 100644
-index 000000000000..91fe765bea94
---- /dev/null
-+++ b/drivers/cxl/bus.c
-@@ -0,0 +1,54 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include "bus.h"
++.. kernel-doc:: include/uapi/linux/cxl_mem.h
++   :doc: UAPI
 +
-+static struct bus_type cxl_bus_type = {
-+	.name = "cxl",
-+};
++.. kernel-doc:: include/uapi/linux/cxl_mem.h
++   :internal:
 +
-+static void cxl_unregister(void *dev)
-+{
-+	device_unregister(dev);
-+}
-+
-+/**
-+ * cxl_register() - Register a device on the CXL bus.
-+ * @dev: The device to register onto the CXL bus.
-+ *
-+ * A CXL device driver must call this in order to have the device be a part of
-+ * the CXL bus. All endpoint device drivers should utilize this function.
-+ *
-+ * Return: 0 on success.
-+ */
-+int cxl_register(struct device *dev)
-+{
-+	int rc;
-+
-+	if (!dev->parent || !dev->parent->driver)
-+		return -EINVAL;
-+
-+	dev->bus = &cxl_bus_type;
-+	rc = device_add(dev);
-+	if (rc)
-+		put_device(dev);
-+	else
-+		rc = devm_add_action_or_reset(dev->parent, cxl_unregister, dev);
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(cxl_register);
-+
-+static __init int cxl_bus_init(void)
-+{
-+	return bus_register(&cxl_bus_type);
-+}
-+
-+static void cxl_bus_exit(void)
-+{
-+	bus_unregister(&cxl_bus_type);
-+}
-+
-+module_init(cxl_bus_init);
-+module_exit(cxl_bus_exit);
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/cxl/bus.h b/drivers/cxl/bus.h
-new file mode 100644
-index 000000000000..5fc75ebd3650
---- /dev/null
-+++ b/drivers/cxl/bus.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
-+#ifndef __CXL_BUS_H__
-+#define __CXL_BUS_H__
-+
-+int cxl_register(struct device *dev);
-+
-+#endif /* __CXL_BUS_H__ */
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 6d641309013d..77c2dee6843c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -3,6 +3,7 @@
- 
- #ifndef __CXL_H__
- #define __CXL_H__
-+#include <linux/range.h>
- 
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
-@@ -65,6 +66,7 @@
- #define   CXLMDEV_RESET_NEEDED(status) \
- 		(CXL_GET_FIELD(status, CXLMDEV_RESET_NEEDED) != CXLMDEV_RESET_NEEDED_NOT)
- 
-+struct cxl_memdev;
- /**
-  * struct cxl_mem - A CXL memory device
-  * @pdev: The PCI device associated with this CXL device.
-@@ -73,6 +75,7 @@
- struct cxl_mem {
- 	struct pci_dev *pdev;
- 	void __iomem *regs;
-+	struct cxl_memdev *cxlmd;
- 
- 	spinlock_t mbox_lock; /* Protects device mailbox and firmware */
+ External Interfaces
+ ===================
  
 diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 82984bf58a8d..bb6ea58f6c7b 100644
+index bb6ea58f6c7b..2c4aadcea0e4 100644
 --- a/drivers/cxl/mem.c
 +++ b/drivers/cxl/mem.c
-@@ -2,11 +2,37 @@
- /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
- #include <linux/sched/clock.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/cdev.h>
-+#include <linux/idr.h>
+@@ -7,6 +7,7 @@
+ #include <linux/idr.h>
  #include <linux/pci.h>
  #include <linux/io.h>
++#include <uapi/linux/cxl_mem.h>
  #include "acpi.h"
  #include "pci.h"
  #include "cxl.h"
-+#include "bus.h"
+@@ -73,6 +74,49 @@ static DEFINE_IDR(cxl_mem_idr);
+ /* protect cxl_mem_idr allocations */
+ static DEFINE_MUTEX(cxl_memdev_lock);
+ 
++/*
++ * This table defines the supported mailboxes commands for the driver. The id is
++ * ordinal and thus gaps in this table aren't allowed. This table is made up of
++ * a UAPI structure. Non-negative values in the table will be validated against
++ * the user's input. For example, if size_in is 0, and the user passed in 1, it
++ * is an error.
++ */
++#define CXL_CMD(_id, _flags, sin, sout, _name, _enable, op)                    \
++	{                                                                      \
++		{ .id = CXL_MEM_COMMAND_ID_##_id,                              \
++		  .flags = CXL_MEM_COMMAND_FLAG_##_flags,                      \
++		  .size_in = sin,                                              \
++		  .size_out = sout,                                            \
++		  .name = _name },                                             \
++			.enable = _enable, .opcode = op                        \
++	}
 +
 +/**
-+ * DOC: cxl mem
++ * struct cxl_mem_command - Driver representation of a memory device command
++ * @info: Command information as it exists for the UAPI
++ * @opcode: The actual bits used for the mailbox protocol
++ * @enable: Whether the command is enabled. The driver may support a large set
++ *	    of commands that may not be enabled. The primary reason a command
++ *	    would not be enabled is for commands that are specified as optional
++ *	    and the hardware doesn't support the command.
 + *
-+ * This implements a CXL memory device ("type-3") as it is defined by the
-+ * Compute Express Link specification.
++ * The cxl_mem_command is the driver's internal representation of commands that
++ * are supported by the driver. Some of these commands may not be supported by
++ * the hardware (!@enable). The driver will use @info to validate the fields
++ * passed in by the user then submit the @opcode to the hardware.
 + *
-+ * The driver has several responsibilities, mainly:
-+ *  - Create the memX device and register on the CXL bus.
-+ *  - Enumerate device's register interface and map them.
-+ *  - Probe the device attributes to establish sysfs interface.
-+ *  - Provide an IOCTL interface to userspace to communicate with the device for
-+ *    things like firmware update.
-+ *  - Support management of interleave sets.
-+ *  - Handle and manage error conditions.
++ * See struct cxl_command_info.
 + */
-+
-+/*
-+ * An entire PCI topology full of devices should be enough for any
-+ * config
-+ */
-+#define CXL_MEM_MAX_DEVS 65536
- 
- #define cxl_doorbell_busy(cxlm)                                                \
- 	(cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET) &                    \
-@@ -35,6 +61,18 @@ struct mbox_cmd {
- 	u16 return_code;
- };
- 
-+struct cxl_memdev {
-+	struct device dev;
-+	struct cxl_mem *cxlm;
-+	int id;
++struct cxl_mem_command {
++	const struct cxl_command_info info;
++	const u16 opcode;
++	bool enable;
 +};
 +
-+static int cxl_mem_major;
-+static struct cdev cxl_mem_cdev;
-+static DEFINE_IDR(cxl_mem_idr);
-+/* protect cxl_mem_idr allocations */
-+static DEFINE_MUTEX(cxl_memdev_lock);
++static struct cxl_mem_command mem_commands[] = {
++	CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
++};
 +
  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
  {
  	const int timeout = msecs_to_jiffies(2000);
-@@ -213,6 +251,36 @@ static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
- 	spin_unlock(&cxlm->mbox_lock);
- }
- 
-+static int cxl_mem_open(struct inode *inode, struct file *file)
-+{
-+	long minor = iminor(inode);
-+	struct cxl_memdev *cxlmd;
-+
-+	rcu_read_lock();
-+	cxlmd = idr_find(&cxl_mem_idr, minor);
-+	rcu_read_unlock();
-+
-+	if (!cxlmd)
-+		return -ENXIO;
-+
-+	file->private_data = cxlmd;
-+
-+	return 0;
-+}
-+
-+static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	return -ENOTTY;
-+}
-+
-+static const struct file_operations cxl_mem_fops = {
-+	.owner = THIS_MODULE,
-+	.open = cxl_mem_open,
-+	.unlocked_ioctl = cxl_mem_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
-+	.llseek = noop_llseek,
-+};
-+
- /**
-  * cxl_mem_setup_regs() - Setup necessary MMIO.
-  * @cxlm: The CXL memory device to communicate with.
-@@ -359,6 +427,141 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+@@ -268,8 +312,53 @@ static int cxl_mem_open(struct inode *inode, struct file *file)
  	return 0;
  }
  
-+static struct cxl_memdev *to_cxl_memdev(struct device *dev)
++static int cxl_mem_count_commands(void)
 +{
-+	return container_of(dev, struct cxl_memdev, dev);
-+}
++	int i, n = 0;
 +
-+static void cxl_memdev_release(struct device *dev)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	for (i = 0; i < ARRAY_SIZE(mem_commands); i++) {
++		struct cxl_mem_command *c = &mem_commands[i];
 +
-+	mutex_lock(&cxl_memdev_lock);
-+	idr_remove(&cxl_mem_idr, cxlmd->id);
-+	mutex_unlock(&cxl_memdev_lock);
-+
-+	kfree(cxlmd);
-+}
-+
-+static char *cxl_memdev_devnode(struct device *dev, umode_t *mode, kuid_t *uid,
-+				kgid_t *gid)
-+{
-+	return kasprintf(GFP_KERNEL, "cxl/%s", dev_name(dev));
-+}
-+
-+static ssize_t firmware_version_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+
-+	return sprintf(buf, "%.16s\n", cxlm->firmware_version);
-+}
-+static DEVICE_ATTR_RO(firmware_version);
-+
-+static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+	unsigned long long len = range_len(&cxlm->ram.range);
-+
-+	return sprintf(buf, "%#llx\n", len);
-+}
-+
-+static struct device_attribute dev_attr_ram_size =
-+	__ATTR(size, 0444, ram_size_show, NULL);
-+
-+static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_mem *cxlm = cxlmd->cxlm;
-+	unsigned long long len = range_len(&cxlm->pmem.range);
-+
-+	return sprintf(buf, "%#llx\n", len);
-+}
-+
-+static struct device_attribute dev_attr_pmem_size =
-+	__ATTR(size, 0444, pmem_size_show, NULL);
-+
-+static struct attribute *cxl_memdev_attributes[] = {
-+	&dev_attr_firmware_version.attr,
-+	NULL,
-+};
-+
-+static struct attribute *cxl_memdev_pmem_attributes[] = {
-+	&dev_attr_pmem_size.attr,
-+	NULL,
-+};
-+
-+static struct attribute *cxl_memdev_ram_attributes[] = {
-+	&dev_attr_ram_size.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group cxl_memdev_attribute_group = {
-+	.attrs = cxl_memdev_attributes,
-+};
-+
-+static struct attribute_group cxl_memdev_ram_attribute_group = {
-+	.name = "ram",
-+	.attrs = cxl_memdev_ram_attributes,
-+};
-+
-+static struct attribute_group cxl_memdev_pmem_attribute_group = {
-+	.name = "pmem",
-+	.attrs = cxl_memdev_pmem_attributes,
-+};
-+
-+static const struct attribute_group *cxl_memdev_attribute_groups[] = {
-+	&cxl_memdev_attribute_group,
-+	&cxl_memdev_ram_attribute_group,
-+	&cxl_memdev_pmem_attribute_group,
-+	NULL,
-+};
-+
-+static const struct device_type cxl_memdev_type = {
-+	.name = "cxl_memdev",
-+	.release = cxl_memdev_release,
-+	.devnode = cxl_memdev_devnode,
-+	.groups = cxl_memdev_attribute_groups,
-+};
-+
-+static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
-+{
-+	struct pci_dev *pdev = cxlm->pdev;
-+	struct cxl_memdev *cxlmd;
-+	struct device *dev;
-+	int rc;
-+
-+	cxlmd = kzalloc(sizeof(*cxlmd), GFP_KERNEL);
-+	if (!cxlmd)
-+		return -ENOMEM;
-+
-+	cxlmd->cxlm = cxlm;
-+
-+	mutex_lock(&cxl_memdev_lock);
-+	rc = idr_alloc(&cxl_mem_idr, cxlmd, 0, CXL_MEM_MAX_DEVS, GFP_KERNEL);
-+	mutex_unlock(&cxl_memdev_lock);
-+	if (rc < 0) {
-+		kfree(cxlmd);
-+		return rc;
++		if (c->enable)
++			n++;
 +	}
 +
-+	cxlmd->id = rc;
-+
-+	dev = &cxlmd->dev;
-+
-+	device_initialize(dev);
-+	dev->parent = &pdev->dev;
-+	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
-+	dev->type = &cxl_memdev_type;
-+	dev_set_name(dev, "mem%d", cxlmd->id);
-+
-+	return cxl_register(dev);
++	return n;
 +}
 +
- /**
-  * cxl_mem_identify() - Send the IDENTIFY command to the device.
-  * @cxlm: The device to identify.
-@@ -461,7 +664,11 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
--	return cxl_mem_identify(cxlm);
-+	rc = cxl_mem_identify(cxlm);
-+	if (rc)
-+		return rc;
+ static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ {
++	if (cmd == CXL_MEM_QUERY_COMMANDS) {
++		struct cxl_mem_query_commands __user *q = (void __user *)arg;
++		u32 n_commands;
++		int i, j;
 +
-+	return cxl_mem_add_memdev(cxlm);
++		if (get_user(n_commands, (u32 __user *)arg))
++			return -EFAULT;
++
++		if (n_commands == 0)
++			return put_user(cxl_mem_count_commands(),
++					(u32 __user *)arg);
++
++		for (i = 0, j = 0;
++		     i < ARRAY_SIZE(mem_commands) && j < n_commands; i++) {
++			struct cxl_mem_command *c = &mem_commands[i];
++			const struct cxl_command_info *info = &c->info;
++
++			if (!c->enable)
++				continue;
++
++			if (copy_to_user(&q->commands[j], info, sizeof(*info)))
++				return -EFAULT;
++
++			if (copy_to_user(&q->commands[j].name, info->name,
++					 strlen(info->name)))
++				return -EFAULT;
++
++			j++;
++		}
++	}
++
+ 	return -ENOTTY;
  }
  
- static const struct pci_device_id cxl_mem_pci_tbl[] = {
-@@ -478,6 +685,44 @@ static struct pci_driver cxl_mem_driver = {
- 	.probe			= cxl_mem_probe,
- };
- 
-+static __init int cxl_mem_init(void)
-+{
-+	int rc;
-+	dev_t devt;
+diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+new file mode 100644
+index 000000000000..1d1e143f98ec
+--- /dev/null
++++ b/include/uapi/linux/cxl_mem.h
+@@ -0,0 +1,102 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * CXL IOCTLs for Memory Devices
++ */
 +
-+	rc = alloc_chrdev_region(&devt, 0, CXL_MEM_MAX_DEVS, "cxl");
-+	if (rc)
-+		return rc;
++#ifndef _UAPI_CXL_MEM_H_
++#define _UAPI_CXL_MEM_H_
 +
-+	cxl_mem_major = MAJOR(devt);
++#if defined(__cplusplus)
++extern "C" {
++#endif
 +
-+	cdev_init(&cxl_mem_cdev, &cxl_mem_fops);
-+	rc = cdev_add(&cxl_mem_cdev, MKDEV(cxl_mem_major, 0), CXL_MEM_MAX_DEVS);
-+	if (rc)
-+		goto err_cdev;
++/**
++ * DOC: UAPI
++ *
++ * CXL memory devices expose UAPI to have a standard user interface.
++ * Userspace can refer to these structure definitions and UAPI formats
++ * to communicate to driver
++ */
 +
-+	rc = pci_register_driver(&cxl_mem_driver);
-+	if (rc)
-+		goto err_driver;
++#define CXL_MEM_QUERY_COMMANDS _IOR('C', 1, struct cxl_mem_query_commands)
 +
-+	return 0;
++#define CXL_MEM_COMMAND_NAME_LENGTH 32
 +
-+err_driver:
-+	cdev_del(&cxl_mem_cdev);
-+err_cdev:
-+	unregister_chrdev_region(MKDEV(cxl_mem_major, 0), CXL_MEM_MAX_DEVS);
++/**
++ * struct cxl_command_info - Command information returned from a query.
++ * @id: ID number for the command.
++ * @flags: Flags that specify command behavior.
++ *
++ *          - CXL_MEM_COMMAND_FLAG_TAINT: Using this command will taint the kernel.
++ * @size_in: Expected input size, or -1 if variable length.
++ * @size_out: Expected output size, or -1 if variable length.
++ * @name: Name describing the command.
++ *
++ * Represents a single command that is supported by both the driver and the
++ * hardware. The is returned as part of an array from the query ioctl. The
++ * following would be a command named "foobar" that takes a variable length
++ * input and returns 0 bytes of output.
++ *
++ *  - @id = 10
++ *  - @name = foobar
++ *  - @flags = 0
++ *  - @size_in = -1
++ *  - @size_out = 0
++ *
++ * See struct cxl_mem_query_commands.
++ */
++struct cxl_command_info {
++	__u32 id;
++#define CXL_MEM_COMMAND_ID_INVALID 0
 +
-+	return rc;
++	__u32 flags;
++#define CXL_MEM_COMMAND_FLAG_NONE 0
++#define CXL_MEM_COMMAND_FLAG_TAINT BIT(0)
++
++	__s32 size_in;
++	__s32 size_out;
++
++	char name[32];
++};
++
++/**
++ * struct cxl_mem_query_commands - Query supported commands.
++ * @n_commands: In/out parameter. When @n_commands is > 0, the driver will
++ *		return min(num_support_commands, n_commands). When @n_commands
++ *		is 0, driver will return the number of total supported commands.
++ * @rsvd: Reserved for future use.
++ * @commands: Output array of supported commands. This array must be allocated
++ *            by userspace to be at least min(num_support_commands, @n_commands)
++ *
++ * Allow userspace to query the available commands supported by both the driver,
++ * and the hardware. Commands that aren't supported by either the driver, or the
++ * hardware are not returned in the query.
++ *
++ * Examples:
++ *
++ *  - { .n_commands = 0 } // Get number of supported commands
++ *  - { .n_commands = 15, .commands = buf } // Return first 15 (or less)
++ *    supported commands
++ *
++ *  See struct cxl_command_info.
++ */
++struct cxl_mem_query_commands {
++	/*
++	 * Input: Number of commands to return (space allocated by user)
++	 * Output: Number of commands supported by the driver/hardware
++	 *
++	 * If n_commands is 0, kernel will only return number of commands and
++	 * not try to populate commands[], thus allowing userspace to know how
++	 * much space to allocate
++	 */
++	__u32 n_commands;
++	__u32 rsvd;
++
++	struct cxl_command_info __user commands[]; /* out: supported commands */
++};
++
++#if defined(__cplusplus)
 +}
++#endif
 +
-+static __exit void cxl_mem_exit(void)
-+{
-+	pci_unregister_driver(&cxl_mem_driver);
-+	cdev_del(&cxl_mem_cdev);
-+	unregister_chrdev_region(MKDEV(cxl_mem_major, 0), CXL_MEM_MAX_DEVS);
-+}
-+
- MODULE_LICENSE("GPL v2");
--module_pci_driver(cxl_mem_driver);
-+module_init(cxl_mem_init);
-+module_exit(cxl_mem_exit);
- MODULE_IMPORT_NS(CXL);
++#endif
 -- 
 2.29.2
 
