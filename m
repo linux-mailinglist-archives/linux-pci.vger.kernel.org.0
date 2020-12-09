@@ -2,54 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 270FC2D4D15
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 22:45:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 328A52D4D42
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 23:07:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388337AbgLIVow (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 16:44:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388024AbgLIVoo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Dec 2020 16:44:44 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97CFFC0613CF
-        for <linux-pci@vger.kernel.org>; Wed,  9 Dec 2020 13:44:03 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id a16so4336304ejj.5
-        for <linux-pci@vger.kernel.org>; Wed, 09 Dec 2020 13:44:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TYfiACm4P9e4Q3UXzVvxYYSBgj6W7482KDX0U+gqWbs=;
-        b=dZmtXaLDGCUswwrzjS8ONF2OhQRmKYjl1nzSnc3mmiJsqNbVqL3manL5sjzglo7CCY
-         1wc497+Sbhlix2kE2CrMvplc808zgbRKSC03CDIRVaXDRwMrqK+7SWFQDwil2NB2dPTg
-         pDdUrg0oWsnoDkoNZpHgxWJgDl8njos5JD/PPNU/lEER943nhqRrpxItMT8/mKCOrlgb
-         Oh/rLXbDyZJOr6qzKQ8ogKqLAKm540ml5BK9bltrYai3mshwQvG5mLxWAumPqnD8CKSz
-         YtOSQPzHKU0JffPiybQFEFyydZIsbEvTbikLd3is5hvLpi4gEcLCpdGVPZCKuwOt5yl5
-         YnXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TYfiACm4P9e4Q3UXzVvxYYSBgj6W7482KDX0U+gqWbs=;
-        b=COyWBMi4JVFkKG0U8AI8+yEOE8SElp3/76dTIhUlQa42AFMCQ/nBAmh+KBeRL0fSiE
-         HPKWtYvAp559IRVqI9euuV9WQNO27vhk6AfG49tOFF+ksDq9IiiyaFpMrwul0HDLeqw1
-         V6YdiMqTpd/9B64/I/WygyvMODxqixu+Se/Wkr8kG+eztTjiSmqSlri93dUiRSF8iCT7
-         YSzQ3VQbUcX7+7SG1lrRLqFux2T/cNUpU92zzeLXLG8E0Uk2zTt38jDBY78vc8cchLGj
-         Yd5/24p21yfadyUxs3RxNjoX0btJwxjphyOX6JdH9MJ9w42O4UFhIWlEpH9/Yn5D758+
-         Vddg==
-X-Gm-Message-State: AOAM530ywzwa4gNgNgoRAxxgurJDpXma2D5MApFEor9OOOsPqjjQf4bv
-        rmE5APNINiQbbhNNm2YdLQ8=
-X-Google-Smtp-Source: ABdhPJw8Oidd7MiYim2KDHlebjhNwIYc6G5UNWFqv7rjerwne/emDzLWDDd6gsqRcg/RCqRAXT5FGQ==
-X-Received: by 2002:a17:906:4994:: with SMTP id p20mr3748565eju.391.1607550242169;
-        Wed, 09 Dec 2020 13:44:02 -0800 (PST)
-Received: from skbuf ([188.25.2.120])
-        by smtp.gmail.com with ESMTPSA id lc18sm2600554ejb.77.2020.12.09.13.43.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 13:44:01 -0800 (PST)
-Date:   Wed, 9 Dec 2020 23:43:59 +0200
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        id S2388395AbgLIWGV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Dec 2020 17:06:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388521AbgLIWGM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Dec 2020 17:06:12 -0500
+Date:   Wed, 9 Dec 2020 16:05:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607551532;
+        bh=NRmjl76QtNuV/wif/5gsS8SlkBI3WP3SYGnwAzcAoIk=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=ke+i/bOPO8oqw4snKSRZqWgA+X70pBTq3TlLU6+f/sBwRMDnK3UQVuxBAlbz+5JuG
+         HbsmkIgSr2l223J1gFfhDBWIQt198XfTfVvZ6h7Rs+UeyTu70cWLUFU0BrxvgM9rLB
+         NS6CnGtlISHesQmPZ1CicrW8sCDa75BpNlClKad00vgXbdeNDE+Biz+Pd+AHMRKqri
+         wZRFqVv3t7igKtAUoiYiLgsG0Z45HNSQgVeX4M/ia18c28B75TzLVFuIgeVEBDvwDx
+         wrMbUSHfnlPhp0Fj6zIVeapwE/2HW4eZHz3/Fa6LOC85UB/rD6X+eleGUFnNKeSP67
+         6XwImIuzTnqmg==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
 Cc:     Michael Walle <michael@walle.cc>, lorenzo.pieralisi@arm.com,
         kw@linux.com, heiko@sntech.de, benh@kernel.crashing.org,
         shawn.lin@rock-chips.com, paulus@samba.org,
@@ -67,32 +41,42 @@ Cc:     Michael Walle <michael@walle.cc>, lorenzo.pieralisi@arm.com,
         Alexandru Marginean <alexm.osslist@gmail.com>
 Subject: Re: [PATCH v6 0/5] PCI: Unify ECAM constants in native PCI Express
  drivers
-Message-ID: <20201209214359.gt4wisqh65oscd4i@skbuf>
-References: <20201209212017.vx7dps3jasjcwg6j@skbuf>
- <20201209213449.GA2546712@bjorn-Precision-5520>
+Message-ID: <20201209220530.GA2551354@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201209213449.GA2546712@bjorn-Precision-5520>
+In-Reply-To: <20201209214359.gt4wisqh65oscd4i@skbuf>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 09, 2020 at 03:34:49PM -0600, Bjorn Helgaas wrote:
-> On Wed, Dec 09, 2020 at 11:20:17PM +0200, Vladimir Oltean wrote:
-> > On Wed, Dec 09, 2020 at 02:59:13PM -0600, Bjorn Helgaas wrote:
-> > > Yep, that's the theory.  Thanks for testing it!
+On Wed, Dec 09, 2020 at 11:43:59PM +0200, Vladimir Oltean wrote:
+> On Wed, Dec 09, 2020 at 03:34:49PM -0600, Bjorn Helgaas wrote:
+> > On Wed, Dec 09, 2020 at 11:20:17PM +0200, Vladimir Oltean wrote:
+> > > On Wed, Dec 09, 2020 at 02:59:13PM -0600, Bjorn Helgaas wrote:
+> > > > Yep, that's the theory.  Thanks for testing it!
+> > >
+> > > Testing what? I'm not following.
 > >
-> > Testing what? I'm not following.
->
-> You posted a patch that you said fixed the bug for you.  The fix is
-> exactly the theory we've been discussing, so you have already verified
-> that the theory is correct.
->
-> I'm sure Krzysztof will update his patch, and we'll get this tidied up
-> in -next again.
+> > You posted a patch that you said fixed the bug for you.  The fix is
+> > exactly the theory we've been discussing, so you have already verified
+> > that the theory is correct.
+> >
+> > I'm sure Krzysztof will update his patch, and we'll get this tidied up
+> > in -next again.
+> 
+> If you were discussing this already, I missed it. I was copied to this
+> thread out of the blue two emails ago. I also looked at the full thread
+> on patchwork, I don't see anything being said about the culprit being
+> the size of the config space mapping.
 
-If you were discussing this already, I missed it. I was copied to this
-thread out of the blue two emails ago. I also looked at the full thread
-on patchwork, I don't see anything being said about the culprit being
-the size of the config space mapping.
+Oh, sorry, this was an IRC discussion on #linux-pci (OFTC):
+
+  10:51 AM <bjorn_> so the fault is on the first read for 00:00.1.  forget my noise about extracting the device/func from the *virtual* address.  the *physical* address is supposed to be aligned so you can do that, but not the virtual address
+  10:55 AM <bjorn_> kwilczynski: oh, i think i see it: pci_ecam_create() does "bsz = 1 << ops->bus_shift", but we removed .bus_shift for this case
+  10:55 AM <bjorn_> needs to default to 20 if it's not specified
+  10:56 AM <bjorn_> result is that we only map one page of the ECAM space, so we fault when we access the second page (which is where 00:00.1 starts)
+
+Anyway, thanks very much again for fixing this and confirming the fix!
+
+Bjorn
