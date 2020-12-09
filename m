@@ -2,90 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E1852D3E1B
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 10:05:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D50192D3E37
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 10:09:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgLIJEM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 04:04:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40154 "EHLO mail.kernel.org"
+        id S1728446AbgLIJIH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Dec 2020 04:08:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728634AbgLIJDx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Dec 2020 04:03:53 -0500
-Date:   Wed, 9 Dec 2020 14:33:00 +0530
+        id S1726044AbgLIJIG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Dec 2020 04:08:06 -0500
+X-Gm-Message-State: AOAM530ZsrA9/HV2DjgowpAhL63/YKhv1cpqkFMFoorvLErNIuzL0PMy
+        K9uG8docXIrYzLqGY0EfpKbcUvToPUL1fOaVtJ0=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607504585;
-        bh=Y8sKKGrlYezUfpA9QSrlmnL0kO7yXjvMcIxMPszDLQU=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZYv88C+wY/E/J2SeDl906oq3dpbKDT6luvBWvgQIoTtv6uk70LSXQOc4LV4/Ckte2
-         t2UovonfT5iDGd4TYZiJMKtE6Td0rbMVabgQIfxxzGAPJPouzmrrf7Cdq5VSoEWG56
-         q3+OKUTzYzW22kRBiuIhOsQUhVtGj0btEIGytZTd6kpR81vO0k3bNJzFp7kxiFMuAS
-         P2jivjBpreQyW8DQ9NQIzE3uS8JtbsnUyXVSE1qVpB3csHKn7duH6xd5l8cNGL9/dL
-         p0AYMZhW78mhf8JJeZgcCWjjWmJu/y/PpwrMg7iVUj5PLUcBVq4nuWF8fIxyWO+fHP
-         iGoo++aTYv9fg==
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ion Badulescu <ionut@badula.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-parisc@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH] PCI: Remove pci_try_set_mwi
-Message-ID: <20201209090300.GI8403@vkoul-mobl>
-References: <4d535d35-6c8c-2bd8-812b-2b53194ce0ec@gmail.com>
+        s=k20201202; t=1607504846;
+        bh=TwxFShO4SPchdzTy7qkGiE4yd1wyqCRwfixyq9lhU7U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NCiGOimI+QFWkGlUZtp54uaMVti9IldC3/6tybv4aAngGynp5QeKYtDn1Ea3viG6k
+         PHX9S56SX/HXW1fK8ZZPDRO9lfAqFCkkwCspMmK4HLO1QobtGZ5EyAk89vzjh5SjYW
+         Jq+5FoSKSVewsuicy5V8hjtOrYy9DBikIUbvEgJQw6qYx9sgVDRQUY/zCFp1d4TBua
+         +613pyJgYP/eaY+At6PuGkeuo87wBR32bvjtoW3pYFP29c05B7kjAHoci1oedOldtN
+         APm58L0Fsb+80x7Uy6lX7NzNPMFQwWi5WJ4Cm+uNh6KtiftBjCvyV8ZlzR0+ZlQj5o
+         EWaXpF140L0UA==
+X-Google-Smtp-Source: ABdhPJxKs07aufMIXKvOvasJWP2Wd8H56Ov3ybUuW6F/PQlQb2wWFCBMjJs8uH8yTwkOwJT1cWw+0emvCRgVQRHX1pw=
+X-Received: by 2002:aca:44d:: with SMTP id 74mr1079063oie.4.1607504845146;
+ Wed, 09 Dec 2020 01:07:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d535d35-6c8c-2bd8-812b-2b53194ce0ec@gmail.com>
+References: <20201201213707.541432-1-samitolvanen@google.com>
+ <CAK8P3a1WEAo2SEgKUEs3SB7n7QeeHa0=cx_nO==rDK0jjDArow@mail.gmail.com>
+ <CABCJKueCHo2RYfx_A21m+=d1gQLR9QsOOxCsHFeicCqyHkb-Kg@mail.gmail.com>
+ <CAK8P3a1Xfpt7QLkvxjtXKcgzcWkS8g9bmxD687+rqjTafTzKrg@mail.gmail.com>
+ <CAK8P3a3O65m6Us=YvCP3QA+0kqAeEqfi-DLOJa+JYmBqs8-JcA@mail.gmail.com> <CAFP8O3L35sj117VJeE3pUPE2H4++z2g48Gfd-8Ca=CUtP1LVWw@mail.gmail.com>
+In-Reply-To: <CAFP8O3L35sj117VJeE3pUPE2H4++z2g48Gfd-8Ca=CUtP1LVWw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Wed, 9 Dec 2020 10:07:08 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1aCiDta9_4-M6tstR+eX53ZaO65wdmoTXdZo2bBQmAWg@mail.gmail.com>
+Message-ID: <CAK8P3a1aCiDta9_4-M6tstR+eX53ZaO65wdmoTXdZo2bBQmAWg@mail.gmail.com>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+To:     =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 09-12-20, 09:31, Heiner Kallweit wrote:
-> pci_set_mwi() and pci_try_set_mwi() do exactly the same, just that the
-> former one is declared as __must_check. However also some callers of
-> pci_set_mwi() have a comment that it's an optional feature. I don't
-> think there's much sense in this separation and the use of
-> __must_check. Therefore remove pci_try_set_mwi() and remove the
-> __must_check attribute from pci_set_mwi().
-> I don't expect either function to be used in new code anyway.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
-> patch applies on top of pci/misc for v5.11
-> ---
->  drivers/dma/dw/pci.c                          |  2 +-
->  drivers/dma/hsu/pci.c                         |  2 +-
+On Wed, Dec 9, 2020 at 6:23 AM 'F=C4=81ng-ru=C3=AC S=C3=B2ng' via Clang Bui=
+lt Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> On Tue, Dec 8, 2020 at 1:02 PM Arnd Bergmann <arnd@kernel.org> wrote:
+> >
+> > On Tue, Dec 8, 2020 at 9:59 PM Arnd Bergmann <arnd@kernel.org> wrote:
+> > >
+> > > Attaching the config for "ld.lld: error: Never resolved function from
+> > >   blockaddress (Producer: 'LLVM12.0.0' Reader: 'LLVM 12.0.0')"
+> >
+> > And here is a new one: "ld.lld: error: assignment to symbol
+> > init_pg_end does not converge"
+>
+> This is interesting. I changed the symbol assignment to a separate
+> loop in https://reviews.llvm.org/D66279
+> Does raising the limit help? Sometimes the kernel linker script can be
+> rewritten to be more friendly to the linker...
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+If that requires rebuilding lld, testing it is beyond what I can help with
+right now. Hopefully someone can reproduce it with my .config.
 
--- 
-~Vinod
+       Arnd
