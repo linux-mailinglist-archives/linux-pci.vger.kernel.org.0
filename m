@@ -2,103 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C28262D4943
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 19:43:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC9772D4A0B
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 20:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387426AbgLISnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 13:43:10 -0500
-Received: from mga01.intel.com ([192.55.52.88]:56059 "EHLO mga01.intel.com"
+        id S2387533AbgLITZ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Dec 2020 14:25:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733201AbgLISnJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 9 Dec 2020 13:43:09 -0500
-IronPort-SDR: nkG+bGWsOoYrfG4XW5fSQDLHeGZNFl9LwHyvR+jb3Ug+OO0gl144eccUhwMkDXAwXuMcc+leMp
- /3Ed09T+3J0Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9830"; a="192435736"
-X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
-   d="scan'208";a="192435736"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2020 10:41:14 -0800
-IronPort-SDR: gZ87t0Nc/DqupPI7eEQNqHQ97pL8lkeZ2mUZ5qVhcWQ5FUkfyp4jVwSupE1aJRK6G+24OKrp8E
- oBe7TL4Yl2kw==
-X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
-   d="scan'208";a="408175808"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2020 10:41:12 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kn4Pm-00DCiD-E0; Wed, 09 Dec 2020 20:42:14 +0200
-Date:   Wed, 9 Dec 2020 20:42:14 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        bhelgaas@google.com, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        mgross@linux.intel.com, lakshmi.bai.raja.subramanian@intel.com
-Subject: Re: [PATCH v3 2/2] PCI: keembay: Add support for Intel Keem Bay
-Message-ID: <20201209184214.GV4077@smile.fi.intel.com>
-References: <20201202073156.5187-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20201202073156.5187-3-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20201209181350.GB660537@robh.at.kernel.org>
+        id S1729345AbgLITZV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Dec 2020 14:25:21 -0500
+X-Gm-Message-State: AOAM532l3TbJttgtMFWH/FX67lJ0sF8srCFNHYJ1OCbEfC0IAsx9G5Za
+        vQUdSmwYe/3ytUt5nEORRuc865GWKYZdZBbFY5U=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607541880;
+        bh=PZ3OfDYS58ZqvFY9CXvEZH4DVeL16HFv3jTodD2L44Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VIdtJMVmToMLsEqoyt3Bw07XE58IWwbXZOF/8vrKCAGHhqAdsjQZPJS4ga0NNbRG8
+         spLjREDJ4m3bTXixW4JfKn8XswUsOOLs2W9FkMCN+8Z3YFlyRmQSSNmHYmLYsCTxJD
+         zj0j4Ti2xsxMaim+W2o/IpIIHePjqUYsYAQemyp3ETe6u+EgUMbFRqz4LJTWkEkY3N
+         yX4xTcMaC0W5M9lOAIy2/yi5mhsM6Y6nT+IaGhBTpK2YLWIyyqcxfsxQlm4dbfRZ71
+         W8Vw21ekj4xBV3oG8wCADt5YbBnXr2ko3FbvYFKqtPvGaksKPDHteUs9DBPQtdgtsQ
+         AUPXqcO+wHU5g==
+X-Google-Smtp-Source: ABdhPJxrF0JWWKfF8bdNN4CMhLw4IPsYEUqP84GKhCmRyu9bJHDs/0dxAJvZhfRzwJd+w8POtqSy2lbm6ieBc+qVqo4=
+X-Received: by 2002:aca:44d:: with SMTP id 74mr2951158oie.4.1607541879572;
+ Wed, 09 Dec 2020 11:24:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201209181350.GB660537@robh.at.kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20201201213707.541432-1-samitolvanen@google.com>
+ <CAK8P3a1WEAo2SEgKUEs3SB7n7QeeHa0=cx_nO==rDK0jjDArow@mail.gmail.com>
+ <CABCJKueCHo2RYfx_A21m+=d1gQLR9QsOOxCsHFeicCqyHkb-Kg@mail.gmail.com>
+ <CAK8P3a1Xfpt7QLkvxjtXKcgzcWkS8g9bmxD687+rqjTafTzKrg@mail.gmail.com>
+ <CAK8P3a3O65m6Us=YvCP3QA+0kqAeEqfi-DLOJa+JYmBqs8-JcA@mail.gmail.com> <CABCJKud-4p2CnTyC5qjREL+Z_q8sD6cYE-0QU7poVKALgoVcNQ@mail.gmail.com>
+In-Reply-To: <CABCJKud-4p2CnTyC5qjREL+Z_q8sD6cYE-0QU7poVKALgoVcNQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Wed, 9 Dec 2020 20:24:22 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0_QfKEQ=F_F9ZUaqzN7gGGGSrE6Zk=8+qxFgGap-X5OQ@mail.gmail.com>
+Message-ID: <CAK8P3a0_QfKEQ=F_F9ZUaqzN7gGGGSrE6Zk=8+qxFgGap-X5OQ@mail.gmail.com>
+Subject: Re: [PATCH v8 00/16] Add support for Clang LTO
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 09, 2020 at 12:13:50PM -0600, Rob Herring wrote:
-> On Wed, Dec 02, 2020 at 03:31:56PM +0800, Wan Ahmad Zainie wrote:
+On Wed, Dec 9, 2020 at 5:09 PM 'Sami Tolvanen' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+> On Tue, Dec 8, 2020 at 1:02 PM Arnd Bergmann <arnd@kernel.org> wrote:
+> > On Tue, Dec 8, 2020 at 9:59 PM Arnd Bergmann <arnd@kernel.org> wrote:
+> > >
+> > > Attaching the config for "ld.lld: error: Never resolved function from
+> > >   blockaddress (Producer: 'LLVM12.0.0' Reader: 'LLVM 12.0.0')"
+> >
+> > And here is a new one: "ld.lld: error: assignment to symbol
+> > init_pg_end does not converge"
+>
+> Thanks for these. I can reproduce the "Never resolved function from
+> blockaddress" issue with full LTO, but I couldn't reproduce this one
+> with ToT Clang, and the config doesn't have LTO enabled:
+>
+> $ grep LTO 0x2824F594_defconfig
+> CONFIG_ARCH_SUPPORTS_LTO_CLANG_THIN=y
+>
+> Is this the correct config file?
 
-...
+It is the right file, and so far this is the only defconfig on which I
+see the "does not converge" error, so I don't have any other one.
 
-> > +static void keembay_pcie_ltssm_enable(struct keembay_pcie *pcie, bool enable)
-> > +{
-> > +	u32 val;
-> > +
-> > +	val = keembay_pcie_readl(pcie, PCIE_REGS_PCIE_APP_CNTRL);
-> > +	if (enable)
-> > +		val |= APP_LTSSM_ENABLE;
-> > +	else
-> > +		val &= ~APP_LTSSM_ENABLE;
-> > +	keembay_pcie_writel(pcie, PCIE_REGS_PCIE_APP_CNTRL, val);
-> 
-> If this is the only bit in this register, do you really need RMW?
+I suspect this might be an issue in the version of lld that I have here
+and unrelated to LTO, and I can confirm that I see the error
+with LTO still disabled.
 
-I think it's safer than do direct write and have something wrong on next
-generations of hardware.
+It seems to be completely random. I do see the bug on next-20201203
+but not on a later one. I also tried bisecting through linux-next and
+arrived at "lib: stackdepot: add support to configure STACK_HASH_SIZE",
+which is almost certainly not related, other than just changing a few
+symbols around.
 
-...
-
-> > +static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > +				     enum pci_epc_irq_type type,
-> > +				     u16 interrupt_num)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > +
-> > +	switch (type) {
-> > +	case PCI_EPC_IRQ_LEGACY:
-> > +		/* Legacy interrupts are not supported in Keem Bay */
-> > +		dev_err(pci->dev, "Legacy IRQ is not supported\n");
-> > +		return -EINVAL;
-> > +	case PCI_EPC_IRQ_MSI:
-> > +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> > +	case PCI_EPC_IRQ_MSIX:
-> > +		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-> > +	default:
-> > +		dev_err(pci->dev, "Unknown IRQ type %d\n", type);
-> > +		return -EINVAL;
-> > +	}
-> 
-> Doesn't the lack of a 'return' give a warning?
-
-Where? I don't see any lack of return.
-
-> > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+      Arnd
