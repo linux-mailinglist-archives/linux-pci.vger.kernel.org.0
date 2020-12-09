@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD5702D37D0
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 01:30:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2538D2D37D1
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 01:30:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgLIAZK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1731769AbgLIAZK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Tue, 8 Dec 2020 19:25:10 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16954 "EHLO mga09.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:16959 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbgLIAZD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        id S1731757AbgLIAZD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
         Tue, 8 Dec 2020 19:25:03 -0500
-IronPort-SDR: wXW1HU6WuvQHZJ6QGMSGDkdDvGDEj8sjyC6fLi3n9BS3L2+RAA4bWG5dC0XSI/cn49G7eQOUHW
- d6lJU0zIQ3DQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142057"
+IronPort-SDR: bhUgg94QhgXeOTVRDoZFvmXIos5+/PgJ536s9QjXYeSG7/LoWaqUyuBBss4uiho18lvUNqJJPq
+ m8rqIRZCWadA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142063"
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="174142057"
+   d="scan'208";a="174142063"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:20 -0800
-IronPort-SDR: CLL/+IZ9KLow3OsQMundsaxJzvewW/UpLXBEZFitm/o+X1wTZ4kKGhf2/iaHxLnJ1LhtrvXzms
- bNVAA4a6QBOw==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:21 -0800
+IronPort-SDR: Eehe0MGhWXN6iNP/dru4+cXgM/7QW+wcNxFgnXNxXt6wBD/j7WgO49HfilXkIIBFHowHMraVzU
+ qEAxGts9mx7A==
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="407838443"
+   d="scan'208";a="407838449"
 Received: from mlubyani-mobl2.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.137.9])
   by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:20 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
@@ -39,192 +39,82 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>
-Subject: [RFC PATCH v2 00/14] CXL 2.0 Support
-Date:   Tue,  8 Dec 2020 16:24:04 -0800
-Message-Id: <20201209002418.1976362-1-ben.widawsky@intel.com>
+Subject: [RFC PATCH v2 01/14] docs: cxl: Add basic documentation
+Date:   Tue,  8 Dec 2020 16:24:05 -0800
+Message-Id: <20201209002418.1976362-2-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20201209002418.1976362-1-ben.widawsky@intel.com>
+References: <20201209002418.1976362-1-ben.widawsky@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Changes since v1 [1]
+This starts a new cxl directory because CXL is a new bus and it is
+expected that the documentation will grow large over time. Currently
+only memory devices are documented as they are all that's supported.
 
-A few additions have been made:
- - IOCTL (UAPI) interface has been added with commands
- - Kernel docs have been created
- - A new debug macro is introduced and sprinkled throughout.
-
-A deletion was made:
- - Removal of the non-standard _OSC UUID.
-
-The detailed list of fixes is:
- - fix cxl_register() no previous prototype warning (0day robot)
- - s/REGLOG/REGLOC/ (Ben)
- - Wait for doorbell on cxl_mem_mbox_get() and add comment on why (Ben)
- - make "type-3" a proper adjective, add spec references, also did the same for
-   the Kconfig (Bjorn)
- - align some defines (Bjorn)
- - s/bar/BAR (Bjorn)
- - rename cxl_bus_prepared() to cxl_bus_acquire() (Bjorn)
- - move definition of struct cxl_mem to "cxl/mem: Map memory device registers" (Bjorn)
- - use consistent hex/decimal (Bjorn)
- - use consistent upper/lower hex values (Bjorn)
- - get rid of READ_ONCE (Bjorn)
- - add offsets to debug messages (Bjorn)
- - cleanup SPDX comment style (Bjorn, Christoph)
- - change errors returned by case (Bjorn, Dan)
- - 80 character violation cleanups (Christoph)
- - cleanup CXL_BUS_PROVIDER dependencies (Christoph, Randy)
- - remove "raw" from mmio functions (Dan)
- - rename PCI_DVSEC_VENDOR_CXL to add _ID (Jonathan)
- - combine introduction of mbox infrastruct and cxl_mem_identify() (Jonathan)
- - add ABI documentation for sysfs attributes (Jonathan)
- - document scope of cxl_memdev_lock (Jonathan)
- - rework cxl_register() to have devm semantics (reaction to comments about
-   cxl_mem_remove() and cxl_mem_add_memdev() semantics) (Jonathan)
- - fix cxl_mem_exit() ordering (Jonathan)
- - use GENMASK/GET_FIELD (Jonathan)
- - fix and add comments for cap ids (Jonathan)
- - use _OFFSET postfix in definitions (Jonathan)
- - save pci_set_drvdata for later (Jonathan)
-
-[1]: https://lore.kernel.org/linux-cxl/20201111054356.793390-1-ben.widawsky@intel.com/
-
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
-
-Introduce support for “type-3” memory devices defined in the recently released
-Compute Express Link (CXL) 2.0 specification[2]. Specifically, these are the
-memory devices defined by section 8.2.8.5 of the CXL 2.0 spec. A reference
-implementation emulating these devices has been submitted to the QEMU mailing
-list and is available on gitlab [3]. “Type-3” is a CXL device that acts as a
-memory expander for RAM or PMEM.  It might be interleaved with other CXL devices
-in a given physical address range.
-
-These changes allow for foundational enumeration of CXL 2.0 memory devices as
-well as basic userspace interaction. The functionality present is:
-- Initial driver bring-up
-- Device enumeration and an initial sysfs representation
-- Submit a basic firmware command via ‘mailbox’ to an emulated memory device
-  with non-volatile capacity.
-- Provide an interface to send "raw" commands to the hardware.
-
-Some of the functionality that is still missing includes:
-- Memory interleaving at the host bridge, root port, or switch level
-- CXL 1.1 Root Complex Integrated Endpoint Support
-- CXL 2.0 Hot plug support
-- A bevy of supported device commands
-
-In addition to the core functionality of discovering the spec defined registers
-and resources, introduce a CXL device model that will be the foundation for
-translating CXL capabilities into existing Linux infrastructure for Persistent
-Memory and other memory devices. For now, this only includes support for the
-management command mailbox that type-3 devices surface. These control devices
-fill the role of “DIMMs” / nmemX memory-devices in LIBNVDIMM terms.
-
-Now, while implementing the driver some feedback for the specification was
-generated to cover perceived gaps and address conflicts. The feedback is
-presented as a reference implementation in the driver and QEMU emulation.
-Specifically the following concepts are original to the Linux implementation and
-feedback / collaboration is requested to develop these into specification
-proposals:
-1. Top level ACPI object (ACPI0017)
-2. HW imposed address space and interleave constraints
-
-ACPI0017
---------
-Introduce a new ACPI namespace device with an _HID of ACPI0017. The purpose of
-this object is twofold, support a legacy OS with a set of out-of-tree CXL
-modules, and establish an attach point for a driver that knows about
-interleaving. Both of these boil down to the same point, to centralize Operating
-System support for resources described by the CXL Early Discovery Table (CEDT).
-
-The legacy OS problem stems from the spec's description of a host bridge,
-ACPI0016 is denoted as the _HID for host bridges, with a _CID of PNP0A08. In a
-CXL unaware version of Linux, the core ACPI subsystem will bind a driver to
-PNP0A08 and preclude a CXL-aware driver from binding to ACPI0016. An ACPI0017
-device allows a standalone CXL-aware driver to register for handling /
-coordinating CEDT and CXL-specific _OSC control.
-
-Similarly when managing interleaving there needs to be some management layer
-above the ACPI0016 device that is capable of assembling leaf nodes into
-interleave sets. As is the case with ACPI0012 that does this central
-coordination for NFIT defined resources, ACPI0017 does the same for CEDT
-described resources.
-
-Memory Windows
--------
-For CXL.mem capable platforms, there is a need for a mechanism for platform
-firmware to make the Operating System aware of any restrictions that hardware
-might have in address space. For example, in a system with 4 host bridges all
-participating in an interleave set, the firmware needs to provide some
-description of this. That information is missing from the CXL 2.0 spec as of
-today and it also is not implemented in the driver. A variety of ACPI based
-mechanisms, for example _CRS fields on the ACPI0017 device, were considered.
-
-Next steps after this basic foundation is expanded command support and LIBNVDIMM
-integration. This is the initial “release early / release often” version of the
-Linux CXL enabling.
-
-[2]: https://www.computeexpresslink.org/
-[3]: https://gitlab.com/bwidawsk/qemu/-/tree/cxl-2.0v2
-
-
-Ben Widawsky (10):
-  docs: cxl: Add basic documentation
-  cxl/mem: Map memory device registers
-  cxl/mem: Find device capabilities
-  cxl/mem: Implement polled mode mailbox
-  cxl/mem: Add basic IOCTL interface
-  cxl/mem: Add send command
-  cxl/mem: Add a "RAW" send command
-  cxl: Add basic debugging
-  MAINTAINERS: Add maintainers of the CXL driver
-  WIP/cxl/mem: Add get firmware for testing
-
-Dan Williams (2):
-  cxl/mem: Introduce a driver for CXL-2.0-Type-3 endpoints
-  cxl/mem: Register CXL memX devices
-
-Vishal Verma (2):
-  cxl/acpi: Add an acpi_cxl module for the CXL interconnect
-  cxl/acpi: add OSC support
-
- Documentation/ABI/testing/sysfs-bus-cxl |   26 +
- Documentation/cxl/index.rst             |   12 +
- Documentation/cxl/memory-devices.rst    |   51 ++
- Documentation/index.rst                 |    1 +
- MAINTAINERS                             |   10 +
- drivers/Kconfig                         |    1 +
- drivers/Makefile                        |    1 +
- drivers/cxl/Kconfig                     |   58 ++
- drivers/cxl/Makefile                    |    9 +
- drivers/cxl/acpi.c                      |  352 ++++++++
- drivers/cxl/acpi.h                      |   35 +
- drivers/cxl/bus.c                       |   54 ++
- drivers/cxl/bus.h                       |    8 +
- drivers/cxl/cxl.h                       |  188 +++++
- drivers/cxl/mem.c                       | 1022 +++++++++++++++++++++++
- drivers/cxl/pci.h                       |   34 +
- include/acpi/actbl1.h                   |   51 ++
- include/uapi/linux/cxl_mem.h            |  148 ++++
- 18 files changed, 2061 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-cxl
+ Documentation/cxl/index.rst          | 12 ++++++++++++
+ Documentation/cxl/memory-devices.rst | 15 +++++++++++++++
+ Documentation/index.rst              |  1 +
+ 3 files changed, 28 insertions(+)
  create mode 100644 Documentation/cxl/index.rst
  create mode 100644 Documentation/cxl/memory-devices.rst
- create mode 100644 drivers/cxl/Kconfig
- create mode 100644 drivers/cxl/Makefile
- create mode 100644 drivers/cxl/acpi.c
- create mode 100644 drivers/cxl/acpi.h
- create mode 100644 drivers/cxl/bus.c
- create mode 100644 drivers/cxl/bus.h
- create mode 100644 drivers/cxl/cxl.h
- create mode 100644 drivers/cxl/mem.c
- create mode 100644 drivers/cxl/pci.h
- create mode 100644 include/uapi/linux/cxl_mem.h
 
+diff --git a/Documentation/cxl/index.rst b/Documentation/cxl/index.rst
+new file mode 100644
+index 000000000000..036e49553542
+--- /dev/null
++++ b/Documentation/cxl/index.rst
+@@ -0,0 +1,12 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++====================
++Compute Express Link
++====================
++
++.. toctree::
++   :maxdepth: 1
++
++   memory-devices
++
++.. only::  subproject and html
+diff --git a/Documentation/cxl/memory-devices.rst b/Documentation/cxl/memory-devices.rst
+new file mode 100644
+index 000000000000..aa4262280c67
+--- /dev/null
++++ b/Documentation/cxl/memory-devices.rst
+@@ -0,0 +1,15 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
++
++===================================
++Compute Express Link Memory Devices
++===================================
++
++A Compute Express Link Memory Device is a CXL component that implements the
++CXL.mem protocol. It contains some amount of volatile memory, persistent memory,
++or both.
++
++Driver Infrastructure
++=====================
++
++This sections covers the driver infrastructure for a CXL memory device.
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index 57719744774c..38678f6c5676 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -137,6 +137,7 @@ needed).
+    misc-devices/index
+    scheduler/index
+    mhi/index
++   cxl/index
+ 
+ Architecture-agnostic documentation
+ -----------------------------------
 -- 
 2.29.2
 
