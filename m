@@ -2,70 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FF372D48BF
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 19:17:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C28262D4943
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 19:43:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732908AbgLISQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 13:16:41 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42146 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732035AbgLISQa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Dec 2020 13:16:30 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l200so2685316oig.9;
-        Wed, 09 Dec 2020 10:16:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lJcMTcPkrpO01a5vanNh8HvkDxv8RBC31yXvSLm2o80=;
-        b=Vw3/SiRaYAGUag7Zh+I20rQc6+Nckjb88nrso+FJPId4gBn8QXZ8lOfPpJA/nspZev
-         jeyfIiqr068rDA8dfX2dsejbn3GP67xFiLuEXpSQVJ8/YGFmrZ4pWlsH3Zh2T6LcpZMf
-         6AXRf1VZ2Y6eirUP5JMr5IF0khhwBVFoWVON6GR8UZeyPKj6g4+vJSiIUqcifoqZ9zJg
-         Clx9UV7wy7nlOnh3Yvvmw0Kdj0G2BROXExMD1IRwVZQ23+BBR0dQHDpN3T+khZW/TvpX
-         gVmPfIZhTwcEODouISLjErBCDZjcxYStPUnXZhbKuUhftb5Ol5Z5wsfL+wBE3cxSX+C3
-         rk+g==
-X-Gm-Message-State: AOAM531GTgrwkr1ZjUMBzNbCubGLiNZdqMLSMp00UCq/y5esZlDYKYe4
-        +cRFCXWmSELIwgJri34uKw==
-X-Google-Smtp-Source: ABdhPJwe7wnywEwUD5Ewmn/eXNVOi9weo+w3uina5FF0l726ppoajbx2RdwePcegK1yH2XkfhD+3Pg==
-X-Received: by 2002:a05:6808:16:: with SMTP id u22mr2645358oic.1.1607537749399;
-        Wed, 09 Dec 2020 10:15:49 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 73sm532299otv.26.2020.12.09.10.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 10:15:48 -0800 (PST)
-Received: (nullmailer pid 705639 invoked by uid 1000);
-        Wed, 09 Dec 2020 18:15:47 -0000
-Date:   Wed, 9 Dec 2020 12:15:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        mgross@linux.intel.com, bhelgaas@google.com,
-        lakshmi.bai.raja.subramanian@intel.com,
-        andriy.shevchenko@linux.intel.com
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: Add Intel Keem Bay PCIe
- controller
-Message-ID: <20201209181547.GA705595@robh.at.kernel.org>
+        id S2387426AbgLISnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Dec 2020 13:43:10 -0500
+Received: from mga01.intel.com ([192.55.52.88]:56059 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733201AbgLISnJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Dec 2020 13:43:09 -0500
+IronPort-SDR: nkG+bGWsOoYrfG4XW5fSQDLHeGZNFl9LwHyvR+jb3Ug+OO0gl144eccUhwMkDXAwXuMcc+leMp
+ /3Ed09T+3J0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9830"; a="192435736"
+X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
+   d="scan'208";a="192435736"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2020 10:41:14 -0800
+IronPort-SDR: gZ87t0Nc/DqupPI7eEQNqHQ97pL8lkeZ2mUZ5qVhcWQ5FUkfyp4jVwSupE1aJRK6G+24OKrp8E
+ oBe7TL4Yl2kw==
+X-IronPort-AV: E=Sophos;i="5.78,405,1599548400"; 
+   d="scan'208";a="408175808"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2020 10:41:12 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kn4Pm-00DCiD-E0; Wed, 09 Dec 2020 20:42:14 +0200
+Date:   Wed, 9 Dec 2020 20:42:14 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        mgross@linux.intel.com, lakshmi.bai.raja.subramanian@intel.com
+Subject: Re: [PATCH v3 2/2] PCI: keembay: Add support for Intel Keem Bay
+Message-ID: <20201209184214.GV4077@smile.fi.intel.com>
 References: <20201202073156.5187-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20201202073156.5187-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20201202073156.5187-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20201209181350.GB660537@robh.at.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201202073156.5187-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+In-Reply-To: <20201209181350.GB660537@robh.at.kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 02 Dec 2020 15:31:55 +0800, Wan Ahmad Zainie wrote:
-> Document DT bindings for PCIe controller found on Intel Keem Bay SoC.
-> 
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-> ---
->  .../bindings/pci/intel,keembay-pcie-ep.yaml   | 68 +++++++++++++
->  .../bindings/pci/intel,keembay-pcie.yaml      | 96 +++++++++++++++++++
->  2 files changed, 164 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
-> 
+On Wed, Dec 09, 2020 at 12:13:50PM -0600, Rob Herring wrote:
+> On Wed, Dec 02, 2020 at 03:31:56PM +0800, Wan Ahmad Zainie wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+...
+
+> > +static void keembay_pcie_ltssm_enable(struct keembay_pcie *pcie, bool enable)
+> > +{
+> > +	u32 val;
+> > +
+> > +	val = keembay_pcie_readl(pcie, PCIE_REGS_PCIE_APP_CNTRL);
+> > +	if (enable)
+> > +		val |= APP_LTSSM_ENABLE;
+> > +	else
+> > +		val &= ~APP_LTSSM_ENABLE;
+> > +	keembay_pcie_writel(pcie, PCIE_REGS_PCIE_APP_CNTRL, val);
+> 
+> If this is the only bit in this register, do you really need RMW?
+
+I think it's safer than do direct write and have something wrong on next
+generations of hardware.
+
+...
+
+> > +static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > +				     enum pci_epc_irq_type type,
+> > +				     u16 interrupt_num)
+> > +{
+> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > +
+> > +	switch (type) {
+> > +	case PCI_EPC_IRQ_LEGACY:
+> > +		/* Legacy interrupts are not supported in Keem Bay */
+> > +		dev_err(pci->dev, "Legacy IRQ is not supported\n");
+> > +		return -EINVAL;
+> > +	case PCI_EPC_IRQ_MSI:
+> > +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> > +	case PCI_EPC_IRQ_MSIX:
+> > +		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
+> > +	default:
+> > +		dev_err(pci->dev, "Unknown IRQ type %d\n", type);
+> > +		return -EINVAL;
+> > +	}
+> 
+> Doesn't the lack of a 'return' give a warning?
+
+Where? I don't see any lack of return.
+
+> > +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
