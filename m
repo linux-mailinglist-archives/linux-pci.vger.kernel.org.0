@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED6122D37C1
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 01:30:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3D772D37BA
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 01:30:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbgLIA17 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 19:27:59 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16961 "EHLO mga09.intel.com"
+        id S1732017AbgLIA10 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 19:27:26 -0500
+Received: from mga09.intel.com ([134.134.136.24]:16954 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731943AbgLIA0G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 8 Dec 2020 19:26:06 -0500
-IronPort-SDR: JlsJmpAwW9yv5IItQmMXPRW4uHh8ySZ4rrsuSm9Ue2yjZUHxWVx8jjm2NdWKiLQeQ93SyJBaOo
- DH9hLevEzZYQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142094"
+        id S1731963AbgLIA0S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 8 Dec 2020 19:26:18 -0500
+IronPort-SDR: GiOMss1028r+Gn5r+MOCm7hz8628P00XP3bhAjxED68agM7VzF6g2xxTZy9EudSJntYzjrWq3w
+ etSVOMN+z7cg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9829"; a="174142096"
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="174142094"
+   d="scan'208";a="174142096"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:29 -0800
-IronPort-SDR: rV3okS6x8LRC8iRYrT1DqL1oXOZZkRpgGmpvmG9cy8GnokOgzwoJuTL4UQWOkZqf/x/NSRMWe3
- 7UsSDKmK+iLw==
+IronPort-SDR: sJ1HRcf/iJjZI7fHyYYvkJ4ktLx/cXdcJ8KMLv9oTnd56IUILKXY3VDk+2k+D0AKY5VXXCcp5n
+ Bt4yLtIRI7Zg==
 X-IronPort-AV: E=Sophos;i="5.78,404,1599548400"; 
-   d="scan'208";a="407838514"
+   d="scan'208";a="407838520"
 Received: from mlubyani-mobl2.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.137.9])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:28 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 16:24:29 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -39,9 +39,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Chris Browy <cbrowy@avery-design.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>
-Subject: [RFC PATCH 11/14] cxl/mem: Add a "RAW" send command
-Date:   Tue,  8 Dec 2020 16:24:15 -0800
-Message-Id: <20201209002418.1976362-12-ben.widawsky@intel.com>
+Subject: [RFC PATCH 12/14] cxl: Add basic debugging
+Date:   Tue,  8 Dec 2020 16:24:16 -0800
+Message-Id: <20201209002418.1976362-13-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201209002418.1976362-1-ben.widawsky@intel.com>
 References: <20201209002418.1976362-1-ben.widawsky@intel.com>
@@ -51,121 +51,116 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The CXL memory device send interface will have a number of supported
-commands. The raw command is not such a command. Raw commands allow
-userspace to send a specified opcode to the underlying hardware and
-bypass all driver checks on the command. This is useful for a couple of
-usecases, mainly:
-1. Undocumented vendor specific hardware commands
-2. Prototyping new hardware commands not yet supported by the driver
-
-While this all sounds very powerful it comes with a couple of caveats:
-1. Bug reports using raw commands will not get the same level of
-   attention as bug reports using supported commands (via taint).
-2. Supported commands will be rejected by the RAW command.
+Provide a standard debug function for use throughout the driver.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
- drivers/cxl/mem.c            | 32 ++++++++++++++++++++++++++++++++
- include/uapi/linux/cxl_mem.h | 14 ++++++++++++--
- 2 files changed, 44 insertions(+), 2 deletions(-)
+ drivers/cxl/cxl.h |  3 +++
+ drivers/cxl/mem.c | 26 +++++++++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 77c2dee6843c..e5afb89dab0b 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -9,6 +9,9 @@
+ #include <linux/bitops.h>
+ #include <linux/io.h>
+ 
++#define cxl_debug(fmt, ...)                                                    \
++	pr_debug("CXL DEBUG: %s: " fmt, __func__, ##__VA_ARGS__)
++
+ #define CXL_SET_FIELD(value, field)                                            \
+ 	({                                                                     \
+ 		WARN_ON(!FIELD_FIT(field##_MASK, value));                      \
 diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 0bf03afc0c80..a2cea7ac7cc6 100644
+index a2cea7ac7cc6..6b2f8d3776b5 100644
 --- a/drivers/cxl/mem.c
 +++ b/drivers/cxl/mem.c
-@@ -115,6 +115,7 @@ struct cxl_mem_command {
+@@ -122,9 +122,12 @@ static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+ {
+ 	const int timeout = msecs_to_jiffies(2000);
+ 	const unsigned long start = jiffies;
++	unsigned long end = start;
  
- static struct cxl_mem_command mem_commands[] = {
- 	CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
-+	CXL_CMD(RAW, TAINT, ~0, ~0, "Raw", true, 0),
- };
+ 	while (cxl_doorbell_busy(cxlm)) {
+-		if (time_after(jiffies, start + timeout)) {
++		end = jiffies;
++
++		if (time_after(end, start + timeout)) {
+ 			/* Check again in case preempted before timeout test */
+ 			if (!cxl_doorbell_busy(cxlm))
+ 				break;
+@@ -133,6 +136,8 @@ static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+ 		cpu_relax();
+ 	}
  
- static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-@@ -326,6 +327,20 @@ static int cxl_mem_count_commands(void)
- 	return n;
- };
++	cxl_debug("Doorbell wait took %dms",
++		  jiffies_to_msecs(end) - jiffies_to_msecs(start));
+ 	return 0;
+ }
  
-+static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mem_commands); i++) {
-+		struct cxl_mem_command *c = &mem_commands[i];
-+
-+		if (c->opcode == opcode)
-+			return c;
-+	}
-+
-+	return NULL;
-+};
-+
- /**
-  * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
-  * @cxlmd: The CXL memory device to communicate with.
-@@ -421,6 +436,23 @@ static int cxl_validate_cmd_from_user(struct cxl_send_command __user *user_cmd,
- 	c = &mem_commands[cmd.id];
- 	info = &c->info;
+@@ -180,6 +185,8 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+ 	}
  
-+	/* Checks are bypassed for raw commands but along comes the taint! */
-+	if (cmd.id == CXL_MEM_COMMAND_ID_RAW) {
-+		struct cxl_mem_command temp =
-+			CXL_CMD(RAW, NONE, cmd.size_in, cmd.size_out, "Raw",
-+				true, cmd.raw.opcode);
-+
-+		if (cmd.raw.rsvd)
-+			return -EINVAL;
-+
-+		if (cxl_mem_find_command(cmd.raw.opcode))
-+			return -EPERM;
-+
-+		add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
-+		memcpy(out_cmd, &temp, sizeof(temp));
-+		return 0;
-+	}
-+
- 	if (cmd.flags & CXL_MEM_COMMAND_FLAG_MASK)
- 		return -EINVAL;
+ 	/* #4 */
++	cxl_debug("Sending command to %s\n",
++		  dev_driver_string(&cxlm->pdev->dev));
+ 	cxl_write_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET,
+ 			     CXLDEV_MB_CTRL_DOORBELL);
  
-diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-index 189d86a13637..f2fbb0dcda06 100644
---- a/include/uapi/linux/cxl_mem.h
-+++ b/include/uapi/linux/cxl_mem.h
-@@ -49,7 +49,8 @@ extern "C" {
- struct cxl_command_info {
- 	__u32 id;
- #define CXL_MEM_COMMAND_ID_INVALID 0
--#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_INVALID + 1)
-+#define CXL_MEM_COMMAND_ID_RAW 1
-+#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_RAW + 1)
+@@ -308,6 +315,8 @@ static int cxl_mem_open(struct inode *inode, struct file *file)
+ 	if (!cxlmd)
+ 		return -ENXIO;
  
- 	__u32 flags;
- #define CXL_MEM_COMMAND_FLAG_NONE 0
-@@ -103,6 +104,9 @@ struct cxl_mem_query_commands {
-  * @id: The command to send to the memory device. This must be one of the
-  *	commands returned by the query command.
-  * @flags: Flags for the command
-+ * @raw: Special fields for raw commands
-+ * @raw.opcode: Opcode passed to hardware when using the RAW command.
-+ * @raw.rsvd: Reserved for future use.
-  * @rsvd: Reserved for future use.
-  * @retval: Return value from the memory device (output).
-  * @size_in: Size of the payload to provide to the device (input).
-@@ -120,7 +124,13 @@ struct cxl_mem_query_commands {
- struct cxl_send_command {
- 	__u32 id;
- 	__u32 flags;
--	__u32 rsvd;
-+	union {
-+		struct {
-+			__u16 opcode;
-+			__u16 rsvd;
-+		} raw;
-+		__u32 rsvd;
-+	};
- 	__u32 retval;
++	cxl_debug("Opened %pD\n", file);
++
+ 	file->private_data = cxlmd;
  
- 	struct {
+ 	return 0;
+@@ -383,6 +392,10 @@ static int handle_mailbox_cmd_from_user(struct cxl_memdev *cxlmd,
+ 		.size_in = cmd->info.size_in,
+ 		.size_out = size_out,
+ 	};
++	cxl_debug("Submitting command for user\n"
++		  "\topcode: %x\n"
++		  "\tsize: %zub/%zub\n",
++		  mbox_cmd.opcode, mbox_cmd.size_in, mbox_cmd.size_out);
+ 	rc = cxl_mem_mbox_send_cmd(cxlmd->cxlm, &mbox_cmd);
+ 	cxl_mem_mbox_put(cxlmd->cxlm);
+ 	if (rc)
+@@ -479,6 +492,8 @@ static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg
+ 		u32 n_commands;
+ 		int i, j;
+ 
++		cxl_debug("Query IOCTL\n");
++
+ 		if (get_user(n_commands, (u32 __user *)arg))
+ 			return -EFAULT;
+ 
+@@ -511,6 +526,8 @@ static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg
+ 		struct cxl_mem_command c;
+ 		int rc;
+ 
++		cxl_debug("Send IOCTL\n");
++
+ 		rc = cxl_validate_cmd_from_user(u, &c);
+ 		if (rc)
+ 			return rc;
+@@ -843,6 +860,13 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
+ 
+ 	id = (struct cxl_mbox_identify *)mbox_cmd.payload;
+ 
++	cxl_debug("Driver identify command\n"
++		  "\tFirmware Version: %s\n"
++		  "\tTotal Capacity: %llu (%llu persistent)\n"
++		  "\tLSA size: %u\n",
++		  id->fw_revision, id->total_capacity, id->persistent_capacity,
++		  id->lsa_size);
++
+ 	/*
+ 	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+ 	 * For now, only the capacity is exported in sysfs
 -- 
 2.29.2
 
