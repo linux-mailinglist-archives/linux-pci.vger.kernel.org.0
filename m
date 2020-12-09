@@ -2,375 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A1F42D3942
-	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 04:34:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD9242D396E
+	for <lists+linux-pci@lfdr.de>; Wed,  9 Dec 2020 05:09:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgLIDd6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 8 Dec 2020 22:33:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgLIDd5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 22:33:57 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA2CC061793
-        for <linux-pci@vger.kernel.org>; Tue,  8 Dec 2020 19:33:17 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id bo9so924915ejb.13
-        for <linux-pci@vger.kernel.org>; Tue, 08 Dec 2020 19:33:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qiuT8EvTc+3FGSCQWBE7WNq9viwXOcS0VjwxrbSTTo8=;
-        b=bOPR9Y70bkACf0PWS89sm3EUxvMBa50oBlo/t2UMA9vsFziqjlbQdcdspZ0VWI5KSV
-         W7WXx3Q1P/w639n9xMQGMoIsaK1GlTEXufKD7N5W0nY65PCsiQCfQ6WXGM4a/yRpVGO6
-         HDRqzsErXKPTuLj2R5ssNGB9iz3jkdJG8lWKLxL07dywQctrYmtzw44QAy+5eF816D27
-         2ipU5asezRmX7uz7/Hq68c0BH8mPYcIeBBFqaZk38kLorwc9HNyjFxwB/cImUPG6suxp
-         BmVujwSXlVO5C6zWCrrmUQQHreNNiy8v6h/LTyQTjj8u94dxnjLi3V9zFUBXWyp/Qy6D
-         Lt3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qiuT8EvTc+3FGSCQWBE7WNq9viwXOcS0VjwxrbSTTo8=;
-        b=QMjqHAmjNk0b6mDIaOLLj87prnKthvbpl4jFIFFH8UbdvzFjVP2azwR6tVmjX4lcmS
-         OSguIQSn3ufjeXjowNwFHH49Z1LD4nYJn3nj5qI5PEFVkRS57IKzoW/uQa5mgkRfCXFe
-         f0da54imYk7GcUuMrkv/JmmcOAQSWNBvYQtTUbRYPA0PqibJM9y02DqlbO7dQmVjXDdP
-         fcjpfn/2PkY3+kS1rcGPIalDAtjWGh3G6kZ1TJVH9Bd0DvN9aKUeaJVCwbrihs9x5JDP
-         JCwTQFAFnjyLR3VyR0LjZ3fpvi2UPSNNQPRa0QSMHM6QwlocwR7DGWRtvVWCnx4+rWWd
-         ZqFA==
-X-Gm-Message-State: AOAM5326nyUbEJY2CzjZec5bwaoyndO6RwPcqk793zVT9XkSiX8h/bXH
-        OWxGacCRJx8FuJBRPjrB/YXM/Eg+rzMp9hCAE2bcPg==
-X-Google-Smtp-Source: ABdhPJzcdNOFLkidvFyTC46AhVFJAlgCwph/VoUM1mbCA+THGRfuoMtHe+UZwXlsIgtTTWr+18KsrHPlueY+IFuQypc=
-X-Received: by 2002:a17:906:a29a:: with SMTP id i26mr386829ejz.45.1607484795950;
- Tue, 08 Dec 2020 19:33:15 -0800 (PST)
+        id S1726987AbgLIEIw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 8 Dec 2020 23:08:52 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16259 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgLIEIw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 8 Dec 2020 23:08:52 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fd04dab0000>; Tue, 08 Dec 2020 20:08:11 -0800
+Received: from [10.25.97.15] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 9 Dec
+ 2020 04:08:04 +0000
+Subject: Re: [PATCH] PCI: Save/restore L1 PM Substate extended capability
+ registers
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        <bhelgaas@google.com>, <rafael@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20201208220624.21877-1-david.e.box@linux.intel.com>
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <d7708556-40b5-c66c-d0c7-ccfe9999691c@nvidia.com>
+Date:   Wed, 9 Dec 2020 09:38:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.2
 MIME-Version: 1.0
-References: <20201209002418.1976362-1-ben.widawsky@intel.com>
- <20201209002418.1976362-10-ben.widawsky@intel.com> <CAPcyv4ipGMsKegzWtd+W8wr4mG7X9DtVeQYvL24Eyu1fB3AN=A@mail.gmail.com>
- <20201209021254.ne42jy6ovn2rk3cf@intel.com>
-In-Reply-To: <20201209021254.ne42jy6ovn2rk3cf@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 8 Dec 2020 19:33:13 -0800
-Message-ID: <CAPcyv4jJWYacUd_xCio29uAUPHzs7Ez9pCC1PpWF3iWHD+XAaw@mail.gmail.com>
-Subject: Re: [RFC PATCH 09/14] cxl/mem: Add basic IOCTL interface
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201208220624.21877-1-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1607486891; bh=tKNGbJ7HdwulcixuNe1lidHwvhj6kJsJOljpK1qtsoI=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=DnSa1mZuCpmEuoQ1WmKpXoVgPVcTFnjYPFp4ho6iHjjTKtxX42y325nNnUqrNdk+d
+         ngY6A7SePH1JADN/Dj1n2mk0fi2dUk3TGL7qpwNS4YJtOGmeASmtn/0h1XXLLq2lm6
+         yZQc0rzwP7AUJVm4jUoF083Nn5bDt7/lR7MJtDZSOTH0pILa+MhZhDYzIDAxsjO7Po
+         yO58ArA97iIumY4dkozGmtlSJy5kVV2HZBQCoEmf713+nYFh986AI0rhF/xKp6unQ+
+         g2PHnQRSQM5gBUD/Wn1tDbJXqxOBFlVcNUFja6wu9wmoAevWCbmwMKQbpPBnuhkXRk
+         MPEtfeXUL5yCw==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 6:13 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 20-12-08 17:37:50, Dan Williams wrote:
-> > On Tue, Dec 8, 2020 at 4:24 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > Add a straightforward IOCTL that provides a mechanism for userspace to
-> > > query the supported memory device commands.
-> > >
-> > > Memory device commands are specified in 8.2.9 of the CXL 2.0
-> > > specification. They are submitted through a mailbox mechanism specified
-> > > in 8.2.8.4.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > >
-> > > ---
-> > >
-> > > I did attempt to use the same struct for querying commands as well as
-> > > sending commands (upcoming patch). The number of unused fields between
-> > > the two made for a bad fit IMO.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > ---
-> > >  Documentation/cxl/memory-devices.rst |   9 +++
-> > >  drivers/cxl/mem.c                    |  89 +++++++++++++++++++++++
-> > >  include/uapi/linux/cxl_mem.h         | 102 +++++++++++++++++++++++++++
-> > >  3 files changed, 200 insertions(+)
-> > >  create mode 100644 include/uapi/linux/cxl_mem.h
-> > >
-> > > diff --git a/Documentation/cxl/memory-devices.rst b/Documentation/cxl/memory-devices.rst
-> > > index 5f723c25382b..ec54674b3822 100644
-> > > --- a/Documentation/cxl/memory-devices.rst
-> > > +++ b/Documentation/cxl/memory-devices.rst
-> > > @@ -32,6 +32,15 @@ CXL Memory Device
-> > >  .. kernel-doc:: drivers/cxl/mem.c
-> > >     :internal:
-> > >
-> > > +CXL IOCTL Interface
-> > > +-------------------
-> > > +
-> > > +.. kernel-doc:: include/uapi/linux/cxl_mem.h
-> > > +   :doc: UAPI
-> > > +
-> > > +.. kernel-doc:: include/uapi/linux/cxl_mem.h
-> > > +   :internal:
-> > > +
-> > >  External Interfaces
-> > >  ===================
-> > >
-> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > index bb6ea58f6c7b..2c4aadcea0e4 100644
-> > > --- a/drivers/cxl/mem.c
-> > > +++ b/drivers/cxl/mem.c
-> > > @@ -7,6 +7,7 @@
-> > >  #include <linux/idr.h>
-> > >  #include <linux/pci.h>
-> > >  #include <linux/io.h>
-> > > +#include <uapi/linux/cxl_mem.h>
-> > >  #include "acpi.h"
-> > >  #include "pci.h"
-> > >  #include "cxl.h"
-> > > @@ -73,6 +74,49 @@ static DEFINE_IDR(cxl_mem_idr);
-> > >  /* protect cxl_mem_idr allocations */
-> > >  static DEFINE_MUTEX(cxl_memdev_lock);
-> > >
-> > > +/*
-> > > + * This table defines the supported mailboxes commands for the driver. The id is
-> > > + * ordinal and thus gaps in this table aren't allowed. This table is made up of
-> > > + * a UAPI structure. Non-negative values in the table will be validated against
-> > > + * the user's input. For example, if size_in is 0, and the user passed in 1, it
-> > > + * is an error.
-> > > + */
-> > > +#define CXL_CMD(_id, _flags, sin, sout, _name, _enable, op)                    \
-> > > +       {                                                                      \
-> > > +               { .id = CXL_MEM_COMMAND_ID_##_id,                              \
-> > > +                 .flags = CXL_MEM_COMMAND_FLAG_##_flags,                      \
-> > > +                 .size_in = sin,                                              \
-> > > +                 .size_out = sout,                                            \
-> > > +                 .name = _name },                                             \
-> > > +                       .enable = _enable, .opcode = op                        \
-> > > +       }
-> >
-> > Seems the ordinality requirement could be dropped if the definition was:
-> >
-> > #define CXL_CMD(_id, _flags, sin, sout, _name, _enable, op)                    \
-> >        [CXL_MEM_COMMAND_ID_##_id] = {
-> >                              \
-> >                { .id = CXL_MEM_COMMAND_ID_##_id,                              \
-> > ...
-> >
-> > Then command 0 and 42 could be defined out of order in the table.
-> > Especially if we need to config-disable or deprecate commands, I think
-> > it would be useful if this table was tolerant to being sparse.
-> >
->
-> How sparse are we talking? The current form does support sparseness, but
-> obviously gets quite large if the ID numbering is similar to random
-> distribution.
+There is a change already available for it in linux-next
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=4257f7e008ea394fcecc050f1569c3503b8bcc15
 
-"Sparse" may have been the wrong word to use. I was implying sparse
-enough that if I add command N+1 I don't need to be careful where I
-put it in mem_commands, but still be able to rely on lookups into
-mem_commands being indexed by the command-id.
+Thanks,
+Vidya Sagar
 
-> I think if we do see this being more like random distribution, it can be
-> supported, but I think it adds a decent amount of complexity for what I see as
-> not much reward - unless you know of a fairly simple way to create this data
-> structure with full sparse ID support?
-
-I'm expecting the command distribution to be mostly uniform, it's more
-of the lookup property that I think would be useful especially for the
-dynamic case of walking mem_commands to update it relative to what the
-hardware supports or other metadata. Speaking of which I think @enable
-should be turned into @flags of which 'enable' is one, in case we want
-to define more flags in the future.
-
->
-> > > +
-> > > +/**
-> > > + * struct cxl_mem_command - Driver representation of a memory device command
-> > > + * @info: Command information as it exists for the UAPI
-> > > + * @opcode: The actual bits used for the mailbox protocol
-> > > + * @enable: Whether the command is enabled. The driver may support a large set
-> > > + *         of commands that may not be enabled. The primary reason a command
-> > > + *         would not be enabled is for commands that are specified as optional
-> > > + *         and the hardware doesn't support the command.
-> > > + *
-> > > + * The cxl_mem_command is the driver's internal representation of commands that
-> > > + * are supported by the driver. Some of these commands may not be supported by
-> > > + * the hardware (!@enable). The driver will use @info to validate the fields
-> > > + * passed in by the user then submit the @opcode to the hardware.
-> > > + *
-> > > + * See struct cxl_command_info.
-> > > + */
-> > > +struct cxl_mem_command {
-> > > +       const struct cxl_command_info info;
-> > > +       const u16 opcode;
-> > > +       bool enable;
-> > > +};
-> > > +
-> > > +static struct cxl_mem_command mem_commands[] = {
-> > > +       CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
-> > > +};
-> > > +
-> > >  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> > >  {
-> > >         const int timeout = msecs_to_jiffies(2000);
-> > > @@ -268,8 +312,53 @@ static int cxl_mem_open(struct inode *inode, struct file *file)
-> > >         return 0;
-> > >  }
-> > >
-> > > +static int cxl_mem_count_commands(void)
-> > > +{
-> > > +       int i, n = 0;
-> > > +
-> > > +       for (i = 0; i < ARRAY_SIZE(mem_commands); i++) {
-> > > +               struct cxl_mem_command *c = &mem_commands[i];
-> > > +
-> > > +               if (c->enable)
-> > > +                       n++;
-> > > +       }
-> > > +
-> > > +       return n;
-> > > +}
-> > > +
-> > >  static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-> > >  {
-> > > +       if (cmd == CXL_MEM_QUERY_COMMANDS) {
-> > > +               struct cxl_mem_query_commands __user *q = (void __user *)arg;
-> > > +               u32 n_commands;
-> > > +               int i, j;
-> > > +
-> > > +               if (get_user(n_commands, (u32 __user *)arg))
-> > > +                       return -EFAULT;
-> > > +
-> > > +               if (n_commands == 0)
-> > > +                       return put_user(cxl_mem_count_commands(),
-> > > +                                       (u32 __user *)arg);
-> > > +
-> > > +               for (i = 0, j = 0;
-> > > +                    i < ARRAY_SIZE(mem_commands) && j < n_commands; i++) {
-> > > +                       struct cxl_mem_command *c = &mem_commands[i];
-> > > +                       const struct cxl_command_info *info = &c->info;
-> > > +
-> > > +                       if (!c->enable)
-> > > +                               continue;
-> > > +
-> > > +                       if (copy_to_user(&q->commands[j], info, sizeof(*info)))
-> > > +                               return -EFAULT;
-> > > +
-> > > +                       if (copy_to_user(&q->commands[j].name, info->name,
-> > > +                                        strlen(info->name)))
-> > > +                               return -EFAULT;
-> >
-> > Not sure why this is needed, see comment below about @name in
-> > cxl_mem_query_commands.
-> >
-> > > +
-> > > +                       j++;
-> > > +               }
-> > > +       }
-> > > +
-> > >         return -ENOTTY;
-> > >  }
-> > >
-> > > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> > > new file mode 100644
-> > > index 000000000000..1d1e143f98ec
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/cxl_mem.h
-> > > @@ -0,0 +1,102 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > +/*
-> > > + * CXL IOCTLs for Memory Devices
-> > > + */
-> > > +
-> > > +#ifndef _UAPI_CXL_MEM_H_
-> > > +#define _UAPI_CXL_MEM_H_
-> > > +
-> > > +#if defined(__cplusplus)
-> > > +extern "C" {
-> > > +#endif
-> > > +
-> > > +/**
-> > > + * DOC: UAPI
-> > > + *
-> > > + * CXL memory devices expose UAPI to have a standard user interface.
-> > > + * Userspace can refer to these structure definitions and UAPI formats
-> > > + * to communicate to driver
-> > > + */
-> > > +
-> > > +#define CXL_MEM_QUERY_COMMANDS _IOR('C', 1, struct cxl_mem_query_commands)
-> > > +
-> > > +#define CXL_MEM_COMMAND_NAME_LENGTH 32
-> > > +
-> > > +/**
-> > > + * struct cxl_command_info - Command information returned from a query.
-> > > + * @id: ID number for the command.
-> > > + * @flags: Flags that specify command behavior.
-> > > + *
-> > > + *          - CXL_MEM_COMMAND_FLAG_TAINT: Using this command will taint the kernel.
-> > > + * @size_in: Expected input size, or -1 if variable length.
-> > > + * @size_out: Expected output size, or -1 if variable length.
-> > > + * @name: Name describing the command.
-> > > + *
-> > > + * Represents a single command that is supported by both the driver and the
-> > > + * hardware. The is returned as part of an array from the query ioctl. The
-> > > + * following would be a command named "foobar" that takes a variable length
-> > > + * input and returns 0 bytes of output.
-> > > + *
-> > > + *  - @id = 10
-> > > + *  - @name = foobar
-> > > + *  - @flags = 0
-> > > + *  - @size_in = -1
-> > > + *  - @size_out = 0
-> > > + *
-> > > + * See struct cxl_mem_query_commands.
-> > > + */
-> > > +struct cxl_command_info {
-> > > +       __u32 id;
-> > > +#define CXL_MEM_COMMAND_ID_INVALID 0
-> > > +
-> > > +       __u32 flags;
-> > > +#define CXL_MEM_COMMAND_FLAG_NONE 0
-> > > +#define CXL_MEM_COMMAND_FLAG_TAINT BIT(0)
-> > > +
-> > > +       __s32 size_in;
-> > > +       __s32 size_out;
-> > > +
-> > > +       char name[32];
-> >
-> > Why does the name for a command need to be shuffled back and forth
-> > over the ioctl interface. Can't this be handled by a static lookup
-> > table defined in the header?
-> >
->
-> I was thinking of cases where the userspace application doesn't match the
-> current kernel's UAPI and giving the driver flexibility to return whatever.
-
-How / why would the application by looking at @name for UAPI compatibility?
-
-> OTTOMH, I also can't think of a way to do this if you want to do define the
-> table sparsely though. Do you have ideas for that?
-
-I don't think the name lookup would be sparse. i.e. it would be ok for
-mem_commands to not have an entry for everything in the name lookup
-table. As for defining the table it could use C preprocessor trick
-popularized by Steven Rostedt:
-
-#define CMDS                                                     \
-        C(CMD1, "command one"),     \
-        C(CMD2, "command two")     \
-#undef C
-#define C(a, b) a
-enum commands_enum { CMDS };
-#undef C
-#define C(a, b) { b }
-static struct {
-        const char *name;
-} commands[] = { CMDS };
-#undef C
-
-...then there's no way for the command ids to get out of sync with the names.
+On 12/9/2020 3:36 AM, David E. Box wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Intel systems that support ACPI Low Power Idle it has been observed
+> that the L1 Substate capability can return disabled after a s2idle
+> cycle. This causes the loss of L1 Substate support during runtime
+> leading to higher power consumption. Add save/restore of the L1SS
+> control registers.
+> 
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>   drivers/pci/pci.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 49 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e578d34095e9..beee3d9952a6 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1539,6 +1539,48 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
+>          pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++);
+>   }
+> 
+> +static void pci_save_l1ss_state(struct pci_dev *dev)
+> +{
+> +       int l1ss;
+> +       struct pci_cap_saved_state *save_state;
+> +       u16 *cap;
+> +
+> +       if (!pci_is_pcie(dev))
+> +               return;
+> +
+> +       l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
+> +       if (!l1ss)
+> +               return;
+> +
+> +       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+> +       if (!save_state) {
+> +               pci_err(dev, "no suspend buffer for L1 Substates\n");
+> +               return;
+> +       }
+> +
+> +       cap = (u16 *)&save_state->cap.data[0];
+> +       pci_read_config_word(dev, l1ss + PCI_L1SS_CTL1, cap++);
+> +       pci_read_config_word(dev, l1ss + PCI_L1SS_CTL1 + 2, cap++);
+> +       pci_read_config_word(dev, l1ss + PCI_L1SS_CTL2, cap++);
+> +}
+> +
+> +static void pci_restore_l1ss_state(struct pci_dev *dev)
+> +{
+> +       struct pci_cap_saved_state *save_state;
+> +       int l1ss;
+> +       u16 *cap;
+> +
+> +       save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+> +       l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
+> +       if (!save_state || !l1ss)
+> +               return;
+> +
+> +       cap = (u16 *)&save_state->cap.data[0];
+> +       pci_write_config_word(dev, l1ss + PCI_L1SS_CTL1, *cap++);
+> +       pci_write_config_word(dev, l1ss + PCI_L1SS_CTL1 + 2, *cap++);
+> +       pci_write_config_word(dev, l1ss + PCI_L1SS_CTL2, *cap++);
+> +}
+> +
+>   /**
+>    * pci_save_state - save the PCI configuration space of a device before
+>    *                 suspending
+> @@ -1563,6 +1605,7 @@ int pci_save_state(struct pci_dev *dev)
+>          if (i != 0)
+>                  return i;
+> 
+> +       pci_save_l1ss_state(dev);
+>          pci_save_ltr_state(dev);
+>          pci_save_dpc_state(dev);
+>          pci_save_aer_state(dev);
+> @@ -1670,6 +1713,7 @@ void pci_restore_state(struct pci_dev *dev)
+>           */
+>          pci_restore_ltr_state(dev);
+> 
+> +       pci_restore_l1ss_state(dev);
+>          pci_restore_pcie_state(dev);
+>          pci_restore_pasid_state(dev);
+>          pci_restore_pri_state(dev);
+> @@ -3332,6 +3376,11 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
+>          if (error)
+>                  pci_err(dev, "unable to allocate suspend buffer for LTR\n");
+> 
+> +       error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
+> +                                           3 * sizeof(u16));
+> +       if (error)
+> +               pci_err(dev, "unable to allocate suspend buffer for L1 Substates\n");
+> +
+>          pci_allocate_vc_save_buffers(dev);
+>   }
+> 
+> --
+> 2.20.1
+> 
