@@ -2,111 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DF522D5283
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 05:05:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40FCD2D5423
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 07:51:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbgLJEEv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 23:04:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731532AbgLJEEo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Dec 2020 23:04:44 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8B7C061793
-        for <linux-pci@vger.kernel.org>; Wed,  9 Dec 2020 20:04:03 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id bo9so5344932ejb.13
-        for <linux-pci@vger.kernel.org>; Wed, 09 Dec 2020 20:04:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aiXzNIBEdezK7LvwdToUmyEveX4RTWL1Q1rKEHzG6GY=;
-        b=V12HS7Wn+bctaIkufygbNwtKV1pkBbE9hHZV8Lf9tSE5VPt6nBit0Nb1HWPIB+8XdO
-         UwbjHDBYoCvlSOrafC5rCuQbCx1D+/3PDyFehNe398RSQzHQ1rPu9pgXYXyg3wMVKY7l
-         FuBEUYEFzcobG0z1knWel86vWiyTyuA3aX6iyNBGyPUSEugrsJ77EmD5w3Zhr4gllpgD
-         NDD0P3wO1Rjasg3bPJKXdNNtxJFUZzyODiRBozAcezwWwmKvGT1tnVg88ssqoLYPKQyE
-         vxZa8+AdNxohhjfYmcfYxPAKri7o/zxhpGNApPEe/Ugj0ylq5uh8h/HdVnA0K5L3ljWV
-         0UiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aiXzNIBEdezK7LvwdToUmyEveX4RTWL1Q1rKEHzG6GY=;
-        b=hrUmItHIZCMHbkuEBCt+1BC/S7RTGeGYSoqBo2laTaL7QLo1cgCUxt3kwXk6Kt96KM
-         YX1z7Hbmb2x55Hx//XdDQamrXxvmid9G+jt3F8+AdjisNc6Q8tBmgGOSO2weUhwAKuV3
-         YDPNC7xX4K1Y54gj9VCi/GBNQP9227YYRmHn9KvQm1Ml+NRmQ5jzRXnEks+Vakt77/94
-         lmgtBhE5HFaxMRQbJFgzTnsC4VRKTLiXzAIBQmLismvapD2M8L4SqHyP3W4MQK1v6gPz
-         FeDAYrYYNJyNS9/Is4p5f9+g4ZGJEyENMnbzwCnAI8lnl6eiqvQWLiwO/PNLvQZeIGYm
-         kkxg==
-X-Gm-Message-State: AOAM531ybr8AcMD9loXrJITjtFIXH74RdsK4lhW0A4dmhufh7XnE63Hd
-        optPZYQhuL1j4lsKSvZNzetK9+6WNyKfTBVY5cEsXw==
-X-Google-Smtp-Source: ABdhPJz4kqsM2zajOVSAKgswV7LD/u9Of8EB4mcOSELuzl9N3rbE8Zn+Vb136NhMCEF83xMViBOj9nm8pJkMBp6g77Y=
-X-Received: by 2002:a17:906:518a:: with SMTP id y10mr4811157ejk.323.1607573042542;
- Wed, 09 Dec 2020 20:04:02 -0800 (PST)
+        id S1732601AbgLJGsc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 01:48:32 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60868 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732146AbgLJGs1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 01:48:27 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BA6lK6G058566;
+        Thu, 10 Dec 2020 00:47:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1607582840;
+        bh=qgITTTZSkIihUU/af1ffR6ZvBdt+qsA59Qd9Not4R7E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FgOkCepwyKxkuu4EcETOJr2tWYn56YV4N8ZbOSd1mg7OzrL2hECkWyusJaJ9iny0J
+         uzxgS8MLsHGhFWXczHaYU1wvoxhDQGShcmlejsn1+ZSFDPUJ9n5GcXkz2lb148/zZO
+         jvWSW1j/XJT6UmLqu+hbUgpPbkEN1Fgk42A6FbdI=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BA6lKQS086512
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Dec 2020 00:47:20 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Dec 2020 00:47:20 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Dec 2020 00:47:20 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BA6lG7A048565;
+        Thu, 10 Dec 2020 00:47:17 -0600
+Subject: Re: [PATCH v2 0/3] PCI: J721E: Fix Broken DT w.r.t SYSCON DT
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+References: <20201204075117.10430-1-kishon@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <6c846ae3-0bb5-f8de-0f3e-5e0239a7aa6c@ti.com>
+Date:   Thu, 10 Dec 2020 12:17:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20201106170036.18713-1-logang@deltatee.com> <20201106170036.18713-5-logang@deltatee.com>
- <20201109091258.GB28918@lst.de> <4e336c7e-207b-31fa-806e-c4e8028524a5@deltatee.com>
- <CAPcyv4ifGcrdOtUt8qr7pmFhmecGHqGVre9G0RorGczCGVECQQ@mail.gmail.com> <fba1022b-1425-bb79-9af8-fe68e6f2c56e@deltatee.com>
-In-Reply-To: <fba1022b-1425-bb79-9af8-fe68e6f2c56e@deltatee.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 9 Dec 2020 20:04:00 -0800
-Message-ID: <CAPcyv4hr=kM6--OUdK+6XAAEVzENJmy-uD78yK-p62bW8vbu9g@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/15] lib/scatterlist: Add flag for indicating P2PDMA
- segments in an SGL
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
-        Stephen Bates <sbates@raithlin.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Ira Weiny <iweiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201204075117.10430-1-kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 9, 2020 at 6:07 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->
->
->
-> On 2020-12-09 6:22 p.m., Dan Williams wrote:
-> > On Mon, Nov 9, 2020 at 8:47 AM Logan Gunthorpe <logang@deltatee.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2020-11-09 2:12 a.m., Christoph Hellwig wrote:
-> >>> On Fri, Nov 06, 2020 at 10:00:25AM -0700, Logan Gunthorpe wrote:
-> >>>> We make use of the top bit of the dma_length to indicate a P2PDMA
-> >>>> segment.
-> >>>
-> >>> I don't think "we" can.  There is nothing limiting the size of a SGL
-> >>> segment.
-> >>
-> >> Yes, I expected this would be the unacceptable part. Any alternative ideas?
-> >
-> > Why is the SG_P2PDMA_FLAG needed as compared to checking the SGL
-> > segment-pages for is_pci_p2pdma_page()?
->
-> Because the DMA and page segments in the SGL aren't necessarily aligned...
->
-> The IOMMU implementations can coalesce multiple pages into fewer DMA
-> address ranges, so the page pointed to by sg->page_link may not be the
-> one that corresponds to the address in sg->dma_address for a given segment.
->
-> If that makes sense -- it's not the easiest thing to explain.
+Hi Lorenzo,
 
-It does...
+On 04/12/20 1:21 pm, Kishon Vijay Abraham I wrote:
+> Previously a subnode to syscon node was added which has the
+> exact memory mapped address of pcie_ctrl but based on review comment
+> provided by Rob [1], the offset is now being passed as argument to
+> "ti,syscon-pcie-ctrl" phandle.
+> 
+> This series has both driver change and DT change. The driver change
+> should be merged first and the driver takes care of maintaining old
+> DT compatibility.
 
-Did someone already grab, or did you already consider the 3rd
-available bit in page_link? AFAICS only SG_CHAIN and SG_END are
-reserved. However, if you have a CONFIG_64BIT dependency for
-user-directed p2pdma that would seem to allow SG_P2PDMA_FLAG to be
-(0x4) in page_link.
+Can you queue the 1st two patches of this series for this merge window?
+I'll ask NM to queue the DTS patch. Let me know if you want me to resend
+only the first two patches as a separate series.
+
+Thank You,
+Kishon
+
+> 
+> Changes frm v1:
+> *) Remove use of allOf in schema
+> *) Added Fixes tag
+> *) Maintain old DT compatibility
+> 
+> [1] -> http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
+> 
+> Kishon Vijay Abraham I (3):
+>   dt-bindings: pci: ti,j721e: Fix "ti,syscon-pcie-ctrl" to take argument
+>   PCI: j721e: Get offset within "syscon" from "ti,syscon-pcie-ctrl"
+>     phandle arg
+>   arm64: dts: ti: k3-j721e-main: Remove "syscon" nodes added for
+>     pcieX_ctrl
+> 
+>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 11 +++--
+>  .../bindings/pci/ti,j721e-pci-host.yaml       | 11 +++--
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 48 ++++---------------
+>  drivers/pci/controller/cadence/pci-j721e.c    | 28 +++++++----
+>  4 files changed, 41 insertions(+), 57 deletions(-)
+> 
