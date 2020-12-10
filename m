@@ -2,167 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DF3C2D4FAF
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 01:44:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D43E2D4FF5
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 01:57:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbgLJAn0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 9 Dec 2020 19:43:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730309AbgLJAnK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 9 Dec 2020 19:43:10 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1524DC0613D6
-        for <linux-pci@vger.kernel.org>; Wed,  9 Dec 2020 16:42:30 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id dk8so3675240edb.1
-        for <linux-pci@vger.kernel.org>; Wed, 09 Dec 2020 16:42:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vNvEsgxEU6uZTR1Us7I6r4YjbSGdWuf43XtWg1h/ZjQ=;
-        b=kj91qDjjmmSRx9Y9wZ28xrM4ILAD7D+wZc32csdO3Abd86CcS8AIaktID/pLpeWAy9
-         Lg4z817plMRMoe59ZWqcK/04+BfENFz0xADon2k4MolNMPPs+lkzHdmDTFXNLFDXK3Q8
-         YqyJGSCuhZpYUehX2ELEtQVWjQ59/V+8xNz60ZcxdhYRDK2i/r6c+aP372zYUKxjHx0V
-         05JeQeIAdF6IAVr+UwxZD6mt9PXXBE0DddWLQZ/IY1T6dR5DjDPHmDTKa7zlnffIZlTU
-         3kTU8HPQQb0S9ei8mEk9AessjYqLRVZhdteyNoISDjfhJUaFIUaTYj6um7CWEJw45/Jk
-         OQJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vNvEsgxEU6uZTR1Us7I6r4YjbSGdWuf43XtWg1h/ZjQ=;
-        b=YogvJlkG2xFg7B3MRuMchXLm0ya777FyhuxK6/sBszmGu2hUqbh01cpjWrFKDdHcNP
-         eoPj5Uym0F+NNFjwdSL/qfoIPSTHENFb3j0E5/SLSkfQLjTcwev+HEpnbMKNchLuY9k9
-         QiGozMg2YEgXA/DYztOTeBhOc0qyXlyH64BYDhJ1xgyoI7hBgYuoVW4hyJLg6HOlZgM5
-         FuvHPqMuwxHyXGIuwkrCUQpJ3VRYU60bnb2OWR3w1QCQ2MwPLZNdd9/Vz1+00R4z6wdK
-         IBJLpgMGLQ2NeGjfL05iPp0qJcTZneZ0D27GYGxREjR0g6nRCk2IwyVOco4i1VOftrGK
-         N/Sg==
-X-Gm-Message-State: AOAM533ncCovibGyZ4KZa5UCGgAbeP69C8tY+6AxnAbHipZfEhYInpvs
-        MdYWaUP6yxl4QONufG+aC1R6f5bhbNX1w+z6k0pUFw==
-X-Google-Smtp-Source: ABdhPJxkEYy1l4Dzzh42MlB1DBuPbdpyEYWjS7i+HtHHCrX01UWMKJujV74kKgE5AM/PYa95sJsQEEPdm4fu6DF/EhY=
-X-Received: by 2002:a50:8a44:: with SMTP id i62mr4336434edi.97.1607560948709;
- Wed, 09 Dec 2020 16:42:28 -0800 (PST)
+        id S1730455AbgLJA4N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 9 Dec 2020 19:56:13 -0500
+Received: from mga02.intel.com ([134.134.136.20]:11147 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728438AbgLJA4N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 9 Dec 2020 19:56:13 -0500
+IronPort-SDR: EB40AqRYvyiZYfSRQF1S+qBk/WRbZjEOxF6U0Wp1oWK+yuzmDK8JKrcwM1okGI2bXO4JmOHlU8
+ htBhc+IrDgXQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9830"; a="161226432"
+X-IronPort-AV: E=Sophos;i="5.78,407,1599548400"; 
+   d="scan'208";a="161226432"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2020 16:54:27 -0800
+IronPort-SDR: MDXlwNbAQ1JCT+K95B+KYpwNKNCAuS13LyV+ICIhcoUiXuEs3nXzfFaqItmkWJeqkTR+ThvX0k
+ 6/91qjkH07zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,407,1599548400"; 
+   d="scan'208";a="438062595"
+Received: from allen-box.sh.intel.com ([10.239.159.28])
+  by fmsmga001.fm.intel.com with ESMTP; 09 Dec 2020 16:54:20 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     tglx@linutronix.de, ashok.raj@intel.com, kevin.tian@intel.com,
+        dave.jiang@intel.com, megha.dey@intel.com
+Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        eric.auger@redhat.com, jacob.jun.pan@intel.com, jgg@mellanox.com,
+        jing.lin@intel.com, kvm@vger.kernel.org, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [RFC PATCH 1/1] platform-msi: Add platform check for subdevice irq domain
+Date:   Thu, 10 Dec 2020 08:46:24 +0800
+Message-Id: <20201210004624.345282-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20201209002418.1976362-1-ben.widawsky@intel.com> <20201209002418.1976362-15-ben.widawsky@intel.com>
-In-Reply-To: <20201209002418.1976362-15-ben.widawsky@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 9 Dec 2020 16:42:26 -0800
-Message-ID: <CAPcyv4hTP+AQ_h7SfeJPjMORqArTWp-6KWPA3Eu=-dmpo1B0AA@mail.gmail.com>
-Subject: Re: [RFC PATCH 14/14] WIP/cxl/mem: Add get firmware for testing
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 8, 2020 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> This also serves as an example how to add a new command
->
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/mem.c            | 22 ++++++++++++++++++++++
->  include/uapi/linux/cxl_mem.h |  3 ++-
->  2 files changed, 24 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 6b2f8d3776b5..76aa1e6e4117 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -116,6 +116,7 @@ struct cxl_mem_command {
->  static struct cxl_mem_command mem_commands[] = {
->         CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
->         CXL_CMD(RAW, TAINT, ~0, ~0, "Raw", true, 0),
-> +       CXL_CMD(GET_FW_INFO, NONE, 0, 0x50, "Get FW Info", false, 0x0200),
+The pci_subdevice_msi_create_irq_domain() should fail if the underlying
+platform is not able to support IMS (Interrupt Message Storage). Otherwise,
+the isolation of interrupt is not guaranteed.
 
-I think CXL_CMD() arguments can be put on a diet if the
-mem-command-id-to-name was moved to its own table, and the opcode was
-defined as something like:
+For x86, IMS is only supported on bare metal for now. We could enable it
+in the virtualization environments in the future if interrupt HYPERCALL
+domain is supported or the hardware has the capability of interrupt
+isolation for subdevices.
 
-#define CXL_MBOX_OP_GET_FW_INFO 0x200
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/linux-pci/87pn4nk7nn.fsf@nanos.tec.linutronix.de/
+Link: https://lore.kernel.org/linux-pci/877dqrnzr3.fsf@nanos.tec.linutronix.de/
+Link: https://lore.kernel.org/linux-pci/877dqqmc2h.fsf@nanos.tec.linutronix.de/
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ arch/x86/pci/common.c       | 43 +++++++++++++++++++++++++++++++++++++
+ drivers/base/platform-msi.c |  8 +++++++
+ include/linux/msi.h         |  1 +
+ 3 files changed, 52 insertions(+)
 
-...so that CXL_CMD can just do:
+Note:
+Learnt from the discussions in this thread:
 
-    .opcode = CXL_MBOX_OP_##_id
+https://lore.kernel.org/linux-pci/160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com/
 
-That @_enable arg wants a flag #define like CMD_ENABLE which reads
-better than 'true'. I would then add CMD_KERNEL_EXCL alongside that
-flag to indicate the commands that may be exclusive to the kernel when
-the device is active in a PMEM memory region, or ones that have an
-alternate ABI wrapped around them like the keys subsystem for security
-or the firwmare activation sysfs interface.
+The device IMS (Interrupt Message Storage) should not be enabled in any
+virtualization environments unless there is a HYPERCALL domain which
+makes the changes in the message store managed by the hypervisor.
 
->  };
->
->  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> @@ -827,6 +828,23 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
->         return cxl_register(dev);
->  }
->
-> +static int cxl_mem_enable_commands(struct cxl_mem *cxlm)
-> +{
-> +       struct cxl_mem_command *c;
-> +
-> +       /*
-> +        * For now we pretend Get FW info is supported.
-> +        *
-> +        * FIXME: Invoke GET LOG to get the Command Effect Logs (CEL).
-> +        */
-> +       c = cxl_mem_find_command(0x200);
-> +       if (!c)
-> +               return -ENOENT;
-> +
-> +       c->enable = true;
-> +       return 0;
-> +}
-> +
->  /**
->   * cxl_mem_identify() - Send the IDENTIFY command to the device.
->   * @cxlm: The device to identify.
-> @@ -936,6 +954,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->         if (rc)
->                 return rc;
->
-> +       rc = cxl_mem_enable_commands(cxlm);
-> +       if (rc)
-> +               return rc;
-> +
->         rc = cxl_mem_identify(cxlm);
->         if (rc)
->                 return rc;
-> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
-> index f2fbb0dcda06..3ac39acf8fa7 100644
-> --- a/include/uapi/linux/cxl_mem.h
-> +++ b/include/uapi/linux/cxl_mem.h
-> @@ -50,7 +50,8 @@ struct cxl_command_info {
->         __u32 id;
->  #define CXL_MEM_COMMAND_ID_INVALID 0
->  #define CXL_MEM_COMMAND_ID_RAW 1
-> -#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_RAW + 1)
-> +#define CXL_MEM_COMMAND_ID_GET_FW_INFO 2
-> +#define CXL_MEM_COMMAND_ID_MAX (CXL_MEM_COMMAND_ID_GET_FW_INFO + 1)
+As the initial step, we allow the IMS to be enabled only if we are
+running on the bare metal. It's easy to enable IMS in the virtualization
+environments if above preconditions are met in the future.
 
-Seems like CXL_MEM_COMMAND_ID definitions want to be an enum so that
-CXL_MEM_COMMAND_ID_MAX does not need to be touched every time.
+We ever thought about moving probably_on_bare_metal() to a more generic
+file so that it could be well maintained and used. But we need some
+suggestions about where to put it. Your comments are very appreciated.
 
->
->         __u32 flags;
->  #define CXL_MEM_COMMAND_FLAG_NONE 0
-> --
-> 2.29.2
->
+This patch is only for comments purpose. Please don't merge it. We will
+include it in the Intel IMS implementation later once we reach a
+consensus.
+
+Best regards,
+baolu
+
+diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+index 3507f456fcd0..2fbebb406cac 100644
+--- a/arch/x86/pci/common.c
++++ b/arch/x86/pci/common.c
+@@ -724,3 +724,46 @@ struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
+ 	return dev;
+ }
+ #endif
++
++/*
++ * We want to figure out which context we are running in. But the hardware
++ * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
++ * which can be manipulated by the VMM to let the OS figure out where it runs.
++ * So we go with the below probably_on_bare_metal() function as a replacement
++ * for definitely_on_bare_metal() to go forward only for the very simple reason
++ * that this is the only option we have.
++ */
++static const char * const possible_vmm_vendor_name[] = {
++	"QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
++	"innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
++	"Microsoft Corporation"
++};
++
++static bool probably_on_bare_metal(void)
++{
++	int i;
++
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return false;
++
++	for (i = 0; i < ARRAY_SIZE(possible_vmm_vendor_name); i++)
++		if (dmi_match(DMI_SYS_VENDOR, possible_vmm_vendor_name[i]))
++			return false;
++
++	pr_info("System running on bare metal, report to bugzilla.kernel.org if not the case.");
++
++	return true;
++}
++
++bool arch_support_pci_device_ims(struct pci_dev *pdev)
++{
++	/*
++	 * When we are running in a VMM context, the device IMS could only be
++	 * enabled when the underlying hardware supports interrupt isolation
++	 * of the subdevice, or any mechanism (trap, hypercall) is added so
++	 * that changes in the interrupt message store could be managed by the
++	 * VMM. For now, we only support the device IMS when we are running on
++	 * the bare metal.
++	 */
++	return probably_on_bare_metal();
++}
+diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+index 8432a1bf4e28..88e5fe4dae67 100644
+--- a/drivers/base/platform-msi.c
++++ b/drivers/base/platform-msi.c
+@@ -512,6 +512,11 @@ struct irq_domain *device_msi_create_irq_domain(struct fwnode_handle *fn,
+ #ifdef CONFIG_PCI
+ #include <linux/pci.h>
+ 
++bool __weak arch_support_pci_device_ims(struct pci_dev *pdev)
++{
++	return false;
++}
++
+ /**
+  * pci_subdevice_msi_create_irq_domain - Create an irq domain for subdevices
+  * @pdev:	Pointer to PCI device for which the subdevice domain is created
+@@ -523,6 +528,9 @@ struct irq_domain *pci_subdevice_msi_create_irq_domain(struct pci_dev *pdev,
+ 	struct irq_domain *domain, *pdev_msi;
+ 	struct fwnode_handle *fn;
+ 
++	if (!arch_support_pci_device_ims(pdev))
++		return NULL;
++
+ 	/*
+ 	 * Retrieve the MSI domain of the underlying PCI device's MSI
+ 	 * domain. The PCI device domain's parent domain is also the parent
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index f319d7c6a4ef..6fda81c4b859 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -478,6 +478,7 @@ struct irq_domain *device_msi_create_irq_domain(struct fwnode_handle *fn,
+ 						struct irq_domain *parent);
+ 
+ # ifdef CONFIG_PCI
++bool arch_support_pci_device_ims(struct pci_dev *pdev);
+ struct irq_domain *pci_subdevice_msi_create_irq_domain(struct pci_dev *pdev,
+ 						       struct msi_domain_info *info);
+ # endif
+-- 
+2.25.1
+
