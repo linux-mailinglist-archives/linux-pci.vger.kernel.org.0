@@ -2,129 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 994962D5A1D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 13:15:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CA622D5AB6
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 13:41:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387578AbgLJMNn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 07:13:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:38332 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgLJMNn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Dec 2020 07:13:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11CB21FB;
-        Thu, 10 Dec 2020 04:12:57 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E923F3F718;
-        Thu, 10 Dec 2020 04:12:55 -0800 (PST)
-Date:   Thu, 10 Dec 2020 12:12:50 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Marek Vasut <marek.vasut@gmail.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20201210121250.GA31998@e121166-lin.cambridge.arm.com>
-References: <a65139b9-3b06-0562-7b6e-9a438aecff66@gmail.com>
- <20201208184627.GA2393103@bjorn-Precision-5520>
+        id S1729077AbgLJMkk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 07:40:40 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34772 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728631AbgLJMkk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 07:40:40 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BACdex4051840;
+        Thu, 10 Dec 2020 06:39:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1607603980;
+        bh=PoKSJKFHo6LVi1AsWhRWfh5gsTPjeohBjOFQoH+PCFU=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=ur2v+oaScko/mvK0G/OEpB5ZohPmWVOUMTdsy8C8R+dboRrTKosuGGaRF3dFrVlkX
+         gYx4NnQKDjldD2jhztENDHI7oCUg7h6ajYGpgbgTHcPu5BbJhWSiHSn7sPDHpX+ts8
+         OtY/lyqC7Eqvrc0KHvqKqlwKB4IC99qNPrJfsvXE=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BACde9g056026
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Dec 2020 06:39:40 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
+ Dec 2020 06:39:40 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 10 Dec 2020 06:39:40 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BACdY6B052109;
+        Thu, 10 Dec 2020 06:39:35 -0600
+Subject: Re: [PATCH v2 0/3] PCI: J721E: Fix Broken DT w.r.t SYSCON DT
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+References: <20201204075117.10430-1-kishon@ti.com>
+ <6c846ae3-0bb5-f8de-0f3e-5e0239a7aa6c@ti.com>
+Message-ID: <3ef9989a-0700-3935-1deb-b86304a76ec6@ti.com>
+Date:   Thu, 10 Dec 2020 18:09:33 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201208184627.GA2393103@bjorn-Precision-5520>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6c846ae3-0bb5-f8de-0f3e-5e0239a7aa6c@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 12:46:27PM -0600, Bjorn Helgaas wrote:
-> On Tue, Dec 08, 2020 at 07:05:09PM +0100, Marek Vasut wrote:
-> > On 12/8/20 5:40 PM, Bjorn Helgaas wrote:
-> 
-> > > > +static const struct of_device_id rcar_pcie_abort_handler_of_match[] __initconst = {
-> > > > +	{ .compatible = "renesas,pcie-r8a7779" },
-> > > > +	{ .compatible = "renesas,pcie-r8a7790" },
-> > > > +	{ .compatible = "renesas,pcie-r8a7791" },
-> > > > +	{ .compatible = "renesas,pcie-rcar-gen2" },
-> > > > +	{},
-> > > > +};
-> > > 
-> > > Why do we need another copy of these, as opposed to doing something
-> > > with of_device_get_match_data(), e.g., like brcm_pcie_probe() does?
-> > 
-> > This is not a copy, but as subset of SoCs which are affected by this
-> > problem.
-> 
-> I know it's not a complete copy.  Many systems include flags like
-> "broken_l1" in their match_data.  Something like this:
-> 
->   struct rcar_pcie_drvdata {
->     int            (*phy_init_fn)(struct rcar_pcie_host *host);
->     unsigned int   broken_l1:1;
->   };
-> 
->   static const struct rcar_pcie_drvdata rcar_init_h1_drvdata = {
->     .phy_init_fn = rcar_pcie_phy_init_h1,
->     .broken_l1 = 1,
->   };
-> 
->   static const struct rcar_pcie_drvdata rcar_init_gen2_drvdata = {
->     .phy_init_fn = rcar_pcie_phy_init_gen2,
->     .broken_l1 = 1,
->   };
-> 
->   static const struct rcar_pcie_drvdata rcar_init_gen3_drvdata = {
->     .phy_init_fn = rcar_pcie_phy_init_gen3,
->   };
-> 
->   static const struct of_device_id rcar_pcie_of_match[] = {
->     { .compatible = "renesas,pcie-r8a7779", .data = rcar_init_h1_drvdata },
->     { .compatible = "renesas,pcie-r8a7790", .data = rcar_init_gen2_drvdata },
->     { .compatible = "renesas,pcie-r8a7791", .data = rcar_init_gen2_drvdata },
->     ...
+Hi Lorenzo,
 
-+1
-
-> > > > +static int __init rcar_pcie_init(void)
-> > > > +{
-> > > > +	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-> > > > +#ifdef CONFIG_ARM_LPAE
-> > > > +		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > > +				"asynchronous external abort");
-> > > > +#else
-> > > > +		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > > +				"imprecise external abort");
-> > > > +#endif
-> > > > +	}
-> > > > +
-> > > > +	return platform_driver_register(&rcar_pcie_driver);
-> > > > +}
-> > > > +device_initcall(rcar_pcie_init);
-> > > > +#else
-> > > >   builtin_platform_driver(rcar_pcie_driver);
-> > > > +#endif
-> > > 
-> > > Is the device_initcall() vs builtin_platform_driver() something
-> > > related to the hook_fault_code()?  What would break if this were
-> > > always builtin_platform_driver()?
-> > 
-> > rcar_pcie_init() would not be called before probe.
+On 10/12/20 12:17 pm, Kishon Vijay Abraham I wrote:
+> Hi Lorenzo,
 > 
-> Sorry to be slow, but why does it need to be called before probe?
-> Obviously software isn't putting the controller in D3 or enabling ASPM
-> before probe.
+> On 04/12/20 1:21 pm, Kishon Vijay Abraham I wrote:
+>> Previously a subnode to syscon node was added which has the
+>> exact memory mapped address of pcie_ctrl but based on review comment
+>> provided by Rob [1], the offset is now being passed as argument to
+>> "ti,syscon-pcie-ctrl" phandle.
+>>
+>> This series has both driver change and DT change. The driver change
+>> should be merged first and the driver takes care of maintaining old
+>> DT compatibility.
+> 
+> Can you queue the 1st two patches of this series for this merge window?
+> I'll ask NM to queue the DTS patch. Let me know if you want me to resend
+> only the first two patches as a separate series.
 
-I don't understand it either so it would be good to clarify.
+Never mind, I'll resend the pending patches for which I have already got
+Acks from Rob.
 
-Also, some of these platforms are SMP systems, I don't understand
-what prevents multiple cores to fault at once given that the faults
-can happen for config/io/mem accesses alike.
+Thank You,
+Kishon
 
-I understand that the immediate fix is for S2R, that is single
-threaded but I would like to understand how comprehensive this fix
-is.
-
-Thanks,
-Lorenzo
+> 
+> Thank You,
+> Kishon
+> 
+>>
+>> Changes frm v1:
+>> *) Remove use of allOf in schema
+>> *) Added Fixes tag
+>> *) Maintain old DT compatibility
+>>
+>> [1] -> http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
+>>
+>> Kishon Vijay Abraham I (3):
+>>   dt-bindings: pci: ti,j721e: Fix "ti,syscon-pcie-ctrl" to take argument
+>>   PCI: j721e: Get offset within "syscon" from "ti,syscon-pcie-ctrl"
+>>     phandle arg
+>>   arm64: dts: ti: k3-j721e-main: Remove "syscon" nodes added for
+>>     pcieX_ctrl
+>>
+>>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 11 +++--
+>>  .../bindings/pci/ti,j721e-pci-host.yaml       | 11 +++--
+>>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 48 ++++---------------
+>>  drivers/pci/controller/cadence/pci-j721e.c    | 28 +++++++----
+>>  4 files changed, 41 insertions(+), 57 deletions(-)
+>>
