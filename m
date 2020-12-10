@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD37F2D671D
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 20:43:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D7F42D67D3
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 20:59:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393478AbgLJTnC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 14:43:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53180 "EHLO
+        id S2404364AbgLJT7e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 14:59:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393443AbgLJTm7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 14:42:59 -0500
+        with ESMTP id S2390461AbgLJTnb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 14:43:31 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235BAC0613D6;
-        Thu, 10 Dec 2020 11:42:19 -0800 (PST)
-Message-Id: <20201210194042.703779349@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 479B4C0617B0;
+        Thu, 10 Dec 2020 11:42:26 -0800 (PST)
+Message-Id: <20201210194043.362094758@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1607629337;
+        s=2020; t=1607629344;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=xNUoZoBVroF7IJy3X8hhV7V+S/ANMxwK+r48iZvHH7k=;
-        b=SuZCyt4zlNSkg7Jh6xjd5t+bljnkIDhiuE1rhn/qKeMG+ite6vJEiEbNofXy6Jc8tYg+0b
-        IECvv2LjnWcGzCS6R2c2tg4sgQpGcjXByKLBZPL7Xs4OwNUUaKF820w3Ic1JKPFWbxYaV/
-        zQxlwp4rnzD+WzTiaw91J+4L7iQQ+SR32KSqZT854CLAJKIIUHqBcwUh01vq4gYJysHS9U
-        2YuIdbPutXAYf6qxYXI8k/N2s6EcL8OojQbYBV3yqFeMwoY5o0cLfzqE9P8/gw+P+igDVq
-        lKj3W3wk7xu1ziy9h34ybqOITt3G9Oy0XdV3S2Ut5Fvm8NWwxziMLNP2XRk3vg==
+        bh=xI8ipC8kVjJGltjSHu5Mwub/dbA42XKOSuIg0xDxbuM=;
+        b=D/de10U4HoG38vblr7IeySKjPU1LbUwG6rWRmeGYZrTiPhh//Hh7l/GxJreJ0rFcvzRPJy
+        uoauNylV8dWf/MoltroGmVGhvJ2oJ5Y1i1Hdh3B/UY4mD9pwH+y7Dg4V+Vuar0V4FZXmUS
+        6T9k0+65HYvYSEKNJ4TVXxdcFWWUmHXiCvk5q873lejGHd1ZF8kDnbNFZOuvndA/bZ6hqk
+        upKi4g8D5MCEBYYTgyELzJKcRa+JlxwqpINFEbwiyouRus62LMleSD5uCsPspz8eEzaopF
+        eLafHsQRj846r/5tje8mdg+dCV5YsColFl6docNWF4RiFgqrORcZz2o154ST/Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1607629337;
+        s=2020e; t=1607629344;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=xNUoZoBVroF7IJy3X8hhV7V+S/ANMxwK+r48iZvHH7k=;
-        b=VHoSRskFC2dXgfT8CV99ZHE5BpRPUfLU6nfE7o3PMPrsIEKWqDmtgbLpWFRMlRZjjTeINe
-        qsFjW8cMZ9WikxCw==
-Date:   Thu, 10 Dec 2020 20:25:38 +0100
+        bh=xI8ipC8kVjJGltjSHu5Mwub/dbA42XKOSuIg0xDxbuM=;
+        b=uhk8uY0rFu42URnjai4w+dmeZE7ul5z78imfPTBVOwBrf5zNSXRAMP26aad4ZYcrnfPUQU
+        IQRkkJ1oiqPOXJDw==
+Date:   Thu, 10 Dec 2020 20:25:44 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -80,7 +80,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Juergen Gross <jgross@suse.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
         xen-devel@lists.xenproject.org
-Subject: [patch 02/30] genirq: Move status flag checks to core
+Subject: [patch 08/30] genirq: Provide kstat_irqdesc_cpu()
 References: <20201210192536.118432146@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -89,75 +89,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-These checks are used by modules and prevent the removal of the export of
-irq_to_desc(). Move the accessor into the core.
+Most users of kstat_irqs_cpu() have the irq descriptor already. No point in
+calling into the core code and looking it up once more.
+
+Use it in per_cpu_count_show() to start with.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/irqdesc.h |   17 +++++------------
- kernel/irq/manage.c     |   17 +++++++++++++++++
- 2 files changed, 22 insertions(+), 12 deletions(-)
+ include/linux/irqdesc.h |    6 ++++++
+ kernel/irq/irqdesc.c    |    4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
 --- a/include/linux/irqdesc.h
 +++ b/include/linux/irqdesc.h
-@@ -223,28 +223,21 @@ irq_set_chip_handler_name_locked(struct
- 	data->chip = chip;
- }
+@@ -113,6 +113,12 @@ static inline void irq_unlock_sparse(voi
+ extern struct irq_desc irq_desc[NR_IRQS];
+ #endif
  
-+bool irq_check_status_bit(unsigned int irq, unsigned int bitmask);
-+
- static inline bool irq_balancing_disabled(unsigned int irq)
- {
--	struct irq_desc *desc;
--
--	desc = irq_to_desc(irq);
--	return desc->status_use_accessors & IRQ_NO_BALANCING_MASK;
-+	return irq_check_status_bit(irq, IRQ_NO_BALANCING_MASK);
- }
- 
- static inline bool irq_is_percpu(unsigned int irq)
- {
--	struct irq_desc *desc;
--
--	desc = irq_to_desc(irq);
--	return desc->status_use_accessors & IRQ_PER_CPU;
-+	return irq_check_status_bit(irq, IRQ_PER_CPU);
- }
- 
- static inline bool irq_is_percpu_devid(unsigned int irq)
- {
--	struct irq_desc *desc;
--
--	desc = irq_to_desc(irq);
--	return desc->status_use_accessors & IRQ_PER_CPU_DEVID;
-+	return irq_check_status_bit(irq, IRQ_PER_CPU_DEVID);
- }
- 
- static inline void
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -2769,3 +2769,23 @@ bool irq_has_action(unsigned int irq)
- 	return res;
- }
- EXPORT_SYMBOL_GPL(irq_has_action);
-+
-+/**
-+ * irq_check_status_bit - Check whether bits in the irq descriptor status are set
-+ * @irq:	The linux irq number
-+ * @bitmask:	The bitmask to evaluate
-+ *
-+ * Returns: True if one of the bits in @bitmask is set
-+ */
-+bool irq_check_status_bit(unsigned int irq, unsigned int bitmask)
++static inline unsigned int irq_desc_kstat_cpu(struct irq_desc *desc,
++					      unsigned int cpu)
 +{
-+	struct irq_desc *desc;
-+	bool res = false;
-+
-+	rcu_read_lock();
-+	desc = irq_to_desc(irq);
-+	if (desc)
-+		res = !!(desc->status_use_accessors & bitmask);
-+	rcu_read_unlock();
-+	return res;
++	return desc->kstat_irqs ? *per_cpu_ptr(desc->kstat_irqs, cpu) : 0;
 +}
++
+ static inline struct irq_desc *irq_data_to_desc(struct irq_data *data)
+ {
+ 	return container_of(data->common, struct irq_desc, irq_common_data);
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -147,12 +147,12 @@ static ssize_t per_cpu_count_show(struct
+ 				  struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	int cpu, irq = desc->irq_data.irq;
+ 	ssize_t ret = 0;
+ 	char *p = "";
++	int cpu;
+ 
+ 	for_each_possible_cpu(cpu) {
+-		unsigned int c = kstat_irqs_cpu(irq, cpu);
++		unsigned int c = irq_desc_kstat_cpu(desc, cpu);
+ 
+ 		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "%s%u", p, c);
+ 		p = ",";
 
