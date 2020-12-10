@@ -2,134 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C19902D6B2F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 00:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77B5E2D6B35
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 00:38:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404428AbgLJWzZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 17:55:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40944 "EHLO mail.kernel.org"
+        id S1729393AbgLJW50 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 17:57:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394102AbgLJWzG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Dec 2020 17:55:06 -0500
-Date:   Thu, 10 Dec 2020 16:41:42 -0600
+        id S1729324AbgLJW5Q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Dec 2020 17:57:16 -0500
+X-Gm-Message-State: AOAM531VI4K5ScDHtgx08n2sIxdeOym6/PE+oGo/QaMpVCk+Ldwct148
+        wrC2B2QpSGaMXBVb6ICV60v6FdcIMXBZx27ZTg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607640103;
-        bh=brrBkbThDlKobOIvGd2AJf4m5XrAZvRVDrnJ3CikUlg=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=MVYN/35b7jjfp9xGI+3cM1WDZqW9kKnXHplFVNWQ9REzfWGCnO+P61ik8LdgjfCmN
-         oKk+/A7Q4smTgBJ2XG6eNurTP64twWFJPL/8F3d6Ahh+U4teuSzz/JxNUvbNaLHfRK
-         6CNm1cXU+cUZAYbGlpceWuu/f9L/9iboVuyowyrhT1qrsLnSoLLhdDuYK+4jWHBUwZ
-         lV6vl040gwbhQHR5IZ/c3jvwsOgzzY6oQgXsH5OBfZR3+mKvNMQnbyJppAj2W8LGeQ
-         40lKqv10zkD1TsmLkivSU7B1Mti/Imxl0LVEXe7ugYAQ1BY9jZ2ah4oXVkzLA8ii64
-         O/iw9YE1hhEQA==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Hedi Berriche <hedi.berriche@hpe.com>
-Cc:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
-        Russ Anderson <rja@hpe.com>, Joerg Roedel <jroedel@suse.com>,
-        stable@kernel.org
-Subject: Re: [PATCH v4 1/1] PCI/ERR: don't clobber status after reset_link()
-Message-ID: <20201210224142.GA58424@bjorn-Precision-5520>
+        s=k20201202; t=1607640995;
+        bh=HILNalL3GlPRV+ztE2WnCsMQWzjgnQh5F8d+VjxfhHA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DkCyyeuvJy4iU5hGrhY5rvXdNF/XDEltkcaXCK6XvpomHZn/eMfi17cIpcRiI5UTN
+         kSgVM0+4jjhPCNQ75+n/cgaon9liXs7woUDnE8yttzk1aQDmv4io7aucoYzyAtdNG0
+         I2wUawkxulB5pG6A0oOdXuJ1alyYKqoFx6TvAWl9grEpRA2evfntb2Y6XvyL5UXgjx
+         TzZURk/yteTpMNwsMgcPKMcKwqol/ljrllpmoEMc4onPQTbPEpHiroGdwkcCe99aWN
+         MqaDFHEFOoTW4rWfDNURprjhGlC5XlkkOBsq9Gva6ntmAVZmR6ksXaR9lV2TA1APi2
+         jOgUDjBhrO9bg==
+X-Google-Smtp-Source: ABdhPJxCdEkGcUPgqgCmU+hGdc9mjJz2mo+m7nRBlZJj4NBRvD8ZfcoTXioyfo8/Gn48VrKyiwGC/1HmZUK4DbzvCWk=
+X-Received: by 2002:a17:906:d784:: with SMTP id pj4mr8261525ejb.360.1607640993261;
+ Thu, 10 Dec 2020 14:56:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201102150951.149893-2-hedi.berriche@hpe.com>
+References: <20201210192536.118432146@linutronix.de> <20201210194044.364211860@linutronix.de>
+In-Reply-To: <20201210194044.364211860@linutronix.de>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 10 Dec 2020 16:56:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKCGkyk9whiGQ0hPyWjSYXnC-TSbot85k7=bwVd0rwC=A@mail.gmail.com>
+Message-ID: <CAL_JsqKCGkyk9whiGQ0hPyWjSYXnC-TSbot85k7=bwVd0rwC=A@mail.gmail.com>
+Subject: Re: [patch 18/30] PCI: xilinx-nwl: Use irq_data_get_irq_chip_data()
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Nov 02, 2020 at 03:09:51PM +0000, Hedi Berriche wrote:
-> Commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-> broke pcie_do_recovery(): updating status after reset_link() has the ill
-> side effect of causing recovery to fail if the error status is
-> PCI_ERS_RESULT_CAN_RECOVER or PCI_ERS_RESULT_NEED_RESET as the following
-> code will *never* run in the case of a successful reset_link()
-> 
->    177         if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->    ...
->    181         }
-> 
->    183         if (status == PCI_ERS_RESULT_NEED_RESET) {
->    ...
->    192         }
-
-The line numbers are basically useless because they depend on some
-particular version of the file.
-
-> For instance in the case of PCI_ERS_RESULT_NEED_RESET we end up not
-> calling ->slot_reset() (because we skip report_slot_reset()) thus
-> breaking driver (re)initialisation.
-> 
-> Don't clobber status with the return value of reset_link(); set status
-> to PCI_ERS_RESULT_RECOVERED, in case of successful link reset, if and
-> only if the initial value of error status is PCI_ERS_RESULT_DISCONNECT
-> or PCI_ERS_RESULT_NO_AER_DRIVER.
+On Thu, Dec 10, 2020 at 1:42 PM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-> Signed-off-by: Hedi Berriche <hedi.berriche@hpe.com>
-> 
-> Reviewed-by: Sinan Kaya <okaya@kernel.org>
-> Cc: Russ Anderson <rja@hpe.com>
-> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Going through a full irq descriptor lookup instead of just using the proper
+> helper function which provides direct access is suboptimal.
+>
+> In fact it _is_ wrong because the chip callback needs to get the chip data
+> which is relevant for the chip while using the irq descriptor variant
+> returns the irq chip data of the top level chip of a hierarchy. It does not
+> matter in this case because the chip is the top level chip, but that
+> doesn't make it more correct.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Joerg Roedel <jroedel@suse.com>
-> 
-> Cc: stable@kernel.org # v5.7+
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
 > ---
->  drivers/pci/pcie/err.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index c543f419d8f9..2730826cfd8a 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -165,10 +165,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	pci_dbg(dev, "broadcast error_detected message\n");
->  	if (state == pci_channel_io_frozen) {
->  		pci_walk_bus(bus, report_frozen_detected, &status);
-> -		status = reset_link(dev);
-> -		if (status != PCI_ERS_RESULT_RECOVERED) {
-> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
->  			pci_warn(dev, "link reset failed\n");
->  			goto failed;
-> +		} else {
-> +			if (status == PCI_ERS_RESULT_DISCONNECT ||
-> +			    status == PCI_ERS_RESULT_NO_AER_DRIVER)
-> +				status = PCI_ERS_RESULT_RECOVERED;
+>  drivers/pci/controller/pcie-xilinx-nwl.c |    8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 
-This code (even before your patch) doesn't match
-Documentation/PCI/pci-error-recovery.rst very well.  The code handles
-pci_channel_io_frozen specially, but I don't think this is mentioned
-in the doc.
-
-The doc says we call ->error_detected() for all affected drivers.
-Then we're supposed to do a slot reset if any driver returned
-NEED_RESET.  But in fact, we always do a reset for the
-pci_channel_io_frozen case and never do one otherwise, regardless of
-what ->error_detected() returned.
-
-The doc says DISCONNECT means "Driver ... doesn't want to recover at
-all." Many drivers can return either NEED_RESET or DISCONNECT, and I
-assume they expect them to be handled differently.  But I'm not sure
-what DISCONNECT really means.  Do we reset the device?  Do we not
-attempt recovery at all?
-
-After your patch, if the reset_link() succeeded, we convert DISCONNECT
-and NO_AER_DRIVER to RECOVERED.  IIUC, that means we do exactly the
-same thing if the consensus of the ->error_detected() functions was
-RECOVERED, DISCONNECT, or NO_AER_DRIVER: we call reset_link() and
-continue with "status = PCI_ERS_RESULT_RECOVERED".
-
-(I'd reverse the sense of the "if (reset_link())" to make this easier
-to read)
-
->  		}
->  	} else {
->  		pci_walk_bus(bus, report_normal_detected, &status);
-> -- 
-> 2.28.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
