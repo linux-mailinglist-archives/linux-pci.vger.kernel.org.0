@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28A9D2D5AE1
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 13:51:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EDEC2D5AE5
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 13:51:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733239AbgLJMun (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 07:50:43 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46754 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732831AbgLJMua (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 07:50:30 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BACnU1i047474;
-        Thu, 10 Dec 2020 06:49:30 -0600
+        id S2387647AbgLJMvc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 07:51:32 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36384 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732831AbgLJMvR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 07:51:17 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BACnYbx054509;
+        Thu, 10 Dec 2020 06:49:34 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1607604570;
-        bh=Dtt2z35S/y3LA+4MvOenkJyQyKKN9WQT4N5VF53o60w=;
+        s=ti-com-17Q1; t=1607604574;
+        bh=9r3OpoyxWVqS2L6/mR3PuWOon4szAflduHj2tvsI/KY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HAL9jNYaxJm5Fi6cYcACaIkKzmwXftMXFML/j+42tAMNKAkg+llzOAdTfXjKpX+UU
-         Uz0GdS6QHUH2PE6UdJatoGDoyUPffQhP0Erp3TnJrDtHbOfjA2V9Sd+4adDPARl2S0
-         lmNdI2xZHg7BYhwph/G4nqnEMKaYp+RDDQTtei0w=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BACnUjb108594
+        b=JhC+MbCkPAYYj5f1fdqMquE7WHiqGjDQqhCXATiuKRoh7++qzytqxBFK+x6jsrD5i
+         1xdKWQ4TJAP5J83/sftrCx3iwXVlMaFsfY8GrhFr43X/lJ67CsmPCamjlmSsq7gYva
+         1Isy69CYAM0z9jEOWQFpqzy8AD2BqpoGkulr0HD8=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BACnYGs016377
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Dec 2020 06:49:30 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 10 Dec 2020 06:49:34 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 10
- Dec 2020 06:49:30 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2020 06:49:33 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 10 Dec 2020 06:49:30 -0600
+ Frontend Transport; Thu, 10 Dec 2020 06:49:33 -0600
 Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BACnKJM112244;
-        Thu, 10 Dec 2020 06:49:24 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BACnKJN112244;
+        Thu, 10 Dec 2020 06:49:30 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -45,9 +45,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [RESEND PATCH 1/4] dt-bindings: pci: ti,j721e: Fix "ti,syscon-pcie-ctrl" to take argument
-Date:   Thu, 10 Dec 2020 18:19:14 +0530
-Message-ID: <20201210124917.24185-2-kishon@ti.com>
+Subject: [RESEND PATCH 2/4] dt-bindings: PCI: Add host mode dt-bindings for TI's J7200 SoC
+Date:   Thu, 10 Dec 2020 18:19:15 +0530
+Message-ID: <20201210124917.24185-3-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201210124917.24185-1-kishon@ti.com>
 References: <20201210124917.24185-1-kishon@ti.com>
@@ -58,79 +58,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix binding documentation of "ti,syscon-pcie-ctrl" to take phandle with
-argument. The argument is the register offset within "syscon" used to
-configure PCIe controller. This change is as discussed in [1]
+Add host mode dt-bindings for TI's J7200 SoC.
 
-[1] -> http://lore.kernel.org/r/CAL_JsqKiUcO76bo1GoepWM1TusJWoty_BRy2hFSgtEVMqtrvvQ@mail.gmail.com
-
-Fixes: 431b53b81cdc ("dt-bindings: PCI: Add host mode dt-bindings for TI's J721E SoC")
-Fixes: 45b39e928966 ("dt-bindings: PCI: Add EP mode dt-bindings for TI's J721E SoC")
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml      | 11 +++++++----
- .../devicetree/bindings/pci/ti,j721e-pci-host.yaml    | 11 +++++++----
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ .../bindings/pci/ti,j721e-pci-host.yaml          | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-index 3ae3e1a2d4b0..3766565cf258 100644
---- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
-@@ -29,9 +29,12 @@ properties:
-       - const: mem
- 
-   ti,syscon-pcie-ctrl:
--    description: Phandle to the SYSCON entry required for configuring PCIe mode
--                 and link speed.
--    $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    items:
-+      - items:
-+          - description: Phandle to the SYSCON entry
-+          - description: pcie_ctrl register offset within SYSCON
-+    description: Specifier for configuring PCIe mode and link speed.
- 
-   power-domains:
-     maxItems: 1
-@@ -80,7 +83,7 @@ examples:
-                  <0x00 0x0d000000 0x00 0x00800000>,
-                  <0x00 0x10000000 0x00 0x08000000>;
-            reg-names = "intd_cfg", "user_cfg", "reg", "mem";
--           ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
-+           ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x4070>;
-            max-link-speed = <3>;
-            num-lanes = <2>;
-            power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
 diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-index ee7a8eade3f6..2b6a1a5eaf7a 100644
+index 2b6a1a5eaf7a..0880a613ece6 100644
 --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
 +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
-@@ -29,9 +29,12 @@ properties:
-       - const: cfg
+@@ -15,8 +15,14 @@ allOf:
  
-   ti,syscon-pcie-ctrl:
--    description: Phandle to the SYSCON entry required for configuring PCIe mode
--      and link speed.
--    $ref: /schemas/types.yaml#/definitions/phandle
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    items:
+ properties:
+   compatible:
+-    enum:
+-      - ti,j721e-pcie-host
++    oneOf:
++      - description: PCIe controller in J7200
++        items:
++          - const: ti,j7200-pcie-host
++          - const: ti,j721e-pcie-host
++      - description: PCIe controller in J721E
++        items:
++          - const: ti,j721e-pcie-host
+ 
+   reg:
+     maxItems: 4
+@@ -51,7 +57,11 @@ properties:
+     const: 0x104c
+ 
+   device-id:
+-    const: 0xb00d
++    oneOf:
 +      - items:
-+          - description: Phandle to the SYSCON entry
-+          - description: pcie_ctrl register offset within SYSCON
-+    description: Specifier for configuring PCIe mode and link speed.
++          - const: 0xb00d
++      - items:
++          - const: 0xb00f
  
-   power-domains:
-     maxItems: 1
-@@ -90,7 +93,7 @@ examples:
-                   <0x00 0x0d000000 0x00 0x00800000>,
-                   <0x00 0x10000000 0x00 0x00001000>;
-             reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
--            ti,syscon-pcie-ctrl = <&pcie0_ctrl>;
-+            ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x4070>;
-             max-link-speed = <3>;
-             num-lanes = <2>;
-             power-domains = <&k3_pds 239 TI_SCI_PD_EXCLUSIVE>;
+   msi-map: true
+ 
 -- 
 2.17.1
 
