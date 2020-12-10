@@ -2,136 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 739032D68F3
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 21:40:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6B42D691C
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 21:50:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404020AbgLJUff (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 15:35:35 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:48742 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393790AbgLJUf0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 15:35:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=noa+454Phd4GD+cflUApEkbCBzQWdQM9xVdZ/BdtqiE=; b=ommLdATmScZCO3Nr0B0IKtaBD0
-        EKrjnXBUtbfueazgUtm6VU6b3S0wYy6KVx4WAtwNJ/AqnjHK72Gy9Jsmxppzw/gnUhc4xUowZeQ7A
-        VcHLuqMKttCxw8ez7I7uwmRr5QxGnTAmGxi8uXmfqMPsZhh7JjrJm5C+6KJYTWYREg/IlUxXKnLyU
-        oiYCxI5xB8TP98NfY73pg38uPmgt4JkWMiii1mD9wV9ZT2fBKdzZ4FLSmo62RegEoh6XSnUbSd6AH
-        TQacvQpLTj7RMyXxinaZaJU5rRKy+bJdREoJnd68m2upWyg2kGwzuZR1wf8InfiqQYZmWP3SPWvYA
-        gjpGnwDw==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1knSdJ-0002Fm-25; Thu, 10 Dec 2020 13:33:50 -0700
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <20201210192536.118432146@linutronix.de>
- <20201210194044.255887860@linutronix.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <3526d997-a629-9843-7060-78d9e0a487c5@deltatee.com>
-Date:   Thu, 10 Dec 2020 13:33:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S2393767AbgLJUtg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 15:49:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390239AbgLJUtg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Dec 2020 15:49:36 -0500
+Date:   Thu, 10 Dec 2020 14:48:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607633335;
+        bh=/z/T40Uva+Pg+iPlqLTDfjeJB9MBwhWjej3odgV6F6U=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=dCbz9XPmN1xPNrBwSLrDizhpKOFS8w2IioR+YbxorbAj4BbziF3vhStRN+Mhsy0sv
+         1nuLyrSS+5rOXsf+D26msP+N98jJ0HTK0jUeQQeppr9W+P2jjcFKD5XhpqJEBc76Ts
+         /06XmQ45LikhCIMSA7c0xfwHHBDLxEMBMWHX5yw69UAMwmw+e6vu6rjbYDjYSSg4fX
+         MCK31tmmmnuEWxZLmT85+1x89vUhOClssHhIb+nrURIsRI7km9Fn3pCNxLcb6TsYpJ
+         mLBeiqfLXFHnj0kephzOOypg8Eq0EytPz0gf5AGk2Zt57KKvJ1zuj84WeRic2Rjke1
+         Vxxlp2i/JDdzQ==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     bhelgaas@google.com, rafael@kernel.org, len.brown@intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v2 1/2] Add save/restore of Precision Time Measurement
+ capability
+Message-ID: <20201210204854.GA52934@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20201210194044.255887860@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: xen-devel@lists.xenproject.org, sstabellini@kernel.org, jgross@suse.com, boris.ostrovsky@oracle.com, leon@kernel.org, saeedm@nvidia.com, linux-rdma@vger.kernel.org, netdev@vger.kernel.org, kuba@kernel.org, davem@davemloft.net, tariqt@nvidia.com, Zhiqiang.Hou@nxp.com, m.karthikeyan@mobiveil.co.in, linux-pci@vger.kernel.org, michal.simek@xilinx.com, bhelgaas@google.com, robh@kernel.org, lorenzo.pieralisi@arm.com, lee.jones@linaro.org, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, tvrtko.ursulin@linux.intel.com, dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, wambui.karugax@gmail.com, chris@chris-wilson.co.uk, pankaj.laxminarayan.bharadiya@intel.com, daniel@ffwll.ch, airlied@linux.ie, rodrigo.vivi@intel.com, joonas.lahtinen@linux.intel.com, jani.nikula@linux.intel.com, linux-s390@vger.kernel.org, hca@linux.ibm.com, borntraeger@de.ibm.com, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-parisc@vger.kernel.org, afzal.mohd.ma@gmail.com, deller@gmx.de, James.Bottomley@HansenPartnership.com, linux-ntb@googlegroups.com, allenbh@gmail.com, dave.jiang@intel.com, jdmason@kudzu.us, maz@kernel.org, peterz@infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [patch 17/30] NTB/msi: Use irq_has_action()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201207223951.19667-1-david.e.box@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2020-12-10 12:25 p.m., Thomas Gleixner wrote:
-> Use the proper core function.
+On Mon, Dec 07, 2020 at 02:39:50PM -0800, David E. Box wrote:
+> The PCI subsystem does not currently save and restore the configuration
+> space for the Precision Time Measurement (PTM) PCIe extended capability
+> leading to the possibility of the feature returning disabled on S3 resume.
+> This has been observed on Intel Coffee Lake desktops. Add save/restore of
+> the PTM control register. This saves the PTM Enable, Root Select, and
+> Effective Granularity bits.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jon Mason <jdmason@kudzu.us>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Allen Hubbe <allenbh@gmail.com>
-> Cc: linux-ntb@googlegroups.com
+> Suggested-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 
-Looks good to me.
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Applied both to pci/ptm for v5.11, thanks!
 
 > ---
->  drivers/ntb/msi.c |    4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> --- a/drivers/ntb/msi.c
-> +++ b/drivers/ntb/msi.c
-> @@ -282,15 +282,13 @@ int ntbm_msi_request_threaded_irq(struct
->  				  struct ntb_msi_desc *msi_desc)
+> Changes from V1:
+> 	- Move save/restore functions to ptm.c
+> 	- Move pci_add_ext_cap_sve_buffer() to pci_ptm_init in ptm.c
+> 	
+>  drivers/pci/pci.c      |  2 ++
+>  drivers/pci/pci.h      |  8 ++++++++
+>  drivers/pci/pcie/ptm.c | 43 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 53 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e578d34095e9..12ba6351c05b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1566,6 +1566,7 @@ int pci_save_state(struct pci_dev *dev)
+>  	pci_save_ltr_state(dev);
+>  	pci_save_dpc_state(dev);
+>  	pci_save_aer_state(dev);
+> +	pci_save_ptm_state(dev);
+>  	return pci_save_vc_state(dev);
+>  }
+>  EXPORT_SYMBOL(pci_save_state);
+> @@ -1677,6 +1678,7 @@ void pci_restore_state(struct pci_dev *dev)
+>  	pci_restore_vc_state(dev);
+>  	pci_restore_rebar_state(dev);
+>  	pci_restore_dpc_state(dev);
+> +	pci_restore_ptm_state(dev);
+>  
+>  	pci_aer_clear_status(dev);
+>  	pci_restore_aer_state(dev);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index f86cae9aa1f4..62cdacba5954 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -516,6 +516,14 @@ static inline int pci_iov_bus_range(struct pci_bus *bus)
+>  
+>  #endif /* CONFIG_PCI_IOV */
+>  
+> +#ifdef CONFIG_PCIE_PTM
+> +void pci_save_ptm_state(struct pci_dev *dev);
+> +void pci_restore_ptm_state(struct pci_dev *dev);
+> +#else
+> +static inline void pci_save_ptm_state(struct pci_dev *dev) {}
+> +static inline void pci_restore_ptm_state(struct pci_dev *dev) {}
+> +#endif
+> +
+>  unsigned long pci_cardbus_resource_alignment(struct resource *);
+>  
+>  static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
+> diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
+> index 357a454cafa0..6b24a1c9327a 100644
+> --- a/drivers/pci/pcie/ptm.c
+> +++ b/drivers/pci/pcie/ptm.c
+> @@ -29,6 +29,47 @@ static void pci_ptm_info(struct pci_dev *dev)
+>  		 dev->ptm_root ? " (root)" : "", clock_desc);
+>  }
+>  
+> +void pci_save_ptm_state(struct pci_dev *dev)
+> +{
+> +	int ptm;
+> +	struct pci_cap_saved_state *save_state;
+> +	u16 *cap;
+> +
+> +	if (!pci_is_pcie(dev))
+> +		return;
+> +
+> +	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+> +	if (!ptm)
+> +		return;
+> +
+> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
+> +	if (!save_state) {
+> +		pci_err(dev, "no suspend buffer for PTM\n");
+> +		return;
+> +	}
+> +
+> +	cap = (u16 *)&save_state->cap.data[0];
+> +	pci_read_config_word(dev, ptm + PCI_PTM_CTRL, cap);
+> +}
+> +
+> +void pci_restore_ptm_state(struct pci_dev *dev)
+> +{
+> +	struct pci_cap_saved_state *save_state;
+> +	int ptm;
+> +	u16 *cap;
+> +
+> +	if (!pci_is_pcie(dev))
+> +		return;
+> +
+> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_PTM);
+> +	ptm = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
+> +	if (!save_state || !ptm)
+> +		return;
+> +
+> +	cap = (u16 *)&save_state->cap.data[0];
+> +	pci_write_config_word(dev, ptm + PCI_PTM_CTRL, *cap);
+> +}
+> +
+>  void pci_ptm_init(struct pci_dev *dev)
 >  {
->  	struct msi_desc *entry;
-> -	struct irq_desc *desc;
->  	int ret;
+>  	int pos;
+> @@ -65,6 +106,8 @@ void pci_ptm_init(struct pci_dev *dev)
+>  	if (!pos)
+>  		return;
 >  
->  	if (!ntb->msi)
->  		return -EINVAL;
+> +	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_PTM, sizeof(u16));
+> +
+>  	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
+>  	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
 >  
->  	for_each_pci_msi_entry(entry, ntb->pdev) {
-> -		desc = irq_to_desc(entry->irq);
-> -		if (desc->action)
-> +		if (irq_has_action(entry->irq))
->  			continue;
->  
->  		ret = devm_request_threaded_irq(&ntb->dev, entry->irq, handler,
+> -- 
+> 2.20.1
 > 
