@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EDB22D6859
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 21:14:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 987AF2D6857
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 21:14:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404461AbgLJUNB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 15:13:01 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56122 "EHLO
+        id S2404354AbgLJUML (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 15:12:11 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56258 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393381AbgLJTm7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 14:42:59 -0500
-Message-Id: <20201210194042.548936472@linutronix.de>
+        with ESMTP id S2393462AbgLJTnD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 14:43:03 -0500
+Message-Id: <20201210194042.860029489@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1607629336;
+        s=2020; t=1607629338;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=wCqGjbHBcSlcHWGOV/dAhxvR97JcFGNX9psmcROoCq0=;
-        b=2Z0Q8lbqw2d3iK0lyMTfu6GGSIFMkE/mgVP/hAGnWOqxBRMxf5MtZTpRPSPBXz/boYfgYn
-        ST6oe0NetpTwhOSarLLIdAuYLS1gydE77MQVYVcY3FouLrWnl5si1eWOJ4F95yCk0G9X60
-        1VL1Pvt1tpdt2jzvXhHk1B3J4gqT2I16payytnnsVM1ae0GkKHVOkzm3mG/NvUjNMZDZ8b
-        Y9sC2WWQtJSCM32DjS16A3YMAUHnAI48PATHpxuESAMuGdCfbbEW6ICvvlfOLWvLQ9S/jh
-        Z+QD95xpqockzbshrRUV6G0e1FqEFRsR9IAhKZG5jK6CihEBgYA5K4ONks8gvw==
+        bh=yFPV7W+/QqCKeqQACSJL6sxoKPc89zwgLkkLw3CK5Qw=;
+        b=b4xfy4bgyikTmVvFd1ABIiZ73tEfKizLVhR+VIJlwT2XXEhpCUYmv0T35kedPEaKJQVpyL
+        EZ6ZpzGOZ5IxdHU/m0CyhJdifeVKmZv6VHKNE7HVl9gYcZmfYEhjmMcUyrjO41XASIxwkE
+        9klGh5JDf3wOEU5Ed3lPXcLem5zy/i2BIvrR40gIEa/OR0IKxYWPTy1L0gdW4vYnASDXBG
+        oPlb3Y/UTUmNePPkOPES/7lQTGxRfLrcgjzM1Sg3uuPGxXkbOxvSMK9KGVtjMA1XVdJV0t
+        Q4ytattWGMjEx0ecdLFwT7qCkSF6HEiYjaunGW+F6+YzwXCTRCwunCHjVGEGUQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1607629336;
+        s=2020e; t=1607629338;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=wCqGjbHBcSlcHWGOV/dAhxvR97JcFGNX9psmcROoCq0=;
-        b=7JxYxk/ThtDXDjNM4lO0Kv6ZI0VZ4wL2ccu9YMROMO3FB+Dn8roKKZsGAALM1EdgllUWzl
-        ydzvbEXlvqdXI/CQ==
-Date:   Thu, 10 Dec 2020 20:25:37 +0100
+        bh=yFPV7W+/QqCKeqQACSJL6sxoKPc89zwgLkkLw3CK5Qw=;
+        b=QKWQOIKE0SKfWygdsF0p53UAxVkxHrZRTXTSBAi/APvw0tfKjTWt41c59REi77MGE+SbMx
+        F6+minehzWx00+CA==
+Date:   Thu, 10 Dec 2020 20:25:39 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -77,7 +77,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Juergen Gross <jgross@suse.com>,
         Stefano Stabellini <sstabellini@kernel.org>,
         xen-devel@lists.xenproject.org
-Subject: [patch 01/30] genirq: Move irq_has_action() into core code
+Subject: [patch 03/30] genirq: Move irq_set_lockdep_class() to core
 References: <20201210192536.118432146@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -86,90 +86,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This function uses irq_to_desc() and is going to be used by modules to
-replace the open coded irq_to_desc() (ab)usage. The final goal is to remove
-the export of irq_to_desc() so driver cannot fiddle with it anymore.
-
-Move it into the core code and fixup the usage sites to include the proper
-header.
+irq_set_lockdep_class() is used from modules and requires irq_to_desc() to
+be exported. Move it into the core code which lifts another requirement for
+the export.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/alpha/kernel/sys_jensen.c |    2 +-
- arch/x86/kernel/topology.c     |    1 +
- include/linux/interrupt.h      |    1 +
- include/linux/irqdesc.h        |    7 +------
- kernel/irq/manage.c            |   17 +++++++++++++++++
- 5 files changed, 21 insertions(+), 7 deletions(-)
+ include/linux/irqdesc.h |   10 ++++------
+ kernel/irq/irqdesc.c    |   14 ++++++++++++++
+ 2 files changed, 18 insertions(+), 6 deletions(-)
 
---- a/arch/alpha/kernel/sys_jensen.c
-+++ b/arch/alpha/kernel/sys_jensen.c
-@@ -7,7 +7,7 @@
-  *
-  * Code supporting the Jensen.
-  */
--
-+#include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/mm.h>
---- a/arch/x86/kernel/topology.c
-+++ b/arch/x86/kernel/topology.c
-@@ -25,6 +25,7 @@
-  *
-  * Send feedback to <colpatch@us.ibm.com>
-  */
-+#include <linux/interrupt.h>
- #include <linux/nodemask.h>
- #include <linux/export.h>
- #include <linux/mmzone.h>
---- a/include/linux/interrupt.h
-+++ b/include/linux/interrupt.h
-@@ -232,6 +232,7 @@ extern void devm_free_irq(struct device
- # define local_irq_enable_in_hardirq()	local_irq_enable()
- #endif
- 
-+bool irq_has_action(unsigned int irq);
- extern void disable_irq_nosync(unsigned int irq);
- extern bool disable_hardirq(unsigned int irq);
- extern void disable_irq(unsigned int irq);
 --- a/include/linux/irqdesc.h
 +++ b/include/linux/irqdesc.h
-@@ -179,12 +179,7 @@ int handle_domain_nmi(struct irq_domain
- /* Test to see if a driver has successfully requested an irq */
- static inline int irq_desc_has_action(struct irq_desc *desc)
- {
--	return desc->action != NULL;
--}
--
--static inline int irq_has_action(unsigned int irq)
--{
--	return irq_desc_has_action(irq_to_desc(irq));
-+	return desc && desc->action != NULL;
+@@ -240,16 +240,14 @@ static inline bool irq_is_percpu_devid(u
+ 	return irq_check_status_bit(irq, IRQ_PER_CPU_DEVID);
  }
  
- /**
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -2752,3 +2752,20 @@ int irq_set_irqchip_state(unsigned int i
- 	return err;
++void __irq_set_lockdep_class(unsigned int irq, struct lock_class_key *lock_class,
++			     struct lock_class_key *request_class);
+ static inline void
+ irq_set_lockdep_class(unsigned int irq, struct lock_class_key *lock_class,
+ 		      struct lock_class_key *request_class)
+ {
+-	struct irq_desc *desc = irq_to_desc(irq);
+-
+-	if (desc) {
+-		lockdep_set_class(&desc->lock, lock_class);
+-		lockdep_set_class(&desc->request_mutex, request_class);
+-	}
++	if (IS_ENABLED(CONFIG_LOCKDEP))
++		__irq_set_lockdep_class(irq, lock_class, request_class);
  }
- EXPORT_SYMBOL_GPL(irq_set_irqchip_state);
+ 
+ #endif
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -968,3 +968,17 @@ unsigned int kstat_irqs_usr(unsigned int
+ 	rcu_read_unlock();
+ 	return sum;
+ }
 +
-+/**
-+ * irq_has_action - Check whether an interrupt is requested
-+ * @irq:	The linux irq number
-+ *
-+ * Returns: A snapshot of the current state
-+ */
-+bool irq_has_action(unsigned int irq)
++#ifdef CONFIG_LOCKDEP
++void __irq_set_lockdep_class(unsigned int irq, struct lock_class_key *lock_class,
++			     struct lock_class_key *request_class)
 +{
-+	bool res;
++	struct irq_desc *desc = irq_to_desc(irq);
 +
-+	rcu_read_lock();
-+	res = irq_desc_has_action(irq_to_desc(irq));
-+	rcu_read_unlock();
-+	return res;
++	if (desc) {
++		lockdep_set_class(&desc->lock, lock_class);
++		lockdep_set_class(&desc->request_mutex, request_class);
++	}
 +}
-+EXPORT_SYMBOL_GPL(irq_has_action);
++EXPORT_SYMBOL_GPL(irq_set_lockdep_class);
++#endif
 
