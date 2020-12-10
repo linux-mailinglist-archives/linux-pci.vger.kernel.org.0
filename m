@@ -2,127 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3D782D6779
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 20:52:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C1512D67CE
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 20:59:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390381AbgLJTuY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 14:50:24 -0500
-Received: from mga02.intel.com ([134.134.136.20]:36449 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390244AbgLJTuW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Dec 2020 14:50:22 -0500
-IronPort-SDR: HRNuGsWQ6M8xwh46flU+d8/VQ0PKqgz+c0cf6S67IE/Oy4bOzBRO1paMazkipbly5LMYl5dip5
- RUSw8zjSR8Iw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="161372918"
-X-IronPort-AV: E=Sophos;i="5.78,409,1599548400"; 
-   d="scan'208";a="161372918"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2020 11:48:35 -0800
-IronPort-SDR: Qef2UfSDuwyPiJ27NUpAFZLQLjXKYRK609+0x1abl5RvYR7KCkszp/IICW7DO8jsBWdQpq5EWc
- XoQtIWeVTwmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,409,1599548400"; 
-   d="scan'208";a="376070310"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga007.jf.intel.com with SMTP; 10 Dec 2020 11:48:24 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 10 Dec 2020 21:48:23 +0200
-Date:   Thu, 10 Dec 2020 21:48:23 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        dri-devel@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        netdev@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        xen-devel@lists.xenproject.org, Leon Romanovsky <leon@kernel.org>,
-        linux-rdma@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Helge Deller <deller@gmx.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-pci@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        intel-gfx@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        David Airlie <airlied@linux.ie>, linux-parisc@vger.kernel.org,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>, Jon Mason <jdmason@kudzu.us>,
-        linux-ntb@googlegroups.com, Saeed Mahameed <saeedm@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [Intel-gfx] [patch 13/30] drm/i915/lpe_audio: Remove pointless
- irq_to_desc() usage
-Message-ID: <X9J7h+myHaraeoKH@intel.com>
-References: <20201210192536.118432146@linutronix.de>
- <20201210194043.862572239@linutronix.de>
+        id S2390321AbgLJT7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 14:59:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404336AbgLJT7N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 14:59:13 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D462C0613CF
+        for <linux-pci@vger.kernel.org>; Thu, 10 Dec 2020 11:58:33 -0800 (PST)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7E8E223E5D;
+        Thu, 10 Dec 2020 20:58:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1607630307;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fMhg82S0rwUSrDpQiFh0ST2pjTuKrxogeVcd6fb/BYU=;
+        b=dnygdpHM2m3GMfxdC9krsKYEPRMHmLSimDuAfuHkp9B+WvhENOP1JGuIC1hgvaWYW8vooR
+        cObG9mXNSlEl+RbJyAQXjAEUjMNUxeXXJK+9oWx4GAVScYKHglUMULZJH+oHRC4twGtl11
+        /qZ1HdnbCMHzriG18csTWpg2CJ/KS0c=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201210194043.862572239@linutronix.de>
-X-Patchwork-Hint: comment
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 10 Dec 2020 20:58:20 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vladimir Oltean <olteanv@gmail.com>, lorenzo.pieralisi@arm.com,
+        kw@linux.com, heiko@sntech.de, benh@kernel.crashing.org,
+        shawn.lin@rock-chips.com, paulus@samba.org,
+        thomas.petazzoni@bootlin.com, jonnyc@amazon.com,
+        toan@os.amperecomputing.com, will@kernel.org, robh@kernel.org,
+        f.fainelli@gmail.com, mpe@ellerman.id.au, michal.simek@xilinx.com,
+        linux-rockchip@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, jonathan.derrick@intel.com,
+        linux-pci@vger.kernel.org, rjui@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, Jonathan.Cameron@huawei.com,
+        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
+        sbranden@broadcom.com, wangzhou1@hisilicon.com,
+        rrichter@marvell.com, linuxppc-dev@lists.ozlabs.org,
+        nsaenzjulienne@suse.de,
+        Alexandru Marginean <alexm.osslist@gmail.com>
+Subject: Re: [PATCH v6 0/5] PCI: Unify ECAM constants in native PCI Express
+ drivers
+In-Reply-To: <20201210173809.GA37355@bjorn-Precision-5520>
+References: <20201210173809.GA37355@bjorn-Precision-5520>
+User-Agent: Roundcube Webmail/1.4.9
+Message-ID: <194550494fde93c6eb840eabf59bde38@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 10, 2020 at 08:25:49PM +0100, Thomas Gleixner wrote:
-> Nothing uses the result and nothing should ever use it in driver code.
+Am 2020-12-10 18:38, schrieb Bjorn Helgaas:
+> On Wed, Dec 09, 2020 at 10:29:04PM +0200, Vladimir Oltean wrote:
+>> On Wed, Dec 09, 2020 at 04:40:52PM +0100, Michael Walle wrote:
+>> > Hopefully my mail client won't mess up the output that much.
+>> 
+>> I can reproduce on my LS1028A as well. The following fixes the bug for
+>> me. I did not follow the discussion and see if it is helpful for 
+>> others.
+>> I don't understand how the bug came to be. There might be more to it
+>> than what I'm seeing. If it's just what I'm seeing, then the patch was
+>> pretty broken to begin with.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Wambui Karuga <wambui.karugax@gmail.com>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: dri-devel@lists.freedesktop.org
+> I squashed the fix below into a pci/ecam branch for v5.11, thanks!
 
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+FWIW
+Tested-by: Michael Walle <michael@walle.cc>
 
-> ---
->  drivers/gpu/drm/i915/display/intel_lpe_audio.c |    4 ----
->  1 file changed, 4 deletions(-)
-> 
-> --- a/drivers/gpu/drm/i915/display/intel_lpe_audio.c
-> +++ b/drivers/gpu/drm/i915/display/intel_lpe_audio.c
-> @@ -297,13 +297,9 @@ int intel_lpe_audio_init(struct drm_i915
->   */
->  void intel_lpe_audio_teardown(struct drm_i915_private *dev_priv)
->  {
-> -	struct irq_desc *desc;
-> -
->  	if (!HAS_LPE_AUDIO(dev_priv))
->  		return;
->  
-> -	desc = irq_to_desc(dev_priv->lpe_audio.irq);
-> -
->  	lpe_audio_platdev_destroy(dev_priv);
->  
->  	irq_free_desc(dev_priv->lpe_audio.irq);
-> 
-> _______________________________________________
-> Intel-gfx mailing list
-> Intel-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
-
--- 
-Ville Syrjälä
-Intel
+-michael
