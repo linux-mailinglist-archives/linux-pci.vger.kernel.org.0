@@ -2,97 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD942D6AA3
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 23:55:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C19902D6B2F
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 00:38:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394028AbgLJVYg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 16:24:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37378 "EHLO mail.kernel.org"
+        id S2404428AbgLJWzZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 17:55:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394009AbgLJVXh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Dec 2020 16:23:37 -0500
-Date:   Thu, 10 Dec 2020 15:22:55 -0600
+        id S2394102AbgLJWzG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 10 Dec 2020 17:55:06 -0500
+Date:   Thu, 10 Dec 2020 16:41:42 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607635377;
-        bh=TOz09/Be4KaJAdEckZ6bX5dETMcE9pxq2g7yzIxBw60=;
+        s=k20201202; t=1607640103;
+        bh=brrBkbThDlKobOIvGd2AJf4m5XrAZvRVDrnJ3CikUlg=;
         h=From:To:Cc:Subject:In-Reply-To:From;
-        b=c29tY261aNn7r2A2U6A3CanPIzaCva7CfX+EOKAD8VV/0N+cwt8mBFXk5sYldhOZe
-         qgm0RkrZ/l4M2nJ1K1isLdePt9NcwqlWk5/clR8RVtPtaQApwT6hzXy/e1iOwXYn8m
-         OdDHUTSGbidktRpNOWmo7rVVV9jKLrNgCCCFfBJlhz+XvWujcXc8Juz7W6gdWsFooU
-         Uugs9Yv53zi8BwVEMuKZMm5rLVwjlSlrvavelbAj5oT6kSat3ehf8n/EfnBYrhdATk
-         OgdNUD7X3gnPRZCsgp+G7sKHSE7pH0iK/EBetU9MMyvf9vOpmd9reSySUUwo4QPgxH
-         Bz8gCUGgaAePA==
+        b=MVYN/35b7jjfp9xGI+3cM1WDZqW9kKnXHplFVNWQ9REzfWGCnO+P61ik8LdgjfCmN
+         oKk+/A7Q4smTgBJ2XG6eNurTP64twWFJPL/8F3d6Ahh+U4teuSzz/JxNUvbNaLHfRK
+         6CNm1cXU+cUZAYbGlpceWuu/f9L/9iboVuyowyrhT1qrsLnSoLLhdDuYK+4jWHBUwZ
+         lV6vl040gwbhQHR5IZ/c3jvwsOgzzY6oQgXsH5OBfZR3+mKvNMQnbyJppAj2W8LGeQ
+         40lKqv10zkD1TsmLkivSU7B1Mti/Imxl0LVEXe7ugYAQ1BY9jZ2ah4oXVkzLA8ii64
+         O/iw9YE1hhEQA==
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alexander Lobakin <alobakin@pm.me>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 pci-next] PCI: Keep both device name and resource name
- for config space remaps
-Message-ID: <20201210212255.GA56204@bjorn-Precision-5520>
+To:     Hedi Berriche <hedi.berriche@hpe.com>
+Cc:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
+        Russ Anderson <rja@hpe.com>, Joerg Roedel <jroedel@suse.com>,
+        stable@kernel.org
+Subject: Re: [PATCH v4 1/1] PCI/ERR: don't clobber status after reset_link()
+Message-ID: <20201210224142.GA58424@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <WbKfdybjZ6xNIUjcC5oC8NcuLqrJfkxQAlnO80ag@cp3-web-020.plabs.ch>
+In-Reply-To: <20201102150951.149893-2-hedi.berriche@hpe.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Nov 19, 2020 at 09:26:33PM +0000, Alexander Lobakin wrote:
-> Follow the rule taken in commit 35bd8c07db2c
-> ("devres: keep both device name and resource name in pretty name")
-> and keep both device and resource names while requesting memory
-> regions for PCI config space to prettify e.g. /proc/iomem output:
+On Mon, Nov 02, 2020 at 03:09:51PM +0000, Hedi Berriche wrote:
+> Commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> broke pcie_do_recovery(): updating status after reset_link() has the ill
+> side effect of causing recovery to fail if the error status is
+> PCI_ERS_RESULT_CAN_RECOVER or PCI_ERS_RESULT_NEED_RESET as the following
+> code will *never* run in the case of a successful reset_link()
 > 
-> Before (DWC Host Controller):
+>    177         if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>    ...
+>    181         }
 > 
-> 18b00000-18b01fff : dbi
-> 18b10000-18b11fff : config
-> 18b20000-18b21fff : dbi
-> 18b30000-18b31fff : config
+>    183         if (status == PCI_ERS_RESULT_NEED_RESET) {
+>    ...
+>    192         }
+
+The line numbers are basically useless because they depend on some
+particular version of the file.
+
+> For instance in the case of PCI_ERS_RESULT_NEED_RESET we end up not
+> calling ->slot_reset() (because we skip report_slot_reset()) thus
+> breaking driver (re)initialisation.
 > 
-> After:
+> Don't clobber status with the return value of reset_link(); set status
+> to PCI_ERS_RESULT_RECOVERED, in case of successful link reset, if and
+> only if the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+> or PCI_ERS_RESULT_NO_AER_DRIVER.
+>
+> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> Signed-off-by: Hedi Berriche <hedi.berriche@hpe.com>
 > 
-> 18b00000-18b01fff : 18b00000.pci dbi
-> 18b10000-18b11fff : 18b00000.pci config
-> 18b20000-18b21fff : 18b20000.pci dbi
-> 18b30000-18b31fff : 18b20000.pci config
-> 
-> Since v1 [0]:
->  - massage subject and commit message (Bjorn);
->  - no functional changes.
-> 
-> [0] https://lore.kernel.org/lkml/JvyOzv8K8n5CCdP1xfLOdOWh4AbFrXdMMOEExr6em8@cp4-web-036.plabs.ch
-> 
+> Reviewed-by: Sinan Kaya <okaya@kernel.org>
+> Cc: Russ Anderson <rja@hpe.com>
+> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-
-Applied to pci/enumeration for v5.11, thanks!
-
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Joerg Roedel <jroedel@suse.com>
+> 
+> Cc: stable@kernel.org # v5.7+
 > ---
->  drivers/pci/pci.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+>  drivers/pci/pcie/err.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e578d34095e9..0716691f7d14 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4188,7 +4188,14 @@ void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
->  	}
->  
->  	size = resource_size(res);
-> -	name = res->name ?: dev_name(dev);
-> +
-> +	if (res->name)
-> +		name = devm_kasprintf(dev, GFP_KERNEL, "%s %s", dev_name(dev),
-> +				      res->name);
-> +	else
-> +		name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
-> +	if (!name)
-> +		return IOMEM_ERR_PTR(-ENOMEM);
->  
->  	if (!devm_request_mem_region(dev, res->start, size, name)) {
->  		dev_err(dev, "can't request region for resource %pR\n", res);
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index c543f419d8f9..2730826cfd8a 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -165,10 +165,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bus(bus, report_frozen_detected, &status);
+> -		status = reset_link(dev);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
+>  			pci_warn(dev, "link reset failed\n");
+>  			goto failed;
+> +		} else {
+> +			if (status == PCI_ERS_RESULT_DISCONNECT ||
+> +			    status == PCI_ERS_RESULT_NO_AER_DRIVER)
+> +				status = PCI_ERS_RESULT_RECOVERED;
+
+This code (even before your patch) doesn't match
+Documentation/PCI/pci-error-recovery.rst very well.  The code handles
+pci_channel_io_frozen specially, but I don't think this is mentioned
+in the doc.
+
+The doc says we call ->error_detected() for all affected drivers.
+Then we're supposed to do a slot reset if any driver returned
+NEED_RESET.  But in fact, we always do a reset for the
+pci_channel_io_frozen case and never do one otherwise, regardless of
+what ->error_detected() returned.
+
+The doc says DISCONNECT means "Driver ... doesn't want to recover at
+all." Many drivers can return either NEED_RESET or DISCONNECT, and I
+assume they expect them to be handled differently.  But I'm not sure
+what DISCONNECT really means.  Do we reset the device?  Do we not
+attempt recovery at all?
+
+After your patch, if the reset_link() succeeded, we convert DISCONNECT
+and NO_AER_DRIVER to RECOVERED.  IIUC, that means we do exactly the
+same thing if the consensus of the ->error_detected() functions was
+RECOVERED, DISCONNECT, or NO_AER_DRIVER: we call reset_link() and
+continue with "status = PCI_ERS_RESULT_RECOVERED".
+
+(I'd reverse the sense of the "if (reset_link())" to make this easier
+to read)
+
+>  		}
+>  	} else {
+>  		pci_walk_bus(bus, report_normal_detected, &status);
 > -- 
-> 2.29.2
-> 
+> 2.28.0
 > 
