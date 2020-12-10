@@ -2,114 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 189CC2D63F9
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 18:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DF282D646D
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 19:06:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392763AbgLJRru (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 12:47:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387836AbgLJRrr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 10 Dec 2020 12:47:47 -0500
-X-Gm-Message-State: AOAM531pnpgy2uvZkn1NAz5umi0HkwXy6S5KsAJ7fe58NINkGQ2HulNq
-        3AkKtkHjpcdmMQTeEG+Bw2/nlOaWg9OYR0ktyQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607622426;
-        bh=Pat6PRh+dwRywkKsNXWK62l5b4kJVX0bFiyGi7EimG4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pIrjzr6DB9EHkGYQooMHi5S8wcIUxxiRZjNYS22D9bY6SxuQ+174YNsra8LM8dOuv
-         taglDRe8U4Xe1Wi80rJk4btCqarzAyxZ8cGe86gPNPFm/mU8tJJouIZfTNI55zHa3w
-         M2eJ21sNyEiNxHljsIef1JEtppjJb8iXIqOPFcPaTeuL0xhIZ1vGWxbRPR0sJhmiJf
-         CX6DWc8AQhMTx/RE/4FmIPAPNakLlvYeI6sl8Tvm3i/BCzn1VuLaNL1UJkg+Ne6udh
-         TqxF8WlJkkrI55tGTyO622xK6oEHYYqUIeuEyXykpjvaPLpYxcxHft+nZNZmxAfkez
-         FpU92eGUD64Kg==
-X-Google-Smtp-Source: ABdhPJyoC806uyQTMX8flHzurevo7QjpXk2mghbu0LOtVbWGcxPBT5pSjkUuIgCMw6GMH3KnJNskInymF8tmDd4BC6o=
-X-Received: by 2002:a05:6214:c23:: with SMTP id a3mr10252530qvd.4.1607622420671;
- Thu, 10 Dec 2020 09:47:00 -0800 (PST)
+        id S2404066AbgLJSFa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 13:05:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391093AbgLJSFU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 13:05:20 -0500
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41667C0613CF;
+        Thu, 10 Dec 2020 10:04:40 -0800 (PST)
+Received: by mail-lj1-x22a.google.com with SMTP id x23so7721380lji.7;
+        Thu, 10 Dec 2020 10:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bMJBLlAjP8wSFID5GV3n2OSs8Pdq22oopeS+FLP5wos=;
+        b=sELdec03/ChHc4t7iqICbFd674XO4Gvlas6DBjCjwFmvdIHNbvpVhCtMjh6g7WCd8t
+         47MSkqS+bfXzFgdhQeRogPDNhYPRy/rXBDN+dI+FEtWgGmH+D+R9yEI/jCgG+o8k/YJf
+         WBEtP/uNGiC4CXfrsylhc1Bmqa3PtCvRY4cqqK5nTeZQ5a45phGvd1QCxLyhgRFyAZYX
+         8FSx1A9zDquyFbTlXDho0SXaHGbUdQyt5IseE7dKDszPDlOcXwKIiEjOyWuw2tPc8ATe
+         +dtUNEnlu9bPmmT939iUgWpG9wesyzePcQ/ExzTM3s0bUSzPHyhXEtzAkLHwX7JHpJRq
+         m9Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bMJBLlAjP8wSFID5GV3n2OSs8Pdq22oopeS+FLP5wos=;
+        b=XeJQlarCYC3fF4ud2ZlK+pNgFm6ui+T+/gh7em0YarKQPPUB1dBUX1XcatVenZuckZ
+         PM0ipsILXovkvHAR0Kk/Wk9mx2myo6+F2jvqtTLH3J5fJo/0fjT9gfpTkzVwvhqUUJAn
+         WDzkjFaIqd/epzU+BgPoetURK7ACd3UnuMh7X7yO6sFEj6VX+nMBQSE+ZjUN8GkbdBbu
+         fe6/GY8rFalvxaMzDX6+pySaXCd0CIBhWJLLKTmsd30icVHc9PSWZ42yUZSnUyvgXVOL
+         ziWKejPNxwReIzVgMDFiKAYLYgL7iZm9yks0hVrdHJ1x02jdMNNzw/pVU0T+0MhqcNbd
+         6XSg==
+X-Gm-Message-State: AOAM531Aajot4sSwaYgMIC4K4QUBo+U/RXrLlAbPKH1YLoaSUsGEsu3A
+        ByGbcmFvgwm6/NiVO4lt44s=
+X-Google-Smtp-Source: ABdhPJwUQ0qFYpspzairXUY5Vk1vHLdRXvBe0mb0QlrUyjL1o5E06Rre2M0l3z1OOcPy4NA+Flsa4A==
+X-Received: by 2002:a2e:b522:: with SMTP id z2mr3335754ljm.500.1607623477535;
+        Thu, 10 Dec 2020 10:04:37 -0800 (PST)
+Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id c136sm601855lfg.306.2020.12.10.10.04.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Dec 2020 10:04:36 -0800 (PST)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH v3 0/2] brcmstb: initial work on BCM4908
+Date:   Thu, 10 Dec 2020 19:04:19 +0100
+Message-Id: <20201210180421.7230-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20201202073156.5187-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20201202073156.5187-3-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20201209181350.GB660537@robh.at.kernel.org> <20201209184214.GV4077@smile.fi.intel.com>
-In-Reply-To: <20201209184214.GV4077@smile.fi.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 10 Dec 2020 11:46:48 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJA4Sx93rF_o+V-gPSHwuyAyf-aT96XpN-UCc3ayjDH+w@mail.gmail.com>
-Message-ID: <CAL_JsqJA4Sx93rF_o+V-gPSHwuyAyf-aT96XpN-UCc3ayjDH+w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] PCI: keembay: Add support for Intel Keem Bay
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        "Raja Subramanian, Lakshmi Bai" 
-        <lakshmi.bai.raja.subramanian@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 9, 2020 at 12:41 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Dec 09, 2020 at 12:13:50PM -0600, Rob Herring wrote:
-> > On Wed, Dec 02, 2020 at 03:31:56PM +0800, Wan Ahmad Zainie wrote:
->
-> ...
->
-> > > +static void keembay_pcie_ltssm_enable(struct keembay_pcie *pcie, bool enable)
-> > > +{
-> > > +   u32 val;
-> > > +
-> > > +   val = keembay_pcie_readl(pcie, PCIE_REGS_PCIE_APP_CNTRL);
-> > > +   if (enable)
-> > > +           val |= APP_LTSSM_ENABLE;
-> > > +   else
-> > > +           val &= ~APP_LTSSM_ENABLE;
-> > > +   keembay_pcie_writel(pcie, PCIE_REGS_PCIE_APP_CNTRL, val);
-> >
-> > If this is the only bit in this register, do you really need RMW?
->
-> I think it's safer than do direct write and have something wrong on next
-> generations of hardware.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-We have 2 Intel SoCs with 2 separate PCI drivers so far, is that
-really going to be a concern? :( (This bit in particular is Synopsys'
-fault. This is what happens when IP vendors just give you signals to
-hook up.)
+BCM4908 uses very similar hardware to the STB one. It still requires
+some tweaks but this initial work allows accessing hardware without:
 
-There's 2 other reasons why to not do a RMW. The firmware or
-bootloader could also change how the register is initialized which you
-may or may not want changed in Linux.  Second, for maintaining this
-code when anyone familiar with this h/w disappears, I'd like to know
-if there's other bits in this register I might want to care about.
+Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
 
-> > > +static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > > +                                enum pci_epc_irq_type type,
-> > > +                                u16 interrupt_num)
-> > > +{
-> > > +   struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > +
-> > > +   switch (type) {
-> > > +   case PCI_EPC_IRQ_LEGACY:
-> > > +           /* Legacy interrupts are not supported in Keem Bay */
-> > > +           dev_err(pci->dev, "Legacy IRQ is not supported\n");
-> > > +           return -EINVAL;
-> > > +   case PCI_EPC_IRQ_MSI:
-> > > +           return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> > > +   case PCI_EPC_IRQ_MSIX:
-> > > +           return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-> > > +   default:
-> > > +           dev_err(pci->dev, "Unknown IRQ type %d\n", type);
-> > > +           return -EINVAL;
-> > > +   }
-> >
-> > Doesn't the lack of a 'return' give a warning?
->
-> Where? I don't see any lack of return.
+Rafał Miłecki (2):
+  dt-bindings: PCI: brcmstb: add BCM4908 binding
+  PCI: brcmstb: support BCM4908 with external PERST# signal controller
 
-Is the compiler smart enough to recognize that with a return in every
-'case' that we don't need a return after the switch? I wouldn't have
-thought so, but I haven't checked.
+ .../bindings/pci/brcm,stb-pcie.yaml           | 37 ++++++++++++++-----
+ drivers/pci/controller/Kconfig                |  2 +-
+ drivers/pci/controller/pcie-brcmstb.c         | 32 ++++++++++++++++
+ 3 files changed, 61 insertions(+), 10 deletions(-)
 
-Rob
+-- 
+2.26.2
+
