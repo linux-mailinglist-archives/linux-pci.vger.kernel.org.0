@@ -2,174 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0275C2D662F
-	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 20:18:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD37F2D671D
+	for <lists+linux-pci@lfdr.de>; Thu, 10 Dec 2020 20:43:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390450AbgLJTQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 14:16:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
+        id S2393478AbgLJTnC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 14:43:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388801AbgLJTQR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 14:16:17 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A489BC0613CF;
-        Thu, 10 Dec 2020 11:15:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6gYdNY4KmlI7o0rmXvmnzYUydPhCNoOaXJ5yQF2TiXE=; b=3BmTfGNZ7A0kuKgTB/7/2QJHnP
-        bxLOO2F/ZzUuuwcZSJDkVK/bIODVhe2I6Cs8eX5RDTCUGpxF+I0INHzWJ2LhzB6Q/YUzzTZKVLOIp
-        wWlXkxDac6v6XbS3J9P44Pylg+tRPhjcV94Ib+FkPYVI8zdqXc1EYRcLXIQe/i/grKi4uSFyNCFBl
-        RYzN5/Y4IwO1ozY/tkG5c3pwzV1a8dfaY5+/rmZCuzmYQKVPGFsEtDVF/cDasQWg6J8ggV9pwQEu8
-        7ZSmVr4natBmb+yi7Ccn2IMABl/jP9r125CYd6vWbeEBOnHfktfW09PrGCdP22+B8bVPlGnrbaITA
-        XwDQuYKA==;
-Received: from 54-240-197-227.amazon.com ([54.240.197.227] helo=u3832b3a9db3152.ant.amazon.com)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1knRPL-0005s9-Ro; Thu, 10 Dec 2020 19:15:20 +0000
-Message-ID: <6d85013b195373211865bbf5eff9c5d973f74a57.camel@infradead.org>
-Subject: Re: [RFC PATCH 1/1] platform-msi: Add platform check for subdevice
- irq domain
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     tglx@linutronix.de, ashok.raj@intel.com, kevin.tian@intel.com,
-        dave.jiang@intel.com, megha.dey@intel.com,
-        alex.williamson@redhat.com, bhelgaas@google.com,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        eric.auger@redhat.com, jacob.jun.pan@intel.com, jgg@mellanox.com,
-        jing.lin@intel.com, kvm@vger.kernel.org, kwankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
-        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
-        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
-        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
-        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
-Date:   Thu, 10 Dec 2020 19:15:15 +0000
-In-Reply-To: <20201210185738.GA49060@bjorn-Precision-5520>
-References: <20201210185738.GA49060@bjorn-Precision-5520>
-Content-Type: multipart/signed; micalg="sha-256";
-        protocol="application/x-pkcs7-signature";
-        boundary="=-rsp7EJyq8i4QUD5Bhnqf"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
+        with ESMTP id S2393443AbgLJTm7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 14:42:59 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235BAC0613D6;
+        Thu, 10 Dec 2020 11:42:19 -0800 (PST)
+Message-Id: <20201210194042.703779349@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1607629337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=xNUoZoBVroF7IJy3X8hhV7V+S/ANMxwK+r48iZvHH7k=;
+        b=SuZCyt4zlNSkg7Jh6xjd5t+bljnkIDhiuE1rhn/qKeMG+ite6vJEiEbNofXy6Jc8tYg+0b
+        IECvv2LjnWcGzCS6R2c2tg4sgQpGcjXByKLBZPL7Xs4OwNUUaKF820w3Ic1JKPFWbxYaV/
+        zQxlwp4rnzD+WzTiaw91J+4L7iQQ+SR32KSqZT854CLAJKIIUHqBcwUh01vq4gYJysHS9U
+        2YuIdbPutXAYf6qxYXI8k/N2s6EcL8OojQbYBV3yqFeMwoY5o0cLfzqE9P8/gw+P+igDVq
+        lKj3W3wk7xu1ziy9h34ybqOITt3G9Oy0XdV3S2Ut5Fvm8NWwxziMLNP2XRk3vg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1607629337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=xNUoZoBVroF7IJy3X8hhV7V+S/ANMxwK+r48iZvHH7k=;
+        b=VHoSRskFC2dXgfT8CV99ZHE5BpRPUfLU6nfE7o3PMPrsIEKWqDmtgbLpWFRMlRZjjTeINe
+        qsFjW8cMZ9WikxCw==
+Date:   Thu, 10 Dec 2020 20:25:38 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Subject: [patch 02/30] genirq: Move status flag checks to core
+References: <20201210192536.118432146@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+These checks are used by modules and prevent the removal of the export of
+irq_to_desc(). Move the accessor into the core.
 
---=-rsp7EJyq8i4QUD5Bhnqf
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/irqdesc.h |   17 +++++------------
+ kernel/irq/manage.c     |   17 +++++++++++++++++
+ 2 files changed, 22 insertions(+), 12 deletions(-)
 
-On Thu, 2020-12-10 at 12:57 -0600, Bjorn Helgaas wrote:
-> What is the point of a function called probably_on_bare_metal()?
-> *Probably*?  The caller can't really do anything with the fact that
-> we're not 100% sure this gives the correct answer.  Just call it
-> "on_bare_metal()" or something and accept the fact that it might be
-> wrong sometimes.
-
-Acknowledging that it's a heuristic is OK, but we should certainly be
-clear about whether it has false positives, false negatives, or both.
-
---=-rsp7EJyq8i4QUD5Bhnqf
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAx
-MjEwMTkxNTE1WjAvBgkqhkiG9w0BCQQxIgQga+iWmil0P/88SGqKwqK0T9Q+zf2awoXZ0oPlv1SD
-FlEwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAGB7emizXAZFTmDtDS2h2sXe2ykgReylPz3g47JF+bC3uaLVH1N9cjZjjmYtvBiy
-4p09Vs5HOXTPVYzR63Jb9xQT/L/Fprf00yNWCKJEJiUTE1JsvssWKDx+h+nh4MTxCwdVnnh8B06I
-bxdYIJuGqjjA+nZMlHOE/OIaFISzh6JIwfG+zrdvCyWNvR/jXZHNXDmHLME4njhchfrDSHE1u+QO
-mgz6Xr/r0nHXugsJt8voKDUTJel04oS6DGI032LGyH0zjlzF/aG0SvpqBMOjjtgMfccv3Xmkdcvc
-cWON2LT1apiBHd8xz8DdtNf6D1DkNz+TKtmGypYBSlFvrxauvOkAAAAAAAA=
-
-
---=-rsp7EJyq8i4QUD5Bhnqf--
+--- a/include/linux/irqdesc.h
++++ b/include/linux/irqdesc.h
+@@ -223,28 +223,21 @@ irq_set_chip_handler_name_locked(struct
+ 	data->chip = chip;
+ }
+ 
++bool irq_check_status_bit(unsigned int irq, unsigned int bitmask);
++
+ static inline bool irq_balancing_disabled(unsigned int irq)
+ {
+-	struct irq_desc *desc;
+-
+-	desc = irq_to_desc(irq);
+-	return desc->status_use_accessors & IRQ_NO_BALANCING_MASK;
++	return irq_check_status_bit(irq, IRQ_NO_BALANCING_MASK);
+ }
+ 
+ static inline bool irq_is_percpu(unsigned int irq)
+ {
+-	struct irq_desc *desc;
+-
+-	desc = irq_to_desc(irq);
+-	return desc->status_use_accessors & IRQ_PER_CPU;
++	return irq_check_status_bit(irq, IRQ_PER_CPU);
+ }
+ 
+ static inline bool irq_is_percpu_devid(unsigned int irq)
+ {
+-	struct irq_desc *desc;
+-
+-	desc = irq_to_desc(irq);
+-	return desc->status_use_accessors & IRQ_PER_CPU_DEVID;
++	return irq_check_status_bit(irq, IRQ_PER_CPU_DEVID);
+ }
+ 
+ static inline void
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -2769,3 +2769,23 @@ bool irq_has_action(unsigned int irq)
+ 	return res;
+ }
+ EXPORT_SYMBOL_GPL(irq_has_action);
++
++/**
++ * irq_check_status_bit - Check whether bits in the irq descriptor status are set
++ * @irq:	The linux irq number
++ * @bitmask:	The bitmask to evaluate
++ *
++ * Returns: True if one of the bits in @bitmask is set
++ */
++bool irq_check_status_bit(unsigned int irq, unsigned int bitmask)
++{
++	struct irq_desc *desc;
++	bool res = false;
++
++	rcu_read_lock();
++	desc = irq_to_desc(irq);
++	if (desc)
++		res = !!(desc->status_use_accessors & bitmask);
++	rcu_read_unlock();
++	return res;
++}
 
