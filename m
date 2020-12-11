@@ -2,123 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7BA02D79D3
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 16:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 659402D7B2D
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 17:43:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405027AbgLKPrx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Dec 2020 10:47:53 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41122 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387469AbgLKPrf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Dec 2020 10:47:35 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 15so10264841oix.8;
-        Fri, 11 Dec 2020 07:47:19 -0800 (PST)
+        id S2389284AbgLKQmt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Dec 2020 11:42:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389066AbgLKQm2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Dec 2020 11:42:28 -0500
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9360FC0613CF;
+        Fri, 11 Dec 2020 08:41:48 -0800 (PST)
+Received: by mail-pg1-x542.google.com with SMTP id n7so7499160pgg.2;
+        Fri, 11 Dec 2020 08:41:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=56syKNuOJ90gHZSy+DseY7QqbtNVXxsXzReMPurvgco=;
+        b=nvCFTmQz3OwUdgoGK0ko6g6K3bNYPz4aC4e1cPt04OJBjcCgw+43hqSGV2drGLVlXD
+         KbMJfgtkIIoA/4PSZZPztt8valYndCn+NRc1rMw6emKQ7c0EPdTIat2espvMgXnmugkZ
+         4GNK7q+vMpUKJD2PkPRNPDp2MtLv+QzjgVbL22X5Dk5QzptBxsyhkhodwtN8HmPtYGvW
+         /CBWK6+zAtpmrrWxzPNFUr3PWGzZhy+v0CjAaIStMYDhOizwulJyq7VscJmWk4C7MmKV
+         q+QbQSysmg6AOtvpLO1TXwvE8OEjx69/XNyQVVP/SgDHGcvNl6X/7td/Nsi5Gyay/jXk
+         enKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xDsLY5toXg//VxcXGzy5JqaCKZTPLtUIx6A9MNnFwrs=;
-        b=FaKOfvAspJyyxxnFpn471ObuyhZfSJauAnSRYzJ6qzFOdF0GshJOUjVA4urq0bGsY4
-         2t8UwEr2Uj72QQcXsCkHWkFBMqW2MYb7uOPUKmve6QtoFIj3HF1z4524TvZWH5yKVuwG
-         LfXKgN9sTlHvC49svUEoyfPqJQVZgdT45+FR3InXeZJ5UwBz8YJVWpRLtI1GN5nZZ9Yx
-         RIbASCFyKLqPJPTgrLyxRi1MqpX+MB4Fl+eDv3gDGHzn+RdCf+taTkGpZwA9XU86Ab9T
-         wkUYUF1m9a6Bn9iuGA/UdVretduPgEbKjV3uFWhzBsx9u0pLpovFg5EIoNY2L4K7vEv+
-         fEXw==
-X-Gm-Message-State: AOAM531VD+eOUZYwhCY1kjpfB6dh1SdAGHLoaB00HJf1jpxDJguFqDFP
-        MhL8gNAMQzpRyNiAzrkabw==
-X-Google-Smtp-Source: ABdhPJz9RSdLsVAV1MSmPfnRJf6AhUickmg/zkRj6FStNxymkRRK8pQiN0v/RAdWhEN7+yZ4Ns9+1Q==
-X-Received: by 2002:aca:d908:: with SMTP id q8mr9761566oig.161.1607701614041;
-        Fri, 11 Dec 2020 07:46:54 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y8sm1638720oix.43.2020.12.11.07.46.52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=56syKNuOJ90gHZSy+DseY7QqbtNVXxsXzReMPurvgco=;
+        b=LAqb5KnRyn8O8g/7XIM+e0MQoxeUSdO2Gk09FVrzAkb3Orrl2qmfWUzcwguw+4yJdo
+         OgxgYXx6ur9QwNrIRT/aDV2S9jfHGLW/u09OMlJc3iJIUKQlB4ehigCsIj9/BquySKbS
+         ZXLJNOloH8vvokrzQNo3EY9l1ieE0yEJrNHiYBxfyBN1e9ODWcosn2e4KQvdTku0nbOz
+         c0feJomkJS7XPJx5DPE2KZDO/wSZcrjYDPLLOYB+D5Q5unBAIqeaEL/yRStZ+N0Ozea4
+         zg08u4xBx8XnKyt0r1iy+Q6V10XlAhGB0eV5jzGVkZp+C+Amm3AWQBf6bRndkSxJyzob
+         URdQ==
+X-Gm-Message-State: AOAM5334gq4ewhwX8YCTOqyQ+cAaoOILxeo5Hd47mFe8hgp6EUOmvcP1
+        2vNh68duZbNgQU3pCq4z/M0=
+X-Google-Smtp-Source: ABdhPJwYZsHve+cDy/trtVG6Ug9cEkP0hyWJehscUiGZ7dT+lalXVKBp/xyjBk/tJTpWgognV5O88Q==
+X-Received: by 2002:a63:3247:: with SMTP id y68mr12668991pgy.10.1607704907988;
+        Fri, 11 Dec 2020 08:41:47 -0800 (PST)
+Received: from localhost.localdomain ([27.255.173.238])
+        by smtp.googlemail.com with ESMTPSA id bg20sm10383183pjb.6.2020.12.11.08.41.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Dec 2020 07:46:53 -0800 (PST)
-Received: (nullmailer pid 345121 invoked by uid 1000);
-        Fri, 11 Dec 2020 15:46:52 -0000
-Date:   Fri, 11 Dec 2020 09:46:52 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: fix use-after-free in pci_register_host_bridge
-Message-ID: <20201211154652.GA313883@robh.at.kernel.org>
-References: <20201120074848.31418-1-miaoqinglang@huawei.com>
+        Fri, 11 Dec 2020 08:41:47 -0800 (PST)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
+        Damien.LeMoal@wdc.com, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Puranjay Mohan <puranjay12@gmail.com>
+Subject: [PATCH] drivers: block: skd: remove skd_pci_info()
+Date:   Fri, 11 Dec 2020 22:11:37 +0530
+Message-Id: <20201211164137.8605-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201120074848.31418-1-miaoqinglang@huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 03:48:48PM +0800, Qinglang Miao wrote:
-> When put_device(&bridge->dev) being called, kfree(bridge) is inside
-> of release function, so the following device_del would cause a
-> use-after-free bug.
-> 
-> Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
+PCI core calls __pcie_print_link_status() for every device, it prints
+both the link width and the link speed. skd_pci_info() does the same
+thing again, hence it can be removed.
 
-That commit did have some problems, but this patch doesn't apply to that 
-commit. See commits 1b54ae8327a4 and 9885440b16b8.
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+ drivers/block/skd_main.c | 31 -------------------------------
+ 1 file changed, 31 deletions(-)
 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
-> ---
->  drivers/pci/probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4289030b0..82292e87e 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -991,8 +991,8 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  	return 0;
->  
->  unregister:
-> -	put_device(&bridge->dev);
->  	device_del(&bridge->dev);
-> +	put_device(&bridge->dev);
+diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+index a962b4551bed..da7aac5335d9 100644
+--- a/drivers/block/skd_main.c
++++ b/drivers/block/skd_main.c
+@@ -3134,40 +3134,11 @@ static const struct pci_device_id skd_pci_tbl[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, skd_pci_tbl);
+ 
+-static char *skd_pci_info(struct skd_device *skdev, char *str)
+-{
+-	int pcie_reg;
+-
+-	strcpy(str, "PCIe (");
+-	pcie_reg = pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
+-
+-	if (pcie_reg) {
+-
+-		char lwstr[6];
+-		uint16_t pcie_lstat, lspeed, lwidth;
+-
+-		pcie_reg += 0x12;
+-		pci_read_config_word(skdev->pdev, pcie_reg, &pcie_lstat);
+-		lspeed = pcie_lstat & (0xF);
+-		lwidth = (pcie_lstat & 0x3F0) >> 4;
+-
+-		if (lspeed == 1)
+-			strcat(str, "2.5GT/s ");
+-		else if (lspeed == 2)
+-			strcat(str, "5.0GT/s ");
+-		else
+-			strcat(str, "<unknown> ");
+-		snprintf(lwstr, sizeof(lwstr), "%dX)", lwidth);
+-		strcat(str, lwstr);
+-	}
+-	return str;
+-}
+ 
+ static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	int i;
+ 	int rc = 0;
+-	char pci_str[32];
+ 	struct skd_device *skdev;
+ 
+ 	dev_dbg(&pdev->dev, "vendor=%04X device=%04x\n", pdev->vendor,
+@@ -3201,8 +3172,6 @@ static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto err_out_regions;
+ 	}
+ 
+-	skd_pci_info(skdev, pci_str);
+-	dev_info(&pdev->dev, "%s 64bit\n", pci_str);
+ 
+ 	pci_set_master(pdev);
+ 	rc = pci_enable_pcie_error_reporting(pdev);
+-- 
+2.27.0
 
-I don't think this is right. 
-
-Let's look at pci_register_host_bridge() with only the relevant 
-sections:
-
-static int pci_register_host_bridge(struct pci_host_bridge *bridge)
-{
-	...
-
-	err = device_add(&bridge->dev);
-	if (err) {
-		put_device(&bridge->dev);
-		goto free;
-	}
-	bus->bridge = get_device(&bridge->dev);
-
-        ...
-	if (err)
-		goto unregister;
-	...
-
-	return 0;
-
-unregister:
-	put_device(&bridge->dev);
-	device_del(&bridge->dev);
-
-free:
-	kfree(bus);
-	return err;
-}
-
-The documentation for device_add says this:
- * Rule of thumb is: if device_add() succeeds, you should call
- * device_del() when you want to get rid of it. If device_add() has
- * *not* succeeded, use *only* put_device() to drop the reference
- * count.
-
-The put_device at the end is to balance the get_device after device_add. 
-It will *only* decrement the use count. Then we call device_del as the 
-documentation says.
-
-Rob
