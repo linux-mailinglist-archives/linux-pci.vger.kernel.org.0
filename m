@@ -2,198 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DCF62D820F
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 23:29:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97AA52D820B
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 23:28:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406850AbgLKW3H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Dec 2020 17:29:07 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:11905 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406847AbgLKW2i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Dec 2020 17:28:38 -0500
-X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Fri, 11 Dec 2020 17:28:38 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1607725718;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=SlMSeRdV/lwxDX3djLyqBMWP9qBV06XtN2qLgsx2f6c=;
-  b=ZKTZR8+vX6fjYD72juCYm2Bp54JJnuY72Rq0HFPpTOB0rlO1GL7cCUkc
-   1gmoUMXRGTc3hZF2491UKx91IySc4a2/ih4R1Y8AyUpUtJOR6r7C2V+yK
-   /Hhf8UPnUAeCmRpD9awUzhzia6rt0mCQhE9JUT5tHvuCsImdF6RKNyQZ9
-   I=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: zxKa8rgyFeg2y8fCG3oi7VnW2gUpr9OYlkvCF/sBtRwerKcGUj3U846xesB6P0sd8TbXpQL30D
- M+yqnl9FyOSn4AVTQICd1n20O7aUuBZJHO1hO49Y7WMuixViLEiIv7JOWQDh2eVZ9soCVAFoQW
- vfrc7AECE95KCs5m0z0M9zvfWWGUs6ClwL+l6kwP1ibvxZE1mGugR63NagsSn+AjDypKzJbLJy
- 9z6mlpc3fKmjPgHdEEba0IFcfG0cgQo5L6XZQsW65QXYXuCPJHzmXpVX8QCySh2BtbtSv6z0yL
- eso=
-X-SBRS: 5.2
-X-MesageID: 33047865
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.78,412,1599537600"; 
-   d="scan'208";a="33047865"
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
- interrupts
-To:     Thomas Gleixner <tglx@linutronix.de>, <boris.ostrovsky@oracle.com>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        <xen-devel@lists.xenproject.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        "afzal mohammed" <afzal.mohd.ma@gmail.com>,
-        <linux-parisc@vger.kernel.org>,
-        "Russell King" <linux@armlinux.org.uk>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        <linux-s390@vger.kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>,
-        "Tvrtko Ursulin" <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, <linux-ntb@googlegroups.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michal Simek" <michal.simek@xilinx.com>,
-        <linux-pci@vger.kernel.org>,
-        "Karthikeyan Mitran" <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
-        "Leon Romanovsky" <leon@kernel.org>
-References: <20201210192536.118432146@linutronix.de>
- <20201210194045.250321315@linutronix.de>
- <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
- <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com>
- <871rfwiknd.fsf@nanos.tec.linutronix.de>
- <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com>
- <877dpoghio.fsf@nanos.tec.linutronix.de>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <edbedd7a-4463-d934-73c9-fa046c19cf6d@citrix.com>
-Date:   Fri, 11 Dec 2020 22:21:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2406846AbgLKW2D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Dec 2020 17:28:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406908AbgLKW1q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Dec 2020 17:27:46 -0500
+Date:   Fri, 11 Dec 2020 16:27:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607725625;
+        bh=Ft9XdeawhEOwP8fMCkcg3uxb+l91j2J02JXfLqBD/KU=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=tNZ8fnrFeS6xRBtx8t2tipIt8DWwvDyP69hcehTwe99e7b7NeAk9IgvOnbfOelaDQ
+         lJXeudcRdrkczzNJUI4mkA9tDvuAaeFuLrrFrYgIH5Ye7OohRWyb796sciPKgahNH+
+         8fKlNdwdx3K9cBO5WMw/4Uelp643xHCzPfPAuuELh9jjCmOM720+Mc8cIVKI1ZctRv
+         dp3uQUHgPisuZDy7JOOqmxFdxe4ArNp3OzfRdKGToeV/fZWc4+BpH2hTvAoGcZGRQt
+         ThNq8RKk/aH1mpmnOMYAE5nscbWt8BP8SMaKsm/qdAm2PZDO8LWDyPd8FBfeNAJO/0
+         QjZDp96Y6dS1Q==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Yicong Yang <yangyicong@hisilicon.com>
+Cc:     linux-pci@vger.kernel.org, mika.westerberg@linux.intel.com,
+        rafael.j.wysocki@intel.com, peter@lekensteyn.nl,
+        linuxarm@huawei.com
+Subject: Re: [PATCH v2] PCI: Make sure the bus bridge powered on when
+ scanning bus
+Message-ID: <20201211222704.GA111886@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <877dpoghio.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- FTLPEX02CL03.citrite.net (10.13.108.165)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1601029386-4928-1-git-send-email-yangyicong@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/12/2020 21:27, Thomas Gleixner wrote:
-> On Fri, Dec 11 2020 at 09:29, boris ostrovsky wrote:
->
->> On 12/11/20 7:37 AM, Thomas Gleixner wrote:
->>> On Fri, Dec 11 2020 at 13:10, Jürgen Groß wrote:
->>>> On 11.12.20 00:20, boris.ostrovsky@oracle.com wrote:
->>>>> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
->>>>>> Change the implementation so that the channel is bound to CPU0 at the XEN
->>>>>> level and leave the affinity mask alone. At startup of the interrupt
->>>>>> affinity will be assigned out of the affinity mask and the XEN binding will
->>>>>> be updated.
->>>>> If that's the case then I wonder whether we need this call at all and instead bind at startup time.
->>>> After some discussion with Thomas on IRC and xen-devel archaeology the
->>>> result is: this will be needed especially for systems running on a
->>>> single vcpu (e.g. small guests), as the .irq_set_affinity() callback
->>>> won't be called in this case when starting the irq.
->> On UP are we not then going to end up with an empty affinity mask? Or
->> are we guaranteed to have it set to 1 by interrupt generic code?
-> An UP kernel does not ever look on the affinity mask. The
-> chip::irq_set_affinity() callback is not invoked so the mask is
-> irrelevant.
->
-> A SMP kernel on a UP machine sets CPU0 in the mask so all is good.
->
->> This is actually why I brought this up in the first place --- a
->> potential mismatch between the affinity mask and Xen-specific data
->> (e.g. info->cpu and then protocol-specific data in event channel
->> code). Even if they are re-synchronized later, at startup time (for
->> SMP).
-> Which is not a problem either. The affinity mask is only relevant for
-> setting the affinity, but it's not relevant for delivery and never can
-> be.
->
->> I don't see anything that would cause a problem right now but I worry
->> that this inconsistency may come up at some point.
-> As long as the affinity mask becomes not part of the event channel magic
-> this should never matter.
->
-> Look at it from hardware:
->
-> interrupt is affine to CPU0
->
->      CPU0 runs:
->      
->      set_affinity(CPU0 -> CPU1)
->         local_irq_disable()
->         
->  --> interrupt is raised in hardware and pending on CPU0
->
->         irq hardware is reconfigured to be affine to CPU1
->
->         local_irq_enable()
->
->  --> interrupt is handled on CPU0
->
-> the next interrupt will be raised on CPU1
->
-> So info->cpu which is registered via the hypercall binds the 'hardware
-> delivery' and whenever the new affinity is written it is rebound to some
-> other CPU and the next interrupt is then raised on this other CPU.
->
-> It's not any different from the hardware example at least not as far as
-> I understood the code.
+On Fri, Sep 25, 2020 at 06:23:06PM +0800, Yicong Yang wrote:
+> When the bus bridge is runtime suspended, we'll fail to rescan
+> the devices through sysfs as we cannot access the configuration
+> space correctly when the bridge is in D3hot.
+> It can be reproduced like:
+> 
+> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+> 
+> 0000:80:00.0 is root port and is runtime suspended and we cannot
+> get 0000:81:00.1 after rescan.
+> 
+> Make bridge powered on when scanning the child bus, by adding
+> pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
+> 
+> A similar issue is met and solved by
+> commit d963f6512e15 ("PCI: Power on bridges before scanning new devices")
+> which rescan the devices through /sys/bus/pci/devices/0000:80:00.0/rescan.
+> The callstack is like:
+> 
+> dev_rescan_restore()
+>   pci_rescan_bus()
+>     pci_scan_bridge_extend()
+>       pci_scan_child_bus_extend() /* will wake up the bridge with this patch */
+> 
+> With this patch the issue is also resolved, so let's remove the calls of
+> pm_runtime_*() in pci_scan_bridge_extend().
 
-Xen's event channels do have a couple of quirks.
+I'm sorry, I feel like an idiot, but I totally lost whatever
+understanding I had of this patch.  Here's what I *think* I
+understand:
 
-Binding an event channel always results in one spurious event being
-delivered.  This is to cover notifications which can get lost during the
-bidirectional setup, or re-setups in certain configurations.
+PCI devices always respond to config transactions unless they're in D3cold,
+but a bridge only forwards config transactions when it is in D0.  When a
+bridge is runtime suspended, we can access config space of the bridge
+itself, but not of anything on its secondary side.  If a bridge is in a
+low-power state, we must bring it back to D0 before enumerating devices
+below it.
 
-Binding an interdomain or pirq event channel always defaults to vCPU0. 
-There is no way to atomically set the affinity while binding.  I believe
-the API predates SMP guest support in Xen, and noone has fixed it up since.
+Prior to d963f6512e15 ("PCI: Power on bridges before scanning new
+devices"), this rescan could fail if 00:01.0 were suspended:
 
-As a consequence, the guest will observe the event raised on vCPU0 as
-part of setting up the event, even if it attempts to set a different
-affinity immediately afterwards.  A little bit of care needs to be taken
-when binding an event channel on vCPUs other than 0, to ensure that the
-callback is safe with respect to any remaining state needing initialisation.
+  # echo 1 > /sys/bus/pci/devices/0000:00:01.0/0000:01:00.0/remove
+  # echo 1 > /sys/bus/pci/devices/0000:00:01.0/rescan
 
-Beyond this, there is nothing magic I'm aware of.
+d963f6512e15 fixed this with the following addition (call tree at the time):
 
-We have seen soft lockups before in certain scenarios, simply due to the
-quantity of events hitting vCPU0 before irqbalance gets around to
-spreading the load.  This is why there is an attempt to round-robin the
-userspace event channel affinities by default, but I still don't see why
-this would need custom affinity logic itself.
+  dev_rescan_store(dev 00:01.0)
+    pci_rescan_bus(bus 00)
+      pci_scan_child_bus(bus 00)
+        for (devfn = 0; devfn < 0x100; devfn += 8)
+          pci_scan_slot(bus 00, dev 00.0, 01.0, etc)
+        list_for_each_entry(dev, &bus->devices)
+          pci_scan_bridge(bus 00, dev 01.0)
+ +          pm_runtime_get_sync(dev 00:01.0)  # enables config below 00:01.0
+            pci_scan_child_bus(bus 01)
+              for (devfn = 0; devfn < 0x100; devfn += 8)
+                pci_scan_slot(bus 01, dev 00.0, 01.0, etc)
+                  # config read of 01:00.0 fails unless 00:01.0 is in D0
 
-Thanks,
 
-~Andrew
+Now, for *this* patch, I think you're saying that this rescan can
+still fail:
+
+  # echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+  # echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+
+IIUC, it uses this path:
+
+  bus_rescan_store(bus 81)                  # 81 is not a root bus
+    pci_rescan_bus_bridge_resize(80:00.0)   # (bus 81)->self
+      bus = 80:00.0->subordinate
+      pci_scan_child_bus(bus 81)
+        pci_scan_child_bus_extend
+          for (devfn = 0; devfn < 256; devfn += 8)
+            pci_scan_slot(bus 81, dev 00.0)
+              # config read of 81:00.0 fails unless 80:00.0 is in D0
+
+
+Am I making any sense?
+
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+> Change since v1:
+> - use an intermediate variable *bridge as suggested
+> - remove the pm_runtime_*() calls in pci_scan_bridge_extend()
+> 
+>  drivers/pci/probe.c | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 03d3712..747a8bc 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1211,12 +1211,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>  	u8 fixed_sec, fixed_sub;
+>  	int next_busnr;
+> 
+> -	/*
+> -	 * Make sure the bridge is powered on to be able to access config
+> -	 * space of devices below it.
+> -	 */
+> -	pm_runtime_get_sync(&dev->dev);
+> -
+>  	pci_read_config_dword(dev, PCI_PRIMARY_BUS, &buses);
+>  	primary = buses & 0xFF;
+>  	secondary = (buses >> 8) & 0xFF;
+> @@ -1418,8 +1412,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>  out:
+>  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+> 
+> -	pm_runtime_put(&dev->dev);
+> -
+>  	return max;
+>  }
+> 
+> @@ -2796,11 +2788,19 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>  	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+>  	unsigned int start = bus->busn_res.start;
+>  	unsigned int devfn, fn, cmax, max = start;
+> -	struct pci_dev *dev;
+> +	struct pci_dev *dev, *bridge = bus->self;
+>  	int nr_devs;
+> 
+>  	dev_dbg(&bus->dev, "scanning bus\n");
+> 
+> +	/*
+> +	 * Make sure the bus bridge is powered on, otherwise we may not be
+> +	 * able to scan the devices as we may fail to access the configuration
+> +	 * space of subordinates.
+> +	 */
+> +	if (bridge)
+> +		pm_runtime_get_sync(&bridge->dev);
+> +
+>  	/* Go find them, Rover! */
+>  	for (devfn = 0; devfn < 256; devfn += 8) {
+>  		nr_devs = pci_scan_slot(bus, devfn);
+> @@ -2913,6 +2913,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>  		}
+>  	}
+> 
+> +	if (bridge)
+> +		pm_runtime_put(&bridge->dev);
+> +
+>  	/*
+>  	 * We've scanned the bus and so we know all about what's on
+>  	 * the other side of any bridges that may be on this bus plus
+> --
+> 2.8.1
+> 
