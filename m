@@ -2,183 +2,258 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D6CA2D7626
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 14:00:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6455F2D7743
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 15:02:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406039AbgLKM6p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Dec 2020 07:58:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:34750 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406014AbgLKM6d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Dec 2020 07:58:33 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1607691469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JI1elAtJ+5DtZ6K623jhzzi7pTI2yY5tK5xHv6JaNRg=;
-        b=IsUihC8x41gfVuZ56mJpZCBvWH6AGSSnlAtCqFu+Y6vHBUWXmKQx9YvU5B8lrG6utDrQMP
-        8canZDEEsNDVhNNdoKfnFOQzTFOpz9W+psXaARAvFsUFtyOebsqoT9kLX8kBnNz5EacFR5
-        rK53uTCJCAI+CQzV9BLaBuU/gNEQZy9UASonSM4NSF0ZsDg2qgrh9flw6frSO8WIrRyHsw
-        fF1cIAuhmb0wJbfH0peqshua47BZpnwfG0pDc4EWPJORiwGLQuagVjgVxqHnf+tQ9+0hUT
-        H0SNNDNOI9Tui6mw4dUpmVwGgPTgPo14TX1s4jNlbb7LIWdUurk9RmWQuaaNkw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1607691469;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JI1elAtJ+5DtZ6K623jhzzi7pTI2yY5tK5xHv6JaNRg=;
-        b=9Ep94KYblAfQy2iSeDDH/NSIpD2gqoyh3N3s+6g4ZgyvdTP4pfDpIIp6ve3zDE8y9b1XGh
-        NoOqscBMvs3mS3Bw==
-To:     Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [patch 14/30] drm/i915/pmu: Replace open coded kstat_irqs() copy
-In-Reply-To: <ad05af1a-5463-2a80-0887-7629721d6863@linux.intel.com>
-References: <20201210192536.118432146@linutronix.de> <20201210194043.957046529@linutronix.de> <ad05af1a-5463-2a80-0887-7629721d6863@linux.intel.com>
-Date:   Fri, 11 Dec 2020 13:57:49 +0100
-Message-ID: <87y2i4h54i.fsf@nanos.tec.linutronix.de>
+        id S2391254AbgLKN7h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Dec 2020 08:59:37 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9706 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388214AbgLKN7W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Dec 2020 08:59:22 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fd37b110001>; Fri, 11 Dec 2020 05:58:41 -0800
+Received: from [10.40.169.64] (172.20.145.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 11 Dec
+ 2020 13:58:30 +0000
+Subject: Re: [PATCH V2] PCI: dwc: Add support to configure for ECRC
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>
+References: <20201124210228.GA589610@bjorn-Precision-5520>
+ <42ebcbe2-7d24-558a-3c33-beb7818d5516@nvidia.com>
+Message-ID: <49e3a6a4-9621-0734-99f1-b4f616dbcb7d@nvidia.com>
+Date:   Fri, 11 Dec 2020 19:28:25 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <42ebcbe2-7d24-558a-3c33-beb7818d5516@nvidia.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [172.20.145.6]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1607695121; bh=J2irPRBhjSNccNHMXWtkhnk7Ke+VeqIj3V6Q8oHLeBo=;
+        h=Subject:From:To:CC:References:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=T2lsTkguHKdFIuFKdl+v6YkJj2lqG0Or9xGYc8AQeZ6oot9VVIscsB5nMI1makPv4
+         QT4HODPPx0KTLvS1B7i5l0Zv/p/brSNxHkKfHL/voKOGT/sozF4sOgXWQCvPUGGYX1
+         KqrB8h/OpQ1kSlhCMSJozhy/2Eb2wYhev7rkP0/IoOwkqbmkLXuHPn2o/+iHqkvFYy
+         KIFnJJ7KG6x3O/R9o7ztNOPhJotkNOiGK1ukE3Hsak4bD/eD9KVPScxvKTsxQBf+n1
+         r1Vy6hyV+WcIntZPlEjoI8J3iVDr1+l/dy3ZgA4uD2xGZSx/MqbABvTBzB3xztU3oH
+         k35B861CazI9w==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 11 2020 at 10:13, Tvrtko Ursulin wrote:
-> On 10/12/2020 19:25, Thomas Gleixner wrote:
-
->> 
->> Aside of that the count is per interrupt line and therefore takes
->> interrupts from other devices into account which share the interrupt line
->> and are not handled by the graphics driver.
->> 
->> Replace it with a pmu private count which only counts interrupts which
->> originate from the graphics card.
->> 
->> To avoid atomics or heuristics of some sort make the counter field
->> 'unsigned long'. That limits the count to 4e9 on 32bit which is a lot and
->> postprocessing can easily deal with the occasional wraparound.
->
-> After my failed hasty sketch from last night I had a different one which 
-> was kind of heuristics based (re-reading the upper dword and retrying if 
-> it changed on 32-bit).
-
-The problem is that there will be two seperate modifications for the low
-and high word. Several ways how the compiler can translate this, but the
-problem is the same for all of them:
-
-CPU 0                           CPU 1
-        load low
-        load high
-        add  low, 1
-        addc high, 0            
-        store low               load high
---> NMI                         load low
-                                load high and compare
-        store high
-
-You can't catch that. If this really becomes an issue you need a
-sequence counter around it.
-      
-
-> But you are right - it is okay to at least start 
-> like this today and if later there is a need we can either do that or 
-> deal with wrap at PMU read time.
-
-Right.
-
->> +/*
->> + * Interrupt statistic for PMU. Increments the counter only if the
->> + * interrupt originated from the the GPU so interrupts from a device which
->> + * shares the interrupt line are not accounted.
->> + */
->> +static inline void pmu_irq_stats(struct drm_i915_private *priv,
->
-> We never use priv as a local name, it should be either i915 or
-> dev_priv.
-
-Sure, will fix.
-
->> +	/*
->> +	 * A clever compiler translates that into INC. A not so clever one
->> +	 * should at least prevent store tearing.
->> +	 */
->> +	WRITE_ONCE(priv->pmu.irq_count, priv->pmu.irq_count + 1);
->
-> Curious, probably more educational for me - given x86_32 and x86_64, and 
-> the context of it getting called, what is the difference from just doing 
-> irq_count++?
-
-Several reasons:
-
-    1) The compiler can pretty much do what it wants with cnt++
-       including tearing and whatever. https://lwn.net/Articles/816850/
-       for the full set of insanities.
-
-       Not really a problem here, but
-
-    2) It's annotating the reader and the writer side and documenting
-       that this is subject to concurrency
-
-    3) It will prevent KCSAN to complain about the data race,
-       i.e. concurrent modification while reading.
+Hi Lorenzo,
+Apologies to bug you, but wondering if you have any further comments on=20
+this patch that I need to take care of?
 
 Thanks,
+Vidya Sagar
 
-        tglx
-
->> --- a/drivers/gpu/drm/i915/i915_pmu.c
->> +++ b/drivers/gpu/drm/i915/i915_pmu.c
->> @@ -423,22 +423,6 @@ static enum hrtimer_restart i915_sample(
->>   	return HRTIMER_RESTART;
->>   }
->
-> In this file you can also drop the #include <linux/irq.h> line.
-
-Indeed.
-
-Thanks,
-
-        tglx
+On 12/3/2020 5:40 PM, Vidya Sagar wrote:
+>=20
+>=20
+> On 11/25/2020 2:32 AM, Bjorn Helgaas wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On Tue, Nov 24, 2020 at 03:50:01PM +0530, Vidya Sagar wrote:
+>>> Hi Bjorn,
+>>> Please let me know if this patch needs any further modifications
+>>
+>> I'm fine with it, but of course Lorenzo will take care of it.
+> Thanks Bjorn.
+>=20
+> Hi Lorenzo,
+> Please let me know if you have any comments for this patch.
+>=20
+> Thanks,
+> Vidya Sagar
+>=20
+>>
+>>> On 11/12/2020 10:32 PM, Vidya Sagar wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> On 11/12/2020 3:59 AM, Bjorn Helgaas wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> On Wed, Nov 11, 2020 at 10:21:46PM +0530, Vidya Sagar wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 11/11/2020 9:57 PM, Jingoo Han wrote:
+>>>>>>> External email: Use caution opening links or attachments
+>>>>>>>
+>>>>>>>
+>>>>>>> On 11/11/20, 7:12 AM, Vidya Sagar wrote:
+>>>>>>>>
+>>>>>>>> DesignWare core has a TLP digest (TD) override bit in
+>>>>>>>> one of the control
+>>>>>>>> registers of ATU. This bit also needs to be programmed for=20
+>>>>>>>> proper ECRC
+>>>>>>>> functionality. This is currently identified as an issue
+>>>>>>>> with DesignWare
+>>>>>>>> IP version 4.90a.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>>>>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>>>>>>> ---
+>>>>>>>> V2:
+>>>>>>>> * Addressed Bjorn's comments
+>>>>>>>>
+>>>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pci/controller/dwc/pcie-designware.c | =
+52
+>>>>>>>> ++++++++++++++++++--
+>>>>>>>> =C2=A0=C2=A0=C2=A0 drivers/pci/controller/dwc/pcie-designware.h |=
+=C2=A0 1 +
+>>>>>>>> =C2=A0=C2=A0=C2=A0 2 files changed, 49 insertions(+), 4 deletions(=
+-)
+>>>>>>>>
+>>>>>>>> diff --git
+>>>>>>>> a/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>> index c2dea8fc97c8..ec0d13ab6bad 100644
+>>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>>>>>>> @@ -225,6 +225,46 @@ static void
+>>>>>>>> dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index,
+>>>>>>>> u32 reg,
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_writel_at=
+u(pci, offset + reg, val);
+>>>>>>>> =C2=A0=C2=A0=C2=A0 }
+>>>>>>>>
+>>>>>>>> +static inline u32 dw_pcie_enable_ecrc(u32 val)
+>>>>>>>
+>>>>>>> What is the reason to use inline here?
+>>>>>>
+>>>>>> Actually, I wanted to move the programming part inside the
+>>>>>> respective APIs
+>>>>>> but then I wanted to give some details as well in comments so to=20
+>>>>>> avoid
+>>>>>> duplication, I came up with this function. But, I'm making it=20
+>>>>>> inline for
+>>>>>> better code optimization by compiler.
+>>>>>
+>>>>> I don't really care either way, but I'd be surprised if the compiler
+>>>>> didn't inline this all by itself even without the explicit "inline".
+>>>> I just checked it and you are right that compiler is indeed inlining i=
+t
+>>>> without explicitly mentioning 'inline'.
+>>>> I hope it is ok to leave it that way.
+>>>>
+>>>>>
+>>>>>>>> +{
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * DesignWare core version 4.90A ha=
+s this strange design=20
+>>>>>>>> issue
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * where the 'TD' bit in the Contro=
+l register-1 of
+>>>>>>>> the ATU outbound
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * region acts like an override for=
+ the ECRC
+>>>>>>>> setting i.e. the presence
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * of TLP Digest(ECRC) in the outgo=
+ing TLPs is
+>>>>>>>> solely determined by
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * this bit. This is contrary to th=
+e PCIe spec
+>>>>>>>> which says that the
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * enablement of the ECRC is solely=
+ determined by
+>>>>>>>> the AER registers.
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Because of this, even when the E=
+CRC is enabled through AER
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * registers, the transactions goin=
+g through ATU
+>>>>>>>> won't have TLP Digest
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * as there is no way the AER sub-s=
+ystem could
+>>>>>>>> program the TD bit which
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * is specific to DesignWare core.
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * The best way to handle this scen=
+ario is to program the=20
+>>>>>>>> TD bit
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * always. It affects only the traf=
+fic from root
+>>>>>>>> port to downstream
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * devices.
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * At this point,
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * When ECRC is enabled in AER regi=
+sters,
+>>>>>>>> everything works normally
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * When ECRC is NOT enabled in AER =
+registers, then,
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * on Root Port:- TLP Digest (DWord=
+ size) gets
+>>>>>>>> appended to each packet
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 even through it i=
+s not required.
+>>>>>>>> Since downstream
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TLPs are mostly f=
+or
+>>>>>>>> configuration accesses and BAR
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 accesses, they ar=
+e not in
+>>>>>>>> critical path and won't
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 have much negativ=
+e effect on the=20
+>>>>>>>> performance.
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * on End Point:- TLP Digest is rec=
+eived for
+>>>>>>>> some/all the packets coming
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from the root por=
+t. TLP Digest
+>>>>>>>> is ignored because,
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 as per the PCIe S=
+pec r5.0 v1.0 section=20
+>>>>>>>> 2.2.3
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "TLP Digest Rules=
+", when an
+>>>>>>>> endpoint receives TLP
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Digest when its E=
+CRC check
+>>>>>>>> functionality is disabled
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 in AER registers,=
+ received TLP
+>>>>>>>> Digest is just ignored.
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Since there is no issue or error=
+ reported
+>>>>>>>> either side, best way to
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * handle the scenario is to progra=
+m TD bit by default.
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>>>> +
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 return val | PCIE_ATU_TD;
+>>>>>>>> +}
