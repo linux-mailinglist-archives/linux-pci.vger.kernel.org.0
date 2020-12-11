@@ -2,119 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D49BF2D6C57
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 01:28:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F19E2D6E97
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 04:29:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392655AbgLKAHw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 19:07:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392180AbgLKAHm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 19:07:42 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9C6C061793;
-        Thu, 10 Dec 2020 16:07:02 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1607645220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QO8ZPs/aGTq6EeeiALBW4EwIli8xcBfNVbHQE3SuKNs=;
-        b=gGpzgKDIdOJvLB57zkDYdB5nPR7tx5lmvyUREbAkcjTKLREnSTar6ATS+ovX5gwzQX+6as
-        +gKXjZ78+gchUrT83h8ptRu8KDTcmgA5V5jrxe+Iroa2IR3dW4mzdsbfdAz67KCaNXJRFh
-        HyT/Fqjz1nJPJbfByhhTG/yrTVt1YV6bo+ZpfwQUI97MYBpnXtPk3xo0rt3TJ6ElYxaC8x
-        LYoOgKlBWXABRporT9mN8YQ9yVhNAWvziSIf5Q/k/u/zwNWg/xf9bb8eHNApJHV92yI6Fh
-        8Vq/6Agy+63spk92uys0SUp9GgNSiQePxXptHhOLRD+usYLs0evVgfm0CC10Uw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1607645220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QO8ZPs/aGTq6EeeiALBW4EwIli8xcBfNVbHQE3SuKNs=;
-        b=fI8WyKpmQQfuF7v98I0m9jYr52j6v9il/Y1kYa+Nz5btUfOeJehvfvrp82h91pkkXnG/cc
-        g+EFTi6ulxrthHDw==
-To:     boris.ostrovsky@oracle.com, LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        id S2390378AbgLKD2k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 22:28:40 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45623 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405216AbgLKD2Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 22:28:16 -0500
+Received: by mail-oi1-f195.google.com with SMTP id f132so8323047oib.12;
+        Thu, 10 Dec 2020 19:28:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eJ9AhbR7dNhyrIAYTLNaexWFEr8PcE/a+4lZQcMflOY=;
+        b=hVC9gQu1KWqRmG8bM0/Aah2H0goaQhCqtY58abnMqAYxfiacGT1KDJ5nQirbk7JURt
+         fN7d6yl7TM5Sfmk4Zd8x3ZFZuwWqRfNF55JrNZ2ZJTB2gyDpUhtZPlH3muphOKK7IOgn
+         0tXdBw6FxFNv5Y3XX8UCE4/Y3G13zeOgW1DheX4UZvt7y0sTNeVHOKgfmF1pvHgCZFyO
+         leK31/8AnHndCWLJAXvIFpTy4PPIdkmSlaEVbKx+29KDWTe3pZUxFsraFbkIKyt1qiUk
+         obKsXj4kVJ0+/F+Mwe/NRrhRpzkFU9BPgemeIbkpKCHNq0JOT8co3UaRQdppKgfpH5th
+         H9VQ==
+X-Gm-Message-State: AOAM531pJQfKmYbnAI6nYlu6RAkT1MzMANOsuQLsF9LwIo5aFDdxH/a/
+        MAAA0LMrqomS/MRucGE74WCKGWCKgg==
+X-Google-Smtp-Source: ABdhPJw0lGiB1h/FpZokQM3xt/Q9C5srIa56/s86Ohke5ZYCBQy8qi0mlicAN7fw4oZPzQuostgzeQ==
+X-Received: by 2002:aca:3c3:: with SMTP id 186mr7739011oid.22.1607657255601;
+        Thu, 10 Dec 2020 19:27:35 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d62sm1500475oia.6.2020.12.10.19.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Dec 2020 19:27:34 -0800 (PST)
+Received: (nullmailer pid 3576272 invoked by uid 1000);
+        Fri, 11 Dec 2020 03:27:34 -0000
+Date:   Thu, 10 Dec 2020 21:27:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu interrupts
-In-Reply-To: <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
-References: <20201210192536.118432146@linutronix.de> <20201210194045.250321315@linutronix.de> <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
-Date:   Fri, 11 Dec 2020 01:06:59 +0100
-Message-ID: <87ft4di4t8.fsf@nanos.tec.linutronix.de>
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: pci: rcar-pci-ep: Document missing
+ interrupts property
+Message-ID: <20201211032734.GA3576224@robh.at.kernel.org>
+References: <20201209101231.2206479-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201209101231.2206479-1-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 10 2020 at 18:20, boris ostrovsky wrote:
-> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
->> All event channel setups bind the interrupt on CPU0 or the target CPU for
->> percpu interrupts and overwrite the affinity mask with the corresponding
->> cpumask. That does not make sense.
->>
->> The XEN implementation of irqchip::irq_set_affinity() already picks a
->> single target CPU out of the affinity mask and the actual target is stor=
-ed
->> in the effective CPU mask, so destroying the user chosen affinity mask
->> which might contain more than one CPU is wrong.
->>
->> Change the implementation so that the channel is bound to CPU0 at the XEN
->> level and leave the affinity mask alone. At startup of the interrupt
->> affinity will be assigned out of the affinity mask and the XEN binding w=
-ill
->> be updated.=20
->
-> If that's the case then I wonder whether we need this call at all and
-> instead bind at startup time.
+On Wed, 09 Dec 2020 11:12:31 +0100, Geert Uytterhoeven wrote:
+> The R-Car PCIe controller does not use interrupts when configured
+> for endpoint mode, hence the bindings do not document the interrupts
+> property.  However, all DTS files provide interrupts properties, and
+> thus fail to validate.
+> 
+> Fix this by documenting the interrupts property.
+> 
+> Fixes: 4c0f80920923f103 ("dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint controller")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2:
+>   - Fix authorship,
+>   - Add Reviewed-by,
+>   - Drop RFC state,
+>   - Fix name of interrupts property in patch description,
+>   - Drop inappropriate Fixes tag,
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
 
-I was wondering about that, but my knowledge about the Xen internal
-requirements is pretty limited. The current set at least survived basic
-testing by J=C3=BCrgen.
-
-Thanks,
-
-        tglx
+Applied, thanks!
