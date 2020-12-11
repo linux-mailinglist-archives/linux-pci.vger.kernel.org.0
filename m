@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 256B92D6FCE
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 06:43:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F1D52D6FD9
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 06:51:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390288AbgLKFma (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Dec 2020 00:42:30 -0500
-Received: from mga04.intel.com ([192.55.52.120]:14134 "EHLO mga04.intel.com"
+        id S2389598AbgLKFt6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Dec 2020 00:49:58 -0500
+Received: from mga09.intel.com ([134.134.136.24]:64331 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389684AbgLKFmE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Dec 2020 00:42:04 -0500
-IronPort-SDR: aLMkqSQ35qCSX53kMoqwwU5U3iwT3SBbA2Uo3lY3Bprkx8NOeE0oyFDB5HBBe9359YZ09jIKmF
- gv4LmeD4xIgA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="171817998"
+        id S2388912AbgLKFt1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Dec 2020 00:49:27 -0500
+IronPort-SDR: ZKkr2hB4yzlGCeKr6428igPsE5lxFukUH6EIo17PEUgwTDxKV36bl8l0IIceV9Q3cxsVr4WCAq
+ V/PrM95C9ebg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="174529069"
 X-IronPort-AV: E=Sophos;i="5.78,410,1599548400"; 
-   d="scan'208";a="171817998"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2020 21:41:23 -0800
-IronPort-SDR: X6BS/2fxNz1H7eHY8Y13cR9z0MGdwoYVTTuo3V0mPPCjPohVnbUJ4n2zJSkblPJfvaC23sTJTV
- +YaHXgzaRkIg==
+   d="scan'208";a="174529069"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2020 21:48:24 -0800
+IronPort-SDR: zoDv3zuQ6ujw3L3I7IFc2Xxwn08BOfTe0NcL4mVNRhk20koafpt+eQfiXqn5hufoViBxrIYFWx
+ Cqm5vyYDbAig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,410,1599548400"; 
-   d="scan'208";a="321389962"
+   d="scan'208";a="484922587"
 Received: from lkp-server01.sh.intel.com (HELO ecc0cebe68d1) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 10 Dec 2020 21:41:22 -0800
+  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2020 21:48:23 -0800
 Received: from kbuild by ecc0cebe68d1 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1knbBB-0000lf-Qt; Fri, 11 Dec 2020 05:41:21 +0000
-Date:   Fri, 11 Dec 2020 13:40:57 +0800
+        id 1knbHy-0000lo-QW; Fri, 11 Dec 2020 05:48:22 +0000
+Date:   Fri, 11 Dec 2020 13:48:17 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/ecam] BUILD SUCCESS
- ae78d161dd571beca1fcfa4eeaf5ed8bb18323ff
-Message-ID: <5fd30669.P0damcvvlm96jBU3%lkp@intel.com>
+Subject: [pci:pci/virtualization] BUILD SUCCESS
+ a2da5d8cc0b0ba637bdca8887f5ecc72f18c7e81
+Message-ID: <5fd30821.5lZIJJXLtArZYvb2%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/ecam
-branch HEAD: ae78d161dd571beca1fcfa4eeaf5ed8bb18323ff  PCI: xgene: Removed unused ".bus_shift" initialisers from pci-xgene.c
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/virtualization
+branch HEAD: a2da5d8cc0b0ba637bdca8887f5ecc72f18c7e81  PCI: Mark AMD Raven iGPU ATS as broken in some platforms
 
-elapsed time: 723m
+elapsed time: 726m
 
-configs tested: 170
+configs tested: 176
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -221,12 +221,18 @@ x86_64                               rhel-8.3
 x86_64                                  kexec
 
 clang tested configs:
-x86_64               randconfig-a001-20201209
-x86_64               randconfig-a002-20201209
-x86_64               randconfig-a003-20201209
 x86_64               randconfig-a004-20201209
 x86_64               randconfig-a006-20201209
 x86_64               randconfig-a005-20201209
+x86_64               randconfig-a001-20201209
+x86_64               randconfig-a002-20201209
+x86_64               randconfig-a003-20201209
+x86_64               randconfig-a003-20201210
+x86_64               randconfig-a006-20201210
+x86_64               randconfig-a002-20201210
+x86_64               randconfig-a005-20201210
+x86_64               randconfig-a004-20201210
+x86_64               randconfig-a001-20201210
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
