@@ -2,287 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BA722D7557
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 13:14:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD3E02D7568
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 13:17:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390424AbgLKMLr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Dec 2020 07:11:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48198 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391389AbgLKMLe (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Dec 2020 07:11:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1607688646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aJZQMJEqjqCeKHnTDA0IPhE5vARBQoDmh6z4taBza3s=;
-        b=P1ENv6ghYnMSOzdKwSZDHOniw7i+gHM9SWvjsPS+nXcpf4uhfjZJjCfiznixdHS7UHUGUl
-        a34b0cvwxyIOGXHl1JLWLzB64bZDoXsOpneHkxjbVOOIAwHRwzjzh7nkMxX9MEEiCvDvNr
-        htx20xTSyXpVilz7Cd7mz1QsfdAQFf8=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 41E96AE87;
-        Fri, 11 Dec 2020 12:10:46 +0000 (UTC)
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
- interrupts
-To:     boris.ostrovsky@oracle.com, Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        id S2395394AbgLKMQE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Dec 2020 07:16:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729717AbgLKMPw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Dec 2020 07:15:52 -0500
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CEE4C0613D6
+        for <linux-pci@vger.kernel.org>; Fri, 11 Dec 2020 04:15:12 -0800 (PST)
+Received: by mail-wm1-x342.google.com with SMTP id y23so8402391wmi.1
+        for <linux-pci@vger.kernel.org>; Fri, 11 Dec 2020 04:15:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qSQYi3dLtVwnUE7Pl/TP3BDVgqP8TWHMbxJBiJCII0E=;
+        b=Dx5LivaHRPPR2HXGN6NhnuCdmBQJvKcZWNlLrTLzZFJwcB6RzJfmUfHHX4C4GRDH+l
+         Fcl2VrSCqpI3weTIOmxR4ST1Ab+nn2xscu6tLq74x6PXQBQG65J05JwnSJmobYeE9qJM
+         dVtzrRd4Izqw/X9RQc7u7y0Gf07xW1suebY6PqHPbvgQpw/9xyyNskglhVAb3CQtCOJJ
+         yvkfzspi1t+d/nNAM30Lby/YgWlVGRWwtFu2aJkl7Qkl4q0eInKA1+hgGxL3Zq2Yij0n
+         ylb9TP1E0wB3Gi46R4nOboIrRT4ILrik9FL+7bvCj7CtuSdXcbyObivBqO36KuGP9+qn
+         d1Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qSQYi3dLtVwnUE7Pl/TP3BDVgqP8TWHMbxJBiJCII0E=;
+        b=U6dViiiINHt6U7gD14L1VyvienW9RKd0AxICBfHY55uEh/vl65oYpTlk1ZrB/wi2YC
+         z64Su73LGgLzfW3l2gcSxN5aPl5RgPU8Q10ROBgRI7WheOlMfOcx+UkhJHEXmcfAIwrS
+         mtK+DSWWIXQMn8hWAlj3fBqToCltt54FXHd/9pkTwrtttU6h+7pwmrLcBeHaCI90nfbN
+         eRC6Og+H/uqS8Su6he278/pTlzAOWhgJNkC2YQB9PXThFR6F1F+sgDKiT/2qvB54+iW0
+         JdEft1j7T1z20BvwwYGe8O/7Za3WwxvBCkjPJMcnIP4L3iWS+5gqkEv+4CqTwNlJXZiO
+         Lpkw==
+X-Gm-Message-State: AOAM5308zC1PImrmgTkIIViItHOA4tVapSMYMSxZP6XvPTezK2AvzG6H
+        kfPcFkmNqfpnDNT09AYLDjVD8Q==
+X-Google-Smtp-Source: ABdhPJzOVm94SMfkeQ9hfL9CF7fkbPYJoEd7mWVHor1srR0OHVa66W4FFAeAs+pfP5iEXHtZs3DlKw==
+X-Received: by 2002:a7b:cc12:: with SMTP id f18mr13429738wmh.110.1607688910750;
+        Fri, 11 Dec 2020 04:15:10 -0800 (PST)
+Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id s63sm16668115wms.18.2020.12.11.04.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Dec 2020 04:15:10 -0800 (PST)
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>
-References: <20201210192536.118432146@linutronix.de>
- <20201210194045.250321315@linutronix.de>
- <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com>
-Date:   Fri, 11 Dec 2020 13:10:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Jon Nettleton <jon@solid-run.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        patches@linaro.org
+Subject: [RFC HACK PATCH] PCI: dwc: layerscape: Hack around enumeration problems with Honeycomb LX2K
+Date:   Fri, 11 Dec 2020 12:15:07 +0000
+Message-Id: <20201211121507.28166-1-daniel.thompson@linaro.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="qMVMfsvlAyIOVuhurM0AhbsuX1abhQOZS"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---qMVMfsvlAyIOVuhurM0AhbsuX1abhQOZS
-Content-Type: multipart/mixed; boundary="1SKmisPo0wwQx0jet3HDKXRMk6SQ4aMth";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: boris.ostrovsky@oracle.com, Thomas Gleixner <tglx@linutronix.de>,
- LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Marc Zyngier <maz@kernel.org>,
- Stefano Stabellini <sstabellini@kernel.org>, xen-devel@lists.xenproject.org,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, afzal mohammed <afzal.mohd.ma@gmail.com>,
- linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Christian Borntraeger <borntraeger@de.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@linux.ie>,
- Daniel Vetter <daniel@ffwll.ch>,
- Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
- Chris Wilson <chris@chris-wilson.co.uk>,
- Wambui Karuga <wambui.karugax@gmail.com>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- Lee Jones <lee.jones@linaro.org>, Jon Mason <jdmason@kudzu.us>,
- Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
- linux-ntb@googlegroups.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Michal Simek <michal.simek@xilinx.com>, linux-pci@vger.kernel.org,
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Tariq Toukan <tariqt@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>
-Message-ID: <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com>
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
- interrupts
-References: <20201210192536.118432146@linutronix.de>
- <20201210194045.250321315@linutronix.de>
- <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
-In-Reply-To: <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
+I have been chasing down a problem enumerating an NVMe drive on a
+Honeycomb LX2K (NXP LX2160A). Specifically the drive can only enumerate
+successfully if the we are emitting lots of console messages via a UART.
+If the system is booted with `quiet` set then enumeration fails.
 
---1SKmisPo0wwQx0jet3HDKXRMk6SQ4aMth
-Content-Type: multipart/mixed;
- boundary="------------8ECAEB8E864B85BAB060713C"
-Content-Language: en-US
+I guessed this would be due to the timing impact of printk-to-UART and
+tried to find out where a delay could be added to provoke a successful
+enumeration.
 
-This is a multi-part message in MIME format.
---------------8ECAEB8E864B85BAB060713C
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+This patch contains the results. The delay length (1ms) was selected by
+binary searching downwards until the delay was not effective for these
+devices (Honeycomb LX2K and a Western Digital WD Blue SN550).
 
-On 11.12.20 00:20, boris.ostrovsky@oracle.com wrote:
->=20
-> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
->> All event channel setups bind the interrupt on CPU0 or the target CPU =
-for
->> percpu interrupts and overwrite the affinity mask with the correspondi=
-ng
->> cpumask. That does not make sense.
->>
->> The XEN implementation of irqchip::irq_set_affinity() already picks a
->> single target CPU out of the affinity mask and the actual target is st=
-ored
->> in the effective CPU mask, so destroying the user chosen affinity mask=
+I have also included the workaround twice (conditionally compiled). The
+first change is the *latest* possible code path that we can deploy a
+delay whilst the second is the earliest place I could find.
 
->> which might contain more than one CPU is wrong.
->>
->> Change the implementation so that the channel is bound to CPU0 at the =
-XEN
->> level and leave the affinity mask alone. At startup of the interrupt
->> affinity will be assigned out of the affinity mask and the XEN binding=
- will
->> be updated.
->=20
->=20
-> If that's the case then I wonder whether we need this call at all and i=
-nstead bind at startup time.
+The summary is that the critical window were we are currently relying on
+a call to the console UART code can "mend" the driver runs from calling
+dw_pcie_setup_rc() in host init to just before we read the state in the
+link up callback.
 
-After some discussion with Thomas on IRC and xen-devel archaeology the
-result is: this will be needed especially for systems running on a
-single vcpu (e.g. small guests), as the .irq_set_affinity() callback
-won't be called in this case when starting the irq.
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+---
+
+Notes:
+    This patch is RFC (and HACK) because I don't have much clue *why* this
+    patch works... merely that this is the smallest possible change I need
+    to replicate the current accidental printk() workaround.  Perhaps one
+    could argue that RFC here stands for request-for-clue.  All my
+    observations and changes here are empirical and I don't know how best to
+    turn them into something that is not a hack!
+    
+    BTW I noticed many other pcie-designware drivers take advantage
+    of a function called dw_pcie_wait_for_link() in their init paths...
+    but my naive attempts to add it to the layerscape driver results
+    in non-booting systems so I haven't embarrassed myself by including
+    that in the patch!
+
+ drivers/pci/controller/dwc/pci-layerscape.c | 35 +++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+index f24f79a70d9a..c354904b90ef 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape.c
++++ b/drivers/pci/controller/dwc/pci-layerscape.c
+@@ -22,6 +22,8 @@
+
+ #include "pcie-designware.h"
+
++#define WORKAROUND_LATEST_POSSIBLE
++
+ /* PEX1/2 Misc Ports Status Register */
+ #define SCFG_PEXMSCPORTSR(pex_idx)	(0x94 + (pex_idx) * 4)
+ #define LTSSM_STATE_SHIFT	20
+@@ -113,10 +115,31 @@ static int ls_pcie_link_up(struct dw_pcie *pci)
+ 	struct ls_pcie *pcie = to_ls_pcie(pci);
+ 	u32 state;
+
++	/*
++	 * Strictly speaking *this* (before the ioread32) is the latest
++	 * point a simple delay can be effective. If we move the delay
++	 * after the ioread32 then the NVMe does not enumerate.
++	 *
++	 * However this function appears to be frequently called so an
++	 * unconditional delay here causes noticeable delay at boot
++	 * time. Hence we implement the workaround by retrying the read
++	 * after a short delay if we think we might need to return false.
++	 */
++
+ 	state = (ioread32(pcie->lut + pcie->drvdata->lut_dbg) >>
+ 		 pcie->drvdata->ltssm_shift) &
+ 		 LTSSM_STATE_MASK;
+
++#ifdef WORKAROUND_LATEST_POSSIBLE
++	if (state < LTSSM_PCIE_L0) {
++		/* see comment above */
++		mdelay(1);
++		state = (ioread32(pcie->lut + pcie->drvdata->lut_dbg) >>
++			 pcie->drvdata->ltssm_shift) &
++			 LTSSM_STATE_MASK;
++	}
++#endif
++
+ 	if (state < LTSSM_PCIE_L0)
+ 		return 0;
+
+@@ -152,6 +175,18 @@ static int ls_pcie_host_init(struct pcie_port *pp)
+
+ 	dw_pcie_setup_rc(pp);
+
++#ifdef WORKAROUND_EARLIEST_POSSIBLE
++	/*
++	 * This is the earliest point the delay is effective.
++	 * If we move it before dw_pcie_setup_rc() then the
++	 * NVMe does not enumerate.
++	 *
++	 * 500us is too short to reliably work around the issue
++	 * hence adopting 1000us here.
++	 */
++	mdelay(1);
++#endif
++
+ 	return 0;
+ }
 
 
-Juergen
+base-commit: 0477e92881850d44910a7e94fc2c46f96faa131f
+--
+2.29.2
 
---------------8ECAEB8E864B85BAB060713C
-Content-Type: application/pgp-keys;
- name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOBy=
-cWx
-w3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJvedYm8O=
-f8Z
-d621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y=
-9bf
-IhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xq=
-G7/
-377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR=
-3Jv
-c3MgPGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsEFgIDA=
-QIe
-AQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4FUGNQH2lvWAUy+dnyT=
-hpw
-dtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3TyevpB0CA3dbBQp0OW0fgCetToGIQrg0=
-MbD
-1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbv=
-oPH
-Z8SlM4KWm8rG+lIkGurqqu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v=
-5QL
-+qHI3EIPtyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVyZ=
-2Vu
-IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJCAcDAgEGFQgCC=
-QoL
-BBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4RF7HoZhPVPogNVbC4YA6lW7Dr=
-Wf0
-teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz78X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC=
-/nu
-AFVGy+67q2DH8As3KPu0344TBDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0Lh=
-ITT
-d9jLzdDad1pQSToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLm=
-XBK
-7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkMnQfvUewRz=
-80h
-SnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMBAgAjBQJTjHDXAhsDBwsJC=
-AcD
-AgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJn=
-FOX
-gMLdBQgBlVPO3/D9R8LtF9DBAFPNhlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1=
-jnD
-kfJZr6jrbjgyoZHiw/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0=
-N51
-N5JfVRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwPOoE+l=
-otu
-fe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK/1xMI3/+8jbO0tsn1=
-tqS
-EUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuZGU+wsB5BBMBAgAjBQJTjHDrA=
-hsD
-BwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3=
-g3O
-ZUEBmDHVVbqMtzwlmNC4k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5=
-dM7
-wRqzgJpJwK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu5=
-D+j
-LRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzBTNh30FVKK1Evm=
-V2x
-AKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37IoN1EblHI//x/e2AaIHpzK5h88N=
-Eaw
-QsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpW=
-nHI
-s98ndPUDpnoxWQugJ6MpMncr0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZR=
-wgn
-BC5mVM6JjQ5xDk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNV=
-bVF
-LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mmwe0icXKLk=
-pEd
-IXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0Iv3OOImwTEe4co3c1mwARA=
-QAB
-wsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMvQ/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEw=
-Tbe
-8YFsw2V/Buv6Z4Mysln3nQK5ZadD534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1=
-vJz
-Q1fOU8lYFpZXTXIHb+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8=
-VGi
-wXvTyJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqcsuylW=
-svi
-uGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5BjR/i1DG86lem3iBDX=
-zXs
-ZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------8ECAEB8E864B85BAB060713C--
-
---1SKmisPo0wwQx0jet3HDKXRMk6SQ4aMth--
-
---qMVMfsvlAyIOVuhurM0AhbsuX1abhQOZS
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAl/TYcMFAwAAAAAACgkQsN6d1ii/Ey+q
-kwgAhqGwSjkPCHuD6iXs+izA0i+SRbhYcA5DS/prsjTsYrIr31Nv0iAWAuq87gH+Uo5StBRXaRlR
-Vh9HiOFFv8ScTgdoiZDUycGN07TFuj9NJGJp/TvD+OZN17OQt2w1Pw1JeRI5RNsVTm22OMUH4Om8
-D5t0xrU0zymXmndnx8OZEQ/j0W+hCRjIoNpmjegRa1p8q12pzI9FJByuAhVVTqmcfucWD2sIXlFk
-ZYAwwiA5sMnSj7UYTiR6lkIWMPv4D0FJYC1GwAMI6EONFeO6SBjMqZsWhymL1P1AU1WoSAe19C/e
-DRzPDV1x+jKSYVArD4THJwjqoa7QDXngm7UxnYCYdg==
-=Bajp
------END PGP SIGNATURE-----
-
---qMVMfsvlAyIOVuhurM0AhbsuX1abhQOZS--
