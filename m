@@ -2,197 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A76B22D78E5
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 16:15:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1947B2D7896
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 16:06:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437679AbgLKPOt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Dec 2020 10:14:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
+        id S2392162AbgLKPA0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Dec 2020 10:00:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406587AbgLKPO1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 11 Dec 2020 10:14:27 -0500
-X-Gm-Message-State: AOAM532va+slDvlPco9ZGiVGdShZunt4Q5t+2MAH2OcyXQ7mXzM8JG8/
-        I5UrwnH/6NPHBjjoAw2EhEMfjh5YqZAH7pnyhA==
+        id S2436895AbgLKPAW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Dec 2020 10:00:22 -0500
+X-Gm-Message-State: AOAM532F1r2X6PpGL4uvgcTAAHdUcHB4fkR5alYvk07B9aAlWFgpTEly
+        CCmh/qXebHctqV5idHqLxB32GCi1QjBsktA84g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607697477;
-        bh=jt9yLQprthmgA87SH0GTsfqD4jh9KUz8rU6Ktkbeui4=;
+        s=k20201202; t=1607698173;
+        bh=6DkU9ooSDWgagrJRUIYO/X3sDJ4hfhxHbpDrECTwLvQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QJXWZ+bzDXcOTwOKti4SmEtfg4AxJVL2/2jhyReZMJ90AaMwyA+bZQ5aEbWxS2c6+
-         bxkAMioKk0dpBQY9r/DzOs8k7AjLuhIiMbCKXEKxzuTswd4l6yhZ2Zqr4oDCmFVGHu
-         aV4u5HNoQU+flpF6B1MuErZNovOCO5S9ELSMoKCbuT0WnMjud2KrqfkystGdoWDyoj
-         qs7ZfTPSFCTW7Ev7oyo9Kyr/QL5+Fb/Ew5PcKhUkaLZECBG//sgR1HnvJ2fxvRtVq/
-         74wg7wNwv87nGmIYcy/7v2phRzoBrjrKBX7QzXyn8dv3FDBBHEO2QaEhlhXIi4MpQ/
-         +hIoELE+9IaQQ==
-X-Google-Smtp-Source: ABdhPJw8iipBBbQd2e3oqGYeXVXnVO2F+gVAD0RecKiPsdLSSdONJGBhs13TPI8RiV9nb+TDmZY20hsosqFWpVGhAE8=
-X-Received: by 2002:a17:906:d87:: with SMTP id m7mr11190157eji.108.1607697471952;
- Fri, 11 Dec 2020 06:37:51 -0800 (PST)
+        b=kiaK+zGqvoYEXNx3YataqbgjDJZa9/RmAI/sdNtc4w68aS/w3e7TKOJ5LCC2YYYnb
+         8HHAfFXS343YtkM/9vvh8laXZ+Zfg9a9cTcHB/kQxvNaJjAoTkrgCv1pB/JWBP61lf
+         TSnbGrfDHJEUWmnP9E2gLFhDXyDpkNERsr4NH7mdK58ArU0gAmjxnMTrejLSxBSw3y
+         vB9UmMD6xt7Vu+nXEDD2RJJ35UjED9QsVjPw7PHxnr07oQo5dWt8NAgT6toowTtfK6
+         Tbuup4Y9DDg6PDFAca8hkAoCuQdvCv8e5herLXVbaO9hBMAZAIwl0rEaIoYmVXaEEm
+         zNlaxGJMm+agg==
+X-Google-Smtp-Source: ABdhPJwsBGHilePCX91/B+68HXzQwCke1MqxmJdd0ufB0PJoG0TAj7RNnkbSayd8FT/j3NwjznYhZmQUUCk3hgmztV8=
+X-Received: by 2002:a17:906:ae43:: with SMTP id lf3mr10466222ejb.130.1607698169358;
+ Fri, 11 Dec 2020 06:49:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20201211121507.28166-1-daniel.thompson@linaro.org>
-In-Reply-To: <20201211121507.28166-1-daniel.thompson@linaro.org>
+References: <20201124210228.GA589610@bjorn-Precision-5520> <42ebcbe2-7d24-558a-3c33-beb7818d5516@nvidia.com>
+ <49e3a6a4-9621-0734-99f1-b4f616dbcb7d@nvidia.com>
+In-Reply-To: <49e3a6a4-9621-0734-99f1-b4f616dbcb7d@nvidia.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 11 Dec 2020 08:37:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKQxFvkFtph1BZD2LKdZjboxhMTWkZe_AWS-vMD9y0pMw@mail.gmail.com>
-Message-ID: <CAL_JsqKQxFvkFtph1BZD2LKdZjboxhMTWkZe_AWS-vMD9y0pMw@mail.gmail.com>
-Subject: Re: [RFC HACK PATCH] PCI: dwc: layerscape: Hack around enumeration
- problems with Honeycomb LX2K
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+Date:   Fri, 11 Dec 2020 08:49:16 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK7EtRhGhd20P2raj1C4GLOoBQ55ngY+BvygRE-61E+9A@mail.gmail.com>
+Message-ID: <CAL_JsqK7EtRhGhd20P2raj1C4GLOoBQ55ngY+BvygRE-61E+9A@mail.gmail.com>
+Subject: Re: [PATCH V2] PCI: dwc: Add support to configure for ECRC
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linaro Patches <patches@linaro.org>
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 11, 2020 at 6:15 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
+On Fri, Dec 11, 2020 at 7:58 AM Vidya Sagar <vidyas@nvidia.com> wrote:
 >
-> I have been chasing down a problem enumerating an NVMe drive on a
-> Honeycomb LX2K (NXP LX2160A). Specifically the drive can only enumerate
-> successfully if the we are emitting lots of console messages via a UART.
-> If the system is booted with `quiet` set then enumeration fails.
+> Hi Lorenzo,
+> Apologies to bug you, but wondering if you have any further comments on
+> this patch that I need to take care of?
 
-We really need to get away from work-arounds for device X on host Y. I
-suspect they are not limited to that combination only...
+You can check the status of your patches in Patchwork:
 
-How exactly does it fail to enumerate? There's a (racy) linkup check
-on config accesses, is it reporting link down and skipping config
-accesses?
+https://patchwork.kernel.org/project/linux-pci/patch/20201111121145.7015-1-vidyas@nvidia.com/
 
-> I guessed this would be due to the timing impact of printk-to-UART and
-> tried to find out where a delay could be added to provoke a successful
-> enumeration.
->
-> This patch contains the results. The delay length (1ms) was selected by
-> binary searching downwards until the delay was not effective for these
-> devices (Honeycomb LX2K and a Western Digital WD Blue SN550).
->
-> I have also included the workaround twice (conditionally compiled). The
-> first change is the *latest* possible code path that we can deploy a
-> delay whilst the second is the earliest place I could find.
->
-> The summary is that the critical window were we are currently relying on
-> a call to the console UART code can "mend" the driver runs from calling
-> dw_pcie_setup_rc() in host init to just before we read the state in the
-> link up callback.
->
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->
-> Notes:
->     This patch is RFC (and HACK) because I don't have much clue *why* this
->     patch works... merely that this is the smallest possible change I need
->     to replicate the current accidental printk() workaround.  Perhaps one
->     could argue that RFC here stands for request-for-clue.  All my
->     observations and changes here are empirical and I don't know how best to
->     turn them into something that is not a hack!
->
->     BTW I noticed many other pcie-designware drivers take advantage
->     of a function called dw_pcie_wait_for_link() in their init paths...
->     but my naive attempts to add it to the layerscape driver results
->     in non-booting systems so I haven't embarrassed myself by including
->     that in the patch!
+If it's in 'New' state and delegated to Lorenzo or Bjorn, it's in
+their queue. You can shorten the queue by reviewing stuff in front of
+you. :)
 
-You need to look at what's pending for v5.11, because I reworked this
-to be more unified. The ordering of init is also possibly changed. The
-sequence is now like this:
+Rob
 
-        dw_pcie_setup_rc(pp);
-        dw_pcie_msi_init(pp);
-
-        if (!dw_pcie_link_up(pci) && pci->ops->start_link) {
-                ret = pci->ops->start_link(pci);
-                if (ret)
-                        goto err_free_msi;
-        }
-
-        /* Ignore errors, the link may come up later */
-        dw_pcie_wait_for_link(pci);
-
-
->  drivers/pci/controller/dwc/pci-layerscape.c | 35 +++++++++++++++++++++
->  1 file changed, 35 insertions(+)
 >
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index f24f79a70d9a..c354904b90ef 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -22,6 +22,8 @@
+> Thanks,
+> Vidya Sagar
 >
->  #include "pcie-designware.h"
->
-> +#define WORKAROUND_LATEST_POSSIBLE
-> +
->  /* PEX1/2 Misc Ports Status Register */
->  #define SCFG_PEXMSCPORTSR(pex_idx)     (0x94 + (pex_idx) * 4)
->  #define LTSSM_STATE_SHIFT      20
-> @@ -113,10 +115,31 @@ static int ls_pcie_link_up(struct dw_pcie *pci)
->         struct ls_pcie *pcie = to_ls_pcie(pci);
->         u32 state;
->
-> +       /*
-> +        * Strictly speaking *this* (before the ioread32) is the latest
-> +        * point a simple delay can be effective. If we move the delay
-> +        * after the ioread32 then the NVMe does not enumerate.
-> +        *
-> +        * However this function appears to be frequently called so an
-> +        * unconditional delay here causes noticeable delay at boot
-> +        * time. Hence we implement the workaround by retrying the read
-> +        * after a short delay if we think we might need to return false.
-> +        */
-> +
->         state = (ioread32(pcie->lut + pcie->drvdata->lut_dbg) >>
->                  pcie->drvdata->ltssm_shift) &
->                  LTSSM_STATE_MASK;
->
-> +#ifdef WORKAROUND_LATEST_POSSIBLE
-> +       if (state < LTSSM_PCIE_L0) {
-> +               /* see comment above */
-> +               mdelay(1);
-> +               state = (ioread32(pcie->lut + pcie->drvdata->lut_dbg) >>
-> +                        pcie->drvdata->ltssm_shift) &
-> +                        LTSSM_STATE_MASK;
-
-Side note, I really wonder about the variety of ways in DWC drivers we
-have to check link state. The default is a debug register... Are the
-standard PCIe registers for this really broken in these cases?
-
-> +       }
-> +#endif
-> +
->         if (state < LTSSM_PCIE_L0)
->                 return 0;
->
-> @@ -152,6 +175,18 @@ static int ls_pcie_host_init(struct pcie_port *pp)
->
->         dw_pcie_setup_rc(pp);
-
-Might be related to the PORT_LOGIC_SPEED_CHANGE we do in here.
-
-> +#ifdef WORKAROUND_EARLIEST_POSSIBLE
-> +       /*
-> +        * This is the earliest point the delay is effective.
-> +        * If we move it before dw_pcie_setup_rc() then the
-> +        * NVMe does not enumerate.
-> +        *
-> +        * 500us is too short to reliably work around the issue
-> +        * hence adopting 1000us here.
-> +        */
-> +       mdelay(1);
-> +#endif
-> +
->         return 0;
->  }
->
->
-> base-commit: 0477e92881850d44910a7e94fc2c46f96faa131f
-> --
-> 2.29.2
->
+> On 12/3/2020 5:40 PM, Vidya Sagar wrote:
+> >
+> >
+> > On 11/25/2020 2:32 AM, Bjorn Helgaas wrote:
+> >> External email: Use caution opening links or attachments
+> >>
+> >>
+> >> On Tue, Nov 24, 2020 at 03:50:01PM +0530, Vidya Sagar wrote:
+> >>> Hi Bjorn,
+> >>> Please let me know if this patch needs any further modifications
+> >>
+> >> I'm fine with it, but of course Lorenzo will take care of it.
+> > Thanks Bjorn.
+> >
+> > Hi Lorenzo,
+> > Please let me know if you have any comments for this patch.
+> >
+> > Thanks,
+> > Vidya Sagar
+> >
+> >>
+> >>> On 11/12/2020 10:32 PM, Vidya Sagar wrote:
+> >>>> External email: Use caution opening links or attachments
+> >>>>
+> >>>>
+> >>>> On 11/12/2020 3:59 AM, Bjorn Helgaas wrote:
+> >>>>> External email: Use caution opening links or attachments
+> >>>>>
+> >>>>>
+> >>>>> On Wed, Nov 11, 2020 at 10:21:46PM +0530, Vidya Sagar wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>> On 11/11/2020 9:57 PM, Jingoo Han wrote:
+> >>>>>>> External email: Use caution opening links or attachments
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> On 11/11/20, 7:12 AM, Vidya Sagar wrote:
+> >>>>>>>>
+> >>>>>>>> DesignWare core has a TLP digest (TD) override bit in
+> >>>>>>>> one of the control
+> >>>>>>>> registers of ATU. This bit also needs to be programmed for
+> >>>>>>>> proper ECRC
+> >>>>>>>> functionality. This is currently identified as an issue
+> >>>>>>>> with DesignWare
+> >>>>>>>> IP version 4.90a.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> >>>>>>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> >>>>>>>> ---
+> >>>>>>>> V2:
+> >>>>>>>> * Addressed Bjorn's comments
+> >>>>>>>>
+> >>>>>>>>     drivers/pci/controller/dwc/pcie-designware.c | 52
+> >>>>>>>> ++++++++++++++++++--
+> >>>>>>>>     drivers/pci/controller/dwc/pcie-designware.h |  1 +
+> >>>>>>>>     2 files changed, 49 insertions(+), 4 deletions(-)
+> >>>>>>>>
+> >>>>>>>> diff --git
+> >>>>>>>> a/drivers/pci/controller/dwc/pcie-designware.c
+> >>>>>>>> b/drivers/pci/controller/dwc/pcie-designware.c
+> >>>>>>>> index c2dea8fc97c8..ec0d13ab6bad 100644
+> >>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> >>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> >>>>>>>> @@ -225,6 +225,46 @@ static void
+> >>>>>>>> dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index,
+> >>>>>>>> u32 reg,
+> >>>>>>>>          dw_pcie_writel_atu(pci, offset + reg, val);
+> >>>>>>>>     }
+> >>>>>>>>
+> >>>>>>>> +static inline u32 dw_pcie_enable_ecrc(u32 val)
+> >>>>>>>
+> >>>>>>> What is the reason to use inline here?
+> >>>>>>
+> >>>>>> Actually, I wanted to move the programming part inside the
+> >>>>>> respective APIs
+> >>>>>> but then I wanted to give some details as well in comments so to
+> >>>>>> avoid
+> >>>>>> duplication, I came up with this function. But, I'm making it
+> >>>>>> inline for
+> >>>>>> better code optimization by compiler.
+> >>>>>
+> >>>>> I don't really care either way, but I'd be surprised if the compiler
+> >>>>> didn't inline this all by itself even without the explicit "inline".
+> >>>> I just checked it and you are right that compiler is indeed inlining it
+> >>>> without explicitly mentioning 'inline'.
+> >>>> I hope it is ok to leave it that way.
+> >>>>
+> >>>>>
+> >>>>>>>> +{
+> >>>>>>>> +     /*
+> >>>>>>>> +      * DesignWare core version 4.90A has this strange design
+> >>>>>>>> issue
+> >>>>>>>> +      * where the 'TD' bit in the Control register-1 of
+> >>>>>>>> the ATU outbound
+> >>>>>>>> +      * region acts like an override for the ECRC
+> >>>>>>>> setting i.e. the presence
+> >>>>>>>> +      * of TLP Digest(ECRC) in the outgoing TLPs is
+> >>>>>>>> solely determined by
+> >>>>>>>> +      * this bit. This is contrary to the PCIe spec
+> >>>>>>>> which says that the
+> >>>>>>>> +      * enablement of the ECRC is solely determined by
+> >>>>>>>> the AER registers.
+> >>>>>>>> +      *
+> >>>>>>>> +      * Because of this, even when the ECRC is enabled through AER
+> >>>>>>>> +      * registers, the transactions going through ATU
+> >>>>>>>> won't have TLP Digest
+> >>>>>>>> +      * as there is no way the AER sub-system could
+> >>>>>>>> program the TD bit which
+> >>>>>>>> +      * is specific to DesignWare core.
+> >>>>>>>> +      *
+> >>>>>>>> +      * The best way to handle this scenario is to program the
+> >>>>>>>> TD bit
+> >>>>>>>> +      * always. It affects only the traffic from root
+> >>>>>>>> port to downstream
+> >>>>>>>> +      * devices.
+> >>>>>>>> +      *
+> >>>>>>>> +      * At this point,
+> >>>>>>>> +      * When ECRC is enabled in AER registers,
+> >>>>>>>> everything works normally
+> >>>>>>>> +      * When ECRC is NOT enabled in AER registers, then,
+> >>>>>>>> +      * on Root Port:- TLP Digest (DWord size) gets
+> >>>>>>>> appended to each packet
+> >>>>>>>> +      *                even through it is not required.
+> >>>>>>>> Since downstream
+> >>>>>>>> +      *                TLPs are mostly for
+> >>>>>>>> configuration accesses and BAR
+> >>>>>>>> +      *                accesses, they are not in
+> >>>>>>>> critical path and won't
+> >>>>>>>> +      *                have much negative effect on the
+> >>>>>>>> performance.
+> >>>>>>>> +      * on End Point:- TLP Digest is received for
+> >>>>>>>> some/all the packets coming
+> >>>>>>>> +      *                from the root port. TLP Digest
+> >>>>>>>> is ignored because,
+> >>>>>>>> +      *                as per the PCIe Spec r5.0 v1.0 section
+> >>>>>>>> 2.2.3
+> >>>>>>>> +      *                "TLP Digest Rules", when an
+> >>>>>>>> endpoint receives TLP
+> >>>>>>>> +      *                Digest when its ECRC check
+> >>>>>>>> functionality is disabled
+> >>>>>>>> +      *                in AER registers, received TLP
+> >>>>>>>> Digest is just ignored.
+> >>>>>>>> +      * Since there is no issue or error reported
+> >>>>>>>> either side, best way to
+> >>>>>>>> +      * handle the scenario is to program TD bit by default.
+> >>>>>>>> +      */
+> >>>>>>>> +
+> >>>>>>>> +     return val | PCIE_ATU_TD;
+> >>>>>>>> +}
