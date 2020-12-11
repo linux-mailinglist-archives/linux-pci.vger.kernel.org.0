@@ -2,129 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 659402D7B2D
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 17:43:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6309B2D7BAF
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 17:58:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389284AbgLKQmt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 11 Dec 2020 11:42:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389066AbgLKQm2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 11 Dec 2020 11:42:28 -0500
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9360FC0613CF;
-        Fri, 11 Dec 2020 08:41:48 -0800 (PST)
-Received: by mail-pg1-x542.google.com with SMTP id n7so7499160pgg.2;
-        Fri, 11 Dec 2020 08:41:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=56syKNuOJ90gHZSy+DseY7QqbtNVXxsXzReMPurvgco=;
-        b=nvCFTmQz3OwUdgoGK0ko6g6K3bNYPz4aC4e1cPt04OJBjcCgw+43hqSGV2drGLVlXD
-         KbMJfgtkIIoA/4PSZZPztt8valYndCn+NRc1rMw6emKQ7c0EPdTIat2espvMgXnmugkZ
-         4GNK7q+vMpUKJD2PkPRNPDp2MtLv+QzjgVbL22X5Dk5QzptBxsyhkhodwtN8HmPtYGvW
-         /CBWK6+zAtpmrrWxzPNFUr3PWGzZhy+v0CjAaIStMYDhOizwulJyq7VscJmWk4C7MmKV
-         q+QbQSysmg6AOtvpLO1TXwvE8OEjx69/XNyQVVP/SgDHGcvNl6X/7td/Nsi5Gyay/jXk
-         enKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=56syKNuOJ90gHZSy+DseY7QqbtNVXxsXzReMPurvgco=;
-        b=LAqb5KnRyn8O8g/7XIM+e0MQoxeUSdO2Gk09FVrzAkb3Orrl2qmfWUzcwguw+4yJdo
-         OgxgYXx6ur9QwNrIRT/aDV2S9jfHGLW/u09OMlJc3iJIUKQlB4ehigCsIj9/BquySKbS
-         ZXLJNOloH8vvokrzQNo3EY9l1ieE0yEJrNHiYBxfyBN1e9ODWcosn2e4KQvdTku0nbOz
-         c0feJomkJS7XPJx5DPE2KZDO/wSZcrjYDPLLOYB+D5Q5unBAIqeaEL/yRStZ+N0Ozea4
-         zg08u4xBx8XnKyt0r1iy+Q6V10XlAhGB0eV5jzGVkZp+C+Amm3AWQBf6bRndkSxJyzob
-         URdQ==
-X-Gm-Message-State: AOAM5334gq4ewhwX8YCTOqyQ+cAaoOILxeo5Hd47mFe8hgp6EUOmvcP1
-        2vNh68duZbNgQU3pCq4z/M0=
-X-Google-Smtp-Source: ABdhPJwYZsHve+cDy/trtVG6Ug9cEkP0hyWJehscUiGZ7dT+lalXVKBp/xyjBk/tJTpWgognV5O88Q==
-X-Received: by 2002:a63:3247:: with SMTP id y68mr12668991pgy.10.1607704907988;
-        Fri, 11 Dec 2020 08:41:47 -0800 (PST)
-Received: from localhost.localdomain ([27.255.173.238])
-        by smtp.googlemail.com with ESMTPSA id bg20sm10383183pjb.6.2020.12.11.08.41.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Dec 2020 08:41:47 -0800 (PST)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        Damien.LeMoal@wdc.com, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Puranjay Mohan <puranjay12@gmail.com>
-Subject: [PATCH] drivers: block: skd: remove skd_pci_info()
-Date:   Fri, 11 Dec 2020 22:11:37 +0530
-Message-Id: <20201211164137.8605-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        id S2390627AbgLKQzh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 11 Dec 2020 11:55:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390711AbgLKQzW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 11 Dec 2020 11:55:22 -0500
+Date:   Fri, 11 Dec 2020 10:54:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607705681;
+        bh=qGbi0KCwfARwG62mclTn4fkyQ7GIU9YNOHL1UyRxz9E=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=tQVNrCiXBSnc1tpGQsMSV3gFYFrnbKOScEReL7bZ24hc6ES4892YIRsAsbFxVa+8Z
+         tIoBRExganwnfZWMuYHEVSAwEMcGseDwSwVK/y59jwt+vOGS7C0ZoNxrd08Jtc5AX7
+         Q9HCsa8n3vocaCMycso25w07Fer69n3ETjEgewkkY8hU1+oZG31Mx596qymQFoICRZ
+         vZNcVdELUb4PQ7cD+Wdr7SdNerR9Tq0PQ5cz1+nOpIGdv8/azugB+11kfW9eYvW3Vb
+         Ivj/b40Z+kYHc/dWoK4fee1xO9mw/FO/jpyxTnQ05TU2ExN2nYJrdHObwBRMb2wFw2
+         r/QNIGNlAHuvw==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "treding@nvidia.com" <treding@nvidia.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: Re: [PATCH V2] PCI: dwc: Add support to configure for ECRC
+Message-ID: <20201211165440.GA80431@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK7EtRhGhd20P2raj1C4GLOoBQ55ngY+BvygRE-61E+9A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCI core calls __pcie_print_link_status() for every device, it prints
-both the link width and the link speed. skd_pci_info() does the same
-thing again, hence it can be removed.
+On Fri, Dec 11, 2020 at 08:49:16AM -0600, Rob Herring wrote:
+> On Fri, Dec 11, 2020 at 7:58 AM Vidya Sagar <vidyas@nvidia.com> wrote:
+> >
+> > Hi Lorenzo,
+> > Apologies to bug you, but wondering if you have any further comments on
+> > this patch that I need to take care of?
+> 
+> You can check the status of your patches in Patchwork:
+> 
+> https://patchwork.kernel.org/project/linux-pci/patch/20201111121145.7015-1-vidyas@nvidia.com/
+> 
+> If it's in 'New' state and delegated to Lorenzo or Bjorn, it's in
+> their queue. You can shorten the queue by reviewing stuff in front of
+> you. :)
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- drivers/block/skd_main.c | 31 -------------------------------
- 1 file changed, 31 deletions(-)
+Thanks for pointing this out, this is exactly right.  I *love* it when
+people help review things.  Obviously it saves me time, and often it
+raises questions I would have missed.
 
-diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
-index a962b4551bed..da7aac5335d9 100644
---- a/drivers/block/skd_main.c
-+++ b/drivers/block/skd_main.c
-@@ -3134,40 +3134,11 @@ static const struct pci_device_id skd_pci_tbl[] = {
- 
- MODULE_DEVICE_TABLE(pci, skd_pci_tbl);
- 
--static char *skd_pci_info(struct skd_device *skdev, char *str)
--{
--	int pcie_reg;
--
--	strcpy(str, "PCIe (");
--	pcie_reg = pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
--
--	if (pcie_reg) {
--
--		char lwstr[6];
--		uint16_t pcie_lstat, lspeed, lwidth;
--
--		pcie_reg += 0x12;
--		pci_read_config_word(skdev->pdev, pcie_reg, &pcie_lstat);
--		lspeed = pcie_lstat & (0xF);
--		lwidth = (pcie_lstat & 0x3F0) >> 4;
--
--		if (lspeed == 1)
--			strcat(str, "2.5GT/s ");
--		else if (lspeed == 2)
--			strcat(str, "5.0GT/s ");
--		else
--			strcat(str, "<unknown> ");
--		snprintf(lwstr, sizeof(lwstr), "%dX)", lwidth);
--		strcat(str, lwstr);
--	}
--	return str;
--}
- 
- static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	int i;
- 	int rc = 0;
--	char pci_str[32];
- 	struct skd_device *skdev;
- 
- 	dev_dbg(&pdev->dev, "vendor=%04X device=%04x\n", pdev->vendor,
-@@ -3201,8 +3172,6 @@ static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err_out_regions;
- 	}
- 
--	skd_pci_info(skdev, pci_str);
--	dev_info(&pdev->dev, "%s 64bit\n", pci_str);
- 
- 	pci_set_master(pdev);
- 	rc = pci_enable_pcie_error_reporting(pdev);
--- 
-2.27.0
+Even "trivial" things like spelling, grammar, whitespace, subject line
+formats, etc. help because they are distractions to me and I will
+comment on them or spend time fixing them myself.  That doesn't mean
+"repost immediately after somebody points out a typo"; it means
+"collect feedback for a week or so, fix everything, *then* repost."
 
+This is an old but still relevant list of some of my OCD tendencies
+that take no special expertise to review for:
+https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
