@@ -2,81 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F19E2D6E97
-	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 04:29:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1D972D6EF7
+	for <lists+linux-pci@lfdr.de>; Fri, 11 Dec 2020 04:58:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbgLKD2k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 10 Dec 2020 22:28:40 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45623 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405216AbgLKD2Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 22:28:16 -0500
-Received: by mail-oi1-f195.google.com with SMTP id f132so8323047oib.12;
-        Thu, 10 Dec 2020 19:28:01 -0800 (PST)
+        id S2395303AbgLKD52 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 10 Dec 2020 22:57:28 -0500
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:39536 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392205AbgLKD5V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 10 Dec 2020 22:57:21 -0500
+Received: by mail-oo1-f65.google.com with SMTP id k9so1829403oop.6;
+        Thu, 10 Dec 2020 19:57:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eJ9AhbR7dNhyrIAYTLNaexWFEr8PcE/a+4lZQcMflOY=;
-        b=hVC9gQu1KWqRmG8bM0/Aah2H0goaQhCqtY58abnMqAYxfiacGT1KDJ5nQirbk7JURt
-         fN7d6yl7TM5Sfmk4Zd8x3ZFZuwWqRfNF55JrNZ2ZJTB2gyDpUhtZPlH3muphOKK7IOgn
-         0tXdBw6FxFNv5Y3XX8UCE4/Y3G13zeOgW1DheX4UZvt7y0sTNeVHOKgfmF1pvHgCZFyO
-         leK31/8AnHndCWLJAXvIFpTy4PPIdkmSlaEVbKx+29KDWTe3pZUxFsraFbkIKyt1qiUk
-         obKsXj4kVJ0+/F+Mwe/NRrhRpzkFU9BPgemeIbkpKCHNq0JOT8co3UaRQdppKgfpH5th
-         H9VQ==
-X-Gm-Message-State: AOAM531pJQfKmYbnAI6nYlu6RAkT1MzMANOsuQLsF9LwIo5aFDdxH/a/
-        MAAA0LMrqomS/MRucGE74WCKGWCKgg==
-X-Google-Smtp-Source: ABdhPJw0lGiB1h/FpZokQM3xt/Q9C5srIa56/s86Ohke5ZYCBQy8qi0mlicAN7fw4oZPzQuostgzeQ==
-X-Received: by 2002:aca:3c3:: with SMTP id 186mr7739011oid.22.1607657255601;
-        Thu, 10 Dec 2020 19:27:35 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ayCrwQlHyJ7DNWgoLclYh2e9r036lnB6ZWhtgl68KDs=;
+        b=deZoHfqAd7a10RFDrtYBoUk1P2IyNEE7bv9TohGRPrQfLprjkIQC6W3RF9rycRQcK8
+         ISMeZ86mlrXFEPQND1vamvEIaBu1MKxbiW4BQx/oABMpTNCfwiFDOl+xcRorNCkHObno
+         3EKMbGv4yRtLxCAkwdjuSKp9zR9MM12gtzl5ByQBj0BAv8GNc5DG1nwul5/RooDNVDB1
+         DM/LHFC1v5WDNUbKBenhZck7e8yF+sVKuI714Zyv12HUJ4UB49WtPWVLQnKu7aOoKNoS
+         bkqJv9uK14j3K3ow6YYHQgmmZvE/NFj8uUH9FdDBVmaykrgqaZjSCOJSMFYn4+2ejU56
+         KBow==
+X-Gm-Message-State: AOAM5328csNoMjLFV1pPz3umnz1tfnzsjQqtj1aFqS3qD9Kmzm1YW1qq
+        Ks+IsJnhu4Z14A+XZvnkMw==
+X-Google-Smtp-Source: ABdhPJwwpC7HWUhCXu0d+UyWyoNPc3+FWY6aX/GqPI/txqW9+ZnUWzheF5f4zETBZ01DX/kKP7qTqg==
+X-Received: by 2002:a4a:c485:: with SMTP id f5mr8470680ooq.78.1607659001036;
+        Thu, 10 Dec 2020 19:56:41 -0800 (PST)
 Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d62sm1500475oia.6.2020.12.10.19.27.34
+        by smtp.gmail.com with ESMTPSA id e1sm1534103oib.11.2020.12.10.19.56.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Dec 2020 19:27:34 -0800 (PST)
-Received: (nullmailer pid 3576272 invoked by uid 1000);
-        Fri, 11 Dec 2020 03:27:34 -0000
-Date:   Thu, 10 Dec 2020 21:27:34 -0600
+        Thu, 10 Dec 2020 19:56:40 -0800 (PST)
+Received: (nullmailer pid 3616780 invoked by uid 1000);
+        Fri, 11 Dec 2020 03:56:39 -0000
+Date:   Thu, 10 Dec 2020 21:56:39 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-rpi-kernel@lists.infradead.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org, linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: pci: rcar-pci-ep: Document missing
- interrupts property
-Message-ID: <20201211032734.GA3576224@robh.at.kernel.org>
-References: <20201209101231.2206479-1-geert+renesas@glider.be>
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: brcmstb: add BCM4908 binding
+Message-ID: <20201211035639.GA3616734@robh.at.kernel.org>
+References: <20201210180421.7230-1-zajec5@gmail.com>
+ <20201210180421.7230-2-zajec5@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20201209101231.2206479-1-geert+renesas@glider.be>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201210180421.7230-2-zajec5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 09 Dec 2020 11:12:31 +0100, Geert Uytterhoeven wrote:
-> The R-Car PCIe controller does not use interrupts when configured
-> for endpoint mode, hence the bindings do not document the interrupts
-> property.  However, all DTS files provide interrupts properties, and
-> thus fail to validate.
+On Thu, 10 Dec 2020 19:04:20 +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
 > 
-> Fix this by documenting the interrupts property.
+> BCM4908 is a SoC family with PCIe controller sharing design with the one
+> for STB. BCM4908 has different power management and memory controller so
+> few tweaks are required.
 > 
-> Fixes: 4c0f80920923f103 ("dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint controller")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> PERST# signal on BCM4908 is handled by an external MISC block so it
+> needs specifying a reset phandle.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
-> v2:
->   - Fix authorship,
->   - Add Reviewed-by,
->   - Drop RFC state,
->   - Fix name of interrupts property in patch description,
->   - Drop inappropriate Fixes tag,
+> V3: Drop "reset-names" from the generic "properties" - it's now defined as
+>     "compatible" specific property
+>     Drop "$ref" from the "resets" - thanks Rob.
 > ---
->  Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 37 ++++++++++++++-----
+>  1 file changed, 28 insertions(+), 9 deletions(-)
 > 
 
-Applied, thanks!
+Reviewed-by: Rob Herring <robh@kernel.org>
