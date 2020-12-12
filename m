@@ -2,182 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A8942D86DC
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Dec 2020 14:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF5D82D8738
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Dec 2020 16:20:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406409AbgLLNXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Dec 2020 08:23:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405486AbgLLNXM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Dec 2020 08:23:12 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9548BC0613CF;
-        Sat, 12 Dec 2020 05:22:31 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id e2so9243934pgi.5;
-        Sat, 12 Dec 2020 05:22:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VTZpp0n/Om/Jf11Mz+DqRKpiaIjN4mJ897+taVy59Ug=;
-        b=gs+DafSa6tm6ZhcmtOMAV2zOpZsgVdlfnJO3Cc8h6uZ7zEIkJ//kiGJiG610YJYd9c
-         hi7RAK/gnCn0RzWdwMYCDo5iWNdBQbtvJKYrsQI5ZcoVP15/FlhWsHbcStHoxRpLv5K2
-         7tZggztOJ5OrWHKSc7C0B5gdsPwG3Jh4XQNGDZzJ5uC91i9eb/FOwSgLNZwxuhvbJlm1
-         NZRNGWscN+BvdnS2hdE/2kf8TIOM+A9TYoTVx3z4X0kR366gEuSlj/jqKKPOYQFh4Kj3
-         5afdtXgK8N3xa39LgKIpCZwsKgk5qgska42v8wTbiGBbB+guXeCE2Frkke6P3b+dq3Ir
-         zifA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VTZpp0n/Om/Jf11Mz+DqRKpiaIjN4mJ897+taVy59Ug=;
-        b=pY/+WAanhS/D2gAgGcR3GdmyLEtanMI1ofX81rIjiO5itib6Igqi+GYh2YCVafjMvB
-         KAA4TMxqifgoSyzaKIwzvWK20KePSLT3LdqHKmcmhUuTV5nCkvWS88y02w+jpHCJCEEJ
-         dnGi/VaLM85BOjREX0tDR4pVtzHIBJ36Nd6zcalYq/JPWrVnnMpT5jhsyO/rgvlseWcD
-         Mm0pxRK89U34sdao1QUcClRD4gGKmFk6d07U8qi9Ax7UxwqPW6ftfPiHH2UyOcnwiYYv
-         4yNU9Tpb78BtqNWijRElZGiLzU7W50i1adnsxGE4SNKhyT7eUiuQqg4Ez0Go8u7Mp51p
-         cZxQ==
-X-Gm-Message-State: AOAM530rAyNTuQBGBmDiNJyJaBunFOnxRCjtAcIaPhkXibM51y+jm7r0
-        5Mjix1V4MBfcnYRzsJYLc5qhf4DNC5zMBkS/MaeVfYbxnN89suRR
-X-Google-Smtp-Source: ABdhPJz6qkGZaIbcK80z8oNTbmCmaNucZ+fxbrx52JjiY59cFl32wS2FAI0NK0C4i2f9nCp4IxJVJq78J8uiblnFRTg=
-X-Received: by 2002:a05:6a00:170a:b029:19d:afca:4704 with SMTP id
- h10-20020a056a00170ab029019dafca4704mr15887538pfc.7.1607779350726; Sat, 12
- Dec 2020 05:22:30 -0800 (PST)
+        id S2439237AbgLLPTV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Dec 2020 10:19:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbgLLPTM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 12 Dec 2020 10:19:12 -0500
+X-Gm-Message-State: AOAM532Nx+9hrRde1Wogr21fNly1ShBy18YGqbulx7NXCgQtFnydjgwR
+        +WapUYbDeTdLPy/zsoZ7bDQZOykg1XwoqXS0YIs=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607786311;
+        bh=psS0hu2IUIHN0p65FsTtGV4EUTtLG77MUOh+AZo/pFQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RmFUg1o5T+2sP8kQE8wa7IRy+eKJo5EB9Gh6xs3WbV2I5d+MTIBbS4YUCVy94Z8S/
+         rs119tEMc8dJogiB88HTo3QzFZaReIkLWA8mDrP3WEpjmzAWNglqghpD9zk9EZenad
+         91ZdRJEOzgl3NsT5MJ5lsEaSK5mIpKSOals2+XUqWFRDAmbI+/5i/gABtOl2UFTa0s
+         RSPNcCwgf1tNBTn3Ptckf37nnREh+LBol2X7QYPZaNAR0F7DpiWexMD3vj6ijbFbYJ
+         ouatYiF+r0HIa6aBWBUD5LUPrG+1KTTWQ8pKO67Gx5wyw9n8yTuv3PU/WAVGVujGhz
+         v9V3IqYY/d4KQ==
+X-Google-Smtp-Source: ABdhPJyYQRTgL1rTSEK+bKujyRCO/OeCso0uNE89jr89FeehL7hSSu8lYv+6qAr6DfcKWjb3JSUKkYAcGQNDLHbUEbQ=
+X-Received: by 2002:a67:fd88:: with SMTP id k8mr15795093vsq.17.1607786310790;
+ Sat, 12 Dec 2020 07:18:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20201210192536.118432146@linutronix.de> <20201210194042.860029489@linutronix.de>
- <CAHp75Vc-2OjE2uwvNRiyLMQ8GSN3P7SehKD-yf229_7ocaktiw@mail.gmail.com>
- <87h7osgifc.fsf@nanos.tec.linutronix.de> <87360cgfol.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87360cgfol.fsf@nanos.tec.linutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 12 Dec 2020 15:22:14 +0200
-Message-ID: <CAHp75Ve5zzeQw8P2wD083WW5+KGehETTy810wksfpXbj+3GBug@mail.gmail.com>
-Subject: Re: [patch 03/30] genirq: Move irq_set_lockdep_class() to core
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+References: <20201118071724.4866-1-wens@kernel.org> <20201118071724.4866-2-wens@kernel.org>
+ <CAL_JsqJphYYUsQR_kLH_y1gOArTifpEVUiTJfDpDsL8WjGxRfA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJphYYUsQR_kLH_y1gOArTifpEVUiTJfDpDsL8WjGxRfA@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Sat, 12 Dec 2020 23:18:17 +0800
+X-Gmail-Original-Message-ID: <CAGb2v6409SeptNUvMnpozriZ-L7iFCFFoG+=fJrtohxezDrEDQ@mail.gmail.com>
+Message-ID: <CAGb2v6409SeptNUvMnpozriZ-L7iFCFFoG+=fJrtohxezDrEDQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] PCI: rockchip: Make 'ep-gpios' DT property optional
+To:     Rob Herring <robh@kernel.org>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
+        Heiko Stuebner <heiko@sntech.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Johan Jonker <jbx6244@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 12:07 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Mon, Dec 7, 2020 at 10:11 PM Rob Herring <robh@kernel.org> wrote:
 >
-> On Fri, Dec 11 2020 at 22:08, Thomas Gleixner wrote:
->
-> > On Fri, Dec 11 2020 at 19:53, Andy Shevchenko wrote:
+> On Wed, Nov 18, 2020 at 1:17 AM Chen-Yu Tsai <wens@kernel.org> wrote:
 > >
-> >> On Thu, Dec 10, 2020 at 10:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>>
-> >>> irq_set_lockdep_class() is used from modules and requires irq_to_desc() to
-> >>> be exported. Move it into the core code which lifts another requirement for
-> >>> the export.
-> >>
-> >> ...
-> >>
-> >>> +       if (IS_ENABLED(CONFIG_LOCKDEP))
-> >>> +               __irq_set_lockdep_class(irq, lock_class, request_class);
+> > From: Chen-Yu Tsai <wens@csie.org>
 > >
-> > You are right. Let me fix that.
+> > The Rockchip PCIe controller DT binding clearly states that 'ep-gpios' is
+> > an optional property. And indeed there are boards that don't require it.
+> >
+> > Make the driver follow the binding by using devm_gpiod_get_optional()
+> > instead of devm_gpiod_get().
+> >
+> > Fixes: e77f847df54c ("PCI: rockchip: Add Rockchip PCIe controller support")
+> > Fixes: 956cd99b35a8 ("PCI: rockchip: Separate common code from RC driver")
+> > Fixes: 964bac9455be ("PCI: rockchip: Split out rockchip_pcie_parse_dt() to parse DT")
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> > Changes since v1:
+> >
+> >   - Rewrite subject to match existing convention and reference
+> >     'ep-gpios' DT property instead of the 'ep_gpio' field
+> > ---
+> >  drivers/pci/controller/pcie-rockchip.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> > index 904dec0d3a88..c95950e9004f 100644
+> > --- a/drivers/pci/controller/pcie-rockchip.c
+> > +++ b/drivers/pci/controller/pcie-rockchip.c
+> > @@ -118,7 +118,7 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+> >         }
+> >
+> >         if (rockchip->is_rc) {
+> > -               rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
+> > +               rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep", GPIOD_OUT_HIGH);
+> >                 if (IS_ERR(rockchip->ep_gpio)) {
+> >                         dev_err(dev, "missing ep-gpios property in node\n");
 >
-> No. I have to correct myself. You're wrong.
->
-> The inline is evaluated in the compilation units which include that
-> header and because the function declaration is unconditional it is
-> happy.
->
-> Now the optimizer stage makes the whole thing a NOOP if CONFIG_LOCKDEP=n
-> and thereby drops the reference to the function which makes it not
-> required for linking.
->
-> So in the file where the function is implemented:
->
-> #ifdef CONFIG_LOCKDEP
-> void __irq_set_lockdep_class(....)
-> {
-> }
-> #endif
->
-> The whole block is either discarded because CONFIG_LOCKDEP is not
-> defined or compile if it is defined which makes it available for the
-> linker.
->
-> And in the latter case the optimizer keeps the call in the inline (it
-> optimizes the condition away because it's always true).
->
-> So in both cases the compiler and the linker are happy and everything
-> works as expected.
->
-> It would fail if the header file had the following:
->
-> #ifdef CONFIG_LOCKDEP
-> void __irq_set_lockdep_class(....);
-> #endif
->
-> Because then it would complain about the missing function prototype when
-> it evaluates the inline.
+> You should drop the error message. What it says is now never the
+> reason for the error and it could most likely be a deferred probe
+> which you don't want an error message for.
 
-I understand that (that's why I put "if even no warning") and what I'm
-talking about is the purpose of IS_ENABLED(). It's usually good for
-compile testing !CONFIG_FOO cases. But here it seems inconsistent.
+What about switching to dev_err_probe() instead?
 
-The pattern I usually see in the cases like this is
+That way deferred probe errors get silenced (or get a better debug message),
+and error messages for other issues, such as miswritten gpio properties are
+still produced.
 
- #ifdef CONFIG_LOCKDEP
- void __irq_set_lockdep_class(....);
- #else
- static inline void ... {}
- #endif
+ChenYu
 
-and call it directly in the caller.
-
-It's not a big deal, so up to you.
-
--- 
-With Best Regards,
-Andy Shevchenko
+> >                         return PTR_ERR(rockchip->ep_gpio);
+> > --
+> > 2.29.1
+> >
