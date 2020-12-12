@@ -2,70 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63CE22D89A4
+	by mail.lfdr.de (Postfix) with ESMTP id DC84D2D89A5
 	for <lists+linux-pci@lfdr.de>; Sat, 12 Dec 2020 20:20:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439857AbgLLTUH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Dec 2020 14:20:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43928 "EHLO
+        id S2439861AbgLLTUI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Dec 2020 14:20:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgLLTUG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Dec 2020 14:20:06 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EFCC0613D3;
-        Sat, 12 Dec 2020 11:19:25 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id u19so12980587edx.2;
-        Sat, 12 Dec 2020 11:19:25 -0800 (PST)
+        with ESMTP id S1726309AbgLLTUH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Dec 2020 14:20:07 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F3DC0613D6;
+        Sat, 12 Dec 2020 11:19:27 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id x16so17023817ejj.7;
+        Sat, 12 Dec 2020 11:19:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oPc/r9BQ5UB7YK8Ckj/oZJBlPi1FTCS20ucGiOtOZTo=;
-        b=M19p5ocdhhgKmeZNbHWkuzmEYib3WwK/6Psg+ocbHeQpxriAN4mBTnUA2Q/mBHd4A4
-         gnF4GvQ0Gz+7VoyKtOqpG2aAxhgkEe0phmcojk+DT84MYY2qnzn5zI8bZRVK/h65x2RH
-         k0Nh+HVvfcGD1nZJz7p6HSTlt78mxkhLVPmFxk+Tw9D/LwLmtlxBiYvtGGBsiEiiSk8e
-         153FmjTu7M4JBvT+C4svEHjp2pyXZYEGwN7oINXsfhcv1DM6ChXsiqLx0WeP14aBCe/w
-         MFBV4tzB1GA57nSducizMVnpmLxl63ju4/TbIFtWepV8ryxM0P+VyeS0fsJ/Upp86GPy
-         kliA==
+        bh=p2NV+t4SUDYEyMQJANM60zUoBpZh63OILDleNEu2fXI=;
+        b=fhvegS1QaH8XhDW5DTWb3rQhFUmHVyAXQ4wmo61vch/n8hpb58mGVczeLqzKusX+2o
+         9X3zx2+8HB+DJ/AEZAbTqZVdLbHn5YdLbiN0TJ+vVQgJyovKeM0+4Y2GW2nSe3elBV78
+         fxssFAxHT/f6FcR7RxgdD5jeLHBe8RPGWRePpjWU4BgfN2mZ95+9UwmjSpP6WXY5a6hG
+         BFDWc3hSI/kwE+9YuvMrSRsf+7B5ZTiFI1tA9/FskF0+ms4ci8ZXZwroyVmi4ntevvTu
+         pJDCacbE278pvKxkji36IEa6Om32OJ22Y/YLV1YS0SFuN6ANZSyIzc4ktxw9L4to9evz
+         PS6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=oPc/r9BQ5UB7YK8Ckj/oZJBlPi1FTCS20ucGiOtOZTo=;
-        b=iaFWO3KwC+XwkeyN9bIVmZ5VSPBXug1eUUwkv7gvoJgMV4uNskxDaUN8kXllQDFFAS
-         3Hj5LUgaqA/TAhJN4/cFwtUk6xfy9WpNQ682RFtidwgpT4WIfQezYDWh+OLkHDRjSNqM
-         I2HP7Wue6PdqqggIbuAycYBHu0ce2KBciPFhtUP8qQamcfcDO/D/iaZDt9RJ6+Yt2dpB
-         ksm8ATfjWJyQtuYqw9CQbIGiZQ45UcuA0vKGgGLsX4D+AWMDhxcDHir4RIKz3jYJCFfP
-         cUpsd/uzSgGwI2zSFbUL3pmz8tCMreDpyqMVpIy+LdUioXgNbk1Z04hPt1gbLVcfqKBW
-         JIfg==
-X-Gm-Message-State: AOAM532Is4vIToyeJvWAuNVPeXz1IIjCJTvPSBA8TzRdrMsy+SolInft
-        9Zga/kFEdKY/v+pwi62DqBAJwcmgLryixg==
-X-Google-Smtp-Source: ABdhPJzfvYCXPMJh6F26oER8D4cDCKw1FFhifttRoCFfjMThdKwBNP/R5vZp7/mxGvbhqFeaG9IZfQ==
-X-Received: by 2002:aa7:c749:: with SMTP id c9mr3414285eds.3.1607800764541;
-        Sat, 12 Dec 2020 11:19:24 -0800 (PST)
+        bh=p2NV+t4SUDYEyMQJANM60zUoBpZh63OILDleNEu2fXI=;
+        b=lBIDsTx88cO0HMLECMW+BmTw9sfph1IY4KWp2qq7b/CG0KIVt+9GU7IrzHKJYh0MT1
+         h9ilEsZLBWZz50wfHDIhQlzaV982HKEy55viCto1SUMRCXa9WqEWuQe8jizMqTb0RgCN
+         hMgK8I4gthq3uqnlp1XkQZAUb/ASqnmFymBNvt/ehT09W21iBX/QIbxjDNnfXJqvJiEo
+         QPTXW38/DPvwSSxZj2zlB2anrJoY4+seBw/jYUZIlQv/qdyD5CXMqIZAfa/GbiwcDRAq
+         9iV64SKG0lt/sn6PmIWN2cW5cSwWsW1crxTj0oBdrNloJ+pfSaZkg94JgOaqJYif7dL0
+         kUKg==
+X-Gm-Message-State: AOAM533C2B8mmSQhN8k9yc5QTlF7CcVzka/9cxMn7Wf4sM5BMkO3E/ng
+        UWFpEwWHjeQOlssfVgxdcM2hqvjqKpL9Og==
+X-Google-Smtp-Source: ABdhPJz9WQ8tSKMNQh7Ect/KoAjZEr2HmqORhV8q+vBMPqt16mKlBkR4TwVAuSgmP/DaStaBmYNvXw==
+X-Received: by 2002:a17:907:2116:: with SMTP id qn22mr16273138ejb.483.1607800766246;
+        Sat, 12 Dec 2020 11:19:26 -0800 (PST)
 Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id ot18sm9544548ejb.54.2020.12.12.11.19.23
+        by smtp.gmail.com with ESMTPSA id cf17sm10738211edb.16.2020.12.12.11.19.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Dec 2020 11:19:23 -0800 (PST)
-Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
+        Sat, 12 Dec 2020 11:19:25 -0800 (PST)
+Subject: Re: [PATCH] PCI: rcar: Always allocate MSI addresses in 32bit space
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Wolfram Sang <wsa@the-dreams.de>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         linux-renesas-soc@vger.kernel.org
-References: <a65139b9-3b06-0562-7b6e-9a438aecff66@gmail.com>
- <20201208184627.GA2393103@bjorn-Precision-5520>
- <20201210121250.GA31998@e121166-lin.cambridge.arm.com>
+References: <20201016120431.7062-1-marek.vasut@gmail.com>
+ <20201210181133.GA3766@e121166-lin.cambridge.arm.com>
 From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <b569d614-2548-5ce1-32f0-dc923a508710@gmail.com>
-Date:   Sat, 12 Dec 2020 20:12:16 +0100
+Message-ID: <83135f6f-8a98-4537-0df5-91a06af07955@gmail.com>
+Date:   Sat, 12 Dec 2020 20:13:54 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <20201210121250.GA31998@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20201210181133.GA3766@e121166-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,51 +71,24 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/10/20 1:12 PM, Lorenzo Pieralisi wrote:
+On 12/10/20 7:11 PM, Lorenzo Pieralisi wrote:
 
 [...]
 
->>>>> +static int __init rcar_pcie_init(void)
->>>>> +{
->>>>> +	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
->>>>> +#ifdef CONFIG_ARM_LPAE
->>>>> +		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
->>>>> +				"asynchronous external abort");
->>>>> +#else
->>>>> +		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
->>>>> +				"imprecise external abort");
->>>>> +#endif
->>>>> +	}
->>>>> +
->>>>> +	return platform_driver_register(&rcar_pcie_driver);
->>>>> +}
->>>>> +device_initcall(rcar_pcie_init);
->>>>> +#else
->>>>>    builtin_platform_driver(rcar_pcie_driver);
->>>>> +#endif
->>>>
->>>> Is the device_initcall() vs builtin_platform_driver() something
->>>> related to the hook_fault_code()?  What would break if this were
->>>> always builtin_platform_driver()?
->>>
->>> rcar_pcie_init() would not be called before probe.
->>
->> Sorry to be slow, but why does it need to be called before probe?
->> Obviously software isn't putting the controller in D3 or enabling ASPM
->> before probe.
+>> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+>> index 1194d5f3341b..ac5c7d7573a6 100644
+>> --- a/drivers/pci/controller/pcie-rcar-host.c
+>> +++ b/drivers/pci/controller/pcie-rcar-host.c
+>> @@ -753,7 +753,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+>>   	}
+>>   
+>>   	/* setup MSI data target */
+>> -	msi->pages = __get_free_pages(GFP_KERNEL, 0);
+>> +	msi->pages = __get_free_pages(GFP_KERNEL | GFP_DMA32, 0);
 > 
-> I don't understand it either so it would be good to clarify.
+> This does not do what you want on !CONFIG_ZONE_DMA32 (ie arm LPAE).
 
-The hook_fault_code() is marked __init, so if probe() was deferred and 
-the kernel __init memory was free'd, attempt to call hook_fault_code() 
-from probe would lead to a crash.
+How come? I would expect GFP_DMA32 allocates a buffer below 4 GiB in any 
+case.
 
-> Also, some of these platforms are SMP systems, I don't understand
-> what prevents multiple cores to fault at once given that the faults
-> can happen for config/io/mem accesses alike.
-> 
-> I understand that the immediate fix is for S2R, that is single
-> threaded but I would like to understand how comprehensive this fix
-> is.
-
-Are you suggesting to add some sort of locking ?
+[...]
