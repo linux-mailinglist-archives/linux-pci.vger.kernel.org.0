@@ -2,218 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9627C2D8637
-	for <lists+linux-pci@lfdr.de>; Sat, 12 Dec 2020 12:28:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A8942D86DC
+	for <lists+linux-pci@lfdr.de>; Sat, 12 Dec 2020 14:23:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405831AbgLLL1c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 12 Dec 2020 06:27:32 -0500
-Received: from mga17.intel.com ([192.55.52.151]:6073 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403956AbgLLL1X (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 12 Dec 2020 06:27:23 -0500
-IronPort-SDR: SI3gsmPmkj9q+Y97kmgcWRarDzt3+u4bScVknn9av+xWi+bJb1LmksynDIJvlUfiXmfadIScRf
- q2Cy97VgzcDA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9832"; a="154356177"
-X-IronPort-AV: E=Sophos;i="5.78,414,1599548400"; 
-   d="scan'208";a="154356177"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2020 03:26:38 -0800
-IronPort-SDR: rUa337gLwAF7LV1dlnojgKVBe3MAwprznxUdY84GZQV0/f3C18thICYBFW4yVAo5N/22wN1G77
- wNwF0BzVPmpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,414,1599548400"; 
-   d="scan'208";a="334769584"
-Received: from lkp-server01.sh.intel.com (HELO ecc0cebe68d1) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 12 Dec 2020 03:26:36 -0800
-Received: from kbuild by ecc0cebe68d1 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1ko32q-0001Jj-5j; Sat, 12 Dec 2020 11:26:36 +0000
-Date:   Sat, 12 Dec 2020 19:25:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/enumeration] BUILD SUCCESS
- b051b15edbc552758191b6da5956da0c807b9edc
-Message-ID: <5fd4a8bf.V3TSBQOaNfg8x2fe%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S2406409AbgLLNXM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 12 Dec 2020 08:23:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405486AbgLLNXM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 12 Dec 2020 08:23:12 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9548BC0613CF;
+        Sat, 12 Dec 2020 05:22:31 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id e2so9243934pgi.5;
+        Sat, 12 Dec 2020 05:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VTZpp0n/Om/Jf11Mz+DqRKpiaIjN4mJ897+taVy59Ug=;
+        b=gs+DafSa6tm6ZhcmtOMAV2zOpZsgVdlfnJO3Cc8h6uZ7zEIkJ//kiGJiG610YJYd9c
+         hi7RAK/gnCn0RzWdwMYCDo5iWNdBQbtvJKYrsQI5ZcoVP15/FlhWsHbcStHoxRpLv5K2
+         7tZggztOJ5OrWHKSc7C0B5gdsPwG3Jh4XQNGDZzJ5uC91i9eb/FOwSgLNZwxuhvbJlm1
+         NZRNGWscN+BvdnS2hdE/2kf8TIOM+A9TYoTVx3z4X0kR366gEuSlj/jqKKPOYQFh4Kj3
+         5afdtXgK8N3xa39LgKIpCZwsKgk5qgska42v8wTbiGBbB+guXeCE2Frkke6P3b+dq3Ir
+         zifA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VTZpp0n/Om/Jf11Mz+DqRKpiaIjN4mJ897+taVy59Ug=;
+        b=pY/+WAanhS/D2gAgGcR3GdmyLEtanMI1ofX81rIjiO5itib6Igqi+GYh2YCVafjMvB
+         KAA4TMxqifgoSyzaKIwzvWK20KePSLT3LdqHKmcmhUuTV5nCkvWS88y02w+jpHCJCEEJ
+         dnGi/VaLM85BOjREX0tDR4pVtzHIBJ36Nd6zcalYq/JPWrVnnMpT5jhsyO/rgvlseWcD
+         Mm0pxRK89U34sdao1QUcClRD4gGKmFk6d07U8qi9Ax7UxwqPW6ftfPiHH2UyOcnwiYYv
+         4yNU9Tpb78BtqNWijRElZGiLzU7W50i1adnsxGE4SNKhyT7eUiuQqg4Ez0Go8u7Mp51p
+         cZxQ==
+X-Gm-Message-State: AOAM530rAyNTuQBGBmDiNJyJaBunFOnxRCjtAcIaPhkXibM51y+jm7r0
+        5Mjix1V4MBfcnYRzsJYLc5qhf4DNC5zMBkS/MaeVfYbxnN89suRR
+X-Google-Smtp-Source: ABdhPJz6qkGZaIbcK80z8oNTbmCmaNucZ+fxbrx52JjiY59cFl32wS2FAI0NK0C4i2f9nCp4IxJVJq78J8uiblnFRTg=
+X-Received: by 2002:a05:6a00:170a:b029:19d:afca:4704 with SMTP id
+ h10-20020a056a00170ab029019dafca4704mr15887538pfc.7.1607779350726; Sat, 12
+ Dec 2020 05:22:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20201210192536.118432146@linutronix.de> <20201210194042.860029489@linutronix.de>
+ <CAHp75Vc-2OjE2uwvNRiyLMQ8GSN3P7SehKD-yf229_7ocaktiw@mail.gmail.com>
+ <87h7osgifc.fsf@nanos.tec.linutronix.de> <87360cgfol.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87360cgfol.fsf@nanos.tec.linutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 12 Dec 2020 15:22:14 +0200
+Message-ID: <CAHp75Ve5zzeQw8P2wD083WW5+KGehETTy810wksfpXbj+3GBug@mail.gmail.com>
+Subject: Re: [patch 03/30] genirq: Move irq_set_lockdep_class() to core
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/enumeration
-branch HEAD: b051b15edbc552758191b6da5956da0c807b9edc  PCI/ACPI: Fix companion lookup for device 0 on the root bus
+On Sat, Dec 12, 2020 at 12:07 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Fri, Dec 11 2020 at 22:08, Thomas Gleixner wrote:
+>
+> > On Fri, Dec 11 2020 at 19:53, Andy Shevchenko wrote:
+> >
+> >> On Thu, Dec 10, 2020 at 10:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>>
+> >>> irq_set_lockdep_class() is used from modules and requires irq_to_desc() to
+> >>> be exported. Move it into the core code which lifts another requirement for
+> >>> the export.
+> >>
+> >> ...
+> >>
+> >>> +       if (IS_ENABLED(CONFIG_LOCKDEP))
+> >>> +               __irq_set_lockdep_class(irq, lock_class, request_class);
+> >
+> > You are right. Let me fix that.
+>
+> No. I have to correct myself. You're wrong.
+>
+> The inline is evaluated in the compilation units which include that
+> header and because the function declaration is unconditional it is
+> happy.
+>
+> Now the optimizer stage makes the whole thing a NOOP if CONFIG_LOCKDEP=n
+> and thereby drops the reference to the function which makes it not
+> required for linking.
+>
+> So in the file where the function is implemented:
+>
+> #ifdef CONFIG_LOCKDEP
+> void __irq_set_lockdep_class(....)
+> {
+> }
+> #endif
+>
+> The whole block is either discarded because CONFIG_LOCKDEP is not
+> defined or compile if it is defined which makes it available for the
+> linker.
+>
+> And in the latter case the optimizer keeps the call in the inline (it
+> optimizes the condition away because it's always true).
+>
+> So in both cases the compiler and the linker are happy and everything
+> works as expected.
+>
+> It would fail if the header file had the following:
+>
+> #ifdef CONFIG_LOCKDEP
+> void __irq_set_lockdep_class(....);
+> #endif
+>
+> Because then it would complain about the missing function prototype when
+> it evaluates the inline.
 
-elapsed time: 724m
+I understand that (that's why I put "if even no warning") and what I'm
+talking about is the purpose of IS_ENABLED(). It's usually good for
+compile testing !CONFIG_FOO cases. But here it seems inconsistent.
 
-configs tested: 156
-configs skipped: 2
+The pattern I usually see in the cases like this is
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+ #ifdef CONFIG_LOCKDEP
+ void __irq_set_lockdep_class(....);
+ #else
+ static inline void ... {}
+ #endif
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-openrisc                            defconfig
-arm                            pleb_defconfig
-ia64                             allyesconfig
-arm                          collie_defconfig
-arm                           sunxi_defconfig
-parisc                generic-32bit_defconfig
-m68k                       m5275evb_defconfig
-arm                          exynos_defconfig
-sh                           se7343_defconfig
-arm                      integrator_defconfig
-arm                            qcom_defconfig
-sh                          rsk7264_defconfig
-mips                     cu1000-neo_defconfig
-powerpc                        cell_defconfig
-arm                      jornada720_defconfig
-arm                        spear6xx_defconfig
-arm                          iop32x_defconfig
-sh                          lboxre2_defconfig
-powerpc                     tqm8541_defconfig
-sh                          landisk_defconfig
-powerpc                       holly_defconfig
-s390                                defconfig
-powerpc                 mpc832x_rdb_defconfig
-parisc                              defconfig
-xtensa                    smp_lx200_defconfig
-arm                        mvebu_v7_defconfig
-sh                             shx3_defconfig
-arm                          gemini_defconfig
-sh                          rsk7269_defconfig
-sh                        apsh4ad0a_defconfig
-m68k                        m5272c3_defconfig
-mips                   sb1250_swarm_defconfig
-arm                         socfpga_defconfig
-arm                          moxart_defconfig
-arc                                 defconfig
-arm                         s3c6400_defconfig
-arm                       aspeed_g4_defconfig
-arc                         haps_hs_defconfig
-powerpc                        warp_defconfig
-xtensa                generic_kc705_defconfig
-m68k                        mvme147_defconfig
-arm                        multi_v5_defconfig
-arm                          pxa910_defconfig
-powerpc                      chrp32_defconfig
-mips                           gcw0_defconfig
-m68k                       bvme6000_defconfig
-powerpc                   currituck_defconfig
-mips                      loongson3_defconfig
-nds32                               defconfig
-parisc                           alldefconfig
-ia64                                defconfig
-powerpc                    klondike_defconfig
-powerpc                 mpc8560_ads_defconfig
-arm                         assabet_defconfig
-powerpc                  mpc885_ads_defconfig
-mips                           xway_defconfig
-powerpc                      cm5200_defconfig
-arm                      footbridge_defconfig
-mips                      pistachio_defconfig
-mips                      maltaaprp_defconfig
-powerpc                      tqm8xx_defconfig
-powerpc                     pq2fads_defconfig
-sh                        edosk7760_defconfig
-arm                             mxs_defconfig
-i386                                defconfig
-powerpc                           allnoconfig
-xtensa                         virt_defconfig
-sparc                            allyesconfig
-powerpc                          g5_defconfig
-xtensa                           allyesconfig
-arm                         mv78xx0_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                          simpad_defconfig
-ia64                             allmodconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-i386                 randconfig-a001-20201210
-i386                 randconfig-a004-20201210
-i386                 randconfig-a003-20201210
-i386                 randconfig-a002-20201210
-i386                 randconfig-a005-20201210
-i386                 randconfig-a006-20201210
-i386                 randconfig-a004-20201209
-i386                 randconfig-a005-20201209
-i386                 randconfig-a001-20201209
-i386                 randconfig-a002-20201209
-i386                 randconfig-a006-20201209
-i386                 randconfig-a003-20201209
-x86_64               randconfig-a016-20201209
-x86_64               randconfig-a012-20201209
-x86_64               randconfig-a013-20201209
-x86_64               randconfig-a014-20201209
-x86_64               randconfig-a015-20201209
-x86_64               randconfig-a011-20201209
-i386                 randconfig-a013-20201209
-i386                 randconfig-a014-20201209
-i386                 randconfig-a011-20201209
-i386                 randconfig-a015-20201209
-i386                 randconfig-a012-20201209
-i386                 randconfig-a016-20201209
-i386                 randconfig-a014-20201211
-i386                 randconfig-a013-20201211
-i386                 randconfig-a012-20201211
-i386                 randconfig-a011-20201211
-i386                 randconfig-a016-20201211
-i386                 randconfig-a015-20201211
-i386                 randconfig-a014-20201212
-i386                 randconfig-a013-20201212
-i386                 randconfig-a012-20201212
-i386                 randconfig-a011-20201212
-i386                 randconfig-a016-20201212
-i386                 randconfig-a015-20201212
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+and call it directly in the caller.
 
-clang tested configs:
-x86_64               randconfig-a004-20201209
-x86_64               randconfig-a006-20201209
-x86_64               randconfig-a005-20201209
-x86_64               randconfig-a001-20201209
-x86_64               randconfig-a002-20201209
-x86_64               randconfig-a003-20201209
+It's not a big deal, so up to you.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+With Best Regards,
+Andy Shevchenko
