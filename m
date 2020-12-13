@@ -2,96 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4780B2D8C78
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Dec 2020 10:09:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D829E2D8CB3
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Dec 2020 12:25:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405211AbgLMJIm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Dec 2020 04:08:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57928 "EHLO
+        id S1727393AbgLMLYv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Dec 2020 06:24:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgLMJIl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Dec 2020 04:08:41 -0500
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33091C061793
-        for <linux-pci@vger.kernel.org>; Sun, 13 Dec 2020 01:08:01 -0800 (PST)
-Received: by mail-io1-xd44.google.com with SMTP id d9so13968306iob.6
-        for <linux-pci@vger.kernel.org>; Sun, 13 Dec 2020 01:08:01 -0800 (PST)
+        with ESMTP id S1725864AbgLMLYv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Dec 2020 06:24:51 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C27F6C0613CF;
+        Sun, 13 Dec 2020 03:24:10 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id 6so3980368ejz.5;
+        Sun, 13 Dec 2020 03:24:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=5uPM6D1T3KKs706E8+sERKFimLN/9nHp+H87Ue6e5VI=;
-        b=M5qV6ijW2X4aAZxF3GxD717jT5q/7uShkTmFj4UDNHM+vJNoLshxpEX+oS8D1R50Rr
-         3X0IJx3RTBic59ML/xckhLexSYhmfg62O1oNjSMkJLdBHzrsH6vAh2aIWz11GzL6RWHh
-         kzOW+Pree0Qm9N7IXh/YsTkLvDM9URNAl2CDM9cUs70Cy/4Za2X8nlxqXRvT5K9a1XV0
-         YrltTVp/IL4eLoRW+7hIelUFmOGR8N6hq2s/VFfeHc55Eer6iLpZBFDdagIsFt0Faeiu
-         z0pNLwBJ+TsBYlIDMAnFmooW7dHS4D12U0eQ4GGhZXXWo7NvA0LNmYePz84BTOlFlqra
-         2XTQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IW66fMc7VTs1PtxS+22ry7ms1/9mizOXCdVTfKV5hpo=;
+        b=bQn+oB1JoyeFOF0nG/mlAluMS+9oNaqRxA17ZBM9Oe3AOE8/JG6goH/EB1c4QkEda4
+         T1lTzWqlfslNfkdjp202c07yMWPNGbIBbpqQZ+AzfJmqs+Kgj+dLxGZ+wWZGA5mc0NdB
+         BijFlgEZnvzEJb3MGQPxQa2/dgeJuYhDvxuwz6QAxAIoRHfwl22d5quEoZXOhJp6a+qE
+         ETivnglunAiRLTbK3ng7taHfwUqrNTJL3Mef8dDWPaAGgN2enm8bDppfomcBBDdM6fOw
+         jt/C5/9LwS2YQBDgMwgsJ0z4C3ZaAE2+qiQJ4375nfTotPFrKA5zulfu7Q8I9D/Awk7+
+         1yaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=5uPM6D1T3KKs706E8+sERKFimLN/9nHp+H87Ue6e5VI=;
-        b=LfNJbBPo00BVbn2Sx+Y0Y6+JiYYl6BkTyOCJ3uGwXvykU009iry+PtyHtKa/GlLfSn
-         vS6vTnMNUFPwicutMCz7RyWlC6gB1FOUD5/jBhWLZseRACxeconpCtCCOOEpoDRoa6QY
-         0vOT8xXTS6M3alsC76QELvosh2i7iLkJrT1rqmCxwSE+FHDGgbvNgJpgbcubOloRoU1f
-         CkOgLwCcikkPUXDO87ehb0shG0pWkbdZTMlQ4H3hSeof8mZL2/XMpMdvkEDf9e/vDYJs
-         qvzKCDkaUFZ68bPldq07aiRugCLK+8iFZvlgT0RVAJiWdbff0OYLe+DQBCvQ9IntTldf
-         bLfg==
-X-Gm-Message-State: AOAM531n947UGHhlVImRi6kF+xF1uvmHGY1rHrlWNC7kScU6alXRnnsF
-        7G6kooQDJsBSOi/piFDE9Avx6P0dRpoklnOP5Hc=
-X-Google-Smtp-Source: ABdhPJzE5ILTQLh7bhnWwOIPyvQWqyWlJ4n1Mbc5M03XY0kZ2oKZobunQANGTK+vTrR6h9ueV0VKt7N2gw9bHsOG33I=
-X-Received: by 2002:a02:5e81:: with SMTP id h123mr26685012jab.36.1607850480243;
- Sun, 13 Dec 2020 01:08:00 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IW66fMc7VTs1PtxS+22ry7ms1/9mizOXCdVTfKV5hpo=;
+        b=BVBMTCn3Bvu5bU8u22YwrSx8UYIrLr1dn/Gtu7QCctWasiftRQClF1RfJ4Jide5z2/
+         oEbevEBznY4HqoeALxnXi/snXKW4lE+iHGRP/WO6+Sf4tO8t8uUs+qLpaH1MwAHNpjST
+         7cICSEyp2srchAP8d7jtWgTMNvk6g/WDXK0iLlUM6eQ1yOK5eqfCPXl6wejZhIxn8spN
+         OtxPSqA6Zsp1kiSzRKxsKsc7prwux91PXGcVki2CZ9dR5KijWb8tZJ8Nhx4OgeqeJJ2n
+         5rYbYMBo9KQMgbYy4+1+7tclWUFLaU25ryFUH+kBxqSkZXQQAooPRicLP8pJtpMyntbE
+         VKCg==
+X-Gm-Message-State: AOAM531B7l7ilylRnx7vVwCRaWZ3ILOCQdDgyAMfMKyzuFnW395gUQT8
+        1sE6TCaMzKMc6W+DxYtzQ4c=
+X-Google-Smtp-Source: ABdhPJynlxi2QKNBVsllMFmw4nuD/o/QttB0CiO5OzyzZ7oeGscU5QYtBXumKqp3eM2r1PK4665luQ==
+X-Received: by 2002:a17:906:a2d0:: with SMTP id by16mr18015254ejb.207.1607858649230;
+        Sun, 13 Dec 2020 03:24:09 -0800 (PST)
+Received: from [192.168.0.107] ([77.127.34.194])
+        by smtp.gmail.com with ESMTPSA id de12sm12533753edb.82.2020.12.13.03.24.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Dec 2020 03:24:08 -0800 (PST)
+Subject: Re: [patch 20/30] net/mlx4: Replace irq_to_desc() abuse
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+References: <20201210192536.118432146@linutronix.de>
+ <20201210194044.580936243@linutronix.de>
+From:   Tariq Toukan <ttoukan.linux@gmail.com>
+Message-ID: <01e427f9-7238-d6a8-25ec-8585914d32df@gmail.com>
+Date:   Sun, 13 Dec 2020 13:24:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Sender: dhldeliveringcompany.bf@gmail.com
-Received: by 2002:a02:a38a:0:0:0:0:0 with HTTP; Sun, 13 Dec 2020 01:07:59
- -0800 (PST)
-From:   Donna Louise <donnamcinneslouise@gmail.com>
-Date:   Sat, 12 Dec 2020 21:07:59 -1200
-X-Google-Sender-Auth: o1aTCgmT583z0Ic88EPpxD1PQT8
-Message-ID: <CAGPv-0HY2WvWHsuBSuyWg6eOq12rvkj3FTbhOb0uXB92aPV_2A@mail.gmail.com>
-Subject: Hello,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20201210194044.580936243@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Friend,
 
-  I am glad to know you, but God knows you better and he knows why he
-has directed me to you at this point in time so do not be surprised at
-all. My name is Mrs. Donna Louise McInnes, a widow, i have been
-suffering from ovarian cancer disease. At this moment i am about to
-end the race like this because the illness has gotten to a very bad
-stage, without any family members and no child. I hope that you will
-not expose or betray this trust and confidence that I am about to
-entrust to you for the mutual benefit of the orphans and the less
-privileged ones. I have some funds I inherited from my late husband,
-the sum of ($11.000.000 Eleven million dollars.) deposited in the
-Bank.  Having known my present health status, I decided to entrust
-this fund to you believing that you will utilize it the way i am going
-to instruct herein.
 
-Therefore I need you to assist me and reclaim this money and use it
-for Charity works, for orphanages and giving justice and help to the
-poor, needy and to promote the words of God and the effort that the
-house of God will be maintained says The Lord." Jeremiah 22:15-16.=E2=80=9C
+On 12/10/2020 9:25 PM, Thomas Gleixner wrote:
+> No driver has any business with the internals of an interrupt
+> descriptor. Storing a pointer to it just to use yet another helper at the
+> actual usage site to retrieve the affinity mask is creative at best. Just
+> because C does not allow encapsulation does not mean that the kernel has no
+> limits.
+> 
+> Retrieve a pointer to the affinity mask itself and use that. It's still
+> using an interface which is usually not for random drivers, but definitely
+> less hideous than the previous hack.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Tariq Toukan <tariqt@nvidia.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
+> ---
+>   drivers/net/ethernet/mellanox/mlx4/en_cq.c   |    8 +++-----
+>   drivers/net/ethernet/mellanox/mlx4/en_rx.c   |    6 +-----
+>   drivers/net/ethernet/mellanox/mlx4/mlx4_en.h |    3 ++-
+>   3 files changed, 6 insertions(+), 11 deletions(-)
+> 
 
-It will be my great pleasure to compensate you with 35 % percent of
-the total money for your personal use, 5 % percent for any expenses
-that may occur during the international transfer process while 60% of
-the money will go to the charity project.
+Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
 
-All I require from you is sincerity and the ability to complete God's
-task without any failure. It will be my pleasure to see that the bank
-has finally released and transferred the fund into your bank account
-therein your country even before I die here in the hospital, because
-of my present health status everything needs to be processed rapidly
-as soon as possible. Please kindly respond quickly. Thanks and God
-bless you.
-
-Best Regards your friend,
-Mrs.Donna Louise McInnes.
+Thanks for your patch.
