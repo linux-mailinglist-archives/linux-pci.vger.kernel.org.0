@@ -2,113 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C7E22D8B58
-	for <lists+linux-pci@lfdr.de>; Sun, 13 Dec 2020 06:12:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4780B2D8C78
+	for <lists+linux-pci@lfdr.de>; Sun, 13 Dec 2020 10:09:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgLMFLW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 13 Dec 2020 00:11:22 -0500
-Received: from mga07.intel.com ([134.134.136.100]:48309 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgLMFLV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 13 Dec 2020 00:11:21 -0500
-IronPort-SDR: rh7TJDJfqv00PM8ZyUZoA9i9TFFMIzelb+/rEY4DB8kKgx++sSfcYcbSK/ukoPa5HebaaHeaqg
- XyEsw9wHytDA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9833"; a="238690323"
-X-IronPort-AV: E=Sophos;i="5.78,415,1599548400"; 
-   d="scan'208";a="238690323"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2020 21:09:34 -0800
-IronPort-SDR: VULFeSzlvORzFoLgMzzy83Dkw5iWbIcQdw2eC8to6i6A4W1bakbFTJT8XWn/pQC/r0Q6N3i8Tc
- qj8Uhf0YayJw==
-X-IronPort-AV: E=Sophos;i="5.78,415,1599548400"; 
-   d="scan'208";a="366436241"
-Received: from ascinco-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.175.177])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2020 21:09:34 -0800
-Subject: Re: [PATCH v8 1/2] PCI/ERR: Call pci_bus_reset() before calling
- ->slot_reset() callback
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, knsathya@kernel.org
-References: <b464e4c8b3022ce3e0c69e64456619fc86378c15.1603740826.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <d12dd711-cdaf-0a79-8deb-e2381b79163b@linux.intel.com>
-Date:   Sat, 12 Dec 2020 21:09:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2405211AbgLMJIm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 13 Dec 2020 04:08:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgLMJIl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 13 Dec 2020 04:08:41 -0500
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33091C061793
+        for <linux-pci@vger.kernel.org>; Sun, 13 Dec 2020 01:08:01 -0800 (PST)
+Received: by mail-io1-xd44.google.com with SMTP id d9so13968306iob.6
+        for <linux-pci@vger.kernel.org>; Sun, 13 Dec 2020 01:08:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=5uPM6D1T3KKs706E8+sERKFimLN/9nHp+H87Ue6e5VI=;
+        b=M5qV6ijW2X4aAZxF3GxD717jT5q/7uShkTmFj4UDNHM+vJNoLshxpEX+oS8D1R50Rr
+         3X0IJx3RTBic59ML/xckhLexSYhmfg62O1oNjSMkJLdBHzrsH6vAh2aIWz11GzL6RWHh
+         kzOW+Pree0Qm9N7IXh/YsTkLvDM9URNAl2CDM9cUs70Cy/4Za2X8nlxqXRvT5K9a1XV0
+         YrltTVp/IL4eLoRW+7hIelUFmOGR8N6hq2s/VFfeHc55Eer6iLpZBFDdagIsFt0Faeiu
+         z0pNLwBJ+TsBYlIDMAnFmooW7dHS4D12U0eQ4GGhZXXWo7NvA0LNmYePz84BTOlFlqra
+         2XTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=5uPM6D1T3KKs706E8+sERKFimLN/9nHp+H87Ue6e5VI=;
+        b=LfNJbBPo00BVbn2Sx+Y0Y6+JiYYl6BkTyOCJ3uGwXvykU009iry+PtyHtKa/GlLfSn
+         vS6vTnMNUFPwicutMCz7RyWlC6gB1FOUD5/jBhWLZseRACxeconpCtCCOOEpoDRoa6QY
+         0vOT8xXTS6M3alsC76QELvosh2i7iLkJrT1rqmCxwSE+FHDGgbvNgJpgbcubOloRoU1f
+         CkOgLwCcikkPUXDO87ehb0shG0pWkbdZTMlQ4H3hSeof8mZL2/XMpMdvkEDf9e/vDYJs
+         qvzKCDkaUFZ68bPldq07aiRugCLK+8iFZvlgT0RVAJiWdbff0OYLe+DQBCvQ9IntTldf
+         bLfg==
+X-Gm-Message-State: AOAM531n947UGHhlVImRi6kF+xF1uvmHGY1rHrlWNC7kScU6alXRnnsF
+        7G6kooQDJsBSOi/piFDE9Avx6P0dRpoklnOP5Hc=
+X-Google-Smtp-Source: ABdhPJzE5ILTQLh7bhnWwOIPyvQWqyWlJ4n1Mbc5M03XY0kZ2oKZobunQANGTK+vTrR6h9ueV0VKt7N2gw9bHsOG33I=
+X-Received: by 2002:a02:5e81:: with SMTP id h123mr26685012jab.36.1607850480243;
+ Sun, 13 Dec 2020 01:08:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <b464e4c8b3022ce3e0c69e64456619fc86378c15.1603740826.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Sender: dhldeliveringcompany.bf@gmail.com
+Received: by 2002:a02:a38a:0:0:0:0:0 with HTTP; Sun, 13 Dec 2020 01:07:59
+ -0800 (PST)
+From:   Donna Louise <donnamcinneslouise@gmail.com>
+Date:   Sat, 12 Dec 2020 21:07:59 -1200
+X-Google-Sender-Auth: o1aTCgmT583z0Ic88EPpxD1PQT8
+Message-ID: <CAGPv-0HY2WvWHsuBSuyWg6eOq12rvkj3FTbhOb0uXB92aPV_2A@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Dear Friend,
 
+  I am glad to know you, but God knows you better and he knows why he
+has directed me to you at this point in time so do not be surprised at
+all. My name is Mrs. Donna Louise McInnes, a widow, i have been
+suffering from ovarian cancer disease. At this moment i am about to
+end the race like this because the illness has gotten to a very bad
+stage, without any family members and no child. I hope that you will
+not expose or betray this trust and confidence that I am about to
+entrust to you for the mutual benefit of the orphans and the less
+privileged ones. I have some funds I inherited from my late husband,
+the sum of ($11.000.000 Eleven million dollars.) deposited in the
+Bank.  Having known my present health status, I decided to entrust
+this fund to you believing that you will utilize it the way i am going
+to instruct herein.
 
-On 10/26/20 12:37 PM, Kuppuswamy Sathyanarayanan wrote:
-> Currently if report_error_detected() or report_mmio_enabled()
-> functions requests PCI_ERS_RESULT_NEED_RESET, current
-> pcie_do_recovery() implementation does not do the requested
-> explicit device reset, but instead just calls the
-> report_slot_reset() on all affected devices. Notifying about the
-> reset via report_slot_reset() without doing the actual device
-> reset is incorrect. So call pci_bus_reset() before triggering
-> ->slot_reset() callback.
-Gentle ping! Any comments on this patch set?
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Reviewed-by: Sinan Kaya <okaya@kernel.org>
-> Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-> ---
->   Changes since v7:
->    * Rebased on top of v5.10-rc1.
-> 
->   Changes since v6:
->    * None.
-> 
->   Changes since v5:
->    * Added Ashok's Reviewed-by tag.
-> 
->   Changes since v4:
->    * Added check for pci_reset_bus() return value.
-> 
->   drivers/pci/pcie/err.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index c543f419d8f9..315a4d559c4c 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -152,6 +152,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   {
->   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->   	struct pci_bus *bus;
-> +	int ret;
->   
->   	/*
->   	 * Error recovery runs on all subordinates of the first downstream port.
-> @@ -181,11 +182,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	}
->   
->   	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> -		/*
-> -		 * TODO: Should call platform-specific
-> -		 * functions to reset slot before calling
-> -		 * drivers' slot_reset callbacks?
-> -		 */
-> +		ret = pci_reset_bus(dev);
-> +		if (ret < 0) {
-> +			pci_err(dev, "Failed to reset %d\n", ret);
-> +			status = PCI_ERS_RESULT_DISCONNECT;
-> +			goto failed;
-> +		}
->   		status = PCI_ERS_RESULT_RECOVERED;
->   		pci_dbg(dev, "broadcast slot_reset message\n");
->   		pci_walk_bus(bus, report_slot_reset, &status);
-> 
+Therefore I need you to assist me and reclaim this money and use it
+for Charity works, for orphanages and giving justice and help to the
+poor, needy and to promote the words of God and the effort that the
+house of God will be maintained says The Lord." Jeremiah 22:15-16.=E2=80=9C
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+It will be my great pleasure to compensate you with 35 % percent of
+the total money for your personal use, 5 % percent for any expenses
+that may occur during the international transfer process while 60% of
+the money will go to the charity project.
+
+All I require from you is sincerity and the ability to complete God's
+task without any failure. It will be my pleasure to see that the bank
+has finally released and transferred the fund into your bank account
+therein your country even before I die here in the hospital, because
+of my present health status everything needs to be processed rapidly
+as soon as possible. Please kindly respond quickly. Thanks and God
+bless you.
+
+Best Regards your friend,
+Mrs.Donna Louise McInnes.
