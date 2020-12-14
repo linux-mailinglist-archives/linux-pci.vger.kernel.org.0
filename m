@@ -2,117 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1646D2D9684
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 11:45:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CA0D2D97F6
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 13:28:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbgLNKoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 05:44:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728703AbgLNKoV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Dec 2020 05:44:21 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6511CC0613CF
-        for <linux-pci@vger.kernel.org>; Mon, 14 Dec 2020 02:43:41 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id a3so14819183wmb.5
-        for <linux-pci@vger.kernel.org>; Mon, 14 Dec 2020 02:43:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gPCYc+i9Iy87r57uStW+ARtubvlgXBH6jVAjmF4IhnU=;
-        b=brfsj5+b+IqlJui0vPdCHYpYP2bFYzO+1JlWfKz1weffGaprU8OkE8dqZ9gA8Ypm/0
-         v6+grN5KbiSQRACrcBWw1asFdDFVqF9nBu3Oa0GUPYv5yBkX67nd1ntfLcAJg0zP6PdE
-         xlq10No04/AwJLV6O3ydkHlsjEAP4HvjVzoA+aYzj43B5E2rQHWk/Z7UGIyKRfSzOZGq
-         LSBaHiBg/MvYDr977DGjKw/verW1+v2Q4CYL/idPu8LHXXM/r9HzNyp7TPbAOeKFlyOV
-         7pCIn4oa/HWqnDFni36IPva5UF+BAQ+YUV6hhDKYRIcADocHuV2u230LRwac34Cs6XGF
-         Q/Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gPCYc+i9Iy87r57uStW+ARtubvlgXBH6jVAjmF4IhnU=;
-        b=Ly8gC9Aqqq4HXIoD3lhalJZVmgtzVi1OMpO0bjMoAFdKEyGvFVAp45xxdu50kjvBw4
-         TyfzLEOd6XfDoQZlqBhjQVs1kpeQCap43OB2VwyyNMqGYgeDRZ+hVkyEBuKSwNErlQjE
-         6IL8XsiAF9UuIiiLpyrpGoIOKxFcx+6Qntd1WERKfA2ktxiV9A0v8WUe55VbB+ugGQzt
-         F0IpYfg1fCu0i0fBqbTBrZUmBs2cdM5xGI3tPv+rHa8vwi7ML6+Gap6X5LC72vwdNNWd
-         mWwdCJ+TlIFg/jYXdrsCUMjmtOX6gLU0lzP8Pj79FCqWwl0POKtL/M48NOwUw5+LMpl2
-         YUAA==
-X-Gm-Message-State: AOAM532FRSTBhgzN19gUIoy6B4X/75HP7Lt/LOtDQJG40ZqJuAVxUaLP
-        4R12dfVz7f24seO8Lceu7+TaCA==
-X-Google-Smtp-Source: ABdhPJyQXVJMnqfLrDR2gjT3sPvs5VM6+4B7QNqCQiLsarQ76jozBbecP92kWQZKTuGAqkMV/ku7Vw==
-X-Received: by 2002:a1c:bc57:: with SMTP id m84mr26948837wmf.163.1607942619946;
-        Mon, 14 Dec 2020 02:43:39 -0800 (PST)
-Received: from holly.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id w189sm18608037wmg.31.2020.12.14.02.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Dec 2020 02:43:39 -0800 (PST)
-Date:   Mon, 14 Dec 2020 10:43:37 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jon Nettleton <jon@solid-run.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linaro Patches <patches@linaro.org>
-Subject: Re: [RFC HACK PATCH] PCI: dwc: layerscape: Hack around enumeration
- problems with Honeycomb LX2K
-Message-ID: <20201214104337.wbvq2gvj3wi6bvzc@holly.lan>
-References: <20201211121507.28166-1-daniel.thompson@linaro.org>
- <CAL_JsqKQxFvkFtph1BZD2LKdZjboxhMTWkZe_AWS-vMD9y0pMw@mail.gmail.com>
- <20201211170558.clfazgoetmery6u3@holly.lan>
+        id S1731453AbgLNM1I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 07:27:08 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:9441 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731433AbgLNM1H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Dec 2020 07:27:07 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4CvgbJ6zM5zhstK;
+        Mon, 14 Dec 2020 20:25:48 +0800 (CST)
+Received: from [127.0.0.1] (10.69.38.196) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.498.0; Mon, 14 Dec 2020
+ 20:26:07 +0800
+Subject: Re: [PATCH v2] PCI: Make sure the bus bridge powered on when scanning
+ bus
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <mika.westerberg@linux.intel.com>,
+        <rafael.j.wysocki@intel.com>, <peter@lekensteyn.nl>,
+        <linuxarm@huawei.com>
+References: <20201211222704.GA111886@bjorn-Precision-5520>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <d0439879-925d-c7f2-b3d7-455a57bf6650@hisilicon.com>
+Date:   Mon, 14 Dec 2020 20:25:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201211170558.clfazgoetmery6u3@holly.lan>
+In-Reply-To: <20201211222704.GA111886@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.38.196]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 11, 2020 at 05:05:58PM +0000, Daniel Thompson wrote:
-> On Fri, Dec 11, 2020 at 08:37:40AM -0600, Rob Herring wrote:
-> > On Fri, Dec 11, 2020 at 6:15 AM Daniel Thompson
-> > >     BTW I noticed many other pcie-designware drivers take advantage
-> > >     of a function called dw_pcie_wait_for_link() in their init paths...
-> > >     but my naive attempts to add it to the layerscape driver results
-> > >     in non-booting systems so I haven't embarrassed myself by including
-> > >     that in the patch!
-> > 
-> > You need to look at what's pending for v5.11, because I reworked this
-> > to be more unified. The ordering of init is also possibly changed. The
-> > sequence is now like this:
-> > 
-> >         dw_pcie_setup_rc(pp);
-> >         dw_pcie_msi_init(pp);
-> > 
-> >         if (!dw_pcie_link_up(pci) && pci->ops->start_link) {
-> >                 ret = pci->ops->start_link(pci);
-> >                 if (ret)
-> >                         goto err_free_msi;
-> >         }
-> > 
-> >         /* Ignore errors, the link may come up later */
-> >         dw_pcie_wait_for_link(pci);
+On 2020/12/12 6:27, Bjorn Helgaas wrote:
+> On Fri, Sep 25, 2020 at 06:23:06PM +0800, Yicong Yang wrote:
+>> When the bus bridge is runtime suspended, we'll fail to rescan
+>> the devices through sysfs as we cannot access the configuration
+>> space correctly when the bridge is in D3hot.
+>> It can be reproduced like:
+>>
+>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+>> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+>>
+>> 0000:80:00.0 is root port and is runtime suspended and we cannot
+>> get 0000:81:00.1 after rescan.
+>>
+>> Make bridge powered on when scanning the child bus, by adding
+>> pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
+>>
+>> A similar issue is met and solved by
+>> commit d963f6512e15 ("PCI: Power on bridges before scanning new devices")
+>> which rescan the devices through /sys/bus/pci/devices/0000:80:00.0/rescan.
+>> The callstack is like:
+>>
+>> dev_rescan_restore()
+>>   pci_rescan_bus()
+>>     pci_scan_bridge_extend()
+>>       pci_scan_child_bus_extend() /* will wake up the bridge with this patch */
+>>
+>> With this patch the issue is also resolved, so let's remove the calls of
+>> pm_runtime_*() in pci_scan_bridge_extend().
 > 
-> Thanks. That looks likely to fix it since IIUC dw_pcie_wait_for_link()
-> will end up waiting somewhat like the double check I added to
-> ls_pcie_link_up().
+> I'm sorry, I feel like an idiot, but I totally lost whatever
+> understanding I had of this patch.  Here's what I *think* I
+> understand:
 > 
-> I'll take a look at let you know.
+> PCI devices always respond to config transactions unless they're in D3cold,
+> but a bridge only forwards config transactions when it is in D0.  When a
+> bridge is runtime suspended, we can access config space of the bridge
+> itself, but not of anything on its secondary side.  If a bridge is in a
+> low-power state, we must bring it back to D0 before enumerating devices
+> below it.
+> 
+> Prior to d963f6512e15 ("PCI: Power on bridges before scanning new
+> devices"), this rescan could fail if 00:01.0 were suspended:
+> 
+>   # echo 1 > /sys/bus/pci/devices/0000:00:01.0/0000:01:00.0/remove
+>   # echo 1 > /sys/bus/pci/devices/0000:00:01.0/rescan
+> 
+> d963f6512e15 fixed this with the following addition (call tree at the time):
+> 
+>   dev_rescan_store(dev 00:01.0)
+>     pci_rescan_bus(bus 00)
+>       pci_scan_child_bus(bus 00)
+>         for (devfn = 0; devfn < 0x100; devfn += 8)
+>           pci_scan_slot(bus 00, dev 00.0, 01.0, etc)
+>         list_for_each_entry(dev, &bus->devices)
+>           pci_scan_bridge(bus 00, dev 01.0)
+>  +          pm_runtime_get_sync(dev 00:01.0)  # enables config below 00:01.0
+>             pci_scan_child_bus(bus 01)
+>               for (devfn = 0; devfn < 0x100; devfn += 8)
+>                 pci_scan_slot(bus 01, dev 00.0, 01.0, etc)
+>                   # config read of 01:00.0 fails unless 00:01.0 is in D0
+> 
+> 
+> Now, for *this* patch, I think you're saying that this rescan can
+> still fail:
+> 
+>   # echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
+>   # echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
+> 
+> IIUC, it uses this path:
+> 
+>   bus_rescan_store(bus 81)                  # 81 is not a root bus
+>     pci_rescan_bus_bridge_resize(80:00.0)   # (bus 81)->self
+>       bus = 80:00.0->subordinate
+>       pci_scan_child_bus(bus 81)
+>         pci_scan_child_bus_extend
+>           for (devfn = 0; devfn < 256; devfn += 8)
+>             pci_scan_slot(bus 81, dev 00.0)
+>               # config read of 81:00.0 fails unless 80:00.0 is in D0
+> 
+> 
+> Am I making any sense?
 
-Yes. These changes have fixed the enumeration problems for me.
+yes, it's right. and the bus rescan will also fail when going another path.
 
-I tested pci/next and I cherry picked your patch series onto v5.10 and
-both are working well.
+when the subordinates of 0000:80:00.0 is partly removed :
 
-Given this fixes a bug for me, do you think there is any scope for me
-to whittle down your series into patches for the stable kernels or am
-I likely to find too many extra bits being pulled in?
+  0000:80:00.0 #root port is runtime suspended and 0000:81:00.0 is removed
+    0000:81:00.1 #function is runtime suspended
 
+then the bus rescan will go:
 
-Daniel.
+  bus_rescan_store (bus 81)
+    if (!pci_is_root_bus(bus) && list_empty(&bus->devices))
+      pci_rescan_bus_bridge_resize(bus->self);
+    else
+      pci_rescan_bus(bus 81) # will go this path as !list_empty(&bus->devices)
+        pci_scan_child_bus(bus 81)
+        ......
+
+the config read of 81:00.0 will fail as bridge 80:00.0 is in D3hot.
+
+> 
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>> Change since v1:
+>> - use an intermediate variable *bridge as suggested
+>> - remove the pm_runtime_*() calls in pci_scan_bridge_extend()
+>>
+>>  drivers/pci/probe.c | 21 ++++++++++++---------
+>>  1 file changed, 12 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+>> index 03d3712..747a8bc 100644
+>> --- a/drivers/pci/probe.c
+>> +++ b/drivers/pci/probe.c
+>> @@ -1211,12 +1211,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>>  	u8 fixed_sec, fixed_sub;
+>>  	int next_busnr;
+>>
+>> -	/*
+>> -	 * Make sure the bridge is powered on to be able to access config
+>> -	 * space of devices below it.
+>> -	 */
+>> -	pm_runtime_get_sync(&dev->dev);
+>> -
+>>  	pci_read_config_dword(dev, PCI_PRIMARY_BUS, &buses);
+>>  	primary = buses & 0xFF;
+>>  	secondary = (buses >> 8) & 0xFF;
+>> @@ -1418,8 +1412,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+>>  out:
+>>  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
+>>
+>> -	pm_runtime_put(&dev->dev);
+>> -
+>>  	return max;
+>>  }
+>>
+>> @@ -2796,11 +2788,19 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>  	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
+>>  	unsigned int start = bus->busn_res.start;
+>>  	unsigned int devfn, fn, cmax, max = start;
+>> -	struct pci_dev *dev;
+>> +	struct pci_dev *dev, *bridge = bus->self;
+>>  	int nr_devs;
+>>
+>>  	dev_dbg(&bus->dev, "scanning bus\n");
+>>
+>> +	/*
+>> +	 * Make sure the bus bridge is powered on, otherwise we may not be
+>> +	 * able to scan the devices as we may fail to access the configuration
+>> +	 * space of subordinates.
+>> +	 */
+>> +	if (bridge)
+>> +		pm_runtime_get_sync(&bridge->dev);
+>> +
+>>  	/* Go find them, Rover! */
+>>  	for (devfn = 0; devfn < 256; devfn += 8) {
+>>  		nr_devs = pci_scan_slot(bus, devfn);
+>> @@ -2913,6 +2913,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+>>  		}
+>>  	}
+>>
+>> +	if (bridge)
+>> +		pm_runtime_put(&bridge->dev);
+>> +
+>>  	/*
+>>  	 * We've scanned the bus and so we know all about what's on
+>>  	 * the other side of any bridges that may be on this bus plus
+>> --
+>> 2.8.1
+>>
+> 
+> .
+> 
+
