@@ -2,104 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 421472D9AC4
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 16:22:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCA072D9B08
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 16:33:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732560AbgLNPUA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 10:20:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:48952 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbgLNPTc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Dec 2020 10:19:32 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BF4E30E;
-        Mon, 14 Dec 2020 07:18:44 -0800 (PST)
-Received: from [10.57.33.60] (unknown [10.57.33.60])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A02D3F66E;
-        Mon, 14 Dec 2020 07:18:42 -0800 (PST)
-Subject: Re: [PATCH v2 3/4] arm64: dts: rockchip: nanopi4: Move ep-gpios
- property to nanopc-t4
-To:     Chen-Yu Tsai <wens@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Johan Jonker <jbx6244@gmail.com>,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20201118071724.4866-1-wens@kernel.org>
- <20201118071724.4866-4-wens@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1e41aefe-6875-d319-1922-210fb865631c@arm.com>
-Date:   Mon, 14 Dec 2020 15:18:40 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S1727200AbgLNPbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 10:31:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731495AbgLNP21 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Dec 2020 10:28:27 -0500
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F4CC0613D6;
+        Mon, 14 Dec 2020 07:27:46 -0800 (PST)
+Received: by mail-pj1-x1043.google.com with SMTP id hk16so6743130pjb.4;
+        Mon, 14 Dec 2020 07:27:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zod9g0ucmYQBVnFLZZB9W/Bw5VKVjG5oSiWxDHXjy38=;
+        b=bXYK1ZSyjNXW0Qh+M9C2SfRd7r1pKszYRp26r4cxtylix/RS6bG6mpeRD/E372JTD1
+         fpf3a9iiJOOsh7SqakQ+H8POqiWMeQcZiG8AmdC4579fLMnqSZfsTnxPhfMxxOpa51RG
+         qpMDgefR5lpG1xShf/T5e4KxPLleWKU7IA4YW887h+maYDZ5D3rbuom7R5EIQcugIuJT
+         9iEKkKyT8hb+IZft0m4ruG5SFBGxdEnIYo3i5wGvHdMSyHFVIKYM2XD6LK1t8dppU9Te
+         fothtOHrTonFpS2q4LQMU/mMZ9DQKY9xzGGdlldZmSkUtx/JIaG/9cyri9dK4l8BruQm
+         3ayA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zod9g0ucmYQBVnFLZZB9W/Bw5VKVjG5oSiWxDHXjy38=;
+        b=Kab0BzRD3svqrL0nprzClwpPVDaIg4ovkD23pNTJonIReZXyggMFuVZmKIfO5/QFio
+         67qBmQ2387+GnNmlMy4lAxNobCQeW7ISc+Vq6Zf9nKGx76BqtdTOwv2t1CdhxFgTMMwl
+         5GEgHkqkGrRNUduNIX3jlWGwS1LfLREVxD8dP7wpXzogjiVSkAnq/ZugAwexiJZ4AN1T
+         uGh19DZeG/9PH3lYcIn2oGaFUUgpe4XLXQXluf+LvXvpb1kfAaWZ7W8jw10h8aoTN1CF
+         GMMsThm3ETlQDnSvmvwGFtYFf7jh4TnzgNXxd6weiG2CjBK1H9Ob8Bc8DWEG054ik/g4
+         WdJg==
+X-Gm-Message-State: AOAM531fbWY0nddzxWQ9XeO1U3x/klSPyMAtY3ummaIO2tbgpmdYg2nQ
+        bzSXHscr/z4pYgo4B3aLAkWlkVfgmm55/3cI
+X-Google-Smtp-Source: ABdhPJwg6z41nULlj+fBpHui3mHcsEEdsSWv2Url9DdIMk0b8MqzGdSGYGJWk/tDMRfFUjVbLs5lpw==
+X-Received: by 2002:a17:902:8f94:b029:da:d168:4443 with SMTP id z20-20020a1709028f94b02900dad1684443mr22760620plo.57.1607959666413;
+        Mon, 14 Dec 2020 07:27:46 -0800 (PST)
+Received: from localhost.localdomain ([124.253.101.135])
+        by smtp.googlemail.com with ESMTPSA id y6sm19656391pjl.0.2020.12.14.07.27.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Dec 2020 07:27:45 -0800 (PST)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
+        Damien.LeMoal@wdc.com, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Puranjay Mohan <puranjay12@gmail.com>
+Subject: [PATCH v1] drivers: block: skd: remove skd_pci_info()
+Date:   Mon, 14 Dec 2020 20:57:20 +0530
+Message-Id: <20201214152720.11922-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20201118071724.4866-4-wens@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-11-18 07:17, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> Only the NanoPC T4 hs the PCIe reset pin routed to the SoC. For the
-> NanoPi M4 family, no such signal is routed to the expansion header on
-> the base board.
-> 
-> As the schematics for the expansion board were not released, it is
-> unclear how this is handled, but the likely answer is that the signal
-> is always pulled high.
-> 
-> Move the ep-gpios property from the common nanopi4.dtsi file to the
-> board level nanopc-t4.dts file. This makes the nanopi-m4 lack ep-gpios,
-> matching the board design.
-> 
-> A companion patch "PCI: rockchip: make ep_gpio optional" for the Linux
-> driver is required, as the driver currently requires the property to be
-> present.
+Change the call to skd_pci_info() to pcie_print_link_status().
+pcie_print_link_status() can be used to print the link speed and
+the link width, skd_pci_info() does the same and hence it is removed.
 
-I concur that this is a more correct description per the schematics (the 
-SOM-RK3399 Dev Kit carrier board is the only other thing showing PERST# 
-wired up like this), and whatever the M4 hats are doing they clearly 
-aren't doing it with GPIO2_A4 either way.
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+v1 - Add call to pcie_print_link_status()
+---
+ drivers/block/skd_main.c | 33 +--------------------------------
+ 1 file changed, 1 insertion(+), 32 deletions(-)
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+index a962b4551bed..efd69f349043 100644
+--- a/drivers/block/skd_main.c
++++ b/drivers/block/skd_main.c
+@@ -3134,40 +3134,10 @@ static const struct pci_device_id skd_pci_tbl[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, skd_pci_tbl);
+ 
+-static char *skd_pci_info(struct skd_device *skdev, char *str)
+-{
+-	int pcie_reg;
+-
+-	strcpy(str, "PCIe (");
+-	pcie_reg = pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
+-
+-	if (pcie_reg) {
+-
+-		char lwstr[6];
+-		uint16_t pcie_lstat, lspeed, lwidth;
+-
+-		pcie_reg += 0x12;
+-		pci_read_config_word(skdev->pdev, pcie_reg, &pcie_lstat);
+-		lspeed = pcie_lstat & (0xF);
+-		lwidth = (pcie_lstat & 0x3F0) >> 4;
+-
+-		if (lspeed == 1)
+-			strcat(str, "2.5GT/s ");
+-		else if (lspeed == 2)
+-			strcat(str, "5.0GT/s ");
+-		else
+-			strcat(str, "<unknown> ");
+-		snprintf(lwstr, sizeof(lwstr), "%dX)", lwidth);
+-		strcat(str, lwstr);
+-	}
+-	return str;
+-}
+-
+ static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	int i;
+ 	int rc = 0;
+-	char pci_str[32];
+ 	struct skd_device *skdev;
+ 
+ 	dev_dbg(&pdev->dev, "vendor=%04X device=%04x\n", pdev->vendor,
+@@ -3201,8 +3171,7 @@ static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto err_out_regions;
+ 	}
+ 
+-	skd_pci_info(skdev, pci_str);
+-	dev_info(&pdev->dev, "%s 64bit\n", pci_str);
++	pcie_print_link_status(pdev);
+ 
+ 	pci_set_master(pdev);
+ 	rc = pci_enable_pcie_error_reporting(pdev);
+-- 
+2.27.0
 
-> Fixes: e7a095908227 ("arm64: dts: rockchip: Add devicetree for NanoPC-T4")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->   arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts | 1 +
->   arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi  | 1 -
->   2 files changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-> index e0d75617bb7e..452728b82e42 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-> @@ -95,6 +95,7 @@ map3 {
->   };
->   
->   &pcie0 {
-> +	ep-gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
->   	num-lanes = <4>;
->   	vpcie3v3-supply = <&vcc3v3_sys>;
->   };
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-> index 76a8b40a93c6..48ed4aaa37f3 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-> @@ -504,7 +504,6 @@ &pcie_phy {
->   };
->   
->   &pcie0 {
-> -	ep-gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
->   	max-link-speed = <2>;
->   	num-lanes = <2>;
->   	vpcie0v9-supply = <&vcca0v9_s3>;
-> 
