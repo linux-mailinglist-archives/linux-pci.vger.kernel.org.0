@@ -2,780 +2,209 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A5542DA3D6
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 00:01:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3D3B2DA455
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 00:45:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441340AbgLNW5c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 17:57:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441343AbgLNW5Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Dec 2020 17:57:24 -0500
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2134C0613D6;
-        Mon, 14 Dec 2020 14:56:43 -0800 (PST)
-Received: by mail-qk1-x741.google.com with SMTP id z11so17368381qkj.7;
-        Mon, 14 Dec 2020 14:56:43 -0800 (PST)
+        id S1727134AbgLNXmy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 18:42:54 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:64390 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbgLNXmt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Dec 2020 18:42:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1607989369; x=1639525369;
+  h=from:to:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=33PHwqJ/wK7i58gbDwOM9s3fmUfMYZ3NWhii2Loltb8=;
+  b=b1aUXRD/Mpp40RsydPV9qH9j6DnTB1mCGbEzfI3bKqUZmidkSXP/Tm7O
+   H4XfhfVJD6C/Gs7sgSyULRUkSxtX8CsVdv59Pkl6DOL1r8K7QuiMWr6bu
+   Wi/lH6Tz0JARUBsE4Sp7Q27IZZ69JklQ1mBLY4CcM2OoBPz5rkASN+FDg
+   nZ+iQC7mKtQsuTA3QLFR0Oqnr03EE5vjaoXKi8F0QI7U2SyVZWqWtCdr/
+   5ZfCdA61G+YHIJNbyNY/NLE6SYPio2s+Fuys6NxU3KaAWES/wMkluAd2J
+   eqsf6xIEtpIdSjYBREMz39umes6+fhrrB/vDLW1RrJ/gexo5I7wunxpQK
+   w==;
+IronPort-SDR: 3Ef9NWsCimbXCOb9mnDdS8T3kH6ajS4+1nWRkFxrAfpa9tt11pHCvqdYTA1vii6ZBsekpbsD1G
+ t5+3l5w3JpgR6NpjY6fMLF2rcQjHQV9DmggOZmfkQcHmRhkcrlSqaH87mnZqAOp6pSAa/IhKgN
+ WrkIrwh2uxAXirEDaM8SAUbH/c+rGd3mcSnA8O9m4YDbMHoEGHLHOSSqDFRMFJofxgSD/9ZWe9
+ +OJmX29rhbIvwx0U1wbYhJLNaMRZ2rMsqrRzahd5Ny0zpkEtRV+HUE2Bsb57g50VQTmXfeo7K0
+ 3CI=
+X-IronPort-AV: E=Sophos;i="5.78,420,1599494400"; 
+   d="scan'208";a="156347789"
+Received: from mail-dm6nam12lp2170.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.170])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Dec 2020 07:41:42 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J7Q7bHb1csnpklnTxyDpK+5FLl6qWGZTFjP1ARCorsSbITwbNWhPuKHXUjBS+uJQHEW7nBNEP7jv7rynAucxyAGRYH5M+flL4PDso/qJlKlagwPt2033CmCcUrZfV4Fpu33CRbDuK6YJYvKO6mTw5UVNjsFOePAYmNvmlZUZG8YvQMjoZhthUZyOEdtL1T8mtzlGTyMPKaINfEvBFxjpoWIiBgIC2CXFRQrtPmLfYP+tD4eC5dz/OtOnPz/JB+pEEjs0T8BF0neH0RZFmHKh1LTRXHkCaXudMxQuBaatE7EZGePac/eKFdZje8SDvqFlzq2nTW7JWzcbesk6R+FZBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+/rBc+wGKc+WqoTqP/m4T4UKGqpfwvZpf0Ya8vDxQLo=;
+ b=IGAdg7IoLH9DcumERRL0c3zh+aTdMZvCFtiAP0iPYodM8Q7f4pTPuG+p1zDviwDxXc9xdN49nn6iizwWtZwMqV9I7bRQ3Szwtf0lVtpYd+aE8IJaAp6CA7ieZ8En7wEkrRulj1yMxlqGca2bJnSGGNNt85lY9UmkxdPnv6OM134TmX/dyXQdfhZ8ZAnTOzU+CA2xHrm8Ck7p5j2W2zscLMg9UEyDRtNwtifgcwOJzbtLoZX/55BdgXQ/KoLw+Dqxy7ukUqWR15LFLZE9IuzW57WAkA14DvMMVW++RCuWV66s67eJS74DBqo+t1rCIFTMS5xRHftVSibb3yRxuBuePw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=39wreBriIoSTWZSXxpvBMhdWxFEQtcTHD+26xf1dKwo=;
-        b=VsetVkf9CwQ5zPAPyoq8i1n9jgVZnpVHtzIL6C5DeBPJtHpC98qXdJv1KXw8ZBemGE
-         TeDNaZ3KUhAfFn6VTSbzawsM44ZTGiWg3w4+4V1qgOldjMdcL2GfaQ2aKzU8Plv6zkls
-         3qbgdQdDn1w0pi8gPszW6bqFudnmx1IJ+UoyrPx+KtwwtXVwi3mharZ/39hlVMWDc/Ia
-         y421FJB38BOGSYgfpIH58loP5bhtkkN3oWrDPv4/OdAHpJk0Nmk0o15O4zKf4xY7d6BJ
-         1cm/YpupAmKxYGX9IIEtwUhZNAW5BB14xy+rQ337uRzXDHCbqtV7dNl34e0aBlY8k9x9
-         8bVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=39wreBriIoSTWZSXxpvBMhdWxFEQtcTHD+26xf1dKwo=;
-        b=D4mImZAWAm6Rz0Y6FfO+RVhmxwSPVqDCcKkV2ZgarYeN2of5IO9K2SvXJiUbmUKXpL
-         9frtRxnxV6XaZUvpVTW0r8VqpfSKhH1/BrKzaHOL/x9FwqpKH1f0rYQPMAmkXgzETbxs
-         J0QB2EwED7XJ8HjAAAixPgIUJfLomwqCKHs+YGu0aVordSFlClz8nF4nbaA6KKt7cKGH
-         y2F7PPsVFmggmVSWFu1PUsa19iZE+N41OVDsv5hZ5+Am2olTAgT+jNTc+b9Zg9HDsryv
-         NcjI+U9pZkVXEDn8qPKvrmH2pReqHk2NLiU1O2iqfMSQRV/hCMaI7NqCYf9xwHBFtrtD
-         J+Iw==
-X-Gm-Message-State: AOAM531hVanLyYazTNGTLickbf39QQ/QMcJtp9xPlGy5x7soGG1ZV2k9
-        rh0bmbTn1UdaSKAT5P1zkLQ6Q41cZMmeSODuC8Y=
-X-Google-Smtp-Source: ABdhPJxcnrC0dN+W0C5rTDV/NcOKqGEcswfX3MxWcAdwwN6VOjmcGXTNQn8teEQ2dlKrfFbB2vacy44/MYs7tTisfDA=
-X-Received: by 2002:a05:620a:2009:: with SMTP id c9mr9297547qka.159.1607986602435;
- Mon, 14 Dec 2020 14:56:42 -0800 (PST)
-MIME-Version: 1.0
-References: <CAA85sZuG2TbTjOAJ1TRhCbsZ2HRhUzD48b+SQ9JuAmW9gUm_dA@mail.gmail.com>
- <20201214191955.GA228095@bjorn-Precision-5520>
-In-Reply-To: <20201214191955.GA228095@bjorn-Precision-5520>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Mon, 14 Dec 2020 23:56:31 +0100
-Message-ID: <CAA85sZs8Li7+8BQWj0e+Qrxes1VF6K_Ukqrqgs1E3hHmaXqsbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] PCI/ASPM: Use the path max in L1 ASPM latency check
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+/rBc+wGKc+WqoTqP/m4T4UKGqpfwvZpf0Ya8vDxQLo=;
+ b=eL7JUgASPWc/D3RBf9UEWh8PbUIBIC/RaFSUHRcULBlCrdVw3qj8W/tygyQE6mXaoWKCcD1iJHCXUE6qCFVxQmXbubbbRKceNljyivhj3LN0N4Xf/OEIGLkXTucrU9cWdgWHBR0q5Ul/HtQuEf375PPOPMALqZ2J7704vzOm70M=
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com (2603:10b6:610:34::19)
+ by CH2PR04MB6760.namprd04.prod.outlook.com (2603:10b6:610:91::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3654.17; Mon, 14 Dec
+ 2020 23:41:40 +0000
+Received: from CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a]) by CH2PR04MB6522.namprd04.prod.outlook.com
+ ([fe80::897c:a04b:4eb0:640a%7]) with mapi id 15.20.3632.023; Mon, 14 Dec 2020
+ 23:41:40 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Puranjay Mohan <puranjay12@gmail.com>,
+        "bjorn@helgaas.com" <bjorn@helgaas.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1] drivers: block: skd: remove skd_pci_info()
+Thread-Topic: [PATCH v1] drivers: block: skd: remove skd_pci_info()
+Thread-Index: AQHW0i2wqDaNil4lgECF1jii2YcNxg==
+Date:   Mon, 14 Dec 2020 23:41:40 +0000
+Message-ID: <CH2PR04MB6522E0FCC3673C97064156C7E7C70@CH2PR04MB6522.namprd04.prod.outlook.com>
+References: <20201214152720.11922-1-puranjay12@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [60.117.181.124]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e4d8e6ff-e2c7-4e29-7a09-08d8a089ce8a
+x-ms-traffictypediagnostic: CH2PR04MB6760:
+x-microsoft-antispam-prvs: <CH2PR04MB67609FFE5EA09E62E199A9C8E7C70@CH2PR04MB6760.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:191;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6P8hVyN9/xGgikENqTIVVinoMjE/FwXzRiUgSBG+9unnAE4Ckxvs5KCai564JkQFQj5GvYYn4w0+Hk7Xi8wE6nBQZ5mXeLVpwpi8RwqIRUe/mwozuuF4kRzZypHm2pW7znl+7n2cyaZosBnFw2elxR0liSReJtjz91kjR4tMU6lmGua0Wl5pYj5XFZBSl6jYIkVCMx/MAzK3AdKgGe2c6pn7qNebWHvSR3J+oAnl/XdgC0TbWMl2gR3pAkcJPlLm8Pk6wKnV5D19P/1UF1i5FzkHijfGgqHZr9UeI1XKwBMh2Yf/GN23pCeDKgQ3yGqys9kR6Caoq41o5BXMYNvOlQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR04MB6522.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(366004)(9686003)(52536014)(5660300002)(64756008)(53546011)(186003)(2906002)(8936002)(66556008)(66946007)(76116006)(66446008)(66476007)(91956017)(110136005)(6506007)(71200400001)(7696005)(8676002)(26005)(83380400001)(55016002)(508600001)(33656002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?h0Mbl6VK50wjO2p4UW5UAv8VjSOMwLFmpkhP7769wRr0yBnsgn2Rbqs266lV?=
+ =?us-ascii?Q?M8911XzGkNLSnUtO3erc6z8MkgIC5nMFPNFlY2zskNbgIR2DZai+sNhmTEQP?=
+ =?us-ascii?Q?L5F/lH8A5NhBSRT08A6x1V78ZxLnOoWk4qDTarDi1rW16TVvhM37dPuW7WDE?=
+ =?us-ascii?Q?DwmEVrM6OhoIcbvzdbIRFlfL7o7tYMwiADE+HcxJGs1/NTxhfVOXASBHUGWZ?=
+ =?us-ascii?Q?LNtWoSfmG/xQZM9NgPyMQWja24XZmxvUztjvAwlA5G52mNqqHFsXV8S89t7r?=
+ =?us-ascii?Q?1+EwwkA0Y7jcqdzZ+BLE3GpIyj+iz7PlPsSHkmJub2RBZMgYE3rMKfKRww3e?=
+ =?us-ascii?Q?H08ooM9376v9w52EY4BTASmtoAIP2JPlSICAadZDtkBeG6y/eQc2AGPaAhK4?=
+ =?us-ascii?Q?ifJWh8s2rRWP2TBlMRxtEHDbd4gQPZsZ7l5ezS8zTHvE/NgI2G4x79MUv7Di?=
+ =?us-ascii?Q?Wl3zr0Dkhbrgwd06jjLXJlPPxKb7NDnhez+Jp1HV7FmfnSPDuO9JA7V0V3NT?=
+ =?us-ascii?Q?1XAxQDmJE4BHbNjLcFiexwMcQTTwNLR/Yglh1cOKn8T3uHM7s3zOmc/RtKrD?=
+ =?us-ascii?Q?m0vtZBWyk3tiew4pCwo2cqtNfyopS7O8XHgOpobDRZ9qeaZFykyVL8IMIo0p?=
+ =?us-ascii?Q?KPxgrouClcPp1420yYpzhH2/2n+uPFPR2JIpx7stmWCNYxUjKPLpiaQHWD/E?=
+ =?us-ascii?Q?NqFCfJsKlH6VnhdHESHom3j0WXrwHOvOy0XCGQPPvmQYWFiwvGRjoQ8jyXsV?=
+ =?us-ascii?Q?taBbW84bEHUJefhiWDCMyc6EBT6AU9o/mYNNd4RxbC4xcNz0zmjYxw95HLqP?=
+ =?us-ascii?Q?olepakqaQPESu8SITvcI1lYf2GMyrNuK5dWPcGHwzxCcKXZpv2Ujcju34nEy?=
+ =?us-ascii?Q?ibqKzYhJkh0ep6HnIsI2EuFoz/H+7yBmuM1mcWT3sWevzdiKDb003A6RRvKG?=
+ =?us-ascii?Q?qRiBnqLvnlGBVQ1WlkEqjlocRW3MymbBBh2iFB9hr522W1ueFlODPnEE7gnI?=
+ =?us-ascii?Q?tkXg?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR04MB6522.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4d8e6ff-e2c7-4e29-7a09-08d8a089ce8a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Dec 2020 23:41:40.8244
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rnl1CaQ9yY6qi4hVgtNL5VKooJ8VLz4LSEdq2SQX3skGykTtOFer61W8MYPgvNPMaGnUHQNHxFXXyMI5TncruQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR04MB6760
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 14, 2020 at 8:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Dec 14, 2020 at 04:47:32PM +0100, Ian Kumlien wrote:
-> > On Mon, Dec 14, 2020 at 3:02 PM Bjorn Helgaas <helgaas@kernel.org> wrot=
-e:
-> > > On Mon, Dec 14, 2020 at 10:14:18AM +0100, Ian Kumlien wrote:
-> > > > On Mon, Dec 14, 2020 at 6:44 AM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
-> > > > >
-> > > > > [+cc Jesse, Tony, David, Jakub, Heiner, lists in case there's an =
-ASPM
-> > > > > issue with I211 or Realtek NICs.  Beginning of thread:
-> > > > > https://lore.kernel.org/r/20201024205548.1837770-1-ian.kumlien@gm=
-ail.com
-> > > > >
-> > > > > Short story: Ian has:
-> > > > >
-> > > > >   Root Port --- Switch --- I211 NIC
-> > > > >                        \-- multifunction Realtek NIC, etc
-> > > > >
-> > > > > and the I211 performance is poor with ASPM L1 enabled on both lin=
-ks
-> > > > > in the path to it.  The patch here disables ASPM on the upstream =
-link
-> > > > > and fixes the performance, but AFAICT the devices in that path gi=
-ve us
-> > > > > no reason to disable L1.  If I understand the spec correctly, the
-> > > > > Realtek device should not be relevant to the I211 path.]
-> > > > >
-> > > > > On Sun, Dec 13, 2020 at 10:39:53PM +0100, Ian Kumlien wrote:
-> > > > > > On Sun, Dec 13, 2020 at 12:47 AM Bjorn Helgaas <helgaas@kernel.=
-org> wrote:
-> > > > > > > On Sat, Oct 24, 2020 at 10:55:46PM +0200, Ian Kumlien wrote:
-> > > > > > > > Make pcie_aspm_check_latency comply with the PCIe spec, spe=
-cifically:
-> > > > > > > > "5.4.1.2.2. Exit from the L1 State"
-> > > > > > > >
-> > > > > > > > Which makes it clear that each switch is required to
-> > > > > > > > initiate a transition within 1=CE=BCs from receiving it,
-> > > > > > > > accumulating this latency and then we have to wait for the
-> > > > > > > > slowest link along the path before entering L0 state from
-> > > > > > > > L1.
-> > > > > > > > ...
-> > > > > > >
-> > > > > > > > On my specific system:
-> > > > > > > > 03:00.0 Ethernet controller: Intel Corporation I211 Gigabit=
- Network Connection (rev 03)
-> > > > > > > > 04:00.0 Unassigned class [ff00]: Realtek Semiconductor Co.,=
- Ltd. Device 816e (rev 1a)
-> > > > > > > >
-> > > > > > > >             Exit latency       Acceptable latency
-> > > > > > > > Tree:       L1       L0s       L1       L0s
-> > > > > > > > ----------  -------  -----     -------  ------
-> > > > > > > > 00:01.2     <32 us   -
-> > > > > > > > | 01:00.0   <32 us   -
-> > > > > > > > |- 02:03.0  <32 us   -
-> > > > > > > > | \03:00.0  <16 us   <2us      <64 us   <512ns
-> > > > > > > > |
-> > > > > > > > \- 02:04.0  <32 us   -
-> > > > > > > >   \04:00.0  <64 us   unlimited <64 us   <512ns
-> > > > > > > >
-> > > > > > > > 04:00.0's latency is the same as the maximum it allows so a=
-s
-> > > > > > > > we walk the path the first switchs startup latency will pas=
-s
-> > > > > > > > the acceptable latency limit for the link, and as a
-> > > > > > > > side-effect it fixes my issues with 03:00.0.
-> > > > > > > >
-> > > > > > > > Without this patch, 03:00.0 misbehaves and only gives me ~4=
-0
-> > > > > > > > mbit/s over links with 6 or more hops. With this patch I'm
-> > > > > > > > back to a maximum of ~933 mbit/s.
-> > > > > > >
-> > > > > > > There are two paths here that share a Link:
-> > > > > > >
-> > > > > > >   00:01.2 --- 01:00.0 -- 02:03.0 --- 03:00.0 I211 NIC
-> > > > > > >   00:01.2 --- 01:00.0 -- 02:04.0 --- 04:00.x multifunction Re=
-altek
-> > > > > > >
-> > > > > > > 1) The path to the I211 NIC includes four Ports and two Links=
- (the
-> > > > > > >    connection between 01:00.0 and 02:03.0 is internal Switch =
-routing,
-> > > > > > >    not a Link).
-> > > > > >
-> > > > > > >    The Ports advertise L1 exit latencies of <32us, <32us, <32=
-us,
-> > > > > > >    <16us.  If both Links are in L1 and 03:00.0 initiates L1 e=
-xit at T,
-> > > > > > >    01:00.0 initiates L1 exit at T + 1.  A TLP from 03:00.0 ma=
-y see up
-> > > > > > >    to 1 + 32 =3D 33us of L1 exit latency.
-> > > > > > >
-> > > > > > >    The NIC can tolerate up to 64us of L1 exit latency, so it =
-is safe
-> > > > > > >    to enable L1 for both Links.
-> > > > > > >
-> > > > > > > 2) The path to the Realtek device is similar except that the =
-Realtek
-> > > > > > >    L1 exit latency is <64us.  If both Links are in L1 and 04:=
-00.x
-> > > > > > >    initiates L1 exit at T, 01:00.0 again initiates L1 exit at=
- T + 1,
-> > > > > > >    but a TLP from 04:00.x may see up to 1 + 64 =3D 65us of L1=
- exit
-> > > > > > >    latency.
-> > > > > > >
-> > > > > > >    The Realtek device can only tolerate 64us of latency, so i=
-t is not
-> > > > > > >    safe to enable L1 for both Links.  It should be safe to en=
-able L1
-> > > > > > >    on the shared link because the exit latency for that link =
-would be
-> > > > > > >    <32us.
-> > > > > >
-> > > > > > 04:00.0:
-> > > > > > DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s <512ns, =
-L1 <64us
-> > > > > > LnkCap: Port #0, Speed 5GT/s, Width x1, ASPM L0s L1, Exit Laten=
-cy L0s
-> > > > > > unlimited, L1 <64us
-> > > > > >
-> > > > > > So maximum latency for the entire link has to be <64 us
-> > > > > > For the device to leave L1 ASPM takes <64us
-> > > > > >
-> > > > > > So the device itself is the slowest entry along the link, which
-> > > > > > means that nothing else along that path can have ASPM enabled
-> > > > >
-> > > > > Yes.  That's what I said above: "it is not safe to enable L1 for =
-both
-> > > > > Links."  Unless I'm missing something, we agree on that.
-> > > > >
-> > > > > I also said that it should be safe to enable L1 on the shared Lin=
-k
-> > > > > (from 00:01.2 to 01:00.0) because if the downstream Link is alway=
-s in
-> > > > > L0, the exit latency of the shared Link should be <32us, and 04:0=
-0.x
-> > > > > can tolerate 64us.
-> > > >
-> > > > Exit latency of shared link would be max of link, ie 64 + L1-hops, =
-not 32
-> > >
-> > > I don't think this is true.  The path from 00:01.2 to 04:00.x include=
-s
-> > > two Links, and they are independent.  The exit latency for each Link
-> > > depends only on the Port at each end:
-> >
-> > The full path is what is important, because that is the actual latency
-> > (which the current linux code doesn't do)
->
-> I think you're saying we need to include the 04:00.x exit latency of
-> 64us even though L1 is not enabled for 04:00.x.  I disagree; the L1
-> exit latency of Ports where L1 is disabled is irrelevant.
-
-I will redo the without patch and look again, I know that I have to
-wait a while for it to happen.
-
-Witch patch 3 i get:
-dec 14 13:44:40 localhost kernel: pci 0000:04:00.0: ASPM latency
-exceeded, disabling: L1:0000:01:00.0-0000:00:01.2
-
-And it should only check links that has L1 aspm enabled, as per the
-original code.
-
-> > >   Link 1 (depends on 00:01.2 and 01:00.0): max(32, 32) =3D 32us
-> > >   Link 2 (depends on 02:04.0 and 04:00.x): max(32, 64) =3D 64us
-> > >
-> > > If L1 is enabled for Link 1 and disabled for Link 2, Link 2 will
-> > > remain in L0 so it has no L1 exit latency, and the exit latency of
-> > > the entire path should be 32us.
-> >
-> > My patch disables this so yes.
-> >
-> > > > > > > > The original code path did:
-> > > > > > > > 04:00:0-02:04.0 max latency 64    -> ok
-> > > > > > > > 02:04.0-01:00.0 max latency 32 +1 -> ok
-> > > > > > > > 01:00.0-00:01.2 max latency 32 +2 -> ok
-> > > > > > > >
-> > > > > > > > And thus didn't see any L1 ASPM latency issues.
-> > > > > > > >
-> > > > > > > > The new code does:
-> > > > > > > > 04:00:0-02:04.0 max latency 64    -> ok
-> > > > > > > > 02:04.0-01:00.0 max latency 64 +1 -> latency exceeded
-> > > > > > > > 01:00.0-00:01.2 max latency 64 +2 -> latency exceeded
-> > > > > > >
-> > > > > > > [Nit: I don't think we should add 1 for the 02:04.0 -- 01:00.=
-0 piece
-> > > > > > > because that's internal Switch routing, not a Link.  But even=
- without
-> > > > > > > that extra microsecond, this path does exceed the acceptable =
-latency
-> > > > > > > since 1 + 64 =3D 65us, and 04:00.0 can only tolerate 64us.]
-> > > > > >
-> > > > > > It does report L1 ASPM on both ends, so the links will be count=
-ed as
-> > > > > > such in the code.
-> > > > >
-> > > > > This is a bit of a tangent and we shouldn't get too wrapped up in=
- it.
-> > > > > This is a confusing aspect of PCIe.  We're talking about this pat=
-h:
-> > > > >
-> > > > >   00:01.2 --- [01:00.0 -- 02:04.0] --- 04:00.x multifunction Real=
-tek
-> > > > >
-> > > > > This path only contains two Links.  The first one is
-> > > > > 00:01.2 --- 01:00.0, and the second one is 02:04.0 --- 04:00.x.
-> > > > >
-> > > > > 01:00.0 is a Switch Upstream Port and 02:04.0 is a Switch Downstr=
-eam
-> > > > > Port.  The connection between them is not a Link; it is some inte=
-rnal
-> > > > > wiring of the Switch that is completely opaque to software.
-> > > > >
-> > > > > The ASPM information and knobs in 01:00.0 apply to the Link on it=
-s
-> > > > > upstream side, and the ASPM info and knobs in 02:04.0 apply to th=
-e
-> > > > > Link on its downstream side.
-> > > > >
-> > > > > The example in sec 5.4.1.2.2 contains three Links.  The L1 exit l=
-atency
-> > > > > for the Link is the max of the exit latencies at each end:
-> > > > >
-> > > > >   Link 1: max(32, 8) =3D 32us
-> > > > >   Link 2: max(8, 32) =3D 32us
-> > > > >   Link 3: max(32, 8) =3D 32us
-> > > > >
-> > > > > The total delay for a TLP starting at the downstream end of Link =
-3
-> > > > > is 32 + 2 =3D 32us.
-> > > > >
-> > > > > In the path to your 04:00.x Realtek device:
-> > > > >
-> > > > >   Link 1 (from 00:01.2 to 01:00.0): max(32, 32) =3D 32us
-> > > > >   Link 2 (from 02:04.0 to 04:00.x): max(32, 64) =3D 64us
-> > > > >
-> > > > > If L1 were enabled on both Links, the exit latency would be 64 + =
-1 =3D
-> > > > > 65us.
-> > > >
-> > > > So one line to be removed from the changelog, i assume... And yes, =
-the
-> > > > code handles that - first disable is 01:00.0 <-> 00:01.2
-> > > >
-> > > > > > I also assume that it can power down individual ports... and en=
-ter
-> > > > > > rest state if no links are up.
-> > > > >
-> > > > > I don't think this is quite true -- a Link can't enter L1 unless =
-the
-> > > > > Ports on both ends have L1 enabled, so I don't think it makes sen=
-se to
-> > > > > talk about an individual Port being in L1.
-> > > > >
-> > > > > > > > It correctly identifies the issue.
-> > > > > > > >
-> > > > > > > > For reference, pcie information:
-> > > > > > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D209725
-> > > > > > >
-> > > > > > > The "lspci without my patches" [1] shows L1 enabled for the s=
-hared
-> > > > > > > Link from 00:01.2 --- 01:00.0 and for the Link to 03:00.0 (I2=
-11), but
-> > > > > > > not for the Link to 04:00.x (Realtek).
-> > > > > > >
-> > > > > > > Per my analysis above, that looks like it *should* be a safe
-> > > > > > > configuration.  03:00.0 can tolerate 64us, actual is <33us.  =
-04:00.0
-> > > > > > > can tolerate 64us, actual should be <32us since only the shar=
-ed Link
-> > > > > > > is in L1.
-> > > > > >
-> > > > > > See above.
-> > > > >
-> > > > > As I said above, if we enabled L1 only on the shared Link from 00=
-:01.2
-> > > > > to 01:00.0, the exit latency should be acceptable.  In that case,=
- a
-> > > > > TLP from 04:00.x would see only 32us of latency:
-> > > > >
-> > > > >   Link 1 (from 00:01.2 to 01:00.0): max(32, 32) =3D 32us
-> > > > >
-> > > > > and 04:00.x can tolerate 64us.
-> > > >
-> > > > But, again, you're completely ignoring the full link, ie 04:00.x wo=
-uld
-> > > > also have to power on.
-> > >
-> > > I think you're using "the full link" to refer to the entire path from
-> > > 00:01.2 to 04:00.x.  In PCIe, a "Link" directly connects two Ports.
-> > > It doesn't refer to the entire path.
-> > >
-> > > No, if L1 is disabled on 02:04.0 and 04:00.x (as Linux apparently doe=
-s
-> > > by default), the Link between them never enters L1, so there is no
-> > > power-on for this Link.
-> >
-> > It doesn't do it by default, my patch does
->
-> I'm relying on [1], your "lspci without my patches" attachment named
-> "lspci-5.9-mainline.txt", which shows:
->
->   02:04.0 LnkCtl: ASPM Disabled
->   04:00.0 LnkCtl: ASPM Disabled
->
-> so I assumed that was what Linux did by default.
-
-Interesting, they are disabled.
-
-> > > > > > > However, the commit log at [2] shows L1 *enabled* for both
-> > > > > > > the shared Link from 00:01.2 --- 01:00.0 and the 02:04.0
-> > > > > > > --- 04:00.x Link, and that would definitely be a problem.
-> > > > > > >
-> > > > > > > Can you explain the differences between [1] and [2]?
-> > > > > >
-> > > > > > I don't understand which sections you're referring to.
-> > > > >
-> > > > > [1] is the "lspci without my patches" attachment of bugzilla #209=
-725,
-> > > > > which is supposed to show the problem this patch solves.  We're
-> > > > > talking about the path to 04:00.x, and [1] show this:
-> > > > >
-> > > > >   01:00.2 L1+               # <-- my typo here, should be 00:01.2
-> > > > >   01:00.0 L1+
-> > > > >   02:04.0 L1-
-> > > > >   04:00.0 L1-
-> > > > >
-> > > > > AFAICT, that should be a legal configuration as far as 04:00.0 is
-> > > > > concerned, so it's not a reason for this patch.
-> > > >
-> > > > Actually, no, maximum path latency 64us
-> > > >
-> > > > 04:00.0 wakeup latency =3D=3D 64us
-> > > >
-> > > > Again, as stated, it can't be behind any sleeping L1 links
-> > >
-> > > It would be pointless for a device to advertise L1 support if it coul=
-d
-> > > never be used.  04:00.0 advertises that it can tolerate L1 latency of
-> > > 64us and that it can exit L1 in 64us or less.  So it *can* be behind =
-a
-> > > Link in L1 as long as nothing else in the path adds more latency.
-> >
-> > Yes, as long as nothing along the entire path adds latency - and I
-> > didn't make the component
-> > I can only say what it states, and we have to handle it.
-> >
-> > > > > [2] is a previous posting of this same patch, and its commit log
-> > > > > includes information about the same path to 04:00.x, but the "Lnk=
-Ctl
-> > > > > Before" column shows:
-> > > > >
-> > > > >   01:00.2 L1+               # <-- my typo here, should be 00:01.2
-> > > > >   01:00.0 L1+
-> > > > >   02:04.0 L1+
-> > > > >   04:00.0 L1+
-> > > > >
-> > > > > I don't know why [1] shows L1 disabled on the downstream Link, wh=
-ile
-> > > > > [2] shows L1 *enabled* on the same Link.
-> > > >
-> > > > From the data they look switched.
-> > > >
-> > > > > > > > Kai-Heng Feng has a machine that will not boot with ASPM wi=
-thout
-> > > > > > > > this patch, information is documented here:
-> > > > > > > > https://bugzilla.kernel.org/show_bug.cgi?id=3D209671
-> > > > > > >
-> > > > > > > I started working through this info, too, but there's not
-> > > > > > > enough information to tell what difference this patch
-> > > > > > > makes.  The attachments compare:
-> > > > > > >
-> > > > > > >   1) CONFIG_PCIEASPM_DEFAULT=3Dy without the patch [3] and
-> > > > > > >   2) CONFIG_PCIEASPM_POWERSAVE=3Dy *with* the patch [4]
-> > > > > > >
-> > > > > > > Obviously CONFIG_PCIEASPM_POWERSAVE=3Dy will configure
-> > > > > > > things differently than CONFIG_PCIEASPM_DEFAULT=3Dy, so we
-> > > > > > > can't tell what changes are due to the config change and
-> > > > > > > what are due to the patch.
-> > > > > > >
-> > > > > > > The lspci *with* the patch ([4]) shows L0s and L1 enabled
-> > > > > > > at almost every possible place.  Here are the Links, how
-> > > > > > > they're configured, and my analysis of the exit latencies
-> > > > > > > vs acceptable latencies:
-> > > > > > >
-> > > > > > >   00:01.1 --- 01:00.0      L1+ (                  L1 <64us vs=
- unl)
-> > > > > > >   00:01.2 --- 02:00.0      L1+ (                  L1 <64us vs=
- 64us)
-> > > > > > >   00:01.3 --- 03:00.0      L1+ (                  L1 <64us vs=
- 64us)
-> > > > > > >   00:01.4 --- 04:00.0      L1+ (                  L1 <64us vs=
- unl)
-> > > > > > >   00:08.1 --- 05:00.x L0s+ L1+ (L0s <64ns vs 4us, L1  <1us vs=
- unl)
-> > > > > > >   00:08.2 --- 06:00.0 L0s+ L1+ (L0s <64ns vs 4us, L1  <1us vs=
- unl)
-> > > > > > >
-> > > > > > > So I can't tell what change prevents the freeze.  I would
-> > > > > > > expect the patch would cause us to *disable* L0s or L1
-> > > > > > > somewhere.
-> > > > > > >
-> > > > > > > The only place [4] shows ASPM disabled is for 05:00.1.
-> > > > > > > The spec says we should program the same value in all
-> > > > > > > functions of a multi-function device.  This is a non-ARI
-> > > > > > > device, so "only capabilities enabled in all functions are
-> > > > > > > enabled for the component as a whole."  That would mean
-> > > > > > > that L0s and L1 are effectively disabled for 05:00.x even
-> > > > > > > though 05:00.0 claims they're enabled.  But the latencies
-> > > > > > > say ASPM L0s and L1 should be safe to be enabled.  This
-> > > > > > > looks like another bug that's probably unrelated.
-> > > > > >
-> > > > > > I don't think it's unrelated, i suspect it's how PCIe works wit=
-h
-> > > > > > multiple links...  a device can cause some kind of head of queu=
-e
-> > > > > > stalling - i don't know how but it really looks like it.
-> > > > >
-> > > > > The text in quotes above is straight out of the spec (PCIe r5.0, =
-sec
-> > > > > 7.5.3.7).  Either the device works that way or it's not compliant=
-.
-> > > > >
-> > > > > The OS configures ASPM based on the requirements and capabilities
-> > > > > advertised by the device.  If a device has any head of queue stal=
-ling
-> > > > > or similar issues, those must be comprehended in the numbers
-> > > > > advertised by the device.  It's not up to the OS to speculate abo=
-ut
-> > > > > issues like that.
-> > > > >
-> > > > > > > The patch might be correct; I haven't actually analyzed
-> > > > > > > the code.  But the commit log doesn't make sense to me
-> > > > > > > yet.
-> > > > > >
-> > > > > > I personally don't think that all this PCI information is requi=
-red,
-> > > > > > the linux kernel is currently doing it wrong according to the s=
-pec.
-> > > > >
-> > > > > We're trying to establish exactly *what* Linux is doing wrong.  S=
-o far
-> > > > > we don't have a good explanation of that.
-> > > >
-> > > > Yes we do, linux counts hops + max for "link" while what should be =
-done is
-> > > > counting hops + max for path
-> > >
-> > > I think you're saying we need to include L1 exit latency even for
-> > > Links where L1 is disabled.  I don't think we should include those.
-> >
-> > Nope, the code does not do that, it only adds the l1 latency on L1
-> > enabled hops
-> >
-> > > > > Based on [1], in the path to 03:00.0, both Links have L1 enabled,=
- with
-> > > > > an exit latency of <33us, and 03:00.0 can tolerate 64us.  That sh=
-ould
-> > > > > work fine.
-> > > > >
-> > > > > Also based on [1], in the path to 04:00.x, the upstream Link has =
-L1
-> > > > > enabled and the downstream Link has L1 disabled, for an exit late=
-ncy
-> > > > > of <32us, and 04:00.0 can tolerate 64us.  That should also work f=
-ine.
-> > > >
-> > > > Again, ignoring the exit latency for 04:00.0
-> > > >
-> > > > > (Alternately, disabling L1 on the upstream Link and enabling it o=
-n the
-> > > > > downstream Link should have an exit latency of <64us and 04:00.0 =
-can
-> > > > > tolerate 64us, so that should work fine, too.)
-> > > >
-> > > > Then nothing else can have L1 aspm enabled
-> > >
-> > > Yes, as I said, we should be able to enable L1 on either of the Links
-> > > in the path to 04:00.x, but not both.
-> >
-> > The code works backwards and disables the first hop that exceeds the
-> > latency requirements -
-> > we could argue that it should try to be smarter about it and try to
-> > disable a minimum amount of links
-> > while still retaining the minimum latency but... It is what it is and
-> > it works when patched.
-> >
-> > > The original problem here is not with the Realtek device at 04:00.x
-> > > but with the I211 NIC at 03:00.0.  So we also need to figure out what
-> > > the connection is.  Does the same I211 performance problem occur if
-> > > you remove the Realtek device from the system?
-> >
-> > It's mounted on the motherboard, so no I can't remove it.
->
-> If you're interested, you could probably unload the Realtek drivers,
-> remove the devices, and set the PCI_EXP_LNKCTL_LD (Link Disable) bit
-> in 02:04.0, e.g.,
->
->   # RT=3D/sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/0000:02:04.0
->   # echo 1 > $RT/0000:04:00.0/remove
->   # echo 1 > $RT/0000:04:00.1/remove
->   # echo 1 > $RT/0000:04:00.2/remove
->   # echo 1 > $RT/0000:04:00.4/remove
->   # echo 1 > $RT/0000:04:00.7/remove
->   # setpci -s02:04.0 CAP_EXP+0x10.w=3D0x0010
->
-> That should take 04:00.x out of the picture.
-
-Didn't actually change the behaviour, I'm suspecting an errata for AMD pcie=
-...
-
-So did this, with unpatched kernel:
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec  4.56 MBytes  38.2 Mbits/sec    0   67.9 KBytes
-[  5]   1.00-2.00   sec  4.47 MBytes  37.5 Mbits/sec    0   96.2 KBytes
-[  5]   2.00-3.00   sec  4.85 MBytes  40.7 Mbits/sec    0   50.9 KBytes
-[  5]   3.00-4.00   sec  4.23 MBytes  35.4 Mbits/sec    0   70.7 KBytes
-[  5]   4.00-5.00   sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
-[  5]   5.00-6.00   sec  4.23 MBytes  35.4 Mbits/sec    0   45.2 KBytes
-[  5]   6.00-7.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
-[  5]   7.00-8.00   sec  3.98 MBytes  33.4 Mbits/sec    0   36.8 KBytes
-[  5]   8.00-9.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
-[  5]   9.00-10.00  sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  43.2 MBytes  36.2 Mbits/sec    0             sende=
-r
-[  5]   0.00-10.00  sec  42.7 MBytes  35.8 Mbits/sec                  recei=
-ver
-
-and:
-echo 0 > /sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/link/l1_aspm
-
-and:
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   113 MBytes   951 Mbits/sec  153    772 KBytes
-[  5]   1.00-2.00   sec   109 MBytes   912 Mbits/sec  276    550 KBytes
-[  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec  123    625 KBytes
-[  5]   3.00-4.00   sec   111 MBytes   933 Mbits/sec   31    687 KBytes
-[  5]   4.00-5.00   sec   110 MBytes   923 Mbits/sec    0    679 KBytes
-[  5]   5.00-6.00   sec   110 MBytes   923 Mbits/sec  136    577 KBytes
-[  5]   6.00-7.00   sec   110 MBytes   923 Mbits/sec  214    645 KBytes
-[  5]   7.00-8.00   sec   110 MBytes   923 Mbits/sec   32    628 KBytes
-[  5]   8.00-9.00   sec   110 MBytes   923 Mbits/sec   81    537 KBytes
-[  5]   9.00-10.00  sec   110 MBytes   923 Mbits/sec   10    577 KBytes
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  1.08 GBytes   927 Mbits/sec  1056             send=
-er
-[  5]   0.00-10.00  sec  1.07 GBytes   923 Mbits/sec                  recei=
-ver
-
-But this only confirms that the fix i experience is a side effect.
-
-The original code is still wrong :)
-
-> > > 03:00.0 can tolerate 64us of latency, so even if L1 is enabled on bot=
-h
-> > > Links leading to it, the path exit latency would be <33us, which
-> > > should be fine.
-> >
-> > Yes, it "should be" but due to broken ASPM latency calculations we
-> > have some kind of
-> > side effect that triggers a racecondition/sideeffect/bug that causes
-> > it to misbehave.
-> >
-> > Since fixing the latency calculation fixes it, I'll leave the rest to
-> > someone with a logic
-> > analyzer and a die-hard-fetish for pcie links - I can't debug it.
-> >
-> > > > > > Also, since it's clearly doing the wrong thing, I'm worried tha=
-t
-> > > > > > dists will take a kernel enable aspm and there will be alot of
-> > > > > > bugreports of non-booting systems or other weird issues... And =
-the
-> > > > > > culprit was known all along.
-> > > > >
-> > > > > There's clearly a problem on your system, but I don't know yet wh=
-ether
-> > > > > Linux is doing something wrong, a device in your system is design=
-ed
-> > > > > incorrectly, or a device is designed correctly but the instance i=
-n
-> > > > > your system is defective.
-> > > >
-> > > > According to the spec it is, there is a explanation of how to
-> > > > calculate the exit latency
-> > > > and when you implement that, which i did (before knowing the actual
-> > > > spec) then it works...
-> > > >
-> > > > > > It's been five months...
-> > > > >
-> > > > > I apologize for the delay.  ASPM is a subtle area of PCIe, the Li=
-nux
-> > > > > code is complicated, and we have a long history of issues with it=
-.  I
-> > > > > want to fix the problem, but I want to make sure we do it in a wa=
-y
-> > > > > that matches the spec so the fix applies to all systems.  I don't=
- want
-> > > > > a magic fix that fixes your system in a way I don't quite underst=
-and.
-> > > >
-> > > > > Obviously *you* understand this, so hopefully it's just a matter =
-of
-> > > > > pounding it through my thick skull :)
-> > > >
-> > > > I only understand what I've been forced to understand - and I do
-> > > > leverage the existing code without
-> > > > knowing what it does underneath, I only look at the links maximum
-> > > > latency and make sure that I keep
-> > > > the maximum latency along the path and not just link for link
-> > > >
-> > > > once you realise that the max allowed latency is buffer dependent -
-> > > > then this becomes obviously correct,
-> > > > and then the pcie spec showed it as being correct as well... so...
-> > > >
-> > > >
-> > > > > > > [1] https://bugzilla.kernel.org/attachment.cgi?id=3D293047
-> > > > > > > [2] https://lore.kernel.org/linux-pci/20201007132808.647589-1=
--ian.kumlien@gmail.com/
-> > > > > > > [3] https://bugzilla.kernel.org/attachment.cgi?id=3D292955
-> > > > > > > [4] https://bugzilla.kernel.org/attachment.cgi?id=3D292957
-> > > > > > >
-> > > > > > > > Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
-> > > > > > > > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/pci/pcie/aspm.c | 22 ++++++++++++++--------
-> > > > > > > >  1 file changed, 14 insertions(+), 8 deletions(-)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/asp=
-m.c
-> > > > > > > > index 253c30cc1967..c03ead0f1013 100644
-> > > > > > > > --- a/drivers/pci/pcie/aspm.c
-> > > > > > > > +++ b/drivers/pci/pcie/aspm.c
-> > > > > > > > @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pc=
-i_dev *pdev,
-> > > > > > > >
-> > > > > > > >  static void pcie_aspm_check_latency(struct pci_dev *endpoi=
-nt)
-> > > > > > > >  {
-> > > > > > > > -     u32 latency, l1_switch_latency =3D 0;
-> > > > > > > > +     u32 latency, l1_max_latency =3D 0, l1_switch_latency =
-=3D 0;
-> > > > > > > >       struct aspm_latency *acceptable;
-> > > > > > > >       struct pcie_link_state *link;
-> > > > > > > >
-> > > > > > > > @@ -456,10 +456,14 @@ static void pcie_aspm_check_latency(s=
-truct pci_dev *endpoint)
-> > > > > > > >               if ((link->aspm_capable & ASPM_STATE_L0S_DW) =
-&&
-> > > > > > > >                   (link->latency_dw.l0s > acceptable->l0s))
-> > > > > > > >                       link->aspm_capable &=3D ~ASPM_STATE_L=
-0S_DW;
-> > > > > > > > +
-> > > > > > > >               /*
-> > > > > > > >                * Check L1 latency.
-> > > > > > > > -              * Every switch on the path to root complex n=
-eed 1
-> > > > > > > > -              * more microsecond for L1. Spec doesn't ment=
-ion L0s.
-> > > > > > > > +              *
-> > > > > > > > +              * PCIe r5.0, sec 5.4.1.2.2 states:
-> > > > > > > > +              * A Switch is required to initiate an L1 exi=
-t transition on its
-> > > > > > > > +              * Upstream Port Link after no more than 1 =
-=CE=BCs from the beginning of an
-> > > > > > > > +              * L1 exit transition on any of its Downstrea=
-m Port Links.
-> > > > > > > >                *
-> > > > > > > >                * The exit latencies for L1 substates are no=
-t advertised
-> > > > > > > >                * by a device.  Since the spec also doesn't =
-mention a way
-> > > > > > > > @@ -469,11 +473,13 @@ static void pcie_aspm_check_latency(s=
-truct pci_dev *endpoint)
-> > > > > > > >                * L1 exit latencies advertised by a device i=
-nclude L1
-> > > > > > > >                * substate latencies (and hence do not do an=
-y check).
-> > > > > > > >                */
-> > > > > > > > -             latency =3D max_t(u32, link->latency_up.l1, l=
-ink->latency_dw.l1);
-> > > > > > > > -             if ((link->aspm_capable & ASPM_STATE_L1) &&
-> > > > > > > > -                 (latency + l1_switch_latency > acceptable=
-->l1))
-> > > > > > > > -                     link->aspm_capable &=3D ~ASPM_STATE_L=
-1;
-> > > > > > > > -             l1_switch_latency +=3D 1000;
-> > > > > > > > +             if (link->aspm_capable & ASPM_STATE_L1) {
-> > > > > > > > +                     latency =3D max_t(u32, link->latency_=
-up.l1, link->latency_dw.l1);
-> > > > > > > > +                     l1_max_latency =3D max_t(u32, latency=
-, l1_max_latency);
-> > > > > > > > +                     if (l1_max_latency + l1_switch_latenc=
-y > acceptable->l1)
-> > > > > > > > +                             link->aspm_capable &=3D ~ASPM=
-_STATE_L1;
-> > > > > > > > +                     l1_switch_latency +=3D 1000;
-> > > > > > > > +             }
-> > > > > > > >
-> > > > > > > >               link =3D link->parent;
-> > > > > > > >       }
-> > > > > > > > --
-> > > > > > > > 2.29.1
-> > > > > > > >
+On 2020/12/15 0:27, Puranjay Mohan wrote:=0A=
+> Change the call to skd_pci_info() to pcie_print_link_status().=0A=
+> pcie_print_link_status() can be used to print the link speed and=0A=
+> the link width, skd_pci_info() does the same and hence it is removed.=0A=
+> =0A=
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>=0A=
+> ---=0A=
+> v1 - Add call to pcie_print_link_status()=0A=
+> ---=0A=
+>  drivers/block/skd_main.c | 33 +--------------------------------=0A=
+>  1 file changed, 1 insertion(+), 32 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c=0A=
+> index a962b4551bed..efd69f349043 100644=0A=
+> --- a/drivers/block/skd_main.c=0A=
+> +++ b/drivers/block/skd_main.c=0A=
+> @@ -3134,40 +3134,10 @@ static const struct pci_device_id skd_pci_tbl[] =
+=3D {=0A=
+>  =0A=
+>  MODULE_DEVICE_TABLE(pci, skd_pci_tbl);=0A=
+>  =0A=
+> -static char *skd_pci_info(struct skd_device *skdev, char *str)=0A=
+> -{=0A=
+> -	int pcie_reg;=0A=
+> -=0A=
+> -	strcpy(str, "PCIe (");=0A=
+> -	pcie_reg =3D pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);=0A=
+> -=0A=
+> -	if (pcie_reg) {=0A=
+> -=0A=
+> -		char lwstr[6];=0A=
+> -		uint16_t pcie_lstat, lspeed, lwidth;=0A=
+> -=0A=
+> -		pcie_reg +=3D 0x12;=0A=
+> -		pci_read_config_word(skdev->pdev, pcie_reg, &pcie_lstat);=0A=
+> -		lspeed =3D pcie_lstat & (0xF);=0A=
+> -		lwidth =3D (pcie_lstat & 0x3F0) >> 4;=0A=
+> -=0A=
+> -		if (lspeed =3D=3D 1)=0A=
+> -			strcat(str, "2.5GT/s ");=0A=
+> -		else if (lspeed =3D=3D 2)=0A=
+> -			strcat(str, "5.0GT/s ");=0A=
+> -		else=0A=
+> -			strcat(str, "<unknown> ");=0A=
+> -		snprintf(lwstr, sizeof(lwstr), "%dX)", lwidth);=0A=
+> -		strcat(str, lwstr);=0A=
+> -	}=0A=
+> -	return str;=0A=
+> -}=0A=
+> -=0A=
+>  static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_i=
+d *ent)=0A=
+>  {=0A=
+>  	int i;=0A=
+>  	int rc =3D 0;=0A=
+> -	char pci_str[32];=0A=
+>  	struct skd_device *skdev;=0A=
+>  =0A=
+>  	dev_dbg(&pdev->dev, "vendor=3D%04X device=3D%04x\n", pdev->vendor,=0A=
+> @@ -3201,8 +3171,7 @@ static int skd_pci_probe(struct pci_dev *pdev, cons=
+t struct pci_device_id *ent)=0A=
+>  		goto err_out_regions;=0A=
+>  	}=0A=
+>  =0A=
+> -	skd_pci_info(skdev, pci_str);=0A=
+> -	dev_info(&pdev->dev, "%s 64bit\n", pci_str);=0A=
+> +	pcie_print_link_status(pdev);=0A=
+>  =0A=
+>  	pci_set_master(pdev);=0A=
+>  	rc =3D pci_enable_pcie_error_reporting(pdev);=0A=
+> =0A=
+=0A=
+Note: V1 of this patch was the one I commented on. This one should thus be =
+V2.=0A=
+=0A=
+In any case, this looks OK to me.=0A=
+=0A=
+Acked-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
