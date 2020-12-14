@@ -2,124 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF3902D9A8E
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 16:06:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 421472D9AC4
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 16:22:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgLNPGS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 10:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
+        id S1732560AbgLNPUA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 10:20:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:48952 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726660AbgLNPGS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Dec 2020 10:06:18 -0500
-X-Gm-Message-State: AOAM5327pdXoz4s46y8m1NxI2O5s+8yXAdLteMeCrv2j6Gu0L5SqxmPw
-        Z/GDkV1l3FBvYt5OUvrshubycddbNvslMKL2Tw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607958336;
-        bh=a1F4GYIz8WZZheoIQJa26d8oTs+duE0aM/uetIhYZ3k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nJDW3YMkWpCLZQ9363A1qxsa2gPUy13vYabHYSVqZq0sNRV9rMk49jEXkyuKDbFs0
-         lMvKN/qte5f/E6OObP8Epx0wRvPqfXNbnVZqArhxIWAhumXeRKJyliDj9zFXJfCYxv
-         fHr544lluW3ilsGXc+fdY66O6UBdxYF9V0ZHVN7n3++e39FN1tGpErEsUMfEdZe+Jj
-         z77GiMnHGH2bD37yLW34xAdC27MsO9k3OLChFMV7OOk5O24kK/2wRJAFsdfZghsjVB
-         HaI+vR2hfwG+lTMtFXcqw32tFEN2ME+Lws2RvgdejLK6Mhp3K5F1/NRcFmebfgXqFR
-         XIiQ8EQ0aGpgQ==
-X-Google-Smtp-Source: ABdhPJz5RHNLQ+OW0J3APptaHpR5PcCXJxM9D0gpTwMuJq0MgiNOFJlcd064NOmzvzNFSS0YXuU1pYjLXv0fIa5YQsg=
-X-Received: by 2002:a05:6402:352:: with SMTP id r18mr24358985edw.373.1607958334944;
- Mon, 14 Dec 2020 07:05:34 -0800 (PST)
-MIME-Version: 1.0
-References: <20201211144236.3825-1-nadeem@cadence.com> <20201211144236.3825-2-nadeem@cadence.com>
- <CAL_JsqLTz2k03gzrjDqi2d1NHQV+3pXxg6OqwcJ17CmfGYMf-A@mail.gmail.com>
- <SN2PR07MB2557145EE4C4E9C50A16CF64D8C90@SN2PR07MB2557.namprd07.prod.outlook.com>
- <912c1efa-6c25-9e5d-5094-6c9dd8e3755d@ti.com>
-In-Reply-To: <912c1efa-6c25-9e5d-5094-6c9dd8e3755d@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 14 Dec 2020 09:05:23 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLEmb4N6AKWpJmh9mGkE3QWsgABUqcH4Zvb5CiSMe_Zvg@mail.gmail.com>
-Message-ID: <CAL_JsqLEmb4N6AKWpJmh9mGkE3QWsgABUqcH4Zvb5CiSMe_Zvg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: pci: Retrain Link to work around Gen2
- training defect.
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Athani Nadeem Ladkhan <nadeem@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>,
+        id S1726438AbgLNPTc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Dec 2020 10:19:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BF4E30E;
+        Mon, 14 Dec 2020 07:18:44 -0800 (PST)
+Received: from [10.57.33.60] (unknown [10.57.33.60])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A02D3F66E;
+        Mon, 14 Dec 2020 07:18:42 -0800 (PST)
+Subject: Re: [PATCH v2 3/4] arm64: dts: rockchip: nanopi4: Move ep-gpios
+ property to nanopc-t4
+To:     Chen-Yu Tsai <wens@kernel.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-Content-Type: text/plain; charset="UTF-8"
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Johan Jonker <jbx6244@gmail.com>,
+        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20201118071724.4866-1-wens@kernel.org>
+ <20201118071724.4866-4-wens@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1e41aefe-6875-d319-1922-210fb865631c@arm.com>
+Date:   Mon, 14 Dec 2020 15:18:40 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
+MIME-Version: 1.0
+In-Reply-To: <20201118071724.4866-4-wens@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Dec 13, 2020 at 10:21 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Nadeem,
->
-> On 12/12/20 12:37 pm, Athani Nadeem Ladkhan wrote:
-> > Hi Rob / Kishon,
-> >
-> >> -----Original Message-----
-> >> From: Rob Herring <robh@kernel.org>
-> >> Sent: Friday, December 11, 2020 10:32 PM
-> >> To: Athani Nadeem Ladkhan <nadeem@cadence.com>
-> >> Cc: Tom Joseph <tjoseph@cadence.com>; Lorenzo Pieralisi
-> >> <lorenzo.pieralisi@arm.com>; Bjorn Helgaas <bhelgaas@google.com>; PCI
-> >> <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.org; Kishon Vijay
-> >> Abraham I <kishon@ti.com>; devicetree@vger.kernel.org; Milind Parab
-> >> <mparab@cadence.com>; Swapnil Kashinath Jakhade
-> >> <sjakhade@cadence.com>; Parshuram Raju Thombare
-> >> <pthombar@cadence.com>
-> >> Subject: Re: [PATCH v4 1/2] dt-bindings: pci: Retrain Link to work around
-> >> Gen2 training defect.
-> >>
-> >> EXTERNAL MAIL
-> >>
-> >>
-> >> On Fri, Dec 11, 2020 at 9:03 AM Nadeem Athani <nadeem@cadence.com>
-> >> wrote:
-> >>>
-> >>> Cadence controller will not initiate autonomous speed change if
-> >>> strapped as Gen2. The Retrain Link bit is set as quirk to enable this speed
-> >> change.
-> >>> Adding a quirk flag based on a new compatible string.
-> >>>
-> >>> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 4
-> >>> +++-
-> >>>  1 file changed, 3 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git
-> >>> a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >>> b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >>> index 293b8ec318bc..204d78f9efe3 100644
-> >>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> >>> @@ -15,7 +15,9 @@ allOf:
-> >>>
-> >>>  properties:
-> >>>    compatible:
-> >>> -    const: cdns,cdns-pcie-host
-> >>> +    enum:
-> >>> +        - cdns,cdns-pcie-host
-> >>> +        - cdns,cdns-pcie-host-quirk-retrain
-> >>
-> >> So, we'll just keep adding quirk strings on to the compatible? I don't think so.
-> >> Compatible strings should map to a specific implementation/platform and
-> >> quirks can then be implied from them. This is the only way we can implement
-> >> quirks in the OS without firmware
-> >> (DT) changes.
-> > Ok, I will change the compatible string to " ti,j721e-pcie-host" in place of  " cdns,cdns-pcie-host-quirk-retrain" .
-> > @Kishon Vijay Abraham I: Is this fine? Or will you suggest an appropriate name?
->
-> IMHO it should be something like "cdns,cdns-pcie-host-vX", since the
-> quirk itself is not specific to TI platform rather Cadence IP version.
+On 2020-11-18 07:17, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+> 
+> Only the NanoPC T4 hs the PCIe reset pin routed to the SoC. For the
+> NanoPi M4 family, no such signal is routed to the expansion header on
+> the base board.
+> 
+> As the schematics for the expansion board were not released, it is
+> unclear how this is handled, but the likely answer is that the signal
+> is always pulled high.
+> 
+> Move the ep-gpios property from the common nanopi4.dtsi file to the
+> board level nanopc-t4.dts file. This makes the nanopi-m4 lack ep-gpios,
+> matching the board design.
+> 
+> A companion patch "PCI: rockchip: make ep_gpio optional" for the Linux
+> driver is required, as the driver currently requires the property to be
+> present.
 
-That's fine if Cadence has a need for it, but for TI platforms use the
-TI compatible string. ECOs on version X IP without changing X is not
-uncommon.
+I concur that this is a more correct description per the schematics (the 
+SOM-RK3399 Dev Kit carrier board is the only other thing showing PERST# 
+wired up like this), and whatever the M4 hats are doing they clearly 
+aren't doing it with GPIO2_A4 either way.
 
-Rob
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Fixes: e7a095908227 ("arm64: dts: rockchip: Add devicetree for NanoPC-T4")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>   arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts | 1 +
+>   arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi  | 1 -
+>   2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+> index e0d75617bb7e..452728b82e42 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+> @@ -95,6 +95,7 @@ map3 {
+>   };
+>   
+>   &pcie0 {
+> +	ep-gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
+>   	num-lanes = <4>;
+>   	vpcie3v3-supply = <&vcc3v3_sys>;
+>   };
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> index 76a8b40a93c6..48ed4aaa37f3 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> @@ -504,7 +504,6 @@ &pcie_phy {
+>   };
+>   
+>   &pcie0 {
+> -	ep-gpios = <&gpio2 RK_PA4 GPIO_ACTIVE_HIGH>;
+>   	max-link-speed = <2>;
+>   	num-lanes = <2>;
+>   	vpcie0v9-supply = <&vcca0v9_s3>;
+> 
