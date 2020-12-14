@@ -2,132 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCA072D9B08
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 16:33:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B9872D9B32
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 16:40:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbgLNPbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 10:31:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731495AbgLNP21 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 14 Dec 2020 10:28:27 -0500
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F4CC0613D6;
-        Mon, 14 Dec 2020 07:27:46 -0800 (PST)
-Received: by mail-pj1-x1043.google.com with SMTP id hk16so6743130pjb.4;
-        Mon, 14 Dec 2020 07:27:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zod9g0ucmYQBVnFLZZB9W/Bw5VKVjG5oSiWxDHXjy38=;
-        b=bXYK1ZSyjNXW0Qh+M9C2SfRd7r1pKszYRp26r4cxtylix/RS6bG6mpeRD/E372JTD1
-         fpf3a9iiJOOsh7SqakQ+H8POqiWMeQcZiG8AmdC4579fLMnqSZfsTnxPhfMxxOpa51RG
-         qpMDgefR5lpG1xShf/T5e4KxPLleWKU7IA4YW887h+maYDZ5D3rbuom7R5EIQcugIuJT
-         9iEKkKyT8hb+IZft0m4ruG5SFBGxdEnIYo3i5wGvHdMSyHFVIKYM2XD6LK1t8dppU9Te
-         fothtOHrTonFpS2q4LQMU/mMZ9DQKY9xzGGdlldZmSkUtx/JIaG/9cyri9dK4l8BruQm
-         3ayA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zod9g0ucmYQBVnFLZZB9W/Bw5VKVjG5oSiWxDHXjy38=;
-        b=Kab0BzRD3svqrL0nprzClwpPVDaIg4ovkD23pNTJonIReZXyggMFuVZmKIfO5/QFio
-         67qBmQ2387+GnNmlMy4lAxNobCQeW7ISc+Vq6Zf9nKGx76BqtdTOwv2t1CdhxFgTMMwl
-         5GEgHkqkGrRNUduNIX3jlWGwS1LfLREVxD8dP7wpXzogjiVSkAnq/ZugAwexiJZ4AN1T
-         uGh19DZeG/9PH3lYcIn2oGaFUUgpe4XLXQXluf+LvXvpb1kfAaWZ7W8jw10h8aoTN1CF
-         GMMsThm3ETlQDnSvmvwGFtYFf7jh4TnzgNXxd6weiG2CjBK1H9Ob8Bc8DWEG054ik/g4
-         WdJg==
-X-Gm-Message-State: AOAM531fbWY0nddzxWQ9XeO1U3x/klSPyMAtY3ummaIO2tbgpmdYg2nQ
-        bzSXHscr/z4pYgo4B3aLAkWlkVfgmm55/3cI
-X-Google-Smtp-Source: ABdhPJwg6z41nULlj+fBpHui3mHcsEEdsSWv2Url9DdIMk0b8MqzGdSGYGJWk/tDMRfFUjVbLs5lpw==
-X-Received: by 2002:a17:902:8f94:b029:da:d168:4443 with SMTP id z20-20020a1709028f94b02900dad1684443mr22760620plo.57.1607959666413;
-        Mon, 14 Dec 2020 07:27:46 -0800 (PST)
-Received: from localhost.localdomain ([124.253.101.135])
-        by smtp.googlemail.com with ESMTPSA id y6sm19656391pjl.0.2020.12.14.07.27.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Dec 2020 07:27:45 -0800 (PST)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        Damien.LeMoal@wdc.com, axboe@kernel.dk,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Puranjay Mohan <puranjay12@gmail.com>
-Subject: [PATCH v1] drivers: block: skd: remove skd_pci_info()
-Date:   Mon, 14 Dec 2020 20:57:20 +0530
-Message-Id: <20201214152720.11922-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        id S2438051AbgLNPfm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 10:35:42 -0500
+Received: from mga17.intel.com ([192.55.52.151]:29578 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407761AbgLNPfk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Dec 2020 10:35:40 -0500
+IronPort-SDR: u0ij5Ba6eXhRk5wdWtCT0k04nwCSdlgUCvbUUl5SWAxAnvRl+cnB58ysqgnpS5tuQLLhW0R0Rq
+ teqnP9qZVKzQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9834"; a="154533059"
+X-IronPort-AV: E=Sophos;i="5.78,420,1599548400"; 
+   d="scan'208";a="154533059"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2020 07:33:55 -0800
+IronPort-SDR: zIxaIazk4jOgt8HPRzw7UppNp4E/ygsjRldrqZnz85QEf9v1I/q+aCSRxi5GlYKObKtRJEEkxt
+ 8yux0UkYLueg==
+X-IronPort-AV: E=Sophos;i="5.78,420,1599548400"; 
+   d="scan'208";a="449054765"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2020 07:33:53 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kopsE-00EIfM-Tq; Mon, 14 Dec 2020 17:34:54 +0200
+Date:   Mon, 14 Dec 2020 17:34:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>
+Subject: Re: [PATCH v3 2/2] PCI: keembay: Add support for Intel Keem Bay
+Message-ID: <20201214153454.GJ4077@smile.fi.intel.com>
+References: <20201202073156.5187-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20201202073156.5187-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20201209181350.GB660537@robh.at.kernel.org>
+ <20201209184214.GV4077@smile.fi.intel.com>
+ <CAL_JsqJA4Sx93rF_o+V-gPSHwuyAyf-aT96XpN-UCc3ayjDH+w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJA4Sx93rF_o+V-gPSHwuyAyf-aT96XpN-UCc3ayjDH+w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Change the call to skd_pci_info() to pcie_print_link_status().
-pcie_print_link_status() can be used to print the link speed and
-the link width, skd_pci_info() does the same and hence it is removed.
+On Thu, Dec 10, 2020 at 11:46:48AM -0600, Rob Herring wrote:
+> On Wed, Dec 9, 2020 at 12:41 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Wed, Dec 09, 2020 at 12:13:50PM -0600, Rob Herring wrote:
+> > > On Wed, Dec 02, 2020 at 03:31:56PM +0800, Wan Ahmad Zainie wrote:
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
-v1 - Add call to pcie_print_link_status()
----
- drivers/block/skd_main.c | 33 +--------------------------------
- 1 file changed, 1 insertion(+), 32 deletions(-)
+...
 
-diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
-index a962b4551bed..efd69f349043 100644
---- a/drivers/block/skd_main.c
-+++ b/drivers/block/skd_main.c
-@@ -3134,40 +3134,10 @@ static const struct pci_device_id skd_pci_tbl[] = {
- 
- MODULE_DEVICE_TABLE(pci, skd_pci_tbl);
- 
--static char *skd_pci_info(struct skd_device *skdev, char *str)
--{
--	int pcie_reg;
--
--	strcpy(str, "PCIe (");
--	pcie_reg = pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
--
--	if (pcie_reg) {
--
--		char lwstr[6];
--		uint16_t pcie_lstat, lspeed, lwidth;
--
--		pcie_reg += 0x12;
--		pci_read_config_word(skdev->pdev, pcie_reg, &pcie_lstat);
--		lspeed = pcie_lstat & (0xF);
--		lwidth = (pcie_lstat & 0x3F0) >> 4;
--
--		if (lspeed == 1)
--			strcat(str, "2.5GT/s ");
--		else if (lspeed == 2)
--			strcat(str, "5.0GT/s ");
--		else
--			strcat(str, "<unknown> ");
--		snprintf(lwstr, sizeof(lwstr), "%dX)", lwidth);
--		strcat(str, lwstr);
--	}
--	return str;
--}
--
- static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	int i;
- 	int rc = 0;
--	char pci_str[32];
- 	struct skd_device *skdev;
- 
- 	dev_dbg(&pdev->dev, "vendor=%04X device=%04x\n", pdev->vendor,
-@@ -3201,8 +3171,7 @@ static int skd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err_out_regions;
- 	}
- 
--	skd_pci_info(skdev, pci_str);
--	dev_info(&pdev->dev, "%s 64bit\n", pci_str);
-+	pcie_print_link_status(pdev);
- 
- 	pci_set_master(pdev);
- 	rc = pci_enable_pcie_error_reporting(pdev);
+> > > > +   struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > +
+> > > > +   switch (type) {
+> > > > +   case PCI_EPC_IRQ_LEGACY:
+> > > > +           /* Legacy interrupts are not supported in Keem Bay */
+> > > > +           dev_err(pci->dev, "Legacy IRQ is not supported\n");
+> > > > +           return -EINVAL;
+> > > > +   case PCI_EPC_IRQ_MSI:
+> > > > +           return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> > > > +   case PCI_EPC_IRQ_MSIX:
+> > > > +           return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
+> > > > +   default:
+> > > > +           dev_err(pci->dev, "Unknown IRQ type %d\n", type);
+> > > > +           return -EINVAL;
+> > > > +   }
+> > >
+> > > Doesn't the lack of a 'return' give a warning?
+> >
+> > Where? I don't see any lack of return.
+> 
+> Is the compiler smart enough to recognize that with a return in every
+> 'case' that we don't need a return after the switch? I wouldn't have
+> thought so, but I haven't checked.
+
+Dunno what happen with -O0, but with -O2 we certainly have no issues with above
+code. (And for the record there are plenty examples of the same over the kernel)
+
 -- 
-2.27.0
+With Best Regards,
+Andy Shevchenko
+
 
