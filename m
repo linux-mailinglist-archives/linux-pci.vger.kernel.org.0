@@ -2,63 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 955772DA1C2
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 21:40:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 290082DA235
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 22:04:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503290AbgLNUiz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 15:38:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
+        id S2503599AbgLNVBc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 16:01:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503362AbgLNUir (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Dec 2020 15:38:47 -0500
-Date:   Mon, 14 Dec 2020 14:38:05 -0600
+        id S2503680AbgLNVBV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Dec 2020 16:01:21 -0500
+Message-ID: <8035075adf8738792f4fa39032eeeb997bc1e653.camel@kernel.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607978286;
-        bh=VxyJ4UtDTcxBmyqCR8InRULR9CxYNwYmHeq59aIftvc=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=cKy1dubN6kvHJ5aGU5z4TmQdbYiGgWsiu6RJQfRNYxdRBoPmUlJTTkzpHBpZDsGlD
-         XZ1z8MVdAi2F6WTaPCPhYM8WAB3emjFlZo5qqt5h8c7PkonL2R19yYSy3qJTH30/XK
-         Jdl/Pi/yd4kmOUnvyKi/7jop3AorriUizetsJ3XRzIq4D7+9fPtOdxqSE4PS9Y0vAX
-         RtMm8Cnft5ngmHXBDHSF1w3hM3gqcysi5NEOaloWNtpJq4SJSZAUaR3qak6FL2/xDs
-         R9vs6er+VfwYJG52bjccwMjbEDg/fMkRfTOoqtlq/77W7NdpxoYq7EyxZTyz1M8qon
-         rz2wQegQQuE7Q==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        s=k20201202; t=1607979519;
+        bh=cldqRzZxWGs3Mp0GWam6BN3UIEF7254f3nfHMyN7cv4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Gtxqgx/zUgAV/HC4HUDaTWWErUYbIXoTgkKUYMD/ELlewv6ngbmFefFbLOnnQE37B
+         fwW9w8lNXB0jkS0zaOY6KiQuNNvzR6i/TAi+fgG1AW/EykMErJidLU/39fKuq2JQ6H
+         cYZqxR/cWcdcz2hfp8VGfziH+pOYPr8oSmVaMVsoIT/cKvofZxClMOcYe7qD5WQeeL
+         NIffLKExOZStE6EtkCW8G8ODK2nn1z9f76JCt7Kq0Z4tPHOOMdZSDtSFcABv2Uu75T
+         yhfntlEnCdaAYrYdYHk5OeIYZ35zyWy0f9d7SzNO3zktL7NiFTX5VRmoH1k+TTpoKc
+         hhNH7an3hKyYw==
+Subject: Re: [patch 23/30] net/mlx5: Use effective interrupt affinity
+From:   Saeed Mahameed <saeed@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20201214203805.GA250639@bjorn-Precision-5520>
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Date:   Mon, 14 Dec 2020 12:58:36 -0800
+In-Reply-To: <20201210194044.876342330@linutronix.de>
+References: <20201210192536.118432146@linutronix.de>
+         <20201210194044.876342330@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a65139b9-3b06-0562-7b6e-9a438aecff66@gmail.com>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 07:05:09PM +0100, Marek Vasut wrote:
-> On 12/8/20 5:40 PM, Bjorn Helgaas wrote:
-
-> > Does this problem occur in both these cases?
-> > 
-> >    1) When ASPM enters L1, and
-> > 
-> >    2) When software writes PCI_PM_CTRL to put the device in D3hot?
-> > 
-> > IIUC both cases require the link to go to L1.  I guess the same
-> > software workaround applies to both cases?
+On Thu, 2020-12-10 at 20:25 +0100, Thomas Gleixner wrote:
+> Using the interrupt affinity mask for checking locality is not really
+> working well on architectures which support effective affinity masks.
 > 
-> Yes
+> The affinity mask is either the system wide default or set by user
+> space,
+> but the architecture can or even must reduce the mask to the
+> effective set,
+> which means that checking the affinity mask itself does not really
+> tell
+> about the actual target CPUs.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Saeed Mahameed <saeedm@nvidia.com>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
+> 
 
-If ASPM puts the Link in L1 and the device needs to DMA, how does the
-Link get back to L0?  Do we use the same data abort hook?  If getting
-back to L0 requires help from software, it seems like that would
-invalidate the L1 exit latency advertised by the devices.  Wouldn't
-that mean we couldn't safely enable L1 at all unless the endpoint
-could tolerate unlimited exit latency?
+Acked-by: Saeed Mahameed <saeedm@nvidia.com>
 
-Bjorn
