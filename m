@@ -2,107 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCC662D99A4
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 15:21:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1328A2D9A72
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 15:59:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439555AbgLNOSJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 09:18:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
+        id S2408331AbgLNO6u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 09:58:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2439156AbgLNOSJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Dec 2020 09:18:09 -0500
-X-Gm-Message-State: AOAM531lIkxewA9BovAnIlo4+Au62ebp07CxVhEIMAZ+zXPsjotv4XkY
-        mWAzVpcVRibYU803TN/PuPyf+QP2HZSF4idmgg==
+        id S2407905AbgLNO6c (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Dec 2020 09:58:32 -0500
+X-Gm-Message-State: AOAM531xvQIO47hW+9J+BOisfG3zlGs+k1M4P6s5hQAsBe/xHa5qvY0+
+        yTRiJ9VJNIqV4JGq/hhLPHq+KvOLR+wKwSY8JQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607955448;
-        bh=vgF8+AK6GkBkQYu4wyAk0STQnnPO354gKvQ6xqwdcfA=;
+        s=k20201202; t=1607957870;
+        bh=YjqfvjSV9lpOWWw1+HWGyAfGe7Q5uZpQr/FuGmIm8vk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UmexIdARMA6NpqX5l/Ll1YH7GxF2bLQRdPOHD/ZZIUFm5MJNvSr2lKR1TSEU0DJGj
-         6l7ix120lUgWQu482Ycgcty7yW3BRqOatZsrfTlM5v65GdoRdrkXX2aywlRUziM3cZ
-         qodmZ0IwyS5ZXX1829JWd3FEkE3IP9G+T3diDYTe2wafs3ufzRLzb38pHXL3w05pyl
-         5urYUo3XBlIiDijQ+p4vvKG9HNiT6hY+a5Q3xrL4lYRTtiZfwPwyOHs1QbcTvPR81+
-         OUPNQzjxhLDJCm56ps8uqr6NkD6bkLaB5W8pFjGl5B2StUSP5umPrtlWGRSfA5Le86
-         TqzRm9q75FaQA==
-X-Google-Smtp-Source: ABdhPJzYRe4IfcaOp8gXNnir2xIHkexB7fAKbIAKD+/2t8UmLHcMcL+EMxw9BMGG2PCerqzkxj+BwlEdA4xVCD10jVg=
-X-Received: by 2002:aa7:d154:: with SMTP id r20mr26170869edo.258.1607955447089;
- Mon, 14 Dec 2020 06:17:27 -0800 (PST)
+        b=E338AB4Tg40+60Asw0fBlGJ4Z4Ibb4OwsmIqeAEmrBh6BxZ9sifmmPx0EG1wdoP2A
+         FEXMPIoh5+e0aDyaT2hqsftFKBJ2vaiUHv0gbnTSQtE87xcSFbqNXZzAFxI9/7bP5o
+         LaL6VGdUgV+ur7ZrBgvTvedPGU6gDep4Yd0iNyUSbxaVE5Ytf1yc84a92owqvw3Rq4
+         qJX95mj8Aw2wFwlx2uiKwaehcV7og3BGBUeL2TlGoohHPBwF23o6aLQCR9H11Mpdmk
+         kW8wpCrlnYXsVargOW3zvZ9j8Z10gLWL1HWhRg+2KVGlDQcAWe5wmo9NCkkkhkkzXE
+         BZaTQK2NovtQw==
+X-Google-Smtp-Source: ABdhPJyLSMg72Yznek8jiRzdUGmAOe93FaxVsu09rOZbryfT+7YOWyVJmc74/U/1ioJcgEsg5vL3GH9lh22HzFPUC5g=
+X-Received: by 2002:a05:6402:1841:: with SMTP id v1mr25750693edy.194.1607957868199;
+ Mon, 14 Dec 2020 06:57:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20201118071724.4866-1-wens@kernel.org> <20201118071724.4866-2-wens@kernel.org>
- <CAL_JsqJphYYUsQR_kLH_y1gOArTifpEVUiTJfDpDsL8WjGxRfA@mail.gmail.com> <CAGb2v6409SeptNUvMnpozriZ-L7iFCFFoG+=fJrtohxezDrEDQ@mail.gmail.com>
-In-Reply-To: <CAGb2v6409SeptNUvMnpozriZ-L7iFCFFoG+=fJrtohxezDrEDQ@mail.gmail.com>
+References: <20201211121507.28166-1-daniel.thompson@linaro.org>
+ <CAL_JsqKQxFvkFtph1BZD2LKdZjboxhMTWkZe_AWS-vMD9y0pMw@mail.gmail.com>
+ <20201211170558.clfazgoetmery6u3@holly.lan> <20201214104337.wbvq2gvj3wi6bvzc@holly.lan>
+In-Reply-To: <20201214104337.wbvq2gvj3wi6bvzc@holly.lan>
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 14 Dec 2020 08:17:15 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+0fMQkqYZ0W0eqnB+J016n-VnBm0TM2Hv1nqhO8_yUbQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+0fMQkqYZ0W0eqnB+J016n-VnBm0TM2Hv1nqhO8_yUbQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] PCI: rockchip: Make 'ep-gpios' DT property optional
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
+Date:   Mon, 14 Dec 2020 08:57:36 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+horJfhz0EAL6gcBW39DGzY27CU7PGWqricG579T0q4w@mail.gmail.com>
+Message-ID: <CAL_Jsq+horJfhz0EAL6gcBW39DGzY27CU7PGWqricG579T0q4w@mail.gmail.com>
+Subject: Re: [RFC HACK PATCH] PCI: dwc: layerscape: Hack around enumeration
+ problems with Honeycomb LX2K
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Johan Jonker <jbx6244@gmail.com>,
+        Jon Nettleton <jon@solid-run.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         PCI <linux-pci@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
+        Linaro Patches <patches@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 9:18 AM Chen-Yu Tsai <wens@kernel.org> wrote:
+On Mon, Dec 14, 2020 at 4:43 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
 >
-> On Mon, Dec 7, 2020 at 10:11 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Nov 18, 2020 at 1:17 AM Chen-Yu Tsai <wens@kernel.org> wrote:
+> On Fri, Dec 11, 2020 at 05:05:58PM +0000, Daniel Thompson wrote:
+> > On Fri, Dec 11, 2020 at 08:37:40AM -0600, Rob Herring wrote:
+> > > On Fri, Dec 11, 2020 at 6:15 AM Daniel Thompson
+> > > >     BTW I noticed many other pcie-designware drivers take advantage
+> > > >     of a function called dw_pcie_wait_for_link() in their init paths...
+> > > >     but my naive attempts to add it to the layerscape driver results
+> > > >     in non-booting systems so I haven't embarrassed myself by including
+> > > >     that in the patch!
 > > >
-> > > From: Chen-Yu Tsai <wens@csie.org>
+> > > You need to look at what's pending for v5.11, because I reworked this
+> > > to be more unified. The ordering of init is also possibly changed. The
+> > > sequence is now like this:
 > > >
-> > > The Rockchip PCIe controller DT binding clearly states that 'ep-gpios' is
-> > > an optional property. And indeed there are boards that don't require it.
+> > >         dw_pcie_setup_rc(pp);
+> > >         dw_pcie_msi_init(pp);
 > > >
-> > > Make the driver follow the binding by using devm_gpiod_get_optional()
-> > > instead of devm_gpiod_get().
-> > >
-> > > Fixes: e77f847df54c ("PCI: rockchip: Add Rockchip PCIe controller support")
-> > > Fixes: 956cd99b35a8 ("PCI: rockchip: Separate common code from RC driver")
-> > > Fixes: 964bac9455be ("PCI: rockchip: Split out rockchip_pcie_parse_dt() to parse DT")
-> > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > > ---
-> > > Changes since v1:
-> > >
-> > >   - Rewrite subject to match existing convention and reference
-> > >     'ep-gpios' DT property instead of the 'ep_gpio' field
-> > > ---
-> > >  drivers/pci/controller/pcie-rockchip.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-> > > index 904dec0d3a88..c95950e9004f 100644
-> > > --- a/drivers/pci/controller/pcie-rockchip.c
-> > > +++ b/drivers/pci/controller/pcie-rockchip.c
-> > > @@ -118,7 +118,7 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+> > >         if (!dw_pcie_link_up(pci) && pci->ops->start_link) {
+> > >                 ret = pci->ops->start_link(pci);
+> > >                 if (ret)
+> > >                         goto err_free_msi;
 > > >         }
 > > >
-> > >         if (rockchip->is_rc) {
-> > > -               rockchip->ep_gpio = devm_gpiod_get(dev, "ep", GPIOD_OUT_HIGH);
-> > > +               rockchip->ep_gpio = devm_gpiod_get_optional(dev, "ep", GPIOD_OUT_HIGH);
-> > >                 if (IS_ERR(rockchip->ep_gpio)) {
-> > >                         dev_err(dev, "missing ep-gpios property in node\n");
+> > >         /* Ignore errors, the link may come up later */
+> > >         dw_pcie_wait_for_link(pci);
 > >
-> > You should drop the error message. What it says is now never the
-> > reason for the error and it could most likely be a deferred probe
-> > which you don't want an error message for.
+> > Thanks. That looks likely to fix it since IIUC dw_pcie_wait_for_link()
+> > will end up waiting somewhat like the double check I added to
+> > ls_pcie_link_up().
+> >
+> > I'll take a look at let you know.
 >
-> What about switching to dev_err_probe() instead?
+> Yes. These changes have fixed the enumeration problems for me.
 >
-> That way deferred probe errors get silenced (or get a better debug message),
-> and error messages for other issues, such as miswritten gpio properties are
-> still produced.
+> I tested pci/next and I cherry picked your patch series onto v5.10 and
+> both are working well.
+>
+> Given this fixes a bug for me, do you think there is any scope for me
+> to whittle down your series into patches for the stable kernels or am
+> I likely to find too many extra bits being pulled in?
 
-I guess, but those errors should be in the subsystem code IMO rather
-than every driver.
+I think I'd just go the adding a delay route. It's a fairly big series
+and depends on my other clean-up done in 5.10. And there's at least
+some possibility it regresses some platform given the limited testing
+linux-next gets.
 
 Rob
