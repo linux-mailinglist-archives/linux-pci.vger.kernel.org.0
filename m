@@ -2,127 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D846F2D9D66
-	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 18:16:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B79072D9DB4
+	for <lists+linux-pci@lfdr.de>; Mon, 14 Dec 2020 18:30:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732829AbgLNRPf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 12:15:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:50070 "EHLO foss.arm.com"
+        id S2440375AbgLNRa3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 14 Dec 2020 12:30:29 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10234 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgLNROr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Dec 2020 12:14:47 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 067901FB;
-        Mon, 14 Dec 2020 09:13:56 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0ABF3F66E;
-        Mon, 14 Dec 2020 09:13:54 -0800 (PST)
-Date:   Mon, 14 Dec 2020 17:13:14 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20201214171314.GA4278@e121166-lin.cambridge.arm.com>
-References: <a65139b9-3b06-0562-7b6e-9a438aecff66@gmail.com>
- <20201208184627.GA2393103@bjorn-Precision-5520>
- <20201210121250.GA31998@e121166-lin.cambridge.arm.com>
- <b569d614-2548-5ce1-32f0-dc923a508710@gmail.com>
+        id S2440371AbgLNRaW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 14 Dec 2020 12:30:22 -0500
+IronPort-SDR: PVLZGPFdq4PJf412lWWdnix0NxdteFphUlCx9TvlIcyqUgRSBP22vyHVzvvYyiu+2A7TrnJV7n
+ /41niS17b8RA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9834"; a="161795988"
+X-IronPort-AV: E=Sophos;i="5.78,420,1599548400"; 
+   d="scan'208";a="161795988"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2020 09:29:37 -0800
+IronPort-SDR: D7pm080c5efPDR/a8PvPUF0giaJs4ugzNWCeyNqrCQ2Enl67OQUgyIgQ0AgmjwiZLYvrfprUlS
+ r8BgWXEtOd/w==
+X-IronPort-AV: E=Sophos;i="5.78,420,1599548400"; 
+   d="scan'208";a="411343436"
+Received: from davidjor-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.136.237])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2020 09:29:36 -0800
+Date:   Mon, 14 Dec 2020 09:29:35 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [RFC PATCH 09/14] cxl/mem: Add basic IOCTL interface
+Message-ID: <20201214172935.efknefvqthp7ohcz@intel.com>
+References: <20201209002418.1976362-1-ben.widawsky@intel.com>
+ <20201209002418.1976362-10-ben.widawsky@intel.com>
+ <8a252085-9dd9-6cf0-afad-a3ff63cf00d8@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b569d614-2548-5ce1-32f0-dc923a508710@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8a252085-9dd9-6cf0-afad-a3ff63cf00d8@infradead.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 08:12:16PM +0100, Marek Vasut wrote:
-> On 12/10/20 1:12 PM, Lorenzo Pieralisi wrote:
+On 20-12-09 19:32:19, Randy Dunlap wrote:
+> On 12/8/20 4:24 PM, Ben Widawsky wrote:
+> > +
+> > +#define CXL_MEM_QUERY_COMMANDS _IOR('C', 1, struct cxl_mem_query_commands)
 > 
-> [...]
+> Hi,
+> I could have missed it, but IOCTL major "numbers" (like 'C') should be
+> listed in Documentation/userspace-api/ioctl/ioctl-number.rst.
 > 
-> > > > > > +static int __init rcar_pcie_init(void)
-> > > > > > +{
-> > > > > > +	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-> > > > > > +#ifdef CONFIG_ARM_LPAE
-> > > > > > +		hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > > > > +				"asynchronous external abort");
-> > > > > > +#else
-> > > > > > +		hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-> > > > > > +				"imprecise external abort");
-> > > > > > +#endif
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	return platform_driver_register(&rcar_pcie_driver);
-> > > > > > +}
-> > > > > > +device_initcall(rcar_pcie_init);
-> > > > > > +#else
-> > > > > >    builtin_platform_driver(rcar_pcie_driver);
-> > > > > > +#endif
-> > > > > 
-> > > > > Is the device_initcall() vs builtin_platform_driver() something
-> > > > > related to the hook_fault_code()?  What would break if this were
-> > > > > always builtin_platform_driver()?
-> > > > 
-> > > > rcar_pcie_init() would not be called before probe.
-> > > 
-> > > Sorry to be slow, but why does it need to be called before probe?
-> > > Obviously software isn't putting the controller in D3 or enabling ASPM
-> > > before probe.
-> > 
-> > I don't understand it either so it would be good to clarify.
 > 
-> The hook_fault_code() is marked __init, so if probe() was deferred and the
-> kernel __init memory was free'd, attempt to call hook_fault_code() from
-> probe would lead to a crash.
+> thanks.
 
-Understood - I don't think there is a point though in keeping
-the builtin_platform_driver() call then, something like:
+I was unaware of this. Fixing for v3 without conflict.
 
-#ifdef CONFIG_ARM
-...
-static __init void init_platform_hook_fault(void) {
-	if (of_find_matching_node(NULL, rcar_pcie_abort_handler_of_match)) {
-		#ifdef CONFIG_ARM_LPAE
-			hook_fault_code(17, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-					"asynchronous external abort");
-		#else
-			hook_fault_code(22, rcar_pcie_aarch32_abort_handler, SIGBUS, 0,
-					"imprecise external abort");
-		#endif
-	}
-}
-#else
-static inline void init_platform_hook_fault(void)
-{}
-#endif
-
-static int __init rcar_pcie_init(void)
-{
-	init_platform_hook_fault();
-	return platform_driver_register(&rcar_pcie_driver);
-}
-device_initcall(rcar_pcie_init);
-
-Or we remove the __init marker from hook_fault_code().
-
-> > Also, some of these platforms are SMP systems, I don't understand
-> > what prevents multiple cores to fault at once given that the faults
-> > can happen for config/io/mem accesses alike.
-> > 
-> > I understand that the immediate fix is for S2R, that is single
-> > threaded but I would like to understand how comprehensive this fix
-> > is.
-> 
-> Are you suggesting to add some sort of locking ?
-
-If we merge a fix the fix has to work, by reading the code if multiple
-cores fault at once this fix seems to have an issue that's why I asked,
-you may still end up with an unhandled fault by reading the code.
-
-Lorenzo
+Thanks.
+Ben
