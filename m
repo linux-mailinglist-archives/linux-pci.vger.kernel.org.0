@@ -2,122 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 430542DACDE
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 13:17:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 399FF2DAD96
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 13:59:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgLOMQv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Dec 2020 07:16:51 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9666 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729063AbgLOMQu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Dec 2020 07:16:50 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fd8a9090000>; Tue, 15 Dec 2020 04:16:09 -0800
-Received: from [10.25.97.140] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 15 Dec
- 2020 12:16:05 +0000
-Subject: Re: dwc: tegra194: issue with card containing a bridge
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20201215102442.GA20517@suse.de>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <9a8abc90-cf18-b0c8-3bcb-efbe03f0ca4c@nvidia.com>
-Date:   Tue, 15 Dec 2020 17:45:59 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.2
+        id S1729282AbgLOM6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Dec 2020 07:58:19 -0500
+Received: from halon.esss.lu.se ([194.47.240.54]:15123 "EHLO halon.esss.lu.se"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729028AbgLOM6M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Dec 2020 07:58:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ess.eu; s=dec2019;
+        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
+         message-id:from:references:cc:to:subject:from;
+        bh=FmksUH45YtSkRp/Xj6PHBuFO+raNDQ45Hls44BOXkPU=;
+        b=a9v3kWWZKU8bUROouOCLeo+Q5tBExt9OJYYsGKvsndJtrU+m8JvmEBQ/Mf6VJDasT1pHnm1wOhDKm
+         GA6N1KYIPMakbRuSd3x3wz7nxnDZGR4WzpBA5BnAoBNvYxdHSiLbsSofvFHpOtKpl1RXwBBZXP6MlU
+         /zVX6CVERiiOBucmrcj7WhIlzNRIYZZZGaobLarXws2vE/z4tzlKeDZXZuua4k+mAwU8ytg2nPZhla
+         jBmptLBlMw+r/xUutELUxu6yngGliCe+GSqSu/o2czssArfQHBrEc4U2fOtZzim1tZbwRG9mb14sCT
+         b7f2nnQsI+IpQ6+7M2NDO8/Ux+5kwIg==
+Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
+        by halon.esss.lu.se (Halon) with ESMTPS
+        id 0107db40-3ed5-11eb-93c8-005056a66d10;
+        Tue, 15 Dec 2020 13:56:53 +0100 (CET)
+Received: from [192.168.0.9] (194.47.241.248) by it-exch16-4.esss.lu.se
+ (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 15 Dec
+ 2020 13:56:22 +0100
+Subject: Re: Recovering from AER: Uncorrected (Fatal) error
+To:     Keith Busch <kbusch@kernel.org>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20201209213227.GA2544987@bjorn-Precision-5520>
+ <6234c1c4-a8cc-1bd6-8366-f359b9b5ef54@ess.eu>
+ <20201214212319.GB22809@redsun51.ssa.fujisawa.hgst.com>
+From:   Hinko Kocevar <hinko.kocevar@ess.eu>
+Message-ID: <0def63a9-9a9e-440c-6bd8-7fd8dfef5b63@ess.eu>
+Date:   Tue, 15 Dec 2020 13:56:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <20201215102442.GA20517@suse.de>
+In-Reply-To: <20201214212319.GB22809@redsun51.ssa.fujisawa.hgst.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1608034569; bh=JswylNTbg6tEbVK8FYcScMuew/YP7v2/TK0pTG+zs38=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=CvxlTwfMh4x+1QRV0VC1xjaGyIBn3xZq8P4yJdEkXCXMZ5N1AxbH42RaieFvBC6TI
-         8eA4hnQbdNMM0S5oeHz6hbVGqJOvTiJW/ijZ+fqG7iwcKR7dWYfwhYWL35CIN3/W8s
-         +iGZCPiQiVtAMrpd/+OWE/50OhCB8jHs3kEu8J04ax0PDZf1M9PvyNv4jBXwGoWq+X
-         iffmHwTNPwLvWoB1nzEEKMo0Wy0xZqjaKMnnwBFUzUEX9i7wU44NhlKzxYdn4VR+Uk
-         JHt3DX+Vsy2ksF6bdzKiTNNxIVeoeDNzkFNFTdE1h57wFHPTPlZGvfpVjd0YIZBETl
-         C+LcV1X5GMkiA==
+X-Originating-IP: [194.47.241.248]
+X-ClientProxiedBy: it-exch16-2.esss.lu.se (10.0.42.132) To
+ it-exch16-4.esss.lu.se (10.0.42.134)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks Mian for bringing it to our notice.
-Have you tried removing the dw_pcie_setup_rc(pp); call from 
-pcie-tegra194.c file on top of linux-next? and does that solve the issue?
+Hi Keith,
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c 
-b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 5597b2a49598..1c9e9c054592 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -907,7 +907,7 @@ static void tegra_pcie_prepare_host(struct pcie_port 
-*pp)
-                 dw_pcie_writel_dbi(pci, 
-CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
-         }
+On 12/14/20 10:23 PM, Keith Busch wrote:
+> On Wed, Dec 09, 2020 at 11:55:07PM +0100, Hinko Kocevar wrote:
+>> Adding a bunch of printk()'s to portdrv_pci.c led to (partial) success!
+>>
+>> So, the pcie_portdrv_error_detected() returns PCI_ERS_RESULT_CAN_RECOVER and
+>> therefore the pcie_portdrv_slot_reset() is not called.
+>>
+>> But the pcie_portdrv_err_resume() is called! Adding these two lines to
+>> pcie_portdrv_err_resume(), before the call to device_for_each_child():
+>>
+>>          pci_restore_state(dev);
+>>          pci_save_state(dev);
+> 
+> You need to do that with the current kernel or are you still using a
+> 3.10? A more recent kernel shouldn't have needed such a fix after the
 
--       dw_pcie_setup_rc(pp);
-+       //dw_pcie_setup_rc(pp);
 
-         clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
+This was tested on the 5.9.12 kernel at that time. As of today, I've 
+re-ran the tests on Bjorn's git tree, pci/err branch from Sunday (I 
+guess 5.10.0 version).
 
-I took a quick look at the dw_pcie_setup_rc() implementation and I'm not 
-sure why calling it second time should create any issue for the 
-enumeration of devices behind a switch. Perhaps I need to spend more 
-time to debug that part.
-In any case, since dw_pcie_setup_rc() is already part of 
-dw_pcie_host_init(), I think it can be removed from 
-tegra_pcie_prepare_host() implemention.
+> following commit was introduced:
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=874b3251113a1e2cbe79c24994dc03fe4fe4b99b
+> 
 
-Thanks,
-Vidya Sagar
+I noticed the change you are pointing out when trying to propose a patch.
 
-On 12/15/2020 3:54 PM, Mian Yousaf Kaukab wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> Hi,
-> I am seeing an issue with next-20201211 with USB3380[1] based PCIe card
-> (vid:pid 10b5:3380) on Jetson AGX Xavier. Card doesn't show up in the
-> lspci output.
-> 
-> In non working case (next-20201211):
-> # lspci
-> 0001:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad2 (rev a1)
-> 0001:01:00.0 SATA controller: Marvell Technology Group Ltd. Device 9171 (rev 13)
-> 0005:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1)
-> 
-> In working case (v5.10-rc7):
-> # lspci
-> 0001:00:00.0 PCI bridge: Molex Incorporated Device 1ad2 (rev a1)
-> 0001:01:00.0 SATA controller: Marvell Technology Group Ltd. Device 9171 (rev 13)
-> 0005:00:00.0 PCI bridge: Molex Incorporated Device 1ad0 (rev a1)
-> 0005:01:00.0 PCI bridge: PLX Technology, Inc. Device 3380 (rev ab)
-> 0005:02:02.0 PCI bridge: PLX Technology, Inc. Device 3380 (rev ab)
-> 0005:03:00.0 USB controller: PLX Technology, Inc. Device 3380 (rev ab)
-> # lspci -t
-> -+-[0005:00]---00.0-[01-ff]----00.0-[02-03]----02.0-[03]----00.0
->   +-[0001:00]---00.0-[01-ff]----00.0
->   \-[0000:00]-
-> #lspci -v
-> https://paste.opensuse.org/87573209
-> 
-> git-bisect points to commit b9ac0f9dc8ea ("PCI: dwc: Move dw_pcie_setup_rc() to DWC common code").
-> dw_pcie_setup_rc() is not removed from pcie-tegra194.c in this commit.
-> 
-> Could the failure be caused because dw_pcie_setup_rc() is called twice now in case of tegra194?
-> 
-> BR,
-> Yousaf
-> 
-> [1]: https://www.broadcom.com/products/pcie-switches-bridges/usb-pci/usb-controllers/usb3380
-> 
+It made me curious on why the pcie_portdrv_slot_reset() is not invoked.
+
+After sprinkling a couple of printk()'s around the pcie_do_recovery() 
+and pcie_portdrv_err_handler's I can observe that the 
+pcie_portdrv_slot_reset() is never called from pcie_do_recovery() due to 
+status returned by reset_subordinates() (actually aer_root_reset() from 
+pcie/aer.c) being PCI_ERS_RESULT_RECOVERED.
+
+I reckon, in order to invoke the pcie_portdrv_slot_reset(), the 
+aer_root_reset() should have returned PCI_ERS_RESULT_NEED_RESET.
+
+As soon as I plug the calls to pci_restore_state() and pci_save_state() 
+into the pcie_portdrv_err_resume() the bus and devices are operational 
+again.
