@@ -2,98 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 399FF2DAD96
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 13:59:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D051A2DADC8
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 14:11:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbgLOM6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Dec 2020 07:58:19 -0500
-Received: from halon.esss.lu.se ([194.47.240.54]:15123 "EHLO halon.esss.lu.se"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729028AbgLOM6M (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Dec 2020 07:58:12 -0500
+        id S1727348AbgLONKR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Dec 2020 08:10:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgLONKE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Dec 2020 08:10:04 -0500
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8168EC06179C;
+        Tue, 15 Dec 2020 05:09:24 -0800 (PST)
+Received: by mail-qv1-xf44.google.com with SMTP id a13so9397195qvv.0;
+        Tue, 15 Dec 2020 05:09:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ess.eu; s=dec2019;
-        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
-         message-id:from:references:cc:to:subject:from;
-        bh=FmksUH45YtSkRp/Xj6PHBuFO+raNDQ45Hls44BOXkPU=;
-        b=a9v3kWWZKU8bUROouOCLeo+Q5tBExt9OJYYsGKvsndJtrU+m8JvmEBQ/Mf6VJDasT1pHnm1wOhDKm
-         GA6N1KYIPMakbRuSd3x3wz7nxnDZGR4WzpBA5BnAoBNvYxdHSiLbsSofvFHpOtKpl1RXwBBZXP6MlU
-         /zVX6CVERiiOBucmrcj7WhIlzNRIYZZZGaobLarXws2vE/z4tzlKeDZXZuua4k+mAwU8ytg2nPZhla
-         jBmptLBlMw+r/xUutELUxu6yngGliCe+GSqSu/o2czssArfQHBrEc4U2fOtZzim1tZbwRG9mb14sCT
-         b7f2nnQsI+IpQ6+7M2NDO8/Ux+5kwIg==
-Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
-        by halon.esss.lu.se (Halon) with ESMTPS
-        id 0107db40-3ed5-11eb-93c8-005056a66d10;
-        Tue, 15 Dec 2020 13:56:53 +0100 (CET)
-Received: from [192.168.0.9] (194.47.241.248) by it-exch16-4.esss.lu.se
- (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 15 Dec
- 2020 13:56:22 +0100
-Subject: Re: Recovering from AER: Uncorrected (Fatal) error
-To:     Keith Busch <kbusch@kernel.org>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20201209213227.GA2544987@bjorn-Precision-5520>
- <6234c1c4-a8cc-1bd6-8366-f359b9b5ef54@ess.eu>
- <20201214212319.GB22809@redsun51.ssa.fujisawa.hgst.com>
-From:   Hinko Kocevar <hinko.kocevar@ess.eu>
-Message-ID: <0def63a9-9a9e-440c-6bd8-7fd8dfef5b63@ess.eu>
-Date:   Tue, 15 Dec 2020 13:56:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hdqeyKkCIkULH5xghW+2OPTmzGrNx+Inf0KzB+LcKvU=;
+        b=h0Eu8pPEqm4M6eudkGrpydocbz0OgQtwdUoB2bgUwS39ZQAvEggcsjM02N7PSSJvCA
+         SsS3FvHATcVhRzWfqA7JOtBE2z8I2IdwspFMySEDhpicCeTfvd4r8Xq8MwWRGYCQFLo3
+         /zYsjEmBjL7FS6VwxsA1Uq2Q7I1dUXIZ+ldktKfyWIPT0hli/OyqDK96wU+3UEhWmPNo
+         3BylVFloB41crHzIVjGIiO8uqxp9odzKPirwkmkMJJzpRAe7vKVg1iBu3GD5txDcwpk9
+         IeaXnG6W1rTi00jihmXS+FuGMyBm3dEiN0rHDjryPBiL9D8cpjKL6u6i5xsIMEvGXOKU
+         jczQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hdqeyKkCIkULH5xghW+2OPTmzGrNx+Inf0KzB+LcKvU=;
+        b=hxyobqDaEOGnrAEmaAlNisLMI/oW3Uwgb3MBEh/jUWPfCNxI6NL7CMqeC1ze2CuiFF
+         aEXWuAC/cNuXRHK6HZPg8cBlbkImKTPOTs1lpE24NNTsigwhxI7Bo4uaZK3kH4UN+fOK
+         O32ZGfip6BrFJGSYtxoqHyUp/qzQLdJJHaaCNXuE7txJjB+kYbmksPUgYdhS6MtTqvG3
+         sYzrBFmIdxtI9DHxOtGRpQMRStMOr0OUOvJs16zrcpHx0auON4aavc6a7l2C8qzQc+AJ
+         kq5VN1DHxCrMdQKWjvHfFxqokDy7TEaushYQcdI4u/YQKjY5ZtStkxLgTohQk32l1F0T
+         khhg==
+X-Gm-Message-State: AOAM531ZdsfPuvGqGx5rfnN+BOnW0XLN2e3BPfaz6SHfSD6tltM+eVE1
+        s+b7xr72I7myuAVRgBNDWdXkHwr4kB3XSROmINs=
+X-Google-Smtp-Source: ABdhPJxlGdBwLcqYBPtaQEMyirP/hdBZ95RAAqVxvBNdnGMzkIna/DL9tdprm+WLHCBJjyDfXP66FkFmREuxLR2xRkE=
+X-Received: by 2002:a0c:b3d1:: with SMTP id b17mr37337119qvf.41.1608037763580;
+ Tue, 15 Dec 2020 05:09:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201214212319.GB22809@redsun51.ssa.fujisawa.hgst.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [194.47.241.248]
-X-ClientProxiedBy: it-exch16-2.esss.lu.se (10.0.42.132) To
- it-exch16-4.esss.lu.se (10.0.42.134)
+References: <CAA85sZs8Li7+8BQWj0e+Qrxes1VF6K_Ukqrqgs1E3hHmaXqsbQ@mail.gmail.com>
+ <20201215004004.GA280628@bjorn-Precision-5520>
+In-Reply-To: <20201215004004.GA280628@bjorn-Precision-5520>
+From:   Ian Kumlien <ian.kumlien@gmail.com>
+Date:   Tue, 15 Dec 2020 14:09:12 +0100
+Message-ID: <CAA85sZvUvUTtyKR8rTDwGa=1sNrhv4cA8LQ+6TXi20Sq9Yn8fw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] PCI/ASPM: Use the path max in L1 ASPM latency check
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Keith,
+On Tue, Dec 15, 2020 at 1:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Dec 14, 2020 at 11:56:31PM +0100, Ian Kumlien wrote:
+> > On Mon, Dec 14, 2020 at 8:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> > > If you're interested, you could probably unload the Realtek drivers,
+> > > remove the devices, and set the PCI_EXP_LNKCTL_LD (Link Disable) bit
+> > > in 02:04.0, e.g.,
+> > >
+> > >   # RT=/sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/0000:02:04.0
+> > >   # echo 1 > $RT/0000:04:00.0/remove
+> > >   # echo 1 > $RT/0000:04:00.1/remove
+> > >   # echo 1 > $RT/0000:04:00.2/remove
+> > >   # echo 1 > $RT/0000:04:00.4/remove
+> > >   # echo 1 > $RT/0000:04:00.7/remove
+> > >   # setpci -s02:04.0 CAP_EXP+0x10.w=0x0010
+> > >
+> > > That should take 04:00.x out of the picture.
+> >
+> > Didn't actually change the behaviour, I'm suspecting an errata for AMD pcie...
+> >
+> > So did this, with unpatched kernel:
+> > [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+> > [  5]   0.00-1.00   sec  4.56 MBytes  38.2 Mbits/sec    0   67.9 KBytes
+> > [  5]   1.00-2.00   sec  4.47 MBytes  37.5 Mbits/sec    0   96.2 KBytes
+> > [  5]   2.00-3.00   sec  4.85 MBytes  40.7 Mbits/sec    0   50.9 KBytes
+> > [  5]   3.00-4.00   sec  4.23 MBytes  35.4 Mbits/sec    0   70.7 KBytes
+> > [  5]   4.00-5.00   sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
+> > [  5]   5.00-6.00   sec  4.23 MBytes  35.4 Mbits/sec    0   45.2 KBytes
+> > [  5]   6.00-7.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
+> > [  5]   7.00-8.00   sec  3.98 MBytes  33.4 Mbits/sec    0   36.8 KBytes
+> > [  5]   8.00-9.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
+> > [  5]   9.00-10.00  sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
+> > - - - - - - - - - - - - - - - - - - - - - - - - -
+> > [ ID] Interval           Transfer     Bitrate         Retr
+> > [  5]   0.00-10.00  sec  43.2 MBytes  36.2 Mbits/sec    0             sender
+> > [  5]   0.00-10.00  sec  42.7 MBytes  35.8 Mbits/sec                  receiver
+> >
+> > and:
+> > echo 0 > /sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/link/l1_aspm
+>
+> BTW, thanks a lot for testing out the "l1_aspm" sysfs file.  I'm very
+> pleased that it seems to be working as intended.
 
-On 12/14/20 10:23 PM, Keith Busch wrote:
-> On Wed, Dec 09, 2020 at 11:55:07PM +0100, Hinko Kocevar wrote:
->> Adding a bunch of printk()'s to portdrv_pci.c led to (partial) success!
->>
->> So, the pcie_portdrv_error_detected() returns PCI_ERS_RESULT_CAN_RECOVER and
->> therefore the pcie_portdrv_slot_reset() is not called.
->>
->> But the pcie_portdrv_err_resume() is called! Adding these two lines to
->> pcie_portdrv_err_resume(), before the call to device_for_each_child():
->>
->>          pci_restore_state(dev);
->>          pci_save_state(dev);
-> 
-> You need to do that with the current kernel or are you still using a
-> 3.10? A more recent kernel shouldn't have needed such a fix after the
+It was nice to find it for easy disabling :)
 
+> > and:
+> > [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+> > [  5]   0.00-1.00   sec   113 MBytes   951 Mbits/sec  153    772 KBytes
+> > [  5]   1.00-2.00   sec   109 MBytes   912 Mbits/sec  276    550 KBytes
+> > [  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec  123    625 KBytes
+> > [  5]   3.00-4.00   sec   111 MBytes   933 Mbits/sec   31    687 KBytes
+> > [  5]   4.00-5.00   sec   110 MBytes   923 Mbits/sec    0    679 KBytes
+> > [  5]   5.00-6.00   sec   110 MBytes   923 Mbits/sec  136    577 KBytes
+> > [  5]   6.00-7.00   sec   110 MBytes   923 Mbits/sec  214    645 KBytes
+> > [  5]   7.00-8.00   sec   110 MBytes   923 Mbits/sec   32    628 KBytes
+> > [  5]   8.00-9.00   sec   110 MBytes   923 Mbits/sec   81    537 KBytes
+> > [  5]   9.00-10.00  sec   110 MBytes   923 Mbits/sec   10    577 KBytes
+> > - - - - - - - - - - - - - - - - - - - - - - - - -
+> > [ ID] Interval           Transfer     Bitrate         Retr
+> > [  5]   0.00-10.00  sec  1.08 GBytes   927 Mbits/sec  1056             sender
+> > [  5]   0.00-10.00  sec  1.07 GBytes   923 Mbits/sec                  receiver
+> >
+> > But this only confirms that the fix i experience is a side effect.
+> >
+> > The original code is still wrong :)
+>
+> What exactly is this machine?  Brand, model, config?  Maybe you could
+> add this and a dmesg log to the buzilla?  It seems like other people
+> should be seeing the same problem, so I'm hoping to grub around on the
+> web to see if there are similar reports involving these devices.
 
-This was tested on the 5.9.12 kernel at that time. As of today, I've 
-re-ran the tests on Bjorn's git tree, pci/err branch from Sunday (I 
-guess 5.10.0 version).
+ASUS Pro WS X570-ACE with AMD Ryzen 9 3900X
 
-> following commit was introduced:
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=874b3251113a1e2cbe79c24994dc03fe4fe4b99b
-> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=209725
+>
+> Here's one that is superficially similar:
+> https://linux-hardware.org/index.php?probe=e5f24075e5&log=lspci_all
+> in that it has a RP -- switch -- I211 path.  Interestingly, the switch
+> here advertises <64us L1 exit latency instead of the <32us latency
+> your switch advertises.  Of course, I can't tell if it's exactly the
+> same switch.
 
-I noticed the change you are pointing out when trying to propose a patch.
+Same chipset it seems
 
-It made me curious on why the pcie_portdrv_slot_reset() is not invoked.
+I'm running bios version:
+        Version: 2206
+        Release Date: 08/13/2020
 
-After sprinkling a couple of printk()'s around the pcie_do_recovery() 
-and pcie_portdrv_err_handler's I can observe that the 
-pcie_portdrv_slot_reset() is never called from pcie_do_recovery() due to 
-status returned by reset_subordinates() (actually aer_root_reset() from 
-pcie/aer.c) being PCI_ERS_RESULT_RECOVERED.
+ANd latest is:
+Version 3003
+2020/12/07
 
-I reckon, in order to invoke the pcie_portdrv_slot_reset(), the 
-aer_root_reset() should have returned PCI_ERS_RESULT_NEED_RESET.
+Will test upgrading that as well, but it could be that they report the
+incorrect latency of the switch - I don't know how many things AGESA
+changes but... It's been updated twice since my upgrade.
 
-As soon as I plug the calls to pci_restore_state() and pci_save_state() 
-into the pcie_portdrv_err_resume() the bus and devices are operational 
-again.
+> Bjorn
