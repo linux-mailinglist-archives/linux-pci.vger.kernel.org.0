@@ -2,190 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A1082DB052
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 16:45:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CEF02DB099
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 16:56:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgLOPmd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Dec 2020 10:42:33 -0500
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:45093 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730035AbgLOPma (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Dec 2020 10:42:30 -0500
-Received: by mail-oi1-f177.google.com with SMTP id f132so23741021oib.12;
-        Tue, 15 Dec 2020 07:42:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QbSdKfHG54/E/3eD2yVHW2JO4FE/Mb+iNnd+PiM7f9Q=;
-        b=cemtsBI3i7lvTbY4SouC7YLBfoszRSGJ0tzh2xCFMsA9kEsgdPEKiaOuobEDUEX73e
-         4+zFi/UtpeTBYISwWVi3kvl+tMzGne0IVjCi3xeRN1fSJqbfgyHNwZD9lUlhLtd4m6Wh
-         VCcvcsFC8GpxS4BhDhC5uBaiQ367oij/ioo8hOJC9NOyDOU7sOM0VF9dBycMRrH2achJ
-         IpFkPrS9++DhL33xm2v9Of9jFeKgF4lFPCNUshqRS71e32UIDm2jnRbpy93AVEKnDcjC
-         uqfbHVVYD7tVGUpyBBHTQUjDpbpLxGYELcyVnXTOg4r/+vOilFJiRTZYXm6pz6hg3qPz
-         NjrQ==
-X-Gm-Message-State: AOAM533n5YGulHEduZ0J7BVF98FqeLpA/Lo3QujxTPbBwW07C7OlQ8UD
-        ZbeH0v76PuYLQHR5EycTmGyuDLyMdw==
-X-Google-Smtp-Source: ABdhPJwpjJlFsNVoUGgLP7QP6orUNf6ZCw3S+UX6zIhpbnj9iGfNsG1e/BJ8cE3fPOmQvNXoPQvukA==
-X-Received: by 2002:a05:6808:18:: with SMTP id u24mr6819744oic.89.1608046909781;
-        Tue, 15 Dec 2020 07:41:49 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j2sm482463otq.78.2020.12.15.07.41.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Dec 2020 07:41:48 -0800 (PST)
-Received: (nullmailer pid 3901273 invoked by uid 1000);
-        Tue, 15 Dec 2020 15:41:47 -0000
-Date:   Tue, 15 Dec 2020 09:41:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: dwc: tegra194: issue with card containing a bridge
-Message-ID: <20201215154147.GA3885265@robh.at.kernel.org>
-References: <20201215102442.GA20517@suse.de>
- <9a8abc90-cf18-b0c8-3bcb-efbe03f0ca4c@nvidia.com>
- <20201215132504.GA20914@suse.de>
+        id S1730472AbgLOPyv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Dec 2020 10:54:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730421AbgLOPyq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 15 Dec 2020 10:54:46 -0500
+X-Gm-Message-State: AOAM530VDE8fRUZKEr/iI6zaiFEJ4Iuhj47PfIqxgiVojRnq+nO36KXR
+        7WPvZsmauqe9lCHTCISvGT8q7htrHFirMv8FDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608047645;
+        bh=gghWFkwWx1IarlLAdXd+Eia1PG+BltXx90Un2XVWq4s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TIcbmFpMD+xR7If58M2C/fNWfW0LX1a3C/BUA5MmVPjuw58mZilPwXfPoL7oGSW85
+         ndN0478TxxXvIT3Ld+wMnD1iJgLrsvLL636FbV+EZ863xUPsbW8jWYCiAOINCkZCPR
+         PRwy2XfhsOIQkGL0xStKcO3Znqo4Re/wVALSdPnDZOx9bLQ/wCY6m0XhCuXEskpYbi
+         YFn2xBvsgzS3sAMI7/Bi0gqyhSzcTJ7yOC4WJJFiQSSVm0VphTgESUDbhs0SJmGYun
+         HgR1Bztq8AzQetcweYE/rXCPhjnCNIIn3cqjYDS6uH54luLJHGtII/xEjlQ5jx/a6p
+         QWkZ3n+BOnFKw==
+X-Google-Smtp-Source: ABdhPJzX6gCl3nrP2sdQmU523LZPHAXcWD3mEcWuFkDvD1i73xrUbyefadNidrNVOhxsFsXvANhmSOfiOKFXG/PUUeE=
+X-Received: by 2002:a05:6402:1841:: with SMTP id v1mr30838131edy.194.1608047643433;
+ Tue, 15 Dec 2020 07:54:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201215132504.GA20914@suse.de>
+References: <20201215070009.27937-1-kishon@ti.com>
+In-Reply-To: <20201215070009.27937-1-kishon@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 15 Dec 2020 09:53:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJzi7JkMcd4NZewA=w8q6BsCkrhW3JcED63R=EyE3v29Q@mail.gmail.com>
+Message-ID: <CAL_JsqJzi7JkMcd4NZewA=w8q6BsCkrhW3JcED63R=EyE3v29Q@mail.gmail.com>
+Subject: Re: [PATCH v5] PCI: cadence: Retrain Link to work around Gen2
+ training defect.
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nadeem Athani <nadeem@cadence.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Milind Parab <mparab@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
+        Parshuram Raju Thombare <pthombar@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 02:25:04PM +0100, Mian Yousaf Kaukab wrote:
-> On Tue, Dec 15, 2020 at 05:45:59PM +0530, Vidya Sagar wrote:
-> > Thanks Mian for bringing it to our notice.
-> > Have you tried removing the dw_pcie_setup_rc(pp); call from pcie-tegra194.c
-> > file on top of linux-next? and does that solve the issue?
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > index 5597b2a49598..1c9e9c054592 100644
-> > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > @@ -907,7 +907,7 @@ static void tegra_pcie_prepare_host(struct pcie_port
-> > *pp)
-> >                 dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
-> > val);
-> >         }
-> > 
-> > -       dw_pcie_setup_rc(pp);
-> > +       //dw_pcie_setup_rc(pp);
-> I still see the same issue with this change.
-> Reverting b9ac0f9dc8ea works though.
-> > 
-> >         clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
-> > 
-> > I took a quick look at the dw_pcie_setup_rc() implementation and I'm not
-> > sure why calling it second time should create any issue for the enumeration
-> > of devices behind a switch. Perhaps I need to spend more time to debug that
-> > part.
-> > In any case, since dw_pcie_setup_rc() is already part of
-> > dw_pcie_host_init(), I think it can be removed from
-> > tegra_pcie_prepare_host() implemention.
+On Tue, Dec 15, 2020 at 1:00 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> From: Nadeem Athani <nadeem@cadence.com>
+>
+> Cadence controller will not initiate autonomous speed change if strapped as
+> Gen2. The Retrain Link bit is set as quirk to enable this speed change.
+>
+> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+> [kishon@ti.com: Enable the workaround for TI's J721E SoC]
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+> Hi Lorenzo,
+> The previous version of the patch can be found at [1].
+> I slightly re-worked the patch from Nadeem
+> *) Removed additional Link Up Check
+> *) Removed quirk from pcie-cadence-plat.c
+> *) Also removed additional compatible
+>    "cdns,cdns-pcie-host-quirk-retrain" added in that series
+> *) Enabled the quirk for J721E
+> [1] -> http://lore.kernel.org/r/20201211144236.3825-1-nadeem@cadence.com
+>
+>  drivers/pci/controller/cadence/pci-j721e.c    |  3 +
+>  .../controller/cadence/pcie-cadence-host.c    | 67 ++++++++++++++-----
+>  drivers/pci/controller/cadence/pcie-cadence.h | 11 ++-
+>  3 files changed, 62 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index dac1ac8a7615..baf729850cb1 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -64,6 +64,7 @@ enum j721e_pcie_mode {
+>
+>  struct j721e_pcie_data {
+>         enum j721e_pcie_mode    mode;
+> +       bool                    quirk_retrain_flag;
+>  };
+>
+>  static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+> @@ -280,6 +281,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
+>
+>  static const struct j721e_pcie_data j721e_pcie_rc_data = {
+>         .mode = PCI_MODE_RC,
+> +       .quirk_retrain_flag = true,
+>  };
+>
+>  static const struct j721e_pcie_data j721e_pcie_ep_data = {
+> @@ -388,6 +390,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>
+>                 bridge->ops = &cdns_ti_pcie_host_ops;
+>                 rc = pci_host_bridge_priv(bridge);
+> +               rc->quirk_retrain_flag = data->quirk_retrain_flag;
+>
+>                 cdns_pcie = &rc->pcie;
+>                 cdns_pcie->dev = dev;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 811c1cb2e8de..773c0d1137ed 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -77,6 +77,50 @@ static struct pci_ops cdns_pcie_host_ops = {
+>         .write          = pci_generic_config_write,
+>  };
+>
+> +static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+> +{
+> +       struct device *dev = pcie->dev;
+> +       int retries;
+> +
+> +       /* Check if the link is up or not */
+> +       for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> +               if (cdns_pcie_link_up(pcie)) {
+> +                       dev_info(dev, "Link up\n");
+> +                       return 0;
+> +               }
+> +               usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+> +       }
+> +
+> +       return -ETIMEDOUT;
+> +}
+> +
+> +static void cdns_pcie_retrain(struct cdns_pcie *pcie)
+> +{
+> +       u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
+> +       u16 lnk_stat, lnk_ctl;
+> +
+> +       /*
+> +        * Set retrain bit if current speed is 2.5 GB/s,
+> +        * but the PCIe root port support is > 2.5 GB/s.
 
-I think the 2nd time is making the link go down is my guess. Tegra was 
-odd in that its start/stop link functions don't do link handling, so I 
-didn't implement those functions and left the link handling in the Tegra 
-driver.
+If you don't have the retrain quirk, wouldn't this condition never
+happen and then the function is just a nop? So this could just be
+called unconditionally.
 
-Can you try the below patch. It needs some more work as it breaks 
-endpoint mode.
-
-8<--------------------------------------------------------------------
-
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 648e731bccfa..49bb487b16ae 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -907,9 +907,32 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
- 		dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
- 	}
- 
--	dw_pcie_setup_rc(pp);
--
- 	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
-+}
-+
-+static int tegra_pcie_dw_host_init(struct pcie_port *pp)
-+{
-+	pp->bridge->ops = &tegra_pci_ops;
-+
-+	tegra_pcie_prepare_host(pp);
-+	tegra_pcie_enable_interrupts(pp);
-+
-+	return 0;
-+}
-+
-+static int tegra_pcie_dw_link_up(struct dw_pcie *pci)
-+{
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	u32 val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
-+
-+	return !!(val & PCI_EXP_LNKSTA_DLLLA);
-+}
-+
-+static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
-+{
-+	u32 val, offset, speed, tmp;
-+	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
-+	struct pcie_port *pp = &pci->pp;
- 
- 	/* Assert RST */
- 	val = appl_readl(pcie, APPL_PINMUX);
-@@ -929,17 +952,6 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
- 	appl_writel(pcie, val, APPL_PINMUX);
- 
- 	msleep(100);
--}
--
--static int tegra_pcie_dw_host_init(struct pcie_port *pp)
--{
--	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
--	u32 val, tmp, offset, speed;
--
--	pp->bridge->ops = &tegra_pci_ops;
--
--	tegra_pcie_prepare_host(pp);
- 
- 	if (dw_pcie_wait_for_link(pci)) {
- 		/*
-@@ -975,7 +987,8 @@ static int tegra_pcie_dw_host_init(struct pcie_port *pp)
- 		val &= ~PCI_DLF_EXCHANGE_ENABLE;
- 		dw_pcie_writel_dbi(pci, offset, val);
- 
--		tegra_pcie_prepare_host(pp);
-+		tegra_pcie_dw_host_init(pp);
-+		dw_pcie_setup_rc(pp);
- 
- 		if (dw_pcie_wait_for_link(pci))
- 			return 0;
-@@ -985,25 +998,6 @@ static int tegra_pcie_dw_host_init(struct pcie_port *pp)
- 		PCI_EXP_LNKSTA_CLS;
- 	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
- 
--	tegra_pcie_enable_interrupts(pp);
--
--	return 0;
--}
--
--static int tegra_pcie_dw_link_up(struct dw_pcie *pci)
--{
--	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
--	u32 val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
--
--	return !!(val & PCI_EXP_LNKSTA_DLLLA);
--}
--
--static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
--{
--	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
--
--	enable_irq(pcie->pex_rst_irq);
--
- 	return 0;
- }
- 
+> +        */
+> +
+> +       lnk_cap_sls = cdns_pcie_readl(pcie, (CDNS_PCIE_RP_BASE + pcie_cap_off +
+> +                                            PCI_EXP_LNKCAP));
+> +       if ((lnk_cap_sls & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
+> +               return;
+> +
+> +       lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
+> +       if ((lnk_stat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB) {
+> +               lnk_ctl = cdns_pcie_rp_readw(pcie,
+> +                                            pcie_cap_off + PCI_EXP_LNKCTL);
+> +               lnk_ctl |= PCI_EXP_LNKCTL_RL;
+> +               cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
+> +                                   lnk_ctl);
+> +
+> +               if (cdns_pcie_host_wait_for_link(pcie))
+> +                       return;
+> +       }
+> +}
+>
+>  static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  {
+> @@ -398,23 +442,6 @@ static int cdns_pcie_host_init(struct device *dev,
+>         return cdns_pcie_host_init_address_translation(rc);
+>  }
+>
+> -static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+> -{
+> -       struct device *dev = pcie->dev;
+> -       int retries;
+> -
+> -       /* Check if the link is up or not */
+> -       for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> -               if (cdns_pcie_link_up(pcie)) {
+> -                       dev_info(dev, "Link up\n");
+> -                       return 0;
+> -               }
+> -               usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+> -       }
+> -
+> -       return -ETIMEDOUT;
+> -}
+> -
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  {
+>         struct device *dev = rc->pcie.dev;
+> @@ -458,8 +485,12 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>         }
+>
+>         ret = cdns_pcie_host_wait_for_link(pcie);
+> -       if (ret)
+> +       if (ret) {
+>                 dev_dbg(dev, "PCIe link never came up\n");
+> +       } else {
+> +               if (rc->quirk_retrain_flag)
+> +                       cdns_pcie_retrain(pcie);
+> +       }
+>
+>         for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
+>                 rc->avail_ib_bar[bar] = true;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 30eba6cafe2c..0f29128a5d0a 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -119,7 +119,7 @@
+>   * Root Port Registers (PCI configuration space for the root port function)
+>   */
+>  #define CDNS_PCIE_RP_BASE      0x00200000
+> -
+> +#define CDNS_PCIE_RP_CAP_OFFSET 0xc0
+>
+>  /*
+>   * Address Translation Registers
+> @@ -291,6 +291,7 @@ struct cdns_pcie {
+>   * @device_id: PCI device ID
+>   * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and        RP_NO_BAR if it's free or
+>   *                available
+> + * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
+>   */
+>  struct cdns_pcie_rc {
+>         struct cdns_pcie        pcie;
+> @@ -299,6 +300,7 @@ struct cdns_pcie_rc {
+>         u32                     vendor_id;
+>         u32                     device_id;
+>         bool                    avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
+> +       bool                    quirk_retrain_flag;
+>  };
+>
+>  /**
+> @@ -414,6 +416,13 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+>         cdns_pcie_write_sz(addr, 0x2, value);
+>  }
+>
+> +static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
+> +{
+> +       void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+> +
+> +       return cdns_pcie_read_sz(addr, 0x2);
+> +}
+> +
+>  /* Endpoint Function register access */
+>  static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
+>                                           u32 reg, u8 value)
+> --
+> 2.17.1
+>
