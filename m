@@ -2,126 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C355A2DA4FC
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 01:41:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C1EA2DA85F
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 08:04:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgLOAkr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 14 Dec 2020 19:40:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgLOAkr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 14 Dec 2020 19:40:47 -0500
-Date:   Mon, 14 Dec 2020 18:40:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607992806;
-        bh=vYzB5Bh2gjJmR+HAPUYeomnVTXQmhB/jJBx2y7DbXeo=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=jQUvwXxYDu5SKP/A+dyoyRW29wX3IPVvnREKIErgNy6/qIXo0xiuPh8rgU+m8KLG4
-         UWVqN6qXpxRzznGDBbh+3JBeGmE94kSgBPP0Dv6a1TZZb8pPu9y3Ifx7ZzXLnd2USd
-         LkEyvCWm5TWIdi/Hj5kKweAB8GrnrZneVo7sbCuaiUo86LmlKfrHiZDdlPHzHcTA4j
-         VNx2qMtwvXp8sH5MgK6u1ZjUGU11lLZW8rOkefVgwi+4maFkHTurVkGlrpeo4ZSAkk
-         G1Cl9CEy01MXqdQpYMdo2jGWDb1lCZsV7e2Zkbe+LYBDt+SRflUv3rgBfEs60JbIe3
-         +VfBXq4Zo0dhQ==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ian Kumlien <ian.kumlien@gmail.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] PCI/ASPM: Use the path max in L1 ASPM latency check
-Message-ID: <20201215004004.GA280628@bjorn-Precision-5520>
+        id S1726636AbgLOHCS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Dec 2020 02:02:18 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44902 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgLOHCM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Dec 2020 02:02:12 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BF70GdC061345;
+        Tue, 15 Dec 2020 01:00:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1608015616;
+        bh=iWkY+8bX1O7V/L8hXMtJVE3oSow43PDbAsF0LzeIDlA=;
+        h=From:To:CC:Subject:Date;
+        b=ccZASm4oaGgrAkN2rJJc1NnTkTek3wlBr+GPNIDAB5//stLxKoibo6aRWrMrcS4cE
+         EGNM7cZEbQ3vLk/qVtEqEeu0WfVBIw8YwahGIJ6rFx7/QT48DDoP5HzpTdsKxQOzem
+         F+N08xUEUp5JuUinP2XedUCOkS8JwtM5mLrzpbt0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BF70G7w051335
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 15 Dec 2020 01:00:16 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 15
+ Dec 2020 01:00:16 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 15 Dec 2020 01:00:16 -0600
+Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BF70BdN130944;
+        Tue, 15 Dec 2020 01:00:12 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nadeem Athani <nadeem@cadence.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <sjakhade@cadence.com>, <pthombar@cadence.com>
+Subject: [PATCH v5] PCI: cadence: Retrain Link to work around Gen2 training defect.
+Date:   Tue, 15 Dec 2020 12:30:09 +0530
+Message-ID: <20201215070009.27937-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA85sZs8Li7+8BQWj0e+Qrxes1VF6K_Ukqrqgs1E3hHmaXqsbQ@mail.gmail.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Dec 14, 2020 at 11:56:31PM +0100, Ian Kumlien wrote:
-> On Mon, Dec 14, 2020 at 8:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+From: Nadeem Athani <nadeem@cadence.com>
 
-> > If you're interested, you could probably unload the Realtek drivers,
-> > remove the devices, and set the PCI_EXP_LNKCTL_LD (Link Disable) bit
-> > in 02:04.0, e.g.,
-> >
-> >   # RT=/sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/0000:02:04.0
-> >   # echo 1 > $RT/0000:04:00.0/remove
-> >   # echo 1 > $RT/0000:04:00.1/remove
-> >   # echo 1 > $RT/0000:04:00.2/remove
-> >   # echo 1 > $RT/0000:04:00.4/remove
-> >   # echo 1 > $RT/0000:04:00.7/remove
-> >   # setpci -s02:04.0 CAP_EXP+0x10.w=0x0010
-> >
-> > That should take 04:00.x out of the picture.
-> 
-> Didn't actually change the behaviour, I'm suspecting an errata for AMD pcie...
-> 
-> So did this, with unpatched kernel:
-> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> [  5]   0.00-1.00   sec  4.56 MBytes  38.2 Mbits/sec    0   67.9 KBytes
-> [  5]   1.00-2.00   sec  4.47 MBytes  37.5 Mbits/sec    0   96.2 KBytes
-> [  5]   2.00-3.00   sec  4.85 MBytes  40.7 Mbits/sec    0   50.9 KBytes
-> [  5]   3.00-4.00   sec  4.23 MBytes  35.4 Mbits/sec    0   70.7 KBytes
-> [  5]   4.00-5.00   sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
-> [  5]   5.00-6.00   sec  4.23 MBytes  35.4 Mbits/sec    0   45.2 KBytes
-> [  5]   6.00-7.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
-> [  5]   7.00-8.00   sec  3.98 MBytes  33.4 Mbits/sec    0   36.8 KBytes
-> [  5]   8.00-9.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
-> [  5]   9.00-10.00  sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
-> - - - - - - - - - - - - - - - - - - - - - - - - -
-> [ ID] Interval           Transfer     Bitrate         Retr
-> [  5]   0.00-10.00  sec  43.2 MBytes  36.2 Mbits/sec    0             sender
-> [  5]   0.00-10.00  sec  42.7 MBytes  35.8 Mbits/sec                  receiver
-> 
-> and:
-> echo 0 > /sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/link/l1_aspm
+Cadence controller will not initiate autonomous speed change if strapped as
+Gen2. The Retrain Link bit is set as quirk to enable this speed change.
 
-BTW, thanks a lot for testing out the "l1_aspm" sysfs file.  I'm very
-pleased that it seems to be working as intended.
+Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+[kishon@ti.com: Enable the workaround for TI's J721E SoC]
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Hi Lorenzo,
+The previous version of the patch can be found at [1].
+I slightly re-worked the patch from Nadeem
+*) Removed additional Link Up Check
+*) Removed quirk from pcie-cadence-plat.c
+*) Also removed additional compatible
+   "cdns,cdns-pcie-host-quirk-retrain" added in that series
+*) Enabled the quirk for J721E
+[1] -> http://lore.kernel.org/r/20201211144236.3825-1-nadeem@cadence.com
 
-> and:
-> [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> [  5]   0.00-1.00   sec   113 MBytes   951 Mbits/sec  153    772 KBytes
-> [  5]   1.00-2.00   sec   109 MBytes   912 Mbits/sec  276    550 KBytes
-> [  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec  123    625 KBytes
-> [  5]   3.00-4.00   sec   111 MBytes   933 Mbits/sec   31    687 KBytes
-> [  5]   4.00-5.00   sec   110 MBytes   923 Mbits/sec    0    679 KBytes
-> [  5]   5.00-6.00   sec   110 MBytes   923 Mbits/sec  136    577 KBytes
-> [  5]   6.00-7.00   sec   110 MBytes   923 Mbits/sec  214    645 KBytes
-> [  5]   7.00-8.00   sec   110 MBytes   923 Mbits/sec   32    628 KBytes
-> [  5]   8.00-9.00   sec   110 MBytes   923 Mbits/sec   81    537 KBytes
-> [  5]   9.00-10.00  sec   110 MBytes   923 Mbits/sec   10    577 KBytes
-> - - - - - - - - - - - - - - - - - - - - - - - - -
-> [ ID] Interval           Transfer     Bitrate         Retr
-> [  5]   0.00-10.00  sec  1.08 GBytes   927 Mbits/sec  1056             sender
-> [  5]   0.00-10.00  sec  1.07 GBytes   923 Mbits/sec                  receiver
-> 
-> But this only confirms that the fix i experience is a side effect.
-> 
-> The original code is still wrong :)
+ drivers/pci/controller/cadence/pci-j721e.c    |  3 +
+ .../controller/cadence/pcie-cadence-host.c    | 67 ++++++++++++++-----
+ drivers/pci/controller/cadence/pcie-cadence.h | 11 ++-
+ 3 files changed, 62 insertions(+), 19 deletions(-)
 
-What exactly is this machine?  Brand, model, config?  Maybe you could
-add this and a dmesg log to the buzilla?  It seems like other people
-should be seeing the same problem, so I'm hoping to grub around on the
-web to see if there are similar reports involving these devices.
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index dac1ac8a7615..baf729850cb1 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -64,6 +64,7 @@ enum j721e_pcie_mode {
+ 
+ struct j721e_pcie_data {
+ 	enum j721e_pcie_mode	mode;
++	bool			quirk_retrain_flag;
+ };
+ 
+ static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+@@ -280,6 +281,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
+ 
+ static const struct j721e_pcie_data j721e_pcie_rc_data = {
+ 	.mode = PCI_MODE_RC,
++	.quirk_retrain_flag = true,
+ };
+ 
+ static const struct j721e_pcie_data j721e_pcie_ep_data = {
+@@ -388,6 +390,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 		bridge->ops = &cdns_ti_pcie_host_ops;
+ 		rc = pci_host_bridge_priv(bridge);
++		rc->quirk_retrain_flag = data->quirk_retrain_flag;
+ 
+ 		cdns_pcie = &rc->pcie;
+ 		cdns_pcie->dev = dev;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 811c1cb2e8de..773c0d1137ed 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -77,6 +77,50 @@ static struct pci_ops cdns_pcie_host_ops = {
+ 	.write		= pci_generic_config_write,
+ };
+ 
++static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
++{
++	struct device *dev = pcie->dev;
++	int retries;
++
++	/* Check if the link is up or not */
++	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
++		if (cdns_pcie_link_up(pcie)) {
++			dev_info(dev, "Link up\n");
++			return 0;
++		}
++		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
++	}
++
++	return -ETIMEDOUT;
++}
++
++static void cdns_pcie_retrain(struct cdns_pcie *pcie)
++{
++	u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
++	u16 lnk_stat, lnk_ctl;
++
++	/*
++	 * Set retrain bit if current speed is 2.5 GB/s,
++	 * but the PCIe root port support is > 2.5 GB/s.
++	 */
++
++	lnk_cap_sls = cdns_pcie_readl(pcie, (CDNS_PCIE_RP_BASE + pcie_cap_off +
++					     PCI_EXP_LNKCAP));
++	if ((lnk_cap_sls & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
++		return;
++
++	lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
++	if ((lnk_stat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB) {
++		lnk_ctl = cdns_pcie_rp_readw(pcie,
++					     pcie_cap_off + PCI_EXP_LNKCTL);
++		lnk_ctl |= PCI_EXP_LNKCTL_RL;
++		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
++				    lnk_ctl);
++
++		if (cdns_pcie_host_wait_for_link(pcie))
++			return;
++	}
++}
+ 
+ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ {
+@@ -398,23 +442,6 @@ static int cdns_pcie_host_init(struct device *dev,
+ 	return cdns_pcie_host_init_address_translation(rc);
+ }
+ 
+-static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+-{
+-	struct device *dev = pcie->dev;
+-	int retries;
+-
+-	/* Check if the link is up or not */
+-	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+-		if (cdns_pcie_link_up(pcie)) {
+-			dev_info(dev, "Link up\n");
+-			return 0;
+-		}
+-		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+-	}
+-
+-	return -ETIMEDOUT;
+-}
+-
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	struct device *dev = rc->pcie.dev;
+@@ -458,8 +485,12 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	}
+ 
+ 	ret = cdns_pcie_host_wait_for_link(pcie);
+-	if (ret)
++	if (ret) {
+ 		dev_dbg(dev, "PCIe link never came up\n");
++	} else {
++		if (rc->quirk_retrain_flag)
++			cdns_pcie_retrain(pcie);
++	}
+ 
+ 	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
+ 		rc->avail_ib_bar[bar] = true;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 30eba6cafe2c..0f29128a5d0a 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -119,7 +119,7 @@
+  * Root Port Registers (PCI configuration space for the root port function)
+  */
+ #define CDNS_PCIE_RP_BASE	0x00200000
+-
++#define CDNS_PCIE_RP_CAP_OFFSET 0xc0
+ 
+ /*
+  * Address Translation Registers
+@@ -291,6 +291,7 @@ struct cdns_pcie {
+  * @device_id: PCI device ID
+  * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
+  *                available
++ * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
+  */
+ struct cdns_pcie_rc {
+ 	struct cdns_pcie	pcie;
+@@ -299,6 +300,7 @@ struct cdns_pcie_rc {
+ 	u32			vendor_id;
+ 	u32			device_id;
+ 	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
++	bool			quirk_retrain_flag;
+ };
+ 
+ /**
+@@ -414,6 +416,13 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+ 	cdns_pcie_write_sz(addr, 0x2, value);
+ }
+ 
++static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
++{
++	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
++
++	return cdns_pcie_read_sz(addr, 0x2);
++}
++
+ /* Endpoint Function register access */
+ static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
+ 					  u32 reg, u8 value)
+-- 
+2.17.1
 
-https://bugzilla.kernel.org/show_bug.cgi?id=209725
-
-Here's one that is superficially similar:
-https://linux-hardware.org/index.php?probe=e5f24075e5&log=lspci_all
-in that it has a RP -- switch -- I211 path.  Interestingly, the switch
-here advertises <64us L1 exit latency instead of the <32us latency
-your switch advertises.  Of course, I can't tell if it's exactly the
-same switch.
-
-Bjorn
