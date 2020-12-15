@@ -2,147 +2,243 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADD8F2DA864
-	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 08:11:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BCF82DAA0B
+	for <lists+linux-pci@lfdr.de>; Tue, 15 Dec 2020 10:26:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbgLOHKv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Dec 2020 02:10:51 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51360 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgLOHKv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Dec 2020 02:10:51 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BF799Zu047587;
-        Tue, 15 Dec 2020 01:09:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1608016149;
-        bh=fNRq+gOfrdMwuLy2nUKc+a0umMFiha80ZqqipUQ7GjI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nIfK4UmtJX+4YT+uFZjIfdGIROvpQMEUPq69q+VnzUUNKEv6l1ZqiFK+mYyHP+B71
-         oKzNXVzg6crDJV+KpHJwRsR+chryLG6CDGMfKQwzO8xwQXpyc3Wck+2s483ZUcP+Ap
-         jhRRefqu1yf5pLoXhzIovUwX6KB1ZJNJhT5UaUQc=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BF799k0063765
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Dec 2020 01:09:09 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 15
- Dec 2020 01:09:08 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 15 Dec 2020 01:09:08 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BF794NZ109620;
-        Tue, 15 Dec 2020 01:09:05 -0600
-Subject: Re: [PATCH v4 1/2] dt-bindings: pci: Retrain Link to work around Gen2
- training defect.
-To:     Rob Herring <robh@kernel.org>
-CC:     Athani Nadeem Ladkhan <nadeem@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-References: <20201211144236.3825-1-nadeem@cadence.com>
- <20201211144236.3825-2-nadeem@cadence.com>
- <CAL_JsqLTz2k03gzrjDqi2d1NHQV+3pXxg6OqwcJ17CmfGYMf-A@mail.gmail.com>
- <SN2PR07MB2557145EE4C4E9C50A16CF64D8C90@SN2PR07MB2557.namprd07.prod.outlook.com>
- <912c1efa-6c25-9e5d-5094-6c9dd8e3755d@ti.com>
- <CAL_JsqLEmb4N6AKWpJmh9mGkE3QWsgABUqcH4Zvb5CiSMe_Zvg@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <95f35432-3360-c855-9f87-cec4e3f57282@ti.com>
-Date:   Tue, 15 Dec 2020 12:38:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727197AbgLOJZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 15 Dec 2020 04:25:45 -0500
+Received: from halon2.esss.lu.se ([194.47.240.53]:37796 "EHLO
+        halon2.esss.lu.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727621AbgLOJZd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 15 Dec 2020 04:25:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ess.eu; s=dec2019;
+        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
+         message-id:from:references:cc:to:subject:from;
+        bh=bQoZ0U9kh5Pwh4k3Hrc5MRZlf1Zk7c0YDLD77yXG6pk=;
+        b=lOUs0L+i7yyrlxeOAcC+GmVO5HyX9sQme34gNhSPze0amVfELrtsOa/eiNpEttKQZvyGuraK+QOV+
+         n0DBSUnT59R5QfszN4Me+eKtp3j8HE52Hv5KKELh+etnXReFT6dWcYERPjE5cxV+qBq5w30GbLdeXL
+         QLUqKO3egQHtUrD6ja74NDYl7yl8tUp+9OVk7z5jVhQq23BScrl9QSBX//Qgo+t6efV3O8PxmXAWAU
+         eyS17fJoh/xXlp+m0hUmgjgOSAmSEk6UQnh/MJLEX/BqIi3ZEvy+YcVqJR3EI1AK1x/Edxjl5fGVzo
+         3lLhvdvllnOsHPJN0D0fB7FRjs9eV6A==
+Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
+        by halon2.esss.lu.se (Halon) with ESMTPS
+        id 4fb3c695-3eb7-11eb-8373-005056a642a7;
+        Tue, 15 Dec 2020 09:24:20 +0000 (UTC)
+Received: from [192.168.0.9] (194.47.241.248) by it-exch16-4.esss.lu.se
+ (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 15 Dec
+ 2020 10:23:49 +0100
+Subject: Re: Kernel oops while using AER inject
+To:     Keith Busch <kbusch@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <c4bf0e02cd7d4ec49462245a315f882f@ess.eu>
+ <20201214185157.GA22809@redsun51.ssa.fujisawa.hgst.com>
+From:   Hinko Kocevar <hinko.kocevar@ess.eu>
+Message-ID: <a64752e9-6669-b9f7-6db3-ba4eae0743bb@ess.eu>
+Date:   Tue, 15 Dec 2020 10:23:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLEmb4N6AKWpJmh9mGkE3QWsgABUqcH4Zvb5CiSMe_Zvg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20201214185157.GA22809@redsun51.ssa.fujisawa.hgst.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [194.47.241.248]
+X-ClientProxiedBy: IT-Exch16-1.esss.lu.se (10.0.42.131) To
+ it-exch16-4.esss.lu.se (10.0.42.134)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-On 14/12/20 8:35 pm, Rob Herring wrote:
-> On Sun, Dec 13, 2020 at 10:21 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+
+On 12/14/20 7:51 PM, Keith Busch wrote:
+> On Thu, Dec 03, 2020 at 04:00:04PM +0000, Hinko Kocevar wrote:
+>> Note that I had to manually remove following devices to make the recovery report success:
 >>
->> Hi Nadeem,
+>> echo 1 > /sys/bus/pci/devices/0000\:02\:02.0/remove
+>> echo 1 > /sys/bus/pci/devices/0000\:02\:08.0/remove
+>> echo 1 > /sys/bus/pci/devices/0000\:02\:09.0/remove
+>> echo 1 > /sys/bus/pci/devices/0000\:02\:0a.0/remove
+>> echo 1 > /sys/bus/pci/devices/0000\:01\:00.1/remove
+>> echo 1 > /sys/bus/pci/devices/0000\:01\:00.2/remove
+>> echo 1 > /sys/bus/pci/devices/0000\:01\:00.3/remove
+>> echo 1 > /sys/bus/pci/devices/0000\:01\:00.4/remove
 >>
->> On 12/12/20 12:37 pm, Athani Nadeem Ladkhan wrote:
->>> Hi Rob / Kishon,
->>>
->>>> -----Original Message-----
->>>> From: Rob Herring <robh@kernel.org>
->>>> Sent: Friday, December 11, 2020 10:32 PM
->>>> To: Athani Nadeem Ladkhan <nadeem@cadence.com>
->>>> Cc: Tom Joseph <tjoseph@cadence.com>; Lorenzo Pieralisi
->>>> <lorenzo.pieralisi@arm.com>; Bjorn Helgaas <bhelgaas@google.com>; PCI
->>>> <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.org; Kishon Vijay
->>>> Abraham I <kishon@ti.com>; devicetree@vger.kernel.org; Milind Parab
->>>> <mparab@cadence.com>; Swapnil Kashinath Jakhade
->>>> <sjakhade@cadence.com>; Parshuram Raju Thombare
->>>> <pthombar@cadence.com>
->>>> Subject: Re: [PATCH v4 1/2] dt-bindings: pci: Retrain Link to work around
->>>> Gen2 training defect.
->>>>
->>>> EXTERNAL MAIL
->>>>
->>>>
->>>> On Fri, Dec 11, 2020 at 9:03 AM Nadeem Athani <nadeem@cadence.com>
->>>> wrote:
->>>>>
->>>>> Cadence controller will not initiate autonomous speed change if
->>>>> strapped as Gen2. The Retrain Link bit is set as quirk to enable this speed
->>>> change.
->>>>> Adding a quirk flag based on a new compatible string.
->>>>>
->>>>> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 4
->>>>> +++-
->>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> index 293b8ec318bc..204d78f9efe3 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->>>>> @@ -15,7 +15,9 @@ allOf:
->>>>>
->>>>>  properties:
->>>>>    compatible:
->>>>> -    const: cdns,cdns-pcie-host
->>>>> +    enum:
->>>>> +        - cdns,cdns-pcie-host
->>>>> +        - cdns,cdns-pcie-host-quirk-retrain
->>>>
->>>> So, we'll just keep adding quirk strings on to the compatible? I don't think so.
->>>> Compatible strings should map to a specific implementation/platform and
->>>> quirks can then be implied from them. This is the only way we can implement
->>>> quirks in the OS without firmware
->>>> (DT) changes.
->>> Ok, I will change the compatible string to " ti,j721e-pcie-host" in place of  " cdns,cdns-pcie-host-quirk-retrain" .
->>> @Kishon Vijay Abraham I: Is this fine? Or will you suggest an appropriate name?
+>> After that, the PCI device tree looks like this:
 >>
->> IMHO it should be something like "cdns,cdns-pcie-host-vX", since the
->> quirk itself is not specific to TI platform rather Cadence IP version.
+>> 00:01.0 root_port, "J6B2", slot 1, device present, speed 8GT/s, width x8
+>>   └─01:00.0 upstream_port, PLX Technology, Inc. (10b5), device 8725
+>>      └─02:01.0 downstream_port, slot 1, device present, power: Off, speed 8GT/s, width x4
+>>         └─03:00.0 upstream_port, PLX Technology, Inc. (10b5) PEX 8748 48-Lane, 12-Port PCI Express Gen 3 (8 GT/s) Switch, 27 x 27mm FCBGA (8748)
+>>            ├─04:00.0 downstream_port, slot 10, power: Off
+>>            ├─04:01.0 downstream_port, slot 4, device present, power: Off, speed 8GT/s, width x4
+>>            │  └─06:00.0 endpoint, Research Centre Juelich (1796), device 0024
+>>            ├─04:02.0 downstream_port, slot 9, power: Off
+>>            ├─04:03.0 downstream_port, slot 3, device present, power: Off, speed 8GT/s, width x4
+>>            │  └─08:00.0 endpoint, Research Centre Juelich (1796), device 0024
+>>            ├─04:08.0 downstream_port, slot 5, device present, power: Off, speed 2.5GT/s, width x4
+>>            │  └─09:00.0 endpoint, current speed 2.5GT/s target speed 8GT/s, Research Centre Juelich (1796), device 0024
+>>            ├─04:09.0 downstream_port, slot 11, power: Off
+>>            ├─04:0a.0 downstream_port, slot 6, device present, power: Off, speed 2.5GT/s, width x4
+>>            │  └─0b:00.0 endpoint, current speed 2.5GT/s target speed 8GT/s, Research Centre Juelich (1796), device 0024
+>>            ├─04:0b.0 downstream_port, slot 12, power: Off
+>>            ├─04:10.0 downstream_port, slot 8, power: Off
+>>            ├─04:11.0 downstream_port, slot 2, device present, power: Off, speed 2.5GT/s, width x1
+>>            │  └─0e:00.0 endpoint, Xilinx Corporation (10ee), device 7011
+>>            └─04:12.0 downstream_port, slot 7, power: Off
+>> 00:01.1 root_port, slot 2, device present
+>> 00:1c.0 root_port, slot 4, device present, speed 2.5GT/s, width x1
+>>   └─15:00.0 endpoint, Intel Corporation (8086) I210 Gigabit Network Connection (1533)
+>> 00:1c.1 root_port, slot 5, device present, speed 2.5GT/s, width x1
+>>   └─16:00.0 endpoint, Intel Corporation (8086) I210 Gigabit Backplane Connection (1537)
+>> 00:1c.2 root_port, slot 6, device present, speed 2.5GT/s, width x1
+>>   └─17:00.0 endpoint, Intel Corporation (8086) I210 Gigabit Backplane Connection (1537)
+>> 00:1c.3 root_port, "J6B1", slot 7, device present, speed 2.5GT/s, width x1
+>>   └─18:00.0 endpoint, Intel Corporation (8086) I210 Gigabit Network Connection (1533)
+>>
+>> Finally, here is the result of the AER recovery taking place upon injecting the fatal uncorrectable error into the 00:01.0 slot.
+>>
+>> Dec  3 15:25:30 bd-cpu18 kernel: aer 0000:00:01.0:pcie002: aer_inject: Injecting errors 00000000/00004000 into device 0000:00:01.0
+>> Dec  3 15:25:30 bd-cpu18 kernel: pcieport 0000:00:01.0: AER: Uncorrected (Fatal) error received: id=0008
+>> Dec  3 15:25:30 bd-cpu18 kernel: pcieport 0000:00:01.0: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, id=0008(Requester ID)
+>> Dec  3 15:25:30 bd-cpu18 kernel: pcieport 0000:00:01.0:   device [8086:1901] error status/mask=00004000/00000000
+>> Dec  3 15:25:30 bd-cpu18 kernel: pcieport 0000:00:01.0:    [14] Completion Timeout
+>> Dec  3 15:25:30 bd-cpu18 kernel: sis8300 0000:06:00.0: [aer_error_detected] called .. state=2
+>> Dec  3 15:25:30 bd-cpu18 kernel: sis8300 0000:08:00.0: [aer_error_detected] called .. state=2
+>> Dec  3 15:25:30 bd-cpu18 kernel: sis8300 0000:09:00.0: [aer_error_detected] called .. state=2
+>> Dec  3 15:25:30 bd-cpu18 kernel: sis8300 0000:0b:00.0: [aer_error_detected] called .. state=2
+>> Dec  3 15:25:30 bd-cpu18 kernel: mrf-pci 0000:0e:00.0: [aer_error_detected] called .. state=2
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:06:00.0: [aer_result_none] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:08:00.0: [aer_result_none] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:09:00.0: [aer_result_none] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:0b:00.0: [aer_result_none] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: mrf-pci 0000:0e:00.0: [aer_result_none] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:06:00.0: [aer_resume] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:06:00.0: [aer_resume] UC errors cleared!
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:08:00.0: [aer_resume] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:08:00.0: [aer_resume] UC errors cleared!
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:09:00.0: [aer_resume] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:09:00.0: [aer_resume] UC errors cleared!
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:0b:00.0: [aer_resume] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: sis8300 0000:0b:00.0: [aer_resume] UC errors cleared!
+>> Dec  3 15:25:31 bd-cpu18 kernel: mrf-pci 0000:0e:00.0: [aer_resume] called..
+>> Dec  3 15:25:31 bd-cpu18 kernel: pcieport 0000:00:01.0: AER: Device recovery successful
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:08:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:08:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:06:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:06:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:09:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:09:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:0b:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:33 bd-cpu18 kernel: sis8300 0000:0b:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:08:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:08:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:06:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:06:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:09:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:09:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:0b:00.0: [sis8300_open] available = 1
+>> Dec  3 15:25:34 bd-cpu18 kernel: sis8300 0000:0b:00.0: [sis8300_release] available = 1, count = 0
+>> Dec  3 15:25:47 bd-cpu18 dbus[1266]: [system] Activating service name='org.freedesktop.problems' (using servicehelper)
+>> Dec  3 15:25:47 bd-cpu18 dbus[1266]: [system] Successfully activated service 'org.freedesktop.problems'
+>>
+>> At this point the PCI space reads for the AMCs returns 0xFFFFFFFF.
+>>
+>> Below are messages captured after issuing 'echo 1 > /sys/bus/pci/rescan'. After that the CPU card rebooted by itself.
+>>
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:01:00.1: Max Payload Size set to 256 (was 128, max 1024)
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:01:00.2: Max Payload Size set to 256 (was 128, max 1024)
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:01:00.3: Max Payload Size set to 256 (was 128, max 1024)
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:01:00.4: Max Payload Size set to 256 (was 128, max 1024)
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:01:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:02:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:02:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:02:08.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:02:09.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pci 0000:02:0a.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:03:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:00.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:01.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:03.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:08.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:09.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:0a.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:0b.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:10.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:11.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: pcieport 0000:04:12.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+>> Dec  3 15:25:59 bd-cpu18 kernel: BUG: unable to handle kernel NULL pointer dereference at           (null)
+>> Dec  3 15:25:59 bd-cpu18 kernel: IP: [<ffffffffc0b182f7>] aer_inj_read_config+0x87/0x160 [aer_inject]
+>> Dec  3 15:25:59 bd-cpu18 kernel: PGD 80000001767c4067 PUD 431939067 PMD 0
+>> Dec  3 15:25:59 bd-cpu18 kernel: Oops: 0000 [#1] SMP
+>> Dec  3 15:25:59 bd-cpu18 kernel: Modules linked in: aer_inject sis8300drv(OE) xt_CHECKSUM iptable_mangle ipt_MASQUERADE nf_nat_masquerade_ipv4 iptable_nat nf_nat_ipv4 nf_nat nf_conntrack_ipv4 nf_defrag_ipv4 xt_conntrack nf_conntrack ipt_REJECT nf_reject_ipv4 devlink tun bridge stp llc ebtable_filter ebtables ip6table_filter ip6_tables iptable_filter sunrpc dm_mirror dm_region_hash dm_log dm_mod iTCO_wdt iTCO_vendor_support mei_wdt intel_wmi_thunderbolt intel_pmc_core snd_hda_codec_hdmi intel_powerclamp coretemp intel_rapl kvm_intel snd_hda_intel snd_hda_codec kvm snd_hda_core irqbypass crc32_pclmul snd_hwdep ghash_clmulni_intel snd_seq snd_seq_device aesni_intel lrw gf128mul snd_pcm glue_helper ablk_helper cryptd pcspkr snd_timer snd i2c_i801 soundcore sg i2c_designware_platform i2c_designware_core mei_me mei ie31200_edac
+>> Dec  3 15:25:59 bd-cpu18 kernel: wmi pinctrl_sunrisepoint pinctrl_intel tpm_crb acpi_pad ip_tables xfs libcrc32c sd_mod crc_t10dif crct10dif_generic i915 iosf_mbi drm_kms_helper ahci syscopyarea sysfillrect sysimgblt fb_sys_fops crct10dif_pclmul igb libahci crct10dif_common crc32c_intel drm libata serio_raw ptp pps_core dca i2c_algo_bit drm_panel_orientation_quirks mrf(OE) parport uio i2c_hid video [last unloaded: sis8300drv]
+>> Dec  3 15:25:59 bd-cpu18 kernel: CPU: 4 PID: 8150 Comm: bash Kdump: loaded Tainted: G           OE  ------------   3.10.0-1160.6.1.el7.x86_64.debug #1
+>> Dec  3 15:25:59 bd-cpu18 kernel: Hardware name: AMI AM G6x/msd/AM G6x/msd, BIOS 4.08.01 02/19/2019
+>> Dec  3 15:25:59 bd-cpu18 kernel: task: ffff9b22b5f88000 ti: ffff9b22b5bc4000 task.ti: ffff9b22b5bc4000
+>> Dec  3 15:25:59 bd-cpu18 kernel: RIP: 0010:[<ffffffffc0b182f7>]  [<ffffffffc0b182f7>] aer_inj_read_config+0x87/0x160 [aer_inject]
+>> Dec  3 15:25:59 bd-cpu18 kernel: RSP: 0018:ffff9b22b5bc7a30  EFLAGS: 00010046
+>> Dec  3 15:25:59 bd-cpu18 kernel: RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000004
+>> Dec  3 15:25:59 bd-cpu18 kernel: RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9b25718ab000
+>> Dec  3 15:25:59 bd-cpu18 kernel: RBP: ffff9b22b5bc7a68 R08: ffff9b22b5bc7a84 R09: ffffffffc0b1a0b0
+>> Dec  3 15:25:59 bd-cpu18 kernel: R10: 0000000000000001 R11: 69c1fefdd26da26d R12: 0000000000000000
+>> Dec  3 15:25:59 bd-cpu18 kernel: R13: ffffffffc0b1a050 R14: ffff9b22b5bc7a84 R15: ffff9b25718ab000
+>> Dec  3 15:25:59 bd-cpu18 kernel: FS:  00007f3d00e8b740(0000) GS:ffff9b259ce00000(0000) knlGS:0000000000000000
+>> Dec  3 15:25:59 bd-cpu18 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> Dec  3 15:25:59 bd-cpu18 kernel: CR2: 0000000000000000 CR3: 0000000175796000 CR4: 00000000003607e0
+>> Dec  3 15:25:59 bd-cpu18 kernel: DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> Dec  3 15:25:59 bd-cpu18 kernel: DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> Dec  3 15:25:59 bd-cpu18 kernel: Call Trace:
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c61a9c>] pci_bus_read_config_dword+0x8c/0xb0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c63a68>] pci_bus_read_dev_vendor_id+0x28/0xe0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c65e04>] pci_scan_single_device+0x74/0xf0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c65eba>] pci_scan_slot+0x3a/0x140
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c6711d>] pci_scan_child_bus_extend+0x4d/0x2f0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c62bcb>] ? pci_bus_write_config_dword+0x6b/0x80
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c66f4b>] pci_scan_bridge_extend+0x47b/0x5e0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c65e04>] ? pci_scan_single_device+0x74/0xf0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c67286>] pci_scan_child_bus_extend+0x1b6/0x2f0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c66f4b>] pci_scan_bridge_extend+0x47b/0x5e0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c67286>] pci_scan_child_bus_extend+0x1b6/0x2f0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c673d0>] pci_scan_child_bus+0x10/0x20
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c66f01>] pci_scan_bridge_extend+0x431/0x5e0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c65e04>] ? pci_scan_single_device+0x74/0xf0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c671e7>] pci_scan_child_bus_extend+0x117/0x2f0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c674b6>] pci_rescan_bus+0x16/0x40
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2c70d78>] bus_rescan_store+0x78/0xa0
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2d56909>] bus_attr_store+0x29/0x30
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2b5272a>] sysfs_kf_write+0x4a/0x60
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2b51ff6>] kernfs_fop_write+0x106/0x190
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2aaf3fc>] vfs_write+0xdc/0x240
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2ad5984>] ? fget_light+0x3c4/0x550
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa2ab029a>] SyS_write+0x8a/0x100
+>> Dec  3 15:25:59 bd-cpu18 kernel: [<ffffffffa3098b12>] system_call_fastpath+0x25/0x2a
+>> Dec  3 15:25:59 bd-cpu18 kernel: Code: 81 f9 b0 a0 b1 c0 74 5c 4d 3b 79 10 75 ee 49 8b 41 18 4d 8b af b8 00 00 00 89 de 49 89 87 b8 00 00 00 4d 89 f0 44 89 e2 4c 89 ff <48> 8b 00 e8 41 f3 10 e2 48 8b 75 d0 89 c3 4d 89 af b8 00 00 00
 > 
-> That's fine if Cadence has a need for it, but for TI platforms use the
-> TI compatible string. ECOs on version X IP without changing X is not
-> uncommon.
+> I believe this is a known issue with aer_inject when you re-enumerate
+> devices below a bridge with injected errors. I reported it here:
+> 
+>    https://lore.kernel.org/linux-pci/20180918235848.26694-3-keith.busch@intel.com/
+> 
+> Essentially, the re-enumerated devices inherit the injected bus_ops, but
+> aer_inject doesn't know about those devices.
+> 
+> The solution I proposed, however, had some CPU architectural and kernel
+> config limitations that made it less appealing.
+> 
 
-Okay. I re-worked the patch to be applicable only to TI's J721E SoC
-http://lore.kernel.org/r/20201215070009.27937-1-kishon@ti.com
+I see that the changes that were introduced seem to touch the exact 
+point of failure as I'm seeing.
 
-Thank You,
-Kishon
+I've stopped using the 3.10 kernel since, and went for 5.9.12 for my 
+work. More recently I've been also looking at using the Bjorn's git 
+tree, pci/err branch.
+
+Will report if I still see the breakage in these recent kernels.
+
+Thanks!
+//hinko
+
