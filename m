@@ -2,165 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 877CC2DC4F4
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 18:03:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DB632DC5E1
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 19:06:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgLPRCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Dec 2020 12:02:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgLPRCp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Dec 2020 12:02:45 -0500
-X-Gm-Message-State: AOAM533OsBuIwTVqNzlRfibVm9AM5mXA1Jrppwlm6E1QzO+eBrr/DI4J
-        msXruEgaccDdvN19H/j+Gx/1O4evZBLJAFQPVA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608138125;
-        bh=VBS+XyYIAtbNDwU+cmCPanVpoUqZR1mv6ycLNrXxZBY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QFJfJLApbDhJSrONIxuRt4PjNmiDL6K0c+kndXsVsgyCzI5J4+8XWUEoexyeq/n4k
-         UfTp1eVqGT8jp4IuHBj4TteTEwva6qE6FnWaf+60DfU7DLGCZrKr4cxiDd465pWIVB
-         5P/3zBIeprmQ2lj1Zk6nWA3tITRH6cmSeTBQSBwHAeDJUxF/ZQRygfFSVuoQUEVUSz
-         OX5Kis9T8tDsa/Fy3zQ3Au7g52labeOhatCI8pi3uN1w7Fuv5JoQxUoCHh6kAraVyT
-         RLJ9eXlEWKDH8Q9xi9mXA02uUVReDurP0R0hcJkRE7C1qF9m+Gkq/czpUhQsiJ/gZL
-         cGcM+bwv5BMiw==
-X-Google-Smtp-Source: ABdhPJwfBr+Ojyy/rdG7+RXLa3aiN3AHwkzpE4F8CAmQgz+1+Lg0018Kseqh6Fj0+lO1mgh7hvjY43lOg4SpyyYyakI=
-X-Received: by 2002:a17:907:2111:: with SMTP id qn17mr30621135ejb.525.1608138123502;
- Wed, 16 Dec 2020 09:02:03 -0800 (PST)
+        id S1729150AbgLPSFg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Dec 2020 13:05:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgLPSFg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Dec 2020 13:05:36 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2529C061794;
+        Wed, 16 Dec 2020 10:04:55 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id 6so19418820ejz.5;
+        Wed, 16 Dec 2020 10:04:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H84hohhtAqK/9czLCk7eWnRTskJbqxdwaPZ3PkL4jCc=;
+        b=EwQv360yLtMHKK1QY4Up+rntBZWNZmlyW6dYplZoiTyrUTgILcz0/2tdfBqBcQ3p8M
+         ed0FtyqM3K3K+jkuRcwZUF3/FDG4Umw5ExRKxu1pz55/2cBsIL+M2fLsUbm1Bk/JsOCa
+         YRcWOo4adeKTHBRN1zYfgAkE/O+Op9nfb4vCdJt1K2LKr+Qiqa5bUMRjoo4RrSsb/1Tj
+         /NwIHtooTuL730Cw4SsSFRHabAXQ7KSXcjqzxwVJURZSNWD/JQLhM9wDL0C61H8cEOCj
+         pe//NfV4TmnsSi9Bxk3uQStIRTsWh++Fs2MEP7f+uvUSEgI7rw2ColA7n5GPYgwspb1J
+         qDZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H84hohhtAqK/9czLCk7eWnRTskJbqxdwaPZ3PkL4jCc=;
+        b=rxtkL2X9hqCWBVEYh0N/AHe+jdfHiFsU8eFvWIMEeglWcA1oknvbBs8HgQk7OJ31tA
+         dBCtz6wvBNrd9AKro7K8EbnpPd1H32QK07UQ5HYByIn1CfFSMIiIKB4ADn9uvnlIm9cI
+         mUOax1QFZw4uEmZltC6/V82iDMapfjKZ4/ixUO3Y01PfPgxH1zECCTLKeKdSQzIVRLoW
+         bXZil3BQuciXy34npsgrmYE4G6gHjC6rMK13hNc4SLEPoRx8cHltWX2WD6WuhmcsqKIm
+         CBrLGkpIsofGP5dtHU6SVksQEOLex65XEubiQ8McWlQuwc+4RMo/seqpuatKG1AhIUCz
+         rnKA==
+X-Gm-Message-State: AOAM530Gm3zWBkxEnc4LLefjhLgRBDlBD8jubAgBVqb3GuBRtGQZe5ZW
+        GE5kp+j7MV2dCkFnBv9zzCYikd9L8dQ=
+X-Google-Smtp-Source: ABdhPJyiniqvnHK7bwY8xMQAcyz/XAR0iE8CvGunP7iNFrEqnZszK4awLq3nX1L8pcCzOCTDDhXg0g==
+X-Received: by 2002:a17:906:3883:: with SMTP id q3mr31638700ejd.160.1608141894561;
+        Wed, 16 Dec 2020 10:04:54 -0800 (PST)
+Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
+        by smtp.gmail.com with ESMTPSA id l1sm1919066eje.12.2020.12.16.10.04.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Dec 2020 10:04:53 -0800 (PST)
+Subject: Re: [PATCH] PCI: rcar: Always allocate MSI addresses in 32bit space
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+References: <20201016120431.7062-1-marek.vasut@gmail.com>
+ <20201210181133.GA3766@e121166-lin.cambridge.arm.com>
+ <83135f6f-8a98-4537-0df5-91a06af07955@gmail.com>
+ <20201214160829.GA3623@e121166-lin.cambridge.arm.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <d7279eff-2129-f58c-baed-aa805f26429d@gmail.com>
+Date:   Wed, 16 Dec 2020 18:49:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-References: <20201215070009.27937-1-kishon@ti.com> <CAL_JsqJzi7JkMcd4NZewA=w8q6BsCkrhW3JcED63R=EyE3v29Q@mail.gmail.com>
- <1ec78477-dadc-cbef-406f-568f44b6c62d@ti.com>
-In-Reply-To: <1ec78477-dadc-cbef-406f-568f44b6c62d@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 16 Dec 2020 11:01:51 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLepmopGObX_r+7gtR+keaNtEAA3WA1j697T4jAWP8DHA@mail.gmail.com>
-Message-ID: <CAL_JsqLepmopGObX_r+7gtR+keaNtEAA3WA1j697T4jAWP8DHA@mail.gmail.com>
-Subject: Re: [PATCH v5] PCI: cadence: Retrain Link to work around Gen2
- training defect.
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nadeem Athani <nadeem@cadence.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        Parshuram Raju Thombare <pthombar@cadence.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201214160829.GA3623@e121166-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 16, 2020 at 9:01 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Rob,
->
-> On 15/12/20 9:23 pm, Rob Herring wrote:
-> > On Tue, Dec 15, 2020 at 1:00 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >>
-> >> From: Nadeem Athani <nadeem@cadence.com>
-> >>
-> >> Cadence controller will not initiate autonomous speed change if strapped as
-> >> Gen2. The Retrain Link bit is set as quirk to enable this speed change.
-> >>
-> >> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
-> >> [kishon@ti.com: Enable the workaround for TI's J721E SoC]
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >> ---
-> >> Hi Lorenzo,
-> >> The previous version of the patch can be found at [1].
-> >> I slightly re-worked the patch from Nadeem
-> >> *) Removed additional Link Up Check
-> >> *) Removed quirk from pcie-cadence-plat.c
-> >> *) Also removed additional compatible
-> >>    "cdns,cdns-pcie-host-quirk-retrain" added in that series
-> >> *) Enabled the quirk for J721E
-> >> [1] -> http://lore.kernel.org/r/20201211144236.3825-1-nadeem@cadence.com
-> >>
-> >>  drivers/pci/controller/cadence/pci-j721e.c    |  3 +
-> >>  .../controller/cadence/pcie-cadence-host.c    | 67 ++++++++++++++-----
-> >>  drivers/pci/controller/cadence/pcie-cadence.h | 11 ++-
-> >>  3 files changed, 62 insertions(+), 19 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> >> index dac1ac8a7615..baf729850cb1 100644
-> >> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> >> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> >> @@ -64,6 +64,7 @@ enum j721e_pcie_mode {
-> >>
-> >>  struct j721e_pcie_data {
-> >>         enum j721e_pcie_mode    mode;
-> >> +       bool                    quirk_retrain_flag;
-> >>  };
-> >>
-> >>  static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
-> >> @@ -280,6 +281,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
-> >>
-> >>  static const struct j721e_pcie_data j721e_pcie_rc_data = {
-> >>         .mode = PCI_MODE_RC,
-> >> +       .quirk_retrain_flag = true,
-> >>  };
-> >>
-> >>  static const struct j721e_pcie_data j721e_pcie_ep_data = {
-> >> @@ -388,6 +390,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
-> >>
-> >>                 bridge->ops = &cdns_ti_pcie_host_ops;
-> >>                 rc = pci_host_bridge_priv(bridge);
-> >> +               rc->quirk_retrain_flag = data->quirk_retrain_flag;
-> >>
-> >>                 cdns_pcie = &rc->pcie;
-> >>                 cdns_pcie->dev = dev;
-> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> index 811c1cb2e8de..773c0d1137ed 100644
-> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> >> @@ -77,6 +77,50 @@ static struct pci_ops cdns_pcie_host_ops = {
-> >>         .write          = pci_generic_config_write,
-> >>  };
-> >>
-> >> +static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
-> >> +{
-> >> +       struct device *dev = pcie->dev;
-> >> +       int retries;
-> >> +
-> >> +       /* Check if the link is up or not */
-> >> +       for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-> >> +               if (cdns_pcie_link_up(pcie)) {
-> >> +                       dev_info(dev, "Link up\n");
-> >> +                       return 0;
-> >> +               }
-> >> +               usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-> >> +       }
-> >> +
-> >> +       return -ETIMEDOUT;
-> >> +}
-> >> +
-> >> +static void cdns_pcie_retrain(struct cdns_pcie *pcie)
-> >> +{
-> >> +       u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
-> >> +       u16 lnk_stat, lnk_ctl;
-> >> +
-> >> +       /*
-> >> +        * Set retrain bit if current speed is 2.5 GB/s,
-> >> +        * but the PCIe root port support is > 2.5 GB/s.
-> >
-> > If you don't have the retrain quirk, wouldn't this condition never
-> > happen and then the function is just a nop? So this could just be
-> > called unconditionally.
->
-> Yeah, but only for the quirk we have to retrain to go to GEN2 speed
-> mode. Else the HW will automatically retrain and go to GEN2.
+On 12/14/20 5:08 PM, Lorenzo Pieralisi wrote:
+> On Sat, Dec 12, 2020 at 08:13:54PM +0100, Marek Vasut wrote:
+>> On 12/10/20 7:11 PM, Lorenzo Pieralisi wrote:
+>>
+>> [...]
+>>
+>>>> diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+>>>> index 1194d5f3341b..ac5c7d7573a6 100644
+>>>> --- a/drivers/pci/controller/pcie-rcar-host.c
+>>>> +++ b/drivers/pci/controller/pcie-rcar-host.c
+>>>> @@ -753,7 +753,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie_host *host)
+>>>>    	}
+>>>>    	/* setup MSI data target */
+>>>> -	msi->pages = __get_free_pages(GFP_KERNEL, 0);
+>>>> +	msi->pages = __get_free_pages(GFP_KERNEL | GFP_DMA32, 0);
+>>>
+>>> This does not do what you want on !CONFIG_ZONE_DMA32 (ie arm LPAE).
+>>
+>> How come? I would expect GFP_DMA32 allocates a buffer below 4 GiB in any
+>> case.
+> 
+> For ARM LPAE allocation falls back to ZONE_NORMAL that happens to work
+> because if there is memory > 4GB it ends up in ZONE_HIGHMEM, so this
+> patch should still work on ARM LPAE too.
+> 
+> Regardless, thoughts above the alternative approach (that saves you
+> a page allocation) ?
 
-Again, so you don't need a flag for this. Comparing the speed is
-enough. IOW, all you need is:
+Since this is a bugfix, I would prefer it to be minimal.
 
-if (current speed < advertised speed)
-  do retrain
+Also, in case there was some yet undiscovered hardware bug which would 
+let the MSI write through, having unused memory as the MSI destination 
+address would only lead to write into that memory -- instead of a write 
+into some other address.
 
-The question is the condition ever true and you don't want to do a
-retrain? I could see higher speeds being unstable or something, but
-then 'advertised speed' would be lowered in that case (to prevent auto
-retraining, right?) and the condition would be false.
-
-Rob
+Changing this to some hard-coded address (any suggestions?) can be a 
+subsequent patch.
