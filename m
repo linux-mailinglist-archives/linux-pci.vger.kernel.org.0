@@ -2,102 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCDCF2DB8AB
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 02:57:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89AE12DBD5B
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 10:14:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725710AbgLPB5g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 15 Dec 2020 20:57:36 -0500
-Received: from mga04.intel.com ([192.55.52.120]:46638 "EHLO mga04.intel.com"
+        id S1726217AbgLPJNv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Dec 2020 04:13:51 -0500
+Received: from mga14.intel.com ([192.55.52.115]:8981 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgLPB5f (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 15 Dec 2020 20:57:35 -0500
-IronPort-SDR: tj621VfwVxWq66F8R1TQGLpLx0p7wX8Ucs3yf9zL+F+F9rRGAv8ihiSOvH2yzRClxi+icnkDRw
- 5aB50NXOa9fQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="172415834"
-X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
-   d="scan'208";a="172415834"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 17:55:45 -0800
-IronPort-SDR: Pg1VhJNtwxPPaY6JBu/qH0cJlUEndiFXtRPXSpkyQkH98HZkG9xQXfqVaR4ONNp2qL0sy0mhJx
- X6f+e4d/50wQ==
+        id S1726197AbgLPJNv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Dec 2020 04:13:51 -0500
+IronPort-SDR: nyrIliZNt2rkHcUhe/SvleSQczQKHkkSzqb8kJI5knyF0QVzJjxeM0EQG5IjVmgYS0WVVR+ZEB
+ KG05QO0XmTaQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="174260591"
+X-IronPort-AV: E=Sophos;i="5.78,424,1599548400"; 
+   d="scan'208";a="174260591"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 01:13:10 -0800
+IronPort-SDR: s1FHwZmo3cggBU0jKmSrnCCNtRWOqvJK80Vw2TXfyHB6OyflgA34ESK85By3JL+UqnOoZ0W64e
+ 7bFap+mqh1Vw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
-   d="scan'208";a="384064484"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.28]) ([10.239.159.28])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Dec 2020 17:55:39 -0800
-Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
-        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
-        alex.williamson@redhat.com, bhelgaas@google.com,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        eric.auger@redhat.com, jacob.jun.pan@intel.com, jgg@mellanox.com,
-        jing.lin@intel.com, kvm@vger.kernel.org, kwankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
-        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
-        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
-        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
-        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
-Subject: Re: [RFC PATCH 1/1] platform-msi: Add platform check for subdevice
- irq domain
+X-IronPort-AV: E=Sophos;i="5.78,424,1599548400"; 
+   d="scan'208";a="386122893"
+Received: from lkp-server02.sh.intel.com (HELO a947d92d0467) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Dec 2020 01:13:09 -0800
+Received: from kbuild by a947d92d0467 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kpSrs-0001EP-PV; Wed, 16 Dec 2020 09:13:08 +0000
+Date:   Wed, 16 Dec 2020 17:12:31 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20201210185738.GA49060@bjorn-Precision-5520>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f473fce5-2751-c103-4195-4d7858ac6b47@linux.intel.com>
-Date:   Wed, 16 Dec 2020 09:48:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS 255b2d524884e4ec60333131aa0ca0ef19826dc2
+Message-ID: <5fd9cf7f.4GLmk7WbPP39rZ6W%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20201210185738.GA49060@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
+branch HEAD: 255b2d524884e4ec60333131aa0ca0ef19826dc2  Merge branch 'remotes/lorenzo/pci/misc'
 
-On 12/11/20 2:57 AM, Bjorn Helgaas wrote:
-> On Thu, Dec 10, 2020 at 08:46:24AM +0800, Lu Baolu wrote:
->> The pci_subdevice_msi_create_irq_domain() should fail if the underlying
->> platform is not able to support IMS (Interrupt Message Storage). Otherwise,
->> the isolation of interrupt is not guaranteed.
->>
->> For x86, IMS is only supported on bare metal for now. We could enable it
->> in the virtualization environments in the future if interrupt HYPERCALL
->> domain is supported or the hardware has the capability of interrupt
->> isolation for subdevices.
-> 
->> + * We want to figure out which context we are running in. But the hardware
->> + * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
->> + * which can be manipulated by the VMM to let the OS figure out where it runs.
->> + * So we go with the below probably_on_bare_metal() function as a replacement
->> + * for definitely_on_bare_metal() to go forward only for the very simple reason
->> + * that this is the only option we have.
->> + */
->> +static const char * const possible_vmm_vendor_name[] = {
->> +	"QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
->> +	"innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
->> +	"Microsoft Corporation"
->> +};
->> +
->> +static bool probably_on_bare_metal(void)
-> 
-> What is the point of a function called probably_on_bare_metal()?
-> *Probably*?  The caller can't really do anything with the fact that
-> we're not 100% sure this gives the correct answer.  Just call it
-> "on_bare_metal()" or something and accept the fact that it might be
-> wrong sometimes.
+elapsed time: 720m
 
-Agreed. we can use on_bare_metal() and add comments and kernel messages
-to let users and developers know that we're not 100% sure. People should
-help to make it more accurate by reporting exceptions.
+configs tested: 117
+configs skipped: 2
 
-> 
-> This patch goes with IMS support, which somebody else is handling, so
-> I assume you don't need anything from the PCI side.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Yes. This is a followup of previous discussion.
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                           efm32_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc               mpc834x_itxgp_defconfig
+arc                           tb10x_defconfig
+powerpc                     ksi8560_defconfig
+arm                    vt8500_v6_v7_defconfig
+riscv                    nommu_k210_defconfig
+mips                            ar7_defconfig
+powerpc                       ppc64_defconfig
+arm                          ep93xx_defconfig
+powerpc                        warp_defconfig
+xtensa                    xip_kc705_defconfig
+sh                           se7724_defconfig
+arm                            lart_defconfig
+um                             i386_defconfig
+ia64                         bigsur_defconfig
+powerpc                 mpc85xx_cds_defconfig
+mips                     loongson1b_defconfig
+sh                          sdk7780_defconfig
+sh                           se7712_defconfig
+arm                             ezx_defconfig
+powerpc                mpc7448_hpc2_defconfig
+m68k                             allyesconfig
+sh                           se7722_defconfig
+mips                     loongson1c_defconfig
+m68k                             allmodconfig
+m68k                       bvme6000_defconfig
+arm                       versatile_defconfig
+arm                          pxa910_defconfig
+powerpc                       maple_defconfig
+mips                           ip27_defconfig
+arm64                            alldefconfig
+mips                        bcm47xx_defconfig
+arm                     davinci_all_defconfig
+x86_64                           allyesconfig
+powerpc                      ppc64e_defconfig
+arm                  colibri_pxa270_defconfig
+arm                            mps2_defconfig
+m68k                        m5407c3_defconfig
+sh                               j2_defconfig
+parisc                generic-32bit_defconfig
+mips                         tb0226_defconfig
+powerpc                 mpc832x_mds_defconfig
+arm                           u8500_defconfig
+powerpc                     tqm8560_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a003-20201215
+x86_64               randconfig-a006-20201215
+x86_64               randconfig-a002-20201215
+x86_64               randconfig-a005-20201215
+x86_64               randconfig-a004-20201215
+x86_64               randconfig-a001-20201215
+i386                 randconfig-a001-20201215
+i386                 randconfig-a004-20201215
+i386                 randconfig-a003-20201215
+i386                 randconfig-a002-20201215
+i386                 randconfig-a006-20201215
+i386                 randconfig-a005-20201215
+i386                 randconfig-a014-20201215
+i386                 randconfig-a013-20201215
+i386                 randconfig-a012-20201215
+i386                 randconfig-a011-20201215
+i386                 randconfig-a015-20201215
+i386                 randconfig-a016-20201215
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                      rhel-8.3-kbuiltin
 
-Best regards,
-baolu
+clang tested configs:
+x86_64               randconfig-a016-20201215
+x86_64               randconfig-a012-20201215
+x86_64               randconfig-a013-20201215
+x86_64               randconfig-a015-20201215
+x86_64               randconfig-a014-20201215
+x86_64               randconfig-a011-20201215
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
