@@ -2,100 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A73932DC5E6
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 19:06:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EA502DC6E9
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 20:14:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgLPSFk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Dec 2020 13:05:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgLPSFj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Dec 2020 13:05:39 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63604C0617A6;
-        Wed, 16 Dec 2020 10:04:59 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id lt17so34086065ejb.3;
-        Wed, 16 Dec 2020 10:04:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6ZwnD7k1OsmN49f8uT7+WS3cJY7luF5zURa/mKmUlFM=;
-        b=mJfh6n+mbPZA9ITn+ZC6r2n4Gq88H6BGaA2C8YSHGF9gZRUPi9f1hUMi8tlxomLtk1
-         jOFXPH5VTi6v/VeQcULMwzxllXzx3yAqgNCqokOO5f0koiYmPjH/zz7ejadg3nUVStIr
-         OlNFY4nH95LyDd9KOGSOvetiORfpADFPizDkAOdCZNixGhLBey9XQBwC+FRGyq89OKvT
-         ZihjslpkmWHuogJp/OGvbNxawhzaFgHCAbtUx1wlbNlXhfEQzabHZ3zkspLPwZRk+Lw0
-         KP5od4MmS1wV2JYSSEvRb5kZyNGxJTUJEjhRCpdLAYh57rUFjLttQ9sDYKjpvn/jquna
-         HxUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6ZwnD7k1OsmN49f8uT7+WS3cJY7luF5zURa/mKmUlFM=;
-        b=bGW9XLseVeZ4P3BufcF1VgWsnjlw/6K+OtmHUYgoEFleMihg3vzcN5MWq4EOCZH0V0
-         26zpX11dNZf9roMByoQWjk9L0DLVWr8tREHX/eDq9nlbAKdiPpCjGayww9VWnvWOLJ5O
-         NVFe69r3USStQXhm0ZfyGeaxieNhXcJnR1ocIvB783lAPwrgOLGT7+MCHy6aQh7KFz2j
-         soNQvCJkFvdaTtcuJYKBVTaCeL6z1sV2jbcx2AiBDpHoFAKvPrONsLKjhnYEVQicj9Sw
-         IkrKpj2ms89eVYky5KcGkQCulOI101FtDMZkPbIH3pEE8uPZbiZEDR+nhpuurAZ62c4K
-         EFaA==
-X-Gm-Message-State: AOAM532fIUNbY3S3WejA025iPKPu7bWyh46BymQf53B+/ZqdcjEsQah3
-        2Jx5qnYt8+tdo6w6czLQo3JPniSX5aI=
-X-Google-Smtp-Source: ABdhPJzxQzS8V1C+fiqMZifMmRP4RwqYhyxCAfmf1uWba3XA7yL9O+YUVLIqeIyywQAYGg0s3z15Sw==
-X-Received: by 2002:a17:906:c82c:: with SMTP id dd12mr32444243ejb.66.1608141898130;
-        Wed, 16 Dec 2020 10:04:58 -0800 (PST)
-Received: from [192.168.1.4] (ip-89-176-112-137.net.upcbroadband.cz. [89.176.112.137])
-        by smtp.gmail.com with ESMTPSA id oq7sm1924062ejb.63.2020.12.16.10.04.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Dec 2020 10:04:57 -0800 (PST)
-Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        id S2387606AbgLPTOG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Dec 2020 14:14:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726732AbgLPTOF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Dec 2020 14:14:05 -0500
+Date:   Wed, 16 Dec 2020 12:20:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608142823;
+        bh=G5QC+s8/mxid++XQG3CrjKnyrmLeds62x+7OAGC/H/g=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=dDTPlDNZqteJl/dqyYpOI4vcRI0MmAF8mBCVJSpBvjFuSrak1u6cJwSAK1jt0QnMw
+         NtB75OgBPP6qHN7LfrCzAaXXV4m3WufvdEqV1gP2Hj5tL5qjuq6oMxI3kvCRCOGTTA
+         nmoTgRCFQgrBMfES8LPXGRvtImXMZ5nUyZUzylb5VNPkuLPzxlPzpUn51HuQAXI9T0
+         1OK/5ve86Eo5C/lg9xxiVQ6id9hJS6Nh2nUofRPEeuEZncG/wP6fZ6MaBLMf3qFz2I
+         5ehUzMHbZ29aVGmM6MaiLwnxcIV3LgUWI1JxT7J4fGmhYSoquRiDFVIXt0VYhS1sDi
+         pJMjpe/oSR3yA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marek Vasut <marek.vasut@gmail.com>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Wolfram Sang <wsa@the-dreams.de>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         linux-renesas-soc@vger.kernel.org
-References: <20201214203805.GA250639@bjorn-Precision-5520>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <87361bf6-0fef-3641-1dcb-21c56a2cf0b0@gmail.com>
-Date:   Wed, 16 Dec 2020 18:56:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
+Message-ID: <20201216182022.GA356517@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20201214203805.GA250639@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87361bf6-0fef-3641-1dcb-21c56a2cf0b0@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/14/20 9:38 PM, Bjorn Helgaas wrote:
-> On Tue, Dec 08, 2020 at 07:05:09PM +0100, Marek Vasut wrote:
->> On 12/8/20 5:40 PM, Bjorn Helgaas wrote:
+On Wed, Dec 16, 2020 at 06:56:11PM +0100, Marek Vasut wrote:
+> On 12/14/20 9:38 PM, Bjorn Helgaas wrote:
+> > On Tue, Dec 08, 2020 at 07:05:09PM +0100, Marek Vasut wrote:
+> > > On 12/8/20 5:40 PM, Bjorn Helgaas wrote:
+> > 
+> > > > Does this problem occur in both these cases?
+> > > > 
+> > > >     1) When ASPM enters L1, and
+> > > > 
+> > > >     2) When software writes PCI_PM_CTRL to put the device in D3hot?
+> > > > 
+> > > > IIUC both cases require the link to go to L1.  I guess the same
+> > > > software workaround applies to both cases?
+> > > 
+> > > Yes
+> > 
+> > If ASPM puts the Link in L1 and the device needs to DMA, how does the
+> > Link get back to L0?
 > 
->>> Does this problem occur in both these cases?
->>>
->>>     1) When ASPM enters L1, and
->>>
->>>     2) When software writes PCI_PM_CTRL to put the device in D3hot?
->>>
->>> IIUC both cases require the link to go to L1.  I guess the same
->>> software workaround applies to both cases?
->>
->> Yes
+> It cannot, so I would expect the DMA access would fail.
+
+I think that means we cannot enable ASPM L1 at all on this device.  I
+don't think devices or drivers are prepared to deal with this sort of
+DMA failure.  At least, if there is a mechanism for dealing with it, I
+don't know what it is.
+
+Preventing use of ASPM L1 probably means some sort of quirk to
+override whatever the controller advertises in its Link Capabilities
+register.
+
+The software-controlled PCI-PM model (where software writes to the
+PCI_PM_CTRL register) is different, and it may still be possible to
+use L1 then.  If software puts the device in D1, D2, or D3hot, the
+device cannot initiate DMA.  If it needs to return to D0, it would
+have to use the PME mechanism, so there is an opportunity for the
+software workaround.
+
+> > Do we use the same data abort hook?  If getting
+> > back to L0 requires help from software, it seems like that would
+> > invalidate the L1 exit latency advertised by the devices.  Wouldn't
+> > that mean we couldn't safely enable L1 at all unless the endpoint
+> > could tolerate unlimited exit latency?
 > 
-> If ASPM puts the Link in L1 and the device needs to DMA, how does the
-> Link get back to L0?
+> Possibly, there could be limitations to the L1 support in some corner cases.
+> Does that mean the L1 support should be disabled completely ?
 
-It cannot, so I would expect the DMA access would fail.
+The L1 exit latency only applies to the ASPM case.  It sounds like we
+will have to disable L1 for ASPM.  But the exit latency doesn't apply
+to the PCI-PM model where software will explicitly return the device
+to D0, and the device should not initiate a transaction until it sees
+the link back in L0.
 
-> Do we use the same data abort hook?  If getting
-> back to L0 requires help from software, it seems like that would
-> invalidate the L1 exit latency advertised by the devices.  Wouldn't
-> that mean we couldn't safely enable L1 at all unless the endpoint
-> could tolerate unlimited exit latency?
-
-Possibly, there could be limitations to the L1 support in some corner 
-cases. Does that mean the L1 support should be disabled completely ?
+Bjorn
