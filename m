@@ -2,94 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EA502DC6E9
-	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 20:14:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB27D2DC7DC
+	for <lists+linux-pci@lfdr.de>; Wed, 16 Dec 2020 21:43:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387606AbgLPTOG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Dec 2020 14:14:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52852 "EHLO mail.kernel.org"
+        id S1727496AbgLPUmt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Dec 2020 15:42:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:26387 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726732AbgLPTOF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Dec 2020 14:14:05 -0500
-Date:   Wed, 16 Dec 2020 12:20:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608142823;
-        bh=G5QC+s8/mxid++XQG3CrjKnyrmLeds62x+7OAGC/H/g=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=dDTPlDNZqteJl/dqyYpOI4vcRI0MmAF8mBCVJSpBvjFuSrak1u6cJwSAK1jt0QnMw
-         NtB75OgBPP6qHN7LfrCzAaXXV4m3WufvdEqV1gP2Hj5tL5qjuq6oMxI3kvCRCOGTTA
-         nmoTgRCFQgrBMfES8LPXGRvtImXMZ5nUyZUzylb5VNPkuLPzxlPzpUn51HuQAXI9T0
-         1OK/5ve86Eo5C/lg9xxiVQ6id9hJS6Nh2nUofRPEeuEZncG/wP6fZ6MaBLMf3qFz2I
-         5ehUzMHbZ29aVGmM6MaiLwnxcIV3LgUWI1JxT7J4fGmhYSoquRiDFVIXt0VYhS1sDi
-         pJMjpe/oSR3yA==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH V4] PCI: rcar: Add L1 link state fix into data abort hook
-Message-ID: <20201216182022.GA356517@bjorn-Precision-5520>
+        id S1726979AbgLPUmt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Dec 2020 15:42:49 -0500
+IronPort-SDR: QPD30WIQKrfJgosEkOHLaew8PMjHkRNoZplib9QY9/+37fhU+cChhY+8YCfQETsAN3dgIwHgPN
+ PeF5ZlcnQbCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9837"; a="175237331"
+X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
+   d="scan'208";a="175237331"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 12:42:07 -0800
+IronPort-SDR: a1N5veaUEZSYSkyI6dbDQnr7U8r0v/vdWeIKvhMygGCuxuuB0VtYyvISwgHNU1GfpkxDG1wwGo
+ jLHB4ak/king==
+X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
+   d="scan'208";a="369339256"
+Received: from ticela-or-085.amr.corp.intel.com (HELO intel.com) ([10.252.135.213])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 12:42:06 -0800
+Date:   Wed, 16 Dec 2020 12:42:05 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-cxl@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [RFC PATCH 11/14] cxl/mem: Add a "RAW" send command
+Message-ID: <20201216204205.acum2sf652aspah3@intel.com>
+References: <20201209002418.1976362-1-ben.widawsky@intel.com>
+ <20201209002418.1976362-12-ben.widawsky@intel.com>
+ <CAPcyv4hRJRP+55QHxQYsAoE7V601+YMWgtEvzLimKRO8b4Jrjg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87361bf6-0fef-3641-1dcb-21c56a2cf0b0@gmail.com>
+In-Reply-To: <CAPcyv4hRJRP+55QHxQYsAoE7V601+YMWgtEvzLimKRO8b4Jrjg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 16, 2020 at 06:56:11PM +0100, Marek Vasut wrote:
-> On 12/14/20 9:38 PM, Bjorn Helgaas wrote:
-> > On Tue, Dec 08, 2020 at 07:05:09PM +0100, Marek Vasut wrote:
-> > > On 12/8/20 5:40 PM, Bjorn Helgaas wrote:
-> > 
-> > > > Does this problem occur in both these cases?
-> > > > 
-> > > >     1) When ASPM enters L1, and
-> > > > 
-> > > >     2) When software writes PCI_PM_CTRL to put the device in D3hot?
-> > > > 
-> > > > IIUC both cases require the link to go to L1.  I guess the same
-> > > > software workaround applies to both cases?
-> > > 
-> > > Yes
-> > 
-> > If ASPM puts the Link in L1 and the device needs to DMA, how does the
-> > Link get back to L0?
+On 20-12-09 14:38:49, Dan Williams wrote:
+> On Tue, Dec 8, 2020 at 4:24 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+> >
+> > The CXL memory device send interface will have a number of supported
+> > commands. The raw command is not such a command. Raw commands allow
+> > userspace to send a specified opcode to the underlying hardware and
+> > bypass all driver checks on the command. This is useful for a couple of
+> > usecases, mainly:
+> > 1. Undocumented vendor specific hardware commands
+> > 2. Prototyping new hardware commands not yet supported by the driver
+> >
+> > While this all sounds very powerful it comes with a couple of caveats:
+> > 1. Bug reports using raw commands will not get the same level of
+> >    attention as bug reports using supported commands (via taint).
+> > 2. Supported commands will be rejected by the RAW command.
+> >
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > ---
+> >  drivers/cxl/mem.c            | 32 ++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/cxl_mem.h | 14 ++++++++++++--
+> >  2 files changed, 44 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index 0bf03afc0c80..a2cea7ac7cc6 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -115,6 +115,7 @@ struct cxl_mem_command {
+> >
+> >  static struct cxl_mem_command mem_commands[] = {
+> >         CXL_CMD(INVALID, NONE, 0, 0, "Reserved", false, 0),
+> > +       CXL_CMD(RAW, TAINT, ~0, ~0, "Raw", true, 0),
 > 
-> It cannot, so I would expect the DMA access would fail.
-
-I think that means we cannot enable ASPM L1 at all on this device.  I
-don't think devices or drivers are prepared to deal with this sort of
-DMA failure.  At least, if there is a mechanism for dealing with it, I
-don't know what it is.
-
-Preventing use of ASPM L1 probably means some sort of quirk to
-override whatever the controller advertises in its Link Capabilities
-register.
-
-The software-controlled PCI-PM model (where software writes to the
-PCI_PM_CTRL register) is different, and it may still be possible to
-use L1 then.  If software puts the device in D1, D2, or D3hot, the
-device cannot initiate DMA.  If it needs to return to D0, it would
-have to use the PME mechanism, so there is an opportunity for the
-software workaround.
-
-> > Do we use the same data abort hook?  If getting
-> > back to L0 requires help from software, it seems like that would
-> > invalidate the L1 exit latency advertised by the devices.  Wouldn't
-> > that mean we couldn't safely enable L1 at all unless the endpoint
-> > could tolerate unlimited exit latency?
+> Why is the taint indication in the ABI? It seems like it only needs to
+> be documented.
 > 
-> Possibly, there could be limitations to the L1 support in some corner cases.
-> Does that mean the L1 support should be disabled completely ?
 
-The L1 exit latency only applies to the ASPM case.  It sounds like we
-will have to disable L1 for ASPM.  But the exit latency doesn't apply
-to the PCI-PM model where software will explicitly return the device
-to D0, and the device should not initiate a transaction until it sees
-the link back in L0.
+It's removed per the previous patch discussion.
 
-Bjorn
+> >  };
+> >
+> >  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+> > @@ -326,6 +327,20 @@ static int cxl_mem_count_commands(void)
+> >         return n;
+> >  };
+> >
+> > +static struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(mem_commands); i++) {
+> > +               struct cxl_mem_command *c = &mem_commands[i];
+> > +
+> > +               if (c->opcode == opcode)
+> > +                       return c;
+> > +       }
+> > +
+> > +       return NULL;
+> > +};
+> > +
+> >  /**
+> >   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
+> >   * @cxlmd: The CXL memory device to communicate with.
+> > @@ -421,6 +436,23 @@ static int cxl_validate_cmd_from_user(struct cxl_send_command __user *user_cmd,
+> >         c = &mem_commands[cmd.id];
+> >         info = &c->info;
+> >
+> > +       /* Checks are bypassed for raw commands but along comes the taint! */
+> > +       if (cmd.id == CXL_MEM_COMMAND_ID_RAW) {
+> > +               struct cxl_mem_command temp =
+> > +                       CXL_CMD(RAW, NONE, cmd.size_in, cmd.size_out, "Raw",
+> > +                               true, cmd.raw.opcode);
+> 
+> Oh, I thought CXL_CMD() was only used to populate the mem_commands
+> array. Feels out of place to use it here when all it is doing is
+> updating the size_{in,out} and opcode fields. Mainly I'm interested in
+> CXL_CMD() enforcing that the command-id is the mem_commands index.
+> 
+
+Agreed and removed.
+
+> > +
+> > +               if (cmd.raw.rsvd)
+> > +                       return -EINVAL;
+> > +
+> > +               if (cxl_mem_find_command(cmd.raw.opcode))
+> > +                       return -EPERM;
+> > +
+> > +               add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+> 
+> TAINT_WARN seems the wrong value, especially since no WARN has
+> occurred. I feel that this is more in the spirit of
+> TAINT_PROPRIETARY_MODULE, TAINT_OVERRIDDEN_ACPI_TABLE, and
+> TAINT_OOT_MODULE. How about a new TAINT_RAW_PASSTHROUGH? I could use
+> this for the acpi/nfit driver as well to disclaim responsibility for
+> system errors that can result from not using the nominal
+> kernel-provided commands.
+
+I like it.
