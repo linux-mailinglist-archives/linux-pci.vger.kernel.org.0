@@ -2,224 +2,217 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FCF2DCA3F
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 02:02:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BB652DD374
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 15:59:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgLQA6e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Dec 2020 19:58:34 -0500
-Received: from mga12.intel.com ([192.55.52.136]:12153 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgLQA6e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Dec 2020 19:58:34 -0500
-IronPort-SDR: /OzDceenrnNtOiICfHSdMKrzmsnQBRUxwG7ITYY7qsb+vFCuBnRPj015EDWx9535QfACFA5Z38
- +jdrwSLVHhEw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9837"; a="154393534"
-X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
-   d="scan'208";a="154393534"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 16:57:40 -0800
-IronPort-SDR: AhDE9XYQhnnC3NL1/cGNoRc5wSVVP9weN0rLDr0EItCO19jjp451Si8bcR5nwBYacOOPEaYm2B
- 2gpTHFxcZEZA==
-X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
-   d="scan'208";a="385113859"
-Received: from jekeller-desk.amr.corp.intel.com ([10.166.241.4])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 16:57:40 -0800
-From:   Jacob Keller <jacob.e.keller@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH] msi: use for_each_msi_entry_safe iterator macro
-Date:   Wed, 16 Dec 2020 16:55:57 -0800
-Message-Id: <20201217005557.45031-1-jacob.e.keller@intel.com>
-X-Mailer: git-send-email 2.29.0
+        id S1728534AbgLQO7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Dec 2020 09:59:41 -0500
+Received: from mail-oo1-f53.google.com ([209.85.161.53]:43720 "EHLO
+        mail-oo1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728531AbgLQO7k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Dec 2020 09:59:40 -0500
+Received: by mail-oo1-f53.google.com with SMTP id y14so3561873oom.10;
+        Thu, 17 Dec 2020 06:59:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5VjKnDqQoi4q0yPvGH6QyQ5V2T/NqP9kdac1+AUhHgA=;
+        b=DaddrN3FV4i2u/J6rbxP08/NigG4ojsM9wSiDprGjVfaPA2S5Rv5IGjHUPYf3zjCNS
+         1tGguPu6u1B6RmEtsyNRB2pFc+TUiJ6F68dXATIEOmrwMWCcQOC/bRbyhrXGGXrMJqkf
+         MN9oHyVQ6p0b4aMo2QFGiyYA1Srl0gkQXN5TQLnuKIlRTfH5+BqFPe8S3icAkWGtzKCt
+         dykxY77O/rWyDI06Kg96lRebkH1cfIFlntmgPl/YqbPCeog1ICvDv2d8LEHwR+JexK9h
+         s5Ps36zP3ZmsCSkfncwltnQXBNRDtBh9mALg7ntO9xEWxImIyM6/WQjBanxzZsgnvBNu
+         O2rw==
+X-Gm-Message-State: AOAM531RcTPzT4m5EBIHpYEvJS2mA9w6dqcPqqFR1Lc3XnrjhjNyxsFC
+        WW+KjS14yJyatMLYA5iGQQ==
+X-Google-Smtp-Source: ABdhPJyJnrB34C0qZ7LoDwE1P5GLi9fASSOpxm3PgAm6Kqnhbc7Yqv3DkfJjQ88pgai4kxPkB1yH/Q==
+X-Received: by 2002:a4a:ded4:: with SMTP id w20mr28734536oou.49.1608217139053;
+        Thu, 17 Dec 2020 06:58:59 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s9sm1124774oie.53.2020.12.17.06.58.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Dec 2020 06:58:58 -0800 (PST)
+Received: (nullmailer pid 3949962 invoked by uid 1000);
+        Thu, 17 Dec 2020 14:58:57 -0000
+Date:   Thu, 17 Dec 2020 08:58:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mian Yousaf Kaukab <ykaukab@suse.de>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: dwc: tegra194: issue with card containing a bridge
+Message-ID: <20201217145857.GA3941403@robh.at.kernel.org>
+References: <20201215102442.GA20517@suse.de>
+ <9a8abc90-cf18-b0c8-3bcb-efbe03f0ca4c@nvidia.com>
+ <20201215132504.GA20914@suse.de>
+ <20201215154147.GA3885265@robh.at.kernel.org>
+ <20201215205235.GC20914@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201215205235.GC20914@suse.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit 81b1e6e6a859 ("platform-msi: Free descriptors in
-platform_msi_domain_free()") introduced for_each_msi_entry_safe as an
-iterator operating on the msi_list using the safe semantics with
-a temporary variable.
+On Tue, Dec 15, 2020 at 09:52:35PM +0100, Mian Yousaf Kaukab wrote:
+> On Tue, Dec 15, 2020 at 09:41:47AM -0600, Rob Herring wrote:
+> > On Tue, Dec 15, 2020 at 02:25:04PM +0100, Mian Yousaf Kaukab wrote:
+> > > On Tue, Dec 15, 2020 at 05:45:59PM +0530, Vidya Sagar wrote:
+> > > > Thanks Mian for bringing it to our notice.
+> > > > Have you tried removing the dw_pcie_setup_rc(pp); call from pcie-tegra194.c
+> > > > file on top of linux-next? and does that solve the issue?
+> > > > 
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > index 5597b2a49598..1c9e9c054592 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > > @@ -907,7 +907,7 @@ static void tegra_pcie_prepare_host(struct pcie_port
+> > > > *pp)
+> > > >                 dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
+> > > > val);
+> > > >         }
+> > > > 
+> > > > -       dw_pcie_setup_rc(pp);
+> > > > +       //dw_pcie_setup_rc(pp);
+> > > I still see the same issue with this change.
+> > > Reverting b9ac0f9dc8ea works though.
+> > > > 
+> > > >         clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
+> > > > 
+> > > > I took a quick look at the dw_pcie_setup_rc() implementation and I'm not
+> > > > sure why calling it second time should create any issue for the enumeration
+> > > > of devices behind a switch. Perhaps I need to spend more time to debug that
+> > > > part.
+> > > > In any case, since dw_pcie_setup_rc() is already part of
+> > > > dw_pcie_host_init(), I think it can be removed from
+> > > > tegra_pcie_prepare_host() implemention.
+> > 
+> > I think the 2nd time is making the link go down is my guess. Tegra was 
+> > odd in that its start/stop link functions don't do link handling, so I 
+> > didn't implement those functions and left the link handling in the Tegra 
+> > driver.
+> > 
+> > Can you try the below patch. It needs some more work as it breaks 
+> > endpoint mode.
 
-A handful of locations still used the generic iterator instead of the
-specific macro. Fix the 3 remaining cases. Add a cocci script which can
-detect and report any misuse that is introduced in future changes.
+[...]
 
-Cc: Rafael J. Wysocki <rafael@kernel.org>
-Cc: Stuart Yoder <stuyoder@gmail.com>
-Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
----
-I noticed that a couple places used the generic _safe iterator. They appear
-to be code which was written before the commit that introduced the new
-MSI-specific iterator.
+> Boot is ok with this patch. Some improvement in lspci as well:
 
- drivers/base/platform-msi.c                   |   2 +-
- drivers/bus/fsl-mc/fsl-mc-msi.c               |   2 +-
- drivers/soc/ti/ti_sci_inta_msi.c              |   2 +-
- .../iterators/for_each_msi_entry.cocci        | 101 ++++++++++++++++++
- 4 files changed, 104 insertions(+), 3 deletions(-)
- create mode 100644 scripts/coccinelle/iterators/for_each_msi_entry.cocci
+Some improvement? Meaning not completely working still?
 
-diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-index c4a17e5edf8b..1fd8ac26c245 100644
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -110,7 +110,7 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec)
- {
- 	struct msi_desc *desc, *tmp;
+> # lspci
+> 0001:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad2 (rev a1)
+> 0001:01:00.0 SATA controller: Marvell Technology Group Ltd. Device 9171 (rev 13)
+> 0005:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1)
+> 0005:01:00.0 PCI bridge: PLX Technology, Inc. Device 3380 (rev ab)
+
+This patch was closer to the original flow, but would not have worked if 
+DLFE disabled mode was needed.
+
+Please give this patch a try:
+
+8<--------------------------------------------------------
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 5597b2a49598..0515897b2f3a 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -853,12 +853,14 @@ static void config_gen3_gen4_eq_presets(struct tegra_pcie_dw *pcie)
+ 	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
+ }
  
--	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
-+	for_each_msi_entry_safe(desc, tmp, dev) {
- 		if (desc->platform.msi_index >= base &&
- 		    desc->platform.msi_index < (base + nvec)) {
- 			list_del(&desc->list);
-diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-msi.c
-index 8edadf05cbb7..d0a52ccfa738 100644
---- a/drivers/bus/fsl-mc/fsl-mc-msi.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
-@@ -214,7 +214,7 @@ static void fsl_mc_msi_free_descs(struct device *dev)
+-static void tegra_pcie_prepare_host(struct pcie_port *pp)
++static int tegra_pcie_dw_host_init(struct pcie_port *pp)
  {
- 	struct msi_desc *desc, *tmp;
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
+ 	u32 val;
  
--	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
-+	for_each_msi_entry_safe(desc, tmp, dev) {
- 		list_del(&desc->list);
- 		free_msi_entry(desc);
++	pp->bridge->ops = &tegra_pci_ops;
++
+ 	if (!pcie->pcie_cap_base)
+ 		pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
+ 							      PCI_CAP_ID_EXP);
+@@ -907,10 +909,24 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
+ 		dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
  	}
-diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_msi.c
-index 0eb9462f609e..66f9772dcdfa 100644
---- a/drivers/soc/ti/ti_sci_inta_msi.c
-+++ b/drivers/soc/ti/ti_sci_inta_msi.c
-@@ -64,7 +64,7 @@ static void ti_sci_inta_msi_free_descs(struct device *dev)
- {
- 	struct msi_desc *desc, *tmp;
  
--	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
-+	for_each_msi_entry_safe(desc, tmp, dev) {
- 		list_del(&desc->list);
- 		free_msi_entry(desc);
+-	dw_pcie_setup_rc(pp);
+-
+ 	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
+ 
++	return 0;
++}
++
++static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
++{
++	u32 val, offset, speed, tmp;
++	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
++	struct pcie_port *pp = &pci->pp;
++	bool retry = true;
++
++	if (pcie->mode == DW_PCIE_EP_TYPE) {
++		enable_irq(pcie->pex_rst_irq);
++		return 0;
++	}
++
++retry_link:
+ 	/* Assert RST */
+ 	val = appl_readl(pcie, APPL_PINMUX);
+ 	val &= ~APPL_PINMUX_PEX_RST;
+@@ -929,19 +945,10 @@ static void tegra_pcie_prepare_host(struct pcie_port *pp)
+ 	appl_writel(pcie, val, APPL_PINMUX);
+ 
+ 	msleep(100);
+-}
+-
+-static int tegra_pcie_dw_host_init(struct pcie_port *pp)
+-{
+-	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+-	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
+-	u32 val, tmp, offset, speed;
+-
+-	pp->bridge->ops = &tegra_pci_ops;
+-
+-	tegra_pcie_prepare_host(pp);
+ 
+ 	if (dw_pcie_wait_for_link(pci)) {
++		if (!retry)
++			return 0;
+ 		/*
+ 		 * There are some endpoints which can't get the link up if
+ 		 * root port has Data Link Feature (DLF) enabled.
+@@ -975,10 +982,11 @@ static int tegra_pcie_dw_host_init(struct pcie_port *pp)
+ 		val &= ~PCI_DLF_EXCHANGE_ENABLE;
+ 		dw_pcie_writel_dbi(pci, offset, val);
+ 
+-		tegra_pcie_prepare_host(pp);
++		tegra_pcie_dw_host_init(pp);
++		dw_pcie_setup_rc(pp);
+ 
+-		if (dw_pcie_wait_for_link(pci))
+-			return 0;
++		retry = false;
++		goto retry_link;
  	}
-diff --git a/scripts/coccinelle/iterators/for_each_msi_entry.cocci b/scripts/coccinelle/iterators/for_each_msi_entry.cocci
-new file mode 100644
-index 000000000000..45282f93ab6f
---- /dev/null
-+++ b/scripts/coccinelle/iterators/for_each_msi_entry.cocci
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/// Use for_each_msi_entry(_safe) instead of generic iterator
-+///
-+// Confidence: High
-+// Copyright: (C) 2020 Jacob Keller, Intel Corporation.
-+// URL: http://coccinelle.lip6.fr/
-+// Comments:
-+// Options: --no-includes --include-headers
-+
-+virtual patch
-+virtual context
-+virtual org
-+virtual report
-+
-+//----------------------------------------------------------
-+//  For context mode
-+//----------------------------------------------------------
-+@depends on context@
-+identifier member =~ "list";
-+struct msi_desc *desc;
-+struct msi_desc *tmp;
-+struct device *dev;
-+iterator name list_for_each_entry_safe;
-+iterator name list_for_each_entry;
-+statement S;
-+@@
-+(
-+* list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), member)
-+S
-+|
-+* list_for_each_entry(desc, dev_to_msi_list(dev), member)
-+S
-+)
-+
-+//----------------------------------------------------------
-+//  For patch mode
-+//----------------------------------------------------------
-+@depends on patch@
-+identifier member =~ "list";
-+struct msi_desc *desc;
-+struct msi_desc *tmp;
-+struct device *dev;
-+iterator name list_for_each_entry_safe;
-+iterator name for_each_msi_entry_safe;
-+iterator name list_for_each_entry;
-+iterator name for_each_msi_entry;
-+statement S;
-+@@
-+(
-+- list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), member)
-++ for_each_msi_entry_safe(desc, tmp, dev)
-+S
-+|
-+- list_for_each_entry(desc, dev_to_msi_list(dev), member)
-++ for_each_msi_entry(desc, dev)
-+S
-+)
-+
-+//----------------------------------------------------------
-+//  For org and report mode
-+//----------------------------------------------------------
-+
-+@r depends on (org || report )@
-+identifier member =~ "list";
-+struct msi_desc *desc;
-+struct msi_desc *tmp;
-+struct device *dev;
-+iterator name list_for_each_entry_safe;
-+iterator name list_for_each_entry;
-+statement S;
-+position p1, p2;
-+@@
-+(
-+ list_for_each_entry_safe@p1(desc, tmp, dev_to_msi_list(dev), member) S
-+|
-+ list_for_each_entry@p2(desc, dev_to_msi_list(dev), member) S
-+)
-+
-+@script:python depends on report@
-+p << r.p1;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING: Use for_each_msi_entry_safe")
-+
-+@script:python depends on org@
-+p << r.p1;
-+@@
-+
-+coccilib.org.print_todo(p[0], "WARNING: Use for_each_msi_entry_safe")
-+
-+@script:python depends on report@
-+p << r.p2;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING: Use for_each_msi_entry")
-+
-+@script:python depends on org@
-+p << r.p2;
-+@@
-+
-+coccilib.org.print_todo(p[0], "WARNING: Use for_each_msi_entry")
-
-base-commit: 255b2d524884e4ec60333131aa0ca0ef19826dc2
--- 
-2.29.0
-
+ 
+ 	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+@@ -998,15 +1006,6 @@ static int tegra_pcie_dw_link_up(struct dw_pcie *pci)
+ 	return !!(val & PCI_EXP_LNKSTA_DLLLA);
+ }
+ 
+-static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
+-{
+-	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
+-
+-	enable_irq(pcie->pex_rst_irq);
+-
+-	return 0;
+-}
+-
+ static void tegra_pcie_dw_stop_link(struct dw_pcie *pci)
+ {
+ 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
