@@ -2,127 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DEDD2DDA35
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 21:39:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D74712DDA47
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 21:45:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgLQUit (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Dec 2020 15:38:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbgLQUit (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Dec 2020 15:38:49 -0500
-Date:   Thu, 17 Dec 2020 14:38:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608237488;
-        bh=Rpq08eYW+DA58q5pcS/wXU0VbVBc1vYow6lIlzk55rU=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=KqE949u41Nqk8wZdC73imrPNhV6iDujEFjRfkVjZScfGg5NLARgNksvDkk54oZI9i
-         mv/u6l2got64jOQ5WYUtngu2q9vI6xjHII+Jcy+PrjjE2gs1K6xgdwztx+nAvI4G2p
-         D/IUTUhGXYUo0T11xN0y5dzNNoaIntqhsq2soJ1qJZmtzmxSv5ozHe2eIvw5XczDhw
-         7imXx7N9zkX5LZaNE/XBXWbLBfgxWdq6WNk63Vd9f31kXpIWOfBj6C4mP+2GZruhTz
-         M32DBRPOd7HuNC1U2xW9CiDgiKPo9i9u/PExMcMNgvaVJ1cxp2OOgAAkXwohRF2CCU
-         mV7YA0/SGEecA==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhou Wang <wangzhou1@hisilicon.com>
-Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
-        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-Message-ID: <20201217203806.GA20785@bjorn-Precision-5520>
+        id S1730268AbgLQUoZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Dec 2020 15:44:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgLQUoZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Dec 2020 15:44:25 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F10C0617A7
+        for <linux-pci@vger.kernel.org>; Thu, 17 Dec 2020 12:43:45 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id dk8so107684edb.1
+        for <linux-pci@vger.kernel.org>; Thu, 17 Dec 2020 12:43:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=ulgwG3L5KQfPeeXWLviGF2w5wVPlt5pQdp4CiLaMlFk=;
+        b=B2WevceXgTdwdrvzuM2MsecUn5pbxwuJQVGTjQXjtrO+nZnbvYIWf5romcco5PW6qg
+         OPUGzocra041LlLKrvvRsE7uvaxJrUu8V5dVC28xL9mee27CyJ+Jpel+/NlVa7hsp+Qw
+         aRHEXcrNBNR6j3P0W74BnD8S9zpAmQf9KmjfDcmKGmMeviP40+QlY5BXdbQn7huCGgWZ
+         28amGQmiQEojoSfNvkY78sNc/OWlfeAL/u2p25fkaikP1BGFj2mVds8sEu55IguxMm25
+         vpuLnHrAhbepuxy0D/ofaBoYurWyrnnzDJSzIk8DnWfgK+gfDcU+Sl/wJTuRh/VVEqde
+         S0CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=ulgwG3L5KQfPeeXWLviGF2w5wVPlt5pQdp4CiLaMlFk=;
+        b=DA59vPrPIKqMn5gxl7XVPf/Fg/xh+wZLva8a2CuctvkGNVyQfwr9R4ZgqSNufZS8fH
+         UvTWDc4d3MhTkOTrDEte+Iy0pkaKv8erC1mfaTAAjUfNN8zE+vJ0Z7OYuokr3nFWw0ks
+         kf+CUWK7ndk+CMLD1hwv0NWxNdBpGXVc99fZkhlxAYFVSBJuAnrHY+yLRRblAlwr4wQb
+         X0V2CTR7r7DYAu6mTRRDG0OP5FI0Ers3KZxTOtF856nRvGSE8O6qBeQ9pX8ZWi5avqbY
+         rl0g6J730s6LKzD/uT6Iztc1GNHCJ9PwiFMPJnU9wTdHVMPB9q4ElC4guZ5aRqwxns/b
+         SQSA==
+X-Gm-Message-State: AOAM532N/KojQhsUdwpmNgiZZdelW+sdFl3Yjn7E6yXr3wkmHo8DyNdh
+        8IluL9Qnzvudp0wVgR7BwD/zFNekyPI=
+X-Google-Smtp-Source: ABdhPJwkYku2/nKxjtDKyvxKpZIPp2MpZuKFRY7FCIR+OeeiGTltQDIavbVmkAr0xv6XtlG3US8Xrg==
+X-Received: by 2002:a05:6402:a5b:: with SMTP id bt27mr1245145edb.222.1608237823756;
+        Thu, 17 Dec 2020 12:43:43 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f06:5500:c095:d389:734d:8e2a? (p200300ea8f065500c095d389734d8e2a.dip0.t-ipconnect.de. [2003:ea:8f06:5500:c095:d389:734d:8e2a])
+        by smtp.googlemail.com with ESMTPSA id l5sm24990150edl.48.2020.12.17.12.43.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Dec 2020 12:43:43 -0800 (PST)
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PCI/VPD: Silence warning if optional VPD PROM is missing
+Message-ID: <b04a0e46-0b97-da3d-aa77-b05c9b37d21f@gmail.com>
+Date:   Thu, 17 Dec 2020 21:43:38 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5FD9EE6E.1040505@hisilicon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 16, 2020 at 07:24:30PM +0800, Zhou Wang wrote:
-> On 2020/6/23 23:04, Bjorn Helgaas wrote:
-> > On Fri, Jun 19, 2020 at 10:26:54AM +0800, Zhangfei Gao wrote:
-> >> Have studied _DSM method, two issues we met comparing using quirk.
-> >>
-> >> 1. Need change definition of either pci_host_bridge or pci_dev, like adding
-> >> member can_stall,
-> >> while pci system does not know stall now.
-> >>
-> >> a, pci devices do not have uuid: uuid need be described in dsdt, while pci
-> >> devices are not defined in dsdt.
-> >>     so we have to use host bridge.
-> > 
-> > PCI devices *can* be described in the DSDT.  IIUC these particular
-> > devices are hardwired (not plug-in cards), so platform firmware can
-> > know about them and could describe them in the DSDT.
-> > 
-> >> b,  Parsing dsdt is in in pci subsystem.
-> >> Like drivers/acpi/pci_root.c:
-> >>        obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid,
-> >> 1,
-> >>                                 IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
-> >>
-> >> After parsing DSM in pci, we need record this info.
-> >> Currently, can_stall info is recorded in iommu_fwspec,
-> >> which is allocated in iommu_fwspec_init and called by iort_iommu_configure
-> >> for uefi.
-> > 
-> > You can look for a _DSM wherever it is convenient for you.  It could
-> > be in an AMBA shim layer.
-> > 
-> >> 2. Guest kernel also need support sva.
-> >> Using quirk, the guest can boot with sva enabled, since quirk is
-> >> self-contained by kernel.
-> >> If using  _DSM, a specific uefi or dtb has to be provided,
-> >> currently we can useQEMU_EFI.fd from apt install qemu-efi
-> > 
-> > I don't quite understand what this means, but as I mentioned before, a
-> > quirk for a *limited* number of devices is OK, as long as there is a
-> > plan that removes the need for a quirk for future devices.
-> > 
-> > E.g., if the next platform version ships with a DTB or firmware with a
-> > _DSM or other mechanism that enables the kernel to discover this
-> > information without a kernel change, it's fine to use a quirk to cover
-> > the early platform.
-> > 
-> > The principles are:
-> > 
-> >   - I don't want to have to update a quirk for every new Device ID
-> >     that needs this.
-> 
-> Hi Bjorn and Zhangfei,
-> 
-> We plan to use ATS/PRI to support SVA in future PCI devices. However, for
-> current devices, we need to add limited number of quirk to let them
-> work. The device IDs of current quirk needed devices are ZIP engine(0xa250, 0xa251),
-> SEC engine(0xa255, 0xa256), HPRE engine(0xa258, 0xa259), revision id are
-> 0x21 and 0x30.
-> 
-> Let's continue to upstream these quirks!
+Realtek RTL8169/8168/8125 NIC families indicate VPD capability and an
+optional VPD EEPROM can be connected via I2C/SPI. However I haven't
+seen any card or system with such a VPD EEPROM yet. The missing EEPROM
+causes the following warning whenever e.g. lscpi -vv is executed.
 
-Please post the patches you propose.  I don't think the previous ones
-are in my queue.  Please include the lore URL for the previous
-posting(s) in the cover letter so we can connect the discussion.
+invalid short VPD tag 00 at offset 01
 
-> >   - I don't really want to have to manage non-PCI information in the
-> >     struct pci_dev.  If this is AMBA- or IOMMU-related, it should be
-> >     stored in a structure related to AMBA or the IOMMU.
-> > .
-> > 
+The warning confuses users, I think we should handle the situation more
+gentle. Therefore, if first VPD byte is read as 0x00, assume a missing
+optional VPD PROM as and silently set the VPD length to 0.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/pci/vpd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index ef5165eb3..bd174705f 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -89,6 +89,10 @@ static size_t pci_vpd_size(struct pci_dev *dev, size_t old_size)
+ 	       pci_read_vpd(dev, off, 1, header) == 1) {
+ 		unsigned char tag;
+ 
++		/* assume missing optional VPD PROM */
++		if (!header[0] && !off)
++			return 0;
++
+ 		if (header[0] & PCI_VPD_LRDT) {
+ 			/* Large Resource Data Type Tag */
+ 			tag = pci_vpd_lrdt_tag(header);
+-- 
+2.29.2
+
