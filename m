@@ -2,126 +2,224 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AC9E2DCA19
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 01:46:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10FCF2DCA3F
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 02:02:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725889AbgLQAph (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Dec 2020 19:45:37 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:26656 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725871AbgLQAph (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Dec 2020 19:45:37 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 0BH0isjD002616;
-        Wed, 16 Dec 2020 16:44:54 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : message-id : mime-version : content-type; s=pfpt0220;
- bh=+NssCuTE/6KL6AeGPhw1nDTQTbl48RuyAedc8KFXKyc=;
- b=evDf4EbPCoxXx3TERiBfAK48CWVs0xJXVG050OhMwZ6VPZQ1Z7cRcFKO2YJSK0OZ4P+7
- rA3ZRgwsDSAow+J8gx6rW/Tya9zMr2fqI+HcJnrIOqdr6ZBwfWRtkAilCF/XenTrOan8
- nLOJxM9FGmL14KxJjL5d/g+YDQgcGzlESgjfeQIvv5Z92m3Fyk5Ak3IVEWnQRKmoonK9
- GXhGP4Qo2ffdAyL5uZPGz7AmjkLxp9d/9q5Ec7XDvnILmuUCzLcBiFuob4Wov5Nc1goZ
- g45QfSehRs8qTwmS3j1KHRoEhSeL0/Rn1zmlpPac5ko+t9Pr7ocDUI75gn4/09iCahrE og== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 35cx8tdxej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 16:44:54 -0800
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Dec
- 2020 16:44:48 -0800
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Dec
- 2020 16:44:47 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 16 Dec 2020 16:44:47 -0800
-Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
-        by maili.marvell.com (Postfix) with ESMTP id 6C4AB3F703F;
-        Wed, 16 Dec 2020 16:44:47 -0800 (PST)
-Received: from localhost (aeasi@localhost)
-        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0BH0ilxF029033;
-        Wed, 16 Dec 2020 16:44:47 -0800
-X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
-Date:   Wed, 16 Dec 2020 16:44:47 -0800
-From:   Arun Easi <aeasi@marvell.com>
-X-X-Sender: aeasi@irv1user01.caveonetworks.com
-To:     <linux-pci@vger.kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Girish Basrur <GBasrur@marvell.com>,
-        Quinn Tran <qutran@marvell.com>
-Subject: VPD blacklist of Marvell QLogic 1077/2261
-Message-ID: <alpine.LRH.2.21.9999.2012161641230.28924@irv1user01.caveonetworks.com>
-User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
+        id S1726571AbgLQA6e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Dec 2020 19:58:34 -0500
+Received: from mga12.intel.com ([192.55.52.136]:12153 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726607AbgLQA6e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 16 Dec 2020 19:58:34 -0500
+IronPort-SDR: /OzDceenrnNtOiICfHSdMKrzmsnQBRUxwG7ITYY7qsb+vFCuBnRPj015EDWx9535QfACFA5Z38
+ +jdrwSLVHhEw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9837"; a="154393534"
+X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
+   d="scan'208";a="154393534"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 16:57:40 -0800
+IronPort-SDR: AhDE9XYQhnnC3NL1/cGNoRc5wSVVP9weN0rLDr0EItCO19jjp451Si8bcR5nwBYacOOPEaYm2B
+ 2gpTHFxcZEZA==
+X-IronPort-AV: E=Sophos;i="5.78,425,1599548400"; 
+   d="scan'208";a="385113859"
+Received: from jekeller-desk.amr.corp.intel.com ([10.166.241.4])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2020 16:57:40 -0800
+From:   Jacob Keller <jacob.e.keller@intel.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH] msi: use for_each_msi_entry_safe iterator macro
+Date:   Wed, 16 Dec 2020 16:55:57 -0800
+Message-Id: <20201217005557.45031-1-jacob.e.keller@intel.com>
+X-Mailer: git-send-email 2.29.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-16_12:2020-12-15,2020-12-16 signatures=0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+Commit 81b1e6e6a859 ("platform-msi: Free descriptors in
+platform_msi_domain_free()") introduced for_each_msi_entry_safe as an
+iterator operating on the msi_list using the safe semantics with
+a temporary variable.
 
-This is regarding the blacklisting of one of the Marvell QLogic FC
-adapter (1077/2261) on VPD area access. The commit that did was
-this:
+A handful of locations still used the generic iterator instead of the
+specific macro. Fix the 3 remaining cases. Add a cocci script which can
+detect and report any misuse that is introduced in future changes.
 
---8<-- pruned commit message --8<--
-| commit 0d5370d1d85251e5893ab7c90a429464de2e140b
-| Author: Ethan Zhao <ethan.zhao@oracle.com>
-| Date:   Mon Feb 27 17:08:44 2017 +0900
-| 
-|     PCI: Prevent VPD access for QLogic ISP2722
-|     Call Trace:
-|      <NMI>  [<ffffffff817193de>] dump_stack+0x63/0x81
-|      [<ffffffff81714072>] panic+0xd0/0x20e
-|      [<ffffffff8101c8b4>] do_nmi+0xf4/0x170
-|      <<EOE>>  [<ffffffff815db4b3>] raw_pci_read+0x23/0x40
-|      [<ffffffff815db4fc>] pci_read+0x2c/0x30
-|      [<ffffffff8136f612>] pci_user_read_config_word+0x72/0x110
-|      [<ffffffff8136f746>] pci_vpd_pci22_wait+0x96/0x130
-|      [<ffffffff8136ff9b>] pci_vpd_pci22_read+0xdb/0x1a0
-|      [<ffffffff8136ea30>] pci_read_vpd+0x20/0x30
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Stuart Yoder <stuyoder@gmail.com>
+Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+---
+I noticed that a couple places used the generic _safe iterator. They appear
+to be code which was written before the commit that introduced the new
+MSI-specific iterator.
 
+ drivers/base/platform-msi.c                   |   2 +-
+ drivers/bus/fsl-mc/fsl-mc-msi.c               |   2 +-
+ drivers/soc/ti/ti_sci_inta_msi.c              |   2 +-
+ .../iterators/for_each_msi_entry.cocci        | 101 ++++++++++++++++++
+ 4 files changed, 104 insertions(+), 3 deletions(-)
+ create mode 100644 scripts/coccinelle/iterators/for_each_msi_entry.cocci
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0d5370d1d85251e5893ab7c90a429464de2e140b
+diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+index c4a17e5edf8b..1fd8ac26c245 100644
+--- a/drivers/base/platform-msi.c
++++ b/drivers/base/platform-msi.c
+@@ -110,7 +110,7 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec)
+ {
+ 	struct msi_desc *desc, *tmp;
+ 
+-	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
++	for_each_msi_entry_safe(desc, tmp, dev) {
+ 		if (desc->platform.msi_index >= base &&
+ 		    desc->platform.msi_index < (base + nvec)) {
+ 			list_del(&desc->list);
+diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-msi.c
+index 8edadf05cbb7..d0a52ccfa738 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-msi.c
++++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+@@ -214,7 +214,7 @@ static void fsl_mc_msi_free_descs(struct device *dev)
+ {
+ 	struct msi_desc *desc, *tmp;
+ 
+-	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
++	for_each_msi_entry_safe(desc, tmp, dev) {
+ 		list_del(&desc->list);
+ 		free_msi_entry(desc);
+ 	}
+diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_msi.c
+index 0eb9462f609e..66f9772dcdfa 100644
+--- a/drivers/soc/ti/ti_sci_inta_msi.c
++++ b/drivers/soc/ti/ti_sci_inta_msi.c
+@@ -64,7 +64,7 @@ static void ti_sci_inta_msi_free_descs(struct device *dev)
+ {
+ 	struct msi_desc *desc, *tmp;
+ 
+-	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
++	for_each_msi_entry_safe(desc, tmp, dev) {
+ 		list_del(&desc->list);
+ 		free_msi_entry(desc);
+ 	}
+diff --git a/scripts/coccinelle/iterators/for_each_msi_entry.cocci b/scripts/coccinelle/iterators/for_each_msi_entry.cocci
+new file mode 100644
+index 000000000000..45282f93ab6f
+--- /dev/null
++++ b/scripts/coccinelle/iterators/for_each_msi_entry.cocci
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/// Use for_each_msi_entry(_safe) instead of generic iterator
++///
++// Confidence: High
++// Copyright: (C) 2020 Jacob Keller, Intel Corporation.
++// URL: http://coccinelle.lip6.fr/
++// Comments:
++// Options: --no-includes --include-headers
++
++virtual patch
++virtual context
++virtual org
++virtual report
++
++//----------------------------------------------------------
++//  For context mode
++//----------------------------------------------------------
++@depends on context@
++identifier member =~ "list";
++struct msi_desc *desc;
++struct msi_desc *tmp;
++struct device *dev;
++iterator name list_for_each_entry_safe;
++iterator name list_for_each_entry;
++statement S;
++@@
++(
++* list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), member)
++S
++|
++* list_for_each_entry(desc, dev_to_msi_list(dev), member)
++S
++)
++
++//----------------------------------------------------------
++//  For patch mode
++//----------------------------------------------------------
++@depends on patch@
++identifier member =~ "list";
++struct msi_desc *desc;
++struct msi_desc *tmp;
++struct device *dev;
++iterator name list_for_each_entry_safe;
++iterator name for_each_msi_entry_safe;
++iterator name list_for_each_entry;
++iterator name for_each_msi_entry;
++statement S;
++@@
++(
++- list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), member)
+++ for_each_msi_entry_safe(desc, tmp, dev)
++S
++|
++- list_for_each_entry(desc, dev_to_msi_list(dev), member)
+++ for_each_msi_entry(desc, dev)
++S
++)
++
++//----------------------------------------------------------
++//  For org and report mode
++//----------------------------------------------------------
++
++@r depends on (org || report )@
++identifier member =~ "list";
++struct msi_desc *desc;
++struct msi_desc *tmp;
++struct device *dev;
++iterator name list_for_each_entry_safe;
++iterator name list_for_each_entry;
++statement S;
++position p1, p2;
++@@
++(
++ list_for_each_entry_safe@p1(desc, tmp, dev_to_msi_list(dev), member) S
++|
++ list_for_each_entry@p2(desc, dev_to_msi_list(dev), member) S
++)
++
++@script:python depends on report@
++p << r.p1;
++@@
++
++coccilib.report.print_report(p[0], "WARNING: Use for_each_msi_entry_safe")
++
++@script:python depends on org@
++p << r.p1;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING: Use for_each_msi_entry_safe")
++
++@script:python depends on report@
++p << r.p2;
++@@
++
++coccilib.report.print_report(p[0], "WARNING: Use for_each_msi_entry")
++
++@script:python depends on org@
++p << r.p2;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING: Use for_each_msi_entry")
 
-While investigating the original report of the issue, I found an
-interesting information that may explain why Ethan Zhao was
-hitting the NMI/crash.
+base-commit: 255b2d524884e4ec60333131aa0ca0ef19826dc2
+-- 
+2.29.0
 
-If you notice the stack referred in the commit, you could see that
-a bunch of old vpd access functions, pci_vpd_pci22*, were referred.
-When these functions were in use (these functions were renamed
-around 2016 Feb by f1cd93f9aabe), there was a critical VPD
-access bug missing; missing in fact most of the life of those
-functions.
-
-This one:
-    104daa71b396: PCI: Determine actual VPD size on first access
-
-Without this patch, a read of the vpd sysfs file can access area
-outside of VPD space, which is not allowed by the spec.
-
-My guess here is that, Ethan, when trying to access VPD of the QLogic
-1077/2261 adapter, was using a kernel that had the bug present and
-it led up to the NMI/crash he was observing on his machine.
-
-We had an early firmware that returned CA on VPD access beyond
-bounds that is known to NMI some servers. The FW has since changed to
-not clear the VPD flag upon out-of-bound access.
-
-In light of the above, plus the fact that I did try the
-experiment on multiple setups and was not able to reproduce the
-issue, would you be willing to revert the above patch? If so, I
-could send a git revert (or equivalent) patch of the commit.
-
-This blacklisting is preventing multiple customers from accessing
-the VPD area of the said production adapter and making their life
-a bit difficult.
-
-Regards,
--Arun
-
-Old discussion of the topic:
-    https://lkml.org/lkml/2019/5/21/991
