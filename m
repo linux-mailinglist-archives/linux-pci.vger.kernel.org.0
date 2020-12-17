@@ -2,111 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 548282DD690
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 18:49:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 941202DDA10
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 21:31:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgLQRtD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Dec 2020 12:49:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgLQRtD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 17 Dec 2020 12:49:03 -0500
-Date:   Thu, 17 Dec 2020 11:48:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608227302;
-        bh=+tD42SLQe9xn0RAbjN1Ki/j49p9w5aI1aNn/jsIAcwU=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=WpOEwdu5snoXXX5tQJQvD3fWyd2pt9eTuaQ+tM40014fAoAFMi9oMTCIh5L/VtTL8
-         hs0p4mKocFNAKZJ1B/l50eIWGnnfb6COVx6+QRESpQI2ZGaoYigxRqf/v7+BcZ7LMd
-         n4AN1RtAGgm6Hj8z0JFX3boygGgPbNOGpiuE/3dIfMwAVHGdwWWsW4JsSaYcWNPdtJ
-         y8fldjVJJURSa0gbE/hht7blDbrkanEk+vLzxvotPYvxAfSjlp5VSrHYOcAe+kSqs/
-         W9dA1NwkcBTuEIWQ3MjwGAiottzW0Z3VjEBo35BUuiJrR7+uEtnpN9u/XolFOfhM3v
-         V0ClyjBhOzh5w==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arun Easi <aeasi@marvell.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Girish Basrur <GBasrur@marvell.com>,
-        Quinn Tran <qutran@marvell.com>
-Subject: Re: VPD blacklist of Marvell QLogic 1077/2261
-Message-ID: <20201217174821.GA9644@bjorn-Precision-5520>
+        id S1731635AbgLQUaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Dec 2020 15:30:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731562AbgLQUaF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Dec 2020 15:30:05 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66190C06138C
+        for <linux-pci@vger.kernel.org>; Thu, 17 Dec 2020 12:29:25 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id j22so21823438eja.13
+        for <linux-pci@vger.kernel.org>; Thu, 17 Dec 2020 12:29:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=w6kXRav+V3yvyrVOqvLuVvzhZG9YhhbrKM8BwIz1iN0=;
+        b=g+rrNbTSPEYQmo1OCz0HWfxo/zdBp8TyKwX+5yAFJlkiY3DlYDYqql6fwTzdGSfTSj
+         fOOfqvMP56C5PhzEXryuGGQYzELFcLg/04gklX1qv2SJY8PzpFqQ7Tjn6jnNWuaWRd8L
+         vHcZsGdhrEwn2TWBQX6ZNYkzovu+5qBzHdaNtTmj8kXq7oCsbaboAMNLIU8Haf03Gqfw
+         Q1BzSZd/zH3KQbsIbovDyYloUPmKeUGb2rnRa4OIMetB182NVomOaSVFqopoYtbK1sop
+         Mkb0/opXUQ47IyXuxyA1XSoYjgIxilwdAWeDuwbA3J1KASBtm8byDQCB0JziU8NutaLv
+         9yYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=w6kXRav+V3yvyrVOqvLuVvzhZG9YhhbrKM8BwIz1iN0=;
+        b=QPKW+OFvnllHXUASXGWQ/r74KQ0pFBOIdJ4g9hF9WBT4oWuw7awBex4NMug8TQIYcn
+         UbRz0PVhGRnA/WF0z7r21NQGB3xyEZCsNZ9OPeLH2WJUP4SJ3/jY3Xw/mjLlMsuCLl/l
+         nMOrD3zuYi1HceZD5qI+UoeLFEt24UCmms5PHdLoUKLJ+xQ82hczQL7zir0tvlm6UDdV
+         afnKqPjCc0RAvNhp6T/KnzDzMjgKXYlaxy/CKVoKv9oFRvSn2hwAli0vZ1vrH7/rfdG6
+         uFKl/3oaphmYF171P/x4ukzAUgWLIS9DW+j24QwFdCUJumFxIcvarNQ8PhhFmjqNWvLE
+         bcDA==
+X-Gm-Message-State: AOAM533/iuz5vKUBy5HWSRnKNY5rk8KpGp/NQS+sTjz+ic3ruBrEp2xB
+        RLelbq/52/OZSLdv3Ufvh2GhVU6AR6Y=
+X-Google-Smtp-Source: ABdhPJwIONE8eBPpFsRrk8xr0HDdd3CHzQ1FHdE4cl9p+w2eOsWEp3tR5mJUFRGRVSaM1eDloUYYNA==
+X-Received: by 2002:a17:906:705:: with SMTP id y5mr773869ejb.428.1608236963387;
+        Thu, 17 Dec 2020 12:29:23 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f06:5500:c095:d389:734d:8e2a? (p200300ea8f065500c095d389734d8e2a.dip0.t-ipconnect.de. [2003:ea:8f06:5500:c095:d389:734d:8e2a])
+        by smtp.googlemail.com with ESMTPSA id be6sm24166488edb.29.2020.12.17.12.29.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Dec 2020 12:29:22 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PCI/VPD: Remove not any longer needed Broadcom NIC quirk
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Message-ID: <1c0c94d1-37bd-442f-a93e-6e2fa202526b@gmail.com>
+Date:   Thu, 17 Dec 2020 21:29:19 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.9999.2012161641230.28924@irv1user01.caveonetworks.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 16, 2020 at 04:44:47PM -0800, Arun Easi wrote:
-> Hi Bjorn,
-> 
-> This is regarding the blacklisting of one of the Marvell QLogic FC
-> adapter (1077/2261) on VPD area access. The commit that did was
-> this:
-> 
-> --8<-- pruned commit message --8<--
-> | commit 0d5370d1d85251e5893ab7c90a429464de2e140b
-> | Author: Ethan Zhao <ethan.zhao@oracle.com>
-> | Date:   Mon Feb 27 17:08:44 2017 +0900
-> | 
-> |     PCI: Prevent VPD access for QLogic ISP2722
-> |     Call Trace:
-> |      <NMI>  [<ffffffff817193de>] dump_stack+0x63/0x81
-> |      [<ffffffff81714072>] panic+0xd0/0x20e
-> |      [<ffffffff8101c8b4>] do_nmi+0xf4/0x170
-> |      <<EOE>>  [<ffffffff815db4b3>] raw_pci_read+0x23/0x40
-> |      [<ffffffff815db4fc>] pci_read+0x2c/0x30
-> |      [<ffffffff8136f612>] pci_user_read_config_word+0x72/0x110
-> |      [<ffffffff8136f746>] pci_vpd_pci22_wait+0x96/0x130
-> |      [<ffffffff8136ff9b>] pci_vpd_pci22_read+0xdb/0x1a0
-> |      [<ffffffff8136ea30>] pci_read_vpd+0x20/0x30
-> 
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0d5370d1d85251e5893ab7c90a429464de2e140b
-> 
-> While investigating the original report of the issue, I found an
-> interesting information that may explain why Ethan Zhao was
-> hitting the NMI/crash.
-> 
-> If you notice the stack referred in the commit, you could see that
-> a bunch of old vpd access functions, pci_vpd_pci22*, were referred.
-> When these functions were in use (these functions were renamed
-> around 2016 Feb by f1cd93f9aabe), there was a critical VPD
-> access bug missing; missing in fact most of the life of those
-> functions.
-> 
-> This one:
->     104daa71b396: PCI: Determine actual VPD size on first access
-> 
-> Without this patch, a read of the vpd sysfs file can access area
-> outside of VPD space, which is not allowed by the spec.
-> 
-> My guess here is that, Ethan, when trying to access VPD of the QLogic
-> 1077/2261 adapter, was using a kernel that had the bug present and
-> it led up to the NMI/crash he was observing on his machine.
-> 
-> We had an early firmware that returned CA on VPD access beyond
-> bounds that is known to NMI some servers. The FW has since changed to
-> not clear the VPD flag upon out-of-bound access.
-> 
-> In light of the above, plus the fact that I did try the
-> experiment on multiple setups and was not able to reproduce the
-> issue, would you be willing to revert the above patch? If so, I
-> could send a git revert (or equivalent) patch of the commit.
-> 
-> This blacklisting is preventing multiple customers from accessing
-> the VPD area of the said production adapter and making their life
-> a bit difficult.
-> 
-> Regards,
-> -Arun
-> 
-> Old discussion of the topic:
->     https://lkml.org/lkml/2019/5/21/991
+This quirk was added in 2008 when we didn't have the logic yet to
+determine VPD size based on checking for the VPD end tag. Now that we
+have this logic and don't read beyond the end tag this quirk can be
+removed.
 
-It makes sense to revert 0d5370d1d852 ("PCI: Prevent VPD access for
-QLogic ISP2722") as long as the resulting kernel works correctly on
-all versions of the 2722 firmware.  We have to assume some customers
-still have the old firmware on their adapters.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+This is basically the same as what you're currently discussing
+for the Marvell / QLogic 1077 quirk.
+---
+ drivers/pci/vpd.c | 46 ----------------------------------------------
+ 1 file changed, 46 deletions(-)
 
-Bjorn
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 7915d10f9..ef5165eb3 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -578,52 +578,6 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_QLOGIC, 0x2261, quirk_blacklist_vpd);
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
+ 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_blacklist_vpd);
+ 
+-/*
+- * For Broadcom 5706, 5708, 5709 rev. A nics, any read beyond the
+- * VPD end tag will hang the device.  This problem was initially
+- * observed when a vpd entry was created in sysfs
+- * ('/sys/bus/pci/devices/<id>/vpd').   A read to this sysfs entry
+- * will dump 32k of data.  Reading a full 32k will cause an access
+- * beyond the VPD end tag causing the device to hang.  Once the device
+- * is hung, the bnx2 driver will not be able to reset the device.
+- * We believe that it is legal to read beyond the end tag and
+- * therefore the solution is to limit the read/write length.
+- */
+-static void quirk_brcm_570x_limit_vpd(struct pci_dev *dev)
+-{
+-	/*
+-	 * Only disable the VPD capability for 5706, 5706S, 5708,
+-	 * 5708S and 5709 rev. A
+-	 */
+-	if ((dev->device == PCI_DEVICE_ID_NX2_5706) ||
+-	    (dev->device == PCI_DEVICE_ID_NX2_5706S) ||
+-	    (dev->device == PCI_DEVICE_ID_NX2_5708) ||
+-	    (dev->device == PCI_DEVICE_ID_NX2_5708S) ||
+-	    ((dev->device == PCI_DEVICE_ID_NX2_5709) &&
+-	     (dev->revision & 0xf0) == 0x0)) {
+-		if (dev->vpd)
+-			dev->vpd->len = 0x80;
+-	}
+-}
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
+-			PCI_DEVICE_ID_NX2_5706,
+-			quirk_brcm_570x_limit_vpd);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
+-			PCI_DEVICE_ID_NX2_5706S,
+-			quirk_brcm_570x_limit_vpd);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
+-			PCI_DEVICE_ID_NX2_5708,
+-			quirk_brcm_570x_limit_vpd);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
+-			PCI_DEVICE_ID_NX2_5708S,
+-			quirk_brcm_570x_limit_vpd);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
+-			PCI_DEVICE_ID_NX2_5709,
+-			quirk_brcm_570x_limit_vpd);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
+-			PCI_DEVICE_ID_NX2_5709S,
+-			quirk_brcm_570x_limit_vpd);
+-
+ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+ {
+ 	int chip = (dev->device & 0xf000) >> 12;
+-- 
+2.29.2
+
