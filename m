@@ -2,181 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA452DC98E
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 00:22:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AC9E2DCA19
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 01:46:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgLPXVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 16 Dec 2020 18:21:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbgLPXVp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 16 Dec 2020 18:21:45 -0500
-Date:   Wed, 16 Dec 2020 17:21:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608160864;
-        bh=DlV059G7MD38ouJN9A/eajY48qCUy0jnak8uvrblwU4=;
-        h=From:To:Cc:Subject:In-Reply-To:From;
-        b=JY5JI6MgsZxmLnhwVV004hisqnfA06z+u1pzxUt/VbvU9tEy6CADG868bY8I5DYHn
-         AKTR9Xq9+A9WCj/Br4dyuQqG7700OJJuh7re6Swx4X32kIu9viVuycYOqa0yek0J/e
-         IKE5Sw4tRPkI7BQessSiZMu0Xcv5XDiqs+EJsH0jtM4gHG565fSZ76q7Fjf9LmUpwa
-         Yto1hLXNz21eLmAc7FTv+oCa5bMd1C+Pj9G26bvQzB5/NOQWdWTFsGM2xsi/7AG4Fw
-         Fsc1EvXWrk3mgOgjD2/CbOoVA9xxn6XHaArh/oxMd38/c/TrwindqA6ktzkpyyF2f/
-         fCfTpIpePI8Bw==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ian Kumlien <ian.kumlien@gmail.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] PCI/ASPM: Use the path max in L1 ASPM latency check
-Message-ID: <20201216232103.GA368161@bjorn-Precision-5520>
+        id S1725889AbgLQAph (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 16 Dec 2020 19:45:37 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:26656 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725871AbgLQAph (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 16 Dec 2020 19:45:37 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 0BH0isjD002616;
+        Wed, 16 Dec 2020 16:44:54 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : mime-version : content-type; s=pfpt0220;
+ bh=+NssCuTE/6KL6AeGPhw1nDTQTbl48RuyAedc8KFXKyc=;
+ b=evDf4EbPCoxXx3TERiBfAK48CWVs0xJXVG050OhMwZ6VPZQ1Z7cRcFKO2YJSK0OZ4P+7
+ rA3ZRgwsDSAow+J8gx6rW/Tya9zMr2fqI+HcJnrIOqdr6ZBwfWRtkAilCF/XenTrOan8
+ nLOJxM9FGmL14KxJjL5d/g+YDQgcGzlESgjfeQIvv5Z92m3Fyk5Ak3IVEWnQRKmoonK9
+ GXhGP4Qo2ffdAyL5uZPGz7AmjkLxp9d/9q5Ec7XDvnILmuUCzLcBiFuob4Wov5Nc1goZ
+ g45QfSehRs8qTwmS3j1KHRoEhSeL0/Rn1zmlpPac5ko+t9Pr7ocDUI75gn4/09iCahrE og== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0b-0016f401.pphosted.com with ESMTP id 35cx8tdxej-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 16 Dec 2020 16:44:54 -0800
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Dec
+ 2020 16:44:48 -0800
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Dec
+ 2020 16:44:47 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 16 Dec 2020 16:44:47 -0800
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id 6C4AB3F703F;
+        Wed, 16 Dec 2020 16:44:47 -0800 (PST)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0BH0ilxF029033;
+        Wed, 16 Dec 2020 16:44:47 -0800
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Wed, 16 Dec 2020 16:44:47 -0800
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     <linux-pci@vger.kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Girish Basrur <GBasrur@marvell.com>,
+        Quinn Tran <qutran@marvell.com>
+Subject: VPD blacklist of Marvell QLogic 1077/2261
+Message-ID: <alpine.LRH.2.21.9999.2012161641230.28924@irv1user01.caveonetworks.com>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA85sZsiuE9rN7uVCuhgiki-rffo4mYbh6BKvuGaJAK5CsPgKw@mail.gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-16_12:2020-12-15,2020-12-16 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Dec 16, 2020 at 12:20:53PM +0100, Ian Kumlien wrote:
-> On Wed, Dec 16, 2020 at 1:08 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Dec 15, 2020 at 02:09:12PM +0100, Ian Kumlien wrote:
-> > > On Tue, Dec 15, 2020 at 1:40 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Mon, Dec 14, 2020 at 11:56:31PM +0100, Ian Kumlien wrote:
-> > > > > On Mon, Dec 14, 2020 at 8:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >
-> > > > > > If you're interested, you could probably unload the Realtek drivers,
-> > > > > > remove the devices, and set the PCI_EXP_LNKCTL_LD (Link Disable) bit
-> > > > > > in 02:04.0, e.g.,
-> > > > > >
-> > > > > >   # RT=/sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/0000:02:04.0
-> > > > > >   # echo 1 > $RT/0000:04:00.0/remove
-> > > > > >   # echo 1 > $RT/0000:04:00.1/remove
-> > > > > >   # echo 1 > $RT/0000:04:00.2/remove
-> > > > > >   # echo 1 > $RT/0000:04:00.4/remove
-> > > > > >   # echo 1 > $RT/0000:04:00.7/remove
-> > > > > >   # setpci -s02:04.0 CAP_EXP+0x10.w=0x0010
-> > > > > >
-> > > > > > That should take 04:00.x out of the picture.
-> > > > >
-> > > > > Didn't actually change the behaviour, I'm suspecting an errata for AMD pcie...
-> > > > >
-> > > > > So did this, with unpatched kernel:
-> > > > > [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> > > > > [  5]   0.00-1.00   sec  4.56 MBytes  38.2 Mbits/sec    0   67.9 KBytes
-> > > > > [  5]   1.00-2.00   sec  4.47 MBytes  37.5 Mbits/sec    0   96.2 KBytes
-> > > > > [  5]   2.00-3.00   sec  4.85 MBytes  40.7 Mbits/sec    0   50.9 KBytes
-> > > > > [  5]   3.00-4.00   sec  4.23 MBytes  35.4 Mbits/sec    0   70.7 KBytes
-> > > > > [  5]   4.00-5.00   sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
-> > > > > [  5]   5.00-6.00   sec  4.23 MBytes  35.4 Mbits/sec    0   45.2 KBytes
-> > > > > [  5]   6.00-7.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
-> > > > > [  5]   7.00-8.00   sec  3.98 MBytes  33.4 Mbits/sec    0   36.8 KBytes
-> > > > > [  5]   8.00-9.00   sec  4.23 MBytes  35.4 Mbits/sec    0   36.8 KBytes
-> > > > > [  5]   9.00-10.00  sec  4.23 MBytes  35.4 Mbits/sec    0   48.1 KBytes
-> > > > > - - - - - - - - - - - - - - - - - - - - - - - - -
-> > > > > [ ID] Interval           Transfer     Bitrate         Retr
-> > > > > [  5]   0.00-10.00  sec  43.2 MBytes  36.2 Mbits/sec    0             sender
-> > > > > [  5]   0.00-10.00  sec  42.7 MBytes  35.8 Mbits/sec                  receiver
-> > > > >
-> > > > > and:
-> > > > > echo 0 > /sys/devices/pci0000:00/0000:00:01.2/0000:01:00.0/link/l1_aspm
-> > > >
-> > > > BTW, thanks a lot for testing out the "l1_aspm" sysfs file.  I'm very
-> > > > pleased that it seems to be working as intended.
-> > >
-> > > It was nice to find it for easy disabling :)
-> > >
-> > > > > and:
-> > > > > [ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-> > > > > [  5]   0.00-1.00   sec   113 MBytes   951 Mbits/sec  153    772 KBytes
-> > > > > [  5]   1.00-2.00   sec   109 MBytes   912 Mbits/sec  276    550 KBytes
-> > > > > [  5]   2.00-3.00   sec   111 MBytes   933 Mbits/sec  123    625 KBytes
-> > > > > [  5]   3.00-4.00   sec   111 MBytes   933 Mbits/sec   31    687 KBytes
-> > > > > [  5]   4.00-5.00   sec   110 MBytes   923 Mbits/sec    0    679 KBytes
-> > > > > [  5]   5.00-6.00   sec   110 MBytes   923 Mbits/sec  136    577 KBytes
-> > > > > [  5]   6.00-7.00   sec   110 MBytes   923 Mbits/sec  214    645 KBytes
-> > > > > [  5]   7.00-8.00   sec   110 MBytes   923 Mbits/sec   32    628 KBytes
-> > > > > [  5]   8.00-9.00   sec   110 MBytes   923 Mbits/sec   81    537 KBytes
-> > > > > [  5]   9.00-10.00  sec   110 MBytes   923 Mbits/sec   10    577 KBytes
-> > > > > - - - - - - - - - - - - - - - - - - - - - - - - -
-> > > > > [ ID] Interval           Transfer     Bitrate         Retr
-> > > > > [  5]   0.00-10.00  sec  1.08 GBytes   927 Mbits/sec  1056             sender
-> > > > > [  5]   0.00-10.00  sec  1.07 GBytes   923 Mbits/sec                  receiver
-> > > > >
-> > > > > But this only confirms that the fix i experience is a side effect.
-> > > > >
-> > > > > The original code is still wrong :)
-> > > >
-> > > > What exactly is this machine?  Brand, model, config?  Maybe you could
-> > > > add this and a dmesg log to the buzilla?  It seems like other people
-> > > > should be seeing the same problem, so I'm hoping to grub around on the
-> > > > web to see if there are similar reports involving these devices.
-> > >
-> > > ASUS Pro WS X570-ACE with AMD Ryzen 9 3900X
-> >
-> > Possible similar issues:
-> >
-> >   https://forums.unraid.net/topic/94274-hardware-upgrade-woes/
-> >   https://forums.servethehome.com/index.php?threads/upgraded-my-home-server-from-intel-to-amd-virtual-disk-stuck-in-degraded-unhealty-state.25535/ (Windows)
-> 
-> Could be, I suspect that we need a workaround (is there a quirk for
-> "reporting wrong latency"?) and the patches.
+Hi Bjorn,
 
-I don't think there's currently a quirk mechanism that would work for
-correcting latencies, but there should be, and we could add one if we
-can figure out for sure what's wrong.
+This is regarding the blacklisting of one of the Marvell QLogic FC
+adapter (1077/2261) on VPD area access. The commit that did was
+this:
 
-I found this:
+--8<-- pruned commit message --8<--
+| commit 0d5370d1d85251e5893ab7c90a429464de2e140b
+| Author: Ethan Zhao <ethan.zhao@oracle.com>
+| Date:   Mon Feb 27 17:08:44 2017 +0900
+| 
+|     PCI: Prevent VPD access for QLogic ISP2722
+|     Call Trace:
+|      <NMI>  [<ffffffff817193de>] dump_stack+0x63/0x81
+|      [<ffffffff81714072>] panic+0xd0/0x20e
+|      [<ffffffff8101c8b4>] do_nmi+0xf4/0x170
+|      <<EOE>>  [<ffffffff815db4b3>] raw_pci_read+0x23/0x40
+|      [<ffffffff815db4fc>] pci_read+0x2c/0x30
+|      [<ffffffff8136f612>] pci_user_read_config_word+0x72/0x110
+|      [<ffffffff8136f746>] pci_vpd_pci22_wait+0x96/0x130
+|      [<ffffffff8136ff9b>] pci_vpd_pci22_read+0xdb/0x1a0
+|      [<ffffffff8136ea30>] pci_read_vpd+0x20/0x30
 
-  https://www.reddit.com/r/VFIO/comments/hgk3cz/x570_pcieclassic_pci_bridge_woes/
 
-which looks like it should be the same hardware (if you can collect a
-dmesg log or "lspci -nnvv" output we could tell for sure) and is
-interesting because it includes some lspci output that shows different
-L1 exit latencies than what you see.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0d5370d1d85251e5893ab7c90a429464de2e140b
 
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=209725
-> > > >
-> > > > Here's one that is superficially similar:
-> > > > https://linux-hardware.org/index.php?probe=e5f24075e5&log=lspci_all
-> > > > in that it has a RP -- switch -- I211 path.  Interestingly, the switch
-> > > > here advertises <64us L1 exit latency instead of the <32us latency
-> > > > your switch advertises.  Of course, I can't tell if it's exactly the
-> > > > same switch.
-> > >
-> > > Same chipset it seems
-> > >
-> > > I'm running bios version:
-> > >         Version: 2206
-> > >         Release Date: 08/13/2020
-> > >
-> > > ANd latest is:
-> > > Version 3003
-> > > 2020/12/07
-> > >
-> > > Will test upgrading that as well, but it could be that they report the
-> > > incorrect latency of the switch - I don't know how many things AGESA
-> > > changes but... It's been updated twice since my upgrade.
-> >
-> > I wouldn't be surprised if the advertised exit latencies are writable
-> > by the BIOS because it probably depends on electrical characteristics
-> > outside the switch.  If so, it's possible ASUS just screwed it up.
-> 
-> Not surprisingly, nothing changed.
-> (There was a lot of "stability improvements")
+While investigating the original report of the issue, I found an
+interesting information that may explain why Ethan Zhao was
+hitting the NMI/crash.
 
-I wouldn't be totally surprised if ASUS didn't test that I211 NIC
-under Linux, but I'm sure it must work well under Windows.  If you
-happen to have Windows, a free trial version of AIDA64 should be able
-to give us the equivalent of "lspci -vv".
+If you notice the stack referred in the commit, you could see that
+a bunch of old vpd access functions, pci_vpd_pci22*, were referred.
+When these functions were in use (these functions were renamed
+around 2016 Feb by f1cd93f9aabe), there was a critical VPD
+access bug missing; missing in fact most of the life of those
+functions.
 
-Bjorn
+This one:
+    104daa71b396: PCI: Determine actual VPD size on first access
+
+Without this patch, a read of the vpd sysfs file can access area
+outside of VPD space, which is not allowed by the spec.
+
+My guess here is that, Ethan, when trying to access VPD of the QLogic
+1077/2261 adapter, was using a kernel that had the bug present and
+it led up to the NMI/crash he was observing on his machine.
+
+We had an early firmware that returned CA on VPD access beyond
+bounds that is known to NMI some servers. The FW has since changed to
+not clear the VPD flag upon out-of-bound access.
+
+In light of the above, plus the fact that I did try the
+experiment on multiple setups and was not able to reproduce the
+issue, would you be willing to revert the above patch? If so, I
+could send a git revert (or equivalent) patch of the commit.
+
+This blacklisting is preventing multiple customers from accessing
+the VPD area of the said production adapter and making their life
+a bit difficult.
+
+Regards,
+-Arun
+
+Old discussion of the topic:
+    https://lkml.org/lkml/2019/5/21/991
