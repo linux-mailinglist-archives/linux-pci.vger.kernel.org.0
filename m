@@ -2,136 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 941202DDA10
-	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 21:31:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DEDD2DDA35
+	for <lists+linux-pci@lfdr.de>; Thu, 17 Dec 2020 21:39:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbgLQUaG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 17 Dec 2020 15:30:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731562AbgLQUaF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 17 Dec 2020 15:30:05 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66190C06138C
-        for <linux-pci@vger.kernel.org>; Thu, 17 Dec 2020 12:29:25 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id j22so21823438eja.13
-        for <linux-pci@vger.kernel.org>; Thu, 17 Dec 2020 12:29:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=w6kXRav+V3yvyrVOqvLuVvzhZG9YhhbrKM8BwIz1iN0=;
-        b=g+rrNbTSPEYQmo1OCz0HWfxo/zdBp8TyKwX+5yAFJlkiY3DlYDYqql6fwTzdGSfTSj
-         fOOfqvMP56C5PhzEXryuGGQYzELFcLg/04gklX1qv2SJY8PzpFqQ7Tjn6jnNWuaWRd8L
-         vHcZsGdhrEwn2TWBQX6ZNYkzovu+5qBzHdaNtTmj8kXq7oCsbaboAMNLIU8Haf03Gqfw
-         Q1BzSZd/zH3KQbsIbovDyYloUPmKeUGb2rnRa4OIMetB182NVomOaSVFqopoYtbK1sop
-         Mkb0/opXUQ47IyXuxyA1XSoYjgIxilwdAWeDuwbA3J1KASBtm8byDQCB0JziU8NutaLv
-         9yYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=w6kXRav+V3yvyrVOqvLuVvzhZG9YhhbrKM8BwIz1iN0=;
-        b=QPKW+OFvnllHXUASXGWQ/r74KQ0pFBOIdJ4g9hF9WBT4oWuw7awBex4NMug8TQIYcn
-         UbRz0PVhGRnA/WF0z7r21NQGB3xyEZCsNZ9OPeLH2WJUP4SJ3/jY3Xw/mjLlMsuCLl/l
-         nMOrD3zuYi1HceZD5qI+UoeLFEt24UCmms5PHdLoUKLJ+xQ82hczQL7zir0tvlm6UDdV
-         afnKqPjCc0RAvNhp6T/KnzDzMjgKXYlaxy/CKVoKv9oFRvSn2hwAli0vZ1vrH7/rfdG6
-         uFKl/3oaphmYF171P/x4ukzAUgWLIS9DW+j24QwFdCUJumFxIcvarNQ8PhhFmjqNWvLE
-         bcDA==
-X-Gm-Message-State: AOAM533/iuz5vKUBy5HWSRnKNY5rk8KpGp/NQS+sTjz+ic3ruBrEp2xB
-        RLelbq/52/OZSLdv3Ufvh2GhVU6AR6Y=
-X-Google-Smtp-Source: ABdhPJwIONE8eBPpFsRrk8xr0HDdd3CHzQ1FHdE4cl9p+w2eOsWEp3tR5mJUFRGRVSaM1eDloUYYNA==
-X-Received: by 2002:a17:906:705:: with SMTP id y5mr773869ejb.428.1608236963387;
-        Thu, 17 Dec 2020 12:29:23 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:c095:d389:734d:8e2a? (p200300ea8f065500c095d389734d8e2a.dip0.t-ipconnect.de. [2003:ea:8f06:5500:c095:d389:734d:8e2a])
-        by smtp.googlemail.com with ESMTPSA id be6sm24166488edb.29.2020.12.17.12.29.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Dec 2020 12:29:22 -0800 (PST)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH] PCI/VPD: Remove not any longer needed Broadcom NIC quirk
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Message-ID: <1c0c94d1-37bd-442f-a93e-6e2fa202526b@gmail.com>
-Date:   Thu, 17 Dec 2020 21:29:19 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S1727018AbgLQUit (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 17 Dec 2020 15:38:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726951AbgLQUit (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 17 Dec 2020 15:38:49 -0500
+Date:   Thu, 17 Dec 2020 14:38:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608237488;
+        bh=Rpq08eYW+DA58q5pcS/wXU0VbVBc1vYow6lIlzk55rU=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=KqE949u41Nqk8wZdC73imrPNhV6iDujEFjRfkVjZScfGg5NLARgNksvDkk54oZI9i
+         mv/u6l2got64jOQ5WYUtngu2q9vI6xjHII+Jcy+PrjjE2gs1K6xgdwztx+nAvI4G2p
+         D/IUTUhGXYUo0T11xN0y5dzNNoaIntqhsq2soJ1qJZmtzmxSv5ozHe2eIvw5XczDhw
+         7imXx7N9zkX5LZaNE/XBXWbLBfgxWdq6WNk63Vd9f31kXpIWOfBj6C4mP+2GZruhTz
+         M32DBRPOd7HuNC1U2xW9CiDgiKPo9i9u/PExMcMNgvaVJ1cxp2OOgAAkXwohRF2CCU
+         mV7YA0/SGEecA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhou Wang <wangzhou1@hisilicon.com>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Thanu Rangarajan <Thanu.Rangarajan@arm.com>,
+        Souvik Chakravarty <Souvik.Chakravarty@arm.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+Message-ID: <20201217203806.GA20785@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5FD9EE6E.1040505@hisilicon.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This quirk was added in 2008 when we didn't have the logic yet to
-determine VPD size based on checking for the VPD end tag. Now that we
-have this logic and don't read beyond the end tag this quirk can be
-removed.
+On Wed, Dec 16, 2020 at 07:24:30PM +0800, Zhou Wang wrote:
+> On 2020/6/23 23:04, Bjorn Helgaas wrote:
+> > On Fri, Jun 19, 2020 at 10:26:54AM +0800, Zhangfei Gao wrote:
+> >> Have studied _DSM method, two issues we met comparing using quirk.
+> >>
+> >> 1. Need change definition of either pci_host_bridge or pci_dev, like adding
+> >> member can_stall,
+> >> while pci system does not know stall now.
+> >>
+> >> a, pci devices do not have uuid: uuid need be described in dsdt, while pci
+> >> devices are not defined in dsdt.
+> >>     so we have to use host bridge.
+> > 
+> > PCI devices *can* be described in the DSDT.  IIUC these particular
+> > devices are hardwired (not plug-in cards), so platform firmware can
+> > know about them and could describe them in the DSDT.
+> > 
+> >> b,  Parsing dsdt is in in pci subsystem.
+> >> Like drivers/acpi/pci_root.c:
+> >>        obj = acpi_evaluate_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid,
+> >> 1,
+> >>                                 IGNORE_PCI_BOOT_CONFIG_DSM, NULL);
+> >>
+> >> After parsing DSM in pci, we need record this info.
+> >> Currently, can_stall info is recorded in iommu_fwspec,
+> >> which is allocated in iommu_fwspec_init and called by iort_iommu_configure
+> >> for uefi.
+> > 
+> > You can look for a _DSM wherever it is convenient for you.  It could
+> > be in an AMBA shim layer.
+> > 
+> >> 2. Guest kernel also need support sva.
+> >> Using quirk, the guest can boot with sva enabled, since quirk is
+> >> self-contained by kernel.
+> >> If using  _DSM, a specific uefi or dtb has to be provided,
+> >> currently we can useQEMU_EFI.fd from apt install qemu-efi
+> > 
+> > I don't quite understand what this means, but as I mentioned before, a
+> > quirk for a *limited* number of devices is OK, as long as there is a
+> > plan that removes the need for a quirk for future devices.
+> > 
+> > E.g., if the next platform version ships with a DTB or firmware with a
+> > _DSM or other mechanism that enables the kernel to discover this
+> > information without a kernel change, it's fine to use a quirk to cover
+> > the early platform.
+> > 
+> > The principles are:
+> > 
+> >   - I don't want to have to update a quirk for every new Device ID
+> >     that needs this.
+> 
+> Hi Bjorn and Zhangfei,
+> 
+> We plan to use ATS/PRI to support SVA in future PCI devices. However, for
+> current devices, we need to add limited number of quirk to let them
+> work. The device IDs of current quirk needed devices are ZIP engine(0xa250, 0xa251),
+> SEC engine(0xa255, 0xa256), HPRE engine(0xa258, 0xa259), revision id are
+> 0x21 and 0x30.
+> 
+> Let's continue to upstream these quirks!
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
-This is basically the same as what you're currently discussing
-for the Marvell / QLogic 1077 quirk.
----
- drivers/pci/vpd.c | 46 ----------------------------------------------
- 1 file changed, 46 deletions(-)
+Please post the patches you propose.  I don't think the previous ones
+are in my queue.  Please include the lore URL for the previous
+posting(s) in the cover letter so we can connect the discussion.
 
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 7915d10f9..ef5165eb3 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -578,52 +578,6 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_QLOGIC, 0x2261, quirk_blacklist_vpd);
- DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
- 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_blacklist_vpd);
- 
--/*
-- * For Broadcom 5706, 5708, 5709 rev. A nics, any read beyond the
-- * VPD end tag will hang the device.  This problem was initially
-- * observed when a vpd entry was created in sysfs
-- * ('/sys/bus/pci/devices/<id>/vpd').   A read to this sysfs entry
-- * will dump 32k of data.  Reading a full 32k will cause an access
-- * beyond the VPD end tag causing the device to hang.  Once the device
-- * is hung, the bnx2 driver will not be able to reset the device.
-- * We believe that it is legal to read beyond the end tag and
-- * therefore the solution is to limit the read/write length.
-- */
--static void quirk_brcm_570x_limit_vpd(struct pci_dev *dev)
--{
--	/*
--	 * Only disable the VPD capability for 5706, 5706S, 5708,
--	 * 5708S and 5709 rev. A
--	 */
--	if ((dev->device == PCI_DEVICE_ID_NX2_5706) ||
--	    (dev->device == PCI_DEVICE_ID_NX2_5706S) ||
--	    (dev->device == PCI_DEVICE_ID_NX2_5708) ||
--	    (dev->device == PCI_DEVICE_ID_NX2_5708S) ||
--	    ((dev->device == PCI_DEVICE_ID_NX2_5709) &&
--	     (dev->revision & 0xf0) == 0x0)) {
--		if (dev->vpd)
--			dev->vpd->len = 0x80;
--	}
--}
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
--			PCI_DEVICE_ID_NX2_5706,
--			quirk_brcm_570x_limit_vpd);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
--			PCI_DEVICE_ID_NX2_5706S,
--			quirk_brcm_570x_limit_vpd);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
--			PCI_DEVICE_ID_NX2_5708,
--			quirk_brcm_570x_limit_vpd);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
--			PCI_DEVICE_ID_NX2_5708S,
--			quirk_brcm_570x_limit_vpd);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
--			PCI_DEVICE_ID_NX2_5709,
--			quirk_brcm_570x_limit_vpd);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
--			PCI_DEVICE_ID_NX2_5709S,
--			quirk_brcm_570x_limit_vpd);
--
- static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
- {
- 	int chip = (dev->device & 0xf000) >> 12;
--- 
-2.29.2
-
+> >   - I don't really want to have to manage non-PCI information in the
+> >     struct pci_dev.  If this is AMBA- or IOMMU-related, it should be
+> >     stored in a structure related to AMBA or the IOMMU.
+> > .
+> > 
