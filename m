@@ -2,108 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D4832DE0CE
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Dec 2020 11:14:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 491C92DE3EB
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Dec 2020 15:21:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732586AbgLRKNF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Dec 2020 05:13:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43808 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389031AbgLRKNF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Dec 2020 05:13:05 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 02F0EAC7B;
-        Fri, 18 Dec 2020 10:12:23 +0000 (UTC)
-Date:   Fri, 18 Dec 2020 11:12:21 +0100
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: dwc: tegra194: issue with card containing a bridge
-Message-ID: <20201218101221.GB52649@suse.de>
-References: <20201215102442.GA20517@suse.de>
- <9a8abc90-cf18-b0c8-3bcb-efbe03f0ca4c@nvidia.com>
- <20201215132504.GA20914@suse.de>
- <20201215154147.GA3885265@robh.at.kernel.org>
- <20201215205235.GC20914@suse.de>
- <20201217145857.GA3941403@robh.at.kernel.org>
- <20201217170635.GA52649@suse.de>
+        id S1726120AbgLROVK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Dec 2020 09:21:10 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37710 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgLROVK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Dec 2020 09:21:10 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BIEJQJC093197;
+        Fri, 18 Dec 2020 08:19:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1608301166;
+        bh=S+0GamKVCQ687Tv6EqyRvpQ1fBcSrBgLoRk//UMEKCc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OhInuthfyE1sUT8QW2eEhRFjnbAPn+XfqGsUV4TRoOxjVnbfsDsvCcSie1YV4266F
+         8/RGvWMmDTkhyLbGDvbXCCq2Lny1atTCTREMQH03bwULQo68I86n48w5a1mGsKnPFE
+         ZUs2go+hyKlixjJWH7kN4clMEnqDp82uw8nSOeuw=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BIEJQSm095816
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Dec 2020 08:19:26 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 18
+ Dec 2020 08:19:26 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 18 Dec 2020 08:19:26 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BIEJNTE090472;
+        Fri, 18 Dec 2020 08:19:23 -0600
+Subject: Re: [PATCH] msi: use for_each_msi_entry_safe iterator macro
+To:     Jacob Keller <jacob.e.keller@intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+References: <20201217005557.45031-1-jacob.e.keller@intel.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <4b3ee539-d5b0-d316-5ee0-0b7bd543c283@ti.com>
+Date:   Fri, 18 Dec 2020 19:49:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201217170635.GA52649@suse.de>
+In-Reply-To: <20201217005557.45031-1-jacob.e.keller@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 17, 2020 at 06:06:35PM +0100, Mian Yousaf Kaukab wrote:
-> On Thu, Dec 17, 2020 at 08:58:57AM -0600, Rob Herring wrote:
-> > On Tue, Dec 15, 2020 at 09:52:35PM +0100, Mian Yousaf Kaukab wrote:
-> > > On Tue, Dec 15, 2020 at 09:41:47AM -0600, Rob Herring wrote:
-> > > > On Tue, Dec 15, 2020 at 02:25:04PM +0100, Mian Yousaf Kaukab wrote:
-> > > > > On Tue, Dec 15, 2020 at 05:45:59PM +0530, Vidya Sagar wrote:
-> > > > > > Thanks Mian for bringing it to our notice.
-> > > > > > Have you tried removing the dw_pcie_setup_rc(pp); call from pcie-tegra194.c
-> > > > > > file on top of linux-next? and does that solve the issue?
-> > > > > > 
-> > > > > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > > b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > > index 5597b2a49598..1c9e9c054592 100644
-> > > > > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> > > > > > @@ -907,7 +907,7 @@ static void tegra_pcie_prepare_host(struct pcie_port
-> > > > > > *pp)
-> > > > > >                 dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
-> > > > > > val);
-> > > > > >         }
-> > > > > > 
-> > > > > > -       dw_pcie_setup_rc(pp);
-> > > > > > +       //dw_pcie_setup_rc(pp);
-> > > > > I still see the same issue with this change.
-> > > > > Reverting b9ac0f9dc8ea works though.
-> > > > > > 
-> > > > > >         clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
-> > > > > > 
-> > > > > > I took a quick look at the dw_pcie_setup_rc() implementation and I'm not
-> > > > > > sure why calling it second time should create any issue for the enumeration
-> > > > > > of devices behind a switch. Perhaps I need to spend more time to debug that
-> > > > > > part.
-> > > > > > In any case, since dw_pcie_setup_rc() is already part of
-> > > > > > dw_pcie_host_init(), I think it can be removed from
-> > > > > > tegra_pcie_prepare_host() implemention.
-> > > > 
-> > > > I think the 2nd time is making the link go down is my guess. Tegra was 
-> > > > odd in that its start/stop link functions don't do link handling, so I 
-> > > > didn't implement those functions and left the link handling in the Tegra 
-> > > > driver.
-> > > > 
-> > > > Can you try the below patch. It needs some more work as it breaks 
-> > > > endpoint mode.
-> > 
-> > [...]
-> > 
-> > > Boot is ok with this patch. Some improvement in lspci as well:
-> > 
-> > Some improvement? Meaning not completely working still?
-> > 
-> > > # lspci
-> > > 0001:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad2 (rev a1)
-> > > 0001:01:00.0 SATA controller: Marvell Technology Group Ltd. Device 9171 (rev 13)
-> > > 0005:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1)
-> > > 0005:01:00.0 PCI bridge: PLX Technology, Inc. Device 3380 (rev ab)
-> > 
-> > This patch was closer to the original flow, but would not have worked if 
-> > DLFE disabled mode was needed.
-> > 
-> > Please give this patch a try:
-> Thank you for the patch! Initial results with it looks very promising.
-> I’ll get back to you tomorrow after running a few more tests.
-Rob, thank you for your efforts! This patch fixed the issue I was seeing. FWIW:
 
-Tested-by: Mian Yousaf Kaukab <ykaukab@suse.de>
 
-BR,
-Yousaf
+On 17/12/20 6:25 am, Jacob Keller wrote:
+> Commit 81b1e6e6a859 ("platform-msi: Free descriptors in
+> platform_msi_domain_free()") introduced for_each_msi_entry_safe as an
+> iterator operating on the msi_list using the safe semantics with
+> a temporary variable.
+> 
+> A handful of locations still used the generic iterator instead of the
+> specific macro. Fix the 3 remaining cases. Add a cocci script which can
+> detect and report any misuse that is introduced in future changes.
+> 
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Cc: Stuart Yoder <stuyoder@gmail.com>
+> Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Santosh Shilimkar <ssantosh@kernel.org>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+> ---
+
+[..snip..]
+
+>  	}
+> diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_msi.c
+> index 0eb9462f609e..66f9772dcdfa 100644
+> --- a/drivers/soc/ti/ti_sci_inta_msi.c
+> +++ b/drivers/soc/ti/ti_sci_inta_msi.c
+> @@ -64,7 +64,7 @@ static void ti_sci_inta_msi_free_descs(struct device *dev)
+>  {
+>  	struct msi_desc *desc, *tmp;
+>  
+> -	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
+> +	for_each_msi_entry_safe(desc, tmp, dev) {
+>  		list_del(&desc->list);
+>  		free_msi_entry(desc);
+>  	}
+
+For ti_sci_inta_msi part:
+
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Thanks and regards,
+Lokesh
+
