@@ -2,141 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B472DEBC3
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Dec 2020 23:53:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E96822DE808
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Dec 2020 18:32:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgLRWvl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Dec 2020 17:51:41 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:27384 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbgLRWvk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 18 Dec 2020 17:51:40 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20201218225058epoutp020f2a434fb0be040aea753660ac5aa0c7~R8U3ERaSE3229732297epoutp02x
-        for <linux-pci@vger.kernel.org>; Fri, 18 Dec 2020 22:50:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20201218225058epoutp020f2a434fb0be040aea753660ac5aa0c7~R8U3ERaSE3229732297epoutp02x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1608331858;
-        bh=Z2NFqj8VfHHzdtjUbgSEQIilQ+fIwqpC7aWCnUGTR2g=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=FQ2BdZmaClWsZG5XIV2kbR5+0zSn6PrSVZRoc2KnOtmX1K3BKvGbCftk5HihBUcsh
-         z3PeIH4O3LBxnM+wukxZxpnnVJOeAZVQlTQexYi4VgncaQKc+FytYOrZ+7z//Tm4n/
-         1Y4j+IoWhTr+8hkkXYedJHvbPAq3YrC4l4FiKAyQ=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20201218225057epcas5p4f495fd8fe622e1dbeb9cfab70bd3233f~R8U2VnzOw0934509345epcas5p4s;
-        Fri, 18 Dec 2020 22:50:57 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C1.E1.33964.1523DDF5; Sat, 19 Dec 2020 07:50:57 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20201218154704epcas5p1446559adbd4a5b267a4c940b5f744970~R2ivw4tl20804008040epcas5p1r;
-        Fri, 18 Dec 2020 15:47:04 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20201218154704epsmtrp17777a88462abe3c39565ad1005f6c9ba~R2ivwE9EO1669016690epsmtrp1M;
-        Fri, 18 Dec 2020 15:47:04 +0000 (GMT)
-X-AuditID: b6c32a4b-ea1ff700000184ac-e0-5fdd32514028
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EF.83.13470.8FECCDF5; Sat, 19 Dec 2020 00:47:04 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20201218154702epsmtip1d520d154f76a28cbaf8a63578d78876a~R2iuiKap72025720257epsmtip1Y;
-        Fri, 18 Dec 2020 15:47:02 +0000 (GMT)
-From:   Shradha Todi <shradha.t@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     kishon@ti.com, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        pankaj.dubey@samsung.com, Shradha Todi <shradha.t@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-Subject: [PATCH v2] PCI: endpoint: Fix NULL pointer dereference for
- ->get_features()
-Date:   Fri, 18 Dec 2020 21:15:16 +0530
-Message-Id: <1608306316-32096-1-git-send-email-shradha.t@samsung.com>
-X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsWy7bCmum6g0d14g4a1EhZLmjIsLjztYbO4
-        vGsOm8XZecfZLN78fsFusWjrF3aL3sO1FjfWsztweKyZt4bRY8GmUo++LasYPY7f2M7k8XmT
-        XABrFJdNSmpOZllqkb5dAlfGkjVf2Aou81b8vjuNqYHxJXcXIyeHhICJRMvxL6xdjFwcQgK7
-        GSXm3f/CBuF8YpT4sewQC0iVkMA3Rokvh41gOppn3WOBKNrLKHH7+CuojhYmifWzHjGBVLEJ
-        aEk0fu1iBrFFBKwlDrdvAStiFljDKLFq6SqwhLBAmMSqCwfYQWwWAVWJ/zN72EBsXgFXiYPz
-        D7FBrJOTuHmukxmkWUJgE7vEtiXbWSASLhJ7Nt5mhrCFJV4d38IOYUtJvOxvg7LzJaZeeApU
-        zwFkV0gs76mDCNtLHLgyByzMLKApsX6XPkRYVmLqqXVg9zML8En0/n7CBBHnldgxD8ZWlvjy
-        dw/UBZIS845dZoWwPSTOtm9lgoRWrMTG/xMYJzDKzkLYsICRcRWjZGpBcW56arFpgXFearle
-        cWJucWleul5yfu4mRnDsa3nvYHz04IPeIUYmDsZDjBIczEoivKEPbscL8aYkVlalFuXHF5Xm
-        pBYfYpTmYFES51X6cSZOSCA9sSQ1OzW1ILUIJsvEwSnVwHSnZdOjmc4ntxZN/iCWdsno8Y6D
-        e8I8w5T667uiNhQoWgT93+/74LHdY+4rPKH9SZICPP+rZA59CS+o+i7+7P7jjczNMySKOLeJ
-        vLvux7Rbw4lj1owQ3ubE4JAVu7atWCZ2OUbqz2ujpKzUhal88aZWmuu+7uP2OiAzLcCmi3mn
-        RtrlGt/Z1b5Wv10PtKhZfDgmX+vZJR5o6/KQiSnk65drng42Plx/L95yljW5f0Xm4qv7/gwW
-        F9xnH764RvnYzopV75vco39Kt7ExbdFnbb7K8njrc5V/v7ZPF1eatEhz6RnBF06rn/u+E1nu
-        dombK8Ug2ang6tMf+owKv4L+3Qh8HJOdkXhcqCtd7L6dpBJLcUaioRZzUXEiALdJnt9sAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkluLIzCtJLcpLzFFi42LZdlhJTvfHuTvxBj+62CyWNGVYXHjaw2Zx
-        edccNouz846zWbz5/YLdYtHWL+wWvYdrLW6sZ3fg8Fgzbw2jx4JNpR59W1Yxehy/sZ3J4/Mm
-        uQDWKC6blNSczLLUIn27BK6MJWu+sBVc5q34fXcaUwPjS+4uRk4OCQETieZZ91i6GLk4hAR2
-        M0r0np7DCpGQlPh8cR0ThC0ssfLfc3aIoiYmiemNi5hBEmwCWhKNX7vAbBEBW4n7jyazghQx
-        C2xilHh6uYsNJCEsECKx59RBsKksAqoS/2f2gMV5BVwlDs4/xAaxQU7i5rlO5gmMPAsYGVYx
-        SqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgSHkpbmDsbtqz7oHWJk4mA8xCjBwawkwhv6
-        4Ha8EG9KYmVValF+fFFpTmrxIUZpDhYlcd4LXSfjhQTSE0tSs1NTC1KLYLJMHJxSDUzGH3Zc
-        POYR5rpJ4/SejmnhP2+n6m3q95Dd+yVlYfvtWhatFi+ZkHXJiQ8yUmfvl5O11WE26K05dLZN
-        +LtcAVfftoy2U5xR+wI/pT76pWgR9NFo0jZbpl9HL/37eVw+wf/yvpM+B5LZA64bRjz0n5N4
-        6nlD7Yo1m7MEKquezNm/R3UD3/un9zolrthtSNA/kPPt97SPVXnip0Ml2D694T998/SJXCbJ
-        WNnXj07P7ln3oTWjq7cqVGZbUfl+D23lrmdFFjpv5z4r0u9k6FFd0DG/M7duZqZS9b38Mm3N
-        D5o1zRyVa1/u3vPs++zzeq+lTsVc0y4ontbwS0v/tdKRK/s+VPsfaqqdv7Xdq+q35WElluKM
-        REMt5qLiRAA8rxwrlAIAAA==
-X-CMS-MailID: 20201218154704epcas5p1446559adbd4a5b267a4c940b5f744970
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20201218154704epcas5p1446559adbd4a5b267a4c940b5f744970
-References: <CGME20201218154704epcas5p1446559adbd4a5b267a4c940b5f744970@epcas5p1.samsung.com>
+        id S1728191AbgLRRcR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Dec 2020 12:32:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727787AbgLRRcR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Dec 2020 12:32:17 -0500
+X-Gm-Message-State: AOAM530eYzdjIS03DeU23l1QN0UavYealEGwaEVsaREi6cWhayzQadiG
+        Qq/APuihaVTN2/VnS0yyYq4Xtr6Ws7wgbfp7Mg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608312696;
+        bh=BGGQyU71jC8PHb+t5FSRSX4kcxy5gG40URfePe8J9nU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cC9AQytUFvAovKozDhlHSzCa40u9b51UDDu9DY6VQsEs2qwlTb7/eZ+duGTl5G1MJ
+         ltk1VO2sg5dTfQ9/rD8rASKJc+I7GyP3U29GCpmR4vNcsvQhuTGV9xRWhbP9HVb3Cr
+         GHcvUq6DPgtaiTnrm90fWn6uZTlOzXGvAz3ugrDpPpOwC9zbdWaT0hryRuRTgrwTal
+         8RHDiRRFV4faBB8B+E/aBqM+Qyr+AtKu47VmmKqT+pQW+ygXcKYgIsnYFKtt1PlFsj
+         2kRsozrN5SM3jDENsG6+VwteAIt6IsjRhBdaQHFUKX3GBUBFmwd3KMIUCI0udLN/Mh
+         Rfjes/c6AAKKA==
+X-Google-Smtp-Source: ABdhPJx+/RIAdMo/5KCMW4U0Xhm+Ecu8VxfrvTtPK9bsliEAA6f3bzT1/rBR+63O/WV/mn7yv7B+sDblEkk6WewuJ5I=
+X-Received: by 2002:a17:906:d87:: with SMTP id m7mr5100609eji.108.1608312694596;
+ Fri, 18 Dec 2020 09:31:34 -0800 (PST)
+MIME-Version: 1.0
+References: <20201215070009.27937-1-kishon@ti.com> <CAL_JsqJzi7JkMcd4NZewA=w8q6BsCkrhW3JcED63R=EyE3v29Q@mail.gmail.com>
+ <1ec78477-dadc-cbef-406f-568f44b6c62d@ti.com> <CAL_JsqLepmopGObX_r+7gtR+keaNtEAA3WA1j697T4jAWP8DHA@mail.gmail.com>
+ <96ca64cb-ec3a-bb83-2de3-775034ba844b@ti.com>
+In-Reply-To: <96ca64cb-ec3a-bb83-2de3-775034ba844b@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 18 Dec 2020 11:31:22 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+fP4CcxVm89YkUYDK9eX2j8Yac97nMCLnxGnMakopc7g@mail.gmail.com>
+Message-ID: <CAL_Jsq+fP4CcxVm89YkUYDK9eX2j8Yac97nMCLnxGnMakopc7g@mail.gmail.com>
+Subject: Re: [PATCH v5] PCI: cadence: Retrain Link to work around Gen2
+ training defect.
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nadeem Athani <nadeem@cadence.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Milind Parab <mparab@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
+        Parshuram Raju Thombare <pthombar@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-get_features ops of pci_epc_ops may return NULL, causing NULL pointer
-dereference in pci_epf_test_bind function. Let us add a check for
-pci_epc_feature pointer in pci_epf_test_bind before we access it to
-avoid any such NULL pointer dereference and return -ENOTSUPP in case
-pci_epc_feature is not found.
+On Fri, Dec 18, 2020 at 8:42 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Rob,
+>
+> On 16/12/20 10:31 pm, Rob Herring wrote:
+> > On Wed, Dec 16, 2020 at 9:01 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> Hi Rob,
+> >>
+> >> On 15/12/20 9:23 pm, Rob Herring wrote:
+> >>> On Tue, Dec 15, 2020 at 1:00 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>>>
+> >>>> From: Nadeem Athani <nadeem@cadence.com>
+> >>>>
+> >>>> Cadence controller will not initiate autonomous speed change if strapped as
+> >>>> Gen2. The Retrain Link bit is set as quirk to enable this speed change.
+> >>>>
+> >>>> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+> >>>> [kishon@ti.com: Enable the workaround for TI's J721E SoC]
+> >>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >>>> ---
+> >>>> Hi Lorenzo,
+> >>>> The previous version of the patch can be found at [1].
+> >>>> I slightly re-worked the patch from Nadeem
+> >>>> *) Removed additional Link Up Check
+> >>>> *) Removed quirk from pcie-cadence-plat.c
+> >>>> *) Also removed additional compatible
+> >>>>    "cdns,cdns-pcie-host-quirk-retrain" added in that series
+> >>>> *) Enabled the quirk for J721E
+> >>>> [1] -> http://lore.kernel.org/r/20201211144236.3825-1-nadeem@cadence.com
+> >>>>
+> >>>>  drivers/pci/controller/cadence/pci-j721e.c    |  3 +
+> >>>>  .../controller/cadence/pcie-cadence-host.c    | 67 ++++++++++++++-----
+> >>>>  drivers/pci/controller/cadence/pcie-cadence.h | 11 ++-
+> >>>>  3 files changed, 62 insertions(+), 19 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> >>>> index dac1ac8a7615..baf729850cb1 100644
+> >>>> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> >>>> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> >>>> @@ -64,6 +64,7 @@ enum j721e_pcie_mode {
+> >>>>
+> >>>>  struct j721e_pcie_data {
+> >>>>         enum j721e_pcie_mode    mode;
+> >>>> +       bool                    quirk_retrain_flag;
+> >>>>  };
+> >>>>
+> >>>>  static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+> >>>> @@ -280,6 +281,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
+> >>>>
+> >>>>  static const struct j721e_pcie_data j721e_pcie_rc_data = {
+> >>>>         .mode = PCI_MODE_RC,
+> >>>> +       .quirk_retrain_flag = true,
+> >>>>  };
+> >>>>
+> >>>>  static const struct j721e_pcie_data j721e_pcie_ep_data = {
+> >>>> @@ -388,6 +390,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+> >>>>
+> >>>>                 bridge->ops = &cdns_ti_pcie_host_ops;
+> >>>>                 rc = pci_host_bridge_priv(bridge);
+> >>>> +               rc->quirk_retrain_flag = data->quirk_retrain_flag;
+> >>>>
+> >>>>                 cdns_pcie = &rc->pcie;
+> >>>>                 cdns_pcie->dev = dev;
+> >>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >>>> index 811c1cb2e8de..773c0d1137ed 100644
+> >>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >>>> @@ -77,6 +77,50 @@ static struct pci_ops cdns_pcie_host_ops = {
+> >>>>         .write          = pci_generic_config_write,
+> >>>>  };
+> >>>>
+> >>>> +static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+> >>>> +{
+> >>>> +       struct device *dev = pcie->dev;
+> >>>> +       int retries;
+> >>>> +
+> >>>> +       /* Check if the link is up or not */
+> >>>> +       for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> >>>> +               if (cdns_pcie_link_up(pcie)) {
+> >>>> +                       dev_info(dev, "Link up\n");
+> >>>> +                       return 0;
+> >>>> +               }
+> >>>> +               usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+> >>>> +       }
+> >>>> +
+> >>>> +       return -ETIMEDOUT;
+> >>>> +}
+> >>>> +
+> >>>> +static void cdns_pcie_retrain(struct cdns_pcie *pcie)
+> >>>> +{
+> >>>> +       u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
+> >>>> +       u16 lnk_stat, lnk_ctl;
+> >>>> +
+> >>>> +       /*
+> >>>> +        * Set retrain bit if current speed is 2.5 GB/s,
+> >>>> +        * but the PCIe root port support is > 2.5 GB/s.
+> >>>
+> >>> If you don't have the retrain quirk, wouldn't this condition never
+> >>> happen and then the function is just a nop? So this could just be
+> >>> called unconditionally.
+> >>
+> >> Yeah, but only for the quirk we have to retrain to go to GEN2 speed
+> >> mode. Else the HW will automatically retrain and go to GEN2.
+> >
+> > Again, so you don't need a flag for this. Comparing the speed is
+> > enough. IOW, all you need is:
+> >
+> > if (current speed < advertised speed)
+> >   do retrain
+> >
+> > The question is the condition ever true and you don't want to do a
+> > retrain? I could see higher speeds being unstable or something, but
+>
+> For all GEN1 cards there will be re-train (since the Cadence IP RC is
+> GEN2 or more say). This is going to be true for older Cadence IPs and
+> newer Cadence IPs (where Cadence has enabled HW re-training).
+>
+> The quirk will prevent SW re-training for newer Cadence IPs when a GEN1
+> card is connected.
 
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
-Signed-off-by: Shradha Todi <shradha.t@samsung.com>
----
-v2:
- rebase on v1
- v1: https://lore.kernel.org/patchwork/patch/1208269/
+Okay, got it.
 
- drivers/pci/endpoint/functions/pci-epf-test.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 66723d5..f1842e6 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -835,13 +835,16 @@ static int pci_epf_test_bind(struct pci_epf *epf)
- 		return -EINVAL;
- 
- 	epc_features = pci_epc_get_features(epc, epf->func_no);
--	if (epc_features) {
--		linkup_notifier = epc_features->linkup_notifier;
--		core_init_notifier = epc_features->core_init_notifier;
--		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
--		pci_epf_configure_bar(epf, epc_features);
-+	if (!epc_features) {
-+		dev_err(&epf->dev, "epc_features not implemented\n");
-+		return -EOPNOTSUPP;
- 	}
- 
-+	linkup_notifier = epc_features->linkup_notifier;
-+	core_init_notifier = epc_features->core_init_notifier;
-+	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
-+	pci_epf_configure_bar(epf, epc_features);
-+
- 	epf_test->test_reg_bar = test_reg_bar;
- 	epf_test->epc_features = epc_features;
- 
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
