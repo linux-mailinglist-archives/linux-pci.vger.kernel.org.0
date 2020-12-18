@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AE52DE87B
-	for <lists+linux-pci@lfdr.de>; Fri, 18 Dec 2020 18:44:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D94632DE878
+	for <lists+linux-pci@lfdr.de>; Fri, 18 Dec 2020 18:44:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgLRRnO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 18 Dec 2020 12:43:14 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:38592 "EHLO mta-01.yadro.com"
+        id S1726224AbgLRRmu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 18 Dec 2020 12:42:50 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:38573 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728115AbgLRRnO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Dec 2020 12:43:14 -0500
+        id S1726242AbgLRRmu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Dec 2020 12:42:50 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id D46A9413C3;
-        Fri, 18 Dec 2020 17:41:30 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 2A660413CB;
+        Fri, 18 Dec 2020 17:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1608313289; x=1610127690; bh=YT0S6jRZmFKntF1RfxOxE05+Oc1ixfUdEj+
-        FCmojLYA=; b=V6DapAPv9clT4CnH3nPC8xJ8wfUdTBCe1XQ9mwnv5b4NUsjOvT+
-        8nzCazdquPMJEEWi9scXkVOYW6UCQwhiWrc4K0WNyxfZkoGGtIJUFpc+tH+VqeKL
-        r/ts/n6DsKstuw5Gqqk/b581SOi5Bz8HOhcEP3wrBfaVMSFeWyhc/bY4=
+        1608313291; x=1610127692; bh=S2G+Li4cmUfMFhe99gYolFF3zExbhtUK11o
+        tKS49VIs=; b=KeGKzJnsLIgoKDZapFqMdp/Qh7PR/jCFz4QWKMY1bDATr7ew8Vp
+        ZaeY2EO2BgE2iWK3gvZFclBETH212Vm4CrKVr/nlaNafZgcd8xjec37fqsT36IYN
+        xobaA7amZdQ3X/c5j9DYOXUGZepEaRbYcBBMi3s6qugnbNMYMkPQrYbs=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mzM7ohzCnT47; Fri, 18 Dec 2020 20:41:29 +0300 (MSK)
+        with ESMTP id 6ZksMcE-ZizT; Fri, 18 Dec 2020 20:41:31 +0300 (MSK)
 Received: from T-EXCH-03.corp.yadro.com (t-exch-03.corp.yadro.com [172.17.100.103])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 3CD44413DD;
+        by mta-01.yadro.com (Postfix) with ESMTPS id 7A15B413DE;
         Fri, 18 Dec 2020 20:41:10 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-03.corp.yadro.com
  (172.17.100.103) with Microsoft SMTP Server (version=TLS1_2,
@@ -43,9 +43,9 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         David Laight <David.Laight@ACULAB.COM>,
         Rajat Jain <rajatja@google.com>, <linux@yadro.com>,
         Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v9 21/26] PCI: Rescan the bus to resize a BAR
-Date:   Fri, 18 Dec 2020 20:40:06 +0300
-Message-ID: <20201218174011.340514-22-s.miroshnichenko@yadro.com>
+Subject: [PATCH v9 22/26] PCI: hotplug: Enable the movable BARs feature by default
+Date:   Fri, 18 Dec 2020 20:40:07 +0300
+Message-ID: <20201218174011.340514-23-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
 References: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
@@ -59,54 +59,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-BAR resizing can be blocked by another BAR, so trigger a bus rescan to be
-able to move BARs, increasing the probability of finding a good layout.
+This is the last patch in the series which implements the essentials of the
+movable BARs feature, so it is turned on by default now.
+
+Tested on x86_64; and with extra patches applied, it also works on ppc64le
+(PowerNV).
+
+In case of problems it is still can be overridden by the following command
+line option:
+
+  pcie_movable_bars=off
 
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/setup-res.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index 28ec3d8c79c8..83a491f6a2c2 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -480,6 +480,9 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	u32 sizes;
- 	u16 cmd;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index f393f0bc8ec4..98fabff81028 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -76,7 +76,7 @@ static void pci_dev_d3_sleep(struct pci_dev *dev)
+ int pci_domains_supported = 1;
+ #endif
  
-+	if (pci_dev_bar_fixed(dev, res))
-+		return -EOPNOTSUPP;
-+
- 	/* Make sure the resource isn't assigned before resizing it. */
- 	if (!(res->flags & IORESOURCE_UNSET))
- 		return -EBUSY;
-@@ -506,7 +509,15 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- 	res->end = res->start + pci_rebar_size_to_bytes(size) - 1;
+-bool pci_can_move_bars;
++bool pci_can_move_bars = true;
  
- 	/* Check if the new config works by trying to assign everything. */
--	if (dev->bus->self) {
-+	if (pci_can_move_bars) {
-+		pci_rescan_bus(dev->bus);
-+
-+		if (!res->flags || (res->flags & IORESOURCE_UNSET) || !res->parent) {
-+			pci_err(dev, "BAR %d resize failed\n", resno);
-+			ret = -1;
-+			goto error_resize;
-+		}
-+	} else if (dev->bus->self) {
- 		ret = pci_reassign_bridge_resources(dev->bus->self, res->flags);
- 		if (ret)
- 			goto error_resize;
-@@ -516,6 +527,8 @@ int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- error_resize:
- 	pci_rebar_set_size(dev, resno, old);
- 	res->end = res->start + pci_rebar_size_to_bytes(old) - 1;
-+	if (pci_can_move_bars)
-+		pci_rescan_bus(dev->bus);
- 	return ret;
- }
- EXPORT_SYMBOL(pci_resize_resource);
+ #define DEFAULT_CARDBUS_IO_SIZE		(256)
+ #define DEFAULT_CARDBUS_MEM_SIZE	(64*1024*1024)
 -- 
 2.24.1
 
