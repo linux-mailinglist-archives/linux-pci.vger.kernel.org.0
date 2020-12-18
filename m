@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 015F92DE876
+	by mail.lfdr.de (Postfix) with ESMTP id 6D4E92DE877
 	for <lists+linux-pci@lfdr.de>; Fri, 18 Dec 2020 18:44:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgLRRmu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S1726220AbgLRRmu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 18 Dec 2020 12:42:50 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:38566 "EHLO mta-01.yadro.com"
+Received: from mta-02.yadro.com ([89.207.88.252]:38570 "EHLO mta-01.yadro.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726220AbgLRRmt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 18 Dec 2020 12:42:49 -0500
+        id S1726224AbgLRRmu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 18 Dec 2020 12:42:50 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 9DCE64120A;
-        Fri, 18 Dec 2020 17:41:24 +0000 (UTC)
+        by mta-01.yadro.com (Postfix) with ESMTP id 7E44C413BC;
+        Fri, 18 Dec 2020 17:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
         content-type:content-type:content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:date:subject
         :subject:from:from:received:received:received; s=mta-01; t=
-        1608313283; x=1610127684; bh=yUQ/qeNM7/P1CLLD+3cl1iPEn6wC6ShgeR8
-        iUomRcFU=; b=HtOZukoxQW96sAXc8+u1lwPp+bX7+KVJk4utowLFbFVMrONY169
-        QS6lIK8ht5RZ5NYghJrOkDMXNXpnsJCqqmVhu8/oZi7v/p/7Mpo8yx0nUDMJv4vI
-        DtJZGfwOhk2hFt68uz+UA7eNiqf4kIjZcHOfB27r+pMVh1rGUaL9zbzc=
+        1608313285; x=1610127686; bh=VeknS/sOEvEPit2cGhX+MTaf2Qht/qtdPSn
+        sto6syzg=; b=E/qXRDdtmsZX0/7lEwIedH6k0KMCHpgbXWXGI5CuwTWZhJONyDj
+        fbAL4EeFlyru6vyfFTtnoFLe1//ZeuQLCXeO4UBT/pRItwKd7lacdwwmveHywxCk
+        ASjZAxtFnGAFE3+mZil3tosv4feUifOB7UVQ0S8L6y5ys868TpkTts20=
 X-Virus-Scanned: amavisd-new at yadro.com
 Received: from mta-01.yadro.com ([127.0.0.1])
         by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QAFJnZ6eNGvt; Fri, 18 Dec 2020 20:41:23 +0300 (MSK)
+        with ESMTP id ds8ckpxxolCM; Fri, 18 Dec 2020 20:41:25 +0300 (MSK)
 Received: from T-EXCH-03.corp.yadro.com (t-exch-03.corp.yadro.com [172.17.100.103])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 8A24A413CF;
+        by mta-01.yadro.com (Postfix) with ESMTPS id C7854413D5;
         Fri, 18 Dec 2020 20:41:09 +0300 (MSK)
 Received: from NB-148.yadro.com (172.17.15.136) by T-EXCH-03.corp.yadro.com
  (172.17.100.103) with Microsoft SMTP Server (version=TLS1_2,
@@ -43,9 +43,9 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
         David Laight <David.Laight@ACULAB.COM>,
         Rajat Jain <rajatja@google.com>, <linux@yadro.com>,
         Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Subject: [PATCH v9 18/26] PCI: pciehp: Trigger a domain rescan on hp events when enabled movable BARs
-Date:   Fri, 18 Dec 2020 20:40:03 +0300
-Message-ID: <20201218174011.340514-19-s.miroshnichenko@yadro.com>
+Subject: [PATCH v9 19/26] PCI: Don't claim fixed BARs
+Date:   Fri, 18 Dec 2020 20:40:04 +0300
+Message-ID: <20201218174011.340514-20-s.miroshnichenko@yadro.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
 References: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
@@ -59,38 +59,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-With movable BARs, hot-adding a device is not a local event for its bridge,
-but it affects the whole RC: BARs and bridge windows can be substantially
-rearranged. So instead of trying to fit the new devices into pre-allocated
-reserved gaps, initiate a full domain rescan.
+A fixed BAR always has an address, but its parent bridge window can be not
+yet calculated (during boot) or temporarily released for re-calculation
+(during PCI rescan) when pci_claim_resource() is called.
 
-The pci_rescan_bus() covers all the operations of the replaced functions:
- - assigning new bus numbers, as the pci_hp_add_bridge() does it;
- - allocating BARs -- pci_assign_unassigned_bridge_resources();
- - configuring MPS settings -- pcie_bus_configure_settings();
- - binding devices to their drivers -- pci_bus_add_devices().
+Apart from that, fixed BARs now have separate guaranteed mechanism of
+assigning comparing to usual BARs, so claiming them is not needed.
+
+Return immediately from pci_claim_resource() to prevent a misleading "can't
+claim BAR ... no compatible bridge window" error message.
 
 Signed-off-by: Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
 ---
- drivers/pci/hotplug/pciehp_pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/setup-res.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-index d17f3bf36f70..6d4c1ef38210 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -58,6 +58,11 @@ int pciehp_configure_device(struct controller *ctrl)
- 		goto out;
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index 6ffda8b94c52..28ec3d8c79c8 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -139,6 +139,9 @@ int pci_claim_resource(struct pci_dev *dev, int resource)
+ 		return -EINVAL;
  	}
  
-+	if (pci_can_move_bars) {
-+		pci_rescan_bus(parent);
-+		goto out;
-+	}
++	if (pci_dev_bar_fixed(dev, res))
++		return 0;
 +
- 	for_each_pci_bridge(dev, parent)
- 		pci_hp_add_bridge(dev);
- 
+ 	/*
+ 	 * If we have a shadow copy in RAM, the PCI device doesn't respond
+ 	 * to the shadow range, so we don't need to claim it, and upstream
 -- 
 2.24.1
 
