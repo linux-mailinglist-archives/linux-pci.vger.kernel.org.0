@@ -2,87 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C68472E08D6
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Dec 2020 11:31:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C5DC2E0C78
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Dec 2020 16:11:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgLVKbW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Dec 2020 05:31:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgLVKbV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Dec 2020 05:31:21 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F1EC0613D3
-        for <linux-pci@vger.kernel.org>; Tue, 22 Dec 2020 02:30:41 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id h205so30788596lfd.5
-        for <linux-pci@vger.kernel.org>; Tue, 22 Dec 2020 02:30:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=arLJjw4ajAn6LC2XU3pN5oUvvehh5rZnK18PYWOQ1S8=;
-        b=o6Q9fwRVgw6bWHybczbcfqvQJFgkuSl3ScafbSdShVN2OMZ0Ob11syixrdzhEjm3zR
-         NjK3O4Mfz6XjlB8KQVPrH3XOxSgQ8P/+UAe39b78DSvpHr/356uTlRf5edVnCXgOxGKv
-         dukFeU5clpiVo+Qa7MNQansZAL+qKHqyac6nlpKxJY7XrrOaK8UNGjsPUmKsbnt8O/gG
-         IAuCO7Aum357sy6nDCXYqs+fqXr25QT6cW2ecSWsslHJamtk7fwyQOYgm5v/SetbJjAX
-         6E3abnS6G6FNuY3XZQXjlUsdaXytsh4/jtRpaj8tJWWG9d5D5gKwifXofu9sSj0OQUSK
-         XcjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=arLJjw4ajAn6LC2XU3pN5oUvvehh5rZnK18PYWOQ1S8=;
-        b=tKMLRrPsVftYKQcO9cL+yROuuR//itOUiQHDwrU9ecCPlom67bRNBKll57VP5+1HX1
-         k1LUEsHAE16L+Nur+/sGXrpnPDioAdzMpcJZYP+ZvAigj4YH4WA40/PFXPAMWQUJFh3l
-         Ai0XU/AylMF4b6wRtX/dfiB0GOVH/mf8MbzEWj3w6BokGNBhS4PPeNgYAyy9EmtLLgEY
-         y9b1ecxfWYlOwhgFv3xKqehg3hZmU11HsaS9uHMi6diRXrc+31Rgy+6gnPcVczK0STLo
-         rLv6Fsf9UHM0usO/UCXtOsLnqilaQ6hxYucQYmjBBwzCFXJKFTUl8zT+g0zsKd8ZaBhR
-         bmCg==
-X-Gm-Message-State: AOAM531msyKnwAta30U46k7nlo5p28VX/G6zfoh+jesNm9OnExovY+i2
-        yttmXbN09Meex4WD7hj1p7l5wjuYWPr0R5tTy3E=
-X-Google-Smtp-Source: ABdhPJza0fOZCF5L+dsfluzobGiGPTiC4ZtaxzRO1XdZ7nNBsen0lbSE90mA3rfxPvZkCux/SKzY9MLBWWMo1ADR7HA=
-X-Received: by 2002:a2e:9101:: with SMTP id m1mr9105433ljg.231.1608633039640;
- Tue, 22 Dec 2020 02:30:39 -0800 (PST)
+        id S1728076AbgLVPJS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Dec 2020 10:09:18 -0500
+Received: from mail-02.mail-europe.com ([51.89.119.103]:45502 "EHLO
+        mail-02.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgLVPJS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Dec 2020 10:09:18 -0500
+Date:   Tue, 22 Dec 2020 15:07:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1608649672; bh=Qx0+gSCQI+zwlEgYtmJbydKr/M0gl5zfTxgSnTu7KjM=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=l8olzOOFqQl9PpAudL0kQlto9/wJQ3L9VKguKXGkYaEfDWjLD6fDIZuKb7U350kFv
+         pHdowhTtIOLbdW0JHiO+X4M35VvCLrYSvM5jeUaydv4TBQywZZWG2TY+QKFIxwXq7e
+         waOQLsroh4qjjR6LgXx2ytkd9qhe14JvyC+eVsYNqL5Qj6Bx8eV/lX+TKxgp5JbqyU
+         2kRlyer4REV/tAxZPd5S793BJ3wrfHAu92ExDOW3ikn6dxhp/XzSZzI3QoXsZNcFJW
+         OUw12ESRn/uDnK3d3AtJ/8g+ixZudY1oD/KkhJonL35OzTlzxcuVp477fUuXqojOII
+         xxnAezm/k28tQ==
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alexander Lobakin <alobakin@pm.me>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: [PATCH pci] PCI: dwc: fix inverted condition of DMA mask setup warning
+Message-ID: <20201222150708.67983-1-alobakin@pm.me>
 MIME-Version: 1.0
-Received: by 2002:a2e:9988:0:0:0:0:0 with HTTP; Tue, 22 Dec 2020 02:30:39
- -0800 (PST)
-Reply-To: elizabethhedw@gmail.com
-From:   "Mrs. Elizabeth Edward" <mjimoh052@gmail.com>
-Date:   Tue, 22 Dec 2020 10:30:39 +0000
-Message-ID: <CAAad0w+izuF21Fiii-1X3j1Wr_NhpfJJjpR9qkdJqjHdzFEKDg@mail.gmail.com>
-Subject: REPLY ME URGENTLY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF shortcircuit=no
+        autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        mailout.protonmail.ch
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greeting
+Commit 660c486590aa ("PCI: dwc: Set 32-bit DMA mask for MSI target
+address allocation") added dma_mask_set() call to explicitly set
+32-bit DMA mask for MSI message mapping, but for now it throws a
+warning on ret =3D=3D 0, while dma_set_mask() returns 0 in case of
+success.
+Fix this by inverting the condition.
 
-Please forgive me for stressing you with my predicaments and I sorry
-to approach you through this media it is because it serves the fastest
-means of communication. I came across your E-mail from my personal
-search and I decided to contact you believing you will be honest to
-fulfill my final wish before I die.
+Misc: remove redundant braces around single statement.
 
-I am Mrs. Elizabeth Edward, 63 years, from USA, I am childless and I
-am suffering from a pro-long critical cancer, my doctors confirmed I
-may not live beyond two months from now as my ill health has defiled
-all forms of medical treatment.
+Fixes: 660c486590aa ("PCI: dwc: Set 32-bit DMA mask for MSI target address =
+allocation")
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Since my days are numbered, I=E2=80=99ve decided willingly to fulfill my
-long-time promise to donate you the sum ($5.000.000.00) million
-dollars I inherited from my late husband Mr. Edward Herbart, foreign
-bank account over years. I need a very honest person who can assist in
-transfer of this money to his or her account and use the funds for
-charities work of God while you use 50% for yourself. I want you to
-know there are no risk involved, it is 100% hitch free & safe. If you
-will be interesting to assist in getting this fund into your account
-for charity project to fulfill my promise before I die please let me
-know immediately. I will appreciate your utmost confidentiality as I
-wait for your reply.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pc=
+i/controller/dwc/pcie-designware-host.c
+index 516b151e0ef3..fa40cc2e376f 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -397,12 +397,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ =09=09=09=09=09=09=09    pp);
+=20
+ =09=09=09ret =3D dma_set_mask(pci->dev, DMA_BIT_MASK(32));
+-=09=09=09if (!ret) {
++=09=09=09if (ret)
+ =09=09=09=09dev_warn(pci->dev,
+ =09=09=09=09=09 "Failed to set DMA mask to 32-bit. "
+ =09=09=09=09=09 "Devices with only 32-bit MSI support"
+ =09=09=09=09=09 " may not work properly\n");
+-=09=09=09}
+=20
+ =09=09=09pp->msi_data =3D dma_map_single_attrs(pci->dev, &pp->msi_msg,
+ =09=09=09=09=09=09      sizeof(pp->msi_msg),
+--=20
+2.29.2
 
-Best Regards
 
-Mrs. Elizabeth Edward
