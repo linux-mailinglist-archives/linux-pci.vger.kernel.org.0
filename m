@@ -2,158 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07D5B2E0756
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Dec 2020 09:39:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C68472E08D6
+	for <lists+linux-pci@lfdr.de>; Tue, 22 Dec 2020 11:31:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgLVIjJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Dec 2020 03:39:09 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:21857 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726016AbgLVIjJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Dec 2020 03:39:09 -0500
-X-UUID: 64f217b91d514130a255023e82a56a98-20201222
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=YLfMy68wBB6UlNustrhsqE6gJYC3N0UvKOcE4aN9Y+k=;
-        b=VaN4Cy8Rsgdt8m3E+NW3DBk5X+RJNigwT5q0LkDBbPNHO6Fn/wEt1LIvYhyI8zzwfbAwoUHFX/ULirsOEcUGiCC2A72ajK0Y8VQqwOz2WhLbo5Xp8VeKTm4rbFXt5qPbY6tvnquxpz1jT8UmkfVS4bx4kPJNi62d1foZQW/nWFI=;
-X-UUID: 64f217b91d514130a255023e82a56a98-20201222
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1489639674; Tue, 22 Dec 2020 16:38:20 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 22 Dec
- 2020 16:38:16 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 22 Dec 2020 16:38:15 +0800
-Message-ID: <1608626297.14736.113.camel@mhfsdcap03>
-Subject: Re: [v5,2/3] PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     <youlin.pei@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <qizhong.cheng@mediatek.com>,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        <linux-pci@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <sin_jieyang@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 22 Dec 2020 16:38:17 +0800
-In-Reply-To: <CANMq1KB3UXg8QKwuv3mFaodx-s_AXSrOWp6C+RN7LaA69nsTyg@mail.gmail.com>
-References: <20201202133813.6917-1-jianjun.wang@mediatek.com>
-         <20201202133813.6917-3-jianjun.wang@mediatek.com>
-         <CANMq1KCSWf4PDMVhxFiLHOHe3dFqZbq1gzn4ph8aApVMX56MDg@mail.gmail.com>
-         <1608608319.14736.97.camel@mhfsdcap03>
-         <CANMq1KB3UXg8QKwuv3mFaodx-s_AXSrOWp6C+RN7LaA69nsTyg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S1726337AbgLVKbW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Dec 2020 05:31:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgLVKbV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Dec 2020 05:31:21 -0500
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33F1EC0613D3
+        for <linux-pci@vger.kernel.org>; Tue, 22 Dec 2020 02:30:41 -0800 (PST)
+Received: by mail-lf1-x142.google.com with SMTP id h205so30788596lfd.5
+        for <linux-pci@vger.kernel.org>; Tue, 22 Dec 2020 02:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=arLJjw4ajAn6LC2XU3pN5oUvvehh5rZnK18PYWOQ1S8=;
+        b=o6Q9fwRVgw6bWHybczbcfqvQJFgkuSl3ScafbSdShVN2OMZ0Ob11syixrdzhEjm3zR
+         NjK3O4Mfz6XjlB8KQVPrH3XOxSgQ8P/+UAe39b78DSvpHr/356uTlRf5edVnCXgOxGKv
+         dukFeU5clpiVo+Qa7MNQansZAL+qKHqyac6nlpKxJY7XrrOaK8UNGjsPUmKsbnt8O/gG
+         IAuCO7Aum357sy6nDCXYqs+fqXr25QT6cW2ecSWsslHJamtk7fwyQOYgm5v/SetbJjAX
+         6E3abnS6G6FNuY3XZQXjlUsdaXytsh4/jtRpaj8tJWWG9d5D5gKwifXofu9sSj0OQUSK
+         XcjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=arLJjw4ajAn6LC2XU3pN5oUvvehh5rZnK18PYWOQ1S8=;
+        b=tKMLRrPsVftYKQcO9cL+yROuuR//itOUiQHDwrU9ecCPlom67bRNBKll57VP5+1HX1
+         k1LUEsHAE16L+Nur+/sGXrpnPDioAdzMpcJZYP+ZvAigj4YH4WA40/PFXPAMWQUJFh3l
+         Ai0XU/AylMF4b6wRtX/dfiB0GOVH/mf8MbzEWj3w6BokGNBhS4PPeNgYAyy9EmtLLgEY
+         y9b1ecxfWYlOwhgFv3xKqehg3hZmU11HsaS9uHMi6diRXrc+31Rgy+6gnPcVczK0STLo
+         rLv6Fsf9UHM0usO/UCXtOsLnqilaQ6hxYucQYmjBBwzCFXJKFTUl8zT+g0zsKd8ZaBhR
+         bmCg==
+X-Gm-Message-State: AOAM531msyKnwAta30U46k7nlo5p28VX/G6zfoh+jesNm9OnExovY+i2
+        yttmXbN09Meex4WD7hj1p7l5wjuYWPr0R5tTy3E=
+X-Google-Smtp-Source: ABdhPJza0fOZCF5L+dsfluzobGiGPTiC4ZtaxzRO1XdZ7nNBsen0lbSE90mA3rfxPvZkCux/SKzY9MLBWWMo1ADR7HA=
+X-Received: by 2002:a2e:9101:: with SMTP id m1mr9105433ljg.231.1608633039640;
+ Tue, 22 Dec 2020 02:30:39 -0800 (PST)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 00173604EC7CD22A602B7873EB32C70165C8892601EF854DADCCF59B40BAB8542000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Received: by 2002:a2e:9988:0:0:0:0:0 with HTTP; Tue, 22 Dec 2020 02:30:39
+ -0800 (PST)
+Reply-To: elizabethhedw@gmail.com
+From:   "Mrs. Elizabeth Edward" <mjimoh052@gmail.com>
+Date:   Tue, 22 Dec 2020 10:30:39 +0000
+Message-ID: <CAAad0w+izuF21Fiii-1X3j1Wr_NhpfJJjpR9qkdJqjHdzFEKDg@mail.gmail.com>
+Subject: REPLY ME URGENTLY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTEyLTIyIGF0IDExOjU1ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
-DQo+IE9uIFR1ZSwgRGVjIDIyLCAyMDIwIGF0IDExOjM4IEFNIEppYW5qdW4gV2FuZyA8amlhbmp1
-bi53YW5nQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbiBNb24sIDIwMjAtMTItMjEg
-YXQgMTA6MTggKzA4MDAsIE5pY29sYXMgQm9pY2hhdCB3cm90ZToNCj4gPiA+IE9uIFdlZCwgRGVj
-IDIsIDIwMjAgYXQgOTozOSBQTSBKaWFuanVuIFdhbmcgPGppYW5qdW4ud2FuZ0BtZWRpYXRlay5j
-b20+IHdyb3RlOg0KPiA+ID4gPiBbc25pcF0NCj4gPiA+ID4gK3N0YXRpYyBpcnFfaHdfbnVtYmVy
-X3QgbXRrX3BjaWVfbXNpX2dldF9od2lycShzdHJ1Y3QgbXNpX2RvbWFpbl9pbmZvICppbmZvLA0K
-PiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXNp
-X2FsbG9jX2luZm9fdCAqYXJnKQ0KPiA+ID4gPiArew0KPiA+ID4gPiArICAgICAgIHN0cnVjdCBt
-c2lfZGVzYyAqZW50cnkgPSBhcmctPmRlc2M7DQo+ID4gPiA+ICsgICAgICAgc3RydWN0IG10a19w
-Y2llX3BvcnQgKnBvcnQgPSBpbmZvLT5jaGlwX2RhdGE7DQo+ID4gPiA+ICsgICAgICAgaW50IGh3
-aXJxOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAgbXV0ZXhfbG9jaygmcG9ydC0+bG9jayk7
-DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICBod2lycSA9IGJpdG1hcF9maW5kX2ZyZWVfcmVn
-aW9uKHBvcnQtPm1zaV9pcnFfaW5fdXNlLCBQQ0lFX01TSV9JUlFTX05VTSwNCj4gPiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9yZGVyX2Jhc2VfMihlbnRyeS0+
-bnZlY191c2VkKSk7DQo+ID4gPiA+ICsgICAgICAgaWYgKGh3aXJxIDwgMCkgew0KPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgbXV0ZXhfdW5sb2NrKCZwb3J0LT5sb2NrKTsNCj4gPiA+ID4gKyAgICAg
-ICAgICAgICAgIHJldHVybiAtRU5PU1BDOw0KPiA+ID4gPiArICAgICAgIH0NCj4gPiA+ID4gKw0K
-PiA+ID4gPiArICAgICAgIG11dGV4X3VubG9jaygmcG9ydC0+bG9jayk7DQo+ID4gPiA+ICsNCj4g
-PiA+ID4gKyAgICAgICByZXR1cm4gaHdpcnE7DQo+ID4gPg0KPiA+ID4gQ29kZSBpcyBnb29kLCBi
-dXQgSSBoYWQgdG8gbG9vayB0d2ljZSB0byBtYWtlIHN1cmUgdGhlIG11dGV4IGlzDQo+ID4gPiB1
-bmxvY2tlZC4gSXMgdGhlIGZvbGxvd2luZyBtYXJnaW5hbGx5IGJldHRlcj8NCj4gPiA+DQo+ID4g
-PiBod2lycSA9IC4uLjsNCj4gPiA+DQo+ID4gPiBtdXRleF91bmxvY2soJnBvcnQtPmxvY2spOw0K
-PiA+ID4NCj4gPiA+IGlmIChod2lycSA8IDApDQo+ID4gPiAgICByZXR1cm4gLUVOT1NQQzsNCj4g
-PiA+DQo+ID4gPiByZXR1cm4gaHdpcnE7DQo+ID4NCj4gPiBJbXByZXNzaXZlLCBJIHdpbGwgZml4
-IGl0IGluIHRoZSBuZXh0IHZlcnNpb24sIGFuZCBJIHRoaW5rIHRoZSBod2lycSBjYW4NCj4gPiBi
-ZSByZXR1cm5lZCBkaXJlY3RseSBzaW5jZSBpdCB3aWxsIGJlIGEgbmVnYXRpdmUgdmFsdWUgaWYN
-Cj4gPiBiaXRtYXBfZmluZF9mcmVlX3JlZ2lvbiBpcyBmYWlsZWQuIFRoZSBjb2RlIHdpbGwgYmUg
-bGlrZSB0aGUgZm9sbG93aW5nOg0KPiA+DQo+ID4gaHdpcnEgPSAuLi47DQo+ID4NCj4gPiBtdXRl
-eF91bmxvY2soJnBvcnQtPmxvY2spOw0KPiA+DQo+ID4gcmV0dXJuIGh3aXJxOw0KPiANCj4gU0cs
-IGFzIGxvbmcgYXMgeW91J3JlIG9rYXkgd2l0aCByZXR1cm5pbmcgLUVOT01FTSBpbnN0ZWFkIG9m
-IC1FTk9TUEMuDQo+IA0KPiBCdXQgbm93IEknbSBoYXZpbmcgZG91YnQgaWYgbmVnYXRpdmUgcmV0
-dXJuIHZhbHVlcyBhcmUgb2ssIGFzDQo+IGlycV9od19udW1iZXJfdCBpcyB1bnNpZ25lZCBsb25n
-Lg0KPiANCj4gbXNpX2RvbWFpbl9hbGxvYw0KPiAoaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20v
-bGludXgvbGF0ZXN0L3NvdXJjZS9rZXJuZWwvaXJxL21zaS5jI0wxNDMpDQo+IHVzZXMgaXQgdG8g
-Y2FsbCBpcnFfZmluZF9tYXBwaW5nDQo+IChodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51
-eC9sYXRlc3Qvc291cmNlL2tlcm5lbC9pcnEvaXJxZG9tYWluLmMjTDg4MikNCj4gd2l0aG91dCBj
-aGVjaywgYW5kIEknbSBub3QgY29udmluY2VkIGlycV9maW5kX21hcHBpbmcgd2lsbCBlcnJvciBv
-dXQNCj4gZ3JhY2VmdWxseS4uLg0KPiANCkkgc2VlLCBpdCBzZWVtcyB0aGUgbXNpX2RvbWFpbl9h
-bGxvYyBmdW5jdGlvbiBhc3N1bWUgdGhlIGdldF9od2lycQ0KY2FsbGJhY2sgYWx3YXlzIHN1Y2Nl
-c3MsIG1heWJlIEkgc2hvdWxkIGFsbG9jYXRlIHRoZSByZWFsIGh3aXJxIGluIHRoZQ0KbXNpX3By
-ZXBhcmUNCihodHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC9sYXRlc3Qvc291cmNlL2tl
-cm5lbC9pcnEvbXNpLmMjTDMwNCkNCmFuZCBzZXQgaXQgdG8gYXJnLT5od2lycSwgYW5kIG92ZXJy
-aWRlIHRoZSBzZXRfZGVzYw0KKGh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVz
-dC9zb3VyY2UvZHJpdmVycy9wY2kvbXNpLmMjTDE0MDUpDQp0byBwcmV2ZW50IHRoZSBtb2RpZnkg
-b2YgYXJnLT5od2lycS4NCg0KPiA+ID4NCj4gPiA+ID4gK30NCj4gPiA+ID4gKw0KPiA+ID4gPiBb
-c25pcF0NCj4gPiA+ID4gK3N0YXRpYyB2b2lkIG10a19wY2llX21zaV9oYW5kbGVyKHN0cnVjdCBp
-cnFfZGVzYyAqZGVzYykNCj4gPiA+ID4gK3sNCj4gPiA+ID4gKyAgICAgICBzdHJ1Y3QgbXRrX3Bj
-aWVfbXNpICptc2lfaW5mbyA9IGlycV9kZXNjX2dldF9oYW5kbGVyX2RhdGEoZGVzYyk7DQo+ID4g
-PiA+ICsgICAgICAgc3RydWN0IGlycV9jaGlwICppcnFjaGlwID0gaXJxX2Rlc2NfZ2V0X2NoaXAo
-ZGVzYyk7DQo+ID4gPiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyBtc2lfZW5hYmxlLCBtc2lfc3Rh
-dHVzOw0KPiA+ID4gPiArICAgICAgIHVuc2lnbmVkIGludCB2aXJxOw0KPiA+ID4gPiArICAgICAg
-IGlycV9od19udW1iZXJfdCBiaXQsIGh3aXJxOw0KPiA+ID4gPiArDQo+ID4gPiA+ICsgICAgICAg
-Y2hhaW5lZF9pcnFfZW50ZXIoaXJxY2hpcCwgZGVzYyk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAg
-ICAgICBtc2lfZW5hYmxlID0gcmVhZGwobXNpX2luZm8tPmJhc2UgKyBQQ0lFX01TSV9FTkFCTEVf
-T0ZGU0VUKTsNCj4gPiA+ID4gKyAgICAgICB3aGlsZSAoKG1zaV9zdGF0dXMgPSByZWFkbChtc2lf
-aW5mby0+YmFzZSArIFBDSUVfTVNJX1NUQVRVU19PRkZTRVQpKSkgew0KPiA+ID4gPiArICAgICAg
-ICAgICAgICAgbXNpX3N0YXR1cyAmPSBtc2lfZW5hYmxlOw0KPiA+ID4NCj4gPiA+IEkgZG9uJ3Qg
-a25vdyBtdWNoIGFib3V0IE1TSSwgYnV0IHdoYXQgaGFwcGVucyBpZiB5b3UgaGF2ZSBhIGJpdCB0
-aGF0DQo+ID4gPiBpcyBzZXQgaW4gUENJRV9NU0lfU1RBVFVTX09GRlNFVCByZWdpc3RlciwgYnV0
-IG5vdCBpbiBtc2lfZW5hYmxlPw0KPiA+DQo+ID4gSWYgdGhlIGJpdCB0aGF0IGluIFBDSUVfTVNJ
-X1NUQVRVU19PRkZTRVQgcmVnaXN0ZXIgaXMgc2V0IGJ1dCBub3QgaW4NCj4gPiBtc2lfZW5hYmxl
-LCBpdCBtdXN0IGJlIGFuIGFibm9ybWFsIHVzYWdlIG9mIE1TSSBvciBzb21ldGhpbmcgZ29lcyB3
-cm9uZywNCj4gPiBpdCBzaG91bGQgYmUgaWdub3JlZCBpbiBjYXNlIHdlIGNhbiBub3QgZmluZCB0
-aGUgY29ycmVzcG9uZGluZyBoYW5kbGVyLg0KPiA+DQo+ID4gPiBTb3VuZHMgbGlrZSB5b3UnbGwg
-anVzdCBzcGluLWxvb3AgZm9yZXZlciB3aXRob3V0IGFja25vd2xlZGdpbmcgdGhlDQo+ID4gPiBp
-bnRlcnJ1cHQuDQo+ID4NCj4gPiBUaGUgaW50ZXJydXB0IHdpbGwgYmUgYWNrbm93bGVkZ2VkIGlu
-IHRoZSBpcnFfYWNrIGNhbGxiYWNrIG9mDQo+ID4gbXRrX21zaV9pcnFfY2hpcCwgd2hpY2ggYmVs
-b25ncyB0byB0aGUgbXNpX2RvbWFpbi4NCj4gDQo+IExldCdzIHRyeSB0byBnbyB0aHJvdWdoIGl0
-IChhbmQgcGxlYXNlIGV4cGxhaW4gdG8gbWUgaWYgSSBnZXQgdGhpcyB3cm9uZykuDQo+IA0KPiBT
-YXkgd2UgaGF2ZToNCj4gDQo+IG1zaV9lbmFibGUgPSBbUENJRV9NU0lfRU5BQkxFX09GRlNFVF0g
-PSAweDE7DQo+IA0KPiB3aGlsZSBsb29wOg0KPiANCj4gbXNpX3N0YXR1cyA9IFtQQ0lFX01TSV9T
-VEFUVVNfT0ZGU0VUXSA9IDB4MzsNCj4gbXNpX3N0YXR1cyAmPSBtc2lfZW5hYmxlID0+IG1zaV9z
-dGF0dXMgPSAweDMgJiAweDEgPSAweDE7DQo+IGZvcl9lYWNoX3NldF9iaXQobXNpX3N0YXR1cykg
-ew0KPiAgICBkbyBzb21ldGhpbmcgdGhhdCBwcmVzdW1hYmx5IHdpbGwgZGlzYWJsZSB0aGUgTVNJ
-IGludGVycnVwdCBzdGF0dXM/DQoNClllcywgdGhlIGNvcnJlc3BvbmRpbmcgaW50ZXJydXB0IHN0
-YXR1cyB3aWxsIGJlIGNsZWFyZWQuDQoNCj4gfQ0KPiAobmV4dCBsb29wIGl0ZXJhdGlvbikNCj4g
-DQo+IG1zaV9zdGF0dXMgPSBbUENJRV9NU0lfU1RBVFVTX09GRlNFVF0gPSAweDI7DQo+IG1zaV9z
-dGF0dXMgJj0gbXNpX2VuYWJsZSA9PiBtc2lfc3RhdHVzID0gMHgyICYgMHgxID0gMHgwOw0KPiBm
-b3JfZWFjaF9zZXRfYml0KG1zaV9zdGF0dXMpID0+IGRvZXMgbm90aGluZy4NCj4gDQo+IG1zaV9z
-dGF0dXMgPSBbUENJRV9NU0lfU1RBVFVTX09GRlNFVF0gPSAweDI7DQo+IChpbmZpbml0ZSBsb29w
-KQ0KPiANCj4gQmFzaWNhbGx5LCBJJ20gd29uZGVyaW5nIGlmIHlvdSBzaG91bGQgcmVwbGFjZSB0
-aGUgd2hpbGUgY29uZGl0aW9uDQo+IHN0YXRlbWVudCB3aXRoOg0KPiANCj4gd2hpbGUgKChtc2lf
-c3RhdHVzID0gcmVhZGwobXNpX2luZm8tPmJhc2UgKyBQQ0lFX01TSV9TVEFUVVNfT0ZGU0VUKSAm
-DQo+IG1zaV9lbmFibGUpKQ0KPiANCg0KWWVzLCBpdCB3aWxsIGJlIGEgZGVhZCBsb29wIGlmIHdl
-IHJlY2VpdmUgYW4gYWJub3JtYWwgaW50ZXJydXB0IHN0YXR1cywNCkkgd2lsbCBmaXggaXQgaW4g
-dGhlIG5leHQgdmVyc2lvbiwgdGhhbmtzIGZvciB5b3VyIGtpbmRseSByZXZpZXcuDQoNCj4gX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gTGludXgtbWVk
-aWF0ZWsgbWFpbGluZyBsaXN0DQo+IExpbnV4LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcN
-Cj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tZWRp
-YXRlaw0KDQo=
+Greeting
 
+Please forgive me for stressing you with my predicaments and I sorry
+to approach you through this media it is because it serves the fastest
+means of communication. I came across your E-mail from my personal
+search and I decided to contact you believing you will be honest to
+fulfill my final wish before I die.
+
+I am Mrs. Elizabeth Edward, 63 years, from USA, I am childless and I
+am suffering from a pro-long critical cancer, my doctors confirmed I
+may not live beyond two months from now as my ill health has defiled
+all forms of medical treatment.
+
+Since my days are numbered, I=E2=80=99ve decided willingly to fulfill my
+long-time promise to donate you the sum ($5.000.000.00) million
+dollars I inherited from my late husband Mr. Edward Herbart, foreign
+bank account over years. I need a very honest person who can assist in
+transfer of this money to his or her account and use the funds for
+charities work of God while you use 50% for yourself. I want you to
+know there are no risk involved, it is 100% hitch free & safe. If you
+will be interesting to assist in getting this fund into your account
+for charity project to fulfill my promise before I die please let me
+know immediately. I will appreciate your utmost confidentiality as I
+wait for your reply.
+
+Best Regards
+
+Mrs. Elizabeth Edward
