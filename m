@@ -2,85 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C5DC2E0C78
-	for <lists+linux-pci@lfdr.de>; Tue, 22 Dec 2020 16:11:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A662E12C3
+	for <lists+linux-pci@lfdr.de>; Wed, 23 Dec 2020 03:28:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgLVPJS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 22 Dec 2020 10:09:18 -0500
-Received: from mail-02.mail-europe.com ([51.89.119.103]:45502 "EHLO
-        mail-02.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgLVPJS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 22 Dec 2020 10:09:18 -0500
-Date:   Tue, 22 Dec 2020 15:07:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1608649672; bh=Qx0+gSCQI+zwlEgYtmJbydKr/M0gl5zfTxgSnTu7KjM=;
-        h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=l8olzOOFqQl9PpAudL0kQlto9/wJQ3L9VKguKXGkYaEfDWjLD6fDIZuKb7U350kFv
-         pHdowhTtIOLbdW0JHiO+X4M35VvCLrYSvM5jeUaydv4TBQywZZWG2TY+QKFIxwXq7e
-         waOQLsroh4qjjR6LgXx2ytkd9qhe14JvyC+eVsYNqL5Qj6Bx8eV/lX+TKxgp5JbqyU
-         2kRlyer4REV/tAxZPd5S793BJ3wrfHAu92ExDOW3ikn6dxhp/XzSZzI3QoXsZNcFJW
-         OUw12ESRn/uDnK3d3AtJ/8g+ixZudY1oD/KkhJonL35OzTlzxcuVp477fUuXqojOII
-         xxnAezm/k28tQ==
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alexander Lobakin <alobakin@pm.me>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: [PATCH pci] PCI: dwc: fix inverted condition of DMA mask setup warning
-Message-ID: <20201222150708.67983-1-alobakin@pm.me>
+        id S1730246AbgLWCYb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 22 Dec 2020 21:24:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730242AbgLWCYb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 22 Dec 2020 21:24:31 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0543622273;
+        Wed, 23 Dec 2020 02:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608690255;
+        bh=QHNmpdhPA/p9BlJGMkvxXOFQOyHXz+uW5IyouauYuTc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DzUUr+zCxmHBTqvVK7rlmgJJPmWdumQNNt/yAAemRjnkQLvjSheDtjtfEFncnevSB
+         3Ajm1pb2kWFkE+yHqksHhgDwyV8TmZbCKLO/kJCwV7qwu1ylNh1SkKU3+b2uVOgvAo
+         NjwZyxqJ9ApB6EucquTKhrVb00bTjQLvMOGmV25xZv7mNmj5ix/ZeR5nLtmR3MqxXg
+         UU8S1m3cnaWSloMoyKzAHHyqeDeAkUEmMpYELxFFCE4V+5/n4xTxu2Hxu5Vs5n4bjS
+         7Lc29R4/Bq39Wc1mYBAD0D6L4RXv1CIXKm9g4A3gVo4640wS1t9GkND5OrV6k5vZ2k
+         HxcuWEqcvyJLQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 66/66] PCI: Add function 1 DMA alias quirk for Marvell 9215 SATA controller
+Date:   Tue, 22 Dec 2020 21:22:52 -0500
+Message-Id: <20201223022253.2793452-66-sashal@kernel.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20201223022253.2793452-1-sashal@kernel.org>
+References: <20201223022253.2793452-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF shortcircuit=no
-        autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        mailout.protonmail.ch
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit 660c486590aa ("PCI: dwc: Set 32-bit DMA mask for MSI target
-address allocation") added dma_mask_set() call to explicitly set
-32-bit DMA mask for MSI message mapping, but for now it throws a
-warning on ret =3D=3D 0, while dma_set_mask() returns 0 in case of
-success.
-Fix this by inverting the condition.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Misc: remove redundant braces around single statement.
+[ Upstream commit 059983790a4c963d92943e55a61fca55be427d55 ]
 
-Fixes: 660c486590aa ("PCI: dwc: Set 32-bit DMA mask for MSI target address =
-allocation")
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Add function 1 DMA alias quirk for Marvell 88SS9215 PCIe SSD Controller.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135
+Link: https://lore.kernel.org/r/20201110220516.697934-1-helgaas@kernel.org
+Reported-by: John Smith <LK7S2ED64JHGLKj75shg9klejHWG49h5hk@protonmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/quirks.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pc=
-i/controller/dwc/pcie-designware-host.c
-index 516b151e0ef3..fa40cc2e376f 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -397,12 +397,11 @@ int dw_pcie_host_init(struct pcie_port *pp)
- =09=09=09=09=09=09=09    pp);
-=20
- =09=09=09ret =3D dma_set_mask(pci->dev, DMA_BIT_MASK(32));
--=09=09=09if (!ret) {
-+=09=09=09if (ret)
- =09=09=09=09dev_warn(pci->dev,
- =09=09=09=09=09 "Failed to set DMA mask to 32-bit. "
- =09=09=09=09=09 "Devices with only 32-bit MSI support"
- =09=09=09=09=09 " may not work properly\n");
--=09=09=09}
-=20
- =09=09=09pp->msi_data =3D dma_map_single_attrs(pci->dev, &pp->msi_msg,
- =09=09=09=09=09=09      sizeof(pp->msi_msg),
---=20
-2.29.2
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index da790f26d2950..510cb05aa96ff 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3934,6 +3934,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9182,
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c46 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x91a0,
+ 			 quirk_dma_func1_alias);
++/* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c135 */
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9215,
++			 quirk_dma_func1_alias);
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c127 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9220,
+ 			 quirk_dma_func1_alias);
+-- 
+2.27.0
 
