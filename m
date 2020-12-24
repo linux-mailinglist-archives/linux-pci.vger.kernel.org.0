@@ -2,115 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D73092E22E4
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Dec 2020 01:06:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9358B2E231D
+	for <lists+linux-pci@lfdr.de>; Thu, 24 Dec 2020 02:00:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbgLXAGE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 23 Dec 2020 19:06:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727134AbgLXAGE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Dec 2020 19:06:04 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D33FC06179C;
-        Wed, 23 Dec 2020 16:05:24 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id z12so236052pjn.1;
-        Wed, 23 Dec 2020 16:05:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RhZlddu07uH3DLklMw0cBddTSdM+bobz0Y1cqIi2B9g=;
-        b=BoLGCo1YoGlKEnaXPlQNCxQ/u0PB0gs67txWhm79Ddo51R2SS02sccAA7P/B5JnW2N
-         6M58LLKJHBColG9D8zykXo4z2CIvap1umNT8bnLu8PS4NnfLGJajS7pOZ3xWEU1BcJxg
-         C2CEdIjHg7o0BBxIfK8uxnA4xTQIZzty/G5nWnE7x9l6qLuGMlgINt7G488Qs1ZUyxn1
-         UBv7BfsqCBAQR48tyX0Q/lUa4oM6OSq9FMQl9PPHVAkpu0gHpUkxxaSBe0YKxD3RKQdD
-         P7HruDmRLAqHqWjHrS70Wtbx4we45d6A0hH2mkpWeK4FxomAyKD9raDUvF3oS3W7q6jG
-         RrUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RhZlddu07uH3DLklMw0cBddTSdM+bobz0Y1cqIi2B9g=;
-        b=QE+1fr6UR9b79/o8n/cSYk+jZfWVCYlXjvz7K4JR2OzNvXmhabGJOhdTN+HjmWqEPw
-         ESSy96CPT8i/bPPWHnhSqfi6SELcKHM8af76oh9IaQ6KMpmTcmPfK7VjifTjsWSwzOk/
-         drq23Tp65bxhtaNJh7kTNjNHoNSIWF+yiXC8HWnkZ5yYKDfKlwWmtyM8OoFYDYZZ0rzI
-         iG6PdpV75Rb0dws/OAeg1KNiqrArRCl7VnnB7CAK6krEOG1xHnR4o53rIB4yVcEa7WFx
-         Aqpgo7EmdZPb05KDX8TcAMIy5gLlAofKz2UTfJObzDXp47GQa6BtnSX/6YcFxByiKFAZ
-         s+5A==
-X-Gm-Message-State: AOAM531F711AD3l1lK7Z7MhJ42RxaXgmJB+jweGEo7y4KLQZEb3utq6v
-        BTLULE+4DB72t04oo6c4aL8=
-X-Google-Smtp-Source: ABdhPJxujcHk5jTktWJsfdUCcIHT46rpxPni05SSBnh/KI9n6TsNOAdATpq3I6FAPpO4G3brj+JxoA==
-X-Received: by 2002:a17:90a:4689:: with SMTP id z9mr1826941pjf.87.1608768323630;
-        Wed, 23 Dec 2020 16:05:23 -0800 (PST)
-Received: from [10.230.29.27] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id f126sm24006772pfa.58.2020.12.23.16.05.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Dec 2020 16:05:22 -0800 (PST)
-Subject: Re: [RESEND PATCH v3 0/2] ata: ahci_brcm: Fix use of BCM7216 reset
- controller
-To:     Jim Quinlan <jim2101024@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>
-References: <20201216214106.32851-1-james.quinlan@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <92084293-d2fd-1663-0f6a-a10f01e23066@gmail.com>
-Date:   Wed, 23 Dec 2020 16:05:18 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.6.0
-MIME-Version: 1.0
-In-Reply-To: <20201216214106.32851-1-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1727940AbgLXBAT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 23 Dec 2020 20:00:19 -0500
+Received: from lucky1.263xmail.com ([211.157.147.133]:47314 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbgLXBAT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 23 Dec 2020 20:00:19 -0500
+X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Dec 2020 20:00:17 EST
+Received: from localhost (unknown [192.168.167.235])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 9911ACA682
+        for <linux-pci@vger.kernel.org>; Thu, 24 Dec 2020 08:52:47 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P1718T140333934454528S1608771166750673_;
+        Thu, 24 Dec 2020 08:52:47 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <56cfdf2770c45aa99155d850d7a93bda>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: lorenzo.pieralisi@arm.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-System-Flag: 0
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH] PCI: rockchip: Correct definition of ROCKCHIP_PCIE_EP_MSI_CTRL_ME
+Date:   Thu, 24 Dec 2020 08:52:41 +0800
+Message-Id: <1608771161-34681-1-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+ROCKCHIP_PCIE_EP_MSI_CTRL_ME should be BIT(0), and fix the flags
+to be u32 type.
 
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+---
 
-On 12/16/2020 1:41 PM, Jim Quinlan wrote:
-> v3 -- discard commit from v2; instead rely on the new function
->       reset_control_rearm provided in a recent commit [1] applied
->       to reset/next.
->    -- New commit to correct pcie-brcmstb.c usage of a reset controller
->       to use reset/rearm verses deassert/assert.
-> 
-> v2 -- refactor rescal-reset driver to implement assert/deassert rather than
->       reset because the reset call only fires once per lifetime and we need
->       to reset after every resume from S2 or S3.
->    -- Split the use of "ahci" and "rescal" controllers in separate fields
->       to keep things simple.
-> 
-> v1 -- original
-> 
-> 
-> [1] Applied commit "reset: make shared pulsed reset controls re-triggerable"
->     found at git://git.pengutronix.de/git/pza/linux.git
->     branch reset/shared-retrigger
+ drivers/pci/controller/pcie-rockchip-ep.c | 7 ++++---
+ drivers/pci/controller/pcie-rockchip.h    | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-The changes in that branch above have now landed in Linus' tree with:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=557acb3d2cd9c82de19f944f6cc967a347735385
-
-It would be good if we could get both patches applied via the same tree
-or within the same cycle to avoid having either PCIe or SATA broken on
-these platforms.
-
-Thanks!
+diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+index 7631dc3..a25e212 100644
+--- a/drivers/pci/controller/pcie-rockchip-ep.c
++++ b/drivers/pci/controller/pcie-rockchip-ep.c
+@@ -313,7 +313,7 @@ static int rockchip_pcie_ep_set_msi(struct pci_epc *epc, u8 fn,
+ {
+ 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+-	u16 flags;
++	u32 flags;
+ 
+ 	flags = rockchip_pcie_read(rockchip,
+ 				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
+@@ -333,7 +333,7 @@ static int rockchip_pcie_ep_get_msi(struct pci_epc *epc, u8 fn)
+ {
+ 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+-	u16 flags;
++	u32 flags;
+ 
+ 	flags = rockchip_pcie_read(rockchip,
+ 				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
+@@ -417,7 +417,8 @@ static int rockchip_pcie_ep_send_msi_irq(struct rockchip_pcie_ep *ep, u8 fn,
+ 					 u8 interrupt_num)
+ {
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+-	u16 flags, mme, data, data_mask;
++	u16 mme, data, data_mask;
++	u32 flags;
+ 	u8 msi_count;
+ 	u64 pci_addr, pci_addr_mask = 0xff;
+ 
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 1650a50..c668268 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -221,7 +221,7 @@
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK		GENMASK(19, 17)
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET		20
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK		GENMASK(22, 20)
+-#define   ROCKCHIP_PCIE_EP_MSI_CTRL_ME				BIT(16)
++#define   ROCKCHIP_PCIE_EP_MSI_CTRL_ME				BIT(0)
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP	BIT(24)
+ #define ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR				0x1
+ #define ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR		0x3
 -- 
-Florian
+2.7.4
+
+
+
