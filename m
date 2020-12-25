@@ -2,125 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91CD22E2693
-	for <lists+linux-pci@lfdr.de>; Thu, 24 Dec 2020 12:58:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9CC62E2A93
+	for <lists+linux-pci@lfdr.de>; Fri, 25 Dec 2020 10:23:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgLXL6Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 24 Dec 2020 06:58:16 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41600 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgLXL6Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 24 Dec 2020 06:58:16 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BOBvRIA086889;
-        Thu, 24 Dec 2020 05:57:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1608811047;
-        bh=wQTq7FhKu7M5hoDmCgbENkxGmB7RVPt1BHM/ptKQwmE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=r7FACEs8Zjnm425OkXaQfsJUUH1T8nNYXh1Hgho4RW/s4hSSEQ2ZNBKiLMbK+iz8O
-         84dsiv9oxy8FFtqfv0jJjoSVBhD9U09gAf9mwrf7yucbXErUTQgp+oNnIf5tv5YvmH
-         d8GfCgHzGlSdie6PJmguR5NZjevJOnTa3xqA70xY=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BOBvROX117625
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Dec 2020 05:57:27 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 24
- Dec 2020 05:57:27 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 24 Dec 2020 05:57:27 -0600
-Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BOBv0Hu006549;
-        Thu, 24 Dec 2020 05:57:22 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 4/4] PCI: j721e: Add support to provide refclk to PCIe connector
-Date:   Thu, 24 Dec 2020 17:26:58 +0530
-Message-ID: <20201224115658.2795-5-kishon@ti.com>
+        id S1726023AbgLYJXh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 25 Dec 2020 04:23:37 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9688 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbgLYJXh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 25 Dec 2020 04:23:37 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4D2Lzz4WxSzkvmr;
+        Fri, 25 Dec 2020 17:21:51 +0800 (CST)
+Received: from localhost.localdomain (10.175.118.36) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.498.0; Fri, 25 Dec 2020 17:22:38 +0800
+From:   Chiqijun <chiqijun@huawei.com>
+To:     <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alex.williamson@redhat.com>, <yin.yinshi@huawei.com>,
+        <cloud.wangxiaoyun@huawei.com>,
+        <zengweiliang.zengweiliang@huawei.com>, <chenlizhong@huawei.com>
+Subject: [v3] PCI: Add pci reset quirk for Huawei Intelligent NIC virtual function
+Date:   Fri, 25 Dec 2020 17:25:30 +0800
+Message-ID: <20201225092530.5728-1-chiqijun@huawei.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201224115658.2795-1-kishon@ti.com>
-References: <20201224115658.2795-1-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.175.118.36]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to provide refclk to PCIe connector.
+When multiple VFs do FLR at the same time, the firmware is
+processed serially, resulting in some VF FLRs being delayed more
+than 100ms, when the virtual machine restarts and the device
+driver is loaded, the firmware is doing the corresponding VF
+FLR, causing the driver to fail to load.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+To solve this problem, add host and firmware status synchronization
+during FLR.
+
+Signed-off-by: Chiqijun <chiqijun@huawei.com>
 ---
- drivers/pci/controller/cadence/pci-j721e.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+v3:
+ - The MSE bit in the VF configuration space is hardwired to zero,
+   remove the setting of PCI_COMMAND_MEMORY bit. Add comment for
+   set PCI_COMMAND register.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index dac1ac8a7615..8ec6d9c3e164 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -6,6 +6,7 @@
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
+v2:
+ - Update comments
+ - Use the HINIC_VF_FLR_CAP_BIT_SHIFT and HINIC_VF_FLR_PROC_BIT_SHIFT
+   macro instead of the magic number
+---
+ drivers/pci/quirks.c | 77 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f70692ac79c5..9c310012ef19 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3912,6 +3912,81 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+ 	return 0;
+ }
  
-+#include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -50,6 +51,7 @@ enum link_status {
- 
- struct j721e_pcie {
- 	struct device		*dev;
-+	struct clk		*refclk;
- 	u32			mode;
- 	u32			num_lanes;
- 	struct cdns_pcie	*cdns_pcie;
-@@ -310,6 +312,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 	struct cdns_pcie_ep *ep;
- 	struct gpio_desc *gpiod;
- 	void __iomem *base;
-+	struct clk *clk;
- 	u32 num_lanes;
- 	u32 mode;
- 	int ret;
-@@ -408,6 +411,19 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 			goto err_get_sync;
- 		}
- 
-+		clk = devm_clk_get_optional(dev, "pcie_refclk");
-+		if (IS_ERR(clk)) {
-+			dev_err(dev, "failed to get pcie_refclk\n");
-+			goto err_pcie_setup;
-+		}
++#define PCI_DEVICE_ID_HINIC_VF      0x375E
++#define HINIC_VF_FLR_TYPE           0x1000
++#define HINIC_VF_FLR_CAP_BIT_SHIFT  6
++#define HINIC_VF_OP                 0xE80
++#define HINIC_VF_FLR_PROC_BIT_SHIFT 10
++#define HINIC_OPERATION_TIMEOUT     15000
 +
-+		ret = clk_prepare_enable(clk);
-+		if (ret) {
-+			dev_err(dev, "failed to enable pcie_refclk\n");
-+			goto err_get_sync;
-+		}
-+		pcie->refclk = clk;
++/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
++static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
++{
++	unsigned long timeout;
++	void __iomem *bar;
++	u16 command;
++	u32 val;
 +
- 		/*
- 		 * "Power Sequencing and Reset Signal Timings" table in
- 		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-@@ -476,6 +492,7 @@ static int j721e_pcie_remove(struct platform_device *pdev)
- 	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
- 	struct device *dev = &pdev->dev;
++	if (probe)
++		return 0;
++
++	bar = pci_iomap(pdev, 0, 0);
++	if (!bar)
++		return -ENOTTY;
++
++	/*
++	 * FLR cap bit bit30, FLR processing bit: bit18, to avoid big-endian
++	 * conversion the big-endian bit6, bit10 is directly operated here.
++	 *
++	 * Get and check firmware capabilities.
++	 */
++	val = readl(bar + HINIC_VF_FLR_TYPE);
++	if (!(val & (1UL << HINIC_VF_FLR_CAP_BIT_SHIFT))) {
++		pci_iounmap(pdev, bar);
++		return -ENOTTY;
++	}
++
++	/*
++	 * Set the processing bit for the start of FLR, which will be cleared
++	 * by the firmware after FLR is completed.
++	 */
++	val = readl(bar + HINIC_VF_OP);
++	val = val | (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT);
++	writel(val, bar + HINIC_VF_OP);
++
++	/* Perform the actual device function reset */
++	pcie_flr(pdev);
++
++	/*
++	 * The device must learn BDF after FLR in order to respond to BAR's
++	 * read request, therefore, we issue a configure write request to let
++	 * the device capture BDF.
++	 */
++	pci_read_config_word(pdev, PCI_COMMAND, &command);
++	pci_write_config_word(pdev, PCI_COMMAND, command);
++
++	/* Waiting for device reset complete */
++	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
++	do {
++		val = readl(bar + HINIC_VF_OP);
++		if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
++			goto reset_complete;
++		msleep(20);
++	} while (time_before(jiffies, timeout));
++
++	val = readl(bar + HINIC_VF_OP);
++	if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
++		goto reset_complete;
++
++	pci_warn(pdev, "Reset dev timeout, flr ack reg: %x\n",
++		 be32_to_cpu(val));
++
++reset_complete:
++	pci_iounmap(pdev, bar);
++
++	return 0;
++}
++
+ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+ 		 reset_intel_82599_sfp_virtfn },
+@@ -3923,6 +3998,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
+ 	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+ 		reset_chelsio_generic_dev },
++	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
++		reset_hinic_vf_dev },
+ 	{ 0 }
+ };
  
-+	clk_disable_unprepare(pcie->refclk);
- 	cdns_pcie_disable_phy(cdns_pcie);
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
 -- 
 2.17.1
 
