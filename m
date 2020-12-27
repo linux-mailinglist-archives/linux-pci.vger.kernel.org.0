@@ -2,174 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1786A2E2EC9
-	for <lists+linux-pci@lfdr.de>; Sat, 26 Dec 2020 18:48:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EDD92E313F
+	for <lists+linux-pci@lfdr.de>; Sun, 27 Dec 2020 14:13:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgLZRr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 26 Dec 2020 12:47:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
+        id S1726103AbgL0NNH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Dec 2020 08:13:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgLZRr6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 26 Dec 2020 12:47:58 -0500
-X-Greylist: delayed 2558 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 26 Dec 2020 09:47:18 PST
-Received: from hall.aurel32.net (hall.aurel32.net [IPv6:2001:bc8:30d7:100::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458DEC061757
-        for <linux-pci@vger.kernel.org>; Sat, 26 Dec 2020 09:47:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
-        ; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
-        Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
-        Subject:Content-ID:Content-Description:X-Debbugs-Cc;
-        bh=e9X4my47ggN7suwunTpSwnYHYZG6SCZvR4V6WN+017g=; b=CxbloHr94lNKLG/iOhD/iGHn6I
-        smSmnVzBae6jo8XRppjlhhEtvwKJOtJPi03E6lfinZwEUBw30LgDOy4lnoNTnGhSiBZJ2CZFrvt8N
-        5wmLwboicp0P1I4EZhpA2wrjrc62LGqwcRovNt0Sgmu8xGFOsNG9yhAqAdM79VH+yUHRoQh4pGxE1
-        6qPrgiBU/xVwxxKnu1Jzjl/OptYDmmLMG0vcv7bj1C6E7nid7gEUFIhGHfgFUB8YckUvfYu8Cawpj
-        4h8FHY+rtaf6fXID81OU0iZ/L1VlJCrrdLgFi5WHu/tYCIyjsGbel9pXZDa0XGcDRT+WcaLyyoXbn
-        QD7DHKAA==;
-Received: from [2a01:e35:2fdd:a4e1:fe91:fc89:bc43:b814] (helo=ohm.rr44.fr)
-        by hall.aurel32.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <aurelien@aurel32.net>)
-        id 1ktCzY-0006e5-S8; Sat, 26 Dec 2020 18:04:32 +0100
-Received: from aurel32 by ohm.rr44.fr with local (Exim 4.94)
-        (envelope-from <aurelien@aurel32.net>)
-        id 1ktCzY-0021De-2t; Sat, 26 Dec 2020 18:04:32 +0100
-Date:   Sat, 26 Dec 2020 18:04:32 +0100
-From:   Aurelien Jarno <aurelien@aurel32.net>
-To:     daire.mcnamara@microchip.com
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com,
-        cyril.jean@microchip.com, ben.dooks@codethink.co.uk
-Subject: Re: [PATCH v19 2/4] dt-bindings: PCI: microchip: Add Microchip
- PolarFire host binding
-Message-ID: <X+dtIPs70A5v17pj@aurel32.net>
-References: <20201224094500.19149-1-daire.mcnamara@microchip.com>
- <20201224094500.19149-3-daire.mcnamara@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201224094500.19149-3-daire.mcnamara@microchip.com>
-User-Agent: Mutt/2.0.2 (2020-11-20)
+        with ESMTP id S1726075AbgL0NNH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Dec 2020 08:13:07 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C276CC061794;
+        Sun, 27 Dec 2020 05:12:26 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id l23so5023130pjg.1;
+        Sun, 27 Dec 2020 05:12:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RFDwzYgwwuGZ5Gz6R//Rp+CcioNRUEFb3RimiveR+qs=;
+        b=MJq3lZjl5BC/D4aHf9PH1V+ONXVY0q8+u9v9P7GtsA1IjSKW1152FaeeziHBNrYjLh
+         PrWxiyfSOZS2nGr2B5uo7v6k8wsA+3kX0aQcFCQ8qP0eNJGz9YRuNHD1aQCSLz7DOLkQ
+         v7CTnosv6lP/RXRXKxEyh733584tedksLVDmiBL+ZkinZEaNC1G+LkzHT/LiwtMO9fAW
+         aIR6Iu1ieCCbjnvWE5RHpodZTuUMTN8w4mO1q9pTtu+UFBMcZbzw7Z4HY5zjpdIS3Sz3
+         t3zkQEH0S6DpKM0qc04tIJHiGQ3Vtyl8rISVOBhVwiqNWQt9AodJ1NTQxSSxxWZq3TpV
+         V2kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RFDwzYgwwuGZ5Gz6R//Rp+CcioNRUEFb3RimiveR+qs=;
+        b=h7eA8rvPqna9ZNEGxcem8UHHz42QtA4413ekZErhrA6duB4Y2rC428VrYnz8VnHiWv
+         lDA2r8Gq9NtG52I/1Ii2cABW3hTDXIG5GDEnlPYL6nj+XGS/h2f6zB4r6xYv4dvB+6kf
+         fl503pjgRSDw3mruCXGQTqsLTF4V+dRElWu9kRFOE7pdNNL6gZbUh+vViORIfGMIEDdI
+         i5Rdt5GYgl03J6eqyd7w6kAQTM+A+jsjw0v1EJ2c0rGIYuCBC6O2Y70A2MVrz0LGWpNS
+         r8zv16dj+HuSh0QAQhQ1OVftfY3pB74Rz7h1tpm9+nyZjzn5L/Gqi9hqGBXSINgc1PQL
+         ngbw==
+X-Gm-Message-State: AOAM531FoLPS8CD27+mxR67hD0AXp04poHBe/ZG8KfH3q9Sc/Nh2qfs1
+        jCRWWm0XUlONlWiJrqKlfgO6S7T80Gg=
+X-Google-Smtp-Source: ABdhPJx8bl2jLYqBWQHhPNip6NT1uy0IrM7N1ffuF02yCH73ZCKIdqZ8GkI5GRwiIOcX6fwTZDEfFw==
+X-Received: by 2002:a17:90b:1882:: with SMTP id mn2mr16431489pjb.236.1609074745592;
+        Sun, 27 Dec 2020 05:12:25 -0800 (PST)
+Received: from sh05419pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id j15sm33510269pfn.180.2020.12.27.05.12.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 27 Dec 2020 05:12:24 -0800 (PST)
+From:   Hongtao Wu <wuht06@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hongtao Wu <billows.wu@unisoc.com>
+Subject: [PATCH v4 0/2] PCI: Add new Unisoc PCIe driver
+Date:   Sun, 27 Dec 2020 21:12:12 +0800
+Message-Id: <1609074734-9336-1-git-send-email-wuht06@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2020-12-24 09:44, daire.mcnamara@microchip.com wrote:
-> From: Daire McNamara <daire.mcnamara@microchip.com>
-> 
-> Add device tree bindings for the Microchip PolarFire PCIe controller
-> when configured in host (Root Complex) mode.
-> 
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/pci/microchip,pcie-host.yaml     | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-> new file mode 100644
-> index 000000000000..5a56f07a5ceb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/microchip,pcie-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip PCIe Root Port Bridge Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Daire McNamara <daire.mcnamara@microchip.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: microchip,pcie-host-1.0 # PolarFire
-> +
-> +  reg:
-> +    maxItems: 2
-> +
-> +  reg-names:
-> +    items:
-> +      - const: cfg
-> +      - const: apb
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: PCIe host controller
-> +      - description: builtin MSI controller
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: pcie
-> +      - const: msi
-> +
-> +  ranges:
-> +    maxItems: 1
-> +
-> +  msi-controller:
-> +    description: Identifies the node as an MSI controller.
-> +
-> +  msi-parent:
-> +    description: MSI controller the device is capable of using.
-> +
-> +required:
-> +  - reg
-> +  - reg-names
-> +  - "#interrupt-cells"
-> +  - interrupts
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - msi-controller
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    soc {
-> +            #address-cells = <2>;
-> +            #size-cells = <2>;
-> +            pcie0: pcie@2030000000 {
-> +                    compatible = "microchip,pcie-host-1.0";
-> +                    reg = <0x0 0x70000000 0x0 0x08000000>,
-> +                          <0x0 0x43000000 0x0 0x00010000>;
-> +                    reg-names = "cfg", "apb";
-> +                    device_type = "pci";
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    #interrupt-cells = <1>;
-> +                    interrupts = <119>;
-> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +                    interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-> +                                    <0 0 0 2 &pcie_intc0 1>,
-> +                                    <0 0 0 3 &pcie_intc0 2>,
-> +                                    <0 0 0 4 &pcie_intc0 3>;
-> +                    interrupt-parent = <&plic0>;
-> +                    msi-parent = <&pcie0>;
-> +                    msi-controller;
-> +                    bus-range = <0x00 0x7f>;
-> +                    ranges = <0x03000000 0x0 0x78000000 0x0 0x78000000 0x0 0x04000000>;
-> +                    pcie_intc_0: interrupt-controller {
+From: Hongtao Wu <billows.wu@unisoc.com>
 
-Very minor nitpick, the name here doesn't match the one in
-interrupt-map, there is an extra '_'.
+This series adds PCIe controller driver for Unisoc SoCs.
+This controller is based on DesignWare PCIe IP.
 
-Otherwise I have tested this patch series on top of Atish's tree, and
-it works fine with a NVME device.
+Changes from v1:
+1) Test this patch on top of Rob Herring's 40 part series of DWC clean-ups:
+   https://lore.kernel.org/linux-pci/20200821035420.380495-1-robh@kernel.org/
 
-Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+2) Delete empty function
 
-Aurelien
+3) Document property "sprd,pcie-poweron-syscons" and
+   'sprd,pcie-poweroff-syscons'
 
--- 
-Aurelien Jarno                          GPG: 4096R/1DDD8C9B
-aurelien@aurel32.net                 http://www.aurel32.net
+4) Delete runtime suspend/resume function
+
+5) Add COMPILE_TEST which CONFIG_PCIE_SPRD depends on
+
+Changes from v2:
+1) Change RC mode to host mode in drivers/pci/controller/dwc/Kconfig
+
+2) Change Signed-off-by from Billows Wu to Hongtao Wu
+
+Changes from v3:
+1) Split the property 'sprd,pcie-poweron-syscons' and
+   'sprd,pcie-poweroff-syscons' into reset, power domains, phy and so on.
+
+2) Delete the function to get resource 'msi' and 'dbi' which were parsed by
+   the DW core.
+
+3) Delete the function 'sprd_pcie_host_init', because the DW core has done it.
+
+Hongtao Wu (2):
+  dt-bindings: PCI: sprd: Document Unisoc PCIe RC host controller
+  PCI: sprd: Add support for Unisoc SoCs' PCIe controller
+
+ .../devicetree/bindings/pci/sprd-pcie.yaml         |  91 +++++++
+ drivers/pci/controller/dwc/Kconfig                 |  12 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-sprd.c             | 293 +++++++++++++++++++++
+ 4 files changed, 397 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
+
+--
+2.7.4
+
