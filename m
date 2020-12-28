@@ -2,186 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDDA32E3292
-	for <lists+linux-pci@lfdr.de>; Sun, 27 Dec 2020 20:21:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EB8C2E33ED
+	for <lists+linux-pci@lfdr.de>; Mon, 28 Dec 2020 04:34:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgL0TVe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 27 Dec 2020 14:21:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgL0TVd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 27 Dec 2020 14:21:33 -0500
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E0AC061794;
-        Sun, 27 Dec 2020 11:20:53 -0800 (PST)
-Received: by mail-ot1-x332.google.com with SMTP id j20so7597805otq.5;
-        Sun, 27 Dec 2020 11:20:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0sVC8j/qFLW+R/BiCcbxfbFuWt0QadRRyfbTVS1VwHY=;
-        b=snNRM2UJuxFlYbt0opdNq/Km+jTrugWz+XCv9dvNVL/debD4RiSNjJuvvfbPHP8li7
-         KIhX0/QgOmUeidxtdeZSEin831Gb4MPxK/Nsdy82P6kpVKu6N4Nc/2a1j/rhKSYYtPfM
-         OdujcskdH0zj17962B4EA6DAWt+WbPQDoOQkCV+q0RBuHOc2AwsMveKzxEy1LnZjcBm6
-         WwVaL7EiOv3pK+MmaGP2Q6W+EWp/A0H6XAJ9Sli5mcOq3SMT90MXTM6BUD6s+YNQPnp0
-         3oKuBMFCRu9MNXQfN7PDX/uDAX7jwXSxxMeoGH5bWQ0ZYiFJh6LgmVaIuZavb11TOu03
-         Stkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0sVC8j/qFLW+R/BiCcbxfbFuWt0QadRRyfbTVS1VwHY=;
-        b=baA1JgZfuXDUP0wIGaf/e/J2QAvhQ1W8cBsVUUJKgN3YSDDUVya7ZRWr42nn5BH4xI
-         56Zgb2WI310CDR2BHisVc244/JfSC0nrQ/NcE9enBxBMZOV/VmlcsF+bp/0GvWU7kIUT
-         C8sOUBx8iO+e8biI5IrNRe2Suto5ok3/OHP4MgjzYTny3K67EzCZembfXwtnV63dH+vo
-         f67r1w6MTMzwdPw0GQhgVwJaLPOGE3aZn25d8DlVQk4bxaMmvDIlq6N+7yMgYjn4CT0/
-         HL5lETj3wUdzaTmQUgwRiQKwq3CAhk0+GVXBprwznOZ3tNJ4wpnK4fSeOEw9ISCMwZP+
-         bc8w==
-X-Gm-Message-State: AOAM532RadgU6GulQv36XZyn62JXa+xh84zQcs14GK1DF5NwFkCDvv8V
-        iXYgSOZ/jATNZGcDser//GM=
-X-Google-Smtp-Source: ABdhPJy5MA8pTqBMHg7t7kC9SkPKcTOcLW8SMiIKlPFipG2wn4l5044FI2Bd1WiObQwt+tJVlAueHQ==
-X-Received: by 2002:a05:6830:cf:: with SMTP id x15mr30498943oto.55.1609096852047;
-        Sun, 27 Dec 2020 11:20:52 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v17sm8555011oou.41.2020.12.27.11.20.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 27 Dec 2020 11:20:50 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Sun, 27 Dec 2020 11:20:49 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-s390@vger.kernel.org,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        xen-devel@lists.xenproject.org, Leon Romanovsky <leon@kernel.org>,
-        linux-rdma@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Helge Deller <deller@gmx.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-pci@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Airlie <airlied@linux.ie>, linux-gpio@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        linux-parisc@vger.kernel.org,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>, Jon Mason <jdmason@kudzu.us>,
-        linux-ntb@googlegroups.com, intel-gfx@lists.freedesktop.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [patch 02/30] genirq: Move status flag checks to core
-Message-ID: <20201227192049.GA195845@roeck-us.net>
-References: <20201210192536.118432146@linutronix.de>
- <20201210194042.703779349@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201210194042.703779349@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726178AbgL1Dee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 27 Dec 2020 22:34:34 -0500
+Received: from mga05.intel.com ([192.55.52.43]:24494 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgL1Ded (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 27 Dec 2020 22:34:33 -0500
+IronPort-SDR: k21CJjbMsL8IA3S//MGCjIWFIck7fuylWZNQOcYw/QTHJemdsHJ0Oyy2zM0vHZKpKlaDyNpeXE
+ gaPsq8WAMwCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9847"; a="261087139"
+X-IronPort-AV: E=Sophos;i="5.78,454,1599548400"; 
+   d="scan'208";a="261087139"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2020 19:33:52 -0800
+IronPort-SDR: e07jpiTLrVybqgz692E+r6kxjanIzqQcaIwsdL8sAQ8IUzFVdcA4CAGtldjt8KSjFaamqxHcAQ
+ dnw9dvGyQLGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,454,1599548400"; 
+   d="scan'208";a="340742925"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga007.fm.intel.com with ESMTP; 27 Dec 2020 19:33:49 -0800
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH v5 0/2] PCI: keembay: Add support for Intel Keem Bay
+Date:   Mon, 28 Dec 2020 11:31:57 +0800
+Message-Id: <20201228033159.15369-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Dec 10, 2020 at 08:25:38PM +0100, Thomas Gleixner wrote:
-> These checks are used by modules and prevent the removal of the export of
-> irq_to_desc(). Move the accessor into the core.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Hi.
 
-Yes, but that means that irq_check_status_bit() may be called from modules,
-but it is not exported, resulting in build errors such as the following.
+The first patch is to document DT bindings for Keem Bay PCIe controller
+for both Root Complex and Endpoint modes.
 
-arm64:allmodconfig:
+The second patch is the driver file, a glue driver. Keem Bay PCIe
+controller is based on DesignWare PCIe IP.
 
-ERROR: modpost: "irq_check_status_bit" [drivers/perf/arm_spe_pmu.ko] undefined!
+The patch was tested with Keem Bay evaluation module board, with A0
+stepping.
 
-Guenter
+Thank you.
 
-> ---
->  include/linux/irqdesc.h |   17 +++++------------
->  kernel/irq/manage.c     |   17 +++++++++++++++++
->  2 files changed, 22 insertions(+), 12 deletions(-)
-> 
-> --- a/include/linux/irqdesc.h
-> +++ b/include/linux/irqdesc.h
-> @@ -223,28 +223,21 @@ irq_set_chip_handler_name_locked(struct
->  	data->chip = chip;
->  }
->  
-> +bool irq_check_status_bit(unsigned int irq, unsigned int bitmask);
-> +
->  static inline bool irq_balancing_disabled(unsigned int irq)
->  {
-> -	struct irq_desc *desc;
-> -
-> -	desc = irq_to_desc(irq);
-> -	return desc->status_use_accessors & IRQ_NO_BALANCING_MASK;
-> +	return irq_check_status_bit(irq, IRQ_NO_BALANCING_MASK);
->  }
->  
->  static inline bool irq_is_percpu(unsigned int irq)
->  {
-> -	struct irq_desc *desc;
-> -
-> -	desc = irq_to_desc(irq);
-> -	return desc->status_use_accessors & IRQ_PER_CPU;
-> +	return irq_check_status_bit(irq, IRQ_PER_CPU);
->  }
->  
->  static inline bool irq_is_percpu_devid(unsigned int irq)
->  {
-> -	struct irq_desc *desc;
-> -
-> -	desc = irq_to_desc(irq);
-> -	return desc->status_use_accessors & IRQ_PER_CPU_DEVID;
-> +	return irq_check_status_bit(irq, IRQ_PER_CPU_DEVID);
->  }
->  
->  static inline void
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -2769,3 +2769,23 @@ bool irq_has_action(unsigned int irq)
->  	return res;
->  }
->  EXPORT_SYMBOL_GPL(irq_has_action);
-> +
-> +/**
-> + * irq_check_status_bit - Check whether bits in the irq descriptor status are set
-> + * @irq:	The linux irq number
-> + * @bitmask:	The bitmask to evaluate
-> + *
-> + * Returns: True if one of the bits in @bitmask is set
-> + */
-> +bool irq_check_status_bit(unsigned int irq, unsigned int bitmask)
-> +{
-> +	struct irq_desc *desc;
-> +	bool res = false;
-> +
-> +	rcu_read_lock();
-> +	desc = irq_to_desc(irq);
-> +	if (desc)
-> +		res = !!(desc->status_use_accessors & bitmask);
-> +	rcu_read_unlock();
-> +	return res;
-> +}
+Best regards,
+Zainie
+
+Changes since v4:
+- Rebased to v5.11-rc1 and retest.
+
+Changes since v3:
+- Add Reviewed-by: Rob Herring <robh@kernel.org> tag in dt-bindings
+  patch.
+- Remove the keembay_pcie_{readl,writel} wrappers. And replace them with
+  readl() and writel().
+- Remove the dead code related to unused irqs.
+- Remove unused definition for unused irqs.
+- In keembay_pcie_ep_init(), initialize enabled interrupts to known
+  state.
+- Rebased to next-20201215.
+
+Changes since v2:
+- In keembay_pcie_probe(), use return keembay_pcie_add_pcie_port(pcie,
+  pdev); statement and remove return 0; at the end of the function.
+
+Changes since v1:
+- In dt-bindings patch.
+  - Fixed indent warning for compatible property.
+  - Rename interrupt-names to pcie, pcie_ev, pcie_err and
+    pcie_mem_access, similar to the name used in datasheet.
+  - Remove device_type, #address-cells and #size-cells property.
+  - Remove num-viewport, num-ib-windows and num-ob-windows property.
+  - Replace additionalProperties with unevaluatedProperties, for RC
+    only.
+  - Add dbi2 and atu property.
+  - Remove description for regs and interrupts property.
+  - Change enum value for num-lanes to 1 and 2 only.
+- In driver patch.
+  - In Kconfig file, remove dependency on ARM64.
+  - Add new define, PCIE_REGS_PCIE_SII_LINK_UP.
+  - Remove PCIE_DBI2_MASK.
+  - In struct keembay_pcie, declare pci member as struct, not pointer.
+    And remove irq number members.
+  - Rename and rework keembay_pcie_establish_link(), to
+    keembay_pcie_start_link().
+  - Remove unneeded BAR disable steps.
+  - Remove unused interrupt handlers; keembay_pcie_ev_irq_handler(),
+    keembay_pcie_err_irq_handler().
+  - Remove keembay_pcie_enable_interrupts().
+  - Rework keembay_pcie_setup_irq() and call it from
+    keembay_pcie_probe().
+  - Remove keembay_pcie_host_init() and make keembay_pcie_host_ops
+    empty.
+  - Keep and rework keembay_pcie_add_pcie_port() a little.
+  - Remove keembay_pcie_add_pcie_ep() and call dw_pcie_ep_init() from
+    keembay_pcie_probe().
+  - In keembay_pcie_probe(), remove dbi setup as it will be handled in
+    dwc common code.
+  - In keembay_pcie_link_up(), use return (val &
+    PCIE_REGS_PCIE_SII_LINK_UP) == PCIE_REGS_PCIE_SII_LINK_UP.
+  - In keembay_pcie_ep_raise_irq(), rework error message for
+    PCI_EPC_IRQ_LEGACY and default cases.
+- Rebased to next-20201124, that has dwc pci refactoring,
+  https://lore.kernel.org/linux-pci/20201105211159.1814485-1-robh@kernel.org/.
+
+
+Wan Ahmad Zainie (2):
+  dt-bindings: PCI: Add Intel Keem Bay PCIe controller
+  PCI: keembay: Add support for Intel Keem Bay
+
+ .../bindings/pci/intel,keembay-pcie-ep.yaml   |  68 +++
+ .../bindings/pci/intel,keembay-pcie.yaml      |  96 ++++
+ drivers/pci/controller/dwc/Kconfig            |  24 +
+ drivers/pci/controller/dwc/Makefile           |   1 +
+ drivers/pci/controller/dwc/pcie-keembay.c     | 448 ++++++++++++++++++
+ 5 files changed, 637 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-keembay.c
+
+-- 
+2.17.1
+
