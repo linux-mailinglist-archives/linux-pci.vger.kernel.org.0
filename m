@@ -2,129 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8766E2E7034
-	for <lists+linux-pci@lfdr.de>; Tue, 29 Dec 2020 12:57:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD8152E71F8
+	for <lists+linux-pci@lfdr.de>; Tue, 29 Dec 2020 16:53:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgL2L5O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 29 Dec 2020 06:57:14 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37176 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgL2L5M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Dec 2020 06:57:12 -0500
-Received: from mail-oo1-f71.google.com ([209.85.161.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1kuDc6-0004ka-Ot
-        for linux-pci@vger.kernel.org; Tue, 29 Dec 2020 11:56:31 +0000
-Received: by mail-oo1-f71.google.com with SMTP id z20so7800275ooe.13
-        for <linux-pci@vger.kernel.org>; Tue, 29 Dec 2020 03:56:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q74LhyOMocTQWIe3Ylg6HmsCuTC4QalH4b9SeCz/Lmw=;
-        b=bqpUU8ZgSM61iMYokCLfw1Pp9oX55H0PDnwmNQ6G/T+RN7ZPB2XF3C+wPu7VVHOcte
-         sHOkG+hh/9dTYwa+4Y1HKPhKlVBTGqb6STUBD6XTOJ1Sf7cdeHA73UyaOu46//++GlGB
-         S0sHkLKJP56sd6yywSOX18EM76T+XpV/n1bu27MAnGBHGVNhRtsVbJ4KLNwt05nSjibj
-         k81TkBGyBy+OE9XzO+zn6SlXsrSLuceYTg4PE7iTZCxgGMkuyvuIFefGnB257CxIZv9A
-         VsPKKstMRNgCkQ5phIRh7BUf6xgz7erjCVyi9hrlKrvuqj5UVOr2R1l0SvwxbXb5blAj
-         e31w==
-X-Gm-Message-State: AOAM5308SKS3gUEY41VrHmE/J2yHIjPHnCyNHjIg0bZIO/eS4hbBAAx+
-        S6SrKPUm2VmktuUMju3frSGlRGDOQ6JXaCye/npixGUBOAnpKOyjz8+zUQsMMyk4yBP0lrwR0rR
-        vw+hfJ1nesS/wfVnM/ihg7IbVRM86LkRRzFRpsEuiTKiqGXX7n8dM1Q==
-X-Received: by 2002:a9d:7411:: with SMTP id n17mr35055823otk.262.1609242989498;
-        Tue, 29 Dec 2020 03:56:29 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwd87AmyCfADf4gnKzotbQ9sDAN7TepdjBNdv0JiQGNi7ekW7M752Dbwu1xJRXPDL61O/Uw1lOEG3U6xYjQtTU=
-X-Received: by 2002:a9d:7411:: with SMTP id n17mr35055815otk.262.1609242989230;
- Tue, 29 Dec 2020 03:56:29 -0800 (PST)
-MIME-Version: 1.0
-References: <79940973-b631-90f9-dbc4-9579c6000816@gmail.com>
- <20201117163817.GA1397220@bjorn-Precision-5520> <CAJZ5v0ipMJ1gCB7okpROG_yAUi5Q8LknqeH+Jpdrjbb4D_vfuQ@mail.gmail.com>
- <b7bf02fd-c1aa-f430-524e-98922041ed81@gmail.com>
-In-Reply-To: <b7bf02fd-c1aa-f430-524e-98922041ed81@gmail.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Tue, 29 Dec 2020 19:56:17 +0800
-Message-ID: <CAAd53p43tMEk3b-BUUW1_rxFPo9zr3ZYqpSrLYddxBk_U=aw2g@mail.gmail.com>
-Subject: Re: Time to re-enable Runtime PM per default for PCI devcies?
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        id S1726335AbgL2Pwo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 29 Dec 2020 10:52:44 -0500
+Received: from magic.merlins.org ([209.81.13.136]:41106 "EHLO
+        mail1.merlins.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726302AbgL2Pwo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 29 Dec 2020 10:52:44 -0500
+Received: from aaubervilliers-653-1-146-240.w86-218.abo.wanadoo.fr ([86.218.37.240]:44390 helo=sauron.svh.merlins.org)
+        by mail1.merlins.org with esmtpsa 
+        (Cipher TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.92 #3)
+        id 1kuHI0-0000jm-Un by authid <merlins.org> with srv_auth_plain; Tue, 29 Dec 2020 07:52:00 -0800
+Received: from merlin by sauron.svh.merlins.org with local (Exim 4.92)
+        (envelope-from <marc_nouveau@merlins.org>)
+        id 1kuHHz-0005Ee-LP; Tue, 29 Dec 2020 07:51:59 -0800
+Date:   Tue, 29 Dec 2020 07:51:59 -0800
+From:   Marc MERLIN <marc_nouveau@merlins.org>
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     nouveau@lists.freedesktop.org,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: 5.9.11 still hanging 2mn at each boot and looping on nvidia-gpu
+ 0000:01:00.3: PME# enabled (Quadro RTX 4000 Mobile)
+Message-ID: <20201229155159.GG23389@merlins.org>
+References: <20200908002935.GD20064@merlins.org>
+ <20200529180315.GA18804@merlins.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Sysadmin: BOFH
+X-URL:  http://marc.merlins.org/
+X-SA-Exim-Connect-IP: 86.218.37.240
+X-SA-Exim-Mail-From: marc_nouveau@merlins.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Dec 26, 2020 at 11:26 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->
-> On 17.11.2020 17:57, Rafael J. Wysocki wrote:
-> > On Tue, Nov 17, 2020 at 5:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>
-> >> [+to Rafael, author of the commit you mentioned,
-> >> +cc Mika, Kai Heng, Lukas, linux-pm, linux-kernel]
-> >>
-> >> On Tue, Nov 17, 2020 at 04:56:09PM +0100, Heiner Kallweit wrote:
-> >>> More than 10 yrs ago Runtime PM was disabled per default by bb910a7040
-> >>> ("PCI/PM Runtime: Make runtime PM of PCI devices inactive by default").
-> >>>
-> >>> Reason given: "avoid breakage on systems where ACPI-based wake-up is
-> >>> known to fail for some devices"
-> >>> Unfortunately the commit message doesn't mention any affected  devices
-> >>> or systems.
-> >
-> > Even if it did that, it wouldn't have been a full list almost for sure.
-> >
-> > We had received multiple problem reports related to that, most likely
-> > because the ACPI PM in BIOSes at that time was tailored for
-> > system-wide PM transitions only.
-> >
->
-> To follow up on this discussion:
-> We could call pm_runtime_forbid() conditionally, e.g. with the following
-> condition. This would enable runtime pm per default for all non-ACPI
-> systems, and it uses the BIOS date as an indicator for a hopefully
-> not that broken ACPI implementation. However I could understand the
-> argument that this looks a little hacky ..
->
-> if (IS_ENABLED(CONFIG_ACPI) && dmi_get_bios_year() <= 2016)
+On Sat, Dec 26, 2020 at 03:12:09AM -0800, Ilia Mirkin wrote:
+> > after boot, when it gets the right trigger (not sure which ones), it
+> > loops on this evern 2 seconds, mostly forever.
+> 
+> The gpu suspends with runtime pm. And then gets woken up for some
+> reason (could be something quite silly, like lspci, or could be
+> something explicitly checking connectors, etc). Repeat.
 
-dmi_get_bios_year() may not be a good indicator. Last time I used it
-caused regression, because the value changed after BIOS update.
-For example, my MacBook Pro is manufactured in 2011, but
-dmi_get_bios_year() returns 2018 with latest BIOS.
+Ah, fair point.  Could it be powertop even?
+How would I go towards tracing that?
+Sounds like this would be a problem with all chips if userspace is able
+to wake them up every second or two with a probe. Now I wonder what
+broken userspace I have that could be doing this.
+ 
+> Display offload usually requires acceleration -- the copies are done
+> using the DMA engine. Please make sure that you have firmware
+> available (and a new enough mesa). The errors suggest that you don't
+> have firmware available at the time that nouveau loads. Depending on
+> your setup, that might mean the firmware has to be built into the
+> kernel, or available in initramfs. (Or just regular filesystem if you
+> don't use a complicated boot sequence. But many people go with distro
+> defaults, which do have this complexity.)
 
-Kai-Heng
+Hi Ilia, thanks for your answer.
 
->
->
->
-> >>> With Runtime PM disabled e.g. the PHY on network devices may remain
-> >>> powered up even with no cable plugged in, affecting battery lifetime
-> >>> on mobile devices. Currently we have to rely on the respective distro
-> >>> or user to enable Runtime PM via sysfs (echo auto > power/control).
-> >>> Some devices work around this restriction by calling pm_runtime_allow
-> >>> in their probe routine, even though that's not recommended by
-> >>> https://www.kernel.org/doc/Documentation/power/pci.txt
-> >>>
-> >>> Disabling Runtime PM per default seems to be a big hammer, a quirk
-> >>> for affected devices / systems may had been better. And we still
-> >>> have the option to disable Runtime PM for selected devices via sysfs.
-> >>>
-> >>> So, to cut a long story short: Wouldn't it be time to remove this
-> >>> restriction?
-> >>
-> >> I don't know the history of this, but maybe Rafael or the others can
-> >> shed some light on it.
-> >
-> > The systems that had those problems 10 years ago would still have
-> > them, but I expect there to be more systems where runtime PM can be
-> > enabled by default for PCI devices without issues.
-> >
->
+Do you think that could be a reason why the boot would hang for 2 full minutes at every
+boot ever since I upgraded to 5.5?
+
+Also, without wanting to sound like a full newbie, where is that
+firmware you're talking about? In my kernel source?
+
+Here's what I do have:
+sauron:/usr/local/bin# dpkggrep nouveau
+libdrm-nouveau2:amd64				install
+xserver-xorg-video-nouveau			install
+
+no nouveau-firmware package in debian:
+sauron:/usr/local/bin# apt-cache search nouveau
+bumblebee - NVIDIA Optimus support for Linux
+libdrm-nouveau2 - Userspace interface to nouveau-specific kernel DRM services -- runtime
+xfonts-jmk - Jim Knoble's character-cell fonts for X
+xserver-xorg-video-nouveau - X.Org X server -- Nouveau display driver
+
+No firmware file on my disk:
+sauron:/usr/local/bin# find /lib/modules/5.9.11-amd64-preempt-sysrq-20190817/ /lib/firmware/ |grep nouveau
+/lib/modules/5.9.11-amd64-preempt-sysrq-20190817/kernel/drivers/gpu/drm/nouveau
+/lib/modules/5.9.11-amd64-preempt-sysrq-20190817/kernel/drivers/gpu/drm/nouveau/nouveau.ko
+sauron:/usr/local/bin# 
+
+The kernel module is in my initrd:
+sauron:/usr/local/bin# dd if=/boot/initrd.img-5.9.11-amd64-preempt-sysrq-20190817 bs=2966528  skip=1 | gunzip | cpio -tdv | grep nouveau
+drwxr-xr-x   1 root     root            0 Nov 30 15:40 usr/lib/modules/5.9.11-amd64-preempt-sysrq-20190817/kernel/drivers/gpu/drm/nouveau
+-rw-r--r--   1 root     root      3691385 Nov 30 15:35 usr/lib/modules/5.9.11-amd64-preempt-sysrq-20190817/kernel/drivers/gpu/drm/nouveau/nouveau.ko
+17+1 records in
+17+1 records out
+52566778 bytes (53 MB, 50 MiB) copied, 1.69708 s, 31.0 MB/s
+
+What am I supposed to do/check next?
+
+Note that ultimately I only need nouveau not to hang my boot 2mn and do
+PM so that the nvidia chip goes to sleep since I don't use it.
+
+Thanks,
+Marc
+-- 
+"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+ 
+Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
