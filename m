@@ -2,176 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6B222E7BF9
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Dec 2020 19:54:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C15A12E7D0E
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Dec 2020 23:58:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgL3SyJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Dec 2020 13:54:09 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:34647 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgL3SyJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Dec 2020 13:54:09 -0500
-Received: from mwalle01.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:fa59:71ff:fe9b:b851])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 2CD2422EE3;
-        Wed, 30 Dec 2020 19:53:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1609354406;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lwvnQhIW98GG6BchDEz7tiz0m2Qh4lkT34sYwkPIRaM=;
-        b=H9MOqMA6dyLhJ3p2Xmioccn/P5uT+qzDoiM4RfoGTWrG/1ABjsNvJeND4qi27+fA5FGAOH
-        le5xRTcHSgQDPIPfgRUgZdpr1So+s5d2zkO3/R3Xu+Xb35H0Cw7ikAgk21mPRQM9hQDtrI
-        QVVGNN2vAV6M0ZFD4YmX57f6iYZ82No=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
-Date:   Wed, 30 Dec 2020 19:53:17 +0100
-Message-Id: <20201230185317.30915-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        id S1726511AbgL3W4w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Dec 2020 17:56:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgL3W4w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Dec 2020 17:56:52 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B57C061573;
+        Wed, 30 Dec 2020 14:56:12 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id k10so6114493wmi.3;
+        Wed, 30 Dec 2020 14:56:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fRTS3Id9eleLhgnOpSCzs7YIho8S+XSbtACGnjJB5e0=;
+        b=PeEPZIGXBiBNgxGXENxz/Ds3ZQsbSnihQPDzVK3FI+U2f6oVAKdbLq0Jbn+ZCDRAa/
+         lNLckVmOjUzJc66SyXLS+RFysXvPeSiSd9i0tClNd0zDkNJTSjLhoNYurlJfB04xYJTb
+         /bu4bA9+JggQo6wDEueTiO9oBw9PSFkdVI0YVLqwI92jsbhofseU9HvieAtnl8VIYxIr
+         hzbxkuRLTvVkOQWIYsuaGgKppPPjP5rHsXtCkPOBBb8gz25GTuNaNPiDOo5SrtSzgN9H
+         TEP6h2EspdvovI+xqKY1a5TithCLGI1uPzo3LTVbf0YKRuzX8IXsNmq947GuluvE41ZU
+         rXRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fRTS3Id9eleLhgnOpSCzs7YIho8S+XSbtACGnjJB5e0=;
+        b=owHm4ZyabN5W34Ey803GoE2sSAMlxW8r1yhsfbYB/fZH3yU34aO1PxjlxxEqqdmPPq
+         6mVsp8GYkMs2f4FTOSjbZe1/fNZnhvid+ZnLpXXFXFLI3AUzPvFkPKMlHRMKetGiD6WL
+         UfGr9Nz8bvbv0H+Rk24hNaDCsH/QD4AP4r50nG+VbWkNf1GEHYLbnyov6TrH4F0c/xUg
+         zvmNHf8YBi521oWRV6Czrf0tPgoRvCKw9KIDI7p6J+XSBC4geO08syiZzlk9cahbNdeV
+         Y6iJBAdmPXbWtWOHXrIa1vJcJIYDeSsjuP5T4V2KQa5J66nEhAAI2tI4D3FJx2yVzmRY
+         gjmw==
+X-Gm-Message-State: AOAM533CS9u7m0OQwxNHtiPV3qgPuSrF6XC+i4FE6SFKmbPfsT3BQdng
+        j3l1UfVcQPso8BkmuEjUOqXQQNT96g0=
+X-Google-Smtp-Source: ABdhPJyfADlFq8aF0bGkckmZ9/26pOJpEMq4HjTAD3GImVYvoXk+P/aENfUZ7pJh12DHLVS9X2y2+w==
+X-Received: by 2002:a05:600c:2246:: with SMTP id a6mr9363773wmm.80.1609368970398;
+        Wed, 30 Dec 2020 14:56:10 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f06:5500:a1e5:2a55:c7d0:ad89? (p200300ea8f065500a1e52a55c7d0ad89.dip0.t-ipconnect.de. [2003:ea:8f06:5500:a1e5:2a55:c7d0:ad89])
+        by smtp.googlemail.com with ESMTPSA id o7sm67482406wrw.62.2020.12.30.14.56.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Dec 2020 14:56:09 -0800 (PST)
+Subject: Re: Time to re-enable Runtime PM per default for PCI devcies?
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <79940973-b631-90f9-dbc4-9579c6000816@gmail.com>
+ <20201117163817.GA1397220@bjorn-Precision-5520>
+ <CAJZ5v0ipMJ1gCB7okpROG_yAUi5Q8LknqeH+Jpdrjbb4D_vfuQ@mail.gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <9ca0fb46-9e65-31e2-103f-1c98ce8362c7@gmail.com>
+Date:   Wed, 30 Dec 2020 23:56:04 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0ipMJ1gCB7okpROG_yAUi5Q8LknqeH+Jpdrjbb4D_vfuQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Intel i210 doesn't work if the Expansion ROM BAR overlaps with
-another BAR. Networking won't work at all and once a packet is sent the
-netdev watchdog will bite:
+On 17.11.2020 17:57, Rafael J. Wysocki wrote:
+> On Tue, Nov 17, 2020 at 5:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>> [+to Rafael, author of the commit you mentioned,
+>> +cc Mika, Kai Heng, Lukas, linux-pm, linux-kernel]
+>>
+>> On Tue, Nov 17, 2020 at 04:56:09PM +0100, Heiner Kallweit wrote:
+>>> More than 10 yrs ago Runtime PM was disabled per default by bb910a7040
+>>> ("PCI/PM Runtime: Make runtime PM of PCI devices inactive by default").
+>>>
+>>> Reason given: "avoid breakage on systems where ACPI-based wake-up is
+>>> known to fail for some devices"
+>>> Unfortunately the commit message doesn't mention any affected  devices
+>>> or systems.
+> 
+> Even if it did that, it wouldn't have been a full list almost for sure.
+> 
+> We had received multiple problem reports related to that, most likely
+> because the ACPI PM in BIOSes at that time was tailored for
+> system-wide PM transitions only.
+> 
+>>> With Runtime PM disabled e.g. the PHY on network devices may remain
+>>> powered up even with no cable plugged in, affecting battery lifetime
+>>> on mobile devices. Currently we have to rely on the respective distro
+>>> or user to enable Runtime PM via sysfs (echo auto > power/control).
+>>> Some devices work around this restriction by calling pm_runtime_allow
+>>> in their probe routine, even though that's not recommended by
+>>> https://www.kernel.org/doc/Documentation/power/pci.txt
+>>>
+>>> Disabling Runtime PM per default seems to be a big hammer, a quirk
+>>> for affected devices / systems may had been better. And we still
+>>> have the option to disable Runtime PM for selected devices via sysfs.
+>>>
+>>> So, to cut a long story short: Wouldn't it be time to remove this
+>>> restriction?
+>>
+>> I don't know the history of this, but maybe Rafael or the others can
+>> shed some light on it.
+> 
+> The systems that had those problems 10 years ago would still have
+> them, but I expect there to be more systems where runtime PM can be
+> enabled by default for PCI devices without issues.
+> 
 
-[   89.059374] ------------[ cut here ]------------
-[   89.064019] NETDEV WATCHDOG: enP2p1s0 (igb): transmit queue 0 timed out
-[   89.070681] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:443 dev_watchdog+0x3a8/0x3b0
-[   89.078989] Modules linked in:
-[   89.082053] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.11.0-rc1-00020-gc16f033804b #289
-[   89.091574] Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 carrier (DT)
-[   89.099870] pstate: 60000005 (nZCv daif -PAN -UAO -TCO BTYPE=--)
-[   89.105900] pc : dev_watchdog+0x3a8/0x3b0
-[   89.109923] lr : dev_watchdog+0x3a8/0x3b0
-[   89.113945] sp : ffff80001000bd50
-[   89.117268] x29: ffff80001000bd50 x28: 0000000000000008
-[   89.122602] x27: 0000000000000004 x26: 0000000000000140
-[   89.127935] x25: ffff002001c6c000 x24: ffff002001c2b940
-[   89.133267] x23: ffff8000118c7000 x22: ffff002001c6c39c
-[   89.138600] x21: ffff002001c6bfb8 x20: ffff002001c6c3b8
-[   89.143932] x19: 0000000000000000 x18: 0000000000000010
-[   89.149264] x17: 0000000000000000 x16: 0000000000000000
-[   89.154596] x15: ffffffffffffffff x14: 0720072007200720
-[   89.159928] x13: 0720072007740775 x12: ffff80001195b980
-[   89.165260] x11: 0000000000000003 x10: ffff800011943940
-[   89.170592] x9 : ffff800010100d44 x8 : 0000000000017fe8
-[   89.175924] x7 : c0000000ffffefff x6 : 0000000000000001
-[   89.181255] x5 : 0000000000000000 x4 : 0000000000000000
-[   89.186587] x3 : 00000000ffffffff x2 : ffff8000118eb908
-[   89.191919] x1 : 84d8200845006900 x0 : 0000000000000000
-[   89.197251] Call trace:
-[   89.199701]  dev_watchdog+0x3a8/0x3b0
-[   89.203374]  call_timer_fn+0x38/0x208
-[   89.207049]  run_timer_softirq+0x290/0x540
-[   89.211158]  __do_softirq+0x138/0x404
-[   89.214831]  irq_exit+0xe8/0xf8
-[   89.217981]  __handle_domain_irq+0x70/0xc8
-[   89.222091]  gic_handle_irq+0xc8/0x2b0
-[   89.225850]  el1_irq+0xb8/0x180
-[   89.228999]  arch_cpu_idle+0x18/0x40
-[   89.232587]  default_idle_call+0x70/0x214
-[   89.236610]  do_idle+0x21c/0x290
-[   89.239848]  cpu_startup_entry+0x2c/0x70
-[   89.243783]  secondary_start_kernel+0x1a0/0x1f0
-[   89.248332] ---[ end trace 1687af62576397bc ]---
-[   89.253350] igb 0002:01:00.0 enP2p1s0: Reset adapter
+As a proposal, maybe we can use the ACPI revision as an indicator for
+whether ACPI implementation is new enough to not be affected by the old
+problems. With the following simple patch runtime pm won't be disabled
+per default for ACPI versions >= 6.0. AFAIK ACPI 6.0 was published in 2015.
 
-Before this fixup the Expansion ROM BAR will overlap with BAR3:
-  # lspci -ns 2:1:0 -xx
-  0002:01:00.0 0200: 8086:1533 (rev 03)
-  00: 86 80 33 15 06 04 10 00 03 00 00 02 08 00 00 00
-  10: 00 00 00 40 00 00 00 00 00 00 00 00 00 00 20 40
-  20: 00 00 00 00 00 00 00 00 00 00 00 00 3c 10 03 00
-  30: 00 00 20 40 40 00 00 00 00 00 00 00 22 01 00 00
+On a side note:
+It seems the sole motivation to disable runtime pm per default is ACPI
+problems. So why do we disable runtime pm also on non-ACPI systems?
+With the proposed patch runtime pm is enabled per default if
+CONFIG_ACPI isn't defined.
 
-Add a quirk which will update the Expansion ROM BAR for Intel i210s even
-if the ROM is disabled. After the quirk is applied:
-  # lspci -ns 2:1:0 -xx
-  0002:01:00.0 0200: 8086:1533 (rev 03)
-  00: 86 80 33 15 06 04 10 00 03 00 00 02 08 00 00 00
-  10: 00 00 00 40 00 00 00 00 00 00 00 00 00 00 20 40
-  20: 00 00 00 00 00 00 00 00 00 00 00 00 3c 10 03 00
-  30: 00 00 10 40 40 00 00 00 00 00 00 00 22 01 00 00
-
-This behavior was seen with U-Boot v2021.01-rc3 on an ARM64 board (kontron
-sl28). Earlier versions likely behave in the same way, but the board which
-this was tested on, is only supported since the 2021.01 version.
-
-Signed-off-by: Michael Walle <michael@walle.cc>
 ---
+ drivers/pci/pci-acpi.c | 5 +++++
+ drivers/pci/pci.c      | 4 +++-
+ drivers/pci/pci.h      | 5 +++++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
-Paul, thanks for the fast first review!
-
-changes since v1:
- - more precise subject
- - added info about bootloader
- - fixed typos
- - added lspci output to the commit message after the quirks is applied
- - added pci_info() to inform about the quirk
- - renamed pci_fixup_rewrite_rom_bar() to pci_fixup_write_rom_bar().
-   Technically, linux didn't write the ROM BAR yet.
-
- drivers/pci/quirks.c | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 653660e3ba9e..a1a904ed5a10 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5612,3 +5612,39 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
- 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-+
-+/*
-+ * Some devices don't work if the Expansion ROM has the same base address as
-+ * one of the other BARs although it is disabled.
-+ * This might happen if the bootloader/BIOS enumerates the BARs in a different
-+ * way than linux. If the Expansion ROM is disabled, linux deliberately skips
-+ * writing the ROM BAR if the BAR is not enabled because of some broken
-+ * devices, see pci_std_update_resource(). Thus, the ROM BAR of the device will
-+ * still contain the value assigned by the booloader, which might be the same
-+ * value as one of the other BARs then.
-+ *
-+ * As a workaround, update the Expansion ROM BAR even if the Expansion ROM is
-+ * disabled.
-+ */
-+static void pci_fixup_write_rom_bar(struct pci_dev *dev)
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 53502a751..265f5d2c4 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -27,6 +27,11 @@ const guid_t pci_acpi_dsm_guid =
+ 	GUID_INIT(0xe5c937d0, 0x3553, 0x4d7a,
+ 		  0x91, 0x17, 0xea, 0x4d, 0x19, 0xc3, 0x43, 0x4d);
+ 
++bool pci_acpi_forbid_runtime_pm(void)
 +{
-+	struct resource *res = &dev->resource[PCI_ROM_RESOURCE];
-+	struct pci_bus_region region;
-+	u32 rom_addr;
-+
-+	pci_read_config_dword(dev, dev->rom_base_reg, &rom_addr);
-+
-+	if (rom_addr & PCI_ROM_ADDRESS_ENABLE)
-+		return;
-+
-+	pci_info(dev, "Writing Expansion ROM BAR to avoid overlapping\n");
-+
-+	pcibios_resource_to_bus(dev->bus, &region, res);
-+	rom_addr &= ~PCI_ROM_ADDRESS_MASK;
-+	rom_addr |= region.start;
-+	pci_write_config_dword(dev, dev->rom_base_reg, rom_addr);
++	return acpi_gbl_FADT.header.revision < 6;
 +}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1533, pci_fixup_write_rom_bar);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1536, pci_fixup_write_rom_bar);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1537, pci_fixup_write_rom_bar);
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1538, pci_fixup_write_rom_bar);
++
+ #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
+ static int acpi_get_rc_addr(struct acpi_device *adev, struct resource *res)
+ {
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b9fecc25d..83b5a7e63 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3024,7 +3024,9 @@ void pci_pm_init(struct pci_dev *dev)
+ 	u16 status;
+ 	u16 pmc;
+ 
+-	pm_runtime_forbid(&dev->dev);
++	if (pci_acpi_forbid_runtime_pm())
++		pm_runtime_forbid(&dev->dev);
++
+ 	pm_runtime_set_active(&dev->dev);
+ 	pm_runtime_enable(&dev->dev);
+ 	device_enable_async_suspend(&dev->dev);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 5c5936509..c1d521fb2 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -701,11 +701,16 @@ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL
+ 
+ #ifdef CONFIG_ACPI
+ int pci_acpi_program_hp_params(struct pci_dev *dev);
++bool pci_acpi_forbid_runtime_pm(void);
+ #else
+ static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
+ {
+ 	return -ENODEV;
+ }
++static inline bool pci_acpi_forbid_runtime_pm(void)
++{
++	return false;
++}
+ #endif
+ 
+ #ifdef CONFIG_PCIEASPM
 -- 
-2.20.1
+2.29.2
+
 
