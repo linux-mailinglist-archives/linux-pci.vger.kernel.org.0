@@ -2,155 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 068442E7B32
-	for <lists+linux-pci@lfdr.de>; Wed, 30 Dec 2020 17:58:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 757002E7B92
+	for <lists+linux-pci@lfdr.de>; Wed, 30 Dec 2020 18:30:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbgL3Q6Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 30 Dec 2020 11:58:16 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18006 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbgL3Q6Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Dec 2020 11:58:16 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fecb17f0000>; Wed, 30 Dec 2020 08:57:35 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 30 Dec
- 2020 16:57:33 +0000
-Received: from vidyas-desktop.nvidia.com (172.20.145.6) by mail.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Wed, 30 Dec 2020 16:57:28 +0000
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <amurray@thegoodpenguin.co.uk>, <robh@kernel.org>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
-        <sagar.tv@gmail.com>
-Subject: [PATCH V3] PCI: dwc: Add support to configure for ECRC
-Date:   Wed, 30 Dec 2020 22:27:23 +0530
-Message-ID: <20201230165723.673-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        id S1726214AbgL3R3Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 30 Dec 2020 12:29:16 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:43867 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgL3R3Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 30 Dec 2020 12:29:16 -0500
+Received: from mwalle01.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:fa59:71ff:fe9b:b851])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8E61722727;
+        Wed, 30 Dec 2020 18:28:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1609349313;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6FicUDPIGdxRaI+t09GLlQLPPAddV4hLMgOu+jJmYzQ=;
+        b=Pt0t25f7AZMrS72/2OOTXUIQb1FDTZ4ZIWIqO3kyJ/v3A3O+AZx33wPaO8Z0goKKBfxYXj
+        QhUGVUzo2Ko7OxYWMkf2FQJympk8MXSFnWJgwatDma5ylJ7YKM5mcZDyi04V2CYNm/K4Jy
+        fMTV5CbQh92pdK+c1nICi9JDbZ4TLkM=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] PCI: add Intel i210 quirk
+Date:   Wed, 30 Dec 2020 18:28:23 +0100
+Message-Id: <20201230172823.28483-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1609347455; bh=wDYaEAHfkbnYI47Hfu8bXFCoPnbVMsdJ4k/iGk/DNvI=;
-        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:X-NVConfidentiality:
-         MIME-Version:Content-Type;
-        b=NoqMs4Eru453f2LR0fuufPHK6Pnxi++YcVVBGE4/t3xQgWVgO28x/FZKVNNMtMl7V
-         76dSEqy1QHZ6EdWNkdpQWd36WnoOAoOmrCTT0fH4DoFpPV2AW2NpragaeyuJBJmLkw
-         arw2wdGm9GlnGaq6PX56n6gLV/Slklz8XrA3BuJS0W3ENoMsh5w2/tnzOUm9eZYNYd
-         RevkUz6tXggHb38lwrdpjH8RA5Ow4qsgyKFyuCSDK71L7bVHiSI6ueUf7uI1LDUywV
-         VybFjnbvkppvouRZ+TCkuQNggiPhQESv0/+S1GJkqk+OECmE6wfGtCWdU8nLwTBFgb
-         9lptnItG85+Pg==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DesignWare core has a TLP digest (TD) override bit in one of the control
-registers of ATU. This bit also needs to be programmed for proper ECRC
-functionality. This is currently identified as an issue with DesignWare
-IP version 4.90a.
+The Intel i210 doesn't work if the Expansion ROM BAR overlaps with
+another BAR. Networking won't work at all and once a packet is sent the
+netdev watchdog will bite:
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+[   89.059374] ------------[ cut here ]------------
+[   89.064019] NETDEV WATCHDOG: enP2p1s0 (igb): transmit queue 0 timed out
+[   89.070681] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:443 dev_watchdog+0x3a8/0x3b0
+[   89.078989] Modules linked in:
+[   89.082053] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.11.0-rc1-00020-gc16f033804b #289
+[   89.091574] Hardware name: Kontron SMARC-sAL28 (Single PHY) on SMARC Eval 2.0 carrier (DT)
+[   89.099870] pstate: 60000005 (nZCv daif -PAN -UAO -TCO BTYPE=--)
+[   89.105900] pc : dev_watchdog+0x3a8/0x3b0
+[   89.109923] lr : dev_watchdog+0x3a8/0x3b0
+[   89.113945] sp : ffff80001000bd50
+[   89.117268] x29: ffff80001000bd50 x28: 0000000000000008
+[   89.122602] x27: 0000000000000004 x26: 0000000000000140
+[   89.127935] x25: ffff002001c6c000 x24: ffff002001c2b940
+[   89.133267] x23: ffff8000118c7000 x22: ffff002001c6c39c
+[   89.138600] x21: ffff002001c6bfb8 x20: ffff002001c6c3b8
+[   89.143932] x19: 0000000000000000 x18: 0000000000000010
+[   89.149264] x17: 0000000000000000 x16: 0000000000000000
+[   89.154596] x15: ffffffffffffffff x14: 0720072007200720
+[   89.159928] x13: 0720072007740775 x12: ffff80001195b980
+[   89.165260] x11: 0000000000000003 x10: ffff800011943940
+[   89.170592] x9 : ffff800010100d44 x8 : 0000000000017fe8
+[   89.175924] x7 : c0000000ffffefff x6 : 0000000000000001
+[   89.181255] x5 : 0000000000000000 x4 : 0000000000000000
+[   89.186587] x3 : 00000000ffffffff x2 : ffff8000118eb908
+[   89.191919] x1 : 84d8200845006900 x0 : 0000000000000000
+[   89.197251] Call trace:
+[   89.199701]  dev_watchdog+0x3a8/0x3b0
+[   89.203374]  call_timer_fn+0x38/0x208
+[   89.207049]  run_timer_softirq+0x290/0x540
+[   89.211158]  __do_softirq+0x138/0x404
+[   89.214831]  irq_exit+0xe8/0xf8
+[   89.217981]  __handle_domain_irq+0x70/0xc8
+[   89.222091]  gic_handle_irq+0xc8/0x2b0
+[   89.225850]  el1_irq+0xb8/0x180
+[   89.228999]  arch_cpu_idle+0x18/0x40
+[   89.232587]  default_idle_call+0x70/0x214
+[   89.236610]  do_idle+0x21c/0x290
+[   89.239848]  cpu_startup_entry+0x2c/0x70
+[   89.243783]  secondary_start_kernel+0x1a0/0x1f0
+[   89.248332] ---[ end trace 1687af62576397bc ]---
+[   89.253350] igb 0002:01:00.0 enP2p1s0: Reset adapter
+
+Before this fixup the Expansion ROM BAR will overlap with BAR3:
+  # lspci -ns 2:1:0 -xx
+  0002:01:00.0 0200: 8086:1533 (rev 03)
+  00: 86 80 33 15 06 04 10 00 03 00 00 02 08 00 00 00
+  10: 00 00 00 40 00 00 00 00 00 00 00 00 00 00 20 40
+  20: 00 00 00 00 00 00 00 00 00 00 00 00 3c 10 03 00
+  30: 00 00 20 40 40 00 00 00 00 00 00 00 22 01 00 00
+
+Add a quirk which will update the Expansion ROM BAR for Intel i210s even
+if the ROM is disabled. This was tested on an ARM64 board (kontron
+sl28).
+
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
-V3:
-* Rebased on top of linux-next
+ drivers/pci/quirks.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-V2:
-* Addressed Bjorn's comments
-
- drivers/pci/controller/dwc/pcie-designware.c | 48 +++++++++++++++++++-
- drivers/pci/controller/dwc/pcie-designware.h |  1 +
- 2 files changed, 47 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 645fa1892375..5b72a5448d2e 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -225,6 +225,46 @@ static void dw_pcie_writel_ob_unroll(struct dw_pcie *pci, u32 index, u32 reg,
- 	dw_pcie_writel_atu(pci, offset + reg, val);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 653660e3ba9e..59c204ef5df7 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5612,3 +5612,37 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
  }
- 
-+static inline u32 dw_pcie_enable_ecrc(u32 val)
+ DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
+ 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
++
++/*
++ * Some devices doesn't work if the Expansion ROM has the same base address as
++ * one of the other BARs although it is disabled.
++ * This might happen if the bootloader/BIOS enumerate the BARs in a different
++ * way than linux. If the Expansion ROM is disabled, linux deliberately skip
++ * writing the ROM BAR if the BAR is not enabled because of some broken
++ * devices, see pci_std_update_resource(). Thus, the ROM BAR of the device will
++ * still contain the value assigned by the booloader, which might be the same
++ * value as one of the other BARs then.
++ *
++ * As a workaround, update the Expansion ROM BAR even if the Expansion ROM is
++ * disabled.
++ */
++static void pci_fixup_rewrite_rom_bar(struct pci_dev *dev)
 +{
-+	/*
-+	 * DesignWare core version 4.90A has this strange design issue
-+	 * where the 'TD' bit in the Control register-1 of the ATU outbound
-+	 * region acts like an override for the ECRC setting i.e. the presence
-+	 * of TLP Digest(ECRC) in the outgoing TLPs is solely determined by
-+	 * this bit. This is contrary to the PCIe spec which says that the
-+	 * enablement of the ECRC is solely determined by the AER registers.
-+	 *
-+	 * Because of this, even when the ECRC is enabled through AER
-+	 * registers, the transactions going through ATU won't have TLP Digest
-+	 * as there is no way the AER sub-system could program the TD bit which
-+	 * is specific to DesignWare core.
-+	 *
-+	 * The best way to handle this scenario is to program the TD bit
-+	 * always. It affects only the traffic from root port to downstream
-+	 * devices.
-+	 *
-+	 * At this point,
-+	 * When ECRC is enabled in AER registers, everything works normally
-+	 * When ECRC is NOT enabled in AER registers, then,
-+	 * on Root Port:- TLP Digest (DWord size) gets appended to each packet
-+	 *                even through it is not required. Since downstream
-+	 *                TLPs are mostly for configuration accesses and BAR
-+	 *                accesses, they are not in critical path and won't
-+	 *                have much negative effect on the performance.
-+	 * on End Point:- TLP Digest is received for some/all the packets coming
-+	 *                from the root port. TLP Digest is ignored because,
-+	 *                as per the PCIe Spec r5.0 v1.0 section 2.2.3
-+	 *                "TLP Digest Rules", when an endpoint receives TLP
-+	 *                Digest when its ECRC check functionality is disabled
-+	 *                in AER registers, received TLP Digest is just ignored.
-+	 * Since there is no issue or error reported either side, best way to
-+	 * handle the scenario is to program TD bit by default.
-+	 */
++	struct resource *res = &dev->resource[PCI_ROM_RESOURCE];
++	struct pci_bus_region region;
++	u32 rom_addr;
 +
-+	return val | PCIE_ATU_TD;
++	pci_read_config_dword(dev, dev->rom_base_reg, &rom_addr);
++
++	if (rom_addr & PCI_ROM_ADDRESS_ENABLE)
++		return;
++
++	pcibios_resource_to_bus(dev->bus, &region, res);
++	rom_addr &= ~PCI_ROM_ADDRESS_MASK;
++	rom_addr |= region.start;
++	pci_write_config_dword(dev, dev->rom_base_reg, rom_addr);
 +}
-+
- static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 					     int index, int type,
- 					     u64 cpu_addr, u64 pci_addr,
-@@ -248,6 +288,8 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, u8 func_no,
- 	val = type | PCIE_ATU_FUNC_NUM(func_no);
- 	val = upper_32_bits(size - 1) ?
- 		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-+	if (pci->version == 0x490A)
-+		val = dw_pcie_enable_ecrc(val);
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL1, val);
- 	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_REGION_CTRL2,
- 				 PCIE_ATU_ENABLE);
-@@ -294,8 +336,10 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
- 			   lower_32_bits(pci_addr));
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
- 			   upper_32_bits(pci_addr));
--	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
--			   PCIE_ATU_FUNC_NUM(func_no));
-+	val = type | PCIE_ATU_FUNC_NUM(func_no);
-+	if (pci->version == 0x490A)
-+		val = dw_pcie_enable_ecrc(val);
-+	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
- 	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
- 
- 	/*
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 0207840756c4..5d979953800d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -86,6 +86,7 @@
- #define PCIE_ATU_TYPE_IO		0x2
- #define PCIE_ATU_TYPE_CFG0		0x4
- #define PCIE_ATU_TYPE_CFG1		0x5
-+#define PCIE_ATU_TD			BIT(8)
- #define PCIE_ATU_FUNC_NUM(pf)           ((pf) << 20)
- #define PCIE_ATU_CR2			0x908
- #define PCIE_ATU_ENABLE			BIT(31)
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1533, pci_fixup_rewrite_rom_bar);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1536, pci_fixup_rewrite_rom_bar);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1537, pci_fixup_rewrite_rom_bar);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1538, pci_fixup_rewrite_rom_bar);
 -- 
-2.25.1
+2.20.1
 
