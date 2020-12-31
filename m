@@ -2,107 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C15C62E7FF8
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Dec 2020 13:39:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 931762E8025
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Dec 2020 13:58:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbgLaMjD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Dec 2020 07:39:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59184 "EHLO
+        id S1726661AbgLaM5X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Dec 2020 07:57:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbgLaMjC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Dec 2020 07:39:02 -0500
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D60FC06179F
-        for <linux-pci@vger.kernel.org>; Thu, 31 Dec 2020 04:38:21 -0800 (PST)
-Received: by mail-ot1-x32d.google.com with SMTP id d8so17914062otq.6
-        for <linux-pci@vger.kernel.org>; Thu, 31 Dec 2020 04:38:21 -0800 (PST)
+        with ESMTP id S1726681AbgLaM5X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Dec 2020 07:57:23 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F431C061573
+        for <linux-pci@vger.kernel.org>; Thu, 31 Dec 2020 04:56:42 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id x20so43850928lfe.12
+        for <linux-pci@vger.kernel.org>; Thu, 31 Dec 2020 04:56:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8fidVqimP5oLeoM0vJSpH6fCyHQZj21WkUFk0MwgeNQ=;
-        b=oLCiEBEZu98SfgKQb6gjuHmkiLq9Q/JThumX8OVTJw//mfFucSVklfg5miBYKvTsO9
-         j/RIxqNZl2BNO2+k4qm5pHSWbwBMLan0oJ6NP0FhNfn4yjE+l3pQtLYz82g+yqpDRdb/
-         hg143UPaB5t1Qtlzeg8EBhWl77NH2khbk9J0Mj3+35j/FQKBf/wAo5TPJ2TGva62AcOx
-         CbEG0fcXZNGBIkcBjgHDQxtPseKRLpPoawutWZoUQNO2hJtq7Lgwb0cD4CViXWcIwqVs
-         BTKZ/VH/h4oLHlBLDNvWYODuBkoy2FnF8wHrHcpVnJIznAL0Ll3cuOzROvr4i5M1Fqv0
-         YLfg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4vZjoGWZedYLbvhemgBlBVpOyf8AcC6M80ix2EkJy5k=;
+        b=mvJtCqEHARbrds8vfmwVE8IV0FDzVFVjDsJ+Ly+kOJpx013Bd5Ept7/RxTUd5PmPZv
+         ff3FMwlzYQ/x574k7mtyMw0lk0VrQ6oYrdIplqE+NKRjxRIWQ6ut2G4ZI5ZEgwMzrFFW
+         GsUn5mjCy/72bJIfWOSzJvZRLc3XyS9T/PeJrMz5POhExysHrq8AJ42ENWxl+W3ReP9T
+         FaIRVF/sFqOPzPLubvRh7fA3ii1hDTiXHqpDfpLQxYgZf1NtXpRHGQIoB68vAOEOzTnA
+         UNsSwvul8lT1GjgKdKGCLM0Yg+9kg1u80qT4TWVW0uNTMlZXLz1AyJTBsQhMeW0L8y1B
+         SKJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8fidVqimP5oLeoM0vJSpH6fCyHQZj21WkUFk0MwgeNQ=;
-        b=s2mxeVjzs+ccjaU/8CfbFuQYJUNUFnw3oln5BXtm3snNvZjkHgLKKYi5HsBxKEZZ0G
-         ihtWiV+PsnhcWrAkNxCMPkmZ+fSYJo7J2gAjNyEi/jJuPi0b1edUsMPpeZ5QsPZ2cfH9
-         uH4Ctyfg5GrWp0hkm5OxLqYS/4yFmJd2gT3QN/niYMGYE7xQJ0KqJTDp377UNnWj81+K
-         QZz8QkjkJTNO2WJ73Q62dggA0NN9JUhr0fAfJoUgQqlhsh8HLv8ycW5dizleWTDFUMpg
-         ntpPPehTsmkdANS0p+ETBdCmSOKcfHurFmGI2S+9bJoK1nPtY3yrMlBYPZ7JkuJvdX6m
-         xRBg==
-X-Gm-Message-State: AOAM5319ppJm94UAi4zI8bY2qs06wPZAkKcoBkFNyqq7HOLdpk+FcCAV
-        /Nm2iwjyApfDL+pkPr2wrjgbkzHcKpC1+vmCru9o2g==
-X-Google-Smtp-Source: ABdhPJwxJpVVcdSlD3GOmcVgzLNgibF7TD7Re668GN9W59cJdtK63zsAzP5yK68X3Fao0S5HtCZmobxzHGsJegYau4Q=
-X-Received: by 2002:a9d:4e84:: with SMTP id v4mr42700646otk.45.1609418300461;
- Thu, 31 Dec 2020 04:38:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20201230115408.492565-1-dmitry.baryshkov@linaro.org>
- <20201230123542.GA5679@thinkpad> <CAA8EJppWi7POSXsHnBJ__TGDBQezU1YHcvSKk9=7wpoAfREh4Q@mail.gmail.com>
- <20201230124641.GC5679@thinkpad> <CAA8EJppeD-Vq643VuKrOXvHr1h6gW_U5XYKqGPcxdwGybkLv1Q@mail.gmail.com>
- <20201230130618.GD5679@thinkpad>
-In-Reply-To: <20201230130618.GD5679@thinkpad>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Thu, 31 Dec 2020 15:38:09 +0300
-Message-ID: <CAA8EJprFbGPeALe3=MtLNA-Vr6qRELA6ssa+z2Y2Z1nr9ATrSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] PCI: qcom: fixup PCIe support on sm8250
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4vZjoGWZedYLbvhemgBlBVpOyf8AcC6M80ix2EkJy5k=;
+        b=tbKHlh0A8loYPA6Y+5oCurKdM4spiEm9VFG3yUu4YY5GgWxbaqNnbvfPGDOUzZ43bD
+         QhoGUdRaqhxTA5iLGTFGdoxywqIl5Kg/k9rzkGlcW8of7U+nvZRkDGCLoFZ3E7IT/+29
+         0gFd/IvR8GRyq9MX7VNtDJdNdge28UkRSYDnLlGrGXK0SpsY4b+tifwqoD4BwNOrTnnC
+         YqdRDGUD375DQyqkIgVsM7XdLqYjLirs1PuY8F2jNNtUzbL/OhneY4/plfkP2N+DPNM8
+         zlRkGqxxgMLnjhbG5Hoz92CaQZbviRN6djeIXq2Em4dVrc/QMCTP1njaLkmxFcA98JpB
+         +eBg==
+X-Gm-Message-State: AOAM530Nt8enWJop2SUdFC7+PsdtAhHf7IoO6H/7NcPEG/KVAC2r+5YY
+        mBNC23LimgShjUie6/Tqd94=
+X-Google-Smtp-Source: ABdhPJzxjGQ5hs2wOpjZ5zeSZkxEF4aK/S7JHO+0Ik9A9Vcne4fX8OAy1TRuY4k78iiNOoOQ6ZJOXA==
+X-Received: by 2002:a2e:b88e:: with SMTP id r14mr27252228ljp.254.1609419400987;
+        Thu, 31 Dec 2020 04:56:40 -0800 (PST)
+Received: from localhost.localdomain (85-76-98-107-nat.elisa-mobile.fi. [85.76.98.107])
+        by smtp.gmail.com with ESMTPSA id r201sm6230659lff.268.2020.12.31.04.56.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Dec 2020 04:56:40 -0800 (PST)
+From:   =?UTF-8?q?Jari=20H=C3=A4m=C3=A4l=C3=A4inen?= <nuumiofi@gmail.com>
+To:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     =?UTF-8?q?Jari=20H=C3=A4m=C3=A4l=C3=A4inen?= <nuumiofi@gmail.com>,
+        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [RFC PATCH 0/3] provide workaround for Rockchip PCIe bus scan crash with optional delay
+Date:   Thu, 31 Dec 2020 14:52:11 +0200
+Message-Id: <20201231125214.25733-1-nuumiofi@gmail.com>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mani,
+Hello all,
 
-On Wed, 30 Dec 2020 at 16:06, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Wed, Dec 30, 2020 at 03:57:54PM +0300, Dmitry Baryshkov wrote:
-> > On Wed, 30 Dec 2020 at 15:46, Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org> wrote:
-> > >
-> > > On Wed, Dec 30, 2020 at 03:38:12PM +0300, Dmitry Baryshkov wrote:
-> > > > Hi Mani,
-> > > >
-> > > > On Wed, 30 Dec 2020 at 15:35, Manivannan Sadhasivam
-> > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >
-> > > > > On Wed, Dec 30, 2020 at 02:54:06PM +0300, Dmitry Baryshkov wrote:
-> > > > > > SM8250 SoC requires another clock to be up to power up the translation
-> > > > > > unit. Add necessary bindings and driver support.
-> > > > > >
-> > > > >
-> > > > > So what is the exact issue you're facing?
-> > > >
-> > > > IOMMU timeouts for PCIe0 device (WiFi)
-> > > >
-> > >
-> > > Strange. I never observed this issue while testing with onboard QCA6390. Is it
-> > > only happening on v5.11?
-> >
-> > No, I've faced it with 5.10 also. Don't remember about 5.9. Downstream
-> > 4.19 also has this patch.
-> > It well might be that on your board the firmware enables this clock.
-> > However to be on a safe side I think we should enable it too.
-> >
->
-> Okay, then please remove the optional field and make it as a required one.
+This RFC patch provides a workaround for Rockchip PCIe controller crashes
+with some devices when PCIe bus is scanned. Both command line parameter and
+device tree property are included as ways to set the delay. I'm sending
+this as RFC because I don't know which approach, command line and/or device
+tree, would be the best considering this is a workaround, not a proper fix.
 
-Done.
+I feel that at least command line parameter should be provided as it's easy
+to edit by end user. Device tree property could be seen as a way for disto
+maintainer to provide sane or safe default with kernel but it also extends
+the change to touch more files which makes it harder to clean up if a
+proper fix to this is found.
 
+Also, I've set delay to 1100 ms for RockPro64 in patch 3 as an example of
+safe default. If new device tree property support is accepted maybe the
+actual device tree should be left unmodified or delay set to 0 ms so that
+users not needing the delay are not affected in any way.
+
+Patch 1 adds the workaround code. Kernel parameter documentation is also
+included. Devices used in testing and a log excerpt are included in
+changelog.
+
+In addition to devices needing the delay, tested and listed in patch 1
+following devices that do not need the delay were tested with no delay and
+1000 ms delay and no regression was observed:
+- Marvell 88SE9215 and 88SE9230 based SATA controllers
+- Samsung 970 EVO Plus NVMe drive
+
+Patches 2 and 3 add dt-bindings and the new property to RockPro64 device as
+an example.
+
+All comments about the workaround itself if it's applicable and about both
+command line + device tree or only command line approaches are welcome.
+
+Best regards,
+Jari Hämäläinen
+
+Jari Hämäläinen (3):
+  PCI: rockchip: provide workaround for bus scan crash with optional
+    delay
+  dt-bindings: PCI: rockchip: document bus-scan-delay-ms workaround
+    property
+  arm64: dts: rockchip: use bus-scan-delay-ms workaround with RockPro64
+    PCIe
+
+ .../admin-guide/kernel-parameters.txt          |  8 ++++++++
+ .../bindings/pci/rockchip-pcie-host.txt        |  3 +++
+ .../boot/dts/rockchip/rk3399-rockpro64.dtsi    |  1 +
+ drivers/pci/controller/pcie-rockchip-host.c    | 18 ++++++++++++++++++
+ drivers/pci/controller/pcie-rockchip.c         |  5 +++++
+ drivers/pci/controller/pcie-rockchip.h         |  2 ++
+ 6 files changed, 37 insertions(+)
+
+
+base-commit: 5c8fe583cce542aa0b84adc939ce85293de36e5e
 -- 
-With best wishes
-Dmitry
+2.29.2
+
