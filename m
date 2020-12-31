@@ -2,96 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E53B52E8028
-	for <lists+linux-pci@lfdr.de>; Thu, 31 Dec 2020 13:58:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01B1F2E819E
+	for <lists+linux-pci@lfdr.de>; Thu, 31 Dec 2020 19:28:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgLaM51 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 31 Dec 2020 07:57:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgLaM50 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 31 Dec 2020 07:57:26 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F3BC06179B
-        for <linux-pci@vger.kernel.org>; Thu, 31 Dec 2020 04:56:46 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id h205so43878094lfd.5
-        for <linux-pci@vger.kernel.org>; Thu, 31 Dec 2020 04:56:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PTGZ/ohUNRbTjFJ7AFoie+4oyvbYi7rty13LxXQOIG0=;
-        b=Lf0G4YG3IoEWxS/gyi5qqLOEhbBDzk3GDQcwcRoBjp5/J2rV6AJGVm4hHrn61odt0X
-         zgAqspSfCw4J5dqcg6KBwNYyC5TTQgOKSLaHoItJ9I59qvb+HD6gvumWUjk+3G57WrhD
-         1qYwV4YoXxF+xTVO1mnrMiMAxfkdKZng31iQLy7bsrpkII2LHWx+oiTh74p+87HB/J2t
-         ncnN77q1Bgw+BACCZ3YtyRHxcalQXfO1D43mHQrT3RPaLrZFsd/GdKrX257dVfSd87KA
-         JOmvyg16kUYstz7BYFk75PQr1ldN8wM4/1CL4kfW2pehU1KVowHEhKmtem7YkTK7jXgG
-         u/6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PTGZ/ohUNRbTjFJ7AFoie+4oyvbYi7rty13LxXQOIG0=;
-        b=RqSiAOe6Lyvd5g7BUxk4wDjnksDzE8IseOzfTvIehpbwD0jSeQSoX004kNnI+oqr7I
-         WnAO0E8UzHcmAf4TBQf9Yt3fLYkW7zuIXMDy6i72ZCZdPvhUgGCAJa7W7dr5WfgiOmaw
-         lbNgrLBxDaSzljqmCRmzGXANk/C516IL53PdUGJNFwDn6UU1AEmwD9nJKumqA499fa6b
-         jnOwzCSetMW5ivjmkATv0eU2z/hbF6hxf8pK+pOosiUZaK2RYs04QAH+RspftpryEFoU
-         Y0uZrTBSuaDU8df+c6p3V1aibMOFN7713CbgvC0Ei7qt7uUSXO0YqNBesOUpS/eh+mqU
-         lYtQ==
-X-Gm-Message-State: AOAM532vT6VT2ciiZaCk4AogtuatI9odAuvT83jh5Wnp3MepVfNLzz/3
-        21Y9VuTUSl2+Jvl84Xir0/2sDKpthL+/RA==
-X-Google-Smtp-Source: ABdhPJwsuh+AlYXEreFhiUSUiyUTRlt7hw+lOYUvGYBH1wcBcIVgcMWBYHI196hJYL1VzrrQYqVygw==
-X-Received: by 2002:a2e:b5d9:: with SMTP id g25mr29328125ljn.471.1609419404582;
-        Thu, 31 Dec 2020 04:56:44 -0800 (PST)
-Received: from localhost.localdomain (85-76-98-107-nat.elisa-mobile.fi. [85.76.98.107])
-        by smtp.gmail.com with ESMTPSA id r201sm6230659lff.268.2020.12.31.04.56.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Dec 2020 04:56:44 -0800 (PST)
-From:   =?UTF-8?q?Jari=20H=C3=A4m=C3=A4l=C3=A4inen?= <nuumiofi@gmail.com>
-To:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     =?UTF-8?q?Jari=20H=C3=A4m=C3=A4l=C3=A4inen?= <nuumiofi@gmail.com>,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [RFC PATCH 3/3] arm64: dts: rockchip: use bus-scan-delay-ms workaround with RockPro64 PCIe
-Date:   Thu, 31 Dec 2020 14:52:14 +0200
-Message-Id: <20201231125214.25733-4-nuumiofi@gmail.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201231125214.25733-1-nuumiofi@gmail.com>
-References: <20201231125214.25733-1-nuumiofi@gmail.com>
+        id S1726219AbgLaS2m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 31 Dec 2020 13:28:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34482 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbgLaS2l (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 31 Dec 2020 13:28:41 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F11BE22473;
+        Thu, 31 Dec 2020 18:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609439281;
+        bh=6UolhkPVF5GeowbkR7qYVt8SbbBQkg0MBaZDTZ7XZkA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EBmsXDcW5jpoarQnWGcHDO9dhpOnFjE9QJKzKdGn/5aX5M02iiGQJ7EyPorGy0U2c
+         LJgfnsggWvMWRMpJIMhx9XVeZnem+IbH4LQ4bCVLx+lQDsGt9+eRsxD8eHq1/Wuu+p
+         pd4JAumiNyf0fwn+7cGlqpQPgfyHKtnFJEdiAjX313brJFRbq/riIB4OEgoaveEVDY
+         /1MjiB/973spChUHDAs462vdAuXoV9CkJdSmM8HZHamRbVA/vC6HkWySja196PFGi4
+         yLXH4hDFZFQRl3y1eAAtEpU0SiCsnXrernUogMCK1zZ5PnkmbJ/Wg2Rg2AZsSd0apj
+         Ow1I9JyZtZDCw==
+Received: by mail-ej1-f48.google.com with SMTP id g20so26228475ejb.1;
+        Thu, 31 Dec 2020 10:28:00 -0800 (PST)
+X-Gm-Message-State: AOAM531itJTux8A+/SYa+zwtV0cR+tMxXJk9JCMD17WY3Y+JE+gEW/IH
+        1BiTABji5TE5hB/8DYctLiaFnk6eTwYhLrSHNw==
+X-Google-Smtp-Source: ABdhPJxZmUYiTprAcEpCfD6/J2tgK7kQBJhySuzZfjMMwXoy92HK9fDtQSZwPttUDlwnZOW0iaUAuhyIGCLYtmOb5Uo=
+X-Received: by 2002:a17:906:4146:: with SMTP id l6mr54869145ejk.341.1609439279516;
+ Thu, 31 Dec 2020 10:27:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20201229113556.5dd4610c@xhacker.debian>
+In-Reply-To: <20201229113556.5dd4610c@xhacker.debian>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 31 Dec 2020 11:27:48 -0700
+X-Gmail-Original-Message-ID: <CAL_Jsq+6HAB4xNzu75oVqoLQZUaEX=Y_j50GAiD4bwY_sq8Pig@mail.gmail.com>
+Message-ID: <CAL_Jsq+6HAB4xNzu75oVqoLQZUaEX=Y_j50GAiD4bwY_sq8Pig@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: dwc: Fix MSI not work after resume
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add delay before RockPro64 PCIe bus scan as a workaround for some devices
-causing a crash like many LSI SAS controller based RAID controllers and
-host bus adapters.
+On Mon, Dec 28, 2020 at 8:36 PM Jisheng Zhang
+<Jisheng.Zhang@synaptics.com> wrote:
+>
+> After we move dw_pcie_msi_init() into core -- dw_pcie_host_init(), the
+> MSI stops working after resume. Because dw_pcie_host_init() is only
+> called once during probe. To fix this issue, we move dw_pcie_msi_init()
+> to dw_pcie_setup_rc().
+>
+> Fixes: 59fbab1ae40e ("PCI: dwc: Move dw_pcie_msi_init() into core")
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>
+> Since v1:
+>  - rebased on 5.11-rc1
+>  - add Fixes tag
+>
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-As a side effect this slows down system startup by the amount of delay
-even with devices that don't need the delay to work.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Jari Hämäläinen <nuumiofi@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Bjorn, please pick up for 5.11.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-index 6e553ff47534..256c357c069e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
-@@ -546,6 +546,7 @@ &pcie0 {
- 	num-lanes = <4>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pcie_perst>;
-+	rockchip,bus-scan-delay-ms = <1100>;
- 	vpcie12v-supply = <&vcc12v_dcin>;
- 	vpcie3v3-supply = <&vcc3v3_pcie>;
- 	status = "okay";
--- 
-2.29.2
-
+Rob
