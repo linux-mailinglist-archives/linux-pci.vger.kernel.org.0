@@ -2,87 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01DBE2E8B35
-	for <lists+linux-pci@lfdr.de>; Sun,  3 Jan 2021 07:48:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AA4A2E8B5C
+	for <lists+linux-pci@lfdr.de>; Sun,  3 Jan 2021 09:25:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725765AbhACGs0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 3 Jan 2021 01:48:26 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19846 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbhACGsZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 3 Jan 2021 01:48:25 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5ff168910000>; Sat, 02 Jan 2021 22:47:45 -0800
-Received: from [10.25.98.34] (172.20.145.6) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 3 Jan
- 2021 06:47:26 +0000
-Subject: Re: [PATCH] PCI:tegra:Correct typo for PCIe endpoint mode in Tegra194
-To:     Wesley Sheng <wesley.sheng@amd.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>,
-        <gustavo.pimentel@synopsys.com>, <andriy.shevchenko@intel.com>,
-        <treding@nvidia.com>, <eswara.kota@linux.intel.com>,
-        <hayashi.kunihiko@socionext.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wesleyshenggit@sina.com>, <wesley.sheng@microchip.com>,
-        <wesley.sheng@microsemi.com>
-References: <20201231032539.22322-1-wesley.sheng@amd.com>
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <4902626c-0ea4-4fba-4b37-70481ef61bbf@nvidia.com>
-Date:   Sun, 3 Jan 2021 12:17:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S1726124AbhACIZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 3 Jan 2021 03:25:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbhACIZ1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 3 Jan 2021 03:25:27 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AC6612080D;
+        Sun,  3 Jan 2021 08:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609662286;
+        bh=SCUPa5CjLPZTftht/C8AD6ge/LKIqPYJxn5ORp7KbYM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hXppJJJb8oMO/IU/WbBnrDq+9iZTjEBUB8OoVfwF80I5BrUXdo4gjDCAGu+mIr8tq
+         r2l5LRbCyqmS3qAr8DP+0J2rThaZ0FvTNox1z7kAm5nX698yd+EQ2GGK8pxqZqCAr9
+         5gwzzHX+KImA5tf3qv8bTs7Ouc8nbBY8ObXRZicTUg6fTno53zAqMTyZUPOigFvpQi
+         LmeawltxWlipUyLHUCHz0YRbrwNRtlp+r9uVyzeewJ1o97JXmUVyOuG8oGtkaLthSF
+         OdFAHwmE6S9OpBefWTwUjT3iz/K6u+s/LnKSz/fteL7BdYZ11GL18gLNnxfvjoMecI
+         SOrhdjmnLbWvw==
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH mlx5-next 0/4] Dynamically assign MSI-X vectors count
+Date:   Sun,  3 Jan 2021 10:24:36 +0200
+Message-Id: <20210103082440.34994-1-leon@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <20201231032539.22322-1-wesley.sheng@amd.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.145.6]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1609656465; bh=WfV8lKNcP8RsbSU6029xxYIm5NbHIuXoGoEQ5XB/OXY=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=ajqJ8A+oB5onl+gslHiHFncrt28jJTpsICHbeTuysZQdjpLMervgi2aeul2AohL9X
-         MowKXiIS54mbp4bqkt2rik0qy0BUyNR0cr459WM+0/GOd5ggwCj5VvtdOoFXJYYSrL
-         mxUp33GDGf3zA4iSat3jRXPBs16rZuiFo/vXR/WfKZMh82vZCA9ZDjNEGN0eaucrEV
-         cDbChyO5tYuLBkGr5jCdLPyLPm8flVQVRtjMnavO8RUKqOlKWKfCb+ZlKQ4q9aKf8F
-         Zpz6+n2dNQzuvcgNo7kQRr0Y4yYHiXA8no+1R9LZ6oHacp6Uvv+a+GkuhR1lKSPTjW
-         C0YF5T22O0opw==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks for the patch.
+From: Leon Romanovsky <leonro@nvidia.com>
 
-Acked-by: Vidya Sagar <vidyas@nvidia.com>
+Hi,
 
-On 12/31/2020 8:55 AM, Wesley Sheng wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> In config PCIE_TEGRA194_EP the mode incorrectly referred to
-> host mode.
-> 
-> Signed-off-by: Wesley Sheng <wesley.sheng@amd.com>
-> ---
->   drivers/pci/controller/dwc/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 044a3761c44f..6960babe6161 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -273,7 +273,7 @@ config PCIE_TEGRA194_EP
->          select PCIE_TEGRA194
->          help
->            Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
-> -         work in host mode. There are two instances of PCIe controllers in
-> +         work in endpoint mode. There are two instances of PCIe controllers in
->            Tegra194. This controller can work either as EP or RC. In order to
->            enable host-specific features PCIE_TEGRA194_HOST must be selected and
->            in order to enable device-specific features PCIE_TEGRA194_EP must be
-> --
-> 2.16.2
-> 
+The number of MSI-X vectors is PCI property visible through lspci, that
+field is read-only and configured by the device.
+
+The static assignment of an amount of MSI-X vectors doesn't allow utilize
+the newly created VF because it is not known to the device the future load
+and configuration where that VF will be used.
+
+The VFs are created on the hypervisor and forwarded to the VMs that have
+different properties (for example number of CPUs).
+
+To overcome the inefficiency in the spread of such MSI-X vectors, we
+allow the kernel to instruct the device with the needed number of such
+vectors, before VF is initialized and bounded to the driver.
+
+Before this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+	Capabilities: [9c] MSI-X: Enable- Count=12 Masked-
+
+Configuration script:
+1. Start fresh
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+modprobe -q -r mlx5_ib mlx5_core
+2. Ensure that driver doesn't run and it is safe to change MSI-X
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_drivers_autoprobe
+3. Load driver for the PF
+modprobe mlx5_core
+4. Configure one of the VFs with new number
+echo 2 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+echo 21 > /sys/bus/pci/devices/0000\:08\:00.2/vf_msix_vec
+
+After this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+	Capabilities: [9c] MSI-X: Enable- Count=21 Masked-
+
+
+Thanks
+
+Leon Romanovsky (4):
+  PCI: Configure number of MSI-X vectors for SR-IOV VFs
+  net/mlx5: Add dynamic MSI-X capabilities bits
+  net/mlx5: Dynamically assign MSI-X vectors count
+  net/mlx5: Allow to the users to configure number of MSI-X vectors
+
+ Documentation/ABI/testing/sysfs-bus-pci       | 16 +++++
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  5 ++
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  6 ++
+ .../net/ethernet/mellanox/mlx5/core/pci_irq.c | 62 +++++++++++++++++++
+ .../net/ethernet/mellanox/mlx5/core/sriov.c   | 49 ++++++++++++++-
+ drivers/pci/iov.c                             | 57 +++++++++++++++++
+ drivers/pci/msi.c                             | 30 +++++++++
+ drivers/pci/pci-sysfs.c                       |  1 +
+ drivers/pci/pci.h                             |  1 +
+ include/linux/mlx5/mlx5_ifc.h                 | 11 +++-
+ include/linux/pci.h                           |  8 +++
+ 11 files changed, 243 insertions(+), 3 deletions(-)
+
+--
+2.29.2
+
