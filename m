@@ -2,40 +2,40 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D52C2E989F
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 16:31:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 752AB2E98BC
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 16:31:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbhADPaY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Jan 2021 10:30:24 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44102 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbhADPaY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 10:30:24 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 104FTRtf075805;
-        Mon, 4 Jan 2021 09:29:27 -0600
+        id S1726664AbhADPbZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Jan 2021 10:31:25 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38506 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbhADPbX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 10:31:23 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 104FTXb1029095;
+        Mon, 4 Jan 2021 09:29:33 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1609774168;
-        bh=huzvdt29JlQlEXgaqFgyR2LUF2BvP9ebYcBJkpvAJiQ=;
+        s=ti-com-17Q1; t=1609774173;
+        bh=re6MIOXxybv+Yv493YnPwG3dJx5wl6L6fPllpFd+bzs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wZIrT0iVr6GNdPrcxtL3MuC8g88ytevPTQqIVLAS6Qcy1w4PYMgRHekAmBJ+t4yIh
-         pYIqoo7SXI3cY5HAFkE2Jdun3cTtmtuFr4bHy2TJvAO6CwyF+i9AYdK1aD61uebJHi
-         7Coa+TKlJqVRxfNfD/hNhrU9ZNQdbvlvuVbmJy84=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 104FTRcZ095429
+        b=onSE1HMwF8RZvDRzAk7swLWrkGkYrhUJm3zzYf8fpFkn98/YoP/tCshSacgBT2LLh
+         Xlh8xhM7m6ZJlBTUCswfLHn8DkInTST6r4cgGV/UA8FfIIXV4jWNH2QIBY6tTf2Ikv
+         +/kGt9UlAUeIhe+c9sj1sg0Or4DIZN7nkMvdZq2A=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 104FTXa1078475
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Jan 2021 09:29:27 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 4 Jan 2021 09:29:33 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 Jan
- 2021 09:29:27 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2021 09:29:33 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 Jan 2021 09:29:27 -0600
+ Frontend Transport; Mon, 4 Jan 2021 09:29:32 -0600
 Received: from a0393678-ssd.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 104FTFZ7093710;
-        Mon, 4 Jan 2021 09:29:22 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 104FTFZ8093710;
+        Mon, 4 Jan 2021 09:29:27 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -48,9 +48,9 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
 CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-Subject: [PATCH v9 01/17] Documentation: PCI: Add specification for the *PCI NTB* function device
-Date:   Mon, 4 Jan 2021 20:58:53 +0530
-Message-ID: <20210104152909.22038-2-kishon@ti.com>
+Subject: [PATCH v9 02/17] PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit BAR
+Date:   Mon, 4 Jan 2021 20:58:54 +0530
+Message-ID: <20210104152909.22038-3-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210104152909.22038-1-kishon@ti.com>
 References: <20210104152909.22038-1-kishon@ti.com>
@@ -61,385 +61,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add specification for the *PCI NTB* function device. The endpoint function
-driver and the host PCI driver should be created based on this
-specification.
+pci_epc_get_first_free_bar() uses only "reserved_bar" member in
+epc_features to get the first unreserved BAR. However if the
+reserved BAR is also a 64-bit BAR, then the next BAR shouldn't be
+returned (since 64-bit BAR uses two BARs).
+
+Make pci_epc_get_first_free_bar() take into account 64 bit BAR while
+returning the first free unreserved BAR.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- Documentation/PCI/endpoint/index.rst          |   1 +
- .../PCI/endpoint/pci-ntb-function.rst         | 351 ++++++++++++++++++
- 2 files changed, 352 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
+ drivers/pci/endpoint/pci-epc-core.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index 4ca7439fbfc9..ef6861128506 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -11,5 +11,6 @@ PCI Endpoint Framework
-    pci-endpoint-cfs
-    pci-test-function
-    pci-test-howto
-+   pci-ntb-function
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index cadd3db0cbb0..25e57672e1a1 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -93,12 +93,20 @@ EXPORT_SYMBOL_GPL(pci_epc_get);
+ unsigned int pci_epc_get_first_free_bar(const struct pci_epc_features
+ 					*epc_features)
+ {
+-	int free_bar;
++	unsigned long free_bar;
  
-    function/binding/pci-test
-diff --git a/Documentation/PCI/endpoint/pci-ntb-function.rst b/Documentation/PCI/endpoint/pci-ntb-function.rst
-new file mode 100644
-index 000000000000..a57908be4047
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
-@@ -0,0 +1,351 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=================
-+PCI NTB Function
-+=================
-+
-+:Author: Kishon Vijay Abraham I <kishon@ti.com>
-+
-+PCI Non Transparent Bridges (NTB) allow two host systems to communicate
-+with each other by exposing each host as a device to the other host.
-+NTBs typically support the ability to generate interrupts on the remote
-+machine, expose memory ranges as BARs and perform DMA.  They also support
-+scratchpads which are areas of memory within the NTB that are accessible
-+from both machines.
-+
-+PCI NTB Function allows two different systems (or hosts) to communicate
-+with each other by configurig the endpoint instances in such a way that
-+transactions from one system is routed to the other system.
-+
-+In the below diagram, PCI NTB function configures the SoC with multiple
-+PCIe Endpoint (EP) instances in such a way that transaction from one EP
-+controller is routed to the other EP controller. Once PCI NTB function
-+configures the SoC with multiple EP instances, HOST1 and HOST2 can
-+communicate with each other using SoC as a bridge.
-+
-+.. code-block:: text
-+
-+    +-------------+                                   +-------------+
-+    |             |                                   |             |
-+    |    HOST1    |                                   |    HOST2    |
-+    |             |                                   |             |
-+    +------^------+                                   +------^------+
-+           |                                                 |
-+           |                                                 |
-+ +---------|-------------------------------------------------|---------+
-+ |  +------v------+                                   +------v------+  |
-+ |  |             |                                   |             |  |
-+ |  |     EP      |                                   |     EP      |  |
-+ |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
-+ |  |             <----------------------------------->             |  |
-+ |  |             |                                   |             |  |
-+ |  |             |                                   |             |  |
-+ |  |             |  SoC With Multiple EP Instances   |             |  |
-+ |  |             |  (Configured using NTB Function)  |             |  |
-+ |  +-------------+                                   +-------------+  |
-+ +---------------------------------------------------------------------+
-+
-+Constructs used for Implementing NTB
-+====================================
-+
-+	1) Config Region
-+	2) Self Scratchpad Registers
-+	3) Peer Scratchpad Registers
-+	4) Doorbell Registers
-+	5) Memory Window
-+
-+
-+Config Region:
-+--------------
-+
-+Config Region is a construct that is specific to NTB implemented using NTB
-+Endpoint Function Driver. The host and endpoint side NTB function driver will
-+exchange information with each other using this region. Config Region has
-+Control/Status Registers for configuring the Endpoint Controller. Host can
-+write into this region for configuring the outbound ATU and to indicate the
-+link status. Endpoint can indicate the status of commands issued be host in
-+this region. Endpoint can also indicate the scratchpad offset, number of
-+memory windows to the host using this region.
-+
-+The format of Config Region is given below. Each of the fields here are 32
-+bits.
-+
-+.. code-block:: text
-+
-+	+------------------------+
-+	|         COMMAND        |
-+	+------------------------+
-+	|         ARGUMENT       |
-+	+------------------------+
-+	|         STATUS         |
-+	+------------------------+
-+	|         TOPOLOGY       |
-+	+------------------------+
-+	|    ADDRESS (LOWER 32)  |
-+	+------------------------+
-+	|    ADDRESS (UPPER 32)  |
-+	+------------------------+
-+	|           SIZE         |
-+	+------------------------+
-+	|   NO OF MEMORY WINDOW  |
-+	+------------------------+
-+	|  MEMORY WINDOW1 OFFSET |
-+	+------------------------+
-+	|       SPAD OFFSET      |
-+	+------------------------+
-+	|        SPAD COUNT      |
-+	+------------------------+
-+	|      DB ENTRY SIZE     |
-+	+------------------------+
-+	|         DB DATA        |
-+	+------------------------+
-+	|            :           |
-+	+------------------------+
-+	|            :           |
-+	+------------------------+
-+	|         DB DATA        |
-+	+------------------------+
-+
-+
-+  COMMAND:
-+
-+	NTB function supports three commands:
-+
-+	  CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
-+	invoking this command, the host should allocate and initialize
-+	MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
-+	Endpoint). The endpoint on receiving this command will configure
-+	the outbound ATU such that transaction to DB BAR will be routed
-+	to the MSI/MSI-X address programmed by the host. The ARGUMENT
-+	register should be populated with number of DBs to configure (in the
-+	lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
-+	(TODO: Add support for MSI-X).
-+
-+	  CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
-+	host invokes this command after allocating a buffer that can be
-+	accessed by remote host. The allocated address should be programmed
-+	in the ADDRESS register (64 bit), the size should be programmed in
-+	the SIZE register and the memory window index should be programmed
-+	in the ARGUMENT register. The endpoint on receiving this command
-+	will configure the outbound ATU such that trasaction to MW BAR
-+	will be routed to the address provided by the host.
-+
-+	  CMD_LINK_UP (0x3): Command to indicate an NTB application is
-+	bound to the EP device on the host side. Once the endpoint
-+	receives this command from both the hosts, the endpoint will
-+	raise an LINK_UP event to both the hosts to indicate the hosts
-+	can start communicating with each other.
-+
-+  ARGUMENT:
-+
-+	The value of this register is based on the commands issued in
-+	command register. See COMMAND section for more information.
-+
-+  TOPOLOGY:
-+
-+	Set to NTB_TOPO_B2B_USD for Primary interface
-+	Set to NTB_TOPO_B2B_DSD for Secondary interface
-+
-+  ADDRESS/SIZE:
-+
-+	Address and Size to be used while configuring the memory window.
-+	See "CMD_CONFIGURE_MW" for more info.
-+
-+  MEMORY WINDOW1 OFFSET:
-+
-+	Memory Window 1 and Doorbell registers are packed together in the
-+	same BAR. The initial portion of the region will have doorbell
-+	registers and the latter portion of the region is for memory window 1.
-+	This register will specify the offset of the memory window 1.
-+
-+  NO OF MEMORY WINDOW:
-+
-+	Specifies the number of memory windows supported by the NTB device.
-+
-+  SPAD OFFSET:
-+
-+	Self scratchpad region and config region are packed together in the
-+	same BAR. The initial portion of the region will have config region
-+	and the latter portion of the region is for self scratchpad. This
-+	register will specify the offset of the self scratchpad registers.
-+
-+  SPAD COUNT:
-+
-+	Specifies the number of scratchpad registers supported by the NTB
-+	device.
-+
-+  DB ENTRY SIZE:
-+
-+	Used to determine the offset within the DB BAR that should be written
-+	in order to raise doorbell. EPF NTB can use either MSI/MSI-X to
-+	ring doorbell (MSI-X support will be added later). MSI uses same
-+	address for all the interrupts and MSI-X can provide different
-+	addresses for different interrupts. The MSI/MSI-X address is provided
-+	by the host and the address it gives is based on the MSI/MSI-X
-+	implementation supported by the host. For instance, ARM platform
-+	using GIC ITS will have same MSI-X address for all the interrupts.
-+	In order to support all the combinations and use the same mechanism
-+	for both MSI and MSI-X, EPF NTB allocates separate region in the
-+	Outbound Address Space for each of the interrupts. This region will
-+	be mapped to the MSI/MSI-X address provided by the host. If a host
-+	provides the same address for all the interrupts, all the regions
-+	will be translated to the same address. If a host provides different
-+	address, the regions will be translated to different address. This
-+	will ensure there is no difference while raising the doorbell.
-+
-+  DB DATA:
-+
-+	EPF NTB supports 32 interrupts. So there are 32 DB DATA registers.
-+	This holds the MSI/MSI-X data that has to be written to MSI address
-+	for raising doorbell interrupt. This will be populated by EPF NTB
-+	while invoking CMD_CONFIGURE_DOORBELL.
-+
-+Scratchpad Registers:
-+---------------------
-+
-+  Each host has it's own register space allocated in the memory of NTB EPC.
-+  They are both readable and writable from both sides of the bridge. They
-+  are used by applications built over NTB and can be used to pass control
-+  and status information between both sides of a device.
-+
-+  Scratchpad registers has 2 parts
-+	1) Self Scratchpad: Host's own register space
-+	2) Peer Scratchpad: Remote host's register space.
-+
-+Doorbell Registers:
-+-------------------
-+
-+  Registers using which one host can interrupt the other host.
-+
-+Memory Window:
-+--------------
-+
-+  Actual transfer of data between the two hosts will happen using the
-+  memory window.
-+
-+Modeling Constructs:
-+====================
-+
-+There are 5 or more distinct regions (config, self scratchpad, peer
-+scratchpad, doorbell, one or more memory windows) to be modeled to achieve
-+NTB functionality. Atleast one memory window is required while more than
-+one is permitted. All these regions should be mapped to BAR for hosts to
-+access these regions.
-+
-+If one 32-bit BAR is allocated for each of these regions, the scheme would
-+look like
-+
-+======  ===============
-+BAR NO  CONSTRUCTS USED
-+======  ===============
-+BAR0    Config Region
-+BAR1    Self Scratchpad
-+BAR2    Peer Scratchpad
-+BAR3    Doorbell
-+BAR4    Memory Window 1
-+BAR5    Memory Window 2
-+======  ===============
-+
-+However if we allocate a separate BAR for each of the region, there would not
-+be enough BARs for all the regions in a platform that supports only 64-bit
-+BAR.
-+
-+In order to be supported by most of the platforms, the regions should be
-+packed and mapped to BARs in a way that provides NTB functionality and
-+also making sure the hosts doesn't access any region that it is not supposed
-+to.
-+
-+The following scheme is used in EPF NTB Function
-+
-+======  ===============================
-+BAR NO  CONSTRUCTS USED
-+======  ===============================
-+BAR0    Config Region + Self Scratchpad
-+BAR1    Peer Scratchpad
-+BAR2    Doorbell + Memory Window 1
-+BAR3    Memory Window 2
-+BAR4    Memory Window 3
-+BAR5    Memory Window 4
-+======  ===============================
-+
-+With this scheme, for the basic NTB functionality 3 BARs should be sufficient.
-+
-+Modeling Config/Scratchpad Region:
-+----------------------------------
-+
-+.. code-block:: text
-+
-+ +-----------------+------->+------------------+        +-----------------+
-+ |       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
-+ +-----------------+----+   +------------------+<-------+-----------------+
-+ |       BAR1      |    |   |SCRATCHPAD REGION |        |       BAR1      |
-+ +-----------------+    +-->+------------------+<-------+-----------------+
-+ |       BAR2      |            Local Memory            |       BAR2      |
-+ +-----------------+                                    +-----------------+
-+ |       BAR3      |                                    |       BAR3      |
-+ +-----------------+                                    +-----------------+
-+ |       BAR4      |                                    |       BAR4      |
-+ +-----------------+                                    +-----------------+
-+ |       BAR5      |                                    |       BAR5      |
-+ +-----------------+                                    +-----------------+
-+   EP CONTROLLER 1                                        EP CONTROLLER 2
-+
-+Above diagram shows Config region + Scratchpad region for HOST1 (connected to
-+EP controller 1) allocated in local memory. The HOST1 can access the config
-+region and scratchpad region (self scratchpad) using BAR0 of EP controller 1.
-+The peer host (HOST2 connected to EP controller 2) can also access this
-+scratchpad region (peer scratchpad) using BAR1 of EP controller 2. This
-+diagram shows the case where Config region and Scratchpad region is allocated
-+for HOST1, however the same is applicable for HOST2.
-+
-+Modeling Doorbell/Memory Window 1:
-+----------------------------------
-+
-+.. code-block:: text
-+
-+ +-----------------+    +----->+----------------+-----------+-----------------+
-+ |       BAR0      |    |      |   Doorbell 1   +-----------> MSI-X ADDRESS 1 |
-+ +-----------------+    |      +----------------+           +-----------------+
-+ |       BAR1      |    |      |   Doorbell 2   +---------+ |                 |
-+ +-----------------+----+      +----------------+         | |                 |
-+ |       BAR2      |           |   Doorbell 3   +-------+ | +-----------------+
-+ +-----------------+----+      +----------------+       | +-> MSI-X ADDRESS 2 |
-+ |       BAR3      |    |      |   Doorbell 4   +-----+ |   +-----------------+
-+ +-----------------+    |      |----------------+     | |   |                 |
-+ |       BAR4      |    |      |                |     | |   +-----------------+
-+ +-----------------+    |      |      MW1       +---+ | +-->+ MSI-X ADDRESS 3||
-+ |       BAR5      |    |      |                |   | |     +-----------------+
-+ +-----------------+    +----->-----------------+   | |     |                 |
-+   EP CONTROLLER 1             |                |   | |     +-----------------+
-+                               |                |   | +---->+ MSI-X ADDRESS 4 |
-+                               +----------------+   |       +-----------------+
-+                                EP CONTROLLER 2     |       |                 |
-+                                  (OB SPACE)        |       |                 |
-+                                                    +------->      MW1        |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            +-----------------+
-+                                                            |                 |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            |                 |
-+                                                            +-----------------+
-+                                                             PCI Address Space
-+                                                             (Managed by HOST2)
-+
-+Above diagram shows how the doorbell and memory window 1 is mapped so that
-+HOST1 can raise doorbell interrupt on HOST2 and also how HOST1 can access
-+buffers exposed by HOST2 using memory window1 (MW1). Here doorbell and
-+memory window 1 regions are allocated in EP controller 2 outbound (OB) address
-+space. Allocating and configuring BARs for doorbell and memory window1
-+is done during the initialization phase of NTB endpoint function driver.
-+Mapping from EP controller 2 OB space to PCI address space is done when HOST2
-+sends CMD_CONFIGURE_MW/CMD_CONFIGURE_DOORBELL. The commands are explained
-+below.
-+
-+Modeling Optional Memory Windows:
-+---------------------------------
-+
-+This is modeled the same was as MW1 but each of the additional memory windows
-+is mapped to separate BARs.
+ 	if (!epc_features)
+ 		return 0;
+ 
+-	free_bar = ffz(epc_features->reserved_bar);
++	/* Find if the reserved BAR is also a 64-bit BAR */
++	free_bar = epc_features->reserved_bar & epc_features->bar_fixed_64bit;
++
++	/* Set the adjacent bit if the reserved BAR is also a 64-bit BAR */
++	free_bar <<= 1;
++	free_bar |= epc_features->reserved_bar;
++
++	/* Now find the free BAR */
++	free_bar = ffz(free_bar);
+ 	if (free_bar > 5)
+ 		return 0;
+ 
 -- 
 2.17.1
 
