@@ -2,145 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 144762E95A7
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 14:14:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 357AA2E95CC
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 14:23:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbhADNN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Jan 2021 08:13:56 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35252 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbhADNNz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 08:13:55 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 104DD2hh108940;
-        Mon, 4 Jan 2021 07:13:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1609765982;
-        bh=PniDc9QWWr+VJ0de9ADs3ktmUYpcGrHXEordESznxd8=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=AeSxBlvH+CO76UEm/uFeQBDGOEOW3/LMnpglLZBKb2IRH/Hl2uFVnr8YZJJmiQutx
-         fOSY936VSiRI8aKbKsx+KDfrnu1Kx4HeETNPq+3swsuKxZcG6RgMbba1vGLqi/4/aU
-         OPkhzCdnR5P9l6my/QlQfSIoj93PWbgHbTnUgMjA=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 104DD2Gd042173
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Jan 2021 07:13:02 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 Jan
- 2021 07:13:01 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 4 Jan 2021 07:13:01 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 104DCuxB085196;
-        Mon, 4 Jan 2021 07:12:57 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v8 11/18] PCI: cadence: Implement ->msi_map_irq() ops
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-ntb@googlegroups.com>
-References: <20201111153559.19050-1-kishon@ti.com>
- <20201111153559.19050-12-kishon@ti.com>
- <CAL_Jsq+iUU0aR950fvQ7+uenBT5MVbCEU9cDg+vfyO=VugpTZA@mail.gmail.com>
-Message-ID: <992b5423-89a2-a03b-539d-a9b2822f598a@ti.com>
-Date:   Mon, 4 Jan 2021 18:42:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726864AbhADNWd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Jan 2021 08:22:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36932 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726278AbhADNWd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 08:22:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1609766466;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vPrbs+ygK2nW6UXpFCX2PTOIhaEcotjknLDYayf1rbg=;
+        b=RR+t52c/ES0bgXN62OrfOtjjhLmMeMkufS98DPBRXA5g9l+rBb+QiyOfyxQisqKx0uxmtQ
+        3VlvqXta2VBHyOSRCx6Isg5nMZsQ1u9/kJd3iXt6wmy+5nDWPVqfg4u9pib2EHkMPXVNGv
+        mUDSiKXc81BwnOfOlZ57btbEyfCu4z0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368-hbxcgdcJNEitLc2_SJ4LKw-1; Mon, 04 Jan 2021 08:21:04 -0500
+X-MC-Unique: hbxcgdcJNEitLc2_SJ4LKw-1
+Received: by mail-wr1-f69.google.com with SMTP id r11so13233933wrs.23
+        for <linux-pci@vger.kernel.org>; Mon, 04 Jan 2021 05:21:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vPrbs+ygK2nW6UXpFCX2PTOIhaEcotjknLDYayf1rbg=;
+        b=eAdvTZNQCwR5dHBz+JdwP+CwJtWydvtCiM3TZq8gRzD84Q+hrXiw0yFThp0P13hohi
+         Zt/oeRFuOd2ck6xmQGXoMWMeb0eTA1rbw3p00fkdZZuBsIyqRnFUQoG5bKKlM/xhH4qZ
+         LwW9yyutBUf3vHfrH/60J5mobO0c9MPbHU6dOFJCVhkOWTWoszInCVt0CkMvWPdBXH0p
+         +Smi/uL1sfdTCZO/u/jVuWyCcyEP37EAm9zQpZ1S7VXQY09Xz8a/MfnPBu6E7vhCp2w0
+         BhyW04LkyFKN/ygNPB6zoo9IRm5wxpqaEv0ggvNBi9N5Oh/qz41QUbDmkpNkFskzDSb5
+         ddNQ==
+X-Gm-Message-State: AOAM53007GYUMhUQwuxBj8JVT3Kdk0yJkXefYftkWhuGfqq14UrTbJmQ
+        5R5WDKCjpxMO+AaI3XgyTYktogCZdwz/6n9vvnDSfBx91abkGfnO3grDOynTrQf+w5ciIsfnJMN
+        Tlzf+RPU9uWs1iSgG5XLMqv8Os3k+NUL01KoO
+X-Received: by 2002:adf:e452:: with SMTP id t18mr76929204wrm.177.1609766463248;
+        Mon, 04 Jan 2021 05:21:03 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwyejyAsfaLxHqjg5lrewtBBFczMjR6pbLPXoTYYnr8a8cMlhhVl17ylXysIJXWiOsLQQV2XV28iok3dOsd31w=
+X-Received: by 2002:adf:e452:: with SMTP id t18mr76929177wrm.177.1609766463058;
+ Mon, 04 Jan 2021 05:21:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+iUU0aR950fvQ7+uenBT5MVbCEU9cDg+vfyO=VugpTZA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20201214060621.1102931-1-kai.heng.feng@canonical.com>
+ <20201216124726.2842197-1-kai.heng.feng@canonical.com> <s5h5z51oj12.wl-tiwai@suse.de>
+ <CAAd53p6kORC1GsW5zt+=0=J5ki43iriO-OqtFvf5W67LWhyyhA@mail.gmail.com>
+ <s5hzh2dn3oa.wl-tiwai@suse.de> <CAAd53p6Ef2zFX_t3y1c6O7BmHnxYGtGSfgzXAMQSom1ainWXzg@mail.gmail.com>
+ <s5hsg85n2km.wl-tiwai@suse.de> <s5hmtydn0yg.wl-tiwai@suse.de>
+ <CAAd53p6MMFh=HCNF9pyrJc9hVMZWFe7_8MvBcBHVWARqHU_TTA@mail.gmail.com>
+ <s5h7dpfk06y.wl-tiwai@suse.de> <CAAd53p53w0H6tsb4JgQtFTkYinniicTYBs2uk7tc=heP2dM_Cw@mail.gmail.com>
+ <CAKb7UvjWX7xbwMKtnad5EVy16nY1M-A13YJeRWyUwHzemcVswA@mail.gmail.com> <CAAd53p4=bSX26QzsPyV1sxADiuVn2sowWyb5JFDoPZQ+ZYoCzA@mail.gmail.com>
+In-Reply-To: <CAAd53p4=bSX26QzsPyV1sxADiuVn2sowWyb5JFDoPZQ+ZYoCzA@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Mon, 4 Jan 2021 14:20:52 +0100
+Message-ID: <CACO55tsPx_UC3OPf9Hq9sGdnZg9jH1+B0zOi6EAxTZ13E1tf7A@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH v2] ALSA: hda: Continue to probe when codec
+ probe fails
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Ilia Mirkin <imirkin@alum.mit.edu>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        nouveau <nouveau@lists.freedesktop.org>, tiwai@suse.com,
+        open list <linux-kernel@vger.kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob,
+On Tue, Dec 22, 2020 at 3:50 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> On Tue, Dec 22, 2020 at 1:56 AM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
+> >
+> > On Mon, Dec 21, 2020 at 11:33 AM Kai-Heng Feng
+> > <kai.heng.feng@canonical.com> wrote:
+> > >
+> > > [+Cc nouveau]
+> > >
+> > > On Fri, Dec 18, 2020 at 4:06 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > > [snip]
+> > > > > Quite possibly the system doesn't power up HDA controller when there's
+> > > > > no external monitor.
+> > > > > So when it's connected to external monitor, it's still needed for HDMI audio.
+> > > > > Let me ask the user to confirm this.
+> > > >
+> > > > Yeah, it's the basic question whether the HD-audio is supposed to work
+> > > > on this machine at all.  If yes, the current approach we take makes
+> > > > less sense - instead we should rather make the HD-audio controller
+> > > > working.
+> > >
+> > > Yea, confirmed that the Nvidia HDA works when HDMI is connected prior boot.
+> > >
+> > > > > > - The second problem is that pci_enable_device() ignores the error
+> > > > > >   returned from pci_set_power_state() if it's -EIO.  And the
+> > > > > >   inaccessible access error returns -EIO, although it's rather a fatal
+> > > > > >   problem.  So the driver believes as the PCI device gets enabled
+> > > > > >   properly.
+> > > > >
+> > > > > This was introduced in 2005, by Alan's 11f3859b1e85 ("[PATCH] PCI: Fix
+> > > > > regression in pci_enable_device_bars") to fix UHCI controller.
+> > > > >
+> > > > > >
+> > > > > > - The third problem is that HD-audio driver blindly believes the
+> > > > > >   codec_mask read from the register even if it's a read failure as I
+> > > > > >   already showed.
+> > > > >
+> > > > > This approach has least regression risk.
+> > > >
+> > > > Yes, but it assumes that HD-audio is really non-existent.
+> > >
+> > > I really don't know any good approach to address this.
+> > > On Windows, HDA PCI is "hidden" until HDMI cable is plugged, then the
+> > > driver will flag the magic bit to make HDA audio appear on the PCI
+> > > bus.
+> > > IIRC the current approach is to make nouveau and device link work.
+> >
+> > I don't have the full context of this discussion, but the kernel
+> > force-enables the HDA subfunction nowadays, irrespective of nouveau or
+> > nvidia or whatever:
+>
+> That's the problem.
+>
+> The nvidia HDA controller on the affected system only gets its power
+> after HDMI cable plugged, so the probe on boot fails.
+>
 
-On 15/12/20 9:31 pm, Rob Herring wrote:
-> On Wed, Nov 11, 2020 at 9:37 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Implement ->msi_map_irq() ops in order to map physical address to
->> MSI address and return MSI data.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../pci/controller/cadence/pcie-cadence-ep.c  | 53 +++++++++++++++++++
->>  1 file changed, 53 insertions(+)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> index 84cc58dc8512..1fe6b8baca97 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->> @@ -382,6 +382,57 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn,
->>         return 0;
->>  }
->>
->> +static int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn,
->> +                                   phys_addr_t addr, u8 interrupt_num,
->> +                                   u32 entry_size, u32 *msi_data,
->> +                                   u32 *msi_addr_offset)
->> +{
->> +       struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
->> +       u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
->> +       struct cdns_pcie *pcie = &ep->pcie;
->> +       u64 pci_addr, pci_addr_mask = 0xff;
->> +       u16 flags, mme, data, data_mask;
->> +       u8 msi_count;
->> +       int ret;
->> +       int i;
->> +
-> 
-> 
->> +       /* Check whether the MSI feature has been enabled by the PCI host. */
->> +       flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
->> +       if (!(flags & PCI_MSI_FLAGS_ENABLE))
->> +               return -EINVAL;
->> +
->> +       /* Get the number of enabled MSIs */
->> +       mme = (flags & PCI_MSI_FLAGS_QSIZE) >> 4;
->> +       msi_count = 1 << mme;
->> +       if (!interrupt_num || interrupt_num > msi_count)
->> +               return -EINVAL;
->> +
->> +       /* Compute the data value to be written. */
->> +       data_mask = msi_count - 1;
->> +       data = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_DATA_64);
->> +       data = data & ~data_mask;
->> +
->> +       /* Get the PCI address where to write the data into. */
->> +       pci_addr = cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_HI);
->> +       pci_addr <<= 32;
->> +       pci_addr |= cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_LO);
->> +       pci_addr &= GENMASK_ULL(63, 2);
-> 
-> Wouldn't all of the above be the same code for any endpoint driver? We
-> just need endpoint config space accessors for the same 32-bit only
-> access issues. Not asking for that in this series, but if that's the
-> direction we should go.
+it might be that the code to enable the sub function is a bit broken
+:/ but it should work. Maybe the quirk_nvidia_hda function needs to be
+called on more occasions? No idea.
 
-Do you mean "endpoint" variant of pci_generic_config_read() which takes
-function number and capability offset? That could be done but we have to
-add support to traverse the linked list of capabilities though the
-capabilities are going to be at a fixed location for a given IP.
+> Kai-Heng
+>
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/quirks.c?h=v5.10#n5267
+> >
+> > Cheers,
+> >
+> >   -ilia
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
+>
 
-Also in some cases, the writes are to a different register than the
-configuration space registers like vendor_id in Cadence EP should be
-written to Local Management register instead of the configuration space
-register.
-
-Thank You,
-Kishon
