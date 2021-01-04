@@ -2,53 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1409B2E92D9
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 10:52:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BF852E938C
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 11:46:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbhADJv1 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 4 Jan 2021 04:51:27 -0500
-Received: from post.dks.ru ([194.226.89.161]:53176 "EHLO post.dks.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbhADJv0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 4 Jan 2021 04:51:26 -0500
-X-Greylist: delayed 1608 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Jan 2021 04:51:24 EST
-Received: from ksmg.dks.lan (unknown [172.17.112.11])
-        by post.dks.ru (Postfix) with ESMTP id 94328270863;
-        Mon,  4 Jan 2021 12:21:42 +0300 (MSK)
-Received: from [192.168.88.237] (unknown [212.154.23.124])
-        (Authenticated sender: zapros@dks.ru)
-        by post.dks.ru (Postfix) with ESMTP id 955CF26F446;
-        Mon,  4 Jan 2021 12:21:36 +0300 (MSK)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726189AbhADKpC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Jan 2021 05:45:02 -0500
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:33391 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbhADKpC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 05:45:02 -0500
+Received: by mail-ot1-f48.google.com with SMTP id b24so25625951otj.0;
+        Mon, 04 Jan 2021 02:44:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JWBFzdltaHB2LmhJPr+3aAFk0bHyrG7NJiFKo6m3amQ=;
+        b=ODKXDySaK2XmdM22/lB0TxClTZMONoqzf1ndHeNap2odpyH4iFZjuPZdCl6Nk6d7OO
+         2Q0Kngc74MYNYMBdOv4rruGg4o5fxqrz6rq/rMAcEFdPYTuZsGbZBwqJGVWa+4KDG6g/
+         XEW9PqfEH5JPz/Wzkuvk6C1l+xzi01+Og04TMzYH3eX4quNWDGcxVYmx4GKjWSRM0AtW
+         nvPmLd07pMeutHatC0loRc7OBsBAb7aUi1grp+5HCUsphilhHCPXWWWSW4infQ9aI+Bi
+         YYmzeiRE7fGlJOsCP6sQ6g1clh9BZOEKx8LJW5WrD9xAD2y8WIfmQULjFb7Si5sferjO
+         fHug==
+X-Gm-Message-State: AOAM533pxxGpcp/2ta+ICqw829FxZlC+ZjB8fW1Oty4z1p8z2ydz9jqx
+        42oWoclHa4ermysmtBMchkb7uPcETvxJBDduK8U=
+X-Google-Smtp-Source: ABdhPJxpg8oSaA/PXZWgJ5sADKEXP+Zc/bvWcki5ZqDJMFgEPzbsdusImgckqNgKqbm0G/lCHkPu7UXFhv5w1Uci7+E=
+X-Received: by 2002:a05:6830:210a:: with SMTP id i10mr52177425otc.145.1609757061486;
+ Mon, 04 Jan 2021 02:44:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: YOUR URGENT RESPONSE !!!!
-To:     Recipients <zapros@dks.ru>
-From:   "Mr. Kim Leang" <zapros@dks.ru>
-Date:   Mon, 04 Jan 2021 01:22:02 -0800
-Reply-To: kimleang575@yahoo.com
-Message-Id: <20210104092136.955CF26F446@post.dks.ru>
-X-KLMS-Rule-ID: 7
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Status: not scanned, disabled by settings
-X-KLMS-AntiSpam-Interceptor-Info: not scanned
-X-KLMS-AntiPhishing: Clean, bases: 2021/01/04 08:40:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2021/01/04 05:34:00 #16008269
-X-KLMS-AntiVirus-Status: Clean, skipped
+References: <20201229170848.18482-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20201229170848.18482-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 Jan 2021 11:44:10 +0100
+Message-ID: <CAMuHMdWkZWRo7S_HYTS-vWBR7gVv5Q+h+kO6LH8re7f74igdXg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Drop PCIE_RCAR config option
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Greeting!
+On Tue, Dec 29, 2020 at 6:09 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> All the defconfig files have replaced PCIE_RCAR config option with
+> PCIE_RCAR_HOST config option which built the same driver, so we can
+> now safely drop PCIE_RCAR config option.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I am contacting you to receive and share with me an abandoned fund ( $21,537.000.00 ) left in our bank by a deceased customer. I was going through the Internet search when I found your email address. My name is Mr. Kim Leang.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I want to utilize this opportunity and make use of this fund if I should present your name to the bank to stand as his business associate/ trustee for the fund to be released to you via Visa card for easy withdrawals in any VISA ATM machine anywhere in the World.
+Gr{oetje,eeting}s,
 
-The bank will also give you international online transfer options. With these you can transfer the funds without any risk.
+                        Geert
 
-Should you be interested in working with me in this project? Please reply back and let's benefit from this golden opportunity.You are my first contact. I shall wait a few days and if I do not hear from you, I shall look for another person.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks and have a nice day,
-Mr. Kim Leang
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
