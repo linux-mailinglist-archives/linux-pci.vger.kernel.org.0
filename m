@@ -2,82 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CD162E957B
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 14:04:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 144762E95A7
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 14:14:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbhADNDi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Jan 2021 08:03:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbhADNDh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 08:03:37 -0500
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E71DC061574
-        for <linux-pci@vger.kernel.org>; Mon,  4 Jan 2021 05:02:57 -0800 (PST)
-Received: by mail-oi1-x234.google.com with SMTP id 15so32027513oix.8
-        for <linux-pci@vger.kernel.org>; Mon, 04 Jan 2021 05:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=p2tEoRxSR0ND4Q5W04SeKoQNOCFAovy/UQrDlk01CLk=;
-        b=gluzlehshsKU4s7DJIFi/HzqVA228mb3CSc7PxTpUgQo+bD+sj4yjjETXR3gu3ZSUp
-         lW9+ehIQ8pXbllbfIikVaNnJPVb7YmL6G87L6F+zg2BX0ySfjYoQCSu2j2dgRa4Nm6BH
-         SrXNK8qyIFCWKDyj3reUsxYnQnkHIRZ0G1jHthxK70WvpYZbc1wAKGH9o/4UAPGVjbYJ
-         mQbb9b9TcBSD/xGpaht78zF3oVcHk5TMq8kmmnTQTtIFKAUYowrAVWq8kSMK14jpDLlN
-         MjkeL8wtHxKLsUmSLcRl7TUfjKTlZkyROZpEa+AT96evuqSborHQsFfHDk5Sk/yVhLt+
-         s4YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=p2tEoRxSR0ND4Q5W04SeKoQNOCFAovy/UQrDlk01CLk=;
-        b=nkEHSmfsrcWq7pjg09JLak7o2tRLKPOmUMsWPnfBEgTpORHs2VlA731+SVd0EVFXWj
-         4UzxeuWuge0WXXVPm/ds3+Inuo4POypSQkYEs9pTcY5wLMdtlhveE6ilKEDdRCrW5uRA
-         SWTfs6jbQvhRRWM0dFHlKMOD42E9ebMGUq458H0C+WpusFdv+VHF8/tdbaKNaUSgirr4
-         6RWGorMaAqr42ZhPz2VoKtO5siH7yFkZbWldhKLBFUHBMgz1rx0Cny71jRYJJ8DPQAPA
-         Ef5qk62OBhAGpGfaZT+aXSYHd3Hozzg9DHmf1gZF71+fY9ZlcjRMb7cMCv94yeQgyp5O
-         LucQ==
-X-Gm-Message-State: AOAM530PWVNen2QPSrBfCD4sQ5gttBupQYcOPbivJ3DVdrGuZMIBl1ly
-        zD+2umWLLDsu6sbSLvQWFxdBEZ/cZRi2knHF5A==
-X-Google-Smtp-Source: ABdhPJyzwSgbu8mi6IcJhOiuGehnj4Rh/tFg5Q9YJAGaJdK93LtbwOigQ6X0t/gk/ihYT6TQfG40wCfFNVmOxjZTiIk=
-X-Received: by 2002:aca:afd0:: with SMTP id y199mr17625165oie.7.1609765376909;
- Mon, 04 Jan 2021 05:02:56 -0800 (PST)
+        id S1726605AbhADNN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Jan 2021 08:13:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35252 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbhADNNz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 08:13:55 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 104DD2hh108940;
+        Mon, 4 Jan 2021 07:13:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1609765982;
+        bh=PniDc9QWWr+VJ0de9ADs3ktmUYpcGrHXEordESznxd8=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=AeSxBlvH+CO76UEm/uFeQBDGOEOW3/LMnpglLZBKb2IRH/Hl2uFVnr8YZJJmiQutx
+         fOSY936VSiRI8aKbKsx+KDfrnu1Kx4HeETNPq+3swsuKxZcG6RgMbba1vGLqi/4/aU
+         OPkhzCdnR5P9l6my/QlQfSIoj93PWbgHbTnUgMjA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 104DD2Gd042173
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 Jan 2021 07:13:02 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 4 Jan
+ 2021 07:13:01 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 4 Jan 2021 07:13:01 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 104DCuxB085196;
+        Mon, 4 Jan 2021 07:12:57 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v8 11/18] PCI: cadence: Implement ->msi_map_irq() ops
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-ntb@googlegroups.com>
+References: <20201111153559.19050-1-kishon@ti.com>
+ <20201111153559.19050-12-kishon@ti.com>
+ <CAL_Jsq+iUU0aR950fvQ7+uenBT5MVbCEU9cDg+vfyO=VugpTZA@mail.gmail.com>
+Message-ID: <992b5423-89a2-a03b-539d-a9b2822f598a@ti.com>
+Date:   Mon, 4 Jan 2021 18:42:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Sender: hniconsults@gmail.com
-Received: by 2002:a05:6830:3116:0:0:0:0 with HTTP; Mon, 4 Jan 2021 05:02:56
- -0800 (PST)
-From:   MR STEFANO PESSINA <stefanopessina34@gmail.com>
-Date:   Mon, 4 Jan 2021 05:02:56 -0800
-X-Google-Sender-Auth: 8qkWBKGmI10yGxxwpz7O207eNkU
-Message-ID: <CANQRi6gsDQbOYR0Sas1vTHf-jwTkfCbsqpRZ4+CfFxFP-0bQdA@mail.gmail.com>
-Subject: SPENDE
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAL_Jsq+iUU0aR950fvQ7+uenBT5MVbCEU9cDg+vfyO=VugpTZA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hallo,
+Hi Rob,
 
-Ich bin Stefano Pessina, ein italienischer Wirtschaftsmagnat, Investor
-und Philanthrop. Der stellvertretende Vorsitzende, Chief Executive
-Officer (CEO) und der gr=C3=B6=C3=9Fte Einzelaktion=C3=A4r der Walgreens Bo=
-ots
-Alliance. Ich habe 25 Prozent meines pers=C3=B6nlichen Verm=C3=B6gens f=C3=
-=BCr
-wohlt=C3=A4tige Zwecke verschenkt. Und ich habe auch zugesagt, den Rest von
-25% in diesem Jahr 2021 an Einzelpersonen zu verschenken. Ich habe
-beschlossen, Ihnen 2.200.000,00 =E2=82=AC (zwei Millionen zweihunderttausen=
-d
-Euro) zu spenden. Wenn Sie an meiner Spende interessiert sind,
-kontaktieren Sie mich f=C3=BCr weitere Informationen. Sie k=C3=B6nnen auch =
-mehr
-=C3=BCber mich =C3=BCber den unten stehenden Link lesen
+On 15/12/20 9:31 pm, Rob Herring wrote:
+> On Wed, Nov 11, 2020 at 9:37 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Implement ->msi_map_irq() ops in order to map physical address to
+>> MSI address and return MSI data.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../pci/controller/cadence/pcie-cadence-ep.c  | 53 +++++++++++++++++++
+>>  1 file changed, 53 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> index 84cc58dc8512..1fe6b8baca97 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>> @@ -382,6 +382,57 @@ static int cdns_pcie_ep_send_msi_irq(struct cdns_pcie_ep *ep, u8 fn,
+>>         return 0;
+>>  }
+>>
+>> +static int cdns_pcie_ep_map_msi_irq(struct pci_epc *epc, u8 fn,
+>> +                                   phys_addr_t addr, u8 interrupt_num,
+>> +                                   u32 entry_size, u32 *msi_data,
+>> +                                   u32 *msi_addr_offset)
+>> +{
+>> +       struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +       u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+>> +       struct cdns_pcie *pcie = &ep->pcie;
+>> +       u64 pci_addr, pci_addr_mask = 0xff;
+>> +       u16 flags, mme, data, data_mask;
+>> +       u8 msi_count;
+>> +       int ret;
+>> +       int i;
+>> +
+> 
+> 
+>> +       /* Check whether the MSI feature has been enabled by the PCI host. */
+>> +       flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+>> +       if (!(flags & PCI_MSI_FLAGS_ENABLE))
+>> +               return -EINVAL;
+>> +
+>> +       /* Get the number of enabled MSIs */
+>> +       mme = (flags & PCI_MSI_FLAGS_QSIZE) >> 4;
+>> +       msi_count = 1 << mme;
+>> +       if (!interrupt_num || interrupt_num > msi_count)
+>> +               return -EINVAL;
+>> +
+>> +       /* Compute the data value to be written. */
+>> +       data_mask = msi_count - 1;
+>> +       data = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_DATA_64);
+>> +       data = data & ~data_mask;
+>> +
+>> +       /* Get the PCI address where to write the data into. */
+>> +       pci_addr = cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_HI);
+>> +       pci_addr <<= 32;
+>> +       pci_addr |= cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_LO);
+>> +       pci_addr &= GENMASK_ULL(63, 2);
+> 
+> Wouldn't all of the above be the same code for any endpoint driver? We
+> just need endpoint config space accessors for the same 32-bit only
+> access issues. Not asking for that in this series, but if that's the
+> direction we should go.
 
-https://en.wikipedia.org/wiki/Stefano_Pessina
+Do you mean "endpoint" variant of pci_generic_config_read() which takes
+function number and capability offset? That could be done but we have to
+add support to traverse the linked list of capabilities though the
+capabilities are going to be at a fixed location for a given IP.
 
-Herzlicher Gruss
-CEO Walgreens Boots Alliance
-Stefano Pessina
+Also in some cases, the writes are to a different register than the
+configuration space registers like vendor_id in Cadence EP should be
+written to Local Management register instead of the configuration space
+register.
+
+Thank You,
+Kishon
