@@ -2,68 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B9F52E9B66
-	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 17:57:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A17C42E9C2F
+	for <lists+linux-pci@lfdr.de>; Mon,  4 Jan 2021 18:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbhADQ53 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 4 Jan 2021 11:57:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbhADQ53 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 11:57:29 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2A6C061574
-        for <linux-pci@vger.kernel.org>; Mon,  4 Jan 2021 08:56:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CsdkWqMPYpLCdzLV15LOrVfBBoHeF9cMJDrzd73YqOc=; b=oQxmBpr8U0onNaYXpyVK8tNb+Z
-        kt5/aJPVRz98uFxNHYffECmzK13HNGUfsWAvygVZ3/qI/mTJNjyQM8payfCXv9TLlqGRs9VuT95vc
-        l2bQwMOOvWU+jTh1LStrj6A4GPU9+yZtk3YZjxULjgRxMuGeJcfYYfjZD6A96lgZMEQRCiOFkOnkl
-        Vzgu+u9Ban3DLI84mYN1Am6G1KafWbfvYrdNkVE7YRCbWJ85+ql1E8Ewaa6CB1eglOEyo3gYqzfL0
-        qN5ZJvtwFCxOKul8epnK9hYHOm0vt9K0o6nGaQ/4UWDjb6EIoKJdL47BoU2MrEcgQFCF7BKn1ZQ1f
-        N67AWKUA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1kwT9g-000KLt-B5; Mon, 04 Jan 2021 16:56:32 +0000
-Date:   Mon, 4 Jan 2021 16:56:28 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrey Grodzovsky <Andrey.Grodzovsky@amd.com>
-Cc:     linux-mm@kvack.org, linux-pci@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: Question regarding page fault handlers in kernel mappings
-Message-ID: <20210104165628.GB22407@casper.infradead.org>
-References: <d511840d-50af-44bd-92db-876180c503a5@amd.com>
+        id S1727783AbhADRk1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 4 Jan 2021 12:40:27 -0500
+Received: from bmailout2.hostsharing.net ([83.223.78.240]:34941 "EHLO
+        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbhADRk1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 4 Jan 2021 12:40:27 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id CB7662800B3CC;
+        Mon,  4 Jan 2021 18:39:44 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id C1A6450D7B; Mon,  4 Jan 2021 18:39:44 +0100 (CET)
+Date:   Mon, 4 Jan 2021 18:39:44 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Time to re-enable Runtime PM per default for PCI devcies?
+Message-ID: <20210104173944.GA31187@wunner.de>
+References: <79940973-b631-90f9-dbc4-9579c6000816@gmail.com>
+ <20201117163817.GA1397220@bjorn-Precision-5520>
+ <CAJZ5v0ipMJ1gCB7okpROG_yAUi5Q8LknqeH+Jpdrjbb4D_vfuQ@mail.gmail.com>
+ <9ca0fb46-9e65-31e2-103f-1c98ce8362c7@gmail.com>
+ <20201231040735.GA2075@wunner.de>
+ <4eb10092-e3f9-c9be-2dec-e6de8aeedf97@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d511840d-50af-44bd-92db-876180c503a5@amd.com>
+In-Reply-To: <4eb10092-e3f9-c9be-2dec-e6de8aeedf97@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 04, 2021 at 11:38:38AM -0500, Andrey Grodzovsky wrote:
-> Hello, I am AMD developer and I am trying to implement support for on the
-> fly graceful graphic card extraction.
+On Thu, Dec 31, 2020 at 10:38:12AM +0100, Heiner Kallweit wrote:
+> On 31.12.2020 05:07, Lukas Wunner wrote:
+> > FWIW, if platform_pci_power_manageable() returns true, it can probably
+> > be assumed that allowing runtime PM by default is okay.  So as a first
+> > step, you may want to call that instead of adding a new callback.
+> 
+> I don't think that's sufficient. Most likely all the broken old systems
+> return true for platform_pci_power_manageable().
 
-Are you talking about surprise removal (eg card on the other end of
-a Thunderbolt connector where there is no possibility for software
-locking), or are you talking about an orderly removal (where the user
-requests removal and there is time to tear everything down gracefully)?
+platform_pci_power_manageable() is not a global flag, but rather
+a per-device flag whether the platform is capable of power-managing
+that device.  E.g. for the ACPI platform, it indicates that objects
+such as _PS0 or _PS3 are present in the device's namespace.
 
-> One issue I am facing is how to avoid
-> accesses to physical addresses both in RAM and MMIO from user mode and
-> kernel after device is gone. For user accesses (mmap) I use the page fault
-> handler to route all RW accesses to dummy zero page. I would like to do the
-> same for kernel side mappings both form RAM (kmap) and device IO
-> (ioremap) but it looks like there is no same mechanism of page fault
-> handlers for kernel side mappings.
+My point is that if the platform can power-manage a device,
+then it ought to be safe to enable runtime PM by default for it.
 
-ioremap() is done through the vmalloc space.  It would, in theory, be
-possible to reprogram the page tables used for vmalloc to point to your
-magic page.  I don't think we have such a mechanism today, and there are
-lots of problems with things like TLB flushes.  It's probably going to
-be harder than you think.
+If you insist on a "big hammer" approach by turning on runtime PM
+by default for everything, you risk regressions.  You can avoid
+that by going for a smart approach which enables runtime PM in
+cases when it's safe.
 
-I'm adding the linux-pci mailing list so you can be helped with the
-logistics of device hot-remove.
+Thanks,
+
+Lukas
