@@ -2,97 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C14B12EAC32
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Jan 2021 14:46:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B3FF2EAC91
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Jan 2021 15:03:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbhAENoy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jan 2021 08:44:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730341AbhAENox (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jan 2021 08:44:53 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE47C061798
-        for <linux-pci@vger.kernel.org>; Tue,  5 Jan 2021 05:44:13 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id q18so36283978wrn.1
-        for <linux-pci@vger.kernel.org>; Tue, 05 Jan 2021 05:44:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/Xh8qZOWXZauoXa9vZ+K50zm9g9s+n1GKQJc2m0FrV8=;
-        b=T9snQ9bKRyo+aHfNWsQiaTwtbweBwUVEbh1FBzR8gZDwjxw5kJ6Urcd3PHcyKp/i7F
-         YuuVOjdv/SL6s2B62e00kEz7gzKjGyM2V1HTtHWdXpI5mqFGqPxqfdRX6ZzDCk98Dz8z
-         V5Xgz1HalBD2/m+gbbOqiROSZG74t8xD+3fXm9RHa9aIrBnOi/OGvclNG4gq3cjC7Jyw
-         hIee/qStDHEI+TPdS8nxykvg/q4+5JRFMwVloX2jOMhP1ty/hfMDlc4ymKMzyfJpWahd
-         b74rKOQUOVrhYyGJB4NoBfxZKS7F5XZvn1Z0ajOcrwYWX4skrHOFTFE7Qte7E80ToxCw
-         BD7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/Xh8qZOWXZauoXa9vZ+K50zm9g9s+n1GKQJc2m0FrV8=;
-        b=XSqxVisGkgQPFsC6S1+liRCXhbEH8EalWdmIRwOVPUM7f65As4IeQEhjkCRraferjj
-         7d65n4rTYb7Sl9aWstHKbuh06OtZZ+5F9Qd0+nBgCPXkefvblQXxos4vT0Ta8X5zBFlg
-         Tc34hiB7vSzvXDixGNN6uAyvOaHUtDbuVh4DXHRiR32FZJmqjn3n9OQ3vfxkZ82KoIe2
-         J2SJ0SBPbvVjnDLfBjpGr3rbPvR8FdkK+yBw2IY4XYwlwe35PBjVHjJ2pJejzNH1HYlq
-         ed2WaQK5yMmkHigfB/KqltySWox4hGZX+c9b4kzPk98QE6ASER2oJblBgu/guUGtUIP9
-         bWxQ==
-X-Gm-Message-State: AOAM531he7jheS3mjZJBX2CgrlnGRi/9V5kL+8DYyo9WPI/7FNsRBAn+
-        hOS6Q2v4AEU3IJcgRnCuciU=
-X-Google-Smtp-Source: ABdhPJwLkmDD5Zg3fZC6NkuylnaqkeVxjvv3JjNRuhSiiF+n5kQbFv7JVfDkAm/Kbhghi2ev482tTQ==
-X-Received: by 2002:adf:dc10:: with SMTP id t16mr80583385wri.345.1609854252040;
-        Tue, 05 Jan 2021 05:44:12 -0800 (PST)
-Received: from abel.fritz.box ([2a02:908:1252:fb60:3137:60b9:8d8f:7f55])
-        by smtp.gmail.com with ESMTPSA id l20sm102191243wrh.82.2021.01.05.05.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Jan 2021 05:44:11 -0800 (PST)
-From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
-        <ckoenig.leichtzumerken@gmail.com>
-X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-To:     bhelgaas@google.com
-Cc:     devspam@moreofthesa.me.uk, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org
-Subject: [PATCH 4/4] PCI: add a REBAR size quirk for Sapphire RX 5600 XT Pulse.
-Date:   Tue,  5 Jan 2021 14:44:04 +0100
-Message-Id: <20210105134404.1545-5-christian.koenig@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210105134404.1545-1-christian.koenig@amd.com>
-References: <20210105134404.1545-1-christian.koenig@amd.com>
+        id S1728264AbhAEOCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jan 2021 09:02:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728034AbhAEOCg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Jan 2021 09:02:36 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B0EAC22AAB;
+        Tue,  5 Jan 2021 14:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609855316;
+        bh=ASplVFuNkPaZ936Orl5wWvFQMIR51qVCfXTsdj5Q8Uc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lWcB9rYOjo3v/q7hy/2jXAAJmAJKNcWXzgaf/a8Kz8yvhK/1jF17ndDs8aMoLFjLg
+         0GOh9ayC59rH8FVaUND2G3Axlymnx0vHGuug2q4h5Azprqa6yaABFNwoVRcZcMFAZN
+         411H8B7g2C1hr1s96q2o65tyiYbVz8/P5Ki2YmLR5+FYOnc5dwDvGJNvEw1QiUzk9n
+         0+AMaDah3es210bjQI+R2qgTjPqaGOOuHcTbG1iAGhx7/7IU11UbomszOWQMz07iUc
+         T8OtsUpmWtH5EVKVlf0Ww0iOcELRNHQvjz8REtrHOOZNWDb7eeY4yBXRA6zgIQXYtd
+         g5m7EAYu8o3EQ==
+Date:   Tue, 5 Jan 2021 14:01:28 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
+ voltage regulators
+Message-ID: <20210105140128.GC4487@sirena.org.uk>
+References: <20201130211145.3012-1-james.quinlan@broadcom.com>
+ <20201130211145.3012-2-james.quinlan@broadcom.com>
+ <20201209140122.GA331678@robh.at.kernel.org>
+ <CANCKTBsFALwF8Hy-=orH8D-nd-qyXqFDopATmKCvbqPbUTC7Sw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
+Content-Disposition: inline
+In-Reply-To: <CANCKTBsFALwF8Hy-=orH8D-nd-qyXqFDopATmKCvbqPbUTC7Sw@mail.gmail.com>
+X-Cookie: I'm ANN LANDERS!!  I can SHOPLIFT!!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Otherwise the CPU can't fully access the BAR.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
----
- drivers/pci/pci.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+--GPJrCs/72TxItFYR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 16216186b51c..b66e4703c214 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3577,7 +3577,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
- 		return 0;
- 
- 	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
--	return (cap & PCI_REBAR_CAP_SIZES) >> 4;
-+	cap = (cap & PCI_REBAR_CAP_SIZES) >> 4;
-+
-+	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
-+	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
-+	    bar == 0 && cap == 0x700)
-+		cap == 0x7f00;
-+
-+	return cap;
- }
- EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
- 
--- 
-2.25.1
+On Mon, Jan 04, 2021 at 05:12:11PM -0500, Jim Quinlan wrote:
 
+> For us, the supplies are for the EP chip's power.  We have the PCIe
+> controller turning them "on" for power-on/resume and "off" for
+> power-off/suspend.  We need the "xxx-supply" property in the
+> controller's DT node because of the chicken-and-egg situation: if the
+> property was in the EP's DT node, the RC  will never discover the EP
+> to see that there is a regulator to turn on.   We would be happy with
+> a single supply name, something like "ep-power".  We would be ecstatic
+> to have two (ep0-power, ep1-power).
+
+Why can't the controller look at the nodes describing devices for
+standard properties?
+
+--GPJrCs/72TxItFYR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl/0cTcACgkQJNaLcl1U
+h9DIbwf+NHMTbyBOhHAFuUOWo4I6SmPq9+RsD3YDgS59K1pPy618QRiBt/+c2TSw
+lV5lD8CiHXjlbVytAV+iw2xwmzsRI78YTuYz4o0GwKp2bKz23NQbGaCd8KN5oIEA
+ToNd53+zPtoRXHP61UC3DOJbDHVdAmYo7vHWh+VFrwl4V2Z/97MokfQ1CL6uIdRh
+NMwgaP2Hw8v6spI4q9rdpqEbzSaik7OkuNpFzDRRN2d/fB+NFv561M+lDAN7Ukyk
+CZbPC5l01SLY2dO6JugfEvf9lduKTU+QCfIQ2+BVOPA1C5r7Idrbg/s+ZSEoaX3L
+kGbxqKu3ifqx3n4xjDya93k/Ftrt/Q==
+=cqQe
+-----END PGP SIGNATURE-----
+
+--GPJrCs/72TxItFYR--
