@@ -2,94 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3FF2EAC91
-	for <lists+linux-pci@lfdr.de>; Tue,  5 Jan 2021 15:03:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF7C42EAD2E
+	for <lists+linux-pci@lfdr.de>; Tue,  5 Jan 2021 15:14:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbhAEOCh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jan 2021 09:02:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
+        id S1727255AbhAEONR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jan 2021 09:13:17 -0500
+Received: from halon.esss.lu.se ([194.47.240.54]:64328 "EHLO halon.esss.lu.se"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728034AbhAEOCg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 5 Jan 2021 09:02:36 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B0EAC22AAB;
-        Tue,  5 Jan 2021 14:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609855316;
-        bh=ASplVFuNkPaZ936Orl5wWvFQMIR51qVCfXTsdj5Q8Uc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lWcB9rYOjo3v/q7hy/2jXAAJmAJKNcWXzgaf/a8Kz8yvhK/1jF17ndDs8aMoLFjLg
-         0GOh9ayC59rH8FVaUND2G3Axlymnx0vHGuug2q4h5Azprqa6yaABFNwoVRcZcMFAZN
-         411H8B7g2C1hr1s96q2o65tyiYbVz8/P5Ki2YmLR5+FYOnc5dwDvGJNvEw1QiUzk9n
-         0+AMaDah3es210bjQI+R2qgTjPqaGOOuHcTbG1iAGhx7/7IU11UbomszOWQMz07iUc
-         T8OtsUpmWtH5EVKVlf0Ww0iOcELRNHQvjz8REtrHOOZNWDb7eeY4yBXRA6zgIQXYtd
-         g5m7EAYu8o3EQ==
-Date:   Tue, 5 Jan 2021 14:01:28 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
- voltage regulators
-Message-ID: <20210105140128.GC4487@sirena.org.uk>
-References: <20201130211145.3012-1-james.quinlan@broadcom.com>
- <20201130211145.3012-2-james.quinlan@broadcom.com>
- <20201209140122.GA331678@robh.at.kernel.org>
- <CANCKTBsFALwF8Hy-=orH8D-nd-qyXqFDopATmKCvbqPbUTC7Sw@mail.gmail.com>
+        id S1727297AbhAEONQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Jan 2021 09:13:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ess.eu; s=dec2019;
+        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
+         message-id:from:references:to:subject:from;
+        bh=RA8bsF2IvtYDxK0HrjzycDJFsmr6rzurulhvIh6DFUY=;
+        b=iGta+lS4esXb+HScA63qGOyG7p8U4fH6r69lNm057kM3oknpcdyN/f+iajEHK1I/AaYSSi1E14ORq
+         pTWGC9A3YiIu2wWQPntY6NG2YEuGq9PQ45SynD5O8GCfBxpjQwzSPR+RpmcBIjbsyd+fQNPUFGkpYF
+         bnifdXJmGBsF96ny/PLTAYTfsoKr0MN8G98ngH18ZLqIbIm04WaLnO+jVY4SGbqzQLeaPD1FeoOFwd
+         bW0nu4L8WQZUbdRWVhpspzZMpEgQHoH/LMKwzhP6C7cFv2a3jShW0o44d/RNmegoJK7l2CL3Q2eMtW
+         +4gzZ/SU5/juLIQEqDYWs8z/Wkes/GQ==
+Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
+        by halon.esss.lu.se (Halon) with ESMTPS
+        id 0de8e8ad-4f60-11eb-93c8-005056a66d10;
+        Tue, 05 Jan 2021 15:12:33 +0100 (CET)
+Received: from [192.168.0.9] (194.47.241.248) by it-exch16-4.esss.lu.se
+ (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 5 Jan 2021
+ 15:12:34 +0100
+Subject: Re: [PATCH 3/3] PCI/ERR: Retain status from error notification
+To:     Keith Busch <kbusch@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+References: <20201217171431.502030-1-kbusch@kernel.org>
+ <20201217171431.502030-3-kbusch@kernel.org>
+From:   Hinko Kocevar <hinko.kocevar@ess.eu>
+Message-ID: <637ad6ff-8a97-ab68-1fcc-eb5432f7ebbf@ess.eu>
+Date:   Tue, 5 Jan 2021 15:12:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
-Content-Disposition: inline
-In-Reply-To: <CANCKTBsFALwF8Hy-=orH8D-nd-qyXqFDopATmKCvbqPbUTC7Sw@mail.gmail.com>
-X-Cookie: I'm ANN LANDERS!!  I can SHOPLIFT!!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20201217171431.502030-3-kbusch@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [194.47.241.248]
+X-ClientProxiedBy: IT-Exch16-1.esss.lu.se (10.0.42.131) To
+ it-exch16-4.esss.lu.se (10.0.42.134)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---GPJrCs/72TxItFYR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jan 04, 2021 at 05:12:11PM -0500, Jim Quinlan wrote:
+On 12/17/20 6:14 PM, Keith Busch wrote:
+> Overwriting the frozen detected status with the result of the link reset
+> loses the NEED_RESET result that drivers are depending on for error
+> handling to report the .slot_reset() callback. Retain this status so
+> that subsequent error handling has the correct flow.
+> 
+> Reported-by: Hinko Kocevar <hinko.kocevar@ess.eu>
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> ---
+>   drivers/pci/pcie/err.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index a84f0bf4c1e2..b576aa890c76 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -198,8 +198,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   	pci_dbg(bridge, "broadcast error_detected message\n");
+>   	if (state == pci_channel_io_frozen) {
+>   		pci_walk_bridge(bridge, report_frozen_detected, &status);
+> -		status = reset_subordinates(bridge);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+>   			pci_warn(bridge, "subordinate device reset failed\n");
+>   			goto failed;
+>   		}
+> 
 
-> For us, the supplies are for the EP chip's power.  We have the PCIe
-> controller turning them "on" for power-on/resume and "off" for
-> power-off/suspend.  We need the "xxx-supply" property in the
-> controller's DT node because of the chicken-and-egg situation: if the
-> property was in the EP's DT node, the RC  will never discover the EP
-> to see that there is a regulator to turn on.   We would be happy with
-> a single supply name, something like "ep-power".  We would be ecstatic
-> to have two (ep0-power, ep1-power).
+Dear Keith,
 
-Why can't the controller look at the nodes describing devices for
-standard properties?
+I can confirm that with this series of patches, applied to a linux-pci 
+GIT tree kernel, the problem is solved for me. The reset is carried out, 
+the secondary bus and the PCI device beind the bus all recover after 
+injecting an error into the root port.
 
---GPJrCs/72TxItFYR
-Content-Type: application/pgp-signature; name="signature.asc"
+Tested-by: Hinko Kocevar <hinko.kocevar@ess.eu>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl/0cTcACgkQJNaLcl1U
-h9DIbwf+NHMTbyBOhHAFuUOWo4I6SmPq9+RsD3YDgS59K1pPy618QRiBt/+c2TSw
-lV5lD8CiHXjlbVytAV+iw2xwmzsRI78YTuYz4o0GwKp2bKz23NQbGaCd8KN5oIEA
-ToNd53+zPtoRXHP61UC3DOJbDHVdAmYo7vHWh+VFrwl4V2Z/97MokfQ1CL6uIdRh
-NMwgaP2Hw8v6spI4q9rdpqEbzSaik7OkuNpFzDRRN2d/fB+NFv561M+lDAN7Ukyk
-CZbPC5l01SLY2dO6JugfEvf9lduKTU+QCfIQ2+BVOPA1C5r7Idrbg/s+ZSEoaX3L
-kGbxqKu3ifqx3n4xjDya93k/Ftrt/Q==
-=cqQe
------END PGP SIGNATURE-----
-
---GPJrCs/72TxItFYR--
+Thank you!
