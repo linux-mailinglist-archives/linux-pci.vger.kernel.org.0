@@ -2,55 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF5F22EB6FF
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 01:45:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8F262EB71A
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 01:52:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbhAFAoy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jan 2021 19:44:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40530 "EHLO
+        id S1725917AbhAFAv7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jan 2021 19:51:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727433AbhAFAox (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jan 2021 19:44:53 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CCF6C061796;
-        Tue,  5 Jan 2021 16:44:13 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id 190so1116311wmz.0;
-        Tue, 05 Jan 2021 16:44:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+aMW43IZhOweNyfQdq3RrsIez7U9DouYQFivMqkSnzQ=;
-        b=AvDD6nNiGb11qb5480K59zSzTDIzPKhKEpnXc9KQu2TzJzl2ELZGRPNHJYmcetbDOi
-         4pa9VHigYBATlxcYL+m+DE1mAJStRz5oOLTuQIn13SfFRILuIvR2jOjQc87iQV+f3GKe
-         2ij1LIH8RNuoMC7Ng9xvnmK3F1DvdGPSfQfBrOfSPb2SCvVNwhZbocLHUkAJkNTNwmbu
-         Gclpk+COgBQ60goJbw6DtC4BR5NpympUofbXEAHtC2PhsLnrTc0kUnEQMsL6tMpgrVHy
-         suRXx92QUaRR3fhq856bUKw84KhG29yej5nHbrgit5dqzgVB0gw957ac07F+ZDKlIXH9
-         bddw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+aMW43IZhOweNyfQdq3RrsIez7U9DouYQFivMqkSnzQ=;
-        b=o4L7wGdpZf9NLJ9FlDr+uSElZl2CVUnJQDqNZzttsiLhSP+a5zwhHa/SKJKfbqyfoE
-         Btdva5JZ0yp5gqu6lH6DvED7Qn7kT4KGR1Ew/BZvwAAldC55NIXFwf2VO/E4yjtZ7+H5
-         5WdlV6IfelDxpLF+QuvO2MXSCjo3nsZXow9Qm3UPHAKHrIw43bvb70w4tNSSrP57B5i1
-         ljVv1cFB73gzwvkFPmO99QOe5gzanWmL314EhaymWHqzMQcbyS5Wsydc+CP8piw3UCPU
-         feBkD+m1g2/kHKLTf2M/cycb/jiEd7O1/y88vjDxcgxXTEvmQUMa3dLcXCVYv+yYl1Lm
-         CDUA==
-X-Gm-Message-State: AOAM530QoA7Z/aCkU5zS7Y+svdpVJ4o/TdXO3RT+FqAso9cXKZN6+dH8
-        xoydAIC91RJqktR4b+pP2WZeHCdgkjE=
-X-Google-Smtp-Source: ABdhPJxFXf+WJ0i6zhYIOFZK5nMMsxVY6A7dj9zpWGlfcf6AuyDvqJIyaqZ1YzGXrNKHWzsYbgBPtg==
-X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr1384772wml.106.1609893851768;
-        Tue, 05 Jan 2021 16:44:11 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:303d:91bf:ac5c:51a1? (p200300ea8f065500303d91bfac5c51a1.dip0.t-ipconnect.de. [2003:ea:8f06:5500:303d:91bf:ac5c:51a1])
-        by smtp.googlemail.com with ESMTPSA id b7sm884725wrv.47.2021.01.05.16.44.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Jan 2021 16:44:10 -0800 (PST)
+        with ESMTP id S1726244AbhAFAv6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jan 2021 19:51:58 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12693C061574;
+        Tue,  5 Jan 2021 16:51:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2VuGgG2Y0oR6VaHF+A2Tlk5qtM6i8jJ0JeuAdLPEIVg=; b=YtyM+2Ss06xrA0JR7dBINeoXw
+        4jdKkyHo49FRvf/FV/c3qm5xE4AyVEtItlodEp1L2+RNlD1SeuFL2mWp3wLydV/ULsYxTgYAzHXxG
+        EAJhIpgHroWFEyvqN+YGlnsYm1O3ER2MNM/6RVqxmy0hsz8+oZ7s344+yfEgfLE7cbL/h084Xr+B9
+        g7gAMS+C6zIBs+i0eRXW1jMAMi3sgRZf3QAwztWXuo4F7eF3FhoQAF0ofEl0sBZF828Xs/grfWXLV
+        RFRiuDI7T+xrYg2m4Mz1gqb0lfw3xVPkGdFy3KLZmtosxjq61B/rXHHJI3bLqS1JbceneNZlPU6E2
+        ff046hNcA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45162)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1kwx2N-0001D4-K8; Wed, 06 Jan 2021 00:50:55 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1kwx2L-0008Az-I1; Wed, 06 Jan 2021 00:50:53 +0000
+Date:   Wed, 6 Jan 2021 00:50:53 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Realtek linux nic maintainers <nic_swsd@realtek.com>,
         David Miller <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -58,63 +46,64 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20210106002833.GA1286114@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
 Subject: Re: [PATCH 2/3] ARM: iop32x: improve N2100 PCI broken parity quirk
-Message-ID: <9d2d3d61-8866-f7d3-09e9-a43b05128689@gmail.com>
-Date:   Wed, 6 Jan 2021 01:44:03 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+Message-ID: <20210106005053.GG1551@shell.armlinux.org.uk>
+References: <d53b6377-ff2a-3bba-612f-d052ffa81d09@gmail.com>
+ <20210106002833.GA1286114@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20210106002833.GA1286114@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06.01.2021 01:28, Bjorn Helgaas wrote:
+On Tue, Jan 05, 2021 at 06:28:33PM -0600, Bjorn Helgaas wrote:
 > On Tue, Jan 05, 2021 at 10:42:31AM +0100, Heiner Kallweit wrote:
->> Simplify the quirk by using new PCI core function
->> pci_quirk_broken_parity(). In addition make the quirk
->> more specific, use device id 0x8169 instead of PCI_ANY_ID.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  arch/arm/mach-iop32x/n2100.c | 8 +++-----
->>  1 file changed, 3 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm/mach-iop32x/n2100.c b/arch/arm/mach-iop32x/n2100.c
->> index 78b9a5ee4..24c3eec46 100644
->> --- a/arch/arm/mach-iop32x/n2100.c
->> +++ b/arch/arm/mach-iop32x/n2100.c
->> @@ -122,12 +122,10 @@ static struct hw_pci n2100_pci __initdata = {
->>   */
->>  static void n2100_fixup_r8169(struct pci_dev *dev)
->>  {
->> -	if (dev->bus->number == 0 &&
->> -	    (dev->devfn == PCI_DEVFN(1, 0) ||
->> -	     dev->devfn == PCI_DEVFN(2, 0)))
->> -		dev->broken_parity_status = 1;
->> +	if (machine_is_n2100())
->> +		pci_quirk_broken_parity(dev);
+> >  {
+> > -	if (dev->bus->number == 0 &&
+> > -	    (dev->devfn == PCI_DEVFN(1, 0) ||
+> > -	     dev->devfn == PCI_DEVFN(2, 0)))
+> > -		dev->broken_parity_status = 1;
+> > +	if (machine_is_n2100())
+> > +		pci_quirk_broken_parity(dev);
 > 
 > Whatever "machine_is_n2100()" is (I can't find the definition), it is
 > surely not equivalent to "00:01.0 || 00:02.0".  That change probably
 > should be a separate patch with some explanation.
-> 
-The machine_is_xxx() checks are dynamically created,
-see arch/arm/tools/gen-mach-types.
-Slots 1 and 2 are the two network cards, both are Realtek RTL8169.
-The quirk (after this patch) applies for Realtek RTL8169 devices only,
-therefore we don't need the slot checks any longer.
-Actually the slot checks haven't been needed even before, because
-only in slots 1 and 2 are Realtek devices.
 
-The machine type check is there to protect from (theoretical) cases
-where the n2100 code (incl. the RTL8169 quirk) may be compiled in,
-but the kernel is used on another machine.
+It isn't equivalent. It says "if this machine is N2100" which is a
+completely different thing from matching the bus/devfn numbers.
+
+You won't find a definition for machine_is_n2100() in the kernel;
+it is generated from the machine table by scripts, along with lots
+of similar definitions for each machine type:
+
+/* The type of machine we're running on */
+extern unsigned int __machine_arch_type;
+
+#ifdef CONFIG_MACH_N2100
+# ifdef machine_arch_type
+#  undef machine_arch_type
+#  define machine_arch_type     __machine_arch_type
+# else
+#  define machine_arch_type     MACH_TYPE_N2100
+# endif
+# define machine_is_n2100()     (machine_arch_type == MACH_TYPE_N2100)
+#else
+# define machine_is_n2100()     (0)
+#endif
+
+The upshot of the above is that machine_is_n2100() is constant zero
+if the platform is not configured (thereby allowing the compiler to
+eliminate the code.) If it is the _only_ platform selected, then it
+evaluates to an always-true expression. Otherwise, it becomes a
+run-time evaluated conditional.
+
+We may have better ways to do this in modern kernels, but this was
+invented decades ago, and works with zero runtime overhead.
 
 > If this makes the quirk safe to use in a generic kernel, that sounds
 > like a good thing.
@@ -124,26 +113,23 @@ but the kernel is used on another machine.
 > a platform-specific issue in the way it's wired up.  I assume it's the
 > latter because the quirk is not in drivers/pci/quirks.c.
 > 
-I haven't seen any other report about RTL8169 parity problems.
-Therefore I also think it's platform-specific.
-
 > Why is it safe to restrict this to device ID 0x8169?  If this is
 > platform issue, it might affect any device in the slot.
-> 
-So far the quirk was applied for all Realtek devices.
-The parity problem is limited to the two RTL8169 network cards, and there
-are no other Realtek PCI devices in the system. Supposedly PCI_ANY_ID
-was just used because it was less work than looking for the device id.
-Functionally it's the same on this system.
 
->>  }
->> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REALTEK, PCI_ANY_ID, n2100_fixup_r8169);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REALTEK, 0x8169, n2100_fixup_r8169);
->>  
->>  static int __init n2100_pci_init(void)
->>  {
->> -- 
->> 2.30.0
->>
->>
+You assume the platform has multiple PCI slots - it doesn't. It's an
+embedded platform (it's sold as a NAS) and it has a single mini-PCI
+slot for a WiFi card. Without that populated, lspci -n looks like
+this:
 
+00:01.0 0200: 10ec:8169 (rev 10)
+00:02.0 0200: 10ec:8169 (rev 10)
+00:03.0 0180: 1095:3512 (rev 01)
+00:04.0 0c03: 1106:3038 (rev 61)
+00:04.1 0c03: 1106:3038 (rev 61)
+00:04.2 0c03: 1106:3104 (rev 63)
+
+Where all those devices are soldered to the board.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
