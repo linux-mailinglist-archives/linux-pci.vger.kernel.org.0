@@ -2,79 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DFF52EBD49
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 12:42:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60BEF2EBF2B
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 14:50:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbhAFLkk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 06:40:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53540 "EHLO mail.kernel.org"
+        id S1726687AbhAFNrJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 08:47:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbhAFLkj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Jan 2021 06:40:39 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B2F923100;
-        Wed,  6 Jan 2021 11:39:58 +0000 (UTC)
+        id S1726074AbhAFNrH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Jan 2021 08:47:07 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D26F22B40;
+        Wed,  6 Jan 2021 13:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609933199;
-        bh=oVQy0WCzmrrM0N7SmWHba1flnwvWAZk0QOZxQDNRFeY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p9P2ZBPUp/btO/65Rs74MhMBR0vz9xgr5BeOKTOxIedNJpUE/jN8pGoUQr7xaWfRT
-         FpgRPgYGnnUEh3nqB9N3xI6685F9kGvz9a0GEM30GMiDhAiEcccA0Wu9Ny3TVWoYe/
-         f9xUD1H66EUj1/gRlh17WIT3uN1TeWDRN1Q4VZ0TtKMSMpQWZyLTcxk8oEfNKQ54V/
-         BVGjLUWvnPpo1sV25vUhxEELP3yOrg72DxRyE+TutKs5elgpqdx6Mrb0BCXCyQosLP
-         wmrTiPBmHesIARF6gRZ1wHpowjPh3+Cesfeh3FLEtGEtb4v9QWKB3LfnTbSpB41B2P
-         SPWhLALexbjzg==
-Date:   Wed, 6 Jan 2021 13:39:51 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Shradha Todi <shradha.t@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        pankaj.dubey@samsung.com, sriram.dash@samsung.com,
-        niyas.ahmed@samsung.com, p.rajanbabu@samsung.com,
-        l.mehra@samsung.com, hari.tv@samsung.com
-Subject: Re: [PATCH v3] PCI: endpoint: Fix NULL pointer dereference for
- ->get_features()
-Message-ID: <20210106113951.GW31158@unreal>
-References: <CGME20210106103829epcas5p20a5c8aa2ae8bd6d8d555dad1aa265a1c@epcas5p2.samsung.com>
- <1609929490-18921-1-git-send-email-shradha.t@samsung.com>
+        s=k20201202; t=1609940786;
+        bh=dk8pXxau3B7w7pPUwA0RrhUn2p0NPeGc5CfgVN0DmzQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZGMA2yuUlk3EsCi/TmoRfktBveZSgR6AWjg6xDPQXlUij7RfCRgx9e8sx58aHDA+3
+         kbiSLI4QrOEWdxlQY8yXgjziLtc1avxml8f5Nmdyh5AgmuxgCc+wm6iDw8B4CYGeqa
+         HAacO9ZaH7lHyEIEbJ5e+PblRveWDce0x7EGc9fiYbgwLR2a9exe6UJDs43ZdZ6XOp
+         +6T1M8agU/E85gddh1oArPrKBEUjtID41uWBOmNQ6j9zgjBolzgmqwTgAMJLRQe1c/
+         yevsMgzuU4EADGqOEUp45n48k6Y3HyTFqgETNjfc9EGEZBY7Of4cHPT6xsb/1IWKN9
+         xuSSRWQNhci/w==
+Received: by wens.tw (Postfix, from userid 1000)
+        id 5155F5FB6B; Wed,  6 Jan 2021 21:46:24 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Robin Murphy <robin.murphy@arm.com>,
+        Johan Jonker <jbx6244@gmail.com>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 0/4] arm64: rockchip: Fix PCIe ep-gpios requirement and Add Nanopi M4B
+Date:   Wed,  6 Jan 2021 21:46:13 +0800
+Message-Id: <20210106134617.391-1-wens@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1609929490-18921-1-git-send-email-shradha.t@samsung.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 06, 2021 at 04:08:10PM +0530, Shradha Todi wrote:
-> get_features ops of pci_epc_ops may return NULL, causing NULL pointer
-> dereference in pci_epf_test_bind function. Let us add a check for
-> pci_epc_feature pointer in pci_epf_test_bind before we access it to avoid
-> any such NULL pointer dereference and return -ENOTSUPP in case
-> pci_epc_feature is not found.
->
-> When the patch is not applied and EPC features is not implemented in the
-> platform driver, we see the following dump due to kernel NULL pointer
-> dereference.
->
-> [  105.135936] Call trace:
-> [  105.138363]  pci_epf_test_bind+0xf4/0x388
-> [  105.142354]  pci_epf_bind+0x3c/0x80
-> [  105.145817]  pci_epc_epf_link+0xa8/0xcc
-> [  105.149632]  configfs_symlink+0x1a4/0x48c
-> [  105.153616]  vfs_symlink+0x104/0x184
-> [  105.157169]  do_symlinkat+0x80/0xd4
-> [  105.160636]  __arm64_sys_symlinkat+0x1c/0x24
-> [  105.164885]  el0_svc_common.constprop.3+0xb8/0x170
-> [  105.169649]  el0_svc_handler+0x70/0x88
-> [  105.173377]  el0_svc+0x8/0x640
-> [  105.176411] Code: d2800581 b9403ab9 f9404ebb 8b394f60 (f9400400)
-> [  105.182478] ---[ end trace a438e3c5a24f9df0 ]---
->
-> Fixes: 2c04c5b8eef79 ("PCI: pci-epf-test: Use pci_epc_get_features() to get
-> EPC features")
->
-> Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-Please no space between Fixes line and SOB.
-Also please don't break Fixes lines.
+Hi everyone,
 
-Thanks
+This is v3 of my Nanopi M4B series. Changes since v2 include:
+
+  - Replaced dev_err() with dev_err_probe() for gpiod_get_optional() error
+  - Added Reviewed-by tag from Robin Murphy for patch 3
+
+Changes since v1 include:
+
+  - Rewrite subject of patch 1 to match existing convention and reference
+    'ep-gpios' DT property instead of the 'ep_gpio' field
+ 
+This series mainly adds support for the new Nanopi M4B, which is a newer
+variant of the Nanopi M4.
+
+The differences against the original Nanopi M4 that are common with the
+other M4V2 revision include:
+
+  - microphone header removed
+  - power button added
+  - recovery button added
+
+Additional changes specific to the M4B:
+
+  - USB 3.0 hub removed; board now has 2x USB 3.0 type-A ports and 2x
+    USB 2.0 ports
+  - ADB toggle switch added; this changes the top USB 3.0 host port to
+    a peripheral port
+  - Type-C port no longer supports data or PD
+  - WiFi/Bluetooth combo chip switched to AP6256, which supports BT 5.0
+    but only 1T1R (down from 2T2R) for WiFi
+
+While working on this, I found that for the M4 family, the PCIe reset
+pin (from the M.2 expansion board) was not wired to the SoC. Only the
+NanoPC T4 has this wired. This ended up in patches 1 and 3.
+
+Patch 1 makes ep_gpio in the Rockchip PCIe driver optional. This property
+is optional in the DT binding, so this just makes the driver adhere to
+the binding.
+
+Patch 2 adds a new compatible string for the new board.
+
+Patch 3 moves the ep-gpios property of the pcie controller from the
+common nanopi4.dtsi file to the nanopc-t4.dts file.
+
+Patch 4 adds a new device tree file for the new board. It includes the
+original device tree for the M4, and then lists the differences.
+
+Given that patch 3 would make PCIe unusable without patch 1, I suggest
+merging patch 1 through the PCI tree as a fix for 5.10, and the rest
+for 5.11 through the Rockchip tree.
+
+Please have a look. The changes are mostly trivial.
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (4):
+  PCI: rockchip: Make 'ep-gpios' DT property optional
+  dt-bindings: arm: rockchip: Add FriendlyARM NanoPi M4B
+  arm64: dts: rockchip: nanopi4: Move ep-gpios property to nanopc-t4
+  arm64: dts: rockchip: rk3399: Add NanoPi M4B
+
+ .../devicetree/bindings/arm/rockchip.yaml     |  1 +
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ .../boot/dts/rockchip/rk3399-nanopc-t4.dts    |  1 +
+ .../boot/dts/rockchip/rk3399-nanopi-m4b.dts   | 52 +++++++++++++++++++
+ .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |  1 -
+ drivers/pci/controller/pcie-rockchip.c        |  5 +-
+ 6 files changed, 58 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
+
+-- 
+2.29.2
+
