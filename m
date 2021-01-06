@@ -2,166 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69C892EC3FC
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 20:36:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6A682EC44D
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 20:58:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbhAFTfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 14:35:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48476 "EHLO
+        id S1726521AbhAFT6K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 14:58:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbhAFTfJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 14:35:09 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51640C06134D;
-        Wed,  6 Jan 2021 11:34:29 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id a12so3432475wrv.8;
-        Wed, 06 Jan 2021 11:34:29 -0800 (PST)
+        with ESMTP id S1726731AbhAFT6K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 14:58:10 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57DA9C06134C;
+        Wed,  6 Jan 2021 11:57:30 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id i5so3001389pgo.1;
+        Wed, 06 Jan 2021 11:57:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j/tPa+TosF4s6ZeUcfX5xJrxDDEIBvCx2esSOFMWJPA=;
-        b=kOhlrN3fzZP4EarkM5nObQu4al+WTx+UiL1xrbrx7/1xiNxyF+qDN+khSBv8s9icg0
-         fI/KhHZur15sGBNvSExuj2u2z3/6bZEkasKt+4UjSvXx7Bbh0BNzq/XdbM/72anjs4UL
-         84dhK2Gs7v4wN+iAfwISVQUihD0Q/ack4MPGiDs5QHLdvCxBXtzBx4Oyo9qi0xSV72TP
-         RHHt27mef5qb6UXx8iTFhQotn8I5qaGtAliy4hGHm/OwStWBjZjxlc6qhcWSGw1TqjEY
-         vluJJXPcdws9/QBOqDyjkKuZ568kvCCa6qlOuSigDEgvZ7L0NQntrA0XbPdOHqKjHBTu
-         iStw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9TFPxgk7ugqCN9QHQNn2fEjzxHi920s9td3tzX/Yo4w=;
+        b=Pzl4TQX0it0x07hLoFXTCZukEvY6JByQlyqa9/NO4b64vANYEUBXu8pOle6b0bim0x
+         0qFqQl1rij8KM2nmcYWn2g+1uYb6ht/YVMnHMJ4flr43AtZ/BlcnMznf9kiWwYviise2
+         Mn9sirLT+xdCeLifNMdV91ffGHHC9DrpwAr/avQvvi+qU/hUJyqmlOt8bmvq68dlIgeN
+         FMO164ecu7+iEK6QFAZEvu0pw/E16XcTQuRHlJZuowg/kQ9t8okGs0eKN1II3ehiIQ+/
+         dFoy//m+lLyfzjknXO8zPd3IDjS1Kum0+bGmzxtQ1mwruwi/Ml0ggiso22D6juIpPBCl
+         fTcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j/tPa+TosF4s6ZeUcfX5xJrxDDEIBvCx2esSOFMWJPA=;
-        b=RNkpepe8bPkrUuH+2d6Syc4D7Rvi/4V4LL4oQiP7gZDbMVRNr7DixzBrfi00bpNiu3
-         0j1TiaPqvH0df/HbNK/k0Rq+lCo6awCjKoHzPMWZ6AwUULzAVcgdp2GeqzvToCDlfRmu
-         s7ntZZHdg6VoZNJzB8kERpoIIscm5QOy8f92cTqMD+Wx6m00rZOO3MF2s6IbgO9ElJdJ
-         V8c40yV+aA6U/MfsqMlxH7WQC2/oe+IAd+cv9jl/W0jjACrqVH6wEMehiKXx/ljM7nvp
-         bhe+rW7EIoYnQkPwbKC3FDXkyOQLe8UrxenUkZ2OLfjaZXKWBTLeYcuJ1EXelN54oCau
-         9DFw==
-X-Gm-Message-State: AOAM533m9oewzPnOItbixkuJTKeuamUJUEbXeOd10Da1Us4sZNW6EUEW
-        tp02aagdtsm38m/Xo2TGh3vcaw8bcb4=
-X-Google-Smtp-Source: ABdhPJyAzCNiTuU1Yx4cF42lFYMKljtIPeDqI2NtDSj1UO4tBbTJIw9rIm8uvHroLFRpnaBN4vFOfg==
-X-Received: by 2002:a5d:610d:: with SMTP id v13mr5696020wrt.425.1609961667725;
-        Wed, 06 Jan 2021 11:34:27 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:e1db:b990:7e09:f1cf? (p200300ea8f065500e1dbb9907e09f1cf.dip0.t-ipconnect.de. [2003:ea:8f06:5500:e1db:b990:7e09:f1cf])
-        by smtp.googlemail.com with ESMTPSA id 125sm4359403wmc.27.2021.01.06.11.34.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Jan 2021 11:34:27 -0800 (PST)
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20210106192233.GA1329080@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v3 1/3] PCI: Disable parity checking if broken_parity is
- set
-Message-ID: <768d90a3-93ea-1f4e-f4e0-e039933bc17b@gmail.com>
-Date:   Wed, 6 Jan 2021 20:34:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9TFPxgk7ugqCN9QHQNn2fEjzxHi920s9td3tzX/Yo4w=;
+        b=hRmtKbUpQ87Igv6dc4ZwqPMJrSGwS/Go6vl7OBzKbIgn2m3iy4HTAWdm0eaNxY5l0R
+         shfKKc4n73U4t7Mp/Lqh2Xri3huNybO30VkRcImNv7czYDJzRhrhn84BkJ8Ji4q8I+Zz
+         0s7SdeUe4x8WLqtgcDghpBErXxAWwiigNQuqzqPznwbeUfQzR/z5LJEFcSezYoDNKwqy
+         24RPZoik3zyA+unt3hpWLfFs7P9hrvwVG5hjPu8TpUnM5h9cTKa8CNl2+iwCCcIWOL6P
+         RXWwHd6MhkQ7yB2OaYVPyPsH0L3QkSci4htVL2+IhM+7hwlqbgfnlta6PWHpE0EXxXAq
+         6QEw==
+X-Gm-Message-State: AOAM533Q1rWVlQb1lmWS7ncqHJF4ldXfDyHOGm4Jp0vF8gYvnsbzm3eE
+        Jr5lbMFfAB4x2BwlWvCGV70Zt+b5IOVNHhmdgWU=
+X-Google-Smtp-Source: ABdhPJw6ExobZUrWRlZg0yQ2U+JP0S5iAEVohn1eSZTN2g6rh95JwTZOk4qh2BfAsWTtfnssn8RLpti8/3sDjGpFdW8=
+X-Received: by 2002:a63:1f10:: with SMTP id f16mr5974644pgf.111.1609963049972;
+ Wed, 06 Jan 2021 11:57:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210106192233.GA1329080@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20201130211145.3012-6-james.quinlan@broadcom.com>
+ <20210106191949.GA1328757@bjorn-Precision-5520> <CA+-6iNzARUT63Mv7qFzk_g5wep4v6aPuN8f8yjQcgozVcKhVTw@mail.gmail.com>
+In-Reply-To: <CA+-6iNzARUT63Mv7qFzk_g5wep4v6aPuN8f8yjQcgozVcKhVTw@mail.gmail.com>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Wed, 6 Jan 2021 14:57:19 -0500
+Message-ID: <CANCKTBt7C+EhcpbgYdreK=xvQuOzEaDm+us-6P+PtoEfCny2Vg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] PCI: brcmstb: Add panic/die handler to RC driver
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mark Brown <broonie@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06.01.2021 20:22, Bjorn Helgaas wrote:
-> On Wed, Jan 06, 2021 at 06:50:22PM +0100, Heiner Kallweit wrote:
->> If we know that a device has broken parity checking, then disable it.
->> This avoids quirks like in r8169 where on the first parity error
->> interrupt parity checking will be disabled if broken_parity_status
->> is set. Make pci_quirk_broken_parity() public so that it can be used
->> by platform code, e.g. for Thecus N2100.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> This series should all go together.  Let me know if you want me to do
-> anything more (would require acks for arm and r8169, of course).
-> 
-Right. For r8169 I'm the maintainer myself and agreed with Jakub that
-the r8169 patch will go through the PCI tree.
+On Wed, Jan 6, 2021 at 2:42 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
+>
+> ---------- Forwarded message ---------
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Date: Wed, Jan 6, 2021 at 2:19 PM
+> Subject: Re: [PATCH v2 5/6] PCI: brcmstb: Add panic/die handler to RC driver
+> To: Jim Quinlan <james.quinlan@broadcom.com>
+> Cc: <linux-pci@vger.kernel.org>, Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de>, <broonie@kernel.org>,
+> <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>, Bjorn
+> Helgaas <bhelgaas@google.com>, Florian Fainelli
+> <f.fainelli@gmail.com>, moderated list:BROADCOM BCM2711/BCM2835 ARM
+> ARCHITECTURE <linux-rpi-kernel@lists.infradead.org>, moderated
+> list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE
+> <linux-arm-kernel@lists.infradead.org>, open list
+> <linux-kernel@vger.kernel.org>
+>
+>
+> On Mon, Nov 30, 2020 at 04:11:42PM -0500, Jim Quinlan wrote:
+> > Whereas most PCIe HW returns 0xffffffff on illegal accesses and the like,
+> > by default Broadcom's STB PCIe controller effects an abort.  This simple
+> > handler determines if the PCIe controller was the cause of the abort and if
+> > so, prints out diagnostic info.
+> >
+> > Example output:
+> >   brcm-pcie 8b20000.pcie: Error: Mem Acc: 32bit, Read, @0x38000000
+> >   brcm-pcie 8b20000.pcie:  Type: TO=0 Abt=0 UnspReq=1 AccDsble=0 BadAddr=0
+>
+> What does this mean for all the other PCI core code that expects
+> 0xffffffff data returns?  Does it work?  Does it break differently on
+> STB than on other platforms?
+Hi Bjorn,
 
-Regarding the arm/iop32x part:
-MAINTAINERS file lists Lennert as maintainer, let me add him.
-Strange thing is that the MAINTAINERS entry for arm/iop32x has no
-F entry, therefore the get_maintainers scripts will never list him
-as addressee. The script lists Russell as "odd fixer".
-@Lennert: Please provide a patch to add the missing F entry.
+Our PCIe HW causes a CPU abort when this happens.  Occasionally a
+customer will have a fault handler try to fix up the abort and
+continue on, but we recommend solving the root problem.  This commit
+just gives us a chance to glean info about the problem.  Our newer
+SOCs have a mode that doesn't abort and instead returns 0xffffffff.
 
-ARM/INTEL IOP32X ARM ARCHITECTURE
-M:	Lennert Buytenhek <kernel@wantstofly.org>
-L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-S:	Maintained
+BTW, can you point me to example files where "PCI core code that
+expects  0xffffffff data returns" [on bad accesses]?
 
+Regards,
+Jim Quinlan
+Broadcom STB
 
->> ---
->>  drivers/pci/quirks.c | 17 +++++++++++------
->>  include/linux/pci.h  |  2 ++
->>  2 files changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 653660e3b..ab54e26b8 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -205,17 +205,22 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
->>  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
->>  				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
->>  
->> +void pci_quirk_broken_parity(struct pci_dev *dev)
->> +{
->> +	u16 cmd;
->> +
->> +	dev->broken_parity_status = 1;	/* This device gives false positives */
->> +	pci_read_config_word(dev, PCI_COMMAND, &cmd);
->> +	pci_write_config_word(dev, PCI_COMMAND, cmd & ~PCI_COMMAND_PARITY);
->> +}
->> +
->>  /*
->>   * The Mellanox Tavor device gives false positive parity errors.  Mark this
->>   * device with a broken_parity_status to allow PCI scanning code to "skip"
->>   * this now blacklisted device.
->>   */
->> -static void quirk_mellanox_tavor(struct pci_dev *dev)
->> -{
->> -	dev->broken_parity_status = 1;	/* This device gives false positives */
->> -}
->> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, quirk_mellanox_tavor);
->> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, quirk_mellanox_tavor);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, pci_quirk_broken_parity);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, pci_quirk_broken_parity);
->>  
->>  /*
->>   * Deal with broken BIOSes that neglect to enable passive release,
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index b32126d26..161dcc474 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -1916,6 +1916,8 @@ enum pci_fixup_pass {
->>  	pci_fixup_suspend_late,	/* pci_device_suspend_late() */
->>  };
->>  
->> +void pci_quirk_broken_parity(struct pci_dev *dev);
->> +
->>  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
->>  #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
->>  				    class_shift, hook)			\
->> -- 
->> 2.30.0
->>
->>
->>
-
+>
+> > +/*
+> > + * Dump out pcie errors on die or panic.
+>
+> s/pcie/PCIe/
+> This could be a single-line comment.
+>
+> > + */
+>
