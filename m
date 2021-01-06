@@ -2,153 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 525AB2EBF27
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 14:50:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AC5E2EBF3F
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 14:57:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbhAFNrI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 08:47:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbhAFNrH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Jan 2021 08:47:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9553223121;
-        Wed,  6 Jan 2021 13:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609940786;
-        bh=zxCR5IPMVyUtLgw9iNAvhL1NSsx2Ep3Yv/Co5D5pP1o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WfIA1I7JwmXFyLWbQfb1NMwLZkm/cTbJZ2IDXvHEDEXQtU5mGhKhO2Djrq/abFzw7
-         YNLgMAmHaFEX+YimPat/a9qBoFM5q3U9CYQzWgCTcE31H143GIHu/qnmFexPHkYvl3
-         dBTijGo8jBTEe2Hl+RYxZoTHKyr2U+SCxZv1uW8RxKjsjFzIOcSUpnfmCrvOcAu1rv
-         vz7HctMfKC5mjNRMUcG384HE+4kVUImguBmFej2tqrkUSRmQQea5Vb1QVRzXrSaY/L
-         VSeglprmcdDyMzDubZOWYNcSqN9JlM1ChTSyoQqRNJ6QsNo9Ad4ugb3gT0j5dcmLHc
-         58EPdukbI/+3w==
-Received: by wens.tw (Postfix, from userid 1000)
-        id 757B35FBCC; Wed,  6 Jan 2021 21:46:24 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Robin Murphy <robin.murphy@arm.com>,
-        Johan Jonker <jbx6244@gmail.com>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v3 4/4] arm64: dts: rockchip: rk3399: Add NanoPi M4B
-Date:   Wed,  6 Jan 2021 21:46:17 +0800
-Message-Id: <20210106134617.391-5-wens@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210106134617.391-1-wens@kernel.org>
-References: <20210106134617.391-1-wens@kernel.org>
+        id S1726397AbhAFN4u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 08:56:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbhAFN4u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 08:56:50 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6656C06134D;
+        Wed,  6 Jan 2021 05:56:09 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id 6so5140111ejz.5;
+        Wed, 06 Jan 2021 05:56:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L8x/QpDCOUcMRuqo00P8LxlArLustwPLlO30ZOy3cg0=;
+        b=HrsqvrMkSiNlal5pnhXdSHTDUyklbYpc96+CDKtUTuxGtALOkaGFkcaL569bP/4IZX
+         7TJEckWk8JvkWrFjbFW6QryzGSJyzFOynxHuzpOklkS6J4Ml4YkYMYOFBGzHUjT6w5Ab
+         Fd/j1eOkAKwDBBUKl08n3Ml+WhqSHcr142PQA4nPvTpHuOGNvf2Ls2eWPlaXR/cVM0cl
+         pE9TJC4HiEfeHvI8db7MAXONW7hGc5hRUN72dv919vtfGAX83CzVKcoC6qL6oYyeX9hs
+         /m9Xb4dpmYO+ThCqGAkZ8ft6fCRlf076VhbcAWmUfKbliaYis+UeWl7WaJOZJhzO8MB7
+         5qQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L8x/QpDCOUcMRuqo00P8LxlArLustwPLlO30ZOy3cg0=;
+        b=HdBrXsDYwtJRe07iW6hSh7ai8rT68bMomWBKBufVGGwNf4ESSaucl0lr/pTBVQh66p
+         Fl7uDTCCe7qOhpfqBHph142gb+6iPg07P4pRx3y0z2EoGaJ54ZvehBrD00WeXigxXQAW
+         RfJxMzybwk9PybpHxEyS0x9eLbNW0WKYOwlX2znriH1tE1TY5WeyXbDMM9oK4PdjxCA3
+         vgf8hsb/0w6MzENqdNy6B637R09qyNDo/FSYcvZDgv2hkkq2yNYG3ksNL4MYPghXs9tr
+         vps8tM7QPcMdOzWt6dOig4AYPmCFZ9fT+XXbctrrmrYGSEwju//manZZm6buBxJO/d4M
+         IJJw==
+X-Gm-Message-State: AOAM533yhDvdQfhyhkZwaVryH2EQq/brEckpt5dAnCwbJxaK00TxsM+e
+        nBbdClnDaykUk38QmcpkCTo=
+X-Google-Smtp-Source: ABdhPJzAguu+fAPoftCt0iGkrQ7CsjxmqlmnyPNRllt6NGxY3xB/MWJfDtyYRzkuM1M8IcgGpNr5eQ==
+X-Received: by 2002:a17:906:1796:: with SMTP id t22mr2815872eje.372.1609941368582;
+        Wed, 06 Jan 2021 05:56:08 -0800 (PST)
+Received: from localhost.localdomain (p200300f13711ec00428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3711:ec00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id pg9sm1282862ejb.102.2021.01.06.05.56.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Jan 2021 05:56:08 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] PCI: dwc/intel-gw: Fix enabling the legacy PCI interrupt lines
+Date:   Wed,  6 Jan 2021 14:55:40 +0100
+Message-Id: <20210106135540.48420-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+The legacy PCI interrupt lines need to be enabled using PCIE_APP_IRNEN
+bits 13 (INTA), 14 (INTB), 15 (INTC) and 16 (INTD). The old code however
+was taking (for example) "13" as raw value instead of taking BIT(13).
+Define the legacy PCI interrupt bits using the BIT() macro and then use
+these in PCIE_APP_IRN_INT.
 
-The NanoPi M4B is a minor revision of the original M4.
-
-The differences against the original Nanopi M4 that are common with the
-other M4V2 revision include:
-
-  - microphone header removed
-  - power button added
-  - recovery button added
-
-Additional changes specific to the M4B:
-
-  - USB 3.0 hub removed; board now has 2x USB 3.0 type-A ports and 2x
-    USB 2.0 ports
-  - ADB toggle switch added; this changes the top USB 3.0 host port to
-    a peripheral port
-  - Type-C port no longer supports data or PD
-  - WiFi/Bluetooth combo chip switched to AP6256, which supports BT 5.0
-    but only 1T1R (down from 2T2R) for WiFi
-
-Add a new dts file for the new board revision that shows the difference
-against the original.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Fixes: ed22aaaede44 ("PCI: dwc: intel: PCIe RC controller driver")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm64/boot/dts/rockchip/Makefile         |  1 +
- .../boot/dts/rockchip/rk3399-nanopi-m4b.dts   | 52 +++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
+ drivers/pci/controller/dwc/pcie-intel-gw.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 1ab55a124a87..622d320ddd13 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -33,6 +33,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-kobol-helios64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-leez-p710.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4b.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
-new file mode 100644
-index 000000000000..72182c58cc46
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * FriendlyElec NanoPi M4B board device tree source
-+ *
-+ * Copyright (c) 2020 Chen-Yu Tsai <wens@csie.org>
-+ */
-+
-+/dts-v1/;
-+#include "rk3399-nanopi-m4.dts"
-+
-+/ {
-+	model = "FriendlyElec NanoPi M4B";
-+	compatible = "friendlyarm,nanopi-m4b", "rockchip,rk3399";
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 1>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1500000>;
-+		poll-interval = <100>;
-+
-+		recovery {
-+			label = "Recovery";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <18000>;
-+		};
-+	};
-+};
-+
-+/* No USB type-C PD power manager */
-+/delete-node/ &fusb0;
-+
-+&i2c4 {
-+	status = "disabled";
-+};
-+
-+&u2phy0_host {
-+	phy-supply = <&vcc5v0_usb2>;
-+};
-+
-+&u2phy0_otg {
-+	phy-supply = <&vbus_typec>;
-+};
-+
-+&u2phy1_otg {
-+	phy-supply = <&vcc5v0_usb1>;
-+};
-+
-+&vbus_typec {
-+	enable-active-high;
-+	gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-+};
+diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+index 0cedd1f95f37..ae96bfbb6c83 100644
+--- a/drivers/pci/controller/dwc/pcie-intel-gw.c
++++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+@@ -39,6 +39,10 @@
+ #define PCIE_APP_IRN_PM_TO_ACK		BIT(9)
+ #define PCIE_APP_IRN_LINK_AUTO_BW_STAT	BIT(11)
+ #define PCIE_APP_IRN_BW_MGT		BIT(12)
++#define PCIE_APP_IRN_INTA		BIT(13)
++#define PCIE_APP_IRN_INTB		BIT(14)
++#define PCIE_APP_IRN_INTC		BIT(15)
++#define PCIE_APP_IRN_INTD		BIT(16)
+ #define PCIE_APP_IRN_MSG_LTR		BIT(18)
+ #define PCIE_APP_IRN_SYS_ERR_RC		BIT(29)
+ #define PCIE_APP_INTX_OFST		12
+@@ -48,10 +52,8 @@
+ 	PCIE_APP_IRN_RX_VDM_MSG | PCIE_APP_IRN_SYS_ERR_RC | \
+ 	PCIE_APP_IRN_PM_TO_ACK | PCIE_APP_IRN_MSG_LTR | \
+ 	PCIE_APP_IRN_BW_MGT | PCIE_APP_IRN_LINK_AUTO_BW_STAT | \
+-	(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTA) | \
+-	(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTB) | \
+-	(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTC) | \
+-	(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTD))
++	PCIE_APP_IRN_INTA | PCIE_APP_IRN_INTB | \
++	PCIE_APP_IRN_INTC | PCIE_APP_IRN_INTD)
+ 
+ #define BUS_IATU_OFFSET			SZ_256M
+ #define RESET_INTERVAL_MS		100
 -- 
-2.29.2
+2.30.0
 
