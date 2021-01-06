@@ -2,113 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BD012EBCFA
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 12:07:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D9C2EBD2B
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 12:31:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbhAFLHU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 06:07:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbhAFLHT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 06:07:19 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514CAC06134D;
-        Wed,  6 Jan 2021 03:06:39 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id lt17so4535739ejb.3;
-        Wed, 06 Jan 2021 03:06:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LMhEikvRUZQaIKyyHYQPd9FehVZ9OCrs1+Guuen9CX0=;
-        b=X4hGYmXPkT7Y/gFWjq2R6usf6mtSbqmYvDxFIVpAsyNrdel18QRQ9NKh0HrcZf2JND
-         KO+7W1KfW/rMUox9uRp4D9cNWB3ft0Sv1vCO9rJaAE8BShbC0aqQncL6yqBAAeGV7sOQ
-         ewL4CpLiRVfd6qelJ0pJlakxNKDC9hSHPvabsHiTeVk3Un7PkdoAqYa3IcPeMHceYJkJ
-         dExoZRtYYyYisFh/1CQTxNUcDVa12tvTPjmRm5pSr3GVzwbMMyntvxAdDLcWKfFsP3nf
-         A7y4eBftUUsxTmgrfKopE8TiCZ0/hEvQOkBu230ZSKKmVUrRglEniQDXLE82Qlu2VEcu
-         +N1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LMhEikvRUZQaIKyyHYQPd9FehVZ9OCrs1+Guuen9CX0=;
-        b=OMayDP+FFJQ7giIdv/VJtWiOD1K1dN5YTetovhZ+zyD50jZz4v+9FvGhiXU0wrH8W1
-         rWfGYSYW0g4TemlV5RRwfXUV2nDjd8jeFVOQus5QV+OhtgQ5ci/G2j8jJqKranpm1/+j
-         v382ww3u6tTX4JPpE9zpPh60TxEm/+MlUhjvdcoBPYRLJAFoR7O2HoRXas4P0ZeHf82d
-         HYnAYRXAurN9E7A8wq0ZmtfhsvorlXFa/jZUNMsC3CbglkpK9Ja3nmGPUGQA5SPnTa8n
-         envTzrTANACmFslQRqpnMB7ePvSnmn3G9RDCNuXFtS/nm2o5uBaJAtCUQKzaH91Ahuio
-         5UBw==
-X-Gm-Message-State: AOAM530tUjjpIal5+05ibGjPW4G93QeBxOv2JN5BPOuvsww7U7arEGoq
-        1QFbk7lqwEHnUbALN5tTIGdyGRlnyxg=
-X-Google-Smtp-Source: ABdhPJxWTZ5/H6x9x1nURlGcN1s3NA5QJ6dGN5bNgAW7aPmczyiNhSd4mzPg43C0epaDGwiI2Xj2vA==
-X-Received: by 2002:a17:906:cd06:: with SMTP id oz6mr2526596ejb.25.1609931197807;
-        Wed, 06 Jan 2021 03:06:37 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:e1db:b990:7e09:f1cf? (p200300ea8f065500e1dbb9907e09f1cf.dip0.t-ipconnect.de. [2003:ea:8f06:5500:e1db:b990:7e09:f1cf])
-        by smtp.googlemail.com with ESMTPSA id m7sm1090983ejr.119.2021.01.06.03.06.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Jan 2021 03:06:37 -0800 (PST)
-Subject: [PATCH v2 3/3] r8169: simplify broken parity handling now that PCI
- core takes care
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <bbc33d9b-af7c-8910-cdb3-fa3e3b2e3266@gmail.com>
-Message-ID: <c9fab472-83a4-3258-e459-abf76abb65a2@gmail.com>
-Date:   Wed, 6 Jan 2021 12:06:29 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S1726212AbhAFLar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 06:30:47 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:31282 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbhAFLar (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 06:30:47 -0500
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20210106113003epoutp04f1126ce56903926d9972c9a9323365c5~XoSxbSlQe0720707207epoutp04Q
+        for <linux-pci@vger.kernel.org>; Wed,  6 Jan 2021 11:30:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20210106113003epoutp04f1126ce56903926d9972c9a9323365c5~XoSxbSlQe0720707207epoutp04Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1609932603;
+        bh=tEtOvPRttzk1ZWhWEEKAC399d33v2dQxEsVfrEgb1to=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=vLV3JEmmP6mPERQPNpsU5GEw1/pY9jZwnivdbqNjZha+p0BMvur7ZOWXIBiRNitnt
+         JCz7D1SbqrgBoykbqY7em0AFdg4uDdOzg9E/McxQvvtgiMW9dmEBclnYjkqkwXZVX7
+         u345Gzj9G0/DyyFXRxXtCGmbYcRibXNJjtyb1MJo=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20210106113002epcas5p31b459d77a0982be70cfbe10f16825387~XoSwSK1b-0800608006epcas5p3m;
+        Wed,  6 Jan 2021 11:30:02 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        14.73.15682.A3F95FF5; Wed,  6 Jan 2021 20:30:02 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20210106113000epcas5p4cb15bdeb397da85972a627ab9be569bf~XoSu2vrBB1308413084epcas5p4E;
+        Wed,  6 Jan 2021 11:30:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20210106113000epsmtrp28b12d375beb0df27534692e4d8465c2e~XoSu13XHD3122631226epsmtrp2W;
+        Wed,  6 Jan 2021 11:30:00 +0000 (GMT)
+X-AuditID: b6c32a49-8bfff70000013d42-94-5ff59f3a79ed
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CB.93.13470.83F95FF5; Wed,  6 Jan 2021 20:30:00 +0900 (KST)
+Received: from pankajdubey02 (unknown [107.122.12.6]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20210106112958epsmtip20865a8d57f07e030013a09aab653987a~XoStApzdw3221732217epsmtip2Z;
+        Wed,  6 Jan 2021 11:29:58 +0000 (GMT)
+From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
+To:     "'Shradha Todi'" <shradha.t@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Cc:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh@kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <bhelgaas@google.com>, <sriram.dash@samsung.com>,
+        <niyas.ahmed@samsung.com>, <p.rajanbabu@samsung.com>,
+        <l.mehra@samsung.com>, <hari.tv@samsung.com>
+In-Reply-To: <1609929900-19082-1-git-send-email-shradha.t@samsung.com>
+Subject: RE: [PATCH v2] PCI: dwc: Change size to u64 for EP outbound iATU
+Date:   Wed, 6 Jan 2021 16:59:57 +0530
+Message-ID: <000401d6e41f$44fae220$cef0a660$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <bbc33d9b-af7c-8910-cdb3-fa3e3b2e3266@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIugMS81mxWyVxXUcStsAlB72BGxQKGN/EDqVcK7AA=
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIKsWRmVeSWpSXmKPExsWy7bCmlq7V/K/xBk27xC2WNGVY7LrbwW7x
+        cdpKJosVX2ayW9x5foPR4vKuOWwWZ+cdZ7N48/sFu8WTKY9YLY5uDLb4v2cHu0Xv4VqLG+vZ
+        HXg91sxbw+ixc9Zddo8Fm0o9Nq3qZPPo27KK0WPL/s+MHp83yQWwR3HZpKTmZJalFunbJXBl
+        dN0pKLglXHFz6TTWBsZFAl2MnBwSAiYS307+Zu1i5OIQEtjNKLF1zjcWkISQwCdGibnbOSES
+        3xglVj/7zAjTsX7lHCaIor2MEls+iUEUvWKUWHl/DVgRm4C+xLkf81hBbBGBbImFDw8ygRQx
+        C7QzSVyZegasm1PATeJ05zywBmEBT4n/z5aC2SwCKhJtqxqAajg4eAUsJd7dtwQJ8woISpyc
+        +QTsOmYBeYntb+cwQxykIPHz6TKoXVYSfw5/h6oRl3h59Ag7yF4JgRMcEuf2nmeFaHCReHKt
+        nQnCFpZ4dXwLO4QtJfH53V42CDtf4sfiScwQzS2MEpOPz4Vqtpc4cGUOC8hxzAKaEut36UMs
+        45Po/f0E7GYJAV6JjjYhiGo1ie/Pz0DdKSPxsHkp1FoPiXdr1jFOYFScheS1WUhem4XkhVkI
+        yxYwsqxilEwtKM5NTy02LTDMSy3XK07MLS7NS9dLzs/dxAhOZVqeOxjvPvigd4iRiYPxEKME
+        B7OSCK/FsS/xQrwpiZVVqUX58UWlOanFhxilOViUxHl3GDyIFxJITyxJzU5NLUgtgskycXBK
+        NTCxXsz6suZmtOc/lfOChl84T++NdU+3OSW1XZn3a9bGVXJhHGmCrxQtT2pdVFHa+2PVteO7
+        b+Q3Hyq199nwvU+/cArDpMUWC47e3Pnz78TtmdtdNsfdmHn60/lDK2b0/X1v+8BS8Ehic+a8
+        6/nT5wvL+MVaSagVCsvJ7wtP27z99FV5ndRn85+Ipaw5tuKqm+yFjmvvtvgsDbGJbbn389uq
+        2SwxUUYNO+/ZpPQeMDi+tEBliy+DUiir7sTfIk93l8RVvZ3551/uqXeeTRtC19Ru0xL8lr59
+        1Vv9r3ftjonvN9z9vWhGdw/r7zfN7zlL/BpLv8iWnBZUvz1TZ+7xvaqs0Tlno0TXLevaG/VN
+        psvgpBJLcUaioRZzUXEiAK1hHCPUAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSvK7F/K/xBk2rDCyWNGVY7LrbwW7x
+        cdpKJosVX2ayW9x5foPR4vKuOWwWZ+cdZ7N48/sFu8WTKY9YLY5uDLb4v2cHu0Xv4VqLG+vZ
+        HXg91sxbw+ixc9Zddo8Fm0o9Nq3qZPPo27KK0WPL/s+MHp83yQWwR3HZpKTmZJalFunbJXBl
+        dN0pKLglXHFz6TTWBsZFAl2MnBwSAiYS61fOYepi5OIQEtjNKLFp42I2iISMxOTVK1ghbGGJ
+        lf+es0MUvWCUWPD9KCNIgk1AX+Lcj3lgRSICuRJ/zk5gBrGZBSYzSbTNl4VomM4ocfD2PSaQ
+        BKeAm8TpznlgzcICnhL/ny0Fs1kEVCTaVjUA1XBw8ApYSry7bwkS5hUQlDg58wkLxExtid6H
+        rYwQtrzE9rdzmCGOU5D4+XQZ1A1WEn8Of4eqF5d4efQI+wRG4VlIRs1CMmoWklGzkLQsYGRZ
+        xSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHJNamjsYt6/6oHeIkYmD8RCjBAezkgiv
+        xbEv8UK8KYmVValF+fFFpTmpxYcYpTlYlMR5L3SdjBcSSE8sSc1OTS1ILYLJMnFwSjUwrXDh
+        c2XYvvrux13z379d8fb2z0oNpqtlzRMj6hgumOh6tH8o2nL8/r0HzI9e1VlN83eoTbBaa/9i
+        rwyrxX5PPukdt84skq6qnanPN2VviKzIHL0p++avuL6g4IfK3GMfPv3496PF8ZPYv1iLPaF8
+        N+ZxLrHh4pwk/ChU33fdYtXaDX83xeZOftRbfULVacsaj12KYRY6dXzy+i75bud4Ob/c3jLn
+        jmFj0dnqpcdF/p2wT/Kot42Jbg+KcZJddSvSb4qq9qmaCU90GHMXlE9JkuSXNY6Q+f7+9tvd
+        v7e1brvexqCQHFbUM8XGS6PLZc/CVyKv1RwLHJsKKlMjTBbMsuCdlfcrNdvnGKfFFuY3SizF
+        GYmGWsxFxYkAkLZO9DgDAAA=
+X-CMS-MailID: 20210106113000epcas5p4cb15bdeb397da85972a627ab9be569bf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20210106104514epcas5p37d8e3a88aefdf109f7fb4157d4a1f07a
+References: <CGME20210106104514epcas5p37d8e3a88aefdf109f7fb4157d4a1f07a@epcas5p3.samsung.com>
+        <1609929900-19082-1-git-send-email-shradha.t@samsung.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Meanwhile the PCI core disables parity checking for a device that has
-broken_parity_status set. Therefore we don't need the quirk any longer
-to disable parity checking on the first parity error interrupt.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/realtek/r8169_main.c | 14 --------------
- 1 file changed, 14 deletions(-)
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index c9abc7ccb..024042f37 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -4329,20 +4329,6 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
- 	if (net_ratelimit())
- 		netdev_err(dev, "PCI error (cmd = 0x%04x, status_errs = 0x%04x)\n",
- 			   pci_cmd, pci_status_errs);
--	/*
--	 * The recovery sequence below admits a very elaborated explanation:
--	 * - it seems to work;
--	 * - I did not see what else could be done;
--	 * - it makes iop3xx happy.
--	 *
--	 * Feel free to adjust to your needs.
--	 */
--	if (pdev->broken_parity_status)
--		pci_cmd &= ~PCI_COMMAND_PARITY;
--	else
--		pci_cmd |= PCI_COMMAND_SERR | PCI_COMMAND_PARITY;
--
--	pci_write_config_word(pdev, PCI_COMMAND, pci_cmd);
- 
- 	rtl_schedule_task(tp, RTL_FLAG_TASK_RESET_PENDING);
- }
--- 
-2.30.0
+> -----Original Message-----
+> From: Shradha Todi <shradha.t@samsung.com>
+> Sent: Wednesday, January 6, 2021 4:15 PM
+> To: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
+> Cc: jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
+> robh@kernel.org; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
+> pankaj.dubey@samsung.com; sriram.dash@samsung.com;
+> niyas.ahmed@samsung.com; p.rajanbabu@samsung.com;
+> l.mehra@samsung.com; hari.tv@samsung.com; Shradha Todi
+> <shradha.t@samsung.com>
+> Subject: [PATCH v2] PCI: dwc: Change size to u64 for EP outbound iATU
+> 
+> Since outbound iATU permits size to be greater than 4GB for which the
+> support is also available, allow EP function to send u64 size instead of
+> truncating to u32.
+> 
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> ---
+> v1: https://lkml.org/lkml/2020/12/18/690
+> v2:
+>    Addressed Bjorn's review on to keep commit message length limit to 75
+> 
+
+Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+
+>  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+> drivers/pci/controller/dwc/pcie-designware.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> b/drivers/pci/controller/dwc/pcie-designware.c
+> index 1d62ca9..db407ed 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -326,7 +326,7 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie
+> *pci, int index, int type,
+> 
+>  void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
+> index,
+>  				  int type, u64 cpu_addr, u64 pci_addr,
+> -				  u32 size)
+> +				  u64 size)
+>  {
+>  	__dw_pcie_prog_outbound_atu(pci, func_no, index, type,
+>  				    cpu_addr, pci_addr, size);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> b/drivers/pci/controller/dwc/pcie-designware.h
+> index 7da79eb..359151f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -302,7 +302,7 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie
+> *pci, int index,
+>  			       u64 size);
+>  void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
+> index,
+>  				  int type, u64 cpu_addr, u64 pci_addr,
+> -				  u32 size);
+> +				  u64 size);
+>  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
+>  			     int bar, u64 cpu_addr,
+>  			     enum dw_pcie_as_type as_type);
+> --
+> 2.7.4
 
 
