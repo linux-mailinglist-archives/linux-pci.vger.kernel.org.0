@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87D9C2EBD2B
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 12:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46EFC2EBD2F
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 12:33:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbhAFLar (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 06:30:47 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:31282 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbhAFLar (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 06:30:47 -0500
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20210106113003epoutp04f1126ce56903926d9972c9a9323365c5~XoSxbSlQe0720707207epoutp04Q
-        for <linux-pci@vger.kernel.org>; Wed,  6 Jan 2021 11:30:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20210106113003epoutp04f1126ce56903926d9972c9a9323365c5~XoSxbSlQe0720707207epoutp04Q
+        id S1726165AbhAFLcK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 06:32:10 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:57449 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbhAFLcJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 06:32:09 -0500
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20210106113126epoutp03063368ecc5d5522e924edda2f916d0b4~XoT_R3jc03086230862epoutp031
+        for <linux-pci@vger.kernel.org>; Wed,  6 Jan 2021 11:31:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20210106113126epoutp03063368ecc5d5522e924edda2f916d0b4~XoT_R3jc03086230862epoutp031
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1609932603;
-        bh=tEtOvPRttzk1ZWhWEEKAC399d33v2dQxEsVfrEgb1to=;
+        s=mail20170921; t=1609932686;
+        bh=lmkyq8Nlom1m6NMi3K85HBE9w55RE7Wid/BQXbv/DBU=;
         h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=vLV3JEmmP6mPERQPNpsU5GEw1/pY9jZwnivdbqNjZha+p0BMvur7ZOWXIBiRNitnt
-         JCz7D1SbqrgBoykbqY7em0AFdg4uDdOzg9E/McxQvvtgiMW9dmEBclnYjkqkwXZVX7
-         u345Gzj9G0/DyyFXRxXtCGmbYcRibXNJjtyb1MJo=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20210106113002epcas5p31b459d77a0982be70cfbe10f16825387~XoSwSK1b-0800608006epcas5p3m;
-        Wed,  6 Jan 2021 11:30:02 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        14.73.15682.A3F95FF5; Wed,  6 Jan 2021 20:30:02 +0900 (KST)
+        b=OiuL0lMDaMAQCCbRKfnv5DAFsvfZdyAOyGIbEl+5cLY8gXuLsNEUmn5zaJ0Th/rYI
+         kbreGWE4lyqE4SlQ5Fk5xWvlYwRmmncYgAXMAyUAM5fdTwL03mj5lod1tIqwH7rDEx
+         bbt0TL9GcQZEyOkwvC/ywMAG+HDoPEjs4Je4hmbI=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20210106113125epcas5p193f2dbac849dd612fc0de248c4dd2d55~XoT9eAifh2931929319epcas5p1-;
+        Wed,  6 Jan 2021 11:31:25 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0D.24.50652.D8F95FF5; Wed,  6 Jan 2021 20:31:25 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20210106113000epcas5p4cb15bdeb397da85972a627ab9be569bf~XoSu2vrBB1308413084epcas5p4E;
-        Wed,  6 Jan 2021 11:30:00 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20210106113124epcas5p2aef3f086ca351e044e892bf58d9074b9~XoT8hqUfb0032200322epcas5p2P;
+        Wed,  6 Jan 2021 11:31:24 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
         epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20210106113000epsmtrp28b12d375beb0df27534692e4d8465c2e~XoSu13XHD3122631226epsmtrp2W;
-        Wed,  6 Jan 2021 11:30:00 +0000 (GMT)
-X-AuditID: b6c32a49-8bfff70000013d42-94-5ff59f3a79ed
+        20210106113124epsmtrp2a6265edd927c030a624f67fe63a88263~XoT8gHrGh0037200372epsmtrp2r;
+        Wed,  6 Jan 2021 11:31:24 +0000 (GMT)
+X-AuditID: b6c32a4a-6b3ff7000000c5dc-fb-5ff59f8d6ed6
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CB.93.13470.83F95FF5; Wed,  6 Jan 2021 20:30:00 +0900 (KST)
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9B.F9.08745.C8F95FF5; Wed,  6 Jan 2021 20:31:24 +0900 (KST)
 Received: from pankajdubey02 (unknown [107.122.12.6]) by
         epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20210106112958epsmtip20865a8d57f07e030013a09aab653987a~XoStApzdw3221732217epsmtip2Z;
-        Wed,  6 Jan 2021 11:29:58 +0000 (GMT)
+        20210106113122epsmtip20ee4ea9eb51111af1312061ace689642~XoT6s63b80358503585epsmtip2c;
+        Wed,  6 Jan 2021 11:31:22 +0000 (GMT)
 From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
 To:     "'Shradha Todi'" <shradha.t@samsung.com>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
@@ -53,54 +53,54 @@ Cc:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
         <bhelgaas@google.com>, <sriram.dash@samsung.com>,
         <niyas.ahmed@samsung.com>, <p.rajanbabu@samsung.com>,
         <l.mehra@samsung.com>, <hari.tv@samsung.com>
-In-Reply-To: <1609929900-19082-1-git-send-email-shradha.t@samsung.com>
-Subject: RE: [PATCH v2] PCI: dwc: Change size to u64 for EP outbound iATU
-Date:   Wed, 6 Jan 2021 16:59:57 +0530
-Message-ID: <000401d6e41f$44fae220$cef0a660$@samsung.com>
+In-Reply-To: <1609930210-19227-1-git-send-email-shradha.t@samsung.com>
+Subject: RE: [PATCH v2] PCI: dwc: Add upper limit address for outbound iATU
+Date:   Wed, 6 Jan 2021 17:01:21 +0530
+Message-ID: <000501d6e41f$76b1c810$64155830$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIugMS81mxWyVxXUcStsAlB72BGxQKGN/EDqVcK7AA=
+Thread-Index: AQHJsRGfSFv8WioXtPNJkxsZ5VdGswG1HobKqiczqcA=
 Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIKsWRmVeSWpSXmKPExsWy7bCmlq7V/K/xBk27xC2WNGVY7LrbwW7x
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIKsWRmVeSWpSXmKPExsWy7bCmhm7v/K/xBk87+CyWNGVY7LrbwW7x
         cdpKJosVX2ayW9x5foPR4vKuOWwWZ+cdZ7N48/sFu8WTKY9YLY5uDLb4v2cHu0Xv4VqLG+vZ
         HXg91sxbw+ixc9Zddo8Fm0o9Nq3qZPPo27KK0WPL/s+MHp83yQWwR3HZpKTmZJalFunbJXBl
-        dN0pKLglXHFz6TTWBsZFAl2MnBwSAiYS307+Zu1i5OIQEtjNKLF1zjcWkISQwCdGibnbOSES
-        3xglVj/7zAjTsX7lHCaIor2MEls+iUEUvWKUWHl/DVgRm4C+xLkf81hBbBGBbImFDw8ygRQx
-        C7QzSVyZegasm1PATeJ05zywBmEBT4n/z5aC2SwCKhJtqxqAajg4eAUsJd7dtwQJ8woISpyc
-        +QTsOmYBeYntb+cwQxykIPHz6TKoXVYSfw5/h6oRl3h59Ag7yF4JgRMcEuf2nmeFaHCReHKt
-        nQnCFpZ4dXwLO4QtJfH53V42CDtf4sfiScwQzS2MEpOPz4Vqtpc4cGUOC8hxzAKaEut36UMs
-        45Po/f0E7GYJAV6JjjYhiGo1ie/Pz0DdKSPxsHkp1FoPiXdr1jFOYFScheS1WUhem4XkhVkI
-        yxYwsqxilEwtKM5NTy02LTDMSy3XK07MLS7NS9dLzs/dxAhOZVqeOxjvPvigd4iRiYPxEKME
-        B7OSCK/FsS/xQrwpiZVVqUX58UWlOanFhxilOViUxHl3GDyIFxJITyxJzU5NLUgtgskycXBK
-        NTCxXsz6suZmtOc/lfOChl84T++NdU+3OSW1XZn3a9bGVXJhHGmCrxQtT2pdVFHa+2PVteO7
-        b+Q3Hyq199nwvU+/cArDpMUWC47e3Pnz78TtmdtdNsfdmHn60/lDK2b0/X1v+8BS8Ehic+a8
-        6/nT5wvL+MVaSagVCsvJ7wtP27z99FV5ndRn85+Ipaw5tuKqm+yFjmvvtvgsDbGJbbn389uq
-        2SwxUUYNO+/ZpPQeMDi+tEBliy+DUiir7sTfIk93l8RVvZ3551/uqXeeTRtC19Ru0xL8lr59
-        1Vv9r3ftjonvN9z9vWhGdw/r7zfN7zlL/BpLv8iWnBZUvz1TZ+7xvaqs0Tlno0TXLevaG/VN
-        psvgpBJLcUaioRZzUXEiAK1hHCPUAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSvK7F/K/xBk2rDCyWNGVY7LrbwW7x
-        cdpKJosVX2ayW9x5foPR4vKuOWwWZ+cdZ7N48/sFu8WTKY9YLY5uDLb4v2cHu0Xv4VqLG+vZ
-        HXg91sxbw+ixc9Zddo8Fm0o9Nq3qZPPo27KK0WPL/s+MHp83yQWwR3HZpKTmZJalFunbJXBl
-        dN0pKLglXHFz6TTWBsZFAl2MnBwSAiYS61fOYepi5OIQEtjNKLFp42I2iISMxOTVK1ghbGGJ
-        lf+es0MUvWCUWPD9KCNIgk1AX+Lcj3lgRSICuRJ/zk5gBrGZBSYzSbTNl4VomM4ocfD2PSaQ
-        BKeAm8TpznlgzcICnhL/ny0Fs1kEVCTaVjUA1XBw8ApYSry7bwkS5hUQlDg58wkLxExtid6H
-        rYwQtrzE9rdzmCGOU5D4+XQZ1A1WEn8Of4eqF5d4efQI+wRG4VlIRs1CMmoWklGzkLQsYGRZ
-        xSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHJNamjsYt6/6oHeIkYmD8RCjBAezkgiv
-        xbEv8UK8KYmVValF+fFFpTmpxYcYpTlYlMR5L3SdjBcSSE8sSc1OTS1ILYLJMnFwSjUwrXDh
-        c2XYvvrux13z379d8fb2z0oNpqtlzRMj6hgumOh6tH8o2nL8/r0HzI9e1VlN83eoTbBaa/9i
-        rwyrxX5PPukdt84skq6qnanPN2VviKzIHL0p++avuL6g4IfK3GMfPv3496PF8ZPYv1iLPaF8
-        N+ZxLrHh4pwk/ChU33fdYtXaDX83xeZOftRbfULVacsaj12KYRY6dXzy+i75bud4Ob/c3jLn
-        jmFj0dnqpcdF/p2wT/Kot42Jbg+KcZJddSvSb4qq9qmaCU90GHMXlE9JkuSXNY6Q+f7+9tvd
-        v7e1brvexqCQHFbUM8XGS6PLZc/CVyKv1RwLHJsKKlMjTBbMsuCdlfcrNdvnGKfFFuY3SizF
-        GYmGWsxFxYkAkLZO9DgDAAA=
-X-CMS-MailID: 20210106113000epcas5p4cb15bdeb397da85972a627ab9be569bf
+        PDx0mKngtETF2WlP2BsY34p0MXJySAiYSCzctoW9i5GLQ0hgN6PE9dYTbBDOJ0aJtxs7mECq
+        hAQ+M0pM/5gD03Hg8QtGiKJdjBI3vr1mhCh6xSgx6XcgiM0moC9x7sc8VhBbRCBbYuHDg0wg
+        DcwC7UwSV6aeAZvKKeAm0XZgD3MXIweHsIC3xPcFRSBhFgEViebjG5lBbF4BS4m5b9cyQtiC
+        EidnPmEBsZkFtCWWLXzNDHGQgsTPp8tYQcaICFhJPL2aAVEiLvHy6BGwzyQETnBIfJx6gBWi
+        3kXi2N/JLBC2sMSr4yDvg9hSEp/f7WWDsPMlfiyexAzR3MIoMfn4XKhme4kDV+awgCxjFtCU
+        WL9LH2IZn0Tv7ydMIGEJAV6JjjYhiGo1ie/Pz0CdKSPxsHkpE4TtIbH46wGWCYyKs5B8NgvJ
+        Z7OQvDALYdkCRpZVjJKpBcW56anFpgVGeanlesWJucWleel6yfm5mxjBqUzLawfjwwcf9A4x
+        MnEwHmKU4GBWEuG1OPYlXog3JbGyKrUoP76oNCe1+BCjNAeLkjjvDoMH8UIC6YklqdmpqQWp
+        RTBZJg5OqQamlR1R106F1BqmPi37xnSZ83bbsW9LWI+w/phQ+pHVWLTz09xnrCxXiqNW2Dhf
+        kzFNXL1I2Msy7s5qJo7oPucnMYw79T1ul4Y4/AuyO7838/POOt55glsYRM4kRiv7fm+PbQj9
+        Y22cq1YmLeHSIiH1PyLsnHHbicxNny9Y7fTep255ItNsaodFdrNHdeC/hVZfnlw8vqNfKSF5
+        q+9Krs0HFxs62bKKbm+5c39eZPpViXxnp4ltD5/9+MY758pF+d4DH9rTus2Osvn1rf3M8tfv
+        2dqzv2fs9y9UV2s8GMO4+M8NhsAe0/Nv06Z7VwbM3f205mKLj/Xlw5JnZrpxKl48n11ceDZn
+        4+mlr7R2M7oosRRnJBpqMRcVJwIAmfvRtNQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsWy7bCSvG7P/K/xBnsn8losacqw2HW3g93i
+        47SVTBYrvsxkt7jz/AajxeVdc9gszs47zmbx5vcLdosnUx6xWhzdGGzxf88Odovew7UWN9az
+        O/B6rJm3htFj56y77B4LNpV6bFrVyebRt2UVo8eW/Z8ZPT5vkgtgj+KySUnNySxLLdK3S+DK
+        uHfgHHtBq0TF8bnr2BsYF4t0MXJySAiYSBx4/IKxi5GLQ0hgB6PEsYlXWCESMhKTV6+AsoUl
+        Vv57zg5R9IJR4uLy+YwgCTYBfYlzP+aBFYkI5Er8OTuBGcRmFpjMJNE2XxbEFhKYzijx73oM
+        iM0p4CbRdmAPUA0Hh7CAt8T3BUUgYRYBFYnm4xvBWnkFLCXmvl3LCGELSpyc+YQFYqS2RO/D
+        VkYYe9nC18wQtylI/Hy6jBVkpIiAlcTTqxkQJeISL48eYZ/AKDwLyaRZSCbNQjJpFpKWBYws
+        qxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgiNSS2sH455VH/QOMTJxMB5ilOBgVhLh
+        tTj2JV6INyWxsiq1KD++qDQntfgQozQHi5I474Wuk/FCAumJJanZqakFqUUwWSYOTqkGJrP3
+        Mgkpv8PCfX1EKyOO7OV4klt86eWLCg1fFp6Fzy5ZGbZ03ckWfHin03P/TZaVrqWhO2S7HCus
+        vWabhbLKTdyam5J8/GZne0D+B61FCwRSTjOsXdjH+MfVbpposi2P01bPx40Zda5Wl68kJ36I
+        3K3Se3eyv9Hug4tbDr5aU3Miwyt/XqyK2uTnG/49l3n8yS7B+lEOW/cbR6aA53r3D7CuenrK
+        UESR+3ViuNTZlM779/ba/D+28v0f+bLZ/7NjVBZ7Mh1Y9+/JK47j0TM+JhaWTrq2qfLc97v/
+        1C9Xqrx/t+/ythVXPeN8zXL5TTts5T7MLfsik3zW4lTIU8GNr04t38t/e8M7oaqoLzp3gpRY
+        ijMSDbWYi4oTAYtuDpw3AwAA
+X-CMS-MailID: 20210106113124epcas5p2aef3f086ca351e044e892bf58d9074b9
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
-X-CMS-RootMailID: 20210106104514epcas5p37d8e3a88aefdf109f7fb4157d4a1f07a
-References: <CGME20210106104514epcas5p37d8e3a88aefdf109f7fb4157d4a1f07a@epcas5p3.samsung.com>
-        <1609929900-19082-1-git-send-email-shradha.t@samsung.com>
+X-CMS-RootMailID: 20210106105019epcas5p377bdbff5cd9e14e5107ccbf2b87b5754
+References: <CGME20210106105019epcas5p377bdbff5cd9e14e5107ccbf2b87b5754@epcas5p3.samsung.com>
+        <1609930210-19227-1-git-send-email-shradha.t@samsung.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -108,66 +108,79 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 > -----Original Message-----
-> From: Shradha Todi <shradha.t@samsung.com>
-> Sent: Wednesday, January 6, 2021 4:15 PM
-> To: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org
-> Cc: jingoohan1@gmail.com; gustavo.pimentel@synopsys.com;
-> robh@kernel.org; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
-> pankaj.dubey@samsung.com; sriram.dash@samsung.com;
-> niyas.ahmed@samsung.com; p.rajanbabu@samsung.com;
-> l.mehra@samsung.com; hari.tv@samsung.com; Shradha Todi
-> <shradha.t@samsung.com>
-> Subject: [PATCH v2] PCI: dwc: Change size to u64 for EP outbound iATU
-> 
-> Since outbound iATU permits size to be greater than 4GB for which the
-> support is also available, allow EP function to send u64 size instead of
-> truncating to u32.
-> 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> From: Shradha Todi <shradha.t=40samsung.com>
+> Sent: Wednesday, January 6, 2021 4:20 PM
+> To: linux-kernel=40vger.kernel.org; linux-pci=40vger.kernel.org
+> Cc: jingoohan1=40gmail.com; gustavo.pimentel=40synopsys.com;
+> robh=40kernel.org; lorenzo.pieralisi=40arm.com; bhelgaas=40google.com;
+> pankaj.dubey=40samsung.com; sriram.dash=40samsung.com;
+> niyas.ahmed=40samsung.com; p.rajanbabu=40samsung.com;
+> l.mehra=40samsung.com; hari.tv=40samsung.com; Shradha Todi
+> <shradha.t=40samsung.com>
+> Subject: =5BPATCH v2=5D PCI: dwc: Add upper limit address for outbound iA=
+TU
+>=20
+> The size parameter is unsigned long type which can accept size > 4GB. In =
+that
+> case, the upper limit address must be programmed. Add support to program
+> the upper limit address and set INCREASE_REGION_SIZE in case size > 4GB.
+>=20
+> Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
 > ---
-> v1: https://lkml.org/lkml/2020/12/18/690
+> v1: https://lkml.org/lkml/2020/12/20/187
 > v2:
->    Addressed Bjorn's review on to keep commit message length limit to 75
-> 
+>    Addressed Rob's review comment and added PCI version check condition
+> to
+>    avoid writing to reserved registers.
+>=20
 
-Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Reviewed-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
 
->  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
-> drivers/pci/controller/dwc/pcie-designware.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
+>  drivers/pci/controller/dwc/pcie-designware.c =7C 9 +++++++--
+> drivers/pci/controller/dwc/pcie-designware.h =7C 1 +
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+>=20
 > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
 > b/drivers/pci/controller/dwc/pcie-designware.c
-> index 1d62ca9..db407ed 100644
+> index 74590c7..1d62ca9 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware.c
 > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -326,7 +326,7 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie
-> *pci, int index, int type,
-> 
->  void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
-> index,
->  				  int type, u64 cpu_addr, u64 pci_addr,
-> -				  u32 size)
-> +				  u64 size)
->  {
->  	__dw_pcie_prog_outbound_atu(pci, func_no, index, type,
->  				    cpu_addr, pci_addr, size);
+> =40=40 -290,12 +290,17 =40=40 static void __dw_pcie_prog_outbound_atu(str=
+uct
+> dw_pcie *pci, u8 func_no,
+>  			   upper_32_bits(cpu_addr));
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
+>  			   lower_32_bits(cpu_addr + size - 1));
+> +	if (pci->version >=3D 0x460A)
+> +		dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_LIMIT,
+> +				   upper_32_bits(cpu_addr + size - 1));
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
+>  			   lower_32_bits(pci_addr));
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
+>  			   upper_32_bits(pci_addr));
+> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type =7C
+> -			   PCIE_ATU_FUNC_NUM(func_no));
+> +	val =3D type =7C PCIE_ATU_FUNC_NUM(func_no);
+> +	val =3D ((upper_32_bits(size - 1)) && (pci->version >=3D 0x460A)) ?
+> +		val =7C PCIE_ATU_INCREASE_REGION_SIZE : val;
+> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
+>  	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
+>=20
+>  	/*
 > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
 > b/drivers/pci/controller/dwc/pcie-designware.h
-> index 7da79eb..359151f 100644
+> index 8b905a2..7da79eb 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware.h
 > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -302,7 +302,7 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie
-> *pci, int index,
->  			       u64 size);
->  void dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int
-> index,
->  				  int type, u64 cpu_addr, u64 pci_addr,
-> -				  u32 size);
-> +				  u64 size);
->  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
->  			     int bar, u64 cpu_addr,
->  			     enum dw_pcie_as_type as_type);
+> =40=40 -102,6 +102,7 =40=40
+>  =23define PCIE_ATU_DEV(x)			FIELD_PREP(GENMASK(23,
+> 19), x)
+>  =23define PCIE_ATU_FUNC(x)		FIELD_PREP(GENMASK(18, 16), x)
+>  =23define PCIE_ATU_UPPER_TARGET		0x91C
+> +=23define PCIE_ATU_UPPER_LIMIT		0x924
+>=20
+>  =23define PCIE_MISC_CONTROL_1_OFF		0x8BC
+>  =23define PCIE_DBI_RO_WR_EN		BIT(0)
 > --
 > 2.7.4
 
