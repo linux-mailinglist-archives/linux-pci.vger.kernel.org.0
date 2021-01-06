@@ -2,74 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5DD42EC0CA
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 17:03:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D54A32EC276
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 18:39:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbhAFQCn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 11:02:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46158 "EHLO mail.kernel.org"
+        id S1727928AbhAFRiI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 12:38:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727148AbhAFQCn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Jan 2021 11:02:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CEE4F23130;
-        Wed,  6 Jan 2021 16:02:01 +0000 (UTC)
+        id S1727926AbhAFRiI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Jan 2021 12:38:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 227E020657;
+        Wed,  6 Jan 2021 17:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609948922;
-        bh=Bj3wP943wNO3hXxH8XiZsDzLprL5iIOMpywhWsXIvV8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K0vJgR5eGuTZh7qe6YrDaTPEpiiZunQ/FLQ8x1xdI9GyWnqnRZbP4JkhY5fxhJW+t
-         wbsvUXM3/MYOcy13+sl0KjV1FENQ4tuJsCfJ5JY97u3GPyOegJKyCFGx72KCrNaIan
-         5+GbITivVTmMxxVMiwRa3f2MHlElL3FyPXij96T/4/OHx9Xx80odwO+bTIKHnW43sm
-         0+Gq6d7p+ifeq2/6+ZP5vnRPNnRd1rOsNPUlHh4pnUkb4lMfLLnft6TQhoY/LxW1fD
-         t8NqtmhV4M33/thTKNO5pEIUj6RgeAXokjg+hLrZag8qmv4TkIZtfEovzqB1ur9Jnh
-         yb355h1ZTmb1g==
-Date:   Wed, 6 Jan 2021 18:01:58 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>, tglx@linutronix.de,
-        ashok.raj@intel.com, kevin.tian@intel.com, dave.jiang@intel.com,
-        megha.dey@intel.com, dwmw2@infradead.org,
-        alex.williamson@redhat.com, bhelgaas@google.com,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        eric.auger@redhat.com, jacob.jun.pan@intel.com,
-        kvm@vger.kernel.org, kwankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
-        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
-        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
-        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
-        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
-Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for
- subdevice irq domain
-Message-ID: <20210106160158.GX31158@unreal>
-References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
- <20210106060613.GU31158@unreal>
- <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
- <20210106104017.GV31158@unreal>
- <20210106152339.GA552508@nvidia.com>
+        s=k20201202; t=1609954647;
+        bh=wvCVgOmz5rBzTWJyX2HIEq3vemRTXSP5tILnLdbiAZw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XgqHOe0d7ap68Z6006lUxnkcWOBj/0K2UTyaLuPru5ONzSPJZfXL+q0+fTFqrIgyD
+         QQsSDapc5Qg7l0wd35+8zkewKTj+A4JosJ5vBgW6ggWUHtWJPk9YnB8mMiAbmX5/wo
+         smIlQotSwH+mwEbEwER/4UayfFNHYcUSTtRZSAeZEZxmgRbdoumoUd6MGe5BvYNhzd
+         ZrcRjKrTRX4845TkN6QU50e/CsHpKXVki3STuroxXWAbVdADv5oRSlHviQFAWMXIXO
+         iFriYHv6EQmG1cteXacXLRID4PyaIqay15NDttgMMEKcLbtwncfjnlQ7ExvaOKO95C
+         RNnU4KwwFhM2w==
+Date:   Wed, 6 Jan 2021 11:37:25 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] ARM: iop32x: improve N2100 PCI broken parity
+ quirk'
+Message-ID: <20210106173725.GA1316633@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210106152339.GA552508@nvidia.com>
+In-Reply-To: <5b100322-7a53-8f5e-32f9-a67c3cd2beeb@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 06, 2021 at 11:23:39AM -0400, Jason Gunthorpe wrote:
-> On Wed, Jan 06, 2021 at 12:40:17PM +0200, Leon Romanovsky wrote:
->
-> > I asked what will you do when QEMU will gain needed functionality?
-> > Will you remove QEMU from this list? If yes, how such "new" kernel will
-> > work on old QEMU versions?
->
-> The needed functionality is some VMM hypercall, so presumably new
-> kernels that support calling this hypercall will be able to discover
-> if the VMM hypercall exists and if so superceed this entire check.
+On Wed, Jan 06, 2021 at 12:05:41PM +0100, Heiner Kallweit wrote:
+> Use new PCI core function pci_quirk_broken_parity(), in addition to
+> setting broken_parity_status is disables parity checking.
 
-Let's not speculate, do we have well-known path?
-Will such patch be taken to stable@/distros?
+That sentence has a typo or something so it doesn't read quite right.
+Maybe:
 
-Thanks
+  Use new PCI core function pci_quirk_broken_parity() to disable
+  parity checking.
 
->
-> Jason
+"broken_parity_status" is basically internal to the PCI core and
+doesn't really seem relevant here.  The only uses are the sysfs
+store/show functions and edac.
+
+> This allows us to remove a quirk in r8169 driver.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+> v2:
+> - remove additional changes from this patch
+> ---
+>  arch/arm/mach-iop32x/n2100.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-iop32x/n2100.c b/arch/arm/mach-iop32x/n2100.c
+> index 78b9a5ee4..9f2aae3cd 100644
+> --- a/arch/arm/mach-iop32x/n2100.c
+> +++ b/arch/arm/mach-iop32x/n2100.c
+> @@ -125,7 +125,7 @@ static void n2100_fixup_r8169(struct pci_dev *dev)
+>  	if (dev->bus->number == 0 &&
+>  	    (dev->devfn == PCI_DEVFN(1, 0) ||
+>  	     dev->devfn == PCI_DEVFN(2, 0)))
+> -		dev->broken_parity_status = 1;
+> +		pci_quirk_broken_parity(dev);
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REALTEK, PCI_ANY_ID, n2100_fixup_r8169);
+>  
+> -- 
+> 2.30.0
+> 
+> 
