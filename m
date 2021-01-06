@@ -2,143 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B1972EC043
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 16:19:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E6862EC058
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 16:25:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbhAFPSk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 10:18:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbhAFPSj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 10:18:39 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398C8C06134D;
-        Wed,  6 Jan 2021 07:17:59 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id g24so4675539edw.9;
-        Wed, 06 Jan 2021 07:17:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s7ucDQgsYb+XUALcOQxMNfW1nWITQF3JeTH0dCH4M34=;
-        b=f7DW9BojkCrHwq32HIzyeXm1FqfVamIKljSnelV+8uptq8fI9iDq+6/XTkMLW35BJ0
-         2E5bMKNYcwRMGPUbPHGDoeda49R9y1NbATAZPKxy3vWDWQCZtnhasMzOnh90borkVEp5
-         Pyq9eM1aF4QsGHymgblggrakODREFyQ3VTY7ljmpTWqT1bmrGBE1eFci1PpRUQaTMbHZ
-         o7RqyFZISQa8+zXkQoaBzOIG7wGs+dY8YGF+AV2P/BmFMOosL2poxE9GGWocmDMZ8NmP
-         Zj3y4SNWMkD+ALX8cyEGP8B1EGbULtPw21rD+252v4GAbzduGC+OXJCZY6mhEi1vYgXc
-         zeeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s7ucDQgsYb+XUALcOQxMNfW1nWITQF3JeTH0dCH4M34=;
-        b=fa9cQJ+HH/7/08s4l6cDYG0Zp0qWe1ZP00O7bnLlEZYXR3CXs7nH5AATf2urZkQsXC
-         +k7k+IUkeSrsnlSiH0UwSgYSI6xR8KIoXB0liduiDkeCvdKkkcW6S50qj+D5VVsr1pdK
-         MDaI1Oykbdcqze9HODNAf3Ht6UvuNiQ53BMgy/nCiYW0RwusTUzTVg+pbrcnGPk+UmEc
-         mDAJVE40A7/KFgaQmFF0QkStW7PE0c/9wRayu6vHrI6JQssEwzSIjMtPXD/gtDkhiG+Q
-         0kILbSxYVC+mukJE2oK7ox6wefzMAfWVT9L+l+soiLhgGXEAMbgF5bhU1ir/QwHBYFNp
-         LN/Q==
-X-Gm-Message-State: AOAM532zCuZPtQBdSFzGPPoywy1kmMWOAvz9lhnOCnp9ycesA9qMPxD+
-        f2YOo6sAUAwcfwaUiwj93S2g5VwnNOpCI46XjJRMsKh10KM=
-X-Google-Smtp-Source: ABdhPJwEoX+GE9TNyG6zQHdCSgd0e8rufnX3/nPdrrDVUu8sr3Jc5LcoctiwQrl2Yg7vztRVPUQWxIPjmljgCEJtWFE=
-X-Received: by 2002:a50:d80c:: with SMTP id o12mr4124786edj.338.1609946277927;
- Wed, 06 Jan 2021 07:17:57 -0800 (PST)
+        id S1726822AbhAFPYd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 10:24:33 -0500
+Received: from nat-hk.nvidia.com ([203.18.50.4]:64379 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbhAFPYc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Jan 2021 10:24:32 -0500
+Received: from HKMAIL103.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5ff5d6060000>; Wed, 06 Jan 2021 23:23:50 +0800
+Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Jan
+ 2021 15:23:47 +0000
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 6 Jan 2021 15:23:47 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Lt4sxGt3CO45GgMfRYvUWwml2cJ43BDEKCptGJRD7QJ01nE5revIRDy/yBiXDTgo77BCO+AwtT87CisCfuX3S0YwgBiY7PN4lz6L8/Sl0U+/9kd3l/2F+Q/pB4Bxif2Em/LjHdesWbB+B5OEL2N8YBy/u6DFM9N8SMFI4dmbgTUKggDW2xfaZjB8cukqM216KuoJM6catvTbjEdrr5QplXkKsA+rNXF6i0uRbRhU2HbFDZWj6wqdkhNEsDYMXmGU2M7GMzWg+mdcll09y4nLu7jXldYwPtc3v+qw6RrXPc9NzP7RM7dRbdfJTFOTl67Lmzek4nWwOqroiJX6PBKwpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=chutKAOueKzJ42yHzRW86r8VwbDXBIwctf9qcU4AwVI=;
+ b=nsZ9F16ZEwFAsg3529nloaL6sACatgV6FruXKEOfFuNo1fW2c9ySpoWi3NWmB02YOEacbBgDPS/bjN7/xYtr90zD4qreiTHqPh3JjtfB5RLzwOCI3gkG28b1MOw2s9KfYsmY4AXtFM9EEHGODFKhDYpfTxMve2QPp4wcLvFVfw47N1AMTSdKN+Yvo3awbXNqE/9ezyRKigeZOihDwB65+vIOrQlUCiU10VvIF4t1tYyXOznB3W3VqYW8SoVdU3yo5lXEHBvB12C6O9GsRmhfqP/jj4qhfNDojspDaL/6n5dRLDh5hWIbFNby5sJGvUsYatOlZkCPRkaSpaif8kKAkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB2582.namprd12.prod.outlook.com (2603:10b6:4:b5::37) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.20; Wed, 6 Jan
+ 2021 15:23:41 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::546d:512c:72fa:4727]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::546d:512c:72fa:4727%7]) with mapi id 15.20.3721.024; Wed, 6 Jan 2021
+ 15:23:41 +0000
+Date:   Wed, 6 Jan 2021 11:23:39 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Lu Baolu <baolu.lu@linux.intel.com>, <tglx@linutronix.de>,
+        <ashok.raj@intel.com>, <kevin.tian@intel.com>,
+        <dave.jiang@intel.com>, <megha.dey@intel.com>,
+        <dwmw2@infradead.org>, <alex.williamson@redhat.com>,
+        <bhelgaas@google.com>, <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <eric.auger@redhat.com>,
+        <jacob.jun.pan@intel.com>, <kvm@vger.kernel.org>,
+        <kwankhede@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <maz@kernel.org>,
+        <mona.hossain@intel.com>, <netanelg@mellanox.com>,
+        <parav@mellanox.com>, <pbonzini@redhat.com>, <rafael@kernel.org>,
+        <samuel.ortiz@intel.com>, <sanjay.k.kumar@intel.com>,
+        <shahafs@mellanox.com>, <tony.luck@intel.com>, <vkoul@kernel.org>,
+        <yan.y.zhao@linux.intel.com>, <yi.l.liu@intel.com>
+Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for
+ subdevice irq domain
+Message-ID: <20210106152339.GA552508@nvidia.com>
+References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
+ <20210106060613.GU31158@unreal>
+ <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
+ <20210106104017.GV31158@unreal>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20210106104017.GV31158@unreal>
+X-ClientProxiedBy: YTBPR01CA0003.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::16) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-References: <20201004162908.3216898-1-martin.blumenstingl@googlemail.com>
- <20201004162908.3216898-4-martin.blumenstingl@googlemail.com>
- <CACRpkdZo-U_cAhbKb4E+d+p+5FenXkGYW0RXxyk4M5uyEPCpzw@mail.gmail.com>
- <CAFBinCCLubmDvxfabQHx2-ucgAsm1NArMUrtPx-UA2nX5xoFFA@mail.gmail.com>
- <CAFBinCAZXJ2=fTQuAUyW1hNeJDHY3_pxo4UhxUaOZC=i1bpFxw@mail.gmail.com> <CACRpkdbKQaT61w6r9Hx40Qvy+7qyLNm-fx-BpL_wdGcB=tmcqQ@mail.gmail.com>
-In-Reply-To: <CACRpkdbKQaT61w6r9Hx40Qvy+7qyLNm-fx-BpL_wdGcB=tmcqQ@mail.gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 6 Jan 2021 16:17:47 +0100
-Message-ID: <CAFBinCBCYZ3bzvvn==CFZyVh8E7TiGvW9PnqmK-Qd=y4X2HgNw@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] gpio: ej1x8: Add GPIO driver for Etron Tech Inc. EJ168/EJ188/EJ198
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YTBPR01CA0003.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:14::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Wed, 6 Jan 2021 15:23:41 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kxAex-0031qq-RW; Wed, 06 Jan 2021 11:23:39 -0400
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1609946630; bh=chutKAOueKzJ42yHzRW86r8VwbDXBIwctf9qcU4AwVI=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=ekxcvTjtpm+oIk7R79mxZfS1daYa4M/bArofO6AFUxp7RVXywivBSuDah1hEIXKF7
+         bm6zOaM2vaQtduMT4OgfdmLmVAD3FWQOiEO9yEVaVQxghDJT1IjTjOr0uSE9lq5I/w
+         X8WcuQU4PYO6y97OEYFiVNX1+MYSROG0U3Ew6H7zeOFSRLoBVWterStyjKowZXkVUG
+         ACTOAM7nMEN90RlZZp7TnrVMXrvMkoIPRiuVYYOgzJifUP0HeJcJrPiLqyg+MiSqKd
+         JnL53LckrctGi6Jpib9X+0WBMdNjOURleR/jOpReeuiolmT5i5NTPNVR+d43xOwYYb
+         nZ9SE+Omw2/YQ==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Linus,
+On Wed, Jan 06, 2021 at 12:40:17PM +0200, Leon Romanovsky wrote:
 
-On Tue, Jan 5, 2021 at 11:23 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Dec 21, 2020 at 4:28 PM Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> > On Wed, Oct 7, 2020 at 9:44 PM Martin Blumenstingl
-> > <martin.blumenstingl@googlemail.com> wrote:
-> > [...]
-> > > > As noted on the earlier patches I think this should be folded into the
-> > > > existing XHCI USB driver in drivers/usb/host/xhci-pci.c or, if that
-> > > > gets messy, as a separate bolt-on, something like
-> > > > xhci-pci-gpio.[c|h] in the drivers/usb/host/* directory.
-> > > > You can use a Kconfig symbol for the GPIO portions or not.
-> > > OK, I will do that if there are no objections from other developers
-> > > I am intending to place the relevant code in xhci-pci-etron.c, similar
-> > > to what we already have with xhci-pci-renesas.c
-> >
-> > I tried this and unfortunately there's a catch.
-> > the nice thing about having a separate GPIO driver means that the
-> > xhci-pci driver doesn't need to know about it.
->
-> Since PCI devices have device-wide power management and things
-> like that I think that is a really dangerous idea.
->
-> What if the GPIO driver starts poking around in this PCI device
-> when the main driver is also probed and has put the device
-> into sleep state?
-that is asking for trouble, indeed.
+> I asked what will you do when QEMU will gain needed functionality?
+> Will you remove QEMU from this list? If yes, how such "new" kernel will
+> work on old QEMU versions?
 
-[...]
-> > I implemented xhci-pci-etron.c and gave it a Kconfig option.
-> > xhci-pci is then calling into xhci-pci-etron (through some
-> > etron_xhci_pci_probe function).
->
-> This sounds about right.
->
-> > unfortunately this means that xhci-pci now depends on xhci-pci-etron.
-> > for xhci-pci-renesas this is fine (I think) because that part of the
-> > code is needed to get the xHCI controller going
-> > but for xhci-pci-etron this is a different story: the GPIO controller
-> > is entirely optional and only used on few devices
->
-> I might be naive but should it not be the other way around?
-> That xhci-pci-etron is dependent on xhci-pci? I imagine
-> it would be an optional add-on.
-the only way to achieve this that I can think of is to basically have
-xhci-pci-etron implement it's own pci_driver and then call
-xhci_pci_probe, xhci_pci_remove, etc.
-but then it depends on the driver load order if the GPIO controller is exposed
+The needed functionality is some VMM hypercall, so presumably new
+kernels that support calling this hypercall will be able to discover
+if the VMM hypercall exists and if so superceed this entire check.
 
-what structure did you have in mind to achieve this?
-
-> > my goal is (at some point in the future) to have the GPIO driver in OpenWrt.
-> > I am not sure if they would accept a patch where xhci-pci would then
-> > pull in the dependencies for that Etron controller, even though most
-> > boards don't need it.
->
-> Make sure the etron part is an additional module that can be
-> loaded after xhci-pci.
-my approach from above unfortunately would not achieve this
-so if you have an idea how to achieve this (or have any other driver
-in mind that I can use as reference, even if not related to
-GPIO/USB/PCI then please let me know)
-
-> OpenWrt support optional modules to be compiled per-system.
-that I already found out. That's why I think that I need to get the
-driver part "right" and then get the OpenWrt part done in just a few
-lines of their build-system
-
-
-Best regards,
-Martin
+Jason
