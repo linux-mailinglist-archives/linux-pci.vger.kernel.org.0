@@ -2,114 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AF4D2EC2CB
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 18:53:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F2932EC3AE
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 20:08:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbhAFRxW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 12:53:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbhAFRxV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 12:53:21 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D4BC061358;
-        Wed,  6 Jan 2021 09:52:40 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id jx16so6118951ejb.10;
-        Wed, 06 Jan 2021 09:52:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LMhEikvRUZQaIKyyHYQPd9FehVZ9OCrs1+Guuen9CX0=;
-        b=tFjOXOsquLgJec5Svj2aNg4kNYEga6uS+V4sECR+77oIWlS4xBlhguxxaXIZkuBYHd
-         OZZ1n95oRVDx+yVtvgBdvvyopTPR2JG8/n58G717wNHR7eHBAsE7Sx13XZ4FkZV4PGx9
-         osesB+IphuyUNg7iZLWFLj27JJ2DRykAaRIyzxuGFykfGlo5Q5vsNzk1wfXsfpRGbxfI
-         IxHB8D+rQYOANCJ44ReQstv3M5fVeYevvRHELPRLc9JzCGX8jJYOcCrQNJQTwBIgIUfv
-         rHMAkvrxfD8y8UAs4sWYt+KvY1lpEfKiyv+Mjv8ZrEgX5qHxk9lNvKtAVknzi9brkptg
-         Gyzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LMhEikvRUZQaIKyyHYQPd9FehVZ9OCrs1+Guuen9CX0=;
-        b=k/rFNRIwJRRrraIfE6T8HnJKUo9JLOGjy5E3Dbnu/ACHBoioSqp/q6+S13rDE3KXR9
-         TPV5+Ikn3M6NtMy6hcjmRsLur5AHG7AT0Ryc3OadmgFFNr1tOCUCxBBr7hrQli9ypY8w
-         D0SiuWHdhSy9DZb3OAHnmI5YojmSxW5sTwawpicm5oklP4R51y8bGBZPTluG6k8x52BU
-         I3qAQPSTPqdw8rM56HtemgoiKjeYvPHIRs/SJNIIM0ZUhREa8cX2TqEbgzEekCcejqkK
-         WpWl/EDJhFXTl/KO687IgiHGJ25o5BGgod18Echfumj0mxVcLmHEfZHtRtUhKMRiIPOd
-         EHkg==
-X-Gm-Message-State: AOAM530DLyVBsK3Dt7aIZ0HSZwCdZdOm2zQQMcuW44kjWi1de3ji0L6V
-        pcQ+78oMQ/XeakC8TV0IlsNVO8yBq8k=
-X-Google-Smtp-Source: ABdhPJzZhqLPes8FWc+g2+meURM8xcd5OE4SEtJiwwW78Jp8SQlh6ANKZ06XF4U9QcDU5ltSn0Ryfg==
-X-Received: by 2002:a17:906:c790:: with SMTP id cw16mr3694633ejb.344.1609955559148;
-        Wed, 06 Jan 2021 09:52:39 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:e1db:b990:7e09:f1cf? (p200300ea8f065500e1dbb9907e09f1cf.dip0.t-ipconnect.de. [2003:ea:8f06:5500:e1db:b990:7e09:f1cf])
-        by smtp.googlemail.com with ESMTPSA id d13sm1728045edx.27.2021.01.06.09.52.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Jan 2021 09:52:38 -0800 (PST)
-Subject: [PATCH v3 3/3] r8169: simplify broken parity handling now that PCI
- core takes care
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <992c800e-2e12-16b0-4845-6311b295d932@gmail.com>
-Message-ID: <9e312679-a684-e9c7-2656-420723706451@gmail.com>
-Date:   Wed, 6 Jan 2021 18:52:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S1726090AbhAFTIE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 14:08:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbhAFTIE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Jan 2021 14:08:04 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 69DBD23124;
+        Wed,  6 Jan 2021 19:07:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609960043;
+        bh=BsN8s/16kWkFD8YBx8OwhZSebR3UbS4QlfACeBPH2H0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jZKdCjGyE4RMGVRtWRkpRmaEmTMXq81y934ves6MgGNnu4uk77/fL/zW0Z/x56PRW
+         XUWsLlkNRlH/l6nQV1tw3GjUtOcKHrDR9wSjp/P9gWPXlxGidwbHmAWAVZs75mUY7B
+         T9gOD1kM11Bar3geBAEgFphUQErkN7e1Z+aatl80CzTRZU2EMMYFVtgSvXmXMt9BG/
+         39OskIyG4givxvX54ukUJJ2AVJ4v1MTU2+rudeqQRd2fi1vY33au7gOg5EFlm67NhJ
+         s2PTy59k1riQjeedINJSB2bKGEz7Ka/LEETU93R5cCs/WKOSNANWTGkNf4sjR7Cmfd
+         140l04DjOordw==
+Date:   Wed, 6 Jan 2021 13:07:22 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        robh@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] pci/controller/dwc: convert comma to semicolon
+Message-ID: <20210106190722.GA1327553@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <992c800e-2e12-16b0-4845-6311b295d932@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201216131944.14990-1-zhengyongjun3@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Meanwhile the PCI core disables parity checking for a device that has
-broken_parity_status set. Therefore we don't need the quirk any longer
-to disable parity checking on the first parity error interrupt.
+On Wed, Dec 16, 2020 at 09:19:44PM +0800, Zheng Yongjun wrote:
+> Replace a comma between expression statements by a semicolon.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
----
- drivers/net/ethernet/realtek/r8169_main.c | 14 --------------
- 1 file changed, 14 deletions(-)
+Looks like a good fix, but read this about the changelog title:
 
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index c9abc7ccb..024042f37 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -4329,20 +4329,6 @@ static void rtl8169_pcierr_interrupt(struct net_device *dev)
- 	if (net_ratelimit())
- 		netdev_err(dev, "PCI error (cmd = 0x%04x, status_errs = 0x%04x)\n",
- 			   pci_cmd, pci_status_errs);
--	/*
--	 * The recovery sequence below admits a very elaborated explanation:
--	 * - it seems to work;
--	 * - I did not see what else could be done;
--	 * - it makes iop3xx happy.
--	 *
--	 * Feel free to adjust to your needs.
--	 */
--	if (pdev->broken_parity_status)
--		pci_cmd &= ~PCI_COMMAND_PARITY;
--	else
--		pci_cmd |= PCI_COMMAND_SERR | PCI_COMMAND_PARITY;
--
--	pci_write_config_word(pdev, PCI_COMMAND, pci_cmd);
- 
- 	rtl_schedule_task(tp, RTL_FLAG_TASK_RESET_PENDING);
- }
--- 
-2.30.0
+https://lore.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com
 
-
-
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> ---
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index 84206f265e54..917ba8d254fc 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -178,7 +178,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	pci->dev = dev;
+>  	pci->ops = pcie->drvdata->dw_pcie_ops;
+>  
+> -	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> +	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4);
+>  
+>  	pcie->pci = pci;
+>  	pcie->ls_epc = ls_epc;
+> -- 
+> 2.22.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
