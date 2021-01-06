@@ -2,178 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD4EC2EBC2B
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 11:12:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA93B2EBCCA
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 11:53:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbhAFKMG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 05:12:06 -0500
-Received: from mga03.intel.com ([134.134.136.65]:16400 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbhAFKMG (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Jan 2021 05:12:06 -0500
-IronPort-SDR: I7Qt2+AcbC1AMAKHLOSCbx0GAvvvBBybYL/p6OHCRt/xLXxjSnqLLrlNWDz3cYBLbUIedIxWpz
- F+RZR8/vvuDw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9855"; a="177357367"
-X-IronPort-AV: E=Sophos;i="5.78,479,1599548400"; 
-   d="scan'208";a="177357367"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2021 02:10:19 -0800
-IronPort-SDR: d08z5hl0XnBjFC605NW3Hlw0yXQdq+NUzEy5P5L4DpQIY0tLy8DeV7WHHXWC+t/VS4vT0Em7qx
- t3sOQngMY85Q==
-X-IronPort-AV: E=Sophos;i="5.78,479,1599548400"; 
-   d="scan'208";a="379231175"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.29.66]) ([10.255.29.66])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2021 02:10:12 -0800
-Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
-        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
-        dwmw2@infradead.org, alex.williamson@redhat.com,
-        bhelgaas@google.com, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, eric.auger@redhat.com,
-        jacob.jun.pan@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
-        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, maz@kernel.org, mona.hossain@intel.com,
-        netanelg@mellanox.com, parav@mellanox.com, pbonzini@redhat.com,
-        rafael@kernel.org, samuel.ortiz@intel.com,
-        sanjay.k.kumar@intel.com, shahafs@mellanox.com,
-        tony.luck@intel.com, vkoul@kernel.org, yan.y.zhao@linux.intel.com,
-        yi.l.liu@intel.com
-To:     Leon Romanovsky <leon@kernel.org>
-References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
- <20210106060613.GU31158@unreal>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for subdevice
- irq domain
-Message-ID: <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
-Date:   Wed, 6 Jan 2021 18:10:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
-MIME-Version: 1.0
-In-Reply-To: <20210106060613.GU31158@unreal>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726435AbhAFKwy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 05:52:54 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:42200 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbhAFKwx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 6 Jan 2021 05:52:53 -0500
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20210106105211epoutp02d367bfc019d3005326e702a8b939b2bf~XnxtJHcqZ1858318583epoutp02h
+        for <linux-pci@vger.kernel.org>; Wed,  6 Jan 2021 10:52:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20210106105211epoutp02d367bfc019d3005326e702a8b939b2bf~XnxtJHcqZ1858318583epoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1609930331;
+        bh=S5F4hqYTLpsu9Adtr3Hc5YMY+HoQSI660uecHx9eVrs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=o6UC2Pvrusu8HVCnXvI7eSsi7vg+nXbwZpYDvXY6qA1v0H+ysluSGLhEcEqQu+n59
+         uXcrF+rW7cXBBDwCQxehSiRAQ8EFU6U3mW8Ab80w7i61v2BQY4PnOTI5jq/u5cSI+t
+         tXgNJP1X6U/PBm+Nupod43NHFquP5B6Dax5cCqFw=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20210106105210epcas5p3596faff7fde2384f6cebe2087f7e47be~XnxsqQvv40505705057epcas5p3B;
+        Wed,  6 Jan 2021 10:52:10 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CF.B8.33964.A5695FF5; Wed,  6 Jan 2021 19:52:10 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20210106103829epcas5p20a5c8aa2ae8bd6d8d555dad1aa265a1c~XnlvpW86v2797727977epcas5p2R;
+        Wed,  6 Jan 2021 10:38:29 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20210106103829epsmtrp12d6f4a4901baea3150fd47155c2e20bc~Xnlvof7P50070200702epsmtrp1Z;
+        Wed,  6 Jan 2021 10:38:29 +0000 (GMT)
+X-AuditID: b6c32a4b-eb7ff700000184ac-dc-5ff5965a9f95
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DA.DF.13470.52395FF5; Wed,  6 Jan 2021 19:38:29 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20210106103827epsmtip1fa6f13763881b0f339c000bb8db10a15~Xnlt45sH62781227812epsmtip1I;
+        Wed,  6 Jan 2021 10:38:27 +0000 (GMT)
+From:   Shradha Todi <shradha.t@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
+        pankaj.dubey@samsung.com, sriram.dash@samsung.com,
+        niyas.ahmed@samsung.com, p.rajanbabu@samsung.com,
+        l.mehra@samsung.com, hari.tv@samsung.com,
+        Shradha Todi <shradha.t@samsung.com>
+Subject: [PATCH v3] PCI: endpoint: Fix NULL pointer dereference for
+ ->get_features()
+Date:   Wed,  6 Jan 2021 16:08:10 +0530
+Message-Id: <1609929490-18921-1-git-send-email-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNIsWRmVeSWpSXmKPExsWy7bCmum7UtK/xBl9u6Fosacqw+DhtJZPF
+        hac9bBZ3nt9gtLi8aw6bxdl5x9ks3vx+wW7xZMojVoujG4MtFm39wm7Re7jW4sZ6dgcejzXz
+        1jB6LNhU6tG3ZRWjx/Eb25k8Pm+SC2CN4rJJSc3JLEst0rdL4Mpo3XeHpeCSSEXLrvVMDYy3
+        BLsYOTkkBEwkjrRuZuxi5OIQEtjNKPH6+D92kISQwCdGiTMroiES3xgl/i1azgjT8XHaVBaI
+        xF5GiSUNJ5kgnBYmidaeBSwgVWwCWhKNX7uYQWwRAWuJw+1b2ECKmAX+MEr03G8AGyUsECbx
+        8c9KNhCbRUBV4srZjUwgNq+Aq8T0I4vYINbJSdw818kM0iwhcIpd4sKZmcwQCReJfxv6mSBs
+        YYlXx7ewQ9hSEi/726DsfImpF54CXcQBZFdILO+pgwjbSxy4MgcszCygKbF+lz5EWFZi6ql1
+        YBOZBfgken8/gZrOK7FjHoytLPHl7x4WCFtSYt6xy6wQtofErKP3GEFGCgnESvw+ETeBUXYW
+        woIFjIyrGCVTC4pz01OLTQuM81LL9YoTc4tL89L1kvNzNzGC04OW9w7GRw8+6B1iZOJgPMQo
+        wcGsJMJrcexLvBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeHQYP4oUE0hNLUrNTUwtSi2CyTByc
+        Ug1MnlPv/Iqqcp/SXlybnSnewnVqjqhNdGBTwoHPwRyrlxl/NXpvsN/IX2Tvxe9WzcfOX7FM
+        uV2ve4B3zwM1zguODTOObwnRESouO/fW/Wn9tJYky00axuYt29NXby0U65S/Z8W5Yue6HY2T
+        3K59uHQ2xq7z1Otrzc9m34nfsSfw0PR9tneU+Bs3sJb9nPwv6GOEDocYY8B3g8Ync09Uz2h5
+        cUBE7eDeXbfm+uzcEdxkv2bqp1+n+FN8mF5MEOZN7G+6M6PuVcg/iSUT9Zb23P3z7Lbq/Q13
+        N0odND+1jjvp1oaTniX7jz3SnTHT3OXs3sUT9X5ap91jtNaS8zwVJpBWln5yh/XEaF6xF1Nc
+        Tuz9E63EUpyRaKjFXFScCACLttJXfgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCLMWRmVeSWpSXmKPExsWy7bCSnK7q5K/xBism81osacqw+DhtJZPF
+        hac9bBZ3nt9gtLi8aw6bxdl5x9ks3vx+wW7xZMojVoujG4MtFm39wm7Re7jW4sZ6dgcejzXz
+        1jB6LNhU6tG3ZRWjx/Eb25k8Pm+SC2CN4rJJSc3JLEst0rdL4Mpo3XeHpeCSSEXLrvVMDYy3
+        BLsYOTkkBEwkPk6bytLFyMUhJLCbUWL53rVMEAlJic8X10HZwhIr/z1nhyhqYpL4POsJO0iC
+        TUBLovFrFzOILSJgK3H/0WRWkCJmgQ4mid9Xr4ElhAVCJD5+7wGbxCKgKnHl7EYwm1fAVWL6
+        kUVsEBvkJG6e62SewMizgJFhFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcMBpae5g
+        3L7qg94hRiYOxkOMEhzMSiK8Fse+xAvxpiRWVqUW5ccXleakFh9ilOZgURLnvdB1Ml5IID2x
+        JDU7NbUgtQgmy8TBKdXA5PrF4tls5jeHT6q8aSszXn9aJeDZ/ND+Asfnv81amiwj0mWvVvHP
+        cngQ7/Yt+lS4aPyZP/cl5r9Yl9Mf9UPn6KuAoAVPLnQdzzjaKX2K/cTKCWUZvM1rDpwKz755
+        1zCcRVtuq5g1S+ycEEWVjIeKR54u5lz11ltFeuFsU92jodzTfLbddnWNbloh2uN8lPWM1pXp
+        v6TvB0xcEdn/esbpK78LZ4Y3/lyzQqNgTVZH0RYJLWV37jDdovde5lvbV+yKyLuxT5XJ4J70
+        kcdR0duf2VzXXJt6N33HTp0fqRy/jFxtH3sF1E6s38jksFap7lGUpWL5bPEfjiK5uaGGsf31
+        OlNMNVhikvK1yyYVrBJTYinOSDTUYi4qTgQAeI9beacCAAA=
+X-CMS-MailID: 20210106103829epcas5p20a5c8aa2ae8bd6d8d555dad1aa265a1c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20210106103829epcas5p20a5c8aa2ae8bd6d8d555dad1aa265a1c
+References: <CGME20210106103829epcas5p20a5c8aa2ae8bd6d8d555dad1aa265a1c@epcas5p2.samsung.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Leon,
+get_features ops of pci_epc_ops may return NULL, causing NULL pointer
+dereference in pci_epf_test_bind function. Let us add a check for
+pci_epc_feature pointer in pci_epf_test_bind before we access it to avoid
+any such NULL pointer dereference and return -ENOTSUPP in case
+pci_epc_feature is not found.
 
-On 2021/1/6 14:06, Leon Romanovsky wrote:
-> On Wed, Jan 06, 2021 at 10:27:49AM +0800, Lu Baolu wrote:
->> The pci_subdevice_msi_create_irq_domain() should fail if the underlying
->> platform is not able to support IMS (Interrupt Message Storage). Otherwise,
->> the isolation of interrupt is not guaranteed.
->>
->> For x86, IMS is only supported on bare metal for now. We could enable it
->> in the virtualization environments in the future if interrupt HYPERCALL
->> domain is supported or the hardware has the capability of interrupt
->> isolation for subdevices.
->>
->> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
->> Link: https://lore.kernel.org/linux-pci/87pn4nk7nn.fsf@nanos.tec.linutronix.de/
->> Link: https://lore.kernel.org/linux-pci/877dqrnzr3.fsf@nanos.tec.linutronix.de/
->> Link: https://lore.kernel.org/linux-pci/877dqqmc2h.fsf@nanos.tec.linutronix.de/
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   arch/x86/pci/common.c       | 47 +++++++++++++++++++++++++++++++++++++
->>   drivers/base/platform-msi.c |  8 +++++++
->>   include/linux/msi.h         |  1 +
->>   3 files changed, 56 insertions(+)
->>
->>
->> Background:
->> Learnt from the discussions in this thread:
->>
->> https://lore.kernel.org/linux-pci/160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com/
->>
->> The device IMS (Interrupt Message Storage) should not be enabled in any
->> virtualization environments unless there is a HYPERCALL domain which
->> makes the changes in the message store managed by the hypervisor.
->>
->> As the initial step, we allow the IMS to be enabled only if we are
->> running on the bare metal. It's easy to enable IMS in the virtualization
->> environments if above preconditions are met in the future.
->>
->> We ever thought about moving on_bare_metal() to a generic file so that
->> it could be well maintained and used. But we need some suggestions about
->> where to put it. Your comments are very appreciated.
->>
->> This patch is only for comments purpose. Please don't merge it. We will
->> include it in the Intel IMS implementation later once we reach a
->> consensus.
->>
->> Change log:
->> v1->v2:
->>   - v1:
->>     https://lore.kernel.org/linux-pci/20201210004624.345282-1-baolu.lu@linux.intel.com/
->>   - Rename probably_on_bare_metal() with on_bare_metal();
->>   - Some vendors might use the same name for both bare metal and virtual
->>     environment. Before we add vendor specific code to distinguish
->>     between them, let's return false in on_bare_metal(). This won't
->>     introduce any regression. The only impact is that the coming new
->>     platform msi feature won't be supported until the vendor specific code
->>     is provided.
->>
->> Best regards,
->> baolu
->>
->> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
->> index 3507f456fcd0..963e0401f2b2 100644
->> --- a/arch/x86/pci/common.c
->> +++ b/arch/x86/pci/common.c
->> @@ -724,3 +724,50 @@ struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
->>   	return dev;
->>   }
->>   #endif
->> +
->> +/*
->> + * We want to figure out which context we are running in. But the hardware
->> + * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
->> + * which can be manipulated by the VMM to let the OS figure out where it runs.
->> + * So we go with the below probably on_bare_metal() function as a replacement
->> + * for definitely on_bare_metal() to go forward only for the very simple reason
->> + * that this is the only option we have.
->> + *
->> + * People might use the same vendor name for both bare metal and virtual
->> + * environment. We can remove those names once we have vendor specific code to
->> + * distinguish between them.
->> + */
->> +static const char * const vmm_vendor_name[] = {
->> +	"QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
->> +	"innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
->> +	"Microsoft Corporation", "Amazon EC2"
->> +};
-> 
-> Maybe it is not concern at all, but this approach will make
-> forward/backward compatibility without kernel upgrade impossible.
-> 
-> Once QEMU (example) will have needed support, someone will need to remove
-> the QEMU from this array, rewrite on_bare_metal() because it is not bare
-> vs. virtual anymore and require kernel upgrade/downgrade every time QEMU
-> version is switched.
-> 
-> Plus need to update stable@ and distros.
-> 
-> I'm already feeling pain from the fields while they debug such code.
-> 
-> Am I missing it completely?
+When the patch is not applied and EPC features is not implemented in the
+platform driver, we see the following dump due to kernel NULL pointer
+dereference.
 
-The basic need here is that we want to disallow a brand new feature
-(device ims) to be enabled in any VMM environment.
+[  105.135936] Call trace:
+[  105.138363]  pci_epf_test_bind+0xf4/0x388
+[  105.142354]  pci_epf_bind+0x3c/0x80
+[  105.145817]  pci_epc_epf_link+0xa8/0xcc
+[  105.149632]  configfs_symlink+0x1a4/0x48c
+[  105.153616]  vfs_symlink+0x104/0x184
+[  105.157169]  do_symlinkat+0x80/0xd4
+[  105.160636]  __arm64_sys_symlinkat+0x1c/0x24
+[  105.164885]  el0_svc_common.constprop.3+0xb8/0x170
+[  105.169649]  el0_svc_handler+0x70/0x88
+[  105.173377]  el0_svc+0x8/0x640
+[  105.176411] Code: d2800581 b9403ab9 f9404ebb 8b394f60 (f9400400)
+[  105.182478] ---[ end trace a438e3c5a24f9df0 ]---
 
-The cpuid (X86_FEATURE_HYPERVISOR) is a good choice, but it's optional
-and even not documented. So besides it, we maintain a block list
-(vmm_vendor_name) which lists all possible VMM vendor names. If
-dmi_match(DMI_SYS_VENDOR) hits, the new feature is not allowed to be
-enabled.
+Fixes: 2c04c5b8eef79 ("PCI: pci-epf-test: Use pci_epc_get_features() to get
+EPC features")
 
-This block list is a bit overkill since some vendor names could also be
-used on bare metal. We will delay enabling the new feature for those
-cases until we have a vendor-specific way to distinguish between bare
-metal and VMM environments.
+Reviewed-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+---
+v2: https://lkml.org/lkml/2020/12/18/691
+v3:
+   Addressed Bjorn's comment to enhance commit message by adding fixes tag
 
-Honestly speaking, I can't see any compatible issue as it's common that
-a new feature is supported in a new kernel but not in an old one.
+ drivers/pci/endpoint/functions/pci-epf-test.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Best regards,
-baolu
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index e4e51d8..1b30774 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -830,13 +830,16 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+ 		return -EINVAL;
+ 
+ 	epc_features = pci_epc_get_features(epc, epf->func_no);
+-	if (epc_features) {
+-		linkup_notifier = epc_features->linkup_notifier;
+-		core_init_notifier = epc_features->core_init_notifier;
+-		test_reg_bar = pci_epc_get_first_free_bar(epc_features);
+-		pci_epf_configure_bar(epf, epc_features);
++	if (!epc_features) {
++		dev_err(&epf->dev, "epc_features not implemented\n");
++		return -EOPNOTSUPP;
+ 	}
+ 
++	linkup_notifier = epc_features->linkup_notifier;
++	core_init_notifier = epc_features->core_init_notifier;
++	test_reg_bar = pci_epc_get_first_free_bar(epc_features);
++	pci_epf_configure_bar(epf, epc_features);
++
+ 	epf_test->test_reg_bar = test_reg_bar;
+ 	epf_test->epc_features = epc_features;
+ 
+-- 
+2.7.4
+
