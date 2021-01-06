@@ -2,95 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9E22EB73F
-	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 01:59:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 448202EB818
+	for <lists+linux-pci@lfdr.de>; Wed,  6 Jan 2021 03:38:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbhAFA6f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 5 Jan 2021 19:58:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbhAFA6e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 5 Jan 2021 19:58:34 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60640C061793;
-        Tue,  5 Jan 2021 16:57:54 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id e25so1231099wme.0;
-        Tue, 05 Jan 2021 16:57:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KXYCn82HDF++SErLqK8nsHG9ESramoIEaNfyckxwBPI=;
-        b=SW5O3QRjqle9V5TgLatZv6eQGXERxBJrGoLURd0zTSbfWDVB7rAhiqoBIMhNHCmTdb
-         Qgh9CKpzehPTXoEvq4A5mn7egguzLVii0l5PGZ9NnneosWxLzx77DnzDSTdF0RItUcD4
-         1dsl3PHJPQW360UxkvDwQ/VUjTItqJC2yr8OvZWBMRFEsizEGMgTDWsUTOTLu0NJGe5e
-         HVmoTwwhtKVm+Bxr4DKx6w3apnBn5X3hQXPNwP5ThIauCYsqgXV7uxupjZFnbEXkNhlv
-         R2vCDaHxr4PMwkG+EuewZp/fnE2lCrNg7PZbhnjHRqPjFnUjss1S5IvLwGtglgHD8gtd
-         oywQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KXYCn82HDF++SErLqK8nsHG9ESramoIEaNfyckxwBPI=;
-        b=LPguTtAva+fVzVkWlIbHpxpMs5AmKFb9clLRENCyVg2Yz5+irLtaath+F8kXY5Vrqf
-         83jFT6WaEweupVcENs01IZDNxdZ8X+IRxSnbEHen+8HHmBtN6O4XbFMTM6G1RXX5vFo1
-         2wCdcTVCmNl55M0OD9kpSdxBwQPJNvdNu8s5IPs2AXDVerL4FylQZL5QPs0leqLQEoz4
-         DQt8F6/1rMJiyp+8aWdPfXovNLUKNll1rj+yARwyyblOCAp/wrTCu75PMaWgbxNFSqfW
-         6KtBCodzLXKQlkxkUdLR/4ZmG5LxLwRBpHsY50YXz9Eym494CMK9bH6H9pYzqpwv6Pyy
-         OZBQ==
-X-Gm-Message-State: AOAM532QaMNEmg2H3nfoh90hsL/2ZM/EtRYjnhps2Ixj6kaibLyTNGgz
-        aBIWdw7TAQCyp3UauRLFzCufUykig2A=
-X-Google-Smtp-Source: ABdhPJzwo+LWEvo/adaKIVydcUGt2CQ1KNHP13ImnpMofj5R7uq/XsdAN/rBGeAnspxRg7PXXOP0rg==
-X-Received: by 2002:a1c:9684:: with SMTP id y126mr1455713wmd.2.1609894672880;
-        Tue, 05 Jan 2021 16:57:52 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:303d:91bf:ac5c:51a1? (p200300ea8f065500303d91bfac5c51a1.dip0.t-ipconnect.de. [2003:ea:8f06:5500:303d:91bf:ac5c:51a1])
-        by smtp.googlemail.com with ESMTPSA id v4sm1036267wrw.42.2021.01.05.16.57.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Jan 2021 16:57:52 -0800 (PST)
-Subject: Re: [PATCH 2/3] ARM: iop32x: improve N2100 PCI broken parity quirk
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20210106002833.GA1286114@bjorn-Precision-5520>
- <9d2d3d61-8866-f7d3-09e9-a43b05128689@gmail.com>
- <20210106005257.GH1551@shell.armlinux.org.uk>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <98b79572-4445-3e4f-062a-590a874943e9@gmail.com>
-Date:   Wed, 6 Jan 2021 01:57:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S1725792AbhAFCho (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 5 Jan 2021 21:37:44 -0500
+Received: from mga18.intel.com ([134.134.136.126]:55722 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbhAFCho (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 5 Jan 2021 21:37:44 -0500
+IronPort-SDR: kjHKXhCRDBTJ6MEhdNrU8lgMsg5I8RiCtrMzPMId+nWQx4mD5VCSXUzv3k/bH/eOkNm66IZXzT
+ geCa9kY+rvIQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9855"; a="164916478"
+X-IronPort-AV: E=Sophos;i="5.78,478,1599548400"; 
+   d="scan'208";a="164916478"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2021 18:35:58 -0800
+IronPort-SDR: l8eZWSbUu3gwxGLlJVi+r6FoPsncy+NcV1PA5yxUi50xwIoJFgzmBu5gPx8BBeNYoGWRq8fPym
+ bAJELIHMJ4RQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,478,1599548400"; 
+   d="scan'208";a="398061314"
+Received: from allen-box.sh.intel.com ([10.239.159.28])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Jan 2021 18:35:51 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     tglx@linutronix.de, ashok.raj@intel.com, kevin.tian@intel.com,
+        dave.jiang@intel.com, megha.dey@intel.com, dwmw2@infradead.org
+Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        eric.auger@redhat.com, jacob.jun.pan@intel.com, jgg@mellanox.com,
+        kvm@vger.kernel.org, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [RFC PATCH v2 1/1] platform-msi: Add platform check for subdevice irq domain
+Date:   Wed,  6 Jan 2021 10:27:49 +0800
+Message-Id: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210106005257.GH1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06.01.2021 01:52, Russell King - ARM Linux admin wrote:
-> On Wed, Jan 06, 2021 at 01:44:03AM +0100, Heiner Kallweit wrote:
->> The machine type check is there to protect from (theoretical) cases
->> where the n2100 code (incl. the RTL8169 quirk) may be compiled in,
->> but the kernel is used on another machine.
-> 
-> That is far from a theoretical case. The ARM port has always supported
-> multiple machines in a single kernel. They just had to be "compatible"
-> in other words, the same SoC. All the platforms supported by
-> arch/arm/mach-iop32x can be built as a single kernel image and run on
-> any of those platforms.
-> 
-Good to know, then we indeed need the machine check. IOW, based on
-what you state we could even now have the following situation:
-N2100 support is compiled in, and the kernel is used on another machine
-that by chance also has Realtek RTL8169 in PCI slots 1 or 2.
-Then the PCI quirk would be applied, even though the machine doesn't
-have the parity issue.
+The pci_subdevice_msi_create_irq_domain() should fail if the underlying
+platform is not able to support IMS (Interrupt Message Storage). Otherwise,
+the isolation of interrupt is not guaranteed.
+
+For x86, IMS is only supported on bare metal for now. We could enable it
+in the virtualization environments in the future if interrupt HYPERCALL
+domain is supported or the hardware has the capability of interrupt
+isolation for subdevices.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/linux-pci/87pn4nk7nn.fsf@nanos.tec.linutronix.de/
+Link: https://lore.kernel.org/linux-pci/877dqrnzr3.fsf@nanos.tec.linutronix.de/
+Link: https://lore.kernel.org/linux-pci/877dqqmc2h.fsf@nanos.tec.linutronix.de/
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ arch/x86/pci/common.c       | 47 +++++++++++++++++++++++++++++++++++++
+ drivers/base/platform-msi.c |  8 +++++++
+ include/linux/msi.h         |  1 +
+ 3 files changed, 56 insertions(+)
+
+
+Background:
+Learnt from the discussions in this thread:
+
+https://lore.kernel.org/linux-pci/160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com/
+
+The device IMS (Interrupt Message Storage) should not be enabled in any
+virtualization environments unless there is a HYPERCALL domain which
+makes the changes in the message store managed by the hypervisor.
+
+As the initial step, we allow the IMS to be enabled only if we are
+running on the bare metal. It's easy to enable IMS in the virtualization
+environments if above preconditions are met in the future.
+
+We ever thought about moving on_bare_metal() to a generic file so that
+it could be well maintained and used. But we need some suggestions about
+where to put it. Your comments are very appreciated.
+
+This patch is only for comments purpose. Please don't merge it. We will
+include it in the Intel IMS implementation later once we reach a
+consensus.
+
+Change log:
+v1->v2:
+ - v1:
+   https://lore.kernel.org/linux-pci/20201210004624.345282-1-baolu.lu@linux.intel.com/
+ - Rename probably_on_bare_metal() with on_bare_metal();
+ - Some vendors might use the same name for both bare metal and virtual
+   environment. Before we add vendor specific code to distinguish
+   between them, let's return false in on_bare_metal(). This won't
+   introduce any regression. The only impact is that the coming new
+   platform msi feature won't be supported until the vendor specific code
+   is provided.
+
+Best regards,
+baolu
+
+diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+index 3507f456fcd0..963e0401f2b2 100644
+--- a/arch/x86/pci/common.c
++++ b/arch/x86/pci/common.c
+@@ -724,3 +724,50 @@ struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
+ 	return dev;
+ }
+ #endif
++
++/*
++ * We want to figure out which context we are running in. But the hardware
++ * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
++ * which can be manipulated by the VMM to let the OS figure out where it runs.
++ * So we go with the below probably on_bare_metal() function as a replacement
++ * for definitely on_bare_metal() to go forward only for the very simple reason
++ * that this is the only option we have.
++ *
++ * People might use the same vendor name for both bare metal and virtual
++ * environment. We can remove those names once we have vendor specific code to
++ * distinguish between them.
++ */
++static const char * const vmm_vendor_name[] = {
++	"QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
++	"innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
++	"Microsoft Corporation", "Amazon EC2"
++};
++
++static bool on_bare_metal(void)
++{
++	int i;
++
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return false;
++
++	for (i = 0; i < ARRAY_SIZE(vmm_vendor_name); i++)
++		if (dmi_match(DMI_SYS_VENDOR, vmm_vendor_name[i]))
++			return false;
++
++	pr_info("System running on bare metal, report to bugzilla.kernel.org if not the case.");
++
++	return true;
++}
++
++bool arch_support_pci_device_ims(struct pci_dev *pdev)
++{
++	/*
++	 * When we are running in a VMM context, the device IMS could only be
++	 * enabled when the underlying hardware supports interrupt isolation
++	 * of the subdevice, or any mechanism (trap, hypercall) is added so
++	 * that changes in the interrupt message store could be managed by the
++	 * VMM. For now, we only support the device IMS when we are running on
++	 * the bare metal.
++	 */
++	return on_bare_metal();
++}
+diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
+index 8432a1bf4e28..88e5fe4dae67 100644
+--- a/drivers/base/platform-msi.c
++++ b/drivers/base/platform-msi.c
+@@ -512,6 +512,11 @@ struct irq_domain *device_msi_create_irq_domain(struct fwnode_handle *fn,
+ #ifdef CONFIG_PCI
+ #include <linux/pci.h>
+ 
++bool __weak arch_support_pci_device_ims(struct pci_dev *pdev)
++{
++	return false;
++}
++
+ /**
+  * pci_subdevice_msi_create_irq_domain - Create an irq domain for subdevices
+  * @pdev:	Pointer to PCI device for which the subdevice domain is created
+@@ -523,6 +528,9 @@ struct irq_domain *pci_subdevice_msi_create_irq_domain(struct pci_dev *pdev,
+ 	struct irq_domain *domain, *pdev_msi;
+ 	struct fwnode_handle *fn;
+ 
++	if (!arch_support_pci_device_ims(pdev))
++		return NULL;
++
+ 	/*
+ 	 * Retrieve the MSI domain of the underlying PCI device's MSI
+ 	 * domain. The PCI device domain's parent domain is also the parent
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index f319d7c6a4ef..6fda81c4b859 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -478,6 +478,7 @@ struct irq_domain *device_msi_create_irq_domain(struct fwnode_handle *fn,
+ 						struct irq_domain *parent);
+ 
+ # ifdef CONFIG_PCI
++bool arch_support_pci_device_ims(struct pci_dev *pdev);
+ struct irq_domain *pci_subdevice_msi_create_irq_domain(struct pci_dev *pdev,
+ 						       struct msi_domain_info *info);
+ # endif
+-- 
+2.25.1
+
