@@ -2,126 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 466C62EE7A8
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 22:33:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A693C2EE7B9
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 22:43:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbhAGVdW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jan 2021 16:33:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35048 "EHLO mail.kernel.org"
+        id S1727665AbhAGVnU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jan 2021 16:43:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbhAGVdW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Jan 2021 16:33:22 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CD44A235DD;
-        Thu,  7 Jan 2021 21:32:41 +0000 (UTC)
+        id S1727655AbhAGVnT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Jan 2021 16:43:19 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D4E6923447;
+        Thu,  7 Jan 2021 21:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610055162;
-        bh=2Gw67ighF9gjZ9mw0RGh6CWP9hvRpTNaH/97IY+bSZA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CrKdDYhXy0UMx0fPLaKrkzGnFaHTKSyCL5I4t6v6wImCfmzRjkx0Y+z6iVVqQ8CjF
-         2W1wMoWLhXYZbRh/C7z3OvuzJWbBymwSMiNLtpFmk17gTZl3FFmNgxdYGx1Yf/XXxK
-         2rtJtumStwMfhLx2o3Vs0x7WiyT9ql2JMxDM9MfNlNEqvQerGqri7wBDnILsmFsPkM
-         Cd8ylwszvOkpquzTDwuNoz28IEn7yvvakoyN9YzGlb7tNyDUAY5V3VbuFSiu6RYWqU
-         UAR4N37u7m9PfMTVI0vkhTSON1x9dS8Z70JUve1ucPWbdW5V92ICEULrFetDifrEHb
-         OnU9bSzFBLWuQ==
-Date:   Thu, 7 Jan 2021 15:32:40 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nirmoy Das <nirmoy.das@amd.com>
-Cc:     bhelgaas@google.com, ckoenig.leichtzumerken@gmail.com,
-        linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devspam@moreofthesa.me.uk,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        kernel test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 4/4] PCI: Add a REBAR size quirk for Sapphire RX 5600 XT
- Pulse
-Message-ID: <20210107213240.GA1392833@bjorn-Precision-5520>
+        s=k20201202; t=1610055759;
+        bh=4sVtflLu0YYnAG/1h9hLJa0zeFOV+KQHKZrv4rhiU9c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ml2IAUz+/8CdaFkAvtPSq3pjxKxwFn8lcMUjBpE7eAJ5EBlO/rFoi9PmhVVHsfwXm
+         xRhM6L7GSgEe4y0p+4Cu44yUUcGcnjkc2RG696gTarBWuXylJp+eMEehu5Hi5elO3R
+         qdNdEyAlY7UymVZyGbYb4nYGg3L5pO71BnpiUUts6fxjNChW6HfEgzfIELQTxkLE68
+         nRZ2sY3qHWjXea5nxB339amni9KSf2iFbd6vBS4DZcI+6gdr9PnJqWSDISytRIgFZG
+         b/1JzREl4n/R6m2Vgeq4CxY+Hc//HnlmqE8iBA5m/9wDH8dJECq2RMxBQwhex2LjKj
+         MDMjLsAXsAWUg==
+Date:   Thu, 7 Jan 2021 13:42:36 -0800
+From:   Keith Busch <kbusch@kernel.org>
+To:     "Kelley, Sean V" <sean.v.kelley@intel.com>
+Cc:     Hinko Kocevar <hinko.kocevar@ess.eu>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCHv2 0/5] aer handling fixups
+Message-ID: <20210107214236.GA1284006@dhcp-10-100-145-180.wdc.com>
+References: <20210104230300.1277180-1-kbusch@kernel.org>
+ <bcc440b0-0ab9-c25f-e7d5-f7ce65db5019@ess.eu>
+ <4242a9a9-c881-0af4-1cab-396931fee420@ess.eu>
+ <20210105183302.GA1278205@dhcp-10-100-145-180.wdc.com>
+ <B31F8CA9-D62B-4488-B4C1-EB31E9117203@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210107175017.15893-5-nirmoy.das@amd.com>
+In-Reply-To: <B31F8CA9-D62B-4488-B4C1-EB31E9117203@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 07, 2021 at 06:50:17PM +0100, Nirmoy Das wrote:
-> RX 5600 XT Pulse advertises support for BAR0 being 256MB, 512MB,
-> or 1GB, but it also supports 2GB, 4GB, and 8GB. Add a rebar
-> size quirk so that CPU can fully access the BAR0.
-
-This isn't quite accurate.  The CPU can fully access BAR 0 no matter
-what.  I think the problem you're solving is that without this quirk,
-BAR 0 isn't big enough to cover the VRAM.
-
-> Signed-off-by: Christian König <christian.koenig@amd.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-IIRC, these Reported-by lines are from the "cap == 0x3f0" problem.  It
-would make sense to include these if this patch fixed that problem in
-something that had already been merged.  But this *hasn't* been
-merged, so these lines only make sense to someone who trawls through
-the mailing list to find the previous version.
-
-I don't really think it's worthwhile to include them.  It's the same
-as giving credit to reviewers, which we typically don't do except via
-a Reviewed-by tag (which I think is too strong for this case) or a
-"v2" changes note after the "---" line.  That doesn't get included in
-the git history, but is easily findable via the Link: tags as below.
-
-If you merge these via a non-PCI tree, please include the "Link:"
-lines in the PCI patches, e.g.,
-
-  Link: https://lore.kernel.org/r/20210107175017.15893-5-nirmoy.das@amd.com
-
-for this one.  Obviously the link is different for each patch and will
-change if you repost the series.
-
-I'm not sure why you put the amd patch in the middle of the series.
-Seems like it would be slightly prettier and just as safe to put it at
-the end.
-
-> Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Let me know if you want me to take the series.
-
-> ---
->  drivers/pci/pci.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+On Tue, Jan 05, 2021 at 11:07:23PM +0000, Kelley, Sean V wrote:
+> > On Jan 5, 2021, at 10:33 AM, Keith Busch <kbusch@kernel.org> wrote:
+> > On Tue, Jan 05, 2021 at 04:06:53PM +0100, Hinko Kocevar wrote:
+> >> On 1/5/21 3:21 PM, Hinko Kocevar wrote:
+> >>> On 1/5/21 12:02 AM, Keith Busch wrote:
+> >>>> Changes from v1:
+> >>>> 
+> >>>>    Added received Acks
+> >>>> 
+> >>>>    Split the kernel print identifying the port type being reset.
+> >>>> 
+> >>>>    Added a patch for the portdrv to ensure the slot_reset happens without
+> >>>>    relying on a downstream device driver..
+> >>>> 
+> >>>> Keith Busch (5):
+> >>>>    PCI/ERR: Clear status of the reporting device
+> >>>>    PCI/AER: Actually get the root port
+> >>>>    PCI/ERR: Retain status from error notification
+> >>>>    PCI/AER: Specify the type of port that was reset
+> >>>>    PCI/portdrv: Report reset for frozen channel
+> >> 
+> >> I removed the patch 5/5 from this patch series, and after testing again, it
+> >> makes my setup recover from the injected error; same as observed with v1
+> >> series.
+> > 
+> > Thanks for the notice. Unfortunately that seems even more confusing to
+> > me right now. That patch shouldn't do anything to the devices or the
+> > driver's state; it just ensures a recovery path that was supposed to
+> > happen anyway. The stack trace says restoring the config space completed
+> > partially before getting stuck at the virtual channel capability, at
+> > which point it appears to be in an infinite loop. I'll try to look into
+> > it. The emulated devices I test with don't have the VC cap but I might
+> > have real devices that do.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 16216186b51c..b061bbd4afb1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3577,7 +3577,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  		return 0;
->  
->  	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
-> -	return (cap & PCI_REBAR_CAP_SIZES) >> 4;
-> +	cap = (cap & PCI_REBAR_CAP_SIZES) >> 4;
-> +
-> +	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
-> +	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
-> +	    bar == 0 && cap == 0x700)
-> +		cap = 0x3f00;
+> Iâ€™m not seeing the error either with V2 when testing with are-inject using RCECs and an associated RCiEP.
 
-I think this is structured wrong.  It should be like this so it's
-easier to match with the spec:
-
-  cap &= PCI_REBAR_CAP_SIZES;
-
-  if (... && cap == 0x7000)
-    cap = 0x3f000;
-
-  return cap >> 4;
-
-> +
-> +	return cap;
->  }
->  EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
->  
-> -- 
-> 2.29.2
-> 
+Thank you, yes, I'm also not seeing a problem either on my end. The
+sighting is still concerning though, so I'll keep looking. I may have to
+request Hinko to try a debug patch to help narrow down where things have
+gone wrong if that's okay.
