@@ -2,51 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E48492ED614
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 18:52:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E95B2ED615
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 18:52:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726064AbhAGRw0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jan 2021 12:52:26 -0500
-Received: from mail-dm6nam10on2080.outbound.protection.outlook.com ([40.107.93.80]:54976
+        id S1726427AbhAGRwd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jan 2021 12:52:33 -0500
+Received: from mail-dm6nam10on2047.outbound.protection.outlook.com ([40.107.93.47]:61472
         "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725835AbhAGRwZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Jan 2021 12:52:25 -0500
+        id S1725835AbhAGRwc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Jan 2021 12:52:32 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I+YipzHL5ARfy68vGcgcId+cknt3XfwtLfY42afdqAfpla50tSW2UBZCXIwQmzd7BzpI0+xj82L68VaW8QsmrRWDpeIiOsMMgHFN3NLK3mnDd8efghgqEdJkFsxn70gll8EIek1OdbgXn/UyLoJQ50ROfTM05IRyGZUnzmFG/NLDEmp66MH1cliIPNPRxqCPSA5bzYpgK0rxhfXMT0N4uuKYVjJuutC7cIlmoGsoStAaroryb7z98ZV6X+tfOeLwntWo64YcrKHk33N03gi8n93befEdk5xAVGetEmrm6387qeFSQvqwIbpa5bqKF8Mj9WocEaBvrMylxI9xw6k7KA==
+ b=LkBEkK/s8IKzy3X5F5rxu+MKfhRPoSqbQz4p0pUYg86Dsg41xmupqjOoLAWa3Zk8hVqFOiDoqzqRms172cTD/E7PzA2o6AdT2ayYOB3me5t2V4W2Y9mgFsw2qHVOWwLNunBod6QaV7bCIpHiCIfyqEmSTPWokb0brE9pUxa+8sN2pb5GyZQXHUKi4WJyHdKI/9Yfd53lVVdTXtPj1KnsoOiH2r00R0eveXwVcWRhVRiIYyh+Ar9N1PjzCEJWd5pl6j7CZ+IMLhcoRkSq4BDi7bKYNhb2vLPYjIRXGmAKRXJZ2ms6XSPoHlbpA4Pn2AcD/bdg9NwISewC2BrEXGixBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1f/85AnEGElOJ9U09MFwycRi+XzCeG5VJ58qVhGop10=;
- b=nP1EDWk8VjbE22TrsgCWaFwkPGWF1SG/TBiunTkyTZ2ndk9Pddj1zPdkFJQTNHxXoiA1U+WJiGrZuVrSFt140D0Mm3mi2PuLtE66o2+RbD5HtVJKod3QhwqbOXcwol+sdoHENO2EpxCvQ4un6TndA38/Hd6xysK9TEoTR1Snyvm7GxEoI/cX08Bq+RrQzivj5QmYPkxSRERwO6xptLYM7/hdSfMMTh7Nedc7VFe85Ju8f/+gXFWR6GHv9OJi628gH8hk3gCZzLFfiQqarAdpEl3/L+XtZHmBlvxPzRRPfc2Nr/vnXwg/zsz5gM6Qx0vKk/gYx8IuNI6cqFjezK1BUg==
+ bh=Nqo0XN9w5s1W+dvGkDagPDeomYvgxU34Cpkxni469KM=;
+ b=VFU1o5DBROif/a9UE0VIZ5RMv4x+6sV0bEt9QELiiOde8v8MvTCtPHD1Lywi8qQFPhz6nGKg2Zx5/quiLkA01H2IZlmVTfhJZzVVvxymLmQrxNfehfJTCzK5ekYuSh8zvRFEL5UDebhDSqcvemmTAiGnx9UQcZlbJF1dQ6m4cgq4zdYlup1QaVyFFDpX9B9C3Qh+prMkgvWrGsu59AyvXmhV29rbXllY1/q2GCUWn/76puUdStERWHXVMwoB7HFvoWg26u4z4sMkYQ8t0MmEPM6qbFkTwXTqdA7RJmzOL2Me3TrFq6b/76caCoBLdrecFCWH0z0RI72AmJSLFOCcWw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1f/85AnEGElOJ9U09MFwycRi+XzCeG5VJ58qVhGop10=;
- b=n9wczHft+d2Af7u3XJRrF7NHtzmPXZ9QqQD06BCGorOiKHUSPeVJA+ad7dHYvUOd8oOLrVz0Wvv6sTgY6dM8BEi2FDGa64mhMGj1E1/wc+9a8h+XQ2BS9x8S9hpwszXPqi3y5D60Hq8LGWE1nTc/hqsnSXG9SlktPAbHZuFults=
+ bh=Nqo0XN9w5s1W+dvGkDagPDeomYvgxU34Cpkxni469KM=;
+ b=D3PCz7HXFnbSSsxL02L7Fmy1fuUN+tJ7AYc+SX6z/T3Snr3hjKdZ9dBDyDwuMPWfp5DEEsnfCyLhbI9UP9GP0Fu9sHw7efQ9UQVZ2BgFoS2iXHHbrLKx8dWHxNgAMgdCXVI84fSg7UVpCjETG8HGyEGJ9sN96YKgnZYl7s0L0Dw=
 Authentication-Results: google.com; dkim=none (message not signed)
  header.d=none;google.com; dmarc=none action=none header.from=amd.com;
 Received: from DM6PR12MB3916.namprd12.prod.outlook.com (2603:10b6:5:1ca::21)
  by DM6PR12MB3066.namprd12.prod.outlook.com (2603:10b6:5:11a::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Thu, 7 Jan
- 2021 17:50:52 +0000
+ 2021 17:50:54 +0000
 Received: from DM6PR12MB3916.namprd12.prod.outlook.com
  ([fe80::f872:3677:28c3:660b]) by DM6PR12MB3916.namprd12.prod.outlook.com
  ([fe80::f872:3677:28c3:660b%5]) with mapi id 15.20.3721.024; Thu, 7 Jan 2021
- 17:50:51 +0000
+ 17:50:53 +0000
 From:   Nirmoy Das <nirmoy.das@amd.com>
 To:     bhelgaas@google.com
 Cc:     ckoenig.leichtzumerken@gmail.com, linux-pci@vger.kernel.org,
         dri-devel@lists.freedesktop.org, devspam@moreofthesa.me.uk,
         Nirmoy Das <nirmoy.das@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: [PATCH 3/4] drm/amdgpu: Resize BAR0 to the maximum available size, even if it doesn't cover VRAM
-Date:   Thu,  7 Jan 2021 18:50:16 +0100
-Message-Id: <20210107175017.15893-4-nirmoy.das@amd.com>
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        kernel test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH 4/4] PCI: Add a REBAR size quirk for Sapphire RX 5600 XT Pulse
+Date:   Thu,  7 Jan 2021 18:50:17 +0100
+Message-Id: <20210107175017.15893-5-nirmoy.das@amd.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210107175017.15893-1-nirmoy.das@amd.com>
 References: <20210107175017.15893-1-nirmoy.das@amd.com>
@@ -58,92 +60,88 @@ X-ClientProxiedBy: AM0PR03CA0093.eurprd03.prod.outlook.com
  (2603:10b6:5:1ca::21)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from brihaspati.fritz.box (217.86.111.165) by AM0PR03CA0093.eurprd03.prod.outlook.com (2603:10a6:208:69::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Thu, 7 Jan 2021 17:50:50 +0000
+Received: from brihaspati.fritz.box (217.86.111.165) by AM0PR03CA0093.eurprd03.prod.outlook.com (2603:10a6:208:69::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Thu, 7 Jan 2021 17:50:52 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: edd9db93-ea7f-48f5-006a-08d8b334c650
+X-MS-Office365-Filtering-Correlation-Id: 6963acd3-640f-4aa5-d02f-08d8b334c784
 X-MS-TrafficTypeDiagnostic: DM6PR12MB3066:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3066AA7DD69BEB69C642E18E8BAF0@DM6PR12MB3066.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3066D6822FD737183EEE7D4E8BAF0@DM6PR12MB3066.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6qN7Tt43VL5Hu2uXoCtC1Pzb73+y4vOQgZSOExDawJ9fsEUsIcfFMpZsalHcqo5br5PFHOrAcpdGv5ZXQ2QuEBvpXNNIRGy+yvTiN9LtWkaTz/u7QHQRv7TFGRk5o5tIuiCgux8GXxR3nQrmUALhjs+g9aN1xucCMxsoFWNZu/BfsZz4nLCqjx2f0HIMkrHypB0DpRaDQ67zMnTRaF/Ofrf8eW1FUna/mtmS5YUoksAVVq0OSTyt3deRyZPP+B904ZUnbJv9tuhixptrwGN7SwLw45dmcEtyyPNXtULdiaIEvQE0ltQDe+F2wGHrfAD8rCyWuqpO56jhntm9DrI+sKJPf8yL21MFLUXCQVRhktvlgFZtEe/wojN2Ghxrkd2R8ilDECinvfL+Uos60OW7lA==
+X-Microsoft-Antispam-Message-Info: ArjC5EaHuX8NhcuV3FpOUcFk1GWSRl0lO8HjkVAzp1BeyQsyIot8qQ0EknxqpLwESsfQeOMel3UCqK020tUug3IgTw0o86n1rswjVdspQzaCaF3cuujZ4UOz4cjGsf9IwDzGZQml492TZjAgtWizuxsZ+FEGwbor3eP25tVnwh/D1vQFvi/7SbWXw687v+4LD84Uo6wx0cDLCWZWQUffO75twXnqcHlsLX7xpUxqfxHc19/JYwF/PtdbZJv2TtFNg4CGaMkVrZBQVnecU2K/Q3FGuz0Ara+JVgt7/r/XtsRnIXrK+WcncO132V1fy8l+eW9kApQtkjZ1bPQhdXe3UW07B5pROZUEYFU38eZVZ7i1SQleNMk9G1HyQu0McWR0XN/TCeBkHhAAPRihgZyBJQ==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3916.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(4326008)(6916009)(316002)(1076003)(66574015)(83380400001)(478600001)(6486002)(54906003)(36756003)(26005)(66476007)(66556008)(5660300002)(8936002)(66946007)(2616005)(16526019)(44832011)(2906002)(52116002)(6506007)(8676002)(86362001)(6666004)(956004)(6512007)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?aFJaWXR0TlN0aStrcFovZ3ZPUmpqclIxT25mVHFNbjRPOEVKM0JOUXd4cDc3?=
- =?utf-8?B?RDlMU1VIVDJSNnM5MDRlM1JqK0FqOTdGeUovTEJZWFUzeUpUZU5rclQyajVS?=
- =?utf-8?B?Z2daUUZxYW1tV0JvNWZJemxnUkMwb2owQU5qZVNYQ2lUcWlJMlpqRmJRcHR1?=
- =?utf-8?B?NjN0OHhLMy9oWEhNSEJ5eEpEN0JlNW94L1ZLT0tLQ20vV0RHdHpxV2UwWWJV?=
- =?utf-8?B?RGRHSG5xdEROb0poTXZ5ZEpnMmNFdmhDOHJuNXdEMkdjWTEwZ2tJRW4rY21l?=
- =?utf-8?B?Skp5VnNFMGNMS0dSMFpzRVB1Ry9HeitjcGRkUVVobElobHhUL3pBTzBaK0Jh?=
- =?utf-8?B?ZHNkWlY4NkRabDYzekZYVWREWFR4ckpFWXpjNjdNbnFzN0o2VDI1bm5IV2FS?=
- =?utf-8?B?RC9aamJkSDRnY044cWhSNWpidHpCQnkrTlFnNGdvcDJMTDRjR1Fhdnd0S05w?=
- =?utf-8?B?cDlQMEJlWTZiNlBVR29XM2U3Q3h5eHlhY1FITWV3dWE3TU54bW5iY2xuVkZx?=
- =?utf-8?B?MmtmUVVFbnM0VHMzcFg4ZzBLQytQSXphNStSYWJiQ0x2Z3ZTSFJ5UEJEMnNu?=
- =?utf-8?B?RDUyNWNwcDBBWnJJM2gyOEx6MW5ubVdyeDhwOHRvbzRHanlRSU5vTlQwZWlp?=
- =?utf-8?B?WjNjTXhDUGZCQllpRWtRbHdsWFJ2dnF2dWNZUnZtb2M1VFg1WlJvVkQrdUZ6?=
- =?utf-8?B?N2pvL2k5Q25wNlI2TVl1ekM0citJMkFsNTVBdWtGcTZoTTd6NExWUm95dUNK?=
- =?utf-8?B?T0xXbWdPWU9MQ3FZM29VWWpqa3crMW4xSHhwbFNDMEYxNjB1YWRZa2oreTFY?=
- =?utf-8?B?eUhWK1ArUTRlb2JhQU9ycXgrQkhPeG5na1orSlJmSVV1T0JDek5sTHUyS1hp?=
- =?utf-8?B?cmwrbkNSRnlkUjZBWktFRzZtQ2REVjNrNnM2SHhRUkozVWFRZ3Zoa0pUN3FQ?=
- =?utf-8?B?RHYvVEI1Y1BQT0hEK2x1THJ5WmxLUzUyd0wxQ0s3bHhRZXViV2lwK01rU3cy?=
- =?utf-8?B?YS9XaVd3VGcrMVFiV1ptOEd3dU43QXBLM0FjTjF2MG0zaFFIWjNmSUl1SWli?=
- =?utf-8?B?NFI2OTQySlVhd2tFaFdlbkk0Qkc0eWNpYVdhRDJoZzdhUGpSaFhqaFdvQ2FK?=
- =?utf-8?B?Q0V5NGJpRGt3WGltZS9GVGk4K2lUREM3alo4ZGFsc2VjdE94T3lrNXNKOG1a?=
- =?utf-8?B?Zmo1M08vTGVoNUZKT2grWWVaME9nMHdpb2tDR0hlbWhJWlFJYzBXaWpBNnh5?=
- =?utf-8?B?dEsrQXQ2bk43blNic0FDMGFVRTJ4Q1N6UmJFdDJDNVRiQmNZTjRjZDJoVE92?=
- =?utf-8?Q?dXQzCxY2Ve6lV8jvwapAZFhwLf3dtvBT2b?=
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?NnB1dCtzTWl2dWJnR0pmN0o5VEUvQWFaNXlRNGRwREVsN0UrZGozblFST2t1?=
+ =?utf-8?B?Uk45S0FRMjEwSVFqUmIzM1pzUi9ZeGdtTG5FYUJ4elQ2RWVnMDVxMnlTQ2dI?=
+ =?utf-8?B?WDhJeUNXRC9IM0U1WDE5R3JYdnozVW5rZjJWTXNZb0xOT2dmZE5rYTBaMllF?=
+ =?utf-8?B?Q0tGY1R5aG1nZmZuV0Z0Y3hYRjhrK1pKMGVYVmNSc2tHdmVjeVBpa3FMVVNx?=
+ =?utf-8?B?dWoxZTYyWDBhR3V2MFlnaTdFQ2VrYUgzaUN4OU4waldJV1g1Wi9rUHFJWmxh?=
+ =?utf-8?B?b1J0YnVJeVBPSFlRNjhCOUtEK3B6UVRXK1VyUGlWOVorNmpMN0dmNnViRGVN?=
+ =?utf-8?B?WkNzZ0pGM1R5dVlCd0wvakp3dUxUMFprSm03eW5iajlHczhHdzFhU3ZPZElX?=
+ =?utf-8?B?aWtYc1dGOUlBWHNkL1hMTllPQzlrZDlzRS9uL3B5emdCNmlmK3ozc0FnUVo4?=
+ =?utf-8?B?d1A2ZDd4SWI5M3pweG5lVDNwcE1qSjJINEdSLy9UVDgvd3c2akdNOFhEMEZC?=
+ =?utf-8?B?djJnV2t1VER2ZDBXbUdVdloxVk5ZaDkrSmFBb2krQVEwVEwvdzlvZHNaem0v?=
+ =?utf-8?B?blNuUjFYcFJtRWNjNkIzMFYwYWVaTUIzMUJlM25HZnoyd2JEVmhxZ0h1eGR3?=
+ =?utf-8?B?QUI0cXZUOTA3Z0lTL2ZNVXJLRnJkTThDTkU2R1M1RmVzaUt0Zi9UUWNEaTFs?=
+ =?utf-8?B?aWM0bFFHUllPOWd1N2VoQzdpdkx2a09RcitlRkZiQmlXdHpoNGc5OVlKd2xX?=
+ =?utf-8?B?Q1VMT25TY2dxS3NJcWhiUTRZNHlaWEh1b3cwc3gycmg3M2xMd3hHTVBpUHlZ?=
+ =?utf-8?B?SlNiQUdaSG5QVEdWUVUvZzdvMEM4VkVnUlp2ZXkvZzJVTUZzSi9iY0ZBekVP?=
+ =?utf-8?B?RWNURnNkL3Z0VkZJcVU1ZWcycWdNQ1RYUE4yUFUvQmVCTURRdUhEdkNaaldn?=
+ =?utf-8?B?M1RLaXpRWDUxbTdrVFN3OUd5QUJIWGREQXQ0djdOYi9nTXZFVnIvOFNEVWhB?=
+ =?utf-8?B?eDNFeTd6MGFaRG9CdmJieUc0dWZzZXN1S3lncjAyUE9DRlNBSUZ3bUg4S0Uw?=
+ =?utf-8?B?NmpLeWdOOUh0MDI5NGpMVUtlRTg2YTBaSEFvMWJBZzBjaS80TEc2QklTeExo?=
+ =?utf-8?B?Y0tJT1ozckI0T01PQ0Z0c011eTJRTFdTTkJRQ0xiOWt2R2U5WWxHaTFaS0F4?=
+ =?utf-8?B?T3k5Ni9GQzhtL2R0SXhOWld0blJSNW15RUh6dldXblRSZFhxQ1NCeEFaODIz?=
+ =?utf-8?B?WTBGak5XZ0xGU2lYUGM4VGVEQW04ZVFZenBnQ21LM002YkM3ODZaMVpwS0FD?=
+ =?utf-8?Q?smoiJDMRKAM0Oed+7LPA6k0h8S9UAp6xLy?=
 X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3916.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2021 17:50:51.8968
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2021 17:50:53.8637
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-Network-Message-Id: edd9db93-ea7f-48f5-006a-08d8b334c650
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6963acd3-640f-4aa5-d02f-08d8b334c784
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bew4ubldRdVU+id4hHT2Au74SXWOgCtWFXOPm3SUVmGl6sMGIkmboWDIM43IWFqhFvm/yo210wQLUEkaS70c2g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: fHVbAVxDIg4R1MvrgQZwjAMxiMiw2VDOpH6+8oIzRYQlxYlNfx67AkJ+ENvasg0R9VJVAb3v2+0pfOd5RWQP+g==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3066
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This allows BAR0 resizing to be done for cards which don't advertise
-support for a size large enough to cover the VRAM but which do
-advertise at least one size larger than the default. For example,
-my RX 5600 XT, which advertises 256MB, 512MB and 1GB.
+RX 5600 XT Pulse advertises support for BAR0 being 256MB, 512MB,
+or 1GB, but it also supports 2GB, 4GB, and 8GB. Add a rebar
+size quirk so that CPU can fully access the BAR0.
 
-Signed-off-by: Darren Salt <devspam@moreofthesa.me.uk>
 Signed-off-by: Christian König <christian.koenig@amd.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index dce0e66b2364..390f2cc13df7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -1090,7 +1090,7 @@ void amdgpu_device_wb_free(struct amdgpu_device *adev, u32 wb)
- int amdgpu_device_resize_fb_bar(struct amdgpu_device *adev)
- {
- 	u64 space_needed = roundup_pow_of_two(adev->gmc.real_vram_size);
--	u32 rbar_size = order_base_2(((space_needed >> 20) | 1)) - 1;
-+	int rbar_size = pci_rebar_bytes_to_size(adev->gmc.real_vram_size);
- 	struct pci_bus *root;
- 	struct resource *res;
- 	unsigned i;
-@@ -1121,6 +1121,10 @@ int amdgpu_device_resize_fb_bar(struct amdgpu_device *adev)
- 	if (!res)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 16216186b51c..b061bbd4afb1 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3577,7 +3577,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
  		return 0;
  
-+	/* Limit the BAR size to what is available */
-+	rbar_size = min(fls(pci_rebar_get_possible_sizes(adev->pdev, 0)) - 1,
-+			rbar_size);
+ 	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
+-	return (cap & PCI_REBAR_CAP_SIZES) >> 4;
++	cap = (cap & PCI_REBAR_CAP_SIZES) >> 4;
 +
- 	/* Disable memory decoding while we change the BAR addresses and size */
- 	pci_read_config_word(adev->pdev, PCI_COMMAND, &cmd);
- 	pci_write_config_word(adev->pdev, PCI_COMMAND,
++	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
++	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
++	    bar == 0 && cap == 0x700)
++		cap = 0x3f00;
++
++	return cap;
+ }
+ EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
+ 
 -- 
 2.29.2
 
