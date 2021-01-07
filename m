@@ -2,181 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 056EE2ECADB
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 08:17:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1AA22ECB64
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 09:06:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbhAGHRE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jan 2021 02:17:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54342 "EHLO mail.kernel.org"
+        id S1726466AbhAGID6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jan 2021 03:03:58 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:40778 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbhAGHRE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Jan 2021 02:17:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4614F23100;
-        Thu,  7 Jan 2021 07:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610003783;
-        bh=6DRAYZOS6gedkI9l2X6RhRYD8BpNTokHC71/7sv/k+Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KuLaTnOuheFSIiPLd7HLtIzrphB47EH3xvlSl3fBRiY5mVn8OSbzz8nMM+83UJ/0z
-         2S4w2pHMLW7M627zuuDCY5znhvyWUHdeI1sCyhi9N6+zQk+ra2VD7hOX3qxPfRRmCj
-         7L0Djsuxi0i5zPIMOsCYsCOdL9H7ZTx/s4wm+xJX6K0GeOoxaswS7+Duk57DAVKd2A
-         Je3/vJu7tBY8HWDhjSS7dBHXKaeP4s/ThfGOrHb60ripAw+IfW0yvf1wCP9a6N7Dpy
-         qsgR92+P464KJESLPsolYgGuZ96yIiLss/+zTxksOOVc9gpc23aeWzHn2cDMAJk9st
-         8K+jIrhR+f+FQ==
-Date:   Thu, 7 Jan 2021 09:16:16 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        id S1726088AbhAGID6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Jan 2021 03:03:58 -0500
+Received: from zn.tnic (p200300ec2f0e340062d4c7d6e370d23d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:3400:62d4:c7d6:e370:d23d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EF3C71EC04A6;
+        Thu,  7 Jan 2021 09:03:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1610006596;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=eh++UBFjyA0qQZ9PtbP+rTC8J3vRPWgH5i0rpNjICOQ=;
+        b=S48lfb0NWfmw1PsK+xjBp6qZk4eTk2sINQxiXIyiZ5gvsBmmQWN2Qa3mVEszvuVUlL50WC
+        o439ORINTzM/WsgpIeIXbWSLrrGYdvmoliFxy83fuaqRg/w4sboAJ05LcAoUgYsfB1ftSj
+        mgkUAvQjt4YZInpqtOg25jdz76lena4=
+Date:   Thu, 7 Jan 2021 09:03:17 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "\"H. Peter Anvin\"" <hpa@zytor.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>
-Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for
- subdevice irq domain
-Message-ID: <20210107071616.GA31158@unreal>
-References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
- <20210106060613.GU31158@unreal>
- <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
- <20210106104017.GV31158@unreal>
- <20210106152339.GA552508@nvidia.com>
- <20210106160158.GX31158@unreal>
- <MWHPR11MB18867EE2F4FA0382DCFEEE2B8CAF0@MWHPR11MB1886.namprd11.prod.outlook.com>
- <20210107060916.GY31158@unreal>
- <MWHPR11MB188629E36439F80AD60900788CAF0@MWHPR11MB1886.namprd11.prod.outlook.com>
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] Hyper-V: pci: x64: Generalize irq/msi set-up and handling
+Message-ID: <20210107080317.GE14697@zn.tnic>
+References: <SN4PR2101MB08808404302E2E1AB6A27DD6C0AF9@SN4PR2101MB0880.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <MWHPR11MB188629E36439F80AD60900788CAF0@MWHPR11MB1886.namprd11.prod.outlook.com>
+In-Reply-To: <SN4PR2101MB08808404302E2E1AB6A27DD6C0AF9@SN4PR2101MB0880.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 07, 2021 at 06:55:16AM +0000, Tian, Kevin wrote:
-> > From: Leon Romanovsky <leon@kernel.org>
-> > Sent: Thursday, January 7, 2021 2:09 PM
-> >
-> > On Thu, Jan 07, 2021 at 02:04:29AM +0000, Tian, Kevin wrote:
-> > > > From: Leon Romanovsky <leon@kernel.org>
-> > > > Sent: Thursday, January 7, 2021 12:02 AM
-> > > >
-> > > > On Wed, Jan 06, 2021 at 11:23:39AM -0400, Jason Gunthorpe wrote:
-> > > > > On Wed, Jan 06, 2021 at 12:40:17PM +0200, Leon Romanovsky wrote:
-> > > > >
-> > > > > > I asked what will you do when QEMU will gain needed functionality?
-> > > > > > Will you remove QEMU from this list? If yes, how such "new" kernel
-> > will
-> > > > > > work on old QEMU versions?
-> > > > >
-> > > > > The needed functionality is some VMM hypercall, so presumably new
-> > > > > kernels that support calling this hypercall will be able to discover
-> > > > > if the VMM hypercall exists and if so superceed this entire check.
-> > > >
-> > > > Let's not speculate, do we have well-known path?
-> > > > Will such patch be taken to stable@/distros?
-> > > >
-> > >
-> > > There are two functions introduced in this patch. One is to detect whether
-> > > running on bare metal or in a virtual machine. The other is for deciding
-> > > whether the platform supports ims. Currently the two are identical because
-> > > ims is supported only on bare metal at current stage. In the future it will
-> > look
-> > > like below when ims can be enabled in a VM:
-> > >
-> > > bool arch_support_pci_device_ims(struct pci_dev *pdev)
-> > > {
-> > > 	return on_bare_metal() || hypercall_irq_domain_supported();
-> > > }
-> > >
-> > > The VMM vendor list is for on_bare_metal, and suppose a vendor will
-> > > never be removed once being added to the list since the fact of running
-> > > in a VM never changes, regardless of whether this hypervisor supports
-> > > extra VMM hypercalls.
-> >
-> > This is what I imagined, this list will be forever, and this worries me.
-> >
-> > I don't know if it is true or not, but guess that at least Oracle and
-> > Microsoft bare metal devices and VMs will have same DMI_SYS_VENDOR.
->
-> It's true. David Woodhouse also said it's the case for Amazon EC2 instances.
->
-> >
-> > It means that this on_bare_metal() function won't work reliably in many
-> > cases. Also being part of include/linux/msi.h, at some point of time,
-> > this function will be picked by the users outside for the non-IMS cases.
-> >
-> > I didn't even mention custom forks of QEMU which are prohibited to change
-> > DMI_SYS_VENDOR and private clouds with custom solutions.
->
-> In this case the private QEMU forks are encouraged to set CPUID (X86_
-> FEATURE_HYPERVISOR) if they do plan to adopt a different vendor name.
+On Thu, Jan 07, 2021 at 05:05:36AM +0000, Sunil Muthuswamy wrote:
+> Currently, operations related to irq/msi in Hyper-V vPCI are
+> x86-specific code. In order to support virtual PCI on Hyper-V for
+> other architectures, introduce generic interfaces to replace the
+> x86-specific ones. There are no functional changes in this patch.
+> 
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
 
-Does QEMU set this bit when it runs in host-passthrough CPU model?
+What is this SoB chain supposed to say?
 
->
-> >
-> > The current array makes DMI_SYS_VENDOR interface as some sort of ABI. If
-> > in the future,
-> > the QEMU will decide to use more hipster name, for example "qEmU", this
-> > function
-> > won't work.
-> >
-> > I'm aware that DMI_SYS_VENDOR is used heavily in the kernel code and
-> > various names for the same company are good example how not reliable it.
-> >
-> > The most hilarious example is "Dell/Dell Inc./Dell Inc/Dell Computer
-> > Corporation/Dell Computer",
-> > but other companies are not far from them.
-> >
-> > Luckily enough, this identification is used for hardware product that
-> > was released to the market and their name will be stable for that
-> > specific model. It is not the case here where we need to ensure future
-> > compatibility too (old kernel on new VM emulator).
-> >
-> > I'm not in position to say yes or no to this patch and don't have plans to do it.
-> > Just expressing my feeling that this solution is too hacky for my taste.
-> >
->
-> I agree with your worries and solely relying on DMI_SYS_VENDOR is
-> definitely too hacky. In previous discussions with Thomas there is no
-> elegant way to handle this situation. It has to be a heuristic approach.
-> First we hope the CPUID bit is set properly in most cases thus is checked
-> first. Then other heuristics can be made for the remaining cases. DMI_
-> SYS_VENDOR is the first hint and more can be added later. For example,
-> when IOMMU is present there is vendor specific way to detect whether
-> it's real or virtual. Dave also mentioned some BIOS flag to indicate a
-> virtual machine. Now probably the real question here is whether people
-> are OK with CPUID+DMI_SYS_VENDOR combo check for now (and grow
-> it later) or prefer to having all identified heuristics so far in-place together...
+See:
 
-IMHO, it should be as much as possible close to the end result.
+  11) Sign your work - the Developer's Certificate of Origin
+  12) When to use Acked-by:, Cc:, and Co-developed-by:
+  13) Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
 
-Thanks
+sections in
 
->
-> Thanks
-> Kevin
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
