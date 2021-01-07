@@ -2,158 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54ED52EE8B6
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 23:32:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D96A52EE8BE
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 23:32:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbhAGWb3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jan 2021 17:31:29 -0500
-Received: from mga18.intel.com ([134.134.136.126]:51397 "EHLO mga18.intel.com"
+        id S1727665AbhAGWcJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jan 2021 17:32:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726854AbhAGWb2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Jan 2021 17:31:28 -0500
-IronPort-SDR: TY9dNrQApMWFsFIZtRk4oQ5g+b4Cg/PXRBZFVNNXwRtiiNVwtFip41edv0E5lzxJRVuWvz4et4
- ABA0A1ebhoPA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9857"; a="165197263"
-X-IronPort-AV: E=Sophos;i="5.79,330,1602572400"; 
-   d="scan'208";a="165197263"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2021 14:30:48 -0800
-IronPort-SDR: GRIvykcqsFsBX5IUkApi96iKuddlVKRVnnMhUnbMfPHK2unGfa49J40ttknUjaGooGnXWT+ZhX
- FJUJXhfUgZVw==
-X-IronPort-AV: E=Sophos;i="5.79,330,1602572400"; 
-   d="scan'208";a="497664854"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.209.22.194]) ([10.209.22.194])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2021 14:30:47 -0800
-Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X vectors
- by group
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Megha Dey <megha.dey@linux.intel.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
-        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
-        megha.dey@intel.com
-References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
- <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
- <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <eabe50a6-efa8-ea96-d8ed-701a0564a13e@intel.com>
-Date:   Thu, 7 Jan 2021 14:30:45 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S1727107AbhAGWcI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Jan 2021 17:32:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2E84223609;
+        Thu,  7 Jan 2021 22:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610058687;
+        bh=xqP7nlN10qlLZWYC6/slW68hsvWo6XqMEBM86vXA8PE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=SEtDWiETVgcWKJelDtg/DLCmeXACklrk2otAdX9sTUYhhWvnOEPEmr698f2skfryg
+         4bF7SzGoXHwoLXAQY1kt2u5Vtnsyw5bzwBNQNwTE/r0w8XopBfZ8dQHtdz+JKC7XWK
+         33DZZWTgUENvFkX6zUBo1tOJqbPE4CZMu+knqNoQgGPDAVVP46e0doY8t8gp0FwMK6
+         JGR4hR4fpNWG/mwhAtJXw6c0C8/qu0xZFl9hSsobUmX1n5nULwaICDX1G5sX6z4OJo
+         Ujmx3RZXCnrymIDmgUmadIKku4LqSxZcH5m7LwUjPKg5scsT2iQGsNwDVzmmix0QE6
+         8hrQc9gSa3N4g==
+Received: by mail-ej1-f46.google.com with SMTP id lt17so11970896ejb.3;
+        Thu, 07 Jan 2021 14:31:27 -0800 (PST)
+X-Gm-Message-State: AOAM5307d4FQAWYI7VxDLFcyFPE5AOL59+A65BA7AwGbSQ3bw5Dma8A2
+        mRqhym6abDGcM/hHnc96qjE5nzpzhSNvZw+N8g==
+X-Google-Smtp-Source: ABdhPJxnu6dyOFmZT8UWWTmOntUJrh4NuvNqwX+ajT8EPvM5XfOIQFMoxWh7cN1XA2tLvNXzv8+fT+OgRjTVfE2v4+E=
+X-Received: by 2002:a17:906:1197:: with SMTP id n23mr684003eja.359.1610058685598;
+ Thu, 07 Jan 2021 14:31:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20201130211145.3012-1-james.quinlan@broadcom.com>
+ <20201130211145.3012-2-james.quinlan@broadcom.com> <20201209140122.GA331678@robh.at.kernel.org>
+ <CANCKTBsFALwF8Hy-=orH8D-nd-qyXqFDopATmKCvbqPbUTC7Sw@mail.gmail.com>
+In-Reply-To: <CANCKTBsFALwF8Hy-=orH8D-nd-qyXqFDopATmKCvbqPbUTC7Sw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 7 Jan 2021 15:31:13 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqKPKk3cPO8DG3FQVSHrKnO+Zed1R=PV7n7iAC+qJKgHcw@mail.gmail.com>
+Message-ID: <CAL_JsqKPKk3cPO8DG3FQVSHrKnO+Zed1R=PV7n7iAC+qJKgHcw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: PCI: Add bindings for Brcmstb EP
+ voltage regulators
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Mark Brown <broonie@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Thomas,
+On Mon, Jan 4, 2021 at 3:12 PM Jim Quinlan <jim2101024@gmail.com> wrote:
+>
+> On Wed, Dec 9, 2020 at 10:07 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, Nov 30, 2020 at 04:11:38PM -0500, Jim Quinlan wrote:
+> > > Quite similar to the regulator bindings found in "rockchip-pcie-host.txt",
+> > > this allows optional regulators to be attached and controlled by the
+> > > PCIe RC driver.
+> > >
+> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > ---
+> > >  .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12 ++++++++++++
+> > >  1 file changed, 12 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > index 807694b4f41f..baacc3d7ec87 100644
+> > > --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> > > @@ -85,6 +85,18 @@ properties:
+> > >        minItems: 1
+> > >        maxItems: 3
+> > >
+> > > +  vpcie12v-supply:
+> > > +    description: 12v regulator phandle for the endpoint device
+> > > +
+> > > +  vpcie3v3-supply:
+> > > +    description: 3.3v regulator phandle for the endpoint device
+> >
+> > 12V and 3.3V are standard slot supplies, can you add them to
+> > pci-bus.yaml. Then some day maybe we can have common slot handling code.
+> >
+> > With that, here you just need:
+> >
+> > vpcie3v3-supply: true
+>
+> Hi Rob,
+>
+> Sorry for the delay in responding -- I just came back from vacation.
 
-On 6/29/2019 12:59 AM, Thomas Gleixner wrote:
-> As already pointed out, that's overengineered.
-> 
-> First of all this patch is doing too many things at once. These changes
-> need to be split up in reviewable bits and pieces.
-> 
+NP, me too.
 
-I am looking into this work as I want to implement ability to do grouped
-partial allocations of MSI-X vectors over time in the ice Linux NIC driver.
+> The problem we have is that these regulators are not "slot" supplies
+> -- our HW does not support PCI slots, so if and when general slot
+> power-handling code came along it would probably screw us up.   If you
+> don't think there is a problem then I will submit the two supply-names
+> you OKed, even though they may not match the voltages we are using for
+> the EPs.
 
-> But I consider this approach as a POC and not something which can be meant
-> as a maintainable solution. It just duct tapes this new functionality into
-> the existing code thereby breaking things left and right. And even if you
-> can 'fix' these issues with more duct tape it won't be maintainable at all.
-> 
-> If you want to support group based allocations, then the PCI/MSI facility
-> has to be refactored from ground up.
-> 
+Maybe no slots, but you defined the voltages here and they look like
+standard voltages. Given this is at least the 2nd usage of these
+properties, it seemed like they should be common. Slot or no physical
+slot.
 
-I agree that this is the right direction to go, but I am having some
-trouble with following these steps when I started trying to implement
-this stuff.
+> For us, the supplies are for the EP chip's power.  We have the PCIe
+> controller turning them "on" for power-on/resume and "off" for
+> power-off/suspend.  We need the "xxx-supply" property in the
+> controller's DT node because of the chicken-and-egg situation: if the
+> property was in the EP's DT node, the RC  will never discover the EP
+> to see that there is a regulator to turn on.   We would be happy with
+> a single supply name, something like "ep-power".  We would be ecstatic
+> to have two (ep0-power, ep1-power).
 
->   1) Introduce the concept of groups by adding a group list head to struct
->      pci_dev. Ideally you create a new struct pci_dev_msi or whatever where
->      all this muck goes into.
-> 
+The chicken-and-egg problem is nothing new. The same thing has come up
+for USB, MDIO, MMC/SD to name a few. If devices on a discoverable bus
+are not discoverable, then they need to be described in DT. I've given
+suggestions many times how to fix the kernel side.
 
-So my big problem I keep running into is that struct msi_desc is used by
-several code paths that aren't PCI. It looks a bit odd trying to
-refactor things to support groups for the non-PCI bus code that uses
-struct msi_desc...
+As Mark said, there's no reason you can't look at other nodes for your
+data. The data a driver needs isn't always nicely packaged up into a
+single node. The DT structure should match the h/w. The EP is a
+different device from the PCI host and its supplies belong in its
+node.
 
-I'd appreciate any further thoughts you have on the right way to go
-forward here. I think that treated vector allocations as groups is a
-huge improvement, as it will make it easier to manage allocating MSI-X
-vectors without running into exhaustion issues due to over allocating.
+Not that if we really wanted to have complete slot support, we'd
+probably end up having slot nodes in DT. That's generally where we've
+ended up at for other cases.
 
-But does this need to be introduced as part of the generic linux/msi.h
-stuff? Doing this means refactoring a bunch of code paths which don't
-seem to care about grouping. But I can't find a good way to handle this
-grouping in just the PCI layer.
+Now there's a second problem here. If this is not standard PCIe rails
+which have a defined power sequencing, then you really need to
+describe the EP device in DT. Otherwise, we don't know what the power
+sequencing is. I will reject any properties such as delays which try
+to poorly describe power sequencing in DT.
 
->   2) Change the existing code to treat the current allocation mode as a
->      group allocation. Keep the entries in a new struct msi_entry_group and
->      have a group id, list head and the entries in there.
-> 
->      Take care of protecting the group list.
-> 
->      Assign group id 0 and add the entry_group to the list in the pci device.
-> 
->      Rework the related functions so they are group aware.
-> 
->      This can be split into preparatory and functional pieces, i.e. multiple
->      patches.
-> 
+>
+> I'm not sure if you remember but FlorianF talked to you about this
+> situation and concluded that something like the above was the way to
+> go forward.
 
-The locking issue here also seems somewhat problematic. A lot of paths
-that access the msi list don't seem to take a lock today. So any change
-that affects these users would force adding locks on all these flows.
+Unless it was last week, assume I don't remember.
 
-I guess for PCI code we could just stop using dev->msi_list altogether,
-and instead use a PCI specific struct pci_msi_group or something? This
-would mean that any flow that the PCI layer needs would have to take the
-group structure instead of or in addition to the device pointer... It's
-not clear how much code actually crosses between the PCI and non-PCI
-usages of struct msi_desc...
+>  For the latest pullreq I  just copied Rockchip's bindings
+> since you reviewed their bindings commit but it looks like you've
+> changed your mind.
 
->   3) Split out the 'first time' enablement code into separate functions and
->      store the relevant state in struct pci_dev_msi
-> 
->   4) Rename pci_alloc_irq_vectors_affinity() to
->      pci_alloc_irq_vectors_affinity_group() and add a group_id pointer
->      argument.
-> 
->      Make pci_alloc_irq_vectors_affinity() a wrapper function which hands
->      in a NULL group id pointer and does proper sanity checking.
-> 
->   5) Create similar constructs for related functionality
-> 
->   6) Enable the group allocation mode for subsequent allocations
-> 
+Well, no. First, it takes more than one to see a pattern. So yes, how
+we describe something might evolve. Second, I didn't ask for anything
+different from Rockchip here. Just move what Rockchip had to a common
+location to reuse. But your reply has convinced me you need an EP
+node.
 
-The rest of the flow makes sense, but I have been struggling with
-finding the right abstraction for handling the msi_desc groups.
-
-Does my idea of separating the PCI layer code to using its own structure
- (and iterators I guess?) instead of relying on msi_list make sense? I
-guess other code could be converted to groups as well, but I have been
-trying to find a good path forward that has minimal chance of breaking
-other users...
-
-I'd appreciate any insight here.
-
-Thanks,
-Jake
-
+>   Given the constraints I have described, what is
+> the best path forward?
+>
 > Thanks,
-> 
-> 	tglx
-> 
-> 
->   
-> 
-> 
+> Jim Quinlan
+> Broadcom STB
+> >
+> > > +
+> > > +  vpcie1v8-supply:
+> > > +    description: 1.8v regulator phandle for the endpoint device
+> > > +
+> > > +  vpcie0v9-supply:
+> > > +    description: 0.9v regulator phandle for the endpoint device
+> >
+> > These are not standard. They go to a soldered down device or
+> > non-standard connector? For the former, the device should really be
+> > described in DT and the supplies added there.
+> >
+> > Mini PCIe connector also has 1.5V supply.
+> >
+> > Rob
