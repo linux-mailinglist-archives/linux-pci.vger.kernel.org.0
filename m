@@ -2,117 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 427AE2EC69A
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 00:12:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FA582EC7E7
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 03:06:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbhAFXMW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 6 Jan 2021 18:12:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47582 "EHLO mail.kernel.org"
+        id S1726687AbhAGCEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 6 Jan 2021 21:04:55 -0500
+Received: from mga17.intel.com ([192.55.52.151]:49782 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbhAFXMV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 6 Jan 2021 18:12:21 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 631FD225AC;
-        Wed,  6 Jan 2021 23:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609974700;
-        bh=C4lkCxq3GgpIZnzJfvMgGcqHjmU2Xc7PbSpPSnKU/7A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MPCGJRH+rxnFAiLtgNX43diPJzGYKtNVmdsQNqc7ITnYe7s1YxYF4b5m23Xm0xgiJ
-         owZ/vBZYJmDsixuBNrON2YUAMPMV3ks+B+pAPxj79/plkwvRe/4pdB79mLHgqLCROZ
-         opbYJnAMrW/htY19T+KTSsGKVhdBiZyQ/TecMneAsH+uH+y97OdNkcPu5Rj131ZrGt
-         y+kw6ft6WCt6a689lqrt2lpUW4Ay7nJAZijjPEo0vgfGDBrMPbgRWacXVSoKtZP+Ds
-         kLjRgmeg5EU/faSdPi5YwVlX3RvTgcKbMRb+S471if/hTECfxAReQxyxe1UAOyNSfk
-         KpLjyA2RguIlQ==
-Date:   Wed, 6 Jan 2021 17:11:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mark Brown <broonie@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/6] PCI: brcmstb: Add panic/die handler to RC driver
-Message-ID: <20210106231139.GA1350432@bjorn-Precision-5520>
+        id S1726681AbhAGCEz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 6 Jan 2021 21:04:55 -0500
+IronPort-SDR: RDo+Mx/OtYC2dFG17EqGT7QI7R1c4bWYUYTxgr0x6Jc/xke1b3spqHZIG8wmC7rBr+w39UwOzQ
+ DOg4Si9B24Rw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9856"; a="157144509"
+X-IronPort-AV: E=Sophos;i="5.79,328,1602572400"; 
+   d="scan'208";a="157144509"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2021 18:03:09 -0800
+IronPort-SDR: n7P5Mq/oH8n/P6xpdUTkl4TlvjA9soP50rLbD+bSq6KWCK64WUnr40vtcFN1TADUSIK2rTRo5I
+ A3impTlyBmRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,328,1602572400"; 
+   d="scan'208";a="462867708"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.28]) ([10.239.159.28])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Jan 2021 18:03:02 -0800
+Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
+        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
+        dwmw2@infradead.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, kvm@vger.kernel.org, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
+Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for subdevice
+ irq domain
+To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
+References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
+ <20210106060613.GU31158@unreal>
+ <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
+ <20210106104017.GV31158@unreal> <20210106152339.GA552508@nvidia.com>
+ <20210106160158.GX31158@unreal>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <e2881bb1-4690-c665-923f-ff711432cc85@linux.intel.com>
+Date:   Thu, 7 Jan 2021 09:55:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANCKTBt7C+EhcpbgYdreK=xvQuOzEaDm+us-6P+PtoEfCny2Vg@mail.gmail.com>
+In-Reply-To: <20210106160158.GX31158@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 06, 2021 at 02:57:19PM -0500, Jim Quinlan wrote:
-> On Wed, Jan 6, 2021 at 2:42 PM Jim Quinlan <james.quinlan@broadcom.com> wrote:
-> >
-> > ---------- Forwarded message ---------
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Date: Wed, Jan 6, 2021 at 2:19 PM
-> > Subject: Re: [PATCH v2 5/6] PCI: brcmstb: Add panic/die handler to RC driver
-> > To: Jim Quinlan <james.quinlan@broadcom.com>
-> > Cc: <linux-pci@vger.kernel.org>, Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de>, <broonie@kernel.org>,
-> > <bcm-kernel-feedback-list@broadcom.com>, Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>, Bjorn
-> > Helgaas <bhelgaas@google.com>, Florian Fainelli
-> > <f.fainelli@gmail.com>, moderated list:BROADCOM BCM2711/BCM2835 ARM
-> > ARCHITECTURE <linux-rpi-kernel@lists.infradead.org>, moderated
-> > list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE
-> > <linux-arm-kernel@lists.infradead.org>, open list
-> > <linux-kernel@vger.kernel.org>
-> >
-> >
-> > On Mon, Nov 30, 2020 at 04:11:42PM -0500, Jim Quinlan wrote:
-> > > Whereas most PCIe HW returns 0xffffffff on illegal accesses and the like,
-> > > by default Broadcom's STB PCIe controller effects an abort.  This simple
-> > > handler determines if the PCIe controller was the cause of the abort and if
-> > > so, prints out diagnostic info.
-> > >
-> > > Example output:
-> > >   brcm-pcie 8b20000.pcie: Error: Mem Acc: 32bit, Read, @0x38000000
-> > >   brcm-pcie 8b20000.pcie:  Type: TO=0 Abt=0 UnspReq=1 AccDsble=0 BadAddr=0
-> >
-> > What does this mean for all the other PCI core code that expects
-> > 0xffffffff data returns?  Does it work?  Does it break differently on
-> > STB than on other platforms?
-> Hi Bjorn,
+On 1/7/21 12:01 AM, Leon Romanovsky wrote:
+> On Wed, Jan 06, 2021 at 11:23:39AM -0400, Jason Gunthorpe wrote:
+>> On Wed, Jan 06, 2021 at 12:40:17PM +0200, Leon Romanovsky wrote:
+>>
+>>> I asked what will you do when QEMU will gain needed functionality?
+>>> Will you remove QEMU from this list? If yes, how such "new" kernel will
+>>> work on old QEMU versions?
+>>
+>> The needed functionality is some VMM hypercall, so presumably new
+>> kernels that support calling this hypercall will be able to discover
+>> if the VMM hypercall exists and if so superceed this entire check.
 > 
-> Our PCIe HW causes a CPU abort when this happens.  Occasionally a
-> customer will have a fault handler try to fix up the abort and
-> continue on, but we recommend solving the root problem.  This commit
-> just gives us a chance to glean info about the problem.  Our newer
-> SOCs have a mode that doesn't abort and instead returns 0xffffffff.
-> 
-> BTW, can you point me to example files where "PCI core code that
-> expects  0xffffffff data returns" [on bad accesses]?
+> Let's not speculate, do we have well-known path?
 
-The most important case is during enumeration.  A config read to a
-device that doesn't exist normally terminates as an Unsupported
-Request, and pci_bus_generic_read_dev_vendor_id() depends on reading
-0xffffffff in that case.  I assume this particular case does work that
-way for brcm-pcie, because I assume enumeration does work.
+All these (hypercall detect and invoke) will be done in
+pci_subdevice_msi_create_irq_domain(). It will be transparent to the
+callers.
 
-pci_cfg_space_size_ext() is similar.  I assume this also works for
-brcm-pcie for the same reason.
+> Will such patch be taken to stable@/distros?
 
-pci_raw_set_power_state() looks for ~0, which it may see if it does a
-config read to a device in D3cold.  pci_dev_wait(), dpc_irq(),
-pcie_pme_work_fn(), pcie_pme_irq() are all similar.
+It will not be taken to stable. For distros, it depends. They can
+backport if they want to support the feature.
 
-Yes, this is ugly and we should check for these more consistently.
-
-The above are all for config reads.  The PCI core doesn't do MMIO
-accesses except for a few cases like MSI-X.  But drivers do, and if
-they check for PCIe errors on MMIO reads, they do it by looking for
-0xffffffff, e.g., pci_mmio_enabled() (in hfi1),
-qib_pci_mmio_enabled(), bnx2x_get_hwinfo(), etc.
-
-Bjorn
+Best regards,
+baolu
