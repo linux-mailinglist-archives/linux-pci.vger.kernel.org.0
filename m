@@ -2,151 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D8472EE701
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 21:36:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9FD12EE766
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 22:06:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbhAGUgY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jan 2021 15:36:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbhAGUgY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Jan 2021 15:36:24 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 916D723447;
-        Thu,  7 Jan 2021 20:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610051743;
-        bh=po85gdl4mbGgQ3zoAKeD43WPxXK5RT1mSTU3OKiNhVs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NVRc3ombNUhTsi7VIIbCgBTp1kgiAL1Ji/eNtcLjti6qYZY+t+QEoPGIH1xW4UdJ9
-         25QMgWFqBBAEx6d/Y27Y/Y6n/dwK1ent3pAwLqei9u1HrkCKZv785sqYUepu0/vkta
-         69GFvDk9iuqliL0u4s0XeULeOBJttxi40nVtmrGJ8DHrRUn/GB19V6WRf9oOkoqJhk
-         Ru+YV6Ypu3rwuv+DRNGTLYkL0D1bowS1u/yZVTRFxaLAv1oaG2mXYeg1/iKrtN2zBc
-         Dg9fkEmcQxixmbkCE1hSpcfHPXGK4Z48lpY5eONeAmtM4aPcaNxC9/QArsz6V9EF42
-         retcQ/wii/u3A==
-Received: by mail-ej1-f43.google.com with SMTP id t16so11433697ejf.13;
-        Thu, 07 Jan 2021 12:35:43 -0800 (PST)
-X-Gm-Message-State: AOAM533J5B0sDqWMwHaYWr1ugRTL5MI4a9+747DpnWKcBQw+OaTpTKDZ
-        beTyP7xBmaYpTkuvCsgrJNM2dh2UtaVCQEmSYA==
-X-Google-Smtp-Source: ABdhPJxkDPWtQ0xY3VDDd1hdruQ8+H5GEjOzabJ81Rv/cCTbHLoq+vApHQul7qsNmbmUkHWACC7bpPpeUJc3TjZuEfs=
-X-Received: by 2002:a17:907:2111:: with SMTP id qn17mr370152ejb.525.1610051742082;
- Thu, 07 Jan 2021 12:35:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <CAL_JsqL2ZXrTg9VFwGK4CawvyBbnHehF9W=cgVEJPzCRoM5G9g@mail.gmail.com>
- <bdd563a9-c8d4-307b-617c-139dda3e4984@arm.com> <CAL_Jsq+OUX2ctFwiqcQtM=oswyz8s-iq94eHW247sabYYF5B-A@mail.gmail.com>
- <5d4f85a4-248b-b62e-f976-63c6214bf588@arm.com>
-In-Reply-To: <5d4f85a4-248b-b62e-f976-63c6214bf588@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Jan 2021 13:35:30 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqK6eqAJBmC2Txb3GGaRt+_GL2kdSv1m1tCyx1KBheze_w@mail.gmail.com>
-Message-ID: <CAL_JsqK6eqAJBmC2Txb3GGaRt+_GL2kdSv1m1tCyx1KBheze_w@mail.gmail.com>
+        id S1727106AbhAGVGi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jan 2021 16:06:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbhAGVGi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jan 2021 16:06:38 -0500
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C36C0612F8
+        for <linux-pci@vger.kernel.org>; Thu,  7 Jan 2021 13:05:57 -0800 (PST)
+Received: by mail-qt1-x831.google.com with SMTP id z9so5257196qtn.4
+        for <linux-pci@vger.kernel.org>; Thu, 07 Jan 2021 13:05:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jonmasters-org.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FadgRMCjqSfK1p2dGVB6UAyZWKTELanycTILncMf0V4=;
+        b=sGo2d1y0YMj5ISVaYjlg8g3gbdADAkFDo37t100vvlXkZ7fFkSjTKQlrRrDsWKrCUM
+         B9fjXz6qkpzTNKXFbHd55FTLqcolca7TUsDvwQ7Qw1p07zeCbweNnbTQPGLqeJC4qfLk
+         pfsdgzeSMhVkyGhAvRqERvfnbdNMRB62RIUJlS2xH18378mAiB/Lihu8zG8NQhZs0PSb
+         M1dVPiSWzEk+H73tJds4x3i+3rBdMB8kyna/2wZju6dAE98GHRyraV9Ep1HAVl7e/LJB
+         BoWdt9dOB9e8LsAFNOmGTiNscYDBr5FnTi232BdHBrW3cbyDUb9qEdhBSddIfGWn7Vtu
+         R27g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FadgRMCjqSfK1p2dGVB6UAyZWKTELanycTILncMf0V4=;
+        b=CLPcWpn8lX6UZjbYNVa/JA5y+28tW7/A2n/me3aRFsydm95JxxOg/5QD8IiF8MlIed
+         2QuvZ04szNxdm9un+WBTTUpXzkh3WEV/rdC8yWWQU39zEVYxJ2eJHY/FwKSA0s7wN3y6
+         f45DSTH8wmQFvXb0vNuxPMtEwyNkt6kVrUWx8GZXkuesW71yhHp9K4JJ1usBJTkQ2QsH
+         a2iOhAAp5NSYuHiyjLS73grHIF7UVTFUbR7U3jXvK8y4t1bzLoTV7auHeQtfulxdbaoT
+         CSq3WYvwIN9oNyo69XpY8aM90a8/iOVFL3bfp2D+9WcdM258IGgYQ51UKsbmDbJIILZ7
+         xGhg==
+X-Gm-Message-State: AOAM531T06xz0CRB2eF+J6NUN4DucfModAArbn0Ad9/EAgv3Ot2FEGoQ
+        t0tV/jyNy1gfMzfBWr7M02rNVA==
+X-Google-Smtp-Source: ABdhPJxzXggeoNZjF84y+uAKodjui60LUjdVr31/hQwxp5mzN5dQTNGemD+VGIcUnS8c9gEW3/0GGA==
+X-Received: by 2002:ac8:5514:: with SMTP id j20mr479421qtq.387.1610053556805;
+        Thu, 07 Jan 2021 13:05:56 -0800 (PST)
+Received: from independence.bos.jonmasters.org (Boston.jonmasters.org. [50.195.43.97])
+        by smtp.gmail.com with ESMTPSA id z20sm3873243qkz.37.2021.01.07.13.05.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Jan 2021 13:05:56 -0800 (PST)
 Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     Will Deacon <will@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>
+Cc:     mark.rutland@arm.com, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, sudeep.holla@arm.com,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org
+References: <20210105045735.1709825-1-jeremy.linton@arm.com>
+ <20210107181416.GA3536@willie-the-truck>
+From:   Jon Masters <jcm@jonmasters.org>
+Organization: World Organi{s,z}ation of Broken Dreams
+Message-ID: <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
+Date:   Thu, 7 Jan 2021 16:05:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20210107181416.GA3536@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 7, 2021 at 12:45 PM Jeremy Linton <jeremy.linton@arm.com> wrote=
-:
->
-> Hi,
->
-> On 1/7/21 11:36 AM, Rob Herring wrote:
-> > On Thu, Jan 7, 2021 at 9:24 AM Jeremy Linton <jeremy.linton@arm.com> wr=
-ote:
-> >>
-> >> Hi,
-> >>
-> >>
-> >> On 1/7/21 9:28 AM, Rob Herring wrote:
-> >>> On Mon, Jan 4, 2021 at 9:57 PM Jeremy Linton <jeremy.linton@arm.com> =
-wrote:
-> >>>>
-> >>>> Given that most arm64 platform's PCI implementations needs quirks
-> >>>> to deal with problematic config accesses, this is a good place to
-> >>>> apply a firmware abstraction. The ARM PCI SMMCCC spec details a
-> >>>> standard SMC conduit designed to provide a simple PCI config
-> >>>> accessor. This specification enhances the existing ACPI/PCI
-> >>>> abstraction and expects power, config, etc functionality is handled
->
-> (trimming)
->
-> >>>>
-> >>>> +static int smccc_pcie_check_conduit(u16 seg)
-> >>>
-> >>> check what? Based on how you use this, perhaps _has_conduit() instead=
-.
-> >>
-> >> Sure.
-> >>
-> >>>
-> >>>> +{
-> >>>> +       struct arm_smccc_res res;
-> >>>> +
-> >>>> +       if (arm_smccc_1_1_get_conduit() =3D=3D SMCCC_CONDUIT_NONE)
-> >>>> +               return -EOPNOTSUPP;
-> >>>> +
-> >>>> +       arm_smccc_smc(SMCCC_PCI_VERSION, 0, 0, 0, 0, 0, 0, 0, &res);
-> >>>> +       if ((int)res.a0 < 0)
-> >>>> +               return -EOPNOTSUPP;
-> >>>> +
-> >>>> +       arm_smccc_smc(SMCCC_PCI_SEG_INFO, seg, 0, 0, 0, 0, 0, 0, &re=
-s);
-> >>>> +       if ((int)res.a0 < 0)
-> >>>> +               return -EOPNOTSUPP;
-> >>>
-> >>> Don't you need to check that read and write functions are supported?
-> >>
-> >> In theory no, the first version of the specification makes them
-> >> mandatory for all implementations. There isn't a partial access method=
-,
-> >> so nothing works if only read or write were implemented.
-> >
-> > Then the spec should change:
-> >
-> > 2.3.3 Caller responsibilities
-> > The caller has the following responsibilities:
-> > =E2=80=A2 The caller must ensure that this function is implemented befo=
-re
-> > issuing a call. This function is discoverable
-> > by calling PCI_FEATURES with pci_func_id set to 0x8400_0132.
-> >
-> >
-> > I guess knowing the version is ensuring, but the 2nd sentence makes it
-> > seem that is how one should ensure.
->
-> Ok, yes i understand, I will add the check.
->
-> >
-> > Related, are there any sort of tests for the interface? I generally
-> > don't think the kernel's job is validating firmware (a frequent topic
-> > for DT), but we should have something. Maybe an SMC unittest module?
-> > If nothing else, seems like we should have at least one PCI_FEATURES
-> > call to make sure it works. We don't want to add it later only to find
-> > that it breaks on some firmware implementations. Though we can just
-> > add firmware quirks. ;)
->
-> I'm not aware of any unit tests at the moment. My testing so far has
-> been against these patches:
-> https://review.trustedfirmware.org/q/topic:"Arm_PCI_Config_Space_Interfac=
-e"
->
-> But given the next version does the PCI_FEATURES calls, that will
-> satisfy your concern, right?
+Hi will, everyone,
 
-Somewhat, but that doesn't replace the need for unittests. We have
-PSCI checker, maybe the same thing should be required here. Otherwise,
-implementations will only be as good as what Linux currently expects.
+On 1/7/21 1:14 PM, Will Deacon wrote:
 
-Rob
+> On Mon, Jan 04, 2021 at 10:57:35PM -0600, Jeremy Linton wrote:
+>> Given that most arm64 platform's PCI implementations needs quirks
+>> to deal with problematic config accesses, this is a good place to
+>> apply a firmware abstraction. The ARM PCI SMMCCC spec details a
+>> standard SMC conduit designed to provide a simple PCI config
+>> accessor. This specification enhances the existing ACPI/PCI
+>> abstraction and expects power, config, etc functionality is handled
+>> by the platform. It also is very explicit that the resulting config
+>> space registers must behave as is specified by the pci specification.
+>>
+>> Lets hook the normal ACPI/PCI config path, and when we detect
+>> missing MADT data, attempt to probe the SMC conduit. If the conduit
+>> exists and responds for the requested segment number (provided by the
+>> ACPI namespace) attach a custom pci_ecam_ops which redirects
+>> all config read/write requests to the firmware.
+>>
+>> This patch is based on the Arm PCI Config space access document @
+>> https://developer.arm.com/documentation/den0115/latest
+> 
+> Why does firmware need to be involved with this at all? Can't we just
+> quirk Linux when these broken designs show up in production? We'll need
+> to modify Linux _anyway_ when the firmware interface isn't implemented
+> correctly...
+
+I agree with Will on this. I think we want to find a way to address some 
+of the non-compliance concerns through quirks in Linux. However...
+
+Several folks here (particularly Lorenzo) have diligently worked hard 
+over the past few years - and pushed their patience - to accommodate 
+hardware vendors with early "not quite compliant" systems. They've taken 
+lots of quirks that frankly shouldn't continue to be necessary were it 
+even remotely a priority in the vendor ecosystem to get a handle on 
+addressing PCIe compliance once and for all. But, again frankly, it 
+hasn't been enough of a priority to get this fixed. The third party IP 
+vendors *need* to address this, and their customers *need* to push back.
+
+We can't keep having a situation in which kinda-sorta compliant stuff 
+comes to market that would work out of the box but for whatever the 
+quirk is this time around. There have been multiple OS releases for the 
+past quite a few years on which this stuff could be tested prior to ever 
+taping out a chip, and so it ought not to be possible to come to market 
+now with an excuse that it wasn't tested. And yet here we still are. All 
+these years and still the message isn't quite being received properly. I 
+do know it takes time to make hardware, and some of it was designed 
+years before and is still trickling down into these threads. But I also 
+think there are cases where much more could have been done earlier.
+
+None of these vendors can possibly want this deep down. Their engineers 
+almost certainly realize that just having compliant ECAM would mean that 
+the hardware was infinitely more valuable being able to run out of the 
+box software that much more easily. And it's not just ECAM. Inevitably, 
+that is just the observable syndrome for worse issues, often with the 
+ITS and forcing quirked systems to have lousy legacy interrupts, etc. 
+Alas, this level of nuance is likely lost by the time it reaches upper 
+management, where "Linux" is all the same to them. I would hope that can 
+change. I would also remind them that if they want to run non-Linux 
+OSes, they will also want to be actually compliant. The willingness of 
+kind folks like Lorenzo and others here to entertain quirks is not 
+necessarily something you will find in every part of the industry.
+
+But that all said, we have a situation in which there are still 
+platforms out there that aren't fully compliant and something has to be 
+done to support them because otherwise it's going to be even more ugly 
+with vendor trees, distro hacks, and other stuff.
+
+Some of you in recent weeks have asked what I and others can do to help 
+from the distro and standardization side of things. To do my part, I'm 
+going to commit to reach out to assorted vendors and have a heart to 
+heart with them about really, truly fully addressing their compliance 
+issues. That includes Cadence, Synopsys, and others who need to stop 
+shipping IP that requires quirks, as well as SoC vendors who need to do 
+more to test their silicon with stock kernels prior to taping out. And I 
+would like to involve the good folks here who are trying to navigate.
+
+I would also politely suggest that we collectively consider how much 
+wiggle room there can be to use quirks for what we are stuck with rather 
+than an SMC-based solution. We all know that quirks can't be a free ride 
+forever. Those who need them should offer something strong in return. A 
+firm commitment that they will never come asking for the same stuff in 
+the future. Is there a way we can do something like that?
+
+Jon.
+
+-- 
+Computer Architect
