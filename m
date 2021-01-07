@@ -2,263 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A08C02ED389
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 16:30:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 328F42ED400
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 17:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbhAGP3j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jan 2021 10:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbhAGP3i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Jan 2021 10:29:38 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A01AB23426;
-        Thu,  7 Jan 2021 15:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610033337;
-        bh=FlnTD0YBDmMGVagGzH/S6ZOJ2bQI2qorsMBi3mqHwTw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tkdzd7t3sIprdNf2Mc/YH0Rqy6F9m5vOCm7ebE3QpDhkdm2wY/FsqIrDoRCh6dezT
-         xG80zGrl8Nm+STFyVx+P/Xx77PfKlbLpQ3J3hcHnh7zxRsf9QZ9zBK8M+JSu5+BaM2
-         dG8tX1sDQEFUwSGY3AhUJ/sz+OvUHoX8u2inZSvBo6KUyYyI0qDlWRCzCKEQJjSNA/
-         rPbtu5tG62HO7Gg3cbocpj3PNWsnl0RdMV1ElDlIHHKkizixk2TH5Z9a4HUJzcdxr9
-         vRLwpqTgWo7w9kvJZwQcD4O0oso/6ig9IA7OsUTNOeDhO7CqBHkgAZwTOKoEHO7pZ8
-         wjQuIxOcMLzSg==
-Received: by mail-ej1-f43.google.com with SMTP id ce23so10198218ejb.8;
-        Thu, 07 Jan 2021 07:28:57 -0800 (PST)
-X-Gm-Message-State: AOAM531DuxAIvx9IVs/naHeX6CF54k205Aecx8TF2MGuKFY/34F3F3SD
-        IQuMePz1tck8AElV87hMMm4jSVZzCeKjIgoGXA==
-X-Google-Smtp-Source: ABdhPJw33hPLvaeK9d3WoQDRtg3jF/7OXep4UsA0SgFuLiywt3w2fj0hzuMtbFMjH5zEj9lUQFI6dUJ8Yd6JECMAB+c=
-X-Received: by 2002:a17:906:1197:: with SMTP id n23mr6787245eja.359.1610033336210;
- Thu, 07 Jan 2021 07:28:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
-In-Reply-To: <20210105045735.1709825-1-jeremy.linton@arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Jan 2021 08:28:43 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqL2ZXrTg9VFwGK4CawvyBbnHehF9W=cgVEJPzCRoM5G9g@mail.gmail.com>
-Message-ID: <CAL_JsqL2ZXrTg9VFwGK4CawvyBbnHehF9W=cgVEJPzCRoM5G9g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728494AbhAGQLD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jan 2021 11:11:03 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:31259 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728247AbhAGQK6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 7 Jan 2021 11:10:58 -0500
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20210107161015epoutp03f081e9ed734c4f629576e56f6845bba8~X-wtE1ptM1297212972epoutp03F
+        for <linux-pci@vger.kernel.org>; Thu,  7 Jan 2021 16:10:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20210107161015epoutp03f081e9ed734c4f629576e56f6845bba8~X-wtE1ptM1297212972epoutp03F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1610035815;
+        bh=uuUvWOFqJZQ4hJc1/kGBf9qGITSHyVmlvTN7W+i4GGQ=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=HDmdlUbiAxkyhsVVVOzJkpfav/vFluy2dLEZwbMJFU1cCqRIC5m5DBEGqIOD6EC55
+         Xik7xls4Bs0TOt58n02crUVNZsJ98BbSrFEDa80WYHoZCgCWmDs+Gvu0+M37msuzo3
+         kJMgATkI65tUoAAmqZyqplkZdPY0bBmrbkRwNZGU=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20210107161014epcas5p3a2ef0cd705917e2d00a00c68e47cb19f~X-wsH93jX1863018630epcas5p3w;
+        Thu,  7 Jan 2021 16:10:14 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C8.0C.50652.66237FF5; Fri,  8 Jan 2021 01:10:14 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20210107152945epcas5p158e88c757a44e98f4e9a898d3ff5f87c~X-NVo2Ho21966319663epcas5p1k;
+        Thu,  7 Jan 2021 15:29:45 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20210107152945epsmtrp24d37acc3040721520f4db4480a46e8d9~X-NVn20W_0276302763epsmtrp2-;
+        Thu,  7 Jan 2021 15:29:45 +0000 (GMT)
+X-AuditID: b6c32a4a-6c9ff7000000c5dc-f8-5ff732660aad
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9C.1A.08745.9E827FF5; Fri,  8 Jan 2021 00:29:45 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20210107152943epsmtip204376ee473fbe0e1a3bab56a121d1785~X-NUMRDCG2046620466epsmtip2L;
+        Thu,  7 Jan 2021 15:29:43 +0000 (GMT)
+From:   Shradha Todi <shradha.t@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Cc:     pankaj.dubey@samsung.com, sriram.dash@samsung.com,
+        niyas.ahmed@samsung.com, p.rajanbabu@samsung.com,
+        l.mehra@samsung.com, hari.tv@samsung.com,
+        Shradha Todi <shradha.t@samsung.com>
+Subject: [PATCH v7 0/5] Add support to handle ZRX-DC Compliant PHYs
+Date:   Thu,  7 Jan 2021 20:58:38 +0530
+Message-Id: <1610033323-10560-1-git-send-email-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsWy7bCmhm6a0fd4g5u/FC0+TlvJZHHn+Q1G
+        i8u75rBZnJ13nM2i88ssNosnUx6xWhzdGGyxaOsXdovew7UWN9azO3B59G1ZxejxeZNcAFMU
+        l01Kak5mWWqRvl0CV8aknbEFn4QqzvYcZ2pg/M/XxcjJISFgItHbPIENxBYS2M0osXKZWBcj
+        F5D9iVFi9q3DLBCJz4wSe2+WdjFygDW8O8sOEd7FKLGvhwmivoVJYsGSv2AJNgEticavXcwg
+        tohAlMTM7a2sIDYzyIJV79NAbGEBZ4l1WyaCLWYRUJV4N+sWE4jNK+Aq0fR4BSPEcXISN891
+        MoMskBBYxy7x5tU3FoiEi8SH29ugioQlXh3fwg5hS0l8freXDcLOl5h64SkLxNEVEst76iDC
+        9hIHrswBCzMLaEqs36UPEZaVmHpqHRPEmXwSvb+fMEHEeSV2zIOxlSW+/N0DdYGkxLxjl1kh
+        bA+Jaa0TWCFhEiuxY/5i5gmMsrMQNixgZFzFKJlaUJybnlpsWmCUl1quV5yYW1yal66XnJ+7
+        iREc6VpeOxgfPvigd4iRiYPxEKMEB7OSCK/FsS/xQrwpiZVVqUX58UWlOanFhxilOViUxHl3
+        GDyIFxJITyxJzU5NLUgtgskycXBKNTCtbdz/yf+5zOnppvYX15j/3ca622/+Pa33/7t9NV+v
+        mOBT/kQj6MJGbsGr0aIpdRynHzv6bxWRz1CRPt7EcPTMg6upXZ22p7ceZ6ye7MgQ0XCw5kLt
+        j6s7rpw4+rkyTnEC07aVFm0pu17nz4l+EOL5x61FzO6Cw8UXcQ95VqV9/3gk/9z5uekfds77
+        P/mWvP6vo97nv6jOlZFqfdXvsb646lOU99x9jn8cahd+5ZuWUKhbW6JRc2r1yY1JTnobRc37
+        g0Xt+Q+3d0ZFL4ppSKvc8jR/S9Or+2zTZz1Rzcjxfa7C06FVdaJ1W4jxJaE7HcsW2d31vzSh
+        fWa8DOcvM1XtMzu23ph+MEj/GG/I4dilSizFGYmGWsxFxYkANE/LYGMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNJMWRmVeSWpSXmKPExsWy7bCSvO5Lje/xBjtn81l8nLaSyeLO8xuM
+        Fpd3zWGzODvvOJtF55dZbBZPpjxitTi6Mdhi0dYv7Ba9h2stbqxnd+Dy6NuyitHj8ya5AKYo
+        LpuU1JzMstQifbsEroxJO2MLPglVnO05ztTA+J+vi5GDQ0LAROLdWfYuRi4OIYEdjBLbjzYw
+        dzFyAsUlJT5fXMcEYQtLrPz3HKqoiUni4ME3rCAJNgEticavXWANIgIxEuv/3WQFKWIWOMwo
+        seL8QrBuYQFniXVbJrKB2CwCqhLvZt0Ci/MKuEo0PV7BCLFBTuLmuU7mCYw8CxgZVjFKphYU
+        56bnFhsWGOWllusVJ+YWl+al6yXn525iBIePltYOxj2rPugdYmTiYDzEKMHBrCTCa3HsS7wQ
+        b0piZVVqUX58UWlOavEhRmkOFiVx3gtdJ+OFBNITS1KzU1MLUotgskwcnFINTMKpqVLHnNtm
+        fPI+fbRKqEvUfo7wjpvVi3neOP5beezZ34RLpflH1Zty2/dcFGnlWOXQ/d1oy5/C/nscZR99
+        xd0XCUm5bfdY71TzrLjppqhca9edp9p++5LKVumy/lwza/9vlQnpQRrqmqLz7t66lrv4wrE8
+        I+55C7bpZDxZUTyJb5nS0hhhRqZVZcwL65jmtLWL9BssWnbt+ZV73KKTZ8zY1Ms5a3V/abT2
+        vrZ/Re/miS2dE3qt4Vz7ngOWImtUDh9ZfXyXxMreO/WVk8pCcjt97B+UFk7bx5/xRUZy1uFI
+        mzWvio27jj5mqWC9Vrj7yherAK/GNWri2YcXX1vDZHU09mXvo0wl8Tt1EqePsCmxFGckGmox
+        FxUnAgA5VS2yjgIAAA==
+X-CMS-MailID: 20210107152945epcas5p158e88c757a44e98f4e9a898d3ff5f87c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20210107152945epcas5p158e88c757a44e98f4e9a898d3ff5f87c
+References: <CGME20210107152945epcas5p158e88c757a44e98f4e9a898d3ff5f87c@epcas5p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 4, 2021 at 9:57 PM Jeremy Linton <jeremy.linton@arm.com> wrote:
->
-> Given that most arm64 platform's PCI implementations needs quirks
-> to deal with problematic config accesses, this is a good place to
-> apply a firmware abstraction. The ARM PCI SMMCCC spec details a
-> standard SMC conduit designed to provide a simple PCI config
-> accessor. This specification enhances the existing ACPI/PCI
-> abstraction and expects power, config, etc functionality is handled
-> by the platform. It also is very explicit that the resulting config
-> space registers must behave as is specified by the pci specification.
+According the PCI Express base specification when PHY does not meet ZRX-DC
+specification, after every 100ms timeout the link should transition to
+recovery state when the link is in low power states. 
 
-If we put it in a document, they must behave.
+Ports that meet the ZRX-DC specification for 2.5 GT/s while in the L1.Idle
+state and are therefore not required to implement the 100 ms timeout and
+transition to Recovery should avoid implementing it, since it will reduce
+the power savings expected from the L1 state.
 
-> Lets hook the normal ACPI/PCI config path, and when we detect
-> missing MADT data, attempt to probe the SMC conduit. If the conduit
-> exists and responds for the requested segment number (provided by the
-> ACPI namespace) attach a custom pci_ecam_ops which redirects
-> all config read/write requests to the firmware.
->
-> This patch is based on the Arm PCI Config space access document @
-> https://developer.arm.com/documentation/den0115/latest
+DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
 
-From the spec:
-"On some platforms, the SoC may only support 32-bit PCI configuration
-space writes. On such platforms, calls to this function with access
-size of 1 or 2 bytes may require the implementation of this function
-to perform a PCI configuration read, following by the write. This
-could result in inadvertently corrupting adjacent RW1C fields. It is
-the implementation responsibility to be aware of these situations and
-guard against them if possible."
+We need to get the PHY property in controller driver. So, we are proposing
+a new method phy_property_present() in the phy driver.
 
-First, this contradicts the above statement about being compliant with
-the PCI spec. Second, Linux is left to just guess whether this is the
-case or not? I guess it would be pointless for firmware to advertise
-this because it could just lie.
+PCIe controller platform drivers should populate the phy_zrxdc_compliant
+flag, which will be used by generic DesignWare driver.
 
-I would like to know how to 'guard against them' so I can implement
-that in the kernel accessors.
+pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> ---
->  arch/arm64/kernel/pci.c   | 87 +++++++++++++++++++++++++++++++++++++++
->  include/linux/arm-smccc.h | 26 ++++++++++++
->  2 files changed, 113 insertions(+)
->
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 1006ed2d7c60..56d3773aaa25 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -7,6 +7,7 @@
->   */
->
->  #include <linux/acpi.h>
-> +#include <linux/arm-smccc.h>
->  #include <linux/init.h>
->  #include <linux/io.h>
->  #include <linux/kernel.h>
-> @@ -107,6 +108,90 @@ static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
->         return status;
->  }
->
-> +static int smccc_pcie_check_conduit(u16 seg)
+Patchset v2 can be found at:
+- 1/2: https://lkml.org/lkml/2019/11/11/672
+- 2/2: https://lkml.org/lkml/2019/10/28/285
 
-check what? Based on how you use this, perhaps _has_conduit() instead.
+Changes w.r.t v2:
+- Addressed review comments
+- Rebased on latest linus/master
 
-> +{
-> +       struct arm_smccc_res res;
-> +
-> +       if (arm_smccc_1_1_get_conduit() == SMCCC_CONDUIT_NONE)
-> +               return -EOPNOTSUPP;
-> +
-> +       arm_smccc_smc(SMCCC_PCI_VERSION, 0, 0, 0, 0, 0, 0, 0, &res);
-> +       if ((int)res.a0 < 0)
-> +               return -EOPNOTSUPP;
-> +
-> +       arm_smccc_smc(SMCCC_PCI_SEG_INFO, seg, 0, 0, 0, 0, 0, 0, &res);
-> +       if ((int)res.a0 < 0)
-> +               return -EOPNOTSUPP;
+Changes w.r.t v3:
+- Added linux-pci@xxxxxxxxxxxxxxx as pointed by Gustavo, Sorry for annoying.
 
-Don't you need to check that read and write functions are supported?
+Changes w.r.t v4:
+- Addressed review comments from Andrew Murray
+- Rebased on latest linus/master
 
-> +
-> +       pr_info("PCI: SMC conduit attached to segment %d\n", seg);
-> +
-> +       return 0;
-> +}
-> +
-> +static int smccc_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
-> +                                 int where, int size, u32 *val)
-> +{
-> +       struct arm_smccc_res res;
-> +
-> +       devfn |= bus->number << 8;
-> +       devfn |= bus->domain_nr << 16;
-> +
-> +       arm_smccc_smc(SMCCC_PCI_READ, devfn, where, size, 0, 0, 0, 0, &res);
-> +       if (res.a0) {
-> +               *val = ~0;
-> +               return -PCIBIOS_BAD_REGISTER_NUMBER;
-> +       }
-> +
-> +       *val = res.a1;
-> +       return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +static int smccc_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
-> +                                  int where, int size, u32 val)
-> +{
-> +       struct arm_smccc_res res;
-> +
-> +       devfn |= bus->number << 8;
-> +       devfn |= bus->domain_nr << 16;
-> +
-> +       arm_smccc_smc(SMCCC_PCI_WRITE, devfn, where, size, val, 0, 0, 0, &res);
-> +       if (res.a0)
-> +               return -PCIBIOS_BAD_REGISTER_NUMBER;
-> +
-> +       return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +static const struct pci_ecam_ops smccc_pcie_ecam_ops = {
-> +       .bus_shift      = 8,
+Changes w.r.t v5:
+- Added check for NULL pointer
 
-Drop. You don't use this and it's not ECAM. Though I'm wondering why
-the smc interface is not just ECAM shifts instead of making up our
-own. I would have made segment its own register rather than reg
-offset.
+Changes w.r.t v6:
+- Rebased on latest linus/master
+- Used this feature in nvidia tegra files
 
-> +       .pci_ops        = {
-> +               .read           = smccc_pcie_config_read,
-> +               .write          = smccc_pcie_config_write,
-> +       }
-> +};
-> +
-> +static struct pci_config_window *
-> +pci_acpi_setup_smccc_mapping(struct acpi_pci_root *root)
-> +{
-> +       struct device *dev = &root->device->dev;
-> +       struct resource *bus_res = &root->secondary;
-> +       struct pci_config_window *cfg;
-> +
-> +       cfg = kzalloc(sizeof(*cfg), GFP_KERNEL);
-> +       if (!cfg)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       cfg->parent = dev;
-> +       cfg->ops = &smccc_pcie_ecam_ops;
-> +       cfg->busr.start = bus_res->start;
-> +       cfg->busr.end = bus_res->end;
-> +       cfg->busr.flags = IORESOURCE_BUS;
-> +
-> +       cfg->res.name = "PCI SMCCC";
-> +       if (cfg->ops->init)
-> +               cfg->ops->init(cfg);
-> +       return cfg;
-> +}
-> +
->  /*
->   * Lookup the bus range for the domain in MCFG, and set up config space
->   * mapping.
-> @@ -125,6 +210,8 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root *root)
->
->         ret = pci_mcfg_lookup(root, &cfgres, &ecam_ops);
->         if (ret) {
-> +               if (!smccc_pcie_check_conduit(seg))
-> +                       return pci_acpi_setup_smccc_mapping(root);
->                 dev_err(dev, "%04x:%pR ECAM region not found\n", seg, bus_res);
->                 return NULL;
->         }
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> index f860645f6512..327f52533c71 100644
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -89,6 +89,32 @@
->
->  #define SMCCC_ARCH_WORKAROUND_RET_UNAFFECTED   1
->
-> +/* PCI ECAM conduit */
-> +#define SMCCC_PCI_VERSION                                              \
-> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
-> +                          ARM_SMCCC_SMC_32,                            \
-> +                          ARM_SMCCC_OWNER_STANDARD, 0x0130)
-> +
-> +#define SMCCC_PCI_FEATURES                                             \
-> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
-> +                          ARM_SMCCC_SMC_32,                            \
-> +                          ARM_SMCCC_OWNER_STANDARD, 0x0131)
-> +
-> +#define SMCCC_PCI_READ                                                 \
-> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
-> +                          ARM_SMCCC_SMC_32,                            \
-> +                          ARM_SMCCC_OWNER_STANDARD, 0x0132)
-> +
-> +#define SMCCC_PCI_WRITE                                                        \
-> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
-> +                          ARM_SMCCC_SMC_32,                            \
-> +                          ARM_SMCCC_OWNER_STANDARD, 0x0133)
-> +
-> +#define SMCCC_PCI_SEG_INFO                                             \
-> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
-> +                          ARM_SMCCC_SMC_32,                            \
-> +                          ARM_SMCCC_OWNER_STANDARD, 0x0134)
-> +
->  /* Paravirtualised time calls (defined by ARM DEN0057A) */
->  #define ARM_SMCCC_HV_PV_TIME_FEATURES                          \
->         ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                 \
-> --
-> 2.26.2
->
+Pankaj Dubey (3):
+  phy: core: add phy_property_present method
+  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
+  PCI: tegra: Remove platform driver support for ZRX-DC compliant PHY
+
+Shradha Todi (2):
+  dt-bindings: PHY: P2U: Add binding for ZRX-DC PHY property
+  arm64: tegra: Add support for ZRX DC PHY property
+
+ .../devicetree/bindings/phy/phy-tegra194-p2u.txt     |  4 ++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi             | 20 ++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.c         |  6 ++++++
+ drivers/pci/controller/dwc/pcie-designware.h         |  4 ++++
+ drivers/pci/controller/dwc/pcie-tegra194.c           | 17 ++++++++---------
+ drivers/phy/phy-core.c                               | 20 ++++++++++++++++++++
+ include/linux/phy/phy.h                              |  6 ++++++
+ 7 files changed, 68 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
+
