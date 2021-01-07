@@ -2,149 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC3702EE7EE
-	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 22:51:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54ED52EE8B6
+	for <lists+linux-pci@lfdr.de>; Thu,  7 Jan 2021 23:32:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbhAGVuW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 7 Jan 2021 16:50:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
+        id S1727858AbhAGWb3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 7 Jan 2021 17:31:29 -0500
+Received: from mga18.intel.com ([134.134.136.126]:51397 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726646AbhAGVuV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 7 Jan 2021 16:50:21 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9D898235FD;
-        Thu,  7 Jan 2021 21:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610056180;
-        bh=NKZE6PdR9JztQJPwMPf2hFCSqm4ah1QPPW+bytfED/Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QaGwjOMBN0itOGBb0VTuf1v7vh/+IomHQllnlDe49lzk69QEW+6IIyd2myU4+RjSH
-         3V4bPXyqrN87NIkSAA6pc2lWF1AarAl7e84AADby/6K/HzvwzEMuAIC3LG/UYbUZlk
-         lYUpThJo0iCpOh6CXHqK6lQaUc7KxfMSlUUmWJl5knkv1ssaSQBMB1m+Sn0HaQ/0bk
-         72VHh8xo77DMO3wMMMofnN/SLV2uACiv5DbhgMNMjqrf+ebEwBHo+ScNOFulzfpXQr
-         yMY56cVwUNcgBLrbAaSrBLRtbL3yB22/LwBF38iQ9YChAM81Xgk5A5Efp7tAbnPNhy
-         AoPD1hgMoTQqg==
-Received: by mail-ed1-f52.google.com with SMTP id y24so9161213edt.10;
-        Thu, 07 Jan 2021 13:49:40 -0800 (PST)
-X-Gm-Message-State: AOAM533utKy0cAjndIzCyazpPndjDz1z+6JFozuifmT6HsG1I2rgBfxB
-        NxWlK5HFND29BFBtR8SAebrDder2+jaDyRM61Q==
-X-Google-Smtp-Source: ABdhPJygWhHryn9+o20dWtEsL533MrDb5EZEc0hqSc5ZXSI1tgLSuOAdWKmgl9Xau3/1/fs5tggNXrspLlqNCJbzbUw=
-X-Received: by 2002:a05:6402:ca2:: with SMTP id cn2mr3113970edb.137.1610056179212;
- Thu, 07 Jan 2021 13:49:39 -0800 (PST)
+        id S1726854AbhAGWb2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 7 Jan 2021 17:31:28 -0500
+IronPort-SDR: TY9dNrQApMWFsFIZtRk4oQ5g+b4Cg/PXRBZFVNNXwRtiiNVwtFip41edv0E5lzxJRVuWvz4et4
+ ABA0A1ebhoPA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9857"; a="165197263"
+X-IronPort-AV: E=Sophos;i="5.79,330,1602572400"; 
+   d="scan'208";a="165197263"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2021 14:30:48 -0800
+IronPort-SDR: GRIvykcqsFsBX5IUkApi96iKuddlVKRVnnMhUnbMfPHK2unGfa49J40ttknUjaGooGnXWT+ZhX
+ FJUJXhfUgZVw==
+X-IronPort-AV: E=Sophos;i="5.79,330,1602572400"; 
+   d="scan'208";a="497664854"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.209.22.194]) ([10.209.22.194])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2021 14:30:47 -0800
+Subject: Re: [RFC V1 RESEND 2/6] PCI/MSI: Dynamic allocation of MSI-X vectors
+ by group
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Megha Dey <megha.dey@linux.intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marc.zyngier@arm.com,
+        ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        megha.dey@intel.com
+References: <1561162778-12669-1-git-send-email-megha.dey@linux.intel.com>
+ <1561162778-12669-3-git-send-email-megha.dey@linux.intel.com>
+ <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <eabe50a6-efa8-ea96-d8ed-701a0564a13e@intel.com>
+Date:   Thu, 7 Jan 2021 14:30:45 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <20210107181416.GA3536@willie-the-truck> <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
-In-Reply-To: <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 7 Jan 2021 14:49:27 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqKuAOCOtg-Qh1=CtQBQHu+kXqQnsees6F-gOCk3BedOzQ@mail.gmail.com>
-Message-ID: <CAL_JsqKuAOCOtg-Qh1=CtQBQHu+kXqQnsees6F-gOCk3BedOzQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-To:     Jon Masters <jcm@jonmasters.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <alpine.DEB.2.21.1906280739100.32342@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 7, 2021 at 2:06 PM Jon Masters <jcm@jonmasters.org> wrote:
->
-> Hi will, everyone,
->
-> On 1/7/21 1:14 PM, Will Deacon wrote:
->
-> > On Mon, Jan 04, 2021 at 10:57:35PM -0600, Jeremy Linton wrote:
-> >> Given that most arm64 platform's PCI implementations needs quirks
-> >> to deal with problematic config accesses, this is a good place to
-> >> apply a firmware abstraction. The ARM PCI SMMCCC spec details a
-> >> standard SMC conduit designed to provide a simple PCI config
-> >> accessor. This specification enhances the existing ACPI/PCI
-> >> abstraction and expects power, config, etc functionality is handled
-> >> by the platform. It also is very explicit that the resulting config
-> >> space registers must behave as is specified by the pci specification.
-> >>
-> >> Lets hook the normal ACPI/PCI config path, and when we detect
-> >> missing MADT data, attempt to probe the SMC conduit. If the conduit
-> >> exists and responds for the requested segment number (provided by the
-> >> ACPI namespace) attach a custom pci_ecam_ops which redirects
-> >> all config read/write requests to the firmware.
-> >>
-> >> This patch is based on the Arm PCI Config space access document @
-> >> https://developer.arm.com/documentation/den0115/latest
-> >
-> > Why does firmware need to be involved with this at all? Can't we just
-> > quirk Linux when these broken designs show up in production? We'll need
-> > to modify Linux _anyway_ when the firmware interface isn't implemented
-> > correctly...
->
-> I agree with Will on this. I think we want to find a way to address some
-> of the non-compliance concerns through quirks in Linux. However...
->
-> Several folks here (particularly Lorenzo) have diligently worked hard
-> over the past few years - and pushed their patience - to accommodate
-> hardware vendors with early "not quite compliant" systems. They've taken
-> lots of quirks that frankly shouldn't continue to be necessary were it
-> even remotely a priority in the vendor ecosystem to get a handle on
-> addressing PCIe compliance once and for all. But, again frankly, it
-> hasn't been enough of a priority to get this fixed. The third party IP
-> vendors *need* to address this, and their customers *need* to push back.
->
-> We can't keep having a situation in which kinda-sorta compliant stuff
-> comes to market that would work out of the box but for whatever the
-> quirk is this time around. There have been multiple OS releases for the
-> past quite a few years on which this stuff could be tested prior to ever
-> taping out a chip, and so it ought not to be possible to come to market
-> now with an excuse that it wasn't tested. And yet here we still are. All
-> these years and still the message isn't quite being received properly. I
-> do know it takes time to make hardware, and some of it was designed
-> years before and is still trickling down into these threads. But I also
-> think there are cases where much more could have been done earlier.
->
-> None of these vendors can possibly want this deep down. Their engineers
-> almost certainly realize that just having compliant ECAM would mean that
-> the hardware was infinitely more valuable being able to run out of the
-> box software that much more easily. And it's not just ECAM. Inevitably,
-> that is just the observable syndrome for worse issues, often with the
-> ITS and forcing quirked systems to have lousy legacy interrupts, etc.
-> Alas, this level of nuance is likely lost by the time it reaches upper
-> management, where "Linux" is all the same to them. I would hope that can
-> change. I would also remind them that if they want to run non-Linux
-> OSes, they will also want to be actually compliant. The willingness of
-> kind folks like Lorenzo and others here to entertain quirks is not
-> necessarily something you will find in every part of the industry.
->
-> But that all said, we have a situation in which there are still
-> platforms out there that aren't fully compliant and something has to be
-> done to support them because otherwise it's going to be even more ugly
-> with vendor trees, distro hacks, and other stuff.
->
-> Some of you in recent weeks have asked what I and others can do to help
-> from the distro and standardization side of things. To do my part, I'm
-> going to commit to reach out to assorted vendors and have a heart to
-> heart with them about really, truly fully addressing their compliance
-> issues. That includes Cadence, Synopsys, and others who need to stop
-> shipping IP that requires quirks, as well as SoC vendors who need to do
-> more to test their silicon with stock kernels prior to taping out. And I
-> would like to involve the good folks here who are trying to navigate.
+Hi Thomas,
 
-I agree with almost all this, but one issue on testing with stock
-kernels. I've been on the other side of this though it's been a while
-now. I've never seen much more than 'boot Linux' for pre Si testing.
-I'd guess every platform did that (Calxeda's 64-bit chip did :)).
-Maybe deeper pockets do more. Given the increased firmware that runs
-before Linux nowadays that's probably only gotten harder. So while
-testing with Linux is great, we still need to be specific about what's
-compliant and not compliant. For example, stock linux can support
-32-bit only accesses, but that's not what we'd consider passing. Maybe
-Linux quirks need to be louder. Customers tend to not like seeing
-error messages.
+On 6/29/2019 12:59 AM, Thomas Gleixner wrote:
+> As already pointed out, that's overengineered.
+> 
+> First of all this patch is doing too many things at once. These changes
+> need to be split up in reviewable bits and pieces.
+> 
 
-Rob
+I am looking into this work as I want to implement ability to do grouped
+partial allocations of MSI-X vectors over time in the ice Linux NIC driver.
+
+> But I consider this approach as a POC and not something which can be meant
+> as a maintainable solution. It just duct tapes this new functionality into
+> the existing code thereby breaking things left and right. And even if you
+> can 'fix' these issues with more duct tape it won't be maintainable at all.
+> 
+> If you want to support group based allocations, then the PCI/MSI facility
+> has to be refactored from ground up.
+> 
+
+I agree that this is the right direction to go, but I am having some
+trouble with following these steps when I started trying to implement
+this stuff.
+
+>   1) Introduce the concept of groups by adding a group list head to struct
+>      pci_dev. Ideally you create a new struct pci_dev_msi or whatever where
+>      all this muck goes into.
+> 
+
+So my big problem I keep running into is that struct msi_desc is used by
+several code paths that aren't PCI. It looks a bit odd trying to
+refactor things to support groups for the non-PCI bus code that uses
+struct msi_desc...
+
+I'd appreciate any further thoughts you have on the right way to go
+forward here. I think that treated vector allocations as groups is a
+huge improvement, as it will make it easier to manage allocating MSI-X
+vectors without running into exhaustion issues due to over allocating.
+
+But does this need to be introduced as part of the generic linux/msi.h
+stuff? Doing this means refactoring a bunch of code paths which don't
+seem to care about grouping. But I can't find a good way to handle this
+grouping in just the PCI layer.
+
+>   2) Change the existing code to treat the current allocation mode as a
+>      group allocation. Keep the entries in a new struct msi_entry_group and
+>      have a group id, list head and the entries in there.
+> 
+>      Take care of protecting the group list.
+> 
+>      Assign group id 0 and add the entry_group to the list in the pci device.
+> 
+>      Rework the related functions so they are group aware.
+> 
+>      This can be split into preparatory and functional pieces, i.e. multiple
+>      patches.
+> 
+
+The locking issue here also seems somewhat problematic. A lot of paths
+that access the msi list don't seem to take a lock today. So any change
+that affects these users would force adding locks on all these flows.
+
+I guess for PCI code we could just stop using dev->msi_list altogether,
+and instead use a PCI specific struct pci_msi_group or something? This
+would mean that any flow that the PCI layer needs would have to take the
+group structure instead of or in addition to the device pointer... It's
+not clear how much code actually crosses between the PCI and non-PCI
+usages of struct msi_desc...
+
+>   3) Split out the 'first time' enablement code into separate functions and
+>      store the relevant state in struct pci_dev_msi
+> 
+>   4) Rename pci_alloc_irq_vectors_affinity() to
+>      pci_alloc_irq_vectors_affinity_group() and add a group_id pointer
+>      argument.
+> 
+>      Make pci_alloc_irq_vectors_affinity() a wrapper function which hands
+>      in a NULL group id pointer and does proper sanity checking.
+> 
+>   5) Create similar constructs for related functionality
+> 
+>   6) Enable the group allocation mode for subsequent allocations
+> 
+
+The rest of the flow makes sense, but I have been struggling with
+finding the right abstraction for handling the msi_desc groups.
+
+Does my idea of separating the PCI layer code to using its own structure
+ (and iterators I guess?) instead of relying on msi_list make sense? I
+guess other code could be converted to groups as well, but I have been
+trying to find a good path forward that has minimal chance of breaking
+other users...
+
+I'd appreciate any insight here.
+
+Thanks,
+Jake
+
+> Thanks,
+> 
+> 	tglx
+> 
+> 
+>   
+> 
+> 
