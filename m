@@ -2,233 +2,236 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 568162EF6A7
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jan 2021 18:43:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CC662EF894
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jan 2021 21:13:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbhAHRmj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jan 2021 12:42:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
+        id S1728975AbhAHUNn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jan 2021 15:13:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbhAHRmj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 Jan 2021 12:42:39 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D0AB123A61;
-        Fri,  8 Jan 2021 17:41:57 +0000 (UTC)
+        id S1728894AbhAHUNm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Jan 2021 15:13:42 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4408623AAC;
+        Fri,  8 Jan 2021 20:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610127718;
-        bh=GFtKttkqbdi9rYoH152XnHzKYvTSzHQHnqBH//h/mdI=;
+        s=k20201202; t=1610136781;
+        bh=0+oDcnV/Kj32RXiBZBSk7/49tBpNnfdZxwIjSKX2pNw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IUIanDAa/QqWP856QxDi8Ry4gOTDDoMSWt3E+21fwLlU/NpIFxAtz554DVs9hc4S6
-         MHpIPYM3+YPyytKQR/ciIE5ulHu2yXfl9TxlDyDUkKMVJjM9ZBgYPzm1uPftDc7UOE
-         LDl5tc/ctLYxiQKg9v/btnJ66RyZ6WUpQrwbAVwqv7w2w7W3MbowNtgHHmn+E7OXOT
-         hg043KOVgQUkLTnVj8A0GRk1d9rm6BThgqFLR3SUV1lH5c/hcJ2PxTmrIKZelEQ/45
-         Kp+hUtuHxM/2uSOz+gKoOo9o8l1hJkA11JllQJG7lSQcEpMCjwPPEiUGRag47zJ0PM
-         CwnPGy5AaTXbQ==
-Date:   Fri, 8 Jan 2021 11:41:56 -0600
+        b=ex/Uh2MDzPJi1iAkVyhPKlQyJ+jCwoSR5+iRgLWV+odV1dVA6zEtDGIaJANmndtoN
+         RiYYwk+sGJFOPEWQV7nOyupWihX1Bs4kFJUxJHxkgXKceqV4uruku7MiUiPbWKre1e
+         451/DOO643x1oG+4bv8lrNVgN1VSEKyaS1CR33N8W+Vw9gQ5hC43eR8RLvxOGi17JX
+         ua7D9MOeJl5+xdBMQr54EGjDEeJ4XP8lNm0Cco8AUmBKOLuSUKoIqffSEu7wGrkDo1
+         n64xDhj5dVXqdUuny3nb/T5P8ayxcXL9NF0x4yUFhK9osdVpkMGvDFhRh1Cw61XWcT
+         PKob4D5kb6epg==
+Date:   Fri, 8 Jan 2021 14:12:59 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     lvying6 <lvying6@huawei.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        fanwentao@huawei.com, Loic Poulain <loic.poulain@linaro.org>
-Subject: Re: [PATCH] AER: add ratelimit for PCIe AER corrected error storm
- log print
-Message-ID: <20210108174156.GA1453200@bjorn-Precision-5520>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Boqun Feng <Boqun.Feng@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "\"H. Peter Anvin\"" <hpa@zytor.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] Hyper-V: pci: x64: Generalize irq/msi set-up and
+ handling
+Message-ID: <20210108201259.GA1461930@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1610111940-5972-1-git-send-email-lvying6@huawei.com>
+In-Reply-To: <SN4PR2101MB0880A1BF1E62836EED4B8358C0AE9@SN4PR2101MB0880.namprd21.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Loic]
+At the very least you could pick one of the subject line prefixes that
+has been used before for either mshyperv.h or pci-hyperv.c instead of
+making up something completely new and different.
 
-On Fri, Jan 08, 2021 at 09:19:00PM +0800, lvying6 wrote:
-> PCIe AER corrected error storm will flush effective system log. System
-> log will hold only the same PCIe AER correted error info. Add ratelimit
-> for PCIe AER corrected error make system log hold other more effective
-> system log info.
+On Fri, Jan 08, 2021 at 07:31:08AM +0000, Sunil Muthuswamy wrote:
+> Currently, operations related to irq/msi in Hyper-V vPCI are
+> x86-specific code. In order to support virtual PCI on Hyper-V for
+> other architectures, introduce generic interfaces to replace the
+> x86-specific ones. There are no functional changes in this patch.
 > 
-> Signed-off-by: lvying6 <lvying6@huawei.com>
-
-Needs a real name, see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n361
-
-For general tips, see https://lore.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com
-
-For my response to similar patch, see https://lore.kernel.org/r/20201204180615.GA1754610@bjorn-Precision-5520
-
-TL;DR: we need to figure out and fix the root cause rather than
-applying a band-aid.
-
+> Co-developed-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+> Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
+> Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 > ---
->  drivers/pci/pcie/aer.c | 113 +++++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 95 insertions(+), 18 deletions(-)
+> In V2:
+> - Addressed feedback on SoB tab.
+> - Added a second patch to move the MSI entry definition.
+> ---
+>  arch/x86/include/asm/mshyperv.h     | 24 +++++++++++++++++++++
+>  drivers/pci/controller/pci-hyperv.c | 33 +++++++++++++++++------------
+>  2 files changed, 44 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 77b0f2c..ba20bb05 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -114,6 +114,76 @@ bool pci_aer_available(void)
->  	return !pcie_aer_disable && pci_msi_enabled();
->  }
+> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+> index ffc289992d1b..05b32ef57e34 100644
+> --- a/arch/x86/include/asm/mshyperv.h
+> +++ b/arch/x86/include/asm/mshyperv.h
+> @@ -245,6 +245,30 @@ bool hv_vcpu_is_preempted(int vcpu);
+>  static inline void hv_apic_init(void) {}
+>  #endif
 >  
-> +/* Not more than 2 messages every 5 seconds */
-> +static DEFINE_RATELIMIT_STATE(ratelimit_aer, 5*HZ, 2);
+> +#define hv_msi_handler		handle_edge_irq
+> +#define hv_msi_handler_name	"edge"
+> +#define hv_msi_prepare		pci_msi_prepare
 > +
-> +/*
-> + * aer_ratelimit - AER log ratelimit
-> + * @rs: ratelimit_state data
-> + * @log_start: first aer log print statement
-> + *
-> + * a complete aer log is composed of log from several functions
-> + * use printk_ratelimit for each aer log print statement will lose part
-> + * of the aer log cause the log to be incomplete
-> + *
-> + * RETURNS:
-> + * 0 means callbacks will be suppressed.
-> + * 1 means go ahead and do it.
-> + */
-> +static int aer_ratelimit(struct ratelimit_state *rs, bool log_start)
+> +/* Returns the Hyper-V PCI parent MSI vector domain. */
+> +static inline struct irq_domain *hv_msi_parent_vector_domain(void)
 > +{
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	if (!rs->interval)
-> +		return 1;
-> +
-> +	/*
-> +	 * If we contend on this state's lock then almost
-> +	 * by definition we are too busy to print a message,
-> +	 * in addition to the one that will be printed by
-> +	 * the entity that is holding the lock already:
-> +	 */
-> +	if (!raw_spin_trylock_irqsave(&rs->lock, flags))
-> +		return 0;
-> +
-> +	if (!rs->begin)
-> +		rs->begin = jiffies;
-> +
-> +	if (time_is_before_jiffies(rs->begin + rs->interval)) {
-> +		if (rs->missed) {
-> +			if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE)) {
-> +				printk_deferred(KERN_WARNING
-> +						"%s: %d callbacks suppressed\n",
-> +						__func__, rs->missed);
-> +				rs->missed = 0;
-> +			}
-> +		}
-> +		rs->begin   = jiffies;
-> +		rs->printed = 0;
-> +	}
-> +	if (rs->burst && log_start) {
-> +		rs->printed++;
-> +		if (rs->burst >= rs->printed) {
-> +			/* The first log is in burst range */
-> +			ret = 1;
-> +		} else {
-> +			/* The first log is out of  burst range, account miss times */
-> +			rs->missed++;
-> +			ret = 0;
-> +		}
-> +	} else if (rs->burst && rs->burst >= rs->printed && !log_start) {
-> +		/* The remaining log is in burst range */
-> +		ret = 1;
-> +	} else {
-> +		/* The remaining log is out of burst range */
-> +		ret = 0;
-> +	}
-> +	raw_spin_unlock_irqrestore(&rs->lock, flags);
-> +
-> +	return ret;
+> +	return x86_vector_domain;
 > +}
 > +
->  #ifdef CONFIG_PCIE_ECRC
+> +/* Returns the interrupt vector mapped to the given IRQ. */
+> +static inline unsigned int hv_msi_get_int_vector(struct irq_data *data)
+> +{
+> +	struct irq_cfg *cfg = irqd_cfg(data);
+> +
+> +	return cfg->vector;
+> +}
+> +
+> +/* Get the IRQ delivery mode. */
+> +static inline u8 hv_msi_irq_delivery_mode(void)
+> +{
+> +	return APIC_DELIVERY_MODE_FIXED;
+> +}
+> +
+>  static inline void hv_set_msi_entry_from_desc(union hv_msi_entry *msi_entry,
+>  					      struct msi_desc *msi_desc)
+>  {
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index 6db8d96a78eb..9ca740d275d7 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -43,12 +43,11 @@
+>  #include <linux/delay.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/irqdomain.h>
+> -#include <asm/irqdomain.h>
+> -#include <asm/apic.h>
+>  #include <linux/irq.h>
+>  #include <linux/msi.h>
+>  #include <linux/hyperv.h>
+>  #include <linux/refcount.h>
+> +#include <linux/pci.h>
+>  #include <asm/mshyperv.h>
 >  
->  #define ECRC_POLICY_DEFAULT 0		/* ECRC set by BIOS */
-> @@ -683,14 +753,15 @@ static void __aer_print_error(struct pci_dev *dev,
->  		level = KERN_ERR;
->  	}
+>  /*
+> @@ -1194,7 +1193,6 @@ static void hv_irq_mask(struct irq_data *data)
+>  static void hv_irq_unmask(struct irq_data *data)
+>  {
+>  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
+> -	struct irq_cfg *cfg = irqd_cfg(data);
+>  	struct hv_retarget_device_interrupt *params;
+>  	struct hv_pcibus_device *hbus;
+>  	struct cpumask *dest;
+> @@ -1223,7 +1221,7 @@ static void hv_irq_unmask(struct irq_data *data)
+>  			   (hbus->hdev->dev_instance.b[7] << 8) |
+>  			   (hbus->hdev->dev_instance.b[6] & 0xf8) |
+>  			   PCI_FUNC(pdev->devfn);
+> -	params->int_target.vector = cfg->vector;
+> +	params->int_target.vector = hv_msi_get_int_vector(data);
 >  
-> -	for_each_set_bit(i, &status, 32) {
-> -		errmsg = strings[i];
-> -		if (!errmsg)
-> -			errmsg = "Unknown Error Bit";
-> +	if (aer_ratelimit(&ratelimit_aer, false))
-> +		for_each_set_bit(i, &status, 32) {
-> +			errmsg = strings[i];
-> +			if (!errmsg)
-> +				errmsg = "Unknown Error Bit";
+>  	/*
+>  	 * Honoring apic->delivery_mode set to APIC_DELIVERY_MODE_FIXED by
+> @@ -1324,7 +1322,7 @@ static u32 hv_compose_msi_req_v1(
+>  	int_pkt->wslot.slot = slot;
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = hv_msi_irq_delivery_mode();
 >  
-> -		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
-> -				info->first_error == i ? " (First)" : "");
-> -	}
-> +			pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
-> +					info->first_error == i ? " (First)" : "");
-> +		}
->  	pci_dev_aer_stats_incr(dev, info);
->  }
+>  	/*
+>  	 * Create MSI w/ dummy vCPU set, overwritten by subsequent retarget in
+> @@ -1345,7 +1343,7 @@ static u32 hv_compose_msi_req_v2(
+>  	int_pkt->wslot.slot = slot;
+>  	int_pkt->int_desc.vector = vector;
+>  	int_pkt->int_desc.vector_count = 1;
+> -	int_pkt->int_desc.delivery_mode = APIC_DELIVERY_MODE_FIXED;
+> +	int_pkt->int_desc.delivery_mode = hv_msi_irq_delivery_mode();
 >  
-> @@ -701,8 +772,9 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  	const char *level;
+>  	/*
+>  	 * Create MSI w/ dummy vCPU set targeting just one vCPU, overwritten
+> @@ -1372,7 +1370,6 @@ static u32 hv_compose_msi_req_v2(
+>   */
+>  static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+> -	struct irq_cfg *cfg = irqd_cfg(data);
+>  	struct hv_pcibus_device *hbus;
+>  	struct vmbus_channel *channel;
+>  	struct hv_pci_dev *hpdev;
+> @@ -1422,7 +1419,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
 >  
->  	if (!info->status) {
-> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> -			aer_error_severity_string[info->severity]);
-> +		if (aer_ratelimit(&ratelimit_aer, false))
-> +			pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-> +				aer_error_severity_string[info->severity]);
->  		goto out;
->  	}
+>  	case PCI_PROTOCOL_VERSION_1_2:
+> @@ -1430,7 +1427,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  		size = hv_compose_msi_req_v2(&ctxt.int_pkts.v2,
+>  					dest,
+>  					hpdev->desc.win_slot.slot,
+> -					cfg->vector);
+> +					hv_msi_get_int_vector(data));
+>  		break;
 >  
-> @@ -711,20 +783,23 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	default:
+> @@ -1541,12 +1538,13 @@ static struct irq_chip hv_msi_irq_chip = {
+>  	.irq_compose_msi_msg	= hv_compose_msi_msg,
+>  	.irq_set_affinity	= hv_set_affinity,
+>  	.irq_ack		= irq_chip_ack_parent,
+> +	.irq_eoi		= irq_chip_eoi_parent,
+>  	.irq_mask		= hv_irq_mask,
+>  	.irq_unmask		= hv_irq_unmask,
+>  };
 >  
->  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>  static struct msi_domain_ops hv_msi_ops = {
+> -	.msi_prepare	= pci_msi_prepare,
+> +	.msi_prepare	= hv_msi_prepare,
+>  	.msi_free	= hv_msi_free,
+>  };
 >  
-> -	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> -		   aer_error_severity_string[info->severity],
-> -		   aer_error_layer[layer], aer_agent_string[agent]);
-> +	if (aer_ratelimit(&ratelimit_aer, false)) {
-> +		pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-> +			   aer_error_severity_string[info->severity],
-> +			   aer_error_layer[layer], aer_agent_string[agent]);
->  
-> -	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> -		   dev->vendor, dev->device, info->status, info->mask);
-> +		pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
-> +			   dev->vendor, dev->device, info->status, info->mask);
+> @@ -1565,17 +1563,26 @@ static struct msi_domain_ops hv_msi_ops = {
+>   */
+>  static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+>  {
+> +	struct irq_domain *parent_domain;
+> +
+> +	parent_domain = hv_msi_parent_vector_domain();
+> +	if (!parent_domain) {
+> +		dev_err(&hbus->hdev->device,
+> +			"Failed to get parent MSI domain\n");
+> +		return -ENODEV;
 > +	}
->  
->  	__aer_print_error(dev, info);
->  
-> -	if (info->tlp_header_valid)
-> +	if (info->tlp_header_valid && aer_ratelimit(&ratelimit_aer, false))
->  		__print_tlp_header(dev, &info->tlp);
->  
->  out:
-> -	if (info->id && info->error_dev_num > 1 && info->id == id)
-> +	if (info->id && info->error_dev_num > 1 && info->id == id
-> +			&& aer_ratelimit(&ratelimit_aer, false))
->  		pci_err(dev, "  Error of this Agent is reported first\n");
->  
->  	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> @@ -924,7 +999,8 @@ static bool find_source_device(struct pci_dev *parent,
->  		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
->  
->  	if (!e_info->error_dev_num) {
-> -		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
-> +		if (aer_ratelimit(&ratelimit_aer, false))
-> +			pci_info(parent, "can't find device of ID%04x\n", e_info->id);
->  		return false;
->  	}
->  	return true;
-> @@ -1131,7 +1207,8 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  			e_info.multi_error_valid = 1;
->  		else
->  			e_info.multi_error_valid = 0;
-> -		aer_print_port_info(pdev, &e_info);
-> +		if (aer_ratelimit(&ratelimit_aer, true))
-> +			aer_print_port_info(pdev, &e_info);
->  
->  		if (find_source_device(pdev, &e_info))
->  			aer_process_err_devices(&e_info);
+> +
+>  	hbus->msi_info.chip = &hv_msi_irq_chip;
+>  	hbus->msi_info.ops = &hv_msi_ops;
+>  	hbus->msi_info.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>  		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+>  		MSI_FLAG_PCI_MSIX);
+> -	hbus->msi_info.handler = handle_edge_irq;
+> -	hbus->msi_info.handler_name = "edge";
+> +	hbus->msi_info.handler = hv_msi_handler;
+> +	hbus->msi_info.handler_name = hv_msi_handler_name;
+>  	hbus->msi_info.data = hbus;
+>  	hbus->irq_domain = pci_msi_create_irq_domain(hbus->sysdata.fwnode,
+>  						     &hbus->msi_info,
+> -						     x86_vector_domain);
+> +						     parent_domain);
+>  	if (!hbus->irq_domain) {
+>  		dev_err(&hbus->hdev->device,
+>  			"Failed to build an MSI IRQ domain\n");
 > -- 
-> 1.8.3.1
-> 
+> 2.17.1
