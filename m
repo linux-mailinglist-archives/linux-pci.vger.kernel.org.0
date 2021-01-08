@@ -2,170 +2,213 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56E872EF0B5
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jan 2021 11:34:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB2D82EF2F5
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jan 2021 14:22:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbhAHKdK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jan 2021 05:33:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:48718 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbhAHKdJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 Jan 2021 05:33:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85034D6E;
-        Fri,  8 Jan 2021 02:32:23 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 366793F70D;
-        Fri,  8 Jan 2021 02:32:22 -0800 (PST)
-Date:   Fri, 8 Jan 2021 10:32:16 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jon Masters <jcm@jonmasters.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>, mark.rutland@arm.com,
-        linux-pci@vger.kernel.org, sudeep.holla@arm.com,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-Message-ID: <20210108103216.GA17931@e121166-lin.cambridge.arm.com>
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <20210107181416.GA3536@willie-the-truck>
- <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
+        id S1726545AbhAHNWy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jan 2021 08:22:54 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:10414 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726508AbhAHNWy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jan 2021 08:22:54 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DC3dh4pD6z7Rsh;
+        Fri,  8 Jan 2021 21:21:12 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.498.0; Fri, 8 Jan 2021
+ 21:21:58 +0800
+From:   lvying6 <lvying6@huawei.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <fanwentao@huawei.com>
+Subject: [PATCH] AER: add ratelimit for PCIe AER corrected error storm log print
+Date:   Fri, 8 Jan 2021 21:19:00 +0800
+Message-ID: <1610111940-5972-1-git-send-email-lvying6@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 07, 2021 at 04:05:48PM -0500, Jon Masters wrote:
-> Hi will, everyone,
-> 
-> On 1/7/21 1:14 PM, Will Deacon wrote:
-> 
-> > On Mon, Jan 04, 2021 at 10:57:35PM -0600, Jeremy Linton wrote:
-> > > Given that most arm64 platform's PCI implementations needs quirks
-> > > to deal with problematic config accesses, this is a good place to
-> > > apply a firmware abstraction. The ARM PCI SMMCCC spec details a
-> > > standard SMC conduit designed to provide a simple PCI config
-> > > accessor. This specification enhances the existing ACPI/PCI
-> > > abstraction and expects power, config, etc functionality is handled
-> > > by the platform. It also is very explicit that the resulting config
-> > > space registers must behave as is specified by the pci specification.
-> > > 
-> > > Lets hook the normal ACPI/PCI config path, and when we detect
-> > > missing MADT data, attempt to probe the SMC conduit. If the conduit
-> > > exists and responds for the requested segment number (provided by the
-> > > ACPI namespace) attach a custom pci_ecam_ops which redirects
-> > > all config read/write requests to the firmware.
-> > > 
-> > > This patch is based on the Arm PCI Config space access document @
-> > > https://developer.arm.com/documentation/den0115/latest
-> > 
-> > Why does firmware need to be involved with this at all? Can't we just
-> > quirk Linux when these broken designs show up in production? We'll need
-> > to modify Linux _anyway_ when the firmware interface isn't implemented
-> > correctly...
-> 
-> I agree with Will on this. I think we want to find a way to address some
-> of the non-compliance concerns through quirks in Linux. However...
+PCIe AER corrected error storm will flush effective system log. System
+log will hold only the same PCIe AER correted error info. Add ratelimit
+for PCIe AER corrected error make system log hold other more effective
+system log info.
 
-I understand the concern and if you are asking me if this can be fixed
-in Linux it obviously can. The point is, at what cost for SW and
-maintenance - in Linux and other OSes, I think Jeremy summed it up
-pretty well:
+Signed-off-by: lvying6 <lvying6@huawei.com>
+---
+ drivers/pci/pcie/aer.c | 113 +++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 95 insertions(+), 18 deletions(-)
 
-https://lore.kernel.org/linux-pci/61558f73-9ac8-69fe-34c1-2074dec5f18a@arm.com
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 77b0f2c..ba20bb05 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -114,6 +114,76 @@ bool pci_aer_available(void)
+ 	return !pcie_aer_disable && pci_msi_enabled();
+ }
+ 
++/* Not more than 2 messages every 5 seconds */
++static DEFINE_RATELIMIT_STATE(ratelimit_aer, 5*HZ, 2);
++
++/*
++ * aer_ratelimit - AER log ratelimit
++ * @rs: ratelimit_state data
++ * @log_start: first aer log print statement
++ *
++ * a complete aer log is composed of log from several functions
++ * use printk_ratelimit for each aer log print statement will lose part
++ * of the aer log cause the log to be incomplete
++ *
++ * RETURNS:
++ * 0 means callbacks will be suppressed.
++ * 1 means go ahead and do it.
++ */
++static int aer_ratelimit(struct ratelimit_state *rs, bool log_start)
++{
++	unsigned long flags;
++	int ret;
++
++	if (!rs->interval)
++		return 1;
++
++	/*
++	 * If we contend on this state's lock then almost
++	 * by definition we are too busy to print a message,
++	 * in addition to the one that will be printed by
++	 * the entity that is holding the lock already:
++	 */
++	if (!raw_spin_trylock_irqsave(&rs->lock, flags))
++		return 0;
++
++	if (!rs->begin)
++		rs->begin = jiffies;
++
++	if (time_is_before_jiffies(rs->begin + rs->interval)) {
++		if (rs->missed) {
++			if (!(rs->flags & RATELIMIT_MSG_ON_RELEASE)) {
++				printk_deferred(KERN_WARNING
++						"%s: %d callbacks suppressed\n",
++						__func__, rs->missed);
++				rs->missed = 0;
++			}
++		}
++		rs->begin   = jiffies;
++		rs->printed = 0;
++	}
++	if (rs->burst && log_start) {
++		rs->printed++;
++		if (rs->burst >= rs->printed) {
++			/* The first log is in burst range */
++			ret = 1;
++		} else {
++			/* The first log is out of  burst range, account miss times */
++			rs->missed++;
++			ret = 0;
++		}
++	} else if (rs->burst && rs->burst >= rs->printed && !log_start) {
++		/* The remaining log is in burst range */
++		ret = 1;
++	} else {
++		/* The remaining log is out of burst range */
++		ret = 0;
++	}
++	raw_spin_unlock_irqrestore(&rs->lock, flags);
++
++	return ret;
++}
++
+ #ifdef CONFIG_PCIE_ECRC
+ 
+ #define ECRC_POLICY_DEFAULT 0		/* ECRC set by BIOS */
+@@ -683,14 +753,15 @@ static void __aer_print_error(struct pci_dev *dev,
+ 		level = KERN_ERR;
+ 	}
+ 
+-	for_each_set_bit(i, &status, 32) {
+-		errmsg = strings[i];
+-		if (!errmsg)
+-			errmsg = "Unknown Error Bit";
++	if (aer_ratelimit(&ratelimit_aer, false))
++		for_each_set_bit(i, &status, 32) {
++			errmsg = strings[i];
++			if (!errmsg)
++				errmsg = "Unknown Error Bit";
+ 
+-		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
+-				info->first_error == i ? " (First)" : "");
+-	}
++			pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
++					info->first_error == i ? " (First)" : "");
++		}
+ 	pci_dev_aer_stats_incr(dev, info);
+ }
+ 
+@@ -701,8 +772,9 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ 	const char *level;
+ 
+ 	if (!info->status) {
+-		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+-			aer_error_severity_string[info->severity]);
++		if (aer_ratelimit(&ratelimit_aer, false))
++			pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
++				aer_error_severity_string[info->severity]);
+ 		goto out;
+ 	}
+ 
+@@ -711,20 +783,23 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ 
+ 	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+ 
+-	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+-		   aer_error_severity_string[info->severity],
+-		   aer_error_layer[layer], aer_agent_string[agent]);
++	if (aer_ratelimit(&ratelimit_aer, false)) {
++		pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
++			   aer_error_severity_string[info->severity],
++			   aer_error_layer[layer], aer_agent_string[agent]);
+ 
+-	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+-		   dev->vendor, dev->device, info->status, info->mask);
++		pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
++			   dev->vendor, dev->device, info->status, info->mask);
++	}
+ 
+ 	__aer_print_error(dev, info);
+ 
+-	if (info->tlp_header_valid)
++	if (info->tlp_header_valid && aer_ratelimit(&ratelimit_aer, false))
+ 		__print_tlp_header(dev, &info->tlp);
+ 
+ out:
+-	if (info->id && info->error_dev_num > 1 && info->id == id)
++	if (info->id && info->error_dev_num > 1 && info->id == id
++			&& aer_ratelimit(&ratelimit_aer, false))
+ 		pci_err(dev, "  Error of this Agent is reported first\n");
+ 
+ 	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+@@ -924,7 +999,8 @@ static bool find_source_device(struct pci_dev *parent,
+ 		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+ 
+ 	if (!e_info->error_dev_num) {
+-		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
++		if (aer_ratelimit(&ratelimit_aer, false))
++			pci_info(parent, "can't find device of ID%04x\n", e_info->id);
+ 		return false;
+ 	}
+ 	return true;
+@@ -1131,7 +1207,8 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+ 			e_info.multi_error_valid = 1;
+ 		else
+ 			e_info.multi_error_valid = 0;
+-		aer_print_port_info(pdev, &e_info);
++		if (aer_ratelimit(&ratelimit_aer, true))
++			aer_print_port_info(pdev, &e_info);
+ 
+ 		if (find_source_device(pdev, &e_info))
+ 			aer_process_err_devices(&e_info);
+-- 
+1.8.3.1
 
-The issue here is that what we are asked to support on ARM64 ACPI is a
-moving target and the target carries PCI with it.
-
-This potentially means that all drivers in:
-
-drivers/pci/controller
-
-may require an MCFG quirk and to implement it we may have to:
-
-- Define new ACPI bindings (that may need AML and that's already a
-  showstopper for some OSes)
-- Require to manage clocks in the kernel (see link-up checks)
-- Handle PCI config space faults in the kernel
-
-Do we really want to do that ? I don't think so. Therefore we need
-to have a policy to define what constitutes a "reasonable" quirk and
-that's not objective I am afraid, however we slice it (there is no
-such a thing as eg 90% ECAM).
-
-The SMC is an olive branch and just to make sure it is crystal clear
-there won't be room for adding quirks if the implementation turns out
-to be broken, if a line in the sand is what we want here it is.
-
-The question is: is there a reason we must not implement SMC support
-given the above ?
-
-As I said and you could imagine, I am the first who has concerns over
-deviating from ECAM but if we do want ACPI support for platforms that
-are not ECAM compliant something has to be done (HW may take years to
-comply).
-
-> Several folks here (particularly Lorenzo) have diligently worked hard
-> over the past few years - and pushed their patience - to accommodate
-> hardware vendors with early "not quite compliant" systems. They've taken
-> lots of quirks that frankly shouldn't continue to be necessary were it
-> even remotely a priority in the vendor ecosystem to get a handle on
-> addressing PCIe compliance once and for all. But, again frankly, it
-> hasn't been enough of a priority to get this fixed. The third party IP
-> vendors *need* to address this, and their customers *need* to push back.
-> 
-> We can't keep having a situation in which kinda-sorta compliant stuff
-> comes to market that would work out of the box but for whatever the quirk
-> is this time around. There have been multiple OS releases for the past
-> quite a few years on which this stuff could be tested prior to ever
-> taping out a chip, and so it ought not to be possible to come to market
-> now with an excuse that it wasn't tested. And yet here we still are. All
-> these years and still the message isn't quite being received properly. I
-> do know it takes time to make hardware, and some of it was designed years
-> before and is still trickling down into these threads. But I also think
-> there are cases where much more could have been done earlier.
-> 
-> None of these vendors can possibly want this deep down. Their engineers
-> almost certainly realize that just having compliant ECAM would mean that
-> the hardware was infinitely more valuable being able to run out of the
-> box software that much more easily. And it's not just ECAM. Inevitably,
-> that is just the observable syndrome for worse issues, often with the ITS
-> and forcing quirked systems to have lousy legacy interrupts, etc. Alas,
-> this level of nuance is likely lost by the time it reaches upper
-> management, where "Linux" is all the same to them. I would hope that can
-> change. I would also remind them that if they want to run non-Linux OSes,
-> they will also want to be actually compliant. The willingness of kind
-> folks like Lorenzo and others here to entertain quirks is not necessarily
-> something you will find in every part of the industry.
-> 
-> But that all said, we have a situation in which there are still platforms
-> out there that aren't fully compliant and something has to be done to
-> support them because otherwise it's going to be even more ugly with
-> vendor trees, distro hacks, and other stuff.
-> 
-> Some of you in recent weeks have asked what I and others can do to help
-> from the distro and standardization side of things. To do my part, I'm
-> going to commit to reach out to assorted vendors and have a heart to
-> heart with them about really, truly fully addressing their compliance
-> issues. That includes Cadence, Synopsys, and others who need to stop
-> shipping IP that requires quirks, as well as SoC vendors who need to do
-> more to test their silicon with stock kernels prior to taping out. And I
-> would like to involve the good folks here who are trying to navigate.
-> 
-> I would also politely suggest that we collectively consider how much
-> wiggle room there can be to use quirks for what we are stuck with rather
-> than an SMC-based solution. We all know that quirks can't be a free ride
-> forever. Those who need them should offer something strong in return. A
-> firm commitment that they will never come asking for the same stuff in
-> the future. Is there a way we can do something like that?
-
-It depends on what we are asked to support and consequently what we
-are willing to accept (and to be honest it is more Bjorn's patience
-than mine that was exercised over the last few years on this topic).
-
-Thanks,
-Lorenzo
