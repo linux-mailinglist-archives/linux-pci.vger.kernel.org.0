@@ -2,165 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F36B72EEDE6
-	for <lists+linux-pci@lfdr.de>; Fri,  8 Jan 2021 08:33:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D98D2EEF99
+	for <lists+linux-pci@lfdr.de>; Fri,  8 Jan 2021 10:30:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbhAHHci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jan 2021 02:32:38 -0500
-Received: from mail-mw2nam12on2108.outbound.protection.outlook.com ([40.107.244.108]:24065
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        id S1728024AbhAHJ2Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jan 2021 04:28:16 -0500
+Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:61006
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725791AbhAHHci (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 Jan 2021 02:32:38 -0500
+        id S1728267AbhAHJ2O (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Jan 2021 04:28:14 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kPJZrw6/HcOPD++SigxIVprdoehQuvtUAJfwLhvGUI72nf6YW/8do1KqIYzgFFj2foarUzAINt3AR10MMPQXNcFq3apwgQRmgr6nJ2TURja03wq04kL4jCe9/MtQ3d9GI4uE1hlUnJb55GNlrYZnuFulQOjwJfviXWPWsFIIclB6bdcgHMG2SHWtKKu9O54GnlO6/I7xFcI13l3MEYHG5GaNq/7bqDVaen8w/rMMN47PwF0Imod5gPFSGQsRqLZs015ynp3fqQ0O6NArZXvTRtmSO/0L6Q8OLr0R+pYG4IGGhgejum96COChph7PohSOXYoSP8B4SwrfFPnwybetvA==
+ b=BwEVeVChonCnQiFNsyUwhdH2Qjf452Byr65jV6ZyDysBnntmSXC05FsVRUpzvAHJBcJ3wSepV4K5VFMBTaWHbYv0zDGdevu40ZEtY3XIgPyG7Cp1tNG/poJuRquGdT5krX6i1gflsMp4A4yr/mBG/GuFiauMqIhjsklIRDB47WEJDTu/gfbmtUyjdUo2Ion0S9nBdmFybNmxsjj7KexxiNx92QE7bgm8kMyLn1otudrIAMFWg8MSlHpcvZFPHOpmUBVVOdiA5MvJGOW/TjsH1HfV5MvmgsuQZq+Y9yuuR3UMKi+epQIADUleOkCm99oSXlhW5qUD/Ht+bDjwvyeBpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qVTxoE1QUzwMKtwMl9XME4rEzaamZPT91LpMepGuOII=;
- b=T/e/TQkd03k6FExKPr34ydH/bzPXPCeC24uadbj5mZ27qlU7tliQnfv6JGY1XLjE2k7CLkjqpsogKBcGcm5F6KUmmmxaEdFylpF2aB31sHE3ljEdLZ3ElzIMCgeFrkO0N6DagjCMr5FemnnlWyUEDSVJXGmembI9Ba/G3Qkv2irMMzfK0CYASDz6n7+VOQN0wgCQQ/1dauUB+o5WV7jjOnErDRlkkNUkYU/cKmX52obzFUQfzY572ivxbGIGqO4h7t+uvKt5oFPUBTlF/9qngepxzeYc3z6lGG9Hdakj9l/lqt04zWkz4EemlA+7tVNoyZdTM7BYPqu6Jd6x2T1TLw==
+ bh=zEDIeGc2J338to9wJLaNFMxFFkKi0V8i1t18JtsTxNs=;
+ b=R/JG7xAQm78fMmSrYsY4Df7YlnHe4bNz3wvsXf0W6utVXdgLx4ltyYl0Pm2X4U4l2juxlm+gd+FRF6UhDGVk5HccMFzB003l/Secii2vGVcWzvQSsab333PWPWgWOhbRaDxK3a1WMXtxBz+rfyRThxXlXmEqs7AQ1ziMNGisYqB9gCfvSyl0ZfoHf+ZjryMPRuWMwFm+0l8Y/N2SEJohpRpn1o2k23jMd3ctTPD0p9Qrfu+J534nEgxrMrwoltgLtFXL70v5/6UlLBfKo2o9Cp82o0psc6icZCSepJoz2F3hj7kk2wtaFaPeFgqR3o2/+InRWGibdI4btEN/Avz0iQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qVTxoE1QUzwMKtwMl9XME4rEzaamZPT91LpMepGuOII=;
- b=jv1aZDz46vxC7hGTrouXp6JmPAFrLwVsIo1hn27vJfzwyH641hA6EEklaKgPP155hMUE8uTLTDyw/QcXka03J38tCg0/MQbVIMPngijRbgfCdYlljeN5CNrgqNiMRIpJtEBN2T3UrPt3q8Uu6VGXOEpY+5BA/6TS1I+kWqt89sM=
-Received: from (2603:10b6:803:51::33) by
- SA0PR21MB1866.namprd21.prod.outlook.com (2603:10b6:806:ed::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3763.0; Fri, 8 Jan 2021 07:31:19 +0000
-Received: from SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::18ca:96d8:8030:e4e8]) by SN4PR2101MB0880.namprd21.prod.outlook.com
- ([fe80::18ca:96d8:8030:e4e8%4]) with mapi id 15.20.3763.002; Fri, 8 Jan 2021
- 07:31:19 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Boqun Feng <Boqun.Feng@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "\"H. Peter Anvin\"" <hpa@zytor.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: [PATCH v2 2/2] Hyper-V: pci: x64: Moving the MSI entry definition to
- arch specific location
-Thread-Topic: [PATCH v2 2/2] Hyper-V: pci: x64: Moving the MSI entry
- definition to arch specific location
-Thread-Index: Adblj4px1LjTTBMqRhiKACld+P9Rww==
-Date:   Fri, 8 Jan 2021 07:31:19 +0000
-Message-ID: <SN4PR2101MB08808B1AA7557C198E08EA12C0AE9@SN4PR2101MB0880.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: microsoft.com; dkim=none (message not signed)
- header.d=none;microsoft.com; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2601:602:9400:570:916:634a:e039:b890]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a516eeff-eeae-4868-2a47-08d8b3a76411
-x-ms-traffictypediagnostic: SA0PR21MB1866:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA0PR21MB1866F3797CCEF0C05EEE1214C0AE9@SA0PR21MB1866.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8+9MnKuwopgLZCNInH51Pp0y5baWaZ69FzyK5LEPogZE1rruowbMHi3oOnWvaiGVQfH8knUb3bS44R8BwSsKrYgqqmqac5IM8OXI3f1WTA42fvizcw1j7ZdNYUNayE0aNCwWoh8g/Y4BMlcslUZ+0KVg5UY3fGE6EZwss+9WVTKJxbR+riIbYFVRkZzTIMlNL4AeLoimVPkiVqAY0YdVq9ZQbBSTQFoiELA5aT/EZ/yZyUJlEoNK5dUAebc1+2JLAhCODrZrjziapPeYdZftr8BuT3c36gP02QCl6LCNyqeYZZEjsE6Rr/sA132sBgq28hrtjq2bGyPtfla54OK+y/hdJblDNmwic9SEGCpL1WGcw8pJFq4+xwvvLPf2OzbK3s1n6C+SS/IuZJw15EMrIQAy3oDZg6r2Wtdi62y9k1W/UfKT9daudSuV3xVfjMAR
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR2101MB0880.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(396003)(376002)(366004)(346002)(86362001)(6506007)(921005)(8936002)(7416002)(33656002)(4326008)(110136005)(316002)(54906003)(8990500004)(7696005)(8676002)(478600001)(10290500003)(71200400001)(52536014)(186003)(82960400001)(9686003)(5660300002)(76116006)(66476007)(66946007)(83380400001)(64756008)(66556008)(55016002)(82950400001)(2906002)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?QrtWd1djOG0MUH7eaNUpSxawgZhGnPVO0SA3Wg6WwUvP1FYApPbFJCEWSNTF?=
- =?us-ascii?Q?Kb/2eZIAClgHAshB+7daAED01cUCsQhUcl0jjoPS/RosT9WzOgHIkU/TpZ29?=
- =?us-ascii?Q?602x+r6mrnLHxkr30XsNaWqOwoXhkgY+f5w0OmCp1Y8s91G0dO+0D4zrYnVS?=
- =?us-ascii?Q?uCk6obhgtoyJbU+cxC82o5PfQKCfgT2nz533rs7zleP3/h1jm5pAusNrCusC?=
- =?us-ascii?Q?Aixpr88Y+/L37TZzx+dYOxTkpww988MDBpuiVidPAKPr1jZdxpVlkI+Wyqx6?=
- =?us-ascii?Q?7PsQx6eBqj433yrAjkiRx/v+nf+0ocsB4GuTYgHijxpvj5Qc/PQCiB+D5RSK?=
- =?us-ascii?Q?qU8YcoYW/21gyZv/grwMAMBum9SLTizu5n8/wdODQTSuK9OOGSmeXAehrPnc?=
- =?us-ascii?Q?IHFyUWP58iJoyKgh+RBD7EHy+lluO1cvHN3Ql5Y9VpyoV5MVPoSg1SbWG9ex?=
- =?us-ascii?Q?z/KwoijI9ti+O1CgDvRRECO1tx0cyqELlVjieYB35eTldyFTzhlXf++qz53H?=
- =?us-ascii?Q?tBAszWjeQYJolqh2w0684RM5S5uhuc26qIHAKM8ULYXUvuNqlm665dVzuwAN?=
- =?us-ascii?Q?2vjGTCXU3hUkytn7ruH13Tc3bGsYCWas5PubL5b/8BpHKnu9yy4rVOBnchDE?=
- =?us-ascii?Q?0pwI2/hTpjPAbNQzbO31fQTSKSHFdMwI9q7QANyh4qj5E+AaNDj3zD8/JCsn?=
- =?us-ascii?Q?U9VR21cJQMo1njPdmi0BoRbxqLrOV4n2LN1fSD6y5xSd81mL4kh97HqRc7Hs?=
- =?us-ascii?Q?4dyUecbtVWC4o2IN4wWvQfHAHoJyT6g8JMUIhBsmF1xVwHPJxsBDtlhrKWoy?=
- =?us-ascii?Q?JRRirQ9Ss5Os3q7KBgObwnBNz2hjxpfabysPhZ7f8OndJvujMdo6Hwyl1P7f?=
- =?us-ascii?Q?3BOio4aVEUmi55RjVFTEq7Qt1/I2Y4bc0qxf3HgRpz5qOEs0/CTcxTrnA7yX?=
- =?us-ascii?Q?u7IeRYgHBp/nRvM40wIpa0XGg+D4SbgskfU22HhIzaEOM0x2MI6TWGg88qK2?=
- =?us-ascii?Q?kJpSv+DzAvAbRpXlfbGy3nAA+gLuzpfitk8ry6OpGLfEzRA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ bh=zEDIeGc2J338to9wJLaNFMxFFkKi0V8i1t18JtsTxNs=;
+ b=aJipFkg4ugadrnsiHDelhRkoqbi/yyopEdplq0YUTiyYthxhVlcyLO6W1irgjA2ETwNBBk46dKToQAs4CFZV1MF10wQSE+TBNfP9FB9ldr4ZbSsw0d+yiJ6OVc/b7tyNbBThYhl8RYq56Xw9UvtGiJs78A9VU0R19ZyOBz3WkFE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
+ by HE1PR0401MB2652.eurprd04.prod.outlook.com (2603:10a6:3:83::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.20; Fri, 8 Jan
+ 2021 09:27:23 +0000
+Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::3194:64d6:5a70:a91d]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
+ ([fe80::3194:64d6:5a70:a91d%4]) with mapi id 15.20.3721.024; Fri, 8 Jan 2021
+ 09:27:22 +0000
+From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lorenzo.pieralisi@arm.com, robh+dt@kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com,
+        gustavo.pimentel@synopsys.com
+Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv3 0/7] PCI: layerscape: Add power management support
+Date:   Fri,  8 Jan 2021 17:36:03 +0800
+Message-Id: <20210108093610.28595-1-Zhiqiang.Hou@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-Originating-IP: [119.31.174.73]
+X-ClientProxiedBy: MAXPR0101CA0019.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:c::29) To HE1PR0402MB3371.eurprd04.prod.outlook.com
+ (2603:10a6:7:85::27)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.73) by MAXPR0101CA0019.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:c::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Fri, 8 Jan 2021 09:27:17 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a54c75f9-acb2-4187-faa8-08d8b3b79a6d
+X-MS-TrafficTypeDiagnostic: HE1PR0401MB2652:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR0401MB2652E60D5FB765F1B7501E4184AE0@HE1PR0401MB2652.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uYU2BujIadtlep5Aqjbq/N1hOK1Q5PmncI9QAw6PlnZRyfQDhsaadkAyocEQ9PQlTY3d6Qb1gxt6loOMINPx0bOzsmgkuWcFzpUR0wfO5AwMTh7qBHXMCPX1KupvKiW7dEr7Tvtb/bziMFN15IzbIREhe6R+fNXpgtM82yMYI3MnjxtVCjoQxB3A3WTrk9Ye1HH+ppxna8feOh/2Gp9ZyyPO4BaQNhRef/lOAguLbyVXLllB7JosZW2F0MebYOC1Ujjuja/EQJRfTpYQmso80IbgGSkjjil/uMbdtRXEV/A+CnTsHXxCPE/jtjPy47eoWP0UikeuSNA0/jvbbvWClb52TkcYBUBQUGCotgpODceuFKZ63HzLXeYx9B6aPIZaaR6AhkBNmdNA+JLERwv3vvKXMKrZlq1xRA2UVXQLxOYLYm8wRAPl91SfbSjyXQ3aHSYijTQyQOvuTVbXP1JJhw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(39860400002)(366004)(396003)(316002)(478600001)(6506007)(6486002)(4326008)(52116002)(2616005)(36756003)(69590400011)(8936002)(66556008)(956004)(921005)(6512007)(1076003)(66476007)(5660300002)(66946007)(26005)(2906002)(6666004)(16526019)(8676002)(83380400001)(186003)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?GiexpPvLUFgrL1wlwYpBPuihkhP4oPN+HXC/LbgR3C7ty+zIWkbtkr1aoDez?=
+ =?us-ascii?Q?tJjDyCbcAIwHmFisbLyJSgz/350g3gRwHSXgSTvWGTENFtkGhUftH7Wb78ZZ?=
+ =?us-ascii?Q?KUxH4MVxizGTgOnGQ6nDIee4/gcVL5vgIWujK4KTDqJemtCe92B48Dfv65SB?=
+ =?us-ascii?Q?fHanT78iKSDgLN9hTo8TFC2mu5a/7o//P3hxzCSRtp99mCeX0JCwAWF0OlsY?=
+ =?us-ascii?Q?kNV0GyCw4fhfmTGgIKUaqTRuQEwmjvtCr0N9es9qSYL8GW816/SZMOR8OOWO?=
+ =?us-ascii?Q?WxzdzEZzEZzeVm2F6jdoZ47Hid4pR7y+7dRxOOGGrTl18G0DCryCvYVbwjpB?=
+ =?us-ascii?Q?gqiE4nXE4HA6veFtlwVtq3GLIB7DawPbtrBw5ik89YSRlVtNHzS4J8vdDbvP?=
+ =?us-ascii?Q?DA/4rd9YQpz+pQkEUJlwpW8PEu0LCxmEfo9oHCJXpdACo57xSV25kCWlX7tI?=
+ =?us-ascii?Q?5mlaDzNkmy9HiUsfPVStSz0vnFooaiVZ3L82K1ygDd/gsbazCS/yoninnzn1?=
+ =?us-ascii?Q?ZkmQB8eWajPVwJWaQE1Ko9AlSF/Lbi+eYa1WsNtlTai81A7lqJKpYLDmW3Mn?=
+ =?us-ascii?Q?ZO72dTn8BHohTlRcLjb/bSRBQWjBEvyKoxeNzhA6cNU20iO+cs+ceniQMUyQ?=
+ =?us-ascii?Q?n9ZviKnRJrWs0kPFOlUkGfBb7aKAZ++ZyCVuSz5oATumy7lY3DfYgTJN1D10?=
+ =?us-ascii?Q?Xrn6Lpz0hdt+bq7Paz8BROcxwToKY8tdI84VWYbLDj8E0MSpKm401hWS+jvc?=
+ =?us-ascii?Q?p05F++0d6sJsy+O43BzllsRY/7VkzqOFGOVVlT7zIgvlLbcthHZ/wOYCINCA?=
+ =?us-ascii?Q?StUxaYUIGoLqyOkTu1feEHRfLdU7WR1KG/1eAZG72rlUHaRN3UYYftjvXzLn?=
+ =?us-ascii?Q?0+BMPM3HGqBFHTfzp/FAuf9OLskoQptI61AAcrb1Sh6ocS5TsPPeM2id1PHH?=
+ =?us-ascii?Q?zPQgo1liuG+leR8i9cGBQt5VOHtZgBa1D9Ypmy0vhC0u+loAJIJFHw8ry5rA?=
+ =?us-ascii?Q?xY5Z?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR2101MB0880.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a516eeff-eeae-4868-2a47-08d8b3a76411
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2021 07:31:19.0965
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2021 09:27:22.2582
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TeDYkJgRxav/Dsjkv/QHb2yqMp3lee7D0A9iXT09OjmKVwf+e1a7zVwjELoGK+8a8WID4UmKKV/wIP9K20FqektuirUPodgWSIpzK+suBh8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR21MB1866
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Network-Message-Id: a54c75f9-acb2-4187-faa8-08d8b3b79a6d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gwdlAfF1ue7ugSmw8Z/uVL6xY+xBngcEWux+YLglO5Ar7CvOV5Md9Iq8VJNHXe+GFBnBDg1luNrw4FNO0fcYLA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2652
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Hyper-V MSI entry is architecture specific. Currently, it is
-defined in an arch neutral location. This patch moves it to an
-arch specific location.
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
----
- arch/x86/include/asm/hyperv-tlfs.h | 7 +++++++
- include/asm-generic/hyperv-tlfs.h  | 8 --------
- 2 files changed, 7 insertions(+), 8 deletions(-)
+This patch series is to add PCIe power management support for NXP
+Layerscape platfroms.
 
-diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hype=
-rv-tlfs.h
-index 6bf42aed387e..a15c17c7f019 100644
---- a/arch/x86/include/asm/hyperv-tlfs.h
-+++ b/arch/x86/include/asm/hyperv-tlfs.h
-@@ -523,6 +523,13 @@ struct hv_partition_assist_pg {
- 	u32 tlb_lock_count;
- };
-=20
-+union hv_msi_entry {
-+	u64 as_uint64;
-+	struct {
-+		u32 address;
-+		u32 data;
-+	} __packed;
-+};
-=20
- #include <asm-generic/hyperv-tlfs.h>
-=20
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv=
--tlfs.h
-index e73a11850055..6265f4494970 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -408,14 +408,6 @@ struct hv_tlb_flush_ex {
- } __packed;
-=20
- /* HvRetargetDeviceInterrupt hypercall */
--union hv_msi_entry {
--	u64 as_uint64;
--	struct {
--		u32 address;
--		u32 data;
--	} __packed;
--};
--
- struct hv_interrupt_entry {
- 	u32 source;			/* 1 for MSI(-X) */
- 	u32 reserved1;
---=20
+Hou Zhiqiang (7):
+  PCI: dwc: Fix a bug of the case dw_pci->ops is NULL
+  PCI: layerscape: Change to use the DWC common link-up check function
+  dt-bindings: pci: layerscape-pci: Add a optional property big-endian
+  arm64: dts: layerscape: Add big-endian property for PCIe nodes
+  dt-bindings: pci: layerscape-pci: Update the description of SCFG
+    property
+  arm64: dts: ls1043a: Add SCFG phandle for PCIe nodes
+  PCI: layerscape: Add power management support
+
+ .../bindings/pci/layerscape-pci.txt           |   6 +-
+ .../arm64/boot/dts/freescale/fsl-ls1012a.dtsi |   1 +
+ .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   6 +
+ .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   3 +
+ drivers/pci/controller/dwc/pci-layerscape.c   | 448 ++++++++++++++----
+ .../pci/controller/dwc/pcie-designware-host.c |   2 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |  14 +-
+ drivers/pci/controller/dwc/pcie-designware.h  |   1 +
+ 8 files changed, 376 insertions(+), 105 deletions(-)
+
+-- 
 2.17.1
+
