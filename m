@@ -2,109 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48AAE2EFD3C
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 03:57:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DB852EFDA6
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 05:07:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbhAIC40 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jan 2021 21:56:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41521 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726427AbhAIC4Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jan 2021 21:56:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610160897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CPOhMKQ/He5lGnpNvXkvui5YIqdQrwnH9IuZfD2JHsc=;
-        b=Krl5I7anRBDlOYKcRf2ppSlPz/OG1BuV+4ageoYYr0PuRG7rAsPjH2f04Xm37NP08fwrC6
-        wW9UA0P78d2YYooohC91IMnp4dCZF1UPzUa9AcUgUHwCbISPZ980WGTF6ujiwjX9midldD
-        O71hMUPvqeLTTj4MY5VXLDa1XTrs8Tc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-GaToKbmmOQSIFyFs2rRjkw-1; Fri, 08 Jan 2021 21:54:53 -0500
-X-MC-Unique: GaToKbmmOQSIFyFs2rRjkw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F1A6180A08A;
-        Sat,  9 Jan 2021 02:54:52 +0000 (UTC)
-Received: from [10.3.112.139] (ovpn-112-139.phx2.redhat.com [10.3.112.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 187B160BF3;
-        Sat,  9 Jan 2021 02:54:48 +0000 (UTC)
-Subject: Re: [PATCH mlx5-next 1/4] PCI: Configure number of MSI-X vectors for
- SR-IOV VFs
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20210108210913.GA1471923@bjorn-Precision-5520>
-From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <96209762-64a8-c710-1b1e-c0cc5207df03@redhat.com>
-Date:   Fri, 8 Jan 2021 21:54:47 -0500
+        id S1726579AbhAIEGg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jan 2021 23:06:36 -0500
+Received: from mga02.intel.com ([134.134.136.20]:12132 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbhAIEGg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Jan 2021 23:06:36 -0500
+IronPort-SDR: JWe+BfksJa9PXBYZv30wGuP4eyQNMvlzG+kJeVDaNyd77tkcup2zmVpQrnoHTctdRUUnOJyH74
+ QfD2C38wUqKQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9858"; a="164763421"
+X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
+   d="scan'208";a="164763421"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 20:04:49 -0800
+IronPort-SDR: OkuaDQclVPfdP1nLAynpvylUzFC681Nu4S1W4D1r4rDKddFpKHNEV5ubQZ3YFeuA2bUK9GewYY
+ AqewMlSPns8w==
+X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
+   d="scan'208";a="399195880"
+Received: from tanmingy-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.247.214])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 20:04:49 -0800
+Subject: Re: [PATCH v4 1/1] PCI/ERR: don't clobber status after reset_link()
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Hedi Berriche <hedi.berriche@hpe.com>
+Cc:     Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
+        Russ Anderson <rja@hpe.com>, Joerg Roedel <jroedel@suse.com>,
+        stable@kernel.org, Keith Busch <kbusch@kernel.org>
+References: <20210108223043.GA1477254@bjorn-Precision-5520>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <01c316b7-afae-5ce5-0c5a-8878310fa1f6@linux.intel.com>
+Date:   Fri, 8 Jan 2021 20:04:46 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20210108210913.GA1471923@bjorn-Precision-5520>
+In-Reply-To: <20210108223043.GA1477254@bjorn-Precision-5520>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/8/21 4:09 PM, Bjorn Helgaas wrote:
-> On Thu, Jan 07, 2021 at 10:54:38PM -0500, Don Dutile wrote:
->> On 1/7/21 7:57 PM, Bjorn Helgaas wrote:
->>> On Sun, Jan 03, 2021 at 10:24:37AM +0200, Leon Romanovsky wrote:
->>>> + **/
->>>> +int pci_set_msix_vec_count(struct pci_dev *dev, int numb)
->>>> +{
->>>> +	struct pci_dev *pdev = pci_physfn(dev);
->>>> +
->>>> +	if (!dev->msix_cap || !pdev->msix_cap)
->>>> +		return -EINVAL;
->>>> +
->>>> +	if (dev->driver || !pdev->driver ||
->>>> +	    !pdev->driver->sriov_set_msix_vec_count)
->>>> +		return -EOPNOTSUPP;
->>>> +
->>>> +	if (numb < 0)
->>>> +		/*
->>>> +		 * We don't support negative numbers for now,
->>>> +		 * but maybe in the future it will make sense.
->>>> +		 */
->>>> +		return -EINVAL;
->>>> +
->>>> +	return pdev->driver->sriov_set_msix_vec_count(dev, numb);
->>> So we write to a VF sysfs file, get here and look up the PF, call a PF
->>> driver callback with the VF as an argument, the callback (at least for
->>> mlx5) looks up the PF from the VF, then does some mlx5-specific magic
->>> to the PF that influences the VF somehow?
->> There's no PF lookup above.... it's just checking if a pdev has a
->> driver with the desired msix-cap setting(reduction) feature.
-> We started with the VF (the sysfs file is attached to the VF).  "pdev"
-> is the corresponding PF; that's what I meant by "looking up the PF".
-> Then we call the PF driver sriov_set_msix_vec_count() method.
-ah, got how your statement relates to the files &/or pdev.
 
-> I asked because this raises questions of whether we need mutual
-> exclusion or some other coordination between setting this for multiple
-> VFs.
->
-> Obviously it's great to answer all these in email, but at the end of
-> the day, the rationale needs to be in the commit, either in code
-> comments or the commit log.
->
-I'm still not getting why this is not per-(vf)pdev -- just b/c a device has N-number of MSIX capability doesn't mean it has to all be used/configured,
-Setting max-MSIX for VFs in the PF's pdev means it is the same number for all VFs ... and I'm not sure that's the right solution either.
-It should still be (v)pdev-based, IMO.
---dd
 
+On 1/8/21 2:30 PM, Bjorn Helgaas wrote:
+> Can we push this forward now?  There are several pending patches in
+> this area from Keith and Sathyanarayanan; I haven't gotten to them
+> yet, so not sure whether they help address any of this.
+
+Following two patches should also address the same issue.
+
+My patch:
+
+https://patchwork.kernel.org/project/linux-pci/patch/6f63321637fef86b6cf0beebf98b987062f9e811.1610153755.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+
+Keith's patch:
+
+https://patchwork.kernel.org/project/linux-pci/patch/20210104230300.1277180-4-kbusch@kernel.org/
+
+
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
