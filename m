@@ -2,129 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D0132EFC27
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 01:30:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 915872EFC8E
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 02:03:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbhAIA3t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jan 2021 19:29:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbhAIA3t (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 8 Jan 2021 19:29:49 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20DA2C0613C1
-        for <linux-pci@vger.kernel.org>; Fri,  8 Jan 2021 16:29:09 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id e2so6517219plt.12
-        for <linux-pci@vger.kernel.org>; Fri, 08 Jan 2021 16:29:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eveSrO3foL1YR94SADi/xGNY6RU/HiTPaoR//1jI2bc=;
-        b=cemTR8rQ+v7aAc1j8X9bSjTtMv/2eIij1J0jQdOW7eNBqbQFCd58aSYpax3rZVT2eY
-         aoIsHA/4koMVUbI+TLf/cwAkcwY2XCmvpLcT//0ZhklFs+Yz+KCOHvj4iDKgepwwDCy2
-         psVcFqYTpa0VlbUiLHsCrmO18jt6/WbjHzn9c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eveSrO3foL1YR94SADi/xGNY6RU/HiTPaoR//1jI2bc=;
-        b=eHIySPjwWDgY0aFmezfdcffQmpyOjVjTk+R7FkGB8KI9FuN/DsX300NRD+clJdHDo7
-         /0qwtWaoF84aORfSW5ZF2hq3dZAqDJrhGWMoaxNFLRl8SDW2LpmgXqcNLKdttfcwSTGj
-         Ws1/XlZNqL9qcY4Z4UTPQekI9COM1IKFNkIbPqrihVuiwPp8A4Ix6T8+/BLR6VF41h7T
-         00XtrY6IKkAnUTr8WnndwZi1TDTFNTpTpVR/YCR8enQfveX0MsgVpl71010uOHRul/J8
-         WJDaR0KsSciWeCEIfrxq/LU6qJn0As6nKFwiZlHytgFkRRwDE+nTMCZUurIcAVl2kFWN
-         Wo1A==
-X-Gm-Message-State: AOAM530jWtp8UkEsQjpLhsnzm07rPWJlpf3jAT5MBe4KnquEzuJPUJSR
-        dbk3pnC21G35tWrbv6/h3HOqrw==
-X-Google-Smtp-Source: ABdhPJxOK52D16pcAwbT6jFjbq8GC4r4IJlAOsTNR/onet1CRy5aKa4cGbW3hXo1Ls7QfN7irIfQYg==
-X-Received: by 2002:a17:90a:db08:: with SMTP id g8mr6363172pjv.163.1610152148560;
-        Fri, 08 Jan 2021 16:29:08 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p16sm9332768pju.47.2021.01.08.16.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jan 2021 16:29:07 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-pci@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-hardening@lists.openwall.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v9 00/16] Add support for Clang LTO
-Date:   Fri,  8 Jan 2021 16:27:13 -0800
-Message-Id: <161015202326.2511797.6087273163265436487.b4-ty@chromium.org>
+        id S1725916AbhAIBCW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 8 Jan 2021 20:02:22 -0500
+Received: from mga11.intel.com ([192.55.52.93]:37225 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725861AbhAIBCV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 8 Jan 2021 20:02:21 -0500
+IronPort-SDR: 5xsQrE1X6E0z/o/pTl1k3kYxSuJZl26Fl39oHUhC9eHj7/BHpZuBcbEBU1llNoz2uzhxRJvIEn
+ 5iqhiimwUR+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9858"; a="174166644"
+X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
+   d="scan'208";a="174166644"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 17:00:34 -0800
+IronPort-SDR: Trq7pdzsOZ/IpVIvI4aoODGktcF/ONJlvGcp7PPi/PcMAZZYUNMw+f75U0cEGP6/KsJ7ZxOQi3
+ Q5JEoP1I++9Q==
+X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
+   d="scan'208";a="423126447"
+Received: from tanmingy-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.247.214])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 17:00:24 -0800
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        knsathya@kernel.org
+Subject: [PATCH v9 1/2] PCI/ERR: Call pci_bus_reset() before calling ->slot_reset() callback
+Date:   Fri,  8 Jan 2021 17:00:00 -0800
+Message-Id: <c7ec55f92d97b237adae0ee4694dbfc1a766600c.1610153755.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201211184633.3213045-1-samitolvanen@google.com>
-References: <20201211184633.3213045-1-samitolvanen@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 11 Dec 2020 10:46:17 -0800, Sami Tolvanen wrote:
-> This patch series adds support for building the kernel with Clang's
-> Link Time Optimization (LTO). In addition to performance, the primary
-> motivation for LTO is to allow Clang's Control-Flow Integrity (CFI)
-> to be used in the kernel. Google has shipped millions of Pixel
-> devices running three major kernel versions with LTO+CFI since 2018.
-> 
-> Most of the patches are build system changes for handling LLVM
-> bitcode, which Clang produces with LTO instead of ELF object files,
-> postponing ELF processing until a later stage, and ensuring initcall
-> ordering.
-> 
-> [...]
+Currently if report_error_detected() or report_mmio_enabled()
+functions requests PCI_ERS_RESULT_NEED_RESET, current
+pcie_do_recovery() implementation does not do the requested
+explicit device reset, but instead just calls the
+report_slot_reset() on all affected devices. Notifying about the
+reset via report_slot_reset() without doing the actual device
+reset is incorrect. So call pci_bus_reset() before triggering
+->slot_reset() callback.
 
-Applied to kspp/lto/v5.11-rc2, thanks!
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+---
+ Changes since v7:
+  * Rebased on top of v5.11-rc1.
 
-I'll let 0-day grind on this over the weekend and toss it in -next on
-Monday if there aren't any objections.
+ Changes since v7:
+  * Rebased on top of v5.10-rc1.
 
-[01/16] tracing: move function tracer options to Kconfig
-        https://git.kernel.org/kees/c/3b15cdc15956
-[02/16] kbuild: add support for Clang LTO
-        https://git.kernel.org/kees/c/833174494976
-[03/16] kbuild: lto: fix module versioning
-        https://git.kernel.org/kees/c/6eb20c5338a0
-[04/16] kbuild: lto: limit inlining
-        https://git.kernel.org/kees/c/f6db4eff0691
-[05/16] kbuild: lto: merge module sections
-        https://git.kernel.org/kees/c/d03e46783689
-[06/16] kbuild: lto: add a default list of used symbols
-        https://git.kernel.org/kees/c/81bfbc27b122
-[07/16] init: lto: ensure initcall ordering
-        https://git.kernel.org/kees/c/7918ea64195d
-[08/16] init: lto: fix PREL32 relocations
-        https://git.kernel.org/kees/c/a51d9615ffb5
-[09/16] PCI: Fix PREL32 relocations for LTO
-        https://git.kernel.org/kees/c/dc83615370e7
-[10/16] modpost: lto: strip .lto from module names
-        https://git.kernel.org/kees/c/5c0312ef3ca0
-[11/16] scripts/mod: disable LTO for empty.c
-        https://git.kernel.org/kees/c/3d05432db312
-[12/16] efi/libstub: disable LTO
-        https://git.kernel.org/kees/c/b12eba00cb87
-[13/16] drivers/misc/lkdtm: disable LTO for rodata.o
-        https://git.kernel.org/kees/c/ed02e86f1752
-[14/16] arm64: vdso: disable LTO
-        https://git.kernel.org/kees/c/d73692f0f527
-[15/16] arm64: disable recordmcount with DYNAMIC_FTRACE_WITH_REGS
-        https://git.kernel.org/kees/c/09b812ac146f
-[16/16] arm64: allow LTO to be selected
-        https://git.kernel.org/kees/c/1354b8946c46
+ Changes since v6:
+  * None.
 
+ Changes since v5:
+  * Added Ashok's Reviewed-by tag.
+
+ Changes since v4:
+  * Added check for pci_reset_bus() return value.
+
+ drivers/pci/pcie/err.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 510f31f0ef6d..6c19e9948232 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -177,6 +177,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	struct pci_dev *bridge;
+ 	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+ 	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
++	int ret;
+ 
+ 	/*
+ 	 * If the error was detected by a Root Port, Downstream Port, RCEC,
+@@ -214,11 +215,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	}
+ 
+ 	if (status == PCI_ERS_RESULT_NEED_RESET) {
+-		/*
+-		 * TODO: Should call platform-specific
+-		 * functions to reset slot before calling
+-		 * drivers' slot_reset callbacks?
+-		 */
++		ret = pci_reset_bus(bridge);
++		if (ret < 0) {
++			pci_err(dev, "Failed to reset %d\n", ret);
++			status = PCI_ERS_RESULT_DISCONNECT;
++			goto failed;
++		}
+ 		status = PCI_ERS_RESULT_RECOVERED;
+ 		pci_dbg(bridge, "broadcast slot_reset message\n");
+ 		pci_walk_bridge(bridge, report_slot_reset, &status);
 -- 
-Kees Cook
+2.25.1
 
