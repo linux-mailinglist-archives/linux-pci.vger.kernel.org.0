@@ -2,71 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DB852EFDA6
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 05:07:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C4122EFEC2
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 10:26:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbhAIEGg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 8 Jan 2021 23:06:36 -0500
-Received: from mga02.intel.com ([134.134.136.20]:12132 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbhAIEGg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 8 Jan 2021 23:06:36 -0500
-IronPort-SDR: JWe+BfksJa9PXBYZv30wGuP4eyQNMvlzG+kJeVDaNyd77tkcup2zmVpQrnoHTctdRUUnOJyH74
- QfD2C38wUqKQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9858"; a="164763421"
-X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
-   d="scan'208";a="164763421"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 20:04:49 -0800
-IronPort-SDR: OkuaDQclVPfdP1nLAynpvylUzFC681Nu4S1W4D1r4rDKddFpKHNEV5ubQZ3YFeuA2bUK9GewYY
- AqewMlSPns8w==
-X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
-   d="scan'208";a="399195880"
-Received: from tanmingy-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.247.214])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 20:04:49 -0800
-Subject: Re: [PATCH v4 1/1] PCI/ERR: don't clobber status after reset_link()
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Hedi Berriche <hedi.berriche@hpe.com>
-Cc:     Ashok Raj <ashok.raj@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
-        Russ Anderson <rja@hpe.com>, Joerg Roedel <jroedel@suse.com>,
-        stable@kernel.org, Keith Busch <kbusch@kernel.org>
-References: <20210108223043.GA1477254@bjorn-Precision-5520>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <01c316b7-afae-5ce5-0c5a-8878310fa1f6@linux.intel.com>
-Date:   Fri, 8 Jan 2021 20:04:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726562AbhAIJ0b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Jan 2021 04:26:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726557AbhAIJ0a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jan 2021 04:26:30 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77131C061786
+        for <linux-pci@vger.kernel.org>; Sat,  9 Jan 2021 01:25:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=orTrwl6mDAQHr3qpvUBQdkm781G49tmCK2vydKoShek=; b=UwQt0S0ZTez3nYn6wqD4k/xQyg
+        oovrXB/K0vpV1JZiwhqQj1Z11RB1FRONgP9z5FT19CugTW+kUMY3fFfUUMrL3e/LeJ9oJx4cWy9XB
+        wBiLpGKwChJAXwT8NnJFh3kU4r4uxpP1tL+saoOO9kRd01AcQ3BhdUjrU2qTREpp7X9Q3EC+IaOGL
+        fSK7AvLp8274SkrwZdCswjgXOXse5gaUALd4DYZR8vT9PD3u4nwz06dNq4suk3A06E4yWGlvUeyKr
+        Ro1UHnY5q8es01SI36HIcp9yrbBbMEBmHG0Tm4V3J0k5iomw0++9icz7l0o+aZ1D41tD+bKaTpcxo
+        PKC4WJWg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1kyAUb-000PHa-89; Sat, 09 Jan 2021 09:25:08 +0000
+Date:   Sat, 9 Jan 2021 09:25:05 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Christian K??nig <ckoenig.leichtzumerken@gmail.com>
+Cc:     bhelgaas@google.com, devspam@moreofthesa.me.uk,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/4] pci: export pci_rebar_get_possible_sizes
+Message-ID: <20210109092505.GA95206@infradead.org>
+References: <20210105134404.1545-1-christian.koenig@amd.com>
+ <20210105134404.1545-2-christian.koenig@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20210108223043.GA1477254@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210105134404.1545-2-christian.koenig@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Jan 05, 2021 at 02:44:01PM +0100, Christian K??nig wrote:
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e578d34095e9..ef80ed451415 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3579,6 +3579,7 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+>  	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
+>  	return (cap & PCI_REBAR_CAP_SIZES) >> 4;
+>  }
+> +EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
 
-
-On 1/8/21 2:30 PM, Bjorn Helgaas wrote:
-> Can we push this forward now?  There are several pending patches in
-> this area from Keith and Sathyanarayanan; I haven't gotten to them
-> yet, so not sure whether they help address any of this.
-
-Following two patches should also address the same issue.
-
-My patch:
-
-https://patchwork.kernel.org/project/linux-pci/patch/6f63321637fef86b6cf0beebf98b987062f9e811.1610153755.git.sathyanarayanan.kuppuswamy@linux.intel.com/
-
-Keith's patch:
-
-https://patchwork.kernel.org/project/linux-pci/patch/20210104230300.1277180-4-kbusch@kernel.org/
-
-
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+EXPORT_SYMBOL_GPL please for such internals.
