@@ -2,114 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 329912F024F
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 18:36:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ABAA2F02E0
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 19:32:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbhAIRe2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Jan 2021 12:34:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56516 "EHLO
+        id S1725983AbhAISca (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Jan 2021 13:32:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbhAIRe2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jan 2021 12:34:28 -0500
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03FDC06179F;
-        Sat,  9 Jan 2021 09:33:47 -0800 (PST)
-Received: by mail-il1-x132.google.com with SMTP id e7so13764376ile.7;
-        Sat, 09 Jan 2021 09:33:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=NikId7Xj7bWOh+hLaIn+ZZMlijXDi8nElT+l6OdToWY=;
-        b=g/pQdtKnuFESOOqddx88eblRnszCnOfblr9FrlAOcVMiw7QPdJqBkMMrQ8qQv9pejD
-         Ny2QqfbXSFy15cuqaGq979m/4cqR8/p9VV4Cuvi9Gve2mhoptlZVOPLFeaYRm9zI89SV
-         +55oFqz636EU/Ok+b+qFnjxTAKDjuWyUWV7m7LPzGH9djYzDFb2Qb/PsVddrPMgbVPDN
-         OrCQxG97wM8LYRaXgfKklCI33p8jWUdT6RGI260XhXB85Yt+7M7k/i+uGfRPxpcOpCIC
-         pA5zReSdT48tC7O9yfnxIhsS+NqdW8Ux/y6F0q7ZlOhNU+h9ZOmHlkhfKUPMM+XFueIr
-         M4gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=NikId7Xj7bWOh+hLaIn+ZZMlijXDi8nElT+l6OdToWY=;
-        b=eBV+4t/j30uMVQizE6i8Uw5ah+pQWKVmrtCuCs78vrUHzjcJyrNZHhIVMXE4fAxRGe
-         E1Mvwr8tzbd2sjPaTiEcDKuqOYqSAUFzPLz4qqNdUKtvQ2MiowprgKwoIPN369yLOkK0
-         bJ1CqKfuOz+PUTj4eM8wREmE3edH9HgeziimHa9qceQ5EVAw4ncdvChXHsfT08EheUgt
-         gL6tubO99YD2Ega0JUr23Vs1xf094bzwTc7uqAQeHoi1z1rs76mpZuNstizJ7DDPA/CN
-         PWwMO9TA92yduxVAMe87T7TBHL/d31GtdGgHoWhTJw2MqxTm07x7TZc0O/uhdpKSe8j5
-         1GhA==
-X-Gm-Message-State: AOAM533L3sIBcShqYObQpkpovThGMGR4q76mzNDuB+aPKkZjEo5Pgpvw
-        zyhsVZ+dxE6l65yUXzrAlI8NezVBW2mxubm+TzM=
-X-Google-Smtp-Source: ABdhPJx1ffrLsMiWlEmhD/YwfQk9GM6w4n9rJLKldS7um9a/rbcv+zWLw4Px08XWbgZ5NbTJHYMzeaP0UJYTrFD6Q3s=
-X-Received: by 2002:a05:6e02:1a43:: with SMTP id u3mr9156005ilv.209.1610213627012;
- Sat, 09 Jan 2021 09:33:47 -0800 (PST)
+        with ESMTP id S1725970AbhAISc3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jan 2021 13:32:29 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BED2C06179F;
+        Sat,  9 Jan 2021 10:31:49 -0800 (PST)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id AFAC722708;
+        Sat,  9 Jan 2021 19:31:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1610217107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p2UDMWK0VwuZPNdNMdX3dZBlVkph5iJ84buMQxQDKJM=;
+        b=pfz+72KfFX4HT4+7K8S0iv9FJlA9Svw3oYFTiOk8xQ66f+xjCPTjTCklPymrOsc3tFq+Cb
+        4JDBFOquyB8XIYHPERtRZM2MBCZLxCM+EQn72icWFAna7v5AuSF882hM9uNA+0eOj9F/Nr
+        Kw8Nct5JoJ03ahEeJtzLGJugp0aD8W4=
 MIME-Version: 1.0
-References: <20201211184633.3213045-1-samitolvanen@google.com>
- <CA+icZUWYxO1hHW-_vrJid7EstqQRYQphjO3Xn6pj6qfEYEONbA@mail.gmail.com>
- <20210109153646.zrmglpvr27f5zd7m@treble> <CA+icZUUiucbsQZtJKYdD7Y7Cq8hJZdBwsF0U0BFbaBtnLY3Nsw@mail.gmail.com>
- <20210109160709.kqqpf64klflajarl@treble> <CA+icZUU=sS2xfzo9qTUTPQ0prbbQcj29tpDt1qK5cYZxarXuxg@mail.gmail.com>
- <20210109163256.3sv3wbgrshbj72ik@treble> <CA+icZUUszOHkJ8Acx2mDowg3StZw9EureDQ7YYkJkcAnpLBA+g@mail.gmail.com>
- <20210109170353.litivfvc4zotnimv@treble> <20210109170558.meufvgwrjtqo5v3i@treble>
-In-Reply-To: <20210109170558.meufvgwrjtqo5v3i@treble>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Sat, 9 Jan 2021 18:33:36 +0100
-Message-ID: <CA+icZUVEyCJK4ja_d=45t35=uRoXSDutcqEXBtKbChoP3MozrQ@mail.gmail.com>
-Subject: Re: [PATCH v9 00/16] Add support for Clang LTO
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 09 Jan 2021 19:31:46 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
+In-Reply-To: <20210108212021.GA1472277@bjorn-Precision-5520>
+References: <20210108212021.GA1472277@bjorn-Precision-5520>
+User-Agent: Roundcube Webmail/1.4.9
+Message-ID: <642eb96b495f5ad7d2d14410fedcd1ad@walle.cc>
+X-Sender: michael@walle.cc
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 9, 2021 at 6:06 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Sat, Jan 09, 2021 at 11:03:57AM -0600, Josh Poimboeuf wrote:
-> > On Sat, Jan 09, 2021 at 05:45:47PM +0100, Sedat Dilek wrote:
-> > > I tried merging with clang-cfi Git which is based on Linux v5.11-rc2+
-> > > with a lot of merge conflicts.
-> > >
-> > > Did you try on top of cfi-10 Git tag which is based on Linux v5.10?
-> > >
-> > > Whatever you successfully did... Can you give me a step-by-step instruction?
-> >
-> > Oops, my bad.  My last three commits (which I just added) do conflict.
-> > Sorry for the confusion.
-> >
-> > Just drop my last three commits:
-> >
-> > git fetch https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git objtool-vmlinux
-> > git checkout -B tmp FETCH_HEAD
-> > git reset --hard HEAD~~~
-> > git fetch https://github.com/samitolvanen/linux clang-lto
-> > git rebase --onto FETCH_HEAD 79881bfc57be
->
-> Last one should be:
->
-> git rebase --onto FETCH_HEAD 2c85ebc57b3e
->
+Hi Bjorn,
 
-OK, that worked fine.
+Am 2021-01-08 22:20, schrieb Bjorn Helgaas:
+> On Wed, Dec 30, 2020 at 07:53:17PM +0100, Michael Walle wrote:
+>> The Intel i210 doesn't work if the Expansion ROM BAR overlaps with
+>> another BAR. Networking won't work at all and once a packet is sent 
+>> the
+>> netdev watchdog will bite:
+> 
+> 
+> 1) Is this a regression?  It sounds like you don't know for sure
+> because earlier kernels don't support your platform.
 
-So commit 2c85ebc57b3e is v5.10 Git tag in upstream.
+Whats the background of the question? The board is offially supported
+since 5.8. I doubt that the code responsible to not touch the ExpROM
+BAR in pci_std_update_resource() were recently changed/added; the
+comment refers to a mail from 2005. So no I don't think it is a
+regression per se.
 
-So, I substituted:
+It is just that some combination of hardware and firmware will program
+the BARs in away so that this bug is triggered. And chances of this
+happing are very unlikely.
 
-git rebase --onto FETCH_HEAD v5.10
+Do we agree that it should be irrelevant how the firmware programs and
+enables the BARs in this case? I.e. you could "fix" u-boot to match the
+way linux will assign addresses to the BARs. But that would just work
+around the real issue here. IMO.
 
-Thanks.
+> 2) Can you open a bugzilla at https://bugzilla.kernel.org and attach
+> the complete dmesg and "sudo lspci -vv" output?  I want to see whether
+> Linux is assigning something incorrectly or this is a consequence of
+> some firmware initialization.
 
-- Sedat -
+Sure, but you wouldn't even see the error with "lspci -vv" because
+lspci will just show the mapping linux assigned to it. But not whats
+written to the actual BAR for the PCI card. I'll also include a
+"lspci -xx". I've enabled CONFIG_PCI_DEBUG, too.
+
+https://bugzilla.kernel.org/show_bug.cgi?id=211105
+
+> 3) If the Intel i210 is defective in how it handles an Expansion ROM
+> that overlaps another BAR, a quirk might be the right fix. But my
+> guess is the device is working correctly per spec and there's
+> something wrong in how firmware/Linux is assigning things.  That would
+> mean we need a more generic fix that's not a quirk and not tied to the
+> Intel i210.
+
+Agreed, but as you already stated (and I've also found that in the PCI
+spec) the Expansion ROM address decoder can be shared by the other BARs
+and it shouldn't matter as long as the ExpROM BAR is disabled, which is
+the case here.
+
+I've included the Intel ML, maybe the Intel guys can comment on that.
+
+>> [   89.059374] ------------[ cut here ]------------
+>> [   89.064019] NETDEV WATCHDOG: enP2p1s0 (igb): transmit queue 0 timed 
+>> out
+>> [   89.070681] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:443 
+>> dev_watchdog+0x3a8/0x3b0
+>> [   89.078989] Modules linked in:
+>> [   89.082053] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W       
+>>   5.11.0-rc1-00020-gc16f033804b #289
+>> [   89.091574] Hardware name: Kontron SMARC-sAL28 (Single PHY) on 
+>> SMARC Eval 2.0 carrier (DT)
+>> [   89.099870] pstate: 60000005 (nZCv daif -PAN -UAO -TCO BTYPE=--)
+>> [   89.105900] pc : dev_watchdog+0x3a8/0x3b0
+>> [   89.109923] lr : dev_watchdog+0x3a8/0x3b0
+>> [   89.113945] sp : ffff80001000bd50
+>> [   89.117268] x29: ffff80001000bd50 x28: 0000000000000008
+>> [   89.122602] x27: 0000000000000004 x26: 0000000000000140
+>> [   89.127935] x25: ffff002001c6c000 x24: ffff002001c2b940
+>> [   89.133267] x23: ffff8000118c7000 x22: ffff002001c6c39c
+>> [   89.138600] x21: ffff002001c6bfb8 x20: ffff002001c6c3b8
+>> [   89.143932] x19: 0000000000000000 x18: 0000000000000010
+>> [   89.149264] x17: 0000000000000000 x16: 0000000000000000
+>> [   89.154596] x15: ffffffffffffffff x14: 0720072007200720
+>> [   89.159928] x13: 0720072007740775 x12: ffff80001195b980
+>> [   89.165260] x11: 0000000000000003 x10: ffff800011943940
+>> [   89.170592] x9 : ffff800010100d44 x8 : 0000000000017fe8
+>> [   89.175924] x7 : c0000000ffffefff x6 : 0000000000000001
+>> [   89.181255] x5 : 0000000000000000 x4 : 0000000000000000
+>> [   89.186587] x3 : 00000000ffffffff x2 : ffff8000118eb908
+>> [   89.191919] x1 : 84d8200845006900 x0 : 0000000000000000
+>> [   89.197251] Call trace:
+>> [   89.199701]  dev_watchdog+0x3a8/0x3b0
+>> [   89.203374]  call_timer_fn+0x38/0x208
+>> [   89.207049]  run_timer_softirq+0x290/0x540
+>> [   89.211158]  __do_softirq+0x138/0x404
+>> [   89.214831]  irq_exit+0xe8/0xf8
+>> [   89.217981]  __handle_domain_irq+0x70/0xc8
+>> [   89.222091]  gic_handle_irq+0xc8/0x2b0
+>> [   89.225850]  el1_irq+0xb8/0x180
+>> [   89.228999]  arch_cpu_idle+0x18/0x40
+>> [   89.232587]  default_idle_call+0x70/0x214
+>> [   89.236610]  do_idle+0x21c/0x290
+>> [   89.239848]  cpu_startup_entry+0x2c/0x70
+>> [   89.243783]  secondary_start_kernel+0x1a0/0x1f0
+>> [   89.248332] ---[ end trace 1687af62576397bc ]---
+>> [   89.253350] igb 0002:01:00.0 enP2p1s0: Reset adapter
+> 
+> This entire splat is overkill.  The useful part is what somebody who
+> trips over this might google for.  Strip out the "cut here", the
+> timestamps, the register dump, and the last 6-8 lines of the call
+> trace.
+
+This seem to be different from subsys to subsys, but whatever ;)
+
+-michael
