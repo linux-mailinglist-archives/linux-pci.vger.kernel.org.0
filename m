@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C4122EFEC2
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 10:26:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 650B42EFED0
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 10:40:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbhAIJ0b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Jan 2021 04:26:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726557AbhAIJ0a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jan 2021 04:26:30 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77131C061786
-        for <linux-pci@vger.kernel.org>; Sat,  9 Jan 2021 01:25:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=orTrwl6mDAQHr3qpvUBQdkm781G49tmCK2vydKoShek=; b=UwQt0S0ZTez3nYn6wqD4k/xQyg
-        oovrXB/K0vpV1JZiwhqQj1Z11RB1FRONgP9z5FT19CugTW+kUMY3fFfUUMrL3e/LeJ9oJx4cWy9XB
-        wBiLpGKwChJAXwT8NnJFh3kU4r4uxpP1tL+saoOO9kRd01AcQ3BhdUjrU2qTREpp7X9Q3EC+IaOGL
-        fSK7AvLp8274SkrwZdCswjgXOXse5gaUALd4DYZR8vT9PD3u4nwz06dNq4suk3A06E4yWGlvUeyKr
-        Ro1UHnY5q8es01SI36HIcp9yrbBbMEBmHG0Tm4V3J0k5iomw0++9icz7l0o+aZ1D41tD+bKaTpcxo
-        PKC4WJWg==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1kyAUb-000PHa-89; Sat, 09 Jan 2021 09:25:08 +0000
-Date:   Sat, 9 Jan 2021 09:25:05 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christian K??nig <ckoenig.leichtzumerken@gmail.com>
-Cc:     bhelgaas@google.com, devspam@moreofthesa.me.uk,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/4] pci: export pci_rebar_get_possible_sizes
-Message-ID: <20210109092505.GA95206@infradead.org>
-References: <20210105134404.1545-1-christian.koenig@amd.com>
- <20210105134404.1545-2-christian.koenig@amd.com>
+        id S1726897AbhAIJke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Jan 2021 04:40:34 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:10863 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbhAIJkd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jan 2021 04:40:33 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DCZfj1DJ4z7Qtd;
+        Sat,  9 Jan 2021 17:38:53 +0800 (CST)
+Received: from linux-ioko.site (10.78.228.23) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.498.0; Sat, 9 Jan 2021 17:39:49 +0800
+From:   Dongdong Liu <liudongdong3@huawei.com>
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+Subject: [RFC PATCH 0/3] PCI: Enable 10-bit tags support for PCIe devices
+Date:   Sat, 9 Jan 2021 17:11:20 +0800
+Message-ID: <1610183483-2061-1-git-send-email-liudongdong3@huawei.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210105134404.1545-2-christian.koenig@amd.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.78.228.23]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 05, 2021 at 02:44:01PM +0100, Christian K??nig wrote:
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e578d34095e9..ef80ed451415 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3579,6 +3579,7 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
->  	return (cap & PCI_REBAR_CAP_SIZES) >> 4;
->  }
-> +EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
+10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
+field size from 8 bits to 10 bits.
 
-EXPORT_SYMBOL_GPL please for such internals.
+For platforms where the RC supports 10-Bit Tag Completer capability,
+it is highly recommended for platform firmware or operating software
+that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
+bit automatically in Endpoints with 10-Bit Tag Requester capability. This
+enables the important class of 10-Bit Tag capable adapters that send
+Memory Read Requests only to host memory.
+
+This patchset is to enable 10-bits for PCIe EP devices.
+
+Dongdong Liu (3):
+  PCI: Add 10-Bit Tag register definitions
+  PCI: Enable 10-bit tags support for PCIe devices
+  PCI/IOV: Enable 10-bit tags support for PCIe VF devices
+
+ drivers/pci/iov.c             |  8 ++++++++
+ drivers/pci/probe.c           | 39 +++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h           |  1 +
+ include/uapi/linux/pci_regs.h |  5 +++++
+ 4 files changed, 53 insertions(+)
+
+--
+1.9.1
+
