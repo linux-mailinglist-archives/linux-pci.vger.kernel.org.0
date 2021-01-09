@@ -2,27 +2,29 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 650B42EFED0
-	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 10:40:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E33132EFECF
+	for <lists+linux-pci@lfdr.de>; Sat,  9 Jan 2021 10:40:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbhAIJke (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 9 Jan 2021 04:40:34 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:10863 "EHLO
+        id S1726898AbhAIJkd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 9 Jan 2021 04:40:33 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:10864 "EHLO
         szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbhAIJkd (ORCPT
+        with ESMTP id S1726897AbhAIJkd (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Sat, 9 Jan 2021 04:40:33 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DCZfj1DJ4z7Qtd;
-        Sat,  9 Jan 2021 17:38:53 +0800 (CST)
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DCZfh6vSgz7Gw8;
+        Sat,  9 Jan 2021 17:38:52 +0800 (CST)
 Received: from linux-ioko.site (10.78.228.23) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
  14.3.498.0; Sat, 9 Jan 2021 17:39:49 +0800
 From:   Dongdong Liu <liudongdong3@huawei.com>
 To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-Subject: [RFC PATCH 0/3] PCI: Enable 10-bit tags support for PCIe devices
-Date:   Sat, 9 Jan 2021 17:11:20 +0800
-Message-ID: <1610183483-2061-1-git-send-email-liudongdong3@huawei.com>
+Subject: [RFC PATCH 1/3] PCI: Add 10-Bit Tag register definitions
+Date:   Sat, 9 Jan 2021 17:11:21 +0800
+Message-ID: <1610183483-2061-2-git-send-email-liudongdong3@huawei.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1610183483-2061-1-git-send-email-liudongdong3@huawei.com>
+References: <1610183483-2061-1-git-send-email-liudongdong3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.78.228.23]
@@ -31,29 +33,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-10-Bit Tag capability, introduced in PCIe-4.0 increases the total Tag
-field size from 8 bits to 10 bits.
+Add 10-Bit Tag register definitions for use in subsequen patches.
+See the PCIe 5.0 spec, sec 7.5.3.15 and 9.3.3.2.
 
-For platforms where the RC supports 10-Bit Tag Completer capability,
-it is highly recommended for platform firmware or operating software
-that configures PCIe hierarchies to Set the 10-Bit Tag Requester Enable
-bit automatically in Endpoints with 10-Bit Tag Requester capability. This
-enables the important class of 10-Bit Tag capable adapters that send
-Memory Read Requests only to host memory.
+Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+---
+ include/uapi/linux/pci_regs.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This patchset is to enable 10-bits for PCIe EP devices.
-
-Dongdong Liu (3):
-  PCI: Add 10-Bit Tag register definitions
-  PCI: Enable 10-bit tags support for PCIe devices
-  PCI/IOV: Enable 10-bit tags support for PCIe VF devices
-
- drivers/pci/iov.c             |  8 ++++++++
- drivers/pci/probe.c           | 39 +++++++++++++++++++++++++++++++++++++++
- include/linux/pci.h           |  1 +
- include/uapi/linux/pci_regs.h |  5 +++++
- 4 files changed, 53 insertions(+)
-
---
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index e709ae8..cf1ddb8 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -648,6 +648,8 @@
+ #define  PCI_EXP_DEVCAP2_ATOMIC_COMP64	0x00000100 /* 64b AtomicOp completion */
+ #define  PCI_EXP_DEVCAP2_ATOMIC_COMP128	0x00000200 /* 128b AtomicOp completion */
+ #define  PCI_EXP_DEVCAP2_LTR		0x00000800 /* Latency tolerance reporting */
++#define  PCI_EXP_DEVCAP2_10BIT_TAG_COMP 0x00010000 /* 10-Bit Tag Completer Supported */
++#define  PCI_EXP_DEVCAP2_10BIT_TAG_REQ  0x00020000 /* 10-Bit Tag Requester Supported */
+ #define  PCI_EXP_DEVCAP2_OBFF_MASK	0x000c0000 /* OBFF support mechanism */
+ #define  PCI_EXP_DEVCAP2_OBFF_MSG	0x00040000 /* New message signaling */
+ #define  PCI_EXP_DEVCAP2_OBFF_WAKE	0x00080000 /* Re-use WAKE# for OBFF */
+@@ -661,6 +663,7 @@
+ #define  PCI_EXP_DEVCTL2_IDO_REQ_EN	0x0100	/* Allow IDO for requests */
+ #define  PCI_EXP_DEVCTL2_IDO_CMP_EN	0x0200	/* Allow IDO for completions */
+ #define  PCI_EXP_DEVCTL2_LTR_EN		0x0400	/* Enable LTR mechanism */
++#define  PCI_EXP_DEVCTL2_10BIT_TAG_REQ_EN 0x1000 /* 10-Bit Tag Requester Enable */
+ #define  PCI_EXP_DEVCTL2_OBFF_MSGA_EN	0x2000	/* Enable OBFF Message type A */
+ #define  PCI_EXP_DEVCTL2_OBFF_MSGB_EN	0x4000	/* Enable OBFF Message type B */
+ #define  PCI_EXP_DEVCTL2_OBFF_WAKE_EN	0x6000	/* OBFF using WAKE# signaling */
+@@ -931,6 +934,7 @@
+ /* Single Root I/O Virtualization */
+ #define PCI_SRIOV_CAP		0x04	/* SR-IOV Capabilities */
+ #define  PCI_SRIOV_CAP_VFM	0x00000001  /* VF Migration Capable */
++#define  PCI_SRIOV_CAP_VF_10BIT_TAG_REQ	0x00000004 /* VF 10-Bit Tag Requester Supported */
+ #define  PCI_SRIOV_CAP_INTR(x)	((x) >> 21) /* Interrupt Message Number */
+ #define PCI_SRIOV_CTRL		0x08	/* SR-IOV Control */
+ #define  PCI_SRIOV_CTRL_VFE	0x0001	/* VF Enable */
+@@ -938,6 +942,7 @@
+ #define  PCI_SRIOV_CTRL_INTR	0x0004	/* VF Migration Interrupt Enable */
+ #define  PCI_SRIOV_CTRL_MSE	0x0008	/* VF Memory Space Enable */
+ #define  PCI_SRIOV_CTRL_ARI	0x0010	/* ARI Capable Hierarchy */
++#define  PCI_SRIOV_CTRL_VF_10BIT_TAG_REQ_EN 0x0020 /* VF 10-Bit Tag Requester Enable */
+ #define PCI_SRIOV_STATUS	0x0a	/* SR-IOV Status */
+ #define  PCI_SRIOV_STATUS_VFM	0x0001	/* VF Migration Status */
+ #define PCI_SRIOV_INITIAL_VF	0x0c	/* Initial VFs */
+-- 
 1.9.1
 
