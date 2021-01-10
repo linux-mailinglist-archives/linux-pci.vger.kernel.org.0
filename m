@@ -2,127 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D0BC2F060F
-	for <lists+linux-pci@lfdr.de>; Sun, 10 Jan 2021 09:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0534A2F07CB
+	for <lists+linux-pci@lfdr.de>; Sun, 10 Jan 2021 16:09:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbhAJIsU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 10 Jan 2021 03:48:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60530 "EHLO mail.kernel.org"
+        id S1726682AbhAJPIR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 10 Jan 2021 10:08:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbhAJIsU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 10 Jan 2021 03:48:20 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B31ED239EB;
-        Sun, 10 Jan 2021 08:47:38 +0000 (UTC)
+        id S1726612AbhAJPIQ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 10 Jan 2021 10:08:16 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0436F22AAE;
+        Sun, 10 Jan 2021 15:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610268459;
-        bh=irKAhtaJtCZe7N6lWVZH9hxZFfZco7OZkLCmKDfdn88=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eAS/0EP5SqObKkIVZntlBA6V9qV71hEJ1cFHBihZ7qcN1biUc63pVcAbKioWPMj0a
-         79/x4ZxBMDd3rcA+f1fspyX3ayFf/MGSrAeG5xq4F64ZQsnmA9+nBhrgsJs2vsop2k
-         KEz80++RprQXuTHZThW2vLo+gaSuQtoVpXi4QcyK85O9gHuztKQosoB4ji4foSE5q9
-         tO4HprIXJCb9PQr8owxzgkBWF2vo86v+lOO2J0iboKIteAXXEKUzjShV+vZbifG/hE
-         ZvHS3QM3ih0TEIKT5Id3QfRtolvGajdm82mb+4irp8m+UK/ZZzFHj54oZyEJnJLqrG
-         kqd46rVmb81RQ==
-Date:   Sun, 10 Jan 2021 10:47:35 +0200
+        s=k20201202; t=1610291255;
+        bh=/KQr93Nb3+WkS9tFMAKpr8ZV8pJbjLYVfQXkHGtQ+YI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IQJRvgztB7F4MGsqrF0FghjP/pJ/YpFO+s5veuGgEto0t2iLr3/dzako6ijctkonG
+         OmiXXiZ+2hYPe4DNKukdr0/WcF/p/whOlkdqJz2T5iDEZ2F1K/auZt6BrjAG8kL73U
+         ym3O/zVIMAAzG4mbjLZbBuGIaKyvAppieGryW/nDL64uovJU9/14Cc4brrF+ECZq5t
+         mxdXDllJMB7k1s5QHBjLvL4nH2NURe5l+SjnAy4Pv4JlLuRMerJN0DLPlEC9fM1S6i
+         c+vFxbC3rIjydLaKDbpta9gYlYA8Ur/t87crjUqb3upk9txFCfUgnpmp6CHn7yVTAd
+         /NYRfNURI5aWA==
 From:   Leon Romanovsky <leon@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Don Dutile <ddutile@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH mlx5-next 1/4] PCI: Configure number of MSI-X vectors for
- SR-IOV VFs
-Message-ID: <20210110084735.GH31158@unreal>
-References: <20210108005721.GA1403391@bjorn-Precision-5520>
- <ba1e7c38-2a21-40ba-787f-458b979b938f@redhat.com>
- <20210108072525.GB31158@unreal>
- <20210108092145.7c70ff74@omen.home>
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH mlx5-next v1 0/5] Dynamically assign MSI-X vectors count
+Date:   Sun, 10 Jan 2021 17:07:22 +0200
+Message-Id: <20210110150727.1965295-1-leon@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210108092145.7c70ff74@omen.home>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 08, 2021 at 09:21:45AM -0700, Alex Williamson wrote:
-> On Fri, 8 Jan 2021 09:25:25 +0200
-> Leon Romanovsky <leon@kernel.org> wrote:
->
-> > On Thu, Jan 07, 2021 at 10:54:38PM -0500, Don Dutile wrote:
-> > > On 1/7/21 7:57 PM, Bjorn Helgaas wrote:
-> > > > [+cc Alex, Don]
-> >
-> > <...>
-> >
-> > > > Help me connect the dots here.  Is this required because of something
-> > > > peculiar to mlx5, or is something like this required for all SR-IOV
-> > > > devices because of the way the PCIe spec is written?
-> > > So, overall, I'm guessing the mlx5 device can have 1000's of MSIX -- say, one per send/receive/completion queue.
-> > > This device capability may exceed the max number MSIX a VM can have/support (depending on guestos).
-> > > So, a sysfs tunable is used to set the max MSIX available, and thus, the device puts >1 send/rcv/completion queue intr on a given MSIX.
-> > >
-> > > ok, time for Leon to better state what this patch does,
-> > > and why it's needed on mlx5 (and may be applicable to other/future high-MSIX devices assigned to VMs (NVME?)).
-> > > Hmmm, now that I said it, why is it SRIOV-centric and not pci-device centric (can pass a PF w/high number of MSIX to a VM).
-> >
-> > Thanks Don and Bjorn,
-> >
-> > I will answer on all comments a little bit later when I will return
-> > to the office (Sunday).
-> >
-> > However it is important for me to present the use case.
-> >
-> > Our mlx5 SR-IOV devices were always capable to drive many MSI-X (upto 2K,
-> > don't catch me on exact number), however when user created VFs, the FW has
-> > no knowledge of how those VFs will be used. So FW had no choice but statically
-> > and equally assign same amount of MSI-X to all VFs.
-> >
-> > After SR-IOV VF creation, user will bind those new VFs to the VMs, but
-> > the VMs have different number of CPUs and despite HW being able to deliver
-> > all needed number of vectors (in mlx5 netdev world, number of channels == number
-> > of CPUs == number of vectors), we will be limited by already set low number
-> > of vectors.
-> >
-> > So it is not for vector reduction, but more for vector re-partition.
-> >
-> > As an example, imagine mlx5 with two VFs. One VF is bounded to VM with 200 CPUs
-> > and another is bounded to VM with 1 CPU. They need different amount of MSI-X vectors.
-> >
-> > Hope that I succeeded to explain :).
->
-> The idea is not unreasonable imo, but without knowing the size of the
-> vector pool, range available per vf, or ultimately whether the vf
-> supports this feature before we try to configure it, I don't see how
-> userspace is expected to make use of this in the general case.  If the
-> configuration requires such specific vf vector usage and pf driver
-> specific knowledge, I'm not sure it's fit as a generic pci-sysfs
-> interface.  Thanks,
+From: Leon Romanovsky <leonro@nvidia.com>
 
-I didn't prohibit read of newly created sysfs file, but if I change
-the implementation to vf_msix_vec_show() to return -EOPNOTSUPP for
-not-supported device, the software will be able to distinguish
-supported/not-supported.
+Changelog
+v1:
+ * Improved wording and commit messages of first PCI patch
+ * Added extra PCI patch to provide total number of MSI-X vectors
+ * Prohibited read of vf_msix_vec sysfs file if driver doesn't support write
+ * Removed extra function definition in pci.h
+v0: https://lore.kernel.org/linux-pci/20210103082440.34994-1-leon@kernel.org
 
-SW will read this file:
-	-> success -> feature supported
-	-> failure -> feature not supported
+--------------------------------------------------------------------
+Hi,
 
-There is one extra sysfs file needed: vf_total_msix. That file will
-give total number of MSI-X vectors that is possible to configure.
+The number of MSI-X vectors is PCI property visible through lspci, that
+field is read-only and configured by the device.
 
-The same logic (supported/not-supported) can be applicable here as well.
+The static assignment of an amount of MSI-X vectors doesn't allow utilize
+the newly created VF because it is not known to the device the future load
+and configuration where that VF will be used.
 
-The feature itself will be used by orchestration software that will
-make decisions based on already configured values or future promises
-and the overall total number. The positive outcome of this scheme
-that driver stays lean.
+The VFs are created on the hypervisor and forwarded to the VMs that have
+different properties (for example number of CPUs).
+
+To overcome the inefficiency in the spread of such MSI-X vectors, we
+allow the kernel to instruct the device with the needed number of such
+vectors, before VF is initialized and bounded to the driver.
+
+Before this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+        Capabilities: [9c] MSI-X: Enable- Count=12 Masked-
+
+Configuration script:
+1. Start fresh
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+modprobe -q -r mlx5_ib mlx5_core
+2. Ensure that driver doesn't run and it is safe to change MSI-X
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_drivers_autoprobe
+3. Load driver for the PF
+modprobe mlx5_core
+4. Configure one of the VFs with new number
+echo 2 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+echo 21 > /sys/bus/pci/devices/0000\:08\:00.2/vf_msix_vec
+
+After this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+        Capabilities: [9c] MSI-X: Enable- Count=21 Masked-
+
 
 Thanks
 
->
-> Alex
->
+Leon Romanovsky (5):
+  PCI: Add sysfs callback to allow MSI-X table size change of SR-IOV VFs
+  PCI: Add SR-IOV sysfs entry to read number of MSI-X vectors
+  net/mlx5: Add dynamic MSI-X capabilities bits
+  net/mlx5: Dynamically assign MSI-X vectors count
+  net/mlx5: Allow to the users to configure number of MSI-X vectors
+
+ Documentation/ABI/testing/sysfs-bus-pci       | 34 +++++++
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  5 +
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  6 ++
+ .../net/ethernet/mellanox/mlx5/core/pci_irq.c | 62 +++++++++++++
+ .../net/ethernet/mellanox/mlx5/core/sriov.c   | 52 ++++++++++-
+ drivers/pci/iov.c                             | 93 +++++++++++++++++++
+ drivers/pci/msi.c                             | 29 ++++++
+ drivers/pci/pci-sysfs.c                       |  1 +
+ drivers/pci/pci.h                             |  5 +
+ include/linux/mlx5/mlx5_ifc.h                 | 11 ++-
+ include/linux/pci.h                           | 10 +-
+ 11 files changed, 304 insertions(+), 4 deletions(-)
+
+--
+2.29.2
+
