@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77FF12F23B5
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jan 2021 01:33:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F4172F23B3
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jan 2021 01:33:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404218AbhALAZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S2405550AbhALAZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Mon, 11 Jan 2021 19:25:58 -0500
-Received: from mga17.intel.com ([192.55.52.151]:11219 "EHLO mga17.intel.com"
+Received: from mga17.intel.com ([192.55.52.151]:11211 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390816AbhAKWxA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 11 Jan 2021 17:53:00 -0500
-IronPort-SDR: sn35YMjR2o8JVZOC57aKZzQjXQOPuJsFQ+EcjArgNYPVk+0X6yueGnbx5lvudd1ovq+JjPZI22
- 8uYccQcXwbUg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9861"; a="157726547"
+        id S2390821AbhAKWxL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 11 Jan 2021 17:53:11 -0500
+IronPort-SDR: jDrJFoLEuLLHxXwvZfazOgwmyefzrHLSVjIYPrjj1BYWXqr2H1XCSxElJZRrt7AeCS9hAlYC1d
+ I6MOX+mwLU0g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9861"; a="157726549"
 X-IronPort-AV: E=Sophos;i="5.79,339,1602572400"; 
-   d="scan'208";a="157726547"
+   d="scan'208";a="157726549"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 14:51:40 -0800
-IronPort-SDR: kEPmQlJck7soFNnY4OmysN+yLBgksCzipRRYR833FRvRqvLuayPCtT4wcxhZVJmwBZx29pJo7T
- ejSBIM8E7wwQ==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 14:51:41 -0800
+IronPort-SDR: ZxpCVApPOpk0948rEmPyzjcAQIfRJ4RpvKSw9tMLqqgCHH8ZLE8YbvsQijFc5W547cymkbrvI1
+ vXGRFrgpg1ig==
 X-IronPort-AV: E=Sophos;i="5.79,339,1602572400"; 
-   d="scan'208";a="352778035"
+   d="scan'208";a="352778039"
 Received: from yyang31-mobl.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.142.71])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 14:51:39 -0800
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 14:51:40 -0800
 From:   Ben Widawsky <ben.widawsky@intel.com>
 To:     linux-cxl@vger.kernel.org
 Cc:     Ben Widawsky <ben.widawsky@intel.com>,
@@ -40,9 +40,9 @@ Cc:     Ben Widawsky <ben.widawsky@intel.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Christoph Hellwig <hch@infradead.org>,
         daniel.lll@alibaba-inc.com
-Subject: [RFC PATCH v3 11/16] taint: add taint for direct hardware access
-Date:   Mon, 11 Jan 2021 14:51:15 -0800
-Message-Id: <20210111225121.820014-12-ben.widawsky@intel.com>
+Subject: [RFC PATCH v3 11/16] taint: add taint for unfettered hardware access
+Date:   Mon, 11 Jan 2021 14:51:16 -0800
+Message-Id: <20210111225121.820014-13-ben.widawsky@intel.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210111225121.820014-1-ben.widawsky@intel.com>
 References: <20210111225121.820014-1-ben.widawsky@intel.com>
@@ -52,21 +52,7 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For drivers that moderate access to the underlying hardware it is
-sometimes desirable to allow userspace to bypass restrictions. Once
-userspace has done this, the driver can no longer guarantee the sanctity
-of either the OS or the hardware. When in this state, it is helpful for
-kernel developers to be made aware (via this taint flag) of this fact
-for subsequent bug reports.
-
-Example usage:
-- Hardware xyzzy accepts 2 commands, waldo and fred.
-- The xyzzy driver provides an interface for using waldo, but not fred.
-- quux is convinced they really need the fred command.
-- xyzzy driver allows quux to frob hardware to initiate fred.
-  - kernel gets tainted.
-- turns out fred command is borked, and scribbles over memory.
-- developers laugh while closing quux's subsequent bug report.
+Make notes about why we use this.
 
 Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 ---
