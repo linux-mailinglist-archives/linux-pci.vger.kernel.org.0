@@ -2,190 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C2DC2F0F44
-	for <lists+linux-pci@lfdr.de>; Mon, 11 Jan 2021 10:40:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B8C42F0FD8
+	for <lists+linux-pci@lfdr.de>; Mon, 11 Jan 2021 11:15:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbhAKJjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jan 2021 04:39:46 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36954 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727915AbhAKJjp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jan 2021 04:39:45 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10B9WNXe035651;
-        Mon, 11 Jan 2021 04:39:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=yTfOc+eDKqFMMFf7FN0ReIS9NkA9YfK5RVQTgUQghIA=;
- b=SnLxhwVXqwVQHxF2/HFMvs66/MbX2j3YS++EP8NemDOX1GJuAfbUpub+GXEpiCpbqCtG
- AX/hQw+GYMelMQ5i8dFdCGPvQq3s+XMFL+0c5Fb9cbkJe2FfTPOAbhLFVGv2nGBd4lMV
- 6RKSs3OkZLuuA301qdL95GVDLVZ3bu5SHMBoCLemzUcN5FJm8QUH+vtsiDCKG/C9N0HI
- 5lVqiiF+MRpwWDFppee+TQmfQnCbcSdc7mQDIsCRdWirtWoiTXuKtXtcgIloPWti+gfV
- Kw8QSxT9z8p/gem5oG5COX4r0eRFlqBrwtBF22cNzw2zkIyRIN/KVR6SQctlkKlbMnX5 4Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 360jyc2c1f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Jan 2021 04:39:03 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10B9X4Am038468;
-        Mon, 11 Jan 2021 04:39:03 -0500
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 360jyc2c0k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Jan 2021 04:39:03 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10B9WrRW025114;
-        Mon, 11 Jan 2021 09:39:01 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 3604h98cpe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Jan 2021 09:39:01 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10B9cw0d29622654
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Jan 2021 09:38:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD7B2AE057;
-        Mon, 11 Jan 2021 09:38:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F566AE056;
-        Mon, 11 Jan 2021 09:38:58 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Jan 2021 09:38:58 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Subject: [RFC 1/1] s390/pci: expose UID checking state in sysfs
-Date:   Mon, 11 Jan 2021 10:38:57 +0100
-Message-Id: <20210111093857.24070-2-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210111093857.24070-1-schnelle@linux.ibm.com>
-References: <20210111093857.24070-1-schnelle@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-09_13:2021-01-07,2021-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 priorityscore=1501 adultscore=0 suspectscore=0
- malwarescore=0 clxscore=1011 mlxscore=0 spamscore=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101110055
+        id S1728689AbhAKKPV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jan 2021 05:15:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725843AbhAKKPU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jan 2021 05:15:20 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513DEC061786;
+        Mon, 11 Jan 2021 02:14:40 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1610360078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vdITQROn2Urg2SWnxxpWECg8/2piMq1rysKQi+Js6AM=;
+        b=UnYkeRyOrRU1KtT5e+L+fQ3h1X+pI6IQmvvPVQCyBzb6fOAslMZh9kmf6riX6Uc0jR5HAW
+        kLM9jzvLqGc+Imjy/0I2rAsMH2VpuQIdJ98CwfEhcoTYCCXiQ/XwFpRt6Jep7zrPxwT0va
+        Xwof1xtTH5Z/PeoiWTuI7XI6GZ2R5aGzpohXNnayNbUAXzj5+Rf7t2lNRSQCuUkrunBvvh
+        E6YQGrr8aPBg88a1jm3tkQeNaO9yiXQdYW2cQM+bbmj0FEDrh39+sh5VynpFZhESsKImAx
+        DwV8ajINKrlorxI1UlTNWgwAXJMXRe809J7/lTBl2XxW6BUf7G/4P1Qx4lUTcA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1610360078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vdITQROn2Urg2SWnxxpWECg8/2piMq1rysKQi+Js6AM=;
+        b=X4gUVuzYQlznnJ4rBpJlj0pVo1A0rJo22Rpjt8+XaTFqV54Id4MU7M5oqDy1KDl8a6a4jG
+        +hpoSFj00cPTvyCg==
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-s390@vger.kernel.org,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        xen-devel@lists.xenproject.org, Leon Romanovsky <leon@kernel.org>,
+        linux-rdma@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Helge Deller <deller@gmx.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-pci@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        David Airlie <airlied@linux.ie>, linux-gpio@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        linux-parisc@vger.kernel.org,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>, Jon Mason <jdmason@kudzu.us>,
+        linux-ntb@googlegroups.com, intel-gfx@lists.freedesktop.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [patch 02/30] genirq: Move status flag checks to core
+In-Reply-To: <20201227192049.GA195845@roeck-us.net>
+References: <20201210192536.118432146@linutronix.de> <20201210194042.703779349@linutronix.de> <20201227192049.GA195845@roeck-us.net>
+Date:   Mon, 11 Jan 2021 11:14:38 +0100
+Message-ID: <87im837pbl.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We use the UID of a zPCI adapter, or the UID of the function zero if
-there are multiple functions in an adapter, as PCI domain if and only if
-UID Checking is turned on.
-Otherwise we automatically generate domains as devices appear.
+On Sun, Dec 27 2020 at 11:20, Guenter Roeck wrote:
+> On Thu, Dec 10, 2020 at 08:25:38PM +0100, Thomas Gleixner wrote:
+> Yes, but that means that irq_check_status_bit() may be called from modules,
+> but it is not exported, resulting in build errors such as the following.
+>
+> arm64:allmodconfig:
+>
+> ERROR: modpost: "irq_check_status_bit" [drivers/perf/arm_spe_pmu.ko] undefined!
 
-The state of UID Checking is thus essential to know if the PCI domain
-will be stable, yet currently there is no way to access this information
-from userspace.
-So let's solve this by showing the state of UID checking as a sysfs
-attribute in /sys/bus/pci/uid_checking
+Duh. Yes, that lacks an export obviously.
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- Documentation/ABI/testing/sysfs-bus-pci | 11 ++++++++
- arch/s390/include/asm/pci.h             |  3 +++
- arch/s390/pci/pci.c                     |  4 +++
- arch/s390/pci/pci_sysfs.c               | 34 +++++++++++++++++++++++++
- 4 files changed, 52 insertions(+)
+Thanks,
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 25c9c39770c6..a174aac0ebb0 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -375,3 +375,14 @@ Description:
- 		The value comes from the PCI kernel device state and can be one
- 		of: "unknown", "error", "D0", D1", "D2", "D3hot", "D3cold".
- 		The file is read only.
-+What:		/sys/bus/pci/zpci/uid_checking
-+Date:		December 2020
-+Contact:	Niklas Schnelle <schnelle@linux.ibm.com>
-+Description:
-+		This attribute exposes the global state of UID Checking on
-+		an s390 Linux system. If UID Checking is on this file
-+		contains '1' otherwise '0'. If UID Checking is on the UID of
-+		a zPCI device, or the UID of function zero for a multi-function
-+		device will be used as its PCI Domain number. If UID Checking
-+		is off PCI Domain numbers are generated automatically and
-+		are not stable across reboots.
-diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index 212628932ddc..3cfa6cc701ba 100644
---- a/arch/s390/include/asm/pci.h
-+++ b/arch/s390/include/asm/pci.h
-@@ -285,6 +285,9 @@ void zpci_debug_exit_device(struct zpci_dev *);
- /* Error reporting */
- int zpci_report_error(struct pci_dev *, struct zpci_report_error_header *);
- 
-+/* Sysfs Entries */
-+int zpci_sysfs_init(void);
-+
- #ifdef CONFIG_NUMA
- 
- /* Returns the node based on PCI bus */
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index 41df8fcfddde..c16c93e5f9af 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -881,6 +881,10 @@ static int __init pci_base_init(void)
- 	if (rc)
- 		goto out_find;
- 
-+	rc = zpci_sysfs_init();
-+	if (rc)
-+		goto out_find;
-+
- 	s390_pci_initialized = 1;
- 	return 0;
- 
-diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-index 5c028bee91b9..d00690f73539 100644
---- a/arch/s390/pci/pci_sysfs.c
-+++ b/arch/s390/pci/pci_sysfs.c
-@@ -172,3 +172,37 @@ const struct attribute_group *zpci_attr_groups[] = {
- 	&pfip_attr_group,
- 	NULL,
- };
-+
-+/* Global zPCI attributes */
-+static ssize_t uid_checking_show(struct kobject *kobj,
-+				 struct kobj_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%i\n", zpci_unique_uid);
-+}
-+
-+static struct kobj_attribute sys_zpci_uid_checking_attr =
-+	__ATTR(uid_checking, 0444, uid_checking_show, NULL);
-+
-+static struct kset *zpci_global_kset;
-+
-+static struct attribute *zpci_attrs_global[] = {
-+	&sys_zpci_uid_checking_attr.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group zpci_attr_group_global = {
-+	.attrs = zpci_attrs_global,
-+};
-+
-+int __init zpci_sysfs_init(void)
-+{
-+	struct kset *pci_bus_kset;
-+
-+	pci_bus_kset = bus_get_kset(&pci_bus_type);
-+
-+	zpci_global_kset = kset_create_and_add("zpci", NULL, &pci_bus_kset->kobj);
-+	if (!zpci_global_kset)
-+		return -ENOMEM;
-+
-+	return sysfs_create_group(&zpci_global_kset->kobj, &zpci_attr_group_global);
-+}
--- 
-2.17.1
-
+        tglx
