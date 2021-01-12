@@ -2,292 +2,349 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3EFA2F25DE
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jan 2021 02:53:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4F7D2F26AE
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jan 2021 04:30:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbhALBxH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 11 Jan 2021 20:53:07 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:36589 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbhALBxG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jan 2021 20:53:06 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20210112015223epoutp0232fd8efe509a02fb23ab1a1f468ed2a7~ZWSHWQ0To0635206352epoutp02U
-        for <linux-pci@vger.kernel.org>; Tue, 12 Jan 2021 01:52:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20210112015223epoutp0232fd8efe509a02fb23ab1a1f468ed2a7~ZWSHWQ0To0635206352epoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1610416343;
-        bh=X8jLKRgKwbuEvV0M3rowV4XcEyS/RHz/ZInOqPgjtN4=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=Zwqgdj7FY9fZ2Fv0rHCe/z+qJZSqX60yNh4H7jtKEFjXNEzvzycKDNc0XFQ86c/CM
-         phuQc5nujYNbOlNDOQeEVP0xES/SL/QUNO15KfqDW+BzHXrPYPz1aa2+LQ+kQ8N5JO
-         +Rjcx/rM3/TeLGfH4KhophlqwDksUfJooLY+cg6M=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20210112015221epcas5p3adcf682767f171f5ae00bb62704dfd3f~ZWSFxlPPN2883428834epcas5p3T;
-        Tue, 12 Jan 2021 01:52:21 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C1.B4.50652.5D00DFF5; Tue, 12 Jan 2021 10:52:21 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-        20210112015220epcas5p16e8c760078ee6b2a11ffca974fab5244~ZWSEqxLVQ0433904339epcas5p1n;
-        Tue, 12 Jan 2021 01:52:20 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20210112015220epsmtrp19e18c6434d87bf0c1ed13130a73ea59c~ZWSEpbswV2601726017epsmtrp1k;
-        Tue, 12 Jan 2021 01:52:20 +0000 (GMT)
-X-AuditID: b6c32a4a-6b3ff7000000c5dc-e8-5ffd00d5b098
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A2.F3.13470.4D00DFF5; Tue, 12 Jan 2021 10:52:20 +0900 (KST)
-Received: from pankajdubey02 (unknown [107.122.12.6]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20210112015218epsmtip2b796bbbcaa5c30ff3f106aad7903df2c~ZWSCXAErw2865428654epsmtip21;
-        Tue, 12 Jan 2021 01:52:18 +0000 (GMT)
-From:   "Pankaj Dubey" <pankaj.dubey@samsung.com>
-To:     "'Bjorn Helgaas'" <helgaas@kernel.org>,
-        "'Shradha Todi'" <shradha.t@samsung.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <sriram.dash@samsung.com>,
-        <niyas.ahmed@samsung.com>, <p.rajanbabu@samsung.com>,
-        <l.mehra@samsung.com>, <hari.tv@samsung.com>,
-        "'Anvesh Salveru'" <anvesh.salveru@gmail.com>,
-        "'Jingoo Han'" <jingoohan1@gmail.com>,
-        "'Gustavo Pimentel'" <gustavo.pimentel@synopsys.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Rob Herring'" <robh@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>
-In-Reply-To: <20210107184406.GA1372915@bjorn-Precision-5520>
-Subject: RE: [PATCH v7 2/5] PCI: dwc: add support to handle ZRX-DC Compliant
- PHYs
-Date:   Tue, 12 Jan 2021 07:22:17 +0530
-Message-ID: <00b801d6e885$906179d0$b1246d70$@samsung.com>
+        id S1726906AbhALD1U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 11 Jan 2021 22:27:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37864 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725885AbhALD1U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 11 Jan 2021 22:27:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610421952;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VWr2T052hL7ZZCsKGI4QVVcBlDC0MV1Qygnm5Lbm6KM=;
+        b=MQskBarsZxw/0up/8jyLrbkPbV7U/8esldN1OtGy15WYWpEJgVWgV324P+8y5o/3E2Yv7J
+        zaxg17I6YQOCX8bgwv166Si0yfBrcUFCAHxK1FX+aQfTwU767R+gYVRLgcPGM4TDSKHgvE
+        +GiOkdb7Ii2NGIBO2a+5NaZ5LwvtE8U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-526-Xtqb7fN6MuKZ4t61dfMkKg-1; Mon, 11 Jan 2021 22:25:48 -0500
+X-MC-Unique: Xtqb7fN6MuKZ4t61dfMkKg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 994D8804002;
+        Tue, 12 Jan 2021 03:25:46 +0000 (UTC)
+Received: from [10.3.112.139] (ovpn-112-139.phx2.redhat.com [10.3.112.139])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 96EC85B4A7;
+        Tue, 12 Jan 2021 03:25:42 +0000 (UTC)
+Subject: Re: [PATCH mlx5-next v1 1/5] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+To:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20210110150727.1965295-1-leon@kernel.org>
+ <20210110150727.1965295-2-leon@kernel.org>
+ <CAKgT0UcJrSNMPAOoniRSnUn+wyRUkL62AfgR3-8QbAkak=pQ=w@mail.gmail.com>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <397a7ed5-c98f-560e-107e-0b354bebb9bd@redhat.com>
+Date:   Mon, 11 Jan 2021 22:25:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <CAKgT0UcJrSNMPAOoniRSnUn+wyRUkL62AfgR3-8QbAkak=pQ=w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFH82WjKnnvSnIAADTcEDBMffMU0QGPcjCeqzSl8HA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmuu5Vhr/xBjeXGVj8WD2B2WJJU4bF
-        rrsd7BYfp61ksnh1Zi2bxYovM9kt7jy/wWhxedccNouz846zWXR+mcVm8eb3C3aLJ1MesVoc
-        3Rhs8X/PDnaL3sO1FjfWszsIeKyZt4bRY+esu+weCzaVemxa1cnm0bdlFaPHlv2fGT0+b5IL
-        YI/isklJzcksSy3St0vgyrjYe5i94KdBxfQ3f9kbGCeqdzFyckgImEgcnP2TrYuRi0NIYDej
-        xKMFu9khnE+MEtev3GAFqRIS+MYocfk5P0zHoV17oIr2Mko8uTkPqv0Vo8TWtY1MIFVsAvoS
-        537MA+sWEQiTOLDwCVgHs8A3ZolbR+6xdDFycHAK2EisPwBWLywQLPHl5ktmEJtFQFXi9ZJn
-        jCA2r4ClxNELu6FsQYmTM5+wgNjMAvIS29/OYYa4SEHi59NlULusJFZ0HWeGqBGXeHn0CNhe
-        CYEHHBL3er8yQjS4SBxpWQ/VLCzx6vgWdghbSuJlfxuUnS/xY/EkZojmFkaJycfnskIk7CUO
-        XJkD9gCzgKbE+l36EMv4JHp/P2ECCUsI8Ep0tAlBVKtJfH9+BmqVjMTD5qVQJR4SP6YZTWBU
-        nIXks1lIPpuF5INZCLsWMLKsYpRMLSjOTU8tNi0wykst1ytOzC0uzUvXS87P3cQITnVaXjsY
-        Hz74oHeIkYmD8RCjBAezkgiv14Y/8UK8KYmVValF+fFFpTmpxYcYpTlYlMR5dxg8iBcSSE8s
-        Sc1OTS1ILYLJMnFwSjUwRR13W3Da8g6fm7GTwy/mF/oM/5OcZZ9Mj90V22l4yS48VivPcsq6
-        uRbnHt8Pfc+9p1x/tjF3ybVAls8NP98kBcw5tHKq1+LI3VtFzVQKH7YGKj57fC6Jb+GvM9HH
-        cic9Oplqn3H9Z5RH3KtDLw9xTmcrfvIzc82VuVdYLB+n7Bc9W/ST2abAtaHFQnpza5Oc8+n8
-        qSEd73LtFi2XklmRzmT90PfOhrqGFUdMs3f6nj+vqy8zJ12+jvWMf/Zq9bpaHc5XTO+8NVb3
-        z3jat6a5/6ar//P+wP2Lt65T1Lp4bJ54gtTz5o5PU07nT/6zZPO2T3c2rni79PHTA3smS+72
-        tG1c8CR20wWBU3kuXzXbVJVYijMSDbWYi4oTAbaf/zTkAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEIsWRmVeSWpSXmKPExsWy7bCSvO4Vhr/xBhtXK1r8WD2B2WJJU4bF
-        rrsd7BYfp61ksnh1Zi2bxYovM9kt7jy/wWhxedccNouz846zWXR+mcVm8eb3C3aLJ1MesVoc
-        3Rhs8X/PDnaL3sO1FjfWszsIeKyZt4bRY+esu+weCzaVemxa1cnm0bdlFaPHlv2fGT0+b5IL
-        YI/isklJzcksSy3St0vgyrjYe5i94KdBxfQ3f9kbGCeqdzFyckgImEgc2rWHHcQWEtjNKLHh
-        oDdEXEZi8uoVrBC2sMTKf8+BariAal4wSrzfsoEJJMEmoC9x7sc8sCIRgTCJt0sms4AUMQs0
-        sUjcOLQWqqOXUWLWk9dsXYwcHJwCNhLrDzCBmMICgRI3rkiA9LIIqEq8XvKMEcTmFbCUOHph
-        N5QtKHFy5hMWkHJmAT2Jto1gYWYBeYntb+cwQ9ymIPHz6TKoE6wkVnQdZ4aoEZd4efQI+wRG
-        4VlIJs1CmDQLyaRZSDoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjlYtzR2M
-        21d90DvEyMTBeIhRgoNZSYTXa8OfeCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8F7pOxgsJpCeW
-        pGanphakFsFkmTg4pRqY9vrdWRVkNNWZtZVHw/BV+bqUf/3XWaueBe9dejVHxyhNKdfmbtIW
-        ya2fa24q5T8saZN9er37TFLk74jnuc/rDy38F/BU/1P80vYVD9UX6i477eD90WEPn25raa/o
-        hztdYbbJ/h7Bs1u6pkXPanR0sfixxju3KPRtwtb5rOJTDJzLj4lc5t5x4Wrtae/9vPePTM4p
-        mxP/4NHiGAXeuGNrT3Tb63+0Xq2TeXvRvY6nCuJea+/VRz96w5WbLHDwwOJdPydonNr33y1y
-        hcgjBcaodddmikbzVgfeay+Vu1Er9TVCrlVg/bNb7ZdFNqTGX6uqC3nOvnOO/Or37fOPqrzx
-        3PRIL/Wg76m4GLMv+SVGSizFGYmGWsxFxYkAMqWEXEUDAAA=
-X-CMS-MailID: 20210112015220epcas5p16e8c760078ee6b2a11ffca974fab5244
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20210107184413epcas5p35526b4c5a8e6767a69fae6a14fa8f7c5
-References: <CGME20210107184413epcas5p35526b4c5a8e6767a69fae6a14fa8f7c5@epcas5p3.samsung.com>
-        <20210107184406.GA1372915@bjorn-Precision-5520>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 1/11/21 2:30 PM, Alexander Duyck wrote:
+> On Sun, Jan 10, 2021 at 7:12 AM Leon Romanovsky <leon@kernel.org> wrote:
+>> From: Leon Romanovsky <leonro@nvidia.com>
+>>
+>> Extend PCI sysfs interface with a new callback that allows configure
+>> the number of MSI-X vectors for specific SR-IO VF. This is needed
+>> to optimize the performance of newly bound devices by allocating
+>> the number of vectors based on the administrator knowledge of targeted VM.
+>>
+>> This function is applicable for SR-IOV VF because such devices allocate
+>> their MSI-X table before they will run on the VMs and HW can't guess the
+>> right number of vectors, so the HW allocates them statically and equally.
+>>
+>> The newly added /sys/bus/pci/devices/.../vf_msix_vec file will be seen
+>> for the VFs and it is writable as long as a driver is not bounded to the VF.
+>>
+>> The values accepted are:
+>>   * > 0 - this will be number reported by the VF's MSI-X capability
+>>   * < 0 - not valid
+>>   * = 0 - will reset to the device default value
+>>
+>> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+>> ---
+>>   Documentation/ABI/testing/sysfs-bus-pci | 20 ++++++++
+>>   drivers/pci/iov.c                       | 62 +++++++++++++++++++++++++
+>>   drivers/pci/msi.c                       | 29 ++++++++++++
+>>   drivers/pci/pci-sysfs.c                 |  1 +
+>>   drivers/pci/pci.h                       |  2 +
+>>   include/linux/pci.h                     |  8 +++-
+>>   6 files changed, 121 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+>> index 25c9c39770c6..05e26e5da54e 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-pci
+>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+>> @@ -375,3 +375,23 @@ Description:
+>>                  The value comes from the PCI kernel device state and can be one
+>>                  of: "unknown", "error", "D0", D1", "D2", "D3hot", "D3cold".
+>>                  The file is read only.
+>> +
+>> +What:          /sys/bus/pci/devices/.../vf_msix_vec
+> So the name for this doesn't seem to match existing SR-IOV naming.  It
+> seems like this should probably be something like sriov_vf_msix_count
+> in order to be closer to the actual naming of what is being dealt
+> with.
+>
+>> +Date:          December 2020
+>> +Contact:       Leon Romanovsky <leonro@nvidia.com>
+>> +Description:
+>> +               This file is associated with the SR-IOV VFs.
+>> +               It allows configuration of the number of MSI-X vectors for
+>> +               the VF. This is needed to optimize performance of newly bound
+>> +               devices by allocating the number of vectors based on the
+>> +               administrator knowledge of targeted VM.
+>> +
+>> +               The values accepted are:
+>> +                * > 0 - this will be number reported by the VF's MSI-X
+>> +                        capability
+>> +                * < 0 - not valid
+>> +                * = 0 - will reset to the device default value
+>> +
+>> +               The file is writable if the PF is bound to a driver that
+>> +               supports the ->sriov_set_msix_vec_count() callback and there
+>> +               is no driver bound to the VF.
+>> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+>> index 4afd4ee4f7f0..42c0df4158d1 100644
+>> --- a/drivers/pci/iov.c
+>> +++ b/drivers/pci/iov.c
+>> @@ -31,6 +31,7 @@ int pci_iov_virtfn_devfn(struct pci_dev *dev, int vf_id)
+>>          return (dev->devfn + dev->sriov->offset +
+>>                  dev->sriov->stride * vf_id) & 0xff;
+>>   }
+>> +EXPORT_SYMBOL(pci_iov_virtfn_devfn);
+>>
+>>   /*
+>>    * Per SR-IOV spec sec 3.3.10 and 3.3.11, First VF Offset and VF Stride may
+>> @@ -426,6 +427,67 @@ const struct attribute_group sriov_dev_attr_group = {
+>>          .is_visible = sriov_attrs_are_visible,
+>>   };
+>>
+>> +#ifdef CONFIG_PCI_MSI
+>> +static ssize_t vf_msix_vec_show(struct device *dev,
+>> +                               struct device_attribute *attr, char *buf)
+>> +{
+>> +       struct pci_dev *pdev = to_pci_dev(dev);
+>> +       int numb = pci_msix_vec_count(pdev);
+>> +       struct pci_dev *pfdev;
+>> +
+>> +       if (numb < 0)
+>> +               return numb;
+>> +
+>> +       pfdev = pci_physfn(pdev);
+>> +       if (!pfdev->driver || !pfdev->driver->sriov_set_msix_vec_count)
+>> +               return -EOPNOTSUPP;
+>> +
+> This doesn't make sense to me. You are getting the vector count for
+> the PCI device and reporting that. Are you expecting to call this on
+> the PF or the VFs? It seems like this should be a PF attribute and not
+> be called on the individual VFs.
+>
+> If you are calling this on the VFs then it doesn't really make any
+> sense anyway since the VF is not a "VF PCI dev representor" and
+> shouldn't be treated as such. In my opinion if we are going to be
+> doing per-port resource limiting that is something that might make
+> more sense as a part of the devlink configuration for the VF since the
+> actual change won't be visible to an assigned device.
+if the op were just limited to nic ports, devlink may be used; but I believe Leon is trying to handle it from an sriov/vf perspective for other non-nic devices as well,
+e.g., ib ports, nvme vf's (which don't have a port concept at all).
 
-
-> -----Original Message-----
-<snip>
-> Subject: Re: [PATCH v7 2/5] PCI: dwc: add support to handle ZRX-DC
-> Compliant PHYs
-> 
-> Capitalize subject to match the rest of the series.
-> 
-> "Add support to handle .." is redundant; "Add support for ..." would be
-> equivalent and shorter.
-
-OK 
-
-> 
-> But this patch actually doesn't add anything at all by itself, since it
-checks pci-
-> >phy_zrxdc_compliant but never sets it.
-
-OK, we will reword the commit message as  "configure controller to handle
-ZRX-DC compliant PHYs"
-
-> 
-> On Thu, Jan 07, 2021 at 08:58:40PM +0530, Shradha Todi wrote:
-> > From: Pankaj Dubey <pankaj.dubey@samsung.com>
-> >
-> > Many platforms use DesignWare controller but the PHY can be different
-> > in different platforms. If the PHY is compliant is to ZRX-DC
-> > specification it helps in low power consumption during power states.
-> 
-> s/is to/to/
-
-OK
-
-> 
-> Even with that, this sentence doesn't quite parse correctly.  Do you mean
-> something like this?
-> 
->   If the PHY is compliant to the ZRX-DC specification, it reduces
->   power consumption in low power Link states.
-> 
-> (I assume this is related to Link power states (L0, L1, etc), not device
-power
-> states (D0, D3hot, etc)).
-> 
-
-Yes, we are talking about Link power states. We rephrase the commit
-description to make it more clear.
-
-> > If current data rate is 8.0 GT/s or higher and PHY is not compliant to
-> > ZRX-DC specification, then after every 100ms link should transition to
-> > recovery state during the low power states.
-> 
-> Not sure this makes sense.  If the Link is in a low power state for 10
-seconds,
-> it must transition to the Recovery state every 100ms during that 10
-seconds,
-> i.e., 100 times?
-> 
-
-According to SNPS DesignWare data-book, the link will transition into
-recovery state every 100ms, which means that yes, 100 times in 10 seconds.
-But what we are trying to say here is that if the PHY is ZRX-DC compliant,
-then the controller does not need to do this and we can thus save power
-consumption.
-
-As per the DesignWare data-book, the controller keeps this bit set to '1' by
-default ("This bit enables a 100ms timer which can trigger exit from L1.")
-and we are trying to reset this bit to '0' in order to not perform the
-constant recovery and hence save power.
-
-> > DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-> > GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
-> >
-> > Platforms with ZRX-DC compliant PHY can set phy_zrxdc_compliant
-> > variable to specify this property to the controller.
-> 
-> If this is a DesignWare-generic register and the "phy-zrxdc-compliant"
-> property can be used by any DesignWare-based driver, why isn't the code to
-> look for it in the DesignWare-generic part?
-> 
-
-Do you mean why this property is part of PHY node instead of DesignWare
-controller?
-
-> Is there a link to the ZRX-DC specification you can mention somewhere in
-this
-> series?
-> 
-
-I don't know if there is any separate ZRX-DC specification exists which can
-be pointed out here, but we have implementation note in PCIe specification
-Rev 4.0 which says as:
-"Ports that meet the ZRX-DC specification for 2.5 GT/s while in the L1.Idle
-state and are therefore not required to implement the 100 ms timeout and
-transition to Recovery should avoid implementing it, since it will reduce
-the power savings expected from the L1 state." 
-
-We have captured same in cover-letter of this patch series.
-
-> > Signed-off-by: Anvesh Salveru <anvesh.salveru@gmail.com>
-> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 6 ++++++
-> > drivers/pci/controller/dwc/pcie-designware.h | 4 ++++
-> >  2 files changed, 10 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 645fa18..74590c7 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -722,4 +722,10 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> >  		       PCIE_PL_CHK_REG_CHK_REG_START;
-> >  		dw_pcie_writel_dbi(pci,
-> PCIE_PL_CHK_REG_CONTROL_STATUS, val);
-> >  	}
-> > +
-> > +	if (pci->phy_zrxdc_compliant) {
-> > +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-> > +		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
-> > +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-> > +	}
-> >  }
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > b/drivers/pci/controller/dwc/pcie-designware.h
-> > index 0207840..8b905a2 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -74,6 +74,9 @@
-> >  #define PCIE_MSI_INTR0_MASK		0x82C
-> >  #define PCIE_MSI_INTR0_STATUS		0x830
-> >
-> > +#define PCIE_PORT_GEN3_RELATED		0x890
-> > +#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL	BIT(0)
-> > +
-> >  #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
-> >  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
-> >
-> > @@ -273,6 +276,7 @@ struct dw_pcie {
-> >  	u8			n_fts[2];
-> >  	bool			iatu_unroll_enabled: 1;
-> >  	bool			io_cfg_atu_shared: 1;
-> > +	bool			phy_zrxdc_compliant;
-> 
-> I raise my eyebrows a little at "bool xx : 1".  I think it's probably
-*correct*, but
-> "unsigned int xx : 1" is the overwhelming favorite and I doubt bool gives
-any
-> advantage.
-> 
->   $ git grep -E "int\s+\S+\s*:\s*1" | egrep "^\S*\.[ch]" | wc -l
->   3129
->   $ git grep -E "bool\s+\S+\s*:\s*1" | egrep "^\S*\.[ch]" | wc -l
->   637
-> 
-> pcie-designware.h is the only user in drivers/pci.  But you're following
-the
-> existing style in the file, which is good.
-
-No, we didn't follow existing style, we will update this in next version.
-
-Thanks for review.
-
-Pankaj Dubey
-> 
-> >  };
-> >
-> >  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie,
-> > pp)
-> > --
-> > 2.7.4
-> >
+>> +       return sprintf(buf, "%d\n", numb);
+>> +}
+>> +
+>> +static ssize_t vf_msix_vec_store(struct device *dev,
+>> +                                struct device_attribute *attr, const char *buf,
+>> +                                size_t count)
+>> +{
+>> +       struct pci_dev *vf_dev = to_pci_dev(dev);
+>> +       int val, ret;
+>> +
+>> +       ret = kstrtoint(buf, 0, &val);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = pci_set_msix_vec_count(vf_dev, val);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       return count;
+>> +}
+>> +static DEVICE_ATTR_RW(vf_msix_vec);
+>> +#endif
+>> +
+>> +static struct attribute *sriov_vf_dev_attrs[] = {
+>> +#ifdef CONFIG_PCI_MSI
+>> +       &dev_attr_vf_msix_vec.attr,
+>> +#endif
+>> +       NULL,
+>> +};
+>> +
+>> +static umode_t sriov_vf_attrs_are_visible(struct kobject *kobj,
+>> +                                         struct attribute *a, int n)
+>> +{
+>> +       struct device *dev = kobj_to_dev(kobj);
+>> +
+>> +       if (dev_is_pf(dev))
+>> +               return 0;
+>> +
+>> +       return a->mode;
+>> +}
+>> +
+>> +const struct attribute_group sriov_vf_dev_attr_group = {
+>> +       .attrs = sriov_vf_dev_attrs,
+>> +       .is_visible = sriov_vf_attrs_are_visible,
+>> +};
+>> +
+>>   int __weak pcibios_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
+>>   {
+>>          return 0;
+>> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+>> index 3162f88fe940..20705ca94666 100644
+>> --- a/drivers/pci/msi.c
+>> +++ b/drivers/pci/msi.c
+>> @@ -991,6 +991,35 @@ int pci_msix_vec_count(struct pci_dev *dev)
+>>   }
+>>   EXPORT_SYMBOL(pci_msix_vec_count);
+>>
+>> +/**
+>> + * pci_set_msix_vec_count - change the reported number of MSI-X vectors
+>> + * This function is applicable for SR-IOV VF because such devices allocate
+>> + * their MSI-X table before they will run on the VMs and HW can't guess the
+>> + * right number of vectors, so the HW allocates them statically and equally.
+>> + * @dev: VF device that is going to be changed
+>> + * @numb: amount of MSI-X vectors
+>> + **/
+>> +int pci_set_msix_vec_count(struct pci_dev *dev, int numb)
+>> +{
+>> +       struct pci_dev *pdev = pci_physfn(dev);
+>> +
+>> +       if (!dev->msix_cap || !pdev->msix_cap)
+>> +               return -EINVAL;
+>> +
+>> +       if (dev->driver || !pdev->driver ||
+>> +           !pdev->driver->sriov_set_msix_vec_count)
+>> +               return -EOPNOTSUPP;
+>> +
+>> +       if (numb < 0)
+>> +               /*
+>> +                * We don't support negative numbers for now,
+>> +                * but maybe in the future it will make sense.
+>> +                */
+>> +               return -EINVAL;
+>> +
+>> +       return pdev->driver->sriov_set_msix_vec_count(dev, numb);
+>> +}
+>> +
+> If you are going to have a set operation for this it would make sense
+> to have a get operation. Your show operation seems unbalanced since
+> you are expecting to call it on the VF directly which just seems
+> wrong.
+>
+>>   static int __pci_enable_msix(struct pci_dev *dev, struct msix_entry *entries,
+>>                               int nvec, struct irq_affinity *affd, int flags)
+>>   {
+>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>> index fb072f4b3176..0af2222643c2 100644
+>> --- a/drivers/pci/pci-sysfs.c
+>> +++ b/drivers/pci/pci-sysfs.c
+>> @@ -1557,6 +1557,7 @@ static const struct attribute_group *pci_dev_attr_groups[] = {
+>>          &pci_dev_hp_attr_group,
+>>   #ifdef CONFIG_PCI_IOV
+>>          &sriov_dev_attr_group,
+>> +       &sriov_vf_dev_attr_group,
+>>   #endif
+>>          &pci_bridge_attr_group,
+>>          &pcie_dev_attr_group,
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 5c59365092fa..1fd273077637 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -183,6 +183,7 @@ extern unsigned int pci_pm_d3hot_delay;
+>>
+>>   #ifdef CONFIG_PCI_MSI
+>>   void pci_no_msi(void);
+>> +int pci_set_msix_vec_count(struct pci_dev *dev, int numb);
+>>   #else
+>>   static inline void pci_no_msi(void) { }
+>>   #endif
+>> @@ -502,6 +503,7 @@ resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
+>>   void pci_restore_iov_state(struct pci_dev *dev);
+>>   int pci_iov_bus_range(struct pci_bus *bus);
+>>   extern const struct attribute_group sriov_dev_attr_group;
+>> +extern const struct attribute_group sriov_vf_dev_attr_group;
+>>   #else
+>>   static inline int pci_iov_init(struct pci_dev *dev)
+>>   {
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index b32126d26997..a17cfc28eb66 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -856,6 +856,8 @@ struct module;
+>>    *             e.g. drivers/net/e100.c.
+>>    * @sriov_configure: Optional driver callback to allow configuration of
+>>    *             number of VFs to enable via sysfs "sriov_numvfs" file.
+>> + * @sriov_set_msix_vec_count: Driver callback to change number of MSI-X vectors
+>> + *              exposed by the sysfs "vf_msix_vec" entry.
+> Hopefully it is doing more than just changing the displayed sysfs
+> value. What is the effect of changing that value on the actual system
+> state? I'm assuming this is some limit that is enforced by the PF or
+> the device firmware?
+>
+>
+>>    * @err_handler: See Documentation/PCI/pci-error-recovery.rst
+>>    * @groups:    Sysfs attribute groups.
+>>    * @driver:    Driver model structure.
+>> @@ -871,6 +873,7 @@ struct pci_driver {
+>>          int  (*resume)(struct pci_dev *dev);    /* Device woken up */
+>>          void (*shutdown)(struct pci_dev *dev);
+>>          int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
+>> +       int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
+>>          const struct pci_error_handlers *err_handler;
+>>          const struct attribute_group **groups;
+>>          struct device_driver    driver;
+>> @@ -2057,7 +2060,6 @@ void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar);
+>>
+>>   #ifdef CONFIG_PCI_IOV
+>>   int pci_iov_virtfn_bus(struct pci_dev *dev, int id);
+>> -int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
+>>
+>>   int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
+>>   void pci_disable_sriov(struct pci_dev *dev);
+>> @@ -2402,6 +2404,10 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
+>>   void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+>>   #endif
+>>
+>> +#ifdef CONFIG_PCI_IOV
+>> +int pci_iov_virtfn_devfn(struct pci_dev *dev, int vf_id);
+>> +#endif
+>> +
+>>   /* Provide the legacy pci_dma_* API */
+>>   #include <linux/pci-dma-compat.h>
+>>
+>> --
+>> 2.29.2
+>>
 
