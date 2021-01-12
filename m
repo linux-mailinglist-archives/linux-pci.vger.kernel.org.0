@@ -2,110 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D9682F3FAC
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:46:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 148002F4031
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:47:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394928AbhALW6p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jan 2021 17:58:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35212 "EHLO mail.kernel.org"
+        id S1733237AbhALXS1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jan 2021 18:18:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394889AbhALW6o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Jan 2021 17:58:44 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 71E932311F;
-        Tue, 12 Jan 2021 22:58:03 +0000 (UTC)
+        id S1733217AbhALXS1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Jan 2021 18:18:27 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 32CB623123;
+        Tue, 12 Jan 2021 23:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610492283;
-        bh=TD2GgmyopcuNlUr3NT6X/nzg/uWon7PfAk17CArwiDk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dDg9mEAFMl31vH2EkotpUo8k4q99uFjs5eZ4DGaOmt5niUL4XgQwfm9wBp6phDv8E
-         /WcWAQlj94Sz5IsHG25hAAdzllLG9ixRhxXuwClPdHfyEt3mRpMabDlN9slIDzYpBX
-         6+n10U4bxwg64LIR3R5RM3snIn5PhqsDyxBKJ65pYenxCrmlBrX+wmRcN+8zgFoGz1
-         8+4/aL5YaE4zROIwezt63hdSjW/uv0Jd+hcIcjoxAJ2SD8cI7n2+abF9yRn/QYkIt5
-         SGKWhrlkNk0GXIHhFOhIDUuNyTC6NPR43voH9MnCJvuAegJlyB6v4CPazZQWto2pl+
-         C0rBtndHOQLrg==
-Date:   Tue, 12 Jan 2021 16:58:02 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
-Message-ID: <20210112225802.GA1859984@bjorn-Precision-5520>
+        s=k20201202; t=1610493466;
+        bh=AdgN6R873ysKeaHkrQmMiOjH22/g+KC6yFxPw/TKI3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zki3hQaVP7+x5/RySXM+YrlytYd8osX3G8gBR1ER90wRkUCkA8XyjvwifR5SKKhef
+         u9UmLjAEeJ/4TWFLdBa2f55dMzM+CcZzGWDrkIfA+xol5meQQu+4ry1+hKqHh6yrOZ
+         kEkQsaNUu5LtzxyBxXnnaCkXkadtzRkgWuwDb0MWjRxRHMLt+K7z7QeEEKkxlHzepE
+         sM51tI2vANFbYelI6eftYxC6BCjo54Yblwx9GzTlHDYqs0LyuSM/nc3yGqSHc+OkNT
+         runsgLm12HZ+lUYQVrMuZW06O3J1ATvOTDVycbOxI0cvkj+BoUlkoOKfSJ25GsV6uH
+         TUQI2pLn7d8rA==
+Date:   Tue, 12 Jan 2021 15:17:44 -0800
+From:   Keith Busch <kbusch@kernel.org>
+To:     Hinko Kocevar <hinko.kocevar@ess.eu>
+Cc:     "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCHv2 0/5] aer handling fixups
+Message-ID: <20210112231744.GB1508433@dhcp-10-100-145-180.wdc.com>
+References: <B31F8CA9-D62B-4488-B4C1-EB31E9117203@intel.com>
+ <20210107214236.GA1284006@dhcp-10-100-145-180.wdc.com>
+ <70f2288d-2d1e-df82-d107-e977e1f50dca@ess.eu>
+ <c3117c51-144f-ae59-ad68-bdc5532d12cb@ess.eu>
+ <20210111163708.GA1458209@dhcp-10-100-145-180.wdc.com>
+ <6783d09d-1431-15fd-961e-3820b14e001e@ess.eu>
+ <20210111220951.GA1472929@dhcp-10-100-145-180.wdc.com>
+ <ed8256dd-d70d-b8dc-fdc0-a78b9aa3bbd9@ess.eu>
+ <20210112192758.GB1472929@dhcp-10-100-145-180.wdc.com>
+ <8650281b-4430-1938-5d45-53f09010497b@ess.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <642eb96b495f5ad7d2d14410fedcd1ad@walle.cc>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8650281b-4430-1938-5d45-53f09010497b@ess.eu>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 09, 2021 at 07:31:46PM +0100, Michael Walle wrote:
-> Hi Bjorn,
+On Tue, Jan 12, 2021 at 11:19:37PM +0100, Hinko Kocevar wrote:
+> I feel inclined to provide a little bit more info about the system I'm
+> running this on as it is not a regular PC/server/laptop. It is a modular
+> micro TCA system with a single CPU and MCH. MCH and CPU are separate cards,
+> as are the other processing cards (AMCs) that link up to CPU through the MCH
+> PEX8748 switch. I can power each card individually, or perform complete
+> system power cycle. The normal power up sequence is: MCH, AMCs, CPU. The CPU
+> is powered 30 sec after all other cards so that their PCIe links are up and
+> ready for Linux.
 > 
-> Am 2021-01-08 22:20, schrieb Bjorn Helgaas:
-> > On Wed, Dec 30, 2020 at 07:53:17PM +0100, Michael Walle wrote:
-> > > The Intel i210 doesn't work if the Expansion ROM BAR overlaps with
-> > > another BAR. Networking won't work at all and once a packet is sent
-> > > the
-> > > netdev watchdog will bite:
-> > 
-> > 1) Is this a regression?  It sounds like you don't know for sure
-> > because earlier kernels don't support your platform.
+> All buses below CPU side 02:01.0 are on MCH PEX8748 switch:
 > 
-> Whats the background of the question? The board is offially supported
-> since 5.8. I doubt that the code responsible to not touch the ExpROM
-> BAR in pci_std_update_resource() were recently changed/added; the
-> comment refers to a mail from 2005. So no I don't think it is a
-> regression per se.
-
-Just asking because it affects the urgency.  If we added a regression
-during the v5.11 merge window, we'd try hard to fix it before
-v5.11-final.  But it sounds like the problem has been there a long
-time, so a fix could wait until v5.12.
-
-> It is just that some combination of hardware and firmware will program
-> the BARs in away so that this bug is triggered. And chances of this
-> happing are very unlikely.
+> [dev@bd-cpu18 ~]$ sudo /usr/local/bin/pcicrawler -t
+> 00:01.0 root_port, "J6B2", slot 1, device present, speed 8GT/s, width x8
+>  ├─01:00.0 upstream_port, PLX Technology, Inc. (10b5), device 8725
+>  │  ├─02:01.0 downstream_port, slot 1, device present, power: Off, speed 8GT/s, width x4
+>  │  │  └─03:00.0 upstream_port, PLX Technology, Inc. (10b5) PEX 8748 48-Lane, 12-Port PCI Express Gen 3 (8 GT/s) Switch, 27 x 27mm FCBGA (8748)
+>  │  │     ├─04:01.0 downstream_port, slot 4, power: Off
+>  │  │     ├─04:03.0 downstream_port, slot 3, power: Off
+>  │  │     ├─04:08.0 downstream_port, slot 5, power: Off
+>  │  │     ├─04:0a.0 downstream_port, slot 6, device present, power: Off, speed 8GT/s, width x4
+>  │  │     │  └─08:00.0 endpoint, Xilinx Corporation (10ee), device 8034
+>  │  │     └─04:12.0 downstream_port, slot 1, power: Off
+>  │  ├─02:02.0 downstream_port, slot 2
+>  │  ├─02:08.0 downstream_port, slot 8
+>  │  ├─02:09.0 downstream_port, slot 9, power: Off
+>  │  └─02:0a.0 downstream_port, slot 10
+>  ├─01:00.1 endpoint, PLX Technology, Inc. (10b5), device 87d0
+>  ├─01:00.2 endpoint, PLX Technology, Inc. (10b5), device 87d0
+>  ├─01:00.3 endpoint, PLX Technology, Inc. (10b5), device 87d0
+>  └─01:00.4 endpoint, PLX Technology, Inc. (10b5), device 87d0
 > 
-> Do we agree that it should be irrelevant how the firmware programs and
-> enables the BARs in this case? I.e. you could "fix" u-boot to match the
-> way linux will assign addresses to the BARs. But that would just work
-> around the real issue here. IMO.
-
-I agree, Linux should work correctly regardless of how firmware
-programmed the BARs.
-
-> > 2) Can you open a bugzilla at https://bugzilla.kernel.org and attach
-> > the complete dmesg and "sudo lspci -vv" output?  I want to see whether
-> > Linux is assigning something incorrectly or this is a consequence of
-> > some firmware initialization.
 > 
-> Sure, but you wouldn't even see the error with "lspci -vv" because
-> lspci will just show the mapping linux assigned to it. But not whats
-> written to the actual BAR for the PCI card. I'll also include a
-> "lspci -xx". I've enabled CONFIG_PCI_DEBUG, too.
+> The lockups most frequently appear after the cold boot of the system. If I
+> restart the CPU card only, and leave the MCH (where the PEX8748 switch
+> resides) powered, the lockups do *not* happen. I'm injecting the same error
+> into the root port and the system card configuration/location/count is
+> always the same.
 > 
-> https://bugzilla.kernel.org/show_bug.cgi?id=211105
+> Nevertheless, in rare occasions while booting the same kernel image after
+> complete system power cycle, no lockup is observed.
 > 
-> > 3) If the Intel i210 is defective in how it handles an Expansion ROM
-> > that overlaps another BAR, a quirk might be the right fix. But my
-> > guess is the device is working correctly per spec and there's
-> > something wrong in how firmware/Linux is assigning things.  That would
-> > mean we need a more generic fix that's not a quirk and not tied to the
-> > Intel i210.
+> So far I observed that the lockups seem to always happen when recovery is
+> dealing with the 02:01.0 device/bus.
 > 
-> Agreed, but as you already stated (and I've also found that in the PCI
-> spec) the Expansion ROM address decoder can be shared by the other BARs
-> and it shouldn't matter as long as the ExpROM BAR is disabled, which is
-> the case here.
+> If the system recovers from a first injected error, I can repeat the
+> injection and the system recovers always. If the first recovery fails I have
+> to either reboot the CPU or power cycle the complete system.
+> 
+> To me it looks like this behavior is somehow related to the system/setup I
+> have, and for some reason is triggered by VC restoration (VC is not is use
+> by my system at all, AFAIK).
+ 
+> Are you able to tell which part of the code the CPU is actually spinning in
+> when the lockup is detected? I added many printk()s in the
+> pci_restore_vc_state(), in the AER IRQ handler, and around to see something
+> being continuously printed, but nothing appeared..
 
-My point is just that if this could theoretically affect devices other
-than the i210, the fix should not be an i210-specific quirk.
+It sounds like your setup is having difficulting completing config
+cycles timely after a secondary bus reset. I don't see right now how
+anything I've provided in this series is causing that.
 
-I'll assume this is a general problem and wait for a generic PCI core
-solution unless it's i210-specific.
+All the stack traces you've provided so far are all within virtual
+channel restoration. Subsequent stack traces are never the same though,
+so it does not appear to be permanently stuck; it's just incredibly
+slow. This particular capability restoration happens to require more
+config cycles than most other capabilities, so I'm guessing it happens
+to show up in your observation because of that rather than anything
+specific about VC.
 
-Bjorn
+The long delays seem like a CTO should have kicked in, but maybe your
+hardware isn't doing it right. Your lspci says Completion Timeout
+configuration is not supported, so it should default to 50msec maximum,
+but since it's taking long enough to trigger a stuck CPU watchdog, and
+you appear to be getting valid data back, it doesn't look like CTO is
+happening.
