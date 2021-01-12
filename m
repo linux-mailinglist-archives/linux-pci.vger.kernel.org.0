@@ -2,192 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13F0E2F3F67
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:46:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 054592F3FB8
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:46:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394513AbhALWU1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jan 2021 17:20:27 -0500
-Received: from halon.esss.lu.se ([194.47.240.54]:20688 "EHLO halon.esss.lu.se"
+        id S1729736AbhALWdL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jan 2021 17:33:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404681AbhALWUX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Jan 2021 17:20:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ess.eu; s=dec2019;
-        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
-         message-id:from:references:cc:to:subject:from;
-        bh=UrCG2cAhmYVBHHKgDsAqGEtAmexHEK3Q88mALPSyHEk=;
-        b=JHOwza5yYexuhRRDwc9M9aOl3+6jCRjSW8gIDSeZ38/ofY9m+yQ7ZbOtInJPskYmwGk4QWhfE2gPa
-         0n9NjfS9IqYb6bvFIB2ps76UScxrl5DwS7iRZTf1TvPRQZvjNCAx0saqFlyXEdUccpKzBTBfd2Rdbu
-         3AHirr7LjFnKF7jD247HBv/xKg06o+J4hviqJ/qCWsGh6faTDb+ufZZzPirgRmmhyvXDuXw/5xJlGj
-         ABrTG5qXNce/Ka9f+Pa+Gxud6wtjIlBtmYrkUJe34dWt8FQttsejUWrh34cgEBUq9s+eqLmQokr4MS
-         i9W5jROGY5Umw9dvkjqMMOEWVLl64Dg==
-Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
-        by halon.esss.lu.se (Halon) with ESMTPS
-        id 3fae735f-5524-11eb-93c8-005056a66d10;
-        Tue, 12 Jan 2021 23:19:34 +0100 (CET)
-Received: from [192.168.0.6] (194.47.241.248) by it-exch16-4.esss.lu.se
- (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 12 Jan
- 2021 23:19:37 +0100
-Subject: Re: [PATCHv2 0/5] aer handling fixups
-To:     Keith Busch <kbusch@kernel.org>
-CC:     "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <4242a9a9-c881-0af4-1cab-396931fee420@ess.eu>
- <20210105183302.GA1278205@dhcp-10-100-145-180.wdc.com>
- <B31F8CA9-D62B-4488-B4C1-EB31E9117203@intel.com>
- <20210107214236.GA1284006@dhcp-10-100-145-180.wdc.com>
- <70f2288d-2d1e-df82-d107-e977e1f50dca@ess.eu>
- <c3117c51-144f-ae59-ad68-bdc5532d12cb@ess.eu>
- <20210111163708.GA1458209@dhcp-10-100-145-180.wdc.com>
- <6783d09d-1431-15fd-961e-3820b14e001e@ess.eu>
- <20210111220951.GA1472929@dhcp-10-100-145-180.wdc.com>
- <ed8256dd-d70d-b8dc-fdc0-a78b9aa3bbd9@ess.eu>
- <20210112192758.GB1472929@dhcp-10-100-145-180.wdc.com>
-From:   Hinko Kocevar <hinko.kocevar@ess.eu>
-Message-ID: <8650281b-4430-1938-5d45-53f09010497b@ess.eu>
-Date:   Tue, 12 Jan 2021 23:19:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S1729184AbhALWdL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Jan 2021 17:33:11 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CC3782312E;
+        Tue, 12 Jan 2021 22:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610490750;
+        bh=HbhpXWVmhkkfnSvFBX49OI5jxpkPszC60LZh3cJi1Fk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bpj8BSauJKq3YXIavFPhJPoAz74GKaMOc/RTpP1iTffeuVvsdUAErdnV/Vew4NB/5
+         sjZWaEqvcd5iqv60Gwp7oXKQNB6l6utqo8URcvUCSpwBHpaEILZd3fhtJVa7okanB5
+         kLVMJHDc2fGIwwC0p/WJ29PitwS2cIaLxUUOI0A70LXWfPK0dOgBIHsu3N7feK1yCR
+         0AEx3TcBXm0Q+To5+f8G8XpiBinPit0h6bsEcdH8YbTrOJxlWBCNrx1T+zDdD0I16F
+         WISC61JQwEutfJAVaGhFynC5boos/XsitMbyPGHQmQRF+vicZnPzsYpkpXYTJCCjH8
+         cgnvzpwyMUblQ==
+Date:   Tue, 12 Jan 2021 16:32:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Victor Ding <victording@google.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Alex Levin <levinale@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Subject: Re: [PATCH 1/2] PCI/ASPM: Disable ASPM until its LTR and L1ss state
+ is restored
+Message-ID: <20210112223228.GA1857596@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210112192758.GB1472929@dhcp-10-100-145-180.wdc.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [194.47.241.248]
-X-ClientProxiedBy: it-exch16-2.esss.lu.se (10.0.42.132) To
- it-exch16-4.esss.lu.se (10.0.42.134)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210112040146.1.I9aa2b9dd39a6ac9235ec55a8c56020538aa212fb@changeid>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Victor,
 
+Thanks for the patch.  Improving suspend/resume performance is always
+a good thing!
 
-On 1/12/21 8:27 PM, Keith Busch wrote:
-> On Tue, Jan 12, 2021 at 06:20:55PM +0100, Hinko Kocevar wrote:
->> On 1/11/21 11:09 PM, Keith Busch wrote:
->>
->> Here is the log after applying the patch.
->>
->> What sticks out are the numerous "VC buffer not found in pci_save_vc_state"
->> messages, AFAICT from vc.c pci_save_vc_state(), which I have not spotted
->> before:
->>
->> [dev@bd-cpu18 ~]$ dmesg | grep vc_
->> [  336.960749] pcieport 0000:00:01.1: VC buffer not found in pci_save_vc_state
->> [  338.125683] pcieport 0000:01:00.0: VC buffer not found in pci_save_vc_state
->> [  338.342504] pcieport 0000:02:01.0: VC buffer not found in pci_save_vc_state
->> [  338.569035] pcieport 0000:03:00.0: VC buffer not found in pci_save_vc_state
->> [  338.775696] pcieport 0000:04:01.0: VC buffer not found in pci_save_vc_state
->> [  338.982599] pcieport 0000:04:03.0: VC buffer not found in pci_save_vc_state
->> [  339.189608] pcieport 0000:04:08.0: VC buffer not found in pci_save_vc_state
->> [  339.406232] pcieport 0000:04:0a.0: VC buffer not found in pci_save_vc_state
->> [  339.986434] pcieport 0000:04:12.0: VC buffer not found in pci_save_vc_state
+On Tue, Jan 12, 2021 at 04:02:04AM +0000, Victor Ding wrote:
+> Right after powering up, the device may have ASPM enabled; however,
+> its LTR and/or L1ss controls may not be in the desired states; hence,
+> the device may enter L1.2 undesirably and cause resume performance
+> penalty. This is especially problematic if ASPM related control
+> registers are modified before a suspension.
+
+s/L1ss/L1SS/ (several occurrences) to match existing usage.
+
+> Therefore, ASPM should disabled until its LTR and L1ss states are
+> fully restored.
 > 
-> Ah, that's happening because I added the cap caching after the cap
-> buffer allocation. The patch below on top of the previous should fix
-> those warnings.
-
-Right. With this little change applied, the warnings are gone now, and I 
-can see the VC related debug messages you introduced with the first patch.
-
->   
->> I do not see the lockup anymore, and the recovery seems to have successfully
->> been performed.
-> 
-> Okay, that kind of indicates the frequent capability lookups are taking
-> a while. We cache other capability offsets for similar reasons in the
-> past, but I don't recall them ever taking so long that it triggers the
-> CPU lockup watchdog.
-
-Now that the VC restore is being invoked again, I see the lockups are back.
-
-> 
+> Signed-off-by: Victor Ding <victording@google.com>
 > ---
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 56992a42bac6..a12efa87c7e0 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2385,6 +2385,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->   	pci_ea_init(dev);		/* Enhanced Allocation */
->   	pci_msi_init(dev);		/* Disable MSI */
->   	pci_msix_init(dev);		/* Disable MSI-X */
-> +	pci_vc_init(dev);		/* Virtual Channel */
->   
->   	/* Buffers for saving PCIe and PCI-X capabilities */
->   	pci_allocate_cap_save_buffers(dev);
-> @@ -2401,7 +2402,6 @@ static void pci_init_capabilities(struct pci_dev *dev)
->   	pci_aer_init(dev);		/* Advanced Error Reporting */
->   	pci_dpc_init(dev);		/* Downstream Port Containment */
->   	pci_rcec_init(dev);		/* Root Complex Event Collector */
-> -	pci_vc_init(dev);		/* Virtual Channel */
->   
->   	pcie_report_downtraining(dev);
->   
-> --
 > 
+>  drivers/pci/pci.c       | 11 +++++++++++
+>  drivers/pci/pci.h       |  2 ++
+>  drivers/pci/pcie/aspm.c |  2 +-
+>  3 files changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index eb323af34f1e..428de433f2e6 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1660,6 +1660,17 @@ void pci_restore_state(struct pci_dev *dev)
+>  	if (!dev->state_saved)
+>  		return;
+>  
+> +	/*
+> +	 * Right after powering up, the device may have ASPM enabled;
 
-I feel inclined to provide a little bit more info about the system I'm 
-running this on as it is not a regular PC/server/laptop. It is a modular 
-micro TCA system with a single CPU and MCH. MCH and CPU are separate 
-cards, as are the other processing cards (AMCs) that link up to CPU 
-through the MCH PEX8748 switch. I can power each card individually, or 
-perform complete system power cycle. The normal power up sequence is: 
-MCH, AMCs, CPU. The CPU is powered 30 sec after all other cards so that 
-their PCIe links are up and ready for Linux.
+I think this could be stated more precisely.  "Right after powering
+up," ASPM should be *disabled* because ASPM Control in the Link
+Control register powers up as zero (disabled).
 
-All buses below CPU side 02:01.0 are on MCH PEX8748 switch:
+> +	 * however, its LTR and/or L1ss controls may not be in the desired
+> +	 * states; as a result, the device may enter L1.2 undesirably and
+> +	 * cause resume performance penalty.
+> +	 * Therefore, ASPM is disabled until its LTR and L1ss states are
+> +	 * fully restored.
+> +	 * (enabling ASPM is part of pci_restore_pcie_state)
 
-[dev@bd-cpu18 ~]$ sudo /usr/local/bin/pcicrawler -t
-00:01.0 root_port, "J6B2", slot 1, device present, speed 8GT/s, width x8
-  ├─01:00.0 upstream_port, PLX Technology, Inc. (10b5), device 8725
-  │  ├─02:01.0 downstream_port, slot 1, device present, power: Off, 
-speed 8GT/s, width x4
-  │  │  └─03:00.0 upstream_port, PLX Technology, Inc. (10b5) PEX 8748 
-48-Lane, 12-Port PCI Express Gen 3 (8 GT/s) Switch, 27 x 27mm FCBGA (8748)
-  │  │     ├─04:01.0 downstream_port, slot 4, power: Off
-  │  │     ├─04:03.0 downstream_port, slot 3, power: Off
-  │  │     ├─04:08.0 downstream_port, slot 5, power: Off
-  │  │     ├─04:0a.0 downstream_port, slot 6, device present, power: 
-Off, speed 8GT/s, width x4
-  │  │     │  └─08:00.0 endpoint, Xilinx Corporation (10ee), device 8034
-  │  │     └─04:12.0 downstream_port, slot 1, power: Off
-  │  ├─02:02.0 downstream_port, slot 2
-  │  ├─02:08.0 downstream_port, slot 8
-  │  ├─02:09.0 downstream_port, slot 9, power: Off
-  │  └─02:0a.0 downstream_port, slot 10
-  ├─01:00.1 endpoint, PLX Technology, Inc. (10b5), device 87d0
-  ├─01:00.2 endpoint, PLX Technology, Inc. (10b5), device 87d0
-  ├─01:00.3 endpoint, PLX Technology, Inc. (10b5), device 87d0
-  └─01:00.4 endpoint, PLX Technology, Inc. (10b5), device 87d0
+If we're enabling L1.2 before LTR has been configured, that's
+definitely a bug.  But I don't see how that happens.  The current code
+looks like:
 
+  pci_restore_state
+    pci_restore_ltr_state
+      pci_write_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap++)
+      pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++)
+    pci_restore_aspm_l1ss_state
+      pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++)
+    pci_restore_pcie_state
+      pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++])
 
-The lockups most frequently appear after the cold boot of the system. If 
-I restart the CPU card only, and leave the MCH (where the PEX8748 switch 
-resides) powered, the lockups do *not* happen. I'm injecting the same 
-error into the root port and the system card 
-configuration/location/count is always the same.
+We *do* restore PCI_L1SS_CTL1, which contains "ASPM L1.2 Enable",
+before we restore PCI_EXP_LNKCTL, which contains "ASPM Control", but I
+don't think "ASPM L1.2 Enable" by itself should be enough to allow
+hardware to enter L1.2.
 
-Nevertheless, in rare occasions while booting the same kernel image 
-after complete system power cycle, no lockup is observed.
+Reading PCIe r5.0, sec 5.5.1, it seems like hardware should ignore the
+PCI_L1SS_CTL1 bits unless ASPM L1 entry is enabled in PCI_EXP_LNKCTL.
 
-So far I observed that the lockups seem to always happen when recovery 
-is dealing with the 02:01.0 device/bus.
+What am I missing?
 
-If the system recovers from a first injected error, I can repeat the 
-injection and the system recovers always. If the first recovery fails I 
-have to either reboot the CPU or power cycle the complete system.
-
-To me it looks like this behavior is somehow related to the system/setup 
-I have, and for some reason is triggered by VC restoration (VC is not is 
-use by my system at all, AFAIK).
-
-Are you able to tell which part of the code the CPU is actually spinning 
-in when the lockup is detected? I added many printk()s in the 
-pci_restore_vc_state(), in the AER IRQ handler, and around to see 
-something being continuously printed, but nothing appeared..
-
-I'll continue testing your patches and try to come up with more info.
-
-Thank you for your time!
+> +	 */
+> +	pcie_config_aspm_dev(dev, 0);
+> +
+>  	/*
+>  	 * Restore max latencies (in the LTR capability) before enabling
+>  	 * LTR itself (in the PCIe capability).
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index e9ea5dfaa3e0..f774bd6d2555 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -564,6 +564,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+>  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+> +void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val);
+>  void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+>  void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+>  #else
+> @@ -571,6 +572,7 @@ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+> +static inline void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val) { }
+>  static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
+>  static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
+>  #endif
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index a08e7d6dc248..45535b4e1595 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -778,7 +778,7 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
+>  	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
+>  }
+>  
+> -static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+> +void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+>  {
+>  	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+>  					   PCI_EXP_LNKCTL_ASPMC, val);
+> -- 
+> 2.30.0.284.gd98b1dd5eaa7-goog
+> 
