@@ -2,255 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B61702F364B
-	for <lists+linux-pci@lfdr.de>; Tue, 12 Jan 2021 17:58:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09E3E2F3682
+	for <lists+linux-pci@lfdr.de>; Tue, 12 Jan 2021 18:05:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391336AbhALQ6I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jan 2021 11:58:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:49786 "EHLO foss.arm.com"
+        id S2391760AbhALRDM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jan 2021 12:03:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726113AbhALQ6H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Jan 2021 11:58:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96892101E;
-        Tue, 12 Jan 2021 08:57:21 -0800 (PST)
-Received: from [192.168.122.166] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DC5E3F719;
-        Tue, 12 Jan 2021 08:57:21 -0800 (PST)
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        catalin.marinas@arm.com, will@kernel.org, robh@kernel.org,
-        sudeep.holla@arm.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <9ecfbc2e-5f33-dd3c-0c3b-ee7c463b3e68@nvidia.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <ffc65624-197f-14cc-58da-2b1cfde285fc@arm.com>
-Date:   Tue, 12 Jan 2021 10:57:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        id S2391743AbhALRDM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Jan 2021 12:03:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 941122311B;
+        Tue, 12 Jan 2021 17:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610470951;
+        bh=u3YAk8tJDd0MtgxLEfhIWKvQfuFzbUKBa4f66KHwhYg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ZJ+2sq2qTWeWBLWHzkhOhPkTtz2MfYFGSJ1KT564skIqTBB3kYFrVjm1ID3tou+WI
+         HjkUofZqZsN1Uv3HWOJEJW9bXlxa/PrOhFW1LEzkGlljSLFJfolE59yPCQBg3EJnmr
+         giCItS/4Zrs/UI0o1Bp9rLxw6PoQdhRJ60ZQiVamAZ8zBXhefkcz7AVaDDFAjopqW5
+         0DttEnHBUoXZIRamgeIwyJ+V5+npbmfKikTCn4vmb3QpgL4UqjeYlX/hGWMZKkIPf4
+         iu9/oRNbKzQrvbE97FXQhNmDmp2zfpuIlxashxw7qXZdtuZ5/g7czup2anEA+fR4n/
+         igVdxT9nFoexA==
+Date:   Tue, 12 Jan 2021 11:02:30 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        jean-philippe <jean-philippe@linaro.org>,
+        kenneth-lee-2012@foxmail.com, wangzhou1@hisilicon.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add a quirk to enable SVA for HiSilicon chip
+Message-ID: <20210112170230.GA1838341@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <9ecfbc2e-5f33-dd3c-0c3b-ee7c463b3e68@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1610434192-27995-1-git-send-email-zhangfei.gao@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 1/12/21 10:16 AM, Vidya Sagar wrote:
+On Tue, Jan 12, 2021 at 02:49:52PM +0800, Zhangfei Gao wrote:
+> HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
+> actually on the AMBA bus. These fake PCI devices can not support tlp
+> and have to enable SMMU stall mode to use the SVA feature.
 > 
+> Add a quirk to set dma-can-stall property and enable tlp for these devices.
+
+s/tlp/TLP/
+
+I don't think "enable TLP" really captures what's going on here.  You
+must be referring to the fact that you set pdev->eetlp_prefix_path.
+
+That is normally set by pci_configure_eetlp_prefix() if the Device
+Capabilities 2 register has the End-End TLP Prefix Supported bit set
+*and* all devices in the upstream path also have it set.
+
+The only place we currently test eetlp_prefix_path is in
+pci_enable_pasid().  In PCIe, PASID is implemented using the PASID TLP
+prefix, so we only enable PASID if TLP prefixes are supported.
+
+If I understand correctly, a PASID-like feature is implemented on AMBA
+without using TLP prefixes, and setting eetlp_prefix_path makes that
+work.
+
+I don't think you should do this by setting eetlp_prefix_path because
+TLP prefixes are used for other features, e.g., TPH.  Setting
+eetlp_prefix_path implies these devices can also support things like
+TLP, and I don't think that's necessarily true.
+
+Apparently these devices have a PASID capability.  I think you should
+add a new pci_dev bit that is specific to this idea of "PASID works
+without TLP prefixes" and then change pci_enable_pasid() to look at
+that bit as well as eetlp_prefix_path.
+
+It seems like dma-can-stall is a separate thing from PASID?  If so,
+this should be two separate patches.
+
+If they can be separated, I would probably make the PASID thing the
+first patch, and then the "dma-can-stall" can be on its own as a
+broken DT workaround (if that's what it is) and it's easier to remove
+that if it become obsolete.
+
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> ---
+> Property dma-can-stall depends on patchset
+> https://lore.kernel.org/linux-iommu/20210108145217.2254447-1-jean-philippe@linaro.org/
 > 
-> On 1/5/2021 10:27 AM, Jeremy Linton wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> Given that most arm64 platform's PCI implementations needs quirks
->> to deal with problematic config accesses, this is a good place to
->> apply a firmware abstraction. The ARM PCI SMMCCC spec details a
->> standard SMC conduit designed to provide a simple PCI config
->> accessor. This specification enhances the existing ACPI/PCI
->> abstraction and expects power, config, etc functionality is handled
->> by the platform. It also is very explicit that the resulting config
->> space registers must behave as is specified by the pci specification.
->>
->> Lets hook the normal ACPI/PCI config path, and when we detect
->> missing MADT data, attempt to probe the SMC conduit. If the conduit
->> exists and responds for the requested segment number (provided by the
->> ACPI namespace) attach a custom pci_ecam_ops which redirects
->> all config read/write requests to the firmware.
->>
->> This patch is based on the Arm PCI Config space access document @
->> https://developer.arm.com/documentation/den0115/latest
->>
->> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
->> ---
->>   arch/arm64/kernel/pci.c   | 87 +++++++++++++++++++++++++++++++++++++++
->>   include/linux/arm-smccc.h | 26 ++++++++++++
->>   2 files changed, 113 insertions(+)
->>
->> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
->> index 1006ed2d7c60..56d3773aaa25 100644
->> --- a/arch/arm64/kernel/pci.c
->> +++ b/arch/arm64/kernel/pci.c
->> @@ -7,6 +7,7 @@
->>    */
->>
->>   #include <linux/acpi.h>
->> +#include <linux/arm-smccc.h>
->>   #include <linux/init.h>
->>   #include <linux/io.h>
->>   #include <linux/kernel.h>
->> @@ -107,6 +108,90 @@ static int pci_acpi_root_prepare_resources(struct 
->> acpi_pci_root_info *ci)
->>          return status;
->>   }
->>
->> +static int smccc_pcie_check_conduit(u16 seg)
->> +{
->> +       struct arm_smccc_res res;
->> +
->> +       if (arm_smccc_1_1_get_conduit() == SMCCC_CONDUIT_NONE)
->> +               return -EOPNOTSUPP;
->> +
->> +       arm_smccc_smc(SMCCC_PCI_VERSION, 0, 0, 0, 0, 0, 0, 0, &res);
->> +       if ((int)res.a0 < 0)
->> +               return -EOPNOTSUPP;
->> +
->> +       arm_smccc_smc(SMCCC_PCI_SEG_INFO, seg, 0, 0, 0, 0, 0, 0, &res);
->> +       if ((int)res.a0 < 0)
->> +               return -EOPNOTSUPP;
->> +
->> +       pr_info("PCI: SMC conduit attached to segment %d\n", seg);
-> Shouldn't this print be moved towards the end of 
-> pci_acpi_setup_smccc_mapping() API?
-
-Thanks for looking at this.
-
-It probably should be, the assumption was that it would attach at this 
-point, but its possible the message is inaccurate if something fails a 
-bit later. I left it there because the segment number is easily 
-available. I've been playing with this a bit for the V2 where I added 
-the additional function checks.
-
-
-
+> drivers/pci/quirks.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
->> +
->> +       return 0;
->> +}
->> +
->> +static int smccc_pcie_config_read(struct pci_bus *bus, unsigned int 
->> devfn,
->> +                                 int where, int size, u32 *val)
->> +{
->> +       struct arm_smccc_res res;
->> +
->> +       devfn |= bus->number << 8;
->> +       devfn |= bus->domain_nr << 16;
->> +
->> +       arm_smccc_smc(SMCCC_PCI_READ, devfn, where, size, 0, 0, 0, 0, 
->> &res);
->> +       if (res.a0) {
->> +               *val = ~0;
->> +               return -PCIBIOS_BAD_REGISTER_NUMBER;
->> +       }
->> +
->> +       *val = res.a1;
->> +       return PCIBIOS_SUCCESSFUL;
->> +}
->> +
->> +static int smccc_pcie_config_write(struct pci_bus *bus, unsigned int 
->> devfn,
->> +                                  int where, int size, u32 val)
->> +{
->> +       struct arm_smccc_res res;
->> +
->> +       devfn |= bus->number << 8;
->> +       devfn |= bus->domain_nr << 16;
->> +
->> +       arm_smccc_smc(SMCCC_PCI_WRITE, devfn, where, size, val, 0, 0, 
->> 0, &res);
->> +       if (res.a0)
->> +               return -PCIBIOS_BAD_REGISTER_NUMBER;
->> +
->> +       return PCIBIOS_SUCCESSFUL;
->> +}
->> +
->> +static const struct pci_ecam_ops smccc_pcie_ecam_ops = {
->> +       .bus_shift      = 8,
->> +       .pci_ops        = {
->> +               .read           = smccc_pcie_config_read,
->> +               .write          = smccc_pcie_config_write,
->> +       }
->> +};
->> +
->> +static struct pci_config_window *
->> +pci_acpi_setup_smccc_mapping(struct acpi_pci_root *root)
->> +{
->> +       struct device *dev = &root->device->dev;
->> +       struct resource *bus_res = &root->secondary;
->> +       struct pci_config_window *cfg;
->> +
->> +       cfg = kzalloc(sizeof(*cfg), GFP_KERNEL);
->> +       if (!cfg)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       cfg->parent = dev;
->> +       cfg->ops = &smccc_pcie_ecam_ops;
->> +       cfg->busr.start = bus_res->start;
->> +       cfg->busr.end = bus_res->end;
->> +       cfg->busr.flags = IORESOURCE_BUS;
->> +
->> +       cfg->res.name = "PCI SMCCC";
->> +       if (cfg->ops->init)
-> Since there is no init implemented, what is the purpose of having this?
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 653660e..a27f327 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -1825,6 +1825,31 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7525_MCH,	quir
+>  
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
+>  
+> +static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+> +{
+> +	struct property_entry properties[] = {
+> +		PROPERTY_ENTRY_BOOL("dma-can-stall"),
+> +		{},
+> +	};
+> +
+> +	if ((pdev->revision != 0x21) && (pdev->revision != 0x30))
+> +		return;
+> +
+> +	pdev->eetlp_prefix_path = 1;
+> +
+> +	/* Device-tree can set the stall property */
+> +	if (!pdev->dev.of_node &&
+> +	    device_add_properties(&pdev->dev, properties))
 
-Its basically dead.
+Does this mean "dma-can-stall" *can* be set via DT, and if it is, this
+quirk is not needed?  So is this quirk basically a workaround for an
+old or broken DT?
 
+> +		pci_warn(pdev, "could not add stall property");
+> +}
+> +
 
+Remove this blank line to follow the style of the rest of the file.
+
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
+> +
+>  /*
+>   * It's possible for the MSI to get corrupted if SHPC and ACPI are used
+>   * together on certain PXH-based systems.
+> -- 
+> 2.7.4
 > 
->> +               cfg->ops->init(cfg);
->> +       return cfg;
->> +}
->> +
->>   /*
->>    * Lookup the bus range for the domain in MCFG, and set up config space
->>    * mapping.
->> @@ -125,6 +210,8 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root 
->> *root)
->>
->>          ret = pci_mcfg_lookup(root, &cfgres, &ecam_ops);
->>          if (ret) {
->> +               if (!smccc_pcie_check_conduit(seg))
->> +                       return pci_acpi_setup_smccc_mapping(root);
->>                  dev_err(dev, "%04x:%pR ECAM region not found\n", seg, 
->> bus_res);
->>                  return NULL;
->>          }
->> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
->> index f860645f6512..327f52533c71 100644
->> --- a/include/linux/arm-smccc.h
->> +++ b/include/linux/arm-smccc.h
->> @@ -89,6 +89,32 @@
->>
->>   #define SMCCC_ARCH_WORKAROUND_RET_UNAFFECTED   1
->>
->> +/* PCI ECAM conduit */
->> +#define SMCCC_PCI_VERSION                                              \
->> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
->> +                          ARM_SMCCC_SMC_32,                            \
->> +                          ARM_SMCCC_OWNER_STANDARD, 0x0130)
->> +
->> +#define SMCCC_PCI_FEATURES                                             \
->> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
->> +                          ARM_SMCCC_SMC_32,                            \
->> +                          ARM_SMCCC_OWNER_STANDARD, 0x0131)
->> +
->> +#define SMCCC_PCI_READ                                                 \
->> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
->> +                          ARM_SMCCC_SMC_32,                            \
->> +                          ARM_SMCCC_OWNER_STANDARD, 0x0132)
->> +
->> +#define 
->> SMCCC_PCI_WRITE                                                        \
->> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
->> +                          ARM_SMCCC_SMC_32,                            \
->> +                          ARM_SMCCC_OWNER_STANDARD, 0x0133)
->> +
->> +#define SMCCC_PCI_SEG_INFO                                             \
->> +       ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                         \
->> +                          ARM_SMCCC_SMC_32,                            \
->> +                          ARM_SMCCC_OWNER_STANDARD, 0x0134)
->> +
->>   /* Paravirtualised time calls (defined by ARM DEN0057A) */
->>   #define ARM_SMCCC_HV_PV_TIME_FEATURES                          \
->>          ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,                 \
->> -- 
->> 2.26.2
->>
-
