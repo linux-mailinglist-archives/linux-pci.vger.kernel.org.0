@@ -2,268 +2,289 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB5BA2F3DBE
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:44:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 934D22F3DEF
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:44:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437002AbhALVhN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jan 2021 16:37:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437021AbhALUmp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 12 Jan 2021 15:42:45 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D8DC522DFA;
-        Tue, 12 Jan 2021 20:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610484124;
-        bh=Jx8pGRlLDrjjP+Fq9/Sw3nurTHY381O0KfCYsbhOLjU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hmuhtYsSE/btYpfJ94B8LaWcLD9ErTUIN2+BXv88yC4i3IQBP6xlJ9pCR1vkYjtAy
-         Jm2SUYw0GYpN0ahpJwzopvIERhZcwHEiStN2Iuv97Wqd/ItJDG+zcWinAV1JrtJoAO
-         3JtZPfcsEyJaDsAMDKg7go05aLazEAvAEM6uXb8SAmYO425wplrF9wMjuW88DHKVG0
-         j7JSxZAn/XQ5TpciFJkGfapGzI7njDy4+pSrOSsQZyeSC7RVgUQr81HEnUKcdMAsov
-         g1GyC/c6IuUNjIW47mWiOKajE+mGJ+4HDmLpfzIOlibm4Ko2qURrMlu4zW521dbl/G
-         dKy7eyhxSdaqQ==
-Date:   Tue, 12 Jan 2021 14:42:02 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ian Kumlien <ian.kumlien@gmail.com>
-Cc:     kai.heng.feng@canonical.com, linux-pci@vger.kernel.org,
-        alexander.duyck@gmail.com, refactormyself@gmail.com,
-        puranjay12@gmail.com
-Subject: Re: [PATCH 1/3] PCI/ASPM: Use the path max in L1 ASPM latency check
-Message-ID: <20210112204202.GA1489918@bjorn-Precision-5520>
+        id S1727800AbhALVtL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jan 2021 16:49:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392300AbhALVgF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jan 2021 16:36:05 -0500
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F98C0617A7;
+        Tue, 12 Jan 2021 13:35:02 -0800 (PST)
+Received: by mail-io1-xd2d.google.com with SMTP id u26so7294411iof.3;
+        Tue, 12 Jan 2021 13:35:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sDeAqm+LFH/+YEjj7tR7t+NLtygzAyr4AwNJQrZj4o8=;
+        b=d3KS/b6o4l1X7mT9/yVOtc79XKM/ftjmGKrR+8dcVWGzgzUZva3IjKiBby3kIFdDeJ
+         gYiwgydpo6taTF0jDTtpzkTEoH101w9+AAOtfpkWEm8GByCs/1pNFbdqsoRgWxr3xPlP
+         Ufw2tDxiZEV2DqpadhIIRyM2BZh97qigG20ujKG+yHOMzTpMGXJFESvTZvbKtGOL794t
+         a6q84vcoKRyxDin0I7IYDfOF93K6DkleGQm0qH4Z08Ll69k73IeWY1RHcupliweOggD0
+         f8SepEg4fBhVbN8tgwHkCWcvkUg4j6zh8/YIennY9c8syFXhmS5jN3xQl1EpgNQ5YcuH
+         hREA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sDeAqm+LFH/+YEjj7tR7t+NLtygzAyr4AwNJQrZj4o8=;
+        b=AT3dcmDuBqFplj2IlfGB2Avz6c+pBW0cE8K9mpVZ7X4wP6YCCN2cdiwdjD/gJXZ8r/
+         XCs4kWBbP24od4PK6ZYVZ5pUuNB24vqemB6Y5BqfQbBcsuM0AGmE7sv+Rp0nHOxH0MUU
+         3Ex1jZpKaIVfZOKBHOqbUM5oAAMkZzbwx2y8OrObH2behu5Tio/chgN5S4Wg2y0Vpvde
+         yY3+2MkWPVj2tf4iOyyhzrb25b6waTry8WPvErHL7t6PqC5NBi2DtsodXSy/V6jbof2e
+         QHOm24O3L5/TQUHEZ3Q+lafzz5t7zB5/hQk2Zo4tKyqqbL+FLQ0D+9tCPYA4zr3CmCki
+         vH9A==
+X-Gm-Message-State: AOAM533VO2wioTO/02SnUnJxs08NOEAM/7CqKS5z5rMqlLUDK1PA7V9O
+        O8yL4STjq2Lr8GTIIImnV5MCL2NU45wlB0K5POM=
+X-Google-Smtp-Source: ABdhPJzjn/TNYAGAH6/SXpllAAMU5SXgaWLsv3NEdJpo5dqEL96pcE0w+cXeO3MWP28fnIjqwgn2BDVfncP71gze6FQ=
+X-Received: by 2002:a5e:9812:: with SMTP id s18mr846974ioj.138.1610487301573;
+ Tue, 12 Jan 2021 13:35:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201024205548.1837770-1-ian.kumlien@gmail.com>
+References: <20210110150727.1965295-1-leon@kernel.org> <20210110150727.1965295-3-leon@kernel.org>
+ <CAKgT0Uczu6cULPsVjFuFVmir35SpL-bs0hosbfH-T5sZLZ78BQ@mail.gmail.com> <20210112065601.GD4678@unreal>
+In-Reply-To: <20210112065601.GD4678@unreal>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 12 Jan 2021 13:34:50 -0800
+Message-ID: <CAKgT0UdndGdA3xONBr62hE-_RBdL-fq6rHLy0PrdsuMn1936TA@mail.gmail.com>
+Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
+ number of MSI-X vectors
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Oct 24, 2020 at 10:55:46PM +0200, Ian Kumlien wrote:
-> Make pcie_aspm_check_latency comply with the PCIe spec, specifically:
-> "5.4.1.2.2. Exit from the L1 State"
-> 
-> Which makes it clear that each switch is required to initiate a
-> transition within 1μs from receiving it, accumulating this latency and
-> then we have to wait for the slowest link along the path before
-> entering L0 state from L1.
-> 
-> The current code doesn't take the maximum latency into account.
-> 
-> From the example:
->    +----------------+
->    |                |
->    |  Root complex  |
->    |                |
->    |    +-----+     |
->    |    |32 μs|     |
->    +----------------+
->            |
->            |  Link 1
->            |
->    +----------------+
->    |     |8 μs|     |
->    |     +----+     |
->    |    Switch A    |
->    |     +----+     |
->    |     |8 μs|     |
->    +----------------+
->            |
->            |  Link 2
->            |
->    +----------------+
->    |    |32 μs|     |
->    |    +-----+     |
->    |    Switch B    |
->    |    +-----+     |
->    |    |32 μs|     |
->    +----------------+
->            |
->            |  Link 3
->            |
->    +----------------+
->    |     |8μs|      |
->    |     +---+      |
->    |   Endpoint C   |
->    |                |
->    |                |
->    +----------------+
-> 
-> Links 1, 2 and 3 are all in L1 state - endpoint C initiates the
-> transition to L0 at time T. Since switch B takes 32 μs to exit L1 on
-> it's ports, Link 3 will transition to L0 at T+32 (longest time
-> considering T+8 for endpoint C and T+32 for switch B).
-> 
-> Switch B is required to initiate a transition from the L1 state on it's
-> upstream port after no more than 1 μs from the beginning of the
-> transition from L1 state on the downstream port. Therefore, transition from
-> L1 to L0 will begin on link 2 at T+1, this will cascade up the path.
-> 
-> The path will exit L1 at T+34.
-> 
-> On my specific system:
-> 03:00.0 Ethernet controller: Intel Corporation I211 Gigabit Network Connection (rev 03)
-> 04:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. Device 816e (rev 1a)
-> 
->             Exit latency       Acceptable latency
-> Tree:       L1       L0s       L1       L0s
-> ----------  -------  -----     -------  ------
-> 00:01.2     <32 us   -
-> | 01:00.0   <32 us   -
-> |- 02:03.0  <32 us   -
-> | \03:00.0  <16 us   <2us      <64 us   <512ns
-> |
-> \- 02:04.0  <32 us   -
->   \04:00.0  <64 us   unlimited <64 us   <512ns
-> 
-> 04:00.0's latency is the same as the maximum it allows so as we walk the path
-> the first switchs startup latency will pass the acceptable latency limit
-> for the link, and as a side-effect it fixes my issues with 03:00.0.
+On Mon, Jan 11, 2021 at 10:56 PM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Mon, Jan 11, 2021 at 11:30:39AM -0800, Alexander Duyck wrote:
+> > On Sun, Jan 10, 2021 at 7:10 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+> > >
+> > > Some SR-IOV capable devices provide an ability to configure specific
+> > > number of MSI-X vectors on their VF prior driver is probed on that VF.
+> > >
+> > > In order to make management easy, provide new read-only sysfs file that
+> > > returns a total number of possible to configure MSI-X vectors.
+> > >
+> > > cat /sys/bus/pci/devices/.../sriov_vf_total_msix
+> > >   = 0 - feature is not supported
+> > >   > 0 - total number of MSI-X vectors to consume by the VFs
+> > >
+> > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-pci | 14 +++++++++++
+> > >  drivers/pci/iov.c                       | 31 +++++++++++++++++++++++++
+> > >  drivers/pci/pci.h                       |  3 +++
+> > >  include/linux/pci.h                     |  2 ++
+> > >  4 files changed, 50 insertions(+)
+> > >
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> > > index 05e26e5da54e..64e9b700acc9 100644
+> > > --- a/Documentation/ABI/testing/sysfs-bus-pci
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> > > @@ -395,3 +395,17 @@ Description:
+> > >                 The file is writable if the PF is bound to a driver that
+> > >                 supports the ->sriov_set_msix_vec_count() callback and there
+> > >                 is no driver bound to the VF.
+> > > +
+> > > +What:          /sys/bus/pci/devices/.../sriov_vf_total_msix
+> >
+> > In this case I would drop the "vf" and just go with sriov_total_msix
+> > since now you are referring to a global value instead of a per VF
+> > value.
+>
+> This field indicates the amount of MSI-X available for VFs, it doesn't
+> include PFs. The missing "_vf_" will mislead users who will believe that
+> it is all MSI-X vectors available for this device. They will need to take
+> into consideration amount of PF MSI-X in order to calculate the VF distribution.
+>
+> So I would leave "_vf_" here.
 
-I don't think this is quite right.  We're looking at the path to
-04:00.0, which includes two Links and one Switch:
+The problem is you aren't indicating how many are available for an
+individual VF though, you are indicating how many are available for
+use by SR-IOV to give to the VFs. The fact that you are dealing with a
+pool makes things confusing in my opinion. For example sriov_vf_device
+describes the device ID that will be given to each VF.
 
-The upstream Link:
-  00:01.2 AMD Root Port               L1 Exit Latency <32us
-  01:00.0 AMD Switch Upstream Port    L1 Exit Latency <32us
+> >
+> > > +Date:          January 2021
+> > > +Contact:       Leon Romanovsky <leonro@nvidia.com>
+> > > +Description:
+> > > +               This file is associated with the SR-IOV PFs.
+> > > +               It returns a total number of possible to configure MSI-X
+> > > +               vectors on the enabled VFs.
+> > > +
+> > > +               The values returned are:
+> > > +                * > 0 - this will be total number possible to consume by VFs,
+> > > +                * = 0 - feature is not supported
+> > > +
+> > > +               If no SR-IOV VFs are enabled, this value will return 0.
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index 42c0df4158d1..0a6ddf3230fd 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -394,12 +394,22 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+> > >         return count;
+> > >  }
+> > >
+> > > +static ssize_t sriov_vf_total_msix_show(struct device *dev,
+> > > +                                       struct device_attribute *attr,
+> > > +                                       char *buf)
+> > > +{
+> > > +       struct pci_dev *pdev = to_pci_dev(dev);
+> > > +
+> > > +       return sprintf(buf, "%d\n", pdev->sriov->vf_total_msix);
+> > > +}
+> > > +
+> >
+> > You display it as a signed value, but unsigned values are not
+> > supported, correct?
+>
+> Right, I made it similar to the vf_msix_set. I can change.
+>
+> >
+> > >  static DEVICE_ATTR_RO(sriov_totalvfs);
+> > >  static DEVICE_ATTR_RW(sriov_numvfs);
+> > >  static DEVICE_ATTR_RO(sriov_offset);
+> > >  static DEVICE_ATTR_RO(sriov_stride);
+> > >  static DEVICE_ATTR_RO(sriov_vf_device);
+> > >  static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+> > > +static DEVICE_ATTR_RO(sriov_vf_total_msix);
+> > >
+> > >  static struct attribute *sriov_dev_attrs[] = {
+> > >         &dev_attr_sriov_totalvfs.attr,
+> > > @@ -408,6 +418,7 @@ static struct attribute *sriov_dev_attrs[] = {
+> > >         &dev_attr_sriov_stride.attr,
+> > >         &dev_attr_sriov_vf_device.attr,
+> > >         &dev_attr_sriov_drivers_autoprobe.attr,
+> > > +       &dev_attr_sriov_vf_total_msix.attr,
+> > >         NULL,
+> > >  };
+> > >
+> > > @@ -658,6 +669,7 @@ static void sriov_disable(struct pci_dev *dev)
+> > >                 sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> > >
+> > >         iov->num_VFs = 0;
+> > > +       iov->vf_total_msix = 0;
+> > >         pci_iov_set_numvfs(dev, 0);
+> > >  }
+> > >
+> > > @@ -1116,6 +1128,25 @@ int pci_sriov_get_totalvfs(struct pci_dev *dev)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(pci_sriov_get_totalvfs);
+> > >
+> > > +/**
+> > > + * pci_sriov_set_vf_total_msix - set total number of MSI-X vectors for the VFs
+> > > + * @dev: the PCI PF device
+> > > + * @numb: the total number of MSI-X vector to consume by the VFs
+> > > + *
+> > > + * Sets the number of MSI-X vectors that is possible to consume by the VFs.
+> > > + * This interface is complimentary part of the pci_set_msix_vec_count()
+> > > + * that will be used to configure the required number on the VF.
+> > > + */
+> > > +void pci_sriov_set_vf_total_msix(struct pci_dev *dev, int numb)
+> > > +{
+> > > +       if (!dev->is_physfn || !dev->driver ||
+> > > +           !dev->driver->sriov_set_msix_vec_count)
+> > > +               return;
+> > > +
+> > > +       dev->sriov->vf_total_msix = numb;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(pci_sriov_set_vf_total_msix);
+> > > +
+> >
+> > This seems broken. What validation is being done on the numb value?
+> > You pass it as int, and your documentation all refers to tests for >=
+> > 0, but isn't a signed input a possibility as well? Also "numb" doesn't
+> > make for a good abbreviation as it is already a word of its own. It
+> > might make more sense to use count or something like that rather than
+> > trying to abbreviate number.
+>
+> "Broken" is a nice word to describe misunderstanding.
 
-The downstream Link:
-  02:04.0 AMD Switch Downstream Port  L1 Exit Latency <32us
-  04:00.0 Realtek Endpoint            L1 Exit Latency <64us, Acceptable 64us
+Would you prefer "lacking input validation".
 
-If both Links are in L1 and 04:00.0 needs to use the Link at time T,
-I think the following events are relevant:
+I see all this code in there checking for is_physfn and driver and
+sriov_set_msix_vec_count before allowing the setting of vf_total_msix.
+It just seems like a lot of validation is taking place on the wrong
+things if you are just going to be setting a value reporting the total
+number of MSI-X vectors in use for SR-IOV.
 
-  T        04:00.0 initiates L1 exit on downstream Link
-  T+1us    01:00.0 initiates L1 exit on upstream Link
-  T+33us   upstream Link is in L0 (32us after initiating exit)
-  T+64us   downstream Link is in L0 (64us after initiating exit)
+In addition this value seems like a custom purpose being pushed into
+the PCIe code since there isn't anything that defaults the value. It
+seems like at a minimum there should be something that programs a
+default value for both of these new fields that are being added so
+that you pull the maximum number of VFs when SR-IOV is enabled, the
+maximum number of MSI-X vectors from a single VF, and then the default
+value for this should be the multiple of the two which can then be
+overridden later.
 
-The upstream Link's L1 exit latency is completely covered by the
-downstream Link's, so 04:00.0 *should* only see its own exit latency
-(64us), which it claims to be able to tolerate.
+> The vf_total_msix is not set by the users and used solely by the drivers
+> to advertise their capability. This field is needed to give a way to
+> calculate how much MSI-X VFs can get. The driver code is part of the
+> kernel and like any other kernel code, it is trusted.
+>
+> I'm checking < 0 in another _set_ routine to make sure that we will be
+> able to extend this sysfs entry if at some point of time negative vector
+> count will make sense.
 
-This patch computes "l1_max_latency + l1_switch_latency", which is
-64us + 1us in this case.  I don't think it's correct to add the 1us
-here because that delay is only relevant to the upstream Link.  We
-should add it to the *upstream Link's* exit latency, but even with
-that, its exit latency is only 33us from 04:00.0's point of view.
+I would rather have a strict interface that doesn't allow for
+unintended flexibility. Out-of-tree drivers tend to exploit that kind
+of stuff and it is problematic when it can occur.
 
-> Without this patch, 03:00.0 misbehaves and only gives me ~40 mbit/s over
-> links with 6 or more hops. With this patch I'm back to a maximum of ~933
-> mbit/s.
-> 
-> The original code path did:
-> 04:00:0-02:04.0 max latency 64    -> ok
-> 02:04.0-01:00.0 max latency 32 +1 -> ok
-> 01:00.0-00:01.2 max latency 32 +2 -> ok
-> 
-> And thus didn't see any L1 ASPM latency issues.
-> 
-> The new code does:
-> 04:00:0-02:04.0 max latency 64    -> ok
-> 02:04.0-01:00.0 max latency 64 +1 -> latency exceeded
-> 01:00.0-00:01.2 max latency 64 +2 -> latency exceeded
-> 
-> It correctly identifies the issue.
-> 
-> For reference, pcie information:
-> https://bugzilla.kernel.org/show_bug.cgi?id=209725
-> 
-> Kai-Heng Feng has a machine that will not boot with ASPM without this patch,
-> information is documented here:
-> https://bugzilla.kernel.org/show_bug.cgi?id=209671
-> 
-> Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/pci/pcie/aspm.c | 22 ++++++++++++++--------
->  1 file changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 253c30cc1967..c03ead0f1013 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
->  
->  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->  {
-> -	u32 latency, l1_switch_latency = 0;
-> +	u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
->  	struct aspm_latency *acceptable;
->  	struct pcie_link_state *link;
->  
-> @@ -456,10 +456,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->  		if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
->  		    (link->latency_dw.l0s > acceptable->l0s))
->  			link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-> +
->  		/*
->  		 * Check L1 latency.
-> -		 * Every switch on the path to root complex need 1
-> -		 * more microsecond for L1. Spec doesn't mention L0s.
-> +		 *
-> +		 * PCIe r5.0, sec 5.4.1.2.2 states:
-> +		 * A Switch is required to initiate an L1 exit transition on its
-> +		 * Upstream Port Link after no more than 1 μs from the beginning of an
-> +		 * L1 exit transition on any of its Downstream Port Links.
->  		 *
->  		 * The exit latencies for L1 substates are not advertised
->  		 * by a device.  Since the spec also doesn't mention a way
-> @@ -469,11 +473,13 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
->  		 * L1 exit latencies advertised by a device include L1
->  		 * substate latencies (and hence do not do any check).
->  		 */
-> -		latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> -		if ((link->aspm_capable & ASPM_STATE_L1) &&
-> -		    (latency + l1_switch_latency > acceptable->l1))
-> -			link->aspm_capable &= ~ASPM_STATE_L1;
-> -		l1_switch_latency += 1000;
-> +		if (link->aspm_capable & ASPM_STATE_L1) {
-> +			latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
-> +			l1_max_latency = max_t(u32, latency, l1_max_latency);
-> +			if (l1_max_latency + l1_switch_latency > acceptable->l1)
-> +				link->aspm_capable &= ~ASPM_STATE_L1;
-> +			l1_switch_latency += 1000;
-> +		}
-
-This is pretty subtle but I *think* the existing code is actually
-correct.  The exit latency of a downstream Link overlaps all except
-1us of the latency of the next upstream Link, so I don't think we have
-to add the total Switch delay to the max Link exit latency.  We only
-have to add the Switch delays downstream of Link X to Link X's exit
-latency.
-
-Also, I think we should accumulate the 1us Switch latency for *all*
-Switches as the existing code does.  For the case where a Switch's
-Upstream Port is L1-capable but the Downstream Port is not, this patch
-doesn't add any l1_switch_latency.  That assumes the Switch can start
-the upstream L1 exit instantly upon receipt of a TLP at the Downstream
-Port.  I think we should assume it takes the same time (up to 1us) to
-start that exit as it would if the Downstream Port were in L1.
-
->  		link = link->parent;
->  	}
-
-My guess is the real problem is the Switch is advertising incorrect
-exit latencies.  If the Switch advertised "<64us" exit latency for its
-Upstream Port, we'd compute "64us exit latency + 1us Switch delay =
-65us", which is more than either 03:00.0 or 04:00.0 can tolerate, so
-we would disable L1 on that upstream Link.
-
-Working around this would require some sort of quirk to override the
-values read from the Switch, which is a little messy.  Here's what I'm
-thinking (not asking you to do this; just trying to think of an
-approach):
-
-  - Configure common clock earlier, in pci_configure_device(), because
-    this changes the "read-only" L1 exit latencies in Link
-    Capabilities.
-
-  - Cache Link Capabilities in the pci_dev.
-
-  - Add a quirk to override the cached values for the Switch based on
-    Vendor/Device ID and probably DMI motherboard/BIOS info.
-
-Bjorn
+> "Count" instead of "numb" is fine by me.
+> >
+> >
+> > >  /**
+> > >   * pci_sriov_configure_simple - helper to configure SR-IOV
+> > >   * @dev: the PCI device
+> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > index 1fd273077637..0fbe291eb0f2 100644
+> > > --- a/drivers/pci/pci.h
+> > > +++ b/drivers/pci/pci.h
+> > > @@ -327,6 +327,9 @@ struct pci_sriov {
+> > >         u16             subsystem_device; /* VF subsystem device */
+> > >         resource_size_t barsz[PCI_SRIOV_NUM_BARS];      /* VF BAR size */
+> > >         bool            drivers_autoprobe; /* Auto probing of VFs by driver */
+> > > +       int             vf_total_msix;  /* Total number of MSI-X vectors the VFs
+> > > +                                        * can consume
+> > > +                                        */
+> > >  };
+> > >
+> > >  /**
+> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > index a17cfc28eb66..fd9ff1f42a09 100644
+> > > --- a/include/linux/pci.h
+> > > +++ b/include/linux/pci.h
+> > > @@ -2074,6 +2074,7 @@ int pci_sriov_get_totalvfs(struct pci_dev *dev);
+> > >  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
+> > >  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
+> > >  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
+> > > +void pci_sriov_set_vf_total_msix(struct pci_dev *dev, int numb);
+> > >
+> > >  /* Arch may override these (weak) */
+> > >  int pcibios_sriov_enable(struct pci_dev *pdev, u16 num_vfs);
+> > > @@ -2114,6 +2115,7 @@ static inline int pci_sriov_get_totalvfs(struct pci_dev *dev)
+> > >  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
+> > >  { return 0; }
+> > >  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
+> > > +static inline void pci_sriov_set_vf_total_msix(struct pci_dev *dev, int numb) {}
+> > >  #endif
+> > >
+> > >  #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
+> > > --
+> > > 2.29.2
+> > >
