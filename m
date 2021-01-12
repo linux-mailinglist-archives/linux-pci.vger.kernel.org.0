@@ -2,281 +2,268 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99DF32F3DB8
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:44:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB5BA2F3DBE
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:44:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438031AbhALVhM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jan 2021 16:37:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437002AbhALUl0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jan 2021 15:41:26 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C63C061575
-        for <linux-pci@vger.kernel.org>; Tue, 12 Jan 2021 12:40:46 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id q22so5430014eja.2
-        for <linux-pci@vger.kernel.org>; Tue, 12 Jan 2021 12:40:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ct93Q3jRetKhaczI+6WcmnjHIFRP3Fo82VEGV+KynCk=;
-        b=T1cZ3JpkSXggl/Jkc5Ldu1myuVwPhCGRR6lqhbhAHv3xS6v+mjC6VwXUiCcBHC25JI
-         sb9pXAcR2De4/gHbvIQK58ATkuAIMTf8m0ZgZE26P2jThxM+b/ywIX6Gu2z+FyH0wWqI
-         8DFVg8H/XJthxJXuQvnTjakrBLaohUIK39TJ9dp1Wu2Tev0vDanE1M6tvq6gbTsrMYZi
-         fRb5OXVvMxBBACwBd5AVcfcv78E2i85gV9iyy6Vtoj0CfpbmHYeTroe17RJ5ajvbGH6H
-         k6CV8KJlnlEiKHnr/nVg+5HGrZtBNr0EowWx6PE5j9SDR6LkSOrpI1J1zsWPXsZ8PQed
-         7L0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ct93Q3jRetKhaczI+6WcmnjHIFRP3Fo82VEGV+KynCk=;
-        b=i9vCipGjmcJ/HX0f1lCROuYvPrhCZWiEuUqXw9j46uo5LALXigafGIytSzt9T+QK80
-         yDr+gzkhosU+DpggleodHBAG2p8RtOk1nq2b1N+P7IDrEnyo8nkk3fnpbGLjBYac4yr5
-         tFMWzxSdyHayqlaow9J6lLEJtfbvM7ndg9nZowYPXRCByujGIpwWT9RuTT+gaZiD6xAX
-         nkFnLYaAJk3BSx3QHfBPKWWKbYVum8J0xMydb7nT5ZLHKVp/UwV9zd+DF+fiTFmxG+vT
-         T8xSjLbwXg7/WN7GPsISRlsT42QROMB/N30/F7TP1qAmNOo+J91NxBloWHjBfCMoxe4N
-         egRw==
-X-Gm-Message-State: AOAM531ihzKmTUbdcJ3gc5G1lHlKl5hfUwmEE+0qo6XoQPnc7G7NP8pg
-        NSOKVnsRm0Xe8yCJVGhQ7YAo9JlEVsui5FkU6s1o6g==
-X-Google-Smtp-Source: ABdhPJzHdcTzIjQRpyGIEfN0AC0DGdj1ibAM+dEAeusNPr+hYVUdYuvlpZNheWMWFHBf12PCInMSBiFgFRDLAzCahKY=
-X-Received: by 2002:a17:907:d8e:: with SMTP id go14mr439401ejc.472.1610484044797;
- Tue, 12 Jan 2021 12:40:44 -0800 (PST)
+        id S2437002AbhALVhN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jan 2021 16:37:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437021AbhALUmp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 12 Jan 2021 15:42:45 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D8DC522DFA;
+        Tue, 12 Jan 2021 20:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610484124;
+        bh=Jx8pGRlLDrjjP+Fq9/Sw3nurTHY381O0KfCYsbhOLjU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hmuhtYsSE/btYpfJ94B8LaWcLD9ErTUIN2+BXv88yC4i3IQBP6xlJ9pCR1vkYjtAy
+         Jm2SUYw0GYpN0ahpJwzopvIERhZcwHEiStN2Iuv97Wqd/ItJDG+zcWinAV1JrtJoAO
+         3JtZPfcsEyJaDsAMDKg7go05aLazEAvAEM6uXb8SAmYO425wplrF9wMjuW88DHKVG0
+         j7JSxZAn/XQ5TpciFJkGfapGzI7njDy4+pSrOSsQZyeSC7RVgUQr81HEnUKcdMAsov
+         g1GyC/c6IuUNjIW47mWiOKajE+mGJ+4HDmLpfzIOlibm4Ko2qURrMlu4zW521dbl/G
+         dKy7eyhxSdaqQ==
+Date:   Tue, 12 Jan 2021 14:42:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ian Kumlien <ian.kumlien@gmail.com>
+Cc:     kai.heng.feng@canonical.com, linux-pci@vger.kernel.org,
+        alexander.duyck@gmail.com, refactormyself@gmail.com,
+        puranjay12@gmail.com
+Subject: Re: [PATCH 1/3] PCI/ASPM: Use the path max in L1 ASPM latency check
+Message-ID: <20210112204202.GA1489918@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210111225121.820014-1-ben.widawsky@intel.com>
- <20210111225121.820014-6-ben.widawsky@intel.com> <20210112191342.00006aad@Huawei.com>
- <20210112192115.vhxjz3cr5vwjshwf@intel.com>
-In-Reply-To: <20210112192115.vhxjz3cr5vwjshwf@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Jan 2021 12:40:35 -0800
-Message-ID: <CAPcyv4iDoFdBn7UkvRpAunLY=TM7vWnH77P3nGKStBfJ9YdwKA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 05/16] cxl/mem: Map memory device registers
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        daniel.lll@alibaba-inc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201024205548.1837770-1-ian.kumlien@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 11:21 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> On 21-01-12 19:13:42, Jonathan Cameron wrote:
-> > On Mon, 11 Jan 2021 14:51:09 -0800
-> > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > > All the necessary bits are initialized in order to find and map the
-> > > register space for CXL Memory Devices. This is accomplished by using the
-> > > Register Locator DVSEC (CXL 2.0 - 8.1.9.1) to determine which PCI BAR to
-> > > use, and how much of an offset from that BAR should be added.
-> > >
-> > > If the memory device registers are found and mapped a new internal data
-> > > structure tracking device state is allocated.
-> > >
-> > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> >
-> > Some issues with managed allocations being manually freed in remove.
-> > It shouldn't be necessary to do that.
-> >
-> > > ---
-> > >  drivers/cxl/cxl.h |  17 ++++++++
-> > >  drivers/cxl/mem.c | 100 +++++++++++++++++++++++++++++++++++++++++++++-
-> > >  drivers/cxl/pci.h |  14 +++++++
-> > >  3 files changed, 130 insertions(+), 1 deletion(-)
-> > >  create mode 100644 drivers/cxl/cxl.h
-> > >
-> > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > new file mode 100644
-> > > index 000000000000..d81d0ba4617c
-> > > --- /dev/null
-> > > +++ b/drivers/cxl/cxl.h
-> > > @@ -0,0 +1,17 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > > +/* Copyright(c) 2020 Intel Corporation. */
-> > > +
-> > > +#ifndef __CXL_H__
-> > > +#define __CXL_H__
-> > > +
-> > > +/**
-> > > + * struct cxl_mem - A CXL memory device
-> > > + * @pdev: The PCI device associated with this CXL device.
-> > > + * @regs: IO mappings to the device's MMIO
-> > > + */
-> > > +struct cxl_mem {
-> > > +   struct pci_dev *pdev;
-> > > +   void __iomem *regs;
-> > > +};
-> > > +
-> > > +#endif
-> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > index 005404888942..8301db34d2ff 100644
-> > > --- a/drivers/cxl/mem.c
-> > > +++ b/drivers/cxl/mem.c
-> > > @@ -5,6 +5,58 @@
-> > >  #include <linux/io.h>
-> > >  #include "acpi.h"
-> > >  #include "pci.h"
-> > > +#include "cxl.h"
-> > > +
-> > > +/**
-> > > + * cxl_mem_create() - Create a new &struct cxl_mem.
-> > > + * @pdev: The pci device associated with the new &struct cxl_mem.
-> > > + * @reg_lo: Lower 32b of the register locator
-> > > + * @reg_hi: Upper 32b of the register locator.
-> > > + *
-> > > + * Return: The new &struct cxl_mem on success, NULL on failure.
-> > > + *
-> > > + * Map the BAR for a CXL memory device. This BAR has the memory device's
-> > > + * registers for the device as specified in CXL specification.
-> > > + */
-> > > +static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
-> > > +                                 u32 reg_hi)
-> > > +{
-> > > +   struct device *dev = &pdev->dev;
-> > > +   struct cxl_mem *cxlm;
-> > > +   void __iomem *regs;
-> > > +   u64 offset;
-> > > +   u8 bar;
-> > > +   int rc;
-> > > +
-> > > +   offset = ((u64)reg_hi << 32) | (reg_lo & CXL_REGLOC_ADDR_MASK);
-> > > +   bar = (reg_lo >> CXL_REGLOC_BIR_SHIFT) & CXL_REGLOC_BIR_MASK;
-> > > +
-> > > +   /* Basic sanity check that BAR is big enough */
-> > > +   if (pci_resource_len(pdev, bar) < offset) {
-> > > +           dev_err(dev, "BAR%d: %pr: too small (offset: %#llx)\n", bar,
-> > > +                   &pdev->resource[bar], (unsigned long long)offset);
-> > > +           return NULL;
-> > > +   }
-> > > +
-> > > +   rc = pcim_iomap_regions(pdev, BIT(bar), pci_name(pdev));
-> > > +   if (rc != 0) {
-> > > +           dev_err(dev, "failed to map registers\n");
-> > > +           return NULL;
-> > > +   }
-> > > +
-> > > +   cxlm = devm_kzalloc(&pdev->dev, sizeof(*cxlm), GFP_KERNEL);
-> > > +   if (!cxlm) {
-> > > +           dev_err(dev, "No memory available\n");
-> > > +           return NULL;
-> > > +   }
-> > > +
-> > > +   regs = pcim_iomap_table(pdev)[bar];
-> > > +   cxlm->pdev = pdev;
-> > > +   cxlm->regs = regs + offset;
-> > > +
-> > > +   dev_dbg(dev, "Mapped CXL Memory Device resource\n");
-> > > +   return cxlm;
-> > > +}
-> > >
-> > >  static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> > >  {
-> > > @@ -33,7 +85,8 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
-> > >  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > >  {
-> > >     struct device *dev = &pdev->dev;
-> > > -   int rc, regloc;
-> > > +   struct cxl_mem *cxlm;
-> > > +   int rc, regloc, i;
-> > >
-> > >     rc = cxl_bus_acquire(pdev);
-> > >     if (rc != 0) {
-> > > @@ -41,15 +94,59 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> > >             return rc;
-> > >     }
-> > >
-> > > +   rc = pcim_enable_device(pdev);
-> > > +   if (rc)
-> > > +           return rc;
-> > > +
-> > >     regloc = cxl_mem_dvsec(pdev, PCI_DVSEC_ID_CXL_REGLOC);
-> > >     if (!regloc) {
-> > >             dev_err(dev, "register location dvsec not found\n");
-> > >             return -ENXIO;
-> > >     }
-> > > +   regloc += 0xc; /* Skip DVSEC + reserved fields */
-> > > +
-> > > +   rc = -ENXIO;
-> > > +   for (i = regloc; i < regloc + 0x24; i += 8) {
-> > > +           u32 reg_lo, reg_hi;
-> > > +           u8 reg_type;
-> > > +
-> > > +           /* "register low and high" contain other bits */
-> > > +           pci_read_config_dword(pdev, i, &reg_lo);
-> > > +           pci_read_config_dword(pdev, i + 4, &reg_hi);
-> > > +
-> > > +           reg_type =
-> > > +                   (reg_lo >> CXL_REGLOC_RBI_SHIFT) & CXL_REGLOC_RBI_MASK;
-> > > +
-> > > +           if (reg_type == CXL_REGLOC_RBI_MEMDEV) {
-> > > +                   rc = 0;
-> > > +                   cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
-> > > +                   if (!cxlm)
-> > > +                           rc = -ENODEV;
-> > > +                   break;
-> > > +           }
-> > > +   }
-> > > +
-> > > +   if (rc)
-> > > +           return rc;
-> > >
-> > > +   pci_set_drvdata(pdev, cxlm);
-> > After below cleanup, not needed yet..
-> >
-> > >     return 0;
-> > >  }
-> > >
-> > > +static void cxl_mem_remove(struct pci_dev *pdev)
-> > > +{
-> > > +   struct cxl_mem *cxlm;
-> > > +
-> > > +   cxlm = pci_get_drvdata(pdev);
-> > > +   if (!cxlm)
-> > > +           return;
-> > > +
-> > > +   kfree(cxlm);
-> >
-> > There is bunch of unwinding here that I'd expect to see in error paths
-> > for probe but it's not there...  Which made me wonder.
-> > So pcim_iounmap_regions is a managed interface, why are call it by
-> > hand?  Same is true of the allocation of cxlm above.  So currently this
-> > remove isn't doing anything useful.
-> >
-> > > +
-> > > +   pcim_iounmap_regions(pdev, ~0);
-> > > +   pci_set_drvdata(pdev, NULL);
-> >
-> > This hasn't been needed for a long time. Example of removal of similar...
-> > http://patchwork.ozlabs.org/project/netdev/patch/005801ceaec1$6b8d3320$42a79960$%25han@samsung.com/
-> >
->
-> Thanks. I copy pasted it from a driver that obviously hasn't been updated yet
-> :-)
->
-> The kfree is still necessary though, right? Earlier in development, I just freed
-> it immediately after creation (this patch is obviously not super useful
-> functionally, but serves nicely for review).
->
-> So we can remove the actual allocation from this patch and move it to later if
-> you think it makes a big difference. My preference is to just leave it doing the
-> kfree and call it good.
+On Sat, Oct 24, 2020 at 10:55:46PM +0200, Ian Kumlien wrote:
+> Make pcie_aspm_check_latency comply with the PCIe spec, specifically:
+> "5.4.1.2.2. Exit from the L1 State"
+> 
+> Which makes it clear that each switch is required to initiate a
+> transition within 1μs from receiving it, accumulating this latency and
+> then we have to wait for the slowest link along the path before
+> entering L0 state from L1.
+> 
+> The current code doesn't take the maximum latency into account.
+> 
+> From the example:
+>    +----------------+
+>    |                |
+>    |  Root complex  |
+>    |                |
+>    |    +-----+     |
+>    |    |32 μs|     |
+>    +----------------+
+>            |
+>            |  Link 1
+>            |
+>    +----------------+
+>    |     |8 μs|     |
+>    |     +----+     |
+>    |    Switch A    |
+>    |     +----+     |
+>    |     |8 μs|     |
+>    +----------------+
+>            |
+>            |  Link 2
+>            |
+>    +----------------+
+>    |    |32 μs|     |
+>    |    +-----+     |
+>    |    Switch B    |
+>    |    +-----+     |
+>    |    |32 μs|     |
+>    +----------------+
+>            |
+>            |  Link 3
+>            |
+>    +----------------+
+>    |     |8μs|      |
+>    |     +---+      |
+>    |   Endpoint C   |
+>    |                |
+>    |                |
+>    +----------------+
+> 
+> Links 1, 2 and 3 are all in L1 state - endpoint C initiates the
+> transition to L0 at time T. Since switch B takes 32 μs to exit L1 on
+> it's ports, Link 3 will transition to L0 at T+32 (longest time
+> considering T+8 for endpoint C and T+32 for switch B).
+> 
+> Switch B is required to initiate a transition from the L1 state on it's
+> upstream port after no more than 1 μs from the beginning of the
+> transition from L1 state on the downstream port. Therefore, transition from
+> L1 to L0 will begin on link 2 at T+1, this will cascade up the path.
+> 
+> The path will exit L1 at T+34.
+> 
+> On my specific system:
+> 03:00.0 Ethernet controller: Intel Corporation I211 Gigabit Network Connection (rev 03)
+> 04:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. Device 816e (rev 1a)
+> 
+>             Exit latency       Acceptable latency
+> Tree:       L1       L0s       L1       L0s
+> ----------  -------  -----     -------  ------
+> 00:01.2     <32 us   -
+> | 01:00.0   <32 us   -
+> |- 02:03.0  <32 us   -
+> | \03:00.0  <16 us   <2us      <64 us   <512ns
+> |
+> \- 02:04.0  <32 us   -
+>   \04:00.0  <64 us   unlimited <64 us   <512ns
+> 
+> 04:00.0's latency is the same as the maximum it allows so as we walk the path
+> the first switchs startup latency will pass the acceptable latency limit
+> for the link, and as a side-effect it fixes my issues with 03:00.0.
 
-devm obviates the need for a cxl_mem_remove() to undo cxl_mem_probe()
-actions. This was all devm clean in v2. The other allocation done in
-the probe path is cxl_memdev() allocation, but that is undone by a
-devm_add_action_or_reset() to unregister the device along with typical
-device reference count rules.
+I don't think this is quite right.  We're looking at the path to
+04:00.0, which includes two Links and one Switch:
+
+The upstream Link:
+  00:01.2 AMD Root Port               L1 Exit Latency <32us
+  01:00.0 AMD Switch Upstream Port    L1 Exit Latency <32us
+
+The downstream Link:
+  02:04.0 AMD Switch Downstream Port  L1 Exit Latency <32us
+  04:00.0 Realtek Endpoint            L1 Exit Latency <64us, Acceptable 64us
+
+If both Links are in L1 and 04:00.0 needs to use the Link at time T,
+I think the following events are relevant:
+
+  T        04:00.0 initiates L1 exit on downstream Link
+  T+1us    01:00.0 initiates L1 exit on upstream Link
+  T+33us   upstream Link is in L0 (32us after initiating exit)
+  T+64us   downstream Link is in L0 (64us after initiating exit)
+
+The upstream Link's L1 exit latency is completely covered by the
+downstream Link's, so 04:00.0 *should* only see its own exit latency
+(64us), which it claims to be able to tolerate.
+
+This patch computes "l1_max_latency + l1_switch_latency", which is
+64us + 1us in this case.  I don't think it's correct to add the 1us
+here because that delay is only relevant to the upstream Link.  We
+should add it to the *upstream Link's* exit latency, but even with
+that, its exit latency is only 33us from 04:00.0's point of view.
+
+> Without this patch, 03:00.0 misbehaves and only gives me ~40 mbit/s over
+> links with 6 or more hops. With this patch I'm back to a maximum of ~933
+> mbit/s.
+> 
+> The original code path did:
+> 04:00:0-02:04.0 max latency 64    -> ok
+> 02:04.0-01:00.0 max latency 32 +1 -> ok
+> 01:00.0-00:01.2 max latency 32 +2 -> ok
+> 
+> And thus didn't see any L1 ASPM latency issues.
+> 
+> The new code does:
+> 04:00:0-02:04.0 max latency 64    -> ok
+> 02:04.0-01:00.0 max latency 64 +1 -> latency exceeded
+> 01:00.0-00:01.2 max latency 64 +2 -> latency exceeded
+> 
+> It correctly identifies the issue.
+> 
+> For reference, pcie information:
+> https://bugzilla.kernel.org/show_bug.cgi?id=209725
+> 
+> Kai-Heng Feng has a machine that will not boot with ASPM without this patch,
+> information is documented here:
+> https://bugzilla.kernel.org/show_bug.cgi?id=209671
+> 
+> Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 22 ++++++++++++++--------
+>  1 file changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 253c30cc1967..c03ead0f1013 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -434,7 +434,7 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
+>  
+>  static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  {
+> -	u32 latency, l1_switch_latency = 0;
+> +	u32 latency, l1_max_latency = 0, l1_switch_latency = 0;
+>  	struct aspm_latency *acceptable;
+>  	struct pcie_link_state *link;
+>  
+> @@ -456,10 +456,14 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  		if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
+>  		    (link->latency_dw.l0s > acceptable->l0s))
+>  			link->aspm_capable &= ~ASPM_STATE_L0S_DW;
+> +
+>  		/*
+>  		 * Check L1 latency.
+> -		 * Every switch on the path to root complex need 1
+> -		 * more microsecond for L1. Spec doesn't mention L0s.
+> +		 *
+> +		 * PCIe r5.0, sec 5.4.1.2.2 states:
+> +		 * A Switch is required to initiate an L1 exit transition on its
+> +		 * Upstream Port Link after no more than 1 μs from the beginning of an
+> +		 * L1 exit transition on any of its Downstream Port Links.
+>  		 *
+>  		 * The exit latencies for L1 substates are not advertised
+>  		 * by a device.  Since the spec also doesn't mention a way
+> @@ -469,11 +473,13 @@ static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+>  		 * L1 exit latencies advertised by a device include L1
+>  		 * substate latencies (and hence do not do any check).
+>  		 */
+> -		latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> -		if ((link->aspm_capable & ASPM_STATE_L1) &&
+> -		    (latency + l1_switch_latency > acceptable->l1))
+> -			link->aspm_capable &= ~ASPM_STATE_L1;
+> -		l1_switch_latency += 1000;
+> +		if (link->aspm_capable & ASPM_STATE_L1) {
+> +			latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
+> +			l1_max_latency = max_t(u32, latency, l1_max_latency);
+> +			if (l1_max_latency + l1_switch_latency > acceptable->l1)
+> +				link->aspm_capable &= ~ASPM_STATE_L1;
+> +			l1_switch_latency += 1000;
+> +		}
+
+This is pretty subtle but I *think* the existing code is actually
+correct.  The exit latency of a downstream Link overlaps all except
+1us of the latency of the next upstream Link, so I don't think we have
+to add the total Switch delay to the max Link exit latency.  We only
+have to add the Switch delays downstream of Link X to Link X's exit
+latency.
+
+Also, I think we should accumulate the 1us Switch latency for *all*
+Switches as the existing code does.  For the case where a Switch's
+Upstream Port is L1-capable but the Downstream Port is not, this patch
+doesn't add any l1_switch_latency.  That assumes the Switch can start
+the upstream L1 exit instantly upon receipt of a TLP at the Downstream
+Port.  I think we should assume it takes the same time (up to 1us) to
+start that exit as it would if the Downstream Port were in L1.
+
+>  		link = link->parent;
+>  	}
+
+My guess is the real problem is the Switch is advertising incorrect
+exit latencies.  If the Switch advertised "<64us" exit latency for its
+Upstream Port, we'd compute "64us exit latency + 1us Switch delay =
+65us", which is more than either 03:00.0 or 04:00.0 can tolerate, so
+we would disable L1 on that upstream Link.
+
+Working around this would require some sort of quirk to override the
+values read from the Switch, which is a little messy.  Here's what I'm
+thinking (not asking you to do this; just trying to think of an
+approach):
+
+  - Configure common clock earlier, in pci_configure_device(), because
+    this changes the "read-only" L1 exit latencies in Link
+    Capabilities.
+
+  - Cache Link Capabilities in the pci_dev.
+
+  - Add a quirk to override the cached values for the Switch based on
+    Vendor/Device ID and probably DMI motherboard/BIOS info.
+
+Bjorn
