@@ -2,82 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E0502F52C3
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 19:57:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00D802F53A3
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 20:53:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbhAMSzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jan 2021 13:55:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44684 "EHLO mail.kernel.org"
+        id S1728555AbhAMTuD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jan 2021 14:50:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbhAMSzn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Jan 2021 13:55:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 644E32222B;
-        Wed, 13 Jan 2021 18:55:02 +0000 (UTC)
+        id S1728512AbhAMTuC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Jan 2021 14:50:02 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B808206C0;
+        Wed, 13 Jan 2021 19:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610564102;
-        bh=yuHsL79Rd3202Hi/UJQF2BDz8BRxCYQuw84DSpJYcDM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UsUMq6YOXYcOu6I4d3KphnjPuEzQGMmMHeCifzbpDARasRxk4mAo64ZTqQA4Ml6FR
-         EphaTP+Ij6RI0+FrIywMXGIbbx4ucGUg07K64nOzp4LwIJz5dJreO8qH8UR+GXttTQ
-         CwdPgg0ZdTs6wXD52cZNNuUy+XUziKZf37i9CZcAVQKi7QeaP+SvM6PpD7ey4o1B7E
-         KHktYPP4zp/gqzP3bTIRDfUVaWQOBSRSOmUoMrAH8iONdbDdSbSg7ohmDVXTfCqEH+
-         HU3xKBwzcKJX/DWX5NYJzGt/5fH6JDLoq55Hz+lyx08LfYYliM/C22f8OwT9Ge9q1X
-         Qe5l2AYkCmWkw==
-Date:   Wed, 13 Jan 2021 12:55:00 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Subject: Re: [RFC 1/1] s390/pci: expose UID checking state in sysfs
-Message-ID: <20210113185500.GA1918216@bjorn-Precision-5520>
+        s=k20201202; t=1610567362;
+        bh=liKrlxPQO3vjDSJyVqFsYCRIjwPMLfx+k+nniFEpqlU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dTB4Oc5o260FgWHCxQiX8+qM0/Py4+y2rjBBS1eZrBMH5AJo3e67kAPdtn2cNMVzA
+         reD4hn2Faeq1CsTrB32fSG85T4OC5sGYlSLTaMuaGL0SAPajHY0q4jaqSE6zLhCaEU
+         JuXVnKjwCygLuwDYWuHt9VwgG0gGubAFq6jyt5lS8tWOYYvqsB/g4q2/BgH/0tmDiM
+         KbbF0zmWyNu3TLDPSwFUdcn2SnOBHdhbkIGVL7PAuJ+HPCRYEJeJoMVO310AFTmfMH
+         H4P5EJJg07VMql2QwSQelTnEabTEpz+B32wRSYm+EHlQm1hqO2g7YgBT90JYcIKW2i
+         jwxVyvIUToYJg==
+Date:   Wed, 13 Jan 2021 21:49:18 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>
+Subject: Re: [PATCH mlx5-next v1 1/5] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+Message-ID: <20210113194918.GJ4678@unreal>
+References: <20210110150727.1965295-1-leon@kernel.org>
+ <20210110150727.1965295-2-leon@kernel.org>
+ <20210113105052.43cf3c15@omen.home.shazbot.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4f5013a1-3dde-1633-a0cc-591fc439e29d@linux.ibm.com>
+In-Reply-To: <20210113105052.43cf3c15@omen.home.shazbot.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 08:47:58AM +0100, Niklas Schnelle wrote:
-> On 1/12/21 10:50 PM, Bjorn Helgaas wrote:
-> > On Mon, Jan 11, 2021 at 10:38:57AM +0100, Niklas Schnelle wrote:
-> >> We use the UID of a zPCI adapter, or the UID of the function zero if
-> >> there are multiple functions in an adapter, as PCI domain if and only if
-> >> UID Checking is turned on.
-> >> Otherwise we automatically generate domains as devices appear.
-> >>
-> >> The state of UID Checking is thus essential to know if the PCI domain
-> >> will be stable, yet currently there is no way to access this information
-> >> from userspace.
-> >> So let's solve this by showing the state of UID checking as a sysfs
-> >> attribute in /sys/bus/pci/uid_checking
+On Wed, Jan 13, 2021 at 10:50:52AM -0700, Alex Williamson wrote:
+> On Sun, 10 Jan 2021 17:07:23 +0200
+> Leon Romanovsky <leon@kernel.org> wrote:
+>
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> >
+> > Extend PCI sysfs interface with a new callback that allows configure
+> > the number of MSI-X vectors for specific SR-IO VF. This is needed
+> > to optimize the performance of newly bound devices by allocating
+> > the number of vectors based on the administrator knowledge of targeted VM.
+> >
+> > This function is applicable for SR-IOV VF because such devices allocate
+> > their MSI-X table before they will run on the VMs and HW can't guess the
+> > right number of vectors, so the HW allocates them statically and equally.
+> >
+> > The newly added /sys/bus/pci/devices/.../vf_msix_vec file will be seen
+> > for the VFs and it is writable as long as a driver is not bounded to the VF.
+> >
+> > The values accepted are:
+> >  * > 0 - this will be number reported by the VF's MSI-X capability
+> >  * < 0 - not valid
+> >  * = 0 - will reset to the device default value
+> >
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > ---
+> >  Documentation/ABI/testing/sysfs-bus-pci | 20 ++++++++
+> >  drivers/pci/iov.c                       | 62 +++++++++++++++++++++++++
+> >  drivers/pci/msi.c                       | 29 ++++++++++++
+> >  drivers/pci/pci-sysfs.c                 |  1 +
+> >  drivers/pci/pci.h                       |  2 +
+> >  include/linux/pci.h                     |  8 +++-
+> >  6 files changed, 121 insertions(+), 1 deletion(-)
 
-> >> +/* Global zPCI attributes */
-> >> +static ssize_t uid_checking_show(struct kobject *kobj,
-> >> +				 struct kobj_attribute *attr, char *buf)
-> >> +{
-> >> +	return sprintf(buf, "%i\n", zpci_unique_uid);
-> >> +}
-> >> +
-> >> +static struct kobj_attribute sys_zpci_uid_checking_attr =
-> >> +	__ATTR(uid_checking, 0444, uid_checking_show, NULL);
-> > 
-> > Use DEVICE_ATTR_RO instead of __ATTR.
-> 
-> It's my understanding that DEVICE_ATTR_* is only for
-> per device attributes. This one is global for the entire
-> Z PCI. I just tried with BUS_ATTR_RO instead
-> and that works but only if I put the attribute at
-> /sys/bus/pci/uid_checking instead of with a zpci
-> subfolder. This path would work for us too, we
-> currently don't have any other global attributes
-> that we are planning to expose but those could of
-> course come up in the future.
+<...>
 
-Ah, I missed the fact that this is a kobj_attribute, not a
-device_attribute.  Maybe KERNEL_ATTR_RO()?  Very few uses so far, but
-seems like it might fit?
+> > +/**
+> > + * pci_set_msix_vec_count - change the reported number of MSI-X vectors
+> > + * This function is applicable for SR-IOV VF because such devices allocate
+> > + * their MSI-X table before they will run on the VMs and HW can't guess the
+> > + * right number of vectors, so the HW allocates them statically and equally.
+> > + * @dev: VF device that is going to be changed
+> > + * @numb: amount of MSI-X vectors
+> > + **/
+> > +int pci_set_msix_vec_count(struct pci_dev *dev, int numb)
+> > +{
+> > +	struct pci_dev *pdev = pci_physfn(dev);
+> > +
+> > +	if (!dev->msix_cap || !pdev->msix_cap)
+> > +		return -EINVAL;
+> > +
+> > +	if (dev->driver || !pdev->driver ||
+> > +	    !pdev->driver->sriov_set_msix_vec_count)
+> > +		return -EOPNOTSUPP;
+>
+>
+> This seems racy, don't we need to hold device_lock on both the VF and
+> PF to avoid driver {un}binding races?  Does that happen implicitly
+> somewhere?  Thanks,
 
-Bjorn
+Yes, you are right absolutely, pdev and dev are not protected here.
+
+Thanks
