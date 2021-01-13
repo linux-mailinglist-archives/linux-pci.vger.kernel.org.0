@@ -2,156 +2,227 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 865D52F5822
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 04:01:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22DB12F580C
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 04:01:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbhANCOj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jan 2021 21:14:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39792 "EHLO mail.kernel.org"
+        id S1728257AbhANCNL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jan 2021 21:13:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729087AbhAMV1N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Jan 2021 16:27:13 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 08C8720DD4;
-        Wed, 13 Jan 2021 21:25:24 +0000 (UTC)
+        id S1725888AbhAMVtK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Jan 2021 16:49:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A018E22B37;
+        Wed, 13 Jan 2021 21:48:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610573125;
-        bh=CnNxb+8yGGrLBAdxm2EQDAH/OEkEdMsqk9sG6FYEJhM=;
+        s=k20201202; t=1610574504;
+        bh=AoAdoj3dhenJpoTSS8I+rn2vHApxce6VRzZdAFQW6Ig=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eLUDRnQEWM7PadLAq9Mxy0LQgQSTTIRG2PFDBR1vmeo59UTtBYUPPzA+x5daVASKK
-         QebCIIOTKjo3xCN5j3hjYDqlvtT4JCvJ6U8deVhBK+/F/AlZZR4tLIWraC0ALEDx19
-         o1Xw6SVLODjDiefwPnbD9yKWmpoF5jyQfSDOnIeTJX16brh7nZjzZ0KtagDMMvf+ru
-         IpOLmHL2eOVgqvIKpWF4tiJzuHCKNK4LnD7vVpd5aLHaWyfnrhHQw35WjqW648Pw4C
-         8fMjICRch3UpWJzLjx4eWAZKjF/oQYLZg490gUlbHgioBxaabEzeLCWjii3rsLlAbb
-         k8DS5SP1imY7g==
-Date:   Wed, 13 Jan 2021 15:25:23 -0600
+        b=arwcqJkVdMSnlMHpeSZTgD6Dpr64G//8Yhz9ThDmwNespzgCt+1h+lf+4dczNb6Qj
+         iF+L8jVjOZXK9mfTtcTDBipxdMWZs6E93Fn+0mlMAoVkCz08eDDugicd3KuRTzEIGo
+         kPoceFbmSfb3btrKL3I2y14Q+tVkA9XDaEyN3zu+JBf+OGn5pt46GcJC6yVJJZ2tgQ
+         3D30SraIoJp0tFXZFpTyb3kPF2+ioNNCMIzgJxkGwg0ghfMjqjbmTdZqS4PO9gIx8H
+         3lBZ1rwCItkBAgGEx6ZYjfTH4i0CMQoSJ9GQwOBj/RkpOeykeurlun8L9xnDkftJnb
+         pnAHn73lYeTdw==
+Date:   Wed, 13 Jan 2021 15:48:22 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Lennert Buytenhek <kernel@wantstofly.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v3 1/3] PCI: Disable parity checking if broken_parity is
- set
-Message-ID: <20210113212523.GA1933362@bjorn-Precision-5520>
+To:     Victor Ding <victording@google.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        linux-mmc@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 2/2] mmc: sdhci-pci-gli: Disable ASPM during a suspension
+Message-ID: <20210113214822.GA1923207@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e9c5b3a-f239-8d8d-08e5-015ec38dd3a0@gmail.com>
+In-Reply-To: <CANqTbdYYSAvpzN2oaPSb2PUCE=rssj19GueTZmkvmukQWj9vUw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 09:52:23PM +0100, Heiner Kallweit wrote:
-> On 06.01.2021 20:34, Heiner Kallweit wrote:
-> > On 06.01.2021 20:22, Bjorn Helgaas wrote:
-> >> On Wed, Jan 06, 2021 at 06:50:22PM +0100, Heiner Kallweit wrote:
-> >>> If we know that a device has broken parity checking, then disable it.
-> >>> This avoids quirks like in r8169 where on the first parity error
-> >>> interrupt parity checking will be disabled if broken_parity_status
-> >>> is set. Make pci_quirk_broken_parity() public so that it can be used
-> >>> by platform code, e.g. for Thecus N2100.
-> >>>
-> >>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> >>> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
-> >>
-> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> >>
-> >> This series should all go together.  Let me know if you want me to do
-> >> anything more (would require acks for arm and r8169, of course).
-> >>
-> > Right. For r8169 I'm the maintainer myself and agreed with Jakub that
-> > the r8169 patch will go through the PCI tree.
-> > 
-> > Regarding the arm/iop32x part:
-> > MAINTAINERS file lists Lennert as maintainer, let me add him.
-> > Strange thing is that the MAINTAINERS entry for arm/iop32x has no
-> > F entry, therefore the get_maintainers scripts will never list him
-> > as addressee. The script lists Russell as "odd fixer".
-> > @Lennert: Please provide a patch to add the missing F entry.
-> > 
-> > ARM/INTEL IOP32X ARM ARCHITECTURE
-> > M:	Lennert Buytenhek <kernel@wantstofly.org>
-> > L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> > S:	Maintained
-> 
-> Bjorn, I saw that you set the series to "not applicable". Is this because
-> of the missing ack for the arm part?
+[+cc Rafael, suspend/resume expert]
 
-No, it's because I screwed up.  I use "not applicable" when I expect
-patches to go via another tree.  I just missed your note about merging
-via the PCI tree.  I'll take a look soon.
+On Wed, Jan 13, 2021 at 01:16:23PM +1100, Victor Ding wrote:
+> On Wed, Jan 13, 2021 at 9:38 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Jan 12, 2021 at 04:02:05AM +0000, Victor Ding wrote:
+> > > GL9750 has a 3100us PortTPowerOnTime; however, it enters L1.2 after
+> > > only ~4us inactivity per PCIe trace. During a suspend/resume process,
+> > > PCI access operations are frequently longer than 4us apart.
+> > > Therefore, the device frequently enters and leaves L1.2 during this
+> > > process, causing longer than desirable suspend/resume time. The total
+> > > time cost due to this L1.2 exit latency could add up to ~200ms.
+> > >
+> > > Considering that PCI access operations are fairly close to each other
+> > > (though sometimes > 4us), the actual time the device could stay in
+> > > L1.2 is negligible. Therefore, the little power-saving benefit from
+> > > ASPM during suspend/resume does not overweight the performance
+> > > degradation caused by long L1.2 exit latency.
+> > >
+> > > Therefore, this patch proposes to disable ASPM during a suspend/resume
+> > > process.
+> >
+> > This sounds like an interesting idea, but it doesn't seem like
+> > anything that's really device-dependent.  Drivers should not need to
+> > be involved in PCI configuration at this level, and they shouldn't
+> > read/write registers like PCI_EXP_LNKCTL directly.
+> >
+> > If we need to disable ASPM during suspend, I'd rather do it in the PCI
+> > core so all devices can benefit and drivers don't need to worry about
+> > it.
+> >
+> Good point. In theory all devices could encounter this issue, and it
+> more-likely occurs on those with low entry timer but high exit latency.
+> GL9750 is the only one I have access to that has such characteristics.
+> 
+> I think we should have ASPM disabled during suspend, or at least part
+> of the suspend process*, mainly for two reasons:
+> 1. Power saving is expected to be little. During suspend/resume, we
+>     frequently access PCI registers, making it unlikely to stay in low
+>     power states;
+> 2. It could cause performance degradation. Unfortunate timing could
+>     put the device into low power states and wake it up very soon after;
+>     resulting noticeable delays.
+> * By "part if the suspend process", I refer [suspend/resume]_noirq, where
+> there are frequent PCI register accesses and suffers most from this issue.
+> 
+> Ideally, the entry time could be tune so that it is long enough that the
+> device would not go into low power states during suspend; however, it
+> may not be feasible mainly because:
+> 1. Hardware limitations;
+> 2. The best timing for suspend/resume may not be the best timing for other
+>     tasks. Considering suspend/resume is a rare task, we probably do not
+>     want to sacrifice other tasks;
+> 3. If the goal is to avoid entering low power states during suspend, it might
+>     be better just to disable it.
+> 
+> What do you think?
 
-> I checked and Lennert's last kernel contribution is from 2015. Having said
-> that the maintainer's entry may be outdated. Not sure who else would be
-> entitled to ack this patch. The change is simple enough, could you take
-> it w/o an ack? 
-> Alternatively, IIRC Russell has got such a device. Russell, would it
-> be possible that you test that there's still no false-positive parity
-> errors with this series?
-> 
-> 
-> > 
-> >>> ---
-> >>>  drivers/pci/quirks.c | 17 +++++++++++------
-> >>>  include/linux/pci.h  |  2 ++
-> >>>  2 files changed, 13 insertions(+), 6 deletions(-)
-> >>>
-> >>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> >>> index 653660e3b..ab54e26b8 100644
-> >>> --- a/drivers/pci/quirks.c
-> >>> +++ b/drivers/pci/quirks.c
-> >>> @@ -205,17 +205,22 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
-> >>>  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
-> >>>  				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
-> >>>  
-> >>> +void pci_quirk_broken_parity(struct pci_dev *dev)
-> >>> +{
-> >>> +	u16 cmd;
-> >>> +
-> >>> +	dev->broken_parity_status = 1;	/* This device gives false positives */
-> >>> +	pci_read_config_word(dev, PCI_COMMAND, &cmd);
-> >>> +	pci_write_config_word(dev, PCI_COMMAND, cmd & ~PCI_COMMAND_PARITY);
-> >>> +}
-> >>> +
-> >>>  /*
-> >>>   * The Mellanox Tavor device gives false positive parity errors.  Mark this
-> >>>   * device with a broken_parity_status to allow PCI scanning code to "skip"
-> >>>   * this now blacklisted device.
-> >>>   */
-> >>> -static void quirk_mellanox_tavor(struct pci_dev *dev)
-> >>> -{
-> >>> -	dev->broken_parity_status = 1;	/* This device gives false positives */
-> >>> -}
-> >>> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, quirk_mellanox_tavor);
-> >>> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, quirk_mellanox_tavor);
-> >>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, pci_quirk_broken_parity);
-> >>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, pci_quirk_broken_parity);
-> >>>  
-> >>>  /*
-> >>>   * Deal with broken BIOSes that neglect to enable passive release,
-> >>> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> >>> index b32126d26..161dcc474 100644
-> >>> --- a/include/linux/pci.h
-> >>> +++ b/include/linux/pci.h
-> >>> @@ -1916,6 +1916,8 @@ enum pci_fixup_pass {
-> >>>  	pci_fixup_suspend_late,	/* pci_device_suspend_late() */
-> >>>  };
-> >>>  
-> >>> +void pci_quirk_broken_parity(struct pci_dev *dev);
-> >>> +
-> >>>  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-> >>>  #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
-> >>>  				    class_shift, hook)			\
-> >>> -- 
-> >>> 2.30.0
-> >>>
-> >>>
-> >>>
-> > 
-> 
+I think we should look at disabling ASPM for all devices during
+suspend.  I really don't want to put this kind of gunk in individual
+drivers.  If we *have* to put something in drivers, it should be using
+interfaces like pci_disable_link_state() instead of writing
+PCI_EXP_LNKCTL directly.
+
+I *would* be interested in more details about this issue you're seeing
+with GS9750, though.  It will help the case for a core change if we
+can open a bugzilla.kernel.org issue with some of the details like the
+L1 exit latency (from "lspci -vv") and details of the activities that
+lead to these delays.  Typical L1 exit latencies are <100us, so to see
+200ms of delay would mean ~2000 L1.2 exits, which is higher than I
+would expect.
+
+> > > Signed-off-by: Victor Ding <victording@google.com>
+> > > ---
+> > >
+> > >  drivers/mmc/host/sdhci-pci-core.c |  2 +-
+> > >  drivers/mmc/host/sdhci-pci-gli.c  | 46 +++++++++++++++++++++++++++++--
+> > >  drivers/mmc/host/sdhci-pci.h      |  1 +
+> > >  3 files changed, 46 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
+> > > index 9552708846ca..fd7544a498c0 100644
+> > > --- a/drivers/mmc/host/sdhci-pci-core.c
+> > > +++ b/drivers/mmc/host/sdhci-pci-core.c
+> > > @@ -67,7 +67,7 @@ static int sdhci_pci_init_wakeup(struct sdhci_pci_chip *chip)
+> > >       return 0;
+> > >  }
+> > >
+> > > -static int sdhci_pci_suspend_host(struct sdhci_pci_chip *chip)
+> > > +int sdhci_pci_suspend_host(struct sdhci_pci_chip *chip)
+> > >  {
+> > >       int i, ret;
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
+> > > index 9887485a4134..c7b788b0e22e 100644
+> > > --- a/drivers/mmc/host/sdhci-pci-gli.c
+> > > +++ b/drivers/mmc/host/sdhci-pci-gli.c
+> > > @@ -109,6 +109,12 @@
+> > >
+> > >  #define GLI_MAX_TUNING_LOOP 40
+> > >
+> > > +#ifdef CONFIG_PM_SLEEP
+> > > +struct gli_host {
+> > > +     u16 linkctl_saved;
+> > > +};
+> > > +#endif
+> > > +
+> > >  /* Genesys Logic chipset */
+> > >  static inline void gl9750_wt_on(struct sdhci_host *host)
+> > >  {
+> > > @@ -577,14 +583,48 @@ static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
+> > >  }
+> > >
+> > >  #ifdef CONFIG_PM_SLEEP
+> > > +static int sdhci_pci_gli_suspend(struct sdhci_pci_chip *chip)
+> > > +{
+> > > +     int ret;
+> > > +     struct sdhci_pci_slot *slot = chip->slots[0];
+> > > +     struct pci_dev *pdev = slot->chip->pdev;
+> > > +     struct gli_host *gli_host = sdhci_pci_priv(slot);
+> > > +
+> > > +     ret = pcie_capability_read_word(pdev, PCI_EXP_LNKCTL,
+> > > +                     &gli_host->linkctl_saved);
+> > > +     if (ret)
+> > > +             goto exit;
+> > > +
+> > > +     ret = pcie_capability_write_word(pdev, PCI_EXP_LNKCTL,
+> > > +                     gli_host->linkctl_saved & ~PCI_EXP_LNKCTL_ASPMC);
+> > > +     if (ret)
+> > > +             goto exit;
+> > > +
+> > > +     ret = sdhci_pci_suspend_host(chip);
+> > > +
+> > > +exit:
+> > > +     return ret;
+> > > +}
+> > > +
+> > >  static int sdhci_pci_gli_resume(struct sdhci_pci_chip *chip)
+> > >  {
+> > > +     int ret;
+> > >       struct sdhci_pci_slot *slot = chip->slots[0];
+> > > +     struct pci_dev *pdev = slot->chip->pdev;
+> > > +     struct gli_host *gli_host = sdhci_pci_priv(slot);
+> > >
+> > > -     pci_free_irq_vectors(slot->chip->pdev);
+> > > +     pci_free_irq_vectors(pdev);
+> > >       gli_pcie_enable_msi(slot);
+> > >
+> > > -     return sdhci_pci_resume_host(chip);
+> > > +     ret = sdhci_pci_resume_host(chip);
+> > > +     if (ret)
+> > > +             goto exit;
+> > > +
+> > > +     ret = pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+> > > +                     PCI_EXP_LNKCTL_ASPMC, gli_host->linkctl_saved);
+> > > +
+> > > +exit:
+> > > +     return ret;
+> > >  }
+> > >
+> > >  static int sdhci_cqhci_gli_resume(struct sdhci_pci_chip *chip)
+> > > @@ -834,7 +874,9 @@ const struct sdhci_pci_fixes sdhci_gl9750 = {
+> > >       .probe_slot     = gli_probe_slot_gl9750,
+> > >       .ops            = &sdhci_gl9750_ops,
+> > >  #ifdef CONFIG_PM_SLEEP
+> > > +     .suspend        = sdhci_pci_gli_suspend,
+> > >       .resume         = sdhci_pci_gli_resume,
+> > > +     .priv_size      = sizeof(struct gli_host),
+> > >  #endif
+> > >  };
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
+> > > index d0ed232af0eb..16187a265e63 100644
+> > > --- a/drivers/mmc/host/sdhci-pci.h
+> > > +++ b/drivers/mmc/host/sdhci-pci.h
+> > > @@ -187,6 +187,7 @@ static inline void *sdhci_pci_priv(struct sdhci_pci_slot *slot)
+> > >  }
+> > >
+> > >  #ifdef CONFIG_PM_SLEEP
+> > > +int sdhci_pci_suspend_host(struct sdhci_pci_chip *chip);
+> > >  int sdhci_pci_resume_host(struct sdhci_pci_chip *chip);
+> > >  #endif
+> > >  int sdhci_pci_enable_dma(struct sdhci_host *host);
+> > > --
+> > > 2.30.0.284.gd98b1dd5eaa7-goog
+> > >
