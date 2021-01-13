@@ -2,181 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC6D02F5869
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 04:02:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A22A42F5864
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 04:02:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbhANCTC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jan 2021 21:19:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728991AbhAMUyy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jan 2021 15:54:54 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEE7C061786;
-        Wed, 13 Jan 2021 12:52:31 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id c124so2790851wma.5;
-        Wed, 13 Jan 2021 12:52:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XzR+bZaWiVntItapmbJT7hixkAXKLBUEq7gHIsoczCo=;
-        b=Dh8muhmAKWVRALQMPwOWhXVAd4O40LKtqtcoiGaw58Im+vayl6yRd3SOxBUi0aCZPp
-         GYWW7ZHrnpd4gA9XUZkfMiPkhz9krKoUhUDB+25BSXZYC7prJqh6cVxhkpIHyp/7Q18N
-         s6KDAdG2E/o9XNfrbefb/YSqXeGNAAsIrF3g8yotju61avWPCO/Yob+JWkzJCf/NWPxH
-         mexpQ7rU5E7Kg3/10GBEzcflIdy++iJh6dbm1ptNiffnI72lp+skIcHDrURGdBTCVfIL
-         LFYEmX0sohItYtHK5pn3DCMpelbz+FiKT+8I1QUXugRPLULKT/mc2uRbHSdGYcIvC7qS
-         vYAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XzR+bZaWiVntItapmbJT7hixkAXKLBUEq7gHIsoczCo=;
-        b=Sr8XXqXD6W85XdIJHTcvqpPXMDRHjcebU+f+rmOzGvaltLerd7L6Z2AfpyaqmFhdhL
-         OkBwUm2GhhRqKhiN8xEW0zCUmhZZeYUoZz0Jdw4AIYj6vRQW+jVjcHScmEvowo86Q4PM
-         VpVCRiE9ABb+co+DNPbpcFrqnnOAdGOtzn56Lygt0rSSPF3B7us7TVQDEwZxHCg5xwCa
-         tTdaSiOP+bcbJC98U7EXmqHc7Y44SLRS7jWnjqY6/Yyxl7x0h9WoCNK7jA/hLv6EOmaQ
-         noQv7Vj4pt3FVc/VSlKI08f+wB6dY3nc/AZCpn3uU1XnXeHpZLk9XisXiD1RrRrXHH2g
-         5L2g==
-X-Gm-Message-State: AOAM531nuztABtYAg8WBeWpvuKO1vT7DK+PcO69rUFJVaGS/Vgb8WLj7
-        HtAE6EfVwvbs2PGGzhq/At6yJXC0u7E=
-X-Google-Smtp-Source: ABdhPJxkGmBTESYXWorIndm/GuiGjUhdjyALJag8TFWm+IY7xSWtIlt21TomtfAHyuWb0u90wZkehw==
-X-Received: by 2002:a7b:c849:: with SMTP id c9mr907463wml.11.1610571149816;
-        Wed, 13 Jan 2021 12:52:29 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f06:5500:391b:9f3f:c40b:cb6d? (p200300ea8f065500391b9f3fc40bcb6d.dip0.t-ipconnect.de. [2003:ea:8f06:5500:391b:9f3f:c40b:cb6d])
-        by smtp.googlemail.com with ESMTPSA id x66sm4686731wmg.26.2021.01.13.12.52.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Jan 2021 12:52:29 -0800 (PST)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Realtek linux nic maintainers <nic_swsd@realtek.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20210106192233.GA1329080@bjorn-Precision-5520>
- <768d90a3-93ea-1f4e-f4e0-e039933bc17b@gmail.com>
-Subject: Re: [PATCH v3 1/3] PCI: Disable parity checking if broken_parity is
- set
-Message-ID: <8e9c5b3a-f239-8d8d-08e5-015ec38dd3a0@gmail.com>
-Date:   Wed, 13 Jan 2021 21:52:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S1727293AbhANCSf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jan 2021 21:18:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728763AbhAMVE0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Jan 2021 16:04:26 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D7D4521D95;
+        Wed, 13 Jan 2021 20:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610571276;
+        bh=kJuETQaVMNcw8dbfJHqaFfpm2JkbaqeCXrQ+kZZ8lOc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=dkzE6zbnUkZwTPhDe65zzJcarln1ss0SZgbyCpBpSamUw56a/LPjGlvFlOXQL7MDl
+         YWgNWyN3gSuHa3WcCjVrd0fcNt1Z/c6q22wHPBv5j/Nwwh/WyWkOrmol60Ah1OgxLj
+         JjN8XBEGP9tQi09R4knorUPXRc4lIuQ1y+o9FPuIElVeXRMX86UvW+vu7rXbw3xktM
+         jlQHmrXNkCZwh52RIe9fRRLDLb2zWiKa4ubUVBjgPFAKnk89g7SNTDAxz2SUMD76tF
+         APU/F8L+LZarG6mWGFLDSPNaGBrvOz+JdZKjDUkcBvsza7ZIDsEqiiGSETcTvy8AQA
+         Kx7lZHDd9NJiA==
+Date:   Wed, 13 Jan 2021 14:54:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Victor Ding <victording@google.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Alex Levin <levinale@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Subject: Re: [PATCH 1/2] PCI/ASPM: Disable ASPM until its LTR and L1ss state
+ is restored
+Message-ID: <20210113205434.GA1926338@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <768d90a3-93ea-1f4e-f4e0-e039933bc17b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANqTbdb4gZYQUAZzatwymy-S9Ajb=PhfP53_D2TYLJp0zw4HxQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06.01.2021 20:34, Heiner Kallweit wrote:
-> On 06.01.2021 20:22, Bjorn Helgaas wrote:
->> On Wed, Jan 06, 2021 at 06:50:22PM +0100, Heiner Kallweit wrote:
->>> If we know that a device has broken parity checking, then disable it.
->>> This avoids quirks like in r8169 where on the first parity error
->>> interrupt parity checking will be disabled if broken_parity_status
->>> is set. Make pci_quirk_broken_parity() public so that it can be used
->>> by platform code, e.g. for Thecus N2100.
->>>
->>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
->>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->> This series should all go together.  Let me know if you want me to do
->> anything more (would require acks for arm and r8169, of course).
->>
-> Right. For r8169 I'm the maintainer myself and agreed with Jakub that
-> the r8169 patch will go through the PCI tree.
-> 
-> Regarding the arm/iop32x part:
-> MAINTAINERS file lists Lennert as maintainer, let me add him.
-> Strange thing is that the MAINTAINERS entry for arm/iop32x has no
-> F entry, therefore the get_maintainers scripts will never list him
-> as addressee. The script lists Russell as "odd fixer".
-> @Lennert: Please provide a patch to add the missing F entry.
-> 
-> ARM/INTEL IOP32X ARM ARCHITECTURE
-> M:	Lennert Buytenhek <kernel@wantstofly.org>
-> L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> S:	Maintained
-> 
+On Wed, Jan 13, 2021 at 01:16:05PM +1100, Victor Ding wrote:
+> On Wed, Jan 13, 2021 at 9:32 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Jan 12, 2021 at 04:02:04AM +0000, Victor Ding wrote:
+> > > Right after powering up, the device may have ASPM enabled; however,
+> > > its LTR and/or L1ss controls may not be in the desired states; hence,
+> > > the device may enter L1.2 undesirably and cause resume performance
+> > > penalty. This is especially problematic if ASPM related control
+> > > registers are modified before a suspension.
+> >
+> > s/L1ss/L1SS/ (several occurrences) to match existing usage.
+> >
+> I'll update it in the next version.
+> >
+> > > Therefore, ASPM should disabled until its LTR and L1ss states are
+> > > fully restored.
+> > >
+> > > Signed-off-by: Victor Ding <victording@google.com>
+> > > ---
+> > >
+> > >  drivers/pci/pci.c       | 11 +++++++++++
+> > >  drivers/pci/pci.h       |  2 ++
+> > >  drivers/pci/pcie/aspm.c |  2 +-
+> > >  3 files changed, 14 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index eb323af34f1e..428de433f2e6 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -1660,6 +1660,17 @@ void pci_restore_state(struct pci_dev *dev)
+> > >       if (!dev->state_saved)
+> > >               return;
+> > >
+> > > +     /*
+> > > +      * Right after powering up, the device may have ASPM enabled;
+> >
+> > I think this could be stated more precisely.  "Right after powering
+> > up," ASPM should be *disabled* because ASPM Control in the Link
+> > Control register powers up as zero (disabled).
+> >
+> Good suggestion; I'll reword in the next version.
+> However, ASPM should be *disabled* for the opposite reason - ASPM Control
+> in the Link Control register *may* power as non-zero (enabled).
+> (More answered in the next section)
+> >
+> > > +      * however, its LTR and/or L1ss controls may not be in the desired
+> > > +      * states; as a result, the device may enter L1.2 undesirably and
+> > > +      * cause resume performance penalty.
+> > > +      * Therefore, ASPM is disabled until its LTR and L1ss states are
+> > > +      * fully restored.
+> > > +      * (enabling ASPM is part of pci_restore_pcie_state)
+> >
+> > If we're enabling L1.2 before LTR has been configured, that's
+> > definitely a bug.  But I don't see how that happens.  The current code
+> > looks like:
+> >
+> >   pci_restore_state
+> >     pci_restore_ltr_state
+> >       pci_write_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap++)
+> >       pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++)
+> >     pci_restore_aspm_l1ss_state
+> >       pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++)
+> >     pci_restore_pcie_state
+> >       pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++])
+> >
+> > We *do* restore PCI_L1SS_CTL1, which contains "ASPM L1.2 Enable",
+> > before we restore PCI_EXP_LNKCTL, which contains "ASPM Control", but I
+> > don't think "ASPM L1.2 Enable" by itself should be enough to allow
+> > hardware to enter L1.2.
+> >
+> > Reading PCIe r5.0, sec 5.5.1, it seems like hardware should ignore the
+> > PCI_L1SS_CTL1 bits unless ASPM L1 entry is enabled in PCI_EXP_LNKCTL.
+> >
+> > What am I missing?
+> >
+> Correct; however, PCI_EXP_LNKCTL may power up as non-zero, i.e. has
+> ASPM Control enabled. BIOS may set PCI_EXP_LNKCTL (and
+> PCI_L1SS_CTL1) before Kernel takes control. When BIOS does so, there
+> is a brief period between powering up and Kernel restoring LTR state
+> that L1.2 is enabled but LTR isn't configured.
 
-Bjorn, I saw that you set the series to "not applicable". Is this because
-of the missing ack for the arm part?
-I checked and Lennert's last kernel contribution is from 2015. Having said
-that the maintainer's entry may be outdated. Not sure who else would be
-entitled to ack this patch. The change is simple enough, could you take
-it w/o an ack? 
-Alternatively, IIRC Russell has got such a device. Russell, would it
-be possible that you test that there's still no false-positive parity
-errors with this series?
+IIUC you're saying that ASPM Control powers up as zero, but BIOS
+enables ASPM before transferring control to the OS.  That makes sense,
+but I wouldn't describe that as "the device powering up with ASPM
+enabled."
 
-
-> 
->>> ---
->>>  drivers/pci/quirks.c | 17 +++++++++++------
->>>  include/linux/pci.h  |  2 ++
->>>  2 files changed, 13 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->>> index 653660e3b..ab54e26b8 100644
->>> --- a/drivers/pci/quirks.c
->>> +++ b/drivers/pci/quirks.c
->>> @@ -205,17 +205,22 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
->>>  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
->>>  				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
->>>  
->>> +void pci_quirk_broken_parity(struct pci_dev *dev)
->>> +{
->>> +	u16 cmd;
->>> +
->>> +	dev->broken_parity_status = 1;	/* This device gives false positives */
->>> +	pci_read_config_word(dev, PCI_COMMAND, &cmd);
->>> +	pci_write_config_word(dev, PCI_COMMAND, cmd & ~PCI_COMMAND_PARITY);
->>> +}
->>> +
->>>  /*
->>>   * The Mellanox Tavor device gives false positive parity errors.  Mark this
->>>   * device with a broken_parity_status to allow PCI scanning code to "skip"
->>>   * this now blacklisted device.
->>>   */
->>> -static void quirk_mellanox_tavor(struct pci_dev *dev)
->>> -{
->>> -	dev->broken_parity_status = 1;	/* This device gives false positives */
->>> -}
->>> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, quirk_mellanox_tavor);
->>> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, quirk_mellanox_tavor);
->>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, pci_quirk_broken_parity);
->>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, pci_quirk_broken_parity);
->>>  
->>>  /*
->>>   * Deal with broken BIOSes that neglect to enable passive release,
->>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>> index b32126d26..161dcc474 100644
->>> --- a/include/linux/pci.h
->>> +++ b/include/linux/pci.h
->>> @@ -1916,6 +1916,8 @@ enum pci_fixup_pass {
->>>  	pci_fixup_suspend_late,	/* pci_device_suspend_late() */
->>>  };
->>>  
->>> +void pci_quirk_broken_parity(struct pci_dev *dev);
->>> +
->>>  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
->>>  #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
->>>  				    class_shift, hook)			\
->>> -- 
->>> 2.30.0
->>>
->>>
->>>
-> 
-
+If BIOS enables L1SS (specifically, if it enables L1.2) when LTR
+hasn't been configured, that sounds like a BIOS defect.
