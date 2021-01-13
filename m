@@ -2,113 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4057F2F4052
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 01:47:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81B392F419F
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 03:18:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbhALXdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 12 Jan 2021 18:33:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41986 "EHLO
+        id S1727835AbhAMCRa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 12 Jan 2021 21:17:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730434AbhALXdR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jan 2021 18:33:17 -0500
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5461FC061575;
-        Tue, 12 Jan 2021 15:32:37 -0800 (PST)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EA6A623E4A;
-        Wed, 13 Jan 2021 00:32:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1610494353;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PFsxw06cYzHFDF+jM+1/5pVhYtFlwy+Z9PRS2LOJagY=;
-        b=F6fpOxOzj4zkHzMyVbOFiaJiUJBm1ZZHJIMw5oVwTI+XkMNKG4EE26hv49d91oKOeUgit6
-        Pg6XoNl+92I/AEnux8fqy25HdwLPFIh9x2Bv3csVwKXz5A+CqCcE2dZTm8//qafNPsUkZC
-        1I7NAIzEM6uu2RzxOm2wv6ppuQ6wDBE=
+        with ESMTP id S1727829AbhAMCR3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 12 Jan 2021 21:17:29 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600F9C061575
+        for <linux-pci@vger.kernel.org>; Tue, 12 Jan 2021 18:16:43 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id u25so492420lfc.2
+        for <linux-pci@vger.kernel.org>; Tue, 12 Jan 2021 18:16:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rv4WHoorKcMMwhd//npkAorfZIWJ3XEBWCkV0kYCKfA=;
+        b=puh0Nzdk9rfZREUiPzO88kJc1hVOSWKhpMsUC23cZUr+aExaQDnjkRWzBjNPAoGBHv
+         Na8UBNkdm2DDupak7xiWYeu4s+qzInjUK70uVkKUqWdoG8INjz5VGOz95ZORY4939Z2a
+         Q8PBa1M+qkGETbeY3MU70Q/9uBxVL0yafW+DunaU+vIgjjWzKo6RCS/ZmUmxhaTP0PrQ
+         s7wbb9tcv6i5/+foQt28fzq0MAOuEEHh4AAjMyZpXnKYodSIydc3DsUTQkh3wAnM6994
+         VatKLIbn0Cdq213f0RJTOZcQYLf152zT0tbcsf27ueXqNs5NiBi+8DdVAAtDHHlSyGFx
+         NFFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rv4WHoorKcMMwhd//npkAorfZIWJ3XEBWCkV0kYCKfA=;
+        b=HY1eE7dX43MaoOV4ikVdWGodmIOoLd03ewmB02yl2nR3DXYg5MfFk1kjA3j6/rz2/c
+         WNRyl0YdRJFiKh6yxkAJeTz6qrN/Gzyznv3XL18OMCMSDiJhftyxpRgDl1rjJP1iLe8l
+         4rqJ3jZ+yVAYH0rjRFQVXVs6qFtRZ9ScqFjG0YqAv8ac8NyMqm+51uSgc9Ol9JftIrnS
+         qoGEqJJBz3ZDdluz5C6IVvDCwrIEFRGy4c2dPJp9fAcx0ORuif0suhe0wOQgFbYW1++N
+         LLLR4kqK4QGwk2KG3r8I5Mv20HTjlhuYAVNPhTGbGp/fWpsJkfEkCnpaymj4STaVIUvY
+         v4nA==
+X-Gm-Message-State: AOAM533CNKajyLWrrRAAMzt6rNEkXEvPW0PdujA1z/VMKvnxx14dEk3x
+        d8zEXVGS470LFNLL+Nz9TF+SQpnGLz1c2aThTMvWiQ==
+X-Google-Smtp-Source: ABdhPJzcZTCOKqEWiKtOr3cqY8dpySVBaWHsu2PluaCbkbwShxS7CdHAVkVEzJfg0NN2gxF+S8ns1gn3jF3wShPu/RE=
+X-Received: by 2002:ac2:5472:: with SMTP id e18mr761103lfn.489.1610504201634;
+ Tue, 12 Jan 2021 18:16:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 13 Jan 2021 00:32:32 +0100
-From:   Michael Walle <michael@walle.cc>
+References: <20210112040146.1.I9aa2b9dd39a6ac9235ec55a8c56020538aa212fb@changeid>
+ <20210112223228.GA1857596@bjorn-Precision-5520>
+In-Reply-To: <20210112223228.GA1857596@bjorn-Precision-5520>
+From:   Victor Ding <victording@google.com>
+Date:   Wed, 13 Jan 2021 13:16:05 +1100
+Message-ID: <CANqTbdb4gZYQUAZzatwymy-S9Ajb=PhfP53_D2TYLJp0zw4HxQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI/ASPM: Disable ASPM until its LTR and L1ss state
+ is restored
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Alex Levin <levinale@google.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
-In-Reply-To: <20210112225802.GA1859984@bjorn-Precision-5520>
-References: <20210112225802.GA1859984@bjorn-Precision-5520>
-User-Agent: Roundcube Webmail/1.4.10
-Message-ID: <3b101fff85ec1c490e9a14305a999cbe@walle.cc>
-X-Sender: michael@walle.cc
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 2021-01-12 23:58, schrieb Bjorn Helgaas:
-> On Sat, Jan 09, 2021 at 07:31:46PM +0100, Michael Walle wrote:
->> Hi Bjorn,
->> 
->> Am 2021-01-08 22:20, schrieb Bjorn Helgaas:
->> > On Wed, Dec 30, 2020 at 07:53:17PM +0100, Michael Walle wrote:
->> > > The Intel i210 doesn't work if the Expansion ROM BAR overlaps with
->> > > another BAR. Networking won't work at all and once a packet is sent
->> > > the
->> > > netdev watchdog will bite:
->> >
->> > 1) Is this a regression?  It sounds like you don't know for sure
->> > because earlier kernels don't support your platform.
->> 
->> Whats the background of the question? The board is offially supported
->> since 5.8. I doubt that the code responsible to not touch the ExpROM
->> BAR in pci_std_update_resource() were recently changed/added; the
->> comment refers to a mail from 2005. So no I don't think it is a
->> regression per se.
-> 
-> Just asking because it affects the urgency.  If we added a regression
-> during the v5.11 merge window, we'd try hard to fix it before
-> v5.11-final.  But it sounds like the problem has been there a long
-> time, so a fix could wait until v5.12.
+Hi Bjorn,
 
-Yeah sure.
-
-[..]
-
->> > 3) If the Intel i210 is defective in how it handles an Expansion ROM
->> > that overlaps another BAR, a quirk might be the right fix. But my
->> > guess is the device is working correctly per spec and there's
->> > something wrong in how firmware/Linux is assigning things.  That would
->> > mean we need a more generic fix that's not a quirk and not tied to the
->> > Intel i210.
->> 
->> Agreed, but as you already stated (and I've also found that in the PCI
->> spec) the Expansion ROM address decoder can be shared by the other 
->> BARs
->> and it shouldn't matter as long as the ExpROM BAR is disabled, which 
->> is
->> the case here.
-> 
-> My point is just that if this could theoretically affect devices other
-> than the i210, the fix should not be an i210-specific quirk.
-> I'll assume this is a general problem and wait for a generic PCI core
-> solution unless it's i210-specific.
-
-I guess the culprit here is that linux skips the programming of the BAR
-because of some broken Matrox card. That should have been a quirk 
-instead,
-right? But I don't know if we want to change that, do we? How many other
-cards depend on that?
-
-And still, how do we find out that the i210 is behaving correctly? In
-my opinion it is clearly not. You can change the ExpROM BAR value
-during runtime and it will start working (while keeping it disabled).
-Am I missing something here?
-
--michael
+On Wed, Jan 13, 2021 at 9:32 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> Hi Victor,
+>
+> Thanks for the patch.  Improving suspend/resume performance is always
+> a good thing!
+>
+> On Tue, Jan 12, 2021 at 04:02:04AM +0000, Victor Ding wrote:
+> > Right after powering up, the device may have ASPM enabled; however,
+> > its LTR and/or L1ss controls may not be in the desired states; hence,
+> > the device may enter L1.2 undesirably and cause resume performance
+> > penalty. This is especially problematic if ASPM related control
+> > registers are modified before a suspension.
+>
+> s/L1ss/L1SS/ (several occurrences) to match existing usage.
+>
+I'll update it in the next version.
+>
+> > Therefore, ASPM should disabled until its LTR and L1ss states are
+> > fully restored.
+> >
+> > Signed-off-by: Victor Ding <victording@google.com>
+> > ---
+> >
+> >  drivers/pci/pci.c       | 11 +++++++++++
+> >  drivers/pci/pci.h       |  2 ++
+> >  drivers/pci/pcie/aspm.c |  2 +-
+> >  3 files changed, 14 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index eb323af34f1e..428de433f2e6 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -1660,6 +1660,17 @@ void pci_restore_state(struct pci_dev *dev)
+> >       if (!dev->state_saved)
+> >               return;
+> >
+> > +     /*
+> > +      * Right after powering up, the device may have ASPM enabled;
+>
+> I think this could be stated more precisely.  "Right after powering
+> up," ASPM should be *disabled* because ASPM Control in the Link
+> Control register powers up as zero (disabled).
+>
+Good suggestion; I'll reword in the next version.
+However, ASPM should be *disabled* for the opposite reason - ASPM Control
+in the Link Control register *may* power as non-zero (enabled).
+(More answered in the next section)
+>
+> > +      * however, its LTR and/or L1ss controls may not be in the desired
+> > +      * states; as a result, the device may enter L1.2 undesirably and
+> > +      * cause resume performance penalty.
+> > +      * Therefore, ASPM is disabled until its LTR and L1ss states are
+> > +      * fully restored.
+> > +      * (enabling ASPM is part of pci_restore_pcie_state)
+>
+> If we're enabling L1.2 before LTR has been configured, that's
+> definitely a bug.  But I don't see how that happens.  The current code
+> looks like:
+>
+>   pci_restore_state
+>     pci_restore_ltr_state
+>       pci_write_config_word(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, *cap++)
+>       pci_write_config_word(dev, ltr + PCI_LTR_MAX_NOSNOOP_LAT, *cap++)
+>     pci_restore_aspm_l1ss_state
+>       pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++)
+>     pci_restore_pcie_state
+>       pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++])
+>
+> We *do* restore PCI_L1SS_CTL1, which contains "ASPM L1.2 Enable",
+> before we restore PCI_EXP_LNKCTL, which contains "ASPM Control", but I
+> don't think "ASPM L1.2 Enable" by itself should be enough to allow
+> hardware to enter L1.2.
+>
+> Reading PCIe r5.0, sec 5.5.1, it seems like hardware should ignore the
+> PCI_L1SS_CTL1 bits unless ASPM L1 entry is enabled in PCI_EXP_LNKCTL.
+>
+> What am I missing?
+>
+Correct; however, PCI_EXP_LNKCTL may power up as non-zero, i.e. has ASPM
+Control enabled. BIOS may set PCI_EXP_LNKCTL (and PCI_L1SS_CTL1) before
+Kernel takes control. When BIOS does so, there is a brief period
+between powering
+up and Kernel restoring LTR state that L1.2 is enabled but LTR isn't configured.
+>
+> > +      */
+> > +     pcie_config_aspm_dev(dev, 0);
+> > +
+> >       /*
+> >        * Restore max latencies (in the LTR capability) before enabling
+> >        * LTR itself (in the PCIe capability).
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index e9ea5dfaa3e0..f774bd6d2555 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -564,6 +564,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+> >  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+> >  void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+> >  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+> > +void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val);
+> >  void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+> >  void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+> >  #else
+> > @@ -571,6 +572,7 @@ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+> >  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+> >  static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+> >  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+> > +static inline void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val) { }
+> >  static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
+> >  static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
+> >  #endif
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index a08e7d6dc248..45535b4e1595 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -778,7 +778,7 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
+> >       pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
+> >  }
+> >
+> > -static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+> > +void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+> >  {
+> >       pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
+> >                                          PCI_EXP_LNKCTL_ASPMC, val);
+> > --
+> > 2.30.0.284.gd98b1dd5eaa7-goog
+> >
