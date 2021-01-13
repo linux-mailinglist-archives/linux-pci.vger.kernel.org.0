@@ -2,93 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8A7C2F52A5
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 19:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E0502F52C3
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 19:57:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbhAMSp4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jan 2021 13:45:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbhAMSpz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jan 2021 13:45:55 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 720B7C061575
-        for <linux-pci@vger.kernel.org>; Wed, 13 Jan 2021 10:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=6wWb0CbYNxqJgZPV91SAmgv6leRfeKA1ITu1yUiAr04=; b=LAO0KsK0dQPu7jiMA5F4NqenbD
-        EW2Fm8PJI8N0jv3aX2Rzq5Hfb3w7Tgo+40iuGh5c2TYq6ssy1IyxKKtvRPIfj+5vSPc7rtcsMzLBO
-        EQuOx+TYjKeiz7DF9+fvJXjWpF8nqo35PNj32geAk2jN03U0SqMXJ2ksivb5A+ZSqSxtUKPlztfWF
-        2XCyeGeXz/WXMZ7FQjfihuvt87QhpLLPjiI6tbMikfUyzMnNysdPU+3hrzN2HsHVnPDobtFQtVJXQ
-        DU/AHxZjUXPNGUs16/s9wrT4Y+AayjiIOJSGhw6SR5D/li4oh5R+MVmfwvh9xwAYhXbkL6rppdT3o
-        P0yFrZrw==;
-Received: from [2601:1c0:6280:3f0::9abc]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kzl8p-00040h-Nb; Wed, 13 Jan 2021 18:45:12 +0000
-Subject: Re: /proc/iomem and /proc/ioports show 0 for address range
-To:     Hinko Kocevar <hinko.kocevar@ess.eu>,
-        Linux PCI <linux-pci@vger.kernel.org>
-References: <375ef4e6-b9a1-d4f2-81b6-582f2152820d@ess.eu>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ae1da3a0-11d3-b1dd-601c-3169e783fcb4@infradead.org>
-Date:   Wed, 13 Jan 2021 10:45:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1728329AbhAMSzn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jan 2021 13:55:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728328AbhAMSzn (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Jan 2021 13:55:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 644E32222B;
+        Wed, 13 Jan 2021 18:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610564102;
+        bh=yuHsL79Rd3202Hi/UJQF2BDz8BRxCYQuw84DSpJYcDM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UsUMq6YOXYcOu6I4d3KphnjPuEzQGMmMHeCifzbpDARasRxk4mAo64ZTqQA4Ml6FR
+         EphaTP+Ij6RI0+FrIywMXGIbbx4ucGUg07K64nOzp4LwIJz5dJreO8qH8UR+GXttTQ
+         CwdPgg0ZdTs6wXD52cZNNuUy+XUziKZf37i9CZcAVQKi7QeaP+SvM6PpD7ey4o1B7E
+         KHktYPP4zp/gqzP3bTIRDfUVaWQOBSRSOmUoMrAH8iONdbDdSbSg7ohmDVXTfCqEH+
+         HU3xKBwzcKJX/DWX5NYJzGt/5fH6JDLoq55Hz+lyx08LfYYliM/C22f8OwT9Ge9q1X
+         Qe5l2AYkCmWkw==
+Date:   Wed, 13 Jan 2021 12:55:00 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Subject: Re: [RFC 1/1] s390/pci: expose UID checking state in sysfs
+Message-ID: <20210113185500.GA1918216@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <375ef4e6-b9a1-d4f2-81b6-582f2152820d@ess.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f5013a1-3dde-1633-a0cc-591fc439e29d@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/13/21 2:29 AM, Hinko Kocevar wrote:
-> [I noticed this while working on PCI devices; not sure which kernel list would be best for this, though]
+On Wed, Jan 13, 2021 at 08:47:58AM +0100, Niklas Schnelle wrote:
+> On 1/12/21 10:50 PM, Bjorn Helgaas wrote:
+> > On Mon, Jan 11, 2021 at 10:38:57AM +0100, Niklas Schnelle wrote:
+> >> We use the UID of a zPCI adapter, or the UID of the function zero if
+> >> there are multiple functions in an adapter, as PCI domain if and only if
+> >> UID Checking is turned on.
+> >> Otherwise we automatically generate domains as devices appear.
+> >>
+> >> The state of UID Checking is thus essential to know if the PCI domain
+> >> will be stable, yet currently there is no way to access this information
+> >> from userspace.
+> >> So let's solve this by showing the state of UID checking as a sysfs
+> >> attribute in /sys/bus/pci/uid_checking
+
+> >> +/* Global zPCI attributes */
+> >> +static ssize_t uid_checking_show(struct kobject *kobj,
+> >> +				 struct kobj_attribute *attr, char *buf)
+> >> +{
+> >> +	return sprintf(buf, "%i\n", zpci_unique_uid);
+> >> +}
+> >> +
+> >> +static struct kobj_attribute sys_zpci_uid_checking_attr =
+> >> +	__ATTR(uid_checking, 0444, uid_checking_show, NULL);
+> > 
+> > Use DEVICE_ATTR_RO instead of __ATTR.
 > 
-> I noticed that my system shows address range for iomem and ioports as all 0. Sometimes (after a power cycle) the addresses are proper, albeit I have not been able to see that in a while now, after performing numerous reboots in the last coupe of days.
-> 
-> FWIW, I think the list of devices (names, count) looks the same in both cases. The system seems to work in both cases; at least I have not seen any complaints in kernel logs, OTOH, not sure what the error message would be.
-> 
-> What may be the reason for not getting the proper addresses listed?
+> It's my understanding that DEVICE_ATTR_* is only for
+> per device attributes. This one is global for the entire
+> Z PCI. I just tried with BUS_ATTR_RO instead
+> and that works but only if I put the attribute at
+> /sys/bus/pci/uid_checking instead of with a zpci
+> subfolder. This path would work for us too, we
+> currently don't have any other global attributes
+> that we are planning to expose but those could of
+> course come up in the future.
 
-config STRICT_DEVMEM
-	bool "Filter access to /dev/mem"
+Ah, I missed the fact that this is a kobj_attribute, not a
+device_attribute.  Maybe KERNEL_ATTR_RO()?  Very few uses so far, but
+seems like it might fit?
 
-and
-
-config IO_STRICT_DEVMEM
-	bool "Filter I/O access to /dev/mem"
-
-so what are your CONFIG_STRICT_DEVMEM and CONFIG_IO_STRICT_DEVMEM set to?
-
-What do you see in /proc/iomem and /proc/ioports if you are admin/root?
-That should be non-zero values.
-
-> This likely poses any issues for userspace tools that would look at those /proc files, OTOH, I wonder if would kernel suffer in any way as well?
-
-Yes, it could affect userspace.
-
-> Kernel version is 5.10.0 (pci git tree).
-> 
-> [dev@bd-cpu18 ~]$ cat /proc/iomem
-> 00000000-00000000 : Reserved
-> 00000000-00000000 : System RAM
-> 00000000-00000000 : Reserved
-> 00000000-00000000 : PCI Bus 0000:00
-> 00000000-00000000 : Video ROM
-> 00000000-00000000 : Reserved
->   00000000-00000000 : System ROM
-> 00000000-00000000 : System RAM
->   00000000-00000000 : Kernel code
->   00000000-00000000 : Kernel rodata
->   00000000-00000000 : Kernel data
->   00000000-00000000 : Kernel bss
-
-
--- 
-~Randy
-You can't do anything without having to do something else first.
--- Belefant's Law
+Bjorn
