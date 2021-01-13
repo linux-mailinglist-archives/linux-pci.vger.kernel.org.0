@@ -2,251 +2,379 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 060162F4AF9
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 13:08:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 448342F4B7A
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 13:45:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbhAMMGk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jan 2021 07:06:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbhAMMGj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jan 2021 07:06:39 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD38C061795
-        for <linux-pci@vger.kernel.org>; Wed, 13 Jan 2021 04:05:59 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id x126so1087887pfc.7
-        for <linux-pci@vger.kernel.org>; Wed, 13 Jan 2021 04:05:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=rgkuTBsatwNJSFukk7YicMTbt2SY0ukVzdRGr/VFZys=;
-        b=cOl6Zhu2dw/c+w51im0JfCjpG4zEg1ObDsz9irQYpzF7Hwyiq0EwAR0u9cWEn2j/Ic
-         j2Yxgd2Je0BYzG9kqyToJLcYgI9M1UG3+H4R4HVjRmN3D71I7UYRxqmNYiRSwBqUbbgG
-         VFpZ6xP6GFO0KWEm6EQe/zgLczvO6HlHDXsoxwYk+37SvMofk0JGzljpabRtOpM8gI2q
-         o3XQK05ukfBLV3VpxJ8psg4JNhZmnnqIS1A9X4kQurhgglyakOoWgQ5KHsU+Hy780Yyx
-         hjTZHwsNXJGCsg01J4xaHHlCRdvqVnvU3/8C6MIW6vHR70INpLIuHNKB0hnGHPOWYzlm
-         WvwA==
+        id S1726729AbhAMMk5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jan 2021 07:40:57 -0500
+Received: from mail-oi1-f174.google.com ([209.85.167.174]:38487 "EHLO
+        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbhAMMk5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jan 2021 07:40:57 -0500
+Received: by mail-oi1-f174.google.com with SMTP id x13so1924928oic.5;
+        Wed, 13 Jan 2021 04:40:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=rgkuTBsatwNJSFukk7YicMTbt2SY0ukVzdRGr/VFZys=;
-        b=KUrGhVY/UpkNVxYOPiS04KBO9kyJBILOHaVaf9d33ykNkJ5F2sxNq/w775VSAUZ3FM
-         TTE5dHkQEB3osb5jAx9JAFBQCIwFCrwONaZRdNRA2tKeVl9P5UcMf3YH5jqbrgLIuP0U
-         I63tgevkYZBpKZJEl+4Ujh4Vb+6onm/Kv8gFnQ96wpveOTf1Cno1NX6XJJNuhQuRXCPb
-         T9nX97UgWTXiQDnQFiXTwSWrhV8vLuh6OccqOnozo6BxW8zxHY47wS8FBMV49cQEEWrs
-         P2AOv8JQ1HPdl9kc3S6A0vDrn/m0EC9+fsWI2qDjMVZlR5sSwgSSWLsWPDrMht64oXtS
-         AEOA==
-X-Gm-Message-State: AOAM532bk7YJGqpKAYh3BUU5jUe8S8fwc38ShoHLeuXWpC1GkhSPRLye
-        yxsEd/gQia8/Zsc43QQTSaxu/Q==
-X-Google-Smtp-Source: ABdhPJxnF/0Q5Vw3ffGbiKIGpIFa1PEf6zSvspzFG3LaIOefe/P+oTi+74uT8h+tnwQkVG9sV997Dg==
-X-Received: by 2002:a63:dd53:: with SMTP id g19mr1766273pgj.291.1610539559087;
-        Wed, 13 Jan 2021 04:05:59 -0800 (PST)
-Received: from ?IPv6:240e:45b:406:3726:19ba:7333:19c1:ecbe? ([240e:45b:406:3726:19ba:7333:19c1:ecbe])
-        by smtp.gmail.com with ESMTPSA id g16sm2288805pfh.187.2021.01.13.04.05.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Jan 2021 04:05:58 -0800 (PST)
-Subject: Re: [PATCH] PCI: Add a quirk to enable SVA for HiSilicon chip
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        jean-philippe <jean-philippe@linaro.org>,
-        kenneth-lee-2012@foxmail.com, wangzhou1@hisilicon.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-References: <20210112170230.GA1838341@bjorn-Precision-5520>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <b9fd8097-85f9-408d-f58c-b26dd21f3aa0@linaro.org>
-Date:   Wed, 13 Jan 2021 20:05:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wrftjWGDDgoG0KhD8U3/hd/ULEYIjOtZB8goRQqzdCs=;
+        b=JQuqHzbrqa9WgsVrQciBsIX9OV951sRmc+nsUIi3ywgnzYlVehlVy7FFlE+ldl1lKY
+         ltCHX9wkQIXRsKVbnL+p0qqGXHNx2E7/A9zB41jCab0Cv8WRbj3FVOeFoOThF5IfhkpV
+         D6IQzXqaVwCsh7rpO8YNth6ob/BvCd9OgXKCVPeglBq0ENAGneYUtQN5zYAsyMB23mPZ
+         +G7BTwXBE4wFrLwmDVOAZSvmO+VNUw60xJr+YErOgRedWTZj0zOxPk7PnwlU0xbW9mz6
+         mYwisle7oRimoebpAcoG576T7WnKmKnlfGbjICFc2qQ/nsSaZS17P3tgcDAgP+4lDOe9
+         kvLg==
+X-Gm-Message-State: AOAM532LT3vZyEbyZsYBJRfJ20vPu2+/ikkX+5g5rQNt10RGwbHFGb6X
+        yIWnmnge6LNOORohoS0V1EB3i775GQRsEsqfe4A=
+X-Google-Smtp-Source: ABdhPJw13BcxY6VWRUbuIxSKDChx/Zck2ok1szTNO1QFozmw2Bo8hMHfYO/UhsZvBNaiz/P/0NRhkIBqQvuT82X50Kg=
+X-Received: by 2002:aca:d6c8:: with SMTP id n191mr966165oig.69.1610541615332;
+ Wed, 13 Jan 2021 04:40:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210112170230.GA1838341@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20210111225121.820014-1-ben.widawsky@intel.com> <20210111225121.820014-3-ben.widawsky@intel.com>
+In-Reply-To: <20210111225121.820014-3-ben.widawsky@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 13 Jan 2021 13:40:01 +0100
+Message-ID: <CAJZ5v0h56q2+1U2DpMoAX-7vxs32hz+SRE_02mucoMY1tiUFiw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 02/16] cxl/acpi: Add an acpi_cxl module for the CXL interconnect
+To:     Ben Widawsky <ben.widawsky@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>
+Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        daniel.lll@alibaba-inc.com,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn
-
-Thanks for the suggestion.
-
-On 2021/1/13 上午1:02, Bjorn Helgaas wrote:
-> On Tue, Jan 12, 2021 at 02:49:52PM +0800, Zhangfei Gao wrote:
->> HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
->> actually on the AMBA bus. These fake PCI devices can not support tlp
->> and have to enable SMMU stall mode to use the SVA feature.
->>
->> Add a quirk to set dma-can-stall property and enable tlp for these devices.
-> s/tlp/TLP/
+On Tue, Jan 12, 2021 at 1:29 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
 >
-> I don't think "enable TLP" really captures what's going on here.  You
-> must be referring to the fact that you set pdev->eetlp_prefix_path.
+> From: Vishal Verma <vishal.l.verma@intel.com>
 >
-> That is normally set by pci_configure_eetlp_prefix() if the Device
-> Capabilities 2 register has the End-End TLP Prefix Supported bit set
-> *and* all devices in the upstream path also have it set.
+> Add an acpi_cxl module to coordinate the ACPI portions of the CXL
+> (Compute eXpress Link) interconnect. This driver binds to ACPI0017
+> objects in the ACPI tree, and coordinates access to the resources
+> provided by the ACPI CEDT (CXL Early Discovery Table).
 >
-> The only place we currently test eetlp_prefix_path is in
-> pci_enable_pasid().  In PCIe, PASID is implemented using the PASID TLP
-> prefix, so we only enable PASID if TLP prefixes are supported.
+> It also coordinates operations of the root port _OSC object to notify
+> platform firmware that the OS has native support for the CXL
+> capabilities of endpoints.
+
+This doesn't happen here, but in the next patch.
+
+> Note: the actbl1.h changes are speculative. The expectation is that they
+> will arrive through the ACPICA tree in due time.
+
+So why don't you put them into a separate patch and drop it from the
+series when not necessary any more?
+
+> Cc: Ben Widawsky <ben.widawsky@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/Kconfig       |  1 +
+>  drivers/Makefile      |  1 +
+>  drivers/cxl/Kconfig   | 36 ++++++++++++++++
+>  drivers/cxl/Makefile  |  5 +++
+>  drivers/cxl/acpi.c    | 97 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/cxl/acpi.h    | 15 +++++++
+>  include/acpi/actbl1.h | 50 ++++++++++++++++++++++
+>  7 files changed, 205 insertions(+)
+>  create mode 100644 drivers/cxl/Kconfig
+>  create mode 100644 drivers/cxl/Makefile
+>  create mode 100644 drivers/cxl/acpi.c
+>  create mode 100644 drivers/cxl/acpi.h
 >
-> If I understand correctly, a PASID-like feature is implemented on AMBA
-> without using TLP prefixes, and setting eetlp_prefix_path makes that
-> work.
-Yes, that's the requirement.
+> diff --git a/drivers/Kconfig b/drivers/Kconfig
+> index dcecc9f6e33f..62c753a73651 100644
+> --- a/drivers/Kconfig
+> +++ b/drivers/Kconfig
+> @@ -6,6 +6,7 @@ menu "Device Drivers"
+>  source "drivers/amba/Kconfig"
+>  source "drivers/eisa/Kconfig"
+>  source "drivers/pci/Kconfig"
+> +source "drivers/cxl/Kconfig"
+>  source "drivers/pcmcia/Kconfig"
+>  source "drivers/rapidio/Kconfig"
 >
-> I don't think you should do this by setting eetlp_prefix_path because
-> TLP prefixes are used for other features, e.g., TPH.  Setting
-> eetlp_prefix_path implies these devices can also support things like
-> TLP, and I don't think that's necessarily true.
-Thanks for the remainder.
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index fd11b9ac4cc3..678ea810410f 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -73,6 +73,7 @@ obj-$(CONFIG_NVM)             += lightnvm/
+>  obj-y                          += base/ block/ misc/ mfd/ nfc/
+>  obj-$(CONFIG_LIBNVDIMM)                += nvdimm/
+>  obj-$(CONFIG_DAX)              += dax/
+> +obj-$(CONFIG_CXL_BUS)          += cxl/
+>  obj-$(CONFIG_DMA_SHARED_BUFFER) += dma-buf/
+>  obj-$(CONFIG_NUBUS)            += nubus/
+>  obj-y                          += macintosh/
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> new file mode 100644
+> index 000000000000..68da926ba5b1
+> --- /dev/null
+> +++ b/drivers/cxl/Kconfig
+> @@ -0,0 +1,36 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +menuconfig CXL_BUS
+> +       tristate "CXL (Compute Express Link) Devices Support"
+> +       help
+> +         CXL is a bus that is electrically compatible with PCI-E, but layers
+> +         three protocols on that signalling (CXL.io, CXL.cache, and CXL.mem).
+> +         The CXL.cache protocol allows devices to hold cachelines locally, the
+> +         CXL.mem protocol allows devices to be fully coherent memory targets,
+> +         the CXL.io protocol is equivalent to PCI-E. Say 'y' to enable support
+> +         for the configuration and management of devices supporting these
+> +         protocols.
+> +
+> +if CXL_BUS
+> +
+> +config CXL_BUS_PROVIDER
+> +       tristate
+> +
+> +config CXL_ACPI
+> +       tristate "CXL ACPI: Platform Support"
+> +       depends on ACPI
+> +       default CXL_BUS
+> +       select CXL_BUS_PROVIDER
+> +       help
+> +         Say 'y/m' to enable a driver (named "cxl_acpi.ko" when built
+> +         as a module) that will enable support for CXL.mem endpoint
+> +         devices. In general, CXL Platform Support is a prerequisite
+> +         for any CXL device driver that wants to claim ownership of a
+> +         component register space. By default platform firmware assumes
+> +         Linux is unaware of CXL capabilities and requires explicit
+> +         opt-in. This platform component also mediates resources
+> +         described by the CEDT (CXL Early Discovery Table).  See
+> +         Chapter 9.14.1 CXL Early Discovery Table (CEDT) in the CXL 2.0
+> +         specification.
+> +
+> +         If unsure say 'm'
+
+Missing full stop.
+
+> +endif
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> new file mode 100644
+> index 000000000000..d38cd34a2582
+> --- /dev/null
+> +++ b/drivers/cxl/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+> +
+> +ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=CXL
+> +cxl_acpi-y := acpi.o
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> new file mode 100644
+> index 000000000000..0f1ba9b3f1ed
+> --- /dev/null
+> +++ b/drivers/cxl/acpi.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> +#include <linux/platform_device.h>
+> +#include <linux/list_sort.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/list.h>
+> +#include <linux/acpi.h>
+> +#include <linux/sort.h>
+> +#include <linux/pci.h>
+> +#include "acpi.h"
+> +
+> +/*
+> + * If/when CXL support is defined by other platform firmware the kernel
+> + * will need a mechanism to select between the platform specific version
+> + * of this routine, until then, hard-code ACPI assumptions
+> + */
+> +int cxl_bus_acquire(struct pci_dev *pdev)
+> +{
+> +       struct acpi_device *adev;
+> +       struct pci_dev *root_port;
+> +       struct device *root;
+> +
+> +       root_port = pcie_find_root_port(pdev);
+> +       if (!root_port)
+> +               return -ENXIO;
+> +
+> +       root = root_port->dev.parent;
+> +       if (!root)
+> +               return -ENXIO;
+> +
+> +       adev = ACPI_COMPANION(root);
+> +       if (!adev)
+> +               return -ENXIO;
+> +
+> +       /* TODO: OSC enabling */
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(cxl_bus_acquire);
+
+I would move the addition of cxl_bus_acquire() entirely to the next
+patch, it looks quite confusing to me as is.
+
+> +
+> +static void acpi_cedt_put_table(void *table)
+> +{
+> +       acpi_put_table(table);
+> +}
+> +
+> +static int cxl_acpi_probe(struct platform_device *pdev)
+> +{
+> +       struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> +       struct cxl_acpi_desc *acpi_desc;
+> +       struct device *dev = &adev->dev;
+> +       struct acpi_table_header *tbl;
+> +       acpi_status status;
+> +       acpi_size sz;
+> +       int rc;
+> +
+> +       status = acpi_get_table(ACPI_SIG_CEDT, 0, &tbl);
+> +       if (ACPI_FAILURE(status)) {
+> +               dev_err(dev, "failed to find CEDT at startup\n");
+> +               return 0;
+> +       }
+> +
+> +       rc = devm_add_action_or_reset(dev, acpi_cedt_put_table, tbl);
+> +       if (rc)
+> +               return rc;
+> +
+> +       sz = tbl->length;
+> +       dev_info(dev, "found CEDT at startup: %lld bytes\n", sz);
+> +
+> +       acpi_desc = devm_kzalloc(dev, sizeof(*acpi_desc), GFP_KERNEL);
+> +       if (!acpi_desc)
+> +               return -ENOMEM;
+> +
+> +       dev_set_drvdata(&adev->dev, acpi_desc);
+> +       acpi_desc->dev = &adev->dev;
+> +       acpi_desc->acpi_header = *tbl;
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct acpi_device_id cxl_acpi_ids[] = {
+> +       { "ACPI0017", 0 },
+> +       { "", 0 },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, cxl_acpi_ids);
+> +
+> +static struct platform_driver cxl_acpi_driver = {
+> +       .probe = cxl_acpi_probe,
+> +       .driver = {
+> +               .name = KBUILD_MODNAME,
+> +               .acpi_match_table = cxl_acpi_ids,
+> +       },
+> +};
+> +
+> +module_platform_driver(cxl_acpi_driver);
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/cxl/acpi.h b/drivers/cxl/acpi.h
+> new file mode 100644
+> index 000000000000..d638f8886ab7
+> --- /dev/null
+> +++ b/drivers/cxl/acpi.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> +
+> +#ifndef __CXL_ACPI_H__
+> +#define __CXL_ACPI_H__
+> +#include <linux/acpi.h>
+> +
+> +struct cxl_acpi_desc {
+> +       struct acpi_table_header acpi_header;
+> +       struct device *dev;
+> +};
+> +
+> +int cxl_bus_acquire(struct pci_dev *pci_dev);
+
+And so this should go to the next patch too IMV.
+
+> +
+> +#endif /* __CXL_ACPI_H__ */
+> diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+> index 43549547ed3e..f3a0303984c8 100644
+> --- a/include/acpi/actbl1.h
+> +++ b/include/acpi/actbl1.h
+> @@ -28,6 +28,7 @@
+>  #define ACPI_SIG_BERT           "BERT" /* Boot Error Record Table */
+>  #define ACPI_SIG_BGRT           "BGRT" /* Boot Graphics Resource Table */
+>  #define ACPI_SIG_BOOT           "BOOT" /* Simple Boot Flag Table */
+> +#define ACPI_SIG_CEDT           "CEDT" /* CXL Early Discovery Table */
+>  #define ACPI_SIG_CPEP           "CPEP" /* Corrected Platform Error Polling table */
+>  #define ACPI_SIG_CSRT           "CSRT" /* Core System Resource Table */
+>  #define ACPI_SIG_DBG2           "DBG2" /* Debug Port table type 2 */
+> @@ -1624,6 +1625,55 @@ struct acpi_ibft_target {
+>         u16 reverse_chap_secret_offset;
+>  };
 >
-> Apparently these devices have a PASID capability.  I think you should
-> add a new pci_dev bit that is specific to this idea of "PASID works
-> without TLP prefixes" and then change pci_enable_pasid() to look at
-> that bit as well as eetlp_prefix_path.
-That's great, this solution is much simpler.
-we can set the bit before pci_enable_pasid.
+> +/*******************************************************************************
+> + *
+> + * CEDT - CXL Early Discovery Table (ACPI 6.4)
+> + *        Version 1
+> + *
+> + ******************************************************************************/
+> +
+> +struct acpi_table_cedt {
+> +       struct acpi_table_header header;        /* Common ACPI table header */
+> +       u32 reserved;
+> +};
+> +
+> +/* Values for CEDT structure types */
+> +
+> +enum acpi_cedt_type {
+> +       ACPI_CEDT_TYPE_HOST_BRIDGE = 0, /* CHBS - CXL Host Bridge Structure */
+> +};
+> +
+> +struct acpi_cedt_structure {
+> +       u8 type;
+> +       u8 reserved;
+> +       u16 length;
+> +};
+> +
+> +/*
+> + * CEDT Structures, correspond to Type in struct acpi_cedt_structure
+> + */
+> +
+> +/* 0: CXL Host Bridge Structure */
+> +
+> +struct acpi_cedt_chbs {
+> +       struct acpi_cedt_structure header;
+> +       u32 uid;
+> +       u32 version;
+> +       u32 reserved1;
+> +       u64 base;
+> +       u64 length;
+> +};
+> +
+> +/* Values for version field above */
+> +
+> +#define ACPI_CEDT_CHBS_VERSION_CXL11    (0)
+> +#define ACPI_CEDT_CHBS_VERSION_CXL20    (1)
+> +
+> +/* Values for length field above */
+> +
+> +#define ACPI_CEDT_CHBS_LENGTH_CXL11     (0x2000)
+> +#define ACPI_CEDT_CHBS_LENGTH_CXL20     (0x10000)
+> +
+>  /* Reset to default packing */
 >
-> It seems like dma-can-stall is a separate thing from PASID?  If so,
-> this should be two separate patches.
+>  #pragma pack()
+> --
+> 2.30.0
 >
-> If they can be separated, I would probably make the PASID thing the
-> first patch, and then the "dma-can-stall" can be on its own as a
-> broken DT workaround (if that's what it is) and it's easier to remove
-> that if it become obsolete.
->
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
->> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
->> ---
->> Property dma-can-stall depends on patchset
->> https://lore.kernel.org/linux-iommu/20210108145217.2254447-1-jean-philippe@linaro.org/
->>
->> drivers/pci/quirks.c | 25 +++++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 653660e..a27f327 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -1825,6 +1825,31 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7525_MCH,	quir
->>   
->>   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, PCI_CLASS_BRIDGE_PCI, 8, quirk_pcie_mch);
->>   
->> +static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
->> +{
->> +	struct property_entry properties[] = {
->> +		PROPERTY_ENTRY_BOOL("dma-can-stall"),
->> +		{},
->> +	};
->> +
->> +	if ((pdev->revision != 0x21) && (pdev->revision != 0x30))
->> +		return;
->> +
->> +	pdev->eetlp_prefix_path = 1;
->> +
->> +	/* Device-tree can set the stall property */
->> +	if (!pdev->dev.of_node &&
->> +	    device_add_properties(&pdev->dev, properties))
-> Does this mean "dma-can-stall" *can* be set via DT, and if it is, this
-> quirk is not needed?  So is this quirk basically a workaround for an
-> old or broken DT?
-The quirk is still needed for uefi case, since uefi can not describe the 
-endpoints (peripheral devices).
->
->> +		pci_warn(pdev, "could not add stall property");
->> +}
->> +
-> Remove this blank line to follow the style of the rest of the file.
->
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
->> +
->>   /*
->>    * It's possible for the MSI to get corrupted if SHPC and ACPI are used
->>    * together on certain PXH-based systems.
-
-How about changes like this
-
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c 
-b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index 68f53f7..886ea26 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -2466,6 +2466,9 @@ static int arm_smmu_enable_pasid(struct 
-arm_smmu_master *master)
-      if (num_pasids <= 0)
-          return num_pasids;
-
-+    if (master->stall_enabled)
-+        pdev->pasid_no_tlp = 1;
-+
-      ret = pci_enable_pasid(pdev, features);
-      if (ret) {
-          dev_err(&pdev->dev, "Failed to enable PASID\n");
-@@ -2860,6 +2863,11 @@ static struct iommu_device 
-*arm_smmu_probe_device(struct device *dev)
-      device_property_read_u32(dev, "pasid-num-bits", &master->ssid_bits);
-      master->ssid_bits = min(smmu->ssid_bits, master->ssid_bits);
-
-+    if ((smmu->features & ARM_SMMU_FEAT_STALLS &&
-+         device_property_read_bool(dev, "dma-can-stall")) ||
-+        smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
-+        master->stall_enabled = true;
-+
-      /*
-       * Note that PASID must be enabled before, and disabled after ATS:
-       * PCI Express Base 4.0r1.0 - 10.5.1.3 ATS Control Register
-@@ -2874,11 +2882,6 @@ static struct iommu_device 
-*arm_smmu_probe_device(struct device *dev)
-          master->ssid_bits = min_t(u8, master->ssid_bits,
-                        CTXDESC_LINEAR_CDMAX);
-
--    if ((smmu->features & ARM_SMMU_FEAT_STALLS &&
--         device_property_read_bool(dev, "dma-can-stall")) ||
--        smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
--        master->stall_enabled = true;
--
-      arm_smmu_init_pri(master);
-
-      return &smmu->iommu;
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index e36d601..fe604b5 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -386,7 +386,7 @@ int pci_enable_pasid(struct pci_dev *pdev, int features)
-      if (WARN_ON(pdev->pasid_enabled))
-          return -EBUSY;
-
--    if (!pdev->eetlp_prefix_path)
-+    if ((!pdev->eetlp_prefix_path) && (!pdev->pasid_no_tlp))
-          return -EINVAL;
-
-      if (!pasid)
-
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index f1f26f8..fbee7fe 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -388,6 +388,7 @@ struct pci_dev {
-                         supported from root to here */
-      u16        l1ss;        /* L1SS Capability pointer */
-  #endif
-+    unsigned int    pasid_no_tlp:1;        /* PASID can be supported 
-without TLP Prefix */
-      unsigned int    eetlp_prefix_path:1;    /* End-to-End TLP Prefix */
-
-      pci_channel_state_t error_state;    /* Current connectivity state */
-
-Thanks
