@@ -2,322 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 950BE2F5174
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 18:52:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB9412F5188
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 18:56:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbhAMRwZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jan 2021 12:52:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38601 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725843AbhAMRwY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jan 2021 12:52:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610560257;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XJ4eBQpZbVGXMxVKRUFfIzF28RtG2WxV81QvTU+zyjc=;
-        b=L4gDHpoL96xfiajHMm0KWMHZ8PsNLtxAiwpiLHbLgay5HyCsXOPEwuG2t0C7JwZivvDPV/
-        MdNa/EGXNRzt2slcERFhSrDz5bF56fZGELlpeSW3b00ri9JSCqsfZcYRLgDiYlxtyHxJOL
-        6M4qTN6nSswNxHjKL67Pb77uqgoor2Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-557-Kd0oRvpyNcaV-Oa2TF5egA-1; Wed, 13 Jan 2021 12:50:55 -0500
-X-MC-Unique: Kd0oRvpyNcaV-Oa2TF5egA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2181B107ACF7;
-        Wed, 13 Jan 2021 17:50:54 +0000 (UTC)
-Received: from omen.home.shazbot.org (ovpn-112-255.phx2.redhat.com [10.3.112.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6297218A60;
-        Wed, 13 Jan 2021 17:50:53 +0000 (UTC)
-Date:   Wed, 13 Jan 2021 10:50:52 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH mlx5-next v1 1/5] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <20210113105052.43cf3c15@omen.home.shazbot.org>
-In-Reply-To: <20210110150727.1965295-2-leon@kernel.org>
-References: <20210110150727.1965295-1-leon@kernel.org>
-        <20210110150727.1965295-2-leon@kernel.org>
+        id S1728247AbhAMRzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jan 2021 12:55:54 -0500
+Received: from mga02.intel.com ([134.134.136.20]:30282 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727866AbhAMRzx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 13 Jan 2021 12:55:53 -0500
+IronPort-SDR: P41kfzI+SBXM5X3xSQE6pF3VHNDe9cX68pbFn6T3RRQP7lamD/JXnhlPxybCgPTk3CtlDKuE7p
+ /Kzemrb7rMuQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9863"; a="165334333"
+X-IronPort-AV: E=Sophos;i="5.79,344,1602572400"; 
+   d="scan'208";a="165334333"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2021 09:55:12 -0800
+IronPort-SDR: cSAIO5cpbERvXSskfeYtztqwIw4DPMDxdhIspDfc6YtxIy2L2pMO/LG9Il48StG095ko7YiT9v
+ hZxIZdQRgYWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,344,1602572400"; 
+   d="scan'208";a="381946284"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by orsmga008.jf.intel.com with ESMTP; 13 Jan 2021 09:55:11 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 Jan 2021 09:55:11 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 13 Jan 2021 09:55:11 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Wed, 13 Jan 2021 09:55:10 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iO3j0y2F02rXA7gDD2LZR4NH0rN5n4TQmHF32UwoowsC4pz0QCQ7BcjKmdzce2V+vZeRMRzLxjrkjq/vGwnne2k2nFRop2GYmShGBrQor00HlJCD1oStcq7VOh6udOX2QFx9yaqigy3USl/bfNG5nmiNAX4X/O7ioZYbqGU6UlYLpkdSWME4+z82BXTXXDqIzCSvqDs0+kYiqhLtncl1zksUtBAZrgW9OmkSriCk6TZ69Iqty4ad7Wa/xGbiZUwv8pr/T+Xad4kL8vXsrZXgXxQzBWJNYgDoh4jLs/LzTCDt25WyO69u9Lf5xFHQNe3/GAyF70qO88mXXDTtbF6HHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxuF5sxHspB+sR1Sn9f9sCh7knWKj+xbjDcXZrcU64k=;
+ b=HRF0fcj7mWgfOfSvZ4Xzre2SZ/x0GssjcCOHR/R/SSWci+MTwjdgfKArMPFBkktEBYURhueo9T+9OKkZlUhB6zwrRZeL9ZPY76oJL4B/LoQVhrRdMhROcy9zWnq9pBQ1EMHawk0b9cL9VL70rYBGm0UqgBAp3Ms+cCpBJv32ct2yYQ1hmpvE+tE2yZ3b84MYCfPYZc4FCvMPx6uG9NPEFAlVOuRFrQQERFwbXL1gSYRji+9VSzMdovFS/Wa9BL7RgRM2qrOusIiN9OFatE+0ACV653FA0yCCxeJIsiwDjXO3rVdfSKOmh7NHrbnomDc14VHAbq/qG6eHleeuvCBy8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CxuF5sxHspB+sR1Sn9f9sCh7knWKj+xbjDcXZrcU64k=;
+ b=eJ0UM5yRfigLpLBW8gF/o1xFwrzba9+vKNC9vU2MxUTJ2m/LR1o6BUFIn2Cachc9pNYahzKnI3eIvesAuY2bnqXF6a7eYaKv5k2C+PyofiePDB9AVQfq6d6/hQqzUTMerdetCDo8UY6/NHsHYPX9ERiiyGRJiLOA4Y+te5JW/uc=
+Received: from MWHPR11MB1599.namprd11.prod.outlook.com (2603:10b6:301:e::16)
+ by MW3PR11MB4523.namprd11.prod.outlook.com (2603:10b6:303:5b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Wed, 13 Jan
+ 2021 17:55:04 +0000
+Received: from MWHPR11MB1599.namprd11.prod.outlook.com
+ ([fe80::4878:159c:ca1e:f430]) by MWHPR11MB1599.namprd11.prod.outlook.com
+ ([fe80::4878:159c:ca1e:f430%10]) with mapi id 15.20.3742.012; Wed, 13 Jan
+ 2021 17:55:04 +0000
+From:   "Kaneda, Erik" <erik.kaneda@intel.com>
+To:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Widawsky, Ben" <ben.widawsky@intel.com>
+CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jon Masters <jcm@jonmasters.org>,
+        "Chris Browy" <cbrowy@avery-design.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "daniel.lll@alibaba-inc.com" <daniel.lll@alibaba-inc.com>,
+        "Moore, Robert" <robert.moore@intel.com>
+Subject: RE: [RFC PATCH v3 02/16] cxl/acpi: Add an acpi_cxl module for the CXL
+ interconnect
+Thread-Topic: [RFC PATCH v3 02/16] cxl/acpi: Add an acpi_cxl module for the
+ CXL interconnect
+Thread-Index: AQHW6HoQdrgpYppa0UO4O3KwKR0KaKokZZSOgAFt+WA=
+Date:   Wed, 13 Jan 2021 17:55:04 +0000
+Message-ID: <MWHPR11MB1599E92A457AF6D103EECB06F0A90@MWHPR11MB1599.namprd11.prod.outlook.com>
+References: <20210111225121.820014-1-ben.widawsky@intel.com>
+ <20210111225121.820014-3-ben.widawsky@intel.com>
+ <20210112184355.00007632@Huawei.com>
+ <CAPcyv4hcppMZ2L8W8arUKmbCo0r=_yZggrnsj3w-Jgszjn=ZoA@mail.gmail.com>
+In-Reply-To: <CAPcyv4hcppMZ2L8W8arUKmbCo0r=_yZggrnsj3w-Jgszjn=ZoA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [174.25.99.223]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 14376f23-aa17-4094-6470-08d8b7ec5b39
+x-ms-traffictypediagnostic: MW3PR11MB4523:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW3PR11MB4523567642464FFA4C9C34B1F0A90@MW3PR11MB4523.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3t8aJwhs0SfAhZrEKnv9TsanFBSWq25doBjaWD6VNvcuYmIzSukjL8ckuTyXqTJZy85ipsnF8EnzZquew5ULy6e/TuyUGHWZUEfSsiirUZCCic8ADzGjB8qu8o9il5Uf4ia9m21IUEO/0ChInFhpKEnwmi5/9Ajz/ymOjK6GIxJQ/fhwCZjTHfFQ4bMgtJAu3GAzzvwamtc6lz/u/r59Ku4kxGXB9xSdwX7qUVOXr0RSwLjW4TNmAgHoHepL5IaLDILb/PSbbcb9VUBhSFdRghrX6v4/HBTPBjqzKAv4SCdJfBKzDp5PDJyX/iaQzha2+aYFZxBN+FRyzkBAH+HecDnMulYyVRukY27prr6PmiCuHYkjLz4zIRvBbmo5/6Y99Fe9uZ/Ww17Ktw98pKWuNF4zCqmmEH6t0dV5msz/TQh6aC+WiXcgxW2CDX6zuBYy+15Iy63Qi+BOQpzqiN8n0w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1599.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(376002)(39860400002)(346002)(33656002)(66476007)(8676002)(76116006)(64756008)(66446008)(52536014)(83380400001)(66946007)(110136005)(7696005)(55016002)(7416002)(4326008)(8936002)(54906003)(66556008)(53546011)(966005)(86362001)(6636002)(316002)(6506007)(5660300002)(71200400001)(26005)(186003)(478600001)(2906002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?YkdORkZDc1RQSVhLOVJIVFdPTTdlT1FtWEZxWnNFQ0laK0dQOVVTajFQUXBw?=
+ =?utf-8?B?SWYycy83UXU2V2hCVmhXRWtwWXB5clowSEhHcys0T0tVaWh0dWU1b3lIandp?=
+ =?utf-8?B?N1dqdTkzUXU1cCt4VFczQUJKK21BQjlRRnJNWUxkTmpTYWs4SXJpRkpvS3ZG?=
+ =?utf-8?B?a2hFK3Y1TStDbFJvOG1TZ25pWWNlemphdmhzRkZQMHNCRWJteUp6YjhzMURv?=
+ =?utf-8?B?VklySFFRM0RvVVpqSmNtcUxGekZ1cUh4N2tiblo0dHJXYk85V21oV01haEg5?=
+ =?utf-8?B?eTRaN2U4alRjczc0aElSUWE2V2RXclAyK1k0MUh0Y09LVXd0M29vSldkd3JU?=
+ =?utf-8?B?QjZHSS80OXZzek5iMXZLWDgzaGFKY3hxdU1FYnN5V1ExRmpHT3dpcHNTUTNT?=
+ =?utf-8?B?dVoxL0plaFlMTm52YmY3RHQyVG5raG8yRHJZNHArejYyZC9Gcys0MWxUVjlr?=
+ =?utf-8?B?cUN4WFFGN3JpMzdQOWdjSmYzdHhKeEhsSU1nWGg5dUNSY2xwNG4weTZtYjNN?=
+ =?utf-8?B?bXp5UnBxMmFMcXdyVERsdEkzUmdhditCM2dZalhxMENpR3g1KzVhM1dsVlF1?=
+ =?utf-8?B?enRLYWptWUlHMFppZ08wMVI2NjZDaEdwOCtXZ2VnbC9pVDhrbHZlYlFWeElN?=
+ =?utf-8?B?RFJxZ0dKVzBHLzg4TG0rekYrV2o4dTZlWVZHdEFnSDVpSzM0ZDR5a1B2SStu?=
+ =?utf-8?B?aUg3UWljWHRFbVdScFR5R2ZUTUJ3elZ5NDVhVVczZjN5QjZ5d3BvdzZVUm0y?=
+ =?utf-8?B?MVZGczNYT1E4dWNJMVFrYVhlU0taMVhhSkIyTWVMaUN1TUIvekFPbjNHK0pK?=
+ =?utf-8?B?UHRoRkF6NXQvaEVzRVhrQXlhZ0N1VjBxS2hyTGk1UlErZmdtVHEzbklRR3Rp?=
+ =?utf-8?B?OGxsMlVaOGtZUDdjSEYwRTFQN2ZmdlZwZGx4Umx2MGRhN3FwSmM5RjRrdVhV?=
+ =?utf-8?B?V0JsRE1mNytndzU4SmZJYWt1TmdPSGM3cCsraU5VUkE3eXF4MHJvUUNoa2Nz?=
+ =?utf-8?B?dVRXWDBUQ2dRcGxvdFozNzd2SENGUmo5MkNwVCsvZ01acm9laE1VWVQrd1M2?=
+ =?utf-8?B?bjRVWU9LWHBVQXlUQmpGb3d0NWs1d3RBZmpHVkRrYW5hVS91OTc4QkZSdjNl?=
+ =?utf-8?B?SjA0c1hCYUx2OURiWTAzZ28vN2NGeS9WL3UreGh0R2VMbVE2WGZRV0JrWnZH?=
+ =?utf-8?B?ZnJZcGJMeEpIL05laThLSFJrZWQzVXhZVDZIWmxZM1pGQnplZ3U2VndERlh5?=
+ =?utf-8?B?Zno4aEdtRWtBaE5rbnFJVXhpdXg1c3h0R3ZVTkJ6Q3BMemRwWEpvWkYzcE9y?=
+ =?utf-8?Q?bq7sK3hyZZ/VQ=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1599.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14376f23-aa17-4094-6470-08d8b7ec5b39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2021 17:55:04.1418
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: T8AQvN5S86EYmK4FoebTQGWKf1GlhQJ4JU2ug/YzxHFjiAoyTGo+0Y492ZnhBirgOn6IgcVuYGZxTIc6ZTijEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4523
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 10 Jan 2021 17:07:23 +0200
-Leon Romanovsky <leon@kernel.org> wrote:
-
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Extend PCI sysfs interface with a new callback that allows configure
-> the number of MSI-X vectors for specific SR-IO VF. This is needed
-> to optimize the performance of newly bound devices by allocating
-> the number of vectors based on the administrator knowledge of targeted VM.
-> 
-> This function is applicable for SR-IOV VF because such devices allocate
-> their MSI-X table before they will run on the VMs and HW can't guess the
-> right number of vectors, so the HW allocates them statically and equally.
-> 
-> The newly added /sys/bus/pci/devices/.../vf_msix_vec file will be seen
-> for the VFs and it is writable as long as a driver is not bounded to the VF.
-> 
-> The values accepted are:
->  * > 0 - this will be number reported by the VF's MSI-X capability
->  * < 0 - not valid
->  * = 0 - will reset to the device default value
-> 
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-pci | 20 ++++++++
->  drivers/pci/iov.c                       | 62 +++++++++++++++++++++++++
->  drivers/pci/msi.c                       | 29 ++++++++++++
->  drivers/pci/pci-sysfs.c                 |  1 +
->  drivers/pci/pci.h                       |  2 +
->  include/linux/pci.h                     |  8 +++-
->  6 files changed, 121 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> index 25c9c39770c6..05e26e5da54e 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> @@ -375,3 +375,23 @@ Description:
->  		The value comes from the PCI kernel device state and can be one
->  		of: "unknown", "error", "D0", D1", "D2", "D3hot", "D3cold".
->  		The file is read only.
-> +
-> +What:		/sys/bus/pci/devices/.../vf_msix_vec
-> +Date:		December 2020
-> +Contact:	Leon Romanovsky <leonro@nvidia.com>
-> +Description:
-> +		This file is associated with the SR-IOV VFs.
-> +		It allows configuration of the number of MSI-X vectors for
-> +		the VF. This is needed to optimize performance of newly bound
-> +		devices by allocating the number of vectors based on the
-> +		administrator knowledge of targeted VM.
-> +
-> +		The values accepted are:
-> +		 * > 0 - this will be number reported by the VF's MSI-X
-> +			 capability
-> +		 * < 0 - not valid
-> +		 * = 0 - will reset to the device default value
-> +
-> +		The file is writable if the PF is bound to a driver that
-> +		supports the ->sriov_set_msix_vec_count() callback and there
-> +		is no driver bound to the VF.
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 4afd4ee4f7f0..42c0df4158d1 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -31,6 +31,7 @@ int pci_iov_virtfn_devfn(struct pci_dev *dev, int vf_id)
->  	return (dev->devfn + dev->sriov->offset +
->  		dev->sriov->stride * vf_id) & 0xff;
->  }
-> +EXPORT_SYMBOL(pci_iov_virtfn_devfn);
-> 
->  /*
->   * Per SR-IOV spec sec 3.3.10 and 3.3.11, First VF Offset and VF Stride may
-> @@ -426,6 +427,67 @@ const struct attribute_group sriov_dev_attr_group = {
->  	.is_visible = sriov_attrs_are_visible,
->  };
-> 
-> +#ifdef CONFIG_PCI_MSI
-> +static ssize_t vf_msix_vec_show(struct device *dev,
-> +				struct device_attribute *attr, char *buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	int numb = pci_msix_vec_count(pdev);
-> +	struct pci_dev *pfdev;
-> +
-> +	if (numb < 0)
-> +		return numb;
-> +
-> +	pfdev = pci_physfn(pdev);
-> +	if (!pfdev->driver || !pfdev->driver->sriov_set_msix_vec_count)
-> +		return -EOPNOTSUPP;
-> +
-> +	return sprintf(buf, "%d\n", numb);
-> +}
-> +
-> +static ssize_t vf_msix_vec_store(struct device *dev,
-> +				 struct device_attribute *attr, const char *buf,
-> +				 size_t count)
-> +{
-> +	struct pci_dev *vf_dev = to_pci_dev(dev);
-> +	int val, ret;
-> +
-> +	ret = kstrtoint(buf, 0, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pci_set_msix_vec_count(vf_dev, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_RW(vf_msix_vec);
-> +#endif
-> +
-> +static struct attribute *sriov_vf_dev_attrs[] = {
-> +#ifdef CONFIG_PCI_MSI
-> +	&dev_attr_vf_msix_vec.attr,
-> +#endif
-> +	NULL,
-> +};
-> +
-> +static umode_t sriov_vf_attrs_are_visible(struct kobject *kobj,
-> +					  struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +
-> +	if (dev_is_pf(dev))
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +const struct attribute_group sriov_vf_dev_attr_group = {
-> +	.attrs = sriov_vf_dev_attrs,
-> +	.is_visible = sriov_vf_attrs_are_visible,
-> +};
-> +
->  int __weak pcibios_sriov_enable(struct pci_dev *pdev, u16 num_vfs)
->  {
->  	return 0;
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 3162f88fe940..20705ca94666 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -991,6 +991,35 @@ int pci_msix_vec_count(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL(pci_msix_vec_count);
-> 
-> +/**
-> + * pci_set_msix_vec_count - change the reported number of MSI-X vectors
-> + * This function is applicable for SR-IOV VF because such devices allocate
-> + * their MSI-X table before they will run on the VMs and HW can't guess the
-> + * right number of vectors, so the HW allocates them statically and equally.
-> + * @dev: VF device that is going to be changed
-> + * @numb: amount of MSI-X vectors
-> + **/
-> +int pci_set_msix_vec_count(struct pci_dev *dev, int numb)
-> +{
-> +	struct pci_dev *pdev = pci_physfn(dev);
-> +
-> +	if (!dev->msix_cap || !pdev->msix_cap)
-> +		return -EINVAL;
-> +
-> +	if (dev->driver || !pdev->driver ||
-> +	    !pdev->driver->sriov_set_msix_vec_count)
-> +		return -EOPNOTSUPP;
-
-
-This seems racy, don't we need to hold device_lock on both the VF and
-PF to avoid driver {un}binding races?  Does that happen implicitly
-somewhere?  Thanks,
-
-Alex
-
-> +
-> +	if (numb < 0)
-> +		/*
-> +		 * We don't support negative numbers for now,
-> +		 * but maybe in the future it will make sense.
-> +		 */
-> +		return -EINVAL;
-> +
-> +	return pdev->driver->sriov_set_msix_vec_count(dev, numb);
-> +}
-> +
->  static int __pci_enable_msix(struct pci_dev *dev, struct msix_entry *entries,
->  			     int nvec, struct irq_affinity *affd, int flags)
->  {
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index fb072f4b3176..0af2222643c2 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1557,6 +1557,7 @@ static const struct attribute_group *pci_dev_attr_groups[] = {
->  	&pci_dev_hp_attr_group,
->  #ifdef CONFIG_PCI_IOV
->  	&sriov_dev_attr_group,
-> +	&sriov_vf_dev_attr_group,
->  #endif
->  	&pci_bridge_attr_group,
->  	&pcie_dev_attr_group,
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 5c59365092fa..1fd273077637 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -183,6 +183,7 @@ extern unsigned int pci_pm_d3hot_delay;
-> 
->  #ifdef CONFIG_PCI_MSI
->  void pci_no_msi(void);
-> +int pci_set_msix_vec_count(struct pci_dev *dev, int numb);
->  #else
->  static inline void pci_no_msi(void) { }
->  #endif
-> @@ -502,6 +503,7 @@ resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
->  void pci_restore_iov_state(struct pci_dev *dev);
->  int pci_iov_bus_range(struct pci_bus *bus);
->  extern const struct attribute_group sriov_dev_attr_group;
-> +extern const struct attribute_group sriov_vf_dev_attr_group;
->  #else
->  static inline int pci_iov_init(struct pci_dev *dev)
->  {
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index b32126d26997..a17cfc28eb66 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -856,6 +856,8 @@ struct module;
->   *		e.g. drivers/net/e100.c.
->   * @sriov_configure: Optional driver callback to allow configuration of
->   *		number of VFs to enable via sysfs "sriov_numvfs" file.
-> + * @sriov_set_msix_vec_count: Driver callback to change number of MSI-X vectors
-> + *              exposed by the sysfs "vf_msix_vec" entry.
->   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
->   * @groups:	Sysfs attribute groups.
->   * @driver:	Driver model structure.
-> @@ -871,6 +873,7 @@ struct pci_driver {
->  	int  (*resume)(struct pci_dev *dev);	/* Device woken up */
->  	void (*shutdown)(struct pci_dev *dev);
->  	int  (*sriov_configure)(struct pci_dev *dev, int num_vfs); /* On PF */
-> +	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
->  	const struct pci_error_handlers *err_handler;
->  	const struct attribute_group **groups;
->  	struct device_driver	driver;
-> @@ -2057,7 +2060,6 @@ void __iomem *pci_ioremap_wc_bar(struct pci_dev *pdev, int bar);
-> 
->  #ifdef CONFIG_PCI_IOV
->  int pci_iov_virtfn_bus(struct pci_dev *dev, int id);
-> -int pci_iov_virtfn_devfn(struct pci_dev *dev, int id);
-> 
->  int pci_enable_sriov(struct pci_dev *dev, int nr_virtfn);
->  void pci_disable_sriov(struct pci_dev *dev);
-> @@ -2402,6 +2404,10 @@ static inline bool pci_is_thunderbolt_attached(struct pci_dev *pdev)
->  void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
->  #endif
-> 
-> +#ifdef CONFIG_PCI_IOV
-> +int pci_iov_virtfn_devfn(struct pci_dev *dev, int vf_id);
-> +#endif
-> +
->  /* Provide the legacy pci_dma_* API */
->  #include <linux/pci-dma-compat.h>
-> 
-> --
-> 2.29.2
-> 
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuIFdpbGxpYW1zIDxk
+YW4uai53aWxsaWFtc0BpbnRlbC5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIEphbnVhcnkgMTIsIDIw
+MjEgMTE6NDQgQU0NCj4gVG86IEpvbmF0aGFuIENhbWVyb24gPEpvbmF0aGFuLkNhbWVyb25AaHVh
+d2VpLmNvbT4NCj4gQ2M6IFdpZGF3c2t5LCBCZW4gPGJlbi53aWRhd3NreUBpbnRlbC5jb20+OyBs
+aW51eC1jeGxAdmdlci5rZXJuZWwub3JnOw0KPiBWZXJtYSwgVmlzaGFsIEwgPHZpc2hhbC5sLnZl
+cm1hQGludGVsLmNvbT47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJu
+ZWxAdmdlci5rZXJuZWwub3JnPjsgTGludXggUENJIDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
+PjsgV2VpbnksIElyYQ0KPiA8aXJhLndlaW55QGludGVsLmNvbT47IEtlbGxleSwgU2VhbiBWIDxz
+ZWFuLnYua2VsbGV5QGludGVsLmNvbT47IFd5c29ja2ksDQo+IFJhZmFlbCBKIDxyYWZhZWwuai53
+eXNvY2tpQGludGVsLmNvbT47IEJqb3JuIEhlbGdhYXMgPGhlbGdhYXNAa2VybmVsLm9yZz47DQo+
+IEpvbiBNYXN0ZXJzIDxqY21Aam9ubWFzdGVycy5vcmc+OyBDaHJpcyBCcm93eSA8Y2Jyb3d5QGF2
+ZXJ5LQ0KPiBkZXNpZ24uY29tPjsgUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+
+OyBDaHJpc3RvcGggSGVsbHdpZw0KPiA8aGNoQGluZnJhZGVhZC5vcmc+OyBkYW5pZWwubGxsQGFs
+aWJhYmEtaW5jLmNvbTsgTW9vcmUsIFJvYmVydA0KPiA8cm9iZXJ0Lm1vb3JlQGludGVsLmNvbT47
+IEthbmVkYSwgRXJpayA8ZXJpay5rYW5lZGFAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JG
+QyBQQVRDSCB2MyAwMi8xNl0gY3hsL2FjcGk6IEFkZCBhbiBhY3BpX2N4bCBtb2R1bGUgZm9yIHRo
+ZQ0KPiBDWEwgaW50ZXJjb25uZWN0DQo+IA0KPiBPbiBUdWUsIEphbiAxMiwgMjAyMSBhdCAxMDo0
+NCBBTSBKb25hdGhhbiBDYW1lcm9uDQo+IDxKb25hdGhhbi5DYW1lcm9uQGh1YXdlaS5jb20+IHdy
+b3RlOg0KPiA+DQo+ID4gT24gTW9uLCAxMSBKYW4gMjAyMSAxNDo1MTowNiAtMDgwMA0KPiA+IEJl
+biBXaWRhd3NreSA8YmVuLndpZGF3c2t5QGludGVsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiA+IEZy
+b206IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0KPiA+ID4NCj4gPiA+
+IEFkZCBhbiBhY3BpX2N4bCBtb2R1bGUgdG8gY29vcmRpbmF0ZSB0aGUgQUNQSSBwb3J0aW9ucyBv
+ZiB0aGUgQ1hMDQo+ID4gPiAoQ29tcHV0ZSBlWHByZXNzIExpbmspIGludGVyY29ubmVjdC4gVGhp
+cyBkcml2ZXIgYmluZHMgdG8gQUNQSTAwMTcNCj4gPiA+IG9iamVjdHMgaW4gdGhlIEFDUEkgdHJl
+ZSwgYW5kIGNvb3JkaW5hdGVzIGFjY2VzcyB0byB0aGUgcmVzb3VyY2VzDQo+ID4gPiBwcm92aWRl
+ZCBieSB0aGUgQUNQSSBDRURUIChDWEwgRWFybHkgRGlzY292ZXJ5IFRhYmxlKS4NCj4gPiA+DQo+
+ID4gPiBJdCBhbHNvIGNvb3JkaW5hdGVzIG9wZXJhdGlvbnMgb2YgdGhlIHJvb3QgcG9ydCBfT1ND
+IG9iamVjdCB0byBub3RpZnkNCj4gPiA+IHBsYXRmb3JtIGZpcm13YXJlIHRoYXQgdGhlIE9TIGhh
+cyBuYXRpdmUgc3VwcG9ydCBmb3IgdGhlIENYTA0KPiA+ID4gY2FwYWJpbGl0aWVzIG9mIGVuZHBv
+aW50cy4NCj4gPiA+DQo+ID4gPiBOb3RlOiB0aGUgYWN0YmwxLmggY2hhbmdlcyBhcmUgc3BlY3Vs
+YXRpdmUuIFRoZSBleHBlY3RhdGlvbiBpcyB0aGF0IHRoZXkNCj4gPiA+IHdpbGwgYXJyaXZlIHRo
+cm91Z2ggdGhlIEFDUElDQSB0cmVlIGluIGR1ZSB0aW1lLg0KPiA+DQo+ID4gSSB3b3VsZCBwdWxs
+IHRoZSBBQ1BJQ0EgY2hhbmdlcyBvdXQgaW50byBhIHByZWN1cnNvciBwYXRjaC4NCj4gDQo+IA0K
+PiA+DQo+ID4gPg0KPiA+ID4gQ2M6IEJlbiBXaWRhd3NreSA8YmVuLndpZGF3c2t5QGludGVsLmNv
+bT4NCj4gPiA+IENjOiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4NCj4g
+PiA+IFNpZ25lZC1vZmYtYnk6IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29t
+Pg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQmVuIFdpZGF3c2t5IDxiZW4ud2lkYXdza3lAaW50ZWwu
+Y29tPg0KPiA+DQo+ID4gSGksDQo+ID4NCj4gPiBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QgdG8g
+YWxzbyBhZGQgQ0VEVCB0byB0aGUgbGlzdCBpbiBkcml2ZXJzL2FjcGkvdGFibGVzLmMNCj4gPiBz
+byB0aGF0IHdlIGNhbiBkdW1wIGl0IGZyb20gL3N5cy9maXJtd2FyZS9hY3BpL3RhYmxlcy8gYW5k
+IHBvdGVudGlhbGx5DQo+ID4gb3ZlcnJpZGUgaXQgZnJvbSBhbiBpbml0cmQuDQo+IA0KPiBBQ1BJ
+Q0EgY2hhbmdlcyB3aWxsIGV2ZW50dWFsbHkgY29tZSB0aHJvdWdoIHRoZSBBQ1BJIHRyZWUgbm90
+IHRoaXMgcGF0Y2gNCj4gc2V0Lg0KPiANCj4gDQo+ID4NCj4gPiBodHRwczovL2VsaXhpci5ib290
+bGluLmNvbS9saW51eC92NS4xMS0NCj4gcmMzL3NvdXJjZS9kcml2ZXJzL2FjcGkvdGFibGVzLmMj
+TDQ4Mg0KPiA+IENhbiBiZSB2ZXJ5IGhlbHBmdWwgd2hpbHN0IGRlYnVnZ2luZy4gIFJlbGF0ZWQg
+dG8gdGhhdCwgYW55b25lIGtub3cgaWYNCj4gYW55b25lDQo+ID4gaGFzIGFjcGljYSBwYXRjaGVz
+IHNvIHdlIGNhbiBoYXZlIGlhc2wgLWQgd29yayBvbiB0aGUgdGFibGU/ICBXb3VsZA0KPiBwcm9i
+YWJseQ0KPiA+IGJlIHVzZWZ1bCBidXQgSSdkIHJhdGhlciBub3QgZHVwbGljYXRlIHdvcmsgaWYg
+aXQncyBhbHJlYWR5IGRvbmUuDQo+ID4NCj4gDQo+IFRoZSBzdXBwbGVtZW50YWwgdGFibGVzIGRl
+c2NyaWJlZCBoZXJlOg0KPiANCj4gaHR0cHM6Ly93d3cudWVmaS5vcmcvYWNwaQ0KPiANCj4gLi4u
+ZG8gZXZlbnR1YWxseSBtYWtlIHRoZXJlIHdheSBpbnRvIEFDUElDQS4gQWRkZWQgQm9iIGFuZCBF
+cmlrIGluDQo+IGNhc2UgdGhleSBjYW4gY29tbWVudCBvbiB3aGVuIENFRFQgYW5kIENEQVQgc3Vw
+cG9ydCB3aWxsIGJlIHBpY2tlZCB1cC4NCg0KV2Ugd291bGQgYmUgaGFwcHkgdG8gYWRkIHN1cHBv
+cnQuIEkgdGhpbmsgQmVuIGhhcyByZWFjaGVkIG91dCB0byBtZSBlYXJsaWVyIGFib3V0IHNvbWV0
+aGluZyBsaWtlIHRoaXMgYnV0IEkgaGF2ZW7igJl0IGhhZCBhIGNoYW5jZSB0byBpbXBsZW1lbnQu
+Li4gU29ycnkgYWJvdXQgdGhlIGRlbGF5Li4gSG93IHNvb24gaXMgdGhlIGlBU0wvQUNQSUNBIHN1
+cHBvcnQgbmVlZGVkIGZvciBDREFUIGFuZCBDREVUPw0KDQpFcmlrDQogDQoNCg==
