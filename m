@@ -2,211 +2,550 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB9412F5188
-	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 18:56:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7375E2F51FE
+	for <lists+linux-pci@lfdr.de>; Wed, 13 Jan 2021 19:28:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbhAMRzy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 13 Jan 2021 12:55:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:30282 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbhAMRzx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 13 Jan 2021 12:55:53 -0500
-IronPort-SDR: P41kfzI+SBXM5X3xSQE6pF3VHNDe9cX68pbFn6T3RRQP7lamD/JXnhlPxybCgPTk3CtlDKuE7p
- /Kzemrb7rMuQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9863"; a="165334333"
-X-IronPort-AV: E=Sophos;i="5.79,344,1602572400"; 
-   d="scan'208";a="165334333"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2021 09:55:12 -0800
-IronPort-SDR: cSAIO5cpbERvXSskfeYtztqwIw4DPMDxdhIspDfc6YtxIy2L2pMO/LG9Il48StG095ko7YiT9v
- hZxIZdQRgYWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,344,1602572400"; 
-   d="scan'208";a="381946284"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by orsmga008.jf.intel.com with ESMTP; 13 Jan 2021 09:55:11 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+        id S1728099AbhAMS2I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 13 Jan 2021 13:28:08 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2338 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbhAMS2H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 13 Jan 2021 13:28:07 -0500
+Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DGG6C0PJHz67bgV;
+        Thu, 14 Jan 2021 02:23:31 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 Jan 2021 09:55:11 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 13 Jan 2021 09:55:11 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Wed, 13 Jan 2021 09:55:10 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iO3j0y2F02rXA7gDD2LZR4NH0rN5n4TQmHF32UwoowsC4pz0QCQ7BcjKmdzce2V+vZeRMRzLxjrkjq/vGwnne2k2nFRop2GYmShGBrQor00HlJCD1oStcq7VOh6udOX2QFx9yaqigy3USl/bfNG5nmiNAX4X/O7ioZYbqGU6UlYLpkdSWME4+z82BXTXXDqIzCSvqDs0+kYiqhLtncl1zksUtBAZrgW9OmkSriCk6TZ69Iqty4ad7Wa/xGbiZUwv8pr/T+Xad4kL8vXsrZXgXxQzBWJNYgDoh4jLs/LzTCDt25WyO69u9Lf5xFHQNe3/GAyF70qO88mXXDTtbF6HHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CxuF5sxHspB+sR1Sn9f9sCh7knWKj+xbjDcXZrcU64k=;
- b=HRF0fcj7mWgfOfSvZ4Xzre2SZ/x0GssjcCOHR/R/SSWci+MTwjdgfKArMPFBkktEBYURhueo9T+9OKkZlUhB6zwrRZeL9ZPY76oJL4B/LoQVhrRdMhROcy9zWnq9pBQ1EMHawk0b9cL9VL70rYBGm0UqgBAp3Ms+cCpBJv32ct2yYQ1hmpvE+tE2yZ3b84MYCfPYZc4FCvMPx6uG9NPEFAlVOuRFrQQERFwbXL1gSYRji+9VSzMdovFS/Wa9BL7RgRM2qrOusIiN9OFatE+0ACV653FA0yCCxeJIsiwDjXO3rVdfSKOmh7NHrbnomDc14VHAbq/qG6eHleeuvCBy8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CxuF5sxHspB+sR1Sn9f9sCh7knWKj+xbjDcXZrcU64k=;
- b=eJ0UM5yRfigLpLBW8gF/o1xFwrzba9+vKNC9vU2MxUTJ2m/LR1o6BUFIn2Cachc9pNYahzKnI3eIvesAuY2bnqXF6a7eYaKv5k2C+PyofiePDB9AVQfq6d6/hQqzUTMerdetCDo8UY6/NHsHYPX9ERiiyGRJiLOA4Y+te5JW/uc=
-Received: from MWHPR11MB1599.namprd11.prod.outlook.com (2603:10b6:301:e::16)
- by MW3PR11MB4523.namprd11.prod.outlook.com (2603:10b6:303:5b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Wed, 13 Jan
- 2021 17:55:04 +0000
-Received: from MWHPR11MB1599.namprd11.prod.outlook.com
- ([fe80::4878:159c:ca1e:f430]) by MWHPR11MB1599.namprd11.prod.outlook.com
- ([fe80::4878:159c:ca1e:f430%10]) with mapi id 15.20.3742.012; Wed, 13 Jan
- 2021 17:55:04 +0000
-From:   "Kaneda, Erik" <erik.kaneda@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Widawsky, Ben" <ben.widawsky@intel.com>
-CC:     "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
+ 15.1.2106.2; Wed, 13 Jan 2021 19:27:25 +0100
+Received: from localhost (10.47.78.18) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Wed, 13 Jan
+ 2021 18:27:24 +0000
+Date:   Wed, 13 Jan 2021 18:26:44 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
         Jon Masters <jcm@jonmasters.org>,
-        "Chris Browy" <cbrowy@avery-design.com>,
+        Chris Browy <cbrowy@avery-design.com>,
         Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "daniel.lll@alibaba-inc.com" <daniel.lll@alibaba-inc.com>,
-        "Moore, Robert" <robert.moore@intel.com>
-Subject: RE: [RFC PATCH v3 02/16] cxl/acpi: Add an acpi_cxl module for the CXL
- interconnect
-Thread-Topic: [RFC PATCH v3 02/16] cxl/acpi: Add an acpi_cxl module for the
- CXL interconnect
-Thread-Index: AQHW6HoQdrgpYppa0UO4O3KwKR0KaKokZZSOgAFt+WA=
-Date:   Wed, 13 Jan 2021 17:55:04 +0000
-Message-ID: <MWHPR11MB1599E92A457AF6D103EECB06F0A90@MWHPR11MB1599.namprd11.prod.outlook.com>
+        "Christoph Hellwig" <hch@infradead.org>,
+        <daniel.lll@alibaba-inc.com>
+Subject: Re: [RFC PATCH v3 07/16] cxl/mem: Implement polled mode mailbox
+Message-ID: <20210113182644.00003bb0@Huawei.com>
+In-Reply-To: <20210111225121.820014-8-ben.widawsky@intel.com>
 References: <20210111225121.820014-1-ben.widawsky@intel.com>
- <20210111225121.820014-3-ben.widawsky@intel.com>
- <20210112184355.00007632@Huawei.com>
- <CAPcyv4hcppMZ2L8W8arUKmbCo0r=_yZggrnsj3w-Jgszjn=ZoA@mail.gmail.com>
-In-Reply-To: <CAPcyv4hcppMZ2L8W8arUKmbCo0r=_yZggrnsj3w-Jgszjn=ZoA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [174.25.99.223]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 14376f23-aa17-4094-6470-08d8b7ec5b39
-x-ms-traffictypediagnostic: MW3PR11MB4523:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR11MB4523567642464FFA4C9C34B1F0A90@MW3PR11MB4523.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3t8aJwhs0SfAhZrEKnv9TsanFBSWq25doBjaWD6VNvcuYmIzSukjL8ckuTyXqTJZy85ipsnF8EnzZquew5ULy6e/TuyUGHWZUEfSsiirUZCCic8ADzGjB8qu8o9il5Uf4ia9m21IUEO/0ChInFhpKEnwmi5/9Ajz/ymOjK6GIxJQ/fhwCZjTHfFQ4bMgtJAu3GAzzvwamtc6lz/u/r59Ku4kxGXB9xSdwX7qUVOXr0RSwLjW4TNmAgHoHepL5IaLDILb/PSbbcb9VUBhSFdRghrX6v4/HBTPBjqzKAv4SCdJfBKzDp5PDJyX/iaQzha2+aYFZxBN+FRyzkBAH+HecDnMulYyVRukY27prr6PmiCuHYkjLz4zIRvBbmo5/6Y99Fe9uZ/Ww17Ktw98pKWuNF4zCqmmEH6t0dV5msz/TQh6aC+WiXcgxW2CDX6zuBYy+15Iy63Qi+BOQpzqiN8n0w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1599.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(376002)(39860400002)(346002)(33656002)(66476007)(8676002)(76116006)(64756008)(66446008)(52536014)(83380400001)(66946007)(110136005)(7696005)(55016002)(7416002)(4326008)(8936002)(54906003)(66556008)(53546011)(966005)(86362001)(6636002)(316002)(6506007)(5660300002)(71200400001)(26005)(186003)(478600001)(2906002)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?YkdORkZDc1RQSVhLOVJIVFdPTTdlT1FtWEZxWnNFQ0laK0dQOVVTajFQUXBw?=
- =?utf-8?B?SWYycy83UXU2V2hCVmhXRWtwWXB5clowSEhHcys0T0tVaWh0dWU1b3lIandp?=
- =?utf-8?B?N1dqdTkzUXU1cCt4VFczQUJKK21BQjlRRnJNWUxkTmpTYWs4SXJpRkpvS3ZG?=
- =?utf-8?B?a2hFK3Y1TStDbFJvOG1TZ25pWWNlemphdmhzRkZQMHNCRWJteUp6YjhzMURv?=
- =?utf-8?B?VklySFFRM0RvVVpqSmNtcUxGekZ1cUh4N2tiblo0dHJXYk85V21oV01haEg5?=
- =?utf-8?B?eTRaN2U4alRjczc0aElSUWE2V2RXclAyK1k0MUh0Y09LVXd0M29vSldkd3JU?=
- =?utf-8?B?QjZHSS80OXZzek5iMXZLWDgzaGFKY3hxdU1FYnN5V1ExRmpHT3dpcHNTUTNT?=
- =?utf-8?B?dVoxL0plaFlMTm52YmY3RHQyVG5raG8yRHJZNHArejYyZC9Gcys0MWxUVjlr?=
- =?utf-8?B?cUN4WFFGN3JpMzdQOWdjSmYzdHhKeEhsSU1nWGg5dUNSY2xwNG4weTZtYjNN?=
- =?utf-8?B?bXp5UnBxMmFMcXdyVERsdEkzUmdhditCM2dZalhxMENpR3g1KzVhM1dsVlF1?=
- =?utf-8?B?enRLYWptWUlHMFppZ08wMVI2NjZDaEdwOCtXZ2VnbC9pVDhrbHZlYlFWeElN?=
- =?utf-8?B?RFJxZ0dKVzBHLzg4TG0rekYrV2o4dTZlWVZHdEFnSDVpSzM0ZDR5a1B2SStu?=
- =?utf-8?B?aUg3UWljWHRFbVdScFR5R2ZUTUJ3elZ5NDVhVVczZjN5QjZ5d3BvdzZVUm0y?=
- =?utf-8?B?MVZGczNYT1E4dWNJMVFrYVhlU0taMVhhSkIyTWVMaUN1TUIvekFPbjNHK0pK?=
- =?utf-8?B?UHRoRkF6NXQvaEVzRVhrQXlhZ0N1VjBxS2hyTGk1UlErZmdtVHEzbklRR3Rp?=
- =?utf-8?B?OGxsMlVaOGtZUDdjSEYwRTFQN2ZmdlZwZGx4Umx2MGRhN3FwSmM5RjRrdVhV?=
- =?utf-8?B?V0JsRE1mNytndzU4SmZJYWt1TmdPSGM3cCsraU5VUkE3eXF4MHJvUUNoa2Nz?=
- =?utf-8?B?dVRXWDBUQ2dRcGxvdFozNzd2SENGUmo5MkNwVCsvZ01acm9laE1VWVQrd1M2?=
- =?utf-8?B?bjRVWU9LWHBVQXlUQmpGb3d0NWs1d3RBZmpHVkRrYW5hVS91OTc4QkZSdjNl?=
- =?utf-8?B?SjA0c1hCYUx2OURiWTAzZ28vN2NGeS9WL3UreGh0R2VMbVE2WGZRV0JrWnZH?=
- =?utf-8?B?ZnJZcGJMeEpIL05laThLSFJrZWQzVXhZVDZIWmxZM1pGQnplZ3U2VndERlh5?=
- =?utf-8?B?Zno4aEdtRWtBaE5rbnFJVXhpdXg1c3h0R3ZVTkJ6Q3BMemRwWEpvWkYzcE9y?=
- =?utf-8?Q?bq7sK3hyZZ/VQ=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        <20210111225121.820014-8-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1599.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14376f23-aa17-4094-6470-08d8b7ec5b39
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2021 17:55:04.1418
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T8AQvN5S86EYmK4FoebTQGWKf1GlhQJ4JU2ug/YzxHFjiAoyTGo+0Y492ZnhBirgOn6IgcVuYGZxTIc6ZTijEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4523
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.78.18]
+X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuIFdpbGxpYW1zIDxk
-YW4uai53aWxsaWFtc0BpbnRlbC5jb20+DQo+IFNlbnQ6IFR1ZXNkYXksIEphbnVhcnkgMTIsIDIw
-MjEgMTE6NDQgQU0NCj4gVG86IEpvbmF0aGFuIENhbWVyb24gPEpvbmF0aGFuLkNhbWVyb25AaHVh
-d2VpLmNvbT4NCj4gQ2M6IFdpZGF3c2t5LCBCZW4gPGJlbi53aWRhd3NreUBpbnRlbC5jb20+OyBs
-aW51eC1jeGxAdmdlci5rZXJuZWwub3JnOw0KPiBWZXJtYSwgVmlzaGFsIEwgPHZpc2hhbC5sLnZl
-cm1hQGludGVsLmNvbT47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxpbnV4LQ0KPiBrZXJu
-ZWxAdmdlci5rZXJuZWwub3JnPjsgTGludXggUENJIDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
-PjsgV2VpbnksIElyYQ0KPiA8aXJhLndlaW55QGludGVsLmNvbT47IEtlbGxleSwgU2VhbiBWIDxz
-ZWFuLnYua2VsbGV5QGludGVsLmNvbT47IFd5c29ja2ksDQo+IFJhZmFlbCBKIDxyYWZhZWwuai53
-eXNvY2tpQGludGVsLmNvbT47IEJqb3JuIEhlbGdhYXMgPGhlbGdhYXNAa2VybmVsLm9yZz47DQo+
-IEpvbiBNYXN0ZXJzIDxqY21Aam9ubWFzdGVycy5vcmc+OyBDaHJpcyBCcm93eSA8Y2Jyb3d5QGF2
-ZXJ5LQ0KPiBkZXNpZ24uY29tPjsgUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+
-OyBDaHJpc3RvcGggSGVsbHdpZw0KPiA8aGNoQGluZnJhZGVhZC5vcmc+OyBkYW5pZWwubGxsQGFs
-aWJhYmEtaW5jLmNvbTsgTW9vcmUsIFJvYmVydA0KPiA8cm9iZXJ0Lm1vb3JlQGludGVsLmNvbT47
-IEthbmVkYSwgRXJpayA8ZXJpay5rYW5lZGFAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JG
-QyBQQVRDSCB2MyAwMi8xNl0gY3hsL2FjcGk6IEFkZCBhbiBhY3BpX2N4bCBtb2R1bGUgZm9yIHRo
-ZQ0KPiBDWEwgaW50ZXJjb25uZWN0DQo+IA0KPiBPbiBUdWUsIEphbiAxMiwgMjAyMSBhdCAxMDo0
-NCBBTSBKb25hdGhhbiBDYW1lcm9uDQo+IDxKb25hdGhhbi5DYW1lcm9uQGh1YXdlaS5jb20+IHdy
-b3RlOg0KPiA+DQo+ID4gT24gTW9uLCAxMSBKYW4gMjAyMSAxNDo1MTowNiAtMDgwMA0KPiA+IEJl
-biBXaWRhd3NreSA8YmVuLndpZGF3c2t5QGludGVsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiA+IEZy
-b206IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPg0KPiA+ID4NCj4gPiA+
-IEFkZCBhbiBhY3BpX2N4bCBtb2R1bGUgdG8gY29vcmRpbmF0ZSB0aGUgQUNQSSBwb3J0aW9ucyBv
-ZiB0aGUgQ1hMDQo+ID4gPiAoQ29tcHV0ZSBlWHByZXNzIExpbmspIGludGVyY29ubmVjdC4gVGhp
-cyBkcml2ZXIgYmluZHMgdG8gQUNQSTAwMTcNCj4gPiA+IG9iamVjdHMgaW4gdGhlIEFDUEkgdHJl
-ZSwgYW5kIGNvb3JkaW5hdGVzIGFjY2VzcyB0byB0aGUgcmVzb3VyY2VzDQo+ID4gPiBwcm92aWRl
-ZCBieSB0aGUgQUNQSSBDRURUIChDWEwgRWFybHkgRGlzY292ZXJ5IFRhYmxlKS4NCj4gPiA+DQo+
-ID4gPiBJdCBhbHNvIGNvb3JkaW5hdGVzIG9wZXJhdGlvbnMgb2YgdGhlIHJvb3QgcG9ydCBfT1ND
-IG9iamVjdCB0byBub3RpZnkNCj4gPiA+IHBsYXRmb3JtIGZpcm13YXJlIHRoYXQgdGhlIE9TIGhh
-cyBuYXRpdmUgc3VwcG9ydCBmb3IgdGhlIENYTA0KPiA+ID4gY2FwYWJpbGl0aWVzIG9mIGVuZHBv
-aW50cy4NCj4gPiA+DQo+ID4gPiBOb3RlOiB0aGUgYWN0YmwxLmggY2hhbmdlcyBhcmUgc3BlY3Vs
-YXRpdmUuIFRoZSBleHBlY3RhdGlvbiBpcyB0aGF0IHRoZXkNCj4gPiA+IHdpbGwgYXJyaXZlIHRo
-cm91Z2ggdGhlIEFDUElDQSB0cmVlIGluIGR1ZSB0aW1lLg0KPiA+DQo+ID4gSSB3b3VsZCBwdWxs
-IHRoZSBBQ1BJQ0EgY2hhbmdlcyBvdXQgaW50byBhIHByZWN1cnNvciBwYXRjaC4NCj4gDQo+IA0K
-PiA+DQo+ID4gPg0KPiA+ID4gQ2M6IEJlbiBXaWRhd3NreSA8YmVuLndpZGF3c2t5QGludGVsLmNv
-bT4NCj4gPiA+IENjOiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4NCj4g
-PiA+IFNpZ25lZC1vZmYtYnk6IFZpc2hhbCBWZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29t
-Pg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogQmVuIFdpZGF3c2t5IDxiZW4ud2lkYXdza3lAaW50ZWwu
-Y29tPg0KPiA+DQo+ID4gSGksDQo+ID4NCj4gPiBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QgdG8g
-YWxzbyBhZGQgQ0VEVCB0byB0aGUgbGlzdCBpbiBkcml2ZXJzL2FjcGkvdGFibGVzLmMNCj4gPiBz
-byB0aGF0IHdlIGNhbiBkdW1wIGl0IGZyb20gL3N5cy9maXJtd2FyZS9hY3BpL3RhYmxlcy8gYW5k
-IHBvdGVudGlhbGx5DQo+ID4gb3ZlcnJpZGUgaXQgZnJvbSBhbiBpbml0cmQuDQo+IA0KPiBBQ1BJ
-Q0EgY2hhbmdlcyB3aWxsIGV2ZW50dWFsbHkgY29tZSB0aHJvdWdoIHRoZSBBQ1BJIHRyZWUgbm90
-IHRoaXMgcGF0Y2gNCj4gc2V0Lg0KPiANCj4gDQo+ID4NCj4gPiBodHRwczovL2VsaXhpci5ib290
-bGluLmNvbS9saW51eC92NS4xMS0NCj4gcmMzL3NvdXJjZS9kcml2ZXJzL2FjcGkvdGFibGVzLmMj
-TDQ4Mg0KPiA+IENhbiBiZSB2ZXJ5IGhlbHBmdWwgd2hpbHN0IGRlYnVnZ2luZy4gIFJlbGF0ZWQg
-dG8gdGhhdCwgYW55b25lIGtub3cgaWYNCj4gYW55b25lDQo+ID4gaGFzIGFjcGljYSBwYXRjaGVz
-IHNvIHdlIGNhbiBoYXZlIGlhc2wgLWQgd29yayBvbiB0aGUgdGFibGU/ICBXb3VsZA0KPiBwcm9i
-YWJseQ0KPiA+IGJlIHVzZWZ1bCBidXQgSSdkIHJhdGhlciBub3QgZHVwbGljYXRlIHdvcmsgaWYg
-aXQncyBhbHJlYWR5IGRvbmUuDQo+ID4NCj4gDQo+IFRoZSBzdXBwbGVtZW50YWwgdGFibGVzIGRl
-c2NyaWJlZCBoZXJlOg0KPiANCj4gaHR0cHM6Ly93d3cudWVmaS5vcmcvYWNwaQ0KPiANCj4gLi4u
-ZG8gZXZlbnR1YWxseSBtYWtlIHRoZXJlIHdheSBpbnRvIEFDUElDQS4gQWRkZWQgQm9iIGFuZCBF
-cmlrIGluDQo+IGNhc2UgdGhleSBjYW4gY29tbWVudCBvbiB3aGVuIENFRFQgYW5kIENEQVQgc3Vw
-cG9ydCB3aWxsIGJlIHBpY2tlZCB1cC4NCg0KV2Ugd291bGQgYmUgaGFwcHkgdG8gYWRkIHN1cHBv
-cnQuIEkgdGhpbmsgQmVuIGhhcyByZWFjaGVkIG91dCB0byBtZSBlYXJsaWVyIGFib3V0IHNvbWV0
-aGluZyBsaWtlIHRoaXMgYnV0IEkgaGF2ZW7igJl0IGhhZCBhIGNoYW5jZSB0byBpbXBsZW1lbnQu
-Li4gU29ycnkgYWJvdXQgdGhlIGRlbGF5Li4gSG93IHNvb24gaXMgdGhlIGlBU0wvQUNQSUNBIHN1
-cHBvcnQgbmVlZGVkIGZvciBDREFUIGFuZCBDREVUPw0KDQpFcmlrDQogDQoNCg==
+On Mon, 11 Jan 2021 14:51:11 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
+
+> Provide enough functionality to utilize the mailbox of a memory device.
+> The mailbox is used to interact with the firmware running on the memory
+> device.
+> 
+> The CXL specification defines separate capabilities for the mailbox and
+> the memory device. While we can confirm the mailbox is ready, in order
+> to actually interact with the memory device, you must also confirm the
+> device's firmware is ready.
+> 
+> Create a function to handle sending a command, optionally with a
+> payload, to the memory device, polling on a result, and then optionally
+> copying out the payload. The algorithm for doing this comes straight out
+> of the CXL 2.0 specification.
+> 
+> Primary mailboxes are capable of generating an interrupt when submitting
+> a command in the background. That implementation is saved for a later
+> time.
+> 
+> Secondary mailboxes aren't implemented at this time.
+> 
+> The flow is proven with one implemented command, "identify". Because the
+> class code has already told the driver this is a memory device and the
+> identify command is mandatory, it's safe to assume for sane devices that
+> everything here will work.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+
+Hi Ben,
+
+A few trivial things inline for this one but basically LGTM.
+
+Jonathan
+
+> ---
+>  drivers/cxl/cxl.h |  43 +++++++
+>  drivers/cxl/mem.c | 312 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 355 insertions(+)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index a77286d04ce4..ca3fa496e21c 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -32,9 +32,40 @@
+>  #define   CXLDEV_MB_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
+>  #define   CXLDEV_MB_CAP_PAYLOAD_SIZE_SHIFT 0
+>  #define CXLDEV_MB_CTRL_OFFSET 0x04
+> +#define   CXLDEV_MB_CTRL_DOORBELL BIT(0)
+>  #define CXLDEV_MB_CMD_OFFSET 0x08
+> +#define   CXLDEV_MB_CMD_COMMAND_OPCODE_SHIFT 0
+> +#define   CXLDEV_MB_CMD_COMMAND_OPCODE_MASK GENMASK(15, 0)
+> +#define   CXLDEV_MB_CMD_PAYLOAD_LENGTH_SHIFT 16
+> +#define   CXLDEV_MB_CMD_PAYLOAD_LENGTH_MASK GENMASK(36, 16)
+>  #define CXLDEV_MB_STATUS_OFFSET 0x10
+> +#define   CXLDEV_MB_STATUS_RET_CODE_SHIFT 32
+
+Given use of FIELD_GET etc we shouldn't need both shift and the mask
+in these defines (hopefully) and you aren't using it in this patch.
+
+> +#define   CXLDEV_MB_STATUS_RET_CODE_MASK GENMASK(47, 32)
+>  #define CXLDEV_MB_BG_CMD_STATUS_OFFSET 0x18
+> +#define CXLDEV_MB_PAYLOAD_OFFSET 0x20
+> +
+> +/* Memory Device (CXL 2.0 - 8.2.8.5.1.1) */
+> +#define CXLMDEV_STATUS_OFFSET 0x0
+> +#define   CXLMDEV_DEV_FATAL BIT(0)
+> +#define   CXLMDEV_FW_HALT BIT(1)
+> +#define   CXLMDEV_STATUS_MEDIA_STATUS_SHIFT 2
+> +#define   CXLMDEV_STATUS_MEDIA_STATUS_MASK GENMASK(3, 2)
+> +#define     CXLMDEV_MS_NOT_READY 0
+> +#define     CXLMDEV_MS_READY 1
+> +#define     CXLMDEV_MS_ERROR 2
+> +#define     CXLMDEV_MS_DISABLED 3
+> +#define   CXLMDEV_READY(status) \
+> +		(CXL_GET_FIELD(status, CXLMDEV_STATUS_MEDIA_STATUS) == CXLMDEV_MS_READY)
+> +#define   CXLMDEV_MBOX_IF_READY BIT(4)
+> +#define   CXLMDEV_RESET_NEEDED_SHIFT 5
+> +#define   CXLMDEV_RESET_NEEDED_MASK GENMASK(7, 5)
+> +#define     CXLMDEV_RESET_NEEDED_NOT 0
+> +#define     CXLMDEV_RESET_NEEDED_COLD 1
+> +#define     CXLMDEV_RESET_NEEDED_WARM 2
+> +#define     CXLMDEV_RESET_NEEDED_HOT 3
+> +#define     CXLMDEV_RESET_NEEDED_CXL 4
+> +#define   CXLMDEV_RESET_NEEDED(status) \
+> +		(CXL_GET_FIELD(status, CXLMDEV_RESET_NEEDED) != CXLMDEV_RESET_NEEDED_NOT)
+>  
+>  /**
+>   * struct cxl_mem - A CXL memory device
+> @@ -45,6 +76,16 @@ struct cxl_mem {
+>  	struct pci_dev *pdev;
+>  	void __iomem *regs;
+>  
+> +	struct {
+> +		struct range range;
+> +	} pmem;
+> +
+> +	struct {
+> +		struct range range;
+> +	} ram;
+> +
+> +	char firmware_version[0x10];
+> +
+>  	/* Cap 0001h - CXL_CAP_CAP_ID_DEVICE_STATUS */
+>  	struct {
+>  		void __iomem *regs;
+> @@ -52,6 +93,7 @@ struct cxl_mem {
+>  
+>  	/* Cap 0002h - CXL_CAP_CAP_ID_PRIMARY_MAILBOX */
+>  	struct {
+> +		struct mutex mutex; /* Protects device mailbox and firmware */
+>  		void __iomem *regs;
+>  		size_t payload_size;
+>  	} mbox;
+> @@ -90,6 +132,7 @@ struct cxl_mem {
+>  
+>  cxl_reg(status);
+>  cxl_reg(mbox);
+> +cxl_reg(mem);
+>  
+>  #define cxl_payload_regs(cxlm)                                                 \
+>  	((void __iomem *)(cxlm)->mbox.regs + CXLDEV_MB_PAYLOAD_OFFSET)
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 8da9f4a861ea..e9ba97bbd7b9 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2020 Intel Corporation. All rights reserved. */
+> +#include <linux/sched/clock.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+>  #include <linux/io.h>
+> @@ -7,6 +8,248 @@
+>  #include "pci.h"
+>  #include "cxl.h"
+>  
+> +#define cxl_doorbell_busy(cxlm)                                                \
+> +	(cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET) &                    \
+> +	 CXLDEV_MB_CTRL_DOORBELL)
+> +
+> +#define CXL_MAILBOX_TIMEOUT_US 2000
+> +
+> +enum opcode {
+> +	CXL_MBOX_OP_IDENTIFY    = 0x4000,
+> +	CXL_MBOX_OP_MAX         = 0x10000
+> +};
+> +
+> +/**
+> + * struct mbox_cmd - A command to be submitted to hardware.
+> + * @opcode: (input) The command set and command submitted to hardware.
+> + * @payload: (input/output) Pointer to the input and output payload.
+> + *           Payload can be NULL if the caller wants to populate the payload
+> + *           registers themselves (potentially avoiding a copy).
+> + * @size_in: (input) Number of bytes to load from @payload.
+> + * @size_out:
+> + *  - (input) Number of bytes allocated to load into @payload.
+> + *  - (output) Number of bytes loaded into @payload.
+> + * @return_code: (output) Error code returned from hardware.
+> + *
+> + * This is the primary mechanism used to send commands to the hardware.
+> + * All the fields except @payload correspond exactly to the fields described in
+> + * Command Register section of the CXL 2.0 spec (8.2.8.4.5). @payload
+> + * corresponds to the Command Payload Registers (8.2.8.4.8).
+> + */
+> +struct mbox_cmd {
+> +	u16 opcode;
+> +	void *payload;
+> +	size_t size_in;
+> +	size_t size_out;
+> +	u16 return_code;
+> +};
+> +
+> +static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+> +{
+> +	const int timeout = msecs_to_jiffies(CXL_MAILBOX_TIMEOUT_US);
+> +	const unsigned long start = jiffies;
+> +	unsigned long end = start;
+> +
+> +	while (cxl_doorbell_busy(cxlm)) {
+> +		end = jiffies;
+> +
+> +		if (time_after(end, start + timeout)) {
+> +			/* Check again in case preempted before timeout test */
+> +			if (!cxl_doorbell_busy(cxlm))
+> +				break;
+> +			return -ETIMEDOUT;
+> +		}
+> +		cpu_relax();
+> +	}
+> +
+> +	dev_dbg(&cxlm->pdev->dev, "Doorbell wait took %dms",
+> +		jiffies_to_msecs(end) - jiffies_to_msecs(start));
+> +	return 0;
+> +}
+> +
+> +static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+> +				 struct mbox_cmd *mbox_cmd)
+> +{
+> +	dev_warn(&cxlm->pdev->dev, "Mailbox command timed out\n");
+> +	dev_info(&cxlm->pdev->dev,
+> +		 "\topcode: 0x%04x\n"
+> +		 "\tpayload size: %zub\n",
+> +		 mbox_cmd->opcode, mbox_cmd->size_in);
+> +	print_hex_dump_debug("Payload ", DUMP_PREFIX_OFFSET, 16, 1,
+> +			     mbox_cmd->payload, mbox_cmd->size_in, true);
+> +
+> +	/* Here's a good place to figure out if a device reset is needed */
+> +}
+> +
+> +/**
+> + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> + * @cxlm: The CXL memory device to communicate with.
+> + * @mbox_cmd: Command to send to the memory device.
+> + *
+> + * Context: Any context. Expects mbox_lock to be held.
+> + * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
+> + *         Caller should check the return code in @mbox_cmd to make sure it
+> + *         succeeded.
+> + *
+> + * This is a generic form of the CXL mailbox send command, thus the only I/O
+> + * operations used are cxl_read_mbox_reg(). Memory devices, and perhaps other
+> + * types of CXL devices may have further information available upon error
+> + * conditions.
+> + *
+> + * FIXME: As stated above, references to &struct cxl_mem should be changed to a
+> + * more generic cxl structure when needed.
+
+I'd flip that to a TODO.  If this driver is ready to go before other usecases
+perhaps need to clear this doesn't 'need' to be fixed.
+
+> + */
+> +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+> +				 struct mbox_cmd *mbox_cmd)
+> +{
+> +	u64 cmd_reg, status_reg;
+> +	size_t out_len;
+> +	int rc;
+> +
+> +	lockdep_assert_held(&cxlm->mbox.mutex);
+> +
+> +	/*
+> +	 * Here are the steps from 8.2.8.4 of the CXL 2.0 spec.
+> +	 *   1. Caller reads MB Control Register to verify doorbell is clear
+> +	 *   2. Caller writes Command Register
+> +	 *   3. Caller writes Command Payload Registers if input payload is non-empty
+> +	 *   4. Caller writes MB Control Register to set doorbell
+> +	 *   5. Caller either polls for doorbell to be clear or waits for interrupt if configured
+> +	 *   6. Caller reads MB Status Register to fetch Return code
+> +	 *   7. If command successful, Caller reads Command Register to get Payload Length
+> +	 *   8. If output payload is non-empty, host reads Command Payload Registers
+> +	 */
+> +
+> +	/* #1 */
+> +	WARN_ON(cxl_doorbell_busy(cxlm));
+
+If it was busy, should we proceed anyway?
+
+> +
+> +	cmd_reg = CXL_SET_FIELD(mbox_cmd->opcode, CXLDEV_MB_CMD_COMMAND_OPCODE);
+> +	if (mbox_cmd->size_in) {
+> +		cmd_reg |= CXL_SET_FIELD(mbox_cmd->size_in,
+> +					 CXLDEV_MB_CMD_PAYLOAD_LENGTH);
+> +		if (mbox_cmd->payload)
+> +			memcpy_toio(cxl_payload_regs(cxlm), mbox_cmd->payload,
+> +				    mbox_cmd->size_in);
+
+I'm sure this is fine, but technically isn't this #3 then #2?
+
+> +	}
+> +
+> +	/* #2, #3 */
+> +	cxl_write_mbox_reg64(cxlm, CXLDEV_MB_CMD_OFFSET, cmd_reg);
+> +
+> +	/* #4 */
+> +	dev_dbg(&cxlm->pdev->dev, "Sending command\n");
+> +	cxl_write_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET,
+> +			     CXLDEV_MB_CTRL_DOORBELL);
+> +
+> +	/* #5 */
+> +	rc = cxl_mem_wait_for_doorbell(cxlm);
+> +	if (rc == -ETIMEDOUT) {
+> +		cxl_mem_mbox_timeout(cxlm, mbox_cmd);
+> +		return rc;
+> +	}
+> +
+> +	/* #6 */
+> +	status_reg = cxl_read_mbox_reg64(cxlm, CXLDEV_MB_STATUS_OFFSET);
+> +	mbox_cmd->return_code =
+> +		CXL_GET_FIELD(status_reg, CXLDEV_MB_STATUS_RET_CODE);
+> +
+> +	if (mbox_cmd->return_code != 0) {
+> +		dev_dbg(&cxlm->pdev->dev, "Mailbox operation had an error\n");
+> +		return 0;
+> +	}
+> +
+> +	/* #7 */
+> +	cmd_reg = cxl_read_mbox_reg64(cxlm, CXLDEV_MB_CMD_OFFSET);
+> +	out_len = CXL_GET_FIELD(cmd_reg, CXLDEV_MB_CMD_PAYLOAD_LENGTH);
+> +	mbox_cmd->size_out = out_len;
+> +
+> +	/* #8 */
+> +	if (out_len && mbox_cmd->payload)
+> +		memcpy_fromio(mbox_cmd->payload, cxl_payload_regs(cxlm),
+> +			      mbox_cmd->size_out);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * cxl_mem_mbox_get() - Acquire exclusive access to the mailbox.
+> + * @cxlm: The memory device to gain access to.
+> + *
+> + * Context: Any context. Takes the mbox_lock.
+> + * Return: 0 if exclusive access was acquired.
+> + */
+> +static int cxl_mem_mbox_get(struct cxl_mem *cxlm)
+> +{
+> +	u64 md_status;
+> +	int rc = -EBUSY;
+
+Trivial: Always set below so no need to init here.
+
+> +
+> +	mutex_lock_io(&cxlm->mbox.mutex);
+> +
+> +	/*
+> +	 * XXX: There is some amount of ambiguity in the 2.0 version of the spec
+> +	 * around the mailbox interface ready (8.2.8.5.1.1). The purpose of the
+> +	 * bit is to allow firmware running on the device to notify us that it's
+> +	 * ready to receive commands. It is unclear if the bit needs to be read
+> +	 * every time one tries to use the mailbox, ie. the firmware can switch
+> +	 * it on and off as needed. Second, there is no defined timeout for
+> +	 * mailbox ready, like there is for the doorbell interface.
+> +	 *
+> +	 * As such, we make the following assumptions:
+> +	 * 1. The firmware might toggle the Mailbox Interface Ready bit, and so
+> +	 *    we check it for every command.
+> +	 * 2. If the doorbell is clear, the firmware should have first set the
+> +	 *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
+> +	 *    to be ready is a sufficient amount of time.
+> +	 */
+> +	rc = cxl_mem_wait_for_doorbell(cxlm);
+> +	if (rc) {
+> +		dev_warn(&cxlm->pdev->dev, "Mailbox interface not ready\n");
+> +		goto out;
+> +	}
+> +
+> +	md_status = cxl_read_mem_reg64(cxlm, CXLMDEV_STATUS_OFFSET);
+> +	if (md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status)) {
+> +		/*
+> +		 * Hardware shouldn't allow a ready status but also have failure
+> +		 * bits set. Spit out an error, this should be a bug report
+> +		 */
+> +		if (md_status & CXLMDEV_DEV_FATAL) {
+> +			dev_err(&cxlm->pdev->dev,
+> +				"CXL device reporting ready and fatal\n");
+> +			rc = -EFAULT;
+> +			goto out;
+> +		}
+> +		if (md_status & CXLMDEV_FW_HALT) {
+> +			dev_err(&cxlm->pdev->dev,
+> +				"CXL device reporting ready and halted\n");
+> +			rc = -EFAULT;
+> +			goto out;
+> +		}
+> +		if (CXLMDEV_RESET_NEEDED(md_status)) {
+> +			dev_err(&cxlm->pdev->dev,
+> +				"CXL device reporting ready and reset needed\n");
+> +			rc = -EFAULT;
+> +			goto out;
+> +		}
+> +
+> +		return 0;
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&cxlm->mbox.mutex);
+> +	return rc;
+> +}
+> +
+> +/**
+> + * cxl_mem_mbox_put() - Release exclusive access to the mailbox.
+> + * @cxlm: The CXL memory device to communicate with.
+> + *
+> + * Context: Any context. Expects mbox_lock to be held.
+> + */
+> +static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
+> +{
+> +	mutex_unlock(&cxlm->mbox.mutex);
+> +}
+> +
+>  /**
+>   * cxl_mem_setup_regs() - Setup necessary MMIO.
+>   * @cxlm: The CXL memory device to communicate with.
+> @@ -135,6 +378,8 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
+>  		return NULL;
+>  	}
+>  
+> +	mutex_init(&cxlm->mbox.mutex);
+> +
+>  	regs = pcim_iomap_table(pdev)[bar];
+>  	cxlm->pdev = pdev;
+>  	cxlm->regs = regs + offset;
+> @@ -167,6 +412,69 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * cxl_mem_identify() - Send the IDENTIFY command to the device.
+> + * @cxlm: The device to identify.
+> + *
+> + * Return: 0 if identify was executed successfully.
+> + *
+> + * This will dispatch the identify command to the device and on success populate
+> + * structures to be exported to sysfs.
+> + */
+> +static int cxl_mem_identify(struct cxl_mem *cxlm)
+> +{
+> +	struct cxl_mbox_identify {
+> +		char fw_revision[0x10];
+> +		__le64 total_capacity;
+> +		__le64 volatile_capacity;
+> +		__le64 persistent_capacity;
+> +		__le64 partition_align;
+> +		__le16 info_event_log_size;
+> +		__le16 warning_event_log_size;
+> +		__le16 failure_event_log_size;
+> +		__le16 fatal_event_log_size;
+> +		__le32 lsa_size;
+> +		u8 poison_list_max_mer[3];
+> +		__le16 inject_poison_limit;
+> +		u8 poison_caps;
+> +		u8 qos_telemetry_caps;
+> +	} __packed id;
+> +	struct mbox_cmd mbox_cmd;
+> +	int rc;
+> +
+> +	/* Retrieve initial device memory map */
+> +	rc = cxl_mem_mbox_get(cxlm);
+> +	if (rc)
+> +		return rc;
+> +
+> +	mbox_cmd = (struct mbox_cmd){
+> +		.opcode = CXL_MBOX_OP_IDENTIFY,
+> +		.payload = &id,
+> +		.size_in = 0,
+> +	};
+> +	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+
+Description of this function has:
+"Caller should check the return code in @mbox_cmd to make sure it succeeded."
+
+I'm not seeing that here.
+
+> +	cxl_mem_mbox_put(cxlm);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (mbox_cmd.size_out != sizeof(id))
+> +		return -ENXIO;
+> +
+> +	/*
+> +	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+> +	 * For now, only the capacity is exported in sysfs
+> +	 */
+> +	cxlm->ram.range.start = 0;
+> +	cxlm->ram.range.end = le64_to_cpu(id.volatile_capacity) - 1;
+> +
+> +	cxlm->pmem.range.start = 0;
+> +	cxlm->pmem.range.end = le64_to_cpu(id.persistent_capacity) - 1;
+> +
+> +	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
+> +
+> +	return rc;
+> +}
+> +
+>  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -222,6 +530,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		goto err;
+>  
+> +	rc = cxl_mem_identify(cxlm);
+> +	if (rc)
+> +		goto err;
+> +
+>  	pci_set_drvdata(pdev, cxlm);
+>  	return 0;
+>  
+
