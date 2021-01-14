@@ -2,195 +2,490 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C28162F6587
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 17:15:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5B22F65A8
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 17:21:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbhANQPH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 11:15:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725918AbhANQPH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Jan 2021 11:15:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C42C2239EB;
-        Thu, 14 Jan 2021 16:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1610640866;
-        bh=6xX+JZ3eD7/Whv74i4bNA2VkhHl2m10fENZO3mqzgVo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gj6OI2oPlZD/tTfqVYtRC69HoaY0dP0J80+mt5tUtZdd0AB5ghmxx7VZkTWclBkt4
-         39nyETPm4MJiKouoxR7St2YGFxM6R+WCcriOo2mD6WYjBdL0lo8pdSrvbMHemeCV9Z
-         RtR9u3DB7iGSj5e9m97jLAYsCjWAy86aF6kTo7qM=
-Date:   Thu, 14 Jan 2021 17:14:23 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Subject: Re: [RFC 1/1] s390/pci: expose UID checking state in sysfs
-Message-ID: <YABt38yz5BJ8gARG@kroah.com>
-References: <20210113185500.GA1918216@bjorn-Precision-5520>
- <675aa466-59ea-cf8a-6eec-caa6478ba4cd@linux.ibm.com>
- <20210114134453.bkfik4zjt5ehz6d5@wittgenstein>
- <YABOHuejsuriwSPn@kroah.com>
- <a567c3d2-1dd2-6b33-8b1a-0a607b601ef8@linux.ibm.com>
- <YABgcnWPLJxYlWUR@kroah.com>
- <f63d5de5-6a31-8839-72ce-c6e937f91d4a@linux.ibm.com>
+        id S1726329AbhANQVS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 11:21:18 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2344 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbhANQVS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 11:21:18 -0500
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DGqFL5ccJz67bxv;
+        Fri, 15 Jan 2021 00:16:38 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Thu, 14 Jan 2021 17:20:34 +0100
+Received: from localhost (10.47.30.252) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 14 Jan
+ 2021 16:20:33 +0000
+Date:   Thu, 14 Jan 2021 16:19:54 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
+        Jon Masters <jcm@jonmasters.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        <daniel.lll@alibaba-inc.com>
+Subject: Re: [RFC PATCH v3 09/16] cxl/mem: Add basic IOCTL interface
+Message-ID: <20210114161954.00003f20@Huawei.com>
+In-Reply-To: <20210111225121.820014-10-ben.widawsky@intel.com>
+References: <20210111225121.820014-1-ben.widawsky@intel.com>
+        <20210111225121.820014-10-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f63d5de5-6a31-8839-72ce-c6e937f91d4a@linux.ibm.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.30.252]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 14, 2021 at 04:51:17PM +0100, Niklas Schnelle wrote:
-> 
-> 
-> On 1/14/21 4:17 PM, Greg Kroah-Hartman wrote:
-> > On Thu, Jan 14, 2021 at 04:06:11PM +0100, Niklas Schnelle wrote:
-> >>
-> >>
-> >> On 1/14/21 2:58 PM, Greg Kroah-Hartman wrote:
-> >>> On Thu, Jan 14, 2021 at 02:44:53PM +0100, Christian Brauner wrote:
-> >>>> On Thu, Jan 14, 2021 at 02:20:10PM +0100, Niklas Schnelle wrote:
-> >>>>>
-> >>>>>
-> >>>>> On 1/13/21 7:55 PM, Bjorn Helgaas wrote:
-> >>>>>> On Wed, Jan 13, 2021 at 08:47:58AM +0100, Niklas Schnelle wrote:
-> >>>>>>> On 1/12/21 10:50 PM, Bjorn Helgaas wrote:
-> >>>>>>>> On Mon, Jan 11, 2021 at 10:38:57AM +0100, Niklas Schnelle wrote:
-> >>>>>>>>> We use the UID of a zPCI adapter, or the UID of the function zero if
-> >>>>>>>>> there are multiple functions in an adapter, as PCI domain if and only if
-> >>>>>>>>> UID Checking is turned on.
-> >>>>>>>>> Otherwise we automatically generate domains as devices appear.
-> >>>>>>>>>
-> >>>>>>>>> The state of UID Checking is thus essential to know if the PCI domain
-> >>>>>>>>> will be stable, yet currently there is no way to access this information
-> >>>>>>>>> from userspace.
-> >>>>>>>>> So let's solve this by showing the state of UID checking as a sysfs
-> >>>>>>>>> attribute in /sys/bus/pci/uid_checking
-> >>>>>>
-> >>>>>>>>> +/* Global zPCI attributes */
-> >>>>>>>>> +static ssize_t uid_checking_show(struct kobject *kobj,
-> >>>>>>>>> +				 struct kobj_attribute *attr, char *buf)
-> >>>>>>>>> +{
-> >>>>>>>>> +	return sprintf(buf, "%i\n", zpci_unique_uid);
-> >>>>>>>>> +}
-> >>>>>>>>> +
-> >>>>>>>>> +static struct kobj_attribute sys_zpci_uid_checking_attr =
-> >>>>>>>>> +	__ATTR(uid_checking, 0444, uid_checking_show, NULL);
-> >>>>>>>>
-> >>>>>>>> Use DEVICE_ATTR_RO instead of __ATTR.
-> >>>>>>>
-> >>>>>>> It's my understanding that DEVICE_ATTR_* is only for
-> >>>>>>> per device attributes. This one is global for the entire
-> >>>>>>> Z PCI. I just tried with BUS_ATTR_RO instead
-> >>>>>>> and that works but only if I put the attribute at
-> >>>>>>> /sys/bus/pci/uid_checking instead of with a zpci
-> >>>>>>> subfolder. This path would work for us too, we
-> >>>>>>> currently don't have any other global attributes
-> >>>>>>> that we are planning to expose but those could of
-> >>>>>>> course come up in the future.
-> >>>>>>
-> >>>>>> Ah, I missed the fact that this is a kobj_attribute, not a
-> >>>>>> device_attribute.  Maybe KERNEL_ATTR_RO()?  Very few uses so far, but
-> >>>>>> seems like it might fit?
-> >>>>>>
-> >>>>>> Bjorn
-> >>>>>>
-> >>>>>
-> >>>>> KERNEL_ATTR_* is currently not exported in any header. After
-> >>>>> adding it to include/linuc/sysfs.h it indeed works perfectly.
-> >>>>> Adding Christian Brauner as suggested by get_maintainers for
-> >>>>> their opinion. I'm of course willing to provide a patch
-> >>>>
-> >>>> Hey Niklas et al. :)
-> >>>>
-> >>>> I think this will need input from Greg. He should be best versed in
-> >>>> sysfs attributes. The problem with KERNEL_ATTR_* to me seems that it's
-> >>>> supposed to be kernel internal. Now, that might just be a matter of
-> >>>> renaming the macro but let's see whether Greg has any better idea or
-> >>>> more questions. :)
-> >>>
-> >>> The big question is, why are you needing this?
-> >>>
-> >>> No driver or driver subsystem should EVER be messing with a "raw"
-> >>> kobject like this.  Just use the existing DEVICE_* macros instead
-> >>> please.
-> >>>
-> >>> If you are using a raw kobject, please ask me how to do this properly,
-> >>> as that is something that should NEVER show up in the /sys/devices/*
-> >>> tree.  Otherwise userspace tools will break.
-> >>>
-> >>> thanks,
-> >>>
-> >>> greg k-h
-> >>
-> >> Hi Greg,
-> >>
-> >> this is for an architecture specific but global i.e. not device bound PCI
-> >> attribute. That's why DEVICE_ATTR_* does not work. BUS_ATTR_* would work
-> >> but only if we place the attribute directly under /sys/bus/pci/new_attr.
-> > 
-> > Then you are doing something wrong :)
-> 
-> That is very possible.
-> 
-> > 
-> > Where _exactly_ are you wanting to put this attribute?
-> 
-> I'm trying for /sys/bus/pci/zpci/uid_checking, I'm using
-> the below code and the attribute even shows up but reading
-> it gives me two 0 bytes only.
-> The relevant code is only a slight alteration of the original patch
-> as follows:
-> 
-> static ssize_t uid_checking_show(struct bus_type *bus, char *buf)
-> {
-> 	return sprintf(buf, "%i\n", zpci_unique_uid);
-> }
-> static BUS_ATTR_RO(uid_checking);
-> 
-> static struct kset *zpci_global_kset;
-> 
-> static struct attribute *zpci_attrs_global[] = {
-> 	&bus_attr_uid_checking.attr,
-> 	NULL,
-> };
-> 
-> static struct attribute_group zpci_attr_group_global = {
-> 	.attrs = zpci_attrs_global,
-> };
+On Mon, 11 Jan 2021 14:51:13 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-Name your attribute group, and then you do not have to mess with a
-"raw" kobject like you are below:
-
+> Add a straightforward IOCTL that provides a mechanism for userspace to
+> query the supported memory device commands. CXL commands as they appear
+> to userspace are described as part of the UAPI kerneldoc. The command
+> list returned via this IOCTL will contain the full set of commands that
+> the driver supports, however, some of those commands may not be
+> available for use by userspace.
 > 
-> int __init zpci_sysfs_init(void)
-> {
-> 	struct kset *pci_bus_kset;
+> Memory device commands are specified in 8.2.9 of the CXL 2.0
+> specification. They are submitted through a mailbox mechanism specified
+> in 8.2.8.4.
 > 
-> 	pci_bus_kset = bus_get_kset(&pci_bus_type);
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Hi Ben,
+
+Maybe today I'll get a clear block to finish reading through these!
+
+Anyhow, some comments inline.
+
+Jonathan
+
+> ---
+>  .clang-format                                 |   1 +
+>  Documentation/cxl/memory-devices.rst          |   9 +
+>  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+>  drivers/cxl/mem.c                             | 156 ++++++++++++++++++
+>  include/uapi/linux/cxl_mem.h                  | 117 +++++++++++++
+>  5 files changed, 284 insertions(+)
+>  create mode 100644 include/uapi/linux/cxl_mem.h
 > 
-> 	zpci_global_kset = kset_create_and_add("zpci", NULL, &pci_bus_kset->kobj);
+> diff --git a/.clang-format b/.clang-format
+> index 10dc5a9a61b3..3f11c8901b43 100644
+> --- a/.clang-format
+> +++ b/.clang-format
+> @@ -109,6 +109,7 @@ ForEachMacros:
+>    - 'css_for_each_child'
+>    - 'css_for_each_descendant_post'
+>    - 'css_for_each_descendant_pre'
+> +  - 'cxl_for_each_cmd'
+>    - 'device_for_each_child_node'
+>    - 'dma_fence_chain_for_each'
+>    - 'do_for_each_ftrace_op'
+> diff --git a/Documentation/cxl/memory-devices.rst b/Documentation/cxl/memory-devices.rst
+> index 5f723c25382b..ec54674b3822 100644
+> --- a/Documentation/cxl/memory-devices.rst
+> +++ b/Documentation/cxl/memory-devices.rst
+> @@ -32,6 +32,15 @@ CXL Memory Device
+>  .. kernel-doc:: drivers/cxl/mem.c
+>     :internal:
+>  
+> +CXL IOCTL Interface
+> +-------------------
+> +
+> +.. kernel-doc:: include/uapi/linux/cxl_mem.h
+> +   :doc: UAPI
+> +
+> +.. kernel-doc:: include/uapi/linux/cxl_mem.h
+> +   :internal:
+> +
+>  External Interfaces
+>  ===================
+>  
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> index a4c75a28c839..6eb8e634664d 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -352,6 +352,7 @@ Code  Seq#    Include File                                           Comments
+>                                                                       <mailto:michael.klein@puffin.lb.shuttle.de>
+>  0xCC  00-0F  drivers/misc/ibmvmc.h                                   pseries VMC driver
+>  0xCD  01     linux/reiserfs_fs.h
+> +0xCE  01-02  uapi/linux/cxl_mem.h                                    Compute Express Link Memory Devices
+>  0xCF  02     fs/cifs/ioctl.c
+>  0xDB  00-0F  drivers/char/mwave/mwavepub.h
+>  0xDD  00-3F                                                          ZFCP device driver see drivers/s390/scsi/
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index da2bf941fe92..d4eb3f5b9469 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/idr.h>
+>  #include <linux/pci.h>
+>  #include <linux/io.h>
+> +#include <uapi/linux/cxl_mem.h>
+>  #include "acpi.h"
+>  #include "pci.h"
+>  #include "cxl.h"
+> @@ -41,6 +42,7 @@
+>  #define CXL_MAILBOX_TIMEOUT_US 2000
+>  
+>  enum opcode {
+> +	CXL_MBOX_OP_INVALID	= 0x0000,
+>  	CXL_MBOX_OP_IDENTIFY    = 0x4000,
+>  	CXL_MBOX_OP_MAX         = 0x10000
+>  };
+> @@ -82,6 +84,90 @@ static DEFINE_IDR(cxl_mem_idr);
+>  /* protect cxl_mem_idr allocations */
+>  static DEFINE_MUTEX(cxl_memdev_lock);
+>  
+> +#define CXL_CMD(_id, _flags, sin, sout, f)                                     \
 
-No, do not mess with at kset, just set the default attribute group for
-the bus to the above, and you should be fine.
+Perhaps this would be better after the structure definition?
 
-> 	if (!zpci_global_kset)
-> 		return -ENOMEM;
-> 
-> 	return sysfs_create_group(&zpci_global_kset->kobj, &zpci_attr_group_global);
+> +	[CXL_MEM_COMMAND_ID_##_id] = {                                         \
+> +		{                                                              \
+I would suggest naming the sub structure in this initializer.
+		.info = { ...
+> +			.id = CXL_MEM_COMMAND_ID_##_id,                        \
+> +			.flags = CXL_MEM_COMMAND_FLAG_##_flags,                \
+> +			.size_in = sin,                                        \
+> +			.size_out = sout,                                      \
+> +		},                                                             \
+> +			.flags = CXL_CMD_INTERNAL_FLAG_##f,                    \
 
-Huge hint, if in a driver, or bus subsystem, and you call sysfs_*,
-that's usually a huge clue that you are doing something wrong.
+These look to be indented too far.
 
-Try the above again, with a simple attribute group, and name for it, and
-it should "just work".
+> +			.opcode = CXL_MBOX_OP_##_id,                           \
+> +	}
+> +
+> +/**
+> + * struct cxl_mem_command - Driver representation of a memory device command
+> + * @info: Command information as it exists for the UAPI
+> + * @opcode: The actual bits used for the mailbox protocol
+> + * @flags: Set of flags reflecting the state of the command.
+> + *
+> + *  * %CXL_CMD_INTERNAL_FLAG_HIDDEN: Command is hidden from userspace. This
+> + *    would typically be used for deprecated commands.
+> + *  * %CXL_CMD_FLAG_MANDATORY: Hardware must support this command. This flag is
+> + *    only used internally by the driver for sanity checking.
+> + *
+> + * The cxl_mem_command is the driver's internal representation of commands that
+> + * are supported by the driver. Some of these commands may not be supported by
+> + * the hardware. The driver will use @info to validate the fields passed in by
+> + * the user then submit the @opcode to the hardware.
+> + *
+> + * See struct cxl_command_info.
+> + */
+> +struct cxl_mem_command {
+> +	const struct cxl_command_info info;
+> +	enum opcode opcode;
+> +	u32 flags;
+> +#define CXL_CMD_INTERNAL_FLAG_NONE 0
+> +#define CXL_CMD_INTERNAL_FLAG_HIDDEN BIT(0)
+> +#define CXL_CMD_INTERNAL_FLAG_MANDATORY BIT(1)
+> +};
+> +
+> +/*
+> + * This table defines the supported mailbox commands for the driver. This table
+> + * is made up of a UAPI structure. Non-negative values as parameters in the
+> + * table will be validated against the user's input. For example, if size_in is
+> + * 0, and the user passed in 1, it is an error.
+> + */
+> +static struct cxl_mem_command mem_commands[] = {
+> +	CXL_CMD(INVALID, KERNEL, 0, 0, HIDDEN),
+> +	CXL_CMD(IDENTIFY, NONE, 0, 0x43, MANDATORY),
+> +};
+> +
+> +#define cxl_for_each_cmd(cmd)                                                  \
+> +	for ((cmd) = &mem_commands[0];                                         \
+> +	     ((cmd) - mem_commands) < ARRAY_SIZE(mem_commands); (cmd)++)
+> +
+> +static inline int cxl_cmd_index(const struct cxl_mem_command *c)
+> +{
+> +	if (unlikely(c >= mem_commands &&
+> +		     c < (mem_commands + sizeof(mem_commands)))) {
 
-thanks,
+This path could do with an explanatory comment.
 
-greg k-h
+> +		struct cxl_mem_command *p;
+> +
+> +		cxl_for_each_cmd(p)
+> +			if (p->opcode == c->opcode &&
+> +			    p->flags == c->flags)
+> +				return p - mem_commands;
+> +	} else {
+> +		return c - mem_commands;
+> +	}
+> +
+> +	WARN_ON_ONCE(1);
+> +	return 0;
+> +}
+> +
+> +static inline struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+> +{
+> +	struct cxl_mem_command *c;
+> +
+> +	cxl_for_each_cmd(c) {
+> +		if (c->opcode == opcode)
+> +			return c;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+>  {
+>  	const int timeout = msecs_to_jiffies(CXL_MAILBOX_TIMEOUT_US);
+> @@ -140,6 +226,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+>  static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+>  				 struct mbox_cmd *mbox_cmd)
+>  {
+> +	const struct cxl_mem_command *cmd;
+>  	u64 cmd_reg, status_reg;
+>  	size_t out_len;
+>  	int rc;
+> @@ -158,6 +245,13 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+>  	 *   8. If output payload is non-empty, host reads Command Payload Registers
+>  	 */
+>  
+> +	cmd = cxl_mem_find_command(mbox_cmd->opcode);
+> +	if (!cmd) {
+> +		dev_info(&cxlm->pdev->dev,
+> +			 "Unknown opcode 0x%04x being sent to hardware\n",
+> +			 mbox_cmd->opcode);
+> +	}
+> +
+>  	/* #1 */
+>  	WARN_ON(cxl_doorbell_busy(cxlm));
+>  
+> @@ -200,6 +294,20 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+>  	out_len = CXL_GET_FIELD(cmd_reg, CXLDEV_MB_CMD_PAYLOAD_LENGTH);
+>  	mbox_cmd->size_out = out_len;
+>  
+> +	/*
+> +	 * If the command had a fixed size output, but the hardware did
+> +	 * something unexpected, just print an error and move on. It would be
+> +	 * worth sending a bug report.
+> +	 */
+> +	if (cmd && cmd->info.size_out >= 0 &&
+> +	    mbox_cmd->size_out != cmd->info.size_out) {
+> +		bool too_big = mbox_cmd->size_out > cmd->info.size_out;
+> +
+> +		dev_err(&cxlm->pdev->dev,
+> +			"payload was %s than driver expectations\n",
+> +			too_big ? "larger" : "smaller");
+> +	}
+> +
+>  	/* #8 */
+>  	if (out_len && mbox_cmd->payload)
+>  		memcpy_fromio(mbox_cmd->payload, cxl_payload_regs(cxlm),
+> @@ -323,8 +431,56 @@ static int cxl_mem_release(struct inode *inode, struct file *file)
+>  	return 0;
+>  }
+>  
+> +static int cxl_mem_count_commands(void)
+> +{
+> +	struct cxl_mem_command *c;
+> +	int n = 0;
+> +
+> +	cxl_for_each_cmd(c) {
+> +		if (c->flags & CXL_CMD_INTERNAL_FLAG_HIDDEN)
+> +			continue;
+> +		n++;
+> +	}
+> +
+> +	return n;
+> +}
+> +
+>  static long cxl_mem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  {
+> +	struct cxl_memdev *cxlmd = file->private_data;
+> +	struct device *dev = &cxlmd->dev;
+> +
+> +	if (cmd == CXL_MEM_QUERY_COMMANDS) {
+> +		struct cxl_mem_query_commands __user *q = (void __user *)arg;
+> +		struct cxl_mem_command *cmd;
+> +		u32 n_commands;
+> +		int j = 0;
+> +
+> +		dev_dbg(dev, "Query IOCTL\n");
+> +
+> +		if (get_user(n_commands, (u32 __user *)arg))
+> +			return -EFAULT;
+> +
+> +		/* returns the total number if 0 elements are requested. */
+> +		if (n_commands == 0)
+> +			return put_user(cxl_mem_count_commands(),
+> +					(u32 __user *)arg);
+
+Perhaps clearer to fill in the n_commands field of q?
+
+> +
+> +		/* otherwise, return max(n_commands, total commands) */
+Doesn't seem to be doing this...
+
+> +		cxl_for_each_cmd(cmd) {
+> +			const struct cxl_command_info *info = &cmd->info;
+> +
+> +			if (cmd->flags & CXL_CMD_INTERNAL_FLAG_HIDDEN)
+> +				continue;
+> +
+> +			if (copy_to_user(&q->commands[j++], info, sizeof(*info)))
+> +				return -EFAULT;
+> +
+> +			if (j == n_commands)
+> +				break;
+
+That doesn't look right.  Shouldn't be returning -ENOTTY in either of the success
+paths.
+> +		}
+> +	}
+> +
+>  	return -ENOTTY;
+>  }
+>  
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> new file mode 100644
+> index 000000000000..847f825bbe18
+> --- /dev/null
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -0,0 +1,117 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * CXL IOCTLs for Memory Devices
+> + */
+> +
+> +#ifndef _UAPI_CXL_MEM_H_
+> +#define _UAPI_CXL_MEM_H_
+> +
+> +#if defined(__cplusplus)
+> +extern "C" {
+> +#endif
+> +
+> +/**
+> + * DOC: UAPI
+> + *
+> + * CXL memory devices expose UAPI to have a standard user interface.
+> + * Userspace can refer to these structure definitions and UAPI formats
+> + * to communicate to driver. The commands themselves are somewhat obfuscated
+> + * with macro magic. They have the form CXL_MEM_COMMAND_ID_<name>.
+> + *
+> + * For example "CXL_MEM_COMMAND_ID_INVALID"
+> + *
+> + * Not all of all commands that the driver supports are always available for use
+> + * by userspace. Userspace must check the results from the QUERY command in
+> + * order to determine the live set of commands.
+> + */
+> +
+> +#define CXL_MEM_QUERY_COMMANDS _IOR(0xCE, 1, struct cxl_mem_query_commands)
+> +
+> +#undef CMDS
+> +#define CMDS                                                                   \
+> +	C(INVALID,	"Invalid Command"),                                    \
+> +	C(IDENTIFY,	"Identify Command"),                                   \
+> +	C(MAX,		"Last command")
+> +#undef C
+> +#define C(a, b) CXL_MEM_COMMAND_ID_##a
+> +
+> +enum { CMDS };
+> +
+> +/**
+> + * struct cxl_command_info - Command information returned from a query.
+> + * @id: ID number for the command.
+> + * @flags: Flags that specify command behavior.
+> + *
+> + *  * %CXL_MEM_COMMAND_FLAG_KERNEL: This command is reserved for exclusive
+> + *    kernel use.
+> + *  * %CXL_MEM_COMMAND_FLAG_MUTEX: This command may require coordination with
+> + *    the kernel in order to complete successfully.
+> + *
+> + * @size_in: Expected input size, or -1 if variable length.
+> + * @size_out: Expected output size, or -1 if variable length.
+> + *
+> + * Represents a single command that is supported by both the driver and the
+> + * hardware. The is returned as part of an array from the query ioctl. The
+
+This is?
+
+> + * following would be a command named "foobar" that takes a variable length
+> + * input and returns 0 bytes of output.
+> + *
+> + *  - @id = 10
+> + *  - @flags = CXL_MEM_COMMAND_FLAG_MUTEX
+> + *  - @size_in = -1
+> + *  - @size_out = 0
+> + *
+> + * See struct cxl_mem_query_commands.
+> + */
+> +struct cxl_command_info {
+> +	__u32 id;
+> +
+> +	__u32 flags;
+> +#define CXL_MEM_COMMAND_FLAG_NONE 0
+> +#define CXL_MEM_COMMAND_FLAG_KERNEL BIT(0)
+> +#define CXL_MEM_COMMAND_FLAG_MUTEX BIT(1)
+> +
+> +	__s32 size_in;
+> +	__s32 size_out;
+> +};
+> +
+> +/**
+> + * struct cxl_mem_query_commands - Query supported commands.
+> + * @n_commands: In/out parameter. When @n_commands is > 0, the driver will
+> + *		return min(num_support_commands, n_commands). When @n_commands
+> + *		is 0, driver will return the number of total supported commands.
+> + * @rsvd: Reserved for future use.
+> + * @commands: Output array of supported commands. This array must be allocated
+> + *            by userspace to be at least min(num_support_commands, @n_commands)
+> + *
+> + * Allow userspace to query the available commands supported by both the driver,
+> + * and the hardware. Commands that aren't supported by either the driver, or the
+> + * hardware are not returned in the query.
+> + *
+> + * Examples:
+> + *
+> + *  - { .n_commands = 0 } // Get number of supported commands
+> + *  - { .n_commands = 15, .commands = buf } // Return first 15 (or less)
+> + *    supported commands
+> + *
+> + *  See struct cxl_command_info.
+> + */
+> +struct cxl_mem_query_commands {
+> +	/*
+> +	 * Input: Number of commands to return (space allocated by user)
+> +	 * Output: Number of commands supported by the driver/hardware
+> +	 *
+> +	 * If n_commands is 0, kernel will only return number of commands and
+> +	 * not try to populate commands[], thus allowing userspace to know how
+> +	 * much space to allocate
+> +	 */
+> +	__u32 n_commands;
+> +	__u32 rsvd;
+> +
+> +	struct cxl_command_info __user commands[]; /* out: supported commands */
+> +};
+> +
+> +#if defined(__cplusplus)
+> +}
+> +#endif
+> +
+> +#endif
+
