@@ -2,221 +2,331 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFFE52F6795
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 18:30:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 046392F679A
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 18:30:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbhANR0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 12:26:55 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2347 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbhANR0z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 12:26:55 -0500
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DGrgc4G0Jz67Z3P;
-        Fri, 15 Jan 2021 01:21:00 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Thu, 14 Jan 2021 18:26:12 +0100
-Received: from localhost (10.47.30.252) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 14 Jan
- 2021 17:26:11 +0000
-Date:   Thu, 14 Jan 2021 17:25:31 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        "Bjorn Helgaas" <helgaas@kernel.org>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        <daniel.lll@alibaba-inc.com>
-Subject: Re: [RFC PATCH v3 13/16] cxl/mem: Create concept of enabled
- commands
-Message-ID: <20210114172531.0000347a@Huawei.com>
-In-Reply-To: <20210111225121.820014-15-ben.widawsky@intel.com>
-References: <20210111225121.820014-1-ben.widawsky@intel.com>
-        <20210111225121.820014-15-ben.widawsky@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        id S1727305AbhANR1H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 12:27:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbhANR1F (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 Jan 2021 12:27:05 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ADD2523B53;
+        Thu, 14 Jan 2021 17:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610645184;
+        bh=KGUL3oGL9uMkClqX4GZ4mcMkJnHlMIC4jocOG2mcHyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=baWmyeFvZXn5uKSyEVk4kck0qohHF97JRj6jz96gCg6dtNI4/U8OLOAem51BFLPDK
+         uAdUb7rIcRXP0XXFyAQuMQ5DdMXDm3TrXyMp/l9LClstFcc2koCkHN16ZEXMLrZa6Y
+         5ppaET3hme0lAt9B0SODjhes6gSIQlZyyVzU6Z7r3WMI3HEblEjHvrBNqWxJkjgzAr
+         oUnQxZa7XYmpWzlOTImQaUdBm269YfZO8uevy7Qhx0cEBsuTP4jm88d8kmnX0+uV1y
+         H2itx/pMJOJA2qikN0unF9CgzhuUNUtL/NXe81NVrn8dDAGCtqqZW0Y8HhSUVJ1mjo
+         +9COpEGMI4xqA==
+Date:   Thu, 14 Jan 2021 19:26:20 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
+ number of MSI-X vectors
+Message-ID: <20210114172620.GC944463@unreal>
+References: <20210110150727.1965295-1-leon@kernel.org>
+ <20210110150727.1965295-3-leon@kernel.org>
+ <CAKgT0Uczu6cULPsVjFuFVmir35SpL-bs0hosbfH-T5sZLZ78BQ@mail.gmail.com>
+ <20210112065601.GD4678@unreal>
+ <CAKgT0UdndGdA3xONBr62hE-_RBdL-fq6rHLy0PrdsuMn1936TA@mail.gmail.com>
+ <20210113061909.GG4678@unreal>
+ <CAKgT0Uc4v54vqRVk_HhjOk=OLJu-20AhuBVcg7=C9_hsLtzxLA@mail.gmail.com>
+ <20210114065024.GK4678@unreal>
+ <CAKgT0UeTXMeH24L9=wsPc2oJ=ZJ5jSpJeOqiJvsB2J9TFRFzwQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.30.252]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UeTXMeH24L9=wsPc2oJ=ZJ5jSpJeOqiJvsB2J9TFRFzwQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 11 Jan 2021 14:51:18 -0800
-Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Thu, Jan 14, 2021 at 08:40:14AM -0800, Alexander Duyck wrote:
+> On Wed, Jan 13, 2021 at 10:50 PM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > On Wed, Jan 13, 2021 at 02:44:45PM -0800, Alexander Duyck wrote:
+> > > On Tue, Jan 12, 2021 at 10:19 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > > >
+> > > > On Tue, Jan 12, 2021 at 01:34:50PM -0800, Alexander Duyck wrote:
+> > > > > On Mon, Jan 11, 2021 at 10:56 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > > > > >
+> > > > > > On Mon, Jan 11, 2021 at 11:30:39AM -0800, Alexander Duyck wrote:
+> > > > > > > On Sun, Jan 10, 2021 at 7:10 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > > > > > >
+> > > > > > > > Some SR-IOV capable devices provide an ability to configure specific
+> > > > > > > > number of MSI-X vectors on their VF prior driver is probed on that VF.
+> > > > > > > >
+> > > > > > > > In order to make management easy, provide new read-only sysfs file that
+> > > > > > > > returns a total number of possible to configure MSI-X vectors.
+> > > > > > > >
+> > > > > > > > cat /sys/bus/pci/devices/.../sriov_vf_total_msix
+> > > > > > > >   = 0 - feature is not supported
+> > > > > > > >   > 0 - total number of MSI-X vectors to consume by the VFs
+> > > > > > > >
+> > > > > > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > > > > > > ---
+> > > > > > > >  Documentation/ABI/testing/sysfs-bus-pci | 14 +++++++++++
+> > > > > > > >  drivers/pci/iov.c                       | 31 +++++++++++++++++++++++++
+> > > > > > > >  drivers/pci/pci.h                       |  3 +++
+> > > > > > > >  include/linux/pci.h                     |  2 ++
+> > > > > > > >  4 files changed, 50 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> > > > > > > > index 05e26e5da54e..64e9b700acc9 100644
+> > > > > > > > --- a/Documentation/ABI/testing/sysfs-bus-pci
+> > > > > > > > +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> > > > > > > > @@ -395,3 +395,17 @@ Description:
+> > > > > > > >                 The file is writable if the PF is bound to a driver that
+> > > > > > > >                 supports the ->sriov_set_msix_vec_count() callback and there
+> > > > > > > >                 is no driver bound to the VF.
+> > > > > > > > +
+> > > > > > > > +What:          /sys/bus/pci/devices/.../sriov_vf_total_msix
+> > > > > > >
+> > > > > > > In this case I would drop the "vf" and just go with sriov_total_msix
+> > > > > > > since now you are referring to a global value instead of a per VF
+> > > > > > > value.
+> > > > > >
+> > > > > > This field indicates the amount of MSI-X available for VFs, it doesn't
+> > > > > > include PFs. The missing "_vf_" will mislead users who will believe that
+> > > > > > it is all MSI-X vectors available for this device. They will need to take
+> > > > > > into consideration amount of PF MSI-X in order to calculate the VF distribution.
+> > > > > >
+> > > > > > So I would leave "_vf_" here.
+> > > > >
+> > > > > The problem is you aren't indicating how many are available for an
+> > > > > individual VF though, you are indicating how many are available for
+> > > > > use by SR-IOV to give to the VFs. The fact that you are dealing with a
+> > > > > pool makes things confusing in my opinion. For example sriov_vf_device
+> > > > > describes the device ID that will be given to each VF.
+> > > >
+> > > > sriov_vf_device is different and is implemented accordingly to the PCI
+> > > > spec, 9.3.3.11 VF Device ID (Offset 1Ah)
+> > > > "This field contains the Device ID that should be presented for every VF
+> > > > to the SI."
+> > > >
+> > > > It is one ID for all VFs.
+> > >
+> > > Yes, but that is what I am getting at. It is also what the device
+> > > configuration will be for one VF. So when I read sriov_vf_total_msix
+> > > it reads as the total for a single VF, not all of the the VFs. That is
+> > > why I think dropping the "vf_" part of the name would make sense, as
+> > > what you are describing is the total number of MSI-X vectors for use
+> > > by SR-IOV VFs.
+> >
+> > I can change to anything as long as new name will give clear indication
+> > that this total number is for VFs and doesn't include SR-IOV PF MSI-X.
+>
+> It is interesting that you make that distinction.
+>
+> So in the case of the Intel hardware we had one pool of MSI-X
+> interrupts that was available for the entire port, both PF and VF.
+> When we enabled SR-IOV we had to repartition that pool in order to
+> assign interrupts to devices. So it sounds like in your case you don't
+> do that and instead the PF is static and the VFs are the only piece
+> that is flexible. Do I have that correct?
 
-> CXL devices must implement the Device Command Interface (described in
-> 8.2.9 of the CXL 2.0 spec). While the driver already maintains a list of
-> commands it supports, there is still a need to be able to distinguish
-> between commands that the driver knows about from commands that may not
-> be supported by the hardware. No such commands currently are defined in
-> the driver.
-> 
-> The implementation leaves the statically defined table of commands and
-> supplements it with a bitmap to determine commands that are enabled.
-> 
-> ---
-> 
-> There are multiple approaches that can be taken, but this is nice for a
-> few reasons.
-> 
-> Here are some of the other solutions:
-> 
-> Create a per instance table with only the supported commands.
-> 1. Having a fixed command id -> command mapping is much easier to manage
->    for development and debugging.
-> 2. Dealing with dynamic memory allocation for the table adds unnecessary
->    complexity.
-> 3. Most tables for device types are likely to be quite similar.
-> 4. Makes it difficult to implement helper macros like cxl_for_each_cmd()
-> 
-> If the per instance table did preserve ids, #1 above can be addressed.
-> However, as "enable" is currently the only mutable state for the
-> commands, it would yield a lot of overhead for not much gain.
-> Additionally, the other issues remain.
-> 
-> If "enable" remains the only mutable state, I believe this to be the
-> best solution. Once the number of mutable elements in a command grows,
-> it probably makes sense to move to per device instance state with a
-> fixed command ID mapping.
-Agreed with the logic.   
+It is partially correct. The mlx5 devices have ability to change MSI-X
+vectors of PF too, but to do so, you will need driver reload and much
+more complex user interface. So we (SW) leave it as static.
 
-However, patch wise, should either drop the --- above or move this below the
---- after your sign off.  Otherwise you run the risk of git dropping your
-sign off and resulting complaints from anyone run validation scripts
-of the kernel tree that check for that.
+>
+> > >
+> > > > >
+> > > > > > >
+> > > > > > > > +Date:          January 2021
+> > > > > > > > +Contact:       Leon Romanovsky <leonro@nvidia.com>
+> > > > > > > > +Description:
+> > > > > > > > +               This file is associated with the SR-IOV PFs.
+> > > > > > > > +               It returns a total number of possible to configure MSI-X
+> > > > > > > > +               vectors on the enabled VFs.
+> > > > > > > > +
+> > > > > > > > +               The values returned are:
+> > > > > > > > +                * > 0 - this will be total number possible to consume by VFs,
+> > > > > > > > +                * = 0 - feature is not supported
+> > > > > > > > +
+> > > > > > > > +               If no SR-IOV VFs are enabled, this value will return 0.
+> > > > > > > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > > > > > > index 42c0df4158d1..0a6ddf3230fd 100644
+> > > > > > > > --- a/drivers/pci/iov.c
+> > > > > > > > +++ b/drivers/pci/iov.c
+> > > > > > > > @@ -394,12 +394,22 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+> > > > > > > >         return count;
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > +static ssize_t sriov_vf_total_msix_show(struct device *dev,
+> > > > > > > > +                                       struct device_attribute *attr,
+> > > > > > > > +                                       char *buf)
+> > > > > > > > +{
+> > > > > > > > +       struct pci_dev *pdev = to_pci_dev(dev);
+> > > > > > > > +
+> > > > > > > > +       return sprintf(buf, "%d\n", pdev->sriov->vf_total_msix);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > >
+> > > > > > > You display it as a signed value, but unsigned values are not
+> > > > > > > supported, correct?
+> > > > > >
+> > > > > > Right, I made it similar to the vf_msix_set. I can change.
+> > > > > >
+> > > > > > >
+> > > > > > > >  static DEVICE_ATTR_RO(sriov_totalvfs);
+> > > > > > > >  static DEVICE_ATTR_RW(sriov_numvfs);
+> > > > > > > >  static DEVICE_ATTR_RO(sriov_offset);
+> > > > > > > >  static DEVICE_ATTR_RO(sriov_stride);
+> > > > > > > >  static DEVICE_ATTR_RO(sriov_vf_device);
+> > > > > > > >  static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+> > > > > > > > +static DEVICE_ATTR_RO(sriov_vf_total_msix);
+> > > > > > > >
+> > > > > > > >  static struct attribute *sriov_dev_attrs[] = {
+> > > > > > > >         &dev_attr_sriov_totalvfs.attr,
+> > > > > > > > @@ -408,6 +418,7 @@ static struct attribute *sriov_dev_attrs[] = {
+> > > > > > > >         &dev_attr_sriov_stride.attr,
+> > > > > > > >         &dev_attr_sriov_vf_device.attr,
+> > > > > > > >         &dev_attr_sriov_drivers_autoprobe.attr,
+> > > > > > > > +       &dev_attr_sriov_vf_total_msix.attr,
+> > > > > > > >         NULL,
+> > > > > > > >  };
+> > > > > > > >
+> > > > > > > > @@ -658,6 +669,7 @@ static void sriov_disable(struct pci_dev *dev)
+> > > > > > > >                 sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> > > > > > > >
+> > > > > > > >         iov->num_VFs = 0;
+> > > > > > > > +       iov->vf_total_msix = 0;
+> > > > > > > >         pci_iov_set_numvfs(dev, 0);
+> > > > > > > >  }
+> > > > > > > >
+> > > > > > > > @@ -1116,6 +1128,25 @@ int pci_sriov_get_totalvfs(struct pci_dev *dev)
+> > > > > > > >  }
+> > > > > > > >  EXPORT_SYMBOL_GPL(pci_sriov_get_totalvfs);
+> > > > > > > >
+> > > > > > > > +/**
+> > > > > > > > + * pci_sriov_set_vf_total_msix - set total number of MSI-X vectors for the VFs
+> > > > > > > > + * @dev: the PCI PF device
+> > > > > > > > + * @numb: the total number of MSI-X vector to consume by the VFs
+> > > > > > > > + *
+> > > > > > > > + * Sets the number of MSI-X vectors that is possible to consume by the VFs.
+> > > > > > > > + * This interface is complimentary part of the pci_set_msix_vec_count()
+> > > > > > > > + * that will be used to configure the required number on the VF.
+> > > > > > > > + */
+> > > > > > > > +void pci_sriov_set_vf_total_msix(struct pci_dev *dev, int numb)
+> > > > > > > > +{
+> > > > > > > > +       if (!dev->is_physfn || !dev->driver ||
+> > > > > > > > +           !dev->driver->sriov_set_msix_vec_count)
+> > > > > > > > +               return;
+> > > > > > > > +
+> > > > > > > > +       dev->sriov->vf_total_msix = numb;
+> > > > > > > > +}
+> > > > > > > > +EXPORT_SYMBOL_GPL(pci_sriov_set_vf_total_msix);
+> > > > > > > > +
+> > > > > > >
+> > > > > > > This seems broken. What validation is being done on the numb value?
+> > > > > > > You pass it as int, and your documentation all refers to tests for >=
+> > > > > > > 0, but isn't a signed input a possibility as well? Also "numb" doesn't
+> > > > > > > make for a good abbreviation as it is already a word of its own. It
+> > > > > > > might make more sense to use count or something like that rather than
+> > > > > > > trying to abbreviate number.
+> > > > > >
+> > > > > > "Broken" is a nice word to describe misunderstanding.
+> > > > >
+> > > > > Would you prefer "lacking input validation".
+> > > > >
+> > > > > I see all this code in there checking for is_physfn and driver and
+> > > > > sriov_set_msix_vec_count before allowing the setting of vf_total_msix.
+> > > > > It just seems like a lot of validation is taking place on the wrong
+> > > > > things if you are just going to be setting a value reporting the total
+> > > > > number of MSI-X vectors in use for SR-IOV.
+> > > >
+> > > > All those checks are in place to ensure that we are not overwriting the
+> > > > default value, which is 0.
+> > >
+> > > Okay, so what you really have is surplus interrupts that you are
+> > > wanting to give out to VF devices. So when we indicate 0 here as the
+> > > default it really means we have no additional interrupts to give out.
+> > > Am I understanding that correctly?
+> >
+> > The vf_total_msix is static value and shouldn't be recalculated after
+> > every MSI-X vector number change. So 0 means that driver doesn't support
+> > at all this feature. The operator is responsible to make proper assignment
+> > calculations, because he is already doing it for the CPUs and netdev queues.
+>
+> Honestly that makes things even uglier. So basically this is a feature
+> where if it isn't supported it will make it look like the SR-IOV
+> device doesn't support MSI-X. I realize it is just the way it is
+> worded but it isn't very pretty.
 
-> 
-> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> ---
->  drivers/cxl/cxl.h |  4 ++++
->  drivers/cxl/mem.c | 38 +++++++++++++++++++++++++++++++++++++-
->  2 files changed, 41 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 537ac4d8e6bd..963ba30cb200 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -17,6 +17,9 @@
->  
->  #define CXL_GET_FIELD(word, field) FIELD_GET(field##_MASK, word)
->  
-> +/* XXX: Arbitrary max */
-> +#define CXL_MAX_COMMANDS 32
+I'm not native English speaker, we can work together later on the
+Documentation to make it more clear.
 
-If going this way, probably want a build time check that you don't
-go beyond this value for a given command set.  I haven't actually
-thought about how to construct that but should be easy enough.
+>
+> > >
+> > > The problem is this is very vendor specific so I am doing my best to
+> > > understand it as it is different then the other NICs I have worked
+> > > with.
+> >
+> > There is nothing vendor specific here. There are two types of devices:
+> > 1. Support this feature. - The vf_total_msix will be greater than 0 for them
+> > and their FW will do sanity checks when user overwrites their default number
+> > that they sat in the VF creation stage.
+> > 2. Doesn't support this feature - The vf_total_msix will be 0.
+> >
+> > It is PCI spec, so those "other NICs" that didn't implement the PCI spec
+> > will stay with option #2. It is not different from current situation.
+>
+> Where in the spec is this?
+>
+> I know in the PCI spec it says that the MSI-X table size is read-only
+> and is not supposed to be written by system software. That is what is
+> being overwritten right now by your patches that has me concerned.
 
-> +
->  /* Device  (CXL 2.0 - 8.2.8.3) */
->  #define CXLDEV_CAP_ARRAY_REG 0x0
->  #define CXLDEV_CAP_ARRAY_CAP_ID 0
-> @@ -88,6 +91,7 @@ struct cxl_mem {
->  	} ram;
->  
->  	char firmware_version[0x10];
-> +	DECLARE_BITMAP(enabled_cmds, CXL_MAX_COMMANDS);
->  
->  	/* Cap 0001h - CXL_CAP_CAP_ID_DEVICE_STATUS */
->  	struct {
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index a824cfd4342a..20b26fa2c466 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -114,6 +114,8 @@ static struct {
->   *    would typically be used for deprecated commands.
->   *  * %CXL_CMD_FLAG_MANDATORY: Hardware must support this command. This flag is
->   *    only used internally by the driver for sanity checking.
-> + *  * %CXL_CMD_INTERNAL_FLAG_PSEUDO: This is a pseudo command which doesn't have
-> + *    a direct mapping to hardware. They are implicitly always enabled.
->   *
->   * The cxl_mem_command is the driver's internal representation of commands that
->   * are supported by the driver. Some of these commands may not be supported by
-> @@ -129,6 +131,7 @@ struct cxl_mem_command {
->  #define CXL_CMD_INTERNAL_FLAG_NONE 0
->  #define CXL_CMD_INTERNAL_FLAG_HIDDEN BIT(0)
->  #define CXL_CMD_INTERNAL_FLAG_MANDATORY BIT(1)
-> +#define CXL_CMD_INTERNAL_FLAG_PSEUDO BIT(2)
->  };
->  
->  /*
-> @@ -140,7 +143,7 @@ struct cxl_mem_command {
->  static struct cxl_mem_command mem_commands[] = {
->  	CXL_CMD(INVALID, KERNEL, 0, 0, HIDDEN),
->  	CXL_CMD(IDENTIFY, NONE, 0, 0x43, MANDATORY),
-> -	CXL_CMD(RAW, NONE, ~0, ~0, MANDATORY),
-> +	CXL_CMD(RAW, NONE, ~0, ~0, PSEUDO),
->  };
->  
->  #define cxl_for_each_cmd(cmd)                                                  \
-> @@ -618,6 +621,10 @@ static int cxl_validate_cmd_from_user(struct cxl_mem *cxlm,
->  	c = &mem_commands[send_cmd->id];
->  	info = &c->info;
->  
-> +	/* Check that the command is enabled for hardware */
-> +	if (!test_bit(cxl_cmd_index(c), cxlm->enabled_cmds))
-> +		return -ENOTTY;
-> +
->  	if (info->flags & CXL_MEM_COMMAND_FLAG_KERNEL)
->  		return -EPERM;
->  
-> @@ -1029,6 +1036,31 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
->  	return rc;
->  }
->  
-> +/**
-> + * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
-> + * @cxlm: The device.
-> + *
-> + * Returns 0 if enumerate completed successfully.
-> + *
-> + * CXL devices have optional support for certain commands. This function will
-> + * determine the set of supported commands for the hardware and update the
-> + * enabled_cmds bitmap in the @cxlm.
-> + */
-> +static int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm)
-> +{
-> +	struct cxl_mem_command *c;
-> +
-> +	/* All commands are considered enabled for now (except INVALID). */
-> +	cxl_for_each_cmd(c) {
-> +		if (c->flags & CXL_CMD_INTERNAL_FLAG_HIDDEN)
-> +			continue;
-> +
-> +		set_bit(cxl_cmd_index(c), cxlm->enabled_cmds);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * cxl_mem_identify() - Send the IDENTIFY command to the device.
->   * @cxlm: The device to identify.
-> @@ -1147,6 +1179,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		goto err;
->  
-> +	rc = cxl_mem_enumerate_cmds(cxlm);
-> +	if (rc)
-> +		return rc;
-> +
->  	rc = cxl_mem_identify(cxlm);
->  	if (rc)
->  		goto err;
+My patches are not over-writting anything, they are asking from FW to
+set more appropriate value. The field stays read-only.
 
+<...>
+
+> >
+> > I remind you that this feature is applicable to all SR-IOV devices, we have
+> > RDMA, NVMe, crypto, FPGA and netdev VFs. The devlink is not supported
+> > outside of netdev world and implementation there will make this feature
+> > is far from being usable.
+>
+> To quote the documentation:
+> "devlink is an API to expose device information and resources not directly
+> related to any device class, such as chip-wide/switch-ASIC-wide configuration."
+
+There is a great world outside of netdev and it doesn't include devlink. :)
+
+>
+> > Right now, the configuration of PCI/core is done through sysfs, so let's
+> > review this feature from PCI/core perspective and not from netdev where
+> > sysfs is not widely used.
+>
+> The problem is what you are configuring is not necessarily PCI device
+> specific. You are configuring the firmware which operates at a level
+> above the PCI device. You just have it manifesting as a PCI behavior
+> as you are editing a read-only configuration space field.
+
+In our devices, PCI config space is managed by FW and it represents HW.
+
+>
+> Also as I mentioned a few times now the approach you are taking
+> violates the PCIe spec by essentially providing a means of making a
+> read-only field writable.
+
+AS you said, we see the same picture differently.
+
+Thansk
