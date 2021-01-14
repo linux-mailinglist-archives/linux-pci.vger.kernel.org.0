@@ -2,142 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B90832F620C
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 14:34:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C08D2F6247
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 14:46:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbhANNbc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 08:31:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbhANNbc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 08:31:32 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D4EC061574;
-        Thu, 14 Jan 2021 05:30:52 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id g25so5531068wmh.1;
-        Thu, 14 Jan 2021 05:30:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5gtQnymxrJU4U/yydHBIyEMWxn2DtKpp2p8TKsUkvAE=;
-        b=t9ScDnhL0kdFbaMBnwSr9ldDMzRrCHF9JPG0ADBs9MXR22YBlAMfQN/Ueh2rMCnm7u
-         eQQPj3w2VkmPEUPXyDFOrbA5FOBygYyxBIEYkPhjhic+YsFagMhrLUzqJ+zFqAJyh/o2
-         jyf1eu4HMnvxZaS2LHmHjEFqh1quRV0GENmo8k/ALq5UMMJITIP5/d0YRSSlibxwzNjp
-         VnE7wLD1hU+K89DfF6+SGvWBBWCNWgVM/f8Lohc61CBNp8rU2cSBcjN6tAZsZ7lYrUOU
-         0td8b1yKdmLe/YoBsMyRBO96kwXwZmiEJSs0zmATSe6x/H4UCOAFGeA+XAJVrarwhDcd
-         40OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5gtQnymxrJU4U/yydHBIyEMWxn2DtKpp2p8TKsUkvAE=;
-        b=CM0rc8YvO8lDDwElEkakzfio4tJjGVdqohYukRNlX10vDx/xFVefI1x1+5txauTOgD
-         yP2TmyLDNW4cRPEhR6Tpvi7VG6n4wA4eXK9uKE9vRoPFaidAKAnLVFHwfExrXx7CfpLn
-         XKTT6Fo2wiBJgwnwjg6p1BgpIF2CEmIjT1DvAh41XnknC1JLnnU+bw8jOyswYKfV1ECv
-         0YquADyFkwn2i3K7cCs3jkZbGi1Tqks9uBISb6LIcSxV+lQDPi9arX0JWBUFIWmpQlsR
-         dB10E9okP52XYCiwb4rD8JxDGa17PZ1OV05g/K4H4DSz2Pwkf0YubcJtS8rScj8feFl2
-         DCVA==
-X-Gm-Message-State: AOAM530mMbCDdiU1P7yJG7slE3YrUoZNJXctx9KvNURLje12tuxCcXfk
-        7GNJowyp0Wb/rhhTc7ZEkV4YKHYdtXjuxvletlw=
-X-Google-Smtp-Source: ABdhPJy80OE8PhB2egv6HX2NYHBoNMNittli7hcX0Nr+DiNqxs15T3dg1QBQfZMC4NvRDIlHuRmEePmxzhmx6m2U1Js=
-X-Received: by 2002:a05:600c:3549:: with SMTP id i9mr3814488wmq.89.1610631050890;
- Thu, 14 Jan 2021 05:30:50 -0800 (PST)
+        id S1725961AbhANNpj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 08:45:39 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57667 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727333AbhANNpj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 08:45:39 -0500
+Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1l02vn-0003FL-4a; Thu, 14 Jan 2021 13:44:55 +0000
+Date:   Thu, 14 Jan 2021 14:44:53 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Subject: Re: [RFC 1/1] s390/pci: expose UID checking state in sysfs
+Message-ID: <20210114134453.bkfik4zjt5ehz6d5@wittgenstein>
+References: <20210113185500.GA1918216@bjorn-Precision-5520>
+ <675aa466-59ea-cf8a-6eec-caa6478ba4cd@linux.ibm.com>
 MIME-Version: 1.0
-References: <1610612968-26612-1-git-send-email-wuht06@gmail.com>
- <1610612968-26612-3-git-send-email-wuht06@gmail.com> <20210114085233.GO4678@unreal>
- <CAG_R4_UJ0=8=31XZD-SiiuL91M02N+fn=CLNA4_5Xm7jRDE1Rg@mail.gmail.com> <20210114130624.GR4678@unreal>
-In-Reply-To: <20210114130624.GR4678@unreal>
-From:   Hongtao Wu <wuht06@gmail.com>
-Date:   Thu, 14 Jan 2021 21:30:39 +0800
-Message-ID: <CAG_R4_UdQay0xh11Snt7G+uS+1E7E0NQf1rE-JpA0fge9jeLRQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 2/2] PCI: sprd: Add support for Unisoc SoCs'
- PCIe controller
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hongtao Wu <billows.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <675aa466-59ea-cf8a-6eec-caa6478ba4cd@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 14, 2021 at 9:06 PM Leon Romanovsky <leon@kernel.org> wrote:
->
-> On Thu, Jan 14, 2021 at 08:00:50PM +0800, Hongtao Wu wrote:
-> > On Thu, Jan 14, 2021 at 4:52 PM Leon Romanovsky <leon@kernel.org> wrote=
-:
-> > >
-> > > On Thu, Jan 14, 2021 at 04:29:28PM +0800, Hongtao Wu wrote:
-> > > > From: Hongtao Wu <billows.wu@unisoc.com>
-> > > >
-> > > > This series adds PCIe controller driver for Unisoc SoCs.
-> > > > This controller is based on DesignWare PCIe IP.
-> > > >
-> > > > Signed-off-by: Hongtao Wu <billows.wu@unisoc.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/Kconfig     |  12 ++
-> > > >  drivers/pci/controller/dwc/Makefile    |   1 +
-> > > >  drivers/pci/controller/dwc/pcie-sprd.c | 293 +++++++++++++++++++++=
-++++++++++++
-> > > >  3 files changed, 306 insertions(+)
-> > > >  create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
-> > >
-> > > <...>
-> > >
-> > > > +static struct platform_driver sprd_pcie_driver =3D {
-> > > > +     .probe =3D sprd_pcie_probe,
-> > > > +     .remove =3D __exit_p(sprd_pcie_remove),
-> > >                    ^^^^^^ why is that?
-> > >
-> >
-> > Thanks for the review.
-> >
-> > I think that if 'MODULE' is defined, '.remove =3D sprd_pcie_remove',
-> > else '.remove =3D NULL'.
-> > I would appreciate hearing your opinion about this.
->
-> If module not defined, these .probe and .remove won't be called.
->
-> >
-> > > > +     .driver =3D {
-> > > > +             .name =3D "sprd-pcie",
-> > > > +             .of_match_table =3D sprd_pcie_of_match,
-> > > > +     },
-> > > > +};
-> > > > +
-> > > > +module_platform_driver(sprd_pcie_driver);
-> > > > +
-> > > > +MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
-> > > > +MODULE_LICENSE("GPL v2");
-> > >
-> > > I think that it needs to be "GPL" and not "GPL v2".
-> > >
-> >
-> > Many platform drivers use 'GPL v2', but others use 'GPL'.
-> > I am not sure whether to use 'GPL' or 'GPL v2'.
-> > Could you tell me why =E2=80=98GPL=E2=80=99 is needed here?
->
-> Because GPL already means v2, see Documentation/process/license-rules.rst
->
->   447
->   448     "GPL v2"                      Same as "GPL". It exists for hist=
-oric
->   449                                   reasons.
->
+On Thu, Jan 14, 2021 at 02:20:10PM +0100, Niklas Schnelle wrote:
+> 
+> 
+> On 1/13/21 7:55 PM, Bjorn Helgaas wrote:
+> > On Wed, Jan 13, 2021 at 08:47:58AM +0100, Niklas Schnelle wrote:
+> >> On 1/12/21 10:50 PM, Bjorn Helgaas wrote:
+> >>> On Mon, Jan 11, 2021 at 10:38:57AM +0100, Niklas Schnelle wrote:
+> >>>> We use the UID of a zPCI adapter, or the UID of the function zero if
+> >>>> there are multiple functions in an adapter, as PCI domain if and only if
+> >>>> UID Checking is turned on.
+> >>>> Otherwise we automatically generate domains as devices appear.
+> >>>>
+> >>>> The state of UID Checking is thus essential to know if the PCI domain
+> >>>> will be stable, yet currently there is no way to access this information
+> >>>> from userspace.
+> >>>> So let's solve this by showing the state of UID checking as a sysfs
+> >>>> attribute in /sys/bus/pci/uid_checking
+> > 
+> >>>> +/* Global zPCI attributes */
+> >>>> +static ssize_t uid_checking_show(struct kobject *kobj,
+> >>>> +				 struct kobj_attribute *attr, char *buf)
+> >>>> +{
+> >>>> +	return sprintf(buf, "%i\n", zpci_unique_uid);
+> >>>> +}
+> >>>> +
+> >>>> +static struct kobj_attribute sys_zpci_uid_checking_attr =
+> >>>> +	__ATTR(uid_checking, 0444, uid_checking_show, NULL);
+> >>>
+> >>> Use DEVICE_ATTR_RO instead of __ATTR.
+> >>
+> >> It's my understanding that DEVICE_ATTR_* is only for
+> >> per device attributes. This one is global for the entire
+> >> Z PCI. I just tried with BUS_ATTR_RO instead
+> >> and that works but only if I put the attribute at
+> >> /sys/bus/pci/uid_checking instead of with a zpci
+> >> subfolder. This path would work for us too, we
+> >> currently don't have any other global attributes
+> >> that we are planning to expose but those could of
+> >> course come up in the future.
+> > 
+> > Ah, I missed the fact that this is a kobj_attribute, not a
+> > device_attribute.  Maybe KERNEL_ATTR_RO()?  Very few uses so far, but
+> > seems like it might fit?
+> > 
+> > Bjorn
+> > 
+> 
+> KERNEL_ATTR_* is currently not exported in any header. After
+> adding it to include/linuc/sysfs.h it indeed works perfectly.
+> Adding Christian Brauner as suggested by get_maintainers for
+> their opinion. I'm of course willing to provide a patch
 
-Thanks for the explanation!
-I'll update =E2=80=9CGPL=E2=80=9D and ".remove" in the next version.
+Hey Niklas et al. :)
 
->
-> >
-> > > Thanks
-> > >
-> > > > --
-> > > > 2.7.4
-> > > >
+I think this will need input from Greg. He should be best versed in
+sysfs attributes. The problem with KERNEL_ATTR_* to me seems that it's
+supposed to be kernel internal. Now, that might just be a matter of
+renaming the macro but let's see whether Greg has any better idea or
+more questions. :)
+
+Christian
