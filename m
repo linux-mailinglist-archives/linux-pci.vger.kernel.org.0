@@ -2,126 +2,367 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8795A2F6883
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 19:01:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C43802F68D4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 19:07:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbhANR4Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 12:56:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726625AbhANR4P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 12:56:15 -0500
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78CBC061574;
-        Thu, 14 Jan 2021 09:55:35 -0800 (PST)
-Received: by mail-io1-xd2b.google.com with SMTP id o6so12854861iob.10;
-        Thu, 14 Jan 2021 09:55:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=67DQJ4NzfsuMMaMoSQKf8A9YGMViRLloPVu4JKfJspU=;
-        b=SEZSRRLIN5/ffeCw/jbEh8+UxH/AbBLcQT5hgZrYIab1LN++Xx/Vr+w7c5e+3pyALa
-         jjRza21FnVLbATUPa+jkmvE9RLZnyzSFbAIOwPX619FbuYuic4rJf/QexVrp2SsQU2Tn
-         xo5EFBjo269YyZYx9T0lxmL/RW9zsP+xk62hAG5bBkMfGb/jnSxEpvKFI55jdM7d6mnm
-         D4Sdvt0FDQwt8kUY98FaBipjJhnSIG9VRABsO0JeUMyEB7dUFOYaS0SkXzX/O58kMGFC
-         JJnIJ955l+VfAqFjMD5lRtqvZrOXYn0vpZ6sXAHihHy7NSdZg3a+FQp5uQwIvnCd6F4x
-         Bqeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=67DQJ4NzfsuMMaMoSQKf8A9YGMViRLloPVu4JKfJspU=;
-        b=C4BzK89r6Bp6uLpDzRtzIJZjc+ukaOUy3B0ghDlXkMQ05e/t4TUryrVkK2fczw2ZSP
-         pNwVGhIlbXkrYV8vCIv8KYGv5Nx1fcp6jluT9F0y+cc9f+XLBRfc5rPMrxJzDG9hC8Lk
-         ytQPut9frVIktBmbs5UPpGrF7vUJ/ryxzrjswqo4E/EGeazd6NlHcITe8orTUhxIAAMj
-         yMX8dcjUxjnZirQaEd+EeR52sLFP+L/iqmC3y04RaOpoLcjXYxwrF/0uw7LPuaKBfj/a
-         sHjQPBQ0Bqe7k74riId0VyzLCLTULK1Tw/60FtAKgKdpviVvtwVcqA5IysGJ0ICFsnij
-         a9gw==
-X-Gm-Message-State: AOAM532ZYZwP1YFp49VS8av4mvpU6xf/ZKocpaFI8PZEO7sWtMSVFutv
-        toyTQDtI3cGTrRzT/ldb6cwLKGCZ5Lp38cO0Cdc=
-X-Google-Smtp-Source: ABdhPJzfTKyiXkoG2S8TYpSj5Alx+3WrJ4Tgl0TbdE8GM6jccfBiN+ZFexSpk9u/wc53N1YXDa4Dg4Q1GBvedXBiMeA=
-X-Received: by 2002:a92:b6c7:: with SMTP id m68mr7544514ill.95.1610646935156;
- Thu, 14 Jan 2021 09:55:35 -0800 (PST)
+        id S1727791AbhANSDf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 13:03:35 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2349 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbhANSDe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 13:03:34 -0500
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DGsXR1xmMz67c9r;
+        Fri, 15 Jan 2021 01:59:51 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Thu, 14 Jan 2021 19:02:51 +0100
+Received: from localhost (10.47.30.252) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 14 Jan
+ 2021 18:02:50 +0000
+Date:   Thu, 14 Jan 2021 18:02:11 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
+        Jon Masters <jcm@jonmasters.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        <daniel.lll@alibaba-inc.com>
+Subject: Re: [RFC PATCH v3 14/16] cxl/mem: Use CEL for enabling commands
+Message-ID: <20210114180211.00007852@Huawei.com>
+In-Reply-To: <20210111225121.820014-16-ben.widawsky@intel.com>
+References: <20210111225121.820014-1-ben.widawsky@intel.com>
+        <20210111225121.820014-16-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20210110150727.1965295-1-leon@kernel.org> <20210110150727.1965295-3-leon@kernel.org>
- <CAKgT0Uczu6cULPsVjFuFVmir35SpL-bs0hosbfH-T5sZLZ78BQ@mail.gmail.com>
- <20210112065601.GD4678@unreal> <CAKgT0UdndGdA3xONBr62hE-_RBdL-fq6rHLy0PrdsuMn1936TA@mail.gmail.com>
- <20210113061909.GG4678@unreal> <CAKgT0Uc4v54vqRVk_HhjOk=OLJu-20AhuBVcg7=C9_hsLtzxLA@mail.gmail.com>
- <20210114065024.GK4678@unreal> <CAKgT0UeTXMeH24L9=wsPc2oJ=ZJ5jSpJeOqiJvsB2J9TFRFzwQ@mail.gmail.com>
- <20210114164857.GN4147@nvidia.com>
-In-Reply-To: <20210114164857.GN4147@nvidia.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 14 Jan 2021 09:55:24 -0800
-Message-ID: <CAKgT0UcKqt=EgE+eitB8-u8LvxqHBDfF+u2ZSi5urP_Aj0Btvg@mail.gmail.com>
-Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
- number of MSI-X vectors
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.30.252]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 14, 2021 at 8:49 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->
-> On Thu, Jan 14, 2021 at 08:40:14AM -0800, Alexander Duyck wrote:
->
-> > Where I think you and I disagree is that I really think the MSI-X
-> > table size should be fixed at one value for the life of the VF.
-> > Instead of changing the table size it should be the number of vectors
-> > that are functional that should be the limit. Basically there should
-> > be only some that are functional and some that are essentially just
-> > dummy vectors that you can write values into that will never be used.
->
-> Ignoring the PCI config space to learn the # of available MSI-X
-> vectors is big break on the how the device's programming ABI works.
->
-> Or stated another way, that isn't compatible with any existing drivers
-> so it is basically not a useful approach as it can't be deployed.
->
-> I don't know why you think that is better.
->
-> Jason
+On Mon, 11 Jan 2021 14:51:19 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-First off, this is technically violating the PCIe spec section 7.7.2.2
-because this is the device driver modifying the Message Control
-register for a device, even if it is the PF firmware modifying the VF.
-The table size is something that should be set and fixed at device
-creation and not changed.
+> The Command Effects Log (CEL) is specified in the CXL 2.0 specification.
+> The CEL is one of two types of logs, the other being vendor specific.
+> They are distinguished in hardware/spec via UUID. The CEL is immediately
+> useful for 2 things:
+> 1. Determine which optional commands are supported by the CXL device.
+> 2. Enumerate any vendor specific commands
+> 
+> The CEL can be used by the driver to determine which commands are
+> available in the hardware (though it isn't, yet). That set of commands
+> might itself be a subset of commands which are available to be used via
+> CXL_MEM_SEND_COMMAND IOCTL.
+> 
+> Prior to this, all commands that the driver exposed were explicitly
+> enabled. After this, only those commands that are found in the CEL are
+> enabled.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
 
-The MSI-X table is essentially just an MMIO resource, and I believe it
-should not be resized, just as you wouldn't expect any MMIO BAR to be
-dynamically resized. Many drivers don't make use of the full MSI-X
-table nor do they bother reading the size. We just populate a subset
-of the table based on the number of interrupt causes we will need to
-associate to interrupt handlers. You can check for yourself. There are
-only a handful of drivers such as vfio that ever bother reading at the
-offset "PCI_MSIX_FLAGS". Normally it is the number of interrupt causes
-that determine how many we need, not the size of the table. In
-addition the OS may restrict us further since there are only so many
-MSI-X interrupts that are supported per system/socket.
+This patch made me wonder if the model for the command in quite right.
+I think it would end up simpler with a pair of payload pointers for send
+and receive (that can be equal when it makes sense).
 
-As far as the programming ABI, having support for some number of MSI-X
-vectors isn't the same as having that number of MSI-X vectors. The
-MSI-X vector table entry is nothing more than a spot to write an
-address/data pair with the ability to mask the value to prevent it
-from being triggered. The driver/OS will associate some handler to
-that address/data pair. Populating an entry doesn't guarantee the
-interrupt will ever be used. The programming model for the device is
-what defines what trigger will be associated with it and when/how it
-will be used.
+A few other things inline.
 
-What I see this patch doing is trying to push driver PF policy onto
-the VF PCIe device configuration space dynamically. Having some
-limited number of interrupt causes should really be what is limiting
-things here. I see that being mostly a thing between the firmware and
-the VF in terms of configuration and not something that necessarily
-has to be pushed down onto the PCIe configuration space itself.
+Jonathan
+
+> ---
+>  drivers/cxl/mem.c            | 178 +++++++++++++++++++++++++++++++++--
+>  include/uapi/linux/cxl_mem.h |   1 +
+>  2 files changed, 172 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 20b26fa2c466..6dfc8ff0aefb 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -44,8 +44,10 @@
+>  enum opcode {
+>  	CXL_MBOX_OP_INVALID	= 0x0000,
+>  #define CXL_MBOX_OP_RAW		CXL_MBOX_OP_INVALID
+> -	CXL_MBOX_OP_IDENTIFY    = 0x4000,
+
+Fix the space vs tabs in earlier patch so this diff doesn't end up looking
+weird and make people wonder what changed about that line.
+
+> -	CXL_MBOX_OP_MAX         = 0x10000
+> +	CXL_MBOX_OP_GET_SUPPORTED_LOGS = 0x0400,
+> +	CXL_MBOX_OP_GET_LOG	= 0x0401,
+> +	CXL_MBOX_OP_IDENTIFY	= 0x4000,
+> +	CXL_MBOX_OP_MAX		= 0x10000
+>  };
+>  
+>  /**
+> @@ -104,6 +106,16 @@ static struct {
+>  			.opcode = CXL_MBOX_OP_##_id,                           \
+>  	}
+>  
+> +enum {
+> +	CEL_UUID,
+> +	DEBUG_UUID
+> +};
+> +
+> +static const uuid_t log_uuid[] = {
+> +	UUID_INIT(0xda9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, 0x96, 0xb1, 0x62, 0x3b, 0x3f, 0x17),
+Whilst it will make some long lines, probably good to make the association of these with the enum
+explicit.
+
+	[CEL_UUID] = UUID_INIT(...),
+	[DEBUG_UUID] = UUID_INIT(...),
+Trailing comma for both this and the enum probably wise as I'm sure we'll get more of these
+at some point.
+
+> +	UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19, 0x40, 0x3d, 0x86)
+> +};
+> +
+>  /**
+>   * struct cxl_mem_command - Driver representation of a memory device command
+>   * @info: Command information as it exists for the UAPI
+> @@ -144,6 +156,7 @@ static struct cxl_mem_command mem_commands[] = {
+>  	CXL_CMD(INVALID, KERNEL, 0, 0, HIDDEN),
+>  	CXL_CMD(IDENTIFY, NONE, 0, 0x43, MANDATORY),
+>  	CXL_CMD(RAW, NONE, ~0, ~0, PSEUDO),
+> +	CXL_CMD(GET_SUPPORTED_LOGS, NONE, 0, ~0, MANDATORY),
+>  };
+>  
+>  #define cxl_for_each_cmd(cmd)                                                  \
+> @@ -1036,6 +1049,103 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+>  	return rc;
+>  }
+>  
+> +struct cxl_mbox_get_supported_logs {
+> +	__le16 entries;
+> +	u8 rsvd[6];
+> +	struct gsl_entry {
+> +		uuid_t uuid;
+> +		__le32 size;
+> +	} __packed entry[2];
+> +} __packed;
+
+blank line here.  Help my eyes parse the code if nothing else.
+
+> +struct cxl_mbox_get_log {
+> +	uuid_t uuid;
+> +	__le32 offset;
+> +	__le32 length;
+> +} __packed;
+> +
+> +static int cxl_xfer_log(struct cxl_mem *cxlm, uuid_t *uuid, u32 size,
+> +			u8 *out)
+> +{
+> +	u32 remaining = size;
+> +	u32 offset = 0;
+> +
+> +	while (remaining) {
+> +		u32 xfer_size = min_t(u32, remaining, cxlm->mbox.payload_size);
+> +		struct mbox_cmd mbox_cmd;
+> +		int rc;
+> +		struct cxl_mbox_get_log log = {
+> +			.uuid = *uuid,
+> +			.offset = cpu_to_le32(offset),
+> +			.length = cpu_to_le32(xfer_size)
+> +		};
+> +
+> +		memcpy_toio(cxl_payload_regs(cxlm), &log, sizeof(log));
+> +		mbox_cmd = (struct mbox_cmd) {
+> +			.opcode = CXL_MBOX_OP_GET_LOG,
+> +			.payload = NULL,
+> +			.size_in = sizeof(log),
+> +		};
+
+The fact that you end up bypassing the payload transfer stuff in mbox_cmd
+rather suggests it's not a particularly good model.  + it keeps confusing
+me.
+
+While the hardware uses a single region for the payload, there is nothing
+saying the code has to work that way.   Why not have separate payload_in and
+payload_out pointers?  Occasionally you might set them to the same buffer, but
+elsewhere you could avoid the direct memcpy()s you are doing around the
+send_cmd(). 
+
+
+
+> +
+> +		rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> +		if (rc)
+> +			return rc;
+> +
+> +		WARN_ON(mbox_cmd.size_out != xfer_size);
+> +
+> +		memcpy_fromio(out, cxl_payload_regs(cxlm), mbox_cmd.size_out);
+> +		out += xfer_size;
+> +		remaining -= xfer_size;
+> +		offset += xfer_size;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_enable_cmd(struct cxl_mem *cxlm,
+> +			   const struct cxl_mem_command *cmd)
+> +{
+> +	if (test_and_set_bit(cxl_cmd_index(cmd), cxlm->enabled_cmds))
+> +		dev_warn(&cxlm->pdev->dev, "Command enabled twice\n");
+> +
+> +	dev_info(&cxlm->pdev->dev, "%s enabled",
+> +		 command_names[cxl_cmd_index(cmd)].name);
+
+Is there anything stopping this being in the previous patch?
+I think it would make more sense there if it can be.
+
+> +}
+> +
+> +/**
+> + * cxl_walk_cel() - Walk through the Command Effects Log.
+> + * @cxlm: Device.
+> + * @size: Length of the Command Effects Log.
+> + * @cel: CEL
+> + *
+> + * Iterate over each entry in the CEL and determine if the driver supports the
+> + * command. If so, the command is enabled for the device and can be used later.
+> + */
+> +static void cxl_walk_cel(struct cxl_mem *cxlm, size_t size, u8 *cel)
+> +{
+> +	struct cel_entry {
+> +		__le16 opcode;
+> +		__le16 effect;
+> +	} *cel_entry;
+> +	const int cel_entries = size / sizeof(*cel_entry);
+> +	int i;
+> +
+> +	cel_entry = (struct cel_entry *)cel;
+> +
+> +	for (i = 0; i < cel_entries; i++) {
+> +		const struct cel_entry *ce = &cel_entry[i];
+> +		const struct cxl_mem_command *cmd =
+> +			cxl_mem_find_command(le16_to_cpu(ce->opcode));
+> +
+> +		if (!cmd) {
+> +			dev_dbg(&cxlm->pdev->dev, "Unsupported opcode 0x%04x",
+> +				le16_to_cpu(ce->opcode));
+> +			continue;
+> +		}
+> +
+> +		cxl_enable_cmd(cxlm, cmd);
+> +	}
+> +}
+> +
+>  /**
+>   * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
+>   * @cxlm: The device.
+> @@ -1048,17 +1158,71 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+>   */
+>  static int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm)
+>  {
+> -	struct cxl_mem_command *c;
+> +	struct cxl_mbox_get_supported_logs gsl;
+> +	const struct cxl_mem_command *c;
+
+Make this const in previous patch to reduce the diff a tiny bit.
+
+> +	struct mbox_cmd mbox_cmd;
+> +	int i, rc;
+>  
+> -	/* All commands are considered enabled for now (except INVALID). */
+> +	/* Pseudo commands are always enabled */
+>  	cxl_for_each_cmd(c) {
+> -		if (c->flags & CXL_CMD_INTERNAL_FLAG_HIDDEN)
+> +		if (c->flags & CXL_CMD_INTERNAL_FLAG_PSEUDO)
+> +			cxl_enable_cmd(cxlm, c);
+> +	}
+> +
+> +	rc = cxl_mem_mbox_get(cxlm, false);
+> +	if (rc)
+> +		return rc;
+> +
+> +	mbox_cmd = (struct mbox_cmd){
+> +		.opcode = CXL_MBOX_OP_GET_SUPPORTED_LOGS,
+> +		.payload = &gsl,
+> +		.size_in = 0,
+
+I raised a question on an earlier patch on why we aren't setting
+size_out.  Your docs say you should and it would make sense to
+me to always do so, but right now it's unused.
+
+> +	};
+> +	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> +	if (rc)
+> +		goto out;
+> +
+> +	for (i = 0; i < le16_to_cpu(gsl.entries); i++) {
+> +		u32 size = le32_to_cpu(gsl.entry[i].size);
+> +		uuid_t uuid = gsl.entry[i].uuid;
+> +		u8 *log;
+> +
+> +		dev_dbg(&cxlm->pdev->dev, "Found LOG type %pU of size %d",
+> +			&uuid, size);
+> +
+> +		if (!uuid_equal(&uuid, &log_uuid[CEL_UUID]))
+>  			continue;
+>  
+> -		set_bit(cxl_cmd_index(c), cxlm->enabled_cmds);
+> +		/*
+> +		 * It's a hardware bug if the log size is less than the input
+> +		 * payload size because there are many mandatory commands.
+> +		 */
+> +		if (sizeof(struct cxl_mbox_get_log) > size) {
+> +			dev_err(&cxlm->pdev->dev,
+> +				"CEL log size reported was too small (%d)",
+> +				size);
+> +			rc = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		log = kvmalloc(size, GFP_KERNEL);
+> +		if (!log) {
+> +			rc = -ENOMEM;
+> +			goto out;
+> +		}
+> +
+> +		rc = cxl_xfer_log(cxlm, &uuid, size, log);
+> +		if (rc)
+> +			goto out;
+> +
+> +		cxl_walk_cel(cxlm, size, log);
+> +
+> +		kvfree(log);
+>  	}
+>  
+> -	return 0;
+> +out:
+> +	cxl_mem_mbox_put(cxlm);
+> +	return rc;
+>  }
+>  
+>  /**
+> diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> index 50acd6cc14d4..b504412d1db7 100644
+> --- a/include/uapi/linux/cxl_mem.h
+> +++ b/include/uapi/linux/cxl_mem.h
+> @@ -33,6 +33,7 @@ extern "C" {
+>  	C(INVALID,	"Invalid Command"),                                    \
+>  	C(IDENTIFY,	"Identify Command"),                                   \
+>  	C(RAW,		"Raw device command"),                                 \
+> +	C(GET_SUPPORTED_LOGS,		"Get Supported Logs"),                 \
+>  	C(MAX,		"Last command")
+>  #undef C
+>  #define C(a, b) CXL_MEM_COMMAND_ID_##a
+
