@@ -2,195 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEF172F5E4C
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 11:05:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2FDA2F5EC8
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 11:33:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbhANKE5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 05:04:57 -0500
-Received: from mga02.intel.com ([134.134.136.20]:64680 "EHLO mga02.intel.com"
+        id S1727668AbhANKc1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 05:32:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbhANKEz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Jan 2021 05:04:55 -0500
-IronPort-SDR: 1AZIdXZ/mPCZozlsbZkf7a8nH7atCOXTZafMSPl2jzzaIhcW2FIVMKclK0sHm2xLtp0SmVmkVN
- qVx1/vRn4BlQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9863"; a="165428685"
-X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
-   d="scan'208";a="165428685"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2021 02:04:10 -0800
-IronPort-SDR: hE79dyMu6oTtA2QK6dRBbpj7niAz2bMSXYi/inYkNP7d64wNa0YR4jtHc3msVSwOaeuowy3Jwj
- Li0lk5ooxzHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
-   d="scan'208";a="405112990"
-Received: from lkp-server01.sh.intel.com (HELO d5d1a9a2c6bb) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Jan 2021 02:04:09 -0800
-Received: from kbuild by d5d1a9a2c6bb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kzzU8-0000lU-VK; Thu, 14 Jan 2021 10:04:08 +0000
-Date:   Thu, 14 Jan 2021 18:03:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 91327d9b3add49a1580024c24857ae2c5ef30982
-Message-ID: <600016f8.yknPZtDMICePsGLT%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726518AbhANKc0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 Jan 2021 05:32:26 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CFE0223A40;
+        Thu, 14 Jan 2021 10:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610620305;
+        bh=JgQMe5VQW8Sc0fkd5NJhBQda6O3r+0lLU6OD5uVEKG4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RxxySrGPl7SB79DNlTCkWb6Z7U2TNwOgx/GZC4Id83x/TAdvaj6WJpfoZeeyOo9WG
+         FSRFIH2aEa5oUrf0RMwHYt5W/ESHuBM6k5HidxsxzekuRIzXcxE4ZnL4YRps9/KFMa
+         BYFsWbTGQoOC1bV6hj1wIcwoeRusCTa64vWc8EsvI0SScN34/sK7PCFqZNlTDcbtgX
+         5ntThtMmzd02S4AUHKRCsQtCnZLEuKfGILXNRWkqv3+SlRUyAYvVBqGbPJoC0RCCAh
+         eaXEG0Y97C2u4uCYY/h1k9lEypnX6COlrEf7Zt75zORBATb6bAA9/4QdDNPMr+pC8c
+         dKKuoRQSau6dQ==
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: [PATCH mlx5-next v2 0/5] Dynamically assign MSI-X vectors count
+Date:   Thu, 14 Jan 2021 12:31:35 +0200
+Message-Id: <20210114103140.866141-1-leon@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  next
-branch HEAD: 91327d9b3add49a1580024c24857ae2c5ef30982  Merge branch 'pci/resource'
+From: Leon Romanovsky <leonro@nvidia.com>
 
-elapsed time: 722m
+Changelog
+v2:
+ * Patch 1:
+  * Renamed vf_msix_vec sysfs knob to be sriov_vf_msix_count
+  * Added PF and VF device locks during set MSI-X call to protect from parallel
+    driver bind/unbind operations.
+  * Removed extra checks when reading sriov_vf_msix, because users will
+    be able to distinguish between supported/not supported by looking on
+    sriov_vf_total_msix count.
+  * Changed all occurrences of "numb" to be "count"
+  * Changed returned error from EOPNOTSUPP to be EBUSY if user tries to set
+    MSI-X count after driver already bound to the VF.
+  * Added extra comment in pci_set_msix_vec_count() to emphasize that driver
+    should not be bound.
+ * Patch 2:
+  * Chaged vf_total_msix from int to be u32 and updated function signatures
+    accordingly.
+  * Improved patch title
+v1: https://lore.kernel.org/linux-pci/20210110150727.1965295-1-leon@kernel.org
+ * Improved wording and commit messages of first PCI patch
+ * Added extra PCI patch to provide total number of MSI-X vectors
+ * Prohibited read of vf_msix_vec sysfs file if driver doesn't support write
+ * Removed extra function definition in pci.h
+v0: https://lore.kernel.org/linux-pci/20210103082440.34994-1-leon@kernel.org
 
-configs tested: 134
-configs skipped: 2
+--------------------------------------------------------------------
+Hi,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The number of MSI-X vectors is PCI property visible through lspci, that
+field is read-only and configured by the device.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                  mpc885_ads_defconfig
-sh                         ap325rxa_defconfig
-powerpc                      ep88xc_defconfig
-powerpc                 mpc8540_ads_defconfig
-mips                      pistachio_defconfig
-arm                        spear3xx_defconfig
-m68k                          hp300_defconfig
-powerpc64                           defconfig
-ia64                             allyesconfig
-m68k                          multi_defconfig
-parisc                              defconfig
-powerpc                 mpc8560_ads_defconfig
-arm                         vf610m4_defconfig
-h8300                               defconfig
-ia64                      gensparse_defconfig
-arm                          pxa910_defconfig
-powerpc                      tqm8xx_defconfig
-powerpc                      katmai_defconfig
-powerpc                       eiger_defconfig
-arc                              alldefconfig
-m68k                        mvme147_defconfig
-um                            kunit_defconfig
-arm                       imx_v4_v5_defconfig
-powerpc                      pasemi_defconfig
-powerpc                      ppc64e_defconfig
-powerpc                    gamecube_defconfig
-mips                          ath25_defconfig
-riscv                          rv32_defconfig
-mips                         db1xxx_defconfig
-arm                           stm32_defconfig
-m68k                        m5272c3_defconfig
-ia64                            zx1_defconfig
-openrisc                    or1ksim_defconfig
-powerpc                 mpc834x_itx_defconfig
-arm                       imx_v6_v7_defconfig
-arm                        magician_defconfig
-mips                       lemote2f_defconfig
-arm                        clps711x_defconfig
-c6x                        evmc6457_defconfig
-arm                        neponset_defconfig
-mips                           ci20_defconfig
-mips                        bcm63xx_defconfig
-m68k                        m5307c3_defconfig
-arc                      axs103_smp_defconfig
-m68k                        mvme16x_defconfig
-arm                        vexpress_defconfig
-powerpc                 mpc837x_rdb_defconfig
-arm                         hackkit_defconfig
-arm                         socfpga_defconfig
-arm                             mxs_defconfig
-xtensa                       common_defconfig
-powerpc                 mpc8315_rdb_defconfig
-mips                      pic32mzda_defconfig
-arm                     am200epdkit_defconfig
-sh                         ecovec24_defconfig
-arc                        nsimosci_defconfig
-powerpc                 mpc8313_rdb_defconfig
-arc                    vdk_hs38_smp_defconfig
-riscv                             allnoconfig
-powerpc                           allnoconfig
-x86_64                           alldefconfig
-arm                         palmz72_defconfig
-arm                       spear13xx_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a006-20210113
-x86_64               randconfig-a004-20210113
-x86_64               randconfig-a001-20210113
-x86_64               randconfig-a005-20210113
-x86_64               randconfig-a003-20210113
-x86_64               randconfig-a002-20210113
-i386                 randconfig-a002-20210113
-i386                 randconfig-a005-20210113
-i386                 randconfig-a006-20210113
-i386                 randconfig-a003-20210113
-i386                 randconfig-a001-20210113
-i386                 randconfig-a004-20210113
-i386                 randconfig-a012-20210113
-i386                 randconfig-a011-20210113
-i386                 randconfig-a016-20210113
-i386                 randconfig-a013-20210113
-i386                 randconfig-a015-20210113
-i386                 randconfig-a014-20210113
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+The static assignment of an amount of MSI-X vectors doesn't allow utilize
+the newly created VF because it is not known to the device the future load
+and configuration where that VF will be used.
 
-clang tested configs:
-x86_64               randconfig-a015-20210113
-x86_64               randconfig-a012-20210113
-x86_64               randconfig-a013-20210113
-x86_64               randconfig-a016-20210113
-x86_64               randconfig-a014-20210113
-x86_64               randconfig-a011-20210113
+The VFs are created on the hypervisor and forwarded to the VMs that have
+different properties (for example number of CPUs).
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+To overcome the inefficiency in the spread of such MSI-X vectors, we
+allow the kernel to instruct the device with the needed number of such
+vectors, before VF is initialized and bounded to the driver.
+
+Before this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+        Capabilities: [9c] MSI-X: Enable- Count=12 Masked-
+
+Configuration script:
+1. Start fresh
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+modprobe -q -r mlx5_ib mlx5_core
+2. Ensure that driver doesn't run and it is safe to change MSI-X
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_drivers_autoprobe
+3. Load driver for the PF
+modprobe mlx5_core
+4. Configure one of the VFs with new number
+echo 2 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+echo 21 > /sys/bus/pci/devices/0000\:08\:00.2/sriov_vf_msix_count
+
+After this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+        Capabilities: [9c] MSI-X: Enable- Count=21 Masked-
+
+Thanks
+
+Leon Romanovsky (5):
+  PCI: Add sysfs callback to allow MSI-X table size change of SR-IOV VFs
+  PCI: Add SR-IOV sysfs entry to read total number of dynamic MSI-X
+    vectors
+  net/mlx5: Add dynamic MSI-X capabilities bits
+  net/mlx5: Dynamically assign MSI-X vectors count
+  net/mlx5: Allow to the users to configure number of MSI-X vectors
+
+ Documentation/ABI/testing/sysfs-bus-pci       | 34 +++++++
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  5 ++
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  6 ++
+ .../net/ethernet/mellanox/mlx5/core/pci_irq.c | 62 +++++++++++++
+ .../net/ethernet/mellanox/mlx5/core/sriov.c   | 52 ++++++++++-
+ drivers/pci/iov.c                             | 89 +++++++++++++++++++
+ drivers/pci/msi.c                             | 47 ++++++++++
+ drivers/pci/pci-sysfs.c                       |  1 +
+ drivers/pci/pci.h                             |  5 ++
+ include/linux/mlx5/mlx5_ifc.h                 | 11 ++-
+ include/linux/pci.h                           |  5 ++
+ 11 files changed, 314 insertions(+), 3 deletions(-)
+
+--
+2.29.2
+
