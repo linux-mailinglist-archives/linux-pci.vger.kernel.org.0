@@ -2,193 +2,221 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C41F22F671D
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 18:15:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFFE52F6795
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 18:30:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbhANRNR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 12:13:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbhANRNR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Jan 2021 12:13:17 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AE96623B31;
-        Thu, 14 Jan 2021 17:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610644356;
-        bh=Ks55mQXoAeg+ag0q8XZoSvGVsUpHSJCQXqPKpmvWRXs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=szGajKBxFN6BkeKJ8IHP9v3IbJ2c4Bgj2Py/EUopZYESKNeGY2bTXwFxF9azmSt0F
-         27sUo0sO21wBcXZZze2Ysg+ENmdl6ilQGtVj7dMu6Dzx/Ikf6fH9e85tmg2C8YS66y
-         dcrCsG6wVSYIcVkXV0hfx6zzY5BLARe2ohtmyS+xxSkgqZt6GbY8m1iO6h85GG85F8
-         /VK8G60AMnDVAie2oAmePV3BrfUIKgvT+eRrLrUlcNTiPLygiwhWbKxhDuA9l5wlup
-         kx0hBD6FShl+Exq2Da56E7oRtr3mCgBAxGNy4YVVe2iNv2CfES9YvIaC8u8nPFZAAN
-         /KlE+1QZ0SUeg==
-Date:   Thu, 14 Jan 2021 19:12:32 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH mlx5-next v1 1/5] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <20210114171232.GB944463@unreal>
-References: <20210110150727.1965295-1-leon@kernel.org>
- <20210110150727.1965295-2-leon@kernel.org>
- <CAKgT0UcJrSNMPAOoniRSnUn+wyRUkL62AfgR3-8QbAkak=pQ=w@mail.gmail.com>
- <20210112063925.GC4678@unreal>
- <CAKgT0Udxd01agBMruooMi8TfAE+QkMt8n7-a2QrZ7Pj6-oFEAg@mail.gmail.com>
- <20210113060938.GF4678@unreal>
- <CAKgT0UecBX+LTR9GuxFb=P+pcUkjU5RYNNjeynExS-9Pik1Hsg@mail.gmail.com>
- <20210114071649.GL4678@unreal>
- <CAKgT0UdPZvSf0qSsU1NGcVcK_j6rPZQ8YT_UcygU+2FEq_dGpQ@mail.gmail.com>
+        id S1727116AbhANR0z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 12:26:55 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2347 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbhANR0z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 12:26:55 -0500
+Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DGrgc4G0Jz67Z3P;
+        Fri, 15 Jan 2021 01:21:00 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Thu, 14 Jan 2021 18:26:12 +0100
+Received: from localhost (10.47.30.252) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2106.2; Thu, 14 Jan
+ 2021 17:26:11 +0000
+Date:   Thu, 14 Jan 2021 17:25:31 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Vishal Verma" <vishal.l.verma@intel.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
+        Jon Masters <jcm@jonmasters.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        <daniel.lll@alibaba-inc.com>
+Subject: Re: [RFC PATCH v3 13/16] cxl/mem: Create concept of enabled
+ commands
+Message-ID: <20210114172531.0000347a@Huawei.com>
+In-Reply-To: <20210111225121.820014-15-ben.widawsky@intel.com>
+References: <20210111225121.820014-1-ben.widawsky@intel.com>
+        <20210111225121.820014-15-ben.widawsky@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UdPZvSf0qSsU1NGcVcK_j6rPZQ8YT_UcygU+2FEq_dGpQ@mail.gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.30.252]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 14, 2021 at 08:51:22AM -0800, Alexander Duyck wrote:
-> On Wed, Jan 13, 2021 at 11:16 PM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Wed, Jan 13, 2021 at 12:00:00PM -0800, Alexander Duyck wrote:
-> > > On Tue, Jan 12, 2021 at 10:09 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > > >
-> > > > On Tue, Jan 12, 2021 at 01:59:51PM -0800, Alexander Duyck wrote:
-> > > > > On Mon, Jan 11, 2021 at 10:39 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > > > > >
-> > > > > > On Mon, Jan 11, 2021 at 11:30:33AM -0800, Alexander Duyck wrote:
-> > > > > > > On Sun, Jan 10, 2021 at 7:12 AM Leon Romanovsky <leon@kernel.org> wrote:
-> > > > > > > >
-> > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > > > > > >
->
-> <snip>
->
-> > >
-> > > > >
-> > > > > Also I am not a big fan of the VF groping around looking for a PF
-> > > > > interface as it means the interface will likely be exposed in the
-> > > > > guest as well, but it just won't work.
-> > > >
-> > > > If you are referring to VF exposed to the VM, so in this case VF must be
-> > > > bound too vfio driver, or any other driver, and won't allow MSI-X change.
-> > > > If you are referring to PF exposed to the VM, it is very unlikely scenario
-> > > > in real world and reserved for braves among us. Even in this case, the
-> > > > set MSI-X won't work, because PF will be connected to the hypervisor driver
-> > > > that doesn't support set_msix.
-> > > >
-> > > > So both cases are handled.
-> > >
-> > > I get that they are handled. However I am not a huge fan of the sysfs
-> > > attributes for one device being dependent on another device. When you
-> > > have to start searching for another device it just makes things messy.
-> >
-> > This is pretty common way, nothing new here.
->
-> This is how writable fields within the device are handled. I am pretty
-> sure this is the first sysfs entry that is providing a workaround via
-> a device firmware to make the field editable that wasn't intended to
-> be.
->
-> So if in the future I define a device that has an MMIO register that
-> allows me to edit configuration space should I just tie it into the
-> same framework? That is kind of where I am going with my objection to
-> this. It just seems like you are adding a backdoor to allow editing
-> read-only configuration options.
+On Mon, 11 Jan 2021 14:51:18 -0800
+Ben Widawsky <ben.widawsky@intel.com> wrote:
 
-I have no objections as long as your new sysfs will make sense and will
-be acceptable by PCI community.
+> CXL devices must implement the Device Command Interface (described in
+> 8.2.9 of the CXL 2.0 spec). While the driver already maintains a list of
+> commands it supports, there is still a need to be able to distinguish
+> between commands that the driver knows about from commands that may not
+> be supported by the hardware. No such commands currently are defined in
+> the driver.
+> 
+> The implementation leaves the statically defined table of commands and
+> supplements it with a bitmap to determine commands that are enabled.
+> 
+> ---
+> 
+> There are multiple approaches that can be taken, but this is nice for a
+> few reasons.
+> 
+> Here are some of the other solutions:
+> 
+> Create a per instance table with only the supported commands.
+> 1. Having a fixed command id -> command mapping is much easier to manage
+>    for development and debugging.
+> 2. Dealing with dynamic memory allocation for the table adds unnecessary
+>    complexity.
+> 3. Most tables for device types are likely to be quite similar.
+> 4. Makes it difficult to implement helper macros like cxl_for_each_cmd()
+> 
+> If the per instance table did preserve ids, #1 above can be addressed.
+> However, as "enable" is currently the only mutable state for the
+> commands, it would yield a lot of overhead for not much gain.
+> Additionally, the other issues remain.
+> 
+> If "enable" remains the only mutable state, I believe this to be the
+> best solution. Once the number of mutable elements in a command grows,
+> it probably makes sense to move to per device instance state with a
+> fixed command ID mapping.
+Agreed with the logic.   
 
->
-> > >
-> > > > >
-> > > > > > >
-> > > > > > > If you are calling this on the VFs then it doesn't really make any
-> > > > > > > sense anyway since the VF is not a "VF PCI dev representor" and
-> > > > > > > shouldn't be treated as such. In my opinion if we are going to be
-> > > > > > > doing per-port resource limiting that is something that might make
-> > > > > > > more sense as a part of the devlink configuration for the VF since the
-> > > > > > > actual change won't be visible to an assigned device.
-> > > > > >
-> > > > > > https://lore.kernel.org/linux-pci/20210112061535.GB4678@unreal/
-> > > > >
-> > > > > So the question I would have is if we are spawning the VFs and
-> > > > > expecting them to have different configs or the same configuration?
-> > > >
-> > > > By default, they have same configuration.
-> > > >
-> > > > > I'm assuming in your case you are looking for a different
-> > > > > configuration per port. Do I have that correct?
-> > > >
-> > > > No, per-VF as represents one device in the PCI world. For example, mlx5
-> > > > can have more than one physical port.
-> > >
-> > > Sorry, I meant per virtual function, not per port.
-> >
-> > Yes, PCI spec is clear, MSI-X vector count is per-device and in our case
-> > it means per-VF.
->
-> I think you overlooked the part about it being "read-only". It isn't
-> really meant to be changed and that is what this patch set is
-> providing.
+However, patch wise, should either drop the --- above or move this below the
+--- after your sign off.  Otherwise you run the risk of git dropping your
+sign off and resulting complaints from anyone run validation scripts
+of the kernel tree that check for that.
 
-We doesn't allow writes to this field, but setting "hint" to the HW on
-the proper resource provisioning.
+> 
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  drivers/cxl/cxl.h |  4 ++++
+>  drivers/cxl/mem.c | 38 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 537ac4d8e6bd..963ba30cb200 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -17,6 +17,9 @@
+>  
+>  #define CXL_GET_FIELD(word, field) FIELD_GET(field##_MASK, word)
+>  
+> +/* XXX: Arbitrary max */
+> +#define CXL_MAX_COMMANDS 32
 
->
-> > >
-> > > > >
-> > > > > Where this gets ugly is that SR-IOV assumes a certain uniformity per
-> > > > > VF so doing a per-VF custom limitation gets ugly pretty quick.
-> > > >
-> > > > I don't find any support for this "uniformity" claim in the PCI spec.
-> > >
-> > > I am referring to the PCI configuration space. Each VF ends up with
-> > > some fixed amount of MMIO resources per function. So typically when
-> > > you spawn VFs we had things setup so that all you do is say how many
-> > > you want.
-> > >
-> > > > > I wonder if it would make more sense if we are going this route to just
-> > > > > define a device-tree like schema that could be fed in to enable VFs
-> > > > > instead of just using echo X > sriov_numvfs and then trying to fix
-> > > > > things afterwards. Then you could define this and other features that
-> > > > > I am sure you would need in the future via json-schema like is done in
-> > > > > device-tree and write it once enabling the set of VFs that you need.
-> > > >
-> > > > Sorry, but this is overkill, it won't give us much and it doesn't fit
-> > > > the VF usage model at all.
-> > > >
-> > > > Right now, all heavy users of SR-IOV are creating many VFs up to the maximum.
-> > > > They do it with autoprobe disabled, because it is too time consuming to wait
-> > > > till all VFs probe themselves and unbind them later.
-> > > >
-> > > > After that, they wait for incoming request to provision VM on VF, they set MAC
-> > > > address, change MSI-X according to VM properties and bind that VF to new VM.
-> > > >
-> > > > So MSI-X change is done after VFs were created.
-> > >
-> > > So if I understand correctly based on your comments below you are
-> > > dynamically changing the VF's MSI-X configuration space then?
-> >
-> > I'm changing "Table Size" from "7.7.2.2 Message Control Register for
-> > MSI-X (Offset 02h)" and nothing more.
-> >
-> > If you do raw PCI read before and after, only this field will be changed.
->
-> I would hope there is much more going on. Otherwise the VF hardware
-> will be exploitable by a malicious driver in the guest since you could
-> read/write to registers beyond the table and see some result. I am
-> assuming the firmware doesn't allow triggering of any interrupts
-> beyond the ones defined as being in the table.
+If going this way, probably want a build time check that you don't
+go beyond this value for a given command set.  I haven't actually
+thought about how to construct that but should be easy enough.
 
-You are talking about internal FW implementation, which is of course
-secure. I'm talking about PCI config space.
+> +
+>  /* Device  (CXL 2.0 - 8.2.8.3) */
+>  #define CXLDEV_CAP_ARRAY_REG 0x0
+>  #define CXLDEV_CAP_ARRAY_CAP_ID 0
+> @@ -88,6 +91,7 @@ struct cxl_mem {
+>  	} ram;
+>  
+>  	char firmware_version[0x10];
+> +	DECLARE_BITMAP(enabled_cmds, CXL_MAX_COMMANDS);
+>  
+>  	/* Cap 0001h - CXL_CAP_CAP_ID_DEVICE_STATUS */
+>  	struct {
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index a824cfd4342a..20b26fa2c466 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -114,6 +114,8 @@ static struct {
+>   *    would typically be used for deprecated commands.
+>   *  * %CXL_CMD_FLAG_MANDATORY: Hardware must support this command. This flag is
+>   *    only used internally by the driver for sanity checking.
+> + *  * %CXL_CMD_INTERNAL_FLAG_PSEUDO: This is a pseudo command which doesn't have
+> + *    a direct mapping to hardware. They are implicitly always enabled.
+>   *
+>   * The cxl_mem_command is the driver's internal representation of commands that
+>   * are supported by the driver. Some of these commands may not be supported by
+> @@ -129,6 +131,7 @@ struct cxl_mem_command {
+>  #define CXL_CMD_INTERNAL_FLAG_NONE 0
+>  #define CXL_CMD_INTERNAL_FLAG_HIDDEN BIT(0)
+>  #define CXL_CMD_INTERNAL_FLAG_MANDATORY BIT(1)
+> +#define CXL_CMD_INTERNAL_FLAG_PSEUDO BIT(2)
+>  };
+>  
+>  /*
+> @@ -140,7 +143,7 @@ struct cxl_mem_command {
+>  static struct cxl_mem_command mem_commands[] = {
+>  	CXL_CMD(INVALID, KERNEL, 0, 0, HIDDEN),
+>  	CXL_CMD(IDENTIFY, NONE, 0, 0x43, MANDATORY),
+> -	CXL_CMD(RAW, NONE, ~0, ~0, MANDATORY),
+> +	CXL_CMD(RAW, NONE, ~0, ~0, PSEUDO),
+>  };
+>  
+>  #define cxl_for_each_cmd(cmd)                                                  \
+> @@ -618,6 +621,10 @@ static int cxl_validate_cmd_from_user(struct cxl_mem *cxlm,
+>  	c = &mem_commands[send_cmd->id];
+>  	info = &c->info;
+>  
+> +	/* Check that the command is enabled for hardware */
+> +	if (!test_bit(cxl_cmd_index(c), cxlm->enabled_cmds))
+> +		return -ENOTTY;
+> +
+>  	if (info->flags & CXL_MEM_COMMAND_FLAG_KERNEL)
+>  		return -EPERM;
+>  
+> @@ -1029,6 +1036,31 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+>  	return rc;
+>  }
+>  
+> +/**
+> + * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
+> + * @cxlm: The device.
+> + *
+> + * Returns 0 if enumerate completed successfully.
+> + *
+> + * CXL devices have optional support for certain commands. This function will
+> + * determine the set of supported commands for the hardware and update the
+> + * enabled_cmds bitmap in the @cxlm.
+> + */
+> +static int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm)
+> +{
+> +	struct cxl_mem_command *c;
+> +
+> +	/* All commands are considered enabled for now (except INVALID). */
+> +	cxl_for_each_cmd(c) {
+> +		if (c->flags & CXL_CMD_INTERNAL_FLAG_HIDDEN)
+> +			continue;
+> +
+> +		set_bit(cxl_cmd_index(c), cxlm->enabled_cmds);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * cxl_mem_identify() - Send the IDENTIFY command to the device.
+>   * @cxlm: The device to identify.
+> @@ -1147,6 +1179,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (rc)
+>  		goto err;
+>  
+> +	rc = cxl_mem_enumerate_cmds(cxlm);
+> +	if (rc)
+> +		return rc;
+> +
+>  	rc = cxl_mem_identify(cxlm);
+>  	if (rc)
+>  		goto err;
 
-Thanks
