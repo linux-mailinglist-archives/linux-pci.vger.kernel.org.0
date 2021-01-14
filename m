@@ -2,92 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B4C72F6128
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 13:41:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDF902F6144
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 13:53:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbhANMlu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 07:41:50 -0500
-Received: from mail-oln040092067050.outbound.protection.outlook.com ([40.92.67.50]:2529
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726376AbhANMlt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Jan 2021 07:41:49 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mgxym60UtiiIc1lX2SNO59Qu+FkTXkFkRFiwl2VvLrnS6I5rcM7vdBXj80Ctnij+BkVLTKFx+K23erKQyzgnL0ZnbTEuFK5Qy96vtW0uNMJhKIaH6DUWdt9xhuynfO4Km6bsHEVl3B6/MfIIO4W14GeVKejEPi2yuNlccTQTmh9HeJDojykiOg42CcKBs3rt//wSL09feYIG0CWEXpXaTZzeYTIyjMrBeO7gAeVyaUovqxMJF6QNVfF+42OlLDnQPj/PpYRmDNDU50dIgxQVYhfNbFS2DUzMnaClk27h5bm8nQChAZCtYlRB5HKtQJavHnxIivQHeQSK72Tl1Kh5HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U0tDmiZQ3s4isfSpHI+JcMMk+gfNL/rvbe6w2vJL2kI=;
- b=QzWvs8tBs66FpP26Q+ESMWK62ylXV56cCfpMn2vtPdLV2TShKDAULCd/qY9cYXeNBWE2LGgar3yoWQqEvc9FFyOtQlJAOU67jxiMlPCQGron37v6lSKDXGzvhT+EAqdBS5NvZqxzYpeqrkpABW8rurzTo1iB1SZmAglvw85CKJ9cyQP6/V/tlKbxdwwxNkHBEM2Hdhro9rW/Ciij34ZjaO2ShTDDbDqzD3/TE0MKM49hfzt6ottuySl6fmJB/cc03goXIXWI3zbxf8qHECXOUPUVYY1O8jfVL3QmMhueFavW1y6xfPgc2E39W3rpnzLe/2jMVD4YLrmFLMIAAm1nJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR02FT029.eop-EUR02.prod.protection.outlook.com
- (2a01:111:e400:7e1d::42) by
- HE1EUR02HT155.eop-EUR02.prod.protection.outlook.com (2a01:111:e400:7e1d::321)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.10; Thu, 14 Jan
- 2021 12:41:01 +0000
-Received: from PA4P190MB1375.EURP190.PROD.OUTLOOK.COM (2a01:111:e400:7e1d::41)
- by HE1EUR02FT029.mail.protection.outlook.com (2a01:111:e400:7e1d::147) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend
- Transport; Thu, 14 Jan 2021 12:41:01 +0000
-Received: from PA4P190MB1375.EURP190.PROD.OUTLOOK.COM
- ([fe80::6d7c:5d4b:3397:9328]) by PA4P190MB1375.EURP190.PROD.OUTLOOK.COM
- ([fe80::6d7c:5d4b:3397:9328%7]) with mapi id 15.20.3742.012; Thu, 14 Jan 2021
- 12:41:01 +0000
-From:   Tomek LECOCQ <tomek.lecocq@hotmail.fr>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: How to reverse engineer a PCI-Express driver under Linux ?
-Thread-Topic: How to reverse engineer a PCI-Express driver under Linux ?
-Thread-Index: AQHW6nKDdB0L3XAHNUCE0Mko98j1+A==
-Date:   Thu, 14 Jan 2021 12:41:01 +0000
-Message-ID: <54A07AB3-806B-4010-99FA-688676497DF3@hotmail.fr>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-incomingtopheadermarker: OriginalChecksum:C7E59DFD751EAF18025820794E87D6AEF5D610B76F1492E40561435301A80452;UpperCasedChecksum:9DCE1C1C0545F7742F8DBF4AEB92D6E5FFDA63F1DB2B32783D88CC60186AA1F8;SizeAsReceived:6806;Count:42
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [Fvuyi8VJ6LXW74wgEf3ToJAeUPq6aS66HwDE2Oxq2UQJ0HjfbGjKXzT7nm3T+2Tj]
-x-ms-publictraffictype: Email
-x-incomingheadercount: 42
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 4d46eefb-f7d3-4eb9-d4df-08d8b889a66c
-x-ms-traffictypediagnostic: HE1EUR02HT155:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Mwwlctb4IFzNGP3G5WrIz5sGg7QKEH0HdmVGT6DKS+RqWbX7aPNZLnVDG3TdRQ2LDTplrZpnd0uJilD6dsA6pdqvC4p6xF45dJwa19z8AwaLkErBoCO1L7FWYwMlfhxmApZR7pJK9wgZaLRBGX4Dt/WgInz7Ona5wBwiIXkQyMUoNnX9iuqjF8hSRtohrc7Ay2M4mCiNqi6KWeKPF1wiuB7dyR0WqyCupkG34uFdIQ6RXR7lRSEy8eRWpauVIKep
-x-ms-exchange-antispam-messagedata: HgMCzQle7E3hz0wfPZ9cqT2+lZukzs/UtKbvNGRnW2mKFG3Ds6gAP2fPn3FLILcJLRQtgkZiQDF3QH9Mn1QlkBgwged5KoEF+3m+deNzH1vUJK5ksKGt2eoy42P0qRZgA1efyviXhPZ+6WkZemOJuzmI8+ywmaXUiADrNoOV78tDVkAvdMHUThRyKtr+Rybw/Sn+8TAbF1ea7qpfCa93qA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B0DBB66534A87D4988989562115E3EDF@EURP190.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        id S1728394AbhANMvc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 07:51:32 -0500
+Received: from hmm.wantstofly.org ([213.239.204.108]:54810 "EHLO
+        mail.wantstofly.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbhANMvb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 07:51:31 -0500
+X-Greylist: delayed 516 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Jan 2021 07:51:29 EST
+Received: by mail.wantstofly.org (Postfix, from userid 1000)
+        id E0B507F44F; Thu, 14 Jan 2021 14:42:11 +0200 (EET)
+Date:   Thu, 14 Jan 2021 14:42:11 +0200
+From:   Lennert Buytenhek <kernel@wantstofly.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Realtek linux nic maintainers <nic_swsd@realtek.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] PCI: Disable parity checking if broken_parity is
+ set
+Message-ID: <20210114124211.GG65905@wantstofly.org>
+References: <20210106192233.GA1329080@bjorn-Precision-5520>
+ <768d90a3-93ea-1f4e-f4e0-e039933bc17b@gmail.com>
+ <8e9c5b3a-f239-8d8d-08e5-015ec38dd3a0@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT029.eop-EUR02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d46eefb-f7d3-4eb9-d4df-08d8b889a66c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2021 12:41:01.4159
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR02HT155
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e9c5b3a-f239-8d8d-08e5-015ec38dd3a0@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGVsbG8sDQoNCkkgaGF2ZSBhIFBDSS1FIHZpZGVvIGNhcHR1cmUgY2FyZCB0aGF0IGhhcyBhIHBy
-b3ByaWV0YXJ5IGRyaXZlciBmb3IgTGludXguDQpJIGhhdmUgc29tZSBleHBlcmllbmNlIHdpdGgg
-cHJvZ3JhbW1pbmcgaW4gQywgYW5kIHNvIEkgd291bGQgbGlrZSB0byBzdGFydCBhIGhvYmJ5IHBy
-b2plY3QgdG8gZGV2ZWxvcCBhIGZyZWUvbGlicmUgZHJpdmVyIGZvciB0aGlzIGRldmljZSBmb3Ig
-TGludXguDQpPZiBjb3Vyc2UgSSBkb27igJl0IGhhdmUgYWNjZXNzIHRvIGFueSBkb2N1bWVudGF0
-aW9uIGFib3V0IGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHRoaXMgZGV2aWNlLCBzbyBJIHRoaW5r
-IEkgd2lsbCBuZWVkIHRvIHJldmVyc2UtZW5naW5lZXIgdGhlIHdheSB0aGUgZXhpc3RpbmcgZHJp
-dmVyIGNvbW11bmljYXRlcyB3aXRoIHRoZSBoYXJkd2FyZS4gSG93IGNvdWxkIEkgYWNoaWV2ZSB0
-aGlzID8NCkFsc28sIHRoZSBsb25nIHRlcm0gZ29hbCBvZiB0aGlzIHByb2plY3Qgd291bGQgYmUg
-dG8gaGF2ZSB0aGlzIGRyaXZlciBtZXJnZWQgaW50byBtYWlubGluZSwgc28gd2hhdCBpcyBhbGxv
-d2VkIG9yIG5vdCB3aGlsZSBkb2luZyB0aGlzIHRvIGF2b2lkIHByb2JsZW1hdGljIGxlZ2FsIHJh
-bWlmaWNhdGlvbnMgPw0KVGhhbmsgeW91IGZvciB5b3VyIGhlbHAuDQoNCkJlc3QgcmVnYXJkcy4N
-ClRvbWVrIExlY29jcQ==
+On Wed, Jan 13, 2021 at 09:52:23PM +0100, Heiner Kallweit wrote:
+> On 06.01.2021 20:34, Heiner Kallweit wrote:
+> > On 06.01.2021 20:22, Bjorn Helgaas wrote:
+> >> On Wed, Jan 06, 2021 at 06:50:22PM +0100, Heiner Kallweit wrote:
+> >>> If we know that a device has broken parity checking, then disable it.
+> >>> This avoids quirks like in r8169 where on the first parity error
+> >>> interrupt parity checking will be disabled if broken_parity_status
+> >>> is set. Make pci_quirk_broken_parity() public so that it can be used
+> >>> by platform code, e.g. for Thecus N2100.
+> >>>
+> >>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> >>> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+> >>
+> >> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> >>
+> >> This series should all go together.  Let me know if you want me to do
+> >> anything more (would require acks for arm and r8169, of course).
+> >>
+> > Right. For r8169 I'm the maintainer myself and agreed with Jakub that
+> > the r8169 patch will go through the PCI tree.
+> > 
+> > Regarding the arm/iop32x part:
+> > MAINTAINERS file lists Lennert as maintainer, let me add him.
+> > Strange thing is that the MAINTAINERS entry for arm/iop32x has no
+> > F entry, therefore the get_maintainers scripts will never list him
+> > as addressee. The script lists Russell as "odd fixer".
+> > @Lennert: Please provide a patch to add the missing F entry.
+> > 
+> > ARM/INTEL IOP32X ARM ARCHITECTURE
+> > M:	Lennert Buytenhek <kernel@wantstofly.org>
+> > L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > S:	Maintained
+> 
+> Bjorn, I saw that you set the series to "not applicable". Is this because
+> of the missing ack for the arm part?
+> I checked and Lennert's last kernel contribution is from 2015. Having said
+> that the maintainer's entry may be outdated. Not sure who else would be
+> entitled to ack this patch. The change is simple enough, could you take
+> it w/o an ack? 
+
+This entry is indeed outdated, I don't have access to this
+hardware anymore.
+
+
+> Alternatively, IIRC Russell has got such a device. Russell, would it
+> be possible that you test that there's still no false-positive parity
+> errors with this series?
+> 
+> 
+> > 
+> >>> ---
+> >>>  drivers/pci/quirks.c | 17 +++++++++++------
+> >>>  include/linux/pci.h  |  2 ++
+> >>>  2 files changed, 13 insertions(+), 6 deletions(-)
+> >>>
+> >>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> >>> index 653660e3b..ab54e26b8 100644
+> >>> --- a/drivers/pci/quirks.c
+> >>> +++ b/drivers/pci/quirks.c
+> >>> @@ -205,17 +205,22 @@ static void quirk_mmio_always_on(struct pci_dev *dev)
+> >>>  DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_ANY_ID, PCI_ANY_ID,
+> >>>  				PCI_CLASS_BRIDGE_HOST, 8, quirk_mmio_always_on);
+> >>>  
+> >>> +void pci_quirk_broken_parity(struct pci_dev *dev)
+> >>> +{
+> >>> +	u16 cmd;
+> >>> +
+> >>> +	dev->broken_parity_status = 1;	/* This device gives false positives */
+> >>> +	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+> >>> +	pci_write_config_word(dev, PCI_COMMAND, cmd & ~PCI_COMMAND_PARITY);
+> >>> +}
+> >>> +
+> >>>  /*
+> >>>   * The Mellanox Tavor device gives false positive parity errors.  Mark this
+> >>>   * device with a broken_parity_status to allow PCI scanning code to "skip"
+> >>>   * this now blacklisted device.
+> >>>   */
+> >>> -static void quirk_mellanox_tavor(struct pci_dev *dev)
+> >>> -{
+> >>> -	dev->broken_parity_status = 1;	/* This device gives false positives */
+> >>> -}
+> >>> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, quirk_mellanox_tavor);
+> >>> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, quirk_mellanox_tavor);
+> >>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR, pci_quirk_broken_parity);
+> >>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_DEVICE_ID_MELLANOX_TAVOR_BRIDGE, pci_quirk_broken_parity);
+> >>>  
+> >>>  /*
+> >>>   * Deal with broken BIOSes that neglect to enable passive release,
+> >>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >>> index b32126d26..161dcc474 100644
+> >>> --- a/include/linux/pci.h
+> >>> +++ b/include/linux/pci.h
+> >>> @@ -1916,6 +1916,8 @@ enum pci_fixup_pass {
+> >>>  	pci_fixup_suspend_late,	/* pci_device_suspend_late() */
+> >>>  };
+> >>>  
+> >>> +void pci_quirk_broken_parity(struct pci_dev *dev);
+> >>> +
+> >>>  #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+> >>>  #define __DECLARE_PCI_FIXUP_SECTION(sec, name, vendor, device, class,	\
+> >>>  				    class_shift, hook)			\
+> >>> -- 
+> >>> 2.30.0
+> >>>
+> >>>
+> >>>
+> > 
