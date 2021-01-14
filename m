@@ -2,170 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA2E22F5ED3
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 11:33:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E237C2F5F44
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 11:52:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbhANKcl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 05:32:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbhANKck (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Jan 2021 05:32:40 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6E88023A53;
-        Thu, 14 Jan 2021 10:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610620320;
-        bh=VsVf4idM5BrmgksBO9HleBJBpXijVbXMivAGlcSUC9g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NC21mz0/UZI6v9hfNot36B4RSg2EAFffjHy+vIYgo8P1DOMRMibxh2FY++Wjn3bNR
-         632wwInKE18FXn5gKwvLcWXpnSX8UqneWhylKWi7ZTxQLJGXld0G5Y8xV6FsZ7PxaI
-         ZKo7wy+k4GZCQGCmDkpOQ8DsILUg1uCoZY3GklLsGF2bRrzS2Pa5q9EjfEeDIpWgK/
-         iubS0OveNqHttyKwdiu3/6KpzUjxItLagmaGtDjpN0iUZZ8aQmvlechTMdYgta654P
-         Bg9WjINA4bHC8kK3ZSYvj5IErYgij83ItGeqo3NYypzJTdWQBssjpiroUg5h9j0oTd
-         r7Yr0NVQZWcHw==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: [PATCH mlx5-next v2 5/5] net/mlx5: Allow to the users to configure number of MSI-X vectors
-Date:   Thu, 14 Jan 2021 12:31:40 +0200
-Message-Id: <20210114103140.866141-6-leon@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210114103140.866141-1-leon@kernel.org>
-References: <20210114103140.866141-1-leon@kernel.org>
+        id S1726236AbhANKub (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 05:50:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbhANKua (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 05:50:30 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27344C061573;
+        Thu, 14 Jan 2021 02:49:50 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id ga15so7501727ejb.4;
+        Thu, 14 Jan 2021 02:49:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9ndg4DzK5tx5X4El9lZvtof/dcnyIAi2qDb/LCZ6Ys0=;
+        b=kM2NffTpZ8i8YRZV02LaWQG3uVsBj8lKxGdxTbOx4AvotYpx3O6iTpYVjfnll1ms3f
+         WJAFo7tyw82Kx/bUVXLYmcre5vTNRSN9jn7AX/q6xxdH9ZnAdS2Xn6JmGisvlZ7zBSlw
+         GqAtGMU1oHBqDQGJ5sB9lgIE7Vv05yj6oQD6RFIFpGcyjsnEM2wL3ZuSMBbrN/9fKeXG
+         jTgaDdb1zN25/QWqrjHW+WcgHGCtUQMmRMIXAfzTSnE25UbZz1xIbJR1PI6UVOMr1XdZ
+         LtKU/EVvLYsqgHPeSyNF+5N3ps/DLdMxT06KTxJWEhZYIxx7Rw6jPOi0Zv9AUEXLTlmO
+         hOUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9ndg4DzK5tx5X4El9lZvtof/dcnyIAi2qDb/LCZ6Ys0=;
+        b=NZVXzng6QZ9+fcwPpf9oIt/NgnNwu3rl3rCucNl/ysyQx2SRrgrDSPghn+7DsVBUE+
+         XCtbjHznOQkjeX5Bw339fy325y2BPp1rf/p65pNYCWI3B+wbBPbnlD+q+ZzBKKljQZuT
+         FM4aFORWf5Hkiap0cq7LtOa5MJxnnY3hroASvxnZkeVAZfNcMTD9L3FlCNF8pA4bJ8i+
+         t+Q/9GMd8p5R+lSoNdkwnjWInQ2igNLm+taNTqC68iLiMkEAi1MTuhb7zmFaSJ+KjFp8
+         sv+2UI5moZ8utrDyPqKNIfMgKn/JI1qUNN8KwIPikZ3zp+gG1i0NJgUFo5E5crwtp0Xp
+         knpw==
+X-Gm-Message-State: AOAM530he3QcCJJ3C6yavHDuhrvaRkSyV4O0wcb6nOS+E7YGCQNi8KfU
+        38OX8KaKXLllZxQcfC3puyvIMLxCj1gcmNYHgWs=
+X-Google-Smtp-Source: ABdhPJwaW7DQD9pCC25nbWXZW7HHqX3ZyyapminGKzDUB6t1uIzPcEweoYPD0AH+7ph68psQoapttu5C957/wtHmAOY=
+X-Received: by 2002:a17:906:cf81:: with SMTP id um1mr4898352ejb.122.1610621388916;
+ Thu, 14 Jan 2021 02:49:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1610612968-26612-1-git-send-email-wuht06@gmail.com>
+ <1610612968-26612-3-git-send-email-wuht06@gmail.com> <20210114085233.GO4678@unreal>
+In-Reply-To: <20210114085233.GO4678@unreal>
+From:   Hongtao Wu <wuht06@gmail.com>
+Date:   Thu, 14 Jan 2021 18:49:37 +0800
+Message-ID: <CAG_R4_WuQMimCKZdj6rpGrxjRT_7NxjxSPd2AxS7r1VRNctTAw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v5 2/2] PCI: sprd: Add support for Unisoc SoCs'
+ PCIe controller
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hongtao Wu <billows.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Thu, Jan 14, 2021 at 4:52 PM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Thu, Jan 14, 2021 at 04:29:28PM +0800, Hongtao Wu wrote:
+> > From: Hongtao Wu <billows.wu@unisoc.com>
+> >
+> > This series adds PCIe controller driver for Unisoc SoCs.
+> > This controller is based on DesignWare PCIe IP.
+> >
+> > Signed-off-by: Hongtao Wu <billows.wu@unisoc.com>
+> > ---
+> >  drivers/pci/controller/dwc/Kconfig     |  12 ++
+> >  drivers/pci/controller/dwc/Makefile    |   1 +
+> >  drivers/pci/controller/dwc/pcie-sprd.c | 293 +++++++++++++++++++++++++++++++++
+> >  3 files changed, 306 insertions(+)
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
+>
+> <...>
+>
+> > +static struct platform_driver sprd_pcie_driver = {
+> > +     .probe = sprd_pcie_probe,
+> > +     .remove = __exit_p(sprd_pcie_remove),
+>                    ^^^^^^ why is that?
+>
+> > +     .driver = {
+> > +             .name = "sprd-pcie",
+> > +             .of_match_table = sprd_pcie_of_match,
+> > +     },
+> > +};
+> > +
+> > +module_platform_driver(sprd_pcie_driver);
+> > +
+> > +MODULE_DESCRIPTION("Unisoc PCIe host controller driver");
+> > +MODULE_LICENSE("GPL v2");
+>
+> I think that it needs to be "GPL" and not "GPL v2".
+>
+> Thanks
 
-Implement ability to configure MSI-X for the SR-IOV VFs.
+Thanks for the review.
+I'll fix it in the next version.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- .../net/ethernet/mellanox/mlx5/core/main.c    |  1 +
- .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  1 +
- .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  4 +-
- .../net/ethernet/mellanox/mlx5/core/sriov.c   | 38 +++++++++++++++++++
- 4 files changed, 42 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index 8269cfbfc69d..334b3b5077c5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1647,6 +1647,7 @@ static struct pci_driver mlx5_core_driver = {
- 	.shutdown	= shutdown,
- 	.err_handler	= &mlx5_err_handler,
- 	.sriov_configure   = mlx5_core_sriov_configure,
-+	.sriov_set_msix_vec_count = mlx5_core_sriov_set_msix_vec_count,
- };
- 
- static void mlx5_core_verify_params(void)
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-index 5babb4434a87..8a2523d2d43a 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-@@ -138,6 +138,7 @@ void mlx5_sriov_cleanup(struct mlx5_core_dev *dev);
- int mlx5_sriov_attach(struct mlx5_core_dev *dev);
- void mlx5_sriov_detach(struct mlx5_core_dev *dev);
- int mlx5_core_sriov_configure(struct pci_dev *dev, int num_vfs);
-+int mlx5_core_sriov_set_msix_vec_count(struct pci_dev *vf, int msix_vec_count);
- int mlx5_core_enable_hca(struct mlx5_core_dev *dev, u16 func_id);
- int mlx5_core_disable_hca(struct mlx5_core_dev *dev, u16 func_id);
- int mlx5_create_scheduling_element_cmd(struct mlx5_core_dev *dev, u8 hierarchy,
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c b/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c
-index 135078e8dd55..65a761346385 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c
-@@ -59,7 +59,7 @@ int mlx5_get_default_msix_vec_count(struct mlx5_core_dev *dev, int num_vfs)
- {
- 	int num_vf_msix, min_msix, max_msix;
- 
--	num_vf_msix = MLX5_CAP_GEN(dev, num_total_dynamic_vf_msix);
-+	num_vf_msix = MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
- 	if (!num_vf_msix)
- 		return 0;
- 
-@@ -83,7 +83,7 @@ int mlx5_set_msix_vec_count(struct mlx5_core_dev *dev, int function_id,
- 	void *hca_cap, *cap;
- 	int ret;
- 
--	num_vf_msix = MLX5_CAP_GEN(dev, num_total_dynamic_vf_msix);
-+	num_vf_msix = MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
- 	if (!num_vf_msix)
- 		return 0;
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
-index c59efb1e7a26..adc7c8945b9d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
-@@ -145,6 +145,7 @@ mlx5_device_disable_sriov(struct mlx5_core_dev *dev, int num_vfs, bool clear_vf)
- static int mlx5_sriov_enable(struct pci_dev *pdev, int num_vfs)
- {
- 	struct mlx5_core_dev *dev  = pci_get_drvdata(pdev);
-+	u32 num_vf_msix;
- 	int err;
- 
- 	err = mlx5_device_enable_sriov(dev, num_vfs);
-@@ -153,6 +154,8 @@ static int mlx5_sriov_enable(struct pci_dev *pdev, int num_vfs)
- 		return err;
- 	}
- 
-+	num_vf_msix = MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
-+	pci_sriov_set_vf_total_msix(pdev, num_vf_msix);
- 	err = pci_enable_sriov(pdev, num_vfs);
- 	if (err) {
- 		mlx5_core_warn(dev, "pci_enable_sriov failed : %d\n", err);
-@@ -188,6 +191,41 @@ int mlx5_core_sriov_configure(struct pci_dev *pdev, int num_vfs)
- 	return err ? err : num_vfs;
- }
- 
-+int mlx5_core_sriov_set_msix_vec_count(struct pci_dev *vf, int msix_vec_count)
-+{
-+	struct pci_dev *pf = pci_physfn(vf);
-+	struct mlx5_core_sriov *sriov;
-+	struct mlx5_core_dev *dev;
-+	int num_vf_msix, id;
-+
-+	dev = pci_get_drvdata(pf);
-+	num_vf_msix = MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
-+	if (!num_vf_msix)
-+		return -EOPNOTSUPP;
-+
-+	if (!msix_vec_count)
-+		msix_vec_count =
-+			mlx5_get_default_msix_vec_count(dev, pci_num_vf(pf));
-+
-+	sriov = &dev->priv.sriov;
-+
-+	/* Reversed translation of PCI VF function number to the internal
-+	 * function_id, which exists in the name of virtfn symlink.
-+	 */
-+	for (id = 0; id < pci_num_vf(pf); id++) {
-+		if (!sriov->vfs_ctx[id].enabled)
-+			continue;
-+
-+		if (vf->devfn == pci_iov_virtfn_devfn(pf, id))
-+			break;
-+	}
-+
-+	if (id == pci_num_vf(pf) || !sriov->vfs_ctx[id].enabled)
-+		return -EINVAL;
-+
-+	return mlx5_set_msix_vec_count(dev, id + 1, msix_vec_count);
-+}
-+
- int mlx5_sriov_attach(struct mlx5_core_dev *dev)
- {
- 	if (!mlx5_core_is_pf(dev) || !pci_num_vf(dev->pdev))
--- 
-2.29.2
-
+>
+> > --
+> > 2.7.4
+> >
