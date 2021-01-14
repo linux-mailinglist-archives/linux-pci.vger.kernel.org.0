@@ -2,121 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 174A72F6A78
-	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 20:05:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FDAB2F6AD4
+	for <lists+linux-pci@lfdr.de>; Thu, 14 Jan 2021 20:24:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbhANTFL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 14:05:11 -0500
-Received: from mga17.intel.com ([192.55.52.151]:49586 "EHLO mga17.intel.com"
+        id S1729046AbhANTVj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 14:21:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbhANTFL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Jan 2021 14:05:11 -0500
-IronPort-SDR: kksxgN36eAdwWvLlFYCwNIUyxyr0epWQLZlM+M5PWJNkch3InjVq8qFJKBC+xMJxgMpc0zHuHp
- DsX/YQrx588w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9864"; a="158199869"
-X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
-   d="scan'208";a="158199869"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2021 11:04:28 -0800
-IronPort-SDR: RVMlgzAllMO97D6rxUMR104YFghec33pshXFLgKHCzfbi7LgAPPWxpq54DcbkDu9g8DmaCYp/K
- OMhtqo8LV1cw==
-X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
-   d="scan'208";a="382373646"
-Received: from jdquesad-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.128.180])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2021 11:04:27 -0800
-Date:   Thu, 14 Jan 2021 11:04:25 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        daniel.lll@alibaba-inc.com
-Subject: Re: [RFC PATCH v3 14/16] cxl/mem: Use CEL for enabling commands
-Message-ID: <20210114190425.rxupmrjm3jfjorj4@intel.com>
-References: <20210111225121.820014-1-ben.widawsky@intel.com>
- <20210111225121.820014-16-ben.widawsky@intel.com>
- <20210114180211.00007852@Huawei.com>
- <20210114181340.fgybdchzfxiiqwhr@intel.com>
- <20210114183217.0000154c@Huawei.com>
+        id S1727017AbhANTVj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 14 Jan 2021 14:21:39 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0764423B40;
+        Thu, 14 Jan 2021 19:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610652058;
+        bh=RqVCL5R8u/uiaCf/QQG+CR/jl+1+F4XOpwQKBqz7ZEU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=I2PivtTkIbmElL1nDEsoNWNYVisYbzDom+ou3cor+tQigc1unPLaILWshIO5lt080
+         qZU8hLPX0sX7CmqHoFoPScbFBXZWVE55zGaoFIFmj3/vNLrpwOprVoZAvrEVdNmlzV
+         JfnW1B5BwoTLF7mPFKGYCE2XpnJ3WCAXeT5oiUfsr7Mn7plBcnV/otXX0J9PasUkQw
+         5WOs2fRrS9Baafg1vL87ORZaIfavot2zQl5B1wT1suukPbi6T2tuZDBqjpjfmSUucw
+         rNL13dvKOxLsNSX6HGujdLNbtTKTbcdLFPxqDQtl+qXZG4KYUpBXjVj4eFS3II2wqj
+         jU5dGSedjy5sQ==
+Date:   Thu, 14 Jan 2021 13:20:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dominik Mierzejewski <dominik@greysector.net>
+Cc:     Peter Jones <pjones@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Bug 211189] New: vgaarb overrides boot device unexpectedly with
+ Intel and discrete AMDGPU
+Message-ID: <20210114192056.GA2013381@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210114183217.0000154c@Huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bug-211189-41252@https.bugzilla.kernel.org/>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-01-14 18:32:17, Jonathan Cameron wrote:
-> On Thu, 14 Jan 2021 10:13:40 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > On 21-01-14 18:02:11, Jonathan Cameron wrote:
-> > > On Mon, 11 Jan 2021 14:51:19 -0800
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >   
-> > > > The Command Effects Log (CEL) is specified in the CXL 2.0 specification.
-> > > > The CEL is one of two types of logs, the other being vendor specific.
-> > > > They are distinguished in hardware/spec via UUID. The CEL is immediately
-> > > > useful for 2 things:
-> > > > 1. Determine which optional commands are supported by the CXL device.
-> > > > 2. Enumerate any vendor specific commands
-> > > > 
-> > > > The CEL can be used by the driver to determine which commands are
-> > > > available in the hardware (though it isn't, yet). That set of commands
-> > > > might itself be a subset of commands which are available to be used via
-> > > > CXL_MEM_SEND_COMMAND IOCTL.
-> > > > 
-> > > > Prior to this, all commands that the driver exposed were explicitly
-> > > > enabled. After this, only those commands that are found in the CEL are
-> > > > enabled.
-> > > > 
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>  
-> > > 
-> > > This patch made me wonder if the model for the command in quite right.
-> > > I think it would end up simpler with a pair of payload pointers for send
-> > > and receive (that can be equal when it makes sense).
-> > > 
-> > > A few other things inline.
-> > > 
-> > > Jonathan  
-> > 
-> > I'll address the others separately, but could you elaborate on this? I'm not
-> > sure I follow your meaning.
-> 
-> Further down in the review..
-> "
-> The fact that you end up bypassing the payload transfer stuff in mbox_cmd
-> rather suggests it's not a particularly good model.  + it keeps confusing
-> me.
-> 
-> While the hardware uses a single region for the payload, there is nothing
-> saying the code has to work that way.   Why not have separate payload_in and
-> payload_out pointers?  Occasionally you might set them to the same buffer, but
-> elsewhere you could avoid the direct memcpy()s you are doing around the
-> send_cmd(). 
-> 
-> "
-> 
-> Jonathan
-> 
-> 
+[cc'd efifb and vgaarb maintainers on bugzilla, but not sure whether
+people pay attention to that]
 
-Ah I was confused if that was a separate statement.
+On Thu, Jan 14, 2021 at 10:42:53AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=211189
+> 
+>             Bug ID: 211189
+>            Summary: vgaarb overrides boot device unexpectedly with Intel
+>                     and discrete AMDGPU
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: 5.10.7-200.fc33.x86_64
+>           Hardware: x86-64
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: normal
+>           Priority: P1
+>          Component: PCI
+>           Assignee: drivers_pci@kernel-bugs.osdl.org
+>           Reporter: dominik@greysector.net
+>         Regression: No
+> 
+> The system is a MSI Z77A-GD65 mainboard configured to boot in UEFI mode.
+> Despite setting integrated GPU (from i5-3570K CPU) as the default in firmware
+> setup, the kernel sets the discrete GPU (Radeon HD 7950) as boot_vga. This
+> results in wrong order in e.g. switcherooctl:
+> $ switcherooctl list
+> Device: 0
+>   Name:        Advanced Micro Devices, Inc. [AMD®/ATI] Tahiti PRO [Radeon HD
+> 7950/8950 OEM / R9 280]
+>   Default:     yes
+>   Environment: DRI_PRIME=pci-0000_01_00_0
+> 
+> Device: 1
+>   Name:        Intel® HD Graphics 4000
+>   Default:     no
+>   Environment: DRI_PRIME=pci-0000_00_02_0
+> $ lspci -vnn
+> ...
+> 00:02.0 VGA compatible controller [0300]: Intel Corporation Xeon E3-1200 v2/3rd
+> Gen Core processor Graphics Controller [8086:0162] (rev 09) (prog-if 00 [VGA
+> controller])
+>         DeviceName:  Onboard IGD
+>         Subsystem: Micro-Star International Co., Ltd. [MSI] Device [1462:2111]
+>         Flags: bus master, fast devsel, latency 0, IRQ 31
+>         Memory at f7800000 (64-bit, non-prefetchable) [size=4M]
+>         Memory at d0000000 (64-bit, prefetchable) [size=256M]
+>         I/O ports at f000 [size=64]
+>         Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>         Capabilities: [d0] Power Management version 2
+>         Capabilities: [a4] PCI Advanced Features
+>         Kernel driver in use: i915
+>         Kernel modules: i915
+> ...
+> 01:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc.
+> [AMD/ATI] Tahiti PRO [Radeon HD 7950/8950 OEM / R9 280] [1002:679a] (prog-if 00
+> [VGA controller])
+>         Subsystem: Micro-Star International Co., Ltd. [MSI] Device [1462:2761]
+>         Flags: bus master, fast devsel, latency 0, IRQ 32
+>         Memory at e0000000 (64-bit, prefetchable) [size=256M]
+>         Memory at f7d00000 (64-bit, non-prefetchable) [size=256K]
+>         I/O ports at e000 [size=256]
+>         Expansion ROM at 000c0000 [disabled] [size=128K]
+>         Capabilities: [48] Vendor Specific Information: Len=08 <?>
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [58] Express Legacy Endpoint, MSI 00
+>         Capabilities: [a0] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Capabilities: [100] Vendor Specific Information: ID=0001 Rev=1 Len=010
+> <?>
+>         Capabilities: [150] Advanced Error Reporting
+>         Capabilities: [270] Secondary PCI Express
+>         Capabilities: [2b0] Address Translation Service (ATS)
+>         Capabilities: [2c0] Page Request Interface (PRI)
+>         Capabilities: [2d0] Process Address Space ID (PASID)
+>         Kernel driver in use: amdgpu
+>         Kernel modules: radeon, amdgpu
+> 
+> $ for f in /sys/bus/pci/devices/*/boot_vga ; do echo -n "$f:" ; cat $f ; done
+> /sys/bus/pci/devices/0000:00:02.0/boot_vga:0
+> /sys/bus/pci/devices/0000:01:00.0/boot_vga:1
+> 
+> $ dmesg
+> ...
+> [    0.267216] pci 0000:01:00.0: BAR 0: assigned to efifb
 
-Can you specify the function prototype you're hoping for (or modification to the
-structure)?
+This is from drivers/video/fbdev/efifb.c and makes me wonder if this
+is a firmware defect.  You set 00:02.0 to be the default in firmware
+setup, but apparently the EFI FB is using 01:00.0?
 
-I really like the lowest level function to simply model the hardware. I get to
-write the 8 steps out and clearly implement them.
-
-I personally don't think it's so awkward, but again, give me something more
-specific and I'll consider it.
+> [    0.268571] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+> [    0.268571] pci 0000:00:02.0: vgaarb: VGA device added:
+> decodes=io+mem,owns=io+mem,locks=none
+> [    0.268571] pci 0000:01:00.0: vgaarb: VGA device added:
+> decodes=io+mem,owns=io+mem,locks=none
+> [    0.268571] pci 0000:00:02.0: vgaarb: no bridge control possible
+> [    0.268571] pci 0000:01:00.0: vgaarb: bridge control possible
+> [    0.268571] pci 0000:01:00.0: vgaarb: overriding boot device
+> [    0.268571] vgaarb: loaded
+> [    0.754748] efifb: probing for efifb
+> [    0.754766] efifb: No BGRT, not showing boot graphics
+> [    0.754768] efifb: framebuffer at 0xe0000000, using 8100k, total 8100k
+> [    0.754769] efifb: mode is 1920x1080x32, linelength=7680, pages=1
+> [    0.754770] efifb: scrolling: redraw
+> [    0.754772] efifb: Truecolor: size=8:8:8:8, shift=24:16:8:0
+> [    2.984727] i915 0000:00:02.0: vgaarb: changed VGA decodes:
+> olddecodes=io+mem,decodes=none:owns=io+mem
+> [    3.011601] [drm] Initialized i915 1.6.0 20200917 for 0000:00:02.0 on minor
+> 0
+> [    3.213870] [drm] amdgpu kernel modesetting enabled.
+> [    3.275739] i915 0000:00:02.0: [drm] fb1: i915drmfb frame buffer device
+> [    3.275972] fb0: switching to amdgpudrmfb from EFI VGA
+> [    3.276112] amdgpu 0000:01:00.0: vgaarb: deactivate vga console
+> [    3.276240] [drm] initializing kernel modesetting (TAHITI 0x1002:0x679A
+> 0x1462:0x2761 0x00).
+> ...
+> [    4.069577] amdgpu 0000:01:00.0: [drm] fb0: amdgpudrmfb frame buffer device
+> [    4.351324] [drm] Initialized amdgpu 3.40.0 20150101 for 0000:01:00.0 on
+> minor 1
+> 
+> -- 
+> You may reply to this email to add a comment.
+> 
+> You are receiving this mail because:
+> You are watching the assignee of the bug.
