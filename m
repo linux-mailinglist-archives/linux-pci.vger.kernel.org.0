@@ -2,162 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3A682F6F35
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jan 2021 01:00:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AE2D2F6F42
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jan 2021 01:08:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbhANX7r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 14 Jan 2021 18:59:47 -0500
-Received: from mga11.intel.com ([192.55.52.93]:35389 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbhANX7r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 14 Jan 2021 18:59:47 -0500
-IronPort-SDR: 7CE5V6nFMHdAiEzLlJ6xkGWDtXqqwEhA/qAL5HNUEzG2IzsNkYYMbBjtXVENOnL32XUqBCBo0q
- H9erDq/z0IWA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9864"; a="174958757"
-X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
-   d="scan'208";a="174958757"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2021 15:58:01 -0800
-IronPort-SDR: JgwNpI72iKplEgLvvRFozPpdeFZ7FrlSQzR4sXrAWlVyCIIfcrp4T/FvOv4QU4UmX2WutfAakz
- 6Ngk+uiv0xsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
-   d="scan'208";a="465409009"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.28]) ([10.239.159.28])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Jan 2021 15:57:53 -0800
-Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
-        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
-        dwmw2@infradead.org, alex.williamson@redhat.com,
-        bhelgaas@google.com, dan.j.williams@intel.com, will@kernel.org,
-        joro@8bytes.org, dmaengine@vger.kernel.org, eric.auger@redhat.com,
-        jacob.jun.pan@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
-        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
-        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
-        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
-        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
-        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
-Subject: Re: [RFC PATCH v3 1/2] iommu: Add capability IOMMU_CAP_VIOMMU
+        id S1731092AbhAOAHK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 14 Jan 2021 19:07:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20675 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731034AbhAOAHK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 14 Jan 2021 19:07:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610669143;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BBPKCL+kqPX9iVSz+iKSVSYyOfI3KtlyhhyW5r/9Qww=;
+        b=Xi27H1Ou7aGJKAaQPN195yVpcmQ1fSmNegvMglmqKSzhc70Ly0lG+KNyGMV08ReUkKwmxT
+        RxxyrEq6yJ9C83QpICMayWwbsczbSKHIKX2aFcTeTgmNGZ2wVFTWlvqMiLb46mXF8FFUMJ
+        7W9PleyVBPtZE6DoMhj7QvVAcl4w/NE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-bG3jlvP5PS2tdXM2EVpoVg-1; Thu, 14 Jan 2021 19:05:39 -0500
+X-MC-Unique: bG3jlvP5PS2tdXM2EVpoVg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD60A802B46;
+        Fri, 15 Jan 2021 00:05:37 +0000 (UTC)
+Received: from omen.home.shazbot.org (ovpn-112-255.phx2.redhat.com [10.3.112.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2652860C6A;
+        Fri, 15 Jan 2021 00:05:37 +0000 (UTC)
+Date:   Thu, 14 Jan 2021 17:05:36 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
 To:     Leon Romanovsky <leon@kernel.org>
-References: <20210114013003.297050-1-baolu.lu@linux.intel.com>
- <20210114013003.297050-2-baolu.lu@linux.intel.com>
- <20210114132627.GA944463@unreal>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <b0c8b260-8e23-a5bd-d2da-ca1d67cdfa8a@linux.intel.com>
-Date:   Fri, 15 Jan 2021 07:49:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [PATCH mlx5-next v2 2/5] PCI: Add SR-IOV sysfs entry to read
+ total number of dynamic MSI-X vectors
+Message-ID: <20210114170536.004601d1@omen.home.shazbot.org>
+In-Reply-To: <20210114103140.866141-3-leon@kernel.org>
+References: <20210114103140.866141-1-leon@kernel.org>
+        <20210114103140.866141-3-leon@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20210114132627.GA944463@unreal>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Leon,
+On Thu, 14 Jan 2021 12:31:37 +0200
+Leon Romanovsky <leon@kernel.org> wrote:
 
-On 1/14/21 9:26 PM, Leon Romanovsky wrote:
-> On Thu, Jan 14, 2021 at 09:30:02AM +0800, Lu Baolu wrote:
->> Some vendor IOMMU drivers are able to declare that it is running in a VM
->> context. This is very valuable for the features that only want to be
->> supported on bare metal. Add a capability bit so that it could be used.
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> And how is it used? Who and how will set it?
-
-Use the existing iommu_capable(). I should add more descriptions about
-who and how to use it.
-
+> Some SR-IOV capable devices provide an ability to configure specific
+> number of MSI-X vectors on their VF prior driver is probed on that VF.
 > 
->>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.c  | 20 ++++++++++++++++++++
->>   drivers/iommu/virtio-iommu.c |  9 +++++++++
->>   include/linux/iommu.h        |  1 +
->>   3 files changed, 30 insertions(+)
->>
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index cb205a04fe4c..8eb022d0e8aa 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -5738,12 +5738,32 @@ static inline bool nested_mode_support(void)
->>   	return ret;
->>   }
->>
->> +static inline bool caching_mode_enabled(void)
->> +{
+> In order to make management easy, provide new read-only sysfs file that
+> returns a total number of possible to configure MSI-X vectors.
 > 
-> Kernel coding style is not in favour of inline functions in *.c files.
-
-Yes, agreed.
-
-Best regards,
-baolu
-
+> cat /sys/bus/pci/devices/.../sriov_vf_total_msix
+>   = 0 - feature is not supported
+>   > 0 - total number of MSI-X vectors to consume by the VFs  
 > 
->> +	struct dmar_drhd_unit *drhd;
->> +	struct intel_iommu *iommu;
->> +	bool ret = false;
->> +
->> +	rcu_read_lock();
->> +	for_each_active_iommu(iommu, drhd) {
->> +		if (cap_caching_mode(iommu->cap)) {
->> +			ret = true;
->> +			break;
->> +		}
->> +	}
->> +	rcu_read_unlock();
->> +
->> +	return ret;
->> +}
->> +
->>   static bool intel_iommu_capable(enum iommu_cap cap)
->>   {
->>   	if (cap == IOMMU_CAP_CACHE_COHERENCY)
->>   		return domain_update_iommu_snooping(NULL) == 1;
->>   	if (cap == IOMMU_CAP_INTR_REMAP)
->>   		return irq_remapping_enabled == 1;
->> +	if (cap == IOMMU_CAP_VIOMMU)
->> +		return caching_mode_enabled();
->>
->>   	return false;
->>   }
->> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
->> index 2bfdd5734844..719793e103db 100644
->> --- a/drivers/iommu/virtio-iommu.c
->> +++ b/drivers/iommu/virtio-iommu.c
->> @@ -931,7 +931,16 @@ static int viommu_of_xlate(struct device *dev, struct of_phandle_args *args)
->>   	return iommu_fwspec_add_ids(dev, args->args, 1);
->>   }
->>
->> +static bool viommu_capable(enum iommu_cap cap)
->> +{
->> +	if (cap == IOMMU_CAP_VIOMMU)
->> +		return true;
->> +
->> +	return false;
->> +}
->> +
->>   static struct iommu_ops viommu_ops = {
->> +	.capable		= viommu_capable,
->>   	.domain_alloc		= viommu_domain_alloc,
->>   	.domain_free		= viommu_domain_free,
->>   	.attach_dev		= viommu_attach_dev,
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index b95a6f8db6ff..1d24be667a03 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -94,6 +94,7 @@ enum iommu_cap {
->>   					   transactions */
->>   	IOMMU_CAP_INTR_REMAP,		/* IOMMU supports interrupt isolation */
->>   	IOMMU_CAP_NOEXEC,		/* IOMMU_NOEXEC flag */
->> +	IOMMU_CAP_VIOMMU,		/* IOMMU can declar running in a VM */
->>   };
->>
->>   /*
->> --
->> 2.25.1
->>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-pci | 14 +++++++++++
+>  drivers/pci/iov.c                       | 31 +++++++++++++++++++++++++
+>  drivers/pci/pci.h                       |  3 +++
+>  include/linux/pci.h                     |  2 ++
+>  4 files changed, 50 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+> index 34a8c6bcde70..530c249cc3da 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci
+> @@ -395,3 +395,17 @@ Description:
+>  		The file is writable if the PF is bound to a driver that
+>  		set sriov_vf_total_msix > 0 and there is no driver bound
+>  		to the VF.
+> +
+> +What:		/sys/bus/pci/devices/.../sriov_vf_total_msix
+> +Date:		January 2021
+> +Contact:	Leon Romanovsky <leonro@nvidia.com>
+> +Description:
+> +		This file is associated with the SR-IOV PFs.
+> +		It returns a total number of possible to configure MSI-X
+> +		vectors on the enabled VFs.
+> +
+> +		The values returned are:
+> +		 * > 0 - this will be total number possible to consume by VFs,
+> +		 * = 0 - feature is not supported
+
+As with previous, why expose it if not supported?
+
+This seems pretty challenging for userspace to use; aiui they would
+need to iterate all the VFs to learn how many vectors are already
+allocated, subtract that number from this value, all while hoping they
+aren't racing someone else doing the same.  Would it be more useful if
+this reported the number of surplus vectors available?
+
+How would a per VF limit be exposed?  Do we expect users to know the
+absolutely MSI-X vector limit or the device specific limit?  Thanks,
+
+Alex
+
+> +
+> +		If no SR-IOV VFs are enabled, this value will return 0.
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 5bc496f8ffa3..f9dc31947dbc 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -394,12 +394,22 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+>  	return count;
+>  }
+> 
+> +static ssize_t sriov_vf_total_msix_show(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	return sprintf(buf, "%u\n", pdev->sriov->vf_total_msix);
+> +}
+> +
+>  static DEVICE_ATTR_RO(sriov_totalvfs);
+>  static DEVICE_ATTR_RW(sriov_numvfs);
+>  static DEVICE_ATTR_RO(sriov_offset);
+>  static DEVICE_ATTR_RO(sriov_stride);
+>  static DEVICE_ATTR_RO(sriov_vf_device);
+>  static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+> +static DEVICE_ATTR_RO(sriov_vf_total_msix);
+> 
+>  static struct attribute *sriov_dev_attrs[] = {
+>  	&dev_attr_sriov_totalvfs.attr,
+> @@ -408,6 +418,7 @@ static struct attribute *sriov_dev_attrs[] = {
+>  	&dev_attr_sriov_stride.attr,
+>  	&dev_attr_sriov_vf_device.attr,
+>  	&dev_attr_sriov_drivers_autoprobe.attr,
+> +	&dev_attr_sriov_vf_total_msix.attr,
+>  	NULL,
+>  };
+> 
+> @@ -654,6 +665,7 @@ static void sriov_disable(struct pci_dev *dev)
+>  		sysfs_remove_link(&dev->dev.kobj, "dep_link");
+> 
+>  	iov->num_VFs = 0;
+> +	iov->vf_total_msix = 0;
+>  	pci_iov_set_numvfs(dev, 0);
+>  }
+> 
+> @@ -1112,6 +1124,25 @@ int pci_sriov_get_totalvfs(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_sriov_get_totalvfs);
+> 
+> +/**
+> + * pci_sriov_set_vf_total_msix - set total number of MSI-X vectors for the VFs
+> + * @dev: the PCI PF device
+> + * @count: the total number of MSI-X vector to consume by the VFs
+> + *
+> + * Sets the number of MSI-X vectors that is possible to consume by the VFs.
+> + * This interface is complimentary part of the pci_set_msix_vec_count()
+> + * that will be used to configure the required number on the VF.
+> + */
+> +void pci_sriov_set_vf_total_msix(struct pci_dev *dev, u32 count)
+> +{
+> +	if (!dev->is_physfn || !dev->driver ||
+> +	    !dev->driver->sriov_set_msix_vec_count)
+> +		return;
+> +
+> +	dev->sriov->vf_total_msix = count;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_sriov_set_vf_total_msix);
+> +
+>  /**
+>   * pci_sriov_configure_simple - helper to configure SR-IOV
+>   * @dev: the PCI device
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index dbbfa9e73ea8..604e1f9172c2 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -327,6 +327,9 @@ struct pci_sriov {
+>  	u16		subsystem_device; /* VF subsystem device */
+>  	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
+>  	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
+> +	u32		vf_total_msix;  /* Total number of MSI-X vectors the VFs
+> +					 * can consume
+> +					 */
+>  };
+> 
+>  /**
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 6be96d468eda..c950513558b8 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2075,6 +2075,7 @@ int pci_sriov_get_totalvfs(struct pci_dev *dev);
+>  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
+>  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
+>  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
+> +void pci_sriov_set_vf_total_msix(struct pci_dev *dev, u32 count);
+> 
+>  /* Arch may override these (weak) */
+>  int pcibios_sriov_enable(struct pci_dev *pdev, u16 num_vfs);
+> @@ -2115,6 +2116,7 @@ static inline int pci_sriov_get_totalvfs(struct pci_dev *dev)
+>  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno)
+>  { return 0; }
+>  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
+> +static inline void pci_sriov_set_vf_total_msix(struct pci_dev *dev, u32 count) {}
+>  #endif
+> 
+>  #if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
+> --
+> 2.29.2
+> 
+
