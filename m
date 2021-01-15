@@ -2,202 +2,215 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A9672F74D1
-	for <lists+linux-pci@lfdr.de>; Fri, 15 Jan 2021 10:02:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3F12F7785
+	for <lists+linux-pci@lfdr.de>; Fri, 15 Jan 2021 12:22:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbhAOJCP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jan 2021 04:02:15 -0500
-Received: from mga09.intel.com ([134.134.136.24]:25111 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726652AbhAOJCO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 15 Jan 2021 04:02:14 -0500
-IronPort-SDR: typwA+IYWS6VL3FcSKzILSf8HPgrpKrp0kvsrIgPJdJKFI5OKLeWoGivvt8TNULGU9FCckdJVi
- HQvuj3BPSm3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9864"; a="178670986"
-X-IronPort-AV: E=Sophos;i="5.79,349,1602572400"; 
-   d="scan'208";a="178670986"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 01:00:27 -0800
-IronPort-SDR: WLt1HcHdqScXiBAxBcUtqNktixeSahOXlMgOo2vZRDcmDiDpOs4y2drKKBMzB1EMZurmqqI2oy
- lrrIHvm/50Zg==
-X-IronPort-AV: E=Sophos;i="5.79,349,1602572400"; 
-   d="scan'208";a="465526291"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 01:00:24 -0800
-Received: by lahna (sSMTP sendmail emulation); Fri, 15 Jan 2021 11:00:21 +0200
-Date:   Fri, 15 Jan 2021 11:00:21 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        linux-pci@vger.kernel.org, Puranjay Mohan <puranjay12@gmail.com>
-Subject: Re: [PATCH] PCI: Re-enable downstream port LTR if it was previously
- enabled
-Message-ID: <20210115090021.GC968855@lahna.fi.intel.com>
-References: <20210114134724.79511-1-mika.westerberg@linux.intel.com>
- <20210115001007.GA2021499@bjorn-Precision-5520>
+        id S1726045AbhAOLVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jan 2021 06:21:50 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47802 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726019AbhAOLVu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 15 Jan 2021 06:21:50 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10FB2Vnb137221;
+        Fri, 15 Jan 2021 06:21:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=QdKpibyt3j07Ur30JcvPON3QdeWUrnH8CWmdF3tGrNU=;
+ b=OEPUWW1CccLDv0RJ8UiSInwKwa/1WPvIMkFVQ2Uoikwn+bRjWVUD4dU49HwwNCnrNC4s
+ B69C8jY4yVnnOZZtv1r4XhZwqXv5fENT4uHGPpTdbisdg/n5CiVLZ75+/LgkKwSLCOxN
+ 1C617GCUsfQOQLZ4Rq3V8N/8BFK9c1BC6tAphEoynlgfWeAueuPts5lj7NsaBeZLXHfY
+ l5b5kqcIOfVcmO7/Z9d2W9OaxmQo6gAcwp7+IQmOfw+W3SkjS2PIYEO4jzgMF7EJOOnZ
+ 58F85tLmeco1wdfrLKgCOoZjDkfxKAxjjPo9+OXViQKlRcjIMFUS7mGW16341bby5foW fQ== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36394rskhn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Jan 2021 06:21:05 -0500
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10FBGrUn021690;
+        Fri, 15 Jan 2021 11:21:03 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 35y4483xmv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 15 Jan 2021 11:21:03 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10FBL0TM49545636
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Jan 2021 11:21:00 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADFF5AE045;
+        Fri, 15 Jan 2021 11:21:00 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39F1DAE056;
+        Fri, 15 Jan 2021 11:21:00 +0000 (GMT)
+Received: from [9.145.69.127] (unknown [9.145.69.127])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 15 Jan 2021 11:21:00 +0000 (GMT)
+Subject: Re: [RFC 1/1] s390/pci: expose UID checking state in sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+References: <20210113185500.GA1918216@bjorn-Precision-5520>
+ <675aa466-59ea-cf8a-6eec-caa6478ba4cd@linux.ibm.com>
+ <20210114134453.bkfik4zjt5ehz6d5@wittgenstein> <YABOHuejsuriwSPn@kroah.com>
+ <a567c3d2-1dd2-6b33-8b1a-0a607b601ef8@linux.ibm.com>
+ <YABgcnWPLJxYlWUR@kroah.com>
+ <f63d5de5-6a31-8839-72ce-c6e937f91d4a@linux.ibm.com>
+ <YABt38yz5BJ8gARG@kroah.com>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <aeae8e23-0263-dfe7-d068-ec925432a4a2@linux.ibm.com>
+Date:   Fri, 15 Jan 2021 12:20:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210115001007.GA2021499@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <YABt38yz5BJ8gARG@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-15_06:2021-01-15,2021-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxscore=0 phishscore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101150063
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
 
-On Thu, Jan 14, 2021 at 06:10:07PM -0600, Bjorn Helgaas wrote:
-> [+cc Puranjay]
+
+On 1/14/21 5:14 PM, Greg Kroah-Hartman wrote:
+> On Thu, Jan 14, 2021 at 04:51:17PM +0100, Niklas Schnelle wrote:
+>>
+>>
+>> On 1/14/21 4:17 PM, Greg Kroah-Hartman wrote:
+>>> On Thu, Jan 14, 2021 at 04:06:11PM +0100, Niklas Schnelle wrote:
+>>>>
+>>>>
+>>>> On 1/14/21 2:58 PM, Greg Kroah-Hartman wrote:
+>>>>> On Thu, Jan 14, 2021 at 02:44:53PM +0100, Christian Brauner wrote:
+>>>>>> On Thu, Jan 14, 2021 at 02:20:10PM +0100, Niklas Schnelle wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 1/13/21 7:55 PM, Bjorn Helgaas wrote:
+>>>>>>>> On Wed, Jan 13, 2021 at 08:47:58AM +0100, Niklas Schnelle wrote:
+>>>>>>>>> On 1/12/21 10:50 PM, Bjorn Helgaas wrote:
+... snip ...
+>>>>>>
+>>>>>> Hey Niklas et al. :)
+>>>>>>
+>>>>>> I think this will need input from Greg. He should be best versed in
+>>>>>> sysfs attributes. The problem with KERNEL_ATTR_* to me seems that it's
+>>>>>> supposed to be kernel internal. Now, that might just be a matter of
+>>>>>> renaming the macro but let's see whether Greg has any better idea or
+>>>>>> more questions. :)
+>>>>>
+>>>>> The big question is, why are you needing this?
+>>>>>
+>>>>> No driver or driver subsystem should EVER be messing with a "raw"
+>>>>> kobject like this.  Just use the existing DEVICE_* macros instead
+>>>>> please.
+>>>>>
+>>>>> If you are using a raw kobject, please ask me how to do this properly,
+>>>>> as that is something that should NEVER show up in the /sys/devices/*
+>>>>> tree.  Otherwise userspace tools will break.
+>>>>>
+>>>>> thanks,
+>>>>>
+>>>>> greg k-h
+>>>>
+>>>> Hi Greg,
+>>>>
+>>>> this is for an architecture specific but global i.e. not device bound PCI
+>>>> attribute. That's why DEVICE_ATTR_* does not work. BUS_ATTR_* would work
+>>>> but only if we place the attribute directly under /sys/bus/pci/new_attr.
+>>>
+>>> Then you are doing something wrong :)
+>>
+>> That is very possible.
+>>
+>>>
+>>> Where _exactly_ are you wanting to put this attribute?
+>>
+>> I'm trying for /sys/bus/pci/zpci/uid_checking, I'm using
+>> the below code and the attribute even shows up but reading
+>> it gives me two 0 bytes only.
+>> The relevant code is only a slight alteration of the original patch
+>> as follows:
+>>
+>> static ssize_t uid_checking_show(struct bus_type *bus, char *buf)
+>> {
+>> 	return sprintf(buf, "%i\n", zpci_unique_uid);
+>> }
+>> static BUS_ATTR_RO(uid_checking);
+>>
+>> static struct kset *zpci_global_kset;
+>>
+>> static struct attribute *zpci_attrs_global[] = {
+>> 	&bus_attr_uid_checking.attr,
+>> 	NULL,
+>> };
+>>
+>> static struct attribute_group zpci_attr_group_global = {
+>> 	.attrs = zpci_attrs_global,
+>> };
 > 
-> On Thu, Jan 14, 2021 at 04:47:24PM +0300, Mika Westerberg wrote:
-> > PCIe r5.0, sec 7.5.3.16 says that the downstream ports must reset the
-> > LTR enable bit if the link goes down (port goes DL_Down status). Now, if
-> > we had LTR previously enabled and the PCIe endpoint gets hot-removed and
-> > then hot-added back the ->ltr_path of the downstream port is still set
-> > but the port now does not have the LTR enable bit set anymore.
+> Name your attribute group, and then you do not have to mess with a
+> "raw" kobject like you are below:
+
+Thanks for this tip and sorry for bothering you again.
+
 > 
-> IIRC LTR is only needed for L1.2, and of course the LTR Capability
-> (Max Snoop/No-Snoop Latency registers) and the L1 PM Substates
-> Capability (LTR_L1.2_THRESHOLD) must be programmed before enabling
-> LTR.  For the bridge, I guess we're assuming those were programmed
-> before the hot-remove, and they remain valid after the hot-add.
+>>
+>> int __init zpci_sysfs_init(void)
+>> {
+>> 	struct kset *pci_bus_kset;
+>>
+>> 	pci_bus_kset = bus_get_kset(&pci_bus_type);
+>>
+>> 	zpci_global_kset = kset_create_and_add("zpci", NULL, &pci_bus_kset->kobj);
 > 
-> But what about the endpoint that we hot-added?  How do we program its
-> LTR and L1 PM Substates Capabilities?  I know we have
-> aspm_calc_l1ss_info() for L1 PM Substates, but I really don't trust
-> it, and I don't think we do anything at all to program the LTR
-> Capability.
+> No, do not mess with at kset, just set the default attribute group for
+> the bus to the above, and you should be fine.
 
-True - we don't. However, enabling the LTR bit here for the endpoint
-(and for the bridges all the way up to the root port) makes the endpoint
-to report that there is no LTR requirement and that allows the SoC to do
-some PM optimizations or so.
+Oh ok, I got this idea from the code adding /sys/bus/pci/slots/ in
+drivers/pci/slot.c:pci_slot_init(). See below maybe we can clean that up too.
 
-We actually see that if this is not re-programmed like this on a Tiger
-Lake based ChromeBook S0ix fails (S0ix is Intel low power idle state).
-
-> I used to think the LTR _DSM was a way to help us program the LTR
-> Capability, and Puranjay did a nice job implementing support for it
-> [1].  But I now think that _DSM doesn't give us enough information
-> (and of course it doesn't help at all for non-ACPI systems or for
-> hierarchies not integrated on the system board), so I didn't merge
-> Puranjay's work.
 > 
-> I tried to have some discussion in the PCI SIG about this, but it
-> never really went anywhere.  Here's my basic question, just for the
-> archives:
+>> 	if (!zpci_global_kset)
+>> 		return -ENOMEM;
+>>
+>> 	return sysfs_create_group(&zpci_global_kset->kobj, &zpci_attr_group_global);
 > 
->   I think the LTR capability Max Snoop registers could also use some
->   clarification.  The base spec says "Software should set this to the
->   platform's maximum supported latency or less."  I assume this
->   platform data is supposed to come from the ACPI LTR _DSM.  The
->   firmware spec says software should sum the latencies along the path
->   between each downstream port (I wonder if this should say "Root
->   Port"?) and an endpoint that supports LTR.  Switches not embedded in
->   the platform will not have this _DSM, but I assume they contribute
->   to this sum.  But I don't know *what* they contribute.
+> Huge hint, if in a driver, or bus subsystem, and you call sysfs_*,
+> that's usually a huge clue that you are doing something wrong.
 > 
+> Try the above again, with a simple attribute group, and name for it, and
+> it should "just work".
 
-That's a fair question :)
+I'm probably missing something but I don't get how this could work in
+this case. If I'm seeing this right the default attribute group here
+is pci_bus_type.bus_groups and that is already set in drivers/pci/pci-driver.c
+so I don't think I should set that.
 
-I personally think that the driver for the specific hardware should know
-what is the latency tolerance for the device when it is doing different
-"tasks".
+I did however find bus_create_file() which does work when using the path
+/sys/bus/pci/uid_checking instead. This would work for us if Bjorn is okay with
+that path and the code is really clean and simple too.
 
-> > For this reason check if the bridge upstrea had LTR enabled set
-> > previously and re-enable it before enabling LTR for the endpoint.
-> 
-> s/upstrea/upstream/
-> s/enabled set/enabled/
+That said, I think we could also add something like bus_create_group().
+Then we could use that to also clean up drivers/pci/slot.c:pci_slot_init()
+and get the original path /sys/bus/pci/zpci/uid_checking.
 
-Thanks, I'll fix those.
+I think this would also allow us to get rid of pci_bus_get_kset() which is
+only used in that function and seems to me like it encourages use of raw ksets.
+Or I'm completely off the mark and just missing something important.
 
-> Seems like there could be more things in the upstream bridge that need
-> to be reprogrammed when the link comes back up (MPS, Common Clock
-> Configuration, etc?).
-> 
-> I don't see anything in the spec about link status affecting MPS, but
-> if we hot-removed a device that supported 4KB MPS and hot-added one
-> that only support 128B, we might need more extensive reconfiguration.
-> I haven't checked; maybe that's already covered?
-
-It looks like that's covered in pcie_find_smpss(). It limits the MPS to
-128 if there are hotplug bridges in the topology. Assuming I read it
-correctly.
-
-> I think Common Clock Config also depends on characteristics of the
-> hot-added device, so we might need to take a look at that, too.
-
-I think pcie_aspm_configure_common_clock() takes care of that already.
-It programs both ends of the link when a device is being added.
-
-> If it turns out that we need to do more to the upstream bridge than
-> just this LTR thing, I wonder if we should pull it out to some kind of
-> "reconfig bridge" function so it's not buried in several random
-> places.
-
-It seems that at the moment it is only the LTR thing that needs to be
-reconfigured as others looks like they are covered by their
-corresponding "enable" functions. Not sure if it is better to move those
-to "reconfig bridge" function because it might be harder to follow if it
-is not close to the code that enables the feature in the first place.
-
-But I can do that if you still think it is better.
-
-> [1] https://lore.kernel.org/r/20201015080311.7811-1-puranjay12@gmail.com
-> 
-> > Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> >  drivers/pci/probe.c | 17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> > index 0eb68b47354f..cd174e06f46f 100644
-> > --- a/drivers/pci/probe.c
-> > +++ b/drivers/pci/probe.c
-> > @@ -2153,7 +2153,7 @@ static void pci_configure_ltr(struct pci_dev *dev)
-> >  {
-> >  #ifdef CONFIG_PCIEASPM
-> >  	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> > -	struct pci_dev *bridge;
-> > +	struct pci_dev *bridge = NULL;
-> >  	u32 cap, ctl;
-> >  
-> >  	if (!pci_is_pcie(dev))
-> > @@ -2191,6 +2191,21 @@ static void pci_configure_ltr(struct pci_dev *dev)
-> >  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> >  	    ((bridge = pci_upstream_bridge(dev)) &&
-> >  	      bridge->ltr_path)) {
-> > +		/*
-> > +		 * Downstream ports reset the LTR enable bit when the
-> > +		 * link goes down (e.g on hot-remove) so re-enable the
-> > +		 * bit here if not set anymore.
-> > +		 * PCIe r5.0, sec 7.5.3.16.
-> > +		 */
-> > +		if (bridge && pcie_downstream_port(bridge)) {
-> 
-> Why test for pcie_downstream_port(bridge) here?  "dev" is a PCIe
-> device, and "bridge" is a PCI device leading to "dev".  I think the
-> only possibilities are that "bridge" is a root port, a switch
-> downstream port, or a PCI-to-PCIe bridge, i.e., exactly what
-> pcie_downstream_port() tests for.
-
-Good point that check is not needed. I'll remove it.
-
-> > +			pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2, &ctl);
-> > +			if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
-> > +				pci_dbg(bridge, "re-enabling LTR\n");
-> > +				pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
-> > +							 PCI_EXP_DEVCTL2_LTR_EN);
-> > +			}
-> > +		}
-> > +		pci_dbg(dev, "enabling LTR\n");
-> >  		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
-> >  					 PCI_EXP_DEVCTL2_LTR_EN);
-> >  		dev->ltr_path = 1;
-> > -- 
-> > 2.29.2
-> > 
+thanks,
+Niklas
