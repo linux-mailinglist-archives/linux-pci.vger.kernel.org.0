@@ -2,150 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B82EF2F89AE
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 00:58:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF5232F89FD
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 01:36:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbhAOX6E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jan 2021 18:58:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43732 "EHLO mail.kernel.org"
+        id S1726058AbhAPAgu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jan 2021 19:36:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727410AbhAOX6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 15 Jan 2021 18:58:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1BC01239E5;
-        Fri, 15 Jan 2021 23:57:23 +0000 (UTC)
+        id S1726151AbhAPAgs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 15 Jan 2021 19:36:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C19F922AAC;
+        Sat, 16 Jan 2021 00:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610755043;
-        bh=Jugm7yT041wqfvRSYw3MdlF8tLFsAvalmyiaeKw8Jd4=;
+        s=k20201202; t=1610757368;
+        bh=fbGi5Mkd+wHJVZakUM/rbIWNnqXHMVw/OF3geWRYAV4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N0xHbYmttdidoLVINDbT8f4OEoalscoXogfQ9zam8wgk+OGu2ipltKpv8YaAIqtlT
-         pypHYIT2Gsqj+jFVcpEf93gIEG1wXXrII1JwUwMJS6naXP6AQUGrSwdEDEZCsY9G54
-         usmXPtaL8Oqe5bK7KzLbrwwsf7W4I6aYn7mpSCjweCXZfYCt6WrNTYbDWBMamd1dHe
-         7vSVZsgbByxNmW+q5/22fEmooCXS5skphnD0xEAJV9JzRu2040wPMMp3cHnzqs3wvA
-         LMrOGFKVNoEFSeYHS+lsCHe9n4WOTN+sKyeZYgEYoJtcZDlNiROEjeeYY6TRHgktnf
-         xRZNOY2lptl1Q==
-Date:   Fri, 15 Jan 2021 17:57:21 -0600
+        b=Bzdc9h4wKnvDLEjJgyNmAL7ChbNHBZrKo+ljVJxxTtc5Lo9scLt0d/wmS9pwGNivc
+         HWBZZ+AMOma1zb/Kg/LqqdQd5Tysyi9AEitjpdXPFcomdsHRthsejFMNMCJW4HsjAb
+         RZ66p95DI7VauE3MIvQ6zqznDowTSPd2mORuMS+oRymUut13dlmVIjoe1f0T8Ij6sA
+         0r8uWCM9O59XdpBId7Sv92AGWbYNfyILzOh3T2+PrSGUvQhHHPCFke7geK4CHYYBqI
+         NSXuEocABYcAnJNYnmFxr/gk0vw1UGL3oO6QOLEwgXRbgB3oLOzRLb3Y7BgVpM7tuM
+         hcBdF8N5apfYg==
+Date:   Fri, 15 Jan 2021 18:36:06 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
-Message-ID: <20210115235721.GA1862880@bjorn-Precision-5520>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
+        linux-pci@vger.kernel.org, Puranjay Mohan <puranjay12@gmail.com>
+Subject: Re: [PATCH] PCI: Re-enable downstream port LTR if it was previously
+ enabled
+Message-ID: <20210116003606.GA2136097@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3b101fff85ec1c490e9a14305a999cbe@walle.cc>
+In-Reply-To: <20210115090021.GC968855@lahna.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 12:32:32AM +0100, Michael Walle wrote:
-> Am 2021-01-12 23:58, schrieb Bjorn Helgaas:
-> > On Sat, Jan 09, 2021 at 07:31:46PM +0100, Michael Walle wrote:
-> > > Am 2021-01-08 22:20, schrieb Bjorn Helgaas:
-
-> > > > 3) If the Intel i210 is defective in how it handles an Expansion ROM
-> > > > that overlaps another BAR, a quirk might be the right fix. But my
-> > > > guess is the device is working correctly per spec and there's
-> > > > something wrong in how firmware/Linux is assigning things.  That would
-> > > > mean we need a more generic fix that's not a quirk and not tied to the
-> > > > Intel i210.
-> > > 
-> > > Agreed, but as you already stated (and I've also found that in
-> > > the PCI spec) the Expansion ROM address decoder can be shared by
-> > > the other BARs and it shouldn't matter as long as the ExpROM BAR
-> > > is disabled, which is the case here.
+On Fri, Jan 15, 2021 at 11:00:21AM +0200, Mika Westerberg wrote:
+> On Thu, Jan 14, 2021 at 06:10:07PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Jan 14, 2021 at 04:47:24PM +0300, Mika Westerberg wrote:
+> > > PCIe r5.0, sec 7.5.3.16 says that the downstream ports must reset the
+> > > LTR enable bit if the link goes down (port goes DL_Down status). Now, if
+> > > we had LTR previously enabled and the PCIe endpoint gets hot-removed and
+> > > then hot-added back the ->ltr_path of the downstream port is still set
+> > > but the port now does not have the LTR enable bit set anymore.
 > > 
-> > My point is just that if this could theoretically affect devices
-> > other than the i210, the fix should not be an i210-specific quirk.
-> > I'll assume this is a general problem and wait for a generic PCI
-> > core solution unless it's i210-specific.
+> > IIRC LTR is only needed for L1.2, and of course the LTR Capability
+> > (Max Snoop/No-Snoop Latency registers) and the L1 PM Substates
+> > Capability (LTR_L1.2_THRESHOLD) must be programmed before enabling
+> > LTR.  For the bridge, I guess we're assuming those were programmed
+> > before the hot-remove, and they remain valid after the hot-add.
+> > 
+> > But what about the endpoint that we hot-added?  How do we program its
+> > LTR and L1 PM Substates Capabilities?  I know we have
+> > aspm_calc_l1ss_info() for L1 PM Substates, but I really don't trust
+> > it, and I don't think we do anything at all to program the LTR
+> > Capability.
 > 
-> I guess the culprit here is that linux skips the programming of the
-> BAR because of some broken Matrox card. That should have been a
-> quirk instead, right? But I don't know if we want to change that, do
-> we? How many other cards depend on that?
+> True - we don't. However, enabling the LTR bit here for the endpoint
+> (and for the bridges all the way up to the root port) makes the endpoint
+> to report that there is no LTR requirement and that allows the SoC to do
+> some PM optimizations or so.
+> 
+> We actually see that if this is not re-programmed like this on a Tiger
+> Lake based ChromeBook S0ix fails (S0ix is Intel low power idle state).
 
-Oh, right.  There's definitely some complicated history there that
-makes me a little scared to change things.  But it's also unfortunate
-if we have to pile quirks on top of quirks.
+So if we set PCI_EXP_DEVCTL2_LTR_EN for the bridge and also for the
+hot-added endpoint, S0ix works.  But we never get to the S0ix state if
+we don't set those bits?
 
-> And still, how do we find out that the i210 is behaving correctly?
-> In my opinion it is clearly not. You can change the ExpROM BAR value
-> during runtime and it will start working (while keeping it
-> disabled).  Am I missing something here?
+And we never actually set the Max Snoop/No-Snoop Latency registers in
+the LTR Capability, so they should power up as zeroes.  IIRC, that is
+the most conservative setting (PCIe r5.0, sec 6.18 says "all 0's
+indicates that the device will be impacted by any delay and that the
+best possible service is requested").
 
-I agree; if the ROM BAR is disabled, I don't think it should matter at
-all what it contains, so this does look like an i210 defect.
+So I *guess* it makes some sort of sense to enable LTR in that
+situation, although I wish we could set the content of the messages
+before enabling them.
 
-Would you mind trying the patch below?  It should update the ROM BAR
-value even when it is disabled.  With the current pci_enable_rom()
-code that doesn't rely on the value read from the BAR, I *think* this
-should be safe even on the Matrox and similar devices.
+> > I used to think the LTR _DSM was a way to help us program the LTR
+> > Capability, and Puranjay did a nice job implementing support for it
+> > [1].  But I now think that _DSM doesn't give us enough information
+> > (and of course it doesn't help at all for non-ACPI systems or for
+> > hierarchies not integrated on the system board), so I didn't merge
+> > Puranjay's work.
+> > 
+> > I tried to have some discussion in the PCI SIG about this, but it
+> > never really went anywhere.  Here's my basic question, just for the
+> > archives:
+> > 
+> >   I think the LTR capability Max Snoop registers could also use some
+> >   clarification.  The base spec says "Software should set this to the
+> >   platform's maximum supported latency or less."  I assume this
+> >   platform data is supposed to come from the ACPI LTR _DSM.  The
+> >   firmware spec says software should sum the latencies along the path
+> >   between each downstream port (I wonder if this should say "Root
+> >   Port"?) and an endpoint that supports LTR.  Switches not embedded in
+> >   the platform will not have this _DSM, but I assume they contribute
+> >   to this sum.  But I don't know *what* they contribute.
+> > 
+> 
+> That's a fair question :)
+> 
+> I personally think that the driver for the specific hardware should know
+> what is the latency tolerance for the device when it is doing different
+> "tasks".
+> 
+> > > For this reason check if the bridge upstrea had LTR enabled set
+> > > previously and re-enable it before enabling LTR for the endpoint.
+> > 
+> > s/upstrea/upstream/
+> > s/enabled set/enabled/
+> 
+> Thanks, I'll fix those.
+> 
+> > Seems like there could be more things in the upstream bridge that need
+> > to be reprogrammed when the link comes back up (MPS, Common Clock
+> > Configuration, etc?).
+> > 
+> > I don't see anything in the spec about link status affecting MPS, but
+> > if we hot-removed a device that supported 4KB MPS and hot-added one
+> > that only support 128B, we might need more extensive reconfiguration.
+> > I haven't checked; maybe that's already covered?
+> 
+> It looks like that's covered in pcie_find_smpss(). It limits the MPS to
+> 128 if there are hotplug bridges in the topology. Assuming I read it
+> correctly.
+
+OK, and it looks like that's called in the hot-add path:
+
+  pciehp_configure_device
+    pcie_bus_configure_settings
+      pcie_find_smpss
+
+so that's good.  I forgot that we had that path.
+
+> > I think Common Clock Config also depends on characteristics of the
+> > hot-added device, so we might need to take a look at that, too.
+> 
+> I think pcie_aspm_configure_common_clock() takes care of that already.
+> It programs both ends of the link when a device is being added.
+
+Yep, right.
+
+> > If it turns out that we need to do more to the upstream bridge than
+> > just this LTR thing, I wonder if we should pull it out to some kind of
+> > "reconfig bridge" function so it's not buried in several random
+> > places.
+> 
+> It seems that at the moment it is only the LTR thing that needs to be
+> reconfigured as others looks like they are covered by their
+> corresponding "enable" functions. Not sure if it is better to move those
+> to "reconfig bridge" function because it might be harder to follow if it
+> is not close to the code that enables the feature in the first place.
+> 
+> But I can do that if you still think it is better.
+
+No, I don't think it's worth doing that.
 
 Bjorn
-
-
-commit 0ca2233eb71f ("PCI: Update ROM BAR even if disabled")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri Jan 15 17:17:44 2021 -0600
-
-    PCI: Update ROM BAR even if disabled
-    
-    Test patch for i210 issue reported by Michael Walle:
-    https://lore.kernel.org/r/20201230185317.30915-1-michael@walle.cc
-
-diff --git a/drivers/pci/rom.c b/drivers/pci/rom.c
-index 8fc9a4e911e3..fc638034628c 100644
---- a/drivers/pci/rom.c
-+++ b/drivers/pci/rom.c
-@@ -35,9 +35,8 @@ int pci_enable_rom(struct pci_dev *pdev)
- 		return 0;
- 
- 	/*
--	 * Ideally pci_update_resource() would update the ROM BAR address,
--	 * and we would only set the enable bit here.  But apparently some
--	 * devices have buggy ROM BARs that read as zero when disabled.
-+	 * Some ROM BARs read as zero when disabled, so we can't simply
-+	 * read the BAR, set the enable bit, and write it back.
- 	 */
- 	pcibios_resource_to_bus(pdev->bus, &region, res);
- 	pci_read_config_dword(pdev, pdev->rom_base_reg, &rom_addr);
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index 7f1acb3918d0..f69b7d179617 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -69,18 +69,10 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
- 	if (resno < PCI_ROM_RESOURCE) {
- 		reg = PCI_BASE_ADDRESS_0 + 4 * resno;
- 	} else if (resno == PCI_ROM_RESOURCE) {
--
--		/*
--		 * Apparently some Matrox devices have ROM BARs that read
--		 * as zero when disabled, so don't update ROM BARs unless
--		 * they're enabled.  See
--		 * https://lore.kernel.org/r/43147B3D.1030309@vc.cvut.cz/
--		 */
--		if (!(res->flags & IORESOURCE_ROM_ENABLE))
--			return;
-+		if (res->flags & IORESOURCE_ROM_ENABLE)
-+			new |= PCI_ROM_ADDRESS_ENABLE;
- 
- 		reg = dev->rom_base_reg;
--		new |= PCI_ROM_ADDRESS_ENABLE;
- 	} else
- 		return;
- 
-@@ -99,7 +91,8 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
- 	pci_write_config_dword(dev, reg, new);
- 	pci_read_config_dword(dev, reg, &check);
- 
--	if ((new ^ check) & mask) {
-+	/* Some ROM BARs read as zero when disabled */
-+	if (resno != PCI_ROM_RESOURCE && (new ^ check) & mask) {
- 		pci_err(dev, "BAR %d: error updating (%#08x != %#08x)\n",
- 			resno, new, check);
- 	}
