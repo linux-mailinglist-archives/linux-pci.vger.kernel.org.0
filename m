@@ -2,166 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF5232F89FD
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 01:36:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89D7C2F8A50
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 02:22:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbhAPAgu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 15 Jan 2021 19:36:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55074 "EHLO mail.kernel.org"
+        id S1726720AbhAPBWR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 15 Jan 2021 20:22:17 -0500
+Received: from mga09.intel.com ([134.134.136.24]:55631 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbhAPAgs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 15 Jan 2021 19:36:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C19F922AAC;
-        Sat, 16 Jan 2021 00:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610757368;
-        bh=fbGi5Mkd+wHJVZakUM/rbIWNnqXHMVw/OF3geWRYAV4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Bzdc9h4wKnvDLEjJgyNmAL7ChbNHBZrKo+ljVJxxTtc5Lo9scLt0d/wmS9pwGNivc
-         HWBZZ+AMOma1zb/Kg/LqqdQd5Tysyi9AEitjpdXPFcomdsHRthsejFMNMCJW4HsjAb
-         RZ66p95DI7VauE3MIvQ6zqznDowTSPd2mORuMS+oRymUut13dlmVIjoe1f0T8Ij6sA
-         0r8uWCM9O59XdpBId7Sv92AGWbYNfyILzOh3T2+PrSGUvQhHHPCFke7geK4CHYYBqI
-         NSXuEocABYcAnJNYnmFxr/gk0vw1UGL3oO6QOLEwgXRbgB3oLOzRLb3Y7BgVpM7tuM
-         hcBdF8N5apfYg==
-Date:   Fri, 15 Jan 2021 18:36:06 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        linux-pci@vger.kernel.org, Puranjay Mohan <puranjay12@gmail.com>
-Subject: Re: [PATCH] PCI: Re-enable downstream port LTR if it was previously
- enabled
-Message-ID: <20210116003606.GA2136097@bjorn-Precision-5520>
+        id S1725601AbhAPBWR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 15 Jan 2021 20:22:17 -0500
+IronPort-SDR: h43Gi4tTtPS8Qt9K0xdP2ne5XhRI31Vg0ejPlIr6vNion1y8TLLObYRoZj7Ri81+ogRPJ8TQLv
+ TOMESzq7hIag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9865"; a="178778399"
+X-IronPort-AV: E=Sophos;i="5.79,351,1602572400"; 
+   d="scan'208";a="178778399"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 17:20:28 -0800
+IronPort-SDR: DznnGYuwJ/UxxQrmQGJd5b9g6Om3RrfpkvoMPBs122KxptEO3Brz/fbs5840Umw7sUzZLqkujt
+ GGgy0p/jLtsg==
+X-IronPort-AV: E=Sophos;i="5.79,351,1602572400"; 
+   d="scan'208";a="382861945"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.175.94]) ([10.249.175.94])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 17:20:18 -0800
+Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
+        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
+        dwmw2@infradead.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, dan.j.williams@intel.com, will@kernel.org,
+        joro@8bytes.org, dmaengine@vger.kernel.org, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
+Subject: Re: [RFC PATCH v3 1/2] iommu: Add capability IOMMU_CAP_VIOMMU
+To:     Leon Romanovsky <leon@kernel.org>
+References: <20210114013003.297050-1-baolu.lu@linux.intel.com>
+ <20210114013003.297050-2-baolu.lu@linux.intel.com>
+ <20210114132627.GA944463@unreal>
+ <b0c8b260-8e23-a5bd-d2da-ca1d67cdfa8a@linux.intel.com>
+ <20210115063108.GI944463@unreal>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <c58adc13-306a-8df8-19e1-27f834b3a7c9@linux.intel.com>
+Date:   Sat, 16 Jan 2021 09:20:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210115090021.GC968855@lahna.fi.intel.com>
+In-Reply-To: <20210115063108.GI944463@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 11:00:21AM +0200, Mika Westerberg wrote:
-> On Thu, Jan 14, 2021 at 06:10:07PM -0600, Bjorn Helgaas wrote:
-> > On Thu, Jan 14, 2021 at 04:47:24PM +0300, Mika Westerberg wrote:
-> > > PCIe r5.0, sec 7.5.3.16 says that the downstream ports must reset the
-> > > LTR enable bit if the link goes down (port goes DL_Down status). Now, if
-> > > we had LTR previously enabled and the PCIe endpoint gets hot-removed and
-> > > then hot-added back the ->ltr_path of the downstream port is still set
-> > > but the port now does not have the LTR enable bit set anymore.
-> > 
-> > IIRC LTR is only needed for L1.2, and of course the LTR Capability
-> > (Max Snoop/No-Snoop Latency registers) and the L1 PM Substates
-> > Capability (LTR_L1.2_THRESHOLD) must be programmed before enabling
-> > LTR.  For the bridge, I guess we're assuming those were programmed
-> > before the hot-remove, and they remain valid after the hot-add.
-> > 
-> > But what about the endpoint that we hot-added?  How do we program its
-> > LTR and L1 PM Substates Capabilities?  I know we have
-> > aspm_calc_l1ss_info() for L1 PM Substates, but I really don't trust
-> > it, and I don't think we do anything at all to program the LTR
-> > Capability.
+Hi,
+
+On 2021/1/15 14:31, Leon Romanovsky wrote:
+> On Fri, Jan 15, 2021 at 07:49:47AM +0800, Lu Baolu wrote:
+>> Hi Leon,
+>>
+>> On 1/14/21 9:26 PM, Leon Romanovsky wrote:
+>>> On Thu, Jan 14, 2021 at 09:30:02AM +0800, Lu Baolu wrote:
+>>>> Some vendor IOMMU drivers are able to declare that it is running in a VM
+>>>> context. This is very valuable for the features that only want to be
+>>>> supported on bare metal. Add a capability bit so that it could be used.
+>>>
+>>> And how is it used? Who and how will set it?
+>>
+>> Use the existing iommu_capable(). I should add more descriptions about
+>> who and how to use it.
 > 
-> True - we don't. However, enabling the LTR bit here for the endpoint
-> (and for the bridges all the way up to the root port) makes the endpoint
-> to report that there is no LTR requirement and that allows the SoC to do
-> some PM optimizations or so.
-> 
-> We actually see that if this is not re-programmed like this on a Tiger
-> Lake based ChromeBook S0ix fails (S0ix is Intel low power idle state).
+> I want to see the code that sets this capability.
 
-So if we set PCI_EXP_DEVCTL2_LTR_EN for the bridge and also for the
-hot-added endpoint, S0ix works.  But we never get to the S0ix state if
-we don't set those bits?
+Currently we have Intel VT-d and the virt-iommu setting this capability.
 
-And we never actually set the Max Snoop/No-Snoop Latency registers in
-the LTR Capability, so they should power up as zeroes.  IIRC, that is
-the most conservative setting (PCIe r5.0, sec 6.18 says "all 0's
-indicates that the device will be impacted by any delay and that the
-best possible service is requested").
+  static bool intel_iommu_capable(enum iommu_cap cap)
+  {
+  	if (cap == IOMMU_CAP_CACHE_COHERENCY)
+  		return domain_update_iommu_snooping(NULL) == 1;
+  	if (cap == IOMMU_CAP_INTR_REMAP)
+  		return irq_remapping_enabled == 1;
++	if (cap == IOMMU_CAP_VIOMMU)
++		return caching_mode_enabled();
 
-So I *guess* it makes some sort of sense to enable LTR in that
-situation, although I wish we could set the content of the messages
-before enabling them.
+  	return false;
+  }
 
-> > I used to think the LTR _DSM was a way to help us program the LTR
-> > Capability, and Puranjay did a nice job implementing support for it
-> > [1].  But I now think that _DSM doesn't give us enough information
-> > (and of course it doesn't help at all for non-ACPI systems or for
-> > hierarchies not integrated on the system board), so I didn't merge
-> > Puranjay's work.
-> > 
-> > I tried to have some discussion in the PCI SIG about this, but it
-> > never really went anywhere.  Here's my basic question, just for the
-> > archives:
-> > 
-> >   I think the LTR capability Max Snoop registers could also use some
-> >   clarification.  The base spec says "Software should set this to the
-> >   platform's maximum supported latency or less."  I assume this
-> >   platform data is supposed to come from the ACPI LTR _DSM.  The
-> >   firmware spec says software should sum the latencies along the path
-> >   between each downstream port (I wonder if this should say "Root
-> >   Port"?) and an endpoint that supports LTR.  Switches not embedded in
-> >   the platform will not have this _DSM, but I assume they contribute
-> >   to this sum.  But I don't know *what* they contribute.
-> > 
-> 
-> That's a fair question :)
-> 
-> I personally think that the driver for the specific hardware should know
-> what is the latency tolerance for the device when it is doing different
-> "tasks".
-> 
-> > > For this reason check if the bridge upstrea had LTR enabled set
-> > > previously and re-enable it before enabling LTR for the endpoint.
-> > 
-> > s/upstrea/upstream/
-> > s/enabled set/enabled/
-> 
-> Thanks, I'll fix those.
-> 
-> > Seems like there could be more things in the upstream bridge that need
-> > to be reprogrammed when the link comes back up (MPS, Common Clock
-> > Configuration, etc?).
-> > 
-> > I don't see anything in the spec about link status affecting MPS, but
-> > if we hot-removed a device that supported 4KB MPS and hot-added one
-> > that only support 128B, we might need more extensive reconfiguration.
-> > I haven't checked; maybe that's already covered?
-> 
-> It looks like that's covered in pcie_find_smpss(). It limits the MPS to
-> 128 if there are hotplug bridges in the topology. Assuming I read it
-> correctly.
+And,
 
-OK, and it looks like that's called in the hot-add path:
++static bool viommu_capable(enum iommu_cap cap)
++{
++	if (cap == IOMMU_CAP_VIOMMU)
++		return true;
++
++	return false;
++}
 
-  pciehp_configure_device
-    pcie_bus_configure_settings
-      pcie_find_smpss
-
-so that's good.  I forgot that we had that path.
-
-> > I think Common Clock Config also depends on characteristics of the
-> > hot-added device, so we might need to take a look at that, too.
-> 
-> I think pcie_aspm_configure_common_clock() takes care of that already.
-> It programs both ends of the link when a device is being added.
-
-Yep, right.
-
-> > If it turns out that we need to do more to the upstream bridge than
-> > just this LTR thing, I wonder if we should pull it out to some kind of
-> > "reconfig bridge" function so it's not buried in several random
-> > places.
-> 
-> It seems that at the moment it is only the LTR thing that needs to be
-> reconfigured as others looks like they are covered by their
-> corresponding "enable" functions. Not sure if it is better to move those
-> to "reconfig bridge" function because it might be harder to follow if it
-> is not close to the code that enables the feature in the first place.
-> 
-> But I can do that if you still think it is better.
-
-No, I don't think it's worth doing that.
-
-Bjorn
+Best regards,
+baolu
