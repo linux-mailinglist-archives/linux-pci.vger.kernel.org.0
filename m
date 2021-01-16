@@ -2,210 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E4882F8BAA
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 06:35:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE4BA2F8C36
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 09:21:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725866AbhAPFdr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jan 2021 00:33:47 -0500
-Received: from mga11.intel.com ([192.55.52.93]:21352 "EHLO mga11.intel.com"
+        id S1726788AbhAPIVR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Jan 2021 03:21:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbhAPFdr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 16 Jan 2021 00:33:47 -0500
-IronPort-SDR: vdOKNzNDG+RiudbzLOUQ99f0V0m0wX/a9GRc63ramulHlaGP5KBFRHqa6AK5IFLsohIW7d8zSK
- 5+lDzwriQ92w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9865"; a="175139591"
-X-IronPort-AV: E=Sophos;i="5.79,351,1602572400"; 
-   d="scan'208";a="175139591"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2021 21:33:03 -0800
-IronPort-SDR: ceqH0ENs1/4+eulASm2y/QpQxtqZWQcE1SuA0+ftpmI/tdWXi/b3avdUSXsV4g6K9QIJi7gGVi
- QzW5/9VZknNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,351,1602572400"; 
-   d="scan'208";a="425554938"
-Received: from lkp-server01.sh.intel.com (HELO 260eafd5ecd0) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jan 2021 21:33:02 -0800
-Received: from kbuild by 260eafd5ecd0 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1l0eCr-0000jU-MK; Sat, 16 Jan 2021 05:33:01 +0000
-Date:   Sat, 16 Jan 2021 13:32:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 8f5ab3b464760ade8511d67cafd4f278b298cfbf
-Message-ID: <60027a70.U0VjmaPnsD7u2NKN%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725767AbhAPIVR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 16 Jan 2021 03:21:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 742EA221E2;
+        Sat, 16 Jan 2021 08:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610785236;
+        bh=/OMqaqhP24E3ddcv7U8rMRBb7LkJzzz8NXuXj/8AUgc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F9hLPMk05F2tOe3ofixPIFTdQYQ/LNk9nJY36XueQwUhtm7NlfC3ObIIfmdyTv8WG
+         jXRm8s1vWGjCR7fjWi8KOonR5Xxj2q7uRPpF+1pTwIc12KtbDt5kUd3CqLK8+bVwYO
+         Pk3bsuvmpkLpfNgg1fRACQDtyE6F8SirKz52XKMtCNMdUHLRMqquoBCzQyVT0xUGu/
+         +1mdz57+kHLgH7ybAKovtLX/E5sQLIZgwvbFVm025vxyq3xRDCml/3TlE5Hmr2epkh
+         6TgEGmOLd+NsUud/Q4rYEANrk2cQWg2lvdg6eltG/oI11fV3NUQNqjrP7pukIdGO6k
+         NKt4cMsm79VQA==
+Date:   Sat, 16 Jan 2021 10:20:31 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>
+Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
+ number of MSI-X vectors
+Message-ID: <20210116082031.GK944463@unreal>
+References: <CAKgT0UcKqt=EgE+eitB8-u8LvxqHBDfF+u2ZSi5urP_Aj0Btvg@mail.gmail.com>
+ <20210114182945.GO4147@nvidia.com>
+ <CAKgT0UcQW+nJjTircZAYs1_GWNrRud=hSTsphfVpsc=xaF7aRQ@mail.gmail.com>
+ <20210114200825.GR4147@nvidia.com>
+ <CAKgT0UcaRgY4XnM0jgWRvwBLj+ufiabFzKPyrf3jkLrF1Z8zEg@mail.gmail.com>
+ <20210114162812.268d684a@omen.home.shazbot.org>
+ <CAKgT0Ufe1w4PpZb3NXuSxug+OMcjm1RP3ZqVrJmQqBDt3ByOZQ@mail.gmail.com>
+ <20210115140619.GA4147@nvidia.com>
+ <20210115155315.GJ944463@unreal>
+ <CAKgT0UdzCqbLwxSnDTtgha+PwTMW5iVb-3VXbwdMNiaAYXyWzQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UdzCqbLwxSnDTtgha+PwTMW5iVb-3VXbwdMNiaAYXyWzQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 8f5ab3b464760ade8511d67cafd4f278b298cfbf  Merge branch 'remotes/lorenzo/pci/rcar'
+On Fri, Jan 15, 2021 at 05:48:59PM -0800, Alexander Duyck wrote:
+> On Fri, Jan 15, 2021 at 7:53 AM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > On Fri, Jan 15, 2021 at 10:06:19AM -0400, Jason Gunthorpe wrote:
+> > > On Thu, Jan 14, 2021 at 05:56:20PM -0800, Alexander Duyck wrote:
+> > >
+> > > > That said, it only works at the driver level. So if the firmware is
+> > > > the one that is having to do this it also occured to me that if this
+> > > > update happened on FLR that would probably be preferred.
+> > >
+> > > FLR is not free, I'd prefer not to require it just for some
+> > > philosophical reason.
+> > >
+> > > > Since the mlx5 already supports devlink I don't see any reason why the
+> > > > driver couldn't be extended to also support the devlink resource
+> > > > interface and apply it to interrupts.
+> > >
+> > > So you are OK with the PF changing the VF as long as it is devlink not
+> > > sysfs? Seems rather arbitary?
+> > >
+> > > Leon knows best, but if I recall devlink becomes wonky when the VF
+> > > driver doesn't provide a devlink instance. How does it do reload of a
+> > > VF then?
+> > >
+> > > I think you end up with essentially the same logic as presented here
+> > > with sysfs.
+> >
+> > The reasons why I decided to go with sysfs are:
+> > 1. This MSI-X table size change is applicable to ALL devices in the world,
+> > and not only netdev.
+>
+> In the PCI world MSI-X table size is a read only value. That is why I
+> am pushing back on this as a PCI interface.
 
-elapsed time: 726m
+And it stays read-only.
 
-configs tested: 149
-configs skipped: 3
+>
+> > 2. This is purely PCI field and apply equally with same logic to all
+> > subsystems and not to netdev only.
+>
+> Again, calling this "purely PCI" is the sort of wording that has me
+> concerned. I would prefer it if we avoid that wording. There is much
+> more to this than just modifying the table size field. The firmware is
+> having to shift resources between devices and this potentially has an
+> effect on the entire part, not just one VF.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It is internal to HW implementation, dumb device can solve it differently.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-sh                        edosk7760_defconfig
-powerpc                   lite5200b_defconfig
-mips                     loongson1c_defconfig
-powerpc                     tqm8560_defconfig
-arm                           viper_defconfig
-xtensa                  cadence_csp_defconfig
-mips                  cavium_octeon_defconfig
-powerpc                      ppc6xx_defconfig
-c6x                              alldefconfig
-arc                        nsimosci_defconfig
-sh                          landisk_defconfig
-powerpc                   currituck_defconfig
-mips                         rt305x_defconfig
-sh                      rts7751r2d1_defconfig
-powerpc                 mpc8272_ads_defconfig
-arm                           h3600_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                       mainstone_defconfig
-sh                        apsh4ad0a_defconfig
-arm                        magician_defconfig
-arm                         assabet_defconfig
-powerpc                mpc7448_hpc2_defconfig
-powerpc                     tqm8548_defconfig
-nios2                            alldefconfig
-sh                          rsk7264_defconfig
-c6x                                 defconfig
-sh                               j2_defconfig
-mips                          ath25_defconfig
-sh                   rts7751r2dplus_defconfig
-mips                  maltasmvp_eva_defconfig
-powerpc               mpc834x_itxgp_defconfig
-um                             i386_defconfig
-mips                     cu1830-neo_defconfig
-sh                   sh7724_generic_defconfig
-arm                          pcm027_defconfig
-mips                         mpc30x_defconfig
-arm                          exynos_defconfig
-mips                            gpr_defconfig
-m68k                         apollo_defconfig
-m68k                        m5407c3_defconfig
-arm                            pleb_defconfig
-m68k                        mvme147_defconfig
-powerpc                       maple_defconfig
-sh                ecovec24-romimage_defconfig
-sparc                       sparc64_defconfig
-sh                        dreamcast_defconfig
-openrisc                    or1ksim_defconfig
-mips                         db1xxx_defconfig
-powerpc                       holly_defconfig
-csky                                defconfig
-mips                       rbtx49xx_defconfig
-arc                 nsimosci_hs_smp_defconfig
-arm                       cns3420vb_defconfig
-powerpc                       eiger_defconfig
-powerpc                 mpc834x_itx_defconfig
-arc                              allyesconfig
-powerpc                      katmai_defconfig
-m68k                        m5272c3_defconfig
-sh                           se7206_defconfig
-powerpc                 mpc8560_ads_defconfig
-m68k                             allmodconfig
-c6x                         dsk6455_defconfig
-arm                      tct_hammer_defconfig
-sh                         apsh4a3a_defconfig
-arc                        nsim_700_defconfig
-arm                        mini2440_defconfig
-sh                           se7780_defconfig
-powerpc                          g5_defconfig
-mips                        nlm_xlr_defconfig
-ia64                            zx1_defconfig
-sh                           se7619_defconfig
-arm                         hackkit_defconfig
-sh                          urquell_defconfig
-powerpc                     redwood_defconfig
-mips                      malta_kvm_defconfig
-m68k                          atari_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20210115
-x86_64               randconfig-a006-20210115
-x86_64               randconfig-a001-20210115
-x86_64               randconfig-a003-20210115
-x86_64               randconfig-a005-20210115
-x86_64               randconfig-a002-20210115
-i386                 randconfig-a002-20210115
-i386                 randconfig-a005-20210115
-i386                 randconfig-a006-20210115
-i386                 randconfig-a001-20210115
-i386                 randconfig-a003-20210115
-i386                 randconfig-a004-20210115
-i386                 randconfig-a012-20210115
-i386                 randconfig-a011-20210115
-i386                 randconfig-a016-20210115
-i386                 randconfig-a015-20210115
-i386                 randconfig-a013-20210115
-i386                 randconfig-a014-20210115
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+>
+> > 3. The sysfs interface is the standard way of configuring PCI/core, not
+> > devlink.
+>
+> This isn't PCI core that is being configured. It is the firmware for
+> the device. You are working with resources that are shared between
+> multiple functions.
 
-clang tested configs:
-x86_64               randconfig-a015-20210115
-x86_64               randconfig-a012-20210115
-x86_64               randconfig-a013-20210115
-x86_64               randconfig-a016-20210115
-x86_64               randconfig-a014-20210115
-x86_64               randconfig-a011-20210115
+I'm ensuring that "lspci -vv .." will work correctly after such change.
+It is PCI core responsibility.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+> > 4. This is how orchestration software provisioning VFs already. It fits
+> > real world usage of SR-IOV, not the artificial one that is proposed during
+> > the discussion.
+>
+> What do you mean this is how they are doing it already? Do you have
+> something out-of-tree and that is why you are fighting to keep the
+> sysfs? If so that isn't a valid argument.
+
+I have Kubernetes and OpenStack, indeed they are not part of the kernel tree.
+They already use sriov_driver_autoprobe sysfs knob to disable autobind
+before even starting. They configure MACs and bind VFs through sysfs/netlink
+already. For them, the read/write of sysfs that is going to be bound to
+the already created VM with known CPU properties, fits perfectly.
+
+>
+> > So the idea to use devlink just because mlx5 supports it, sound really
+> > wrong to me. If it was other driver from another subsystem without
+> > devlink support, the request to use devlink won't never come.
+> >
+> > Thanks
+>
+> I am suggesting the devlink resources interface because it would be a
+> VERY good fit for something like this. By the definition of it:
+> ``devlink`` provides the ability for drivers to register resources, which
+> can allow administrators to see the device restrictions for a given
+> resource, as well as how much of the given resource is currently
+> in use. Additionally, these resources can optionally have configurable size.
+> This could enable the administrator to limit the number of resources that
+> are used.
+
+It is not resource, but HW objects. The devlink doesn't even see the VFs
+as long as they are not bound to the drivers.
+
+This is an example:
+
+[root@vm ~]# echo 0 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_drivers_autoprobe
+[root@vm ~]# echo 0 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_numvfs
+[ 2370.579711] mlx5_core 0000:01:00.0: E-Switch: Disable: mode(LEGACY), nvfs(2), active vports(3)
+[root@vm ~]# echo 2 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_numvfs
+[ 2377.663666] mlx5_core 0000:01:00.0: E-Switch: Enable: mode(LEGACY), nvfs(2), active vports(3)
+[ 2377.777010] pci 0000:01:00.1: [15b3:101c] type 00 class 0x020000
+[ 2377.784903] pci 0000:01:00.2: [15b3:101c] type 00 class 0x020000
+[root@vm ~]# devlink dev
+pci/0000:01:00.0
+[root@vm ~]# lspci |grep nox
+01:00.0 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6]
+01:00.1 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6 Virtual Function]
+01:00.2 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6 Virtual Function]
+
+So despite us having 2 VFs ready to be given to VMs, administrator doesn't
+see them as devices.
+
+>
+> Even looking over the example usage I don't see there being much to
+> prevent you from applying it to this issue. In addition it has the
+> idea of handling changes that cannot be immediately applied already
+> included. Your current solution doesn't have a good way of handling
+> that and instead just aborts with an error.
+
+Yes, because it is HW resource that should be applied immediately to
+make sure that it is honored, before it is committed to the users.
+
+It is very tempting to use devlink everywhere, but it is really wrong
+tool for this scenario.
+
+Thanks
