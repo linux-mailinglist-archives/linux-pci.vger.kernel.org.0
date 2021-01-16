@@ -2,127 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF1D82F8C40
-	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 09:38:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FE772F8C45
+	for <lists+linux-pci@lfdr.de>; Sat, 16 Jan 2021 09:40:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbhAPIho (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 16 Jan 2021 03:37:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55528 "EHLO mail.kernel.org"
+        id S1726615AbhAPIjt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 16 Jan 2021 03:39:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbhAPIho (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sat, 16 Jan 2021 03:37:44 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 50D3323339;
-        Sat, 16 Jan 2021 08:37:02 +0000 (UTC)
+        id S1725832AbhAPIjs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 16 Jan 2021 03:39:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0A2A323339;
+        Sat, 16 Jan 2021 08:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610786223;
-        bh=fUvGUa8buxclXkXy2ODilNx+gwyZaEszpeJx/QXoyOg=;
+        s=k20201202; t=1610786347;
+        bh=OTU/ZiHDfKKS3DGAIXMuHsKqoyF0ThtCMaNSJ7Psvjo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GoFeK0uWk4BJEnorD8fa6slsAvhbOP/pVxsxaczQqnOnh9xtzhsYQV69eqwT/Pzb/
-         NBxfqhXaOOEn7C2UR+qIqcal2RsW3zctlZIdEnmxIXTe1DOAcv93cQqLy/73I80TEM
-         YYQsXJQ7C9jxI4lclMikQ1r/7d0E/K2P2SRuxPWfwmzOTTeP6TrxQzxoGoWn9ok/bq
-         PmQaQUYrHyYRFXo1j5gNa+WamZZMiGXGFfikYKvDGAwSYDyHCmi9nzyBBOU7xkJP7I
-         H/TZNNpwwlSu/Z9SmtL3m9odiVJ7vtHDUT8cESWGqpyLyvMxtIqf4x1zQ7xyDGRmuk
-         mxCcghA8K7yjQ==
-Date:   Sat, 16 Jan 2021 10:36:59 +0200
+        b=Jz5EIWi/XmKCHgceatEQXnZqkRblFMiPdEbfMUHCCMWeCbc7HTDuNmtG7y/uGuZ4H
+         /5Tar/XvIMVLcKRvp6hYsy7+A/BoGdjcHmy8msunKBcPdOKI3PZksX7XfYizzNpwdv
+         63ufhfOpjeHnFy5NO5rtDFQ/ZMIXeepbXj/3s4uN5rkVZ+bS8U5MafqvIB/cEH6Wbq
+         Q3qkA3QMFFT0VVmln2VY432TGr1zPsXgGfEEGWI+T+/l1Httq+JDO8kGZ6UKgELrkp
+         Y+bVljKtVkgF1FiycqJwUdOPzBXuws/uaPeejspDpp4ZdsABXBf4ITh/ctuppYpxTE
+         k9uGQfCC4KYaw==
+Date:   Sat, 16 Jan 2021 10:39:04 +0200
 From:   Leon Romanovsky <leon@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [PATCH mlx5-next v2 2/5] PCI: Add SR-IOV sysfs entry to read
- total number of dynamic MSI-X vectors
-Message-ID: <20210116083659.GM944463@unreal>
-References: <20210114103140.866141-1-leon@kernel.org>
- <20210114103140.866141-3-leon@kernel.org>
- <20210114170536.004601d1@omen.home.shazbot.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     tglx@linutronix.de, ashok.raj@intel.com, kevin.tian@intel.com,
+        dave.jiang@intel.com, megha.dey@intel.com, dwmw2@infradead.org,
+        alex.williamson@redhat.com, bhelgaas@google.com,
+        dan.j.williams@intel.com, will@kernel.org, joro@8bytes.org,
+        dmaengine@vger.kernel.org, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
+Subject: Re: [RFC PATCH v3 1/2] iommu: Add capability IOMMU_CAP_VIOMMU
+Message-ID: <20210116083904.GN944463@unreal>
+References: <20210114013003.297050-1-baolu.lu@linux.intel.com>
+ <20210114013003.297050-2-baolu.lu@linux.intel.com>
+ <20210114132627.GA944463@unreal>
+ <b0c8b260-8e23-a5bd-d2da-ca1d67cdfa8a@linux.intel.com>
+ <20210115063108.GI944463@unreal>
+ <c58adc13-306a-8df8-19e1-27f834b3a7c9@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210114170536.004601d1@omen.home.shazbot.org>
+In-Reply-To: <c58adc13-306a-8df8-19e1-27f834b3a7c9@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 14, 2021 at 05:05:36PM -0700, Alex Williamson wrote:
-> On Thu, 14 Jan 2021 12:31:37 +0200
-> Leon Romanovsky <leon@kernel.org> wrote:
+On Sat, Jan 16, 2021 at 09:20:16AM +0800, Lu Baolu wrote:
+> Hi,
 >
-> > From: Leon Romanovsky <leonro@nvidia.com>
+> On 2021/1/15 14:31, Leon Romanovsky wrote:
+> > On Fri, Jan 15, 2021 at 07:49:47AM +0800, Lu Baolu wrote:
+> > > Hi Leon,
+> > >
+> > > On 1/14/21 9:26 PM, Leon Romanovsky wrote:
+> > > > On Thu, Jan 14, 2021 at 09:30:02AM +0800, Lu Baolu wrote:
+> > > > > Some vendor IOMMU drivers are able to declare that it is running in a VM
+> > > > > context. This is very valuable for the features that only want to be
+> > > > > supported on bare metal. Add a capability bit so that it could be used.
+> > > >
+> > > > And how is it used? Who and how will set it?
+> > >
+> > > Use the existing iommu_capable(). I should add more descriptions about
+> > > who and how to use it.
 > >
-> > Some SR-IOV capable devices provide an ability to configure specific
-> > number of MSI-X vectors on their VF prior driver is probed on that VF.
-> >
-> > In order to make management easy, provide new read-only sysfs file that
-> > returns a total number of possible to configure MSI-X vectors.
-> >
-> > cat /sys/bus/pci/devices/.../sriov_vf_total_msix
-> >   = 0 - feature is not supported
-> >   > 0 - total number of MSI-X vectors to consume by the VFs
-> >
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >  Documentation/ABI/testing/sysfs-bus-pci | 14 +++++++++++
-> >  drivers/pci/iov.c                       | 31 +++++++++++++++++++++++++
-> >  drivers/pci/pci.h                       |  3 +++
-> >  include/linux/pci.h                     |  2 ++
-> >  4 files changed, 50 insertions(+)
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-> > index 34a8c6bcde70..530c249cc3da 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-pci
-> > +++ b/Documentation/ABI/testing/sysfs-bus-pci
-> > @@ -395,3 +395,17 @@ Description:
-> >  		The file is writable if the PF is bound to a driver that
-> >  		set sriov_vf_total_msix > 0 and there is no driver bound
-> >  		to the VF.
-> > +
-> > +What:		/sys/bus/pci/devices/.../sriov_vf_total_msix
-> > +Date:		January 2021
-> > +Contact:	Leon Romanovsky <leonro@nvidia.com>
-> > +Description:
-> > +		This file is associated with the SR-IOV PFs.
-> > +		It returns a total number of possible to configure MSI-X
-> > +		vectors on the enabled VFs.
-> > +
-> > +		The values returned are:
-> > +		 * > 0 - this will be total number possible to consume by VFs,
-> > +		 * = 0 - feature is not supported
+> > I want to see the code that sets this capability.
 >
-> As with previous, why expose it if not supported?
+> Currently we have Intel VT-d and the virt-iommu setting this capability.
+>
+>  static bool intel_iommu_capable(enum iommu_cap cap)
+>  {
+>  	if (cap == IOMMU_CAP_CACHE_COHERENCY)
+>  		return domain_update_iommu_snooping(NULL) == 1;
+>  	if (cap == IOMMU_CAP_INTR_REMAP)
+>  		return irq_remapping_enabled == 1;
+> +	if (cap == IOMMU_CAP_VIOMMU)
+> +		return caching_mode_enabled();
+>
+>  	return false;
+>  }
+>
+> And,
+>
+> +static bool viommu_capable(enum iommu_cap cap)
+> +{
+> +	if (cap == IOMMU_CAP_VIOMMU)
+> +		return true;
+> +
+> +	return false;
+> +}
 
-It is much simpler to the users implement logic that operates
-accordingly to this value instead of relying on exist/not-exist and
-anyway handle 0 to be on the safe side.
+These two functions are reading this cap and not setting.
+Where can I see code that does "cap = IOMMU_CAP_VIOMMU" and not "=="?
 
 >
-> This seems pretty challenging for userspace to use; aiui they would
-> need to iterate all the VFs to learn how many vectors are already
-> allocated, subtract that number from this value, all while hoping they
-> aren't racing someone else doing the same.  Would it be more useful if
-> this reported the number of surplus vectors available?
-
-Only privileged users are allowed to do it, so it is unlikely that we
-will have more than one entity which manages PFs/VFs assignments.
-
-Users already count number of CPUs they give to the VMs, so counting
-resources is not new to them.
-
-I didn't count in the kernel because it will require from users to
-understand and treat "0" differently to understand that the pool is
-depleted. So they will need to count max size of the pool anyway.
-
-Unless we want to have two knobs, one of max and another for current,
-they will count. The thing is that users will count anyway and won't
-use the current value. It gives nothing.
-
->
-> How would a per VF limit be exposed?  Do we expect users to know the
-> absolutely MSI-X vector limit or the device specific limit?  Thanks,
-
-At this stage yes, we can discuss it later when the need will arise.
-
-Thanks
+> Best regards,
+> baolu
