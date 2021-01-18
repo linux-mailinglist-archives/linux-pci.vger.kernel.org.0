@@ -2,167 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 847EF2F9D0E
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 11:47:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7540D2F9D12
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 11:47:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388169AbhARKpV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 05:45:21 -0500
-Received: from lucky1.263xmail.com ([211.157.147.132]:49874 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388871AbhARJc1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 04:32:27 -0500
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 3DD38EFBB8;
-        Mon, 18 Jan 2021 17:17:58 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from xxm-vm.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P13518T140326291363584S1610961461018109_;
-        Mon, 18 Jan 2021 17:17:57 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <537c15aae69a0918012960324760c77f>
-X-RL-SENDER: xxm@rock-chips.com
-X-SENDER: xxm@rock-chips.com
-X-LOGIN-NAME: xxm@rock-chips.com
-X-FST-TO: bhelgaas@google.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-System-Flag: 0
-From:   Simon Xue <xxm@rock-chips.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Simon Xue <xxm@rock-chips.com>
-Subject: [PATCH 2/3] dt-bindings: rockchip: Add DesignWare based PCIe controller
-Date:   Mon, 18 Jan 2021 17:17:38 +0800
-Message-Id: <20210118091739.247040-2-xxm@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210118091739.247040-1-xxm@rock-chips.com>
-References: <20210118091739.247040-1-xxm@rock-chips.com>
+        id S2388886AbhARKqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 05:46:37 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2361 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389136AbhARJoV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 04:44:21 -0500
+Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DK6Cq72DRz67dBV;
+        Mon, 18 Jan 2021 17:38:15 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Mon, 18 Jan 2021 10:43:39 +0100
+Received: from [10.47.11.164] (10.47.11.164) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Mon, 18 Jan
+ 2021 09:43:37 +0000
+Subject: Re: [PATCH RFC 0/4] Fix arm64 crash for accessing unmapped IO port
+ regions (reboot)
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <arnd@arndb.de>, <akpm@linux-foundation.org>,
+        <xuwei5@hisilicon.com>, <lorenzo.pieralisi@arm.com>,
+        <helgaas@kernel.org>, <song.bao.hua@hisilicon.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linuxarm@openeuler.org>
+References: <1610729929-188490-1-git-send-email-john.garry@huawei.com>
+ <982ed6eb-6975-aea8-1555-a557633966f5@flygoat.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <6c0a2484-2cd6-ea1f-1094-21a7e86d71a2@huawei.com>
+Date:   Mon, 18 Jan 2021 09:42:25 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <982ed6eb-6975-aea8-1555-a557633966f5@flygoat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.47.11.164]
+X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
----
- .../bindings/pci/rockchip-dw-pcie.yaml        | 101 ++++++++++++++++++
- 1 file changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+On 18/01/2021 01:59, Jiaxun Yang wrote:
+> 在 2021/1/16 上午12:58, John Garry 写道:
+>> This is a reboot of my original series to address the problem of drivers
+>> for legacy ISA devices accessing unmapped IO port regions on arm64 
+>> systems
+>> and causing the system to crash.
+>>
+>> There was another recent report of such an issue [0], and some old ones
+>> [1] and [2] for reference.
+>>
+>> The background is that many systems do not include PCI host controllers,
+>> or they do and controller probe may have failed. For these cases, no IO
+>> ports are mapped. However, loading drivers for legacy ISA devices can
+>> crash the system as there is nothing to stop them accessing those IO
+>> ports (which have not been io remap'ed).
+>>
+>> My original solution tried to keep the kernel alive in these 
+>> situations by
+>> rejecting logical PIO access to PCI IO regions until PCI IO port regions
+>> have been mapped.
+>>
+>> This series goes one step further, by just reserving the complete legacy
+>> IO port range in 0x0--0xffff for arm64. The motivation for doing this is
+>> to make the request_region() calls for those drivers fail, like this:
+>>
+>> root@ubuntu:/home/john# insmod mk712.ko
+>>   [ 3415.575800] mk712: unable to get IO region
+>> insmod: ERROR: could not insert module mk712.ko: No such device
+>>
+>> Otherwise, in theory, those drivers could initiate rogue accesses to
+>> mapped IO port regions for other devices and cause corruptions or
+>> side-effects. Indeed, those drivers should not be allowed to access
+>> IO ports at all in such a system.
+>>
+>> As a secondary defence, for broken drivers who do not call
+>> request_region(), IO port accesses in range 0--0xffff will be ignored,
+>> again preserving the system.
+>>
+>> I am sending as an RFC as I am not sure of any problem with reserving
+>> first 0x10000 of IO space like this. There is reserve= commandline
+>> argument, which does allow this already.
+> 
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-new file mode 100644
-index 000000000000..fa664cfffb29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DesignWare based PCIe RC controller on Rockchip SoCs
-+
-+maintainers:
-+  - Shawn Lin <shawn.lin@rock-chips.com>
-+  - Simon Xue <xxm@rock-chips.com>
-+
-+# We need a select here so we don't match all nodes with 'snps,dw-pcie'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: rockchip,rk3568-pcie
-+  required:
-+    - compatible
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3568-pcie
-+      - snps,dw-pcie
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: AHB clock for PCIe master
-+      - description: AHB clock for PCIe slave
-+      - description: AHB clock for PCIe dbi
-+      - description: APB clock for PCIe
-+      - description: Auxiliary clock for PCIe
-+
-+  clock-names:
-+    items:
-+      - const: aclk_mst
-+      - const: aclk_slv
-+      - const: aclk_dbi
-+      - const: pclk
-+      - const: aux
-+
-+  resets:
-+    items:
-+      - description: PCIe pipe reset line
-+
-+  reset-names:
-+    items:
-+      - const: pipe
-+
-+required:
-+  - compatible
-+  - "#address-cells"
-+  - "#size-cells"
-+  - bus-range
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - msi-map
-+  - num-lanes
-+  - phys
-+  - phy-names
-+  - ranges
-+  - resets
-+  - reset-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pcie3x2: pcie@fe280000 {
-+      compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
-+      #address-cells = <3>;
-+      #size-cells = <2>;
-+      bus-range = <0x20 0x2f>;
-+      reg = <0x3 0xc0800000 0x0 0x400000>,
-+            <0x0 0xfe280000 0x0 0x10000>;
-+      reg-names = "pcie-dbi", "pcie-apb";
-+      clocks = <&cru ACLK_PCIE30X2_MST>, <&cru ACLK_PCIE30X2_SLV>,
-+               <&cru ACLK_PCIE30X2_DBI>, <&cru PCLK_PCIE30X2>,
-+               <&cru CLK_PCIE30X2_AUX_NDFT>;
-+      clock-names = "aclk_mst", "aclk_slv",
-+                    "aclk_dbi", "pclk",
-+                    "aux";
-+      msi-map = <0x2000 &its 0x2000 0x1000>;
-+      num-lanes = <2>;
-+      phys = <&pcie30phy>;
-+      phy-names = "pcie-phy";
-+      ranges = <0x00000800 0x0 0x80000000 0x3 0x80000000 0x0 0x800000
-+                0x81000000 0x0 0x80800000 0x3 0x80800000 0x0 0x100000
-+                0x83000000 0x0 0x80900000 0x3 0x80900000 0x0 0x3f700000>;
-+      resets = <&cru SRST_PCIE30X2_POWERUP>;
-+      reset-names = "pipe";
-+    };
-+
-+...
--- 
-2.25.1
+Hi Jiaxun,
 
+> 
+> Is it ok with ACPI? I'm not really familiar with ACPI on arm64 but my 
+> impression
+> is ACPI would use legacy I/O ports to communicate with kbd controller, 
+> EC and
+> power management facilities.
 
+I tested for ACPI. As far as I'm concerned, fixed IO ports should not be 
+used on arm64 systems.
+
+Indeed, ACPI spec says IO port addresses should be CPU addressable, and 
+it is the job of the kernel to io remap those correctly for systems 
+which do not support IO ports natively, i.e. those that define PCI_IOBASE.
+
+> 
+> We'd better have a method to detect if ISA bus is not present on the system
+> instead of reserve them unconditionally.
+> 
+
+For ISA bus or any IO ports region, they would/should be behind PCI host 
+bridge or modeled as INDIRECT IO host and we should allocate logic PIO 
+region for them, and there should be no assumption on the IO port 
+address in drivers, i.e. not fixed.
+
+Thanks,
+John
+
+> 
+>>
+>> For reference, here's how /proc/ioports looks on my arm64 system with
+>> this change:
+>>
+>> root@ubuntu:/home/john# more /proc/ioports
+>> 00010000-0001ffff : PCI Bus 0002:f8
+>>    00010000-00010fff : PCI Bus 0002:f9
+>>      00010000-00010007 : 0002:f9:00.0
+>>        00010000-00010007 : serial
+>>      00010008-0001000f : 0002:f9:00.1
+>>        00010008-0001000f : serial
+>>      00010010-00010017 : 0002:f9:00.2
+>>      00010018-0001001f : 0002:f9:00.2
+>> 00020000-0002ffff : PCI Bus 0004:88
+>> 00030000-0003ffff : PCI Bus 0005:78
+>> 00040000-0004ffff : PCI Bus 0006:c0
+>> 00050000-0005ffff : PCI Bus 0007:90
+>> 00060000-0006ffff : PCI Bus 000a:10
+>> 00070000-0007ffff : PCI Bus 000c:20
+>> 00080000-0008ffff : PCI Bus 000d:30
+>>
+>> [0] 
+>> https://lore.kernel.org/linux-input/20210112055129.7840-1-song.bao.hua@hisilicon.com/T/#mf86445470160c44ac110e9d200b09245169dc5b6 
+>>
+>> [1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
+>> [2] 
+>> https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/ 
+>>
+>>
+>> Difference since v4:
+>> https://lore.kernel.org/linux-pci/1560262374-67875-1-git-send-email-john.garry@huawei.com/ 
+>>
+>> - Reserve legacy ISA region
+>>
+>> John Garry (4):
+>>    arm64: io: Introduce IO_SPACE_BASE
+>>    asm-generic/io.h: Add IO_SPACE_BASE
+>>    kernel/resource: Make ioport_resource.start configurable
+>>    logic_pio: Warn on and discard accesses to addresses below
+>>      IO_SPACE_BASE
+>>
+>>   arch/arm64/include/asm/io.h |  1 +
+>>   include/asm-generic/io.h    |  4 ++++
+>>   include/linux/logic_pio.h   |  5 +++++
+>>   kernel/resource.c           |  2 +-
+>>   lib/logic_pio.c             | 20 ++++++++++++++------
+>>   5 files changed, 25 insertions(+), 7 deletions(-)
+>>
+> 
+> .
 
