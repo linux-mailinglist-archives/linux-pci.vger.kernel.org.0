@@ -2,308 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C46DC2F9A66
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 08:21:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AE572F9AEC
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 09:03:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbhARHUz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 02:20:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
+        id S1733275AbhARIBy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 03:01:54 -0500
+Received: from halon.esss.lu.se ([194.47.240.54]:51669 "EHLO halon.esss.lu.se"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbhARHUx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Jan 2021 02:20:53 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 783C320759;
-        Mon, 18 Jan 2021 07:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610954412;
-        bh=1aGZEuzpoXB2TTOqTWM6jSnN6ey8qL8jQbSBWm3oaqY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pWmpaXT8XO3tOvly/fK5Dnc3Tw94LamhGYHf5nH9/dZgQaVuzxPxqXJylJIwrqD5i
-         TRBbzfZT4lzrQQeKNlb/BKENECFrXAfELNUQnx2Ow2cD29FvvN2gkCUn94Tg21UXmS
-         lnYobQxLF3O1av27S/lB1+YFFwELUmt3kKuY5UF5hKbbmoZgLHpHKYE1Np5yehF3TE
-         pWkjwtudvPhtwjw2u8QmqHXMFmpBw5zudTNrkWBvU1IjT4oMmkIlaJ2cQTdXNgtIW4
-         H8mqYBqVVPe6U5GdIqd1IwyKHXgI/kT6BWU9KmVxPiX3ASzyLoaugGy0gME5YB7XkZ
-         FVNeYpAsbIZuA==
-Date:   Mon, 18 Jan 2021 09:20:08 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
- number of MSI-X vectors
-Message-ID: <20210118072008.GA4843@unreal>
-References: <CAKgT0UcQW+nJjTircZAYs1_GWNrRud=hSTsphfVpsc=xaF7aRQ@mail.gmail.com>
- <20210114200825.GR4147@nvidia.com>
- <CAKgT0UcaRgY4XnM0jgWRvwBLj+ufiabFzKPyrf3jkLrF1Z8zEg@mail.gmail.com>
- <20210114162812.268d684a@omen.home.shazbot.org>
- <CAKgT0Ufe1w4PpZb3NXuSxug+OMcjm1RP3ZqVrJmQqBDt3ByOZQ@mail.gmail.com>
- <20210115140619.GA4147@nvidia.com>
- <20210115155315.GJ944463@unreal>
- <CAKgT0UdzCqbLwxSnDTtgha+PwTMW5iVb-3VXbwdMNiaAYXyWzQ@mail.gmail.com>
- <20210116082031.GK944463@unreal>
- <CAKgT0UeKiz=gh+djt83GRBGi8qQWTBzs-qxKj_78N+gx-KtkMQ@mail.gmail.com>
+        id S2387454AbhARIBX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Jan 2021 03:01:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ess.eu; s=dec2019;
+        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
+         message-id:from:references:cc:to:subject:from;
+        bh=/X+4LJFqCFMNci3R18Nz3EMSoC4YxZYZwWhpCgzuMMc=;
+        b=G8IRjwhr9ZdlAtS/Xcs7VfwBm3jH/0QpzI2dkpMQnnEFW4cKhprkIW0orvKmJb1ImUQxlfC57L3DN
+         Ezrp8l5g12EwDysPdg7IGhNp7pwHzP5kdabHoqRcBWJcQuvf/0eIKbZ03f4K0yE79R7mGkzUWCDLIZ
+         oPZCcnsBq8Mr8xa2+rhxuW8IfloRh5nzdglJwMaGq1L0mbnzSWcobhOxLoXuWq1J5eDVQXpLGDKw20
+         kisXNjRH7NB8235I/hf++uUwH/FeLVT15t2fs/c2oQwoUw2U2q8L8ndIIV0a5ery1D+4NMvd/ZxiXK
+         YC6NaGSM9A/kYvfddgl7GxODIkZdWeA==
+Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
+        by halon.esss.lu.se (Halon) with ESMTPS
+        id 3d3f66c2-5963-11eb-93c8-005056a66d10;
+        Mon, 18 Jan 2021 09:00:32 +0100 (CET)
+Received: from [192.168.0.6] (194.47.241.248) by it-exch16-4.esss.lu.se
+ (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Mon, 18 Jan
+ 2021 09:00:34 +0100
+Subject: Re: [PATCHv2 0/5] aer handling fixups
+To:     Keith Busch <kbusch@kernel.org>
+CC:     "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <B31F8CA9-D62B-4488-B4C1-EB31E9117203@intel.com>
+ <20210107214236.GA1284006@dhcp-10-100-145-180.wdc.com>
+ <70f2288d-2d1e-df82-d107-e977e1f50dca@ess.eu>
+ <c3117c51-144f-ae59-ad68-bdc5532d12cb@ess.eu>
+ <20210111163708.GA1458209@dhcp-10-100-145-180.wdc.com>
+ <6783d09d-1431-15fd-961e-3820b14e001e@ess.eu>
+ <20210111220951.GA1472929@dhcp-10-100-145-180.wdc.com>
+ <ed8256dd-d70d-b8dc-fdc0-a78b9aa3bbd9@ess.eu>
+ <20210112192758.GB1472929@dhcp-10-100-145-180.wdc.com>
+ <8650281b-4430-1938-5d45-53f09010497b@ess.eu>
+ <20210112231744.GB1508433@dhcp-10-100-145-180.wdc.com>
+From:   Hinko Kocevar <hinko.kocevar@ess.eu>
+Message-ID: <008a7051-dbad-abd2-6cf8-52433f453b42@ess.eu>
+Date:   Mon, 18 Jan 2021 09:00:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UeKiz=gh+djt83GRBGi8qQWTBzs-qxKj_78N+gx-KtkMQ@mail.gmail.com>
+In-Reply-To: <20210112231744.GB1508433@dhcp-10-100-145-180.wdc.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [194.47.241.248]
+X-ClientProxiedBy: it-exch16-3.esss.lu.se (10.0.42.133) To
+ it-exch16-4.esss.lu.se (10.0.42.134)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 17, 2021 at 07:16:30PM -0800, Alexander Duyck wrote:
-> On Sat, Jan 16, 2021 at 12:20 AM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Fri, Jan 15, 2021 at 05:48:59PM -0800, Alexander Duyck wrote:
-> > > On Fri, Jan 15, 2021 at 7:53 AM Leon Romanovsky <leon@kernel.org> wrote:
-> > > >
-> > > > On Fri, Jan 15, 2021 at 10:06:19AM -0400, Jason Gunthorpe wrote:
-> > > > > On Thu, Jan 14, 2021 at 05:56:20PM -0800, Alexander Duyck wrote:
-> > > > >
-> > > > > > That said, it only works at the driver level. So if the firmware is
-> > > > > > the one that is having to do this it also occured to me that if this
-> > > > > > update happened on FLR that would probably be preferred.
-> > > > >
-> > > > > FLR is not free, I'd prefer not to require it just for some
-> > > > > philosophical reason.
-> > > > >
-> > > > > > Since the mlx5 already supports devlink I don't see any reason why the
-> > > > > > driver couldn't be extended to also support the devlink resource
-> > > > > > interface and apply it to interrupts.
-> > > > >
-> > > > > So you are OK with the PF changing the VF as long as it is devlink not
-> > > > > sysfs? Seems rather arbitary?
-> > > > >
-> > > > > Leon knows best, but if I recall devlink becomes wonky when the VF
-> > > > > driver doesn't provide a devlink instance. How does it do reload of a
-> > > > > VF then?
-> > > > >
-> > > > > I think you end up with essentially the same logic as presented here
-> > > > > with sysfs.
-> > > >
-> > > > The reasons why I decided to go with sysfs are:
-> > > > 1. This MSI-X table size change is applicable to ALL devices in the world,
-> > > > and not only netdev.
-> > >
-> > > In the PCI world MSI-X table size is a read only value. That is why I
-> > > am pushing back on this as a PCI interface.
-> >
-> > And it stays read-only.
->
-> Only if you come at it directly. What this is adding is a back door
-> that is visible as a part of the VF sysfs.
->
-> > >
-> > > > 2. This is purely PCI field and apply equally with same logic to all
-> > > > subsystems and not to netdev only.
-> > >
-> > > Again, calling this "purely PCI" is the sort of wording that has me
-> > > concerned. I would prefer it if we avoid that wording. There is much
-> > > more to this than just modifying the table size field. The firmware is
-> > > having to shift resources between devices and this potentially has an
-> > > effect on the entire part, not just one VF.
-> >
-> > It is internal to HW implementation, dumb device can solve it differently.
->
-> That is my point. I am worried about "dumb devices" that may follow. I
-> would like to see the steps that should be taken to prevent these sort
-> of things called out specifically. Basically this isn't just modifying
-> the PCIe config space, it is actually resizing the PBA and MSI-X
-> table.
 
-Exactly the last line the dumb device can implement differently. The
-request is simple - configure MSI-X table size to be the new size.
 
->
-> > >
-> > > > 3. The sysfs interface is the standard way of configuring PCI/core, not
-> > > > devlink.
-> > >
-> > > This isn't PCI core that is being configured. It is the firmware for
-> > > the device. You are working with resources that are shared between
-> > > multiple functions.
-> >
-> > I'm ensuring that "lspci -vv .." will work correctly after such change.
-> > It is PCI core responsibility.
->
-> The current code doesn't work on anything with a driver loaded on it.
+On 1/13/21 12:17 AM, Keith Busch wrote:
+> On Tue, Jan 12, 2021 at 11:19:37PM +0100, Hinko Kocevar wrote:
+>> I feel inclined to provide a little bit more info about the system I'm
+>> running this on as it is not a regular PC/server/laptop. It is a modular
+>> micro TCA system with a single CPU and MCH. MCH and CPU are separate cards,
+>> as are the other processing cards (AMCs) that link up to CPU through the MCH
+>> PEX8748 switch. I can power each card individually, or perform complete
+>> system power cycle. The normal power up sequence is: MCH, AMCs, CPU. The CPU
+>> is powered 30 sec after all other cards so that their PCIe links are up and
+>> ready for Linux.
+>>
+>> All buses below CPU side 02:01.0 are on MCH PEX8748 switch:
+>>
+>> [dev@bd-cpu18 ~]$ sudo /usr/local/bin/pcicrawler -t
+>> 00:01.0 root_port, "J6B2", slot 1, device present, speed 8GT/s, width x8
+>>   ├─01:00.0 upstream_port, PLX Technology, Inc. (10b5), device 8725
+>>   │  ├─02:01.0 downstream_port, slot 1, device present, power: Off, speed 8GT/s, width x4
+>>   │  │  └─03:00.0 upstream_port, PLX Technology, Inc. (10b5) PEX 8748 48-Lane, 12-Port PCI Express Gen 3 (8 GT/s) Switch, 27 x 27mm FCBGA (8748)
+>>   │  │     ├─04:01.0 downstream_port, slot 4, power: Off
+>>   │  │     ├─04:03.0 downstream_port, slot 3, power: Off
+>>   │  │     ├─04:08.0 downstream_port, slot 5, power: Off
+>>   │  │     ├─04:0a.0 downstream_port, slot 6, device present, power: Off, speed 8GT/s, width x4
+>>   │  │     │  └─08:00.0 endpoint, Xilinx Corporation (10ee), device 8034
+>>   │  │     └─04:12.0 downstream_port, slot 1, power: Off
+>>   │  ├─02:02.0 downstream_port, slot 2
+>>   │  ├─02:08.0 downstream_port, slot 8
+>>   │  ├─02:09.0 downstream_port, slot 9, power: Off
+>>   │  └─02:0a.0 downstream_port, slot 10
+>>   ├─01:00.1 endpoint, PLX Technology, Inc. (10b5), device 87d0
+>>   ├─01:00.2 endpoint, PLX Technology, Inc. (10b5), device 87d0
+>>   ├─01:00.3 endpoint, PLX Technology, Inc. (10b5), device 87d0
+>>   └─01:00.4 endpoint, PLX Technology, Inc. (10b5), device 87d0
+>>
+>>
+>> The lockups most frequently appear after the cold boot of the system. If I
+>> restart the CPU card only, and leave the MCH (where the PEX8748 switch
+>> resides) powered, the lockups do *not* happen. I'm injecting the same error
+>> into the root port and the system card configuration/location/count is
+>> always the same.
+>>
+>> Nevertheless, in rare occasions while booting the same kernel image after
+>> complete system power cycle, no lockup is observed.
+>>
+>> So far I observed that the lockups seem to always happen when recovery is
+>> dealing with the 02:01.0 device/bus.
+>>
+>> If the system recovers from a first injected error, I can repeat the
+>> injection and the system recovers always. If the first recovery fails I have
+>> to either reboot the CPU or power cycle the complete system.
+>>
+>> To me it looks like this behavior is somehow related to the system/setup I
+>> have, and for some reason is triggered by VC restoration (VC is not is use
+>> by my system at all, AFAIK).
+>   
+>> Are you able to tell which part of the code the CPU is actually spinning in
+>> when the lockup is detected? I added many printk()s in the
+>> pci_restore_vc_state(), in the AER IRQ handler, and around to see something
+>> being continuously printed, but nothing appeared..
+> 
+> It sounds like your setup is having difficulting completing config
+> cycles timely after a secondary bus reset. I don't see right now how
+> anything I've provided in this series is causing that.
+> 
+> All the stack traces you've provided so far are all within virtual
+> channel restoration. Subsequent stack traces are never the same though,
+> so it does not appear to be permanently stuck; it's just incredibly
+> slow. This particular capability restoration happens to require more
+> config cycles than most other capabilities, so I'm guessing it happens
+> to show up in your observation because of that rather than anything
+> specific about VC.
+> 
+> The long delays seem like a CTO should have kicked in, but maybe your
+> hardware isn't doing it right. Your lspci says Completion Timeout
+> configuration is not supported, so it should default to 50msec maximum,
+> but since it's taking long enough to trigger a stuck CPU watchdog, and
+> you appear to be getting valid data back, it doesn't look like CTO is
+> happening.
+> 
 
-The problem that no one care about this case, because in opposite to
-other devices that usually operates in the hypervisor and probed during
-the boot, the VFs are used differently. They run in VMs, probed there
-and (usually) not needed in hypervisor.
+Some very good new (and some little less good).
 
-The driver reload would make sense if PF MSI-X table was changed.
+The good news is that after recompiling the latest PCI GIT kernel 
+source, with heavily stripped down config (without any extras and 
+modules), I do *not* see the lockups any more. Up to now I've been using 
+CentOS7 bloated stock config from stock kernel to compile git sources.
 
-> In addition the messaging provided is fairly minimal which results in
-> an interface that will be difficult to understand when it doesn't
-> work.
+The not so good news is that I'm not sure what exactly solved the issue 
+for me; it seems to be config related. I've also been touching some 
+other system settings, outside the Linux. Otherwise my HW configuration 
+has not changed. I performed the same test steps that previously 
+resulted in lockups and none were seen so far. I'm looking into what 
+exactly might have been causing the issues.
 
-I'm fond of simple interfaces: 0, EBUSY and EINVAL are common way
-to inform user. We must remember that this interface is for low-level
-PCI property and is needed for expert users who needs to squeeze maximum
-for their VMs out of expensive high speed network card that supports SR-IOV.
+With that being said, I believe that this patch series is working for my 
+system and the issues reported were related to my system mis-configuration.
 
-According to the ebay, the CX6 card costs between 1000 and 1700 USDs,
-not really home equipment.
 
-> In addition there is currently only one piece of hardware that
-> works with this interface which is the mlx5.
+Thank you again!
 
-It is not different from any other feature, someone should be first.
-This has very clear purpose, scoped well and understandable when and
-why it is needed.
-
-Kernel is full of devices and features that exist in one device only.
-
-> My concern is this is
-> adding overhead to all VFs that will not be used by most SR-IOV
-> capable devices. In my view it would make much more sense to have a
-> top-down approach instead of bottom-up where the PF is registering
-> interfaces for the VFs.
->
-> If you want yet another compromise I would be much happier with the PF
-> registering the sysfs interfaces on the VFs rather than the VFs
-> registering the interface and hoping the PF supports it. At least with
-> that you are guaranteed the PF will respond to the interface when it
-> is registered.
-
-Thanks a lot, I appreciate it, will take a look now.
-
->
-> > >
-> > > > 4. This is how orchestration software provisioning VFs already. It fits
-> > > > real world usage of SR-IOV, not the artificial one that is proposed during
-> > > > the discussion.
-> > >
-> > > What do you mean this is how they are doing it already? Do you have
-> > > something out-of-tree and that is why you are fighting to keep the
-> > > sysfs? If so that isn't a valid argument.
-> >
-> > I have Kubernetes and OpenStack, indeed they are not part of the kernel tree.
-> > They already use sriov_driver_autoprobe sysfs knob to disable autobind
-> > before even starting. They configure MACs and bind VFs through sysfs/netlink
-> > already. For them, the read/write of sysfs that is going to be bound to
-> > the already created VM with known CPU properties, fits perfectly.
->
-> By that argument the same could be said about netlink. What I don't
-> get is why it is okay to configure the MAC through netlink but
-> suddenly when we are talking about interrupts it is out of the
-> question.
-
-They belong to different subsystems, while MAC is applicable to the
-netdev (both PF and VFs), MSI-X is applicable to all devices.
-
-I'm not arguing about netlink vs. sysfs, just saying that devlink doesn't
-fit here.
-
-> As far as the binding that is the driver interface which is
-> more or less grandfathered in anyway as there aren't too many ways to
-> deal with them as there isn't an alternate interface for the drivers
-> to define support.
->
-> > >
-> > > > So the idea to use devlink just because mlx5 supports it, sound really
-> > > > wrong to me. If it was other driver from another subsystem without
-> > > > devlink support, the request to use devlink won't never come.
-> > > >
-> > > > Thanks
-> > >
-> > > I am suggesting the devlink resources interface because it would be a
-> > > VERY good fit for something like this. By the definition of it:
-> > > ``devlink`` provides the ability for drivers to register resources, which
-> > > can allow administrators to see the device restrictions for a given
-> > > resource, as well as how much of the given resource is currently
-> > > in use. Additionally, these resources can optionally have configurable size.
-> > > This could enable the administrator to limit the number of resources that
-> > > are used.
-> >
-> > It is not resource, but HW objects. The devlink doesn't even see the VFs
-> > as long as they are not bound to the drivers.
-> >
-> > This is an example:
-> >
-> > [root@vm ~]# echo 0 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_drivers_autoprobe
-> > [root@vm ~]# echo 0 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_numvfs
-> > [ 2370.579711] mlx5_core 0000:01:00.0: E-Switch: Disable: mode(LEGACY), nvfs(2), active vports(3)
-> > [root@vm ~]# echo 2 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_numvfs
-> > [ 2377.663666] mlx5_core 0000:01:00.0: E-Switch: Enable: mode(LEGACY), nvfs(2), active vports(3)
-> > [ 2377.777010] pci 0000:01:00.1: [15b3:101c] type 00 class 0x020000
-> > [ 2377.784903] pci 0000:01:00.2: [15b3:101c] type 00 class 0x020000
-> > [root@vm ~]# devlink dev
-> > pci/0000:01:00.0
-> > [root@vm ~]# lspci |grep nox
-> > 01:00.0 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6]
-> > 01:00.1 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6 Virtual Function]
-> > 01:00.2 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6 Virtual Function]
-> >
-> > So despite us having 2 VFs ready to be given to VMs, administrator doesn't
-> > see them as devices.
->
-> The MSI-X vectors are a resource assigned to hardware objects. It just
-> depends on how you want to look at things. Right now you have the VFs
-> register an interface on behalf of the PF. I am arguing it would be
-> better to have the PF register an interface on behalf of the VFs.
-> Ultimately the PF is responsible for creating the VFs in the first
-> place. I don't see it as that much of a leap to have the
-> mlx5_sriov_enable call register interfaces for the VFs so that you can
-> configure the MSI-X vectors from the PF, and then tear them down
-> before it frees the VFs. Having the VFs do the work seems error prone
-> since it is assuming the interfaces are there on the PF when in all
-> cases but one (mlx5) it currently isn't.
-
-I'm not sure that I understood your last sentence correctly. If VF device
-is not on hypervisor, it will mean the device is already probed and
-change of MSI-X table is prohibited. I don't know how you can configure
-VF devices to be passthrough to the VMs without SR-IOV enable call first.
-
-I would say that all devices start their life at the same place where PF
-is located.
-
->
-> > >
-> > > Even looking over the example usage I don't see there being much to
-> > > prevent you from applying it to this issue. In addition it has the
-> > > idea of handling changes that cannot be immediately applied already
-> > > included. Your current solution doesn't have a good way of handling
-> > > that and instead just aborts with an error.
-> >
-> > Yes, because it is HW resource that should be applied immediately to
-> > make sure that it is honored, before it is committed to the users.
->
-> The problem is you cannot do that at all if the driver is already
-> loaded. One advantage of using something like devlink is that you
-> could potentially have the VF driver help to coordinate things so you
-> could have the case where the VF has the mlx5 driver loaded work
-> correctly where you would update the MSI-X vector count and then
-> trigger the driver reload via devlink.
-
-The thing is that it is not needed for VFs at all.
-
->
-> > It is very tempting to use devlink everywhere, but it is really wrong
-> > tool for this scenario.
->
-> We can agree to disagree there. I am not a fan of sysfs being applied
-> everywhere either. The problem is it is an easy goto when someone is
-> looking for a quick and dirty solution and often leads to more
-> problems later as it usually misses critical path locking issues and
-> the like.
-
-It is fun that you mentioned that devlink as an example of good locking scheme.
-Without going into to much details, right now Parav and myself are trying to fix
-devlink locking around reload functionality. It was close to DOA for me when I
-worked on auxiliary bus patches.
-
-So no, devlink is not better. It is another (good) tool that needs more love
-and care to be real PCI configuration utility. At lest, it should step out of
-netdev shadow.
-
-The block subsystem built whole stack around sysfs and they doesn't seem
-upset about it.
-
-Thanks
