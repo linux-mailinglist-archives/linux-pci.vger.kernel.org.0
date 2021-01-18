@@ -2,157 +2,555 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43BD52FA665
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 17:39:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A77892FA693
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 17:45:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405612AbhARP5q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 10:57:46 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11005 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405890AbhARPrz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 10:47:55 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B6005ad7d0002>; Mon, 18 Jan 2021 07:47:09 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 18 Jan
- 2021 15:47:09 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
- by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 18 Jan 2021 15:47:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MxOdRpP9CBrMYABsvprBuBDX+ne67cdaL6CWgMBggUYEcHtA8McC+ltofD54LG7VW55Aj81WrAt1Y7kpnqPjeJnbU0Pb69O3P3q9r2OzxiqRQG2IGDG6kEsAQs/qRouLWBa71FUqXDJl3raqDpvF9gtpkzbJlX+/WpIYLESxq15xr6fl7qSiyak+I9DRvF0UkiYvw9zmnsHpjD3Z6uTsBy+Iga06D/2zv9RENz3rxxK8jLg+iMkJwaQw+Kutj8m/+Flu+4Pp1p+QAby3Em29nhIJlIEsbG0wwYduKgVSmPZni2BznGH0eEE8JjT9atzJWITrm9sOBDDHujX8XQMvew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YEcQrRC3aVCEMun2EKQCxRLBrYsyH9MspeVeRJbkbcw=;
- b=EDrydWy7BTIAjNd+R1MYXw6PX5dXU35ECXhU3XnMHfu5QEoNrYZhtV3fk0191Sh3Y9Jn+01u3BRO/ngjhi+iOPsZ47ime6+7UYv8E9hycaZsTqB9P+eZgo6oLAIMmpafrG82QILG5zvMqLo8ZJSbMxO0y2tE49oLHCRVkaBvWYXeK+pAX3nt14kFJjt0caBLUF3wi6EGleJiYA0JJxbQuS+6d0KSnnY+dS9Oh29YgrXAbs4dfzQO/UKeGxljPPdeo7QlUtV2saodtzC0RQPYSelIr6CMhOO76VZaK8iIUnPeOtTINSuHqX+ssav2fDHE82rYYuRJSOLDd4rXJldRBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4010.namprd12.prod.outlook.com (2603:10b6:5:1ce::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.10; Mon, 18 Jan
- 2021 15:47:07 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::546d:512c:72fa:4727]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::546d:512c:72fa:4727%7]) with mapi id 15.20.3763.014; Mon, 18 Jan 2021
- 15:47:07 +0000
-Date:   Mon, 18 Jan 2021 11:47:05 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
- number of MSI-X vectors
-Message-ID: <20210118154705.GK4147@nvidia.com>
-References: <20210114164857.GN4147@nvidia.com>
- <CAKgT0UcKqt=EgE+eitB8-u8LvxqHBDfF+u2ZSi5urP_Aj0Btvg@mail.gmail.com>
- <20210114182945.GO4147@nvidia.com>
- <CAKgT0UcQW+nJjTircZAYs1_GWNrRud=hSTsphfVpsc=xaF7aRQ@mail.gmail.com>
- <20210114200825.GR4147@nvidia.com>
- <CAKgT0UcaRgY4XnM0jgWRvwBLj+ufiabFzKPyrf3jkLrF1Z8zEg@mail.gmail.com>
- <20210114162812.268d684a@omen.home.shazbot.org>
- <CAKgT0Ufe1w4PpZb3NXuSxug+OMcjm1RP3ZqVrJmQqBDt3ByOZQ@mail.gmail.com>
- <20210115140619.GA4147@nvidia.com>
- <CAKgT0UfAoGXQp9C0uL124GZfdhY6vvpk3NmCDqCpLET9dzAdRg@mail.gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UfAoGXQp9C0uL124GZfdhY6vvpk3NmCDqCpLET9dzAdRg@mail.gmail.com>
-X-ClientProxiedBy: BL1PR13CA0141.namprd13.prod.outlook.com
- (2603:10b6:208:2bb::26) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S2406070AbhARQoh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 11:44:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:39328 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405722AbhARQoX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Jan 2021 11:44:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD9D431B;
+        Mon, 18 Jan 2021 08:43:36 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98E643F68F;
+        Mon, 18 Jan 2021 08:43:35 -0800 (PST)
+Date:   Mon, 18 Jan 2021 16:43:29 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     daire.mcnamara@microchip.com
+Cc:     bhelgaas@google.com, robh@kernel.org, linux-pci@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        david.abdurachmanov@gmail.com, cyril.jean@microchip.com,
+        ben.dooks@codethink.co.uk
+Subject: Re: [PATCH v19 3/4] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+Message-ID: <20210118164329.GA16417@e121166-lin.cambridge.arm.com>
+References: <20201224094500.19149-1-daire.mcnamara@microchip.com>
+ <20201224094500.19149-4-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.162.115.133) by BL1PR13CA0141.namprd13.prod.outlook.com (2603:10b6:208:2bb::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.6 via Frontend Transport; Mon, 18 Jan 2021 15:47:07 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1l1WkD-002yn2-9y; Mon, 18 Jan 2021 11:47:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1610984829; bh=YEcQrRC3aVCEMun2EKQCxRLBrYsyH9MspeVeRJbkbcw=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType;
-        b=Eg5Vj3wMTROKVjlcrEZ+kn064+iDF5M3EJNML+nzVqWp7tJcH9IYubtG7panaLr8s
-         dVnn6v4mIMT+fthsuS6kMhyzWsZlkX360NEEQ83ijiKJDvP9GmYkx5Q4XDgmhUGqGj
-         39kUYTHB8rIRxWZdOxvjVwbioAhzh0BBAgMu9Mc9HmezdklXbGuU6hGSlxxR50z+KZ
-         NJdgwURtKf9so81Ky1uORdQKlawdcHZbBXoFS8ZD6sVMC77jABeovloEupC3Deaefx
-         oudhE0HwPW+cyChjt42bA36w3/53/8BlbVLCItJzK3S7aFd0jdlPl67MXSgXFbKFGk
-         pZYmYUeQsHWUg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201224094500.19149-4-daire.mcnamara@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 08:32:19PM -0800, Alexander Duyck wrote:
-> On Fri, Jan 15, 2021 at 6:06 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
-> >
-> > On Thu, Jan 14, 2021 at 05:56:20PM -0800, Alexander Duyck wrote:
-> >
-> > > That said, it only works at the driver level. So if the firmware is
-> > > the one that is having to do this it also occured to me that if this
-> > > update happened on FLR that would probably be preferred.
-> >
-> > FLR is not free, I'd prefer not to require it just for some
-> > philosophical reason.
+On Thu, Dec 24, 2020 at 09:44:59AM +0000, daire.mcnamara@microchip.com wrote:
+> From: Daire McNamara <daire.mcnamara@microchip.com>
 > 
-> It wasn't so much a philosophical thing as the fact that it can sort
-> of take the place as a reload. 
+> Add support for the Microchip PolarFire PCIe controller when
+> configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/Kconfig               |   10 +
+>  drivers/pci/controller/Makefile              |    1 +
+>  drivers/pci/controller/pcie-microchip-host.c | 1119 ++++++++++++++++++
+>  3 files changed, 1130 insertions(+)
+>  create mode 100644 drivers/pci/controller/pcie-microchip-host.c
+> 
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 64e2f5e379aa..bca2f8949510 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -298,6 +298,16 @@ config PCI_LOONGSON
+>  	  Say Y here if you want to enable PCI controller support on
+>  	  Loongson systems.
+>  
+> +config PCIE_MICROCHIP_HOST
+> +	bool "Microchip AXI PCIe host bridge support"
+> +	depends on PCI_MSI && OF
+> +	select PCI_MSI_IRQ_DOMAIN
+> +	select GENERIC_MSI_IRQ_DOMAIN
+> +	select PCI_HOST_COMMON
+> +	help
+> +	  Say Y here if you want kernel to support the Microchip AXI PCIe
+> +	  Host Bridge driver.
+> +
+>  config PCIE_HISI_ERR
+>  	depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
+>  	bool "HiSilicon HIP PCIe controller error handling driver"
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index 04c6edc285c5..b85fcd574ff6 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
+>  obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
+>  obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+>  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+> +obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
+>  obj-$(CONFIG_VMD) += vmd.o
+>  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
+>  obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
+> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+> new file mode 100644
+> index 000000000000..a4f40017d034
+> --- /dev/null
+> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> @@ -0,0 +1,1119 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Microchip AXI PCIe Bridge host controller driver
+> + *
+> + * Copyright (c) 2018 - 2020 Microchip Corporation. All rights reserved.
+> + *
+> + * Author: Daire McNamara <daire.mcnamara@microchip.com>
+> + *
+> + * Based on:
+> + *	pcie-rcar.c
+> + *	pcie-xilinx.c
+> + *	pcie-altera.c
 
-Asserting no driver is present and doing some SW-only "FLR" is pretty
-much the same thing.
+Nit: Don't think that's useful information and it can also become stale
+so remove these files references.
 
-We can't issue FLR unless no driver is present anyhow, so really all
-this does is add a useless step. If some HW needs FLR then it can do
-it in here, but I don't see a value to inject it when not needed. 
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/module.h>
+> +#include <linux/msi.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/pci-ecam.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "../pci.h"
+> +
+> +/* Number of MSI IRQs */
+> +#define MC_NUM_MSI_IRQS				32
+> +#define MC_NUM_MSI_IRQS_CODED			5
+> +
+> +/* PCIe Bridge Phy and Controller Phy offsets */
+> +#define MC_PCIE1_BRIDGE_ADDR			0x00008000u
+> +#define MC_PCIE1_CTRL_ADDR			0x0000a000u
+> +
+> +#define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
+> +#define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
+> +
+> +/* PCIe Controller Phy Regs */
+> +#define SEC_ERROR_CNT				0x20
+> +#define DED_ERROR_CNT				0x24
+> +#define SEC_ERROR_INT				0x28
+> +#define  SEC_ERROR_INT_TX_RAM_SEC_ERR_INT	GENMASK(3, 0)
+> +#define  SEC_ERROR_INT_RX_RAM_SEC_ERR_INT	GENMASK(7, 4)
+> +#define  SEC_ERROR_INT_PCIE2AXI_RAM_SEC_ERR_INT	GENMASK(11, 8)
+> +#define  SEC_ERROR_INT_AXI2PCIE_RAM_SEC_ERR_INT	GENMASK(15, 12)
+> +#define  NUM_SEC_ERROR_INTS			(4)
+> +#define SEC_ERROR_INT_MASK			0x2c
+> +#define DED_ERROR_INT				0x30
+> +#define  DED_ERROR_INT_TX_RAM_DED_ERR_INT	GENMASK(3, 0)
+> +#define  DED_ERROR_INT_RX_RAM_DED_ERR_INT	GENMASK(7, 4)
+> +#define  DED_ERROR_INT_PCIE2AXI_RAM_DED_ERR_INT	GENMASK(11, 8)
+> +#define  DED_ERROR_INT_AXI2PCIE_RAM_DED_ERR_INT	GENMASK(15, 12)
+> +#define  NUM_DED_ERROR_INTS			(4)
+> +#define DED_ERROR_INT_MASK			0x34
+> +#define ECC_CONTROL				0x38
+> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_0		BIT(0)
+> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_1		BIT(1)
+> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_2		BIT(2)
+> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_3		BIT(3)
+> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_0		BIT(4)
+> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_1		BIT(5)
+> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_2		BIT(6)
+> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_3		BIT(7)
+> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_0	BIT(8)
+> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_1	BIT(9)
+> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_2	BIT(10)
+> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_3	BIT(11)
+> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_0	BIT(12)
+> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_1	BIT(13)
+> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_2	BIT(14)
+> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_3	BIT(15)
+> +#define  ECC_CONTROL_TX_RAM_ECC_BYPASS		BIT(24)
+> +#define  ECC_CONTROL_RX_RAM_ECC_BYPASS		BIT(25)
+> +#define  ECC_CONTROL_PCIE2AXI_RAM_ECC_BYPASS	BIT(26)
+> +#define  ECC_CONTROL_AXI2PCIE_RAM_ECC_BYPASS	BIT(27)
 
-Yes, if we were PCI-SIG we'd probably insist that a FLR be done, but
-we are not PCI-SIG, this is just Linux, and asserting there are no
-users of the MSI is sufficient.
+Are these used at all ?
 
-> However looking over the mlx5 code I don't see any handling of FLR
-> in there so I am assuming that is handled by the firmware.
+> +#define LTSSM_STATE				0x5c
+> +#define  LTSSM_L0_STATE				0x10
 
-The device does the device side of the FLR, the mlx5 driver should
-trigger FLR during error recovery flows.
+Ditto
 
-> It is about the setup of things. The sysfs existing in the VF is kind
-> of ugly since it is a child device calling up to the parent and
-> telling it how it is supposed to be configured. 
+Please make sure you define what's needed.
 
-Well, the logical place to put that sysfs file is under the VF,
-otherwise it becomes ugly in a different way. I agree it would be
-nicer if the file only existed when the right driver is loaded, and
-there was a better way to get from the PF to VF.
+> +#define PCIE_EVENT_INT				0x14c
+> +#define  PCIE_EVENT_INT_L2_EXIT_INT		BIT(0)
+> +#define  PCIE_EVENT_INT_HOTRST_EXIT_INT		BIT(1)
+> +#define  PCIE_EVENT_INT_DLUP_EXIT_INT		BIT(2)
+> +#define  PCIE_EVENT_INT_MASK			GENMASK(2, 0)
+> +#define  PCIE_EVENT_INT_L2_EXIT_INT_MASK	BIT(16)
+> +#define  PCIE_EVENT_INT_HOTRST_EXIT_INT_MASK	BIT(17)
+> +#define  PCIE_EVENT_INT_DLUP_EXIT_INT_MASK	BIT(18)
+> +#define  PCIE_EVENT_INT_ENB_MASK		GENMASK(18, 16)
+> +#define  PCIE_EVENT_INT_ENB_SHIFT		16
+> +#define  NUM_PCIE_EVENTS			(3)
+> +
+> +/* PCIe Bridge Phy Regs */
+> +#define PCIE_PCI_IDS_DW1			0x9c
+> +
+> +/* PCIe Config space MSI capability structure */
+> +#define MC_MSI_CAP_CTRL_OFFSET			0xe0u
+> +#define  MC_MSI_MAX_Q_AVAIL			(MC_NUM_MSI_IRQS_CODED << 1)
+> +#define  MC_MSI_Q_SIZE				(MC_NUM_MSI_IRQS_CODED << 4)
+> +
+> +#define IMASK_LOCAL				0x180
+> +#define  DMA_END_ENGINE_0_MASK			0x00000000u
+> +#define  DMA_END_ENGINE_0_SHIFT			0
+> +#define  DMA_END_ENGINE_1_MASK			0x00000000u
+> +#define  DMA_END_ENGINE_1_SHIFT			1
+> +#define  DMA_ERROR_ENGINE_0_MASK		0x00000100u
+> +#define  DMA_ERROR_ENGINE_0_SHIFT		8
+> +#define  DMA_ERROR_ENGINE_1_MASK		0x00000200u
+> +#define  DMA_ERROR_ENGINE_1_SHIFT		9
+> +#define  A_ATR_EVT_POST_ERR_MASK		0x00010000u
+> +#define  A_ATR_EVT_POST_ERR_SHIFT		16
+> +#define  A_ATR_EVT_FETCH_ERR_MASK		0x00020000u
+> +#define  A_ATR_EVT_FETCH_ERR_SHIFT		17
+> +#define  A_ATR_EVT_DISCARD_ERR_MASK		0x00040000u
+> +#define  A_ATR_EVT_DISCARD_ERR_SHIFT		18
+> +#define  A_ATR_EVT_DOORBELL_MASK		0x00000000u
+> +#define  A_ATR_EVT_DOORBELL_SHIFT		19
+> +#define  P_ATR_EVT_POST_ERR_MASK		0x00100000u
+> +#define  P_ATR_EVT_POST_ERR_SHIFT		20
+> +#define  P_ATR_EVT_FETCH_ERR_MASK		0x00200000u
+> +#define  P_ATR_EVT_FETCH_ERR_SHIFT		21
+> +#define  P_ATR_EVT_DISCARD_ERR_MASK		0x00400000u
+> +#define  P_ATR_EVT_DISCARD_ERR_SHIFT		22
+> +#define  P_ATR_EVT_DOORBELL_MASK		0x00000000u
+> +#define  P_ATR_EVT_DOORBELL_SHIFT		23
+> +#define  PM_MSI_INT_INTA_MASK			0x01000000u
+> +#define  PM_MSI_INT_INTA_SHIFT			24
+> +#define  PM_MSI_INT_INTB_MASK			0x02000000u
+> +#define  PM_MSI_INT_INTB_SHIFT			25
+> +#define  PM_MSI_INT_INTC_MASK			0x04000000u
+> +#define  PM_MSI_INT_INTC_SHIFT			26
+> +#define  PM_MSI_INT_INTD_MASK			0x08000000u
+> +#define  PM_MSI_INT_INTD_SHIFT			27
+> +#define  PM_MSI_INT_INTX_MASK			0x0f000000u
+> +#define  PM_MSI_INT_INTX_SHIFT			24
+> +#define  PM_MSI_INT_MSI_MASK			0x10000000u
+> +#define  PM_MSI_INT_MSI_SHIFT			28
+> +#define  PM_MSI_INT_AER_EVT_MASK		0x20000000u
+> +#define  PM_MSI_INT_AER_EVT_SHIFT		29
+> +#define  PM_MSI_INT_EVENTS_MASK			0x40000000u
+> +#define  PM_MSI_INT_EVENTS_SHIFT		30
+> +#define  PM_MSI_INT_SYS_ERR_MASK		0x80000000u
+> +#define  PM_MSI_INT_SYS_ERR_SHIFT		31
+> +#define  NUM_LOCAL_EVENTS			15
+> +#define ISTATUS_LOCAL				0x184
+> +#define IMASK_HOST				0x188
+> +#define ISTATUS_HOST				0x18c
+> +#define MSI_ADDR				0x190
+> +#define ISTATUS_MSI				0x194
+> +
+> +/* PCIe Master table init defines */
+> +#define ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
+> +#define  ATR0_PCIE_ATR_SIZE			0x25
+> +#define  ATR0_PCIE_ATR_SIZE_SHIFT		1
+> +#define ATR0_PCIE_WIN0_SRC_ADDR			0x604u
+> +#define ATR0_PCIE_WIN0_TRSL_ADDR_LSB		0x608u
+> +#define ATR0_PCIE_WIN0_TRSL_ADDR_UDW		0x60cu
+> +#define ATR0_PCIE_WIN0_TRSL_PARAM		0x610u
+> +
+> +/* PCIe AXI slave table init defines */
+> +#define ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
+> +#define  ATR_SIZE_SHIFT				1
+> +#define  ATR_IMPL_ENABLE			1
+> +#define ATR0_AXI4_SLV0_SRC_ADDR			0x804u
+> +#define ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
+> +#define ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
+> +#define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
+> +#define  PCIE_TX_RX_INTERFACE			0x00000000u
+> +#define  PCIE_CONFIG_INTERFACE			0x00000001u
+> +
+> +#define ATR_ENTRY_SIZE				32
+> +
+> +#define EVENT_PCIE_L2_EXIT			0
+> +#define EVENT_PCIE_HOTRST_EXIT			1
+> +#define EVENT_PCIE_DLUP_EXIT			2
+> +#define EVENT_SEC_TX_RAM_SEC_ERR		3
+> +#define EVENT_SEC_RX_RAM_SEC_ERR		4
+> +#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		5
+> +#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		6
+> +#define EVENT_DED_TX_RAM_DED_ERR		7
+> +#define EVENT_DED_RX_RAM_DED_ERR		8
+> +#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		9
+> +#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		10
+> +#define EVENT_LOCAL_DMA_END_ENGINE_0		11
+> +#define EVENT_LOCAL_DMA_END_ENGINE_1		12
+> +#define EVENT_LOCAL_DMA_ERROR_ENGINE_0		13
+> +#define EVENT_LOCAL_DMA_ERROR_ENGINE_1		14
+> +#define EVENT_LOCAL_A_ATR_EVT_POST_ERR		15
+> +#define EVENT_LOCAL_A_ATR_EVT_FETCH_ERR		16
+> +#define EVENT_LOCAL_A_ATR_EVT_DISCARD_ERR	17
+> +#define EVENT_LOCAL_A_ATR_EVT_DOORBELL		18
+> +#define EVENT_LOCAL_P_ATR_EVT_POST_ERR		19
+> +#define EVENT_LOCAL_P_ATR_EVT_FETCH_ERR		20
+> +#define EVENT_LOCAL_P_ATR_EVT_DISCARD_ERR	21
+> +#define EVENT_LOCAL_P_ATR_EVT_DOORBELL		22
+> +#define EVENT_LOCAL_PM_MSI_INT_INTX		23
+> +#define EVENT_LOCAL_PM_MSI_INT_MSI		24
+> +#define EVENT_LOCAL_PM_MSI_INT_AER_EVT		25
+> +#define EVENT_LOCAL_PM_MSI_INT_EVENTS		26
+> +#define EVENT_LOCAL_PM_MSI_INT_SYS_ERR		27
+> +#define NUM_EVENTS				28
+> +
+> +#define PCIE_EVENT_CAUSE(x, s)	\
+> +	[EVENT_PCIE_ ## x] = { __stringify(x), s }
+> +
+> +#define SEC_ERROR_CAUSE(x, s) \
+> +	[EVENT_SEC_ ## x] = { __stringify(x), s }
+> +
+> +#define DED_ERROR_CAUSE(x, s) \
+> +	[EVENT_DED_ ## x] = { __stringify(x), s }
+> +
+> +#define LOCAL_EVENT_CAUSE(x, s) \
+> +	[EVENT_LOCAL_ ## x] = { __stringify(x), s }
+> +
+> +#define PCIE_EVENT(x) \
+> +	.base = MC_PCIE_CTRL_ADDR, \
+> +	.offset = PCIE_EVENT_INT, \
+> +	.mask_offset = PCIE_EVENT_INT, \
+> +	.mask_high = 1, \
+> +	.mask = PCIE_EVENT_INT_ ## x ## _INT, \
+> +	.enb_mask = PCIE_EVENT_INT_ENB_MASK
+> +
+> +#define SEC_EVENT(x) \
+> +	.base = MC_PCIE_CTRL_ADDR, \
+> +	.offset = SEC_ERROR_INT, \
+> +	.mask_offset = SEC_ERROR_INT_MASK, \
+> +	.mask = SEC_ERROR_INT_ ## x ## _INT, \
+> +	.mask_high = 1, \
+> +	.enb_mask = 0
+> +
+> +#define DED_EVENT(x) \
+> +	.base = MC_PCIE_CTRL_ADDR, \
+> +	.offset = DED_ERROR_INT, \
+> +	.mask_offset = DED_ERROR_INT_MASK, \
+> +	.mask_high = 1, \
+> +	.mask = DED_ERROR_INT_ ## x ## _INT, \
+> +	.enb_mask = 0
+> +
+> +#define LOCAL_EVENT(x) \
+> +	.base = MC_PCIE_BRIDGE_ADDR, \
+> +	.offset = ISTATUS_LOCAL, \
+> +	.mask_offset = IMASK_LOCAL, \
+> +	.mask_high = 0, \
+> +	.mask = x ## _MASK, \
+> +	.enb_mask = 0
+> +
+> +#define PCIE_EVENT_TO_EVENT_MAP(x) \
+> +	{ PCIE_EVENT_INT_ ## x ## _INT, EVENT_PCIE_ ## x }
+> +
+> +#define SEC_ERROR_TO_EVENT_MAP(x) \
+> +	{ SEC_ERROR_INT_ ## x ## _INT, EVENT_SEC_ ## x }
+> +
+> +#define DED_ERROR_TO_EVENT_MAP(x) \
+> +	{ DED_ERROR_INT_ ## x ## _INT, EVENT_DED_ ## x }
+> +
+> +#define LOCAL_STATUS_TO_EVENT_MAP(x) \
+> +	{ x ## _MASK, EVENT_LOCAL_ ## x }
+> +
+> +struct event_map {
+> +	u32 reg_mask;
+> +	u32 event_bit;
+> +};
+> +
+> +struct mc_msi {
+> +	struct mutex lock;		/* Protect used bitmap */
+> +	struct irq_domain *msi_domain;
+> +	struct irq_domain *dev_domain;
+> +	u32 num_vectors;
+> +	u64 vector_phy;
+> +	DECLARE_BITMAP(used, MC_NUM_MSI_IRQS);
+> +};
+> +
+> +struct mc_port {
+> +	void __iomem *axi_base_addr;
+> +	struct device *dev;
+> +	struct irq_domain *intx_domain;
+> +	struct irq_domain *event_domain;
+> +	raw_spinlock_t lock;
+> +	struct mc_msi msi;
+> +};
+> +
+> +struct cause {
+> +	const char *sym;
+> +	const char *str;
+> +};
+> +
+> +static const struct cause event_cause[NUM_EVENTS] = {
+> +	PCIE_EVENT_CAUSE(L2_EXIT, "L2 exit event"),
+> +	PCIE_EVENT_CAUSE(HOTRST_EXIT, "Hot reset exit event"),
+> +	PCIE_EVENT_CAUSE(DLUP_EXIT, "DLUP exit event"),
+> +	SEC_ERROR_CAUSE(TX_RAM_SEC_ERR,  "sec error in tx buffer"),
+> +	SEC_ERROR_CAUSE(RX_RAM_SEC_ERR,  "sec error in rx buffer"),
+> +	SEC_ERROR_CAUSE(PCIE2AXI_RAM_SEC_ERR,  "sec error in pcie2axi buffer"),
+> +	SEC_ERROR_CAUSE(AXI2PCIE_RAM_SEC_ERR,  "sec error in axi2pcie buffer"),
+> +	DED_ERROR_CAUSE(TX_RAM_DED_ERR,  "ded error in tx buffer"),
+> +	DED_ERROR_CAUSE(RX_RAM_DED_ERR,  "ded error in rx buffer"),
+> +	DED_ERROR_CAUSE(PCIE2AXI_RAM_DED_ERR,  "ded error in pcie2axi buffer"),
+> +	DED_ERROR_CAUSE(AXI2PCIE_RAM_DED_ERR,  "ded error in axi2pcie buffer"),
+> +	LOCAL_EVENT_CAUSE(DMA_ERROR_ENGINE_0, "dma engine 0 error"),
+> +	LOCAL_EVENT_CAUSE(DMA_ERROR_ENGINE_1, "dma engine 1 error"),
+> +	LOCAL_EVENT_CAUSE(A_ATR_EVT_POST_ERR, "axi write request error"),
+> +	LOCAL_EVENT_CAUSE(A_ATR_EVT_FETCH_ERR, "axi read request error"),
+> +	LOCAL_EVENT_CAUSE(A_ATR_EVT_DISCARD_ERR, "axi read timeout"),
+> +	LOCAL_EVENT_CAUSE(P_ATR_EVT_POST_ERR, "pcie write request error"),
+> +	LOCAL_EVENT_CAUSE(P_ATR_EVT_FETCH_ERR, "pcie read request error"),
+> +	LOCAL_EVENT_CAUSE(P_ATR_EVT_DISCARD_ERR, "pcie read timeout"),
+> +	LOCAL_EVENT_CAUSE(PM_MSI_INT_AER_EVT, "aer event"),
+> +	LOCAL_EVENT_CAUSE(PM_MSI_INT_EVENTS, "pm/ltr/hotplug event"),
+> +	LOCAL_EVENT_CAUSE(PM_MSI_INT_SYS_ERR, "system error"),
+> +};
+> +
+> +struct event_map pcie_event_to_event[] = {
+> +	PCIE_EVENT_TO_EVENT_MAP(L2_EXIT),
+> +	PCIE_EVENT_TO_EVENT_MAP(HOTRST_EXIT),
+> +	PCIE_EVENT_TO_EVENT_MAP(DLUP_EXIT)
+> +};
+> +
+> +struct event_map sec_error_to_event[] = {
+> +	SEC_ERROR_TO_EVENT_MAP(TX_RAM_SEC_ERR),
+> +	SEC_ERROR_TO_EVENT_MAP(RX_RAM_SEC_ERR),
+> +	SEC_ERROR_TO_EVENT_MAP(PCIE2AXI_RAM_SEC_ERR),
+> +	SEC_ERROR_TO_EVENT_MAP(AXI2PCIE_RAM_SEC_ERR)
+> +};
+> +
+> +struct event_map ded_error_to_event[] = {
+> +	DED_ERROR_TO_EVENT_MAP(TX_RAM_DED_ERR),
+> +	DED_ERROR_TO_EVENT_MAP(RX_RAM_DED_ERR),
+> +	DED_ERROR_TO_EVENT_MAP(PCIE2AXI_RAM_DED_ERR),
+> +	DED_ERROR_TO_EVENT_MAP(AXI2PCIE_RAM_DED_ERR)
+> +};
+> +
+> +struct event_map local_status_to_event[] = {
+> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_END_ENGINE_0),
+> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_END_ENGINE_1),
+> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_ERROR_ENGINE_0),
+> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_ERROR_ENGINE_1),
+> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_POST_ERR),
+> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_FETCH_ERR),
+> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_DISCARD_ERR),
+> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_DOORBELL),
+> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_POST_ERR),
+> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_FETCH_ERR),
+> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_DISCARD_ERR),
+> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_DOORBELL),
+> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_INTX),
+> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_MSI),
+> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_AER_EVT),
+> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_EVENTS),
+> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_SYS_ERR),
+> +};
+> +
+> +struct {
+> +	u32 base;
+> +	u32 offset;
+> +	u32 mask;
+> +	u32 shift;
+> +	u32 enb_mask;
+> +	u32 mask_high;
+> +	u32 mask_offset;
+> +} event_descs[] = {
+> +	{ PCIE_EVENT(L2_EXIT) },
+> +	{ PCIE_EVENT(HOTRST_EXIT) },
+> +	{ PCIE_EVENT(DLUP_EXIT) },
+> +	{ SEC_EVENT(TX_RAM_SEC_ERR) },
+> +	{ SEC_EVENT(RX_RAM_SEC_ERR) },
+> +	{ SEC_EVENT(PCIE2AXI_RAM_SEC_ERR) },
+> +	{ SEC_EVENT(AXI2PCIE_RAM_SEC_ERR) },
+> +	{ DED_EVENT(TX_RAM_DED_ERR) },
+> +	{ DED_EVENT(RX_RAM_DED_ERR) },
+> +	{ DED_EVENT(PCIE2AXI_RAM_DED_ERR) },
+> +	{ DED_EVENT(AXI2PCIE_RAM_DED_ERR) },
+> +	{ LOCAL_EVENT(DMA_END_ENGINE_0) },
+> +	{ LOCAL_EVENT(DMA_END_ENGINE_1) },
+> +	{ LOCAL_EVENT(DMA_ERROR_ENGINE_0) },
+> +	{ LOCAL_EVENT(DMA_ERROR_ENGINE_1) },
+> +	{ LOCAL_EVENT(A_ATR_EVT_POST_ERR) },
+> +	{ LOCAL_EVENT(A_ATR_EVT_FETCH_ERR) },
+> +	{ LOCAL_EVENT(A_ATR_EVT_DISCARD_ERR) },
+> +	{ LOCAL_EVENT(A_ATR_EVT_DOORBELL) },
+> +	{ LOCAL_EVENT(P_ATR_EVT_POST_ERR) },
+> +	{ LOCAL_EVENT(P_ATR_EVT_FETCH_ERR) },
+> +	{ LOCAL_EVENT(P_ATR_EVT_DISCARD_ERR) },
+> +	{ LOCAL_EVENT(P_ATR_EVT_DOORBELL) },
+> +	{ LOCAL_EVENT(PM_MSI_INT_INTX) },
+> +	{ LOCAL_EVENT(PM_MSI_INT_MSI) },
+> +	{ LOCAL_EVENT(PM_MSI_INT_AER_EVT) },
+> +	{ LOCAL_EVENT(PM_MSI_INT_EVENTS) },
+> +	{ LOCAL_EVENT(PM_MSI_INT_SYS_ERR) }
+> +};
+> +
+> +static char poss_clks[][5] = { "fic0", "fic1", "fic2", "fic3" };
+> +
+> +static void mc_pcie_enable_msi(struct mc_port *port, void __iomem *base)
+> +{
+> +	struct mc_msi *msi = &port->msi;
+> +	u32 cap_offset = MC_MSI_CAP_CTRL_OFFSET;
+> +	u16 msg_ctrl = readw_relaxed(base + cap_offset + PCI_MSI_FLAGS);
+> +
+> +	msg_ctrl |= PCI_MSI_FLAGS_ENABLE;
+> +	msg_ctrl &= ~PCI_MSI_FLAGS_QMASK;
+> +	msg_ctrl |= MC_MSI_MAX_Q_AVAIL;
+> +	msg_ctrl &= ~PCI_MSI_FLAGS_QSIZE;
+> +	msg_ctrl |= MC_MSI_Q_SIZE;
+> +	msg_ctrl |= PCI_MSI_FLAGS_64BIT;
 
-> I'm sure in theory we could probably even have the VF request
-> something like that itself through some sort of mailbox and cut out
-> the middle-man but that would be even uglier.
+Pretty sure you can write in a more compact way.
 
-No, not ever. The VF is in a security domain that can't make those
-kinds of changes to itself.
+[...]
 
-> In my mind it was the PF driver providing a devlink instance for the
-> VF if a driver isn't loaded.
+> +static const struct pci_ecam_ops mc_ecam_ops = {
+> +	.bus_shift = 20,
 
-I think hacking up devlink to provide dummy devlink objects for VFs
-that otherwise wouldn't exist and then ensuring handover to/from real
-drivers that might want those objects natively, just for the sake of
-using devlink to instead of the existing PCI sysfs is major overkill.
+Not needed, see commit e7708f5b10e2
 
-If we are even thinking of moving PCI to devlink I'd want to see
-devlink taken out of net and a whole devlink PCI subsystem
-infrastructure created to manage all this sanely.
+Can you respin promptly please so that we can merge it ?
 
-Hacking a subystem into devlink on the side with some small niche
-feature is not the way to approach such fundamental things.
+Thanks,
+Lorenzo
 
-I also don't know if PCI will get much value from netlinkification, or
-if devlink is even the right netlink representation for PCI in the
-first place.
-
-Jason
+> +	.init = mc_platform_init,
+> +	.pci_ops = {
+> +		.map_bus = pci_ecam_map_bus,
+> +		.read = pci_generic_config_read,
+> +		.write = pci_generic_config_write,
+> +	}
+> +};
+> +
+> +static const struct of_device_id mc_pcie_of_match[] = {
+> +	{
+> +		.compatible = "microchip,pcie-host-1.0",
+> +		.data = &mc_ecam_ops,
+> +	},
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, mc_pcie_of_match)
+> +
+> +static struct platform_driver mc_pcie_driver = {
+> +	.probe = pci_host_common_probe,
+> +	.driver = {
+> +		.name = "microchip-pcie",
+> +		.of_match_table = mc_pcie_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(mc_pcie_driver);
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Microchip PCIe host controller driver");
+> +MODULE_AUTHOR("Daire McNamara <daire.mcnamara@microchip.com>");
+> -- 
+> 2.25.1
+> 
