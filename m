@@ -2,238 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01B752FAD47
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 23:24:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78EFA2FADB3
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jan 2021 00:12:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731096AbhARWXd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 17:23:33 -0500
-Received: from mx.socionext.com ([202.248.49.38]:16111 "EHLO mx.socionext.com"
+        id S2404117AbhARXLZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 18:11:25 -0500
+Received: from mx.socionext.com ([202.248.49.38]:16450 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbhARWXc (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Jan 2021 17:23:32 -0500
+        id S1730151AbhARXLY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Jan 2021 18:11:24 -0500
 Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 19 Jan 2021 07:09:57 +0900
+  by mx.socionext.com with ESMTP; 19 Jan 2021 08:10:41 +0900
 Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 19A9C205902B;
-        Tue, 19 Jan 2021 07:09:57 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 19 Jan 2021 07:09:57 +0900
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id CA473205902B;
+        Tue, 19 Jan 2021 08:10:41 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 19 Jan 2021 08:10:41 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id B92F5B1D40;
-        Tue, 19 Jan 2021 07:09:56 +0900 (JST)
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id 7D774B1D40;
+        Tue, 19 Jan 2021 08:10:41 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
+To:     Rob Herring <robh@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v9 3/3] PCI: uniphier: Add misc interrupt handler to invoke PME and AER
-Date:   Tue, 19 Jan 2021 07:09:45 +0900
-Message-Id: <1611007785-25771-4-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2] PCI: designware-ep: Fix the reference to pci->num_{ib,ob}_windows before setting
+Date:   Tue, 19 Jan 2021 08:10:39 +0900
+Message-Id: <1611011439-29881-1-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1611007785-25771-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1611007785-25771-1-git-send-email-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch adds misc interrupt handler to detect and invoke PME/AER event.
+The commit 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows") gets
+the values of pci->num_ib_windows and pci->num_ob_windows from iATU
+registers instead of DT properties in dw_pcie_iatu_detect_regions*() or its
+unroll version.
 
-In UniPhier PCIe controller, PME/AER signals are assigned to the same
-signal as MSI by the internal logic. These signals should be detected by
-the internal register, however, DWC MSI handler can't handle these signals.
+However, before the values are set, the allocations in dw_pcie_ep_init()
+refer them to determine the sizes of window_map. As a result, null pointer
+dereference exception will occur when linking the EP function and the
+controller.
 
-DWC MSI handler calls .msi_host_isr() callback function, that detects
-PME/AER signals using the internal register and invokes the interrupt
-with PME/AER vIRQ numbers.
+  # ln -s functions/pci_epf_test/test controllers/66000000.pcie-ep/
+  Unable to handle kernel NULL pointer dereference at virtual address
+  0000000000000010
 
-These vIRQ numbers is obtained by uniphier_pcie_port_get_irq() function,
-that finds the device that matches PME/AER from the devices associated
-with Root Port, and returns its vIRQ number.
+The call trace is as follows:
 
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+  Call trace:
+   _find_next_bit.constprop.1+0xc/0x88
+   dw_pcie_ep_set_bar+0x78/0x1f8
+   pci_epc_set_bar+0x9c/0xe8
+   pci_epf_test_core_init+0xe8/0x220
+   pci_epf_test_bind+0x1e0/0x378
+   pci_epf_bind+0x54/0xb0
+   pci_epc_epf_link+0x58/0x80
+   configfs_symlink+0x1c0/0x570
+   vfs_symlink+0xdc/0x198
+   do_symlinkat+0xa0/0x110
+   __arm64_sys_symlinkat+0x28/0x38
+   el0_svc_common+0x84/0x1a0
+   do_el0_svc+0x38/0x88
+   el0_svc+0x1c/0x28
+   el0_sync_handler+0x88/0xb0
+   el0_sync+0x140/0x180
+
+The pci->num_{ib,ob}_windows should be referenced after they are set by
+dw_pcie_iatu_detect_regions*() called from dw_pcie_setup().
+
+Cc: Rob Herring <robh@kernel.org>
+Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-uniphier.c | 101 +++++++++++++++++++++++++----
- 1 file changed, 89 insertions(+), 12 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 41 ++++++++++++-------------
+ 1 file changed, 20 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index 7e8bad3..bc4db6f 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -21,6 +21,7 @@
- #include <linux/reset.h>
- 
- #include "pcie-designware.h"
-+#include "../../pcie/portdrv.h"
- 
- #define PCL_PINCTRL0			0x002c
- #define PCL_PERST_PLDN_REGEN		BIT(12)
-@@ -44,7 +45,9 @@
- #define PCL_SYS_AUX_PWR_DET		BIT(8)
- 
- #define PCL_RCV_INT			0x8108
-+#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
- #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
-+#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
- #define PCL_CFG_BW_MGT_STATUS		BIT(4)
- #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
- #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
-@@ -68,6 +71,8 @@ struct uniphier_pcie_priv {
- 	struct reset_control *rst;
- 	struct phy *phy;
- 	struct irq_domain *legacy_irq_domain;
-+	int aer_irq;
-+	int pme_irq;
- };
- 
- #define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
-@@ -164,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
- 
- static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+Changed since v1:
+- Add description of exception to commit message
+- Change the subject
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index bcd1cd9..adc7ca5 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -638,6 +638,7 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
+ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
  {
--	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
-+	u32 val;
-+
-+	val = PCL_RCV_INT_ALL_ENABLE;
-+	if (pci_msi_enabled())
-+		val |= PCL_RCV_INT_ALL_INT_MASK;
-+	else
-+		val |= PCL_RCV_INT_ALL_MSI_MASK;
-+
-+	writel(val, priv->base + PCL_RCV_INT);
- 	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
- }
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	struct device *dev = pci->dev;
+ 	unsigned int offset;
+ 	unsigned int nbars;
+ 	u8 hdr_type;
+@@ -669,6 +670,25 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ 	dw_pcie_setup(pci);
+ 	dw_pcie_dbi_ro_wr_dis(pci);
  
-@@ -228,28 +241,51 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
- 	.map = uniphier_pcie_intx_map,
- };
- 
--static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
- {
--	struct pcie_port *pp = irq_desc_get_handler_data(desc);
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
--	unsigned long reg;
--	u32 val, bit, virq;
-+	u32 val;
- 
--	/* INT for debug */
- 	val = readl(priv->base + PCL_RCV_INT);
- 
- 	if (val & PCL_CFG_BW_MGT_STATUS)
- 		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
- 	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
- 		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
--	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
--		dev_dbg(pci->dev, "Root Error\n");
--	if (val & PCL_CFG_PME_MSI_STATUS)
--		dev_dbg(pci->dev, "PME Interrupt\n");
++	ep->ib_window_map = devm_kcalloc(dev,
++					 BITS_TO_LONGS(pci->num_ib_windows),
++					 sizeof(long),
++					 GFP_KERNEL);
++	if (!ep->ib_window_map)
++		return -ENOMEM;
 +
-+	if (is_msi) {
-+		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS) {
-+			dev_dbg(pci->dev, "Root Error Status\n");
-+			if (priv->aer_irq)
-+				generic_handle_irq(priv->aer_irq);
-+		}
++	ep->ob_window_map = devm_kcalloc(dev,
++					 BITS_TO_LONGS(pci->num_ob_windows),
++					 sizeof(long),
++					 GFP_KERNEL);
++	if (!ep->ob_window_map)
++		return -ENOMEM;
 +
-+		if (val & PCL_CFG_PME_MSI_STATUS) {
-+			dev_dbg(pci->dev, "PME Interrupt\n");
-+			if (priv->pme_irq)
-+				generic_handle_irq(priv->pme_irq);
-+		}
-+	}
- 
- 	writel(val, priv->base + PCL_RCV_INT);
-+}
++	ep->outbound_addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
++			    GFP_KERNEL);
++	if (!ep->outbound_addr)
++		return -ENOMEM;
 +
-+static void uniphier_pcie_msi_host_isr(struct pcie_port *pp)
-+{
-+	uniphier_pcie_misc_isr(pp, true);
-+}
-+
-+static void uniphier_pcie_irq_handler(struct irq_desc *desc)
-+{
-+	struct pcie_port *pp = irq_desc_get_handler_data(desc);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long reg;
-+	u32 val, bit, virq;
-+
-+	uniphier_pcie_misc_isr(pp, false);
- 
- 	/* INTx */
- 	chained_irq_enter(chip, desc);
-@@ -317,8 +353,45 @@ static int uniphier_pcie_host_init(struct pcie_port *pp)
  	return 0;
  }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+@@ -676,7 +696,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
+ 	int ret;
+-	void *addr;
+ 	u8 func_no;
+ 	struct resource *res;
+ 	struct pci_epc *epc;
+@@ -714,26 +733,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 	ep->phys_base = res->start;
+ 	ep->addr_size = resource_size(res);
  
-+static int uniphier_pcie_port_get_irq(struct pcie_port *pp, u32 service)
-+{
-+	struct pci_dev *pcidev;
-+	int irq = 0;
-+
-+	if (!IS_ENABLED(CONFIG_PCIEAER) && !IS_ENABLED(CONFIG_PCIE_PME))
-+		return 0;
-+
-+	/*
-+	 * Finds the device that matches 'service' from the devices
-+	 * associated with Root Port, and returns its vIRQ number.
-+	 */
-+	list_for_each_entry(pcidev, &pp->bridge->bus->devices, bus_list) {
-+		irq = pcie_port_service_get_irq(pcidev, service);
-+		if (irq)
-+			break;
-+	}
-+
-+	return irq;
-+}
-+
-+static int uniphier_pcie_host_init_complete(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
-+
-+	if (IS_ENABLED(CONFIG_PCIE_PME))
-+		priv->pme_irq =
-+			uniphier_pcie_port_get_irq(pp, PCIE_PORT_SERVICE_PME);
-+	if (IS_ENABLED(CONFIG_PCIEAER))
-+		priv->aer_irq =
-+			uniphier_pcie_port_get_irq(pp, PCIE_PORT_SERVICE_AER);
-+
-+	return 0;
-+}
-+
- static const struct dw_pcie_host_ops uniphier_pcie_host_ops = {
- 	.host_init = uniphier_pcie_host_init,
-+	.msi_host_isr = uniphier_pcie_msi_host_isr,
- };
+-	ep->ib_window_map = devm_kcalloc(dev,
+-					 BITS_TO_LONGS(pci->num_ib_windows),
+-					 sizeof(long),
+-					 GFP_KERNEL);
+-	if (!ep->ib_window_map)
+-		return -ENOMEM;
+-
+-	ep->ob_window_map = devm_kcalloc(dev,
+-					 BITS_TO_LONGS(pci->num_ob_windows),
+-					 sizeof(long),
+-					 GFP_KERNEL);
+-	if (!ep->ob_window_map)
+-		return -ENOMEM;
+-
+-	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
+-			    GFP_KERNEL);
+-	if (!addr)
+-		return -ENOMEM;
+-	ep->outbound_addr = addr;
+-
+ 	if (pci->link_gen < 1)
+ 		pci->link_gen = of_pci_get_max_link_speed(np);
  
- static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
-@@ -398,7 +471,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
- 
- 	priv->pci.pp.ops = &uniphier_pcie_host_ops;
- 
--	return dw_pcie_host_init(&priv->pci.pp);
-+	ret = dw_pcie_host_init(&priv->pci.pp);
-+	if (ret)
-+		return ret;
-+
-+	return uniphier_pcie_host_init_complete(&priv->pci.pp);
- }
- 
- static const struct of_device_id uniphier_pcie_match[] = {
 -- 
 2.7.4
 
