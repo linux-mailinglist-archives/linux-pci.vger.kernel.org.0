@@ -2,177 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7540D2F9D12
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 11:47:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FD6D2FA06F
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 13:52:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388886AbhARKqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 05:46:37 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2361 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389136AbhARJoV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 04:44:21 -0500
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DK6Cq72DRz67dBV;
-        Mon, 18 Jan 2021 17:38:15 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 18 Jan 2021 10:43:39 +0100
-Received: from [10.47.11.164] (10.47.11.164) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Mon, 18 Jan
- 2021 09:43:37 +0000
-Subject: Re: [PATCH RFC 0/4] Fix arm64 crash for accessing unmapped IO port
- regions (reboot)
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <arnd@arndb.de>, <akpm@linux-foundation.org>,
-        <xuwei5@hisilicon.com>, <lorenzo.pieralisi@arm.com>,
-        <helgaas@kernel.org>, <song.bao.hua@hisilicon.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linuxarm@openeuler.org>
-References: <1610729929-188490-1-git-send-email-john.garry@huawei.com>
- <982ed6eb-6975-aea8-1555-a557633966f5@flygoat.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <6c0a2484-2cd6-ea1f-1094-21a7e86d71a2@huawei.com>
-Date:   Mon, 18 Jan 2021 09:42:25 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S2404215AbhARMlF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 07:41:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:34910 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404179AbhARMk7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Jan 2021 07:40:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59A0A31B;
+        Mon, 18 Jan 2021 04:40:10 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D7FD3F719;
+        Mon, 18 Jan 2021 04:40:09 -0800 (PST)
+Date:   Mon, 18 Jan 2021 12:40:03 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     Phil Elwell <phil@raspberrypi.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2] PCI: brcmstb: Restore initial fundamental reset
+Message-ID: <20210118124003.GA12967@e121166-lin.cambridge.arm.com>
+References: <20201112172709.1817-1-phil@raspberrypi.com>
+ <CA+-6iNwH3v78QhQOFpsXfA4hgUo9TXJaF4hy_imA60iQ2a3bMg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <982ed6eb-6975-aea8-1555-a557633966f5@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.11.164]
-X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+-6iNwH3v78QhQOFpsXfA4hgUo9TXJaF4hy_imA60iQ2a3bMg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18/01/2021 01:59, Jiaxun Yang wrote:
-> 在 2021/1/16 上午12:58, John Garry 写道:
->> This is a reboot of my original series to address the problem of drivers
->> for legacy ISA devices accessing unmapped IO port regions on arm64 
->> systems
->> and causing the system to crash.
->>
->> There was another recent report of such an issue [0], and some old ones
->> [1] and [2] for reference.
->>
->> The background is that many systems do not include PCI host controllers,
->> or they do and controller probe may have failed. For these cases, no IO
->> ports are mapped. However, loading drivers for legacy ISA devices can
->> crash the system as there is nothing to stop them accessing those IO
->> ports (which have not been io remap'ed).
->>
->> My original solution tried to keep the kernel alive in these 
->> situations by
->> rejecting logical PIO access to PCI IO regions until PCI IO port regions
->> have been mapped.
->>
->> This series goes one step further, by just reserving the complete legacy
->> IO port range in 0x0--0xffff for arm64. The motivation for doing this is
->> to make the request_region() calls for those drivers fail, like this:
->>
->> root@ubuntu:/home/john# insmod mk712.ko
->>   [ 3415.575800] mk712: unable to get IO region
->> insmod: ERROR: could not insert module mk712.ko: No such device
->>
->> Otherwise, in theory, those drivers could initiate rogue accesses to
->> mapped IO port regions for other devices and cause corruptions or
->> side-effects. Indeed, those drivers should not be allowed to access
->> IO ports at all in such a system.
->>
->> As a secondary defence, for broken drivers who do not call
->> request_region(), IO port accesses in range 0--0xffff will be ignored,
->> again preserving the system.
->>
->> I am sending as an RFC as I am not sure of any problem with reserving
->> first 0x10000 of IO space like this. There is reserve= commandline
->> argument, which does allow this already.
-> 
+On Thu, Nov 12, 2020 at 01:38:13PM -0500, Jim Quinlan wrote:
+> On Thu, Nov 12, 2020 at 12:27 PM Phil Elwell <phil@raspberrypi.com> wrote:
+> >
+> > Commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+> > replaced a single reset function with a pointer to one of two
+> > implementations, but also removed the call asserting the reset
+> > at the start of brcm_pcie_setup. Doing so breaks Raspberry Pis with
+> > VL805 XHCI controllers lacking dedicated SPI EEPROMs, which have been
+> > used for USB booting but then need to be reset so that the kernel
+> > can reconfigure them. The lack of a reset causes the firmware's loading
+> > of the EEPROM image to RAM to fail, breaking USB for the kernel.
+> >
+> > Fixes: commit 04356ac30771 ("PCI: brcmstb: Add bcm7278 PERST# support")
+> >
+> > Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> > Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > ---
+> > Changes in v2:
+> >   - Exclude BCM7278 from the initial reset
+> >   - Ack from Nicolas
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> > index bea86899bd5d..83aa85bfe8e3 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -869,6 +869,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> >
+> >         /* Reset the bridge */
+> >         pcie->bridge_sw_init_set(pcie, 1);
+> > +
+> > +       /* Assert the fundemental reset, except on BCM7278 */
+> > +       if (pcie->type != BCM7278)
+> > +               pcie->perst_set(pcie, 1);
+> I'm okay with this although I  would rather it not be needed.
 
-Hi Jiaxun,
-
-> 
-> Is it ok with ACPI? I'm not really familiar with ACPI on arm64 but my 
-> impression
-> is ACPI would use legacy I/O ports to communicate with kbd controller, 
-> EC and
-> power management facilities.
-
-I tested for ACPI. As far as I'm concerned, fixed IO ports should not be 
-used on arm64 systems.
-
-Indeed, ACPI spec says IO port addresses should be CPU addressable, and 
-it is the job of the kernel to io remap those correctly for systems 
-which do not support IO ports natively, i.e. those that define PCI_IOBASE.
-
-> 
-> We'd better have a method to detect if ISA bus is not present on the system
-> instead of reserve them unconditionally.
-> 
-
-For ISA bus or any IO ports region, they would/should be behind PCI host 
-bridge or modeled as INDIRECT IO host and we should allocate logic PIO 
-region for them, and there should be no assumption on the IO port 
-address in drivers, i.e. not fixed.
+Can I merge this patch as is then ?
 
 Thanks,
-John
+Lorenzo
 
-> 
->>
->> For reference, here's how /proc/ioports looks on my arm64 system with
->> this change:
->>
->> root@ubuntu:/home/john# more /proc/ioports
->> 00010000-0001ffff : PCI Bus 0002:f8
->>    00010000-00010fff : PCI Bus 0002:f9
->>      00010000-00010007 : 0002:f9:00.0
->>        00010000-00010007 : serial
->>      00010008-0001000f : 0002:f9:00.1
->>        00010008-0001000f : serial
->>      00010010-00010017 : 0002:f9:00.2
->>      00010018-0001001f : 0002:f9:00.2
->> 00020000-0002ffff : PCI Bus 0004:88
->> 00030000-0003ffff : PCI Bus 0005:78
->> 00040000-0004ffff : PCI Bus 0006:c0
->> 00050000-0005ffff : PCI Bus 0007:90
->> 00060000-0006ffff : PCI Bus 000a:10
->> 00070000-0007ffff : PCI Bus 000c:20
->> 00080000-0008ffff : PCI Bus 000d:30
->>
->> [0] 
->> https://lore.kernel.org/linux-input/20210112055129.7840-1-song.bao.hua@hisilicon.com/T/#mf86445470160c44ac110e9d200b09245169dc5b6 
->>
->> [1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
->> [2] 
->> https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/ 
->>
->>
->> Difference since v4:
->> https://lore.kernel.org/linux-pci/1560262374-67875-1-git-send-email-john.garry@huawei.com/ 
->>
->> - Reserve legacy ISA region
->>
->> John Garry (4):
->>    arm64: io: Introduce IO_SPACE_BASE
->>    asm-generic/io.h: Add IO_SPACE_BASE
->>    kernel/resource: Make ioport_resource.start configurable
->>    logic_pio: Warn on and discard accesses to addresses below
->>      IO_SPACE_BASE
->>
->>   arch/arm64/include/asm/io.h |  1 +
->>   include/asm-generic/io.h    |  4 ++++
->>   include/linux/logic_pio.h   |  5 +++++
->>   kernel/resource.c           |  2 +-
->>   lib/logic_pio.c             | 20 ++++++++++++++------
->>   5 files changed, 25 insertions(+), 7 deletions(-)
->>
-> 
-> .
+> Regards,
+> Jim
+> > +
+> >         usleep_range(100, 200);
+> >
+> >         /* Take the bridge out of reset */
+> > --
+> > 2.25.1
+> >
+
 
