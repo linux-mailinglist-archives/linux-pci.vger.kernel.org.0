@@ -2,179 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2F5C2F9788
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 03:01:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B404B2F97FC
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 03:57:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbhARCBB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 17 Jan 2021 21:01:01 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:52001 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730784AbhARCBA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Jan 2021 21:01:00 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7429F580691;
-        Sun, 17 Jan 2021 20:59:53 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Sun, 17 Jan 2021 20:59:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=/
-        sgmulDHp9rb7PANJ3YQeT7vYqlzAUl9a9PJU2TOFmU=; b=SBt8i3AAOYoPS+tjZ
-        a+fFzGY9e8jJmmqjZU+Q71NK3b8q/2JOCTc+hu45JQDaFlWojNYOIhrBhHEYfQxp
-        yFVszswjnwlEgYvWu7F7py0Np5jYg0XzqBx6EuEVSM5tSabVfzOFjjfrX3QpiQO7
-        IovmrFRlOApeAiiAiBdYJ/LBlQjUUMfhiYlIBlQzSbTvx3ZVO5oFz17A3+2FpkJh
-        fLpodCI5TZXzF8d05UPKu0FeIgTmKpiIYJu2OGYRpGo3+xzjHMPNXOpSglK5E4a2
-        EL03IiWrzZh97JEaRHCoHEiF3rGD107d5TxVnrKebIZKOr39QkHlTZqJql68jDDD
-        hJhsQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=/sgmulDHp9rb7PANJ3YQeT7vYqlzAUl9a9PJU2TOF
-        mU=; b=Fu9oVD8v9DVMtGCVFAH82kUeTkasi1oQ9IvWAQLpkBMwFGuFII/uKhJCA
-        vCDnAl5WpofkNH3jw5sFZeDoUjxpZDdVTp3r5wX++ZRqJn2POKdUTmBwQHLIiN25
-        fFGRY+eMJ4Hr9CJk42Evx1Jq8nI6mYlnpJHgR5tpbJJIesM2QC/uetLcSHEUkFe4
-        YIL69305CCgiQPvo8qco12LT3hN6sVgQlFLJJC4pWL3o/Rg2uZ11XZ5Y7DDKY2/u
-        Y3dyEJsbiYBggoSFWgZ9INpnCiPUTSp2rAETOnz95GPFVStfis8aNbXKfT/4pFjt
-        uR9JZ8c2lZy5sMRDobR17JHXKBcZQ==
-X-ME-Sender: <xms:l-sEYJCkLZH2UJGzP2vauPOP_nwPhqRBwS-gPvYPrl3EJzxJwWAoPQ>
-    <xme:l-sEYHiN_q4EIFerhwAkJTKdlGgBIseViXndJRDQoFE7GPQCatRtwjbztlHjSWZxY
-    OT6kag8fkpVasACCrM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrtdejgdegtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtkeertddtfeftnecuhfhrohhmpeflihgrgihu
-    nhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecugg
-    ftrfgrthhtvghrnhepteduueduffeghfefgeetfeevtdfftedugfdtveduudetgfefffel
-    vddtgfelleefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepgeehrdeffe
-    drhedtrddvheegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:l-sEYElkfKcR0HURU7YnX7c3Eioemnj04tRfeRSe9ZPFAochYuzn9Q>
-    <xmx:l-sEYDy1PxiYh387JoY6s3D_ghWw3g85QJuv9mX1M_QsaN9mQGT-rA>
-    <xmx:l-sEYOTWh-c5IJtu0rCvHQGOENBFGPPQvL7uYkxs7gfVaOS7nsgQ4w>
-    <xmx:mesEYFK9Va2bqi9zNc3sMjbUy_AnW_rFTYuRMqUpEfxU1TaY5KOxGzE9yO4>
-Received: from [0.0.0.0] (li1000-254.members.linode.com [45.33.50.254])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BDEFB1080059;
-        Sun, 17 Jan 2021 20:59:44 -0500 (EST)
-Subject: Re: [PATCH RFC 0/4] Fix arm64 crash for accessing unmapped IO port
- regions (reboot)
-To:     John Garry <john.garry@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, arnd@arndb.de, akpm@linux-foundation.org,
-        xuwei5@hisilicon.com, lorenzo.pieralisi@arm.com,
-        helgaas@kernel.org, song.bao.hua@hisilicon.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-pci@vger.kernel.org, linuxarm@openeuler.org
-References: <1610729929-188490-1-git-send-email-john.garry@huawei.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <982ed6eb-6975-aea8-1555-a557633966f5@flygoat.com>
-Date:   Mon, 18 Jan 2021 09:59:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S1731352AbhARC45 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Jan 2021 21:56:57 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:62802 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731357AbhARC44 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Jan 2021 21:56:56 -0500
+X-UUID: 3c519507fd0f437081defd32a9a62e7f-20210118
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0em+L8nboXyN5nqrai5ZhBQakH44tZ0SkP9/VKi1jl4=;
+        b=NTS5bM8qvxYuWLCN3n46aIpZBWKMUi8MO88IIPhjVDOQLeuQWLN2uV5i6ncx7v5zuadEtv1W6iYsipF8FXMps8p3m8Qtsve31AmKV2fgW4gc5pfI+A5qBm6TuiBIL92o+5LrLBhggQUUY8V2ARPQ+v6FLnNidXUhiHbcCsIAatc=;
+X-UUID: 3c519507fd0f437081defd32a9a62e7f-20210118
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <mingchuang.qiao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1858029874; Mon, 18 Jan 2021 10:55:35 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 18 Jan
+ 2021 10:55:33 +0800
+Received: from [10.19.240.15] (10.19.240.15) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 Jan 2021 10:55:32 +0800
+Message-ID: <1610938533.5980.11.camel@mcddlt001>
+Subject: Re: [PATCH] pci: avoid unsync of LTR mechanism configuration
+From:   Mingchuang Qiao <mingchuang.qiao@mediatek.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <bhelgaas@google.com>, <matthias.bgg@gmail.com>,
+        <kerun.zhu@mediatek.com>, <linux-pci@vger.kernel.org>,
+        <lambert.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <haijun.liu@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 18 Jan 2021 10:55:33 +0800
+In-Reply-To: <20210112213635.GA1854447@bjorn-Precision-5520>
+References: <20210112213635.GA1854447@bjorn-Precision-5520>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <1610729929-188490-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-TM-SNTS-SMTP: AEA3A7EE47DDF04712E42F9002E2427F938FEDBADB231A5E2D59475E1619EA042000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-ÔÚ 2021/1/16 ÉÏÎç12:58, John Garry Ð´µÀ:
-> This is a reboot of my original series to address the problem of drivers
-> for legacy ISA devices accessing unmapped IO port regions on arm64 systems
-> and causing the system to crash.
->
-> There was another recent report of such an issue [0], and some old ones
-> [1] and [2] for reference.
->
-> The background is that many systems do not include PCI host controllers,
-> or they do and controller probe may have failed. For these cases, no IO
-> ports are mapped. However, loading drivers for legacy ISA devices can
-> crash the system as there is nothing to stop them accessing those IO
-> ports (which have not been io remap'ed).
->
-> My original solution tried to keep the kernel alive in these situations by
-> rejecting logical PIO access to PCI IO regions until PCI IO port regions
-> have been mapped.
->
-> This series goes one step further, by just reserving the complete legacy
-> IO port range in 0x0--0xffff for arm64. The motivation for doing this is
-> to make the request_region() calls for those drivers fail, like this:
->
-> root@ubuntu:/home/john# insmod mk712.ko
->   [ 3415.575800] mk712: unable to get IO region
-> insmod: ERROR: could not insert module mk712.ko: No such device
->
-> Otherwise, in theory, those drivers could initiate rogue accesses to
-> mapped IO port regions for other devices and cause corruptions or
-> side-effects. Indeed, those drivers should not be allowed to access
-> IO ports at all in such a system.
->
-> As a secondary defence, for broken drivers who do not call
-> request_region(), IO port accesses in range 0--0xffff will be ignored,
-> again preserving the system.
->
-> I am sending as an RFC as I am not sure of any problem with reserving
-> first 0x10000 of IO space like this. There is reserve= commandline
-> argument, which does allow this already.
-
-Hi John,
-
-Is it ok with ACPI? I'm not really familiar with ACPI on arm64 but my 
-impression
-is ACPI would use legacy I/O ports to communicate with kbd controller, 
-EC and
-power management facilities.
-
-We'd better have a method to detect if ISA bus is not present on the system
-instead of reserve them unconditionally.
-
-Thanks.
-
-- Jiaxun
-
->
-> For reference, here's how /proc/ioports looks on my arm64 system with
-> this change:
->
-> root@ubuntu:/home/john# more /proc/ioports
-> 00010000-0001ffff : PCI Bus 0002:f8
->    00010000-00010fff : PCI Bus 0002:f9
->      00010000-00010007 : 0002:f9:00.0
->        00010000-00010007 : serial
->      00010008-0001000f : 0002:f9:00.1
->        00010008-0001000f : serial
->      00010010-00010017 : 0002:f9:00.2
->      00010018-0001001f : 0002:f9:00.2
-> 00020000-0002ffff : PCI Bus 0004:88
-> 00030000-0003ffff : PCI Bus 0005:78
-> 00040000-0004ffff : PCI Bus 0006:c0
-> 00050000-0005ffff : PCI Bus 0007:90
-> 00060000-0006ffff : PCI Bus 000a:10
-> 00070000-0007ffff : PCI Bus 000c:20
-> 00080000-0008ffff : PCI Bus 000d:30
->
-> [0] https://lore.kernel.org/linux-input/20210112055129.7840-1-song.bao.hua@hisilicon.com/T/#mf86445470160c44ac110e9d200b09245169dc5b6
-> [1] https://lore.kernel.org/linux-pci/56F209A9.4040304@huawei.com
-> [2] https://lore.kernel.org/linux-arm-kernel/e6995b4a-184a-d8d4-f4d4-9ce75d8f47c0@huawei.com/
->
-> Difference since v4:
-> https://lore.kernel.org/linux-pci/1560262374-67875-1-git-send-email-john.garry@huawei.com/
-> - Reserve legacy ISA region
->
-> John Garry (4):
->    arm64: io: Introduce IO_SPACE_BASE
->    asm-generic/io.h: Add IO_SPACE_BASE
->    kernel/resource: Make ioport_resource.start configurable
->    logic_pio: Warn on and discard accesses to addresses below
->      IO_SPACE_BASE
->
->   arch/arm64/include/asm/io.h |  1 +
->   include/asm-generic/io.h    |  4 ++++
->   include/linux/logic_pio.h   |  5 +++++
->   kernel/resource.c           |  2 +-
->   lib/logic_pio.c             | 20 ++++++++++++++------
->   5 files changed, 25 insertions(+), 7 deletions(-)
->
+T24gVHVlLCAyMDIxLTAxLTEyIGF0IDE1OjM2IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBOb3RlIHN1YmplY3QgbGluZSB0aXBzIGF0IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAx
+NzEwMjYyMjM3MDEuR0EyNTY0OUBiaGVsZ2Fhcy1nbGFwdG9wLnJvYW0uY29ycC5nb29nbGUuY29t
+DQo+IA0KPiBPbiBUdWUsIEphbiAxMiwgMjAyMSBhdCAwMzoyNzozOVBNICswODAwLCBtaW5nY2h1
+YW5nLnFpYW9AbWVkaWF0ZWsuY29tIHdyb3RlOg0KPiA+IEZyb206IE1pbmdjaHVhbmcgUWlhbyA8
+bWluZ2NodWFuZy5xaWFvQG1lZGlhdGVrLmNvbT4NCj4gPiANCj4gPiBJbiBwY2kgYnVzIHNjYW4g
+ZmxvdywgdGhlIExUUiBtZWNoYW5pc20gZW5hYmxlIGJpdCBvZiBERVZDVEwyIHJlZ2lzdGVyDQo+
+ID4gaXMgY29uZmlndXJlZCBpbiBwY2lfY29uZmlndXJlX2x0cigpLiBJZiBkZXZpY2UgYW5kIGl0
+J3MgYnJpZGdlIGJvdGgNCj4gPiBzdXBwb3J0IExUUiBtZWNoYW5pc20sIExUUiBtZWNoYW5pc20g
+b2YgZGV2aWNlIGFuZCBpdCdzIGJyaWRnZSB3aWxsDQo+ID4gYmUgZW5hYmxlZCBpbiBERVZDVEwy
+IHJlZ2lzdGVyLiBBbmQgdGhlIGZsYWcgcGNpX2Rldi0+bHRyX3BhdGggd2lsbA0KPiA+IGJlIHNl
+dCBhcyAxLg0KPiANCj4gcy9pdCdzL2l0cy8gdHdpY2UgYWJvdmUuDQo+IEl0J3MgPT0gSXQgaXMu
+DQo+IEl0cyA9PSBiZWxvbmdpbmcgdG8gJ2l0Jy4NCj4gV2VpcmQsIEkga25vdywgYnV0IHRoYXQn
+cyBFbmdsaXNoIGZvciB5b3UgOikNCj4gDQo+ID4gRm9yIHNvbWUgcGNpZSBwcm9kdWN0cywgcGNp
+ZSBsaW5rIGJlY29tZXMgZG93biB3aGVuIGRldmljZSByZXNldC4gQW5kIHRoZW4NCj4gPiB0aGUg
+TFRSIG1lY2hhbmlzbSBlbmFibGUgYml0IG9mIGJyaWRnZSB3aWxsIGJlY29tZSAwIGJhc2VkIG9u
+IGRlc2NyaXB0aW9uDQo+ID4gaW4gUENJRSByNC4wLCBzZWMgNy44LjE2LiBIb3dldmVyLCB0aGUg
+cGNpX2Rldi0+bHRyX3BhdGggdmFsdWUgb2YgYnJpZGdlDQo+ID4gaXMgc3RpbGwgMS4gUmVtb3Zl
+IGFuZCByZXNjYW4gZmxvdyBjb3VsZCBiZSB0cmlnZ2VyZWQgdG8gcmVjb3ZlciBhZnRlcg0KPiA+
+IGRldmljZSByZXNldC4gSW4gdGhlIGJ1cyByZXNjYW4gZmxvdywgdGhlIExUUiBtZWNoYW5pc20g
+b2YgZGV2aWNlIHdpbGwgYmUNCj4gPiBlbmFibGVkIGluIHBjaV9jb25maWd1cmVfbHRyKCkgZHVl
+IHRvIGx0cl9wYXRoIG9mIGl0cyBicmlkZ2UgaXMgc3RpbGwgMS4NCj4gDQo+IHMvcGNpZS9QQ0ll
+LyB0d2ljZSBhYm92ZS4NCj4gcy9QQ0lFL1BDSWUvOyBhbHNvIHJlZmVyZW5jZSByNS4wIGluc3Rl
+YWQgb2YgcjQuMCBpZiBwb3NzaWJsZS4NCj4gDQoNClNvcnJ5IGZvciB0aGUgbWlzc3BlbGxpbmcg
+YW5kIGluY29udmVuaWVuY2UuIFRoYW5rcyBmb3IgdGhlIGNvcnJlY3Rpb24NCmFuZCBJIHdpbGwg
+Zm9sbG93IHRoZSBzdWdnZXN0aW9uIGluIGxhdGVyIHBhdGNoLg0KDQo+IFRoaXMgc291bmRzIGxp
+a2UgYSBnZW5lcmFsIHByb2JsZW0gb2YgbW9zdCBkZXZpY2UgY29uZmlnIGJpdHMgYmVpbmcNCj4g
+Y2xlYXJlZCBieSByZXNldC4gIFVzdWFsbHkgdGhlc2UgYXJlIHJlc3RvcmVkIGJ5IHBjaV9yZXN0
+b3JlX3N0YXRlKCkuDQo+IElzIHRoYXQgZnVuY3Rpb24gbWlzc2luZyBhIHJlc3RvcmUgZm9yIFBD
+SV9FWFBfREVWQ1RMMj8gIEknZCByYXRoZXINCj4gaGF2ZSBhIGdlbmVyYWwtcHVycG9zZSB3YXkg
+b2YgcmVzdG9yaW5nIGFsbCB0aGUgY29uZmlnIHN0YXRlIHRoYW4NCj4gbGl0dGxlIHBpZWNlcyBz
+Y2F0dGVyZWQgYWxsIG92ZXIuDQo+IA0KDQpBY3R1YWxseSBpdOKAmXMgbm90IFBDSV9FWFBfREVW
+Q1RMMiByZXN0b3JlIG1pc3NpbmcgaXNzdWUuIFRoZQ0KUENJX0VYUF9ERVZDVEwyIGlzIGNvcnJl
+Y3RseSBzYXZlZC9yZXN0b3JlZCBkdXJpbmcgYnJpZGdlIHJ1bnRpbWUNCnN1c3BlbmQvcmVzdW1l
+Lg0KDQpJdOKAmXMgdGhlIGlzc3VlIHRoYXQgbHRyX3BhdGggdmFsdWUgb2YgdGhlIGJyaWRnZSBt
+aXNtYXRjaGVzIHRoZSBhY3R1YWwNCnZhbHVlIGluIGJyaWRnZeKAmXMgUENJX0VYUF9ERVZDVEwy
+Lg0KDQpIZXJlIGlzIHRoZSBzY2VuYXJpbyBmb3IgdGhlIGlzc3VlOg0KMS5QQ0kgYnVzIHNjYW4g
+ZG9uZQ0KICAgLUZvciBib3RoIFBDSWUgRGV2aWNlIGFuZCBicmlkZ2U6DQogICAgICAtIkxUUiBN
+ZWNoYW5pc20gRW5hYmxlIiBiaXQgaW4gUENJX0VYUF9ERVZDVEwyIGlzIDENCiAgICAgIC0gbHRy
+X3BhdGggdmFsdWUgaXMgMQ0KDQoyLkRldmljZSByZXNldHMgYW5kIFBDSWUgbGluayBpcyBkb3du
+LCB0aGVuICJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0DQpvZiBicmlkZ2UgY2hhbmdlcyB0byAw
+IGFjY29yZGluZyB0byBQQ0llIHI1LjAsIHNlYyA3LjUuMy4xNi4NCiAgIC1UaGUgbHRyX3BhdGgg
+dmFsdWUgb2YgYnJpZGdlIGlzIHN0aWxsIDEgYnV0IHRoZSAiTFRSIE1lY2hhbmlzbQ0KRW5hYmxl
+IiBiaXQgd2l0aGluIFBDSV9FWFBfREVWQ1RMMiBjaGFuZ2VkIHRvIDAuDQoNCjMuVHJpZ2dlciBk
+ZXZpY2UgcmVtb3ZhbCBhbmQgYnJpZGdlIGVudGVycyBydW50aW1lIHN1c3BlbmQgZmxvdy4NCiAg
+IC0iTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdCBvZiBicmlkZ2UgaXMgMCBhbmQgc2F2ZWQgYnkN
+CnBjaV9zYXZlX3N0YXRlKCkuDQoNCjQuVHJpZ2dlciBidXMgcmVzY2FuIGFuZCBicmlkZ2UgZW50
+ZXJzIHJ1bnRpbWUgcmVzdW1lIGZsb3cuDQogICAtIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQg
+b2YgYnJpZGdlIGlzIHJlc3RvcmVkIGJ5DQpwY2lfcmVzdG9yZV9zdGF0ZSgpIGFuZCB0aGUgdmFs
+dWUgaXMgMC4NCg0KNS5TY2FuIGRldmljZSBhbmQgY29uZmlndXJlIGRldmljZSdzIExUUiBpbiBw
+Y2lfY29uZmlndXJlX2x0cigpLg0KICAgLSJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0IG9mIGRl
+dmljZSBpcyBjb25maWd1cmVkIGFzIDEgZHVlIHRvDQpicmlkZ2UncyBsdHJfcGF0aCB2YWx1ZSBp
+cyAxLg0KDQo2LlRoZSAiTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdCBvZiBkZXZpY2UgYW5kIGJy
+aWRnZSBpcyBkaWZmZXJlbnQgbm93Lg0KICAgLVdoZW4gZGV2aWNlIHNlbmRzIExUUiBNZXNzYWdl
+LCBicmlkZ2Ugd2lsbCB0cmVhdCB0aGUgTWVzc2FnZSBhcw0KVW5zdXBwb3J0ZWQgUmVxdWVzdCBh
+Y2NvcmRpbmcgdG8gUENJZSByNS4wLCBzZWMgNi4xOC4NCg0KVGhpcyBwYXRjaCBpcyB1c2VkIHRv
+IG1ha2UgYnJpZGdlJ3MgbHRyX3BhdGggdmFsdWUgbWF0Y2ggIkxUUiBNZWNoYW5pc20NCkVuYWJs
+ZSIgYml0IHdpdGhpbiBERVZDVEwyIHJlZ2lzdGVyIGFuZCBhdm9pZCB0aGUgVW5zdXBwb3J0ZWQg
+UmVxdWVzdC4NCg0KPiA+IFdoZW4gZGV2aWNlJ3MgTFRSIG1lY2hhbmlzbSBpcyBlbmFibGVkLCBk
+ZXZpY2Ugd2lsbCBzZW5kIExUUiBtZXNzYWdlIHRvDQo+ID4gYnJpZGdlLiBCcmlkZ2UgcmVjZWl2
+ZXMgdGhlIGRldmljZSdzIExUUiBtZXNzYWdlIGFuZCBmb3VuZCBicmlkZ2UncyBMVFINCj4gPiBt
+ZWNoYW5pc20gaXMgZGlzYWJsZWQuIFRoZW4gdGhlIGJyaWRnZSB3aWxsIGdlbmVyYXRlIHVuc3Vw
+cG9ydGVkIHJlcXVlc3QNCj4gPiBhbmQgb3RoZXIgZXJyb3IgaGFuZGxpbmcgZmxvdyB3aWxsIGJl
+IHRyaWdnZXJlZCBzdWNoIGFzIEFFUiBOb24tRmF0YWwNCj4gPiBlcnJvciBoYW5kbGluZy4NCj4g
+PiANCj4gPiBUaGlzIHBhdGNoIGlzIHVzZWQgdG8gYXZvaWQgdGhpcyB1bnN1cHBvcnRlZCByZXF1
+ZXN0IGFuZCBtYWtlIHRoZSBicmlkZ2Uncw0KPiA+IGx0cl9wYXRoIHZhbHVlIGlzIGFsaWduZWQg
+d2l0aCBERVZDVEwyIHJlZ2lzdGVyIHZhbHVlLiBDaGVjayBicmlkZ2UNCj4gPiByZWdpc3RlciB2
+YWx1ZSBpZiBhbGlnbmVkIHdpdGggbHRyX3BhdGggaW4gcGNpX2NvbmZpZ3VyZV9sdHIoKS4gSWYN
+Cj4gPiByZWdpc3RlciB2YWx1ZSBpcyBkaXNhYmxlIGFuZCB0aGUgbHRyX3BhdGggaXMgMSwgd2Ug
+bmVlZCBjb25maWd1cmUNCj4gPiB0aGUgcmVnaXN0ZXIgdmFsdWUgYXMgZW5hYmxlLg0KPiA+IA0K
+PiA+IFNpZ25lZC1vZmYtYnk6IE1pbmdjaHVhbmcgUWlhbyA8bWluZ2NodWFuZy5xaWFvQG1lZGlh
+dGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvcHJvYmUuYyB8IDE4ICsrKysrKysr
+KysrKysrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMyBkZWxl
+dGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcHJvYmUuYyBiL2Ry
+aXZlcnMvcGNpL3Byb2JlLmMNCj4gPiBpbmRleCA5NTNmMTVhYmM4NTAuLjQ5MzU1Y2Y0YWY1NCAx
+MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9wcm9iZS5jDQo+ID4gKysrIGIvZHJpdmVycy9w
+Y2kvcHJvYmUuYw0KPiA+IEBAIC0yMTMyLDkgKzIxMzIsMjEgQEAgc3RhdGljIHZvaWQgcGNpX2Nv
+bmZpZ3VyZV9sdHIoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gPiAgCSAqIENvbXBsZXggYW5kIGFs
+bCBpbnRlcm1lZGlhdGUgU3dpdGNoZXMgaW5kaWNhdGUgc3VwcG9ydCBmb3IgTFRSLg0KPiA+ICAJ
+ICogUENJZSByNC4wLCBzZWMgNi4xOC4NCj4gPiAgCSAqLw0KPiA+IC0JaWYgKHBjaV9wY2llX3R5
+cGUoZGV2KSA9PSBQQ0lfRVhQX1RZUEVfUk9PVF9QT1JUIHx8DQo+ID4gLQkgICAgKChicmlkZ2Ug
+PSBwY2lfdXBzdHJlYW1fYnJpZGdlKGRldikpICYmDQo+ID4gLQkgICAgICBicmlkZ2UtPmx0cl9w
+YXRoKSkgew0KPiA+ICsJaWYgKHBjaV9wY2llX3R5cGUoZGV2KSA9PSBQQ0lfRVhQX1RZUEVfUk9P
+VF9QT1JUKSB7DQo+ID4gKwkJcGNpZV9jYXBhYmlsaXR5X3NldF93b3JkKGRldiwgUENJX0VYUF9E
+RVZDVEwyLA0KPiA+ICsJCQkJCSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKTsNCj4gPiArCQlkZXYt
+Pmx0cl9wYXRoID0gMTsNCj4gPiArCQlyZXR1cm47DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJYnJp
+ZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShkZXYpOw0KPiA+ICsJaWYgKGJyaWRnZSAmJiBicmlk
+Z2UtPmx0cl9wYXRoKSB7DQo+ID4gKwkJcGNpZV9jYXBhYmlsaXR5X3JlYWRfZHdvcmQoYnJpZGdl
+LCBQQ0lfRVhQX0RFVkNUTDIsICZjdGwpOw0KPiA+ICsJCWlmICghKGN0bCAmIFBDSV9FWFBfREVW
+Q1RMMl9MVFJfRU4pKSB7DQo+ID4gKwkJCXBjaWVfY2FwYWJpbGl0eV9zZXRfd29yZChicmlkZ2Us
+IFBDSV9FWFBfREVWQ1RMMiwNCj4gPiArCQkJCQkJIFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pOw0K
+PiA+ICsJCX0NCj4gPiArDQo+ID4gIAkJcGNpZV9jYXBhYmlsaXR5X3NldF93b3JkKGRldiwgUENJ
+X0VYUF9ERVZDVEwyLA0KPiA+ICAJCQkJCSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKTsNCj4gPiAg
+CQlkZXYtPmx0cl9wYXRoID0gMTsNCj4gPiAtLSANCj4gPiAyLjE4LjANCj4gPiBfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+DQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsDQoNCg==
 
