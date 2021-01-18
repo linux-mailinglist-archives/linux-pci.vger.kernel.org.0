@@ -2,148 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B404B2F97FC
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 03:57:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1D9F2F9819
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 04:17:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbhARC45 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 17 Jan 2021 21:56:57 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:62802 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731357AbhARC44 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Jan 2021 21:56:56 -0500
-X-UUID: 3c519507fd0f437081defd32a9a62e7f-20210118
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0em+L8nboXyN5nqrai5ZhBQakH44tZ0SkP9/VKi1jl4=;
-        b=NTS5bM8qvxYuWLCN3n46aIpZBWKMUi8MO88IIPhjVDOQLeuQWLN2uV5i6ncx7v5zuadEtv1W6iYsipF8FXMps8p3m8Qtsve31AmKV2fgW4gc5pfI+A5qBm6TuiBIL92o+5LrLBhggQUUY8V2ARPQ+v6FLnNidXUhiHbcCsIAatc=;
-X-UUID: 3c519507fd0f437081defd32a9a62e7f-20210118
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <mingchuang.qiao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1858029874; Mon, 18 Jan 2021 10:55:35 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 18 Jan
- 2021 10:55:33 +0800
-Received: from [10.19.240.15] (10.19.240.15) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 18 Jan 2021 10:55:32 +0800
-Message-ID: <1610938533.5980.11.camel@mcddlt001>
-Subject: Re: [PATCH] pci: avoid unsync of LTR mechanism configuration
-From:   Mingchuang Qiao <mingchuang.qiao@mediatek.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <bhelgaas@google.com>, <matthias.bgg@gmail.com>,
-        <kerun.zhu@mediatek.com>, <linux-pci@vger.kernel.org>,
-        <lambert.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <haijun.liu@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 18 Jan 2021 10:55:33 +0800
-In-Reply-To: <20210112213635.GA1854447@bjorn-Precision-5520>
-References: <20210112213635.GA1854447@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1731481AbhARDRZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 17 Jan 2021 22:17:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729550AbhARDRW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 17 Jan 2021 22:17:22 -0500
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F72C061573;
+        Sun, 17 Jan 2021 19:16:41 -0800 (PST)
+Received: by mail-io1-xd34.google.com with SMTP id y19so30211419iov.2;
+        Sun, 17 Jan 2021 19:16:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ejhEkrrlCdvSz/w2hBpJHroA3OZ0GfHtQsf8yJhbs8=;
+        b=sQxYlzCebBfQuGxEbZl6K4lM0T7dFqH7fScOChD3HnRReek+4mD15OImi/pTLu/CMV
+         3GB+mqd2VrSip2p2+Cf2HXVqK/TXXSwp7NdsvR38BpQlbTG0e9H7COdALCJmaocZBDhT
+         ZBYJJra3F5HJdLZBj9Do0zHUfeqF24ddXenFyqWPHcTEDclDK49ucvpm5VjNXArrlphe
+         LREUiWEQqvgOJWGzEp2OaOOqLG49D7uOi7qFAIjkRqO8dujfyuURaNenRauvR4ws5aiz
+         khnELRK1YKyKdKgQJS2tQGPX7ju4BYbYN4cLiJKjkNcQxNdCEwYw1J+1EaXem8tOrpNa
+         W6jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ejhEkrrlCdvSz/w2hBpJHroA3OZ0GfHtQsf8yJhbs8=;
+        b=Mjqu2XegT/MWzrLSWAsQt/ap2USN+/Nle65+c2lB16AyZoW2s36rQcCs10BoqcVG9P
+         XkHsAtfd2O+KAxfW2Odo7QkiFGYyKz0e0AM8F465tyi2R4jf5NNr5N8Fr2UXR4fzt+ID
+         pSg5bMS5dMg7wSGCDC7YF8vHgR/iVhdZ1kpOAvg5epA2X5xQWgmv5iP4XP+kLPUp6Gx2
+         Hv1+csJYquLvDgoHsPGUSan7wZhbPyAl64CBq/z9MjZnaPf/rD6DZbKtJm9oePrubgGI
+         Mz/xOefP1KzMeL8MmliTIrXirdu2k8VRBw3so9N2ikr+qxcX/TQ7i3lQ6L9sHYVUKupM
+         S75Q==
+X-Gm-Message-State: AOAM5313RsONG9cR7JO/0pswgohLSEDRFoqZWcZTFWK+/DQqmLm/hAd8
+        5GwtQFRwDhnOr+hcLBGQp2ZkhFPjQajoUIevvN8=
+X-Google-Smtp-Source: ABdhPJwCtfL23UMYf+C0R7TV2eGSlFpWTzoMl9Awnq5Q971i6GvBEsDDUMcKRNcYf+MLnxkgE/KqHcGKKa96Dc3N7dI=
+X-Received: by 2002:a02:969a:: with SMTP id w26mr18666399jai.96.1610939801062;
+ Sun, 17 Jan 2021 19:16:41 -0800 (PST)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: AEA3A7EE47DDF04712E42F9002E2427F938FEDBADB231A5E2D59475E1619EA042000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <CAKgT0UcKqt=EgE+eitB8-u8LvxqHBDfF+u2ZSi5urP_Aj0Btvg@mail.gmail.com>
+ <20210114182945.GO4147@nvidia.com> <CAKgT0UcQW+nJjTircZAYs1_GWNrRud=hSTsphfVpsc=xaF7aRQ@mail.gmail.com>
+ <20210114200825.GR4147@nvidia.com> <CAKgT0UcaRgY4XnM0jgWRvwBLj+ufiabFzKPyrf3jkLrF1Z8zEg@mail.gmail.com>
+ <20210114162812.268d684a@omen.home.shazbot.org> <CAKgT0Ufe1w4PpZb3NXuSxug+OMcjm1RP3ZqVrJmQqBDt3ByOZQ@mail.gmail.com>
+ <20210115140619.GA4147@nvidia.com> <20210115155315.GJ944463@unreal>
+ <CAKgT0UdzCqbLwxSnDTtgha+PwTMW5iVb-3VXbwdMNiaAYXyWzQ@mail.gmail.com> <20210116082031.GK944463@unreal>
+In-Reply-To: <20210116082031.GK944463@unreal>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Sun, 17 Jan 2021 19:16:30 -0800
+Message-ID: <CAKgT0UeKiz=gh+djt83GRBGi8qQWTBzs-qxKj_78N+gx-KtkMQ@mail.gmail.com>
+Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
+ number of MSI-X vectors
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVHVlLCAyMDIxLTAxLTEyIGF0IDE1OjM2IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBOb3RlIHN1YmplY3QgbGluZSB0aXBzIGF0IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAx
-NzEwMjYyMjM3MDEuR0EyNTY0OUBiaGVsZ2Fhcy1nbGFwdG9wLnJvYW0uY29ycC5nb29nbGUuY29t
-DQo+IA0KPiBPbiBUdWUsIEphbiAxMiwgMjAyMSBhdCAwMzoyNzozOVBNICswODAwLCBtaW5nY2h1
-YW5nLnFpYW9AbWVkaWF0ZWsuY29tIHdyb3RlOg0KPiA+IEZyb206IE1pbmdjaHVhbmcgUWlhbyA8
-bWluZ2NodWFuZy5xaWFvQG1lZGlhdGVrLmNvbT4NCj4gPiANCj4gPiBJbiBwY2kgYnVzIHNjYW4g
-ZmxvdywgdGhlIExUUiBtZWNoYW5pc20gZW5hYmxlIGJpdCBvZiBERVZDVEwyIHJlZ2lzdGVyDQo+
-ID4gaXMgY29uZmlndXJlZCBpbiBwY2lfY29uZmlndXJlX2x0cigpLiBJZiBkZXZpY2UgYW5kIGl0
-J3MgYnJpZGdlIGJvdGgNCj4gPiBzdXBwb3J0IExUUiBtZWNoYW5pc20sIExUUiBtZWNoYW5pc20g
-b2YgZGV2aWNlIGFuZCBpdCdzIGJyaWRnZSB3aWxsDQo+ID4gYmUgZW5hYmxlZCBpbiBERVZDVEwy
-IHJlZ2lzdGVyLiBBbmQgdGhlIGZsYWcgcGNpX2Rldi0+bHRyX3BhdGggd2lsbA0KPiA+IGJlIHNl
-dCBhcyAxLg0KPiANCj4gcy9pdCdzL2l0cy8gdHdpY2UgYWJvdmUuDQo+IEl0J3MgPT0gSXQgaXMu
-DQo+IEl0cyA9PSBiZWxvbmdpbmcgdG8gJ2l0Jy4NCj4gV2VpcmQsIEkga25vdywgYnV0IHRoYXQn
-cyBFbmdsaXNoIGZvciB5b3UgOikNCj4gDQo+ID4gRm9yIHNvbWUgcGNpZSBwcm9kdWN0cywgcGNp
-ZSBsaW5rIGJlY29tZXMgZG93biB3aGVuIGRldmljZSByZXNldC4gQW5kIHRoZW4NCj4gPiB0aGUg
-TFRSIG1lY2hhbmlzbSBlbmFibGUgYml0IG9mIGJyaWRnZSB3aWxsIGJlY29tZSAwIGJhc2VkIG9u
-IGRlc2NyaXB0aW9uDQo+ID4gaW4gUENJRSByNC4wLCBzZWMgNy44LjE2LiBIb3dldmVyLCB0aGUg
-cGNpX2Rldi0+bHRyX3BhdGggdmFsdWUgb2YgYnJpZGdlDQo+ID4gaXMgc3RpbGwgMS4gUmVtb3Zl
-IGFuZCByZXNjYW4gZmxvdyBjb3VsZCBiZSB0cmlnZ2VyZWQgdG8gcmVjb3ZlciBhZnRlcg0KPiA+
-IGRldmljZSByZXNldC4gSW4gdGhlIGJ1cyByZXNjYW4gZmxvdywgdGhlIExUUiBtZWNoYW5pc20g
-b2YgZGV2aWNlIHdpbGwgYmUNCj4gPiBlbmFibGVkIGluIHBjaV9jb25maWd1cmVfbHRyKCkgZHVl
-IHRvIGx0cl9wYXRoIG9mIGl0cyBicmlkZ2UgaXMgc3RpbGwgMS4NCj4gDQo+IHMvcGNpZS9QQ0ll
-LyB0d2ljZSBhYm92ZS4NCj4gcy9QQ0lFL1BDSWUvOyBhbHNvIHJlZmVyZW5jZSByNS4wIGluc3Rl
-YWQgb2YgcjQuMCBpZiBwb3NzaWJsZS4NCj4gDQoNClNvcnJ5IGZvciB0aGUgbWlzc3BlbGxpbmcg
-YW5kIGluY29udmVuaWVuY2UuIFRoYW5rcyBmb3IgdGhlIGNvcnJlY3Rpb24NCmFuZCBJIHdpbGwg
-Zm9sbG93IHRoZSBzdWdnZXN0aW9uIGluIGxhdGVyIHBhdGNoLg0KDQo+IFRoaXMgc291bmRzIGxp
-a2UgYSBnZW5lcmFsIHByb2JsZW0gb2YgbW9zdCBkZXZpY2UgY29uZmlnIGJpdHMgYmVpbmcNCj4g
-Y2xlYXJlZCBieSByZXNldC4gIFVzdWFsbHkgdGhlc2UgYXJlIHJlc3RvcmVkIGJ5IHBjaV9yZXN0
-b3JlX3N0YXRlKCkuDQo+IElzIHRoYXQgZnVuY3Rpb24gbWlzc2luZyBhIHJlc3RvcmUgZm9yIFBD
-SV9FWFBfREVWQ1RMMj8gIEknZCByYXRoZXINCj4gaGF2ZSBhIGdlbmVyYWwtcHVycG9zZSB3YXkg
-b2YgcmVzdG9yaW5nIGFsbCB0aGUgY29uZmlnIHN0YXRlIHRoYW4NCj4gbGl0dGxlIHBpZWNlcyBz
-Y2F0dGVyZWQgYWxsIG92ZXIuDQo+IA0KDQpBY3R1YWxseSBpdOKAmXMgbm90IFBDSV9FWFBfREVW
-Q1RMMiByZXN0b3JlIG1pc3NpbmcgaXNzdWUuIFRoZQ0KUENJX0VYUF9ERVZDVEwyIGlzIGNvcnJl
-Y3RseSBzYXZlZC9yZXN0b3JlZCBkdXJpbmcgYnJpZGdlIHJ1bnRpbWUNCnN1c3BlbmQvcmVzdW1l
-Lg0KDQpJdOKAmXMgdGhlIGlzc3VlIHRoYXQgbHRyX3BhdGggdmFsdWUgb2YgdGhlIGJyaWRnZSBt
-aXNtYXRjaGVzIHRoZSBhY3R1YWwNCnZhbHVlIGluIGJyaWRnZeKAmXMgUENJX0VYUF9ERVZDVEwy
-Lg0KDQpIZXJlIGlzIHRoZSBzY2VuYXJpbyBmb3IgdGhlIGlzc3VlOg0KMS5QQ0kgYnVzIHNjYW4g
-ZG9uZQ0KICAgLUZvciBib3RoIFBDSWUgRGV2aWNlIGFuZCBicmlkZ2U6DQogICAgICAtIkxUUiBN
-ZWNoYW5pc20gRW5hYmxlIiBiaXQgaW4gUENJX0VYUF9ERVZDVEwyIGlzIDENCiAgICAgIC0gbHRy
-X3BhdGggdmFsdWUgaXMgMQ0KDQoyLkRldmljZSByZXNldHMgYW5kIFBDSWUgbGluayBpcyBkb3du
-LCB0aGVuICJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0DQpvZiBicmlkZ2UgY2hhbmdlcyB0byAw
-IGFjY29yZGluZyB0byBQQ0llIHI1LjAsIHNlYyA3LjUuMy4xNi4NCiAgIC1UaGUgbHRyX3BhdGgg
-dmFsdWUgb2YgYnJpZGdlIGlzIHN0aWxsIDEgYnV0IHRoZSAiTFRSIE1lY2hhbmlzbQ0KRW5hYmxl
-IiBiaXQgd2l0aGluIFBDSV9FWFBfREVWQ1RMMiBjaGFuZ2VkIHRvIDAuDQoNCjMuVHJpZ2dlciBk
-ZXZpY2UgcmVtb3ZhbCBhbmQgYnJpZGdlIGVudGVycyBydW50aW1lIHN1c3BlbmQgZmxvdy4NCiAg
-IC0iTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdCBvZiBicmlkZ2UgaXMgMCBhbmQgc2F2ZWQgYnkN
-CnBjaV9zYXZlX3N0YXRlKCkuDQoNCjQuVHJpZ2dlciBidXMgcmVzY2FuIGFuZCBicmlkZ2UgZW50
-ZXJzIHJ1bnRpbWUgcmVzdW1lIGZsb3cuDQogICAtIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQg
-b2YgYnJpZGdlIGlzIHJlc3RvcmVkIGJ5DQpwY2lfcmVzdG9yZV9zdGF0ZSgpIGFuZCB0aGUgdmFs
-dWUgaXMgMC4NCg0KNS5TY2FuIGRldmljZSBhbmQgY29uZmlndXJlIGRldmljZSdzIExUUiBpbiBw
-Y2lfY29uZmlndXJlX2x0cigpLg0KICAgLSJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0IG9mIGRl
-dmljZSBpcyBjb25maWd1cmVkIGFzIDEgZHVlIHRvDQpicmlkZ2UncyBsdHJfcGF0aCB2YWx1ZSBp
-cyAxLg0KDQo2LlRoZSAiTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdCBvZiBkZXZpY2UgYW5kIGJy
-aWRnZSBpcyBkaWZmZXJlbnQgbm93Lg0KICAgLVdoZW4gZGV2aWNlIHNlbmRzIExUUiBNZXNzYWdl
-LCBicmlkZ2Ugd2lsbCB0cmVhdCB0aGUgTWVzc2FnZSBhcw0KVW5zdXBwb3J0ZWQgUmVxdWVzdCBh
-Y2NvcmRpbmcgdG8gUENJZSByNS4wLCBzZWMgNi4xOC4NCg0KVGhpcyBwYXRjaCBpcyB1c2VkIHRv
-IG1ha2UgYnJpZGdlJ3MgbHRyX3BhdGggdmFsdWUgbWF0Y2ggIkxUUiBNZWNoYW5pc20NCkVuYWJs
-ZSIgYml0IHdpdGhpbiBERVZDVEwyIHJlZ2lzdGVyIGFuZCBhdm9pZCB0aGUgVW5zdXBwb3J0ZWQg
-UmVxdWVzdC4NCg0KPiA+IFdoZW4gZGV2aWNlJ3MgTFRSIG1lY2hhbmlzbSBpcyBlbmFibGVkLCBk
-ZXZpY2Ugd2lsbCBzZW5kIExUUiBtZXNzYWdlIHRvDQo+ID4gYnJpZGdlLiBCcmlkZ2UgcmVjZWl2
-ZXMgdGhlIGRldmljZSdzIExUUiBtZXNzYWdlIGFuZCBmb3VuZCBicmlkZ2UncyBMVFINCj4gPiBt
-ZWNoYW5pc20gaXMgZGlzYWJsZWQuIFRoZW4gdGhlIGJyaWRnZSB3aWxsIGdlbmVyYXRlIHVuc3Vw
-cG9ydGVkIHJlcXVlc3QNCj4gPiBhbmQgb3RoZXIgZXJyb3IgaGFuZGxpbmcgZmxvdyB3aWxsIGJl
-IHRyaWdnZXJlZCBzdWNoIGFzIEFFUiBOb24tRmF0YWwNCj4gPiBlcnJvciBoYW5kbGluZy4NCj4g
-PiANCj4gPiBUaGlzIHBhdGNoIGlzIHVzZWQgdG8gYXZvaWQgdGhpcyB1bnN1cHBvcnRlZCByZXF1
-ZXN0IGFuZCBtYWtlIHRoZSBicmlkZ2Uncw0KPiA+IGx0cl9wYXRoIHZhbHVlIGlzIGFsaWduZWQg
-d2l0aCBERVZDVEwyIHJlZ2lzdGVyIHZhbHVlLiBDaGVjayBicmlkZ2UNCj4gPiByZWdpc3RlciB2
-YWx1ZSBpZiBhbGlnbmVkIHdpdGggbHRyX3BhdGggaW4gcGNpX2NvbmZpZ3VyZV9sdHIoKS4gSWYN
-Cj4gPiByZWdpc3RlciB2YWx1ZSBpcyBkaXNhYmxlIGFuZCB0aGUgbHRyX3BhdGggaXMgMSwgd2Ug
-bmVlZCBjb25maWd1cmUNCj4gPiB0aGUgcmVnaXN0ZXIgdmFsdWUgYXMgZW5hYmxlLg0KPiA+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IE1pbmdjaHVhbmcgUWlhbyA8bWluZ2NodWFuZy5xaWFvQG1lZGlh
-dGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9wY2kvcHJvYmUuYyB8IDE4ICsrKysrKysr
-KysrKysrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMyBkZWxl
-dGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcHJvYmUuYyBiL2Ry
-aXZlcnMvcGNpL3Byb2JlLmMNCj4gPiBpbmRleCA5NTNmMTVhYmM4NTAuLjQ5MzU1Y2Y0YWY1NCAx
-MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9wcm9iZS5jDQo+ID4gKysrIGIvZHJpdmVycy9w
-Y2kvcHJvYmUuYw0KPiA+IEBAIC0yMTMyLDkgKzIxMzIsMjEgQEAgc3RhdGljIHZvaWQgcGNpX2Nv
-bmZpZ3VyZV9sdHIoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gPiAgCSAqIENvbXBsZXggYW5kIGFs
-bCBpbnRlcm1lZGlhdGUgU3dpdGNoZXMgaW5kaWNhdGUgc3VwcG9ydCBmb3IgTFRSLg0KPiA+ICAJ
-ICogUENJZSByNC4wLCBzZWMgNi4xOC4NCj4gPiAgCSAqLw0KPiA+IC0JaWYgKHBjaV9wY2llX3R5
-cGUoZGV2KSA9PSBQQ0lfRVhQX1RZUEVfUk9PVF9QT1JUIHx8DQo+ID4gLQkgICAgKChicmlkZ2Ug
-PSBwY2lfdXBzdHJlYW1fYnJpZGdlKGRldikpICYmDQo+ID4gLQkgICAgICBicmlkZ2UtPmx0cl9w
-YXRoKSkgew0KPiA+ICsJaWYgKHBjaV9wY2llX3R5cGUoZGV2KSA9PSBQQ0lfRVhQX1RZUEVfUk9P
-VF9QT1JUKSB7DQo+ID4gKwkJcGNpZV9jYXBhYmlsaXR5X3NldF93b3JkKGRldiwgUENJX0VYUF9E
-RVZDVEwyLA0KPiA+ICsJCQkJCSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKTsNCj4gPiArCQlkZXYt
-Pmx0cl9wYXRoID0gMTsNCj4gPiArCQlyZXR1cm47DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJYnJp
-ZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShkZXYpOw0KPiA+ICsJaWYgKGJyaWRnZSAmJiBicmlk
-Z2UtPmx0cl9wYXRoKSB7DQo+ID4gKwkJcGNpZV9jYXBhYmlsaXR5X3JlYWRfZHdvcmQoYnJpZGdl
-LCBQQ0lfRVhQX0RFVkNUTDIsICZjdGwpOw0KPiA+ICsJCWlmICghKGN0bCAmIFBDSV9FWFBfREVW
-Q1RMMl9MVFJfRU4pKSB7DQo+ID4gKwkJCXBjaWVfY2FwYWJpbGl0eV9zZXRfd29yZChicmlkZ2Us
-IFBDSV9FWFBfREVWQ1RMMiwNCj4gPiArCQkJCQkJIFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pOw0K
-PiA+ICsJCX0NCj4gPiArDQo+ID4gIAkJcGNpZV9jYXBhYmlsaXR5X3NldF93b3JkKGRldiwgUENJ
-X0VYUF9ERVZDVEwyLA0KPiA+ICAJCQkJCSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKTsNCj4gPiAg
-CQlkZXYtPmx0cl9wYXRoID0gMTsNCj4gPiAtLSANCj4gPiAyLjE4LjANCj4gPiBfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-DQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsDQoNCg==
+On Sat, Jan 16, 2021 at 12:20 AM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Fri, Jan 15, 2021 at 05:48:59PM -0800, Alexander Duyck wrote:
+> > On Fri, Jan 15, 2021 at 7:53 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > On Fri, Jan 15, 2021 at 10:06:19AM -0400, Jason Gunthorpe wrote:
+> > > > On Thu, Jan 14, 2021 at 05:56:20PM -0800, Alexander Duyck wrote:
+> > > >
+> > > > > That said, it only works at the driver level. So if the firmware is
+> > > > > the one that is having to do this it also occured to me that if this
+> > > > > update happened on FLR that would probably be preferred.
+> > > >
+> > > > FLR is not free, I'd prefer not to require it just for some
+> > > > philosophical reason.
+> > > >
+> > > > > Since the mlx5 already supports devlink I don't see any reason why the
+> > > > > driver couldn't be extended to also support the devlink resource
+> > > > > interface and apply it to interrupts.
+> > > >
+> > > > So you are OK with the PF changing the VF as long as it is devlink not
+> > > > sysfs? Seems rather arbitary?
+> > > >
+> > > > Leon knows best, but if I recall devlink becomes wonky when the VF
+> > > > driver doesn't provide a devlink instance. How does it do reload of a
+> > > > VF then?
+> > > >
+> > > > I think you end up with essentially the same logic as presented here
+> > > > with sysfs.
+> > >
+> > > The reasons why I decided to go with sysfs are:
+> > > 1. This MSI-X table size change is applicable to ALL devices in the world,
+> > > and not only netdev.
+> >
+> > In the PCI world MSI-X table size is a read only value. That is why I
+> > am pushing back on this as a PCI interface.
+>
+> And it stays read-only.
 
+Only if you come at it directly. What this is adding is a back door
+that is visible as a part of the VF sysfs.
+
+> >
+> > > 2. This is purely PCI field and apply equally with same logic to all
+> > > subsystems and not to netdev only.
+> >
+> > Again, calling this "purely PCI" is the sort of wording that has me
+> > concerned. I would prefer it if we avoid that wording. There is much
+> > more to this than just modifying the table size field. The firmware is
+> > having to shift resources between devices and this potentially has an
+> > effect on the entire part, not just one VF.
+>
+> It is internal to HW implementation, dumb device can solve it differently.
+
+That is my point. I am worried about "dumb devices" that may follow. I
+would like to see the steps that should be taken to prevent these sort
+of things called out specifically. Basically this isn't just modifying
+the PCIe config space, it is actually resizing the PBA and MSI-X
+table.
+
+> >
+> > > 3. The sysfs interface is the standard way of configuring PCI/core, not
+> > > devlink.
+> >
+> > This isn't PCI core that is being configured. It is the firmware for
+> > the device. You are working with resources that are shared between
+> > multiple functions.
+>
+> I'm ensuring that "lspci -vv .." will work correctly after such change.
+> It is PCI core responsibility.
+
+The current code doesn't work on anything with a driver loaded on it.
+In addition the messaging provided is fairly minimal which results in
+an interface that will be difficult to understand when it doesn't
+work. In addition there is currently only one piece of hardware that
+works with this interface which is the mlx5. My concern is this is
+adding overhead to all VFs that will not be used by most SR-IOV
+capable devices. In my view it would make much more sense to have a
+top-down approach instead of bottom-up where the PF is registering
+interfaces for the VFs.
+
+If you want yet another compromise I would be much happier with the PF
+registering the sysfs interfaces on the VFs rather than the VFs
+registering the interface and hoping the PF supports it. At least with
+that you are guaranteed the PF will respond to the interface when it
+is registered.
+
+> >
+> > > 4. This is how orchestration software provisioning VFs already. It fits
+> > > real world usage of SR-IOV, not the artificial one that is proposed during
+> > > the discussion.
+> >
+> > What do you mean this is how they are doing it already? Do you have
+> > something out-of-tree and that is why you are fighting to keep the
+> > sysfs? If so that isn't a valid argument.
+>
+> I have Kubernetes and OpenStack, indeed they are not part of the kernel tree.
+> They already use sriov_driver_autoprobe sysfs knob to disable autobind
+> before even starting. They configure MACs and bind VFs through sysfs/netlink
+> already. For them, the read/write of sysfs that is going to be bound to
+> the already created VM with known CPU properties, fits perfectly.
+
+By that argument the same could be said about netlink. What I don't
+get is why it is okay to configure the MAC through netlink but
+suddenly when we are talking about interrupts it is out of the
+question. As far as the binding that is the driver interface which is
+more or less grandfathered in anyway as there aren't too many ways to
+deal with them as there isn't an alternate interface for the drivers
+to define support.
+
+> >
+> > > So the idea to use devlink just because mlx5 supports it, sound really
+> > > wrong to me. If it was other driver from another subsystem without
+> > > devlink support, the request to use devlink won't never come.
+> > >
+> > > Thanks
+> >
+> > I am suggesting the devlink resources interface because it would be a
+> > VERY good fit for something like this. By the definition of it:
+> > ``devlink`` provides the ability for drivers to register resources, which
+> > can allow administrators to see the device restrictions for a given
+> > resource, as well as how much of the given resource is currently
+> > in use. Additionally, these resources can optionally have configurable size.
+> > This could enable the administrator to limit the number of resources that
+> > are used.
+>
+> It is not resource, but HW objects. The devlink doesn't even see the VFs
+> as long as they are not bound to the drivers.
+>
+> This is an example:
+>
+> [root@vm ~]# echo 0 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_drivers_autoprobe
+> [root@vm ~]# echo 0 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_numvfs
+> [ 2370.579711] mlx5_core 0000:01:00.0: E-Switch: Disable: mode(LEGACY), nvfs(2), active vports(3)
+> [root@vm ~]# echo 2 > /sys/bus/pci/devices/0000\:01\:00.0/sriov_numvfs
+> [ 2377.663666] mlx5_core 0000:01:00.0: E-Switch: Enable: mode(LEGACY), nvfs(2), active vports(3)
+> [ 2377.777010] pci 0000:01:00.1: [15b3:101c] type 00 class 0x020000
+> [ 2377.784903] pci 0000:01:00.2: [15b3:101c] type 00 class 0x020000
+> [root@vm ~]# devlink dev
+> pci/0000:01:00.0
+> [root@vm ~]# lspci |grep nox
+> 01:00.0 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6]
+> 01:00.1 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6 Virtual Function]
+> 01:00.2 Ethernet controller: Mellanox Technologies MT28908 Family [ConnectX-6 Virtual Function]
+>
+> So despite us having 2 VFs ready to be given to VMs, administrator doesn't
+> see them as devices.
+
+The MSI-X vectors are a resource assigned to hardware objects. It just
+depends on how you want to look at things. Right now you have the VFs
+register an interface on behalf of the PF. I am arguing it would be
+better to have the PF register an interface on behalf of the VFs.
+Ultimately the PF is responsible for creating the VFs in the first
+place. I don't see it as that much of a leap to have the
+mlx5_sriov_enable call register interfaces for the VFs so that you can
+configure the MSI-X vectors from the PF, and then tear them down
+before it frees the VFs. Having the VFs do the work seems error prone
+since it is assuming the interfaces are there on the PF when in all
+cases but one (mlx5) it currently isn't.
+
+> >
+> > Even looking over the example usage I don't see there being much to
+> > prevent you from applying it to this issue. In addition it has the
+> > idea of handling changes that cannot be immediately applied already
+> > included. Your current solution doesn't have a good way of handling
+> > that and instead just aborts with an error.
+>
+> Yes, because it is HW resource that should be applied immediately to
+> make sure that it is honored, before it is committed to the users.
+
+The problem is you cannot do that at all if the driver is already
+loaded. One advantage of using something like devlink is that you
+could potentially have the VF driver help to coordinate things so you
+could have the case where the VF has the mlx5 driver loaded work
+correctly where you would update the MSI-X vector count and then
+trigger the driver reload via devlink.
+
+> It is very tempting to use devlink everywhere, but it is really wrong
+> tool for this scenario.
+
+We can agree to disagree there. I am not a fan of sysfs being applied
+everywhere either. The problem is it is an easy goto when someone is
+looking for a quick and dirty solution and often leads to more
+problems later as it usually misses critical path locking issues and
+the like.
+
+Especially when it is making a subordinate interface look like the
+MSI-X table size is somehow writable. I would much rather the creation
+of any interface controlled more directly by the PF, or at a minimum
+have the PF registering the interfaces rather than leaving this up to
+the VF in the hopes that the PF provides the functionality needed to
+service the request.
