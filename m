@@ -2,201 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DEBA2FA09F
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 14:02:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E8D82FA19D
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 14:32:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390515AbhARNCF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 08:02:05 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:11402 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391953AbhARM77 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 07:59:59 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DKBfQ713jz7TDD;
-        Mon, 18 Jan 2021 20:58:06 +0800 (CST)
-Received: from [127.0.0.1] (10.69.38.196) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.498.0; Mon, 18 Jan 2021
- 20:59:05 +0800
-Subject: Re: [PATCH v2] PCI: Make sure the bus bridge powered on when scanning
- bus
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <mika.westerberg@linux.intel.com>,
-        <rafael.j.wysocki@intel.com>, <peter@lekensteyn.nl>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-References: <20201211222704.GA111886@bjorn-Precision-5520>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <1c39e614-14a3-2446-b6eb-8c3218f12727@hisilicon.com>
-Date:   Mon, 18 Jan 2021 20:59:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S2404451AbhARN2y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 08:28:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2392217AbhARN2t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 18 Jan 2021 08:28:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7E33D206B5;
+        Mon, 18 Jan 2021 13:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610976485;
+        bh=UmiixWBNdjkivF9FYr78Zj5u4oftJvSEwMizR+p6/xI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=as5qI4UZlYECI4bU/hA/EeenIP9833ek9zOgEhe1lPCGB7xwMlKJfQ4Ef61KFXywS
+         i74e+Y8dbyCyZlMVyMndjsqDgFAEFCf/XMyFVnEldQC5u/6vQLsJAT9ICyuvXMH9Wk
+         wvIg5i1hy/jBoSODXXzNljfI6dcNYtGucDLihwGohxw28T2l0BVUyWvZzbR7KzdKnd
+         /GXmBbtFDM3jt1+yEYKzGJcv6IozhUzCP4/CXVFKMHu3WyBI3HGbKxyxdGZhpVlJbo
+         V3g/O6ha/Dte4WUIdQsgmqs17j34NRa780/odsZzHf0VnsU1Xof6bWbjURq31CF597
+         fE0n8lkgumeaw==
+Date:   Mon, 18 Jan 2021 15:28:00 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>
+Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
+ number of MSI-X vectors
+Message-ID: <20210118132800.GA4835@unreal>
+References: <20210114200825.GR4147@nvidia.com>
+ <CAKgT0UcaRgY4XnM0jgWRvwBLj+ufiabFzKPyrf3jkLrF1Z8zEg@mail.gmail.com>
+ <20210114162812.268d684a@omen.home.shazbot.org>
+ <CAKgT0Ufe1w4PpZb3NXuSxug+OMcjm1RP3ZqVrJmQqBDt3ByOZQ@mail.gmail.com>
+ <20210115140619.GA4147@nvidia.com>
+ <20210115155315.GJ944463@unreal>
+ <CAKgT0UdzCqbLwxSnDTtgha+PwTMW5iVb-3VXbwdMNiaAYXyWzQ@mail.gmail.com>
+ <20210116082031.GK944463@unreal>
+ <CAKgT0UeKiz=gh+djt83GRBGi8qQWTBzs-qxKj_78N+gx-KtkMQ@mail.gmail.com>
+ <20210118072008.GA4843@unreal>
 MIME-Version: 1.0
-In-Reply-To: <20201211222704.GA111886@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.69.38.196]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210118072008.GA4843@unreal>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Mon, Jan 18, 2021 at 09:20:08AM +0200, Leon Romanovsky wrote:
+> On Sun, Jan 17, 2021 at 07:16:30PM -0800, Alexander Duyck wrote:
+> > On Sat, Jan 16, 2021 at 12:20 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > On Fri, Jan 15, 2021 at 05:48:59PM -0800, Alexander Duyck wrote:
+> > > > On Fri, Jan 15, 2021 at 7:53 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > > > >
+> > > > > On Fri, Jan 15, 2021 at 10:06:19AM -0400, Jason Gunthorpe wrote:
+> > > > > > On Thu, Jan 14, 2021 at 05:56:20PM -0800, Alexander Duyck wrote:
 
-any further process shall I make to get this patch merged?
+<...>
 
-Thanks.
+> > If you want yet another compromise I would be much happier with the PF
+> > registering the sysfs interfaces on the VFs rather than the VFs
+> > registering the interface and hoping the PF supports it. At least with
+> > that you are guaranteed the PF will respond to the interface when it
+> > is registered.
+>
+> Thanks a lot, I appreciate it, will take a look now.
 
-On 2020/12/12 6:27, Bjorn Helgaas wrote:
-> On Fri, Sep 25, 2020 at 06:23:06PM +0800, Yicong Yang wrote:
->> When the bus bridge is runtime suspended, we'll fail to rescan
->> the devices through sysfs as we cannot access the configuration
->> space correctly when the bridge is in D3hot.
->> It can be reproduced like:
->>
->> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
->> $ echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
->>
->> 0000:80:00.0 is root port and is runtime suspended and we cannot
->> get 0000:81:00.1 after rescan.
->>
->> Make bridge powered on when scanning the child bus, by adding
->> pm_runtime_get_sync()/pm_runtime_put() in pci_scan_child_bus_extend().
->>
->> A similar issue is met and solved by
->> commit d963f6512e15 ("PCI: Power on bridges before scanning new devices")
->> which rescan the devices through /sys/bus/pci/devices/0000:80:00.0/rescan.
->> The callstack is like:
->>
->> dev_rescan_restore()
->>   pci_rescan_bus()
->>     pci_scan_bridge_extend()
->>       pci_scan_child_bus_extend() /* will wake up the bridge with this patch */
->>
->> With this patch the issue is also resolved, so let's remove the calls of
->> pm_runtime_*() in pci_scan_bridge_extend().
-> 
-> I'm sorry, I feel like an idiot, but I totally lost whatever
-> understanding I had of this patch.  Here's what I *think* I
-> understand:
-> 
-> PCI devices always respond to config transactions unless they're in D3cold,
-> but a bridge only forwards config transactions when it is in D0.  When a
-> bridge is runtime suspended, we can access config space of the bridge
-> itself, but not of anything on its secondary side.  If a bridge is in a
-> low-power state, we must bring it back to D0 before enumerating devices
-> below it.
-> 
-> Prior to d963f6512e15 ("PCI: Power on bridges before scanning new
-> devices"), this rescan could fail if 00:01.0 were suspended:
-> 
->   # echo 1 > /sys/bus/pci/devices/0000:00:01.0/0000:01:00.0/remove
->   # echo 1 > /sys/bus/pci/devices/0000:00:01.0/rescan
-> 
-> d963f6512e15 fixed this with the following addition (call tree at the time):
-> 
->   dev_rescan_store(dev 00:01.0)
->     pci_rescan_bus(bus 00)
->       pci_scan_child_bus(bus 00)
->         for (devfn = 0; devfn < 0x100; devfn += 8)
->           pci_scan_slot(bus 00, dev 00.0, 01.0, etc)
->         list_for_each_entry(dev, &bus->devices)
->           pci_scan_bridge(bus 00, dev 01.0)
->  +          pm_runtime_get_sync(dev 00:01.0)  # enables config below 00:01.0
->             pci_scan_child_bus(bus 01)
->               for (devfn = 0; devfn < 0x100; devfn += 8)
->                 pci_scan_slot(bus 01, dev 00.0, 01.0, etc)
->                   # config read of 01:00.0 fails unless 00:01.0 is in D0
-> 
-> 
-> Now, for *this* patch, I think you're saying that this rescan can
-> still fail:
-> 
->   # echo 1 > /sys/bus/pci/devices/0000:80:00.0/0000:81:00.1/remove
->   # echo 1 > /sys/bus/pci/devices/0000:80:00.0/pci_bus/0000:81/rescan
-> 
-> IIUC, it uses this path:
-> 
->   bus_rescan_store(bus 81)                  # 81 is not a root bus
->     pci_rescan_bus_bridge_resize(80:00.0)   # (bus 81)->self
->       bus = 80:00.0->subordinate
->       pci_scan_child_bus(bus 81)
->         pci_scan_child_bus_extend
->           for (devfn = 0; devfn < 256; devfn += 8)
->             pci_scan_slot(bus 81, dev 00.0)
->               # config read of 81:00.0 fails unless 80:00.0 is in D0
-> 
-> 
-> Am I making any sense?
-> 
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> ---
->> Change since v1:
->> - use an intermediate variable *bridge as suggested
->> - remove the pm_runtime_*() calls in pci_scan_bridge_extend()
->>
->>  drivers/pci/probe.c | 21 ++++++++++++---------
->>  1 file changed, 12 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 03d3712..747a8bc 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -1211,12 +1211,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->>  	u8 fixed_sec, fixed_sub;
->>  	int next_busnr;
->>
->> -	/*
->> -	 * Make sure the bridge is powered on to be able to access config
->> -	 * space of devices below it.
->> -	 */
->> -	pm_runtime_get_sync(&dev->dev);
->> -
->>  	pci_read_config_dword(dev, PCI_PRIMARY_BUS, &buses);
->>  	primary = buses & 0xFF;
->>  	secondary = (buses >> 8) & 0xFF;
->> @@ -1418,8 +1412,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
->>  out:
->>  	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, bctl);
->>
->> -	pm_runtime_put(&dev->dev);
->> -
->>  	return max;
->>  }
->>
->> @@ -2796,11 +2788,19 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->>  	unsigned int used_buses, normal_bridges = 0, hotplug_bridges = 0;
->>  	unsigned int start = bus->busn_res.start;
->>  	unsigned int devfn, fn, cmax, max = start;
->> -	struct pci_dev *dev;
->> +	struct pci_dev *dev, *bridge = bus->self;
->>  	int nr_devs;
->>
->>  	dev_dbg(&bus->dev, "scanning bus\n");
->>
->> +	/*
->> +	 * Make sure the bus bridge is powered on, otherwise we may not be
->> +	 * able to scan the devices as we may fail to access the configuration
->> +	 * space of subordinates.
->> +	 */
->> +	if (bridge)
->> +		pm_runtime_get_sync(&bridge->dev);
->> +
->>  	/* Go find them, Rover! */
->>  	for (devfn = 0; devfn < 256; devfn += 8) {
->>  		nr_devs = pci_scan_slot(bus, devfn);
->> @@ -2913,6 +2913,9 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
->>  		}
->>  	}
->>
->> +	if (bridge)
->> +		pm_runtime_put(&bridge->dev);
->> +
->>  	/*
->>  	 * We've scanned the bus and so we know all about what's on
->>  	 * the other side of any bridges that may be on this bus plus
->> --
->> 2.8.1
->>
-> 
-> .
-> 
+I found only two solutions to implement it in this way.
+Option 1.
+Allow multi entry write to some new sysfs knob that will receive BDF (or another VF
+identification) and vector count. Something like this:
 
+ echo "0000:01:00.2 123" > sriov_vf_msix_count
+
+From one side, that solution is unlikely to be welcomed by Greg KH and from another,
+it will require a lot of boilerplate code to make it safe and correct.
+
+Option 2.
+Create directory under PF device with files writable and organized by VF numbers.
+It is doable, but will cause to code bloat with no gain at all. Cleaner than now,
+it won't be.
+
+Why the current approach with one file per-proper VF device is not good enough?
+
+Thanks
