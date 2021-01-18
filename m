@@ -2,110 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A7702F9BAA
-	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 10:02:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 847EF2F9D0E
+	for <lists+linux-pci@lfdr.de>; Mon, 18 Jan 2021 11:47:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387994AbhARJAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 04:00:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388155AbhARJAr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 04:00:47 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA47EC061575
-        for <linux-pci@vger.kernel.org>; Mon, 18 Jan 2021 01:00:05 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id n10so10505556pgl.10
-        for <linux-pci@vger.kernel.org>; Mon, 18 Jan 2021 01:00:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3k3cvWBqp3yfYjIh9TJOU/QTWyWiEbyVzrpJg7eUzFk=;
-        b=CypnN4xXqqoPD6fZ6ZyEzVUe/XB55DNBfsbqbpVUg7suOG9R0D1GgU0PPjbhuk4z+i
-         yvdUR/YRlZt6mEZUrmlcK97ibeugaABW/PBO/QKVptkEZ+bfDSujj50M4BLk5EpMOi9f
-         fphxUjOQHUKrmgzIWX/o/8ycF03Y07NjjpI/KOZZAlRCHbtm43XCJgs2sP7OxYjDdt6+
-         eFVfU9D8hMJa0SrscBOvFAug6O72cC1kKliGP9o+DHdVIS5zpD9KJYx5XggX1qBzJ0ww
-         gOxzjqWqw0f4aPiGagE/ZxLd2QXEZ4A31H3uuGcR506u2rbN+GSEuApcALTIW60JoknW
-         cZ+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3k3cvWBqp3yfYjIh9TJOU/QTWyWiEbyVzrpJg7eUzFk=;
-        b=D6ScNjU+mup3Ua+Gd7lv+wiseGY/Jh29OOkBsE/u4xteDhg0mTw9P+YvpPU3XHnMsR
-         eLqPxAqMZcuV1g74MAsJoHK6DcFETZhCJZcbvnJbceDhs9a8GCnkj4gxAXsgHt1fq3AK
-         nqX8Z4a8ll0f/SNr9yrOsce1wKnzQdGG0hk2iOSHDy9lWm6jHBHeCFL7LqZsH7FlbVY4
-         5osq2uFJ37IGnQt3/rPNIqORkafbHxa37pZnGLsl+N+PeDpTc5PChRHBjsIDmwjaGL3N
-         pjrROdZkmS6tLb/q9GjA17AaD3zeeiVGYDHz7U0mtybnK6Csykdv+8nyiNuWlhrZnqLT
-         53sg==
-X-Gm-Message-State: AOAM531oSBdWaUtpjvWZDWkK3EDoMs+xNdbQJzi2O9CFcqDTw6Qm3we3
-        KhyRXUlBG7SuAj3iv/phigQdGQ==
-X-Google-Smtp-Source: ABdhPJwRerby7DfvrEpSpJUgKZScBXCGa+EReKk5cv1b0njhy5SmH32VK+27Czea/1J1ebXTIkorrw==
-X-Received: by 2002:a63:5805:: with SMTP id m5mr25120923pgb.352.1610960405257;
-        Mon, 18 Jan 2021 01:00:05 -0800 (PST)
-Received: from localhost.localdomain ([240e:362:42c:4800:8459:4fa0:20cc:1141])
-        by smtp.gmail.com with ESMTPSA id c23sm16087162pgc.72.2021.01.18.00.59.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Jan 2021 01:00:04 -0800 (PST)
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+        id S2388169AbhARKpV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 05:45:21 -0500
+Received: from lucky1.263xmail.com ([211.157.147.132]:49874 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388871AbhARJc1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 04:32:27 -0500
+Received: from localhost (unknown [192.168.167.70])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 3DD38EFBB8;
+        Mon, 18 Jan 2021 17:17:58 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from xxm-vm.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P13518T140326291363584S1610961461018109_;
+        Mon, 18 Jan 2021 17:17:57 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <537c15aae69a0918012960324760c77f>
+X-RL-SENDER: xxm@rock-chips.com
+X-SENDER: xxm@rock-chips.com
+X-LOGIN-NAME: xxm@rock-chips.com
+X-FST-TO: bhelgaas@google.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-System-Flag: 0
+From:   Simon Xue <xxm@rock-chips.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        jean-philippe <jean-philippe@linaro.org>,
-        kenneth-lee-2012@foxmail.com, wangzhou1@hisilicon.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH v2 3/3] PCI: set dma-can-stall for HiSilicon chip
-Date:   Mon, 18 Jan 2021 16:58:36 +0800
-Message-Id: <1610960316-28935-4-git-send-email-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1610960316-28935-1-git-send-email-zhangfei.gao@linaro.org>
-References: <1610960316-28935-1-git-send-email-zhangfei.gao@linaro.org>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Simon Xue <xxm@rock-chips.com>
+Subject: [PATCH 2/3] dt-bindings: rockchip: Add DesignWare based PCIe controller
+Date:   Mon, 18 Jan 2021 17:17:38 +0800
+Message-Id: <20210118091739.247040-2-xxm@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210118091739.247040-1-xxm@rock-chips.com>
+References: <20210118091739.247040-1-xxm@rock-chips.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
-actually on the AMBA bus. These fake PCI devices can support SVA via
-SMMU stall feature, by setting dma-can-stall for ACPI platforms.
-
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+Signed-off-by: Simon Xue <xxm@rock-chips.com>
 ---
-Property dma-can-stall depends on patchset
-https://lore.kernel.org/linux-iommu/20210108145217.2254447-1-jean-philippe@linaro.org/
+ .../bindings/pci/rockchip-dw-pcie.yaml        | 101 ++++++++++++++++++
+ 1 file changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
 
- drivers/pci/quirks.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 873d27f..b866cdf 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1827,10 +1827,23 @@ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_HUAWEI, 0x1610, PCI_CLASS_BRIDGE_PCI
- 
- static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
- {
-+	struct property_entry properties[] = {
-+		PROPERTY_ENTRY_BOOL("dma-can-stall"),
-+		{},
-+	};
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+new file mode 100644
+index 000000000000..fa664cfffb29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -0,0 +1,101 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	if (pdev->revision != 0x21 && pdev->revision != 0x30)
- 		return;
- 
- 	pdev->pasid_no_tlp = 1;
++title: DesignWare based PCIe RC controller on Rockchip SoCs
 +
-+	/*
-+	 * Set the dma-can-stall property on ACPI platforms. Device tree
-+	 * can set it directly.
-+	 */
-+	if (!pdev->dev.of_node &&
-+	    device_add_properties(&pdev->dev, properties))
-+		pci_warn(pdev, "could not add stall property");
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
++maintainers:
++  - Shawn Lin <shawn.lin@rock-chips.com>
++  - Simon Xue <xxm@rock-chips.com>
++
++# We need a select here so we don't match all nodes with 'snps,dw-pcie'
++select:
++  properties:
++    compatible:
++      contains:
++        const: rockchip,rk3568-pcie
++  required:
++    - compatible
++
++properties:
++  compatible:
++    enum:
++      - rockchip,rk3568-pcie
++      - snps,dw-pcie
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: AHB clock for PCIe master
++      - description: AHB clock for PCIe slave
++      - description: AHB clock for PCIe dbi
++      - description: APB clock for PCIe
++      - description: Auxiliary clock for PCIe
++
++  clock-names:
++    items:
++      - const: aclk_mst
++      - const: aclk_slv
++      - const: aclk_dbi
++      - const: pclk
++      - const: aux
++
++  resets:
++    items:
++      - description: PCIe pipe reset line
++
++  reset-names:
++    items:
++      - const: pipe
++
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
++  - bus-range
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - msi-map
++  - num-lanes
++  - phys
++  - phy-names
++  - ranges
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    pcie3x2: pcie@fe280000 {
++      compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
++      #address-cells = <3>;
++      #size-cells = <2>;
++      bus-range = <0x20 0x2f>;
++      reg = <0x3 0xc0800000 0x0 0x400000>,
++            <0x0 0xfe280000 0x0 0x10000>;
++      reg-names = "pcie-dbi", "pcie-apb";
++      clocks = <&cru ACLK_PCIE30X2_MST>, <&cru ACLK_PCIE30X2_SLV>,
++               <&cru ACLK_PCIE30X2_DBI>, <&cru PCLK_PCIE30X2>,
++               <&cru CLK_PCIE30X2_AUX_NDFT>;
++      clock-names = "aclk_mst", "aclk_slv",
++                    "aclk_dbi", "pclk",
++                    "aux";
++      msi-map = <0x2000 &its 0x2000 0x1000>;
++      num-lanes = <2>;
++      phys = <&pcie30phy>;
++      phy-names = "pcie-phy";
++      ranges = <0x00000800 0x0 0x80000000 0x3 0x80000000 0x0 0x800000
++                0x81000000 0x0 0x80800000 0x3 0x80800000 0x0 0x100000
++                0x83000000 0x0 0x80900000 0x3 0x80900000 0x0 0x3f700000>;
++      resets = <&cru SRST_PCIE30X2_POWERUP>;
++      reset-names = "pipe";
++    };
++
++...
 -- 
-2.7.4
+2.25.1
+
+
 
