@@ -2,162 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78EFA2FADB3
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jan 2021 00:12:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39B342FAFA0
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jan 2021 05:54:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404117AbhARXLZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 18 Jan 2021 18:11:25 -0500
-Received: from mx.socionext.com ([202.248.49.38]:16450 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730151AbhARXLY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 18 Jan 2021 18:11:24 -0500
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 19 Jan 2021 08:10:41 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id CA473205902B;
-        Tue, 19 Jan 2021 08:10:41 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 19 Jan 2021 08:10:41 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 7D774B1D40;
-        Tue, 19 Jan 2021 08:10:41 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Rob Herring <robh@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S1730245AbhASEhc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 18 Jan 2021 23:37:32 -0500
+Received: from mail-lf1-f50.google.com ([209.85.167.50]:40048 "EHLO
+        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728481AbhASEdl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 18 Jan 2021 23:33:41 -0500
+Received: by mail-lf1-f50.google.com with SMTP id v24so20577847lfr.7;
+        Mon, 18 Jan 2021 20:33:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6N+mtJnAllpPqS59taAIm6aHXmVEI3uucSUB9g2qkoQ=;
+        b=VIPWjiecJyU8Lw2ZPDoI5NjzdbI72osiUVxaFoEadamdVx1uvG4KozptDDYE37pDQX
+         /JJ6ugdGuGIgS6RnQEJZaYe+AXNjh9Ytk5/NSs6uUmABgqgyoBA2QKx0Qm04iHz88TeL
+         OFWGwJRHR12PJhsVFkMygzsz2NXnZlmW+Da7EZXDEN7oSpw9xvEJXy28QtO950wKSSJl
+         ea/vqVgOKLsTmP0telCJIfpJr5cmw3pD1TlNtplSa6150eX+r64oAEWnRHDFEiZRhZIo
+         305ediMKx3wWKwBuswRqeoLJ7qhyOmCMCVZYNjmmHPeEXAdhDwmpcHeNECg8sUXPxW/1
+         1DiA==
+X-Gm-Message-State: AOAM532zhopB3UiffNqKimlr1cRxcQAJ07cUf6QbJo0nNfxkEEDDgR6D
+        Eb1m9Bj7tcYJkgxsjAvQiB0r2sU8gOU39Q==
+X-Google-Smtp-Source: ABdhPJytOkHd/csUxWnIN9wrsx6Xzf/CwbF8B2rkm2tnFbLQr7/fpL6gx2O0kj9naDGK3tioA8JBOA==
+X-Received: by 2002:a19:991:: with SMTP id 139mr1042089lfj.637.1611030777529;
+        Mon, 18 Jan 2021 20:32:57 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id h1sm2147623lfc.121.2021.01.18.20.32.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jan 2021 20:32:57 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id v24so20577782lfr.7;
+        Mon, 18 Jan 2021 20:32:56 -0800 (PST)
+X-Received: by 2002:ac2:4d44:: with SMTP id 4mr1116418lfp.296.1611030776537;
+ Mon, 18 Jan 2021 20:32:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20210106134617.391-1-wens@kernel.org>
+In-Reply-To: <20210106134617.391-1-wens@kernel.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 19 Jan 2021 12:32:45 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64oCaS14ATUi+y6ZQTkZCqGxnskM=zFkoQp_-jVanu_Vw@mail.gmail.com>
+Message-ID: <CAGb2v64oCaS14ATUi+y6ZQTkZCqGxnskM=zFkoQp_-jVanu_Vw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] arm64: rockchip: Fix PCIe ep-gpios requirement and
+ Add Nanopi M4B
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2] PCI: designware-ep: Fix the reference to pci->num_{ib,ob}_windows before setting
-Date:   Tue, 19 Jan 2021 08:10:39 +0900
-Message-Id: <1611011439-29881-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+Cc:     Chen-Yu Tsai <wens@kernel.org>, Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Johan Jonker <jbx6244@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The commit 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows") gets
-the values of pci->num_ib_windows and pci->num_ob_windows from iATU
-registers instead of DT properties in dw_pcie_iatu_detect_regions*() or its
-unroll version.
+Hi,
 
-However, before the values are set, the allocations in dw_pcie_ep_init()
-refer them to determine the sizes of window_map. As a result, null pointer
-dereference exception will occur when linking the EP function and the
-controller.
+On Wed, Jan 6, 2021 at 9:46 PM Chen-Yu Tsai <wens@kernel.org> wrote:
+>
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> Hi everyone,
+>
+> This is v3 of my Nanopi M4B series. Changes since v2 include:
+>
+>   - Replaced dev_err() with dev_err_probe() for gpiod_get_optional() error
+>   - Added Reviewed-by tag from Robin Murphy for patch 3
+>
+> Changes since v1 include:
+>
+>   - Rewrite subject of patch 1 to match existing convention and reference
+>     'ep-gpios' DT property instead of the 'ep_gpio' field
+>
+> This series mainly adds support for the new Nanopi M4B, which is a newer
+> variant of the Nanopi M4.
+>
+> The differences against the original Nanopi M4 that are common with the
+> other M4V2 revision include:
+>
+>   - microphone header removed
+>   - power button added
+>   - recovery button added
+>
+> Additional changes specific to the M4B:
+>
+>   - USB 3.0 hub removed; board now has 2x USB 3.0 type-A ports and 2x
+>     USB 2.0 ports
+>   - ADB toggle switch added; this changes the top USB 3.0 host port to
+>     a peripheral port
+>   - Type-C port no longer supports data or PD
+>   - WiFi/Bluetooth combo chip switched to AP6256, which supports BT 5.0
+>     but only 1T1R (down from 2T2R) for WiFi
+>
+> While working on this, I found that for the M4 family, the PCIe reset
+> pin (from the M.2 expansion board) was not wired to the SoC. Only the
+> NanoPC T4 has this wired. This ended up in patches 1 and 3.
+>
+> Patch 1 makes ep_gpio in the Rockchip PCIe driver optional. This property
+> is optional in the DT binding, so this just makes the driver adhere to
+> the binding.
+>
+> Patch 2 adds a new compatible string for the new board.
+>
+> Patch 3 moves the ep-gpios property of the pcie controller from the
+> common nanopi4.dtsi file to the nanopc-t4.dts file.
+>
+> Patch 4 adds a new device tree file for the new board. It includes the
+> original device tree for the M4, and then lists the differences.
+>
+> Given that patch 3 would make PCIe unusable without patch 1, I suggest
+> merging patch 1 through the PCI tree as a fix for 5.10, and the rest
+> for 5.11 through the Rockchip tree.
 
-  # ln -s functions/pci_epf_test/test controllers/66000000.pcie-ep/
-  Unable to handle kernel NULL pointer dereference at virtual address
-  0000000000000010
+Gentle ping. I would really like to get the PCIe controller fix merged
+before -rc6 (cut-off for arm-soc -next) and be able to get the new board
+into 5.12. Or we could have all of them merged for 5.12, though depending
+on the order the PRs are sent and merged by Linus there would be a possible
+window where PCIe doesn't work for the Nanopi M4's.
 
-The call trace is as follows:
 
-  Call trace:
-   _find_next_bit.constprop.1+0xc/0x88
-   dw_pcie_ep_set_bar+0x78/0x1f8
-   pci_epc_set_bar+0x9c/0xe8
-   pci_epf_test_core_init+0xe8/0x220
-   pci_epf_test_bind+0x1e0/0x378
-   pci_epf_bind+0x54/0xb0
-   pci_epc_epf_link+0x58/0x80
-   configfs_symlink+0x1c0/0x570
-   vfs_symlink+0xdc/0x198
-   do_symlinkat+0xa0/0x110
-   __arm64_sys_symlinkat+0x28/0x38
-   el0_svc_common+0x84/0x1a0
-   do_el0_svc+0x38/0x88
-   el0_svc+0x1c/0x28
-   el0_sync_handler+0x88/0xb0
-   el0_sync+0x140/0x180
+Thanks
+ChenYu
 
-The pci->num_{ib,ob}_windows should be referenced after they are set by
-dw_pcie_iatu_detect_regions*() called from dw_pcie_setup().
-
-Cc: Rob Herring <robh@kernel.org>
-Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 41 ++++++++++++-------------
- 1 file changed, 20 insertions(+), 21 deletions(-)
-
-Changed since v1:
-- Add description of exception to commit message
-- Change the subject
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index bcd1cd9..adc7ca5 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -638,6 +638,7 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct device *dev = pci->dev;
- 	unsigned int offset;
- 	unsigned int nbars;
- 	u8 hdr_type;
-@@ -669,6 +670,25 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 	dw_pcie_setup(pci);
- 	dw_pcie_dbi_ro_wr_dis(pci);
- 
-+	ep->ib_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ib_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ib_window_map)
-+		return -ENOMEM;
-+
-+	ep->ob_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ob_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ob_window_map)
-+		return -ENOMEM;
-+
-+	ep->outbound_addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-+			    GFP_KERNEL);
-+	if (!ep->outbound_addr)
-+		return -ENOMEM;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
-@@ -676,7 +696,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
- int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- {
- 	int ret;
--	void *addr;
- 	u8 func_no;
- 	struct resource *res;
- 	struct pci_epc *epc;
-@@ -714,26 +733,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	ep->phys_base = res->start;
- 	ep->addr_size = resource_size(res);
- 
--	ep->ib_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ib_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ib_window_map)
--		return -ENOMEM;
--
--	ep->ob_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ob_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ob_window_map)
--		return -ENOMEM;
--
--	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
--			    GFP_KERNEL);
--	if (!addr)
--		return -ENOMEM;
--	ep->outbound_addr = addr;
--
- 	if (pci->link_gen < 1)
- 		pci->link_gen = of_pci_get_max_link_speed(np);
- 
--- 
-2.7.4
-
+> Please have a look. The changes are mostly trivial.
+>
+>
+> Regards
+> ChenYu
+>
+> Chen-Yu Tsai (4):
+>   PCI: rockchip: Make 'ep-gpios' DT property optional
+>   dt-bindings: arm: rockchip: Add FriendlyARM NanoPi M4B
+>   arm64: dts: rockchip: nanopi4: Move ep-gpios property to nanopc-t4
+>   arm64: dts: rockchip: rk3399: Add NanoPi M4B
+>
+>  .../devicetree/bindings/arm/rockchip.yaml     |  1 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+>  .../boot/dts/rockchip/rk3399-nanopc-t4.dts    |  1 +
+>  .../boot/dts/rockchip/rk3399-nanopi-m4b.dts   | 52 +++++++++++++++++++
+>  .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |  1 -
+>  drivers/pci/controller/pcie-rockchip.c        |  5 +-
+>  6 files changed, 58 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
+>
+> --
+> 2.29.2
+>
