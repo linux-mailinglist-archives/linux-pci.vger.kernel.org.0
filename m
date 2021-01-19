@@ -2,134 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2206F2FB137
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jan 2021 07:25:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4389C2FB1B0
+	for <lists+linux-pci@lfdr.de>; Tue, 19 Jan 2021 07:41:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbhASGUc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Jan 2021 01:20:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58266 "EHLO mail.kernel.org"
+        id S1727860AbhASGjG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jan 2021 01:39:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731911AbhASFob (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 19 Jan 2021 00:44:31 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0A50420707;
-        Tue, 19 Jan 2021 05:43:49 +0000 (UTC)
+        id S1732677AbhASFkR (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 19 Jan 2021 00:40:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DCFBD20707;
+        Tue, 19 Jan 2021 05:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611035030;
-        bh=ARoB+UWuVqmI6HBQVjLPKm6Lz3T27r5zvxMQw3PNPH0=;
+        s=k20201202; t=1611034775;
+        bh=30QA8sfSITs3gpwA/1iUXVHhw489NQgc3I22GSDkfmA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TTpW4hvXm+IFVIW9dl8WNqoeNjIGEUumWZR0/gXNjhwW8Dvd3gqVLPF1ZBJCbJA9X
-         BDi5qJhhlbJ1ZmVDoRPzSk/aEMnI4arRljiMdKscGlvENdHoSap+RMXiEbGjJIUKo9
-         ZDvBgxWsE0tGFErVuaSJTKwHuBBWfFtg291lx5nuC63rpEnqLAZDgsHyoVnfWRbECw
-         19q6uFVz52tkiIepIwqWLgz4KAXl2LpPd2sslP/ghmXAdZXZN6mPMW8BpEGmJZgND9
-         GWvdOarmW5kBFldXfvUflBx4rygRmNvMHPMCs2tMXjuILIB+1DwpmAIdjb+5b83fJr
-         HQlPWtlY3dMhQ==
-Date:   Tue, 19 Jan 2021 07:43:46 +0200
+        b=GStJBH73usYbmfGoHh7ojXBl3SErt/0PQPdS80ZofKrM9VIsxdZMu1ql/trUXMRr5
+         OgSP6RlJHTK83iiX9O0SywESB13dBGDJxAvw5gkyEIJ9mxkORGH5v5UORsfYs5tDXV
+         JAmIzBctzrBW3oRFbWu9DB9IjHV1tVwcbVwjAtS/J4u3xB7tySqIo7oENCmoiMpYfm
+         NlYl6m4/yQFth61wxD8CgY5NqO82F6OoEbNTqkZZ9QdS3gLbMjNSMYVI4G7O3CE8If
+         LdrmLnbsiM65Wk/UT2HQhEgeBUwi/EB8zNgiwPpTJ3oG5EkItJMqxW4yW7MtoLOhT5
+         NxLeiO8+W5bAA==
+Date:   Tue, 19 Jan 2021 07:39:31 +0200
 From:   Leon Romanovsky <leon@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Saeed Mahameed <saeedm@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>
-Subject: Re: [PATCH mlx5-next v1 2/5] PCI: Add SR-IOV sysfs entry to read
- number of MSI-X vectors
-Message-ID: <20210119054346.GD21258@unreal>
-References: <20210114162812.268d684a@omen.home.shazbot.org>
- <CAKgT0Ufe1w4PpZb3NXuSxug+OMcjm1RP3ZqVrJmQqBDt3ByOZQ@mail.gmail.com>
- <20210115140619.GA4147@nvidia.com>
- <20210115155315.GJ944463@unreal>
- <CAKgT0UdzCqbLwxSnDTtgha+PwTMW5iVb-3VXbwdMNiaAYXyWzQ@mail.gmail.com>
- <20210116082031.GK944463@unreal>
- <CAKgT0UeKiz=gh+djt83GRBGi8qQWTBzs-qxKj_78N+gx-KtkMQ@mail.gmail.com>
- <20210118072008.GA4843@unreal>
- <20210118132800.GA4835@unreal>
- <CAKgT0UeYb5xz8iehE1Y0s-cyFbsy46bjF83BkA7qWZMkAOLR-g@mail.gmail.com>
+        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [PATCH mlx5-next v2 0/5] Dynamically assign MSI-X vectors count
+Message-ID: <20210119053931.GC21258@unreal>
+References: <20210114103140.866141-1-leon@kernel.org>
+ <20210114095128.0f388f08@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20210117054409.GQ944463@unreal>
+ <20210117072441.GA1242829@unreal>
+ <20210118100732.51803b06@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgT0UeYb5xz8iehE1Y0s-cyFbsy46bjF83BkA7qWZMkAOLR-g@mail.gmail.com>
+In-Reply-To: <20210118100732.51803b06@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 10:21:03AM -0800, Alexander Duyck wrote:
-> On Mon, Jan 18, 2021 at 5:28 AM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Mon, Jan 18, 2021 at 09:20:08AM +0200, Leon Romanovsky wrote:
-> > > On Sun, Jan 17, 2021 at 07:16:30PM -0800, Alexander Duyck wrote:
-> > > > On Sat, Jan 16, 2021 at 12:20 AM Leon Romanovsky <leon@kernel.org> wrote:
+On Mon, Jan 18, 2021 at 10:07:32AM -0800, Jakub Kicinski wrote:
+> On Sun, 17 Jan 2021 09:24:41 +0200 Leon Romanovsky wrote:
+> > On Sun, Jan 17, 2021 at 07:44:09AM +0200, Leon Romanovsky wrote:
+> > > On Thu, Jan 14, 2021 at 09:51:28AM -0800, Jakub Kicinski wrote:
+> > > > On Thu, 14 Jan 2021 12:31:35 +0200 Leon Romanovsky wrote:
+> > > > > The number of MSI-X vectors is PCI property visible through lspci, that
+> > > > > field is read-only and configured by the device.
 > > > > >
-> > > > > On Fri, Jan 15, 2021 at 05:48:59PM -0800, Alexander Duyck wrote:
-> > > > > > On Fri, Jan 15, 2021 at 7:53 AM Leon Romanovsky <leon@kernel.org> wrote:
-> > > > > > >
-> > > > > > > On Fri, Jan 15, 2021 at 10:06:19AM -0400, Jason Gunthorpe wrote:
-> > > > > > > > On Thu, Jan 14, 2021 at 05:56:20PM -0800, Alexander Duyck wrote:
-> >
-> > <...>
-> >
-> > > > If you want yet another compromise I would be much happier with the PF
-> > > > registering the sysfs interfaces on the VFs rather than the VFs
-> > > > registering the interface and hoping the PF supports it. At least with
-> > > > that you are guaranteed the PF will respond to the interface when it
-> > > > is registered.
+> > > > > The static assignment of an amount of MSI-X vectors doesn't allow utilize
+> > > > > the newly created VF because it is not known to the device the future load
+> > > > > and configuration where that VF will be used.
+> > > > >
+> > > > > The VFs are created on the hypervisor and forwarded to the VMs that have
+> > > > > different properties (for example number of CPUs).
+> > > > >
+> > > > > To overcome the inefficiency in the spread of such MSI-X vectors, we
+> > > > > allow the kernel to instruct the device with the needed number of such
+> > > > > vectors, before VF is initialized and bounded to the driver.
+> > > >
+> > > >
+> > > > Hi Leon!
+> > > >
+> > > > Looks like you got some missing kdoc here, check out the test in
+> > > > patchwork so we don't need to worry about this later:
+> > > >
+> > > > https://patchwork.kernel.org/project/netdevbpf/list/?series=414497
 > > >
-> > > Thanks a lot, I appreciate it, will take a look now.
-> >
-> > I found only two solutions to implement it in this way.
-> > Option 1.
-> > Allow multi entry write to some new sysfs knob that will receive BDF (or another VF
-> > identification) and vector count. Something like this:
-> >
-> >  echo "0000:01:00.2 123" > sriov_vf_msix_count
-> >
-> > From one side, that solution is unlikely to be welcomed by Greg KH and from another,
-> > it will require a lot of boilerplate code to make it safe and correct.
+> > > Thanks Jakub,
+> > >
+> > > I'll add kdocs to internal mlx5 functions.
+> > > IMHO, they are useless.
 >
-> You are overthinking this. I didn't say the sysfs had to be in the PF
-> directory itself. My request was that the PF is what placed the sysfs
-> file in the directory since indirectly it is responsible for spawning
-> the VF anyway it shouldn't be too much of a lift to have the PF place
-> sysfs files in the VF hierarchy.
->
-> The main piece I am not a fan of is the fact that the VF is blindly
-> registering an interface and presenting it without knowing if it even
-> works.
->
-> The secondary issue that I see as important, but I am willing to
-> compromise on is that the interface makes it appear as though the VF
-> configuration space is writable via this sysfs file. My preference
-> would be to somehow make it transparent that the PF is providing this
-> functionality. I thought it might be easier to do with devlink rather
-> than with sysfs which is why I have been preferring devlink. However
-> based on your pushback I am willing to give up on that, but I think we
-> still need to restructure how the sysfs is being managed.
->
-> > Option 2.
-> > Create directory under PF device with files writable and organized by VF numbers.
-> > It is doable, but will cause to code bloat with no gain at all. Cleaner than now,
-> > it won't be.
-> >
-> > Why the current approach with one file per-proper VF device is not good enough?
->
-> Because it is muddying the waters in terms of what is control taking
-> place from the VF versus the PF. In my mind the ideal solution if you
-> insist on going with the VF sysfs route would be to look at spawning a
-> directory inside the VF sysfs specifically for all of the instances
-> that will be PF management controls. At least that would give some
-> hint that this is a backdoor control and not actually interacting with
-> the VF PCI device directly. Then if in the future you have to add more
-> to this you have a spot already laid out and the controls won't be
-> mistaken for standard PCI controls as they are PF management controls.
->
-> In addition you could probably even create a directory on the PF with
-> the new control you had added for getting the master count as well as
-> look at adding symlinks to the VF files so that you could manage all
-> of the resources in one spot. That would result in the controls being
-> nicely organized and easy to use.
+> It's just scripts/kernel-doc, and it's checking if the kdoc is _valid_,
+> your call if you want to add kdoc, just a comment, or nothing at all.
 
-Thanks, for you inputs.
+I prefer clean CI, so will add.
 
-I'll try offline different variants and will post v4 soon.
+>
+> > At the end, it looks like CI false alarm.
+> >
+> > drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:81: warning: Function parameter or member 'dev' not described in 'mlx5_set_msix_vec_count'
+> > drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:81: warning: Function parameter or member 'function_id' not described in 'mlx5_set_msix_vec_count'
+> > drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c:81: warning: Function parameter or member 'msix_vec_count' not described in 'mlx5_set_msix_vec_count'
+> > New warnings added
+> >
+> > The function mlx5_set_msix_vec_count() is documented.
+> > +/**
+> > + * mlx5_set_msix_vec_count() - Set dynamically allocated MSI-X to the VF
+> > + * @dev - PF to work on
+> > + * @function_id - internal PCI VF function id
+> > + * @msix_vec_count - Number of MSI-X to set
+> > + **/
+> > +int mlx5_set_msix_vec_count(struct mlx5_core_dev *dev, int function_id,
+> > +			    int msix_vec_count)
+> > https://patchwork.kernel.org/project/netdevbpf/patch/20210114103140.866141-5-leon@kernel.org/
+>
+> AFAIU that's not valid kdoc, I _think_ you need to replace ' -' with ':'
+> for arguments (not my rules).
+
+Right, I figured it when submitted v3.
+
+Thanks
