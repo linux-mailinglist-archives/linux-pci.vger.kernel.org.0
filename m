@@ -2,94 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0596A2FD9A1
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 20:29:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 887672FD9AC
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 20:33:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392227AbhATT2M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jan 2021 14:28:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392421AbhATT2J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jan 2021 14:28:09 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E8DC061757
-        for <linux-pci@vger.kernel.org>; Wed, 20 Jan 2021 11:27:29 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id ox12so10826225ejb.2
-        for <linux-pci@vger.kernel.org>; Wed, 20 Jan 2021 11:27:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tFCMdgvZedWspt+wwjfwNdDyL/Ze+wNdJzREDBLW6Fk=;
-        b=nMGspExDUuX235k2+XQanleBXymdTcxWKYQ4yt3evkAQD8sCqFjkN7MziIuY090VGl
-         426mCCktSx1rp4apsLSJzVTg81exHVPASk4qRZtVT27xpal1feB4LPBtYkv3kSV2HnJM
-         SwQ8F8bDk09D6EOyoMgRYxCZAV+wYxqYLv0XJ+vTif6R3fGcx8rPtz1IJsEmtc5qpC1c
-         9/8F1YgUtg0WHBDmpDd8VtlZdEKGoI4RreXa2veB8HWg7kwxsOa6QJlxJnRHX+17fXqm
-         AT0FYPo26h38iIqGYhB2zhE6tBg/TAuEJDeW3zYHfDgHAdMOXiAM692bclwDrkFJeT4Y
-         jt5Q==
+        id S1731278AbhATTWW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jan 2021 14:22:22 -0500
+Received: from mail-wm1-f45.google.com ([209.85.128.45]:36995 "EHLO
+        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388671AbhATSsy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jan 2021 13:48:54 -0500
+Received: by mail-wm1-f45.google.com with SMTP id c128so3759073wme.2
+        for <linux-pci@vger.kernel.org>; Wed, 20 Jan 2021 10:48:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tFCMdgvZedWspt+wwjfwNdDyL/Ze+wNdJzREDBLW6Fk=;
-        b=YzoyirfuqXt1YfIh28F+hnTUj+54prCprAOFQ4OA/yJyVurcXeZaAfF63YjzSL4Eyv
-         5qToltIrUnWIHaNJdzOA1sMiiWDK4eEzreuQiyaeoiCrY1AYt+3A4dbEBJGDqLUQ3WOG
-         6CGkwrwPb+IF/eBPuszs8npRj2bk9hGjLZo/W737VibzWpftusRngYB/BxWg08GS0OKd
-         S+x+Qd2QNYfRgrCqyqITyGjvWTBxIP8tvoNc/rKykGQy06F4Y15DXVRc0O+0uO6TIhmX
-         HxRwIoIH3c2yONdaL22xgWMpNict7oiMxHhuTLGY9+kmzBGSjqOYLt6lOHzUNmTYz3pu
-         f9DA==
-X-Gm-Message-State: AOAM53184DvNdeYjdt/p+eCWGS/36mm3Nx3oXhXLHTZ7q+CTf6vCkKln
-        DLxs3nza3EiJ/wx/sYfOiudtC1xjs24EJVNc9KpV0w==
-X-Google-Smtp-Source: ABdhPJwM9p+beeUOnARUSMidOhUstigJfZ7qhz2P2ZIlv/8e3wdhXKdXxrWIddFKnIObRClHkNIPZbjsZjpLRCiqKJc=
-X-Received: by 2002:a17:906:ce49:: with SMTP id se9mr7146939ejb.341.1611170847785;
- Wed, 20 Jan 2021 11:27:27 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uxPmbiajECo9YExCxiewn6BUGuPfDNtaPp5Y2cOf+vw=;
+        b=UKxlCiRSJDq4U13Cp5Eii6miOwNPrU9cZLiCptY7X/jdRhB+XkeoHOkIWoVnZJAlPr
+         jY63oCpJrrOBi4Bc+tq+Qdl1Rbuje7rj9MoSMQ1x5yvBHUhV8ak9thEfbfxmUrh0sE+R
+         67dCHyHb0t000AT1aUc5MI/FiEyj+sj/Jze68uSKOXZvgYgw0dWLgB3JmF0QaMljBaNs
+         tt5q21fKYvkunuWhxpUP+yYwWjZ9kHtBbbPWIr3lWzsnq4nHFDPNUaMRQ2eKDU/TB37g
+         BZTmFMQFje5e1NNhkoQzkaiUa0WUaTp8U/8TbllLs0sxW4TJ+tL6q5MQd77i3yIZRfK+
+         yhzw==
+X-Gm-Message-State: AOAM53016P27wkqIguveE5v0guoACS9hrHDsUdo1vaFN/loJUWJBdYLl
+        DFmBiHBTtK2tQ7hyPPG7wck=
+X-Google-Smtp-Source: ABdhPJwtn2xpshugzYAvflARryBYa82pNPYQWztaOHR67Bzcg8Dpc4zdRyBK9jvQ3DfPLD+GcFYXig==
+X-Received: by 2002:a1c:c90c:: with SMTP id f12mr5726969wmb.98.1611168492620;
+        Wed, 20 Jan 2021 10:48:12 -0800 (PST)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id v11sm5466474wrt.25.2021.01.20.10.48.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jan 2021 10:48:11 -0800 (PST)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: mediatek: Add missing of_node_put() to fix reference leak
+Date:   Wed, 20 Jan 2021 18:48:10 +0000
+Message-Id: <20210120184810.3068794-1-kw@linux.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-References: <20210111225121.820014-1-ben.widawsky@intel.com>
- <20210111225121.820014-3-ben.widawsky@intel.com> <20210112184355.00007632@Huawei.com>
- <CAPcyv4hcppMZ2L8W8arUKmbCo0r=_yZggrnsj3w-Jgszjn=ZoA@mail.gmail.com> <MWHPR11MB1599E92A457AF6D103EECB06F0A90@MWHPR11MB1599.namprd11.prod.outlook.com>
-In-Reply-To: <MWHPR11MB1599E92A457AF6D103EECB06F0A90@MWHPR11MB1599.namprd11.prod.outlook.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 20 Jan 2021 11:27:21 -0800
-Message-ID: <CAPcyv4gyuw7U1YFCSUbyY=xRe4EPVbKHqxJUUaXP1oHtEeEwtA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 02/16] cxl/acpi: Add an acpi_cxl module for the CXL interconnect
-To:     "Kaneda, Erik" <erik.kaneda@intel.com>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Widawsky, Ben" <ben.widawsky@intel.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "daniel.lll@alibaba-inc.com" <daniel.lll@alibaba-inc.com>,
-        "Moore, Robert" <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 9:55 AM Kaneda, Erik <erik.kaneda@intel.com> wrote:
-[..]
-> > The supplemental tables described here:
-> >
-> > https://www.uefi.org/acpi
-> >
-> > ...do eventually make there way into ACPICA. Added Bob and Erik in
-> > case they can comment on when CEDT and CDAT support will be picked up.
->
-> We would be happy to add support. I think Ben has reached out to me earli=
-er about something like this but I haven=E2=80=99t had a chance to implemen=
-t... Sorry about the delay.. How soon is the iASL/ACPICA support needed for=
- CDAT and CDET?
+The for_each_available_child_of_node helper internally makes use of the
+of_get_next_available_child() which performs an of_node_get() on each
+iteration when searching for next available child node.
 
-CDAT and CEDT definitions in include/acpi/actbl* would be useful as
-soon as v5.12. If that's too soon I don't think we're blocked, but the
-driver is fast approaching the point where it needs to consult these
-tables to enable higher order functionality.
+Should an available child node be found, then it would return a device
+node pointer with reference count incremented, thus early return from
+the middle of the loop requires an explicit of_node_put() to prevent
+reference count leak.
+
+To stop the reference leak, explicitly call of_node_put() before
+returning after an error occurred.
+
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/pcie-mediatek.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+index cf4c18f0c25a..23548b517e4b 100644
+--- a/drivers/pci/controller/pcie-mediatek.c
++++ b/drivers/pci/controller/pcie-mediatek.c
+@@ -1035,14 +1035,14 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
+ 		err = of_pci_get_devfn(child);
+ 		if (err < 0) {
+ 			dev_err(dev, "failed to parse devfn: %d\n", err);
+-			return err;
++			goto error_put_node;
+ 		}
+ 
+ 		slot = PCI_SLOT(err);
+ 
+ 		err = mtk_pcie_parse_port(pcie, child, slot);
+ 		if (err)
+-			return err;
++			goto error_put_node;
+ 	}
+ 
+ 	err = mtk_pcie_subsys_powerup(pcie);
+@@ -1058,6 +1058,9 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
+ 		mtk_pcie_subsys_powerdown(pcie);
+ 
+ 	return 0;
++error_put_node:
++	of_node_put(child);
++	return err;
+ }
+ 
+ static int mtk_pcie_probe(struct platform_device *pdev)
+-- 
+2.30.0
+
