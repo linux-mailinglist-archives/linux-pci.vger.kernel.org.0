@@ -2,236 +2,352 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85CE12FCF3C
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 13:01:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 897B72FCF52
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 13:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbhATLVO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jan 2021 06:21:14 -0500
-Received: from mga03.intel.com ([134.134.136.65]:24710 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731020AbhATKFM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 20 Jan 2021 05:05:12 -0500
-IronPort-SDR: boxfYtlhInPz685jUte/R6GFzUJjFLjD7X2ToFUVA6whHFEI9FY3+qljfHIJZDInqe91Mzfti/
- MUtX4WoZdWWg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9869"; a="179164688"
-X-IronPort-AV: E=Sophos;i="5.79,360,1602572400"; 
-   d="scan'208";a="179164688"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 02:04:30 -0800
-IronPort-SDR: JHezPY0bu7q+2njJDgwnEAfhkbNzGWELq4XtIKQ03NKgViXOxSHfkVyD5YrF3VWiXZOVe6gzzA
- o5d5r10CTrmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,360,1602572400"; 
-   d="scan'208";a="402689171"
-Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Jan 2021 02:04:29 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 20 Jan 2021 02:04:29 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 20 Jan 2021 02:04:29 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 20 Jan 2021 02:04:29 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.46) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Wed, 20 Jan 2021 02:04:28 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aHt85hEmO4gbN9H8BIr9daQkd5Asp35eRT7Ge2is4BnUdo0dfwSAWHhpw2NZ/5zLyiEJ+Z7kTQE1GW3pQD3qonYi7LXTWU36JAItaSwglagN4DJ830YExGPHB1lBSQqMeilknLjJvRY7XPwuMebdrWEU+9ajGUKhj/YH0p2CYDPnKA02j9XWpI2ZOsRGmuLq+1g/Ziw9OZuxunAjZgEX4nGdeShuQw/aNyitwo89AbkCNZGY9MpbwdUx7olmcRLCR4DcbXgr1q/7xxWjyWuLTcM/rOvVq3uCsx1/D9Un1zKPr7ChsnJ+JNDmoPfv1Y9yqCoMWtqdnreyZep8kQqgnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EamwKu1JIt1LjdR/XcJLuTR4pqedQ8vREzBYDaDKwnE=;
- b=XP4EZIxigAWqQukCjM8n5zYw/538HWgr+bbIecNEU15WvN/ztUBIxGDQCARJ1/WRoKdqqPwqDiP+/u8M3axpANMR2qO18tUpOzukFdTCulzsdImlhra4DZ4s+foO8BUFl9YVbCjjJ11yY1CSn/PhrlPvl2YO1li8Q8I0bPd8XhRVDBrVeghUh1dDVgIEwCP0wXYgqRxY1+LKEZnyBGXugPZ1Ixso6/o/c5/ksRe57kDbH6bvDSgiPJSNyBCJB+ElXBK7PL9RrGET3G2auMnsHkB+Ko9lF0FXpwYxy1W4VHjAqSdEJbQ8IgbKAc+3uBiZpaAKlFrIE8qvLqWquntIog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EamwKu1JIt1LjdR/XcJLuTR4pqedQ8vREzBYDaDKwnE=;
- b=FRMeC79E6QL3OADGdM8zTSYHes+/8ygglYmZuQFB+kbUiHjbeezNuEez06j1cYyhMyIUmvyrHw61nUXuzbHe03OpgNwHwkRV8WF3ge5JkW9VQyxdS7CB3i0LDYhx62ec2L6r6iFLCRdOGA84qnTJI9Mx9cfj3Pzvy3dIsFQfED4=
-Received: from SN6PR11MB3421.namprd11.prod.outlook.com (2603:10b6:805:cd::27)
- by SN6PR11MB3343.namprd11.prod.outlook.com (2603:10b6:805:ba::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.14; Wed, 20 Jan
- 2021 10:04:27 +0000
-Received: from SN6PR11MB3421.namprd11.prod.outlook.com
- ([fe80::910b:5087:a18e:f19]) by SN6PR11MB3421.namprd11.prod.outlook.com
- ([fe80::910b:5087:a18e:f19%6]) with mapi id 15.20.3763.014; Wed, 20 Jan 2021
- 10:04:27 +0000
-From:   "Surendrakumar Upadhyay, TejaskumarX" 
-        <tejaskumarx.surendrakumar.upadhyay@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-CC:     Jesse Barnes <jsbarnes@google.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Linux PCI" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "De Marchi, Lucas" <lucas.demarchi@intel.com>,
-        "Roper, Matthew D" <matthew.d.roper@intel.com>,
-        "Pandey, Hariom" <hariom.pandey@intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>
-Subject: RE: [PATCH] x86/gpu: add JSL stolen memory support
-Thread-Topic: [PATCH] x86/gpu: add JSL stolen memory support
-Thread-Index: AQHWstDzxN2Pwg+4lUqs/o8gwa6wpqm5S1QAgABL34CAAUSNAIATRwMAgABjNQCAABWMgIAArfUAgACitgCAAC1YAIAQi95ggABnAACAAmNxkIAA/FuAgADPwoCAAG9wAIAADA0wgEsKCaA=
-Date:   Wed, 20 Jan 2021 10:04:26 +0000
-Message-ID: <SN6PR11MB34215740DC23DEB73D85B016DFA20@SN6PR11MB3421.namprd11.prod.outlook.com>
-References: <160698518967.3553.11319067086667823352@jlahtine-mobl.ger.corp.intel.com>
- <20201203152520.GA1554214@bjorn-Precision-5520>
- <SN6PR11MB34212EA0A59FB5827D3D4C9DDFF20@SN6PR11MB3421.namprd11.prod.outlook.com>
-In-Reply-To: <SN6PR11MB34212EA0A59FB5827D3D4C9DDFF20@SN6PR11MB3421.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [103.249.233.127]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a7844453-395e-4bed-eb3f-08d8bd2ac574
-x-ms-traffictypediagnostic: SN6PR11MB3343:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB334390B98A7D7A31E130A957DFA20@SN6PR11MB3343.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:826;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QPtver1VaJwcovP6sQ6nhHrx0Ql2Yuo0+/bJg/Wqex+8QQ/bfiRAI+UC5VzJJjqX03md5QqiJXNjzRgUwkfHeoSfPzjfCgBM84OWmY/3vqmS7nBsCoVi2jKbTok+TqwFxp+K73FqIRtJVSxM0WY8AGFA9p9B1b6ZcTmhAsJqp9wcCH9jRvIRmEia91cJDI5uYCVO2y7T5w1jAPXixsZiU+vJ9A0/NkmgLOZPnq2hScgbjXx5dISZcR2iHR/rTvNTF5k0e6ZdxGbdoqMQ/T8G/DxZVhDvDheuKr0Ml23LOf/cmmd4ycEkIR4Gtf46rUl20THoB6KbMhtmywIa8G56qLay1XK7o+jlqrnnJPmJUWQiXQfbV560mSOyBAUG+XfI4SZgK4XU7TVzf0QSUBXLyg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3421.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(71200400001)(33656002)(55016002)(64756008)(6506007)(76116006)(8936002)(53546011)(7696005)(8676002)(186003)(110136005)(316002)(2906002)(4326008)(5660300002)(7416002)(26005)(52536014)(86362001)(9686003)(54906003)(66946007)(66476007)(66446008)(478600001)(66556008)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?Ts9fj1dm+8mhAp7XCditLfPhuD6EPzhVM/LI41hYMRYfV8lNT0ixAsQM1P7g?=
- =?us-ascii?Q?lgkwYa/eROvByj5Gk9XK128iaj21NwwmNJzRCbhOTdU9A79sZpD3xGlTKzEb?=
- =?us-ascii?Q?zy6nHNPLivcDMCxXrVcP7a1uB/uA209cR9PhP17dBYPtiLZ8KkTYWeNoQfjt?=
- =?us-ascii?Q?C0d5MBqew0nkVpPf25C0pZr+iMwlMhQGpeEq6OHSmZtp1UsVuJCxIi/0jPBY?=
- =?us-ascii?Q?TQ0iYD0CSh1VEAl8P7IGkQWBqyOcne2+svMd5OZCfE+nvKWFgAr2bFJMa2j2?=
- =?us-ascii?Q?yY198rRqi87dDYzVyzx7rkPrAMJU/pLHOdPjAFmj5u0mAEcsjQNZRbBi7AFw?=
- =?us-ascii?Q?GxPiBr87I9bUcjHAFIpn+PJBifnp3N7yGQEbNpUAImVJypkvqAdmPUpg2KF4?=
- =?us-ascii?Q?qf+4EAYvOs435xbHU3X5O8yzEK3nBPUKrP8vJFqJs5a2TwWPV8TCYEQ8g0cJ?=
- =?us-ascii?Q?blRjgBzXUDny4YilegdLG8SlJ2K3u55lUVqlHP7BXRxN/qGfi0+iIA4bubIk?=
- =?us-ascii?Q?XbJV8sKV5YhL4DBTOuymri3cIvOHYJwLALaE555QPrsdMmwJeuDejiDYCqkL?=
- =?us-ascii?Q?MY+iL3aazc/kjAe3tEbNtcM0a6dORd/mGulx8wyVQrYmnHj1oh+l7Scum/uB?=
- =?us-ascii?Q?WFUzdgk6HYdy8ZUPLQlEcg3LRqJAFG3joTnIWbhM1JL35GIux0OaZJXgXCyq?=
- =?us-ascii?Q?PQMV/pmFhsh0nOdqMHMrHa3hc33glb8lGjSsykO4Uq/qTTEzCp76K075RYDm?=
- =?us-ascii?Q?LBBJqILZR0Hkb33yr+riv8fiY8iHAT4BFX7byAzTnxmQVyTAU+zNC0X1yKOT?=
- =?us-ascii?Q?xMKOsRzKMKsMwJU1dWkeVuuU5sghvOwRArbYaOvaGhVI3vg5bfwMd1UsYTUD?=
- =?us-ascii?Q?eDS6JY17vs96U/fBETskKhlIDfJ2s629fe/9sqdWBY5SdUPDPEZBw1M33k2g?=
- =?us-ascii?Q?BN8KyZngUq/5S1mYtT47FXLo8W1kqvHXG5ORAC1ruUbGcN6GC+mHeidual8L?=
- =?us-ascii?Q?bvJF?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1730041AbhATLWE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jan 2021 06:22:04 -0500
+Received: from regular1.263xmail.com ([211.150.70.201]:33176 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730414AbhATKMs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jan 2021 05:12:48 -0500
+Received: from localhost (unknown [192.168.167.32])
+        by regular1.263xmail.com (Postfix) with ESMTP id 8C467DD3;
+        Wed, 20 Jan 2021 18:06:46 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [192.168.31.83] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P9605T140282402715392S1611137205091198_;
+        Wed, 20 Jan 2021 18:06:45 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <8ff28dfb5dc050d228dd7191eb44a491>
+X-RL-SENDER: xxm@rock-chips.com
+X-SENDER: xxm@rock-chips.com
+X-LOGIN-NAME: xxm@rock-chips.com
+X-FST-TO: devicetree@vger.kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-System-Flag: 0
+Subject: Re: [PATCH 2/3] dt-bindings: rockchip: Add DesignWare based PCIe
+ controller
+To:     Johan Jonker <jbx6244@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+References: <20210118091739.247040-1-xxm@rock-chips.com>
+ <20210118091739.247040-2-xxm@rock-chips.com>
+ <e143ad9e-1cfd-e59d-0079-513c036981ba@gmail.com>
+From:   xxm <xxm@rock-chips.com>
+Message-ID: <3b2714f6-2bdf-4b63-5a64-fa257e4fc94e@rock-chips.com>
+Date:   Wed, 20 Jan 2021 18:06:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3421.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7844453-395e-4bed-eb3f-08d8bd2ac574
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jan 2021 10:04:27.0456
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jBfloG72rV6Zw6iMgtgPNu6jR7Asny0VqhdW5q5oEnRFMdnE6Wt8yKlSNdhxYNIBs/vEb0aZMzSzWQBGdVSb79is2kFKhoFhMektesov2bJqOzIW0P/PLtq5hJTFwiouo/tyvRK4aRMlIYJj0ldLkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB3343
-X-OriginatorOrg: intel.com
+In-Reply-To: <e143ad9e-1cfd-e59d-0079-513c036981ba@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+Hi Johan,
 
-Have we decided anything on this patch?
+Thanks for your review, I try to fix what you point out and get some 
+consultations from others, please help to have
 
-Thanks,
-Tejas
+a look at the patch V2
 
-> -----Original Message-----
-> From: Surendrakumar Upadhyay, TejaskumarX
-> Sent: 03 December 2020 21:40
-> To: Bjorn Helgaas <helgaas@kernel.org>; Joonas Lahtinen
-> <joonas.lahtinen@linux.intel.com>
-> Cc: Jesse Barnes <jsbarnes@google.com>; Daniel Vetter <daniel@ffwll.ch>;
-> Linux PCI <linux-pci@vger.kernel.org>; Linux Kernel Mailing List <linux-
-> kernel@vger.kernel.org>; X86 ML <x86@kernel.org>; Borislav Petkov
-> <bp@alien8.de>; De Marchi, Lucas <lucas.demarchi@intel.com>; Roper,
-> Matthew D <matthew.d.roper@intel.com>; Pandey, Hariom
-> <hariom.pandey@intel.com>; Jani Nikula <jani.nikula@linux.intel.com>; Viv=
-i,
-> Rodrigo <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>
-> Subject: RE: [PATCH] x86/gpu: add JSL stolen memory support
->=20
-> Okay then I will wait for someone to respond with "Reviewed-by". So this =
-can
-> be merged.
->=20
-> Thanks,
-> Tejas
->=20
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 03 December 2020 20:55
-> > To: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: Surendrakumar Upadhyay, TejaskumarX
-> > <tejaskumarx.surendrakumar.upadhyay@intel.com>; Jesse Barnes
-> > <jsbarnes@google.com>; Daniel Vetter <daniel@ffwll.ch>; Linux PCI
-> > <linux- pci@vger.kernel.org>; Linux Kernel Mailing List <linux-
-> > kernel@vger.kernel.org>; X86 ML <x86@kernel.org>; Borislav Petkov
-> > <bp@alien8.de>; De Marchi, Lucas <lucas.demarchi@intel.com>; Roper,
-> > Matthew D <matthew.d.roper@intel.com>; Pandey, Hariom
-> > <hariom.pandey@intel.com>; Jani Nikula <jani.nikula@linux.intel.com>;
-> > Vivi, Rodrigo <rodrigo.vivi@intel.com>; David Airlie
-> > <airlied@linux.ie>
-> > Subject: Re: [PATCH] x86/gpu: add JSL stolen memory support
-> >
-> > On Thu, Dec 03, 2020 at 10:46:29AM +0200, Joonas Lahtinen wrote:
-> > > Quoting Bjorn Helgaas (2020-12-02 22:22:53)
-> > > > On Wed, Dec 02, 2020 at 05:21:58AM +0000, Surendrakumar Upadhyay,
-> > TejaskumarX wrote:
-> > > > > Yes it fails all the tests which are allocating from this stolen
-> > > > > memory bunch. For example IGT tests like "
-> > > > > igt@kms_frontbuffer_tracking@-[fbc|fbcpsr].* |
-> > > > > igt@kms_fbcon_fbt@fbc.* " are failing as they totally depend to
-> > > > > work on stolen memory.
-> > >
-> > > That's just because we have de-duped the stolen memory detection code=
-.
-> > > If it's not detected at the early quirks, it's not detected by the
-> > > driver at all.
-> > >
-> > > So if the patch is not merged to early quirks, we'd have to refactor
-> > > the code to add alternative detection path to i915. Before that is
-> > > done, the failures are expected.
-> > >
-> > > > I'm sure that means something to graphics developers, but I have
-> > > > no idea!  Do you have URLs for the test case source, outputs,
-> > > > dmesg log, lspci info, bug reports, etc?
-> > >
-> > > The thing is, the bug reports for stuff like this would only start
-> > > to flow after Jasperlake systems are shipping widely and the less
-> > > common OEMs start integrating it to into strangely behaving BIOSes.
-> > > Or that is the assumption.
-> > >
-> > > If it's fine to merge this through i915 for now with an Acked-by,
-> > > like the previous patches, that'd be great. We can start a
-> > > discussion on if the new platforms are affected anymore. But I'd
-> > > rather not drop it before we have that understanding, as the
-> > > previous problems have included boot time memory corruption.
-> > >
-> > > Would that work?
-> >
-> > Like I said, I'm not objecting if somebody else wants to apply this.
-> >
-> > I'm just pointing out that there's a little bit of voodoo here because
-> > it's not clear what makes a BIOS strangely behaving or what causes
-> > boot-time memory corruption, and that means we don't really have any
-> > hope of resolving this stream of quirk updates.
-> >
-> > Bjorn
+Simon Xue.
+
+在 2021/1/19 21:07, Johan Jonker 写道:
+> Hi Simon,
+>
+> Thank you for this patch for rk3568 pcie.
+>
+> Include the Rockchip device tree maintainer and all other people/lists
+> to the CC list.
+>
+> ./scripts/checkpatch.pl --strict <patch1> <patch2>
+>
+>   ./scripts/get_maintainer.pl --noroles --norolestats --nogit-fallback
+> --nogit <patch1> <patch2>
+>
+> git send-email --suppress-cc all --dry-run --annotate --to
+> heiko@sntech.de --cc <..> <patch1> <patch2>
+>
+> This SoC has no support in mainline linux kernel yet.
+> In all the following yaml documents for rk3568 we need headers with
+> defines for clocks and power domains, etc.
+>
+> For example:
+> #include <dt-bindings/clock/rk3568-cru.h>
+> #include <dt-bindings/power/rk3568-power.h>
+>
+> Could Rockchip submit first clocks and power drivers entries and a basic
+> rk3568.dtsi + evb dts?
+> Include a patch to this serie with 3 pcie nodes added to rk3568.dtsi.
+>
+> A dtbs_check only works with a complete dtsi and evb dts.
+>
+> make ARCH=arm64 dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+>
+> On 1/18/21 10:17 AM, Simon Xue wrote:
+>> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+>> ---
+>>   .../bindings/pci/rockchip-dw-pcie.yaml        | 101 ++++++++++++++++++
+>>   1 file changed, 101 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..fa664cfffb29
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+>> @@ -0,0 +1,101 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: DesignWare based PCIe RC controller on Rockchip SoCs
+>> +
+>> +maintainers:
+>> +  - Shawn Lin <shawn.lin@rock-chips.com>
+>> +  - Simon Xue <xxm@rock-chips.com>
+> maintainers:
+>    - Heiko Stuebner <heiko@sntech.de>
+>
+> Add only people with maintainer rights.
+>
+>
+> allOf:
+>    - $ref: /schemas/pci/pci-bus.yaml#
+>
+> designware-pcie.txt is in need for conversion to yaml.
+> Include the things that are needed in this document for now.
+>
+>> +
+>> +# We need a select here so we don't match all nodes with 'snps,dw-pcie'
+>> +select:
+>> +  properties:
+>> +    compatible:
+>> +      contains:
+>> +        const: rockchip,rk3568-pcie
+>> +  required:
+>> +    - compatible
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - rockchip,rk3568-pcie
+>> +      - snps,dw-pcie
+>      items:
+>        - const: rockchip,rk3568-pcie
+>        - const: snps,dw-pcie
+>
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>      interrupts:
+>        - description:
+>        - description:
+>        - description:
+>        - description:
+>        - description:
+>
+>    interrupt-names:    items:
+>        - const: sys
+>        - const: pmc
+>        - const: msg
+>        - const: legacy
+>        - const: err
+>
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: AHB clock for PCIe master
+>> +      - description: AHB clock for PCIe slave
+>> +      - description: AHB clock for PCIe dbi
+>> +      - description: APB clock for PCIe
+>> +      - description: Auxiliary clock for PCIe
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: aclk_mst
+>> +      - const: aclk_slv
+>> +      - const: aclk_dbi
+>> +      - const: pclk
+>> +      - const: aux
+>> +
+>
+>    msi-map: true
+>
+>    power-domains:
+>      maxItems: 1
+>
+>> +  resets:	maxItems: 1
+>> +    items:
+>> +      - description: PCIe pipe reset line
+> remove
+>
+>> +
+>> +  reset-names:
+> 	const: pipe
+>
+>> +    items:
+>> +      - const: pipe
+> remove
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+> already required in pci-bus.yaml
+>
+>> +  - bus-range
+>> +  - reg
+>> +  - reg-names
+>> +  - clocks
+>> +  - clock-names
+>> +  - msi-map
+> not defined in pci-bus.yaml and designware-pcie.txt
+> add to document
+>
+>> +  - num-lanes
+>> +  - phys
+>> +  - phy-names
+> not defined in pci-bus.yaml and designware-pcie.txt
+> add to document
+>
+>     - power-domains
+>
+>> +  - ranges
+> already required in pci-bus.yaml
+>
+>> +  - resets
+>> +  - reset-names
+>> +
+>> +additionalProperties: false
+> unevaluatedProperties: false
+>
+> If other documents are included use unevaluatedProperties.
+>
+>> +
+>> +examples:
+>> +  - |
+> #include <dt-bindings/clock/rk3568-cru.h>
+> #include <dt-bindings/interrupt-controller/arm-gic.h>
+> #include <dt-bindings/power/rk3568-power.h>
+>
+> Missing defines
+>
+>
+>      bus {
+>          #address-cells = <2>;
+>          #size-cells = <2>;
+>
+> dt-check uses standard 32 bit regs
+> this example is for 64 bit
+>
+>> +    pcie3x2: pcie@fe280000 {
+>> +      compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+> sort things that start with # below
+>
+>> +      bus-range = <0x20 0x2f>;
+> sort order is:
+> compatible
+> reg
+> interrupt
+> the rest in alphabetical order
+> things with #
+> no status in yaml examples
+>
+>
+>> +      reg = <0x3 0xc0800000 0x0 0x400000>,
+>> +            <0x0 0xfe280000 0x0 0x10000>;
+>> +      reg-names = "pcie-dbi", "pcie-apb";
+> 		interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> 		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
+>
+>> +      clocks = <&cru ACLK_PCIE30X2_MST>, <&cru ACLK_PCIE30X2_SLV>,
+>> +               <&cru ACLK_PCIE30X2_DBI>, <&cru PCLK_PCIE30X2>,
+>> +               <&cru CLK_PCIE30X2_AUX_NDFT>;
+>> +      clock-names = "aclk_mst", "aclk_slv",
+>> +                    "aclk_dbi", "pclk",
+>> +                    "aux";
+>> +      msi-map = <0x2000 &its 0x2000 0x1000>;
+>> +      num-lanes = <2>;
+>> +      phys = <&pcie30phy>;
+>> +      phy-names = "pcie-phy";
+>      power-domains = <&power RK3568_PD_PIPE>;
+>
+>> +      ranges = <0x00000800 0x0 0x80000000 0x3 0x80000000 0x0 0x800000
+>> +                0x81000000 0x0 0x80800000 0x3 0x80800000 0x0 0x100000
+>> +                0x83000000 0x0 0x80900000 0x3 0x80900000 0x0 0x3f700000>;
+>> +      resets = <&cru SRST_PCIE30X2_POWERUP>;
+>> +      reset-names = "pipe";
+>> +    };
+> };
+>
+>> +
+>> +...
+>>
+> Make sure that all properties that show up in this node are checked!
+>
+> 	pcie2x1: pcie@fe260000 {
+> 		compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
+> 		#address-cells = <3>;
+> 		#size-cells = <2>;
+> 		bus-range = <0x0 0xf>;
+> 		clocks = <&cru ACLK_PCIE20_MST>, <&cru ACLK_PCIE20_SLV>,
+> 			 <&cru ACLK_PCIE20_DBI>, <&cru PCLK_PCIE20>,
+> 			 <&cru CLK_PCIE20_AUX_NDFT>;
+> 		clock-names = "aclk_mst", "aclk_slv",
+> 			      "aclk_dbi", "pclk", "aux";
+> 		device_type = "pci";
+> 		interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> 			     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+> 		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
+> 		linux,pci-domain = <0>;
+> 		num-ib-windows = <6>;
+> 		num-ob-windows = <2>;
+> 		max-link-speed = <2>;
+> 		msi-map = <0x0 &its 0x0 0x1000>;
+> 		num-lanes = <1>;
+> 		phys = <&combphy2_psq PHY_TYPE_PCIE>;
+> 		phy-names = "pcie-phy";
+> 		power-domains = <&power RK3568_PD_PIPE>;
+> 		ranges = <0x00000800 0x0 0x00000000 0x3 0x00000000 0x0 0x800000
+> 			  0x81000000 0x0 0x00800000 0x3 0x00800000 0x0 0x100000
+> 			  0x83000000 0x0 0x00900000 0x3 0x00900000 0x0 0x3f700000>;
+> 		reg = <0x3 0xc0000000 0x0 0x400000>,
+> 		      <0x0 0xfe260000 0x0 0x10000>;
+> 		reg-names = "pcie-dbi", "pcie-apb";
+> 		resets = <&cru SRST_PCIE20_POWERUP>;
+> 		reset-names = "pipe";
+> 		status = "disabled";
+> 	};
+>
+>
+>
+
+
