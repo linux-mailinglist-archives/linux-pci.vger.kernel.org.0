@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E3712FCF56
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 13:13:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FE802FCF5A
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 13:13:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730183AbhATLWz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jan 2021 06:22:55 -0500
-Received: from lucky1.263xmail.com ([211.157.147.131]:60854 "EHLO
+        id S1729666AbhATLX2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jan 2021 06:23:28 -0500
+Received: from lucky1.263xmail.com ([211.157.147.132]:45014 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732347AbhATKSW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jan 2021 05:18:22 -0500
-Received: from localhost (unknown [192.168.167.69])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 59422B6C5A;
-        Wed, 20 Jan 2021 18:15:59 +0800 (CST)
+        with ESMTP id S1732591AbhATKTZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jan 2021 05:19:25 -0500
+Received: from localhost (unknown [192.168.167.235])
+        by lucky1.263xmail.com (Postfix) with ESMTP id CA553EFECA;
+        Wed, 20 Jan 2021 18:17:05 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from xxm-vm.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P19895T139772813092608S1611137755735916_;
-        Wed, 20 Jan 2021 18:15:58 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P24739T140081880880896S1611137823657337_;
+        Wed, 20 Jan 2021 18:17:06 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <3093c1207baea7857c786500d30da240>
+X-UNIQUE-TAG: <6437ee0df936cb16e67f5d472d753823>
 X-RL-SENDER: xxm@rock-chips.com
 X-SENDER: xxm@rock-chips.com
 X-LOGIN-NAME: xxm@rock-chips.com
@@ -35,12 +35,10 @@ From:   Simon Xue <xxm@rock-chips.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Johan Jonker <jbx6244@gmail.com>,
         Simon Xue <xxm@rock-chips.com>
 Subject: [PATCH v2 1/2] dt-bindings: rockchip: Add DesignWare based PCIe controller
-Date:   Wed, 20 Jan 2021 18:15:53 +0800
-Message-Id: <20210120101554.241029-1-xxm@rock-chips.com>
+Date:   Wed, 20 Jan 2021 18:16:57 +0800
+Message-Id: <20210120101658.241134-1-xxm@rock-chips.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
