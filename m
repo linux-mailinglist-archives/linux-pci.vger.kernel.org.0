@@ -2,122 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CF6B2FD328
-	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 15:53:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8351D2FD311
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 15:53:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732963AbhATOvT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 20 Jan 2021 09:51:19 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:48415 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729274AbhATOfi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 20 Jan 2021 09:35:38 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B4D2322727;
-        Wed, 20 Jan 2021 15:34:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1611153295;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/ErNlhMUQaNtjrr+RiOGSDOM6D+LTE0johCMOlQNCxY=;
-        b=WZaDu7hc4Vc3km9qkbg5toDFDmKXGV2ULtxLkNgUTqUeQksL5QLILdCzjwaKqPU37mjFts
-        8nkwzttm2IkgaoRrEts68UksVlkzgav3IlfVzn3JjHLGZ+MLCABqDLAdW9+aRhIVqHyAre
-        OU6INGrNNP7V5NiFIjrW0ZcLuJwERv8=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Jan 2021 15:34:54 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        id S2389210AbhATOnA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 20 Jan 2021 09:43:00 -0500
+Received: from m12-12.163.com ([220.181.12.12]:47933 "EHLO m12-12.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390764AbhATOlW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 20 Jan 2021 09:41:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=y8Z+jU1IE/vKH8MMhw
+        F/F1/xZhIIlIreDEVa8fPEHRM=; b=n8biHLN1jMTnSd/CT269uO2McS1u8rKODW
+        klv1XG5VUTGPFf7hk6Jwg3YQk777iOca3vrtmwfV7aKD7ISjceCaM20Fd+LUMeao
+        3ilKmtOBcjmxuxF7Dyqd/t7H5D8BFCa3rQIY3vYffAhWL7bEZZMQRjHujkDhPbA1
+        +PAL0afpI=
+Received: from localhost.localdomain (unknown [111.201.134.89])
+        by smtp8 (Coremail) with SMTP id DMCowAC3Nvs7QAhgoibuMw--.3261S4;
+        Wed, 20 Jan 2021 22:37:50 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>
-Subject: Re: [PATCH] PCI: dwc: layerscape: convert to
- builtin_platform_driver()
-In-Reply-To: <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
-References: <20210120105246.23218-1-michael@walle.cc>
- <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.10
-Message-ID: <2495e985839f3b05ef5e00b58a05ecb7@walle.cc>
-X-Sender: michael@walle.cc
+        Michal Simek <michal.simek@xilinx.com>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Pan Bian <bianpan2016@163.com>
+Subject: [PATCH] PCI: xilinx-cpm: Fix reference count leak on error path
+Date:   Wed, 20 Jan 2021 06:37:45 -0800
+Message-Id: <20210120143745.699-1-bianpan2016@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: DMCowAC3Nvs7QAhgoibuMw--.3261S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JF15uFWUZF4ruw1rAw1DJrb_yoW3urX_uw
+        1UZF1xur4UCryfJr1vyrWSvr9Yyas7Xwn7KFn3tF13Aa9FgryfZr97A398XryrCrWfJF9r
+        Ar90yay7CFyUCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjYiiPUUUUU==
+X-Originating-IP: [111.201.134.89]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBzx4gclaD9ynmfAAAsS
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 2021-01-20 15:23, schrieb Rob Herring:
-> On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc> wrote:
->> 
->> fw_devlink will defer the probe until all suppliers are ready. We 
->> can't
->> use builtin_platform_driver_probe() because it doesn't retry after 
->> probe
->> deferral. Convert it to builtin_platform_driver().
-> 
-> If builtin_platform_driver_probe() doesn't work with fw_devlink, then
-> shouldn't it be fixed or removed? Then we're not fixing drivers later
-> when folks start caring about deferred probe and devlink.
-> 
-> I'd really prefer if we convert this to a module instead. (And all the
-> other PCI host drivers.)
+Also drop the reference count of the node on error path.
 
-I briefly looked into adding a remove() op. But I don't know what will
-have to be undo of the ls_pcie_host_init(). That would be up to the
-maintainers of this driver.
+Fixes: 508f610648b9 ("PCI: xilinx-cpm: Add Versal CPM Root Port driver")
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+---
+ drivers/pci/controller/pcie-xilinx-cpm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-_But_ I'd really like to see PCI working on my board again ;) At
-least until the end of this development cycle.
+diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+index f92e0152e65e..67937facd90c 100644
+--- a/drivers/pci/controller/pcie-xilinx-cpm.c
++++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+@@ -404,6 +404,7 @@ static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie_port *port)
+ 	return 0;
+ out:
+ 	xilinx_cpm_free_irq_domains(port);
++	of_node_put(pcie_intc_node);
+ 	dev_err(dev, "Failed to allocate IRQ domains\n");
+ 
+ 	return -ENOMEM;
+-- 
+2.17.1
 
--michael
 
->> Fixes: e590474768f1 ("driver core: Set fw_devlink=on by default")
-> 
-> This happened!?
-> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  drivers/pci/controller/dwc/pci-layerscape.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c 
->> b/drivers/pci/controller/dwc/pci-layerscape.c
->> index 44ad34cdc3bc..5b9c625df7b8 100644
->> --- a/drivers/pci/controller/dwc/pci-layerscape.c
->> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
->> @@ -232,7 +232,7 @@ static const struct of_device_id 
->> ls_pcie_of_match[] = {
->>         { },
->>  };
->> 
->> -static int __init ls_pcie_probe(struct platform_device *pdev)
->> +static int ls_pcie_probe(struct platform_device *pdev)
->>  {
->>         struct device *dev = &pdev->dev;
->>         struct dw_pcie *pci;
->> @@ -271,10 +271,11 @@ static int __init ls_pcie_probe(struct 
->> platform_device *pdev)
->>  }
->> 
->>  static struct platform_driver ls_pcie_driver = {
->> +       .probe = ls_pcie_probe,
->>         .driver = {
->>                 .name = "layerscape-pcie",
->>                 .of_match_table = ls_pcie_of_match,
->>                 .suppress_bind_attrs = true,
->>         },
->>  };
->> -builtin_platform_driver_probe(ls_pcie_driver, ls_pcie_probe);
->> +builtin_platform_driver(ls_pcie_driver);
->> --
->> 2.20.1
->> 
