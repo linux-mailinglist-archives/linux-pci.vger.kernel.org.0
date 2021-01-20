@@ -2,203 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D577F2FC39A
-	for <lists+linux-pci@lfdr.de>; Tue, 19 Jan 2021 23:38:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44EA02FC54E
+	for <lists+linux-pci@lfdr.de>; Wed, 20 Jan 2021 01:06:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbhASWg7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 19 Jan 2021 17:36:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54298 "EHLO
+        id S1728512AbhATACR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 19 Jan 2021 19:02:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387677AbhASOhg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jan 2021 09:37:36 -0500
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF895C0613ED
-        for <linux-pci@vger.kernel.org>; Tue, 19 Jan 2021 06:34:58 -0800 (PST)
-Received: by mail-ot1-x333.google.com with SMTP id 36so8416656otp.2
-        for <linux-pci@vger.kernel.org>; Tue, 19 Jan 2021 06:34:58 -0800 (PST)
+        with ESMTP id S1730969AbhATABb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 19 Jan 2021 19:01:31 -0500
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A86C061757
+        for <linux-pci@vger.kernel.org>; Tue, 19 Jan 2021 16:00:50 -0800 (PST)
+Received: by mail-yb1-xb2a.google.com with SMTP id x78so13273399ybe.11
+        for <linux-pci@vger.kernel.org>; Tue, 19 Jan 2021 16:00:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4e0CGYDHUfu279fyABP5Y+REbie5VpiNs9f4Knw2Cok=;
-        b=VBqn8DUOGeynSeRg3k1zvnxZgxHVN/m4CmDY5MHMndd1hrRsvbsOlsUR+N5zIlZNjv
-         I1JtDyXv8bu7TYIBeBou0qbqzOTX9l2l0clQMWnlaS5BEAD0UdAQ7SGwdm49iZ4AHegS
-         P3+zFz0CEInVbSD6li/gqZsMR+ZONkqJPxGNc=
+         :cc;
+        bh=sXowcYDvZcXKMzrFe9FqqTDON419/OKr3sdTZYFlcNc=;
+        b=j0I/oY65AvJ7CU54ULhJ1qeloJ+tUy7Suv13S/8UGRdct5S1U8jqJtgzxSw4bqgHo0
+         yrK3A/QwKI/9olI6wVBRt2hybEi1JNg5UciXh8FDI9oyJqGr4kiAc6bZq48259pH9cpX
+         gd1k93jSKgdDgnpcNnX/C73ZSypJxkVZUOHBO48boKgjMvSsPr1EDj6vsQdL9axQLRrc
+         /T9nB0wQRj1MlR7RxqmLvOKSgoyko5pIvX7rcpazCz4FXZxcCfzIn5VY9zfwABcTcn07
+         g/eariP4frZx7HX41ZYN8COsV2lZk0Yg3ygglu2ORdvSh6nAzSQrZCHIGkIzxBcFmSlY
+         uO+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4e0CGYDHUfu279fyABP5Y+REbie5VpiNs9f4Knw2Cok=;
-        b=AIW6Dpk4fpoMUfZByfEZw1ge2cB8GganhXqQguOJw1W34sMP9MkY7au2RPsGxUxxaa
-         J/e285lUU8NkhmBdA8rXacXEgRpab1Xgv6t1FXyq86QCg/Qizgb2mOYe1Yhg4yHJDzJN
-         CWQlDefgDgm6tlurUAhl2ZYjjPYw0um8a1AA4E30SiiqIYkAjl/+HR91Xcb8FcGTXR4R
-         1Yk5vQ2jGKJxG/o+sST5ZKY94h1db16HSmnCAk/eNZ9jd/Nr02+WAWwU3E7cOrmFpgJM
-         W8alXHhO7xGR3EFW3l8qB86R0psnTKDr4hoFM1ruho6WAmGpgkWqd9RsMj1wGpEkXpkn
-         /IMA==
-X-Gm-Message-State: AOAM533xLZRTZB2E/9EXbMd9CpzbsNIjzvT52z9pbbraqs/4Hyxd+gUv
-        px/YbgDEchTfTqMRSlwG9U4uUOnNz2lKJsFJacYJIQ==
-X-Google-Smtp-Source: ABdhPJxNAs6mhMviXMtFn7M206VEX/Eake/mU9seAOwtJ76LA2Emqx8YbNqRC8ThlQu1JNtpKUawwkeGr99A8LNHJEY=
-X-Received: by 2002:a9d:ea6:: with SMTP id 35mr3626432otj.188.1611066898227;
- Tue, 19 Jan 2021 06:34:58 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=sXowcYDvZcXKMzrFe9FqqTDON419/OKr3sdTZYFlcNc=;
+        b=RrTeo3dqMjBtID5Zg087HmyYNFMmo/LLMPAulfteevzdoi/1DpLIJpb/LnyQTdrw19
+         9YztW1invL02u1PdV27vm6Dz2WC8oUlPXkJjwjlzFDeRoiDyT2110fhCDFwO5EXJorHl
+         liFDqyHfSMq0vUi3G1ot0eT8o8CPb+SG99UQErnopFz7VMgjgK07sX8eTMojFuzHbjoj
+         ubia1P6GaNiUEPXrJgKVFZ2QKUDG4pWjjMVSul2VWzq525NwHFU4sxMcr9iWdjAPa8ef
+         iim/9TZek+QCLtxEtT10+dDypbsqMhshHzBPQ2VdIcNPDfxXNiWe1d45M1sLWxy94Vn5
+         eZDQ==
+X-Gm-Message-State: AOAM5323GWT0j058Pehphijsv/2mlxc7CUMiCTfaTMi/xk/dlTFtvorX
+        +CxPmISeK+/HewihoUlGQHTCO2mANKF+n+qJhpYxwg==
+X-Google-Smtp-Source: ABdhPJw5WAIHI4c3zIOTDPo9BjXenLy0BPhFyl4vUZqVjWpXCCRqzn59hUQZuomKdzC+jWBZv9W9ZAJt+QV+jZKyzb8=
+X-Received: by 2002:a25:77d4:: with SMTP id s203mr10670708ybc.32.1611100849671;
+ Tue, 19 Jan 2021 16:00:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20201127164131.2244124-1-daniel.vetter@ffwll.ch>
- <20201127164131.2244124-13-daniel.vetter@ffwll.ch> <CAKMK7uGrdDrbtj0OyzqQc0CGrQwc2F3tFJU9vLfm2jjufAZ5YQ@mail.gmail.com>
- <YAbtZBU5PMr68q9E@kroah.com>
-In-Reply-To: <YAbtZBU5PMr68q9E@kroah.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 19 Jan 2021 15:34:47 +0100
-Message-ID: <CAKMK7uGHSgetm7mDso6_vj+aGrR4u+ChwHb3k0QvgG0K6X2fPg@mail.gmail.com>
-Subject: Re: [PATCH v7 12/17] PCI: Revoke mappings like devmem
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+References: <20201218031703.3053753-6-saravanak@google.com>
+ <20210117230134.32042-1-michael@walle.cc> <CAGETcx9=6fPAHLuMyfxfXTGxeSUO8FwHVU_F4bfqLTfK6c+eXw@mail.gmail.com>
+ <4b9ae679b6f76d2f7e340e2ec229dd53@walle.cc>
+In-Reply-To: <4b9ae679b6f76d2f7e340e2ec229dd53@walle.cc>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 19 Jan 2021 16:00:13 -0800
+Message-ID: <CAGETcx-s1Hc8iiForpoeqP6Tf-syOYvxHMui+3vRJFmqArL+-A@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] driver core: Set fw_devlink=on by default
+To:     Michael Walle <michael@walle.cc>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Linux PCI <linux-pci@vger.kernel.org>
+        Marc Zyngier <maz@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com,
+        Linux PCI <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 3:32 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, Jan 19, 2021 at 2:41 AM Michael Walle <michael@walle.cc> wrote:
 >
-> On Tue, Jan 19, 2021 at 09:17:55AM +0100, Daniel Vetter wrote:
-> > On Fri, Nov 27, 2020 at 5:42 PM Daniel Vetter <daniel.vetter@ffwll.ch> =
-wrote:
-> > >
-> > > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-> > > the region") /dev/kmem zaps ptes when the kernel requests exclusive
-> > > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-> > > the default for all driver uses.
-> > >
-> > > Except there's two more ways to access PCI BARs: sysfs and proc mmap
-> > > support. Let's plug that hole.
-> > >
-> > > For revoke_devmem() to work we need to link our vma into the same
-> > > address_space, with consistent vma->vm_pgoff. ->pgoff is already
-> > > adjusted, because that's how (io_)remap_pfn_range works, but for the
-> > > mapping we need to adjust vma->vm_file->f_mapping. The cleanest way i=
-s
-> > > to adjust this at at ->open time:
-> > >
-> > > - for sysfs this is easy, now that binary attributes support this. We
-> > >   just set bin_attr->mapping when mmap is supported
-> > > - for procfs it's a bit more tricky, since procfs pci access has only
-> > >   one file per device, and access to a specific resources first needs
-> > >   to be set up with some ioctl calls. But mmap is only supported for
-> > >   the same resources as sysfs exposes with mmap support, and otherwis=
-e
-> > >   rejected, so we can set the mapping unconditionally at open time
-> > >   without harm.
-> > >
-> > > A special consideration is for arch_can_pci_mmap_io() - we need to
-> > > make sure that the ->f_mapping doesn't alias between ioport and iomem
-> > > space. There's only 2 ways in-tree to support mmap of ioports: generi=
-c
-> > > pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the single
-> > > architecture hand-rolling. Both approach support ioport mmap through =
-a
-> > > special pfn range and not through magic pte attributes. Aliasing is
-> > > therefore not a problem.
-> > >
-> > > The only difference in access checks left is that sysfs PCI mmap does
-> > > not check for CAP_RAWIO. I'm not really sure whether that should be
-> > > added or not.
-> > >
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Cc: John Hubbard <jhubbard@nvidia.com>
-> > > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > > Cc: Jan Kara <jack@suse.cz>
-> > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: linux-mm@kvack.org
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: linux-samsung-soc@vger.kernel.org
-> > > Cc: linux-media@vger.kernel.org
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: linux-pci@vger.kernel.org
-> > > Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > > --
-> > > v2:
-> > > - Totally new approach: Adjust filp->f_mapping at open time. Note tha=
-t
-> > >   this now works on all architectures, not just those support
-> > >   ARCH_GENERIC_PCI_MMAP_RESOURCE
-> > > ---
-> > >  drivers/pci/pci-sysfs.c | 4 ++++
-> > >  drivers/pci/proc.c      | 1 +
-> > >  2 files changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > index d15c881e2e7e..3f1c31bc0b7c 100644
-> > > --- a/drivers/pci/pci-sysfs.c
-> > > +++ b/drivers/pci/pci-sysfs.c
-> > > @@ -929,6 +929,7 @@ void pci_create_legacy_files(struct pci_bus *b)
-> > >         b->legacy_io->read =3D pci_read_legacy_io;
-> > >         b->legacy_io->write =3D pci_write_legacy_io;
-> > >         b->legacy_io->mmap =3D pci_mmap_legacy_io;
-> > > +       b->legacy_io->mapping =3D iomem_get_mapping();
-> > >         pci_adjust_legacy_attr(b, pci_mmap_io);
-> > >         error =3D device_create_bin_file(&b->dev, b->legacy_io);
-> > >         if (error)
-> > > @@ -941,6 +942,7 @@ void pci_create_legacy_files(struct pci_bus *b)
-> > >         b->legacy_mem->size =3D 1024*1024;
-> > >         b->legacy_mem->attr.mode =3D 0600;
-> > >         b->legacy_mem->mmap =3D pci_mmap_legacy_mem;
-> > > +       b->legacy_io->mapping =3D iomem_get_mapping();
+> Am 2021-01-18 22:01, schrieb Saravana Kannan:
+> > On Sun, Jan 17, 2021 at 3:01 PM Michael Walle <michael@walle.cc> wrote:
+> >> > Cyclic dependencies in some firmware was one of the last remaining
+> >> > reasons fw_devlink=on couldn't be set by default. Now that cyclic
+> >> > dependencies don't block probing, set fw_devlink=on by default.
+> >> >
+> >> > Setting fw_devlink=on by default brings a bunch of benefits (currently,
+> >> > only for systems with device tree firmware):
+> >> > * Significantly cuts down deferred probes.
+> >> > * Device probe is effectively attempted in graph order.
+> >> > * Makes it much easier to load drivers as modules without having to
+> >> >   worry about functional dependencies between modules (depmod is still
+> >> >   needed for symbol dependencies).
+> >> >
+> >> > If this patch prevents some devices from probing, it's very likely due
+> >> > to the system having one or more device drivers that "probe"/set up a
+> >> > device (DT node with compatible property) without creating a struct
+> >> > device for it.  If we hit such cases, the device drivers need to be
+> >> > fixed so that they populate struct devices and probe them like normal
+> >> > device drivers so that the driver core is aware of the devices and their
+> >> > status. See [1] for an example of such a case.
+> >> >
+> >> > [1] - https://lore.kernel.org/lkml/CAGETcx9PiX==mLxB9PO8Myyk6u2vhPVwTMsA5NkD-ywH5xhusw@mail.gmail.com/
+> >> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >>
+> >> This breaks (at least) probing of the PCIe controllers of my board.
+> >> The
+> >> driver in question is
+> >>   drivers/pci/controller/dwc/pci-layerscape.c
+> >> I've also put the maintainers of this driver on CC. Looks like it uses
+> >> a
+> >> proper struct device. But it uses builtin_platform_driver_probe() and
+> >> apparently it waits for the iommu which uses module_platform_driver().
+> >> Dunno if that will work together.
 > >
-> > Unlike the normal pci stuff below, the legacy files here go boom
-> > because they're set up much earlier in the boot sequence. This only
-> > affects HAVE_PCI_LEGACY architectures, which aren't that many. So what
-> > should we do here now:
-> > - drop the devmem revoke for these
-> > - rework the init sequence somehow to set up these files a lot later
-> > - redo the sysfs patch so that it doesn't take an address_space
-> > pointer, but instead a callback to get at that (since at open time
-> > everything is set up). Imo rather ugly
-> > - ditch this part of the series (since there's not really any takers
-> > for the latter parts it might just not make sense to push for this)
-> > - something else?
-> >
-> > Bjorn, Greg, thoughts?
+> > Yeah, the builtin vs module doesn't matter. I've had fw_devlink work
+> > multiple times with the consumer driver being built in and the
+> > supplier actually loaded as a module. Making that work is one of the
+> > goals of fw_devlink.
 >
-> What sysfs patch are you referring to here?
+> Ok.
 
-Currently in linux-next:
+Hi Michael,
 
-commit 74b30195395c406c787280a77ae55aed82dbbfc7 (HEAD ->
-topic/iomem-mmap-vs-gup, drm/topic/iomem-mmap-vs-gup)
-Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Fri Nov 27 17:41:25 2020 +0100
+My bad, I spoke too soon. I thought you were talking about builtin_ vs
+module_. My response is correct in that context. But the problem here
+is related to builtin_platform_driver_probe(). That macro expects the
+device (PCI) to be added and ready to probe by the time it's called.
+If not, it just gives up and frees the code. That's why it's not
+getting called after the first attempt. Can you please convert it into
+builtin_platform_driver()? It should be a pretty trivial change.
 
-   sysfs: Support zapping of binary attr mmaps
+-Saravana
 
-Or the patch right before this one in this submission here:
-
-https://lore.kernel.org/dri-devel/20201127164131.2244124-12-daniel.vetter@f=
-fwll.ch/
-
-Cheers, Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>
+> >> The board device tree can be found here:
+> >>   arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
+> >>
+> >> Attached is the log with enabled "probe deferral" messages enabled.
+> >
+> > I took a look at the logs. As you said, pci seems to be waiting on
+> > iommu, but it's not clear why the iommu didn't probe by then. Can you
+> > add initcall_debug=1 and enable the logs in device_link_add()? Btw, I
+> > realize one compromise on the logs is to send them as an attachment
+> > instead of inline. That way, it's still archived in the list, but I
+> > don't have to deal with log lines getting wrapped, etc.
+> >
+> > Thanks for reporting the issues. Also, could you try picking up all of
+> > these changes and giving it a shot. It's unlikely to help, but I want
+> > to rule out issues related to fixes in progress.
+> >
+> > https://lore.kernel.org/lkml/20210116011412.3211292-1-saravanak@google.com/
+> > https://lore.kernel.org/lkml/20210115210159.3090203-1-saravanak@google.com/
+> > https://lore.kernel.org/lkml/20201218210750.3455872-1-saravanak@google.com/
+>
+> Did pick them up, the last one had a conflict due some superfluous
+> lines.
+> Maybe they got reordered in that arrray.
+>
+> Issue still persist. I've enabled the debug in device_link_add(), in
+> device_links_check_suppliers() and booted with initcall_debug. Please
+> see attached log. Lets see how that goes ;)
+>
+> [    0.132687] calling  ls_pcie_driver_init+0x0/0x38 @ 1
+> [    0.132762] platform 3400000.pcie: probe deferral - supplier
+> 5000000.iommu not ready
+> [    0.132777] platform 3500000.pcie: probe deferral - supplier
+> 5000000.iommu not ready
+> [    0.132818] initcall ls_pcie_driver_init+0x0/0x38 returned -19 after
+> 119 usecs
+>
+> After that, ls_pcie_driver_init() is never called again.
+>
+> -michael
