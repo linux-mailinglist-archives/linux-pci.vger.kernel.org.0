@@ -2,145 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E68D2FE6F4
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 11:01:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86CFE2FE84C
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 12:03:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbhAUKAp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jan 2021 05:00:45 -0500
-Received: from mail-eopbgr760059.outbound.protection.outlook.com ([40.107.76.59]:15968
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728336AbhAUKAP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Jan 2021 05:00:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LM/u6uIGejPHjEjwPzQDmOxru+ocbBsNDZBmCF1DAq28rV1W/ysTsWG/8sylY0LvsNyBvLFwvn7q49REWvS6WtxjCynCx6qWrKYh/QS9IL/UxXSBSMog/6lpbHk/jMn521EH06wnyUaaO5ZOrwuarZ4gWkin4k97qbW+9IiBha2eY0Lvjhoc4j/dfuKilBDEuUdk/TwuSJLm9XbFyRKIEOffoLcFfHiADscGpZeUIVSVwfwVn/oriwKkPtuCZnTI9l1cPooWoKF6pgNZ++vDvKllz5QBVJBYKmj6jQ+jPj/OSgMioP0OMYVx614sP+ZFYRHgQ4XyvZAYauAvyJ93bQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4OchD7+pkMKuxP1fklda8kDbYhh2bXCkrzfYWcP3Lno=;
- b=hldNsCZ719wpDBv3As/VbLw9Nl6Q3jHPWEh+oi+P5uCiM33eamlMkz3CFmIjAyXCk4Z71PRqA1aigoOMOFpUw1pORI4jbxHCWFLbN8DCosxKqbudST3iGmHFLtUiISyAxlm8ld3kTSEKNXN3KvnXQ+ZVHj7AFhP9mY5DnXmC+1b7pSg3/CXcjMRMpKhyRj+ebdJdKddGQbqydEoDInLR3JG92gTNJEYStrdTcl9ozniFF1cy7EkJGpVGGtflEPVNlhRi/Q93TPVqoCaU3JczJG9bmQdCF6GYVrkb8yYIOoqSHm8pXDqs26mzbn97KPYCVwAQWI5tM+ER+8PXG87HRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4OchD7+pkMKuxP1fklda8kDbYhh2bXCkrzfYWcP3Lno=;
- b=OHzA7EJQZ/iH2vhLlWFmcaVHDd3CAe+JMubT2dvKua7IosvWpPGd5wUdgA8QgYhfK54Rb6oFpqRm8WbPso6kmDcDsYAXF0LHy/UO69pADq+sXT90K64RzNCiVencwsJsql41GnCV6yA0ok3mmVMdo8gxxLhaYVuN+uq/fJCgU4o=
-Received: from MN2PR20CA0014.namprd20.prod.outlook.com (2603:10b6:208:e8::27)
- by BL0PR02MB4546.namprd02.prod.outlook.com (2603:10b6:208:26::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.14; Thu, 21 Jan
- 2021 09:59:27 +0000
-Received: from BL2NAM02FT059.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:e8:cafe::75) by MN2PR20CA0014.outlook.office365.com
- (2603:10b6:208:e8::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.12 via Frontend
- Transport; Thu, 21 Jan 2021 09:59:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
-Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
- BL2NAM02FT059.mail.protection.outlook.com (10.152.76.247) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3784.12 via Frontend Transport; Thu, 21 Jan 2021 09:59:26 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 21 Jan 2021 01:59:22 -0800
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.1913.5 via Frontend Transport; Thu, 21 Jan 2021 01:59:22 -0800
-Envelope-to: bharat.kumar.gogada@xilinx.com,
- linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- bhelgaas@google.com
-Received: from [10.140.9.2] (port=42522 helo=xhdbharatku40.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1l2WkM-0000of-3Z; Thu, 21 Jan 2021 01:59:22 -0800
-From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <bhelgaas@google.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH] PCI: xilinx-nwl: Enable coherenct PCIe traffic using CCI
-Date:   Thu, 21 Jan 2021 15:29:16 +0530
-Message-ID: <1611223156-8787-1-git-send-email-bharat.kumar.gogada@xilinx.com>
-X-Mailer: git-send-email 2.7.4
+        id S1730124AbhAULCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jan 2021 06:02:55 -0500
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:43254 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730147AbhAULCl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jan 2021 06:02:41 -0500
+Received: by mail-ot1-f47.google.com with SMTP id v1so1186757ott.10;
+        Thu, 21 Jan 2021 03:02:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B0t6IbQwZ6aPHm7zibBMR6oc08hDXRFl0UUCk6sC9bM=;
+        b=s1JgGhMfGIEorKIkmY1uOCy6rhKZjEN2g/y0mH9xU7LfyBDaqKZx1HJGKIpsnnnCLl
+         1dtR+itgXotyc12XJWpqLnO8N0bSGyqqpcEFgKbc1X0xw6mZ38i6hUQJeQAX0dmcTK0Z
+         PFaajorVROhs7lPXfqh1UJhZ1XzNSgKbUJyP3aNNZ953EyU9ozoxIUJOTHlC/s5flu2u
+         VXh4VBAWiCPsruCtgqdHdL8XhI4d8D9fQSKdtidKQW5CDs2TLI3zFaXBUUQRD0mgV8Mc
+         tnXT0l+Dfv0MkdRSzesm754R32j6Ge2zkW2wbd3vpAFghxAt8oPUb9V5fcXSG8ipsPap
+         LSww==
+X-Gm-Message-State: AOAM531ORADILRmpCOpKYlpHVEntf40KPu3/+wMeSAfboTunr6pUuQo8
+        3LBP2hh7fbrtLsx/EhHzLLWUDdKwrEnjTe+EnOU=
+X-Google-Smtp-Source: ABdhPJzSbFq2Zg/MF32GZEaX+aMqzCGFlyozhpNYPxHvt5ug1jBRwJ1lgTOfRSPtDNp9bqyOAhcuPvtUBSO1aAA+gxU=
+X-Received: by 2002:a9d:c01:: with SMTP id 1mr9868576otr.107.1611226921014;
+ Thu, 21 Jan 2021 03:02:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 08473162-bdb7-4459-f9e0-08d8bdf33ce7
-X-MS-TrafficTypeDiagnostic: BL0PR02MB4546:
-X-Microsoft-Antispam-PRVS: <BL0PR02MB454670503844F420BA908FDDA5A10@BL0PR02MB4546.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4JGz07VU21SWfjXrEVQX+K7bbttj4Vm/QFaxbloA3X4et55Ev60y/sSTZkq4IvhoDxipaWeigStiGKcYBkKTGUqEDUaK4nQdg5U4UmNQlVBjfZlJz1aSb3VFTphfnRw4gDbeMSnwgPGxwjw0tNxxFHKgy6ubLm7BZeSCxlZUqUYxzJST/StIBM6hVYl+KgLE1O8Tit31J9pUyuG2ULAv66LamYI9VlUNFTcbQoMYCnp+FYm+adomRROPTWtWEtrf2E0LnjfCukH2Jrt3Fz9uy2MxEgzA2H3VtMj7DUB+c1aoPIcv2N7z0rrEO1copgrIlJ+VRkiSLh3Eq6dL/w7zlWEPbUYfeZ1ppfFyQ8HD84OsY+egqwLazJ7pKNKIFaUJFIvuHQDH//lbj9DXVKbVc1TZPnVkiqZt9SurDFo432/B2uDYp4NW8vBAC5nd4iVmb4sS6tDze7Ys51IYqhLFT+F+ZPmmzQ9WIQ5DLkwJyrueHUk7JGYKtFs092iS6rtvR1Hy2lktrG/0u8oibh6ojH3KyDQH3L3gLr+ACi54raY5qL9e92EPWF7STpVQLoxvgg7/qNtyaDsGmyzleJicMFbUe9nNIm5whJkJNugMptpKDFCXpLm2cVZwp++5tMS9
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(46966006)(110136005)(4326008)(5660300002)(26005)(2906002)(47076005)(7636003)(186003)(426003)(478600001)(356005)(6666004)(8676002)(36756003)(107886003)(54906003)(7696005)(8936002)(316002)(82310400003)(82740400003)(70586007)(70206006)(336012)(9786002)(2616005)(102446001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2021 09:59:26.8056
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08473162-bdb7-4459-f9e0-08d8bdf33ce7
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT059.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4546
+References: <20210120105246.23218-1-michael@walle.cc> <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
+ <CAGETcx86HMo=gaDdXFyJ4QQ-pGXWzw2G0J=SjC-eq4K7B1zQHg@mail.gmail.com>
+ <c3e35b90e173b15870a859fd7001a712@walle.cc> <CAGETcx8eZRd1fJ3yuO_t2UXBFHObeNdv-c8oFH3mXw6zi=zOkQ@mail.gmail.com>
+ <f706c0e4b684e07635396fcf02f4c9a6@walle.cc> <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
+In-Reply-To: <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 21 Jan 2021 12:01:50 +0100
+Message-ID: <CAMuHMdWvFej-6vkaLM44t7eX2LpkDSXu4_7VH-X-3XRueXTO=A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: layerscape: convert to builtin_platform_driver()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Roy Zang <roy.zang@nxp.com>, PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-- Add support for routing PCIe traffic coherently when
- Cache Coherent Interconnect(CCI) is enabled in the system.
+Hi Saravana,
 
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
----
- drivers/pci/controller/pcie-xilinx-nwl.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Thu, Jan 21, 2021 at 1:05 AM Saravana Kannan <saravanak@google.com> wrote:
+> On Wed, Jan 20, 2021 at 3:53 PM Michael Walle <michael@walle.cc> wrote:
+> > Am 2021-01-20 20:47, schrieb Saravana Kannan:
+> > > On Wed, Jan 20, 2021 at 11:28 AM Michael Walle <michael@walle.cc>
+> > > wrote:
+> > >>
+> > >> [RESEND, fat-fingered the buttons of my mail client and converted
+> > >> all CCs to BCCs :(]
+> > >>
+> > >> Am 2021-01-20 20:02, schrieb Saravana Kannan:
+> > >> > On Wed, Jan 20, 2021 at 6:24 AM Rob Herring <robh@kernel.org> wrote:
+> > >> >>
+> > >> >> On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc>
+> > >> >> wrote:
+> > >> >> >
+> > >> >> > fw_devlink will defer the probe until all suppliers are ready. We can't
+> > >> >> > use builtin_platform_driver_probe() because it doesn't retry after probe
+> > >> >> > deferral. Convert it to builtin_platform_driver().
+> > >> >>
+> > >> >> If builtin_platform_driver_probe() doesn't work with fw_devlink, then
+> > >> >> shouldn't it be fixed or removed?
+> > >> >
+> > >> > I was actually thinking about this too. The problem with fixing
+> > >> > builtin_platform_driver_probe() to behave like
+> > >> > builtin_platform_driver() is that these probe functions could be
+> > >> > marked with __init. But there are also only 20 instances of
+> > >> > builtin_platform_driver_probe() in the kernel:
+> > >> > $ git grep ^builtin_platform_driver_probe | wc -l
+> > >> > 20
+> > >> >
+> > >> > So it might be easier to just fix them to not use
+> > >> > builtin_platform_driver_probe().
+> > >> >
+> > >> > Michael,
+> > >> >
+> > >> > Any chance you'd be willing to help me by converting all these to
+> > >> > builtin_platform_driver() and delete builtin_platform_driver_probe()?
+> > >>
+> > >> If it just moving the probe function to the _driver struct and
+> > >> remove the __init annotations. I could look into that.
+> > >
+> > > Yup. That's pretty much it AFAICT.
+> > >
+> > > builtin_platform_driver_probe() also makes sure the driver doesn't ask
+> > > for async probe, etc. But I doubt anyone is actually setting async
+> > > flags and still using builtin_platform_driver_probe().
+> >
+> > Hasn't module_platform_driver_probe() the same problem? And there
+> > are ~80 drivers which uses that.
+>
+> Yeah. The biggest problem with all of these is the __init markers.
+> Maybe some familiar with coccinelle can help?
 
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 07e3666..08e06057 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -26,6 +26,7 @@
- 
- /* Bridge core config registers */
- #define BRCFG_PCIE_RX0			0x00000000
-+#define BRCFG_PCIE_RX1			0x00000004
- #define BRCFG_INTERRUPT			0x00000010
- #define BRCFG_PCIE_RX_MSG_FILTER	0x00000020
- 
-@@ -128,6 +129,7 @@
- #define NWL_ECAM_VALUE_DEFAULT		12
- 
- #define CFG_DMA_REG_BAR			GENMASK(2, 0)
-+#define CFG_PCIE_CACHE			GENMASK(7, 0)
- 
- #define INT_PCI_MSI_NR			(2 * 32)
- 
-@@ -675,6 +677,12 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
- 	nwl_bridge_writel(pcie, CFG_ENABLE_MSG_FILTER_MASK,
- 			  BRCFG_PCIE_RX_MSG_FILTER);
- 
-+	/* This routes the PCIe DMA traffic to go through CCI path */
-+	if (of_dma_is_coherent(dev->of_node)) {
-+		nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX1) |
-+				  CFG_PCIE_CACHE, BRCFG_PCIE_RX1);
-+	}
-+
- 	err = nwl_wait_for_link(pcie);
- 	if (err)
- 		return err;
+And dropping them will increase memory usage.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
