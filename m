@@ -2,153 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA4A12FF046
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 17:30:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD32A2FF04A
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 17:30:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732384AbhAUQ21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jan 2021 11:28:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
+        id S2387823AbhAUQ3Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jan 2021 11:29:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387628AbhAUQYO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Jan 2021 11:24:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B05FB21973;
-        Thu, 21 Jan 2021 16:23:32 +0000 (UTC)
+        id S1732818AbhAUQ3N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Jan 2021 11:29:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 081D9206D8;
+        Thu, 21 Jan 2021 16:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611246212;
-        bh=/QAuvzzbOy5gjAKZaimJyKMU90IrxgHktHCgD4sEem4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQzQG0cRoS36JjZJgTRB4R1hztSjy5/F3lt5GgL6e8qE9YlNiM2kFjMKPA0LGbLvx
-         lkdz5w2X3E97J+wiAujmkoD+n2CGsVRyCmpe3K9aZWBAuBP8TdQtSN21gui9Stln20
-         23KlDPiu7Eg1pgZN1SQyAW1MGuhVHmAtCWWG4aaa4AERNz7ER1oTmFJAr4ADj3nUMz
-         cONtzRGL9qnHDbBGwnmWYrKm5qG7xaRq/x35SU+6Zuf9GYMDbzeTberti6zTlY8eLI
-         d6DSYyL8CtB54RdFnOtLhs17Zdga6aWnI+Q1OJP3Mo1S2vzRVHaFDg8ahGlBZHNcFO
-         AwhLykEy71W1Q==
-Received: by wens.tw (Postfix, from userid 1000)
-        id A950E5F9AB; Fri, 22 Jan 2021 00:23:28 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Johan Jonker <jbx6244@gmail.com>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v4 4/4] arm64: dts: rockchip: rk3399: Add NanoPi M4B
-Date:   Fri, 22 Jan 2021 00:23:21 +0800
-Message-Id: <20210121162321.4538-5-wens@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210121162321.4538-1-wens@kernel.org>
-References: <20210121162321.4538-1-wens@kernel.org>
+        s=k20201202; t=1611246510;
+        bh=Zf8jgI/znTml17RA4NO0vaF+2LzStyZ+d/XnHcMtsV4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sCDbhm0B2bnYK9DcRQON1x/sDXtjMRK/xOu2WSEbxuJXPJW2XKfA/9IyjAYsuKVGl
+         FzT9WVmzZmacrC3B197YKTnsmYPEejSz0wrjXLiojimZqjHgfI63Mu0Om9EL299wyc
+         HfnALXtyvpgdx6YK0BPr4FCH1Aipm90ZJGg2tDz6JEK2pVaxOohL++37va9QE7JaTd
+         UCkPi61JY7UqwW/KUNTFUfgxIhJ+R0K5SgUsbheD2kxZyOXf5t4OzzdFXwlJSn19Yo
+         J6W3qZuN0230hQLfAJkX1G5OLYbT2QgptntqMlt1rmnzDy8L9vvVx2UAB6IGlGmXfl
+         c6g5CqBF22G/Q==
+Date:   Thu, 21 Jan 2021 10:28:27 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] PCI: xilinx-nwl: Enable coherenct PCIe traffic using CCI
+Message-ID: <20210121162827.GA2658969@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1611223156-8787-1-git-send-email-bharat.kumar.gogada@xilinx.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+[+cc Rob]
 
-The NanoPi M4B is a minor revision of the original M4.
+s/coherenct/coherent/ in subject
+s/traffic/DMA/ (this applies specifically to DMA, not to MMIO)
 
-The differences against the original Nanopi M4 that are common with the
-other M4V2 revision include:
+On Thu, Jan 21, 2021 at 03:29:16PM +0530, Bharat Kumar Gogada wrote:
+> - Add support for routing PCIe traffic coherently when
+>  Cache Coherent Interconnect(CCI) is enabled in the system.
 
-  - microphone header removed
-  - power button added
-  - recovery button added
+s/- Add/Add/
+s/Interconnect(CCI)/Interconnect (CCI)/
 
-Additional changes specific to the M4B:
+Can you include a URL to a CCI spec?  I'm not familiar with it.  I
+guess this is something upstream from the host bridge, i.e., between
+the CPU and the host bridge, so it's outside the PCI domain?
 
-  - USB 3.0 hub removed; board now has 2x USB 3.0 type-A ports and 2x
-    USB 2.0 ports
-  - ADB toggle switch added; this changes the top USB 3.0 host port to
-    a peripheral port
-  - Type-C port no longer supports data or PD
-  - WiFi/Bluetooth combo chip switched to AP6256, which supports BT 5.0
-    but only 1T1R (down from 2T2R) for WiFi
+I'd like to mention the DT "dma-coherent" property in the commit log
+to help connect this with the knob that controls it.
 
-Add a new dts file for the new board revision that shows the difference
-against the original.
+The "dma-coherent" property is mentioned several places in
+Documentation/devicetree/bindings/pci/ (but not anything obviously
+related to xilinx-nwl).  Should it be moved to something like
+Documentation/devicetree/bindings/pci/pci.txt to make it more generic?
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm64/boot/dts/rockchip/Makefile         |  1 +
- .../boot/dts/rockchip/rk3399-nanopi-m4b.dts   | 52 +++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index b29a445b355a..62d3abc17a24 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -34,6 +34,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-kobol-helios64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-leez-p710.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4b.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
-new file mode 100644
-index 000000000000..72182c58cc46
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * FriendlyElec NanoPi M4B board device tree source
-+ *
-+ * Copyright (c) 2020 Chen-Yu Tsai <wens@csie.org>
-+ */
-+
-+/dts-v1/;
-+#include "rk3399-nanopi-m4.dts"
-+
-+/ {
-+	model = "FriendlyElec NanoPi M4B";
-+	compatible = "friendlyarm,nanopi-m4b", "rockchip,rk3399";
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 1>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1500000>;
-+		poll-interval = <100>;
-+
-+		recovery {
-+			label = "Recovery";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <18000>;
-+		};
-+	};
-+};
-+
-+/* No USB type-C PD power manager */
-+/delete-node/ &fusb0;
-+
-+&i2c4 {
-+	status = "disabled";
-+};
-+
-+&u2phy0_host {
-+	phy-supply = <&vcc5v0_usb2>;
-+};
-+
-+&u2phy0_otg {
-+	phy-supply = <&vbus_typec>;
-+};
-+
-+&u2phy1_otg {
-+	phy-supply = <&vcc5v0_usb1>;
-+};
-+
-+&vbus_typec {
-+	enable-active-high;
-+	gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-+};
--- 
-2.29.2
-
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> ---
+>  drivers/pci/controller/pcie-xilinx-nwl.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+> index 07e3666..08e06057 100644
+> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> @@ -26,6 +26,7 @@
+>  
+>  /* Bridge core config registers */
+>  #define BRCFG_PCIE_RX0			0x00000000
+> +#define BRCFG_PCIE_RX1			0x00000004
+>  #define BRCFG_INTERRUPT			0x00000010
+>  #define BRCFG_PCIE_RX_MSG_FILTER	0x00000020
+>  
+> @@ -128,6 +129,7 @@
+>  #define NWL_ECAM_VALUE_DEFAULT		12
+>  
+>  #define CFG_DMA_REG_BAR			GENMASK(2, 0)
+> +#define CFG_PCIE_CACHE			GENMASK(7, 0)
+>  
+>  #define INT_PCI_MSI_NR			(2 * 32)
+>  
+> @@ -675,6 +677,12 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
+>  	nwl_bridge_writel(pcie, CFG_ENABLE_MSG_FILTER_MASK,
+>  			  BRCFG_PCIE_RX_MSG_FILTER);
+>  
+> +	/* This routes the PCIe DMA traffic to go through CCI path */
+> +	if (of_dma_is_coherent(dev->of_node)) {
+> +		nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX1) |
+> +				  CFG_PCIE_CACHE, BRCFG_PCIE_RX1);
+> +	}
+> +
+>  	err = nwl_wait_for_link(pcie);
+>  	if (err)
+>  		return err;
+> -- 
+> 2.7.4
+> 
