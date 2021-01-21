@@ -2,123 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86CFE2FE84C
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 12:03:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0972FEABC
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 13:54:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbhAULCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jan 2021 06:02:55 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:43254 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730147AbhAULCl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jan 2021 06:02:41 -0500
-Received: by mail-ot1-f47.google.com with SMTP id v1so1186757ott.10;
-        Thu, 21 Jan 2021 03:02:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B0t6IbQwZ6aPHm7zibBMR6oc08hDXRFl0UUCk6sC9bM=;
-        b=s1JgGhMfGIEorKIkmY1uOCy6rhKZjEN2g/y0mH9xU7LfyBDaqKZx1HJGKIpsnnnCLl
-         1dtR+itgXotyc12XJWpqLnO8N0bSGyqqpcEFgKbc1X0xw6mZ38i6hUQJeQAX0dmcTK0Z
-         PFaajorVROhs7lPXfqh1UJhZ1XzNSgKbUJyP3aNNZ953EyU9ozoxIUJOTHlC/s5flu2u
-         VXh4VBAWiCPsruCtgqdHdL8XhI4d8D9fQSKdtidKQW5CDs2TLI3zFaXBUUQRD0mgV8Mc
-         tnXT0l+Dfv0MkdRSzesm754R32j6Ge2zkW2wbd3vpAFghxAt8oPUb9V5fcXSG8ipsPap
-         LSww==
-X-Gm-Message-State: AOAM531ORADILRmpCOpKYlpHVEntf40KPu3/+wMeSAfboTunr6pUuQo8
-        3LBP2hh7fbrtLsx/EhHzLLWUDdKwrEnjTe+EnOU=
-X-Google-Smtp-Source: ABdhPJzSbFq2Zg/MF32GZEaX+aMqzCGFlyozhpNYPxHvt5ug1jBRwJ1lgTOfRSPtDNp9bqyOAhcuPvtUBSO1aAA+gxU=
-X-Received: by 2002:a9d:c01:: with SMTP id 1mr9868576otr.107.1611226921014;
- Thu, 21 Jan 2021 03:02:01 -0800 (PST)
+        id S1730845AbhAUMyJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jan 2021 07:54:09 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2956 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731501AbhAUMyH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 21 Jan 2021 07:54:07 -0500
+Received: from dggeme706-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4DM2N55qzxz5KYw;
+        Thu, 21 Jan 2021 20:52:05 +0800 (CST)
+Received: from [10.174.60.228] (10.174.60.228) by
+ dggeme706-chm.china.huawei.com (10.1.199.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Thu, 21 Jan 2021 20:53:13 +0800
+Subject: Re: [v3] PCI: Add pci reset quirk for Huawei Intelligent NIC virtual
+ function
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Yinshi (Stone)" <yin.yinshi@huawei.com>,
+        "Wangxiaoyun (Cloud)" <cloud.wangxiaoyun@huawei.com>,
+        zengweiliang zengweiliang <zengweiliang.zengweiliang@huawei.com>,
+        "Chenlizhong (IT Chip)" <chenlizhong@huawei.com>
+References: <20210108222519.GA1473637@bjorn-Precision-5520>
+From:   Chiqijun <chiqijun@huawei.com>
+Message-ID: <7e0a6c6c-a12c-ee54-0468-69079b8edde4@huawei.com>
+Date:   Thu, 21 Jan 2021 20:53:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20210120105246.23218-1-michael@walle.cc> <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
- <CAGETcx86HMo=gaDdXFyJ4QQ-pGXWzw2G0J=SjC-eq4K7B1zQHg@mail.gmail.com>
- <c3e35b90e173b15870a859fd7001a712@walle.cc> <CAGETcx8eZRd1fJ3yuO_t2UXBFHObeNdv-c8oFH3mXw6zi=zOkQ@mail.gmail.com>
- <f706c0e4b684e07635396fcf02f4c9a6@walle.cc> <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
-In-Reply-To: <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 21 Jan 2021 12:01:50 +0100
-Message-ID: <CAMuHMdWvFej-6vkaLM44t7eX2LpkDSXu4_7VH-X-3XRueXTO=A@mail.gmail.com>
-Subject: Re: [PATCH] PCI: dwc: layerscape: convert to builtin_platform_driver()
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Roy Zang <roy.zang@nxp.com>, PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210108222519.GA1473637@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.60.228]
+X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
+ dggeme706-chm.china.huawei.com (10.1.199.102)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Saravana,
 
-On Thu, Jan 21, 2021 at 1:05 AM Saravana Kannan <saravanak@google.com> wrote:
-> On Wed, Jan 20, 2021 at 3:53 PM Michael Walle <michael@walle.cc> wrote:
-> > Am 2021-01-20 20:47, schrieb Saravana Kannan:
-> > > On Wed, Jan 20, 2021 at 11:28 AM Michael Walle <michael@walle.cc>
-> > > wrote:
-> > >>
-> > >> [RESEND, fat-fingered the buttons of my mail client and converted
-> > >> all CCs to BCCs :(]
-> > >>
-> > >> Am 2021-01-20 20:02, schrieb Saravana Kannan:
-> > >> > On Wed, Jan 20, 2021 at 6:24 AM Rob Herring <robh@kernel.org> wrote:
-> > >> >>
-> > >> >> On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc>
-> > >> >> wrote:
-> > >> >> >
-> > >> >> > fw_devlink will defer the probe until all suppliers are ready. We can't
-> > >> >> > use builtin_platform_driver_probe() because it doesn't retry after probe
-> > >> >> > deferral. Convert it to builtin_platform_driver().
-> > >> >>
-> > >> >> If builtin_platform_driver_probe() doesn't work with fw_devlink, then
-> > >> >> shouldn't it be fixed or removed?
-> > >> >
-> > >> > I was actually thinking about this too. The problem with fixing
-> > >> > builtin_platform_driver_probe() to behave like
-> > >> > builtin_platform_driver() is that these probe functions could be
-> > >> > marked with __init. But there are also only 20 instances of
-> > >> > builtin_platform_driver_probe() in the kernel:
-> > >> > $ git grep ^builtin_platform_driver_probe | wc -l
-> > >> > 20
-> > >> >
-> > >> > So it might be easier to just fix them to not use
-> > >> > builtin_platform_driver_probe().
-> > >> >
-> > >> > Michael,
-> > >> >
-> > >> > Any chance you'd be willing to help me by converting all these to
-> > >> > builtin_platform_driver() and delete builtin_platform_driver_probe()?
-> > >>
-> > >> If it just moving the probe function to the _driver struct and
-> > >> remove the __init annotations. I could look into that.
-> > >
-> > > Yup. That's pretty much it AFAICT.
-> > >
-> > > builtin_platform_driver_probe() also makes sure the driver doesn't ask
-> > > for async probe, etc. But I doubt anyone is actually setting async
-> > > flags and still using builtin_platform_driver_probe().
-> >
-> > Hasn't module_platform_driver_probe() the same problem? And there
-> > are ~80 drivers which uses that.
->
-> Yeah. The biggest problem with all of these is the __init markers.
-> Maybe some familiar with coccinelle can help?
 
-And dropping them will increase memory usage.
+On 2021/1/9 6:25, Bjorn Helgaas wrote:
+> s/pci reset/reset/ in subject (it's obvious this is for PCI).
 
-Gr{oetje,eeting}s,
+Will fix.
 
-                        Geert
+> 
+> On Fri, Dec 25, 2020 at 05:25:30PM +0800, Chiqijun wrote:
+>> When multiple VFs do FLR at the same time, the firmware is
+>> processed serially, resulting in some VF FLRs being delayed more
+>> than 100ms, when the virtual machine restarts and the device
+>> driver is loaded, the firmware is doing the corresponding VF
+>> FLR, causing the driver to fail to load.
+>>
+>> To solve this problem, add host and firmware status synchronization
+>> during FLR.
+>>
+>> Signed-off-by: Chiqijun <chiqijun@huawei.com>
+>> ---
+>> v3:
+>>   - The MSE bit in the VF configuration space is hardwired to zero,
+>>     remove the setting of PCI_COMMAND_MEMORY bit. Add comment for
+>>     set PCI_COMMAND register.
+>>
+>> v2:
+>>   - Update comments
+>>   - Use the HINIC_VF_FLR_CAP_BIT_SHIFT and HINIC_VF_FLR_PROC_BIT_SHIFT
+>>     macro instead of the magic number
+>> ---
+>>   drivers/pci/quirks.c | 77 ++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 77 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index f70692ac79c5..9c310012ef19 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -3912,6 +3912,81 @@ static int delay_250ms_after_flr(struct pci_dev *dev, int probe)
+>>   	return 0;
+>>   }
+>>   
+>> +#define PCI_DEVICE_ID_HINIC_VF      0x375E
+>> +#define HINIC_VF_FLR_TYPE           0x1000
+>> +#define HINIC_VF_FLR_CAP_BIT_SHIFT  6
+>> +#define HINIC_VF_OP                 0xE80
+>> +#define HINIC_VF_FLR_PROC_BIT_SHIFT 10
+>> +#define HINIC_OPERATION_TIMEOUT     15000
+> 
+> Add a comment so we know the scale here.  "15 sec" or "15000 msec"
+> or similar.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Will fix.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+>> +/* Device-specific reset method for Huawei Intelligent NIC virtual functions */
+>> +static int reset_hinic_vf_dev(struct pci_dev *pdev, int probe)
+>> +{
+>> +	unsigned long timeout;
+>> +	void __iomem *bar;
+>> +	u16 command;
+>> +	u32 val;
+>> +
+>> +	if (probe)
+>> +		return 0;
+>> +
+>> +	bar = pci_iomap(pdev, 0, 0);
+>> +	if (!bar)
+>> +		return -ENOTTY;
+>> +
+>> +	/*
+>> +	 * FLR cap bit bit30, FLR processing bit: bit18, to avoid big-endian
+>> +	 * conversion the big-endian bit6, bit10 is directly operated here.
+> 
+> I don't understand the big-endian comments here.  Unless the above
+> adds useful information, I'd say just remove it.
+> 
+> Obviously, the code here has to work correctly on both big- and
+> little-endian systems.
+> 
+> Below you use be32_to_cpu() before printing HINIC_VF_OP.  Why aren't
+> you using it here for HINIC_VF_FLR_TYPE?  be32_to_cpu() is common in
+> drivers/net/ethernet/huawei/hinic/, which I assume is for the same
+> device.
+I only considered using the device on the little endian system before, 
+but we should also consider using it on the big endian system, Will fix 
+it in the next patch. Thanks.
+
+> 
+>> +	 * Get and check firmware capabilities.
+>> +	 */
+>> +	val = readl(bar + HINIC_VF_FLR_TYPE);
+>> +	if (!(val & (1UL << HINIC_VF_FLR_CAP_BIT_SHIFT))) {
+>> +		pci_iounmap(pdev, bar);
+>> +		return -ENOTTY;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Set the processing bit for the start of FLR, which will be cleared
+>> +	 * by the firmware after FLR is completed.
+>> +	 */
+>> +	val = readl(bar + HINIC_VF_OP);
+>> +	val = val | (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT);
+>> +	writel(val, bar + HINIC_VF_OP);
+>> +
+>> +	/* Perform the actual device function reset */
+>> +	pcie_flr(pdev);
+>> +
+>> +	/*
+>> +	 * The device must learn BDF after FLR in order to respond to BAR's
+>> +	 * read request, therefore, we issue a configure write request to let
+>> +	 * the device capture BDF.
+>> +	 */
+>> +	pci_read_config_word(pdev, PCI_COMMAND, &command);
+>> +	pci_write_config_word(pdev, PCI_COMMAND, command);
+> 
+> I assume this is because of this requirement from PCIe r5.0, sec
+> 2.2.9:
+> 
+>    Functions must capture the Bus and Device Numbers supplied with all
+>    Type 0 Configuration Write Requests completed by the Function, and
+>    supply these numbers in the Bus and Device Number fields of the
+>    Completer ID for all Completions generated by the Device/Function.
+> 
+> I'm a little concerned because it seems like this requirement should
+> apply to *all* resets, and I don't see where we do a similar write
+> following other resets.  Can you help me out?  Do we need this in
+> other cases?  Do we do it?
+> 
+
+This depends on the hardware device. The HINIC device clears the BDF 
+information of the VF during FLR, so it relies on Configuration Write 
+Requests to capture BDF. If other devices do not clear the DBF 
+information during FLR, this operation is not required.
+In addition, I did not find other devices directly access the BAR 
+register after FLR in resets.
+
+> I'm also slightly nervous about writing the Command register, even
+> though we just reset the device (so the register should be all zeroes)
+> and we're writing the same value we just read from it.  Wouldn't
+> writing 0 to the Vendor ID register, which is guaranteed to be HwInit,
+> accomplish the same?
+> 
+
+OK, writing 0 to the Vendor ID register can also achieve the same 
+effect. Will fix it in the next patch.
+
+>> +	/* Waiting for device reset complete */
+>> +	timeout = jiffies + msecs_to_jiffies(HINIC_OPERATION_TIMEOUT);
+>> +	do {
+>> +		val = readl(bar + HINIC_VF_OP);
+>> +		if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
+>> +			goto reset_complete;
+>> +		msleep(20);
+>> +	} while (time_before(jiffies, timeout));
+>> +
+>> +	val = readl(bar + HINIC_VF_OP);
+>> +	if (!(val & (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT)))
+>> +		goto reset_complete;
+>> +
+>> +	pci_warn(pdev, "Reset dev timeout, flr ack reg: %x\n",
+> 
+> "%#010x" so it's obvious that this is hex, no matter what the value.
+> 
+
+Will fix.
+Thanks.
+
+>> +		 be32_to_cpu(val));
+>> +
+>> +reset_complete:
+>> +	pci_iounmap(pdev, bar);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>>   	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+>>   		 reset_intel_82599_sfp_virtfn },
+>> @@ -3923,6 +3998,8 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>>   	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
+>>   	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+>>   		reset_chelsio_generic_dev },
+>> +	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+>> +		reset_hinic_vf_dev },
+>>   	{ 0 }
+>>   };
+>>   
+>> -- 
+>> 2.17.1
+>>
+> .
+> 
