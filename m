@@ -2,148 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC5C2FEFE2
-	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 17:13:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA6042FF03C
+	for <lists+linux-pci@lfdr.de>; Thu, 21 Jan 2021 17:28:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbhAUQMu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 21 Jan 2021 11:12:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
+        id S1731903AbhAUQYW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 21 Jan 2021 11:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731699AbhAUQMf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 21 Jan 2021 11:12:35 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 850CB23A23;
-        Thu, 21 Jan 2021 16:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1611245514;
-        bh=OVEIUtuoedkG3hYog+0eKNwTMSkV3Iyaz4tQF4gL37s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TDmjjmYc2BPSpXyZFdoZg8JVTFco3/YGBUCAyn/QQrkgOOBQcjmTjcb/h7iGHeggz
-         K2bxCcc/CaRmmDGbJwKsrKuX8rK2S51/fvbDu7P6OiH9Dy/F10V3Of2BBIx0PLGi4R
-         yH2TC9RpAVoMjTV9gfoL4JB8xGs2WyjkssWPUKdk=
-Date:   Thu, 21 Jan 2021 17:11:51 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Subject: Re: [RFC 1/1] s390/pci: expose UID checking state in sysfs
-Message-ID: <YAmnx2AkVc0rbibQ@kroah.com>
-References: <1cf42837-bf98-944f-697c-8407a0ebd623@linux.ibm.com>
- <20210121155445.GA2657778@bjorn-Precision-5520>
+        id S2387790AbhAUQYM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 21 Jan 2021 11:24:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 28A46206D8;
+        Thu, 21 Jan 2021 16:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611246211;
+        bh=uROovJ44LLe0pdBZ9ITux1uflMtGS1qHKsqt1LSzBXA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=afQhVqID28+G/Hp/5oipH1QBbcyCG1tF2aPrHexosB7ouHUAaYc2PkmgdjKTDCByf
+         uWqBCp5gKkwcUriaebIz+rfKzXQ9dxpOjdGbWSqj59rnMDZsu/9AyUSZDz9VIGHfVh
+         S8yW4UK2zvKwzCktGIWPtPIA2n4JCa8qLxX8LH5G5NWNmAty0JmcnLILdIL2FuIuCc
+         uZXwqVJSFAJrOUKhC024irFtXGIogD7R67yKhO+wuWHYN3hYzclqVVEoajPyYriexU
+         c1yZA3s4mQUcDy3yCrQRIZJNj6oBCo8K77rXGvEvOiXGf8mXeCzifbikUSkwOcr8MJ
+         1JCHmpS+YKIqg==
+Received: by wens.tw (Postfix, from userid 1000)
+        id 6B2DA5FB93; Fri, 22 Jan 2021 00:23:28 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Johan Jonker <jbx6244@gmail.com>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v4 0/4] arm64: rockchip: Fix PCIe ep-gpios requirement and Add Nanopi M4B
+Date:   Fri, 22 Jan 2021 00:23:17 +0800
+Message-Id: <20210121162321.4538-1-wens@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210121155445.GA2657778@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 09:54:45AM -0600, Bjorn Helgaas wrote:
-> [Greg may be able to help compare/contrast this s390 UID with udev
-> persistent names]
-> 
-> On Thu, Jan 21, 2021 at 04:31:55PM +0100, Niklas Schnelle wrote:
-> > On 1/15/21 4:29 PM, Bjorn Helgaas wrote:
-> > > On Fri, Jan 15, 2021 at 12:20:59PM +0100, Niklas Schnelle wrote:
-> > >> On 1/14/21 5:14 PM, Greg Kroah-Hartman wrote:
-> > >>> On Thu, Jan 14, 2021 at 04:51:17PM +0100, Niklas Schnelle wrote:
-> > >>>> On 1/14/21 4:17 PM, Greg Kroah-Hartman wrote:
-> > >>>>> On Thu, Jan 14, 2021 at 04:06:11PM +0100, Niklas Schnelle wrote:
-> > >>>>>> On 1/14/21 2:58 PM, Greg Kroah-Hartman wrote:
-> > >>>>>>> On Thu, Jan 14, 2021 at 02:44:53PM +0100, Christian Brauner wrote:
-> > >>>>>>>> On Thu, Jan 14, 2021 at 02:20:10PM +0100, Niklas Schnelle wrote:
-> > >>>>>>>>> On 1/13/21 7:55 PM, Bjorn Helgaas wrote:
-> > >>>>>>>>>> On Wed, Jan 13, 2021 at 08:47:58AM +0100, Niklas Schnelle wrote:
-> > >>>>>>>>>>> On 1/12/21 10:50 PM, Bjorn Helgaas wrote:
-> > >> ... snip ...
-> > >>
-> > >>>
-> > >>>> 	if (!zpci_global_kset)
-> > >>>> 		return -ENOMEM;
-> > >>>>
-> > >>>> 	return sysfs_create_group(&zpci_global_kset->kobj, &zpci_attr_group_global);
-> > >>>
-> > >>> Huge hint, if in a driver, or bus subsystem, and you call sysfs_*,
-> > >>> that's usually a huge clue that you are doing something wrong.
-> > >>>
-> > >>> Try the above again, with a simple attribute group, and name for it, and
-> > >>> it should "just work".
-> > >>
-> > >> I'm probably missing something but I don't get how this could work
-> > >> in this case. If I'm seeing this right the default attribute group
-> > >> here is pci_bus_type.bus_groups and that is already set in
-> > >> drivers/pci/pci-driver.c so I don't think I should set that.
-> > >>
-> > >> I did however find bus_create_file() which does work when using the
-> > >> path /sys/bus/pci/uid_checking instead. This would work for us if
-> > >> Bjorn is okay with that path and the code is really clean and simple
-> > >> too.
-> > >>
-> > >> That said, I think we could also add something like
-> > >> bus_create_group().  Then we could use that to also clean up
-> > >> drivers/pci/slot.c:pci_slot_init() and get the original path
-> > >> /sys/bus/pci/zpci/uid_checking.
-> > > 
-> > > I don't think "uid_checking" is quite the right name.  It says
-> > > something about the *implementation*, but it doesn't convey what that
-> > > *means* to userspace.  IIUC this file tells userspace something about
-> > > whether a given PCI device always has the same PCI domain/bus/dev/fn
-> > > address (or maybe just the same domain?)
-> > > 
-> > > It sounds like this feature could be useful beyond just s390, and
-> > > other arches might implement it differently, without the UID concept.
-> > > If so, I'm OK with something at the /sys/bus/pci/xxx level as long as
-> > > the name is not s390-specific (and "uid" sounds s390-specific).
-> > > 
-> > > I assume it would also help with the udev/systemd end if you could
-> > > make this less s390 dependent.
-> > 
-> > I've thought about this more and even implemented a proof of concept
-> > patch for a global attribute using a pcibios_has_reproducible_addressing()
-> > hook. 
-> > 
-> > However after implementing it I think as a more general and
-> > future proof concept it makes more sense to do this as a per device
-> > attribute, maybe as another flag in "stuct pci_dev" named something
-> > like "reliable_address". My reasoning behind this can be best be seen
-> > with a QEMU example. While I expect that QEMU can easily guarantee
-> > that one can always use "0000:01:00.0" for a virtio-pci NIC and
-> > thus enp1s0 interface name, the same might be harder to guarantee
-> > for a SR-IOV VF passed through with vfio-pci in that same VM and
-> > even less so if a thunderbolt controller is passed through and
-> > enumeration may depend on daisy chaining. The QEMU example
-> > also applies to s390 and maybe others will in the future.
-> 
-> I'm a little wary of using the PCI geographical address
-> ("0000:01:00.0") as a stable name.  Even if you can make a way to use
-> that to identify a specific device instance, regardless of how it is
-> plugged in or passed through, it sounds like we could end up with
-> "physical PCI addresses" and "virtual PCI addresses" that look the
-> same and would cause confusion.
+From: Chen-Yu Tsai <wens@csie.org>
 
-Agreed, as we all know, PCI addresses are never a stable name and can
-change every boot on some systems.  Never rely on them, but you can use
-them as a "hint" for something that you have to determine is different
-from something else that is the same type of device.
+Hi everyone,
 
-> This concept sounds similar to the udev concept of a "persistent
-> device name".  What advantages does this s390 UID have over the udev
-> approach?
-> 
-> There are optional PCI device serial numbers that we currently don't
-> really make use of.  Would that be a generic way to help with this?
+This is v4 of my Nanopi M4B series.
 
-Only if you can require that they be unique.  Is there such a
-requirement and who enforces it?
+Changes since v3 include:
 
-For USB, it was only "required" to have unique serial numbers for one
-class of devices (printers), and even then, it really wasn't enforced
-that much so you can't rely on it being unique at all, which makes it
-pretty useless :(
+  - Directly return dev_err_probe() instead of having a separate return
+    statement
 
-thanks,
+Changes since v2 include:
 
-greg k-h
+  - Replaced dev_err() with dev_err_probe() for gpiod_get_optional() error
+  - Added Reviewed-by tag from Robin Murphy for patch 3
+
+Changes since v1 include:
+
+  - Rewrite subject of patch 1 to match existing convention and reference
+    'ep-gpios' DT property instead of the 'ep_gpio' field
+ 
+This series mainly adds support for the new Nanopi M4B, which is a newer
+variant of the Nanopi M4.
+
+The differences against the original Nanopi M4 that are common with the
+other M4V2 revision include:
+
+  - microphone header removed
+  - power button added
+  - recovery button added
+
+Additional changes specific to the M4B:
+
+  - USB 3.0 hub removed; board now has 2x USB 3.0 type-A ports and 2x
+    USB 2.0 ports
+  - ADB toggle switch added; this changes the top USB 3.0 host port to
+    a peripheral port
+  - Type-C port no longer supports data or PD
+  - WiFi/Bluetooth combo chip switched to AP6256, which supports BT 5.0
+    but only 1T1R (down from 2T2R) for WiFi
+
+While working on this, I found that for the M4 family, the PCIe reset
+pin (from the M.2 expansion board) was not wired to the SoC. Only the
+NanoPC T4 has this wired. This ended up in patches 1 and 3.
+
+Patch 1 makes ep_gpio in the Rockchip PCIe driver optional. This property
+is optional in the DT binding, so this just makes the driver adhere to
+the binding.
+
+Patch 2 adds a new compatible string for the new board.
+
+Patch 3 moves the ep-gpios property of the pcie controller from the
+common nanopi4.dtsi file to the nanopc-t4.dts file.
+
+Patch 4 adds a new device tree file for the new board. It includes the
+original device tree for the M4, and then lists the differences.
+
+Given that patch 3 would make PCIe unusable without patch 1, I suggest
+merging patch 1 through the PCI tree as a fix for 5.11, and the rest
+for 5.12 through the Rockchip tree.
+
+Please have a look. The changes are mostly trivial.
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (4):
+  PCI: rockchip: Make 'ep-gpios' DT property optional
+  dt-bindings: arm: rockchip: Add FriendlyARM NanoPi M4B
+  arm64: dts: rockchip: nanopi4: Move ep-gpios property to nanopc-t4
+  arm64: dts: rockchip: rk3399: Add NanoPi M4B
+
+ .../devicetree/bindings/arm/rockchip.yaml     |  1 +
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ .../boot/dts/rockchip/rk3399-nanopc-t4.dts    |  1 +
+ .../boot/dts/rockchip/rk3399-nanopi-m4b.dts   | 52 +++++++++++++++++++
+ .../boot/dts/rockchip/rk3399-nanopi4.dtsi     |  1 -
+ drivers/pci/controller/pcie-rockchip.c        |  9 ++--
+ 6 files changed, 59 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4b.dts
+
+-- 
+2.29.2
+
