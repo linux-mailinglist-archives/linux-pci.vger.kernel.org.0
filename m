@@ -2,171 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F343F3004CB
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jan 2021 15:05:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 089253004F8
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jan 2021 15:12:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbhAVODu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jan 2021 09:03:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbhAVODW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jan 2021 09:03:22 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 123BCC06174A;
-        Fri, 22 Jan 2021 06:02:42 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id bx12so6647355edb.8;
-        Fri, 22 Jan 2021 06:02:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rJTtOq8f3FlXKNS2xc6ac2je/Zvq93yXj8Whnd3Or3M=;
-        b=X3g4hnUQFKT/NU/h5d8/fUqMKlC+/2uBgHiH2GmXlUtOrwHENTKO5h6e0oyvpL3Z0w
-         g/HkwRCgYa6BNDwoSfTDzK41Kjouh1XUPZqh7uWnWverY+V6dyEynL/86jIgL3cefFJ6
-         hgk9awlKyZ7+09UHDJHzVLKn5B23FCQhFNYyLhsphUqwLmgKXNfY+RPxSbQ6GNard1nV
-         ddc7t2WPT9vo/7HO2SII0XEl7cjLl7FFN1UXBCAKCxOM7LDnDCgb9x3d/OCYayP/3Odw
-         mBP7CN0KJ4SHjIYqPB05hUDof2976vr9DGtEAaxfo3RofWnbnCnXiTR3+IBa2Jwnts+R
-         hr1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rJTtOq8f3FlXKNS2xc6ac2je/Zvq93yXj8Whnd3Or3M=;
-        b=gTPXko01bGJxYWc0VZlmZqJhMuU5/ZgOQtr+S6W8ZxYMPCCaR3WSBORYpE88AIWvco
-         EFquetk2h6EWY6TwtcMOYazk4uDY6LDyGvqOaCic9b8uzf4Bfyg3mWVl7s21N1d/Eb8t
-         QHOBcHc63tCAig8VJlpkPvXHdr7KEHpmq0m/E3BZN9cAjK1T6z0/Vr9VvZP4z7lKJcjz
-         ObS9JJu8VgVioc/59cn1olY/gu9gtszSQLKKFy14efxU1Irge6Qb7pkG2wwnohhFj/i/
-         AaWdtCq+cz/QWrYbQq+S0hnZTgPgO7eZ99jAKDwfVry2XLm18MXLmdILH42cFGvqlBHb
-         TW2w==
-X-Gm-Message-State: AOAM532xB/wam0aNYP4+8RFrg/7cyMlTNKOrwBKYzpVed5WmcTf8cuwW
-        0pjCMrfxj0HV4iyYi/S5h8Q=
-X-Google-Smtp-Source: ABdhPJys+MBeoVfqapSNF84elvf+M7qMEaeBOGGFAU/c93EVbQWEqFFcrrGZaVn999BHQajxg1OGWg==
-X-Received: by 2002:a50:d6dc:: with SMTP id l28mr3383739edj.105.1611324160810;
-        Fri, 22 Jan 2021 06:02:40 -0800 (PST)
-Received: from [192.168.2.2] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g2sm4464232ejk.108.2021.01.22.06.02.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Jan 2021 06:02:40 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] dt-bindings: rockchip: Add DesignWare based PCIe
- controller
-To:     xxm <xxm@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Heiko Stuebner <heiko@sntech.de>
-References: <20210120101554.241029-1-xxm@rock-chips.com>
- <3af70037-c05d-1759-2bae-41db1e8e2768@gmail.com>
- <31b54a67-eb1e-fa57-fff7-a0c867f27cc6@rock-chips.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <9c560852-8ebf-61a6-906b-9cc8ced8bed0@gmail.com>
-Date:   Fri, 22 Jan 2021 15:02:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1728286AbhAVOLA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jan 2021 09:11:00 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51656 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728141AbhAVOKQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jan 2021 09:10:16 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10ME8IVL110496;
+        Fri, 22 Jan 2021 08:08:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1611324498;
+        bh=w4XabDkfYqLlpKtLwnIUmLYMQ/z5aYMl+m+dHwL0v8k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=u3V0pMykhDgUZEJa1Dcxg7xSweOtPYaboOkgMlSYxfAinatt5Oumasnh9sDmrscyD
+         uJRTD05gzPBqiXEEVQaNGdciyLVlGgxgDeRxc8nVP+Gx1pPXXVVZodT449HRngtfSP
+         dv6EFYD+Akzg0V91ILj+8qnfcnpgdsY38Uib4G1A=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10ME8I6e072597
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Jan 2021 08:08:18 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ Jan 2021 08:08:18 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 Jan 2021 08:08:18 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10ME8BrS073625;
+        Fri, 22 Jan 2021 08:08:13 -0600
+Subject: Re: [PATCH v9 17/17] Documentation: PCI: Add userguide for PCI
+ endpoint NTB function
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
+References: <20210119181852.GA2495234@bjorn-Precision-5520>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <809ab02c-8cc2-86ea-0524-b9350d38c684@ti.com>
+Date:   Fri, 22 Jan 2021 19:38:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <31b54a67-eb1e-fa57-fff7-a0c867f27cc6@rock-chips.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210119181852.GA2495234@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Simon,
+Hi Bjorn,
 
-A few comments, have a look if it is useful or that you disagree.
+On 20/01/21 12:04 am, Bjorn Helgaas wrote:
+> On Mon, Jan 04, 2021 at 08:59:09PM +0530, Kishon Vijay Abraham I wrote:
+>> Add documentation to help users use pci-epf-ntb function driver and
+>> existing host side NTB infrastructure for NTB functionality.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+>> ---
+>>  Documentation/PCI/endpoint/index.rst         |   1 +
+>>  Documentation/PCI/endpoint/pci-ntb-howto.rst | 160 +++++++++++++++++++
+>>  2 files changed, 161 insertions(+)
+>>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
+>>
+>> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+>> index 9cb6e5f3c4d5..38ea1f604b6d 100644
+>> --- a/Documentation/PCI/endpoint/index.rst
+>> +++ b/Documentation/PCI/endpoint/index.rst
+>> @@ -12,6 +12,7 @@ PCI Endpoint Framework
+>>     pci-test-function
+>>     pci-test-howto
+>>     pci-ntb-function
+>> +   pci-ntb-howto
+>>  
+>>     function/binding/pci-test
+>>     function/binding/pci-ntb
+>> diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
+>> new file mode 100644
+>> index 000000000000..b6e1073c9a39
+>> --- /dev/null
+>> +++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
+>> @@ -0,0 +1,160 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +===================================================================
+>> +PCI Non-Transparent Bridge (NTB) Endpoint Function (EPF) User Guide
+>> +===================================================================
+>> +
+>> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+>> +
+>> +This document is a guide to help users use pci-epf-ntb function driver
+>> +and ntb_hw_epf host driver for NTB functionality. The list of steps to
+>> +be followed in the host side and EP side is given below. For the hardware
+>> +configuration and internals of NTB using configurable endpoints see
+>> +Documentation/PCI/endpoint/pci-ntb-function.rst
+>> +
+>> +Endpoint Device
+>> +===============
+>> +
+>> +Endpoint Controller Devices
+>> +---------------------------
+>> +
+>> +For implementing NTB functionality at least two endpoint controller devices
+>> +are required.
+>> +To find the list of endpoint controller devices in the system::
+> 
+> Is the above one paragraph or two?  Reflow or add blank line as
+> appropriate.
 
-/////
+I'll add blank line above.
 
-The format of ranges in your pcie node in rk3568.dtsi and your example
-is wrong!
-
-  ranges:
-    oneOf:
-      - $ref: "/schemas/types.yaml#/definitions/flag"
-      - minItems: 1
-        maxItems: 32    # Should be enough
-        items:
-          minItems: 5
-          maxItems: 7
-          additionalItems: true
-          items:
-            - enum:
-                - 0x01000000
-                - 0x02000000
-                - 0x03000000
-                - 0x42000000
-                - 0x43000000
-                - 0x81000000
-                - 0x82000000
-                - 0x83000000
-                - 0xc2000000
-                - 0xc3000000
-
-The array size is 3: ==> maxItems: 3
-in a array a range of 5 to 7 u64 is expected.
-They must start with one of the enums above!
-yaml dt_check expects <> around every array member!
-
-Old example:
-
-ranges = <0x00000800 0x0 0x80000000 0x3 0x80000000 0x0 0x800000
-
-0x00000800 is not in the list of above, please recheck!
-
-          0x81000000 0x0 0x80800000 0x3 0x80800000 0x0 0x100000
-          0x83000000 0x0 0x80900000 0x3 0x80900000 0x0 0x3f700000>;
-
-New example:
-FICTION example with correct first element, but maybe NOT good for
-Rockchip pcie!
-
-ranges = <0x81000000 0x0 0x80000000 0x3 0x80000000 0x0 0x800000>,
-         <0x81000000 0x0 0x80800000 0x3 0x80800000 0x0 0x100000>,
-         <0x83000000 0x0 0x80900000 0x3 0x80900000 0x0 0x3f700000>;
-	
-Change this also in rk3568.dtsi!
-
-/////
-
-rockchip_add_pcie_port()
-
-For FTRACE filters it is needed that all functions start with the same
-function prefix.
-
-Maybe use:
-rockchip_pcie_add_port()
-
-/////
-
-The function prefix of pcie-dw-rockchip.c is identical with functions in
-pcie-rockchip-host.c
-Is that OK for the maintainers?
-
-/////
-
-+static struct platform_driver rockchip_pcie_driver = {
-+	.driver = {
-+		.name	= "rk-pcie",
-
-Maybe change to:
-
-+		.name	= "rockchip-dw-pcie",
-
-This name shows up in the kernel log.
-Could you keep it in line with other Rockchip names, so we can filter
-more easy?
-
-dmesg | grep rockchip
-
-rockchip-vop
-rochchip-drm
-etc.
-
-+		.of_match_table = rockchip_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = rockchip_pcie_probe,
-+};
-
-/////
+Thanks
+Kishon
