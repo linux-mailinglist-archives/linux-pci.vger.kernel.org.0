@@ -2,198 +2,289 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ED62300946
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jan 2021 18:09:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEC52300BBA
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jan 2021 19:46:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbhAVRI5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jan 2021 12:08:57 -0500
-Received: from mga06.intel.com ([134.134.136.31]:6192 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729575AbhAVRIu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 22 Jan 2021 12:08:50 -0500
-IronPort-SDR: 8q1JZnoFh6/Ov4uE3tiQfOD8noZtd7gcFNnduNcvfwAEXq9praj/AfOHBKA6s2WjhMgOmHXlsN
- ds1hjG/BCh6Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9872"; a="241014315"
-X-IronPort-AV: E=Sophos;i="5.79,367,1602572400"; 
-   d="scan'208";a="241014315"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 09:08:08 -0800
-IronPort-SDR: uCDpyMIblkwPQQuh3jthwwt+zajyW0pO+I5VI7d7NstXQkK4jCq3xnDTJlSNItCSxDhuKmzm4j
- ojQQ9sQK0swg==
-X-IronPort-AV: E=Sophos;i="5.79,367,1602572400"; 
-   d="scan'208";a="357096396"
-Received: from entan-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.129.121])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 09:08:07 -0800
-Date:   Fri, 22 Jan 2021 09:08:06 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        "linux-acpi@vger.kernel.org, Ira Weiny" <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jon Masters <jcm@jonmasters.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        daniel.lll@alibaba-inc.com
-Subject: Re: [RFC PATCH v3 10/16] cxl/mem: Add send command
-Message-ID: <20210122170806.lbimm7dzlo3t4b6j@intel.com>
-References: <20210111225121.820014-1-ben.widawsky@intel.com>
- <20210111225121.820014-11-ben.widawsky@intel.com>
- <20210114171038.00003636@Huawei.com>
- <20210121181546.fqmsecgqklh4hep4@intel.com>
- <20210122114357.00001af9@Huawei.com>
+        id S1729051AbhAVSoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jan 2021 13:44:22 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54306 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728407AbhAVOUw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jan 2021 09:20:52 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10MEJ0Ub114282;
+        Fri, 22 Jan 2021 08:19:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1611325140;
+        bh=DsOvnr9WyeNbm72xXsxkc4ITW7ucVmRQuFGzTZmHPc8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=agChah64OGf9H5Ursk5i5syAzS2CugcoqFBYVP89uj0NZIqP5Ot/6ufi3jQlou3rV
+         HI9hk3WbEBQzMz3ohokhFc+5S32baA0r+2P6trcgV3xLxEMdVpLH14Kmfqn6746f6B
+         I651mSZ20/gq+Iwh4G/L6khTxo5zXQZ/JXNd6TzI=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10MEJ0AC019739
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 22 Jan 2021 08:19:00 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
+ Jan 2021 08:18:59 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 22 Jan 2021 08:18:59 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10MEIrTc042677;
+        Fri, 22 Jan 2021 08:18:55 -0600
+Subject: Re: [PATCH v9 01/17] Documentation: PCI: Add specification for the
+ *PCI NTB* function device
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
+References: <20210119181106.GA2493893@bjorn-Precision-5520>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <797ec9f2-34c3-5dc4-cc0a-d4f7cdf4afb0@ti.com>
+Date:   Fri, 22 Jan 2021 19:48:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210122114357.00001af9@Huawei.com>
+In-Reply-To: <20210119181106.GA2493893@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-01-22 11:43:57, Jonathan Cameron wrote:
-> On Thu, 21 Jan 2021 10:15:46 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > On 21-01-14 17:10:38, Jonathan Cameron wrote:
-> > > On Mon, 11 Jan 2021 14:51:14 -0800
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >   
-> > > > The send command allows userspace to issue mailbox commands directly to
-> > > > the hardware. The driver will verify basic properties of the command and
-> > > > possible inspect the input (or output) payload to determine whether or
-> > > > not the command is allowed (or might taint the kernel).
-> > > > 
-> > > > The list of allowed commands and their properties can be determined by
-> > > > using the QUERY IOCTL for CXL memory devices.
-> > > > 
-> > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > ---
-> > > >  drivers/cxl/mem.c            | 204 ++++++++++++++++++++++++++++++++++-
-> > > >  include/uapi/linux/cxl_mem.h |  39 +++++++
-> > > >  2 files changed, 239 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > index d4eb3f5b9469..f979788b4d9f 100644
-> > > > --- a/drivers/cxl/mem.c
-> > > > +++ b/drivers/cxl/mem.c
-> > > > @@ -84,6 +84,13 @@ static DEFINE_IDR(cxl_mem_idr);
-> > > >  /* protect cxl_mem_idr allocations */
-> > > >  static DEFINE_MUTEX(cxl_memdev_lock);
-> > > >  
-> > > > +#undef C
-> > > > +#define C(a, b) { b }  
-> > > 
-> > > I'm not following why this is here?
-> > >   
-> > 
-> > It's used for a debug message in handle_mailbox_cmd_from_user(). This is all the
-> > macro magic stolen from ftrace. Or, did I miss the question?
-> > 
-> > > > +static struct {
-> > > > +	const char *name;
-> > > > +} command_names[] = { CMDS };
-> > > > +#undef C
-> 
-> Mostly that you define it then undef it without use that I can see.
-> 
-> > > > +
-> > > >  #define CXL_CMD(_id, _flags, sin, sout, f)                                     \
-> > > >  	[CXL_MEM_COMMAND_ID_##_id] = {                                         \
-> > > >  		{                                                              \  
-> > > ...
-> > >   
-> > > > +
-> > > > +/**
-> > > > + * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
-> > > > + * @cxlmd: The CXL memory device to communicate with.
-> > > > + * @cmd: The validated command.
-> > > > + * @in_payload: Pointer to userspace's input payload.
-> > > > + * @out_payload: Pointer to userspace's output payload.
-> > > > + * @u: The command submitted by userspace. Has output fields.
-> > > > + *
-> > > > + * Return:
-> > > > + *  * %0	- Mailbox transaction succeeded.
-> > > > + *  * %-EFAULT	- Something happened with copy_to/from_user.
-> > > > + *  * %-EINTR	- Mailbox acquisition interrupted.
-> > > > + *  * %-E2BIG   - Output payload would overrun buffer.
-> > > > + *
-> > > > + * Creates the appropriate mailbox command on behalf of a userspace request.
-> > > > + * Return value, size, and output payload are all copied out to @u. The
-> > > > + * parameters for the command must be validated before calling this function.
-> > > > + *
-> > > > + * A 0 return code indicates the command executed successfully, not that it was
-> > > > + * itself successful. IOW, the retval should always be checked if wanting to  
-> > > 
-> > > cmd->retval perhaps to be more explicit?
-> > >   
-> > > > + * determine the actual result.
-> > > > + */
-> > > > +static int handle_mailbox_cmd_from_user(struct cxl_memdev *cxlmd,
-> > > > +					const struct cxl_mem_command *cmd,
-> > > > +					u64 in_payload,
-> > > > +					u64 out_payload,
-> > > > +					struct cxl_send_command __user *u)
-> > > > +{
-> > > > +	struct mbox_cmd mbox_cmd = {
-> > > > +		.opcode = cmd->opcode,
-> > > > +		.size_in = cmd->info.size_in,
-> > > > +		.payload = NULL, /* Copied by copy_to|from_user() */
-> > > > +	};
-> > > > +	int rc;
-> > > > +
-> > > > +	if (cmd->info.size_in) {
-> > > > +		/*
-> > > > +		 * Directly copy the userspace payload into the hardware. UAPI
-> > > > +		 * states that the buffer must already be little endian.
-> > > > +		 */
-> > > > +		if (copy_from_user((__force void *)cxl_payload_regs(cxlmd->cxlm),
-> > > > +				   u64_to_user_ptr(in_payload),
-> > > > +				   cmd->info.size_in)) {
-> > > > +			cxl_mem_mbox_put(cxlmd->cxlm);  
-> > > 
-> > > mbox_get is after this point though it shouldn't be given we just
-> > > wrote into the mbox registers.
-> > > 
-> > > This seems unlikely to be a high performance path, so perhaps just
-> > > use a local buffer and let cxl_mem_mbox_send_cmd copy it into the registers.
-> > >   
-> > 
-> > You're correct about the get() needing to be first. I will fix it. As for
-> > performance path - so while this does potentially help with performance, it
-> > actually ends up being I think a little cleaner to not have to deal with a local
-> > buffer.
-> > 
-> > How strongly do you feel about it? I'd say if you don't care so much, let's keep
-> > it as is and find a reason to undo later.
-> 
-> A slightly interesting corner.  The fact that there are no other cases of this
-> particular sequence in kernel bothered me...  It's more than possible I've
-> missed something in the following.
-> 
-> So with a bounce buffered we'd have
-> copy_from_user()
-> then 
-> memcpy_toio()
-> 
-> here we end loosing the fact that memcpy_to_io() might not be a 'simple' memcpy().
-> In the generic asm form it's just a (__force void *) like you have here done using
-> __io_virt() (which might make sense here if you keep this, to make it clear
-> what's going on)
-> 
-> However, not all architectures are using the generic form of memcpy_toio()
-> and even if the ones we care about are safe today using the above construct,
-> it's more than possible some future architecture might be more 'exciting'.
-> 
-> So basically I'm doubtful that this construct is safe.
-> 
-> Jonathan
-> 
+Hi Bjorn,
 
-Sounds reasonable.
+On 20/01/21 12:04 am, Bjorn Helgaas wrote:
+> On Mon, Jan 04, 2021 at 08:58:53PM +0530, Kishon Vijay Abraham I wrote:
+>> Add specification for the *PCI NTB* function device. The endpoint function
+>> driver and the host PCI driver should be created based on this
+>> specification.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> A few typos below if there's opportunity for revisions.
 
-Thanks for digging. I'll go back to the bounce buffer in v4.
+I'll fix them.
+> 
+>> ---
+>>  Documentation/PCI/endpoint/index.rst          |   1 +
+>>  .../PCI/endpoint/pci-ntb-function.rst         | 351 ++++++++++++++++++
+>>  2 files changed, 352 insertions(+)
+>>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
+>>
+>> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+>> index 4ca7439fbfc9..ef6861128506 100644
+>> --- a/Documentation/PCI/endpoint/index.rst
+>> +++ b/Documentation/PCI/endpoint/index.rst
+>> @@ -11,5 +11,6 @@ PCI Endpoint Framework
+>>     pci-endpoint-cfs
+>>     pci-test-function
+>>     pci-test-howto
+>> +   pci-ntb-function
+>>  
+>>     function/binding/pci-test
+>> diff --git a/Documentation/PCI/endpoint/pci-ntb-function.rst b/Documentation/PCI/endpoint/pci-ntb-function.rst
+>> new file mode 100644
+>> index 000000000000..a57908be4047
+>> --- /dev/null
+>> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
+>> @@ -0,0 +1,351 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +=================
+>> +PCI NTB Function
+>> +=================
+>> +
+>> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+>> +
+>> +PCI Non Transparent Bridges (NTB) allow two host systems to communicate
+>> +with each other by exposing each host as a device to the other host.
+>> +NTBs typically support the ability to generate interrupts on the remote
+>> +machine, expose memory ranges as BARs and perform DMA.  They also support
+>> +scratchpads which are areas of memory within the NTB that are accessible
+>> +from both machines.
+>> +
+>> +PCI NTB Function allows two different systems (or hosts) to communicate
+>> +with each other by configurig the endpoint instances in such a way that
+>> +transactions from one system is routed to the other system.
+> 
+> s/is/are/
+> 
+>> +In the below diagram, PCI NTB function configures the SoC with multiple
+>> +PCIe Endpoint (EP) instances in such a way that transaction from one EP
+>> +controller is routed to the other EP controller. Once PCI NTB function
+> 
+> s/transaction ... is/transactions ... are/
+> 
+>> +configures the SoC with multiple EP instances, HOST1 and HOST2 can
+>> +communicate with each other using SoC as a bridge.
+>> +
+>> +.. code-block:: text
+>> +
+>> +    +-------------+                                   +-------------+
+>> +    |             |                                   |             |
+>> +    |    HOST1    |                                   |    HOST2    |
+>> +    |             |                                   |             |
+>> +    +------^------+                                   +------^------+
+>> +           |                                                 |
+>> +           |                                                 |
+>> + +---------|-------------------------------------------------|---------+
+>> + |  +------v------+                                   +------v------+  |
+>> + |  |             |                                   |             |  |
+>> + |  |     EP      |                                   |     EP      |  |
+>> + |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
+>> + |  |             <----------------------------------->             |  |
+>> + |  |             |                                   |             |  |
+>> + |  |             |                                   |             |  |
+>> + |  |             |  SoC With Multiple EP Instances   |             |  |
+>> + |  |             |  (Configured using NTB Function)  |             |  |
+>> + |  +-------------+                                   +-------------+  |
+>> + +---------------------------------------------------------------------+
+>> +
+>> +Constructs used for Implementing NTB
+>> +====================================
+>> +
+>> +	1) Config Region
+>> +	2) Self Scratchpad Registers
+>> +	3) Peer Scratchpad Registers
+>> +	4) Doorbell Registers
+>> +	5) Memory Window
+>> +
+>> +
+>> +Config Region:
+>> +--------------
+>> +
+>> +Config Region is a construct that is specific to NTB implemented using NTB
+>> +Endpoint Function Driver. The host and endpoint side NTB function driver will
+>> +exchange information with each other using this region. Config Region has
+>> +Control/Status Registers for configuring the Endpoint Controller. Host can
+>> +write into this region for configuring the outbound ATU and to indicate the
+> 
+> Expand "ATU" since this is the first mention.
+> 
+>> +link status. Endpoint can indicate the status of commands issued be host in
+>> +this region. Endpoint can also indicate the scratchpad offset, number of
+>> +memory windows to the host using this region.
+> 
+> s/be host/by host/
+> s/offset, number/offset and number/
+> 
+>> +The format of Config Region is given below. Each of the fields here are 32
+>> +bits.
+> 
+> s/Each ... are/All ... are/
+> 
+>> +
+>> +.. code-block:: text
+>> +
+>> +	+------------------------+
+>> +	|         COMMAND        |
+>> +	+------------------------+
+>> +	|         ARGUMENT       |
+>> +	+------------------------+
+>> +	|         STATUS         |
+>> +	+------------------------+
+>> +	|         TOPOLOGY       |
+>> +	+------------------------+
+>> +	|    ADDRESS (LOWER 32)  |
+>> +	+------------------------+
+>> +	|    ADDRESS (UPPER 32)  |
+>> +	+------------------------+
+>> +	|           SIZE         |
+>> +	+------------------------+
+>> +	|   NO OF MEMORY WINDOW  |
+>> +	+------------------------+
+>> +	|  MEMORY WINDOW1 OFFSET |
+>> +	+------------------------+
+>> +	|       SPAD OFFSET      |
+>> +	+------------------------+
+>> +	|        SPAD COUNT      |
+>> +	+------------------------+
+>> +	|      DB ENTRY SIZE     |
+>> +	+------------------------+
+>> +	|         DB DATA        |
+>> +	+------------------------+
+>> +	|            :           |
+>> +	+------------------------+
+>> +	|            :           |
+>> +	+------------------------+
+>> +	|         DB DATA        |
+>> +	+------------------------+
+>> +
+>> +
+>> +  COMMAND:
+>> +
+>> +	NTB function supports three commands:
+>> +
+>> +	  CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
+>> +	invoking this command, the host should allocate and initialize
+>> +	MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
+> 
+> s/i.e/i.e.,/
+> 
+>> +	Endpoint). The endpoint on receiving this command will configure
+>> +	the outbound ATU such that transaction to DB BAR will be routed
+>> +	to the MSI/MSI-X address programmed by the host. The ARGUMENT
+> 
+> s/transaction to/transactions to/
+> 
+> Expand "DB BAR".  I assume this refers to "Doorbell BAR" (which itself
+> is not defined).  How do we know which is the Doorbell BAR?
+
+right doorbell. That part is explained in the "Modeling Constructs"
+section below.
+> 
+> Also, "DB" itself needs to be expanded somehow for uses like below:
+> 
+>> +	register should be populated with number of DBs to configure (in the
+>> +	lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
+>> +	(TODO: Add support for MSI-X).
+>> +
+>> +	  CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
+>> +	host invokes this command after allocating a buffer that can be
+>> +	accessed by remote host. The allocated address should be programmed
+>> +	in the ADDRESS register (64 bit), the size should be programmed in
+>> +	the SIZE register and the memory window index should be programmed
+>> +	in the ARGUMENT register. The endpoint on receiving this command
+>> +	will configure the outbound ATU such that trasaction to MW BAR
+>> +	will be routed to the address provided by the host.
+> 
+> How do we know which is the MW BAR?  I assume "MW" refers to "Memory
+> Window".
+
+right memory window. That's again explained in the "Modeling Constructs"
+section below.
+> 
+>> +
+>> +	  CMD_LINK_UP (0x3): Command to indicate an NTB application is
+>> +	bound to the EP device on the host side. Once the endpoint
+>> +	receives this command from both the hosts, the endpoint will
+>> +	raise an LINK_UP event to both the hosts to indicate the hosts
+>> +	can start communicating with each other.
+> 
+> s/raise an/raise a/
+> 
+> I guess this "LINK_UP event" is something other than the PCIe DL_Up
+> state, because each host has already been communicating with the
+> endpoint.  Right?  Is this LINK_UP a software construct?
+
+Yeah. This is when an NTB client application is bound to the NTB device.
+This is used for handshake between the applications running on the two
+hosts.
+
+Thanks
+Kishon
