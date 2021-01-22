@@ -2,289 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC52300BBA
-	for <lists+linux-pci@lfdr.de>; Fri, 22 Jan 2021 19:46:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A67E300CFA
+	for <lists+linux-pci@lfdr.de>; Fri, 22 Jan 2021 20:57:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbhAVSoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jan 2021 13:44:22 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54306 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbhAVOUw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jan 2021 09:20:52 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10MEJ0Ub114282;
-        Fri, 22 Jan 2021 08:19:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1611325140;
-        bh=DsOvnr9WyeNbm72xXsxkc4ITW7ucVmRQuFGzTZmHPc8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=agChah64OGf9H5Ursk5i5syAzS2CugcoqFBYVP89uj0NZIqP5Ot/6ufi3jQlou3rV
-         HI9hk3WbEBQzMz3ohokhFc+5S32baA0r+2P6trcgV3xLxEMdVpLH14Kmfqn6746f6B
-         I651mSZ20/gq+Iwh4G/L6khTxo5zXQZ/JXNd6TzI=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10MEJ0AC019739
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 22 Jan 2021 08:19:00 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 22
- Jan 2021 08:18:59 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 22 Jan 2021 08:18:59 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10MEIrTc042677;
-        Fri, 22 Jan 2021 08:18:55 -0600
-Subject: Re: [PATCH v9 01/17] Documentation: PCI: Add specification for the
- *PCI NTB* function device
+        id S1728425AbhAVTyw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jan 2021 14:54:52 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26669 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729705AbhAVTVm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 Jan 2021 14:21:42 -0500
+IronPort-SDR: tWVqVpZFQsrBMEv8jX3eV5wAGH068/WPYiILMNakOf/hTn/G2Oq0MGkvXGVC1ljBFv2SIzoLZk
+ x3Ek37TCg1+Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9872"; a="243570142"
+X-IronPort-AV: E=Sophos;i="5.79,367,1602572400"; 
+   d="scan'208";a="243570142"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 11:20:54 -0800
+IronPort-SDR: /UCp8tnUPcVYW1FsAnyyEOfDWMtePt0PvNnSnVuWcSH9h2qnt3dp3kgO5YknO1flBM4ySzIHW1
+ ma9lylZFE8PQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,367,1602572400"; 
+   d="scan'208";a="503144093"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga004.jf.intel.com with ESMTP; 22 Jan 2021 11:20:54 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 22 Jan 2021 11:20:53 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 22 Jan 2021 11:20:53 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Fri, 22 Jan 2021 11:20:53 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iBSwrDWUAgYLSOhxDBzYREyx63S7XgJXD/b4fGqVhmJ7CXK43Z/Yup2Z4gd1egRlzDxv4EYSfgF53eMF8fANz8ddXGSWjb7FGn+Log8oGOMHKZl7XatuZj58dUVawINXH/ugaHusETUiVLk3RZlKviIdu4jPBVABLtPTpxFdFNayN4U/p0zPqWmS10bti1D56m8ViWfHEus1HnhVa0boL8dZxfEcPGAhpdp4/02Orm2ltYN5TRn97HoxPQcccYtc44RiQmUmFP+VlJBZ37iqMoU1c5INhp/u/sLkIUrs1N33YVKtAyFefPdUYGKdApc7qHUxMIh+s7lPShcdQ/Xt2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/BBX4ZAuydHsvDl/esE3i4r0DA/S6aYflZU2u9FSkJ0=;
+ b=O96yVakl2m35gc3QYZWEOpLRGOPDQK2JtT7Bok8USJog9P7/vBLq395v/fTazLszJgtqG94BgKzmxvs38IVfoGKfLFb0NFDxnLQZ9Nq/aL48DRKSIZIl1oOnkagCirTkc3orVnuG/H1WKVO0ARY6I008aqxWP11wwQV40WpPBMo27DAKkwBV0vIjIYbQFr+x7lsLtVHn860bL6J8SbfgEWi0dd+djunaqQnhPYK7ZxqKi7KJfOaqQqZcGAfM0xa4qRYwn7G7HA9YG5MltFVfXafdr2ggqnSiTQv3KhFgenxNZQyxcwrh7eH5KcDg9Lp41JwHj+kUuDAAF4dI4P/Y8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/BBX4ZAuydHsvDl/esE3i4r0DA/S6aYflZU2u9FSkJ0=;
+ b=t8viYCEh6iw4KTZigvpr8GezDqMcQeJy/pR80ey/YF+eb3URO2QE8Mnv4FwBrfyObfyoQfyWO6Cb453KQiTp/cqB9nLgsNvIFPOxM0/aAkgyqlGJriwTVWgJTj7yRh1+ZD94sW6cvkTT0b8lTnMBxjq3FgX3NW6gA9+czj/wxQY=
+Received: from MWHPR11MB1406.namprd11.prod.outlook.com (2603:10b6:300:23::18)
+ by MWHPR11MB2061.namprd11.prod.outlook.com (2603:10b6:300:28::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.12; Fri, 22 Jan
+ 2021 19:20:52 +0000
+Received: from MWHPR11MB1406.namprd11.prod.outlook.com
+ ([fe80::2835:4cc2:edf6:3c0d]) by MWHPR11MB1406.namprd11.prod.outlook.com
+ ([fe80::2835:4cc2:edf6:3c0d%9]) with mapi id 15.20.3763.017; Fri, 22 Jan 2021
+ 19:20:52 +0000
+From:   "Thokala, Srikanth" <srikanth.thokala@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>
-References: <20210119181106.GA2493893@bjorn-Precision-5520>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <797ec9f2-34c3-5dc4-cc0a-d4f7cdf4afb0@ti.com>
-Date:   Fri, 22 Jan 2021 19:48:52 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20210119181106.GA2493893@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>
+Subject: RE: [PATCH v6 2/2] PCI: keembay: Add support for Intel Keem Bay
+Thread-Topic: [PATCH v6 2/2] PCI: keembay: Add support for Intel Keem Bay
+Thread-Index: AQHW8CxEYqglrlTf6UWr0PjVJmm9saoyfXIAgAGG52A=
+Date:   Fri, 22 Jan 2021 19:20:52 +0000
+Message-ID: <MWHPR11MB140635AB9C29EDC932E7DBA185A00@MWHPR11MB1406.namprd11.prod.outlook.com>
+References: <20210122032610.4958-3-srikanth.thokala@intel.com>
+ <20210121195206.GA2678455@bjorn-Precision-5520>
+In-Reply-To: <20210121195206.GA2678455@bjorn-Precision-5520>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [122.167.96.157]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a4df0983-4645-46ce-95c9-08d8bf0ad56c
+x-ms-traffictypediagnostic: MWHPR11MB2061:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB20619FF57B0BA1EB25B7A7E385A09@MWHPR11MB2061.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VV7Laxq6JUb3HHQF9Q+MFYhOB5ZAQy0UxBDx/NU3xykJhucTZxpMItvb1O4rHYGj7bcobZQixK5F7luvi6rP99dzeKila8wxHIajXggvf0BA03nBQMh+NVHHcqgLOVWQtm5/VwGh8cJBZhaIUZBDt+XUlMygIf4p3diV45tbzkWsPzUn+UOWXlrZ3viIZVc0KBhtTCdU7vXOGh4sJ5CnvoquXmBZoBPdZcWdgVAlss82A1JLsHX4ZQHibR9uq5EfieB3+/asjyozlbBI4mrWr45h1vHO1vJpezUnFiWdx/xCvVh6mDSwPJF3DSudIIXY3CiNirJoF1oJ7NYm+46hFDQslmed1H0l35nYJjCzvpfwzm407lLGAcPlG8z6CZq5ozPO9LL66H2SCHi8uW74JQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1406.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(53546011)(33656002)(66476007)(26005)(66946007)(64756008)(66446008)(6506007)(186003)(7696005)(86362001)(2906002)(66556008)(8676002)(83380400001)(6916009)(478600001)(5660300002)(76116006)(316002)(71200400001)(54906003)(52536014)(4326008)(55016002)(8936002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?1+cdZrJCiklR81uYQFIziQ9xgKuq2Ylh+dzL0EmX4BMsNG+xkaaBr2XbJ2jr?=
+ =?us-ascii?Q?Ub0mHZLMcvBOVdp/Sy2YSIKBWD1QZBSnCq7bc+EIUEl3UJHhTIEE9txt6eAZ?=
+ =?us-ascii?Q?h2Wgw8clUAbpgUVICtmfI+wUhm6kl7uOve7dj+Pu4D8Xc2cU14GPhQNIXq0G?=
+ =?us-ascii?Q?RhjZcGAsIRYQ9Yjc+PPrkJ+ec4TfpjDhnAm6joBtxI7Udc9zmNOMTdjQ3uqo?=
+ =?us-ascii?Q?Rmtwiidz0ES0/2ToM+v+23VRLepyZwuDKlJi0yqkiXxSk2YjBxWOEqYX6MmL?=
+ =?us-ascii?Q?7fkPsiz/NFM0yw32rpSetNUU0AsPRmBQ2Zvv8ARra2hjKR0s8c3mFu//sNzJ?=
+ =?us-ascii?Q?ySaRPFjtj5oXTb1nz3pSG15tnsFidoTTxH4aNZw62Ty2TTHSoLDrpUjT45SI?=
+ =?us-ascii?Q?MCQXmiDGxg5yoBbHthrXV9OobVFs24L2sI2w+CLhE5SFSKzt75LaNPWh63rM?=
+ =?us-ascii?Q?FFB74CnaEiIhPGZpmNXjkXyC+peYmb1wBlbFrxKbHyjfz5lBJu3gHO6nSBXX?=
+ =?us-ascii?Q?SG7+/pZMciMkXP727Epk+jhh+y+v9jjdkC5DStMS/yCsWo9TGOyK4fdzMplR?=
+ =?us-ascii?Q?Q9xSVmQsPX320TdrrgEUoEYJgWDGcVqPX4ccwVoF98jxkN+UTmms3AYt6kUZ?=
+ =?us-ascii?Q?fldPmtxotIkj/bVph12ZWnc9UaZZHP7S11Sm5rY3xI1IyIfiDEaiB/s00xW/?=
+ =?us-ascii?Q?EAb8f+KSoldz0T1Zw8n4bEfg/lSegn4qayyd9ZMsFU8ZIdDEnfXkD8Vg1v7Y?=
+ =?us-ascii?Q?C1GVvwr2pxY+jxznHDHoV08xsIO3MHFeDTVUu0uFRTr1bwB0dWHdHEeQ+QrU?=
+ =?us-ascii?Q?3tCPdSJD+nxT4Tz7i8hbVaFC1y9PLTUZ2bl36/jbeSCJ8mMPoPZirvMZbDay?=
+ =?us-ascii?Q?h/wIWocVvjYrI957/POYGWIKe1PYnIC+4n79i5EUWxXoqlKJURZPlejochCA?=
+ =?us-ascii?Q?0l4Jgly5kHXKp3PrgYFf13fzitdf+BOJZH0gy4TJFI8=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1406.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4df0983-4645-46ce-95c9-08d8bf0ad56c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2021 19:20:52.3336
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w8XGtULkm5/tQrdNknFJbb8yjh2UIQuFLFp254ytjtRUose2AzKmpwg0DqDK9TgaMSvjMOyERt5KA4pyeV4+ODW13JeQGIlAdZsEJezMq2k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB2061
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
 
-On 20/01/21 12:04 am, Bjorn Helgaas wrote:
-> On Mon, Jan 04, 2021 at 08:58:53PM +0530, Kishon Vijay Abraham I wrote:
->> Add specification for the *PCI NTB* function device. The endpoint function
->> driver and the host PCI driver should be created based on this
->> specification.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> A few typos below if there's opportunity for revisions.
+Thanks for the review.
 
-I'll fix them.
-> 
->> ---
->>  Documentation/PCI/endpoint/index.rst          |   1 +
->>  .../PCI/endpoint/pci-ntb-function.rst         | 351 ++++++++++++++++++
->>  2 files changed, 352 insertions(+)
->>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
->>
->> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
->> index 4ca7439fbfc9..ef6861128506 100644
->> --- a/Documentation/PCI/endpoint/index.rst
->> +++ b/Documentation/PCI/endpoint/index.rst
->> @@ -11,5 +11,6 @@ PCI Endpoint Framework
->>     pci-endpoint-cfs
->>     pci-test-function
->>     pci-test-howto
->> +   pci-ntb-function
->>  
->>     function/binding/pci-test
->> diff --git a/Documentation/PCI/endpoint/pci-ntb-function.rst b/Documentation/PCI/endpoint/pci-ntb-function.rst
->> new file mode 100644
->> index 000000000000..a57908be4047
->> --- /dev/null
->> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
->> @@ -0,0 +1,351 @@
->> +.. SPDX-License-Identifier: GPL-2.0
->> +
->> +=================
->> +PCI NTB Function
->> +=================
->> +
->> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
->> +
->> +PCI Non Transparent Bridges (NTB) allow two host systems to communicate
->> +with each other by exposing each host as a device to the other host.
->> +NTBs typically support the ability to generate interrupts on the remote
->> +machine, expose memory ranges as BARs and perform DMA.  They also support
->> +scratchpads which are areas of memory within the NTB that are accessible
->> +from both machines.
->> +
->> +PCI NTB Function allows two different systems (or hosts) to communicate
->> +with each other by configurig the endpoint instances in such a way that
->> +transactions from one system is routed to the other system.
-> 
-> s/is/are/
-> 
->> +In the below diagram, PCI NTB function configures the SoC with multiple
->> +PCIe Endpoint (EP) instances in such a way that transaction from one EP
->> +controller is routed to the other EP controller. Once PCI NTB function
-> 
-> s/transaction ... is/transactions ... are/
-> 
->> +configures the SoC with multiple EP instances, HOST1 and HOST2 can
->> +communicate with each other using SoC as a bridge.
->> +
->> +.. code-block:: text
->> +
->> +    +-------------+                                   +-------------+
->> +    |             |                                   |             |
->> +    |    HOST1    |                                   |    HOST2    |
->> +    |             |                                   |             |
->> +    +------^------+                                   +------^------+
->> +           |                                                 |
->> +           |                                                 |
->> + +---------|-------------------------------------------------|---------+
->> + |  +------v------+                                   +------v------+  |
->> + |  |             |                                   |             |  |
->> + |  |     EP      |                                   |     EP      |  |
->> + |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
->> + |  |             <----------------------------------->             |  |
->> + |  |             |                                   |             |  |
->> + |  |             |                                   |             |  |
->> + |  |             |  SoC With Multiple EP Instances   |             |  |
->> + |  |             |  (Configured using NTB Function)  |             |  |
->> + |  +-------------+                                   +-------------+  |
->> + +---------------------------------------------------------------------+
->> +
->> +Constructs used for Implementing NTB
->> +====================================
->> +
->> +	1) Config Region
->> +	2) Self Scratchpad Registers
->> +	3) Peer Scratchpad Registers
->> +	4) Doorbell Registers
->> +	5) Memory Window
->> +
->> +
->> +Config Region:
->> +--------------
->> +
->> +Config Region is a construct that is specific to NTB implemented using NTB
->> +Endpoint Function Driver. The host and endpoint side NTB function driver will
->> +exchange information with each other using this region. Config Region has
->> +Control/Status Registers for configuring the Endpoint Controller. Host can
->> +write into this region for configuring the outbound ATU and to indicate the
-> 
-> Expand "ATU" since this is the first mention.
-> 
->> +link status. Endpoint can indicate the status of commands issued be host in
->> +this region. Endpoint can also indicate the scratchpad offset, number of
->> +memory windows to the host using this region.
-> 
-> s/be host/by host/
-> s/offset, number/offset and number/
-> 
->> +The format of Config Region is given below. Each of the fields here are 32
->> +bits.
-> 
-> s/Each ... are/All ... are/
-> 
->> +
->> +.. code-block:: text
->> +
->> +	+------------------------+
->> +	|         COMMAND        |
->> +	+------------------------+
->> +	|         ARGUMENT       |
->> +	+------------------------+
->> +	|         STATUS         |
->> +	+------------------------+
->> +	|         TOPOLOGY       |
->> +	+------------------------+
->> +	|    ADDRESS (LOWER 32)  |
->> +	+------------------------+
->> +	|    ADDRESS (UPPER 32)  |
->> +	+------------------------+
->> +	|           SIZE         |
->> +	+------------------------+
->> +	|   NO OF MEMORY WINDOW  |
->> +	+------------------------+
->> +	|  MEMORY WINDOW1 OFFSET |
->> +	+------------------------+
->> +	|       SPAD OFFSET      |
->> +	+------------------------+
->> +	|        SPAD COUNT      |
->> +	+------------------------+
->> +	|      DB ENTRY SIZE     |
->> +	+------------------------+
->> +	|         DB DATA        |
->> +	+------------------------+
->> +	|            :           |
->> +	+------------------------+
->> +	|            :           |
->> +	+------------------------+
->> +	|         DB DATA        |
->> +	+------------------------+
->> +
->> +
->> +  COMMAND:
->> +
->> +	NTB function supports three commands:
->> +
->> +	  CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
->> +	invoking this command, the host should allocate and initialize
->> +	MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
-> 
-> s/i.e/i.e.,/
-> 
->> +	Endpoint). The endpoint on receiving this command will configure
->> +	the outbound ATU such that transaction to DB BAR will be routed
->> +	to the MSI/MSI-X address programmed by the host. The ARGUMENT
-> 
-> s/transaction to/transactions to/
-> 
-> Expand "DB BAR".  I assume this refers to "Doorbell BAR" (which itself
-> is not defined).  How do we know which is the Doorbell BAR?
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Friday, January 22, 2021 1:22 AM
+> To: Thokala, Srikanth <srikanth.thokala@intel.com>
+> Cc: bhelgaas@google.com; robh+dt@kernel.org; lorenzo.pieralisi@arm.com;
+> linux-pci@vger.kernel.org; devicetree@vger.kernel.org;
+> andriy.shevchenko@linux.intel.com; mgross@linux.intel.com; Raja
+> Subramanian, Lakshmi Bai <lakshmi.bai.raja.subramanian@intel.com>;
+> Sangannavar, Mallikarjunappa <mallikarjunappa.sangannavar@intel.com>
+> Subject: Re: [PATCH v6 2/2] PCI: keembay: Add support for Intel Keem Bay
+>=20
+> On Fri, Jan 22, 2021 at 08:56:10AM +0530, srikanth.thokala@intel.com
+> wrote:
+> > From: Srikanth Thokala <srikanth.thokala@intel.com>
+> >
+> > Add driver for Intel Keem Bay SoC PCIe controller. This controller
+> > is based on DesignWare PCIe core.
+> >
+> > In root complex mode, only internal reference clock is possible for
+> > Keem Bay A0. For Keem Bay B0, external reference clock can be used
+> > and will be the default configuration. Currently, keembay_pcie_of_data
+> > structure has one member. It will be expanded later to handle this
+> > difference.
+> >
+> > Endpoint mode link initialization is handled by the boot firmware.
+> >
+> > Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com=
+>
+> > Signed-off-by: Srikanth Thokala <srikanth.thokala@intel.com>
+> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  MAINTAINERS                               |   7 +
+> >  drivers/pci/controller/dwc/Kconfig        |  28 ++
+> >  drivers/pci/controller/dwc/Makefile       |   1 +
+> >  drivers/pci/controller/dwc/pcie-keembay.c | 446 ++++++++++++++++++++++
+> >  4 files changed, 482 insertions(+)
+> >  create mode 100644 drivers/pci/controller/dwc/pcie-keembay.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 00836f6452f0..2fc0fb03c430 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -13852,6 +13852,13 @@ L:	linux-pci@vger.kernel.org
+> >  S:	Maintained
+> >  F:	drivers/pci/controller/dwc/*spear*
+> >
+> > +PCI DRIVER FOR INTEL KEEM BAY
+> > +M:	Srikanth Thokala <srikanth.thokala@intel.com>
+> > +L:	linux-pci@vger.kernel.org
+> > +S:	Maintained
+> > +F:	Documentation/devicetree/bindings/pci/intel,keembay-pcie*
+> > +F:	drivers/pci/controller/dwc/pcie-keembay.c
+>=20
+> <checks MAINTAINERS> ... yep, all previous entries are in alphabetical
+> order.  This new one just got dropped at the end.
+>=20
+> I feel like a broken record, but please, please, take a look at the
+> surrounding code/text/whatever, and MAKE YOUR NEW STUFF MATCH THE
+> EXISTING STYLE.  We want the whole thing to be reasonably consistent
+> so readers can make sense of it without being confused by the
+> idiosyncrasies of every contributor.
+>=20
+> Also, probably s/PCI DRIVER/PCIE DRIVER/.  We have both (an existing
+> inconsistency), but pick one, put it in the section that matches, and
+> alphabetize.
 
-right doorbell. That part is explained in the "Modeling Constructs"
-section below.
-> 
-> Also, "DB" itself needs to be expanded somehow for uses like below:
-> 
->> +	register should be populated with number of DBs to configure (in the
->> +	lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
->> +	(TODO: Add support for MSI-X).
->> +
->> +	  CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
->> +	host invokes this command after allocating a buffer that can be
->> +	accessed by remote host. The allocated address should be programmed
->> +	in the ADDRESS register (64 bit), the size should be programmed in
->> +	the SIZE register and the memory window index should be programmed
->> +	in the ARGUMENT register. The endpoint on receiving this command
->> +	will configure the outbound ATU such that trasaction to MW BAR
->> +	will be routed to the address provided by the host.
-> 
-> How do we know which is the MW BAR?  I assume "MW" refers to "Memory
-> Window".
+Sorry I missed; I will fix it in my next version.
 
-right memory window. That's again explained in the "Modeling Constructs"
-section below.
-> 
->> +
->> +	  CMD_LINK_UP (0x3): Command to indicate an NTB application is
->> +	bound to the EP device on the host side. Once the endpoint
->> +	receives this command from both the hosts, the endpoint will
->> +	raise an LINK_UP event to both the hosts to indicate the hosts
->> +	can start communicating with each other.
-> 
-> s/raise an/raise a/
-> 
-> I guess this "LINK_UP event" is something other than the PCIe DL_Up
-> state, because each host has already been communicating with the
-> endpoint.  Right?  Is this LINK_UP a software construct?
+>=20
+> > +
+> >  PCMCIA SUBSYSTEM
+> >  M:	Dominik Brodowski <linux@dominikbrodowski.net>
+> >  S:	Odd Fixes
+>=20
+> > +static void keembay_ep_reset_deassert(struct keembay_pcie *pcie)
+> > +{
+> > +	msleep(100);
+>=20
+> Please note the spec section that requires this sleep.  Otherwise it's
+> just an unmaintainable magic number.
 
-Yeah. This is when an NTB client application is bound to the NTB device.
-This is used for handshake between the applications running on the two
-hosts.
+Sure, I will do that.
 
-Thanks
-Kishon
+Thanks!
+Srikanth
+
+>=20
+> > +	gpiod_set_value_cansleep(pcie->reset, 0);
+> > +	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
+> > +}
