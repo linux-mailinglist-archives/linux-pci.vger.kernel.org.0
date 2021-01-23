@@ -2,85 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62D813011CC
-	for <lists+linux-pci@lfdr.de>; Sat, 23 Jan 2021 01:59:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C840E3011E8
+	for <lists+linux-pci@lfdr.de>; Sat, 23 Jan 2021 02:16:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbhAWA7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 22 Jan 2021 19:59:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbhAWA7R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 22 Jan 2021 19:59:17 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BBC5C06174A
-        for <linux-pci@vger.kernel.org>; Fri, 22 Jan 2021 16:58:42 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id a12so1911870lfb.1
-        for <linux-pci@vger.kernel.org>; Fri, 22 Jan 2021 16:58:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5ncuFXAe0aPkuXVB4zgUHcV5LukUVjJ/gSSZpk8KyCI=;
-        b=km2tWbeMu07V3WtG4MkaerY000XrF1c/1khie8U5LGAJq4i9YLUWErJpa8+wxGM14Z
-         2kS+swimo5EGamCwbUavQ6W3uwTc3GHKtrkbOtrTY3vIAQarioZol61BOP2uHDl1fd9I
-         vSrIgUzGFGPMZ/JnKnYIosb2nEHH8aXcz2kTZ/kGD1D7StUMVtuZg+GjISmnlyRJQX5k
-         vKPPRitrqzuMlCAjKInAcr5BbP5oblw70NZ9oSPEYtdjCIYb8RsDTQTQmEqV5U9nt85d
-         fbbOFVBVm5OQ8MMlF7ikN6D1xdk6qsZd7FNSE4D1jw23WmW/n9c71ZnJ0oDmevrAsRsZ
-         FWlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5ncuFXAe0aPkuXVB4zgUHcV5LukUVjJ/gSSZpk8KyCI=;
-        b=QWYmJnYzLlfBuLVsCR2BhupcTknkH2PoPldE94Yf/5hG1uxrSrvI88TrK5FB4wnVDP
-         SIr1YJWv7P6VXUZcqk0tQWNPECaXS0pHPRSR2JGAnRU9LpNvtVU/XAQPOekEWILSlm+/
-         EXJA6zF97NorgHZ2AQRNYXOEfQFS5V3iN7Y+M+sd72m6LJKyDnB/G74IQgAKA9Chtw7+
-         cPDmWt2Nik+xOImY+mZ2uBAI/LVCYpFYhtvo6DKPQQkds3RwR4OSTxFFxVMDvwWhsS+d
-         GZ3wWQ7s0Dh0FqeVz9B2XgSY28Z7v+vstpupSmLgenkbNDXzmndQjCcsvL4jhvF24RjM
-         y+sQ==
-X-Gm-Message-State: AOAM532bBf+lkym+q07vt9zN826EFLsn9+Ok4a4/GPN03QKt1fNaY+8n
-        zEzYCIiXZw11ZZNXsZzQNWQYiZX8glE2yY3m
-X-Google-Smtp-Source: ABdhPJyaX9bp4qTzntkpBvUSvMeB1jaukDVsvi/0+br9gJlDaENWGQTWr369J/ERnqX8fEWyqMBY9Q==
-X-Received: by 2002:a05:6512:71:: with SMTP id i17mr1296590lfo.517.1611363520585;
-        Fri, 22 Jan 2021 16:58:40 -0800 (PST)
-Received: from umbar.lan ([188.162.64.145])
-        by smtp.gmail.com with ESMTPSA id e10sm1138524ljn.79.2021.01.22.16.58.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Jan 2021 16:58:39 -0800 (PST)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: free of node in pci_scan_device's error path
-Date:   Sat, 23 Jan 2021 03:58:38 +0300
-Message-Id: <20210123005838.3623618-1-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.29.2
+        id S1726440AbhAWBQK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 22 Jan 2021 20:16:10 -0500
+Received: from mga04.intel.com ([192.55.52.120]:26863 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbhAWBQD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 22 Jan 2021 20:16:03 -0500
+IronPort-SDR: BBT4I6a6o8su3JlSOcJFJDu3YPkMqYC1SRd96Zvur3qOXH1u8jXIRkMq3sLCiYk59GPIvWvMio
+ FJCGOVTblFqw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9872"; a="176962173"
+X-IronPort-AV: E=Sophos;i="5.79,368,1602572400"; 
+   d="scan'208";a="176962173"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 17:11:20 -0800
+IronPort-SDR: I1QdyjMVMsE07R9pya9Y/gl4ub+rWu5kkiaW1KaPtY/oTQTHU8PHBtTFaEXSLTphYJEN9ytThl
+ Pj9ngkKRDTDA==
+X-IronPort-AV: E=Sophos;i="5.79,368,1602572400"; 
+   d="scan'208";a="386084669"
+Received: from usundar-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.36.142])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 17:11:19 -0800
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: [PATCH v13 0/5] Simplify PCIe native ownership
+Date:   Fri, 22 Jan 2021 17:11:08 -0800
+Message-Id: <cover.1611364024.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In the pci_scan_device() if pci_setup_device() fails for any reason, the
-code will not release device's of_node by calling pci_release_of_node().
-Fix that by calling the release function.
+Currently, PCIe capabilities ownership status is detected by
+verifying the status of pcie_ports_native, and _OSC negotiated
+results (cached in  struct pci_host_bridge->native_* members).
+But this logic can be simplified, and we can use only struct
+pci_host_bridge ->native_* members to detect it. 
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Fixes: 98d9f30c820d ("pci/of: Match PCI devices to OF nodes dynamically")
----
- drivers/pci/probe.c | 1 +
- 1 file changed, 1 insertion(+)
+This patchset removes the distributed checks for pcie_ports_native,
+parameter.
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 953f15abc850..be51670572fa 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2353,6 +2353,7 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
- 	pci_set_of_node(dev);
- 
- 	if (pci_setup_device(dev)) {
-+		pci_release_of_node(dev);
- 		pci_bus_put(dev->bus);
- 		kfree(dev);
- 		return NULL;
+Changes since v12:
+ * Rebased on top of v5.11-rc1
+
+Changes since v11 (Bjorns update):
+ * Add bugfix for DPC with no AER Capability
+ * Split OSC_OWNER trivial changes from pcie_ports_native changes
+ * Temporarily drop pcie_ports_dpc_native changes (revisit it later).
+
+Changes since v10:
+ * Addressed format issue reported by lkp test.
+
+Changes since v9:
+ * Rebased on top of v5.10-rc1
+
+Changes since v8:
+ * Simplified setting _OSC ownwership logic
+ * Moved bridge->native_ltr out of #ifdef CONFIG_PCIEPORTBUS.
+
+Changes since v7:
+ * Fixed "fix array_size.cocci warnings".
+
+Changes since v6:
+ * Created new patch for CONFIG_PCIEPORTBUS check in
+   pci_init_host_bridge().
+ * Added warning message for a case when pcie_ports_native
+   overrides _OSC negotiation result.
+
+Changes since v5:
+ * Rebased on top of v5.8-rc1
+
+Changes since v4:
+ * Changed the patch set title (Original link: https://lkml.org/lkml/2020/5/26/1710)
+ * Added AER/DPC dependency logic cleanup fixes.
+
+Bjorn Helgaas (2):
+  PCI/DPC: Ignore devices with no AER Capability
+  PCI/ACPI: Centralize pci_aer_available() checking
+
+Kuppuswamy Sathyanarayanan (3):
+  PCI: Assume control of portdrv-related features only when portdrv
+    enabled
+  PCI/ACPI: Tidy _OSC control bit checking
+  PCI/ACPI: Centralize pcie_ports_native checking
+
+ drivers/acpi/pci_root.c           | 49 ++++++++++++++++++++++++-------
+ drivers/pci/hotplug/pciehp_core.c |  2 +-
+ drivers/pci/pci-acpi.c            |  3 --
+ drivers/pci/pcie/aer.c            |  2 +-
+ drivers/pci/pcie/dpc.c            |  3 ++
+ drivers/pci/pcie/portdrv_core.c   | 11 +++----
+ drivers/pci/probe.c               |  6 ++--
+ 7 files changed, 51 insertions(+), 25 deletions(-)
+
 -- 
-2.29.2
+2.25.1
 
