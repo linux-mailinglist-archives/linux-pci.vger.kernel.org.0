@@ -2,171 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E043302AA2
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 19:47:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 747A7302AFD
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 20:00:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730443AbhAYSqq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jan 2021 13:46:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730064AbhAYSqS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 25 Jan 2021 13:46:18 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2320522DFB;
-        Mon, 25 Jan 2021 18:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611600344;
-        bh=Z0PYkD5c8k6V+L+B6WcLlwfL+2n9gR6KhmRw0jJXIlE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iAjAaIRatmibVWZrqxhrA/wafXH0y9jZSaTxrxsPjuYzcBqELg5GSXY/hHJIfeT0n
-         Ow0qoLYVHRIBadT7JqOv3CmqlQLEBWbX00eZ1wf97Fk03eH2PQA0mmtWpWDXnRZZGM
-         nKYAjbF7HG07gMlCOTP5ErrdEfu6+ot8H4ENWqpnN3F95f2W0vpGREmkcRZ8PnXH5E
-         mVNlXIQ2a9FOCq+2Hp4DvsfJLiRfya8VaUwmOgb7ZE0XG/EkqgEG9u8Ll/8KJtwTyA
-         uSXarDER2z+3KIBFVz97OL9klmlWeb83MNwemtU3yDkOvTZrxKLgcCwpafRE7Imn9c
-         vjk9snNlD9cqw==
-Date:   Mon, 25 Jan 2021 20:45:41 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     xxm <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Johan Jonker <jbx6244@gmail.com>
-Subject: Re: [PATCH v3 2/2] PCI: rockchip: add DesignWare based PCIe
- controller
-Message-ID: <20210125184541.GJ579511@unreal>
-References: <20210125024824.634583-1-xxm@rock-chips.com>
- <20210125024927.634634-1-xxm@rock-chips.com>
- <20210125054836.GB579511@unreal>
- <0b65ca38-ff7a-f9cd-5406-1f275fbbecd1@rock-chips.com>
- <20210125090129.GF579511@unreal>
- <e7ed6586-06f3-52e3-b2db-38887a5a37e4@arm.com>
+        id S1731400AbhAYTAQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jan 2021 14:00:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbhAYTAB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jan 2021 14:00:01 -0500
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2837C061756
+        for <linux-pci@vger.kernel.org>; Mon, 25 Jan 2021 10:59:20 -0800 (PST)
+Received: by mail-yb1-xb32.google.com with SMTP id i141so14375262yba.0
+        for <linux-pci@vger.kernel.org>; Mon, 25 Jan 2021 10:59:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MycbrezgsQZFT8oqiMufe2gK1ooAaS0SUCHVJFVQ9MQ=;
+        b=D89ARNqQBSe6Gl9R5DO/KGq6f+XwI019KcTyn5HUgOjPlzNOoKDGLvzncEHAHxv7re
+         lb0QJau2yo6HykmQLwhmFTcTH8Sq6QkyRikthUtPyKV308YBxPqBa17hLZ7vVdG82tdr
+         1ZYHEmIoWgXZXzZgGJavOcNzowg9rVJTESsTDHUrdAkVRtjVOXki39cVm64f90B/xnUN
+         p++bUV3uNwbHulfuik0Rs79fbFZMM9ifY6BNJzC7/LyidIkjYH3n/Y3WfoT8VtT0C7bQ
+         vqglJpySbxKD72RPbiNIaXSY6RlQxd1v9SjROcZsCNjlhR4Ys9ezoFcio6JbYI7EjanP
+         cYLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MycbrezgsQZFT8oqiMufe2gK1ooAaS0SUCHVJFVQ9MQ=;
+        b=RrQ1NVupmWhXyi5tvAgrHb6b75UeEdEID/0gXO7kGx6ulO+d4fFLnNEvV9XEqRnJnl
+         quhpjbEiaOQGighFPU2ofZrEPvwjNggMZ1EHfadV88DcZNYvS6sks7L35RFGHov1kWe6
+         e7dkvnRrgCw9KivmIDNuPr00PjCtAZ+R3/4yBWm73TROhu9mf4+4mwwuuCVp01/IbDj3
+         JksRlJAZYafIbcp6clqZxYMzVdGE/naL8zyCVlAf3TcMzgbJsm8jlBwP3M0rGfHXA06D
+         M9bkwth4iL84v3iIh8m7HBZTaBYc8TVoxxe+YsYvRmOD0+woy6qaZ4GJF2fYNDApCgqv
+         ycqw==
+X-Gm-Message-State: AOAM531tf0De+QbqwHUAJ1UvvU6SQTqZ9nxP8Vpqgceg5/oQ7HkjlKB8
+        GsL42P9yHyULp1FTigLsDC3Lj3Y6DLq1cVtt0M5qZg==
+X-Google-Smtp-Source: ABdhPJwgOyKDm0nJVp7CDR5p+pD9pfx6JsaeKrbh2AWLDPYbm1qy57jLH9fVrTDF4d9HZfHyOf/YQTtTZFeWAQ46qnY=
+X-Received: by 2002:a25:2f46:: with SMTP id v67mr3110432ybv.20.1611601159888;
+ Mon, 25 Jan 2021 10:59:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e7ed6586-06f3-52e3-b2db-38887a5a37e4@arm.com>
+References: <20210120105246.23218-1-michael@walle.cc> <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
+ <CAGETcx86HMo=gaDdXFyJ4QQ-pGXWzw2G0J=SjC-eq4K7B1zQHg@mail.gmail.com>
+ <c3e35b90e173b15870a859fd7001a712@walle.cc> <20210125165041.GA5979@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20210125165041.GA5979@e121166-lin.cambridge.arm.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 25 Jan 2021 10:58:43 -0800
+Message-ID: <CAGETcx-P-MxM+49XdUGBmg5YgnHS=fmz8uewywXvLSFKj=MqRQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: layerscape: convert to builtin_platform_driver()
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Michael Walle <michael@walle.cc>, Rob Herring <robh@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 03:53:38PM +0000, Robin Murphy wrote:
-> On 2021-01-25 09:01, Leon Romanovsky wrote:
-> > On Mon, Jan 25, 2021 at 02:40:10PM +0800, xxm wrote:
-> > > Hi Leon,
-> > >
-> > > Thanks for your reply.
-> > >
-> > > 在 2021/1/25 13:48, Leon Romanovsky 写道:
-> > > > On Mon, Jan 25, 2021 at 10:49:27AM +0800, Simon Xue wrote:
-> > > > > pcie-dw-rockchip is based on DWC IP. But pcie-rockchip-host
-> > > > > is Rockchip designed IP which is only used for RK3399. So all the following
-> > > > > non-RK3399 SoCs should use this driver.
-> > > > >
-> > > > > Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> > > > > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> > > > > ---
-> > > > >    drivers/pci/controller/dwc/Kconfig            |   9 +
-> > > > >    drivers/pci/controller/dwc/Makefile           |   1 +
-> > > > >    drivers/pci/controller/dwc/pcie-dw-rockchip.c | 286 ++++++++++++++++++
-> > > > >    3 files changed, 296 insertions(+)
-> > > > >    create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > > > > index 22c5529e9a65..aee408fe9283 100644
-> > > > > --- a/drivers/pci/controller/dwc/Kconfig
-> > > > > +++ b/drivers/pci/controller/dwc/Kconfig
-> > > > > @@ -214,6 +214,15 @@ config PCIE_ARTPEC6_EP
-> > > > >    	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
-> > > > >    	  endpoint mode. This uses the DesignWare core.
-> > > > >
-> > > > > +config PCIE_ROCKCHIP_DW_HOST
-> > > > > +	bool "Rockchip DesignWare PCIe controller"
-> > > > > +	select PCIE_DW
-> > > > > +	select PCIE_DW_HOST
-> > > > > +	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> > > > > +	depends on OF
-> > > > > +	help
-> > > > > +	  Enables support for the DW PCIe controller in the Rockchip SoC.
-> > > > > +
-> > > > >    config PCIE_INTEL_GW
-> > > > >    	bool "Intel Gateway PCIe host controller support"
-> > > > >    	depends on OF && (X86 || COMPILE_TEST)
-> > > > > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> > > > > index a751553fa0db..30eef8e9ee8a 100644
-> > > > > --- a/drivers/pci/controller/dwc/Makefile
-> > > > > +++ b/drivers/pci/controller/dwc/Makefile
-> > > > > @@ -13,6 +13,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
-> > > > >    obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
-> > > > >    obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
-> > > > >    obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-> > > > > +obj-$(CONFIG_PCIE_ROCKCHIP_DW_HOST) += pcie-dw-rockchip.o
-> > > > >    obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
-> > > > >    obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
-> > > > >    obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..07f6d1cd5853
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> > > > > @@ -0,0 +1,286 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +/*
-> > > > > + * PCIe host controller driver for Rockchip SoCs
-> > > > > + *
-> > > > > + * Copyright (C) 2021 Rockchip Electronics Co., Ltd.
-> > > > > + *		http://www.rock-chips.com
-> > > > > + *
-> > > > > + * Author: Simon Xue <xxm@rock-chips.com>
-> > > > > + */
-> > > > > +
-> > > > > +#include <linux/clk.h>
-> > > > > +#include <linux/gpio/consumer.h>
-> > > > > +#include <linux/mfd/syscon.h>
-> > > > > +#include <linux/module.h>
-> > > > > +#include <linux/of_device.h>
-> > > > > +#include <linux/phy/phy.h>
-> > > > > +#include <linux/platform_device.h>
-> > > > > +#include <linux/regmap.h>
-> > > > > +#include <linux/reset.h>
-> > > > > +
-> > > > > +#include "pcie-designware.h"
-> > > > > +
-> > > > > +/*
-> > > > > + * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
-> > > > > + * mask for the lower 16 bits.  This allows atomic updates
-> > > > > + * of the register without locking.
-> > > > > + */
-> > > > This is correct only for the variables that naturally aligned, I imagine
-> > > > that this is the case here and in the Linux, but better do not write comments
-> > > > in the code that are not accurate.
-> > >
-> > > Ok, will remove.
-> > > I wonder what it would be when outside the Linux? Could you share some information?
-> >
-> > The C standard says nothing about atomicity, integer assignment maybe atomic,
-> > maybe it isn’t. There is no guarantee, plain integer assignment in C is non-atomic
-> > by definition.
-> >
-> > The atomicity of u32 is very dependent on hardware vendor, memory model and compiler,
-> > for example x86 and ARMs guarantee atomicity for u32. This is why I said that probably
-> > here (Linux) it is ok and you are not alone in expecting lockless write.
+On Mon, Jan 25, 2021 at 8:50 AM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
 >
-> Huh? What do variables and the abstract machine of the C language
-> environment have to do with the definition of *hardware MMIO registers*? We
-> don't write to registers with plain integer assignment of u32, we use
-> writel() (precisely in order to bypass that abstract C environment).
+> On Wed, Jan 20, 2021 at 08:28:36PM +0100, Michael Walle wrote:
+> > [RESEND, fat-fingered the buttons of my mail client and converted
+> > all CCs to BCCs :(]
+> >
+> > Am 2021-01-20 20:02, schrieb Saravana Kannan:
+> > > On Wed, Jan 20, 2021 at 6:24 AM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc>
+> > > > wrote:
+> > > > >
+> > > > > fw_devlink will defer the probe until all suppliers are ready. We can't
+> > > > > use builtin_platform_driver_probe() because it doesn't retry after probe
+> > > > > deferral. Convert it to builtin_platform_driver().
+> > > >
+> > > > If builtin_platform_driver_probe() doesn't work with fw_devlink, then
+> > > > shouldn't it be fixed or removed?
+> > >
+> > > I was actually thinking about this too. The problem with fixing
+> > > builtin_platform_driver_probe() to behave like
+> > > builtin_platform_driver() is that these probe functions could be
+> > > marked with __init. But there are also only 20 instances of
+> > > builtin_platform_driver_probe() in the kernel:
+> > > $ git grep ^builtin_platform_driver_probe | wc -l
+> > > 20
+> > >
+> > > So it might be easier to just fix them to not use
+> > > builtin_platform_driver_probe().
+> > >
+> > > Michael,
+> > >
+> > > Any chance you'd be willing to help me by converting all these to
+> > > builtin_platform_driver() and delete builtin_platform_driver_probe()?
+> >
+> > If it just moving the probe function to the _driver struct and
+> > remove the __init annotations. I could look into that.
 >
-> I appreciate that the comment is not universally true if taken completely
-> out of context, but I that's true of pretty much all comments ever. If
-> someone really were trying to learn basic programming principles from random
-> comments in Linux drivers, then it's already a bit late for us to try and
-> save them from themselves.
+> Can I drop this patch then ?
 
-So what? Does it mean that new code should have comments that are not
-correct? As you can see from this conversation, even the author didn't
-know what u32 isn’t guaranteed to be atomic, so yes, the comments should
-be correct.
+No, please pick it up. Michael and I were talking about doing similar
+changes for other drivers.
 
-Thanks
+-Saravana
