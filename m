@@ -2,132 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68201302C5B
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 21:18:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0A6A302C43
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 21:10:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731876AbhAYURD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jan 2021 15:17:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732207AbhAYTvY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jan 2021 14:51:24 -0500
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA229C061573;
-        Mon, 25 Jan 2021 11:49:34 -0800 (PST)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E968922ED8;
-        Mon, 25 Jan 2021 20:49:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1611604173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TRMRiMPnLqcdMCzeCpMY9I5j0GaNmNLOnRGXlUp7ZT8=;
-        b=qVALf0uTVCxJRs5Ek+hjUqnfIBgrqMb2y5kS5ewEe0dB0cM1IODnyCsbAtmptCCioyQNtl
-        3dARMjTSGXO8NauKzu8vlJT4ckMqPlywphyE8RqFAoQ8q02Iu3XppELd/IAT/zTVzPrIbl
-        j6DWPzB+ZAl5Tz6Jfeysii8zyDqmRPA=
+        id S1732060AbhAYUJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jan 2021 15:09:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732265AbhAYT5o (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Jan 2021 14:57:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 13F5D206DC;
+        Mon, 25 Jan 2021 19:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611604623;
+        bh=ETSriY70PmSdz7CV66kryAqZ+pG/PLJthIcum+ti7ko=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=g1L3hIt93ui4c5At4h5UovgstCsAcRLG48Kw4xGIzrPGCJf4jtE/PZ49er+jvs3W8
+         R9DEsHlosG4IO/jKaAhPhC6T76mh0YIi2AF3JPshzFTTLkAn3zTtQIoMyKTYQ9wpho
+         UHyLzycOQo5NKwdxPGKVHl9Ft6Iyp1Q4la+vjsp26n9X2MxKYZ3cb6+w9L4zSRl6MK
+         iybKHFb53eZPr2gPpwYpm5RC12JSee7NtSSjuqSkj1IrPYV6C+C0pYIIzmTHDLXAab
+         SdL7Mng3+fo8PTUY4uQF30QRVcQKkOe2296JAdrTIg6WiocXIjHfWzNG/cUkHlRvHx
+         J7sqXrAWifZSg==
+Date:   Mon, 25 Jan 2021 13:57:00 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: Fix handling of pci user accessor return codes in
+ syscalls
+Message-ID: <20210125195700.GA2818097@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 25 Jan 2021 20:49:32 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Roy Zang <roy.zang@nxp.com>, PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] PCI: dwc: layerscape: convert to
- builtin_platform_driver()
-In-Reply-To: <CAMuHMdWvFej-6vkaLM44t7eX2LpkDSXu4_7VH-X-3XRueXTO=A@mail.gmail.com>
-References: <20210120105246.23218-1-michael@walle.cc>
- <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
- <CAGETcx86HMo=gaDdXFyJ4QQ-pGXWzw2G0J=SjC-eq4K7B1zQHg@mail.gmail.com>
- <c3e35b90e173b15870a859fd7001a712@walle.cc>
- <CAGETcx8eZRd1fJ3yuO_t2UXBFHObeNdv-c8oFH3mXw6zi=zOkQ@mail.gmail.com>
- <f706c0e4b684e07635396fcf02f4c9a6@walle.cc>
- <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
- <CAMuHMdWvFej-6vkaLM44t7eX2LpkDSXu4_7VH-X-3XRueXTO=A@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.10
-Message-ID: <a24391e62b107040435766fff52bdd31@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1220314-e518-1e18-bf94-8e6f8c703758@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am 2021-01-21 12:01, schrieb Geert Uytterhoeven:
-> Hi Saravana,
+On Sun, Jan 24, 2021 at 04:39:32PM +0100, Heiner Kallweit wrote:
+> Referenced commit changed the user accessors to return negative errno's
+> on error, seems this wasn't reflected in all users. Here it doesn't
+> really make a difference because the effective check is the same.
 > 
-> On Thu, Jan 21, 2021 at 1:05 AM Saravana Kannan <saravanak@google.com> 
-> wrote:
->> On Wed, Jan 20, 2021 at 3:53 PM Michael Walle <michael@walle.cc> 
->> wrote:
->> > Am 2021-01-20 20:47, schrieb Saravana Kannan:
->> > > On Wed, Jan 20, 2021 at 11:28 AM Michael Walle <michael@walle.cc>
->> > > wrote:
->> > >>
->> > >> [RESEND, fat-fingered the buttons of my mail client and converted
->> > >> all CCs to BCCs :(]
->> > >>
->> > >> Am 2021-01-20 20:02, schrieb Saravana Kannan:
->> > >> > On Wed, Jan 20, 2021 at 6:24 AM Rob Herring <robh@kernel.org> wrote:
->> > >> >>
->> > >> >> On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc>
->> > >> >> wrote:
->> > >> >> >
->> > >> >> > fw_devlink will defer the probe until all suppliers are ready. We can't
->> > >> >> > use builtin_platform_driver_probe() because it doesn't retry after probe
->> > >> >> > deferral. Convert it to builtin_platform_driver().
->> > >> >>
->> > >> >> If builtin_platform_driver_probe() doesn't work with fw_devlink, then
->> > >> >> shouldn't it be fixed or removed?
->> > >> >
->> > >> > I was actually thinking about this too. The problem with fixing
->> > >> > builtin_platform_driver_probe() to behave like
->> > >> > builtin_platform_driver() is that these probe functions could be
->> > >> > marked with __init. But there are also only 20 instances of
->> > >> > builtin_platform_driver_probe() in the kernel:
->> > >> > $ git grep ^builtin_platform_driver_probe | wc -l
->> > >> > 20
->> > >> >
->> > >> > So it might be easier to just fix them to not use
->> > >> > builtin_platform_driver_probe().
->> > >> >
->> > >> > Michael,
->> > >> >
->> > >> > Any chance you'd be willing to help me by converting all these to
->> > >> > builtin_platform_driver() and delete builtin_platform_driver_probe()?
->> > >>
->> > >> If it just moving the probe function to the _driver struct and
->> > >> remove the __init annotations. I could look into that.
->> > >
->> > > Yup. That's pretty much it AFAICT.
->> > >
->> > > builtin_platform_driver_probe() also makes sure the driver doesn't ask
->> > > for async probe, etc. But I doubt anyone is actually setting async
->> > > flags and still using builtin_platform_driver_probe().
->> >
->> > Hasn't module_platform_driver_probe() the same problem? And there
->> > are ~80 drivers which uses that.
->> 
->> Yeah. The biggest problem with all of these is the __init markers.
->> Maybe some familiar with coccinelle can help?
+> Fixes: 34e3207205ef ("PCI: handle positive error codes")
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+
+Applied to pci/misc for v5.11, thanks!
+
+> ---
+>  drivers/pci/syscall.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> And dropping them will increase memory usage.
-
-Although I do have the changes for the builtin_platform_driver_probe()
-ready, I don't think it makes much sense to send these unless we agree
-on the increased memory footprint. While there are just a few
-builtin_platform_driver_probe() and memory increase _might_ be
-negligible, there are many more module_platform_driver_probe().
-
--michael
+> diff --git a/drivers/pci/syscall.c b/drivers/pci/syscall.c
+> index 31e39558d..8b003c890 100644
+> --- a/drivers/pci/syscall.c
+> +++ b/drivers/pci/syscall.c
+> @@ -20,7 +20,7 @@ SYSCALL_DEFINE5(pciconfig_read, unsigned long, bus, unsigned long, dfn,
+>  	u16 word;
+>  	u32 dword;
+>  	long err;
+> -	long cfg_ret;
+> +	int cfg_ret;
+>  
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+> @@ -46,7 +46,7 @@ SYSCALL_DEFINE5(pciconfig_read, unsigned long, bus, unsigned long, dfn,
+>  	}
+>  
+>  	err = -EIO;
+> -	if (cfg_ret != PCIBIOS_SUCCESSFUL)
+> +	if (cfg_ret)
+>  		goto error;
+>  
+>  	switch (len) {
+> @@ -105,7 +105,7 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
+>  		if (err)
+>  			break;
+>  		err = pci_user_write_config_byte(dev, off, byte);
+> -		if (err != PCIBIOS_SUCCESSFUL)
+> +		if (err)
+>  			err = -EIO;
+>  		break;
+>  
+> @@ -114,7 +114,7 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
+>  		if (err)
+>  			break;
+>  		err = pci_user_write_config_word(dev, off, word);
+> -		if (err != PCIBIOS_SUCCESSFUL)
+> +		if (err)
+>  			err = -EIO;
+>  		break;
+>  
+> @@ -123,7 +123,7 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
+>  		if (err)
+>  			break;
+>  		err = pci_user_write_config_dword(dev, off, dword);
+> -		if (err != PCIBIOS_SUCCESSFUL)
+> +		if (err)
+>  			err = -EIO;
+>  		break;
+>  
+> -- 
+> 2.30.0
+> 
