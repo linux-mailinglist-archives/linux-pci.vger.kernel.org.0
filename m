@@ -2,270 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79F97302C73
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 21:24:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC01D302D1C
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 22:00:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbhAYUX7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jan 2021 15:23:59 -0500
-Received: from mail-oi1-f178.google.com ([209.85.167.178]:35417 "EHLO
-        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731647AbhAYUXF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jan 2021 15:23:05 -0500
-Received: by mail-oi1-f178.google.com with SMTP id w8so16181911oie.2;
-        Mon, 25 Jan 2021 12:22:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=flH03nsBpe00qQdsxJOcf2ps7GrLZPGe76i1E36MC1w=;
-        b=gOXNX+0k6xYzBLbgkk+c1iflRQC9AreciGxXDhQC2opllTLufH4xDsPldtcTBlmH7h
-         PjEXb1nU3RwaOI56rOPCwny+ngr+T4zrEZZO+F45SFw6hjRzJ/RfrHwZ3TAT6dtNJ/Xb
-         rOKCwt0laXMlYV2LjI4SczPSwNA278YHRHbQOWYz86E5KlVtD4HCJSrD334nWGgBYhW/
-         8HD9rkcJD+Obo5vz/odp4Qe5/14LKBgg3131Dt6azdXyy32FRqez/poZgS/u6WC5EWT/
-         R14zLIZQXN/o6Q6ayo4vt6FgdnfklrJ9ZVb/sDVsokjMNX3sX92Vl2Go6hdB90ciZU8D
-         uLTA==
-X-Gm-Message-State: AOAM5334Fh0ES8cjOat8hFpMc5hdYQZIKrVSuUcZtcYrjB34TQukXLPD
-        8AYMZmrYKLDpq0/sUAjgTZaEwCkAUg==
-X-Google-Smtp-Source: ABdhPJw8JJtpG3VCKMiMILQJceIiVEob/sgewfQC9q50O2WEX+Mur0PRRcu7fqAgtWlD3ee1xKkv4Q==
-X-Received: by 2002:aca:c48b:: with SMTP id u133mr1195539oif.105.1611606143985;
-        Mon, 25 Jan 2021 12:22:23 -0800 (PST)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l5sm3761987oth.41.2021.01.25.12.22.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jan 2021 12:22:22 -0800 (PST)
-Received: (nullmailer pid 912195 invoked by uid 1000);
-        Mon, 25 Jan 2021 20:22:20 -0000
-Date:   Mon, 25 Jan 2021 14:22:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jianjun Wang <jianjun.wang@mediatek.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, maz@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
-        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
-        sin_jieyang@mediatek.com, drinkcat@chromium.org,
-        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
-Subject: Re: [v7,1/7] dt-bindings: PCI: mediatek-gen3: Add YAML schema
-Message-ID: <20210125202220.GA905995@robh.at.kernel.org>
-References: <20210113114001.5804-1-jianjun.wang@mediatek.com>
- <20210113114001.5804-2-jianjun.wang@mediatek.com>
+        id S1732060AbhAYU7N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jan 2021 15:59:13 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:46712 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732425AbhAYU6e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jan 2021 15:58:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1611608315; x=1643144315;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=StUkdEEE0J310rS81PX8zY+TsfyCJ9STur4fZ0/lAok=;
+  b=r3jXb2z/jMMJh62qaUrlGWbQnRJ/of1gF7QIAiS+EFD1/X37wTraGPmi
+   Z7LvzfNftKyY+dM1LgsTmqMjtqsWnxrMi46Z4oKwGFtUKv/SJhIGBPtub
+   fpwU3OpTEBk2JR9ZFnrJ6FZ4QkVqb782Oe4QqfQ+0CMw06Og49Hm3OLjY
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.79,374,1602547200"; 
+   d="scan'208";a="114678178"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-c7f73527.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 25 Jan 2021 20:57:47 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-1e-c7f73527.us-east-1.amazon.com (Postfix) with ESMTPS id C055AA5892;
+        Mon, 25 Jan 2021 20:57:43 +0000 (UTC)
+Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 Jan 2021 20:57:42 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 25 Jan 2021 20:57:42 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1497.010;
+ Mon, 25 Jan 2021 20:57:42 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "robh@kernel.org" <robh@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Jisheng.Zhang@synaptics.com" <Jisheng.Zhang@synaptics.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH dwc-next v2 2/2] PCI: dwc: al: Remove useless dw_pcie_ops
+Thread-Topic: [PATCH dwc-next v2 2/2] PCI: dwc: al: Remove useless dw_pcie_ops
+Thread-Index: AQHW81y5+LQF22LzXkarAWfdj0BAjw==
+Date:   Mon, 25 Jan 2021 20:57:42 +0000
+Message-ID: <d9df69aa9373451f6ccb8884f72eda2623343168.camel@amazon.com>
+References: <20201120191611.7b84a86b@xhacker.debian>
+         <20201120191720.5a2320cf@xhacker.debian>
+In-Reply-To: <20201120191720.5a2320cf@xhacker.debian>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.161.253]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2E693A6BA779C14B96DA1B346D00CFF4@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210113114001.5804-2-jianjun.wang@mediatek.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 07:39:55PM +0800, Jianjun Wang wrote:
-> Add YAML schemas documentation for Gen3 PCIe controller on
-> MediaTek SoCs.
-> 
-> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  .../bindings/pci/mediatek-pcie-gen3.yaml      | 172 ++++++++++++++++++
->  1 file changed, 172 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> new file mode 100644
-> index 000000000000..f133fb0184f1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-> @@ -0,0 +1,172 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/mediatek-pcie-gen3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Gen3 PCIe controller on MediaTek SoCs
-> +
-> +maintainers:
-> +  - Jianjun Wang <jianjun.wang@mediatek.com>
-> +
-> +description: |+
-> +  PCIe Gen3 MAC controller for MediaTek SoCs, it supports Gen3 speed
-> +  and compatible with Gen2, Gen1 speed.
-> +
-> +  This PCIe controller supports up to 256 MSI vectors, the MSI hardware
-> +  block diagram is as follows:
-> +
-> +                    +-----+
-> +                    | GIC |
-> +                    +-----+
-> +                       ^
-> +                       |
-> +                   port->irq
-> +                       |
-> +               +-+-+-+-+-+-+-+-+
-> +               |0|1|2|3|4|5|6|7| (PCIe intc)
-> +               +-+-+-+-+-+-+-+-+
-> +                ^ ^           ^
-> +                | |    ...    |
-> +        +-------+ +------+    +-----------+
-> +        |                |                |
-> +  +-+-+---+--+--+  +-+-+---+--+--+  +-+-+---+--+--+
-> +  |0|1|...|30|31|  |0|1|...|30|31|  |0|1|...|30|31| (MSI sets)
-> +  +-+-+---+--+--+  +-+-+---+--+--+  +-+-+---+--+--+
-> +   ^ ^      ^  ^    ^ ^      ^  ^    ^ ^      ^  ^
-> +   | |      |  |    | |      |  |    | |      |  |  (MSI vectors)
-> +   | |      |  |    | |      |  |    | |      |  |
-> +
-> +    (MSI SET0)       (MSI SET1)  ...   (MSI SET7)
-> +
-> +  With 256 MSI vectors supported, the MSI vectors are composed of 8 sets,
-> +  each set has its own address for MSI message, and supports 32 MSI vectors
-> +  to generate interrupt.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt8192-pcie
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  ranges:
-> +    minItems: 1
-> +    maxItems: 8
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
-
-Why the range? The SoC either has the reset lines or it doesn't.
-
-> +
-> +  reset-names:
-> +    anyOf:
-> +      - const: mac
-> +      - const: phy
-
-I don't think this should stay, but if so, better expressed like this:
-
-minItems: 1
-maxItems: 2
-items:
-  enum: [ mac, phy ]
-
-
-> +
-> +  clocks:
-> +    maxItems: 6
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pl_250m
-> +      - const: tl_26m
-> +      - const: tl_96m
-> +      - const: tl_32k
-> +      - const: peri_26m
-> +      - const: top_133m
-> +
-> +  assigned-clocks:
-> +    maxItems: 1
-> +
-> +  assigned-clock-parents:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  interrupt-controller:
-> +    description: Interrupt controller node for handling legacy PCI interrupts.
-> +    type: object
-> +    properties:
-> +      '#address-cells':
-> +        const: 0
-> +      '#interrupt-cells':
-> +        const: 1
-> +      interrupt-controller: true
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#interrupt-cells'
-> +      - interrupt-controller
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - ranges
-> +  - clocks
-> +  - '#interrupt-cells'
-> +  - interrupt-controller
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie: pcie@11230000 {
-> +            compatible = "mediatek,mt8192-pcie";
-> +            device_type = "pci";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            reg = <0x00 0x11230000 0x00 0x4000>;
-> +            reg-names = "pcie-mac";
-
-Not documented. Drop.
-
-> +            interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH 0>;
-> +            bus-range = <0x00 0xff>;
-> +            ranges = <0x82000000 0x00 0x12000000 0x00
-> +                      0x12000000 0x00 0x1000000>;
-> +            clocks = <&infracfg 44>,
-> +                     <&infracfg 40>,
-> +                     <&infracfg 43>,
-> +                     <&infracfg 97>,
-> +                     <&infracfg 99>,
-> +                     <&infracfg 111>;
-> +            clock-names = "pl_250m", "tl_26m", "tl_96m",
-> +                          "tl_32k", "peri_26m", "top_133m";
-> +            assigned-clocks = <&topckgen 50>;
-> +            assigned-clock-parents = <&topckgen 91>;
-> +
-> +            phys = <&pciephy>;
-> +            phy-names = "pcie-phy";
-> +            resets = <&infracfg_rst 0>;
-> +            reset-names = "phy";
-> +
-> +            #interrupt-cells = <1>;
-> +            interrupt-map-mask = <0 0 0 0x7>;
-> +            interrupt-map = <0 0 0 1 &pcie_intc 0>,
-> +                            <0 0 0 2 &pcie_intc 1>,
-> +                            <0 0 0 3 &pcie_intc 2>,
-> +                            <0 0 0 4 &pcie_intc 3>;
-> +            pcie_intc: interrupt-controller {
-> +                      #address-cells = <0>;
-> +                      #interrupt-cells = <1>;
-> +                      interrupt-controller;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.25.1
-> 
+T24gRnJpLCAyMDIwLTExLTIwIGF0IDE5OjE3ICswODAwLCBKaXNoZW5nIFpoYW5nIHdyb3RlOg0K
+PiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBvcmdh
+bml6YXRpb24uIERvDQo+IG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
+cyB5b3UgY2FuIGNvbmZpcm0gdGhlIHNlbmRlcg0KPiBhbmQga25vdyB0aGUgY29udGVudCBpcyBz
+YWZlLg0KPiANCj4gDQo+IA0KPiBXZSBoYXZlIHJlbW92ZWQgdGhlIGR3X3BjaWVfb3BzIGFsd2F5
+cyBleGlzdHMgYXNzdW1wdGlvbiBpbiBkd2MNCj4gY29yZSBkcml2ZXIsIHdlIGNhbiByZW1vdmUg
+dGhlIHVzZWxlc3MgZHdfcGNpZV9vcHMgbm93Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSmlzaGVu
+ZyBaaGFuZyA8SmlzaGVuZy5aaGFuZ0BzeW5hcHRpY3MuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMv
+cGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtYWwuYyB8IDQgLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxl
+ci9kd2MvcGNpZS1hbC5jDQo+IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1hbC5j
+DQo+IGluZGV4IDdhYzhhMzdkOWNlMC4uMzY5NzdjNDhhN2FlIDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFsLmMNCj4gKysrIGIvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvcGNpZS1hbC5jDQo+IEBAIC0zMjIsOSArMzIyLDYgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBkd19wY2llX2hvc3Rfb3BzDQo+IGFsX3BjaWVfaG9zdF9vcHMgPSB7DQo+ICAgICAg
+ICAgLmhvc3RfaW5pdCA9IGFsX3BjaWVfaG9zdF9pbml0LA0KPiAgfTsNCj4gDQo+IC1zdGF0aWMg
+Y29uc3Qgc3RydWN0IGR3X3BjaWVfb3BzIGR3X3BjaWVfb3BzID0gew0KPiAtfTsNCj4gLQ0KPiAg
+c3RhdGljIGludCBhbF9wY2llX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+
+ICB7DQo+ICAgICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gQEAgLTM0
+Miw3ICszMzksNiBAQCBzdGF0aWMgaW50IGFsX3BjaWVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZQ0KPiAqcGRldikNCj4gICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiANCj4g
+ICAgICAgICBwY2ktPmRldiA9IGRldjsNCj4gLSAgICAgICBwY2ktPm9wcyA9ICZkd19wY2llX29w
+czsNCj4gICAgICAgICBwY2ktPnBwLm9wcyA9ICZhbF9wY2llX2hvc3Rfb3BzOw0KPiANCj4gICAg
+ICAgICBhbF9wY2llLT5wY2kgPSBwY2k7DQo+IC0tDQo+IDIuMjkuMg0KPiANCg0KQWNrZWQtYnk6
+IEpvbmF0aGFuIENob2Nyb24gPGpvbm55Y0BhbWF6b24uY29tPg0KDQoNClRoYW5rcywNCiAgIEpv
+bmF0aGFuDQo=
