@@ -2,87 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBC613027DF
-	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 17:32:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 997753027FD
+	for <lists+linux-pci@lfdr.de>; Mon, 25 Jan 2021 17:37:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbhAYQbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 25 Jan 2021 11:31:41 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:31940 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727840AbhAYQbH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jan 2021 11:31:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1611592266; x=1643128266;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Y6cYRDZBHofXC1+fMpkWazCbSAWSF9dRS/TDToGnCxg=;
-  b=e3inWXgvz39YTPy8FIiOTx9ZpqmAqhm10KlPLdDSYtRSPN09QS6N6EFN
-   2MtfdlnPXwB4Q/05uM+rhl7Lw2hVwlESnFZ1IifETPzNKGjQZvhfYALfp
-   7lAGQ+0hoTR8fLqXgt2SejYuu68FgRHlRZnfM20kKoHFrSHMCX1dFhTwn
-   P85I5n2rb7vzBmD0aXM/zzCCs2ypfs9nwNuMz2a7lp8VY0SeFi5GCMqTM
-   1pOmwI1p2pojusM+kMf+E+HsSWLCDsRPWG7sovMC6cpmmfR7uImcy1lc+
-   KP2ACxK1ZYuIRulLA1WyVa9CQF4ptUwrWli0GxcQNQ7PZmzpYdXOWlSIi
-   g==;
-IronPort-SDR: QcCEgNQK5upIbX+b+qnkA7bBFXzY3TOPYZ4ralwBmfiJEGG16OKSCkKG2J4OGphoyD5WSiVrnA
- W+E0TSgkDyU/tcnoq+jF3/BOxWMbWccKvwnh4e3zWsFc4D6tkNRydA5WAb23oQGkBnxrniBayY
- DoAkeC1OBkPRDlevi5/zMqnZ/NV2iFfu8TMenE29gVxAjGfeMrSQRpnU5+GRO+yX4gg8ljcWh+
- 4/WZp8vgW9atBYchYboT35ESEUuo+buEj3kinZKzMRrdcOR1IEPaFHoZ0CNIhrrvOlIIbGJhfE
- 36Q=
-X-IronPort-AV: E=Sophos;i="5.79,374,1602572400"; 
-   d="scan'208";a="112382968"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Jan 2021 09:29:49 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 25 Jan 2021 09:29:49 -0700
-Received: from ryzen.microchip.com (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Mon, 25 Jan 2021 09:29:47 -0700
-From:   <daire.mcnamara@microchip.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh@kernel.org>, <linux-pci@vger.kernel.org>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-CC:     <david.abdurachmanov@gmail.com>, <cyril.jean@microchip.com>,
-        "Daire McNamara" <daire.mcnamara@microchip.com>
-Subject: [PATCH v21 4/4] MAINTAINERS: Add Daire McNamara as maintainer for the Microchip PCIe driver
-Date:   Mon, 25 Jan 2021 16:29:34 +0000
-Message-ID: <20210125162934.5335-5-daire.mcnamara@microchip.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210125162934.5335-1-daire.mcnamara@microchip.com>
-References: <20210125162934.5335-1-daire.mcnamara@microchip.com>
+        id S1730759AbhAYQgW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 25 Jan 2021 11:36:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:51054 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730778AbhAYQf7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Jan 2021 11:35:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 265A41042;
+        Mon, 25 Jan 2021 08:34:35 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07DD13F68F;
+        Mon, 25 Jan 2021 08:34:33 -0800 (PST)
+Date:   Mon, 25 Jan 2021 16:34:31 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     zhangqilong <zhangqilong3@huawei.com>, vidyas@nvidia.com
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIFBDSQ==?= =?utf-8?Q?=3A?= dwc:
+ fix reference leak in pex_ep_event_pex_rst_deassert
+Message-ID: <20210125163431.GB5795@e121166-lin.cambridge.arm.com>
+References: <20201102143045.142121-1-zhangqilong3@huawei.com>
+ <f09c0801-d584-3c27-d3e7-ca59a64a30d1@nvidia.com>
+ <b1f6b6805a7746b48020d7cfaaa73fab@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1f6b6805a7746b48020d7cfaaa73fab@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Daire McNamara <daire.mcnamara@microchip.com>
+On Tue, Nov 03, 2020 at 03:14:21AM +0000, zhangqilong wrote:
+> Hi
+> 
+> > 
+> > 
+> > On 11/2/2020 8:00 PM, Zhang Qilong wrote:
+> > > External email: Use caution opening links or attachments
+> > >
+> > >
+> > > pm_runtime_get_sync will increment pm usage counter even it failed.
+> > > Forgetting to pm_runtime_put_noidle will result in reference leak in
+> > > pex_ep_event_pex_rst_deassert, so we should fix it.
+> > >
+> > > Fixes: c57247f940e8e ("PCI: tegra: Add support for PCIe endpoint mode
+> > > in Tegra194")
+> > > Signed-off-by: Zhang Qilong <zhangqilong3@huawei.com>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-tegra194.c | 1 +
+> > >   1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > index f920e7efe118..936510b5c649 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> > > @@ -1662,6 +1662,7 @@ static void pex_ep_event_pex_rst_deassert(struct
+> > > tegra_pcie_dw *pcie)
+> > >
+> > >          ret = pm_runtime_get_sync(dev);
+> > >          if (ret < 0) {
+> > > +               pm_runtime_put_noidle(dev);
+> > Why can't we call pm_runtime_put_sync(dev) as that is what is being called in
+> > failure cases anyway further down in this API?
+> > 
+> Both of the two functions are OK, the difference is that, when pm_runtime_put_sync failed(runtime of the device has error, the device is in Inaccessible state or other error state...), it only increase the usage count of the power, and do nothing else. We merely need call pm_runtime_put_noidle to decrease the usage count. If we call pm_runtime_put_sync to reset it, it will notify device bus type if the device can be suspended, and that is meanless when pm_runtime_put_sync failed.
 
-Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+I don't understand. Vidya any feedback ?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e73636b75f29..f2dafbf3393c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13628,6 +13628,13 @@ S:	Supported
- F:	Documentation/devicetree/bindings/pci/mediatek*
- F:	drivers/pci/controller/*mediatek*
- 
-+PCIE DRIVER FOR MICROCHIP
-+M:	Daire McNamara <daire.mcnamara@microchip.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/microchip*
-+F:	drivers/pci/controller/*microchip*
-+
- PCIE DRIVER FOR QUALCOMM MSM
- M:	Stanimir Varbanov <svarbanov@mm-sol.com>
- L:	linux-pci@vger.kernel.org
--- 
-2.25.1
+Lorenzo
 
+> Thanks, best wish!
+> 
+> Zhang Qilong
+> > >                  dev_err(dev, "Failed to get runtime sync for PCIe
+> > dev: %d\n",
+> > >                          ret);
+> > >                  return;
+> > > --
+> > > 2.17.1
+> > >
