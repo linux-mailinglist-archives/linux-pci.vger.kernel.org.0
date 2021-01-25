@@ -2,162 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4CFD30356E
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 06:41:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1E830356F
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 06:41:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbhAZFlJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 00:41:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbhAYSyr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 25 Jan 2021 13:54:47 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 971C422DFB;
-        Mon, 25 Jan 2021 18:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611600870;
-        bh=+/v7YpTvqPhR84191yFPRMMeJCkalitvIkNrX3HFn6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tbGWM5h0wfTjNzFohZuBvh7ltduk3U7WQzGqGF0sKYHSo5Z1lmTvQ6QCZZB1tTG/2
-         pyg+0Jz7HPzOnV7UuqlFu1ZhBzDP9+0fLm+xNgXlN8fxVPDYHW+i+B5Z90rKLL2WHV
-         OknASSJxbCM8+PfLNm8xNpA8yQzWZMiXECjO3oq+bh6FPaAARxdgce4jRqLvk59X4o
-         2JPEcDUzkSNgwGHc5sZ1z1NmrOWSzcDvncP23izljthpCGAv2VFIlkrdr8esveiasB
-         LioIirUPsm10LyHIpl5mlhFmd92llAwWX145Pwrw9//0c+EziVrU30rfs1K5BPmCiV
-         orGpBcCQobOmw==
-Date:   Mon, 25 Jan 2021 20:54:26 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH mlx5-next v4 1/4] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <20210125185426.GL579511@unreal>
-References: <20210124131119.558563-1-leon@kernel.org>
- <20210124131119.558563-2-leon@kernel.org>
- <CAKgT0UcJQ3uy6J_CCLizDLfzGL2saa_PjOYH4nK+RQjfmpNA=w@mail.gmail.com>
- <20210124190032.GD5038@unreal>
- <20210125184719.GK579511@unreal>
- <CAKgT0UdPMGUax-UbeBK7-iNmsBqU_0w6hGdZ--P5EwfgmdN2ug@mail.gmail.com>
+        id S1728630AbhAZFl2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 00:41:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35782 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731783AbhAYTXW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jan 2021 14:23:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611602515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UT03s/I31YRDKMUtBXKP7GcN0aALUMC3UXcsyLIGnNY=;
+        b=E+xvLT+2Gr4mr/Uj5DpEE4+hRlJu2hnbJebzGcdt8BuV6Z3UTGQMU9sYjkdZz+7M4xuFut
+        ZOIKlb5lO49Y91lt5s/Q38E4ZWWwPL9zCyxmtm+pfpziwD3lY1zz/v/YJ1hnh/xy4VSuHN
+        sE/gtUrwk4zRmI5sQ9Ksz8Eh78Tj3uU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-516-LvIX0ORjO2Oefu_NzbeS2w-1; Mon, 25 Jan 2021 14:21:54 -0500
+X-MC-Unique: LvIX0ORjO2Oefu_NzbeS2w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0752010054FF;
+        Mon, 25 Jan 2021 19:21:53 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 66AE95D9DB;
+        Mon, 25 Jan 2021 19:21:52 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Myron Stowe <mstowe@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-doc@vger.kernel.org
+Subject: [PATCH] pci-driver: Add driver load messages
+Date:   Mon, 25 Jan 2021 14:21:46 -0500
+Message-Id: <20210125192146.1102523-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0UdPMGUax-UbeBK7-iNmsBqU_0w6hGdZ--P5EwfgmdN2ug@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 10:50:53AM -0800, Alexander Duyck wrote:
-> On Mon, Jan 25, 2021 at 10:47 AM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > On Sun, Jan 24, 2021 at 09:00:32PM +0200, Leon Romanovsky wrote:
-> > > On Sun, Jan 24, 2021 at 08:47:44AM -0800, Alexander Duyck wrote:
-> > > > On Sun, Jan 24, 2021 at 5:11 AM Leon Romanovsky <leon@kernel.org> wrote:
-> > > > >
-> > > > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > > >
-> > > > > Extend PCI sysfs interface with a new callback that allows configure
-> > > > > the number of MSI-X vectors for specific SR-IO VF. This is needed
-> > > > > to optimize the performance of newly bound devices by allocating
-> > > > > the number of vectors based on the administrator knowledge of targeted VM.
-> > > > >
-> > > > > This function is applicable for SR-IOV VF because such devices allocate
-> > > > > their MSI-X table before they will run on the VMs and HW can't guess the
-> > > > > right number of vectors, so the HW allocates them statically and equally.
-> > > > >
-> > > > > 1) The newly added /sys/bus/pci/devices/.../vfs_overlay/sriov_vf_msix_count
-> > > > > file will be seen for the VFs and it is writable as long as a driver is not
-> > > > > bounded to the VF.
-> > > > >
-> > > > > The values accepted are:
-> > > > >  * > 0 - this will be number reported by the VF's MSI-X capability
-> > > > >  * < 0 - not valid
-> > > > >  * = 0 - will reset to the device default value
-> > > > >
-> > > > > 2) In order to make management easy, provide new read-only sysfs file that
-> > > > > returns a total number of possible to configure MSI-X vectors.
-> > > > >
-> > > > > cat /sys/bus/pci/devices/.../vfs_overlay/sriov_vf_total_msix
-> > > > >   = 0 - feature is not supported
-> > > > >   > 0 - total number of MSI-X vectors to consume by the VFs
-> > > > >
-> > > > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > > > > ---
-> > > > >  Documentation/ABI/testing/sysfs-bus-pci |  32 +++++
-> > > > >  drivers/pci/iov.c                       | 180 ++++++++++++++++++++++++
-> > > > >  drivers/pci/msi.c                       |  47 +++++++
-> > > > >  drivers/pci/pci.h                       |   4 +
-> > > > >  include/linux/pci.h                     |  10 ++
-> > > > >  5 files changed, 273 insertions(+)
-> > > > >
-> > > >
-> > > > <snip>
-> > > >
-> > > > > +
-> > > > > +static umode_t sriov_pf_attrs_are_visible(struct kobject *kobj,
-> > > > > +                                         struct attribute *a, int n)
-> > > > > +{
-> > > > > +       struct device *dev = kobj_to_dev(kobj);
-> > > > > +       struct pci_dev *pdev = to_pci_dev(dev);
-> > > > > +
-> > > > > +       if (!pdev->msix_cap || !dev_is_pf(dev))
-> > > > > +               return 0;
-> > > > > +
-> > > > > +       return a->mode;
-> > > > > +}
-> > > > > +
-> > > > > +static umode_t sriov_vf_attrs_are_visible(struct kobject *kobj,
-> > > > > +                                         struct attribute *a, int n)
-> > > > > +{
-> > > > > +       struct device *dev = kobj_to_dev(kobj);
-> > > > > +       struct pci_dev *pdev = to_pci_dev(dev);
-> > > > > +
-> > > > > +       if (!pdev->msix_cap || dev_is_pf(dev))
-> > > > > +               return 0;
-> > > > > +
-> > > > > +       return a->mode;
-> > > > > +}
-> > > > > +
-> > > >
-> > > > Given the changes I don't see why we need to add the "visible"
-> > > > functions. We are only registering this from the PF if there is a need
-> > > > to make use of the interfaces, correct? If so we can just assume that
-> > > > the interfaces should always be visible if they are requested.
-> > >
-> > > I added them to make extension of this vfs_overlay interface more easy,
-> > > so we won't forget that current fields needs "msix_cap". Also I followed
-> > > same style as other attribute_group which has .is_visible.
-> > >
-> > > >
-> > > > Also you may want to look at placing a link to the VF folders in the
-> > > > PF folder, although I suppose there are already links from the PF PCI
-> > > > device to the VF PCI devices so maybe that isn't necessary. It just
-> > > > takes a few extra steps to navigate between the two.
-> > >
-> > > We already have, I don't think that we need to add extra links, it will
-> > > give nothing.
-> > >
-> > > [leonro@vm ~]$ ls -l /sys/bus/pci/devices/0000\:01\:00.0/
-> > > ....
-> > > drwxr-xr-x 2 root root        0 Jan 24 14:02 vfs_overlay
-> > > lrwxrwxrwx 1 root root        0 Jan 24 14:02 virtfn0 -> ../0000:01:00.1
-> > > lrwxrwxrwx 1 root root        0 Jan 24 14:02 virtfn1 -> ../0000:01:00.2
-> > > ....
-> >
-> > Alexander, are we clear here? Do you expect v5 without ".is_visible" from me?
->
-> Yeah, I am okay with the .is_visible being left around. It just seems
-> redundant is all.
+There are two situations where driver load messages are helpful.
 
-Thanks a lot for your review,
-I appreciate the effort and time you invested into it.
+1) Some drivers silently load on devices and debugging driver or system
+failures in these cases is difficult.  While some drivers (networking
+for example) may not completely initialize when the PCI driver probe() function
+has returned, it is still useful to have some idea of driver completion.
 
->
-> Thanks.
->
->  -Alex
+2) Storage and Network device vendors have relatively short lives for
+some of their hardware.  Some devices may continue to function but are
+problematic due to out-of-date firmware or other issues.  Maintaining
+a database of the hardware is out-of-the-question in the kernel as it would
+require constant updating.  Outputting a message in the log would allow
+different OSes to determine if the problem hardware was truly supported or not.
+
+Add optional driver load messages from the PCI core that indicates which
+driver was loaded, on which slot, and on which device.
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Myron Stowe <mstowe@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-doc@vger.kernel.org
+---
+ Documentation/admin-guide/kernel-parameters.txt |  2 ++
+ drivers/pci/pci-driver.c                        | 14 +++++++++++++-
+ drivers/pci/pci.c                               |  2 ++
+ drivers/pci/pci.h                               |  1 +
+ 4 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 23f209c8c19a..32ecee6a4ef0 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3793,6 +3793,8 @@
+ 		nomio		[S390] Do not use MIO instructions.
+ 		norid		[S390] ignore the RID field and force use of
+ 				one PCI domain per PCI function
++		driver_load_messages
++				Output driver load status messages.
+ 
+ 	pcie_aspm=	[PCIE] Forcibly enable or disable PCIe Active State Power
+ 			Management.
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 8b587fc97f7b..35d5b6973578 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -23,6 +23,8 @@
+ #include "pci.h"
+ #include "pcie/portdrv.h"
+ 
++bool driver_load_messages;
++
+ struct pci_dynid {
+ 	struct list_head node;
+ 	struct pci_device_id id;
+@@ -305,10 +307,20 @@ static long local_pci_probe(void *_ddi)
+ 	 */
+ 	pm_runtime_get_sync(dev);
+ 	pci_dev->driver = pci_drv;
++	if (driver_load_messages)
++		pci_info(pci_dev, "loading on device [%0x:%0x]\n",
++			 pci_dev->vendor, pci_dev->device);
+ 	rc = pci_drv->probe(pci_dev, ddi->id);
+-	if (!rc)
++	if (!rc) {
++		if (driver_load_messages)
++			pci_info(pci_dev, "loaded on device [%0x:%0x]\n",
++				 pci_dev->vendor, pci_dev->device);
+ 		return rc;
++	}
+ 	if (rc < 0) {
++		if (driver_load_messages)
++			pci_info(pci_dev, "failed (%d) on device [%0x:%0x]\n",
++				 rc, pci_dev->vendor, pci_dev->device);
+ 		pci_dev->driver = NULL;
+ 		pm_runtime_put_sync(dev);
+ 		return rc;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e578d34095e9..c64b3b6e1e8d 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6547,6 +6547,8 @@ static int __init pci_setup(char *str)
+ 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+ 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+ 				disable_acs_redir_param = str + 18;
++			} else if (!strncmp(str, "driver_load_messages", 24)) {
++				driver_load_messages = true;
+ 			} else {
+ 				pr_err("PCI: Unknown option `%s'\n", str);
+ 			}
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index f86cae9aa1f4..db1218e188ac 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -690,4 +690,5 @@ static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
+ extern const struct attribute_group aspm_ctrl_attr_group;
+ #endif
+ 
++extern bool driver_load_messages;
+ #endif /* DRIVERS_PCI_H */
+-- 
+2.29.2
+
