@@ -2,213 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06F403048BB
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 20:37:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 110C73048B6
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 20:35:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbhAZFkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 00:40:12 -0500
-Received: from mail-ot1-f49.google.com ([209.85.210.49]:45443 "EHLO
-        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730074AbhAYPiV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 25 Jan 2021 10:38:21 -0500
-Received: by mail-ot1-f49.google.com with SMTP id n42so13098269ota.12;
-        Mon, 25 Jan 2021 07:38:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f18aNlf+CBP0yuuR02rWziM5RLBYLipwk+rx5Ec7GS8=;
-        b=QFd6Q1pxY6fNeAuXRDZLa871Cu1jUJtc/g5v7sL+W3kHdSw3UtoVUWarB030pk65lH
-         yXPuyIOfOKSIom588SIvZb8BccogjHhL7CZbgOPWNDJdwjzpACr7z6019CvO7L4TPnhB
-         h33Fud+Wyl2Wzg+xwj0id4CRMfRsDVqXAwtO5iwnaansRVSR6PiotwdI4v+jMPXWiTk2
-         iZ5QSV5Dkx9h3oaG9P2eazHMLiSkJOXAD8XhTynAxTT2vvrJezEEkS+VL9GZ+OgKAPGV
-         F1UFin9wiyaBPivqf7VA3j8EMQA6W+1p6UXjwGCKpJ622dOst2gjNqTHSpQD9Ih3s9wI
-         RT5Q==
-X-Gm-Message-State: AOAM530A9vIYIg66eHaG8bJKqWnkLjzp0vgbLv5WQihC0vpCYhSZvKkm
-        IYaClWHUuxda18ANjuqg9lcm71XOBw==
-X-Google-Smtp-Source: ABdhPJwBLRd3UYnmCyIIcmDPrWI9kJuiZLJQ+nSP8vtT2LMcRfAerKqDfj2xYImFVdFMovdkZAB/Qg==
-X-Received: by 2002:a9d:6e98:: with SMTP id a24mr797090otr.351.1611588394589;
-        Mon, 25 Jan 2021 07:26:34 -0800 (PST)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l5sm3593187oth.41.2021.01.25.07.26.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jan 2021 07:26:33 -0800 (PST)
-Received: (nullmailer pid 390270 invoked by uid 1000);
-        Mon, 25 Jan 2021 15:26:32 -0000
-Date:   Mon, 25 Jan 2021 09:26:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Simon Xue <xxm@rock-chips.com>
+        id S1726984AbhAZFlB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 00:41:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728277AbhAYSrq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 25 Jan 2021 13:47:46 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2C35E206FA;
+        Mon, 25 Jan 2021 18:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611600442;
+        bh=aes1csZ5xz5Ut64yIXHedOXiqt+WZ494OkUk9tO4aBk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CwJBecAgB0gXi0OS2WYZZXK+h0Hlz22hNvnZTpUUJZS3KSsnXYIX1A06DoksOUOof
+         T8vMuuQy0tyvcQqTrW5VdqjFKonN9Pa+6I442MGo49GC2DpA16rXZTfIWk0wtJLrWW
+         EE5OSewqZ3HIMkja0X3KQ9ByADpAMpWXzXcxZt8eypXfTEV+ULeBMh7Na6O4CLJtwy
+         BP6/TJwW0jdTytxYghgAmc4RZqWTHof09RwxYcfVL4Rwe13TSK7mVGc+nq12fCq1sj
+         PsZ53DWEoUl0pL6VwB+IYwwtGM4/hdXv4vt0STxoxEKp6p0HzKRuMpAXrL9cF69LLd
+         FCRXeio5RCH0Q==
+Date:   Mon, 25 Jan 2021 20:47:19 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 1/2] dt-bindings: rockchip: Add DesignWare based PCIe
- controller
-Message-ID: <20210125152632.GA381616@robh.at.kernel.org>
-References: <20210125024824.634583-1-xxm@rock-chips.com>
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v4 1/4] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+Message-ID: <20210125184719.GK579511@unreal>
+References: <20210124131119.558563-1-leon@kernel.org>
+ <20210124131119.558563-2-leon@kernel.org>
+ <CAKgT0UcJQ3uy6J_CCLizDLfzGL2saa_PjOYH4nK+RQjfmpNA=w@mail.gmail.com>
+ <20210124190032.GD5038@unreal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125024824.634583-1-xxm@rock-chips.com>
+In-Reply-To: <20210124190032.GD5038@unreal>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 10:48:24AM +0800, Simon Xue wrote:
-> Document DT bindings for PCIe controller found on Rockchip SoC.
-> 
-> Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> ---
->  .../bindings/pci/rockchip-dw-pcie.yaml        | 133 ++++++++++++++++++
->  1 file changed, 133 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> new file mode 100644
-> index 000000000000..24ea42203c14
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> @@ -0,0 +1,133 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: DesignWare based PCIe RC controller on Rockchip SoCs
-> +
-> +maintainers:
-> +  - Shawn Lin <shawn.lin@rock-chips.com>
-> +  - Simon Xue <xxm@rock-chips.com>
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +description: |+
-> +  RK3568 SoC PCIe host controller is based on the Synopsys DesignWare
-> +  PCIe IP and thus inherits all the common properties defined in
-> +  designware-pcie.txt.
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +
-> +# We need a select here so we don't match all nodes with 'snps,dw-pcie'
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: rockchip,rk3568-pcie
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: rockchip,rk3568-pcie
-> +      - const: snps,dw-pcie
-> +
-> +  reg:
-> +    items:
-> +      - description: Data Bus Interface (DBI) registers
-> +      - description: Rockchip designed configuration registers
-> +
-> +  clocks:
-> +    items:
-> +      - description: AHB clock for PCIe master
-> +      - description: AHB clock for PCIe slave
-> +      - description: AHB clock for PCIe dbi
-> +      - description: APB clock for PCIe
-> +      - description: Auxiliary clock for PCIe
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aclk_mst
-> +      - const: aclk_slv
-> +      - const: aclk_dbi
-> +      - const: pclk
-> +      - const: aux
-> +
-> +  msi-map: true
-> +
-> +  num-lanes: true
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie-phy
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  ranges:
-> +    maxItems: 3
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: pipe
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - msi-map
-> +  - num-lanes
-> +  - phys
-> +  - phy-names
-> +  - power-domains
-> +  - resets
-> +  - reset-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie3x2: pcie@fe280000 {
-> +            compatible = "rockchip,rk3568-pcie", "snps,dw-pcie";
-> +            reg = <0x3 0xc0800000 0x0 0x400000>,
-> +                  <0x0 0xfe280000 0x0 0x10000>;
-> +            reg-names = "pcie-dbi", "pcie-apb";
+On Sun, Jan 24, 2021 at 09:00:32PM +0200, Leon Romanovsky wrote:
+> On Sun, Jan 24, 2021 at 08:47:44AM -0800, Alexander Duyck wrote:
+> > On Sun, Jan 24, 2021 at 5:11 AM Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+> > >
+> > > Extend PCI sysfs interface with a new callback that allows configure
+> > > the number of MSI-X vectors for specific SR-IO VF. This is needed
+> > > to optimize the performance of newly bound devices by allocating
+> > > the number of vectors based on the administrator knowledge of targeted VM.
+> > >
+> > > This function is applicable for SR-IOV VF because such devices allocate
+> > > their MSI-X table before they will run on the VMs and HW can't guess the
+> > > right number of vectors, so the HW allocates them statically and equally.
+> > >
+> > > 1) The newly added /sys/bus/pci/devices/.../vfs_overlay/sriov_vf_msix_count
+> > > file will be seen for the VFs and it is writable as long as a driver is not
+> > > bounded to the VF.
+> > >
+> > > The values accepted are:
+> > >  * > 0 - this will be number reported by the VF's MSI-X capability
+> > >  * < 0 - not valid
+> > >  * = 0 - will reset to the device default value
+> > >
+> > > 2) In order to make management easy, provide new read-only sysfs file that
+> > > returns a total number of possible to configure MSI-X vectors.
+> > >
+> > > cat /sys/bus/pci/devices/.../vfs_overlay/sriov_vf_total_msix
+> > >   = 0 - feature is not supported
+> > >   > 0 - total number of MSI-X vectors to consume by the VFs
+> > >
+> > > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-pci |  32 +++++
+> > >  drivers/pci/iov.c                       | 180 ++++++++++++++++++++++++
+> > >  drivers/pci/msi.c                       |  47 +++++++
+> > >  drivers/pci/pci.h                       |   4 +
+> > >  include/linux/pci.h                     |  10 ++
+> > >  5 files changed, 273 insertions(+)
+> > >
+> >
+> > <snip>
+> >
+> > > +
+> > > +static umode_t sriov_pf_attrs_are_visible(struct kobject *kobj,
+> > > +                                         struct attribute *a, int n)
+> > > +{
+> > > +       struct device *dev = kobj_to_dev(kobj);
+> > > +       struct pci_dev *pdev = to_pci_dev(dev);
+> > > +
+> > > +       if (!pdev->msix_cap || !dev_is_pf(dev))
+> > > +               return 0;
+> > > +
+> > > +       return a->mode;
+> > > +}
+> > > +
+> > > +static umode_t sriov_vf_attrs_are_visible(struct kobject *kobj,
+> > > +                                         struct attribute *a, int n)
+> > > +{
+> > > +       struct device *dev = kobj_to_dev(kobj);
+> > > +       struct pci_dev *pdev = to_pci_dev(dev);
+> > > +
+> > > +       if (!pdev->msix_cap || dev_is_pf(dev))
+> > > +               return 0;
+> > > +
+> > > +       return a->mode;
+> > > +}
+> > > +
+> >
+> > Given the changes I don't see why we need to add the "visible"
+> > functions. We are only registering this from the PF if there is a need
+> > to make use of the interfaces, correct? If so we can just assume that
+> > the interfaces should always be visible if they are requested.
+>
+> I added them to make extension of this vfs_overlay interface more easy,
+> so we won't forget that current fields needs "msix_cap". Also I followed
+> same style as other attribute_group which has .is_visible.
+>
+> >
+> > Also you may want to look at placing a link to the VF folders in the
+> > PF folder, although I suppose there are already links from the PF PCI
+> > device to the VF PCI devices so maybe that isn't necessary. It just
+> > takes a few extra steps to navigate between the two.
+>
+> We already have, I don't think that we need to add extra links, it will
+> give nothing.
+>
+> [leonro@vm ~]$ ls -l /sys/bus/pci/devices/0000\:01\:00.0/
+> ....
+> drwxr-xr-x 2 root root        0 Jan 24 14:02 vfs_overlay
+> lrwxrwxrwx 1 root root        0 Jan 24 14:02 virtfn0 -> ../0000:01:00.1
+> lrwxrwxrwx 1 root root        0 Jan 24 14:02 virtfn1 -> ../0000:01:00.2
+> ....
 
-I believe I already said use 'dbi'. The DBI is also not 4MB. The config 
-space goes here too, not in 'ranges'.
+Alexander, are we clear here? Do you expect v5 without ".is_visible" from me?
 
-> +            bus-range = <0x20 0x2f>;
-> +            clocks = <&cru 143>, <&cru 144>,
-> +                     <&cru 145>, <&cru 146>,
-> +                     <&cru 147>;
-> +            clock-names = "aclk_mst", "aclk_slv",
-> +                          "aclk_dbi", "pclk",
-> +                          "aux";
-> +            device_type = "pci";
-> +            linux,pci-domain = <2>;
-> +            max-link-speed = <2>;
-> +            msi-map = <0x2000 &its 0x2000 0x1000>;
-> +            num-lanes = <2>;
-> +            phys = <&pcie30phy>;
-> +            phy-names = "pcie-phy";
-> +            power-domains = <&power 15>;
-> +            ranges = <0x00000800 0x0 0x80000000 0x3 0x80000000 0x0 0x800000>,
-> +                     <0x81000000 0x0 0x80800000 0x3 0x80800000 0x0 0x100000>,
-> +                     <0x83000000 0x0 0x80900000 0x3 0x80900000 0x0 0x3f700000>;
-> +            resets = <&cru 193>;
-> +            reset-names = "pipe";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +        };
-> +    };
-> +...
-> -- 
-> 2.25.1
-> 
-> 
-> 
+Thanks
+
+>
+> Thanks
