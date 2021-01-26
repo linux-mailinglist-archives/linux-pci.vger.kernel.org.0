@@ -2,195 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6958F303FAE
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 15:07:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59A1D3040D9
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 15:50:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405566AbhAZOHU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 09:07:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58654 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392439AbhAZOHO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jan 2021 09:07:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611669932;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2rB6XFaxGAxM8niWUVsZnQk0ABX9trnQ25Xy7weSpFw=;
-        b=JZcqmB+tKnz9QKBiBSUaS4g/LvKnGFp8klMmUi8X0hw6bp30SdM6oi8EjXF8kKfEf0LuvS
-        RWrOQ7DCAqFBIem5DcP+31JOltyTyYmgO5MXetBYALMrdbJdhBAlYgosKgtvCqOmwBDdZj
-        hMOnSGbyNe1BQX2xYQhxBRtnW8HFZTU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-nvKC4CGjN-C2qPztRAdAJw-1; Tue, 26 Jan 2021 09:05:26 -0500
-X-MC-Unique: nvKC4CGjN-C2qPztRAdAJw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54554801AA7;
-        Tue, 26 Jan 2021 14:05:25 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 99CAB10021AA;
-        Tue, 26 Jan 2021 14:05:24 +0000 (UTC)
-Subject: Re: [PATCH] pci-driver: Add driver load messages
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     bhelgaas@google.com, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, mstowe@redhat.com
-References: <20210126063935.GC1053290@unreal>
- <20210126125446.1118325-1-prarit@redhat.com>
- <20210126131441.GG1053290@unreal>
- <616eb9a3-b855-316b-5091-8b8230208455@redhat.com>
- <20210126135324.GH1053290@unreal>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <1917ff0c-7d7a-9580-be8a-bb65a970c5bb@redhat.com>
-Date:   Tue, 26 Jan 2021 09:05:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2405975AbhAZOtr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 09:49:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391343AbhAZOte (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Jan 2021 09:49:34 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0200C23101;
+        Tue, 26 Jan 2021 14:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611672533;
+        bh=G/T0jPwLGg8lM5WaMFH8R28YFCg05xkzcrFyW7ZCPQ8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dq6nQ9AVkEDX3HsZpsZJN7dp/GBweFeek9jOCUXcVoW64SJkJHIJaBP8fafURMFip
+         rOov4+9+g8wMzfS08IOKRplGuXsREEwhwwVgrp+GP3nkiH3T8TpC3cHqIpHy3uZZnY
+         HgN6larYeLzTtYBHgzldyKL1vADTENCi0EokpjUElcUn5l0So6KRruefXxQVoqI9ce
+         yAVZTHZK1jVqYoGTBU4MpvENU14eUnQ0YS4r8HG1hmdCBDvUSxjLGDNZJjC1AZeB1z
+         Jt6iOtz1zT2nXiDPooQI/wESx8jwsZ9iPUfKfwxLEwzQLUZ+J2MUzhfKMKdk7xkkPg
+         eyO3A2n7WiIXQ==
+Received: by mail-ej1-f49.google.com with SMTP id ke15so23269935ejc.12;
+        Tue, 26 Jan 2021 06:48:52 -0800 (PST)
+X-Gm-Message-State: AOAM533lSga2MxUa6M4Sr0WCFjB6eZhov5QiuZq03hdvnn6pkd6ljRxr
+        sdEzsov8l7BurKbFBAq+eilQ659c5b2Qmb6Jvg==
+X-Google-Smtp-Source: ABdhPJz5uL45LCjYMSeSUuhgl7Xo+mvSzco3ZHqNBiKXImdAUCiZ6mpo5aHUEBCt7/kYu2Qj402kAGhAxp2DUZ4ZcOs=
+X-Received: by 2002:a17:906:a94:: with SMTP id y20mr3484816ejf.525.1611672531542;
+ Tue, 26 Jan 2021 06:48:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210126135324.GH1053290@unreal>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20210125024824.634583-1-xxm@rock-chips.com> <20210125152632.GA381616@robh.at.kernel.org>
+ <e22ea1ed-9b3b-98ae-5b78-6c3c10af3589@rock-chips.com>
+In-Reply-To: <e22ea1ed-9b3b-98ae-5b78-6c3c10af3589@rock-chips.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 26 Jan 2021 08:48:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJLEmCFP5D1SN-BuOC=ZNsA216RMLT-aAN4Bqst7Kb=TQ@mail.gmail.com>
+Message-ID: <CAL_JsqJLEmCFP5D1SN-BuOC=ZNsA216RMLT-aAN4Bqst7Kb=TQ@mail.gmail.com>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyAxLzJdIGR0LWJpbmRpbmdzOiByb2NrY2hpcDogQWRkIERlc2lnbg==?=
+        =?UTF-8?B?V2FyZSBiYXNlZCBQQ0llIGNvbnRyb2xsZXLjgJDor7fms6jmhI/vvIzpgq7ku7bnlLFyb2JoZXJyaW5n?=
+        =?UTF-8?B?MkBnbWFpbC5jb23ku6Plj5HjgJE=?=
+To:     xxm <xxm@rock-chips.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Mon, Jan 25, 2021 at 8:44 PM xxm <xxm@rock-chips.com> wrote:
+>
+> Hi Rob,
+>
+> Thanks for reply.
+>
+> =E5=9C=A8 2021/1/25 23:26, Rob Herring =E5=86=99=E9=81=93:
+> > On Mon, Jan 25, 2021 at 10:48:24AM +0800, Simon Xue wrote:
+> >> Document DT bindings for PCIe controller found on Rockchip SoC.
+> >>
+> >> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> >> ---
+> >>   .../bindings/pci/rockchip-dw-pcie.yaml        | 133 ++++++++++++++++=
+++
+> >>   1 file changed, 133 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw=
+-pcie.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.ya=
+ml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> >> new file mode 100644
+> >> index 000000000000..24ea42203c14
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+> >> @@ -0,0 +1,133 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: DesignWare based PCIe RC controller on Rockchip SoCs
+> >> +
+> >> +maintainers:
+> >> +  - Shawn Lin <shawn.lin@rock-chips.com>
+> >> +  - Simon Xue <xxm@rock-chips.com>
+> >> +  - Heiko Stuebner <heiko@sntech.de>
+> >> +
+> >> +description: |+
+> >> +  RK3568 SoC PCIe host controller is based on the Synopsys DesignWare
+> >> +  PCIe IP and thus inherits all the common properties defined in
+> >> +  designware-pcie.txt.
+> >> +
+> >> +allOf:
+> >> +  - $ref: /schemas/pci/pci-bus.yaml#
+> >> +
+> >> +# We need a select here so we don't match all nodes with 'snps,dw-pci=
+e'
+> >> +select:
+> >> +  properties:
+> >> +    compatible:
+> >> +      contains:
+> >> +        const: rockchip,rk3568-pcie
+> >> +  required:
+> >> +    - compatible
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: rockchip,rk3568-pcie
+> >> +      - const: snps,dw-pcie
+> >> +
+> >> +  reg:
+> >> +    items:
+> >> +      - description: Data Bus Interface (DBI) registers
+> >> +      - description: Rockchip designed configuration registers
+> >> +
+> >> +  clocks:
+> >> +    items:
+> >> +      - description: AHB clock for PCIe master
+> >> +      - description: AHB clock for PCIe slave
+> >> +      - description: AHB clock for PCIe dbi
+> >> +      - description: APB clock for PCIe
+> >> +      - description: Auxiliary clock for PCIe
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      - const: aclk_mst
+> >> +      - const: aclk_slv
+> >> +      - const: aclk_dbi
+> >> +      - const: pclk
+> >> +      - const: aux
+> >> +
+> >> +  msi-map: true
+> >> +
+> >> +  num-lanes: true
+> >> +
+> >> +  phys:
+> >> +    maxItems: 1
+> >> +
+> >> +  phy-names:
+> >> +    const: pcie-phy
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +
+> >> +  ranges:
+> >> +    maxItems: 3
+> >> +
+> >> +  resets:
+> >> +    maxItems: 1
+> >> +
+> >> +  reset-names:
+> >> +    const: pipe
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - reg-names
+> >> +  - clocks
+> >> +  - clock-names
+> >> +  - msi-map
+> >> +  - num-lanes
+> >> +  - phys
+> >> +  - phy-names
+> >> +  - power-domains
+> >> +  - resets
+> >> +  - reset-names
+> >> +
+> >> +unevaluatedProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >> +
+> >> +    bus {
+> >> +        #address-cells =3D <2>;
+> >> +        #size-cells =3D <2>;
+> >> +
+> >> +        pcie3x2: pcie@fe280000 {
+> >> +            compatible =3D "rockchip,rk3568-pcie", "snps,dw-pcie";
+> >> +            reg =3D <0x3 0xc0800000 0x0 0x400000>,
+> >> +                  <0x0 0xfe280000 0x0 0x10000>;
+> >> +            reg-names =3D "pcie-dbi", "pcie-apb";
+> > I believe I already said use 'dbi'. The DBI is also not 4MB. The config
+> > space goes here too, not in 'ranges'.
+>
+> Sorry for missing  update in yaml.
+>
+> I think yaml is used to describe the resources of specific SoC, it
+> reserves 4MB for DBI on Rockchip SoC.
+>
+> So, I think assign 4MB here is reasonable.
 
+Not if there's nothing there. Otherwise you are wasting almost 4MB of
+virtual space. Doesn't matter so much on 64-bit, but for 32-bit it
+really does.
 
-On 1/26/21 8:53 AM, Leon Romanovsky wrote:
-> On Tue, Jan 26, 2021 at 08:42:12AM -0500, Prarit Bhargava wrote:
->>
->>
->> On 1/26/21 8:14 AM, Leon Romanovsky wrote:
->>> On Tue, Jan 26, 2021 at 07:54:46AM -0500, Prarit Bhargava wrote:
->>>>   Leon Romanovsky <leon@kernel.org> wrote:
->>>>> On Mon, Jan 25, 2021 at 02:41:38PM -0500, Prarit Bhargava wrote:
->>>>>> There are two situations where driver load messages are helpful.
->>>>>>
->>>>>> 1) Some drivers silently load on devices and debugging driver or system
->>>>>> failures in these cases is difficult.  While some drivers (networking
->>>>>> for example) may not completely initialize when the PCI driver probe() function
->>>>>> has returned, it is still useful to have some idea of driver completion.
->>>>>
->>>>> Sorry, probably it is me, but I don't understand this use case.
->>>>> Are you adding global to whole kernel command line boot argument to debug
->>>>> what and when?
->>>>>
->>>>> During boot:
->>>>> If device success, you will see it in /sys/bus/pci/[drivers|devices]/*.
->>>>> If device fails, you should get an error from that device (fix the
->>>>> device to return an error), or something immediately won't work and
->>>>> you won't see it in sysfs.
->>>>>
->>>>
->>>> What if there is a panic during boot?  There's no way to get to sysfs.
->>>> That's the case where this is helpful.
->>>
->>> How? If you have kernel panic, it means you have much more worse problem
->>> than not-supported device. If kernel panic was caused by the driver, you
->>> will see call trace related to it. If kernel panic was caused by
->>> something else, supported/not supported won't help here.
->>
->> I still have no idea *WHICH* device it was that the panic occurred on.
-> 
-> The kernel panic is printed from the driver. There is one driver loaded
-> for all same PCI devices which are probed without relation to their
-> number.>
-> If you have host with ten same cards, you will see one driver and this
-> is where the problem and not in supported/not-supported device.
-
-That's true, but you can also have different cards loading the same driver.
-See, for example, any PCI_IDs list in a driver.
-
-For example,
-
-10:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3008 [Fury] (rev 02)
-20:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3108 [Invader] (rev 02)
-
-Both load the megaraid driver and have different profiles within the driver.  I
-have no idea which one actually panicked until removing one card.
-
-It's MUCH worse when debugging new hardware and getting a panic from, for
-example, the uncore code which binds to a PCI mapped device.  One device might
-work and the next one doesn't.  And then you can multiply that by seeing *many*
-panics at once and trying to determine if the problem was on one specific
-socket, die, or core.
-
-> 
->>>
->>>>
->>>>> During run:
->>>>> We have many other solutions to get debug prints during run, for example
->>>>> tracing, which is possible to toggle dynamically.
->>>>>
->>>>> Right now, my laptop will print 34 prints on boot and endless amount during
->>>>> day-to-day usage.
->>>>>
->>>>> ➜  kernel git:(rdma-next) ✗ lspci |wc -l
->>>>> 34
->>>>>
->>>>>>
->>>>>> 2) Storage and Network device vendors have relatively short lives for
->>>>>> some of their hardware.  Some devices may continue to function but are
->>>>>> problematic due to out-of-date firmware or other issues.  Maintaining
->>>>>> a database of the hardware is out-of-the-question in the kernel as it would
->>>>>> require constant updating.  Outputting a message in the log would allow
->>>>>> different OSes to determine if the problem hardware was truly supported or not.
->>>>>
->>>>> And rely on some dmesg output as a true source of supported/not supported and
->>>>> making this ABI which needs knob in command line. ?
->>>>
->>>> Yes.  The console log being saved would work as a true source of load
->>>> messages to be interpreted by an OS tool.  But I see your point about the
->>>> knob below...
->>>
->>> You will need much more stronger claim than the above if you want to proceed
->>> ABI path through dmesg prints.
->>>
->>
->> See my answer below.  I agree with you on the ABI statement.
->>
->>>>
->>>>>
->>>>>>
->>>>>> Add optional driver load messages from the PCI core that indicates which
->>>>>> driver was loaded, on which slot, and on which device.
->>>>>
->>>>> Why don't you add simple pr_debug(..) without any knob? You will be able
->>>>> to enable/disable it through dynamic prints facility.
->>>>
->>>> Good point.  I'll wait for more feedback and submit a v2 with pr_debug.
->>>
->>> Just to be clear, none of this can be ABI and any kernel print can
->>> be changed or removed any minute without any announcement.
->>
->> Yes, that's absolutely the case and I agree with you that nothing can guarantee
->> ABI of those pr_debug() statements.  They are *debug* after all.
-> 
-> You missed the point. ALL pr*() prints are not ABI, without relation to their level.
-> 
-
-Yes, I understood that.  I'm just emphasizing your ABI concern.
-
-P.
-
-> Thanks
-> 
->>
->> P.
->>
->>>
->>> Thanks
->>>
->>>>
->>>> P.
->>>>
->>>>>
->>>>> Thanks
->>>>
->>>
->>
-> 
-
+Rob
