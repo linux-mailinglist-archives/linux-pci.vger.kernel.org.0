@@ -2,106 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95BC33054E8
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 08:45:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 886EE3054E3
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 08:45:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S317158AbhAZXcK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 18:32:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404663AbhAZTve (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Jan 2021 14:51:34 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A0DB222B2C;
-        Tue, 26 Jan 2021 19:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611690648;
-        bh=/6ngywS810oXL2ZA1A4zcs8uV/FXPP53uDQM5zBbkwM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nac9SDFmG9oX4kG01dO+elCsbd182MDOZNKBY25QVfMXGNtTi2SRohLDsEvkXLyLX
-         JQeI/D7hch3yS7BQP1yGU5/0ES3eaGXsd7pyXOeJFb7Wq+DdmCxwiGddsUD86o9U29
-         ZK5HG0LZSIS27WlJ0ACtqd7CvehtAyqdTUhbHHy8Cw9bvbNBMUXSfVisB1BSrDR0ns
-         LsJmwNl32NfluNr+HJiFMIMDe//5g5e1P8MvXgDQGQjT3zko6g26EUb5gha/nLgXGP
-         7w0wks0rLmp+9X2RLeETkn7r8M1RVYhknuxWKoqm8Hq0aIgDFK9DMwM87ySNsUXFo6
-         OGKZB0giQ1gtw==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] Fix "ordering" comment typos
-Date:   Tue, 26 Jan 2021 13:50:42 -0600
-Message-Id: <20210126195042.2909405-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S317162AbhAZXdl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 18:33:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405425AbhAZUM2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jan 2021 15:12:28 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724A5C061786
+        for <linux-pci@vger.kernel.org>; Tue, 26 Jan 2021 12:11:45 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id v24so24485853lfr.7
+        for <linux-pci@vger.kernel.org>; Tue, 26 Jan 2021 12:11:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8YPuJSo/Ctz3y/b9vjns8oaUIFXpJod7O95PtwVpOOg=;
+        b=hf9VsxQjKXwhtOt5BE9bt4BAarY5cOZBvh16EtXohnJctrjCQdQdfrShx6AcuEHvcc
+         KAlNOdM2tJUwfAI+6+GuPoVlX1MumpKq2NAz0OxRoTBZ/NMaLsF6uNnD/nmJ5WcgSMjj
+         /CpRgnoe2+WsJL6gGz+y0gaDINQb7Oc2yeptmLXf/t7XZ9DRw9SloN9FwSs8B2ckvAf4
+         5zH+V7COyXRV+jRtaUSffzryQwUbRA0a7HT6kwWa6rkH3RSnvT1Wg+Fsg0c8Ou1q/oa9
+         p0KSGT36juNFCMfKcFEyS7cMTYeVnmPBeHbrIVFFJUYiOADq7CQdXoO55sFkKqFtDj0Z
+         JGWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8YPuJSo/Ctz3y/b9vjns8oaUIFXpJod7O95PtwVpOOg=;
+        b=cul1vzuM7GjBojrAEiN7rNVuMOl6k/MTegaYG987+3h3N4C4YPx9Vmg83rhYWGSQHp
+         VsH6tuxglx3b1Q4KnZI+DIQyc/F1MLJ5wDFW7OREYj9S84awGl8yC/lOzDXpzbfRBGOX
+         iIrQmuVjx4ycBcZj6YMLfL1GRmwQrP8DDmR0l//QtcuiOqog8sJpxACiAeJAeiNjBjCq
+         WjR8rwu891f2HC7YX7nf1urmILY5Y8FFrh0KFCvcr6bxGjqebqAunH8JY+yZsBGhaxHK
+         8LXdy9hfB03X49TUFSgHGglZb5DPT8QtmfMIV0ELFmIowzylcr6zgnzSn8tV6+58le4H
+         eWTA==
+X-Gm-Message-State: AOAM532Ed3IkiE+s35aZ6SLSy+4NWz8Pg4yCoKoFk5C8vLWwaaPtEDi1
+        y7x4L3/mmJAX+EciyQLM5WdRxvaiQDMI8Wm2
+X-Google-Smtp-Source: ABdhPJxs4fHMHxtc4B4yVQwvl50X5PLLxgMZq91FRxwZxRqFFiGbXAW/cT1/bgeFBXX56rr+mQy5+g==
+X-Received: by 2002:a05:6512:22c2:: with SMTP id g2mr3521030lfu.634.1611691903540;
+        Tue, 26 Jan 2021 12:11:43 -0800 (PST)
+Received: from [192.168.1.211] ([94.25.229.205])
+        by smtp.gmail.com with ESMTPSA id g27sm622716lfh.291.2021.01.26.12.11.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Jan 2021 12:11:42 -0800 (PST)
+Subject: Re: [PATCH v5 0/2] PCI: qcom: fix PCIe support on sm8250
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-pci@vger.kernel.org
+References: <20210117013114.441973-1-dmitry.baryshkov@linaro.org>
+Message-ID: <64f62684-523d-cbd5-708b-4c06e7d03954@linaro.org>
+Date:   Tue, 26 Jan 2021 23:11:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210117013114.441973-1-dmitry.baryshkov@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
-
-Fix comment typos in "ordering".
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- arch/s390/include/asm/facility.h             | 2 +-
- drivers/gpu/drm/qxl/qxl_drv.c                | 2 +-
- drivers/net/wireless/intel/iwlwifi/fw/file.h | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Rob, Lorenzo, gracious poke for this patchset.
 
 
-Unless somebody objects, I'll just merge these typo fixes via the PCI tree.
+On 17/01/2021 04:31, Dmitry Baryshkov wrote:
+> SM8250 platform requires additional clock to be enabled for PCIe to
+> function. In case it is disabled, PCIe access will result in IOMMU
+> timeouts. Add device tree binding and driver support for this clock.
+> 
+> Canges since v4:
+>   - Remove QCOM_PCIE_2_7_0_MAX_CLOCKS define and has_sf_tbu variable.
+> 
+> Changes since v3:
+>   - Merge clock handling back into qcom_pcie_get_resources_2_7_0().
+>     Define res->num_clks to the amount of clocks used for this particular
+>     platform.
+> 
+> Changes since v2:
+>   - Split this clock handling from qcom_pcie_get_resources_2_7_0()
+>   - Change comment to point that the clock is required rather than
+>     optional
+> 
+> Changes since v1:
+>   - Added Fixes: tags, as respective patches have hit the upstream Linux
+>     tree.
+> 
+> 
 
 
-diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
-index 68c476b20b57..91b5d714d28f 100644
---- a/arch/s390/include/asm/facility.h
-+++ b/arch/s390/include/asm/facility.h
-@@ -44,7 +44,7 @@ static inline int __test_facility(unsigned long nr, void *facilities)
- }
- 
- /*
-- * The test_facility function uses the bit odering where the MSB is bit 0.
-+ * The test_facility function uses the bit ordering where the MSB is bit 0.
-  * That makes it easier to query facility bits with the bit number as
-  * documented in the Principles of Operation.
-  */
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index 6e7f16f4cec7..dab190a547cc 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -141,7 +141,7 @@ static void qxl_drm_release(struct drm_device *dev)
- 
- 	/*
- 	 * TODO: qxl_device_fini() call should be in qxl_pci_remove(),
--	 * reodering qxl_modeset_fini() + qxl_device_fini() calls is
-+	 * reordering qxl_modeset_fini() + qxl_device_fini() calls is
- 	 * non-trivial though.
- 	 */
- 	qxl_modeset_fini(qdev);
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/file.h b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-index 597bc88479ba..04fbfe5cbeb0 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/file.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-@@ -866,7 +866,7 @@ struct iwl_fw_dbg_trigger_time_event {
-  * tx_bar: tid bitmap to configure on what tid the trigger should occur
-  *	when a BAR is send (for an Rx BlocAck session).
-  * frame_timeout: tid bitmap to configure on what tid the trigger should occur
-- *	when a frame times out in the reodering buffer.
-+ *	when a frame times out in the reordering buffer.
-  */
- struct iwl_fw_dbg_trigger_ba {
- 	__le16 rx_ba_start;
 -- 
-2.25.1
-
+With best wishes
+Dmitry
