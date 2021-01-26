@@ -2,235 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89BEE304789
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 20:08:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF59430478E
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 20:09:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbhAZRAf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 12:00:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40560 "EHLO mail.kernel.org"
+        id S1727341AbhAZRAk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 12:00:40 -0500
+Received: from muru.com ([72.249.23.125]:52962 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730395AbhAZHf4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Jan 2021 02:35:56 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id ADD342251D;
-        Tue, 26 Jan 2021 07:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611646514;
-        bh=nc2VyaHuWhB2Rn3GSSxeXz9nYEjWg42v9pO+xztLTwk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwW/MOfiG/ypoEqvBFY8ATzeSRK8wdOeWtHpRYw0R5EOhOiYEJnrT2ivf57aQfEOE
-         wWWcv4jBA2STuXCsjF+W8OITvW1gQ5lazEO7pS1ztRUjF8W/+6AIb1CRMyDlmlW5qk
-         IP1btKusjBPT9ySR34oN8CCCQ5E2uVQLArxrWkhJ59Sx1cXACfN0x+VXf6G8yIvSw0
-         sGWqjEeZUZ/7wlvZJ5s2SMLJ7o74cthQOsMxWB4SBx7pgvjOH0nGBQ/Uae8vufPLPi
-         FOH+F3NVFcIQppIc8Twm1miQ2mIgOZdeMmR1N8/3rBzuHyrcMU4fzGdm56vV0lQmSI
-         hhZjjpy/skm/g==
-Received: by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1l4Isa-00BqrO-Js; Tue, 26 Jan 2021 08:35:12 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Binghui Wang <wangbinghui@hisilicon.com>,
+        id S2388921AbhAZI2G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Jan 2021 03:28:06 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id E46B6820C;
+        Tue, 26 Jan 2021 08:27:27 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Balaji T K <balajitk@ti.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
         linux-pci@vger.kernel.org
-Subject: [PATCH RFC 2/2] dt: pci: kirin-pcie.txt: convert it to yaml
-Date:   Tue, 26 Jan 2021 08:35:07 +0100
-Message-Id: <30795b4a1cea54292d49881d5843e2bdbc496e4d.1611645945.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <cover.1611645945.git.mchehab+huawei@kernel.org>
-References: <cover.1611645945.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 02/27] ARM: dts: Update pcie ranges for dra7
+Date:   Tue, 26 Jan 2021 10:26:51 +0200
+Message-Id: <20210126082716.54358-3-tony@atomide.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20210126082716.54358-1-tony@atomide.com>
+References: <20210126082716.54358-1-tony@atomide.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert	the file into a	JSON description at the	yaml format.
+In order to update pcie to probe with ti-sysc and genpd, let's update the
+pcie ranges to not use address 0 for 0x20000000 and 0x30000000. The range
+for 0 is typically used for child devices as the offset from the module
+base. In the following patches, we will update pcie to probe with ti-sysc,
+and the patches become a bit confusing to read compared to other similar
+modules unless we update the ranges first. So let's just use the full
+addresses for ranges for the 0x20000000 and 0x30000000 ranges.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- .../bindings/pci/hisilicon,kirin-pcie.yaml    | 98 +++++++++++++++++++
- .../devicetree/bindings/pci/kirin-pcie.txt    | 50 ----------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 99 insertions(+), 51 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+ arch/arm/boot/dts/dra7.dtsi | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-new file mode 100644
-index 000000000000..8d8112b2aca0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/hisilicon,kirin-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon Kirin SoCs PCIe host DT description
-+
-+maintainers:
-+  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-+
-+description: |
-+  Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
-+  It shares common functions with the PCIe DesignWare core driver and
-+  inherits common properties defined in
-+  Documentation/devicetree/bindings/pci/designware-pcie.yaml.
-+
-+properties:
-+  compatible:
-+    const: hisilicon,kirin960-pcie
-+
-+  reg:
-+    description: |
-+      Should contain rc_dbi, apb, phy, config registers location and length.
-+
-+  reg-names:
-+    description: |
-+      Must include the following entries:
-+      "dbi": controller configuration registers;
-+      "apb": apb Ctrl register defined by Kirin;
-+      "phy": apb PHY register defined by Kirin;
-+      "config": PCIe configuration space registers.
-+
-+  "#address-cells":
-+    const: 3
-+
-+  "#size-cells":
-+    const: 2
-+
-+  reset-gpios:
-+    description: The GPIO to generate PCIe PERST# assert and deassert signal.
-+    maxItems: 1
-+
-+allOf:
-+  - $ref: "designware,pcie.yaml#"
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - reset-gpios
-+  - "#address-cells"
-+  - "#size-cells"
-+  - device_type
-+  - ranges
-+  - "#interrupt-cells"
-+  - interrupt-map-mask
-+  - interrupt-map
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/hi3660-clock.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      pcie@f4000000 {
-+        compatible = "hisilicon,kirin960-pcie";
-+        reg = <0x0 0xf4000000 0x0 0x1000>,
-+              <0x0 0xff3fe000 0x0 0x1000>,
-+              <0x0 0xf3f20000 0x0 0x40000>,
-+              <0x0 0xF4000000 0 0x2000>;
-+        reg-names = "dbi","apb","phy", "config";
-+        bus-range = <0x0  0x1>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        device_type = "pci";
-+        ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
-+        num-lanes = <1>;
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0xf800 0 0 7>;
-+        interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
-+                        <0x0 0 0 2 &gic 0 0 0  283 4>,
-+                        <0x0 0 0 3 &gic 0 0 0  284 4>,
-+                        <0x0 0 0 4 &gic 0 0 0  285 4>;
-+        clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-+                 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-+                 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-+                 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-+                 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-+        clock-names = "pcie_phy_ref", "pcie_aux", "pcie_apb_phy",
-+                      "pcie_apb_sys", "pcie_aclk";
-+        reset-gpios = <&gpio11 1 0 >;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-deleted file mode 100644
-index 8e4fe7fc50f9..000000000000
---- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--HiSilicon Kirin SoCs PCIe host DT description
--
--Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
--It shares common functions with the PCIe DesignWare core driver and
--inherits common properties defined in
--Documentation/devicetree/bindings/pci/designware,pcie.yaml.
--
--Additional properties are described here:
--
--Required properties
--- compatible:
--	"hisilicon,kirin960-pcie" for PCIe of Kirin960 SoC
--- reg: Should contain rc_dbi, apb, phy, config registers location and length.
--- reg-names: Must include the following entries:
--  "dbi": controller configuration registers;
--  "apb": apb Ctrl register defined by Kirin;
--  "phy": apb PHY register defined by Kirin;
--  "config": PCIe configuration space registers.
--- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
--
--Optional properties:
--
--Example based on kirin960:
--
--	pcie@f4000000 {
--		compatible = "hisilicon,kirin-pcie";
--		reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
--		      <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
--		reg-names = "dbi","apb","phy", "config";
--		bus-range = <0x0  0x1>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--		device_type = "pci";
--		ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
--		num-lanes = <1>;
--		#interrupt-cells = <1>;
--		interrupt-map-mask = <0xf800 0 0 7>;
--		interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
--				<0x0 0 0 2 &gic 0 0 0  283 4>,
--				<0x0 0 0 3 &gic 0 0 0  284 4>,
--				<0x0 0 0 4 &gic 0 0 0  285 4>;
--		clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
--			 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
--			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
--			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
--			 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
--		clock-names = "pcie_phy_ref", "pcie_aux",
--			      "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
--		reset-gpios = <&gpio11 1 0 >;
--	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3bb3233830ec..2b98a4763724 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13611,7 +13611,7 @@ M:	Xiaowei Song <songxiaowei@hisilicon.com>
- M:	Binghui Wang <wangbinghui@hisilicon.com>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/pci/kirin-pcie.txt
-+F:	Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
- F:	drivers/pci/controller/dwc/pcie-kirin.c
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -170,22 +170,24 @@ axi@0 {
+ 			compatible = "simple-bus";
+ 			#size-cells = <1>;
+ 			#address-cells = <1>;
+-			ranges = <0x51000000 0x51000000 0x3000
+-				  0x0	     0x20000000 0x10000000>;
++			ranges = <0x51000000 0x51000000 0x3000>,
++				 <0x20000000 0x20000000 0x10000000>;
+ 			dma-ranges;
+ 			/**
+ 			 * To enable PCI endpoint mode, disable the pcie1_rc
+ 			 * node and enable pcie1_ep mode.
+ 			 */
+ 			pcie1_rc: pcie@51000000 {
+-				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
++				reg = <0x51000000 0x2000>,
++				      <0x51002000 0x14c>,
++				      <0x20001000 0x2000>;
+ 				reg-names = "rc_dbics", "ti_conf", "config";
+ 				interrupts = <0 232 0x4>, <0 233 0x4>;
+ 				#address-cells = <3>;
+ 				#size-cells = <2>;
+ 				device_type = "pci";
+-				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+-					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				ranges = <0x81000000 0 0x00000000 0x20003000 0 0x00010000>,
++					 <0x82000000 0 0x20013000 0x20013000 0 0x0ffed000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -209,7 +211,10 @@ pcie1_intc: interrupt-controller {
+ 			};
  
- PCIE DRIVER FOR HISILICON STB
+ 			pcie1_ep: pcie_ep@51000000 {
+-				reg = <0x51000000 0x28>, <0x51002000 0x14c>, <0x51001000 0x28>, <0x1000 0x10000000>;
++				reg = <0x51000000 0x28>,
++				      <0x51002000 0x14c>,
++				      <0x51001000 0x28>,
++				      <0x20001000 0x10000000>;
+ 				reg-names = "ep_dbics", "ti_conf", "ep_dbics2", "addr_space";
+ 				interrupts = <0 232 0x4>;
+ 				num-lanes = <1>;
+@@ -228,19 +233,21 @@ axi@1 {
+ 			compatible = "simple-bus";
+ 			#size-cells = <1>;
+ 			#address-cells = <1>;
+-			ranges = <0x51800000 0x51800000 0x3000
+-				  0x0	     0x30000000 0x10000000>;
++			ranges = <0x51800000 0x51800000 0x3000>,
++				 <0x30000000 0x30000000 0x10000000>;
+ 			dma-ranges;
+ 			status = "disabled";
+ 			pcie2_rc: pcie@51800000 {
+-				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
++				reg = <0x51800000 0x2000>,
++				      <0x51802000 0x14c>,
++				      <0x30001000 0x2000>;
+ 				reg-names = "rc_dbics", "ti_conf", "config";
+ 				interrupts = <0 355 0x4>, <0 356 0x4>;
+ 				#address-cells = <3>;
+ 				#size-cells = <2>;
+ 				device_type = "pci";
+-				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+-					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				ranges = <0x81000000 0 0x00000000 0x30003000 0 0x00010000>,
++					 <0x82000000 0 0x30013000 0x30013000 0 0x0ffed000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 -- 
-2.29.2
-
+2.30.0
