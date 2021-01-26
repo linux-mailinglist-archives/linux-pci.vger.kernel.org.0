@@ -2,187 +2,335 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BC05303C69
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 13:03:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAA71303CF5
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 13:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405303AbhAZMCO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 07:02:14 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:48608 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2405305AbhAZMCC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jan 2021 07:02:02 -0500
-X-UUID: 25cea06461e3435db86dfa532cc29f75-20210126
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=oAYBDnd46n/nrsFHoThyvhzrrUWPsLR/Mvddequ82jM=;
-        b=IRyUMiZzSSbD8Gy5yyV+3fDyCqN1oCz8Q3WYXKvWdlhXcS+KwLnRS9eQUBkUbKGzdS6qy4ucLS3wt3WnZgSDrDnfk+ctFr2B0qXZ+wAbFJ+fjx7hZ8HGmmSMYyAQ0xJu5wP/jL1Z96NGIO62CejeUxl6cMIo4p3yIrQatRVHXc4=;
-X-UUID: 25cea06461e3435db86dfa532cc29f75-20210126
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1998379757; Tue, 26 Jan 2021 20:01:06 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 26 Jan
- 2021 20:01:02 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 26 Jan 2021 20:01:01 +0800
-Message-ID: <1611662461.14672.22.camel@mhfsdcap03>
-Subject: Re: [v7,1/7] dt-bindings: PCI: mediatek-gen3: Add YAML schema
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <youlin.pei@mediatek.com>, <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <Rex-BC.Chen@mediatek.com>, <qizhong.cheng@mediatek.com>,
-        <chuanjia.liu@mediatek.com>, <maz@kernel.org>,
-        <drinkcat@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <anson.chuang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Sj Huang" <sj.huang@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        <sin_jieyang@mediatek.com>, <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 26 Jan 2021 20:01:01 +0800
-In-Reply-To: <20210125202220.GA905995@robh.at.kernel.org>
-References: <20210113114001.5804-1-jianjun.wang@mediatek.com>
-         <20210113114001.5804-2-jianjun.wang@mediatek.com>
-         <20210125202220.GA905995@robh.at.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S2404576AbhAZM0U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 07:26:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404481AbhAZMZv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Jan 2021 07:25:51 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A605C23109;
+        Tue, 26 Jan 2021 12:25:10 +0000 (UTC)
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1l4NPA-00A7Mc-LG; Tue, 26 Jan 2021 12:25:08 +0000
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: F1DA409755172DE8362284DDADA00A7EBF387AB58BF3F0CEECE433EDDC46C67A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 26 Jan 2021 12:25:08 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
+        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
+        sin_jieyang@mediatek.com, drinkcat@chromium.org,
+        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
+Subject: Re: [v7,4/7] PCI: mediatek-gen3: Add INTx support
+In-Reply-To: <20210113114001.5804-5-jianjun.wang@mediatek.com>
+References: <20210113114001.5804-1-jianjun.wang@mediatek.com>
+ <20210113114001.5804-5-jianjun.wang@mediatek.com>
+User-Agent: Roundcube Webmail/1.4.10
+Message-ID: <123724a33c29d1f078f2a65795c6e208@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jianjun.wang@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, ryder.lee@mediatek.com, p.zabel@pengutronix.de, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com, youlin.pei@mediatek.com, chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com, sin_jieyang@mediatek.com, drinkcat@chromium.org, Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gTW9uLCAyMDIxLTAxLTI1IGF0IDE0OjIyIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gV2VkLCBKYW4gMTMsIDIwMjEgYXQgMDc6Mzk6NTVQTSArMDgwMCwgSmlhbmp1biBXYW5nIHdy
-b3RlOg0KPiA+IEFkZCBZQU1MIHNjaGVtYXMgZG9jdW1lbnRhdGlvbiBmb3IgR2VuMyBQQ0llIGNv
-bnRyb2xsZXIgb24NCj4gPiBNZWRpYVRlayBTb0NzLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEppYW5qdW4gV2FuZyA8amlhbmp1bi53YW5nQG1lZGlhdGVrLmNvbT4NCj4gPiBBY2tlZC1ieTog
-UnlkZXIgTGVlIDxyeWRlci5sZWVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmlu
-ZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sICAgICAgfCAxNzIgKysrKysrKysrKysr
-KysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNzIgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRp
-YXRlay1wY2llLWdlbjMueWFtbA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0K
-PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5mMTMzZmIw
-MTg0ZjENCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0KPiA+IEBAIC0wLDAgKzEs
-MTcyIEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0y
-LUNsYXVzZSkNCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHA6Ly9kZXZp
-Y2V0cmVlLm9yZy9zY2hlbWFzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbCMNCj4gPiArJHNj
-aGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4g
-Kw0KPiA+ICt0aXRsZTogR2VuMyBQQ0llIGNvbnRyb2xsZXIgb24gTWVkaWFUZWsgU29Dcw0KPiA+
-ICsNCj4gPiArbWFpbnRhaW5lcnM6DQo+ID4gKyAgLSBKaWFuanVuIFdhbmcgPGppYW5qdW4ud2Fu
-Z0BtZWRpYXRlay5jb20+DQo+ID4gKw0KPiA+ICtkZXNjcmlwdGlvbjogfCsNCj4gPiArICBQQ0ll
-IEdlbjMgTUFDIGNvbnRyb2xsZXIgZm9yIE1lZGlhVGVrIFNvQ3MsIGl0IHN1cHBvcnRzIEdlbjMg
-c3BlZWQNCj4gPiArICBhbmQgY29tcGF0aWJsZSB3aXRoIEdlbjIsIEdlbjEgc3BlZWQuDQo+ID4g
-Kw0KPiA+ICsgIFRoaXMgUENJZSBjb250cm9sbGVyIHN1cHBvcnRzIHVwIHRvIDI1NiBNU0kgdmVj
-dG9ycywgdGhlIE1TSSBoYXJkd2FyZQ0KPiA+ICsgIGJsb2NrIGRpYWdyYW0gaXMgYXMgZm9sbG93
-czoNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgKy0tLS0tKw0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgIHwgR0lDIHwNCj4gPiArICAgICAgICAgICAgICAgICAgICArLS0tLS0rDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgXg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHwNCj4gPiArICAgICAgICAgICAgICAgICAgIHBvcnQtPmlycQ0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIHwNCj4gPiArICAgICAgICAgICAgICAgKy0rLSstKy0rLSstKy0rLSsNCj4gPiAr
-ICAgICAgICAgICAgICAgfDB8MXwyfDN8NHw1fDZ8N3wgKFBDSWUgaW50YykNCj4gPiArICAgICAg
-ICAgICAgICAgKy0rLSstKy0rLSstKy0rLSsNCj4gPiArICAgICAgICAgICAgICAgIF4gXiAgICAg
-ICAgICAgXg0KPiA+ICsgICAgICAgICAgICAgICAgfCB8ICAgIC4uLiAgICB8DQo+ID4gKyAgICAg
-ICAgKy0tLS0tLS0rICstLS0tLS0rICAgICstLS0tLS0tLS0tLSsNCj4gPiArICAgICAgICB8ICAg
-ICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgfA0KPiA+ICsgICstKy0rLS0tKy0tKy0tKyAg
-Ky0rLSstLS0rLS0rLS0rICArLSstKy0tLSstLSstLSsNCj4gPiArICB8MHwxfC4uLnwzMHwzMXwg
-IHwwfDF8Li4ufDMwfDMxfCAgfDB8MXwuLi58MzB8MzF8IChNU0kgc2V0cykNCj4gPiArICArLSst
-Ky0tLSstLSstLSsgICstKy0rLS0tKy0tKy0tKyAgKy0rLSstLS0rLS0rLS0rDQo+ID4gKyAgIF4g
-XiAgICAgIF4gIF4gICAgXiBeICAgICAgXiAgXiAgICBeIF4gICAgICBeICBeDQo+ID4gKyAgIHwg
-fCAgICAgIHwgIHwgICAgfCB8ICAgICAgfCAgfCAgICB8IHwgICAgICB8ICB8ICAoTVNJIHZlY3Rv
-cnMpDQo+ID4gKyAgIHwgfCAgICAgIHwgIHwgICAgfCB8ICAgICAgfCAgfCAgICB8IHwgICAgICB8
-ICB8DQo+ID4gKw0KPiA+ICsgICAgKE1TSSBTRVQwKSAgICAgICAoTVNJIFNFVDEpICAuLi4gICAo
-TVNJIFNFVDcpDQo+ID4gKw0KPiA+ICsgIFdpdGggMjU2IE1TSSB2ZWN0b3JzIHN1cHBvcnRlZCwg
-dGhlIE1TSSB2ZWN0b3JzIGFyZSBjb21wb3NlZCBvZiA4IHNldHMsDQo+ID4gKyAgZWFjaCBzZXQg
-aGFzIGl0cyBvd24gYWRkcmVzcyBmb3IgTVNJIG1lc3NhZ2UsIGFuZCBzdXBwb3J0cyAzMiBNU0kg
-dmVjdG9ycw0KPiA+ICsgIHRvIGdlbmVyYXRlIGludGVycnVwdC4NCj4gPiArDQo+ID4gK2FsbE9m
-Og0KPiA+ICsgIC0gJHJlZjogL3NjaGVtYXMvcGNpL3BjaS1idXMueWFtbCMNCj4gPiArDQo+ID4g
-K3Byb3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJsZToNCj4gPiArICAgIGNvbnN0OiBtZWRpYXRl
-ayxtdDgxOTItcGNpZQ0KPiA+ICsNCj4gPiArICByZWc6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0K
-PiA+ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiArDQo+
-ID4gKyAgcmFuZ2VzOg0KPiA+ICsgICAgbWluSXRlbXM6IDENCj4gPiArICAgIG1heEl0ZW1zOiA4
-DQo+ID4gKw0KPiA+ICsgIHJlc2V0czoNCj4gPiArICAgIG1pbkl0ZW1zOiAxDQo+ID4gKyAgICBt
-YXhJdGVtczogMg0KPiANCj4gV2h5IHRoZSByYW5nZT8gVGhlIFNvQyBlaXRoZXIgaGFzIHRoZSBy
-ZXNldCBsaW5lcyBvciBpdCBkb2Vzbid0Lg0KPiANCj4gPiArDQo+ID4gKyAgcmVzZXQtbmFtZXM6
-DQo+ID4gKyAgICBhbnlPZjoNCj4gPiArICAgICAgLSBjb25zdDogbWFjDQo+ID4gKyAgICAgIC0g
-Y29uc3Q6IHBoeQ0KPiANCj4gSSBkb24ndCB0aGluayB0aGlzIHNob3VsZCBzdGF5LCBidXQgaWYg
-c28sIGJldHRlciBleHByZXNzZWQgbGlrZSB0aGlzOg0KPiANCj4gbWluSXRlbXM6IDENCj4gbWF4
-SXRlbXM6IDINCj4gaXRlbXM6DQo+ICAgZW51bTogWyBtYWMsIHBoeSBdDQoNCkhpIFJvYiwNCg0K
-VGhhbmtzIGZvciB5b3VyIHJldmlldywgZG9lcyB0aGlzIG1lYW5zIHRoYXQgSSBzaG91bGQgbWVy
-Z2UgdGhlIHJlc2V0cw0KYW5kIHJlc2V0LW5hbWVzIHRvZ2V0aGVyIGFzIHRoZSBmb2xsb3dpbmcg
-cHJvcGVydHk/DQoNCnJlc2V0czoNCiAgbWluSXRlbXM6IDENCiAgbWF4SXRlbXM6IDINCiAgaXRl
-bXM6DQogICAgZW51bTogWyBtYWMsIHBoeSBdDQo+IA0KPiANCj4gPiArDQo+ID4gKyAgY2xvY2tz
-Og0KPiA+ICsgICAgbWF4SXRlbXM6IDYNCj4gPiArDQo+ID4gKyAgY2xvY2stbmFtZXM6DQo+ID4g
-KyAgICBpdGVtczoNCj4gPiArICAgICAgLSBjb25zdDogcGxfMjUwbQ0KPiA+ICsgICAgICAtIGNv
-bnN0OiB0bF8yNm0NCj4gPiArICAgICAgLSBjb25zdDogdGxfOTZtDQo+ID4gKyAgICAgIC0gY29u
-c3Q6IHRsXzMyaw0KPiA+ICsgICAgICAtIGNvbnN0OiBwZXJpXzI2bQ0KPiA+ICsgICAgICAtIGNv
-bnN0OiB0b3BfMTMzbQ0KPiA+ICsNCj4gPiArICBhc3NpZ25lZC1jbG9ja3M6DQo+ID4gKyAgICBt
-YXhJdGVtczogMQ0KPiA+ICsNCj4gPiArICBhc3NpZ25lZC1jbG9jay1wYXJlbnRzOg0KPiA+ICsg
-ICAgbWF4SXRlbXM6IDENCj4gPiArDQo+ID4gKyAgcGh5czoNCj4gPiArICAgIG1heEl0ZW1zOiAx
-DQo+ID4gKw0KPiA+ICsgICcjaW50ZXJydXB0LWNlbGxzJzoNCj4gPiArICAgIGNvbnN0OiAxDQo+
-ID4gKw0KPiA+ICsgIGludGVycnVwdC1jb250cm9sbGVyOg0KPiA+ICsgICAgZGVzY3JpcHRpb246
-IEludGVycnVwdCBjb250cm9sbGVyIG5vZGUgZm9yIGhhbmRsaW5nIGxlZ2FjeSBQQ0kgaW50ZXJy
-dXB0cy4NCj4gPiArICAgIHR5cGU6IG9iamVjdA0KPiA+ICsgICAgcHJvcGVydGllczoNCj4gPiAr
-ICAgICAgJyNhZGRyZXNzLWNlbGxzJzoNCj4gPiArICAgICAgICBjb25zdDogMA0KPiA+ICsgICAg
-ICAnI2ludGVycnVwdC1jZWxscyc6DQo+ID4gKyAgICAgICAgY29uc3Q6IDENCj4gPiArICAgICAg
-aW50ZXJydXB0LWNvbnRyb2xsZXI6IHRydWUNCj4gPiArDQo+ID4gKyAgICByZXF1aXJlZDoNCj4g
-PiArICAgICAgLSAnI2FkZHJlc3MtY2VsbHMnDQo+ID4gKyAgICAgIC0gJyNpbnRlcnJ1cHQtY2Vs
-bHMnDQo+ID4gKyAgICAgIC0gaW50ZXJydXB0LWNvbnRyb2xsZXINCj4gPiArDQo+ID4gKyAgICBh
-ZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+ICsg
-IC0gY29tcGF0aWJsZQ0KPiA+ICsgIC0gcmVnDQo+ID4gKyAgLSBpbnRlcnJ1cHRzDQo+ID4gKyAg
-LSByYW5nZXMNCj4gPiArICAtIGNsb2Nrcw0KPiA+ICsgIC0gJyNpbnRlcnJ1cHQtY2VsbHMnDQo+
-ID4gKyAgLSBpbnRlcnJ1cHQtY29udHJvbGxlcg0KPiA+ICsNCj4gPiArdW5ldmFsdWF0ZWRQcm9w
-ZXJ0aWVzOiBmYWxzZQ0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAg
-ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0K
-PiA+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5o
-Pg0KPiA+ICsNCj4gPiArICAgIGJ1cyB7DQo+ID4gKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
-Mj47DQo+ID4gKyAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQo+ID4gKw0KPiA+ICsgICAgICAg
-IHBjaWU6IHBjaWVAMTEyMzAwMDAgew0KPiA+ICsgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10ODE5Mi1wY2llIjsNCj4gPiArICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNp
-IjsNCj4gPiArICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mz47DQo+ID4gKyAgICAgICAg
-ICAgICNzaXplLWNlbGxzID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICByZWcgPSA8MHgwMCAweDEx
-MjMwMDAwIDB4MDAgMHg0MDAwPjsNCj4gPiArICAgICAgICAgICAgcmVnLW5hbWVzID0gInBjaWUt
-bWFjIjsNCj4gDQo+IE5vdCBkb2N1bWVudGVkLiBEcm9wLg0KSSB3aWxsIGFkZCB0aGUgcHJvcGVy
-dHkgaW5mb3JtYXRpb24gZm9yIHJlZy1uYW1lcyBpbiB0aGUgbmV4dCB2ZXJzaW9uLA0KaXQncyB1
-c2VkIGJ5IGNvbnRyb2xsZXIgZHJpdmVyIHRvIGdldCB0aGUgcmVnaXN0ZXIgcmVzb3VyY2UuDQoN
-ClRoYW5rcy4NCj4gDQo+ID4gKyAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAyNTEg
-SVJRX1RZUEVfTEVWRUxfSElHSCAwPjsNCj4gPiArICAgICAgICAgICAgYnVzLXJhbmdlID0gPDB4
-MDAgMHhmZj47DQo+ID4gKyAgICAgICAgICAgIHJhbmdlcyA9IDwweDgyMDAwMDAwIDB4MDAgMHgx
-MjAwMDAwMCAweDAwDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAweDEyMDAwMDAwIDB4MDAg
-MHgxMDAwMDAwPjsNCj4gPiArICAgICAgICAgICAgY2xvY2tzID0gPCZpbmZyYWNmZyA0ND4sDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgIDwmaW5mcmFjZmcgNDA+LA0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICA8JmluZnJhY2ZnIDQzPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgPCZp
-bmZyYWNmZyA5Nz4sDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIDwmaW5mcmFjZmcgOTk+LA0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICA8JmluZnJhY2ZnIDExMT47DQo+ID4gKyAgICAgICAg
-ICAgIGNsb2NrLW5hbWVzID0gInBsXzI1MG0iLCAidGxfMjZtIiwgInRsXzk2bSIsDQo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgInRsXzMyayIsICJwZXJpXzI2bSIsICJ0b3BfMTMzbSI7
-DQo+ID4gKyAgICAgICAgICAgIGFzc2lnbmVkLWNsb2NrcyA9IDwmdG9wY2tnZW4gNTA+Ow0KPiA+
-ICsgICAgICAgICAgICBhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPCZ0b3Bja2dlbiA5MT47DQo+
-ID4gKw0KPiA+ICsgICAgICAgICAgICBwaHlzID0gPCZwY2llcGh5PjsNCj4gPiArICAgICAgICAg
-ICAgcGh5LW5hbWVzID0gInBjaWUtcGh5IjsNCj4gPiArICAgICAgICAgICAgcmVzZXRzID0gPCZp
-bmZyYWNmZ19yc3QgMD47DQo+ID4gKyAgICAgICAgICAgIHJlc2V0LW5hbWVzID0gInBoeSI7DQo+
-ID4gKw0KPiA+ICsgICAgICAgICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiA+ICsgICAg
-ICAgICAgICBpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MCAwIDAgMHg3PjsNCj4gPiArICAgICAgICAg
-ICAgaW50ZXJydXB0LW1hcCA9IDwwIDAgMCAxICZwY2llX2ludGMgMD4sDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICA8MCAwIDAgMiAmcGNpZV9pbnRjIDE+LA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgPDAgMCAwIDMgJnBjaWVfaW50YyAyPiwNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIDwwIDAgMCA0ICZwY2llX2ludGMgMz47DQo+ID4gKyAgICAg
-ICAgICAgIHBjaWVfaW50YzogaW50ZXJydXB0LWNvbnRyb2xsZXIgew0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MD47DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-aW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+ID4gKyAgICAgICAgICAgIH07DQo+ID4gKyAgICAgICAg
-fTsNCj4gPiArICAgIH07DQo+ID4gLS0gDQo+ID4gMi4yNS4xDQo+ID4gDQo+IA0KPiBfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1tZWRpYXRl
-ayBtYWlsaW5nIGxpc3QNCj4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVr
-DQoNCg==
+On 2021-01-13 11:39, Jianjun Wang wrote:
+> Add INTx support for MediaTek Gen3 PCIe controller.
+> 
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek-gen3.c | 163 ++++++++++++++++++++
+>  1 file changed, 163 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c
+> b/drivers/pci/controller/pcie-mediatek-gen3.c
+> index c00ea7c167de..7979a2856c35 100644
+> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> @@ -9,6 +9,9 @@
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of_address.h>
+> @@ -49,6 +52,12 @@
+>  #define PCIE_LINK_STATUS_REG		0x154
+>  #define PCIE_PORT_LINKUP		BIT(8)
+> 
+> +#define PCIE_INT_ENABLE_REG		0x180
+> +#define PCIE_INTX_SHIFT			24
+> +#define PCIE_INTX_MASK			GENMASK(27, 24)
 
+I guess this '24' is actually PCIE_INTX_SHIFT? In this case,
+please write it as
+
+GENMASK(PCIE_INTX_SHIFT + PCI_NUM_INTX - 1, PCIE_INTX_SHIFT)
+
+to make it clear that you are dealing with one bit per INTx.
+
+> +
+> +#define PCIE_INT_STATUS_REG		0x184
+> +
+>  #define PCIE_TRANS_TABLE_BASE_REG	0x800
+>  #define PCIE_ATR_SRC_ADDR_MSB_OFFSET	0x4
+>  #define PCIE_ATR_TRSL_ADDR_LSB_OFFSET	0x8
+> @@ -77,6 +86,8 @@
+>   * @phy: PHY controller block
+>   * @clks: PCIe clocks
+>   * @num_clks: PCIe clocks count for this port
+> + * @irq: PCIe controller interrupt number
+> + * @intx_domain: legacy INTx IRQ domain
+>   */
+>  struct mtk_pcie_port {
+>  	struct device *dev;
+> @@ -87,6 +98,9 @@ struct mtk_pcie_port {
+>  	struct phy *phy;
+>  	struct clk_bulk_data *clks;
+>  	int num_clks;
+> +
+> +	int irq;
+> +	struct irq_domain *intx_domain;
+>  };
+> 
+>  /**
+> @@ -266,6 +280,149 @@ static int mtk_pcie_startup_port(struct
+> mtk_pcie_port *port)
+>  	return 0;
+>  }
+> 
+> +static int mtk_pcie_set_affinity(struct irq_data *data,
+> +				 const struct cpumask *mask, bool force)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static void mtk_intx_mask(struct irq_data *data)
+> +{
+> +	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(port->base + PCIE_INT_ENABLE_REG);
+> +	val &= ~BIT(data->hwirq + PCIE_INTX_SHIFT);
+> +	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
+
+This is missing some locking. Otherwise, two concurrent mask/unmask
+for different interrupts will corrupt each other's state.
+
+> +}
+> +
+> +static void mtk_intx_unmask(struct irq_data *data)
+> +{
+> +	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(port->base + PCIE_INT_ENABLE_REG);
+> +	val |= BIT(data->hwirq + PCIE_INTX_SHIFT);
+> +	writel_relaxed(val, port->base + PCIE_INT_ENABLE_REG);
+
+Same thing here.
+
+> +}
+> +
+> +/**
+> + * mtk_intx_eoi
+> + * @data: pointer to chip specific data
+> + *
+> + * As an emulated level IRQ, its interrupt status will remain
+> + * until the corresponding de-assert message is received; hence that
+> + * the status can only be cleared when the interrupt has been 
+> serviced.
+> + */
+> +static void mtk_intx_eoi(struct irq_data *data)
+> +{
+> +	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+> +	unsigned long hwirq;
+> +
+> +	hwirq = data->hwirq + PCIE_INTX_SHIFT;
+> +	writel_relaxed(BIT(hwirq), port->base + PCIE_INT_STATUS_REG);
+> +}
+> +
+> +static struct irq_chip mtk_intx_irq_chip = {
+> +	.irq_mask		= mtk_intx_mask,
+> +	.irq_unmask		= mtk_intx_unmask,
+> +	.irq_eoi		= mtk_intx_eoi,
+> +	.irq_set_affinity	= mtk_pcie_set_affinity,
+> +	.name			= "PCIe",
+
+nit: "PCIe" is not really descriptive. "INTx" would be a bit better.
+
+> +};
+> +
+> +static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int 
+> irq,
+> +			     irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler_name(irq, &mtk_intx_irq_chip,
+> +				      handle_fasteoi_irq, "INTx");
+> +	irq_set_chip_data(irq, domain->host_data);
+
+You probably want to set the chip_data *before* wiring
+the handler, as otherwise you could end-up with a NULL
+pointer in any of the callbacks if the interrupt fires
+between the two.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = mtk_pcie_intx_map,
+> +};
+> +
+> +static int mtk_pcie_init_irq_domains(struct mtk_pcie_port *port,
+> +				     struct device_node *node)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct device_node *intc_node;
+> +
+> +	/* Setup INTx */
+> +	intc_node = of_get_child_by_name(node, "interrupt-controller");
+> +	if (!intc_node) {
+> +		dev_err(dev, "missing PCIe Intc node\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	port->intx_domain = irq_domain_add_linear(intc_node, PCI_NUM_INTX,
+> +						  &intx_domain_ops, port);
+> +	if (!port->intx_domain) {
+> +		dev_err(dev, "failed to get INTx IRQ domain\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void mtk_pcie_irq_teardown(struct mtk_pcie_port *port)
+> +{
+> +	irq_set_chained_handler_and_data(port->irq, NULL, NULL);
+> +
+> +	if (port->intx_domain)
+> +		irq_domain_remove(port->intx_domain);
+> +
+> +	irq_dispose_mapping(port->irq);
+> +}
+> +
+> +static void mtk_pcie_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct mtk_pcie_port *port = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *irqchip = irq_desc_get_chip(desc);
+> +	unsigned long status;
+> +	unsigned int virq;
+> +	irq_hw_number_t irq_bit = PCIE_INTX_SHIFT;
+> +
+> +	chained_irq_enter(irqchip, desc);
+> +
+> +	status = readl_relaxed(port->base + PCIE_INT_STATUS_REG);
+> +	if (status & PCIE_INTX_MASK) {
+
+This "if (status & PCIE_INTX_MASK)" is already implicit from
+the for_each_set_bit_from() iterator, and you can drop it.
+
+> +		for_each_set_bit_from(irq_bit, &status, PCI_NUM_INTX +
+> +				      PCIE_INTX_SHIFT) {
+> +			virq = irq_find_mapping(port->intx_domain,
+> +						irq_bit - PCIE_INTX_SHIFT);
+> +			generic_handle_irq(virq);
+> +		}
+> +	}
+> +
+> +	chained_irq_exit(irqchip, desc);
+> +}
+> +
+> +static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+> +			      struct device_node *node)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	int err;
+> +
+> +	err = mtk_pcie_init_irq_domains(port, node);
+> +	if (err) {
+> +		dev_err(dev, "failed to init PCIe IRQ domain\n");
+> +		return err;
+> +	}
+> +
+> +	port->irq = platform_get_irq(pdev, 0);
+> +	if (port->irq < 0)
+> +		return port->irq;
+> +
+> +	irq_set_chained_handler_and_data(port->irq, mtk_pcie_irq_handler, 
+> port);
+
+You seem to be missing something that will mask all INTx interrupts
+as an initial state.
+
+> +
+> +	return 0;
+> +}
+> +
+>  static int mtk_pcie_clk_init(struct mtk_pcie_port *port)
+>  {
+>  	int ret;
+> @@ -388,6 +545,10 @@ static int mtk_pcie_setup(struct mtk_pcie_port 
+> *port)
+>  		goto err_setup;
+>  	}
+> 
+> +	err = mtk_pcie_setup_irq(port, dev->of_node);
+> +	if (err)
+> +		goto err_setup;
+> +
+>  	dev_info(dev, "PCIe link up success!\n");
+> 
+>  	return 0;
+> @@ -423,6 +584,7 @@ static int mtk_pcie_probe(struct platform_device 
+> *pdev)
+> 
+>  	err = pci_host_probe(host);
+>  	if (err) {
+> +		mtk_pcie_irq_teardown(port);
+>  		mtk_pcie_power_down(port);
+>  		return err;
+>  	}
+> @@ -440,6 +602,7 @@ static int mtk_pcie_remove(struct platform_device 
+> *pdev)
+>  	pci_remove_root_bus(host->bus);
+>  	pci_unlock_rescan_remove();
+> 
+> +	mtk_pcie_irq_teardown(port);
+>  	mtk_pcie_power_down(port);
+> 
+>  	return 0;
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
