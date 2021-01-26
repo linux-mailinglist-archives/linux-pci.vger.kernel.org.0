@@ -2,115 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6887930444D
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 18:01:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53DB3304457
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 18:01:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389819AbhAZIVC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 03:21:02 -0500
-Received: from smtprelay0146.hostedemail.com ([216.40.44.146]:53526 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389809AbhAZIVA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jan 2021 03:21:00 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 8742B12C7;
-        Tue, 26 Jan 2021 08:20:14 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:982:988:989:1260:1261:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1543:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2828:2919:3138:3139:3140:3141:3142:3355:3622:3867:3868:3870:3871:3872:3873:3874:4250:4321:5007:7652:8531:10004:10400:10848:10967:11026:11232:11473:11658:11914:12043:12294:12296:12297:12438:12555:12740:12760:12895:12986:13255:13439:14181:14659:14721:21080:21212:21451:21627:21740:21990:30054:30070:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: fire53_3e0904e2758c
-X-Filterd-Recvd-Size: 4553
-Received: from [192.168.1.159] (unknown [47.151.137.21])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 26 Jan 2021 08:20:12 +0000 (UTC)
-Message-ID: <48c5a16657bb7b6c0f619253e57133137d4e825c.camel@perches.com>
-Subject: Re: [PATCH mlx5-next v4 1/4] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-From:   Joe Perches <joe@perches.com>
-To:     Leon Romanovsky <leon@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Date:   Tue, 26 Jan 2021 00:20:11 -0800
-In-Reply-To: <20210126060135.GQ579511@unreal>
-References: <20210124131119.558563-1-leon@kernel.org>
-         <20210124131119.558563-2-leon@kernel.org>
-         <20210125135229.6193f783@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <20210126060135.GQ579511@unreal>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        id S1727022AbhAZRAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 12:00:37 -0500
+Received: from muru.com ([72.249.23.125]:52936 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390008AbhAZI2C (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Jan 2021 03:28:02 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id C4E5C8057;
+        Tue, 26 Jan 2021 08:27:23 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 00/27] Update dra7 to probe with genpd to drop legacy pdata
+Date:   Tue, 26 Jan 2021 10:26:49 +0200
+Message-Id: <20210126082716.54358-1-tony@atomide.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 2021-01-26 at 08:01 +0200, Leon Romanovsky wrote:
-> On Mon, Jan 25, 2021 at 01:52:29PM -0800, Jakub Kicinski wrote:
-> > On Sun, 24 Jan 2021 15:11:16 +0200 Leon Romanovsky wrote:
-> > > +static int pci_enable_vfs_overlay(struct pci_dev *dev) { return 0; }
-> > > +static void pci_disable_vfs_overlay(struct pci_dev *dev) {}
-> > 
-> > s/static /static inline /
-> 
-> Thanks a lot, I think that we should extend checkpatch.pl to catch such
-> mistakes.
+Hi all,
 
-Who is this "we" you refer to? ;)
+Here's a series to update dra7 to probe with ti-sysc and genpd like we've
+already done for am3 and 4.
 
-> How hard is it to extend checkpatch.pl to do regexp and warn if in *.h file
-> someone declared function with implementation but didn't add "inline" word?
+These patches are against v5.11-rc1, and depend on the following commits
+in my fixes branch:
 
-Something like this seems reasonable and catches these instances in
-include/linux/*.h
+7078a5ba7a58 ("soc: ti: omap-prm: Fix boot time errors for rst_map_012 bits 0 and 1")
+2a39af3870e9 ("ARM: OMAP2+: Fix booting for am335x after moving to simple-pm-bus")
 
-$ ./scripts/checkpatch.pl -f include/linux/*.h --types=static_inline --terse --nosummary
-include/linux/dma-mapping.h:203: WARNING: static function definition might be better as static inline
-include/linux/genl_magic_func.h:55: WARNING: static function definition might be better as static inline
-include/linux/genl_magic_func.h:78: WARNING: static function definition might be better as static inline
-include/linux/kernel.h:670: WARNING: static function definition might be better as static inline
-include/linux/kprobes.h:213: WARNING: static function definition might be better as static inline
-include/linux/kprobes.h:231: WARNING: static function definition might be better as static inline
-include/linux/kprobes.h:511: WARNING: static function definition might be better as static inline
-include/linux/skb_array.h:185: WARNING: static function definition might be better as static inline
-include/linux/slab.h:606: WARNING: static function definition might be better as static inline
-include/linux/stop_machine.h:62: WARNING: static function definition might be better as static inline
-include/linux/vmw_vmci_defs.h:850: WARNING: static function definition might be better as static inline
-include/linux/zstd.h:95: WARNING: static function definition might be better as static inline
-include/linux/zstd.h:106: WARNING: static function definition might be better as static inline
+These patches also depend on the series:
 
-A false positive exists when __must_check is used between
-static and inline.  It's an unusual and IMO not a preferred use.
----
- scripts/checkpatch.pl | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+[PATCH 0/3] Few ti-sysc changes for v5.12 merge window
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 4f8494527139..0ac366481962 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -4451,6 +4451,18 @@ sub process {
- 			}
- 		}
- 
-+# check for static function definitions without inline in .h files
-+# only works for static in column 1 and avoids multiline macro definitions
-+		if ($realfile =~ /\.h$/ &&
-+		    defined($stat) &&
-+		    $stat =~ /^\+static(?!\s+(?:$Inline|union|struct))\b.*\{.*\}\s*$/s &&
-+		    $line =~ /^\+static(?!\s+(?:$Inline|union|struct))\b/ &&
-+		    $line !~ /\\$/) {
-+			WARN("STATIC_INLINE",
-+			     "static function definition might be better as static inline\n" .
-+				$herecurr);
-+		}
-+
- # check for non-global char *foo[] = {"bar", ...} declarations.
- 		if ($line =~ /^.\s+(?:static\s+|const\s+)?char\s+\*\s*\w+\s*\[\s*\]\s*=\s*\{/) {
- 			WARN("STATIC_CONST_CHAR_ARRAY",
+Please review and test, I've also pushed out a temporary testing branch to
+make testing easier to [0][1].
 
+Regards,
 
+Tony
+
+[0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git tmp-testing-genpd-dra7
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v5.12/tmp-testing-genpd-dra7
+
+Tony Lindgren (27):
+  PCI: pci-dra7xx: Prepare for deferred probe with
+    module_platform_driver
+  ARM: dts: Update pcie ranges for dra7
+  ARM: dts: Configure interconnect target module for dra7 pcie
+  ARM: dts: Properly configure dra7 edma sysconfig registers
+  ARM: dts: Move dra7 l3 noc to a separate node
+  ARM: dts: Configure interconnect target module for dra7 qspi
+  ARM: dts: Configure interconnect target module for dra7 sata
+  ARM: dts: Configure interconnect target module for dra7 mpu
+  ARM: dts: Configure interconnect target module for dra7 dmm
+  ARM: dts: Configure simple-pm-bus for dra7 l4_wkup
+  ARM: dts: Configure simple-pm-bus for dra7 l4_per1
+  ARM: dts: Configure simple-pm-bus for dra7 l4_per2
+  ARM: dts: Configure simple-pm-bus for dra7 l4_per3
+  ARM: dts: Configure simple-pm-bus for dra7 l4_cfg
+  ARM: dts: Configure simple-pm-bus for dra7 l3
+  ARM: OMAP2+: Drop legacy platform data for dra7 pcie
+  ARM: OMAP2+: Drop legacy platform data for dra7 qspi
+  ARM: OMAP2+: Drop legacy platform data for dra7 sata
+  ARM: OMAP2+: Drop legacy platform data for dra7 mpu
+  ARM: OMAP2+: Drop legacy platform data for dra7 dmm
+  ARM: OMAP2+: Drop legacy platform data for dra7 l4_wkup
+  ARM: OMAP2+: Drop legacy platform data for dra7 l4_per1
+  ARM: OMAP2+: Drop legacy platform data for dra7 l4_per2
+  ARM: OMAP2+: Drop legacy platform data for dra7 l4_per3
+  ARM: OMAP2+: Drop legacy platform data for dra7 l4_cfg
+  ARM: OMAP2+: Drop legacy platform data for dra7 l3
+  ARM: OMAP2+: Drop legacy platform data for dra7 hwmod
+
+ arch/arm/boot/dts/dra7-l4.dtsi            |  75 ++-
+ arch/arm/boot/dts/dra7.dtsi               | 220 ++++---
+ arch/arm/mach-omap2/Kconfig               |   1 -
+ arch/arm/mach-omap2/Makefile              |   1 -
+ arch/arm/mach-omap2/common.h              |   9 -
+ arch/arm/mach-omap2/io.c                  |   2 -
+ arch/arm/mach-omap2/omap_hwmod.c          |   8 -
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 719 ----------------------
+ drivers/pci/controller/dwc/pci-dra7xx.c   |  13 +-
+ 9 files changed, 211 insertions(+), 837 deletions(-)
+ delete mode 100644 arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+
+-- 
+2.30.0
