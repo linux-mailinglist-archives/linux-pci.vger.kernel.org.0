@@ -2,133 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA5EC304DFE
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 01:52:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1EA7304DFF
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 01:52:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbhAZXaV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 18:30:21 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2430 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392072AbhAZR6z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jan 2021 12:58:55 -0500
-Received: from fraeml709-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DQDqc26slz67gXH;
-        Wed, 27 Jan 2021 01:53:32 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml709-chm.china.huawei.com (10.206.15.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Tue, 26 Jan 2021 18:57:55 +0100
-Received: from [10.47.2.35] (10.47.2.35) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 26 Jan
- 2021 17:57:53 +0000
-Subject: Re: [PATCH RFC 0/4] Fix arm64 crash for accessing unmapped IO port
- regions (reboot)
-To:     Arnd Bergmann <arnd@kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "xuwei (O)" <xuwei5@huawei.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linuxarm@openeuler.org" <linuxarm@openeuler.org>
-References: <1610729929-188490-1-git-send-email-john.garry@huawei.com>
- <CAK8P3a38HsXrebiCdJXJdxdBvS7AUjs+rVEex-0JQ+ZsytTy8A@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <fe18fbe3-e7e6-039d-aaf8-67bfb4cf2375@huawei.com>
-Date:   Tue, 26 Jan 2021 17:56:31 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1731560AbhAZXcx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 18:32:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404669AbhAZTv4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Jan 2021 14:51:56 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3173F22B3B;
+        Tue, 26 Jan 2021 19:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611690673;
+        bh=vtCVPMTIKr8d/cujk/wlDZgk61TwrRcnev62B7CYDSU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ntmkasyMuY9szgYvqzjFdNX35Zl2VUsqtWEGScduGwhaKgSRF/oZrdE6uxRFgG1kE
+         1Tod8EMi4jXOMSu9RO9Ey42EO2X8GgVPuvmHKMXPfs1EKRam6OJsYWnA0x/KcNJYed
+         3skXaO9YVnrp225k7laYKxObMz/rc9QnMqNRnV3FYeZm0BXzJvnvkqvb1ogi+FjsFy
+         8rSbTN8GXoul9Zv5gIr9iI21ejCbxUvT9bgGRRDdRMxj8/XfOTMs4zvc6aclu5Oela
+         MLblTBG78VEl287pPlnNsSPXEUQGU82Ca2+agcPIztyEzvhse7XuXDVbVLNCgO+Kh9
+         0WLVJ0WyRRJ6Q==
+Date:   Tue, 26 Jan 2021 13:51:11 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] MAINTAINERS: Fix 'ARM/TEXAS INSTRUMENT KEYSTONE
+ CLOCKSOURCE' capitalization
+Message-ID: <20210126195111.GA2909572@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a38HsXrebiCdJXJdxdBvS7AUjs+rVEex-0JQ+ZsytTy8A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.2.35]
-X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210126193457.2907650-1-helgaas@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
->>
->> For reference, here's how /proc/ioports looks on my arm64 system with
->> this change:
->>
->> root@ubuntu:/home/john# more /proc/ioports
->> 00010000-0001ffff : PCI Bus 0002:f8
->>    00010000-00010fff : PCI Bus 0002:f9
->>      00010000-00010007 : 0002:f9:00.0
->>        00010000-00010007 : serial
->>      00010008-0001000f : 0002:f9:00.1
->>        00010008-0001000f : serial
->>      00010010-00010017 : 0002:f9:00.2
->>      00010018-0001001f : 0002:f9:00.2
->> 00020000-0002ffff : PCI Bus 0004:88
->> 00030000-0003ffff : PCI Bus 0005:78
->> 00040000-0004ffff : PCI Bus 0006:c0
->> 00050000-0005ffff : PCI Bus 0007:90
->> 00060000-0006ffff : PCI Bus 000a:10
->> 00070000-0007ffff : PCI Bus 000c:20
->> 00080000-0008ffff : PCI Bus 000d:30
-
-Hi Arnd,
-
-> Doesn't this mean we lose the ability to access PCI devices
-> with legacy ISA compatibility? Most importantly, any GPU today
-> should in theory still support VGA frame buffer mode or text
-> console, but both of these stop working if the low I/O ports are
-> not mapped to the corresponding PCI bus.
-
-Hmmm.. so are you saying that there is an expectation that the kernel 
-PIO region assigned for these devices must start at 0x0? If so, I assume 
-it's because fixed IO ports are used.
-
-> There is of course
-> already a problem if you have multiple PCI host bridges, and
-> each one gets its own PIO range, which means that only one
-> of them can have an ISA bridge with working PIO behind it.
-
-The answer to my question, above, seems to be 'yes' now.
-
+On Tue, Jan 26, 2021 at 01:34:57PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Another such case would be a BMC that has legacy ISA devices
-> behind a (real or emulated) LPC bus, e.g. a 8250 UART, ps2
-> keyboard, RTC, or an ATA CDROM. Not sure if any of those are
-> ever used on Arm machines.
+> Fix capitalization typo in 'ARM/TEXAS INSTRUMENT KEYSTONE CLOCKSOURCE'.
 > 
-> Regarding the size of the reservation, does this actually need
-> to cover the 0x0fff...0xffff range or just 0x0000...0x0fff? I don't
-> think there are any drivers that hardcode I/O ports beyond 0x0fff
-> because those would not work on ISA buses but require PCI
-> assigned BARs.
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
-I just chose the complete legacy IO port range, that being 0x0--0xffff. 
-If there would be no hardcoded ports beyond 0x0fff, then reserving 
-0x0--0xfff would work.
+I'll just merge this via the PCI tree unless anybody objects.
 
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> One more thought: There are two common ways in which PCI
-> host bridges map their PIO ports: either each host bridge has
-> its own 0x0...0xffff BAR range but gets remapped to an
-> arbitrary range of port numbers in the kernel, or each host bridge
-> uses a distinct range of port numbers, and the kernel can use
-> a 1:1 mapping between hardware and software port numbers,
-> i.e. the number in the BAR is the same as in the kernel.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cc1e6a5ee6e6..52311efad03e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2603,7 +2603,7 @@ L:	linux-kernel@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/clk/keystone/
+>  
+> -ARM/TEXAS INSTRUMENT KEYSTONE ClOCKSOURCE
+> +ARM/TEXAS INSTRUMENT KEYSTONE CLOCKSOURCE
+>  M:	Santosh Shilimkar <ssantosh@kernel.org>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  L:	linux-kernel@vger.kernel.org
+> -- 
+> 2.25.1
 > 
-> If all numbers are shifted by 0x10000, that second case no
-> longer works, and there is always an offset.
-
-Yes, this change would definitely break the second. But does - or could 
-- anyone use it on arm64? I didn't think that it was possible.
-
-Thanks,
-John
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
