@@ -2,152 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E222304499
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 18:16:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE3B03044A0
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 18:16:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732733AbhAZRFx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 12:05:53 -0500
-Received: from muru.com ([72.249.23.125]:53192 "EHLO muru.com"
+        id S2388737AbhAZRG4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 12:06:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390153AbhAZIbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Jan 2021 03:31:47 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 0FED78BF8;
-        Tue, 26 Jan 2021 08:28:19 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>,
+        id S2390411AbhAZItC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Jan 2021 03:49:02 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D2F3620793;
+        Tue, 26 Jan 2021 08:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611650901;
+        bh=Ii9h7tu6rlb17VtHNV7jap79gnKT5ToYbuNVC5byeDQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Eiq5xmJ/5nwYLMKM3nVI7oWCsU3DwM+02Q/slPFtq/D6W7MAa6T1ClmejLIrq6H9Y
+         5ltkO190tl04dACulkZngZUukLjPJ2e1wVsfFEtIEU8lAgKaEj3dtqU4zS2HoK+xfA
+         ByUIv2I8KS1/pG4plzWOWU4oLeOJa9zfvMHwSS5crYZhL+E0mAGPgbEchycAzQTron
+         uqLm5j0jw4T+r86d077gXeV3tgMUpD9JKIbo7FLB/+qbfKd3SC80OTPBnNoXn1RA8q
+         jx/Vx8VHiKgB5mH8337hhgIeMimnpvwHM/4Y5g8AbcDN7sJh45Kc5Q/eqPOHKCfaGO
+         WL0r0EdEAFeTw==
+Date:   Tue, 26 Jan 2021 10:48:17 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 27/27] ARM: OMAP2+: Drop legacy platform data for dra7 hwmod
-Date:   Tue, 26 Jan 2021 10:27:16 +0200
-Message-Id: <20210126082716.54358-28-tony@atomide.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210126082716.54358-1-tony@atomide.com>
-References: <20210126082716.54358-1-tony@atomide.com>
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v4 1/4] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+Message-ID: <20210126084817.GD1053290@unreal>
+References: <20210124131119.558563-1-leon@kernel.org>
+ <20210124131119.558563-2-leon@kernel.org>
+ <20210125135229.6193f783@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20210126060135.GQ579511@unreal>
+ <48c5a16657bb7b6c0f619253e57133137d4e825c.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48c5a16657bb7b6c0f619253e57133137d4e825c.camel@perches.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We can now probe interconnects with simple-pm-bus and genpd.
+On Tue, Jan 26, 2021 at 12:20:11AM -0800, Joe Perches wrote:
+> On Tue, 2021-01-26 at 08:01 +0200, Leon Romanovsky wrote:
+> > On Mon, Jan 25, 2021 at 01:52:29PM -0800, Jakub Kicinski wrote:
+> > > On Sun, 24 Jan 2021 15:11:16 +0200 Leon Romanovsky wrote:
+> > > > +static int pci_enable_vfs_overlay(struct pci_dev *dev) { return 0; }
+> > > > +static void pci_disable_vfs_overlay(struct pci_dev *dev) {}
+> > >
+> > > s/static /static inline /
+> >
+> > Thanks a lot, I think that we should extend checkpatch.pl to catch such
+> > mistakes.
+>
+> Who is this "we" you refer to? ;)
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap2/Kconfig               |  1 -
- arch/arm/mach-omap2/Makefile              |  1 -
- arch/arm/mach-omap2/io.c                  |  2 -
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 64 -----------------------
- 4 files changed, 68 deletions(-)
- delete mode 100644 arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+"We" == community :)
 
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -90,7 +90,6 @@ config SOC_DRA7XX
- 	select HAVE_ARM_ARCH_TIMER
- 	select IRQ_CROSSBAR
- 	select ARM_ERRATA_798181 if SMP
--	select OMAP_HWMOD
- 	select OMAP_INTERCONNECT
- 	select OMAP_INTERCONNECT_BARRIER
- 	select PM_OPP
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -209,7 +209,6 @@ obj-$(CONFIG_ARCH_OMAP3)		+= omap_hwmod_3xxx_data.o
- obj-$(CONFIG_SOC_TI81XX)		+= omap_hwmod_81xx_data.o
- obj-$(CONFIG_ARCH_OMAP4)		+= omap_hwmod_44xx_data.o
- obj-$(CONFIG_SOC_OMAP5)			+= omap_hwmod_54xx_data.o
--obj-$(CONFIG_SOC_DRA7XX)		+= omap_hwmod_7xx_data.o
- 
- # OMAP2420 MSDI controller integration support ("MMC")
- obj-$(CONFIG_SOC_OMAP2420)		+= msdi.o
-diff --git a/arch/arm/mach-omap2/io.c b/arch/arm/mach-omap2/io.c
---- a/arch/arm/mach-omap2/io.c
-+++ b/arch/arm/mach-omap2/io.c
-@@ -667,8 +667,6 @@ void __init dra7xx_init_early(void)
- 	dra7xxx_check_revision();
- 	dra7xx_powerdomains_init();
- 	dra7xx_clockdomains_init();
--	dra7xx_hwmod_init();
--	omap_hwmod_init_postsetup();
- 	omap_clk_soc_init = dra7xx_dt_clk_init;
- 	omap_secure_init();
- }
-diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-deleted file mode 100644
---- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-+++ /dev/null
-@@ -1,64 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Hardware modules present on the DRA7xx chips
-- *
-- * Copyright (C) 2013 Texas Instruments Incorporated - https://www.ti.com
-- *
-- * Paul Walmsley
-- * Benoit Cousson
-- *
-- * This file is automatically generated from the OMAP hardware databases.
-- * We respectfully ask that any modifications to this file be coordinated
-- * with the public linux-omap@vger.kernel.org mailing list and the
-- * authors above to ensure that the autogeneration scripts are kept
-- * up-to-date with the file contents.
-- */
--
--#include <linux/io.h>
--
--#include "omap_hwmod.h"
--#include "omap_hwmod_common_data.h"
--#include "cm1_7xx.h"
--#include "cm2_7xx.h"
--#include "prm7xx.h"
--#include "soc.h"
--
--/* Base offset for all DRA7XX interrupts external to MPUSS */
--#define DRA7XX_IRQ_GIC_START	32
--
--/*
-- * Interfaces
-- */
--static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
--	NULL,
--};
--
--/* SoC variant specific hwmod links */
--static struct omap_hwmod_ocp_if *dra72x_hwmod_ocp_ifs[] __initdata = {
--	NULL,
--};
--
--static struct omap_hwmod_ocp_if *rtc_hwmod_ocp_ifs[] __initdata = {
--	NULL,
--};
--
--int __init dra7xx_hwmod_init(void)
--{
--	int ret;
--
--	omap_hwmod_init();
--	ret = omap_hwmod_register_links(dra7xx_hwmod_ocp_ifs);
--
--	if (!ret && soc_is_dra74x()) {
--		ret = omap_hwmod_register_links(rtc_hwmod_ocp_ifs);
--	} else if (!ret && soc_is_dra72x()) {
--		ret = omap_hwmod_register_links(dra72x_hwmod_ocp_ifs);
--		if (!ret && !of_machine_is_compatible("ti,dra718"))
--			ret = omap_hwmod_register_links(rtc_hwmod_ocp_ifs);
--	} else if (!ret && soc_is_dra76x()) {
--		if (!ret && soc_is_dra76x_abz())
--			ret = omap_hwmod_register_links(rtc_hwmod_ocp_ifs);
--	}
--
--	return ret;
--}
--- 
-2.30.0
+>
+> > How hard is it to extend checkpatch.pl to do regexp and warn if in *.h file
+> > someone declared function with implementation but didn't add "inline" word?
+>
+> Something like this seems reasonable and catches these instances in
+> include/linux/*.h
+
+Thanks
+
+>
+> $ ./scripts/checkpatch.pl -f include/linux/*.h --types=static_inline --terse --nosummary
+> include/linux/dma-mapping.h:203: WARNING: static function definition might be better as static inline
+> include/linux/genl_magic_func.h:55: WARNING: static function definition might be better as static inline
+> include/linux/genl_magic_func.h:78: WARNING: static function definition might be better as static inline
+> include/linux/kernel.h:670: WARNING: static function definition might be better as static inline
+> include/linux/kprobes.h:213: WARNING: static function definition might be better as static inline
+> include/linux/kprobes.h:231: WARNING: static function definition might be better as static inline
+> include/linux/kprobes.h:511: WARNING: static function definition might be better as static inline
+> include/linux/skb_array.h:185: WARNING: static function definition might be better as static inline
+> include/linux/slab.h:606: WARNING: static function definition might be better as static inline
+> include/linux/stop_machine.h:62: WARNING: static function definition might be better as static inline
+> include/linux/vmw_vmci_defs.h:850: WARNING: static function definition might be better as static inline
+> include/linux/zstd.h:95: WARNING: static function definition might be better as static inline
+> include/linux/zstd.h:106: WARNING: static function definition might be better as static inline
+>
+> A false positive exists when __must_check is used between
+> static and inline.  It's an unusual and IMO not a preferred use.
+
+Maybe just filter and ignore such functions for now?
+Will you send proper patch or do you want me to do it?
+
+> ---
+>  scripts/checkpatch.pl | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 4f8494527139..0ac366481962 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -4451,6 +4451,18 @@ sub process {
+>  			}
+>  		}
+>
+> +# check for static function definitions without inline in .h files
+> +# only works for static in column 1 and avoids multiline macro definitions
+> +		if ($realfile =~ /\.h$/ &&
+> +		    defined($stat) &&
+> +		    $stat =~ /^\+static(?!\s+(?:$Inline|union|struct))\b.*\{.*\}\s*$/s &&
+> +		    $line =~ /^\+static(?!\s+(?:$Inline|union|struct))\b/ &&
+> +		    $line !~ /\\$/) {
+> +			WARN("STATIC_INLINE",
+> +			     "static function definition might be better as static inline\n" .
+> +				$herecurr);
+> +		}
+> +
+>  # check for non-global char *foo[] = {"bar", ...} declarations.
+>  		if ($line =~ /^.\s+(?:static\s+|const\s+)?char\s+\*\s*\w+\s*\[\s*\]\s*=\s*\{/) {
+>  			WARN("STATIC_CONST_CHAR_ARRAY",
+>
+>
