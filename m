@@ -2,204 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A1D3040D9
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 15:50:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DB6D3040F8
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 15:54:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405975AbhAZOtr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 09:49:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
+        id S2391346AbhAZOxa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 09:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391343AbhAZOte (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Jan 2021 09:49:34 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0200C23101;
-        Tue, 26 Jan 2021 14:48:52 +0000 (UTC)
+        id S2391314AbhAZOx1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 26 Jan 2021 09:53:27 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 98F9223103;
+        Tue, 26 Jan 2021 14:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611672533;
-        bh=G/T0jPwLGg8lM5WaMFH8R28YFCg05xkzcrFyW7ZCPQ8=;
+        s=k20201202; t=1611672764;
+        bh=3yBxzjkgZhuyNBbMaccqgbZLYAKuOFoO0Q29PtcedmU=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Dq6nQ9AVkEDX3HsZpsZJN7dp/GBweFeek9jOCUXcVoW64SJkJHIJaBP8fafURMFip
-         rOov4+9+g8wMzfS08IOKRplGuXsREEwhwwVgrp+GP3nkiH3T8TpC3cHqIpHy3uZZnY
-         HgN6larYeLzTtYBHgzldyKL1vADTENCi0EokpjUElcUn5l0So6KRruefXxQVoqI9ce
-         yAVZTHZK1jVqYoGTBU4MpvENU14eUnQ0YS4r8HG1hmdCBDvUSxjLGDNZJjC1AZeB1z
-         Jt6iOtz1zT2nXiDPooQI/wESx8jwsZ9iPUfKfwxLEwzQLUZ+J2MUzhfKMKdk7xkkPg
-         eyO3A2n7WiIXQ==
-Received: by mail-ej1-f49.google.com with SMTP id ke15so23269935ejc.12;
-        Tue, 26 Jan 2021 06:48:52 -0800 (PST)
-X-Gm-Message-State: AOAM533lSga2MxUa6M4Sr0WCFjB6eZhov5QiuZq03hdvnn6pkd6ljRxr
-        sdEzsov8l7BurKbFBAq+eilQ659c5b2Qmb6Jvg==
-X-Google-Smtp-Source: ABdhPJz5uL45LCjYMSeSUuhgl7Xo+mvSzco3ZHqNBiKXImdAUCiZ6mpo5aHUEBCt7/kYu2Qj402kAGhAxp2DUZ4ZcOs=
-X-Received: by 2002:a17:906:a94:: with SMTP id y20mr3484816ejf.525.1611672531542;
- Tue, 26 Jan 2021 06:48:51 -0800 (PST)
+        b=XTkQNv8Sbs4GgCocet74Y0iwGHu2J4vtK6ffoT2EiaLXhKdv6+gXprNgC/91C2sld
+         ZdA2w1TSkTamreVLY6tGDje+3rgiY/G57iiXOcRNzUccxx5vGIuxJCLGrSV8il8/4B
+         E7rhmyrQHEx/wB+Z9CW1wz96IvEq+hC3edpHow4/1eTbnupidGt+9Y4Fa+lfqO7EUi
+         OLJR+AZHucIYJ6M/mt5yxzyfzBigbeI3Fgz7JjLZav62AiDzmFxr4GICriOU09G/Hj
+         /4lzkpmLdlThZBbb8qpP0amMjjFfNYgQv1iTpHyCJ9lBxDS05/+TWgR4SLys4qxRmI
+         USD7Klh2QhO6A==
+Received: by mail-ed1-f52.google.com with SMTP id bx12so20053883edb.8;
+        Tue, 26 Jan 2021 06:52:44 -0800 (PST)
+X-Gm-Message-State: AOAM532mxoCYUZskT8JnAZTaq3NVBVwRZ2QadjOFshXApMWunMFh/maH
+        sgU61iG4N3yQKQQALrNsJm9o3X8s3GskZZvEgg==
+X-Google-Smtp-Source: ABdhPJx9p+Z7FBDf1hYI1Kfn/L638Nk9D11uIpYesw9n6jxClik4PWGyAIMoLFtqYSEQp7jkpV+XQhsyE8iIOyuGiv0=
+X-Received: by 2002:aa7:c895:: with SMTP id p21mr4836358eds.165.1611672763215;
+ Tue, 26 Jan 2021 06:52:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20210125024824.634583-1-xxm@rock-chips.com> <20210125152632.GA381616@robh.at.kernel.org>
- <e22ea1ed-9b3b-98ae-5b78-6c3c10af3589@rock-chips.com>
-In-Reply-To: <e22ea1ed-9b3b-98ae-5b78-6c3c10af3589@rock-chips.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 26 Jan 2021 08:48:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJLEmCFP5D1SN-BuOC=ZNsA216RMLT-aAN4Bqst7Kb=TQ@mail.gmail.com>
-Message-ID: <CAL_JsqJLEmCFP5D1SN-BuOC=ZNsA216RMLT-aAN4Bqst7Kb=TQ@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyAxLzJdIGR0LWJpbmRpbmdzOiByb2NrY2hpcDogQWRkIERlc2lnbg==?=
-        =?UTF-8?B?V2FyZSBiYXNlZCBQQ0llIGNvbnRyb2xsZXLjgJDor7fms6jmhI/vvIzpgq7ku7bnlLFyb2JoZXJyaW5n?=
-        =?UTF-8?B?MkBnbWFpbC5jb23ku6Plj5HjgJE=?=
-To:     xxm <xxm@rock-chips.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+References: <20210125024824.634583-1-xxm@rock-chips.com> <20210125024927.634634-1-xxm@rock-chips.com>
+ <20210125054836.GB579511@unreal> <0b65ca38-ff7a-f9cd-5406-1f275fbbecd1@rock-chips.com>
+ <20210125090129.GF579511@unreal>
+In-Reply-To: <20210125090129.GF579511@unreal>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 26 Jan 2021 08:52:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJET8-gn-uy11EVHJAz057FVH3-BErwyL41W2WpxhgQUQ@mail.gmail.com>
+Message-ID: <CAL_JsqJET8-gn-uy11EVHJAz057FVH3-BErwyL41W2WpxhgQUQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] PCI: rockchip: add DesignWare based PCIe controller
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     xxm <xxm@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         PCI <linux-pci@vger.kernel.org>,
         "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         devicetree@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 8:44 PM xxm <xxm@rock-chips.com> wrote:
+On Mon, Jan 25, 2021 at 3:01 AM Leon Romanovsky <leon@kernel.org> wrote:
 >
-> Hi Rob,
+> On Mon, Jan 25, 2021 at 02:40:10PM +0800, xxm wrote:
+> > Hi Leon,
+> >
+> > Thanks for your reply.
+> >
+> > =E5=9C=A8 2021/1/25 13:48, Leon Romanovsky =E5=86=99=E9=81=93:
+> > > On Mon, Jan 25, 2021 at 10:49:27AM +0800, Simon Xue wrote:
+> > > > pcie-dw-rockchip is based on DWC IP. But pcie-rockchip-host
+> > > > is Rockchip designed IP which is only used for RK3399. So all the f=
+ollowing
+> > > > non-RK3399 SoCs should use this driver.
+> > > >
+> > > > Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> > > > Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> > > > ---
+> > > >   drivers/pci/controller/dwc/Kconfig            |   9 +
+> > > >   drivers/pci/controller/dwc/Makefile           |   1 +
+> > > >   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 286 +++++++++++++=
++++++
+> > > >   3 files changed, 296 insertions(+)
+> > > >   create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > >
+> > > > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/contr=
+oller/dwc/Kconfig
+> > > > index 22c5529e9a65..aee408fe9283 100644
+> > > > --- a/drivers/pci/controller/dwc/Kconfig
+> > > > +++ b/drivers/pci/controller/dwc/Kconfig
+> > > > @@ -214,6 +214,15 @@ config PCIE_ARTPEC6_EP
+> > > >             Enables support for the PCIe controller in the ARTPEC-6=
+ SoC to work in
+> > > >             endpoint mode. This uses the DesignWare core.
+> > > >
+> > > > +config PCIE_ROCKCHIP_DW_HOST
+> > > > + bool "Rockchip DesignWare PCIe controller"
+> > > > + select PCIE_DW
+> > > > + select PCIE_DW_HOST
+> > > > + depends on ARCH_ROCKCHIP || COMPILE_TEST
+> > > > + depends on OF
+> > > > + help
+> > > > +   Enables support for the DW PCIe controller in the Rockchip SoC.
+> > > > +
+> > > >   config PCIE_INTEL_GW
+> > > >           bool "Intel Gateway PCIe host controller support"
+> > > >           depends on OF && (X86 || COMPILE_TEST)
+> > > > diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/cont=
+roller/dwc/Makefile
+> > > > index a751553fa0db..30eef8e9ee8a 100644
+> > > > --- a/drivers/pci/controller/dwc/Makefile
+> > > > +++ b/drivers/pci/controller/dwc/Makefile
+> > > > @@ -13,6 +13,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE_EP) +=3D pci-layersca=
+pe-ep.o
+> > > >   obj-$(CONFIG_PCIE_QCOM) +=3D pcie-qcom.o
+> > > >   obj-$(CONFIG_PCIE_ARMADA_8K) +=3D pcie-armada8k.o
+> > > >   obj-$(CONFIG_PCIE_ARTPEC6) +=3D pcie-artpec6.o
+> > > > +obj-$(CONFIG_PCIE_ROCKCHIP_DW_HOST) +=3D pcie-dw-rockchip.o
+> > > >   obj-$(CONFIG_PCIE_INTEL_GW) +=3D pcie-intel-gw.o
+> > > >   obj-$(CONFIG_PCIE_KIRIN) +=3D pcie-kirin.o
+> > > >   obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/driver=
+s/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > new file mode 100644
+> > > > index 000000000000..07f6d1cd5853
+> > > > --- /dev/null
+> > > > +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> > > > @@ -0,0 +1,286 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * PCIe host controller driver for Rockchip SoCs
+> > > > + *
+> > > > + * Copyright (C) 2021 Rockchip Electronics Co., Ltd.
+> > > > + *               http://www.rock-chips.com
+> > > > + *
+> > > > + * Author: Simon Xue <xxm@rock-chips.com>
+> > > > + */
+> > > > +
+> > > > +#include <linux/clk.h>
+> > > > +#include <linux/gpio/consumer.h>
+> > > > +#include <linux/mfd/syscon.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/of_device.h>
+> > > > +#include <linux/phy/phy.h>
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/regmap.h>
+> > > > +#include <linux/reset.h>
+> > > > +
+> > > > +#include "pcie-designware.h"
+> > > > +
+> > > > +/*
+> > > > + * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
+> > > > + * mask for the lower 16 bits.  This allows atomic updates
+> > > > + * of the register without locking.
+> > > > + */
+> > > This is correct only for the variables that naturally aligned, I imag=
+ine
+> > > that this is the case here and in the Linux, but better do not write =
+comments
+> > > in the code that are not accurate.
+> >
+> > Ok, will remove.
+> > I wonder what it would be when outside the Linux? Could you share some =
+information?
 >
-> Thanks for reply.
+> The C standard says nothing about atomicity, integer assignment maybe ato=
+mic,
+> maybe it isn=E2=80=99t. There is no guarantee, plain integer assignment i=
+n C is non-atomic
+> by definition.
 >
-> =E5=9C=A8 2021/1/25 23:26, Rob Herring =E5=86=99=E9=81=93:
-> > On Mon, Jan 25, 2021 at 10:48:24AM +0800, Simon Xue wrote:
-> >> Document DT bindings for PCIe controller found on Rockchip SoC.
-> >>
-> >> Signed-off-by: Simon Xue <xxm@rock-chips.com>
-> >> ---
-> >>   .../bindings/pci/rockchip-dw-pcie.yaml        | 133 ++++++++++++++++=
-++
-> >>   1 file changed, 133 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw=
--pcie.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.ya=
-ml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> >> new file mode 100644
-> >> index 000000000000..24ea42203c14
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> >> @@ -0,0 +1,133 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: DesignWare based PCIe RC controller on Rockchip SoCs
-> >> +
-> >> +maintainers:
-> >> +  - Shawn Lin <shawn.lin@rock-chips.com>
-> >> +  - Simon Xue <xxm@rock-chips.com>
-> >> +  - Heiko Stuebner <heiko@sntech.de>
-> >> +
-> >> +description: |+
-> >> +  RK3568 SoC PCIe host controller is based on the Synopsys DesignWare
-> >> +  PCIe IP and thus inherits all the common properties defined in
-> >> +  designware-pcie.txt.
-> >> +
-> >> +allOf:
-> >> +  - $ref: /schemas/pci/pci-bus.yaml#
-> >> +
-> >> +# We need a select here so we don't match all nodes with 'snps,dw-pci=
-e'
-> >> +select:
-> >> +  properties:
-> >> +    compatible:
-> >> +      contains:
-> >> +        const: rockchip,rk3568-pcie
-> >> +  required:
-> >> +    - compatible
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    items:
-> >> +      - const: rockchip,rk3568-pcie
-> >> +      - const: snps,dw-pcie
-> >> +
-> >> +  reg:
-> >> +    items:
-> >> +      - description: Data Bus Interface (DBI) registers
-> >> +      - description: Rockchip designed configuration registers
-> >> +
-> >> +  clocks:
-> >> +    items:
-> >> +      - description: AHB clock for PCIe master
-> >> +      - description: AHB clock for PCIe slave
-> >> +      - description: AHB clock for PCIe dbi
-> >> +      - description: APB clock for PCIe
-> >> +      - description: Auxiliary clock for PCIe
-> >> +
-> >> +  clock-names:
-> >> +    items:
-> >> +      - const: aclk_mst
-> >> +      - const: aclk_slv
-> >> +      - const: aclk_dbi
-> >> +      - const: pclk
-> >> +      - const: aux
-> >> +
-> >> +  msi-map: true
-> >> +
-> >> +  num-lanes: true
-> >> +
-> >> +  phys:
-> >> +    maxItems: 1
-> >> +
-> >> +  phy-names:
-> >> +    const: pcie-phy
-> >> +
-> >> +  power-domains:
-> >> +    maxItems: 1
-> >> +
-> >> +  ranges:
-> >> +    maxItems: 3
-> >> +
-> >> +  resets:
-> >> +    maxItems: 1
-> >> +
-> >> +  reset-names:
-> >> +    const: pipe
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - reg-names
-> >> +  - clocks
-> >> +  - clock-names
-> >> +  - msi-map
-> >> +  - num-lanes
-> >> +  - phys
-> >> +  - phy-names
-> >> +  - power-domains
-> >> +  - resets
-> >> +  - reset-names
-> >> +
-> >> +unevaluatedProperties: false
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >> +
-> >> +    bus {
-> >> +        #address-cells =3D <2>;
-> >> +        #size-cells =3D <2>;
-> >> +
-> >> +        pcie3x2: pcie@fe280000 {
-> >> +            compatible =3D "rockchip,rk3568-pcie", "snps,dw-pcie";
-> >> +            reg =3D <0x3 0xc0800000 0x0 0x400000>,
-> >> +                  <0x0 0xfe280000 0x0 0x10000>;
-> >> +            reg-names =3D "pcie-dbi", "pcie-apb";
-> > I believe I already said use 'dbi'. The DBI is also not 4MB. The config
-> > space goes here too, not in 'ranges'.
->
-> Sorry for missing  update in yaml.
->
-> I think yaml is used to describe the resources of specific SoC, it
-> reserves 4MB for DBI on Rockchip SoC.
->
-> So, I think assign 4MB here is reasonable.
+> The atomicity of u32 is very dependent on hardware vendor, memory model a=
+nd compiler,
+> for example x86 and ARMs guarantee atomicity for u32. This is why I said =
+that probably
+> here (Linux) it is ok and you are not alone in expecting lockless write.
 
-Not if there's nothing there. Otherwise you are wasting almost 4MB of
-virtual space. Doesn't matter so much on 64-bit, but for 32-bit it
-really does.
+But this is a mmio register accessed thru writel() which does have all
+those guarantees.
 
 Rob
