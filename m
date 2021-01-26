@@ -2,221 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 647A53037F4
-	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 09:33:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29B8C303860
+	for <lists+linux-pci@lfdr.de>; Tue, 26 Jan 2021 09:53:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390167AbhAZIcM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 26 Jan 2021 03:32:12 -0500
-Received: from muru.com ([72.249.23.125]:53190 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390152AbhAZIbr (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Jan 2021 03:31:47 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id C3E348BE9;
-        Tue, 26 Jan 2021 08:28:17 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, Balaji T K <balajitk@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 26/27] ARM: OMAP2+: Drop legacy platform data for dra7 l3
-Date:   Tue, 26 Jan 2021 10:27:15 +0200
-Message-Id: <20210126082716.54358-27-tony@atomide.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210126082716.54358-1-tony@atomide.com>
-References: <20210126082716.54358-1-tony@atomide.com>
+        id S1730007AbhAZIwD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 26 Jan 2021 03:52:03 -0500
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:39077 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390427AbhAZIvG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 26 Jan 2021 03:51:06 -0500
+Received: by mail-ot1-f49.google.com with SMTP id i30so15537498ota.6;
+        Tue, 26 Jan 2021 00:50:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dQS05gAa+WfDRZQbLeXyiyoUlWSeuuqlrJ0M+LF4pGw=;
+        b=kSa/7qtt5aHXOir55Yn9tnMtiNUqcBdzhYRFuZSyWVQDhDsnb8c/WNWxUqp0w3pREp
+         to5Yu3gs5YAElhZgQdbgAV8KW5CeBC3pyxSa/pmiAe+p5acsQoWpmt6VelV+Nn1fcgL/
+         LFF4zDc4abObMqnnkPv6gbCOJs6Bmq7obdtk8brj1ImutIoD8wkK+XJHSMOmJyWqXW1h
+         mCIgaRPUTao+nBpOvx4sbR5bMJA0EMtgOHwOiwacLGggXB6fxNP0axNC33O+FOcP3v9K
+         GIcQ9Q2sk9ng98EJaMlPusg8fTnLv3Lj90PTHqVNESAXWZLixhA1eVg6fvuT0dudGL2X
+         dRBQ==
+X-Gm-Message-State: AOAM533Xw2u3K5yz4UZwo/CJMTIb0slPBM028V0iDdqTMu0l5uil9Qpl
+        CYwloAjTufzTReBKQPq0DHZe5S6NAaQBqvg7hj0=
+X-Google-Smtp-Source: ABdhPJydB/0YI6k0pmQhCEPbC77QKWeRVaG2MIkeegbghOEhRTqm/NdHbTtvjdrHIu5hkpVekXoUN0XUzbHHm5UHQp4=
+X-Received: by 2002:a05:6830:15cc:: with SMTP id j12mr3278439otr.145.1611651025336;
+ Tue, 26 Jan 2021 00:50:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210120105246.23218-1-michael@walle.cc> <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
+ <CAGETcx86HMo=gaDdXFyJ4QQ-pGXWzw2G0J=SjC-eq4K7B1zQHg@mail.gmail.com>
+ <c3e35b90e173b15870a859fd7001a712@walle.cc> <CAGETcx8eZRd1fJ3yuO_t2UXBFHObeNdv-c8oFH3mXw6zi=zOkQ@mail.gmail.com>
+ <f706c0e4b684e07635396fcf02f4c9a6@walle.cc> <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
+ <CAMuHMdWvFej-6vkaLM44t7eX2LpkDSXu4_7VH-X-3XRueXTO=A@mail.gmail.com>
+ <a24391e62b107040435766fff52bdd31@walle.cc> <CAGETcx8FO+YSM0jwCnDdnvE3NCdjZ=1FSmAZpyaOEOvCgd4SXw@mail.gmail.com>
+In-Reply-To: <CAGETcx8FO+YSM0jwCnDdnvE3NCdjZ=1FSmAZpyaOEOvCgd4SXw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 26 Jan 2021 09:50:14 +0100
+Message-ID: <CAMuHMdX8__juNc-Lx8Tu9abMKq-pT=yA4s6D1w4ZeStKOasGpg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: layerscape: convert to builtin_platform_driver()
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Roy Zang <roy.zang@nxp.com>, PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We can now probe interconnects with simple-pm-bus and genpd.
+Hi Saravana,
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 162 ----------------------
- 1 file changed, 162 deletions(-)
+On Mon, Jan 25, 2021 at 11:42 PM Saravana Kannan <saravanak@google.com> wrote:
+> On Mon, Jan 25, 2021 at 11:49 AM Michael Walle <michael@walle.cc> wrote:
+> > Am 2021-01-21 12:01, schrieb Geert Uytterhoeven:
+> > > On Thu, Jan 21, 2021 at 1:05 AM Saravana Kannan <saravanak@google.com>
+> > > wrote:
+> > >> On Wed, Jan 20, 2021 at 3:53 PM Michael Walle <michael@walle.cc>
+> > >> wrote:
+> > >> > Am 2021-01-20 20:47, schrieb Saravana Kannan:
+> > >> > > On Wed, Jan 20, 2021 at 11:28 AM Michael Walle <michael@walle.cc>
+> > >> > > wrote:
+> > >> > >>
+> > >> > >> [RESEND, fat-fingered the buttons of my mail client and converted
+> > >> > >> all CCs to BCCs :(]
+> > >> > >>
+> > >> > >> Am 2021-01-20 20:02, schrieb Saravana Kannan:
+> > >> > >> > On Wed, Jan 20, 2021 at 6:24 AM Rob Herring <robh@kernel.org> wrote:
+> > >> > >> >>
+> > >> > >> >> On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc>
+> > >> > >> >> wrote:
+> > >> > >> >> >
+> > >> > >> >> > fw_devlink will defer the probe until all suppliers are ready. We can't
+> > >> > >> >> > use builtin_platform_driver_probe() because it doesn't retry after probe
+> > >> > >> >> > deferral. Convert it to builtin_platform_driver().
+> > >> > >> >>
+> > >> > >> >> If builtin_platform_driver_probe() doesn't work with fw_devlink, then
+> > >> > >> >> shouldn't it be fixed or removed?
+> > >> > >> >
+> > >> > >> > I was actually thinking about this too. The problem with fixing
+> > >> > >> > builtin_platform_driver_probe() to behave like
+> > >> > >> > builtin_platform_driver() is that these probe functions could be
+> > >> > >> > marked with __init. But there are also only 20 instances of
+> > >> > >> > builtin_platform_driver_probe() in the kernel:
+> > >> > >> > $ git grep ^builtin_platform_driver_probe | wc -l
+> > >> > >> > 20
+> > >> > >> >
+> > >> > >> > So it might be easier to just fix them to not use
+> > >> > >> > builtin_platform_driver_probe().
+> > >> > >> >
+> > >> > >> > Michael,
+> > >> > >> >
+> > >> > >> > Any chance you'd be willing to help me by converting all these to
+> > >> > >> > builtin_platform_driver() and delete builtin_platform_driver_probe()?
+> > >> > >>
+> > >> > >> If it just moving the probe function to the _driver struct and
+> > >> > >> remove the __init annotations. I could look into that.
+> > >> > >
+> > >> > > Yup. That's pretty much it AFAICT.
+> > >> > >
+> > >> > > builtin_platform_driver_probe() also makes sure the driver doesn't ask
+> > >> > > for async probe, etc. But I doubt anyone is actually setting async
+> > >> > > flags and still using builtin_platform_driver_probe().
+> > >> >
+> > >> > Hasn't module_platform_driver_probe() the same problem? And there
+> > >> > are ~80 drivers which uses that.
+> > >>
+> > >> Yeah. The biggest problem with all of these is the __init markers.
+> > >> Maybe some familiar with coccinelle can help?
+> > >
+> > > And dropping them will increase memory usage.
+> >
+> > Although I do have the changes for the builtin_platform_driver_probe()
+> > ready, I don't think it makes much sense to send these unless we agree
+> > on the increased memory footprint. While there are just a few
+> > builtin_platform_driver_probe() and memory increase _might_ be
+> > negligible, there are many more module_platform_driver_probe().
+>
+> While it's good to drop code that'll not be used past kernel init, the
+> module_platform_driver_probe() is going even more extreme. It doesn't
+> even allow deferred probe (well before kernel init is done). I don't
+> think that behavior is right and that's why we should delete it. Also,
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-@@ -26,172 +26,10 @@
- /* Base offset for all DRA7XX interrupts external to MPUSS */
- #define DRA7XX_IRQ_GIC_START	32
- 
--/*
-- * IP blocks
-- */
--
--/*
-- * 'l3' class
-- * instance(s): l3_instr, l3_main_1, l3_main_2
-- */
--static struct omap_hwmod_class dra7xx_l3_hwmod_class = {
--	.name	= "l3",
--};
--
--/* l3_instr */
--static struct omap_hwmod dra7xx_l3_instr_hwmod = {
--	.name		= "l3_instr",
--	.class		= &dra7xx_l3_hwmod_class,
--	.clkdm_name	= "l3instr_clkdm",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L3INSTR_L3_INSTR_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L3INSTR_L3_INSTR_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_HWCTRL,
--		},
--	},
--};
--
--/* l3_main_1 */
--static struct omap_hwmod dra7xx_l3_main_1_hwmod = {
--	.name		= "l3_main_1",
--	.class		= &dra7xx_l3_hwmod_class,
--	.clkdm_name	= "l3main1_clkdm",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L3MAIN1_L3_MAIN_1_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L3MAIN1_L3_MAIN_1_CONTEXT_OFFSET,
--		},
--	},
--};
--
--/* l3_main_2 */
--static struct omap_hwmod dra7xx_l3_main_2_hwmod = {
--	.name		= "l3_main_2",
--	.class		= &dra7xx_l3_hwmod_class,
--	.clkdm_name	= "l3instr_clkdm",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L3INSTR_L3_MAIN_2_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L3INSTR_L3_MAIN_2_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_HWCTRL,
--		},
--	},
--};
--
--/*
-- * 'bb2d' class
-- *
-- */
--
--static struct omap_hwmod_class dra7xx_bb2d_hwmod_class = {
--	.name	= "bb2d",
--};
--
--/* bb2d */
--static struct omap_hwmod dra7xx_bb2d_hwmod = {
--	.name		= "bb2d",
--	.class		= &dra7xx_bb2d_hwmod_class,
--	.clkdm_name	= "dss_clkdm",
--	.main_clk	= "dpll_core_h24x2_ck",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_DSS_BB2D_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_DSS_BB2D_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/*
-- * 'vcp' class
-- *
-- */
--
--static struct omap_hwmod_class dra7xx_vcp_hwmod_class = {
--	.name	= "vcp",
--};
--
--/* vcp1 */
--static struct omap_hwmod dra7xx_vcp1_hwmod = {
--	.name		= "vcp1",
--	.class		= &dra7xx_vcp_hwmod_class,
--	.clkdm_name	= "l3main1_clkdm",
--	.main_clk	= "l3_iclk_div",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L3MAIN1_VCP1_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L3MAIN1_VCP1_CONTEXT_OFFSET,
--		},
--	},
--};
--
--/* vcp2 */
--static struct omap_hwmod dra7xx_vcp2_hwmod = {
--	.name		= "vcp2",
--	.class		= &dra7xx_vcp_hwmod_class,
--	.clkdm_name	= "l3main1_clkdm",
--	.main_clk	= "l3_iclk_div",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L3MAIN1_VCP2_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L3MAIN1_VCP2_CONTEXT_OFFSET,
--		},
--	},
--};
--
--
--
- /*
-  * Interfaces
-  */
--
--/* l3_main_2 -> l3_instr */
--static struct omap_hwmod_ocp_if dra7xx_l3_main_2__l3_instr = {
--	.master		= &dra7xx_l3_main_2_hwmod,
--	.slave		= &dra7xx_l3_instr_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l3_main_1 -> l3_main_2 */
--static struct omap_hwmod_ocp_if dra7xx_l3_main_1__l3_main_2 = {
--	.master		= &dra7xx_l3_main_1_hwmod,
--	.slave		= &dra7xx_l3_main_2_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU,
--};
--
--/* l3_main_1 -> bb2d */
--static struct omap_hwmod_ocp_if dra7xx_l3_main_1__bb2d = {
--	.master		= &dra7xx_l3_main_1_hwmod,
--	.slave		= &dra7xx_bb2d_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l3_main_1 -> vcp1 */
--static struct omap_hwmod_ocp_if dra7xx_l3_main_1__vcp1 = {
--	.master		= &dra7xx_l3_main_1_hwmod,
--	.slave		= &dra7xx_vcp1_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l3_main_1 -> vcp2 */
--static struct omap_hwmod_ocp_if dra7xx_l3_main_1__vcp2 = {
--	.master		= &dra7xx_l3_main_1_hwmod,
--	.slave		= &dra7xx_vcp2_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
- static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
--	&dra7xx_l3_main_2__l3_instr,
--	&dra7xx_l3_main_1__l3_main_2,
--	&dra7xx_l3_main_1__bb2d,
--	&dra7xx_l3_main_1__vcp1,
--	&dra7xx_l3_main_1__vcp2,
- 	NULL,
- };
- 
+This construct is typically used for builtin hardware for which the
+dependencies are registered very early, and thus known to probe at
+first try (if present).
+
+> I doubt if any of these probe functions even take up 4KB of memory.
+
+How many 4 KiB pages do you have in a system with 10 MiB of SRAM?
+How many can you afford to waste?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.30.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
