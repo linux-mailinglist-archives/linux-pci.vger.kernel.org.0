@@ -2,115 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65D5F305B52
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 13:28:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED26E305A91
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 13:01:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237499AbhA0M0y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 07:26:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35154 "EHLO mail.kernel.org"
+        id S233612AbhA0MAm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 07:00:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:42136 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S314044AbhAZWzk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Jan 2021 17:55:40 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A5DDE2065D;
-        Tue, 26 Jan 2021 22:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611701699;
-        bh=7/yqTNqWIqQ7XCIx1WSLqU/snxBtDCQ23qUfG8HlO5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hxfU/IRuv3TUSul3I/evOCCOqIPlij7Fp31pMB/khCbDtR9z8LV26+bh8BQ6A4D5H
-         Uq6Ao6JNAEzjMpilMG6xm7GxiAKvj/FOBV4T5u++joQDdfLKG1YcevdvOPMchYnQL5
-         dR64tGX8kKpzZdmaGAYt7JHF65SsvAsX4aF6OOzy2vG/uyXamFVONJlj7Iaz6Adbu/
-         LEY2tk3cW4TpsdZlqoPVTZiSzGNkH2fDVm+iqF0C/113G8xoke/nSmDYfRYddMEIAw
-         3l6N9G7bZ6O7HocoxzYRRF0iUibB5D5RzXhmA+I1JFNpag/Q5v+LNgqQRm4egUMNf/
-         yrOTMJv1AnUmg==
-Date:   Tue, 26 Jan 2021 22:54:54 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Masters <jcm@jonmasters.org>, mark.rutland@arm.com,
-        linux-pci@vger.kernel.org, sudeep.holla@arm.com,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-Message-ID: <20210126225454.GB30941@willie-the-truck>
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <20210107181416.GA3536@willie-the-truck>
- <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
- <20210108103216.GA17931@e121166-lin.cambridge.arm.com>
- <20210122194829.GE25471@willie-the-truck>
- <4c2db08d-ccc4-05eb-6b7b-5fd7d07dd11e@arm.com>
+        id S237453AbhA0L6G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Jan 2021 06:58:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF2361FB;
+        Wed, 27 Jan 2021 03:57:20 -0800 (PST)
+Received: from [10.57.47.135] (unknown [10.57.47.135])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BDAE3F68F;
+        Wed, 27 Jan 2021 03:57:17 -0800 (PST)
+Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping
+ CPUs
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        frederic@kernel.org, mtosatti@redhat.com, juri.lelli@redhat.com,
+        abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
+References: <20200625223443.2684-1-nitesh@redhat.com>
+ <20200625223443.2684-2-nitesh@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com>
+Date:   Wed, 27 Jan 2021 11:57:16 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c2db08d-ccc4-05eb-6b7b-5fd7d07dd11e@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200625223443.2684-2-nitesh@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 10:46:04AM -0600, Jeremy Linton wrote:
-> On 1/22/21 1:48 PM, Will Deacon wrote:
-> > This isn't like the usual fragmentation problems, where firmware swoops in
-> > to save the day; CPU onlining, spectre mitigations, early entropy etc. All
-> > of these problems exist because there isn't a standard method to implement
-> > them outside of firmware, and so adding a layer of abstraction there makes
-> > sense.
+Hi,
+
+On 2020-06-25 23:34, Nitesh Narayan Lal wrote:
+> From: Alex Belits <abelits@marvell.com>
 > 
-> There are a lot of parallels with PSCI here because there were existing
-> standards for cpu online.
-
-I don't recall anything that I would consider a standard at the time.
-
-> > But PCIe is already a standard!
+> The current implementation of cpumask_local_spread() does not respect the
+> isolated CPUs, i.e., even if a CPU has been isolated for Real-Time task,
+> it will return it to the caller for pinning of its IRQ threads. Having
+> these unwanted IRQ threads on an isolated CPU adds up to a latency
+> overhead.
 > 
-> And it says that ECAM is optional, particularly if there are
-> firmware/platform standardized ways of accessing the config space.
-
-Nice loophole; I haven't checked.
-
-> > We shouldn't paper over hardware designers' inability to follow a ~20 year
-> > old standard by hiding it behind another standard that is hot off the press.
-> > Seriously.
+> Restrict the CPUs that are returned for spreading IRQs only to the
+> available housekeeping CPUs.
 > 
-> No disagreement, but its been more than half a decade and there are some
-> high (millions!) volume parts, that still don't have kernel support.
-
-Ok.
-
-> > There is not a scrap of evidence to suggest that the firmware
-> > implementations will be any better, but they will certainly be harder to
-> > debug and maintain.  I have significant reservations about Arm's interest in
-> > maintaining the spec as both more errata appear and the PCIe spec evolves
-> > (after all, this is outside of SBSA, no?). The whole thing stinks of "if all
-> > you have is a hammer, then everything looks like a nail". But this isn't the
-> > sort of problem that is solved with yet another spec -- instead, how about
-> > encouraging vendors to read the specs that already exist?
+> Signed-off-by: Alex Belits <abelits@marvell.com>
+> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
+> ---
+>   lib/cpumask.c | 16 +++++++++++-----
+>   1 file changed, 11 insertions(+), 5 deletions(-)
 > 
-> PSCI, isn't a good example of a firmware interface that works?
+> diff --git a/lib/cpumask.c b/lib/cpumask.c
+> index fb22fb266f93..85da6ab4fbb5 100644
+> --- a/lib/cpumask.c
+> +++ b/lib/cpumask.c
+> @@ -6,6 +6,7 @@
+>   #include <linux/export.h>
+>   #include <linux/memblock.h>
+>   #include <linux/numa.h>
+> +#include <linux/sched/isolation.h>
+>   
+>   /**
+>    * cpumask_next - get the next cpu in a cpumask
+> @@ -205,22 +206,27 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
+>    */
+>   unsigned int cpumask_local_spread(unsigned int i, int node)
+>   {
+> -	int cpu;
+> +	int cpu, hk_flags;
+> +	const struct cpumask *mask;
+>   
+> +	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_MANAGED_IRQ;
+> +	mask = housekeeping_cpumask(hk_flags);
 
-Not sure what you're getting at here.
+AFAICS, this generally resolves to something based on cpu_possible_mask 
+rather than cpu_online_mask as before, so could now potentially return 
+an offline CPU. Was that an intentional change?
 
-> > > The SMC is an olive branch and just to make sure it is crystal clear
-> > > there won't be room for adding quirks if the implementation turns out
-> > > to be broken, if a line in the sand is what we want here it is.
-> > 
-> > I appreciate the sentiment, but you're not solving the problem here. You're
-> > moving it somewhere else. Somewhere where you don't have to deal with it
-> > (and I honestly can't blame you for that), but also somewhere where you
-> > _can't_ necessarily deal with it. The inevitable outcome is an endless
-> > succession of crappy, non-compliant machines which only appear to operate
-> > correctly with particularly kernel/firmware combinations. Imagine trying to
-> > use something like that?
-> > 
-> > The approach championed here actively discourages vendors from building
-> > spec-compliant hardware and reduces our ability to work around problems
-> > on such hardware at the same time.
-> > 
-> > So I won't be applying these patches, sorry.
+I was just looking at the current code since I had the rare presence of 
+mind to check if something suitable already existed before I start 
+open-coding "any online CPU, but local node preferred" logic for 
+handling IRQ affinity in a driver - cpumask_local_spread() appears to be 
+almost what I want (if a bit more heavyweight), if only it would 
+actually guarantee an online CPU as the kerneldoc claims :(
+
+Robin.
+
+>   	/* Wrap: we always want a cpu. */
+> -	i %= num_online_cpus();
+> +	i %= cpumask_weight(mask);
+>   
+>   	if (node == NUMA_NO_NODE) {
+> -		for_each_cpu(cpu, cpu_online_mask)
+> +		for_each_cpu(cpu, mask) {
+>   			if (i-- == 0)
+>   				return cpu;
+> +		}
+>   	} else {
+>   		/* NUMA first. */
+> -		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
+> +		for_each_cpu_and(cpu, cpumask_of_node(node), mask) {
+>   			if (i-- == 0)
+>   				return cpu;
+> +		}
+>   
+> -		for_each_cpu(cpu, cpu_online_mask) {
+> +		for_each_cpu(cpu, mask) {
+>   			/* Skip NUMA nodes, done above. */
+>   			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
+>   				continue;
 > 
-> Does that mean its open season for ECAM quirks, and we can expect them to
-> start being merged now?
-
-That's not for me to say.
-
-Will
