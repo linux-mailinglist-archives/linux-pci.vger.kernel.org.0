@@ -2,54 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA380305F84
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 16:26:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9625305FDE
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 16:43:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235919AbhA0PZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 10:25:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
+        id S236131AbhA0PmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 10:42:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343864AbhA0PXv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Jan 2021 10:23:51 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A1CC920771;
-        Wed, 27 Jan 2021 15:23:10 +0000 (UTC)
+        id S235666AbhA0PkM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Jan 2021 10:40:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 81166207CC;
+        Wed, 27 Jan 2021 15:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611760990;
-        bh=/QK8GOdLQmHZB+d1F1HXmuQHXgdym25vBsrOecX6Rxg=;
+        s=k20201202; t=1611761972;
+        bh=jnWaTgTjEiXLwIl71ozjyUIexPVv8coDp5HgeSvIPAU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=corHFPnAaJIWnvjmcJvX0D6K4q7cW/vVgMVS5GJav5/8IulD7wa/NBfdRRFYg5Ho1
-         qwIpp6CsOHSqJz3g+6DKdd8e31bZCuij50hIl0JK+SalgdaDFC6GgITjCK59S+CGxR
-         cHY6zz3D21QUNAvtWXyvyd1Dn4wWf3esiXBWwIFyFILyQdlsqST97nbUrcB3vomJk/
-         WlRJxwfxI4iti7TmqiV7eGAUMv1qJAzfiVcp8oH6c1ZHo8N3KgdKxNulh4z+Zsx6D9
-         M+5gi3wITncvdEFcS4jL0byyz8tIF++kEB1SQ/W5CBAV4bC0KHWK2f8rAG7xknBe//
-         hm3yNTHrkav0g==
-Date:   Wed, 27 Jan 2021 09:23:08 -0600
+        b=eSolqN6tHqQ0PDVntK44LMEXtuXPy8sGMBO07JjNGhqNWFtFsLcW3JUeCHs/z1LAa
+         U5w9nLj0hS2uHQiu503HQlUiVTIZI85a1WP2hHxcnu84gsQ9xgXevcyFGWAUsJQnRC
+         jJhQN7GlF4xrFRKWzM8fl/lv/GeXYMcheZ7af9xwVtxllUv6uaoY9Ytl6mdXpms7t9
+         wnuCZsdLOZTUH7mYIq8lXnXGUXd2gBLf7y60zLzAatYwXe1DNfz3iM9g4D0oxCN4MD
+         kInYfuVpHA5JchQP6v3X3y3PswSpTbIyQkMhOAuPVVt2JKxeFDZFjWF2mwgehR3GOa
+         BQobHlPNxc7ag==
+Date:   Wed, 27 Jan 2021 09:39:28 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Bharat Kumar Gogada <bharatku@xilinx.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: xilinx-nwl: Enable coherenct PCIe traffic using CCI
-Message-ID: <20210127152308.GA2985356@bjorn-Precision-5520>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/3] PCI/ACPI: _OSC cleanups
+Message-ID: <20210127153928.GA2988033@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR02MB555964381D30E72FC79B4F7CA5BB9@BYAPR02MB5559.namprd02.prod.outlook.com>
+In-Reply-To: <CAJZ5v0i_HJzBM1+e3oU4b_y==0hoQJWJ+ZKxLCU5HCdnjdFYqA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 27, 2021 at 05:03:12AM +0000, Bharat Kumar Gogada wrote:
-> > On Thu, Jan 21, 2021 at 03:29:16PM +0530, Bharat Kumar Gogada wrote:
+On Wed, Jan 27, 2021 at 02:55:07PM +0100, Rafael J. Wysocki wrote:
+> On Wed, Jan 27, 2021 at 1:54 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > Clean up a few _OSC-related things.
+> >
+> > We talked about the _OSC failure message in the last patch long ago, and I
+> > just dropped the ball, sorry about that.  Previous discussion:
+> > https://lore.kernel.org/linux-pci/20200602223618.GA845676@bjorn-Precision-5520/
+> >
+> > I'm happy to merge these given your ack, Rafael, or you can take them if
+> > they look good to you.
+> 
+> They do look good to me, so
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> for the whole series.
+> 
+> I don't think it really matters which way they go in and I'm guessing
+> that it will be somewhat more convenient to you to apply them, so
+> please route them through the PCI tree.
 
-> Here is the CCI spec 
-> https://developer.arm.com/documentation/ddi0470/k/preface
-
-I'm sure it was obvious, but please include this in the commit log as
-well.
-
-> > Can you include a URL to a CCI spec?  I'm not familiar with it.  I
-> > guess this is something upstream from the host bridge, i.e.,
-> > between the CPU and the host bridge, so it's outside the PCI
-> > domain?
+Thanks, Rafael, I put these on my pci/enumeration branch for v5.12.
