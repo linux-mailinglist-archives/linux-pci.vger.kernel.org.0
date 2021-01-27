@@ -2,140 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAAC2305BE6
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 13:47:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C91D5305B77
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 13:35:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237474AbhA0Mpz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 07:45:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S313045AbhAZWyh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 26 Jan 2021 17:54:37 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E80792065C;
-        Tue, 26 Jan 2021 22:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611701637;
-        bh=90forB2cGb6Q0K0xI6+WurI9tm2KAuX6GVmEgXtvfyE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Me+oMZH2WW/ar4X1gTYs4u+oK3haCRjuAP1NLtUeZ8ObrUwGpUl3n8wZzE1PHlQui
-         1Hne7FVBUSOTElLsaCdCoDDo1OK7St+oFpUI42pWfAK4qUsC/6maGovC/ckaBnMa1F
-         fJMXgl8WopCIouYXOWu8ffEYVdxXB10/8zQ+rv9WVA6gArdrpVbKfq+M4YULWDtpIC
-         wpIXvGjq2phHuMMipiJxv/BGjXKW/29lluTTlzl8jHqtSB27mTIGrtv6r/OlAYY6L2
-         tYJ8qyF+RtA8bVYcIKdVL/aYsEnUHZvIopj7Si6BO7d9qyHq8Wff547T5vRMdcD091
-         GctZKz0wU4uCw==
-Date:   Tue, 26 Jan 2021 22:53:51 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Vikram Sethi <vsethi@nvidia.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, vidyas@nvidia.com,
-        treding@nvidia.com, Jon Masters <jcm@jonmasters.org>,
-        Jeremy Linton <jeremy.linton@arm.com>, mark.rutland@arm.com,
-        linux-pci@vger.kernel.org, sudeep.holla@arm.com,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
-        ebrower@nvidia.com
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-Message-ID: <20210126225351.GA30941@willie-the-truck>
-References: <20210105045735.1709825-1-jeremy.linton@arm.com>
- <20210107181416.GA3536@willie-the-truck>
- <56375cd8-8e11-aba6-9e11-1e0ec546e423@jonmasters.org>
- <20210108103216.GA17931@e121166-lin.cambridge.arm.com>
- <20210122194829.GE25471@willie-the-truck>
- <b37bbff9-d4f8-ece6-3a89-fa21093e15e1@nvidia.com>
+        id S237074AbhA0Mei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 07:34:38 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45102 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237969AbhA0Mb3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jan 2021 07:31:29 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10RC2Nkh117828;
+        Wed, 27 Jan 2021 07:30:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=rwzNdVxaabwTTzTgTZiXcpB5MZiv4i4Keynxr5b824I=;
+ b=VKGYx+Yu4qp0Ov/MuEfEu9mWOggHrC9iBzT/DriErNwUnp7Z7Hhi7zMFSGM3KDJX8WqB
+ +hN1QC7L1GaKVhph2FRR2Eb9TttgHq8HwB2Sy85+bCDMJBRRR+zwMyxbcfOI97dGUFG0
+ CTyloZkSAYkmfUodCXcbRk5JbW+LoNHAnTUuz/BN7bo1yoNDnGr/MBYHy+PJ/FNuReDx
+ WG/1rSlWm6EHh8wKm2Gv8UAywyN3D4T/wrP9BzIQlrrfEFNCrylyJQ2+Yb4Ux1hQZw0R
+ m5B03B9I4ikPy1xSn1z0EA1QAggwZV5UmVkM8PCCzjXvU5trcFNyq+yc461hLLjsvQ1W Hg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36awe7eyxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Jan 2021 07:30:37 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10RC30MO119656;
+        Wed, 27 Jan 2021 07:30:37 -0500
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36awe7eyws-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Jan 2021 07:30:37 -0500
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10RCEBZL002533;
+        Wed, 27 Jan 2021 12:30:34 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 368be81ya7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Jan 2021 12:30:34 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10RCUVv446793006
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Jan 2021 12:30:31 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C60442042;
+        Wed, 27 Jan 2021 12:30:31 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE3BF42045;
+        Wed, 27 Jan 2021 12:30:30 +0000 (GMT)
+Received: from localhost (unknown [9.171.68.8])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 27 Jan 2021 12:30:30 +0000 (GMT)
+Date:   Wed, 27 Jan 2021 13:30:29 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] Fix "ordering" comment typos
+Message-ID: <your-ad-here.call-01611750629-ext-5157@work.hours>
+References: <20210126195042.2909405-1-helgaas@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b37bbff9-d4f8-ece6-3a89-fa21093e15e1@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210126195042.2909405-1-helgaas@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-27_05:2021-01-27,2021-01-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 spamscore=0 clxscore=1011 suspectscore=0
+ impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=936 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2101270063
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 11:08:31AM -0600, Vikram Sethi wrote:
-> On 1/22/2021 1:48 PM, Will Deacon wrote:
-> > On Fri, Jan 08, 2021 at 10:32:16AM +0000, Lorenzo Pieralisi wrote:
-> >> On Thu, Jan 07, 2021 at 04:05:48PM -0500, Jon Masters wrote:
-> >>> On 1/7/21 1:14 PM, Will Deacon wrote:
-> >>>> On Mon, Jan 04, 2021 at 10:57:35PM -0600, Jeremy Linton wrote:
-> >>>>> Given that most arm64 platform's PCI implementations needs quirks
-> >>>>> to deal with problematic config accesses, this is a good place to
-> >>>>> apply a firmware abstraction. The ARM PCI SMMCCC spec details a
-> >>>>> standard SMC conduit designed to provide a simple PCI config
-> >>>>> accessor. This specification enhances the existing ACPI/PCI
-> >>>>> abstraction and expects power, config, etc functionality is handled
-> >>>>> by the platform. It also is very explicit that the resulting config
-> >>>>> space registers must behave as is specified by the pci specification.
-> >>>>>
-> >>>>> Lets hook the normal ACPI/PCI config path, and when we detect
-> >>>>> missing MADT data, attempt to probe the SMC conduit. If the conduit
-> >>>>> exists and responds for the requested segment number (provided by the
-> >>>>> ACPI namespace) attach a custom pci_ecam_ops which redirects
-> >>>>> all config read/write requests to the firmware.
-> >>>>>
-> >>>>> This patch is based on the Arm PCI Config space access document @
-> >>>>> https://developer.arm.com/documentation/den0115/latest
-> >>>> Why does firmware need to be involved with this at all? Can't we just
-> >>>> quirk Linux when these broken designs show up in production? We'll need
-> >>>> to modify Linux _anyway_ when the firmware interface isn't implemented
-> >>>> correctly...
-> >>> I agree with Will on this. I think we want to find a way to address some
-> >>> of the non-compliance concerns through quirks in Linux. However...
-> >> I understand the concern and if you are asking me if this can be fixed
-> >> in Linux it obviously can. The point is, at what cost for SW and
-> >> maintenance - in Linux and other OSes, I think Jeremy summed it up
-> >> pretty well:
-> >>
-> >> https://lore.kernel.org/linux-pci/61558f73-9ac8-69fe-34c1-2074dec5f18a@arm.com
-> >>
-> >> The issue here is that what we are asked to support on ARM64 ACPI is a
-> >> moving target and the target carries PCI with it.
-> >>
-> >> This potentially means that all drivers in:
-> >>
-> >> drivers/pci/controller
-> >>
-> >> may require an MCFG quirk and to implement it we may have to:
-> >>
-> >> - Define new ACPI bindings (that may need AML and that's already a
-> >>   showstopper for some OSes)
-> >> - Require to manage clocks in the kernel (see link-up checks)
-> >> - Handle PCI config space faults in the kernel
-> >>
-> >> Do we really want to do that ? I don't think so. Therefore we need
-> >> to have a policy to define what constitutes a "reasonable" quirk and
-> >> that's not objective I am afraid, however we slice it (there is no
-> >> such a thing as eg 90% ECAM).
-> > Without a doubt, I would much prefer to see these quirks and workarounds
-> > in Linux than hidden behind a firmware interface. Every single time.
+On Tue, Jan 26, 2021 at 01:50:42PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> In that case, can you please comment on/apply Tegra194 ECAM quirk that was rejected
+> Fix comment typos in "ordering".
 > 
-> a year ago, and was the reason we worked with Samer/ARM to define this common
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  arch/s390/include/asm/facility.h             | 2 +-
+>  drivers/gpu/drm/qxl/qxl_drv.c                | 2 +-
+>  drivers/net/wireless/intel/iwlwifi/fw/file.h | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> mechanism?
 > 
-> https://lkml.org/lkml/2020/1/3/395
+> Unless somebody objects, I'll just merge these typo fixes via the PCI tree.
 > 
-> The T194 ECAM is from widely used Root Port IP from a IP vendor. That is one reason so many
 > 
-> *existing* SOCs have ECAM quirks. ARM is only now working with the Root port IP vendors
-> 
-> to test ECAM, MSI etc, but the reality is there were deficiencies in industry IP that is widely
-> 
-> used. If this common quirk is not the way to go, then please apply the T194 specific quirk which was
-> 
-> NAK'd a year ago, or suggest how to improve that quirk.
-> 
-> The ECAM issue has been fixed on future Tegra chips and is validated preSilicon with BSA
-> 
-> tests, so it is not going to be a recurrent issue for us.
+> diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
+> index 68c476b20b57..91b5d714d28f 100644
+> --- a/arch/s390/include/asm/facility.h
+> +++ b/arch/s390/include/asm/facility.h
+> @@ -44,7 +44,7 @@ static inline int __test_facility(unsigned long nr, void *facilities)
+>  }
+>  
+>  /*
+> - * The test_facility function uses the bit odering where the MSB is bit 0.
+> + * The test_facility function uses the bit ordering where the MSB is bit 0.
+>   * That makes it easier to query facility bits with the bit number as
+>   * documented in the Principles of Operation.
+>   */
 
-(aside: please fix your mail client not to add all these blank lines)
-
-Personally, if a hundred lines of self-contained quirk code is all that is
-needed to get your legacy IP running, then I would say we should merge it.
-But I don't maintain the PCI subsystem, and I trust Bjorn and Lorenzo's
-judgement as to what is the right thing to do when it concerns that code.
-After all, they're the ones who end up having to look after this stuff long
-after the hardware companies have stopped caring.
-
-Will
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
