@@ -2,122 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08779306564
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 21:51:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 541A5306693
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 22:44:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233390AbhA0Uvj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 15:51:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48650 "EHLO mail.kernel.org"
+        id S231702AbhA0VnS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 16:43:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233256AbhA0Uvi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Jan 2021 15:51:38 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E854264D9F;
-        Wed, 27 Jan 2021 20:50:56 +0000 (UTC)
+        id S235800AbhA0Vdo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Jan 2021 16:33:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1BDF164DCD;
+        Wed, 27 Jan 2021 21:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611780657;
-        bh=PG1IVVNWLnFqxSk+/vBnwpgrgPzUioifx7UoAF6paEM=;
+        s=k20201202; t=1611783182;
+        bh=VAN1+fqJVKIXO2NTpiYqBBYNJGEP2fh7JX5PuSchluY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=V6ucyWyVzhwo9MAVgd72z/OiDy+6W7Eb8HOigwQfsd/393QNAIAAkOCXSdOVYko7/
-         tOeDvNRqS8mngQv6eXjLYDW3wiRvtdwGc2cCIPDawIjeUQZgStSP5d/oP5llxKBJBg
-         wCVo2QPaC59YuuxolKClPPp3gacA1VMuNeFHjeKllA4mZyUV1V20NipHu8RLuflVTl
-         rlihkD/NwuDrAvCG3k5bQ4gJc0ko2TnQ7EDUtUlQYqkxQSwKyjU5QqEDrszynVJZo3
-         G2EyH9ZcgW1Ow8vHd9aA/lZwYcTyrQfYRgsNrsYoQH87bp5qp/AU8k649wDA6OX7uY
-         GH4mT9MLsSSuw==
-Date:   Wed, 27 Jan 2021 14:50:53 -0600
+        b=uzpAKctksMZgR9G0N9XwV0GSwOLYNGfAp/HNmWbaqPd/RsMT9ExyklHRaEEQCs925
+         8uwlpGyQUIho+WdGGuL6LeW+bRJ3fL2U+bl9bCnA561HtZhLAmU891fbndnD0t+RdW
+         CFXukH2ckJEq3H6Ge65m77RLTAQL9zoaQCYPn1fIdLB54tIaqZEIO0+9/rxwoj1S6k
+         JL3jJDYPg6N15jYZ39J7chv7o3Xvl39fapZB48IgOdywHu5v6gI4qECy4gEkgPRSJa
+         iINyOaJYov9rrs7lWkICks1iQU37JOZ1X1VIijieJdln+wWuljaVodoh8TwMTYaS93
+         A35d9cFvaor+A==
+Date:   Wed, 27 Jan 2021 15:33:00 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
+To:     Marc MERLIN <marc_nouveau@merlins.org>
+Cc:     nouveau@lists.freedesktop.org,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] PCI/AER: Disable AER interrupt during suspend
-Message-ID: <20210127205053.GA3049358@bjorn-Precision-5520>
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: 5.9.11 still hanging 2mn at each boot and looping on nvidia-gpu
+ 0000:01:00.3: PME# enabled (Quadro RTX 4000 Mobile)
+Message-ID: <20210127213300.GA3046575@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210127173101.446940-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20201226111209.GA2498@merlins.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 01:31:00AM +0800, Kai-Heng Feng wrote:
-> Commit 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in
-> hint") enables ACS, and some platforms lose its NVMe after resume from
-> firmware:
-> [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
-> [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
-> [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
-> [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
-> [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
-> [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
-> [   50.947843] nvme nvme0: frozen state error detected, reset controller
+Hi Marc, I appreciate your persistence on this.  I am frankly
+surprised that you've put up with this so long.
+
+On Sat, Dec 26, 2020 at 03:12:09AM -0800, Marc MERLIN wrote:
+> This started with 5.5 and hasn't gotten better since then, despite
+> some reports I tried to send.
 > 
-> It happens right after ACS gets enabled during resume.
-> 
-> To prevent that from happening, disable AER interrupt and enable it on
-> system suspend and resume, respectively.
-
-Lots of questions here.  Maybe this is what we'll end up doing, but I
-am curious about why the error is reported in the first place.
-
-Is this a consequence of the link going down and back up?
-
-Is it consequence of the device doing a DMA when it shouldn't?
-
-Are we doing something in the wrong order during suspend?  Or maybe
-resume, since I assume the error is reported during resume?
-
-If we *do* take the error, why doesn't DPC recovery work?
-
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209149
-> Fixes: 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint")
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/pci/pcie/aer.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 77b0f2c45bc0..0e9a85530ae6 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1365,6 +1365,22 @@ static int aer_probe(struct pcie_device *dev)
->  	return 0;
->  }
+> As per my previous message:
+> I have a Thinkpad P70 with hybrid graphics.
+> 01:00.0 VGA compatible controller: NVIDIA Corporation GM107GLM [Quadro M600M] (rev a2)
+> that one works fine, I can use i915 for the main screen, and nouveau to
+> display on the external ports (external ports are only wired to nvidia
+> chip, so it's impossible to use them without turning the nvidia chip
+> on).
 >  
-> +static int aer_suspend(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +
-> +	aer_disable_rootport(rpc);
-> +	return 0;
-> +}
-> +
-> +static int aer_resume(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +
-> +	aer_enable_rootport(rpc);
-> +	return 0;
-> +}
-> +
->  /**
->   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
->   * @dev: pointer to Root Port, RCEC, or RCiEP
-> @@ -1437,6 +1453,8 @@ static struct pcie_port_service_driver aerdriver = {
->  	.service	= PCIE_PORT_SERVICE_AER,
+> I now got a newer P73 also with the same hybrid graphics (setup as such
+> in the bios). It runs fine with i915, and I don't need to use external
+> display with nouveau for now (it almost works, but I only see the mouse
+> cursor on the external screen, no window or anything else can get
+> displayed, very weird).
+> 01:00.0 VGA compatible controller: NVIDIA Corporation TU104GLM [Quadro RTX 4000 Mobile / Max-Q] (rev a1)
 >  
->  	.probe		= aer_probe,
-> +	.suspend	= aer_suspend,
-> +	.resume		= aer_resume,
->  	.remove		= aer_remove,
->  };
->  
-> -- 
-> 2.29.2
 > 
+> after boot, when it gets the right trigger (not sure which ones), it
+> loops on this evern 2 seconds, mostly forever.
+> 
+> I'm not sure if it's nouveau's fault or the kernel's PCI PME's fault, or something else.
+
+IIUC there are basically two problems:
+
+  1) A 2 minute delay during boot
+  2) Some sort of event every 2 seconds that kills your battery life
+
+Your machine doesn't sound unusual, and I haven't seen a flood of
+similar reports, so maybe there's something unusual about your config.
+But I really don't have any guesses for either one.
+
+It sounds like v5.5 worked fine and you first noticed the slow boot
+problem in v5.8.  We *could* try to bisect it, but I know that's a lot
+of work on your part.
+
+Grasping for any ideas for the boot delay; could you boot with
+"initcall_debug" and collect your "lsmod" output?  I notice async_tx
+in some of your logs, but I have no idea what it is.  It's from
+crypto, so possibly somewhat unusual?
+
+Bjorn
