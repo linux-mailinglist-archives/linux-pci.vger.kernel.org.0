@@ -2,171 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 622833054EC
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 08:46:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EB92305509
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 08:52:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232154AbhA0Hpk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 02:45:40 -0500
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:35477 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231488AbhA0Hoi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jan 2021 02:44:38 -0500
-Received: by mail-ot1-f46.google.com with SMTP id 36so847210otp.2;
-        Tue, 26 Jan 2021 23:44:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x0dGkBBCOjjdRO5NeNomyXurGTss4C1Z8jAZPD1nTr0=;
-        b=D/t6/XpngIhr+dElHpkKgt7I9raIdEFD/aIUvplW60JNP0cGyfm8vB5RupvZjShzK8
-         o9tAFA7R1prXP1p4TWSIDLkFG3Ok12Pr731mwn36mh6OTJ6NZINfAlsYeJiYCMn4aPE8
-         SoJJP9OWxg7MTI1M8h2hTZq7jAqlg7xGRNqPg+nXVJu12OokR1Tpl3dBANluMPjYMzJd
-         ililMEOfD6U8Wqr+uSU3mqavqrZ1scytN5GGfOAR5AYlkG3bSHsoUnzvbhkv3qH3Tz2A
-         v3cVkmUc3XEWwej1GhByKCSx44Cwci6TR6WIFhOYA/47d0kdY0MbOWh5Hy40AvsjGOAS
-         QW/g==
-X-Gm-Message-State: AOAM532/RncdhhlpjY2XqfIjMmv+jhWUhCflVCbduVIUpwgMM/NL5QHn
-        KAKKdqvgiH1tZvbdGNoeo4s8OzikM3SJEHe6N+A=
-X-Google-Smtp-Source: ABdhPJytEiLX+kMjV4Ea2i2rFfKnTCKJB2DxU0jLTV+BpUesrQ9gHru0x+sIRyJPwSKOmvFMZ1Gze3L0qvmdO0bLsr0=
-X-Received: by 2002:a9d:c01:: with SMTP id 1mr6698124otr.107.1611733436883;
- Tue, 26 Jan 2021 23:43:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20210120105246.23218-1-michael@walle.cc> <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
- <CAGETcx86HMo=gaDdXFyJ4QQ-pGXWzw2G0J=SjC-eq4K7B1zQHg@mail.gmail.com>
- <c3e35b90e173b15870a859fd7001a712@walle.cc> <CAGETcx8eZRd1fJ3yuO_t2UXBFHObeNdv-c8oFH3mXw6zi=zOkQ@mail.gmail.com>
- <f706c0e4b684e07635396fcf02f4c9a6@walle.cc> <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
- <CAMuHMdWvFej-6vkaLM44t7eX2LpkDSXu4_7VH-X-3XRueXTO=A@mail.gmail.com>
- <a24391e62b107040435766fff52bdd31@walle.cc> <CAGETcx8FO+YSM0jwCnDdnvE3NCdjZ=1FSmAZpyaOEOvCgd4SXw@mail.gmail.com>
- <CAMuHMdX8__juNc-Lx8Tu9abMKq-pT=yA4s6D1w4ZeStKOasGpg@mail.gmail.com> <CAGETcx-0G-Y8wT_+BfP5vbi0gW6KonwgoJ6DdqjaGbFkutTGag@mail.gmail.com>
-In-Reply-To: <CAGETcx-0G-Y8wT_+BfP5vbi0gW6KonwgoJ6DdqjaGbFkutTGag@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Jan 2021 08:43:45 +0100
-Message-ID: <CAMuHMdXMaAtrbQibJh+Z2v5qhe_Tg0hQU9YqxuU0ow_iNO1atg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: dwc: layerscape: convert to builtin_platform_driver()
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Roy Zang <roy.zang@nxp.com>, PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S231691AbhA0HwA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 02:52:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234070AbhA0Hte (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Jan 2021 02:49:34 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BF76B2074A;
+        Wed, 27 Jan 2021 07:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611733728;
+        bh=Nro3vfQTCFtmv98iajZ/Tld6vSBtHkyWqkV/zj14XFw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SHMBfSfTtkKbBZei+R26dC4Lsa2N+suQiJ9H3LZMp1MaKa5JjGt+4QjAdFsyIyLUT
+         tQmzXXgXxEdLQ2XzmFzAyIzEDH80xOrFrwsQDYWFBcKKnne9TgiIilSEhMFajPzLcb
+         WKlppAIzlGh3Fdk7NfvaI8omlrDmEFva/CSsY1cFN2joSSKZRYRcFT7U90A+CfEknv
+         NgBhXEjQyytURjwbuv1CbEWSI5z02gPfxp9eYDmJnFUBTAyEZEGvdNF+R6c9qOt6Gv
+         k1vZRXX2j4SYiZQErTdX1uQdkl0rrqMB5kZzlCHOYRGKTz5ie1ZeE0UWWrrB+E8xPk
+         07s+G/JFyQ1kw==
+Date:   Wed, 27 Jan 2021 08:48:37 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fabio Estevam <festevam@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jesper Nilsson <jesper.nilsson@axis.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Jonathan Chocron <jonnyc@amazon.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@axis.com, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH RFC 1/2] dt: pci: designware-pcie.txt: convert it to
+ yaml
+Message-ID: <20210127084837.39d68850@coco.lan>
+In-Reply-To: <b6ab7110-fc87-85d7-d591-dffad32985ec@samsung.com>
+References: <cover.1611645945.git.mchehab+huawei@kernel.org>
+        <CGME20210126074127eucas1p1dd8f2d1704d708d64458922566b934f1@eucas1p1.samsung.com>
+        <55f479324098b66d7dba89c8f9c3e455731df4f7.1611645945.git.mchehab+huawei@kernel.org>
+        <b6ab7110-fc87-85d7-d591-dffad32985ec@samsung.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Saravana,
+Hi Marek,
 
-On Wed, Jan 27, 2021 at 1:44 AM Saravana Kannan <saravanak@google.com> wrote:
-> On Tue, Jan 26, 2021 at 12:50 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Mon, Jan 25, 2021 at 11:42 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > On Mon, Jan 25, 2021 at 11:49 AM Michael Walle <michael@walle.cc> wrote:
-> > > > Am 2021-01-21 12:01, schrieb Geert Uytterhoeven:
-> > > > > On Thu, Jan 21, 2021 at 1:05 AM Saravana Kannan <saravanak@google.com>
-> > > > > wrote:
-> > > > >> On Wed, Jan 20, 2021 at 3:53 PM Michael Walle <michael@walle.cc>
-> > > > >> wrote:
-> > > > >> > Am 2021-01-20 20:47, schrieb Saravana Kannan:
-> > > > >> > > On Wed, Jan 20, 2021 at 11:28 AM Michael Walle <michael@walle.cc>
-> > > > >> > > wrote:
-> > > > >> > >>
-> > > > >> > >> [RESEND, fat-fingered the buttons of my mail client and converted
-> > > > >> > >> all CCs to BCCs :(]
-> > > > >> > >>
-> > > > >> > >> Am 2021-01-20 20:02, schrieb Saravana Kannan:
-> > > > >> > >> > On Wed, Jan 20, 2021 at 6:24 AM Rob Herring <robh@kernel.org> wrote:
-> > > > >> > >> >>
-> > > > >> > >> >> On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc>
-> > > > >> > >> >> wrote:
-> > > > >> > >> >> >
-> > > > >> > >> >> > fw_devlink will defer the probe until all suppliers are ready. We can't
-> > > > >> > >> >> > use builtin_platform_driver_probe() because it doesn't retry after probe
-> > > > >> > >> >> > deferral. Convert it to builtin_platform_driver().
-> > > > >> > >> >>
-> > > > >> > >> >> If builtin_platform_driver_probe() doesn't work with fw_devlink, then
-> > > > >> > >> >> shouldn't it be fixed or removed?
-> > > > >> > >> >
-> > > > >> > >> > I was actually thinking about this too. The problem with fixing
-> > > > >> > >> > builtin_platform_driver_probe() to behave like
-> > > > >> > >> > builtin_platform_driver() is that these probe functions could be
-> > > > >> > >> > marked with __init. But there are also only 20 instances of
-> > > > >> > >> > builtin_platform_driver_probe() in the kernel:
-> > > > >> > >> > $ git grep ^builtin_platform_driver_probe | wc -l
-> > > > >> > >> > 20
-> > > > >> > >> >
-> > > > >> > >> > So it might be easier to just fix them to not use
-> > > > >> > >> > builtin_platform_driver_probe().
-> > > > >> > >> >
-> > > > >> > >> > Michael,
-> > > > >> > >> >
-> > > > >> > >> > Any chance you'd be willing to help me by converting all these to
-> > > > >> > >> > builtin_platform_driver() and delete builtin_platform_driver_probe()?
-> > > > >> > >>
-> > > > >> > >> If it just moving the probe function to the _driver struct and
-> > > > >> > >> remove the __init annotations. I could look into that.
-> > > > >> > >
-> > > > >> > > Yup. That's pretty much it AFAICT.
-> > > > >> > >
-> > > > >> > > builtin_platform_driver_probe() also makes sure the driver doesn't ask
-> > > > >> > > for async probe, etc. But I doubt anyone is actually setting async
-> > > > >> > > flags and still using builtin_platform_driver_probe().
-> > > > >> >
-> > > > >> > Hasn't module_platform_driver_probe() the same problem? And there
-> > > > >> > are ~80 drivers which uses that.
-> > > > >>
-> > > > >> Yeah. The biggest problem with all of these is the __init markers.
-> > > > >> Maybe some familiar with coccinelle can help?
-> > > > >
-> > > > > And dropping them will increase memory usage.
-> > > >
-> > > > Although I do have the changes for the builtin_platform_driver_probe()
-> > > > ready, I don't think it makes much sense to send these unless we agree
-> > > > on the increased memory footprint. While there are just a few
-> > > > builtin_platform_driver_probe() and memory increase _might_ be
-> > > > negligible, there are many more module_platform_driver_probe().
-> > >
-> > > While it's good to drop code that'll not be used past kernel init, the
-> > > module_platform_driver_probe() is going even more extreme. It doesn't
-> > > even allow deferred probe (well before kernel init is done). I don't
-> > > think that behavior is right and that's why we should delete it. Also,
+Em Tue, 26 Jan 2021 11:13:20 +0100
+Marek Szyprowski <m.szyprowski@samsung.com> escreveu:
+
+> Hi Mauro,
+> 
+> On 26.01.2021 08:35, Mauro Carvalho Chehab wrote:
+> > Convert the file into a JSON description at the yaml format.
 > >
-> > This construct is typically used for builtin hardware for which the
-> > dependencies are registered very early, and thus known to probe at
-> > first try (if present).
-> >
-> > > I doubt if any of these probe functions even take up 4KB of memory.
-> >
-> > How many 4 KiB pages do you have in a system with 10 MiB of SRAM?
-> > How many can you afford to waste?
->
-> There are only a few instances of this macro in the kernel. How many
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >   .../bindings/pci/amlogic,meson-pcie.txt       |   4 +-
+> >   .../bindings/pci/axis,artpec6-pcie.txt        |   2 +-
+> >   .../bindings/pci/designware,pcie.yaml         | 194 ++++++++++++++++++
+> >   .../bindings/pci/designware-pcie.txt          |  77 -------
+> >   .../bindings/pci/fsl,imx6q-pcie.txt           |   2 +-
+> >   .../bindings/pci/hisilicon-histb-pcie.txt     |   2 +-
+> >   .../bindings/pci/hisilicon-pcie.txt           |   2 +-
+> >   .../devicetree/bindings/pci/kirin-pcie.txt    |   2 +-
+> >   .../bindings/pci/layerscape-pci.txt           |   2 +-
+> >   .../bindings/pci/nvidia,tegra194-pcie.txt     |   4 +-
+> >   .../devicetree/bindings/pci/pci-armada8k.txt  |   2 +-
+> >   .../devicetree/bindings/pci/pci-keystone.txt  |  10 +-
+> >   .../devicetree/bindings/pci/pcie-al.txt       |   2 +-
+> >   .../devicetree/bindings/pci/qcom,pcie.txt     |  14 +-
+> >   .../bindings/pci/samsung,exynos5440-pcie.txt  |   4 +-  
 
-$ git grep -lw builtin_platform_driver_probe | wc -l
-21
-$ git grep -lw module_platform_driver_probe | wc -l
-86
+> You must have used an old tree for preparing this patchset. The above 
+> file is gone in v5.11-rc1 and there is 
+> Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml instead.
 
-+ the ones that haven't been converted to the above yet:
+Yeah, this series was generated against v5.10, as part of my efforts
+to have Hikey 970 properly supported upstream:
 
-$ git grep -lw platform_driver_probe | wc -l
-58
+	https://github.com/mchehab/linux/commits/devel/hikey970
 
-> of those actually fit the description above? We can probably just
-> check the DT?
+For the next version, I'll rebase on the top of linux-next. 
 
-What do you mean by checking the DT?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Mauro
