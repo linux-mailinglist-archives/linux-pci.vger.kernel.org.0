@@ -2,166 +2,199 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D652306091
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 17:08:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B90F30612E
+	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 17:43:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236832AbhA0QHd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 11:07:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343499AbhA0QFj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Jan 2021 11:05:39 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 51F4D2085B;
-        Wed, 27 Jan 2021 16:04:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611763499;
-        bh=yYsgLRUmRxGz/ZaXcE1r1SS47EHfehsiLZXwPGcjmtM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PhkGhScATQZIN0Y0VqjdzclS5aAOBbWGTAap4ciSZujfO02W4vpSvZkFW7MTZbyEk
-         R0Y9kCdiKt07WjPtX+tHi0+JhKRbot9GdFKtEHQFRM7p7q4TWqRn4f+SJoBdSK3BT/
-         v4G/rDp5yomdcDgv0uu0dLpqh3lhvY8rmm3ktNksAcNVCfSjplSQToDEc1zY/CFSWU
-         g0f4vVlY9hVEUvtokw6kNVH84YFiHe7jQ/rPX9PQKiw7pHrb8SBCb6UQpqVeaOTBx2
-         oCwcDMUBYq2cn8HtcAlGoPsPE6jOywpwFliPkF9+2sPprTY+6sa/rc+3ZpUNuspGgm
-         E4UT2bJNn5AZQ==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     "Kenneth R . Crudup" <kenny@panix.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] Revert "PCI/ASPM: Save/restore L1SS Capability for suspend/resume"
-Date:   Wed, 27 Jan 2021 10:04:49 -0600
-Message-Id: <20210127160449.2990506-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S232005AbhA0QnY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 11:43:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229682AbhA0QnI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jan 2021 11:43:08 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329BAC061788
+        for <linux-pci@vger.kernel.org>; Wed, 27 Jan 2021 08:42:28 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id i141so2646013yba.0
+        for <linux-pci@vger.kernel.org>; Wed, 27 Jan 2021 08:42:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DhlJDOHouhyzoZng9fJ2frIQEnLbOzAgsBucZ1xKE+Q=;
+        b=qhZFI+sMK2QvOM0tX+sbe7tSSfEUacHXU7Wc/fiZiGImf44dQ3z3Uund/QxKZ/1h9Q
+         s/GDEhs3T8IvEXbPJ6jxrzs+IEeoSm8SbL88rB75v9+7PODSL5SGoUGJT29bIRR3qL+O
+         UFojdWN6LdFC74lUmRR7GHaahe7McQNBwzFUKs3KTsBg8QM3+Yryqa3n6oOmkYNqq0Wn
+         SEwaPMwAE4YCyne6qX0eMoZ4ng3Xf66DEfIDE4UarGF1ToJkA5Vtdw69wEtbLSzyVZNr
+         JF3QgHYa5DcdVJipQQ9JGZxtkoQU9Y9Y+fja30YayyMKL7/ZOUUmZM9jCZa+nktN0coR
+         y9yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DhlJDOHouhyzoZng9fJ2frIQEnLbOzAgsBucZ1xKE+Q=;
+        b=ZAuM3+ac9dW7ITXppllMfAM1u4IXbtzsHX2EYI3krTPgA7lPCr5LobJLIMl6mIW0Gw
+         EiI/6FJtfVWphg3Ov4OYKyCMx8wD1/ADHrpE9sHNJ8EP6LDcHqRRySfpYtsZr6z771Bs
+         u2bLvWyE+KkM8mGBEAOH0tgSRsJXczFP4bhctribMv/8ZmiYh7n3h9px91UqkbXaGf35
+         aufuuycfWy60/t3m9utDqFiqK5cbpR4WOWtv31fZoe7SjJK2uSxsisXLAUivnIMNHmkJ
+         48+hI7x/mlTFcWUUSpZXAp69dpGKIqg7BAZ2BFx9L75d3n00WLEU81V8PxwSzNldycAj
+         ePXw==
+X-Gm-Message-State: AOAM533iqM58OzMKqJ4VIfAF4578c+UOvCU8sAvFO4vUpaMnGD3DFuoE
+        varzDwoFHVCmm71zoHVXUeRtRVVEkat9iAWTgPki3v0pcgg=
+X-Google-Smtp-Source: ABdhPJyTvhJWCJ0GgEFEPNNK+Aj1wHbHsyL+lMhynRRzjgtQPwprNz5H2mOCSJ9e3/s4ARAtNSkp6kxlHCFtD6MzH3I=
+X-Received: by 2002:a25:77d4:: with SMTP id s203mr19594855ybc.32.1611765747235;
+ Wed, 27 Jan 2021 08:42:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210120105246.23218-1-michael@walle.cc> <CAL_JsqLSJCLtgPyAdKSqsy=JoHSLYef_0s-stTbiJ+VCq2qaSA@mail.gmail.com>
+ <CAGETcx86HMo=gaDdXFyJ4QQ-pGXWzw2G0J=SjC-eq4K7B1zQHg@mail.gmail.com>
+ <c3e35b90e173b15870a859fd7001a712@walle.cc> <CAGETcx8eZRd1fJ3yuO_t2UXBFHObeNdv-c8oFH3mXw6zi=zOkQ@mail.gmail.com>
+ <f706c0e4b684e07635396fcf02f4c9a6@walle.cc> <CAGETcx8_6Hp+MWFOhRohXwdWFSfCc7A=zpb5QYNHZE5zv0bDig@mail.gmail.com>
+ <CAMuHMdWvFej-6vkaLM44t7eX2LpkDSXu4_7VH-X-3XRueXTO=A@mail.gmail.com>
+ <a24391e62b107040435766fff52bdd31@walle.cc> <CAGETcx8FO+YSM0jwCnDdnvE3NCdjZ=1FSmAZpyaOEOvCgd4SXw@mail.gmail.com>
+ <CAMuHMdX8__juNc-Lx8Tu9abMKq-pT=yA4s6D1w4ZeStKOasGpg@mail.gmail.com>
+ <CAGETcx-0G-Y8wT_+BfP5vbi0gW6KonwgoJ6DdqjaGbFkutTGag@mail.gmail.com> <CAMuHMdXMaAtrbQibJh+Z2v5qhe_Tg0hQU9YqxuU0ow_iNO1atg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXMaAtrbQibJh+Z2v5qhe_Tg0hQU9YqxuU0ow_iNO1atg@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 27 Jan 2021 08:41:50 -0800
+Message-ID: <CAGETcx8=woX_SVckG+gs68KMif-JGoy3a1PQGfonMNBH18Ak6A@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: layerscape: convert to builtin_platform_driver()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Michael Walle <michael@walle.cc>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Roy Zang <roy.zang@nxp.com>, PCI <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, Jan 26, 2021 at 11:43 PM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Saravana,
+>
+> On Wed, Jan 27, 2021 at 1:44 AM Saravana Kannan <saravanak@google.com> wrote:
+> > On Tue, Jan 26, 2021 at 12:50 AM Geert Uytterhoeven
+> > <geert@linux-m68k.org> wrote:
+> > > On Mon, Jan 25, 2021 at 11:42 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > On Mon, Jan 25, 2021 at 11:49 AM Michael Walle <michael@walle.cc> wrote:
+> > > > > Am 2021-01-21 12:01, schrieb Geert Uytterhoeven:
+> > > > > > On Thu, Jan 21, 2021 at 1:05 AM Saravana Kannan <saravanak@google.com>
+> > > > > > wrote:
+> > > > > >> On Wed, Jan 20, 2021 at 3:53 PM Michael Walle <michael@walle.cc>
+> > > > > >> wrote:
+> > > > > >> > Am 2021-01-20 20:47, schrieb Saravana Kannan:
+> > > > > >> > > On Wed, Jan 20, 2021 at 11:28 AM Michael Walle <michael@walle.cc>
+> > > > > >> > > wrote:
+> > > > > >> > >>
+> > > > > >> > >> [RESEND, fat-fingered the buttons of my mail client and converted
+> > > > > >> > >> all CCs to BCCs :(]
+> > > > > >> > >>
+> > > > > >> > >> Am 2021-01-20 20:02, schrieb Saravana Kannan:
+> > > > > >> > >> > On Wed, Jan 20, 2021 at 6:24 AM Rob Herring <robh@kernel.org> wrote:
+> > > > > >> > >> >>
+> > > > > >> > >> >> On Wed, Jan 20, 2021 at 4:53 AM Michael Walle <michael@walle.cc>
+> > > > > >> > >> >> wrote:
+> > > > > >> > >> >> >
+> > > > > >> > >> >> > fw_devlink will defer the probe until all suppliers are ready. We can't
+> > > > > >> > >> >> > use builtin_platform_driver_probe() because it doesn't retry after probe
+> > > > > >> > >> >> > deferral. Convert it to builtin_platform_driver().
+> > > > > >> > >> >>
+> > > > > >> > >> >> If builtin_platform_driver_probe() doesn't work with fw_devlink, then
+> > > > > >> > >> >> shouldn't it be fixed or removed?
+> > > > > >> > >> >
+> > > > > >> > >> > I was actually thinking about this too. The problem with fixing
+> > > > > >> > >> > builtin_platform_driver_probe() to behave like
+> > > > > >> > >> > builtin_platform_driver() is that these probe functions could be
+> > > > > >> > >> > marked with __init. But there are also only 20 instances of
+> > > > > >> > >> > builtin_platform_driver_probe() in the kernel:
+> > > > > >> > >> > $ git grep ^builtin_platform_driver_probe | wc -l
+> > > > > >> > >> > 20
+> > > > > >> > >> >
+> > > > > >> > >> > So it might be easier to just fix them to not use
+> > > > > >> > >> > builtin_platform_driver_probe().
+> > > > > >> > >> >
+> > > > > >> > >> > Michael,
+> > > > > >> > >> >
+> > > > > >> > >> > Any chance you'd be willing to help me by converting all these to
+> > > > > >> > >> > builtin_platform_driver() and delete builtin_platform_driver_probe()?
+> > > > > >> > >>
+> > > > > >> > >> If it just moving the probe function to the _driver struct and
+> > > > > >> > >> remove the __init annotations. I could look into that.
+> > > > > >> > >
+> > > > > >> > > Yup. That's pretty much it AFAICT.
+> > > > > >> > >
+> > > > > >> > > builtin_platform_driver_probe() also makes sure the driver doesn't ask
+> > > > > >> > > for async probe, etc. But I doubt anyone is actually setting async
+> > > > > >> > > flags and still using builtin_platform_driver_probe().
+> > > > > >> >
+> > > > > >> > Hasn't module_platform_driver_probe() the same problem? And there
+> > > > > >> > are ~80 drivers which uses that.
+> > > > > >>
+> > > > > >> Yeah. The biggest problem with all of these is the __init markers.
+> > > > > >> Maybe some familiar with coccinelle can help?
+> > > > > >
+> > > > > > And dropping them will increase memory usage.
+> > > > >
+> > > > > Although I do have the changes for the builtin_platform_driver_probe()
+> > > > > ready, I don't think it makes much sense to send these unless we agree
+> > > > > on the increased memory footprint. While there are just a few
+> > > > > builtin_platform_driver_probe() and memory increase _might_ be
+> > > > > negligible, there are many more module_platform_driver_probe().
+> > > >
+> > > > While it's good to drop code that'll not be used past kernel init, the
+> > > > module_platform_driver_probe() is going even more extreme. It doesn't
+> > > > even allow deferred probe (well before kernel init is done). I don't
+> > > > think that behavior is right and that's why we should delete it. Also,
+> > >
+> > > This construct is typically used for builtin hardware for which the
+> > > dependencies are registered very early, and thus known to probe at
+> > > first try (if present).
+> > >
+> > > > I doubt if any of these probe functions even take up 4KB of memory.
+> > >
+> > > How many 4 KiB pages do you have in a system with 10 MiB of SRAM?
+> > > How many can you afford to waste?
+> >
+> > There are only a few instances of this macro in the kernel. How many
+>
+> $ git grep -lw builtin_platform_driver_probe | wc -l
+> 21
+> $ git grep -lw module_platform_driver_probe | wc -l
+> 86
+>
+> + the ones that haven't been converted to the above yet:
+>
+> $ git grep -lw platform_driver_probe | wc -l
+> 58
+>
 
-This reverts commit 4257f7e008ea394fcecc050f1569c3503b8bcc15.
+Yeah, this adds up in terms of the number of places we'd need to fix.
+But thinking more about it, a couple of points:
+1. Not all builtin_platform_driver_probe() are problems for
+fw_devlink. So we can just fix them as we go if we need to.
 
-Kenneth reported that after 4257f7e008ea, he sees a torrent of disk I/O
-errors on his NVMe device, and possibly other devices, until a reboot.
+2. The problem with builtin_platform_driver_probe() isn't really with
+the use of __init. It's the fact that it doesn't allow deferred
+probes. builtin_platform_driver_probe()/platform_driver_probe() could
+still be fixed up to allow deferred probe until we get to the point
+where we free the __init section (so at least till late_initcall).
 
-Link: https://lore.kernel.org/linux-pci/20201228040513.GA611645@bjorn-Precision-5520/
-Reported-by: Kenneth R. Crudup <kenny@panix.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
-This is tentative, pending a better fix for the issue.
+> > of those actually fit the description above? We can probably just
+> > check the DT?
+>
+> What do you mean by checking the DT?
 
- drivers/pci/pci.c       |  7 -------
- drivers/pci/pci.h       |  4 ----
- drivers/pci/pcie/aspm.c | 44 -----------------------------------------
- 3 files changed, 55 deletions(-)
+I was talking about checking the DT to see if the board has very
+little memory, but that's not always obvious from DT nor does it scale
+with the number of instances we have. So, ignore this comment.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b9fecc25d213..790393d1e318 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1558,7 +1558,6 @@ int pci_save_state(struct pci_dev *dev)
- 		return i;
- 
- 	pci_save_ltr_state(dev);
--	pci_save_aspm_l1ss_state(dev);
- 	pci_save_dpc_state(dev);
- 	pci_save_aer_state(dev);
- 	pci_save_ptm_state(dev);
-@@ -1665,7 +1664,6 @@ void pci_restore_state(struct pci_dev *dev)
- 	 * LTR itself (in the PCIe capability).
- 	 */
- 	pci_restore_ltr_state(dev);
--	pci_restore_aspm_l1ss_state(dev);
- 
- 	pci_restore_pcie_state(dev);
- 	pci_restore_pasid_state(dev);
-@@ -3353,11 +3351,6 @@ void pci_allocate_cap_save_buffers(struct pci_dev *dev)
- 	if (error)
- 		pci_err(dev, "unable to allocate suspend buffer for LTR\n");
- 
--	error = pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_L1SS,
--					    2 * sizeof(u32));
--	if (error)
--		pci_err(dev, "unable to allocate suspend buffer for ASPM-L1SS\n");
--
- 	pci_allocate_vc_save_buffers(dev);
- }
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 5c59365092fa..a7bdf0b1d45d 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -582,15 +582,11 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev);
- void pcie_aspm_exit_link_state(struct pci_dev *pdev);
- void pcie_aspm_pm_state_change(struct pci_dev *pdev);
- void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
--void pci_save_aspm_l1ss_state(struct pci_dev *dev);
--void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
- #else
- static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
- static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
- static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
--static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
--static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
- #endif
- 
- #ifdef CONFIG_PCIE_ECRC
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index a08e7d6dc248..ac0557a305af 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -734,50 +734,6 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
- 				PCI_L1SS_CTL1_L1SS_MASK, val);
- }
- 
--void pci_save_aspm_l1ss_state(struct pci_dev *dev)
--{
--	int aspm_l1ss;
--	struct pci_cap_saved_state *save_state;
--	u32 *cap;
--
--	if (!pci_is_pcie(dev))
--		return;
--
--	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
--	if (!aspm_l1ss)
--		return;
--
--	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
--	if (!save_state)
--		return;
--
--	cap = (u32 *)&save_state->cap.data[0];
--	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, cap++);
--	pci_read_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, cap++);
--}
--
--void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
--{
--	int aspm_l1ss;
--	struct pci_cap_saved_state *save_state;
--	u32 *cap;
--
--	if (!pci_is_pcie(dev))
--		return;
--
--	aspm_l1ss = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_L1SS);
--	if (!aspm_l1ss)
--		return;
--
--	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
--	if (!save_state)
--		return;
--
--	cap = (u32 *)&save_state->cap.data[0];
--	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL1, *cap++);
--	pci_write_config_dword(dev, aspm_l1ss + PCI_L1SS_CTL2, *cap++);
--}
--
- static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
- {
- 	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
--- 
-2.25.1
+Anyway, time to get back to actually writing the code to deal with
+this and other corner cases.
 
+-Saravana
