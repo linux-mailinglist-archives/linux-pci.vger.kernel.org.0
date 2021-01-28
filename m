@@ -2,277 +2,238 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 696343075A1
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 13:14:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B73D30762A
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 13:30:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231183AbhA1MMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 07:12:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:57904 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229618AbhA1MMl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Jan 2021 07:12:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D3B41FB;
-        Thu, 28 Jan 2021 04:11:54 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 777383F719;
-        Thu, 28 Jan 2021 04:11:52 -0800 (PST)
-Date:   Thu, 28 Jan 2021 12:11:47 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        id S231592AbhA1M3U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 07:29:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231425AbhA1M3M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 07:29:12 -0500
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78DA5C061756
+        for <linux-pci@vger.kernel.org>; Thu, 28 Jan 2021 04:28:26 -0800 (PST)
+Received: by mail-pg1-x549.google.com with SMTP id o11so1038682pgn.1
+        for <linux-pci@vger.kernel.org>; Thu, 28 Jan 2021 04:28:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=KQRxmbkqnVfcFdMWoNI1FcaCAHf3VakR0zyATmOVZLg=;
+        b=NiEN2RXjNnyyA1aD6pItplvLFhcRqc0fl33qILL57dK8zoOLNNTnP9UJhpZPPhptgz
+         TDyuuRWmiCn4UDZ3P8NxBR1dCQwWvRwxYXDUx4Gk0cfn2ANsgZ1r5SVftz8ZnU+Ubnke
+         UXp2FTqwKUbv6dyU1fv1WhpWaV4LLFTzYWtxk3iJJt3eYHQux8BiuhlGGGp7+OjusUUx
+         e2OpJMrr6dZM8Q2Z44EmGpFlBZmbKEOa172YWfMvnFeLIIC2VHWpmVjzjru3TvvH+SkC
+         cQo1+6Z+Q84/bSj1JNMb66n7OV2UMv/4pv+RVlx1u4LrCMfMEWUcoOl6y1SC3nrJuJ2c
+         wTxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=KQRxmbkqnVfcFdMWoNI1FcaCAHf3VakR0zyATmOVZLg=;
+        b=NPHHZuSf4/JenQROggG1VoHH2tpXI0lwrwh0b/wnthuL4+dsqlZT5Zke/bhuyF8Ube
+         LReN3o4PlyCqGMZf/0w4ZlJZqwTL1vy81y/cEicIv9JGA3A8jYSPkID/YJkt0x/HEVzT
+         liA8tTWQrD1XO3INZqlAT+skvM2jpf4q9xDiQMvQUSrmTulZbZTxOFVLzl+71U3zk/yh
+         eMarq0TxZM1haZ3B/boav2SaXsxwNgkNUXNSVor/QNxiGowDnJ6Vld+SjfvEPw1qDS7t
+         ix7b6j2owy9lMgvOcIZFdCughHhGRYkyb3vJNNp4AjD+n4oCKumdpYe8BIWWFl1cWmMi
+         sOhw==
+X-Gm-Message-State: AOAM531oT8IBqmWjlBtbytxMDH2yOnj4kbcTYp1uqxumnbR4OnNMMwLX
+        jR6b2WvEQjPaDf3RjRH78/X770tNEk8KV5yA
+X-Google-Smtp-Source: ABdhPJzHPUJozEO9IhoK+J+fdPwIzudsS5MDpsiCcLzp30hVMfgHC1ekwqAWwALMnAPFd5DnNYROM+fFEfzz1YpP
+Sender: "victording via sendgmr" <victording@victording.c.googlers.com>
+X-Received: from victording.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:65c7])
+ (user=victording job=sendgmr) by 2002:a17:902:b212:b029:df:ec2e:6a1f with
+ SMTP id t18-20020a170902b212b02900dfec2e6a1fmr16016023plr.24.1611836905911;
+ Thu, 28 Jan 2021 04:28:25 -0800 (PST)
+Date:   Thu, 28 Jan 2021 12:27:54 +0000
+Message-Id: <20210128122311.1.I42c1001f8b0eaac973a99e1e5c2170788ee36c9c@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.30.0.280.ga3ce27912f-goog
+Subject: [PATCH] PCI/ASPM: Disable ASPM when save/restore PCI state
+From:   Victor Ding <victording@google.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+        Victor Ding <victording@google.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
-Subject: Re: [PATCH v9 01/17] Documentation: PCI: Add specification for the
- *PCI NTB* function device
-Message-ID: <20210128121147.GA23564@e121166-lin.cambridge.arm.com>
-References: <20210119181106.GA2493893@bjorn-Precision-5520>
- <797ec9f2-34c3-5dc4-cc0a-d4f7cdf4afb0@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <797ec9f2-34c3-5dc4-cc0a-d4f7cdf4afb0@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Yicong Yang <yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 22, 2021 at 07:48:52PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Bjorn,
-> 
-> On 20/01/21 12:04 am, Bjorn Helgaas wrote:
-> > On Mon, Jan 04, 2021 at 08:58:53PM +0530, Kishon Vijay Abraham I wrote:
-> >> Add specification for the *PCI NTB* function device. The endpoint function
-> >> driver and the host PCI driver should be created based on this
-> >> specification.
-> >>
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > 
-> > A few typos below if there's opportunity for revisions.
-> 
-> I'll fix them.
+Certain PCIe devices (e.g. GL9750) have high penalties (e.g. high Port
+T_POWER_ON) when exiting L1 but enter L1 aggressively. As a result,
+such devices enter and exit L1 frequently during pci_save_state and
+pci_restore_state; eventually causing poor suspend/resume performance.
 
-Hi Kishon,
+Based on the observation that PCI accesses dominance pci_save_state/
+pci_restore_state plus these accesses are fairly close to each other, the
+actual time the device could stay in low power states is negligible.
+Therefore, the little power-saving benefit from ASPM during suspend/resume
+does not overweight the performance degradation caused by high L1 exit
+penalties.
 
-if you have changes please send them along and I will re-merge the
-whole series.
+Therefore, this patch proposes to disable ASPM during a suspend/resume
+process.
 
-Thanks,
-Lorenzo
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=211187
+Signed-off-by: Victor Ding <victording@google.com>
 
-> >> ---
-> >>  Documentation/PCI/endpoint/index.rst          |   1 +
-> >>  .../PCI/endpoint/pci-ntb-function.rst         | 351 ++++++++++++++++++
-> >>  2 files changed, 352 insertions(+)
-> >>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
-> >>
-> >> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-> >> index 4ca7439fbfc9..ef6861128506 100644
-> >> --- a/Documentation/PCI/endpoint/index.rst
-> >> +++ b/Documentation/PCI/endpoint/index.rst
-> >> @@ -11,5 +11,6 @@ PCI Endpoint Framework
-> >>     pci-endpoint-cfs
-> >>     pci-test-function
-> >>     pci-test-howto
-> >> +   pci-ntb-function
-> >>  
-> >>     function/binding/pci-test
-> >> diff --git a/Documentation/PCI/endpoint/pci-ntb-function.rst b/Documentation/PCI/endpoint/pci-ntb-function.rst
-> >> new file mode 100644
-> >> index 000000000000..a57908be4047
-> >> --- /dev/null
-> >> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
-> >> @@ -0,0 +1,351 @@
-> >> +.. SPDX-License-Identifier: GPL-2.0
-> >> +
-> >> +=================
-> >> +PCI NTB Function
-> >> +=================
-> >> +
-> >> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
-> >> +
-> >> +PCI Non Transparent Bridges (NTB) allow two host systems to communicate
-> >> +with each other by exposing each host as a device to the other host.
-> >> +NTBs typically support the ability to generate interrupts on the remote
-> >> +machine, expose memory ranges as BARs and perform DMA.  They also support
-> >> +scratchpads which are areas of memory within the NTB that are accessible
-> >> +from both machines.
-> >> +
-> >> +PCI NTB Function allows two different systems (or hosts) to communicate
-> >> +with each other by configurig the endpoint instances in such a way that
-> >> +transactions from one system is routed to the other system.
-> > 
-> > s/is/are/
-> > 
-> >> +In the below diagram, PCI NTB function configures the SoC with multiple
-> >> +PCIe Endpoint (EP) instances in such a way that transaction from one EP
-> >> +controller is routed to the other EP controller. Once PCI NTB function
-> > 
-> > s/transaction ... is/transactions ... are/
-> > 
-> >> +configures the SoC with multiple EP instances, HOST1 and HOST2 can
-> >> +communicate with each other using SoC as a bridge.
-> >> +
-> >> +.. code-block:: text
-> >> +
-> >> +    +-------------+                                   +-------------+
-> >> +    |             |                                   |             |
-> >> +    |    HOST1    |                                   |    HOST2    |
-> >> +    |             |                                   |             |
-> >> +    +------^------+                                   +------^------+
-> >> +           |                                                 |
-> >> +           |                                                 |
-> >> + +---------|-------------------------------------------------|---------+
-> >> + |  +------v------+                                   +------v------+  |
-> >> + |  |             |                                   |             |  |
-> >> + |  |     EP      |                                   |     EP      |  |
-> >> + |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
-> >> + |  |             <----------------------------------->             |  |
-> >> + |  |             |                                   |             |  |
-> >> + |  |             |                                   |             |  |
-> >> + |  |             |  SoC With Multiple EP Instances   |             |  |
-> >> + |  |             |  (Configured using NTB Function)  |             |  |
-> >> + |  +-------------+                                   +-------------+  |
-> >> + +---------------------------------------------------------------------+
-> >> +
-> >> +Constructs used for Implementing NTB
-> >> +====================================
-> >> +
-> >> +	1) Config Region
-> >> +	2) Self Scratchpad Registers
-> >> +	3) Peer Scratchpad Registers
-> >> +	4) Doorbell Registers
-> >> +	5) Memory Window
-> >> +
-> >> +
-> >> +Config Region:
-> >> +--------------
-> >> +
-> >> +Config Region is a construct that is specific to NTB implemented using NTB
-> >> +Endpoint Function Driver. The host and endpoint side NTB function driver will
-> >> +exchange information with each other using this region. Config Region has
-> >> +Control/Status Registers for configuring the Endpoint Controller. Host can
-> >> +write into this region for configuring the outbound ATU and to indicate the
-> > 
-> > Expand "ATU" since this is the first mention.
-> > 
-> >> +link status. Endpoint can indicate the status of commands issued be host in
-> >> +this region. Endpoint can also indicate the scratchpad offset, number of
-> >> +memory windows to the host using this region.
-> > 
-> > s/be host/by host/
-> > s/offset, number/offset and number/
-> > 
-> >> +The format of Config Region is given below. Each of the fields here are 32
-> >> +bits.
-> > 
-> > s/Each ... are/All ... are/
-> > 
-> >> +
-> >> +.. code-block:: text
-> >> +
-> >> +	+------------------------+
-> >> +	|         COMMAND        |
-> >> +	+------------------------+
-> >> +	|         ARGUMENT       |
-> >> +	+------------------------+
-> >> +	|         STATUS         |
-> >> +	+------------------------+
-> >> +	|         TOPOLOGY       |
-> >> +	+------------------------+
-> >> +	|    ADDRESS (LOWER 32)  |
-> >> +	+------------------------+
-> >> +	|    ADDRESS (UPPER 32)  |
-> >> +	+------------------------+
-> >> +	|           SIZE         |
-> >> +	+------------------------+
-> >> +	|   NO OF MEMORY WINDOW  |
-> >> +	+------------------------+
-> >> +	|  MEMORY WINDOW1 OFFSET |
-> >> +	+------------------------+
-> >> +	|       SPAD OFFSET      |
-> >> +	+------------------------+
-> >> +	|        SPAD COUNT      |
-> >> +	+------------------------+
-> >> +	|      DB ENTRY SIZE     |
-> >> +	+------------------------+
-> >> +	|         DB DATA        |
-> >> +	+------------------------+
-> >> +	|            :           |
-> >> +	+------------------------+
-> >> +	|            :           |
-> >> +	+------------------------+
-> >> +	|         DB DATA        |
-> >> +	+------------------------+
-> >> +
-> >> +
-> >> +  COMMAND:
-> >> +
-> >> +	NTB function supports three commands:
-> >> +
-> >> +	  CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
-> >> +	invoking this command, the host should allocate and initialize
-> >> +	MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
-> > 
-> > s/i.e/i.e.,/
-> > 
-> >> +	Endpoint). The endpoint on receiving this command will configure
-> >> +	the outbound ATU such that transaction to DB BAR will be routed
-> >> +	to the MSI/MSI-X address programmed by the host. The ARGUMENT
-> > 
-> > s/transaction to/transactions to/
-> > 
-> > Expand "DB BAR".  I assume this refers to "Doorbell BAR" (which itself
-> > is not defined).  How do we know which is the Doorbell BAR?
-> 
-> right doorbell. That part is explained in the "Modeling Constructs"
-> section below.
-> > 
-> > Also, "DB" itself needs to be expanded somehow for uses like below:
-> > 
-> >> +	register should be populated with number of DBs to configure (in the
-> >> +	lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
-> >> +	(TODO: Add support for MSI-X).
-> >> +
-> >> +	  CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
-> >> +	host invokes this command after allocating a buffer that can be
-> >> +	accessed by remote host. The allocated address should be programmed
-> >> +	in the ADDRESS register (64 bit), the size should be programmed in
-> >> +	the SIZE register and the memory window index should be programmed
-> >> +	in the ARGUMENT register. The endpoint on receiving this command
-> >> +	will configure the outbound ATU such that trasaction to MW BAR
-> >> +	will be routed to the address provided by the host.
-> > 
-> > How do we know which is the MW BAR?  I assume "MW" refers to "Memory
-> > Window".
-> 
-> right memory window. That's again explained in the "Modeling Constructs"
-> section below.
-> > 
-> >> +
-> >> +	  CMD_LINK_UP (0x3): Command to indicate an NTB application is
-> >> +	bound to the EP device on the host side. Once the endpoint
-> >> +	receives this command from both the hosts, the endpoint will
-> >> +	raise an LINK_UP event to both the hosts to indicate the hosts
-> >> +	can start communicating with each other.
-> > 
-> > s/raise an/raise a/
-> > 
-> > I guess this "LINK_UP event" is something other than the PCIe DL_Up
-> > state, because each host has already been communicating with the
-> > endpoint.  Right?  Is this LINK_UP a software construct?
-> 
-> Yeah. This is when an NTB client application is bound to the NTB device.
-> This is used for handshake between the applications running on the two
-> hosts.
-> 
-> Thanks
-> Kishon
+---
+
+ drivers/pci/pci.c       | 18 +++++++++++++++---
+ drivers/pci/pci.h       |  6 ++++++
+ drivers/pci/pcie/aspm.c | 26 ++++++++++++++++++++++++++
+ include/linux/pci.h     |  1 +
+ 4 files changed, 48 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 32011b7b4c04..a925a7075063 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1542,6 +1542,10 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
+ int pci_save_state(struct pci_dev *dev)
+ {
+ 	int i;
++
++	pcie_save_aspm_control(dev);
++	pcie_disable_aspm(dev);
++
+ 	/* XXX: 100% dword access ok here? */
+ 	for (i = 0; i < 16; i++) {
+ 		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
+@@ -1552,18 +1556,22 @@ int pci_save_state(struct pci_dev *dev)
+ 
+ 	i = pci_save_pcie_state(dev);
+ 	if (i != 0)
+-		return i;
++		goto Exit;
+ 
+ 	i = pci_save_pcix_state(dev);
+ 	if (i != 0)
+-		return i;
++		goto Exit;
+ 
+ 	pci_save_ltr_state(dev);
+ 	pci_save_aspm_l1ss_state(dev);
+ 	pci_save_dpc_state(dev);
+ 	pci_save_aer_state(dev);
+ 	pci_save_ptm_state(dev);
+-	return pci_save_vc_state(dev);
++	i = pci_save_vc_state(dev);
++
++Exit:
++	pcie_restore_aspm_control(dev);
++	return i;
+ }
+ EXPORT_SYMBOL(pci_save_state);
+ 
+@@ -1661,6 +1669,8 @@ void pci_restore_state(struct pci_dev *dev)
+ 	if (!dev->state_saved)
+ 		return;
+ 
++	pcie_disable_aspm(dev);
++
+ 	/*
+ 	 * Restore max latencies (in the LTR capability) before enabling
+ 	 * LTR itself (in the PCIe capability).
+@@ -1689,6 +1699,8 @@ void pci_restore_state(struct pci_dev *dev)
+ 	pci_enable_acs(dev);
+ 	pci_restore_iov_state(dev);
+ 
++	pcie_restore_aspm_control(dev);
++
+ 	dev->state_saved = false;
+ }
+ EXPORT_SYMBOL(pci_restore_state);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index a81459159f6d..e074a0cbe73c 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -584,6 +584,9 @@ void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+ void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+ void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
++void pcie_save_aspm_control(struct pci_dev *dev);
++void pcie_restore_aspm_control(struct pci_dev *dev);
++void pcie_disable_aspm(struct pci_dev *pdev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+@@ -591,6 +594,9 @@ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+ static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
+ static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
++static inline void pcie_save_aspm_control(struct pci_dev *dev) { }
++static inline void pcie_restore_aspm_control(struct pci_dev *dev) { }
++static inline void pcie_disable_aspm(struct pci_dev *pdev) { }
+ #endif
+ 
+ #ifdef CONFIG_PCIE_ECRC
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index a08e7d6dc248..519b9f1b067a 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -105,6 +105,12 @@ static const char *policy_str[] = {
+ 
+ #define LINK_RETRAIN_TIMEOUT HZ
+ 
++void pcie_disable_aspm(struct pci_dev *pdev)
++{
++	pcie_capability_clear_and_set_word(pdev, PCI_EXP_LNKCTL,
++						PCI_EXP_LNKCTL_ASPMC, 0);
++}
++
+ static int policy_to_aspm_state(struct pcie_link_state *link)
+ {
+ 	switch (aspm_policy) {
+@@ -680,6 +686,26 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 	}
+ }
+ 
++void pcie_save_aspm_control(struct pci_dev *dev)
++{
++	u16 lnkctl;
++
++	if (!pci_is_pcie(dev))
++		return;
++
++	pci_read_config_word(dev, PCI_EXP_LNKCTL, &lnkctl);
++	dev->saved_aspm_ctl = lnkctl & PCI_EXP_LNKCTL_ASPMC;
++}
++
++void pcie_restore_aspm_control(struct pci_dev *dev)
++{
++	if (!pci_is_pcie(dev))
++		return;
++
++	pcie_capability_clear_and_set_word(dev, PCI_EXP_LNKCTL,
++					PCI_EXP_LNKCTL_ASPMC, dev->saved_aspm_ctl);
++}
++
+ /* Configure the ASPM L1 substates */
+ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index b32126d26997..a21bfd6e3f89 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -387,6 +387,7 @@ struct pci_dev {
+ 	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
+ 					   supported from root to here */
+ 	u16		l1ss;		/* L1SS Capability pointer */
++	u16		saved_aspm_ctl; /* ASPM Control saved at suspend time */
+ #endif
+ 	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
+ 
+-- 
+2.30.0.280.ga3ce27912f-goog
+
