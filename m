@@ -2,189 +2,277 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BF3130754E
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 12:59:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 696343075A1
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 13:14:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231138AbhA1L5u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 06:57:50 -0500
-Received: from mga06.intel.com ([134.134.136.31]:61294 "EHLO mga06.intel.com"
+        id S231183AbhA1MMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 07:12:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:57904 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229831AbhA1L5t (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Jan 2021 06:57:49 -0500
-IronPort-SDR: soiyE6CpLq+dKT7KhCNBct+clhda1kqsfSuIJtxDWlvTvtDf/GRiW7ZEQnVCsFCgQtYg3O/PyL
- UaY3Nlpy+DoA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9877"; a="241746573"
-X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
-   d="scan'208";a="241746573"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2021 03:57:06 -0800
-IronPort-SDR: CFrCrPiSYaCWFmlvKSg3rN1x8H23iyAiPkS1mqNBxG4bjoqeXZ9/ongLgIrmM6GPQUce05YTRb
- bDxYiOnRhS5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
-   d="scan'208";a="403462814"
-Received: from lkp-server02.sh.intel.com (HELO 625d3a354f04) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Jan 2021 03:57:05 -0800
-Received: from kbuild by 625d3a354f04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1l55v6-0002rR-EQ; Thu, 28 Jan 2021 11:57:04 +0000
-Date:   Thu, 28 Jan 2021 19:56:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 71df1724cda35ac3cd93195997615371e12b4651
-Message-ID: <6012a67d.2PTKdqrUV3jRbpCx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S229618AbhA1MMl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Jan 2021 07:12:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D3B41FB;
+        Thu, 28 Jan 2021 04:11:54 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 777383F719;
+        Thu, 28 Jan 2021 04:11:52 -0800 (PST)
+Date:   Thu, 28 Jan 2021 12:11:47 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
+Subject: Re: [PATCH v9 01/17] Documentation: PCI: Add specification for the
+ *PCI NTB* function device
+Message-ID: <20210128121147.GA23564@e121166-lin.cambridge.arm.com>
+References: <20210119181106.GA2493893@bjorn-Precision-5520>
+ <797ec9f2-34c3-5dc4-cc0a-d4f7cdf4afb0@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <797ec9f2-34c3-5dc4-cc0a-d4f7cdf4afb0@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 71df1724cda35ac3cd93195997615371e12b4651  Merge branch 'remotes/lorenzo/pci/misc'
+On Fri, Jan 22, 2021 at 07:48:52PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Bjorn,
+> 
+> On 20/01/21 12:04 am, Bjorn Helgaas wrote:
+> > On Mon, Jan 04, 2021 at 08:58:53PM +0530, Kishon Vijay Abraham I wrote:
+> >> Add specification for the *PCI NTB* function device. The endpoint function
+> >> driver and the host PCI driver should be created based on this
+> >> specification.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > 
+> > A few typos below if there's opportunity for revisions.
+> 
+> I'll fix them.
 
-elapsed time: 722m
+Hi Kishon,
 
-configs tested: 128
-configs skipped: 2
+if you have changes please send them along and I will re-merge the
+whole series.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
+Lorenzo
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                         rt305x_defconfig
-sh                           se7724_defconfig
-arm                           u8500_defconfig
-h8300                    h8300h-sim_defconfig
-mips                      loongson3_defconfig
-powerpc                     stx_gp3_defconfig
-arm                  colibri_pxa300_defconfig
-powerpc                   bluestone_defconfig
-nios2                         3c120_defconfig
-arc                        vdk_hs38_defconfig
-mips                malta_qemu_32r6_defconfig
-arm                     eseries_pxa_defconfig
-xtensa                    xip_kc705_defconfig
-mips                            gpr_defconfig
-arm                          pxa910_defconfig
-m68k                        mvme16x_defconfig
-sparc                            alldefconfig
-arm                        vexpress_defconfig
-mips                          rb532_defconfig
-um                             i386_defconfig
-mips                    maltaup_xpa_defconfig
-mips                       bmips_be_defconfig
-powerpc                     mpc83xx_defconfig
-sh                            migor_defconfig
-powerpc                     ppa8548_defconfig
-xtensa                           allyesconfig
-mips                      pic32mzda_defconfig
-powerpc                     pseries_defconfig
-arm                          ep93xx_defconfig
-openrisc                    or1ksim_defconfig
-sh                         apsh4a3a_defconfig
-arm                       aspeed_g5_defconfig
-arm                        mvebu_v5_defconfig
-m68k                       m5275evb_defconfig
-powerpc                      ppc44x_defconfig
-nios2                            allyesconfig
-powerpc                      tqm8xx_defconfig
-arm                          moxart_defconfig
-mips                         bigsur_defconfig
-arc                        nsim_700_defconfig
-ia64                         bigsur_defconfig
-powerpc                 canyonlands_defconfig
-powerpc                  mpc885_ads_defconfig
-powerpc                 xes_mpc85xx_defconfig
-powerpc                 mpc8313_rdb_defconfig
-arc                            hsdk_defconfig
-mips                        bcm63xx_defconfig
-powerpc                    sam440ep_defconfig
-arm                           tegra_defconfig
-mips                          ath79_defconfig
-sh                          r7780mp_defconfig
-mips                       capcella_defconfig
-mips                       lemote2f_defconfig
-mips                 decstation_r4k_defconfig
-c6x                        evmc6678_defconfig
-arc                         haps_hs_defconfig
-sparc64                          alldefconfig
-arm                  colibri_pxa270_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                             allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a003-20210128
-i386                 randconfig-a006-20210128
-x86_64               randconfig-a012-20210128
-x86_64               randconfig-a015-20210128
-x86_64               randconfig-a016-20210128
-x86_64               randconfig-a011-20210128
-x86_64               randconfig-a013-20210128
-x86_64               randconfig-a014-20210128
-i386                 randconfig-a013-20210128
-i386                 randconfig-a011-20210128
-i386                 randconfig-a012-20210128
-i386                 randconfig-a016-20210128
-i386                 randconfig-a014-20210128
-i386                 randconfig-a015-20210128
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a002-20210128
-x86_64               randconfig-a003-20210128
-x86_64               randconfig-a001-20210128
-x86_64               randconfig-a005-20210128
-x86_64               randconfig-a006-20210128
-x86_64               randconfig-a004-20210128
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> >> ---
+> >>  Documentation/PCI/endpoint/index.rst          |   1 +
+> >>  .../PCI/endpoint/pci-ntb-function.rst         | 351 ++++++++++++++++++
+> >>  2 files changed, 352 insertions(+)
+> >>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-function.rst
+> >>
+> >> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> >> index 4ca7439fbfc9..ef6861128506 100644
+> >> --- a/Documentation/PCI/endpoint/index.rst
+> >> +++ b/Documentation/PCI/endpoint/index.rst
+> >> @@ -11,5 +11,6 @@ PCI Endpoint Framework
+> >>     pci-endpoint-cfs
+> >>     pci-test-function
+> >>     pci-test-howto
+> >> +   pci-ntb-function
+> >>  
+> >>     function/binding/pci-test
+> >> diff --git a/Documentation/PCI/endpoint/pci-ntb-function.rst b/Documentation/PCI/endpoint/pci-ntb-function.rst
+> >> new file mode 100644
+> >> index 000000000000..a57908be4047
+> >> --- /dev/null
+> >> +++ b/Documentation/PCI/endpoint/pci-ntb-function.rst
+> >> @@ -0,0 +1,351 @@
+> >> +.. SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +=================
+> >> +PCI NTB Function
+> >> +=================
+> >> +
+> >> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+> >> +
+> >> +PCI Non Transparent Bridges (NTB) allow two host systems to communicate
+> >> +with each other by exposing each host as a device to the other host.
+> >> +NTBs typically support the ability to generate interrupts on the remote
+> >> +machine, expose memory ranges as BARs and perform DMA.  They also support
+> >> +scratchpads which are areas of memory within the NTB that are accessible
+> >> +from both machines.
+> >> +
+> >> +PCI NTB Function allows two different systems (or hosts) to communicate
+> >> +with each other by configurig the endpoint instances in such a way that
+> >> +transactions from one system is routed to the other system.
+> > 
+> > s/is/are/
+> > 
+> >> +In the below diagram, PCI NTB function configures the SoC with multiple
+> >> +PCIe Endpoint (EP) instances in such a way that transaction from one EP
+> >> +controller is routed to the other EP controller. Once PCI NTB function
+> > 
+> > s/transaction ... is/transactions ... are/
+> > 
+> >> +configures the SoC with multiple EP instances, HOST1 and HOST2 can
+> >> +communicate with each other using SoC as a bridge.
+> >> +
+> >> +.. code-block:: text
+> >> +
+> >> +    +-------------+                                   +-------------+
+> >> +    |             |                                   |             |
+> >> +    |    HOST1    |                                   |    HOST2    |
+> >> +    |             |                                   |             |
+> >> +    +------^------+                                   +------^------+
+> >> +           |                                                 |
+> >> +           |                                                 |
+> >> + +---------|-------------------------------------------------|---------+
+> >> + |  +------v------+                                   +------v------+  |
+> >> + |  |             |                                   |             |  |
+> >> + |  |     EP      |                                   |     EP      |  |
+> >> + |  | CONTROLLER1 |                                   | CONTROLLER2 |  |
+> >> + |  |             <----------------------------------->             |  |
+> >> + |  |             |                                   |             |  |
+> >> + |  |             |                                   |             |  |
+> >> + |  |             |  SoC With Multiple EP Instances   |             |  |
+> >> + |  |             |  (Configured using NTB Function)  |             |  |
+> >> + |  +-------------+                                   +-------------+  |
+> >> + +---------------------------------------------------------------------+
+> >> +
+> >> +Constructs used for Implementing NTB
+> >> +====================================
+> >> +
+> >> +	1) Config Region
+> >> +	2) Self Scratchpad Registers
+> >> +	3) Peer Scratchpad Registers
+> >> +	4) Doorbell Registers
+> >> +	5) Memory Window
+> >> +
+> >> +
+> >> +Config Region:
+> >> +--------------
+> >> +
+> >> +Config Region is a construct that is specific to NTB implemented using NTB
+> >> +Endpoint Function Driver. The host and endpoint side NTB function driver will
+> >> +exchange information with each other using this region. Config Region has
+> >> +Control/Status Registers for configuring the Endpoint Controller. Host can
+> >> +write into this region for configuring the outbound ATU and to indicate the
+> > 
+> > Expand "ATU" since this is the first mention.
+> > 
+> >> +link status. Endpoint can indicate the status of commands issued be host in
+> >> +this region. Endpoint can also indicate the scratchpad offset, number of
+> >> +memory windows to the host using this region.
+> > 
+> > s/be host/by host/
+> > s/offset, number/offset and number/
+> > 
+> >> +The format of Config Region is given below. Each of the fields here are 32
+> >> +bits.
+> > 
+> > s/Each ... are/All ... are/
+> > 
+> >> +
+> >> +.. code-block:: text
+> >> +
+> >> +	+------------------------+
+> >> +	|         COMMAND        |
+> >> +	+------------------------+
+> >> +	|         ARGUMENT       |
+> >> +	+------------------------+
+> >> +	|         STATUS         |
+> >> +	+------------------------+
+> >> +	|         TOPOLOGY       |
+> >> +	+------------------------+
+> >> +	|    ADDRESS (LOWER 32)  |
+> >> +	+------------------------+
+> >> +	|    ADDRESS (UPPER 32)  |
+> >> +	+------------------------+
+> >> +	|           SIZE         |
+> >> +	+------------------------+
+> >> +	|   NO OF MEMORY WINDOW  |
+> >> +	+------------------------+
+> >> +	|  MEMORY WINDOW1 OFFSET |
+> >> +	+------------------------+
+> >> +	|       SPAD OFFSET      |
+> >> +	+------------------------+
+> >> +	|        SPAD COUNT      |
+> >> +	+------------------------+
+> >> +	|      DB ENTRY SIZE     |
+> >> +	+------------------------+
+> >> +	|         DB DATA        |
+> >> +	+------------------------+
+> >> +	|            :           |
+> >> +	+------------------------+
+> >> +	|            :           |
+> >> +	+------------------------+
+> >> +	|         DB DATA        |
+> >> +	+------------------------+
+> >> +
+> >> +
+> >> +  COMMAND:
+> >> +
+> >> +	NTB function supports three commands:
+> >> +
+> >> +	  CMD_CONFIGURE_DOORBELL (0x1): Command to configure doorbell. Before
+> >> +	invoking this command, the host should allocate and initialize
+> >> +	MSI/MSI-X vectors (i.e initialize the MSI/MSI-X capability in the
+> > 
+> > s/i.e/i.e.,/
+> > 
+> >> +	Endpoint). The endpoint on receiving this command will configure
+> >> +	the outbound ATU such that transaction to DB BAR will be routed
+> >> +	to the MSI/MSI-X address programmed by the host. The ARGUMENT
+> > 
+> > s/transaction to/transactions to/
+> > 
+> > Expand "DB BAR".  I assume this refers to "Doorbell BAR" (which itself
+> > is not defined).  How do we know which is the Doorbell BAR?
+> 
+> right doorbell. That part is explained in the "Modeling Constructs"
+> section below.
+> > 
+> > Also, "DB" itself needs to be expanded somehow for uses like below:
+> > 
+> >> +	register should be populated with number of DBs to configure (in the
+> >> +	lower 16 bits) and if MSI or MSI-X should be configured (BIT 16).
+> >> +	(TODO: Add support for MSI-X).
+> >> +
+> >> +	  CMD_CONFIGURE_MW (0x2): Command to configure memory window. The
+> >> +	host invokes this command after allocating a buffer that can be
+> >> +	accessed by remote host. The allocated address should be programmed
+> >> +	in the ADDRESS register (64 bit), the size should be programmed in
+> >> +	the SIZE register and the memory window index should be programmed
+> >> +	in the ARGUMENT register. The endpoint on receiving this command
+> >> +	will configure the outbound ATU such that trasaction to MW BAR
+> >> +	will be routed to the address provided by the host.
+> > 
+> > How do we know which is the MW BAR?  I assume "MW" refers to "Memory
+> > Window".
+> 
+> right memory window. That's again explained in the "Modeling Constructs"
+> section below.
+> > 
+> >> +
+> >> +	  CMD_LINK_UP (0x3): Command to indicate an NTB application is
+> >> +	bound to the EP device on the host side. Once the endpoint
+> >> +	receives this command from both the hosts, the endpoint will
+> >> +	raise an LINK_UP event to both the hosts to indicate the hosts
+> >> +	can start communicating with each other.
+> > 
+> > s/raise an/raise a/
+> > 
+> > I guess this "LINK_UP event" is something other than the PCIe DL_Up
+> > state, because each host has already been communicating with the
+> > endpoint.  Right?  Is this LINK_UP a software construct?
+> 
+> Yeah. This is when an NTB client application is bound to the NTB device.
+> This is used for handshake between the applications running on the two
+> hosts.
+> 
+> Thanks
+> Kishon
