@@ -2,89 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 541A5306693
-	for <lists+linux-pci@lfdr.de>; Wed, 27 Jan 2021 22:44:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 059D6306891
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 01:22:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231702AbhA0VnS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 16:43:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
+        id S231224AbhA1AVT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 19:21:19 -0500
+Received: from mx.socionext.com ([202.248.49.38]:13384 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235800AbhA0Vdo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Jan 2021 16:33:44 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1BDF164DCD;
-        Wed, 27 Jan 2021 21:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611783182;
-        bh=VAN1+fqJVKIXO2NTpiYqBBYNJGEP2fh7JX5PuSchluY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uzpAKctksMZgR9G0N9XwV0GSwOLYNGfAp/HNmWbaqPd/RsMT9ExyklHRaEEQCs925
-         8uwlpGyQUIho+WdGGuL6LeW+bRJ3fL2U+bl9bCnA561HtZhLAmU891fbndnD0t+RdW
-         CFXukH2ckJEq3H6Ge65m77RLTAQL9zoaQCYPn1fIdLB54tIaqZEIO0+9/rxwoj1S6k
-         JL3jJDYPg6N15jYZ39J7chv7o3Xvl39fapZB48IgOdywHu5v6gI4qECy4gEkgPRSJa
-         iINyOaJYov9rrs7lWkICks1iQU37JOZ1X1VIijieJdln+wWuljaVodoh8TwMTYaS93
-         A35d9cFvaor+A==
-Date:   Wed, 27 Jan 2021 15:33:00 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc MERLIN <marc_nouveau@merlins.org>
-Cc:     nouveau@lists.freedesktop.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: 5.9.11 still hanging 2mn at each boot and looping on nvidia-gpu
- 0000:01:00.3: PME# enabled (Quadro RTX 4000 Mobile)
-Message-ID: <20210127213300.GA3046575@bjorn-Precision-5520>
+        id S231199AbhA1AUp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 27 Jan 2021 19:20:45 -0500
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 28 Jan 2021 09:19:47 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 95ED62059027;
+        Thu, 28 Jan 2021 09:19:47 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 28 Jan 2021 09:19:47 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan2.css.socionext.com (Postfix) with ESMTP id 67A20B1D40;
+        Thu, 28 Jan 2021 09:19:47 +0900 (JST)
+Received: from [10.212.22.231] (unknown [10.212.22.231])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id B11F412014A;
+        Thu, 28 Jan 2021 09:19:46 +0900 (JST)
+Subject: Re: [PATCH] PCI: dwc: Move forward the iATU detection process
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>,
+        "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>
+References: <20210125044803.4310-1-Zhiqiang.Hou@nxp.com>
+ <7d2d8a01-1339-2858-0d6a-5674f1cf2bca@socionext.com>
+ <HE1PR0402MB33713DFC517B00EE1D13371784BB0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <8a7121f8-2b5c-82dd-3636-df390ec2b70d@socionext.com>
+Date:   Thu, 28 Jan 2021 09:19:46 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201226111209.GA2498@merlins.org>
+In-Reply-To: <HE1PR0402MB33713DFC517B00EE1D13371784BB0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Marc, I appreciate your persistence on this.  I am frankly
-surprised that you've put up with this so long.
-
-On Sat, Dec 26, 2020 at 03:12:09AM -0800, Marc MERLIN wrote:
-> This started with 5.5 and hasn't gotten better since then, despite
-> some reports I tried to send.
+On 2021/01/27 15:27, Z.q. Hou wrote:
+> Hi,
 > 
-> As per my previous message:
-> I have a Thinkpad P70 with hybrid graphics.
-> 01:00.0 VGA compatible controller: NVIDIA Corporation GM107GLM [Quadro M600M] (rev a2)
-> that one works fine, I can use i915 for the main screen, and nouveau to
-> display on the external ports (external ports are only wired to nvidia
-> chip, so it's impossible to use them without turning the nvidia chip
-> on).
->  
-> I now got a newer P73 also with the same hybrid graphics (setup as such
-> in the bios). It runs fine with i915, and I don't need to use external
-> display with nouveau for now (it almost works, but I only see the mouse
-> cursor on the external screen, no window or anything else can get
-> displayed, very weird).
-> 01:00.0 VGA compatible controller: NVIDIA Corporation TU104GLM [Quadro RTX 4000 Mobile / Max-Q] (rev a1)
->  
+> Yes, they are fix the same issue.
+> Rob and other contributors sent so many patches to refine the drivers and make the code brief and more readable, so I don't think we should just focus on the fixes of this issue. I don't think it is a good choice that your patch move some of the software perspective initializations into hardware ones.
+
+Ok, I checked your patch fixed this issue on my board with or without
+my patch. I'll follow the maintainers for handling my patch.
+
+Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+
+Thank you,
+
 > 
-> after boot, when it gets the right trigger (not sure which ones), it
-> loops on this evern 2 seconds, mostly forever.
+> Thanks
+> Zhiqiang
 > 
-> I'm not sure if it's nouveau's fault or the kernel's PCI PME's fault, or something else.
+>> -----Original Message-----
+>> From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> Sent: 2021年1月26日 13:26
+>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>> Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
+>> lorenzo.pieralisi@arm.com; robh@kernel.org; bhelgaas@google.com;
+>> gustavo.pimentel@synopsys.com; jingoohan1@gmail.com;
+>> jaswinder.singh@linaro.org; masami.hiramatsu@linaro.org
+>> Subject: Re: [PATCH] PCI: dwc: Move forward the iATU detection process
+>>
+>> Hi,
+>>
+>> This looks to me the same fix as my posted patch[1].
+>> Is this more effective than mine?
+>>
+>> Thank you,
+>>
+>> [1]
+>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww
+>> .spinics.net%2Flists%2Flinux-pci%2Fmsg103889.html&amp;data=04%7C01%
+>> 7CZhiqiang.Hou%40nxp.com%7Cd9fa58aac4774c9dd61b08d8c1bad128%7C
+>> 686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637472355412202563
+>> %7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiL
+>> CJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=Mt3B4jQ1Q1fu%2
+>> FAz9s4Y4eieHv7nYorvvT2pKlqFLE9k%3D&amp;reserved=0
+>>
+>> On 2021/01/25 13:48, Zhiqiang Hou wrote:
+>>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>>>
+>>> In the dw_pcie_ep_init(), it depends on the detected iATU region
+>>> numbers to allocate the in/outbound window management bit map.
+>>> It fails after the commit 281f1f99cf3a ("PCI: dwc: Detect number of
+>>> iATU windows").
+>>>
+>>> So this patch move the iATU region detection into a new function, move
+>>> forward the detection to the very beginning of functions
+>>> dw_pcie_host_init() and dw_pcie_ep_init(). And also remove it from the
+>>> dw_pcie_setup(), since it's more like a software perspective
+>>> initialization step than hardware setup.
+>>>
+>>> Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
+>>> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>>> ---
+>>>    drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 ++
+>>>    drivers/pci/controller/dwc/pcie-designware-host.c |  2 ++
+>>>    drivers/pci/controller/dwc/pcie-designware.c      | 11 ++++++++---
+>>>    drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+>>>    4 files changed, 13 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>>> b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>>> index bcd1cd9ba8c8..fcf935bf6f5e 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+>>> @@ -707,6 +707,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>>>    		}
+>>>    	}
+>>>
+>>> +	dw_pcie_iatu_detect(pci);
+>>> +
+>>>    	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> "addr_space");
+>>>    	if (!res)
+>>>    		return -EINVAL;
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> index 8a84c005f32b..8eae817c138d 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>> @@ -316,6 +316,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>    			return PTR_ERR(pci->dbi_base);
+>>>    	}
+>>>
+>>> +	dw_pcie_iatu_detect(pci);
+>>> +
+>>>    	bridge = devm_pci_alloc_host_bridge(dev, 0);
+>>>    	if (!bridge)
+>>>    		return -ENOMEM;
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+>>> b/drivers/pci/controller/dwc/pcie-designware.c
+>>> index 5b72a5448d2e..5b9bf02d918b 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>>> @@ -654,11 +654,9 @@ static void dw_pcie_iatu_detect_regions(struct
+>> dw_pcie *pci)
+>>>    	pci->num_ob_windows = ob;
+>>>    }
+>>>
+>>> -void dw_pcie_setup(struct dw_pcie *pci)
+>>> +void dw_pcie_iatu_detect(struct dw_pcie *pci)
+>>>    {
+>>> -	u32 val;
+>>>    	struct device *dev = pci->dev;
+>>> -	struct device_node *np = dev->of_node;
+>>>    	struct platform_device *pdev = to_platform_device(dev);
+>>>
+>>>    	if (pci->version >= 0x480A || (!pci->version && @@ -687,6 +685,13
+>>> @@ void dw_pcie_setup(struct dw_pcie *pci)
+>>>
+>>>    	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u
+>> inbound",
+>>>    		 pci->num_ob_windows, pci->num_ib_windows);
+>>> +}
+>>> +
+>>> +void dw_pcie_setup(struct dw_pcie *pci) {
+>>> +	u32 val;
+>>> +	struct device *dev = pci->dev;
+>>> +	struct device_node *np = dev->of_node;
+>>>
+>>>    	if (pci->link_gen > 0)
+>>>    		dw_pcie_link_set_max_speed(pci, pci->link_gen); diff --git
+>>> a/drivers/pci/controller/dwc/pcie-designware.h
+>>> b/drivers/pci/controller/dwc/pcie-designware.h
+>>> index 5d979953800d..867369d4c4f7 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>> @@ -305,6 +305,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie
+>> *pci, u8 func_no, int index,
+>>>    void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
+>>>    			 enum dw_pcie_region_type type);
+>>>    void dw_pcie_setup(struct dw_pcie *pci);
+>>> +void dw_pcie_iatu_detect(struct dw_pcie *pci);
+>>>
+>>>    static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32
+>> val)
+>>>    {
+>>>
+>>
+>> ---
+>> Best Regards
+>> Kunihiko Hayashi
 
-IIUC there are basically two problems:
-
-  1) A 2 minute delay during boot
-  2) Some sort of event every 2 seconds that kills your battery life
-
-Your machine doesn't sound unusual, and I haven't seen a flood of
-similar reports, so maybe there's something unusual about your config.
-But I really don't have any guesses for either one.
-
-It sounds like v5.5 worked fine and you first noticed the slow boot
-problem in v5.8.  We *could* try to bisect it, but I know that's a lot
-of work on your part.
-
-Grasping for any ideas for the boot delay; could you boot with
-"initcall_debug" and collect your "lsmod" output?  I notice async_tx
-in some of your logs, but I have no idea what it is.  It's from
-crypto, so possibly somewhat unusual?
-
-Bjorn
+---
+Best Regards
+Kunihiko Hayashi
