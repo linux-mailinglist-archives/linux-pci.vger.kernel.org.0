@@ -2,136 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C736D3077BA
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 15:14:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA65B30780B
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 15:29:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbhA1ONu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 09:13:50 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45074 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229677AbhA1ONt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 09:13:49 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10SEC2pA032804;
-        Thu, 28 Jan 2021 08:12:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1611843122;
-        bh=AudpKSlaZboe1uf2RLBPZd0j5l8pLIG2KQCVcoHb/Pk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uPJ7p4RKAidWFI38PN1NVSopf6Q7AB8r16q1edIU8BR6ItGm+4Fdt1N/Y0DtJXhvi
-         q4K257lDVAD5/IKRGm5H8F/CauOzOtcX1Ac6+XDTM5ToStp5yrE69X1RJEFqxm5lw4
-         GBgIKOUbMCy0nGkR07Nk0IT2mcN8fYDJN6RbIFFY=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10SEC2n4026339
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 Jan 2021 08:12:02 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- Jan 2021 08:12:02 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 Jan 2021 08:12:02 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10SEBwH7081595;
-        Thu, 28 Jan 2021 08:11:59 -0600
-Subject: Re: [PATCH v2 1/3] PCI: endpoint: Add 'started' to pci_epc to set
- whether the controller is started
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1611500977-24816-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1611500977-24816-2-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <1253c4c9-4e5e-1456-6475-0334f3bb8634@ti.com>
-Date:   Thu, 28 Jan 2021 19:41:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S229840AbhA1O3f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 09:29:35 -0500
+Received: from mga17.intel.com ([192.55.52.151]:46518 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231586AbhA1O3e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Jan 2021 09:29:34 -0500
+IronPort-SDR: TiWbAe8k6q2U7d3uPWM4lSyp+yrMTMsx9986JilPAGwQ3owBNfQSPO2wB88gv4g1SZAGFnq4BC
+ p2Yx656S6ybA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9877"; a="160012376"
+X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
+   d="scan'208";a="160012376"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2021 06:27:48 -0800
+IronPort-SDR: +PFPIvlRjek6MWrX9uP9iaFFhGEDkOin/OloFocOFfpB2UombOfcu9lElfPgCPSR9ahsCgLNZN
+ pBm+PFjtZHqw==
+X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
+   d="scan'208";a="363775047"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2021 06:27:44 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 28 Jan 2021 16:27:42 +0200
+Date:   Thu, 28 Jan 2021 16:27:42 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     mingchuang.qiao@mediatek.com
+Cc:     bhelgaas@google.com, matthias.bgg@gmail.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, haijun.liu@mediatek.com,
+        lambert.wang@mediatek.com, kerun.zhu@mediatek.com,
+        alex.williamson@redhat.com, rjw@rjwysocki.net,
+        utkarsh.h.patel@intel.com
+Subject: Re: [v2] PCI: Avoid unsync of LTR mechanism configuration
+Message-ID: <20210128142742.GV2542@lahna.fi.intel.com>
+References: <20210128100531.2694-1-mingchuang.qiao@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <1611500977-24816-2-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210128100531.2694-1-mingchuang.qiao@mediatek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kunihiko,
+Hi,
 
-On 24/01/21 8:39 pm, Kunihiko Hayashi wrote:
-> This adds a member 'started' as a boolean value to struct pci_epc to set
-> whether the controller is started, and also adds a function to get the
-> value.
+On Thu, Jan 28, 2021 at 06:05:31PM +0800, mingchuang.qiao@mediatek.com wrote:
+> From: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> In bus scan flow, the "LTR Mechanism Enable" bit of DEVCTL2 register is
+> configured in pci_configure_ltr(). If device and bridge both support LTR
+> mechanism, the "LTR Mechanism Enable" bit of device and bridge will be
+> enabled in DEVCTL2 register. And pci_dev->ltr_path will be set as 1.
+> 
+> If PCIe link goes down when device resets, the "LTR Mechanism Enable" bit
+> of bridge will change to 0 according to PCIe r5.0, sec 7.5.3.16. However,
+> the pci_dev->ltr_path value of bridge is still 1.
+> 
+> For following conditions, check and re-configure "LTR Mechanism Enable" bit
+> of bridge to make "LTR Mechanism Enable" bit mtach ltr_path value.
+>    -before configuring device's LTR for hot-remove/hot-add
+>    -before restoring device's DEVCTL2 register when restore device state
+> 
+> Signed-off-by: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
 > ---
->  drivers/pci/endpoint/pci-epc-core.c | 2 ++
->  include/linux/pci-epc.h             | 7 +++++++
->  2 files changed, 9 insertions(+)
+> changes of v2
+>  -modify patch description
+>  -reconfigure bridge's LTR before restoring device DEVCTL2 register
+> ---
+>  drivers/pci/pci.c   | 25 +++++++++++++++++++++++++
+>  drivers/pci/probe.c | 19 ++++++++++++++++---
+>  2 files changed, 41 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index cc8f9eb..2904175 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -174,6 +174,7 @@ void pci_epc_stop(struct pci_epc *epc)
->  
->  	mutex_lock(&epc->lock);
->  	epc->ops->stop(epc);
-> +	epc->started = false;
->  	mutex_unlock(&epc->lock);
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_stop);
-> @@ -196,6 +197,7 @@ int pci_epc_start(struct pci_epc *epc)
->  
->  	mutex_lock(&epc->lock);
->  	ret = epc->ops->start(epc);
-> +	epc->started = true;
->  	mutex_unlock(&epc->lock);
->  
->  	return ret;
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index b82c9b1..5808952 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -131,6 +131,7 @@ struct pci_epc_mem {
->   * @lock: mutex to protect pci_epc ops
->   * @function_num_map: bitmap to manage physical function number
->   * @notifier: used to notify EPF of any EPC events (like linkup)
-> + * @started: true if this EPC is started
->   */
->  struct pci_epc {
->  	struct device			dev;
-> @@ -145,6 +146,7 @@ struct pci_epc {
->  	struct mutex			lock;
->  	unsigned long			function_num_map;
->  	struct atomic_notifier_head	notifier;
-> +	bool				started;
->  };
->  
->  /**
-> @@ -191,6 +193,11 @@ pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
->  	return atomic_notifier_chain_register(&epc->notifier, nb);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b9fecc25d213..88b4eb70c252 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1437,6 +1437,24 @@ static int pci_save_pcie_state(struct pci_dev *dev)
+>  	return 0;
 >  }
 >  
-> +static inline bool pci_epc_is_started(struct pci_epc *epc)
+> +static void pci_reconfigure_bridge_ltr(struct pci_dev *dev)
 > +{
-> +	return epc->started;
-> +}
-
-This should also be protected.
-
-Thanks
-Kishon
+> +#ifdef CONFIG_PCIEASPM
+> +	struct pci_dev *bridge;
+> +	u32 ctl;
 > +
->  struct pci_epc *
->  __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
->  		      struct module *owner);
-> 
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge && bridge->ltr_path) {
+> +		pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2, &ctl);
+> +		if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
+> +			pci_dbg(bridge, "re-enabling LTR\n");
+> +			pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
+> +						 PCI_EXP_DEVCTL2_LTR_EN);
+> +		}
+> +	}
+> +#endif
+> +}
+> +
+>  static void pci_restore_pcie_state(struct pci_dev *dev)
+>  {
+>  	int i = 0;
+> @@ -1447,6 +1465,13 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+>  	if (!save_state)
+>  		return;
+>  
+> +	/*
+> +	 * Downstream ports reset the LTR enable bit when link goes down.
+> +	 * Check and re-configure the bit here before restoring device.
+> +	 * PCIe r5.0, sec 7.5.3.16.
+> +	 */
+> +	pci_reconfigure_bridge_ltr(dev);
+> +
+>  	cap = (u16 *)&save_state->cap.data[0];
+>  	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
+>  	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 953f15abc850..4ad172517fd2 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2132,9 +2132,22 @@ static void pci_configure_ltr(struct pci_dev *dev)
+>  	 * Complex and all intermediate Switches indicate support for LTR.
+>  	 * PCIe r4.0, sec 6.18.
+>  	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	    ((bridge = pci_upstream_bridge(dev)) &&
+> -	      bridge->ltr_path)) {
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+> +					 PCI_EXP_DEVCTL2_LTR_EN);
+> +		dev->ltr_path = 1;
+> +		return;
+> +	}
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge && bridge->ltr_path) {
+> +		pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2, &ctl);
+> +		if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
+> +			pci_dbg(bridge, "re-enabling LTR\n");
+> +			pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
+> +						 PCI_EXP_DEVCTL2_LTR_EN);
+> +		}
+> +
+
+Can't you use pci_reconfigure_bridge_ltr() here too?
+
+Otherwise looks good.
