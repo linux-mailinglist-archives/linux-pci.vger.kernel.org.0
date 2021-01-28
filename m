@@ -2,84 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31019307F21
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 21:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F119307FDB
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 21:50:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231344AbhA1UF5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 15:05:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58176 "EHLO
+        id S231300AbhA1Usx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 15:48:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231383AbhA1UDU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 15:03:20 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B78C061221;
-        Thu, 28 Jan 2021 12:01:39 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1611864097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3eLkCvYAhriOPJ7z9HfTV78cQyqxpEiJgEGLW8Ug9OQ=;
-        b=rgutv3+b4fCuQO2NPYLPM2A2LF4QtgxTtRCEhMqLfK2dt00gMtMdV9q8L3UUZQwSHs8nqV
-        NzjwfoARCvHimHhCzQL0trvvJQ9CLz/u+9cafws4RLNRbyxfde6MPKuUGPrk0ho3YZMjvS
-        JhxP5cELF4GcPbBgYJmeajT1gRLCfkJoIVgNGVyKIEZS5rulATe7u8Hiv081AJKVn3A6KI
-        MvDcZnBcbXGxt0eFyyEiRR/O7PPBx+B81r5r3ykM/tqeB1gu6oG4rf4Y+E4EtFsaTLBJgU
-        wINUReJQv/XStMHDY5Ahd8NExFJ4QCwnxp/Y2/KMkSjzaHg2hZKVYeFLmZf9qQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1611864097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3eLkCvYAhriOPJ7z9HfTV78cQyqxpEiJgEGLW8Ug9OQ=;
-        b=v7oE4IEZ8qTXtqCCRrOIGMvMr/fgmhz8b8qcg+0shet7zAWJFLgUt26gLWthcNVEwkr7Tr
-        kgAjekNEjbSjyAAA==
-To:     Marcelo Tosatti <mtosatti@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        frederic@kernel.org, juri.lelli@redhat.com, abelits@marvell.com,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, peterz@infradead.org,
-        davem@davemloft.net, akpm@linux-foundation.org,
-        sfr@canb.auug.org.au, stephen@networkplumber.org,
-        rppt@linux.vnet.ibm.com, jinyuqi@huawei.com,
-        zhangshaokun@hisilicon.com
-Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping CPUs
-In-Reply-To: <20210128165903.GB38339@fuller.cnet>
-References: <20200625223443.2684-1-nitesh@redhat.com> <20200625223443.2684-2-nitesh@redhat.com> <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com> <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de> <20210128165903.GB38339@fuller.cnet>
-Date:   Thu, 28 Jan 2021 21:01:37 +0100
-Message-ID: <87h7n0de5a.fsf@nanos.tec.linutronix.de>
+        with ESMTP id S231302AbhA1Usr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 15:48:47 -0500
+X-Greylist: delayed 515 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 28 Jan 2021 12:48:07 PST
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B837C061573
+        for <linux-pci@vger.kernel.org>; Thu, 28 Jan 2021 12:48:07 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 88190100D9410;
+        Thu, 28 Jan 2021 21:39:29 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 383F811105F; Thu, 28 Jan 2021 21:39:29 +0100 (CET)
+Date:   Thu, 28 Jan 2021 21:39:29 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Sergei Miroshnichenko <s.miroshnichenko@yadro.com>,
+        linux-pci@vger.kernel.org, Stefan Roese <sr@denx.de>,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Rajat Jain <rajatja@google.com>, linux@yadro.com,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Christian Kellner <christian@kellner.me>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
+Message-ID: <20210128203929.GB6613@wunner.de>
+References: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
+ <20210128145316.GA3052488@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210128145316.GA3052488@bjorn-Precision-5520>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 28 2021 at 13:59, Marcelo Tosatti wrote:
->> The whole pile wants to be reverted. It's simply broken in several ways.
->
-> I was asking for your comments on interaction with CPU hotplug :-)
+On Thu, Jan 28, 2021 at 08:53:16AM -0600, Bjorn Helgaas wrote:
+> On Fri, Dec 18, 2020 at 08:39:45PM +0300, Sergei Miroshnichenko wrote:
+> > Currently PCI hotplug works on top of resources which are usually reserved:
+> > by BIOS, bootloader, firmware, or by the kernel (pci=hpmemsize=XM). These
+> > resources are gaps in the address space where BARs of new devices may fit,
+> > and extra bus number per port, so bridges can be hot-added. This series aim
+> > the BARs problem: it shows the kernel how to redistribute them on the run,
+> > so the hotplug becomes predictable and cross-platform. A follow-up patchset
+> > will propose a solution for bus numbers. And another one -- for the powerpc
+> > arch-specific problems.
+> 
+> I can certainly see scenarios where this functionality will be useful,
+> but the series currently doesn't mention bug reports that it fixes.  I
+> suspect there *are* some related bug reports, e.g., for Thunderbolt
+> hotplug.  We should dig them up, include pointers to them, and get the
+> reporters to test the series and provide feedback.
 
-Which I answered in an seperate mail :)
+In case it helps, an earlier version of the series was referenced
+in this LWN article more than 2 years ago (scroll down to the
+"Moving BARs" section at the end of the article):
 
-> So housekeeping_cpumask has multiple meanings. In this case:
+https://lwn.net/Articles/767885/
 
-...
+The article provides some context:  Specifically, macOS is capable
+of resizing and moving BARs, so this series sort of helps us catch
+up with the competition.
 
-> So as long as the meaning of the flags are respected, seems
-> alright.
+With Thunderbolt, this series is particularly useful if
+(a) PCIe cards are hot-added with large BARs (such as GPUs) and/or
+(b) the Thunderbolt daisy-chain is very long.
 
-Yes. Stuff like the managed interrupts preference for housekeeping CPUs
-when a affinity mask spawns housekeeping and isolated is perfectly
-fine. It's well thought out and has no limitations.
+Thunderbolt is essentially a cascade of nested hotplug ports,
+so if more and more devices are added, it's easy to see that
+the top-level hotplug port's BAR window may run out of space.
 
-> Nitesh, is there anything preventing this from being fixed
-> in userspace ? (as Thomas suggested previously).
+My understanding is that Sergei's use case doesn't involve
+Thunderbolt at all but rather hotplugging of GPUs and network
+cards in PowerPC servers in a datacenter, which may have the
+same kinds of issues.
 
-Everything with is not managed can be steered by user space.
+I intended to review and test this iteration of the series more
+closely, but haven't been able to carve out the required time.
+I'm adding some Thunderbolt folks to cc in the hope that they
+can at least test the series on their development branch.
+Getting this upstreamed should really be in the best interest
+of Intel and other promulgators of Thunderbolt.
 
 Thanks,
 
-        tglx
+Lukas
