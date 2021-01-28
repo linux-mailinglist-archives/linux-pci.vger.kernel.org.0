@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D62F307549
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 12:57:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B307E307552
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 12:59:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbhA1L4s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 06:56:48 -0500
-Received: from mga02.intel.com ([134.134.136.20]:31334 "EHLO mga02.intel.com"
+        id S231194AbhA1L6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 06:58:05 -0500
+Received: from mga03.intel.com ([134.134.136.65]:52844 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229597AbhA1L4r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Jan 2021 06:56:47 -0500
-IronPort-SDR: GSpw13PFvAcwdZCrJA/WNtPyc58C9KxKF/4gSwXGG5aY4rF+L9GMHKuaPC+TNZYJ+BQVzUiYuO
- OrblBhApT84w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9877"; a="167317595"
+        id S229817AbhA1L6E (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Jan 2021 06:58:04 -0500
+IronPort-SDR: VIW/IIW40zsm04jaud2qW6tKjlnYPj5KUzVpWhofLJuRy9rkBFsDtUGG6/nJg5E1db04h8EbE7
+ M6jL9sEZrl2g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9877"; a="180298277"
 X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
-   d="scan'208";a="167317595"
+   d="scan'208";a="180298277"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2021 03:56:04 -0800
-IronPort-SDR: 5eHuF+IWXBxkr/yWPLMs76xwaAVd9BzUgttHRe401YJhUJdTTvpxz8AhXkgCTa6eDwtp/4vd90
- ogNbapgraHQQ==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2021 03:57:06 -0800
+IronPort-SDR: eEEKbuL65o6rf+Eu7Xk3nUauUOc2LCH9jh5yNB711RcckrlC5lHO1SNotj/NO0OXv0Pjzkt309
+ 1o9JPkyxDAOA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
-   d="scan'208";a="473515699"
+   d="scan'208";a="473515947"
 Received: from lkp-server02.sh.intel.com (HELO 625d3a354f04) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Jan 2021 03:56:05 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 28 Jan 2021 03:57:05 -0800
 Received: from kbuild by 625d3a354f04 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1l55u7-0002qx-Sp; Thu, 28 Jan 2021 11:56:03 +0000
-Date:   Thu, 28 Jan 2021 19:55:39 +0800
+        id 1l55v6-0002ry-Tt; Thu, 28 Jan 2021 11:57:04 +0000
+Date:   Thu, 28 Jan 2021 19:56:38 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/enumeration] BUILD SUCCESS
- 508d392ae0bb3729d4c18628e021968a1b11b32c
-Message-ID: <6012a63b.s0yxOjpqrxZfHRJg%lkp@intel.com>
+Subject: [pci:for-linus] BUILD SUCCESS
+ 7e69d07d7c3c7a8ed69ff10a6fa65afa7c56685c
+Message-ID: <6012a676.i15KxP580/NnOsmg%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
-branch HEAD: 508d392ae0bb3729d4c18628e021968a1b11b32c  PCI/ACPI: Clarify message about _OSC failure
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
+branch HEAD: 7e69d07d7c3c7a8ed69ff10a6fa65afa7c56685c  Revert "PCI/ASPM: Save/restore L1SS Capability for suspend/resume"
 
-elapsed time: 721m
+elapsed time: 722m
 
-configs tested: 115
+configs tested: 122
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -90,6 +90,14 @@ arm                       aspeed_g5_defconfig
 arm                        mvebu_v5_defconfig
 m68k                       m5275evb_defconfig
 powerpc                      ppc44x_defconfig
+nios2                            allyesconfig
+powerpc                     ep8248e_defconfig
+sh                        edosk7760_defconfig
+powerpc                    mvme5100_defconfig
+mips                     cu1000-neo_defconfig
+arm                           stm32_defconfig
+xtensa                    smp_lx200_defconfig
+arm                        neponset_defconfig
 powerpc                      tqm8xx_defconfig
 arm                          moxart_defconfig
 mips                         bigsur_defconfig
@@ -120,7 +128,6 @@ arc                              allyesconfig
 nds32                             allnoconfig
 c6x                              allyesconfig
 nds32                               defconfig
-nios2                            allyesconfig
 csky                                defconfig
 alpha                               defconfig
 alpha                            allyesconfig
