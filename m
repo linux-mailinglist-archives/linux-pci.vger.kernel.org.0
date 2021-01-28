@@ -2,204 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 059D6306891
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 01:22:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE1C3306BF9
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 05:14:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231224AbhA1AVT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 27 Jan 2021 19:21:19 -0500
-Received: from mx.socionext.com ([202.248.49.38]:13384 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231199AbhA1AUp (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 27 Jan 2021 19:20:45 -0500
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 28 Jan 2021 09:19:47 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 95ED62059027;
-        Thu, 28 Jan 2021 09:19:47 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 28 Jan 2021 09:19:47 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan2.css.socionext.com (Postfix) with ESMTP id 67A20B1D40;
-        Thu, 28 Jan 2021 09:19:47 +0900 (JST)
-Received: from [10.212.22.231] (unknown [10.212.22.231])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id B11F412014A;
-        Thu, 28 Jan 2021 09:19:46 +0900 (JST)
-Subject: Re: [PATCH] PCI: dwc: Move forward the iATU detection process
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>,
-        "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>
-References: <20210125044803.4310-1-Zhiqiang.Hou@nxp.com>
- <7d2d8a01-1339-2858-0d6a-5674f1cf2bca@socionext.com>
- <HE1PR0402MB33713DFC517B00EE1D13371784BB0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <8a7121f8-2b5c-82dd-3636-df390ec2b70d@socionext.com>
-Date:   Thu, 28 Jan 2021 09:19:46 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S231211AbhA1EKq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 27 Jan 2021 23:10:46 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54168 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229586AbhA1EKd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 27 Jan 2021 23:10:33 -0500
+Received: from mail-lj1-f199.google.com ([209.85.208.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1l4ycv-0002lk-Un
+        for linux-pci@vger.kernel.org; Thu, 28 Jan 2021 04:09:50 +0000
+Received: by mail-lj1-f199.google.com with SMTP id z5so2359903ljo.6
+        for <linux-pci@vger.kernel.org>; Wed, 27 Jan 2021 20:09:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7fl7bm6buw7fD0rpOxqw4tFNpwhOF3QlYfdvY0hGN/E=;
+        b=N4QFliZV9MdlzsnATvi65fkmZtciXBa2gdXR7fhAgPnmevIOcHbPnSofbBbpKMotWj
+         4KJYKKfimDcQpUX/gXoyIYp/ExtWXHT4Hu1GF704BlIPhORSI13RoYcnVUcjJZ15pRpK
+         HfeWFUIl7rRuYQqoLs8UFaxxWHLE1J3gi63bf7OzwO47U8W+N3fH8WncMtnfh3fm/m2n
+         01OY592tDDDSoxnFD2CITGnkVuKCS0wmXpXZVjrgn33OnYYxFB/EVXpK5KIkxIt2+0FW
+         e0vvfUMSVrYe0UhJUjpDvn5SLd+wKjny/q+07WM9kSNWMhvLTVwwzC4kbWnyei0F8J8H
+         4Dhw==
+X-Gm-Message-State: AOAM532+0amzj5NL6bdRO6g/0iqYriW0I+opXriPh17/aTbe9wetfdIU
+        oGbTXwVE/DY7Rm7Dug4+9Eje3DwzYA9VkYKkLWub4ZOpqmFgSVj37jy/IzAVYomEgIm6u+WkGVJ
+        Ur6jRkQhR04y+rDQx3EcTu6qjVoAIZ+iLo4aYWZJU6fLJRkaSRz6Jqg==
+X-Received: by 2002:a2e:7a05:: with SMTP id v5mr7107368ljc.402.1611806989348;
+        Wed, 27 Jan 2021 20:09:49 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzUZ61PxNciB0RDZ4gO3Vtagr/TV9bDy/Ex9ys0/59vTDw6Y6nGIPGqgglSPQLGt2i2uXLbz1zcOkH5OoCjSQU=
+X-Received: by 2002:a2e:7a05:: with SMTP id v5mr7107359ljc.402.1611806989056;
+ Wed, 27 Jan 2021 20:09:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <HE1PR0402MB33713DFC517B00EE1D13371784BB0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210127173101.446940-1-kai.heng.feng@canonical.com> <20210127205053.GA3049358@bjorn-Precision-5520>
+In-Reply-To: <20210127205053.GA3049358@bjorn-Precision-5520>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Thu, 28 Jan 2021 12:09:37 +0800
+Message-ID: <CAAd53p7FfRCgfC5dGL3HyP+rbVtR2VCfMPYBBvJ=-DFCWFeVPA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI/AER: Disable AER interrupt during suspend
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Russell Currey <ruscur@russell.cc>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021/01/27 15:27, Z.q. Hou wrote:
-> Hi,
-> 
-> Yes, they are fix the same issue.
-> Rob and other contributors sent so many patches to refine the drivers and make the code brief and more readable, so I don't think we should just focus on the fixes of this issue. I don't think it is a good choice that your patch move some of the software perspective initializations into hardware ones.
+On Thu, Jan 28, 2021 at 4:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Jan 28, 2021 at 01:31:00AM +0800, Kai-Heng Feng wrote:
+> > Commit 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in
+> > hint") enables ACS, and some platforms lose its NVMe after resume from
+> > firmware:
+> > [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
+> > [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
+> > [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
+> > [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
+> > [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+> > [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+> > [   50.947843] nvme nvme0: frozen state error detected, reset controller
+> >
+> > It happens right after ACS gets enabled during resume.
+> >
+> > To prevent that from happening, disable AER interrupt and enable it on
+> > system suspend and resume, respectively.
+>
+> Lots of questions here.  Maybe this is what we'll end up doing, but I
+> am curious about why the error is reported in the first place.
+>
+> Is this a consequence of the link going down and back up?
 
-Ok, I checked your patch fixed this issue on my board with or without
-my patch. I'll follow the maintainers for handling my patch.
+Could be. From the observations, it only happens when firmware suspend
+(S3) is used.
+Maybe it happens when it's gets powered up, but I don't have equipment
+to debug at hardware level.
 
-Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+If we use non-firmware suspend method, enabling ACS after resume won't
+trip AER and DPC.
 
-Thank you,
+>
+> Is it consequence of the device doing a DMA when it shouldn't?
 
-> 
-> Thanks
-> Zhiqiang
-> 
->> -----Original Message-----
->> From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> Sent: 2021年1月26日 13:26
->> To: Z.q. Hou <zhiqiang.hou@nxp.com>
->> Cc: linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org;
->> lorenzo.pieralisi@arm.com; robh@kernel.org; bhelgaas@google.com;
->> gustavo.pimentel@synopsys.com; jingoohan1@gmail.com;
->> jaswinder.singh@linaro.org; masami.hiramatsu@linaro.org
->> Subject: Re: [PATCH] PCI: dwc: Move forward the iATU detection process
->>
->> Hi,
->>
->> This looks to me the same fix as my posted patch[1].
->> Is this more effective than mine?
->>
->> Thank you,
->>
->> [1]
->> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww
->> .spinics.net%2Flists%2Flinux-pci%2Fmsg103889.html&amp;data=04%7C01%
->> 7CZhiqiang.Hou%40nxp.com%7Cd9fa58aac4774c9dd61b08d8c1bad128%7C
->> 686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637472355412202563
->> %7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiL
->> CJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=Mt3B4jQ1Q1fu%2
->> FAz9s4Y4eieHv7nYorvvT2pKlqFLE9k%3D&amp;reserved=0
->>
->> On 2021/01/25 13:48, Zhiqiang Hou wrote:
->>> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->>>
->>> In the dw_pcie_ep_init(), it depends on the detected iATU region
->>> numbers to allocate the in/outbound window management bit map.
->>> It fails after the commit 281f1f99cf3a ("PCI: dwc: Detect number of
->>> iATU windows").
->>>
->>> So this patch move the iATU region detection into a new function, move
->>> forward the detection to the very beginning of functions
->>> dw_pcie_host_init() and dw_pcie_ep_init(). And also remove it from the
->>> dw_pcie_setup(), since it's more like a software perspective
->>> initialization step than hardware setup.
->>>
->>> Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
->>> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
->>> ---
->>>    drivers/pci/controller/dwc/pcie-designware-ep.c   |  2 ++
->>>    drivers/pci/controller/dwc/pcie-designware-host.c |  2 ++
->>>    drivers/pci/controller/dwc/pcie-designware.c      | 11 ++++++++---
->>>    drivers/pci/controller/dwc/pcie-designware.h      |  1 +
->>>    4 files changed, 13 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> b/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> index bcd1cd9ba8c8..fcf935bf6f5e 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
->>> @@ -707,6 +707,8 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->>>    		}
->>>    	}
->>>
->>> +	dw_pcie_iatu_detect(pci);
->>> +
->>>    	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> "addr_space");
->>>    	if (!res)
->>>    		return -EINVAL;
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
->>> b/drivers/pci/controller/dwc/pcie-designware-host.c
->>> index 8a84c005f32b..8eae817c138d 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>> @@ -316,6 +316,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>    			return PTR_ERR(pci->dbi_base);
->>>    	}
->>>
->>> +	dw_pcie_iatu_detect(pci);
->>> +
->>>    	bridge = devm_pci_alloc_host_bridge(dev, 0);
->>>    	if (!bridge)
->>>    		return -ENOMEM;
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
->>> b/drivers/pci/controller/dwc/pcie-designware.c
->>> index 5b72a5448d2e..5b9bf02d918b 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.c
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
->>> @@ -654,11 +654,9 @@ static void dw_pcie_iatu_detect_regions(struct
->> dw_pcie *pci)
->>>    	pci->num_ob_windows = ob;
->>>    }
->>>
->>> -void dw_pcie_setup(struct dw_pcie *pci)
->>> +void dw_pcie_iatu_detect(struct dw_pcie *pci)
->>>    {
->>> -	u32 val;
->>>    	struct device *dev = pci->dev;
->>> -	struct device_node *np = dev->of_node;
->>>    	struct platform_device *pdev = to_platform_device(dev);
->>>
->>>    	if (pci->version >= 0x480A || (!pci->version && @@ -687,6 +685,13
->>> @@ void dw_pcie_setup(struct dw_pcie *pci)
->>>
->>>    	dev_info(pci->dev, "Detected iATU regions: %u outbound, %u
->> inbound",
->>>    		 pci->num_ob_windows, pci->num_ib_windows);
->>> +}
->>> +
->>> +void dw_pcie_setup(struct dw_pcie *pci) {
->>> +	u32 val;
->>> +	struct device *dev = pci->dev;
->>> +	struct device_node *np = dev->of_node;
->>>
->>>    	if (pci->link_gen > 0)
->>>    		dw_pcie_link_set_max_speed(pci, pci->link_gen); diff --git
->>> a/drivers/pci/controller/dwc/pcie-designware.h
->>> b/drivers/pci/controller/dwc/pcie-designware.h
->>> index 5d979953800d..867369d4c4f7 100644
->>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>> @@ -305,6 +305,7 @@ int dw_pcie_prog_inbound_atu(struct dw_pcie
->> *pci, u8 func_no, int index,
->>>    void dw_pcie_disable_atu(struct dw_pcie *pci, int index,
->>>    			 enum dw_pcie_region_type type);
->>>    void dw_pcie_setup(struct dw_pcie *pci);
->>> +void dw_pcie_iatu_detect(struct dw_pcie *pci);
->>>
->>>    static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32
->> val)
->>>    {
->>>
->>
->> ---
->> Best Regards
->> Kunihiko Hayashi
+If it's doing DMA while suspending, the same error should also happen
+after NVMe is suspended and before PCIe port suspending.
+Furthermore, if non-firmware suspend method is used, there's so such
+issue, so less likely to be any DMA operation.
 
----
-Best Regards
-Kunihiko Hayashi
+>
+> Are we doing something in the wrong order during suspend?  Or maybe
+> resume, since I assume the error is reported during resume?
+
+Yes the error is reported during resume. The suspend/resume order
+seems fine as non-firmware suspend doesn't have this issue.
+
+>
+> If we *do* take the error, why doesn't DPC recovery work?
+
+It works for the root port, but not for the NVMe drive:
+[   50.947816] pcieport 0000:00:1b.0: DPC: containment event,
+status:0x1f01 source:0x0000
+[   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
+[   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error:
+severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver
+ID)
+[   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error
+status/mask=00200000/00010000
+[   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+[   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+[   50.947843] nvme nvme0: frozen state error detected, reset controller
+[   50.948400] ACPI: EC: event unblocked
+[   50.948432] xhci_hcd 0000:00:14.0: PME# disabled
+[   50.948444] xhci_hcd 0000:00:14.0: enabling bus mastering
+[   50.949056] pcieport 0000:00:1b.0: PME# disabled
+[   50.949068] pcieport 0000:00:1c.0: PME# disabled
+[   50.949416] e1000e 0000:00:1f.6: PME# disabled
+[   50.949463] e1000e 0000:00:1f.6: enabling bus mastering
+[   50.951606] sd 0:0:0:0: [sda] Starting disk
+[   50.951610] nvme 0000:01:00.0: can't change power state from D3hot
+to D0 (config space inaccessible)
+[   50.951730] nvme nvme0: Removing after probe failure status: -19
+[   50.952360] nvme nvme0: failed to set APST feature (-19)
+[   50.971136] snd_hda_intel 0000:00:1f.3: PME# disabled
+[   51.089330] pcieport 0000:00:1b.0: AER: broadcast resume message
+[   51.089345] pcieport 0000:00:1b.0: AER: device recovery successful
+
+But I think why recovery doesn't work for NVMe is for another discussion...
+
+Kai-Heng
+
+>
+> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+> > Fixes: 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint")
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> >  drivers/pci/pcie/aer.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 77b0f2c45bc0..0e9a85530ae6 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -1365,6 +1365,22 @@ static int aer_probe(struct pcie_device *dev)
+> >       return 0;
+> >  }
+> >
+> > +static int aer_suspend(struct pcie_device *dev)
+> > +{
+> > +     struct aer_rpc *rpc = get_service_data(dev);
+> > +
+> > +     aer_disable_rootport(rpc);
+> > +     return 0;
+> > +}
+> > +
+> > +static int aer_resume(struct pcie_device *dev)
+> > +{
+> > +     struct aer_rpc *rpc = get_service_data(dev);
+> > +
+> > +     aer_enable_rootport(rpc);
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > @@ -1437,6 +1453,8 @@ static struct pcie_port_service_driver aerdriver = {
+> >       .service        = PCIE_PORT_SERVICE_AER,
+> >
+> >       .probe          = aer_probe,
+> > +     .suspend        = aer_suspend,
+> > +     .resume         = aer_resume,
+> >       .remove         = aer_remove,
+> >  };
+> >
+> > --
+> > 2.29.2
+> >
