@@ -2,89 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9EA30775E
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 14:46:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C736D3077BA
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 15:14:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231222AbhA1NpT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 08:45:19 -0500
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:45540 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbhA1NpS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 08:45:18 -0500
-Received: by mail-wr1-f44.google.com with SMTP id m13so5434924wro.12;
-        Thu, 28 Jan 2021 05:45:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5L/q64E5zQnOnsRdaZ3AFP3jIIvq5gFQ6Mm7DceN5AY=;
-        b=n3FIVIg+hxpFYFKsblUZ+k9XwfNjfc0WAoSDl1okNHTVxY767LT2Bp6OvPiDU+wnKj
-         oO7oviHDzHMGK0JszXNuSD8UvjQm9CeWdLnj5BBsmanoA7nrgLcpjN906DGzIroNVULu
-         JBCFIfMBzVkRyRWBRXkUt8TbUnvlFUpCB/0LYA33fXZ+S/VPw/W3l1hRLfAUS1/PahxB
-         olR2zwu5j1y3x7OccbH1FPa4wv1edHTWGlEVH1901ooRYVuimHKzbV+bPNQs+zuuc0lG
-         vJfizNCi+kGxUqFrnzPd5ELuoBZL8QEqLfw1p+MevGUIqeuJD4jaQtzI6Whwp3kINghI
-         Nf3Q==
-X-Gm-Message-State: AOAM532hBjVvdNcrq68YiEGC0z6jh6V2Ux+SCQjlgWNLGxQ/EDljevas
-        Guc5hZIw+W8YStFiuqeM/kdPYdDPkkVz6kxH
-X-Google-Smtp-Source: ABdhPJygC+zgGvU4QWQf1g9gsoO94MvNzy2kjnFGMjaMUF7o2rgDxP+DYC8yhFb41oSjUkzbWCzAaw==
-X-Received: by 2002:adf:dd81:: with SMTP id x1mr16493158wrl.249.1611841475365;
-        Thu, 28 Jan 2021 05:44:35 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id b3sm6959838wme.32.2021.01.28.05.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Jan 2021 05:44:34 -0800 (PST)
-Date:   Thu, 28 Jan 2021 14:44:33 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Victor Ding <victording@google.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Yicong Yang <yangyicong@hisilicon.com>
-Subject: Re: [PATCH] PCI/ASPM: Disable ASPM when save/restore PCI state
-Message-ID: <YBK/wa2AuwYJ/zTp@rocinante>
-References: <20210128122311.1.I42c1001f8b0eaac973a99e1e5c2170788ee36c9c@changeid>
+        id S229847AbhA1ONu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 09:13:50 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45074 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229677AbhA1ONt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 09:13:49 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10SEC2pA032804;
+        Thu, 28 Jan 2021 08:12:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1611843122;
+        bh=AudpKSlaZboe1uf2RLBPZd0j5l8pLIG2KQCVcoHb/Pk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uPJ7p4RKAidWFI38PN1NVSopf6Q7AB8r16q1edIU8BR6ItGm+4Fdt1N/Y0DtJXhvi
+         q4K257lDVAD5/IKRGm5H8F/CauOzOtcX1Ac6+XDTM5ToStp5yrE69X1RJEFqxm5lw4
+         GBgIKOUbMCy0nGkR07Nk0IT2mcN8fYDJN6RbIFFY=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10SEC2n4026339
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Jan 2021 08:12:02 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ Jan 2021 08:12:02 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 Jan 2021 08:12:02 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10SEBwH7081595;
+        Thu, 28 Jan 2021 08:11:59 -0600
+Subject: Re: [PATCH v2 1/3] PCI: endpoint: Add 'started' to pci_epc to set
+ whether the controller is started
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1611500977-24816-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1611500977-24816-2-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <1253c4c9-4e5e-1456-6475-0334f3bb8634@ti.com>
+Date:   Thu, 28 Jan 2021 19:41:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210128122311.1.I42c1001f8b0eaac973a99e1e5c2170788ee36c9c@changeid>
+In-Reply-To: <1611500977-24816-2-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Victor,
+Hi Kunihiko,
 
-Thank you for working on this!
-
-[...]
->  	i = pci_save_pcie_state(dev);
->  	if (i != 0)
-> -		return i;
-> +		goto Exit;
+On 24/01/21 8:39 pm, Kunihiko Hayashi wrote:
+> This adds a member 'started' as a boolean value to struct pci_epc to set
+> whether the controller is started, and also adds a function to get the
+> value.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/endpoint/pci-epc-core.c | 2 ++
+>  include/linux/pci-epc.h             | 7 +++++++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index cc8f9eb..2904175 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -174,6 +174,7 @@ void pci_epc_stop(struct pci_epc *epc)
 >  
->  	i = pci_save_pcix_state(dev);
->  	if (i != 0)
-> -		return i;
-> +		goto Exit;
-[...]
-> +Exit:
-> +	pcie_restore_aspm_control(dev);
-> +	return i;
+>  	mutex_lock(&epc->lock);
+>  	epc->ops->stop(epc);
+> +	epc->started = false;
+>  	mutex_unlock(&epc->lock);
 >  }
-[...]
+>  EXPORT_SYMBOL_GPL(pci_epc_stop);
+> @@ -196,6 +197,7 @@ int pci_epc_start(struct pci_epc *epc)
+>  
+>  	mutex_lock(&epc->lock);
+>  	ret = epc->ops->start(epc);
+> +	epc->started = true;
+>  	mutex_unlock(&epc->lock);
+>  
+>  	return ret;
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index b82c9b1..5808952 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -131,6 +131,7 @@ struct pci_epc_mem {
+>   * @lock: mutex to protect pci_epc ops
+>   * @function_num_map: bitmap to manage physical function number
+>   * @notifier: used to notify EPF of any EPC events (like linkup)
+> + * @started: true if this EPC is started
+>   */
+>  struct pci_epc {
+>  	struct device			dev;
+> @@ -145,6 +146,7 @@ struct pci_epc {
+>  	struct mutex			lock;
+>  	unsigned long			function_num_map;
+>  	struct atomic_notifier_head	notifier;
+> +	bool				started;
+>  };
+>  
+>  /**
+> @@ -191,6 +193,11 @@ pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
+>  	return atomic_notifier_chain_register(&epc->notifier, nb);
+>  }
+>  
+> +static inline bool pci_epc_is_started(struct pci_epc *epc)
+> +{
+> +	return epc->started;
+> +}
 
-A silly thing, but the goto labels are customary lower-case.
+This should also be protected.
 
-Nonetheless, this is probably something that can be corrected when
-applying, so that you don't need to unnecessarily send a new version
-(unless you will eventually following other reviews, then don't forget
-about it).
-
-Krzysztof
+Thanks
+Kishon
+> +
+>  struct pci_epc *
+>  __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+>  		      struct module *owner);
+> 
