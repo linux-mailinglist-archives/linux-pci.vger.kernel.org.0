@@ -2,60 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F953073F1
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 11:42:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0694E307413
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 11:51:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbhA1Kk3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 05:40:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:56252 "EHLO foss.arm.com"
+        id S229486AbhA1Ks5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 05:48:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:56418 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231289AbhA1Kk2 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Jan 2021 05:40:28 -0500
+        id S229783AbhA1Ksy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 28 Jan 2021 05:48:54 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D1411FB;
-        Thu, 28 Jan 2021 02:39:41 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D5091FB;
+        Thu, 28 Jan 2021 02:48:09 -0800 (PST)
 Received: from e123427-lin.arm.com (unknown [10.57.46.3])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B27E3F766;
-        Thu, 28 Jan 2021 02:39:39 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3A8A3F68F;
+        Thu, 28 Jan 2021 02:48:06 -0800 (PST)
 From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Jonathan Chocron <jonnyc@amazon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>,
+        Toan Le <toan@os.amperecomputing.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] PCI: dwc: remove useless dw_pcie_ops
-Date:   Thu, 28 Jan 2021 10:39:32 +0000
-Message-Id: <161183035514.4271.3911411429293996469.b4-ty@arm.com>
+        linux-arm-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: xgene: Fix CRS SV comment
+Date:   Thu, 28 Jan 2021 10:47:59 +0000
+Message-Id: <161183083785.8020.12831888278176058281.b4-ty@arm.com>
 X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20210128144208.343052f7@xhacker.debian>
-References: <20210128144208.343052f7@xhacker.debian>
+In-Reply-To: <20210126213503.2922848-1-helgaas@kernel.org>
+References: <20210126213503.2922848-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 28 Jan 2021 14:42:13 +0800, Jisheng Zhang wrote:
-> Some designware based device driver especially host only driver may
-> work well with the default read_dbi/write_dbi/link_up implementation
-> in pcie-designware.c, thus remove the assumption to simplify those
-> drivers.
+On Tue, 26 Jan 2021 15:35:03 -0600, Bjorn Helgaas wrote:
+> Configuration Request Retry Status ("CRS") must be supported by all PCIe
+> devices.  CRS Software Visibility is an optional feature that enables a
+> Root Port to make CRS visible to software by returning a special data value
+> to complete a config read.
 > 
-> Since v2:
->   - rebase to the latest pci/dwc
->   - add Acked-by tag
-> 
-> [...]
+> Clarify a comment to say that it is "CRS SV", not "CRS", that can be
+> enabled.
 
-Applied to pci/dwc, thanks!
+Applied to pci/misc, thanks!
 
-[1/2] PCI: dwc: Don't assume the ops in dw_pcie always exists
-      https://git.kernel.org/lpieralisi/pci/c/f2213e5f3b
-[2/2] PCI: dwc: al: Remove useless dw_pcie_ops
-      https://git.kernel.org/lpieralisi/pci/c/05e11f20f5
+[1/1] PCI: xgene: Fix CRS SV comment
+      https://git.kernel.org/lpieralisi/pci/c/cc4a08cd09
 
 Thanks,
 Lorenzo
