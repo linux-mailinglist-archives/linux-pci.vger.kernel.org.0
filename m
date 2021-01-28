@@ -2,151 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA65B30780B
-	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 15:29:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C6E3307816
+	for <lists+linux-pci@lfdr.de>; Thu, 28 Jan 2021 15:33:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229840AbhA1O3f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 09:29:35 -0500
-Received: from mga17.intel.com ([192.55.52.151]:46518 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231586AbhA1O3e (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 28 Jan 2021 09:29:34 -0500
-IronPort-SDR: TiWbAe8k6q2U7d3uPWM4lSyp+yrMTMsx9986JilPAGwQ3owBNfQSPO2wB88gv4g1SZAGFnq4BC
- p2Yx656S6ybA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9877"; a="160012376"
-X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
-   d="scan'208";a="160012376"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2021 06:27:48 -0800
-IronPort-SDR: +PFPIvlRjek6MWrX9uP9iaFFhGEDkOin/OloFocOFfpB2UombOfcu9lElfPgCPSR9ahsCgLNZN
- pBm+PFjtZHqw==
-X-IronPort-AV: E=Sophos;i="5.79,382,1602572400"; 
-   d="scan'208";a="363775047"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2021 06:27:44 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 28 Jan 2021 16:27:42 +0200
-Date:   Thu, 28 Jan 2021 16:27:42 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     mingchuang.qiao@mediatek.com
-Cc:     bhelgaas@google.com, matthias.bgg@gmail.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, haijun.liu@mediatek.com,
-        lambert.wang@mediatek.com, kerun.zhu@mediatek.com,
-        alex.williamson@redhat.com, rjw@rjwysocki.net,
-        utkarsh.h.patel@intel.com
-Subject: Re: [v2] PCI: Avoid unsync of LTR mechanism configuration
-Message-ID: <20210128142742.GV2542@lahna.fi.intel.com>
-References: <20210128100531.2694-1-mingchuang.qiao@mediatek.com>
+        id S231406AbhA1Oaj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 09:30:39 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55014 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231736AbhA1Oa0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 09:30:26 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10SETN9v047348;
+        Thu, 28 Jan 2021 08:29:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1611844163;
+        bh=AGuu1uk59C5HzGmXebO7NHb9zrfqRHugzWkIahYiu10=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fn/nDQQEeysezFrYPuFESi52LVMD4msuMAbTozd9EzdMZAm2OYJ9gdqrCiVZF7sGT
+         mHzPMPAc3FQ50PdXTMzPoi4VjYTexOs0GlXKT2RF9Iw4ghsmQTLfu2TXyzLwTeBTTx
+         1feX7TgOldsJblhISryd8eDOxlVRbBqFnPjeVmZE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10SETNiY056439
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 Jan 2021 08:29:23 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ Jan 2021 08:29:22 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 Jan 2021 08:29:22 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10SETIJQ028665;
+        Thu, 28 Jan 2021 08:29:19 -0600
+Subject: Re: [PATCH v2 3/3] PCI: uniphier-ep: Add EPC restart management
+ support
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1611500977-24816-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1611500977-24816-4-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c5e89789-2dd3-3247-ec85-d54652987e2a@ti.com>
+Date:   Thu, 28 Jan 2021 19:59:17 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210128100531.2694-1-mingchuang.qiao@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1611500977-24816-4-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Kunihiko,
 
-On Thu, Jan 28, 2021 at 06:05:31PM +0800, mingchuang.qiao@mediatek.com wrote:
-> From: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
+On 24/01/21 8:39 pm, Kunihiko Hayashi wrote:
+> Set the polling function and call the init function to enable EPC restart
+> management. The polling function detects that the bus-reset signal is a
+> rising edge.
 > 
-> In bus scan flow, the "LTR Mechanism Enable" bit of DEVCTL2 register is
-> configured in pci_configure_ltr(). If device and bridge both support LTR
-> mechanism, the "LTR Mechanism Enable" bit of device and bridge will be
-> enabled in DEVCTL2 register. And pci_dev->ltr_path will be set as 1.
-> 
-> If PCIe link goes down when device resets, the "LTR Mechanism Enable" bit
-> of bridge will change to 0 according to PCIe r5.0, sec 7.5.3.16. However,
-> the pci_dev->ltr_path value of bridge is still 1.
-> 
-> For following conditions, check and re-configure "LTR Mechanism Enable" bit
-> of bridge to make "LTR Mechanism Enable" bit mtach ltr_path value.
->    -before configuring device's LTR for hot-remove/hot-add
->    -before restoring device's DEVCTL2 register when restore device state
-> 
-> Signed-off-by: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 > ---
-> changes of v2
->  -modify patch description
->  -reconfigure bridge's LTR before restoring device DEVCTL2 register
-> ---
->  drivers/pci/pci.c   | 25 +++++++++++++++++++++++++
->  drivers/pci/probe.c | 19 ++++++++++++++++---
->  2 files changed, 41 insertions(+), 3 deletions(-)
+>  drivers/pci/controller/dwc/Kconfig            |  1 +
+>  drivers/pci/controller/dwc/pcie-uniphier-ep.c | 44 ++++++++++++++++++++++++++-
+>  2 files changed, 44 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index b9fecc25d213..88b4eb70c252 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1437,6 +1437,24 @@ static int pci_save_pcie_state(struct pci_dev *dev)
->  	return 0;
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 22c5529..90d400a 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -302,6 +302,7 @@ config PCIE_UNIPHIER_EP
+>  	depends on OF && HAS_IOMEM
+>  	depends on PCI_ENDPOINT
+>  	select PCIE_DW_EP
+> +	select PCI_ENDPOINT_RESTART
+>  	help
+>  	  Say Y here if you want PCIe endpoint controller support on
+>  	  UniPhier SoCs. This driver supports Pro5 SoC.
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> index 69810c6..9d83850 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+> @@ -26,6 +26,7 @@
+>  #define PCL_RSTCTRL_PIPE3		BIT(0)
+>  
+>  #define PCL_RSTCTRL1			0x0020
+> +#define PCL_RSTCTRL_PERST_MON		BIT(16)
+>  #define PCL_RSTCTRL_PERST		BIT(0)
+>  
+>  #define PCL_RSTCTRL2			0x0024
+> @@ -60,6 +61,7 @@ struct uniphier_pcie_ep_priv {
+>  	struct clk *clk, *clk_gio;
+>  	struct reset_control *rst, *rst_gio;
+>  	struct phy *phy;
+> +	bool bus_reset_status;
+>  	const struct pci_epc_features *features;
+>  };
+>  
+> @@ -212,6 +214,41 @@ uniphier_pcie_get_features(struct dw_pcie_ep *ep)
+>  	return priv->features;
 >  }
 >  
-> +static void pci_reconfigure_bridge_ltr(struct pci_dev *dev)
+> +static bool uniphier_pcie_ep_poll_reset(void *data)
 > +{
-> +#ifdef CONFIG_PCIEASPM
-> +	struct pci_dev *bridge;
-> +	u32 ctl;
+> +	struct uniphier_pcie_ep_priv *priv = data;
+> +	bool ret, status;
 > +
-> +	bridge = pci_upstream_bridge(dev);
-> +	if (bridge && bridge->ltr_path) {
-> +		pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2, &ctl);
-> +		if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
-> +			pci_dbg(bridge, "re-enabling LTR\n");
-> +			pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
-> +						 PCI_EXP_DEVCTL2_LTR_EN);
-> +		}
-> +	}
-> +#endif
+> +	if (!priv)
+> +		return false;
+> +
+> +	status = !(readl(priv->base + PCL_RSTCTRL1) & PCL_RSTCTRL_PERST_MON);
+> +
+> +	/* return true if the rising edge of bus reset is detected */
+> +	ret = !!(status == false && priv->bus_reset_status == true);
+> +	priv->bus_reset_status = status;
+
+I'm still not convinced about having a separate library for restart
+management but shouldn't we reset the function driver on falling edge?
+After the rising edge the host expects the endpoint to be ready.
+
+Why not use the CORE_INIT (core_init_notifier) infrastructure?
+
+Thanks
+Kishon
+
+> +
+> +	return ret;
 > +}
 > +
->  static void pci_restore_pcie_state(struct pci_dev *dev)
->  {
->  	int i = 0;
-> @@ -1447,6 +1465,13 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
->  	if (!save_state)
->  		return;
+> +static int uniphier_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +	int ret;
+> +
+> +	/* Set up epc-restart thread */
+> +	pci_epc_restart_register_poll_func(ep->epc,
+> +					    uniphier_pcie_ep_poll_reset, priv);
+> +	/* With call of poll_reset() directly, initialize internal state */
+> +	uniphier_pcie_ep_poll_reset(priv);
+> +	ret = pci_epc_restart_init(ep->epc);
+> +	if (ret)
+> +		dev_err(pci->dev, "Failed to initialize epc-restart (%d)\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+>  static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
+>  	.ep_init = uniphier_pcie_ep_init,
+>  	.raise_irq = uniphier_pcie_ep_raise_irq,
+> @@ -318,7 +355,12 @@ static int uniphier_pcie_ep_probe(struct platform_device *pdev)
+>  		return ret;
 >  
-> +	/*
-> +	 * Downstream ports reset the LTR enable bit when link goes down.
-> +	 * Check and re-configure the bit here before restoring device.
-> +	 * PCIe r5.0, sec 7.5.3.16.
-> +	 */
-> +	pci_reconfigure_bridge_ltr(dev);
+>  	priv->pci.ep.ops = &uniphier_pcie_ep_ops;
+> -	return dw_pcie_ep_init(&priv->pci.ep);
 > +
->  	cap = (u16 *)&save_state->cap.data[0];
->  	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
->  	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 953f15abc850..4ad172517fd2 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2132,9 +2132,22 @@ static void pci_configure_ltr(struct pci_dev *dev)
->  	 * Complex and all intermediate Switches indicate support for LTR.
->  	 * PCIe r4.0, sec 6.18.
->  	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> -	    ((bridge = pci_upstream_bridge(dev)) &&
-> -	      bridge->ltr_path)) {
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
-> +		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
-> +					 PCI_EXP_DEVCTL2_LTR_EN);
-> +		dev->ltr_path = 1;
-> +		return;
-> +	}
+> +	ret = dw_pcie_ep_init(&priv->pci.ep);
+> +	if (ret)
+> +		return ret;
 > +
-> +	bridge = pci_upstream_bridge(dev);
-> +	if (bridge && bridge->ltr_path) {
-> +		pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2, &ctl);
-> +		if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
-> +			pci_dbg(bridge, "re-enabling LTR\n");
-> +			pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
-> +						 PCI_EXP_DEVCTL2_LTR_EN);
-> +		}
-> +
-
-Can't you use pci_reconfigure_bridge_ltr() here too?
-
-Otherwise looks good.
+> +	return uniphier_pcie_ep_init_complete(&priv->pci.ep);
+>  }
+>  
+>  static const struct pci_epc_features uniphier_pro5_data = {
+> 
