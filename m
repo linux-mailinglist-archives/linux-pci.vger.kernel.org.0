@@ -2,114 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08F67308239
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 01:08:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1BB3082C1
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 01:57:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbhA2AIW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 28 Jan 2021 19:08:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229757AbhA2AIT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 19:08:19 -0500
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09C8C061573;
-        Thu, 28 Jan 2021 16:07:39 -0800 (PST)
-Received: by mail-ot1-x32e.google.com with SMTP id v1so7014862ott.10;
-        Thu, 28 Jan 2021 16:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5ILX5b+RrV4AiVEpHFwN5sXUa5ubqo8Aj21NjAeDVw8=;
-        b=V4GAHau9okbpK6XGG3KiHomAbwbMBxMKryjJwX9TnkZnDtcA6LrdLM2sC/t2zLQPxJ
-         GZzp9qLpHojfqJna7Zdce17l9auN+5WwynFxLmsi/nmB+t3BcaV3lPfeSfK04nmPNOOi
-         VoS7kz9jADhp+43HxTn/9ySNbyFQcrS3viKPcbadbztu1a0u6w/LnOMc03JGVeIFNv9Z
-         niHbtFJs/7nLv4C6YXrOSkS/Z1DlPKIepKi6QR6gXcsVpEUwNUF33tbLLsgE2feZlJYQ
-         sPA3JUos47pVUQ4+kH2zsJCkSqKxbQ+qrlyjiKsHnGJiTufDwASeoiqY0o1eoUdt/NA4
-         90YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5ILX5b+RrV4AiVEpHFwN5sXUa5ubqo8Aj21NjAeDVw8=;
-        b=roi+r+sqyLfUN34qKyWXmrWlQesXl80q+Rn8eLJSG3FDaMwdhHp3Qo3PfEg4jPZ3Bq
-         1mXCDtwhsp2+k+R2bXl9MLpvi+pISa8MG93vEzSTjfaY/WdgpcJQzyPZHevauvB5U5XY
-         NS7aQmthgm83/r0xZiLIo07gfNr+KRBCZSOSaMiO9BtNMtRMR9KKCfmc/hanWrhOZ56T
-         6UvH7O1tC0g/ow4LMIscd+AjHWDKIARz5B68UY0aYFmpjTSAxQzdabEkoPOOxdsxgBMG
-         ajkv9xd+V8WUp8uS5P2yZh/ehgp3HGauZrm1cpOLi6+VNo8/XlA81yXkd6gtAtHpbTDN
-         6PWw==
-X-Gm-Message-State: AOAM530TRiwnH9G/xDSsxs/3aGI0yJB81MQDjz0BNfgt+MIdyc3aZWMI
-        uylzcLJb9bGPsaCahFKthPE=
-X-Google-Smtp-Source: ABdhPJx3ahECZvlnl3YkKKiFHwySpQ25/lyuK31tnlxfD+LWhGsvll2hpWhbtrqgFDjVuWKQG+i1jQ==
-X-Received: by 2002:a9d:4c9a:: with SMTP id m26mr1261144otf.7.1611878859004;
-        Thu, 28 Jan 2021 16:07:39 -0800 (PST)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id r1sm1610314ooq.16.2021.01.28.16.07.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Jan 2021 16:07:38 -0800 (PST)
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-To:     Sinan Kaya <okaya@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-        Alexandru Gagniuc <alex_gagniuc@dellteam.com>,
-        Keith Busch <keith.busch@intel.com>
-Cc:     Jan Vesely <jano.vesely@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Dave Airlie <airlied@gmail.com>,
-        Ben Skeggs <skeggsb@gmail.com>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        "A. Vladimirov" <vladimirov.atanas@gmail.com>
-References: <20210128233929.GA39660@bjorn-Precision-5520>
- <6bfe3128-4f4d-6447-ab91-1bc54a02e16f@kernel.org>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <f6106d30-cbdb-6ba5-8910-086cee92875e@gmail.com>
-Date:   Thu, 28 Jan 2021 18:07:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S231228AbhA2A5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 28 Jan 2021 19:57:09 -0500
+Received: from magic.merlins.org ([209.81.13.136]:38518 "EHLO
+        mail1.merlins.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229627AbhA2A5J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 28 Jan 2021 19:57:09 -0500
+Received: from [204.250.24.206] (port=54620 helo=sauron.svh.merlins.org)
+        by mail1.merlins.org with esmtpsa 
+        (Cipher TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.92 #3)
+        id 1l5I5K-0000Av-Lm by authid <merlins.org> with srv_auth_plain; Thu, 28 Jan 2021 16:56:26 -0800
+Received: from merlin by sauron.svh.merlins.org with local (Exim 4.92)
+        (envelope-from <marc_nouveau@merlins.org>)
+        id 1l5I5K-0008IY-7Q; Thu, 28 Jan 2021 16:56:26 -0800
+Date:   Thu, 28 Jan 2021 16:56:26 -0800
+From:   Marc MERLIN <marc_nouveau@merlins.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     nouveau@lists.freedesktop.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: 5.9.11 still hanging 2mn at each boot and looping on nvidia-gpu
+ 0000:01:00.3: PME# enabled (Quadro RTX 4000 Mobile)
+Message-ID: <20210129005626.GP29348@merlins.org>
 MIME-Version: 1.0
-In-Reply-To: <6bfe3128-4f4d-6447-ab91-1bc54a02e16f@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210128205946.GA27855@bjorn-Precision-5520>
+ <20210127213300.GA3046575@bjorn-Precision-5520>
+X-Sysadmin: BOFH
+X-URL:  http://marc.merlins.org/
+X-Broken-Reverse-DNS: no host name for IP address 204.250.24.206
+X-SA-Exim-Connect-IP: 204.250.24.206
+X-SA-Exim-Mail-From: marc_nouveau@merlins.org
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/28/21 5:51 PM, Sinan Kaya wrote:
-> On 1/28/2021 6:39 PM, Bjorn Helgaas wrote:
->> AFAICT, this thread petered out with no resolution.
->>
->> If the bandwidth change notifications are important to somebody,
->> please speak up, preferably with a patch that makes the notifications
->> disabled by default and adds a parameter to enable them (or some other
->> strategy that makes sense).
->>
->> I think these are potentially useful, so I don't really want to just
->> revert them, but if nobody thinks these are important enough to fix,
->> that's a possibility.
+On Wed, Jan 27, 2021 at 03:33:00PM -0600, Bjorn Helgaas wrote:
+> Hi Marc, I appreciate your persistence on this.  I am frankly
+> surprised that you've put up with this so long.
+ 
+Well, been using linux for 27 years, but also it's not like I have much
+of a choice outside of switching to windows, as tempting as it's getting
+sometimes ;)
+
+> > after boot, when it gets the right trigger (not sure which ones), it
+> > loops on this evern 2 seconds, mostly forever.
+> > 
+> > I'm not sure if it's nouveau's fault or the kernel's PCI PME's fault, or something else.
 > 
-> Hide behind debug or expert option by default? or even mark it as BROKEN
-> until someone fixes it?
+> IIUC there are basically two problems:
 > 
-Instead of making it a config option, wouldn't it be better as a kernel 
-parameter? People encountering this seem quite competent in passing 
-kernel arguments, so having a "pcie_bw_notification=off" would solve 
-their problems.
+>   1) A 2 minute delay during boot
+> Another random thought: is there any chance the boot delay could be
+> related to crypto waiting for entropy?
 
-As far as marking this as broken, I've seen no conclusive evidence of to 
-tell if its a sw bug or actual hardware problem. Could we have a sysfs 
-to disable this on a per-downstream-port basis?
+So, the 2mn hang went away after I added the nouveau firwmare in initrd.
+The only problem is that the nouveau driver does not give a very good
+clue as to what's going on and what to do.
+For comparison the intel iwlwifi driver is very clear about firmware
+it's trying to load, if it can't and what exact firmware you need to
+find on the internet (filename)
 
-e.g.
-     echo 0 > /sys/bus/pci/devices/0000:00:04.0/bw_notification_enabled
+>   2) Some sort of event every 2 seconds that kills your battery life
+> Your machine doesn't sound unusual, and I haven't seen a flood of
+> similar reports, so maybe there's something unusual about your config.
+> But I really don't have any guesses for either one.
 
-This probably won't be ideal if there are many devices downtraining 
-their links ad-hoc. At worst we'd have a way to silence those messages 
-if we do encounter such devices.
+Honestly, there are not too many thinpad P73 running linux out there. I
+wouldn't be surprised if it's only a handful or two.
 
-Alex
+> It sounds like v5.5 worked fine and you first noticed the slow boot
+> problem in v5.8.  We *could* try to bisect it, but I know that's a lot
+> of work on your part.
+
+I've done that in the past, to be honest now that it works after I added
+the firmware that nouveau started needing, and didn't need before, the
+hang at boot is gone for sure.
+The PCI PM wakeup issues on batteries happen sometimes still, but they
+are much more rare now.
+
+> Grasping for any ideas for the boot delay; could you boot with
+> "initcall_debug" and collect your "lsmod" output?  I notice async_tx
+> in some of your logs, but I have no idea what it is.  It's from
+> crypto, so possibly somewhat unusual?
+
+Is this still neeeded? I think of nouveau does a better job of helping
+the user correct the issue if firmware is missing (I think intel even
+gives a URL in printk), that would probably be what's needed for the
+most part.
+
+[   12.832547] async_tx: api initialized (async) comes from ./crypto/async_tx/async_tx.c
+
+Thanks for your answer, let me know if there is anything else useful I
+can give, I think I'm otherwise mostly ok now.
+
+Marc
+-- 
+"A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+ 
+Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
