@@ -2,143 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA023308C9F
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 19:42:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9642308F35
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 22:23:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232579AbhA2Sjj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Jan 2021 13:39:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49443 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231897AbhA2Sji (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Jan 2021 13:39:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611945491;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o6RgsnGWqDbRx7FOfKlaMYyztEsq7mThGPYbon8eyBE=;
-        b=gWLZlXGMxJRgaRnQ+23B0+qqFEZVT6X71yDjvM1tFZmw/QCaGKxYtOUWdnXDaskKc2KODd
-        WkPFRTauKO7POXZSfM1AMxky7YF0aMXtjkssoNkLPZcnWuhd+dD8Yfne76abedR76MdYwL
-        PrhrV9JeHvRNnbODQ/ytheJk94uD000=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-FnU8NuaCP02giqCI5tvXtQ-1; Fri, 29 Jan 2021 13:38:09 -0500
-X-MC-Unique: FnU8NuaCP02giqCI5tvXtQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FC3581CBF3;
-        Fri, 29 Jan 2021 18:38:07 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 93A875D984;
-        Fri, 29 Jan 2021 18:38:05 +0000 (UTC)
-Subject: Re: [PATCH] pci-driver: Add driver load messages
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>, bhelgaas@google.com,
-        corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, mstowe@redhat.com
-References: <20210126151259.GA2886142@bjorn-Precision-5520>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <e2dfcabb-c62b-2823-b2a7-7d54799be183@redhat.com>
-Date:   Fri, 29 Jan 2021 13:38:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S233149AbhA2VVR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Jan 2021 16:21:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232781AbhA2VVP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 29 Jan 2021 16:21:15 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E64D564E06;
+        Fri, 29 Jan 2021 21:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611955234;
+        bh=DM5sQEzyeZQYMcv/NaSI/egJ43G1u2n09nG0uwuL3WY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FIDLV8XNeZ1l66lLMPHxljPeKYJ+ZTJbAuPp+NuXCBWm3PSdSnENF+nfQ0jFSkUdH
+         rY4flYpfbKBikYZPqLhkf3404J5nD2SXAhD96nZIlm5iDiOvNv8/SlQyoFvmHzLR1l
+         VPBDgQr7ML2hLmUydmGT1Jx3f+MK1T3M/5nDhM7WJ8WKeUihNQpsBeO4OP4pXSq5mV
+         rY6d4WPHktV6s9e7rTZMmTTvsGm4b6udTJ5bvAYwWMacud25mDnrWM2FbZY/A00mSK
+         Jt7HnJDWzMqr9wKnDKGe1rfJ8m6lBgerRgJkd8oC68yvvw+svAsp3MFAyRTumRUtdI
+         fKnwI1mz0l4QQ==
+Date:   Fri, 29 Jan 2021 15:20:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marc MERLIN <marc_nouveau@merlins.org>
+Cc:     nouveau@lists.freedesktop.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Subject: Re: 5.9.11 still hanging 2mn at each boot and looping on nvidia-gpu
+ 0000:01:00.3: PME# enabled (Quadro RTX 4000 Mobile)
+Message-ID: <20210129212032.GA99457@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210126151259.GA2886142@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210129005626.GP29348@merlins.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 1/26/21 10:12 AM, Bjorn Helgaas wrote:
-> Hi Prarit,
+On Thu, Jan 28, 2021 at 04:56:26PM -0800, Marc MERLIN wrote:
+> On Wed, Jan 27, 2021 at 03:33:00PM -0600, Bjorn Helgaas wrote:
+> > Hi Marc, I appreciate your persistence on this.  I am frankly
+> > surprised that you've put up with this so long.
+>  
+> Well, been using linux for 27 years, but also it's not like I have much
+> of a choice outside of switching to windows, as tempting as it's getting
+> sometimes ;)
+> 
+> > > after boot, when it gets the right trigger (not sure which ones), it
+> > > loops on this evern 2 seconds, mostly forever.
+> > > 
+> > > I'm not sure if it's nouveau's fault or the kernel's PCI PME's fault, or something else.
+> > 
+> > IIUC there are basically two problems:
+> > 
+> >   1) A 2 minute delay during boot
+> > Another random thought: is there any chance the boot delay could be
+> > related to crypto waiting for entropy?
+> 
+> So, the 2mn hang went away after I added the nouveau firwmare in initrd.
+> The only problem is that the nouveau driver does not give a very good
+> clue as to what's going on and what to do.
 >
-> On Tue, Jan 26, 2021 at 09:05:23AM -0500, Prarit Bhargava wrote:
->> On 1/26/21 8:53 AM, Leon Romanovsky wrote:
->>> On Tue, Jan 26, 2021 at 08:42:12AM -0500, Prarit Bhargava wrote:
->>>> On 1/26/21 8:14 AM, Leon Romanovsky wrote:
->>>>> On Tue, Jan 26, 2021 at 07:54:46AM -0500, Prarit Bhargava wrote:
->>>>>>   Leon Romanovsky <leon@kernel.org> wrote:
->>>>>>> On Mon, Jan 25, 2021 at 02:41:38PM -0500, Prarit Bhargava wrote:
->>>>>>>> There are two situations where driver load messages are helpful.
->>>>>>>>
->>>>>>>> 1) Some drivers silently load on devices and debugging driver or system
->>>>>>>> failures in these cases is difficult.  While some drivers (networking
->>>>>>>> for example) may not completely initialize when the PCI driver probe()
-function
->>>>>>>> has returned, it is still useful to have some idea of driver completion.
->>>>>>>
->>>>>>> Sorry, probably it is me, but I don't understand this use case.
->>>>>>> Are you adding global to whole kernel command line boot argument to debug
->>>>>>> what and when?
->>>>>>>
->>>>>>> During boot:
->>>>>>> If device success, you will see it in /sys/bus/pci/[drivers|devices]/*.
->>>>>>> If device fails, you should get an error from that device (fix the
->>>>>>> device to return an error), or something immediately won't work and
->>>>>>> you won't see it in sysfs.
->>>>>>
->>>>>> What if there is a panic during boot?  There's no way to get to sysfs.
->>>>>> That's the case where this is helpful.
->>>>>
->>>>> How? If you have kernel panic, it means you have much more worse problem
->>>>> than not-supported device. If kernel panic was caused by the driver, you
->>>>> will see call trace related to it. If kernel panic was caused by
->>>>> something else, supported/not supported won't help here.
->>>>
->>>> I still have no idea *WHICH* device it was that the panic occurred on.
->>>
->>> The kernel panic is printed from the driver. There is one driver loaded
->>> for all same PCI devices which are probed without relation to their
->>> number.>
->>> If you have host with ten same cards, you will see one driver and this
->>> is where the problem and not in supported/not-supported device.
->>
->> That's true, but you can also have different cards loading the same driver.
->> See, for example, any PCI_IDs list in a driver.
->>
->> For example,
->>
->> 10:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3008 [Fury] (rev 02)
->> 20:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3108 [Invader]
-(rev 02)
->>
->> Both load the megaraid driver and have different profiles within the
->> driver.  I have no idea which one actually panicked until removing
->> one card.
->>
->> It's MUCH worse when debugging new hardware and getting a panic
->> from, for example, the uncore code which binds to a PCI mapped
->> device.  One device might work and the next one doesn't.  And then
->> you can multiply that by seeing *many* panics at once and trying to
->> determine if the problem was on one specific socket, die, or core.
->
-> Would a dev_panic() interface that identified the device and driver
-> help with this?
+> For comparison the intel iwlwifi driver is very clear about firmware
+> it's trying to load, if it can't and what exact firmware you need to
+> find on the internet (filename)
 
-It would but,
+I guess you're referring to this in iwl_request_firmware()?
 
->
-> For driver_load_messages, it doesn't seem necessarily PCI-specific.
-> If we want a message like that, maybe it could be in
-> driver_probe_device() or similar?  There are already a few pr_debug()
-> calls in that path.  There are some enabled by initcall_debug that
-> include the return value from the probe; would those be close to what
-> you're looking for?
+  IWL_ERR(drv, "check git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git\n"); 
 
-I think this drivers/base/dd.c:727 might suffice.  Let me try some tests
-with that and get back to you.
+How can we fix this in nouveau so we don't have the debug this again?
+I don't really know how firmware loading works, but "git grep -A5
+request_firmware drivers/gpu/drm/nouveau/" shows that we generally
+print something when request_firmware() fails.
 
-Thanks for the pointers,
+But I didn't notice those messages in your logs, so I'm probably
+barking up the wrong tree.
 
-P.
->
-> Bjorn
->
+> >   2) Some sort of event every 2 seconds that kills your battery life
+> > Your machine doesn't sound unusual, and I haven't seen a flood of
+> > similar reports, so maybe there's something unusual about your config.
+> > But I really don't have any guesses for either one.
+> 
+> Honestly, there are not too many thinpad P73 running linux out there. I
+> wouldn't be surprised if it's only a handful or two.
+> 
+> > It sounds like v5.5 worked fine and you first noticed the slow boot
+> > problem in v5.8.  We *could* try to bisect it, but I know that's a lot
+> > of work on your part.
+> 
+> I've done that in the past, to be honest now that it works after I added
+> the firmware that nouveau started needing, and didn't need before, the
+> hang at boot is gone for sure.
+> The PCI PM wakeup issues on batteries happen sometimes still, but they
+> are much more rare now.
 
+So maybe the wakeups are related to having vs not having the nouveau
+firmware?  I'm still curious about that, and it smells like a bug to
+me, but probably something to do with nouveau where I have no hope of
+debugging it.
+
+> > Grasping for any ideas for the boot delay; could you boot with
+> > "initcall_debug" and collect your "lsmod" output?  I notice async_tx
+> > in some of your logs, but I have no idea what it is.  It's from
+> > crypto, so possibly somewhat unusual?
+> 
+> Is this still neeeded? I think of nouveau does a better job of helping
+> the user correct the issue if firmware is missing (I think intel even
+> gives a URL in printk), that would probably be what's needed for the
+> most part.
+
+Nope, don't bother with this, thanks.
+
+Bjorn
