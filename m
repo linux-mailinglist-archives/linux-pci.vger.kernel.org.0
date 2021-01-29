@@ -2,118 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9642308F35
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 22:23:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D530C308FA0
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 22:52:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233149AbhA2VVR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Jan 2021 16:21:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52400 "EHLO mail.kernel.org"
+        id S233199AbhA2VvZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Jan 2021 16:51:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232781AbhA2VVP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 29 Jan 2021 16:21:15 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E64D564E06;
-        Fri, 29 Jan 2021 21:20:33 +0000 (UTC)
+        id S231169AbhA2VvH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 29 Jan 2021 16:51:07 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E617064D7F;
+        Fri, 29 Jan 2021 21:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611955234;
-        bh=DM5sQEzyeZQYMcv/NaSI/egJ43G1u2n09nG0uwuL3WY=;
+        s=k20201202; t=1611957026;
+        bh=vQA5KzxHuphY6TPIp7lU22R5TOoyWqbkWLYbeBGkZ14=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FIDLV8XNeZ1l66lLMPHxljPeKYJ+ZTJbAuPp+NuXCBWm3PSdSnENF+nfQ0jFSkUdH
-         rY4flYpfbKBikYZPqLhkf3404J5nD2SXAhD96nZIlm5iDiOvNv8/SlQyoFvmHzLR1l
-         VPBDgQr7ML2hLmUydmGT1Jx3f+MK1T3M/5nDhM7WJ8WKeUihNQpsBeO4OP4pXSq5mV
-         rY6d4WPHktV6s9e7rTZMmTTvsGm4b6udTJ5bvAYwWMacud25mDnrWM2FbZY/A00mSK
-         Jt7HnJDWzMqr9wKnDKGe1rfJ8m6lBgerRgJkd8oC68yvvw+svAsp3MFAyRTumRUtdI
-         fKnwI1mz0l4QQ==
-Date:   Fri, 29 Jan 2021 15:20:32 -0600
+        b=UoNG+jLwHxo8QHqOKgSc3rRnkDlQ48CKxbj5S472I3pSBMHB+pYY6LbtgVf2RR/dQ
+         BH843idb7uW5lm9u2xOM+0jkB6Wu0da5NE1Xkf33zENWqdyuvJ7Cfpo6deSIqjYReI
+         EsdxLraGuWnG4DAsxHUeOKoMlLZbPeFakfAg5UBIkSPLGSwlRmwHkbYw4JNLpcw27y
+         ngYygTweOJDXyPOe3+CO2/lLnSTEpQmZshSc2Z9DiVq+zZy/YAS4D026oQmZizVksS
+         mxlXPZaqHJpJyl2uk4Mr3eLA5JPLgE/W5O/Z5U9v57QIJjEgFrN/YQWAxcQXMYKsu4
+         S+s7lnurqdnqQ==
+Date:   Fri, 29 Jan 2021 15:50:24 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc MERLIN <marc_nouveau@merlins.org>
-Cc:     nouveau@lists.freedesktop.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: 5.9.11 still hanging 2mn at each boot and looping on nvidia-gpu
- 0000:01:00.3: PME# enabled (Quadro RTX 4000 Mobile)
-Message-ID: <20210129212032.GA99457@bjorn-Precision-5520>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] pcie-qcom: provide a way to power up qca6390 chip
+ on RB5 platform
+Message-ID: <20210129215024.GA113900@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210129005626.GP29348@merlins.org>
+In-Reply-To: <da0ac373-4edb-0230-b264-49697fa3d86a@linaro.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 04:56:26PM -0800, Marc MERLIN wrote:
-> On Wed, Jan 27, 2021 at 03:33:00PM -0600, Bjorn Helgaas wrote:
-> > Hi Marc, I appreciate your persistence on this.  I am frankly
-> > surprised that you've put up with this so long.
->  
-> Well, been using linux for 27 years, but also it's not like I have much
-> of a choice outside of switching to windows, as tempting as it's getting
-> sometimes ;)
-> 
-> > > after boot, when it gets the right trigger (not sure which ones), it
-> > > loops on this evern 2 seconds, mostly forever.
+On Fri, Jan 29, 2021 at 06:45:21AM +0300, Dmitry Baryshkov wrote:
+> On 28/01/2021 22:26, Rob Herring wrote:
+> > On Thu, Jan 28, 2021 at 11:52 AM Dmitry Baryshkov
+> > <dmitry.baryshkov@linaro.org> wrote:
 > > > 
-> > > I'm not sure if it's nouveau's fault or the kernel's PCI PME's fault, or something else.
+> > > Some Qualcomm platforms require to power up an external device before
+> > > probing the PCI bus. E.g. on RB5 platform the QCA6390 WiFi/BT chip needs
+> > > to be powered up before PCIe0 bus is probed. Add a quirk to the
+> > > respective PCIe root bridge to attach to the power domain if one is
+> > > required, so that the QCA chip is started before scanning the PCIe bus.
 > > 
-> > IIUC there are basically two problems:
-> > 
-> >   1) A 2 minute delay during boot
-> > Another random thought: is there any chance the boot delay could be
-> > related to crypto waiting for entropy?
+> > This is solving a generic problem in a specific driver. It needs to be
+> > solved for any PCI host and any device.
 > 
-> So, the 2mn hang went away after I added the nouveau firwmare in initrd.
-> The only problem is that the nouveau driver does not give a very good
-> clue as to what's going on and what to do.
->
-> For comparison the intel iwlwifi driver is very clear about firmware
-> it's trying to load, if it can't and what exact firmware you need to
-> find on the internet (filename)
-
-I guess you're referring to this in iwl_request_firmware()?
-
-  IWL_ERR(drv, "check git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git\n"); 
-
-How can we fix this in nouveau so we don't have the debug this again?
-I don't really know how firmware loading works, but "git grep -A5
-request_firmware drivers/gpu/drm/nouveau/" shows that we generally
-print something when request_firmware() fails.
-
-But I didn't notice those messages in your logs, so I'm probably
-barking up the wrong tree.
-
-> >   2) Some sort of event every 2 seconds that kills your battery life
-> > Your machine doesn't sound unusual, and I haven't seen a flood of
-> > similar reports, so maybe there's something unusual about your config.
-> > But I really don't have any guesses for either one.
+> Ack. I see your point here.
 > 
-> Honestly, there are not too many thinpad P73 running linux out there. I
-> wouldn't be surprised if it's only a handful or two.
+> As this would require porting code from powerpc/spark of-pci code and
+> changing pcie port driver to apply power supply before bus probing happens,
+> I'd also ask for the comments from PCI maintainers. Will that solution be
+> acceptable to you?
+
+I can't say without seeing the code.  I don't know enough about this
+scenario to envision how it might look.
+
+I guess the QCA6390 is a PCIe device?  Why does it need to be powered
+up before probing?  Shouldn't we get a link-up interrupt when it is
+powered up so we could probe it then?
+
+Nit: when changing any file, please take a look at the commit history
+and make yours match, e.g.,
+
+  pcie-qcom: provide a way to power up qca6390 chip on RB5 platform
+
+does not look like:
+
+  PCI: qcom: Add support for configuring BDF to SID mapping for SM8250
+  PCI: qcom: Add SM8250 SoC support
+  PCI: qcom: Make sure PCIe is reset before init for rev 2.1.0
+  PCI: qcom: Replace define with standard value
+  PCI: qcom: Support pci speed set for ipq806x
+  PCI: qcom: Add ipq8064 rev2 variant
+
+Also, if you capitalize it as "QCA6390" in the commit log, do it the
+same in the subject.
+
+> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > ---
+> > >   drivers/pci/controller/dwc/pcie-qcom.c | 21 +++++++++++++++++++++
+> > >   1 file changed, 21 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > index ab21aa01c95d..eb73c8540d4d 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -20,6 +20,7 @@
+> > >   #include <linux/of_device.h>
+> > >   #include <linux/of_gpio.h>
+> > >   #include <linux/pci.h>
+> > > +#include <linux/pm_domain.h>
+> > >   #include <linux/pm_runtime.h>
+> > >   #include <linux/platform_device.h>
+> > >   #include <linux/phy/phy.h>
+> > > @@ -1568,6 +1569,26 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x0302, qcom_fixup_class);
+> > >   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1000, qcom_fixup_class);
+> > >   DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x1001, qcom_fixup_class);
+> > > 
+> > > +static void qcom_fixup_power(struct pci_dev *dev)
+> > > +{
+> > > +       int ret;
+> > > +       struct pcie_port *pp = dev->bus->sysdata;
+> > > +       struct dw_pcie *pci;
+> > > +
+> > > +       if (!pci_is_root_bus(dev->bus))
+> > > +               return;
+> > > +
+> > > +       ret = dev_pm_domain_attach(&dev->dev, true);
+> > > +       if (ret < 0 || !dev->dev.pm_domain)
+> > > +               return;
+> > > +
+> > > +       pci = to_dw_pcie_from_pp(pp);
+> > > +       dev_info(&dev->dev, "Bus powered up, waiting for link to come up\n");
+> > > +
+> > > +       dw_pcie_wait_for_link(pci);
+> > > +}
+> > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, 0x010b, qcom_fixup_power);
+> > > +
+> > >   static struct platform_driver qcom_pcie_driver = {
+> > >          .probe = qcom_pcie_probe,
+> > >          .driver = {
+> > > --
+> > > 2.29.2
+> > > 
 > 
-> > It sounds like v5.5 worked fine and you first noticed the slow boot
-> > problem in v5.8.  We *could* try to bisect it, but I know that's a lot
-> > of work on your part.
 > 
-> I've done that in the past, to be honest now that it works after I added
-> the firmware that nouveau started needing, and didn't need before, the
-> hang at boot is gone for sure.
-> The PCI PM wakeup issues on batteries happen sometimes still, but they
-> are much more rare now.
-
-So maybe the wakeups are related to having vs not having the nouveau
-firmware?  I'm still curious about that, and it smells like a bug to
-me, but probably something to do with nouveau where I have no hope of
-debugging it.
-
-> > Grasping for any ideas for the boot delay; could you boot with
-> > "initcall_debug" and collect your "lsmod" output?  I notice async_tx
-> > in some of your logs, but I have no idea what it is.  It's from
-> > crypto, so possibly somewhat unusual?
-> 
-> Is this still neeeded? I think of nouveau does a better job of helping
-> the user correct the issue if firmware is missing (I think intel even
-> gives a URL in printk), that would probably be what's needed for the
-> most part.
-
-Nope, don't bother with this, thanks.
-
-Bjorn
+> -- 
+> With best wishes
+> Dmitry
