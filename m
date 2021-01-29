@@ -2,91 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CC7B3090B4
-	for <lists+linux-pci@lfdr.de>; Sat, 30 Jan 2021 00:40:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD3A23090C1
+	for <lists+linux-pci@lfdr.de>; Sat, 30 Jan 2021 00:50:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231489AbhA2XkO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Jan 2021 18:40:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
+        id S231199AbhA2Xub (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Jan 2021 18:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231296AbhA2XkM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 29 Jan 2021 18:40:12 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DC77A64DFB;
-        Fri, 29 Jan 2021 23:39:30 +0000 (UTC)
+        id S231183AbhA2Xua (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 29 Jan 2021 18:50:30 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 981A064DF1;
+        Fri, 29 Jan 2021 23:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611963571;
-        bh=ERrJYHFh8Jj6TX3rWZ8jzW16SHBX6admnR8+Rc0W3iA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IhHNVERl3GvC0h6SOMOD/atc+1VsIPS/6gySIr4qlDWRXNI2Gtx91MT0UeXUFVN8i
-         pbAS+FIPkCzaTpf3vZyuMROZgTOaUpu3Vc73G5EYk0jurTdZyX5dsXHba34rvgogvp
-         d7m6bHm/nB4stDF1g8dO3WzoJisodcVOpZQ2+u1oYTaaRK1/N/BuosOjOktII6JBTB
-         tedI5aoh5Hz2EGCwzyEvqwNMFbhSu++SKG46dGiLk4xL/FiYULXGe4a8SwbyXinXem
-         Y2d7UEvSKHFBYOGs4yMdiGvxHHaOUx2GQub5hDTrne9+dXEn3yIKLVaUXv+Kz8Hi//
-         iMNIRbCvPXODQ==
-Received: by mail-ed1-f51.google.com with SMTP id s11so12526061edd.5;
-        Fri, 29 Jan 2021 15:39:30 -0800 (PST)
-X-Gm-Message-State: AOAM530Cpz1KAMEel8DPJcyIdevJ3QxbZf4woGUlZHftxvOtfnKl3H4O
-        3lnpy08menNckY5NodI5WarIB97iDmSsjZPbBA==
-X-Google-Smtp-Source: ABdhPJwj8wUk4PoqlM3tcYKPzYCPGNO0F0zImcCS2wvT5z3jofsqBR0sdYUgKNDBI+L9oGNn3ZsyveDUbiuFp1F4y+o=
-X-Received: by 2002:aa7:d987:: with SMTP id u7mr7891493eds.62.1611963569366;
- Fri, 29 Jan 2021 15:39:29 -0800 (PST)
+        s=k20201202; t=1611964189;
+        bh=bHyYJM7rYjf5CG3Ie3F1ruLwv+EQLpu9ZTUQs5cnxDc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=MjsDm8SUiSeg6YRfsO48BX0463Gep9k6glJkmCdVInyM9bjzFEjBckzKPduMQupuD
+         bxUG/INgM1ytQxttxAKBNQ7L4HpizJLtHLXVayViDThtW8brJCD+FvycvZVdyDUWor
+         g+EykFh0ZORQkYq/qcT9Q25rfjGyQqnyu4aUlVwOCBjfnZtK+aPhJGqQh/Ubg06Gdt
+         aIRmx/XaFi025k5KL1I3H1yQtWKEJ46CAsAvhRbjbBA329iXYJ5omgcm5yjWKq4Wxw
+         iIvDxrh3waeG56PKMYIelXrpzlxwZK870wGQXKG/IW26IQP/NdFLBhEff3LJzUpifU
+         MVboCzc1Qp9vw==
+Date:   Fri, 29 Jan 2021 17:49:46 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Antti =?iso-8859-1?Q?J=E4rvinen?= <antti.jarvinen@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] PCI: quirk for preventing bus reset on TI C667X
+Message-ID: <20210129234946.GA124037@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20210128175225.3102958-1-dmitry.baryshkov@linaro.org>
- <20210128175225.3102958-4-dmitry.baryshkov@linaro.org> <CAL_JsqLRn40h0K-Fze5m1LS2+raLp94LariMkUh7XtekTBT5+Q@mail.gmail.com>
- <da0ac373-4edb-0230-b264-49697fa3d86a@linaro.org>
-In-Reply-To: <da0ac373-4edb-0230-b264-49697fa3d86a@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 29 Jan 2021 17:39:18 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJcBDfa6s7sG0Zho41T7zbVg15GH2WDh+inKNtTs+CcZw@mail.gmail.com>
-Message-ID: <CAL_JsqJcBDfa6s7sG0Zho41T7zbVg15GH2WDh+inKNtTs+CcZw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] pcie-qcom: provide a way to power up qca6390 chip
- on RB5 platform
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <35612e76-0b97-7bb4-60b7-88ae6d53f0be@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 28, 2021 at 9:45 PM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On 28/01/2021 22:26, Rob Herring wrote:
-> > On Thu, Jan 28, 2021 at 11:52 AM Dmitry Baryshkov
-> > <dmitry.baryshkov@linaro.org> wrote:
-> >>
-> >> Some Qualcomm platforms require to power up an external device before
-> >> probing the PCI bus. E.g. on RB5 platform the QCA6390 WiFi/BT chip needs
-> >> to be powered up before PCIe0 bus is probed. Add a quirk to the
-> >> respective PCIe root bridge to attach to the power domain if one is
-> >> required, so that the QCA chip is started before scanning the PCIe bus.
-> >
-> > This is solving a generic problem in a specific driver. It needs to be
-> > solved for any PCI host and any device.
->
-> Ack. I see your point here.
->
-> As this would require porting code from powerpc/spark of-pci code and
-> changing pcie port driver to apply power supply before bus probing
-> happens, I'd also ask for the comments from PCI maintainers. Will that
-> solution be acceptable to you?
+On Tue, Jan 26, 2021 at 01:22:18PM +0200, Antti Järvinen wrote:
+> On 22.1.2021 1.55, Bjorn Helgaas wrote:> 
+> 
+> > It looks like we would probably be trying a Secondary Bus Reset using
+> > the bridge leading to the C667X.  Can you confirm? 
+> 
+> Yes, this is my understanding too.
+> 
+> > Wonder if you
+> > could try doing what pci_reset_secondary_bus() does by hand:
+> > 
+> 
+> I tried this by hand. It looks that result is same as through VFIO.
+> 
+> # cat sbr.sh
+> BRIDGE=10:00.0
+> C667X=11:00.0
+> 
+> setpci -s$C667X VENDOR_ID.w
+> 
+> VAL=$(setpci -s$BRIDGE BRIDGE_CONTROL.w)
+> echo $VAL
+> setpci -s$BRIDGE BRIDGE_CONTROL.w=$(($VAL | 0x40))
+> sleep 1
+> setpci -s$BRIDGE BRIDGE_CONTROL.w=$VAL
+> sleep 1
+> setpci -s$C667X VENDOR_ID.w=0
+> setpci -s$C667X VENDOR_ID.w
+> 
+> 
+> # ./sbr.sh
+> 104c
+> 0003
+> ffff
+> 
+> 
+> >   # BRIDGE=...                              # PCI address, e.g., 00:1c.0
+> >   # C667X=...
+> >   # setpci -s$C667X VENDOR_ID.w
+> >   # setpci -s$BRIDGE BRIDGE_CONTROL.w       # prints "val"
+> >   # setpci -s$BRIDGE BRIDGE_CONTROL.w=      # val | 0x40 (set SBR)
+> >   # sleep 1
+> >   # setpci -s$BRIDGE BRIDGE_CONTROL.w=      # val (clear SBR)
+> >   # sleep 1
+> >   # setpci -s$C667X VENDOR_ID.w=0
+> >   # setpci -s$C667X VENDOR_ID.w
+> > 
+> > If we use this quirk and avoid the reset, I assume that means
+> > assigning the device to VMs with VFIO will leak state between VMs?
+> 
+> I think this is true.
 
-Oh good, something exists. :)
+Alex, is there some warning about situations like this where a device
+may leak state between VMs?
 
-FYI, there's another similar case needing this that just popped up[1].
+There's nothing in quirk_no_bus_reset() itself where we set
+PCI_DEV_FLAGS_NO_BUS_RESET, and nothing in pci_parent_bus_reset() or
+pci_dev_reset_slot_function() where we test it, but I didn't chase
+into VFIO.
 
-Rob
+Seems important enough that we might want to mention it at least once
+and maybe even every time we try to reset the device.  I hope the leak
+isn't completely silent.
 
-[1] https://lore.kernel.org/linux-pci/20210129173057.30288c9d@coco.lan/
+Bjorn
