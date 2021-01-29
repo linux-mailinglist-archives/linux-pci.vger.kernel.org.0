@@ -2,119 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC25308647
-	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 08:13:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78173308A51
+	for <lists+linux-pci@lfdr.de>; Fri, 29 Jan 2021 17:36:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbhA2HMn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 29 Jan 2021 02:12:43 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:14306 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229656AbhA2HMk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 29 Jan 2021 02:12:40 -0500
-X-UUID: 031b914e14c4445e9add05fc0c4e33f5-20210129
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Dotr11xV0I8A+Mm2Qxg7vmqoGowQzsRFthVfYwd5JAo=;
-        b=QW4I0yGsvDJ5T4//G06x+FXkmJBtcv+2artZbMLgAgZMszHGGlpXdU9NBuaKEXPjVuogALecHitM897LGjevq5PbtiRIU3aDHskAdjdMWn1X+sDRnA0huSWgsj/4skGJIbQjy70R6iP054PDx8PJeY8Z5RY3ESOdQqSfzn/DigM=;
-X-UUID: 031b914e14c4445e9add05fc0c4e33f5-20210129
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <mingchuang.qiao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1567695377; Fri, 29 Jan 2021 15:11:52 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 29 Jan
- 2021 15:11:46 +0800
-Received: from mcddlt001.mediatek.inc (10.19.240.15) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 29 Jan 2021 15:11:45 +0800
-From:   <mingchuang.qiao@mediatek.com>
-To:     <bhelgaas@google.com>, <matthias.bgg@gmail.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <mingchuang.qiao@mediatek.com>, <haijun.liu@mediatek.com>,
-        <lambert.wang@mediatek.com>, <kerun.zhu@mediatek.com>,
-        <mika.westerberg@linux.intel.com>, <alex.williamson@redhat.com>,
-        <rjw@rjwysocki.net>, <utkarsh.h.patel@intel.com>
-Subject: [v3] PCI: Avoid unsync of LTR mechanism configuration
-Date:   Fri, 29 Jan 2021 15:11:37 +0800
-Message-ID: <20210129071137.8743-1-mingchuang.qiao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        id S231593AbhA2Qf4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 29 Jan 2021 11:35:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231642AbhA2Qdy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 29 Jan 2021 11:33:54 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A0FC164DFB;
+        Fri, 29 Jan 2021 16:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611937470;
+        bh=rX//8lmNsK9ouUWLaFuelzOZswldJFRqZnwM9SrzbmA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rIdEcRXyknFPg6vCzipnjyc/WTpKmyVlmoOuN2YwQwtLSqPW+EJuS+WD4+mmtmLKX
+         5gwOC0Z/ybiPmQnrOTa5DIRP0EqAkElggSbcll5Mb43sr62i2YUhpexHQULXJat2jy
+         t8gzwcPAlLkFM/HjstxhS06O3sImop4QIX3GpQsMvn/XvnpP0qeTH6ccTQeGbsJFiT
+         43ospAl2b7n4fvB5j2fjm+yxiWBJePUJtikrT7XbZEOnXC501ZBbw0lCpbTd01mHZG
+         8npsCU1Y65UT2PgkQ3xfqqvnU5/rvG4k1Qx5v6xqT3b0Q+eY0XRk4h9Z2RwE7u356y
+         534BjZuz4AGww==
+Date:   Fri, 29 Jan 2021 10:24:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] Fix "ordering" comment typos
+Message-ID: <20210129162428.GA85218@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: D09C1C281E76E7598B4674A7DB4AB076AF2D879ACA6C536492D37C5A40A3E4C32000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210126195042.2909405-1-helgaas@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogTWluZ2NodWFuZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KDQpJ
-biBidXMgc2NhbiBmbG93LCB0aGUgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgb2YgREVWQ1RM
-MiByZWdpc3RlciBpcw0KY29uZmlndXJlZCBpbiBwY2lfY29uZmlndXJlX2x0cigpLiBJZiBkZXZp
-Y2UgYW5kIGJyaWRnZSBib3RoIHN1cHBvcnQgTFRSDQptZWNoYW5pc20sIHRoZSAiTFRSIE1lY2hh
-bmlzbSBFbmFibGUiIGJpdCBvZiBkZXZpY2UgYW5kIGJyaWRnZSB3aWxsIGJlDQplbmFibGVkIGlu
-IERFVkNUTDIgcmVnaXN0ZXIuIEFuZCBwY2lfZGV2LT5sdHJfcGF0aCB3aWxsIGJlIHNldCBhcyAx
-Lg0KDQpJZiBQQ0llIGxpbmsgZ29lcyBkb3duIHdoZW4gZGV2aWNlIHJlc2V0cywgdGhlICJMVFIg
-TWVjaGFuaXNtIEVuYWJsZSIgYml0DQpvZiBicmlkZ2Ugd2lsbCBjaGFuZ2UgdG8gMCBhY2NvcmRp
-bmcgdG8gUENJZSByNS4wLCBzZWMgNy41LjMuMTYuIEhvd2V2ZXIsDQp0aGUgcGNpX2Rldi0+bHRy
-X3BhdGggdmFsdWUgb2YgYnJpZGdlIGlzIHN0aWxsIDEuDQoNCkZvciBmb2xsb3dpbmcgY29uZGl0
-aW9ucywgY2hlY2sgYW5kIHJlLWNvbmZpZ3VyZSAiTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdA0K
-b2YgYnJpZGdlIHRvIG1ha2UgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgbXRhY2ggbHRyX3Bh
-dGggdmFsdWUuDQogICAtYmVmb3JlIGNvbmZpZ3VyaW5nIGRldmljZSdzIExUUiBmb3IgaG90LXJl
-bW92ZS9ob3QtYWRkDQogICAtYmVmb3JlIHJlc3RvcmluZyBkZXZpY2UncyBERVZDVEwyIHJlZ2lz
-dGVyIHdoZW4gcmVzdG9yZSBkZXZpY2Ugc3RhdGUNCg0KU2lnbmVkLW9mZi1ieTogTWluZ2NodWFu
-ZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KLS0tDQpjaGFuZ2VzIG9mIHYy
-DQogLW1vZGlmeSBwYXRjaCBkZXNjcmlwdGlvbg0KIC1yZWNvbmZpZ3VyZSBicmlkZ2UncyBMVFIg
-YmVmb3JlIHJlc3RvcmluZyBkZXZpY2UgREVWQ1RMMiByZWdpc3Rlcg0KY2hhbmdlcyBvZiB2Mw0K
-IC1jYWxsIHBjaV9yZWNvbmZpZ3VyZV9icmlkZ2VfbHRyKCkgaW4gcHJvYmUuYw0KLS0tDQogZHJp
-dmVycy9wY2kvcGNpLmMgICB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysNCiBkcml2ZXJz
-L3BjaS9wY2kuaCAgIHwgIDEgKw0KIGRyaXZlcnMvcGNpL3Byb2JlLmMgfCAxMyArKysrKysrKysr
-LS0tDQogMyBmaWxlcyBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0K
-DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNpLmMgYi9kcml2ZXJzL3BjaS9wY2kuYw0KaW5k
-ZXggYjlmZWNjMjVkMjEzLi4xMmI1NTdjOGYwNjIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BjaS9w
-Y2kuYw0KKysrIGIvZHJpdmVycy9wY2kvcGNpLmMNCkBAIC0xNDM3LDYgKzE0MzcsMjQgQEAgc3Rh
-dGljIGludCBwY2lfc2F2ZV9wY2llX3N0YXRlKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQogCXJldHVy
-biAwOw0KIH0NCiANCit2b2lkIHBjaV9yZWNvbmZpZ3VyZV9icmlkZ2VfbHRyKHN0cnVjdCBwY2lf
-ZGV2ICpkZXYpDQorew0KKyNpZmRlZiBDT05GSUdfUENJRUFTUE0NCisJc3RydWN0IHBjaV9kZXYg
-KmJyaWRnZTsNCisJdTMyIGN0bDsNCisNCisJYnJpZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShk
-ZXYpOw0KKwlpZiAoYnJpZGdlICYmIGJyaWRnZS0+bHRyX3BhdGgpIHsNCisJCXBjaWVfY2FwYWJp
-bGl0eV9yZWFkX2R3b3JkKGJyaWRnZSwgUENJX0VYUF9ERVZDVEwyLCAmY3RsKTsNCisJCWlmICgh
-KGN0bCAmIFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pKSB7DQorCQkJcGNpX2RiZyhicmlkZ2UsICJy
-ZS1lbmFibGluZyBMVFJcbiIpOw0KKwkJCXBjaWVfY2FwYWJpbGl0eV9zZXRfd29yZChicmlkZ2Us
-IFBDSV9FWFBfREVWQ1RMMiwNCisJCQkJCQkgUENJX0VYUF9ERVZDVEwyX0xUUl9FTik7DQorCQl9
-DQorCX0NCisjZW5kaWYNCit9DQorDQogc3RhdGljIHZvaWQgcGNpX3Jlc3RvcmVfcGNpZV9zdGF0
-ZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KIHsNCiAJaW50IGkgPSAwOw0KQEAgLTE0NDcsNiArMTQ2
-NSwxMyBAQCBzdGF0aWMgdm9pZCBwY2lfcmVzdG9yZV9wY2llX3N0YXRlKHN0cnVjdCBwY2lfZGV2
-ICpkZXYpDQogCWlmICghc2F2ZV9zdGF0ZSkNCiAJCXJldHVybjsNCiANCisJLyoNCisJICogRG93
-bnN0cmVhbSBwb3J0cyByZXNldCB0aGUgTFRSIGVuYWJsZSBiaXQgd2hlbiBsaW5rIGdvZXMgZG93
-bi4NCisJICogQ2hlY2sgYW5kIHJlLWNvbmZpZ3VyZSB0aGUgYml0IGhlcmUgYmVmb3JlIHJlc3Rv
-cmluZyBkZXZpY2UuDQorCSAqIFBDSWUgcjUuMCwgc2VjIDcuNS4zLjE2Lg0KKwkgKi8NCisJcGNp
-X3JlY29uZmlndXJlX2JyaWRnZV9sdHIoZGV2KTsNCisNCiAJY2FwID0gKHUxNiAqKSZzYXZlX3N0
-YXRlLT5jYXAuZGF0YVswXTsNCiAJcGNpZV9jYXBhYmlsaXR5X3dyaXRlX3dvcmQoZGV2LCBQQ0lf
-RVhQX0RFVkNUTCwgY2FwW2krK10pOw0KIAlwY2llX2NhcGFiaWxpdHlfd3JpdGVfd29yZChkZXYs
-IFBDSV9FWFBfTE5LQ1RMLCBjYXBbaSsrXSk7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcGNp
-LmggYi9kcml2ZXJzL3BjaS9wY2kuaA0KaW5kZXggNWM1OTM2NTA5MmZhLi5hNjYwYTAxMzU4YzUg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BjaS9wY2kuaA0KKysrIGIvZHJpdmVycy9wY2kvcGNpLmgN
-CkBAIC0xMTEsNiArMTExLDcgQEAgdm9pZCBwY2lfZnJlZV9jYXBfc2F2ZV9idWZmZXJzKHN0cnVj
-dCBwY2lfZGV2ICpkZXYpOw0KIGJvb2wgcGNpX2JyaWRnZV9kM19wb3NzaWJsZShzdHJ1Y3QgcGNp
-X2RldiAqZGV2KTsNCiB2b2lkIHBjaV9icmlkZ2VfZDNfdXBkYXRlKHN0cnVjdCBwY2lfZGV2ICpk
-ZXYpOw0KIHZvaWQgcGNpX2JyaWRnZV93YWl0X2Zvcl9zZWNvbmRhcnlfYnVzKHN0cnVjdCBwY2lf
-ZGV2ICpkZXYpOw0KK3ZvaWQgcGNpX3JlY29uZmlndXJlX2JyaWRnZV9sdHIoc3RydWN0IHBjaV9k
-ZXYgKmRldik7DQogDQogc3RhdGljIGlubGluZSB2b2lkIHBjaV93YWtldXBfZXZlbnQoc3RydWN0
-IHBjaV9kZXYgKmRldikNCiB7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcHJvYmUuYyBiL2Ry
-aXZlcnMvcGNpL3Byb2JlLmMNCmluZGV4IDk1M2YxNWFiYzg1MC4uZmE2MDc1MDkzZjNiIDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy9wY2kvcHJvYmUuYw0KKysrIGIvZHJpdmVycy9wY2kvcHJvYmUuYw0K
-QEAgLTIxMzIsOSArMjEzMiwxNiBAQCBzdGF0aWMgdm9pZCBwY2lfY29uZmlndXJlX2x0cihzdHJ1
-Y3QgcGNpX2RldiAqZGV2KQ0KIAkgKiBDb21wbGV4IGFuZCBhbGwgaW50ZXJtZWRpYXRlIFN3aXRj
-aGVzIGluZGljYXRlIHN1cHBvcnQgZm9yIExUUi4NCiAJICogUENJZSByNC4wLCBzZWMgNi4xOC4N
-CiAJICovDQotCWlmIChwY2lfcGNpZV90eXBlKGRldikgPT0gUENJX0VYUF9UWVBFX1JPT1RfUE9S
-VCB8fA0KLQkgICAgKChicmlkZ2UgPSBwY2lfdXBzdHJlYW1fYnJpZGdlKGRldikpICYmDQotCSAg
-ICAgIGJyaWRnZS0+bHRyX3BhdGgpKSB7DQorCWlmIChwY2lfcGNpZV90eXBlKGRldikgPT0gUENJ
-X0VYUF9UWVBFX1JPT1RfUE9SVCkgew0KKwkJcGNpZV9jYXBhYmlsaXR5X3NldF93b3JkKGRldiwg
-UENJX0VYUF9ERVZDVEwyLA0KKwkJCQkJIFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pOw0KKwkJZGV2
-LT5sdHJfcGF0aCA9IDE7DQorCQlyZXR1cm47DQorCX0NCisNCisJYnJpZGdlID0gcGNpX3Vwc3Ry
-ZWFtX2JyaWRnZShkZXYpOw0KKwlpZiAoYnJpZGdlICYmIGJyaWRnZS0+bHRyX3BhdGgpIHsNCisJ
-CXBjaV9yZWNvbmZpZ3VyZV9icmlkZ2VfbHRyKGRldik7DQogCQlwY2llX2NhcGFiaWxpdHlfc2V0
-X3dvcmQoZGV2LCBQQ0lfRVhQX0RFVkNUTDIsDQogCQkJCQkgUENJX0VYUF9ERVZDVEwyX0xUUl9F
-Tik7DQogCQlkZXYtPmx0cl9wYXRoID0gMTsNCi0tIA0KMi4xOC4wDQo=
+On Tue, Jan 26, 2021 at 01:50:42PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Fix comment typos in "ordering".
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  arch/s390/include/asm/facility.h             | 2 +-
+>  drivers/gpu/drm/qxl/qxl_drv.c                | 2 +-
+>  drivers/net/wireless/intel/iwlwifi/fw/file.h | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> 
+> Unless somebody objects, I'll just merge these typo fixes via the PCI tree.
 
+Applied to pci/misc for v5.12 with acks from Kalle and Vasily.
+
+> diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
+> index 68c476b20b57..91b5d714d28f 100644
+> --- a/arch/s390/include/asm/facility.h
+> +++ b/arch/s390/include/asm/facility.h
+> @@ -44,7 +44,7 @@ static inline int __test_facility(unsigned long nr, void *facilities)
+>  }
+>  
+>  /*
+> - * The test_facility function uses the bit odering where the MSB is bit 0.
+> + * The test_facility function uses the bit ordering where the MSB is bit 0.
+>   * That makes it easier to query facility bits with the bit number as
+>   * documented in the Principles of Operation.
+>   */
+> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+> index 6e7f16f4cec7..dab190a547cc 100644
+> --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> @@ -141,7 +141,7 @@ static void qxl_drm_release(struct drm_device *dev)
+>  
+>  	/*
+>  	 * TODO: qxl_device_fini() call should be in qxl_pci_remove(),
+> -	 * reodering qxl_modeset_fini() + qxl_device_fini() calls is
+> +	 * reordering qxl_modeset_fini() + qxl_device_fini() calls is
+>  	 * non-trivial though.
+>  	 */
+>  	qxl_modeset_fini(qdev);
+> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/file.h b/drivers/net/wireless/intel/iwlwifi/fw/file.h
+> index 597bc88479ba..04fbfe5cbeb0 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/fw/file.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/fw/file.h
+> @@ -866,7 +866,7 @@ struct iwl_fw_dbg_trigger_time_event {
+>   * tx_bar: tid bitmap to configure on what tid the trigger should occur
+>   *	when a BAR is send (for an Rx BlocAck session).
+>   * frame_timeout: tid bitmap to configure on what tid the trigger should occur
+> - *	when a frame times out in the reodering buffer.
+> + *	when a frame times out in the reordering buffer.
+>   */
+>  struct iwl_fw_dbg_trigger_ba {
+>  	__le16 rx_ba_start;
+> -- 
+> 2.25.1
+> 
