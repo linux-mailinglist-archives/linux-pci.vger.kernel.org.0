@@ -2,116 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13A26309CF6
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Jan 2021 15:36:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A85730CEFE
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 23:36:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231277AbhAaOdA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Jan 2021 09:33:00 -0500
-Received: from so15.mailgun.net ([198.61.254.15]:23669 "EHLO so15.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232840AbhAaOZN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 31 Jan 2021 09:25:13 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1612103086; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=is+Y0S6VYuSq/a22S7AdpwgFKHNWJy9S/ugml5uNJWU=; b=f5/6hEYRIFalQEqdmikweoSuMN2JECFP7ynd1WYiqsgde2l/MGCWwGA2drpgxNmYbdpsBGmN
- EVP9AnxflZ4NcbvEPuGXrfunzMymuqHS4xSp8FzZluRoDP4nDkhwwIOEJ8kvB57aGyHiV5iV
- 6ad3yK1DRtpbOcdGhulemFN1B2w=
-X-Mailgun-Sending-Ip: 198.61.254.15
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 6016bc2f7a21b36a9deb2f5f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 31 Jan 2021 14:18:23
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7BDAC433CA; Sun, 31 Jan 2021 14:18:22 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
-        autolearn=no autolearn_force=no version=3.4.0
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7039C433C6;
-        Sun, 31 Jan 2021 14:18:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7039C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] misc: qca639x: add support for QCA639x powerup sequence
-References: <20210128175225.3102958-1-dmitry.baryshkov@linaro.org>
-        <20210128175225.3102958-2-dmitry.baryshkov@linaro.org>
-Date:   Sun, 31 Jan 2021 16:18:16 +0200
-In-Reply-To: <20210128175225.3102958-2-dmitry.baryshkov@linaro.org> (Dmitry
-        Baryshkov's message of "Thu, 28 Jan 2021 20:52:21 +0300")
-Message-ID: <875z3dmbpz.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S235856AbhBBWea (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 17:34:30 -0500
+Received: from [20.39.40.203] ([20.39.40.203]:61037 "EHLO optinix.in"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S230091AbhBBWeU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Feb 2021 17:34:20 -0500
+dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
+        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
+        b=Z/qoYR5e93G/1E5Uh8tLreepyziGYShILI7fcXozE97A3DqZKBadv9kcBZBcmHZnqAUcLkt0g+COxgI6WqJ5gdfKqksQSW540KJaAE4DNiZ+EZYtErJhsiZnZCgjfp9yI8W2dpgN2EsH5zUvgVY6Bl2MWU8ziaGqy1DCXSk4DXXi+2CTtkJX9uQrf2ohPvP7bhav6zr4dJxTQjQYoopWjV3h9j7RqQq/UIXqX3VBjVDZARoXQTZUB0KN0A
+        F7X8DeijiSCFEdYkkdQwasjHi3K0B6KloKBXegK0TgQ39PHt5t2MVnmtmeZadY0DbdImfujjk25mqjLTG700JJRoTl9A==
+Received: from User (Unknown [52.231.31.5])
+        by optinix.in with ESMTP
+        ; Sat, 30 Jan 2021 02:14:15 +0000
+Message-ID: <B0CC978E-0149-4652-A2D0-17DE1F49BCC1@optinix.in>
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <support@digitalsol.in>
+Subject: Re:read
+Date:   Sat, 30 Jan 2021 02:14:13 -0000
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> writes:
+Hello,
 
-> Qualcomm QCA639x is a family of WiFi + Bluetooth SoCs, with BT part
-> being controlled through the UART and WiFi being present on PCIe
-> bus. Both blocks share common power sources. Add device driver handling
-> power sequencing of QCA6390/1.
->
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/misc/Kconfig        |  12 +++
->  drivers/misc/Makefile       |   1 +
->  drivers/misc/qcom-qca639x.c | 164 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 177 insertions(+)
->  create mode 100644 drivers/misc/qcom-qca639x.c
->
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index e90c2524e46c..a14f67ab476c 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -255,6 +255,18 @@ config QCOM_FASTRPC
->  	  applications DSP processor. Say M if you want to enable this
->  	  module.
->  
-> +config QCOM_QCA639X
-> +	tristate "Qualcomm QCA639x WiFi/Bluetooth module support"
-> +	depends on REGULATOR && PM_GENERIC_DOMAINS
-> +	help
-> +	  If you say yes to this option, support will be included for Qualcomm
-> +	  QCA639x family of WiFi and Bluetooth SoCs. Note, this driver supports
-> +	  only power control for this SoC, you still have to enable individual
-> +	  Bluetooth and WiFi drivers.
-> +
-> +	  Say M here if you want to include support for QCA639x chips as a
-> +	  module. This will build a module called "qcom-qca639x".
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-Is this is something you need on ARM platforms? As on x86 this is
-definitely not needed, for example it's enough to load ath11k_pci to get
-QCA6390 Wi-Fi working. I think the documentation should be clarified
-where this QCOM_QCA639X is needed (and it's not needed on normal PCI
-devices).
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Regards,
+Ms. Reem.
+
