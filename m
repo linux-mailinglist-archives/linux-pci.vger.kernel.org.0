@@ -2,83 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AC3F309CD4
-	for <lists+linux-pci@lfdr.de>; Sun, 31 Jan 2021 15:27:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13A26309CF6
+	for <lists+linux-pci@lfdr.de>; Sun, 31 Jan 2021 15:36:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232043AbhAaOWo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Jan 2021 09:22:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231263AbhAaNsW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Jan 2021 08:48:22 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 036DAC061574
-        for <linux-pci@vger.kernel.org>; Sun, 31 Jan 2021 05:47:41 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id g10so13701102wrx.1
-        for <linux-pci@vger.kernel.org>; Sun, 31 Jan 2021 05:47:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kHPDX/mA2r0E6Yt46pEVCGybNvRisrwzhopl+6yNVpU=;
-        b=GhQVznDGmtvLwkayLscQ2S8pJbN1ImCmD2wcAXerJEBdUsXGxNSOxBNjxC3AVBrVW1
-         VJx2phNgnEXEQv/boOUTBLYkfm8lXrPeKIYMHf+OV67/Y07qfZ8/oxCBX1vgWGTiKVjE
-         2ru4okm8lHpf2kzEN6u3Rt82uls05Mx7uN0eTEs0EIwHr1yHe7IKDmm0Xg5XnXxmhYBj
-         pWnbWnBKQgD9ogPKY51l5PghuxCCdnlBO4YzQ/OB6qZ9UUtpTahPJXNILa+VpPTDCTpB
-         VT4iZ7l0iLFeMySs0j4jK2Hoj+O7m7mzNaPsFwWIcP5bPoq4Nc+TjEL+INDO/JHGWKDC
-         RDrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kHPDX/mA2r0E6Yt46pEVCGybNvRisrwzhopl+6yNVpU=;
-        b=IkegBPLRLNKLh7Q7CTC2NBCeU4RCQE2XzpxEQy50RkZxTRHoFGikJwIDpflad1MiAE
-         QYWIn9OO3jCv1HqLABLBLyCwceWPRKriLxORCqFVjvCHDIgrPRGXAx4QD8S+rRV6afol
-         NRZPOoVJT6Z9APPrkUhdSwkN7nwhOeRdSOi/TquIIyGgNJSk/Dai8ai7+k7jeAqVhD3h
-         NN7dkLGRELD1AXC+2+W+Dcz4LANe2/UvO9HpZwKiUxKkjKjdVVZQu2izK5uey36huJbm
-         UJD1++rtf4HWfiNKaHBl6Z7Q55aydjzUS8Dmdoah7FvwH380baMEnh7tM8bLiXgniJNP
-         IziA==
-X-Gm-Message-State: AOAM533n3zoJ1GiBEaxK0e8qW58mpGJHNiJF833lDG/2zs7qXQWFKXkm
-        bi3Q9uZCzgtnWbnQvxAxi1axp1buZhg=
-X-Google-Smtp-Source: ABdhPJxynyFKZ7T+TmuQuEmPrwcfqd9B4oJhZSSuIHZd0cOOUQaL4UFzeqZRxp3FEnsBqWNH2NLrQA==
-X-Received: by 2002:a05:6000:1189:: with SMTP id g9mr13676040wrx.230.1612100860338;
-        Sun, 31 Jan 2021 05:47:40 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f1f:ad00:f567:4a48:ca7a:6e1e? (p200300ea8f1fad00f5674a48ca7a6e1e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:f567:4a48:ca7a:6e1e])
-        by smtp.googlemail.com with ESMTPSA id m184sm19369559wmf.12.2021.01.31.05.47.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 31 Jan 2021 05:47:39 -0800 (PST)
-Subject: Re: [PATCH v2] PCI/VPD: Remove not any longer needed Broadcom NIC
- quirk
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <daa6acdf-5027-62c8-e3fb-125411b018f5@gmail.com>
-Message-ID: <c45e82f0-03ed-397f-474f-30f1a09a5cd6@gmail.com>
-Date:   Sun, 31 Jan 2021 14:47:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S231277AbhAaOdA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 31 Jan 2021 09:33:00 -0500
+Received: from so15.mailgun.net ([198.61.254.15]:23669 "EHLO so15.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232840AbhAaOZN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 31 Jan 2021 09:25:13 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1612103086; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=is+Y0S6VYuSq/a22S7AdpwgFKHNWJy9S/ugml5uNJWU=; b=f5/6hEYRIFalQEqdmikweoSuMN2JECFP7ynd1WYiqsgde2l/MGCWwGA2drpgxNmYbdpsBGmN
+ EVP9AnxflZ4NcbvEPuGXrfunzMymuqHS4xSp8FzZluRoDP4nDkhwwIOEJ8kvB57aGyHiV5iV
+ 6ad3yK1DRtpbOcdGhulemFN1B2w=
+X-Mailgun-Sending-Ip: 198.61.254.15
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 6016bc2f7a21b36a9deb2f5f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 31 Jan 2021 14:18:23
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D7BDAC433CA; Sun, 31 Jan 2021 14:18:22 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+        autolearn=no autolearn_force=no version=3.4.0
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7039C433C6;
+        Sun, 31 Jan 2021 14:18:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7039C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] misc: qca639x: add support for QCA639x powerup sequence
+References: <20210128175225.3102958-1-dmitry.baryshkov@linaro.org>
+        <20210128175225.3102958-2-dmitry.baryshkov@linaro.org>
+Date:   Sun, 31 Jan 2021 16:18:16 +0200
+In-Reply-To: <20210128175225.3102958-2-dmitry.baryshkov@linaro.org> (Dmitry
+        Baryshkov's message of "Thu, 28 Jan 2021 20:52:21 +0300")
+Message-ID: <875z3dmbpz.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <daa6acdf-5027-62c8-e3fb-125411b018f5@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 17.12.2020 21:59, Heiner Kallweit wrote:
-> This quirk was added in 2008 [0] when we didn't have the logic yet to
-> determine VPD size based on checking for the VPD end tag. Now that we
-> have this logic [1] and don't read beyond the end tag this quirk can
-> be removed.
-> 
-> [0] 99cb233d60cb ("PCI: Limit VPD read/write lengths for Broadcom 5706, 5708, 5709 rev.")
-> [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> writes:
 
-This VPD patch and a handful more are still sitting in patchwork as "new".
-I'm inquiring because I have a bigger series of VPD refactoring in my tree
-and wonder whether there's a chance to get it into 5.12
-(being at 5.11-rc6 already).
+> Qualcomm QCA639x is a family of WiFi + Bluetooth SoCs, with BT part
+> being controlled through the UART and WiFi being present on PCIe
+> bus. Both blocks share common power sources. Add device driver handling
+> power sequencing of QCA6390/1.
+>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/misc/Kconfig        |  12 +++
+>  drivers/misc/Makefile       |   1 +
+>  drivers/misc/qcom-qca639x.c | 164 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 177 insertions(+)
+>  create mode 100644 drivers/misc/qcom-qca639x.c
+>
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index e90c2524e46c..a14f67ab476c 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -255,6 +255,18 @@ config QCOM_FASTRPC
+>  	  applications DSP processor. Say M if you want to enable this
+>  	  module.
+>  
+> +config QCOM_QCA639X
+> +	tristate "Qualcomm QCA639x WiFi/Bluetooth module support"
+> +	depends on REGULATOR && PM_GENERIC_DOMAINS
+> +	help
+> +	  If you say yes to this option, support will be included for Qualcomm
+> +	  QCA639x family of WiFi and Bluetooth SoCs. Note, this driver supports
+> +	  only power control for this SoC, you still have to enable individual
+> +	  Bluetooth and WiFi drivers.
+> +
+> +	  Say M here if you want to include support for QCA639x chips as a
+> +	  module. This will build a module called "qcom-qca639x".
+
+Is this is something you need on ARM platforms? As on x86 this is
+definitely not needed, for example it's enough to load ath11k_pci to get
+QCA6390 Wi-Fi working. I think the documentation should be clarified
+where this QCOM_QCA639X is needed (and it's not needed on normal PCI
+devices).
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
