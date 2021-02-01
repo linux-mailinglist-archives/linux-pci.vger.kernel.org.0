@@ -2,102 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09DD930B2B2
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 23:21:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F5A830B2B8
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 23:24:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229623AbhBAWUy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Feb 2021 17:20:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229572AbhBAWUx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Feb 2021 17:20:53 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 469FC64D9D;
-        Mon,  1 Feb 2021 22:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612218012;
-        bh=zyFHqY7Z7ZGLlxb05bgv94Ltfq2qc5kx29hJwa9Zeiw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iW/NL/2DVQsv8vtwctljs747yPoVvEdYa0BZmFr/tD9v0aw8bEkdYYCNws6DGnRLz
-         5GGGJXfwSzg3leHB8N7M0NFSWJ2qf8lErjoVW8vU2RUZRPc8NaBJAgTiDxMGV6u7+i
-         69APl7iVhce33J1v4jVSueHzf78DGF7gtE8qOfqNBOMjJPtbWoF4OfznXULlZ1Dnk9
-         4nhAVNVOCJ589uaCdPXRVLNYiGlM8gz26tCTpJLkGob/+WMmg+hk+g0X8a+/j5lg6D
-         gsOteVM8AC0aurloBNI8hKWdObtSpiLjPSSnkCCcse/Z6eDogDqsuVy7j+KGF5vTyA
-         LeqMFkLc+w5oQ==
-Date:   Mon, 1 Feb 2021 16:20:10 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v2] PCI: Fix Intel i210 by avoiding overlapping of BARs
-Message-ID: <20210201222010.GA31234@bjorn-Precision-5520>
+        id S229530AbhBAWYb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Feb 2021 17:24:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229514AbhBAWY3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Feb 2021 17:24:29 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B21DDC061573
+        for <linux-pci@vger.kernel.org>; Mon,  1 Feb 2021 14:23:49 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id p21so1134291pld.8
+        for <linux-pci@vger.kernel.org>; Mon, 01 Feb 2021 14:23:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=bFIvq1iUBnF2uNTg/XXudUmq/LzMkpvkSS7sgQp5FVU=;
+        b=DGUMvsvgtCsyOu5/4Ulasc7oslinB5t/JcszBUeqsrg01SmgO7CuSlAkMTB+IVPDpp
+         +IMl/nxtXmJKqcIhqAuXke2BJIs0HW5Yg58xHGDP76qtLt4qwzAY1MRtIQHLT1+Aq5NR
+         CV3XEEpjX5pMeXelmer6a1LbnGUxAaQdbTRN0p4wkVDvcm62X3B3VBkeA9U/4fwuiMI4
+         VXaJfjxQ0BUKSnQtejvqxOoV9J4EW5uG68o0W83kyDWnPe+dkNwgDX3kT9keZzcbAhPE
+         TCIa13u2rHfK9e7QIsiEcep21m4J6m3rmoOHu1cjS9eRcMsh2adEd+ryF6V+ydIlwEGA
+         UV9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=bFIvq1iUBnF2uNTg/XXudUmq/LzMkpvkSS7sgQp5FVU=;
+        b=LHebfEcvCLdLUIX3NxXHgVqTDOtonANXr73utgv+46hBUpbwRtaBXov0PUA5kYamqq
+         GIT7+cjkw0EZ7yCAojbazdjctcvlixv3qKqc3u4xz4qRoW38Pakqgcu5Ej5rDzzpIERd
+         gC4RzP8sclT3pbVN6u4pofiMgR9oFAkkVYsao2+plp8JLfaXQV+/jVam0N88Kjp4YVEc
+         qXEaZAgD8QuKpY3WyMD2qGzP25J5GMdPdIiuPI2AvVGGNSpJT1dUa0yZnZIYKG1XrFKW
+         2iKta3V8s52peLMFOCqCE8eip04AdpcemzWOc5ZHCphgwlUF/BHEFukSxTLya8BikQMy
+         z3AQ==
+X-Gm-Message-State: AOAM530FOHqfQZcUm6CnNER/ab9GlXM4cAawGJMdrrrIRefFZ+RlIaSV
+        46wBctvLXNfKEHI+yEUvvLz4R8EuzFns6Q==
+X-Google-Smtp-Source: ABdhPJwMLSpGX0o+h2MFNvOFlmVc1GTAxnAxHJh9h3T5rMGwIj0rIL8nzRGWRD9t80SVGsT5UUpL2w==
+X-Received: by 2002:a17:902:bf44:b029:df:f0eb:cb33 with SMTP id u4-20020a170902bf44b02900dff0ebcb33mr19537849pls.13.1612218229062;
+        Mon, 01 Feb 2021 14:23:49 -0800 (PST)
+Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
+        by smtp.gmail.com with ESMTPSA id 123sm19531753pfd.91.2021.02.01.14.23.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Feb 2021 14:23:48 -0800 (PST)
+Date:   Mon, 1 Feb 2021 14:23:47 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        daniel.lll@alibaba-inc.com,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: Re: [PATCH 03/14] cxl/mem: Find device capabilities
+In-Reply-To: <20210201215857.ud5cpg7hbxj2j5bx@intel.com>
+Message-ID: <b46ed01-3f1-6643-d371-7764c3bde4f8@google.com>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-4-ben.widawsky@intel.com> <234711bf-c03f-9aca-e0b5-ca677add3ea@google.com> <20210201165352.wi7tzpnd4ymxlms4@intel.com> <32f33dd-97a-8b1c-d488-e5198a3d7748@google.com>
+ <20210201215857.ud5cpg7hbxj2j5bx@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8647a2cd4bfbcd42c27183d1c8984a0@walle.cc>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 01, 2021 at 08:49:16PM +0100, Michael Walle wrote:
-> Am 2021-01-17 20:27, schrieb Michael Walle:
-> > Am 2021-01-16 00:57, schrieb Bjorn Helgaas:
-> > > On Wed, Jan 13, 2021 at 12:32:32AM +0100, Michael Walle wrote:
-> > > > Am 2021-01-12 23:58, schrieb Bjorn Helgaas:
-> > > > > On Sat, Jan 09, 2021 at 07:31:46PM +0100, Michael Walle wrote:
-> > > > > > Am 2021-01-08 22:20, schrieb Bjorn Helgaas:
-> > > 
-> > > > > > > 3) If the Intel i210 is defective in how it handles an Expansion ROM
-> > > > > > > that overlaps another BAR, a quirk might be the right fix. But my
-> > > > > > > guess is the device is working correctly per spec and there's
-> > > > > > > something wrong in how firmware/Linux is assigning things.  That would
-> > > > > > > mean we need a more generic fix that's not a quirk and not tied to the
-> > > > > > > Intel i210.
-> > > > > >
-> > > > > > Agreed, but as you already stated (and I've also found that in
-> > > > > > the PCI spec) the Expansion ROM address decoder can be shared by
-> > > > > > the other BARs and it shouldn't matter as long as the ExpROM BAR
-> > > > > > is disabled, which is the case here.
-> > > > >
-> > > > > My point is just that if this could theoretically affect devices
-> > > > > other than the i210, the fix should not be an i210-specific quirk.
-> > > > > I'll assume this is a general problem and wait for a generic PCI
-> > > > > core solution unless it's i210-specific.
+On Mon, 1 Feb 2021, Ben Widawsky wrote:
+
+> > > > > +static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
+> > > > > +{
+> > > > > +	const int cap = cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CAPS_OFFSET);
+> > > > > +
+> > > > > +	cxlm->mbox.payload_size =
+> > > > > +		1 << CXL_GET_FIELD(cap, CXLDEV_MB_CAP_PAYLOAD_SIZE);
+> > > > > +
+> > > > > +	/* 8.2.8.4.3 */
+> > > > > +	if (cxlm->mbox.payload_size < 256) {
+> > > > > +		dev_err(&cxlm->pdev->dev, "Mailbox is too small (%zub)",
+> > > > > +			cxlm->mbox.payload_size);
+> > > > > +		return -ENXIO;
+> > > > > +	}
 > > > > 
-> > > > I guess the culprit here is that linux skips the programming of the
-> > > > BAR because of some broken Matrox card. That should have been a
-> > > > quirk instead, right? But I don't know if we want to change that, do
-> > > > we? How many other cards depend on that?
+> > > > Any reason not to check cxlm->mbox.payload_size > (1 << 20) as well and 
+> > > > return ENXIO if true?
 > > > 
-> > > Oh, right.  There's definitely some complicated history there that
-> > > makes me a little scared to change things.  But it's also unfortunate
-> > > if we have to pile quirks on top of quirks.
+> > > If some crazy vendor wanted to ship a mailbox larger than 1M, why should the
+> > > driver not allow it?
 > > > 
-> > > > And still, how do we find out that the i210 is behaving correctly?
-> > > > In my opinion it is clearly not. You can change the ExpROM BAR value
-> > > > during runtime and it will start working (while keeping it
-> > > > disabled).  Am I missing something here?
-> > > 
-> > > I agree; if the ROM BAR is disabled, I don't think it should matter at
-> > > all what it contains, so this does look like an i210 defect.
-> > > 
-> > > Would you mind trying the patch below?  It should update the ROM BAR
-> > > value even when it is disabled.  With the current pci_enable_rom()
-> > > code that doesn't rely on the value read from the BAR, I *think* this
-> > > should be safe even on the Matrox and similar devices.
 > > 
-> > Your patch will fix my issue:
-> > 
-> > Tested-by: Michael Walle <michael@walle.cc>
+> > Because the spec disallows it :)
 > 
-> any news on this?
+> I don't see it being the driver's responsibility to enforce spec correctness
+> though. In certain cases, I need to use the spec, like I have to pick /some/
+> mailbox timeout. For other cases... 
+> 
+> I'm not too familiar with what other similar drivers may or may not do in
+> situations like this. The current 256 limit is mostly a reflection of that being
+> too small to even support advertised mandatory commands. So things can't work in
+> that scenario, but things can work if they have a larger register size (so long
+> as the BAR advertises enough space).
+> 
 
-Thanks for the reminder.  I was thinking this morning that I need to
-get back to this.  I'm trying to convince myself that doing this
-wouldn't break the problem fixed by 755528c860b0 ("Ignore disabled ROM
-resources at setup").  So far I haven't quite succeeded.
+I don't think things can work above 1MB, either, though.  Section 
+8.2.8.4.5 specifies 20 bits to define the payload length, if this is 
+larger than cxlm->mbox.payload_size it would venture into the reserved 
+bits of the command register.
 
-Bjorn
+So is the idea to allow cxl_mem_setup_mailbox() to succeed with a payload 
+size > 1MB and then only check 20 bits for the command register?
