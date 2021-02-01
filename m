@@ -2,111 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7248030A28F
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 08:20:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF2030A6A4
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 12:35:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbhBAHTI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Feb 2021 02:19:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37586 "EHLO mail.kernel.org"
+        id S229633AbhBALeP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Feb 2021 06:34:15 -0500
+Received: from mga14.intel.com ([192.55.52.115]:32651 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231512AbhBAHTH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Feb 2021 02:19:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4736864DD8;
-        Mon,  1 Feb 2021 07:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612163817;
-        bh=Zwn/mjIhE8KaLzdWcR0nmtPEaa95EKlnI9n3HIC0218=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ul8/WhlnRwOFuGNOmIOg2qsXdwR0FMbdh0lyr8hIKNbJ2hUegMbqxnjf4wmb8PKMR
-         zogaXergaIbHMklrTDNMeyJrrybJW9ETUcMiBarS1Vm3DcFB2XpoZUmWYTu6quZOBL
-         G0h3GJoAVaVRRF4+qjmOPzB/wNUO5wfJ4kyTMdjRtEd0CxhTqXg8hvYnu7UTzIL1nb
-         B/3Qt0H/4B6bRVqt3ncIvOATl77/QmksWaHsaS5xM2S85jjuiwhGhFXRMLgcENGGcI
-         KxIs0iL/s5200ZdWSM9QjzjaWPATdiGGWcUr3I4B6aZ8mHIgXBwwPHmYqFwc75AhEV
-         n5NhVXkVVfhZA==
-Date:   Mon, 1 Feb 2021 12:46:52 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 00/15] dmaengine: dw-edma: HDMA support
-Message-ID: <20210201071652.GN2771@vkoul-mobl>
-References: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
+        id S229519AbhBALeL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Feb 2021 06:34:11 -0500
+IronPort-SDR: B9NYTBIXfFOB2yzS3wD6VUrdX4jxYOfWgXYK4K+wtW7fr7aT/xCvuRxlItVsrVto1npyJO5zpT
+ dWfh2ptSH8rw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9881"; a="179893342"
+X-IronPort-AV: E=Sophos;i="5.79,392,1602572400"; 
+   d="scan'208";a="179893342"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 03:32:24 -0800
+IronPort-SDR: uDBPuBlI6lww5J63dNZScwPZj5Wp4O3+ZRJ32zypyNKkFRd/SLkGKImhOrVRGJNs0b+p9g+lGo
+ 5sw3ScHdaGDQ==
+X-IronPort-AV: E=Sophos;i="5.79,392,1602572400"; 
+   d="scan'208";a="390865226"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 03:32:19 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 01 Feb 2021 13:32:17 +0200
+Date:   Mon, 1 Feb 2021 13:32:17 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     mingchuang.qiao@mediatek.com
+Cc:     bhelgaas@google.com, matthias.bgg@gmail.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, haijun.liu@mediatek.com,
+        lambert.wang@mediatek.com, kerun.zhu@mediatek.com,
+        alex.williamson@redhat.com, rjw@rjwysocki.net,
+        utkarsh.h.patel@intel.com
+Subject: Re: [v3] PCI: Avoid unsync of LTR mechanism configuration
+Message-ID: <20210201113217.GL2542@lahna.fi.intel.com>
+References: <20210129071137.8743-1-mingchuang.qiao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <20210129071137.8743-1-mingchuang.qiao@mediatek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 15-12-20, 18:30, Gustavo Pimentel wrote:
-> This patch series adds the HDMA support, as long the IP design has set
-> the compatible register map parameter, which allows compatibility at
-> some degree for the existing Synopsys DesignWare eDMA driver that is
-> already available on the Kernel.
-> 
-> The HDMA "Hyper-DMA" IP is an enhancement of the eDMA "embedded-DMA" IP.
-> 
-> This new improvement comes with a PCI DVSEC that allows to the driver
-> recognize and switch behavior if it's an eDMA or an HDMA, becoming
-> retrocompatible, in the absence of this DVSEC, the driver will assume
-> that is an eDMA IP.
-> 
-> It also adds the interleaved support, since it will be similar to the
-> current scatter-gather implementation.
-> 
-> As well fixes/improves some abnormal behaviors not detected before, such as:
->  - crash on loading/unloading driver
->  - memory space definition for the data area and for the linked list space
->  - scatter-gather address calculation on 32 bits platforms
->  - minor comment and variable reordering
-> 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> 
-> Gustavo Pimentel (15):
->   dmaengine: dw-edma: Add writeq() and readq() for 64 bits architectures
->   dmaengine: dw-edma: Fix comments offset characters' alignment
->   dmaengine: dw-edma: Add support for the HDMA feature
->   PCI: Add pci_find_vsec_capability() to find a specific VSEC
+Hi,
 
-Had this been picked up.. I see we have dependency on pci patch for this
-series..
+On Fri, Jan 29, 2021 at 03:11:37PM +0800, mingchuang.qiao@mediatek.com wrote:
+> From: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
+> 
+> In bus scan flow, the "LTR Mechanism Enable" bit of DEVCTL2 register is
+> configured in pci_configure_ltr(). If device and bridge both support LTR
+> mechanism, the "LTR Mechanism Enable" bit of device and bridge will be
+> enabled in DEVCTL2 register. And pci_dev->ltr_path will be set as 1.
+> 
+> If PCIe link goes down when device resets, the "LTR Mechanism Enable" bit
+> of bridge will change to 0 according to PCIe r5.0, sec 7.5.3.16. However,
+> the pci_dev->ltr_path value of bridge is still 1.
+> 
+> For following conditions, check and re-configure "LTR Mechanism Enable" bit
+> of bridge to make "LTR Mechanism Enable" bit mtach ltr_path value.
 
->   dmaengine: dw-edma: Add PCIe VSEC data retrieval support
->   dmaengine: dw-edma: Add device_prep_interleave_dma() support
->   dmaengine: dw-edma: Improve number of channels check
->   dmaengine: dw-edma: Reorder variables to keep consistency
->   dmaengine: dw-edma: Improve the linked list and data blocks definition
->   dmaengine: dw-edma: Change linked list and data blocks offset and
->     sizes
->   dmaengine: dw-edma: Move struct dentry variable from static definition
->     into dw_edma struct
->   dmaengine: dw-edma: Fix crash on loading/unloading driver
->   dmaengine: dw-edma: Change DMA abreviation from lower into upper case
->   dmaengine: dw-edma: Revert fix scatter-gather address calculation
->   dmaengine: dw-edma: Add pcim_iomap_table return checker
+Typo mtach -> match.
+
+>    -before configuring device's LTR for hot-remove/hot-add
+>    -before restoring device's DEVCTL2 register when restore device state
 > 
->  drivers/dma/dw-edma/dw-edma-core.c       | 178 +++++++++++-------
->  drivers/dma/dw-edma/dw-edma-core.h       |  37 ++--
->  drivers/dma/dw-edma/dw-edma-pcie.c       | 275 +++++++++++++++++++++-------
->  drivers/dma/dw-edma/dw-edma-v0-core.c    | 300 ++++++++++++++++++++++++-------
->  drivers/dma/dw-edma/dw-edma-v0-core.h    |   2 +-
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  77 ++++----
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.h |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-regs.h    | 291 +++++++++++++++++++-----------
->  drivers/pci/pci.c                        |  29 +++
->  include/linux/pci.h                      |   1 +
->  include/uapi/linux/pci_regs.h            |   5 +
->  11 files changed, 844 insertions(+), 355 deletions(-)
+> Signed-off-by: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
+> ---
+> changes of v2
+>  -modify patch description
+>  -reconfigure bridge's LTR before restoring device DEVCTL2 register
+> changes of v3
+>  -call pci_reconfigure_bridge_ltr() in probe.c
+
+Hmm, which part of this patch takes care of the reset path? It is not
+entirely clear to me at least.
+
+> ---
+>  drivers/pci/pci.c   | 25 +++++++++++++++++++++++++
+>  drivers/pci/pci.h   |  1 +
+>  drivers/pci/probe.c | 13 ++++++++++---
+>  3 files changed, 36 insertions(+), 3 deletions(-)
 > 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index b9fecc25d213..12b557c8f062 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1437,6 +1437,24 @@ static int pci_save_pcie_state(struct pci_dev *dev)
+>  	return 0;
+>  }
+>  
+> +void pci_reconfigure_bridge_ltr(struct pci_dev *dev)
+> +{
+> +#ifdef CONFIG_PCIEASPM
+> +	struct pci_dev *bridge;
+> +	u32 ctl;
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge && bridge->ltr_path) {
+> +		pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2, &ctl);
+> +		if (!(ctl & PCI_EXP_DEVCTL2_LTR_EN)) {
+> +			pci_dbg(bridge, "re-enabling LTR\n");
+> +			pcie_capability_set_word(bridge, PCI_EXP_DEVCTL2,
+> +						 PCI_EXP_DEVCTL2_LTR_EN);
+> +		}
+> +	}
+> +#endif
+> +}
+> +
+>  static void pci_restore_pcie_state(struct pci_dev *dev)
+>  {
+>  	int i = 0;
+> @@ -1447,6 +1465,13 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+>  	if (!save_state)
+>  		return;
+>  
+> +	/*
+> +	 * Downstream ports reset the LTR enable bit when link goes down.
+> +	 * Check and re-configure the bit here before restoring device.
+> +	 * PCIe r5.0, sec 7.5.3.16.
+> +	 */
+> +	pci_reconfigure_bridge_ltr(dev);
+> +
+>  	cap = (u16 *)&save_state->cap.data[0];
+>  	pcie_capability_write_word(dev, PCI_EXP_DEVCTL, cap[i++]);
+>  	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 5c59365092fa..a660a01358c5 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -111,6 +111,7 @@ void pci_free_cap_save_buffers(struct pci_dev *dev);
+>  bool pci_bridge_d3_possible(struct pci_dev *dev);
+>  void pci_bridge_d3_update(struct pci_dev *dev);
+>  void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev);
+> +void pci_reconfigure_bridge_ltr(struct pci_dev *dev);
+
+Nit: calling it pci_bridge_reconfigure_ltr() would match better with the
+other function names.
+
+>  
+>  static inline void pci_wakeup_event(struct pci_dev *dev)
+>  {
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 953f15abc850..fa6075093f3b 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2132,9 +2132,16 @@ static void pci_configure_ltr(struct pci_dev *dev)
+>  	 * Complex and all intermediate Switches indicate support for LTR.
+>  	 * PCIe r4.0, sec 6.18.
+>  	 */
+> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> -	    ((bridge = pci_upstream_bridge(dev)) &&
+> -	      bridge->ltr_path)) {
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) {
+> +		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+> +					 PCI_EXP_DEVCTL2_LTR_EN);
+> +		dev->ltr_path = 1;
+> +		return;
+> +	}
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge && bridge->ltr_path) {
+> +		pci_reconfigure_bridge_ltr(dev);
+>  		pcie_capability_set_word(dev, PCI_EXP_DEVCTL2,
+>  					 PCI_EXP_DEVCTL2_LTR_EN);
+>  		dev->ltr_path = 1;
 > -- 
-> 2.7.4
-
--- 
-~Vinod
+> 2.18.0
