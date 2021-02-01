@@ -2,108 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E2F130B27D
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 23:05:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C47D30B287
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 23:07:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbhBAWC6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Feb 2021 17:02:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbhBAWC4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Feb 2021 17:02:56 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B853CC0613ED
-        for <linux-pci@vger.kernel.org>; Mon,  1 Feb 2021 14:02:15 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id rv9so26740552ejb.13
-        for <linux-pci@vger.kernel.org>; Mon, 01 Feb 2021 14:02:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FHpWXQOSv7s9aWUS8YqFMt0x/4KDBay3sfDCNqdteVQ=;
-        b=yRi8mguQqwGyP74Lz8HnidEorwfF7klt4qQMuE6uyPGrI0nnVf3UO1/tbJR+kWOOGR
-         dWmIQcJgh8tUURN0ieUfGpl3soucjW0wrSDuKx6Y9XL66sU8opnIg7sxdwSNSWp0fLIr
-         nQTxV7ahPPxceFtgJKNxCIJWgLTD7hfKHYxTCqUPpp1scoT0JWUDr3XWsuBhkaWsp2Ko
-         ku9Jrb6DLqZ+8d/xmEcVgGxMbIkRA+sIynA/F4cTTRjVtBfrkLzvKwBPHtBFKCEVpHC4
-         s94dtYIxVabjk/YTMSmQlvYnC5/uXpJNxnnYFAza3R9pXfMZNpwI9PbJpgEUEG7m6ZhM
-         cCjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FHpWXQOSv7s9aWUS8YqFMt0x/4KDBay3sfDCNqdteVQ=;
-        b=VhHGNJqOGnVej4Wp7d68ENHLNkKAcm79m8OEtohY+O6JfQE4AABRww9tG/W9fPEcbg
-         UVdLnOmyGJQmNwLa3HJh9Hlxc8+r0TpEJJFMgGjwgc2ZsiJguWUEpu6DzmMF29VTFle5
-         nWbA+ZyWOKChEd/Ys9HG0Nd+B7+fg6s5jD07OpDlD7ppIq+0RQcgmqbLuo2f/+GAJdxK
-         Qwqy6TTv8tHkMDMHR/FpFnbuphaUOqK1N/NObm/5gpNNHQgI0M7HpLaU9DJQKLBJD8jK
-         AoXtGWdab+YhPs6P9b7B/TEf1XdhM+cSa0pIVFA1Lseisc+uMUe14UkK6m2FM50V2izF
-         tWww==
-X-Gm-Message-State: AOAM532FcY4BUoo7pb2wDtvzGFaKCOS05/6rN3U1mQgwlKQX3sSuOpTz
-        3LQpqsaAm9/OhEJkgZuEXd2l1KG4N6GdwLEEIjP+2g==
-X-Google-Smtp-Source: ABdhPJwx5HQJkiYYzBPXX7BYLe1eriXrLIkYHDMYupmuWFH/I1Xqh4x+vyz3z88NdGsEK2HXTHd3EhXx58RQNYJdZQ8=
-X-Received: by 2002:a17:906:af6b:: with SMTP id os11mr8117536ejb.472.1612216934397;
- Mon, 01 Feb 2021 14:02:14 -0800 (PST)
+        id S229543AbhBAWFK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Feb 2021 17:05:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:40040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230009AbhBAWEV (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Feb 2021 17:04:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B55D1042;
+        Mon,  1 Feb 2021 14:03:19 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.46.207])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 430183F718;
+        Mon,  1 Feb 2021 14:03:16 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Rob Herring <robh@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ntb@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v11 00/17] Implement NTB Controller using multiple PCI EP
+Date:   Mon,  1 Feb 2021 22:03:09 +0000
+Message-Id: <161221695543.9151.8142592721154575298.b4-ty@arm.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20210201195809.7342-1-kishon@ti.com>
+References: <20210201195809.7342-1-kishon@ti.com>
 MIME-Version: 1.0
-References: <20210130002438.1872527-1-ben.widawsky@intel.com>
- <20210130002438.1872527-4-ben.widawsky@intel.com> <234711bf-c03f-9aca-e0b5-ca677add3ea@google.com>
- <20210201165352.wi7tzpnd4ymxlms4@intel.com> <32f33dd-97a-8b1c-d488-e5198a3d7748@google.com>
-In-Reply-To: <32f33dd-97a-8b1c-d488-e5198a3d7748@google.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 1 Feb 2021 14:02:11 -0800
-Message-ID: <CAPcyv4jyojkRqkXPK=ZgMfUATVNUf71GZsgQuarygz4QEM1o-w@mail.gmail.com>
-Subject: Re: [PATCH 03/14] cxl/mem: Find device capabilities
-To:     David Rientjes <rientjes@google.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        daniel.lll@alibaba-inc.com,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 1, 2021 at 1:51 PM David Rientjes <rientjes@google.com> wrote:
->
-> On Mon, 1 Feb 2021, Ben Widawsky wrote:
->
-> > On 21-01-30 15:51:49, David Rientjes wrote:
-> > > On Fri, 29 Jan 2021, Ben Widawsky wrote:
-> > >
-> > > > +static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
-> > > > +{
-> > > > + const int cap = cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CAPS_OFFSET);
-> > > > +
-> > > > + cxlm->mbox.payload_size =
-> > > > +         1 << CXL_GET_FIELD(cap, CXLDEV_MB_CAP_PAYLOAD_SIZE);
-> > > > +
-> > > > + /* 8.2.8.4.3 */
-> > > > + if (cxlm->mbox.payload_size < 256) {
-> > > > +         dev_err(&cxlm->pdev->dev, "Mailbox is too small (%zub)",
-> > > > +                 cxlm->mbox.payload_size);
-> > > > +         return -ENXIO;
-> > > > + }
-> > >
-> > > Any reason not to check cxlm->mbox.payload_size > (1 << 20) as well and
-> > > return ENXIO if true?
-> >
-> > If some crazy vendor wanted to ship a mailbox larger than 1M, why should the
-> > driver not allow it?
-> >
->
-> Because the spec disallows it :)
+On Tue, 2 Feb 2021 01:27:52 +0530, Kishon Vijay Abraham I wrote:
+> This series is about implementing SW defined Non-Transparent Bridge (NTB)
+> using multiple endpoint (EP) instances. This series has been tested using
+> 2 endpoint instances in J7 connected to J7 board on one end and DRA7 board
+> on the other end. However there is nothing platform specific for the NTB
+> functionality.
+> 
+> This was presented in Linux Plumbers Conference. Link to presentation
+> and video can be found @ [1]
+> Created a video demo @ [9]
+> 
+> [...]
 
-Unless it causes an operational failure in practice I'd go with the
-Robustness Principle and be liberal in accepting hardware geometries.
+Applied to pci/ntb, thanks!
+
+[01/17] Documentation: PCI: Add specification for the *PCI NTB* function device
+        https://git.kernel.org/lpieralisi/pci/c/051a6adf6e
+[02/17] PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit BAR
+        https://git.kernel.org/lpieralisi/pci/c/c0527dabcc
+[03/17] PCI: endpoint: Add helper API to get the 'next' unreserved BAR
+        https://git.kernel.org/lpieralisi/pci/c/d91d6ddfd2
+[04/17] PCI: endpoint: Make *_free_bar() to return error codes on failure
+        https://git.kernel.org/lpieralisi/pci/c/b9bdfa3da3
+[05/17] PCI: endpoint: Remove unused pci_epf_match_device()
+        https://git.kernel.org/lpieralisi/pci/c/2872f07cb0
+[06/17] PCI: endpoint: Add support to associate secondary EPC with EPF
+        https://git.kernel.org/lpieralisi/pci/c/6d0b4a7f2c
+[07/17] PCI: endpoint: Add support in configfs to associate two EPCs with EPF
+        https://git.kernel.org/lpieralisi/pci/c/c8e7d97270
+[08/17] PCI: endpoint: Add pci_epc_ops to map MSI irq
+        https://git.kernel.org/lpieralisi/pci/c/2bbb192338
+[09/17] PCI: endpoint: Add pci_epf_ops for epf drivers to expose function specific attrs
+        https://git.kernel.org/lpieralisi/pci/c/cea2edf604
+[10/17] PCI: endpoint: Allow user to create sub-directory of 'EPF Device' directory
+        https://git.kernel.org/lpieralisi/pci/c/1b0ef1c913
+[11/17] PCI: cadence: Implement ->msi_map_irq() ops
+        https://git.kernel.org/lpieralisi/pci/c/743a5d6309
+[12/17] PCI: cadence: Configure LM_EP_FUNC_CFG based on epc->function_num_map
+        https://git.kernel.org/lpieralisi/pci/c/54e9e441b0
+[13/17] PCI: endpoint: Add EP function driver to provide NTB functionality
+        https://git.kernel.org/lpieralisi/pci/c/e9d7f4603e
+[14/17] PCI: Add TI J721E device to pci ids
+        https://git.kernel.org/lpieralisi/pci/c/7aac69682e
+[15/17] NTB: Add support for EPF PCI-Express Non-Transparent Bridge
+        https://git.kernel.org/lpieralisi/pci/c/363baf7d60
+[16/17] Documentation: PCI: Add configfs binding documentation for pci-ntb endpoint function
+        https://git.kernel.org/lpieralisi/pci/c/0456a9cd0a
+[17/17] Documentation: PCI: Add userguide for PCI endpoint NTB function
+        https://git.kernel.org/lpieralisi/pci/c/096ce75bf6
+
+Thanks,
+Lorenzo
