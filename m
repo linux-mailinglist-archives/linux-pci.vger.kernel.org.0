@@ -2,102 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0DE130AFE3
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 19:58:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A87630AFF0
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 20:02:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231587AbhBAS6N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Feb 2021 13:58:13 -0500
-Received: from foss.arm.com ([217.140.110.172]:36580 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229996AbhBAS6L (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Feb 2021 13:58:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE453147A;
-        Mon,  1 Feb 2021 10:57:25 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D6FF3F71A;
-        Mon,  1 Feb 2021 10:57:24 -0800 (PST)
-Date:   Mon, 1 Feb 2021 18:57:19 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Shradha Todi <shradha.t@samsung.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh@kernel.org, bhelgaas@google.com, pankaj.dubey@samsung.com,
-        sriram.dash@samsung.com, niyas.ahmed@samsung.com,
-        p.rajanbabu@samsung.com, l.mehra@samsung.com, hari.tv@samsung.com
-Subject: Re: [PATCH v2] PCI: dwc: Add upper limit address for outbound iATU
-Message-ID: <20210201185719.GA5767@e121166-lin.cambridge.arm.com>
-References: <CGME20210106105019epcas5p377bdbff5cd9e14e5107ccbf2b87b5754@epcas5p3.samsung.com>
- <1609930210-19227-1-git-send-email-shradha.t@samsung.com>
+        id S230273AbhBATCB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Feb 2021 14:02:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229692AbhBATBz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Feb 2021 14:01:55 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B7EC061573
+        for <linux-pci@vger.kernel.org>; Mon,  1 Feb 2021 11:01:14 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id q2so5406645edi.4
+        for <linux-pci@vger.kernel.org>; Mon, 01 Feb 2021 11:01:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C4j8R2NWjOWWuVLjBbyJdPlrlZ/j8TvzFIyUEA+Ndu8=;
+        b=nyzwIexSmOjDJ+JcSNBcdEk6/yXwTc3YKKDydwVmgfPbkLgTinbZm6+ykK0VQzEtXd
+         2FGnsXVks/jQjS4fLAnBKnK11OSqp97qHKPP7ZUqdq9zaUFinHt8zs2HO+5Snar6F84v
+         5kZW9qoTEN+59FePDotW3jAP0kx+s2AOE3I3aKrRS257mRb/6+u9GsKidEMKfGro142s
+         DWpsafh0uFz0iMyedBmo8mVT7/beWRMM3ciL+gitIiUzkwCc6LH/5iwE8X/spV3q0Kbs
+         nPUT/vZZ8B2SFP534Z/VBodBdcFAo7cIr+SWbdYD0ZsBKkAsg8VJmh6BVUYFFwT3Dh2D
+         +6LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C4j8R2NWjOWWuVLjBbyJdPlrlZ/j8TvzFIyUEA+Ndu8=;
+        b=umWv0B5OxLuvg8M7rx3Hg1usgfKI/iRhr9QcfD+wKY5tisrAqyCTOCIfr7YX9WTya2
+         wIPk13W6TbmpHTjUwcBlCjIQL0ypT06c65TNjM6SX9fXxzymGgjbZpNMIlREoxz/6o8K
+         qHhNmjdc6+oH04RsM8jM9Lf5kf4uRf2ItCjB5k3FjEV7hBu1kIFNCcgdaRND9Ab/CoGY
+         oJV/E0JUW9Nw1vVF80Pdp4ElBfL8sVUlp4MQYtrpuw/+lFSEwho7EnbsALYoKEskOCEo
+         c7m2rKQnQSOysYTtz3Pts91PHrNiwNqxwxr2ddkA0RFZir+frzkYa6PLMzyGTAHxMd8L
+         rxAQ==
+X-Gm-Message-State: AOAM532UefywquSxzoEkvsKv8Lmw2hStlxXxlm2iaUnTuOK5DP04U3+f
+        2+Hs5OTokG3/4h396hBVLJwh9jt0lOt3kYUCNbDgxg==
+X-Google-Smtp-Source: ABdhPJynM6kBjwVDj3TQA0+jvvwTHEb3P0qRRcbLVYHUWU+FzxYi6yyx9m7bmpMHOcX1OWvc84NajYIYsO/BTj6o3/4=
+X-Received: by 2002:aa7:cd87:: with SMTP id x7mr21185852edv.210.1612206073657;
+ Mon, 01 Feb 2021 11:01:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1609930210-19227-1-git-send-email-shradha.t@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+ <20210130002438.1872527-9-ben.widawsky@intel.com> <20210201181845.GJ197521@fedora>
+ <20210201183455.3dndfwyswwvs2dlm@intel.com>
+In-Reply-To: <20210201183455.3dndfwyswwvs2dlm@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 1 Feb 2021 11:01:11 -0800
+Message-ID: <CAPcyv4iBbA+PCnTg-hFALuDJNqcJrwwXN_gMEe6z9LZvSfC5hw@mail.gmail.com>
+Subject: Re: [PATCH 08/14] taint: add taint for direct hardware access
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        daniel.lll@alibaba-inc.com,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 06, 2021 at 04:20:10PM +0530, Shradha Todi wrote:
-> The size parameter is unsigned long type which can accept size > 4GB. In
-> that case, the upper limit address must be programmed. Add support to
-> program the upper limit address and set INCREASE_REGION_SIZE in case size >
-> 4GB.
-> 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
-> v1: https://lkml.org/lkml/2020/12/20/187
-> v2:
->    Addressed Rob's review comment and added PCI version check condition to
->    avoid writing to reserved registers.
-> 
->  drivers/pci/controller/dwc/pcie-designware.c | 9 +++++++--
->  drivers/pci/controller/dwc/pcie-designware.h | 1 +
->  2 files changed, 8 insertions(+), 2 deletions(-)
+On Mon, Feb 1, 2021 at 10:35 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> On 21-02-01 13:18:45, Konrad Rzeszutek Wilk wrote:
+> > On Fri, Jan 29, 2021 at 04:24:32PM -0800, Ben Widawsky wrote:
+> > > For drivers that moderate access to the underlying hardware it is
+> > > sometimes desirable to allow userspace to bypass restrictions. Once
+> > > userspace has done this, the driver can no longer guarantee the sanctity
+> > > of either the OS or the hardware. When in this state, it is helpful for
+> > > kernel developers to be made aware (via this taint flag) of this fact
+> > > for subsequent bug reports.
+> > >
+> > > Example usage:
+> > > - Hardware xyzzy accepts 2 commands, waldo and fred.
+> > > - The xyzzy driver provides an interface for using waldo, but not fred.
+> > > - quux is convinced they really need the fred command.
+> > > - xyzzy driver allows quux to frob hardware to initiate fred.
+> >
+> > Would it not be easier to _not_ frob the hardware for fred-operation?
+> > Aka not implement it or just disallow in the first place?
+>
+> Yeah. So the idea is you either are in a transient phase of the command and some
+> future kernel will have real support for fred - or a vendor is being short
+> sighted and not adding support for fred.
+>
+> >
+> >
+> > >   - kernel gets tainted.
+> > > - turns out fred command is borked, and scribbles over memory.
+> > > - developers laugh while closing quux's subsequent bug report.
+> >
+> > Yeah good luck with that theory in-the-field. The customer won't
+> > care about this and will demand a solution for doing fred-operation.
+> >
+> > Just easier to not do fred-operation in the first place,no?
+>
+> The short answer is, in an ideal world you are correct. See nvdimm as an example
+> of the real world.
+>
+> The longer answer. Unless we want to wait until we have all the hardware we're
+> ever going to see, it's impossible to have a fully baked, and validated
+> interface. The RAW interface is my admission that I make no guarantees about
+> being able to provide the perfect interface and giving the power back to the
+> hardware vendors and their driver writers.
+>
+> As an example, suppose a vendor shipped a device with their special vendor
+> opcode. They can enable their customers to use that opcode on any driver
+> version. That seems pretty powerful and worthwhile to me.
+>
 
-Does not apply to my pci/dwc branch, please rebase it on top of it
-and resend it while keeping review tags.
+Powerful, frightening, and questionably worthwhile when there are
+already examples of commands that need extra coordination for whatever
+reason. However, I still think the decision tilts towards allowing
+this given ongoing spec work.
 
-Thanks,
-Lorenzo
+NVDIMM ended up allowing unfettered vendor passthrough given the lack
+of an organizing body to unify vendors. CXL on the other hand appears
+to have more gravity to keep vendors honest. A WARN splat with a
+taint, and a debugfs knob for the truly problematic commands seems
+sufficient protection of system integrity while still following the
+Linux ethos of giving system owners enough rope to make their own
+decisions.
 
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 74590c7..1d62ca9 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -290,12 +290,17 @@ static void __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
->  			   upper_32_bits(cpu_addr));
->  	dw_pcie_writel_dbi(pci, PCIE_ATU_LIMIT,
->  			   lower_32_bits(cpu_addr + size - 1));
-> +	if (pci->version >= 0x460A)
-> +		dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_LIMIT,
-> +				   upper_32_bits(cpu_addr + size - 1));
->  	dw_pcie_writel_dbi(pci, PCIE_ATU_LOWER_TARGET,
->  			   lower_32_bits(pci_addr));
->  	dw_pcie_writel_dbi(pci, PCIE_ATU_UPPER_TARGET,
->  			   upper_32_bits(pci_addr));
-> -	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, type |
-> -			   PCIE_ATU_FUNC_NUM(func_no));
-> +	val = type | PCIE_ATU_FUNC_NUM(func_no);
-> +	val = ((upper_32_bits(size - 1)) && (pci->version >= 0x460A)) ?
-> +		val | PCIE_ATU_INCREASE_REGION_SIZE : val;
-> +	dw_pcie_writel_dbi(pci, PCIE_ATU_CR1, val);
->  	dw_pcie_writel_dbi(pci, PCIE_ATU_CR2, PCIE_ATU_ENABLE);
->  
->  	/*
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 8b905a2..7da79eb 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -102,6 +102,7 @@
->  #define PCIE_ATU_DEV(x)			FIELD_PREP(GENMASK(23, 19), x)
->  #define PCIE_ATU_FUNC(x)		FIELD_PREP(GENMASK(18, 16), x)
->  #define PCIE_ATU_UPPER_TARGET		0x91C
-> +#define PCIE_ATU_UPPER_LIMIT		0x924
->  
->  #define PCIE_MISC_CONTROL_1_OFF		0x8BC
->  #define PCIE_DBI_RO_WR_EN		BIT(0)
-> -- 
-> 2.7.4
-> 
+> Or a more realistic example, we ship a driver that adds a command which is
+> totally broken. Customers can utilize the RAW interface until it gets fixed in a
+> subsequent release which might be quite a ways out.
+>
+> I'll say the RAW interface isn't an encouraged usage, but it's one that I expect
+> to be needed, and if it's not we can always try to kill it later. If nobody is
+> actually using it, nobody will complain, right :D
+
+It might be worthwhile to make RAW support a compile time decision so
+that Linux distros can only ship support for the commands the CXL
+driver-dev community has blessed, but I'll leave it to a distro
+developer to second that approach.
