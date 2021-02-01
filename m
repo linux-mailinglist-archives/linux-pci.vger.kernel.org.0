@@ -2,127 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 290B230A072
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 04:04:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7248030A28F
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 08:20:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231347AbhBADCb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 31 Jan 2021 22:02:31 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:41840 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231336AbhBADCa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 31 Jan 2021 22:02:30 -0500
-X-UUID: 36e3e8bb05c54d0c84966d9b51e58f55-20210201
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4DaRnR0RDonEuYHoySDMzHFlzRHmLObfdyELeUP0L7A=;
-        b=S+hdQzQiqrfQVr9s1EszAIw9rfagaWlpNkmlESTn9a3ymUqbjfmPNgOuJ5S90D5lvDJKYPM4Tka9WewCRRxzDwlxXXblPjuOvdc453wYS+QiitXTJrzbdbtzZ2auNa8KFjm0/oFHgaRS1B9omq0QfMIaFEUJQAw5z1HVcPSZmqA=;
-X-UUID: 36e3e8bb05c54d0c84966d9b51e58f55-20210201
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <mingchuang.qiao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 91236079; Mon, 01 Feb 2021 11:01:35 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 1 Feb
- 2021 11:01:27 +0800
-Received: from [10.19.240.15] (10.19.240.15) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 1 Feb 2021 11:01:26 +0800
-Message-ID: <1612148486.5980.115.camel@mcddlt001>
-Subject: Re: [v2] PCI: Avoid unsync of LTR mechanism configuration
-From:   Mingchuang Qiao <mingchuang.qiao@mediatek.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-CC:     <bhelgaas@google.com>, <matthias.bgg@gmail.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <haijun.liu@mediatek.com>,
-        <lambert.wang@mediatek.com>, <kerun.zhu@mediatek.com>,
-        <alex.williamson@redhat.com>, <rjw@rjwysocki.net>,
-        <utkarsh.h.patel@intel.com>
-Date:   Mon, 1 Feb 2021 11:01:26 +0800
-In-Reply-To: <20210128142742.GV2542@lahna.fi.intel.com>
-References: <20210128100531.2694-1-mingchuang.qiao@mediatek.com>
-         <20210128142742.GV2542@lahna.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S230106AbhBAHTI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Feb 2021 02:19:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231512AbhBAHTH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Feb 2021 02:19:07 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4736864DD8;
+        Mon,  1 Feb 2021 07:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612163817;
+        bh=Zwn/mjIhE8KaLzdWcR0nmtPEaa95EKlnI9n3HIC0218=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ul8/WhlnRwOFuGNOmIOg2qsXdwR0FMbdh0lyr8hIKNbJ2hUegMbqxnjf4wmb8PKMR
+         zogaXergaIbHMklrTDNMeyJrrybJW9ETUcMiBarS1Vm3DcFB2XpoZUmWYTu6quZOBL
+         G0h3GJoAVaVRRF4+qjmOPzB/wNUO5wfJ4kyTMdjRtEd0CxhTqXg8hvYnu7UTzIL1nb
+         B/3Qt0H/4B6bRVqt3ncIvOATl77/QmksWaHsaS5xM2S85jjuiwhGhFXRMLgcENGGcI
+         KxIs0iL/s5200ZdWSM9QjzjaWPATdiGGWcUr3I4B6aZ8mHIgXBwwPHmYqFwc75AhEV
+         n5NhVXkVVfhZA==
+Date:   Mon, 1 Feb 2021 12:46:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 00/15] dmaengine: dw-edma: HDMA support
+Message-ID: <20210201071652.GN2771@vkoul-mobl>
+References: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: F3737F1BBDFC02D87822EE46E76318472CAB920FD28DF5C228C7598C6FB5B9F92000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDIxLTAxLTI4IGF0IDE2OjI3ICswMjAwLCBNaWthIFdlc3RlcmJlcmcgd3JvdGU6
-DQo+IEhpLA0KPiANCj4gT24gVGh1LCBKYW4gMjgsIDIwMjEgYXQgMDY6MDU6MzFQTSArMDgwMCwg
-bWluZ2NodWFuZy5xaWFvQG1lZGlhdGVrLmNvbSB3cm90ZToNCj4gPiBGcm9tOiBNaW5nY2h1YW5n
-IFFpYW8gPG1pbmdjaHVhbmcucWlhb0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gSW4gYnVzIHNj
-YW4gZmxvdywgdGhlICJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0IG9mIERFVkNUTDIgcmVnaXN0
-ZXIgaXMNCj4gPiBjb25maWd1cmVkIGluIHBjaV9jb25maWd1cmVfbHRyKCkuIElmIGRldmljZSBh
-bmQgYnJpZGdlIGJvdGggc3VwcG9ydCBMVFINCj4gPiBtZWNoYW5pc20sIHRoZSAiTFRSIE1lY2hh
-bmlzbSBFbmFibGUiIGJpdCBvZiBkZXZpY2UgYW5kIGJyaWRnZSB3aWxsIGJlDQo+ID4gZW5hYmxl
-ZCBpbiBERVZDVEwyIHJlZ2lzdGVyLiBBbmQgcGNpX2Rldi0+bHRyX3BhdGggd2lsbCBiZSBzZXQg
-YXMgMS4NCj4gPiANCj4gPiBJZiBQQ0llIGxpbmsgZ29lcyBkb3duIHdoZW4gZGV2aWNlIHJlc2V0
-cywgdGhlICJMVFIgTWVjaGFuaXNtIEVuYWJsZSIgYml0DQo+ID4gb2YgYnJpZGdlIHdpbGwgY2hh
-bmdlIHRvIDAgYWNjb3JkaW5nIHRvIFBDSWUgcjUuMCwgc2VjIDcuNS4zLjE2LiBIb3dldmVyLA0K
-PiA+IHRoZSBwY2lfZGV2LT5sdHJfcGF0aCB2YWx1ZSBvZiBicmlkZ2UgaXMgc3RpbGwgMS4NCj4g
-PiANCj4gPiBGb3IgZm9sbG93aW5nIGNvbmRpdGlvbnMsIGNoZWNrIGFuZCByZS1jb25maWd1cmUg
-IkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQNCj4gPiBvZiBicmlkZ2UgdG8gbWFrZSAiTFRSIE1l
-Y2hhbmlzbSBFbmFibGUiIGJpdCBtdGFjaCBsdHJfcGF0aCB2YWx1ZS4NCj4gPiAgICAtYmVmb3Jl
-IGNvbmZpZ3VyaW5nIGRldmljZSdzIExUUiBmb3IgaG90LXJlbW92ZS9ob3QtYWRkDQo+ID4gICAg
-LWJlZm9yZSByZXN0b3JpbmcgZGV2aWNlJ3MgREVWQ1RMMiByZWdpc3RlciB3aGVuIHJlc3RvcmUg
-ZGV2aWNlIHN0YXRlDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWluZ2NodWFuZyBRaWFvIDxt
-aW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+IGNoYW5nZXMgb2YgdjIN
-Cj4gPiAgLW1vZGlmeSBwYXRjaCBkZXNjcmlwdGlvbg0KPiA+ICAtcmVjb25maWd1cmUgYnJpZGdl
-J3MgTFRSIGJlZm9yZSByZXN0b3JpbmcgZGV2aWNlIERFVkNUTDIgcmVnaXN0ZXINCj4gPiAtLS0N
-Cj4gPiAgZHJpdmVycy9wY2kvcGNpLmMgICB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysN
-Cj4gPiAgZHJpdmVycy9wY2kvcHJvYmUuYyB8IDE5ICsrKysrKysrKysrKysrKystLS0NCj4gPiAg
-MiBmaWxlcyBjaGFuZ2VkLCA0MSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+IA0K
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9wY2kuYyBiL2RyaXZlcnMvcGNpL3BjaS5jDQo+
-ID4gaW5kZXggYjlmZWNjMjVkMjEzLi44OGI0ZWI3MGMyNTIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJp
-dmVycy9wY2kvcGNpLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9wY2kuYw0KPiA+IEBAIC0xNDM3
-LDYgKzE0MzcsMjQgQEAgc3RhdGljIGludCBwY2lfc2F2ZV9wY2llX3N0YXRlKHN0cnVjdCBwY2lf
-ZGV2ICpkZXYpDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICANCj4gPiArc3RhdGljIHZv
-aWQgcGNpX3JlY29uZmlndXJlX2JyaWRnZV9sdHIoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gPiAr
-ew0KPiA+ICsjaWZkZWYgQ09ORklHX1BDSUVBU1BNDQo+ID4gKwlzdHJ1Y3QgcGNpX2RldiAqYnJp
-ZGdlOw0KPiA+ICsJdTMyIGN0bDsNCj4gPiArDQo+ID4gKwlicmlkZ2UgPSBwY2lfdXBzdHJlYW1f
-YnJpZGdlKGRldik7DQo+ID4gKwlpZiAoYnJpZGdlICYmIGJyaWRnZS0+bHRyX3BhdGgpIHsNCj4g
-PiArCQlwY2llX2NhcGFiaWxpdHlfcmVhZF9kd29yZChicmlkZ2UsIFBDSV9FWFBfREVWQ1RMMiwg
-JmN0bCk7DQo+ID4gKwkJaWYgKCEoY3RsICYgUENJX0VYUF9ERVZDVEwyX0xUUl9FTikpIHsNCj4g
-PiArCQkJcGNpX2RiZyhicmlkZ2UsICJyZS1lbmFibGluZyBMVFJcbiIpOw0KPiA+ICsJCQlwY2ll
-X2NhcGFiaWxpdHlfc2V0X3dvcmQoYnJpZGdlLCBQQ0lfRVhQX0RFVkNUTDIsDQo+ID4gKwkJCQkJ
-CSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKTsNCj4gPiArCQl9DQo+ID4gKwl9DQo+ID4gKyNlbmRp
-Zg0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgdm9pZCBwY2lfcmVzdG9yZV9wY2llX3N0YXRl
-KHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4gIHsNCj4gPiAgCWludCBpID0gMDsNCj4gPiBAQCAt
-MTQ0Nyw2ICsxNDY1LDEzIEBAIHN0YXRpYyB2b2lkIHBjaV9yZXN0b3JlX3BjaWVfc3RhdGUoc3Ry
-dWN0IHBjaV9kZXYgKmRldikNCj4gPiAgCWlmICghc2F2ZV9zdGF0ZSkNCj4gPiAgCQlyZXR1cm47
-DQo+ID4gIA0KPiA+ICsJLyoNCj4gPiArCSAqIERvd25zdHJlYW0gcG9ydHMgcmVzZXQgdGhlIExU
-UiBlbmFibGUgYml0IHdoZW4gbGluayBnb2VzIGRvd24uDQo+ID4gKwkgKiBDaGVjayBhbmQgcmUt
-Y29uZmlndXJlIHRoZSBiaXQgaGVyZSBiZWZvcmUgcmVzdG9yaW5nIGRldmljZS4NCj4gPiArCSAq
-IFBDSWUgcjUuMCwgc2VjIDcuNS4zLjE2Lg0KPiA+ICsJICovDQo+ID4gKwlwY2lfcmVjb25maWd1
-cmVfYnJpZGdlX2x0cihkZXYpOw0KPiA+ICsNCj4gPiAgCWNhcCA9ICh1MTYgKikmc2F2ZV9zdGF0
-ZS0+Y2FwLmRhdGFbMF07DQo+ID4gIAlwY2llX2NhcGFiaWxpdHlfd3JpdGVfd29yZChkZXYsIFBD
-SV9FWFBfREVWQ1RMLCBjYXBbaSsrXSk7DQo+ID4gIAlwY2llX2NhcGFiaWxpdHlfd3JpdGVfd29y
-ZChkZXYsIFBDSV9FWFBfTE5LQ1RMLCBjYXBbaSsrXSk7DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvcGNpL3Byb2JlLmMgYi9kcml2ZXJzL3BjaS9wcm9iZS5jDQo+ID4gaW5kZXggOTUzZjE1YWJj
-ODUwLi40YWQxNzI1MTdmZDIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvcHJvYmUuYw0K
-PiA+ICsrKyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMNCj4gPiBAQCAtMjEzMiw5ICsyMTMyLDIyIEBA
-IHN0YXRpYyB2b2lkIHBjaV9jb25maWd1cmVfbHRyKHN0cnVjdCBwY2lfZGV2ICpkZXYpDQo+ID4g
-IAkgKiBDb21wbGV4IGFuZCBhbGwgaW50ZXJtZWRpYXRlIFN3aXRjaGVzIGluZGljYXRlIHN1cHBv
-cnQgZm9yIExUUi4NCj4gPiAgCSAqIFBDSWUgcjQuMCwgc2VjIDYuMTguDQo+ID4gIAkgKi8NCj4g
-PiAtCWlmIChwY2lfcGNpZV90eXBlKGRldikgPT0gUENJX0VYUF9UWVBFX1JPT1RfUE9SVCB8fA0K
-PiA+IC0JICAgICgoYnJpZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShkZXYpKSAmJg0KPiA+IC0J
-ICAgICAgYnJpZGdlLT5sdHJfcGF0aCkpIHsNCj4gPiArCWlmIChwY2lfcGNpZV90eXBlKGRldikg
-PT0gUENJX0VYUF9UWVBFX1JPT1RfUE9SVCkgew0KPiA+ICsJCXBjaWVfY2FwYWJpbGl0eV9zZXRf
-d29yZChkZXYsIFBDSV9FWFBfREVWQ1RMMiwNCj4gPiArCQkJCQkgUENJX0VYUF9ERVZDVEwyX0xU
-Ul9FTik7DQo+ID4gKwkJZGV2LT5sdHJfcGF0aCA9IDE7DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJ
-fQ0KPiA+ICsNCj4gPiArCWJyaWRnZSA9IHBjaV91cHN0cmVhbV9icmlkZ2UoZGV2KTsNCj4gPiAr
-CWlmIChicmlkZ2UgJiYgYnJpZGdlLT5sdHJfcGF0aCkgew0KPiA+ICsJCXBjaWVfY2FwYWJpbGl0
-eV9yZWFkX2R3b3JkKGJyaWRnZSwgUENJX0VYUF9ERVZDVEwyLCAmY3RsKTsNCj4gPiArCQlpZiAo
-IShjdGwgJiBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKSkgew0KPiA+ICsJCQlwY2lfZGJnKGJyaWRn
-ZSwgInJlLWVuYWJsaW5nIExUUlxuIik7DQo+ID4gKwkJCXBjaWVfY2FwYWJpbGl0eV9zZXRfd29y
-ZChicmlkZ2UsIFBDSV9FWFBfREVWQ1RMMiwNCj4gPiArCQkJCQkJIFBDSV9FWFBfREVWQ1RMMl9M
-VFJfRU4pOw0KPiA+ICsJCX0NCj4gPiArDQo+IA0KPiBDYW4ndCB5b3UgdXNlIHBjaV9yZWNvbmZp
-Z3VyZV9icmlkZ2VfbHRyKCkgaGVyZSB0b28/DQo+IA0KPiBPdGhlcndpc2UgbG9va3MgZ29vZC4N
-Cg0KVGhhbmtzIGZvciByZXZpZXcuIEkgaGF2ZSBzZW50IGEgbmV3IHBhdGNoIGZvciB0aGlzLg0K
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtYXJtLWtlcm5lbC8yMDIxMDEyOTA3MTEzNy44
-NzQzLTEtbWluZ2NodWFuZy5xaWFvQG1lZGlhdGVrLmNvbS8gDQoNCg==
+On 15-12-20, 18:30, Gustavo Pimentel wrote:
+> This patch series adds the HDMA support, as long the IP design has set
+> the compatible register map parameter, which allows compatibility at
+> some degree for the existing Synopsys DesignWare eDMA driver that is
+> already available on the Kernel.
+> 
+> The HDMA "Hyper-DMA" IP is an enhancement of the eDMA "embedded-DMA" IP.
+> 
+> This new improvement comes with a PCI DVSEC that allows to the driver
+> recognize and switch behavior if it's an eDMA or an HDMA, becoming
+> retrocompatible, in the absence of this DVSEC, the driver will assume
+> that is an eDMA IP.
+> 
+> It also adds the interleaved support, since it will be similar to the
+> current scatter-gather implementation.
+> 
+> As well fixes/improves some abnormal behaviors not detected before, such as:
+>  - crash on loading/unloading driver
+>  - memory space definition for the data area and for the linked list space
+>  - scatter-gather address calculation on 32 bits platforms
+>  - minor comment and variable reordering
+> 
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> 
+> Gustavo Pimentel (15):
+>   dmaengine: dw-edma: Add writeq() and readq() for 64 bits architectures
+>   dmaengine: dw-edma: Fix comments offset characters' alignment
+>   dmaengine: dw-edma: Add support for the HDMA feature
+>   PCI: Add pci_find_vsec_capability() to find a specific VSEC
 
+Had this been picked up.. I see we have dependency on pci patch for this
+series..
+
+>   dmaengine: dw-edma: Add PCIe VSEC data retrieval support
+>   dmaengine: dw-edma: Add device_prep_interleave_dma() support
+>   dmaengine: dw-edma: Improve number of channels check
+>   dmaengine: dw-edma: Reorder variables to keep consistency
+>   dmaengine: dw-edma: Improve the linked list and data blocks definition
+>   dmaengine: dw-edma: Change linked list and data blocks offset and
+>     sizes
+>   dmaengine: dw-edma: Move struct dentry variable from static definition
+>     into dw_edma struct
+>   dmaengine: dw-edma: Fix crash on loading/unloading driver
+>   dmaengine: dw-edma: Change DMA abreviation from lower into upper case
+>   dmaengine: dw-edma: Revert fix scatter-gather address calculation
+>   dmaengine: dw-edma: Add pcim_iomap_table return checker
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c       | 178 +++++++++++-------
+>  drivers/dma/dw-edma/dw-edma-core.h       |  37 ++--
+>  drivers/dma/dw-edma/dw-edma-pcie.c       | 275 +++++++++++++++++++++-------
+>  drivers/dma/dw-edma/dw-edma-v0-core.c    | 300 ++++++++++++++++++++++++-------
+>  drivers/dma/dw-edma/dw-edma-v0-core.h    |   2 +-
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  77 ++++----
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.h |   4 +-
+>  drivers/dma/dw-edma/dw-edma-v0-regs.h    | 291 +++++++++++++++++++-----------
+>  drivers/pci/pci.c                        |  29 +++
+>  include/linux/pci.h                      |   1 +
+>  include/uapi/linux/pci_regs.h            |   5 +
+>  11 files changed, 844 insertions(+), 355 deletions(-)
+> 
+> -- 
+> 2.7.4
+
+-- 
+~Vinod
