@@ -2,1217 +2,495 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAC6C30B00C
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 20:07:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4983730B029
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Feb 2021 20:14:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231196AbhBATGg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Feb 2021 14:06:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:36682 "EHLO foss.arm.com"
+        id S230157AbhBATOP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Feb 2021 14:14:15 -0500
+Received: from mga06.intel.com ([134.134.136.31]:55591 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229831AbhBATGf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 1 Feb 2021 14:06:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2909147A;
-        Mon,  1 Feb 2021 11:05:47 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABB273F71A;
-        Mon,  1 Feb 2021 11:05:46 -0800 (PST)
-Date:   Mon, 1 Feb 2021 19:05:41 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     daire.mcnamara@microchip.com
-Cc:     bhelgaas@google.com, robh@kernel.org, linux-pci@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        david.abdurachmanov@gmail.com, cyril.jean@microchip.com
-Subject: Re: [PATCH v21 3/4] PCI: microchip: Add host driver for Microchip
- PCIe controller
-Message-ID: <20210201190541.GA5894@e121166-lin.cambridge.arm.com>
-References: <20210125162934.5335-1-daire.mcnamara@microchip.com>
- <20210125162934.5335-4-daire.mcnamara@microchip.com>
+        id S229663AbhBATON (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Feb 2021 14:14:13 -0500
+IronPort-SDR: iBhq9pKxYbE0XKF3ZCz1gBxdfS3sCxe3pRuRbbRVdmBW7WOD7VbbXvM4DiNxZxQ6WgBDmUj7kI
+ BvVONVh3vpFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="242255848"
+X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
+   d="scan'208";a="242255848"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 11:13:18 -0800
+IronPort-SDR: bdV3ff9QBU2QuDtP0Cn/Tgx3L20CoxDNGsfdJPPcYKd+C+9vL4a0BY4ha7QB0smxjq4i+bL8cu
+ hiIpTc6883Ww==
+X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
+   d="scan'208";a="506968510"
+Received: from jambrizm-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.133.15])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 11:13:17 -0800
+Date:   Mon, 1 Feb 2021 11:13:16 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        daniel.lll@alibaba-inc.com,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: Re: [PATCH 04/14] cxl/mem: Implement polled mode mailbox
+Message-ID: <20210201191316.e3kkkwqbx5fujp6y@intel.com>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+ <20210130002438.1872527-5-ben.widawsky@intel.com>
+ <20210201175400.GG197521@fedora>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125162934.5335-4-daire.mcnamara@microchip.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210201175400.GG197521@fedora>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 04:29:33PM +0000, daire.mcnamara@microchip.com wrote:
-> From: Daire McNamara <daire.mcnamara@microchip.com>
+On 21-02-01 12:54:00, Konrad Rzeszutek Wilk wrote:
+> > +#define cxl_doorbell_busy(cxlm)                                                \
+> > +	(cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET) &                    \
+> > +	 CXLDEV_MB_CTRL_DOORBELL)
+> > +
+> > +#define CXL_MAILBOX_TIMEOUT_US 2000
 > 
-> Add support for the Microchip PolarFire PCIe controller when
-> configured in host (Root Complex) mode.
+> You been using the spec for the values. Is that number also from it ?
 > 
-> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/pci/controller/Kconfig               |   10 +
->  drivers/pci/controller/Makefile              |    1 +
->  drivers/pci/controller/pcie-microchip-host.c | 1114 ++++++++++++++++++
->  3 files changed, 1125 insertions(+)
->  create mode 100644 drivers/pci/controller/pcie-microchip-host.c
+
+Yes it is. I'll add a comment with the spec reference.
+
+> > +
+> > +enum opcode {
+> > +	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+> > +	CXL_MBOX_OP_MAX			= 0x10000
+> > +};
+> > +
+> > +/**
+> > + * struct mbox_cmd - A command to be submitted to hardware.
+> > + * @opcode: (input) The command set and command submitted to hardware.
+> > + * @payload_in: (input) Pointer to the input payload.
+> > + * @payload_out: (output) Pointer to the output payload. Must be allocated by
+> > + *		 the caller.
+> > + * @size_in: (input) Number of bytes to load from @payload.
+> > + * @size_out: (output) Number of bytes loaded into @payload.
+> > + * @return_code: (output) Error code returned from hardware.
+> > + *
+> > + * This is the primary mechanism used to send commands to the hardware.
+> > + * All the fields except @payload_* correspond exactly to the fields described in
+> > + * Command Register section of the CXL 2.0 spec (8.2.8.4.5). @payload_in and
+> > + * @payload_out are written to, and read from the Command Payload Registers
+> > + * defined in (8.2.8.4.8).
+> > + */
+> > +struct mbox_cmd {
+> > +	u16 opcode;
+> > +	void *payload_in;
+> > +	void *payload_out;
 > 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 64e2f5e379aa..bca2f8949510 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -298,6 +298,16 @@ config PCI_LOONGSON
->  	  Say Y here if you want to enable PCI controller support on
->  	  Loongson systems.
->  
-> +config PCIE_MICROCHIP_HOST
-> +	bool "Microchip AXI PCIe host bridge support"
-> +	depends on PCI_MSI && OF
-> +	select PCI_MSI_IRQ_DOMAIN
-> +	select GENERIC_MSI_IRQ_DOMAIN
-> +	select PCI_HOST_COMMON
-> +	help
-> +	  Say Y here if you want kernel to support the Microchip AXI PCIe
-> +	  Host Bridge driver.
-> +
->  config PCIE_HISI_ERR
->  	depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
->  	bool "HiSilicon HIP PCIe controller error handling driver"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 04c6edc285c5..b85fcd574ff6 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
->  obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
->  obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
->  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
-> +obj-$(CONFIG_PCIE_MICROCHIP_HOST) += pcie-microchip-host.o
->  obj-$(CONFIG_VMD) += vmd.o
->  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
->  obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
-> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-> new file mode 100644
-> index 000000000000..0ef2beab185b
-> --- /dev/null
-> +++ b/drivers/pci/controller/pcie-microchip-host.c
-> @@ -0,0 +1,1114 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Microchip AXI PCIe Bridge host controller driver
-> + *
-> + * Copyright (c) 2018 - 2020 Microchip Corporation. All rights reserved.
-2021 - I will update it for you if that's OK.
-
-> + * Author: Daire McNamara <daire.mcnamara@microchip.com>
-> + *
-> + * Based on:
-> + *	pcie-rcar.c
-> + *	pcie-xilinx.c
-> + *	pcie-altera.c
-
-Can I remove these references please ? I said that before, let me know
-please, do not respost another version.
-
-Thanks,
-Lorenzo
-
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/module.h>
-> +#include <linux/msi.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/pci-ecam.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "../pci.h"
-> +
-> +/* Number of MSI IRQs */
-> +#define MC_NUM_MSI_IRQS				32
-> +#define MC_NUM_MSI_IRQS_CODED			5
-> +
-> +/* PCIe Bridge Phy and Controller Phy offsets */
-> +#define MC_PCIE1_BRIDGE_ADDR			0x00008000u
-> +#define MC_PCIE1_CTRL_ADDR			0x0000a000u
-> +
-> +#define MC_PCIE_BRIDGE_ADDR			(MC_PCIE1_BRIDGE_ADDR)
-> +#define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
-> +
-> +/* PCIe Controller Phy Regs */
-> +#define SEC_ERROR_CNT				0x20
-> +#define DED_ERROR_CNT				0x24
-> +#define SEC_ERROR_INT				0x28
-> +#define  SEC_ERROR_INT_TX_RAM_SEC_ERR_INT	GENMASK(3, 0)
-> +#define  SEC_ERROR_INT_RX_RAM_SEC_ERR_INT	GENMASK(7, 4)
-> +#define  SEC_ERROR_INT_PCIE2AXI_RAM_SEC_ERR_INT	GENMASK(11, 8)
-> +#define  SEC_ERROR_INT_AXI2PCIE_RAM_SEC_ERR_INT	GENMASK(15, 12)
-> +#define  NUM_SEC_ERROR_INTS			(4)
-> +#define SEC_ERROR_INT_MASK			0x2c
-> +#define DED_ERROR_INT				0x30
-> +#define  DED_ERROR_INT_TX_RAM_DED_ERR_INT	GENMASK(3, 0)
-> +#define  DED_ERROR_INT_RX_RAM_DED_ERR_INT	GENMASK(7, 4)
-> +#define  DED_ERROR_INT_PCIE2AXI_RAM_DED_ERR_INT	GENMASK(11, 8)
-> +#define  DED_ERROR_INT_AXI2PCIE_RAM_DED_ERR_INT	GENMASK(15, 12)
-> +#define  NUM_DED_ERROR_INTS			(4)
-> +#define DED_ERROR_INT_MASK			0x34
-> +#define ECC_CONTROL				0x38
-> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_0		BIT(0)
-> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_1		BIT(1)
-> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_2		BIT(2)
-> +#define  ECC_CONTROL_TX_RAM_INJ_ERROR_3		BIT(3)
-> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_0		BIT(4)
-> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_1		BIT(5)
-> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_2		BIT(6)
-> +#define  ECC_CONTROL_RX_RAM_INJ_ERROR_3		BIT(7)
-> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_0	BIT(8)
-> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_1	BIT(9)
-> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_2	BIT(10)
-> +#define  ECC_CONTROL_PCIE2AXI_RAM_INJ_ERROR_3	BIT(11)
-> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_0	BIT(12)
-> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_1	BIT(13)
-> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_2	BIT(14)
-> +#define  ECC_CONTROL_AXI2PCIE_RAM_INJ_ERROR_3	BIT(15)
-> +#define  ECC_CONTROL_TX_RAM_ECC_BYPASS		BIT(24)
-> +#define  ECC_CONTROL_RX_RAM_ECC_BYPASS		BIT(25)
-> +#define  ECC_CONTROL_PCIE2AXI_RAM_ECC_BYPASS	BIT(26)
-> +#define  ECC_CONTROL_AXI2PCIE_RAM_ECC_BYPASS	BIT(27)
-> +#define LTSSM_STATE				0x5c
-> +#define  LTSSM_L0_STATE				0x10
-> +#define PCIE_EVENT_INT				0x14c
-> +#define  PCIE_EVENT_INT_L2_EXIT_INT		BIT(0)
-> +#define  PCIE_EVENT_INT_HOTRST_EXIT_INT		BIT(1)
-> +#define  PCIE_EVENT_INT_DLUP_EXIT_INT		BIT(2)
-> +#define  PCIE_EVENT_INT_MASK			GENMASK(2, 0)
-> +#define  PCIE_EVENT_INT_L2_EXIT_INT_MASK	BIT(16)
-> +#define  PCIE_EVENT_INT_HOTRST_EXIT_INT_MASK	BIT(17)
-> +#define  PCIE_EVENT_INT_DLUP_EXIT_INT_MASK	BIT(18)
-> +#define  PCIE_EVENT_INT_ENB_MASK		GENMASK(18, 16)
-> +#define  PCIE_EVENT_INT_ENB_SHIFT		16
-> +#define  NUM_PCIE_EVENTS			(3)
-> +
-> +/* PCIe Bridge Phy Regs */
-> +#define PCIE_PCI_IDS_DW1			0x9c
-> +
-> +/* PCIe Config space MSI capability structure */
-> +#define MC_MSI_CAP_CTRL_OFFSET			0xe0u
-> +#define  MC_MSI_MAX_Q_AVAIL			(MC_NUM_MSI_IRQS_CODED << 1)
-> +#define  MC_MSI_Q_SIZE				(MC_NUM_MSI_IRQS_CODED << 4)
-> +
-> +#define IMASK_LOCAL				0x180
-> +#define  DMA_END_ENGINE_0_MASK			0x00000000u
-> +#define  DMA_END_ENGINE_0_SHIFT			0
-> +#define  DMA_END_ENGINE_1_MASK			0x00000000u
-> +#define  DMA_END_ENGINE_1_SHIFT			1
-> +#define  DMA_ERROR_ENGINE_0_MASK		0x00000100u
-> +#define  DMA_ERROR_ENGINE_0_SHIFT		8
-> +#define  DMA_ERROR_ENGINE_1_MASK		0x00000200u
-> +#define  DMA_ERROR_ENGINE_1_SHIFT		9
-> +#define  A_ATR_EVT_POST_ERR_MASK		0x00010000u
-> +#define  A_ATR_EVT_POST_ERR_SHIFT		16
-> +#define  A_ATR_EVT_FETCH_ERR_MASK		0x00020000u
-> +#define  A_ATR_EVT_FETCH_ERR_SHIFT		17
-> +#define  A_ATR_EVT_DISCARD_ERR_MASK		0x00040000u
-> +#define  A_ATR_EVT_DISCARD_ERR_SHIFT		18
-> +#define  A_ATR_EVT_DOORBELL_MASK		0x00000000u
-> +#define  A_ATR_EVT_DOORBELL_SHIFT		19
-> +#define  P_ATR_EVT_POST_ERR_MASK		0x00100000u
-> +#define  P_ATR_EVT_POST_ERR_SHIFT		20
-> +#define  P_ATR_EVT_FETCH_ERR_MASK		0x00200000u
-> +#define  P_ATR_EVT_FETCH_ERR_SHIFT		21
-> +#define  P_ATR_EVT_DISCARD_ERR_MASK		0x00400000u
-> +#define  P_ATR_EVT_DISCARD_ERR_SHIFT		22
-> +#define  P_ATR_EVT_DOORBELL_MASK		0x00000000u
-> +#define  P_ATR_EVT_DOORBELL_SHIFT		23
-> +#define  PM_MSI_INT_INTA_MASK			0x01000000u
-> +#define  PM_MSI_INT_INTA_SHIFT			24
-> +#define  PM_MSI_INT_INTB_MASK			0x02000000u
-> +#define  PM_MSI_INT_INTB_SHIFT			25
-> +#define  PM_MSI_INT_INTC_MASK			0x04000000u
-> +#define  PM_MSI_INT_INTC_SHIFT			26
-> +#define  PM_MSI_INT_INTD_MASK			0x08000000u
-> +#define  PM_MSI_INT_INTD_SHIFT			27
-> +#define  PM_MSI_INT_INTX_MASK			0x0f000000u
-> +#define  PM_MSI_INT_INTX_SHIFT			24
-> +#define  PM_MSI_INT_MSI_MASK			0x10000000u
-> +#define  PM_MSI_INT_MSI_SHIFT			28
-> +#define  PM_MSI_INT_AER_EVT_MASK		0x20000000u
-> +#define  PM_MSI_INT_AER_EVT_SHIFT		29
-> +#define  PM_MSI_INT_EVENTS_MASK			0x40000000u
-> +#define  PM_MSI_INT_EVENTS_SHIFT		30
-> +#define  PM_MSI_INT_SYS_ERR_MASK		0x80000000u
-> +#define  PM_MSI_INT_SYS_ERR_SHIFT		31
-> +#define  NUM_LOCAL_EVENTS			15
-> +#define ISTATUS_LOCAL				0x184
-> +#define IMASK_HOST				0x188
-> +#define ISTATUS_HOST				0x18c
-> +#define MSI_ADDR				0x190
-> +#define ISTATUS_MSI				0x194
-> +
-> +/* PCIe Master table init defines */
-> +#define ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
-> +#define  ATR0_PCIE_ATR_SIZE			0x25
-> +#define  ATR0_PCIE_ATR_SIZE_SHIFT		1
-> +#define ATR0_PCIE_WIN0_SRC_ADDR			0x604u
-> +#define ATR0_PCIE_WIN0_TRSL_ADDR_LSB		0x608u
-> +#define ATR0_PCIE_WIN0_TRSL_ADDR_UDW		0x60cu
-> +#define ATR0_PCIE_WIN0_TRSL_PARAM		0x610u
-> +
-> +/* PCIe AXI slave table init defines */
-> +#define ATR0_AXI4_SLV0_SRCADDR_PARAM		0x800u
-> +#define  ATR_SIZE_SHIFT				1
-> +#define  ATR_IMPL_ENABLE			1
-> +#define ATR0_AXI4_SLV0_SRC_ADDR			0x804u
-> +#define ATR0_AXI4_SLV0_TRSL_ADDR_LSB		0x808u
-> +#define ATR0_AXI4_SLV0_TRSL_ADDR_UDW		0x80cu
-> +#define ATR0_AXI4_SLV0_TRSL_PARAM		0x810u
-> +#define  PCIE_TX_RX_INTERFACE			0x00000000u
-> +#define  PCIE_CONFIG_INTERFACE			0x00000001u
-> +
-> +#define ATR_ENTRY_SIZE				32
-> +
-> +#define EVENT_PCIE_L2_EXIT			0
-> +#define EVENT_PCIE_HOTRST_EXIT			1
-> +#define EVENT_PCIE_DLUP_EXIT			2
-> +#define EVENT_SEC_TX_RAM_SEC_ERR		3
-> +#define EVENT_SEC_RX_RAM_SEC_ERR		4
-> +#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		5
-> +#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		6
-> +#define EVENT_DED_TX_RAM_DED_ERR		7
-> +#define EVENT_DED_RX_RAM_DED_ERR		8
-> +#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		9
-> +#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		10
-> +#define EVENT_LOCAL_DMA_END_ENGINE_0		11
-> +#define EVENT_LOCAL_DMA_END_ENGINE_1		12
-> +#define EVENT_LOCAL_DMA_ERROR_ENGINE_0		13
-> +#define EVENT_LOCAL_DMA_ERROR_ENGINE_1		14
-> +#define EVENT_LOCAL_A_ATR_EVT_POST_ERR		15
-> +#define EVENT_LOCAL_A_ATR_EVT_FETCH_ERR		16
-> +#define EVENT_LOCAL_A_ATR_EVT_DISCARD_ERR	17
-> +#define EVENT_LOCAL_A_ATR_EVT_DOORBELL		18
-> +#define EVENT_LOCAL_P_ATR_EVT_POST_ERR		19
-> +#define EVENT_LOCAL_P_ATR_EVT_FETCH_ERR		20
-> +#define EVENT_LOCAL_P_ATR_EVT_DISCARD_ERR	21
-> +#define EVENT_LOCAL_P_ATR_EVT_DOORBELL		22
-> +#define EVENT_LOCAL_PM_MSI_INT_INTX		23
-> +#define EVENT_LOCAL_PM_MSI_INT_MSI		24
-> +#define EVENT_LOCAL_PM_MSI_INT_AER_EVT		25
-> +#define EVENT_LOCAL_PM_MSI_INT_EVENTS		26
-> +#define EVENT_LOCAL_PM_MSI_INT_SYS_ERR		27
-> +#define NUM_EVENTS				28
-> +
-> +#define PCIE_EVENT_CAUSE(x, s)	\
-> +	[EVENT_PCIE_ ## x] = { __stringify(x), s }
-> +
-> +#define SEC_ERROR_CAUSE(x, s) \
-> +	[EVENT_SEC_ ## x] = { __stringify(x), s }
-> +
-> +#define DED_ERROR_CAUSE(x, s) \
-> +	[EVENT_DED_ ## x] = { __stringify(x), s }
-> +
-> +#define LOCAL_EVENT_CAUSE(x, s) \
-> +	[EVENT_LOCAL_ ## x] = { __stringify(x), s }
-> +
-> +#define PCIE_EVENT(x) \
-> +	.base = MC_PCIE_CTRL_ADDR, \
-> +	.offset = PCIE_EVENT_INT, \
-> +	.mask_offset = PCIE_EVENT_INT, \
-> +	.mask_high = 1, \
-> +	.mask = PCIE_EVENT_INT_ ## x ## _INT, \
-> +	.enb_mask = PCIE_EVENT_INT_ENB_MASK
-> +
-> +#define SEC_EVENT(x) \
-> +	.base = MC_PCIE_CTRL_ADDR, \
-> +	.offset = SEC_ERROR_INT, \
-> +	.mask_offset = SEC_ERROR_INT_MASK, \
-> +	.mask = SEC_ERROR_INT_ ## x ## _INT, \
-> +	.mask_high = 1, \
-> +	.enb_mask = 0
-> +
-> +#define DED_EVENT(x) \
-> +	.base = MC_PCIE_CTRL_ADDR, \
-> +	.offset = DED_ERROR_INT, \
-> +	.mask_offset = DED_ERROR_INT_MASK, \
-> +	.mask_high = 1, \
-> +	.mask = DED_ERROR_INT_ ## x ## _INT, \
-> +	.enb_mask = 0
-> +
-> +#define LOCAL_EVENT(x) \
-> +	.base = MC_PCIE_BRIDGE_ADDR, \
-> +	.offset = ISTATUS_LOCAL, \
-> +	.mask_offset = IMASK_LOCAL, \
-> +	.mask_high = 0, \
-> +	.mask = x ## _MASK, \
-> +	.enb_mask = 0
-> +
-> +#define PCIE_EVENT_TO_EVENT_MAP(x) \
-> +	{ PCIE_EVENT_INT_ ## x ## _INT, EVENT_PCIE_ ## x }
-> +
-> +#define SEC_ERROR_TO_EVENT_MAP(x) \
-> +	{ SEC_ERROR_INT_ ## x ## _INT, EVENT_SEC_ ## x }
-> +
-> +#define DED_ERROR_TO_EVENT_MAP(x) \
-> +	{ DED_ERROR_INT_ ## x ## _INT, EVENT_DED_ ## x }
-> +
-> +#define LOCAL_STATUS_TO_EVENT_MAP(x) \
-> +	{ x ## _MASK, EVENT_LOCAL_ ## x }
-> +
-> +struct event_map {
-> +	u32 reg_mask;
-> +	u32 event_bit;
-> +};
-> +
-> +struct mc_msi {
-> +	struct mutex lock;		/* Protect used bitmap */
-> +	struct irq_domain *msi_domain;
-> +	struct irq_domain *dev_domain;
-> +	u32 num_vectors;
-> +	u64 vector_phy;
-> +	DECLARE_BITMAP(used, MC_NUM_MSI_IRQS);
-> +};
-> +
-> +struct mc_port {
-> +	void __iomem *axi_base_addr;
-> +	struct device *dev;
-> +	struct irq_domain *intx_domain;
-> +	struct irq_domain *event_domain;
-> +	raw_spinlock_t lock;
-> +	struct mc_msi msi;
-> +};
-> +
-> +struct cause {
-> +	const char *sym;
-> +	const char *str;
-> +};
-> +
-> +static const struct cause event_cause[NUM_EVENTS] = {
-> +	PCIE_EVENT_CAUSE(L2_EXIT, "L2 exit event"),
-> +	PCIE_EVENT_CAUSE(HOTRST_EXIT, "Hot reset exit event"),
-> +	PCIE_EVENT_CAUSE(DLUP_EXIT, "DLUP exit event"),
-> +	SEC_ERROR_CAUSE(TX_RAM_SEC_ERR,  "sec error in tx buffer"),
-> +	SEC_ERROR_CAUSE(RX_RAM_SEC_ERR,  "sec error in rx buffer"),
-> +	SEC_ERROR_CAUSE(PCIE2AXI_RAM_SEC_ERR,  "sec error in pcie2axi buffer"),
-> +	SEC_ERROR_CAUSE(AXI2PCIE_RAM_SEC_ERR,  "sec error in axi2pcie buffer"),
-> +	DED_ERROR_CAUSE(TX_RAM_DED_ERR,  "ded error in tx buffer"),
-> +	DED_ERROR_CAUSE(RX_RAM_DED_ERR,  "ded error in rx buffer"),
-> +	DED_ERROR_CAUSE(PCIE2AXI_RAM_DED_ERR,  "ded error in pcie2axi buffer"),
-> +	DED_ERROR_CAUSE(AXI2PCIE_RAM_DED_ERR,  "ded error in axi2pcie buffer"),
-> +	LOCAL_EVENT_CAUSE(DMA_ERROR_ENGINE_0, "dma engine 0 error"),
-> +	LOCAL_EVENT_CAUSE(DMA_ERROR_ENGINE_1, "dma engine 1 error"),
-> +	LOCAL_EVENT_CAUSE(A_ATR_EVT_POST_ERR, "axi write request error"),
-> +	LOCAL_EVENT_CAUSE(A_ATR_EVT_FETCH_ERR, "axi read request error"),
-> +	LOCAL_EVENT_CAUSE(A_ATR_EVT_DISCARD_ERR, "axi read timeout"),
-> +	LOCAL_EVENT_CAUSE(P_ATR_EVT_POST_ERR, "pcie write request error"),
-> +	LOCAL_EVENT_CAUSE(P_ATR_EVT_FETCH_ERR, "pcie read request error"),
-> +	LOCAL_EVENT_CAUSE(P_ATR_EVT_DISCARD_ERR, "pcie read timeout"),
-> +	LOCAL_EVENT_CAUSE(PM_MSI_INT_AER_EVT, "aer event"),
-> +	LOCAL_EVENT_CAUSE(PM_MSI_INT_EVENTS, "pm/ltr/hotplug event"),
-> +	LOCAL_EVENT_CAUSE(PM_MSI_INT_SYS_ERR, "system error"),
-> +};
-> +
-> +struct event_map pcie_event_to_event[] = {
-> +	PCIE_EVENT_TO_EVENT_MAP(L2_EXIT),
-> +	PCIE_EVENT_TO_EVENT_MAP(HOTRST_EXIT),
-> +	PCIE_EVENT_TO_EVENT_MAP(DLUP_EXIT)
-> +};
-> +
-> +struct event_map sec_error_to_event[] = {
-> +	SEC_ERROR_TO_EVENT_MAP(TX_RAM_SEC_ERR),
-> +	SEC_ERROR_TO_EVENT_MAP(RX_RAM_SEC_ERR),
-> +	SEC_ERROR_TO_EVENT_MAP(PCIE2AXI_RAM_SEC_ERR),
-> +	SEC_ERROR_TO_EVENT_MAP(AXI2PCIE_RAM_SEC_ERR)
-> +};
-> +
-> +struct event_map ded_error_to_event[] = {
-> +	DED_ERROR_TO_EVENT_MAP(TX_RAM_DED_ERR),
-> +	DED_ERROR_TO_EVENT_MAP(RX_RAM_DED_ERR),
-> +	DED_ERROR_TO_EVENT_MAP(PCIE2AXI_RAM_DED_ERR),
-> +	DED_ERROR_TO_EVENT_MAP(AXI2PCIE_RAM_DED_ERR)
-> +};
-> +
-> +struct event_map local_status_to_event[] = {
-> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_END_ENGINE_0),
-> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_END_ENGINE_1),
-> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_ERROR_ENGINE_0),
-> +	LOCAL_STATUS_TO_EVENT_MAP(DMA_ERROR_ENGINE_1),
-> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_POST_ERR),
-> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_FETCH_ERR),
-> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_DISCARD_ERR),
-> +	LOCAL_STATUS_TO_EVENT_MAP(A_ATR_EVT_DOORBELL),
-> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_POST_ERR),
-> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_FETCH_ERR),
-> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_DISCARD_ERR),
-> +	LOCAL_STATUS_TO_EVENT_MAP(P_ATR_EVT_DOORBELL),
-> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_INTX),
-> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_MSI),
-> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_AER_EVT),
-> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_EVENTS),
-> +	LOCAL_STATUS_TO_EVENT_MAP(PM_MSI_INT_SYS_ERR),
-> +};
-> +
-> +struct {
-> +	u32 base;
-> +	u32 offset;
-> +	u32 mask;
-> +	u32 shift;
-> +	u32 enb_mask;
-> +	u32 mask_high;
-> +	u32 mask_offset;
-> +} event_descs[] = {
-> +	{ PCIE_EVENT(L2_EXIT) },
-> +	{ PCIE_EVENT(HOTRST_EXIT) },
-> +	{ PCIE_EVENT(DLUP_EXIT) },
-> +	{ SEC_EVENT(TX_RAM_SEC_ERR) },
-> +	{ SEC_EVENT(RX_RAM_SEC_ERR) },
-> +	{ SEC_EVENT(PCIE2AXI_RAM_SEC_ERR) },
-> +	{ SEC_EVENT(AXI2PCIE_RAM_SEC_ERR) },
-> +	{ DED_EVENT(TX_RAM_DED_ERR) },
-> +	{ DED_EVENT(RX_RAM_DED_ERR) },
-> +	{ DED_EVENT(PCIE2AXI_RAM_DED_ERR) },
-> +	{ DED_EVENT(AXI2PCIE_RAM_DED_ERR) },
-> +	{ LOCAL_EVENT(DMA_END_ENGINE_0) },
-> +	{ LOCAL_EVENT(DMA_END_ENGINE_1) },
-> +	{ LOCAL_EVENT(DMA_ERROR_ENGINE_0) },
-> +	{ LOCAL_EVENT(DMA_ERROR_ENGINE_1) },
-> +	{ LOCAL_EVENT(A_ATR_EVT_POST_ERR) },
-> +	{ LOCAL_EVENT(A_ATR_EVT_FETCH_ERR) },
-> +	{ LOCAL_EVENT(A_ATR_EVT_DISCARD_ERR) },
-> +	{ LOCAL_EVENT(A_ATR_EVT_DOORBELL) },
-> +	{ LOCAL_EVENT(P_ATR_EVT_POST_ERR) },
-> +	{ LOCAL_EVENT(P_ATR_EVT_FETCH_ERR) },
-> +	{ LOCAL_EVENT(P_ATR_EVT_DISCARD_ERR) },
-> +	{ LOCAL_EVENT(P_ATR_EVT_DOORBELL) },
-> +	{ LOCAL_EVENT(PM_MSI_INT_INTX) },
-> +	{ LOCAL_EVENT(PM_MSI_INT_MSI) },
-> +	{ LOCAL_EVENT(PM_MSI_INT_AER_EVT) },
-> +	{ LOCAL_EVENT(PM_MSI_INT_EVENTS) },
-> +	{ LOCAL_EVENT(PM_MSI_INT_SYS_ERR) }
-> +};
-> +
-> +static char poss_clks[][5] = { "fic0", "fic1", "fic2", "fic3" };
-> +
-> +static void mc_pcie_enable_msi(struct mc_port *port, void __iomem *base)
-> +{
-> +	struct mc_msi *msi = &port->msi;
-> +	u32 cap_offset = MC_MSI_CAP_CTRL_OFFSET;
-> +	u16 msg_ctrl = readw_relaxed(base + cap_offset + PCI_MSI_FLAGS);
-> +
-> +	msg_ctrl |= PCI_MSI_FLAGS_ENABLE;
-> +	msg_ctrl &= ~PCI_MSI_FLAGS_QMASK;
-> +	msg_ctrl |= MC_MSI_MAX_Q_AVAIL;
-> +	msg_ctrl &= ~PCI_MSI_FLAGS_QSIZE;
-> +	msg_ctrl |= MC_MSI_Q_SIZE;
-> +	msg_ctrl |= PCI_MSI_FLAGS_64BIT;
-> +
-> +	writew_relaxed(msg_ctrl, base + cap_offset + PCI_MSI_FLAGS);
-> +
-> +	writel_relaxed(lower_32_bits(msi->vector_phy), base + cap_offset + PCI_MSI_ADDRESS_LO);
-> +	writel_relaxed(upper_32_bits(msi->vector_phy), base + cap_offset + PCI_MSI_ADDRESS_HI);
-> +}
-> +
-> +static void mc_handle_msi(struct irq_desc *desc)
-> +{
-> +	struct mc_port *port = irq_desc_get_handler_data(desc);
-> +	struct device *dev = port->dev;
-> +	struct mc_msi *msi = &port->msi;
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	unsigned long status;
-> +	u32 bit;
-> +	u32 virq;
-> +
-> +	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
-> +	if (status & PM_MSI_INT_MSI_MASK) {
-> +		status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
-> +		for_each_set_bit(bit, &status, msi->num_vectors) {
-> +			virq = irq_find_mapping(msi->dev_domain, bit);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err_ratelimited(dev, "bad MSI IRQ %d\n", bit);
-> +		}
-> +	}
-> +}
-> +
-> +static void mc_msi_bottom_irq_ack(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	u32 bitpos = data->hwirq;
-> +	unsigned long status;
-> +
-> +	writel_relaxed(BIT(bitpos), bridge_base_addr + ISTATUS_MSI);
-> +	status = readl_relaxed(bridge_base_addr + ISTATUS_MSI);
-> +	if (!status)
-> +		writel_relaxed(BIT(PM_MSI_INT_MSI_SHIFT), bridge_base_addr + ISTATUS_LOCAL);
-> +}
-> +
-> +static void mc_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	phys_addr_t addr = port->msi.vector_phy;
-> +
-> +	msg->address_lo = lower_32_bits(addr);
-> +	msg->address_hi = upper_32_bits(addr);
-> +	msg->data = data->hwirq;
-> +
-> +	dev_dbg(port->dev, "msi#%x address_hi %#x address_lo %#x\n", (int)data->hwirq,
-> +		msg->address_hi, msg->address_lo);
-> +}
-> +
-> +static int mc_msi_set_affinity(struct irq_data *irq_data, const struct cpumask *mask, bool force)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static struct irq_chip mc_msi_bottom_irq_chip = {
-> +	.name = "Microchip MSI",
-> +	.irq_ack = mc_msi_bottom_irq_ack,
-> +	.irq_compose_msi_msg = mc_compose_msi_msg,
-> +	.irq_set_affinity = mc_msi_set_affinity,
-> +};
-> +
-> +static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				   unsigned int nr_irqs, void *args)
-> +{
-> +	struct mc_port *port = domain->host_data;
-> +	struct mc_msi *msi = &port->msi;
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	unsigned long bit;
-> +	u32 val;
-> +
-> +	mutex_lock(&msi->lock);
-> +	bit = find_first_zero_bit(msi->used, msi->num_vectors);
-> +	if (bit >= msi->num_vectors) {
-> +		mutex_unlock(&msi->lock);
-> +		return -ENOSPC;
-> +	}
-> +
-> +	set_bit(bit, msi->used);
-> +
-> +	irq_domain_set_info(domain, virq, bit, &mc_msi_bottom_irq_chip, domain->host_data,
-> +			    handle_edge_irq, NULL, NULL);
-> +
-> +	/* Enable MSI interrupts */
-> +	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
-> +	val |= PM_MSI_INT_MSI_MASK;
-> +	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
-> +
-> +	mutex_unlock(&msi->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void mc_irq_msi_domain_free(struct irq_domain *domain, unsigned int virq,
-> +				   unsigned int nr_irqs)
-> +{
-> +	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-> +	struct mc_port *port = irq_data_get_irq_chip_data(d);
-> +	struct mc_msi *msi = &port->msi;
-> +
-> +	mutex_lock(&msi->lock);
-> +
-> +	if (test_bit(d->hwirq, msi->used))
-> +		__clear_bit(d->hwirq, msi->used);
-> +	else
-> +		dev_err(port->dev, "trying to free unused MSI%lu\n", d->hwirq);
-> +
-> +	mutex_unlock(&msi->lock);
-> +}
-> +
-> +static const struct irq_domain_ops msi_domain_ops = {
-> +	.alloc	= mc_irq_msi_domain_alloc,
-> +	.free	= mc_irq_msi_domain_free,
-> +};
-> +
-> +static struct irq_chip mc_msi_irq_chip = {
-> +	.name = "Microchip PCIe MSI",
-> +	.irq_ack = irq_chip_ack_parent,
-> +	.irq_mask = pci_msi_mask_irq,
-> +	.irq_unmask = pci_msi_unmask_irq,
-> +};
-> +
-> +static struct msi_domain_info mc_msi_domain_info = {
-> +	.flags = (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_PCI_MSIX),
-> +	.chip = &mc_msi_irq_chip,
-> +};
-> +
-> +static int mc_allocate_msi_domains(struct mc_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
-> +	struct mc_msi *msi = &port->msi;
-> +
-> +	mutex_init(&port->msi.lock);
-> +
-> +	msi->dev_domain = irq_domain_add_linear(NULL, msi->num_vectors, &msi_domain_ops, port);
-> +	if (!msi->dev_domain) {
-> +		dev_err(dev, "failed to create IRQ domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	msi->msi_domain = pci_msi_create_irq_domain(fwnode, &mc_msi_domain_info, msi->dev_domain);
-> +	if (!msi->msi_domain) {
-> +		dev_err(dev, "failed to create MSI domain\n");
-> +		irq_domain_remove(msi->dev_domain);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void mc_handle_intx(struct irq_desc *desc)
-> +{
-> +	struct mc_port *port = irq_desc_get_handler_data(desc);
-> +	struct device *dev = port->dev;
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	unsigned long status;
-> +	u32 bit;
-> +	u32 virq;
-> +
-> +	status = readl_relaxed(bridge_base_addr + ISTATUS_LOCAL);
-> +	if (status & PM_MSI_INT_INTX_MASK) {
-> +		status &= PM_MSI_INT_INTX_MASK;
-> +		status >>= PM_MSI_INT_INTX_SHIFT;
-> +		for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> +			virq = irq_find_mapping(port->intx_domain, bit);
-> +			if (virq)
-> +				generic_handle_irq(virq);
-> +			else
-> +				dev_err_ratelimited(dev, "bad INTx IRQ %d\n", bit);
-> +		}
-> +	}
-> +}
-> +
-> +static void mc_ack_intx_irq(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
-> +
-> +	writel_relaxed(mask, bridge_base_addr + ISTATUS_LOCAL);
-> +}
-> +
-> +static void mc_mask_intx_irq(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	unsigned long flags;
-> +	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
-> +	u32 val;
-> +
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
-> +	val &= ~mask;
-> +	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static void mc_unmask_intx_irq(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	unsigned long flags;
-> +	u32 mask = BIT(data->hwirq + PM_MSI_INT_INTX_SHIFT);
-> +	u32 val;
-> +
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
-> +	val |= mask;
-> +	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static struct irq_chip mc_intx_irq_chip = {
-> +	.name = "Microchip PCIe INTx",
-> +	.irq_ack = mc_ack_intx_irq,
-> +	.irq_mask = mc_mask_intx_irq,
-> +	.irq_unmask = mc_unmask_intx_irq,
-> +};
-> +
-> +static int mc_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-> +			    irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &mc_intx_irq_chip, handle_level_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops intx_domain_ops = {
-> +	.map = mc_pcie_intx_map,
-> +};
-> +
-> +static inline u32 reg_to_event(u32 reg, struct event_map field)
-> +{
-> +	u32 val;
-> +
-> +	val = (reg & field.reg_mask) ? BIT(field.event_bit) : 0;
-> +
-> +	return val;
-> +}
-> +
-> +static u32 pcie_events(void __iomem *addr)
-> +{
-> +	u32 reg = readl_relaxed(addr);
-> +	u32 val = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pcie_event_to_event); i++)
-> +		val |= reg_to_event(reg, pcie_event_to_event[i]);
-> +
-> +	return val;
-> +}
-> +
-> +static u32 sec_errors(void __iomem *addr)
-> +{
-> +	u32 reg = readl_relaxed(addr);
-> +	u32 val = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(sec_error_to_event); i++)
-> +		val |= reg_to_event(reg, sec_error_to_event[i]);
-> +
-> +	return val;
-> +}
-> +
-> +static u32 ded_errors(void __iomem *addr)
-> +{
-> +	u32 reg = readl_relaxed(addr);
-> +	u32 val = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ded_error_to_event); i++)
-> +		val |= reg_to_event(reg, ded_error_to_event[i]);
-> +
-> +	return val;
-> +}
-> +
-> +static u32 local_events(void __iomem *addr)
-> +{
-> +	u32 reg = readl_relaxed(addr);
-> +	u32 val = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(local_status_to_event); i++)
-> +		val |= reg_to_event(reg, local_status_to_event[i]);
-> +
-> +	return val;
-> +}
-> +
-> +static u32 get_events(struct mc_port *port)
-> +{
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	void __iomem *ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
-> +	u32 events = 0;
-> +
-> +	events |= pcie_events(ctrl_base_addr + PCIE_EVENT_INT);
-> +	events |= sec_errors(ctrl_base_addr + SEC_ERROR_INT);
-> +	events |= ded_errors(ctrl_base_addr + DED_ERROR_INT);
-> +	events |= local_events(bridge_base_addr + ISTATUS_LOCAL);
-> +
-> +	return events;
-> +}
-> +
-> +static irqreturn_t mc_event_handler(int irq, void *dev_id)
-> +{
-> +	struct mc_port *port = dev_id;
-> +	struct device *dev = port->dev;
-> +	struct irq_data *data;
-> +
-> +	data = irq_domain_get_irq_data(port->event_domain, irq);
-> +
-> +	if (event_cause[data->hwirq].str)
-> +		dev_err_ratelimited(dev, "%s\n", event_cause[data->hwirq].str);
-> +	else
-> +		dev_err_ratelimited(dev, "bad event IRQ %ld\n", data->hwirq);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static void mc_handle_event(struct irq_desc *desc)
-> +{
-> +	struct mc_port *port = irq_desc_get_handler_data(desc);
-> +	unsigned long events;
-> +	u32 bit;
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +
-> +	chained_irq_enter(chip, desc);
-> +
-> +	events = get_events(port);
-> +
-> +	for_each_set_bit(bit, &events, NUM_EVENTS)
-> +		generic_handle_irq(irq_find_mapping(port->event_domain, bit));
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static void mc_ack_event_irq(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	u32 event = data->hwirq;
-> +	void __iomem *addr;
-> +	u32 mask;
-> +
-> +	addr = port->axi_base_addr + event_descs[event].base + event_descs[event].offset;
-> +	mask = event_descs[event].mask;
-> +	mask |= event_descs[event].enb_mask;
-> +
-> +	writel_relaxed(mask, addr);
-> +}
-> +
-> +static void mc_mask_event_irq(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	u32 event = data->hwirq;
-> +	void __iomem *addr;
-> +	u32 mask;
-> +	u32 val;
-> +
-> +	addr = port->axi_base_addr + event_descs[event].base + event_descs[event].mask_offset;
-> +	mask = event_descs[event].mask;
-> +	if (event_descs[event].enb_mask) {
-> +		mask <<= PCIE_EVENT_INT_ENB_SHIFT;
-> +		mask &= PCIE_EVENT_INT_ENB_MASK;
-> +	}
-> +
-> +	if (!event_descs[event].mask_high)
-> +		mask = ~mask;
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val = readl_relaxed(addr);
-> +	if (event_descs[event].mask_high)
-> +		val |= mask;
-> +	else
-> +		val &= mask;
-> +
-> +	writel_relaxed(val, addr);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static void mc_unmask_event_irq(struct irq_data *data)
-> +{
-> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
-> +	u32 event = data->hwirq;
-> +	void __iomem *addr;
-> +	u32 mask;
-> +	u32 val;
-> +
-> +	addr = port->axi_base_addr + event_descs[event].base + event_descs[event].mask_offset;
-> +	mask = event_descs[event].mask;
-> +
-> +	if (event_descs[event].enb_mask)
-> +		mask <<= PCIE_EVENT_INT_ENB_SHIFT;
-> +
-> +	if (event_descs[event].mask_high)
-> +		mask = ~mask;
-> +
-> +	if (event_descs[event].enb_mask)
-> +		mask &= PCIE_EVENT_INT_ENB_MASK;
-> +
-> +	raw_spin_lock(&port->lock);
-> +	val = readl_relaxed(addr);
-> +	if (event_descs[event].mask_high)
-> +		val &= mask;
-> +	else
-> +		val |= mask;
-> +	writel_relaxed(val, addr);
-> +	raw_spin_unlock(&port->lock);
-> +}
-> +
-> +static struct irq_chip mc_event_irq_chip = {
-> +	.name = "Microchip PCIe EVENT",
-> +	.irq_ack = mc_ack_event_irq,
-> +	.irq_mask = mc_mask_event_irq,
-> +	.irq_unmask = mc_unmask_event_irq,
-> +};
-> +
-> +static int mc_pcie_event_map(struct irq_domain *domain, unsigned int irq,
-> +			     irq_hw_number_t hwirq)
-> +{
-> +	irq_set_chip_and_handler(irq, &mc_event_irq_chip, handle_level_irq);
-> +	irq_set_chip_data(irq, domain->host_data);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops event_domain_ops = {
-> +	.map = mc_pcie_event_map,
-> +};
-> +
-> +static inline struct clk *mc_pcie_init_clk(struct device *dev, const char *id)
-> +{
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	clk = devm_clk_get_optional(dev, id);
-> +	if (IS_ERR(clk))
-> +		return clk;
-> +	if (!clk)
-> +		return clk;
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare, clk);
-> +
-> +	return clk;
-> +}
-> +
-> +static int mc_pcie_init_clks(struct device *dev)
-> +{
-> +	struct clk *fic;
-> +	int i;
-> +
-> +	/*
-> +	 * PCIe may be clocked via Fabric Interface
-> +	 * using between 1 and 4 clocks. Scan DT for
-> +	 * clocks and enable them if present
-> +	 */
-> +	for (i = 0; i < ARRAY_SIZE(poss_clks); i++) {
-> +		fic = mc_pcie_init_clk(dev, poss_clks[i]);
-> +		if (IS_ERR(fic))
-> +			return PTR_ERR(fic);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mc_pcie_init_irq_domains(struct mc_port *port)
-> +{
-> +	struct device *dev = port->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *pcie_intc_node;
-> +
-> +	/* Setup INTx */
-> +	pcie_intc_node = of_get_next_child(node, NULL);
-> +	if (!pcie_intc_node) {
-> +		dev_err(dev, "failed to find PCIe Intc node\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	port->event_domain = irq_domain_add_linear(pcie_intc_node, NUM_EVENTS, &event_domain_ops,
-> +						   port);
-> +	if (!port->event_domain) {
-> +		dev_err(dev, "failed to get event domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	irq_domain_update_bus_token(port->event_domain, DOMAIN_BUS_NEXUS);
-> +
-> +	port->intx_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX, &intx_domain_ops,
-> +						  port);
-> +	if (!port->intx_domain) {
-> +		dev_err(dev, "failed to get an INTx IRQ domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	irq_domain_update_bus_token(port->intx_domain, DOMAIN_BUS_WIRED);
-> +
-> +	of_node_put(pcie_intc_node);
-> +	raw_spin_lock_init(&port->lock);
-> +
-> +	return mc_allocate_msi_domains(port);
-> +}
-> +
-> +static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index, phys_addr_t axi_addr,
-> +				 phys_addr_t pci_addr, size_t size)
-> +{
-> +	u32 atr_sz = ilog2(size) - 1;
-> +	u32 val;
-> +
-> +	if (index == 0)
-> +		val = PCIE_CONFIG_INTERFACE;
-> +	else
-> +		val = PCIE_TX_RX_INTERFACE;
-> +
-> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) + ATR0_AXI4_SLV0_TRSL_PARAM);
-> +
-> +	val = lower_32_bits(axi_addr) | (atr_sz << ATR_SIZE_SHIFT) | ATR_IMPL_ENABLE;
-> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
-> +	       ATR0_AXI4_SLV0_SRCADDR_PARAM);
-> +
-> +	val = upper_32_bits(axi_addr);
-> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
-> +	       ATR0_AXI4_SLV0_SRC_ADDR);
-> +
-> +	val = lower_32_bits(pci_addr);
-> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
-> +	       ATR0_AXI4_SLV0_TRSL_ADDR_LSB);
-> +
-> +	val = upper_32_bits(pci_addr);
-> +	writel(val, bridge_base_addr + (index * ATR_ENTRY_SIZE) +
-> +	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
-> +
-> +	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-> +	val |= (ATR0_PCIE_ATR_SIZE << ATR0_PCIE_ATR_SIZE_SHIFT);
-> +	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-> +	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
-> +}
-> +
-> +static int mc_pcie_setup_windows(struct platform_device *pdev, struct mc_port *port)
-> +{
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	struct pci_host_bridge *bridge = platform_get_drvdata(pdev);
-> +	struct resource_entry *entry;
-> +	u64 pci_addr;
-> +	u32 index = 1;
-> +
-> +	resource_list_for_each_entry(entry, &bridge->windows) {
-> +		if (resource_type(entry->res) == IORESOURCE_MEM) {
-> +			pci_addr = entry->res->start - entry->offset;
-> +			mc_pcie_setup_window(bridge_base_addr, index, entry->res->start,
-> +					     pci_addr, resource_size(entry->res));
-> +			index++;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mc_platform_init(struct pci_config_window *cfg)
-> +{
-> +	struct device *dev = cfg->parent;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct mc_port *port;
-> +	void __iomem *bridge_base_addr;
-> +	void __iomem *ctrl_base_addr;
-> +	int ret;
-> +	int irq;
-> +	int i, intx_irq, msi_irq, event_irq;
-> +	u32 val;
-> +	int err;
-> +
-> +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-> +	if (!port)
-> +		return -ENOMEM;
-> +	port->dev = dev;
-> +
-> +	ret = mc_pcie_init_clks(dev);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get clock resources, error %d\n", ret);
-> +		return -ENODEV;
-> +	}
-> +
-> +	port->axi_base_addr = devm_platform_ioremap_resource(pdev, 1);
-> +	if (IS_ERR(port->axi_base_addr))
-> +		return PTR_ERR(port->axi_base_addr);
-> +
-> +	bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	ctrl_base_addr = port->axi_base_addr + MC_PCIE_CTRL_ADDR;
-> +
-> +	port->msi.vector_phy = MSI_ADDR;
-> +	port->msi.num_vectors = MC_NUM_MSI_IRQS;
-> +	ret = mc_pcie_init_irq_domains(port);
-> +	if (ret) {
-> +		dev_err(dev, "failed creating IRQ domains\n");
-> +		return ret;
-> +	}
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "unable to request IRQ%d\n", irq);
-> +		return -ENODEV;
-> +	}
-> +
-> +	for (i = 0; i < NUM_EVENTS; i++) {
-> +		event_irq = irq_create_mapping(port->event_domain, i);
-> +		if (!event_irq) {
-> +			dev_err(dev, "failed to map interrupt\n");
-> +			return -ENXIO;
-> +		}
-> +
-> +		err = devm_request_irq(dev, event_irq, mc_event_handler,
-> +				       0, event_cause[i].sym, port);
-> +		if (err) {
-> +			dev_err(dev, "failed to request IRQ %d\n", event_irq);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	intx_irq = irq_create_mapping(port->event_domain, EVENT_LOCAL_PM_MSI_INT_INTX);
-> +	if (!intx_irq) {
-> +		dev_err(dev, "failed to map INTx interrupt\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	/* Plug the INTx chained handler */
-> +	irq_set_chained_handler_and_data(intx_irq, mc_handle_intx, port);
-> +
-> +	msi_irq = irq_create_mapping(port->event_domain, EVENT_LOCAL_PM_MSI_INT_MSI);
-> +	if (!msi_irq)
-> +		return -ENXIO;
-> +
-> +	/* Plug the MSI chained handler */
-> +	irq_set_chained_handler_and_data(msi_irq, mc_handle_msi, port);
-> +
-> +	/* Plug the main event chained handler */
-> +	irq_set_chained_handler_and_data(irq, mc_handle_event, port);
-> +
-> +	/* Hardware doesn't setup MSI by default */
-> +	mc_pcie_enable_msi(port, cfg->win);
-> +
-> +	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
-> +	val |= PM_MSI_INT_INTX_MASK;
-> +	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
-> +
-> +	writel_relaxed(val, ctrl_base_addr + ECC_CONTROL);
-> +
-> +	val = PCIE_EVENT_INT_L2_EXIT_INT | PCIE_EVENT_INT_HOTRST_EXIT_INT |
-> +	      PCIE_EVENT_INT_DLUP_EXIT_INT;
-> +	writel_relaxed(val, ctrl_base_addr + PCIE_EVENT_INT);
-> +
-> +	val = SEC_ERROR_INT_TX_RAM_SEC_ERR_INT | SEC_ERROR_INT_RX_RAM_SEC_ERR_INT |
-> +	      SEC_ERROR_INT_PCIE2AXI_RAM_SEC_ERR_INT | SEC_ERROR_INT_AXI2PCIE_RAM_SEC_ERR_INT;
-> +	writel_relaxed(val, ctrl_base_addr + SEC_ERROR_INT);
-> +	writel_relaxed(0, ctrl_base_addr + SEC_ERROR_INT_MASK);
-> +	writel_relaxed(0, ctrl_base_addr + SEC_ERROR_CNT);
-> +
-> +	val = DED_ERROR_INT_TX_RAM_DED_ERR_INT | DED_ERROR_INT_RX_RAM_DED_ERR_INT |
-> +	      DED_ERROR_INT_PCIE2AXI_RAM_DED_ERR_INT | DED_ERROR_INT_AXI2PCIE_RAM_DED_ERR_INT;
-> +	writel_relaxed(val, ctrl_base_addr + DED_ERROR_INT);
-> +	writel_relaxed(0, ctrl_base_addr + DED_ERROR_INT_MASK);
-> +	writel_relaxed(0, ctrl_base_addr + DED_ERROR_CNT);
-> +
-> +	writel_relaxed(0, bridge_base_addr + IMASK_HOST);
-> +	writel_relaxed(GENMASK(31, 0), bridge_base_addr + ISTATUS_HOST);
-> +
-> +	/* Configure Address Translation Table 0 for PCIe config space */
-> +	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff, cfg->res.start,
-> +			     resource_size(&cfg->res));
-> +
-> +	return mc_pcie_setup_windows(pdev, port);
-> +}
-> +
-> +static const struct pci_ecam_ops mc_ecam_ops = {
-> +	.init = mc_platform_init,
-> +	.pci_ops = {
-> +		.map_bus = pci_ecam_map_bus,
-> +		.read = pci_generic_config_read,
-> +		.write = pci_generic_config_write,
-> +	}
-> +};
-> +
-> +static const struct of_device_id mc_pcie_of_match[] = {
-> +	{
-> +		.compatible = "microchip,pcie-host-1.0",
-> +		.data = &mc_ecam_ops,
-> +	},
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, mc_pcie_of_match)
-> +
-> +static struct platform_driver mc_pcie_driver = {
-> +	.probe = pci_host_common_probe,
-> +	.driver = {
-> +		.name = "microchip-pcie",
-> +		.of_match_table = mc_pcie_of_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +};
-> +
-> +builtin_platform_driver(mc_pcie_driver);
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("Microchip PCIe host controller driver");
-> +MODULE_AUTHOR("Daire McNamara <daire.mcnamara@microchip.com>");
-> -- 
-> 2.25.1
+> On a 32-bit OS (not that we use those that more, but lets assume
+> someone really wants to), the void is 4-bytes, while on 64-bit it is
+> 8-bytes.
 > 
+> `pahole` is your friend as I think there is a gap between opcode and
+> payload_in in the structure.
+> 
+> > +	size_t size_in;
+> > +	size_t size_out;
+> 
+> And those can also change depending on 32-bit/64-bit.
+> 
+> > +	u16 return_code;
+> > +#define CXL_MBOX_SUCCESS 0
+> > +};
+> 
+> Do you want to use __packed to match with the spec?
+> 
+> Ah, reading later you don't care about it.
+> 
+> In that case may I recommend you move 'return_code' (or perhaps just
+> call it rc?) to be right after opcode? Less of gaps in that structure.
+> 
+
+I guess I hadn't realized we're supposed to try to fully pack structs by
+default.
+
+> > +
+> > +static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
+> > +{
+> > +	const int timeout = msecs_to_jiffies(CXL_MAILBOX_TIMEOUT_US);
+> > +	const unsigned long start = jiffies;
+> > +	unsigned long end = start;
+> > +
+> > +	while (cxl_doorbell_busy(cxlm)) {
+> > +		end = jiffies;
+> > +
+> > +		if (time_after(end, start + timeout)) {
+> > +			/* Check again in case preempted before timeout test */
+> > +			if (!cxl_doorbell_busy(cxlm))
+> > +				break;
+> > +			return -ETIMEDOUT;
+> > +		}
+> > +		cpu_relax();
+> > +	}
+> 
+> Hm, that is not very scheduler friendly. I mean we are sitting here for
+> 2000us (2 ms) - that is quite the amount of time spinning.
+> 
+> Should this perhaps be put in a workqueue?
+
+So let me first point you to the friendlier version which was shot down:
+https://lore.kernel.org/linux-cxl/20201111054356.793390-8-ben.widawsky@intel.com/
+
+I'm not opposed to this being moved to a workqueue at some point, but I think
+that's unnecessary complexity currently. The reality is that it's expected that
+commands will finish way sooner than this or be implemented as background
+commands. I've heard a person who makes a lot of the spec decisions say, "if
+it's 2 seconds, nobody will use these things".
+
+I think adding the summary of this back and forth as a comment to the existing
+code makes a lot of sense.
+
+> > +
+> > +	dev_dbg(&cxlm->pdev->dev, "Doorbell wait took %dms",
+> > +		jiffies_to_msecs(end) - jiffies_to_msecs(start));
+> > +	return 0;
+> > +}
+> > +
+> > +static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+> > +				 struct mbox_cmd *mbox_cmd)
+> > +{
+> > +	dev_warn(&cxlm->pdev->dev, "Mailbox command timed out\n");
+> > +	dev_info(&cxlm->pdev->dev,
+> > +		 "\topcode: 0x%04x\n"
+> > +		 "\tpayload size: %zub\n",
+> > +		 mbox_cmd->opcode, mbox_cmd->size_in);
+> > +
+> > +	if (IS_ENABLED(CONFIG_CXL_MEM_INSECURE_DEBUG)) {
+> > +		print_hex_dump_debug("Payload ", DUMP_PREFIX_OFFSET, 16, 1,
+> > +				     mbox_cmd->payload_in, mbox_cmd->size_in,
+> > +				     true);
+> > +	}
+> > +
+> > +	/* Here's a good place to figure out if a device reset is needed */
+> > +}
+> > +
+> > +/**
+> > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> > + * @cxlm: The CXL memory device to communicate with.
+> > + * @mbox_cmd: Command to send to the memory device.
+> > + *
+> > + * Context: Any context. Expects mbox_lock to be held.
+> > + * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
+> > + *         Caller should check the return code in @mbox_cmd to make sure it
+> > + *         succeeded.
+> > + *
+> > + * This is a generic form of the CXL mailbox send command, thus the only I/O
+> > + * operations used are cxl_read_mbox_reg(). Memory devices, and perhaps other
+> > + * types of CXL devices may have further information available upon error
+> > + * conditions.
+> > + *
+> > + * The CXL spec allows for up to two mailboxes. The intention is for the primary
+> > + * mailbox to be OS controlled and the secondary mailbox to be used by system
+> > + * firmware. This allows the OS and firmware to communicate with the device and
+> > + * not need to coordinate with each other. The driver only uses the primary
+> > + * mailbox.
+> > + */
+> > +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+> > +				 struct mbox_cmd *mbox_cmd)
+> > +{
+> > +	void __iomem *payload = cxlm->mbox.regs + CXLDEV_MB_PAYLOAD_OFFSET;
+> > +	u64 cmd_reg, status_reg;
+> > +	size_t out_len;
+> > +	int rc;
+> > +
+> > +	lockdep_assert_held(&cxlm->mbox.mutex);
+> > +
+> > +	/*
+> > +	 * Here are the steps from 8.2.8.4 of the CXL 2.0 spec.
+> > +	 *   1. Caller reads MB Control Register to verify doorbell is clear
+> > +	 *   2. Caller writes Command Register
+> > +	 *   3. Caller writes Command Payload Registers if input payload is non-empty
+> > +	 *   4. Caller writes MB Control Register to set doorbell
+> > +	 *   5. Caller either polls for doorbell to be clear or waits for interrupt if configured
+> > +	 *   6. Caller reads MB Status Register to fetch Return code
+> > +	 *   7. If command successful, Caller reads Command Register to get Payload Length
+> > +	 *   8. If output payload is non-empty, host reads Command Payload Registers
+> > +	 *
+> > +	 *   Hardware is free to do whatever it wants before the doorbell is
+> > +	 *   rung, and isn't allowed to change anything after it clears the
+> > +	 *   doorbell. As such, steps 2 and 3 can happen in any order, and steps
+> > +	 *   6, 7, 8 can also happen in any order (though some orders might not
+> > +	 *   make sense).
+> > +	 */
+> > +
+> > +	/* #1 */
+> > +	if (cxl_doorbell_busy(cxlm)) {
+> > +		dev_err_ratelimited(&cxlm->pdev->dev,
+> > +				    "Mailbox re-busy after acquiring\n");
+> > +		return -EBUSY;
+> > +	}
+> > +
+> > +	cmd_reg = CXL_SET_FIELD(mbox_cmd->opcode, CXLDEV_MB_CMD_COMMAND_OPCODE);
+> > +	if (mbox_cmd->size_in) {
+> > +		if (WARN_ON(!mbox_cmd->payload_in))
+> > +			return -EINVAL;
+> > +
+> > +		cmd_reg |= CXL_SET_FIELD(mbox_cmd->size_in,
+> > +					 CXLDEV_MB_CMD_PAYLOAD_LENGTH);
+> > +		memcpy_toio(payload, mbox_cmd->payload_in, mbox_cmd->size_in);
+> > +	}
+> > +
+> > +	/* #2, #3 */
+> > +	cxl_write_mbox_reg64(cxlm, CXLDEV_MB_CMD_OFFSET, cmd_reg);
+> > +
+> > +	/* #4 */
+> > +	dev_dbg(&cxlm->pdev->dev, "Sending command\n");
+> > +	cxl_write_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET,
+> > +			     CXLDEV_MB_CTRL_DOORBELL);
+> > +
+> > +	/* #5 */
+> > +	rc = cxl_mem_wait_for_doorbell(cxlm);
+> > +	if (rc == -ETIMEDOUT) {
+> > +		cxl_mem_mbox_timeout(cxlm, mbox_cmd);
+> > +		return rc;
+> > +	}
+> > +
+> > +	/* #6 */
+> > +	status_reg = cxl_read_mbox_reg64(cxlm, CXLDEV_MB_STATUS_OFFSET);
+> > +	mbox_cmd->return_code =
+> > +		CXL_GET_FIELD(status_reg, CXLDEV_MB_STATUS_RET_CODE);
+> > +
+> > +	if (mbox_cmd->return_code != 0) {
+> > +		dev_dbg(&cxlm->pdev->dev, "Mailbox operation had an error\n");
+> > +		return 0;
+> > +	}
+> > +
+> > +	/* #7 */
+> > +	cmd_reg = cxl_read_mbox_reg64(cxlm, CXLDEV_MB_CMD_OFFSET);
+> > +	out_len = CXL_GET_FIELD(cmd_reg, CXLDEV_MB_CMD_PAYLOAD_LENGTH);
+> > +
+> > +	/* #8 */
+> > +	if (out_len && mbox_cmd->payload_out)
+> > +		memcpy_fromio(mbox_cmd->payload_out, payload, out_len);
+> > +
+> > +	mbox_cmd->size_out = out_len;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * cxl_mem_mbox_get() - Acquire exclusive access to the mailbox.
+> > + * @cxlm: The memory device to gain access to.
+> > + *
+> > + * Context: Any context. Takes the mbox_lock.
+> > + * Return: 0 if exclusive access was acquired.
+> > + */
+> > +static int cxl_mem_mbox_get(struct cxl_mem *cxlm)
+> > +{
+> > +	struct device *dev = &cxlm->pdev->dev;
+> > +	int rc = -EBUSY;
+> > +	u64 md_status;
+> > +
+> > +	mutex_lock_io(&cxlm->mbox.mutex);
+> > +
+> > +	/*
+> > +	 * XXX: There is some amount of ambiguity in the 2.0 version of the spec
+> > +	 * around the mailbox interface ready (8.2.8.5.1.1).  The purpose of the
+> > +	 * bit is to allow firmware running on the device to notify the driver
+> > +	 * that it's ready to receive commands. It is unclear if the bit needs
+> > +	 * to be read for each transaction mailbox, ie. the firmware can switch
+> > +	 * it on and off as needed. Second, there is no defined timeout for
+> > +	 * mailbox ready, like there is for the doorbell interface.
+> > +	 *
+> > +	 * Assumptions:
+> > +	 * 1. The firmware might toggle the Mailbox Interface Ready bit, check
+> > +	 *    it for every command.
+> > +	 *
+> > +	 * 2. If the doorbell is clear, the firmware should have first set the
+> > +	 *    Mailbox Interface Ready bit. Therefore, waiting for the doorbell
+> > +	 *    to be ready is sufficient.
+> > +	 */
+> > +	rc = cxl_mem_wait_for_doorbell(cxlm);
+> > +	if (rc) {
+> > +		dev_warn(dev, "Mailbox interface not ready\n");
+> > +		goto out;
+> > +	}
+> > +
+> > +	md_status = cxl_read_mem_reg64(cxlm, CXLMDEV_STATUS_OFFSET);
+> > +	if (!(md_status & CXLMDEV_MBOX_IF_READY && CXLMDEV_READY(md_status))) {
+> > +		dev_err(dev,
+> > +			"mbox: reported doorbell ready, but not mbox ready\n");
+> 
+> You can make that oneline.
+> > +		goto out;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Hardware shouldn't allow a ready status but also have failure bits
+> > +	 * set. Spit out an error, this should be a bug report
+> > +	 */
+> > +	rc = -EFAULT;
+> 
+> Should these include more details? As in a dump of other registers to
+> help in the field to debug why the device is busted?
+> 
+
+We've discussed a bit, having kind of a general error state (my driver
+background is in i915 where we did such a thing). I'm not opposed, but as the
+error handling at this point is very minimal, I think it can wait until the next
+round of patches for further enabling.
+
+> > +	if (md_status & CXLMDEV_DEV_FATAL) {
+> > +		dev_err(dev, "mbox: reported ready, but fatal\n");
+> > +		goto out;
+> > +	}
+> > +	if (md_status & CXLMDEV_FW_HALT) {
+> > +		dev_err(dev, "mbox: reported ready, but halted\n");
+> > +		goto out;
+> > +	}
+> > +	if (CXLMDEV_RESET_NEEDED(md_status)) {
+> > +		dev_err(dev, "mbox: reported ready, but reset needed\n");
+> > +		goto out;
+> > +	}
+> > +
+> > +	/* with lock held */
+> > +	return 0;
+> > +
+> > +out:
+> > +	mutex_unlock(&cxlm->mbox.mutex);
+> > +	return rc;
+> > +}
+> > +
+> > +/**
+> > + * cxl_mem_mbox_put() - Release exclusive access to the mailbox.
+> > + * @cxlm: The CXL memory device to communicate with.
+> > + *
+> > + * Context: Any context. Expects mbox_lock to be held.
+> > + */
+> > +static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
+> > +{
+> > +	mutex_unlock(&cxlm->mbox.mutex);
+> > +}
+> > +
+> >  /**
+> >   * cxl_mem_setup_regs() - Setup necessary MMIO.
+> >   * @cxlm: The CXL memory device to communicate with.
+> > @@ -142,6 +406,8 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
+> >  		return NULL;
+> >  	}
+> >  
+> > +	mutex_init(&cxlm->mbox.mutex);
+> > +
+> >  	regs = pcim_iomap_table(pdev)[bar];
+> >  	cxlm->pdev = pdev;
+> >  	cxlm->regs = regs + offset;
+> > @@ -174,6 +440,76 @@ static int cxl_mem_dvsec(struct pci_dev *pdev, int dvsec)
+> >  	return 0;
+> >  }
+> >  
+> > +/**
+> > + * cxl_mem_identify() - Send the IDENTIFY command to the device.
+> > + * @cxlm: The device to identify.
+> > + *
+> > + * Return: 0 if identify was executed successfully.
+> > + *
+> > + * This will dispatch the identify command to the device and on success populate
+> > + * structures to be exported to sysfs.
+> > + */
+> > +static int cxl_mem_identify(struct cxl_mem *cxlm)
+> > +{
+> > +	struct cxl_mbox_identify {
+> > +		char fw_revision[0x10];
+> > +		__le64 total_capacity;
+> > +		__le64 volatile_capacity;
+> > +		__le64 persistent_capacity;
+> > +		__le64 partition_align;
+> > +		__le16 info_event_log_size;
+> > +		__le16 warning_event_log_size;
+> > +		__le16 failure_event_log_size;
+> > +		__le16 fatal_event_log_size;
+> > +		__le32 lsa_size;
+> > +		u8 poison_list_max_mer[3];
+> > +		__le16 inject_poison_limit;
+> > +		u8 poison_caps;
+> > +		u8 qos_telemetry_caps;
+> > +	} __packed id;
+> > +	struct mbox_cmd mbox_cmd;
+> > +	int rc;
+> > +
+> > +	/* Retrieve initial device memory map */
+> > +	rc = cxl_mem_mbox_get(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	mbox_cmd = (struct mbox_cmd){
+> > +		.opcode = CXL_MBOX_OP_IDENTIFY,
+> > +		.payload_out = &id,
+> > +		.size_in = 0,
+> > +	};
+> > +	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> > +	cxl_mem_mbox_put(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	/* TODO: Handle retry or reset responses from firmware. */
+> > +	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS) {
+> > +		dev_err(&cxlm->pdev->dev, "Mailbox command failed (%d)\n",
+> > +			mbox_cmd.return_code);
+> > +		return -ENXIO;
+> > +	}
+> > +
+> > +	if (mbox_cmd.size_out != sizeof(id))
+> > +		return -ENXIO;
+> > +
+> > +	/*
+> > +	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+> 
+> ??? Not sure I understand.
+> 
+
+The current code is showing two aliased/overlapping ranges.
+[0, id.volatile_capacity)
+[0, id.persistent_capacity)
+
+This is not allowed by spec.
+
+> > +	 * For now, only the capacity is exported in sysfs
+> > +	 */
+> > +	cxlm->ram.range.start = 0;
+> > +	cxlm->ram.range.end = le64_to_cpu(id.volatile_capacity) - 1;
+> > +
+> > +	cxlm->pmem.range.start = 0;
+> > +	cxlm->pmem.range.end = le64_to_cpu(id.persistent_capacity) - 1;
+> > +
+> > +	memcpy(cxlm->firmware_version, id.fw_revision, sizeof(id.fw_revision));
+> > +
+> > +	return rc;
+> > +}
+> > +
+> >  static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > @@ -219,7 +555,11 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	return cxl_mem_setup_mailbox(cxlm);
+> > +	rc = cxl_mem_setup_mailbox(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	return cxl_mem_identify(cxlm);
+> >  }
+> >  
+> >  static const struct pci_device_id cxl_mem_pci_tbl[] = {
+> > -- 
+> > 2.30.0
+> > 
