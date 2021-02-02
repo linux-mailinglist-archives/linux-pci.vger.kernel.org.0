@@ -2,257 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D034430B57B
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 03:51:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 854F330B7C0
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 07:19:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbhBBCv2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Feb 2021 21:51:28 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:39476 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbhBBCv1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Feb 2021 21:51:27 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1122hcYt174064;
-        Tue, 2 Feb 2021 02:49:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2020-01-29;
- bh=yd3mYrRFNOCGtysxD/WTTDlFEyjgkWwzlPpu1kV4ves=;
- b=BUi629LH6QEBrSdiChrBL+4YCu4Zg4VwufndAGuOZ49R20JTIa3B54MPc0tu8+Xg/arT
- 2r8Zn9/8bKhPQgU+CGZ+3KWvpHdBKLtwquhEeLQ+yvT/hVRvJXsQl5Hsu5BDv6GgC6fb
- sRWIzoJwNer2Se/pOsPOpYxsOvgpxfllpillLz2pQkFZMWrtJsFDKnhom33IA7YuG/YZ
- cyLUTnONE3qWVuPYqNMxLLHzGh3QvYlZd267DeXIfbAGRne/0veqY1a6c2TlWmqCflps
- dDhuBmDhO0A8pGTkvYmED7iu3K4eBGO7xICkoseAeET58XWwTiHnyclzK12w/w9GAn38 gQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 36cvyarp0w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Feb 2021 02:49:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1122kAf1167714;
-        Tue, 2 Feb 2021 02:49:15 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
-        by userp3020.oracle.com with ESMTP id 36dh7qqpr0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 02 Feb 2021 02:49:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=InmEED6mZjNb86JD/YrKdD3Wu0n7R+tv5rM/eGUCdNNkvWe4wIc3E1yLzL1isMa3tQZgKlbWWhCBO3HOCrhbSko8V3EKKMEBuRiqIG3LAc8/vs7dFZTQZDqPZDJVQTTZj9is+j+hy3qxBedleSbb3yF3CPBlUt5mLYYKmritPKuYh1YQOp6u5vEqKGbKlx6agxk1+fVt6ZUvdxZzb8T2eW28ecCRaQOBMMxgjf42xSOZyI42NYkWhcinr73cWlu0emxOiZnKFcdqcL8bb48rPeEOf/hekPNjMKY9hdc+Rk4DjosLPYOKgyE5BbZ8vtyNjD2xqqhBngidbox2w/jpmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yd3mYrRFNOCGtysxD/WTTDlFEyjgkWwzlPpu1kV4ves=;
- b=lK3GWFqq1UzPAzuPAVqnEEqwDlqpbmUJFv4OFSlGbDffbLnmj3MrtFH/gFaj3a2iZQgVRhw8UY8mHb+S8qfOUVNvQaBX5mDp1VZTcKMlCtmuTaQakiSfyPCd9nPfM5ndwz0N4qd0jYZrZ4M/YCiKQoLHPSEusVs/6InfKTE7OFg6yfs/46QyNtVvb1e3jA0OpHYaQf5xShJtk4t/7DXiTiPmBe6VhhR/RE/JU98tuOtH7kexNF7rrMFlW5uDiWloUFX/9RnROWRXK6aZmzwg10zAKwU7JOMNRk8kqCorh2C2xAsWwiXLw1IIRX3r/TsrBeGwmMMbm5CnLc9Ub+2E9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        id S231941AbhBBGRL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 01:17:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231924AbhBBGRJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Feb 2021 01:17:09 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD3CC0613ED
+        for <linux-pci@vger.kernel.org>; Mon,  1 Feb 2021 22:16:28 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id s24so1608643pjp.5
+        for <linux-pci@vger.kernel.org>; Mon, 01 Feb 2021 22:16:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yd3mYrRFNOCGtysxD/WTTDlFEyjgkWwzlPpu1kV4ves=;
- b=hO2U8mwWfxz/ZmZ/OMzgJ7IdqptL/i5GQVVN0PTSqMWX+f7vPmEW4qRQnDO7d6ghWt0xgkkIbhU6y2bhl/mgb8nEtidZbj1VgddR3EIUZmpN7uhOIMYWQrD20ywaD0ZqG4XvAT0HaxY0rLykU9U/2O1bAZIs90vjrArxsz7W9Ic=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=oracle.com;
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
- by BYAPR10MB3590.namprd10.prod.outlook.com (2603:10b6:a03:11a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3805.24; Tue, 2 Feb
- 2021 02:49:12 +0000
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::e180:1ba2:d87:456]) by BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::e180:1ba2:d87:456%4]) with mapi id 15.20.3784.019; Tue, 2 Feb 2021
- 02:49:12 +0000
-Date:   Mon, 1 Feb 2021 21:49:02 -0500
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        daniel.lll@alibaba-inc.com,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 08/14] taint: add taint for direct hardware access
-Message-ID: <YBi9nkiu3DvMZhrs@Konrads-MacBook-Pro.local>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com>
- <20210130002438.1872527-9-ben.widawsky@intel.com>
- <20210201181845.GJ197521@fedora>
- <20210201183455.3dndfwyswwvs2dlm@intel.com>
- <CAPcyv4iBbA+PCnTg-hFALuDJNqcJrwwXN_gMEe6z9LZvSfC5hw@mail.gmail.com>
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1NqKt1tkYjXYw5uT6W0gag7j6UD0Pw2ioTo6s17oNpE=;
+        b=LIQE6iXhoVslxswTP0KgBiXobDim0ju5ZYkrmyKvYra9JaoER+znAmc9qT9xTPVIt9
+         jtJp4IGHblx4gB7wk3KL0g+Hb00CnXsMXEYUJcWHtjBB8foOwO+AUaKNeRXK9ZgkhRKx
+         unkdwcCqhuoaaet8S05RadBgyTo9LLCg4RKzfWTfjpFw0H97MwDGbtL4K8TPiIrR+CLV
+         DwRwQ/IGJ8gY6RwwC4QvP+2Eo9r3HN+B83VS/PZdcxWUj5ka7LREzljL9mQeerH3xM4Z
+         9xY7VqEODF93PjT/9QkROmbj3BKowCGvzX+TVEKvk4DRJaXjYZyncefY2/3uwm/Blrhc
+         kU9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1NqKt1tkYjXYw5uT6W0gag7j6UD0Pw2ioTo6s17oNpE=;
+        b=MG6jftSkL2Bd6a6NIzlPsxAbRaIVY7zu0RrzuKONsjBcVCVsfDlYdTEUUPSIRFWlp8
+         e/DUaVf9mvvranyVdOYpVbFalB7WB6O5mHVHXMK8CvrbwXn4ZVtxMZu9UWRwLovzJkQS
+         BGuSm6F2qa6odyihyNrClLg9Gzi5kjeAKYuV+0R8hGH9DDX8xFZ7O0b3eHlGEs3Kwqde
+         P4buK86GaUGr4uqyv4dyGtW1RZvgWojS6ZNsIqyh5JyJQqWwyf95BzQZqy3Jjq3MuS/Z
+         nJUexIOsYxqQ+Km2CPodp5wPOikgC87c7ICn489/BoUP01GNjj1ipZW/CCZObxF5b6at
+         IeUQ==
+X-Gm-Message-State: AOAM533WDPy1uPV3a6ErihopDG8kwRwhaBWazy3Xv6XvEioXqts24Z8U
+        FHCjUTtCRK5nHfjAq+QAsEnC
+X-Google-Smtp-Source: ABdhPJx0A/UAcWiA3V+ISiM2k6qA5tPlnvHP9HVWN/SYdIrEkyV65T+v0hqfxGwDjC/6oH+Cyvts7w==
+X-Received: by 2002:a17:903:1cc:b029:de:98bb:d46d with SMTP id e12-20020a17090301ccb02900de98bbd46dmr21069426plh.54.1612246588193;
+        Mon, 01 Feb 2021 22:16:28 -0800 (PST)
+Received: from thinkpad ([2409:4072:6d83:1efe:9823:4cab:2941:306])
+        by smtp.gmail.com with ESMTPSA id l2sm1447547pju.25.2021.02.01.22.16.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Feb 2021 22:16:27 -0800 (PST)
+Date:   Tue, 2 Feb 2021 11:46:19 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: Add Bluetooth support on RB5
+Message-ID: <20210202061619.GA13607@thinkpad>
+References: <20210128175225.3102958-1-dmitry.baryshkov@linaro.org>
+ <20210128175225.3102958-6-dmitry.baryshkov@linaro.org>
+ <CAL_Jsq+nNRv3KceHthgktHR1oRMs+eKWC4O7n0k78izs1aTPfA@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4iBbA+PCnTg-hFALuDJNqcJrwwXN_gMEe6z9LZvSfC5hw@mail.gmail.com>
-X-Originating-IP: [138.3.200.7]
-X-ClientProxiedBy: CH2PR10CA0030.namprd10.prod.outlook.com
- (2603:10b6:610:4c::40) To BYAPR10MB2999.namprd10.prod.outlook.com
- (2603:10b6:a03:85::27)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Konrads-MacBook-Pro.local (138.3.200.7) by CH2PR10CA0030.namprd10.prod.outlook.com (2603:10b6:610:4c::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3805.16 via Frontend Transport; Tue, 2 Feb 2021 02:49:06 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 33830b42-6c08-4c37-a485-08d8c7251eed
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3590:
-X-Microsoft-Antispam-PRVS: <BYAPR10MB35903CC2DC84B123D66FBBA089B59@BYAPR10MB3590.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1186;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1+of07iCReb3ca20U6qstk99VN92on16oPxpQcnYK9cTFphyqXbsDO1RLWWWYt/o05eXsxpJrB+W4Rf80eBIpSjLXcrVg0iTlGiKjcTWlD9ZnTlso4EI4CKTkPFkihBeHINArh4aS2KX/i5FayLi0fy+OH4peSJH4QQQp2ldnlJ+cviNTwSd1cRVs9KE0oGCPNyn9SaAdkKD6noDLncXIvGsR1Czz/mXU00/ka63hAZg1MPi60OIjvzQUczvpzp1kWn0u3sqtdQxVRvUnQSuRm/bfXLdftZ/H0/JtWUkGE2oqnq0pdmy/LCz2vnlh3AHGEx2eAyzggtSy+xZALqV7VGPZrjz2WbytGqS2kHx8gpTc4qvhoQwzypRh+7PUH7Zqb32K4YYiw6i8JacfeAsGODW7eGZLfW6rL4p+KmGA75Wh16lbas34PnxOfIDa1TVK9eKt/CoG7GysFxnC/vWMsZrVqXQnflAwePKXviRRavR3Lby7I6y4qYC8zSgqPVplwjoimmb+Sjhk1ZiggUUIA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(396003)(136003)(366004)(39860400002)(478600001)(6666004)(316002)(6916009)(8676002)(83380400001)(54906003)(7416002)(86362001)(66476007)(53546011)(956004)(66556008)(4326008)(66946007)(16526019)(6506007)(2906002)(5660300002)(55016002)(52116002)(7696005)(9686003)(186003)(26005)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?Ub5nvcR+oYpv+m5Z32MgUp3ZVuMeT+c6Wv3hd2AybroJ+MT7JEhbtITWsnAh?=
- =?us-ascii?Q?Tres+1uueVOcTj3/lk1IwG+gbHFrsYbw5pdrH2lasILjjImWhLD8sX6W26sL?=
- =?us-ascii?Q?1SMcgZgGxW6HoiJVUzxa1um+esCupHE0v50veDJ9JlApQi04oDtQjIF6++if?=
- =?us-ascii?Q?OM665zmCreIujNba2d9vW4y1l7iwEhP+xSM42FlOhI+ryqn9LqAu2GJvts7P?=
- =?us-ascii?Q?8XLe7Pi3XWOMheluvp/pq/Boc+4SNo9DM/djNBmKML5aCj5yXcHHaCkHA/Dn?=
- =?us-ascii?Q?eWfGnLo+vNmWcvXegnqz6eVj7GIDcF98fQm5hGB4uPTNP9s/UjRsw9vUnHGX?=
- =?us-ascii?Q?etPqiR2Q/tR8iwu2pZ2SH7qCqPm4j6XmCTK0nChLhbH1BTzcN1rt5FzQu1a1?=
- =?us-ascii?Q?bBw670Bd+wX7tn+OTfRM5sboCQiMfWY/hQjRxDw2lkzzggAtcFkW8azyk3NC?=
- =?us-ascii?Q?0dFBRGmSsubFAn/AhcwUNtffHfpj69WdDiKfHha1uEN3CPIKq7jQHaUmLNkO?=
- =?us-ascii?Q?Ls49F9NWh3/SuS1OCzuS82vMu3j+HWg5BMlSB5lCCLHBOaNUiEiNkp7NWi+J?=
- =?us-ascii?Q?14m84pCyCMNisH2ijJoltwSKqNjC4LVdVRO/iMSDJhXh1TLPxVVPBveGcH4B?=
- =?us-ascii?Q?wKmcsfiQdwUNkso+QZiO/9X6OxvxNNLs+iGGILD4svr/13967fXLxnVcrxOy?=
- =?us-ascii?Q?TkpwRWPSiXnlJkl7DUfQKZIxn8wVc4Jg1PlqjF9MzYUal2dQsW2moraehxUm?=
- =?us-ascii?Q?jfqRgcvEgvbiSVWUQuUu7YCBfJyobQ9Q9L+Zw5/tCzZKZv/A9W/gOsy6N4sU?=
- =?us-ascii?Q?FFNxBZ4LNVNpZYbLz8mkzoeFbPpTMUehLcc27u9ZdveUHmBzTfJIsbhNA40l?=
- =?us-ascii?Q?OlyXTSL2xc0tRVHBe3Ce3xByx141Z4TOZnI+IF/iTSxUm7oqG9F/BMbda+Ne?=
- =?us-ascii?Q?sEEx6/Og0RwNXcwDYJD2wyU3ptzonQOSq88/YBVeDJbfHsFz2SnLv9/s3rm0?=
- =?us-ascii?Q?0eh4xR5d4nW/gC9AnInxefS9HVV0s1x2/eTl4d/E8B1t1C0ChxmKr9zI99O2?=
- =?us-ascii?Q?iqYsgvjn?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33830b42-6c08-4c37-a485-08d8c7251eed
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2021 02:49:12.1482
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PIAZNqJETkKVx00YJNCIpn3BlUP2ko0AsvzFPzI29/gqXfIn481G0NyKCr0AMQRhxU4uKp0Z9KC6ieXqZ1IvjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3590
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9882 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- suspectscore=0 spamscore=0 mlxlogscore=999 phishscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102020019
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9882 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 impostorscore=0
- mlxscore=0 spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102020019
+In-Reply-To: <CAL_Jsq+nNRv3KceHthgktHR1oRMs+eKWC4O7n0k78izs1aTPfA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 01, 2021 at 11:01:11AM -0800, Dan Williams wrote:
-> On Mon, Feb 1, 2021 at 10:35 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+On Thu, Jan 28, 2021 at 01:15:22PM -0600, Rob Herring wrote:
+> On Thu, Jan 28, 2021 at 11:52 AM Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
 > >
-> > On 21-02-01 13:18:45, Konrad Rzeszutek Wilk wrote:
-> > > On Fri, Jan 29, 2021 at 04:24:32PM -0800, Ben Widawsky wrote:
-> > > > For drivers that moderate access to the underlying hardware it is
-> > > > sometimes desirable to allow userspace to bypass restrictions. Once
-> > > > userspace has done this, the driver can no longer guarantee the sanctity
-> > > > of either the OS or the hardware. When in this state, it is helpful for
-> > > > kernel developers to be made aware (via this taint flag) of this fact
-> > > > for subsequent bug reports.
-> > > >
-> > > > Example usage:
-> > > > - Hardware xyzzy accepts 2 commands, waldo and fred.
-> > > > - The xyzzy driver provides an interface for using waldo, but not fred.
-> > > > - quux is convinced they really need the fred command.
-> > > > - xyzzy driver allows quux to frob hardware to initiate fred.
-> > >
-> > > Would it not be easier to _not_ frob the hardware for fred-operation?
-> > > Aka not implement it or just disallow in the first place?
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > >
-> > Yeah. So the idea is you either are in a transient phase of the command and some
-> > future kernel will have real support for fred - or a vendor is being short
-> > sighted and not adding support for fred.
+> > Add Bluetooth support on RB5 using the onboard QCA6391 WLAN+BT chipset.
 > >
-> > >
-> > >
-> > > >   - kernel gets tainted.
-> > > > - turns out fred command is borked, and scribbles over memory.
-> > > > - developers laugh while closing quux's subsequent bug report.
-> > >
-> > > Yeah good luck with that theory in-the-field. The customer won't
-> > > care about this and will demand a solution for doing fred-operation.
-> > >
-> > > Just easier to not do fred-operation in the first place,no?
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > [DB: added qca6391 power domain, removed s2f regulator]
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/qrb5165-rb5.dts | 29 ++++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
 > >
-> > The short answer is, in an ideal world you are correct. See nvdimm as an example
-> > of the real world.
+> > diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+> > index b39a9729395f..c65c13994a86 100644
+> > --- a/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+> > +++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+> > @@ -19,6 +19,7 @@ / {
+> >         compatible = "qcom,qrb5165-rb5", "qcom,sm8250";
 > >
-> > The longer answer. Unless we want to wait until we have all the hardware we're
-> > ever going to see, it's impossible to have a fully baked, and validated
-> > interface. The RAW interface is my admission that I make no guarantees about
-> > being able to provide the perfect interface and giving the power back to the
-> > hardware vendors and their driver writers.
-> >
-> > As an example, suppose a vendor shipped a device with their special vendor
-> > opcode. They can enable their customers to use that opcode on any driver
-> > version. That seems pretty powerful and worthwhile to me.
-> >
+> >         aliases {
+> > +               hsuart0 = &uart6;
 > 
-> Powerful, frightening, and questionably worthwhile when there are
-> already examples of commands that need extra coordination for whatever
-> reason. However, I still think the decision tilts towards allowing
-> this given ongoing spec work.
+> Serial devices should be 'serialN'. Don't add custom aliases.
 > 
-> NVDIMM ended up allowing unfettered vendor passthrough given the lack
-> of an organizing body to unify vendors. CXL on the other hand appears
-> to have more gravity to keep vendors honest. A WARN splat with a
-> taint, and a debugfs knob for the truly problematic commands seems
-> sufficient protection of system integrity while still following the
-> Linux ethos of giving system owners enough rope to make their own
-> decisions.
+
+Sorry, this is needed by the serial driver:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/tty/serial/qcom_geni_serial.c#n1364
+
+Thanks,
+Mani
+
+> >                 serial0 = &uart12;
+> >                 sdhc2 = &sdhc_2;
 > 
-> > Or a more realistic example, we ship a driver that adds a command which is
-> > totally broken. Customers can utilize the RAW interface until it gets fixed in a
-> > subsequent release which might be quite a ways out.
+> BTW, this should be dropped too.
+> 
+> >         };
+> > @@ -689,6 +690,26 @@ &pm8150_rtc {
+> >         status = "okay";
+> >  };
 > >
-> > I'll say the RAW interface isn't an encouraged usage, but it's one that I expect
-> > to be needed, and if it's not we can always try to kill it later. If nobody is
-> > actually using it, nobody will complain, right :D
-> 
-> It might be worthwhile to make RAW support a compile time decision so
-> that Linux distros can only ship support for the commands the CXL
-> driver-dev community has blessed, but I'll leave it to a distro
-> developer to second that approach.
-
-Couple of thoughts here:
-
- - As distro developer (well, actually middle manager of distro
-   developers) this approach of raw interface is a headache.
-
-   Customers will pick it and use it since it is there and the poor
-   support folks will have to go through layers of different devices to
-   say (for example) to finally find out that some OEM firmware opcode
-   X is a debug facility for inserting corrupted data, while for another vendor
-   the same X opcode makes it go super-fast.
-
-   Not that anybody would do that, right? Ha!
-
- - I will imagine that some of the more vocal folks in the community
-   will make it difficult to integrate these patches with these two
-   (especially this taint one). This will make the acceptance of these
-   patches more difficult than it should be. If you really want them,
-   perhaps make them part of another patchset, or a follow up ones.
-
- - I still don't get why as a brand new community hacks are coming up
-   (even when the hardware is not yet there) instead of pushing back at
-   the vendors to have a clean up interface. I get in say two or three
-   years these things .. but from the start? I get your point about
-   flexibility, but it seems to me that the right way is not give open
-   RAW interface (big barndoor) but rather maintain the driver and grow
-   it (properly constructed doors) as more functionality comes about
-   and then adding it in the driver.
-
-
+> > +&qup_uart6_default {
+> > +       ctsrx {
+> > +               pins = "gpio16", "gpio19";
+> > +               drive-strength = <2>;
+> > +               bias-disable;
+> > +       };
+> > +
+> > +       rts {
+> > +               pins = "gpio17";
+> > +               drive-strength = <2>;
+> > +               bias-disable;
+> > +       };
+> > +
+> > +       tx {
+> > +               pins = "gpio18";
+> > +               drive-strength = <2>;
+> > +               bias-pull-up;
+> > +       };
+> > +};
+> > +
+> >  &qupv3_id_0 {
+> >         status = "okay";
+> >  };
+> > @@ -1194,6 +1215,14 @@ wlan-en {
+> >         };
+> >  };
+> >
+> > +&uart6 {
+> > +       status = "okay";
+> > +       bluetooth {
+> > +               compatible = "qcom,qca6390-bt";
+> > +               power-domains = <&qca6391>;
+> > +       };
+> > +};
+> > +
+> >  &uart12 {
+> >         status = "okay";
+> >  };
+> > --
+> > 2.29.2
+> >
