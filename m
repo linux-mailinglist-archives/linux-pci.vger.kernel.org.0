@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A4130C943
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 19:16:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB9CA30C951
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 19:16:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238267AbhBBSO0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Feb 2021 13:14:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47004 "EHLO
+        id S238308AbhBBSQK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 13:16:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238174AbhBBSLC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Feb 2021 13:11:02 -0500
+        with ESMTP id S238397AbhBBSOi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Feb 2021 13:14:38 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E95B9C06178C;
-        Tue,  2 Feb 2021 10:10:21 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8131EC06174A;
+        Tue,  2 Feb 2021 10:13:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AVVe2K/NEHRP81u+T9FBKHD+3y3Q3gc7pWp75m9zru0=; b=OI0GI4y9LgXK1Ujzm42hs9roVB
-        96C9b2nQjVweVjdyYGWGMCv8eLoeT5/Ec/lG7zFc709TJV29GNpd8FdDuQO8XOlDSkH8IzLqCgoys
-        QgcVvN7gDxNP2Xo9J0DAcAwNufDoWPtamooMnP4JMUUlNFHa/R8e0fhtjJDhbOOohKm0FLGyhdOsg
-        V8CU3Xs10D8+YjfQh1E1Y3OWn4nH4KU7/isg3r2zDdsaJ2vrEXg85M+pdDTORRf5RPxTGY4oDyISE
-        xFC7v0ckzMQ/+ddiF4d4ErqtBh0p9csQmsSoOkZlh9MpKMJWaroKNeJRjm9ah2JB7uQGKyJ32Itlj
-        0VFvDMOA==;
+        bh=bJEP+2U5IHzdV2qfnQ7rYOCO3psxW3Bn2kjhHos5sUE=; b=wJAxx4saCmpOESyrOd9ngpJa8p
+        WclqsGHnEBCWPZPSjwMviTo2DraBgO/ruRSqVc1jZKjk8P1ETlGUT0ZhoSJ33sXPtY4wPD7EvVtuh
+        vCvgqYuU6TWVajw+XMVs3AHKvE5tj9r31Wn/vHI220bvXTQUv2tsHtmfxQzVKF/YsaUzbG3Vf9Ab3
+        k/bav4UP053XTUZXT8EEZItKfYHXn9QYa4ayeq5KkBDZ9C0tBvTgz8TTDs1JdXN30lUSljn6FZsQA
+        n63z8TKMycIgOhwJqOfnP/Y2l/w5Xc5shymhQEajRookQg5x/6X5bhabeGGdnWvfGkOTYGGBW5qIJ
+        kuPLgAzg==;
 Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l7080-00FZdy-GK; Tue, 02 Feb 2021 18:10:16 +0000
-Date:   Tue, 2 Feb 2021 18:10:16 +0000
+        id 1l70BW-00FZoh-LW; Tue, 02 Feb 2021 18:13:54 +0000
+Date:   Tue, 2 Feb 2021 18:13:54 +0000
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+Cc:     linux-cxl@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Chris Browy <cbrowy@avery-design.com>,
         Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Jon Masters <jcm@jonmasters.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
@@ -44,79 +44,55 @@ Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
         daniel.lll@alibaba-inc.com,
         "John Groves (jgroves)" <jgroves@micron.com>,
         "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 03/14] cxl/mem: Find device capabilities
-Message-ID: <20210202181016.GD3708021@infradead.org>
+Subject: Re: [PATCH 05/14] cxl/mem: Register CXL memX devices
+Message-ID: <20210202181354.GE3708021@infradead.org>
 References: <20210130002438.1872527-1-ben.widawsky@intel.com>
- <20210130002438.1872527-4-ben.widawsky@intel.com>
+ <20210130002438.1872527-6-ben.widawsky@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210130002438.1872527-4-ben.widawsky@intel.com>
+In-Reply-To: <20210130002438.1872527-6-ben.widawsky@intel.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 29, 2021 at 04:24:27PM -0800, Ben Widawsky wrote:
->  #ifndef __CXL_H__
->  #define __CXL_H__
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 25e08e5f40bd..33432a4cbe23 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3179,6 +3179,20 @@ struct device *get_device(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(get_device);
 >  
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/io.h>
+> +/**
+> + * get_live_device() - increment reference count for device iff !dead
+> + * @dev: device.
+> + *
+> + * Forward the call to get_device() if the device is still alive. If
+> + * this is called with the device_lock() held then the device is
+> + * guaranteed to not die until the device_lock() is dropped.
+> + */
+> +struct device *get_live_device(struct device *dev)
+> +{
+> +	return dev && !dev->p->dead ? get_device(dev) : NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(get_live_device);
+
+Err, if you want to add new core functionality that needs to be in a
+separate well documented prep patch, and also CCed to the relevant
+maintainers.
+
+>  	mutex_unlock(&cxlm->mbox.mutex);
+>  }
+>  
+> +static int cxl_memdev_open(struct inode *inode, struct file *file)
+> +{
+> +	struct cxl_memdev *cxlmd =
+> +		container_of(inode->i_cdev, typeof(*cxlmd), cdev);
 > +
-> +#define CXL_SET_FIELD(value, field)                                            \
-> +	({                                                                     \
-> +		WARN_ON(!FIELD_FIT(field##_MASK, value));                      \
-> +		FIELD_PREP(field##_MASK, value);                               \
-> +	})
-> +
-> +#define CXL_GET_FIELD(word, field) FIELD_GET(field##_MASK, word)
+> +	file->private_data = cxlmd;
 
-This looks like some massive obsfucation.  What is the intent
-here?
-
-> +	/* Cap 0001h - CXL_CAP_CAP_ID_DEVICE_STATUS */
-> +	struct {
-> +		void __iomem *regs;
-> +	} status;
-> +
-> +	/* Cap 0002h - CXL_CAP_CAP_ID_PRIMARY_MAILBOX */
-> +	struct {
-> +		void __iomem *regs;
-> +		size_t payload_size;
-> +	} mbox;
-> +
-> +	/* Cap 4000h - CXL_CAP_CAP_ID_MEMDEV */
-> +	struct {
-> +		void __iomem *regs;
-> +	} mem;
-
-This style looks massively obsfucated.  For one the comments look like
-absolute gibberish, but also what is the point of all these anonymous
-structures?
-
-> +#define cxl_reg(type)                                                          \
-> +	static inline void cxl_write_##type##_reg32(struct cxl_mem *cxlm,      \
-> +						    u32 reg, u32 value)        \
-> +	{                                                                      \
-> +		void __iomem *reg_addr = cxlm->type.regs;                      \
-> +		writel(value, reg_addr + reg);                                 \
-> +	}                                                                      \
-> +	static inline void cxl_write_##type##_reg64(struct cxl_mem *cxlm,      \
-> +						    u32 reg, u64 value)        \
-> +	{                                                                      \
-> +		void __iomem *reg_addr = cxlm->type.regs;                      \
-> +		writeq(value, reg_addr + reg);                                 \
-> +	}                                                                      \
-
-What is the value add of all this obsfucation over the trivial
-calls to the write*/read* functions, possible with a locally
-declarate "void __iomem *" variable in the callers like in all
-normall drivers?  Except for making the life of the poor soul trying
-to debug this code some time in the future really hard, of course.
-
-> +	/* 8.2.8.4.3 */
-
-????
-
+There is no good reason to ever mirror stuff from the inode into
+file->private_data, as you can just trivially get at the original
+location using file_inode(file).
