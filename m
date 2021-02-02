@@ -2,82 +2,270 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7872B30C71B
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 18:12:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA7F30C7AD
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 18:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237155AbhBBRLG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Feb 2021 12:11:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40618 "EHLO mail.kernel.org"
+        id S237447AbhBBR1x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 12:27:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237249AbhBBRJE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Feb 2021 12:09:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EFAC64F87;
-        Tue,  2 Feb 2021 17:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1612285704;
-        bh=kfjDlNIaVJazL4BD9E8JsEE9EWpuCPoncBB5XS/Gm2E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rxLU42pT9IwOohjuggI83EYkw9r2Bc/yogUTvaDI2B0sFVSf4QKMdcnkBTkGGSnJP
-         gRYaHTSJOal1g8+732zORip149mzM3sPaKIjEbYEr3soKwrwiRAefIGiBI+rp+jiD7
-         7SJ25kEfW02MTR6ZgfK7M7X+kGR8CoCjMaPPTs4M=
-Date:   Tue, 2 Feb 2021 18:08:21 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/5] misc: Add Add Synopsys DesignWare xData IP driver
-Message-ID: <YBmHBaevmWRmyUTq@kroah.com>
-References: <cover.1605777306.git.gustavo.pimentel@synopsys.com>
- <DM5PR12MB183527AA0FECE00D7A3D46DBDAB59@DM5PR12MB1835.namprd12.prod.outlook.com>
- <YBklScf1HPCVKQPf@kroah.com>
- <DM5PR12MB183515FF24DC1C306CDCD718DAB59@DM5PR12MB1835.namprd12.prod.outlook.com>
- <YBkst6PeVskpi4SO@kroah.com>
- <DM5PR12MB18352C83BFA6587910C922A7DAB59@DM5PR12MB1835.namprd12.prod.outlook.com>
+        id S233758AbhBBRZu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Feb 2021 12:25:50 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 525F464F86;
+        Tue,  2 Feb 2021 17:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612286710;
+        bh=WQY5AvDumycq/ElML3+ROe/hqNmEzEwK8b3q6Dbry9k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fYcazlak18I761FxGJzqUtfmUf+KiFIKU/JkEU+oOKEKxaK8RkKjKLXxb7JwdobpM
+         NEC4q0d69E7ZIG3YIwDon/dNbdbxbcPj8VxjyT6eNi2KQGBfIhBJjyuFIASXX3zjgB
+         v6FuBy5/ogyiuuyKh5Q94LECgwLZL8XeZiOc3xXMPNnN0JyuaGuCBMcUIRcKZZDDTS
+         ai5j50f1vO6pGSB9xsAVxp5ScPGqpH+re2MtDluvKgRzKi+x0SBJh7pVPGANCl6c5s
+         GTl5sGkHKVQss9JDgIjpTFBjblHUX3CUelFdZSqRVX8cKIP5SrqZsI7m75kuCsV13l
+         o+ALF4cGwk+PA==
+Date:   Tue, 2 Feb 2021 11:25:08 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v5 3/4] net/mlx5: Dynamically assign MSI-X
+ vectors count
+Message-ID: <20210202172508.GA113855@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM5PR12MB18352C83BFA6587910C922A7DAB59@DM5PR12MB1835.namprd12.prod.outlook.com>
+In-Reply-To: <20210126085730.1165673-4-leon@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 04:58:50PM +0000, Gustavo Pimentel wrote:
-> On Tue, Feb 2, 2021 at 10:43:3, Greg Kroah-Hartman 
-> <gregkh@linuxfoundation.org> wrote:
+On Tue, Jan 26, 2021 at 10:57:29AM +0200, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> > On Tue, Feb 02, 2021 at 10:38:29AM +0000, Gustavo Pimentel wrote:
-> > > On Tue, Feb 2, 2021 at 10:11:21, Greg Kroah-Hartman 
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > > On Tue, Feb 02, 2021 at 08:51:10AM +0000, Gustavo Pimentel wrote:
-> > > > > Just a kindly reminder.
-> > > > 
-> > > > reminder of what?
-> > > 
-> > > To review the patch set. I've done the requested modifications, but I 
-> > > didn't get any feedback if this patch series is fine or it needs 
-> > > something more to have an ACK.
-> > 
-> > I do not knwo, I don't see anything my my review queue, sorry.
+> The number of MSI-X vectors is PCI property visible through lspci, that
+> field is read-only and configured by the device. The static assignment
+> of an amount of MSI-X vectors doesn't allow utilize the newly created
+> VF because it is not known to the device the future load and configuration
+> where that VF will be used.
 > 
-> I've resend the patch series. Let's see if appears now 😊
+> To overcome the inefficiency in the spread of such MSI-X vectors, we
+> allow the kernel to instruct the device with the needed number of such
+> vectors.
 > 
-> > 
-> > > If some feedback was provided, please accept my apologies. My email 
-> > > account was having some issues some time ago and I might not have 
-> > > received some emails.
-> > 
-> > Check the archives please, that's what they are there for :)
-> 
-> I have just checked, there isn't any feedback besides yours and Arnd 
-> Bergmann.
+> Such change immediately increases the amount of MSI-X vectors for the
+> system with @ VFs from 12 vectors per-VF, to be 32 vectors per-VF.
 
-Did you incorporate our review?
+Not knowing anything about mlx5, it looks like maybe this gets some
+parameters from firmware on the device, then changes the way MSI-X
+vectors are distributed among VFs?
 
-greg k-h
+I don't understand the implications above about "static assignment"
+and "inefficiency in the spread."  I guess maybe this takes advantage
+of the fact that you know how many VFs are enabled, so if NumVFs is
+less that TotalVFs, you can assign more vectors to each VF?
+
+If that's the case, spell it out a little bit.  The current text makes
+it sound like you discovered brand new MSI-X vectors somewhere,
+regardless of how many VFs are enabled, which doesn't sound right.
+
+> Before this patch:
+> [root@server ~]# lspci -vs 0000:08:00.2
+> 08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+> ....
+> 	Capabilities: [9c] MSI-X: Enable- Count=12 Masked-
+> 
+> After this patch:
+> [root@server ~]# lspci -vs 0000:08:00.2
+> 08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+> ....
+> 	Capabilities: [9c] MSI-X: Enable- Count=32 Masked-
+> 
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  .../net/ethernet/mellanox/mlx5/core/main.c    |  4 ++
+>  .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  5 ++
+>  .../net/ethernet/mellanox/mlx5/core/pci_irq.c | 72 +++++++++++++++++++
+>  .../net/ethernet/mellanox/mlx5/core/sriov.c   | 13 +++-
+>  4 files changed, 92 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> index ca6f2fc39ea0..79cfcc844156 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> @@ -567,6 +567,10 @@ static int handle_hca_cap(struct mlx5_core_dev *dev, void *set_ctx)
+>  	if (MLX5_CAP_GEN_MAX(dev, mkey_by_name))
+>  		MLX5_SET(cmd_hca_cap, set_hca_cap, mkey_by_name, 1);
+>  
+> +	if (MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix))
+> +		MLX5_SET(cmd_hca_cap, set_hca_cap, num_total_dynamic_vf_msix,
+> +			 MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix));
+> +
+>  	return set_caps(dev, set_ctx, MLX5_SET_HCA_CAP_OP_MOD_GENERAL_DEVICE);
+>  }
+>  
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+> index 0a0302ce7144..5babb4434a87 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+> @@ -172,6 +172,11 @@ int mlx5_irq_attach_nb(struct mlx5_irq_table *irq_table, int vecidx,
+>  		       struct notifier_block *nb);
+>  int mlx5_irq_detach_nb(struct mlx5_irq_table *irq_table, int vecidx,
+>  		       struct notifier_block *nb);
+> +
+> +int mlx5_set_msix_vec_count(struct mlx5_core_dev *dev, int devfn,
+> +			    int msix_vec_count);
+> +int mlx5_get_default_msix_vec_count(struct mlx5_core_dev *dev, int num_vfs);
+> +
+>  struct cpumask *
+>  mlx5_irq_get_affinity_mask(struct mlx5_irq_table *irq_table, int vecidx);
+>  struct cpu_rmap *mlx5_irq_get_rmap(struct mlx5_irq_table *table);
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c b/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c
+> index 6fd974920394..2a35888fcff0 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c
+> @@ -55,6 +55,78 @@ static struct mlx5_irq *mlx5_irq_get(struct mlx5_core_dev *dev, int vecidx)
+>  	return &irq_table->irq[vecidx];
+>  }
+>  
+> +/**
+> + * mlx5_get_default_msix_vec_count() - Get defaults of number of MSI-X vectors
+> + * to be set
+
+s/defaults of number of/default number of/
+s/to be set/to be assigned to each VF/ ?
+
+> + * @dev: PF to work on
+> + * @num_vfs: Number of VFs was asked when SR-IOV was enabled
+
+s/Number of VFs was asked when SR-IOV was enabled/Number of enabled VFs/ ?
+
+> + **/
+
+Documentation/doc-guide/kernel-doc.rst says kernel-doc comments end
+with just "*/" (not "**/").
+
+> +int mlx5_get_default_msix_vec_count(struct mlx5_core_dev *dev, int num_vfs)
+> +{
+> +	int num_vf_msix, min_msix, max_msix;
+> +
+> +	num_vf_msix = MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
+> +	if (!num_vf_msix)
+> +		return 0;
+> +
+> +	min_msix = MLX5_CAP_GEN(dev, min_dynamic_vf_msix_table_size);
+> +	max_msix = MLX5_CAP_GEN(dev, max_dynamic_vf_msix_table_size);
+> +
+> +	/* Limit maximum number of MSI-X to leave some of them free in the
+> +	 * pool and ready to be assigned by the users without need to resize
+> +	 * other Vfs.
+
+s/number of MSI-X/number of MSI-X vectors/
+s/Vfs/VFs/
+
+> +	 */
+> +	return max(min(num_vf_msix / num_vfs, max_msix / 2), min_msix);
+> +}
+> +
+> +/**
+> + * mlx5_set_msix_vec_count() - Set dynamically allocated MSI-X to the VF
+> + * @dev: PF to work on
+> + * @function_id: Internal PCI VF function id
+> + * @msix_vec_count: Number of MSI-X to set
+
+s/id/ID/
+s/Number of MSI-X/Number of MSI-X vectors/
+
+> + **/
+> +int mlx5_set_msix_vec_count(struct mlx5_core_dev *dev, int function_id,
+> +			    int msix_vec_count)
+> +{
+> +	int sz = MLX5_ST_SZ_BYTES(set_hca_cap_in);
+> +	int num_vf_msix, min_msix, max_msix;
+> +	void *hca_cap, *cap;
+> +	int ret;
+> +
+> +	num_vf_msix = MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
+> +	if (!num_vf_msix)
+> +		return 0;
+> +
+> +	if (!MLX5_CAP_GEN(dev, vport_group_manager) || !mlx5_core_is_pf(dev))
+> +		return -EOPNOTSUPP;
+> +
+> +	min_msix = MLX5_CAP_GEN(dev, min_dynamic_vf_msix_table_size);
+> +	max_msix = MLX5_CAP_GEN(dev, max_dynamic_vf_msix_table_size);
+> +
+> +	if (msix_vec_count < min_msix)
+> +		return -EINVAL;
+> +
+> +	if (msix_vec_count > max_msix)
+> +		return -EOVERFLOW;
+> +
+> +	hca_cap = kzalloc(sz, GFP_KERNEL);
+> +	if (!hca_cap)
+> +		return -ENOMEM;
+> +
+> +	cap = MLX5_ADDR_OF(set_hca_cap_in, hca_cap, capability);
+> +	MLX5_SET(cmd_hca_cap, cap, dynamic_msix_table_size, msix_vec_count);
+> +
+> +	MLX5_SET(set_hca_cap_in, hca_cap, opcode, MLX5_CMD_OP_SET_HCA_CAP);
+> +	MLX5_SET(set_hca_cap_in, hca_cap, other_function, 1);
+> +	MLX5_SET(set_hca_cap_in, hca_cap, function_id, function_id);
+> +
+> +	MLX5_SET(set_hca_cap_in, hca_cap, op_mod,
+> +		 MLX5_SET_HCA_CAP_OP_MOD_GENERAL_DEVICE << 1);
+> +	ret = mlx5_cmd_exec_in(dev, set_hca_cap, hca_cap);
+> +	kfree(hca_cap);
+> +	return ret;
+> +}
+> +
+>  int mlx5_irq_attach_nb(struct mlx5_irq_table *irq_table, int vecidx,
+>  		       struct notifier_block *nb)
+>  {
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+> index 3094d20297a9..f0ec86a1c8a6 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
+> @@ -71,8 +71,7 @@ static int sriov_restore_guids(struct mlx5_core_dev *dev, int vf)
+>  static int mlx5_device_enable_sriov(struct mlx5_core_dev *dev, int num_vfs)
+>  {
+>  	struct mlx5_core_sriov *sriov = &dev->priv.sriov;
+> -	int err;
+> -	int vf;
+> +	int err, vf, num_msix_count;
+>  
+>  	if (!MLX5_ESWITCH_MANAGER(dev))
+>  		goto enable_vfs_hca;
+> @@ -85,12 +84,22 @@ static int mlx5_device_enable_sriov(struct mlx5_core_dev *dev, int num_vfs)
+>  	}
+>  
+>  enable_vfs_hca:
+> +	num_msix_count = mlx5_get_default_msix_vec_count(dev, num_vfs);
+>  	for (vf = 0; vf < num_vfs; vf++) {
+>  		err = mlx5_core_enable_hca(dev, vf + 1);
+>  		if (err) {
+>  			mlx5_core_warn(dev, "failed to enable VF %d (%d)\n", vf, err);
+>  			continue;
+>  		}
+> +
+> +		err = mlx5_set_msix_vec_count(dev, vf + 1, num_msix_count);
+> +		if (err) {
+> +			mlx5_core_warn(dev,
+> +				       "failed to set MSI-X vector counts VF %d, err %d\n",
+> +				       vf, err);
+> +			continue;
+> +		}
+> +
+>  		sriov->vfs_ctx[vf].enabled = 1;
+>  		if (MLX5_CAP_GEN(dev, port_type) == MLX5_CAP_PORT_TYPE_IB) {
+>  			err = sriov_restore_guids(dev, vf);
+> -- 
+> 2.29.2
+> 
