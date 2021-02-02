@@ -2,126 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A130130C543
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 17:19:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1EE730C599
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 17:29:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235993AbhBBQRp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Feb 2021 11:17:45 -0500
-Received: from mx.socionext.com ([202.248.49.38]:24641 "EHLO mx.socionext.com"
+        id S236257AbhBBQ1R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 11:27:17 -0500
+Received: from mout.gmx.net ([212.227.15.15]:36983 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236044AbhBBQPd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Feb 2021 11:15:33 -0500
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 03 Feb 2021 01:13:27 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id EAA732059027;
-        Wed,  3 Feb 2021 01:13:27 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 3 Feb 2021 01:13:27 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 6B16EB1D40;
-        Wed,  3 Feb 2021 01:13:27 +0900 (JST)
-Received: from [10.212.20.246] (unknown [10.212.20.246])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id C6B731202F7;
-        Wed,  3 Feb 2021 01:13:26 +0900 (JST)
-Subject: Re: [PATCH v2 1/3] PCI: endpoint: Add 'started' to pci_epc to set
- whether the controller is started
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1611500977-24816-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1611500977-24816-2-git-send-email-hayashi.kunihiko@socionext.com>
- <1253c4c9-4e5e-1456-6475-0334f3bb8634@ti.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <83a6ec4e-3f59-5084-2241-404169d50116@socionext.com>
-Date:   Wed, 3 Feb 2021 01:13:26 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S236312AbhBBQXZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Feb 2021 11:23:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1612282862;
+        bh=j7MqdTeRJ2CWeYhU/BJJVscXmV0af2mzaUyfN5RfAW0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=SuXGNdGWi9JtCysGxjPI2Z3K4MA44C3FSkk8lyksyx668b1rVZp+3TJg7ueWsPovL
+         bzVGqiANrOCu/bIJrD5lhFV7BFBFTViszkulxhYhtIHZRoaaTA6FT3xnhqpfDnh6XR
+         rt9ML7UEEDkx9TFvJi+EGGzRG20jFfh4126YSUEk=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.149.138] ([217.61.149.138]) by web-mail.gmx.net
+ (3c-app-gmx-bs53.server.lan [172.19.170.137]) (via HTTP); Tue, 2 Feb 2021
+ 17:21:02 +0100
 MIME-Version: 1.0
-In-Reply-To: <1253c4c9-4e5e-1456-6475-0334f3bb8634@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-ID: <trinity-0ead36a9-4583-40d1-8b47-146be8ae8533-1612282862443@3c-app-gmx-bs53>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Frank Wunderlich <linux@fw-web.de>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Aw: Re:  Re:  Re: [PATCH] pci: mediatek: fix warning in msi.h
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 2 Feb 2021 17:21:02 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <c63d8d7d966c1dda82884f361d4691c3@kernel.org>
+References: <20201031140330.83768-1-linux@fw-web.de>
+ <1604253261.22363.0.camel@mtkswgap22>
+ <trinity-9eb2a213-f877-4af3-87df-f76a9c093073-1604255233122@3c-app-gmx-bap08>
+ <87k0v4u4uq.wl-maz@kernel.org> <87pn4w90hm.fsf@nanos.tec.linutronix.de>
+ <df5565a2f1e821041c7c531ad52a3344@kernel.org>
+ <87h7q791j8.fsf@nanos.tec.linutronix.de>
+ <877dr38kt8.fsf@nanos.tec.linutronix.de>
+ <901c5eb8bbaa3fe53ddc8f65917e48ef@kernel.org>
+ <87o8ke7njb.fsf@nanos.tec.linutronix.de>
+ <trinity-1d7f8900-10db-40c0-a0aa-47bb99ed84cd-1604508571909@3c-app-gmx-bs02>
+ <87h7q4lnoz.fsf@nanos.tec.linutronix.de>
+ <074d057910c3e834f4bd58821e8583b1@kernel.org>
+ <87blgbl887.fsf@nanos.tec.linutronix.de>
+ <c63d8d7d966c1dda82884f361d4691c3@kernel.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:u3SIc85K08OE7DKGZvTGXOsAnmBdfTSXT9sG/woR+q++Yox4oBwPqjdX/Z6uHwHmIaCz9
+ xtoVLE6VhiyeYHWnScTDNyxEkUGTOJd7tylKctqrRlGSEA+owGrs7nyr1NZxGWbgIV+z159lUGym
+ /zmcTpTSQLJ5RyWeJYJvG+K1n3k1agV04JCFP0MglDPbVPTeumrlJYzkHAvTKhOg0dV1BPu+HcGy
+ EEuP6iojtiTqbE5BBj/s6s2+7/hhLLjo2SP4WotNM4ugp9hrQPPBpBsMhj6rtagoWlYfMXzQ78Cg
+ w8=
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:k/Dr0NOy/1k=:UIeRd3EBwGoX18LylrsoZW
+ bNHoK2iWsEigwQNdjNgdfNyjpIGewc6CdfmAyzSRjhk8J4W+8p1Eyg8AKANXDqKy6jrkNWTn6
+ 9Gd65OejMRWCmrlS/RtSmH6gIBExjnyZ1PjiSf4TvubbsWifzgnSt9YXQwBqWGi0hccLjWGMp
+ tRq2hBW6rz+MgYlmdVq7gN0t86FaK79esvt9mlSrNVmV0+YjjtFVga0gUnDAl6FyPGuCJqeTX
+ nIZV1cizRaOyGEKg5zVUcOoCa4orCUIiWMZi25lZwUXgX8vrptvb6kS0s5Lx6ypZCoLmq2TMy
+ /NKErKz3wQFG2atbjOZBxXraIfCSgRYKddmllYDfwQ6vD6WOV7KILNyVNnqk2xmbO8lRIlpH1
+ TjCn03mzIzrV02oT+A/3I6IlKqdXhJaj32TYXpQIACiXoiKy9PCiehiD5iU6pAhIr7M2cgYtd
+ B0E2op19XSYNfcxpZHrafgtqawMxUY3AIyS4QbuyMfy+/8OkN7jitcK1tw2pWbE9hpHG/Q/Uw
+ WQX7UrRSM7UX+j4jFfveeA5VO6N760iiAFTdZD4BQETytd4STgm3DtjFhyEwb8ZoYaSUX682U
+ qKFPvvPb3yJ0o=
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+Hi,
 
-On 2021/01/28 23:11, Kishon Vijay Abraham I wrote:
-> Hi Kunihiko,
-> 
-> On 24/01/21 8:39 pm, Kunihiko Hayashi wrote:
->> This adds a member 'started' as a boolean value to struct pci_epc to set
->> whether the controller is started, and also adds a function to get the
->> value.
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>   drivers/pci/endpoint/pci-epc-core.c | 2 ++
->>   include/linux/pci-epc.h             | 7 +++++++
->>   2 files changed, 9 insertions(+)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index cc8f9eb..2904175 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -174,6 +174,7 @@ void pci_epc_stop(struct pci_epc *epc)
->>   
->>   	mutex_lock(&epc->lock);
->>   	epc->ops->stop(epc);
->> +	epc->started = false;
->>   	mutex_unlock(&epc->lock);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_stop);
->> @@ -196,6 +197,7 @@ int pci_epc_start(struct pci_epc *epc)
->>   
->>   	mutex_lock(&epc->lock);
->>   	ret = epc->ops->start(epc);
->> +	epc->started = true;
->>   	mutex_unlock(&epc->lock);
->>   
->>   	return ret;
->> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->> index b82c9b1..5808952 100644
->> --- a/include/linux/pci-epc.h
->> +++ b/include/linux/pci-epc.h
->> @@ -131,6 +131,7 @@ struct pci_epc_mem {
->>    * @lock: mutex to protect pci_epc ops
->>    * @function_num_map: bitmap to manage physical function number
->>    * @notifier: used to notify EPF of any EPC events (like linkup)
->> + * @started: true if this EPC is started
->>    */
->>   struct pci_epc {
->>   	struct device			dev;
->> @@ -145,6 +146,7 @@ struct pci_epc {
->>   	struct mutex			lock;
->>   	unsigned long			function_num_map;
->>   	struct atomic_notifier_head	notifier;
->> +	bool				started;
->>   };
->>   
->>   /**
->> @@ -191,6 +193,11 @@ pci_epc_register_notifier(struct pci_epc *epc, struct notifier_block *nb)
->>   	return atomic_notifier_chain_register(&epc->notifier, nb);
->>   }
->>   
->> +static inline bool pci_epc_is_started(struct pci_epc *epc)
->> +{
->> +	return epc->started;
->> +}
-> 
-> This should also be protected.
+is there any new state?
 
-Ok, I prepared this function for restart management in patch 2/3.
-This also needs to be reconsidered.
+kernel test robot reports the following problem (i do not see it when compiling for my arm/arm64 devices):
 
-Thank you,
+ARCH=i386
 
----
-Best Regards
-Kunihiko Hayashi
+drivers/pci/probe.c: In function 'pci_register_host_bridge':
+>> drivers/pci/probe.c:930:39: error: 'struct device' has no member named 'msi_domain'; did you mean 'pm_domain'?
+930 | (bridge->msi_domain && !bus->dev.msi_domain))
+
+and yes...msi_domain is only member of pci_host_bridge (include/linux/pci.h)
+
+why do you check for msi_domain in pci_bus->dev
+
+regards Frank
