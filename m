@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A2F230BF74
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 14:33:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F366D30BF77
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 14:33:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232258AbhBBNbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Feb 2021 08:31:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
+        id S232397AbhBBNbv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 08:31:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231497AbhBBNan (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Feb 2021 08:30:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CB27D64F51;
+        id S232345AbhBBNb1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Feb 2021 08:31:27 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DAFFD64EDA;
         Tue,  2 Feb 2021 13:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1612272602;
-        bh=P1//vV/xroxOXJR5AGgK3kzXgaxmA/blRDvzebBehs0=;
+        bh=erwwnvc97xuvNb/GIafHSr71dHfEPwM5oq3L6s8voRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWe0qKCTLyT4TQ9Sm3MwTBggyxoKebyKgItKTLs1renNkPlyRIpGhiX9QXUjQpSJd
-         9P2B/BAUYlEyF8VrPI9njuv9t02PXnLwGDyxm2AM7kyvGkN0pKewKw/kWLzm5Mlvzv
-         tV5qJ0Ra6+CtjuXWh+5efxLX4oftI8mJKDFUU/+0k/ldg+02u6KUk6xmeSXeoamZv/
-         NSnbGY+lVwyqIaTp0imp0ZQESTuzWeo+wWN3I+EWZxWm70tCbi+a4lvKy5UZ3naADl
-         iFocacv/tyvhTLIcF8u3GpJDuUJBCx2DBfMhmGKw+meCZ5XfNWzN13yvV8WJ/o2U/d
-         VZYc0eL/Yl+iQ==
+        b=H9Cb5xpnVcE+fWV4E2SuBYbqZ1Aeb/4PHUCK++GkCu8iRb0oYQMpvUa0c2LzvUF7d
+         eW+cIuEVY6wbjcuNYUI0gZlrWskMit2+jBfUGwTaABlv/97pO0Sf3Kekcs1UQvDAhC
+         8RLE6790jLzYOQj9NsDALz3qqs6uPeGnZ+LMWIMSZomHhCQ0G6lQNfDco/hq1Je48S
+         HwJxpZBg725ixI8rESo+bOm+gTxKDVvU+bw0tM/zCIll2WB6gkEyTSUV3TFzdN/p7A
+         yWagAEIhd6X1HNvPXCF/bZFNespphPZFNVQ7l3neuIlPJ5U+hf6saEBQtQ2K+3xEPp
+         bKQau2+0EKu8Q==
 Received: by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1l6vkl-0011z7-Ql; Tue, 02 Feb 2021 14:29:59 +0100
+        id 1l6vkl-0011zA-S1; Tue, 02 Feb 2021 14:29:59 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Binghui Wang <wangbinghui@hisilicon.com>,
@@ -34,9 +34,9 @@ Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Xiaowei Song <songxiaowei@hisilicon.com>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH 10/13] pci: dwc: pcie-kirin: allow using multiple reset GPIOs
-Date:   Tue,  2 Feb 2021 14:29:55 +0100
-Message-Id: <39d125c8d033ca961bbaa77c9c2b0df3f0bd7ef1.1612271903.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 11/13] pci: dwc: pcie-kirin: add support for clkreq GPIOs
+Date:   Tue,  2 Feb 2021 14:29:56 +0100
+Message-Id: <d6a54284f50b74dd3249e79b65e060d1982e7100.1612271903.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <cover.1612271903.git.mchehab+huawei@kernel.org>
 References: <cover.1612271903.git.mchehab+huawei@kernel.org>
@@ -48,240 +48,150 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Hikey 970, the PCI hardware contains a bridge (PEX 8606),
-an Ethernet controller (RTL8169), a M.2 connector and a
-mini 1X connector.
+The PCI hardware on Hikey 970 also need to enable clock
+lines for PCI bridge, Ethernet and M.2 connector.
 
-They work out of the box, but each of them requires its
-own reset line, which should be initialized when the PCI
-hardware is reset.
+Those should be enabled during PCI hardware power on logic.
 
-So, add support for the DTS to contain multiple reset lines.
+Add support for them.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-kirin.c | 134 +++++++++++-------------
- 1 file changed, 64 insertions(+), 70 deletions(-)
+ drivers/pci/controller/dwc/pcie-kirin.c | 77 +++++++++++--------------
+ 1 file changed, 34 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
-index 42aea34dff4d..faf711366309 100644
+index faf711366309..37b964386d21 100644
 --- a/drivers/pci/controller/dwc/pcie-kirin.c
 +++ b/drivers/pci/controller/dwc/pcie-kirin.c
-@@ -139,6 +139,7 @@
- #define TIME_PHY_PD_MIN		10
+@@ -140,6 +140,8 @@
  #define TIME_PHY_PD_MAX		11
  
-+#define MAX_GPIO_RESETS		4
+ #define MAX_GPIO_RESETS		4
++#define MAX_GPIO_CLKREQ		3
++
  struct kirin_pcie {
  	struct dw_pcie	*pci;
  	void __iomem	*apb_base;
-@@ -151,8 +152,10 @@ struct kirin_pcie {
- 	struct clk	*phy_ref_clk;
+@@ -153,9 +155,11 @@ struct kirin_pcie {
  	struct clk	*pcie_aclk;
  	struct clk	*pcie_aux_clk;
--	int		gpio_id_reset[4];
-+	int		n_gpio_resets;
- 	int		gpio_id_clkreq[3];
-+	int		gpio_id_reset[MAX_GPIO_RESETS];
-+	const char	*reset_names[MAX_GPIO_RESETS];
+ 	int		n_gpio_resets;
+-	int		gpio_id_clkreq[3];
++	int		n_gpio_clkreq;
+ 	int		gpio_id_reset[MAX_GPIO_RESETS];
+ 	const char	*reset_names[MAX_GPIO_RESETS];
++	int		gpio_id_clkreq[MAX_GPIO_CLKREQ];
++	const char	*clkreq_names[MAX_GPIO_CLKREQ];
  	u32		eye_param[5];
  };
  
-@@ -297,8 +300,10 @@ static long kirin_common_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 					   struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	struct regulator *reg;
--	int ret;
-+	char name[32];
-+	int ret, i;
+@@ -345,6 +349,24 @@ static long kirin_common_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+ 			return -ENOMEM;
+ 	}
  
- 	reg = devm_regulator_get_optional(dev, "pci");
- 	if (IS_ERR_OR_NULL(reg)) {
-@@ -322,14 +327,47 @@ static long kirin_common_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 	if (IS_ERR(kirin_pcie->phy_base))
- 		return PTR_ERR(kirin_pcie->phy_base);
- 
-+	kirin_pcie->n_gpio_resets = of_gpio_named_count(np, "reset-gpios");
-+	if (kirin_pcie->n_gpio_resets > MAX_GPIO_RESETS) {
-+		dev_err(dev, "Too many GPIO resets!\n");
++	kirin_pcie->n_gpio_clkreq = of_gpio_named_count(np, "clkreq-gpios");
++	if (kirin_pcie->n_gpio_clkreq > MAX_GPIO_CLKREQ) {
++		dev_err(dev, "Too many GPIO clock requests!\n");
 +		return -EINVAL;
 +	}
-+	for (i = 0; i < kirin_pcie->n_gpio_resets; i++) {
-+		kirin_pcie->gpio_id_reset[i] = of_get_named_gpio(dev->of_node,
-+							    "reset-gpios", i);
-+		if (kirin_pcie->gpio_id_reset[i] < 0)
-+			return kirin_pcie->gpio_id_reset[i];
++	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++) {
++		kirin_pcie->gpio_id_clkreq[i] = of_get_named_gpio(dev->of_node,
++							    "clkreq-gpios", i);
++		if (kirin_pcie->gpio_id_clkreq[i] < 0)
++			return kirin_pcie->gpio_id_clkreq[i];
 +
-+		sprintf(name, "pcie_perst_%d", i);
-+		kirin_pcie->reset_names[i] = devm_kstrdup_const(dev, name,
++		sprintf(name, "pcie_clkreq_%d", i);
++		kirin_pcie->clkreq_names[i] = devm_kstrdup_const(dev, name,
 +								GFP_KERNEL);
-+		if (!kirin_pcie->reset_names[i])
++		if (!kirin_pcie->clkreq_names[i])
 +			return -ENOMEM;
 +	}
 +
  	return 0;
  }
  
-+static int kirin_gpio_request(struct kirin_pcie *kirin_pcie,
-+			      struct device *dev)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < kirin_pcie->n_gpio_resets; i++) {
-+		ret = devm_gpio_request(dev, kirin_pcie->gpio_id_reset[i],
-+					kirin_pcie->reset_names[i]);
+@@ -360,6 +382,12 @@ static int kirin_gpio_request(struct kirin_pcie *kirin_pcie,
+ 			return ret;
+ 	}
+ 
++	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++) {
++		ret = devm_gpio_request(dev, kirin_pcie->gpio_id_clkreq[i],
++					kirin_pcie->clkreq_names[i]);
 +		if (ret)
 +			return ret;
 +	}
-+
-+
-+	return ret;
-+}
-+
-+
- static long kirin960_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 				       struct platform_device *pdev)
- {
--	struct device *dev = &pdev->dev;
--
- 	kirin_pcie->crgctrl =
- 		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-crgctrl");
- 	if (IS_ERR(kirin_pcie->crgctrl))
-@@ -340,56 +378,18 @@ static long kirin960_pcie_get_resource(struct kirin_pcie *kirin_pcie,
- 	if (IS_ERR(kirin_pcie->sysctrl))
- 		return PTR_ERR(kirin_pcie->sysctrl);
  
--	kirin_pcie->gpio_id_reset[0] = of_get_named_gpio(dev->of_node,
--						      "reset-gpios", 0);
--	if (kirin_pcie->gpio_id_reset[0] < 0)
--		return kirin_pcie->gpio_id_reset[0];
--
- 	return 0;
+ 	return ret;
  }
- 
- static long kirin970_pcie_get_resource(struct kirin_pcie *kirin_pcie,
--				      struct platform_device *pdev)
-+				       struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
- 	kirin970_pcie_get_eyeparam(kirin_pcie);
- 
--	kirin_pcie->gpio_id_reset[0] = of_get_named_gpio(dev->of_node,
--						"switch,reset-gpios", 0);
--	if (kirin_pcie->gpio_id_reset[0] < 0)
--		return kirin_pcie->gpio_id_reset[0];
--
--	kirin_pcie->gpio_id_reset[1] = of_get_named_gpio(dev->of_node,
--						"eth,reset-gpios", 0);
--	if (kirin_pcie->gpio_id_reset[1] < 0)
--		return kirin_pcie->gpio_id_reset[1];
--
--	kirin_pcie->gpio_id_reset[2] = of_get_named_gpio(dev->of_node,
--						"m_2,reset-gpios", 0);
--	if (kirin_pcie->gpio_id_reset[2] < 0)
--		return kirin_pcie->gpio_id_reset[2];
--
--	kirin_pcie->gpio_id_reset[3] = of_get_named_gpio(dev->of_node,
--						"mini1,reset-gpios", 0);
--	if (kirin_pcie->gpio_id_reset[3] < 0)
--		return kirin_pcie->gpio_id_reset[3];
--
--	ret = devm_gpio_request(dev, kirin_pcie->gpio_id_reset[0],
--				    "pcie_switch_reset");
--	if (ret)
--		return ret;
--	ret = devm_gpio_request(dev, kirin_pcie->gpio_id_reset[1],
--				    "pcie_eth_reset");
--	if (ret)
--		return ret;
--	ret = devm_gpio_request(dev, kirin_pcie->gpio_id_reset[2],
--				    "pcie_m_2_reset");
--	if (ret)
--		return ret;
--	ret = devm_gpio_request(dev, kirin_pcie->gpio_id_reset[3],
--				    "pcie_mini1_reset");
-+	ret = kirin_gpio_request(kirin_pcie, dev);
+@@ -393,36 +421,6 @@ static long kirin970_pcie_get_resource(struct kirin_pcie *kirin_pcie,
  	if (ret)
  		return ret;
  
-@@ -849,7 +849,7 @@ static int kirin970_pcie_noc_power(struct kirin_pcie *kirin_pcie, bool enable)
+-	kirin_pcie->gpio_id_clkreq[0] = of_get_named_gpio(dev->of_node,
+-						"eth,clkreq-gpios", 0);
+-	if (kirin_pcie->gpio_id_clkreq[0] < 0)
+-		return -ENODEV;
+-
+-	kirin_pcie->gpio_id_clkreq[1] = of_get_named_gpio(dev->of_node,
+-						"m_2,clkreq-gpios", 0);
+-	if (kirin_pcie->gpio_id_clkreq[1] < 0)
+-		return -ENODEV;
+-
+-	kirin_pcie->gpio_id_clkreq[2] = of_get_named_gpio(dev->of_node,
+-						"mini1,clkreq-gpios", 0);
+-	if (kirin_pcie->gpio_id_clkreq[2] < 0)
+-		return -ENODEV;
+-
+-	ret = devm_gpio_request(dev, kirin_pcie->gpio_id_clkreq[0],
+-				    "pcie_eth_clkreq");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(dev, kirin_pcie->gpio_id_clkreq[1],
+-				    "pcie_m_2_clkreq");
+-	if (ret)
+-		return ret;
+-
+-	ret = devm_gpio_request(dev, kirin_pcie->gpio_id_clkreq[2],
+-				    "pcie_mini1_clkreq");
+-	if (ret)
+-		return ret;
+-
+ 	kirin_pcie->crgctrl =
+ 		syscon_regmap_lookup_by_compatible("hisilicon,hi3670-crgctrl");
+ 	if (IS_ERR(kirin_pcie->crgctrl))
+@@ -848,7 +846,6 @@ static int kirin970_pcie_noc_power(struct kirin_pcie *kirin_pcie, bool enable)
+ 
  static int kirin970_pcie_power_on(struct kirin_pcie *kirin_pcie)
  {
- 	struct device *dev = kirin_pcie->pci->dev;
--	int ret;
-+	int ret, i;
+-	struct device *dev = kirin_pcie->pci->dev;
+ 	int ret, i;
  	u32 val;
  
- 	/* Power supply for Host */
-@@ -901,22 +901,11 @@ static int kirin970_pcie_power_on(struct kirin_pcie *kirin_pcie)
+@@ -858,17 +855,11 @@ static int kirin970_pcie_power_on(struct kirin_pcie *kirin_pcie)
+ 	usleep_range(TIME_CMOS_MIN, TIME_CMOS_MAX);
+ 	kirin_pcie_oe_enable(kirin_pcie);
  
- 	/* perst assert Endpoints */
- 	usleep_range(21000, 23000);
--	ret = gpio_direction_output(kirin_pcie->gpio_id_reset[0], 1);
+-	ret = gpio_direction_output(kirin_pcie->gpio_id_clkreq[0], 0);
 -	if (ret)
--		goto close_clk;
+-		dev_err(dev, "Failed to pulse eth clkreq signal\n");
 -
--	ret = gpio_direction_output(kirin_pcie->gpio_id_reset[1], 1);
+-	ret = gpio_direction_output(kirin_pcie->gpio_id_clkreq[1], 0);
 -	if (ret)
--		goto close_clk;
+-		dev_err(dev, "Failed to pulse m.2 clkreq signal\n");
 -
--	ret = gpio_direction_output(kirin_pcie->gpio_id_reset[2], 1);
+-	ret = gpio_direction_output(kirin_pcie->gpio_id_clkreq[2], 0);
 -	if (ret)
--		goto close_clk;
--
--	ret = gpio_direction_output(kirin_pcie->gpio_id_reset[3], 1);
--	if (ret)
--		goto close_clk;
--
-+	for (i = 0; i < kirin_pcie->n_gpio_resets; i++) {
-+		ret = gpio_direction_output(kirin_pcie->gpio_id_reset[i], 1);
+-		dev_err(dev, "Failed to pulse mini1 clkreq signal\n");
++	for (i = 0; i < kirin_pcie->n_gpio_clkreq; i++) {
++		ret = gpio_direction_output(kirin_pcie->gpio_id_clkreq[i], 0);
 +		if (ret)
 +			return ret;
 +	}
- 	usleep_range(10000, 11000);
  
- 	ret = is_pipe_clk_stable(kirin_pcie);
-@@ -937,6 +926,7 @@ static int kirin970_pcie_power_on(struct kirin_pcie *kirin_pcie)
- 
- static int kirin960_pcie_power_on(struct kirin_pcie *kirin_pcie)
- {
-+	struct device *dev = kirin_pcie->pci->dev;
- 	int ret;
- 
- 	/* Power supply for Host */
-@@ -962,15 +952,19 @@ static int kirin960_pcie_power_on(struct kirin_pcie *kirin_pcie)
- 		goto close_clk;
- 
- 	/* perst assert Endpoint */
--	if (!gpio_request(kirin_pcie->gpio_id_reset[0], "pcie_perst")) {
--		usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
--		ret = gpio_direction_output(kirin_pcie->gpio_id_reset[0], 1);
--		if (ret)
--			goto close_clk;
--		usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
--
--		return 0;
--	}
-+	ret = kirin_gpio_request(kirin_pcie, dev);
-+	if (ret)
-+		goto close_clk;
-+
-+	usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
-+
-+	ret = gpio_direction_output(kirin_pcie->gpio_id_reset[0], 1);
-+	if (ret)
-+		goto close_clk;
-+
-+	usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
-+
-+	return 0;
- 
- close_clk:
- 	kirin_pcie_clk_ctrl(kirin_pcie, false);
+ 	ret = kirin_pcie_clk_ctrl(kirin_pcie, true);
+ 	if (ret)
 -- 
 2.29.2
 
