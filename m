@@ -2,153 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82AD630CD14
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 21:30:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8F7D30CD27
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 21:37:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232503AbhBBU21 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Feb 2021 15:28:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
+        id S233088AbhBBUfl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 15:35:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233370AbhBBU0d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Feb 2021 15:26:33 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1A3C06178A;
-        Tue,  2 Feb 2021 12:25:17 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id d1so21120289otl.13;
-        Tue, 02 Feb 2021 12:25:17 -0800 (PST)
+        with ESMTP id S232556AbhBBUfi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Feb 2021 15:35:38 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E79FC06174A;
+        Tue,  2 Feb 2021 12:34:58 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id 7so21886281wrz.0;
+        Tue, 02 Feb 2021 12:34:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K4Ci0dOt6mDbLixIdBD74oSiNIzdo5UPoGTbCfJND84=;
-        b=FEr8xY+tWDPQbmtxA9wld9tkyQE13zFClR7bivzyaLre57PAOOSlZ7EnC2s4+9+FJb
-         IKbioFBba3yedubTp4z12JUgcaAjB/rg++0DgBtNk8JSSDxW9bkeCVHTv9RB9xHwYBk1
-         f7VpremtYhuBot9yR8F0ybFR5iPTHKVlAFtwmadA/K88mMT/jvzPqpTblcvcUJnqGLQp
-         bmGKLRnUOT/HcAm8AqON+4EpXdDvUGuz/or160bnmzewUK+daYzQbxK58KYcgr543TRW
-         hozdwYlgT0cfg03qljGe3viPEdw9U8PDeu2O9+SZlNjINyZtN1r6ZTNcxjdE0NiCrL8l
-         5ANg==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=tnv2kk3+4uAnHFDEYnFneJ8g44LDP4N7nemgkVTA6BU=;
+        b=Ij2krijiBcZhnFd4zHACwvGRG3aghcpJPlU75Fus9BBICD8EWXFvuQZ9iaueSV7oei
+         /bHZsrXzJIw3Wsbhb6Bvhbgn5vFc+qC6lSv0CfxUc7tIkl7at8IdQYB2dDENJ6McXlFz
+         Q3SxT9k2Lrubsaur9IRlFcrNZ1ojFzsO4boJZqQkhVOgLXoAUKCVTttBWpP9LHm215I2
+         329k38f3N0HxNF+3xd8erod1KeJEEQDKQXfShyceBCwERs+49l+0P5VPuaGwBnpzNoQ/
+         uAavuv+lwjIaV75JqMAfqufNgy9rAa5K+8LidOaZnfh0oAgB18L1k1kidhMEAkVGB6PU
+         N1pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K4Ci0dOt6mDbLixIdBD74oSiNIzdo5UPoGTbCfJND84=;
-        b=c5+d90828VOZT64BPC749sOaAc9VTgCyQU+MGd/XmOESuC3zuMdeJD4xt8dRndhvfG
-         8qmhOV9eQOiJV2NW8+8QHyY69hT31aToAgIBRLQptvVE/VTOPhPu5iQiiZCTWR7RxEJa
-         8IAZG0r6FJgn36dAGErAQCEKA1/WWZp8k9g5EQCiLHFTTOOo/XCTXnSfa7jy2oVWOakl
-         c01A5oIm+X9Q391F/LDoiB6lWsovFLCLuu88+I2diH/esXa0GE4rGFRnxah2pJkR4ai6
-         2UQPLss3e6x0tQaUon8tGGJJ+cPZr/eEdFEo923OfFeS1emAUrcoMA2CLw81QAtyWN6U
-         soMA==
-X-Gm-Message-State: AOAM533GOGOVrLS7lHRthzrEB9VIG/DGBi8KbS8MzZjT1BzW8Z7h42Hv
-        /ni5KIFaZ9HMjZL1d708t7s=
-X-Google-Smtp-Source: ABdhPJxM1hVSd/NdQdOg6m0MfCKRSnV3Kac8fIEQp8dREvh0JLr2N1xtMY/tF/UrTru31B59RvaFCg==
-X-Received: by 2002:a9d:1b2c:: with SMTP id l41mr4509428otl.215.1612297516514;
-        Tue, 02 Feb 2021 12:25:16 -0800 (PST)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id u25sm957699otg.40.2021.02.02.12.25.15
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=tnv2kk3+4uAnHFDEYnFneJ8g44LDP4N7nemgkVTA6BU=;
+        b=K2CwjjhEctMq2qYRrYV3prIKkwE9fuuX6Q9Xjnk2ayAKahBCsZVMEvjagfIy/Eqbhb
+         jB4eUcoBRpHppBftSvdUy2aGFNTBkm4HqNP0Qipge0PF6PLd+LywWVCJhR5Ayopd3evx
+         apgLnnzgUnRvUvqPnVrmajgYWSBFAqgwMynHmdZy5cvNlHe5IMjqS0agEFPZwSTN331q
+         wPoN+B0EbHAgPSNYOBMDG3R05OdiuFXcVtMsHWnTgunKBHtlBMsYR2dHM9m8AB8Pxw1Z
+         h1IHXoyVg1X8M/uhQukCCFLvBCQSzDCCxmLrdzJgAsgYJJ3B9E+1oOs0XF1g/vQjrZlu
+         4hHw==
+X-Gm-Message-State: AOAM533jEe4mk2TbakdADxUojCXuZEQ3155W//7yIbuyqCRxekvRmQdP
+        ZnpBjU7JMQSKU4gYAfgaifMzcMexusw=
+X-Google-Smtp-Source: ABdhPJw5VOzCoXt4Nf3Ku0U97DzWIoWlOaUBMOgA1OFughIp8ShjC9hOXT9uaMeGELlNqDdJl/uXYQ==
+X-Received: by 2002:a5d:4ccb:: with SMTP id c11mr24439808wrt.324.1612298096505;
+        Tue, 02 Feb 2021 12:34:56 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f1f:ad00:e887:ce1a:5d1d:a96e? (p200300ea8f1fad00e887ce1a5d1da96e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:e887:ce1a:5d1d:a96e])
+        by smtp.googlemail.com with ESMTPSA id s4sm33334620wrt.85.2021.02.02.12.34.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Feb 2021 12:25:15 -0800 (PST)
-Subject: Re: Issues with "PCI/LINK: Report degraded links via link bandwidth
- notification"
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Sinan Kaya <okaya@kernel.org>, Keith Busch <keith.busch@intel.com>,
-        Jan Vesely <jano.vesely@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Shyam Iyer <Shyam_Iyer@dell.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Dave Airlie <airlied@gmail.com>,
-        Ben Skeggs <skeggsb@gmail.com>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        "A. Vladimirov" <vladimirov.atanas@gmail.com>
-References: <20210202201621.GA127455@bjorn-Precision-5520>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <4c610757-d402-6da7-ff35-916887ce86a3@gmail.com>
-Date:   Tue, 2 Feb 2021 14:25:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 02 Feb 2021 12:34:56 -0800 (PST)
+To:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH net-next 0/4] chelsio: improve PCI VPD handling
+Message-ID: <b07dc99d-7fd0-48c0-3fc4-89cda90ee5d7@gmail.com>
+Date:   Tue, 2 Feb 2021 21:34:49 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210202201621.GA127455@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/2/21 2:16 PM, Bjorn Helgaas wrote:
-> On Tue, Feb 02, 2021 at 01:50:20PM -0600, Alex G. wrote:
->> On 1/29/21 3:56 PM, Bjorn Helgaas wrote:
->>> On Thu, Jan 28, 2021 at 06:07:36PM -0600, Alex G. wrote:
->>>> On 1/28/21 5:51 PM, Sinan Kaya wrote:
->>>>> On 1/28/2021 6:39 PM, Bjorn Helgaas wrote:
->>>>>> AFAICT, this thread petered out with no resolution.
->>>>>>
->>>>>> If the bandwidth change notifications are important to somebody,
->>>>>> please speak up, preferably with a patch that makes the notifications
->>>>>> disabled by default and adds a parameter to enable them (or some other
->>>>>> strategy that makes sense).
->>>>>>
->>>>>> I think these are potentially useful, so I don't really want to just
->>>>>> revert them, but if nobody thinks these are important enough to fix,
->>>>>> that's a possibility.
->>>>>
->>>>> Hide behind debug or expert option by default? or even mark it as BROKEN
->>>>> until someone fixes it?
->>>>>
->>>> Instead of making it a config option, wouldn't it be better as a kernel
->>>> parameter? People encountering this seem quite competent in passing kernel
->>>> arguments, so having a "pcie_bw_notification=off" would solve their
->>>> problems.
->>>
->>> I don't want people to have to discover a parameter to solve issues.
->>> If there's a parameter, notification should default to off, and people
->>> who want notification should supply a parameter to enable it.  Same
->>> thing for the sysfs idea.
->>
->> I can imagine cases where a per-port flag would be useful. For example, a
->> machine with a NIC and a couple of PCIe storage drives. In this example, the
->> PCIe drives downtrain willie-nillie, so it's useful to turn off their
->> notifications, but the NIC absolutely must not downtrain. It's debatable
->> whether it should be default on or default off.
->>
->>> I think we really just need to figure out what's going on.  Then it
->>> should be clearer how to handle it.  I'm not really in a position to
->>> debug the root cause since I don't have the hardware or the time.
->>
->> I wonder
->> (a) if some PCIe devices are downtraining willie-nillie to save power
->> (b) if this willie-nillie downtraining somehow violates PCIe spec
->> (c) what is the official behavior when downtraining is intentional
->>
->> My theory is: YES, YES, ASPM. But I don't know how to figure this out
->> without having the problem hardware in hand.
->>
->>> If nobody can figure out what's going on, I think we'll have to make it
->>> disabled by default.
->>
->> I think most distros do "CONFIG_PCIE_BW is not set". Is that not true?
-> 
-> I think it *is* true that distros do not enable CONFIG_PCIE_BW.
-> 
-> But it's perfectly reasonable for people building their own kernels to
-> enable it.  It should be safe to enable all config options.  If they
-> do enable CONFIG_PCIE_BW, I don't want them to waste time debugging
-> messages they don't expect.
-> 
-> If we understood why these happen and could filter out the expected
-> ones, that would be great.  But we don't.  We've already wasted quite
-> a bit of Jan's and Atanas' time, and no doubt others who haven't
-> bothered to file bug reports.
-> 
-> So I think I'll queue up a patch to remove the functionality for now.
-> It's easily restored if somebody debugs the problem or adds a
-> command-line switch or something.
+Working on PCI VPD core code I came across the Chelsio drivers.
+Let's improve the way how they handle PCI VPD.
 
-I think it's best we make it a module (or kernel) parameter, default=off 
-for the time being.
+This series touches only device-specific quirks in the core code,
+therefore I think it should go via the netdev tree.
 
-Alex
+Heiner Kallweit (4):
+  PCI/VPD: Remove Chelsio T3 quirk
+  cxgb4: remove unused vpd_cap_addr
+  PCI/VPD: Change Chelsio T4 quirk to provide access to full virtual
+    address space
+  cxgb4: remove changing VPD len
+
+ .../net/ethernet/chelsio/cxgb4/cudbg_entity.h |  1 -
+ .../net/ethernet/chelsio/cxgb4/cudbg_lib.c    | 21 ++++---------------
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h    |  1 -
+ .../net/ethernet/chelsio/cxgb4/cxgb4_main.c   |  2 --
+ drivers/pci/vpd.c                             | 18 ++++------------
+ 5 files changed, 8 insertions(+), 35 deletions(-)
+
+-- 
+2.30.0
+
