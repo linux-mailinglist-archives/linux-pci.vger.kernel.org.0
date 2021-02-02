@@ -2,95 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4625F30C4DF
-	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 17:08:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DE4730C530
+	for <lists+linux-pci@lfdr.de>; Tue,  2 Feb 2021 17:15:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236022AbhBBQFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Feb 2021 11:05:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51186 "EHLO mail.kernel.org"
+        id S236146AbhBBQP1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 11:15:27 -0500
+Received: from mx.socionext.com ([202.248.49.38]:24641 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233312AbhBBQDq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Feb 2021 11:03:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 50E4F64E9C;
-        Tue,  2 Feb 2021 16:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612281785;
-        bh=7iQVk30xqGz7oh/+t2UzNMka+0TYG4P9cu4Sz5uw44U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MGVczdi5TLvWclKzomnm6cyIJ3HcZ+w7vfYsz1MHUEUiQatmYgA2zNeQvlXYuBfuy
-         kTTdgHUOfaDhTbmcXXDBNA7IwFv21TKX7KYvcHjZdJyRUf1agJdHjVdmibIHR5tXgT
-         MysVD/n4KdIZzTm1sOYZh7s4c2wjqTTs5dlLCjXSsQNlmK/0XAFRXOLPSdfavbXZFf
-         hiD1vngA5T4+2Lj2s5ss+WWIpLloYnzdtI9jePtK01Zrxtf3TXUUg/PramnSVy74m5
-         Hs6QTRWpzm8z7KVPlJ4R7EMjv8ZLM+CNlBTAV9Hkd31SZaGwe84yaZwD0ezxo/VQWT
-         l+m/BczKA2F9g==
-Date:   Tue, 2 Feb 2021 16:02:17 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        id S236073AbhBBQOA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Feb 2021 11:14:00 -0500
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 03 Feb 2021 01:13:17 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id A61A32059027;
+        Wed,  3 Feb 2021 01:13:17 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Wed, 3 Feb 2021 01:13:17 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan2.css.socionext.com (Postfix) with ESMTP id 00C77B1D40;
+        Wed,  3 Feb 2021 01:13:17 +0900 (JST)
+Received: from [10.212.20.246] (unknown [10.212.20.246])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 511FE120148;
+        Wed,  3 Feb 2021 01:13:16 +0900 (JST)
+Subject: Re: [PATCH v2 3/3] PCI: uniphier-ep: Add EPC restart management
+ support
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 09/13] pci: dwc: pcie-kirin: allow to optionally require
- a regulator
-Message-ID: <20210202160217.GC5154@sirena.org.uk>
-References: <cover.1612271903.git.mchehab+huawei@kernel.org>
- <7f4abd1ba9f4b33fe6f66213f56aa4269db74317.1612271903.git.mchehab+huawei@kernel.org>
- <20210202134101.GB5154@sirena.org.uk>
- <20210202155028.28b0cf94@coco.lan>
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1611500977-24816-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1611500977-24816-4-git-send-email-hayashi.kunihiko@socionext.com>
+ <c5e89789-2dd3-3247-ec85-d54652987e2a@ti.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <b2227106-6f95-bfe6-5ee4-28ec21175a8b@socionext.com>
+Date:   Wed, 3 Feb 2021 01:13:15 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
-Content-Disposition: inline
-In-Reply-To: <20210202155028.28b0cf94@coco.lan>
-X-Cookie: Only God can make random selections.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c5e89789-2dd3-3247-ec85-d54652987e2a@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Kishon,
+Thank you for your comment.
 
---4jXrM3lyYWu4nBt5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2021/01/28 23:29, Kishon Vijay Abraham I wrote:
+> Hi Kunihiko,
+> 
+> On 24/01/21 8:39 pm, Kunihiko Hayashi wrote:
+>> Set the polling function and call the init function to enable EPC restart
+>> management. The polling function detects that the bus-reset signal is a
+>> rising edge.
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/Kconfig            |  1 +
+>>   drivers/pci/controller/dwc/pcie-uniphier-ep.c | 44 ++++++++++++++++++++++++++-
+>>   2 files changed, 44 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>> index 22c5529..90d400a 100644
+>> --- a/drivers/pci/controller/dwc/Kconfig
+>> +++ b/drivers/pci/controller/dwc/Kconfig
+>> @@ -302,6 +302,7 @@ config PCIE_UNIPHIER_EP
+>>   	depends on OF && HAS_IOMEM
+>>   	depends on PCI_ENDPOINT
+>>   	select PCIE_DW_EP
+>> +	select PCI_ENDPOINT_RESTART
+>>   	help
+>>   	  Say Y here if you want PCIe endpoint controller support on
+>>   	  UniPhier SoCs. This driver supports Pro5 SoC.
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+>> index 69810c6..9d83850 100644
+>> --- a/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
+>> @@ -26,6 +26,7 @@
+>>   #define PCL_RSTCTRL_PIPE3		BIT(0)
+>>   
+>>   #define PCL_RSTCTRL1			0x0020
+>> +#define PCL_RSTCTRL_PERST_MON		BIT(16)
+>>   #define PCL_RSTCTRL_PERST		BIT(0)
+>>   
+>>   #define PCL_RSTCTRL2			0x0024
+>> @@ -60,6 +61,7 @@ struct uniphier_pcie_ep_priv {
+>>   	struct clk *clk, *clk_gio;
+>>   	struct reset_control *rst, *rst_gio;
+>>   	struct phy *phy;
+>> +	bool bus_reset_status;
+>>   	const struct pci_epc_features *features;
+>>   };
+>>   
+>> @@ -212,6 +214,41 @@ uniphier_pcie_get_features(struct dw_pcie_ep *ep)
+>>   	return priv->features;
+>>   }
+>>   
+>> +static bool uniphier_pcie_ep_poll_reset(void *data)
+>> +{
+>> +	struct uniphier_pcie_ep_priv *priv = data;
+>> +	bool ret, status;
+>> +
+>> +	if (!priv)
+>> +		return false;
+>> +
+>> +	status = !(readl(priv->base + PCL_RSTCTRL1) & PCL_RSTCTRL_PERST_MON);
+>> +
+>> +	/* return true if the rising edge of bus reset is detected */
+>> +	ret = !!(status == false && priv->bus_reset_status == true);
+>> +	priv->bus_reset_status = status;
+> 
+> I'm still not convinced about having a separate library for restart
+> management but shouldn't we reset the function driver on falling edge?
 
-On Tue, Feb 02, 2021 at 03:50:28PM +0100, Mauro Carvalho Chehab wrote:
-> Mark Brown <broonie@kernel.org> escreveu:
-> > On Tue, Feb 02, 2021 at 02:29:54PM +0100, Mauro Carvalho Chehab wrote:
+I understand your opnion well.
+There might not be enough way to give controller-specific features
+to handle "restart" as a common function.
 
-> > > As this is device-dependent, such regulator line should be
-> > > optional. =20
+> After the rising edge the host expects the endpoint to be ready.
 
-> > Supplies should only be optional if they may be physically absent from
-> > the system,=20
+I see. I didn't consider that restart was completed just after
+the rising edge.
 
-> That's the case. On Hikey 960, the PCIe hardware supported by this
-> driver doesn't require any regulator.
+> Why not use the CORE_INIT (core_init_notifier) infrastructure?
 
-> On Hikey 970, the PCIe hardware is more complex. Some components
-> are outside the SoC, and those require a regulator to be powered
-> up.
+I don't follow the CORE_INIT yet, so I'll try to introduce it
+into the driver. However, our current controller doesn't have
+an interrupt that detects PERST like pcie-tegra194.
+I think the driver needs a thread for polling PERST like patch 2/3.
 
-That's not an optional supply, that's a required supply for a different
-device.  The driver should select which supplies it is requesting based
-on the hardware it's controlling.
+Thank you,
 
---4jXrM3lyYWu4nBt5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmAZd4kACgkQJNaLcl1U
-h9COtwf/dNvTdqU99ibQk82bdFJxdWofc46BUTLIq+yKgtyLLWwcERh5WQHggaoD
-9E1nXpB2MkifqUkKyQ7KGOooDTiQsilpPrR7Doxn/svILexLmCO/zNtqomromkt3
-B5PS19a5NEVbi+tZDGYLVMnhiJw7OOrNWUVihsLCJ+Xdz5EfO7TerB8AhGngog0h
-TrYYofWJYKjMTSKoxottsGdrt/fuhdYEevtEHFdfDhnE4EcfixFB5GN/eP/2fyga
-XDzjVbzJ+Psxkf1SjbljSD3FsGBB8Lfek6tlQuHYi3CGT4hYgW64Q+0vYepCxQKv
-E5Cq7YqSSba0fdXYPOKMmIIO5Y4xlw==
-=AM6x
------END PGP SIGNATURE-----
-
---4jXrM3lyYWu4nBt5--
+---
+Best Regards
+Kunihiko Hayashi
