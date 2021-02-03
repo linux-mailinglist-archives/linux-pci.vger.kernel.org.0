@@ -2,153 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1573830DDBA
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 16:12:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5BD330DDFA
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 16:22:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234042AbhBCPLY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 10:11:24 -0500
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:38649 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233593AbhBCPFf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 10:05:35 -0500
-Received: by mail-wm1-f53.google.com with SMTP id y187so5559670wmd.3;
-        Wed, 03 Feb 2021 07:05:18 -0800 (PST)
+        id S234397AbhBCPVQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 10:21:16 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:33981 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233666AbhBCPSp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 10:18:45 -0500
+Received: by mail-wr1-f53.google.com with SMTP id g10so24793802wrx.1;
+        Wed, 03 Feb 2021 07:18:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7lGYY0t2SsSYdZzfAQe7JZ9ZLf0SzKvMRUPvlgOK/lU=;
-        b=O/HSuYK/QYPj1RDLtMBoafNbXZ0YB8IvaHuCl1nwAQen3KmK+ypty9v8YdwQ/UuzzI
-         PgAoMebPxSG2U6+xfENZPcJ9GCWmnXyKsPsDIQebR8GcWwUMaOfTXoJl84pri1pQC7So
-         BSkQwxUjAslm8KlSb/u31iATWANGy12DgkPXYr5QRP3HsTEwl+xuPkn44BKhXXC/xn9f
-         47nMjm1ICmsgikeVir+7+xajJi9fla50GmWyYPGG8HckX4rGVkkWZ1gel2Qg36nLo3j6
-         69/LrPA14XzyTiP81BgATjcyK3b9RTtFnRa/XaL/mtOEcEZAQiqxgLxbdatFncRawiYi
-         Ab6A==
-X-Gm-Message-State: AOAM5312qJMyXn/7YQ6lnMwSDpoCS5xerLW9qIvvIZTKxw/y5PW5eMW3
-        +EIzo/HykWkR8TVEQH2EIc+3Dn/qJ1k=
-X-Google-Smtp-Source: ABdhPJySwZj21BOTjBxxZ1RHk+K0NjJrWOn5VZZtlFgGxcDX08lbjIbDArdkxjjAtoQRQfG4Pno+zQ==
-X-Received: by 2002:a1c:6802:: with SMTP id d2mr3147028wmc.32.1612364692359;
-        Wed, 03 Feb 2021 07:04:52 -0800 (PST)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id r17sm4051704wro.46.2021.02.03.07.04.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=l8cy511fPN0zMtLnY1N3mRqUzrgghWD2gteAENtqOr4=;
+        b=ddm/WiyFEVCmAw/Tyo/um9mEUCsRL7EaLP3Y38MMf38ykoez1Hco1tTzz0DaGjNtEf
+         1U9RQVKNrwpuiunfnY5hn0JHMh2q6hfwT3Ig8BJbhAPV+Z86YT9UsF+67bf8xKAwYTzA
+         /kALgCb2wG7G5KuNt60BHyXfghOB6b05ATg7ukPGxZsik0wj0eH2sEQ5+dllLhXTMOXm
+         3yN/CMzkIgKKVATG23MpaXxe4LJ5TjBZj38FvSCyjTYGdpsRfoX3QIKFdVB6I0Eb4Vv8
+         r0r8V6hTGO+/OuRgxFVQymwSCQBOUmFInWqYHHiayFEpT3iY2bRn4aQDrHscWRwwYm1v
+         pNQw==
+X-Gm-Message-State: AOAM531apDiVr4M8rbkTn6/ahw7F9aczEPpypU4CSZ0C9RT/+oirs9yI
+        ir82I0lgL9d99NdpdD9KXno=
+X-Google-Smtp-Source: ABdhPJxHYufoQCzPYGt5wA9ljcUG0KO5NravuBCruERtSdbtgmaOFdPvrIVqBsYfFNUMoI+Pb198iw==
+X-Received: by 2002:adf:fb0c:: with SMTP id c12mr4151714wrr.6.1612365483472;
+        Wed, 03 Feb 2021 07:18:03 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id p18sm3042799wmc.31.2021.02.03.07.18.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Feb 2021 07:04:51 -0800 (PST)
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linux on Hyper-V List <linux-hyperv@vger.kernel.org>
-Cc:     virtualization@lists.linux-foundation.org,
-        Linux Kernel List <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Nuno Das Neves <nunodasneves@linux.microsoft.com>,
-        pasha.tatashin@soleen.com, Wei Liu <wei.liu@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wed, 03 Feb 2021 07:18:02 -0800 (PST)
+Date:   Wed, 3 Feb 2021 16:18:01 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Binghui Wang <wangbinghui@hisilicon.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-pci@vger.kernel.org (open list:PCI NATIVE HOST BRIDGE AND
-        ENDPOINT DRIVERS),
-        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
-Subject: [PATCH v6 12/16] asm-generic/hyperv: update hv_interrupt_entry
-Date:   Wed,  3 Feb 2021 15:04:31 +0000
-Message-Id: <20210203150435.27941-13-wei.liu@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210203150435.27941-1-wei.liu@kernel.org>
-References: <20210203150435.27941-1-wei.liu@kernel.org>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Xiaowei Song <songxiaowei@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] PCI: dwc: pcie-kirin: allow using multiple
+ reset GPIOs
+Message-ID: <YBq+qaOwJdNOllQ/@rocinante>
+References: <cover.1612335031.git.mchehab+huawei@kernel.org>
+ <4fb97b1fc3fe6df9a2fea8f96bdef433e75463a6.1612335031.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4fb97b1fc3fe6df9a2fea8f96bdef433e75463a6.1612335031.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We will soon use the same structure to handle IO-APIC interrupts as
-well. Introduce an enum to identify the source and a data structure for
-IO-APIC RTE.
 
-While at it, update pci-hyperv.c to use the enum.
+Hi Mauro,
 
-No functional change.
+Thank you for working on this!
 
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/pci/controller/pci-hyperv.c |  2 +-
- include/asm-generic/hyperv-tlfs.h   | 36 +++++++++++++++++++++++++++--
- 2 files changed, 35 insertions(+), 3 deletions(-)
+> @@ -151,8 +152,10 @@ struct kirin_pcie {
+>       struct clk      *phy_ref_clk;
+>       struct clk      *pcie_aclk;
+>       struct clk      *pcie_aux_clk;
+> -     int             gpio_id_reset[4];
+> +     int             n_gpio_resets;
+>       int             gpio_id_clkreq[3];
+> +     int             gpio_id_reset[MAX_GPIO_RESETS];
+> +     const char      *reset_names[MAX_GPIO_RESETS];
+>       u32             eye_param[5];
+>  };
+[...]
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 6db8d96a78eb..87aa62ee0368 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1216,7 +1216,7 @@ static void hv_irq_unmask(struct irq_data *data)
- 	params = &hbus->retarget_msi_interrupt_params;
- 	memset(params, 0, sizeof(*params));
- 	params->partition_id = HV_PARTITION_ID_SELF;
--	params->int_entry.source = 1; /* MSI(-X) */
-+	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
- 	hv_set_msi_entry_from_desc(&params->int_entry.msi_entry, msi_desc);
- 	params->device_id = (hbus->hdev->dev_instance.b[5] << 24) |
- 			   (hbus->hdev->dev_instance.b[4] << 16) |
-diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
-index 4669f9a4e1f1..94c7d77bbf68 100644
---- a/include/asm-generic/hyperv-tlfs.h
-+++ b/include/asm-generic/hyperv-tlfs.h
-@@ -480,6 +480,11 @@ struct hv_create_vp {
- 	u64 flags;
- } __packed;
- 
-+enum hv_interrupt_source {
-+	HV_INTERRUPT_SOURCE_MSI = 1, /* MSI and MSI-X */
-+	HV_INTERRUPT_SOURCE_IOAPIC,
-+};
-+
- union hv_msi_address_register {
- 	u32 as_uint32;
- 	struct {
-@@ -513,10 +518,37 @@ union hv_msi_entry {
- 	} __packed;
- };
- 
-+union hv_ioapic_rte {
-+	u64 as_uint64;
-+
-+	struct {
-+		u32 vector:8;
-+		u32 delivery_mode:3;
-+		u32 destination_mode:1;
-+		u32 delivery_status:1;
-+		u32 interrupt_polarity:1;
-+		u32 remote_irr:1;
-+		u32 trigger_mode:1;
-+		u32 interrupt_mask:1;
-+		u32 reserved1:15;
-+
-+		u32 reserved2:24;
-+		u32 destination_id:8;
-+	};
-+
-+	struct {
-+		u32 low_uint32;
-+		u32 high_uint32;
-+	};
-+} __packed;
-+
- struct hv_interrupt_entry {
--	u32 source;			/* 1 for MSI(-X) */
-+	u32 source;
- 	u32 reserved1;
--	union hv_msi_entry msi_entry;
-+	union {
-+		union hv_msi_entry msi_entry;
-+		union hv_ioapic_rte ioapic_rte;
-+	};
- } __packed;
- 
- /*
--- 
-2.20.1
+A small nit, so feel free to ignore, of course.
 
+The "n_gpio_resets" variable might be better as "gpio_resets_num" or
+"gpio_resets_count" - both are popular name suffixes for that type of
+variables.  To add, other variables also start with "gpio_", thus it
+would also follow the naming pattern.
+
+[...]
+> +     kirin_pcie->n_gpio_resets = of_gpio_named_count(np, "reset-gpios");
+[...]
+
+This would then become (for example):
+
+  kirin_pcie->gpio_resets_count = of_gpio_named_count(np, "reset-gpios");
+
+Krzysztof
