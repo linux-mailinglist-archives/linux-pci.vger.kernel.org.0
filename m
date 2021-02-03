@@ -2,225 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74DE430E251
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 19:17:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D035630E3B7
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 21:02:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232459AbhBCSRI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 13:17:08 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:48782 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233016AbhBCSQ6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 13:16:58 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 113IALCl121866;
-        Wed, 3 Feb 2021 18:15:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2020-01-29;
- bh=g1beYCRtHQ+7eyet6gw/AH4AqA2dBKOVEjc/R55Ly5I=;
- b=eV9ZKkhP/yV/MF/dRqr508suYDMFQEQeyM4zcBcl/rp/tjVgIogrzsPHeCH2nnbGiiiC
- ZYqSzgx0fnm7lKMO9HdEvE26xlbCYB2CsSq6DRdFjLHi7H/ad6VssIoTwQSf5kc75wZM
- TxvMc4IeUfpZSBVEvp5nQboNs4JQ/Rs2O15OezVTFYXIlnFnAAN0QInOockx5qTrRmmR
- jYU87xLHZyFpJL4o+dGBj80EL84eDbw87C05JyTzeOt2Pk0KV2Dpt8LtAWx5LJrBw9bn
- 5QIKZB4+v9bCCCDnZguXSSdbTxUPBuMxFHp4K9k5Qtdcl76BDTXOuGsXUmT4R7StPdpE GA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 36cxvr47na-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Feb 2021 18:15:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 113IF2nG143446;
-        Wed, 3 Feb 2021 18:15:05 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by aserp3020.oracle.com with ESMTP id 36dhc1gwu3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Feb 2021 18:15:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P8LcgC33KTF6m3RCogoNKlJOiUcYZiDzudHIIUMFQM/IyFXJ1X7mw1samfpymXJKaXve3Bt7YnyWOy0NL/GDG6eXaZjWxsQguYRvb7hN45TaKSWh4YmVtyBmW4/0vAHarn0nbaTzA4ckLwv+57VR7uAJm3WGFWIGFFaqAqxyaON1gpK7hSPk6qB884OGA4sn4Ay6z5RO9TM8u1nPYUY2h4ox7cqk7vOzjABti51vabYUFOmMSo3RBoXy7vecVOFS2/P+yh0NYsYLu/UC7ee3Es6RTpfZjSxZFhMVT7zAIwws5/FDnprXlsbUtJI/0DppDNb6bu5G5WQ8QEIIu8SttA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g1beYCRtHQ+7eyet6gw/AH4AqA2dBKOVEjc/R55Ly5I=;
- b=FpUcoM4lcKJH7dlAAjTEMflsMwDE6c+/jgfUu8x27bRrN+VWRbcmD4shFBJp6mMvwOkmjU3eNSrIDEKOQlDHY56uThL5zoWDYlDxRQczrlAWA95nLz++jgilxJARGr1e6x9TvCAlgRVipGFdz6etxZe6QomV1SFzaVhDEu9FR7PfpUUnpz9uilJDeG6+8+ArcV6rjyh5OF8kMGAQetI391gTvDWk1VKv36rlZp9oH+tzGmU3Cw/4nJfrj1aTIA7sbB38uMfqJ2ygsSysVu13ao9TndOxNQKBfikKMpqmJSzDlsYLFWMbG7SzuuknxIPCMwi9HCm3CH9xkux4zqy74g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g1beYCRtHQ+7eyet6gw/AH4AqA2dBKOVEjc/R55Ly5I=;
- b=Nc56UhndAdCMa48kPj6ijlkdJFGud5Pd636oGV/TexDVdXXSD1NwpbjL975DpyAz1aFxW5M+8llgmyoV4toICpV9WMzv9I+aBNxA01Ak/jew4R2RoYcyS1ofus8SJhYX4zl4dZY7gK6WcYq2IlK9G2Osdis30TezVnbARbVsKK4=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=oracle.com;
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com (2603:10b6:a03:85::27)
- by BYAPR10MB3445.namprd10.prod.outlook.com (2603:10b6:a03:81::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.20; Wed, 3 Feb
- 2021 18:14:59 +0000
-Received: from BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::e180:1ba2:d87:456]) by BYAPR10MB2999.namprd10.prod.outlook.com
- ([fe80::e180:1ba2:d87:456%4]) with mapi id 15.20.3825.019; Wed, 3 Feb 2021
- 18:14:59 +0000
-Date:   Wed, 3 Feb 2021 13:14:50 -0500
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Ben Widawsky <ben.widawsky@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        daniel.lll@alibaba-inc.com,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 13/14] cxl/mem: Add limited Get Log command (0401h)
-Message-ID: <YBroGrVd76p+BF0v@Konrads-MacBook-Pro.local>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com>
- <20210130002438.1872527-14-ben.widawsky@intel.com>
- <20210201182848.GL197521@fedora>
- <20210202235103.v36v3znh5tsi4g5x@intel.com>
- <CAPcyv4i3MMY=WExfvcPFYiJkHoM_UeZ63ORZqi0Vbm76JapS8A@mail.gmail.com>
- <20210203171610.2y2x4krijol5dvkk@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210203171610.2y2x4krijol5dvkk@intel.com>
-X-Originating-IP: [138.3.200.57]
-X-ClientProxiedBy: CH2PR07CA0009.namprd07.prod.outlook.com
- (2603:10b6:610:20::22) To BYAPR10MB2999.namprd10.prod.outlook.com
- (2603:10b6:a03:85::27)
+        id S231215AbhBCUAo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 15:00:44 -0500
+Received: from mta-02.yadro.com ([89.207.88.252]:49822 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231696AbhBCUAl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Feb 2021 15:00:41 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id A567241253;
+        Wed,  3 Feb 2021 19:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        mime-version:content-transfer-encoding:content-id:content-type
+        :content-type:content-language:accept-language:in-reply-to
+        :references:message-id:date:date:subject:subject:from:from
+        :received:received:received:received; s=mta-01; t=1612382395; x=
+        1614196796; bh=nNazUy+mZ3RjN3M3Tx+GUj1B/fOJldYF/TIYxuQC0lU=; b=X
+        iVIlP6cqVLkk2TXxavgU6KKM5yxyCz/47/Om/0mq7MigztSQQvNcGOKWxnhAsbkN
+        83kSEiIEp+rj7OIKGpS7MF2K1QWNM/3sm9Vssjn5a0jey0+SdL9k1Xm24ViN4mO1
+        RtETuh03cIpJU1r+GNWVrHgAXA1r73kmxFta1AZ1Dw=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ayz8d242ICkG; Wed,  3 Feb 2021 22:59:55 +0300 (MSK)
+Received: from T-EXCH-04.corp.yadro.com (t-exch-04.corp.yadro.com [172.17.100.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 819C4411D9;
+        Wed,  3 Feb 2021 22:59:54 +0300 (MSK)
+Received: from T-EXCH-03.corp.yadro.com (172.17.100.103) by
+ T-EXCH-04.corp.yadro.com (172.17.100.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 3 Feb 2021 22:59:53 +0300
+Received: from T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272]) by
+ T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272%14]) with mapi id
+ 15.01.0669.032; Wed, 3 Feb 2021 22:59:54 +0300
+From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>,
+        "rajatja@google.com" <rajatja@google.com>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>,
+        "andy.lavr@gmail.com" <andy.lavr@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "sr@denx.de" <sr@denx.de>, "lukas@wunner.de" <lukas@wunner.de>,
+        "linux@yadro.com" <linux@yadro.com>
+Subject: Re: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
+Thread-Topic: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
+Thread-Index: AQHW1WT234xzlvvTV0WAimI1cHAduao9LYkAgAnDqIA=
+Date:   Wed, 3 Feb 2021 19:59:54 +0000
+Message-ID: <de82694ed11f2c8a996d3701da04a8ee87fe6be5.camel@yadro.com>
+References: <20210128145316.GA3052488@bjorn-Precision-5520>
+In-Reply-To: <20210128145316.GA3052488@bjorn-Precision-5520>
+Accept-Language: en-US, ru-RU
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [172.17.15.136]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5C5707E3B86B6A4C82E4ABAEF1A70100@yadro.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Konrads-MacBook-Pro.local (138.3.200.57) by CH2PR07CA0009.namprd07.prod.outlook.com (2603:10b6:610:20::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.17 via Frontend Transport; Wed, 3 Feb 2021 18:14:54 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c6a8d3d7-aee9-48ce-6df2-08d8c86f9e11
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3445:
-X-Microsoft-Antispam-PRVS: <BYAPR10MB344535FA43FBD61E277C2C9489B49@BYAPR10MB3445.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6QNx7EYGPFre2pyyIitD1VXx/8C4Ooc7rgqKUrno/+nbpgi4WzRGpsyPQdrtRM4R3a3UbcXBjAHxkbHXkjzb98r6cqaSvf/RkQ0G4pgvKcNWFkv7yUD1i6ZZYC5t7eAR4vBz2Yy0UsQryWdFraHJeZeg9oMsG08b36dG2/ecN23PrrYp1MXvfl00/PDxXBpcxcW3S61amJWKWUXqtO48XTCDYdfl+bDPyxF+Z1z4wFWrrdbLy6Ix0SWrJvVTWmXTpGulf2Y5anhEFoZiLT/hlyuCzBIWI5dGyNbCOq8o8eEz/LxUYsX2+QFWrs8xAgiDpFG1t7DYMjDz7dOTtPIzi9QlSnQk2Xi9E3/ui63fsIYcFIEMJWWzSp5hwT3FxJPE7OJMRgMEugfQEeHHd2x/Le61cLlt3MslI0W6UljkSMf1p/MMndqmHZ/IGvEKghJ4qLcRYPQrw4uPB8G/+Y0XdPIzUNdMn36EV47N7c/Oazp1WpKq403P6daNQC4wHpgn8MGSp7W1x+awf9ErziK9yiaistMHYdKuLjXDrNte79Ooh+Lp6JUOmdYoSP8oyLFa
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2999.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(346002)(376002)(366004)(396003)(6666004)(54906003)(55016002)(956004)(316002)(7696005)(52116002)(6506007)(7416002)(26005)(86362001)(66946007)(66476007)(8936002)(8676002)(186003)(16526019)(5660300002)(6916009)(2906002)(66556008)(83380400001)(4326008)(53546011)(9686003)(478600001)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?LbNa5+82uIdTO2xZJcLFbYGxcGebDkNJlRXe3Og7AIPFRKL9EaCNOXBiahRN?=
- =?us-ascii?Q?BcPenfV6al/j+GVjFuB7ldjZDCBjJPF9+ZvyJ4XeU/P2vQBAVDRo7pXvI6Z3?=
- =?us-ascii?Q?g3UVl6t1Yn/GvCZoi08i8ydN6M8Phe2xzVAu/Gq1YHnzlTGlBTe8Nzl6xPOG?=
- =?us-ascii?Q?nL78JlaZnfSki7Xv6kyjK/6+TH6paymTmyAfCavcpC2t/w4HTeft18kDPfv1?=
- =?us-ascii?Q?KTJaV4B4SCTWfLhsc2TnMIny6ZJeXaya/I1x2yDZh/N1SzAR1RC+GycI820M?=
- =?us-ascii?Q?T39xcYXwtUpgZIW6yH335HcTg1bXZ6k5RJ7H+yahO2XJMq2tviNH8UUMSjl1?=
- =?us-ascii?Q?KZfdDXp+wKmX5HJR9LY0QZ6ae550yklvFrykPIo80tIqA+DgxURNmCwVNZhV?=
- =?us-ascii?Q?lJQZYqySSXDco5YKFM75xFBYPRbngKe8SmSzI0Shu/WbkmmnF1r1jLO9qlkk?=
- =?us-ascii?Q?DcwOkDOKom3tjmBHy49MTirb54LoXSk/gFjpdHPEYnkEUXe12JXPsOw1F07A?=
- =?us-ascii?Q?Ksvu0Rj0D7YZA2vtk+7Txk19I1VukwFWU33IH81SG93Sj0iRjvTuN63FJvTG?=
- =?us-ascii?Q?K8rUnrbhtciqTBxq/K1dTFDUVFFlM6HXblAQGM4ayMNJQzu3WC4JHq6M828m?=
- =?us-ascii?Q?pO2X1BWjrHTyvVMzc4JUIxhGebmHbbZIMzLhqg23B470WdQ3chgVh0FH5/QN?=
- =?us-ascii?Q?BDYRsa3oX2jxqiD2FpIqzmcPXCsUxr6DW5jILfIsSSvTuWavv33X+yvnCIE+?=
- =?us-ascii?Q?jQFqqigSTIUmp6Yq5Qts5/LHe9ARhAxLM+qZDdQvR9hGEvni3EmPrG36ygiZ?=
- =?us-ascii?Q?Z1y1d6Xv0bWB+tfd4xuRkjOafHncqXg9HL8UBoaUhnh+XotHPCVFgS0HtJo+?=
- =?us-ascii?Q?HjxM8B5Z1vV8NrFF7GFaaaS0150JUJbDE7Lg+eRbcXTyvUJRAy9J6vaAv/2w?=
- =?us-ascii?Q?u2YvSJtT6HEr/k7+MCg0fu/Si0I7WHwLsJlB/a8wA3kKHds1rGfEFKXFbPt9?=
- =?us-ascii?Q?MByT7JinJ3aTPiYdOw5kBJKs+L2N6f8yr36fLIhApYf4H48nPoS5m1M+pX0A?=
- =?us-ascii?Q?XKPIeSli?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6a8d3d7-aee9-48ce-6df2-08d8c86f9e11
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2999.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2021 18:14:59.4051
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dTlK/NzN127osddV6eaOvBemrej7AiBA8zzaWPxBQuvQkOSnGhuzOyFMEHeZ8egotfRJsdcl1h4rFjAT35t/bQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3445
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9884 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- spamscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102030108
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9884 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102030107
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 03, 2021 at 09:16:10AM -0800, Ben Widawsky wrote:
-> On 21-02-02 15:57:03, Dan Williams wrote:
-> > On Tue, Feb 2, 2021 at 3:51 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >
-> > > On 21-02-01 13:28:48, Konrad Rzeszutek Wilk wrote:
-> > > > On Fri, Jan 29, 2021 at 04:24:37PM -0800, Ben Widawsky wrote:
-> > > > > The Get Log command returns the actual log entries that are advertised
-> > > > > via the Get Supported Logs command (0400h). CXL device logs are selected
-> > > > > by UUID which is part of the CXL spec. Because the driver tries to
-> > > > > sanitize what is sent to hardware, there becomes a need to restrict the
-> > > > > types of logs which can be accessed by userspace. For example, the
-> > > > > vendor specific log might only be consumable by proprietary, or offline
-> > > > > applications, and therefore a good candidate for userspace.
-> > > > >
-> > > > > The current driver infrastructure does allow basic validation for all
-> > > > > commands, but doesn't inspect any of the payload data. Along with Get
-> > > > > Log support comes new infrastructure to add a hook for payload
-> > > > > validation. This infrastructure is used to filter out the CEL UUID,
-> > > > > which the userspace driver doesn't have business knowing, and taints on
-> > > > > invalid UUIDs being sent to hardware.
-> > > >
-> > > > Perhaps a better option is to reject invalid UUIDs?
-> > > >
-> > > > And if you really really want to use invalid UUIDs then:
-> > > >
-> > > > 1) Make that code wrapped in CONFIG_CXL_DEBUG_THIS_IS_GOING_TO..?
-> > > >
-> > > > 2) Wrap it with lockdown code so that you can't do this at all
-> > > >    when in LOCKDOWN_INTEGRITY or such?
-> > > >
-> > >
-> > > The commit message needs update btw as CEL is allowed in the latest rev of the
-> > > patches.
-> > >
-> > > We could potentially combine this with the now added (in a branch) CONFIG_RAW
-> > > config option. Indeed I think that makes sense. Dan, thoughts?
-> > 
-> > Yeah, unknown UUIDs blocking is the same risk as raw commands as a
-> > vendor can trigger any behavior they want. A "CONFIG_RAW depends on
-> > !CONFIG_INTEGRITY" policy sounds reasonable as well.
-> 
-> What about LOCKDOWN_NONE though? I think we need something runtime for this.
-> 
-> Can we summarize the CONFIG options here?
-> 
-> CXL_MEM_INSECURE_DEBUG // no change
-> CXL_MEM_RAW_COMMANDS // if !security_locked_down(LOCKDOWN_NONE)
-> 
-> bool cxl_unsafe()
-
-Would it be better if this inverted? Aka cxl_safe()..
-?
-> {
-> #ifndef CXL_MEM_RAW_COMMANDS
-> 	return false;
-> #else
-> 	return !security_locked_down(LOCKDOWN_NONE);
-
-:thumbsup:
-
-(Naturally this would inverted if this was cxl_safe()).
-
-
-> #endif
-> }
-> 
-> ---
-> 
-> Did I get that right?
-
-:nods:
-
+SGkgQmpvcm4sDQoNCk9uIFRodSwgMjAyMS0wMS0yOCBhdCAwODo1MyAtMDYwMCwgQmpvcm4gSGVs
+Z2FhcyB3cm90ZToNCj4gSSBjYW4gY2VydGFpbmx5IHNlZSBzY2VuYXJpb3Mgd2hlcmUgdGhpcyBm
+dW5jdGlvbmFsaXR5IHdpbGwgYmUNCj4gdXNlZnVsLA0KPiBidXQgdGhlIHNlcmllcyBjdXJyZW50
+bHkgZG9lc24ndCBtZW50aW9uIGJ1ZyByZXBvcnRzIHRoYXQgaXQNCj4gZml4ZXMuICBJDQo+IHN1
+c3BlY3QgdGhlcmUgKmFyZSogc29tZSByZWxhdGVkIGJ1ZyByZXBvcnRzLCBlLmcuLCBmb3IgVGh1
+bmRlcmJvbHQNCj4gaG90cGx1Zy4gIFdlIHNob3VsZCBkaWcgdGhlbSB1cCwgaW5jbHVkZSBwb2lu
+dGVycyB0byB0aGVtLCBhbmQgZ2V0DQo+IHRoZQ0KPiByZXBvcnRlcnMgdG8gdGVzdCB0aGUgc2Vy
+aWVzIGFuZCBwcm92aWRlIGZlZWRiYWNrLg0KDQpJdCBuZXZlciBvY2N1cnJlZCB0byBtZSB0byBh
+Y3R1YWxseSBzZWFyY2ggZm9yIHJlcG9ydHMsIHRoYW5rcy4NCg0KPiBXZSBoYWQgc29tZSByZXZp
+ZXcgdHJhZmZpYyBvbiBlYXJsaWVyIHZlcnNpb25zLCBidXQgYXMgZmFyIGFzIEkgY2FuDQo+IHNl
+ZSwgbm9ib2R5IGhhcyBzdGVwcGVkIHVwIHdpdGggYW55IGFjdHVhbCBzaWducyBvZiBhcHByb3Zh
+bCwgZS5nLiwNCj4gVGVzdGVkLWJ5LCBSZXZpZXdlZC1ieSwgb3IgQWNrZWQtYnkgdGFncy4gIFRo
+YXQncyBhIHByb2JsZW0gYmVjYXVzZQ0KPiB0aGlzIHRvdWNoZXMgYSBsb3Qgb2Ygc2Vuc2l0aXZl
+IGNvZGUgYW5kIEkgZG9uJ3Qgd2FudCB0byBiZSBzdHVjaw0KPiBmaXhpbmcgaXNzdWVzIGFsbCBi
+eSBteXNlbGYuICBXaGVuIGlzc3VlcyBjcm9wIHVwLCBJIGxvb2sgdG8gdGhlDQo+IGF1dGhvciBh
+bmQgcmV2aWV3ZXJzIHRvIGhlbHAgb3V0Lg0KDQpJbmRlZWQsIEkgaGFkIG9ubHkgYSBmZXcgaW5m
+b3JtYWwgcGVyc29uYWwgcmVzcG9uc2VzIFtmcm9tIG91dHNpZGUgb2YNCm91ciBjb21wYW55XToN
+CiAtIHNvbWUgbWFjaGluZXMgaGF2ZSBubyByZWdyZXNzaW9ucyB3aXRoIHRoZSBrZXJuZWwgYnVp
+bHQgd2l0aCBDbGFuZy0NCjEyK0xUTytJQVM7DQogLSBOVk1lIGhvdHBsdWcgc3RhcnRlZCB3b3Jr
+aW5nIGZvciBBTUQgRXB5YyB3aXRoIGEgUEVYIHN3aXRjaDsNCiAtIEFub3RoZXIgc3lzdGVtIHdp
+dGggc2V2ZXJhbCBQRVggc3dpdGNoZXMgaXMgdW5kZXIgb25nb2luZw0KZXhwZXJpbWVudHMuDQoN
+ClByb3ZpZGluZyBhbiBhYmlsaXR5IHRvIHF1aWNrbHkgcmV0dXJuIHRvIHRoZSBvbGQgQkFScyBh
+bGxvY2F0aW5nIGlzDQp0aGUgcmVhc29uIHdoeSBJIGtlZXAgd3JhcHBpbmcgdGhlIG1vc3QgaW50
+cnVzaXZlIGNvZGUgd2l0aCAiaWYNCihwY2lfY2FuX21vdmVfYmFycykiLiBPcmlnaW5hbGx5IEkg
+d2FudGVkIGl0IHRvIGJlIGRpc2FibGVkIGJ5IGRlZmF1bHQsDQphdmFpbGFibGUgZm9yIHRob3Nl
+IHRydWx5IGRlc3BlcmF0ZS4gQnV0IHRoZXJlIHdhcyBhbiBvYmplY3Rpb24gdGhhdA0KdGhlIGNv
+ZGUgd2lsbCBub3QgYmUgZXZlciB0ZXN0ZWQgdGhpcyB3YXkuDQoNCj4gQWxvbmcgdGhhdCBsaW5l
+LCBJJ20gYSBsaXR0bGUgY29uY2VybmVkIGFib3V0IGhvdyB3ZSB3aWxsIGJlIGFibGUgdG8NCj4g
+cmVwcm9kdWNlIGFuZCBkZWJ1ZyBwcm9ibGVtcy4gIElzc3VlcyB3aWxsIGxpa2VseSBkZXBlbmQg
+b24gdGhlDQo+IHRvcG9sb2d5LCB0aGUgcmVzb3VyY2VzIG9mIHRoZSBzcGVjaWZpYyBkZXZpY2Vz
+IGludm9sdmVkLCBhbmQgYQ0KPiBzcGVjaWZpYyBzZXF1ZW5jZSBvZiBob3RwbHVnIG9wZXJhdGlv
+bnMuICBUaG9zZSBtYXkgYmUgaGFyZCB0bw0KPiByZXByb2R1Y2UgZXZlbiBmb3IgdGhlIHJlcG9y
+dGVyLiAgTWF5YmUgdGhpcyBpcyBub3RoaW5nIG1vcmUgdGhhbiBhDQo+IGdyZXAgcGF0dGVybiB0
+byBleHRyYWN0IHJlbGV2YW50IGV2ZW50cyBmcm9tIGRtZXNnLiAgSWRlYWwsIGJ1dCBtYXliZQ0K
+PiBpbXByYWN0aWNhbCwgd291bGQgYmUgYSB3YXkgdG8gcmVwcm9kdWNlIHRoaW5ncyBpbiBhIFZN
+IHVzaW5nIHFlbXUNCj4gYW5kDQo+IGEgc2NyaXB0IHRvIHNpbXVsYXRlIGhvdHBsdWdzLg0KDQpJ
+IGhhdmVuJ3QgeWV0IHRyaWVkIHRoZSBxZW11IGZvciBQQ0kgZGVidWdnaW5nLCBkZWZpbml0ZWx5
+IG5lZWQgdG8gdGFrZQ0KYSBsb29rLiBUbyBoZWxwIHdpdGggdGhhdCwgdGhlIHBhdGNoc2V0IGlz
+IHN1cHBsaWVkIHdpdGggYWRkaXRpb25hbA0KcHJpbnRzLCBidXQgQ09ORklHX1BDSV9ERUJVRz15
+IGlzIHN0aWxsIHByZWZlcnJlZC4gQSBzaW11bGF0aW9uIHdpbGwNCnJldmVhbCBpZiBhZGRpdGlv
+bmFsIGRlYnVnIG1lc3NhZ2VzIGFyZSBuZWVkZWQuDQoNCj4gPiBUaGUgZmVhdHVyZSBpcyB1c2Fi
+bGUgbm90IG9ubHkgZm9yIGhvdHBsdWcsIGJ1dCBhbHNvIGZvciBib290aW5nDQo+ID4gd2l0aCBh
+DQo+ID4gY29tcGxldGUgc2V0IG9mIEJBUnMgYXNzaWduZWQsIGFuZCBmb3IgUmVzaXphYmxlIEJB
+UnMuDQo+IA0KPiBJJ20gaW50ZXJlc3RlZCBpbiBtb3JlIGRldGFpbHMgYWJvdXQgYm90aCBvZiB0
+aGVzZS4gIFdoYXQgZG9lcyAiYQ0KPiBjb21wbGV0ZSBzZXQgb2YgQkFScyBhc3NpZ25lZCIgbWVh
+bj8gIE9uIHg4NiwgdGhlIEJJT1MgdXN1YWxseQ0KPiBhc3NpZ25zDQo+IGFsbCB0aGUgQkFScyBh
+aGVhZCBvZiB0aW1lLCBidXQgSSBrbm93IHRoYXQncyBub3QgdGhlIGNhc2UgZm9yIGFsbA0KPiBh
+cmNoZXMuDQoNClVzdWFsbHkgeWVzLCBidXQgd2UgaGF2ZSBhdCBsZWFzdCBvbmUgeDg2IFBDIHRo
+YXQgc2tpcHMgc29tZSBCQVJzIChuZWVkDQp0byBjaGVjayBvdXQgYWdhaW4gaXRzIHBhcnRpY3Vs
+YXIgbW9kZWwgYW5kIHZlcnNpb24sIElJUkMgdGhhdCB3YXMNClozNzAtRikgLS0gbm90IHRoZSBj
+cnVjaWFsIG9uZXMgbGlrZSBCQVIwLCB0aG91Z2guIFRoYXQgcmVhbGx5IGdvdCBtZQ0KYnkgc3Vy
+cHJpc2UsIHNvIG5vdyBpdCBpcyBvbmUgbW9yZSBjYXNlIGNvdmVyZWQuDQoNCj4gRm9yIFJlc2l6
+YWJsZSBCQVJzLCBpcyB0aGUgcG9pbnQgdGhhdCB0aGlzIGFsbG93cyBtb3JlIGZsZXhpYmlsaXR5
+IGluDQo+IHJlc2l6aW5nIEJBUnMgYmVjYXVzZSB3ZSBjYW4gbm93IG1vdmUgdGhpbmdzIG91dCBv
+ZiB0aGUgd2F5Pw0KDQpOb3Qgb25seSB0aGluZ3Mgb3V0IG9mIHRoZSB3YXksIGJ1dCBtb3N0IGlt
+cG9ydGFudGx5IHRoZSBicmlkZ2Ugd2luZG93cw0KYXJlIG5vdyBmbG9hdGluZyBhcyB3ZWxsLiBT
+byBpdCdzIG1vcmUgZnJlZWRvbSBmb3IgYSBuZXcgQkFSIHRvDQoiY2hvb3NlIiBhIHBsYWNlLg0K
+DQpBbiBhd2Z1bGx5IHN5bnRoZXRpYyBleGFtcGxlOg0KDQp8ICAgICAgICAgICAgICAgICAgICAg
+ICBSQyBBZGRyZXNzIFNwYWNlICAgICAgICAgICAgICAgICAgICAgICB8DQp8IG9yaWcgR1BVIEJB
+UiB8IGZpeGVkIEJBUiB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQp8ICAg
+ICAgICAgICAgICB8IGZpeGVkIEJBUiB8ICAgICBSZXNpemVkIEdQVSBCQVIgICAgICAgIHwgICAg
+ICB8DQoNCj4gPiBUZXN0ZWQgb24gYSBudW1iZXIgb2YgeDg2XzY0IG1hY2hpbmVzIHdpdGhvdXQg
+YW55IHNwZWNpYWwga2VybmVsDQo+ID4gY29tbWFuZA0KPiA+IGxpbmUgYXJndW1lbnRzIChzb21l
+IG9mIHRoZW0gLS0gd2l0aCBvbGRlciB2OCByZXZpc2lvbiBvZiB0aGlzDQo+ID4gcGF0Y2hzZXQp
+Og0KPiA+ICAtIFBDOiBpNy01OTMwSyArIEFTVVMgWDk5LUE7DQo+ID4gIC0gUEM6IGk1LTg1MDAg
+KyBBU1VTIFozNzAtRjsNCj4gPiAgLSBQQzogQU1EIFJ5emVuIDcgMzcwMFggKyBBU1JvY2sgWDU3
+MCArIEFNRCA1NzAwIFhUIChSZXNpemFibGUNCj4gPiBCQVJzKTsNCj4gPiAgLSBTdXBlcm1pY3Jv
+IFN1cGVyIFNlcnZlci9IMTFTU0wtaTogQU1EIEVQWUMgNzI1MTsNCj4gPiAgLSBIUCBQcm9MaWFu
+dCBETDM4MCBHNTogWGVvbiBYNTQ2MDsNCj4gPiAgLSBEZWxsIEluc3Bpcm9uIE41MDEwOiBpNSBN
+IDQ4MDsNCj4gPiAgLSBEZWxsIFByZWNpc2lvbiBNNjYwMDogaTctMjkyMFhNLg0KPiANCj4gRG9l
+cyB0aGlzIHRlc3Rpbmcgc2hvdyBubyBjaGFuZ2UgaW4gYmVoYXZpb3IgYW5kIG5vIHJlZ3Jlc3Np
+b25zLCBvcg0KPiBkb2VzIGl0IHNob3cgdGhhdCB0aGlzIHNlcmllcyBmaXhlcyBjYXNlcyB0aGF0
+IHByZXZpb3VzbHkgZGlkIG5vdA0KPiB3b3JrPyAgSWYgdGhlIGxhdHRlciwgc29tZSBidWd6aWxs
+YSByZXBvcnRzIHdpdGggYmVmb3JlL2FmdGVyIGRtZXNnDQo+IGxvZ3Mgd291bGQgZ2l2ZSBzb21l
+IGluc2lnaHQgaW50byBob3cgdGhpcyB3b3JrcyBhbmQgYWxzbyBzb21lIGdvb2QNCj4ganVzdGlm
+aWNhdGlvbi4NCg0KQm90aCwgYWN0dWFsbHksIGJ1dCB0aGUgZG1lc2cgbG9ncyB3ZXJlIG5ldmVy
+IHB1Ymxpc2hlZCwgc28gdGhleSB3aWxsDQpiZSB0aGUgbmV4dCBzdGVwIC0tIGNvbWJpbmVkIHdp
+dGggcWVtdSBzY3JpcHRzLCBpZiBpdCB3b3Jrcy4NCg0KPiA+IFRoaXMgcGF0Y2hzZXQgaXMgYSBw
+YXJ0IG9mIG91ciB3b3JrIG9uIGFkZGluZyBzdXBwb3J0IGZvciBob3QtDQo+ID4gYWRkaW5nDQo+
+ID4gY2hhaW5zIG9mIGNoYXNzaXMgZnVsbCBvZiBvdGhlciBicmlkZ2VzLCBOVk1FIGRyaXZlcywg
+U0FTIEhCQXMsDQo+ID4gR1BVcywgZXRjLg0KPiA+IHdpdGhvdXQgc3BlY2lhbCByZXF1aXJlbWVu
+dHMgc3VjaCBhcyBIb3QtUGx1ZyBDb250cm9sbGVyLA0KPiA+IHJlc2VydmF0aW9uIG9mDQo+ID4g
+YnVzIG51bWJlcnMgb3IgbWVtb3J5IHJlZ2lvbnMgYnkgZmlybXdhcmUsIGV0Yy4NCj4gDQo+IFRo
+aXMgaXMgYSBsaXR0bGUgYml0IG9mIGEgY2hpY2tlbiBhbmQgZWdnIHNpdHVhdGlvbi4gIEkgc3Vz
+cGVjdCBtYW55DQo+IHBlb3BsZSB3b3VsZCBsaWtlIHRoaXMgZnVuY3Rpb25hbGl0eSwgYnV0IGN1
+cnJlbnRseSB3ZSBlaXRoZXIgYXZvaWQNCj4gaXQNCj4gYmVjYXVzZSBpdCdzICJrbm93biBub3Qg
+dG8gd29yayIgb3Igd2UgaGFjayBhcm91bmQgaXQgd2l0aCB0aGUNCj4gZmlybXdhcmUgcmVzZXJ2
+YXRpb25zIHlvdSBtZW50aW9uLg0KDQpUaGUgY3VycmVudCAodjkpIHBhdGNoc2V0IGJlY2FtZSBt
+b3JlIHN5bWJpb3RpYyB3aXRoIG90aGVyIGhvdHBsdWcNCmZhY2lsaXRpZXM6IGl0IHN0YXJ0ZWQg
+dG8gcmVzcGVjdCBwY2k9aHBtZW1zaXplIGV0YywgYW5kIG9ubHkgZHJvcHMgaXQNCmlmIHN1Y2gg
+YWxsb2NhdGlvbiBpcyBpbXBvc3NpYmxlLg0KDQpBdHRlbnRpb24gQnV0dG9uIGZvciBBc3Npc3Rl
+ZCBIb3RwbHVnIChwY2llaHAgZHJpdmVyKSB3YXMgYWx3YXlzDQpzdXBwb3J0ZWQuIEl0IGlzIGFs
+c28gZnVsbHkgY29tcGF0aWJsZSB3aXRoIERQQy4NCg0KVGhlIGdvYWwgaXMgdG8gc3F1ZWV6ZSBh
+cyBtdWNoIGFzIHBvc3NpYmxlIGV2ZW4gd2l0aG91dCBzcGVjaWFsDQpodytmdytzdyBzdXBwb3J0
+LCB3aGVuIHRoZSBvbmx5IGF2YWlsYWJsZSB0b29sIGlzIGEgbWFudWFsIHJlc2NhbiB2aWENCnN5
+c2ZzLg0KDQpTZXJnZQ0K
