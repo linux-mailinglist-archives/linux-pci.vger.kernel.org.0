@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6AB630E606
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 23:29:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 973D830E60C
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 23:29:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232228AbhBCW1T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 17:27:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54110 "EHLO mail.kernel.org"
+        id S232246AbhBCW1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 17:27:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232102AbhBCW1S (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Feb 2021 17:27:18 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AD66264E4D;
-        Wed,  3 Feb 2021 22:26:37 +0000 (UTC)
+        id S232102AbhBCW1r (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Feb 2021 17:27:47 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8072364F60;
+        Wed,  3 Feb 2021 22:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1612391198;
-        bh=5PBHMw6ojmDEik1O+vyfstveI5h3euncpBTbWsEG0IY=;
+        s=korg; t=1612391227;
+        bh=1OjCvlZW5TaEzpDVRBEta9g2ySXHUupUZ9vlLNUcZZo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lfR81MJDOx97I1rvLMV7pygVL24LKw5wRzd1kOtVQ6kpOKDrT+kmlnBsvUlR03uxT
-         JvCfH126UV65czpUaYkh8V5eqbHUbclGGoY8FHrZaCePp3MbiURnpdccWGbsfMeK+h
-         xkTVYu5Cy1/FEVWbtK8nkW2Na8N9wglk72cfBPVk=
-Date:   Wed, 3 Feb 2021 23:26:35 +0100
+        b=EdGfmSDhc7Fwh4RK5NuQ95sO/+6XZ1zKBkr0dhnuZPJ0CtMnFmxbIpKBi8cuCUC1z
+         Yt8jidwBbN8X2MbOPa/DcVPJYI4NJTFOfJFMcZ6TE+C+0JLgvmrfBlaTAcVL2jQrNA
+         Z5EaAyNcIZDxeaj+jjL0OxxI+8/l1SCWX3fM2OPI=
+Date:   Wed, 3 Feb 2021 23:27:04 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -32,7 +32,7 @@ Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
         Jonathan Corbet <corbet@lwn.net>
 Subject: Re: [RESEND v4 3/6] misc: Add Synopsys DesignWare xData IP driver to
  Kconfig
-Message-ID: <YBsjG1D4SJBG2X5Z@kroah.com>
+Message-ID: <YBsjOAb545+Swz/T@kroah.com>
 References: <cover.1612390291.git.gustavo.pimentel@synopsys.com>
  <81f95c6ff0faaf8cbb56430320abb76af772a339.1612390291.git.gustavo.pimentel@synopsys.com>
 MIME-Version: 1.0
@@ -53,28 +53,8 @@ On Wed, Feb 03, 2021 at 11:12:48PM +0100, Gustavo Pimentel wrote:
 > ---
 >  drivers/misc/Kconfig | 11 +++++++++++
 >  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index fafa8b0..6d5783f 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -423,6 +423,17 @@ config SRAM
->  config SRAM_EXEC
->  	bool
->  
-> +config DW_XDATA_PCIE
-> +	depends on PCI
-> +	tristate "Synopsys DesignWare xData PCIe driver"
-> +	default	n
 
-That's already the default, no need for this line at all.
-
-> +	help
-> +	  This driver allows controlling Synopsys DesignWare PCIe traffic
-> +	  generator IP also known as xData, present in Synopsys Designware
-> +	  PCIe Endpoint prototype.
-
-Module name?
+Why isn't this, and patch 2, part of patch 1?  Why split this out?
 
 thanks,
 
