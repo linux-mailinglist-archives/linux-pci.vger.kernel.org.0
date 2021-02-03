@@ -2,139 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41F0F30D4A2
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 09:07:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8D1D30DB26
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 14:27:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232466AbhBCIE4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 03:04:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232561AbhBCIEv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 03:04:51 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E611DC06174A
-        for <linux-pci@vger.kernel.org>; Wed,  3 Feb 2021 00:04:10 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id v15so23104367wrx.4
-        for <linux-pci@vger.kernel.org>; Wed, 03 Feb 2021 00:04:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=am0KqW9fBPwVrDuzP8VC76/ZM0x7toLVBWQ4oShfx2o=;
-        b=syszducIjgUsxVxBJxTbAsuQNzZDl7i4rMW6A/G+cOJE2pmmvaZa3QNXCaCPN6We8T
-         qr7n+tPO8G/gBYhJZv+W+LRHEJXTBvASm0khY9eiRnXNy3NTSWh2iwvSWcWnSRUJ+ZmG
-         kb4OMXKBp9rWt4SMxWNWZMjWJ/sYHX/ShqKEg8bORz95xAmhX1G3NST6z0fkwe8aqRbX
-         7cLw0v7lvy+6pMRU2nmRT89cjd8vZOEr3Px37+l+hg3E7qACjYUzYoYwWK88OPyMB+N3
-         3SwJXFSVgRIW7eMOEJlQdLlSNISzB3325qOGJOTaDhxu84AMaa6iv7KrDEJ5PYzo7Ebm
-         3rCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=am0KqW9fBPwVrDuzP8VC76/ZM0x7toLVBWQ4oShfx2o=;
-        b=Bn6WGxphhemxc8VVwNGhcePANxL9dvLJLbt1bBM8Ze41A5RZsKZMhs/tge2wYLo3i0
-         0XZPrUcwBm42ukF6tJWtfrt82ED5me/qJtWMzn+STzENuCbbqtWSuCXNFvD+d7aeJcnm
-         sb3FgE3MB4ETXEX1DFfmRS7D8J3ybWRgWUv8zY9BbLbnaEBoTFpNCPr1gBtQrU8CJVct
-         dsW/tdB+7H4NcIwlqH692Was5rDZkSj2cZ7YOG77ZxWX76rPsTXLV5MiEMzYP/A5igaw
-         QvXD2EY0RF2KWfQVfBLa5m/Uk+fyRDOs0N122wOLiJTMLWcHxDZHWRlQM48lQTzpZjhV
-         f7BA==
-X-Gm-Message-State: AOAM533qEXLxl67pDudFrhL3mIPcvJltKhVzFfDtik9gEhxXpRlEMU4U
-        KnxCLU2PP86rP7IiieYnBut5hW9AjC4=
-X-Google-Smtp-Source: ABdhPJwcj6imIolqfNZv9psRcgizsSK6m/9iq7A1xZ9G+we1xxUgsbhXy79R7naqS/UKr7U0+Unudg==
-X-Received: by 2002:adf:fd52:: with SMTP id h18mr2011357wrs.295.1612339449486;
-        Wed, 03 Feb 2021 00:04:09 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f1f:ad00:f08f:200e:76bc:9fee? (p200300ea8f1fad00f08f200e76bc9fee.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:f08f:200e:76bc:9fee])
-        by smtp.googlemail.com with ESMTPSA id o12sm2186164wrx.82.2021.02.03.00.04.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Feb 2021 00:04:08 -0800 (PST)
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20210202235945.GA151272@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 1/2] PCI/VPD: Remove dead code from sysfs access functions
-Message-ID: <1d86f004-d9bd-2668-1086-06137d891970@gmail.com>
-Date:   Wed, 3 Feb 2021 08:17:07 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S231796AbhBCN0o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 08:26:44 -0500
+Received: from 198-20-226-115.unifiedlayer.com ([198.20.226.115]:49464 "EHLO
+        198-20-226-115.unifiedlayer.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S231587AbhBCN0j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 08:26:39 -0500
+X-Greylist: delayed 21638 seconds by postgrey-1.27 at vger.kernel.org; Wed, 03 Feb 2021 08:26:07 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=carnivalassure.com.bd; s=default; h=Content-Transfer-Encoding:Content-Type:
+        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=miRpAdBSO5eDo01VDX+EK9bqGCmqMjXHS3kO16T6iWw=; b=kpCxYUDs/Q6wFBgfe0+bmSS68M
+        zcRYWno/roH+XKBInhEBiKEf4sx8y5/VefxhpIs/9qNGv8WOvWRCUN26vxTSG7tj0WdQmOoQFUzGd
+        zFM6BBul3KRpIf0JTZbu6Gc0tILR3OADCzdq2jQpAr+iKaIbhn9Rm18NZ+GP5i3xtzfKEgr4eVlJ0
+        3dgYZqwo3IWhtiIKzeiK2Z56Y1fDICQvb9Zp0KBuIYmQ0tUoaRYeeoyaIyZf2v3dlk5hTiB2kGqOn
+        CMjmGpZsfobBwAkx8N1sOiSN6V0/cWmqmUGnX19FS5LdTSeXjM2y5OQ+CKiYPJhu4jYoICJGCThbx
+        uLC5ik7A==;
+Received: from [127.0.0.1] (port=46362 helo=dot.dotlines.com.sg)
+        by dot.dotlines.com.sg with esmtpa (Exim 4.93)
+        (envelope-from <noreply@carnivalassure.com.bd>)
+        id 1l7CVi-0005Z8-7H; Wed, 03 Feb 2021 01:23:34 -0600
 MIME-Version: 1.0
-In-Reply-To: <20210202235945.GA151272@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Date:   Wed, 03 Feb 2021 01:23:33 -0600
+From:   Francois Pinault <noreply@carnivalassure.com.bd>
+To:     undisclosed-recipients:;
+Subject: Hello/Hallo
+Organization: Donation
+Reply-To: francoispinault1936@outlook.com
+Mail-Reply-To: francoispinault1936@outlook.com
+Message-ID: <da06bea50ecb79383d03c55bea3716bf@carnivalassure.com.bd>
+X-Sender: noreply@carnivalassure.com.bd
+User-Agent: Roundcube Webmail/1.3.15
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - dot.dotlines.com.sg
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - carnivalassure.com.bd
+X-Get-Message-Sender-Via: dot.dotlines.com.sg: authenticated_id: noreply@carnivalassure.com.bd
+X-Authenticated-Sender: dot.dotlines.com.sg: noreply@carnivalassure.com.bd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 03.02.2021 00:59, Bjorn Helgaas wrote:
-> On Thu, Jan 07, 2021 at 10:48:15PM +0100, Heiner Kallweit wrote:
->> Since 104daa71b396 ("PCI: Determine actual VPD size on first access")
->> attribute size is set to 0 (unlimited). So let's remove this now
->> dead code.
-> 
-> Doesn't the 104daa71b396 commit log say "attr->size == 0" means the
-> size is unknown (not unlimited)?
-> 
-If attr->size == 0, then sysfs code will not check whether a read/write
-access is out of bounds. It expects that the respective driver returns
-an error or less than the requested data when reading beyond the
-actual size. And that's exactly what we do in the VPD code.
 
-> But I don't think vpd.c does anything at all with attr->size other
-> than set it to zero.  Is there some reason we can't remove the
-> "attr->size = 0" assignment, too?
-> 
-We could rely on zero-initialization of the allocated memory.
-But leaving this assignment makes clear that sysfs code doesn't have
-to check length restrictions.
 
-> Maybe the sysfs attribute code uses it?  But I don't see vpd.c doing
-> anything that would contribute to that.
-> 
-Yes, attr->size is used by sysfs code only.
+-- 
+Hallo, ich bin Herr Francois Pinault, ich habe Ihnen gespendet. Sie 
+können mein Profil auf Wikipedia, Google oder Forbes überprüfen.
 
-> Sorry, I'm just puzzled.
-> 
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/pci/vpd.c | 14 --------------
->>  1 file changed, 14 deletions(-)
->>
->> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
->> index 7915d10f9..a3fd09105 100644
->> --- a/drivers/pci/vpd.c
->> +++ b/drivers/pci/vpd.c
->> @@ -403,13 +403,6 @@ static ssize_t read_vpd_attr(struct file *filp, struct kobject *kobj,
->>  {
->>  	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
->>  
->> -	if (bin_attr->size > 0) {
->> -		if (off > bin_attr->size)
->> -			count = 0;
->> -		else if (count > bin_attr->size - off)
->> -			count = bin_attr->size - off;
->> -	}
->> -
->>  	return pci_read_vpd(dev, off, count, buf);
->>  }
->>  
->> @@ -419,13 +412,6 @@ static ssize_t write_vpd_attr(struct file *filp, struct kobject *kobj,
->>  {
->>  	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
->>  
->> -	if (bin_attr->size > 0) {
->> -		if (off > bin_attr->size)
->> -			count = 0;
->> -		else if (count > bin_attr->size - off)
->> -			count = bin_attr->size - off;
->> -	}
->> -
->>  	return pci_write_vpd(dev, off, count, buf);
->>  }
->>  
->> -- 
->> 2.30.0
->>
->>
+Für Ihren Spendenanspruch und weitere Informationen kontaktieren Sie 
+mich umgehend unter francoispinault1936@outlook.com
 
+Mit freundlichen Grüßen,
+Herr Francois Pinault
