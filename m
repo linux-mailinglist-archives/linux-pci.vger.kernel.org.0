@@ -2,260 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31EB530DE11
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 16:25:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4B7C30DF78
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 17:16:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233221AbhBCPY5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 10:24:57 -0500
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:34027 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234169AbhBCPY4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 10:24:56 -0500
-Received: by mail-wr1-f48.google.com with SMTP id g10so24823523wrx.1
-        for <linux-pci@vger.kernel.org>; Wed, 03 Feb 2021 07:24:38 -0800 (PST)
+        id S234924AbhBCQPw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 11:15:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235002AbhBCQPV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 11:15:21 -0500
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA5AC0613ED
+        for <linux-pci@vger.kernel.org>; Wed,  3 Feb 2021 08:14:40 -0800 (PST)
+Received: by mail-oi1-x22b.google.com with SMTP id m13so390265oig.8
+        for <linux-pci@vger.kernel.org>; Wed, 03 Feb 2021 08:14:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bCfZ/a/6NOr6nE7maD0+c3yfEPShyNSVY7EhDvteykY=;
+        b=F30Nrt9vPiAB/zyqMpbpGMCX5+9GbissyHIBmWRmyMfHwYjqRyqHPvGGNSQswndDl8
+         ueuYjPhiYQRYrUuuoE2fCSgdN6wSgEVa4WV8ZAaC0Pdwh0MqPavWRi9wHjisevfaVscM
+         tKXh1rpbVgrfZgdHoSxmfIAY/17F42+Ith6ME=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=EstoSS3tvMVZyTXWQIL14jQcnlvYjp87Dy6dOXG1BHc=;
-        b=s3zfF5wVZGVgbbzAAQqQxrnysEpNIiztZWOKm6v91beQxAZe8K3MBwKeFpCeH+5Jgu
-         vIqF+yl4zyuK2+tEp/7vxJSog/FCaSXwnbwFWYClgJHGBXqtr+jON8cpBssOLp48E0+r
-         607lNz0oV6C3BAQo3UKZEhwuJwwEcybO3nGSWFHegItH3TMtg32SdU1/Xkr+GeClK2JQ
-         kDZ6oa8Im0VN4uCX4lTKJDoHi8tix1w8C/4EuqufEFnq7i1LxXtP0i5sUlMO0v/IQkjt
-         AFfU9HNKWkIczk0dlrMZPQbL+y7qvXrRru+yN0vZXCVs/SMyIXdXTBncQ0hhY54Mqero
-         alSg==
-X-Gm-Message-State: AOAM530LZfyHzm5ENMZqhJOSsC8+obfS61m9LESn1S997FbYtzLDEhJA
-        I+TxqkjhSAvcLOmMm0SlxIQ=
-X-Google-Smtp-Source: ABdhPJxkTUPWiQOR7Bbjz2yWy46KzlgBPE4Fw613az+lTtjH2jokXls8tOgYC8ikRHW3PktIBJ4qrA==
-X-Received: by 2002:a5d:6a10:: with SMTP id m16mr4078743wru.220.1612365852226;
-        Wed, 03 Feb 2021 07:24:12 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id k4sm4493433wrm.53.2021.02.03.07.24.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Feb 2021 07:24:11 -0800 (PST)
-Date:   Wed, 3 Feb 2021 16:24:10 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI/VPD: Let PCI sysfs core code handle VPD
- binary attribute
-Message-ID: <YBrAGpuXD/akcNN2@rocinante>
-References: <305704a7-f1da-a5a0-04e6-ee884be4f6da@gmail.com>
- <7703024f-8882-9eec-a122-599871728a89@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bCfZ/a/6NOr6nE7maD0+c3yfEPShyNSVY7EhDvteykY=;
+        b=QkOgRRTXJStjXz4oQDKHXS0Qzy0FWCHOiCEyGLI5N3niuMwwSWTzPzC50sB/Hz5oyW
+         hZ7Dv0kdYbl9PBtJp2q5ZumwjC1JnqIpPiPzoFOrRGuBFTo4orFhGw1VTpE8RvifHW+4
+         rEkJPXVfJalwU5jsATNFV/dNMkdYplyVCZHc/rL375GYVSeaG071utoVlXDEGkk7TtYm
+         OYW7D+Y3ysAOdqohYQuaC6Y0647t1WMYPhAjRlcv76tuo1LrEEcCAEdXTYaZm8NAXgT8
+         lNDKhSjEWEjF14osaKxh7JUda+rFztlv7B1VHxUfqKAP71q5FDe9Hchli6EEbmegCbMs
+         8Viw==
+X-Gm-Message-State: AOAM530G/T7Svh50HDjInrzClONXi79NtWDBEgbX2eLCq6Rg4ZFjD8h0
+        Wr0C+TQt/kjpiCXhHHKyqeGXIsJc0aFI4/Yyz3+pww==
+X-Google-Smtp-Source: ABdhPJxC2Hr09yAlU46Rq8Zw9mzo14g2j/8RncSJTzh5gFRD/Uq7tpWlsM64N23HZFbUWxoY/ZCynmvy0uA3EPvqdek=
+X-Received: by 2002:aca:1906:: with SMTP id l6mr2422037oii.101.1612368880228;
+ Wed, 03 Feb 2021 08:14:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7703024f-8882-9eec-a122-599871728a89@gmail.com>
+References: <20201127164131.2244124-1-daniel.vetter@ffwll.ch>
+ <20201127164131.2244124-13-daniel.vetter@ffwll.ch> <CAKMK7uGrdDrbtj0OyzqQc0CGrQwc2F3tFJU9vLfm2jjufAZ5YQ@mail.gmail.com>
+ <YAbtZBU5PMr68q9E@kroah.com> <CAKMK7uGHSgetm7mDso6_vj+aGrR4u+ChwHb3k0QvgG0K6X2fPg@mail.gmail.com>
+ <YAb4yD4IbpQ3qhJG@kroah.com> <CAKMK7uF9RfqhOGzcjgXTY62-dFS7ELr+uHuRDhEjOcO-kSgY+w@mail.gmail.com>
+In-Reply-To: <CAKMK7uF9RfqhOGzcjgXTY62-dFS7ELr+uHuRDhEjOcO-kSgY+w@mail.gmail.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Wed, 3 Feb 2021 17:14:29 +0100
+Message-ID: <CAKMK7uG7QiP6m5jfidn7AWVhXp1JUZNpgpNPWOV6bqo9H+7vXA@mail.gmail.com>
+Subject: Re: [PATCH v7 12/17] PCI: Revoke mappings like devmem
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Heiner,
+On Tue, Jan 19, 2021 at 5:03 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrot=
+e:
+>
+> On Tue, Jan 19, 2021 at 4:20 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Jan 19, 2021 at 03:34:47PM +0100, Daniel Vetter wrote:
+> > > On Tue, Jan 19, 2021 at 3:32 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Tue, Jan 19, 2021 at 09:17:55AM +0100, Daniel Vetter wrote:
+> > > > > On Fri, Nov 27, 2020 at 5:42 PM Daniel Vetter <daniel.vetter@ffwl=
+l.ch> wrote:
+> > > > > >
+> > > > > > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver cl=
+aims
+> > > > > > the region") /dev/kmem zaps ptes when the kernel requests exclu=
+sive
+> > > > > > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, t=
+his is
+> > > > > > the default for all driver uses.
+> > > > > >
+> > > > > > Except there's two more ways to access PCI BARs: sysfs and proc=
+ mmap
+> > > > > > support. Let's plug that hole.
+> > > > > >
+> > > > > > For revoke_devmem() to work we need to link our vma into the sa=
+me
+> > > > > > address_space, with consistent vma->vm_pgoff. ->pgoff is alread=
+y
+> > > > > > adjusted, because that's how (io_)remap_pfn_range works, but fo=
+r the
+> > > > > > mapping we need to adjust vma->vm_file->f_mapping. The cleanest=
+ way is
+> > > > > > to adjust this at at ->open time:
+> > > > > >
+> > > > > > - for sysfs this is easy, now that binary attributes support th=
+is. We
+> > > > > >   just set bin_attr->mapping when mmap is supported
+> > > > > > - for procfs it's a bit more tricky, since procfs pci access ha=
+s only
+> > > > > >   one file per device, and access to a specific resources first=
+ needs
+> > > > > >   to be set up with some ioctl calls. But mmap is only supporte=
+d for
+> > > > > >   the same resources as sysfs exposes with mmap support, and ot=
+herwise
+> > > > > >   rejected, so we can set the mapping unconditionally at open t=
+ime
+> > > > > >   without harm.
+> > > > > >
+> > > > > > A special consideration is for arch_can_pci_mmap_io() - we need=
+ to
+> > > > > > make sure that the ->f_mapping doesn't alias between ioport and=
+ iomem
+> > > > > > space. There's only 2 ways in-tree to support mmap of ioports: =
+generic
+> > > > > > pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the sin=
+gle
+> > > > > > architecture hand-rolling. Both approach support ioport mmap th=
+rough a
+> > > > > > special pfn range and not through magic pte attributes. Aliasin=
+g is
+> > > > > > therefore not a problem.
+> > > > > >
+> > > > > > The only difference in access checks left is that sysfs PCI mma=
+p does
+> > > > > > not check for CAP_RAWIO. I'm not really sure whether that shoul=
+d be
+> > > > > > added or not.
+> > > > > >
+> > > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > > > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > > > > Cc: Kees Cook <keescook@chromium.org>
+> > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > > > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > > > > > Cc: Jan Kara <jack@suse.cz>
+> > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > Cc: linux-mm@kvack.org
+> > > > > > Cc: linux-arm-kernel@lists.infradead.org
+> > > > > > Cc: linux-samsung-soc@vger.kernel.org
+> > > > > > Cc: linux-media@vger.kernel.org
+> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > Cc: linux-pci@vger.kernel.org
+> > > > > > Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > > > > > --
+> > > > > > v2:
+> > > > > > - Totally new approach: Adjust filp->f_mapping at open time. No=
+te that
+> > > > > >   this now works on all architectures, not just those support
+> > > > > >   ARCH_GENERIC_PCI_MMAP_RESOURCE
+> > > > > > ---
+> > > > > >  drivers/pci/pci-sysfs.c | 4 ++++
+> > > > > >  drivers/pci/proc.c      | 1 +
+> > > > > >  2 files changed, 5 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > > > > index d15c881e2e7e..3f1c31bc0b7c 100644
+> > > > > > --- a/drivers/pci/pci-sysfs.c
+> > > > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > > > @@ -929,6 +929,7 @@ void pci_create_legacy_files(struct pci_bus=
+ *b)
+> > > > > >         b->legacy_io->read =3D pci_read_legacy_io;
+> > > > > >         b->legacy_io->write =3D pci_write_legacy_io;
+> > > > > >         b->legacy_io->mmap =3D pci_mmap_legacy_io;
+> > > > > > +       b->legacy_io->mapping =3D iomem_get_mapping();
+> > > > > >         pci_adjust_legacy_attr(b, pci_mmap_io);
+> > > > > >         error =3D device_create_bin_file(&b->dev, b->legacy_io)=
+;
+> > > > > >         if (error)
+> > > > > > @@ -941,6 +942,7 @@ void pci_create_legacy_files(struct pci_bus=
+ *b)
+> > > > > >         b->legacy_mem->size =3D 1024*1024;
+> > > > > >         b->legacy_mem->attr.mode =3D 0600;
+> > > > > >         b->legacy_mem->mmap =3D pci_mmap_legacy_mem;
+> > > > > > +       b->legacy_io->mapping =3D iomem_get_mapping();
+> > > > >
+> > > > > Unlike the normal pci stuff below, the legacy files here go boom
+> > > > > because they're set up much earlier in the boot sequence. This on=
+ly
+> > > > > affects HAVE_PCI_LEGACY architectures, which aren't that many. So=
+ what
+> > > > > should we do here now:
+> > > > > - drop the devmem revoke for these
+> > > > > - rework the init sequence somehow to set up these files a lot la=
+ter
+> > > > > - redo the sysfs patch so that it doesn't take an address_space
+> > > > > pointer, but instead a callback to get at that (since at open tim=
+e
+> > > > > everything is set up). Imo rather ugly
+> > > > > - ditch this part of the series (since there's not really any tak=
+ers
+> > > > > for the latter parts it might just not make sense to push for thi=
+s)
+> > > > > - something else?
+> > > > >
+> > > > > Bjorn, Greg, thoughts?
+> > > >
+> > > > What sysfs patch are you referring to here?
+> > >
+> > > Currently in linux-next:
+> > >
+> > > commit 74b30195395c406c787280a77ae55aed82dbbfc7 (HEAD ->
+> > > topic/iomem-mmap-vs-gup, drm/topic/iomem-mmap-vs-gup)
+> > > Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > > Date:   Fri Nov 27 17:41:25 2020 +0100
+> > >
+> > >    sysfs: Support zapping of binary attr mmaps
+> > >
+> > > Or the patch right before this one in this submission here:
+> > >
+> > > https://lore.kernel.org/dri-devel/20201127164131.2244124-12-daniel.ve=
+tter@ffwll.ch/
+> >
+> > Ah.  Hm, a callback in the sysfs file logic seems really hairy, so I
+> > would prefer that not happen.  If no one really needs this stuff, why
+> > not just drop it like you mention?
+>
+> Well it is needed, but just on architectures I don't care about much.
+> Most relevant is perhaps powerpc (that's where Stephen hit the issue).
+> I do wonder whether we could move the legacy pci files setup to where
+> the modern stuff is set up from pci_create_resource_files() or maybe
+> pci_create_sysfs_dev_files() even for HAVE_PCI_LEGACY. I think that
+> might work, but since it's legacy flow on some funny architectures
+> (alpha, itanium, that kind of stuff) I have no idea what kind of
+> monsters I'm going to anger :-)
 
-Thank you for working on this and for cleaning this up!
+Back from a week of vacation, I looked at this again and I think
+shouldn't be hard to fix this with the sam trick
+pci_create_sysfs_dev_files() uses: As long as sysfs_initialized isn't
+set we skip, and then later on when the vfs is up&running we can
+initialize everything.
 
-On 21-02-03 09:50:13, Heiner Kallweit wrote:
-> Since 104daa71b396 ("PCI: Determine actual VPD size on first access")
-> there's nothing that keeps us from using a static attribute.
-> This allows to use PCI sysfs core code for handling the attribute.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/pci/pci-sysfs.c | 54 ++++++++++++++++++++++++++++++-----------
->  drivers/pci/pci.h       |  2 --
->  drivers/pci/vpd.c       | 54 -----------------------------------------
->  3 files changed, 40 insertions(+), 70 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index fb072f4b3..ed2ded167 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -255,6 +255,25 @@ static ssize_t ari_enabled_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RO(ari_enabled);
->  
-> +static ssize_t vpd_read(struct file *filp, struct kobject *kobj,
-> +			struct bin_attribute *bin_attr, char *buf,
-> +			loff_t off, size_t count)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-> +
-> +	return pci_read_vpd(dev, off, count, buf);
-> +}
-> +
-> +static ssize_t vpd_write(struct file *filp, struct kobject *kobj,
-> +			 struct bin_attribute *bin_attr, char *buf,
-> +			 loff_t off, size_t count)
-> +{
-> +	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-> +
-> +	return pci_write_vpd(dev, off, count, buf);
-> +}
-> +static BIN_ATTR_RW(vpd, 0);
-> +
->  static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
->  			     char *buf)
->  {
-> @@ -621,6 +640,11 @@ static struct attribute *pci_dev_attrs[] = {
->  	NULL,
->  };
->  
-> +static struct bin_attribute *pci_dev_bin_attrs[] = {
-> +	&bin_attr_vpd,
-> +	NULL,
-> +};
-> +
->  static struct attribute *pci_bridge_attrs[] = {
->  	&dev_attr_subordinate_bus_number.attr,
->  	&dev_attr_secondary_bus_number.attr,
-> @@ -1323,20 +1347,10 @@ static DEVICE_ATTR(reset, 0200, NULL, reset_store);
->  
->  static int pci_create_capabilities_sysfs(struct pci_dev *dev)
->  {
-> -	int retval;
-> -
-> -	pcie_vpd_create_sysfs_dev_files(dev);
-> -
-> -	if (dev->reset_fn) {
-> -		retval = device_create_file(&dev->dev, &dev_attr_reset);
-> -		if (retval)
-> -			goto error;
-> -	}
-> -	return 0;
-> +	if (!dev->reset_fn)
-> +		return 0;
->  
-> -error:
-> -	pcie_vpd_remove_sysfs_dev_files(dev);
-> -	return retval;
-> +	return device_create_file(&dev->dev, &dev_attr_reset);
->  }
->  
->  int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
-> @@ -1409,7 +1423,6 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
->  
->  static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
->  {
-> -	pcie_vpd_remove_sysfs_dev_files(dev);
->  	if (dev->reset_fn) {
->  		device_remove_file(&dev->dev, &dev_attr_reset);
->  		dev->reset_fn = 0;
-> @@ -1523,8 +1536,21 @@ static umode_t pcie_dev_attrs_are_visible(struct kobject *kobj,
->  	return 0;
->  }
->  
-> +static umode_t pci_dev_bin_attrs_visible(struct kobject *kobj,
-> +					 struct bin_attribute *a, int n)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(kobj_to_dev(kobj));
-> +
-> +	if (a == &bin_attr_vpd && !pdev->vpd)
-> +		return 0;
-> +
-> +	return a->attr.mode;
-> +}
-> +
->  static const struct attribute_group pci_dev_group = {
->  	.attrs = pci_dev_attrs,
-> +	.bin_attrs = pci_dev_bin_attrs,
-> +	.is_bin_visible = pci_dev_bin_attrs_visible,
->  };
->  
->  const struct attribute_group *pci_dev_groups[] = {
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index ef7c46613..d6ad1a3e2 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -143,8 +143,6 @@ static inline bool pcie_downstream_port(const struct pci_dev *dev)
->  
->  int pci_vpd_init(struct pci_dev *dev);
->  void pci_vpd_release(struct pci_dev *dev);
-> -void pcie_vpd_create_sysfs_dev_files(struct pci_dev *dev);
-> -void pcie_vpd_remove_sysfs_dev_files(struct pci_dev *dev);
->  
->  /* PCI Virtual Channel */
->  int pci_save_vc_state(struct pci_dev *dev);
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 2096530ce..a33a8fd7e 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -21,7 +21,6 @@ struct pci_vpd_ops {
->  
->  struct pci_vpd {
->  	const struct pci_vpd_ops *ops;
-> -	struct bin_attribute *attr;	/* Descriptor for sysfs VPD entry */
->  	struct mutex	lock;
->  	unsigned int	len;
->  	u16		flag;
-> @@ -397,59 +396,6 @@ void pci_vpd_release(struct pci_dev *dev)
->  	kfree(dev->vpd);
->  }
->  
-> -static ssize_t read_vpd_attr(struct file *filp, struct kobject *kobj,
-> -			     struct bin_attribute *bin_attr, char *buf,
-> -			     loff_t off, size_t count)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-> -
-> -	return pci_read_vpd(dev, off, count, buf);
-> -}
-> -
-> -static ssize_t write_vpd_attr(struct file *filp, struct kobject *kobj,
-> -			      struct bin_attribute *bin_attr, char *buf,
-> -			      loff_t off, size_t count)
-> -{
-> -	struct pci_dev *dev = to_pci_dev(kobj_to_dev(kobj));
-> -
-> -	return pci_write_vpd(dev, off, count, buf);
-> -}
-> -
-> -void pcie_vpd_create_sysfs_dev_files(struct pci_dev *dev)
-> -{
-> -	int retval;
-> -	struct bin_attribute *attr;
-> -
-> -	if (!dev->vpd)
-> -		return;
-> -
-> -	attr = kzalloc(sizeof(*attr), GFP_ATOMIC);
-> -	if (!attr)
-> -		return;
-> -
-> -	sysfs_bin_attr_init(attr);
-> -	attr->size = 0;
-> -	attr->attr.name = "vpd";
-> -	attr->attr.mode = S_IRUSR | S_IWUSR;
-> -	attr->read = read_vpd_attr;
-> -	attr->write = write_vpd_attr;
-> -	retval = sysfs_create_bin_file(&dev->dev.kobj, attr);
-> -	if (retval) {
-> -		kfree(attr);
-> -		return;
-> -	}
-> -
-> -	dev->vpd->attr = attr;
-> -}
-> -
-> -void pcie_vpd_remove_sysfs_dev_files(struct pci_dev *dev)
-> -{
-> -	if (dev->vpd && dev->vpd->attr) {
-> -		sysfs_remove_bin_file(&dev->dev.kobj, dev->vpd->attr);
-> -		kfree(dev->vpd->attr);
-> -	}
-> -}
-> -
->  int pci_vpd_find_tag(const u8 *buf, unsigned int off, unsigned int len, u8 rdt)
->  {
->  	int i;
-> -- 
-> 2.30.0
-> 
+To be able to apply the same thing to pci_create_legacy_files() I
+think all I need is to iterate overa all struct pci_bus in
+pci_sysfs_init() and we're good. Unfortunately I didn't find any
+for_each_pci_bus(), so how do I do that?
 
-This looks so much better now.
-
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-
-Krzysztof
+Thanks, Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
