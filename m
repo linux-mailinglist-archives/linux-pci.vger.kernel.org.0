@@ -2,115 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 708D330D770
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 11:27:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3ADD30D9A0
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 13:16:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233664AbhBCK00 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 05:26:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233640AbhBCK0U (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Feb 2021 05:26:20 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B369B614A7;
-        Wed,  3 Feb 2021 10:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612347939;
-        bh=r7DX/QwPjeWNXWAAED2oxF9FZ3T3xXWSX0ALos9WL+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b6yepVHC7kh2v7FfHhrX7DePfqL/0DCmVhSS32K9bFiMFB1rCprgPww2tb9kQWLHc
-         lMfWqS++TB+B681kfuAr2xsChlWZgGrC3qdi7K3X+UozFeRumXGbfisSFS/e22NHhv
-         vmN7AtXaJk0gjlRB71yy3yoQvhGtBg55KSySEoT0wmmaWifKY8l63xpDdPCJXiA2Ur
-         DUOfwg66dq3ReDpbsyF53a6wSCbSTQE4TXpKBN95CeSGy4gM3FcSPQ4FIFNzJ0rCep
-         xNAJBwkEUaF19MnfTq8v+pU8ZFuhKGPfAW5SXNraBL8qmLCduSWJuaMzk2X6vRsyJa
-         RskglmqoXh8Vg==
-Received: by pali.im (Postfix)
-        id 3D06F949; Wed,  3 Feb 2021 11:25:37 +0100 (CET)
-Date:   Wed, 3 Feb 2021 11:25:37 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: pci-bridge-emul: fix array overruns, improve safety
-Message-ID: <20210203102537.hfw3hioqsu4j5jdq@pali>
-References: <E1l6z9W-0006Re-MQ@rmk-PC.armlinux.org.uk>
+        id S234358AbhBCMQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 07:16:41 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12114 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234381AbhBCMQl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 07:16:41 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DW0wm6Q45z162K4;
+        Wed,  3 Feb 2021 20:14:32 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.498.0; Wed, 3 Feb 2021 20:15:42 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <sathyanarayanan.kuppuswamy@linux.intel.com>, <kbusch@kernel.org>,
+        <sean.v.kelley@intel.com>, <qiuxu.zhuo@intel.com>,
+        <prime.zeng@huawei.com>, <yangyicong@hisilicon.com>,
+        <linuxarm@openeuler.org>
+Subject: [PATCH] PCI/DPC: Check host->native_dpc before enable dpc service
+Date:   Wed, 3 Feb 2021 20:13:29 +0800
+Message-ID: <1612354409-14285-1-git-send-email-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <E1l6z9W-0006Re-MQ@rmk-PC.armlinux.org.uk>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tuesday 02 February 2021 17:07:46 Russell King wrote:
-> We allow up to PCI_EXP_SLTSTA2 registers to be accessed, but the
-> PCIe behaviour (pcie_cap_regs_behavior) array only covers up to
-> PCI_EXP_RTSTA. Expand this array to avoid walking off the end of it.
-> 
-> Do the same for pci_regs_behavior for consistency, and add a
-> BUILD_BUG_ON() to also check the bridge->conf structure size.
-> 
-> Fixes: 23a5fba4d941 ("PCI: Introduce PCI bridge emulated config space common logic")
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Per PCI Firmware Specification Rev. 3.2 Table 4-6,
+Interpretation of _OSC Control Field Returned Value, for
+bit 7 of _OSC control return value:
 
-Looks good!
+  "Firmware sets this bit to 1 to grant the OS control over PCI Express
+  Downstream Port Containment configuration."
+  "If control of this feature was requested and denied,
+  or was not requested, the firmware returns this bit set to 0."
 
-Reviewed-by: Pali Rohár <pali@kernel.org>
+We store bit 7 of _OSC control return value in host->native_dpc,
+check it before enable the dpc service as the firmware may not
+grant the control.
 
-Just to note that I'm planning to send a patch which adds missing
-register definitions for pcie_cap_regs_behavior[].
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/pci/pcie/portdrv_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> ---
->  drivers/pci/pci-bridge-emul.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index 139869d50eb2..fdaf86a888b7 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -21,8 +21,9 @@
->  #include "pci-bridge-emul.h"
->  
->  #define PCI_BRIDGE_CONF_END	PCI_STD_HEADER_SIZEOF
-> +#define PCI_CAP_PCIE_SIZEOF	(PCI_EXP_SLTSTA2 + 2)
->  #define PCI_CAP_PCIE_START	PCI_BRIDGE_CONF_END
-> -#define PCI_CAP_PCIE_END	(PCI_CAP_PCIE_START + PCI_EXP_SLTSTA2 + 2)
-> +#define PCI_CAP_PCIE_END	(PCI_CAP_PCIE_START + PCI_CAP_PCIE_SIZEOF)
->  
->  /**
->   * struct pci_bridge_reg_behavior - register bits behaviors
-> @@ -46,7 +47,8 @@ struct pci_bridge_reg_behavior {
->  	u32 w1c;
->  };
->  
-> -static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-> +static const
-> +struct pci_bridge_reg_behavior pci_regs_behavior[PCI_STD_HEADER_SIZEOF / 4] = {
->  	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
->  	[PCI_COMMAND / 4] = {
->  		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-> @@ -164,7 +166,8 @@ static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
->  	},
->  };
->  
-> -static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
-> +static const
-> +struct pci_bridge_reg_behavior pcie_cap_regs_behavior[PCI_CAP_PCIE_SIZEOF / 4] = {
->  	[PCI_CAP_LIST_ID / 4] = {
->  		/*
->  		 * Capability ID, Next Capability Pointer and
-> @@ -260,6 +263,8 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
->  int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
->  			 unsigned int flags)
->  {
-> +	BUILD_BUG_ON(sizeof(bridge->conf) != PCI_BRIDGE_CONF_END);
-> +
->  	bridge->conf.class_revision |= cpu_to_le32(PCI_CLASS_BRIDGE_PCI << 16);
->  	bridge->conf.header_type = PCI_HEADER_TYPE_BRIDGE;
->  	bridge->conf.cache_line_size = 0x10;
-> -- 
-> 2.20.1
-> 
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index e1fed664..7445d03 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -253,7 +253,8 @@ static int get_port_device_capability(struct pci_dev *dev)
+ 	 */
+ 	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+ 	    pci_aer_available() &&
+-	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
++	    (pcie_ports_dpc_native ||
++	    ((services & PCIE_PORT_SERVICE_AER) && host->native_dpc)))
+ 		services |= PCIE_PORT_SERVICE_DPC;
+ 
+ 	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+-- 
+2.8.1
+
