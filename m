@@ -2,262 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4B7C30DF78
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 17:16:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 969F330E0A4
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 18:13:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234924AbhBCQPw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 11:15:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
+        id S231451AbhBCRNO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 12:13:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235002AbhBCQPV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 11:15:21 -0500
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA5AC0613ED
-        for <linux-pci@vger.kernel.org>; Wed,  3 Feb 2021 08:14:40 -0800 (PST)
-Received: by mail-oi1-x22b.google.com with SMTP id m13so390265oig.8
-        for <linux-pci@vger.kernel.org>; Wed, 03 Feb 2021 08:14:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bCfZ/a/6NOr6nE7maD0+c3yfEPShyNSVY7EhDvteykY=;
-        b=F30Nrt9vPiAB/zyqMpbpGMCX5+9GbissyHIBmWRmyMfHwYjqRyqHPvGGNSQswndDl8
-         ueuYjPhiYQRYrUuuoE2fCSgdN6wSgEVa4WV8ZAaC0Pdwh0MqPavWRi9wHjisevfaVscM
-         tKXh1rpbVgrfZgdHoSxmfIAY/17F42+Ith6ME=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bCfZ/a/6NOr6nE7maD0+c3yfEPShyNSVY7EhDvteykY=;
-        b=QkOgRRTXJStjXz4oQDKHXS0Qzy0FWCHOiCEyGLI5N3niuMwwSWTzPzC50sB/Hz5oyW
-         hZ7Dv0kdYbl9PBtJp2q5ZumwjC1JnqIpPiPzoFOrRGuBFTo4orFhGw1VTpE8RvifHW+4
-         rEkJPXVfJalwU5jsATNFV/dNMkdYplyVCZHc/rL375GYVSeaG071utoVlXDEGkk7TtYm
-         OYW7D+Y3ysAOdqohYQuaC6Y0647t1WMYPhAjRlcv76tuo1LrEEcCAEdXTYaZm8NAXgT8
-         lNDKhSjEWEjF14osaKxh7JUda+rFztlv7B1VHxUfqKAP71q5FDe9Hchli6EEbmegCbMs
-         8Viw==
-X-Gm-Message-State: AOAM530G/T7Svh50HDjInrzClONXi79NtWDBEgbX2eLCq6Rg4ZFjD8h0
-        Wr0C+TQt/kjpiCXhHHKyqeGXIsJc0aFI4/Yyz3+pww==
-X-Google-Smtp-Source: ABdhPJxC2Hr09yAlU46Rq8Zw9mzo14g2j/8RncSJTzh5gFRD/Uq7tpWlsM64N23HZFbUWxoY/ZCynmvy0uA3EPvqdek=
-X-Received: by 2002:aca:1906:: with SMTP id l6mr2422037oii.101.1612368880228;
- Wed, 03 Feb 2021 08:14:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20201127164131.2244124-1-daniel.vetter@ffwll.ch>
- <20201127164131.2244124-13-daniel.vetter@ffwll.ch> <CAKMK7uGrdDrbtj0OyzqQc0CGrQwc2F3tFJU9vLfm2jjufAZ5YQ@mail.gmail.com>
- <YAbtZBU5PMr68q9E@kroah.com> <CAKMK7uGHSgetm7mDso6_vj+aGrR4u+ChwHb3k0QvgG0K6X2fPg@mail.gmail.com>
- <YAb4yD4IbpQ3qhJG@kroah.com> <CAKMK7uF9RfqhOGzcjgXTY62-dFS7ELr+uHuRDhEjOcO-kSgY+w@mail.gmail.com>
-In-Reply-To: <CAKMK7uF9RfqhOGzcjgXTY62-dFS7ELr+uHuRDhEjOcO-kSgY+w@mail.gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 3 Feb 2021 17:14:29 +0100
-Message-ID: <CAKMK7uG7QiP6m5jfidn7AWVhXp1JUZNpgpNPWOV6bqo9H+7vXA@mail.gmail.com>
-Subject: Re: [PATCH v7 12/17] PCI: Revoke mappings like devmem
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S229902AbhBCRNM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 12:13:12 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EAD6C061573;
+        Wed,  3 Feb 2021 09:12:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TOHrz9rJRmT1MZjmRcdSp7+GuY9P+OtZtUJvbJgCulo=; b=QlTPVhm61sGQuTcf3P0iNWT8ED
+        Bi2gkvv6DDeJQwV2HZj+zq53XZjee6QmF+jgW/E4anVOGeBwLE0OhGlE/INHWoFljCKhZx4kLuKFi
+        vBpPlOiPaIYrUSdcPkchYs5y8EocLYDkgBQi5zK2utgiNqo1gFusaNMlddnGX4lCKct1oIiIfQN0x
+        4FZFsAcm9c0hrwdS+WY55lmm+xjte1BQs5jszrftBaCW8zuTfPkpbQPL1wxnyHoTRZuCOgTwdKSQC
+        PmSjukh2Zy50HgX10fdq7MOFixROv7xKlGJkbVoqgE9rz6+csO3TxasqOuAu242s0FMgsIu5s/vvZ
+        pnxR5IZg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l7LhT-00HEZu-Qm; Wed, 03 Feb 2021 17:12:20 +0000
+Date:   Wed, 3 Feb 2021 17:12:19 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-cxl@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        daniel.lll@alibaba-inc.com,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: Re: [PATCH 02/14] cxl/mem: Map memory device registers
+Message-ID: <20210203171219.GA4104698@infradead.org>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+ <20210130002438.1872527-3-ben.widawsky@intel.com>
+ <20210202180441.GC3708021@infradead.org>
+ <20210202183151.7kwruvip7nshqsc4@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210202183151.7kwruvip7nshqsc4@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 5:03 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrot=
-e:
->
-> On Tue, Jan 19, 2021 at 4:20 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jan 19, 2021 at 03:34:47PM +0100, Daniel Vetter wrote:
-> > > On Tue, Jan 19, 2021 at 3:32 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Jan 19, 2021 at 09:17:55AM +0100, Daniel Vetter wrote:
-> > > > > On Fri, Nov 27, 2020 at 5:42 PM Daniel Vetter <daniel.vetter@ffwl=
-l.ch> wrote:
-> > > > > >
-> > > > > > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver cl=
-aims
-> > > > > > the region") /dev/kmem zaps ptes when the kernel requests exclu=
-sive
-> > > > > > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, t=
-his is
-> > > > > > the default for all driver uses.
-> > > > > >
-> > > > > > Except there's two more ways to access PCI BARs: sysfs and proc=
- mmap
-> > > > > > support. Let's plug that hole.
-> > > > > >
-> > > > > > For revoke_devmem() to work we need to link our vma into the sa=
-me
-> > > > > > address_space, with consistent vma->vm_pgoff. ->pgoff is alread=
-y
-> > > > > > adjusted, because that's how (io_)remap_pfn_range works, but fo=
-r the
-> > > > > > mapping we need to adjust vma->vm_file->f_mapping. The cleanest=
- way is
-> > > > > > to adjust this at at ->open time:
-> > > > > >
-> > > > > > - for sysfs this is easy, now that binary attributes support th=
-is. We
-> > > > > >   just set bin_attr->mapping when mmap is supported
-> > > > > > - for procfs it's a bit more tricky, since procfs pci access ha=
-s only
-> > > > > >   one file per device, and access to a specific resources first=
- needs
-> > > > > >   to be set up with some ioctl calls. But mmap is only supporte=
-d for
-> > > > > >   the same resources as sysfs exposes with mmap support, and ot=
-herwise
-> > > > > >   rejected, so we can set the mapping unconditionally at open t=
-ime
-> > > > > >   without harm.
-> > > > > >
-> > > > > > A special consideration is for arch_can_pci_mmap_io() - we need=
- to
-> > > > > > make sure that the ->f_mapping doesn't alias between ioport and=
- iomem
-> > > > > > space. There's only 2 ways in-tree to support mmap of ioports: =
-generic
-> > > > > > pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the sin=
-gle
-> > > > > > architecture hand-rolling. Both approach support ioport mmap th=
-rough a
-> > > > > > special pfn range and not through magic pte attributes. Aliasin=
-g is
-> > > > > > therefore not a problem.
-> > > > > >
-> > > > > > The only difference in access checks left is that sysfs PCI mma=
-p does
-> > > > > > not check for CAP_RAWIO. I'm not really sure whether that shoul=
-d be
-> > > > > > added or not.
-> > > > > >
-> > > > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > > > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > > > Cc: Kees Cook <keescook@chromium.org>
-> > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > > > Cc: John Hubbard <jhubbard@nvidia.com>
-> > > > > > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > > > > > Cc: Jan Kara <jack@suse.cz>
-> > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > Cc: linux-mm@kvack.org
-> > > > > > Cc: linux-arm-kernel@lists.infradead.org
-> > > > > > Cc: linux-samsung-soc@vger.kernel.org
-> > > > > > Cc: linux-media@vger.kernel.org
-> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > Cc: linux-pci@vger.kernel.org
-> > > > > > Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > > > > > --
-> > > > > > v2:
-> > > > > > - Totally new approach: Adjust filp->f_mapping at open time. No=
-te that
-> > > > > >   this now works on all architectures, not just those support
-> > > > > >   ARCH_GENERIC_PCI_MMAP_RESOURCE
-> > > > > > ---
-> > > > > >  drivers/pci/pci-sysfs.c | 4 ++++
-> > > > > >  drivers/pci/proc.c      | 1 +
-> > > > > >  2 files changed, 5 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > > > index d15c881e2e7e..3f1c31bc0b7c 100644
-> > > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > > @@ -929,6 +929,7 @@ void pci_create_legacy_files(struct pci_bus=
- *b)
-> > > > > >         b->legacy_io->read =3D pci_read_legacy_io;
-> > > > > >         b->legacy_io->write =3D pci_write_legacy_io;
-> > > > > >         b->legacy_io->mmap =3D pci_mmap_legacy_io;
-> > > > > > +       b->legacy_io->mapping =3D iomem_get_mapping();
-> > > > > >         pci_adjust_legacy_attr(b, pci_mmap_io);
-> > > > > >         error =3D device_create_bin_file(&b->dev, b->legacy_io)=
-;
-> > > > > >         if (error)
-> > > > > > @@ -941,6 +942,7 @@ void pci_create_legacy_files(struct pci_bus=
- *b)
-> > > > > >         b->legacy_mem->size =3D 1024*1024;
-> > > > > >         b->legacy_mem->attr.mode =3D 0600;
-> > > > > >         b->legacy_mem->mmap =3D pci_mmap_legacy_mem;
-> > > > > > +       b->legacy_io->mapping =3D iomem_get_mapping();
-> > > > >
-> > > > > Unlike the normal pci stuff below, the legacy files here go boom
-> > > > > because they're set up much earlier in the boot sequence. This on=
-ly
-> > > > > affects HAVE_PCI_LEGACY architectures, which aren't that many. So=
- what
-> > > > > should we do here now:
-> > > > > - drop the devmem revoke for these
-> > > > > - rework the init sequence somehow to set up these files a lot la=
-ter
-> > > > > - redo the sysfs patch so that it doesn't take an address_space
-> > > > > pointer, but instead a callback to get at that (since at open tim=
-e
-> > > > > everything is set up). Imo rather ugly
-> > > > > - ditch this part of the series (since there's not really any tak=
-ers
-> > > > > for the latter parts it might just not make sense to push for thi=
-s)
-> > > > > - something else?
-> > > > >
-> > > > > Bjorn, Greg, thoughts?
-> > > >
-> > > > What sysfs patch are you referring to here?
-> > >
-> > > Currently in linux-next:
-> > >
-> > > commit 74b30195395c406c787280a77ae55aed82dbbfc7 (HEAD ->
-> > > topic/iomem-mmap-vs-gup, drm/topic/iomem-mmap-vs-gup)
-> > > Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > > Date:   Fri Nov 27 17:41:25 2020 +0100
-> > >
-> > >    sysfs: Support zapping of binary attr mmaps
-> > >
-> > > Or the patch right before this one in this submission here:
-> > >
-> > > https://lore.kernel.org/dri-devel/20201127164131.2244124-12-daniel.ve=
-tter@ffwll.ch/
-> >
-> > Ah.  Hm, a callback in the sysfs file logic seems really hairy, so I
-> > would prefer that not happen.  If no one really needs this stuff, why
-> > not just drop it like you mention?
->
-> Well it is needed, but just on architectures I don't care about much.
-> Most relevant is perhaps powerpc (that's where Stephen hit the issue).
-> I do wonder whether we could move the legacy pci files setup to where
-> the modern stuff is set up from pci_create_resource_files() or maybe
-> pci_create_sysfs_dev_files() even for HAVE_PCI_LEGACY. I think that
-> might work, but since it's legacy flow on some funny architectures
-> (alpha, itanium, that kind of stuff) I have no idea what kind of
-> monsters I'm going to anger :-)
+On Tue, Feb 02, 2021 at 10:31:51AM -0800, Ben Widawsky wrote:
+> > > +		if (reg_type == CXL_REGLOC_RBI_MEMDEV) {
+> > > +			rc = 0;
+> > > +			cxlm = cxl_mem_create(pdev, reg_lo, reg_hi);
+> > > +			if (!cxlm)
+> > > +				rc = -ENODEV;
+> > > +			break;
+> > 
+> > And given that we're going to grow more types eventually, why not start
+> > out with a switch here?  Also why return the structure when nothing
+> > uses it?
+> 
+>  We've (Intel) already started working on the libnvdimm integration which does
+>  change this around a bit. In order to go with what's best tested though, I've
+>  chosen to use this as is for merge. Many different people not just in Intel
+>  have tested these codepaths. The resulting code moves the check on register
+>  type out of this function entirely.
+> 
+>  If you'd like me to make it a switch, I can, but it's going to be extracted
+>  later anyway.
 
-Back from a week of vacation, I looked at this again and I think
-shouldn't be hard to fix this with the sam trick
-pci_create_sysfs_dev_files() uses: As long as sysfs_initialized isn't
-set we skip, and then later on when the vfs is up&running we can
-initialize everything.
-
-To be able to apply the same thing to pci_create_legacy_files() I
-think all I need is to iterate overa all struct pci_bus in
-pci_sysfs_init() and we're good. Unfortunately I didn't find any
-for_each_pci_bus(), so how do I do that?
-
-Thanks, Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+This was just a suggestion.  No hard feelings, it's just that the code
+looks a little odd to me.
