@@ -2,344 +2,276 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FF4C30D089
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 01:56:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8889D30D11A
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 02:56:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbhBCAz1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Feb 2021 19:55:27 -0500
-Received: from mga18.intel.com ([134.134.136.126]:24811 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230437AbhBCAz0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Feb 2021 19:55:26 -0500
-IronPort-SDR: EljF6gcuh9T3Q2QeC+Xn9GnuCXdj9R41xBh8Tl+uWJDAz0niRmjL7P+EtwQXQQ/vbbukfIWuas
- U1DNyz5jjp6A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="168639743"
-X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
-   d="scan'208";a="168639743"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 16:54:44 -0800
-IronPort-SDR: T/OKYfRyJECY92tbmhe95trHnlElgkP/dg1d1yQ7hUQWoAcmWXv06c4utLZaKcN9E5eW0I+84+
- WVBgh83fvJ6A==
-X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
-   d="scan'208";a="371036464"
-Received: from rebbutt-mobl3.amr.corp.intel.com (HELO intel.com) ([10.252.133.20])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 16:54:43 -0800
-Date:   Tue, 2 Feb 2021 16:54:40 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     David Rientjes <rientjes@google.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        daniel.lll@alibaba-inc.com,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH 04/14] cxl/mem: Implement polled mode mailbox
-Message-ID: <20210203005440.yyyphe4yigf3fvkc@intel.com>
-References: <20210130002438.1872527-1-ben.widawsky@intel.com>
- <20210130002438.1872527-5-ben.widawsky@intel.com>
- <5986abe5-1248-30b2-5f53-fa7013baafad@google.com>
- <CAPcyv4g_yUpwoBJsLeVwCZAkZGGrfSgrCk2+GXVXBcouktZNSQ@mail.gmail.com>
- <20210202225733.miq5sl3mqit2zuhg@intel.com>
- <CAPcyv4gPbN74wOzPH5-qC6a1V5ZwXUVedtr0ZJmfP8DA13YWnA@mail.gmail.com>
+        id S230050AbhBCBz5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Feb 2021 20:55:57 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:44636 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229696AbhBCBz4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Feb 2021 20:55:56 -0500
+Received: from mailhost.synopsys.com (badc-mailhost4.synopsys.com [10.192.0.82])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C3FC6400E6;
+        Wed,  3 Feb 2021 01:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1612317295; bh=tIS4xwqj2Ua+iS73M+HCWfU6zZlhKz7aA0KcQ66Ip6E=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=iI+hBgV9fC7yBlmhNTEOhF4mxbLs9l/Qr9xhm6tBEV5IUImggYyNYCZX7dGlMrAYs
+         9W688y+3SBbAgV5BaeFzarB8l37aP0rKC4/MJ21jBhPl7PEV4FnNVTjnlHYA2uxcqs
+         plY7CFi8sasB+8ffxDqriTrpElKLdevhRjpzLC9xheaPUEAiTWm1CEL5Rrxq9eoKsF
+         x0WqD82gtWMa9tvn99AfhtBM5TzhEMK3pyI/ZUL0gt7gmPuiVQjiI3fkiqe+yHaQV/
+         WInjDbeX2AP8JoT10KKhhePQH6omLLcW0KSvpz7GTZCCTFu7qRpdVGXoplQ48jSAnZ
+         b4JMJTyu3CEVg==
+Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id AD751A005E;
+        Wed,  3 Feb 2021 01:54:53 +0000 (UTC)
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 1A578400E7;
+        Wed,  3 Feb 2021 01:54:52 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="dC7vxXyI";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BaSdKF1JCJEUxUy+WF6oON+KYNi6U81sg9PIYIGBvch6VQUx2PVv/GZw34PuYLQw5uSZlwHciI5dAWf3QTSS3AiTF/RJqH+7zvz8hGU5B2y3NYhhtO7pdndq9V9BxXx9oXenQcI4RoL5yssvm+dUexkVSNjOG68kQYeNT64dtbZSfTw9YD00gYXWUmfvHLglSZsl7EHKrjw4pnaCQZvDLcWfQ4+v0zxvnMcN4+ybalgpspo2egOIkvDt7FHLz+HptZl17Ot3Ec9seDi9VEYJMPWhyeiwfg7Mowwkw64RfzZ1fNCy1UbJO++e2XNOQR6cRncTMZLnQM10wbJqJPgAMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U0lWd9ozdJuPnR0iysZaXTi+x5wfPm7sESs1IcwfT4Y=;
+ b=Mq13fawROoz01N6gpXtJ6GWz2fpBDj0BXB69ANWx7MdW5AlqqMf6In+1laPj350yEINfYT/QWeBNjCRYYXOeDDemi+M6MrTXvpbXcE1KqyY/L2P2Ehf7D/WAG4m0xP8fVx7Ax5RWE6lFiJeyCkWg46ztmzFE0rj5tMJhMwOlmwYj1hHB8tr1JHu6fdQAxnioemd5bTJxG/xUm7Y+OU5m7glh+5xu4i+rqBVlvdEb/woS2yhvQtbcCKS7tCOWm3GUXymOUIoNHFLL3LIyjGA8v1AL5qNbZnCGFBysEQKfisFJQe9ZHl64B+lJyaKqb1MxCcO6y6Nvd53ZV1L1G5uQ2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U0lWd9ozdJuPnR0iysZaXTi+x5wfPm7sESs1IcwfT4Y=;
+ b=dC7vxXyIuJmoxPzByNsARYJYRpl7Cccma2azpRQbqS8W/sZYZHYSXJDl2MQlUkHv83OoJ5WENIKUuO4VeL9/thbKbQCWgpFlCrQyhAoowLkWk8SE67cLwh3BVSRve6kI6oiZGWJRx89OWzX+d7+TEmX8jsNMLbdhS161PGQlVVU=
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
+ DM6PR12MB4958.namprd12.prod.outlook.com (2603:10b6:5:20a::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3784.12; Wed, 3 Feb 2021 01:54:49 +0000
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052]) by DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052%10]) with mapi id 15.20.3805.028; Wed, 3 Feb 2021
+ 01:54:49 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: RE: [PATCH v2 04/15] PCI: Add pci_find_vsec_capability() to find a
+ specific VSEC
+Thread-Topic: [PATCH v2 04/15] PCI: Add pci_find_vsec_capability() to find a
+ specific VSEC
+Thread-Index: AQHW+WCk8KFoXO5U70eM77z8tv2kyapFKi6AgAB9hHA=
+Date:   Wed, 3 Feb 2021 01:54:49 +0000
+Message-ID: <DM5PR12MB18351689BA7312BF9DFDD6FEDAB49@DM5PR12MB1835.namprd12.prod.outlook.com>
+References: <cover.1612269536.git.gustavo.pimentel@synopsys.com>
+ <2ecb33dfee5dc05efc05de0731b0cb77bc246f54.1612269537.git.gustavo.pimentel@synopsys.com>
+ <20210202180855.GA3571@wunner.de>
+In-Reply-To: <20210202180855.GA3571@wunner.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWNhMDRhZTUwLTY1YzItMTFlYi05OGU2LWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxjYTA0YWU1MS02NWMyLTExZWItOThlNi1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjIxNzUiIHQ9IjEzMjU2NzkwODg2NTY3?=
+ =?us-ascii?Q?MzUxNyIgaD0iUElUS1dxMXRmWDVQd0RaS1RpTnZzMGJDUktVPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFB?=
+ =?us-ascii?Q?dENZNk16L25XQWF5RHFNSVhsS01vcklPb3doZVVveWdPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFOclNWM2dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: wunner.de; dkim=none (message not signed)
+ header.d=none;wunner.de; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: be918cc4-0f41-44e9-ae27-08d8c7e6b0b3
+x-ms-traffictypediagnostic: DM6PR12MB4958:
+x-microsoft-antispam-prvs: <DM6PR12MB495881D77F9A4B2E6BD2F044DAB49@DM6PR12MB4958.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1elaiNJZtjSpcAb4s+Qc49dAHeDdp5iBDUyw0hminuBWgdRWvomg/W9vqgmMxIInQV67P26pY/T0DRAape+jHkN0M5vNAMmy8j6xqFmZveA2KDoRO17Sx731BKLW+sTyWF/G9jdD84xwGTgx6SoIIZJ28SaZEp3iqgLDNBAvcUx55q3rv48a5LOi3Mj4lJORa8euP/zu9IMo8cbtGgpSfzHJdeuvgW3ATg+fk/ABTb+LGfHb++OfCrHOcmLtNfIzDD5LHbBlDaxgTQALqMq/Eab5Ka5kooKpdVq3t4tv/xGKwCJEIKO29Yi6HnYIcRe3LdtTahMkWqWy1rAEyRJjAEe/1WgZz5Cl5hqf+1oeqhNM+9qK5wB2aLnS+Gg02cygU+dR+zdnpRYtnbMyJ8vaHUoPh4LJgZpx85upwl5FqXVpRcRxIbky9DrRehcTFPZ9/R/+S4gGnLyQg3i4TEjfy481L5+gfzoa6Z7Iz2gNu520ELhOZ1MqqPzq9xrUatiWP2X2oIB6GCJ1iDUKNWJHrflG5zFpSMXYrdLiaAEu8ngvrcZnxskU1ukZaEkxzXv3
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(396003)(136003)(376002)(346002)(366004)(55016002)(6916009)(7696005)(9686003)(71200400001)(86362001)(186003)(8936002)(76116006)(54906003)(316002)(33656002)(66476007)(8676002)(83380400001)(6506007)(66446008)(64756008)(66946007)(66556008)(4326008)(5660300002)(53546011)(26005)(52536014)(478600001)(2906002)(37363001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?fek66dbql69clGOoZ2Z1FWqBIH+998Qvch+JCZgLI+qgY+e+pz8YsIaaBqWy?=
+ =?us-ascii?Q?IBIKIG3uZLnG0QUu/X2e0bjZ5yUbEOhmRjPtYqehX5B6dHsx8P+Wb63UfXT5?=
+ =?us-ascii?Q?nDz9Asxck1m+pBMdVkLCywbYepJ64jdulUgqrGkFk3fwe+0FoHh4gL4GOujg?=
+ =?us-ascii?Q?O9mWOEaJpsfosldH1iQsjV0lAPvv8/Fx5fjQVV9vUnA4CoDFrs/CNG4Hwe+p?=
+ =?us-ascii?Q?TNSWfV45WGowv2h1HoWFw71pVzTSqK6SDG3sLL1StyFZvaqhUd4KWhuR1VSo?=
+ =?us-ascii?Q?1Shv+xZjNr61dIgNkM9vayIMMMmB4NZWfxhBajv20mDacpXfLYl3dsFqjs3X?=
+ =?us-ascii?Q?VfCZwonaA0XzOqIzFkhqSQTIT6CFblUgAX0nKW9RMp/D7UIKrualVtFkPjQD?=
+ =?us-ascii?Q?V3xGy4MdZnVfrHxDuIzRO+c4cc9YtPESWQe9LDYqOoOIVAbK4JJDYjCv6Xb7?=
+ =?us-ascii?Q?nT1LT8LcNU1P4QUob5rpJnhmRzCGifGXWLtCdFu5ZC6xWSUDKjJuh4VwMidZ?=
+ =?us-ascii?Q?Fzala6PhBFLDTVfJhwijqjY1QoAZe1/UAuYqDzhJGkGC12I3P26KWG4eCDib?=
+ =?us-ascii?Q?i45cUcaiLCQqEeLIOsuTu9w7q9rnHrSe5kF7m54JmmtPYXGzpaKLTGrZP9Vm?=
+ =?us-ascii?Q?jKPwBAxTYC30pCTGNSD8jWBe0lmCvySZf2Z3OjoEOmPZP6Bq5AePDILSNFMB?=
+ =?us-ascii?Q?1LSb1r7jmnsOrQyNh3HDLZ+XaoIA9ZMYPpIwUtO0HARTredPPd02MWEg+q/O?=
+ =?us-ascii?Q?KOpty4z8qLp5DYZPJ2GENlIEpPgvZwMjdsdZKT9JpqlTZYh2flzxgsD+ZrGI?=
+ =?us-ascii?Q?y/Xc4uqr8UpnOMbRLJS/ToGlGnnLCytF4kmWwZDHq4+bmK5IQtiDOIkTw7Q4?=
+ =?us-ascii?Q?4f2PJ/xkokalPVETqgQShPs2mdOc01Gh2dhmsc5qJPPglziMkYQjb0to9+ks?=
+ =?us-ascii?Q?QL/KfKvjwLJJyd2xI/MQ98Az5knzkKj6xBFyuzWHybaJwp/YmasKAEG7L+gD?=
+ =?us-ascii?Q?9VNLOTzro9cULL5GKgWkQX1hXwE1Itzq8qSUgMA4zuQb58LBcHEH297EBIuh?=
+ =?us-ascii?Q?ZRnj/uRu?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4gPbN74wOzPH5-qC6a1V5ZwXUVedtr0ZJmfP8DA13YWnA@mail.gmail.com>
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be918cc4-0f41-44e9-ae27-08d8c7e6b0b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2021 01:54:49.2976
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m23ntKw5siVxsDRdlK2DI8uzmQ/lIBImMmSHJl0rI7yGNBqZx8tYF1knU8b3eYShVWzNdoxvaBEjcjikFYc09A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4958
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-02-02 15:54:03, Dan Williams wrote:
-> On Tue, Feb 2, 2021 at 2:57 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
-> >
-> > On 21-02-01 12:00:18, Dan Williams wrote:
-> > > On Sat, Jan 30, 2021 at 3:52 PM David Rientjes <rientjes@google.com> wrote:
-> > > >
-> > > > On Fri, 29 Jan 2021, Ben Widawsky wrote:
-> > > >
-> > > > > Provide enough functionality to utilize the mailbox of a memory device.
-> > > > > The mailbox is used to interact with the firmware running on the memory
-> > > > > device.
-> > > > >
-> > > > > The CXL specification defines separate capabilities for the mailbox and
-> > > > > the memory device. The mailbox interface has a doorbell to indicate
-> > > > > ready to accept commands and the memory device has a capability register
-> > > > > that indicates the mailbox interface is ready. The expectation is that
-> > > > > the doorbell-ready is always later than the memory-device-indication
-> > > > > that the mailbox is ready.
-> > > > >
-> > > > > Create a function to handle sending a command, optionally with a
-> > > > > payload, to the memory device, polling on a result, and then optionally
-> > > > > copying out the payload. The algorithm for doing this comes straight out
-> > > > > of the CXL 2.0 specification.
-> > > > >
-> > > > > Primary mailboxes are capable of generating an interrupt when submitting
-> > > > > a command in the background. That implementation is saved for a later
-> > > > > time.
-> > > > >
-> > > > > Secondary mailboxes aren't implemented at this time.
-> > > > >
-> > > > > The flow is proven with one implemented command, "identify". Because the
-> > > > > class code has already told the driver this is a memory device and the
-> > > > > identify command is mandatory.
-> > > > >
-> > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > > ---
-> > > > >  drivers/cxl/Kconfig |  14 ++
-> > > > >  drivers/cxl/cxl.h   |  39 +++++
-> > > > >  drivers/cxl/mem.c   | 342 +++++++++++++++++++++++++++++++++++++++++++-
-> > > > >  3 files changed, 394 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> > > > > index 3b66b46af8a0..fe591f74af96 100644
-> > > > > --- a/drivers/cxl/Kconfig
-> > > > > +++ b/drivers/cxl/Kconfig
-> > > > > @@ -32,4 +32,18 @@ config CXL_MEM
-> > > > >         Chapter 2.3 Type 3 CXL Device in the CXL 2.0 specification.
-> > > > >
-> > > > >         If unsure say 'm'.
-> > > > > +
-> > > > > +config CXL_MEM_INSECURE_DEBUG
-> > > > > +     bool "CXL.mem debugging"
-> > > > > +     depends on CXL_MEM
-> > > > > +     help
-> > > > > +       Enable debug of all CXL command payloads.
-> > > > > +
-> > > > > +       Some CXL devices and controllers support encryption and other
-> > > > > +       security features. The payloads for the commands that enable
-> > > > > +       those features may contain sensitive clear-text security
-> > > > > +       material. Disable debug of those command payloads by default.
-> > > > > +       If you are a kernel developer actively working on CXL
-> > > > > +       security enabling say Y, otherwise say N.
-> > > >
-> > > > Not specific to this patch, but the reference to encryption made me
-> > > > curious about integrity: are all CXL.mem devices compatible with DIMP?
-> > > > Some?  None?
-> > >
-> > > The encryption here is "device passphrase" similar to the NVDIMM
-> > > Security Management described here:
-> > >
-> > > https://pmem.io/documents/IntelOptanePMem_DSM_Interface-V2.0.pdf
-> > >
-> > > The LIBNVDIMM enabling wrapped this support with the Linux keys
-> > > interface which among other things enforces wrapping the clear text
-> > > passphrase with a Linux "trusted/encrypted" key.
-> > >
-> > > Additionally, the CXL.io interface optionally supports PCI IDE:
-> > >
-> > > https://www.intel.com/content/dam/www/public/us/en/documents/reference-guides/pcie-device-security-enhancements.pdf
-> > >
-> > > I'm otherwise not familiar with the DIMP acronym?
-> > >
-> > > > > +
-> > > > >  endif
-> > > > > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > > > > index a3da7f8050c4..df3d97154b63 100644
-> > > > > --- a/drivers/cxl/cxl.h
-> > > > > +++ b/drivers/cxl/cxl.h
-> > > > > @@ -31,9 +31,36 @@
-> > > > >  #define CXLDEV_MB_CAPS_OFFSET 0x00
-> > > > >  #define   CXLDEV_MB_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-> > > > >  #define CXLDEV_MB_CTRL_OFFSET 0x04
-> > > > > +#define   CXLDEV_MB_CTRL_DOORBELL BIT(0)
-> > > > >  #define CXLDEV_MB_CMD_OFFSET 0x08
-> > > > > +#define   CXLDEV_MB_CMD_COMMAND_OPCODE_MASK GENMASK(15, 0)
-> > > > > +#define   CXLDEV_MB_CMD_PAYLOAD_LENGTH_MASK GENMASK(36, 16)
-> > > > >  #define CXLDEV_MB_STATUS_OFFSET 0x10
-> > > > > +#define   CXLDEV_MB_STATUS_RET_CODE_MASK GENMASK(47, 32)
-> > > > >  #define CXLDEV_MB_BG_CMD_STATUS_OFFSET 0x18
-> > > > > +#define CXLDEV_MB_PAYLOAD_OFFSET 0x20
-> > > > > +
-> > > > > +/* Memory Device (CXL 2.0 - 8.2.8.5.1.1) */
-> > > > > +#define CXLMDEV_STATUS_OFFSET 0x0
-> > > > > +#define   CXLMDEV_DEV_FATAL BIT(0)
-> > > > > +#define   CXLMDEV_FW_HALT BIT(1)
-> > > > > +#define   CXLMDEV_STATUS_MEDIA_STATUS_MASK GENMASK(3, 2)
-> > > > > +#define     CXLMDEV_MS_NOT_READY 0
-> > > > > +#define     CXLMDEV_MS_READY 1
-> > > > > +#define     CXLMDEV_MS_ERROR 2
-> > > > > +#define     CXLMDEV_MS_DISABLED 3
-> > > > > +#define   CXLMDEV_READY(status) \
-> > > > > +             (CXL_GET_FIELD(status, CXLMDEV_STATUS_MEDIA_STATUS) == CXLMDEV_MS_READY)
-> > > > > +#define   CXLMDEV_MBOX_IF_READY BIT(4)
-> > > > > +#define   CXLMDEV_RESET_NEEDED_SHIFT 5
-> > > > > +#define   CXLMDEV_RESET_NEEDED_MASK GENMASK(7, 5)
-> > > > > +#define     CXLMDEV_RESET_NEEDED_NOT 0
-> > > > > +#define     CXLMDEV_RESET_NEEDED_COLD 1
-> > > > > +#define     CXLMDEV_RESET_NEEDED_WARM 2
-> > > > > +#define     CXLMDEV_RESET_NEEDED_HOT 3
-> > > > > +#define     CXLMDEV_RESET_NEEDED_CXL 4
-> > > > > +#define   CXLMDEV_RESET_NEEDED(status) \
-> > > > > +             (CXL_GET_FIELD(status, CXLMDEV_RESET_NEEDED) != CXLMDEV_RESET_NEEDED_NOT)
-> > > > >
-> > > > >  /**
-> > > > >   * struct cxl_mem - A CXL memory device
-> > > > > @@ -44,6 +71,16 @@ struct cxl_mem {
-> > > > >       struct pci_dev *pdev;
-> > > > >       void __iomem *regs;
-> > > > >
-> > > > > +     struct {
-> > > > > +             struct range range;
-> > > > > +     } pmem;
-> > > > > +
-> > > > > +     struct {
-> > > > > +             struct range range;
-> > > > > +     } ram;
-> > > > > +
-> > > > > +     char firmware_version[0x10];
-> > > > > +
-> > > > >       /* Cap 0001h - CXL_CAP_CAP_ID_DEVICE_STATUS */
-> > > > >       struct {
-> > > > >               void __iomem *regs;
-> > > > > @@ -51,6 +88,7 @@ struct cxl_mem {
-> > > > >
-> > > > >       /* Cap 0002h - CXL_CAP_CAP_ID_PRIMARY_MAILBOX */
-> > > > >       struct {
-> > > > > +             struct mutex mutex; /* Protects device mailbox and firmware */
-> > > > >               void __iomem *regs;
-> > > > >               size_t payload_size;
-> > > > >       } mbox;
-> > > > > @@ -89,5 +127,6 @@ struct cxl_mem {
-> > > > >
-> > > > >  cxl_reg(status);
-> > > > >  cxl_reg(mbox);
-> > > > > +cxl_reg(mem);
-> > > > >
-> > > > >  #endif /* __CXL_H__ */
-> > > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > > index fa14d51243ee..69ed15bfa5d4 100644
-> > > > > --- a/drivers/cxl/mem.c
-> > > > > +++ b/drivers/cxl/mem.c
-> > > > > @@ -6,6 +6,270 @@
-> > > > >  #include "pci.h"
-> > > > >  #include "cxl.h"
-> > > > >
-> > > > > +#define cxl_doorbell_busy(cxlm)                                                \
-> > > > > +     (cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET) &                    \
-> > > > > +      CXLDEV_MB_CTRL_DOORBELL)
-> > > > > +
-> > > > > +#define CXL_MAILBOX_TIMEOUT_US 2000
-> > > >
-> > > > This should be _MS?
-> > > >
-> > > > > +
-> > > > > +enum opcode {
-> > > > > +     CXL_MBOX_OP_IDENTIFY            = 0x4000,
-> > > > > +     CXL_MBOX_OP_MAX                 = 0x10000
-> > > > > +};
-> > > > > +
-> > > > > +/**
-> > > > > + * struct mbox_cmd - A command to be submitted to hardware.
-> > > > > + * @opcode: (input) The command set and command submitted to hardware.
-> > > > > + * @payload_in: (input) Pointer to the input payload.
-> > > > > + * @payload_out: (output) Pointer to the output payload. Must be allocated by
-> > > > > + *            the caller.
-> > > > > + * @size_in: (input) Number of bytes to load from @payload.
-> > > > > + * @size_out: (output) Number of bytes loaded into @payload.
-> > > > > + * @return_code: (output) Error code returned from hardware.
-> > > > > + *
-> > > > > + * This is the primary mechanism used to send commands to the hardware.
-> > > > > + * All the fields except @payload_* correspond exactly to the fields described in
-> > > > > + * Command Register section of the CXL 2.0 spec (8.2.8.4.5). @payload_in and
-> > > > > + * @payload_out are written to, and read from the Command Payload Registers
-> > > > > + * defined in (8.2.8.4.8).
-> > > > > + */
-> > > > > +struct mbox_cmd {
-> > > > > +     u16 opcode;
-> > > > > +     void *payload_in;
-> > > > > +     void *payload_out;
-> > > > > +     size_t size_in;
-> > > > > +     size_t size_out;
-> > > > > +     u16 return_code;
-> > > > > +#define CXL_MBOX_SUCCESS 0
-> > > > > +};
-> > > > > +
-> > > > > +static int cxl_mem_wait_for_doorbell(struct cxl_mem *cxlm)
-> > > > > +{
-> > > > > +     const int timeout = msecs_to_jiffies(CXL_MAILBOX_TIMEOUT_US);
-> > > > > +     const unsigned long start = jiffies;
-> > > > > +     unsigned long end = start;
-> > > > > +
-> > > > > +     while (cxl_doorbell_busy(cxlm)) {
-> > > > > +             end = jiffies;
-> > > > > +
-> > > > > +             if (time_after(end, start + timeout)) {
-> > > > > +                     /* Check again in case preempted before timeout test */
-> > > > > +                     if (!cxl_doorbell_busy(cxlm))
-> > > > > +                             break;
-> > > > > +                     return -ETIMEDOUT;
-> > > > > +             }
-> > > > > +             cpu_relax();
-> > > > > +     }
-> > > > > +
-> > > > > +     dev_dbg(&cxlm->pdev->dev, "Doorbell wait took %dms",
-> > > > > +             jiffies_to_msecs(end) - jiffies_to_msecs(start));
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> > > > > +                              struct mbox_cmd *mbox_cmd)
-> > > > > +{
-> > > > > +     dev_warn(&cxlm->pdev->dev, "Mailbox command timed out\n");
-> > > > > +     dev_info(&cxlm->pdev->dev,
-> > > > > +              "\topcode: 0x%04x\n"
-> > > > > +              "\tpayload size: %zub\n",
-> > > > > +              mbox_cmd->opcode, mbox_cmd->size_in);
-> > > > > +
-> > > > > +     if (IS_ENABLED(CONFIG_CXL_MEM_INSECURE_DEBUG)) {
-> > > > > +             print_hex_dump_debug("Payload ", DUMP_PREFIX_OFFSET, 16, 1,
-> > > > > +                                  mbox_cmd->payload_in, mbox_cmd->size_in,
-> > > > > +                                  true);
-> > > > > +     }
-> > > > > +
-> > > > > +     /* Here's a good place to figure out if a device reset is needed */
-> > > >
-> > > > What are the implications if we don't do a reset, as this implementation
-> > > > does not?  IOW, does a timeout require a device to be recovered through a
-> > > > reset before it can receive additional commands, or is it safe to simply
-> > > > drop the command that timed out on the floor and proceed?
-> > >
-> > > Not a satisfying answer, but "it depends". It's also complicated by
-> > > the fact that a reset may need to be coordinated with other devices in
-> > > the interleave-set as the HDM decoders may bounce.
-> > >
-> > > For comparison, to date there have been no problems with the "drop on
-> > > the floor" policy of LIBNVDIMM command timeouts. At the same time
-> > > there simply was not a software visible reset mechanism for those
-> > > devices so this problem never came out. This mailbox isn't a fast
-> > > path, so the device is likely completely dead if this timeout is ever
-> > > violated, and the firmware reporting a timeout might as well assume
-> > > that the OS gives up on the device.
-> > >
-> > > I'll let Ben chime in on the rest...
-> >
-> > Reset handling is next on the TODO list for the driver. I had two main reasons
-> > for not even taking a stab at it.
-> > 1. I have no good way to test it. We are working on adding some test conditions
-> >    to QEMU for it.
-> > 2. The main difficulty in my mind with reset is you can't pull the memory out
-> >    from under the OS here. While the driver doesn't yet handle persistent memory
-> >    capacities, it may have volatile capacity configured by the BIOS. So the goal
-> >    was, get the bits of the driver in that would at least allow developers,
-> >    hardware vendors, and folks contributing to the spec a way to have basic
-> >    interaction with a CXL type 3 device.
-> 
-> Honestly I think in most cases if the firmware decides to return a
-> "reset required" status the Linux response will be "lol, no" because
-> the firmware has no concept of the violence that would impose on the
-> rest of the system.
+Hi Lukas,
 
-How about UAPI to initiate a reset? I think a sysfs bool would do the trick.
-Maybe sysfs file to display current error status, and one to reset?
+On Tue, Feb 2, 2021 at 18:8:55, Lukas Wunner <lukas@wunner.de> wrote:
+
+> On Tue, Feb 02, 2021 at 01:40:18PM +0100, Gustavo Pimentel wrote:
+> >  /**
+> > + * pci_find_vsec_capability - Find a vendor-specific extended capabili=
+ty
+> > + * @dev: PCI device to query
+> > + * @cap: vendor-specific capability ID code
+> > + *
+> > + * Returns the address of the vendor-specific structure that matches t=
+he
+> > + * requested capability ID code within the device's PCI configuration =
+space
+> > + * or 0 if it does not find a match.
+> > + */
+> > +u16 pci_find_vsec_capability(struct pci_dev *dev, int vsec_cap_id)
+> > +{
+>=20
+> As the name implies, the capability is "vendor-specific", so it is perfec=
+tly
+> possible that two vendors use the same VSEC ID for different things.
+>=20
+> To make sure you're looking for the right capability, you need to pass
+> a u16 vendor into this function and bail out if dev->vendor is different.
+
+This function will be called by the driver that will pass the correct=20
+device which will be already pointing to the config space associated with=20
+the endpoint for instance. Because the driver is already attached to the=20
+endpoint through the vendor ID and device ID specified, there is no need=20
+to do that validation, it will be redundant.
+
+>=20
+>=20
+> > +	u16 vsec;
+> > +	u32 header;
+> > +
+> > +	vsec =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VNDR);
+> > +	while (vsec) {
+> > +		if (pci_read_config_dword(dev, vsec + PCI_VSEC_HDR,
+> > +					  &header) =3D=3D PCIBIOS_SUCCESSFUL &&
+> > +		    PCI_VSEC_CAP_ID(header) =3D=3D vsec_cap_id)
+> > +			return vsec;
+> > +
+> > +		vsec =3D pci_find_next_ext_capability(dev, vsec,
+> > +						    PCI_EXT_CAP_ID_VNDR);
+> > +	}
+>=20
+> FWIW, a more succinct implementation would be:
+>=20
+> 	while ((vsec =3D pci_find_next_ext_capability(...))) { ... }
+>=20
+> See set_pcie_thunderbolt() in drivers/pci/probe.c for an example.
+> Please consider refactoring that function to use your new helper.
+
+That looks more clean. I will do it. Thanks!
+
+>=20
+> Thanks,
+>=20
+> Lukas
+
 
