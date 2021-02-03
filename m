@@ -2,99 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BFC230D4A8
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 09:07:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3041730D583
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Feb 2021 09:48:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232242AbhBCIGz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 03:06:55 -0500
-Received: from mga07.intel.com ([134.134.136.100]:50097 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232433AbhBCIGy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 3 Feb 2021 03:06:54 -0500
-IronPort-SDR: 0SMHToqfLyMlkAwjsM10JRHnfkp64H1i+wb3j6oofTcwGfxOS+dBc2iU8fpMKNSkcSZeSijVhD
- HqtV5zRmyzqQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="245079974"
-X-IronPort-AV: E=Sophos;i="5.79,397,1602572400"; 
-   d="scan'208";a="245079974"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 00:05:25 -0800
-IronPort-SDR: 9A720OnrUfEV+anxHhtqm10DSp8wmVjx7uYFX9jMxPNWfTI8taECRSPJnuBCUhu2UZ2daKhvUN
- YD8IaYrM64sg==
-X-IronPort-AV: E=Sophos;i="5.79,397,1602572400"; 
-   d="scan'208";a="356645477"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 00:05:21 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 03 Feb 2021 10:05:18 +0200
-Date:   Wed, 3 Feb 2021 10:05:18 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mingchuang Qiao <mingchuang.qiao@mediatek.com>
-Cc:     bhelgaas@google.com, matthias.bgg@gmail.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, haijun.liu@mediatek.com,
-        lambert.wang@mediatek.com, kerun.zhu@mediatek.com,
-        alex.williamson@redhat.com, rjw@rjwysocki.net,
-        utkarsh.h.patel@intel.com
-Subject: Re: [v3] PCI: Avoid unsync of LTR mechanism configuration
-Message-ID: <20210203080518.GP2542@lahna.fi.intel.com>
-References: <20210129071137.8743-1-mingchuang.qiao@mediatek.com>
- <20210201113217.GL2542@lahna.fi.intel.com>
- <1612318441.5980.142.camel@mcddlt001>
+        id S232591AbhBCIrs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 03:47:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232563AbhBCIrr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 03:47:47 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1134C061573
+        for <linux-pci@vger.kernel.org>; Wed,  3 Feb 2021 00:47:06 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id m13so23206416wro.12
+        for <linux-pci@vger.kernel.org>; Wed, 03 Feb 2021 00:47:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=o6AMCjBmcUopUOvsKp0ZrY4Gx7sy0RLfMISVl53nM7w=;
+        b=UzqB4mRyrP4af5/dwmXr22/yXk+80ShhshHdtH60fGz6Msgsb4AcpiGp6d9Dt4ZYtK
+         tj/iWm2Sr4R6ZaDdafIoEOyPKff7iy7+eW/O382arJgC2I73AalPitk6Aqlq9vVTwQ9g
+         Y6tLEKfxGAhuI7X5Rm0hszVx7S6db1928gOVbKTzfJhCqhxf35FtqZr40eq66EleGjRb
+         2o5hwuH5KhvY/CwUpVzjz4ecQi0FtMVEPly6XZ6LCyNRQPD/1Ru8GGwTqyrXb9bzNYbD
+         x6pNZZuJ9f73LJFLjNvUYwtpoGmqT67KQxyU3Wl9boEKpWirlTKxsgKXjF25LgFvRIXZ
+         l9+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=o6AMCjBmcUopUOvsKp0ZrY4Gx7sy0RLfMISVl53nM7w=;
+        b=gqp6kwdWmXCW3vG8MdgRotSqyDreCHPeXCgb9/DSwszDqBnYXLz19d4VQqUP55V4n7
+         wlM3B23A5kpryX820rrRDyb+BcnfGTCQwi02IR6HCxMoeMYF9wNBx12gEEKOiWxefz9T
+         ktAu9GoamqB51IYZnlJaGPPN1cyKWZ2dHex8RonY86s15ICzDvHu2PJoZikLAA9AK4MH
+         /Gu3ariF/gepRs3QvToyDCnDA7Vl99g8jneVk1HgN79pUQeHhN8Dnk81eumEblzILkKe
+         5w3vzXri13wTZ6I4eqbK0iEm5Pdgqf9ouo0ZhcQ5fl6i0uTJn9bOMzGFePX1YABliZpG
+         CTww==
+X-Gm-Message-State: AOAM532VEmCKWzT/RMaDXx7mrm2Ddw0LhUUNuttZMby1/m+/ZLG4b3H5
+        2tj2lPJQXYJ4YfZZXXypmkxsz0hKTOc=
+X-Google-Smtp-Source: ABdhPJxyIRlWJFFPy1jn+jjR9/6XanIGOnPRjacxMhpJEldqLq5RebX3KUIQg60a/Ngm7DBmyZhHFA==
+X-Received: by 2002:a05:6000:1372:: with SMTP id q18mr2184709wrz.280.1612342025394;
+        Wed, 03 Feb 2021 00:47:05 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f1f:ad00:f08f:200e:76bc:9fee? (p200300ea8f1fad00f08f200e76bc9fee.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:f08f:200e:76bc:9fee])
+        by smtp.googlemail.com with ESMTPSA id t205sm1760932wmt.28.2021.02.03.00.47.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Feb 2021 00:47:05 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2 0/2] PCI/VPD: Improve handling binary sysfs attribute
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Message-ID: <305704a7-f1da-a5a0-04e6-ee884be4f6da@gmail.com>
+Date:   Wed, 3 Feb 2021 09:46:58 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1612318441.5980.142.camel@mcddlt001>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 03, 2021 at 10:14:01AM +0800, Mingchuang Qiao wrote:
-> Hi,
-> 
-> On Mon, 2021-02-01 at 13:32 +0200, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Fri, Jan 29, 2021 at 03:11:37PM +0800, mingchuang.qiao@mediatek.com wrote:
-> > > From: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
-> > > 
-> > > In bus scan flow, the "LTR Mechanism Enable" bit of DEVCTL2 register is
-> > > configured in pci_configure_ltr(). If device and bridge both support LTR
-> > > mechanism, the "LTR Mechanism Enable" bit of device and bridge will be
-> > > enabled in DEVCTL2 register. And pci_dev->ltr_path will be set as 1.
-> > > 
-> > > If PCIe link goes down when device resets, the "LTR Mechanism Enable" bit
-> > > of bridge will change to 0 according to PCIe r5.0, sec 7.5.3.16. However,
-> > > the pci_dev->ltr_path value of bridge is still 1.
-> > > 
-> > > For following conditions, check and re-configure "LTR Mechanism Enable" bit
-> > > of bridge to make "LTR Mechanism Enable" bit mtach ltr_path value.
-> > 
-> > Typo mtach -> match.
-> > 
-> > >    -before configuring device's LTR for hot-remove/hot-add
-> > >    -before restoring device's DEVCTL2 register when restore device state
-> > > 
-> > > Signed-off-by: Mingchuang Qiao <mingchuang.qiao@mediatek.com>
-> > > ---
-> > > changes of v2
-> > >  -modify patch description
-> > >  -reconfigure bridge's LTR before restoring device DEVCTL2 register
-> > > changes of v3
-> > >  -call pci_reconfigure_bridge_ltr() in probe.c
-> > 
-> > Hmm, which part of this patch takes care of the reset path? It is not
-> > entirely clear to me at least.
-> > 
-> 
-> When device resets and link goes down, there seems to have two methods
-> to recover for software. 
->    -One is that trigger device removal and rescan.
->    -The other is that restore device with pci_restore_state() after link
-> comes back up.
-> For above both scenarios, we need check and reconfigure "LTR Mechanism
-> Enable" bit of bridge. It's also this patch intends to do.
->    -For the rescan scenario, it's done in pci_configure_ltr().
->    -For the restore scenario, it's done in pci_restore_pcie_state().
+Since 104daa71b396 ("PCI: Determine actual VPD size on first access")
+there's nothing that keeps us from using a static attribute.
+This allows to significantly simplify the code.
 
-Okay, thanks for the clarification!
+v2:
+- switch to using PCI sysfs core code in patch 2
+
+Heiner Kallweit (2):
+  PCI/VPD: Remove dead code from sysfs access functions
+  PCI/VPD: Let PCI sysfs core code handle VPD binary attribute
+
+ drivers/pci/pci-sysfs.c | 54 +++++++++++++++++++++++---------
+ drivers/pci/pci.h       |  2 --
+ drivers/pci/vpd.c       | 68 -----------------------------------------
+ 3 files changed, 40 insertions(+), 84 deletions(-)
+
+-- 
+2.30.0
+
