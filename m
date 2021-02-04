@@ -2,410 +2,458 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B361730E7B6
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 00:44:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D58A30E858
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 01:12:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234016AbhBCXmR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Feb 2021 18:42:17 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:59322 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233564AbhBCXmP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Feb 2021 18:42:15 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 113NAGKe046541;
-        Wed, 3 Feb 2021 23:40:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : content-type :
- mime-version; s=corp-2020-01-29;
- bh=T1bb0XTc3eHB9TaU/o5/wnJRnLYt5yXAz2mfRftNqPk=;
- b=AQgAsmYNKDuhJEXkKCCLjZ4btVMHNAaabw7AQaLEHjRQ1DxQ6rsmXgUd7yOAwDKP9eE6
- /jn8Fue+dSJnNLWUz8OvbspBrcSBTd2mFnhKJJYcoRiHLkKv0pQ8floQsGn4dTpuwT0r
- XCDo8DnyDk48OzkHCP/OfGRAcLmqeSD7XxwLuh5HakhRJ5fe0Xig1IQqnm5Sxz235Ir8
- mKVab/Wc+yzfaXw0POZyJ5aL5Tt0Magst+aUTkPD5NEilXYr61/hnUQYX8qpWRJVIPie
- lYzpfQkSuh7hAS2ER2mkomqrQd0Q61hS4+sZxC14yRf+48hMe4kXNeamnh4m+vxdT9M4 3w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 36cxvr5fk6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Feb 2021 23:40:15 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 113NBZKB083400;
-        Wed, 3 Feb 2021 23:38:14 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
-        by aserp3030.oracle.com with ESMTP id 36dh1rp0e3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Feb 2021 23:38:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bzvh6TTjCKW6F/TBlPDxODMljmdU5b4U3YAZ35m4YjhLwwteroxdqRsIJXe6JrhtN/uUMUOElMzdZF1C1ENAr/iL1fuHxcW3WJ9TRa2Y0XqOGJ2RXu4LZVIpUtij3CG7vhsmbZ1bGXtFSLQSpltPFLoYkclDIu0iNCjpPLnCFanCiIOQeozHW9gQkSabewgu0PiVkxwh2PAy2tiAC2ZMA4AA/5FujqwuP3Nlw9VXAGOYvJkIEMSbYJTTzYk4PkLiBnJZ210q0KU4xFKDBtqO2M/kgU6/BGf2v2p/32pOyIlvd4KGSKYlFzG8qCSOW5qaNusG35HP52alvI07I30YpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T1bb0XTc3eHB9TaU/o5/wnJRnLYt5yXAz2mfRftNqPk=;
- b=NsRvqL3XdcmO+sHJOG6vt9wkb0lFGLkVs6UQrK32rQH1C6R8jsab1XeW9C+xmQrrhtcwtO5GxWPtzwIXzsM8O9wJTXQuqvAStPW7TRG97ZtI5TvX4TDX6474kqE5dKXn6VUYTXneJWWSzuWVrQRtaDNPHYyje0YbkIJyeB0DNXmsHkgkcQhXEOq3Mo/jyelM3Gwashr8bKF3DUTo1jq+QEbtnAJ01VklerV71acJhDvDy7a/Ire8LPupCxJia7la3+S9IN8ZGoTIvoRHTyek2iSGphT1pDOi/CDJt7lme8U5szvXIZQNUyJQ0o071z+guAhUzAl1uYzMbs5TORkCbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T1bb0XTc3eHB9TaU/o5/wnJRnLYt5yXAz2mfRftNqPk=;
- b=SH5E9mnI9UFqO/gUOeqFccVa5MYZdZsvoeyx68oFPHzx3hPsNVbSgm9Rh0xvUBc3Y2BlVvygdWv1haxHsNTj+TY77T6AJnfyqKjAeQADPPtP4bn59/aq76NOgrPOqOgNASnEzJEpRGcsQNg612h1i32PshXf4qIM/gTJXU7V5V8=
-Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
- header.d=none;lists.freedesktop.org; dmarc=none action=none
- header.from=oracle.com;
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com (2603:10b6:a02:a9::20)
- by SJ0PR10MB4784.namprd10.prod.outlook.com (2603:10b6:a03:2d4::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3805.19; Wed, 3 Feb
- 2021 23:38:11 +0000
-Received: from BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::b52e:bdd3:d193:4d14]) by BYAPR10MB2663.namprd10.prod.outlook.com
- ([fe80::b52e:bdd3:d193:4d14%7]) with mapi id 15.20.3805.026; Wed, 3 Feb 2021
- 23:38:11 +0000
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, nouveau@lists.freedesktop.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org
-Cc:     linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-        akpm@linux-foundation.org, benh@kernel.crashing.org,
-        bskeggs@redhat.com, bhelgaas@google.com, bp@alien8.de,
-        boris.ostrovsky@oracle.com, hch@lst.de, chris@chris-wilson.co.uk,
-        daniel@ffwll.ch, airlied@linux.ie, hpa@zytor.com, mingo@kernel.org,
-        mingo@redhat.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, jgross@suse.com,
-        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
-        matthew.auld@intel.com, mpe@ellerman.id.au, rppt@kernel.org,
-        paulus@samba.org, peterz@infradead.org, robin.murphy@arm.com,
-        rodrigo.vivi@intel.com, sstabellini@kernel.org,
-        bauerman@linux.ibm.com, tsbogend@alpha.franken.de,
-        tglx@linutronix.de, ulf.hansson@linaro.org, joe.jin@oracle.com,
-        thomas.lendacky@amd.com
-Subject: [PATCH RFC v1 6/6] xen-swiotlb: enable 64-bit xen-swiotlb
-Date:   Wed,  3 Feb 2021 15:37:09 -0800
-Message-Id: <20210203233709.19819-7-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210203233709.19819-1-dongli.zhang@oracle.com>
-References: <20210203233709.19819-1-dongli.zhang@oracle.com>
-Content-Type: text/plain
-X-Originating-IP: [138.3.200.16]
-X-ClientProxiedBy: CH0PR03CA0008.namprd03.prod.outlook.com
- (2603:10b6:610:b0::13) To BYAPR10MB2663.namprd10.prod.outlook.com
- (2603:10b6:a02:a9::20)
+        id S233727AbhBDALZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Feb 2021 19:11:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233331AbhBDALX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 3 Feb 2021 19:11:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C3E8164F4C;
+        Thu,  4 Feb 2021 00:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612397442;
+        bh=KuL8gT/46wSZPMGk1dXKfNuH3BHVZp8R6sObJbm7utE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FTDYgvs/HKwBIA3eB89fUbFH5rlzqGznNRsWJJQyZDOpCXXtcOqg8zVA2znJuUF5y
+         UVEbP1ZLn8tHXtt995tlgfN8NcIHj8jn94FzBy4Lfk0sojJVzNTlrT7iG6xM8fqNJ5
+         bn27lwoEApKV3ePH2fw6I0K4hzihqmbJGXhsfieTFDHsptM5x4Wxtp+w4Dr8idO8QW
+         FSaLFMAXVmg6+Na5gU8XYnnaETEz/cSgc3tL2ngbFjmTggf5QDWBDOQcEQVOpjv4xm
+         8G4JvyyB0whExLjsCKtISAeYeylJihw4Uj+vyFQEp+vylw2xAiCjpmsmhvCWFQVHq2
+         cltjmPW/BBQug==
+Date:   Wed, 3 Feb 2021 18:10:39 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH mlx5-next v5 1/4] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+Message-ID: <20210204001039.GA16871@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (138.3.200.16) by CH0PR03CA0008.namprd03.prod.outlook.com (2603:10b6:610:b0::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.17 via Frontend Transport; Wed, 3 Feb 2021 23:38:05 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1a6f39ca-831d-4584-1671-08d8c89cc4a6
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB4784:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SJ0PR10MB47843A529EE3238F834D6E8CF0B49@SJ0PR10MB4784.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:136;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: g1MdwF09ZQsQBk3V9QOQLj3Q2J4L21DedJnj5zLtjikYKElnwxG4upLd7TjhmJPnAU7VpjSHxPeJkqoPBRqm6qLeK0CHlFugspJnxi0iJI55XYooo19FwHgiOqBWBro0DzURhQTcUKHg2pt6GcgakcdWtajKr7YhF2oMlQ9TwO3PVCjJBIHzVB9ARp0nbm7zuhWes6OM0DRHYiZShiKkwZu7s9DdAyEDvWn/Gl0ZL4waWfYydjw/WkEc5/ennCc9OVPn+TREYJxjo1DWlOpdvMoTMaiSx8AjE+9jEXwuXzWLjL3qbTLDi6ktPwxxXGQs8U3Irr5/M7ar7bmutYlTQ2ed6ghggKY+GkYuKZFNMtieoWviD0NZJ01fhMAb5gbdJWAM4p1gONjFeoyWColerWY0LMjTOXUAp3dPN8tNJCXJ//c8+I3jztzLAk5mNt4e8uVOFDvvw+5Ri8EtVZZgmhOTrLSuo/OqSS6VgrbK7WOcJCGAIwNtW19s81SglVsppCFxB/JYDVlfn/XzOiteTG9HHCwH7jJTeIGHi0vZYowFiLlsq0xIt5bSbDcpMaMnWCnR5Cj//oWPXtmR2wvTgnI8gqLb36wjoJGn9DZCM2o=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2663.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(39860400002)(396003)(376002)(346002)(83380400001)(316002)(5660300002)(956004)(66946007)(6506007)(86362001)(7406005)(1076003)(66476007)(8676002)(186003)(26005)(36756003)(7416002)(478600001)(2906002)(66556008)(8936002)(6486002)(16526019)(69590400011)(4326008)(6512007)(44832011)(921005)(2616005)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?v4+k5MesDHa1MVSGi/UHPtmaF26L/lVN8GcJ71CBITc1I1MM0IDFIyBYytE4?=
- =?us-ascii?Q?53IGo7YT2EKkghBW/3Sk9E+bozL8K8Q/9nt64yNP1VUKTKWcNXGh0x3n6L54?=
- =?us-ascii?Q?xVW44nCRVbatRJqN678ro8ZSzYt+2fRymUty+3o8u/17/PwxyEk9Ady2ePJu?=
- =?us-ascii?Q?MOCoTjqlbeIOOmbEC/N28xw5dHvOPOovzSUgb9BAxSKqZmaCGbKEKN2DT/bR?=
- =?us-ascii?Q?zqtS1Di8iAHNISKyT5Kia3S5FQ31jIr8lU9eM3naCerZx5CWbllDRJPUggXy?=
- =?us-ascii?Q?PDUKaAxh4cXAaHrxbUuSXPbWSf2dHDC/0daQlqTmIDOHhAzikT+ON4WOwr19?=
- =?us-ascii?Q?NAfx9YwHYZjSnq7QmKuypvDXn/4sFWZ036E16UhM22ZhF3yCJSsT3DjLdG8U?=
- =?us-ascii?Q?tOX4toyIsdgCmi7p5QlaizYNgW+RH61ZTyCbLfrdr/vqHzBb7i9rreaXl+1c?=
- =?us-ascii?Q?guCiLvEr5Go5xNdVG4uR7NyDFOlzkkVsbMfELRCU0p1mRPrIQdx6GL7zHrWH?=
- =?us-ascii?Q?LhATraTb6GMS48zXasH4Dla6lHfNT/es/ZkxUzm5az8Zdjsb76SNDY6Qy0U9?=
- =?us-ascii?Q?dVdWc5Wr/3tykSq/9BWFCam6QyHfXpzywRf5L/GutdWeL2qGZqKhTaUTXeGH?=
- =?us-ascii?Q?EGF9kybhdDX9WoEPRubZZkhbyNiMckO0VrgM333uXg5hUIhn8B+PqVQen7cM?=
- =?us-ascii?Q?0Yf1gM25kWnPI3xofo9GasPaYo/sS+suvzIvlhb2ApKpM6Rc4MCuXBM8KsXR?=
- =?us-ascii?Q?BMlDEGL0r32OC2U3k4ymsoa2g5qKu7wKo3KGE6iz6Ya8AkYKuoW4nUzA9F4P?=
- =?us-ascii?Q?aSeXvt2DyQABYPMdHHv0KPr9+b4R5tmZoteVrUkzO/IDIxlQAXE/0MOQs2aR?=
- =?us-ascii?Q?jwCOMJIruq+MmWnpzVoZ5Wkmc8RWspNBAP+lJpmBZcIUeuUp0Z8vKzuqSteA?=
- =?us-ascii?Q?2Cp+CP+6w/Vxi22Q1FuM16M5VQ0xW2fIukRt0PSMYAsj9qZln0bvBSCk4r32?=
- =?us-ascii?Q?Tzd2Gh0o0RoulKFMNHy6Y2VjnRy43NW+4INplMPcCZXk7WjQgKv7YOEj3syO?=
- =?us-ascii?Q?x9uYpUo5?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a6f39ca-831d-4584-1671-08d8c89cc4a6
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2663.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2021 23:38:11.4626
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r1RSaXkF0zyFxShGIWuzhyAUNVmLQ3O5X3zrZzuMcrJieYM/HHT4wwktIQz2k01o9UKkfGFBJpMRNiO3jThp5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4784
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9884 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 phishscore=0
- suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102030143
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9884 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102030143
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210202194429.GH3264866@unreal>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch is to enable the 64-bit xen-swiotlb buffer.
+On Tue, Feb 02, 2021 at 09:44:29PM +0200, Leon Romanovsky wrote:
+> On Tue, Feb 02, 2021 at 12:06:09PM -0600, Bjorn Helgaas wrote:
+> > On Tue, Jan 26, 2021 at 10:57:27AM +0200, Leon Romanovsky wrote:
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+> > >
+> > > Extend PCI sysfs interface with a new callback that allows
+> > > configure the number of MSI-X vectors for specific SR-IO VF.
+> > > This is needed to optimize the performance of newly bound
+> > > devices by allocating the number of vectors based on the
+> > > administrator knowledge of targeted VM.
+> >
+> > I'm reading between the lines here, but IIUC the point is that you
+> > have a PF that supports a finite number of MSI-X vectors for use
+> > by all the VFs, and this interface is to control the distribution
+> > of those MSI-X vectors among the VFs.
+> 
+> The MSI-X is HW resource, all devices in the world have limitation
+> here.
+>
+> > > This function is applicable for SR-IOV VF because such devices
+> > > allocate their MSI-X table before they will run on the VMs and
+> > > HW can't guess the right number of vectors, so the HW allocates
+> > > them statically and equally.
+> >
+> > This is written in a way that suggests this is behavior required
+> > by the PCIe spec.  If it is indeed related to something in the
+> > spec, please cite it.
+> 
+> Spec doesn't say it directly, but you will need to really hurt brain
+> of your users if you decide to do it differently. You have one
+> enable bit to create all VFs at the same time without any option to
+> configure them in advance.
+> 
+> Of course, you can create some partition map, upload it to FW and
+> create from there.
 
-For Xen PVM DMA address, the 64-bit device will be able to allocate from
-64-bit swiotlb buffer.
+Of course all devices have limitations.  But let's add some details
+about the way *this* device works.  That will help avoid giving the
+impression that this is the *only* way spec-conforming devices can
+work.
 
-Cc: Joe Jin <joe.jin@oracle.com>
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
- drivers/xen/swiotlb-xen.c | 117 ++++++++++++++++++++++++--------------
- 1 file changed, 74 insertions(+), 43 deletions(-)
+> > "such devices allocate their MSI-X table before they will run on
+> > the VMs": Let's be specific here.  This MSI-X Table allocation
+> > apparently doesn't happen when we set VF Enable in the PF, because
+> > these sysfs files are attached to the VFs, which don't exist yet.
+> > It's not the VF driver binding, because that's a software
+> > construct.  What is the hardware event that triggers the
+> > allocation?
+> 
+> Write of MSI-X vector count to the FW through PF.
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index e18cae693cdc..c9ab07809e32 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -108,27 +108,36 @@ static int is_xen_swiotlb_buffer(struct device *dev, dma_addr_t dma_addr)
- 	unsigned long bfn = XEN_PFN_DOWN(dma_to_phys(dev, dma_addr));
- 	unsigned long xen_pfn = bfn_to_local_pfn(bfn);
- 	phys_addr_t paddr = (phys_addr_t)xen_pfn << XEN_PAGE_SHIFT;
-+	int i;
- 
- 	/* If the address is outside our domain, it CAN
- 	 * have the same virtual address as another address
- 	 * in our domain. Therefore _only_ check address within our domain.
- 	 */
--	if (pfn_valid(PFN_DOWN(paddr))) {
--		return paddr >= virt_to_phys(xen_io_tlb_start[SWIOTLB_LO]) &&
--		       paddr < virt_to_phys(xen_io_tlb_end[SWIOTLB_LO]);
--	}
-+	if (!pfn_valid(PFN_DOWN(paddr)))
-+		return 0;
-+
-+	for (i = 0; i < swiotlb_nr; i++)
-+		if (paddr >= virt_to_phys(xen_io_tlb_start[i]) &&
-+		    paddr < virt_to_phys(xen_io_tlb_end[i]))
-+			return 1;
-+
- 	return 0;
- }
- 
- static int
--xen_swiotlb_fixup(void *buf, size_t size, unsigned long nslabs)
-+xen_swiotlb_fixup(void *buf, size_t size, unsigned long nslabs,
-+		  enum swiotlb_t type)
- {
- 	int i, rc;
- 	int dma_bits;
- 	dma_addr_t dma_handle;
- 	phys_addr_t p = virt_to_phys(buf);
- 
--	dma_bits = get_order(IO_TLB_SEGSIZE << IO_TLB_SHIFT) + PAGE_SHIFT;
-+	if (type == SWIOTLB_HI)
-+		dma_bits = max_dma_bits[SWIOTLB_HI];
-+	else
-+		dma_bits = get_order(IO_TLB_SEGSIZE << IO_TLB_SHIFT) + PAGE_SHIFT;
- 
- 	i = 0;
- 	do {
-@@ -139,7 +148,7 @@ xen_swiotlb_fixup(void *buf, size_t size, unsigned long nslabs)
- 				p + (i << IO_TLB_SHIFT),
- 				get_order(slabs << IO_TLB_SHIFT),
- 				dma_bits, &dma_handle);
--		} while (rc && dma_bits++ < max_dma_bits[SWIOTLB_LO]);
-+		} while (rc && dma_bits++ < max_dma_bits[type]);
- 		if (rc)
- 			return rc;
- 
-@@ -147,16 +156,17 @@ xen_swiotlb_fixup(void *buf, size_t size, unsigned long nslabs)
- 	} while (i < nslabs);
- 	return 0;
- }
--static unsigned long xen_set_nslabs(unsigned long nr_tbl)
-+
-+static unsigned long xen_set_nslabs(unsigned long nr_tbl, enum swiotlb_t type)
- {
- 	if (!nr_tbl) {
--		xen_io_tlb_nslabs[SWIOTLB_LO] = (64 * 1024 * 1024 >> IO_TLB_SHIFT);
--		xen_io_tlb_nslabs[SWIOTLB_LO] = ALIGN(xen_io_tlb_nslabs[SWIOTLB_LO],
-+		xen_io_tlb_nslabs[type] = (64 * 1024 * 1024 >> IO_TLB_SHIFT);
-+		xen_io_tlb_nslabs[type] = ALIGN(xen_io_tlb_nslabs[type],
- 						      IO_TLB_SEGSIZE);
- 	} else
--		xen_io_tlb_nslabs[SWIOTLB_LO] = nr_tbl;
-+		xen_io_tlb_nslabs[type] = nr_tbl;
- 
--	return xen_io_tlb_nslabs[SWIOTLB_LO] << IO_TLB_SHIFT;
-+	return xen_io_tlb_nslabs[type] << IO_TLB_SHIFT;
- }
- 
- enum xen_swiotlb_err {
-@@ -180,23 +190,24 @@ static const char *xen_swiotlb_error(enum xen_swiotlb_err err)
- 	}
- 	return "";
- }
--int __ref xen_swiotlb_init(int verbose, bool early)
-+
-+static int xen_swiotlb_init_type(int verbose, bool early, enum swiotlb_t type)
- {
- 	unsigned long bytes, order;
- 	int rc = -ENOMEM;
- 	enum xen_swiotlb_err m_ret = XEN_SWIOTLB_UNKNOWN;
- 	unsigned int repeat = 3;
- 
--	xen_io_tlb_nslabs[SWIOTLB_LO] = swiotlb_nr_tbl(SWIOTLB_LO);
-+	xen_io_tlb_nslabs[type] = swiotlb_nr_tbl(type);
- retry:
--	bytes = xen_set_nslabs(xen_io_tlb_nslabs[SWIOTLB_LO]);
--	order = get_order(xen_io_tlb_nslabs[SWIOTLB_LO] << IO_TLB_SHIFT);
-+	bytes = xen_set_nslabs(xen_io_tlb_nslabs[type], type);
-+	order = get_order(xen_io_tlb_nslabs[type] << IO_TLB_SHIFT);
- 
- 	/*
- 	 * IO TLB memory already allocated. Just use it.
- 	 */
--	if (io_tlb_start[SWIOTLB_LO] != 0) {
--		xen_io_tlb_start[SWIOTLB_LO] = phys_to_virt(io_tlb_start[SWIOTLB_LO]);
-+	if (io_tlb_start[type] != 0) {
-+		xen_io_tlb_start[type] = phys_to_virt(io_tlb_start[type]);
- 		goto end;
- 	}
- 
-@@ -204,81 +215,95 @@ int __ref xen_swiotlb_init(int verbose, bool early)
- 	 * Get IO TLB memory from any location.
- 	 */
- 	if (early) {
--		xen_io_tlb_start[SWIOTLB_LO] = memblock_alloc(PAGE_ALIGN(bytes),
-+		xen_io_tlb_start[type] = memblock_alloc(PAGE_ALIGN(bytes),
- 						  PAGE_SIZE);
--		if (!xen_io_tlb_start[SWIOTLB_LO])
-+		if (!xen_io_tlb_start[type])
- 			panic("%s: Failed to allocate %lu bytes align=0x%lx\n",
- 			      __func__, PAGE_ALIGN(bytes), PAGE_SIZE);
- 	} else {
- #define SLABS_PER_PAGE (1 << (PAGE_SHIFT - IO_TLB_SHIFT))
- #define IO_TLB_MIN_SLABS ((1<<20) >> IO_TLB_SHIFT)
- 		while ((SLABS_PER_PAGE << order) > IO_TLB_MIN_SLABS) {
--			xen_io_tlb_start[SWIOTLB_LO] = (void *)xen_get_swiotlb_free_pages(order);
--			if (xen_io_tlb_start[SWIOTLB_LO])
-+			xen_io_tlb_start[type] = (void *)xen_get_swiotlb_free_pages(order);
-+			if (xen_io_tlb_start[type])
- 				break;
- 			order--;
- 		}
- 		if (order != get_order(bytes)) {
- 			pr_warn("Warning: only able to allocate %ld MB for software IO TLB\n",
- 				(PAGE_SIZE << order) >> 20);
--			xen_io_tlb_nslabs[SWIOTLB_LO] = SLABS_PER_PAGE << order;
--			bytes = xen_io_tlb_nslabs[SWIOTLB_LO] << IO_TLB_SHIFT;
-+			xen_io_tlb_nslabs[type] = SLABS_PER_PAGE << order;
-+			bytes = xen_io_tlb_nslabs[type] << IO_TLB_SHIFT;
- 		}
- 	}
--	if (!xen_io_tlb_start[SWIOTLB_LO]) {
-+	if (!xen_io_tlb_start[type]) {
- 		m_ret = XEN_SWIOTLB_ENOMEM;
- 		goto error;
- 	}
- 	/*
- 	 * And replace that memory with pages under 4GB.
- 	 */
--	rc = xen_swiotlb_fixup(xen_io_tlb_start[SWIOTLB_LO],
-+	rc = xen_swiotlb_fixup(xen_io_tlb_start[type],
- 			       bytes,
--			       xen_io_tlb_nslabs[SWIOTLB_LO]);
-+			       xen_io_tlb_nslabs[type],
-+			       type);
- 	if (rc) {
- 		if (early)
--			memblock_free(__pa(xen_io_tlb_start[SWIOTLB_LO]),
-+			memblock_free(__pa(xen_io_tlb_start[type]),
- 				      PAGE_ALIGN(bytes));
- 		else {
--			free_pages((unsigned long)xen_io_tlb_start[SWIOTLB_LO], order);
--			xen_io_tlb_start[SWIOTLB_LO] = NULL;
-+			free_pages((unsigned long)xen_io_tlb_start[type], order);
-+			xen_io_tlb_start[type] = NULL;
- 		}
- 		m_ret = XEN_SWIOTLB_EFIXUP;
- 		goto error;
- 	}
- 	if (early) {
--		if (swiotlb_init_with_tbl(xen_io_tlb_start[SWIOTLB_LO],
--					  xen_io_tlb_nslabs[SWIOTLB_LO],
--					  SWIOTLB_LO, verbose))
-+		if (swiotlb_init_with_tbl(xen_io_tlb_start[type],
-+					  xen_io_tlb_nslabs[type],
-+					  type, verbose))
- 			panic("Cannot allocate SWIOTLB buffer");
- 		rc = 0;
- 	} else
--		rc = swiotlb_late_init_with_tbl(xen_io_tlb_start[SWIOTLB_LO],
--						xen_io_tlb_nslabs[SWIOTLB_LO],
--						SWIOTLB_LO);
-+		rc = swiotlb_late_init_with_tbl(xen_io_tlb_start[type],
-+						xen_io_tlb_nslabs[type],
-+						type);
- 
- end:
--	xen_io_tlb_end[SWIOTLB_LO] = xen_io_tlb_start[SWIOTLB_LO] + bytes;
-+	xen_io_tlb_end[type] = xen_io_tlb_start[type] + bytes;
- 	if (!rc)
--		swiotlb_set_max_segment(PAGE_SIZE, SWIOTLB_LO);
-+		swiotlb_set_max_segment(PAGE_SIZE, type);
- 
- 	return rc;
- error:
- 	if (repeat--) {
--		xen_io_tlb_nslabs[SWIOTLB_LO] = max(1024UL, /* Min is 2MB */
--					(xen_io_tlb_nslabs[SWIOTLB_LO] >> 1));
-+		xen_io_tlb_nslabs[type] = max(1024UL, /* Min is 2MB */
-+					(xen_io_tlb_nslabs[type] >> 1));
- 		pr_info("Lowering to %luMB\n",
--			(xen_io_tlb_nslabs[SWIOTLB_LO] << IO_TLB_SHIFT) >> 20);
-+			(xen_io_tlb_nslabs[type] << IO_TLB_SHIFT) >> 20);
- 		goto retry;
- 	}
- 	pr_err("%s (rc:%d)\n", xen_swiotlb_error(m_ret), rc);
- 	if (early)
- 		panic("%s (rc:%d)", xen_swiotlb_error(m_ret), rc);
- 	else
--		free_pages((unsigned long)xen_io_tlb_start[SWIOTLB_LO], order);
-+		free_pages((unsigned long)xen_io_tlb_start[type], order);
- 	return rc;
- }
- 
-+int __ref xen_swiotlb_init(int verbose, bool early)
-+{
-+	int i, rc;
-+
-+	for (i = 0; i < swiotlb_nr; i++) {
-+		rc = xen_swiotlb_init_type(verbose, early, i);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	return 0;
-+}
-+
- static void *
- xen_swiotlb_alloc_coherent(struct device *hwdev, size_t size,
- 			   dma_addr_t *dma_handle, gfp_t flags,
-@@ -566,7 +591,13 @@ xen_swiotlb_sync_sg_for_device(struct device *dev, struct scatterlist *sgl,
- static int
- xen_swiotlb_dma_supported(struct device *hwdev, u64 mask)
- {
--	return xen_virt_to_bus(hwdev, xen_io_tlb_end[SWIOTLB_LO] - 1) <= mask;
-+	int i;
-+
-+	for (i = 0; i < swiotlb_nr; i++)
-+		if (xen_virt_to_bus(hwdev, xen_io_tlb_end[i] - 1) <= mask)
-+			return true;
-+
-+	return false;
- }
- 
- const struct dma_map_ops xen_swiotlb_dma_ops = {
--- 
-2.17.1
+This is an example of something that is obviously specific to this
+mlx5 device.  The Table Size field in Message Control is RO per spec,
+and obviously firmware on the device is completely outside the scope
+of the PCIe spec.
 
+This commit log should describe how *this* device manages this
+allocation and how the PF Table Size and the VF Table Sizes are
+related.  Per PCIe, there is no necessary connection between them.
+
+> > > cat /sys/bus/pci/devices/.../vfs_overlay/sriov_vf_total_msix
+> > >   = 0 - feature is not supported
+> > >   > 0 - total number of MSI-X vectors to consume by the VFs
+> >
+> > "total number of MSI-X vectors available for distribution among the
+> > VFs"?
+> 
+> Users need to be aware of how much vectors exist in the system.
+
+Understood -- if there's an interface to influence the distribution of
+vectors among VFs, one needs to know how many vectors there are to
+work with.
+
+My point was that "number of vectors to consume by VFs" is awkward
+wording, so I suggested an alternative.
+
+> > > +What:            /sys/bus/pci/devices/.../vfs_overlay/sriov_vf_msix_count
+> > > +Date:            January 2021
+> > > +Contact: Leon Romanovsky <leonro@nvidia.com>
+> > > +Description:
+> > > +         This file is associated with the SR-IOV VFs.
+> > > +         It allows configuration of the number of MSI-X vectors for
+> > > +         the VF. This is needed to optimize performance of newly bound
+> > > +         devices by allocating the number of vectors based on the
+> > > +         administrator knowledge of targeted VM.
+> > > +
+> > > +         The values accepted are:
+> > > +          * > 0 - this will be number reported by the VF's MSI-X
+> > > +                  capability
+> > > +          * < 0 - not valid
+> > > +          * = 0 - will reset to the device default value
+> > > +
+> > > +         The file is writable if the PF is bound to a driver that
+> > > +         set sriov_vf_total_msix > 0 and there is no driver bound
+> > > +         to the VF.
+
+Drivers don't actually set "sriov_vf_total_msix".  This should
+probably say something like "the PF is bound to a driver that
+implements ->sriov_set_msix_vec_count()."
+
+> > > +What:		/sys/bus/pci/devices/.../vfs_overlay/sriov_vf_total_msix
+> > > +Date:		January 2021
+> > > +Contact:	Leon Romanovsky <leonro@nvidia.com>
+> > > +Description:
+> > > +		This file is associated with the SR-IOV PFs.
+> > > +		It returns a total number of possible to configure MSI-X
+> > > +		vectors on the enabled VFs.
+> > > +
+> > > +		The values returned are:
+> > > +		 * > 0 - this will be total number possible to consume by VFs,
+> > > +		 * = 0 - feature is not supported
+
+Can you swap the order of these two files in the documentation?
+sriov_vf_total_msix is associated with the PF and logically precedes
+sriov_vf_msix_count, which is associated with VFs.
+
+Not sure the "= 0" description is necessary here.  If the value
+returned is the number of MSI-X vectors available for assignment to
+VFs, "0" is a perfectly legitimate value.  It just means there are
+none.  It doesn't need to be described separately.
+
+> > Do these filenames really need to contain both "sriov" and "vf"?
+> 
+> This is what I was asked at some point. In previous versions the name
+> was without "sriov".
+
+We currently have:
+
+  $ grep DEVICE_ATTR drivers/pci/iov.c
+  static DEVICE_ATTR_RO(sriov_totalvfs);
+  static DEVICE_ATTR_RW(sriov_numvfs);
+  static DEVICE_ATTR_RO(sriov_offset);
+  static DEVICE_ATTR_RO(sriov_stride);
+  static DEVICE_ATTR_RO(sriov_vf_device);
+  static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+
+If we put them in a new "vfs_overlay" directory, it seems like
+overkill to repeat the "vf" part, but I'm hoping the new files can end
+up next to these existing files.  In that case, I think it makes sense
+to include "sriov".  And it probably does make sense to include "vf"
+as well.
+
+> > Should these be next to the existing SR-IOV sysfs files, i.e., in or
+> > alongside sriov_dev_attr_group?
+> 
+> This was suggestion in previous versions. I didn't hear anyone
+> supporting it.
+
+Pointer to this discussion?  I'm not sure what value is added by a new
+directory.
+
+> > Hmmm, I see pci_enable_vfs_overlay() is called by the driver.  I don't
+> > really like that because then we're dependent on drivers to maintain
+> > the PCI sysfs hierarchy.  E.g., a driver might forget to call
+> > pci_disable_vfs_overlay(), and then a future driver load will fail.
+> > 
+> > Maybe this could be done with .is_visible() functions that call driver
+> > callbacks.
+> 
+> It was in previous versions too, but this solution allows PF to control
+> the VFs overlay dynamically.
+
+See below; I think it might be possible to do this dynamically even
+without pci_enable_vfs_overlay().
+
+> > > +int pci_enable_vfs_overlay(struct pci_dev *dev)
+> > > +{
+> > > +	struct pci_dev *virtfn;
+> > > +	int id, ret;
+> > > +
+> > > +	if (!dev->is_physfn || !dev->sriov->num_VFs)
+> > > +		return 0;
+> > > +
+> > > +	ret = sysfs_create_group(&dev->dev.kobj, &sriov_pf_dev_attr_group);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	for (id = 0; id < dev->sriov->num_VFs; id++) {
+> > > +		virtfn = pci_get_domain_bus_and_slot(
+> > > +			pci_domain_nr(dev->bus), pci_iov_virtfn_bus(dev, id),
+> > > +			pci_iov_virtfn_devfn(dev, id));
+> > > +
+> > > +		if (!virtfn)
+> > > +			continue;
+> > > +
+> > > +		ret = sysfs_create_group(&virtfn->dev.kobj,
+> > > +					 &sriov_vf_dev_attr_group);
+> > > +		if (ret)
+> > > +			goto out;
+> > > +	}
+> > > +	return 0;
+> > > +
+> > > +out:
+> > > +	while (id--) {
+> > > +		virtfn = pci_get_domain_bus_and_slot(
+> > > +			pci_domain_nr(dev->bus), pci_iov_virtfn_bus(dev, id),
+> > > +			pci_iov_virtfn_devfn(dev, id));
+> > > +
+> > > +		if (!virtfn)
+> > > +			continue;
+> > > +
+> > > +		sysfs_remove_group(&virtfn->dev.kobj, &sriov_vf_dev_attr_group);
+> > > +	}
+> > > +	sysfs_remove_group(&dev->dev.kobj, &sriov_pf_dev_attr_group);
+> > > +	return ret;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(pci_enable_vfs_overlay);
+> > > +
+> > > +void pci_disable_vfs_overlay(struct pci_dev *dev)
+> > > +{
+> > > +	struct pci_dev *virtfn;
+> > > +	int id;
+> > > +
+> > > +	if (!dev->is_physfn || !dev->sriov->num_VFs)
+> > > +		return;
+> > > +
+> > > +	id = dev->sriov->num_VFs;
+> > > +	while (id--) {
+> > > +		virtfn = pci_get_domain_bus_and_slot(
+> > > +			pci_domain_nr(dev->bus), pci_iov_virtfn_bus(dev, id),
+> > > +			pci_iov_virtfn_devfn(dev, id));
+> > > +
+> > > +		if (!virtfn)
+> > > +			continue;
+> > > +
+> > > +		sysfs_remove_group(&virtfn->dev.kobj, &sriov_vf_dev_attr_group);
+> > > +	}
+> > > +	sysfs_remove_group(&dev->dev.kobj, &sriov_pf_dev_attr_group);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(pci_disable_vfs_overlay);
+> >
+> > I'm not convinced all this sysfs wrangling is necessary.  If it is,
+> > add a hint in a comment about why this is special and can't use
+> > something like sriov_dev_attr_group.
+> 
+> This makes the overlay to be PF-driven. Alexander insisted on this flow.
+
+If you're referring to [1], I think "insisted on this flow" might be
+an overstatement of what Alex was looking for.  IIUC Alex wants the
+sysfs files to be visible only when they're useful, i.e., when a
+driver implements ->sriov_set_msix_vec_count().
+
+That seems reasonable and also seems like something a smarter
+.is_visible() function could accomplish without having drivers call
+pci_enable_vfs_overlay(), e.g., maybe some variation of this:
+
+  static umode_t sriov_vf_attrs_are_visible(...)
+  {
+    if (!pdev->msix_cap || dev_is_pf(dev))
+      return 0;
+
+    pf = pci_physfn(pdev);
+    if (pf->driver && pf->driver->sriov_set_msix_vec_count)
+      return a->mode;
+
+    return 0;
+  }
+
+(Probably needs locking while we look at pf->driver, just like in
+pci_vf_set_msix_vec_count().)
+ 
+pci_enable_vfs_overlay() significantly complicates the code and it's
+the sort of sysfs code we're trying to avoid, so if we really do need
+it, please add a brief comment about *why* we have to do it that way.
+
+> > > +void pci_sriov_set_vf_total_msix(struct pci_dev *dev, u32 count)
+> > > +{
+> > > +	if (!dev->is_physfn)
+> > > +		return;
+> > > +
+> > > +	dev->sriov->vf_total_msix = count;
+> >
+> > The PCI core doesn't use vf_total_msix at all.  The driver, e.g.,
+> > mlx5, calls this, and all the PCI core does is hang onto the value and
+> > expose it via sysfs.  I think I'd rather have a callback in struct
+> > pci_driver and let the driver supply the value when needed.  I.e.,
+> > sriov_vf_total_msix_show() would call the callback instead of looking
+> > at pdev->sriov->vf_total_msix.
+> 
+> It will cause to unnecessary locking to ensure that driver doesn't
+> vanish during sysfs read. I can change, but don't think that it is right
+> decision.
+
+Doesn't sysfs already ensure the driver can't vanish while we're
+executing a DEVICE_ATTR accessor?
+
+> > > +int pci_vf_set_msix_vec_count(struct pci_dev *dev, int count)
+> > > +{
+> > > +	struct pci_dev *pdev = pci_physfn(dev);
+> > > +	int ret;
+> > > +
+> > > +	if (count < 0)
+> > > +		/*
+> > > +		 * We don't support negative numbers for now,
+> > > +		 * but maybe in the future it will make sense.
+> > > +		 */
+> >
+> > Drop the comment; I don't think it adds useful information.
+> >
+> > > +		return -EINVAL;
+> > > +
+> > > +	device_lock(&pdev->dev);
+> > > +	if (!pdev->driver) {
+> > > +		ret = -EOPNOTSUPP;
+> > > +		goto err_pdev;
+> > > +	}
+> > > +
+> > > +	device_lock(&dev->dev);
+> > > +	if (dev->driver) {
+> > > +		/*
+> > > +		 * Driver already probed this VF and configured itself
+> > > +		 * based on previously configured (or default) MSI-X vector
+> > > +		 * count. It is too late to change this field for this
+> > > +		 * specific VF.
+> > > +		 */
+> > > +		ret = -EBUSY;
+> > > +		goto err_dev;
+> > > +	}
+> > > +
+> > > +	ret = pdev->driver->sriov_set_msix_vec_count(dev, count);
+> >
+> > This looks like a NULL pointer dereference.
+> 
+> In current code, it is impossible, the call to pci_vf_set_msix_vec_count()
+> will be only for devices that supports sriov_vf_msix_count which is
+> possible with ->sriov_set_msix_vec_count() only.
+
+OK.  I think you're right, but it takes quite a lot of analysis to
+prove that right now.  If the .is_visible() function for
+sriov_vf_msix_count checked whether the driver implements
+->sriov_set_msix_vec_count(), it would be quite a bit easier,
+and it might even help get rid of pci_enable_vfs_overlay().
+
+Also, pci_vf_set_msix_vec_count() is in pci/msi.c, but AFAICT there's
+no actual *reason* for it to be there other than the fact that it has
+"msix" in the name.  It uses no MSI data structures.  Maybe it could
+be folded into sriov_vf_msix_count_store(), which would make the
+analysis even easier.
+
+> > > @@ -326,6 +327,9 @@ struct pci_sriov {
+> > >  	u16		subsystem_device; /* VF subsystem device */
+> > >  	resource_size_t	barsz[PCI_SRIOV_NUM_BARS];	/* VF BAR size */
+> > >  	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
+> > > +	u32		vf_total_msix;  /* Total number of MSI-X vectors the VFs
+> > > +					 * can consume
+> > > +					 */
+> >
+> >   * can consume */
+> >
+> > Hopefully you can eliminate vf_total_msix altogether.
+> 
+> I think that will be worse from the flow point of view (extra locks)
+> and the memory if you are worried about it. This variable consumes 4
+> bytes, the pointer to the function will take 8 bytes.
+
+I'm not concerned about the space.  The function pointer is in struct
+pci_driver, whereas the variable is in struct pci_sriov, so the
+variable would likely consume more space because there are probably
+more VFs than pci_drivers.
+
+My bigger concern is that vf_total_msix is really *driver* state, not
+PCI core state, and I'd prefer if the PCI core were not responsible
+for it.
+
+> > > +++ b/include/linux/pci.h
+> > > @@ -856,6 +856,8 @@ struct module;
+> > >   *		e.g. drivers/net/e100.c.
+> > >   * @sriov_configure: Optional driver callback to allow configuration of
+> > >   *		number of VFs to enable via sysfs "sriov_numvfs" file.
+> > > + * @sriov_set_msix_vec_count: Driver callback to change number of MSI-X vectors
+> > > + *              exposed by the sysfs "vf_msix_vec" entry.
+> >
+> > "vf_msix_vec" is apparently stale?  There's no other reference in this
+> > patch.
+> >
+> > I think the important part is that this changes the number of vectors
+> > advertised in the VF's MSI-X Message Control register, which will be
+> > read when the VF driver enables MSI-X.
+> >
+> > If that's true, why would we expose this via a sysfs file?  We can
+> > easily read it via lspci.
+> 
+> I did it for feature complete, we don't need read of this sysfs.
+
+If you don't need this sysfs file, just remove it.  If you do need it,
+please update the "vf_msix_vec" so it's correct.  Also, clarify the
+description so we can tell that we're changing the Table Size VFs will
+see in their Message Control registers.
+
+> > > +static inline void pci_sriov_set_vf_total_msix(struct pci_dev *dev, u32 count) {}
+> >
+> > Also here.  Unless removing the space would make this fit in 80
+> > columns.
+> 
+> Yes, it is 80 columns without space.
+
+No, I don't think it is.  In an 80 column window, the result looks
+like:
+
+  static inline void pci_sriov_set_vf_total_msix(...) {
+  }
+
+Please change it so it looks like this so it matches the rest of the
+file:
+
+  static inline void pci_sriov_set_vf_total_msix(...)
+  { }
+
+Bjorn
+
+[1] https://lore.kernel.org/r/CAKgT0UcJQ3uy6J_CCLizDLfzGL2saa_PjOYH4nK+RQjfmpNA=w@mail.gmail.com
