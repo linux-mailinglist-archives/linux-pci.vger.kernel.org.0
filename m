@@ -2,150 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FBB830EFE1
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 10:45:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA15130EFFE
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 10:54:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235099AbhBDJop (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 04:44:45 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6760 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234315AbhBDJol (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 04:44:41 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 1149XtIm065989;
-        Thu, 4 Feb 2021 04:44:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=tfb6Fkvp+Z82tZSPVDzQf4C8wqzxCA07JtAsUJkdV6M=;
- b=RK22oWOfA2YXbmKfPSvktV26f29tY8mAYPJJlRpdvqlFxX9hXwODjeuF5zvRwxy0TygW
- tbKsAZN1zkgjenB/mruXSUF+1gtjcvXWSgKTZajneSUdiU61WrTeQNe2s5LnZU9Ht0o9
- Jbt8AHUoI78BWIydTD/vM6Im9alt6xdbb9ddOmzjt4cmgts+eQktC6lRABCTUm3HtHNr
- PEC3JgWaHTzL5rFwTqrzfYUgf2A4CaSdoLEHrrbSXlLrsJHvPp2bQRBHAjvtZbEBN6sI
- SI7uehXRYCAaxnOtOrC07Z8f4td/plMAwYQ8SF1sgap32TjSYxpvFNrLo3tK9JGNgzGB ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36gcu8jrej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 04:44:00 -0500
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 11493hYF065573;
-        Thu, 4 Feb 2021 04:43:59 -0500
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36gcu8jrds-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 04:43:59 -0500
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 1149gxX3007373;
-        Thu, 4 Feb 2021 09:43:57 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 36cy38afsp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 09:43:57 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1149hjYR28180986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Feb 2021 09:43:45 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5DC444204B;
-        Thu,  4 Feb 2021 09:43:54 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C05042047;
-        Thu,  4 Feb 2021 09:43:54 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Feb 2021 09:43:54 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Subject: [RFC v2 1/1] PCI: Add s390 specific UID uniqueness attribute
-Date:   Thu,  4 Feb 2021 10:43:53 +0100
-Message-Id: <20210204094353.63819-2-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210204094353.63819-1-schnelle@linux.ibm.com>
-References: <20210204094353.63819-1-schnelle@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-04_05:2021-02-04,2021-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102040057
+        id S233597AbhBDJw0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 04:52:26 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:51312 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S235292AbhBDJwZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 04:52:25 -0500
+X-UUID: aae8768ba5b347539e6247ef73a9929e-20210204
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=yCGwEsEVjQoUIZ8It18p5vUYxvCyrioMe/9PFTM4Wv8=;
+        b=LfwqeIUU6kyKxpCCLwDesrEgvv/2Asn8gUZGGu7/gxLNhQUDM2APTpGKI0tHb3b8zWl86Sqxzzfd5B2S8Zhb6ZsABw+HqMs2WHojnQunYXmETTqgy2Lw+zvtvQhi5TyNdm0PLo+WMCjjxeJaQ2yZo0SCpbSlmbhVtOI+grAwXDU=;
+X-UUID: aae8768ba5b347539e6247ef73a9929e-20210204
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <mingchuang.qiao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1961543882; Thu, 04 Feb 2021 17:51:37 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 4 Feb
+ 2021 17:51:31 +0800
+Received: from mcddlt001.mediatek.inc (10.19.240.15) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 4 Feb 2021 17:51:30 +0800
+From:   <mingchuang.qiao@mediatek.com>
+To:     <bhelgaas@google.com>, <matthias.bgg@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <mingchuang.qiao@mediatek.com>, <haijun.liu@mediatek.com>,
+        <lambert.wang@mediatek.com>, <kerun.zhu@mediatek.com>,
+        <mika.westerberg@linux.intel.com>, <alex.williamson@redhat.com>,
+        <rjw@rjwysocki.net>, <utkarsh.h.patel@intel.com>
+Subject: [v4] PCI: Avoid unsync of LTR mechanism configuration
+Date:   Thu, 4 Feb 2021 17:51:25 +0800
+Message-ID: <20210204095125.9212-1-mingchuang.qiao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: A2F39DD1C52C3A4A4AADE6AFD365C93497CD1F4332D5C12853C645E0F0D636AF2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The global UID uniqueness attribute exposes whether the platform
-guarantees that the user-defined per-device UID attribute values
-(/sys/bus/pci/device/<dev>/uid) are unique and can thus be used as
-a global identifier for the associated PCI device. With this commit
-it is exposed at /sys/bus/pci/zpci/unique_uids
-
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
- drivers/pci/pci-sysfs.c                 | 21 +++++++++++++++++++++
- 2 files changed, 30 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 25c9c39770c6..812dd9d3f80d 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -375,3 +375,12 @@ Description:
- 		The value comes from the PCI kernel device state and can be one
- 		of: "unknown", "error", "D0", D1", "D2", "D3hot", "D3cold".
- 		The file is read only.
-+What:		/sys/bus/pci/zpci/unique_uids
-+Date:		February 2021
-+Contact:	Niklas Schnelle <schnelle@linux.ibm.com>
-+Description:
-+		This attribute exposes the global state of UID Uniqueness on an
-+		s390 Linux system. If this file contains '1' the per-device UID
-+		attribute is guaranteed to provide a unique user defined
-+		identifier for that PCI device. If this file contains '0' UIDs
-+		may collide and do not provide a unique identifier.
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index fb072f4b3176..61de66ab59cf 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -425,6 +425,24 @@ static ssize_t rescan_store(struct bus_type *bus, const char *buf, size_t count)
- }
- static BUS_ATTR_WO(rescan);
- 
-+#if defined(CONFIG_S390)
-+static ssize_t unique_uids_show(struct bus_type *bus, char *buf)
-+{
-+	return sprintf(buf, "%i\n", zpci_unique_uid);
-+}
-+static BUS_ATTR_RO(unique_uids);
-+
-+static struct attribute *zpci_bus_attrs[] = {
-+	&bus_attr_unique_uids.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group zpci_bus_group = {
-+	.name = "zpci",
-+	.attrs = zpci_bus_attrs,
-+};
-+#endif
-+
- static struct attribute *pci_bus_attrs[] = {
- 	&bus_attr_rescan.attr,
- 	NULL,
-@@ -436,6 +454,9 @@ static const struct attribute_group pci_bus_group = {
- 
- const struct attribute_group *pci_bus_groups[] = {
- 	&pci_bus_group,
-+#if defined(CONFIG_S390)
-+	&zpci_bus_group,
-+#endif
- 	NULL,
- };
- 
--- 
-2.17.1
+RnJvbTogTWluZ2NodWFuZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KDQpJ
+biBidXMgc2NhbiBmbG93LCB0aGUgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgb2YgREVWQ1RM
+MiByZWdpc3RlciBpcw0KY29uZmlndXJlZCBpbiBwY2lfY29uZmlndXJlX2x0cigpLiBJZiBkZXZp
+Y2UgYW5kIGJyaWRnZSBib3RoIHN1cHBvcnQgTFRSDQptZWNoYW5pc20sIHRoZSAiTFRSIE1lY2hh
+bmlzbSBFbmFibGUiIGJpdCBvZiBkZXZpY2UgYW5kIGJyaWRnZSB3aWxsIGJlDQplbmFibGVkIGlu
+IERFVkNUTDIgcmVnaXN0ZXIuIEFuZCBwY2lfZGV2LT5sdHJfcGF0aCB3aWxsIGJlIHNldCBhcyAx
+Lg0KDQpJZiBQQ0llIGxpbmsgZ29lcyBkb3duIHdoZW4gZGV2aWNlIHJlc2V0cywgdGhlICJMVFIg
+TWVjaGFuaXNtIEVuYWJsZSIgYml0DQpvZiBicmlkZ2Ugd2lsbCBjaGFuZ2UgdG8gMCBhY2NvcmRp
+bmcgdG8gUENJZSByNS4wLCBzZWMgNy41LjMuMTYuIEhvd2V2ZXIsDQp0aGUgcGNpX2Rldi0+bHRy
+X3BhdGggdmFsdWUgb2YgYnJpZGdlIGlzIHN0aWxsIDEuDQoNCkZvciBmb2xsb3dpbmcgY29uZGl0
+aW9ucywgY2hlY2sgYW5kIHJlLWNvbmZpZ3VyZSAiTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdA0K
+b2YgYnJpZGdlIHRvIG1ha2UgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgbWF0Y2ggbHRyX3Bh
+dGggdmFsdWUuDQogICAtYmVmb3JlIGNvbmZpZ3VyaW5nIGRldmljZSdzIExUUiBmb3IgaG90LXJl
+bW92ZS9ob3QtYWRkDQogICAtYmVmb3JlIHJlc3RvcmluZyBkZXZpY2UncyBERVZDVEwyIHJlZ2lz
+dGVyIHdoZW4gcmVzdG9yZSBkZXZpY2Ugc3RhdGUNCg0KU2lnbmVkLW9mZi1ieTogTWluZ2NodWFu
+ZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KLS0tDQpjaGFuZ2VzIG9mIHY0
+DQogLWZpeCB0eXBvIG9mIGNvbW1pdCBtZXNzYWdlDQogLXJlbmFtZTogcGNpX3JlY29uZmlndXJl
+X2JyaWRnZV9sdHIoKS0+cGNpX2JyaWRnZV9yZWNvbmZpZ3VyZV9sdHIoKQ0KY2hhbmdlcyBvZiB2
+Mw0KIC1jYWxsIHBjaV9yZWNvbmZpZ3VyZV9icmlkZ2VfbHRyKCkgaW4gcHJvYmUuYw0KY2hhbmdl
+cyBvZiB2Mg0KIC1tb2RpZnkgcGF0Y2ggZGVzY3JpcHRpb24NCiAtcmVjb25maWd1cmUgYnJpZGdl
+J3MgTFRSIGJlZm9yZSByZXN0b3JpbmcgZGV2aWNlIERFVkNUTDIgcmVnaXN0ZXINCi0tLQ0KIGRy
+aXZlcnMvcGNpL3BjaS5jICAgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKysrDQogZHJpdmVy
+cy9wY2kvcGNpLmggICB8ICAxICsNCiBkcml2ZXJzL3BjaS9wcm9iZS5jIHwgMTMgKysrKysrKysr
+Ky0tLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkN
+Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaS5jIGIvZHJpdmVycy9wY2kvcGNpLmMNCmlu
+ZGV4IGI5ZmVjYzI1ZDIxMy4uNmJmNjVkMjk1MzMxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wY2kv
+cGNpLmMNCisrKyBiL2RyaXZlcnMvcGNpL3BjaS5jDQpAQCAtMTQzNyw2ICsxNDM3LDI0IEBAIHN0
+YXRpYyBpbnQgcGNpX3NhdmVfcGNpZV9zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KIAlyZXR1
+cm4gMDsNCiB9DQogDQordm9pZCBwY2lfYnJpZGdlX3JlY29uZmlndXJlX2x0cihzdHJ1Y3QgcGNp
+X2RldiAqZGV2KQ0KK3sNCisjaWZkZWYgQ09ORklHX1BDSUVBU1BNDQorCXN0cnVjdCBwY2lfZGV2
+ICpicmlkZ2U7DQorCXUzMiBjdGw7DQorDQorCWJyaWRnZSA9IHBjaV91cHN0cmVhbV9icmlkZ2Uo
+ZGV2KTsNCisJaWYgKGJyaWRnZSAmJiBicmlkZ2UtPmx0cl9wYXRoKSB7DQorCQlwY2llX2NhcGFi
+aWxpdHlfcmVhZF9kd29yZChicmlkZ2UsIFBDSV9FWFBfREVWQ1RMMiwgJmN0bCk7DQorCQlpZiAo
+IShjdGwgJiBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKSkgew0KKwkJCXBjaV9kYmcoYnJpZGdlLCAi
+cmUtZW5hYmxpbmcgTFRSXG4iKTsNCisJCQlwY2llX2NhcGFiaWxpdHlfc2V0X3dvcmQoYnJpZGdl
+LCBQQ0lfRVhQX0RFVkNUTDIsDQorCQkJCQkJIFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pOw0KKwkJ
+fQ0KKwl9DQorI2VuZGlmDQorfQ0KKw0KIHN0YXRpYyB2b2lkIHBjaV9yZXN0b3JlX3BjaWVfc3Rh
+dGUoc3RydWN0IHBjaV9kZXYgKmRldikNCiB7DQogCWludCBpID0gMDsNCkBAIC0xNDQ3LDYgKzE0
+NjUsMTMgQEAgc3RhdGljIHZvaWQgcGNpX3Jlc3RvcmVfcGNpZV9zdGF0ZShzdHJ1Y3QgcGNpX2Rl
+diAqZGV2KQ0KIAlpZiAoIXNhdmVfc3RhdGUpDQogCQlyZXR1cm47DQogDQorCS8qDQorCSAqIERv
+d25zdHJlYW0gcG9ydHMgcmVzZXQgdGhlIExUUiBlbmFibGUgYml0IHdoZW4gbGluayBnb2VzIGRv
+d24uDQorCSAqIENoZWNrIGFuZCByZS1jb25maWd1cmUgdGhlIGJpdCBoZXJlIGJlZm9yZSByZXN0
+b3JpbmcgZGV2aWNlLg0KKwkgKiBQQ0llIHI1LjAsIHNlYyA3LjUuMy4xNi4NCisJICovDQorCXBj
+aV9icmlkZ2VfcmVjb25maWd1cmVfbHRyKGRldik7DQorDQogCWNhcCA9ICh1MTYgKikmc2F2ZV9z
+dGF0ZS0+Y2FwLmRhdGFbMF07DQogCXBjaWVfY2FwYWJpbGl0eV93cml0ZV93b3JkKGRldiwgUENJ
+X0VYUF9ERVZDVEwsIGNhcFtpKytdKTsNCiAJcGNpZV9jYXBhYmlsaXR5X3dyaXRlX3dvcmQoZGV2
+LCBQQ0lfRVhQX0xOS0NUTCwgY2FwW2krK10pOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3Bj
+aS5oIGIvZHJpdmVycy9wY2kvcGNpLmgNCmluZGV4IDVjNTkzNjUwOTJmYS4uYjNhNWU1Mjg3Y2I3
+IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wY2kvcGNpLmgNCisrKyBiL2RyaXZlcnMvcGNpL3BjaS5o
+DQpAQCAtMTExLDYgKzExMSw3IEBAIHZvaWQgcGNpX2ZyZWVfY2FwX3NhdmVfYnVmZmVycyhzdHJ1
+Y3QgcGNpX2RldiAqZGV2KTsNCiBib29sIHBjaV9icmlkZ2VfZDNfcG9zc2libGUoc3RydWN0IHBj
+aV9kZXYgKmRldik7DQogdm9pZCBwY2lfYnJpZGdlX2QzX3VwZGF0ZShzdHJ1Y3QgcGNpX2RldiAq
+ZGV2KTsNCiB2b2lkIHBjaV9icmlkZ2Vfd2FpdF9mb3Jfc2Vjb25kYXJ5X2J1cyhzdHJ1Y3QgcGNp
+X2RldiAqZGV2KTsNCit2b2lkIHBjaV9icmlkZ2VfcmVjb25maWd1cmVfbHRyKHN0cnVjdCBwY2lf
+ZGV2ICpkZXYpOw0KIA0KIHN0YXRpYyBpbmxpbmUgdm9pZCBwY2lfd2FrZXVwX2V2ZW50KHN0cnVj
+dCBwY2lfZGV2ICpkZXYpDQogew0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3Byb2JlLmMgYi9k
+cml2ZXJzL3BjaS9wcm9iZS5jDQppbmRleCA5NTNmMTVhYmM4NTAuLmFkZTA1NWU5ZmI1OCAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvcGNpL3Byb2JlLmMNCisrKyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMN
+CkBAIC0yMTMyLDkgKzIxMzIsMTYgQEAgc3RhdGljIHZvaWQgcGNpX2NvbmZpZ3VyZV9sdHIoc3Ry
+dWN0IHBjaV9kZXYgKmRldikNCiAJICogQ29tcGxleCBhbmQgYWxsIGludGVybWVkaWF0ZSBTd2l0
+Y2hlcyBpbmRpY2F0ZSBzdXBwb3J0IGZvciBMVFIuDQogCSAqIFBDSWUgcjQuMCwgc2VjIDYuMTgu
+DQogCSAqLw0KLQlpZiAocGNpX3BjaWVfdHlwZShkZXYpID09IFBDSV9FWFBfVFlQRV9ST09UX1BP
+UlQgfHwNCi0JICAgICgoYnJpZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShkZXYpKSAmJg0KLQkg
+ICAgICBicmlkZ2UtPmx0cl9wYXRoKSkgew0KKwlpZiAocGNpX3BjaWVfdHlwZShkZXYpID09IFBD
+SV9FWFBfVFlQRV9ST09UX1BPUlQpIHsNCisJCXBjaWVfY2FwYWJpbGl0eV9zZXRfd29yZChkZXYs
+IFBDSV9FWFBfREVWQ1RMMiwNCisJCQkJCSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKTsNCisJCWRl
+di0+bHRyX3BhdGggPSAxOw0KKwkJcmV0dXJuOw0KKwl9DQorDQorCWJyaWRnZSA9IHBjaV91cHN0
+cmVhbV9icmlkZ2UoZGV2KTsNCisJaWYgKGJyaWRnZSAmJiBicmlkZ2UtPmx0cl9wYXRoKSB7DQor
+CQlwY2lfYnJpZGdlX3JlY29uZmlndXJlX2x0cihkZXYpOw0KIAkJcGNpZV9jYXBhYmlsaXR5X3Nl
+dF93b3JkKGRldiwgUENJX0VYUF9ERVZDVEwyLA0KIAkJCQkJIFBDSV9FWFBfREVWQ1RMMl9MVFJf
+RU4pOw0KIAkJZGV2LT5sdHJfcGF0aCA9IDE7DQotLSANCjIuMTguMA0K
 
