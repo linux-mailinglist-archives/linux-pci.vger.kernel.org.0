@@ -2,58 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CCFB30F259
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 12:39:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9456430F2A0
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 12:46:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235699AbhBDLf3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 06:35:29 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12127 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235893AbhBDLdW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 06:33:22 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DWbwR5Npzz162m1;
-        Thu,  4 Feb 2021 19:31:19 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.498.0; Thu, 4 Feb 2021 19:32:28 +0800
-From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <linuxarm@openeuler.org>
-Subject: [PATCH] PCI: Use subdir-ccflags-* to inherit debug flag
-Date:   Thu, 4 Feb 2021 19:30:15 +0800
-Message-ID: <1612438215-33105-1-git-send-email-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        id S235805AbhBDLng (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 06:43:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:56774 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235586AbhBDLnf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Feb 2021 06:43:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8852D6E;
+        Thu,  4 Feb 2021 03:42:49 -0800 (PST)
+Received: from e123427-lin.arm.com (unknown [10.57.48.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78FEF3F73B;
+        Thu,  4 Feb 2021 03:42:48 -0800 (PST)
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     robh@kernel.org, linux-pci@vger.kernel.org, robh+dt@kernel.org,
+        bhelgaas@google.com,
+        "daire.mcnamara@microchip.com" <daire.mcnamara@microchip.com>,
+        devicetree@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        cyril.jean@microchip.com, david.abdurachmanov@gmail.com
+Subject: Re: [PATCH v21 0/4] PCI: microchip: Add host driver for Microchip PCIe controller
+Date:   Thu,  4 Feb 2021 11:42:42 +0000
+Message-Id: <161243891187.17448.11139405975325668129.b4-ty@arm.com>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20210125162934.5335-1-daire.mcnamara@microchip.com>
+References: <20210125162934.5335-1-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Junhao He <hejunhao2@hisilicon.com>
+On Mon, 25 Jan 2021 16:29:30 +0000, daire.mcnamara@microchip.com wrote:
+> This patchset adds support for the Microchip PCIe PolarFire PCIe
+> controller when configured in host (Root Complex) mode.
+> 
+> Updates since v20:
+> * Changed module license from GPLv2 to GPL
+> * Removed bus-shift for mc_ecam_ops
+> 
+> [...]
 
-Use subdir-ccflags-* instead of ccflags-* to inherit the debug
-settings from Kconfig when traversing subdirectories.
+Applied to pci/microchip, tentatively for v5.12, thanks !
 
-Signed-off-by: Junhao He <hejunhao2@hisilicon.com>
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- drivers/pci/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1/4] PCI: Call platform_set_drvdata earlier in devm_pci_alloc_host_bridge
+      https://git.kernel.org/lpieralisi/pci/c/5aa5282680
+[2/4] dt-bindings: PCI: microchip: Add Microchip PolarFire host binding
+      https://git.kernel.org/lpieralisi/pci/c/1d8b748536
+[3/4] PCI: microchip: Add host driver for Microchip PCIe controller
+      https://git.kernel.org/lpieralisi/pci/c/8a09a17d15
+[4/4] MAINTAINERS: Add Daire McNamara as maintainer for the Microchip PCIe driver
+      https://git.kernel.org/lpieralisi/pci/c/e9ddffa6a4
 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 11cc794..d62c4ac 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -36,4 +36,4 @@ obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
- obj-y				+= controller/
- obj-y				+= switch/
- 
--ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
-+subdir-ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
--- 
-2.8.1
-
+Thanks,
+Lorenzo
