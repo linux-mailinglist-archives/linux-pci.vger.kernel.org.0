@@ -2,255 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 882BF30F548
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 15:45:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFA9430F5D2
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 16:08:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236853AbhBDOmn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 09:42:43 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S236886AbhBDOm1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 09:42:27 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 114EZBGp024022;
-        Thu, 4 Feb 2021 09:41:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=JKjQmFsAW2neqppkMppeLkt8OZRHfO/VIL0sG/T7MEc=;
- b=hZs1eax9HxlNub5KpsftgE+JKK6k7QwL01uu77sibtAMW8DZsxUNvjFP0wy1Pbz3gS8G
- F8NY4LQN5cHSWh8WK5ExDNlAf/tso+kbP1co/B5NbqA1UzCnZ919STgH35ou5meywJGy
- QPZhkygxIdnO76nhNjXrxgQ6a5JwAX6+tf9oVpx0XvJV5a4bKhHEiVbV1zUbHSgPW00P
- 4AS0Lm7PlG7h3A17Nr0Hj1Zc9SapNB5nCmgPdaB56ZcFeFOESHp7Eie8RHxq3rETlOgy
- ABEGaRYzIy99l8gMiB7rEMNrXAtbdENW4SVe7fdzv2YFzeYEW1Dtz6u2pGEtjNYPHBaF TQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 36gjfyh0fq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 09:41:35 -0500
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 114EZU68025439;
-        Thu, 4 Feb 2021 09:41:35 -0500
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 36gjfyh0eh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 09:41:35 -0500
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 114EXvao003762;
-        Thu, 4 Feb 2021 14:41:33 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03fra.de.ibm.com with ESMTP id 36cy38amc6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 14:41:33 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 114EfU6e44892644
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Feb 2021 14:41:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 623CAA4051;
-        Thu,  4 Feb 2021 14:41:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDBAAA4040;
-        Thu,  4 Feb 2021 14:41:29 +0000 (GMT)
-Received: from [9.145.50.6] (unknown [9.145.50.6])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Feb 2021 14:41:29 +0000 (GMT)
-Subject: Re: [RFC v2 1/1] PCI: Add s390 specific UID uniqueness attribute
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-References: <20210204094353.63819-1-schnelle@linux.ibm.com>
- <20210204094353.63819-2-schnelle@linux.ibm.com> <YBvPBD+fCtQkCFFD@kroah.com>
- <7b85c218-88a4-b6db-e5de-7004475564ee@linux.ibm.com>
- <YBv45HFPe109GT9e@kroah.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <7631ff35-ef7d-dff7-2295-69f8fb96238c@linux.ibm.com>
-Date:   Thu, 4 Feb 2021 15:41:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S237130AbhBDPII (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 10:08:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237129AbhBDPHI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 10:07:08 -0500
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A553DC061786
+        for <linux-pci@vger.kernel.org>; Thu,  4 Feb 2021 07:06:28 -0800 (PST)
+Received: by mail-qv1-xf2b.google.com with SMTP id a1so1808513qvd.13
+        for <linux-pci@vger.kernel.org>; Thu, 04 Feb 2021 07:06:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LFbwFaTMPKHadriK/BpIPtRIBqmNI/eMhQjTkmh9eEo=;
+        b=wy2NLH1ZxuF5t4/LRsF6R3dRYHexjM/pQomx51Lhf0vFNZi915fJmK+KylJxE6mETt
+         DpqLgpZ//Shkd1TQrSgHf0Y8QJKTOLCOWHKjsd+Holdq50ZPLbhALtIjqecMRlkQ1nHR
+         7tOWMSCWxLIKNoLrpKIGIswH8lbnng4CXULMgpFyfQBQG001Xpv3pZPX22ai040P7+nK
+         Is3P0YBEpy28/YpM+itFPDB848jUSkKZGG242dPl8LaZKEDWpTjrB+7bhdvq8JP25GLY
+         ybTHKNSW9QVm93hvafXxYzxNaXiwzn7Srpm2XXN5Tpt1RR7VHj4BMoQedVYljsLFuT7o
+         sKXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LFbwFaTMPKHadriK/BpIPtRIBqmNI/eMhQjTkmh9eEo=;
+        b=FubWEjkXGDJhDPjWZZ4FdWU2EjHkkMqsu7y/pR49taEENriJI0GIgD0HpItcm2MJd0
+         frl6L5H+vl43VqLdbW7zQKx5mhBNQegpUvkn76HOq2y4/XeEwXd2mD1l4uwBfHN8NuE5
+         38TqNtfj55Mn6CfGKjptz2MaQgFh2IfHa9naYNhyX7Bft4VA7gnEsLXYOO/1kpdp+mj2
+         da2KpovNLQ4DjuBPxRhY2eE9RLM77go6mESDDGfH5XO0Rn/SsufL487IRbp4zETtEviT
+         rg2/ZMWeyW0Haf7VI5iRE+sdJGLKYRyoBxGBZaespyoWJXt66q7QeC7X3ArGP9FQir2A
+         vwnQ==
+X-Gm-Message-State: AOAM530aclMMlLOd3z2LEXk7og2XocJ+rTOt0ECYNmt+j6LZkbBdnRSG
+        KRm79VdW0JaEJdE42YRzzONjbDvJnRJTKNSg4aCZag==
+X-Google-Smtp-Source: ABdhPJxdGaXWetnPk2IYHVvnVzKo4th0undMW1WSbXMLT10MLtsQMQQCswIadudiQkTdk+Auslt1nL9OsmQovtF7LMA=
+X-Received: by 2002:a0c:cb11:: with SMTP id o17mr7932307qvk.23.1612451187866;
+ Thu, 04 Feb 2021 07:06:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <YBv45HFPe109GT9e@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-04_07:2021-02-04,2021-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 suspectscore=0 adultscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102040090
+References: <20210117013114.441973-1-dmitry.baryshkov@linaro.org> <64f62684-523d-cbd5-708b-4c06e7d03954@linaro.org>
+In-Reply-To: <64f62684-523d-cbd5-708b-4c06e7d03954@linaro.org>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Thu, 4 Feb 2021 18:06:16 +0300
+Message-ID: <CAA8EJpqxtqxy5Z8KGt_wQGLvXKWhmLXi845VQ+w2_ps71fKVhg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] PCI: qcom: fix PCIe support on sm8250
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, 26 Jan 2021 at 23:11, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> Rob, Lorenzo, gracious poke for this patchset.
+
+Dear colleagues, another gracious ping. I'm not insisting on getting
+this into 5.12 (it would be good though), but I'd kindly ask for these
+patches to be reviewed/acked.
+
+> On 17/01/2021 04:31, Dmitry Baryshkov wrote:
+> > SM8250 platform requires additional clock to be enabled for PCIe to
+> > function. In case it is disabled, PCIe access will result in IOMMU
+> > timeouts. Add device tree binding and driver support for this clock.
+> >
+> > Canges since v4:
+> >   - Remove QCOM_PCIE_2_7_0_MAX_CLOCKS define and has_sf_tbu variable.
+> >
+> > Changes since v3:
+> >   - Merge clock handling back into qcom_pcie_get_resources_2_7_0().
+> >     Define res->num_clks to the amount of clocks used for this particular
+> >     platform.
+> >
+> > Changes since v2:
+> >   - Split this clock handling from qcom_pcie_get_resources_2_7_0()
+> >   - Change comment to point that the clock is required rather than
+> >     optional
+> >
+> > Changes since v1:
+> >   - Added Fixes: tags, as respective patches have hit the upstream Linux
+> >     tree.
+> >
+> >
+>
+>
+> --
+> With best wishes
+> Dmitry
 
 
-On 2/4/21 2:38 PM, Greg Kroah-Hartman wrote:
-> On Thu, Feb 04, 2021 at 01:02:51PM +0100, Niklas Schnelle wrote:
->>
->>
->> On 2/4/21 11:40 AM, Greg Kroah-Hartman wrote:
->>> On Thu, Feb 04, 2021 at 10:43:53AM +0100, Niklas Schnelle wrote:
->>>> The global UID uniqueness attribute exposes whether the platform
->>>> guarantees that the user-defined per-device UID attribute values
->>>> (/sys/bus/pci/device/<dev>/uid) are unique and can thus be used as
->>>> a global identifier for the associated PCI device. With this commit
->>>> it is exposed at /sys/bus/pci/zpci/unique_uids
->>>>
->>>> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->>>> ---
->>>>  Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
->>>>  drivers/pci/pci-sysfs.c                 | 21 +++++++++++++++++++++
->>>>  2 files changed, 30 insertions(+)
->>>>
->>>> diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
->>>> index 25c9c39770c6..812dd9d3f80d 100644
->>>> --- a/Documentation/ABI/testing/sysfs-bus-pci
->>>> +++ b/Documentation/ABI/testing/sysfs-bus-pci
->>>> @@ -375,3 +375,12 @@ Description:
->>>>  		The value comes from the PCI kernel device state and can be one
->>>>  		of: "unknown", "error", "D0", D1", "D2", "D3hot", "D3cold".
->>>>  		The file is read only.
->>>> +What:		/sys/bus/pci/zpci/unique_uids
->>>
->>> No blank line before this new line?
->>
->> Good catch, thanks!
->>
->>>
->>> And why "zpci"?
->>
->> There doesn't seem to be a precedent for arch specific attributes under
->> /sys/bus/pci so I went with a separate group for the RFC.
-> 
-> Why?  There's nothing arch-specific here, right?  Either the file is
-> present or not.
 
-Good point, will change this to /sys/bus/pci/unique_uids
-
-> 
->> "zpci" since that's what we've been calling the s390 specific PCI.
->> I'm not attached to that name or having a separate group, from
->> my perspective /sys/bus/pci/unique_uids would actually be ideal
->> if Bjorn is okay with that, we don't currently foresee any additional
->> global attributes and no one else seems to have them but
->> one never knows and a separate group would then of course,
->> well group them.
-> 
-> Why not just a simple file, no need for arch-specific names if this
-> really can show up under other arches?
-
-I guess other arches would be free to implement the same UID concept
-as above I'm happy to change this to a simple file.
-
-> 
->>>> +Date:		February 2021
->>>> +Contact:	Niklas Schnelle <schnelle@linux.ibm.com>
->>>> +Description:
->>>> +		This attribute exposes the global state of UID Uniqueness on an
->>>> +		s390 Linux system. If this file contains '1' the per-device UID
->>>> +		attribute is guaranteed to provide a unique user defined
->>>> +		identifier for that PCI device. If this file contains '0' UIDs
->>>> +		may collide and do not provide a unique identifier.
->>>
->>> What are they "colliding" with?  And where does the UID come from, the
->>> device itself or somewhere else?
->>
->> If this attribute is 0 multiple PCI devices seen by Linux may have the same UID i.e.
->> they may collide with each other on the same Linux instance.
-> 
-> So can't userspace figure this out on its own?
-
-Userspace can figure out that they do not currently collide but
-without this attribute it doesn't know that the platform also guarantees
-that no collision will be introduced by e.g. hotplug. We are however
-pushing to have this always turned on so yes over time this attribute
-will hopefully be always 1 but this will take years.
-
-> 
->> The
->> UIDs are exposed under /sys/bus/pci/devices/<dev>/uid. Even if the attribute is 1
->> multiple Linux instances will often see the same UID. The main use case
->> we currently envision is naming PCI based network interfaces "eno<UID>"
->> which of course only works if the UIDs are unique for that Linux.
->> On the same mainframe multiple Linux instances may then e.g. use the same
->> UID for VFs from the same physical PCI network card or different cards
->> but the same physical network all defined by an administrator/management
->> system.
->>
->> The UIDs come from the platform/firmware/hypervisor and are provided
->> for each device by the CLP List PCI Functions "instruction" that is used
->> on s390x where an OS can't probe the physical PCI bus but instead
->> that is done by firmware. On QEMU/KVM they can be set on the QEMU cli,
->> on our machine hypervisor they are defined by the machine administrator/management
->> software as part of the definition of VMs/Partitions on that mainframe which includes
->> everything from the number of CPUs, memory, I/O devices etc. With the exposed UID uniqueness
->> attribute the platform then certifies that it will ensure that a UID is set to
->> a unique non-zero value. I can of course add more of this explanation
->> in the documentation too.
-> 
-> Please explain it more, but why would userspace care about this?  If
-> userspace sees a UID "collision" then it just adds something else to the
-> end of the name to make it unique.
-
-The idea is that userspace can be sure that no collisions will ever
-happen. Consequently we can tell users that if they have UID uniqueness
-checking on in their partition definition and they add a PCIe NIC with UID
-X the network device will be named "enoX". This is particularly important
-since during installation users might have to specify the interface name
-as part of the installer's boot parameters _before_ Linux even boots.
-Note that in our usual environments a lot of customers do not use things
-like DHCP and might have very strict rules which interfaces will be
-used for what. Similarly this would allow users to know exact interface
-names when specifying e.g a Cloud Init configuration.
-
-> 
-> What is it supposed to do differently based on the value/presense of
-> this file?
-
-When UIDs are not guaranteed to be unique they are often unset that
-is 0 and then the most stable identifier for a PCI function that a user
-can know before even booting Linux is /sys/bus/pci/function_id.
-This Function ID (FID) is also used as the hotplug slot
-number and thus the X in "ensX.." interface names.
-Thus, this would instead be the preferred interface naming scheme that
-still allows the user to relate the interface names inside Linux
-to what they can see in their machine/hypervisor configuration.
-
-It should be noted that in our environments often the Linux admin(s)
-will be a different group with very different background then the machine/mainframe
-admin and the FID and UID are ofent the only per device information both
-sides can see to identify an interface. Currently not even
-the MAC address can be seen from the machine configuration or
-even when listing devices in the z/VM hypervisor so we really want to use
-either the FID or the UID in interface names.
-
-In the future similar considerations may apply to other PCI devices.
-
-> 
->> Both the uniqueness guarantee (this attribute) as well as the UIDs themselves
->> are part of the Z (s390x) architecture so fall under the mainframe typical
->> backwards compatibility considerations.
-> 
-> So what can userspace do with this?  What tool is going to rely on this?
-
-We have a systemd/udev patch waiting on this RFC discussion
-that will use this attribute for the aforementioned decision of either
-preferring the existing "ens<hotplug_slot_numnber>…" or "eno<UID>…"
-interface names based on this value.
-
-As I mentioned in the cover letter we are also
-considering instead going for /sys/firmware/.. but as far as
-I can see that currently really needs much uglier raw kobject handling and
-would lose the direct relation to PCI and creates the question
-why PCI code puts stuff in /sys/firmware/… or alternatively which
-other code deals with a PCI specific value.
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
+-- 
+With best wishes
+Dmitry
