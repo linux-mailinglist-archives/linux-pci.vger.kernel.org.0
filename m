@@ -2,158 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 004AB30FFAE
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 22:51:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9F6430FFE8
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 23:09:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbhBDVvL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 16:51:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229500AbhBDVvC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Feb 2021 16:51:02 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EE39E64E7B;
-        Thu,  4 Feb 2021 21:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612475421;
-        bh=PmEJQCCq9oY53CiWzcFwaIPerZi1rEcWvCOS/uKzoFQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WequWrptF4WjW06B0BSUo7SbQyS+KfQGTGsiwm9iU60B1NVylYXeQTl1fDMqGEAta
-         JReU0y9ygCPvABAqgwOcutNNywGESDTlzpSVpa71m4FE3QbAvRkhhat3S6RiIlTcUp
-         JTlugHTATg5QaP5m/I3pbdjVLEpFTHshnXMOKWLoRlKOwLXYCMra/+GuRzRq+eo1R5
-         NXgth8yVgN34gF7h+9aDUld5QrUiafvq/6NBCwTxrkKWRXbUTpNg+dEM/GObX4l1j2
-         XB9A4pGG+h3SKSszPKJM5hdYb33urnHHvJOVqsyf9D4QgjMSmA4NenhdmbdpN2zBhS
-         pu0QMV7je4d5Q==
-Date:   Thu, 4 Feb 2021 15:50:19 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-samsung-soc@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH 1/2] PCI: also set up legacy files only after sysfs init
-Message-ID: <20210204215019.GA104698@bjorn-Precision-5520>
+        id S230202AbhBDWIP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 17:08:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230174AbhBDWHu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 17:07:50 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEAFAC06178A;
+        Thu,  4 Feb 2021 14:07:09 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id a9so8298750ejr.2;
+        Thu, 04 Feb 2021 14:07:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cZeT95wC8V3SUCLPqjndJB2PNzVVidIbqpAqqa8ah+w=;
+        b=djCMpaZ4W+MYvW/MVYF1Y6XKAbiK1YcELv+tSX/9OR9+4Rg9HrK8EqKUzNvUa/4NWC
+         gc4kAKQt8ggxEtDcyrtdl3xjj+vSgZNUrnntM/04rianFF77BlaML3HcBFWbdNTM8+aH
+         fIrwAAJnjyJvFe0SPuFk/JKIiL6E0FO6pNcbvqGE4o0K2j84pHjzaTSF+qefSzBXcePl
+         7233uL7fQxnHGuS3s+UaaA5pPN6l0LZMO0YD3rPupOL/MhScriDbNULxBjWWAYqpX97U
+         LFAmqjtXLnyAfr5Eo3Lp0gf8iYTQ6VCGcG00YXMD7P4Q7F5gihBHViqx3B8OFIEE/uMn
+         37Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cZeT95wC8V3SUCLPqjndJB2PNzVVidIbqpAqqa8ah+w=;
+        b=MKD24qHCyen+SAwVeAYyipWfA7yepXdny7796/nD4iwdgYnCNkQiw7Ual3ODZLVO0K
+         zdau++sFNtL/GCJv+LjPWWwZYrm+kA14N39DJS+vHxSE39Cex1eMkzF81eyt/d0/+r1O
+         G7ugsvxgeF2f0iki3i34W0Ip9kqNW0NjlRUgDH5iE0V6j8zO9xpdEps/mA7Xhd7mWjd7
+         gOpNmVNC1RqeiDxgE6C+sSnC+4E79KuhMp+QcaQvpymQ+sspJ/4Mm2S37bIAmmj/0HOl
+         ISOTsrjmw8WGTb+Kvyg4ON4gAH4zfIUcAr61Ujogh3FnMXGAjAEZX6/0acUBa+SNmPVo
+         hcog==
+X-Gm-Message-State: AOAM5328+IEIXSi086DyEcbIJlDvBiw/nSRTWRsf/CFhS5K5V9k84IDH
+        f+SnjgO1ECmEAK30gawPKb4=
+X-Google-Smtp-Source: ABdhPJy5ejiJsnPdp8Jx3NWPeqCf+cy1aCWQwgCTeY4I5gYi8Aos4exfy2skoVbESGoE5LAM4R5XQQ==
+X-Received: by 2002:a17:906:bce2:: with SMTP id op2mr1148625ejb.127.1612476428520;
+        Thu, 04 Feb 2021 14:07:08 -0800 (PST)
+Received: from xws.localdomain ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id y20sm2968904edc.84.2021.02.04.14.07.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Feb 2021 14:07:07 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Run platform power transition on initial D0 entry
+Date:   Thu,  4 Feb 2021 23:06:40 +0100
+Message-Id: <20210204220640.1548532-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210204165831.2703772-2-daniel.vetter@ffwll.ch>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Oliver, Pali, Krzysztof]
+On some devices and platforms, the initial platform power state is not
+in sync with the power state of the PCI device.
 
-s/also/Also/ in subject
+pci_enable_device_flags() updates the state of a PCI device by reading
+from the PCI_PM_CTRL register. This may change the stored power state of
+the device without running the appropriate platform power transition.
 
-On Thu, Feb 04, 2021 at 05:58:30PM +0100, Daniel Vetter wrote:
-> We are already doing this for all the regular sysfs files on PCI
-> devices, but not yet on the legacy io files on the PCI buses. Thus far
-> now problem, but in the next patch I want to wire up iomem revoke
-> support. That needs the vfs up an running already to make so that
-> iomem_get_mapping() works.
+Due to the stored power-state being changed, the later call to
+pci_set_power_state(..., PCI_D0) in do_pci_enable_device() can evaluate
+to a no-op if the stored state has been changed to D0 via that. This
+will then prevent the appropriate platform power transition to be run,
+which can on some devices and platforms lead to platform and PCI power
+state being entirely different, i.e. out-of-sync. On ACPI platforms,
+this can lead to power resources not being turned on, even though they
+are marked as required for D0.
 
-s/now problem/no problem/
-s/an running/and running/
-s/so that/sure that/ ?
+Specifically, on the Microsoft Surface Book 2 and 3, some ACPI power
+regions that should be "on" for the D0 state (and others) are
+initialized as "off" in ACPI, whereas the PCI device is in D0. As the
+state is updated in pci_enable_device_flags() without ensuring that the
+platform state is also updated, the power resource will never be
+properly turned on. Instead, it lives in a sort of on-but-marked-as-off
+zombie-state, which confuses things down the line when attempting to
+transition the device into D3cold: As the resource is already marked as
+off, it won't be turned off and the device does not fully enter D3cold,
+causing increased power consumption during (runtime-)suspend.
 
-iomem_get_mapping() doesn't exist; I don't know what that should be.
+By replacing pci_set_power_state() in do_pci_enable_device() with
+pci_power_up(), we can force pci_platform_power_transition() to be
+called, which will then check if the platform power state needs updating
+and appropriate actions need to be taken.
 
-> Wire it up exactly like the existing code. Note that
-> pci_remove_legacy_files() doesn't need a check since the one for
-> pci_bus->legacy_io is sufficient.
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
 
-I'm not sure exactly what you mean by "the existing code."  I could
-probably figure it out, but it would save time to mention the existing
-function here.
+I'm not entirely sure if this is the best way to do this, so I'm open to
+alternatives. In a previous version of this, I've tried to run the
+platform/ACPI transition directly after the pci_read_config_word() in
+pci_enable_device_flags(), however, that caused some regression in
+intel-lpss-pci, specifically that then had trouble accessing its config
+space for initial setup.
 
-This looks like another instance where we should really apply Oliver's
-idea of converting these to attribute_groups [1].
+This version has been tested for a while now on [1/2] without any
+complaints. As this essentially only drops the initial are-we-already-
+in-that-state-check, I don't expect any issues to be caused by that.
 
-The cover letter mentions options discussed with Greg in [2], but I
-don't think the "sysfs_initialized" hack vs attribute_groups was part
-of that discussion.
+[1]: https://github.com/linux-surface/linux-surface
+[2]: https://github.com/linux-surface/kernel
 
-It's not absolutely a show-stopper, but it *is* a shame to extend the
-sysfs_initialized hack if attribute_groups could do this more cleanly
-and help solve more than one issue.
+---
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bjorn
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b9fecc25d213..eb778e80d8cf 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1802,7 +1802,7 @@ static int do_pci_enable_device(struct pci_dev *dev, int bars)
+ 	u16 cmd;
+ 	u8 pin;
+ 
+-	err = pci_set_power_state(dev, PCI_D0);
++	err = pci_power_up(dev);
+ 	if (err < 0 && err != -EIO)
+ 		return err;
+ 
+-- 
+2.30.0
 
-[1] https://lore.kernel.org/r/CAOSf1CHss03DBSDO4PmTtMp0tCEu5kScn704ZEwLKGXQzBfqaA@mail.gmail.com
-[2] https://lore.kernel.org/dri-devel/CAKMK7uGrdDrbtj0OyzqQc0CGrQwc2F3tFJU9vLfm2jjufAZ5YQ@mail.gmail.com/
-
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> ---
->  drivers/pci/pci-sysfs.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index fb072f4b3176..0c45b4f7b214 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -927,6 +927,9 @@ void pci_create_legacy_files(struct pci_bus *b)
->  {
->  	int error;
->  
-> +	if (!sysfs_initialized)
-> +		return;
-> +
->  	b->legacy_io = kcalloc(2, sizeof(struct bin_attribute),
->  			       GFP_ATOMIC);
->  	if (!b->legacy_io)
-> @@ -1448,6 +1451,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
->  static int __init pci_sysfs_init(void)
->  {
->  	struct pci_dev *pdev = NULL;
-> +	struct pci_bus *pbus = NULL;
->  	int retval;
->  
->  	sysfs_initialized = 1;
-> @@ -1459,6 +1463,9 @@ static int __init pci_sysfs_init(void)
->  		}
->  	}
->  
-> +	while ((pbus = pci_find_next_bus(pbus)))
-> +		pci_create_legacy_files(pbus);
-> +
->  	return 0;
->  }
->  late_initcall(pci_sysfs_init);
-> -- 
-> 2.30.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
