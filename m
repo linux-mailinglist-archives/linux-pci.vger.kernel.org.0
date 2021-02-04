@@ -2,121 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA15130EFFE
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 10:54:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C887130F007
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 10:59:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233597AbhBDJw0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 04:52:26 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:51312 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S235292AbhBDJwZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 04:52:25 -0500
-X-UUID: aae8768ba5b347539e6247ef73a9929e-20210204
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=yCGwEsEVjQoUIZ8It18p5vUYxvCyrioMe/9PFTM4Wv8=;
-        b=LfwqeIUU6kyKxpCCLwDesrEgvv/2Asn8gUZGGu7/gxLNhQUDM2APTpGKI0tHb3b8zWl86Sqxzzfd5B2S8Zhb6ZsABw+HqMs2WHojnQunYXmETTqgy2Lw+zvtvQhi5TyNdm0PLo+WMCjjxeJaQ2yZo0SCpbSlmbhVtOI+grAwXDU=;
-X-UUID: aae8768ba5b347539e6247ef73a9929e-20210204
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <mingchuang.qiao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1961543882; Thu, 04 Feb 2021 17:51:37 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 4 Feb
- 2021 17:51:31 +0800
-Received: from mcddlt001.mediatek.inc (10.19.240.15) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 4 Feb 2021 17:51:30 +0800
-From:   <mingchuang.qiao@mediatek.com>
-To:     <bhelgaas@google.com>, <matthias.bgg@gmail.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <mingchuang.qiao@mediatek.com>, <haijun.liu@mediatek.com>,
-        <lambert.wang@mediatek.com>, <kerun.zhu@mediatek.com>,
-        <mika.westerberg@linux.intel.com>, <alex.williamson@redhat.com>,
-        <rjw@rjwysocki.net>, <utkarsh.h.patel@intel.com>
-Subject: [v4] PCI: Avoid unsync of LTR mechanism configuration
-Date:   Thu, 4 Feb 2021 17:51:25 +0800
-Message-ID: <20210204095125.9212-1-mingchuang.qiao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        id S234600AbhBDJ7H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 04:59:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:55134 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232838AbhBDJ7G (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Feb 2021 04:59:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0044511D4;
+        Thu,  4 Feb 2021 01:58:21 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F8263F719;
+        Thu,  4 Feb 2021 01:58:20 -0800 (PST)
+Date:   Thu, 4 Feb 2021 09:58:15 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Randy Dunlap <rdunlap@infradead.org>, kishon@ti.com
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: endpoint: fix build error, EP NTB driver uses
+ configfs
+Message-ID: <20210204095815.GA26804@e121166-lin.cambridge.arm.com>
+References: <20210202201255.26768-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: A2F39DD1C52C3A4A4AADE6AFD365C93497CD1F4332D5C12853C645E0F0D636AF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210202201255.26768-1-rdunlap@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RnJvbTogTWluZ2NodWFuZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KDQpJ
-biBidXMgc2NhbiBmbG93LCB0aGUgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgb2YgREVWQ1RM
-MiByZWdpc3RlciBpcw0KY29uZmlndXJlZCBpbiBwY2lfY29uZmlndXJlX2x0cigpLiBJZiBkZXZp
-Y2UgYW5kIGJyaWRnZSBib3RoIHN1cHBvcnQgTFRSDQptZWNoYW5pc20sIHRoZSAiTFRSIE1lY2hh
-bmlzbSBFbmFibGUiIGJpdCBvZiBkZXZpY2UgYW5kIGJyaWRnZSB3aWxsIGJlDQplbmFibGVkIGlu
-IERFVkNUTDIgcmVnaXN0ZXIuIEFuZCBwY2lfZGV2LT5sdHJfcGF0aCB3aWxsIGJlIHNldCBhcyAx
-Lg0KDQpJZiBQQ0llIGxpbmsgZ29lcyBkb3duIHdoZW4gZGV2aWNlIHJlc2V0cywgdGhlICJMVFIg
-TWVjaGFuaXNtIEVuYWJsZSIgYml0DQpvZiBicmlkZ2Ugd2lsbCBjaGFuZ2UgdG8gMCBhY2NvcmRp
-bmcgdG8gUENJZSByNS4wLCBzZWMgNy41LjMuMTYuIEhvd2V2ZXIsDQp0aGUgcGNpX2Rldi0+bHRy
-X3BhdGggdmFsdWUgb2YgYnJpZGdlIGlzIHN0aWxsIDEuDQoNCkZvciBmb2xsb3dpbmcgY29uZGl0
-aW9ucywgY2hlY2sgYW5kIHJlLWNvbmZpZ3VyZSAiTFRSIE1lY2hhbmlzbSBFbmFibGUiIGJpdA0K
-b2YgYnJpZGdlIHRvIG1ha2UgIkxUUiBNZWNoYW5pc20gRW5hYmxlIiBiaXQgbWF0Y2ggbHRyX3Bh
-dGggdmFsdWUuDQogICAtYmVmb3JlIGNvbmZpZ3VyaW5nIGRldmljZSdzIExUUiBmb3IgaG90LXJl
-bW92ZS9ob3QtYWRkDQogICAtYmVmb3JlIHJlc3RvcmluZyBkZXZpY2UncyBERVZDVEwyIHJlZ2lz
-dGVyIHdoZW4gcmVzdG9yZSBkZXZpY2Ugc3RhdGUNCg0KU2lnbmVkLW9mZi1ieTogTWluZ2NodWFu
-ZyBRaWFvIDxtaW5nY2h1YW5nLnFpYW9AbWVkaWF0ZWsuY29tPg0KLS0tDQpjaGFuZ2VzIG9mIHY0
-DQogLWZpeCB0eXBvIG9mIGNvbW1pdCBtZXNzYWdlDQogLXJlbmFtZTogcGNpX3JlY29uZmlndXJl
-X2JyaWRnZV9sdHIoKS0+cGNpX2JyaWRnZV9yZWNvbmZpZ3VyZV9sdHIoKQ0KY2hhbmdlcyBvZiB2
-Mw0KIC1jYWxsIHBjaV9yZWNvbmZpZ3VyZV9icmlkZ2VfbHRyKCkgaW4gcHJvYmUuYw0KY2hhbmdl
-cyBvZiB2Mg0KIC1tb2RpZnkgcGF0Y2ggZGVzY3JpcHRpb24NCiAtcmVjb25maWd1cmUgYnJpZGdl
-J3MgTFRSIGJlZm9yZSByZXN0b3JpbmcgZGV2aWNlIERFVkNUTDIgcmVnaXN0ZXINCi0tLQ0KIGRy
-aXZlcnMvcGNpL3BjaS5jICAgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKysrDQogZHJpdmVy
-cy9wY2kvcGNpLmggICB8ICAxICsNCiBkcml2ZXJzL3BjaS9wcm9iZS5jIHwgMTMgKysrKysrKysr
-Ky0tLQ0KIDMgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkN
-Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3BjaS5jIGIvZHJpdmVycy9wY2kvcGNpLmMNCmlu
-ZGV4IGI5ZmVjYzI1ZDIxMy4uNmJmNjVkMjk1MzMxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wY2kv
-cGNpLmMNCisrKyBiL2RyaXZlcnMvcGNpL3BjaS5jDQpAQCAtMTQzNyw2ICsxNDM3LDI0IEBAIHN0
-YXRpYyBpbnQgcGNpX3NhdmVfcGNpZV9zdGF0ZShzdHJ1Y3QgcGNpX2RldiAqZGV2KQ0KIAlyZXR1
-cm4gMDsNCiB9DQogDQordm9pZCBwY2lfYnJpZGdlX3JlY29uZmlndXJlX2x0cihzdHJ1Y3QgcGNp
-X2RldiAqZGV2KQ0KK3sNCisjaWZkZWYgQ09ORklHX1BDSUVBU1BNDQorCXN0cnVjdCBwY2lfZGV2
-ICpicmlkZ2U7DQorCXUzMiBjdGw7DQorDQorCWJyaWRnZSA9IHBjaV91cHN0cmVhbV9icmlkZ2Uo
-ZGV2KTsNCisJaWYgKGJyaWRnZSAmJiBicmlkZ2UtPmx0cl9wYXRoKSB7DQorCQlwY2llX2NhcGFi
-aWxpdHlfcmVhZF9kd29yZChicmlkZ2UsIFBDSV9FWFBfREVWQ1RMMiwgJmN0bCk7DQorCQlpZiAo
-IShjdGwgJiBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKSkgew0KKwkJCXBjaV9kYmcoYnJpZGdlLCAi
-cmUtZW5hYmxpbmcgTFRSXG4iKTsNCisJCQlwY2llX2NhcGFiaWxpdHlfc2V0X3dvcmQoYnJpZGdl
-LCBQQ0lfRVhQX0RFVkNUTDIsDQorCQkJCQkJIFBDSV9FWFBfREVWQ1RMMl9MVFJfRU4pOw0KKwkJ
-fQ0KKwl9DQorI2VuZGlmDQorfQ0KKw0KIHN0YXRpYyB2b2lkIHBjaV9yZXN0b3JlX3BjaWVfc3Rh
-dGUoc3RydWN0IHBjaV9kZXYgKmRldikNCiB7DQogCWludCBpID0gMDsNCkBAIC0xNDQ3LDYgKzE0
-NjUsMTMgQEAgc3RhdGljIHZvaWQgcGNpX3Jlc3RvcmVfcGNpZV9zdGF0ZShzdHJ1Y3QgcGNpX2Rl
-diAqZGV2KQ0KIAlpZiAoIXNhdmVfc3RhdGUpDQogCQlyZXR1cm47DQogDQorCS8qDQorCSAqIERv
-d25zdHJlYW0gcG9ydHMgcmVzZXQgdGhlIExUUiBlbmFibGUgYml0IHdoZW4gbGluayBnb2VzIGRv
-d24uDQorCSAqIENoZWNrIGFuZCByZS1jb25maWd1cmUgdGhlIGJpdCBoZXJlIGJlZm9yZSByZXN0
-b3JpbmcgZGV2aWNlLg0KKwkgKiBQQ0llIHI1LjAsIHNlYyA3LjUuMy4xNi4NCisJICovDQorCXBj
-aV9icmlkZ2VfcmVjb25maWd1cmVfbHRyKGRldik7DQorDQogCWNhcCA9ICh1MTYgKikmc2F2ZV9z
-dGF0ZS0+Y2FwLmRhdGFbMF07DQogCXBjaWVfY2FwYWJpbGl0eV93cml0ZV93b3JkKGRldiwgUENJ
-X0VYUF9ERVZDVEwsIGNhcFtpKytdKTsNCiAJcGNpZV9jYXBhYmlsaXR5X3dyaXRlX3dvcmQoZGV2
-LCBQQ0lfRVhQX0xOS0NUTCwgY2FwW2krK10pOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3Bj
-aS5oIGIvZHJpdmVycy9wY2kvcGNpLmgNCmluZGV4IDVjNTkzNjUwOTJmYS4uYjNhNWU1Mjg3Y2I3
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9wY2kvcGNpLmgNCisrKyBiL2RyaXZlcnMvcGNpL3BjaS5o
-DQpAQCAtMTExLDYgKzExMSw3IEBAIHZvaWQgcGNpX2ZyZWVfY2FwX3NhdmVfYnVmZmVycyhzdHJ1
-Y3QgcGNpX2RldiAqZGV2KTsNCiBib29sIHBjaV9icmlkZ2VfZDNfcG9zc2libGUoc3RydWN0IHBj
-aV9kZXYgKmRldik7DQogdm9pZCBwY2lfYnJpZGdlX2QzX3VwZGF0ZShzdHJ1Y3QgcGNpX2RldiAq
-ZGV2KTsNCiB2b2lkIHBjaV9icmlkZ2Vfd2FpdF9mb3Jfc2Vjb25kYXJ5X2J1cyhzdHJ1Y3QgcGNp
-X2RldiAqZGV2KTsNCit2b2lkIHBjaV9icmlkZ2VfcmVjb25maWd1cmVfbHRyKHN0cnVjdCBwY2lf
-ZGV2ICpkZXYpOw0KIA0KIHN0YXRpYyBpbmxpbmUgdm9pZCBwY2lfd2FrZXVwX2V2ZW50KHN0cnVj
-dCBwY2lfZGV2ICpkZXYpDQogew0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3Byb2JlLmMgYi9k
-cml2ZXJzL3BjaS9wcm9iZS5jDQppbmRleCA5NTNmMTVhYmM4NTAuLmFkZTA1NWU5ZmI1OCAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvcGNpL3Byb2JlLmMNCisrKyBiL2RyaXZlcnMvcGNpL3Byb2JlLmMN
-CkBAIC0yMTMyLDkgKzIxMzIsMTYgQEAgc3RhdGljIHZvaWQgcGNpX2NvbmZpZ3VyZV9sdHIoc3Ry
-dWN0IHBjaV9kZXYgKmRldikNCiAJICogQ29tcGxleCBhbmQgYWxsIGludGVybWVkaWF0ZSBTd2l0
-Y2hlcyBpbmRpY2F0ZSBzdXBwb3J0IGZvciBMVFIuDQogCSAqIFBDSWUgcjQuMCwgc2VjIDYuMTgu
-DQogCSAqLw0KLQlpZiAocGNpX3BjaWVfdHlwZShkZXYpID09IFBDSV9FWFBfVFlQRV9ST09UX1BP
-UlQgfHwNCi0JICAgICgoYnJpZGdlID0gcGNpX3Vwc3RyZWFtX2JyaWRnZShkZXYpKSAmJg0KLQkg
-ICAgICBicmlkZ2UtPmx0cl9wYXRoKSkgew0KKwlpZiAocGNpX3BjaWVfdHlwZShkZXYpID09IFBD
-SV9FWFBfVFlQRV9ST09UX1BPUlQpIHsNCisJCXBjaWVfY2FwYWJpbGl0eV9zZXRfd29yZChkZXYs
-IFBDSV9FWFBfREVWQ1RMMiwNCisJCQkJCSBQQ0lfRVhQX0RFVkNUTDJfTFRSX0VOKTsNCisJCWRl
-di0+bHRyX3BhdGggPSAxOw0KKwkJcmV0dXJuOw0KKwl9DQorDQorCWJyaWRnZSA9IHBjaV91cHN0
-cmVhbV9icmlkZ2UoZGV2KTsNCisJaWYgKGJyaWRnZSAmJiBicmlkZ2UtPmx0cl9wYXRoKSB7DQor
-CQlwY2lfYnJpZGdlX3JlY29uZmlndXJlX2x0cihkZXYpOw0KIAkJcGNpZV9jYXBhYmlsaXR5X3Nl
-dF93b3JkKGRldiwgUENJX0VYUF9ERVZDVEwyLA0KIAkJCQkJIFBDSV9FWFBfREVWQ1RMMl9MVFJf
-RU4pOw0KIAkJZGV2LT5sdHJfcGF0aCA9IDE7DQotLSANCjIuMTguMA0K
+On Tue, Feb 02, 2021 at 12:12:55PM -0800, Randy Dunlap wrote:
+> The pci-epf-ntb driver uses configfs APIs, so it should depend on
+> CONFIGFS_FS to prevent build errors.
+> 
+> ld: drivers/pci/endpoint/functions/pci-epf-ntb.o: in function `epf_ntb_add_cfs':
+> pci-epf-ntb.c:(.text+0x1b): undefined reference to `config_group_init_type_name'
+> 
+> Fixes: 7dc64244f9e9 ("PCI: endpoint: Add EP function driver to provide NTB functionality")
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: linux-pci@vger.kernel.org
+> ---
+> You may switch to 'select CONFIG_FS_FS' if you feel strongly about it.
 
+Kishon ?
+
+Thanks,
+Lorenzo
+
+>  drivers/pci/endpoint/functions/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- linux-next-20210202.orig/drivers/pci/endpoint/functions/Kconfig
+> +++ linux-next-20210202/drivers/pci/endpoint/functions/Kconfig
+> @@ -16,6 +16,7 @@ config PCI_EPF_TEST
+>  config PCI_EPF_NTB
+>  	tristate "PCI Endpoint NTB driver"
+>  	depends on PCI_ENDPOINT
+> +	depends on CONFIGFS_FS
+>  	help
+>  	  Select this configuration option to enable the NTB driver
+>  	  for PCI Endpoint. NTB driver implements NTB controller
