@@ -2,167 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A435031000E
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 23:27:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EF09310013
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 23:27:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbhBDWYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 17:24:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
+        id S230138AbhBDWZL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 17:25:11 -0500
+Received: from mga02.intel.com ([134.134.136.20]:53358 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229534AbhBDWYv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Feb 2021 17:24:51 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A10F664FAA;
-        Thu,  4 Feb 2021 22:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612477449;
-        bh=JutpsfoRnwZiwX9WSRX+9vPCxj9lG7YuiARSCN/pfb8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R4EZehMHVo5fn0vaQZAo7gB2GbIMgL9Qiush/t7IxMNPcsOg65YtqQLWvt4bMJG5r
-         9lA0cGGOXqj2x+6Sp6C+nsCP9UpoVG7H2Kxadl5eCcGEWjM0L1VWnTD+yhLy8bbnsj
-         U4aqcqXxREXCmyDZNMlany8b0SXougiBRi6sN4iQGcB5bfs1R3oWkHK+yVzaMfmSXq
-         rZsWXNB+48T84kW+wWsLjJRqtCcgMiozGaAzlgcOvMHWIqJm9nQDeLygHVBngpqhMd
-         m0VgANBrq/FqFnSDuQpzpaQ4th8XfYs1SbCzwN0SE6+YWLxM1aHUhPjKLibKF95OFJ
-         oFe7uv9RQ7SFw==
-Received: by pali.im (Postfix)
-        id 42B99736; Thu,  4 Feb 2021 23:24:07 +0100 (CET)
-Date:   Thu, 4 Feb 2021 23:24:07 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-samsung-soc@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH 1/2] PCI: also set up legacy files only after sysfs init
-Message-ID: <20210204222407.pkx7wvmcvugdwqdd@pali>
-References: <20210204165831.2703772-2-daniel.vetter@ffwll.ch>
- <20210204215019.GA104698@bjorn-Precision-5520>
+        id S229534AbhBDWZI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Feb 2021 17:25:08 -0500
+IronPort-SDR: 12SpxswXJ0iiSFsRgV8eyo+WPutEluUsOBOd+o7AL1h+KJhXLY6wzDUqy6mic9bCBlm8IflXWS
+ QcgBYfOJFdkg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9885"; a="168455567"
+X-IronPort-AV: E=Sophos;i="5.81,153,1610438400"; 
+   d="scan'208";a="168455567"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2021 14:24:27 -0800
+IronPort-SDR: y/7S/VUBRnji49Z9RcM7MCK9m9bPc9F2qnjPMyRowJSljxxzoccj0mjoNWsOJdTYwHZYVCzA52
+ cylVr2edM40A==
+X-IronPort-AV: E=Sophos;i="5.81,153,1610438400"; 
+   d="scan'208";a="576429167"
+Received: from jguillor-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.133.14])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2021 14:24:26 -0800
+Date:   Thu, 4 Feb 2021 14:24:25 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     "John Groves (jgroves)" <jgroves@micron.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "daniel.lll@alibaba-inc.com" <daniel.lll@alibaba-inc.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [EXT] Re: [PATCH 04/14] cxl/mem: Implement polled mode mailbox
+Message-ID: <20210204222425.5vlulgaip7stal3z@intel.com>
+References: <20210130002438.1872527-1-ben.widawsky@intel.com>
+ <20210130002438.1872527-5-ben.widawsky@intel.com>
+ <20210201175400.GG197521@fedora>
+ <20210201191316.e3kkkwqbx5fujp6y@intel.com>
+ <CAPcyv4hP6AOV1OQKbohCqczM1RUPQHQ07+7MuNJ1_p6+opLSQQ@mail.gmail.com>
+ <SN6PR08MB46052FE9BC20A747CACD8F50D1B39@SN6PR08MB4605.namprd08.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210204215019.GA104698@bjorn-Precision-5520>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <SN6PR08MB46052FE9BC20A747CACD8F50D1B39@SN6PR08MB4605.namprd08.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 04 February 2021 15:50:19 Bjorn Helgaas wrote:
-> [+cc Oliver, Pali, Krzysztof]
+On 21-02-04 21:53:29, John Groves (jgroves) wrote:
+>    Micron Confidential
+> 
+> 
+> 
+>    From: Dan Williams <dan.j.williams@intel.com>
+>    Date: Monday, February 1, 2021 at 1:28 PM
+>    To: Ben Widawsky <ben.widawsky@intel.com>
+>    Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+>    linux-cxl@vger.kernel.org <linux-cxl@vger.kernel.org>, Linux ACPI
+>    <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List
+>    <linux-kernel@vger.kernel.org>, linux-nvdimm
+>    <linux-nvdimm@lists.01.org>, Linux PCI <linux-pci@vger.kernel.org>,
+>    Bjorn Helgaas <helgaas@kernel.org>, Chris Browy
+>    <cbrowy@avery-design.com>, Christoph Hellwig <hch@infradead.org>, Ira
+>    Weiny <ira.weiny@intel.com>, Jon Masters <jcm@jonmasters.org>, Jonathan
+>    Cameron <Jonathan.Cameron@huawei.com>, Rafael Wysocki
+>    <rafael.j.wysocki@intel.com>, Randy Dunlap <rdunlap@infradead.org>,
+>    Vishal Verma <vishal.l.verma@intel.com>, daniel.lll@alibaba-inc.com
+>    <daniel.lll@alibaba-inc.com>, John Groves (jgroves)
+>    <jgroves@micron.com>, Kelley, Sean V <sean.v.kelley@intel.com>
+>    Subject: [EXT] Re: [PATCH 04/14] cxl/mem: Implement polled mode mailbox
+> 
+>    CAUTION: EXTERNAL EMAIL. Do not click links or open attachments unless
+>    you recognize the sender and were expecting this message.
+>    On Mon, Feb 1, 2021 at 11:13 AM Ben Widawsky <ben.widawsky@intel.com>
+>    wrote:
+>    >
+>    > On 21-02-01 12:54:00, Konrad Rzeszutek Wilk wrote:
+>    > > > +#define
+>    cxl_doorbell_busy(cxlm)
+>    \
+>    > > > +   (cxl_read_mbox_reg32(cxlm, CXLDEV_MB_CTRL_OFFSET)
+>    &                    \
+>    > > > +    CXLDEV_MB_CTRL_DOORBELL)
+>    > > > +
+>    > > > +#define CXL_MAILBOX_TIMEOUT_US 2000
+>    > >
+>    > > You been using the spec for the values. Is that number also from it
+>    ?
+>    > >
+>    >
+>    > Yes it is. I'll add a comment with the spec reference.
+> 
+> 
+> 
+>    From section 8.2.8.4 in the CXL 2.0 spec: “The mailbox command timeout
+>    is 2 seconds.”  So this should be:
+> 
+> 
+>    #define CXL_MAILBOX_TIMEOUT_US 2000000
+> 
+> 
+>    …right? 2000us is 2ms…
+> 
+> 
 
-Just to note that extending or using sysfs_initialized introduces
-another race condition into kernel code which results in PCI fatal
-errors. Details are in email discussion which Bjorn already sent.
+Thanks. This was caught already in earlier review by David Rientjes
+<rientjes@google.com>
 
-> s/also/Also/ in subject
-> 
-> On Thu, Feb 04, 2021 at 05:58:30PM +0100, Daniel Vetter wrote:
-> > We are already doing this for all the regular sysfs files on PCI
-> > devices, but not yet on the legacy io files on the PCI buses. Thus far
-> > now problem, but in the next patch I want to wire up iomem revoke
-> > support. That needs the vfs up an running already to make so that
-> > iomem_get_mapping() works.
-> 
-> s/now problem/no problem/
-> s/an running/and running/
-> s/so that/sure that/ ?
-> 
-> iomem_get_mapping() doesn't exist; I don't know what that should be.
-> 
-> > Wire it up exactly like the existing code. Note that
-> > pci_remove_legacy_files() doesn't need a check since the one for
-> > pci_bus->legacy_io is sufficient.
-> 
-> I'm not sure exactly what you mean by "the existing code."  I could
-> probably figure it out, but it would save time to mention the existing
-> function here.
-> 
-> This looks like another instance where we should really apply Oliver's
-> idea of converting these to attribute_groups [1].
-> 
-> The cover letter mentions options discussed with Greg in [2], but I
-> don't think the "sysfs_initialized" hack vs attribute_groups was part
-> of that discussion.
-> 
-> It's not absolutely a show-stopper, but it *is* a shame to extend the
-> sysfs_initialized hack if attribute_groups could do this more cleanly
-> and help solve more than one issue.
-> 
-> Bjorn
-> 
-> [1] https://lore.kernel.org/r/CAOSf1CHss03DBSDO4PmTtMp0tCEu5kScn704ZEwLKGXQzBfqaA@mail.gmail.com
-> [2] https://lore.kernel.org/dri-devel/CAKMK7uGrdDrbtj0OyzqQc0CGrQwc2F3tFJU9vLfm2jjufAZ5YQ@mail.gmail.com/
-> 
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: Jérôme Glisse <jglisse@redhat.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: linux-mm@kvack.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-samsung-soc@vger.kernel.org
-> > Cc: linux-media@vger.kernel.org
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: linux-pci@vger.kernel.org
-> > ---
-> >  drivers/pci/pci-sysfs.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > index fb072f4b3176..0c45b4f7b214 100644
-> > --- a/drivers/pci/pci-sysfs.c
-> > +++ b/drivers/pci/pci-sysfs.c
-> > @@ -927,6 +927,9 @@ void pci_create_legacy_files(struct pci_bus *b)
-> >  {
-> >  	int error;
-> >  
-> > +	if (!sysfs_initialized)
-> > +		return;
-> > +
-> >  	b->legacy_io = kcalloc(2, sizeof(struct bin_attribute),
-> >  			       GFP_ATOMIC);
-> >  	if (!b->legacy_io)
-> > @@ -1448,6 +1451,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
-> >  static int __init pci_sysfs_init(void)
-> >  {
-> >  	struct pci_dev *pdev = NULL;
-> > +	struct pci_bus *pbus = NULL;
-> >  	int retval;
-> >  
-> >  	sysfs_initialized = 1;
-> > @@ -1459,6 +1463,9 @@ static int __init pci_sysfs_init(void)
-> >  		}
-> >  	}
-> >  
-> > +	while ((pbus = pci_find_next_bus(pbus)))
-> > +		pci_create_legacy_files(pbus);
-> > +
-> >  	return 0;
-> >  }
-> >  late_initcall(pci_sysfs_init);
-> > -- 
-> > 2.30.0
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+It's renamed CXL_MAILBOX_TIMEOUT_MS 2000
