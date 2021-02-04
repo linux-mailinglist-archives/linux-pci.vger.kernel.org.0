@@ -2,71 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3BBB30EE8F
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 09:38:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8569C30EE9C
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Feb 2021 09:41:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234867AbhBDIgO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 03:36:14 -0500
-Received: from halon.esss.lu.se ([194.47.240.54]:39193 "EHLO halon.esss.lu.se"
+        id S234921AbhBDIlL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 03:41:11 -0500
+Received: from verein.lst.de ([213.95.11.211]:54996 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234982AbhBDIgO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Feb 2021 03:36:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ess.eu; s=dec2019;
-        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
-         message-id:from:references:to:subject:from;
-        bh=kWa7eRyWY/ViKBH5Dz8k0xhlfT5+/t8NeCDDCY/ZZOU=;
-        b=QfpU2fVlT4YIAY8ZYFdgR4DiuLoE8szodQk8Xf2hRYEh/arrsL2RtBkjXscn4UzbNzdCbJ5MEovUJ
-         CPWsmJm+ZnV2hycZgYlnbUivN1WSL9iCcPpKBkUrusk+ReNft7/KeB+K4tS3ZAENRE2gdLzbmE5gg1
-         F3+kxyk0j+IKh5NWtP0s5vh/x+D+WwCIB3DUrzRCcQcTK0fsozkT8v14SAaIaZDU2e8PTFSVMYEaFF
-         Y/emJ6OVbKZ9Mu/z6woRMGf9sa/MRG1E4BhaLVCsptLCVRZdgAmtMSkFHTeNQtSBCDJ/3KHh4o0fPb
-         xuTmwswAopCove+SMsQjucfoBHZE1Nw==
-Received: from mail.esss.lu.se (it-exch16-4.esss.lu.se [10.0.42.134])
-        by halon.esss.lu.se (Halon) with ESMTPS
-        id f11634fb-66c3-11eb-93c8-005056a66d10;
-        Thu, 04 Feb 2021 09:35:31 +0100 (CET)
-Received: from [192.168.0.6] (194.47.241.248) by it-exch16-4.esss.lu.se
- (10.0.42.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Thu, 4 Feb 2021
- 09:35:31 +0100
-Subject: Re: [PATCHv2 0/5] aer handling fixups
-To:     Keith Busch <kbusch@kernel.org>, <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-References: <20210104230300.1277180-1-kbusch@kernel.org>
- <20210203000320.GB22815@redsun51.ssa.fujisawa.hgst.com>
-From:   Hinko Kocevar <hinko.kocevar@ess.eu>
-Message-ID: <24132ba1-08de-b5c3-0a97-b1236a6131f4@ess.eu>
-Date:   Thu, 4 Feb 2021 09:35:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S234897AbhBDIlK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Feb 2021 03:41:10 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 77E4067373; Thu,  4 Feb 2021 09:40:23 +0100 (CET)
+Date:   Thu, 4 Feb 2021 09:40:23 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, nouveau@lists.freedesktop.org,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        akpm@linux-foundation.org, benh@kernel.crashing.org,
+        bskeggs@redhat.com, bhelgaas@google.com, bp@alien8.de,
+        boris.ostrovsky@oracle.com, hch@lst.de, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, hpa@zytor.com, mingo@kernel.org,
+        mingo@redhat.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, jgross@suse.com,
+        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
+        matthew.auld@intel.com, mpe@ellerman.id.au, rppt@kernel.org,
+        paulus@samba.org, peterz@infradead.org, robin.murphy@arm.com,
+        rodrigo.vivi@intel.com, sstabellini@kernel.org,
+        bauerman@linux.ibm.com, tsbogend@alpha.franken.de,
+        tglx@linutronix.de, ulf.hansson@linaro.org, joe.jin@oracle.com,
+        thomas.lendacky@amd.com
+Subject: Re: [PATCH RFC v1 5/6] xen-swiotlb: convert variables to arrays
+Message-ID: <20210204084023.GA32328@lst.de>
+References: <20210203233709.19819-1-dongli.zhang@oracle.com> <20210203233709.19819-6-dongli.zhang@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20210203000320.GB22815@redsun51.ssa.fujisawa.hgst.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [194.47.241.248]
-X-ClientProxiedBy: it-exch16-4.esss.lu.se (10.0.42.134) To
- it-exch16-4.esss.lu.se (10.0.42.134)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210203233709.19819-6-dongli.zhang@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+So one thing that has been on my mind for a while:  I'd really like
+to kill the separate dma ops in Xen swiotlb.  If we compare xen-swiotlb
+to swiotlb the main difference seems to be:
 
-On 2/3/21 1:03 AM, Keith Busch wrote:
-> Hi Bjorn,
-> 
-> Any further concern? I beleive Hinko idenfitied his observations as
-> being solely due to his platform rather than this implementation, which
+ - additional reasons to bounce I/O vs the plain DMA capable
+ - the possibility to do a hypercall on arm/arm64
+ - an extra translation layer before doing the phys_to_dma and vice
+   versa
+ - an special memory allocator
 
-True.
-
-Thanks,
-//hinko
-
-> should fix some outstanding uncorrectable error handling. Please let me
-> know if there's anything additional you'd like to see with this series.
-> 
-> Thanks,
-> Keith
-> 
+I wonder if inbetween a few jump labels or other no overhead enablement
+options and possibly better use of the dma_range_map we could kill
+off most of swiotlb-xen instead of maintaining all this code duplication?
