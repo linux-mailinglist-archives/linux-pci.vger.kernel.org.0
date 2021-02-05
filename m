@@ -2,295 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E2D31191A
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 03:57:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2B63311919
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 03:57:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbhBFCyz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 21:54:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37486 "EHLO
+        id S231532AbhBFCyr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 21:54:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbhBFCcM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 21:32:12 -0500
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E90C0698C4
-        for <linux-pci@vger.kernel.org>; Fri,  5 Feb 2021 14:15:36 -0800 (PST)
-Received: by mail-ot1-x334.google.com with SMTP id y11so8422242otq.1
-        for <linux-pci@vger.kernel.org>; Fri, 05 Feb 2021 14:15:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=taGs30p9Jgf4gV/wPi9elUg7cx6ns45kdVRnxK1EwUQ=;
-        b=L2F18bYfGoRMooi6v6A+IU/iaDEijwVhvsD4UVGKzPtGF37PpRXw8yFB9abbXEdGVA
-         On6iD3KkqPe3J+70D3QsHMan9II/eVIIAF7BPLIxpl6vkrmUNyZy3khlyGuLDX6HOXy+
-         vYB0sflij9on2vy9ccpdBMSydqoDBmQfZHdH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=taGs30p9Jgf4gV/wPi9elUg7cx6ns45kdVRnxK1EwUQ=;
-        b=ThDAgnXHGHMSHHIoGW+nchYn1+1Z2wJawuxjAEp6c7saEmkskgubUIDXVMsvn/R7FX
-         OThWDB35GLnqE8P0oSelWYlWapJhmAuIC7IDXwxDxPSrb3DGp71eduNIO4ylyigy/Qeq
-         DjW+kXEdbX08a4L8oCGUfpoAQZu8NtFr701HC6/aKAmyM4hMJtqYBBCk371pJYdvh0J/
-         G3CzuDyrueRSb9N6MPiRHu6wJKtc2r2FGbodXKZ6rCDHi/6XS5yKch4tVYJ4HBVY3KkU
-         qWJNDhsuwCnlKgNCVHXYQDXdKYZY/NjQVpRuH6tjLBvVDITy/93fMnVFMr0aqGXvJDID
-         7Mog==
-X-Gm-Message-State: AOAM530DRedK12KFi9YCqDjWTjeKQ1VxaHhRn0YlqyVz1Bl8n5wIMTsg
-        Lf1BmyUsN7cEtLsM697O2+an4OQZH8HmnEf9poSnww==
-X-Google-Smtp-Source: ABdhPJy5EJ6H5/mqpNyGBkMsS4KXN0cD9B4H1vTM+rBPaFiGLK05l3urYSQR6OMu8W8lkRx0T+ayhegPEOSlFT+SUdg=
-X-Received: by 2002:a9d:b85:: with SMTP id 5mr5054831oth.281.1612563335891;
- Fri, 05 Feb 2021 14:15:35 -0800 (PST)
+        with ESMTP id S229889AbhBFCb7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 21:31:59 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F97BC0698CD;
+        Fri,  5 Feb 2021 14:23:20 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1612563798;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JYkA3RrLpslNe4BPJ+qwNAmLtBwJzPONHv5u5sY8rJo=;
+        b=pa62pz5j6fpyq6BNunJWRioIZHzt03EMO+9YMDITawcqTDW5+K96CExRcGZoaI20pUNgHp
+        BegjgG+Zc/KPn3v2NRU8HZwcJvVSEVhJeff9T73VLslq782utfOKlqfaGR66zzegF/RR+o
+        24yO0HWtVr9h6Efdn4Fj5p9bittzl57OMZhH+NxRy51ImzBewC7RkAsXxPuda/6v9vKfvK
+        08wkWmmDeZTMQrnyY6PRslq1pQ89TXdTCv8P7TwdFUoK6Xlh9eYbk3nLPZqNYmxMVaJzud
+        a855pKafYmIxVofnRRrQ8nySQ7oLddCwwUTsnIws/LM+q1sFVGzbb4I5oMAaDg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1612563798;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JYkA3RrLpslNe4BPJ+qwNAmLtBwJzPONHv5u5sY8rJo=;
+        b=ia/I81znDMIupeN3U68VCQP8ZCE1PviKLTuK5n8y7MyuNaRFcYYTUgPcyAmBfVS980JGnc
+        K7WB5FKOT2abohCQ==
+To:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, frederic@kernel.org,
+        juri.lelli@redhat.com, abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
+Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping CPUs
+In-Reply-To: <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
+References: <20200625223443.2684-1-nitesh@redhat.com> <20200625223443.2684-2-nitesh@redhat.com> <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com> <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de> <20210128165903.GB38339@fuller.cnet> <87h7n0de5a.fsf@nanos.tec.linutronix.de> <20210204181546.GA30113@fuller.cnet> <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com> <20210204190647.GA32868@fuller.cnet> <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
+Date:   Fri, 05 Feb 2021 23:23:18 +0100
+Message-ID: <87y2g26tnt.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20210205194541.GA191443@bjorn-Precision-5520> <c216efcc-6c81-8a7e-a823-1ddb62ebddb7@amd.com>
- <CAKMK7uEKs=g817+ahvsQxv1qVx8yTWC3qZyu8T2ojd82yv+ayg@mail.gmail.com> <9d0929f1-c7c7-5832-8c9c-3c52084bd56a@amd.com>
-In-Reply-To: <9d0929f1-c7c7-5832-8c9c-3c52084bd56a@amd.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Fri, 5 Feb 2021 23:15:25 +0100
-Message-ID: <CAKMK7uF4mO91XO-9m-bAgE3wGu1WJV48hPTPWK+VCNwjfeeczg@mail.gmail.com>
-Subject: Re: Avoid MMIO write access after hot unplug [WAS - Re: Question
- about supporting AMD eGPU hot plug case]
-To:     Andrey Grodzovsky <Andrey.Grodzovsky@amd.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "s.miroshnichenko@yadro.com" <s.miroshnichenko@yadro.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Antonovitch, Anatoli" <Anatoli.Antonovitch@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 5, 2021 at 10:24 PM Andrey Grodzovsky
-<Andrey.Grodzovsky@amd.com> wrote:
+On Thu, Feb 04 2021 at 14:17, Nitesh Narayan Lal wrote:
+> On 2/4/21 2:06 PM, Marcelo Tosatti wrote:
+>>>> How about adding a new flag for isolcpus instead?
+>>>>
+>>> Do you mean a flag based on which we can switch the affinity mask to
+>>> housekeeping for all the devices at the time of IRQ distribution?
+>> Yes a new flag for isolcpus. HK_FLAG_IRQ_SPREAD or some better name.
 >
->
->
-> On 2/5/21 3:49 PM, Daniel Vetter wrote:
-> > On Fri, Feb 5, 2021 at 9:42 PM Andrey Grodzovsky
-> > <Andrey.Grodzovsky@amd.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2/5/21 2:45 PM, Bjorn Helgaas wrote:
-> >>> On Fri, Feb 05, 2021 at 11:08:45AM -0500, Andrey Grodzovsky wrote:
-> >>>> On 2/5/21 10:38 AM, Bjorn Helgaas wrote:
-> >>>>> On Thu, Feb 04, 2021 at 11:03:10AM -0500, Andrey Grodzovsky wrote:
-> >>>>>> + linux-pci mailing list and a bit of extra details bellow.
-> >>>>>>
-> >>>>>> On 2/2/21 12:51 PM, Andrey Grodzovsky wrote:
-> >>>>>>> Bjorn, Sergey I would also like to use this opportunity to ask yo=
-u a
-> >>>>>>> question on a related topic - Hot unplug.
-> >>>>>>> I've been working for a while on this (see latest patchset set he=
-re
-> >>>>>>> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F=
-%2Flists.freedesktop.org%2Farchives%2Famd-gfx%2F2021-January%2F058595.html&=
-amp;data=3D04%7C01%7CAndrey.Grodzovsky%40amd.com%7C49d227022bff486d9fd008d8=
-ca178ec1%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637481549831907816%7C=
-Unknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiL=
-CJXVCI6Mn0%3D%7C1000&amp;sdata=3DI0ma8E5vOKAOh3vPI0IcGrbZpeFeHtbjuBOkTA5mPS=
-U%3D&amp;reserved=3D0).
-> >>>>>>> My question is specifically regarding this patch
-> >>>>>>> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F=
-%2Flists.freedesktop.org%2Farchives%2Famd-gfx%2F2021-January%2F058606.html&=
-amp;data=3D04%7C01%7CAndrey.Grodzovsky%40amd.com%7C49d227022bff486d9fd008d8=
-ca178ec1%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637481549831917820%7C=
-Unknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiL=
-CJXVCI6Mn0%3D%7C1000&amp;sdata=3DAS4ahmsk%2BY1bRvkqrLWC1KfrE8oNAGhbtKqIOm5A=
-UQo%3D&amp;reserved=3D0
-> >>>>>>> - the idea here is to
-> >>>>>>> prevent any accesses to MMIO address ranges still mapped in kerne=
-l page
-> >>>>>
-> >>>>> I think you're talking about a PCI BAR that is mapped into a user
-> >>>>> process.
-> >>>>
-> >>>> For user mappings, including MMIO mappings, we have a reliable
-> >>>> approach where we invalidate device address space mappings for all
-> >>>> user on first sign of device disconnect and then on all subsequent
-> >>>> page faults from the users accessing those ranges we insert dummy
-> >>>> zero page into their respective page tables. It's actually the
-> >>>> kernel driver, where no page faulting can be used such as for user
-> >>>> space, I have issues on how to protect from keep accessing those
-> >>>> ranges which already are released by PCI subsystem and hence can be
-> >>>> allocated to another hot plugging device.
-> >>>
-> >>> That doesn't sound reliable to me, but maybe I don't understand what
-> >>> you mean by the "first sign of device disconnect."
-> >>
-> >> See functions drm_dev_enter, drm_dev_exit and drm_dev_unplug in drm_de=
-rv.c
-> >>
-> >> At least from a PCI
-> >>> perspective, the first sign of a surprise hot unplug is likely to be
-> >>> an MMIO read that returns ~0.
-> >>
-> >> We set drm_dev_unplug in amdgpu_pci_remove and base all later checks
-> >> with drm_dev_enter/drm_dev_exit on this
-> >>
-> >>>
-> >>> It's true that the hot unplug will likely cause an interrupt and we
-> >>> *may* be able to unbind the driver before the driver or a user progra=
-m
-> >>> performs an MMIO access, but there's certainly no guarantee.  The
-> >>> following sequence is always possible:
-> >>>
-> >>>     - User unplugs PCIe device
-> >>>     - Bridge raises hotplug interrupt
-> >>>     - Driver or userspace issues MMIO read
-> >>>     - Bridge responds with error because link to device is down
-> >>>     - Host bridge receives error, fabricates ~0 data to CPU
-> >>>     - Driver or userspace sees ~0 data from MMIO read
-> >>>     - PCI core fields hotplug interrupt and unbinds driver
-> >>>
-> >>>>> It is impossible to reliably *prevent* MMIO accesses to a BAR on a
-> >>>>> PCI device that has been unplugged.  There is always a window
-> >>>>> where the CPU issues a load/store and the device is unplugged
-> >>>>> before the load/store completes.
-> >>>>>
-> >>>>> If a PCIe device is unplugged, an MMIO read to that BAR will
-> >>>>> complete on PCIe with an uncorrectable fatal error.  When that
-> >>>>> happens there is no valid data from the PCIe device, so the PCIe
-> >>>>> host bridge typically fabricates ~0 data so the CPU load
-> >>>>> instruction can complete.
-> >>>>>
-> >>>>> If you want to reliably recover from unplugs like this, I think
-> >>>>> you have to check for that ~0 data at the important points, i.e.,
-> >>>>> where you make decisions based on the data.  Of course, ~0 may be
-> >>>>> valid data in some cases.  You have to use your knowledge of the
-> >>>>> device programming model to determine whether ~0 is possible, and
-> >>>>> if it is, check in some other way, like another MMIO read, to tell
-> >>>>> whether the read succeeded and returned ~0, or failed because of
-> >>>>> PCIe error and returned ~0.
-> >>>>
-> >>>> Looks like there is a high performance price to pay for this
-> >>>> approach if we protect at every possible junction (e.g. register
-> >>>> read/write accessors ), I tested this by doing 1M read/writes while
-> >>>> using drm_dev_enter/drm_dev_exit which is DRM's RCU based guard
-> >>>> against device unplug and even then we hit performance penalty of
-> >>>> 40%. I assume that with actual MMIO read (e.g.
-> >>>> pci_device_is_present)  will cause a much larger performance
-> >>>> penalty.
-> >>>
-> >>> I guess you have to decide whether you want a fast 90% solution or a
-> >>> somewhat slower 100% reliable solution :)
-> >>>
-> >>> I don't think the checking should be as expensive as you're thinking.
-> >>> You only have to check if:
-> >>>
-> >>>     (1) you're doing an MMIO read (there's no response for MMIO write=
-s,
-> >>>         so you can't tell whether they succeed),
-> >>>     (2) the MMIO read returns ~0,
-> >>>     (3) ~0 might be a valid value for the register you're reading, an=
-d
-> >>>     (4) the read value is important to your control flow.
-> >>>
-> >>> For example, if you do a series of reads and act on the data after al=
-l
-> >>> the reads complete, you only need to worry about whether the *last*
-> >>> read failed.  If that last read is to a register that is known to
-> >>> contain a zero bit, no additional MMIO read is required and the
-> >>> checking is basically free.
-> >>
-> >> I am more worried about MMIO writes to avoid writing to a BAR
-> >> of a newly 'just' plugged in device that got accidentally allocated so=
-me
-> >> part of MMIO addresses range that our 'ghost' device still using.
-> >
-> > We have to shut all these down before the ->remove callback has
-> > finished. At least that's my understanding, before that's all done the
-> > pci subsystem wont reallocate anything.
-> >
-> > The drm_dev_enter/exit is only meant to lock out entire code paths
-> > when we know the device is gone, so that we don't spend an eternity
-> > timing out every access and running lots of code for no point. The
-> > other reason for drm_dev_exit is to guard the sw side from access of
-> > data structures which we tear down (or have to tear down) as part of
-> > ->remove callback, like io remaps, maybe timers/workers driving hw
-> > access and all these things. Only the uapi objects need to stay around
-> > until userspace has closed all the fd/unmapped all the mappings so
-> > that we don't oops all over the place.
-> >
-> > Of course auditing a big driver like amdgpu for this is massive pain,
-> > so where/how you sprinkle drm_dev_enter/exit over it is a bit an
-> > engineering tradeoff.
-> >
-> > Either way (if my understanding is correct), after ->remove is
-> > finished, your driver _must_ guarantee that all access to mmio ranges
-> > has stopped. How you do that is kinda up to you.
-> >
-> > But also like Bjorn pointed out, _while_ the hotunplug is happening,
-> > i.e. at any moment between when transactions start failing up to and
-> > including you driver's ->remove callback having finished, you need to
-> > be able to cope with the bogus all-0xff replies in your code. But
-> > that's kinda an orthogonal requirement: If you've fixed the use-after
-> > free you might still crash on 0xff, and even if you fixed the all the
-> > crashes due to 0xff reads you might still have lots of use-after frees
-> > around.
-> >
-> > Cheers, Daniel
->
-> I see, so, to summarize and confirm I got this correct.
-> We drop the per register access guards as this an overkill and hurts perf=
-ormance.
-> Post .remove callback I verify to guard any IOCTL (already done), block G=
-PU
-> scheduler threads (already done) and disable interrupts (already done), g=
-uard
-> against any direct IB submissions to HW rings (not done yet) and cancel a=
-nd
-> flush any background running threads (timers mostly probably) (not done y=
-et)
-> which might trigger HW programming.
->
-> Correct ?
+> Does sounds like a nice idea to explore, lets see what Thomas thinks about it.
 
-Yeah. Well for clean design I think your ->remove callback should
-guarantee that all background tasks your driver has (timers, workers,
-whatever) are completely stopped. With drm_dev_enter/exit maybe only
-guarding re-arming of these (since if you stop the timer/kthread maybe
-also the data structure is gone entirely with kfree() that contained
-these). But that's also implementation details which might go one way
-or the other.
--Daniel
+I just read back up on that whole discussion and stared into the usage
+sites a bit.
 
->
-> Andrey
->
-> >
-> >> Andrey
-> >>
-> >>>
-> >>>>>>> table by the driver AFTER the device is gone physically and
-> >>>>>>> from the PCI  subsystem, post pci_driver.remove call back
-> >>>>>>> execution. This happens because struct device (and struct
-> >>>>>>> drm_device representing the graphic card) are still present
-> >>>>>>> because some user clients which  are not aware of hot removal
-> >>>>>>> still hold device file open and hence prevents device refcount
-> >>>>>>> to drop to 0. The solution in this patch is brute force where
-> >>>>>>> we try and find any place we access MMIO mapped to kernel
-> >>>>>>> address space and guard against the write access with a
-> >>>>>>> 'device-unplug' flag. This solution is obliviously racy
-> >>>>>>> because a device can be unplugged right after checking the
-> >>>>>>> falg.  I had an idea to instead not release but to keep those
-> >>>>>>> ranges reserved even after pci_driver.remove, until DRM device
-> >>>>>>> is destroyed when it's refcount drops to 0 and by this to
-> >>>>>>> prevent new devices plugged in and allocated some of the same
-> >>>>>>> MMIO address  range to get accidental writes into their
-> >>>>>>> registers.  But, on dri-devel I was advised that this will
-> >>>>>>> upset the PCI subsystem and so best to be avoided but I still
-> >>>>>>> would like another opinion from PCI experts on whether this
-> >>>>>>> approach is indeed not possible ?
-> >
-> >
-> >
+There are a couple of issues here in a larger picture. Looking at it
+from the device side first:
 
+The spreading is done for non-managed queues/interrupts which makes them
+movable by user space. So it could be argued from both sides that the
+damage done by allowing the full online mask or by allowing only the
+house keeping mask can be fixed up by user space.
 
+But that's the trivial part of the problem. The real problem is CPU
+hotplug and offline CPUs and the way how interrupts are set up for their
+initial affinity.
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+As Robin noticed, the change in 1abdfe706a57 ("lib: Restrict
+cpumask_local_spread to houskeeping CPUs") is broken as it can return
+offline CPUs in both the NOHZ_FULL and the !NOHZ_FULL case.
+
+The original code is racy vs. hotplug unless the callers block hotplug.
+
+Let's look at all the callers and what they do with it.
+
+  cptvf_set_irq_affinity()     affinity hint
+  safexcel_request_ring_irq()  affinity hint
+  mv_cesa_probe()              affinity hint
+  bnxt_request_irq()           affinity hint
+  nicvf_set_irq_affinity()     affinity hint
+  cxgb4_set_msix_aff()         affinity hint
+  enic_init_affinity_hint(()   affinity hint
+  iavf_request_traffic_irqs()  affinity hint
+  ionic_alloc_qcq_interrupt()  affinity hint
+  efx_set_interrupt_affinity() affinity hint
+  i40e_vsi_request_irq_msix()  affinity hint
+
+  be_evt_queues_create()       affinity hint, queue affinity
+  hns3_nic_set_cpumask()       affinity hint, queue affinity
+  mlx4_en_init_affinity_hint() affinity hint, queue affinity
+  mlx4_en_create_tx_ring()     affinity hint, queue affinity
+  set_comp_irq_affinity_hint() affinity hint, queue affinity
+  i40e_config_xps_tx_ring()    affinity hint, queue affinity
+  
+  hclge_configure              affinity_hint, queue affinity, workqueue selection
+
+  ixgbe_alloc_q_vector()       node selection, affinity hint, queue affinity
+
+All of them do not care about disabling hotplug. Taking cpu_read_lock()
+inside of that spread function would not solve anything because once the
+lock is dropped the CPU can go away.
+
+There are 3 classes of this:
+
+   1) Does not matter: affinity hint
+
+   2) Might fail to set up the network queue when the selected CPU
+      is offline.
+
+   3) Broken: The hclge driver which uses the cpu to schedule work on
+      that cpu. That's broken, but unfortunately neither the workqueue
+      code nor the timer code will ever notice. The work just wont be
+      scheduled until the CPU comes online again which might be never.
+
+But looking at the above I really have to ask the question what the
+commit in question is actually trying to solve.
+
+AFAICT, nothing at all. Why?
+
+  1) The majority of the drivers sets the hint __after_ requesting the
+     interrupt
+
+  2) Even if set _before_ requesting the interrupt it does not solve
+     anything because it's a hint and the interrupt core code does
+     not care about it at all. It provides the storage and the procfs
+     interface nothing else.
+
+So how does that prevent the interrupt subsystem from assigning an
+interrupt to an isolated CPU? Not at all.
+
+Interrupts which are freshly allocated get the default interrupt
+affinity mask, which is either set on the command line or via /proc. The
+affinity of the interrupt can be changed after it has been populated in
+/proc.
+
+When the interrupt is requested then one of the online CPUs in it's
+affinity mask is chosen.
+
+X86 is special here because this also requires that there are free
+vectors on one of the online CPUs in the mask. If the CPUs in the
+affinity mask run out of vectors then it will grab a vector from some
+other CPU which might be an isolated CPU.
+
+When the affinity mask of the interrupt at the time when it is actually
+requested contains an isolated CPU then nothing prevents the kernel from
+steering it at an isolated CPU. But that has absolutely nothing to do
+with that spreading thingy.
+
+The only difference which this change makes is the fact that the
+affinity hint changes. Nothing else.
+
+This whole blurb about it might break isolation when an interrupt is
+requested is just nonsensical, really.
+
+If the default affinity mask is not correctly set up before devices are
+initialized then it's not going to be cured by changing that spread
+function. If the user space irq balancer ignores the isolation mask and
+blindly moves stuff to the affinity hint, then this monstrosity needs to
+be fixed.
+
+So I'm going to revert this commit because it _IS_ broken _AND_ useless
+and does not solve anything it claims to solve.
+
+Thanks,
+
+        tglx
