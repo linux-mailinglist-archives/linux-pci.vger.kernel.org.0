@@ -2,180 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2B63311919
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 03:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8EF4311849
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 03:34:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231532AbhBFCyr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 21:54:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37358 "EHLO
+        id S230273AbhBFCdY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 21:33:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229889AbhBFCb7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 21:31:59 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F97BC0698CD;
-        Fri,  5 Feb 2021 14:23:20 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1612563798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JYkA3RrLpslNe4BPJ+qwNAmLtBwJzPONHv5u5sY8rJo=;
-        b=pa62pz5j6fpyq6BNunJWRioIZHzt03EMO+9YMDITawcqTDW5+K96CExRcGZoaI20pUNgHp
-        BegjgG+Zc/KPn3v2NRU8HZwcJvVSEVhJeff9T73VLslq782utfOKlqfaGR66zzegF/RR+o
-        24yO0HWtVr9h6Efdn4Fj5p9bittzl57OMZhH+NxRy51ImzBewC7RkAsXxPuda/6v9vKfvK
-        08wkWmmDeZTMQrnyY6PRslq1pQ89TXdTCv8P7TwdFUoK6Xlh9eYbk3nLPZqNYmxMVaJzud
-        a855pKafYmIxVofnRRrQ8nySQ7oLddCwwUTsnIws/LM+q1sFVGzbb4I5oMAaDg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1612563798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JYkA3RrLpslNe4BPJ+qwNAmLtBwJzPONHv5u5sY8rJo=;
-        b=ia/I81znDMIupeN3U68VCQP8ZCE1PviKLTuK5n8y7MyuNaRFcYYTUgPcyAmBfVS980JGnc
-        K7WB5FKOT2abohCQ==
-To:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, frederic@kernel.org,
-        juri.lelli@redhat.com, abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
-Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping CPUs
-In-Reply-To: <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
-References: <20200625223443.2684-1-nitesh@redhat.com> <20200625223443.2684-2-nitesh@redhat.com> <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com> <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de> <20210128165903.GB38339@fuller.cnet> <87h7n0de5a.fsf@nanos.tec.linutronix.de> <20210204181546.GA30113@fuller.cnet> <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com> <20210204190647.GA32868@fuller.cnet> <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
-Date:   Fri, 05 Feb 2021 23:23:18 +0100
-Message-ID: <87y2g26tnt.fsf@nanos.tec.linutronix.de>
+        with ESMTP id S230111AbhBFCcW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 21:32:22 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2208BC08ECAA;
+        Fri,  5 Feb 2021 14:31:34 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id y187so7118099wmd.3;
+        Fri, 05 Feb 2021 14:31:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OGkdoF9M+3UHWUpJpcL+F1t+md4Wtn4nbfKuUxKA+lw=;
+        b=OJXGhu/oA37QRNKNPvFHp9JUOLW7WmM7tR/uGem0it+xgf84yzzyRqdAl6IeGLIVOX
+         0npkDlFfk3DExhzVa1wjH12H6FF6kw76mtNs3aFJ1srnOtJTUecBSo/gJXYt+eM8fUic
+         DblPuV7d8Vwc0J1fbNOjVn/rd0Ykl0nF7Ji3xBBGxLqUU3xjsIV69b5QPFcLW1pIXEpT
+         lSCBG2eT3Myt1czM338XYrM2GxjaR8u7ZIdReXVxByDwdB1wZxOzJYGDqvZV3KtWwo/J
+         hRfoOKoHJx8/Tv5xzSYWjaEeiBLDowf7+tnZ9wtQZDXwQ+ofl9WgDu3LgGTsUqteF8du
+         1gyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OGkdoF9M+3UHWUpJpcL+F1t+md4Wtn4nbfKuUxKA+lw=;
+        b=FUFTPTVWCp4LEZA9cUvQhmYW5+D4omKzLKBmLe3z/aiuiOpgMJV3rZtQ4UThRHVpn9
+         RQ8oY5eCCh7WZtyiojG2SFWxQvkIGW7ETVqJr4XK37d7XsU++CBXtKsG6HgK4tfswcfs
+         mbj4JMEVl50oQ37EB/0s9MKbySxYHQvH968Q8Ppaq0jcG+FSaF3fOTUBZe/8eN/HH1zW
+         OnkWWz0HX92V0qy3r+zV6WM0NQQnF96Zd/n4yolhzlhESH2Di0qfH+p86lKwmzC2Dj81
+         ffRL8DA282e+Fxhmq61wSIrJ87qMZ1jztD3Noh5vlw1RbtrZKYehlf3r+e5VleoefTAG
+         df/A==
+X-Gm-Message-State: AOAM530m2QJPgowJCj1J8xSFGSeEKH4S9UfuiOBvBGP4Fc7BCSapoLxW
+        JDxwPuhBDt7+v1zBLKXS+/V/FzEjy5cwsA==
+X-Google-Smtp-Source: ABdhPJzArfqsgcTZr4tf8P+QkK/7PQxFGptMBSKBaLkutC8oJ0Urk+cXLensYO1LhlWb3BKOt2GFww==
+X-Received: by 2002:a1c:5a54:: with SMTP id o81mr5328234wmb.50.1612564292839;
+        Fri, 05 Feb 2021 14:31:32 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f1f:ad00:11de:46a1:319f:d28? (p200300ea8f1fad0011de46a1319f0d28.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:11de:46a1:319f:d28])
+        by smtp.googlemail.com with ESMTPSA id b18sm13962344wrm.57.2021.02.05.14.31.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Feb 2021 14:31:32 -0800 (PST)
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Casey Leedom <leedom@chelsio.com>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+References: <20210205214621.GA198699@bjorn-Precision-5520>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH resend net-next v2 2/3] PCI/VPD: Change Chelsio T4 quirk
+ to provide access to full virtual address space
+Message-ID: <6d05f72b-9a61-6da8-e70e-d4b3cdf3ca28@gmail.com>
+Date:   Fri, 5 Feb 2021 23:31:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20210205214621.GA198699@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 04 2021 at 14:17, Nitesh Narayan Lal wrote:
-> On 2/4/21 2:06 PM, Marcelo Tosatti wrote:
->>>> How about adding a new flag for isolcpus instead?
->>>>
->>> Do you mean a flag based on which we can switch the affinity mask to
->>> housekeeping for all the devices at the time of IRQ distribution?
->> Yes a new flag for isolcpus. HK_FLAG_IRQ_SPREAD or some better name.
->
-> Does sounds like a nice idea to explore, lets see what Thomas thinks about it.
+On 05.02.2021 22:46, Bjorn Helgaas wrote:
+> [+cc Casey, Rahul]
+> 
+> On Fri, Feb 05, 2021 at 08:29:45PM +0100, Heiner Kallweit wrote:
+>> cxgb4 uses the full VPD address space for accessing its EEPROM (with some
+>> mapping, see t4_eeprom_ptov()). In cudbg_collect_vpd_data() it sets the
+>> VPD len to 32K (PCI_VPD_MAX_SIZE), and then back to 2K (CUDBG_VPD_PF_SIZE).
+>> Having official (structured) and inofficial (unstructured) VPD data
+>> violates the PCI spec, let's set VPD len according to all data that can be
+>> accessed via PCI VPD access, no matter of its structure.
+> 
+> s/inofficial/unofficial/
+> 
+>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> ---
+>>  drivers/pci/vpd.c | 7 +++----
+>>  1 file changed, 3 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+>> index 7915d10f9..06a7954d0 100644
+>> --- a/drivers/pci/vpd.c
+>> +++ b/drivers/pci/vpd.c
+>> @@ -633,9 +633,8 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+>>  	/*
+>>  	 * If this is a T3-based adapter, there's a 1KB VPD area at offset
+>>  	 * 0xc00 which contains the preferred VPD values.  If this is a T4 or
+>> -	 * later based adapter, the special VPD is at offset 0x400 for the
+>> -	 * Physical Functions (the SR-IOV Virtual Functions have no VPD
+>> -	 * Capabilities).  The PCI VPD Access core routines will normally
+>> +	 * later based adapter, provide access to the full virtual EEPROM
+>> +	 * address space. The PCI VPD Access core routines will normally
+>>  	 * compute the size of the VPD by parsing the VPD Data Structure at
+>>  	 * offset 0x000.  This will result in silent failures when attempting
+>>  	 * to accesses these other VPD areas which are beyond those computed
+>> @@ -644,7 +643,7 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+>>  	if (chip == 0x0 && prod >= 0x20)
+>>  		pci_set_vpd_size(dev, 8192);
+>>  	else if (chip >= 0x4 && func < 0x8)
+>> -		pci_set_vpd_size(dev, 2048);
+>> +		pci_set_vpd_size(dev, PCI_VPD_MAX_SIZE);
+> 
+> This code was added by 7dcf688d4c78 ("PCI/cxgb4: Extend T3 PCI quirk
+> to T4+ devices") [1].  Unfortunately that commit doesn't really have
+> the details about what it fixes, other than the silent failures it
+> mentions in the comment.
+> 
+> Some devices hang if we try to read at the wrong VPD address, and this
+> can be done via the sysfs "vpd" file.  Can you expand the commit log
+> with an argument for why it is always safe to set the size to
+> PCI_VPD_MAX_SIZE for these devices?
+> 
 
-I just read back up on that whole discussion and stared into the usage
-sites a bit.
+Seeing t4_eeprom_ptov() there is data at the end of the VPD address
+space, but there may be gaps in between. I don't have test hw,
+therefore it would be good if Chelsio could confirm that accessing
+any address in the VPD address space (32K) is ok. If a VPD address
+isn't backed by EEPROM, it should return 0x00 or 0xff, and not hang
+the device.
 
-There are a couple of issues here in a larger picture. Looking at it
-from the device side first:
+> The fact that cudbg_collect_vpd_data() fiddles around with
+> pci_set_vpd_size() suggests to me that there is *some* problem with
+> reading parts of the VPD.  Otherwise, why would they bother?
+> 
+> 940c9c458866 ("cxgb4: collect vpd info directly from hardware") [2]
+> added the pci_set_vpd_size() usage, but doesn't say why it's needed.
+> Maybe Rahul will remember?
+> 
 
-The spreading is done for non-managed queues/interrupts which makes them
-movable by user space. So it could be argued from both sides that the
-damage done by allowing the full online mask or by allowing only the
-house keeping mask can be fixed up by user space.
+In addition we have cb92148b58a4 ("PCI: Add pci_set_vpd_size() to set
+VPD size"). To me it seems the VPD size quirks and this commit
+try to achieve the same: allow to override the autodetected VPD len
 
-But that's the trivial part of the problem. The real problem is CPU
-hotplug and offline CPUs and the way how interrupts are set up for their
-initial affinity.
+The quirk mechanism is well established, and if possible I'd like
+to get rid of pci_set_vpd_size(). I don't like the idea that the
+PCI core exposes API calls for accessing a proprietary VPD data
+format of one specific vendor (cxgb4 is the only user of
+pci_set_vpd_size()).
 
-As Robin noticed, the change in 1abdfe706a57 ("lib: Restrict
-cpumask_local_spread to houskeeping CPUs") is broken as it can return
-offline CPUs in both the NOHZ_FULL and the !NOHZ_FULL case.
+> Bjorn
+> 
+> [1] https://git.kernel.org/linus/7dcf688d4c78
+> [2] https://git.kernel.org/linus/940c9c458866
+> 
+>>  }
+>>  
+>>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+>> -- 
+>> 2.30.0
+>>
+>>
+>>
 
-The original code is racy vs. hotplug unless the callers block hotplug.
-
-Let's look at all the callers and what they do with it.
-
-  cptvf_set_irq_affinity()     affinity hint
-  safexcel_request_ring_irq()  affinity hint
-  mv_cesa_probe()              affinity hint
-  bnxt_request_irq()           affinity hint
-  nicvf_set_irq_affinity()     affinity hint
-  cxgb4_set_msix_aff()         affinity hint
-  enic_init_affinity_hint(()   affinity hint
-  iavf_request_traffic_irqs()  affinity hint
-  ionic_alloc_qcq_interrupt()  affinity hint
-  efx_set_interrupt_affinity() affinity hint
-  i40e_vsi_request_irq_msix()  affinity hint
-
-  be_evt_queues_create()       affinity hint, queue affinity
-  hns3_nic_set_cpumask()       affinity hint, queue affinity
-  mlx4_en_init_affinity_hint() affinity hint, queue affinity
-  mlx4_en_create_tx_ring()     affinity hint, queue affinity
-  set_comp_irq_affinity_hint() affinity hint, queue affinity
-  i40e_config_xps_tx_ring()    affinity hint, queue affinity
-  
-  hclge_configure              affinity_hint, queue affinity, workqueue selection
-
-  ixgbe_alloc_q_vector()       node selection, affinity hint, queue affinity
-
-All of them do not care about disabling hotplug. Taking cpu_read_lock()
-inside of that spread function would not solve anything because once the
-lock is dropped the CPU can go away.
-
-There are 3 classes of this:
-
-   1) Does not matter: affinity hint
-
-   2) Might fail to set up the network queue when the selected CPU
-      is offline.
-
-   3) Broken: The hclge driver which uses the cpu to schedule work on
-      that cpu. That's broken, but unfortunately neither the workqueue
-      code nor the timer code will ever notice. The work just wont be
-      scheduled until the CPU comes online again which might be never.
-
-But looking at the above I really have to ask the question what the
-commit in question is actually trying to solve.
-
-AFAICT, nothing at all. Why?
-
-  1) The majority of the drivers sets the hint __after_ requesting the
-     interrupt
-
-  2) Even if set _before_ requesting the interrupt it does not solve
-     anything because it's a hint and the interrupt core code does
-     not care about it at all. It provides the storage and the procfs
-     interface nothing else.
-
-So how does that prevent the interrupt subsystem from assigning an
-interrupt to an isolated CPU? Not at all.
-
-Interrupts which are freshly allocated get the default interrupt
-affinity mask, which is either set on the command line or via /proc. The
-affinity of the interrupt can be changed after it has been populated in
-/proc.
-
-When the interrupt is requested then one of the online CPUs in it's
-affinity mask is chosen.
-
-X86 is special here because this also requires that there are free
-vectors on one of the online CPUs in the mask. If the CPUs in the
-affinity mask run out of vectors then it will grab a vector from some
-other CPU which might be an isolated CPU.
-
-When the affinity mask of the interrupt at the time when it is actually
-requested contains an isolated CPU then nothing prevents the kernel from
-steering it at an isolated CPU. But that has absolutely nothing to do
-with that spreading thingy.
-
-The only difference which this change makes is the fact that the
-affinity hint changes. Nothing else.
-
-This whole blurb about it might break isolation when an interrupt is
-requested is just nonsensical, really.
-
-If the default affinity mask is not correctly set up before devices are
-initialized then it's not going to be cured by changing that spread
-function. If the user space irq balancer ignores the isolation mask and
-blindly moves stuff to the affinity hint, then this monstrosity needs to
-be fixed.
-
-So I'm going to revert this commit because it _IS_ broken _AND_ useless
-and does not solve anything it claims to solve.
-
-Thanks,
-
-        tglx
