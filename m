@@ -2,166 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8EF4311849
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 03:34:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3998D3119F4
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 04:27:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbhBFCdY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 21:33:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230111AbhBFCcW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 21:32:22 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2208BC08ECAA;
-        Fri,  5 Feb 2021 14:31:34 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id y187so7118099wmd.3;
-        Fri, 05 Feb 2021 14:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OGkdoF9M+3UHWUpJpcL+F1t+md4Wtn4nbfKuUxKA+lw=;
-        b=OJXGhu/oA37QRNKNPvFHp9JUOLW7WmM7tR/uGem0it+xgf84yzzyRqdAl6IeGLIVOX
-         0npkDlFfk3DExhzVa1wjH12H6FF6kw76mtNs3aFJ1srnOtJTUecBSo/gJXYt+eM8fUic
-         DblPuV7d8Vwc0J1fbNOjVn/rd0Ykl0nF7Ji3xBBGxLqUU3xjsIV69b5QPFcLW1pIXEpT
-         lSCBG2eT3Myt1czM338XYrM2GxjaR8u7ZIdReXVxByDwdB1wZxOzJYGDqvZV3KtWwo/J
-         hRfoOKoHJx8/Tv5xzSYWjaEeiBLDowf7+tnZ9wtQZDXwQ+ofl9WgDu3LgGTsUqteF8du
-         1gyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OGkdoF9M+3UHWUpJpcL+F1t+md4Wtn4nbfKuUxKA+lw=;
-        b=FUFTPTVWCp4LEZA9cUvQhmYW5+D4omKzLKBmLe3z/aiuiOpgMJV3rZtQ4UThRHVpn9
-         RQ8oY5eCCh7WZtyiojG2SFWxQvkIGW7ETVqJr4XK37d7XsU++CBXtKsG6HgK4tfswcfs
-         mbj4JMEVl50oQ37EB/0s9MKbySxYHQvH968Q8Ppaq0jcG+FSaF3fOTUBZe/8eN/HH1zW
-         OnkWWz0HX92V0qy3r+zV6WM0NQQnF96Zd/n4yolhzlhESH2Di0qfH+p86lKwmzC2Dj81
-         ffRL8DA282e+Fxhmq61wSIrJ87qMZ1jztD3Noh5vlw1RbtrZKYehlf3r+e5VleoefTAG
-         df/A==
-X-Gm-Message-State: AOAM530m2QJPgowJCj1J8xSFGSeEKH4S9UfuiOBvBGP4Fc7BCSapoLxW
-        JDxwPuhBDt7+v1zBLKXS+/V/FzEjy5cwsA==
-X-Google-Smtp-Source: ABdhPJzArfqsgcTZr4tf8P+QkK/7PQxFGptMBSKBaLkutC8oJ0Urk+cXLensYO1LhlWb3BKOt2GFww==
-X-Received: by 2002:a1c:5a54:: with SMTP id o81mr5328234wmb.50.1612564292839;
-        Fri, 05 Feb 2021 14:31:32 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f1f:ad00:11de:46a1:319f:d28? (p200300ea8f1fad0011de46a1319f0d28.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:11de:46a1:319f:d28])
-        by smtp.googlemail.com with ESMTPSA id b18sm13962344wrm.57.2021.02.05.14.31.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Feb 2021 14:31:32 -0800 (PST)
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Casey Leedom <leedom@chelsio.com>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-References: <20210205214621.GA198699@bjorn-Precision-5520>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH resend net-next v2 2/3] PCI/VPD: Change Chelsio T4 quirk
- to provide access to full virtual address space
-Message-ID: <6d05f72b-9a61-6da8-e70e-d4b3cdf3ca28@gmail.com>
-Date:   Fri, 5 Feb 2021 23:31:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S232445AbhBFDYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 22:24:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232516AbhBFDV4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Feb 2021 22:21:56 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1197560C3D;
+        Fri,  5 Feb 2021 21:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612562241;
+        bh=ZN48Ca5F36yaf5Drs7x+C/29r4xyz8+M1y9jXHdbi24=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nAY41uOB3KikAGegz2nWmDV69PPAzAYy+ERiEx8Qb53sk+fWwA2JhgIP65ysw1XM6
+         P6Go38C8VoIMQYjqjOm6d5kYhctDXJn4YnRx3d1zH45JSDWN6MchYsgcsS/XK0T4eE
+         uhdPxyKlzZNDDVvQqP+fuy/brUD1J7ADC172BhA9JWSNDjvMab2ouNWAa2WuFAEo7q
+         IN9KmPJyiXSvKCxB9YuQO2QutSwa1w2Sv4ZrespGhDGPz+b+drFIp3cMW7k4XtsdzH
+         2UT7EUqyovINJ+VeSjRlH45K11zEAPjyNGv0NKuQwLx82L41Qm2x2G9n0iU4MxjLi+
+         xez5xCE2ixOaQ==
+Date:   Fri, 5 Feb 2021 15:57:18 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Nirmal Patel <nirmal.patel@intel.com>,
+        Kapil Karkra <kapil.karkra@intel.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 2/2] PCI: vmd: Disable MSI/X remapping when possible
+Message-ID: <20210205215718.GA202474@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20210205214621.GA198699@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210204190906.38515-3-jonathan.derrick@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05.02.2021 22:46, Bjorn Helgaas wrote:
-> [+cc Casey, Rahul]
+On Thu, Feb 04, 2021 at 12:09:06PM -0700, Jon Derrick wrote:
+> VMD will retransmit child device MSI/X using its own MSI/X table and
+> requester-id. This limits the number of MSI/X available to the whole
+> child device domain to the number of VMD MSI/X interrupts.
 > 
-> On Fri, Feb 05, 2021 at 08:29:45PM +0100, Heiner Kallweit wrote:
->> cxgb4 uses the full VPD address space for accessing its EEPROM (with some
->> mapping, see t4_eeprom_ptov()). In cudbg_collect_vpd_data() it sets the
->> VPD len to 32K (PCI_VPD_MAX_SIZE), and then back to 2K (CUDBG_VPD_PF_SIZE).
->> Having official (structured) and inofficial (unstructured) VPD data
->> violates the PCI spec, let's set VPD len according to all data that can be
->> accessed via PCI VPD access, no matter of its structure.
+> Some VMD devices have a mode where this remapping can be disabled,
+> allowing child device interrupts to bypass processing with the VMD MSI/X
+> domain interrupt handler and going straight the child device interrupt
+> handler, allowing for better performance and scaling. The requester-id
+> still gets changed to the VMD endpoint's requester-id, and the interrupt
+> remapping handlers have been updated to properly set IRTE for child
+> device interrupts to the VMD endpoint's context.
 > 
-> s/inofficial/unofficial/
-> 
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/pci/vpd.c | 7 +++----
->>  1 file changed, 3 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
->> index 7915d10f9..06a7954d0 100644
->> --- a/drivers/pci/vpd.c
->> +++ b/drivers/pci/vpd.c
->> @@ -633,9 +633,8 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->>  	/*
->>  	 * If this is a T3-based adapter, there's a 1KB VPD area at offset
->>  	 * 0xc00 which contains the preferred VPD values.  If this is a T4 or
->> -	 * later based adapter, the special VPD is at offset 0x400 for the
->> -	 * Physical Functions (the SR-IOV Virtual Functions have no VPD
->> -	 * Capabilities).  The PCI VPD Access core routines will normally
->> +	 * later based adapter, provide access to the full virtual EEPROM
->> +	 * address space. The PCI VPD Access core routines will normally
->>  	 * compute the size of the VPD by parsing the VPD Data Structure at
->>  	 * offset 0x000.  This will result in silent failures when attempting
->>  	 * to accesses these other VPD areas which are beyond those computed
->> @@ -644,7 +643,7 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->>  	if (chip == 0x0 && prod >= 0x20)
->>  		pci_set_vpd_size(dev, 8192);
->>  	else if (chip >= 0x4 && func < 0x8)
->> -		pci_set_vpd_size(dev, 2048);
->> +		pci_set_vpd_size(dev, PCI_VPD_MAX_SIZE);
-> 
-> This code was added by 7dcf688d4c78 ("PCI/cxgb4: Extend T3 PCI quirk
-> to T4+ devices") [1].  Unfortunately that commit doesn't really have
-> the details about what it fixes, other than the silent failures it
-> mentions in the comment.
-> 
-> Some devices hang if we try to read at the wrong VPD address, and this
-> can be done via the sysfs "vpd" file.  Can you expand the commit log
-> with an argument for why it is always safe to set the size to
-> PCI_VPD_MAX_SIZE for these devices?
-> 
+> Some VMD platforms have existing production BIOS which rely on MSI/X
+> remapping and won't explicitly program the MSI/X remapping bit. This
+> re-enables MSI/X remapping on unload.
 
-Seeing t4_eeprom_ptov() there is data at the end of the VPD address
-space, but there may be gaps in between. I don't have test hw,
-therefore it would be good if Chelsio could confirm that accessing
-any address in the VPD address space (32K) is ok. If a VPD address
-isn't backed by EEPROM, it should return 0x00 or 0xff, and not hang
-the device.
+Trivial comments below.  Would you mind using "MSI-X" instead of
+"MSI/X" so it matches the usage in the PCIe specs?  Several mentions
+above (including subject) and below.
 
-> The fact that cudbg_collect_vpd_data() fiddles around with
-> pci_set_vpd_size() suggests to me that there is *some* problem with
-> reading parts of the VPD.  Otherwise, why would they bother?
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> ---
+>  drivers/pci/controller/vmd.c | 60 ++++++++++++++++++++++++++++--------
+>  1 file changed, 48 insertions(+), 12 deletions(-)
 > 
-> 940c9c458866 ("cxgb4: collect vpd info directly from hardware") [2]
-> added the pci_set_vpd_size() usage, but doesn't say why it's needed.
-> Maybe Rahul will remember?
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 5e80f28f0119..a319ce49645b 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -59,6 +59,13 @@ enum vmd_features {
+>  	 * be used for MSI remapping
+>  	 */
+>  	VMD_FEAT_OFFSET_FIRST_VECTOR		= (1 << 3),
+> +
+> +	/*
+> +	 * Device can bypass remapping MSI/X transactions into its MSI/X table,
+> +	 * avoding the requirement of a VMD MSI domain for child device
+
+s/avoding/avoiding/
+
+> +	 * interrupt handling
+
+Maybe a period at the end of the sentence.
+
+> +	 */
+> +	VMD_FEAT_BYPASS_MSI_REMAP		= (1 << 4),
+>  };
+>  
+>  /*
+> @@ -306,6 +313,15 @@ static struct msi_domain_info vmd_msi_domain_info = {
+>  	.chip		= &vmd_msi_controller,
+>  };
+>  
+> +static void vmd_enable_msi_remapping(struct vmd_dev *vmd, bool enable)
+> +{
+> +	u16 reg;
+> +
+> +	pci_read_config_word(vmd->dev, PCI_REG_VMCONFIG, &reg);
+> +	reg = enable ? (reg & ~0x2) : (reg | 0x2);
+
+Would be nice to have a #define for 0x2.
+
+> +	pci_write_config_word(vmd->dev, PCI_REG_VMCONFIG, reg);
+> +}
+> +
+>  static int vmd_create_irq_domain(struct vmd_dev *vmd)
+>  {
+>  	struct fwnode_handle *fn;
+> @@ -325,6 +341,13 @@ static int vmd_create_irq_domain(struct vmd_dev *vmd)
+>  
+>  static void vmd_remove_irq_domain(struct vmd_dev *vmd)
+>  {
+> +	/*
+> +	 * Some production BIOS won't enable remapping between soft reboots.
+> +	 * Ensure remapping is restored before unloading the driver.
+> +	 */
+> +	if (!vmd->msix_count)
+> +		vmd_enable_msi_remapping(vmd, true);
+> +
+>  	if (vmd->irq_domain) {
+>  		struct fwnode_handle *fn = vmd->irq_domain->fwnode;
+>  
+> @@ -679,15 +702,31 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  
+>  	sd->node = pcibus_to_node(vmd->dev->bus);
+>  
+> -	ret = vmd_create_irq_domain(vmd);
+> -	if (ret)
+> -		return ret;
+> -
+>  	/*
+> -	 * Override the irq domain bus token so the domain can be distinguished
+> -	 * from a regular PCI/MSI domain.
+> +	 * Currently MSI remapping must be enabled in guest passthrough mode
+> +	 * due to some missing interrupt remapping plumbing. This is probably
+> +	 * acceptable because the guest is usually CPU-limited and MSI
+> +	 * remapping doesn't become a performance bottleneck.
+>  	 */
+> -	irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
+> +	if (!(features & VMD_FEAT_BYPASS_MSI_REMAP) || offset[0] || offset[1]) {
+> +		ret = vmd_alloc_irqs(vmd);
+> +		if (ret)
+> +			return ret;
+> +
+> +		vmd_enable_msi_remapping(vmd, true);
+> +
+> +		ret = vmd_create_irq_domain(vmd);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/*
+> +		 * Override the irq domain bus token so the domain can be
+> +		 * distinguished from a regular PCI/MSI domain.
+> +		 */
+> +		irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
+> +	} else {
+> +		vmd_enable_msi_remapping(vmd, false);
+> +	}
+>  
+>  	pci_add_resource(&resources, &vmd->resources[0]);
+>  	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+> @@ -753,10 +792,6 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
+>  		vmd->first_vec = 1;
+>  
+> -	err = vmd_alloc_irqs(vmd);
+> -	if (err)
+> -		return err;
+> -
+>  	spin_lock_init(&vmd->cfg_lock);
+>  	pci_set_drvdata(dev, vmd);
+>  	err = vmd_enable_domain(vmd, features);
+> @@ -825,7 +860,8 @@ static const struct pci_device_id vmd_ids[] = {
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP,},
+>  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_VMD_28C0),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW |
+> -				VMD_FEAT_HAS_BUS_RESTRICTIONS,},
+> +				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+> +				VMD_FEAT_BYPASS_MSI_REMAP,},
+>  	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x467f),
+>  		.driver_data = VMD_FEAT_HAS_MEMBAR_SHADOW_VSCAP |
+>  				VMD_FEAT_HAS_BUS_RESTRICTIONS |
+> -- 
+> 2.27.0
 > 
-
-In addition we have cb92148b58a4 ("PCI: Add pci_set_vpd_size() to set
-VPD size"). To me it seems the VPD size quirks and this commit
-try to achieve the same: allow to override the autodetected VPD len
-
-The quirk mechanism is well established, and if possible I'd like
-to get rid of pci_set_vpd_size(). I don't like the idea that the
-PCI core exposes API calls for accessing a proprietary VPD data
-format of one specific vendor (cxgb4 is the only user of
-pci_set_vpd_size()).
-
-> Bjorn
-> 
-> [1] https://git.kernel.org/linus/7dcf688d4c78
-> [2] https://git.kernel.org/linus/940c9c458866
-> 
->>  }
->>  
->>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->> -- 
->> 2.30.0
->>
->>
->>
-
