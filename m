@@ -2,219 +2,251 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA96C310D64
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 16:48:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3D5F310DAB
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 17:13:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231951AbhBEOEr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 09:04:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231723AbhBEOBu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 09:01:50 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BFFAC0613D6;
-        Fri,  5 Feb 2021 06:01:09 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id d16so7742300wro.11;
-        Fri, 05 Feb 2021 06:01:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hJspoQKIWUzdqDPt9UWimHH0DAFk1pHJ8MGdnopELRM=;
-        b=TbgxvQwdyRdJnL6aC/RVtpAN64WPVpCuWqYVibPDl1RzW1bo+BTGeVs2qIO7O4VDKI
-         PVkuDIJ9dx8W7pOY2MYtoKkrH9vdOTkpbSiCSuoWCYBf4zE4goOBgKoiFlVU4n0sniBF
-         73HUmD2oMp2gPootywJ7YJTeAJhBrdMdJTaTlgWn5QH4utkXlJ9BJYXtCkwC7kbf/nv9
-         9+WNvOnquXRoR3wuHQsKEPVLf33XtegEeZ91h/wgVDpkXrkjz2ozOSsz3G69hsMfAOLj
-         CrkadTN5v5LCORn7VJHPSYGD8Cp9gLgGXVf5YJpaeBPEbtKXgw3bJvlUY/9i+1fP6I6b
-         L4Hw==
+        id S232651AbhBEOdX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 09:33:23 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36122 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229813AbhBEObB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 09:31:01 -0500
+Received: from mail-lj1-f197.google.com ([209.85.208.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1l82rh-0001U3-LU
+        for linux-pci@vger.kernel.org; Fri, 05 Feb 2021 15:17:45 +0000
+Received: by mail-lj1-f197.google.com with SMTP id g24so5730129ljj.0
+        for <linux-pci@vger.kernel.org>; Fri, 05 Feb 2021 07:17:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hJspoQKIWUzdqDPt9UWimHH0DAFk1pHJ8MGdnopELRM=;
-        b=cVkQnprIwBSxTr7F6mLercTf5SepRdN7t0d/j9K/GNwVZMUm66tGcFE+tVNCdkigt6
-         UhacaE8PKdDCNWNetGf3rmpkv0QRS+HJk8CA9+jn6OLKyGfW6GBRk65HXGw0GzFXQ7ER
-         q66yCAHQfpk8xroSvcsDZgc7QM80p5QiBcYHpULJUSR4XlmH5/eHDSPRERpYnmLYwuie
-         uzP4PB80mGoOZ5C5FUdauyD5GXEbAMcmVC+Vv26IKDXomgwlm7oYH9ijkFAJba6QInX6
-         Jl6dZc64axJ5IVclArlYNnDaYMhp31PJhPmomF7Fugc+65pnpl7KhQsP+8MjeYbbHq25
-         YetA==
-X-Gm-Message-State: AOAM531HfHXPYJajuXFyJBD25BOyBXCBYRrJ+opWwZcqvP8lhxUfPsTY
-        PY1vos+IFNQrbzajwC9033A=
-X-Google-Smtp-Source: ABdhPJzCGvEVCDOdYAaKYmj7TV7crawJZIXaa4q+THPqLYCe41MbPaQQeoVutg+aTDxp8CgVCb2fHA==
-X-Received: by 2002:a05:6000:12c7:: with SMTP id l7mr5149539wrx.103.1612533668071;
-        Fri, 05 Feb 2021 06:01:08 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f1f:ad00:9118:8653:7e7:879e? (p200300ea8f1fad009118865307e7879e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:9118:8653:7e7:879e])
-        by smtp.googlemail.com with ESMTPSA id d30sm14059811wrc.92.2021.02.05.06.01.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Feb 2021 06:01:07 -0800 (PST)
-Subject: Re: [PATCH net-next 1/4] PCI/VPD: Remove Chelsio T3 quirk
-To:     Raju Rangoju <rajur@chelsio.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        rahul.lakkireddy@chelsio.com
-References: <b07dc99d-7fd0-48c0-3fc4-89cda90ee5d7@gmail.com>
- <a64e550c-b8d2-889e-1f55-019b10060c1b@gmail.com>
- <20210205124236.GA18529@chelsio.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <fd24860f-67b0-e1ef-16e6-889cb08c5567@gmail.com>
-Date:   Fri, 5 Feb 2021 15:01:02 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dcCnqRmAjchBIWgopIMyFLGi9ScvcHWbPb+SJE+igpM=;
+        b=Vl7N8oonbMeOib5DBz1EP/SHaLfpcQCQj6oeXbzcE2Rb66WOXFlSVTp84nR6UGsMla
+         q4IcwnxGnOq3EiIOFDiAWjXbA51R1+Znec8p8Rp0nGZ422OR44ItbQFee5+k9bmZz5lP
+         w6rKlHwWTEarpZacXrcSNdxhIde4qOAQ2V4vUv3KhKfgscdnsrhcpKASacAwP33z0TUi
+         DA09mwtY6gBge2Hc0TGm2m7cdOiFF9jA909Pf1BRQW5cNsu6JwPYDcVWofbrXqvdM9x+
+         nZsoFnfYgpr+sr2uH1vVWGhjywPq5/QcCSgWTfFz5Uknnfm/N1XOLYRO6X23ZZ+/hvGO
+         cpww==
+X-Gm-Message-State: AOAM532QMUCQoUBzkT1iSajnB8VlO8C3uHhlzfyaemZbPDDrDIc9o+YW
+        TPJDiLONyk3RwZAiRM5L8XU+XZNvW5fTOAr0TB2ONtnxQFOpRkxGesEtviXAjPT2651U6K++5yp
+        vhax7DiWNSfLjLRUEgaYA083qluZoA75IvY4HH1+HlNxGsKgXYWy5qA==
+X-Received: by 2002:a05:6512:b1b:: with SMTP id w27mr2804656lfu.10.1612538264929;
+        Fri, 05 Feb 2021 07:17:44 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz5QyAS3LZdIX9zgOlKqJK+3Kk/KaMBVgPAN6AecD1AaQ3iNETAz2J330gd48lhk7j86RlOtJgcLN1IWOOKMQw=
+X-Received: by 2002:a05:6512:b1b:: with SMTP id w27mr2804637lfu.10.1612538264573;
+ Fri, 05 Feb 2021 07:17:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210205124236.GA18529@chelsio.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAAd53p7FfRCgfC5dGL3HyP+rbVtR2VCfMPYBBvJ=-DFCWFeVPA@mail.gmail.com>
+ <20210204232758.GA125392@bjorn-Precision-5520>
+In-Reply-To: <20210204232758.GA125392@bjorn-Precision-5520>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 5 Feb 2021 23:17:32 +0800
+Message-ID: <CAAd53p6VN0ejKHcTRgj8mZ_iApR=KogpVZ-HkvdoZbJ=Yue98g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI/AER: Disable AER interrupt during suspend
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Russell Currey <ruscur@russell.cc>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "open list:PCI ENHANCED ERROR HANDLING (EEH) FOR POWERPC" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05.02.2021 13:42, Raju Rangoju wrote:
-> On Tuesday, February 02/02/21, 2021 at 21:35:55 +0100, Heiner Kallweit wrote:
->> cxgb3 driver doesn't use the PCI core code for VPD access, it has its own
->> implementation. Therefore we don't need a quirk for it in the core code.
->>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> ---
->>  drivers/pci/vpd.c | 13 ++++---------
->>  1 file changed, 4 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
->> index 7915d10f9..db86fe226 100644
->> --- a/drivers/pci/vpd.c
->> +++ b/drivers/pci/vpd.c
->> @@ -628,22 +628,17 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->>  {
->>  	int chip = (dev->device & 0xf000) >> 12;
->>  	int func = (dev->device & 0x0f00) >>  8;
->> -	int prod = (dev->device & 0x00ff) >>  0;
->>  
->>  	/*
->> -	 * If this is a T3-based adapter, there's a 1KB VPD area at offset
->> -	 * 0xc00 which contains the preferred VPD values.  If this is a T4 or
->> -	 * later based adapter, the special VPD is at offset 0x400 for the
->> -	 * Physical Functions (the SR-IOV Virtual Functions have no VPD
->> -	 * Capabilities).  The PCI VPD Access core routines will normally
->> +	 * If this is a T4 or later based adapter, the special VPD is at offset
->> +	 * 0x400 for the Physical Functions (the SR-IOV Virtual Functions have
->> +	 * no VPD Capabilities). The PCI VPD Access core routines will normally
->>  	 * compute the size of the VPD by parsing the VPD Data Structure at
->>  	 * offset 0x000.  This will result in silent failures when attempting
->>  	 * to accesses these other VPD areas which are beyond those computed
->>  	 * limits.
->>  	 */
->> -	if (chip == 0x0 && prod >= 0x20)
->> -		pci_set_vpd_size(dev, 8192);
-> 
-> The above quirk has been added by the following commit to fix VPD access
-> issue in the guest VM. Wouldn't removing this quirk reopen the original
-> issue?
-> 
+On Fri, Feb 5, 2021 at 7:28 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Alex]
+>
+> On Thu, Jan 28, 2021 at 12:09:37PM +0800, Kai-Heng Feng wrote:
+> > On Thu, Jan 28, 2021 at 4:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Thu, Jan 28, 2021 at 01:31:00AM +0800, Kai-Heng Feng wrote:
+> > > > Commit 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in
+> > > > hint") enables ACS, and some platforms lose its NVMe after resume from
+> > > > firmware:
+> > > > [   50.947816] pcieport 0000:00:1b.0: DPC: containment event, status:0x1f01 source:0x0000
+> > > > [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
+> > > > [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver ID)
+> > > > [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error status/mask=00200000/00010000
+> > > > [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+> > > > [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+> > > > [   50.947843] nvme nvme0: frozen state error detected, reset controller
+> > > >
+> > > > It happens right after ACS gets enabled during resume.
+> > > >
+> > > > To prevent that from happening, disable AER interrupt and enable it on
+> > > > system suspend and resume, respectively.
+> > >
+> > > Lots of questions here.  Maybe this is what we'll end up doing, but I
+> > > am curious about why the error is reported in the first place.
+> > >
+> > > Is this a consequence of the link going down and back up?
+> >
+> > Could be. From the observations, it only happens when firmware suspend
+> > (S3) is used.
+> > Maybe it happens when it's gets powered up, but I don't have equipment
+> > to debug at hardware level.
+> >
+> > If we use non-firmware suspend method, enabling ACS after resume won't
+> > trip AER and DPC.
+> >
+> > > Is it consequence of the device doing a DMA when it shouldn't?
+> >
+> > If it's doing DMA while suspending, the same error should also happen
+> > after NVMe is suspended and before PCIe port suspending.
+> > Furthermore, if non-firmware suspend method is used, there's so such
+> > issue, so less likely to be any DMA operation.
+> >
+> > > Are we doing something in the wrong order during suspend?  Or maybe
+> > > resume, since I assume the error is reported during resume?
+> >
+> > Yes the error is reported during resume. The suspend/resume order
+> > seems fine as non-firmware suspend doesn't have this issue.
+>
+> I really feel like we need a better understanding of what's going on
+> here.  Disabling the AER interrupt is like closing our eyes and
+> pretending that because we don't see it, it didn't happen.
+>
+> An ACS error is triggered by a DMA, right?  I'm assuming an MMIO
+> access from the CPU wouldn't trigger this error.  And it sounds like
+> the error is triggered before we even start running the driver after
+> resume.
+>
+> If we're powering up an NVMe device from D3cold and it DMAs before the
+> driver touches it, something would be seriously broken.  I doubt
+> that's what's happening.  Maybe a device could resume some previously
+> programmed DMA after powering up from D3hot.
 
-Indeed, I looked at cxgb3 and missed the problematic vfio-pci use case.
-So let me remove patch 1 from the series.
+I am not that familiar with PCIe ACS/AER/DPC, so I can't really answer
+questions you raised.
+PCIe spec doesn't say the suspend/resume order is also not helping here.
 
-> ----------------------------------------------------------
-> commit 1c7de2b4ff886a45fbd2f4c3d4627e0f37a9dd77
-> Author: Alexey Kardashevskiy <aik@ozlabs.ru>
-> Date:   Mon Oct 24 18:04:17 2016 +1100
-> 
-> PCI: Enable access to non-standard VPD for Chelsio devices (cxgb3)
-> 
-> There is at least one Chelsio 10Gb card which uses VPD area to store 
-> some non-standard blocks (example below).  However pci_vpd_size() returns the 
-> length of the first block only assuming that there can be only one VPD "End 
-> Tag".
-> 
-> Since 4e1a635552d3 ("vfio/pci: Use kernel VPD access functions"), VFIO
-> blocks access beyond that offset, which prevents the guest "cxgb3" driver
-> from probing the device.  The host system does not have this problem as its
-> driver accesses the config space directly without pci_read_vpd().
-> 
-> Add a quirk to override the VPD size to a bigger value.  The maximum size
-> is taken from EEPROMSIZE in drivers/net/ethernet/chelsio/cxgb3/common.h.
-> We do not read the tag as the cxgb3 driver does as the driver supports
-> writing to EEPROM/VPD and when it writes, it only checks for 8192 bytes
-> boundary.  The quirk is registered for all devices supported by the cxgb3
-> driver.
-> 
-> This adds a quirk to the PCI layer (not to the cxgb3 driver) as the cxgb3
-> driver itself accesses VPD directly and the problem only exists with the
-> vfio-pci driver (when cxgb3 is not running on the host and may not be even
-> loaded) which blocks accesses beyond the first block of VPD data. However
-> vfio-pci itself does not have quirks mechanism so we add it to PCI.
-> 
-> This is the controller:
-> Ethernet controller [0200]: Chelsio Communications Inc T310 10GbE Single
-> Port Adapter [1425:0030]
-> 
-> This is what I parsed from its VPD:
-> ===
->   b'\x82*\x0010 Gigabit Ethernet-SR PCI Express Adapter\x90J\x00EC\x07D76809
->   FN\x0746K'
-> 
->   0000 Large item 42 bytes; name 0x2 Identifier	String
-> 	b'10 Gigabit Ethernet-SR PCI Express Adapter'
->     002d Large item 74	bytes; name 0x10
-> 	#00 [EC] len=7:	b'D76809'
-> 	#0a [FN] len=7:	b'46K7897'
-> 	#14 [PN] len=7:	b'46K7897'
-> 	#1e [MN] len=4:	b'1037'
-> 	#25 [FC] len=4:	b'5769'
-> 	#2c [SN] len=12: b'YL102035603V'
-> 	#3b [NA] len=12: b'00145E992ED1'
->     007a Small item 1 bytes; name 0xf End Tag
->     0c00 Large item 16 bytes; name 0x2 Identifier String
-> 	b'S310E-SR-X      '
->     0c13 Large item 234 bytes; name 0x10
-> 	#00 [PN] len=16: b'TBD             '
-> 	#13 [EC] len=16: b'110107730D2     '
-> 	#26 [SN] len=16: b'97YL102035603V  '
-> 	#39 [NA] len=12: b'00145E992ED1'
-> 	#48 [V0] len=6: b'175000'
-> 	#51 [V1] len=6: b'266666'
-> 	#5a [V2] len=6: b'266666'
-> 	#63 [V3] len=6: b'2000  '
-> 	#6c [V4] len=2: b'1 '
-> 	#71 [V5] len=6: b'c2    '
-> 	#7a [V6] len=6: b'0     '
-> 	#83 [V7] len=2: b'1 '
-> 	#88 [V8] len=2: b'0 '
-> 	#8d [V9] len=2: b'0 '
-> 	#92 [VA] len=2: b'0 '
-> 	#97 [RV] len=80:
-> 	b's\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'...
->    0d00 Large item 252 bytes; name 0x11
-> 	#00 [VC] len=16: b'122310_1222 dp  '
-> 	#13 [VD] len=16: b'610-0001-00 H1\x00\x00'
-> 	#26 [VE] len=16: b'122310_1353 fp  '
-> 	#39 [VF] len=16: b'610-0001-00 H1\x00\x00'
-> 	 #4c [RW] len=173:
-> 	 b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'...
->    0dff Small item 0 bytes; name 0xf End Tag
-> 
->    10f3 Large item 13315 bytes; name 0x62
->    !!! unknown item name 98:
->    b'\xd0\x03\x00@`\x0c\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00'
->    ===
-> 
->    Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
->    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> ---------------------------------------------
-> 
-> 
->> -	else if (chip >= 0x4 && func < 0x8)
->> +	if (chip >= 0x4 && func < 0x8)
->>  		pci_set_vpd_size(dev, 2048);
->>  }
->>  
->> -- 
->> 2.30.0
->>
->>
+However, I really think it's a system firmware issue.
+I've seen some suspend-to-idle platforms with NVMe can reach D3cold,
+those are unaffected.
 
+>
+> Or maybe the error occurred on suspend, like if the device wasn't
+> quiesced or something, but we didn't notice it until resume?  The
+> AER error status bits are RW1CS, which means they can be preserved
+> across hot/warm/cold resets.
+>
+> Can you instrument the code to see whether the AER error status bit is
+> set before enabling ACS?  I'm not sure that merely enabling ACS (I
+> assume you mean pci_std_enable_acs(), where we write PCI_ACS_CTRL)
+> should cause an interrupt for a previously-logged error.  I suspect
+> that could happen when enabling *AER*, but I wouldn't think it would
+> happen when enabling *ACS*.
+
+Diff to print AER status:
+https://bugzilla.kernel.org/show_bug.cgi?id=209149#c11
+
+And dmesg:
+https://bugzilla.kernel.org/show_bug.cgi?id=209149#c12
+
+Looks like the read before suspend and after resume are both fine.
+
+>
+> Does this error happen on multiple machines from different vendors?
+> Wondering if it could be a BIOS issue, e.g., BIOS not cleaning up
+> after it did something to cause an error.
+
+AFAIK, systems from both HP and Dell are affected.
+I was told that the reference platform from Intel is using
+suspend-to-idle, but vendors changed the sleep method to S3 to have
+lower power consumption to pass regulation.
+
+Kai-Heng
+
+>
+> > > If we *do* take the error, why doesn't DPC recovery work?
+> >
+> > It works for the root port, but not for the NVMe drive:
+> > [   50.947816] pcieport 0000:00:1b.0: DPC: containment event,
+> > status:0x1f01 source:0x0000
+> > [   50.947817] pcieport 0000:00:1b.0: DPC: unmasked uncorrectable error detected
+> > [   50.947829] pcieport 0000:00:1b.0: PCIe Bus Error:
+> > severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Receiver
+> > ID)
+> > [   50.947830] pcieport 0000:00:1b.0:   device [8086:06ac] error
+> > status/mask=00200000/00010000
+> > [   50.947831] pcieport 0000:00:1b.0:    [21] ACSViol                (First)
+> > [   50.947841] pcieport 0000:00:1b.0: AER: broadcast error_detected message
+> > [   50.947843] nvme nvme0: frozen state error detected, reset controller
+> > [   50.948400] ACPI: EC: event unblocked
+> > [   50.948432] xhci_hcd 0000:00:14.0: PME# disabled
+> > [   50.948444] xhci_hcd 0000:00:14.0: enabling bus mastering
+> > [   50.949056] pcieport 0000:00:1b.0: PME# disabled
+> > [   50.949068] pcieport 0000:00:1c.0: PME# disabled
+> > [   50.949416] e1000e 0000:00:1f.6: PME# disabled
+> > [   50.949463] e1000e 0000:00:1f.6: enabling bus mastering
+> > [   50.951606] sd 0:0:0:0: [sda] Starting disk
+> > [   50.951610] nvme 0000:01:00.0: can't change power state from D3hot
+> > to D0 (config space inaccessible)
+> > [   50.951730] nvme nvme0: Removing after probe failure status: -19
+> > [   50.952360] nvme nvme0: failed to set APST feature (-19)
+> > [   50.971136] snd_hda_intel 0000:00:1f.3: PME# disabled
+> > [   51.089330] pcieport 0000:00:1b.0: AER: broadcast resume message
+> > [   51.089345] pcieport 0000:00:1b.0: AER: device recovery successful
+> >
+> > But I think why recovery doesn't work for NVMe is for another discussion...
+> >
+> > Kai-Heng
+> >
+> > >
+> > > > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=209149
+> > > > Fixes: 50310600ebda ("iommu/vt-d: Enable PCI ACS for platform opt in hint")
+> > > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > > ---
+> > > >  drivers/pci/pcie/aer.c | 18 ++++++++++++++++++
+> > > >  1 file changed, 18 insertions(+)
+> > > >
+> > > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > > > index 77b0f2c45bc0..0e9a85530ae6 100644
+> > > > --- a/drivers/pci/pcie/aer.c
+> > > > +++ b/drivers/pci/pcie/aer.c
+> > > > @@ -1365,6 +1365,22 @@ static int aer_probe(struct pcie_device *dev)
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > +static int aer_suspend(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc = get_service_data(dev);
+> > > > +
+> > > > +     aer_disable_rootport(rpc);
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +static int aer_resume(struct pcie_device *dev)
+> > > > +{
+> > > > +     struct aer_rpc *rpc = get_service_data(dev);
+> > > > +
+> > > > +     aer_enable_rootport(rpc);
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > >  /**
+> > > >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> > > >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > > > @@ -1437,6 +1453,8 @@ static struct pcie_port_service_driver aerdriver = {
+> > > >       .service        = PCIE_PORT_SERVICE_AER,
+> > > >
+> > > >       .probe          = aer_probe,
+> > > > +     .suspend        = aer_suspend,
+> > > > +     .resume         = aer_resume,
+> > > >       .remove         = aer_remove,
+> > > >  };
+> > > >
+> > > > --
+> > > > 2.29.2
+> > > >
