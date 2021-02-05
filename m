@@ -2,229 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50FFA3108FC
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 11:26:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82173310B4B
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 13:47:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231310AbhBEKYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 05:24:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231228AbhBEKWl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Feb 2021 05:22:41 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8DCF064E55;
-        Fri,  5 Feb 2021 10:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612520519;
-        bh=vTdK7tqpnai+N4Mr1MYvbIdxctZy8n6ZlIZgJ2TTGIs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aw9IX3t8/+kJNRGDZ+eN+AcOe96RKkF8t8qkjRXLa5ntx8zUbf71H7CUidQRP/3oy
-         /jYL5MOzNTkXCNVb+pWxV8zK/1XWdVgzZi8nk/3ExJgEbVYSOS32dh8UG2wBx57LbT
-         OfJqPh+TzyXNYzzIQJO8xNFIIAvNiGmkVtRk+/nwkolGXcSYv9TH6LThlKK8ci0QPF
-         et1/cuIWO6xPGl6ZAON1zoRCnud1K6EP3sTct9KVU3TGucYouiF7zH/V758kBhQQB7
-         LyqKl1Z8P4+8ePkkWvfs31Oj9jOtCO+JuKcTd7+EAmVmnnXr+rST7vmtWkEsN6rZhM
-         4Y7uHIzJ0CqJQ==
-Received: by pali.im (Postfix)
-        id 41ADC8A2; Fri,  5 Feb 2021 11:21:57 +0100 (CET)
-Date:   Fri, 5 Feb 2021 11:21:57 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
+        id S232238AbhBEMp5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 07:45:57 -0500
+Received: from stargate.chelsio.com ([12.32.117.8]:40605 "EHLO
+        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232194AbhBEMnt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 07:43:49 -0500
+Received: from localhost (kumbhalgarh.blr.asicdesigners.com [10.193.185.255])
+        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id 115CgeqE030066;
+        Fri, 5 Feb 2021 04:42:41 -0800
+Date:   Fri, 5 Feb 2021 18:12:41 +0530
+From:   Raju Rangoju <rajur@chelsio.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH 1/2] PCI: also set up legacy files only after sysfs init
-Message-ID: <20210205102157.n7avchjbzwbfkpdm@pali>
-References: <20210204165831.2703772-2-daniel.vetter@ffwll.ch>
- <20210204215019.GA104698@bjorn-Precision-5520>
- <20210204222407.pkx7wvmcvugdwqdd@pali>
- <CAKMK7uFeZpc4oV2GNRdP_EXmYqacg5o3jPegqqaFZZYqqRutFA@mail.gmail.com>
- <20210205100449.w2vzqozgnolxqh4h@pali>
- <CAKMK7uG9NsEzFfapZa4KF6sw0=CuD6Pyk5=7WhjxgFBut4uJkw@mail.gmail.com>
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        rahul.lakkireddy@chelsio.com
+Subject: Re: [PATCH net-next 1/4] PCI/VPD: Remove Chelsio T3 quirk
+Message-ID: <20210205124236.GA18529@chelsio.com>
+References: <b07dc99d-7fd0-48c0-3fc4-89cda90ee5d7@gmail.com>
+ <a64e550c-b8d2-889e-1f55-019b10060c1b@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKMK7uG9NsEzFfapZa4KF6sw0=CuD6Pyk5=7WhjxgFBut4uJkw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <a64e550c-b8d2-889e-1f55-019b10060c1b@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Friday 05 February 2021 11:16:00 Daniel Vetter wrote:
-> On Fri, Feb 5, 2021 at 11:04 AM Pali Rohár <pali@kernel.org> wrote:
-> >
-> > On Friday 05 February 2021 10:59:50 Daniel Vetter wrote:
-> > > On Thu, Feb 4, 2021 at 11:24 PM Pali Rohár <pali@kernel.org> wrote:
-> > > >
-> > > > On Thursday 04 February 2021 15:50:19 Bjorn Helgaas wrote:
-> > > > > [+cc Oliver, Pali, Krzysztof]
-> > > >
-> > > > Just to note that extending or using sysfs_initialized introduces
-> > > > another race condition into kernel code which results in PCI fatal
-> > > > errors. Details are in email discussion which Bjorn already sent.
-> > >
-> > > Yeah I wondered why this doesn't race.
-> >
-> > It races, but with smaller probability. I have not seen this race
-> > condition on x86. But I was able to reproduce it with native PCIe
-> > drivers on ARM64 (Marvell Armada 3720; pci-aardvark). In mentioned
-> > discussion I wrote when this race condition happen. But I understand
-> > that it is hard to simulate it.
+On Tuesday, February 02/02/21, 2021 at 21:35:55 +0100, Heiner Kallweit wrote:
+> cxgb3 driver doesn't use the PCI core code for VPD access, it has its own
+> implementation. Therefore we don't need a quirk for it in the core code.
 > 
-> btw I looked at your patch, and isn't that just reducing the race window?
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+>  drivers/pci/vpd.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index 7915d10f9..db86fe226 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -628,22 +628,17 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+>  {
+>  	int chip = (dev->device & 0xf000) >> 12;
+>  	int func = (dev->device & 0x0f00) >>  8;
+> -	int prod = (dev->device & 0x00ff) >>  0;
+>  
+>  	/*
+> -	 * If this is a T3-based adapter, there's a 1KB VPD area at offset
+> -	 * 0xc00 which contains the preferred VPD values.  If this is a T4 or
+> -	 * later based adapter, the special VPD is at offset 0x400 for the
+> -	 * Physical Functions (the SR-IOV Virtual Functions have no VPD
+> -	 * Capabilities).  The PCI VPD Access core routines will normally
+> +	 * If this is a T4 or later based adapter, the special VPD is at offset
+> +	 * 0x400 for the Physical Functions (the SR-IOV Virtual Functions have
+> +	 * no VPD Capabilities). The PCI VPD Access core routines will normally
+>  	 * compute the size of the VPD by parsing the VPD Data Structure at
+>  	 * offset 0x000.  This will result in silent failures when attempting
+>  	 * to accesses these other VPD areas which are beyond those computed
+>  	 * limits.
+>  	 */
+> -	if (chip == 0x0 && prod >= 0x20)
+> -		pci_set_vpd_size(dev, 8192);
 
-I probably have not wrote reply to that thread and only to Krzysztof on
-IRC, but my "hack" really does not solve that race condition. And as you
-wrote it only reduced occurrence on tested HW.
+The above quirk has been added by the following commit to fix VPD access
+issue in the guest VM. Wouldn't removing this quirk reopen the original
+issue?
 
-Krzysztof wrote that would look at this issue and try to solve it
-properly. So I have not doing more investigation on that my "hack"
-patch, race conditions are hard to catch and solve...
+----------------------------------------------------------
+commit 1c7de2b4ff886a45fbd2f4c3d4627e0f37a9dd77
+Author: Alexey Kardashevskiy <aik@ozlabs.ru>
+Date:   Mon Oct 24 18:04:17 2016 +1100
 
-> I think we have a very similar problem in drm, where the
-> drm_dev_register() for the overall device (which also registers all
-> drm_connector) can race with the hotplug of an individual connector in
-> drm_connector_register() which is hotplugged at runtime.
-> 
-> I went with a per-connector registered boolean + a lock to make sure
-> that really only one of the two call paths can end up registering the
-> connector. Part of registering connectors is setting up sysfs files,
-> so I think it's exactly the same problem as here.
-> 
-> Cheers, Daniel
-> 
-> >
-> > > but since the history goes back
-> > > to pre-git times I figured it would have been addressed somehow
-> > > already if it indeed does race.
-> > > -Daniel
-> > >
-> > > > > s/also/Also/ in subject
-> > > > >
-> > > > > On Thu, Feb 04, 2021 at 05:58:30PM +0100, Daniel Vetter wrote:
-> > > > > > We are already doing this for all the regular sysfs files on PCI
-> > > > > > devices, but not yet on the legacy io files on the PCI buses. Thus far
-> > > > > > now problem, but in the next patch I want to wire up iomem revoke
-> > > > > > support. That needs the vfs up an running already to make so that
-> > > > > > iomem_get_mapping() works.
-> > > > >
-> > > > > s/now problem/no problem/
-> > > > > s/an running/and running/
-> > > > > s/so that/sure that/ ?
-> > > > >
-> > > > > iomem_get_mapping() doesn't exist; I don't know what that should be.
-> > > > >
-> > > > > > Wire it up exactly like the existing code. Note that
-> > > > > > pci_remove_legacy_files() doesn't need a check since the one for
-> > > > > > pci_bus->legacy_io is sufficient.
-> > > > >
-> > > > > I'm not sure exactly what you mean by "the existing code."  I could
-> > > > > probably figure it out, but it would save time to mention the existing
-> > > > > function here.
-> > > > >
-> > > > > This looks like another instance where we should really apply Oliver's
-> > > > > idea of converting these to attribute_groups [1].
-> > > > >
-> > > > > The cover letter mentions options discussed with Greg in [2], but I
-> > > > > don't think the "sysfs_initialized" hack vs attribute_groups was part
-> > > > > of that discussion.
-> > > > >
-> > > > > It's not absolutely a show-stopper, but it *is* a shame to extend the
-> > > > > sysfs_initialized hack if attribute_groups could do this more cleanly
-> > > > > and help solve more than one issue.
-> > > > >
-> > > > > Bjorn
-> > > > >
-> > > > > [1] https://lore.kernel.org/r/CAOSf1CHss03DBSDO4PmTtMp0tCEu5kScn704ZEwLKGXQzBfqaA@mail.gmail.com
-> > > > > [2] https://lore.kernel.org/dri-devel/CAKMK7uGrdDrbtj0OyzqQc0CGrQwc2F3tFJU9vLfm2jjufAZ5YQ@mail.gmail.com/
-> > > > >
-> > > > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > > > > > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > > > Cc: Kees Cook <keescook@chromium.org>
-> > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > > > Cc: John Hubbard <jhubbard@nvidia.com>
-> > > > > > Cc: Jérôme Glisse <jglisse@redhat.com>
-> > > > > > Cc: Jan Kara <jack@suse.cz>
-> > > > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > Cc: linux-mm@kvack.org
-> > > > > > Cc: linux-arm-kernel@lists.infradead.org
-> > > > > > Cc: linux-samsung-soc@vger.kernel.org
-> > > > > > Cc: linux-media@vger.kernel.org
-> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > Cc: linux-pci@vger.kernel.org
-> > > > > > ---
-> > > > > >  drivers/pci/pci-sysfs.c | 7 +++++++
-> > > > > >  1 file changed, 7 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > > > index fb072f4b3176..0c45b4f7b214 100644
-> > > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > > @@ -927,6 +927,9 @@ void pci_create_legacy_files(struct pci_bus *b)
-> > > > > >  {
-> > > > > >     int error;
-> > > > > >
-> > > > > > +   if (!sysfs_initialized)
-> > > > > > +           return;
-> > > > > > +
-> > > > > >     b->legacy_io = kcalloc(2, sizeof(struct bin_attribute),
-> > > > > >                            GFP_ATOMIC);
-> > > > > >     if (!b->legacy_io)
-> > > > > > @@ -1448,6 +1451,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
-> > > > > >  static int __init pci_sysfs_init(void)
-> > > > > >  {
-> > > > > >     struct pci_dev *pdev = NULL;
-> > > > > > +   struct pci_bus *pbus = NULL;
-> > > > > >     int retval;
-> > > > > >
-> > > > > >     sysfs_initialized = 1;
-> > > > > > @@ -1459,6 +1463,9 @@ static int __init pci_sysfs_init(void)
-> > > > > >             }
-> > > > > >     }
-> > > > > >
-> > > > > > +   while ((pbus = pci_find_next_bus(pbus)))
-> > > > > > +           pci_create_legacy_files(pbus);
-> > > > > > +
-> > > > > >     return 0;
-> > > > > >  }
-> > > > > >  late_initcall(pci_sysfs_init);
-> > > > > > --
-> > > > > > 2.30.0
-> > > > > >
-> > > > > >
-> > > > > > _______________________________________________
-> > > > > > linux-arm-kernel mailing list
-> > > > > > linux-arm-kernel@lists.infradead.org
-> > > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > >
-> > >
-> > >
-> > > --
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
-> 
-> 
-> 
+PCI: Enable access to non-standard VPD for Chelsio devices (cxgb3)
+
+There is at least one Chelsio 10Gb card which uses VPD area to store 
+some non-standard blocks (example below).  However pci_vpd_size() returns the 
+length of the first block only assuming that there can be only one VPD "End 
+Tag".
+
+Since 4e1a635552d3 ("vfio/pci: Use kernel VPD access functions"), VFIO
+blocks access beyond that offset, which prevents the guest "cxgb3" driver
+from probing the device.  The host system does not have this problem as its
+driver accesses the config space directly without pci_read_vpd().
+
+Add a quirk to override the VPD size to a bigger value.  The maximum size
+is taken from EEPROMSIZE in drivers/net/ethernet/chelsio/cxgb3/common.h.
+We do not read the tag as the cxgb3 driver does as the driver supports
+writing to EEPROM/VPD and when it writes, it only checks for 8192 bytes
+boundary.  The quirk is registered for all devices supported by the cxgb3
+driver.
+
+This adds a quirk to the PCI layer (not to the cxgb3 driver) as the cxgb3
+driver itself accesses VPD directly and the problem only exists with the
+vfio-pci driver (when cxgb3 is not running on the host and may not be even
+loaded) which blocks accesses beyond the first block of VPD data. However
+vfio-pci itself does not have quirks mechanism so we add it to PCI.
+
+This is the controller:
+Ethernet controller [0200]: Chelsio Communications Inc T310 10GbE Single
+Port Adapter [1425:0030]
+
+This is what I parsed from its VPD:
+===
+  b'\x82*\x0010 Gigabit Ethernet-SR PCI Express Adapter\x90J\x00EC\x07D76809
+  FN\x0746K'
+
+  0000 Large item 42 bytes; name 0x2 Identifier	String
+	b'10 Gigabit Ethernet-SR PCI Express Adapter'
+    002d Large item 74	bytes; name 0x10
+	#00 [EC] len=7:	b'D76809'
+	#0a [FN] len=7:	b'46K7897'
+	#14 [PN] len=7:	b'46K7897'
+	#1e [MN] len=4:	b'1037'
+	#25 [FC] len=4:	b'5769'
+	#2c [SN] len=12: b'YL102035603V'
+	#3b [NA] len=12: b'00145E992ED1'
+    007a Small item 1 bytes; name 0xf End Tag
+    0c00 Large item 16 bytes; name 0x2 Identifier String
+	b'S310E-SR-X      '
+    0c13 Large item 234 bytes; name 0x10
+	#00 [PN] len=16: b'TBD             '
+	#13 [EC] len=16: b'110107730D2     '
+	#26 [SN] len=16: b'97YL102035603V  '
+	#39 [NA] len=12: b'00145E992ED1'
+	#48 [V0] len=6: b'175000'
+	#51 [V1] len=6: b'266666'
+	#5a [V2] len=6: b'266666'
+	#63 [V3] len=6: b'2000  '
+	#6c [V4] len=2: b'1 '
+	#71 [V5] len=6: b'c2    '
+	#7a [V6] len=6: b'0     '
+	#83 [V7] len=2: b'1 '
+	#88 [V8] len=2: b'0 '
+	#8d [V9] len=2: b'0 '
+	#92 [VA] len=2: b'0 '
+	#97 [RV] len=80:
+	b's\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'...
+   0d00 Large item 252 bytes; name 0x11
+	#00 [VC] len=16: b'122310_1222 dp  '
+	#13 [VD] len=16: b'610-0001-00 H1\x00\x00'
+	#26 [VE] len=16: b'122310_1353 fp  '
+	#39 [VF] len=16: b'610-0001-00 H1\x00\x00'
+	 #4c [RW] len=173:
+	 b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'...
+   0dff Small item 0 bytes; name 0xf End Tag
+
+   10f3 Large item 13315 bytes; name 0x62
+   !!! unknown item name 98:
+   b'\xd0\x03\x00@`\x0c\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+   ===
+
+   Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+   Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+---------------------------------------------
+
+
+> -	else if (chip >= 0x4 && func < 0x8)
+> +	if (chip >= 0x4 && func < 0x8)
+>  		pci_set_vpd_size(dev, 2048);
+>  }
+>  
 > -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> 2.30.0
+> 
+> 
