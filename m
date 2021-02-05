@@ -2,149 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37EBC311606
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 23:55:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F51531154F
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 23:32:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbhBEWsN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 17:48:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42040 "EHLO
+        id S232545AbhBEW2M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 17:28:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230484AbhBENhT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 08:37:19 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5102DC06178A
-        for <linux-pci@vger.kernel.org>; Fri,  5 Feb 2021 05:36:39 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id p15so7675998wrq.8
-        for <linux-pci@vger.kernel.org>; Fri, 05 Feb 2021 05:36:39 -0800 (PST)
+        with ESMTP id S231672AbhBEOVV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 09:21:21 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1125C061797;
+        Fri,  5 Feb 2021 07:59:06 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id y18so9287969edw.13;
+        Fri, 05 Feb 2021 07:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1gQoFS6ud405970AWgVagisJdKuspo0iHcNG3yO+v+Y=;
-        b=ZFx74dwXRN8XJoI8vReT6nG84gTmG6QDsKTETcJ06jTJw70JqS2qOLWzaeIPJLa2+q
-         i3A1Tex+NtYld5e4GVoxTw0izBPXMnjweumu4hA9cypntxtKgmAi+PLJzkGHZ1RqPeVy
-         tW/D5qIVWDn/14kg51lcnIhmcjtyQwf70EOXU=
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pl9PtiuMxl0Wa0UufjsEq2pee41iNKdi+j7uGSkuBlY=;
+        b=ifXVpwXtvtBs/eY+e1RftosFX11LP0QgXLOAecM6RjNtp1MBBYfe6a8sGTnuqdGieD
+         juOScMbSeZLQXpxrGmerKmCHw5Yxz5R463SwpcFnLdBUYk/Dbp2BBV+UqipuOVIWEjmc
+         ex7dVgjYVCXS+My4kk1vGAhNGKmVJo2AqiFnskJRz7f0CPTKZ4Ryo3HUhsWI6gfrKcZk
+         u83byyBo+QfqQdX9gcFSpExUFWWVBSX1qGmDUDfIfttdqTFRuuyumX8SPP2Bzvj7Mlmu
+         5oncJjPirvf/h2CpokF8aU6yg1VrtZD/BM/JePBDSBBHowMzYdxH2k949bHlVrLMgrbw
+         URGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1gQoFS6ud405970AWgVagisJdKuspo0iHcNG3yO+v+Y=;
-        b=ZKvSi/idS2laSk9kgjiknMhfD5R0Q+vhhUhxN4liUkYiBSfQbVSaOPxTGDDEmBQitL
-         a7va5jiHA42hPllNfi3oSTatPIesegEYptKvOr+VjVmMZJsGF/wVg/VWttaFF4eMhvFN
-         t7m+jOOnmvVmNd483tRkbCr3FR1q71GuGA7XvLEy2DINadixvMDRHJ1w58B3NuDAdBzD
-         0wMRlqbzUrJdDbXTXwNuR3AjxihlYKM0AnCp7PBmp9su1eEABeS3ka7mjvIJlOFt4bZS
-         KE6Loa1AKFMrid6LPtW91GhoeQM59bb/Bqejgj35I+JoRbaj2FFFnHoq7KOkmOV71xXe
-         WJLw==
-X-Gm-Message-State: AOAM532u/95irOAOdg5l6uKlESJriyEhmBmeK6lwe9X7c4P4MdVdVw3V
-        7oBeWVVhel4a2hCenNLaoWrfTQ==
-X-Google-Smtp-Source: ABdhPJzWE2gxGEZn4lzZcDo3tutehy5qX/E9j/4aIeZc6b9+p2my5zf6hrvCeUW2K6Drt8e7TSvqBw==
-X-Received: by 2002:a5d:5283:: with SMTP id c3mr4938476wrv.319.1612532197971;
-        Fri, 05 Feb 2021 05:36:37 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id z8sm11944234wrh.83.2021.02.05.05.36.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Feb 2021 05:36:37 -0800 (PST)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: Also set up legacy files only after sysfs init
-Date:   Fri,  5 Feb 2021 14:36:32 +0100
-Message-Id: <20210205133632.2827730-1-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <d958eb8e32d5dd6ffd981b92cd54fe7b3fcebab9>
-References: <d958eb8e32d5dd6ffd981b92cd54fe7b3fcebab9>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pl9PtiuMxl0Wa0UufjsEq2pee41iNKdi+j7uGSkuBlY=;
+        b=eJoh3iYrODUxRZssg+oFB4yCxP7qLvGeOY0GW3TiyGGWVKOzBzk4IvXTevt5FMkMJ0
+         m0KbPUXVX9mMbBcD09lT5Ub55pkMp6Q8AnIP1Xo8t1u5nx/Ay7vvOx1/p1RtnbEH90ld
+         w66Z9fkwyEvfhIWHzNN1vi55Vc57Yn3Yzboj09HW2MJfRbRVdeBHKvKEYDHwMSkR8a2y
+         re+IWJiKIt81ihDQG6Nmr3yE5lNO3pgyHTyKPiYT/qzonoLD1O6OzFH2BvDIBhEQeDDp
+         ++cN4OlFeltouvhuPiVVgC7ybMv/Th6PqM0tBvb7FmhTE8sZ0qjQW4nn3PewaDQIzbaC
+         v2GQ==
+X-Gm-Message-State: AOAM533eSScaLiXrRXQuD5aTvBFjuJPlYlPIHLfpsJWfqVaGjWO0wdIU
+        f0xJqcFNKXc2RPlemhE+Izk+8IFXx16uuA==
+X-Google-Smtp-Source: ABdhPJwCCFXDZDrN4miU79NjOF7WAm1zKAMS0y2CG9OU6uhlmWNyiyQCgzq1BZAYb0iOFvxskCIJxg==
+X-Received: by 2002:adf:ef03:: with SMTP id e3mr5519833wro.98.1612535136318;
+        Fri, 05 Feb 2021 06:25:36 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f1f:ad00:9118:8653:7e7:879e? (p200300ea8f1fad009118865307e7879e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:9118:8653:7e7:879e])
+        by smtp.googlemail.com with ESMTPSA id 36sm13069342wrj.97.2021.02.05.06.25.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Feb 2021 06:25:35 -0800 (PST)
+Subject: [PATCH net-next v2 1/3] cxgb4: remove unused vpd_cap_addr
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <8edfa4ae-1e78-249d-14fb-0e44a2c51864@gmail.com>
+Message-ID: <e3eed002-7a86-1336-4530-c1b6ab5261bd@gmail.com>
+Date:   Fri, 5 Feb 2021 15:25:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8edfa4ae-1e78-249d-14fb-0e44a2c51864@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-We are already doing this for all the regular sysfs files on PCI
-devices, but not yet on the legacy io files on the PCI buses. Thus far
-no problem, but in the next patch I want to wire up iomem revoke
-support. That needs the vfs up and running already to make sure that
-iomem_get_mapping() works.
+Supposedly this is a leftover from T3 driver heritage. cxgb4 uses the
+PCI core VPD access code that handles detection of VPD capabilities.
 
-Wire it up exactly like the existing code in
-pci_create_sysfs_dev_files(). Note that pci_remove_legacy_files()
-doesn't need a check since the one for pci_bus->legacy_io is
-sufficient.
-
-An alternative solution would be to implement a callback in sysfs to
-set up the address space from iomem_get_mapping() when userspace calls
-mmap(). This also works, but Greg didn't really like that just to work
-around an ordering issue when the kernel loads initially.
-
-v2: Improve commit message (Bjorn)
-
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/pci/pci-sysfs.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h      | 1 -
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 2 --
+ 2 files changed, 3 deletions(-)
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index fb072f4b3176..0c45b4f7b214 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -927,6 +927,9 @@ void pci_create_legacy_files(struct pci_bus *b)
- {
- 	int error;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+index 8e681ce72..314f8d806 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4.h
+@@ -414,7 +414,6 @@ struct pf_resources {
+ };
  
-+	if (!sysfs_initialized)
-+		return;
-+
- 	b->legacy_io = kcalloc(2, sizeof(struct bin_attribute),
- 			       GFP_ATOMIC);
- 	if (!b->legacy_io)
-@@ -1448,6 +1451,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
- static int __init pci_sysfs_init(void)
- {
- 	struct pci_dev *pdev = NULL;
-+	struct pci_bus *pbus = NULL;
- 	int retval;
+ struct pci_params {
+-	unsigned int vpd_cap_addr;
+ 	unsigned char speed;
+ 	unsigned char width;
+ };
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+index 9f1965c80..6264bc66a 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+@@ -3201,8 +3201,6 @@ static void cxgb4_mgmt_fill_vf_station_mac_addr(struct adapter *adap)
+ 	int err;
+ 	u8 *na;
  
- 	sysfs_initialized = 1;
-@@ -1459,6 +1463,9 @@ static int __init pci_sysfs_init(void)
- 		}
- 	}
- 
-+	while ((pbus = pci_find_next_bus(pbus)))
-+		pci_create_legacy_files(pbus);
-+
- 	return 0;
- }
- late_initcall(pci_sysfs_init);
+-	adap->params.pci.vpd_cap_addr = pci_find_capability(adap->pdev,
+-							    PCI_CAP_ID_VPD);
+ 	err = t4_get_raw_vpd_params(adap, &adap->params.vpd);
+ 	if (err)
+ 		return;
 -- 
 2.30.0
+
 
