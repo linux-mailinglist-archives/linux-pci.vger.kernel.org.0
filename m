@@ -2,63 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95196310157
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 01:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 068E5310229
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 02:22:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbhBEAIg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Feb 2021 19:08:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231366AbhBEAIg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Feb 2021 19:08:36 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 1CE7A64FA9;
-        Fri,  5 Feb 2021 00:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612483675;
-        bh=jNLmguFD8+tZi/lXe+zyo/f8aUtFwVfL6qWf1YCn6KQ=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=BL/7HOqloNcbK+9l/KAeDZyryyOeXnvzxgs2kz18pQGVsmhTtsfTFdgDTUZmGJ1sl
-         dSvtW+yKyfg1Z/j7N9kAlPbGOhCUlhThHtMo+9jR0avo933pXBeKo/joAdiKezHIKe
-         BhsSzr2lFnr49xKnZrmC1gCv+OFTs5s6pcBJVDitPdhD07eTycc6kCkwCyK9yoIHg3
-         YpBiG3pYmGfpPLgcw3negzJ7zFV1gi8wgd3qq2w4auotFtsn7hHDysM2N/nOIq62eR
-         HNZqha+gBV0Qog7ArW+lOirs2V3XxHQ4ERIxCyS/FBHIN6o/1EXIgZS00iEhNX/pBF
-         eqpgV8Vae1Wvw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 08689609F1;
-        Fri,  5 Feb 2021 00:07:55 +0000 (UTC)
-Subject: Re: [GIT PULL] PCI fixes for v5.11
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210204230058.GA124906@bjorn-Precision-5520>
-References: <20210204230058.GA124906@bjorn-Precision-5520>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210204230058.GA124906@bjorn-Precision-5520>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci-v5.11-fixes-2
-X-PR-Tracked-Commit-Id: 40fb68c7725aee024ed99ad38504f5d25820c6f0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dd86e7fa07a3ec33c92c957ea7b642c4702516a0
-Message-Id: <161248367496.10625.109166622431095088.pr-tracker-bot@kernel.org>
-Date:   Fri, 05 Feb 2021 00:07:54 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Vidya Sagar <vidyas@nvidia.com>
+        id S232635AbhBEBVt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Feb 2021 20:21:49 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12076 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232533AbhBEBVt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Feb 2021 20:21:49 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DWyHx2NfTzMT2x;
+        Fri,  5 Feb 2021 09:19:25 +0800 (CST)
+Received: from [127.0.0.1] (10.40.192.162) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.498.0; Fri, 5 Feb 2021
+ 09:20:59 +0800
+Subject: Re: [PATCH 1/1] PCI/AER: Change to use helper pcie_aer_is_native() in
+ some places
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+References: <1612420127-6447-1-git-send-email-tanxiaofei@huawei.com>
+ <YBxsCPEFe0lxhDMO@rocinante>
+CC:     <helgaas@kernel.org>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <sean.v.kelley@intel.com>, <Jonathan.Cameron@huawei.com>,
+        <refactormyself@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+From:   tanxiaofei <tanxiaofei@huawei.com>
+Message-ID: <064df5a3-3a55-544e-b9d0-314abade1ace@huawei.com>
+Date:   Fri, 5 Feb 2021 09:20:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <YBxsCPEFe0lxhDMO@rocinante>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.40.192.162]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Thu, 4 Feb 2021 17:00:58 -0600:
+Hi Krzysztof,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci-v5.11-fixes-2
+On 2021/2/5 5:50, Krzysztof Wilczyński wrote:
+> Hi Tan,
+>
+> This is very nice!  Thank you for this.
+>
+> [...]
+>>  	if (dev->aer_cap && pci_aer_available() &&
+>> -	    (pcie_ports_native || host->native_aer)) {
+>> +	    pcie_aer_is_native(dev)) {
+>>  		services |= PCIE_PORT_SERVICE_AER;
+> [...]
+>
+> A suggestion.  You could improve this even further, for example:
+>
+>   if (pci_aer_available() && pcie_aer_is_native(dev)) {
+>
+> This is because the pcie_aer_is_native() function performs the
+> dev->aer_cap check internally, so we could rely on it, and avoid
+> checking the same thing twice.
+>
+> What do you think?
+>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dd86e7fa07a3ec33c92c957ea7b642c4702516a0
+Yes, it's better, i will send v2 patch including this.thanks.
 
-Thank you!
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+>
+> Krzysztof
+>
+> .
+>
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
