@@ -2,116 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 719CE3113D8
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 22:48:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C403D311454
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Feb 2021 23:07:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230038AbhBEVrQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 16:47:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232525AbhBEVrE (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Feb 2021 16:47:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 519EC64DFD;
-        Fri,  5 Feb 2021 21:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612561583;
-        bh=2McPkCXon2pKG5PSuW3NFwUtwFl4XnvVTNdISzVq+ec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sblQCqKN89uSvgcZpkK2V3fGqixjtx8dGk6Nx7fmuNBGd5Iz7ydfCGAe4nA3pMuKS
-         o8nkZ65BL+4QLUQI1y9jQ8aNOBa672RMCyxRQBWbhMc6UoJxt53cyD0Swsy63iGghn
-         3KJ5j7bWl19Pf09sxlAv8fx7VmGAh17m5XQMBBogo/ZMFX1JFmFY6EBZXkccZ3rwcb
-         EAgj1AXeTq89xbBMvmpuMb6I3bOFSw5yHPuaxURSDZRy7a+X++gsg3KL15c4bAkRzW
-         qvrFJ+QVDjuNHHgibJuOvUuhOH4DnRo9WQQXQtEMiPbA2w1ZvVVM0zqouSMd0zvKmi
-         bvlU8JwTZzSXw==
-Date:   Fri, 5 Feb 2021 15:46:21 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
+        id S233065AbhBEWDx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 17:03:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232975AbhBEO5z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Feb 2021 09:57:55 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D56C0617A7;
+        Fri,  5 Feb 2021 08:26:50 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id w4so6483225wmi.4;
+        Fri, 05 Feb 2021 08:26:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=qkOMo2ll21Kj5Gw0zJCnssUfVA2sNkOv80MBYCGIhRA=;
+        b=GT3AhtO2+ycO8mxCe30V8GmkrI3L+0F/KIN6Ax0Eagi4Gz127rYwKdDDjpWgR08X9J
+         OorDdRoK0j2R3xAaHYzgkVbd9pad8BYOlWnWxiAXpZ3mdm8S9O0YJKLENZRJoVPQj6KW
+         n8IFVXOjx3xnyRw0Fnb3y6mQn/4mlXp+5olDkRQG7x3XVwJ1k/8KxlPinpLCPWVPMpwJ
+         HKjy2KGng9Apmh81L3FsMGMvvWOFWoH1hMLZcksUZJoRboUb6Iq43XGl1tbkEAScg41n
+         CoIaNNk28NN2lKV14VZrNasJ3aIW9NzVZhmpYzw4Y3YdrXxfHsgtvFb9IsfWPCtoGAu0
+         Qyzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=qkOMo2ll21Kj5Gw0zJCnssUfVA2sNkOv80MBYCGIhRA=;
+        b=I1HhU5lk8felwrvFuqfltFa2sF3j0RU20P1Xelex35fK/zEpDO1e4M6heOLfXnwtC2
+         ehWbTToT+KJanpTWgqjisHglOkwjV48BgFJAhubOxB/OX1BqC0PUZ8jvO3xHjulaeGYJ
+         rO2nSlEEygk7/5ZR0SjSaGcNeUJzfLfYnqZA7UVIkyqNrM5B6H6l8VyfB9/GjmkND4yy
+         qtJi+lp9851CdsK5b8F85hWktDGyQWWjoGrZ44i9xL9r/d+bfGSaKoSNAifPBG5Kk4Vf
+         2FelC1P6Y2uyVWxe5tP67lefX1i9HpWUiFU1u9gxX0NeT8ZZgOx6zpVQw4rc9N2gTWYo
+         k0gg==
+X-Gm-Message-State: AOAM533S/kMhqpys/RTzF17/gX60FSCkzXEQjC78Z3jM0/SrqIIQZ+Jq
+        eZU0I85BypM8+ebNd6q5poUC2ts5Okigyw==
+X-Google-Smtp-Source: ABdhPJwDegFue9QaFRgWm8J+tlU4FED2PpI55GA1+0qctSg7nTtNfSi6UikoGp/H2j4RVqBOb7R24A==
+X-Received: by 2002:a1c:e104:: with SMTP id y4mr3638295wmg.89.1612535090456;
+        Fri, 05 Feb 2021 06:24:50 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f1f:ad00:9118:8653:7e7:879e? (p200300ea8f1fad009118865307e7879e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:9118:8653:7e7:879e])
+        by smtp.googlemail.com with ESMTPSA id h207sm9536401wme.18.2021.02.05.06.24.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Feb 2021 06:24:49 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
         David Miller <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Casey Leedom <leedom@chelsio.com>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Subject: Re: [PATCH resend net-next v2 2/3] PCI/VPD: Change Chelsio T4 quirk
- to provide access to full virtual address space
-Message-ID: <20210205214621.GA198699@bjorn-Precision-5520>
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: [PATCH net-next v2 0/3] cxgb4: improve PCI VPD handling
+Message-ID: <8edfa4ae-1e78-249d-14fb-0e44a2c51864@gmail.com>
+Date:   Fri, 5 Feb 2021 15:24:43 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6bf6319f-acaa-c114-d10b-cb9b7d469968@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Casey, Rahul]
+Working on PCI VPD core code I came across the Chelsio drivers.
+Let's improve the way how cxgb4 handles PCI VPD.
 
-On Fri, Feb 05, 2021 at 08:29:45PM +0100, Heiner Kallweit wrote:
-> cxgb4 uses the full VPD address space for accessing its EEPROM (with some
-> mapping, see t4_eeprom_ptov()). In cudbg_collect_vpd_data() it sets the
-> VPD len to 32K (PCI_VPD_MAX_SIZE), and then back to 2K (CUDBG_VPD_PF_SIZE).
-> Having official (structured) and inofficial (unstructured) VPD data
-> violates the PCI spec, let's set VPD len according to all data that can be
-> accessed via PCI VPD access, no matter of its structure.
+One major goal is to eventually remove pci_set_vpd_size(),
+cxgb4 is the only user. The amount of data exposed via the VPD
+interface is fixed, therefore I see no benefit in providing
+an interface for manipulating the VPD size.
 
-s/inofficial/unofficial/
+This series touches only device-specific quirks in the core code,
+therefore I think it should go via the netdev tree.
 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/pci/vpd.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-> index 7915d10f9..06a7954d0 100644
-> --- a/drivers/pci/vpd.c
-> +++ b/drivers/pci/vpd.c
-> @@ -633,9 +633,8 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->  	/*
->  	 * If this is a T3-based adapter, there's a 1KB VPD area at offset
->  	 * 0xc00 which contains the preferred VPD values.  If this is a T4 or
-> -	 * later based adapter, the special VPD is at offset 0x400 for the
-> -	 * Physical Functions (the SR-IOV Virtual Functions have no VPD
-> -	 * Capabilities).  The PCI VPD Access core routines will normally
-> +	 * later based adapter, provide access to the full virtual EEPROM
-> +	 * address space. The PCI VPD Access core routines will normally
->  	 * compute the size of the VPD by parsing the VPD Data Structure at
->  	 * offset 0x000.  This will result in silent failures when attempting
->  	 * to accesses these other VPD areas which are beyond those computed
-> @@ -644,7 +643,7 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->  	if (chip == 0x0 && prod >= 0x20)
->  		pci_set_vpd_size(dev, 8192);
->  	else if (chip >= 0x4 && func < 0x8)
-> -		pci_set_vpd_size(dev, 2048);
-> +		pci_set_vpd_size(dev, PCI_VPD_MAX_SIZE);
+v2:
+- remove patch 1 from the series
 
-This code was added by 7dcf688d4c78 ("PCI/cxgb4: Extend T3 PCI quirk
-to T4+ devices") [1].  Unfortunately that commit doesn't really have
-the details about what it fixes, other than the silent failures it
-mentions in the comment.
+Heiner Kallweit (3):
+  cxgb4: remove unused vpd_cap_addr
+  PCI/VPD: Change Chelsio T4 quirk to provide access to full virtual
+    address space
+  cxgb4: remove changing VPD len
 
-Some devices hang if we try to read at the wrong VPD address, and this
-can be done via the sysfs "vpd" file.  Can you expand the commit log
-with an argument for why it is always safe to set the size to
-PCI_VPD_MAX_SIZE for these devices?
+ .../net/ethernet/chelsio/cxgb4/cudbg_entity.h |  1 -
+ .../net/ethernet/chelsio/cxgb4/cudbg_lib.c    | 21 ++++---------------
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4.h    |  1 -
+ .../net/ethernet/chelsio/cxgb4/cxgb4_main.c   |  2 --
+ drivers/pci/vpd.c                             |  7 +++----
+ 5 files changed, 7 insertions(+), 25 deletions(-)
 
-The fact that cudbg_collect_vpd_data() fiddles around with
-pci_set_vpd_size() suggests to me that there is *some* problem with
-reading parts of the VPD.  Otherwise, why would they bother?
+-- 
+2.30.0
 
-940c9c458866 ("cxgb4: collect vpd info directly from hardware") [2]
-added the pci_set_vpd_size() usage, but doesn't say why it's needed.
-Maybe Rahul will remember?
-
-Bjorn
-
-[1] https://git.kernel.org/linus/7dcf688d4c78
-[2] https://git.kernel.org/linus/940c9c458866
-
->  }
->  
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
-> -- 
-> 2.30.0
-> 
-> 
-> 
