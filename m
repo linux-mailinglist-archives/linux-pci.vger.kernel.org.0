@@ -2,168 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEEA5311963
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 04:04:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02A3D311A40
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 04:38:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231965AbhBFDD1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 22:03:27 -0500
-Received: from mga03.intel.com ([134.134.136.65]:19971 "EHLO mga03.intel.com"
+        id S229977AbhBFDiJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 22:38:09 -0500
+Received: from mga03.intel.com ([134.134.136.65]:16481 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232072AbhBFCvN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Feb 2021 21:51:13 -0500
-IronPort-SDR: 54Z94SfQGXsURTxz9IvJfzRl33imBsrcL+K4cCrhQYRGLxyWZjgT29tCqjwvafQx9VxAB3fHFS
- 4AEau5BWwz0g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9886"; a="181579425"
+        id S231593AbhBFDfw (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Feb 2021 22:35:52 -0500
+IronPort-SDR: N1Jy17ZFBHkVqHFQGh/jVK2QtKP3auZFC+6urMTW+tg1+GEwZthJ3vlZ9tZgJZCMepjIv6Wli/
+ VFypMY063mTA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9886"; a="181581381"
 X-IronPort-AV: E=Sophos;i="5.81,156,1610438400"; 
-   d="scan'208";a="181579425"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2021 18:50:23 -0800
-IronPort-SDR: ZYEbH79NCcVuUb33cx3dcwdgg7j3x4nPjn2QVCXDsdC/XVOKH784RPFUHYTu+KoyR77KdjlkA4
- qqg5sKQajzxg==
-X-ExtLoop1: 1
+   d="scan'208";a="181581381"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2021 19:35:10 -0800
+IronPort-SDR: 45plgOWjxXoSgKZ9Lpg7N2xYOHrLJi70ic3mz6JaGwYXS/VqsjjaF0RNTPqylM1PCpbcdD7klB
+ 9PpKCz63cI2g==
 X-IronPort-AV: E=Sophos;i="5.81,156,1610438400"; 
-   d="scan'208";a="373801568"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Feb 2021 18:50:23 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Fri, 5 Feb 2021 18:50:22 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Fri, 5 Feb 2021 18:50:22 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2106.002;
- Fri, 5 Feb 2021 18:50:22 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Patel, Nirmal" <nirmal.patel@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "Karkra, Kapil" <kapil.karkra@intel.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: vmd: Disable MSI/X remapping when possible
-Thread-Topic: [PATCH v2 2/2] PCI: vmd: Disable MSI/X remapping when possible
-Thread-Index: AQHW+ylCpE2jdsG6GkKlPiUMLGcsOqpKo4cAgABQ7wA=
-Date:   Sat, 6 Feb 2021 02:50:22 +0000
-Message-ID: <1a91d03da88eb81dff5782686e08eb34ecce7e45.camel@intel.com>
-References: <20210205215718.GA202474@bjorn-Precision-5520>
-In-Reply-To: <20210205215718.GA202474@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3799C4C95BAF7C40BC897FB30EB52955@intel.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="576921846"
+Received: from rgrover1-mobl.amr.corp.intel.com (HELO jderrick-mobl.amr.corp.intel.com) ([10.209.102.94])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2021 19:35:11 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <linux-pci@vger.kernel.org>, <iommu@lists.linux-foundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Nirmal Patel <nirmal.patel@intel.com>,
+        Kapil Karkra <kapil.karkra@intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH v3 0/2] VMD MSI Remapping Bypass
+Date:   Fri,  5 Feb 2021 20:35:00 -0700
+Message-Id: <20210206033502.103964-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIxLTAyLTA1IGF0IDE1OjU3IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
-PiBPbiBUaHUsIEZlYiAwNCwgMjAyMSBhdCAxMjowOTowNlBNIC0wNzAwLCBKb24gRGVycmljayB3
-cm90ZToNCj4gPiBWTUQgd2lsbCByZXRyYW5zbWl0IGNoaWxkIGRldmljZSBNU0kvWCB1c2luZyBp
-dHMgb3duIE1TSS9YIHRhYmxlIGFuZA0KPiA+IHJlcXVlc3Rlci1pZC4gVGhpcyBsaW1pdHMgdGhl
-IG51bWJlciBvZiBNU0kvWCBhdmFpbGFibGUgdG8gdGhlIHdob2xlDQo+ID4gY2hpbGQgZGV2aWNl
-IGRvbWFpbiB0byB0aGUgbnVtYmVyIG9mIFZNRCBNU0kvWCBpbnRlcnJ1cHRzLg0KPiA+IA0KPiA+
-IFNvbWUgVk1EIGRldmljZXMgaGF2ZSBhIG1vZGUgd2hlcmUgdGhpcyByZW1hcHBpbmcgY2FuIGJl
-IGRpc2FibGVkLA0KPiA+IGFsbG93aW5nIGNoaWxkIGRldmljZSBpbnRlcnJ1cHRzIHRvIGJ5cGFz
-cyBwcm9jZXNzaW5nIHdpdGggdGhlIFZNRCBNU0kvWA0KPiA+IGRvbWFpbiBpbnRlcnJ1cHQgaGFu
-ZGxlciBhbmQgZ29pbmcgc3RyYWlnaHQgdGhlIGNoaWxkIGRldmljZSBpbnRlcnJ1cHQNCj4gPiBo
-YW5kbGVyLCBhbGxvd2luZyBmb3IgYmV0dGVyIHBlcmZvcm1hbmNlIGFuZCBzY2FsaW5nLiBUaGUg
-cmVxdWVzdGVyLWlkDQo+ID4gc3RpbGwgZ2V0cyBjaGFuZ2VkIHRvIHRoZSBWTUQgZW5kcG9pbnQn
-cyByZXF1ZXN0ZXItaWQsIGFuZCB0aGUgaW50ZXJydXB0DQo+ID4gcmVtYXBwaW5nIGhhbmRsZXJz
-IGhhdmUgYmVlbiB1cGRhdGVkIHRvIHByb3Blcmx5IHNldCBJUlRFIGZvciBjaGlsZA0KPiA+IGRl
-dmljZSBpbnRlcnJ1cHRzIHRvIHRoZSBWTUQgZW5kcG9pbnQncyBjb250ZXh0Lg0KPiA+IA0KPiA+
-IFNvbWUgVk1EIHBsYXRmb3JtcyBoYXZlIGV4aXN0aW5nIHByb2R1Y3Rpb24gQklPUyB3aGljaCBy
-ZWx5IG9uIE1TSS9YDQo+ID4gcmVtYXBwaW5nIGFuZCB3b24ndCBleHBsaWNpdGx5IHByb2dyYW0g
-dGhlIE1TSS9YIHJlbWFwcGluZyBiaXQuIFRoaXMNCj4gPiByZS1lbmFibGVzIE1TSS9YIHJlbWFw
-cGluZyBvbiB1bmxvYWQuDQo+IA0KPiBUcml2aWFsIGNvbW1lbnRzIGJlbG93LiAgV291bGQgeW91
-IG1pbmQgdXNpbmcgIk1TSS1YIiBpbnN0ZWFkIG9mDQo+ICJNU0kvWCIgc28gaXQgbWF0Y2hlcyB0
-aGUgdXNhZ2UgaW4gdGhlIFBDSWUgc3BlY3M/ICBTZXZlcmFsIG1lbnRpb25zDQo+IGFib3ZlIChp
-bmNsdWRpbmcgc3ViamVjdCkgYW5kIGJlbG93Lg0KVGhhbmtzIEJqb3JuLCB3aWxsIGRvDQoNCj4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tAaW50ZWwu
-Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIHwgNjAgKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0
-OCBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1k
-LmMNCj4gPiBpbmRleCA1ZTgwZjI4ZjAxMTkuLmEzMTljZTQ5NjQ1YiAxMDA2NDQNCj4gPiAtLS0g
-YS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci92bWQuYw0KPiA+IEBAIC01OSw2ICs1OSwxMyBAQCBlbnVtIHZtZF9mZWF0dXJlcyB7
-DQo+ID4gIAkgKiBiZSB1c2VkIGZvciBNU0kgcmVtYXBwaW5nDQo+ID4gIAkgKi8NCj4gPiAgCVZN
-RF9GRUFUX09GRlNFVF9GSVJTVF9WRUNUT1IJCT0gKDEgPDwgMyksDQo+ID4gKw0KPiA+ICsJLyoN
-Cj4gPiArCSAqIERldmljZSBjYW4gYnlwYXNzIHJlbWFwcGluZyBNU0kvWCB0cmFuc2FjdGlvbnMg
-aW50byBpdHMgTVNJL1ggdGFibGUsDQo+ID4gKwkgKiBhdm9kaW5nIHRoZSByZXF1aXJlbWVudCBv
-ZiBhIFZNRCBNU0kgZG9tYWluIGZvciBjaGlsZCBkZXZpY2UNCj4gDQo+IHMvYXZvZGluZy9hdm9p
-ZGluZy8NCj4gDQo+ID4gKwkgKiBpbnRlcnJ1cHQgaGFuZGxpbmcNCj4gDQo+IE1heWJlIGEgcGVy
-aW9kIGF0IHRoZSBlbmQgb2YgdGhlIHNlbnRlbmNlLg0KPiANCj4gPiArCSAqLw0KPiA+ICsJVk1E
-X0ZFQVRfQllQQVNTX01TSV9SRU1BUAkJPSAoMSA8PCA0KSwNCj4gPiAgfTsNCj4gPiAgDQo+ID4g
-IC8qDQo+ID4gQEAgLTMwNiw2ICszMTMsMTUgQEAgc3RhdGljIHN0cnVjdCBtc2lfZG9tYWluX2lu
-Zm8gdm1kX21zaV9kb21haW5faW5mbyA9IHsNCj4gPiAgCS5jaGlwCQk9ICZ2bWRfbXNpX2NvbnRy
-b2xsZXIsDQo+ID4gIH07DQo+ID4gIA0KPiA+ICtzdGF0aWMgdm9pZCB2bWRfZW5hYmxlX21zaV9y
-ZW1hcHBpbmcoc3RydWN0IHZtZF9kZXYgKnZtZCwgYm9vbCBlbmFibGUpDQo+ID4gK3sNCj4gPiAr
-CXUxNiByZWc7DQo+ID4gKw0KPiA+ICsJcGNpX3JlYWRfY29uZmlnX3dvcmQodm1kLT5kZXYsIFBD
-SV9SRUdfVk1DT05GSUcsICZyZWcpOw0KPiA+ICsJcmVnID0gZW5hYmxlID8gKHJlZyAmIH4weDIp
-IDogKHJlZyB8IDB4Mik7DQo+IA0KPiBXb3VsZCBiZSBuaWNlIHRvIGhhdmUgYSAjZGVmaW5lIGZv
-ciAweDIuDQo+IA0KPiA+ICsJcGNpX3dyaXRlX2NvbmZpZ193b3JkKHZtZC0+ZGV2LCBQQ0lfUkVH
-X1ZNQ09ORklHLCByZWcpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW50IHZtZF9jcmVh
-dGVfaXJxX2RvbWFpbihzdHJ1Y3Qgdm1kX2RldiAqdm1kKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3Qg
-Zndub2RlX2hhbmRsZSAqZm47DQo+ID4gQEAgLTMyNSw2ICszNDEsMTMgQEAgc3RhdGljIGludCB2
-bWRfY3JlYXRlX2lycV9kb21haW4oc3RydWN0IHZtZF9kZXYgKnZtZCkNCj4gPiAgDQo+ID4gIHN0
-YXRpYyB2b2lkIHZtZF9yZW1vdmVfaXJxX2RvbWFpbihzdHJ1Y3Qgdm1kX2RldiAqdm1kKQ0KPiA+
-ICB7DQo+ID4gKwkvKg0KPiA+ICsJICogU29tZSBwcm9kdWN0aW9uIEJJT1Mgd29uJ3QgZW5hYmxl
-IHJlbWFwcGluZyBiZXR3ZWVuIHNvZnQgcmVib290cy4NCj4gPiArCSAqIEVuc3VyZSByZW1hcHBp
-bmcgaXMgcmVzdG9yZWQgYmVmb3JlIHVubG9hZGluZyB0aGUgZHJpdmVyLg0KPiA+ICsJICovDQo+
-ID4gKwlpZiAoIXZtZC0+bXNpeF9jb3VudCkNCj4gPiArCQl2bWRfZW5hYmxlX21zaV9yZW1hcHBp
-bmcodm1kLCB0cnVlKTsNCj4gPiArDQo+ID4gIAlpZiAodm1kLT5pcnFfZG9tYWluKSB7DQo+ID4g
-IAkJc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZuID0gdm1kLT5pcnFfZG9tYWluLT5md25vZGU7DQo+
-ID4gIA0KPiA+IEBAIC02NzksMTUgKzcwMiwzMSBAQCBzdGF0aWMgaW50IHZtZF9lbmFibGVfZG9t
-YWluKHN0cnVjdCB2bWRfZGV2ICp2bWQsIHVuc2lnbmVkIGxvbmcgZmVhdHVyZXMpDQo+ID4gIA0K
-PiA+ICAJc2QtPm5vZGUgPSBwY2lidXNfdG9fbm9kZSh2bWQtPmRldi0+YnVzKTsNCj4gPiAgDQo+
-ID4gLQlyZXQgPSB2bWRfY3JlYXRlX2lycV9kb21haW4odm1kKTsNCj4gPiAtCWlmIChyZXQpDQo+
-ID4gLQkJcmV0dXJuIHJldDsNCj4gPiAtDQo+ID4gIAkvKg0KPiA+IC0JICogT3ZlcnJpZGUgdGhl
-IGlycSBkb21haW4gYnVzIHRva2VuIHNvIHRoZSBkb21haW4gY2FuIGJlIGRpc3Rpbmd1aXNoZWQN
-Cj4gPiAtCSAqIGZyb20gYSByZWd1bGFyIFBDSS9NU0kgZG9tYWluLg0KPiA+ICsJICogQ3VycmVu
-dGx5IE1TSSByZW1hcHBpbmcgbXVzdCBiZSBlbmFibGVkIGluIGd1ZXN0IHBhc3N0aHJvdWdoIG1v
-ZGUNCj4gPiArCSAqIGR1ZSB0byBzb21lIG1pc3NpbmcgaW50ZXJydXB0IHJlbWFwcGluZyBwbHVt
-YmluZy4gVGhpcyBpcyBwcm9iYWJseQ0KPiA+ICsJICogYWNjZXB0YWJsZSBiZWNhdXNlIHRoZSBn
-dWVzdCBpcyB1c3VhbGx5IENQVS1saW1pdGVkIGFuZCBNU0kNCj4gPiArCSAqIHJlbWFwcGluZyBk
-b2Vzbid0IGJlY29tZSBhIHBlcmZvcm1hbmNlIGJvdHRsZW5lY2suDQo+ID4gIAkgKi8NCj4gPiAt
-CWlycV9kb21haW5fdXBkYXRlX2J1c190b2tlbih2bWQtPmlycV9kb21haW4sIERPTUFJTl9CVVNf
-Vk1EX01TSSk7DQo+ID4gKwlpZiAoIShmZWF0dXJlcyAmIFZNRF9GRUFUX0JZUEFTU19NU0lfUkVN
-QVApIHx8IG9mZnNldFswXSB8fCBvZmZzZXRbMV0pIHsNCj4gPiArCQlyZXQgPSB2bWRfYWxsb2Nf
-aXJxcyh2bWQpOw0KPiA+ICsJCWlmIChyZXQpDQo+ID4gKwkJCXJldHVybiByZXQ7DQo+ID4gKw0K
-PiA+ICsJCXZtZF9lbmFibGVfbXNpX3JlbWFwcGluZyh2bWQsIHRydWUpOw0KPiA+ICsNCj4gPiAr
-CQlyZXQgPSB2bWRfY3JlYXRlX2lycV9kb21haW4odm1kKTsNCj4gPiArCQlpZiAocmV0KQ0KPiA+
-ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCQkvKg0KPiA+ICsJCSAqIE92ZXJyaWRlIHRo
-ZSBpcnEgZG9tYWluIGJ1cyB0b2tlbiBzbyB0aGUgZG9tYWluIGNhbiBiZQ0KPiA+ICsJCSAqIGRp
-c3Rpbmd1aXNoZWQgZnJvbSBhIHJlZ3VsYXIgUENJL01TSSBkb21haW4uDQo+ID4gKwkJICovDQo+
-ID4gKwkJaXJxX2RvbWFpbl91cGRhdGVfYnVzX3Rva2VuKHZtZC0+aXJxX2RvbWFpbiwgRE9NQUlO
-X0JVU19WTURfTVNJKTsNCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJdm1kX2VuYWJsZV9tc2lfcmVt
-YXBwaW5nKHZtZCwgZmFsc2UpOw0KPiA+ICsJfQ0KPiA+ICANCj4gPiAgCXBjaV9hZGRfcmVzb3Vy
-Y2UoJnJlc291cmNlcywgJnZtZC0+cmVzb3VyY2VzWzBdKTsNCj4gPiAgCXBjaV9hZGRfcmVzb3Vy
-Y2Vfb2Zmc2V0KCZyZXNvdXJjZXMsICZ2bWQtPnJlc291cmNlc1sxXSwgb2Zmc2V0WzBdKTsNCj4g
-PiBAQCAtNzUzLDEwICs3OTIsNiBAQCBzdGF0aWMgaW50IHZtZF9wcm9iZShzdHJ1Y3QgcGNpX2Rl
-diAqZGV2LCBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqaWQpDQo+ID4gIAlpZiAoZmVhdHVy
-ZXMgJiBWTURfRkVBVF9PRkZTRVRfRklSU1RfVkVDVE9SKQ0KPiA+ICAJCXZtZC0+Zmlyc3RfdmVj
-ID0gMTsNCj4gPiAgDQo+ID4gLQllcnIgPSB2bWRfYWxsb2NfaXJxcyh2bWQpOw0KPiA+IC0JaWYg
-KGVycikNCj4gPiAtCQlyZXR1cm4gZXJyOw0KPiA+IC0NCj4gPiAgCXNwaW5fbG9ja19pbml0KCZ2
-bWQtPmNmZ19sb2NrKTsNCj4gPiAgCXBjaV9zZXRfZHJ2ZGF0YShkZXYsIHZtZCk7DQo+ID4gIAll
-cnIgPSB2bWRfZW5hYmxlX2RvbWFpbih2bWQsIGZlYXR1cmVzKTsNCj4gPiBAQCAtODI1LDcgKzg2
-MCw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCB2bWRfaWRzW10gPSB7DQo+
-ID4gIAkJLmRyaXZlcl9kYXRhID0gVk1EX0ZFQVRfSEFTX01FTUJBUl9TSEFET1dfVlNDQVAsfSwN
-Cj4gPiAgCXtQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfSU5URUwsIFBDSV9ERVZJQ0VfSURfSU5U
-RUxfVk1EXzI4QzApLA0KPiA+ICAJCS5kcml2ZXJfZGF0YSA9IFZNRF9GRUFUX0hBU19NRU1CQVJf
-U0hBRE9XIHwNCj4gPiAtCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVTVFJJQ1RJT05TLH0sDQo+ID4g
-KwkJCQlWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUyB8DQo+ID4gKwkJCQlWTURfRkVBVF9C
-WVBBU1NfTVNJX1JFTUFQLH0sDQo+ID4gIAl7UENJX0RFVklDRShQQ0lfVkVORE9SX0lEX0lOVEVM
-LCAweDQ2N2YpLA0KPiA+ICAJCS5kcml2ZXJfZGF0YSA9IFZNRF9GRUFUX0hBU19NRU1CQVJfU0hB
-RE9XX1ZTQ0FQIHwNCj4gPiAgCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVTVFJJQ1RJT05TIHwNCj4g
-PiAtLSANCj4gPiAyLjI3LjANCj4gPiANCg==
+The Intel Volume Management Device acts similar to a PCI-to-PCI bridge in that
+it changes downstream devices' requester-ids to its own. As VMD supports PCIe
+devices, it has its own MSI-X table and transmits child device MSI-X by
+remapping child device MSI-X and handling like a demultiplexer.
+
+Some newer VMD devices (Icelake Server) have an option to bypass the VMD MSI-X
+remapping table. This allows for better performance scaling as the child device
+MSI-X won't be limited by VMD's MSI-X count and IRQ handler.
+
+V2->V3:
+Trivial comment fixes
+Added acks
+
+V1->V2:
+Updated for 5.12-next
+Moved IRQ allocation and remapping enable/disable to a more logical location
+
+V1 patches 1-4 were already merged
+V1, 5/6: https://patchwork.kernel.org/project/linux-pci/patch/20200728194945.14126-6-jonathan.derrick@intel.com/
+V1, 6/6: https://patchwork.kernel.org/project/linux-pci/patch/20200728194945.14126-7-jonathan.derrick@intel.com/
+
+Jon Derrick (2):
+  iommu/vt-d: Use Real PCI DMA device for IRTE
+  PCI: vmd: Disable MSI-X remapping when possible
+
+ drivers/iommu/intel/irq_remapping.c |  3 +-
+ drivers/pci/controller/vmd.c        | 61 +++++++++++++++++++++++------
+ 2 files changed, 51 insertions(+), 13 deletions(-)
+
+-- 
+2.27.0
+
