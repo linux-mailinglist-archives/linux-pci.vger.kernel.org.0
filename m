@@ -2,249 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD6F53119F3
-	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 04:27:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEEA5311963
+	for <lists+linux-pci@lfdr.de>; Sat,  6 Feb 2021 04:04:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbhBFDYr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Feb 2021 22:24:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42942 "EHLO mail.kernel.org"
+        id S231965AbhBFDD1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Feb 2021 22:03:27 -0500
+Received: from mga03.intel.com ([134.134.136.65]:19971 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230334AbhBFDOq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Feb 2021 22:14:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AD1CF64FDB;
-        Fri,  5 Feb 2021 22:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612565826;
-        bh=beTYi/eHaZGvu87n/mYxclpTO5XD4POh4Hsclbr4UsI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=twbwCzTRvZa5kyVY9+M2lhdUy721vEk0ixTed2lJAxOI9h+UlNXkF//3JC6oa1/u2
-         vhYiEitqivPF8BKaLKg8M/i4a7IRQ9hF1v1MAQ2lsubnghd2BmkWTLoT1ewGq7u/ve
-         ct7RrEZvR1SwbyDEohCHVb+590hxuzqoB8Dj2KVKwAWEbWadTDJevYRM519rclCZJs
-         Z1I+DbzYbLO7HdVgMz3gfoET6/cCX05hBXLzcr/jllY/mlqBb+lqpglJ5jrbZK+Fxv
-         /TftQyqKPd6SqLCuG1hucYuJQhfiPI2zRdAz9xTdNW4xWbJeSUNvSn9Fde/maBBHyT
-         /hooeNKz9bJcQ==
-Date:   Fri, 5 Feb 2021 16:57:03 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH mlx5-next v5 1/4] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <20210205225703.GA193188@bjorn-Precision-5520>
+        id S232072AbhBFCvN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Feb 2021 21:51:13 -0500
+IronPort-SDR: 54Z94SfQGXsURTxz9IvJfzRl33imBsrcL+K4cCrhQYRGLxyWZjgT29tCqjwvafQx9VxAB3fHFS
+ 4AEau5BWwz0g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9886"; a="181579425"
+X-IronPort-AV: E=Sophos;i="5.81,156,1610438400"; 
+   d="scan'208";a="181579425"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2021 18:50:23 -0800
+IronPort-SDR: ZYEbH79NCcVuUb33cx3dcwdgg7j3x4nPjn2QVCXDsdC/XVOKH784RPFUHYTu+KoyR77KdjlkA4
+ qqg5sKQajzxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,156,1610438400"; 
+   d="scan'208";a="373801568"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Feb 2021 18:50:23 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 5 Feb 2021 18:50:22 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 5 Feb 2021 18:50:22 -0800
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2106.002;
+ Fri, 5 Feb 2021 18:50:22 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Patel, Nirmal" <nirmal.patel@intel.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "Karkra, Kapil" <kapil.karkra@intel.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] PCI: vmd: Disable MSI/X remapping when possible
+Thread-Topic: [PATCH v2 2/2] PCI: vmd: Disable MSI/X remapping when possible
+Thread-Index: AQHW+ylCpE2jdsG6GkKlPiUMLGcsOqpKo4cAgABQ7wA=
+Date:   Sat, 6 Feb 2021 02:50:22 +0000
+Message-ID: <1a91d03da88eb81dff5782686e08eb34ecce7e45.camel@intel.com>
+References: <20210205215718.GA202474@bjorn-Precision-5520>
+In-Reply-To: <20210205215718.GA202474@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3799C4C95BAF7C40BC897FB30EB52955@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210205173547.GE93433@unreal>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 05, 2021 at 07:35:47PM +0200, Leon Romanovsky wrote:
-> On Thu, Feb 04, 2021 at 03:12:12PM -0600, Bjorn Helgaas wrote:
-> > On Thu, Feb 04, 2021 at 05:50:48PM +0200, Leon Romanovsky wrote:
-> > > On Wed, Feb 03, 2021 at 06:10:39PM -0600, Bjorn Helgaas wrote:
-> > > > On Tue, Feb 02, 2021 at 09:44:29PM +0200, Leon Romanovsky wrote:
-> > > > > On Tue, Feb 02, 2021 at 12:06:09PM -0600, Bjorn Helgaas wrote:
-> > > > > > On Tue, Jan 26, 2021 at 10:57:27AM +0200, Leon Romanovsky wrote:
-> > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > > > > >
-> > > > > > > Extend PCI sysfs interface with a new callback that allows
-> > > > > > > configure the number of MSI-X vectors for specific SR-IO VF.
-> > > > > > > This is needed to optimize the performance of newly bound
-> > > > > > > devices by allocating the number of vectors based on the
-> > > > > > > administrator knowledge of targeted VM.
-> > > > > >
-> > > > > > I'm reading between the lines here, but IIUC the point is that you
-> > > > > > have a PF that supports a finite number of MSI-X vectors for use
-> > > > > > by all the VFs, and this interface is to control the distribution
-> > > > > > of those MSI-X vectors among the VFs.
-> >
-> > > > This commit log should describe how *this* device manages this
-> > > > allocation and how the PF Table Size and the VF Table Sizes are
-> > > > related.  Per PCIe, there is no necessary connection between them.
-> > >
-> > > There is no connection in mlx5 devices either. PF is used as a vehicle
-> > > to access VF that doesn't have driver yet. From "table size" perspective
-> > > they completely independent, because PF already probed by driver and
-> > > it is already too late to change it.
-> > >
-> > > So PF table size is static and can be changed through FW utility only.
-> >
-> > This is where description of the device would be useful.
-> >
-> > The fact that you need "sriov_vf_total_msix" to advertise how many
-> > vectors are available and "sriov_vf_msix_count" to influence how they
-> > are distributed across the VFs suggests that these Table Sizes are not
-> > completely independent.
-> >
-> > Can a VF have a bigger Table Size than the PF does?  Can all the VF
-> > Table Sizes added together be bigger than the PF Table Size?  If VF A
-> > has a larger Table Size, does that mean VF B must have a smaller Table
-> > Size?
-> 
-> VFs are completely independent devices and their table size can be
-> bigger than PF. FW has two pools, one for PF and another for all VFs.
-> In real world scenarios, every VF will have more MSI-X vectors than PF,
-> which will be distributed by orchestration software.
-
-Well, if the sum of all the VF Table Sizes cannot exceed the size of
-the FW pool for VFs, I would say the VFs are not completely
-independent.  Increasing the Table Size of one VF reduces it for other
-VFs.
-
-This is an essential detail because it's the whole reason behind this
-interface, so sketching this out in the commit log will make this much
-easier to understand.
-
-> > Here's the sequence as I understand it:
-> >
-> >   1) PF driver binds to PF
-> >   2) PF driver enables VFs
-> >   3) PF driver creates /sys/.../<PF>/sriov_vf_total_msix
-> >   4) PF driver creates /sys/.../<VFn>/sriov_vf_msix_count for each VF
-> >   5) Management app reads sriov_vf_total_msix, writes sriov_vf_msix_count
-> >   6) VF driver binds to VF
-> >   7) VF reads MSI-X Message Control (Table Size)
-> >
-> > Is it true that "lspci VF" at 4.1 and "lspci VF" at 5.1 may read
-> > different Table Sizes?  That would be a little weird.
-> 
-> Yes, this is the flow. I think differently from you and think this
-> is actual good thing that user writes new msix count and it is shown
-> immediately.
-
-Only weird because per spec Table Size is read-only and in this
-scenario it changes, so it may be surprising, but probably not a huge
-deal.
-
-> > I'm also a little concerned about doing 2 before 3 & 4.  That works
-> > for mlx5 because implements the Table Size adjustment in a way that
-> > works *after* the VFs have been enabled.
-> 
-> It is not related to mlx5, but to the PCI spec that requires us to
-> create all VFs at the same time. Before enabling VFs, they don't
-> exist.
-
-Yes.  I can imagine a PF driver that collects characteristics for the
-desired VFs before enabling them, sort of like we already collect the
-*number* of VFs.  But I think your argument for dynamic changes after
-creation below is pretty compelling.
-
-> > But it seems conceivable that a device could implement vector
-> > distribution in a way that would require the VF Table Sizes to be
-> > fixed *before* enabling VFs.  That would be nice in the sense that the
-> > VFs would be created "fully formed" and the VF Table Size would be
-> > completely read-only as documented.
-> 
-> It is not how SR-IOV is used in real world. Cloud providers create many
-> VFs but don't assign those VFs yet. They do it after customer request
-> VM with specific properties (number of CPUs) which means number of MSI-X
-> vectors in our case.
-> 
-> All this is done when other VFs already in use and we can't destroy and
-> recreate them at that point of time.
-
-Makes sense, thanks for this insight.  The need to change the MSI-X
-Table Size dynamically while other VFs are in use would also be useful
-in the commit log because it really helps motivate this design.
-
-> > > > > > > +What:		/sys/bus/pci/devices/.../vfs_overlay/sriov_vf_total_msix
-> > > > > > > +Date:		January 2021
-> > > > > > > +Contact:	Leon Romanovsky <leonro@nvidia.com>
-> > > > > > > +Description:
-> > > > > > > +		This file is associated with the SR-IOV PFs.
-> > > > > > > +		It returns a total number of possible to configure MSI-X
-> > > > > > > +		vectors on the enabled VFs.
-> > > > > > > +
-> > > > > > > +		The values returned are:
-> > > > > > > +		 * > 0 - this will be total number possible to consume by VFs,
-> > > > > > > +		 * = 0 - feature is not supported
-> > >
-> > > > Not sure the "= 0" description is necessary here.  If the value
-> > > > returned is the number of MSI-X vectors available for assignment to
-> > > > VFs, "0" is a perfectly legitimate value.  It just means there are
-> > > > none.  It doesn't need to be described separately.
-> > >
-> > > I wanted to help users and remove ambiguity. For example, mlx5 drivers
-> > > will always implement proper .set_...() callbacks but for some devices
-> > > without needed FW support, the value will be 0. Instead of misleading
-> > > users with wrong promise that feature supported but doesn't have
-> > > available vectors, I decided to be more clear. For the users, 0 means, don't
-> > > try, it is not working.
-> >
-> > Oh, you mean "feature is not supported by the FIRMWARE on some mlx5
-> > devices"?  I totally missed that; I thought you meant "not supported
-> > by the PF driver."  Why not have the PF driver detect that the
-> > firmware doesn't support the feature and just not expose the sysfs
-> > files at all in that case?
-> 
-> I can do it and will do it, but this behavior will be possible because
-> mlx5 is flexible enough. I imagine that other device won't be so flexible,
-> for example they will decide to "close" this feature because of other
-> SW limitation.
-
-What about something like this?
-
-  This file contains the total number of MSI-X vectors available for
-  assignment to all VFs associated with this PF.  It may be zero if
-  the device doesn't support this functionality.
-
-Side question: How does user-space use this?  This file contains a
-constant, and there's no interface to learn how many vectors are still
-available in the pool, right?
-
-I guess the user just has to manage the values written to
-.../VF<n>/sriov_vf_msix_count so the sum of all of them never exceeds
-sriov_vf_total_msix?  If that user app crashes, I guess it can
-reconstruct this state by reading all the
-.../VF<n>/sriov_vf_msix_count files?
-
-> > > > If we put them in a new "vfs_overlay" directory, it seems like
-> > > > overkill to repeat the "vf" part, but I'm hoping the new files can end
-> > > > up next to these existing files.  In that case, I think it makes sense
-> > > > to include "sriov".  And it probably does make sense to include "vf"
-> > > > as well.
-> > >
-> > > I put everything in folder to group any possible future extensions.
-> > > Those extensions are applicable to SR-IOV VFs only, IMHO they deserve
-> > > separate folder.
-> >
-> > I'm not convinced (yet) that the possibility of future extensions is
-> > enough justification for adding the "vfs_overlay" directory.  It
-> > really complicates the code flow -- if we skipped the new directory,
-> > I'm pretty sure we could make .is_visible() work, which would be a
-> > major simplification.
-> 
-> Unfortunately not, is_visible() is not dynamic and called when device
-> creates sysfs and it doesn't rescan it or refresh them. It means that
-> all files from vfs_overlay folder will exist even driver is removed
-> from PF.
-> 
-> Also sysfs is created before driver is probed.
-
-Ah, both excellent points, that makes this much clearer to me, thank
-you!
-
-> > And there's quite a bit of value in the new files being right next to
-> > the existing sriov_* files.
-> 
-> I have no problem to drop folder, just need clear request, should I.
-
-I think we should drop the folder.  I missed the previous discussion
-though, so if somebody has a good objection to dropping it, let me
-know.
-
-Dropping the folder has the potential advantage that we *could* decide
-to expose these files always, and just have them be non-functional if
-the device doesn't support assignment or the PF driver isn't bound.
-Then I think we could use static sysfs attributes without
-pci_enable_vfs_overlay().
-
-Bjorn
+T24gRnJpLCAyMDIxLTAyLTA1IGF0IDE1OjU3IC0wNjAwLCBCam9ybiBIZWxnYWFzIHdyb3RlOg0K
+PiBPbiBUaHUsIEZlYiAwNCwgMjAyMSBhdCAxMjowOTowNlBNIC0wNzAwLCBKb24gRGVycmljayB3
+cm90ZToNCj4gPiBWTUQgd2lsbCByZXRyYW5zbWl0IGNoaWxkIGRldmljZSBNU0kvWCB1c2luZyBp
+dHMgb3duIE1TSS9YIHRhYmxlIGFuZA0KPiA+IHJlcXVlc3Rlci1pZC4gVGhpcyBsaW1pdHMgdGhl
+IG51bWJlciBvZiBNU0kvWCBhdmFpbGFibGUgdG8gdGhlIHdob2xlDQo+ID4gY2hpbGQgZGV2aWNl
+IGRvbWFpbiB0byB0aGUgbnVtYmVyIG9mIFZNRCBNU0kvWCBpbnRlcnJ1cHRzLg0KPiA+IA0KPiA+
+IFNvbWUgVk1EIGRldmljZXMgaGF2ZSBhIG1vZGUgd2hlcmUgdGhpcyByZW1hcHBpbmcgY2FuIGJl
+IGRpc2FibGVkLA0KPiA+IGFsbG93aW5nIGNoaWxkIGRldmljZSBpbnRlcnJ1cHRzIHRvIGJ5cGFz
+cyBwcm9jZXNzaW5nIHdpdGggdGhlIFZNRCBNU0kvWA0KPiA+IGRvbWFpbiBpbnRlcnJ1cHQgaGFu
+ZGxlciBhbmQgZ29pbmcgc3RyYWlnaHQgdGhlIGNoaWxkIGRldmljZSBpbnRlcnJ1cHQNCj4gPiBo
+YW5kbGVyLCBhbGxvd2luZyBmb3IgYmV0dGVyIHBlcmZvcm1hbmNlIGFuZCBzY2FsaW5nLiBUaGUg
+cmVxdWVzdGVyLWlkDQo+ID4gc3RpbGwgZ2V0cyBjaGFuZ2VkIHRvIHRoZSBWTUQgZW5kcG9pbnQn
+cyByZXF1ZXN0ZXItaWQsIGFuZCB0aGUgaW50ZXJydXB0DQo+ID4gcmVtYXBwaW5nIGhhbmRsZXJz
+IGhhdmUgYmVlbiB1cGRhdGVkIHRvIHByb3Blcmx5IHNldCBJUlRFIGZvciBjaGlsZA0KPiA+IGRl
+dmljZSBpbnRlcnJ1cHRzIHRvIHRoZSBWTUQgZW5kcG9pbnQncyBjb250ZXh0Lg0KPiA+IA0KPiA+
+IFNvbWUgVk1EIHBsYXRmb3JtcyBoYXZlIGV4aXN0aW5nIHByb2R1Y3Rpb24gQklPUyB3aGljaCBy
+ZWx5IG9uIE1TSS9YDQo+ID4gcmVtYXBwaW5nIGFuZCB3b24ndCBleHBsaWNpdGx5IHByb2dyYW0g
+dGhlIE1TSS9YIHJlbWFwcGluZyBiaXQuIFRoaXMNCj4gPiByZS1lbmFibGVzIE1TSS9YIHJlbWFw
+cGluZyBvbiB1bmxvYWQuDQo+IA0KPiBUcml2aWFsIGNvbW1lbnRzIGJlbG93LiAgV291bGQgeW91
+IG1pbmQgdXNpbmcgIk1TSS1YIiBpbnN0ZWFkIG9mDQo+ICJNU0kvWCIgc28gaXQgbWF0Y2hlcyB0
+aGUgdXNhZ2UgaW4gdGhlIFBDSWUgc3BlY3M/ICBTZXZlcmFsIG1lbnRpb25zDQo+IGFib3ZlIChp
+bmNsdWRpbmcgc3ViamVjdCkgYW5kIGJlbG93Lg0KVGhhbmtzIEJqb3JuLCB3aWxsIGRvDQoNCj4g
+DQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uIERlcnJpY2sgPGpvbmF0aGFuLmRlcnJpY2tAaW50ZWwu
+Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jIHwgNjAgKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0
+OCBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9wY2kvY29udHJvbGxlci92bWQuYyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvdm1k
+LmMNCj4gPiBpbmRleCA1ZTgwZjI4ZjAxMTkuLmEzMTljZTQ5NjQ1YiAxMDA2NDQNCj4gPiAtLS0g
+YS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3ZtZC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci92bWQuYw0KPiA+IEBAIC01OSw2ICs1OSwxMyBAQCBlbnVtIHZtZF9mZWF0dXJlcyB7
+DQo+ID4gIAkgKiBiZSB1c2VkIGZvciBNU0kgcmVtYXBwaW5nDQo+ID4gIAkgKi8NCj4gPiAgCVZN
+RF9GRUFUX09GRlNFVF9GSVJTVF9WRUNUT1IJCT0gKDEgPDwgMyksDQo+ID4gKw0KPiA+ICsJLyoN
+Cj4gPiArCSAqIERldmljZSBjYW4gYnlwYXNzIHJlbWFwcGluZyBNU0kvWCB0cmFuc2FjdGlvbnMg
+aW50byBpdHMgTVNJL1ggdGFibGUsDQo+ID4gKwkgKiBhdm9kaW5nIHRoZSByZXF1aXJlbWVudCBv
+ZiBhIFZNRCBNU0kgZG9tYWluIGZvciBjaGlsZCBkZXZpY2UNCj4gDQo+IHMvYXZvZGluZy9hdm9p
+ZGluZy8NCj4gDQo+ID4gKwkgKiBpbnRlcnJ1cHQgaGFuZGxpbmcNCj4gDQo+IE1heWJlIGEgcGVy
+aW9kIGF0IHRoZSBlbmQgb2YgdGhlIHNlbnRlbmNlLg0KPiANCj4gPiArCSAqLw0KPiA+ICsJVk1E
+X0ZFQVRfQllQQVNTX01TSV9SRU1BUAkJPSAoMSA8PCA0KSwNCj4gPiAgfTsNCj4gPiAgDQo+ID4g
+IC8qDQo+ID4gQEAgLTMwNiw2ICszMTMsMTUgQEAgc3RhdGljIHN0cnVjdCBtc2lfZG9tYWluX2lu
+Zm8gdm1kX21zaV9kb21haW5faW5mbyA9IHsNCj4gPiAgCS5jaGlwCQk9ICZ2bWRfbXNpX2NvbnRy
+b2xsZXIsDQo+ID4gIH07DQo+ID4gIA0KPiA+ICtzdGF0aWMgdm9pZCB2bWRfZW5hYmxlX21zaV9y
+ZW1hcHBpbmcoc3RydWN0IHZtZF9kZXYgKnZtZCwgYm9vbCBlbmFibGUpDQo+ID4gK3sNCj4gPiAr
+CXUxNiByZWc7DQo+ID4gKw0KPiA+ICsJcGNpX3JlYWRfY29uZmlnX3dvcmQodm1kLT5kZXYsIFBD
+SV9SRUdfVk1DT05GSUcsICZyZWcpOw0KPiA+ICsJcmVnID0gZW5hYmxlID8gKHJlZyAmIH4weDIp
+IDogKHJlZyB8IDB4Mik7DQo+IA0KPiBXb3VsZCBiZSBuaWNlIHRvIGhhdmUgYSAjZGVmaW5lIGZv
+ciAweDIuDQo+IA0KPiA+ICsJcGNpX3dyaXRlX2NvbmZpZ193b3JkKHZtZC0+ZGV2LCBQQ0lfUkVH
+X1ZNQ09ORklHLCByZWcpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgaW50IHZtZF9jcmVh
+dGVfaXJxX2RvbWFpbihzdHJ1Y3Qgdm1kX2RldiAqdm1kKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3Qg
+Zndub2RlX2hhbmRsZSAqZm47DQo+ID4gQEAgLTMyNSw2ICszNDEsMTMgQEAgc3RhdGljIGludCB2
+bWRfY3JlYXRlX2lycV9kb21haW4oc3RydWN0IHZtZF9kZXYgKnZtZCkNCj4gPiAgDQo+ID4gIHN0
+YXRpYyB2b2lkIHZtZF9yZW1vdmVfaXJxX2RvbWFpbihzdHJ1Y3Qgdm1kX2RldiAqdm1kKQ0KPiA+
+ICB7DQo+ID4gKwkvKg0KPiA+ICsJICogU29tZSBwcm9kdWN0aW9uIEJJT1Mgd29uJ3QgZW5hYmxl
+IHJlbWFwcGluZyBiZXR3ZWVuIHNvZnQgcmVib290cy4NCj4gPiArCSAqIEVuc3VyZSByZW1hcHBp
+bmcgaXMgcmVzdG9yZWQgYmVmb3JlIHVubG9hZGluZyB0aGUgZHJpdmVyLg0KPiA+ICsJICovDQo+
+ID4gKwlpZiAoIXZtZC0+bXNpeF9jb3VudCkNCj4gPiArCQl2bWRfZW5hYmxlX21zaV9yZW1hcHBp
+bmcodm1kLCB0cnVlKTsNCj4gPiArDQo+ID4gIAlpZiAodm1kLT5pcnFfZG9tYWluKSB7DQo+ID4g
+IAkJc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZuID0gdm1kLT5pcnFfZG9tYWluLT5md25vZGU7DQo+
+ID4gIA0KPiA+IEBAIC02NzksMTUgKzcwMiwzMSBAQCBzdGF0aWMgaW50IHZtZF9lbmFibGVfZG9t
+YWluKHN0cnVjdCB2bWRfZGV2ICp2bWQsIHVuc2lnbmVkIGxvbmcgZmVhdHVyZXMpDQo+ID4gIA0K
+PiA+ICAJc2QtPm5vZGUgPSBwY2lidXNfdG9fbm9kZSh2bWQtPmRldi0+YnVzKTsNCj4gPiAgDQo+
+ID4gLQlyZXQgPSB2bWRfY3JlYXRlX2lycV9kb21haW4odm1kKTsNCj4gPiAtCWlmIChyZXQpDQo+
+ID4gLQkJcmV0dXJuIHJldDsNCj4gPiAtDQo+ID4gIAkvKg0KPiA+IC0JICogT3ZlcnJpZGUgdGhl
+IGlycSBkb21haW4gYnVzIHRva2VuIHNvIHRoZSBkb21haW4gY2FuIGJlIGRpc3Rpbmd1aXNoZWQN
+Cj4gPiAtCSAqIGZyb20gYSByZWd1bGFyIFBDSS9NU0kgZG9tYWluLg0KPiA+ICsJICogQ3VycmVu
+dGx5IE1TSSByZW1hcHBpbmcgbXVzdCBiZSBlbmFibGVkIGluIGd1ZXN0IHBhc3N0aHJvdWdoIG1v
+ZGUNCj4gPiArCSAqIGR1ZSB0byBzb21lIG1pc3NpbmcgaW50ZXJydXB0IHJlbWFwcGluZyBwbHVt
+YmluZy4gVGhpcyBpcyBwcm9iYWJseQ0KPiA+ICsJICogYWNjZXB0YWJsZSBiZWNhdXNlIHRoZSBn
+dWVzdCBpcyB1c3VhbGx5IENQVS1saW1pdGVkIGFuZCBNU0kNCj4gPiArCSAqIHJlbWFwcGluZyBk
+b2Vzbid0IGJlY29tZSBhIHBlcmZvcm1hbmNlIGJvdHRsZW5lY2suDQo+ID4gIAkgKi8NCj4gPiAt
+CWlycV9kb21haW5fdXBkYXRlX2J1c190b2tlbih2bWQtPmlycV9kb21haW4sIERPTUFJTl9CVVNf
+Vk1EX01TSSk7DQo+ID4gKwlpZiAoIShmZWF0dXJlcyAmIFZNRF9GRUFUX0JZUEFTU19NU0lfUkVN
+QVApIHx8IG9mZnNldFswXSB8fCBvZmZzZXRbMV0pIHsNCj4gPiArCQlyZXQgPSB2bWRfYWxsb2Nf
+aXJxcyh2bWQpOw0KPiA+ICsJCWlmIChyZXQpDQo+ID4gKwkJCXJldHVybiByZXQ7DQo+ID4gKw0K
+PiA+ICsJCXZtZF9lbmFibGVfbXNpX3JlbWFwcGluZyh2bWQsIHRydWUpOw0KPiA+ICsNCj4gPiAr
+CQlyZXQgPSB2bWRfY3JlYXRlX2lycV9kb21haW4odm1kKTsNCj4gPiArCQlpZiAocmV0KQ0KPiA+
+ICsJCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCQkvKg0KPiA+ICsJCSAqIE92ZXJyaWRlIHRo
+ZSBpcnEgZG9tYWluIGJ1cyB0b2tlbiBzbyB0aGUgZG9tYWluIGNhbiBiZQ0KPiA+ICsJCSAqIGRp
+c3Rpbmd1aXNoZWQgZnJvbSBhIHJlZ3VsYXIgUENJL01TSSBkb21haW4uDQo+ID4gKwkJICovDQo+
+ID4gKwkJaXJxX2RvbWFpbl91cGRhdGVfYnVzX3Rva2VuKHZtZC0+aXJxX2RvbWFpbiwgRE9NQUlO
+X0JVU19WTURfTVNJKTsNCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJdm1kX2VuYWJsZV9tc2lfcmVt
+YXBwaW5nKHZtZCwgZmFsc2UpOw0KPiA+ICsJfQ0KPiA+ICANCj4gPiAgCXBjaV9hZGRfcmVzb3Vy
+Y2UoJnJlc291cmNlcywgJnZtZC0+cmVzb3VyY2VzWzBdKTsNCj4gPiAgCXBjaV9hZGRfcmVzb3Vy
+Y2Vfb2Zmc2V0KCZyZXNvdXJjZXMsICZ2bWQtPnJlc291cmNlc1sxXSwgb2Zmc2V0WzBdKTsNCj4g
+PiBAQCAtNzUzLDEwICs3OTIsNiBAQCBzdGF0aWMgaW50IHZtZF9wcm9iZShzdHJ1Y3QgcGNpX2Rl
+diAqZGV2LCBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqaWQpDQo+ID4gIAlpZiAoZmVhdHVy
+ZXMgJiBWTURfRkVBVF9PRkZTRVRfRklSU1RfVkVDVE9SKQ0KPiA+ICAJCXZtZC0+Zmlyc3RfdmVj
+ID0gMTsNCj4gPiAgDQo+ID4gLQllcnIgPSB2bWRfYWxsb2NfaXJxcyh2bWQpOw0KPiA+IC0JaWYg
+KGVycikNCj4gPiAtCQlyZXR1cm4gZXJyOw0KPiA+IC0NCj4gPiAgCXNwaW5fbG9ja19pbml0KCZ2
+bWQtPmNmZ19sb2NrKTsNCj4gPiAgCXBjaV9zZXRfZHJ2ZGF0YShkZXYsIHZtZCk7DQo+ID4gIAll
+cnIgPSB2bWRfZW5hYmxlX2RvbWFpbih2bWQsIGZlYXR1cmVzKTsNCj4gPiBAQCAtODI1LDcgKzg2
+MCw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCB2bWRfaWRzW10gPSB7DQo+
+ID4gIAkJLmRyaXZlcl9kYXRhID0gVk1EX0ZFQVRfSEFTX01FTUJBUl9TSEFET1dfVlNDQVAsfSwN
+Cj4gPiAgCXtQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfSU5URUwsIFBDSV9ERVZJQ0VfSURfSU5U
+RUxfVk1EXzI4QzApLA0KPiA+ICAJCS5kcml2ZXJfZGF0YSA9IFZNRF9GRUFUX0hBU19NRU1CQVJf
+U0hBRE9XIHwNCj4gPiAtCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVTVFJJQ1RJT05TLH0sDQo+ID4g
+KwkJCQlWTURfRkVBVF9IQVNfQlVTX1JFU1RSSUNUSU9OUyB8DQo+ID4gKwkJCQlWTURfRkVBVF9C
+WVBBU1NfTVNJX1JFTUFQLH0sDQo+ID4gIAl7UENJX0RFVklDRShQQ0lfVkVORE9SX0lEX0lOVEVM
+LCAweDQ2N2YpLA0KPiA+ICAJCS5kcml2ZXJfZGF0YSA9IFZNRF9GRUFUX0hBU19NRU1CQVJfU0hB
+RE9XX1ZTQ0FQIHwNCj4gPiAgCQkJCVZNRF9GRUFUX0hBU19CVVNfUkVTVFJJQ1RJT05TIHwNCj4g
+PiAtLSANCj4gPiAyLjI3LjANCj4gPiANCg==
