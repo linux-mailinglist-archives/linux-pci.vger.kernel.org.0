@@ -2,185 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC623120B7
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Feb 2021 02:37:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 133523125A3
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Feb 2021 16:57:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbhBGBhB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Feb 2021 20:37:01 -0500
-Received: from mail-lf1-f48.google.com ([209.85.167.48]:46616 "EHLO
-        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbhBGBhA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Feb 2021 20:37:00 -0500
-Received: by mail-lf1-f48.google.com with SMTP id v5so14519424lft.13;
-        Sat, 06 Feb 2021 17:36:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MsIYELOiBOvxC7BLCCq9XFdfwN6TwYFsgK/fAqU4LV4=;
-        b=bVf/liT4DI0R2plh/aFJyUu69vlDaISsXFO/5vWEiZ6A8QnVuVeEG2jm4YfikXBIWm
-         rx82ZPbR4jozX8Ba+p0A1Fa8P1tKpYVV1U5EHaaWkol64uBu1fldkBbp/d/xGgV4555U
-         axacnKxns0CrebsjWG14GrfIMtguV7s/DHZu1V33X0LmIVOWkiM3af684w+rA76YBW47
-         kgOTdhKQmh0JxqZPW0oQtbeu0H1nyufPb3I2LqPaf7VN/TbbJ49YwpXxrsQ4d2x1iJhY
-         2vGSvWbNfEi/Vyl+reh7aMqrDVUasi8JVBXb9VZpWrQIZKrM0RRE9iplKFXM2qkZMB9j
-         M+0w==
-X-Gm-Message-State: AOAM532ti+4+VkeP8BUEt6iEUIJIxujBzYsedhdbRxqU8D+TdtX1C+yD
-        vc87iEM4AWbTjiAY9MtQ73xQk2sF6xvSvmYp
-X-Google-Smtp-Source: ABdhPJzy/jEwHgYAGmRrI1aQ/pcZFAfJ9GDkGIE5fdaqHNDxnI7gfQv/2yqD2VXgKOnimvg1uFWXBQ==
-X-Received: by 2002:ac2:5dfc:: with SMTP id z28mr6715442lfq.218.1612661777948;
-        Sat, 06 Feb 2021 17:36:17 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id o11sm1503365lfu.157.2021.02.06.17.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Feb 2021 17:36:17 -0800 (PST)
-Date:   Sun, 7 Feb 2021 02:36:15 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [RESEND v4 1/6] misc: Add Synopsys DesignWare xData IP driver
-Message-ID: <YB9EDzI7mSrzXUUB@rocinante>
-References: <cover.1612390291.git.gustavo.pimentel@synopsys.com>
- <bba090c3d9d3d90fb2dfe5f2aaa52c155d87958f.1612390291.git.gustavo.pimentel@synopsys.com>
+        id S229618AbhBGP4v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Feb 2021 10:56:51 -0500
+Received: from verein.lst.de ([213.95.11.211]:38553 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229491AbhBGP4u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 7 Feb 2021 10:56:50 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3732F68B02; Sun,  7 Feb 2021 16:56:02 +0100 (CET)
+Date:   Sun, 7 Feb 2021 16:56:01 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, nouveau@lists.freedesktop.org,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        akpm@linux-foundation.org, benh@kernel.crashing.org,
+        bskeggs@redhat.com, bhelgaas@google.com, bp@alien8.de,
+        boris.ostrovsky@oracle.com, hch@lst.de, chris@chris-wilson.co.uk,
+        daniel@ffwll.ch, airlied@linux.ie, hpa@zytor.com, mingo@kernel.org,
+        mingo@redhat.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, jgross@suse.com,
+        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
+        matthew.auld@intel.com, mpe@ellerman.id.au, rppt@kernel.org,
+        paulus@samba.org, peterz@infradead.org, robin.murphy@arm.com,
+        rodrigo.vivi@intel.com, sstabellini@kernel.org,
+        bauerman@linux.ibm.com, tsbogend@alpha.franken.de,
+        tglx@linutronix.de, ulf.hansson@linaro.org, joe.jin@oracle.com,
+        thomas.lendacky@amd.com
+Subject: Re: [PATCH RFC v1 5/6] xen-swiotlb: convert variables to arrays
+Message-ID: <20210207155601.GA25111@lst.de>
+References: <20210203233709.19819-1-dongli.zhang@oracle.com> <20210203233709.19819-6-dongli.zhang@oracle.com> <20210204084023.GA32328@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bba090c3d9d3d90fb2dfe5f2aaa52c155d87958f.1612390291.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <20210204084023.GA32328@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Gustavo,
+On Thu, Feb 04, 2021 at 09:40:23AM +0100, Christoph Hellwig wrote:
+> So one thing that has been on my mind for a while:  I'd really like
+> to kill the separate dma ops in Xen swiotlb.  If we compare xen-swiotlb
+> to swiotlb the main difference seems to be:
+> 
+>  - additional reasons to bounce I/O vs the plain DMA capable
+>  - the possibility to do a hypercall on arm/arm64
+>  - an extra translation layer before doing the phys_to_dma and vice
+>    versa
+>  - an special memory allocator
+> 
+> I wonder if inbetween a few jump labels or other no overhead enablement
+> options and possibly better use of the dma_range_map we could kill
+> off most of swiotlb-xen instead of maintaining all this code duplication?
 
-Thank you for all the work here!
+So I looked at this a bit more.
 
-A few suggestions.
+For x86 with XENFEAT_auto_translated_physmap (how common is that?)
+pfn_to_gfn is a nop, so plain phys_to_dma/dma_to_phys do work as-is.
 
-[...]
-> +static void dw_xdata_stop(struct dw_xdata *dw)
-> +{
-> +	u32 burst = readl(&(__dw_xdara_regs(dw)->burst_cnt));
-> +
-> +	if (burst & BIT(31)) {
-> +		burst &= ~(u32)BIT(31);
-> +		writel(burst, &(__dw_regs(dw)->burst_cnt));
-> +	}
-> +}
+xen_arch_need_swiotlb always returns true for x86, and
+range_straddles_page_boundary should never be true for the
+XENFEAT_auto_translated_physmap case.
 
-Would it be possible to add a define for this "BIT(31)", similarly to
-the "XPERF_CONTROL_ENABLE", for example:
+So as far as I can tell the mapping fast path for the
+XENFEAT_auto_translated_physmap can be trivially reused from swiotlb.
 
-  #define XPERF_CONTROL_ENABLE		BIT(5)
-  #define XPERF_CONTROL_DISABLE		BIT(31)
+That leaves us with the next more complicated case, x86 or fully cache
+coherent arm{,64} without XENFEAT_auto_translated_physmap.  In that case
+we need to patch in a phys_to_dma/dma_to_phys that performs the MFN
+lookup, which could be done using alternatives or jump labels.
+I think if that is done right we should also be able to let that cover
+the foreign pages in is_xen_swiotlb_buffer/is_swiotlb_buffer, but
+in that worst case that would need another alternative / jump label.
 
-What do you think?
+For non-coherent arm{,64} we'd also need to use alternatives or jump
+labels to for the cache maintainance ops, but that isn't a hard problem
+either.
 
-> +static void dw_xdata_start(struct dw_xdata *dw, bool write)
-> +{
-> +	u32 control, status;
-> +
-> +	/* Stop first if xfer in progress */
-> +	dw_xdata_stop(dw);
-> +
-> +	/* Clear status register */
-> +	writel(0x0, &(__dw_regs(dw)->status));
-> +
-> +	/* Burst count register set for continuous until stopped */
-> +	writel(0x80001001, &(__dw_regs(dw)->burst_cnt));
 
-Would you mind adding a define (possibly with a comment, if it makes
-sense, of course) rather than open coding it here.
-
-> +	/* Pattern register */
-> +	writel(0x0, &(__dw_regs(dw)->pattern));
-> +
-> +	/* Control register */
-> +	control = CONTROL_DOORBELL | CONTROL_PATTERN_INC | CONTROL_NO_ADDR_INC;
-> +	if (write) {
-> +		control |= CONTROL_IS_WRITE;
-> +		control |= CONTROL_LENGTH(dw->max_wr_len);
-> +	} else {
-> +		control |= CONTROL_LENGTH(dw->max_rd_len);
-> +	}
-> +	writel(control, &(__dw_regs(dw)->control));
-> +
-> +	usleep_range(100, 150);
-[...]
-
-Why sleep here?
-
-Do you just add some delay that changes were reflected, or is it
-a requirement of sorts?  What do you think about documenting why the
-sleep where? Would it make sense?
-
-[...]
-> +static void dw_xdata_perf(struct dw_xdata *dw, u64 *rate, bool write)
-> +{
-> +	u64 data[2], time[2], diff;
-> +
-> +	/* First measurement */
-> +	writel(0x0, &(__dw_regs(dw)->perf_control));
-> +	dw_xdata_perf_meas(dw, &data[0], write);
-> +	time[0] = jiffies;
-> +	writel((u32)XPERF_CONTROL_ENABLE, &(__dw_regs(dw)->perf_control));
-> +
-> +	/* Delay 100ms */
-> +	mdelay(100);
-[...]
-
-The mdelay() is self-explanatory, so a comment that explains why to take
-two measurements that are 100 ms apart and how rate is calculated might
-be more useful (unless it would be an overkill here).
-
-If this is an arbitrary delay without any special meaning, then probably
-no comment is needed here.
-
-What do you think?
-
-[...]
-> +	/* Calculations */
-
-What sort of calculations precisely? :)
-
-[...]
-> +static int dw_xdata_pcie_probe(struct pci_dev *pdev,
-> +			       const struct pci_device_id *pid)
-> +{
-> +	const struct dw_xdata_pcie_data *pdata = (void *)pid->driver_data;
-> +	struct dw_xdata *dw;
-> +	u64 addr;
-> +	int err;
-> +
-> +	/* Enable PCI device */
-> +	err = pcim_enable_device(pdev);
-
-This comment might not be needed.
-
-[...]
-> +	/* Mapping PCI BAR regions */
-> +	err = pcim_iomap_regions(pdev, BIT(pdata->rg_bar), pci_name(pdev));
-
-This comment might also not be needed.
-
-[...]
-> +	/* Allocate memory */
-
-And so this comment.
-
-[...]
-> +	/* Data structure initialization */
-[...]
-> +	/* Saving data structure reference */
-[...]
-> +	/* Sysfs */
-[...]
-
-And possibly few of these are also not needed.
-
-Krzysztof
