@@ -2,105 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC64B312740
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Feb 2021 20:44:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3809B3127D0
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Feb 2021 23:17:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbhBGTor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Feb 2021 14:44:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56378 "EHLO
+        id S229621AbhBGWQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Feb 2021 17:16:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbhBGTor (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Feb 2021 14:44:47 -0500
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FE6C06174A;
-        Sun,  7 Feb 2021 11:44:06 -0800 (PST)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4DYfjW6BGkz9sVv;
-        Mon,  8 Feb 2021 06:43:58 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1612727043;
-        bh=ltYiGt6TK6vuybpo1dLZBhXtXG3N1/IDk2y8vCNNrNg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OdsSPBrR5hSgqYTpRuQMpKb3f2js+RSyh4nmFUAt7LiRVAC0i3QS3LIoyxOaHTp1V
-         LKIzOka8qvU1BgDTjGStfoH+XuR7IDQa97RDMXp1SRs8tkUbgVv57nZtYSA1F71zrY
-         fmULOihQhnCQMf8Atc02eLO6w/cIZhgg42gZ1MASduzoRUPLtA6d9lzT+0y9LejnFa
-         4OV+XEvRj9rl8VoCtl7TCMyv4TiZrFGlTpUqig0Ndy8tt8mXd7GeheZSOrksovoco6
-         x4k7i2QwFO1Ya+RwCPAdo552llREoVir+txgmzrpvNLM/yEpUldGzuQfWe8iDYAnp+
-         65klvrKV+iROg==
-Date:   Mon, 8 Feb 2021 06:43:57 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/2] pci sysfs file iomem revoke support
-Message-ID: <20210208064357.29b3df55@canb.auug.org.au>
-In-Reply-To: <20210204165831.2703772-1-daniel.vetter@ffwll.ch>
-References: <20210204165831.2703772-1-daniel.vetter@ffwll.ch>
+        with ESMTP id S229506AbhBGWQw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Feb 2021 17:16:52 -0500
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F2DAC06174A;
+        Sun,  7 Feb 2021 14:16:12 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id d3so19420063lfg.10;
+        Sun, 07 Feb 2021 14:16:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=amw+arajV2h5jip6V0/FYm9nsxnyFJgWfDun4yL2hWo=;
+        b=Qxz3qIx4N/K/ylzxBOh9LpEAJVJER0i3fj5x5/b4eYTiPdgZowWin7i0TJhL3YBGYX
+         nqUU4rin5JIo4EF9yw/Ct4YDapLRWVueBm8FZguVaNpmhpn+GUSOGOmHQfmxdEFFuC8Q
+         813WjLZU5WM+3YdNjdP3GZc3hhKDoeAQ+3MLzwtsQuRjmFv8VXnCZ9LMS87ggn6rN8XO
+         a10sgapTHYd7EqRAsKEysMqnlXuw5Tq4yMN53oCC8rKkoZ5naGSafn231Ih80kr3ro0R
+         QjVuXaiMF5Rp3GSxU1lln7BDoxWUMov4gzapyFc+Rl2Tgj+MrexZG5WmBVVlMKGqGCQX
+         UtXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=amw+arajV2h5jip6V0/FYm9nsxnyFJgWfDun4yL2hWo=;
+        b=Je20lzumsezgDfAP2CJ6rJRtNzPAReP+L5hWVT0CXJEakDpJAyNPq2LaBCmPSadMZL
+         IzibS6DFGC2QM6Hh0nADWVwVhRCT08n9QxILyhFEq0GE/L0gfzVe4bWOIKXX1M0NzV5O
+         EYm01xcnW8WvrhWstClcgNppP7eZpN1ZmPMh6rQrBwLMG2RP7ZSmQrXJwrtEfP5TbiQk
+         OBoKN6smJA/tDk75dkf8xCSUFOQ0vaJ91l0WOKHWJuZVax5gU8+wSKomlaZ5Hmy60BB7
+         GTokmZDgVOFitI4E4xeY0mM7iVWujaE78uQGgUKqy64DDDsbHhmeeh/cpUDrq7Vti3dq
+         ZJ1g==
+X-Gm-Message-State: AOAM531XX5ecHHQ/yRN0s2DE3fntsPHD6RGBHgczPrTOk7mxzIRk2cix
+        AlwSKP9ALLnyym8thhEgOS++lgJq58BchQ==
+X-Google-Smtp-Source: ABdhPJyjaJRB143WhUN8+rLijJv2/iICLgKR/rcd245VCxOBQw4+5emTlBYz3D77P7u2f2YLo877sg==
+X-Received: by 2002:ac2:5639:: with SMTP id b25mr8348018lff.370.1612736170304;
+        Sun, 07 Feb 2021 14:16:10 -0800 (PST)
+Received: from localhost.localdomain (h-158-174-22-164.NA.cust.bahnhof.se. [158.174.22.164])
+        by smtp.gmail.com with ESMTPSA id y25sm1873866lfe.20.2021.02.07.14.16.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Feb 2021 14:16:09 -0800 (PST)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] PCI: tegra: Constify static structs
+Date:   Sun,  7 Feb 2021 23:16:04 +0100
+Message-Id: <20210207221604.48910-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HZXOMZy1qKTf=dgNtb2Lic5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---Sig_/HZXOMZy1qKTf=dgNtb2Lic5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The only usage of them is to assign their address to the 'ops' field in
+the pcie_port and the dw_pcie_ep structs, both which are pointers to
+const. Make them const to allow the compiler to put them in read-only
+memory.
 
-Hi Daniel,
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Thu,  4 Feb 2021 17:58:29 +0100 Daniel Vetter <daniel.vetter@ffwll.ch> w=
-rote:
->
-> Hi all,
->=20
-> This is a revised version of patch 12 from my series to lock down some
-> follow_pfn vs VM_SPECIAL races:
->=20
-> https://lore.kernel.org/dri-devel/CAKwvOdnSrsnTgPEuQJyaOTSkTP2dR9208Y66HQ=
-G_h1e2LKfqtw@mail.gmail.com/
->=20
-> Stephen reported an issue on HAVE_PCI_LEGACY platforms which this patch
-> set tries to address. Previous patches are all still in linux-next.
->=20
-> Stephen, would be awesome if you can give this a spin.
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 6fa216e52d14..18acd48e8e9b 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -1019,7 +1019,7 @@ static const struct dw_pcie_ops tegra_dw_pcie_ops = {
+ 	.stop_link = tegra_pcie_dw_stop_link,
+ };
+ 
+-static struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
++static const struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
+ 	.host_init = tegra_pcie_dw_host_init,
+ };
+ 
+@@ -1881,7 +1881,7 @@ tegra_pcie_ep_get_features(struct dw_pcie_ep *ep)
+ 	return &tegra_pcie_epc_features;
+ }
+ 
+-static struct dw_pcie_ep_ops pcie_ep_ops = {
++static const struct dw_pcie_ep_ops pcie_ep_ops = {
+ 	.raise_irq = tegra_pcie_ep_raise_irq,
+ 	.get_features = tegra_pcie_ep_get_features,
+ };
+-- 
+2.30.0
 
-OK, I applied the 2 patches on top of next-20210205 and it no longer
-panics for my simple boot test (PowerPC pseries_le_defconfig under
-qemu).
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/HZXOMZy1qKTf=dgNtb2Lic5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmAgQv0ACgkQAVBC80lX
-0Gyo1gf/SH1pSdhNbE2Vt94tyktGdYja0lGsoy/TOEl6OehIzW4kK0pdTbMpnvVY
-bZ4/Me/eSj1UHkLGtXs/MHsIE98xJQVWxRYU4xYcOAuklIS6ePVtxu0cm6wGQrbx
-Iieo/JSqtCtf2U03bfjfVc+wn3o/4pK8tx6mUqsYfZ1RL8txxXeCEgHPRHqkphF6
-whFQKsvUIx0KUb+Vo86YhO7V5/EAtG22De7pSyE+ssE9FTDjMBeBNwNcTy3xIzOg
-8ucfuK7YES+QCflvMtnEOynP5ZDTMZY/OVs0DDrWwL4/klrS4kZ/p63qJasVazcg
-m7Vno/Hve3fT0kdlrxLU7ratx/u7fw==
-=Zm2+
------END PGP SIGNATURE-----
-
---Sig_/HZXOMZy1qKTf=dgNtb2Lic5--
