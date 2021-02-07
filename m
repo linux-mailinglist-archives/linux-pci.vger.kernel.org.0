@@ -2,88 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 133523125A3
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Feb 2021 16:57:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC64B312740
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Feb 2021 20:44:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbhBGP4v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Feb 2021 10:56:51 -0500
-Received: from verein.lst.de ([213.95.11.211]:38553 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229491AbhBGP4u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 7 Feb 2021 10:56:50 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3732F68B02; Sun,  7 Feb 2021 16:56:02 +0100 (CET)
-Date:   Sun, 7 Feb 2021 16:56:01 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, nouveau@lists.freedesktop.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
-        akpm@linux-foundation.org, benh@kernel.crashing.org,
-        bskeggs@redhat.com, bhelgaas@google.com, bp@alien8.de,
-        boris.ostrovsky@oracle.com, hch@lst.de, chris@chris-wilson.co.uk,
-        daniel@ffwll.ch, airlied@linux.ie, hpa@zytor.com, mingo@kernel.org,
-        mingo@redhat.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, jgross@suse.com,
-        konrad.wilk@oracle.com, m.szyprowski@samsung.com,
-        matthew.auld@intel.com, mpe@ellerman.id.au, rppt@kernel.org,
-        paulus@samba.org, peterz@infradead.org, robin.murphy@arm.com,
-        rodrigo.vivi@intel.com, sstabellini@kernel.org,
-        bauerman@linux.ibm.com, tsbogend@alpha.franken.de,
-        tglx@linutronix.de, ulf.hansson@linaro.org, joe.jin@oracle.com,
-        thomas.lendacky@amd.com
-Subject: Re: [PATCH RFC v1 5/6] xen-swiotlb: convert variables to arrays
-Message-ID: <20210207155601.GA25111@lst.de>
-References: <20210203233709.19819-1-dongli.zhang@oracle.com> <20210203233709.19819-6-dongli.zhang@oracle.com> <20210204084023.GA32328@lst.de>
+        id S229510AbhBGTor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Feb 2021 14:44:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229445AbhBGTor (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Feb 2021 14:44:47 -0500
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FE6C06174A;
+        Sun,  7 Feb 2021 11:44:06 -0800 (PST)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4DYfjW6BGkz9sVv;
+        Mon,  8 Feb 2021 06:43:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1612727043;
+        bh=ltYiGt6TK6vuybpo1dLZBhXtXG3N1/IDk2y8vCNNrNg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OdsSPBrR5hSgqYTpRuQMpKb3f2js+RSyh4nmFUAt7LiRVAC0i3QS3LIoyxOaHTp1V
+         LKIzOka8qvU1BgDTjGStfoH+XuR7IDQa97RDMXp1SRs8tkUbgVv57nZtYSA1F71zrY
+         fmULOihQhnCQMf8Atc02eLO6w/cIZhgg42gZ1MASduzoRUPLtA6d9lzT+0y9LejnFa
+         4OV+XEvRj9rl8VoCtl7TCMyv4TiZrFGlTpUqig0Ndy8tt8mXd7GeheZSOrksovoco6
+         x4k7i2QwFO1Ya+RwCPAdo552llREoVir+txgmzrpvNLM/yEpUldGzuQfWe8iDYAnp+
+         65klvrKV+iROg==
+Date:   Mon, 8 Feb 2021 06:43:57 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 0/2] pci sysfs file iomem revoke support
+Message-ID: <20210208064357.29b3df55@canb.auug.org.au>
+In-Reply-To: <20210204165831.2703772-1-daniel.vetter@ffwll.ch>
+References: <20210204165831.2703772-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210204084023.GA32328@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: multipart/signed; boundary="Sig_/HZXOMZy1qKTf=dgNtb2Lic5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 04, 2021 at 09:40:23AM +0100, Christoph Hellwig wrote:
-> So one thing that has been on my mind for a while:  I'd really like
-> to kill the separate dma ops in Xen swiotlb.  If we compare xen-swiotlb
-> to swiotlb the main difference seems to be:
-> 
->  - additional reasons to bounce I/O vs the plain DMA capable
->  - the possibility to do a hypercall on arm/arm64
->  - an extra translation layer before doing the phys_to_dma and vice
->    versa
->  - an special memory allocator
-> 
-> I wonder if inbetween a few jump labels or other no overhead enablement
-> options and possibly better use of the dma_range_map we could kill
-> off most of swiotlb-xen instead of maintaining all this code duplication?
+--Sig_/HZXOMZy1qKTf=dgNtb2Lic5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-So I looked at this a bit more.
+Hi Daniel,
 
-For x86 with XENFEAT_auto_translated_physmap (how common is that?)
-pfn_to_gfn is a nop, so plain phys_to_dma/dma_to_phys do work as-is.
+On Thu,  4 Feb 2021 17:58:29 +0100 Daniel Vetter <daniel.vetter@ffwll.ch> w=
+rote:
+>
+> Hi all,
+>=20
+> This is a revised version of patch 12 from my series to lock down some
+> follow_pfn vs VM_SPECIAL races:
+>=20
+> https://lore.kernel.org/dri-devel/CAKwvOdnSrsnTgPEuQJyaOTSkTP2dR9208Y66HQ=
+G_h1e2LKfqtw@mail.gmail.com/
+>=20
+> Stephen reported an issue on HAVE_PCI_LEGACY platforms which this patch
+> set tries to address. Previous patches are all still in linux-next.
+>=20
+> Stephen, would be awesome if you can give this a spin.
 
-xen_arch_need_swiotlb always returns true for x86, and
-range_straddles_page_boundary should never be true for the
-XENFEAT_auto_translated_physmap case.
+OK, I applied the 2 patches on top of next-20210205 and it no longer
+panics for my simple boot test (PowerPC pseries_le_defconfig under
+qemu).
 
-So as far as I can tell the mapping fast path for the
-XENFEAT_auto_translated_physmap can be trivially reused from swiotlb.
+--=20
+Cheers,
+Stephen Rothwell
 
-That leaves us with the next more complicated case, x86 or fully cache
-coherent arm{,64} without XENFEAT_auto_translated_physmap.  In that case
-we need to patch in a phys_to_dma/dma_to_phys that performs the MFN
-lookup, which could be done using alternatives or jump labels.
-I think if that is done right we should also be able to let that cover
-the foreign pages in is_xen_swiotlb_buffer/is_swiotlb_buffer, but
-in that worst case that would need another alternative / jump label.
+--Sig_/HZXOMZy1qKTf=dgNtb2Lic5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-For non-coherent arm{,64} we'd also need to use alternatives or jump
-labels to for the cache maintainance ops, but that isn't a hard problem
-either.
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmAgQv0ACgkQAVBC80lX
+0Gyo1gf/SH1pSdhNbE2Vt94tyktGdYja0lGsoy/TOEl6OehIzW4kK0pdTbMpnvVY
+bZ4/Me/eSj1UHkLGtXs/MHsIE98xJQVWxRYU4xYcOAuklIS6ePVtxu0cm6wGQrbx
+Iieo/JSqtCtf2U03bfjfVc+wn3o/4pK8tx6mUqsYfZ1RL8txxXeCEgHPRHqkphF6
+whFQKsvUIx0KUb+Vo86YhO7V5/EAtG22De7pSyE+ssE9FTDjMBeBNwNcTy3xIzOg
+8ucfuK7YES+QCflvMtnEOynP5ZDTMZY/OVs0DDrWwL4/klrS4kZ/p63qJasVazcg
+m7Vno/Hve3fT0kdlrxLU7ratx/u7fw==
+=Zm2+
+-----END PGP SIGNATURE-----
 
+--Sig_/HZXOMZy1qKTf=dgNtb2Lic5--
