@@ -2,75 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61630312B22
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 08:35:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13EE4312B9A
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 09:23:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbhBHHe5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 02:34:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
+        id S229822AbhBHIWt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 03:22:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229751AbhBHHez (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Feb 2021 02:34:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A22F64DDD;
-        Mon,  8 Feb 2021 07:34:12 +0000 (UTC)
+        id S229766AbhBHIWd (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Feb 2021 03:22:33 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0382464E7C;
+        Mon,  8 Feb 2021 08:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612769653;
-        bh=7TyKKVr8AyUm1jsKCCtx7TX3UogGf1VLNtMdZYu55qE=;
+        s=k20201202; t=1612772512;
+        bh=Sc4SyiQNkQRCBMHLyFUuSu5h5GfleBywijQHNH8VGwY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G7Az6K0blie4qbk6W+OmSAiRBXBb8s7jK2ZlbGUgcxaOOYHekFQSTz4Nc+kDQDyuO
-         nYA3EpuafmQgO0KeOfVCJqxEqbXbLaZTV9T+GkcOgjgKZJBZU6hdpKpPTBsY3iDP77
-         f+7IC5MVo827j341lOJ4noltUFLzjvqnmMTymdmMWDUXFALU80TQYtU/wm3rD9B4kZ
-         7nB81Wt1nVraPRFkzsXQzfF+iBsB3Dnsm58LcymzfT01DBpp8mQOth49kuge3GL9Tz
-         YheMG1xMXpA31Et5OftgIVV9o6FlZaa7PxngODydq+KBsKQHx3Eg0VMn3Kjb5P0tfH
-         X1Z30lWzamknw==
-Date:   Mon, 8 Feb 2021 09:34:08 +0200
+        b=uJALf7V4OHLbpIhOfAaIY+MW1DSl6gXscF6VMcBh40t2jSQt5+FY63KEiG5/CcOKn
+         HwOtotob3s8s5mWKCjZ8R2yckWr0niOxr9yvGYFM5KRqUfmRhq7iDoNF7tNiQP1xkl
+         5HW7Tnd4J9yiImoLgJX4gc0c99c6AdQtsHdEoJ0zVfKQWUbl4A3k5AhITSxeNBZSnM
+         gAsDTp+NIMv3oSMlyWQOBSJQ7YQbEscsEdxxoCGM2zAlQcIv8mPFwxC13BuzX+1PCB
+         w/lULHjroi+HVcAWeGxBZThE8Axw0VEbz2QG7NJrcIenkZ+KOSkqMRootvv6mLMg3u
+         P/e9iMqmKYCBA==
+Date:   Mon, 8 Feb 2021 10:21:48 +0200
 From:   Leon Romanovsky <leon@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [RESEND PATCH v3 3/5] misc: Add Synopsys DesignWare xData IP
- driver to Kconfig
-Message-ID: <20210208073408.GC4656@unreal>
-References: <cover.1612284945.git.gustavo.pimentel@synopsys.com>
- <850ba8b075a65f753bbb802b9af23839624908bd.1612284945.git.gustavo.pimentel@synopsys.com>
+To:     Megha Dey <megha.dey@intel.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        dave.jiang@intel.com, ashok.raj@intel.com, kevin.tian@intel.com,
+        dwmw@amazon.co.uk, x86@kernel.org, tony.luck@intel.com,
+        dan.j.williams@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, maz@kernel.org, linux-pci@vger.kernel.org,
+        baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
+Subject: Re: [PATCH 11/12] platform-msi: Add platform check for subdevice irq
+ domain
+Message-ID: <20210208082148.GA20265@unreal>
+References: <1612385805-3412-1-git-send-email-megha.dey@intel.com>
+ <1612385805-3412-12-git-send-email-megha.dey@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <850ba8b075a65f753bbb802b9af23839624908bd.1612284945.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <1612385805-3412-12-git-send-email-megha.dey@intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 05:56:36PM +0100, Gustavo Pimentel wrote:
-> Add Synopsys DesignWare xData IP driver to Kconfig.
+On Wed, Feb 03, 2021 at 12:56:44PM -0800, Megha Dey wrote:
+> From: Lu Baolu <baolu.lu@linux.intel.com>
 >
-> This driver enables/disables the PCIe traffic generator module
-> pertain to the Synopsys DesignWare prototype.
+> The pci_subdevice_msi_create_irq_domain() should fail if the underlying
+> platform is not able to support IMS (Interrupt Message Storage). Otherwise,
+> the isolation of interrupt is not guaranteed.
 >
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> For x86, IMS is only supported on bare metal for now. We could enable it
+> in the virtualization environments in the future if interrupt HYPERCALL
+> domain is supported or the hardware has the capability of interrupt
+> isolation for subdevices.
+>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://lore.kernel.org/linux-pci/87pn4nk7nn.fsf@nanos.tec.linutronix.de/
+> Link: https://lore.kernel.org/linux-pci/877dqrnzr3.fsf@nanos.tec.linutronix.de/
+> Link: https://lore.kernel.org/linux-pci/877dqqmc2h.fsf@nanos.tec.linutronix.de/
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Megha Dey <megha.dey@intel.com>
 > ---
->  drivers/misc/Kconfig | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  arch/x86/pci/common.c       | 74 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/base/platform-msi.c |  8 +++++
+>  include/linux/msi.h         |  1 +
+>  3 files changed, 83 insertions(+)
 >
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index fafa8b0..6d5783f 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -423,6 +423,17 @@ config SRAM
->  config SRAM_EXEC
->  	bool
+> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+> index 3507f45..263ccf6 100644
+> --- a/arch/x86/pci/common.c
+> +++ b/arch/x86/pci/common.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/init.h>
+>  #include <linux/dmi.h>
+>  #include <linux/slab.h>
+> +#include <linux/iommu.h>
+> +#include <linux/msi.h>
 >
-> +config DW_XDATA_PCIE
-> +	depends on PCI
-> +	tristate "Synopsys DesignWare xData PCIe driver"
-> +	default	n
+>  #include <asm/acpi.h>
+>  #include <asm/segment.h>
+> @@ -724,3 +726,75 @@ struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
+>  	return dev;
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_DEVICE_MSI
 
-"N" is a default option and not needed to be stated explicitly.
+Sorry for my naive question, but I see it in all your patches in this series
+and wonder why did you wrap everything with ifdefs?.
+
+All *.c code is wrapped with those ifdefs, which is hard to navigate and
+unlikely to give any code/size optimization benefit if kernel is compiled
+without CONFIG_DEVICE_MSI. The more common approach is to put those
+ifdef in the public header files and leave to the compiler to drop not
+called functions.
 
 Thanks
