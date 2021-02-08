@@ -2,124 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC0D3313F2A
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 20:38:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51E62313F63
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 20:45:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236200AbhBHTgv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 14:36:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236348AbhBHTf7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Feb 2021 14:35:59 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7FEE960238;
-        Mon,  8 Feb 2021 19:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612812918;
-        bh=MGpnihOYgovKUNDN8RKjHCBSWobXEqBkmqJNNNAU/3k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aP+eunnCA20VP1zI4U0hV5jEh6HZTUkp/JehiOF9qu/veMnajkSD5d2+26+ErWDaA
-         Tcnv00QAGC7mX2eSOC4umMTvYmyaUDFSL48/whkYmc/NBMLooV9tSj+40wXUnoj32y
-         Wlw/+DAY9z9B64Sn3MqWj4+z0VkrlGD7rjmso/hy9GIxXxdbO8YB7qqEjNEWZ4I3JG
-         CvCK4/hgZhjsqfI75qq71RnU0UoBgy2UOzmgFT3Jhg7gRP3VvC3GGiPDlgr5KlJ6Us
-         d9JiPxaWK3+709ykTaOxAhQD0CbtxRnKFu2hlsHFyj4CyXnQuLMkl8yhHD9MctBtuC
-         yJPPNzN3u39Ug==
-Date:   Mon, 8 Feb 2021 13:35:16 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH v4 15/15] dmaengine: dw-edma: Add pcim_iomap_table return
- checker
-Message-ID: <20210208193516.GA406304@bjorn-Precision-5520>
+        id S236229AbhBHTpA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 14:45:00 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38728 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236288AbhBHToo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 14:44:44 -0500
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1612813442;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=i+MjUAuHKQNzcecJvz4vROoSLoJ9O38FaHd9JIBla1E=;
+        b=a3dTYr6I5T2l0UCXYY555u02vDEDj3Ed5n+xMBvsbohAzgjaM8/TuYjf5PpBEw8fGvdnk1
+        HOjdfAjqNWzIlpkKk+c8JDpXLk1g35F9bHXVvfk4ciBxFPfTnfx/6MCreY8VwCDmKur33X
+        haPgOPrAbibIP7dRSZ2M2LD4gHOHQa6TiYx0mQM51rkjPid+/57NJiwKEEOxjpVqo3TKaj
+        84cT3L63p+u6WZmMcOjFfLx1uENTOuKtLr3RIc8L4r7ghYtbs/blhuyaadp4aZg68ot0kb
+        eEkrcCQpynwFh/c1vw6lzZ+AD7vifPH5aT40IuHlVZGsI1H9uyP0bw57Hf4LJw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1612813442;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=i+MjUAuHKQNzcecJvz4vROoSLoJ9O38FaHd9JIBla1E=;
+        b=UJKlPItL8E62jUr88RA6L4Zu+LNLrm8/lGiBxllj8i3xsLevUzeLxqp0UQRNRPazecxcIF
+        0AN8C0OfI+sa0ZCw==
+To:     linux-pci@vger.kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH] PCI: Remove WARN_ON(in_interrupt()).
+Date:   Mon,  8 Feb 2021 20:44:00 +0100
+Message-Id: <20210208194400.384003-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ceb5eb396e417f9e45d39fd5ef565ba77aae6a63.1612389406.git.gustavo.pimentel@synopsys.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Krzysztof]
+WARN_ON(in_interrupt()) is used for historic reasons to ensure proper
+usage of down_read() and predates might_sleep() and lockdep.
 
-From reading the subject, I thought you were adding a function to
-check the return values, i.e., a "checker."  But you're really adding
-"checks" :)
+down_read() has might_sleep() which also catches users from preemption
+disabled regions while in_interrupt() does not.
 
-On Wed, Feb 03, 2021 at 10:58:06PM +0100, Gustavo Pimentel wrote:
-> Detected by CoverityScan CID 16555 ("Dereference null return")
-> 
-> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 686b4ff..7445033 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -238,6 +238,9 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  	dw->rd_ch_cnt = vsec_data.rd_ch_cnt;
->  
->  	dw->rg_region.vaddr = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-> +	if (!dw->rg_region.vaddr)
-> +		return -ENOMEM;
+Remove WARN_ON(in_interrupt()) because there is better debugging
+facility.
 
-This doesn't seem quite right.  If pcim_iomap_table() fails, it
-returns NULL.  But then we assign "vaddr = NULL[vsec_data.rg.bar]"
-which dereferences the NULL pointer even before your test.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ drivers/pci/search.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-This "pcim_iomap_table(dev)[n]" pattern is extremely common.  There
-are over 100 calls of pcim_iomap_table(), and
+diff --git a/drivers/pci/search.c b/drivers/pci/search.c
+index 2061672954ee3..b4c138a6ec025 100644
+--- a/drivers/pci/search.c
++++ b/drivers/pci/search.c
+@@ -168,7 +168,6 @@ struct pci_bus *pci_find_next_bus(const struct pci_bus =
+*from)
+ 	struct list_head *n;
+ 	struct pci_bus *b =3D NULL;
+=20
+-	WARN_ON(in_interrupt());
+ 	down_read(&pci_bus_sem);
+ 	n =3D from ? from->node.next : pci_root_buses.next;
+ 	if (n !=3D &pci_root_buses)
+@@ -196,7 +195,6 @@ struct pci_dev *pci_get_slot(struct pci_bus *bus, unsig=
+ned int devfn)
+ {
+ 	struct pci_dev *dev;
+=20
+-	WARN_ON(in_interrupt());
+ 	down_read(&pci_bus_sem);
+=20
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+@@ -274,7 +272,6 @@ static struct pci_dev *pci_get_dev_by_id(const struct p=
+ci_device_id *id,
+ 	struct device *dev_start =3D NULL;
+ 	struct pci_dev *pdev =3D NULL;
+=20
+-	WARN_ON(in_interrupt());
+ 	if (from)
+ 		dev_start =3D &from->dev;
+ 	dev =3D bus_find_device(&pci_bus_type, dev_start, (void *)id,
+@@ -381,7 +378,6 @@ int pci_dev_present(const struct pci_device_id *ids)
+ {
+ 	struct pci_dev *found =3D NULL;
+=20
+-	WARN_ON(in_interrupt());
+ 	while (ids->vendor || ids->subvendor || ids->class_mask) {
+ 		found =3D pci_get_dev_by_id(ids, NULL);
+ 		if (found) {
+--=20
+2.30.0
 
-  $ git grep "pcim_iomap_table(.*)\[.*\]" | wc -l
-
-says about 75 of them are of this form, where we dereference the
-result before testing it.
-
->  	dw->rg_region.vaddr += vsec_data.rg.off;
->  	dw->rg_region.paddr = pdev->resource[vsec_data.rg.bar].start;
->  	dw->rg_region.paddr += vsec_data.rg.off;
-> @@ -250,12 +253,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
->  
->  		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
-> +		if (!ll_region->vaddr)
-> +			return -ENOMEM;
-> +
->  		ll_region->vaddr += ll_block->off;
->  		ll_region->paddr = pdev->resource[ll_block->bar].start;
->  		ll_region->paddr += ll_block->off;
->  		ll_region->sz = ll_block->sz;
->  
->  		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
-> +		if (!dt_region->vaddr)
-> +			return -ENOMEM;
-> +
->  		dt_region->vaddr += dt_block->off;
->  		dt_region->paddr = pdev->resource[dt_block->bar].start;
->  		dt_region->paddr += dt_block->off;
-> @@ -269,12 +278,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
->  
->  		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
-> +		if (!ll_region->vaddr)
-> +			return -ENOMEM;
-> +
->  		ll_region->vaddr += ll_block->off;
->  		ll_region->paddr = pdev->resource[ll_block->bar].start;
->  		ll_region->paddr += ll_block->off;
->  		ll_region->sz = ll_block->sz;
->  
->  		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
-> +		if (!dt_region->vaddr)
-> +			return -ENOMEM;
-> +
->  		dt_region->vaddr += dt_block->off;
->  		dt_region->paddr = pdev->resource[dt_block->bar].start;
->  		dt_region->paddr += dt_block->off;
-> -- 
-> 2.7.4
-> 
