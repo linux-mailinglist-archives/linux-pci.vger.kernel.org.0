@@ -2,132 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60B44313A7A
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 18:08:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71E5B313B3F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 18:44:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbhBHRIb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 12:08:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48706 "EHLO
+        id S234072AbhBHRny (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 12:43:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234750AbhBHRIF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 12:08:05 -0500
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACF5C061786;
-        Mon,  8 Feb 2021 09:07:25 -0800 (PST)
-Received: by mail-io1-xd2b.google.com with SMTP id f67so13953337ioa.1;
-        Mon, 08 Feb 2021 09:07:25 -0800 (PST)
+        with ESMTP id S235006AbhBHRnD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 12:43:03 -0500
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F0CC061797
+        for <linux-pci@vger.kernel.org>; Mon,  8 Feb 2021 09:41:39 -0800 (PST)
+Received: by mail-qv1-xf35.google.com with SMTP id es14so7325455qvb.3
+        for <linux-pci@vger.kernel.org>; Mon, 08 Feb 2021 09:41:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HSRFaWzAQ8UdS4NvVN5o3Zdpy3GIl49ji37O6ltQmPQ=;
-        b=YXu0+C3wx7E9PFVQc930kzd0Hkm8H/XXiRwqdWRdZLxwUYqp6XypgWlxBlRPCs0zMW
-         rOE4YG5XcfVcr4R7wcAS/1jCPtAs/OYsDGlOBut0NjEc2cqmDxZ2H6ayaDUOyeQkF4Jc
-         cel6EpGDo39Nf3IxL6E2rwN1oQTkA6x/Miq+3NChs3ygoOsp75XymphU/zYFlA02MwEm
-         pQWvLTgxKfL+JGKYn7ok8X6lCRC6hopHVtKXssw59Wu7/P2Pdx3F8G9HZnjvAvQRdgR7
-         K9v/gbpze4sOxUorS5SFLjS2awKITYdBkkxv8nEK+jJUNGm5Comx0JK5MWdJMGTyFKLo
-         53wA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lYKXVdnh/PO9XjtD5IgPdqemjTdpcMN6jzVdD0HqOds=;
+        b=LySTcV8v08xg3n6sD04f5XU2Wwh15eukNDmnjeNYGfAF06hM2BlbfExiOLGaPIGKW7
+         InKbZdUtvbEyo+3ToKAEsfDuRPEyMhZVoRagegoaV2Ep/YNv2bn+BD6INRkwnxRQuA37
+         KWNAw39/80SX9iVbriz6CKOxZvBELz6MiLbOV65qSPY7eDsk1IJMi2p8EQvPrGvZoWao
+         IeyFc8npDXD2lKwUc1K6siIGfIO7fFJWhNnPkYuLr/2PlUjPGYJ7/CtSSuXebHLIa8z7
+         TSOoDG9ayXTE438VJKTB9Ef2EdzU1Ycc4hWZyfso16ZHlvuDDC3WBjqoqjbuMuLx6EOM
+         yvGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HSRFaWzAQ8UdS4NvVN5o3Zdpy3GIl49ji37O6ltQmPQ=;
-        b=dmBEHO0HKbCxt1HamvLmAfz+/dAkab/8hBK0QGBaHKsW+ZldceuwzAxQWUhdYqVgk9
-         MyCF3mtXGx5XU3RjvzUTd9XB2Qz2Qgi83ohz9wPSWCzIeM+8c2t1y+cRFh2u0swPptvW
-         jLWj+/0jdBZ/jbttUrKvX9ADR36ENriGO1owolrjs/O/KWpLsVVxSvlSNVlEFxXyp0oQ
-         qTEUb9MnTWFvRIHHPtnc42ROXZxaGFPH406YIUyeqbzHsiD6ggYwluDOoN5yCF2rgaFZ
-         /AhXJmVS7n/+wOHlQeoGz0P5OzsXnByHbZavf2wbLNeFTck6SnvQUi5MSc+bMvtbvys9
-         Fusw==
-X-Gm-Message-State: AOAM531yCciRKFmQerYo2j29yKWKQp1NNjE1hPI9Sz45W0N0zAO3kfrc
-        oZYep2hEh7kRU9GTdkruKeRF3uW1GAp4qBlxJ6Y=
-X-Google-Smtp-Source: ABdhPJyVxRyKIyiPdGFsVg2AUAB6TYewLO37E2XT8zMrav87AZWeYd/58aJkllRI/O9aluviaknaNK/3gLG4MJG1QYs=
-X-Received: by 2002:a6b:f708:: with SMTP id k8mr1999806iog.187.1612804044511;
- Mon, 08 Feb 2021 09:07:24 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lYKXVdnh/PO9XjtD5IgPdqemjTdpcMN6jzVdD0HqOds=;
+        b=jzqsonSVipXVy6wBYjY6dl03D4jtOyFNrzWdBy304nd/mE6WXAXpKgJPREjD2Rn8ip
+         5nwed7lsL+1lnEXPdoGmTTjcT+THzSaj1lPavNVeF3563bR2hrXqX1aw7gFZ4Y88dl2J
+         gSRTKyBN4Cnk6PfA9eGVqfn3W3ZYVkcSArSeR1RnPRgTuVjf0rEgY00xIngSn/UMQdin
+         mofOYMYl0M4h5rwVQ2q+ng3Uy6fzXYzlYPvgdkDdHJwStf2AX35ALmGDc3NBkvLPvkzQ
+         lZk9jmaWJ41Lwokj7sSn7stjWLowQnirmwOCVih2vdUe6IKkwVc6JK9mmsgcZmxv/+Zm
+         PTTA==
+X-Gm-Message-State: AOAM530sKCvFeE+k/YeqvaWb6T1A5awkhYvkd2NyYagVFJs/MguCoAgF
+        bg2uvOqWOQBLUjcltB6GmYk=
+X-Google-Smtp-Source: ABdhPJx9aIGk3y7k4n1/4ueMj7NTptTd+Kt0s9n2df3ZaY04d1fk8C/VPRXlAtuibrQnIZNLlPx07Q==
+X-Received: by 2002:a0c:b617:: with SMTP id f23mr16808161qve.44.1612806098478;
+        Mon, 08 Feb 2021 09:41:38 -0800 (PST)
+Received: from localhost.localdomain ([2804:14c:482:919::1001])
+        by smtp.gmail.com with ESMTPSA id q20sm2629468qke.26.2021.02.08.09.41.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Feb 2021 09:41:37 -0800 (PST)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     bhelgaas@google.com
+Cc:     jingoohan1@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: [PATCH] PCI: dwc: exynos: Check the phy_power_on() return value
+Date:   Mon,  8 Feb 2021 14:41:14 -0300
+Message-Id: <20210208174114.615811-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <8edfa4ae-1e78-249d-14fb-0e44a2c51864@gmail.com> <90961c36-b345-5a7c-5ae8-c7c2311b56a8@gmail.com>
-In-Reply-To: <90961c36-b345-5a7c-5ae8-c7c2311b56a8@gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 8 Feb 2021 09:07:13 -0800
-Message-ID: <CAKgT0Ufw-hF92SWqha+yy4hjA0WVYkAZkqZMdnP=+mTJvmvnNA@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 3/3] cxgb4: remove changing VPD len
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 5, 2021 at 2:18 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
->
-> Now that the PCI VPD for Chelsio devices from T4 has been changed and VPD
-> len is set to PCI_VPD_MAX_SIZE (32K), we don't have to change the VPD len
-> any longer.
->
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  .../net/ethernet/chelsio/cxgb4/cudbg_entity.h |  1 -
->  .../net/ethernet/chelsio/cxgb4/cudbg_lib.c    | 21 ++++---------------
->  2 files changed, 4 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h b/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h
-> index 876f90e57..02ccb610a 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_entity.h
-> @@ -220,7 +220,6 @@ struct cudbg_mps_tcam {
->         u8 reserved[2];
->  };
->
-> -#define CUDBG_VPD_PF_SIZE 0x800
->  #define CUDBG_SCFG_VER_ADDR 0x06
->  #define CUDBG_SCFG_VER_LEN 4
->  #define CUDBG_VPD_VER_ADDR 0x18c7
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-> index 75474f810..addac5518 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.c
-> @@ -2689,7 +2689,7 @@ int cudbg_collect_vpd_data(struct cudbg_init *pdbg_init,
->         u32 scfg_vers, vpd_vers, fw_vers;
->         struct cudbg_vpd_data *vpd_data;
->         struct vpd_params vpd = { 0 };
-> -       int rc, ret;
-> +       int rc;
->
->         rc = t4_get_raw_vpd_params(padap, &vpd);
->         if (rc)
-> @@ -2699,24 +2699,11 @@ int cudbg_collect_vpd_data(struct cudbg_init *pdbg_init,
->         if (rc)
->                 return rc;
->
-> -       /* Serial Configuration Version is located beyond the PF's vpd size.
-> -        * Temporarily give access to entire EEPROM to get it.
-> -        */
-> -       rc = pci_set_vpd_size(padap->pdev, EEPROMVSIZE);
-> -       if (rc < 0)
-> -               return rc;
-> -
-> -       ret = cudbg_read_vpd_reg(padap, CUDBG_SCFG_VER_ADDR, CUDBG_SCFG_VER_LEN,
-> -                                &scfg_vers);
-> -
-> -       /* Restore back to original PF's vpd size */
-> -       rc = pci_set_vpd_size(padap->pdev, CUDBG_VPD_PF_SIZE);
-> -       if (rc < 0)
-> +       rc = cudbg_read_vpd_reg(padap, CUDBG_SCFG_VER_ADDR, CUDBG_SCFG_VER_LEN,
-> +                               &scfg_vers);
-> +       if (rc)
->                 return rc;
->
-> -       if (ret)
-> -               return ret;
-> -
->         rc = cudbg_read_vpd_reg(padap, CUDBG_VPD_VER_ADDR, CUDBG_VPD_VER_LEN,
->                                 vpd_str);
->         if (rc)
+phy_power_on() may fail, so we should better check its return
+value and propagate it in the error case.
 
-Assuming that patch 2 is okay then this patch should be fine since it
-is just toggling back and forth between the same value anyway.
+This fixes the following Coverity error:
 
-Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
+	CID 1472841:  Error handling issues  (CHECKED_RETURN)
+	Calling "phy_power_on" without checking return value (as is done elsewhere 40 out of 50 times).
+	phy_power_on(ep->phy);
+	phy_init(ep->phy);
+           
+Reported-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/pci/controller/dwc/pci-exynos.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+index c24dab383654..eabedc0529cb 100644
+--- a/drivers/pci/controller/dwc/pci-exynos.c
++++ b/drivers/pci/controller/dwc/pci-exynos.c
+@@ -254,13 +254,17 @@ static int exynos_pcie_host_init(struct pcie_port *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct exynos_pcie *ep = to_exynos_pcie(pci);
++	int ret;
+ 
+ 	pp->bridge->ops = &exynos_pci_ops;
+ 
+ 	exynos_pcie_assert_core_reset(ep);
+ 
+ 	phy_reset(ep->phy);
+-	phy_power_on(ep->phy);
++	ret = phy_power_on(ep->phy);
++	if (ret < 0)
++		return ret;
++
+ 	phy_init(ep->phy);
+ 
+ 	exynos_pcie_deassert_core_reset(ep);
+-- 
+2.25.1
+
