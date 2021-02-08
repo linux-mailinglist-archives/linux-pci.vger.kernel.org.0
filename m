@@ -2,105 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E5B313B3F
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 18:44:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0AFE313D9A
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 19:34:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234072AbhBHRny (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 12:43:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235006AbhBHRnD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 12:43:03 -0500
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F0CC061797
-        for <linux-pci@vger.kernel.org>; Mon,  8 Feb 2021 09:41:39 -0800 (PST)
-Received: by mail-qv1-xf35.google.com with SMTP id es14so7325455qvb.3
-        for <linux-pci@vger.kernel.org>; Mon, 08 Feb 2021 09:41:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lYKXVdnh/PO9XjtD5IgPdqemjTdpcMN6jzVdD0HqOds=;
-        b=LySTcV8v08xg3n6sD04f5XU2Wwh15eukNDmnjeNYGfAF06hM2BlbfExiOLGaPIGKW7
-         InKbZdUtvbEyo+3ToKAEsfDuRPEyMhZVoRagegoaV2Ep/YNv2bn+BD6INRkwnxRQuA37
-         KWNAw39/80SX9iVbriz6CKOxZvBELz6MiLbOV65qSPY7eDsk1IJMi2p8EQvPrGvZoWao
-         IeyFc8npDXD2lKwUc1K6siIGfIO7fFJWhNnPkYuLr/2PlUjPGYJ7/CtSSuXebHLIa8z7
-         TSOoDG9ayXTE438VJKTB9Ef2EdzU1Ycc4hWZyfso16ZHlvuDDC3WBjqoqjbuMuLx6EOM
-         yvGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lYKXVdnh/PO9XjtD5IgPdqemjTdpcMN6jzVdD0HqOds=;
-        b=jzqsonSVipXVy6wBYjY6dl03D4jtOyFNrzWdBy304nd/mE6WXAXpKgJPREjD2Rn8ip
-         5nwed7lsL+1lnEXPdoGmTTjcT+THzSaj1lPavNVeF3563bR2hrXqX1aw7gFZ4Y88dl2J
-         gSRTKyBN4Cnk6PfA9eGVqfn3W3ZYVkcSArSeR1RnPRgTuVjf0rEgY00xIngSn/UMQdin
-         mofOYMYl0M4h5rwVQ2q+ng3Uy6fzXYzlYPvgdkDdHJwStf2AX35ALmGDc3NBkvLPvkzQ
-         lZk9jmaWJ41Lwokj7sSn7stjWLowQnirmwOCVih2vdUe6IKkwVc6JK9mmsgcZmxv/+Zm
-         PTTA==
-X-Gm-Message-State: AOAM530sKCvFeE+k/YeqvaWb6T1A5awkhYvkd2NyYagVFJs/MguCoAgF
-        bg2uvOqWOQBLUjcltB6GmYk=
-X-Google-Smtp-Source: ABdhPJx9aIGk3y7k4n1/4ueMj7NTptTd+Kt0s9n2df3ZaY04d1fk8C/VPRXlAtuibrQnIZNLlPx07Q==
-X-Received: by 2002:a0c:b617:: with SMTP id f23mr16808161qve.44.1612806098478;
-        Mon, 08 Feb 2021 09:41:38 -0800 (PST)
-Received: from localhost.localdomain ([2804:14c:482:919::1001])
-        by smtp.gmail.com with ESMTPSA id q20sm2629468qke.26.2021.02.08.09.41.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Feb 2021 09:41:37 -0800 (PST)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     bhelgaas@google.com
-Cc:     jingoohan1@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: [PATCH] PCI: dwc: exynos: Check the phy_power_on() return value
-Date:   Mon,  8 Feb 2021 14:41:14 -0300
-Message-Id: <20210208174114.615811-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        id S232677AbhBHSdF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 13:33:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:39996 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235654AbhBHSck (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Feb 2021 13:32:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FEA11042;
+        Mon,  8 Feb 2021 10:31:54 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD1503F73D;
+        Mon,  8 Feb 2021 10:31:52 -0800 (PST)
+Date:   Mon, 8 Feb 2021 18:31:47 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Nadeem Athani <nadeem@cadence.com>
+Cc:     tjoseph@cadence.com, robh@kernel.org, bhelgaas@google.com,
+        kishon@ti.com, linux-omap@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mparab@cadence.com,
+        sjakhade@cadence.com, pthombar@cadence.com
+Subject: Re: [PATCH v7 2/2] PCI: cadence: Retrain Link to work around Gen2
+ training defect.
+Message-ID: <20210208183147.GA12258@e121166-lin.cambridge.arm.com>
+References: <20201230120515.2348-1-nadeem@cadence.com>
+ <20201230120515.2348-3-nadeem@cadence.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201230120515.2348-3-nadeem@cadence.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-phy_power_on() may fail, so we should better check its return
-value and propagate it in the error case.
+On Wed, Dec 30, 2020 at 01:05:15PM +0100, Nadeem Athani wrote:
+> Cadence controller will not initiate autonomous speed change if strapped
+> as Gen2. The Retrain Link bit is set as quirk to enable this speed change.
+> 
+> Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+> ---
+>  drivers/pci/controller/cadence/pci-j721e.c         |  3 ++
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 37 +++++++++++++++++++++-
+>  drivers/pci/controller/cadence/pcie-cadence.h      | 11 ++++++-
+>  3 files changed, 49 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index dac1ac8a7615..849f1e416ea5 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -64,6 +64,7 @@ enum j721e_pcie_mode {
+>  
+>  struct j721e_pcie_data {
+>  	enum j721e_pcie_mode	mode;
+> +	bool quirk_retrain_flag;
+>  };
+>  
+>  static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+> @@ -280,6 +281,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
+>  
+>  static const struct j721e_pcie_data j721e_pcie_rc_data = {
+>  	.mode = PCI_MODE_RC,
+> +	.quirk_retrain_flag = true,
+>  };
+>  
+>  static const struct j721e_pcie_data j721e_pcie_ep_data = {
+> @@ -388,6 +390,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  
+>  		bridge->ops = &cdns_ti_pcie_host_ops;
+>  		rc = pci_host_bridge_priv(bridge);
+> +		rc->quirk_retrain_flag = data->quirk_retrain_flag;
+>  
+>  		cdns_pcie = &rc->pcie;
+>  		cdns_pcie->dev = dev;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 9f7aa718c8d4..f3496588862d 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -94,6 +94,35 @@ static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+> +{
+> +	u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
+> +	u16 lnk_stat, lnk_ctl;
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * Set retrain bit if current speed is 2.5 GB/s,
+> +	 * but the PCIe root port support is > 2.5 GB/s.
+> +	 */
+> +
+> +	lnk_cap_sls = cdns_pcie_readl(pcie, (CDNS_PCIE_RP_BASE + pcie_cap_off +
+> +					     PCI_EXP_LNKCAP));
+> +	if ((lnk_cap_sls & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
+> +		return ret;
+> +
+> +	lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
+> +	if ((lnk_stat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB) {
+> +		lnk_ctl = cdns_pcie_rp_readw(pcie,
+> +					     pcie_cap_off + PCI_EXP_LNKCTL);
+> +		lnk_ctl |= PCI_EXP_LNKCTL_RL;
+> +		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
+> +				    lnk_ctl);
+> +
+> +		ret = cdns_pcie_host_wait_for_link(pcie);
+> +	}
+> +	return ret;
+> +}
+> +
+>  static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>  {
+>  	struct cdns_pcie *pcie = &rc->pcie;
+> @@ -457,8 +486,14 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	}
+>  
+>  	ret = cdns_pcie_host_wait_for_link(pcie);
+> -	if (ret)
+> +	if (ret) {
+>  		dev_dbg(dev, "PCIe link never came up\n");
+> +	} else {
+> +		if (rc->quirk_retrain_flag) {
+> +			if (cdns_pcie_retrain(pcie))
+> +				dev_dbg(dev, "PCIe link never came up\n");
 
-This fixes the following Coverity error:
+I'd move this whole if/else in a function cdns_pcie_host_start_link(),
+IMO that's cleaner.
 
-	CID 1472841:  Error handling issues  (CHECKED_RETURN)
-	Calling "phy_power_on" without checking return value (as is done elsewhere 40 out of 50 times).
-	phy_power_on(ep->phy);
-	phy_init(ep->phy);
-           
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- drivers/pci/controller/dwc/pci-exynos.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
+{
+	struct cdns_pcie *pcie = &rc->pcie;
+	int ret;
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index c24dab383654..eabedc0529cb 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -254,13 +254,17 @@ static int exynos_pcie_host_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct exynos_pcie *ep = to_exynos_pcie(pci);
-+	int ret;
- 
- 	pp->bridge->ops = &exynos_pci_ops;
- 
- 	exynos_pcie_assert_core_reset(ep);
- 
- 	phy_reset(ep->phy);
--	phy_power_on(ep->phy);
-+	ret = phy_power_on(ep->phy);
-+	if (ret < 0)
-+		return ret;
-+
- 	phy_init(ep->phy);
- 
- 	exynos_pcie_deassert_core_reset(ep);
--- 
-2.25.1
+	ret = cdns_pcie_host_wait_for_link(pcie);
+	/*
+	 * PLS ADD A COMMENT HERE
+	 */
+	if (!ret && rc->quirk_retrain_flag)
+		ret = cdns_pcie_retrain(pcie);
 
+	return ret;
+}
