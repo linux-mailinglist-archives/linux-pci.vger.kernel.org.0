@@ -2,99 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5359C31397A
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 17:31:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A25BD313A50
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 18:00:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234363AbhBHQbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 11:31:40 -0500
-Received: from mga06.intel.com ([134.134.136.31]:19248 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234385AbhBHQbf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Feb 2021 11:31:35 -0500
-IronPort-SDR: w8A3dw0pUoqojApfa7isZPsccaizS7S10GYNQ9vNjmhsa2hgaNB0CTkWU89GeHCUpt8iWuQP/y
- H/9tNIvQED7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9889"; a="243239018"
-X-IronPort-AV: E=Sophos;i="5.81,162,1610438400"; 
-   d="scan'208";a="243239018"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2021 08:30:50 -0800
-IronPort-SDR: 8i4vN7cHtGmxFxqlQtWG8JmDoVMk+L7DpLAWuf9/p1Vo9HDd/nPHZeMM7DpX2E/L/Br0bHGXsN
- HW9Bxh8z05XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,162,1610438400"; 
-   d="scan'208";a="435683959"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga001.jf.intel.com with ESMTP; 08 Feb 2021 08:30:50 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 8 Feb 2021 08:30:49 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 8 Feb 2021 08:30:48 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.2106.002;
- Mon, 8 Feb 2021 08:30:48 -0800
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "kw@linux.com" <kw@linux.com>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "Patel, Nirmal" <nirmal.patel@intel.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "jroedel@suse.de" <jroedel@suse.de>,
-        "Karkra, Kapil" <kapil.karkra@intel.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] PCI: vmd: Disable MSI-X remapping when possible
-Thread-Topic: [PATCH v3 2/2] PCI: vmd: Disable MSI-X remapping when possible
-Thread-Index: AQHW/DkUNvX+5gOMpEiNiIzEbeMxXqpOxWOAgAA3ygA=
-Date:   Mon, 8 Feb 2021 16:30:48 +0000
-Message-ID: <37b6f55d6fad77d7536890a540ecf5369f8de0a9.camel@intel.com>
-References: <20210206033502.103964-1-jonathan.derrick@intel.com>
-         <20210206033502.103964-3-jonathan.derrick@intel.com>
-         <YCE4a4swLUTw6j9Y@rocinante>
-In-Reply-To: <YCE4a4swLUTw6j9Y@rocinante>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.1.200.100]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AD7512E5603F2F4FBC75F2218B96054A@intel.com>
-Content-Transfer-Encoding: base64
+        id S234480AbhBHRAR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 12:00:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234655AbhBHRAE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 12:00:04 -0500
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1CDC061786;
+        Mon,  8 Feb 2021 08:59:24 -0800 (PST)
+Received: by mail-il1-x12a.google.com with SMTP id y17so13360820ili.12;
+        Mon, 08 Feb 2021 08:59:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LGzOoaHfO6ykiKcUqxsrDL6YrTaESwHASHuVknVgqFA=;
+        b=PoJgzz7Q6EDnRAZbB3MHO1cSjrYWFDKlCCJwE4IACpFhYoQ0nUu3+oVgiIqITVWmIX
+         ivdIk6e5eT9Ttk+Buv1tlONEZD+YciTCWbY0bvSxpOdseh4F2054UdBsx1U2jaT46kv0
+         K9Co9/GwvV9a/2o35rPpv4P0Nct9mqx/0kOHolFL24XRSlX2nH0cxEByBRM0gow/IVE+
+         fBP5ZzLjdXIcpThKMTnBVta/1GDcB/5g9gtRL0i/ytJi03O8HU1yTufLekiUCYXQP3UJ
+         HccPTyUWRI+BjAguPsSD6pBRHS8Zipn23/nz3lC7/fy5bsbaC4bufVsirsGvt3pPUi/c
+         flMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LGzOoaHfO6ykiKcUqxsrDL6YrTaESwHASHuVknVgqFA=;
+        b=KMXA33UP85b1uE39UH9m9dJS8JJJdsQOhF//6MuQhLnXv/fgyWwyQkfFUzbWHQk6wy
+         ln68qwUhxh3KF3f8JCmGTiFtSfvtqmmiobwwq3zbfdDCXqgz+Vuqb1LCq3M6p8HcIg72
+         EVQ/bDEkgQSa5wer5w+5qujEINKmtJbA3hFDfkYMz5V8c8JKASveIpXx126g+zpr8erC
+         GNAQ/OgJwYkd54rBX4lLClQ8SAgRoPEOh/kMkXE4mfi5HB0pYgemUFl59weoHdAXIqBl
+         0op17Ae/nigBzyjCp9krF6BLw/fq0FBeMEVb0R53ByveqIwN9dmMqnri+ipMb+ArfVpp
+         Gm8Q==
+X-Gm-Message-State: AOAM532tQ2xyVW5knxmp8o94dgCsr5Jv3J1skMhnu1grRi7amS5t1oEw
+        IHtNZwj8tmCJtyQVZFPLHQ3JHCZnFjCPSDMSGcY=
+X-Google-Smtp-Source: ABdhPJyUiTn5jJbrait8KW5QhQszo8cI8BWEtPbFDmG1Y8/yJwJjZj3thVHDaHQgILZZnlBwVphng1stVj3K1HAkPbE=
+X-Received: by 2002:a05:6e02:4cd:: with SMTP id f13mr15675804ils.42.1612803563887;
+ Mon, 08 Feb 2021 08:59:23 -0800 (PST)
 MIME-Version: 1.0
+References: <8edfa4ae-1e78-249d-14fb-0e44a2c51864@gmail.com> <0e55480b-67cb-8a2f-fb82-734d4b1b0eb0@gmail.com>
+In-Reply-To: <0e55480b-67cb-8a2f-fb82-734d4b1b0eb0@gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 8 Feb 2021 08:59:13 -0800
+Message-ID: <CAKgT0UcBoXv5mGr9NFxusqX16mqi3Nr7+2BUZL0=z6Js8d9A7Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 2/3] PCI/VPD: Change Chelsio T4 quirk to
+ provide access to full virtual address space
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Raju Rangoju <rajur@chelsio.com>, Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgS3J6eXN6dG9mLA0KDQpPbiBNb24sIDIwMjEtMDItMDggYXQgMTQ6MTEgKzAxMDAsIEtyenlz
-enRvZiBXaWxjennFhHNraSB3cm90ZToNCj4gSGkgSm9uLA0KPiANCj4gVGhhbmsgeW91IGZvciBh
-bGwgdGhlIHdvcmsgaGVyZSENCj4gDQo+IEp1c3QgYSBudW1iZXIgb2Ygc3VnZ2VzdGlvbnMsIG1h
-aW5seSBuaXRwaWNrcywgc28gZmVlbCBmcmVlIHRvIGlnbm9yZQ0KPiB0aGVzZSwgb2YgY291cnNl
-Lg0KPiANCj4gWy4uLl0NCj4gPiArI2RlZmluZSBWTUNGR19NU0lfUk1QX0RJUwkweDINCj4gWy4u
-Ll0NCj4gDQo+IFdoYXQgYWJvdXQgY2FsbGluZyB0aGlzIFZNQ09ORklHX01TSV9SRU1BUCBzbyB0
-aGF0IGlzIG1vcmUNCj4gc2VsZi1leHBsYW5hdG9yeSAoaXQgYWxzbyBzaGFyZXMgc29tZSBzaW1p
-bGFyaXR5IHdpdGggdGhlDQo+IFBDSV9SRUdfVk1DT05GSUcgZGVmaW50aXRpb24pLg0KPiANCj4g
-Wy4uLl0NCj4gPiArCVZNRF9GRUFUX0JZUEFTU19NU0lfUkVNQVAJCT0gKDEgPDwgNCksDQo+IFsu
-Li5dDQo+IA0KPiBGb2xsb3dpbmcgb24gdGhlIG5hbWluZyB0aGF0IGluY2x1ZGVkICJIQVMiIHRv
-IGluZGljYXRlIGEgZmVhdHVyZSAob3INCj4gc3VwcG9ydCBmb3IgdGhlcmVvZiksIHBlcmhhcHMg
-d2UgY291bGQgbmFtZSB0aGlzIGFzLCBmb3IgZXhhbXBsZToNCj4gDQo+IAlWTURfRkVBVF9DQU5f
-QllQQVNTX01TSV9SRU1BUA0KPiANCj4gV2hhdCBkbyB5b3UgdGhpbms/DQpTdXJlDQoNCj4gDQo+
-IFsuLi5dIA0KPiA+ICtzdGF0aWMgdm9pZCB2bWRfZW5hYmxlX21zaV9yZW1hcHBpbmcoc3RydWN0
-IHZtZF9kZXYgKnZtZCwgYm9vbCBlbmFibGUpDQo+ID4gK3sNCj4gPiArCXUxNiByZWc7DQo+ID4g
-Kw0KPiA+ICsJcGNpX3JlYWRfY29uZmlnX3dvcmQodm1kLT5kZXYsIFBDSV9SRUdfVk1DT05GSUcs
-ICZyZWcpOw0KPiA+ICsJcmVnID0gZW5hYmxlID8gKHJlZyAmIH5WTUNGR19NU0lfUk1QX0RJUykg
-OiAocmVnIHwgVk1DRkdfTVNJX1JNUF9ESVMpOw0KPiA+ICsJcGNpX3dyaXRlX2NvbmZpZ193b3Jk
-KHZtZC0+ZGV2LCBQQ0lfUkVHX1ZNQ09ORklHLCByZWcpOw0KPiA+ICt9DQo+IA0KPiBJIHdvbmRl
-ciBpZiBjYWxsaW5nIHRoaXMgZnVuY3Rpb24gdm1kX3NldF9tc2lfcmVtYXBwaW5nKCkgd291bGQg
-YmUgbW9yZQ0KPiBhbGlnbmVkIHdpdGggd2hhdCBpdCBkb2VzLCBzaW5jZSBpdCB0dXJucyB0aGUg
-TVNJIHJlbWFwcGluZyBzdXBwb3J0IG9uDQo+IGFuZCBvZmYsIHNvIHRvIHNwZWFrLCBhcyBuZWVk
-ZWQuICBEbyB5b3UgdGhpbmsgdGhpcyB3b3VsZCBiZSBPSyB0byBkbz8NCj4gDQpZZXMgdGhhdCBt
-YWtlcyBzZW5zZQ0KDQo+IFsuLi5dDQo+ID4gKwkJLyoNCj4gPiArCQkgKiBPdmVycmlkZSB0aGUg
-aXJxIGRvbWFpbiBidXMgdG9rZW4gc28gdGhlIGRvbWFpbiBjYW4gYmUNCj4gPiArCQkgKiBkaXN0
-aW5ndWlzaGVkIGZyb20gYSByZWd1bGFyIFBDSS9NU0kgZG9tYWluLg0KPiA+ICsJCSAqLw0KPiAN
-Cj4gSXQgd291bGQgYmUgIklSUSIgaGVyZS4NCj4gDQpObyBwcm9ibGVtIQ0KDQoNCj4gUmV2aWV3
-ZWQtYnk6IEtyenlzenRvZiBXaWxjennFhHNraSA8a3dAbGludXguY29tPg0KPiANClRoYW5rcyEN
-Cg0KPiBLcnp5c3p0b2YNCg==
+On Fri, Feb 5, 2021 at 2:15 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>
+> cxgb4 uses the full VPD address space for accessing its EEPROM (with some
+> mapping, see t4_eeprom_ptov()). In cudbg_collect_vpd_data() it sets the
+> VPD len to 32K (PCI_VPD_MAX_SIZE), and then back to 2K (CUDBG_VPD_PF_SIZE).
+> Having official (structured) and inofficial (unstructured) VPD data
+> violates the PCI spec, let's set VPD len according to all data that can be
+> accessed via PCI VPD access, no matter of its structure.
+>
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+>  drivers/pci/vpd.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index 7915d10f9..06a7954d0 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -633,9 +633,8 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+>         /*
+>          * If this is a T3-based adapter, there's a 1KB VPD area at offset
+>          * 0xc00 which contains the preferred VPD values.  If this is a T4 or
+> -        * later based adapter, the special VPD is at offset 0x400 for the
+> -        * Physical Functions (the SR-IOV Virtual Functions have no VPD
+> -        * Capabilities).  The PCI VPD Access core routines will normally
+> +        * later based adapter, provide access to the full virtual EEPROM
+> +        * address space. The PCI VPD Access core routines will normally
+>          * compute the size of the VPD by parsing the VPD Data Structure at
+>          * offset 0x000.  This will result in silent failures when attempting
+>          * to accesses these other VPD areas which are beyond those computed
+> @@ -644,7 +643,7 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+>         if (chip == 0x0 && prod >= 0x20)
+>                 pci_set_vpd_size(dev, 8192);
+>         else if (chip >= 0x4 && func < 0x8)
+> -               pci_set_vpd_size(dev, 2048);
+> +               pci_set_vpd_size(dev, PCI_VPD_MAX_SIZE);
+>  }
+>
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+
+So as I recall the size value was added when some hardware was hanging
+when an out-of-bounds read occured from various tools accessing the
+VPD. I'm assuming if you are enabling full access the T4 hardware can
+handle cases where an out-of-bounds read is requested?
+
+Otherwise the code itself looks fine to me.
+
+Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
