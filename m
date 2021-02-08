@@ -2,66 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38AC0312E48
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 11:00:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 215BB31301A
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 12:07:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231840AbhBHKA1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 05:00:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231984AbhBHJy7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 04:54:59 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C810C0698D8
-        for <linux-pci@vger.kernel.org>; Mon,  8 Feb 2021 01:46:30 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id m6so9383519pfk.1
-        for <linux-pci@vger.kernel.org>; Mon, 08 Feb 2021 01:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
-        b=EBAN8kT/RdDTitIJIwHViEDhHzNJv4CIWk9rs6YltTkWZ458GA493YyOdSoiZ3kf2I
-         cdNbMkg2fZDvPvkuycg7WSARNJ/puPrDyOFIWKtgjChKMEIfkIP2Q2XVpBk+DA9Lhucn
-         6XQlMQaKQZVW2ZyZN5QBK8n9vbP0QwsOuCEl8YnAfifh/FxrfAzpfX38semmARrCGxh8
-         WFi+25A8lhFcplpes37lwhh0IayXXJWFPkoQ+knUplL4fyj/9WvmsAavsN2O11FqYU0q
-         sXGcgyuoksh1FLpl3IVpUWra/8A8W9zD+TSlCF6rCGoTQRx8E8R9VquYNvg3vN5bAAWe
-         XSXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
-        b=W3Q1trMZF2dhUBxf5lrJOvCTeZUrK1AMTzpjUlRto1/fmG66s8UxUUvRhkEzgHiyEM
-         zVSY8GT9V3GZVscaCc6oEBUw6k6pDeZtOaCME/rjADwNGpyV7HPeTSuuUx2Egbq1kRiZ
-         oeIoxZDrqfnYm0+HyefBKbCzKqIUEgf9whjihkPkMInjoHtNLODRzbJGn1g5pv2AXzr3
-         7raGYuqEU4vQdNPiTKEmu35kCQzqyyCwJNzH7vWIRw2HDkrLXByEdMQ7gXDeeuDnQWCO
-         rUNcQGXmW74WP1KdtfnmQUypRnQk1Br9q46JBZ4KWI1Gzb3/EJmV7MWSvPMLjZC1g87/
-         hJmg==
-X-Gm-Message-State: AOAM532ob22NGlCmP0pxsbRfG6+iUBORLUwGRulqFFbqMCDxup2sgkg0
-        5+bcxkmJab1FJbKF9waC32WCVgnts4QprQtdrFg=
-X-Google-Smtp-Source: ABdhPJybDL+KhCvXPDIs57vnx74bKnUW7LRfIk9mtYaX6Td3ETIAJUIor6BltYlrl2tm2rDxnhIvTg/8Y9D/vq+/hVc=
-X-Received: by 2002:a63:c84a:: with SMTP id l10mr16253996pgi.159.1612777589348;
- Mon, 08 Feb 2021 01:46:29 -0800 (PST)
+        id S232867AbhBHLGc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 06:06:32 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:12868 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232830AbhBHLAK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 06:00:10 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DZ30122gDz7hqt;
+        Mon,  8 Feb 2021 18:57:53 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.498.0; Mon, 8 Feb 2021
+ 18:59:10 +0800
+From:   Luo Jiaxing <luojiaxing@huawei.com>
+To:     <maz@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linuxarm@openeuler.org>
+Subject: [PATCH v1 0/2] irqchip/gic-v3-its: don't set bitmap for LPI which user didn't allocate
+Date:   Mon, 8 Feb 2021 18:58:44 +0800
+Message-ID: <1612781926-56206-1-git-send-email-luojiaxing@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Received: by 2002:a17:90a:5d0a:0:0:0:0 with HTTP; Mon, 8 Feb 2021 01:46:29
- -0800 (PST)
-Reply-To: richadtomm@qq.com
-From:   "Mr.Richard Thomas" <tommiirrrch@gmail.com>
-Date:   Mon, 8 Feb 2021 01:46:29 -0800
-Message-ID: <CAGbSTZMAc0EF+BT96=ag5apRs+Aauw-A-2pin2QX1dEQy+tMew@mail.gmail.com>
-Subject: Re Thanks.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Friend,
-I will be pleased if you can allow me to invest $104M Dollars in
-Estate Management,in your company or any area you best that will be
-of good profit to both of us
+When the number of online CPUs is less than 16, we found that it will fail
+to allocate 32 MSI interrupts (including 16 affinity interrupts) after the
+hisi_sas module is unloaded and then reloaded.
 
-Please do well to respond including your information for more details.
+After analysis, it is found that a bug exists when the ITS releases
+interrupt resources, and this patch set contains a bugfix patch and a patch
+for appending debugging information.
 
-Thanks.
-Mr.Richard Thomas
+Luo Jiaxing (2):
+  irqchip/gic-v3-its: don't set bitmap for LPI which user didn't
+    allocate
+  genirq/msi: add an error print when __irq_domain_alloc_irqs() failed
+
+ drivers/irqchip/irq-gic-v3-its.c | 4 ++++
+ kernel/irq/msi.c                 | 1 +
+ 2 files changed, 5 insertions(+)
+
+-- 
+2.7.4
+
