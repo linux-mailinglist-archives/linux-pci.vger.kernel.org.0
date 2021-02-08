@@ -2,102 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3809B3127D0
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Feb 2021 23:17:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 439BB3128DD
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 03:03:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbhBGWQx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Feb 2021 17:16:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbhBGWQw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Feb 2021 17:16:52 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F2DAC06174A;
-        Sun,  7 Feb 2021 14:16:12 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id d3so19420063lfg.10;
-        Sun, 07 Feb 2021 14:16:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=amw+arajV2h5jip6V0/FYm9nsxnyFJgWfDun4yL2hWo=;
-        b=Qxz3qIx4N/K/ylzxBOh9LpEAJVJER0i3fj5x5/b4eYTiPdgZowWin7i0TJhL3YBGYX
-         nqUU4rin5JIo4EF9yw/Ct4YDapLRWVueBm8FZguVaNpmhpn+GUSOGOmHQfmxdEFFuC8Q
-         813WjLZU5WM+3YdNjdP3GZc3hhKDoeAQ+3MLzwtsQuRjmFv8VXnCZ9LMS87ggn6rN8XO
-         a10sgapTHYd7EqRAsKEysMqnlXuw5Tq4yMN53oCC8rKkoZ5naGSafn231Ih80kr3ro0R
-         QjVuXaiMF5Rp3GSxU1lln7BDoxWUMov4gzapyFc+Rl2Tgj+MrexZG5WmBVVlMKGqGCQX
-         UtXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=amw+arajV2h5jip6V0/FYm9nsxnyFJgWfDun4yL2hWo=;
-        b=Je20lzumsezgDfAP2CJ6rJRtNzPAReP+L5hWVT0CXJEakDpJAyNPq2LaBCmPSadMZL
-         IzibS6DFGC2QM6Hh0nADWVwVhRCT08n9QxILyhFEq0GE/L0gfzVe4bWOIKXX1M0NzV5O
-         EYm01xcnW8WvrhWstClcgNppP7eZpN1ZmPMh6rQrBwLMG2RP7ZSmQrXJwrtEfP5TbiQk
-         OBoKN6smJA/tDk75dkf8xCSUFOQ0vaJ91l0WOKHWJuZVax5gU8+wSKomlaZ5Hmy60BB7
-         GTokmZDgVOFitI4E4xeY0mM7iVWujaE78uQGgUKqy64DDDsbHhmeeh/cpUDrq7Vti3dq
-         ZJ1g==
-X-Gm-Message-State: AOAM531XX5ecHHQ/yRN0s2DE3fntsPHD6RGBHgczPrTOk7mxzIRk2cix
-        AlwSKP9ALLnyym8thhEgOS++lgJq58BchQ==
-X-Google-Smtp-Source: ABdhPJyjaJRB143WhUN8+rLijJv2/iICLgKR/rcd245VCxOBQw4+5emTlBYz3D77P7u2f2YLo877sg==
-X-Received: by 2002:ac2:5639:: with SMTP id b25mr8348018lff.370.1612736170304;
-        Sun, 07 Feb 2021 14:16:10 -0800 (PST)
-Received: from localhost.localdomain (h-158-174-22-164.NA.cust.bahnhof.se. [158.174.22.164])
-        by smtp.gmail.com with ESMTPSA id y25sm1873866lfe.20.2021.02.07.14.16.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Feb 2021 14:16:09 -0800 (PST)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, Jingoo Han <jingoohan1@gmail.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH] PCI: tegra: Constify static structs
-Date:   Sun,  7 Feb 2021 23:16:04 +0100
-Message-Id: <20210207221604.48910-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.30.0
+        id S229631AbhBHCCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Feb 2021 21:02:03 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55664 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229570AbhBHCCC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Feb 2021 21:02:02 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 11820AkW123340;
+        Sun, 7 Feb 2021 20:00:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1612749610;
+        bh=cUtFIfOlkE66hKZ1iSDwIL9jGzTqS4QxLAUcpT4MTbM=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=apsu4RILEZPLAGEaHnF7AHIxBXnqVsHiIrfJNRUxWE9k4p00Fibsx4Hh8JAMM5eGc
+         MSTyzFqD8sBnIJ562Xr7lFcGOEb7I8Q/G3tid/MpGf6Iygj74Mhbofy8hM+CD7d/kW
+         Qq2+En/2/+KkTOGFb+zks4j20TMRza3RHrWg72NM=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 11820ANp120619
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 7 Feb 2021 20:00:10 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sun, 7 Feb
+ 2021 20:00:09 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Sun, 7 Feb 2021 20:00:09 -0600
+Received: from [10.250.232.75] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 118205jW070770;
+        Sun, 7 Feb 2021 20:00:06 -0600
+Subject: Re: [PATCH v7 0/2] PCI: cadence: Retrain Link to work around Gen2
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Nadeem Athani <nadeem@cadence.com>, <tjoseph@cadence.com>,
+        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <linux-omap@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <pthombar@cadence.com>
+References: <20201230120515.2348-1-nadeem@cadence.com>
+ <15abdca0-d1e1-64b7-4a9a-d7549f035e01@ti.com>
+Message-ID: <c9cd405b-024c-cc80-586a-7fd3d28dfd96@ti.com>
+Date:   Mon, 8 Feb 2021 07:30:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <15abdca0-d1e1-64b7-4a9a-d7549f035e01@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The only usage of them is to assign their address to the 'ops' field in
-the pcie_port and the dw_pcie_ep structs, both which are pointers to
-const. Make them const to allow the compiler to put them in read-only
-memory.
+Hi Lorenzo, Rob,
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 12/01/21 12:45 pm, Kishon Vijay Abraham I wrote:
+> 
+> 
+> On 30/12/20 5:35 pm, Nadeem Athani wrote:
+>> Cadence controller will not initiate autonomous speed change if strapped
+>> as Gen2. The Retrain Link bit is set as quirk to enable this speed change.
+>> Adding a quirk flag for defective IP. In future IP revisions this will not
+>> be applicable.
+>>
+>> Version history:
+>> Changes in v7:
+>> - Changing the commit title of patch 1 in this series.
+>> - Added a return value for function cdns_pcie_retrain().
+>> Changes in v6:
+>> - Move the position of function cdns_pcie_host_wait_for_link to remove
+>>   compilation error. No changes in code. Separate patch for this.
+>> Changes in v5:
+>> - Remove the compatible string based setting of quirk flag.
+>> - Removed additional Link Up Check
+>> - Removed quirk from pcie-cadence-plat.c and added in pci-j721e.c
+>> Changes in v4:
+>> - Added a quirk flag based on a new compatible string.
+>> - Change of api for link up: cdns_pcie_host_wait_for_link().
+>> Changes in v3:
+>> - To set retrain link bit,checking device capability & link status.
+>> - 32bit read in place of 8bit.
+>> - Minor correction in patch comment.
+>> - Change in variable & macro name.
+>> Changes in v2:
+>> - 16bit read in place of 8bit.
+> 
+> Could get GEN2 card enumerated in GEN2 mode in J7ES EVM.
+> 
+> Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 6fa216e52d14..18acd48e8e9b 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1019,7 +1019,7 @@ static const struct dw_pcie_ops tegra_dw_pcie_ops = {
- 	.stop_link = tegra_pcie_dw_stop_link,
- };
- 
--static struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
-+static const struct dw_pcie_host_ops tegra_pcie_dw_host_ops = {
- 	.host_init = tegra_pcie_dw_host_init,
- };
- 
-@@ -1881,7 +1881,7 @@ tegra_pcie_ep_get_features(struct dw_pcie_ep *ep)
- 	return &tegra_pcie_epc_features;
- }
- 
--static struct dw_pcie_ep_ops pcie_ep_ops = {
-+static const struct dw_pcie_ep_ops pcie_ep_ops = {
- 	.raise_irq = tegra_pcie_ep_raise_irq,
- 	.get_features = tegra_pcie_ep_get_features,
- };
--- 
-2.30.0
+Can this series be merged?
 
+Thanks
+Kishon
+
+> 
+> Thanks
+> Kishon
+>>
+>> Nadeem Athani (2):
+>>   PCI: cadence: Shifting of a function to support new code.
+>>   PCI: cadence: Retrain Link to work around Gen2 training defect.
+>>
+>>  drivers/pci/controller/cadence/pci-j721e.c         |  3 +
+>>  drivers/pci/controller/cadence/pcie-cadence-host.c | 70 ++++++++++++++++------
+>>  drivers/pci/controller/cadence/pcie-cadence.h      | 11 +++-
+>>  3 files changed, 65 insertions(+), 19 deletions(-)
+>>
