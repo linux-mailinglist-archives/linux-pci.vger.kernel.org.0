@@ -2,88 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75A803142C2
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 23:20:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A25C31434D
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 23:55:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbhBHWUo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 17:20:44 -0500
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:41497 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229754AbhBHWU1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 17:20:27 -0500
-Received: by mail-wr1-f43.google.com with SMTP id n6so6244093wrv.8
-        for <linux-pci@vger.kernel.org>; Mon, 08 Feb 2021 14:20:11 -0800 (PST)
+        id S231259AbhBHWym (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 17:54:42 -0500
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:38789 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231193AbhBHWyj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 17:54:39 -0500
+Received: by mail-wr1-f54.google.com with SMTP id b3so19152472wrj.5;
+        Mon, 08 Feb 2021 14:54:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=YlOpw/FJ0voz3T7tDPp2AUxXKXP0XbUl5aH4GyttCzc=;
-        b=Uh1vEstk5vvfe1bav6iiOVzgyWidsmFFW20/btYsgS2OF8kfsUuTcKOLkoCYEIy1f3
-         LSeZ/BWoi9FWwn3O1vBHxJAtW1Su4SxxPQxeFaO+pz44ce/3yeU+6Nhd1f0sOQJpQLcN
-         O+q5i7kr1/4u68tf3q3CXXlPK1BQsIatZxIxIWKy0tNd0iUXWOEKJ0C9kYA3icEElJpg
-         hE4Hq2tH3pZMsFB/M0U8+QqjDIUt4RF8hASofpXCiPFsQx2N1E37hxlBCSFFdgIy9Ly6
-         pjBkIewdyylit2Ne7EyquyZ6H+kLzs6eZM5i4XWHC+FN+RUhNgdApmvh2j490OS6tf9R
-         MOeQ==
-X-Gm-Message-State: AOAM5305MvwvsZQmsNboAL2Fb6QLgjuspKsrQkRwsOnLrGljsn3uIfKj
-        KIr/N14p+cDq7rZWhooyxlo=
-X-Google-Smtp-Source: ABdhPJyvkCUlaByyTn5Pj5govoT0DH87sgPLRqdgy5NM+oXEgMEc32GgMm5mmRIpXHnNmnoOMK4ndg==
-X-Received: by 2002:a5d:51cf:: with SMTP id n15mr21531193wrv.303.1612822786197;
-        Mon, 08 Feb 2021 14:19:46 -0800 (PST)
+        bh=kS2s2dPI8ytNFZbp+yZg3gpLYqkSZkDa3K+KlRfCscc=;
+        b=X6g1SUM14CetOT8E28Ij12tvO3sKdtFYfP4eUdMWrSEnhq5VstpxEFFtEkzI+XE9ct
+         xFLCD+BgWInAou/8idYKJ0P+T30+BvANod/UiKtxb6Nvvw4QcVcv79Zn3ORoMVr5XbjX
+         tzC4pMtH9g/WIE+iLFmvJAeZBbuOeoz4LIiGTgTCA+Gz2p80EAzAFPgwN2Oi5G3A8ZzM
+         tB7FnVn9Xc1TpluQ1zAwzgPEd0YHjehqFk0lSJjeuYyyH6EbwY5JxiW/Ls1MT27Pi7+y
+         hTTGpyZ2zlf7iddiJEzMgOSt7lv0m3tlPmO5xFybEnTybqTfLKoB67Pgg6OEAJrN/TuE
+         KR3A==
+X-Gm-Message-State: AOAM530gkLMJsm/CquxUuHbqsUDxDMkyuw/7GPtpZsHE2uttBLKTis/O
+        pel5MSp6MVYuJsaTd55Tk3E=
+X-Google-Smtp-Source: ABdhPJymt7En80dZe3oV3AmeF01oXinFd+vz4l2FwpOdSJenB05fjyQ1B2jwhWUBri8ayNY6K/YUnw==
+X-Received: by 2002:a5d:4287:: with SMTP id k7mr7719744wrq.317.1612824836871;
+        Mon, 08 Feb 2021 14:53:56 -0800 (PST)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id 17sm950034wmf.32.2021.02.08.14.19.45
+        by smtp.gmail.com with ESMTPSA id b2sm11598136wrv.73.2021.02.08.14.53.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Feb 2021 14:19:45 -0800 (PST)
-Date:   Mon, 8 Feb 2021 23:19:44 +0100
+        Mon, 08 Feb 2021 14:53:55 -0800 (PST)
+Date:   Mon, 8 Feb 2021 23:53:54 +0100
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>, linux-pci@vger.kernel.org
-Subject: Re: New Defects reported by Coverity Scan for Linux
-Message-ID: <YCG5AHUbK4LjdujQ@rocinante>
-References: <6020c2368a549_2dfbcf2b02da5acf501000c7@prd-scan-dashboard-0.mail>
- <20210208162651.GA392069@bjorn-Precision-5520>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [RESEND v4 1/6] misc: Add Synopsys DesignWare xData IP driver
+Message-ID: <YCHBAmFAOv/Joqp5@rocinante>
+References: <cover.1612390291.git.gustavo.pimentel@synopsys.com>
+ <bba090c3d9d3d90fb2dfe5f2aaa52c155d87958f.1612390291.git.gustavo.pimentel@synopsys.com>
+ <YB9EDzI7mSrzXUUB@rocinante>
+ <DM5PR12MB18354765D69889F2CD6E4D89DA8F9@DM5PR12MB1835.namprd12.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210208162651.GA392069@bjorn-Precision-5520>
+In-Reply-To: <DM5PR12MB18354765D69889F2CD6E4D89DA8F9@DM5PR12MB1835.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Fabio]
+[+cc Bjorn]
 
-Hi Bjorn, Lorenzo and Rob,
+Hi Gustavo,
 
 [...]
-> > *** CID 1472841:  Error handling issues  (CHECKED_RETURN)
-> > /drivers/pci/controller/dwc/pci-exynos.c: 263 in exynos_pcie_host_init()
-> > 257     
-> > 258     	pp->bridge->ops = &exynos_pci_ops;
-> > 259     
-> > 260     	exynos_pcie_assert_core_reset(ep);
-> > 261     
-> > 262     	phy_reset(ep->phy);
-> > >>>     CID 1472841:  Error handling issues  (CHECKED_RETURN)
-> > >>>     Calling "phy_power_on" without checking return value (as is done elsewhere 40 out of 50 times).
-> > 263     	phy_power_on(ep->phy);
-> > 264     	phy_init(ep->phy);
-> > 265     
-> > 266     	exynos_pcie_deassert_core_reset(ep);
-> > 267     	exynos_pcie_enable_irq_pulse(ep);
-> > 268     
+> Thanks for your review. I will wait for a couple of days, before sending 
+> a new version of this patch series based on your feedback.
 
-We also have the following defect detected in the same file, and it's of
-an identical nature - lack of error checking.  The reported defect:
+Thank you!
 
-263        phy_power_on(ep->phy);
-CID 1471267 (#1 of 1): Unchecked return value (CHECKED_RETURN)
-2. check_return: Calling phy_init without checking return value (as is done elsewhere 41 out of 49 times).
-264        phy_init(ep->phy);
+There might be one more change, and improvement, to be done as per
+Bjorn's feedback, see:
 
-This would also be quite trivial to fix, but I don't know much about
-Exons, thus I am not sure if there is anything special it would need
-aside of perhaps phy_power_off() and phy_exit(), etc.
+  https://lore.kernel.org/linux-pci/20210208193516.GA406304@bjorn-Precision-5520/
+
+The code in question would be (exceprt from the patch):
+
+[...]
++static int dw_xdata_pcie_probe(struct pci_dev *pdev,
++			       const struct pci_device_id *pid)
++{
++	const struct dw_xdata_pcie_data *pdata = (void *)pid->driver_data;
++	struct dw_xdata *dw;
+[...]
++	dw->rg_region.vaddr = pcim_iomap_table(pdev)[pdata->rg_bar];
++	if (!dw->rg_region.vaddr)
++		return -ENOMEM;
+[...]
+
+Perhaps something like the following would would?
+
+void __iomem * const *iomap_table;
+
+iomap_table = pcim_iomap_table(pdev);
+if (!iomap_table)
+        return -ENOMEM;
+
+dw->rg_region.vaddr = iomap_table[pdata->rg_bar];
+if (!dw->rg_region.vaddr)
+	return -ENOMEM;
+
+With sensible error messages added, of course.  What do you think?
 
 Krzysztof
