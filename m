@@ -2,198 +2,190 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04C13314052
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 21:23:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E48331427C
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Feb 2021 23:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232871AbhBHUXB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Feb 2021 15:23:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34100 "EHLO
+        id S231894AbhBHWBm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Feb 2021 17:01:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236724AbhBHUW0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 15:22:26 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3454AC061786;
-        Mon,  8 Feb 2021 12:21:44 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id g10so18793784wrx.1;
-        Mon, 08 Feb 2021 12:21:44 -0800 (PST)
+        with ESMTP id S231480AbhBHWB1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Feb 2021 17:01:27 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85531C06178C
+        for <linux-pci@vger.kernel.org>; Mon,  8 Feb 2021 14:00:47 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id z22so20895500edb.9
+        for <linux-pci@vger.kernel.org>; Mon, 08 Feb 2021 14:00:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vtCMCN6heQ0ZaJ85S8b5oAfnL6kyt6McH4Z8RZ7mgLA=;
-        b=vKTRu6fjJjSTc+uIjmdl+uP8zSuI9QBmP9EYRhGl526AfX8yqjgt3RSvZMQ1MMx+J6
-         UhFsNavUilJwc09MBpP6SBT2GcC0DTbOT/5j2d564VZP7QHi4M7koYHxtbyvbjSYE+nt
-         fTd8CmTNvBgBSO/nfz9bG/KV9xxpHZwe1T2s+yh4BesunYWSvmo83XxT7qILRdHvgTCC
-         kTOI0iCXa74hkRUDKRqO1rkT6DgM9fRtkugq2Nb8znCM1637TqqpylgX2U8u17wlE9Zv
-         Cp/p5mdu9LC/MVxks1mVi1cwvbkIs6d2q4t3IrJ1OQK68klrWBq2f/Df/g7IE7jJBRbp
-         HyAA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r89J6l710rUUDBhc44yP9Tx7/jektan0rwuh5uDDLWM=;
+        b=dsSy7+QIlUg5fJpnCw9Jd2tbEIKMm1oBaH+E8Z+UF+9JNrqf0vnWP99MMBXL4Dj6qJ
+         2cNYA+BKdops1ogWwVks3MoYZa2xMVCy/zAx5/NTrJ3ewbvfS/t5fWZxYGw0+RmygcmF
+         hI5ZEcIJZEK4e3zu0GJiHhW92iNKeo+ke7GCsPCmqOYeREGE40sC7zXYKpJvr4dLw3J4
+         g9GwkNA0sl5H9aJ8Bqz1l3mKvnuBRSaIAzfLobI1s08Xgm1ev0bRxErIZxgjG4w1w5ck
+         fSvWmtuMpa01tpXV0wjl7CYUpZKjXc8K6BhI98L8FuS1cUFdUkkEnqGJA92N4/7fSB3N
+         yttg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vtCMCN6heQ0ZaJ85S8b5oAfnL6kyt6McH4Z8RZ7mgLA=;
-        b=BvuoKpo9v5sh3SVGY/FuxnytYIbcPrRSw0Ud96cZYlZnbW/c+CmAA5d/fCDZgtzXmq
-         EVYZEDP8kzZ2204mVEybB/ensPCVmHF4Y7aknpXFd8GnFr9R9KzZy4HhgPwpj/WJ8lsv
-         ys/mFvPMRz9Cqw6hMfIlmUC6rE7fROV+3Jge5vU7GoyShdwFXjaUXMtbY86c1f2eqn5v
-         4TwG0AVaBJF0r8FTLoDJFhH29PeAuFNpYWp5mm6SZ+8y70ZvH8Xhx2AVnCvgdKaUDXN0
-         nN38CmE3NgO+89GxC6UHGp+gMe6e6cI11Cl0b+gVJ8g5ZSm4CD7i1rwbo0lHBEOjN+t0
-         CwDw==
-X-Gm-Message-State: AOAM530kHk5KJA72NlZAFat4Txe6flBgSKd1g+1B5SRhFJb9lTm8evA6
-        df+IswulWYAut6zCtcZ/jtFr3ylCLWKKuQ==
-X-Google-Smtp-Source: ABdhPJw17hMAqllGiRC4rR6/pMULDn8Fe03uwYTnQJ8eAURYu62GC1p561PNOroqLn0Q09KzDCWyLw==
-X-Received: by 2002:adf:f512:: with SMTP id q18mr21539601wro.55.1612815702601;
-        Mon, 08 Feb 2021 12:21:42 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f1f:ad00:f9e7:a381:9de9:80df? (p200300ea8f1fad00f9e7a3819de980df.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:f9e7:a381:9de9:80df])
-        by smtp.googlemail.com with ESMTPSA id a9sm16550077wrn.60.2021.02.08.12.21.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Feb 2021 12:21:42 -0800 (PST)
-To:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Raju Rangoju <rajur@chelsio.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Casey Leedom <leedom@chelsio.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20210205214621.GA198699@bjorn-Precision-5520>
- <6d05f72b-9a61-6da8-e70e-d4b3cdf3ca28@gmail.com>
- <20210208194740.GA24818@chelsio.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH resend net-next v2 2/3] PCI/VPD: Change Chelsio T4 quirk
- to provide access to full virtual address space
-Message-ID: <62621fec-8967-597d-359e-caf12d4ec3b3@gmail.com>
-Date:   Mon, 8 Feb 2021 21:21:38 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r89J6l710rUUDBhc44yP9Tx7/jektan0rwuh5uDDLWM=;
+        b=B0MnFU1Mif36CjVCYPcnLMsBBxgEsahMg+7J75WN7qgcX8x0QHPm9/Dx9HJPeGQStx
+         HBJRnRhgVfb6kk+jS0r2TC7PL4Nte36KHE410K69h7Db0ZxjvVn+osevaVhgyTto2Pk0
+         T+o9QUkfQyj8NZir4Z5a4XtxGk0ADUEOmbwbIeLf/aDOjHST6mlBENEHlINQANymj/7R
+         X5lZLh77y9BwMgyLADlmVGVchgAfqDvT0SmmMTbFTp6lRgi7MRRYPlXZyOADnRCmr4+D
+         TSemwaiwG/c/IX3Th4HWfYlMbcJAj7S5dBnGJg8TzlmvSd7KXxceuK2+drZKJ6kRKPFc
+         5jKw==
+X-Gm-Message-State: AOAM531z4bB8uAm1vTnIU1ajCdOtgS6UjHDIOTL8L0rrTX0XDsGwH36S
+        9elsLB24PaLxLxx3UTOaT91gPOY/zAZAyx4QG8y2IA==
+X-Google-Smtp-Source: ABdhPJzY6/u+KZJ6MZj37P3ZJJx43Erb+zC9cXNDhUnY3tNXxRfpzBL1HuhT2GNObnY0azh1Mn/lu14uXsB7CMBo1vw=
+X-Received: by 2002:a05:6402:5107:: with SMTP id m7mr19262106edd.52.1612821645375;
+ Mon, 08 Feb 2021 14:00:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210208194740.GA24818@chelsio.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210130002438.1872527-1-ben.widawsky@intel.com> <20210130002438.1872527-9-ben.widawsky@intel.com>
+In-Reply-To: <20210130002438.1872527-9-ben.widawsky@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 8 Feb 2021 14:00:33 -0800
+Message-ID: <CAPcyv4iPXqO5FL4_bmMQaSvmUm9FVrPv9yPJr3Q4DQWYf4t5hQ@mail.gmail.com>
+Subject: Re: [PATCH 08/14] taint: add taint for direct hardware access
+To:     Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>
+Cc:     linux-cxl@vger.kernel.org, Ben Widawsky <ben.widawsky@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        daniel.lll@alibaba-inc.com,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 08.02.2021 20:47, Rahul Lakkireddy wrote:
-> On Friday, February 02/05/21, 2021 at 23:31:24 +0100, Heiner Kallweit wrote:
->> On 05.02.2021 22:46, Bjorn Helgaas wrote:
->>> [+cc Casey, Rahul]
->>>
->>> On Fri, Feb 05, 2021 at 08:29:45PM +0100, Heiner Kallweit wrote:
->>>> cxgb4 uses the full VPD address space for accessing its EEPROM (with some
->>>> mapping, see t4_eeprom_ptov()). In cudbg_collect_vpd_data() it sets the
->>>> VPD len to 32K (PCI_VPD_MAX_SIZE), and then back to 2K (CUDBG_VPD_PF_SIZE).
->>>> Having official (structured) and inofficial (unstructured) VPD data
->>>> violates the PCI spec, let's set VPD len according to all data that can be
->>>> accessed via PCI VPD access, no matter of its structure.
->>>
->>> s/inofficial/unofficial/
->>>
->>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>> ---
->>>>  drivers/pci/vpd.c | 7 +++----
->>>>  1 file changed, 3 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
->>>> index 7915d10f9..06a7954d0 100644
->>>> --- a/drivers/pci/vpd.c
->>>> +++ b/drivers/pci/vpd.c
->>>> @@ -633,9 +633,8 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->>>>  	/*
->>>>  	 * If this is a T3-based adapter, there's a 1KB VPD area at offset
->>>>  	 * 0xc00 which contains the preferred VPD values.  If this is a T4 or
->>>> -	 * later based adapter, the special VPD is at offset 0x400 for the
->>>> -	 * Physical Functions (the SR-IOV Virtual Functions have no VPD
->>>> -	 * Capabilities).  The PCI VPD Access core routines will normally
->>>> +	 * later based adapter, provide access to the full virtual EEPROM
->>>> +	 * address space. The PCI VPD Access core routines will normally
->>>>  	 * compute the size of the VPD by parsing the VPD Data Structure at
->>>>  	 * offset 0x000.  This will result in silent failures when attempting
->>>>  	 * to accesses these other VPD areas which are beyond those computed
->>>> @@ -644,7 +643,7 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
->>>>  	if (chip == 0x0 && prod >= 0x20)
->>>>  		pci_set_vpd_size(dev, 8192);
->>>>  	else if (chip >= 0x4 && func < 0x8)
->>>> -		pci_set_vpd_size(dev, 2048);
->>>> +		pci_set_vpd_size(dev, PCI_VPD_MAX_SIZE);
->>>
->>> This code was added by 7dcf688d4c78 ("PCI/cxgb4: Extend T3 PCI quirk
->>> to T4+ devices") [1].  Unfortunately that commit doesn't really have
->>> the details about what it fixes, other than the silent failures it
->>> mentions in the comment.
->>>
->>> Some devices hang if we try to read at the wrong VPD address, and this
->>> can be done via the sysfs "vpd" file.  Can you expand the commit log
->>> with an argument for why it is always safe to set the size to
->>> PCI_VPD_MAX_SIZE for these devices?
->>>
->>
->> Seeing t4_eeprom_ptov() there is data at the end of the VPD address
->> space, but there may be gaps in between. I don't have test hw,
->> therefore it would be good if Chelsio could confirm that accessing
->> any address in the VPD address space (32K) is ok. If a VPD address
->> isn't backed by EEPROM, it should return 0x00 or 0xff, and not hang
->> the device.
->>
-> 
-> We've tested the patches on T5 adapter. Although there are no crashes
-> seen, the 32K VPD read from sysfs at certain chunks are getting wrapped
-> around and overwritten. We're still analyzing this.
-> 
->>> The fact that cudbg_collect_vpd_data() fiddles around with
->>> pci_set_vpd_size() suggests to me that there is *some* problem with
->>> reading parts of the VPD.  Otherwise, why would they bother?
->>>
->>> 940c9c458866 ("cxgb4: collect vpd info directly from hardware") [2]
->>> added the pci_set_vpd_size() usage, but doesn't say why it's needed.
->>> Maybe Rahul will remember?
->>>
-> 
-> If firmware has crashed, then it's not possible to collect the VPD info
-> from firmware. So, the VPD info is fetched from EEPROM instead, which
-> is unfortunately outside the VPD size of the PF.
-> 
->>
->> In addition we have cb92148b58a4 ("PCI: Add pci_set_vpd_size() to set
->> VPD size"). To me it seems the VPD size quirks and this commit
->> try to achieve the same: allow to override the autodetected VPD len
->>
->> The quirk mechanism is well established, and if possible I'd like
->> to get rid of pci_set_vpd_size(). I don't like the idea that the
->> PCI core exposes API calls for accessing a proprietary VPD data
->> format of one specific vendor (cxgb4 is the only user of
->> pci_set_vpd_size()).
->>
-> 
-> There seems to be a way to get the Serial Configuration Version from
-> some internal registers. I will send the patch soon. It should remove
-> the call to pci_set_vpd_size() from cudbg_lib.c.
-> 
-Great, this would be the best solution. Then we can get rid of
-pci_set_vpd_size() w/o impact on what is exposed via sysfs.
+[ add Jon Corbet as I'd expect him to be Cc'd on anything that
+generically touches Documentation/ like this, and add Kees as the last
+person who added a taint (tag you're it) ]
 
-So for now I'll drop patches 2 and 3 and will resend patch 1
-as a single patch. 
+Jon, Kees, are either of you willing to ack this concept?
 
-> Thanks,
-> Rahul
-> 
-Heiner
+Top-posting to add more context for the below:
 
->>> Bjorn
->>>
->>> [1] https://git.kernel.org/linus/7dcf688d4c78
->>> [2] https://git.kernel.org/linus/940c9c458866
->>>
->>>>  }
->>>>  
->>>>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
->>>> -- 
->>>> 2.30.0
->>>>
->>>>
->>>>
->>
+This taint is proposed because it has implications for
+CONFIG_LOCK_DOWN_KERNEL among other things. These CXL devices
+implement memory like DDR would, but unlike DDR there are
+administrative / configuration commands that demand kernel
+coordination before they can be sent. The posture taken with this
+taint is "guilty until proven innocent" for commands that have yet to
+be explicitly allowed by the driver. This is different than NVME for
+example where an errant vendor-defined command could destroy data on
+the device, but there is no wider threat to system integrity. The
+taint allows a pressure release valve for any and all commands to be
+sent, but flagged with WARN_TAINT_ONCE if the driver has not
+explicitly enabled it on an allowed list of known-good / kernel
+coordinated commands.
 
+On Fri, Jan 29, 2021 at 4:25 PM Ben Widawsky <ben.widawsky@intel.com> wrote:
+>
+> For drivers that moderate access to the underlying hardware it is
+> sometimes desirable to allow userspace to bypass restrictions. Once
+> userspace has done this, the driver can no longer guarantee the sanctity
+> of either the OS or the hardware. When in this state, it is helpful for
+> kernel developers to be made aware (via this taint flag) of this fact
+> for subsequent bug reports.
+>
+> Example usage:
+> - Hardware xyzzy accepts 2 commands, waldo and fred.
+> - The xyzzy driver provides an interface for using waldo, but not fred.
+> - quux is convinced they really need the fred command.
+> - xyzzy driver allows quux to frob hardware to initiate fred.
+>   - kernel gets tainted.
+> - turns out fred command is borked, and scribbles over memory.
+> - developers laugh while closing quux's subsequent bug report.
+>
+> Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst   | 1 +
+>  Documentation/admin-guide/tainted-kernels.rst | 6 +++++-
+>  include/linux/kernel.h                        | 3 ++-
+>  kernel/panic.c                                | 1 +
+>  4 files changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 1d56a6b73a4e..3e1eada53504 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -1352,6 +1352,7 @@ ORed together. The letters are seen in "Tainted" line of Oops reports.
+>   32768  `(K)`  kernel has been live patched
+>   65536  `(X)`  Auxiliary taint, defined and used by for distros
+>  131072  `(T)`  The kernel was built with the struct randomization plugin
+> +262144  `(H)`  The kernel has allowed vendor shenanigans
+>  ======  =====  ==============================================================
+>
+>  See :doc:`/admin-guide/tainted-kernels` for more information.
+> diff --git a/Documentation/admin-guide/tainted-kernels.rst b/Documentation/admin-guide/tainted-kernels.rst
+> index ceeed7b0798d..ee2913316344 100644
+> --- a/Documentation/admin-guide/tainted-kernels.rst
+> +++ b/Documentation/admin-guide/tainted-kernels.rst
+> @@ -74,7 +74,7 @@ a particular type of taint. It's best to leave that to the aforementioned
+>  script, but if you need something quick you can use this shell command to check
+>  which bits are set::
+>
+> -       $ for i in $(seq 18); do echo $(($i-1)) $(($(cat /proc/sys/kernel/tainted)>>($i-1)&1));done
+> +       $ for i in $(seq 19); do echo $(($i-1)) $(($(cat /proc/sys/kernel/tainted)>>($i-1)&1));done
+>
+>  Table for decoding tainted state
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> @@ -100,6 +100,7 @@ Bit  Log  Number  Reason that got the kernel tainted
+>   15  _/K   32768  kernel has been live patched
+>   16  _/X   65536  auxiliary taint, defined for and used by distros
+>   17  _/T  131072  kernel was built with the struct randomization plugin
+> + 18  _/H  262144  kernel has allowed vendor shenanigans
+>  ===  ===  ======  ========================================================
+>
+>  Note: The character ``_`` is representing a blank in this table to make reading
+> @@ -175,3 +176,6 @@ More detailed explanation for tainting
+>       produce extremely unusual kernel structure layouts (even performance
+>       pathological ones), which is important to know when debugging. Set at
+>       build time.
+> +
+> + 18) ``H`` Kernel has allowed direct access to hardware and can no longer make
+> +     any guarantees about the stability of the device or driver.
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index f7902d8c1048..bc95486f817e 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -443,7 +443,8 @@ extern enum system_states {
+>  #define TAINT_LIVEPATCH                        15
+>  #define TAINT_AUX                      16
+>  #define TAINT_RANDSTRUCT               17
+> -#define TAINT_FLAGS_COUNT              18
+> +#define TAINT_RAW_PASSTHROUGH          18
+> +#define TAINT_FLAGS_COUNT              19
+>  #define TAINT_FLAGS_MAX                        ((1UL << TAINT_FLAGS_COUNT) - 1)
+>
+>  struct taint_flag {
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 332736a72a58..dff22bd80eaf 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -386,6 +386,7 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
+>         [ TAINT_LIVEPATCH ]             = { 'K', ' ', true },
+>         [ TAINT_AUX ]                   = { 'X', ' ', true },
+>         [ TAINT_RANDSTRUCT ]            = { 'T', ' ', true },
+> +       [ TAINT_RAW_PASSTHROUGH ]       = { 'H', ' ', true },
+>  };
+>
+>  /**
+> --
+> 2.30.0
+>
