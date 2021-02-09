@@ -2,107 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D051315719
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 20:48:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6F933158F8
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 22:54:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233601AbhBITpv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 14:45:51 -0500
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:37483 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233463AbhBITkr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 14:40:47 -0500
-Received: by mail-wm1-f48.google.com with SMTP id m1so4649799wml.2;
-        Tue, 09 Feb 2021 11:40:31 -0800 (PST)
+        id S233943AbhBIVvG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 16:51:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234215AbhBIVJB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 16:09:01 -0500
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1069CC06174A;
+        Tue,  9 Feb 2021 13:06:37 -0800 (PST)
+Received: by mail-il1-x134.google.com with SMTP id e7so17408210ile.7;
+        Tue, 09 Feb 2021 13:06:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=15OODCihpty0UWi0a0aB28afyJjig1mNPU55XHksU0Y=;
+        b=WGXCYkfG2UPIZGxYCJxQlssPEm1c/IlOG/OKZvuBR+izcGLbqIiFcfuejjz/mGmaXQ
+         OfzIgOqW63BCSbhlSfev2owDbikYinz5IvA+aXtZi8UAmRcKM1JtOTRsxFiDdqbB+rZK
+         cMssXcwgnShvLxiXKNb1af1X6+vePNNgHf71OWkAAWi/LSCIRQgBXyzm3xqfEmBefztI
+         vTJG4RRv71a/763zsXLPjnDxESRZrXyXxXLc9gyOQ3mz3UtI2jkPQY9DyHWsdMQb1OZ/
+         6MvSndL/Mb4iTPgxdOvDg2Yz1PRmd1nCTbcm3mgb2ZyLbJ5qSGTBIrZ/Dp2EcdpoqliJ
+         gUhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c6vCaI1Ot4rIOLJkm4PsY67pG5cYnNtElevzVRC/8jc=;
-        b=HEZWULPJ+zz9Zw7W3W/pwWRa85Feels4tRl3vzTw9uUorgAhvnmwLkj1EJIKmJ+5du
-         97HyEp6ZmNBr4cknN6LcKiXjMUFS/c3VURmBlbvSdHTZGUb4xasUdMeP/jj7MIfeZTR3
-         stIQ1SHkDEq94qRdaFE6CCAHYA/NJtKtmEZJuX258NLQWB6bPjTsqBpOWl1GBZgc//kD
-         iKp8EZ58l3pdnbgu2C/tFyt1drgf5gRvdQCdD9f2Dg4pa9Oy7ReE0Ht3NDFfIqRG11Eq
-         Rmqcdz/J7DUC7frhl2id8lPzYUc3jc27Jl9zd2vImb8Dv+niOaBIi/0bzXn02vj+avAe
-         clBw==
-X-Gm-Message-State: AOAM5314CXwB3RD5Xe11dG7KecZxyU2aNrreBg50CG3dVGNyc5LbNPV9
-        BCOj60zV4NBmz9C1+IBtWho=
-X-Google-Smtp-Source: ABdhPJw7FD2tJaT20PTfXYsdZ/lAuCGttMIMQRbkmPz7RXBi0JFHhR8pII9knECGQDnDCrCFoWqmrg==
-X-Received: by 2002:a1c:b087:: with SMTP id z129mr5003988wme.147.1612899605420;
-        Tue, 09 Feb 2021 11:40:05 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id r16sm36117272wrt.68.2021.02.09.11.40.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 11:40:04 -0800 (PST)
-Date:   Tue, 9 Feb 2021 20:40:03 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 15/15] dmaengine: dw-edma: Add pcim_iomap_table return
- checker
-Message-ID: <YCLlE+StUVWjfxqf@rocinante>
-References: <ceb5eb396e417f9e45d39fd5ef565ba77aae6a63.1612389406.git.gustavo.pimentel@synopsys.com>
- <20210208193516.GA406304@bjorn-Precision-5520>
- <DM5PR12MB1835A960892E401D50DEBB9DDA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
- <YCLR3uB5+GELTXSk@rocinante>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=15OODCihpty0UWi0a0aB28afyJjig1mNPU55XHksU0Y=;
+        b=s91Xm145AjTv+qg71k908NZ1gPEnT6GRtM70UVYsXE+Gh/0nwW/NfvQ/+DwXMRkUlB
+         1GOFYanrHOqPgQjNCwZ/hWhAB1ns/Nnm0s8xjg5rtCE55NICrFSdzTYkAlUy/UONVI/X
+         6Zbb8qOja2Xt3LDX8EL0bgmITtCgZcxPtRRrg1SDknDQZdRTlflvir1HCUMz7aUDOVM2
+         2nPpchGlB0z0ocEqBUQkl3I+BdKWlsr5ORoucCYR63VHSzzBRaR38Ikm2uoJwr+uheOu
+         KZ5H1jcMZJPfZ81xpPbTnmCjYzNoTObIuvOqS29wiBuwKnwOUMYTbjgjnFx90z40N8ud
+         mp/A==
+X-Gm-Message-State: AOAM530oK6UePWaMwPGEUUbGzi1crnurqop1u+VgJDPzwlVNVsNSDYV3
+        g7HIaCDD6O9S9mZ1/yulvIKZInIEOMNZeYzXS10=
+X-Google-Smtp-Source: ABdhPJx6CJULSRazipUh8Vc7wnERN3KJ4SipHXstSl2Km+4a0nkeP2kgKY7mN/5Pjmc5k6lp53CnVDwOyTqVCG4rPrQ=
+X-Received: by 2002:a92:cec2:: with SMTP id z2mr2768778ilq.42.1612904796430;
+ Tue, 09 Feb 2021 13:06:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YCLR3uB5+GELTXSk@rocinante>
+References: <20210209133445.700225-1-leon@kernel.org>
+In-Reply-To: <20210209133445.700225-1-leon@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 9 Feb 2021 13:06:25 -0800
+Message-ID: <CAKgT0Ud+c6wzo3n_8VgtVBQm-2UPic6U2QFuqqN-P9nEv_Y+JQ@mail.gmail.com>
+Subject: Re: [PATCH mlx5-next v6 0/4] Dynamically assign MSI-X vectors count
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Gustavo,
+On Tue, Feb 9, 2021 at 5:34 AM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> From: Leon Romanovsky <leonro@nvidia.com>
 
-[...]
-> > That's true, there are a lot of drivers that don't verify that pointer. 
-> > What do you suggest?
-> > 1) To remove the verification so that is aligned with the other drivers
-> > 2) Leave it as is. Or even to add this verification to the other drivers?
-> > 
-> > Either way, I will add the pcim_iomap_table(pdev) before this 
-> > instruction.
-> [...]
-> 
-> A lot of the drivers consume the value from pcim_iomap_table() at
-> a given BAR index directly as-is, some check if the pointer they got
-> back is not NULL, a very few also check if the address at a given index
-> is not NULL.
-> 
-> Given that the memory allocation for the table can fail, we ought to
-> check for a NULL pointer.  It's a bit worrying that people decided to
-> consume the value it returns directly without any verification.
-> 
-> I only found two drivers that perform this additional verification of
-> checking whether the address at a given index is valid, as per:
-> 
->   https://lore.kernel.org/linux-pci/YCLFTjZQ2bCfGC+J@rocinante/
-> 
-> Personally, I would opt for (2), and then like you suggested send
-> a separate series to update other drivers so that they also include the
-> this NULL pointer check.
-> 
-> But let's wait for Bjorn's take on this, though.
+<snip>
 
-As per Bjorn's reply:
+> --------------------------------------------------------------------
+> Hi,
+>
+> The number of MSI-X vectors is PCI property visible through lspci, that
+> field is read-only and configured by the device.
+>
+> The static assignment of an amount of MSI-X vectors doesn't allow utilize
+> the newly created VF because it is not known to the device the future load
+> and configuration where that VF will be used.
+>
+> The VFs are created on the hypervisor and forwarded to the VMs that have
+> different properties (for example number of CPUs).
+>
+> To overcome the inefficiency in the spread of such MSI-X vectors, we
+> allow the kernel to instruct the device with the needed number of such
+> vectors, before VF is initialized and bounded to the driver.
+>
+> Before this series:
+> [root@server ~]# lspci -vs 0000:08:00.2
+> 08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+> ....
+>         Capabilities: [9c] MSI-X: Enable- Count=12 Masked-
+>
+> Configuration script:
+> 1. Start fresh
+> echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+> modprobe -q -r mlx5_ib mlx5_core
+> 2. Ensure that driver doesn't run and it is safe to change MSI-X
+> echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_drivers_autoprobe
+> 3. Load driver for the PF
+> modprobe mlx5_core
+> 4. Configure one of the VFs with new number
+> echo 2 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+> echo 21 > /sys/bus/pci/devices/0000\:08\:00.2/sriov_vf_msix_count
+>
+> After this series:
+> [root@server ~]# lspci -vs 0000:08:00.2
+> 08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+> ....
+>         Capabilities: [9c] MSI-X: Enable- Count=21 Masked-
+>
+> Thanks
+>
+> Leon Romanovsky (4):
+>   PCI: Add sysfs callback to allow MSI-X table size change of SR-IOV VFs
+>   net/mlx5: Add dynamic MSI-X capabilities bits
+>   net/mlx5: Dynamically assign MSI-X vectors count
+>   net/mlx5: Allow to the users to configure number of MSI-X vectors
+>
+>  Documentation/ABI/testing/sysfs-bus-pci       |  28 ++++
+>  .../net/ethernet/mellanox/mlx5/core/main.c    |  17 ++
+>  .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  27 ++++
+>  .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  72 +++++++++
+>  .../net/ethernet/mellanox/mlx5/core/sriov.c   |  58 ++++++-
+>  drivers/pci/iov.c                             | 153 ++++++++++++++++++
+>  include/linux/mlx5/mlx5_ifc.h                 |  11 +-
+>  include/linux/pci.h                           |  12 ++
+>  8 files changed, 375 insertions(+), 3 deletions(-)
+>
 
-  https://lore.kernel.org/linux-pci/20210209185246.GA494880@bjorn-Precision-5520/
+This seems much improved from the last time I reviewed the patch set.
+I am good with the drop of the folder in favor of using "sriov" in the
+naming of the fields.
 
-These extra checks I proposed would be definitely too much, especially
-since almost everyone who uses pcim_iomap_table() also calls either
-pcim_iomap_regions() or pcim_iomap_regions_request_all() before
-accessing the table.
-
-There probably is also an opportunity to simplify some of the other
-drivers in the future, especially if do some API changes as per what
-Bjorn suggested.
-
-Sorry for taking your time, and thank you again!
-
-Krzysztof
+For the series:
+Reviewed-by: Alexander Duyck <alexanderduyck@fb.com>
