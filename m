@@ -2,278 +2,284 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A34393151F9
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 15:48:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F8983152D4
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 16:30:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbhBIOr4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 09:47:56 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:37370 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232250AbhBIOro (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 09:47:44 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 119Ebot5014140;
-        Tue, 9 Feb 2021 06:46:37 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=zWrVEGuowaumsucHSvd+LQ+8x8BQqc6fHTRt9z1+hu4=;
- b=gSpuapw6gAq4fgph68/K6tR9LlulcP5HkyWat451qSBfm8L6zgITLyPUMSeom47h/zU1
- +CBgWqWow0Md3J6soN2RoyzhnSdm7usTW6d07A2zdq+mmmm0otrsTooZDL6Qo8F2V2Tc
- TV1YQ9FlIFHAm1DV4hffwlO5dYEoVzTN+xY0233f24Pt6ZMlCXzH0RjVSyZ2AjzYS3Bo
- +51wWmAmq/YGfCqm/SYQmuWXNjomMyYStoij9WqAsutsCL8us3BJ5Jmw4m7KknQvyCN3
- zDa9wZ/ehdlL29IOI85J6kM4ne3wqds+0XK1/n3kYwpCVLRjp+x07/xA2e4qxcLtOiyV og== 
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2108.outbound.protection.outlook.com [104.47.55.108])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 36hrku0ng8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 06:46:37 -0800
+        id S232295AbhBIP33 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 10:29:29 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:39376 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231366AbhBIP32 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 10:29:28 -0500
+Received: from mailhost.synopsys.com (sv1-mailhost1.synopsys.com [10.205.2.131])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F2B11C010B;
+        Tue,  9 Feb 2021 15:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1612884503; bh=5hqceRlJayfpJv/Hf3mJAXYhU3Ta5FwcrD1hYrvyrWA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=fc4CaquT1wreinUplGRuMhxx1y7pXLfJDS+BDfeomhoxesbEw+WkeF5f2M/r4QZhO
+         JLk8Ehx22SZyrJSBH9iTcFVesOG+Nzds0j9wWT3HqXFA37c23sX6xnDHuisSk7f4kT
+         un+nje/z7Jy50StLqfu+rFaRykFptkyU0yJRMxCcXOYss4TSanVF+Lnk8dYDBjQR5G
+         N4sDmyx0mwEBE2L/Vy89eiyG82IQC9CEB2I0Glu4RPdXqzpqB8lj9o3iRk2/ErzZbR
+         0oo5A6YAQxAbTTD1czee1O/Q+bPumsGl7CRTb2yLyFRWaF/EiZYFMAdy6WPsW9xSgu
+         baYJlNh7JIEYA==
+Received: from o365relay-in.synopsys.com (sv2-o365relay3.synopsys.com [10.202.1.139])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 7A27BA005F;
+        Tue,  9 Feb 2021 15:28:20 +0000 (UTC)
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2055.outbound.protection.outlook.com [104.47.37.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id B9CE4400A3;
+        Tue,  9 Feb 2021 15:28:18 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="IYb675IY";
+        dkim-atps=neutral
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QuDdmWCCg/qZ9jO0fwMdpTtM+TZYqKdVdEW6Eb98S/A3hfXb+ImHRowyD8J+Y/PB0JUQD4+k87/4n2t/59CXCNuhv2x5RjEoo6r2/jL0LYHHREFbBxtqXY38nC+TrtDnNgQNBqGjZjxEVswrmGOHTC46gx1B1fC1+RPv1E5l/wEIFUxVbWbFo+Sq+j+AMO7rJAucC+mUfKSe32cBksK/d3grwqtgBrNWWIJhBtKHrKqwtKtWPEbYTmQd26xvyEJZ1wOSnPyV1YWKWejU5XLXgPboG7jleWJ0mLfERvjnDJlYSM+MoT0HrwJSiydMskAfWXtZe7iM6lGM48Iw+d0/PQ==
+ b=ms55efXpq2zRcvvD1BkWzv66X5kok8DKdQ2qnn2ciuh5lxQc6rec13NW6vLyGcTOWsU9otPJs1p/sBnA5aCJh2QuqlSjzPdkQE9EpMoRYH46axFboF9gw8czrK7D9/BCBQngUht/+37UWMxaWOLzQYcqCIhu0U+U7/QEOUBgaPLECm//oKwQaWKpS4Cp5/VhwezFtUp4Tc0dKJK5NimWlfmvJlvrXFQf0LWbQiiUV0Cqis/sjOYpFISHGXuQkCb0mjbIv9MD2Cty7I73KYPBcGxa6NRsv2kv5FLYHm1SQqNLETQnfnPTrqQ1npUv/b/2rF5165x4eqdVrNdewRb9tQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zWrVEGuowaumsucHSvd+LQ+8x8BQqc6fHTRt9z1+hu4=;
- b=H63/uxl9FCHRyb2+AwZMSgFOTf3vad75mULOhH1x6JkVjyhTsmcaa8EYGTfz97bCqcR0R2Q3VFXwOHkyCtG5StFPuIlCLciAD9INFTBa6z1Yg6Jn3ysXpO0kUfjg3zbeR7zhOs98TTMudmiJbcLkMZIATewnqFltoFDKNU11Nx4jCP36M/CmmeRQNEDgCYisPgkLMlhO8kzlo7Lu20/mEsOPpa2QfOldtmNYN/IiAcnEBdaURpEoEHdK9GZF1d1XPV00LbcHD5MilwUjJoFptelPpEca0LzcSwwBQ2Ce/EYV+Xx7EcsTX8+Ji+6FzRlOxUMc2GmgS/n0aYDUqzGwNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 64.207.220.244) smtp.rcpttodomain=google.com smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ bh=5hqceRlJayfpJv/Hf3mJAXYhU3Ta5FwcrD1hYrvyrWA=;
+ b=TFpPXCAP27asvBbGMhP31idpiutVJZRnqSXuhCM5pDiyMzGo4n+GjoK+vPl9tdSlOFjZBgv7jNoqqnz37iGit1sTpdMJPeJfKe7m0xvXMcGAqUu7R0t/MW1zbV6rbKF9oZbyUTE6YZCY7NvsOfosM1/Txxum9n3+8zV6VBPDyx1T+h3s4jyI4HijJ4qmVI1qGTcBpL84Nuq6IsulO3w6CpV4jOWEzs8DSoo55OK8VnGtL6LKHUmO5jJwGvFju1vz7TpFaE0VnV2dDcIfve5zJSj2kmv6nCkK7MVcTAfohO1jPXFKVgGoZlZHFzSW2L3YfeMrxb8Dh0HtUno0L9YCQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zWrVEGuowaumsucHSvd+LQ+8x8BQqc6fHTRt9z1+hu4=;
- b=iYFw/VzAH71IT7liel9T8KFm/uGylGRehl7y4WzJKawQpGk8Q/iqa7S1z57BRsN7PQzAJQ+IUCsSILNSwCWI+hIvWEtqL1qebuevl+4DygDb8oN01iovvwQj7F/AfBJtk8X3HLrt8i2+qitADZqSwXqtoVvDALIaAm4DZvxlXD4=
-Received: from BN6PR16CA0025.namprd16.prod.outlook.com (2603:10b6:405:14::11)
- by SN6PR07MB7936.namprd07.prod.outlook.com (2603:10b6:805:ec::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.20; Tue, 9 Feb
- 2021 14:46:34 +0000
-Received: from BN8NAM12FT004.eop-nam12.prod.protection.outlook.com
- (2603:10b6:405:14:cafe::21) by BN6PR16CA0025.outlook.office365.com
- (2603:10b6:405:14::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.26 via Frontend
- Transport; Tue, 9 Feb 2021 14:46:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
- smtp.mailfrom=cadence.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=pass action=none header.from=cadence.com;
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
- client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
-Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
- BN8NAM12FT004.mail.protection.outlook.com (10.13.183.58) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3846.25 via Frontend Transport; Tue, 9 Feb 2021 14:46:32 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 119EkRwH001420
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Tue, 9 Feb 2021 06:46:31 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Tue, 9 Feb 2021 15:46:28 +0100
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 9 Feb 2021 15:46:28 +0100
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 119EkSd9026767;
-        Tue, 9 Feb 2021 15:46:28 +0100
-Received: (from nadeem@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 119EkSAg026766;
-        Tue, 9 Feb 2021 15:46:28 +0100
-From:   Nadeem Athani <nadeem@cadence.com>
-To:     <tjoseph@cadence.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kishon@ti.com>
-CC:     <nadeem@cadence.com>, <mparab@cadence.com>, <sjakhade@cadence.com>,
-        <pthombar@cadence.com>
-Subject: [PATCH v8 2/2] PCI: cadence: Retrain Link to work around Gen2 training defect.
-Date:   Tue, 9 Feb 2021 15:46:22 +0100
-Message-ID: <20210209144622.26683-3-nadeem@cadence.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20210209144622.26683-1-nadeem@cadence.com>
-References: <20210209144622.26683-1-nadeem@cadence.com>
+ bh=5hqceRlJayfpJv/Hf3mJAXYhU3Ta5FwcrD1hYrvyrWA=;
+ b=IYb675IYiy+yKHop3hijYVL7LVBfob4kMMl2wCEnIBd7zOqik3D+fiUl3D4JSQn8hYcwHbB+dADnqM8+fuHU/6b4YBGSmiE0T3tQFU1e2RmH32qIMYLrSGqqo38C/RV+zsmRKfMZBt5sRLVOYMuc8S2T0nrwreNXeLFi/C9DVd8=
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
+ DM6PR12MB4433.namprd12.prod.outlook.com (2603:10b6:5:2a1::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3846.25; Tue, 9 Feb 2021 15:28:16 +0000
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052]) by DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052%10]) with mapi id 15.20.3825.030; Tue, 9 Feb 2021
+ 15:28:16 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>
+CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Subject: RE: [RESEND v4 1/6] misc: Add Synopsys DesignWare xData IP driver
+Thread-Topic: [RESEND v4 1/6] misc: Add Synopsys DesignWare xData IP driver
+Thread-Index: AQHW+no0jzACp8G9M0OTEsfsxRZtmKpL7kqAgAIYZmCAAN7oAIABFLsw
+Date:   Tue, 9 Feb 2021 15:28:16 +0000
+Message-ID: <DM5PR12MB18350F331485A6FF36ED28DADA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
+References: <cover.1612390291.git.gustavo.pimentel@synopsys.com>
+ <bba090c3d9d3d90fb2dfe5f2aaa52c155d87958f.1612390291.git.gustavo.pimentel@synopsys.com>
+ <YB9EDzI7mSrzXUUB@rocinante>
+ <DM5PR12MB18354765D69889F2CD6E4D89DA8F9@DM5PR12MB1835.namprd12.prod.outlook.com>
+ <YCHBAmFAOv/Joqp5@rocinante>
+In-Reply-To: <YCHBAmFAOv/Joqp5@rocinante>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MVFpqTW1RM1lqQTRMVFpoWldJdE1URmxZaTA1T0dVMkxXWTRPVFJq?=
+ =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRncyWXpKa04ySXdPUzAyWVdWaUxURXha?=
+ =?utf-8?B?V0l0T1RobE5pMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?RTNOelVpSUhROUlqRXpNalUzTXpVNE1EazBNakV6TlRFMk15SWdhRDBpVDFC?=
+ =?utf-8?B?TE5GQmtZa1lyYTFOa2JIaHpablU0WVRrMVFsQlZNVWhWUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZDTjFRMlozVXJVRGRYUVdWVVduVjRkV2xMVDBGQ05V?=
+ =?utf-8?B?NXROMGMyU1c4MFFVVlBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGT2NsTldNMmRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: linux.com; dkim=none (message not signed)
+ header.d=none;linux.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [89.155.14.32]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 83f153b8-4cf6-4618-621c-08d8cd0f5296
+x-ms-traffictypediagnostic: DM6PR12MB4433:
+x-microsoft-antispam-prvs: <DM6PR12MB443334DFAEFCA9F6A12B4150DA8E9@DM6PR12MB4433.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Vdaow7Iz0BI2IRq6iuCYBG2yOS53+P7dREFeNZs4fyeBcGJyhJxo7Fq+A0g/GqU1yYXtfIL2ZzRP+E9vIY34vLh0A/2EN5E6TdI5fzvzUTP+nRRGzuNZXl+Nj+AnWOtcMGcGcuRC5lxNBB3Mpefe9tH1oK3cddpuVWKO7jJ9tX9GjaismeT7Il0Yn9KBbC5uA6Md6NYok/U1UcAv7pB7TxZsZDiYvPKAxOBjPqQFfJEh4WA0RJAA2jJpANY5TbjMA9f11ulCY6fIegOGx5bYBz076T3KoJiSxs0NFH6IqTxKTjUVvUPxukivLK4kOVR0ee13L5TdigjNRF7/hkiCOFXJ+UtQsJ/IJHttYBLmDsqGLjpffkQHLJVwSZf289ZgvLnAczwjAM8lRFd4ZEYSPA1i+h8GkJZyMkIzOimzMvli3Q+DXjNmqbTEESS+U/VijunsireXMX4GS5vA7UTz40MkpYCLBEHfhQdZrd2mJaxaM4WPyqhIScjei6Us5QxLgkAJnlOOKYF4OKwhpe7q7e0rMTX+y4d6VF4fYHM7it9wDdwqdwAwsCOFCtX0IsA+rjK9ObymFxd2Rg2UzFnOU7YGfKC0cc+yQH4rtkl/jUo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(366004)(39860400002)(136003)(376002)(346002)(26005)(7696005)(186003)(86362001)(5660300002)(2906002)(478600001)(54906003)(966005)(4326008)(6916009)(8936002)(316002)(8676002)(33656002)(64756008)(76116006)(66476007)(66946007)(66556008)(66446008)(66574015)(9686003)(7416002)(71200400001)(53546011)(55016002)(6506007)(52536014)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?ZUQzUjkxeVU2MjN5Z1I0cmRNNXE4SnZkby81cGxCTkQ2Vk5BalFiTUYyZlVv?=
+ =?utf-8?B?bDJBNWw5bEJ4TXB6OEpoVFdPbjl3cndJTUdvaTk3NUE3RGtoV0R6bnRUdnFz?=
+ =?utf-8?B?RWt6Q09TazEzWjNOKzU0Wk0wMjBYU3AvRkptM2N4QVhhcjhuNWNBbG16ZmpP?=
+ =?utf-8?B?eWVISjFVY3BKMk1QSFpJbERIY21oaWJXRmQwb3hVZVpYV0I4NENTOGhWSDRM?=
+ =?utf-8?B?ZmFOY0dNOUN2MUxvUDhoWlZNd2N2NE43MytuRHp0RVpUVmJ3eFdxTEV2bjFB?=
+ =?utf-8?B?OXVzaENkZGgyMEw4U0xKVlBsRlZkbDRpTlRaZ1I4VHkzV0RaMG5ZNFB4MFRz?=
+ =?utf-8?B?ZDl1UEZnbzFpaThLK2Q4ZWhkL3ozb01ySmQ5d1JZemtxZm52SDFNSitrdDRS?=
+ =?utf-8?B?ZkxhN3Q1NEs1T3VLVHYrblZZdWVyZCtoYjYybEg1djduZitVSE5EZWNVVHdH?=
+ =?utf-8?B?VmNzYVlJZlk1aFhKbGIxTHkxSjh6enZ2YUxINDhQMVN5SDVoQ3VTank1S28z?=
+ =?utf-8?B?cHpqdC9zbXRGWTRjak9PUmUwVnhhMVpkYVl4a2s2RzNYajJlamtuUWNlSjk2?=
+ =?utf-8?B?NGRJTHJBQUtkaHFhTnlQVlZOTEVyVjgvWEZOcEo4eU40UFgvTU1LWVRTVW1T?=
+ =?utf-8?B?QjdTZElFV1ZlTERWZ2ZHUGNGUnRaTmlaQjBSNEVjdzIvVUZLdGo3Q2dXQnJt?=
+ =?utf-8?B?U3pzQ3dNUU5rVlZiRWI0U3FLMDlVbUlZdnh1eU5rREFSMTlxZjFBWXh4bFhD?=
+ =?utf-8?B?SnBmRmdFSmZrRk5SSktLb2dPdG42cjVoMTJyRVN2M2xndS9YS01JUHdBTVpM?=
+ =?utf-8?B?aVdwejR6MGdLVFBzaTJ2WUIzdWxrZTlVcm5ndHBicDZzYjF6WHMxbWx6OFIz?=
+ =?utf-8?B?MFBzZHpqaEZKTTF6ZHJQbnZkNmhKZEZ2ckduYVc1OUR4Lzg1OExkQTNHK01o?=
+ =?utf-8?B?bWFNTEtvYUgxMnExNWppSEJlZFpqSEZFUmh2WUpWaUtUcUNvaWxUTW9obWdt?=
+ =?utf-8?B?TlZ5U2k5c2hJUDVyZ2Nza2Y2RVpEWVlxa1crcEFkOUkza0x1NHdYbjRGdzlB?=
+ =?utf-8?B?NnM2MVBDN2NDTVFZNlVwQXk4N1JMZjM2QVc5WTZjZVUxc3Iwb013U2hMMzJi?=
+ =?utf-8?B?T0JiR0sxS1FPaHZ4V1JFUG5XMi9wNlVOUVpncWtGN05rY0tOdkRqNnMvWkFS?=
+ =?utf-8?B?dkZuKzhreEliR1E0NmgzY3JlRkxWWG52ZjJDK0dXcHQ1SytDZldQS0Ixckla?=
+ =?utf-8?B?Qzd3YTZlN0FjN280c3NEMEtMWnRKQmZxN2EzZENMMzRHM1NBcE1GTmV4ZTYy?=
+ =?utf-8?B?ZFU3ZmVMRkNWSGRCNEJnUWI0YlZwdHJqSzFKTU5GaVk5TUJvem42WmZ0WmxQ?=
+ =?utf-8?B?cHZ0QzZWWDJuL2tVMVlTUkpUMEZ2S2hLVk5hbkRGL1dGeXQ4WlBoM3N6QnAw?=
+ =?utf-8?B?R3Q0ak1ybTIybCtkejVERUJINmZRWEt4ZFA5a1Y2cG40LzhPdDVtRFN1aGkx?=
+ =?utf-8?B?TzdNSDJDemVZRjllOFlvRzJGL0hUaDd0OXlxQ2Z2WTN4ejVCWnRjZThDZE5i?=
+ =?utf-8?B?cWliUXlKVHN5bHFUak5vOE1zaERLcUVlOGFmdVRoTS9YWWg0eGpsK3ZxYzBy?=
+ =?utf-8?B?dzVzN2ozZUF6bWhNUDZZWDFZSmJKV1NDSGxsSEdQSmVObCtGQWowckNUUTdr?=
+ =?utf-8?B?Z0FnT0FDZ1dEUmwvdk9Nblh6OG5EalRDaFlpenV4U3o2MEV6MGVhbCthWGov?=
+ =?utf-8?Q?rHFTkfhiidDjHjWL8s=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 618b385a-d044-4a92-a1fd-08d8cd097e38
-X-MS-TrafficTypeDiagnostic: SN6PR07MB7936:
-X-Microsoft-Antispam-PRVS: <SN6PR07MB7936BD97F8280957C4396FDAD88E9@SN6PR07MB7936.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2043;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BWk+gpNNt0oHC+SDqTnULp9endJzsH9Z7/dQYXkgz8sFiZReMbFJkC2+oFhSRBrxxFmx1w/ST6RrQ4xe5sMcLKpRqsr7x3YxSkLwiDzCZztZ2dcH8SkirWe6F0b8V1bzK3yzG7kyRn8cK+mPx+Y+1/+966Taz6EiyzqykeNaHRqP4WDyJMXmPvvyF6HP+jjhSRWResFrzBhMkBMvJ2IzmuT2rNCb6hoOlEuqxzvxaAWxIZIrjApFBkP7IvNcOXfeNtLWdPVKbFtmeDEAeKgPTqdBPfaRKj5C58l2XuRuF5DvCfW+HOiiZZreIAVDHDEZBHrQ4hYpoVfzModnRtx5PhPIW2rAKRhgJ54bkkA3TmCfgn4XzG6umQ7jz1o7g7+Gxp3TgKg2yQXcBRMi0WpvMRYB4ZO0AMsE6E7IEHT17JK126nyrMASBCh7c8txGEG7e/2UrBiFpcFh/OD+Tfdia1WLQq0CaFienG4cW35snrbTXciYjDV54L7PqgevpXCNeI9hZceDM7Lm9ka4yPcmB/q6Sk7TtpLll2nvbtazY5AijRD4l8QvibEvo6jzzHEBqCO/vVVidoCK+1VjMsetO9kHSeVGBpkakTk97/85SLUaEqMZobpCC+zcbSw6SmGDMx9vwSuVt8dW/8iyf5GfyofyqglR6Gg3hUFNdNUdtKb5pr0LZ8tM6iwXxEm1pKpnaiwUOp349uZ25gP2yR5qm22pruS2KdXAIEfSE2Xnq316nd+VgPm5XWlWKwzXjAS+
-X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFS:(4636009)(376002)(39860400002)(346002)(136003)(396003)(36092001)(36840700001)(46966006)(83380400001)(26005)(42186006)(107886003)(6666004)(82310400003)(2906002)(336012)(186003)(1076003)(81166007)(82740400003)(426003)(478600001)(2616005)(4326008)(34020700004)(8676002)(54906003)(36906005)(70586007)(86362001)(356005)(47076005)(36756003)(36860700001)(316002)(8936002)(5660300002)(110136005)(70206006)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2021 14:46:32.7506
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83f153b8-4cf6-4618-621c-08d8cd0f5296
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2021 15:28:16.5966
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 618b385a-d044-4a92-a1fd-08d8cd097e38
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM12FT004.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR07MB7936
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-09_03:2021-02-09,2021-02-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- adultscore=0 malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1015 suspectscore=0 priorityscore=1501
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2102090076
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D6BpqqRqqrVF9pucXOOTEpjG3IPAWqMUfkkJFxgnjJpzN2A8AmQreOVtKnpqpPFvLdtY5EBYTrXIYsng4cQ0/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4433
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Cadence controller will not initiate autonomous speed change if strapped
-as Gen2. The Retrain Link bit is set as quirk to enable this speed change.
-
-Signed-off-by: Nadeem Athani <nadeem@cadence.com>
----
- drivers/pci/controller/cadence/pci-j721e.c         |  3 ++
- drivers/pci/controller/cadence/pcie-cadence-host.c | 48 +++++++++++++++++++++-
- drivers/pci/controller/cadence/pcie-cadence.h      | 11 ++++-
- 3 files changed, 60 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index dac1ac8a7615..849f1e416ea5 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -64,6 +64,7 @@ enum j721e_pcie_mode {
- 
- struct j721e_pcie_data {
- 	enum j721e_pcie_mode	mode;
-+	bool quirk_retrain_flag;
- };
- 
- static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
-@@ -280,6 +281,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
- 
- static const struct j721e_pcie_data j721e_pcie_rc_data = {
- 	.mode = PCI_MODE_RC,
-+	.quirk_retrain_flag = true,
- };
- 
- static const struct j721e_pcie_data j721e_pcie_ep_data = {
-@@ -388,6 +390,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 
- 		bridge->ops = &cdns_ti_pcie_host_ops;
- 		rc = pci_host_bridge_priv(bridge);
-+		rc->quirk_retrain_flag = data->quirk_retrain_flag;
- 
- 		cdns_pcie = &rc->pcie;
- 		cdns_pcie->dev = dev;
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 9f7aa718c8d4..6f591d382578 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -94,6 +94,52 @@ static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
- 	return -ETIMEDOUT;
- }
- 
-+static int cdns_pcie_retrain(struct cdns_pcie *pcie)
-+{
-+	u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
-+	u16 lnk_stat, lnk_ctl;
-+	int ret = 0;
-+
-+	/*
-+	 * Set retrain bit if current speed is 2.5 GB/s,
-+	 * but the PCIe root port support is > 2.5 GB/s.
-+	 */
-+
-+	lnk_cap_sls = cdns_pcie_readl(pcie, (CDNS_PCIE_RP_BASE + pcie_cap_off +
-+					     PCI_EXP_LNKCAP));
-+	if ((lnk_cap_sls & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
-+		return ret;
-+
-+	lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
-+	if ((lnk_stat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB) {
-+		lnk_ctl = cdns_pcie_rp_readw(pcie,
-+					     pcie_cap_off + PCI_EXP_LNKCTL);
-+		lnk_ctl |= PCI_EXP_LNKCTL_RL;
-+		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
-+				    lnk_ctl);
-+
-+		ret = cdns_pcie_host_wait_for_link(pcie);
-+	}
-+	return ret;
-+}
-+
-+static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
-+{
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	int ret;
-+
-+	ret = cdns_pcie_host_wait_for_link(pcie);
-+
-+	/*
-+	 * Retrain link for Gen2 training defect
-+	 * if quirk flag is set.
-+	 */
-+	if (!ret && rc->quirk_retrain_flag)
-+		ret = cdns_pcie_retrain(pcie);
-+
-+	return ret;
-+}
-+
- static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- {
- 	struct cdns_pcie *pcie = &rc->pcie;
-@@ -456,7 +502,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 		return ret;
- 	}
- 
--	ret = cdns_pcie_host_wait_for_link(pcie);
-+	ret = cdns_pcie_host_start_link(rc);
- 	if (ret)
- 		dev_dbg(dev, "PCIe link never came up\n");
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 30eba6cafe2c..254d2570f8c9 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -119,7 +119,7 @@
-  * Root Port Registers (PCI configuration space for the root port function)
-  */
- #define CDNS_PCIE_RP_BASE	0x00200000
--
-+#define CDNS_PCIE_RP_CAP_OFFSET 0xc0
- 
- /*
-  * Address Translation Registers
-@@ -291,6 +291,7 @@ struct cdns_pcie {
-  * @device_id: PCI device ID
-  * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
-  *                available
-+ * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
-  */
- struct cdns_pcie_rc {
- 	struct cdns_pcie	pcie;
-@@ -299,6 +300,7 @@ struct cdns_pcie_rc {
- 	u32			vendor_id;
- 	u32			device_id;
- 	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
-+	bool                    quirk_retrain_flag;
- };
- 
- /**
-@@ -414,6 +416,13 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
- 	cdns_pcie_write_sz(addr, 0x2, value);
- }
- 
-+static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
-+{
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
-+
-+	return cdns_pcie_read_sz(addr, 0x2);
-+}
-+
- /* Endpoint Function register access */
- static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u8 value)
--- 
-2.15.0
-
+T24gTW9uLCBGZWIgOCwgMjAyMSBhdCAyMjo1Mzo1NCwgS3J6eXN6dG9mIFdpbGN6ecWEc2tpIDxr
+d0BsaW51eC5jb20+IA0Kd3JvdGU6DQoNCj4gWytjYyBCam9ybl0NCj4gDQo+IEhpIEd1c3Rhdm8s
+DQo+IA0KPiBbLi4uXQ0KPiA+IFRoYW5rcyBmb3IgeW91ciByZXZpZXcuIEkgd2lsbCB3YWl0IGZv
+ciBhIGNvdXBsZSBvZiBkYXlzLCBiZWZvcmUgc2VuZGluZyANCj4gPiBhIG5ldyB2ZXJzaW9uIG9m
+IHRoaXMgcGF0Y2ggc2VyaWVzIGJhc2VkIG9uIHlvdXIgZmVlZGJhY2suDQo+IA0KPiBUaGFuayB5
+b3UhDQo+IA0KPiBUaGVyZSBtaWdodCBiZSBvbmUgbW9yZSBjaGFuZ2UsIGFuZCBpbXByb3ZlbWVu
+dCwgdG8gYmUgZG9uZSBhcyBwZXINCj4gQmpvcm4ncyBmZWVkYmFjaywgc2VlOg0KPiANCj4gICBo
+dHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgt
+cGNpLzIwMjEwMjA4MTkzNTE2LkdBNDA2MzA0QGJqb3JuLVByZWNpc2lvbi01NTIwL19fOyEhQTRG
+MlI5R19wZyFPeHA1NnBVX1VONk0yQmhmTlJTZFlxc0ZVbmNxVmtsQmpfMUlkTFFEX3dfVjZkS1JQ
+RE9fRmpQVXlzdE1hNUQzOVNSajh1byQgDQo+IA0KPiBUaGUgY29kZSBpbiBxdWVzdGlvbiB3b3Vs
+ZCBiZSAoZXhjZXBydCBmcm9tIHRoZSBwYXRjaCk6DQo+IA0KPiBbLi4uXQ0KPiArc3RhdGljIGlu
+dCBkd194ZGF0YV9wY2llX3Byb2JlKHN0cnVjdCBwY2lfZGV2ICpwZGV2LA0KPiArCQkJICAgICAg
+IGNvbnN0IHN0cnVjdCBwY2lfZGV2aWNlX2lkICpwaWQpDQo+ICt7DQo+ICsJY29uc3Qgc3RydWN0
+IGR3X3hkYXRhX3BjaWVfZGF0YSAqcGRhdGEgPSAodm9pZCAqKXBpZC0+ZHJpdmVyX2RhdGE7DQo+
+ICsJc3RydWN0IGR3X3hkYXRhICpkdzsNCj4gWy4uLl0NCj4gKwlkdy0+cmdfcmVnaW9uLnZhZGRy
+ID0gcGNpbV9pb21hcF90YWJsZShwZGV2KVtwZGF0YS0+cmdfYmFyXTsNCj4gKwlpZiAoIWR3LT5y
+Z19yZWdpb24udmFkZHIpDQo+ICsJCXJldHVybiAtRU5PTUVNOw0KPiBbLi4uXQ0KPiANCj4gUGVy
+aGFwcyBzb21ldGhpbmcgbGlrZSB0aGUgZm9sbG93aW5nIHdvdWxkIHdvdWxkPw0KPiANCj4gdm9p
+ZCBfX2lvbWVtICogY29uc3QgKmlvbWFwX3RhYmxlOw0KPiANCj4gaW9tYXBfdGFibGUgPSBwY2lt
+X2lvbWFwX3RhYmxlKHBkZXYpOw0KPiBpZiAoIWlvbWFwX3RhYmxlKQ0KPiAgICAgICAgIHJldHVy
+biAtRU5PTUVNOw0KPiANCj4gZHctPnJnX3JlZ2lvbi52YWRkciA9IGlvbWFwX3RhYmxlW3BkYXRh
+LT5yZ19iYXJdOw0KPiBpZiAoIWR3LT5yZ19yZWdpb24udmFkZHIpDQo+IAlyZXR1cm4gLUVOT01F
+TTsNCj4gDQo+IFdpdGggc2Vuc2libGUgZXJyb3IgbWVzc2FnZXMgYWRkZWQsIG9mIGNvdXJzZS4g
+IFdoYXQgZG8geW91IHRoaW5rPw0KDQpJIHRoaW5rIGFsbCB0aGUgaW1wcm92ZW1lbnRzIGFyZSB3
+ZWxjb21lLiBJIHdpbGwgZG8gdGhhdC4NCk15IG9ubHkgZG91YnQgaXMgaWYgQmpvcm4gcmVjb21t
+ZW5kcyByZW1vdmluZyB0aGUgDQppb21hcF90YWJsZVtwZGF0YS0+cmdfYmFyXSBjaGVjaywgYWZ0
+ZXIgYWRkaW5nIHRoZSB2ZXJpZmljYXRpb24gb24gdGhlIA0KcGNpbV9pb21hcF90YWJsZSwgYmVj
+YXVzZSBhbGwgb3RoZXIgZHJpdmVycyBkb2Vzbid0IGRvIHRoYXQuDQoNClRoYW5rcyENCg0KLUd1
+c3Rhdm8NCj4gDQo+IEtyenlzenRvZg0KDQoNCg==
