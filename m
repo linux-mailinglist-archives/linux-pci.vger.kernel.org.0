@@ -2,99 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85DC53155C6
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 19:23:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54FCB315679
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 20:07:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233225AbhBISWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 13:22:16 -0500
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:52230 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233259AbhBISSv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 13:18:51 -0500
-Received: by mail-wm1-f53.google.com with SMTP id i5so4149045wmq.2;
-        Tue, 09 Feb 2021 10:18:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uLdJv6cZuHRtRFFRIJEOoH3tFE87WZTh9kuO83NwQkA=;
-        b=AQ+XhQOVzY7tNvN+7MromeEYGIc+mQAB+nJkPt0qZSlT3XflLWIVYJS3kuOrlSYnV3
-         iY8IO7acAMxh4Raaq+esbLoxLLigbJxNsW/qmAnN+jnzRckSF3+HXFAHXwuHa3dk9Afp
-         CQTnAz8ByqxnI5fo1T5NvFB4JT30kM6hGD9s4QJ2PUREIWbZRz8X7Ju4FenHTy3GK3gq
-         2s0hmen74301TCgW/Tq5aNiher26PN1SqbEaWaYkR6Pc5QJ/X9w/Pa3n6vhupgf7fJzD
-         FtfnBoboDFsGw+lsSF7CO0WnJVZKBjkkmUobv/CaQkUB/QkyGunTZLlNL+Qv4FNoREn+
-         yt4w==
-X-Gm-Message-State: AOAM531yJTqrhiAiUo+d6CMDrC4zJIvUeNg8oLZM96SXn4HdyQP7ZUxC
-        wBnMkBZ4UaE4RiHLgXChnP2gO4geLdYcbrS7
-X-Google-Smtp-Source: ABdhPJwz+oj1rYRkIUbkuFpwNkRP8w69gpqFE7NuELRZRlrJxE3bDlWo2EjSvBNuLir40teoqSz3YQ==
-X-Received: by 2002:a1c:105:: with SMTP id 5mr4662963wmb.89.1612894688876;
-        Tue, 09 Feb 2021 10:18:08 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id u70sm6019208wmu.20.2021.02.09.10.18.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 10:18:08 -0800 (PST)
-Date:   Tue, 9 Feb 2021 19:18:06 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+        id S233407AbhBITFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 14:05:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233236AbhBISzB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Feb 2021 13:55:01 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2291A64EC7;
+        Tue,  9 Feb 2021 18:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612896768;
+        bh=Um0381MQlq+jw86AMsINGntInS+/cd/swF0D0oxyDkg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=a0YHiuhrUOmX477wtoeOkZ9D6VCgv5H26YzN4QUfKr9RB7PwoTD4iSlK5AurFFgqn
+         f4MwS6Q0yOzZlGAuwm6HD3LJAYYFNcpm3/MolYNdH3dHthgNTfQMOTeJ8ngtcyKuKR
+         pYKGqVY7+JW/MX8QxhIYafDEU1gRHidgW3QXK7xJ8EQzJ3mddopn4NL/f2Hljuta+1
+         xLDf1xxbZFQ9yIHfdumBj6nlc/QuD24d6KMs5Qej3mcdKRI44mrhLB1Dpe90hsNeQV
+         gsPfop5Dc6lG8YLc84/cxx3RtaM6N/az5Mt7vTPrqXRyaT6KVmLRf4+sag/ckBmuN6
+         b03u1x+vniN3w==
+Date:   Tue, 9 Feb 2021 12:52:46 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 15/15] dmaengine: dw-edma: Add pcim_iomap_table return
- checker
-Message-ID: <YCLR3uB5+GELTXSk@rocinante>
-References: <ceb5eb396e417f9e45d39fd5ef565ba77aae6a63.1612389406.git.gustavo.pimentel@synopsys.com>
- <20210208193516.GA406304@bjorn-Precision-5520>
- <DM5PR12MB1835A960892E401D50DEBB9DDA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [RESEND v4 1/6] misc: Add Synopsys DesignWare xData IP driver
+Message-ID: <20210209185246.GA494880@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <DM5PR12MB1835A960892E401D50DEBB9DDA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM5PR12MB18350F331485A6FF36ED28DADA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Gustavo,
-
-[...]
-> > This "pcim_iomap_table(dev)[n]" pattern is extremely common.  There
-> > are over 100 calls of pcim_iomap_table(), and
+On Tue, Feb 09, 2021 at 03:28:16PM +0000, Gustavo Pimentel wrote:
+> On Mon, Feb 8, 2021 at 22:53:54, Krzysztof Wilczyński <kw@linux.com> 
+> wrote:
+> > [...]
+> > > Thanks for your review. I will wait for a couple of days, before sending 
+> > > a new version of this patch series based on your feedback.
 > > 
-> >   $ git grep "pcim_iomap_table(.*)\[.*\]" | wc -l
+> > Thank you!
 > > 
-> > says about 75 of them are of this form, where we dereference the
-> > result before testing it.
+> > There might be one more change, and improvement, to be done as per
+> > Bjorn's feedback, see:
+> > 
+> >   https://urldefense.com/v3/__https://lore.kernel.org/linux-pci/20210208193516.GA406304@bjorn-Precision-5520/__;!!A4F2R9G_pg!Oxp56pU_UN6M2BhfNRSdYqsFUncqVklBj_1IdLQD_w_V6dKRPDO_FjPUystMa5D39SRj8uo$ 
+> > 
+> > The code in question would be (exceprt from the patch):
+> > 
+> > [...]
+> > +static int dw_xdata_pcie_probe(struct pci_dev *pdev,
+> > +			       const struct pci_device_id *pid)
+> > +{
+> > +	const struct dw_xdata_pcie_data *pdata = (void *)pid->driver_data;
+> > +	struct dw_xdata *dw;
+> > [...]
+> > +	dw->rg_region.vaddr = pcim_iomap_table(pdev)[pdata->rg_bar];
+> > +	if (!dw->rg_region.vaddr)
+> > +		return -ENOMEM;
+> > [...]
+> > 
+> > Perhaps something like the following would would?
+> > 
+> > void __iomem * const *iomap_table;
+> > 
+> > iomap_table = pcim_iomap_table(pdev);
+> > if (!iomap_table)
+> >         return -ENOMEM;
+> > 
+> > dw->rg_region.vaddr = iomap_table[pdata->rg_bar];
+> > if (!dw->rg_region.vaddr)
+> > 	return -ENOMEM;
+> > 
+> > With sensible error messages added, of course.  What do you think?
 > 
-> That's true, there are a lot of drivers that don't verify that pointer. 
-> What do you suggest?
-> 1) To remove the verification so that is aligned with the other drivers
-> 2) Leave it as is. Or even to add this verification to the other drivers?
-> 
-> Either way, I will add the pcim_iomap_table(pdev) before this 
-> instruction.
-[...]
+> I think all the improvements are welcome. I will do that.
+> My only doubt is if Bjorn recommends removing the 
+> iomap_table[pdata->rg_bar] check, after adding the verification on the 
+> pcim_iomap_table, because all other drivers doesn't do that.
 
-A lot of the drivers consume the value from pcim_iomap_table() at
-a given BAR index directly as-is, some check if the pointer they got
-back is not NULL, a very few also check if the address at a given index
-is not NULL.
+I misunderstood the usage of pcim_iomap_table() -- it looks like one
+must call pcim_iomap_regions() *first*, and test its result, and
+*that* is where we should catch any pcim_iomap_table() failures, e.g.,
 
-Given that the memory allocation for the table can fail, we ought to
-check for a NULL pointer.  It's a bit worrying that people decided to
-consume the value it returns directly without any verification.
+  rc = pcim_iomap_regions()   # or pcim_iomap_regions_request_all()
+  if (rc)
+    return rc;                # pcim_iomap_table() or other failure
 
-I only found two drivers that perform this additional verification of
-checking whether the address at a given index is valid, as per:
+  vaddr = pcim_iomap_table()[BAR];
+  if (!vaddr)
+    return -ENOMEM;           # BAR doesn't exist
 
-  https://lore.kernel.org/linux-pci/YCLFTjZQ2bCfGC+J@rocinante/
+You *do* correctly call pcim_iomap_regions() first, which calls
+pcim_imap_table() internally, so if pcim_iomap_table() were to return
+NULL, you should catch it there.
 
-Personally, I would opt for (2), and then like you suggested send
-a separate series to update other drivers so that they also include the
-this NULL pointer check.
+Then we assume that the subsequent "pcim_iomap_table()[BAR]" call will
+succeed and NOT return NULL, so it should be safe to index into the
+table.  And if the table[BAR] entry is NULL, it means the BAR doesn't
+exist or isn't mapped.
 
-But let's wait for Bjorn's take on this, though.
+That sort of makes sense, but the API design doesn't quite seem
+obviously correct to me.  The table was created by
+pcim_iomap_regions(), and pcim_iomap_table() is basically retrieving
+that artifact.
 
-Krzysztof
+I wonder if it could be improved by making pcim_iomap_table() strictly
+internal to devres.c and having the pcim_iomap functions return the
+table directly.  Then the code would look something like this:
+
+  table = pcim_iomap_regions();
+  if (IS_ERR(table))
+    return PTR_ERR(table);    # pcim_iomap_table() or other failure
+
+  vaddr = table[BAR];         # "table" is guaranteed to be non-NULL
+  if (!vaddr)
+    return -ENOMEM;
+
+Obviously this is not something you should do for *this* series.
+I think you should follow the example of other drivers, which means
+keeping your patch exactly as you posted it.  I'm just interested in
+opinions on this as a possible future API improvement.
+
+Bjorn
