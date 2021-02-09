@@ -2,147 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9FAB314DC1
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 12:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05583314FF4
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 14:18:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232212AbhBILBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 06:01:14 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:4617 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232006AbhBIK6e (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 05:58:34 -0500
-Received: from dggeme706-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4DZfvg055MzY78B;
-        Tue,  9 Feb 2021 18:56:15 +0800 (CST)
-Received: from [10.174.63.109] (10.174.63.109) by
- dggeme706-chm.china.huawei.com (10.1.199.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2106.2; Tue, 9 Feb 2021 18:57:29 +0800
-Subject: Re: [v3] PCI: Add pci reset quirk for Huawei Intelligent NIC virtual
- function
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Yinshi (Stone)" <yin.yinshi@huawei.com>,
-        "Wangxiaoyun (Cloud)" <cloud.wangxiaoyun@huawei.com>,
-        zengweiliang zengweiliang <zengweiliang.zengweiliang@huawei.com>,
-        "Chenlizhong (IT Chip)" <chenlizhong@huawei.com>
-References: <20210121153043.GA2654954@bjorn-Precision-5520>
-From:   Chiqijun <chiqijun@huawei.com>
-Message-ID: <63b84959-d649-486a-3736-bbfca46c2362@huawei.com>
-Date:   Tue, 9 Feb 2021 18:57:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S231186AbhBINRy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 08:17:54 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12159 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231284AbhBINRu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 08:17:50 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DZk086K5GzlF7G;
+        Tue,  9 Feb 2021 21:15:20 +0800 (CST)
+Received: from [10.67.103.235] (10.67.103.235) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.498.0; Tue, 9 Feb 2021 21:17:04 +0800
+Subject: Re: [PATCH] lspci: Decode VF 10-Bit Tag Requester
+To:     <mj@ucw.cz>
+References: <1610371395-31766-1-git-send-email-liudongdong3@huawei.com>
+CC:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+From:   Dongdong Liu <liudongdong3@huawei.com>
+Message-ID: <722ba38a-47bc-2dcb-27f9-fddb77760e85@huawei.com>
+Date:   Tue, 9 Feb 2021 21:17:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210121153043.GA2654954@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <1610371395-31766-1-git-send-email-liudongdong3@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.63.109]
-X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
- dggeme706-chm.china.huawei.com (10.1.199.102)
+X-Originating-IP: [10.67.103.235]
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+ping :)  Any comments on the patch ?
 
-
-On 2021/1/21 23:30, Bjorn Helgaas wrote:
-> [Alex is a reset expert, hoping he can chime in]
-> 
-> On Thu, Jan 21, 2021 at 08:53:12PM +0800, Chiqijun wrote:
->> On 2021/1/9 6:25, Bjorn Helgaas wrote:
->>> On Fri, Dec 25, 2020 at 05:25:30PM +0800, Chiqijun wrote:
->>>> When multiple VFs do FLR at the same time, the firmware is
->>>> processed serially, resulting in some VF FLRs being delayed more
->>>> than 100ms, when the virtual machine restarts and the device
->>>> driver is loaded, the firmware is doing the corresponding VF
->>>> FLR, causing the driver to fail to load.
->>>>
->>>> To solve this problem, add host and firmware status synchronization
->>>> during FLR.
->>>>
->>>> Signed-off-by: Chiqijun <chiqijun@huawei.com>
->>>> ...
-> 
->>>> +	 * Get and check firmware capabilities.
->>>> +	 */
->>>> +	val = readl(bar + HINIC_VF_FLR_TYPE);
->>>> +	if (!(val & (1UL << HINIC_VF_FLR_CAP_BIT_SHIFT))) {
->>>> +		pci_iounmap(pdev, bar);
->>>> +		return -ENOTTY;
->>>> +	}
->>>> +
->>>> +	/*
->>>> +	 * Set the processing bit for the start of FLR, which will be cleared
->>>> +	 * by the firmware after FLR is completed.
->>>> +	 */
->>>> +	val = readl(bar + HINIC_VF_OP);
->>>> +	val = val | (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT);
->>>> +	writel(val, bar + HINIC_VF_OP);
->>>> +
->>>> +	/* Perform the actual device function reset */
->>>> +	pcie_flr(pdev);
->>>> +
->>>> +	/*
->>>> +	 * The device must learn BDF after FLR in order to respond to BAR's
->>>> +	 * read request, therefore, we issue a configure write request to let
->>>> +	 * the device capture BDF.
->>>> +	 */
->>>> +	pci_read_config_word(pdev, PCI_COMMAND, &command);
->>>> +	pci_write_config_word(pdev, PCI_COMMAND, command);
->>>
->>> I assume this is because of this requirement from PCIe r5.0, sec
->>> 2.2.9:
->>>
->>>     Functions must capture the Bus and Device Numbers supplied with all
->>>     Type 0 Configuration Write Requests completed by the Function, and
->>>     supply these numbers in the Bus and Device Number fields of the
->>>     Completer ID for all Completions generated by the Device/Function.
->>>
->>> I'm a little concerned because it seems like this requirement should
->>> apply to *all* resets, and I don't see where we do a similar write
->>> following other resets.  Can you help me out?  Do we need this in
->>> other cases?  Do we do it?
->>
->> This depends on the hardware device. The HINIC device clears the BDF
->> information of the VF during FLR, so it relies on Configuration
->> Write Requests to capture BDF. If other devices do not clear the DBF
->> information during FLR, this operation is not required.
-> 
-> If the spec says devices must keep the latched BDF during FLR, and the
-> HINIC doesn't comply with that, then it makes sense to do a config
-> write here in HINIC-specific code.
-> 
-> But if devices are allowed to clear the BDF during FLR, the OS has to
-> assume they all do, and the generic code for FLR (and probably other
-> resets) should do a config write so devices can latch the BDF again.
-> 
->> In addition, I did not find other devices directly access the BAR register
->> after FLR in resets.
-> 
-> I didn't catch your meaning here.
-> 
-> If a device loses the BDF during FLR and we don't do something to
-> allow it to latch the BDF again, any completions from the device will
-> have the wrong information.  We will likely do *some* config write to
-> the device eventually, which will fix this, but we can't rely on some
-> unknown future write to do this.  If it's a problem, we need to
-> explicitly do a write for this purpose.
-> 
-> Bjorn
-> .
-> 
->     
-The spec does not specify whether the BDF needs to be kept after FLR, 
-but the section 2.2.9 of the PCIe r5.0 has the following description:
-
-     If a Function must generate a Completion prior to the initial
-     device Configuration Write Request, 0's must be entered into the
-     Bus Number and Device Number fields
-
-Does this mean that we should always get the expected completion
-after initializing the device?
+On 2021/1/11 21:23, Dongdong Liu wrote:
+> Decode VF 10-Bit Tag Requester Supported and Enable bit
+> in SR-IOV Capabilities Register.
+>
+> Sample output:
+>   IOVCap: Migration-, 10BitTagReq+, Interrupt Message Number: 000
+>   IOVCtl: Enable+ Migration- Interrupt- MSE+ ARIHierarchy- 10BitTagReq+
+>
+> Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+> ---
+>  lib/header.h | 2 ++
+>  ls-ecaps.c   | 8 ++++----
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/lib/header.h b/lib/header.h
+> index 170e5c1..bff49c2 100644
+> --- a/lib/header.h
+> +++ b/lib/header.h
+> @@ -1126,6 +1126,7 @@
+>  /* Single Root I/O Virtualization */
+>  #define PCI_IOV_CAP		0x04	/* SR-IOV Capability Register */
+>  #define  PCI_IOV_CAP_VFM	0x00000001 /* VF Migration Capable */
+> +#define  PCI_IOV_CAP_VF_10BIT_TAG_REQ 0x00000004 /* VF 10-Bit Tag Requester Supported */
+>  #define  PCI_IOV_CAP_IMN(x)	((x) >> 21) /* VF Migration Interrupt Message Number */
+>  #define PCI_IOV_CTRL		0x08	/* SR-IOV Control Register */
+>  #define  PCI_IOV_CTRL_VFE	0x0001	/* VF Enable */
+> @@ -1133,6 +1134,7 @@
+>  #define  PCI_IOV_CTRL_VFMIE	0x0004	/* VF Migration Interrupt Enable */
+>  #define  PCI_IOV_CTRL_MSE	0x0008	/* VF MSE */
+>  #define  PCI_IOV_CTRL_ARI	0x0010	/* ARI Capable Hierarchy */
+> +#define  PCI_IOV_CTRL_VF_10BIT_TAG_REQ_EN 0x0020 /* VF 10-Bit Tag Requester Enable */
+>  #define PCI_IOV_STATUS		0x0a	/* SR-IOV Status Register */
+>  #define  PCI_IOV_STATUS_MS	0x0001	/* VF Migration Status */
+>  #define PCI_IOV_INITIALVF	0x0c	/* Number of VFs that are initially associated */
+> diff --git a/ls-ecaps.c b/ls-ecaps.c
+> index 99c55ff..9b50aec 100644
+> --- a/ls-ecaps.c
+> +++ b/ls-ecaps.c
+> @@ -369,13 +369,13 @@ cap_sriov(struct device *d, int where)
+>      return;
+>
+>    l = get_conf_long(d, where + PCI_IOV_CAP);
+> -  printf("\t\tIOVCap:\tMigration%c, Interrupt Message Number: %03x\n",
+> -	FLAG(l, PCI_IOV_CAP_VFM), PCI_IOV_CAP_IMN(l));
+> +  printf("\t\tIOVCap:\tMigration%c, 10BitTagReq%c, Interrupt Message Number: %03x\n",
+> +	FLAG(l, PCI_IOV_CAP_VFM), FLAG(l, PCI_IOV_CAP_VF_10BIT_TAG_REQ), PCI_IOV_CAP_IMN(l));
+>    w = get_conf_word(d, where + PCI_IOV_CTRL);
+> -  printf("\t\tIOVCtl:\tEnable%c Migration%c Interrupt%c MSE%c ARIHierarchy%c\n",
+> +  printf("\t\tIOVCtl:\tEnable%c Migration%c Interrupt%c MSE%c ARIHierarchy%c 10BitTagReq%c\n",
+>  	FLAG(w, PCI_IOV_CTRL_VFE), FLAG(w, PCI_IOV_CTRL_VFME),
+>  	FLAG(w, PCI_IOV_CTRL_VFMIE), FLAG(w, PCI_IOV_CTRL_MSE),
+> -	FLAG(w, PCI_IOV_CTRL_ARI));
+> +	FLAG(w, PCI_IOV_CTRL_ARI), FLAG(w, PCI_IOV_CTRL_VF_10BIT_TAG_REQ_EN));
+>    w = get_conf_word(d, where + PCI_IOV_STATUS);
+>    printf("\t\tIOVSta:\tMigration%c\n", FLAG(w, PCI_IOV_STATUS_MS));
+>    w = get_conf_word(d, where + PCI_IOV_INITIALVF);
+>
