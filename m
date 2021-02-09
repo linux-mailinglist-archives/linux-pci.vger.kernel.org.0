@@ -2,214 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1409315057
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 14:36:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 455163151FA
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 15:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230185AbhBINfp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 08:35:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231366AbhBINfm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Feb 2021 08:35:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 58C3664ED3;
-        Tue,  9 Feb 2021 13:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612877701;
-        bh=5UrSrnNscVpnQ6QiFa+BRdHDIDUqHAl3HAvZrkWu1bI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M1dJbvjGVX4F19Qfsn9BWW9HObeyv44PioLJqp2/uFDMTJWghqkfhM8UGdbPsjt+D
-         FcwEMVgaaO2BNlSm1oYddBH7RkEyYeVGfl8woRJeJVpz3l2d4LnbBeAClWBCO5p4br
-         EEuutMh901fGS2a+s6nfLNNp+ZYlNIp6Cs+oX47zHCmSsiXZXZPGmt9pxCassMi5jM
-         OYYEfNUuvPWl/cc8yGmnik9Bgu+nMHNqGU4HwZ0fx0lklm6kH/MbnYn8BMO36F97mp
-         oB8YQlO+WQs4CqNM9N346TajHxSGJGkHnvP/8SNvxGyBzLD7QarC4/sKrfqXuRhZy1
-         W155lIOxxwirw==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: [PATCH mlx5-next v6 4/4] net/mlx5: Allow to the users to configure number of MSI-X vectors
-Date:   Tue,  9 Feb 2021 15:34:45 +0200
-Message-Id: <20210209133445.700225-5-leon@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210209133445.700225-1-leon@kernel.org>
-References: <20210209133445.700225-1-leon@kernel.org>
+        id S232291AbhBIOr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 09:47:59 -0500
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:50326 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232274AbhBIOrr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 09:47:47 -0500
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 119EbpAb014146;
+        Tue, 9 Feb 2021 06:46:36 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=LuW1n95X1tMZQ0ICeIVYUEVmB38v55X0tSFtqUvQqLc=;
+ b=kKkR8B5IZJM71cHBLQ6xQDNGigr/pBNVzppIbEUQASiNKg3q/c/42VX+Pa9Y7T7thxfM
+ ZIg3tUEmHnOmGyk3Oi21+dKvM9JjG9RfF/78lAHCQei9mGW4ciyBHSap961qTDkAmv1Z
+ zxEMJTlIumXppjve6dvjtGXBAEtjEeviookix2AQYTz0ENfw+9Gn+zhZEprScUUTJQZ8
+ decCWgbftJ2hJ3g/xqSpbWrK+dvPpsusGnQEJ9FWN7SDtwd8ORU7onX2axHLDfOAVipP
+ x6sfhY0sSd7RrIQ8hh2lJjHDVaaXLPSLxa0K4n6e5GGAoisUVvzvAatsJHtdDqOd5W9J Cg== 
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2173.outbound.protection.outlook.com [104.47.56.173])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 36hrku0ng5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Feb 2021 06:46:36 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lajtwIheZFj324Q62uz1wmwk8Dgpsy4vbYLo6idYraZVet/v0NjoylybOxE1EeHHh+BfEyTnG3Z4sK1SLclPhnmXWYZGMnczLbl07vbXbv2MskD+T/+qsEg76MlztEjq6Nf3TM+K5EL/ajzMYOm34KsudnuBoHTOy9v4rBUYzoLIfsj7hFL+flBBo0GGapfsBby4ZBHuJCBTXepUVaOgrCrzzSw0BS/bNuLpunzf6h+4PDd1BjSg+iQpV2fVCle6TN9BPp7kk82YeucHCo58Jfvj5CdeLgn4WpX37XnRstsiYw4qPt3S7WQ3s8Ebz+3BW8khnt7DFP/fusjDQw7INw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LuW1n95X1tMZQ0ICeIVYUEVmB38v55X0tSFtqUvQqLc=;
+ b=Mk5r19vKLFUW4B82ULIU5tczPeOSaWcrWRXlmrPlm9Ag8DgG4NaLE6J8S25dWMhhPCPMBU00OlJEcSnh79sivPWy8GN29LPqyQn4PcgXQJrY2TKA2+DytPKb2W7CU/WX1E0oB1mjs9KNMcYYOujzfTQecPpqOYTtX6JO3Frpo/8ZtxTd0mx40Q4RTC8Kb8U4MUh69qR4yqYaZiRPDDY02ZerQsBaUWhR4g9DnxspcoC2m2R+xtAnlW/HrsxEn67MsK8bz5ogVbY5l4LzFvV6ZiJiMLcR+a+O0Rvaoh5q7xrdMBiD3gRMQCy25cJCRRhWG/JhoJPlnBGCgDw0JxpB5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 64.207.220.244) smtp.rcpttodomain=google.com smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LuW1n95X1tMZQ0ICeIVYUEVmB38v55X0tSFtqUvQqLc=;
+ b=BHs5/SSnrufLz10twT9C78WAlbIbHGosg5CTkSXML9pXvqv/x/Qx10ZsHj3kTRly+0+Lz9MA4tVZj9HzRTl3SuTrl/BhGkxYTs95InmpBew2N5spib9gy3+0dNzsTH/yYVqPhY2Y2qv04+ze3QcO6INiqQwj5HTYCGRoj5hY7v8=
+Received: from BN9PR03CA0193.namprd03.prod.outlook.com (2603:10b6:408:f9::18)
+ by BLAPR07MB7633.namprd07.prod.outlook.com (2603:10b6:208:298::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.27; Tue, 9 Feb
+ 2021 14:46:33 +0000
+Received: from BN8NAM12FT036.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:408:f9:cafe::3c) by BN9PR03CA0193.outlook.office365.com
+ (2603:10b6:408:f9::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.25 via Frontend
+ Transport; Tue, 9 Feb 2021 14:46:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
+ smtp.mailfrom=cadence.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 64.207.220.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
+Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
+ BN8NAM12FT036.mail.protection.outlook.com (10.13.182.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3846.25 via Frontend Transport; Tue, 9 Feb 2021 14:46:31 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 119EkRwF001420
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Tue, 9 Feb 2021 06:46:29 -0800
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 9 Feb 2021 15:46:26 +0100
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 9 Feb 2021 15:46:26 +0100
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 119EkQe1026748;
+        Tue, 9 Feb 2021 15:46:26 +0100
+Received: (from nadeem@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 119EkPvI026742;
+        Tue, 9 Feb 2021 15:46:25 +0100
+From:   Nadeem Athani <nadeem@cadence.com>
+To:     <tjoseph@cadence.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kishon@ti.com>
+CC:     <nadeem@cadence.com>, <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <pthombar@cadence.com>
+Subject: [PATCH v8 0/2] PCI: cadence: Retrain Link to work around Gen2
+Date:   Tue, 9 Feb 2021 15:46:20 +0100
+Message-ID: <20210209144622.26683-1-nadeem@cadence.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 15b32a4a-0563-4064-d324-08d8cd097db8
+X-MS-TrafficTypeDiagnostic: BLAPR07MB7633:
+X-Microsoft-Antispam-PRVS: <BLAPR07MB763381ACA1B1884366DEC602D88E9@BLAPR07MB7633.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vvSaz+DGZKJhQ3G2tLAuLfJbCdrECn8Dx8erKVkkjEBjOyhig0l6ikD5MKWJbxHQDieqQo1z9R4HMQZjcyF6x6PdSl1pXyygVFaSGrwyIsgJkaAI7TbdjrxWSa0by3t3VbzWiVH7/vyKlmmfQly4eBYSCQOQTSae59LAzDm93WJFC1MNf2sEQDSQ2LhS7wEykh1R7aVOhkHLmqDge2hrhhcrUI+tCN7uCocNnn4L3m4RlmZZZFAXtJKcdjgQdVAuFIVVwybitN33bDBP/uSeLXv2nCNMwyI64UT1TZxJkF1Vr/sxf5KxueCJHjGS7YmfmgLJghPzcPXZXWig1/MLHKdfEuSda2kdV1AnyX1tl1q7uS/4s8Pnmabh5J3YlmOrMdAx/Ers/MWqrAbUvKqokTFnlDXwoF2/vZUErHWv8P7+O3H5zWJdP3iD3SA4L9tnsiLPJwbKWVpi49aKWR7cvFFREb3jYKx8ssLJBQS3+M0w6rSCDbR2UAr2xzcZQLqvcobfw7lz1T18k1Uv21aJdjPlsSPhL0LV74WKhrPUo38FOGedu0ZSVWt1uBawjxf6VntuRlIX2bPhkQGmKRwomD7hnr4RlClofp0ST/XHUyZKI9ZpPuO3BUKOMzPxbgp7W8VA0qJNGENqtRnH/5KDv2Wlp9Ft7YrnbRyn5XRrlYm4wFrjOp+mLBaO496itRXJiAPm5A26hg+xfyz6GbkwoSayIWxlj+ZYB/5Ev5ZzNZD7/fVcpm0R+lcKXRddEaKq
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFS:(4636009)(376002)(136003)(39860400002)(346002)(396003)(36092001)(36840700001)(46966006)(316002)(36860700001)(5660300002)(478600001)(1076003)(54906003)(4326008)(2616005)(34020700004)(186003)(36906005)(36756003)(47076005)(70586007)(86362001)(110136005)(2906002)(8676002)(26005)(82310400003)(83380400001)(356005)(6666004)(426003)(42186006)(8936002)(81166007)(336012)(70206006)(107886003)(82740400003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2021 14:46:31.9120
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15b32a4a-0563-4064-d324-08d8cd097db8
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM12FT036.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR07MB7633
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
+ definitions=2021-02-09_03:2021-02-09,2021-02-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ adultscore=0 malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=965
+ lowpriorityscore=0 clxscore=1011 suspectscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2102090076
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+Cadence controller will not initiate autonomous speed change if strapped
+as Gen2. The Retrain Link bit is set as quirk to enable this speed change.
+Adding a quirk flag for defective IP. In future IP revisions this will not
+be applicable.
 
-Implement ability to configure MSI-X for the SR-IOV VFs.
+Version history:
+Changes in v8:
+- Adding a new function cdns_pcie_host_start_link().
+Changes in v7:
+- Changing the commit title of patch 1 in this series.
+- Added a return value for function cdns_pcie_retrain().
+Changes in v6:
+- Move the position of function cdns_pcie_host_wait_for_link to remove
+  compilation error. No changes in code. Separate patch for this.
+Changes in v5:
+- Remove the compatible string based setting of quirk flag.
+- Removed additional Link Up Check
+- Removed quirk from pcie-cadence-plat.c and added in pci-j721e.c
+Changes in v4:
+- Added a quirk flag based on a new compatible string.
+- Change of api for link up: cdns_pcie_host_wait_for_link().
+Changes in v3:
+- To set retrain link bit,checking device capability & link status.
+- 32bit read in place of 8bit.
+- Minor correction in patch comment.
+- Change in variable & macro name.
+Changes in v2:
+- 16bit read in place of 8bit.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- .../net/ethernet/mellanox/mlx5/core/main.c    | 13 ++++++
- .../ethernet/mellanox/mlx5/core/mlx5_core.h   | 22 +++++++++
- .../net/ethernet/mellanox/mlx5/core/sriov.c   | 45 +++++++++++++++++++
- 3 files changed, 80 insertions(+)
+Nadeem Athani (2):
+  PCI: cadence: Shifting of a function to support new code.
+  PCI: cadence: Retrain Link to work around Gen2 training defect.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index 79cfcc844156..db59c51e148e 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1395,6 +1395,14 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 		goto err_load_one;
- 	}
- 
-+	err = mlx5_enable_vf_overlay(dev);
-+	if (err) {
-+		mlx5_core_err(dev,
-+			      "mlx5_enable_vf_overlay failed with error code %d\n",
-+			      err);
-+		goto err_vf_overlay;
-+	}
-+
- 	err = mlx5_crdump_enable(dev);
- 	if (err)
- 		dev_err(&pdev->dev, "mlx5_crdump_enable failed with error code %d\n", err);
-@@ -1403,6 +1411,8 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *id)
- 	devlink_reload_enable(devlink);
- 	return 0;
- 
-+err_vf_overlay:
-+	mlx5_unload_one(dev, true);
- err_load_one:
- 	mlx5_pci_close(dev);
- pci_init_err:
-@@ -1423,6 +1433,7 @@ static void remove_one(struct pci_dev *pdev)
- 	devlink_reload_disable(devlink);
- 	mlx5_crdump_disable(dev);
- 	mlx5_drain_health_wq(dev);
-+	mlx5_disable_vf_overlay(dev);
- 	mlx5_unload_one(dev, true);
- 	mlx5_pci_close(dev);
- 	mlx5_mdev_uninit(dev);
-@@ -1650,6 +1661,8 @@ static struct pci_driver mlx5_core_driver = {
- 	.shutdown	= shutdown,
- 	.err_handler	= &mlx5_err_handler,
- 	.sriov_configure   = mlx5_core_sriov_configure,
-+	.sriov_get_vf_total_msix = mlx5_sriov_get_vf_total_msix,
-+	.sriov_set_msix_vec_count = mlx5_core_sriov_set_msix_vec_count,
- };
- 
- static void mlx5_core_verify_params(void)
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-index 5babb4434a87..e5c2fa558f77 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
-@@ -138,6 +138,7 @@ void mlx5_sriov_cleanup(struct mlx5_core_dev *dev);
- int mlx5_sriov_attach(struct mlx5_core_dev *dev);
- void mlx5_sriov_detach(struct mlx5_core_dev *dev);
- int mlx5_core_sriov_configure(struct pci_dev *dev, int num_vfs);
-+int mlx5_core_sriov_set_msix_vec_count(struct pci_dev *vf, int msix_vec_count);
- int mlx5_core_enable_hca(struct mlx5_core_dev *dev, u16 func_id);
- int mlx5_core_disable_hca(struct mlx5_core_dev *dev, u16 func_id);
- int mlx5_create_scheduling_element_cmd(struct mlx5_core_dev *dev, u8 hierarchy,
-@@ -264,4 +265,25 @@ void mlx5_set_nic_state(struct mlx5_core_dev *dev, u8 state);
- 
- void mlx5_unload_one(struct mlx5_core_dev *dev, bool cleanup);
- int mlx5_load_one(struct mlx5_core_dev *dev, bool boot);
-+
-+static inline int mlx5_enable_vf_overlay(struct mlx5_core_dev *dev)
-+{
-+	if (MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix))
-+		return pci_enable_vf_overlay(dev->pdev);
-+
-+	return 0;
-+}
-+
-+static inline void mlx5_disable_vf_overlay(struct mlx5_core_dev *dev)
-+{
-+	if (MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix))
-+		pci_disable_vf_overlay(dev->pdev);
-+}
-+
-+static inline u32 mlx5_sriov_get_vf_total_msix(struct pci_dev *pdev)
-+{
-+	struct mlx5_core_dev *dev = pci_get_drvdata(pdev);
-+
-+	return MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
-+}
- #endif /* __MLX5_CORE_H__ */
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
-index f0ec86a1c8a6..446bfdfce4a2 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/sriov.c
-@@ -156,6 +156,15 @@ static int mlx5_sriov_enable(struct pci_dev *pdev, int num_vfs)
- 	if (err) {
- 		mlx5_core_warn(dev, "pci_enable_sriov failed : %d\n", err);
- 		mlx5_device_disable_sriov(dev, num_vfs, true);
-+		return err;
-+	}
-+
-+	err = mlx5_enable_vf_overlay(dev);
-+	if (err) {
-+		mlx5_core_warn(dev, "mlx5_enable_vf_overlay failed : %d\n",
-+			       err);
-+		pci_disable_sriov(pdev);
-+		mlx5_device_disable_sriov(dev, num_vfs, true);
- 	}
- 	return err;
- }
-@@ -165,6 +174,7 @@ static void mlx5_sriov_disable(struct pci_dev *pdev)
- 	struct mlx5_core_dev *dev  = pci_get_drvdata(pdev);
- 	int num_vfs = pci_num_vf(dev->pdev);
- 
-+	mlx5_disable_vf_overlay(dev);
- 	pci_disable_sriov(pdev);
- 	mlx5_device_disable_sriov(dev, num_vfs, true);
- }
-@@ -187,6 +197,41 @@ int mlx5_core_sriov_configure(struct pci_dev *pdev, int num_vfs)
- 	return err ? err : num_vfs;
- }
- 
-+int mlx5_core_sriov_set_msix_vec_count(struct pci_dev *vf, int msix_vec_count)
-+{
-+	struct pci_dev *pf = pci_physfn(vf);
-+	struct mlx5_core_sriov *sriov;
-+	struct mlx5_core_dev *dev;
-+	int num_vf_msix, id;
-+
-+	dev = pci_get_drvdata(pf);
-+	num_vf_msix = MLX5_CAP_GEN_MAX(dev, num_total_dynamic_vf_msix);
-+	if (!num_vf_msix)
-+		return -EOPNOTSUPP;
-+
-+	if (!msix_vec_count)
-+		msix_vec_count =
-+			mlx5_get_default_msix_vec_count(dev, pci_num_vf(pf));
-+
-+	sriov = &dev->priv.sriov;
-+
-+	/* Reversed translation of PCI VF function number to the internal
-+	 * function_id, which exists in the name of virtfn symlink.
-+	 */
-+	for (id = 0; id < pci_num_vf(pf); id++) {
-+		if (!sriov->vfs_ctx[id].enabled)
-+			continue;
-+
-+		if (vf->devfn == pci_iov_virtfn_devfn(pf, id))
-+			break;
-+	}
-+
-+	if (id == pci_num_vf(pf) || !sriov->vfs_ctx[id].enabled)
-+		return -EINVAL;
-+
-+	return mlx5_set_msix_vec_count(dev, id + 1, msix_vec_count);
-+}
-+
- int mlx5_sriov_attach(struct mlx5_core_dev *dev)
- {
- 	if (!mlx5_core_is_pf(dev) || !pci_num_vf(dev->pdev))
+ drivers/pci/controller/cadence/pci-j721e.c         |  3 +
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 81 +++++++++++++++++-----
+ drivers/pci/controller/cadence/pcie-cadence.h      | 11 ++-
+ 3 files changed, 76 insertions(+), 19 deletions(-)
+
 -- 
-2.29.2
+2.15.0
 
