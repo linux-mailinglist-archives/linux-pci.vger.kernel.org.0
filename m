@@ -2,133 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A676D315584
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 19:01:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85DC53155C6
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 19:23:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233035AbhBIRz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 12:55:26 -0500
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:34275 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233142AbhBIRqk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 12:46:40 -0500
-Received: by mail-ot1-f51.google.com with SMTP id y11so18262711otq.1;
-        Tue, 09 Feb 2021 09:46:24 -0800 (PST)
+        id S233225AbhBISWQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 13:22:16 -0500
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:52230 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233259AbhBISSv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 13:18:51 -0500
+Received: by mail-wm1-f53.google.com with SMTP id i5so4149045wmq.2;
+        Tue, 09 Feb 2021 10:18:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=g9ou2r2uOk1p7jZj1nuZ6tXYHwtGvuF9zt0EteXz9iI=;
-        b=iXHZzXnB6sashZ2DlJUPYnMIOv70QLKU6UULvHAg3AQTcu4ly/wjnFYBkTIRKoSQ9e
-         a62KyCalEB2ycucSM9DxQlyM+7m5RIrs+QbZG7c2xQ9mcm0GcEjiv0MCqhevlCwCo7PT
-         ctTxnaVp4fzuu/3fH7ss/LZO26KUWIWL+NrYU8X5pZeP8ix1JQB9XmxGvOBlaoeUuSef
-         UgAPgt7Lp8CT4DMYZkpX0Eu4dYsGJlW2XglUizhNAa7lK56ExkcznB782eTdkUPEYpg5
-         jzanLnse7lUjAf2cAn93F2xTJ/yB3+GjuMKrU+yoTmkigscHzAd1eLdXa0yrmCFYrUao
-         2J3g==
-X-Gm-Message-State: AOAM530r2NRC0C85Pxfvfh/j8pgzmgQLENEeSVPqBnLPde+C+n05lfgY
-        zeWKWFv7bb5t47KijtN21A==
-X-Google-Smtp-Source: ABdhPJyD9wSsTphvRQqPgcANSdzEQZOZFn0KtsoMnVgF3Lga/h8BDQMhXRKkLBVeCJe9FLssgiVuJA==
-X-Received: by 2002:a9d:4c83:: with SMTP id m3mr17146800otf.353.1612892759469;
-        Tue, 09 Feb 2021 09:45:59 -0800 (PST)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m22sm4293003ooj.43.2021.02.09.09.45.53
+        bh=uLdJv6cZuHRtRFFRIJEOoH3tFE87WZTh9kuO83NwQkA=;
+        b=AQ+XhQOVzY7tNvN+7MromeEYGIc+mQAB+nJkPt0qZSlT3XflLWIVYJS3kuOrlSYnV3
+         iY8IO7acAMxh4Raaq+esbLoxLLigbJxNsW/qmAnN+jnzRckSF3+HXFAHXwuHa3dk9Afp
+         CQTnAz8ByqxnI5fo1T5NvFB4JT30kM6hGD9s4QJ2PUREIWbZRz8X7Ju4FenHTy3GK3gq
+         2s0hmen74301TCgW/Tq5aNiher26PN1SqbEaWaYkR6Pc5QJ/X9w/Pa3n6vhupgf7fJzD
+         FtfnBoboDFsGw+lsSF7CO0WnJVZKBjkkmUobv/CaQkUB/QkyGunTZLlNL+Qv4FNoREn+
+         yt4w==
+X-Gm-Message-State: AOAM531yJTqrhiAiUo+d6CMDrC4zJIvUeNg8oLZM96SXn4HdyQP7ZUxC
+        wBnMkBZ4UaE4RiHLgXChnP2gO4geLdYcbrS7
+X-Google-Smtp-Source: ABdhPJwz+oj1rYRkIUbkuFpwNkRP8w69gpqFE7NuELRZRlrJxE3bDlWo2EjSvBNuLir40teoqSz3YQ==
+X-Received: by 2002:a1c:105:: with SMTP id 5mr4662963wmb.89.1612894688876;
+        Tue, 09 Feb 2021 10:18:08 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id u70sm6019208wmu.20.2021.02.09.10.18.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 09:45:54 -0800 (PST)
-Received: (nullmailer pid 4020954 invoked by uid 1000);
-        Tue, 09 Feb 2021 17:45:53 -0000
-Date:   Tue, 9 Feb 2021 11:45:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Binghui Wang <wangbinghui@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Xiaowei Song <songxiaowei@hisilicon.com>,
-        devicetree@vger.kernel.org,
+        Tue, 09 Feb 2021 10:18:08 -0800 (PST)
+Date:   Tue, 9 Feb 2021 19:18:06 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH RFC 2/2] dt: pci: kirin-pcie.txt: convert it to yaml
-Message-ID: <20210209174553.GA4017550@robh.at.kernel.org>
-References: <cover.1611645945.git.mchehab+huawei@kernel.org>
- <30795b4a1cea54292d49881d5843e2bdbc496e4d.1611645945.git.mchehab+huawei@kernel.org>
- <CAL_JsqJrkvkBMzyAf_Wbv8tbEWbfTwjgwLYKf=Cr8S5mo_URfQ@mail.gmail.com>
- <20210202104537.0ad3f8a7@coco.lan>
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v4 15/15] dmaengine: dw-edma: Add pcim_iomap_table return
+ checker
+Message-ID: <YCLR3uB5+GELTXSk@rocinante>
+References: <ceb5eb396e417f9e45d39fd5ef565ba77aae6a63.1612389406.git.gustavo.pimentel@synopsys.com>
+ <20210208193516.GA406304@bjorn-Precision-5520>
+ <DM5PR12MB1835A960892E401D50DEBB9DDA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210202104537.0ad3f8a7@coco.lan>
+In-Reply-To: <DM5PR12MB1835A960892E401D50DEBB9DDA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 10:45:37AM +0100, Mauro Carvalho Chehab wrote:
-> Em Tue, 26 Jan 2021 09:49:18 -0600
-> Rob Herring <robh+dt@kernel.org> escreveu:
-> 
-> > On Tue, Jan 26, 2021 at 1:35 AM Mauro Carvalho Chehab
-> > <mchehab+huawei@kernel.org> wrote:
-> > >
-> > > Convert the file into a JSON description at the yaml format.
-> > >
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > > ---
-> > >  .../bindings/pci/hisilicon,kirin-pcie.yaml    | 98 +++++++++++++++++++
-> > >  .../devicetree/bindings/pci/kirin-pcie.txt    | 50 ----------
-> > >  MAINTAINERS                                   |  2 +-
-> > >  3 files changed, 99 insertions(+), 51 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> > > new file mode 100644
-> > > index 000000000000..8d8112b2aca0
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> > > @@ -0,0 +1,98 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/pci/hisilicon,kirin-pcie.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: HiSilicon Kirin SoCs PCIe host DT description
-> > > +
-> > > +maintainers:
-> > > +  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > > +
-> > > +description: |
-> > > +  Kirin PCIe host controller is based on the Synopsys DesignWare PCI core.
-> > > +  It shares common functions with the PCIe DesignWare core driver and
-> > > +  inherits common properties defined in
-> > > +  Documentation/devicetree/bindings/pci/designware-pcie.yaml.  
+Hi Gustavo,
+
+[...]
+> > This "pcim_iomap_table(dev)[n]" pattern is extremely common.  There
+> > are over 100 calls of pcim_iomap_table(), and
 > > 
-> > Drop this and move the $ref to here.
+> >   $ git grep "pcim_iomap_table(.*)\[.*\]" | wc -l
+> > 
+> > says about 75 of them are of this form, where we dereference the
+> > result before testing it.
 > 
-> That doesn't pass at dt_binding_check. If I do either:
+> That's true, there are a lot of drivers that don't verify that pointer. 
+> What do you suggest?
+> 1) To remove the verification so that is aligned with the other drivers
+> 2) Leave it as is. Or even to add this verification to the other drivers?
 > 
->   allOf:
->     - $ref: snps,pcie.yaml#
-> 
-> or:
-> 
->   allOf:
->     - $ref: /schemas/pci/pci-bus.yaml#
->     - $ref: snps,pcie.yaml#
-> 
-> Then dt-binding-check starts to think that this DT is for a pinctrl:
-> 
-> 	make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> 	  LINT    Documentation/devicetree/bindings
-> 	  DTEX    Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dts
-> 	./Documentation/devicetree/bindings/sound/mt8192-mt6359-rt1015-rt5682.yaml:10:4: [warning] wrong indentation: expected 2 but found 3 (indentation)
-> 	./Documentation/devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml:102:10: [warning] wrong indentation: expected 10 but found 9 (indentation)
-> 	  CHKDT   Documentation/devicetree/bindings/processed-schema-examples.json
-> 	  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.json
-> 	  DTC     Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml
-> 	  CHECK   Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml
-> 	.../Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.example.dt.yaml: pcie@f4000000: '#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'interrupt-names', 'interrupts', 'num-lanes', 'ranges', 'reg-names', 'reset-gpios' do not match any of the regexes: 'pinctrl-[0-9]+'
-> 		From schema: .../Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml
-> 
-> No idea why. Perhaps something broken at pinctrl schema?
+> Either way, I will add the pcim_iomap_table(pdev) before this 
+> instruction.
+[...]
 
-You'll need to use unevaluatedProperties instead of 
-additionalProperties.
+A lot of the drivers consume the value from pcim_iomap_table() at
+a given BAR index directly as-is, some check if the pointer they got
+back is not NULL, a very few also check if the address at a given index
+is not NULL.
 
-Rob
+Given that the memory allocation for the table can fail, we ought to
+check for a NULL pointer.  It's a bit worrying that people decided to
+consume the value it returns directly without any verification.
+
+I only found two drivers that perform this additional verification of
+checking whether the address at a given index is valid, as per:
+
+  https://lore.kernel.org/linux-pci/YCLFTjZQ2bCfGC+J@rocinante/
+
+Personally, I would opt for (2), and then like you suggested send
+a separate series to update other drivers so that they also include the
+this NULL pointer check.
+
+But let's wait for Bjorn's take on this, though.
+
+Krzysztof
