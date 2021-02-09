@@ -2,37 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 455163151FA
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 15:48:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEAC0315202
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 15:50:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbhBIOr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 09:47:59 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:50326 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232274AbhBIOrr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 09:47:47 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 119EbpAb014146;
-        Tue, 9 Feb 2021 06:46:36 -0800
+        id S232060AbhBIOsu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 09:48:50 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:33584 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232274AbhBIOst (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 09:48:49 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 119EibSH020875;
+        Tue, 9 Feb 2021 06:46:38 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=LuW1n95X1tMZQ0ICeIVYUEVmB38v55X0tSFtqUvQqLc=;
- b=kKkR8B5IZJM71cHBLQ6xQDNGigr/pBNVzppIbEUQASiNKg3q/c/42VX+Pa9Y7T7thxfM
- ZIg3tUEmHnOmGyk3Oi21+dKvM9JjG9RfF/78lAHCQei9mGW4ciyBHSap961qTDkAmv1Z
- zxEMJTlIumXppjve6dvjtGXBAEtjEeviookix2AQYTz0ENfw+9Gn+zhZEprScUUTJQZ8
- decCWgbftJ2hJ3g/xqSpbWrK+dvPpsusGnQEJ9FWN7SDtwd8ORU7onX2axHLDfOAVipP
- x6sfhY0sSd7RrIQ8hh2lJjHDVaaXLPSLxa0K4n6e5GGAoisUVvzvAatsJHtdDqOd5W9J Cg== 
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2173.outbound.protection.outlook.com [104.47.56.173])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 36hrku0ng5-1
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=dXYSEl0G00OdyADOwSkjnpNiSLWKVIbFkN7qbFkMRB0=;
+ b=T3nJhvI5vZMA8kH12kD1rsbaT8xaHJl+458itQxsuwpselGsbaqiQgtcItsy4TcNz0v5
+ W+L+YUTgofhZ4tG0mLzVMA21PBcW/+KbzHQvN/2623oTTzwmfGcMz9qO2CYnd60/QXkg
+ 7Dr1cVn602dd0FB4HhKjx30mIbxD22mdHU8bp4OK9sJjiV7g15nb5KllIT2SA97ayQXY
+ rhgjbY82dCpyYlKQ9O6SQ3xji0kmmHeiv5Gqd0HnQYq5VIY1D9R60hoOIgH6HCwVCKKz
+ BgMnlIs3aSQZ68bhURnz6wDJE348ISxsNAEB9ZBmiqhFk/TpLcGVzN+c7ITizk5nZFcW YA== 
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2175.outbound.protection.outlook.com [104.47.55.175])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 36hrcw8sh9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 06:46:36 -0800
+        Tue, 09 Feb 2021 06:46:38 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lajtwIheZFj324Q62uz1wmwk8Dgpsy4vbYLo6idYraZVet/v0NjoylybOxE1EeHHh+BfEyTnG3Z4sK1SLclPhnmXWYZGMnczLbl07vbXbv2MskD+T/+qsEg76MlztEjq6Nf3TM+K5EL/ajzMYOm34KsudnuBoHTOy9v4rBUYzoLIfsj7hFL+flBBo0GGapfsBby4ZBHuJCBTXepUVaOgrCrzzSw0BS/bNuLpunzf6h+4PDd1BjSg+iQpV2fVCle6TN9BPp7kk82YeucHCo58Jfvj5CdeLgn4WpX37XnRstsiYw4qPt3S7WQ3s8Ebz+3BW8khnt7DFP/fusjDQw7INw==
+ b=UpbXW85zIYl/47bL4b6ieq7vQLMieJ5joeDW2sXiozyb8XKIaMiee/PbVmFkIwzJqaBgCW3I1x4wUlqeXqyZJN25spFOa96L+Dujo6orBhs6y0XgmJmEUfy8NX+HKBX3eHmC4pT6H2J1dq82pRrWA3bFpIUCpv3dKxiJz7l7jPzqJj0/lRWBZJ9HYKm1MXiyso2eMpqu5IlBCuxCmwwhWnASz0vRPe42O7YPVvr5loWw1fAy/K9gV9YoMMFHQyvRUyYTolixiNd5nJVnYnKnSeUQY80p+/JrJ9q/6wU0KblB7879uqwdqTEppz1tCWv1/w7/yihTT277oyQ1V2FibQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LuW1n95X1tMZQ0ICeIVYUEVmB38v55X0tSFtqUvQqLc=;
- b=Mk5r19vKLFUW4B82ULIU5tczPeOSaWcrWRXlmrPlm9Ag8DgG4NaLE6J8S25dWMhhPCPMBU00OlJEcSnh79sivPWy8GN29LPqyQn4PcgXQJrY2TKA2+DytPKb2W7CU/WX1E0oB1mjs9KNMcYYOujzfTQecPpqOYTtX6JO3Frpo/8ZtxTd0mx40Q4RTC8Kb8U4MUh69qR4yqYaZiRPDDY02ZerQsBaUWhR4g9DnxspcoC2m2R+xtAnlW/HrsxEn67MsK8bz5ogVbY5l4LzFvV6ZiJiMLcR+a+O0Rvaoh5q7xrdMBiD3gRMQCy25cJCRRhWG/JhoJPlnBGCgDw0JxpB5w==
+ bh=dXYSEl0G00OdyADOwSkjnpNiSLWKVIbFkN7qbFkMRB0=;
+ b=B74g83PFjyZOj3OQsdVB0iBR5fNz9ECd+z8IuEaiCT9y6hzlsBuSM+hGS6XFYvauBvDYQBh2H/garg+z5WUMVZEuql2iks4thAeLSOZBiSKaFsFj/SSmmkqfVjT3DPJfqhilPUUxi8WYWp+SZ/K+/YL90BEK42KZzovNDhwWDDm2eo7bTpeWuI3e9cQMyPzlgqnwQ0JjWiV4a1etQBJaDnJuscyog4/6BXTgJN4BrKE4da7hGCHudl5jm9EUiDFw4SRXnE97y7eV4k4BUzYg8Akcq5vyDkUyrOTbVzGQxh/u7ghQ2g8y1Epb9AW9KMPkFWCPKgTBhDiLoqrvZjtfcA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  64.207.220.244) smtp.rcpttodomain=google.com smtp.mailfrom=cadence.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
@@ -40,18 +41,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LuW1n95X1tMZQ0ICeIVYUEVmB38v55X0tSFtqUvQqLc=;
- b=BHs5/SSnrufLz10twT9C78WAlbIbHGosg5CTkSXML9pXvqv/x/Qx10ZsHj3kTRly+0+Lz9MA4tVZj9HzRTl3SuTrl/BhGkxYTs95InmpBew2N5spib9gy3+0dNzsTH/yYVqPhY2Y2qv04+ze3QcO6INiqQwj5HTYCGRoj5hY7v8=
-Received: from BN9PR03CA0193.namprd03.prod.outlook.com (2603:10b6:408:f9::18)
- by BLAPR07MB7633.namprd07.prod.outlook.com (2603:10b6:208:298::13) with
+ bh=dXYSEl0G00OdyADOwSkjnpNiSLWKVIbFkN7qbFkMRB0=;
+ b=Z2P0/KTPo0fIxg1c2OjxnxuqGqsC/Tzto6ied3XlZFmOjpYctiWB8nCOm4ayV0ay+SxoJkVSWENFbEf2Sh4aaaYe0OsrLS4J7boYhQXCdmDK3c9WqAQT0DLyHIR/tY3UTU0EEIAcOA4Sh9DRjztaufKnPKA4HQZeosZtAX2mB5U=
+Received: from BN9PR03CA0834.namprd03.prod.outlook.com (2603:10b6:408:13e::29)
+ by BN6PR07MB2753.namprd07.prod.outlook.com (2603:10b6:404:40::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.27; Tue, 9 Feb
- 2021 14:46:33 +0000
-Received: from BN8NAM12FT036.eop-nam12.prod.protection.outlook.com
- (2603:10b6:408:f9:cafe::3c) by BN9PR03CA0193.outlook.office365.com
- (2603:10b6:408:f9::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.25 via Frontend
- Transport; Tue, 9 Feb 2021 14:46:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.20; Tue, 9 Feb
+ 2021 14:46:34 +0000
+Received: from BN8NAM12FT046.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:408:13e:cafe::8e) by BN9PR03CA0834.outlook.office365.com
+ (2603:10b6:408:13e::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.20 via Frontend
+ Transport; Tue, 9 Feb 2021 14:46:34 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 64.207.220.244)
  smtp.mailfrom=cadence.com; google.com; dkim=none (message not signed)
  header.d=none;google.com; dmarc=pass action=none header.from=cadence.com;
@@ -59,26 +60,26 @@ Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
  64.207.220.244 as permitted sender) receiver=protection.outlook.com;
  client-ip=64.207.220.244; helo=wcmailrelayl01.cadence.com;
 Received: from wcmailrelayl01.cadence.com (64.207.220.244) by
- BN8NAM12FT036.mail.protection.outlook.com (10.13.182.224) with Microsoft SMTP
+ BN8NAM12FT046.mail.protection.outlook.com (10.13.183.148) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3846.25 via Frontend Transport; Tue, 9 Feb 2021 14:46:31 +0000
+ 15.20.3846.25 via Frontend Transport; Tue, 9 Feb 2021 14:46:32 +0000
 Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 119EkRwF001420
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 119EkRwG001420
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Tue, 9 Feb 2021 06:46:29 -0800
+        Tue, 9 Feb 2021 06:46:31 -0800
 X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
 Received: from maileu3.global.cadence.com (10.160.88.99) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Tue, 9 Feb 2021 15:46:26 +0100
+ 15.0.1367.3; Tue, 9 Feb 2021 15:46:27 +0100
 Received: from vleu-orange.cadence.com (10.160.88.83) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 9 Feb 2021 15:46:26 +0100
+ 15.0.1367.3 via Frontend Transport; Tue, 9 Feb 2021 15:46:27 +0100
 Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 119EkQe1026748;
-        Tue, 9 Feb 2021 15:46:26 +0100
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 119EkR5x026758;
+        Tue, 9 Feb 2021 15:46:27 +0100
 Received: (from nadeem@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 119EkPvI026742;
-        Tue, 9 Feb 2021 15:46:25 +0100
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 119EkR0c026757;
+        Tue, 9 Feb 2021 15:46:27 +0100
 From:   Nadeem Athani <nadeem@cadence.com>
 To:     <tjoseph@cadence.com>, <lorenzo.pieralisi@arm.com>,
         <robh@kernel.org>, <bhelgaas@google.com>,
@@ -86,82 +87,106 @@ To:     <tjoseph@cadence.com>, <lorenzo.pieralisi@arm.com>,
         <kishon@ti.com>
 CC:     <nadeem@cadence.com>, <mparab@cadence.com>, <sjakhade@cadence.com>,
         <pthombar@cadence.com>
-Subject: [PATCH v8 0/2] PCI: cadence: Retrain Link to work around Gen2
-Date:   Tue, 9 Feb 2021 15:46:20 +0100
-Message-ID: <20210209144622.26683-1-nadeem@cadence.com>
+Subject: [PATCH v8 1/2] PCI: cadence: Shifting of a function to support new code.
+Date:   Tue, 9 Feb 2021 15:46:21 +0100
+Message-ID: <20210209144622.26683-2-nadeem@cadence.com>
 X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20210209144622.26683-1-nadeem@cadence.com>
+References: <20210209144622.26683-1-nadeem@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-OrganizationHeadersPreserved: maileu3.global.cadence.com
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 15b32a4a-0563-4064-d324-08d8cd097db8
-X-MS-TrafficTypeDiagnostic: BLAPR07MB7633:
-X-Microsoft-Antispam-PRVS: <BLAPR07MB763381ACA1B1884366DEC602D88E9@BLAPR07MB7633.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-MS-Office365-Filtering-Correlation-Id: 3cd15bdb-9449-4edf-7d22-08d8cd097ddd
+X-MS-TrafficTypeDiagnostic: BN6PR07MB2753:
+X-Microsoft-Antispam-PRVS: <BN6PR07MB2753117692E6AA37A74BA9FFD88E9@BN6PR07MB2753.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vvSaz+DGZKJhQ3G2tLAuLfJbCdrECn8Dx8erKVkkjEBjOyhig0l6ikD5MKWJbxHQDieqQo1z9R4HMQZjcyF6x6PdSl1pXyygVFaSGrwyIsgJkaAI7TbdjrxWSa0by3t3VbzWiVH7/vyKlmmfQly4eBYSCQOQTSae59LAzDm93WJFC1MNf2sEQDSQ2LhS7wEykh1R7aVOhkHLmqDge2hrhhcrUI+tCN7uCocNnn4L3m4RlmZZZFAXtJKcdjgQdVAuFIVVwybitN33bDBP/uSeLXv2nCNMwyI64UT1TZxJkF1Vr/sxf5KxueCJHjGS7YmfmgLJghPzcPXZXWig1/MLHKdfEuSda2kdV1AnyX1tl1q7uS/4s8Pnmabh5J3YlmOrMdAx/Ers/MWqrAbUvKqokTFnlDXwoF2/vZUErHWv8P7+O3H5zWJdP3iD3SA4L9tnsiLPJwbKWVpi49aKWR7cvFFREb3jYKx8ssLJBQS3+M0w6rSCDbR2UAr2xzcZQLqvcobfw7lz1T18k1Uv21aJdjPlsSPhL0LV74WKhrPUo38FOGedu0ZSVWt1uBawjxf6VntuRlIX2bPhkQGmKRwomD7hnr4RlClofp0ST/XHUyZKI9ZpPuO3BUKOMzPxbgp7W8VA0qJNGENqtRnH/5KDv2Wlp9Ft7YrnbRyn5XRrlYm4wFrjOp+mLBaO496itRXJiAPm5A26hg+xfyz6GbkwoSayIWxlj+ZYB/5Ev5ZzNZD7/fVcpm0R+lcKXRddEaKq
-X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFS:(4636009)(376002)(136003)(39860400002)(346002)(396003)(36092001)(36840700001)(46966006)(316002)(36860700001)(5660300002)(478600001)(1076003)(54906003)(4326008)(2616005)(34020700004)(186003)(36906005)(36756003)(47076005)(70586007)(86362001)(110136005)(2906002)(8676002)(26005)(82310400003)(83380400001)(356005)(6666004)(426003)(42186006)(8936002)(81166007)(336012)(70206006)(107886003)(82740400003)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: z7X5ziLKl5I/djQox6Zcw7NWAFXTsZ+ruB3oWK8qPbnM08ctCCnymAVgAJUUqj62oRK6c9oalHOiV2/9tTzbpaexXFYt44JsNxLG6UD42rQx3lQiW7QJeVeCuMnlmLocQrABYjlaQkvRwJyEcT71PnEedbbTtUEs9ExUgNTEzYFfKh/Xsyumsl9ljqgPNAqyvB1Ac8110h+jKqFW8qr5rIKtj8F0PIdpFIqWtU0W/bNK1R1i+5nL4Clu/oOGUa8H+Q7C1wCM4mjIgxY2QIqcoHMjbqIBuwa7T5Pyn+p0/FwexqMYXQ3S/KrM8pHgPsuMr32oxd3e0CSjHHrKLRt3ak6EaYidD3gd+5aoQxdGQO2QvjneIkHar1CvTOkvamRA0x9LOQIFG8dSWoNfkPHRbf6MoIvXO9ZjyL4P9tgCzM1bX+d9mUhDtlqAx0CwxNDXk8rXSFhLpY1goJan7fpeqaPNoJzY0x9pn/PFskUvETh0oEhGPtMQdzHrncfvyU/Iatv4ffhGMYocyyt+rSAPqNNDJixstmntiZwTfRLZir5bY8gb2QBzJmYYN0+4iR9AoQMc/Pso51MK1+E807T2FaE9SZEArXbPEO0sdhEqHhl4Fssgo+AULuG59bQ86BVkRbXmNAdRe+SocHgRsPu/kgdx+Bxizn7oLrJGAqTajlFaAl9IEL07HIIji4kQh+d0aWUo9Q5g3zlMNAuR93jCZlLC8YQOroB5qnh2g7OYvODBTMhnvH+XIGXCOP+DQekB
+X-Forefront-Antispam-Report: CIP:64.207.220.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:wcmailrelayl01.cadence.com;PTR:ErrorRetry;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(39860400002)(376002)(36092001)(46966006)(36840700001)(4326008)(70206006)(70586007)(8936002)(107886003)(54906003)(86362001)(2906002)(316002)(42186006)(34020700004)(36906005)(356005)(426003)(82310400003)(2616005)(47076005)(82740400003)(110136005)(8676002)(336012)(186003)(81166007)(6666004)(1076003)(36860700001)(5660300002)(478600001)(26005)(36756003)(83380400001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2021 14:46:31.9120
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2021 14:46:32.1533
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15b32a4a-0563-4064-d324-08d8cd097db8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3cd15bdb-9449-4edf-7d22-08d8cd097ddd
 X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.244];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM12FT036.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM12FT046.eop-nam12.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR07MB7633
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR07MB2753
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
  definitions=2021-02-09_03:2021-02-09,2021-02-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- adultscore=0 malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=965
- lowpriorityscore=0 clxscore=1011 suspectscore=0 priorityscore=1501
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2102090076
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 suspectscore=0 phishscore=0
+ impostorscore=0 adultscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 spamscore=0 malwarescore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2102090077
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Cadence controller will not initiate autonomous speed change if strapped
-as Gen2. The Retrain Link bit is set as quirk to enable this speed change.
-Adding a quirk flag for defective IP. In future IP revisions this will not
-be applicable.
+Moving the function cdns_pcie_host_wait_for_link() further up in the file,
+as it's going to be used by upcoming additional code in the driver.
 
-Version history:
-Changes in v8:
-- Adding a new function cdns_pcie_host_start_link().
-Changes in v7:
-- Changing the commit title of patch 1 in this series.
-- Added a return value for function cdns_pcie_retrain().
-Changes in v6:
-- Move the position of function cdns_pcie_host_wait_for_link to remove
-  compilation error. No changes in code. Separate patch for this.
-Changes in v5:
-- Remove the compatible string based setting of quirk flag.
-- Removed additional Link Up Check
-- Removed quirk from pcie-cadence-plat.c and added in pci-j721e.c
-Changes in v4:
-- Added a quirk flag based on a new compatible string.
-- Change of api for link up: cdns_pcie_host_wait_for_link().
-Changes in v3:
-- To set retrain link bit,checking device capability & link status.
-- 32bit read in place of 8bit.
-- Minor correction in patch comment.
-- Change in variable & macro name.
-Changes in v2:
-- 16bit read in place of 8bit.
+Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 33 +++++++++++-----------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
-Nadeem Athani (2):
-  PCI: cadence: Shifting of a function to support new code.
-  PCI: cadence: Retrain Link to work around Gen2 training defect.
-
- drivers/pci/controller/cadence/pci-j721e.c         |  3 +
- drivers/pci/controller/cadence/pcie-cadence-host.c | 81 +++++++++++++++++-----
- drivers/pci/controller/cadence/pcie-cadence.h      | 11 ++-
- 3 files changed, 76 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 811c1cb2e8de..9f7aa718c8d4 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -77,6 +77,22 @@ static struct pci_ops cdns_pcie_host_ops = {
+ 	.write		= pci_generic_config_write,
+ };
+ 
++static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
++{
++	struct device *dev = pcie->dev;
++	int retries;
++
++	/* Check if the link is up or not */
++	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
++		if (cdns_pcie_link_up(pcie)) {
++			dev_info(dev, "Link up\n");
++			return 0;
++		}
++		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
++	}
++
++	return -ETIMEDOUT;
++}
+ 
+ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ {
+@@ -398,23 +414,6 @@ static int cdns_pcie_host_init(struct device *dev,
+ 	return cdns_pcie_host_init_address_translation(rc);
+ }
+ 
+-static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+-{
+-	struct device *dev = pcie->dev;
+-	int retries;
+-
+-	/* Check if the link is up or not */
+-	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+-		if (cdns_pcie_link_up(pcie)) {
+-			dev_info(dev, "Link up\n");
+-			return 0;
+-		}
+-		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+-	}
+-
+-	return -ETIMEDOUT;
+-}
+-
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	struct device *dev = rc->pcie.dev;
 -- 
 2.15.0
 
