@@ -2,98 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3E6A315A97
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 01:06:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F3D2315A98
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 01:06:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234470AbhBJAF0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 19:05:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234921AbhBIXYn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 18:24:43 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D517BC06178B
-        for <linux-pci@vger.kernel.org>; Tue,  9 Feb 2021 15:24:00 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id p21so43348lfu.11
-        for <linux-pci@vger.kernel.org>; Tue, 09 Feb 2021 15:24:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=C0AgyR2td8Wni5MnEa1+1u2wCmrll85Ef/D08+QnXD8=;
-        b=I302+fItg6vO5gHFEWY+KjOrj7RemddKaCq/VjRrbrZRbcIKClDu49LNO381R3kaIz
-         OaaVkwhRWtJ2Gu9L5inG5UKZ8oM9gwLcnvwC4owDBua7Mm//oe5z8WMU9duQtcRccckJ
-         X8L0eriHaEzdy9cjgwERCBC1F/miTtoUEHVDZkLA2QWNNR0YXEDaUqybiSU2ivpHO8t2
-         3r9E5bYVxzliybxbOKZGxuEdzNgjQCWJdW8Ag47brjvKVs7BLUYp3wpOiJVSi5FRN8Li
-         urHTSxHiBUL3RsMZZzUHjzwtzfaJih+VGPC+VkyDsm+K/uIIRSEVzP/R7PrkMwPJGuJp
-         LdmQ==
+        id S234871AbhBJAFb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 19:05:31 -0500
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:46666 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233534AbhBIXo1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 18:44:27 -0500
+Received: by mail-lf1-f49.google.com with SMTP id v5so84846lft.13;
+        Tue, 09 Feb 2021 15:44:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=C0AgyR2td8Wni5MnEa1+1u2wCmrll85Ef/D08+QnXD8=;
-        b=fY30FWyrDShundj5nT7Hqb4J6KFix5OJLTbIZL+3jy1Tlnn7UgZ3KiDxFKf+URhniZ
-         Nw6c3TMMmm1j/EEkerYAYvThzN48nk/KqN/ZxXMOnISdDjfnONc45yqzoaLGt6GEjakU
-         9szDDRH9DaVI/qjOIvx9RUHXij6YIE7hlpj5xrd3e8h0DaFZFz82t5sdEEwGZcF9IANA
-         aLY8aO5P9S/bqze37s/M2tiYNZHvou3zJ2AuTwoISpZb1u5u/XMYwvuHz3fMycLf6SBN
-         LNQ17JJavm1gzOhEbLgOuA+/qmQAuMS3OWWxi0cj4SxlhqQh7XXOydbRUVUJU9gW22Ko
-         NNDg==
-X-Gm-Message-State: AOAM532KgpoN+BqcGxu1vjp1kWla/TazC8I/wXkaE01sytLz5ZXSL+CI
-        unRtgyXR7TULJ+oMS+B2s4UWpEDYFMFUbHNYjIk=
-X-Google-Smtp-Source: ABdhPJxcnm8wJrqrSTrPPKfrGwPoWtPrDBhwgqNDEgRgOv8fznwxWYWG6NnXIFO2qQOozLRBmdlqOn8oFYe4F4l0+Vk=
-X-Received: by 2002:ac2:4c08:: with SMTP id t8mr135694lfq.523.1612913039265;
- Tue, 09 Feb 2021 15:23:59 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yGmWhoja/hQOYUa2PNDucYo9KJYqOoWVC1/FBOW7ZLs=;
+        b=CSwu8RNl0F3aLFNUa2Zhqv/aqOr5LKZ/7NneX13EyvlbISAlqrLqBhJJJ7UJZwfvI+
+         quS89wObQiz7ojngCi7DM6T1jhylHQ+3XWcBSnVAZ01C4E0m29wEPc2lZDcW/Y4PPIgj
+         Ed+riKLtmJ/w0egBe6Fl2kBCYicFdUj3zXYSdcrTD0bV+BuxOFh1lSlbK4bSqNCyr+Zr
+         6vxTkKRcP49eVDXmEZhzL2lesOGyuY3FZAzp4583OpXKBd2/cQzuy9xfvmQkbKlaxs+y
+         1YY45uwPdPHt4Ie5OGc+I4YVy/5AJXOOJdrs2IYwIjMa1PXanRmjlQhXnQXYL8A35VGG
+         nQuw==
+X-Gm-Message-State: AOAM530yQyCHG82gFfpTcdg633sDyv2vKJlhv6/9F2IzsgNc+1VYcVPt
+        fcfEWP7xYbEkJLY4Epoaof8=
+X-Google-Smtp-Source: ABdhPJxx6hda2CiPB5yiesOFRVWCjUTcZerPAMRTqgFm5S+ShAghK/pTP616i1cMawpsbVKWyUk2/w==
+X-Received: by 2002:ac2:544c:: with SMTP id d12mr172177lfn.585.1612914223533;
+        Tue, 09 Feb 2021 15:43:43 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id u6sm21519lji.63.2021.02.09.15.43.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Feb 2021 15:43:42 -0800 (PST)
+Date:   Wed, 10 Feb 2021 00:43:41 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Yicong Yang <yangyicong@hisilicon.com>, linux-pci@vger.kernel.org,
+        prime.zeng@huawei.com, linuxarm@openeuler.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Use subdir-ccflags-* to inherit debug flag
+Message-ID: <YCMeLS1Vd2YQuWmQ@rocinante>
+References: <1612438215-33105-1-git-send-email-yangyicong@hisilicon.com>
+ <20210209212510.GA513360@bjorn-Precision-5520>
 MIME-Version: 1.0
-Received: by 2002:a2e:908c:0:0:0:0:0 with HTTP; Tue, 9 Feb 2021 15:23:58 -0800 (PST)
-Reply-To: mrssophia.robi@bk.ru
-From:   "Mrs. Sophia" <saraminna2332@gmail.com>
-Date:   Tue, 9 Feb 2021 15:23:58 -0800
-Message-ID: <CAE4xx=QTdJMd=2LmiVSrauE0Qtsy_wcYbQ+EBq0XXsu7aN4FtQ@mail.gmail.com>
-Subject: Dearest
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210209212510.GA513360@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello My Dearest
+Hi Bjorn,
 
-Please I appeal to you to exercise a little patience and read through
-my mail carefully, I am contacting you personally for investment
-assistance and a long term business relationship in your Country.
+Thank you!  This looks great!
 
-I am Mrs. Sophia Robin  a citizen of the united state of America ,  I
-work at HSBC Bank in Milan Italy  as a Telex Manager charge of wire
-transfer department.
+[...]
+> commit e8e9aababe60 ("PCI: Apply CONFIG_PCI_DEBUG to entire drivers/pci hierarchy")
+> Author: Junhao He <hejunhao2@hisilicon.com>
+> Date:   Thu Feb 4 19:30:15 2021 +0800
+> 
+>     PCI: Apply CONFIG_PCI_DEBUG to entire drivers/pci hierarchy
+>     
+>     CONFIG_PCI_DEBUG=y adds -DDEBUG to CFLAGS, which enables things like
+>     pr_debug() and dev_dbg() (and hence pci_dbg()).  Previously we added
+>     -DDEBUG for files in drivers/pci/, but not files in subdirectories of
+>     drivers/pci/.
+>     
+>     Add -DDEBUG to CFLAGS for all files below drivers/pci/ so CONFIG_PCI_DEBUG
+>     applies to the entire hierarchy.
+>     
+>     [bhelgaas: commit log]
+>     Link: https://lore.kernel.org/r/1612438215-33105-1-git-send-email-yangyicong@hisilicon.com
+>     Signed-off-by: Junhao He <hejunhao2@hisilicon.com>
+>     Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> 
+> diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
+> index 11cc79411e2d..d62c4ac4ae1b 100644
+> --- a/drivers/pci/Makefile
+> +++ b/drivers/pci/Makefile
+> @@ -36,4 +36,4 @@ obj-$(CONFIG_PCI_ENDPOINT)	+= endpoint/
+>  obj-y				+= controller/
+>  obj-y				+= switch/
+>  
+> -ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
+> +subdir-ccflags-$(CONFIG_PCI_DEBUG) := -DDEBUG
 
-I am contacting you for an important and  urgent business transaction,
-I  want the bank to transfer the money left by Dr. Cheng Chao,  A
-Chinese  Politician who  died, March 17th 2020 without any trace of
-his family members,  he used our bank to launder money overseas
-through the help of their Political advisers. And most of the funds
-which they transferred out of the shores of China  were gold and oil
-money that was supposed to have been used to develop the continent.
-Can you invest this money and also help the poor ? The amount value at
-$15.5million Dollars  ($US15,500,000), left in his account still
-unclaimed, if you know that you are capable to invest this fund into
-any  profitable business in your country kindly send me your details
-information as listed below to enable me draft you an application form
-of claim along with the deposit certificate which you are going to
-fill with your bank account detail necessary and contact the HSBC Bank
-in Italy  for immediate transfer of the Amounted sum into your bank
-account direct.
+And thank you again, Yicong, for fixing this.  Much appreciated.
 
-Percentage share will be 60,for me/ 40, for you.
-
-(1) Your full name..................................................
-(2) Your address....................................................
-(3) Your Nationality.................................................
-(4) Your Age / Sex.....................................................
-(5) Your  Occupation............................................
-(6) Your marital status......................................
-(7) Your direct telephone number..................
-(8) Your photo.......................................
-
-Thanks with my best regards.
-Mrs. Sophia Robin
-Telex Manager
-Milan Italy  (H.S.B.C)
+Krzysztof
