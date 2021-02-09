@@ -2,126 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C76A314CDE
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 11:25:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9FAB314DC1
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Feb 2021 12:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230005AbhBIKXJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 05:23:09 -0500
-Received: from mail-dm6nam12on2084.outbound.protection.outlook.com ([40.107.243.84]:2784
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231274AbhBIKVD (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Feb 2021 05:21:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CZeD4T8ARZrzJRtX6LslvkQP3bO+4X8cnxfMQkERkol4QxJ4srBgxvb+XO+0LOdLMe8DDD/Qi0wDGCccZswdX4qxN6XsUAHt+gfq0/ms5qz1zlXDmYCIbWJ3cA07bnOvx8FCpHsOnYwjnjJb32LInR5xMvsi6LjvID1GP3vxpNm2kKhxRDVlSMkT4rjcXN8DwZFeip4WfkntBWXryN+Kue7B5cuo70OXZPDGeJMO94C/zJL4eAX8J44ncLqfukt3TsS08YmU8dNf995FtiO0yrgZVMU+2X0MTAPilXonfvO9X4/0WzvOdED4clmYpN0gxg2pU61NpKN97s7dBcRjnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j8+mSReKVu5/l/FJ8ALBYjnmeqXn2KGoeugFYsbdO3o=;
- b=n9rgI1wcuSeogkR2ilpfjuGwjKpThzmCxQWJB4QRx9stmQYP78hDz9qdVEFuzMDERHl8QdMC1Nw6d6kgMgEtRmyRCPm9DJD+BQXPPdySzu018yp4uR2ZE04nPwmbwa4uxSSCF31ADHII007ijI0Dt30Yk/UB80cf64c1jawQh4n27qNehXG7Sp8YHBefQFpD6bWSzcQoJZCXoD+TLqk6RWN5XMn9n3pLGSAwzi48Zjvxo0A+b+0DPgAmQuM6M3POs1jjKPVS7fjvSyUzCCaxxKODgPYn6TEBKRmUhKdYjsq0CcIa7xhxDzJYhk3upIWtEJ2aJ6Nut2BGxA8yYUIQQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j8+mSReKVu5/l/FJ8ALBYjnmeqXn2KGoeugFYsbdO3o=;
- b=TKVEodIFumr+UonP3YxRdBD2q09/TC/g7Ewtipo1IzNPU5qKQNztiyWHvQdvbqOGA7lbr/ojfjF/f3Ums3JLcvyr3eW/NT9Prxt/ucnM2bxmwl5LqH+xtDWyGGFKJAEsNenEmp2Rg+UTah8cat6NkivgelR00a/ezW1Qcl42vdU=
-Received: from SN7PR04CA0254.namprd04.prod.outlook.com (2603:10b6:806:f3::19)
- by BY5PR02MB6898.namprd02.prod.outlook.com (2603:10b6:a03:23c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.19; Tue, 9 Feb
- 2021 10:20:11 +0000
-Received: from SN1NAM02FT057.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:f3:cafe::7c) by SN7PR04CA0254.outlook.office365.com
- (2603:10b6:806:f3::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.25 via Frontend
- Transport; Tue, 9 Feb 2021 10:20:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT057.mail.protection.outlook.com (10.152.73.105) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3784.12 via Frontend Transport; Tue, 9 Feb 2021 10:20:11 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Tue, 9 Feb 2021 02:20:06 -0800
-Received: from smtp.xilinx.com (172.19.127.96) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.1913.5 via Frontend Transport; Tue, 9 Feb 2021 02:20:06 -0800
-Envelope-to: bharat.kumar.gogada@xilinx.com,
- linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- bhelgaas@google.com
-Received: from [10.140.9.2] (port=53404 helo=xhdbharatku40.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <bharat.kumar.gogada@xilinx.com>)
-        id 1l9Q7p-00007p-QG; Tue, 09 Feb 2021 02:20:06 -0800
-From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <bhelgaas@google.com>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Subject: [PATCH 2/2] PCI: xilinx-nwl: Add optional "dma-coherent" property
-Date:   Tue, 9 Feb 2021 15:49:55 +0530
-Message-ID: <20210209101955.8836-2-bharat.kumar.gogada@xilinx.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210209101955.8836-1-bharat.kumar.gogada@xilinx.com>
-References: <20210209101955.8836-1-bharat.kumar.gogada@xilinx.com>
+        id S232212AbhBILBO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 06:01:14 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:4617 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232006AbhBIK6e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 05:58:34 -0500
+Received: from dggeme706-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4DZfvg055MzY78B;
+        Tue,  9 Feb 2021 18:56:15 +0800 (CST)
+Received: from [10.174.63.109] (10.174.63.109) by
+ dggeme706-chm.china.huawei.com (10.1.199.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Tue, 9 Feb 2021 18:57:29 +0800
+Subject: Re: [v3] PCI: Add pci reset quirk for Huawei Intelligent NIC virtual
+ function
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Yinshi (Stone)" <yin.yinshi@huawei.com>,
+        "Wangxiaoyun (Cloud)" <cloud.wangxiaoyun@huawei.com>,
+        zengweiliang zengweiliang <zengweiliang.zengweiliang@huawei.com>,
+        "Chenlizhong (IT Chip)" <chenlizhong@huawei.com>
+References: <20210121153043.GA2654954@bjorn-Precision-5520>
+From:   Chiqijun <chiqijun@huawei.com>
+Message-ID: <63b84959-d649-486a-3736-bbfca46c2362@huawei.com>
+Date:   Tue, 9 Feb 2021 18:57:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 62348d22-ab17-4737-8520-08d8cce44861
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6898:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB68982735191252BBBCAEABBBA58E9@BY5PR02MB6898.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XqtpnInFK5U7RjGt5tzuUG1+3nPf/cFMO0t7KWy2pXWdjgw2Jiux7QBv89n0wr0k1zikydqAlWPRkszr9tNSldNcg8g2GnW4RaZaZAyM6Aq9/QhhYRyRmvMeE0nIciC+ZcmcXn00+4vE5xlUzbtCKvuLIIok9LbmSdWhDiHYLuLDYi9OFmUFhBLq6lmkN+ImPWCQHks1Alire8iiCBdLQNi4C3wlB6hHNIrhy9vH3zmSaAZhcEVDZ5S534Ahn5ZJ91Watv525lH6Zx0q4uLh53lyoqJC5SUrTg1BwLT22Fxy2uR3q03fH/kLJlUlhCV6OHswdRtoLuoiZL++1oM5I0DntP2EFnE4lQlF/uEdwJZgOr2ZfWnizPtg/qCLNavUbyBlgGXFbqsws7DJ6k70F1zs4MmVwCiDk4dPCCP64WJOLLM/cHuK9c4cIRWWS8YvlwxmnwvSvE9XuCqjW1dPCvEfFANURtIs8Es6iOXfpl/B5cNskgwuOAzPtNJLOWUETWtupbUMSMQdf0TmC9P9rTzq3rLw9Vo6ZRpGscQgyucWDAOsBZ8gXEoo32o8vtoJC90vJLMNMioepqnHnF66Bg7Ev/1trceDXKkQjysEJ7IxqXGFnQnwIlBeMj1epZLfZLFkpz6KYDXpzUrUJ7yhg20gDgmgx7YIja8h7ZKOveQ9PESeDTUKPeVV3QDxmIl2
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(346002)(39860400002)(396003)(376002)(136003)(46966006)(36840700001)(103116003)(478600001)(107886003)(26005)(186003)(36906005)(6666004)(36756003)(9786002)(8676002)(70206006)(82740400003)(7636003)(70586007)(82310400003)(5660300002)(426003)(110136005)(336012)(316002)(7696005)(2906002)(54906003)(4326008)(4744005)(8936002)(36860700001)(356005)(2616005)(47076005)(1076003)(102446001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2021 10:20:11.1035
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62348d22-ab17-4737-8520-08d8cce44861
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT057.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6898
+In-Reply-To: <20210121153043.GA2654954@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.63.109]
+X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
+ dggeme706-chm.china.huawei.com (10.1.199.102)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add optional dma-coherent property to support coherent PCIe DMA traffic.
 
-Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
----
- Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-index 01bf7fdf4c19..2d677e90a7e2 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt
-@@ -33,6 +33,8 @@ Required properties:
- 	- #address-cells: specifies the number of cells needed to encode an
- 		address. The value must be 0.
- 
-+Optional properties:
-+- dma-coherent: present if DMA operations are coherent
- 
- Example:
- ++++++++
--- 
-2.17.1
+On 2021/1/21 23:30, Bjorn Helgaas wrote:
+> [Alex is a reset expert, hoping he can chime in]
+> 
+> On Thu, Jan 21, 2021 at 08:53:12PM +0800, Chiqijun wrote:
+>> On 2021/1/9 6:25, Bjorn Helgaas wrote:
+>>> On Fri, Dec 25, 2020 at 05:25:30PM +0800, Chiqijun wrote:
+>>>> When multiple VFs do FLR at the same time, the firmware is
+>>>> processed serially, resulting in some VF FLRs being delayed more
+>>>> than 100ms, when the virtual machine restarts and the device
+>>>> driver is loaded, the firmware is doing the corresponding VF
+>>>> FLR, causing the driver to fail to load.
+>>>>
+>>>> To solve this problem, add host and firmware status synchronization
+>>>> during FLR.
+>>>>
+>>>> Signed-off-by: Chiqijun <chiqijun@huawei.com>
+>>>> ...
+> 
+>>>> +	 * Get and check firmware capabilities.
+>>>> +	 */
+>>>> +	val = readl(bar + HINIC_VF_FLR_TYPE);
+>>>> +	if (!(val & (1UL << HINIC_VF_FLR_CAP_BIT_SHIFT))) {
+>>>> +		pci_iounmap(pdev, bar);
+>>>> +		return -ENOTTY;
+>>>> +	}
+>>>> +
+>>>> +	/*
+>>>> +	 * Set the processing bit for the start of FLR, which will be cleared
+>>>> +	 * by the firmware after FLR is completed.
+>>>> +	 */
+>>>> +	val = readl(bar + HINIC_VF_OP);
+>>>> +	val = val | (1UL << HINIC_VF_FLR_PROC_BIT_SHIFT);
+>>>> +	writel(val, bar + HINIC_VF_OP);
+>>>> +
+>>>> +	/* Perform the actual device function reset */
+>>>> +	pcie_flr(pdev);
+>>>> +
+>>>> +	/*
+>>>> +	 * The device must learn BDF after FLR in order to respond to BAR's
+>>>> +	 * read request, therefore, we issue a configure write request to let
+>>>> +	 * the device capture BDF.
+>>>> +	 */
+>>>> +	pci_read_config_word(pdev, PCI_COMMAND, &command);
+>>>> +	pci_write_config_word(pdev, PCI_COMMAND, command);
+>>>
+>>> I assume this is because of this requirement from PCIe r5.0, sec
+>>> 2.2.9:
+>>>
+>>>     Functions must capture the Bus and Device Numbers supplied with all
+>>>     Type 0 Configuration Write Requests completed by the Function, and
+>>>     supply these numbers in the Bus and Device Number fields of the
+>>>     Completer ID for all Completions generated by the Device/Function.
+>>>
+>>> I'm a little concerned because it seems like this requirement should
+>>> apply to *all* resets, and I don't see where we do a similar write
+>>> following other resets.  Can you help me out?  Do we need this in
+>>> other cases?  Do we do it?
+>>
+>> This depends on the hardware device. The HINIC device clears the BDF
+>> information of the VF during FLR, so it relies on Configuration
+>> Write Requests to capture BDF. If other devices do not clear the DBF
+>> information during FLR, this operation is not required.
+> 
+> If the spec says devices must keep the latched BDF during FLR, and the
+> HINIC doesn't comply with that, then it makes sense to do a config
+> write here in HINIC-specific code.
+> 
+> But if devices are allowed to clear the BDF during FLR, the OS has to
+> assume they all do, and the generic code for FLR (and probably other
+> resets) should do a config write so devices can latch the BDF again.
+> 
+>> In addition, I did not find other devices directly access the BAR register
+>> after FLR in resets.
+> 
+> I didn't catch your meaning here.
+> 
+> If a device loses the BDF during FLR and we don't do something to
+> allow it to latch the BDF again, any completions from the device will
+> have the wrong information.  We will likely do *some* config write to
+> the device eventually, which will fix this, but we can't rely on some
+> unknown future write to do this.  If it's a problem, we need to
+> explicitly do a write for this purpose.
+> 
+> Bjorn
+> .
+> 
+>     
+The spec does not specify whether the BDF needs to be kept after FLR, 
+but the section 2.2.9 of the PCIe r5.0 has the following description:
 
+     If a Function must generate a Completion prior to the initial
+     device Configuration Write Request, 0's must be entered into the
+     Bus Number and Device Number fields
+
+Does this mean that we should always get the expected completion
+after initializing the device?
