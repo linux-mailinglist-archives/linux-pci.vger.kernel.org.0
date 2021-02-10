@@ -2,78 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D0D315CE8
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 03:10:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 499FB315E07
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 05:05:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234952AbhBJCJB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 21:09:01 -0500
-Received: from mga17.intel.com ([192.55.52.151]:55654 "EHLO mga17.intel.com"
+        id S230134AbhBJEFt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 23:05:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234773AbhBJCIT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Feb 2021 21:08:19 -0500
-IronPort-SDR: cX3nKQXXP2jtkstCRz/RYYSAMY2ZxnjKreYAA5NaaiF0id1Axz15nXLG3ZYobDGsIohpjzk+vX
- LxmQ+aP8h9ag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9890"; a="161748060"
-X-IronPort-AV: E=Sophos;i="5.81,166,1610438400"; 
-   d="scan'208";a="161748060"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2021 18:07:09 -0800
-IronPort-SDR: ZIYRofkClCG24wq35CWWIL37qCS+WZ7fnXiO5uUlOMBxLH38CZ0OxTDLEznqHRg67Ik/8bn1kA
- tAertE8fxlag==
-X-IronPort-AV: E=Sophos;i="5.81,166,1610438400"; 
-   d="scan'208";a="379628247"
-Received: from qiuxu-lab.sh.intel.com ([10.239.53.1])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2021 18:07:06 -0800
-From:   Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, "Jin, Wen" <wen.jin@intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] PCI/RCEC: Fix failure to inject errors to some RCiEP devices
-Date:   Wed, 10 Feb 2021 10:05:16 +0800
-Message-Id: <20210210020516.95292-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S230106AbhBJEFs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Feb 2021 23:05:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D563564E3E;
+        Wed, 10 Feb 2021 04:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612929907;
+        bh=aXk+E4JkTI1ArALfp/Qrm2K3Qp9xcTdEeQ0awh25x6g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ihtYHZcE+whEN1BKj94orHcD9SGFd70Seb/sqlr2jIBONwqNDEWPB4pIucM55r7Bj
+         mnMXWHejOVDvG8bNZpcQAxXDgDzgI0zD4jGsvf3yaB67jSqzp5iA77kR+Zq0Bq0MAR
+         xPT+KSXqpGiLjF9DGAi4QvV6eAGf548evN6mglvcJHDkYCGAOw9XxeHf6p2dtIvvuT
+         CpnFbBBYCuSLeF3epYHoi2St3KSCUBnfucaEuXd7bYCr01AlF+5WoWdg/40XVTrD0T
+         XC5wAkqsgIKagAQ82Q5os2esXt08GNzWVKgpRCGfFzTHZvWgLBjEQZIJ8h15NRx2vK
+         lV7ZsquW0RUdg==
+Date:   Wed, 10 Feb 2021 13:05:04 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Hinko Kocevar <hinko.kocevar@ess.eu>
+Subject: Re: [PATCHv2 0/5] aer handling fixups
+Message-ID: <20210210040504.GB23363@redsun51.ssa.fujisawa.hgst.com>
+References: <20210104230300.1277180-1-kbusch@kernel.org>
+ <20210209230614.GA523701@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210209230614.GA523701@bjorn-Precision-5520>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On a Sapphire Rapids server, it failed to inject correctable errors
-to the RCiEP device e8:02.0 which was associated with the RCEC device
-e8:00.4. See the following error log before applying the patch:
+On Tue, Feb 09, 2021 at 05:06:14PM -0600, Bjorn Helgaas wrote:
+> [+cc Hinko]
+> 
+> On Mon, Jan 04, 2021 at 03:02:55PM -0800, Keith Busch wrote:
+> > Changes from v1:
+> > 
+> >   Added received Acks
+> > 
+> >   Split the kernel print identifying the port type being reset.
+> > 
+> >   Added a patch for the portdrv to ensure the slot_reset happens without
+> >   relying on a downstream device driver..
+> > 
+> > Keith Busch (5):
+> >   PCI/ERR: Clear status of the reporting device
+> >   PCI/AER: Actually get the root port
+> >   PCI/ERR: Retain status from error notification
+> >   PCI/AER: Specify the type of port that was reset
+> >   PCI/portdrv: Report reset for frozen channel
+> > 
+> >  drivers/pci/pcie/aer.c         |  5 +++--
+> >  drivers/pci/pcie/err.c         | 16 +++++++---------
+> >  drivers/pci/pcie/portdrv_pci.c |  3 ++-
+> >  3 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> I applied these to pci/error for v5.12, thanks!
 
-aer-inject -s e8:02.0 examples/correctable
-Error: Failed to write, No such device
-
-This was because rcec_assoc_rciep() mistakenly used "rciep->devfn" as
-device number to check whether the corresponding bit was set in
-the RCiEPBitmap of the RCEC. So that the RCiEP device e8:02.0 wasn't
-linked to the RCEC and resulted in the above error.
-
-Fix it by using PCI_SLOT() to convert rciep->devfn to device number.
-Ensure that the RCiEP devices associated with the RCEC are linked to
-the RCEC as the RCEC is enumerated. After applying the patch, correctable
-errors can be injected to the RCiEP successfully.
-
-Reported-and-tested-by: Wen Jin <wen.jin@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
- drivers/pci/pcie/rcec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-index 2c5c552994e4..d0bcd141ac9c 100644
---- a/drivers/pci/pcie/rcec.c
-+++ b/drivers/pci/pcie/rcec.c
-@@ -32,7 +32,7 @@ static bool rcec_assoc_rciep(struct pci_dev *rcec, struct pci_dev *rciep)
+Thanks!
  
- 	/* Same bus, so check bitmap */
- 	for_each_set_bit(devn, &bitmap, 32)
--		if (devn == rciep->devfn)
-+		if (devn == PCI_SLOT(rciep->devfn))
- 			return true;
- 
- 	return false;
--- 
-2.17.1
+> I *am* a little concerned about the issues Hinko saw because it
+> doesn't look we found a root cause.  I didn't spend any time looking
+> into it, but even if it only shows up on his specific platform or with
+> some weird config combination, it's a problem.  But I guess we'll see
+> if anybody else trips over it.
 
+Yes, I'm also closely monitoring for AER issues. I think Hinko's
+observation was seen without this series, and was just initially noticed
+with it. I'm reasonably confident this is a safe improvement, but I want
+to see this work well with everyone's hardware, too.
