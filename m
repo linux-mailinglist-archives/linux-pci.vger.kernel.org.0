@@ -2,80 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 499FB315E07
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 05:05:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92D6F315E20
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 05:16:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbhBJEFt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 23:05:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
+        id S229725AbhBJEQh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 23:16:37 -0500
+Received: from mga07.intel.com ([134.134.136.100]:21118 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230106AbhBJEFs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Feb 2021 23:05:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D563564E3E;
-        Wed, 10 Feb 2021 04:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612929907;
-        bh=aXk+E4JkTI1ArALfp/Qrm2K3Qp9xcTdEeQ0awh25x6g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ihtYHZcE+whEN1BKj94orHcD9SGFd70Seb/sqlr2jIBONwqNDEWPB4pIucM55r7Bj
-         mnMXWHejOVDvG8bNZpcQAxXDgDzgI0zD4jGsvf3yaB67jSqzp5iA77kR+Zq0Bq0MAR
-         xPT+KSXqpGiLjF9DGAi4QvV6eAGf548evN6mglvcJHDkYCGAOw9XxeHf6p2dtIvvuT
-         CpnFbBBYCuSLeF3epYHoi2St3KSCUBnfucaEuXd7bYCr01AlF+5WoWdg/40XVTrD0T
-         XC5wAkqsgIKagAQ82Q5os2esXt08GNzWVKgpRCGfFzTHZvWgLBjEQZIJ8h15NRx2vK
-         lV7ZsquW0RUdg==
-Date:   Wed, 10 Feb 2021 13:05:04 +0900
-From:   Keith Busch <kbusch@kernel.org>
+        id S229684AbhBJEQh (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Feb 2021 23:16:37 -0500
+IronPort-SDR: wCoKOU9j8H6XFcizKhBJgiqqBKAVotpGdJV1lWl9X91iMQMbKPck52w5W+HU/rJa5yqOP8ThrD
+ xltpmQ8sbecQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9890"; a="246077741"
+X-IronPort-AV: E=Sophos;i="5.81,167,1610438400"; 
+   d="scan'208";a="246077741"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2021 20:15:56 -0800
+IronPort-SDR: otGQuroHwX3yfJqQ8qMgSOZQ8EP+Yu5unshrwQ3vY1Ctrg7mnHbAHdJyqdIXZqIoNPkl4zXcHM
+ 8Igy6/eCeokg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,167,1610438400"; 
+   d="scan'208";a="412706723"
+Received: from lkp-server02.sh.intel.com (HELO cd560a204411) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Feb 2021 20:15:55 -0800
+Received: from kbuild by cd560a204411 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1l9guw-0002du-CU; Wed, 10 Feb 2021 04:15:54 +0000
+Date:   Wed, 10 Feb 2021 12:15:51 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Hinko Kocevar <hinko.kocevar@ess.eu>
-Subject: Re: [PATCHv2 0/5] aer handling fixups
-Message-ID: <20210210040504.GB23363@redsun51.ssa.fujisawa.hgst.com>
-References: <20210104230300.1277180-1-kbusch@kernel.org>
- <20210209230614.GA523701@bjorn-Precision-5520>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS ed3a5d46747a10f7520f636ba90c5f8590b37090
+Message-ID: <60235df7.SIdT/caO9yLuauaD%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210209230614.GA523701@bjorn-Precision-5520>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 09, 2021 at 05:06:14PM -0600, Bjorn Helgaas wrote:
-> [+cc Hinko]
-> 
-> On Mon, Jan 04, 2021 at 03:02:55PM -0800, Keith Busch wrote:
-> > Changes from v1:
-> > 
-> >   Added received Acks
-> > 
-> >   Split the kernel print identifying the port type being reset.
-> > 
-> >   Added a patch for the portdrv to ensure the slot_reset happens without
-> >   relying on a downstream device driver..
-> > 
-> > Keith Busch (5):
-> >   PCI/ERR: Clear status of the reporting device
-> >   PCI/AER: Actually get the root port
-> >   PCI/ERR: Retain status from error notification
-> >   PCI/AER: Specify the type of port that was reset
-> >   PCI/portdrv: Report reset for frozen channel
-> > 
-> >  drivers/pci/pcie/aer.c         |  5 +++--
-> >  drivers/pci/pcie/err.c         | 16 +++++++---------
-> >  drivers/pci/pcie/portdrv_pci.c |  3 ++-
-> >  3 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> I applied these to pci/error for v5.12, thanks!
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+branch HEAD: ed3a5d46747a10f7520f636ba90c5f8590b37090  Merge branch 'remotes/lorenzo/pci/misc'
 
-Thanks!
- 
-> I *am* a little concerned about the issues Hinko saw because it
-> doesn't look we found a root cause.  I didn't spend any time looking
-> into it, but even if it only shows up on his specific platform or with
-> some weird config combination, it's a problem.  But I guess we'll see
-> if anybody else trips over it.
+elapsed time: 729m
 
-Yes, I'm also closely monitoring for AER issues. I think Hinko's
-observation was seen without this series, and was just initially noticed
-with it. I'm reasonably confident this is a safe improvement, but I want
-to see this work well with everyone's hardware, too.
+configs tested: 116
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                     davinci_all_defconfig
+s390                          debug_defconfig
+arm                         hackkit_defconfig
+sh                           se7721_defconfig
+m68k                       m5249evb_defconfig
+sh                   sh7770_generic_defconfig
+c6x                        evmc6472_defconfig
+mips                         cobalt_defconfig
+arc                        nsimosci_defconfig
+xtensa                         virt_defconfig
+microblaze                          defconfig
+powerpc                     ksi8560_defconfig
+arm                       versatile_defconfig
+powerpc                     stx_gp3_defconfig
+sh                        sh7785lcr_defconfig
+powerpc                      pasemi_defconfig
+arm                             mxs_defconfig
+arc                              alldefconfig
+mips                          ath79_defconfig
+c6x                        evmc6474_defconfig
+arm                          pxa3xx_defconfig
+powerpc                    socrates_defconfig
+xtensa                    smp_lx200_defconfig
+mips                        jmr3927_defconfig
+powerpc                       ppc64_defconfig
+c6x                              allyesconfig
+xtensa                  audio_kc705_defconfig
+sh                               allmodconfig
+arm                    vt8500_v6_v7_defconfig
+arm                             pxa_defconfig
+mips                           xway_defconfig
+arm                       netwinder_defconfig
+mips                            gpr_defconfig
+arc                              allyesconfig
+m68k                       m5475evb_defconfig
+arm                           stm32_defconfig
+mips                          malta_defconfig
+m68k                        mvme147_defconfig
+arm                       cns3420vb_defconfig
+alpha                            allyesconfig
+sh                             shx3_defconfig
+arm                          ixp4xx_defconfig
+xtensa                  nommu_kc705_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20210209
+x86_64               randconfig-a001-20210209
+x86_64               randconfig-a005-20210209
+x86_64               randconfig-a004-20210209
+x86_64               randconfig-a002-20210209
+x86_64               randconfig-a003-20210209
+i386                 randconfig-a001-20210209
+i386                 randconfig-a005-20210209
+i386                 randconfig-a003-20210209
+i386                 randconfig-a002-20210209
+i386                 randconfig-a006-20210209
+i386                 randconfig-a004-20210209
+i386                 randconfig-a016-20210209
+i386                 randconfig-a013-20210209
+i386                 randconfig-a012-20210209
+i386                 randconfig-a014-20210209
+i386                 randconfig-a011-20210209
+i386                 randconfig-a015-20210209
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a013-20210209
+x86_64               randconfig-a014-20210209
+x86_64               randconfig-a015-20210209
+x86_64               randconfig-a012-20210209
+x86_64               randconfig-a016-20210209
+x86_64               randconfig-a011-20210209
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
