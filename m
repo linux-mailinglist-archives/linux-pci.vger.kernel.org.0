@@ -2,139 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7697531728B
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 22:42:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 408E131729D
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 22:46:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233308AbhBJVlh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Feb 2021 16:41:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232031AbhBJVlf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Feb 2021 16:41:35 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 567E564EDF;
-        Wed, 10 Feb 2021 21:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612993254;
-        bh=f44NPsIKdvVz4sgR73Jy/yomvy3TJguxverZulfIkv8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=LDqSvUKK/dUgih+SoexCs2NpBSymHqLD605AiZy5maqEI/6AXrW+0vdTCv29oBcMY
-         YCFOw/3wWb5caauRzNrqcxwD3sCdCJqnzWaAH63oGNWvDmcMwvcbp1ctcxDIx58LX3
-         uYloZZbhn4lEJKGkImgCuUFSGFdF/tLpU9VsdRNoacSf8dmHkmo0BKK7UNh4w4lkJu
-         /XENEBx69/iQ83muLFq1rWDQ9od8Owbknpii8zdqtmgbKMkvaJXWRb5syq+u/1u2rS
-         ZCC/XOr8dUuEvj/3xCBcOgyFQxtUgHARvza/bW3yo2UMR9/W7LVDY0BaJBHaMhQIgN
-         OY6ZR9sRLKOqg==
-Date:   Wed, 10 Feb 2021 15:40:53 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-samsung-soc@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] PCI: Also set up legacy files only after sysfs init
-Message-ID: <20210210214053.GA610964@bjorn-Precision-5520>
+        id S232208AbhBJVqC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Feb 2021 16:46:02 -0500
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:51685 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232097AbhBJVp5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Feb 2021 16:45:57 -0500
+Received: by mail-wm1-f46.google.com with SMTP id t142so3152970wmt.1;
+        Wed, 10 Feb 2021 13:45:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K198DCJ4x+tkk5MzAOh2fgwgWRM7jXwp8acavChFK1k=;
+        b=RL/0/o3ZmgHQbkDa8jNI6IHDnQAOUGD4j6FBV1yP9Tj7V5TxfBQQLi7caj09VZ/0np
+         IBk6m8zFg1eoJRsEx2StHFDTZ1c+uAOiHx2AfsHlXw/ntBKRIbBSpG07n3leB7XUji8L
+         sgiGs04HOAfDkuaVdRGbCXyXA4dAWL84HOWzlB8iGyviIv9gpn0r+VXS/hzvIKv1jL8P
+         pNlW5yqThX7YezrVoPfy33mLEx5ZePZXNBUSqWSCKNmxSiWHFT+ZNeZCKtom4rGVko/s
+         z212Uq2UtsAdSp1ygLXPpFrhx7aNwcyxMOtlhflVHsAHjJSIRIputXx4w9IVuQ6G+kcF
+         IXBw==
+X-Gm-Message-State: AOAM530vHb4nPE6kKxWuDpDttd+5ZXSvbL6FqwkBpPsiyChKntzZUWON
+        D6LqQwe9wMaCc/Ww+YkHWNM3tp4azyXx0Xp+
+X-Google-Smtp-Source: ABdhPJxFYXDq9ZbGNvtUOKX/OVL9l7xwHvw0DW9oXkNPslQVZS1s6OT5J3K5joZp2m+fVV5HgwJndw==
+X-Received: by 2002:a1c:c308:: with SMTP id t8mr1101584wmf.7.1612993514947;
+        Wed, 10 Feb 2021 13:45:14 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id c9sm4466055wmb.33.2021.02.10.13.45.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Feb 2021 13:45:14 -0800 (PST)
+Date:   Wed, 10 Feb 2021 22:45:13 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com
+Subject: Re: [PATCH 1/2] PCI: xilinx-nwl: Enable coherent PCIe DMA traffic
+ using CCI
+Message-ID: <YCRT6QVQai3oIvwf@rocinante>
+References: <20210209101955.8836-1-bharat.kumar.gogada@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210205133632.2827730-1-daniel.vetter@ffwll.ch>
+In-Reply-To: <20210209101955.8836-1-bharat.kumar.gogada@xilinx.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 05, 2021 at 02:36:32PM +0100, Daniel Vetter wrote:
-> We are already doing this for all the regular sysfs files on PCI
-> devices, but not yet on the legacy io files on the PCI buses. Thus far
-> no problem, but in the next patch I want to wire up iomem revoke
-> support. That needs the vfs up and running already to make sure that
-> iomem_get_mapping() works.
-> 
-> Wire it up exactly like the existing code in
-> pci_create_sysfs_dev_files(). Note that pci_remove_legacy_files()
-> doesn't need a check since the one for pci_bus->legacy_io is
-> sufficient.
-> 
-> An alternative solution would be to implement a callback in sysfs to
-> set up the address space from iomem_get_mapping() when userspace calls
-> mmap(). This also works, but Greg didn't really like that just to work
-> around an ordering issue when the kernel loads initially.
-> 
-> v2: Improve commit message (Bjorn)
-> 
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Hi Bharat,
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Thank you for sending the patches over!
 
-I wish we weren't extending a known-racy mechanism to do this, but at
-least we're not *adding* a brand new race.
+> Add support for routing PCIe DMA traffic coherently when
+> Cache Coherent Interconnect (CCI) is enabled in the system.
+> The "dma-coherent" property is used to determine if CCI is enabled
+> or not.
+> Refer https://developer.arm.com/documentation/ddi0470/k/preface
+> for CCI specification.
+[...]
 
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> ---
->  drivers/pci/pci-sysfs.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index fb072f4b3176..0c45b4f7b214 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -927,6 +927,9 @@ void pci_create_legacy_files(struct pci_bus *b)
->  {
->  	int error;
->  
-> +	if (!sysfs_initialized)
-> +		return;
-> +
->  	b->legacy_io = kcalloc(2, sizeof(struct bin_attribute),
->  			       GFP_ATOMIC);
->  	if (!b->legacy_io)
-> @@ -1448,6 +1451,7 @@ void pci_remove_sysfs_dev_files(struct pci_dev *pdev)
->  static int __init pci_sysfs_init(void)
->  {
->  	struct pci_dev *pdev = NULL;
-> +	struct pci_bus *pbus = NULL;
->  	int retval;
->  
->  	sysfs_initialized = 1;
-> @@ -1459,6 +1463,9 @@ static int __init pci_sysfs_init(void)
->  		}
->  	}
->  
-> +	while ((pbus = pci_find_next_bus(pbus)))
-> +		pci_create_legacy_files(pbus);
-> +
->  	return 0;
->  }
->  late_initcall(pci_sysfs_init);
-> -- 
-> 2.30.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+A small nitpick, so feel free to ignore, of course.
+
+Perhaps "Refer to" and "for the CCI", etc.
+
+[...]
+> +	/* This routes the PCIe DMA traffic to go through CCI path */
+> +	if (of_dma_is_coherent(dev->of_node)) {
+> +		nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX1) |
+> +				  CFG_PCIE_CACHE, BRCFG_PCIE_RX1);
+> +	}
+[...]
+
+A suggestion.
+
+You can drop the curly brackets here if you want to keep the style used
+in the kernel, especially for when there is a single statement inside
+the code block.
+
+Krzysztof
