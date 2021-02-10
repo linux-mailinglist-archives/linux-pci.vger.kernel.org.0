@@ -2,183 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A261B316A27
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 16:28:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C329D316ADC
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 17:14:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231205AbhBJP2G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Feb 2021 10:28:06 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:42214 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbhBJP2C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Feb 2021 10:28:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1612970880; x=1644506880;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=xGVzJquCzyjQYa4LIIypMWK2VAvY2VtOhqrB42TBKao=;
-  b=bIShQNFzDHVNVmK8H7lZPyR4MhOyh/K9R30r6viLzrDiyHYJmw0j/odX
-   trlRYwC0BPvOIrny/983/xCKXBk7ZuFSXmUy5hGjQNpXg4/bwYYMsbgG4
-   I+gCZ3y0LJtnNEO5YbWjsUp6l9DIvmuZ9d8KVQf/zDS/7xFen4n2veIKM
-   l3M09eeAGZBFsLPbEdCJVdNk370QRDgxP3v6avA7ja3FEctwSZBBCdMiD
-   Zn+0+Ftv9nalruErOCVZssk2yuUrvCuT9EByLyOCZRH2TMlrI2R9i2g5n
-   zWKINlCmnHutsl8INaMz1jsEF9K5Lylc5ycFx0fBttZ71/mWXMxFC42qs
-   Q==;
-IronPort-SDR: vwCVGxVJThETRAbcUmdJWtiNNgPYabBmPfEgW9aa8If73sgNVKvG/URQc3sb1vupu/7Pe/hrXM
- GD9jEyAaxiuf+V7Dy9no3LfsuE/VVEoWKYIINn5dvCkENuDx9aYEZwzjUoqwy2lSHajOPZOlPR
- P/5zIDsU6Lhf5BIlRaE7TmR42ycm+ZVbWWnxeQ9G6NxEZAUL1k14+WFaHKT18wKswEay+V3RW+
- w2F1SpBRTeLYhxw4EhuO+shNDxRqrE060NUUwfLLpwZ6alVyLDiUTSklrYHAe7Q8QnEO3vqmzR
- +aU=
-X-IronPort-AV: E=Sophos;i="5.81,168,1610434800"; 
-   d="scan'208";a="108719237"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Feb 2021 08:26:44 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 10 Feb 2021 08:26:40 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 10 Feb 2021 08:26:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UaxLrcc88/V8g86xpqjGEaOcDuWGtpUbUObx3IYsbPoBxodHcgnQstwZJPsyPt3xcA15BZ1GRtS6sHcOEBLNuAtLVywcFCzcihSZdQRD9EAD2JtjAeTvyEC/xCjz5vRyl1GWr5HaKcVqKROlXt7NenAxLBaEVxqzjr5TNbRULhOtIrJjpfl/ptwHFiJhMtPJsQgbYf8U3oc1Bt/0d+hXSVBEZ38WcPEpFu+8pBArbwXU0aGfFtC+UR/XcJAUBjP93Pu0n8ujkah3V4bqJIxNePxj7Z7yfOmWt367y8CGqmGiw4QnwOSbzEjCi1L4r7xIBh8JmbhbL93IFUsXiCsiBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rteu7Jctq28lgwb8XznjyCN7S2VISSfAMObiYy0AGfI=;
- b=NfGFRWDYBLjZ8tIow3nc2j64MCkywN1qjQroetzCDE5gxVgL0bUF7G25v4AsZnnoW8Zq5N8qHBV+IQ9dibK+yUFShKHIktDS7HTNf5RiOsfY/IEo9OKzOFN4DPFW1MNDIijxuDc7dltLK7ZRxgHA6CyVjzPR7pgWQd5AQ59QGAiN6l1JTJ84/P6HNU7/KsNTeo+oKYdGBAhSmakoZdgwMD2Pxcp3hd9cxuxWQm3SZZZbTRAMR7PEdtc/da1RpoDkCNwlTauqUr442IXvxT0tP8GhmOFKRBb9/rOM0MZRQcChIu5KOGpbH7Wh1uo7BwpbKS3jfcq6eZo3va63T/x6hA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rteu7Jctq28lgwb8XznjyCN7S2VISSfAMObiYy0AGfI=;
- b=jmUrznCyUi1nmjgcD9fNilkjubIGHD0rCUTYqqC1Nrx1tcrDwlQeLTZJ1//dhyMdIX22JHrGbPaeStRw+neqt/4EpBIHMgsDZrT24HZBU8XDFlEm7Mdf10/6rx9I6mrtQdodxMQYKS8v93xzE8eqyqPl3+KzlrmPQUQf6J7drKI=
-Received: from MN2PR11MB3645.namprd11.prod.outlook.com (2603:10b6:208:f8::13)
- by MN2PR11MB3648.namprd11.prod.outlook.com (2603:10b6:208:f0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.30; Wed, 10 Feb
- 2021 15:26:27 +0000
-Received: from MN2PR11MB3645.namprd11.prod.outlook.com
- ([fe80::51c7:31cf:308f:4c30]) by MN2PR11MB3645.namprd11.prod.outlook.com
- ([fe80::51c7:31cf:308f:4c30%5]) with mapi id 15.20.3825.030; Wed, 10 Feb 2021
- 15:26:27 +0000
-From:   <Ariel.Sibley@microchip.com>
-To:     <ben.widawsky@intel.com>, <linux-cxl@vger.kernel.org>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-pci@vger.kernel.org>,
-        <helgaas@kernel.org>, <cbrowy@avery-design.com>,
-        <hch@infradead.org>, <dan.j.williams@intel.com>,
-        <david@redhat.com>, <rientjes@google.com>, <ira.weiny@intel.com>,
-        <jcm@jonmasters.org>, <Jonathan.Cameron@Huawei.com>,
-        <rafael.j.wysocki@intel.com>, <rdunlap@infradead.org>,
-        <vishal.l.verma@intel.com>, <jgroves@micron.com>,
-        <sean.v.kelley@intel.com>
-Subject: RE: [PATCH v2 5/8] cxl/mem: Add a "RAW" send command
-Thread-Topic: [PATCH v2 5/8] cxl/mem: Add a "RAW" send command
-Thread-Index: AQHW/0AqZCOVul459UanKz+acVTCvapRfUwQ
-Date:   Wed, 10 Feb 2021 15:26:27 +0000
-Message-ID: <MN2PR11MB36455574E25237635D3F9CC0888D9@MN2PR11MB3645.namprd11.prod.outlook.com>
-References: <20210210000259.635748-1-ben.widawsky@intel.com>
- <20210210000259.635748-6-ben.widawsky@intel.com>
-In-Reply-To: <20210210000259.635748-6-ben.widawsky@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [142.134.145.175]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0d30efc6-6810-469d-115c-08d8cdd83bc3
-x-ms-traffictypediagnostic: MN2PR11MB3648:
-x-microsoft-antispam-prvs: <MN2PR11MB3648B7F3EF4F10333189B652888D9@MN2PR11MB3648.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4OBqMZ8ipHipRogcYq7jSyeW+7sOEgcxf7S3rKauMKT3/u3a0/VpQ1EraPbYOfV0Q9KZKUYjCdwh21kfmALpTSbA4cpF6Oqg5Jb6ey1kSQqk6lWIPGhkecy19snxPTDJL3Arravrl7/MBnl+BL8sx+xlE4fqr/E7KfDhbGFhZ/KVGgr8WHPtr5l/nsw0gSxCgNPnmMLewqZXxzbiBCK+TVfbRw1d566lMUs5VTb79XrrPi/JW5X5yEamxWJQLa54IFPdqPmaIe6TvT9AM1L1aKt5qyOXIa0WIPkhBgMylNvbq7u3Tg4hnJEnRuY2yi9LxWMAt/8UVD/SsoZIdMeyUsYyFVL0XUtqHQdRyIJGq/WgogJ3SZjHhiFYHJ1NJsUUBeDhistFmVSzhlR/OCO/tUUc7CPDO6L4IRrWtGoZzSmikReRJylbGbbOsPW55IbJJu95SASqNkUrrVEHQjmcsOY6ZaxoGxHkbozNGsY3BnIaui3gmgflil2UG5hk9zh4mXfH22WlQgr2FEFJyekMfw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB3645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(366004)(39860400002)(136003)(396003)(71200400001)(4326008)(8676002)(2906002)(66446008)(64756008)(66556008)(54906003)(66476007)(52536014)(6506007)(110136005)(33656002)(83380400001)(76116006)(478600001)(7696005)(5660300002)(26005)(86362001)(8936002)(9686003)(66946007)(316002)(55016002)(186003)(7416002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?gOymMf+WEY4yG+Xfrdz5PI1KH7Mqb6Ki7EQTiXcThj+wrXrftv/WW3mgb9j0?=
- =?us-ascii?Q?CDer+rAjFY//ITpZJXxFK2Q79snOpvQmIzPTfuLmtTzVsX40kMqk5lv2O5Dd?=
- =?us-ascii?Q?+OBb/j+MCt94bOmpCWxv2iqUbcM/xMnmeGuyKNQCzuWYJZAIAT8xg9Ia60A+?=
- =?us-ascii?Q?n/oGPlqxG2JZ3l7sCPLdqORw30ksRGpxe6og+/olIEmds4GUJdNpo3sKthq2?=
- =?us-ascii?Q?68C9XNPWIpp+Db9u6XWlZUaEbC908+knBdwORLxdZt45GlaE6Bx2AHnQgkVz?=
- =?us-ascii?Q?GfPdiA4pSUvPwo0zjZoBs1vaDU1ej3qFCrKJu2XD9scBA8rk/3w5nGZhpUQh?=
- =?us-ascii?Q?ecIubz/6nbkq7BimTdOX5A91+9QYwZ+2aGEIHZSdrbmGLKRmsp4OS8CrQuBs?=
- =?us-ascii?Q?tAmT/OxpmXXaC/yQoPukqGmG3aAeDmFh00g/CNO5HtUJNGhqv5UHrUgR6h61?=
- =?us-ascii?Q?PfzUWU6rN+w6GXcsAPh6cWb7ZNKvQv+FOTvGts1vumrYyfu1vv11KQsWrmxo?=
- =?us-ascii?Q?neFAicn2aZFU+YmpU9YU+GKMytPpmKKhGEQSkXMYazag+ZX0tYGjstEaYxfs?=
- =?us-ascii?Q?7LPj06Eh1rQooo6rSOYe9UM7MlNI2jofQGROoZBisqXWxRfSNIwrkpb8/uE5?=
- =?us-ascii?Q?kaldtbbwr2M8MAgNcWZih+4OaNSgIPZhrhp23N5pIFaS30wRpulBpTqF8Hfw?=
- =?us-ascii?Q?632fRhP+DtIf4fdkwRHerZ5VWyD7XpNey8Hgv2ephI5mu1LNIV+1FlyK/zTQ?=
- =?us-ascii?Q?0DugoaWgRRN5p83bf1gJMB03mXJ+zuDLKA2TY3XusogoeFhz+2B8WmxWUI7h?=
- =?us-ascii?Q?T7m6RqvWPAryKBK5qgFWm2qgynBNa5zdThzdltih8SUK5Be+QtgX47OGUkBy?=
- =?us-ascii?Q?Zhlh9sGTIVAdT4CEMG4LSZBsm2xBF70qjw/ilFKZ/C59jowXqUbhqASpGrK1?=
- =?us-ascii?Q?cXGAGC043YlAoYgLBLsjBnW/IJszg6WEGAZer7FQU6Mi8QHRq3hopDS6OOUo?=
- =?us-ascii?Q?NwHih2pzFtdYDoCpfhMXAtEasqUhmGjfjq66T6iADbjAz4bh97oSlveN7xN2?=
- =?us-ascii?Q?yxvw2vPGyCpvp3eODy1fFOmkRYmxJzhoFNzbzl+GC1IgaNjYBWU1MCqulyk+?=
- =?us-ascii?Q?4rSWLFu8lZyzZgQSATjs8q1NhM8FzFBRhFYvo3/Bllh4pNJrEsDSoICjm2l1?=
- =?us-ascii?Q?9PTn2UVFkMTLadWCWw8/3v7T8DxqKvEc0Syeef55Y8gW4f63u18y0egMBrRz?=
- =?us-ascii?Q?pQ4e2/hkK0fBw4rkdB9E1ujx+labqs6KCNfh/3PGvauESMZfBwA1CknEoVpX?=
- =?us-ascii?Q?W7mCacEqvCHLxIzK4dmhIjiq?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S232014AbhBJQOJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Feb 2021 11:14:09 -0500
+Received: from mga04.intel.com ([192.55.52.120]:47934 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231868AbhBJQOI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Feb 2021 11:14:08 -0500
+IronPort-SDR: brOpo4J7Sz4XGvwe7MtUNv2Or/tCFepqrAajPx+CIz4NnrZIgFjUV7f+t5PuCD5rVkGYRLGFD5
+ mCvwVFoUN7cQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="179543641"
+X-IronPort-AV: E=Sophos;i="5.81,168,1610438400"; 
+   d="scan'208";a="179543641"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2021 08:13:26 -0800
+IronPort-SDR: /xiRUGXUeGLG1htggB11SM/yhLjN57OHzbzANld9rmCFnmfriA8pYZshYsZdZlrHoHdgGJmXyF
+ OSJned8nDOdQ==
+X-IronPort-AV: E=Sophos;i="5.81,168,1610438400"; 
+   d="scan'208";a="380191372"
+Received: from mjyalung-mobl.amr.corp.intel.com (HELO jderrick-mobl.amr.corp.intel.com) ([10.209.178.245])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2021 08:13:25 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     <linux-pci@vger.kernel.org>, <iommu@lists.linux-foundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Nirmal Patel <nirmal.patel@intel.com>,
+        Kapil Karkra <kapil.karkra@intel.com>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Jon Derrick <jonathan.derrick@intel.com>
+Subject: [PATCH v4 0/2] VMD MSI Remapping Bypass
+Date:   Wed, 10 Feb 2021 09:13:13 -0700
+Message-Id: <20210210161315.316097-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB3645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d30efc6-6810-469d-115c-08d8cdd83bc3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2021 15:26:27.0855
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CRpiWRDXuRW2qDUVWJkzMWVf937tDgKisduj8eD6xY4BRGymyE/2M9xAbB/hg8jviBbKraw4k4g4EqrU3vkjGL+ZiRad9xjZWQAuiIE81Fs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3648
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-> index c4ba3aa0a05d..08eaa8e52083 100644
-> --- a/drivers/cxl/Kconfig
-> +++ b/drivers/cxl/Kconfig
-> @@ -33,6 +33,24 @@ config CXL_MEM
->=20
->           If unsure say 'm'.
->=20
-> +config CXL_MEM_RAW_COMMANDS
-> +       bool "RAW Command Interface for Memory Devices"
-> +       depends on CXL_MEM
-> +       help
-> +         Enable CXL RAW command interface.
-> +
-> +         The CXL driver ioctl interface may assign a kernel ioctl comman=
-d
-> +         number for each specification defined opcode. At any given poin=
-t in
-> +         time the number of opcodes that the specification defines and a=
- device
-> +         may implement may exceed the kernel's set of associated ioctl f=
-unction
-> +         numbers. The mismatch is either by omission, specification is t=
-oo new,
-> +         or by design. When prototyping new hardware, or developing /
-> debugging
-> +         the driver it is useful to be able to submit any possible comma=
-nd to
-> +         the hardware, even commands that may crash the kernel due to th=
-eir
-> +         potential impact to memory currently in use by the kernel.
-> +
-> +         If developing CXL hardware or the driver say Y, otherwise say N=
-.
+The Intel Volume Management Device acts similar to a PCI-to-PCI bridge in that
+it changes downstream devices' requester-ids to its own. As VMD supports PCIe
+devices, it has its own MSI-X table and transmits child device MSI-X by
+remapping child device MSI-X and handling like a demultiplexer.
 
-Blocking RAW commands by default will prevent vendors from developing user =
-space tools that utilize vendor specific commands. Vendors of CXL.mem devic=
-es should take ownership of ensuring any vendor defined commands that could=
- cause user data to be exposed or corrupted are disabled at the device leve=
-l for shipping configurations.
+Some newer VMD devices (Icelake Server) have an option to bypass the VMD MSI-X
+remapping table. This allows for better performance scaling as the child device
+MSI-X won't be limited by VMD's MSI-X count and IRQ handler.
+
+V3->V4:
+Integrated wording suggestions; no functional changes
+
+V2->V3:
+Trivial comment fixes
+Added acks
+
+V1->V2:
+Updated for 5.12-next
+Moved IRQ allocation and remapping enable/disable to a more logical location
+
+V1 patches 1-4 were already merged
+V1, 5/6: https://patchwork.kernel.org/project/linux-pci/patch/20200728194945.14126-6-jonathan.derrick@intel.com/
+V1, 6/6: https://patchwork.kernel.org/project/linux-pci/patch/20200728194945.14126-7-jonathan.derrick@intel.com/
+
+
+Jon Derrick (2):
+  iommu/vt-d: Use Real PCI DMA device for IRTE
+  PCI: vmd: Disable MSI-X remapping when possible
+
+ drivers/iommu/intel/irq_remapping.c |  3 +-
+ drivers/pci/controller/vmd.c        | 63 +++++++++++++++++++++++------
+ 2 files changed, 53 insertions(+), 13 deletions(-)
+
+-- 
+2.27.0
+
