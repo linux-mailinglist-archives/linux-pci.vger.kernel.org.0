@@ -2,71 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B6B8315B84
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 01:45:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23D0D315CE8
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 03:10:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233733AbhBJAor (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Feb 2021 19:44:47 -0500
-Received: from mail-lf1-f53.google.com ([209.85.167.53]:34267 "EHLO
-        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234365AbhBJAmv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Feb 2021 19:42:51 -0500
-Received: by mail-lf1-f53.google.com with SMTP id h26so338438lfm.1;
-        Tue, 09 Feb 2021 16:42:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jp61220gRqoTuclVP4V0Wh3NhhyBFN50NZfTrAPVLqs=;
-        b=Hc0dPG+9LTWbF0YGBGE4/OlJnYboaGl3ld1laqYjk6KpenSUnburhvLuEGnGP4oiuG
-         eNOFclsy6V+2TNx8IrV77+hkIfeXaEd1z7S7F1ISsDGZ3YR2eswYR64DfyF8lMd9T9ea
-         zfeR4j4uNi/+m6nrkwJwQ7DhUyXgzPu8RUOkmT9xLMUs7NdXWWYRydTYhQ/3tJT114Sr
-         EmoUc+ev9RzVI/NXlupcYvFGiwkZJkfC9w9axprjg7gyoSgLH5zrwFvnCXpewhYaY/Gv
-         pt7BPh8WBm+1VxTP42RlLybTIaWsHiwpGza2dzx512G2+B0WuB4lOZFuVaOPTyRRNwSQ
-         q85g==
-X-Gm-Message-State: AOAM5332T4tEQEQyB0hT6Iy8oIhfLC/EBLkS5SzuONfUdi+jnwTVkQJE
-        gUrwxH9btrhyoheWNBwPSls=
-X-Google-Smtp-Source: ABdhPJyvPoG6O/WBwAwI+e0nRQmtuM2HCCVaU3lMXPThSx9yJF3UYIYIi9IJ3S6MMNgdWs+BqKcPIg==
-X-Received: by 2002:a05:6512:988:: with SMTP id w8mr302991lft.294.1612917729100;
-        Tue, 09 Feb 2021 16:42:09 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id x3sm53996ljj.120.2021.02.09.16.42.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 16:42:08 -0800 (PST)
-Date:   Wed, 10 Feb 2021 01:42:07 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     srikanth.thokala@intel.com
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com,
-        mallikarjunappa.sangannavar@intel.com
-Subject: Re: [PATCH v7 1/2] dt-bindings: PCI: Add Intel Keem Bay PCIe
- controller
-Message-ID: <YCMr3yCv5+cAjzDc@rocinante>
-References: <20210124234702.21074-1-srikanth.thokala@intel.com>
- <20210124234702.21074-2-srikanth.thokala@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210124234702.21074-2-srikanth.thokala@intel.com>
+        id S234952AbhBJCJB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Feb 2021 21:09:01 -0500
+Received: from mga17.intel.com ([192.55.52.151]:55654 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234773AbhBJCIT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Feb 2021 21:08:19 -0500
+IronPort-SDR: cX3nKQXXP2jtkstCRz/RYYSAMY2ZxnjKreYAA5NaaiF0id1Axz15nXLG3ZYobDGsIohpjzk+vX
+ LxmQ+aP8h9ag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9890"; a="161748060"
+X-IronPort-AV: E=Sophos;i="5.81,166,1610438400"; 
+   d="scan'208";a="161748060"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2021 18:07:09 -0800
+IronPort-SDR: ZIYRofkClCG24wq35CWWIL37qCS+WZ7fnXiO5uUlOMBxLH38CZ0OxTDLEznqHRg67Ik/8bn1kA
+ tAertE8fxlag==
+X-IronPort-AV: E=Sophos;i="5.81,166,1610438400"; 
+   d="scan'208";a="379628247"
+Received: from qiuxu-lab.sh.intel.com ([10.239.53.1])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2021 18:07:06 -0800
+From:   Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, "Jin, Wen" <wen.jin@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] PCI/RCEC: Fix failure to inject errors to some RCiEP devices
+Date:   Wed, 10 Feb 2021 10:05:16 +0800
+Message-Id: <20210210020516.95292-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Srikanth,
+On a Sapphire Rapids server, it failed to inject correctable errors
+to the RCiEP device e8:02.0 which was associated with the RCEC device
+e8:00.4. See the following error log before applying the patch:
 
-Thank you for working on this new driver!
+aer-inject -s e8:02.0 examples/correctable
+Error: Failed to write, No such device
 
-[...]
-> +title: Intel Keem Bay PCIe controller endpoint mode
-[...]
-> +title: Intel Keem Bay PCIe controller root complex mode
-[...]
+This was because rcec_assoc_rciep() mistakenly used "rciep->devfn" as
+device number to check whether the corresponding bit was set in
+the RCiEPBitmap of the RCEC. So that the RCiEP device e8:02.0 wasn't
+linked to the RCEC and resulted in the above error.
 
-Not sure if worth spending on this, but I've noticed that people often
-capitalise "Root Complex" and "Endpoint" when talking about PCIe controller
-features - you did the same in the cover letter, so I wonder if you want
-to keep this consistent.
+Fix it by using PCI_SLOT() to convert rciep->devfn to device number.
+Ensure that the RCiEP devices associated with the RCEC are linked to
+the RCEC as the RCEC is enumerated. After applying the patch, correctable
+errors can be injected to the RCiEP successfully.
 
-Krzysztof
+Reported-and-tested-by: Wen Jin <wen.jin@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+ drivers/pci/pcie/rcec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+index 2c5c552994e4..d0bcd141ac9c 100644
+--- a/drivers/pci/pcie/rcec.c
++++ b/drivers/pci/pcie/rcec.c
+@@ -32,7 +32,7 @@ static bool rcec_assoc_rciep(struct pci_dev *rcec, struct pci_dev *rciep)
+ 
+ 	/* Same bus, so check bitmap */
+ 	for_each_set_bit(devn, &bitmap, 32)
+-		if (devn == rciep->devfn)
++		if (devn == PCI_SLOT(rciep->devfn))
+ 			return true;
+ 
+ 	return false;
+-- 
+2.17.1
+
