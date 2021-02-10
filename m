@@ -2,123 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3BE0317068
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 20:42:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7DE63170B7
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Feb 2021 20:55:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232565AbhBJTlJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Feb 2021 14:41:09 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:37672 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232742AbhBJTk4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Feb 2021 14:40:56 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 662A54124F;
-        Wed, 10 Feb 2021 19:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        mime-version:content-transfer-encoding:content-id:content-type
-        :content-type:content-language:accept-language:in-reply-to
-        :references:message-id:date:date:subject:subject:from:from
-        :received:received:received:received; s=mta-01; t=1612986008; x=
-        1614800409; bh=ur6MGwThh7YTYY1GUMFltTEurCvPhYjulaH5PguVfqM=; b=V
-        zo1TeTrfU+wozHBlZvquwkpGV7b19E+YfmIeJUR/JiqX6WQImaa8dzK+RdXbqGTh
-        hPH31D5a+3cpQRX/z4wA8cRMklEhWoyQC+zW898OlYqrI3VWe9KCGrBLWaGDGV5d
-        Dv8fQCkzLuG/6K31CROmSI/cyccR0jJWbwBogmyNC4=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id opYYxEr6UExe; Wed, 10 Feb 2021 22:40:08 +0300 (MSK)
-Received: from T-EXCH-04.corp.yadro.com (t-exch-04.corp.yadro.com [172.17.100.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 14DA8404CB;
-        Wed, 10 Feb 2021 22:40:06 +0300 (MSK)
-Received: from T-EXCH-03.corp.yadro.com (172.17.100.103) by
- T-EXCH-04.corp.yadro.com (172.17.100.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 10 Feb 2021 22:40:06 +0300
-Received: from T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272]) by
- T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272%14]) with mapi id
- 15.01.0669.032; Wed, 10 Feb 2021 22:40:06 +0300
-From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     "David.Laight@aculab.com" <David.Laight@aculab.com>,
-        "christian@kellner.me" <christian@kellner.me>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "YehezkelShB@gmail.com" <YehezkelShB@gmail.com>,
-        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "linux@yadro.com" <linux@yadro.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "sr@denx.de" <sr@denx.de>, "lukas@wunner.de" <lukas@wunner.de>,
-        "andy.lavr@gmail.com" <andy.lavr@gmail.com>
-Subject: Re: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
-Thread-Topic: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
-Thread-Index: AQHW1WT234xzlvvTV0WAimI1cHAduao9LYkAgABgu4CABcepgIADoByAgADzoQCACgJRgA==
-Date:   Wed, 10 Feb 2021 19:40:06 +0000
-Message-ID: <afc5d363476d445cfdf04b0ec4db9275db803af3.camel@yadro.com>
-References: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
-         <20210128145316.GA3052488@bjorn-Precision-5520>
-         <20210128203929.GB6613@wunner.de>
-         <20210201125523.GN2542@lahna.fi.intel.com>
-         <44ce19d112b97930b1a154740c2e15f3f2d10818.camel@yadro.com>
-         <20210204104912.GE2542@lahna.fi.intel.com>
-In-Reply-To: <20210204104912.GE2542@lahna.fi.intel.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [172.17.15.136]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1436AB617BBD2840BAC0039003EB9EB9@yadro.com>
-Content-Transfer-Encoding: base64
+        id S232578AbhBJTzX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Feb 2021 14:55:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232045AbhBJTzV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Feb 2021 14:55:21 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE9BC061574
+        for <linux-pci@vger.kernel.org>; Wed, 10 Feb 2021 11:54:41 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id y9so6273492ejp.10
+        for <linux-pci@vger.kernel.org>; Wed, 10 Feb 2021 11:54:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r8ql4t5FN+DQ5z6SKaawhVvoEWWehqT+I1El6GCGVQ4=;
+        b=UZb6WVbTWSGdh6Bv8sJ0CZE9rE5T4V6FvNnZjV+yO5TAkRphM7kzZ4CnBzE+DtGp7T
+         KZ8+plW5edXC0gs6ASCzCyGGBR3vCrnphh8APG2ELadQqqAiM6B+WMcvnSehEoq6sNnR
+         J0nHzUDbHdZRZcZYKFCy1GsHkZMhkqgChpVYtn/C9TaUk4wW/raUMMFvoMwLNKNjY53p
+         tB8hJhtHR/KBTboYiE5NKWek/XIXfGesldItsTvDTnGbmz5y37Km1pbFiJzGF+Bm1P+E
+         BzZCe/NLem1n16h0IqP8PtixD6bbV9Z+ODchWMMICWSnZG844Zm9P0nm/K/1rPyxZkA9
+         kwHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r8ql4t5FN+DQ5z6SKaawhVvoEWWehqT+I1El6GCGVQ4=;
+        b=e4dFoDptZMERyzaeYcEBJC3/1DvTzb6/Ke0eIviqS60JroFuBG/lZ1yqV0IXydvxr5
+         lgbkuICpH3bYguePzaUqRrrQbOjn9RJFCSuoQx2MDp1ISRaEIK/fMXKAH8lIcNgbF1Lb
+         0g7GdNSAMe9Xxc7IRzjnCP+QGd/LmRc4KdhzhObhZlnSr8nqEnZV8Jqc6iDOfODSnPEs
+         zljCoL5HY7LGiZ4ICqAmEvIUvW3GidQdUr4r2vk4ejwQGn1+pPfOGMeWSizlNUacIz89
+         Z8zwRzAni8FQ53ZZuGJWm3gxuAmqRwDTvIGACm8NAnvgmNL3vIipP0AQ8qd5roq/QmqA
+         EnxA==
+X-Gm-Message-State: AOAM530VW9zpR9h9soSSVPZZM0IIcsgAIRZVlqYiEcHzgJu09vLmJOXk
+        MT0zyjnqS1o55pgddqNG926Ji12oJmtRlp1ikRrtdQ==
+X-Google-Smtp-Source: ABdhPJyFlWbTp88uiBk8oj2jnks2vvVMZHRU5zQHaleujzXDGp2pVOAsUaO9gD/k4yZ6I0HiskQDvayp/pdzxo6NaBc=
+X-Received: by 2002:a17:906:57cd:: with SMTP id u13mr4661147ejr.341.1612986880263;
+ Wed, 10 Feb 2021 11:54:40 -0800 (PST)
 MIME-Version: 1.0
+References: <20210210000259.635748-1-ben.widawsky@intel.com>
+ <20210210000259.635748-3-ben.widawsky@intel.com> <20210210174104.0000710a@Huawei.com>
+ <20210210185319.chharluce2ly4cne@intel.com>
+In-Reply-To: <20210210185319.chharluce2ly4cne@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 10 Feb 2021 11:54:29 -0800
+Message-ID: <CAPcyv4i4_6HLNpw7p-1PD9cePuMuPkvUfx0ROT8M0Y7ftxzYfg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] cxl/mem: Find device capabilities
+To:     Ben Widawsky <ben.widawsky@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org, Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gVGh1LCAyMDIxLTAyLTA0IGF0IDEyOjQ5ICswMjAwLCBNaWthIFdlc3RlcmJlcmcNCndyb3Rl
-Og0KPiBPbiBXZWQsIEZlYiAwMywgMjAyMSBhdCAwODoxNzoxNFBNICswMDAwLCBTZXJnZWkgTWly
-b3NobmljaGVua28NCj4gd3JvdGU6DQo+ID4gT24gTW9uLCAyMDIxLTAyLTAxIGF0IDE0OjU1ICsw
-MjAwLCBNaWthIFdlc3RlcmJlcmcgd3JvdGU6DQo+ID4gPiBPbiBUaHUsIEphbiAyOCwgMjAyMSBh
-dCAwOTozOToyOVBNICswMTAwLCBMdWthcyBXdW5uZXIgd3JvdGU6DQo+ID4gPiA+IE9uIFRodSwg
-SmFuIDI4LCAyMDIxIGF0IDA4OjUzOjE2QU0gLTA2MDAsIEJqb3JuIEhlbGdhYXMgd3JvdGU6DQo+
-ID4gPiA+ID4gT24gRnJpLCBEZWMgMTgsIDIwMjAgYXQgMDg6Mzk6NDVQTSArMDMwMCwgU2VyZ2Vp
-DQo+ID4gPiA+ID4gTWlyb3NobmljaGVua28NCj4gPiA+ID4gPiB3cm90ZToNCj4gPiA+ID4gPiA+
-IC4uLg0KPiA+ID4gPiANCj4gPiA+ID4gSSBpbnRlbmRlZCB0byByZXZpZXcgYW5kIHRlc3QgdGhp
-cyBpdGVyYXRpb24gb2YgdGhlIHNlcmllcyBtb3JlDQo+ID4gPiA+IGNsb3NlbHksIGJ1dCBoYXZl
-bid0IGJlZW4gYWJsZSB0byBjYXJ2ZSBvdXQgdGhlIHJlcXVpcmVkIHRpbWUuDQo+ID4gPiA+IEkn
-bSBhZGRpbmcgc29tZSBUaHVuZGVyYm9sdCBmb2xrcyB0byBjYyBpbiB0aGUgaG9wZSB0aGF0IHRo
-ZXkNCj4gPiA+ID4gY2FuIGF0IGxlYXN0IHRlc3QgdGhlIHNlcmllcyBvbiB0aGVpciBkZXZlbG9w
-bWVudCBicmFuY2guDQo+ID4gPiA+IEdldHRpbmcgdGhpcyB1cHN0cmVhbWVkIHNob3VsZCByZWFs
-bHkgYmUgaW4gdGhlIGJlc3QgaW50ZXJlc3QNCj4gPiA+ID4gb2YgSW50ZWwgYW5kIG90aGVyIHBy
-b211bGdhdG9ycyBvZiBUaHVuZGVyYm9sdC4NCj4gPiA+IA0KPiA+ID4gU3VyZS4gSXQgc2VlbXMg
-dGhhdCB0aGlzIHNlcmllcyB3YXMgc3VibWl0dGVkIGluIERlY2VtYmVyIHNvDQo+ID4gPiBwcm9i
-YWJseQ0KPiA+ID4gbm90IGFwcGxpY2FibGUgdG8gdGhlIHBjaS5naXQvbmV4dCBhbnltb3JlLiBB
-bnl3YXlzLCBJIGNhbiBnaXZlDQo+ID4gPiBpdCBhDQo+ID4gPiB0cnkNCj4gPiA+IG9uIGEgVEJU
-IGNhcGFibGUgc3lzdGVtIGlmIHNvbWVvbmUgdGVsbHMgbWUgd2hhdCBleGFjdGx5IHRvIHRlc3QN
-Cj4gPiA+IDstKQ0KPiA+ID4gUHJvYmFibHkgYXQgbGVhc3QgdGhhdCB0aGUgZXhpc3RpbmcgZnVu
-Y3Rpb25hbGl0eSBzdGlsbCB3b3JrcyBidXQNCj4gPiA+IHNvbWV0aGluZyBlbHNlIG1heWJlIHRv
-bz8NCj4gPiANCj4gPiBGb3Igc2V0dXBzIHRoYXQgd29ya2VkIGZpbmUsIHRoZSBvbmx5IGV4cGVj
-dGVkIGNoYW5nZSBpcyBhIHBvc3NpYmxlDQo+ID4gbGl0dGxlIGRpZmZlcmVudCBCQVIgbGF5b3V0
-IChpbiAvcHJvYy9pb21lbSksIGFuZCB0aGVyZSBzaG91bGQgdGhlDQo+ID4gc2FtZQ0KPiA+IHF1
-YW50aXR5IChvciBtb3JlKSBvZiBCQVJzIGFzc2lnbmVkIHRoYW4gYmVmb3JlLg0KPiA+IA0KPiA+
-IEJ1dCBpZiB0aGVyZSBhcmUgYW55IHByb2JsZW1hdGljIHNldHVwcywgd2hpY2ggd2VyZW4ndCBh
-YmxlIHRvDQo+ID4gYXJyYW5nZQ0KPiA+IG5ldyBCQVJzLCB0aGlzIHBhdGNoc2V0IG1heSBwdXNo
-IGEgYml0IGZ1cnRoZXIuDQo+IA0KPiBHb3QgaXQuDQo+IA0KPiA+IEluIGEgZmV3IGRheXMgSSds
-bCBwcm92aWRlIGFuIHVwZGF0ZWQgYnJhbmNoIGZvciBvdXIgbWlycm9yIG9mIHRoZQ0KPiA+IGtl
-cm5lbCBvbiBHaXRodWIsIHdpdGggYSBjb21wbGV0ZSBhbmQgYnVtcGVkIHNldCBvZiBwYXRjaGVz
-LA0KPiA+IHJlZHVjaW5nDQo+ID4gdGhlIHN0ZXBzIHJlcXVpcmVkIHRvIHRlc3QgdGhlbS4NCj4g
-DQo+IFNvdW5kcyBnb29kLCB0aGFua3MhDQoNCkhpIE1pa2EsDQoNClRoZSBicmFuY2ggaXMgZmlu
-YWxseSByZWFkeSwgc28gaWYgeW91IHN0aWxsIGhhdmUgdGltZSBmb3IgdGhhdCwgcGxlYXNlDQp0
-YWtlIGEgbG9vazoNCg0KaHR0cHM6Ly9naXRodWIuY29tL1lBRFJPLUtOUy9saW51eC90cmVlL3lh
-ZHJvL3BjaWVfaG90cGx1Zy9tb3ZhYmxlX2JhcnNfdjkuMQ0KDQoNCkFuZCBhIGJpdCBvZmYgdG9w
-aWM6IEkndmUgYWxzbyB1cGRhdGVkIHRoZSBicmFuY2ggd2l0aCBhIGNvbXBsZXRlIHNldA0Kb2Yg
-b3VyIGhvdHBsdWctcmVsYXRlZCBwYXRjaGVzLCBpbmNsdWRpbmcgYW4gUkZDIHNlcmllcyBvZiBt
-b3ZhYmxlIGJ1cw0KbnVtYmVycyBmb3IgaG90LWFkZGluZyBsYXJnZSBhbmQvb3IgbmVzdGVkIHN3
-aXRjaGVzIChhdCB0aGUgY29zdCBvZg0KYnJlYWtpbmcgdGhlIHN5c2ZzK3Byb2NzZiBBQkkpLiBJ
-biBjYXNlIG9uZSBpcyBldmVyIGdvaW5nIHRvIHRyeSB0aGF0LA0KdGhlIHBjaT1yZWFsbG9jLG1v
-dmFibGVfYnVzZXMga2VybmVsIGNvbW1hbmQgbGluZSBhcmd1bWVudHMgYXJlIG5lZWRlZDoNCg0K
-aHR0cHM6Ly9naXRodWIuY29tL1lBRFJPLUtOUy9saW51eC9jb21taXRzL3lhZHJvL3BjaWVfaG90
-cGx1Zy9tb3ZhYmxlX2J1c2VzX3Y5LjENCg0KVGhhbmtzIQ0KDQpTZXJnZQ0K
+On Wed, Feb 10, 2021 at 10:53 AM Ben Widawsky <ben.widawsky@intel.com> wrote:
+[..]
+> > Christoph raised this in v1, and I agree with him that his would me more compact
+> > and readable as
+> >
+> >       struct range pmem_range;
+> >       struct range ram_range;
+> >
+> > The discussion seemed to get lost without getting resolved that I can see.
+> >
+>
+> I had been waiting for Dan to chime in, since he authored it. I'll change it and
+> he can yell if he cares.
+
+No concerns from me.
+
+>
+> > > +
+> > > +   struct {
+> > > +           struct range range;
+> > > +   } ram;
+> >
+> > > +};
+> > > +
+> > > +#endif /* __CXL_H__ */
+> > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > > index 99a6571508df..0a868a15badc 100644
+> > > --- a/drivers/cxl/mem.c
+> > > +++ b/drivers/cxl/mem.c
+> >
+> >
+> > ...
+> >
+> > > +static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+> > > +                            struct mbox_cmd *mbox_cmd)
+> > > +{
+> > > +   struct device *dev = &cxlm->pdev->dev;
+> > > +
+> > > +   dev_dbg(dev, "Mailbox command (opcode: %#x size: %zub) timed out\n",
+> > > +           mbox_cmd->opcode, mbox_cmd->size_in);
+> > > +
+> > > +   if (IS_ENABLED(CONFIG_CXL_MEM_INSECURE_DEBUG)) {
+> >
+> > Hmm.  Whilst I can see the advantage of this for debug, I'm not sure we want
+> > it upstream even under a rather evil looking CONFIG variable.
+> >
+> > Is there a bigger lock we can use to avoid chance of accidental enablement?
+>
+> Any suggestions? I'm told this functionality was extremely valuable for NVDIMM,
+> though I haven't personally experienced it.
+
+Yeah, there was no problem with the identical mechanism in LIBNVDIMM
+land. However, I notice that the useful feature for LIBNVDIMM is the
+option to dump all payloads. This one only fires on timeouts which is
+less useful. So I'd say fix it to dump all payloads on the argument
+that the safety mechanism was proven with the LIBNVDIMM precedent, or
+delete it altogether to maintain v5.12 momentum. Payload dumping can
+be added later.
+
+[..]
+> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > > index e709ae8235e7..6267ca9ae683 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -1080,6 +1080,7 @@
+> > >
+> > >  /* Designated Vendor-Specific (DVSEC, PCI_EXT_CAP_ID_DVSEC) */
+> > >  #define PCI_DVSEC_HEADER1          0x4 /* Designated Vendor-Specific Header1 */
+> > > +#define PCI_DVSEC_HEADER1_LENGTH_MASK      0xFFF00000
+> >
+> > Seems sensible to add the revision mask as well.
+> > The vendor id currently read using a word read rather than dword, but perhaps
+> > neater to add that as well for completeness?
+> >
+> > Having said that, given Bjorn's comment on clashes and the fact he'd rather see
+> > this stuff defined in drivers and combined later (see review patch 1 and follow
+> > the link) perhaps this series should not touch this header at all.
+>
+> I'm fine to move it back.
+
+Yeah, we're playing tennis now between Bjorn's and Christoph's
+comments, but I like Bjorn's suggestion of "deduplicate post merge"
+given the bloom of DVSEC infrastructure landing at the same time.
