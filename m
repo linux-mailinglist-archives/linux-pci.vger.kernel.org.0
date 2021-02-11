@@ -2,118 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CAF93186D9
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 10:22:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25C7A3186E9
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 10:22:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229965AbhBKJRO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 04:17:14 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:56644 "EHLO
+        id S229895AbhBKJTC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 04:19:02 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:56762 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230054AbhBKJKs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 04:10:48 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        by vger.kernel.org with ESMTP id S230103AbhBKJON (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 04:14:13 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8EF98C00C5;
-        Thu, 11 Feb 2021 09:09:14 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5C08EC00B8;
+        Thu, 11 Feb 2021 09:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1613034554; bh=im9YPeIOIOX6v4VKPr6LIGB+a/nLiNTjVu6zUPMNTcw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=HNw0YtZtjRjWYZ4k0IPCCoIVTYw81Nd+HXb4SdsYHkZwfs/IiA569sJZXp1uZAgft
-         1wdWCbLpRte5l109pvlqeZCDYCER87r/guTNqZk5NLFYOEUQN0yKoKaZsecdqqZlHB
-         3DQDEu4COjkAVPfHwitO+MVJssHSHRnOplaZH+oBRhF+2w0hxdmYSpG7QsKian8TZz
-         sjbWRgPEzZ9yVd3GM5zfsxpvtG+s8tG+f7nQDwREAtZbWI6q65BfL8I+0JbM7iPItx
-         99HuW3T1+BsYnrzq3Jf5cgQuz0c+/mwJS+CidetTmTIUjbfw3+zF782hpg2/eg9ozS
-         QY9NRZC6YGzrA==
+        t=1613034774; bh=XVY3C5tM44biaeLPnPeGD6yk38dcUlFr4a1J9QvrIv4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fHkDL/OPWc1PdlaKLb411a7JUM4XgYHY7JVrpi7vZDIwj9HlTihoEjhQmxwavmRWm
+         RRtzlul5Wv35NQQwD1GS4RGbmmUDpMSKEbqCkIvLUl/rTVbgHw5tCT1i+fOtd7OWk9
+         Z7KDbkgffvwhV4UmjjdWafcHW8+YyF7+ayEcScIsq4jdRAn3B5vmWDcEHe9Xt6j/d/
+         cqIfOg/Vng8kcxM/Mri5rE6dhe11lX2hnDaV7FAfNnc9aqzlXYXQUSaDToNpvh5oJ2
+         ZJa7TUcg8UfpvguZy7tqYNXQvNWdavNkfKceIVFI2X1WWDiL+ivLPDBwlA+j4Ze73S
+         rZS1jrhB1YRfw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 549A9A005C;
-        Thu, 11 Feb 2021 09:09:13 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id D1894A0061;
+        Thu, 11 Feb 2021 09:12:52 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v5 6/6] docs: ABI: Add sysfs documentation interface of dw-xdata-pcie driver
-Date:   Thu, 11 Feb 2021 10:08:43 +0100
-Message-Id: <dce623f03f782fe536765916a9c3be36cee1dfe2.1613034397.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v5 00/15] dmaengine: dw-edma: HDMA support
+Date:   Thu, 11 Feb 2021 10:12:33 +0100
+Message-Id: <cover.1613034728.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1613034397.git.gustavo.pimentel@synopsys.com>
-References: <cover.1613034397.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1613034397.git.gustavo.pimentel@synopsys.com>
-References: <cover.1613034397.git.gustavo.pimentel@synopsys.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This patch describes the sysfs interface implemented on the dw-xdata-pcie
-driver.
+This patch series adds the HDMA support, as long the IP design has set
+the compatible register map parameter, which allows compatibility at
+some degree for the existing Synopsys DesignWare eDMA driver that is
+already available on the Kernel.
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- Documentation/ABI/testing/sysfs-driver-xdata | 46 ++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-xdata
+The HDMA "Hyper-DMA" IP is an enhancement of the eDMA "embedded-DMA" IP.
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-xdata b/Documentation/ABI/testing/sysfs-driver-xdata
-new file mode 100644
-index 00000000..a7bb44b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-xdata
-@@ -0,0 +1,46 @@
-+What:		/sys/kernel/dw-xdata-pcie/write
-+Date:		February 2021
-+KernelVersion:	5.12
-+Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+Description:	Allows the user to enable the PCIe traffic generator which
-+		will create write TLPs frames - from the Root Complex to the
-+		Endpoint direction.
-+		Usage e.g.
-+		 echo 1 > /sys/kernel/dw-xdata-pcie/write
-+
-+		The user can read the current PCIe link throughput generated
-+		through this generator.
-+		Usage e.g.
-+		 cat /sys/kernel/dw-xdata-pcie/write
-+		 204 MB/s
-+
-+		The file is read and write.
-+
-+What:		/sys/kernel/dw-xdata-pcie/read
-+Date:		February 2021
-+KernelVersion:	5.12
-+Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+Description:	Allows the user to enable the PCIe traffic generator which
-+		will create read TLPs frames - from the Endpoint to the Root
-+		Complex direction.
-+		Usage e.g.
-+		 echo 1 > /sys/kernel/dw-xdata-pcie/read
-+
-+		The user can read the current PCIe link throughput generated
-+		through this generator.
-+		Usage e.g.
-+		 cat /sys/kernel/dw-xdata-pcie/read
-+		 199 MB/s
-+
-+		The file is read and write.
-+
-+What:		/sys/kernel/dw-xdata-pcie/stop
-+Date:		February 2021
-+KernelVersion:	5.12
-+Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+Description:	Allows the user to disable the PCIe traffic generator in all
-+		directions.
-+		Usage e.g.
-+		 echo 1 > /sys/kernel/dw-xdata-pcie/stop
-+
-+		The file is write only.
+This new improvement comes with a PCI DVSEC that allows to the driver
+recognize and switch behavior if it's an eDMA or an HDMA, becoming
+retrocompatible, in the absence of this DVSEC, the driver will assume
+that is an eDMA IP.
+
+It also adds the interleaved support, since it will be similar to the
+current scatter-gather implementation.
+
+As well fixes/improves some abnormal behaviors not detected before, such as:
+ - crash on loading/unloading driver
+ - memory space definition for the data area and for the linked list space
+ - scatter-gather address calculation on 32 bits platforms
+ - minor comment and variable reordering
+
+Changes:
+ V2: Applied changes based on Bjorn Helgaas' review
+     Rebased patches on top of v5.11-rc1 version
+ V3: Applied changes based on Lukas Wunner' review
+ V4: Fix a typo detected by kernel test robot
+ V5: Rework driver accordingly to Bjorn Helgaas's feedback
+
+Gustavo Pimentel (15):
+  dmaengine: dw-edma: Add writeq() and readq() for 64 bits architectures
+  dmaengine: dw-edma: Fix comments offset characters' alignment
+  dmaengine: dw-edma: Add support for the HDMA feature
+  PCI: Add pci_find_vsec_capability() to find a specific VSEC
+  dmaengine: dw-edma: Add PCIe VSEC data retrieval support
+  dmaengine: dw-edma: Add device_prep_interleave_dma() support
+  dmaengine: dw-edma: Improve number of channels check
+  dmaengine: dw-edma: Reorder variables to keep consistency
+  dmaengine: dw-edma: Improve the linked list and data blocks definition
+  dmaengine: dw-edma: Change linked list and data blocks offset and
+    sizes
+  dmaengine: dw-edma: Move struct dentry variable from static definition
+    into dw_edma struct
+  dmaengine: dw-edma: Fix crash on loading/unloading driver
+  dmaengine: dw-edma: Change DMA abreviation from lower into upper case
+  dmaengine: dw-edma: Revert fix scatter-gather address calculation
+  dmaengine: dw-edma: Add pcim_iomap_table return check
+
+ drivers/dma/dw-edma/dw-edma-core.c       | 178 +++++++++++-------
+ drivers/dma/dw-edma/dw-edma-core.h       |  37 ++--
+ drivers/dma/dw-edma/dw-edma-pcie.c       | 275 +++++++++++++++++++++-------
+ drivers/dma/dw-edma/dw-edma-v0-core.c    | 300 ++++++++++++++++++++++++-------
+ drivers/dma/dw-edma/dw-edma-v0-core.h    |   2 +-
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  77 ++++----
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-regs.h    | 291 +++++++++++++++++++-----------
+ drivers/pci/pci.c                        |  34 ++++
+ include/linux/pci.h                      |   2 +
+ include/uapi/linux/pci_regs.h            |   6 +
+ 11 files changed, 851 insertions(+), 355 deletions(-)
+
 -- 
 2.7.4
 
