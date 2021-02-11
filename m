@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07D1F3186D2
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 10:22:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CAF93186D9
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 10:22:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbhBKJQu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 04:16:50 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:34068 "EHLO
+        id S229965AbhBKJRO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 04:17:14 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:56644 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230052AbhBKJKr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 04:10:47 -0500
+        by vger.kernel.org with ESMTP id S230054AbhBKJKs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 04:10:48 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6EE13401D9;
-        Thu, 11 Feb 2021 09:09:13 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8EF98C00C5;
+        Thu, 11 Feb 2021 09:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1613034553; bh=x6qwlQ3unob1xa78MC32IMOFOlfkiuMvvCbd1vCCzC8=;
+        t=1613034554; bh=im9YPeIOIOX6v4VKPr6LIGB+a/nLiNTjVu6zUPMNTcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=OLtSWyt1IrHosK6QLJkU19M9Rrlv3ASey1ySvQ6Ao1Gi+ykbo6yH9KiSyfAbVqsQR
-         Su0AB85Q2O+ZGfbY378P0e7wVLKWfBw+yS+wFQsfGrCuPJaJWk+TeG/ffIO/29jLD0
-         WcvIMIWutp8pIheVlEbh88HT1hV2X0K2a4Ihs0HIG7nY/cgsk3oIb8qBjufEayRFQs
-         kkAz4pAU6S9mMFmZAsCAIgqr0zCbaeHAtL1hlJ9q2SmE1Fw5KUm327jQJIA4EITQro
-         XiRQU3hfHrUYLXlN0JEDcdxdXHc9MCVHlsxNxp7e+nQcmz/pQRYvVAOcqq7U6bhuw8
-         qywi3nGKDjq8A==
+        b=HNw0YtZtjRjWYZ4k0IPCCoIVTYw81Nd+HXb4SdsYHkZwfs/IiA569sJZXp1uZAgft
+         1wdWCbLpRte5l109pvlqeZCDYCER87r/guTNqZk5NLFYOEUQN0yKoKaZsecdqqZlHB
+         3DQDEu4COjkAVPfHwitO+MVJssHSHRnOplaZH+oBRhF+2w0hxdmYSpG7QsKian8TZz
+         sjbWRgPEzZ9yVd3GM5zfsxpvtG+s8tG+f7nQDwREAtZbWI6q65BfL8I+0JbM7iPItx
+         99HuW3T1+BsYnrzq3Jf5cgQuz0c+/mwJS+CidetTmTIUjbfw3+zF782hpg2/eg9ozS
+         QY9NRZC6YGzrA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 3496AA005E;
-        Thu, 11 Feb 2021 09:09:12 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 549A9A005C;
+        Thu, 11 Feb 2021 09:09:13 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -41,9 +41,9 @@ To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
         Jonathan Corbet <corbet@lwn.net>,
         Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v5 5/6] MAINTAINERS: Add Synopsys xData IP driver maintainer
-Date:   Thu, 11 Feb 2021 10:08:42 +0100
-Message-Id: <748e23c798df091835577037ed75fab130e3dfb8.1613034397.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v5 6/6] docs: ABI: Add sysfs documentation interface of dw-xdata-pcie driver
+Date:   Thu, 11 Feb 2021 10:08:43 +0100
+Message-Id: <dce623f03f782fe536765916a9c3be36cee1dfe2.1613034397.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1613034397.git.gustavo.pimentel@synopsys.com>
 References: <cover.1613034397.git.gustavo.pimentel@synopsys.com>
@@ -53,35 +53,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Synopsys xData IP driver maintainer.
-
-This driver aims to support Synopsys xData IP and is normally distributed
-along with Synopsys PCIe EndPoint IP as a PCIe traffic generator (depends
-of the use and licensing agreement).
+This patch describes the sysfs interface implemented on the dw-xdata-pcie
+driver.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/ABI/testing/sysfs-driver-xdata | 46 ++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-xdata
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 546aa66..f9d681b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5061,6 +5061,13 @@ S:	Maintained
- F:	drivers/dma/dw-edma/
- F:	include/linux/dma/edma.h
- 
-+DESIGNWARE XDATA IP DRIVER
-+M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/misc-devices/dw-xdata-pcie.rst
-+F:	drivers/misc/dw-xdata-pcie.c
+diff --git a/Documentation/ABI/testing/sysfs-driver-xdata b/Documentation/ABI/testing/sysfs-driver-xdata
+new file mode 100644
+index 00000000..a7bb44b
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-xdata
+@@ -0,0 +1,46 @@
++What:		/sys/kernel/dw-xdata-pcie/write
++Date:		February 2021
++KernelVersion:	5.12
++Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
++Description:	Allows the user to enable the PCIe traffic generator which
++		will create write TLPs frames - from the Root Complex to the
++		Endpoint direction.
++		Usage e.g.
++		 echo 1 > /sys/kernel/dw-xdata-pcie/write
 +
- DESIGNWARE USB2 DRD IP DRIVER
- M:	Minas Harutyunyan <hminas@synopsys.com>
- L:	linux-usb@vger.kernel.org
++		The user can read the current PCIe link throughput generated
++		through this generator.
++		Usage e.g.
++		 cat /sys/kernel/dw-xdata-pcie/write
++		 204 MB/s
++
++		The file is read and write.
++
++What:		/sys/kernel/dw-xdata-pcie/read
++Date:		February 2021
++KernelVersion:	5.12
++Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
++Description:	Allows the user to enable the PCIe traffic generator which
++		will create read TLPs frames - from the Endpoint to the Root
++		Complex direction.
++		Usage e.g.
++		 echo 1 > /sys/kernel/dw-xdata-pcie/read
++
++		The user can read the current PCIe link throughput generated
++		through this generator.
++		Usage e.g.
++		 cat /sys/kernel/dw-xdata-pcie/read
++		 199 MB/s
++
++		The file is read and write.
++
++What:		/sys/kernel/dw-xdata-pcie/stop
++Date:		February 2021
++KernelVersion:	5.12
++Contact:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
++Description:	Allows the user to disable the PCIe traffic generator in all
++		directions.
++		Usage e.g.
++		 echo 1 > /sys/kernel/dw-xdata-pcie/stop
++
++		The file is write only.
 -- 
 2.7.4
 
