@@ -2,131 +2,301 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55F71318F4B
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 17:01:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5658318F45
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 17:01:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230382AbhBKP7l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 10:59:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40183 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230303AbhBKP5c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 10:57:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613058966;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FgID+L3tcWjGCzMJOEFzOMkSnQKXBsghqlTv8BLKjOs=;
-        b=CsaarQP+3zaJN9wn918ApjtT7YK3QIFHfThI6e3rRrMX+SHZPPG0ScmPXn/AVfQwfzyCUe
-        MoC6c+wzBdfYcgBgpLStF+okgwYy3dCG0Lc8q5hkZDLDLpWWXQh30cli9A/vxOrx60WW31
-        2N9r/HrJZAT5b/uKVypaRLwEmcwrU+g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-GDVA0jVsMKSpXZsXWaO46Q-1; Thu, 11 Feb 2021 10:56:01 -0500
-X-MC-Unique: GDVA0jVsMKSpXZsXWaO46Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3117F8049C6;
-        Thu, 11 Feb 2021 15:55:26 +0000 (UTC)
-Received: from [10.10.117.219] (ovpn-117-219.rdu2.redhat.com [10.10.117.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9FFC210013D7;
-        Thu, 11 Feb 2021 15:55:19 +0000 (UTC)
-Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping
- CPUs
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, frederic@kernel.org,
-        juri.lelli@redhat.com, abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
-References: <20200625223443.2684-1-nitesh@redhat.com>
- <20200625223443.2684-2-nitesh@redhat.com>
- <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com>
- <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de>
- <20210128165903.GB38339@fuller.cnet> <87h7n0de5a.fsf@nanos.tec.linutronix.de>
- <20210204181546.GA30113@fuller.cnet>
- <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com>
- <20210204190647.GA32868@fuller.cnet>
- <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
- <87y2g26tnt.fsf@nanos.tec.linutronix.de>
- <d0aed683-87ae-91a2-d093-de3f5d8a8251@redhat.com>
-Organization: Red Hat Inc,
-Message-ID: <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com>
-Date:   Thu, 11 Feb 2021 10:55:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        id S231461AbhBKP6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 10:58:44 -0500
+Received: from mga11.intel.com ([192.55.52.93]:2141 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230204AbhBKP40 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Feb 2021 10:56:26 -0500
+IronPort-SDR: 1Hmbvlbx+Aa8M/gvqqvaBTNgWRLZW4LPoUkxPNBRxlFaL0v8nRqDigWJJFdrKecrya706oFoMJ
+ kyjNjYT8MWTQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9892"; a="178753695"
+X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
+   d="scan'208";a="178753695"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 07:55:31 -0800
+IronPort-SDR: EgnaUWff8EGXz/BJlRdi5ijvd4e91qboJwcrZEuvVKmIq9WMiTtGEobzflWht8ANRRWvZd0b4D
+ Gr0lZPesZDEA==
+X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
+   d="scan'208";a="437162324"
+Received: from reknight-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.134.254])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 07:55:31 -0800
+Date:   Thu, 11 Feb 2021 07:55:29 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: Re: [PATCH v2 2/8] cxl/mem: Find device capabilities
+Message-ID: <20210211155529.agul56lcb33cta5s@intel.com>
+References: <20210210000259.635748-1-ben.widawsky@intel.com>
+ <20210210000259.635748-3-ben.widawsky@intel.com>
+ <20210210133252.000047af@Huawei.com>
+ <20210210150759.00005684@Huawei.com>
+ <20210210165557.7fuqbyr7e7zjoxaa@intel.com>
+ <20210210181605.ecbl3m5ep4rszpqs@intel.com>
+ <20210211095548.00000da7@Huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <d0aed683-87ae-91a2-d093-de3f5d8a8251@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210211095548.00000da7@Huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 21-02-11 09:55:48, Jonathan Cameron wrote:
+> On Wed, 10 Feb 2021 10:16:05 -0800
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
+> 
+> > On 21-02-10 08:55:57, Ben Widawsky wrote:
+> > > On 21-02-10 15:07:59, Jonathan Cameron wrote:  
+> > > > On Wed, 10 Feb 2021 13:32:52 +0000
+> > > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > > >   
+> > > > > On Tue, 9 Feb 2021 16:02:53 -0800
+> > > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
+> > > > >   
+> > > > > > Provide enough functionality to utilize the mailbox of a memory device.
+> > > > > > The mailbox is used to interact with the firmware running on the memory
+> > > > > > device. The flow is proven with one implemented command, "identify".
+> > > > > > Because the class code has already told the driver this is a memory
+> > > > > > device and the identify command is mandatory.
+> > > > > > 
+> > > > > > CXL devices contain an array of capabilities that describe the
+> > > > > > interactions software can have with the device or firmware running on
+> > > > > > the device. A CXL compliant device must implement the device status and
+> > > > > > the mailbox capability. Additionally, a CXL compliant memory device must
+> > > > > > implement the memory device capability. Each of the capabilities can
+> > > > > > [will] provide an offset within the MMIO region for interacting with the
+> > > > > > CXL device.
+> > > > > > 
+> > > > > > The capabilities tell the driver how to find and map the register space
+> > > > > > for CXL Memory Devices. The registers are required to utilize the CXL
+> > > > > > spec defined mailbox interface. The spec outlines two mailboxes, primary
+> > > > > > and secondary. The secondary mailbox is earmarked for system firmware,
+> > > > > > and not handled in this driver.
+> > > > > > 
+> > > > > > Primary mailboxes are capable of generating an interrupt when submitting
+> > > > > > a background command. That implementation is saved for a later time.
+> > > > > > 
+> > > > > > Link: https://www.computeexpresslink.org/download-the-specification
+> > > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > > > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>    
+> > > > > 
+> > > > > Hi Ben,
+> > > > > 
+> > > > >   
+> > > > > > +/**
+> > > > > > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> > > > > > + * @cxlm: The CXL memory device to communicate with.
+> > > > > > + * @mbox_cmd: Command to send to the memory device.
+> > > > > > + *
+> > > > > > + * Context: Any context. Expects mbox_lock to be held.
+> > > > > > + * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
+> > > > > > + *         Caller should check the return code in @mbox_cmd to make sure it
+> > > > > > + *         succeeded.    
+> > > > > 
+> > > > > cxl_xfer_log() doesn't check mbox_cmd->return_code and for my test it currently
+> > > > > enters an infinite loop as a result.  
+> > > 
+> > > I meant to fix that.
+> > >   
+> > > > > 
+> > > > > I haven't checked other paths, but to my mind it is not a good idea to require
+> > > > > two levels of error checking - the example here proves how easy it is to forget
+> > > > > one.  
+> > > 
+> > > Demonstrably, you're correct. I think it would be good to have a kernel only
+> > > mbox command that does the error checking though. Let me type something up and
+> > > see how it looks.  
+> > 
+> > Hi Jonathan. What do you think of this? The bit I'm on the fence about is if I
+> > should validate output size too. I like the simplicity as it is, but it requires
+> > every caller to possibly check output size, which is kind of the same problem
+> > you're originally pointing out.
+> 
+> The simplicity is good and this is pretty much what I expected you would end up with
+> (always reassuring)
+> 
+> For the output, perhaps just add another parameter to the wrapper for minimum
+> output length expected?
+> 
+> Now you mention the length question.  It does rather feel like there should also
+> be some protection on memcpy_fromio() copying too much data if the hardware
+> happens to return an unexpectedly long length.  Should never happen, but
+> the hardening is worth adding anyway given it's easy to do.
+> 
+> Jonathan
 
-On 2/6/21 7:43 PM, Nitesh Narayan Lal wrote:
-> On 2/5/21 5:23 PM, Thomas Gleixner wrote:
->> On Thu, Feb 04 2021 at 14:17, Nitesh Narayan Lal wrote:
->>> On 2/4/21 2:06 PM, Marcelo Tosatti wrote:
->>>>>> How about adding a new flag for isolcpus instead?
->>>>>>
->>>>> Do you mean a flag based on which we can switch the affinity mask to
->>>>> housekeeping for all the devices at the time of IRQ distribution?
->>>> Yes a new flag for isolcpus. HK_FLAG_IRQ_SPREAD or some better name.
->>> Does sounds like a nice idea to explore, lets see what Thomas thinks about it.
+Some background because I forget what I've said previously... It's unfortunate
+that the spec maxes at 1M mailbox size but has enough bits in the length field
+to support 2M-1. I've made some requests to have this fixed, so maybe 3.0 won't
+be awkward like this.
 
-<snip>
+I think it makes sense to do as you suggested. One question though, do you have
+an opinion on we return to the caller as the output payload size, do we cap it
+at 1M also, or are we honest?
 
->>> When the affinity mask of the interrupt at the time when it is actually
->>> requested contains an isolated CPU then nothing prevents the kernel from
->>> steering it at an isolated CPU. But that has absolutely nothing to do
->>> with that spreading thingy.
->>>
->>> The only difference which this change makes is the fact that the
->>> affinity hint changes. Nothing else.
->>>
-> Thanks for the detailed explanation.
->
-> Before I posted this patch, I was doing some debugging on a setup where I
-> was observing some latency issues due to the iavf IRQs that were pinned on
-> the isolated CPUs.
->
-> Based on some initial traces I had this impression that the affinity hint
-> or cpumask_local_spread was somehow playing a role in deciding the affinity
-> mask of these IRQs. Although, that does look incorrect after going through
-> your explanation.
-> For some reason, with a kernel that had this patch when I tried creating
-> VFs iavf IRQs always ended up on the HK CPUs.
->
-> The reasoning for the above is still not very clear to me. I will investigate
-> this further to properly understand this behavior.
->
->
+-       if (out_len && mbox_cmd->payload_out)
+-               memcpy_fromio(mbox_cmd->payload_out, payload, out_len);
++       if (out_len && mbox_cmd->payload_out) {
++               size_t n = min_t(size_t, cxlm->payload_size, out_len);
++               memcpy_fromio(mbox_cmd->payload_out, payload, n);
++       }
 
-After a little more digging, I found out why cpumask_local_spread change
-affects the general/initial smp_affinity for certain device IRQs.
+So...
+mbox_cmd->size_out = out_len;
+mbox_cmd->size_out = n;
 
-After the introduction of the commit:
 
-    e2e64a932 genirq: Set initial affinity in irq_set_affinity_hint()
-
-For all the drivers that set hint, initial affinity is set based on the
-CPU retrieved from cpumask_local_spread. So in an environment where
-irqbalance is disabled, these device IRQs remain on the CPUs that are
-picked from cpumask_local_spread even though they are isolated. I think
-the commit message of the reverted patch should have covered this as
-well.
-
--- 
-Thanks
-Nitesh
-
+> 
+> 
+> > 
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index 55c5f5a6023f..ad7b2077ab28 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -284,7 +284,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+> >  }
+> >  
+> >  /**
+> > - * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> > + * __cxl_mem_mbox_send_cmd() - Execute a mailbox command
+> >   * @cxlm: The CXL memory device to communicate with.
+> >   * @mbox_cmd: Command to send to the memory device.
+> >   *
+> > @@ -296,7 +296,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+> >   * This is a generic form of the CXL mailbox send command, thus the only I/O
+> >   * operations used are cxl_read_mbox_reg(). Memory devices, and perhaps other
+> >   * types of CXL devices may have further information available upon error
+> > - * conditions.
+> > + * conditions. Driver facilities wishing to send mailbox commands should use the
+> > + * wrapper command.
+> >   *
+> >   * The CXL spec allows for up to two mailboxes. The intention is for the primary
+> >   * mailbox to be OS controlled and the secondary mailbox to be used by system
+> > @@ -304,8 +305,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
+> >   * not need to coordinate with each other. The driver only uses the primary
+> >   * mailbox.
+> >   */
+> > -static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+> > -				 struct mbox_cmd *mbox_cmd)
+> > +static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
+> > +				   struct mbox_cmd *mbox_cmd)
+> >  {
+> >  	void __iomem *payload = cxlm->mbox_regs + CXLDEV_MBOX_PAYLOAD_OFFSET;
+> >  	u64 cmd_reg, status_reg;
+> > @@ -469,6 +470,54 @@ static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
+> >  	mutex_unlock(&cxlm->mbox_mutex);
+> >  }
+> >  
+> > +/**
+> > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
+> > + * @cxlm: The CXL memory device to communicate with.
+> > + * @opcode: Opcode for the mailbox command.
+> > + * @in: The input payload for the mailbox command.
+> > + * @in_size: The length of the input payload
+> > + * @out: Caller allocated buffer for the output.
+> > + *
+> > + * Context: Any context. Will acquire and release mbox_mutex.
+> > + * Return:
+> > + *  * %>=0	- Number of bytes returned in @out.
+> > + *  * %-EBUSY	- Couldn't acquire exclusive mailbox access.
+> > + *  * %-EFAULT	- Hardware error occurred.
+> > + *  * %-ENXIO	- Command completed, but device reported an error.
+> > + *
+> > + * Mailbox commands may execute successfully yet the device itself reported an
+> > + * error. While this distinction can be useful for commands from userspace, the
+> > + * kernel will often only care when both are successful.
+> > + *
+> > + * See __cxl_mem_mbox_send_cmd()
+> > + */
+> > +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, u8 *in,
+> > +				 size_t in_size, u8 *out)
+> > +{
+> > +	struct mbox_cmd mbox_cmd = {
+> > +		.opcode = opcode,
+> > +		.payload_in = in,
+> > +		.size_in = in_size,
+> > +		.payload_out = out,
+> > +	};
+> > +	int rc;
+> > +
+> > +	rc = cxl_mem_mbox_get(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	rc = __cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> > +	cxl_mem_mbox_put(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	/* TODO: Map return code to proper kernel style errno */
+> > +	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS)
+> > +		return -ENXIO;
+> > +
+> > +	return mbox_cmd.size_out;
+> > +}
+> > +
+> >  /**
+> >   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
+> >   * @cxlmd: The CXL memory device to communicate with.
+> > @@ -1380,33 +1429,18 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
+> >  		u8 poison_caps;
+> >  		u8 qos_telemetry_caps;
+> >  	} __packed id;
+> > -	struct mbox_cmd mbox_cmd = {
+> > -		.opcode = CXL_MBOX_OP_IDENTIFY,
+> > -		.payload_out = &id,
+> > -		.size_in = 0,
+> > -	};
+> >  	int rc;
+> >  
+> > -	/* Retrieve initial device memory map */
+> > -	rc = cxl_mem_mbox_get(cxlm);
+> > -	if (rc)
+> > -		return rc;
+> > -
+> > -	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> > -	cxl_mem_mbox_put(cxlm);
+> > -	if (rc)
+> > +	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_IDENTIFY, NULL, 0,
+> > +				   (u8 *)&id);
+> > +	if (rc < 0)
+> >  		return rc;
+> >  
+> > -	/* TODO: Handle retry or reset responses from firmware. */
+> > -	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS) {
+> > -		dev_err(&cxlm->pdev->dev, "Mailbox command failed (%d)\n",
+> > -			mbox_cmd.return_code);
+> > +	if (rc < sizeof(id)) {
+> > +		dev_err(&cxlm->pdev->dev, "Short identify data\n",
+> >  		return -ENXIO;
+> >  	}
+> >  
+> > -	if (mbox_cmd.size_out != sizeof(id))
+> > -		return -ENXIO;
+> > -
+> >  	/*
+> >  	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
+> >  	 * For now, only the capacity is exported in sysfs
+> > 
+> > 
+> > [snip]
+> > 
+> 
