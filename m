@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 926E5318C52
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 14:44:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12B44318C55
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 14:44:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229674AbhBKNnW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 08:43:22 -0500
-Received: from mga01.intel.com ([192.55.52.88]:22459 "EHLO mga01.intel.com"
+        id S229803AbhBKNnq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 08:43:46 -0500
+Received: from mga05.intel.com ([192.55.52.43]:57829 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231872AbhBKNk0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Feb 2021 08:40:26 -0500
-IronPort-SDR: c8w53nza90m3z4uRoCckddPtuHM6m4NAPsC0ci96bCn0+x9UjrbV3+3AXUWwzPOsTHJXoT5EAm
- CdFuBXC9W3pQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="201368106"
+        id S231907AbhBKNkb (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Feb 2021 08:40:31 -0500
+IronPort-SDR: OQGM/D4q5Wigg/8EFi5n6KpmU7sEEA8bYGXfKbpNma/idRFPpX2lBPi64h78qjDsrUaY73xJNt
+ RFLanhMQomNw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="267080958"
 X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="201368106"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:39:39 -0800
-IronPort-SDR: kGDVh8H8M5iSKSE9xqVOdn5Hio10WVgdAM9tySL72zuzc1g/k/jvJ0bF3Advm5OHPzqze5Gm4O
- nU8C3reGf44w==
+   d="scan'208";a="267080958"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:39:40 -0800
+IronPort-SDR: DW3tDJacTezYEKykW3Gfc2ubV7pc86jv/autzaZBWqhrmrxDXUvDpyLcgNItfcRF5//xBDg+Yh
+ jChCinMqLD4Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="578807827"
+   d="scan'208";a="362017796"
 Received: from lkp-server02.sh.intel.com (HELO cd560a204411) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 11 Feb 2021 05:39:38 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 11 Feb 2021 05:39:38 -0800
 Received: from kbuild by cd560a204411 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lACC1-0003oU-ET; Thu, 11 Feb 2021 13:39:37 +0000
-Date:   Thu, 11 Feb 2021 21:39:12 +0800
+        id 1lACC1-0003oW-Er; Thu, 11 Feb 2021 13:39:37 +0000
+Date:   Thu, 11 Feb 2021 21:39:15 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/misc] BUILD SUCCESS
- 9a1471222189bdab467db0a0043c66b95142d5a5
-Message-ID: <60253380.m0xtv5j11bBS/pfh%lkp@intel.com>
+Subject: [pci:pci/error] BUILD SUCCESS
+ 0cea36bd0c8e4b37f2348b61d0b055ccb7ccd064
+Message-ID: <60253383.Ym2D9B2mLoH7Dj4Q%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,8 +43,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/misc
-branch HEAD: 9a1471222189bdab467db0a0043c66b95142d5a5  PCI: Remove WARN_ON(in_interrupt())
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/error
+branch HEAD: 0cea36bd0c8e4b37f2348b61d0b055ccb7ccd064  PCI/portdrv: Report reset for frozen channel
 
 elapsed time: 723m
 
@@ -72,9 +72,9 @@ c6x                         dsk6455_defconfig
 mips                          malta_defconfig
 powerpc                        cell_defconfig
 m68k                       m5249evb_defconfig
-powerpc                     sbc8548_defconfig
 sh                            shmin_defconfig
 arm                          pxa168_defconfig
+powerpc                     sbc8548_defconfig
 sh                                  defconfig
 powerpc                     powernv_defconfig
 arm                         palmz72_defconfig
