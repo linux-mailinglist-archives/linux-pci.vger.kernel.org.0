@@ -2,208 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AE763182FD
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 02:18:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E8E1318465
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 05:42:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231366AbhBKBRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Feb 2021 20:17:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
+        id S229544AbhBKElq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Feb 2021 23:41:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229800AbhBKBRc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Feb 2021 20:17:32 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB959C061574;
-        Wed, 10 Feb 2021 17:16:50 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id l17so1949995wmq.2;
-        Wed, 10 Feb 2021 17:16:50 -0800 (PST)
+        with ESMTP id S229564AbhBKElp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Feb 2021 23:41:45 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E9FC0613D6
+        for <linux-pci@vger.kernel.org>; Wed, 10 Feb 2021 20:41:04 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id y9so7926474ejp.10
+        for <linux-pci@vger.kernel.org>; Wed, 10 Feb 2021 20:41:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WXGPmEvy9dSivvx3DCUoFQtWsNlJFnP4j+gTWZ6NVsM=;
-        b=XlEkgTkWybu3asiL2QYqXomweDCDbrx9AOVOg3gCmfHOTHvu+nKO3CY0BKHRbc1gfF
-         R2DkqQJNJa0Obpt13cLimlki6C6M9iU1LNzD5ZI3GwtUziL6Gqlc0qWw3NySnJTtE63U
-         HIcGRsNx1r8ovJOpO7ixW3CU7FvSj3WrHGu+aAZLYjsw5yXKZGtMgqrwZf5ffXZwxMFG
-         ZHLRV63bSljeJt+/6Kmtt/syY+zvfNsZkjXh/wJ4YFKxD/fmERkZoBMf1VpwMAAemG04
-         7M7nLayG4NMLJXqlJL3fw4IfX2GYMSYwNdSzklZG73q6hIAsC8xuIXVz6MiTjdCkebjw
-         E4cQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sl6/My6OzOs0T7wZB4oePD5pENhmSvczhT0K8Arc7LI=;
+        b=WkyTT/tlVuOu/QtJMR4TMPtKI3ZroEdf6vo0pV6EA6pmvld9AUZh5AcBIdoQsmyy5W
+         ujhDIglIq4no4S4FnPjAJEON+41CXF/kZhVZc/Of6nBcJmH2ckxq7jFNww9nR/DwT+h/
+         8UqUiI1xPm3fisBJZevopAV8RlTeHFLm996qBPYad35tPwuvIkQ2wNljHBO7QuzsU8pl
+         m6UjMx88Bp2ax8h59hFBDU+mEcT6OxV4L26reH2yIq5jyt3ZKaGUX00yc6uufxWXKc/K
+         6TpW44YRo7+SiphYrSoLs6Eu0cjTNKyi8E8jF9IRE0pU/01y+thIBuSGcpnf168C/Bou
+         mgcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WXGPmEvy9dSivvx3DCUoFQtWsNlJFnP4j+gTWZ6NVsM=;
-        b=ZRfDN8fc58KjqD5k8mc59bmiNaiJ5ikr1JOysjVWIcbakcJLsfsZf6SuVU3oCEuS1y
-         y9WcwmqelcWuu/USCCSjFipcvf4LVlOqTmzClJZ7qd0mhVpooyp8QXpxyvlj5CvzaPPY
-         eIlLTP9RbpVBn92/W10MP7GIn+TENeWB3VZU/HNpyfT+Lm4Z1uSvJ8uSLeGX0iLzWO8a
-         s3i5hfEPcXAFIHkcy1ToPDEBx1MD7NabHilJWaWYOP9FWLaM7KOqjwQxq109kbG6C28c
-         2J6KsOnNcDl7yOYbb46km7qRVhO3pW8xaAhJAQO0vk5kyo3RSmLm2aQO17oybd2Otvqa
-         5nag==
-X-Gm-Message-State: AOAM533DXUEqEQpr11bB9vSuQlrnFe119Fj1UuqJGeU3GaP+NeX1WJsC
-        1ZvGpSeoQ8bCzVgYOC5vwZ0gNLVHkyuwxw==
-X-Google-Smtp-Source: ABdhPJw2Vv+G2hjkNsT2yfIQL84InzdFMQTtDC1sDpINbwXBPaf+WSUchuWoay1KN9SpSAG5L4TTCw==
-X-Received: by 2002:a1c:48c4:: with SMTP id v187mr1989667wma.145.1613006209013;
-        Wed, 10 Feb 2021 17:16:49 -0800 (PST)
-Received: from [192.168.2.202] (pd9e5a48d.dip0.t-ipconnect.de. [217.229.164.141])
-        by smtp.gmail.com with ESMTPSA id a84sm5847877wme.12.2021.02.10.17.16.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Feb 2021 17:16:48 -0800 (PST)
-Subject: Re: [PATCH] PCI: Run platform power transition on initial D0 entry
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-References: <20210210235749.GA617942@bjorn-Precision-5520>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <e768f68e-4f22-1b9a-e3d4-eb7dbdede58e@gmail.com>
-Date:   Thu, 11 Feb 2021 02:16:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sl6/My6OzOs0T7wZB4oePD5pENhmSvczhT0K8Arc7LI=;
+        b=H7vJKw3pVUKIKM3846B2r7NmcK8ZqY30qS7AECJ4I2EpxpU27QSdoN499gqjqrb9jc
+         Ol6y5QRt6u2t5NKciPt3djXFRTnBaZ05iAyLAJ1O0HpQYPMFnJfGAby1zm9dhgAmSosC
+         cbO2vKhEWtsG8NCYm0w00MW2jnxIqEJlPgTDZvs9/9lVW/fyVc3OZIig+fqRJdjTTnl8
+         8Fc4TZk1ql2UwFfFcCAxzAzS+M/RTcnlA6VESxMutOnvV9c85Rh27EltjmppJngdzvyC
+         HUnRVjbzH8CamVwCuwof+hyrgvKxmB8AWeTIac6Iot1Tn6FjfRvN7vEhcMAmxKrfTjt/
+         cztw==
+X-Gm-Message-State: AOAM530En6wTSd1v/IQN84ADlMbJGxNTIhOvXeQbNjQ8ZuyIfNohodJW
+        cT6Lx1mddHzeGUmatFDGyJI9LlX1NSiEe2ymQakuQA==
+X-Google-Smtp-Source: ABdhPJyqM5HE0PbHSNMhdSZjzjNWswbaPuS/dDwtU5r1wQLbe3Pkm5vgDMrXrmlgqG9PntEEBlBF3kFxRImOkT4QFcE=
+X-Received: by 2002:a17:906:78a:: with SMTP id l10mr6139548ejc.264.1613018462922;
+ Wed, 10 Feb 2021 20:41:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210210235749.GA617942@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210210000259.635748-1-ben.widawsky@intel.com>
+ <20210210000259.635748-5-ben.widawsky@intel.com> <20210210184540.00007536@Huawei.com>
+In-Reply-To: <20210210184540.00007536@Huawei.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 10 Feb 2021 20:40:52 -0800
+Message-ID: <CAPcyv4hRUB3jxdCV06y0kYMbKbGroEW6F9yOQ4KB_z6YgWBZ4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] cxl/mem: Add basic IOCTL interface
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Chris Browy <cbrowy@avery-design.com>, Christoph Hellwig
+        <hch@infradead.org>, Dan Williams <dan.j.williams@intel.com>, David
+        Hildenbrand <david@redhat.com>, David Rientjes" <rientjes@google.com>,
+        "Jon Masters <jcm@jonmasters.org>, Rafael Wysocki
+        <rafael.j.wysocki@intel.com>, Randy Dunlap" <rdunlap@infradead.org>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Dan Williams <dan.j.willams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/11/21 12:57 AM, Bjorn Helgaas wrote:
-> [+cc Rafael, linux-pm]
-> 
-> On Thu, Feb 04, 2021 at 11:06:40PM +0100, Maximilian Luz wrote:
->> On some devices and platforms, the initial platform power state is not
->> in sync with the power state of the PCI device.
->>
->> pci_enable_device_flags() updates the state of a PCI device by reading
->> from the PCI_PM_CTRL register. This may change the stored power state of
->> the device without running the appropriate platform power transition.
-> 
-> At this point in the code, setting dev->current_state based on the
-> value of PCI_PM_CTRL seems reasonable.  We're making the pci_dev state
-> match the PCI device hardware state.  This paragraph sort of implies
-> we're missing an "appropriate platform power transition" here, but I
-> don't think that's the case.
+On Wed, Feb 10, 2021 at 10:47 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+[..]
+> > +#define CXL_CMDS                                                          \
+> > +     ___C(INVALID, "Invalid Command"),                                 \
+> > +     ___C(IDENTIFY, "Identify Command"),                               \
+> > +     ___C(MAX, "Last command")
+> > +
+> > +#define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+> > +enum { CXL_CMDS };
+> > +
+> > +#undef ___C
+> > +#define ___C(a, b) { b }
+> > +static const struct {
+> > +     const char *name;
+> > +} cxl_command_names[] = { CXL_CMDS };
+> > +#undef ___C
+>
+> Unless there are going to be a lot of these, I'd just write them out long hand
+> as much more readable than the macro magic.
 
-In terms of PCI core, this is fine. But there's no attempt made at
-checking that the platform state (not the core state) is compatible with
-what we're setting here.
+This macro magic isn't new to Linux it was introduced with ftrace:
 
-So the core state is correct and shows that the device is on, but
-unfortunately there's some ACPI code out there that seems to initialize
-some ACPI power resource to a state that doesn't match this (in this
-case off). So updating the state without also making sure that the power
-resource is also updated (e.g. turned on or at least marked as turned on
-here) leaves both states to be different (emphasis on leaves, the were
-already out-of-sync before that). E.g. in my case PCI says 'on'
-(correct) and ACPI says 'off' (wrong).
+See "cpp tricks and treats": https://lwn.net/Articles/383362/
 
-The problem is that when we now later transition the device into D3cold,
-the PCI core itself will do that transition just fine, but the PCI-ACPI
-(i.e. platform) part thinks the power resource is already off and won't
-do anything. And that prevents the device from actually being turned
-off.
+>
+> enum {
+>         CXL_MEM_COMMAND_ID_INVALID,
+>         CXL_MEM_COMMAND_ID_IDENTIFY,
+>         CXL_MEM_COMMAND_ID_MAX
+> };
+>
+> static const struct {
+>         const char *name;
+> } cxl_command_names[] = {
+>         [CXL_MEM_COMMAND_ID_INVALID] = { "Invalid Command" },
+>         [CXL_MEM_COMMAND_ID_IDENTIFY] = { "Identify Comamnd" },
+>         /* I hope you never need the Last command to exist in here as that sounds like a bug */
+> };
+>
+> That's assuming I actually figured the macro fun out correctly.
+> To my mind it's worth doing this stuff for 'lots' no so much for 3.
 
-Also running pci_set_power_state(..., PCI_D0) later does not fix that
-because the PCI core (correctly) believes that the device is already on
-and just returns doing nothing. So it doesn't even attempt to check the
-platform state, which is reasonable behavior if one assumes that the
-platform state is always in sync with the PCI core state. It's just that
-here, I think, we can't assume that they're in sync (mostly because ACPI
-/ platform stuff may be weird and buggy and we may not have control over
-that).
-
-This is why I suggested replacing pci_set_power_state(dev, PCI_D0) with
-pci_power_up(dev). With PCI_D0, they essentially do the same thing,
-except for the (first) state check. Also both later call
-pci_platform_power_transition() and pci_raw_set_power_state(), which
-(should) have their individual state checks. So if the device is already
-in D0, this boils down to calling the pci_platform_power_transition()
-only.
-
-> But it would be nice if we could combine this bit from
-> pci_enable_device_flags() with the pci_set_power_state() in
-> do_pci_enable_device().
-> 
->> Due to the stored power-state being changed, the later call to
->> pci_set_power_state(..., PCI_D0) in do_pci_enable_device() can evaluate
->> to a no-op if the stored state has been changed to D0 via that. This
->> will then prevent the appropriate platform power transition to be run,
->> which can on some devices and platforms lead to platform and PCI power
->> state being entirely different, i.e. out-of-sync. On ACPI platforms,
->> this can lead to power resources not being turned on, even though they
->> are marked as required for D0.
->>
->> Specifically, on the Microsoft Surface Book 2 and 3, some ACPI power
->> regions that should be "on" for the D0 state (and others) are
->> initialized as "off" in ACPI, whereas the PCI device is in D0.
-> 
-> So some ACPI power regions are in fact "on" (because the PCI device
-> that requires them is in D0), but the ACPI core believes them to be
-> "off" (or probably "unknown, treated as 'off'")?
-
-Yes, that's pretty much it.
-
-The problem I'm dealing with specifically is caused by the ACPI code in
-[1]. There, _STA gets initialized to 'off' and is only updated when the
-power transitions run (i.e. the _ON or _OFF methods). There's nothing in
-this ACPI code that checks the actual state of the PCI device, which
-causes this problem. So, to me, it seems that this code is expecting the
-_ON method to be called in PCI bring-up.
-
-[1]: https://github.com/linux-surface/acpidumps/blob/1ed05b95df844534229f752ea2267c8dd8ae7f8c/surface_book_2/dsdt.dsl#L19170-L19225
-
->> As the
->> state is updated in pci_enable_device_flags() without ensuring that the
->> platform state is also updated, the power resource will never be
->> properly turned on. Instead, it lives in a sort of on-but-marked-as-off
->> zombie-state, which confuses things down the line when attempting to
->> transition the device into D3cold: As the resource is already marked as
->> off, it won't be turned off and the device does not fully enter D3cold,
->> causing increased power consumption during (runtime-)suspend.
->>
->> By replacing pci_set_power_state() in do_pci_enable_device() with
->> pci_power_up(), we can force pci_platform_power_transition() to be
->> called, which will then check if the platform power state needs updating
->> and appropriate actions need to be taken.
->>
->> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> 
-> I added Rafael & linux-pm because he should chime in here.
-> 
->> ---
->>
->> I'm not entirely sure if this is the best way to do this, so I'm open to
->> alternatives. In a previous version of this, I've tried to run the
->> platform/ACPI transition directly after the pci_read_config_word() in
->> pci_enable_device_flags(), however, that caused some regression in
->> intel-lpss-pci, specifically that then had trouble accessing its config
->> space for initial setup.
->>
->> This version has been tested for a while now on [1/2] without any
->> complaints. As this essentially only drops the initial are-we-already-
->> in-that-state-check, I don't expect any issues to be caused by that.
->>
->> [1]: https://github.com/linux-surface/linux-surface
->> [2]: https://github.com/linux-surface/kernel
->>
->> ---
->>   drivers/pci/pci.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index b9fecc25d213..eb778e80d8cf 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1802,7 +1802,7 @@ static int do_pci_enable_device(struct pci_dev *dev, int bars)
->>   	u16 cmd;
->>   	u8 pin;
->>   
->> -	err = pci_set_power_state(dev, PCI_D0);
->> +	err = pci_power_up(dev);
->>   	if (err < 0 && err != -EIO)
->>   		return err;
->>   
->> -- 
->> 2.30.0
->>
+The list will continue to expand, and it eliminates the "did you
+remember to update cxl_command_names" review burden permanently.
