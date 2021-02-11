@@ -2,175 +2,502 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 923A7319154
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 18:43:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAAB8319181
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 18:51:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231778AbhBKRnm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 12:43:42 -0500
-Received: from mail-eopbgr1410134.outbound.protection.outlook.com ([40.107.141.134]:35872
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232478AbhBKRlZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Feb 2021 12:41:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XB5jCOnNSTXknd59LOc1pjTPw5OT0nbepGx/zy/exYgQR8zBU9k6l3otdhNWy/UD+DcDVjIJ6alzvO0bsP1L0cYT0CEuXGXjh/bExb5FsRyIKE0C7MZjvW9TFsbQUxdmA7QjSdmbtwa36Q+3zxnrimcE6JnWArEegHtmv+NLVDkhguNewq0I0TrkqV9sFMTBe5kVagLTR6XoAIK5mDHPUR3BOyxUIFH039NMgTZJg6TN3CKaLCsL3npumobxWajM68sVf3outpbK6U3yDda9VqRSP6pkAZ8w4fVqivE8jwTaIluPhpd7iDUKcIdiX4/OtL2dZDhI8uCevv9ZByoIlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w7YZQYVIyh24t8bdjdCtmIfO/Azvg4xdjfdELiKyboA=;
- b=KPFlwwx942xwd2HxuC2dufyabj2VhAnSJZhFeFHZgaJYWkW2bldWAgLCR1dR61c7kXxRApvj5IsQnhbBcYMJqAkmdFTlGgzdHcC581S8uz2W+y8ZxrcIsa60WXIlppX86fdg5RLNkRU5ozLgLUxdP8Jlz7l0T+rCsgReFLCtd0bUm6ph7MW1WMTKHVVY/VvQwN+sTJ9aeQp29frpAQKtb46WRiJjdEKzeqPMqt5dw4JhZZ9F8uaJKzdj0Eoc4+uUTRPqZNsqFQukVYQQTPxKQ5cIDnGqwEnxcZ2rJxSrntAbTprUpqI9kUxnwgx3MFWa6Rahc6T2eQ5zeV6uV5Bzaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w7YZQYVIyh24t8bdjdCtmIfO/Azvg4xdjfdELiKyboA=;
- b=Te+mQ/Vrimf05WTOQij8Ge0VuvHL9Dh0KDt9IaeJ93gNFYgNk0IBUY9kqM74TsmAkefUmC8v8uuRNZKQECGWGukTWFiR3ZW6Q4UoZm9IL/Ow3h9let1qFpGU8rZMb99LtHH7H0n2W/tmIPQ3ce0VoMhtl32kSHNJpvgyWZgj5v4=
-Received: from OSBPR01MB5048.jpnprd01.prod.outlook.com (2603:1096:604:38::10)
- by OS3PR01MB5959.jpnprd01.prod.outlook.com (2603:1096:604:d9::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27; Thu, 11 Feb
- 2021 17:40:34 +0000
-Received: from OSBPR01MB5048.jpnprd01.prod.outlook.com
- ([fe80::e003:e079:b89f:bd1c]) by OSBPR01MB5048.jpnprd01.prod.outlook.com
- ([fe80::e003:e079:b89f:bd1c%4]) with mapi id 15.20.3825.030; Thu, 11 Feb 2021
- 17:40:34 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: RE: [RESEND PATCH v2] dt-bindings: pci: rcar-pci-ep: Document r8a7795
-Thread-Topic: [RESEND PATCH v2] dt-bindings: pci: rcar-pci-ep: Document
- r8a7795
-Thread-Index: AQHW/rgeFwFhkw21AEqr4tQ0wJriBapTO+Rg
-Date:   Thu, 11 Feb 2021 17:40:33 +0000
-Message-ID: <OSBPR01MB5048D7B1E77A84BE53EB3692AA8C9@OSBPR01MB5048.jpnprd01.prod.outlook.com>
-References: <20210209074840.21254-1-yuya.hamamachi.sx@renesas.com>
-In-Reply-To: <20210209074840.21254-1-yuya.hamamachi.sx@renesas.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: renesas.com; dkim=none (message not signed)
- header.d=none;renesas.com; dmarc=none action=none header.from=bp.renesas.com;
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8f4cbf74-8659-4e58-8b10-08d8ceb422a8
-x-ms-traffictypediagnostic: OS3PR01MB5959:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OS3PR01MB59594954A36E28B998E78E8AAA8C9@OS3PR01MB5959.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bTsZCxAVKbuU+XsD9Ez0O3XPnlO7m9JQVJXm+paF3zEXhZKl0DbUnZ3aWxj0shEHvmRZ4UeTASgPHBoRbSpdCwiCf8mMMrWolxPVYxDnYGZRjbmnVZpxDdsKHjpLmXM4n5fAgiU9RBce5GA5odziPWR3P1bYjB6td7E4vfTnEV91yHW+PXmpw4c0wFane+JcjQaQL3DSfVBsLnkinnzoLy5bhhmjwrOeXBEElNpRuStMXbAEwrQQFuBb43AUdCypex5/GJqbm65hT+sOImqNXNpkci72Q4g1EDQocNT8OFBYN6Md/2KEPfUnhVmrzWKU8ZSggmC25ZnkZt9xCLK3Qx7FSxaY8WlwA7Csaz44vs9RdZRhphyDxIeeHSyKT+L7thUbULEu810uUzbP+eIYakBM0NGGbbuGbUYOcU2OeOEJ6Ch724AA/8kvW8eQEG1vpiHlI/XK3iXdWUZmqsoQfoqizvenOqbyMvA/1/EIUdnbOmTqwxYNFxVe1yt0z61rqteTAdLNFWslTrYYBfNn5lv2yS4Ip0hqJ/1EfqHnSe+ys88ndGCjpPidaLs99U/WJ6rBEs/YIw+rRDobZt18R6W74CtAZBzGMKLFteojCyk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB5048.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(366004)(346002)(39860400002)(396003)(478600001)(45080400002)(66946007)(186003)(53546011)(7696005)(86362001)(6506007)(26005)(33656002)(8936002)(64756008)(71200400001)(8676002)(2906002)(83380400001)(66556008)(76116006)(66476007)(66446008)(110136005)(55016002)(9686003)(316002)(52536014)(966005)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?kY8qnnH90DieL5r9efa/Yg7Q8JfW9n8aOv2laLAL2bzGJ4N+lqsV94+fctRb?=
- =?us-ascii?Q?QTwENSeSleVcgb+zC/jyUyzXmDSldfBjS2n8DnOOGzrJ+mrS4LS+rZRTZ01w?=
- =?us-ascii?Q?BB09JsRT6jPY2wRBGCfZEWiPsmxFry1tfVZXUgkiBPbUHfQbEi5Bncm4A97a?=
- =?us-ascii?Q?LEja0MPkKhKEYbORKD3xNwCEjryuiExcbz6zhXgFZgWlBDGlspbYcJ4EBkwY?=
- =?us-ascii?Q?be7CqDvqErzEotQwtSQAIo0QUtKXpelD6Is20fTBim+rd6YVd5kn8WX97T1V?=
- =?us-ascii?Q?ZaZ8dVFCGkIT7dYiB5sfXNtzjVFqdMDWmodu0LIIywABZmg6SwE4YUXqEttN?=
- =?us-ascii?Q?Eq1T/4ZzNs3jqvOB49jADLi5QEy0zK3R0iAuMwDSvEKUvNtXk1g6BV3rrkP+?=
- =?us-ascii?Q?88nGtInnZCGdtBDGuKv1Dc7V9+7i1+CoVJVnZ1m8EaZGBfe37mIYAHUlehpQ?=
- =?us-ascii?Q?8lFk3JimCHbWjGDIgDBpq2Q9sMpfQLrYW8fWa4Y8BY89lXjSUcAHryAQTSJG?=
- =?us-ascii?Q?tD88T3O7+vvSSrJVCGAVcHRIU9F2rPECW71Cd4YBiam7mj5rVJfNyd1QSI2b?=
- =?us-ascii?Q?eq2prLiubVWkqYkl0rvB6n8PEDXjgT1L18qL8N/ndRoGdVLSyDWbOJnw7Ig+?=
- =?us-ascii?Q?ZvkBftQd50BFhoZmqO58xSHHZlssW9zeHdWfRfRQpcD4lC3WIOVLvK1l/b0c?=
- =?us-ascii?Q?kDWK8w1np071B8MRT8X/ABDj8N5qUrBE1lsEDo/ticnNhAfrnhMy5QdiHMQI?=
- =?us-ascii?Q?0NXkuFd22n2ReiT++8CynWdQH87rwZJPUVZLBJL9s0Inzd8Z9FXmgQtuPDKC?=
- =?us-ascii?Q?tcAbYSFlSeFRs8J1aBcip1mgYaEbXe1zAvRY6SuXS/qHsC8dynfgYJuyZzNy?=
- =?us-ascii?Q?j7oAPVW8rEglAXmImqDfUUdHqwGigssoEYhneFvjYDHSpP4p0eDO9hZRnHcY?=
- =?us-ascii?Q?nPZD3D6p7tahYjKh02GFSLIwUBDphvkCp3rqHl326ViNvpmHmGWKd87AFHot?=
- =?us-ascii?Q?35QfK4elMERcpfr6STpzWQLktn8beAC6knlthgG06BW8RgLSsMc5lSa3XgjT?=
- =?us-ascii?Q?/My2oSuPc+qHyFdMUi5sGULxn4lxp+zAsiKIhvLEbOYDvC/m4M48CBdr3Hvy?=
- =?us-ascii?Q?7AWVdUeBSzKSm/tUwkLVuF41h+OMqls2PqxL84qnZ/dobFbe40TQ+m0OsxCt?=
- =?us-ascii?Q?YQCUgLvGBI5tgmCZ9h6pMrpCC1y+faExHuB5xG6pRNrywoRq4oB0lqRimtJg?=
- =?us-ascii?Q?MzUaI93rTxEbyovzOI2W4bgSZYrKRNj5777uWutGL3LFVrUQXqKwzyoUjNjO?=
- =?us-ascii?Q?pmmzg6R2O6eBfo9rvXzKY8cI?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S231364AbhBKRt0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 12:49:26 -0500
+Received: from mga02.intel.com ([134.134.136.20]:4486 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232439AbhBKRrM (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Feb 2021 12:47:12 -0500
+IronPort-SDR: qUpi0zZKvC5FoKNmoa3V5m8MSZpe7qKRGaqF5UQfJjE2zJXDT1PIfggQkBEDQW/oIrgSapghX2
+ 1y91HfUYxB4g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9892"; a="169412235"
+X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
+   d="scan'208";a="169412235"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 09:45:04 -0800
+IronPort-SDR: rDvZwF3246golPewl0O+aInDBwt8buurES4YPGm0Tx5j1HN2Y+HFXejnwAd8JPufiXP/YUTBQA
+ NY9CeC2oZJfg==
+X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
+   d="scan'208";a="510924079"
+Received: from reknight-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.134.254])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 09:45:03 -0800
+Date:   Thu, 11 Feb 2021 09:45:02 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: Re: [PATCH v2 6/8] cxl/mem: Enable commands via CEL
+Message-ID: <20210211174502.72thmdqlh2q5tdu3@intel.com>
+References: <20210210000259.635748-1-ben.widawsky@intel.com>
+ <20210210000259.635748-7-ben.widawsky@intel.com>
+ <20210211120215.00007d3d@Huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB5048.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f4cbf74-8659-4e58-8b10-08d8ceb422a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2021 17:40:34.0123
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Mb9Bg2zeUuJV/PvdK1ahlvMCm90UQ8usg9FsqU5Ya9wb0bl12le9azktJpuaszX21tK5zNPa79JAFS93K4OXY7M938aSXR36iVjxREa8LQYnVORO285GC6AgMKIt13AM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB5959
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210211120215.00007d3d@Huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Hamamachi-san,
+On 21-02-11 12:02:15, Jonathan Cameron wrote:
+> On Tue, 9 Feb 2021 16:02:57 -0800
+> Ben Widawsky <ben.widawsky@intel.com> wrote:
+> 
+> > CXL devices identified by the memory-device class code must implement
+> > the Device Command Interface (described in 8.2.9 of the CXL 2.0 spec).
+> > While the driver already maintains a list of commands it supports, there
+> > is still a need to be able to distinguish between commands that the
+> > driver knows about from commands that are optionally supported by the
+> > hardware.
+> > 
+> > The Command Effects Log (CEL) is specified in the CXL 2.0 specification.
+> > The CEL is one of two types of logs, the other being vendor specific.
+> 
+> I'd say "vendor specific debug" just so that no one thinks it has anything
+> to do with the rest of this description (which mentioned vendor specific
+> commands).
+> 
+> > They are distinguished in hardware/spec via UUID. The CEL is useful for
+> > 2 things:
+> > 1. Determine which optional commands are supported by the CXL device.
+> > 2. Enumerate any vendor specific commands
+> > 
+> > The CEL is used by the driver to determine which commands are available
+> > in the hardware and therefore which commands userspace is allowed to
+> > execute. The set of enabled commands might be a subset of commands which
+> > are advertised in UAPI via CXL_MEM_SEND_COMMAND IOCTL.
+> > 
+> > The implementation leaves the statically defined table of commands and
+> > supplements it with a bitmap to determine commands that are enabled.
+> > This organization was chosen for the following reasons:
+> > - Smaller memory footprint. Doesn't need a table per device.
+> > - Reduce memory allocation complexity.
+> > - Fixed command IDs to opcode mapping for all devices makes development
+> >   and debugging easier.
+> > - Certain helpers are easily achievable, like cxl_for_each_cmd().
+> > 
+> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  drivers/cxl/cxl.h            |   2 +
+> >  drivers/cxl/mem.c            | 216 +++++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/cxl_mem.h |   1 +
+> >  3 files changed, 219 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index b3c56fa6e126..9a5e595abfa4 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -68,6 +68,7 @@ struct cxl_memdev;
+> >   *                (CXL 2.0 8.2.8.4.3 Mailbox Capabilities Register)
+> >   * @mbox_mutex: Mutex to synchronize mailbox access.
+> >   * @firmware_version: Firmware version for the memory device.
+> > + * @enabled_commands: Hardware commands found enabled in CEL.
+> >   * @pmem: Persistent memory capacity information.
+> >   * @ram: Volatile memory capacity information.
+> >   */
+> > @@ -83,6 +84,7 @@ struct cxl_mem {
+> >  	size_t payload_size;
+> >  	struct mutex mbox_mutex; /* Protects device mailbox and firmware */
+> >  	char firmware_version[0x10];
+> > +	unsigned long *enabled_cmds;
+> >  
+> >  	struct {
+> >  		struct range range;
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index 6d766a994dce..e9aa6ca18d99 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -45,6 +45,8 @@ enum opcode {
+> >  	CXL_MBOX_OP_INVALID		= 0x0000,
+> >  	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
+> >  	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
+> > +	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
+> > +	CXL_MBOX_OP_GET_LOG		= 0x0401,
+> >  	CXL_MBOX_OP_IDENTIFY		= 0x4000,
+> >  	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
+> >  	CXL_MBOX_OP_SET_LSA		= 0x4103,
+> > @@ -103,6 +105,19 @@ static DEFINE_IDA(cxl_memdev_ida);
+> >  static struct dentry *cxl_debugfs;
+> >  static bool raw_allow_all;
+> >  
+> > +enum {
+> > +	CEL_UUID,
+> > +	VENDOR_DEBUG_UUID
+> 
+> Who wants to take a bet this will get extended at somepoint in the future?
+> Add a trailing comma to make that less noisy.
+> 
+> They would never have used a UUID if this wasn't expected to expand.
+> CXL spec calls out that "The following Log Identifier UUIDs are defined in _this_
+> specification" rather implying other specs may well define more.
+> Fun for the future!
+> 
+> > +};
+> > +
+> > +/* See CXL 2.0 Table 170. Get Log Input Payload */
+> > +static const uuid_t log_uuid[] = {
+> > +	[CEL_UUID] = UUID_INIT(0xda9c0b5, 0xbf41, 0x4b78, 0x8f, 0x79, 0x96,
+> > +			       0xb1, 0x62, 0x3b, 0x3f, 0x17),
+> > +	[VENDOR_DEBUG_UUID] = UUID_INIT(0xe1819d9, 0x11a9, 0x400c, 0x81, 0x1f,
+> > +					0xd6, 0x07, 0x19, 0x40, 0x3d, 0x86)
+> 
+> likewise on trailing comma
+> 
+> > +};
+> > +
+> >  /**
+> >   * struct cxl_mem_command - Driver representation of a memory device command
+> >   * @info: Command information as it exists for the UAPI
+> > @@ -111,6 +126,8 @@ static bool raw_allow_all;
+> >   *
+> >   *  * %CXL_CMD_FLAG_MANDATORY: Hardware must support this command. This flag is
+> >   *    only used internally by the driver for sanity checking.
+> > + *  * %CXL_CMD_INTERNAL_FLAG_PSEUDO: This is a pseudo command which doesn't have
+> > + *    a direct mapping to hardware. They are implicitly always enabled.
+> 
+> Stale comment?
+> 
+> >   *
+> >   * The cxl_mem_command is the driver's internal representation of commands that
+> >   * are supported by the driver. Some of these commands may not be supported by
+> > @@ -146,6 +163,7 @@ static struct cxl_mem_command mem_commands[] = {
+> >  #ifdef CONFIG_CXL_MEM_RAW_COMMANDS
+> >  	CXL_CMD(RAW, NONE, ~0, ~0),
+> >  #endif
+> > +	CXL_CMD(GET_SUPPORTED_LOGS, NONE, 0, ~0),
+> >  };
+> >  
+> >  /*
+> > @@ -627,6 +645,10 @@ static int cxl_validate_cmd_from_user(struct cxl_mem *cxlm,
+> >  	c = &mem_commands[send_cmd->id];
+> >  	info = &c->info;
+> >  
+> > +	/* Check that the command is enabled for hardware */
+> > +	if (!test_bit(info->id, cxlm->enabled_cmds))
+> > +		return -ENOTTY;
+> > +
+> >  	if (info->flags & CXL_MEM_COMMAND_FLAG_KERNEL)
+> >  		return -EPERM;
+> >  
+> > @@ -869,6 +891,14 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
+> >  	mutex_init(&cxlm->mbox_mutex);
+> >  	cxlm->pdev = pdev;
+> >  	cxlm->regs = regs + offset;
+> > +	cxlm->enabled_cmds =
+> > +		devm_kmalloc_array(dev, BITS_TO_LONGS(cxl_cmd_count),
+> > +				   sizeof(unsigned long),
+> > +				   GFP_KERNEL | __GFP_ZERO);
+> 
+> Hmm. There doesn't seem to be a devm_bitmap_zalloc
+> 
+> Embarrassingly one of the google hits on the topic is me suggesting
+> this in a previous review (that I'd long since forgotten)
+> 
+> Perhaps one for a refactoring patch after this lands.
+> 
+> 
+> > +	if (!cxlm->enabled_cmds) {
+> > +		dev_err(dev, "No memory available for bitmap\n");
+> > +		return NULL;
+> > +	}
+> >  
+> >  	dev_dbg(dev, "Mapped CXL Memory Device resource\n");
+> >  	return cxlm;
+> > @@ -1088,6 +1118,188 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+> >  	return rc;
+> >  }
+> >  
+> > +struct cxl_mbox_get_log {
+> > +	uuid_t uuid;
+> > +	__le32 offset;
+> > +	__le32 length;
+> > +} __packed;
+> > +
+> > +static int cxl_xfer_log(struct cxl_mem *cxlm, uuid_t *uuid, u32 size, u8 *out)
+> > +{
+> > +	u32 remaining = size;
+> > +	u32 offset = 0;
+> > +
+> > +	while (remaining) {
+> > +		u32 xfer_size = min_t(u32, remaining, cxlm->payload_size);
+> > +		struct cxl_mbox_get_log log = {
+> > +			.uuid = *uuid,
+> > +			.offset = cpu_to_le32(offset),
+> > +			.length = cpu_to_le32(xfer_size)
+> > +		};
+> > +		struct mbox_cmd mbox_cmd = {
+> > +			.opcode = CXL_MBOX_OP_GET_LOG,
+> > +			.payload_in = &log,
+> > +			.payload_out = out,
+> > +			.size_in = sizeof(log),
+> > +		};
+> > +		int rc;
+> > +
+> > +		rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> > +		if (rc)
+> > +			return rc;
+> > +
+> > +		WARN_ON(mbox_cmd.size_out != xfer_size);
+> 
+> Just for completeness (as already addressed in one of Ben's replies
+> to earlier patch) this is missing handling for the return code.
+> 
+> > +
+> > +		out += xfer_size;
+> > +		remaining -= xfer_size;
+> > +		offset += xfer_size;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static inline struct cxl_mem_command *cxl_mem_find_command(u16 opcode)
+> > +{
+> > +	struct cxl_mem_command *c;
+> > +
+> > +	cxl_for_each_cmd(c)
+> > +		if (c->opcode == opcode)
+> > +			return c;
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +static void cxl_enable_cmd(struct cxl_mem *cxlm,
+> > +			   const struct cxl_mem_command *cmd)
+> > +{
+> > +	if (test_and_set_bit(cmd->info.id, cxlm->enabled_cmds))
+> > +		dev_WARN_ONCE(&cxlm->pdev->dev, true, "cmd enabled twice\n");
+> > +}
+> > +
+> > +/**
+> > + * cxl_walk_cel() - Walk through the Command Effects Log.
+> > + * @cxlm: Device.
+> > + * @size: Length of the Command Effects Log.
+> > + * @cel: CEL
+> > + *
+> > + * Iterate over each entry in the CEL and determine if the driver supports the
+> > + * command. If so, the command is enabled for the device and can be used later.
+> > + */
+> > +static void cxl_walk_cel(struct cxl_mem *cxlm, size_t size, u8 *cel)
+> > +{
+> > +	struct cel_entry {
+> > +		__le16 opcode;
+> > +		__le16 effect;
+> > +	} *cel_entry;
+> 
+> Driver is currently marking a bunch of other structures packed that don't
+> need it. Perhaps do this one as well for consistency?
+> 
 
-Thank you for the patch.
+Just for my memory later...
+I don't actually recall the history here. I had no intention originally to use
+__packed, but they just kind of got in there, and it doesn't really hurt so
+we've left them.
 
-> -----Original Message-----
-> From: Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
-> Sent: 09 February 2021 07:49
-> To: linux-pci@vger.kernel.org; linux-renesas-soc@vger.kernel.org; devicet=
-ree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; marek.vasut+renesas@gmail.com; Yoshihiro Shimoda
-> <yoshihiro.shimoda.uh@renesas.com>; bhelgaas@google.com; robh+dt@kernel.o=
-rg; Prabhakar Mahadev Lad
-> <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Subject: [RESEND PATCH v2] dt-bindings: pci: rcar-pci-ep: Document r8a779=
-5
->=20
-> Document the support for R-Car PCIe EP on R8A7795 SoC device.
->=20
-> Signed-off-by: Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Changes from v1:
-> - Add Geert-san's Reviewed-by.
-> -
-> https://jpn01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch=
-work.kernel.org%2Fproject%2Flin
-> ux-renesas-soc%2Fpatch%2F20201125073303.19057-2-
-> yuya.hamamachi.sx%40renesas.com%2F&amp;data=3D04%7C01%7Cprabhakar.mahadev=
--
-> lad.rj%40bp.renesas.com%7C11d21066f9f74148fef308d8cccf3fad%7C53d82571da19=
-47e49cb4625a166a4a2a%7C0%7C0%
-> 7C637484537803337191%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi=
-V2luMzIiLCJBTiI6Ik1haWwiLCJXV
-> CI6Mn0%3D%7C1000&amp;sdata=3DP6YQgQkwjcVeRgJk3zST5ijphgyFw8iZsvwA2YOUpq0%=
-3D&amp;reserved=3D0
->=20
->  Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-Acked-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+There are a few CXL structures which need packed (which is unfortunate), but
+this isn't one of them.
 
-Cheers,
-Prabhakar
+> > +	const int cel_entries = size / sizeof(*cel_entry);
+> > +	int i;
+> > +
+> > +	cel_entry = (struct cel_entry *)cel;
+> > +
+> > +	for (i = 0; i < cel_entries; i++) {
+> > +		const struct cel_entry *ce = &cel_entry[i];
+> 
+> Given ce is only ever used to get the ce->opcode maybe better using that
+> as the local variable?
+> 
+> 		u16 opcode = le16_to_cpu(cel_entry[i].opcode)
+> 
+> Obviously that might change depending on later patches though.
+> 
 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> index 84eeb7fe6e01..fb97f4ea0e63 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> @@ -19,6 +19,7 @@ properties:
->            - renesas,r8a774b1-pcie-ep     # RZ/G2N
->            - renesas,r8a774c0-pcie-ep     # RZ/G2E
->            - renesas,r8a774e1-pcie-ep     # RZ/G2H
-> +          - renesas,r8a7795-pcie-ep      # R-Car H3
->        - const: renesas,rcar-gen3-pcie-ep # R-Car Gen3 and RZ/G2
->=20
->    reg:
-> --
-> 2.25.1
+Thanks. I did this and got rid of the const below and was able to remove the
+line split below.
 
+You'll learn I'm a little const-happy.
+
+> 
+> > +		const struct cxl_mem_command *cmd =
+> > +			cxl_mem_find_command(le16_to_cpu(ce->opcode));
+> > +
+> > +		if (!cmd) {
+> > +			dev_dbg(&cxlm->pdev->dev, "Unsupported opcode 0x%04x",
+> 
+> Unsupported by who? (driver rather than hardware)
+> 
+> > +				le16_to_cpu(ce->opcode));
+> > +			continue;
+> > +		}
+> > +
+> > +		cxl_enable_cmd(cxlm, cmd);
+> > +	}
+> > +}
+> > +
+> > +/**
+> > + * cxl_mem_enumerate_cmds() - Enumerate commands for a device.
+> > + * @cxlm: The device.
+> > + *
+> > + * Returns 0 if enumerate completed successfully.
+> > + *
+> > + * CXL devices have optional support for certain commands. This function will
+> > + * determine the set of supported commands for the hardware and update the
+> > + * enabled_cmds bitmap in the @cxlm.
+> > + */
+> > +static int cxl_mem_enumerate_cmds(struct cxl_mem *cxlm)
+> > +{
+> > +	struct device *dev = &cxlm->pdev->dev;
+> > +	struct cxl_mbox_get_supported_logs {
+> > +		__le16 entries;
+> > +		u8 rsvd[6];
+> > +		struct gsl_entry {
+> > +			uuid_t uuid;
+> > +			__le32 size;
+> > +		} __packed entry[2];
+> > +	} __packed gsl;
+> > +	struct mbox_cmd mbox_cmd = {
+> > +		.opcode = CXL_MBOX_OP_GET_SUPPORTED_LOGS,
+> > +		.payload_out = &gsl,
+> > +		.size_in = 0,
+> > +	};
+> > +	int i, rc;
+> > +
+> > +	rc = cxl_mem_mbox_get(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
+> > +	if (rc)
+> > +		goto out;
+> > +
+> > +	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS) {
+> > +		rc = -ENXIO;
+> > +		goto out;
+> > +	}
+> > +
+> > +	if (mbox_cmd.size_out > sizeof(gsl)) {
+> > +		dev_warn(dev, "%zu excess logs\n",
+> > +			 (mbox_cmd.size_out - sizeof(gsl)) /
+> > +				 sizeof(struct gsl_entry));
+> 
+> This could well happen given spec seems to allow for other
+> entries defined by other specs.
+
+Interesting. When I read the spec before (multiple times) I was certain it said
+other UUIDs aren't allowed. You're correct though that the way it is worded,
+this is a bad check. AIUI, the spec permits any UUID and as such I think we
+should remove tainting for unknown UUIDs. Let me put the exact words:
+
+Table 169 & 170
+"Log Identifier: UUID representing the log to retrieve data for. The following
+ Log Identifier UUIDs are defined in this specification"
+
+To me this implies UUIDs from other (not "this") specifications are permitted.
+
+Dan, I'd like your opinion here. I'm tempted to change the current WARN to a
+dev_dbg or somesuch.
+
+> 
+> Note that it's this path that I mentioned earlier as requiring we sanity
+> check the output size available before calling mempcy_fromio into it
+> with the hardware supported size.
+
+Since posting, I've already reworked this somewhat based on the other changes
+and it should be safe now.
+
+
+> 
+> 
+> > +	}
+> > +
+> > +	for (i = 0; i < le16_to_cpu(gsl.entries); i++) {
+> > +		u32 size = le32_to_cpu(gsl.entry[i].size);
+> > +		uuid_t uuid = gsl.entry[i].uuid;
+> > +		u8 *log;
+> > +
+> > +		dev_dbg(dev, "Found LOG type %pU of size %d", &uuid, size);
+> > +
+> > +		if (!uuid_equal(&uuid, &log_uuid[CEL_UUID]))
+> > +			continue;
+> > +
+> > +		/*
+> > +		 * It's a hardware bug if the log size is less than the input
+> > +		 * payload size because there are many mandatory commands.
+> > +		 */
+> > +		if (sizeof(struct cxl_mbox_get_log) > size) {
+> 
+> If you are going to talk about less than in the comment, I'd flip the condition
+> around so it lines up. Trivial obviously but nice to tidy up.
+> 
+> > +			dev_err(dev, "CEL log size reported was too small (%d)",
+> > +				size);
+> > +			rc = -ENOMEM;
+> > +			goto out;
+> > +		}
+> > +
+> > +		log = kvmalloc(size, GFP_KERNEL);
+> > +		if (!log) {
+> > +			rc = -ENOMEM;
+> > +			goto out;
+> > +		}
+> > +
+> > +		rc = cxl_xfer_log(cxlm, &uuid, size, log);
+> > +		if (rc) {
+> > +			kvfree(log);
+> > +			goto out;
+> > +		}
+> > +
+> > +		cxl_walk_cel(cxlm, size, log);
+> > +		kvfree(log);
+> > +	}
+> > +
+> > +out:
+> > +	cxl_mem_mbox_put(cxlm);
+> > +	return rc;
+> > +}
+> > +
+> >  /**
+> >   * cxl_mem_identify() - Send the IDENTIFY command to the device.
+> >   * @cxlm: The device to identify.
+> > @@ -1211,6 +1423,10 @@ static int cxl_mem_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > +	rc = cxl_mem_enumerate_cmds(cxlm);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> >  	rc = cxl_mem_identify(cxlm);
+> >  	if (rc)
+> >  		return rc;
+> > diff --git a/include/uapi/linux/cxl_mem.h b/include/uapi/linux/cxl_mem.h
+> > index 72d1eb601a5d..c5e75b9dad9d 100644
+> > --- a/include/uapi/linux/cxl_mem.h
+> > +++ b/include/uapi/linux/cxl_mem.h
+> > @@ -23,6 +23,7 @@
+> >  	___C(INVALID, "Invalid Command"),                                 \
+> >  	___C(IDENTIFY, "Identify Command"),                               \
+> >  	___C(RAW, "Raw device command"),                                  \
+> > +	___C(GET_SUPPORTED_LOGS, "Get Supported Logs"),                   \
+> >  	___C(MAX, "Last command")
+> >  
+> >  #define ___C(a, b) CXL_MEM_COMMAND_ID_##a
+> 
