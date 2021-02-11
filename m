@@ -2,182 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0E3B3189B7
+	by mail.lfdr.de (Postfix) with ESMTP id 027A53189B6
 	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 12:47:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbhBKLn6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 06:43:58 -0500
-Received: from mga05.intel.com ([192.55.52.43]:25159 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231157AbhBKLlu (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Feb 2021 06:41:50 -0500
-IronPort-SDR: n8BL/aUGguU9epXZl2vi8ZILgCIXsr+Em1KsX6BNJpJ0NkBRSsMOXJmpbKTelJ/H7PLcr174G6
- 56eZCkUR7DKA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="267068026"
-X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="267068026"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 03:39:48 -0800
-IronPort-SDR: H4pUb/sNT5P4+5pxnOQaim8PI+F3swEsk366x71JUt/0t0kV+MyPrj6gTGJUy5SiHLlEzeBkZN
- XyAb9Heu/J8A==
-X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="380566784"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 03:39:44 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 11 Feb 2021 13:39:41 +0200
-Date:   Thu, 11 Feb 2021 13:39:41 +0200
-From:   "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-To:     Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Cc:     "David.Laight@aculab.com" <David.Laight@aculab.com>,
-        "christian@kellner.me" <christian@kellner.me>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "YehezkelShB@gmail.com" <YehezkelShB@gmail.com>,
-        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "linux@yadro.com" <linux@yadro.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "sr@denx.de" <sr@denx.de>, "lukas@wunner.de" <lukas@wunner.de>,
-        "andy.lavr@gmail.com" <andy.lavr@gmail.com>
-Subject: Re: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
-Message-ID: <20210211113941.GF2542@lahna.fi.intel.com>
-References: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
- <20210128145316.GA3052488@bjorn-Precision-5520>
- <20210128203929.GB6613@wunner.de>
- <20210201125523.GN2542@lahna.fi.intel.com>
- <44ce19d112b97930b1a154740c2e15f3f2d10818.camel@yadro.com>
- <20210204104912.GE2542@lahna.fi.intel.com>
- <afc5d363476d445cfdf04b0ec4db9275db803af3.camel@yadro.com>
+        id S229906AbhBKLnt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 06:43:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231186AbhBKLks (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 06:40:48 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B23C061756
+        for <linux-pci@vger.kernel.org>; Thu, 11 Feb 2021 03:40:07 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id j11so5242315wmi.3
+        for <linux-pci@vger.kernel.org>; Thu, 11 Feb 2021 03:40:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=tohq/JdjtvfZAdF0OwFagBaJvOCASM9Lm+6u557MXjU=;
+        b=jZncg4+OXDdQ5q77dwIRHbggDnfB06LDmsbCk5upxPGhtffhotOMwIqK1O8T7B8hQt
+         9VA9VJSW61VKy0oqGxmTVL2/0OMvbIJa7tncMhXCtgcgVHcizN5iPYqNNKVSkBnESbXp
+         EP68F/9S+Ns61exdSbpanlq8Qj5LlUlGlMll+9ActU7xIAzQgDpj6prbBRYf9bqocqKT
+         o4Q7d/hwclN8w2gg5mptmvGnFU/GMkaxz81vym5PTZRJbbmq3uTRfWdCBnmvnrZDODgt
+         ogJ9MwhDKSSRjceWYLdSLQ3QEHERllMzCykpYjBu8JT9sFvcn71BJEdTNtvWwsGzNAvb
+         vGWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=tohq/JdjtvfZAdF0OwFagBaJvOCASM9Lm+6u557MXjU=;
+        b=KC9xbuesGGOtZJHRlfx7z83MfidZcSm46PFf7J7cFTo2jEHp1o2EC470SgBeYPQ6Lz
+         zmM+KG3Gv7AQ3rePHQbLsh/mXlP4xcNOoc42XLUOdytvY0ok/oP41AyllCSSNG7cSaWd
+         iBUF/MFwXmBqnUxQoGaZfjIu13dtp3lfzokrGokHqasAc7HajOI3KQ6FEDIvDefwEy+w
+         6IeaJR+kU57qQDK6OwTFInYC4LOA9oMYdlo9ePgzhBDGxzyhQKvXGbQflNZ/fjAQX4+Y
+         hXBv8hIdvRLIZQkCZxEk94dRTA2mruMBs/gZVJ6908HYzUXDau5V0MQuxodyyiZ6ckHw
+         DlPA==
+X-Gm-Message-State: AOAM530B/exrltoM/vicuzJeEcruJpwmGAM41WTjpWY8r1En6r/8soPs
+        S0W4FckxB5h4OPvNBqAPSkhdlo/aGDL52g==
+X-Google-Smtp-Source: ABdhPJySw7gjyxqROo/LUzY60SvdaPpgiUtbK6dsF70pGv8y8w8FQxZhsuGmKfqZThaAnWPyxrgGwA==
+X-Received: by 2002:a1c:2d48:: with SMTP id t69mr4611953wmt.124.1613043606127;
+        Thu, 11 Feb 2021 03:40:06 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f1f:ad00:60ca:853:df03:450e? (p200300ea8f1fad0060ca0853df03450e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:60ca:853:df03:450e])
+        by smtp.googlemail.com with ESMTPSA id n187sm9631299wmf.29.2021.02.11.03.40.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Feb 2021 03:40:05 -0800 (PST)
+To:     Bjorn Helgaas <bhelgaas@google.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH] PCI/VPD: Remove pci_set_vpd_size
+Message-ID: <aa84f395-8c37-89d8-939f-496dfb630b90@gmail.com>
+Date:   Thu, 11 Feb 2021 12:39:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <afc5d363476d445cfdf04b0ec4db9275db803af3.camel@yadro.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+24a1720a0841 ("cxgb4: collect serial config version from register")
+removed the only usage of pci_set_vpd_size(). If a device needs to
+override the auto-detected VPD size, then this can be done using a
+PCI quirk, like it's done for Chelsio devices. There's no need to
+allow drivers to change the VPD size. So let's remove
+pci_set_vpd_size().
 
-On Wed, Feb 10, 2021 at 07:40:06PM +0000, Sergei Miroshnichenko wrote:
-> On Thu, 2021-02-04 at 12:49 +0200, Mika Westerberg
-> wrote:
-> > On Wed, Feb 03, 2021 at 08:17:14PM +0000, Sergei Miroshnichenko
-> > wrote:
-> > > On Mon, 2021-02-01 at 14:55 +0200, Mika Westerberg wrote:
-> > > > On Thu, Jan 28, 2021 at 09:39:29PM +0100, Lukas Wunner wrote:
-> > > > > On Thu, Jan 28, 2021 at 08:53:16AM -0600, Bjorn Helgaas wrote:
-> > > > > > On Fri, Dec 18, 2020 at 08:39:45PM +0300, Sergei
-> > > > > > Miroshnichenko
-> > > > > > wrote:
-> > > > > > > ...
-> > > > > 
-> > > > > I intended to review and test this iteration of the series more
-> > > > > closely, but haven't been able to carve out the required time.
-> > > > > I'm adding some Thunderbolt folks to cc in the hope that they
-> > > > > can at least test the series on their development branch.
-> > > > > Getting this upstreamed should really be in the best interest
-> > > > > of Intel and other promulgators of Thunderbolt.
-> > > > 
-> > > > Sure. It seems that this series was submitted in December so
-> > > > probably
-> > > > not applicable to the pci.git/next anymore. Anyways, I can give
-> > > > it a
-> > > > try
-> > > > on a TBT capable system if someone tells me what exactly to test
-> > > > ;-)
-> > > > Probably at least that the existing functionality still works but
-> > > > something else maybe too?
-> > > 
-> > > For setups that worked fine, the only expected change is a possible
-> > > little different BAR layout (in /proc/iomem), and there should the
-> > > same
-> > > quantity (or more) of BARs assigned than before.
-> > > 
-> > > But if there are any problematic setups, which weren't able to
-> > > arrange
-> > > new BARs, this patchset may push a bit further.
-> > 
-> > Got it.
-> > 
-> > > In a few days I'll provide an updated branch for our mirror of the
-> > > kernel on Github, with a complete and bumped set of patches,
-> > > reducing
-> > > the steps required to test them.
-> > 
-> > Sounds good, thanks!
-> 
-> Hi Mika,
-> 
-> The branch is finally ready, so if you still have time for that, please
-> take a look:
-> 
-> https://github.com/YADRO-KNS/linux/tree/yadro/pcie_hotplug/movable_bars_v9.1
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+- Referenced commit just landed in linux-next via the netdev tree.
+---
+ drivers/pci/vpd.c   | 47 +++++++--------------------------------------
+ include/linux/pci.h |  1 -
+ 2 files changed, 7 insertions(+), 41 deletions(-)
 
-Thanks for sharing!
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 4cf0d77ca..d1cbc5e64 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -16,7 +16,6 @@
+ struct pci_vpd_ops {
+ 	ssize_t (*read)(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
+ 	ssize_t (*write)(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
+-	int (*set_size)(struct pci_dev *dev, size_t len);
+ };
+ 
+ struct pci_vpd {
+@@ -59,19 +58,6 @@ ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void
+ }
+ EXPORT_SYMBOL(pci_write_vpd);
+ 
+-/**
+- * pci_set_vpd_size - Set size of Vital Product Data space
+- * @dev:	pci device struct
+- * @len:	size of vpd space
+- */
+-int pci_set_vpd_size(struct pci_dev *dev, size_t len)
+-{
+-	if (!dev->vpd || !dev->vpd->ops)
+-		return -ENODEV;
+-	return dev->vpd->ops->set_size(dev, len);
+-}
+-EXPORT_SYMBOL(pci_set_vpd_size);
+-
+ #define PCI_VPD_MAX_SIZE (PCI_VPD_ADDR_MASK + 1)
+ 
+ /**
+@@ -296,23 +282,19 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 	return ret ? ret : count;
+ }
+ 
+-static int pci_vpd_set_size(struct pci_dev *dev, size_t len)
++static void pci_vpd_set_size(struct pci_dev *dev, size_t len)
+ {
+ 	struct pci_vpd *vpd = dev->vpd;
+ 
+-	if (len == 0 || len > PCI_VPD_MAX_SIZE)
+-		return -EIO;
+-
+-	vpd->valid = 1;
+-	vpd->len = len;
+-
+-	return 0;
++	if (vpd && len && len <= PCI_VPD_MAX_SIZE) {
++		vpd->valid = 1;
++		vpd->len = len;
++	}
+ }
+ 
+ static const struct pci_vpd_ops pci_vpd_ops = {
+ 	.read = pci_vpd_read,
+ 	.write = pci_vpd_write,
+-	.set_size = pci_vpd_set_size,
+ };
+ 
+ static ssize_t pci_vpd_f0_read(struct pci_dev *dev, loff_t pos, size_t count,
+@@ -345,24 +327,9 @@ static ssize_t pci_vpd_f0_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 	return ret;
+ }
+ 
+-static int pci_vpd_f0_set_size(struct pci_dev *dev, size_t len)
+-{
+-	struct pci_dev *tdev = pci_get_slot(dev->bus,
+-					    PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
+-	int ret;
+-
+-	if (!tdev)
+-		return -ENODEV;
+-
+-	ret = pci_set_vpd_size(tdev, len);
+-	pci_dev_put(tdev);
+-	return ret;
+-}
+-
+ static const struct pci_vpd_ops pci_vpd_f0_ops = {
+ 	.read = pci_vpd_f0_read,
+ 	.write = pci_vpd_f0_write,
+-	.set_size = pci_vpd_f0_set_size,
+ };
+ 
+ int pci_vpd_init(struct pci_dev *dev)
+@@ -528,9 +495,9 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+ 	 * limits.
+ 	 */
+ 	if (chip == 0x0 && prod >= 0x20)
+-		pci_set_vpd_size(dev, 8192);
++		pci_vpd_set_size(dev, 8192);
+ 	else if (chip >= 0x4 && func < 0x8)
+-		pci_set_vpd_size(dev, 2048);
++		pci_vpd_set_size(dev, 2048);
+ }
+ 
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 86c799c97..edadc62ae 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1302,7 +1302,6 @@ void pci_unlock_rescan_remove(void);
+ /* Vital Product Data routines */
+ ssize_t pci_read_vpd(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
+ ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
+-int pci_set_vpd_size(struct pci_dev *dev, size_t len);
+ 
+ /* Helper functions for low-level code (drivers/pci/setup-[bus,res].c) */
+ resource_size_t pcibios_retrieve_fw_addr(struct pci_dev *dev, int idx);
+-- 
+2.30.0
 
-I tried this series on top of v5.11-rc7 on a Dell XPS 9380 so that I
-have two TBT3 devices connected. Each device includes PCIe switch and a
-xHCI endpoint.
-
-What I see that the hotplug downstream port does not have enough bus
-numbers (and other resources allocated) so when attaching the second
-device it does not fit there anymore. The resulting 'lspci -t' output
-looks like below:
-
--[0000:00]-+-00.0
-           +-02.0
-           +-04.0
-           +-08.0
-           +-12.0
-           +-14.0
-           +-14.2
-           +-15.0
-           +-15.1
-           +-16.0
-           +-1c.0-[01]----00.0
-           +-1c.6-[02]----00.0
-           +-1d.0-[03-3b]----00.0-[04-3b]--+-00.0-[05]----00.0
-           |                               +-01.0-[06-1f]----00.0-[07-09]--+-02.0-[08]----00.0
-           |                               |                               \-04.0-[09]----00.0-[0a]--
-           |                               +-02.0-[20]----00.0
-           |                               \-04.0-[21-3b]--
-           +-1d.4-[3c]----00.0
-           +-1f.0
-           +-1f.3
-           +-1f.4
-           \-1f.5
-
-So the last PCIE switch is not visible anymore, and the xHCI on the
-second TBT device is not functional either.
-
-On the mainline kernel I get this:
-
--[0000:00]-+-00.0
-           +-02.0
-           +-04.0
-           +-08.0
-           +-12.0
-           +-14.0
-           +-14.2
-           +-15.0
-           +-15.1
-           +-16.0
-           +-1c.0-[01]----00.0
-           +-1c.6-[02]----00.0
-           +-1d.0-[03-3b]----00.0-[04-3b]--+-00.0-[05]----00.0
-           |                               +-01.0-[06-1f]----00.0-[07-1f]--+-02.0-[08]----00.0
-           |                               |                               \-04.0-[09-1f]----00.0-[0a-1f]--+-02.0-[0b]----00.0
-           |                               |                                                               \-04.0-[0c-1f]--
-           |                               +-02.0-[20]----00.0
-           |                               \-04.0-[21-3b]--
-           +-1d.4-[3c]----00.0
-           +-1f.0
-           +-1f.3
-           +-1f.4
-           \-1f.5
-
-In this topology I can add yet another TBT device and there are still
-resources available and all the endpoints are functional too.
-
-I can send you the full dmesg and lspci -vv output if needed.
