@@ -2,107 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F86B318C93
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 14:51:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68292318CAE
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 14:57:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232100AbhBKNtt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 08:49:49 -0500
-Received: from mga06.intel.com ([134.134.136.31]:32479 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232096AbhBKNqP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Feb 2021 08:46:15 -0500
-IronPort-SDR: g25u0qg4lqM1iy26PxnU3QQEcNiaIpUJLMKN3JH75eUWu1ab80pWlWy06Tc79XnnqT2kFLyXfj
- 0u5/QnXKW50g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="243731576"
-X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="243731576"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:41:02 -0800
-IronPort-SDR: BTj8AraIgoaLoHIX2rx4fj+soe3t6Cw8mL62/RWND1Kus8m7AaU+g7wUV+gjyKrHLNLd/v7pak
- q2CW9G7MRqkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="397260907"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 11 Feb 2021 05:40:54 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3E8CE592; Thu, 11 Feb 2021 15:40:46 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Sumit Gupta <sumitg@nvidia.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH v1 9/9] x86/platform/intel-mid: Update Copyright year and drop file names
-Date:   Thu, 11 Feb 2021 15:40:08 +0200
-Message-Id: <20210211134008.38282-10-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210211134008.38282-1-andriy.shevchenko@linux.intel.com>
-References: <20210211134008.38282-1-andriy.shevchenko@linux.intel.com>
+        id S231898AbhBKNvd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 08:51:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232152AbhBKNsp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 08:48:45 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FF2C0613D6
+        for <linux-pci@vger.kernel.org>; Thu, 11 Feb 2021 05:48:02 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id u16so1960849wmq.1
+        for <linux-pci@vger.kernel.org>; Thu, 11 Feb 2021 05:48:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=tohq/JdjtvfZAdF0OwFagBaJvOCASM9Lm+6u557MXjU=;
+        b=HQu57158wSVHhIE8l7cx35me4mYPQpunE5u/k69jspcVq62YAAex1C2vV4y4XOgyUf
+         CDi6g3lMdp2cXJDnGDoo9rvHJ0h2c70fKMVKLmq+2t6DjU5f9saat4k+zo2hVf4db0Xe
+         dizf7w4BQnVoYMgvnuiRF7MelKozHeDxnJok7RJbjLv39RaBV+lG2Id8TrBuByoGizU2
+         erkgfalKehBtyYJEBVkJ8UMUJtU1qTzvVovRsdwY4Y9t8D/n5I7gfhNa7CJtE5MrrYwz
+         9e5PguMR1yaZP/ieol1XnbgCPKikznV+nSf070iulNnzt/fBZu1M5St0iHKvOHq0kQg8
+         C2+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=tohq/JdjtvfZAdF0OwFagBaJvOCASM9Lm+6u557MXjU=;
+        b=fizR+uMFtWUB8P1ZPuOaMaQ2sm1GHIwoZRGZbkW7hMK7HKkJHWrR259tu6bayQFoVA
+         5uUJPfY3RQPsipILIlMAw+M0OHbowJM15BvYT1OtQzpv+YVuqVXILimzvj4g8xyMhd8B
+         nHOIFBQ6XlmllxrlRvP0bSNVOSVAJs8rWUuLJ8Xcy2ztAgZJJmMm4QIJHSzimgBf/Arr
+         6Tqlrwy/2H2ZdMnjWIvFI6Cla7ukWXC8tFzqmSJf3DqgWmwiu/w4QAgH9SuVw4iGWz48
+         Uqdwa/bsN3K4dL4tuFxaIN9AdUFrlKx3sHXDWGGqZ/AT4seeqJ6RxKWGwvCzzJ16Xb23
+         AARw==
+X-Gm-Message-State: AOAM532ka8NLuVqHdLVUy3Aipmuhr4Q6HcfDQQkQFLnATpmBDvitdpxr
+        QmAiiWP6Ems0djXbgTf/AuMYaUcjIo653w==
+X-Google-Smtp-Source: ABdhPJzmGj4PIL2Lj8D0JG3g1kTRWkA98/AyYRGC6sCW6bv5edmfCZTAZQ0VN7iWGvRDUSmG6vhOSg==
+X-Received: by 2002:a05:600c:4f02:: with SMTP id l2mr5005150wmq.67.1613051281303;
+        Thu, 11 Feb 2021 05:48:01 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f1f:ad00:60ca:853:df03:450e? (p200300ea8f1fad0060ca0853df03450e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:60ca:853:df03:450e])
+        by smtp.googlemail.com with ESMTPSA id i7sm4720210wru.49.2021.02.11.05.47.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Feb 2021 05:48:00 -0800 (PST)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH RESEND] PCI/VPD: Remove pci_set_vpd_size
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Message-ID: <ac972a55-05e6-91b5-259d-d310f834eba1@gmail.com>
+Date:   Thu, 11 Feb 2021 14:47:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Update Copyright year and drop file names from files themselves.
+24a1720a0841 ("cxgb4: collect serial config version from register")
+removed the only usage of pci_set_vpd_size(). If a device needs to
+override the auto-detected VPD size, then this can be done using a
+PCI quirk, like it's done for Chelsio devices. There's no need to
+allow drivers to change the VPD size. So let's remove
+pci_set_vpd_size().
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- arch/x86/include/asm/intel-mid.h        | 4 ++--
- arch/x86/platform/intel-mid/intel-mid.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+- Referenced commit just landed in linux-next via the netdev tree.
+---
+ drivers/pci/vpd.c   | 47 +++++++--------------------------------------
+ include/linux/pci.h |  1 -
+ 2 files changed, 7 insertions(+), 41 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index c043e91f45ad..c201083b34f6 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -1,8 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * intel-mid.h: Intel MID specific setup code
-+ * Intel MID specific setup code
-  *
-- * (C) Copyright 2009 Intel Corporation
-+ * (C) Copyright 2009, 2021 Intel Corporation
-  */
- #ifndef _ASM_X86_INTEL_MID_H
- #define _ASM_X86_INTEL_MID_H
-diff --git a/arch/x86/platform/intel-mid/intel-mid.c b/arch/x86/platform/intel-mid/intel-mid.c
-index 2802b5e4637b..f4592dc7a1c1 100644
---- a/arch/x86/platform/intel-mid/intel-mid.c
-+++ b/arch/x86/platform/intel-mid/intel-mid.c
-@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * intel-mid.c: Intel MID platform setup code
-+ * Intel MID platform setup code
-  *
-- * (C) Copyright 2008, 2012 Intel Corporation
-+ * (C) Copyright 2008, 2012, 2021 Intel Corporation
-  * Author: Jacob Pan (jacob.jun.pan@intel.com)
-  * Author: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
-  */
+diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+index 4cf0d77ca..d1cbc5e64 100644
+--- a/drivers/pci/vpd.c
++++ b/drivers/pci/vpd.c
+@@ -16,7 +16,6 @@
+ struct pci_vpd_ops {
+ 	ssize_t (*read)(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
+ 	ssize_t (*write)(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
+-	int (*set_size)(struct pci_dev *dev, size_t len);
+ };
+ 
+ struct pci_vpd {
+@@ -59,19 +58,6 @@ ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void
+ }
+ EXPORT_SYMBOL(pci_write_vpd);
+ 
+-/**
+- * pci_set_vpd_size - Set size of Vital Product Data space
+- * @dev:	pci device struct
+- * @len:	size of vpd space
+- */
+-int pci_set_vpd_size(struct pci_dev *dev, size_t len)
+-{
+-	if (!dev->vpd || !dev->vpd->ops)
+-		return -ENODEV;
+-	return dev->vpd->ops->set_size(dev, len);
+-}
+-EXPORT_SYMBOL(pci_set_vpd_size);
+-
+ #define PCI_VPD_MAX_SIZE (PCI_VPD_ADDR_MASK + 1)
+ 
+ /**
+@@ -296,23 +282,19 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 	return ret ? ret : count;
+ }
+ 
+-static int pci_vpd_set_size(struct pci_dev *dev, size_t len)
++static void pci_vpd_set_size(struct pci_dev *dev, size_t len)
+ {
+ 	struct pci_vpd *vpd = dev->vpd;
+ 
+-	if (len == 0 || len > PCI_VPD_MAX_SIZE)
+-		return -EIO;
+-
+-	vpd->valid = 1;
+-	vpd->len = len;
+-
+-	return 0;
++	if (vpd && len && len <= PCI_VPD_MAX_SIZE) {
++		vpd->valid = 1;
++		vpd->len = len;
++	}
+ }
+ 
+ static const struct pci_vpd_ops pci_vpd_ops = {
+ 	.read = pci_vpd_read,
+ 	.write = pci_vpd_write,
+-	.set_size = pci_vpd_set_size,
+ };
+ 
+ static ssize_t pci_vpd_f0_read(struct pci_dev *dev, loff_t pos, size_t count,
+@@ -345,24 +327,9 @@ static ssize_t pci_vpd_f0_write(struct pci_dev *dev, loff_t pos, size_t count,
+ 	return ret;
+ }
+ 
+-static int pci_vpd_f0_set_size(struct pci_dev *dev, size_t len)
+-{
+-	struct pci_dev *tdev = pci_get_slot(dev->bus,
+-					    PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
+-	int ret;
+-
+-	if (!tdev)
+-		return -ENODEV;
+-
+-	ret = pci_set_vpd_size(tdev, len);
+-	pci_dev_put(tdev);
+-	return ret;
+-}
+-
+ static const struct pci_vpd_ops pci_vpd_f0_ops = {
+ 	.read = pci_vpd_f0_read,
+ 	.write = pci_vpd_f0_write,
+-	.set_size = pci_vpd_f0_set_size,
+ };
+ 
+ int pci_vpd_init(struct pci_dev *dev)
+@@ -528,9 +495,9 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
+ 	 * limits.
+ 	 */
+ 	if (chip == 0x0 && prod >= 0x20)
+-		pci_set_vpd_size(dev, 8192);
++		pci_vpd_set_size(dev, 8192);
+ 	else if (chip >= 0x4 && func < 0x8)
+-		pci_set_vpd_size(dev, 2048);
++		pci_vpd_set_size(dev, 2048);
+ }
+ 
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 86c799c97..edadc62ae 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1302,7 +1302,6 @@ void pci_unlock_rescan_remove(void);
+ /* Vital Product Data routines */
+ ssize_t pci_read_vpd(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
+ ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
+-int pci_set_vpd_size(struct pci_dev *dev, size_t len);
+ 
+ /* Helper functions for low-level code (drivers/pci/setup-[bus,res].c) */
+ resource_size_t pcibios_retrieve_fw_addr(struct pci_dev *dev, int idx);
 -- 
 2.30.0
 
