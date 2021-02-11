@@ -2,118 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E8E1318465
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 05:42:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 649CC3186D5
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 10:22:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbhBKElq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Feb 2021 23:41:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbhBKElp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Feb 2021 23:41:45 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E9FC0613D6
-        for <linux-pci@vger.kernel.org>; Wed, 10 Feb 2021 20:41:04 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id y9so7926474ejp.10
-        for <linux-pci@vger.kernel.org>; Wed, 10 Feb 2021 20:41:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sl6/My6OzOs0T7wZB4oePD5pENhmSvczhT0K8Arc7LI=;
-        b=WkyTT/tlVuOu/QtJMR4TMPtKI3ZroEdf6vo0pV6EA6pmvld9AUZh5AcBIdoQsmyy5W
-         ujhDIglIq4no4S4FnPjAJEON+41CXF/kZhVZc/Of6nBcJmH2ckxq7jFNww9nR/DwT+h/
-         8UqUiI1xPm3fisBJZevopAV8RlTeHFLm996qBPYad35tPwuvIkQ2wNljHBO7QuzsU8pl
-         m6UjMx88Bp2ax8h59hFBDU+mEcT6OxV4L26reH2yIq5jyt3ZKaGUX00yc6uufxWXKc/K
-         6TpW44YRo7+SiphYrSoLs6Eu0cjTNKyi8E8jF9IRE0pU/01y+thIBuSGcpnf168C/Bou
-         mgcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sl6/My6OzOs0T7wZB4oePD5pENhmSvczhT0K8Arc7LI=;
-        b=H7vJKw3pVUKIKM3846B2r7NmcK8ZqY30qS7AECJ4I2EpxpU27QSdoN499gqjqrb9jc
-         Ol6y5QRt6u2t5NKciPt3djXFRTnBaZ05iAyLAJ1O0HpQYPMFnJfGAby1zm9dhgAmSosC
-         cbO2vKhEWtsG8NCYm0w00MW2jnxIqEJlPgTDZvs9/9lVW/fyVc3OZIig+fqRJdjTTnl8
-         8Fc4TZk1ql2UwFfFcCAxzAzS+M/RTcnlA6VESxMutOnvV9c85Rh27EltjmppJngdzvyC
-         HUnRVjbzH8CamVwCuwof+hyrgvKxmB8AWeTIac6Iot1Tn6FjfRvN7vEhcMAmxKrfTjt/
-         cztw==
-X-Gm-Message-State: AOAM530En6wTSd1v/IQN84ADlMbJGxNTIhOvXeQbNjQ8ZuyIfNohodJW
-        cT6Lx1mddHzeGUmatFDGyJI9LlX1NSiEe2ymQakuQA==
-X-Google-Smtp-Source: ABdhPJyqM5HE0PbHSNMhdSZjzjNWswbaPuS/dDwtU5r1wQLbe3Pkm5vgDMrXrmlgqG9PntEEBlBF3kFxRImOkT4QFcE=
-X-Received: by 2002:a17:906:78a:: with SMTP id l10mr6139548ejc.264.1613018462922;
- Wed, 10 Feb 2021 20:41:02 -0800 (PST)
+        id S230166AbhBKJQ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 04:16:56 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:56602 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230046AbhBKJKs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 04:10:48 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E2391C00B8;
+        Thu, 11 Feb 2021 09:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1613034550; bh=1vhPCybPaU1gp8Q22JtWBqzxeYFMfx3q1bNItmKLjzE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V4+mpXRPw4UkkXdeSFKmKUD00AojT2Zm6HQwo+qT41Lc/omq5ggGaaq78xtjLfqc9
+         3clxhfzvNBw4+VbIHCDuxJZhwrGR9YW2AjmwO7owijN43zgIPbyQCea2TFKFe5kT/k
+         rmvYQLvLl2sWQOxVikLJHiOM2/AEEOyFav7Pd9d2sGP4UAgojs9ldW/QM0g7X3K0IU
+         MQ+0TAefGx+rz1xAo82TgI1eOidv+o/c+R+TjR5OXNv3uvXAFpnawbSMj99NyIAV6z
+         FwwAbD2ecrUVI5Vv/BtxYY/G7twcTbz3s76lytUOQJdioo5Fvl5VpMRQM2vYLJ0TeU
+         JO51N+DyzwH1w==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 2C69DA005C;
+        Thu, 11 Feb 2021 09:09:06 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v5 0/6] misc: Add Add Synopsys DesignWare xData IP driver
+Date:   Thu, 11 Feb 2021 10:08:37 +0100
+Message-Id: <cover.1613034397.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20210210000259.635748-1-ben.widawsky@intel.com>
- <20210210000259.635748-5-ben.widawsky@intel.com> <20210210184540.00007536@Huawei.com>
-In-Reply-To: <20210210184540.00007536@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 10 Feb 2021 20:40:52 -0800
-Message-ID: <CAPcyv4hRUB3jxdCV06y0kYMbKbGroEW6F9yOQ4KB_z6YgWBZ4Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] cxl/mem: Add basic IOCTL interface
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Chris Browy <cbrowy@avery-design.com>, Christoph Hellwig
-        <hch@infradead.org>, Dan Williams <dan.j.williams@intel.com>, David
-        Hildenbrand <david@redhat.com>, David Rientjes" <rientjes@google.com>,
-        "Jon Masters <jcm@jonmasters.org>, Rafael Wysocki
-        <rafael.j.wysocki@intel.com>, Randy Dunlap" <rdunlap@infradead.org>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        kernel test robot <lkp@intel.com>,
-        Dan Williams <dan.j.willams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=n
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 10, 2021 at 10:47 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
-[..]
-> > +#define CXL_CMDS                                                          \
-> > +     ___C(INVALID, "Invalid Command"),                                 \
-> > +     ___C(IDENTIFY, "Identify Command"),                               \
-> > +     ___C(MAX, "Last command")
-> > +
-> > +#define ___C(a, b) CXL_MEM_COMMAND_ID_##a
-> > +enum { CXL_CMDS };
-> > +
-> > +#undef ___C
-> > +#define ___C(a, b) { b }
-> > +static const struct {
-> > +     const char *name;
-> > +} cxl_command_names[] = { CXL_CMDS };
-> > +#undef ___C
->
-> Unless there are going to be a lot of these, I'd just write them out long hand
-> as much more readable than the macro magic.
+This patch series adds a new driver called xData-pcie for the Synopsys
+DesignWare PCIe prototype.
 
-This macro magic isn't new to Linux it was introduced with ftrace:
+The driver configures and enables the Synopsys DesignWare PCIe traffic
+generator IP inside of prototype Endpoint which will generate upstream
+and downstream PCIe traffic. This allows to quickly test the PCIe link
+throughput speed and check is the prototype solution has some limitation
+or not.
 
-See "cpp tricks and treats": https://lwn.net/Articles/383362/
+Changes:
+ V2: Rework driver according to Greg Kroah-Hartman' feedback
+ V3: Fixed issues detected while running on 64 bits platforms
+     Rebased patches on top of v5.11-rc1 version
+ V4: Rework driver according to Greg Kroah-Hartman' feedback
+     Add the ABI doc related to the sysfs implemented on this driver
+ V5: Rework driver accordingly to Leon Romanovsky's feedback
+     Rework driver accordingly to Krzysztof Wilczyński's feedback
 
->
-> enum {
->         CXL_MEM_COMMAND_ID_INVALID,
->         CXL_MEM_COMMAND_ID_IDENTIFY,
->         CXL_MEM_COMMAND_ID_MAX
-> };
->
-> static const struct {
->         const char *name;
-> } cxl_command_names[] = {
->         [CXL_MEM_COMMAND_ID_INVALID] = { "Invalid Command" },
->         [CXL_MEM_COMMAND_ID_IDENTIFY] = { "Identify Comamnd" },
->         /* I hope you never need the Last command to exist in here as that sounds like a bug */
-> };
->
-> That's assuming I actually figured the macro fun out correctly.
-> To my mind it's worth doing this stuff for 'lots' no so much for 3.
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-The list will continue to expand, and it eliminates the "did you
-remember to update cxl_command_names" review burden permanently.
+Gustavo Pimentel (6):
+  misc: Add Synopsys DesignWare xData IP driver
+  misc: Add Synopsys DesignWare xData IP driver to Makefile
+  misc: Add Synopsys DesignWare xData IP driver to Kconfig
+  Documentation: misc-devices: Add Documentation for dw-xdata-pcie
+    driver
+  MAINTAINERS: Add Synopsys xData IP driver maintainer
+  docs: ABI: Add sysfs documentation interface of dw-xdata-pcie driver
+
+ Documentation/ABI/testing/sysfs-driver-xdata |  46 ++++
+ Documentation/misc-devices/dw-xdata-pcie.rst |  40 +++
+ MAINTAINERS                                  |   7 +
+ drivers/misc/Kconfig                         |  10 +
+ drivers/misc/Makefile                        |   1 +
+ drivers/misc/dw-xdata-pcie.c                 | 394 +++++++++++++++++++++++++++
+ 6 files changed, 498 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-xdata
+ create mode 100644 Documentation/misc-devices/dw-xdata-pcie.rst
+ create mode 100644 drivers/misc/dw-xdata-pcie.c
+
+-- 
+2.7.4
+
