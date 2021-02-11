@@ -2,334 +2,279 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F78E319242
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 19:30:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C11431934C
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Feb 2021 20:45:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232317AbhBKS3w (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 13:29:52 -0500
-Received: from mga12.intel.com ([192.55.52.136]:55991 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230170AbhBKS2Y (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Feb 2021 13:28:24 -0500
-IronPort-SDR: 8+MtpKwllv4BrtHjc9OYZD1lW1ZitHlF9nerl/vusjaRivIEEk+MdMwLz0OgUjeCd3OlPvxvlT
- i4xx/Lig0kow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9892"; a="161436845"
-X-IronPort-AV: E=Sophos;i="5.81,171,1610438400"; 
-   d="scan'208";a="161436845"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 10:27:43 -0800
-IronPort-SDR: elIk349DQyDh644AggX470YSysO1hkJJFZIpOHWMiAjHOmHsmKeibjlEjNzDOkq6fRqExZpyXq
- 6+g2DxOLUkng==
-X-IronPort-AV: E=Sophos;i="5.81,171,1610438400"; 
-   d="scan'208";a="380840785"
-Received: from reknight-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.134.254])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 10:27:42 -0800
-Date:   Thu, 11 Feb 2021 10:27:41 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
+        id S231280AbhBKToB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Feb 2021 14:44:01 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:55700 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229756AbhBKTn5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 14:43:57 -0500
+Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8AAB5C00EC;
+        Thu, 11 Feb 2021 19:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1613072575; bh=Rccv+mFL92XoEvS0rYwDBocf4bEDKmLo5wfgWNEAZio=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=igEmWFGnUVKOrELp4PMAUek0qpHlLIMj1xz3KA+gCf36Dyvk6l1OUn3kuzEP/v9hr
+         JXeIAjHjNDtEyE9fxntMGhXEqbJENP1HuFPSWHm6MmMZCYv89Zlc5wfW1e4LSWLNtC
+         5OZTH67Bl0jJsnmPwjQZCH+9WghjRs3zk93Q5EkSk+PKBe0zH1d+wi0aaRw0GhPFy1
+         /BeAvwaQFgajaV2vf+APsKpmRfY4tk0hXSE/pyz4Ifg1zknqgu4pbvzhey5rFq7baC
+         CKFTwW+ryvSkZOUcJXayU4cHIRrXxVA6jz7bHRlvbIhIa1s9VeiDairHFbKRYPXMlB
+         TNklKeD1PByaw==
+Received: from o365relay-in.synopsys.com (us03-o365relay3.synopsys.com [10.4.161.139])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id BBA08A007C;
+        Thu, 11 Feb 2021 19:42:54 +0000 (UTC)
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2059.outbound.protection.outlook.com [104.47.38.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 0E477800BF;
+        Thu, 11 Feb 2021 19:42:54 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="Vw3IkbLL";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mYtPrsxnQwtxpr8Ge3SNg/Tr352Z8GOUlQUck5e8GFeQInM4Uxj9AxtnAVYJlX92PnyKCZ6gKv1ZXTYGcnHqx93cunrbqkbRo1xuwaZ3ohIzUg5lifoHKUSRDoqmCgIvSffvfvKxA0bLa8WcqPrLkb2oCI4y8jxysua7Lr5jbaAxeNfKTUELSy7bjEI2U0/4BQikAb7P4kQIqReGyJfV1DBwzNcFH1yEw02Akhu1g0eGTYooOQFUGRi8qqKFz6kaMay0p2w29QRwiZ3HsYXwQE7ZG6qkCRoVWVE2tu7Vd/EF3JYAF2y+zy0v+GKuXjMSQ7qST6TXYeST4woSBEu8Nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rccv+mFL92XoEvS0rYwDBocf4bEDKmLo5wfgWNEAZio=;
+ b=aIaCYyQjatJZFVkcy0vEz2Wgc/p4NhSZJ3/HIE/SHorM/xJgY6AnBqTMbYNsUibVS0T2I04WRcMtYf1jr/jM8nbncLiMGFClCXtD9k5DlAhgAbksF6XPcjqjb+YnwD1tkBT7HMjAmtkroLOrxlM4XhO0VWAMPqlGGHiLx2eC1vVUdxhCrslXTOGSjXCkwHMBNMQVqo3a9WhUXrYQxVGVDZr9W5jsmruW4B+So9wRsuK1f001Bh7XOWxnLPIGdUAdzkmjHAVmZtKFtxZ7eE/NwIdZwDDAJruciBS+WqsHGcp3ji/pyy+tD5aO8DbyfJqHikTo4sSFGuMPRi1DCZJwKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rccv+mFL92XoEvS0rYwDBocf4bEDKmLo5wfgWNEAZio=;
+ b=Vw3IkbLL+ekfJYzhhMaPjTG39bGtUXkWWz8+0ytre0s9hB9kOTq2TtE6xY3pmthvo0kHFYeon14cswLyj7DwxY7RvWQapWwm+kfzLYGGRPdpuxLCo3kAt1z8ARj53grL8dV1Pz69DvOzdvrFHYroL9Suc+6IiOI471Ij3x6Q37Y=
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
+ DM6PR12MB3962.namprd12.prod.outlook.com (2603:10b6:5:1ce::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3825.17; Thu, 11 Feb 2021 19:42:51 +0000
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052]) by DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052%10]) with mapi id 15.20.3825.030; Thu, 11 Feb
+ 2021 19:42:50 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     =?utf-8?B?S3J6eXN6dG9mIFdpbGN6ecWEc2tp?= <kw@linux.com>
+CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH v2 2/8] cxl/mem: Find device capabilities
-Message-ID: <20210211182741.yrojts2cdyoufsfl@intel.com>
-References: <20210210000259.635748-1-ben.widawsky@intel.com>
- <20210210000259.635748-3-ben.widawsky@intel.com>
- <20210210133252.000047af@Huawei.com>
- <20210210150759.00005684@Huawei.com>
- <20210210165557.7fuqbyr7e7zjoxaa@intel.com>
- <20210210181605.ecbl3m5ep4rszpqs@intel.com>
- <20210211095548.00000da7@Huawei.com>
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: RE: [PATCH v5 04/15] PCI: Add pci_find_vsec_capability() to find a
+ specific VSEC
+Thread-Topic: [PATCH v5 04/15] PCI: Add pci_find_vsec_capability() to find a
+ specific VSEC
+Thread-Index: AQHXAFYYY3LqVflQEEOj3FiPg7rchapS6FsAgABugQA=
+Date:   Thu, 11 Feb 2021 19:42:50 +0000
+Message-ID: <DM5PR12MB183546B682C54B570213E8EADA8C9@DM5PR12MB1835.namprd12.prod.outlook.com>
+References: <cover.1613034728.git.gustavo.pimentel@synopsys.com>
+ <45b51292876f238afe3f6865113cd9d72d33e51a.1613034728.git.gustavo.pimentel@synopsys.com>
+ <YCUoJuK8TBsJAnp7@rocinante>
+In-Reply-To: <YCUoJuK8TBsJAnp7@rocinante>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MVFV4TW1ZMU16VmlMVFpqWVRFdE1URmxZaTA1T0dVMkxXWTRPVFJq?=
+ =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRncxTVRKbU5UTTFZeTAyWTJFeExURXha?=
+ =?utf-8?B?V0l0T1RobE5pMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?RTNNVFlpSUhROUlqRXpNalUzTlRRMk1UWTROVGd5TXpjeU9DSWdhRDBpUkRr?=
+ =?utf-8?B?dlpFUnVXV3hQV21kVmIwZGpNM0Z5ZWxaSk5URlRNVVYzUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZFZDJsTVkxUnlaMFJZUVZaVWVFcHJabkJXV2pGNlZs?=
+ =?utf-8?B?QkZiVklyYkZadVdFMVBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGT2NsTldNMmRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: linux.com; dkim=none (message not signed)
+ header.d=none;linux.com; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [89.155.14.32]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2a384662-d2ad-4256-0dce-08d8cec5379c
+x-ms-traffictypediagnostic: DM6PR12MB3962:
+x-microsoft-antispam-prvs: <DM6PR12MB3962C2699F46C29D75F92A1DDA8C9@DM6PR12MB3962.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: M3jQJQTv59Qmi4zUThSCu/jkMcKl+ivj4rCohC5467LADOme9uQmFM/DTKrMLah+woLWedi0QFmkPB+pMmSxaPCtkFnQFxczdKZyogUAOvX8J4YPhJ51TFhiSFwTKjVy+iGSwY21CAMILHgpeCEH39lg6KgP/NLoEnMV9B4W0wq/W+qqC7kemJI1gVJpFoe5SF99rnh4bMqv/O4UgkQsjRUEEH9KSayoRmoOotZbT990vCxJjQHpNj1mcnNW05QBMmqJJEDbx6yPYj141h1xaePLLn4QsKpxeNVJbc5adhNQc8PP1pulk/JKY9kkeFLa0DkLPXBtsaYHoWNPlUmbeb56GPi+iQKEHu2bAMitXJetXpDp9IZtrpLfJaiRF6ddGXgKvP0MoybaD1kLiDnLOkZGJLHaCxedGUFTdcBoU7BWeEfgGIefQmtytdVWINBIwMJYoiPTBbPV+UEJTzpmmCruZ2cL/m2M2ZXuhwdZrYJTX7EU5DjwYwHSJCNuBmJasNjKdPgnPoUWgHK4qY7xxi2ooHX3mwLkPAFjV8CtRbtukf13eSaMmDJROxrF9Fd7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(136003)(376002)(366004)(396003)(346002)(66946007)(76116006)(66446008)(66556008)(64756008)(9686003)(6916009)(5660300002)(478600001)(186003)(2906002)(71200400001)(53546011)(26005)(66476007)(316002)(55016002)(86362001)(8936002)(83380400001)(8676002)(52536014)(54906003)(6506007)(7696005)(4326008)(33656002)(37363001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?bmtPdlJiUy93Q21KSXYvMGx2S29hOHUyZDVkK1c0ajlESUx1bWJSc2c2WkpC?=
+ =?utf-8?B?R0RQRnRSdTc5Rk10ampuTlMyYkpZT1gyYlREakUzUG1Vei9rZzNVSGdPWS80?=
+ =?utf-8?B?UnJobEJ5anJkQTFWanNrRHVuNzJTVGVpMHUvZnpxakg3a0Rwa2dMWTBWa2F6?=
+ =?utf-8?B?UzhMZ3hYNUhxMmVFL2lPOURJclJGSDB0cEJSMndXWk04K0Z1NjQ5anh2c0JL?=
+ =?utf-8?B?WnBBZC90dnhxSkpPKys4Y3BXSS90NjZ0Y2NKZ2ZRTmRFNWRTYWRNTGViM0Ri?=
+ =?utf-8?B?RGlXMHlJV3FaQjhzQkJvTGtJRHRwUmltVEd5ajUvTnJUYTlFSThicElwM1Ur?=
+ =?utf-8?B?N0ZNODQ2bVRWQXc3SHp1T0IybWdqdkY5K2tvT3hKd1BaaTd5dXo2VGhhdjJy?=
+ =?utf-8?B?QXp5cmVUTXIramVLSms0MEh5UTlmZ0h0QnFvZllrRFpvMmNyeENYWkVoRFha?=
+ =?utf-8?B?Ry9UdzRsWGhJUkNsYVBvcWNVQ1dIdmJoZ05aR2VITzZoSXJrenFrOFA4c0dC?=
+ =?utf-8?B?eFpNMzF3UE9vdVFZY1ZlSHFXKzA1NFNuR1pCRFFCWWdlT0hFSTVEK0VndytL?=
+ =?utf-8?B?bzZ4Vy95RHhoeHM0ZUlsdkNSTTFnZDdGTHFIM3hlUXpiSTVLTXhDRjlqcVYv?=
+ =?utf-8?B?bjE0TXBUSGRwazlka1VWaEQ3QXVSQlM4aDdBbnFyQ1laRVVxTkNGcERvaWt3?=
+ =?utf-8?B?RkVOKzNyaVE0dkFlM05vVm1RMEY2OVRENmp3WVA5eTMvc2w4UW04VkZXRXRM?=
+ =?utf-8?B?R1VON0d5OXNyeHBUMS9VWEtVaXg4SEJ0azFEV2VaVDRvS1Jlc1FGRzJEY2xX?=
+ =?utf-8?B?eGRZMkxPL2xiWFFYTkQvMkh6dkR5R2xsWk56c2Rxc0NSTTFmTjh4bEJrWG1t?=
+ =?utf-8?B?Wmczajc2L2drYW5ZeTJVbURVK0hZU2tRQzJWYkxJL1Z0dXE1L20wcnIwK1N0?=
+ =?utf-8?B?OVg1SCtkVGRrTEczQ2VXTnBFUHRjWDVSWG5PR2FiWlRxQUhuWmJZVlVjUjQz?=
+ =?utf-8?B?bFBiRE9FQkh0cGk4OE1kRkRIYWtrcDg3ajE0czJPVUdjaWhWNTluWUNucHhV?=
+ =?utf-8?B?dTQ0Z1MzZU91QVlOTVRSTytlNUtTTlhRam1ra1dhK3RFLzRSd09NRlF5SEh6?=
+ =?utf-8?B?R2laWTdMdHFpU05IeDdYSzBGbkxxQ1c3VzlsM2MxSFdGVU4xM05wRytEblVL?=
+ =?utf-8?B?RE9hYnRrbVliL05WRzh1MmVKRnVIV2JNc0lEdTRQdFU3ekhBOGxDaSs1ZHdR?=
+ =?utf-8?B?THZTNjgzdE5wMGhvczhBd241VC81Z0ZBZkkzZzQweGJzRHl3SnVYVDVWUnE5?=
+ =?utf-8?B?VTNicHB3SytqSHY4LzBsd0s3QldOMEVOZlB1T0kwckd2ZVZVR09QNGc5NzF0?=
+ =?utf-8?B?OUFEdkJWZE9aTllFb1JlSTlzS0R1cnl1TWJwYXh5ZVVaV0dkZndPNHNQSEE4?=
+ =?utf-8?B?Nngxck5OVWxybGwxRmN2YktMcGRUcEZ3bVp4d21qN0Q4Uks3NytpZVNqNSs3?=
+ =?utf-8?B?NVMvKy9nSmNHeEloUzFBUVFlYVgvSE9xeFNjSEoxV013djlHQXRHUTlaVU5Q?=
+ =?utf-8?B?NjhaSWJXcVlFZnRQaGRrdHBnVXdqZUxhY0ovZVRMeXZWUkNEYmlOb1lOM0F1?=
+ =?utf-8?B?WnBnOFU1eG52dGpCL0ZLSWFPS2dtWjdQeFZjcmRrUTVBYVJuVGdmektVNFgx?=
+ =?utf-8?B?aW53SUczSHVyalRKL3Y1M2N2eGhuQ1FZeWNoNXhtb1VsZ21oZ0dmMy9TaG9W?=
+ =?utf-8?Q?8lxbyBnuiG2+40pb16MW2lJCko+iIbc4pqgr0yc?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210211095548.00000da7@Huawei.com>
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a384662-d2ad-4256-0dce-08d8cec5379c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2021 19:42:50.8838
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: toZVcfI8S58ioJAOMPdD5ZyS847T9axSJnJUddMvH528WfU/A9/bDADe1GHq12INksdA804bPCFaeqqhadeydw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3962
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-02-11 09:55:48, Jonathan Cameron wrote:
-> On Wed, 10 Feb 2021 10:16:05 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > On 21-02-10 08:55:57, Ben Widawsky wrote:
-> > > On 21-02-10 15:07:59, Jonathan Cameron wrote:  
-> > > > On Wed, 10 Feb 2021 13:32:52 +0000
-> > > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > > >   
-> > > > > On Tue, 9 Feb 2021 16:02:53 -0800
-> > > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > >   
-> > > > > > Provide enough functionality to utilize the mailbox of a memory device.
-> > > > > > The mailbox is used to interact with the firmware running on the memory
-> > > > > > device. The flow is proven with one implemented command, "identify".
-> > > > > > Because the class code has already told the driver this is a memory
-> > > > > > device and the identify command is mandatory.
-> > > > > > 
-> > > > > > CXL devices contain an array of capabilities that describe the
-> > > > > > interactions software can have with the device or firmware running on
-> > > > > > the device. A CXL compliant device must implement the device status and
-> > > > > > the mailbox capability. Additionally, a CXL compliant memory device must
-> > > > > > implement the memory device capability. Each of the capabilities can
-> > > > > > [will] provide an offset within the MMIO region for interacting with the
-> > > > > > CXL device.
-> > > > > > 
-> > > > > > The capabilities tell the driver how to find and map the register space
-> > > > > > for CXL Memory Devices. The registers are required to utilize the CXL
-> > > > > > spec defined mailbox interface. The spec outlines two mailboxes, primary
-> > > > > > and secondary. The secondary mailbox is earmarked for system firmware,
-> > > > > > and not handled in this driver.
-> > > > > > 
-> > > > > > Primary mailboxes are capable of generating an interrupt when submitting
-> > > > > > a background command. That implementation is saved for a later time.
-> > > > > > 
-> > > > > > Link: https://www.computeexpresslink.org/download-the-specification
-> > > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>    
-> > > > > 
-> > > > > Hi Ben,
-> > > > > 
-> > > > >   
-> > > > > > +/**
-> > > > > > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
-> > > > > > + * @cxlm: The CXL memory device to communicate with.
-> > > > > > + * @mbox_cmd: Command to send to the memory device.
-> > > > > > + *
-> > > > > > + * Context: Any context. Expects mbox_lock to be held.
-> > > > > > + * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
-> > > > > > + *         Caller should check the return code in @mbox_cmd to make sure it
-> > > > > > + *         succeeded.    
-> > > > > 
-> > > > > cxl_xfer_log() doesn't check mbox_cmd->return_code and for my test it currently
-> > > > > enters an infinite loop as a result.  
-> > > 
-> > > I meant to fix that.
-> > >   
-> > > > > 
-> > > > > I haven't checked other paths, but to my mind it is not a good idea to require
-> > > > > two levels of error checking - the example here proves how easy it is to forget
-> > > > > one.  
-> > > 
-> > > Demonstrably, you're correct. I think it would be good to have a kernel only
-> > > mbox command that does the error checking though. Let me type something up and
-> > > see how it looks.  
-> > 
-> > Hi Jonathan. What do you think of this? The bit I'm on the fence about is if I
-> > should validate output size too. I like the simplicity as it is, but it requires
-> > every caller to possibly check output size, which is kind of the same problem
-> > you're originally pointing out.
-> 
-> The simplicity is good and this is pretty much what I expected you would end up with
-> (always reassuring)
-> 
-> For the output, perhaps just add another parameter to the wrapper for minimum
-> output length expected?
-> 
-> Now you mention the length question.  It does rather feel like there should also
-> be some protection on memcpy_fromio() copying too much data if the hardware
-> happens to return an unexpectedly long length.  Should never happen, but
-> the hardening is worth adding anyway given it's easy to do.
-> 
-> Jonathan
-> 
-
-I like it.
-
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 2e199b05f686..58071a203212 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -293,7 +293,7 @@ static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
-  * See __cxl_mem_mbox_send_cmd()
-  */
- static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, u8 *in,
--				 size_t in_size, u8 *out)
-+				 size_t in_size, u8 *out, size_t out_min_size)
- {
- 	struct mbox_cmd mbox_cmd = {
- 		.opcode = opcode,
-@@ -303,6 +303,9 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, u8 *in,
- 	};
- 	int rc;
- 
-+	if (out_min_size > cxlm->payload_size)
-+		return -E2BIG;
-+
- 	rc = cxl_mem_mbox_get(cxlm);
- 	if (rc)
- 		return rc;
-@@ -316,6 +319,9 @@ static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, u8 *in,
- 	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS)
- 		return -ENXIO;
- 
-+	if (mbox_cmd.size_out < out_min_size)
-+		return -ENODATA;
-+
- 	return mbox_cmd.size_out;
- }
- 
-@@ -505,15 +511,10 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
- 	int rc;
- 
- 	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_IDENTIFY, NULL, 0,
--				   (u8 *)&id);
-+				   (u8 *)&id, sizeof(id));
- 	if (rc < 0)
- 		return rc;
- 
--	if (rc < sizeof(id)) {
--		dev_err(&cxlm->pdev->dev, "Short identify data\n");
--		return -ENXIO;
--	}
--
- 	/*
- 	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
- 	 * For now, only the capacity is exported in sysfs
-
-
-> 
-> > 
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index 55c5f5a6023f..ad7b2077ab28 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -284,7 +284,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> >  }
-> >  
-> >  /**
-> > - * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
-> > + * __cxl_mem_mbox_send_cmd() - Execute a mailbox command
-> >   * @cxlm: The CXL memory device to communicate with.
-> >   * @mbox_cmd: Command to send to the memory device.
-> >   *
-> > @@ -296,7 +296,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> >   * This is a generic form of the CXL mailbox send command, thus the only I/O
-> >   * operations used are cxl_read_mbox_reg(). Memory devices, and perhaps other
-> >   * types of CXL devices may have further information available upon error
-> > - * conditions.
-> > + * conditions. Driver facilities wishing to send mailbox commands should use the
-> > + * wrapper command.
-> >   *
-> >   * The CXL spec allows for up to two mailboxes. The intention is for the primary
-> >   * mailbox to be OS controlled and the secondary mailbox to be used by system
-> > @@ -304,8 +305,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> >   * not need to coordinate with each other. The driver only uses the primary
-> >   * mailbox.
-> >   */
-> > -static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
-> > -				 struct mbox_cmd *mbox_cmd)
-> > +static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
-> > +				   struct mbox_cmd *mbox_cmd)
-> >  {
-> >  	void __iomem *payload = cxlm->mbox_regs + CXLDEV_MBOX_PAYLOAD_OFFSET;
-> >  	u64 cmd_reg, status_reg;
-> > @@ -469,6 +470,54 @@ static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
-> >  	mutex_unlock(&cxlm->mbox_mutex);
-> >  }
-> >  
-> > +/**
-> > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
-> > + * @cxlm: The CXL memory device to communicate with.
-> > + * @opcode: Opcode for the mailbox command.
-> > + * @in: The input payload for the mailbox command.
-> > + * @in_size: The length of the input payload
-> > + * @out: Caller allocated buffer for the output.
-> > + *
-> > + * Context: Any context. Will acquire and release mbox_mutex.
-> > + * Return:
-> > + *  * %>=0	- Number of bytes returned in @out.
-> > + *  * %-EBUSY	- Couldn't acquire exclusive mailbox access.
-> > + *  * %-EFAULT	- Hardware error occurred.
-> > + *  * %-ENXIO	- Command completed, but device reported an error.
-> > + *
-> > + * Mailbox commands may execute successfully yet the device itself reported an
-> > + * error. While this distinction can be useful for commands from userspace, the
-> > + * kernel will often only care when both are successful.
-> > + *
-> > + * See __cxl_mem_mbox_send_cmd()
-> > + */
-> > +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, u8 *in,
-> > +				 size_t in_size, u8 *out)
-> > +{
-> > +	struct mbox_cmd mbox_cmd = {
-> > +		.opcode = opcode,
-> > +		.payload_in = in,
-> > +		.size_in = in_size,
-> > +		.payload_out = out,
-> > +	};
-> > +	int rc;
-> > +
-> > +	rc = cxl_mem_mbox_get(cxlm);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	rc = __cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
-> > +	cxl_mem_mbox_put(cxlm);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	/* TODO: Map return code to proper kernel style errno */
-> > +	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS)
-> > +		return -ENXIO;
-> > +
-> > +	return mbox_cmd.size_out;
-> > +}
-> > +
-> >  /**
-> >   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
-> >   * @cxlmd: The CXL memory device to communicate with.
-> > @@ -1380,33 +1429,18 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
-> >  		u8 poison_caps;
-> >  		u8 qos_telemetry_caps;
-> >  	} __packed id;
-> > -	struct mbox_cmd mbox_cmd = {
-> > -		.opcode = CXL_MBOX_OP_IDENTIFY,
-> > -		.payload_out = &id,
-> > -		.size_in = 0,
-> > -	};
-> >  	int rc;
-> >  
-> > -	/* Retrieve initial device memory map */
-> > -	rc = cxl_mem_mbox_get(cxlm);
-> > -	if (rc)
-> > -		return rc;
-> > -
-> > -	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
-> > -	cxl_mem_mbox_put(cxlm);
-> > -	if (rc)
-> > +	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_IDENTIFY, NULL, 0,
-> > +				   (u8 *)&id);
-> > +	if (rc < 0)
-> >  		return rc;
-> >  
-> > -	/* TODO: Handle retry or reset responses from firmware. */
-> > -	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS) {
-> > -		dev_err(&cxlm->pdev->dev, "Mailbox command failed (%d)\n",
-> > -			mbox_cmd.return_code);
-> > +	if (rc < sizeof(id)) {
-> > +		dev_err(&cxlm->pdev->dev, "Short identify data\n",
-> >  		return -ENXIO;
-> >  	}
-> >  
-> > -	if (mbox_cmd.size_out != sizeof(id))
-> > -		return -ENXIO;
-> > -
-> >  	/*
-> >  	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
-> >  	 * For now, only the capacity is exported in sysfs
-> > 
-> > 
-> > [snip]
-> > 
-> 
+T24gVGh1LCBGZWIgMTEsIDIwMjEgYXQgMTI6NTA6NDYsIEtyenlzenRvZiBXaWxjennFhHNraSA8
+a3dAbGludXguY29tPiANCndyb3RlOg0KDQo+IEhpIEd1c3Rhdm8sDQo+IA0KPiBbLi4uXQ0KPiA+
+ICsgKiBUeXBpY2FsbHkgdGhpcyBmdW5jdGlvbiB3aWxsIGJlIGNhbGxlZCBieSB0aGUgcGNpIGRy
+aXZlciwgd2hpY2ggcGFzc2VzDQo+IA0KPiBJdCB3b3VsZCBiZSAiUENJIiBoZXJlLg0KDQpOaWNl
+bHkgY2F0Y2guDQoNCj4gDQo+ID4gKyAqIHRocm91Z2ggYXJndW1lbnQgdGhlICdzdHJ1Y3QgcGNp
+X2RldiAqJyBhbHJlYWR5IHBvaW50aW5nIGZvciB0aGUgZGV2aWNlDQo+ID4gKyAqIGNvbmZpZyBz
+cGFjZSB0aGF0IGlzIGFzc29jaWF0ZWQgd2l0aCB0aGUgdmVuZG9yIGFuZCBkZXZpY2UgSUQgd2hp
+Y2ggd2lsbA0KPiA+ICsgKiBrbm93IHdoaWNoIElEIHRvIHNlYXJjaCBhbmQgd2hhdCB0byBkbyB3
+aXRoIGl0LCBob3dldmVyLCBpdCBtaWdodCBiZQ0KPiANCj4gUHJvYmFibHkgInRoZXJlIG1pZ2h0
+IGJlIi4NCg0KSSd2ZSByZXBocmFzZWQgaXQuDQoNCj4gDQo+ID4gKyAqIGNhc2VzIHRoYXQgdGhp
+cyBmdW5jdGlvbiBjb3VsZCBiZSBjYWxsZWQgb3V0c2lkZSBvZiB0aGlzIHNjb3BlIGFuZA0KPiA+
+ICsgKiB0aGVyZWZvcmUgaXMgdGhlIGNhbGxlciByZXNwb25zaWJpbGl0eSB0byBjaGVjayB0aGUg
+dmVuZG9yIGFuZC9vcg0KPiBbLi4uXQ0KPiANCj4gQSBzdWdnZXN0aW9uLiAgVGhpcyBjb21taXQg
+bWVzc2FnZSBpcyBhIGxpdHRsZSBoYXJkIHRvIHJlYWQgYW5kIGNvdWxkIGJlDQo+IGltcHJvdmVk
+Lg0KPiANCj4gSXQgbWlnaHQganVzdCBiZSBtZSAoYnkgYW5kIGxhcmdlLCBhbmQgSSBhbSBub3Qg
+YSBuYXRpdmUgRW5nbGlzaA0KPiBzcGVha2VyKSwgYnV0IGl0J3MgYWN0dWFsbHkgZWFzaWVyIHRv
+IGZpZ3VyZSBvdXQgd2hhdCB0aGUgZnVuY3Rpb24gZG9lcw0KPiBhZnRlciByZWFkaW5nIHRoZSBp
+bXBsZW1lbnRhdGlvbiB0aGF0IGZyb20gdGhlIGNvbW1lbnQuIDopDQoNCkkgaGF2ZSBhbHNvIHJl
+cGhyYXNlZCBpdC4gSSBob3BlIGl0IHdvdWxkIGJlIGJldHRlciwgYnV0IEkgZG9uJ3Qgc2VlIGhv
+dy4NCg0KIkFkZHMgYW5vdGhlciBoZWxwZXIgdG8gb25lcyB0aGF0IGFscmVhZHkgZXhpc3QgY2Fs
+bGVkIA0KcGNpX2ZpbmRfdnNlY19jYXBhYmlsaXR5LiBUaGlzIGhlbHBlciBjcmF3bHMgdGhyb3Vn
+aCB0aGUgZGV2aWNlIFBDSSANCmNvbmZpZyBzcGFjZSBzZWFyY2hpbmcgZm9yIGEgc3BlY2lmaWMg
+SUQgb24gdGhlIFZlbmRvci1TcGVjaWZpYyBFeHRlbmRlZCANCkNhcGFiaWxpdGllcyBzZWN0aW9u
+Lg0KDQpUaGUgVmVuZG9yLVNwZWNpZmljIEV4dGVuZGVkIENhcGFiaWxpdHkgKFZTRUMpIGlzIGEg
+c3BlY2lhbCBQQ0kgDQpjYXBhYmlsaXR5IChhY3RzIGxpa2UgY29udGFpbmVyKSBkZWZpbmVkIGJ5
+IFBDSS1TSUcgdGhhdCBhbGxvd3MgdGhlIG9uZSANCm9yIG1vcmUgcHJvcHJpZXRhcnkgY2FwYWJp
+bGl0aWVzIGRlZmluZWQgYnkgdGhlIHZlbmRvciB3aGljaCBhcmVuJ3QgDQpzdGFuZGFyZCBvciBz
+aGFyZWQgYmV0d2VlbiB0aGUgbWFudWZhY3R1cmVzLg0KDQotR3VzdGF2bw0KDQo+IA0KPiBLcnp5
+c3p0b2YNCg0KDQo=
