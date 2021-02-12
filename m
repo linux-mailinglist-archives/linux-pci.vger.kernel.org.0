@@ -2,325 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8100D31A220
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 16:55:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3744231A38F
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 18:29:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbhBLPzT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Feb 2021 10:55:19 -0500
-Received: from mga12.intel.com ([192.55.52.136]:8025 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229512AbhBLPzS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Feb 2021 10:55:18 -0500
-IronPort-SDR: DdcDcPzVbCi0TLLzQdad/idpN0woYGb0azSPwdpyplH94DHluMJp2rRe6kYRBnfcK+gMkv9evl
- SQG5d+t+b76w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9893"; a="161576520"
-X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
-   d="scan'208";a="161576520"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 07:54:38 -0800
-IronPort-SDR: ua5ODGCeCiIyd188xVcwJvXjmN0ucGTZtobnydEpeFsnW38CpSKttJz/zUEdqu62gGlHsWL+cn
- GNLoQHgHV0hA==
-X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
-   d="scan'208";a="381488777"
-Received: from smandal1-mobl2.amr.corp.intel.com (HELO intel.com) ([10.252.133.121])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 07:54:36 -0800
-Date:   Fri, 12 Feb 2021 07:54:35 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: Re: [PATCH v2 2/8] cxl/mem: Find device capabilities
-Message-ID: <20210212155435.wwmsuqom4qyymdq6@intel.com>
-References: <20210210000259.635748-1-ben.widawsky@intel.com>
- <20210210000259.635748-3-ben.widawsky@intel.com>
- <20210210133252.000047af@Huawei.com>
- <20210210150759.00005684@Huawei.com>
- <20210210165557.7fuqbyr7e7zjoxaa@intel.com>
- <20210210181605.ecbl3m5ep4rszpqs@intel.com>
- <20210211095548.00000da7@Huawei.com>
- <20210211155529.agul56lcb33cta5s@intel.com>
- <20210212132706.00006edc@Huawei.com>
+        id S229611AbhBLR3O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Feb 2021 12:29:14 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:42438 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229497AbhBLR3N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Feb 2021 12:29:13 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4AA4840C64;
+        Fri, 12 Feb 2021 17:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1613150894; bh=Kz/HN9GFZ6LekWdpgyUQBJQAeSl6o3M1KoJNJhws9XU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Xaal5YzHcuEOsRB7cWnsNZWIbP/pzcwzyS5oe8KuByqxgsYPRU5UVQ6cYGiuHZ8J5
+         T0VCTNV+cPHqa4tUwWmy7zV5dNbvTbB08gu/Urj4h3nno1Z9Efdi7Cef4HHSp0dxcy
+         kLkeV+zSKqzdC1DWg7HJESK7wj+8NF+cfxTdhhkmfY5bKh68tOY+hbjQzdw8FjI7fu
+         cKHC8jvJa46ffvInxFTWA2u4lV0+6vIUnub8adpp7dY/fiubuLB1dzplrUXg59kWDf
+         16SIWkOD+xnehsgPk+IdarUkqalzMHVjIFVLlrcfS0NPkN+A2/qDMK50xxPnGgVDAv
+         BYK2AujeL5a6A==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6A0CDA005D;
+        Fri, 12 Feb 2021 17:28:10 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v6 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Date:   Fri, 12 Feb 2021 18:28:02 +0100
+Message-Id: <cover.1613150798.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210212132706.00006edc@Huawei.com>
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-02-12 13:27:06, Jonathan Cameron wrote:
-> On Thu, 11 Feb 2021 07:55:29 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
-> 
-> > On 21-02-11 09:55:48, Jonathan Cameron wrote:
-> > > On Wed, 10 Feb 2021 10:16:05 -0800
-> > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > >   
-> > > > On 21-02-10 08:55:57, Ben Widawsky wrote:  
-> > > > > On 21-02-10 15:07:59, Jonathan Cameron wrote:    
-> > > > > > On Wed, 10 Feb 2021 13:32:52 +0000
-> > > > > > Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > > > > >     
-> > > > > > > On Tue, 9 Feb 2021 16:02:53 -0800
-> > > > > > > Ben Widawsky <ben.widawsky@intel.com> wrote:
-> > > > > > >     
-> > > > > > > > Provide enough functionality to utilize the mailbox of a memory device.
-> > > > > > > > The mailbox is used to interact with the firmware running on the memory
-> > > > > > > > device. The flow is proven with one implemented command, "identify".
-> > > > > > > > Because the class code has already told the driver this is a memory
-> > > > > > > > device and the identify command is mandatory.
-> > > > > > > > 
-> > > > > > > > CXL devices contain an array of capabilities that describe the
-> > > > > > > > interactions software can have with the device or firmware running on
-> > > > > > > > the device. A CXL compliant device must implement the device status and
-> > > > > > > > the mailbox capability. Additionally, a CXL compliant memory device must
-> > > > > > > > implement the memory device capability. Each of the capabilities can
-> > > > > > > > [will] provide an offset within the MMIO region for interacting with the
-> > > > > > > > CXL device.
-> > > > > > > > 
-> > > > > > > > The capabilities tell the driver how to find and map the register space
-> > > > > > > > for CXL Memory Devices. The registers are required to utilize the CXL
-> > > > > > > > spec defined mailbox interface. The spec outlines two mailboxes, primary
-> > > > > > > > and secondary. The secondary mailbox is earmarked for system firmware,
-> > > > > > > > and not handled in this driver.
-> > > > > > > > 
-> > > > > > > > Primary mailboxes are capable of generating an interrupt when submitting
-> > > > > > > > a background command. That implementation is saved for a later time.
-> > > > > > > > 
-> > > > > > > > Link: https://www.computeexpresslink.org/download-the-specification
-> > > > > > > > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
-> > > > > > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>      
-> > > > > > > 
-> > > > > > > Hi Ben,
-> > > > > > > 
-> > > > > > >     
-> > > > > > > > +/**
-> > > > > > > > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
-> > > > > > > > + * @cxlm: The CXL memory device to communicate with.
-> > > > > > > > + * @mbox_cmd: Command to send to the memory device.
-> > > > > > > > + *
-> > > > > > > > + * Context: Any context. Expects mbox_lock to be held.
-> > > > > > > > + * Return: -ETIMEDOUT if timeout occurred waiting for completion. 0 on success.
-> > > > > > > > + *         Caller should check the return code in @mbox_cmd to make sure it
-> > > > > > > > + *         succeeded.      
-> > > > > > > 
-> > > > > > > cxl_xfer_log() doesn't check mbox_cmd->return_code and for my test it currently
-> > > > > > > enters an infinite loop as a result.    
-> > > > > 
-> > > > > I meant to fix that.
-> > > > >     
-> > > > > > > 
-> > > > > > > I haven't checked other paths, but to my mind it is not a good idea to require
-> > > > > > > two levels of error checking - the example here proves how easy it is to forget
-> > > > > > > one.    
-> > > > > 
-> > > > > Demonstrably, you're correct. I think it would be good to have a kernel only
-> > > > > mbox command that does the error checking though. Let me type something up and
-> > > > > see how it looks.    
-> > > > 
-> > > > Hi Jonathan. What do you think of this? The bit I'm on the fence about is if I
-> > > > should validate output size too. I like the simplicity as it is, but it requires
-> > > > every caller to possibly check output size, which is kind of the same problem
-> > > > you're originally pointing out.  
-> > > 
-> > > The simplicity is good and this is pretty much what I expected you would end up with
-> > > (always reassuring)
-> > > 
-> > > For the output, perhaps just add another parameter to the wrapper for minimum
-> > > output length expected?
-> > > 
-> > > Now you mention the length question.  It does rather feel like there should also
-> > > be some protection on memcpy_fromio() copying too much data if the hardware
-> > > happens to return an unexpectedly long length.  Should never happen, but
-> > > the hardening is worth adding anyway given it's easy to do.
-> > > 
-> > > Jonathan  
-> > 
-> > Some background because I forget what I've said previously... It's unfortunate
-> > that the spec maxes at 1M mailbox size but has enough bits in the length field
-> > to support 2M-1. I've made some requests to have this fixed, so maybe 3.0 won't
-> > be awkward like this.
-> 
-> Agreed spec should be tighter here, but I'd argue over 1M indicates buggy hardware.
-> 
-> > 
-> > I think it makes sense to do as you suggested. One question though, do you have
-> > an opinion on we return to the caller as the output payload size, do we cap it
-> > at 1M also, or are we honest?
-> > 
-> > -       if (out_len && mbox_cmd->payload_out)
-> > -               memcpy_fromio(mbox_cmd->payload_out, payload, out_len);
-> > +       if (out_len && mbox_cmd->payload_out) {
-> > +               size_t n = min_t(size_t, cxlm->payload_size, out_len);
-> > +               memcpy_fromio(mbox_cmd->payload_out, payload, n);
-> > +       }
-> 
-> Ah, I read emails in wrong order.  What you have is what I expected and got
-> confused about in your other email.
-> 
-> > 
-> > So...
-> > mbox_cmd->size_out = out_len;
-> > mbox_cmd->size_out = n;
-> 
-> Good question.  My gut says the second one.
-> Maybe it's worth a warning print to let us know something
-> unexpected happened.
-> 
+This patch series adds a new driver called xData-pcie for the Synopsys
+DesignWare PCIe prototype.
 
-I also prefer 'n', It's unfortunate though if userspace hits this condition, it
-would have to scrape kernel logs to find out. Perhaps though userspace wouldn't
-ever really care.
+The driver configures and enables the Synopsys DesignWare PCIe traffic
+generator IP inside of prototype Endpoint which will generate upstream
+and downstream PCIe traffic. This allows to quickly test the PCIe link
+throughput speed and check is the prototype solution has some limitation
+or not.
 
-> > 
-> > 
-> > > 
-> > >   
-> > > > 
-> > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > index 55c5f5a6023f..ad7b2077ab28 100644
-> > > > --- a/drivers/cxl/mem.c
-> > > > +++ b/drivers/cxl/mem.c
-> > > > @@ -284,7 +284,7 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> > > >  }
-> > > >  
-> > > >  /**
-> > > > - * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
-> > > > + * __cxl_mem_mbox_send_cmd() - Execute a mailbox command
-> > > >   * @cxlm: The CXL memory device to communicate with.
-> > > >   * @mbox_cmd: Command to send to the memory device.
-> > > >   *
-> > > > @@ -296,7 +296,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> > > >   * This is a generic form of the CXL mailbox send command, thus the only I/O
-> > > >   * operations used are cxl_read_mbox_reg(). Memory devices, and perhaps other
-> > > >   * types of CXL devices may have further information available upon error
-> > > > - * conditions.
-> > > > + * conditions. Driver facilities wishing to send mailbox commands should use the
-> > > > + * wrapper command.
-> > > >   *
-> > > >   * The CXL spec allows for up to two mailboxes. The intention is for the primary
-> > > >   * mailbox to be OS controlled and the secondary mailbox to be used by system
-> > > > @@ -304,8 +305,8 @@ static void cxl_mem_mbox_timeout(struct cxl_mem *cxlm,
-> > > >   * not need to coordinate with each other. The driver only uses the primary
-> > > >   * mailbox.
-> > > >   */
-> > > > -static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
-> > > > -				 struct mbox_cmd *mbox_cmd)
-> > > > +static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
-> > > > +				   struct mbox_cmd *mbox_cmd)
-> > > >  {
-> > > >  	void __iomem *payload = cxlm->mbox_regs + CXLDEV_MBOX_PAYLOAD_OFFSET;
-> > > >  	u64 cmd_reg, status_reg;
-> > > > @@ -469,6 +470,54 @@ static void cxl_mem_mbox_put(struct cxl_mem *cxlm)
-> > > >  	mutex_unlock(&cxlm->mbox_mutex);
-> > > >  }
-> > > >  
-> > > > +/**
-> > > > + * cxl_mem_mbox_send_cmd() - Send a mailbox command to a memory device.
-> > > > + * @cxlm: The CXL memory device to communicate with.
-> > > > + * @opcode: Opcode for the mailbox command.
-> > > > + * @in: The input payload for the mailbox command.
-> > > > + * @in_size: The length of the input payload
-> > > > + * @out: Caller allocated buffer for the output.
-> > > > + *
-> > > > + * Context: Any context. Will acquire and release mbox_mutex.
-> > > > + * Return:
-> > > > + *  * %>=0	- Number of bytes returned in @out.
-> > > > + *  * %-EBUSY	- Couldn't acquire exclusive mailbox access.
-> > > > + *  * %-EFAULT	- Hardware error occurred.
-> > > > + *  * %-ENXIO	- Command completed, but device reported an error.
-> > > > + *
-> > > > + * Mailbox commands may execute successfully yet the device itself reported an
-> > > > + * error. While this distinction can be useful for commands from userspace, the
-> > > > + * kernel will often only care when both are successful.
-> > > > + *
-> > > > + * See __cxl_mem_mbox_send_cmd()
-> > > > + */
-> > > > +static int cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm, u16 opcode, u8 *in,
-> > > > +				 size_t in_size, u8 *out)
-> > > > +{
-> > > > +	struct mbox_cmd mbox_cmd = {
-> > > > +		.opcode = opcode,
-> > > > +		.payload_in = in,
-> > > > +		.size_in = in_size,
-> > > > +		.payload_out = out,
-> > > > +	};
-> > > > +	int rc;
-> > > > +
-> > > > +	rc = cxl_mem_mbox_get(cxlm);
-> > > > +	if (rc)
-> > > > +		return rc;
-> > > > +
-> > > > +	rc = __cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
-> > > > +	cxl_mem_mbox_put(cxlm);
-> > > > +	if (rc)
-> > > > +		return rc;
-> > > > +
-> > > > +	/* TODO: Map return code to proper kernel style errno */
-> > > > +	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS)
-> > > > +		return -ENXIO;
-> > > > +
-> > > > +	return mbox_cmd.size_out;
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * handle_mailbox_cmd_from_user() - Dispatch a mailbox command.
-> > > >   * @cxlmd: The CXL memory device to communicate with.
-> > > > @@ -1380,33 +1429,18 @@ static int cxl_mem_identify(struct cxl_mem *cxlm)
-> > > >  		u8 poison_caps;
-> > > >  		u8 qos_telemetry_caps;
-> > > >  	} __packed id;
-> > > > -	struct mbox_cmd mbox_cmd = {
-> > > > -		.opcode = CXL_MBOX_OP_IDENTIFY,
-> > > > -		.payload_out = &id,
-> > > > -		.size_in = 0,
-> > > > -	};
-> > > >  	int rc;
-> > > >  
-> > > > -	/* Retrieve initial device memory map */
-> > > > -	rc = cxl_mem_mbox_get(cxlm);
-> > > > -	if (rc)
-> > > > -		return rc;
-> > > > -
-> > > > -	rc = cxl_mem_mbox_send_cmd(cxlm, &mbox_cmd);
-> > > > -	cxl_mem_mbox_put(cxlm);
-> > > > -	if (rc)
-> > > > +	rc = cxl_mem_mbox_send_cmd(cxlm, CXL_MBOX_OP_IDENTIFY, NULL, 0,
-> > > > +				   (u8 *)&id);
-> > > > +	if (rc < 0)
-> > > >  		return rc;
-> > > >  
-> > > > -	/* TODO: Handle retry or reset responses from firmware. */
-> > > > -	if (mbox_cmd.return_code != CXL_MBOX_SUCCESS) {
-> > > > -		dev_err(&cxlm->pdev->dev, "Mailbox command failed (%d)\n",
-> > > > -			mbox_cmd.return_code);
-> > > > +	if (rc < sizeof(id)) {
-> > > > +		dev_err(&cxlm->pdev->dev, "Short identify data\n",
-> > > >  		return -ENXIO;
-> > > >  	}
-> > > >  
-> > > > -	if (mbox_cmd.size_out != sizeof(id))
-> > > > -		return -ENXIO;
-> > > > -
-> > > >  	/*
-> > > >  	 * TODO: enumerate DPA map, as 'ram' and 'pmem' do not alias.
-> > > >  	 * For now, only the capacity is exported in sysfs
-> > > > 
-> > > > 
-> > > > [snip]
-> > > >   
-> > >   
-> 
+Changes:
+ V2: Rework driver according to Greg Kroah-Hartman' feedback
+ V3: Fixed issues detected while running on 64 bits platforms
+     Rebased patches on top of v5.11-rc1 version
+ V4: Rework driver according to Greg Kroah-Hartman' feedback
+     Add the ABI doc related to the sysfs implemented on this driver
+ V5: Rework driver accordingly to Leon Romanovsky' feedback
+     Rework driver accordingly to Krzysztof Wilczyński' feedback
+ V6: Rework driver according to Greg Kroah-Hartman' feedback
+     Rework driver accordingly to Krzysztof Wilczyński' feedback
+     Rework driver accordingly to Leon Romanovsky' feedback
+
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Gustavo Pimentel (5):
+  misc: Add Synopsys DesignWare xData IP driver
+  misc: Add Synopsys DesignWare xData IP driver to Makefile and Kconfig
+  Documentation: misc-devices: Add Documentation for dw-xdata-pcie
+    driver
+  MAINTAINERS: Add Synopsys xData IP driver maintainer
+  docs: ABI: Add sysfs documentation interface of dw-xdata-pcie driver
+
+ Documentation/ABI/testing/sysfs-driver-xdata |  46 ++++
+ Documentation/misc-devices/dw-xdata-pcie.rst |  40 +++
+ MAINTAINERS                                  |   7 +
+ drivers/misc/Kconfig                         |  10 +
+ drivers/misc/Makefile                        |   1 +
+ drivers/misc/dw-xdata-pcie.c                 | 390 +++++++++++++++++++++++++++
+ 6 files changed, 494 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-xdata
+ create mode 100644 Documentation/misc-devices/dw-xdata-pcie.rst
+ create mode 100644 drivers/misc/dw-xdata-pcie.c
+
+-- 
+2.7.4
+
