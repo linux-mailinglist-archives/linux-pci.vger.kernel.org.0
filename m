@@ -2,33 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9844231A398
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 18:29:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A88E031A394
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 18:29:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231404AbhBLR3W (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Feb 2021 12:29:22 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42732 "EHLO
+        id S231341AbhBLR3T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Feb 2021 12:29:19 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:42474 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229796AbhBLR3R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Feb 2021 12:29:17 -0500
+        by vger.kernel.org with ESMTP id S230405AbhBLR3Q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Feb 2021 12:29:16 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CD095C0446;
-        Fri, 12 Feb 2021 17:28:15 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0737C40C6B;
+        Fri, 12 Feb 2021 17:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1613150897; bh=863tP0aolNfteoszWABDENJIX1G0vnTYrYhI2nTehPU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+        t=1613150896; bh=cWk/9t1KJ3pkWZTaXhcE9sqS1Abl0NkmKoOW7uAzFRQ=;
+        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=OBcbOPzVvwilhlsJj44auPvX7EilxnAzQaHp84GXzkJfphrP98K6LvySnSRcnqWue
-         X5a3eH9Rp2L9OKkMQ6LjpkXWkOCQhjah4pAZM/B2iu1Mdd44RdssWeT6uap/vMY4n+
-         sUKPzhh6n1muZm9/+JWZ6OxPNcQ2vIegP6nnOuIwR9Rt4v0cpn6gyCnfA182+YNdGT
-         0RJx0Cg8hrwZ7K1U4BSVHZCy4VFo7dv0RZoK1SiMqTbgLiyYoP050ALRLM55nUxH4H
-         2odsCi2W+bdfXO8RkpuXv6WCmX+s5hBzeTjxIkKSKq4kNo/dyZZXQ8yqtWR4xkheLi
-         vGEfgyfQ3K+Fg==
+        b=OY0Fo/L8uWdChJDGzWbKVuADzYlOeYZjYjnDV4JkjB6rgXmmB3/3bghuYhTrlWpmu
+         15h2c9NXBERGUjt5Ph525s9+gyBPKIz2SeK/xco48LAx2m559y4fbZT8KlaAeAEqHf
+         lVWaCFeil0E3ZuiI1pjhTgjLA/edfhRTeJt6hme8sSd4DJF7enxN6AbEo6dk2laDEy
+         YBrPQi5QG+YWocfha3ddXByrLolrJhTjoPBBt8qv4fBrgNBXTOwLoJnzhRr6Fr1V7T
+         kkHiEv02aFXE6BHeJ5zv67g0o0T3xOssIsA83qwl8oqHrCOMQBsmZ7jDs+1zE3Orw+
+         qOo0iEpyCMGtQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id DD41AA021D;
-        Fri, 12 Feb 2021 17:28:13 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id C4688A005D;
+        Fri, 12 Feb 2021 17:28:14 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -39,11 +39,11 @@ To:     linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v6 2/5] misc: Add Synopsys DesignWare xData IP driver to Makefile and Kconfig
-Date:   Fri, 12 Feb 2021 18:28:04 +0100
-Message-Id: <2683d06074193f2f56bdb519ceed20cb54c00056.1613150798.git.gustavo.pimentel@synopsys.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v6 3/5] Documentation: misc-devices: Add Documentation for dw-xdata-pcie driver
+Date:   Fri, 12 Feb 2021 18:28:05 +0100
+Message-Id: <3ac165649570ce353e644f2b4c3f7473d72c7e23.1613150798.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1613150798.git.gustavo.pimentel@synopsys.com>
 References: <cover.1613150798.git.gustavo.pimentel@synopsys.com>
@@ -53,50 +53,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Synopsys DesignWare xData IP driver to Makefile and Kconfig.
-
-This driver enables/disables the PCIe traffic generator module
-pertain to the Synopsys DesignWare prototype.
+Add Documentation for dw-xdata-pcie driver.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/misc/Kconfig  | 10 ++++++++++
- drivers/misc/Makefile |  1 +
- 2 files changed, 11 insertions(+)
+ Documentation/misc-devices/dw-xdata-pcie.rst | 40 ++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/misc-devices/dw-xdata-pcie.rst
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index fafa8b0..e42b171 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -423,6 +423,16 @@ config SRAM
- config SRAM_EXEC
- 	bool
- 
-+config DW_XDATA_PCIE
-+	depends on PCI
-+	tristate "Synopsys DesignWare xData PCIe driver"
-+	help
-+	  This driver allows controlling Synopsys DesignWare PCIe traffic
-+	  generator IP also known as xData, present in Synopsys DesignWare
-+	  PCIe Endpoint prototype.
+diff --git a/Documentation/misc-devices/dw-xdata-pcie.rst b/Documentation/misc-devices/dw-xdata-pcie.rst
+new file mode 100644
+index 00000000..3d241ae
+--- /dev/null
++++ b/Documentation/misc-devices/dw-xdata-pcie.rst
+@@ -0,0 +1,40 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+	  If unsure, say N.
++===========================================================================
++Driver for Synopsys DesignWare PCIe traffic generator (also known as xData)
++===========================================================================
 +
- config PCI_ENDPOINT_TEST
- 	depends on PCI
- 	select CRC32
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index d23231e..bf22021 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
- obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
- obj-$(CONFIG_CXL_BASE)		+= cxl/
-+obj-$(CONFIG_DW_XDATA_PCIE)	+= dw-xdata-pcie.o
- obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
- obj-$(CONFIG_OCXL)		+= ocxl/
- obj-y				+= cardreader/
++This driver should be used as a host-side (Root Complex) driver and Synopsys
++DesignWare prototype that includes this IP.
++
++The "dw-xdata-pcie" driver can be used to enable/disable PCIe traffic
++generator in either direction (mutual exclusion) besides allowing the
++PCIe link performance analysis.
++
++The interaction with this driver is done through the module parameter and
++can be changed in runtime. The driver outputs the requested command state
++information to /var/log/kern.log or dmesg.
++
++Request write TLPs traffic generation - Root Complex to Endpoint direction
++- Command:
++	echo 1 > /sys/bus/pci/drivers/dw-xdata-pcie/.../write
++
++Get write TLPs traffic link throughput in MB/s
++- Command:
++        cat /sys/bus/pci/drivers/dw-xdata-pcie/.../write
++- Output example:
++	204
++
++Request read TLPs traffic generation - Endpoint to Root Complex direction:
++- Command:
++	echo 1 > /sys/bus/pci/drivers/dw-xdata-pcie/.../read
++
++Get read TLPs traffic link throughput in MB/s
++- Command:
++        cat /sys/bus/pci/drivers/dw-xdata-pcie/.../read
++- Output example:
++	199
++
++Request to stop any current TLP transfer:
++- Command:
++	echo 1 > /sys/bus/pci/drivers/dw-xdata-pcie/.../stop
 -- 
 2.7.4
 
