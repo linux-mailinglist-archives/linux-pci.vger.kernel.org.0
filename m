@@ -2,194 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42DD5319C51
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 11:05:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8708319C5E
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 11:12:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbhBLKEm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Feb 2021 05:04:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbhBLKEA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Feb 2021 05:04:00 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45FFCC06178B
-        for <linux-pci@vger.kernel.org>; Fri, 12 Feb 2021 02:03:17 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id 7so7233558wrz.0
-        for <linux-pci@vger.kernel.org>; Fri, 12 Feb 2021 02:03:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=y10zmKTwVSU2bmLvDau6dZ5wxR4I4atJnubBYNUZwLs=;
-        b=QGehvdPLmnyihf0IxNfVK08VpYfCI3jl++jNTW/peYO+G2YIVagtdIPrxXZ9gRQDdd
-         /AZZPJ6EQp58chjBOCz163syQAI3OI+qVDTp/c5KWEHO02v2MQjuTj3YespYU6OefiwK
-         XyiIKPiRZzcM4pN+dK1qgUvzN/YymyICr553Kb3/0Q/NOkAS2/vhHsxBGPmeNG6XWngm
-         Hxx/Blm9KpsgLRbOLo+gKmgS69Sp6YJdo0q+V1Mc+O1F993a6PPkjm/pgX4FGaavToBZ
-         ceWylzpyKoQuc/Oz8EtyuZN+FAmMDKmJmZ7qvCswPP96S2l8iugOIEf77M5XPnJt+IFG
-         IG/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=y10zmKTwVSU2bmLvDau6dZ5wxR4I4atJnubBYNUZwLs=;
-        b=eY/dFqnhcO2Il60S2u6P94K6CERw+wnfiCSFeugnf7JvxOwhY8LbY4/+OOEMIW4qsA
-         wKKkcosA/u3DwFt7AkNtFLyHGTleK4iY+aHjdgWiGjrL3us6yArbhUFEbc+7NrKE+vEQ
-         V9DuEAeAZksKIsxavyjzUEd/K1JQqVZGdueLtUIdn8jdw5yCOHFb6NQTp1tXP3Lyai5l
-         qpYjwPeP+8KX5Mxm+dCT75EXd+jEfwlhyRpAzusZyFgIALZfdzUpUSXL2yj+pLf6VWSg
-         tktLFYU9nZDmQnN01FAJ1+RKa6F9K0kIfp+7A3ypag6RDBB9Ink0lbRPxz03WOarYQTY
-         UEdw==
-X-Gm-Message-State: AOAM5314CbGGXjJDFAZ4zOKkLPRNQ+5zAgJeDjWPU+4WCjlJUl8Oad09
-        zuq2oiysEA1WKmbNx4/mAp5flZFShdJ7Pw==
-X-Google-Smtp-Source: ABdhPJy+V9bJjN+gjGzUEv9hG1sU+HL2yBLfWaWD8yq+C4Rywzj/oOlGcbqwm1H4+zlAVahyv6IdWg==
-X-Received: by 2002:a5d:4902:: with SMTP id x2mr1898762wrq.207.1613124195631;
-        Fri, 12 Feb 2021 02:03:15 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f1f:ad00:6ca0:dfcc:de5d:f04e? (p200300ea8f1fad006ca0dfccde5df04e.dip0.t-ipconnect.de. [2003:ea:8f1f:ad00:6ca0:dfcc:de5d:f04e])
-        by smtp.googlemail.com with ESMTPSA id s23sm13753893wmc.29.2021.02.12.02.03.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Feb 2021 02:03:15 -0800 (PST)
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH RESEND] PCI/VPD: Remove pci_set_vpd_size
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Message-ID: <47d86e52-9bcf-7da7-1edb-0d988a7a82ab@gmail.com>
-Date:   Fri, 12 Feb 2021 11:02:47 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S229650AbhBLKKI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Feb 2021 05:10:08 -0500
+Received: from mail-eopbgr70083.outbound.protection.outlook.com ([40.107.7.83]:23998
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229904AbhBLKKB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Feb 2021 05:10:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VHmTLGrGWs3Jb009pLLLO+ToSVxjKUSw1sHxnE37n2t6wu56Y7hH6a+LiGodUnS/Mvm7QCtOYeqEPcBK2hooGMuwtKkBwveoBWCpCId3pfeZJ49NZOYOZhBnCsQblZc5tErg8M7/Fr1dm8PLb9cC2wcP8f6tB1rPwpHOlVlqHIX0t1j680ZYDsW2uI8/By24gzfG0R1lSeNEnbacN+OdMVGnrThsB1DTQ4ANB7oO9TrjwgD+fz6IcEtOiCd/Fl+0Tb0QvrzGfj33eM2++bo1eKh1yTTMTJzN4WQp8uY0azcU7sDFZFDJlvOUChWfloiG4F2062KYpc9YZPew7akmWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1CDYJ7fEy+M4Wi6GR+rdRFSZUWWw3lOAkB1zM+ah6UA=;
+ b=TgnPcHb+s1RiSVRbMfXc033kyqMd7d3ms6APdEOIgXhSh0xoJlilhDH+YfN1BNSx4E9c+tm/FlZCF3zGcu/yzN2KLHgQ/4wl+GWc/B4Z+tT0CRTEoqpGuTxdlpuXvEA7ApEPJhv7vSPIKAUvqPRmLzJZaRDGAm+7L1+fAIuDZ6YdYLzclpo0fAMnmLW1AqkZyhSoNkmmz6+dyuqEsV0Ui+U8wRUAgUNDU/QZhaIvLuvGNFHjB0bkx2Lw5yWiEj07Mu9bmVZxYSVqUMKRpg1P0U5fqhgqJxmxBt6LeV5DKayeyYUgKqwaGzZ1RKJUgPSPrfGGriCTwi3qzhKJdK+9kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1CDYJ7fEy+M4Wi6GR+rdRFSZUWWw3lOAkB1zM+ah6UA=;
+ b=DEpjvYJQT+KPtZOWHQpSWTCj72pAZAn7LXALz+roezfp4oSYw4XQk4EEZAVPSjSQOq+79kLLfces8EkD6OLPtJgFh3u593kIKdljjmHhBIjhhNz1K2udREEUTk727cFx5jvMIryQ36nBdjYiN0qd3wEq/dHWZYamsck9ucxjIzc=
+Authentication-Results: google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13)
+ by VI1PR04MB4688.eurprd04.prod.outlook.com (2603:10a6:803:6a::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.23; Fri, 12 Feb
+ 2021 10:09:10 +0000
+Received: from VE1PR04MB6702.eurprd04.prod.outlook.com
+ ([fe80::8da8:ad8f:e241:457b]) by VE1PR04MB6702.eurprd04.prod.outlook.com
+ ([fe80::8da8:ad8f:e241:457b%3]) with mapi id 15.20.3846.026; Fri, 12 Feb 2021
+ 10:09:10 +0000
+From:   Wasim Khan <wasim.khan@oss.nxp.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wasim Khan <wasim.khan@nxp.com>
+Subject: [PATCH] PCI : check if type 0 devices have all BARs of size zero
+Date:   Fri, 12 Feb 2021 11:08:56 +0100
+Message-Id: <20210212100856.473415-1-wasim.khan@oss.nxp.com>
+X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [92.121.36.4]
+X-ClientProxiedBy: FR2P281CA0003.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::13) To VE1PR04MB6702.eurprd04.prod.outlook.com
+ (2603:10a6:803:123::13)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv05369.swis.nl-cdc01.nxp.com (92.121.36.4) by FR2P281CA0003.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.12 via Frontend Transport; Fri, 12 Feb 2021 10:09:09 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 41f29bd8-21e4-4120-f5cf-08d8cf3e3d7a
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4688:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB468868AF45B68ECA1F9E0B58D18B9@VI1PR04MB4688.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yczFfXeB6AySviU3ECyfbH9BioPEtNmjzwADNRvYywzfqjRJmSMjehWizzdAWi8fXZEUe5n8s3fdNPRNojyJ9JIYmq72igjGy5Vt10Il2+ezKxuTR4IUrzwf6IG0WuvdE1WfIkW/Xp91+R5he4x/kjHs4nJAd3EbhPAQTs1bcyYDw87FNjSm4TE2dna8jPs8ovM1KbFhPYvQFpLopBUbKlNTLBOPo4sxPOBoelhQ8P9UIKuFOWXB/bQGPsTooqxoHj+6vkNpxyWLFS1V71hwG91d4dvPChMz05d1hTLTP0XkjIX8rmJNCEe3ertO5dOTiXlLFHHl06PbPUH5ojP/EHKiRcvLksiGqxnz4kUo/70RDYo9dQrgLgV30gI+U9pLtlkYXYts/HlDXt6CcVumb7etzDrC0cQmBLkH61st35QxUNxFFDkewP3GoPzxJTSfCiiQ8Z4NiEgqLcJ8HJHDHvVNW7Vh92WGstfN1wLJ1jXk1MMYUNbqS7o+M4Gb14EPN+clLO9oOKFR8W3YQtG1ZQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6702.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(39850400004)(366004)(136003)(316002)(6506007)(2616005)(86362001)(66556008)(26005)(956004)(5660300002)(186003)(6916009)(44832011)(66476007)(2906002)(8676002)(83380400001)(52116002)(6666004)(6512007)(6486002)(66946007)(1076003)(4326008)(8936002)(16526019)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?aU6ejeX3vozAnC7FZW6g1EY+DdJ7QjNUcrl10c8cxYIkFe0oAD9KW9OAwlDS?=
+ =?us-ascii?Q?dwVWBBWLEjLmoKZ9xRw+iuiLvDNr/rGSu8FNBrr0mK+pE0FXh1YBh8Nqsptc?=
+ =?us-ascii?Q?FZxqsIarQHF2jepWhCgoM9EoLs6Oi/n9pBGOm4AWKZpMrUXqspU0slUuKMei?=
+ =?us-ascii?Q?UKXJrGQzqSdRFSWs0QfjKZdLux1oZGkyZISo2PSY9NC0X17RkRCIVauV41FV?=
+ =?us-ascii?Q?cyLgTt3lHd669wmtBpyHKzW6+YEXFps1m+ipj2Ryk/h2kCw2a0Cua0Ta3+dn?=
+ =?us-ascii?Q?4evOMAcPWoCmkiWzCEP7twfcRHB2Sb7oF1pGtPtJlJ9rPRcn1AITgShbY9dU?=
+ =?us-ascii?Q?7w+SE4PpNTtdGVs1vIZB36x0B6Fx22mlk18bTaGbDs8sSn2wsR/BqiEnms9i?=
+ =?us-ascii?Q?Zffo7tf8kUTc1gZLYgaIBCw/zsKoCLg9x2SEpiMsTPz3ekWNUeFROHSFGWyx?=
+ =?us-ascii?Q?P4kbmC2PLWyEBkdpWZd4wIbMJc5c95brYGItGa99B10J4YXxGuvSUwpmjPB2?=
+ =?us-ascii?Q?UPKhEpjwv48v+1F5EvoQZi2VGVk4vuAwuDvyKX/GvVAtK15Y/kGcFtgmFKfP?=
+ =?us-ascii?Q?Rvgj5f6mQNHsDOnZIUW/Ic5fhOa5DRRvs0Z4iKcqMEYXZ+KnPGIC7oiGwSZQ?=
+ =?us-ascii?Q?xD3zR1NtLmDHI3AtCr0noAbbw9Pi6DyTzTqIGuVYhM35qg+kon2dwlJ8KGLb?=
+ =?us-ascii?Q?YxsWo3vrWd5MLk/VU+PeEmo97NoMz4UqeB+q6xsT6mBxAOOeTUhF1FRiBRb9?=
+ =?us-ascii?Q?BLWc1ZqM7ZZoaegkWMZxpv4kA4wFS05n9CpPM32W78K5rlWzpVAW+repFfKw?=
+ =?us-ascii?Q?b3kSIuKzTBNyUGNZGX636YaHSnWYiuF/LqRldce08nA4YI2Rnfham7A9ItIG?=
+ =?us-ascii?Q?Nz0liicGjTX6uaEYQFpWaTUsyqOwHyVdXfn4Wm/6pOif9HD3Ii1NyigOyliZ?=
+ =?us-ascii?Q?Mp77JoBQzYEBv1oSWmitO/EUG1DAYonguyEvCze6LfL7npOItf98G2u7C0do?=
+ =?us-ascii?Q?CIfvxH+OeiW8f62+5jLAFGQAVCPKwY5YQ6s8/hHJ+i9S7XhOiNNG+/7+F4rU?=
+ =?us-ascii?Q?YRuImRNC7NlENix+zlzBLtKFax7pAagyfLzgjEQPdgSGzThwRI9E+YFRfCyL?=
+ =?us-ascii?Q?PWAa8NGLZXFKCInbKBIxwJXLKnvdGRFlGY6kWImgT+3FiIIsSGwBE4eOcNuo?=
+ =?us-ascii?Q?JrbmvENVD2GaUZWunxX2LDJeM17vu6I0eOO6qvnIFZNbo1C1eKMliDnHj5+P?=
+ =?us-ascii?Q?t31WOVRpNa7LYQFeJJ4OWEg9lIN3IjGIpeG7Pe93jbkZgQYLl2/iwfzZV1pq?=
+ =?us-ascii?Q?rHgHHEme+vs05KJGEJSM+H0v?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41f29bd8-21e4-4120-f5cf-08d8cf3e3d7a
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6702.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2021 10:09:10.4702
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 28oF+vnGN5uBQgwKYb3fA45ZFMNRGYfWZqe+Y6eB7bcG0uGZW68woO7/nu9TD7MjVqruPy7/HAmga1UPwKs3PA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4688
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-24a1720a0841 ("cxgb4: collect serial config version from register")
-removed the only usage of pci_set_vpd_size(). If a device needs to
-override the auto-detected VPD size, then this can be done using a
-PCI quirk, like it's done for Chelsio devices. There's no need to
-allow drivers to change the VPD size. So let's remove
-pci_set_vpd_size().
+From: Wasim Khan <wasim.khan@nxp.com>
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
----
-- Referenced commit just landed in linux-next via the netdev tree.
-- Uups, had the list on bcc instead of cc.
----
- drivers/pci/vpd.c   | 47 +++++++--------------------------------------
- include/linux/pci.h |  1 -
- 2 files changed, 7 insertions(+), 41 deletions(-)
+Log a message if all BARs of type 0 devices are of
+size zero. This can help detecting type 0 devices
+not reporting BAR size correctly.
 
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 4cf0d77ca..d1cbc5e64 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -16,7 +16,6 @@
- struct pci_vpd_ops {
- 	ssize_t (*read)(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
- 	ssize_t (*write)(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
--	int (*set_size)(struct pci_dev *dev, size_t len);
- };
- 
- struct pci_vpd {
-@@ -59,19 +58,6 @@ ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void
- }
- EXPORT_SYMBOL(pci_write_vpd);
- 
--/**
-- * pci_set_vpd_size - Set size of Vital Product Data space
-- * @dev:	pci device struct
-- * @len:	size of vpd space
-- */
--int pci_set_vpd_size(struct pci_dev *dev, size_t len)
--{
--	if (!dev->vpd || !dev->vpd->ops)
--		return -ENODEV;
--	return dev->vpd->ops->set_size(dev, len);
--}
--EXPORT_SYMBOL(pci_set_vpd_size);
--
- #define PCI_VPD_MAX_SIZE (PCI_VPD_ADDR_MASK + 1)
- 
- /**
-@@ -296,23 +282,19 @@ static ssize_t pci_vpd_write(struct pci_dev *dev, loff_t pos, size_t count,
- 	return ret ? ret : count;
- }
- 
--static int pci_vpd_set_size(struct pci_dev *dev, size_t len)
-+static void pci_vpd_set_size(struct pci_dev *dev, size_t len)
+Signed-off-by: Wasim Khan <wasim.khan@nxp.com>
+---
+ drivers/pci/probe.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 953f15abc850..6438d6d56777 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -321,6 +321,7 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
  {
- 	struct pci_vpd *vpd = dev->vpd;
+ 	unsigned int pos, reg;
++	bool found = false;
  
--	if (len == 0 || len > PCI_VPD_MAX_SIZE)
--		return -EIO;
--
--	vpd->valid = 1;
--	vpd->len = len;
--
--	return 0;
-+	if (vpd && len && len <= PCI_VPD_MAX_SIZE) {
-+		vpd->valid = 1;
-+		vpd->len = len;
-+	}
- }
+ 	if (dev->non_compliant_bars)
+ 		return;
+@@ -333,8 +334,12 @@ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
+ 		struct resource *res = &dev->resource[pos];
+ 		reg = PCI_BASE_ADDRESS_0 + (pos << 2);
+ 		pos += __pci_read_base(dev, pci_bar_unknown, res, reg);
++		found |= res->flags ? 1 : 0;
+ 	}
  
- static const struct pci_vpd_ops pci_vpd_ops = {
- 	.read = pci_vpd_read,
- 	.write = pci_vpd_write,
--	.set_size = pci_vpd_set_size,
- };
- 
- static ssize_t pci_vpd_f0_read(struct pci_dev *dev, loff_t pos, size_t count,
-@@ -345,24 +327,9 @@ static ssize_t pci_vpd_f0_write(struct pci_dev *dev, loff_t pos, size_t count,
- 	return ret;
- }
- 
--static int pci_vpd_f0_set_size(struct pci_dev *dev, size_t len)
--{
--	struct pci_dev *tdev = pci_get_slot(dev->bus,
--					    PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
--	int ret;
--
--	if (!tdev)
--		return -ENODEV;
--
--	ret = pci_set_vpd_size(tdev, len);
--	pci_dev_put(tdev);
--	return ret;
--}
--
- static const struct pci_vpd_ops pci_vpd_f0_ops = {
- 	.read = pci_vpd_f0_read,
- 	.write = pci_vpd_f0_write,
--	.set_size = pci_vpd_f0_set_size,
- };
- 
- int pci_vpd_init(struct pci_dev *dev)
-@@ -528,9 +495,9 @@ static void quirk_chelsio_extend_vpd(struct pci_dev *dev)
- 	 * limits.
- 	 */
- 	if (chip == 0x0 && prod >= 0x20)
--		pci_set_vpd_size(dev, 8192);
-+		pci_vpd_set_size(dev, 8192);
- 	else if (chip >= 0x4 && func < 0x8)
--		pci_set_vpd_size(dev, 2048);
-+		pci_vpd_set_size(dev, 2048);
- }
- 
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 86c799c97..edadc62ae 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1302,7 +1302,6 @@ void pci_unlock_rescan_remove(void);
- /* Vital Product Data routines */
- ssize_t pci_read_vpd(struct pci_dev *dev, loff_t pos, size_t count, void *buf);
- ssize_t pci_write_vpd(struct pci_dev *dev, loff_t pos, size_t count, const void *buf);
--int pci_set_vpd_size(struct pci_dev *dev, size_t len);
- 
- /* Helper functions for low-level code (drivers/pci/setup-[bus,res].c) */
- resource_size_t pcibios_retrieve_fw_addr(struct pci_dev *dev, int idx);
++	if (!dev->hdr_type && !found)
++		pci_info(dev, "BAR size is 0 for BAR[0..%d]\n", howmany - 1);
++
+ 	if (rom) {
+ 		struct resource *res = &dev->resource[PCI_ROM_RESOURCE];
+ 		dev->rom_base_reg = rom;
 -- 
-2.30.0
+2.25.1
 
