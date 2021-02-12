@@ -2,104 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A531731991F
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 05:29:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04BE0319AD5
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 08:47:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229575AbhBLE2x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Feb 2021 23:28:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbhBLE2v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Feb 2021 23:28:51 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD7DDC061786
-        for <linux-pci@vger.kernel.org>; Thu, 11 Feb 2021 20:28:11 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id s15so4470340plr.9
-        for <linux-pci@vger.kernel.org>; Thu, 11 Feb 2021 20:28:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZR+aabr64yWgCcg3tFC4qsF1v5nqVYMm2I0noIyPsCw=;
-        b=GobiS9mGxBlo/ukJelr5dPQgMLmlKJ4s8q3FhWYR6ySAZHOhb5a+AkpAhdhMMG7T/3
-         phntOq6lnoQEfWXfrXVN55v9Z83q5ajNFNPbSZCgjUFnIsqY07v5RZCUrnTfs+3L5hyx
-         sQtZTV3SFQqw+zEAEwmGVPCazkAqscVBvpfokVbOgRDrgJ9rdDWXcbMIM2rawyF8NV38
-         ypm1L7uNZ0RoMvikm1CSgCAXG+tK+TKVNXNEVZOMU3EgMqrBHlIPiTiQVmRFg2IV6KIG
-         hvlPg6/ytjncrZ1g2GShK/db2YiEaD3nuU04X1SRf75DX49+0Nt+gD1RsiiLfwGpBOw3
-         QTcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZR+aabr64yWgCcg3tFC4qsF1v5nqVYMm2I0noIyPsCw=;
-        b=qzNv2I8C7ntnL0Z21kztWmny5fbes5iRxn8cT2UNcxZQGVGDEBu/e39D7YsnyvQiXn
-         g8R0IDHnrsFYvbrjDax//74NT8MA9LEch8copv8y73CA9dVSUZLiMKxFMd5bMHIEMH5a
-         MAEaoahK0vJYR+jCHCAFH+Ww0NYXuyYq8ugq1dJSIxjBWk473VdbOJrvf7Bjb78j3WK9
-         Ac5Rs5mKuq2HuHKgEz4UbWlvFr98EufMDdM0WcXdhGd9DoxsxBQfMCQi0HhJVqX0jSvC
-         IFqP3xuteM9XF94IjDx+YDObuthrgz0pwXgVNZ3EBYwv3jOBvdd9ATLFj0E3JPoR46po
-         04Zg==
-X-Gm-Message-State: AOAM532lTnSX0r760UpHMCAU/m9r7i+5jpkY9eVOs/X1DceETPc/6rMX
-        WQUFdDo2rIflFyoP/WBcfW8P+Q==
-X-Google-Smtp-Source: ABdhPJwGkjQUwMP8XefFXrRE5xGFyoG2PyK9oRFz9QBGRyIafYp6Js9D8Flr/JNJ1qq0jMIv0cwVlw==
-X-Received: by 2002:a17:90b:4905:: with SMTP id kr5mr1030438pjb.135.1613104091205;
-        Thu, 11 Feb 2021 20:28:11 -0800 (PST)
-Received: from localhost ([122.172.59.240])
-        by smtp.gmail.com with ESMTPSA id r68sm7309061pfc.49.2021.02.11.20.28.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Feb 2021 20:28:10 -0800 (PST)
-Date:   Fri, 12 Feb 2021 09:58:07 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Sumit Gupta <sumitg@nvidia.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        x86@kernel.org, linux-pm@vger.kernel.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 2/9] cpufreq: sfi-cpufreq: Remove driver for
- deprecated firmware
-Message-ID: <20210212042807.4yzclby4rffnkwvm@vireshk-i7>
-References: <20210211134008.38282-1-andriy.shevchenko@linux.intel.com>
- <20210211134008.38282-3-andriy.shevchenko@linux.intel.com>
+        id S229873AbhBLHpp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Feb 2021 02:45:45 -0500
+Received: from mx.socionext.com ([202.248.49.38]:26054 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229913AbhBLHpa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Feb 2021 02:45:30 -0500
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 12 Feb 2021 16:44:36 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 6797A2059027;
+        Fri, 12 Feb 2021 16:44:36 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 12 Feb 2021 16:44:36 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id F12F5B1D40;
+        Fri, 12 Feb 2021 16:44:35 +0900 (JST)
+Received: from [10.212.20.145] (unknown [10.212.20.145])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 44DE21202F7;
+        Fri, 12 Feb 2021 16:44:35 +0900 (JST)
+Subject: Re: [PATCH v2] PCI: designware-ep: Fix the reference to
+ pci->num_{ib,ob}_windows before setting
+To:     Rob Herring <robh@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+References: <1611011439-29881-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAL_JsqLtcXFktBWWqpbYf3B5BR2eUyBsQQ3Q5S3Ma8hn5T5Z0Q@mail.gmail.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <216818ce-adee-3c08-7410-1d5d1ef5011c@socionext.com>
+Date:   Fri, 12 Feb 2021 16:44:34 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210211134008.38282-3-andriy.shevchenko@linux.intel.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <CAL_JsqLtcXFktBWWqpbYf3B5BR2eUyBsQQ3Q5S3Ma8hn5T5Z0Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11-02-21, 15:40, Andy Shevchenko wrote:
-> SFI-based platforms are gone. So does this driver.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/cpufreq/Kconfig.x86   |  10 ---
->  drivers/cpufreq/Makefile      |   1 -
->  drivers/cpufreq/sfi-cpufreq.c | 127 ----------------------------------
->  3 files changed, 138 deletions(-)
->  delete mode 100644 drivers/cpufreq/sfi-cpufreq.c
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+I found that this patch would cause null pointer dereference exception
+when removing the function link.
+
+If once linking the test function to the controller,
+   # ln -s functions/pci_epf_test/test controllers/66000000.pcie-ep/
+
+and unlinking it immediately,
+   # rm controllers/66000000.pcie-ep/test
+
+then the driver will occur null pointer access in dw_pcie_ep_clear_bar()
+because ep->ib_window_map doesn't have a pointer to allocated memory yet.
+
+To fix the original issue, I strongly recommend to apply Hou's patch [1]
+instead of this patch.
+
+Thank you,
+
+[1] https://patchwork.kernel.org/project/linux-pci/patch/20210125044803.4310-1-Zhiqiang.Hou@nxp.com/
+
+On 2021/01/21 0:20, Rob Herring wrote:
+> On Mon, Jan 18, 2021 at 5:10 PM Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+>>
+>> The commit 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows") gets
+>> the values of pci->num_ib_windows and pci->num_ob_windows from iATU
+>> registers instead of DT properties in dw_pcie_iatu_detect_regions*() or its
+>> unroll version.
+>>
+>> However, before the values are set, the allocations in dw_pcie_ep_init()
+>> refer them to determine the sizes of window_map. As a result, null pointer
+>> dereference exception will occur when linking the EP function and the
+>> controller.
+>>
+>>    # ln -s functions/pci_epf_test/test controllers/66000000.pcie-ep/
+>>    Unable to handle kernel NULL pointer dereference at virtual address
+>>    0000000000000010
+>>
+>> The call trace is as follows:
+>>
+>>    Call trace:
+>>     _find_next_bit.constprop.1+0xc/0x88
+>>     dw_pcie_ep_set_bar+0x78/0x1f8
+>>     pci_epc_set_bar+0x9c/0xe8
+>>     pci_epf_test_core_init+0xe8/0x220
+>>     pci_epf_test_bind+0x1e0/0x378
+>>     pci_epf_bind+0x54/0xb0
+>>     pci_epc_epf_link+0x58/0x80
+>>     configfs_symlink+0x1c0/0x570
+>>     vfs_symlink+0xdc/0x198
+>>     do_symlinkat+0xa0/0x110
+>>     __arm64_sys_symlinkat+0x28/0x38
+>>     el0_svc_common+0x84/0x1a0
+>>     do_el0_svc+0x38/0x88
+>>     el0_svc+0x1c/0x28
+>>     el0_sync_handler+0x88/0xb0
+>>     el0_sync+0x140/0x180
+>>
+>> The pci->num_{ib,ob}_windows should be referenced after they are set by
+>> dw_pcie_iatu_detect_regions*() called from dw_pcie_setup().
+>>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-designware-ep.c | 41 ++++++++++++-------------
+>>   1 file changed, 20 insertions(+), 21 deletions(-)
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 
 -- 
-viresh
+---
+Best Regards
+Kunihiko Hayashi
