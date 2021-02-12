@@ -2,102 +2,256 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91D4B31A642
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 21:55:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7988631A7A8
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Feb 2021 23:32:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231289AbhBLUzJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Feb 2021 15:55:09 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:55698 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230477AbhBLUzJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Feb 2021 15:55:09 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id CBABB4128A;
-        Fri, 12 Feb 2021 20:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        mime-version:content-transfer-encoding:content-id:content-type
-        :content-type:content-language:accept-language:in-reply-to
-        :references:message-id:date:date:subject:subject:from:from
-        :received:received:received:received; s=mta-01; t=1613163261; x=
-        1614977662; bh=A2h9ZfSLg88FgPBOkhRhm2SzRshmIAsl4uBa6F19fkw=; b=T
-        vgtW0SvMIw5wD8P+SLfwMd2WO6Lydi7+EZWp8+4amY0pLjxto02HLQZ63ilXTgeI
-        I7pR6BUurC/ldcN3TQbtrcJ06jUWLTS58l6IODjNg91qKkYwDuiz4cLuTblIq5ZH
-        /2bA+xEKrbvsUcFteM7oMw8mHH+CKaJKdhatTW1Xh0=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QesUdhETJ-KO; Fri, 12 Feb 2021 23:54:21 +0300 (MSK)
-Received: from T-EXCH-04.corp.yadro.com (t-exch-04.corp.yadro.com [172.17.100.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 8423B4126D;
-        Fri, 12 Feb 2021 23:54:19 +0300 (MSK)
-Received: from T-EXCH-03.corp.yadro.com (172.17.100.103) by
- T-EXCH-04.corp.yadro.com (172.17.100.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 12 Feb 2021 23:54:18 +0300
-Received: from T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272]) by
- T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272%14]) with mapi id
- 15.01.0669.032; Fri, 12 Feb 2021 23:54:19 +0300
-From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     "David.Laight@aculab.com" <David.Laight@aculab.com>,
-        "christian@kellner.me" <christian@kellner.me>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "rajatja@google.com" <rajatja@google.com>,
-        "YehezkelShB@gmail.com" <YehezkelShB@gmail.com>,
-        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "linux@yadro.com" <linux@yadro.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "sr@denx.de" <sr@denx.de>, "lukas@wunner.de" <lukas@wunner.de>,
-        "andy.lavr@gmail.com" <andy.lavr@gmail.com>
-Subject: Re: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
-Thread-Topic: [PATCH v9 00/26] PCI: Allow BAR movement during boot and hotplug
-Thread-Index: AQHW1WT234xzlvvTV0WAimI1cHAduao9LYkAgABgu4CABcepgIADoByAgADzoQCACgJRgIABDByAgABmKICAAUCIgIAAhpoA
-Date:   Fri, 12 Feb 2021 20:54:18 +0000
-Message-ID: <460947ac479281677cdc42e69fc60dccd19dfe94.camel@yadro.com>
-References: <20201218174011.340514-1-s.miroshnichenko@yadro.com>
-         <20210128145316.GA3052488@bjorn-Precision-5520>
-         <20210128203929.GB6613@wunner.de>
-         <20210201125523.GN2542@lahna.fi.intel.com>
-         <44ce19d112b97930b1a154740c2e15f3f2d10818.camel@yadro.com>
-         <20210204104912.GE2542@lahna.fi.intel.com>
-         <afc5d363476d445cfdf04b0ec4db9275db803af3.camel@yadro.com>
-         <20210211113941.GF2542@lahna.fi.intel.com>
-         <52dd963fc697059d3db39c25eda222f4b7197761.camel@yadro.com>
-         <20210212125233.GS2542@lahna.fi.intel.com>
-In-Reply-To: <20210212125233.GS2542@lahna.fi.intel.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [172.17.15.136]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <46AC30FA8F37C84798556D5DAB655894@yadro.com>
-Content-Transfer-Encoding: base64
+        id S232263AbhBLWaP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Feb 2021 17:30:15 -0500
+Received: from mga03.intel.com ([134.134.136.65]:60252 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232211AbhBLW3z (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Feb 2021 17:29:55 -0500
+IronPort-SDR: HcG+d1BZIUIDA1TJ3cRRp0M4v5C33brTFqEHblZnsMFv61w6qxTF4p9KsGP4aFkRUrNJJfMwOM
+ jXuEd+cipz6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9893"; a="182555574"
+X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
+   d="scan'208";a="182555574"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 14:25:47 -0800
+IronPort-SDR: f3D7kuD5czDVuNMOJ2hRTaJiO6B38Z+lTWmq6tDCdI1vAb06Te0WGfWPCRchWb1cHhgi6Px8hY
+ a6paK+v2TnJQ==
+X-IronPort-AV: E=Sophos;i="5.81,174,1610438400"; 
+   d="scan'208";a="587605351"
+Received: from smandal1-mobl2.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.133.121])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2021 14:25:46 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     linux-cxl@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Subject: [PATCH v3 0/9] CXL 2.0 Support
+Date:   Fri, 12 Feb 2021 14:25:32 -0800
+Message-Id: <20210212222541.2123505-1-ben.widawsky@intel.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIxLTAyLTEyIGF0IDE0OjUyICswMjAwLCBtaWthLndlc3RlcmJlcmdAbGludXgu
-aW50ZWwuY29tDQp3cm90ZToNCj4gSGksDQo+IA0KPiBPbiBUaHUsIEZlYiAxMSwgMjAyMSBhdCAw
-NTo0NToyMFBNICswMDAwLCBTZXJnZWkgTWlyb3NobmljaGVua28NCj4gd3JvdGU6DQo+ID4gV2hh
-dCBhIHBpdHkuIFllcywgcGxlYXNlLCBJIHdvdWxkIG9mIGNvdXJzZSBsaWtlIHRvIHRha2UgYSBs
-b29rIHdoeQ0KPiA+IHRoYXQgaGFwcGVuZWQsIGFuZCBjb21wYXJlLCB3aGF0IHdlbnQgd3Jvbmcg
-KGJlZm9yZSBhbmQgYWZ0ZXIgdGhlDQo+ID4gaG90cGx1ZzogbHNwY2kgLXR2LCBkbWVzZyAtdCBh
-bmQgL3Byb2MvaW9tZW0gd2l0aCAvcHJvYy9pb3BvcnRzLCBpZg0KPiA+IGl0DQo+ID4gd291bGRu
-J3QgYmUgdG9vIG11Y2ggdHJvdWJsZSkuDQo+IA0KPiBJIGp1c3Qgc2VudCB0aGVzZSBsb2dzIHRv
-IHlvdSBpbiBhIHNlcGFyYXRlIGVtYWlsLiBMZXQgbWUga25vdyBpZiB5b3UNCj4gbmVlZCBtb3Jl
-Lg0KDQpUaGFua3MsIGZyb20gdGhlbSBpdCdzIGNsZWFyIHRoYXQgdGhlICJmdWxsIHJlc2NhbiIg
-YXBwcmFjaCBjdXJyZW50bHkNCmRvZXNuJ3QgaW52b2x2ZSB0aGUgcGNpX2J1c19kaXN0cmlidXRl
-X2F2YWlsYWJsZV9yZXNvdXJjZXMoKSwgdGhhdCdzDQp3aHkgaG90LWFkZGluZyBhIHNlY29uZCBu
-ZXN0ZWQgc3dpdGNoIGJyZWFrczogYmVjYXVzZSBvZiBub24tDQpkaXN0cmlidXRlZCBmcmVlIGJ1
-cyBudW1iZXJzLiBUaGUgZmlyc3Qgc3dpdGNoIHNlZW1zIHdhcyBob3QtYWRkZWQganVzdA0KZmlu
-ZSwgd2l0aCBCQVJzIGJlaW5nIG1vdmVkIGEgYml0Lg0KDQpUaGlzIGlzIHRvIGJlIGZpeGVkIGlu
-IHYxMCwgYWxvbmcgd2l0aCB0aGUNCm1wdDNzYXMrcGNpX2Rldl9pc19kaXNjb25uZWN0ZWQoKSBt
-b21lbnQgTHVrYXMgaGFkIGZvdW5kICh0aGFua3MNCkx1a2FzISksIENPTkZJR19ERUJVR19MT0NL
-X0FMTE9DIG1hY3JvLCBhbmQgYSBtb3JlIHVzZWZ1bCBkZWJ1Zw0KbWVzc2FnZXMuDQoNClNlcmdl
-DQo=
+# Changes since v2 [1]
+
+  * s/mbox_lock/mbox_mutex in kdocs (Ben)
+  * Remove stray comments about deleted flags (Ben)
+  * Remove flags from CXL_CMD (Ben)
+  * Rework cxl_mem_enumerate_cmds() to allow more than 2 commands (Ben, Jonathan)
+    * I misread the spec and this needed more robust handling.
+  * Remove validate_payload() as it no longer is useful (Ben)
+  * Remove check that CEL returned reasonable command list (Ben)
+    * It is easy enough to figure this out elsewhere.
+    * Enable sane set of commands regardless (Ben)
+    * Remove now useless cxl_enable_cmd() (Ben)
+  * Add payload dump debugging regardless of timeout (Dan)
+    * Extracted to separate RFC patch (Ben)
+  * Move PCI_DVSEC_HEADER1_LENGTH_MASK back to cxl.h (Jonathan, Bjorn)
+  * Drop duplicated PCI_EXT_CAP_ID_DVSEC (Jonathan)
+  * Use PCI_DEVICE_CLASS (Jonathan)
+  * Create wrapper for kernel mailbox usage (Jonathan)
+    * Helps with error conditions
+  * Various cosmetic changes (Jonathan)
+  * Remove references to removed MUTEX flag (Jonathan)
+  * Remove KERNEL flag since not used yet (Jonathan)
+  * Remove payload dumping for debug (Jonathan)
+  * Show example expansion from macro magic (Jonathan)
+
+---
+
+In addition to the mailing list, please feel free to use #cxl on oftc IRC for
+discussion.
+
+---
+
+# Summary
+
+Introduce support for “type-3” memory devices defined in the Compute Express
+Link (CXL) 2.0 specification [2]. Specifically, these are the memory devices
+defined by section 8.2.8.5 of the CXL 2.0 spec. A reference implementation
+emulating these devices has been submitted to the QEMU mailing list [3] and is
+available on gitlab [4], but will move to a shared tree on kernel.org after
+initial acceptance. “Type-3” is a CXL device that acts as a memory expander for
+RAM or Persistent Memory. The device might be interleaved with other CXL devices
+in a given physical address range.
+
+In addition to the core functionality of discovering the spec defined registers
+and resources, introduce a CXL device model that will be the foundation for
+translating CXL capabilities into existing Linux infrastructure for Persistent
+Memory and other memory devices. For now, this only includes support for the
+management command mailbox the surfacing of type-3 devices. These control
+devices fill the role of “DIMMs” / nmemX memory-devices in LIBNVDIMM terms.
+
+## Userspace Interaction
+
+Interaction with the driver and type-3 devices via the CXL drivers is introduced
+in this patch series and considered stable ABI. They include
+
+   * sysfs - Documentation/ABI/testing/sysfs-bus-cxl
+   * IOCTL - Documentation/driver-api/cxl/memory-devices.rst
+   * debugfs - Documentation/ABI/testing/debugfs-debug
+
+Work is in process to add support for CXL interactions to the ndctl project [5]
+
+### Development plans
+
+One of the unique challenges that CXL imposes on the Linux driver model is that
+it requires the operating system to perform physical address space management
+interleaved across devices and bridges. Whereas LIBNVDIMM handles a list of
+established static persistent memory address ranges (for example from the ACPI
+NFIT), CXL introduces hotplug and the concept of allocating address space to
+instantiate persistent memory ranges. This is similar to PCI in the sense that
+the platform establishes the MMIO range for PCI BARs to be allocated, but it is
+significantly complicated by the fact that a given device can optionally be
+interleaved with other devices and can participate in several interleave-sets at
+once. LIBNVDIMM handled something like this with the aliasing between PMEM and
+BLOCK-WINDOW mode, but CXL adds flexibility to alias DEVICE MEMORY through up to
+10 decoders per device.
+
+All of the above needs to be enabled with respect to PCI hotplug events on
+Type-3 memory device which needs hooks to determine if a given device is
+contributing to a "System RAM" address range that is unable to be unplugged. In
+other words CXL ties PCI hotplug to Memory Hotplug and PCI hotplug needs to be
+able to negotiate with memory hotplug.  In the medium term the implications of
+CXL hotplug vs ACPI SRAT/SLIT/HMAT need to be reconciled. One capability that
+seems to be needed is either the dynamic allocation of new memory nodes, or
+default initializing extra pgdat instances beyond what is enumerated in ACPI
+SRAT to accommodate hot-added CXL memory.
+
+Patches welcome, questions welcome as the development effort on the post v5.12
+capabilities proceeds.
+
+## Running in QEMU
+
+The incantation to get CXL support in QEMU [4] is considered unstable at this
+time. Future readers of this cover letter should verify if any changes are
+needed. For the novice QEMU user, the following can be copy/pasted into a
+working QEMU commandline. It is enough to make the simplest topology possible.
+The topology would consist of a single memory window, single type3 device,
+single root port, and single host bridge.
+
+    +-------------+
+    |   CXL PXB   |
+    |             |
+    |  +-------+  |<----------+
+    |  |CXL RP |  |           |
+    +--+-------+--+           v
+           |            +----------+
+           |            | "window" |
+           |            +----------+
+           v                  ^
+    +-------------+           |
+    |  CXL Type 3 |           |
+    |   Device    |<----------+
+    +-------------+
+
+// Memory backend for "window"
+-object memory-backend-file,id=cxl-mem1,share,mem-path=cxl-type3,size=512M
+
+// Memory backend for LSA
+-object memory-backend-file,id=cxl-mem1-lsa,share,mem-path=cxl-mem1-lsa,size=1K
+
+// Host Bridge
+-device pxb-cxl id=cxl.0,bus=pcie.0,bus_nr=52,uid=0 len-window-base=1,window-base[0]=0x4c0000000 memdev[0]=cxl-mem1
+
+// Single root port
+-device cxl rp,id=rp0,bus=cxl.0,addr=0.0,chassis=0,slot=0,memdev=cxl-mem1
+
+// Single type3 device
+-device cxl-type3,bus=rp0,memdev=cxl-mem1,id=cxl-pmem0,size=256M -device cxl-type3,bus=rp1,memdev=cxl-mem1,id=cxl-pmem1,size=256M,lsa=cxl-mem1-lsa
+
+---
+
+[1]: https://lore.kernel.org/linux-cxl/20210210000259.635748-1-ben.widawsky@intel.com/
+[2]: https://www.computeexpresslink.org/](https://www.computeexpresslink.org/)
+[3]: https://lore.kernel.org/qemu-devel/20210202005948.241655-1-ben.widawsky@intel.com/
+[4]: https://gitlab.com/bwidawsk/qemu/-/tree/cxl-2.0v4
+[5]: https://github.com/pmem/ndctl/tree/cxl-2.0v2
+
+Ben Widawsky (7):
+  cxl/mem: Find device capabilities
+  cxl/mem: Add basic IOCTL interface
+  cxl/mem: Add a "RAW" send command
+  cxl/mem: Enable commands via CEL
+  cxl/mem: Add set of informational commands
+  MAINTAINERS: Add maintainers of the CXL driver
+  cxl/mem: Add payload dumping for debug
+
+Dan Williams (2):
+  cxl/mem: Introduce a driver for CXL-2.0-Type-3 endpoints
+  cxl/mem: Register CXL memX devices
+
+ .clang-format                                 |    1 +
+ Documentation/ABI/testing/sysfs-bus-cxl       |   26 +
+ Documentation/driver-api/cxl/index.rst        |   12 +
+ .../driver-api/cxl/memory-devices.rst         |   46 +
+ Documentation/driver-api/index.rst            |    1 +
+ .../userspace-api/ioctl/ioctl-number.rst      |    1 +
+ MAINTAINERS                                   |   11 +
+ drivers/Kconfig                               |    1 +
+ drivers/Makefile                              |    1 +
+ drivers/cxl/Kconfig                           |   66 +
+ drivers/cxl/Makefile                          |    7 +
+ drivers/cxl/bus.c                             |   29 +
+ drivers/cxl/cxl.h                             |   93 +
+ drivers/cxl/mem.c                             | 1531 +++++++++++++++++
+ drivers/cxl/pci.h                             |   31 +
+ include/linux/pci_ids.h                       |    1 +
+ include/uapi/linux/cxl_mem.h                  |  170 ++
+ 17 files changed, 2028 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-cxl
+ create mode 100644 Documentation/driver-api/cxl/index.rst
+ create mode 100644 Documentation/driver-api/cxl/memory-devices.rst
+ create mode 100644 drivers/cxl/Kconfig
+ create mode 100644 drivers/cxl/Makefile
+ create mode 100644 drivers/cxl/bus.c
+ create mode 100644 drivers/cxl/cxl.h
+ create mode 100644 drivers/cxl/mem.c
+ create mode 100644 drivers/cxl/pci.h
+ create mode 100644 include/uapi/linux/cxl_mem.h
+
+---
+
+Cc: linux-acpi@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-nvdimm@lists.01.org
+Cc: linux-pci@vger.kernel.org
+Cc: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Chris Browy <cbrowy@avery-design.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jon Masters <jcm@jonmasters.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Rafael Wysocki <rafael.j.wysocki@intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: "John Groves (jgroves)" <jgroves@micron.com>
+Cc: "Kelley, Sean V" <sean.v.kelley@intel.com>
+
+-- 
+2.30.0
+
