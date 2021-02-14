@@ -2,94 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E6DA31B1D8
-	for <lists+linux-pci@lfdr.de>; Sun, 14 Feb 2021 19:14:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F43831B33A
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Feb 2021 00:15:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbhBNSNA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 Feb 2021 13:13:00 -0500
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:45781 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229837AbhBNSM7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 Feb 2021 13:12:59 -0500
-Received: by mail-lj1-f182.google.com with SMTP id c8so2938154ljd.12
-        for <linux-pci@vger.kernel.org>; Sun, 14 Feb 2021 10:12:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bKQP9PkvlkTFM5gTJ3JCCMep+JAVlAFdBFG8KguzX+M=;
-        b=SUCQbriVe2MT0PZIoG6F1LdclW0WZpT2hd3WQ8RgkkSelSv5J259jORY6XFYwp5w3B
-         v8m/i8J4mSuaEmyjhmbcUZ1APqiALH+fvEIAZYEpowEV2+QZ4aHkaw7W9i7hwNbfdT71
-         Uka1ZHqaTRifOE7GMsykPKNrukcUzEkqnFHzckFIbbVsIraZtT2Dflb0PTb8TOgdVgs1
-         JbpCyudQa8LuK0sGdRaODPPqJFAqnw3zMTzJYHlSrUOvpDbhNgehUo94a7b8S1NT8X6+
-         JMY9S8lU+k/ZjD+twyCjuBLMDqxQDQkUaycaoBuF/azkIJ1lLQMFJGdtd1pYny0xGZiQ
-         gDfA==
-X-Gm-Message-State: AOAM5324+KzbdLKtu0xKkQav3pNy+GHJNAq91/emaoR7kHWk/oROt5GU
-        YW6630t7uuxq6l2FZ0t7SuP5S7bjdlI=
-X-Google-Smtp-Source: ABdhPJzK6cxaje0MRRTuSiwt1IEAVm9hHcL9g5coDAffTBDVM304gZYyBbKS9BjuDdDSndQqoEud4w==
-X-Received: by 2002:a2e:b5c8:: with SMTP id g8mr7591314ljn.506.1613326338018;
-        Sun, 14 Feb 2021 10:12:18 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id o11sm2501687lfu.157.2021.02.14.10.12.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Feb 2021 10:12:17 -0800 (PST)
-Date:   Sun, 14 Feb 2021 19:12:16 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: Take __pci_set_master in do_pci_disable_device
-Message-ID: <YCloAA+od1WIo7o3@rocinante>
-References: <20210214110637.24750-1-minwoo.im.dev@gmail.com>
+        id S230046AbhBNXPj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 Feb 2021 18:15:39 -0500
+Received: from mga07.intel.com ([134.134.136.100]:49707 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229792AbhBNXPj (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sun, 14 Feb 2021 18:15:39 -0500
+IronPort-SDR: lvCgyegnW6k6StVGMoPbB1kxQ7P6VaRhRElmlGLC4gw4g9xiybXpWpZyhnDhBxbx3aUp8lcsF+
+ e2QvUFPMGRYQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9895"; a="246671017"
+X-IronPort-AV: E=Sophos;i="5.81,179,1610438400"; 
+   d="scan'208";a="246671017"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2021 15:14:58 -0800
+IronPort-SDR: 5baMiPXAMLOLE+02Ny6pfw3U38wyzJ/BY291r/241pX2vv9fWp+/sWXoW5/e34TDtQzqTVMYnU
+ aQ6EekstXsAQ==
+X-IronPort-AV: E=Sophos;i="5.81,179,1610438400"; 
+   d="scan'208";a="398810113"
+Received: from cbfoster-mobl.amr.corp.intel.com (HELO intel.com) ([10.252.135.243])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2021 15:14:57 -0800
+Date:   Sun, 14 Feb 2021 15:14:56 -0800
+From:   Ben Widawsky <ben.widawsky@intel.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Chris Browy <cbrowy@avery-design.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jon Masters <jcm@jonmasters.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "John Groves (jgroves)" <jgroves@micron.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Dan Williams <dan.j.willams@intel.com>
+Subject: Re: [PATCH v2 4/8] cxl/mem: Add basic IOCTL interface
+Message-ID: <20210214231456.xnwitliczv6qwmjv@intel.com>
+References: <20210210000259.635748-1-ben.widawsky@intel.com>
+ <20210210000259.635748-5-ben.widawsky@intel.com>
+ <YClQEefYBR+YKBUv@zeniv-ca.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210214110637.24750-1-minwoo.im.dev@gmail.com>
+In-Reply-To: <YClQEefYBR+YKBUv@zeniv-ca.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Minwoo,
+On 21-02-14 16:30:09, Al Viro wrote:
+> On Tue, Feb 09, 2021 at 04:02:55PM -0800, Ben Widawsky wrote:
+> 
+> > +static int handle_mailbox_cmd_from_user(struct cxl_memdev *cxlmd,
+> > +					const struct cxl_mem_command *cmd,
+> > +					u64 in_payload, u64 out_payload,
+> > +					struct cxl_send_command __user *s)
+> > +{
+> > +	struct cxl_mem *cxlm = cxlmd->cxlm;
+> > +	struct device *dev = &cxlmd->dev;
+> > +	struct mbox_cmd mbox_cmd = {
+> > +		.opcode = cmd->opcode,
+> > +		.size_in = cmd->info.size_in,
+> > +	};
+> > +	s32 user_size_out;
+> > +	int rc;
+> > +
+> > +	if (get_user(user_size_out, &s->out.size))
+> > +		return -EFAULT;
+> 
+> You have already copied it in.  Never reread stuff from userland - it *can*
+> change under you.
 
-Thank you for sending the patch over!
+As it turns out, this is some leftover logic which doesn't need to exist at all,
+and I'm happy to change it. Thanks for reviewing.
 
-You might need to improve the subject a little - it should be brief but
-still informative.
+I wasn't familiar with this restriction though. For my edification could you
+explain how that could happen? Also, is this something that should go in the
+kdocs, because I don't see anything about this restriction there.
 
-> __pci_set_mater() has debug log in there so that it would be better to
-> take this function.  So take __pci_set_master() function rather than
-> open coding it.  This patch didn't move __pci_set_master() to above to
-> avoid churns.
-[...]
-
-It would be __pci_set_master() int he sentence above.  Also, perhaps
-"use" would be better than "take".  Generally, this commit message might
-need a little improvement to be more clear why are you do doing this.
-
-[...]
-> +static void __pci_set_master(struct pci_dev *dev, bool enable);
->  static void do_pci_disable_device(struct pci_dev *dev)
->  {
-> -	u16 pci_command;
-> -
-> -	pci_read_config_word(dev, PCI_COMMAND, &pci_command);
-> -	if (pci_command & PCI_COMMAND_MASTER) {
-> -		pci_command &= ~PCI_COMMAND_MASTER;
-> -		pci_write_config_word(dev, PCI_COMMAND, pci_command);
-> -	}
-> +	__pci_set_master(dev, false);
->  
->  	pcibios_disable_device(dev);
->  }
-
-You could use pci_clear_master(), which we export and that internally
-calls __pci_set_master(), so there would be no need to add any forward
-declarations or to move anything around in the file.
-
-Having said that, there is a difference between do_pci_disable_device()
-and how __pci_set_master() works - the latter sets the is_busmaster flag
-accordingly on the given device whereas the former does not.  This might
-be of some significance - not sure if we should or should not set this,
-since the do_pci_disable_device() does not do that (perhaps it's on
-purpose or due to some hisoric reasons).
-
-Krzysztof
+Thanks.
+Ben
