@@ -2,121 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ECCE31C2EB
-	for <lists+linux-pci@lfdr.de>; Mon, 15 Feb 2021 21:25:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04CB331C34C
+	for <lists+linux-pci@lfdr.de>; Mon, 15 Feb 2021 21:56:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbhBOUZ2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Feb 2021 15:25:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbhBOUZ1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Feb 2021 15:25:27 -0500
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C6BBC061574
-        for <linux-pci@vger.kernel.org>; Mon, 15 Feb 2021 12:24:47 -0800 (PST)
-Received: by mail-qk1-x730.google.com with SMTP id t63so7572061qkc.1
-        for <linux-pci@vger.kernel.org>; Mon, 15 Feb 2021 12:24:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to;
-        bh=DvoRXzwzvXTWqoU2SmDjRGAMPM5/FJbKCW4hLOOZ0aQ=;
-        b=j2nwmsVFijDf6nLajg7AKo/XsMaqTZca9HD9TPqJNfFsIl1uOanaXRYGjwM8MPkPbe
-         OvGET4BTU6Ao7TX2smyPskRc0S2+CxtatMErLshsa9TBcG0ZfRAupL0R/NMqWlDT94AY
-         gF/mymFwG7P6Atj/dah0z2mxQgo119BZTMIfDHVcDARhulKMuxjK9qkg3BQ2ylvh25/s
-         KpLBAipjvVoy7Yb4u8Izrar2chdSnl2Moe8NibpvBoUZSNokByEnqRFNcMKpXOy34wje
-         FYtUpQcPtlo2uTfulMJVdJuiw/P40QNMuofbSpyy8QoWPla1TH18W8AHq3Sc3xyUk7NP
-         TlwA==
+        id S229670AbhBOUzv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Feb 2021 15:55:51 -0500
+Received: from mail-lf1-f52.google.com ([209.85.167.52]:46200 "EHLO
+        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229469AbhBOUzu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 Feb 2021 15:55:50 -0500
+Received: by mail-lf1-f52.google.com with SMTP id v5so12523407lft.13;
+        Mon, 15 Feb 2021 12:55:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to;
-        bh=DvoRXzwzvXTWqoU2SmDjRGAMPM5/FJbKCW4hLOOZ0aQ=;
-        b=hEcYjwDVTd8gDrbHPyRxVt1CwbOnCtMCRaB0hxXJYsx+GT81SDntbmxiRjBEz/KAn/
-         E5xJ/wSbHRTVgrIK8R5XdUEzQMzPQLftQ19nV76iHv7JBp/9tSdrgbVCXLm6sb0gVSJL
-         /W0SQecPKbG6n5N8g+FG6Jb8R6ReffTD2CzfT2J7KeRwEJ93XBa1veh4OGjYEQ9sHNIO
-         VBc7pjKhM3AmtX+bAGtBhRMK4GfwfCuNy3KOHB0vU516eAGu0oUsAyzz3/vttNU4/xjz
-         mggTTM+Dgweawcybg9OZ5Owe10YqktBE2mE9U2y1a8rcwgp6jf3SgcNAA4cPnn3RIvhp
-         bclQ==
-X-Gm-Message-State: AOAM5324PD1N7MFwqTT5Ql+lhffWDvhIV2kEjPT9C/nq5zTrxAEFhoqm
-        pFH+l3rvW3WWsAHTJqyk+cN5r1TjozwKdOgFSPND78AP
-X-Google-Smtp-Source: ABdhPJxSV2pmFBf3sopEdKCvLsF4cQJCSfDiQlFn5mvoiPAUswt6kjQBdAwd8vPj1h8UM8Tlu1AyhtNpx/P88p1l6Dw=
-X-Received: by 2002:a05:620a:485:: with SMTP id 5mr16078572qkr.461.1613420686174;
- Mon, 15 Feb 2021 12:24:46 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=whwMqTlS1WBk9AS5zpBCAK3G8DSK1CxTvfiZRNL1dTI=;
+        b=k1HeO8dLyXkPikOGp8cuKd5IS2IQX6E9lpvA99tqqGcZI26e/NiknPZEpmHeaB+N0r
+         NWuk01l+XRvYH/KSpbXYF6jMb5uqnvAUuxUn/aZM3Tc+xdZoIZbfS+TTFMxp/1FU9YJm
+         TLz3iYmAhwbx2o6u98f4Ul837tTvSmbRphjsVgLhVuGhabhFoErEp6ZqUkhx7FSM83VK
+         6GIhc1T0klpnQql9jV+KlXNTFQS05nJkmPyWzH5f1e+l10B17/TL11/k7h4On50EpyEv
+         wcBzAsXblRAE0JWNsLuNIxL38SWdq9qIKtntBkofjV+VKXCTyKJyYIli6sjruynuZ6nu
+         x72Q==
+X-Gm-Message-State: AOAM530EeIQ5bZFVFHXtK5xwECuIgHFGbrYUxTmWs3bD6CgxKLLMVYhU
+        ryMNU4xcS8eJriLr8Gja2CE=
+X-Google-Smtp-Source: ABdhPJzl4f8o29TEkIis3q7JbqLJp6lJCJmwVeq0HyGGLbB9OVwiNeC/gqum50UkbyjMTg9eFj74uw==
+X-Received: by 2002:a19:6b17:: with SMTP id d23mr2984143lfa.103.1613422507756;
+        Mon, 15 Feb 2021 12:55:07 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id d4sm2898773lfi.117.2021.02.15.12.55.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Feb 2021 12:55:07 -0800 (PST)
+Date:   Mon, 15 Feb 2021 21:55:06 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, helgaas@kernel.org, wsa@kernel.org,
+        linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <YCrfqungNSSxe5lK@rocinante>
+References: <20210215181550.714101-1-zhengdejin5@gmail.com>
+ <20210215181550.714101-2-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-References: <CAPYVV1c7bUPKg5TzAOAsgQJq2DdPUDb_1=5TqwkJzxZO0w-NmQ@mail.gmail.com>
-In-Reply-To: <CAPYVV1c7bUPKg5TzAOAsgQJq2DdPUDb_1=5TqwkJzxZO0w-NmQ@mail.gmail.com>
-Reply-To: raydude@gmail.com
-From:   Brian McKee <raydude@gmail.com>
-Date:   Mon, 15 Feb 2021 12:24:35 -0800
-Message-ID: <CAPYVV1ciaLbsvM6aqHOEZ52jE83h+KMP0nzHS2uYWxWZbznZEw@mail.gmail.com>
-Subject: Fwd: Trying to get nvme and altera-pci drivers to play nice.
-To:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210215181550.714101-2-zhengdejin5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
-I'm a hardware guy, debugging an embedded system using a Cyclone V
-SOC. It utilizes pcie 1.0 with four lanes connected to an NVMe drive
-for main storage.
+Hi Dejin,
 
-Bringup has come to a halt as I haven't been able to get the
-altera-pci driver to play nice with the nvme driver.
+Thank you for all the work here!
 
-The altera-pcie module loads and lspci -v shows the nvme drive and the
-number of lanes connected and speed, but when I load the nvme driver
-it hangs on the first try:
+The subject and the commit message could be improved to include a little
+more details about why do you want to do it, and what problems does it
+aims to solve.
 
-(pardon my printk's, I've been trying to track this down to find out
-what I'm doing wrong in the hardware)
+> Introduce pcim_alloc_irq_vectors(), a explicit device-managed version of
+> pci_alloc_irq_vectors().
 
-nvme: Successfully exiting nvme_pci_enable.
-pci.c: nvme_reset_work: calling nvme_pci_configure_admin_queue.
-nvme: core.c: nvme_wait_ready entry
-nvme: core.c: nvme_wait_ready return
-nvme: core.c: nvme_wait_ready entry
-nvme: core.c: nvme_wait_ready return
-pci.c: nvme_reset_work: calling nvme_alloc_admin_tags.
-nvme: core.c: nvme_change_ctrl_state entry
-pci.c: nvme_reset_work: calling nvme_init_identify.
-nvme: core.c: entering nvme_init_identify
-nvme: core.c: nvme_init_identify: calling nvme_identify_ctrl
-nvme: core.c: Entering nvme_identify_ctrl
-nvme: core.c: nvme_identify_ctrl: getting nvme_admin_identify...
-nvme: core.c: nvme_identify_ctrl: kmalloc(nvme_id_ctrl)
-nvme: core.c: nvme_identify_ctrl: calling nvme_submit_sync_cmd
-nvme: core.c: Entering __nvme_submit_sync_cmd
-nvme: core.c: __nvme_submit_sync_cmd: calling nvme_alloc_request
-nvme: core.c: nvme_alloc_request entry
-nvme: core.c: nvme_alloc_request calling blk_mq_alloc_request
-nvme: core.c: nvme_alloc_request done. cmd = 0xef22fd08
-nvme: core.c: __nvme_submit_sync_cmd: calling blk_rq_map_kern
-nvme: core.c: __nvme_submit_sync_cmd: calling blk_execute_rq
-blk-exec.c: Entering blk_execute_rq
-blk-exec.c: blk_execute_rq: calling blk_execute_rq_nowait
-blk-exec.c: blk_execute_rq_nowait: calling blk_mq_sched_insert_request
-nvme: core.c: nvme_setup_cmd entry
-nvme: core.c: nvme_setup_cmd: adding command: 34 to nvme_req queue
-nvme: core.c: nvme_setup_cmd return
-blk-exec.c: blk_execute_rq: starting wait_for_completion_io_timeout()
+You can probably drop the "explicit" word from the sentence above.
+ 
+> +/**
+> + * pcim_alloc_irq_vectors - a device-managed pci_alloc_irq_vectors()
+> + *
+> + * It depends on calling pcim_enable_device() to make irq resources manageable.
+> + */
 
+It would be "IRQ" in the sentence above.  Also see [1] for more details
+about how to make a patch ready to be accepted.
 
-After a watchdog, reboot and reload of both modules, it produces this
-message sometimes other times it repeats the watchdog reset:
+Also, this comment looks like it's intended to be compliant with the
+kernel-doc format, and if so, then you should describe each argument as
+the bare minimum, so that the entire comment would become this function
+documentation making it also a little more useful.  See [2] for an
+example of how to use kernel-doc.
 
-[   64.471966] nvme nvme0: I/O 16 QID 0 timeout, disable controller
-[   64.478147] nvme nvme0: Identify Controller failed (-4)
-[   64.483380] nvme nvme0: Removing after probe failure status: -5
+> +int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> +				unsigned int max_vecs, unsigned int flags)
+> +{
+> +	struct pci_devres *dr;
+> +
+> +       /*Ensure that the pcim_enable_device() function has been called*/
 
-According to my printks the nvme driver is attempting a drive
-identify. But the blk read never returns. I can't figure out exactly
-what code is being called by the nvme driver as none of the altera-pci
-routine printks I have installed are showing up before the hang. The
-code traverses into blk-exec.c and never comes out.
+The comment above has to be correctly aligned and it's also missing
+spaces around the sentence to be properly formatted, see [3].
 
-I know it's a big ask, but can someone advise me on how to proceed to
-debug this?
+> +	dr = find_pci_dr(dev);
+> +	if (!dr || !dr->enabled)
+> +		return -EINVAL;
+> +
+> +	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
+> +}
 
-Brian
+Question: wouldn't you need to call pci_free_irq_vectors() somewhere,
+possibly to pcim_release() callback?  Although, I am not sure where the
+right place would be.
+
+I am asking, as the documentation (see [4]) suggests that one would have
+to release allocated IRQ vectors (relevant exceprt):
+
+>> To automatically use MSI or MSI-X interrupt vectors, use the following
+>> function:
+>>
+>>  int pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>>		unsigned int max_vecs, unsigned int flags);
+>>
+>> which allocates up to max_vecs interrupt vectors for a PCI device.
+>>
+>> (...)
+>>
+>> Any allocated resources should be freed before removing the device using
+>> the following function:
+>>
+>>  void pci_free_irq_vectors(struct pci_dev *dev);
+
+What do you think?
+
+1. https://lore.kernel.org/linux-pci/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+2. https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html
+3. https://www.kernel.org/doc/html/latest/process/coding-style.html
+4. https://www.kernel.org/doc/html/latest/PCI/msi-howto.html
+
+Krzysztof
