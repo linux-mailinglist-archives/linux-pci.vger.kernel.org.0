@@ -2,111 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEDF431CBE2
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 15:29:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84DB831CC21
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 15:38:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbhBPO1X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Feb 2021 09:27:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbhBPO1K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Feb 2021 09:27:10 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D792C061574;
-        Tue, 16 Feb 2021 06:26:29 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id z68so6337394pgz.0;
-        Tue, 16 Feb 2021 06:26:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=faHK0cyvGGeTK0Lu2KFV2g1IzncYxmvTiObKgbcKmx0=;
-        b=qRlbmw9QjZCjMvUcUGVN8zUC3MT5NH+dYnEVedbk1SZi/hod3HnSm239TTk2FHeNkJ
-         47kpT0p57IWaSec4PR9BFHfJ8jg52O/paiSrSEaYF2BVX4EdeUYREInTzKa1SvGmxqfw
-         05bwsThstX++KCMslLXP1SgjzvDSBk+XCe/yc3DFAjmryMHMM54cpZ/AmqSIqJtVQxtf
-         Vif7+CBybed6x9vCFHj0QNLoQRFRdSbarw8AZENJgoIm2ayyyN9V6KLSpkyuKkUs1H/H
-         8TkNhjds0aFcVmiaXvPsNa9Uq0QbKHam/pt+Rv5nxXrgVw0wXaiviNQrn9jYK2ayYByY
-         5QsQ==
+        id S230313AbhBPOh4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Feb 2021 09:37:56 -0500
+Received: from mail-oi1-f175.google.com ([209.85.167.175]:45455 "EHLO
+        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230436AbhBPOgz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Feb 2021 09:36:55 -0500
+Received: by mail-oi1-f175.google.com with SMTP id q186so7434470oig.12;
+        Tue, 16 Feb 2021 06:36:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=faHK0cyvGGeTK0Lu2KFV2g1IzncYxmvTiObKgbcKmx0=;
-        b=PVzVHW0+cIVND28siBgn5ME+ZiTYltipgLrXo5D7vJsovbtuIuYe9Z9shZEkGWxIGy
-         tNZAGeT3EVRvYLvzvH5fMKIv/XqwXTtaNBFum2MSYyBkmcXWJCOWczSmDJVPUVY/V3UR
-         mJPX3ljqG43ijbD5DHhUlIT84fe8FtQNPdlGal1cR3roq0ocksFg4I4waDdchSp6ZyBH
-         I53goXJt07+5OQMC/2Gz8L9Kgc5vi11Yeb4OWTlCsmHbd9G2UYSNfTlThLD9ZSXk/mzP
-         QJwNes/o+Ufa4nJDyI8SUh/UtO9ArejGkg4A3i/rNYxjhn0ydOhdxir0ADUSGNAb4V+y
-         bE9Q==
-X-Gm-Message-State: AOAM533B+CFikrlbHwlp1XTrq3bn19HK+HmHbet3yA4mWnd1O9xM4m54
-        KEKg+G87JY5oFwODsPlH9GE=
-X-Google-Smtp-Source: ABdhPJwiT1RhR1WEFZ7nGGATonnaewsEVZLnFdy6/orkPw4DRiIJmMOFovA/RiTlQCYGzqf5YWP2vQ==
-X-Received: by 2002:a63:af1b:: with SMTP id w27mr19028491pge.162.1613485588909;
-        Tue, 16 Feb 2021 06:26:28 -0800 (PST)
-Received: from localhost (185.212.56.4.16clouds.com. [185.212.56.4])
-        by smtp.gmail.com with ESMTPSA id t1sm22289668pfl.194.2021.02.16.06.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Feb 2021 06:26:28 -0800 (PST)
-Date:   Tue, 16 Feb 2021 22:26:26 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        corbet@lwn.net, jarkko.nikula@linux.intel.com,
-        mika.westerberg@linux.intel.com, rric@kernel.org,
-        helgaas@kernel.org, wsa@kernel.org, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] PCI: Introduce pcim_alloc_irq_vectors()
-Message-ID: <20210216142626.GA747814@nuc8i5>
-References: <20210215181550.714101-1-zhengdejin5@gmail.com>
- <20210215181550.714101-2-zhengdejin5@gmail.com>
- <YCrfqungNSSxe5lK@rocinante>
- <YCual+Fq9mcnxbM4@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zFEmgM5nd9X4uA88XvE/RcCvbu2mvzrxdiV7SGrmahM=;
+        b=YgKS8/7jlF/U851UY7AKnIQyQH5Al4r8Cyq94mX3oRrLCZGVkIlx/v9QVzRWFtvWsc
+         NutUjYAiwBa5Dbox5rA9ZBS9Jkn1h8XAv4V/QOxx/Utx0YR+GifT/l+Jov1v0dU7VVkn
+         IrQJ5YA4Q4cCuOuGwkjDEbuESIF83yZMtJvogYYEYSHDuAk4ccPgE5+rBGIkugHOXuok
+         FuXnFNT2BrtVydkpqlAe70e/elHsKL+qbh4X/K3pIFexxmovU1k2kTCh0uF0bLL0v22x
+         ZQAiRM76w5p6kKkEjH2jh6BaoAmY7J8ikviRSM1yJEVmXBrjUfouSd3gXQKah0dv1j2A
+         aBFg==
+X-Gm-Message-State: AOAM530z/zyPc1pmZvpIZ/BGMmapBgT626aS6P/nhi6fLlmRzLa9Uv7d
+        d089zcqjrYKArGoVUlFcP6YBQJCWwqo3m5infak=
+X-Google-Smtp-Source: ABdhPJz+vZ1/ZJ/++ZKkEYu+dbOzGcPsUUw86sHhWktYil+PFvSSrzOk8mxOhbjNoo4ewHFCA4eYYn19xlZ7wilAHRM=
+X-Received: by 2002:aca:3d85:: with SMTP id k127mr2769075oia.157.1613486173455;
+ Tue, 16 Feb 2021 06:36:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YCual+Fq9mcnxbM4@smile.fi.intel.com>
+References: <1613443120-4279-1-git-send-email-chen45464546@163.com>
+In-Reply-To: <1613443120-4279-1-git-send-email-chen45464546@163.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Feb 2021 15:36:01 +0100
+Message-ID: <CAJZ5v0gORvymCwAFD4aAb23NSVSLqaTp34ujU7dX=WtH0cdXfg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: hotplug: Remove unused function pointer typedef acpiphp_callback
+To:     Chen Lin <chen45464546@163.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chen Lin <chen.lin5@zte.com.cn>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 12:12:39PM +0200, Andy Shevchenko wrote:
-> On Mon, Feb 15, 2021 at 09:55:06PM +0100, Krzysztof Wilczyński wrote:
-> 
-> > Question: wouldn't you need to call pci_free_irq_vectors() somewhere,
-> > possibly to pcim_release() callback?  Although, I am not sure where the
-> > right place would be.
-> > 
-> > I am asking, as the documentation (see [4]) suggests that one would have
-> > to release allocated IRQ vectors (relevant exceprt):
-> 
-> It's done in pcim_release() but not explicitly.
-> 
->         if (dev->msi_enabled)
->                 pci_disable_msi(dev);
->         if (dev->msix_enabled)
->                 pci_disable_msix(dev);
-> 
-> Maybe above can be replaced by pci_free_irq_vectors() to be sure that any
-> future change to PCI IRQ allocation APIs.
-> 
-> Yes, I have checked and currently the above code is equivalent to
-> pci_free_irq_vectors().
-> 
-> Dejin, please update your patch accordingly.
+On Tue, Feb 16, 2021 at 3:40 AM Chen Lin <chen45464546@163.com> wrote:
 >
-Hi Andy and Krzysztof,
+> From: Chen Lin <chen.lin5@zte.com.cn>
+>
+> Remove the 'acpiphp_callback' typedef as it is not used.
+>
+> Signed-off-by: Chen Lin <chen.lin5@zte.com.cn>
 
-I have modified it and sent patch v2. thank you very much!
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-BR,
-Dejin
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> ---
+>  drivers/pci/hotplug/acpiphp.h |    3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/pci/hotplug/acpiphp.h b/drivers/pci/hotplug/acpiphp.h
+> index a2094c0..a74b274 100644
+> --- a/drivers/pci/hotplug/acpiphp.h
+> +++ b/drivers/pci/hotplug/acpiphp.h
+> @@ -176,9 +176,6 @@ struct acpiphp_attention_info
+>  int acpiphp_register_hotplug_slot(struct acpiphp_slot *slot, unsigned int sun);
+>  void acpiphp_unregister_hotplug_slot(struct acpiphp_slot *slot);
+>
+> -/* acpiphp_glue.c */
+> -typedef int (*acpiphp_callback)(struct acpiphp_slot *slot, void *data);
+> -
+>  int acpiphp_enable_slot(struct acpiphp_slot *slot);
+>  int acpiphp_disable_slot(struct acpiphp_slot *slot);
+>  u8 acpiphp_get_power_status(struct acpiphp_slot *slot);
+> --
+> 1.7.9.5
+>
+>
