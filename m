@@ -2,116 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EAFE31C524
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 02:49:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0807E31C59D
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 03:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbhBPBsZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 Feb 2021 20:48:25 -0500
-Received: from mga07.intel.com ([134.134.136.100]:3274 "EHLO mga07.intel.com"
+        id S229754AbhBPCkC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 Feb 2021 21:40:02 -0500
+Received: from m12-16.163.com ([220.181.12.16]:55920 "EHLO m12-16.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229981AbhBPBsJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 15 Feb 2021 20:48:09 -0500
-IronPort-SDR: YKTTbh2c2zqb1lUNM6Yjf8LKWv+dLovs2XZ22zk43zZultCz/gzlOAhKHqQ3g5GfPc18Fh0f/T
- SmsymvQulNiQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9896"; a="246852891"
-X-IronPort-AV: E=Sophos;i="5.81,182,1610438400"; 
-   d="scan'208";a="246852891"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2021 17:45:58 -0800
-IronPort-SDR: CM/kNTgy5+2NNwreOrPZn2YmO4CweyPi7LXOc+kc7bo1KigCQoNjlvS1Fykquoy6Z22EtmaAUB
- BG4hFJktC/rg==
-X-IronPort-AV: E=Sophos;i="5.81,182,1610438400"; 
-   d="scan'208";a="399296125"
-Received: from dlbingha-mobl1.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.134.31])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2021 17:45:59 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-cxl@vger.kernel.org
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Subject: [PATCH v4 9/9] cxl/mem: Add payload dumping for debug
-Date:   Mon, 15 Feb 2021 17:45:38 -0800
-Message-Id: <20210216014538.268106-10-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210216014538.268106-1-ben.widawsky@intel.com>
-References: <20210216014538.268106-1-ben.widawsky@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S229713AbhBPCkC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 15 Feb 2021 21:40:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=AARYkRayiGFTgZjLdJ
+        EzuTfDkzsRTsvYgF8PsXcfCJ4=; b=drFmtWNh40sCp9tfsaZPGxvXvG6sFbf/bC
+        iy9b8LoBWu23omZdqg/w89v+GMJN+McG17HLm9HXuM6tWwNXzruY6/IqLa8leQSG
+        B0CMu20d8WSMhgQ9Io6hdmgDtqOBkoemayU3MCFXB4Wt/SS2P3cxa2oCaRVwyAFN
+        XXFLg7HeU=
+Received: from localhost.localdomain (unknown [125.70.193.99])
+        by smtp12 (Coremail) with SMTP id EMCowADnOT7qLytgKjrYcA--.3200S2;
+        Tue, 16 Feb 2021 10:37:33 +0800 (CST)
+From:   Chen Lin <chen45464546@163.com>
+To:     rjw@rjwysocki.net
+Cc:     lenb@kernel.org, bhelgaas@google.com, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chen Lin <chen.lin5@zte.com.cn>
+Subject: [PATCH] PCI: hotplug: Remove unused function pointer typedef acpiphp_callback
+Date:   Tue, 16 Feb 2021 10:38:40 +0800
+Message-Id: <1613443120-4279-1-git-send-email-chen45464546@163.com>
+X-Mailer: git-send-email 1.7.9.5
+X-CM-TRANSID: EMCowADnOT7qLytgKjrYcA--.3200S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Jr1UAr4kJr15GF43Wr48JFb_yoWfuFgEgF
+        1Dtr17Kr15GFnakFn8Jw15ZFyjgay3uFyrWw48tFn3Ar48KrsxC3yUGw45ZF97AryYgF1j
+        y347Xr1vyr97tjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0LvtJUUUUU==
+X-Originating-IP: [125.70.193.99]
+X-CM-SenderInfo: hfkh0kqvuwkkiuw6il2tof0z/xtbBdg47nlUMQAw9iAAAs9
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-It's often useful in debug scenarios to see what the hardware has dumped
-out. As it stands today, any device error will result in the payload not
-being copied out, so there is no way to triage commands which weren't
-expected to fail (and sometimes the payload may have that information).
+From: Chen Lin <chen.lin5@zte.com.cn>
 
-The functionality is protected by normal kernel security mechanisms as
-well as a CONFIG option in the CXL driver.
+Remove the 'acpiphp_callback' typedef as it is not used.
 
-This was extracted from the original version of the CXL enabling patch
-series.
-
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Signed-off-by: Chen Lin <chen.lin5@zte.com.cn>
 ---
- drivers/cxl/Kconfig | 13 +++++++++++++
- drivers/cxl/mem.c   |  8 ++++++++
- 2 files changed, 21 insertions(+)
+ drivers/pci/hotplug/acpiphp.h |    3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
-index 97dc4d751651..3eec9276e586 100644
---- a/drivers/cxl/Kconfig
-+++ b/drivers/cxl/Kconfig
-@@ -50,4 +50,17 @@ config CXL_MEM_RAW_COMMANDS
- 	  potential impact to memory currently in use by the kernel.
+diff --git a/drivers/pci/hotplug/acpiphp.h b/drivers/pci/hotplug/acpiphp.h
+index a2094c0..a74b274 100644
+--- a/drivers/pci/hotplug/acpiphp.h
++++ b/drivers/pci/hotplug/acpiphp.h
+@@ -176,9 +176,6 @@ struct acpiphp_attention_info
+ int acpiphp_register_hotplug_slot(struct acpiphp_slot *slot, unsigned int sun);
+ void acpiphp_unregister_hotplug_slot(struct acpiphp_slot *slot);
  
- 	  If developing CXL hardware or the driver say Y, otherwise say N.
-+
-+config CXL_MEM_INSECURE_DEBUG
-+	bool "CXL.mem debugging"
-+	depends on CXL_MEM
-+	help
-+	  Enable debug of all CXL command payloads.
-+
-+	  Some CXL devices and controllers support encryption and other
-+	  security features. The payloads for the commands that enable
-+	  those features may contain sensitive clear-text security
-+	  material. Disable debug of those command payloads by default.
-+	  If you are a kernel developer actively working on CXL
-+	  security enabling say Y, otherwise say N.
- endif
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index dc608bb20a31..237b956f0be0 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -342,6 +342,14 @@ static int __cxl_mem_mbox_send_cmd(struct cxl_mem *cxlm,
- 
- 	/* #5 */
- 	rc = cxl_mem_wait_for_doorbell(cxlm);
-+
-+	if (!cxl_is_security_command(mbox_cmd->opcode) ||
-+	    IS_ENABLED(CONFIG_CXL_MEM_INSECURE_DEBUG)) {
-+		print_hex_dump_debug("Payload ", DUMP_PREFIX_OFFSET, 16, 1,
-+				     mbox_cmd->payload_in, mbox_cmd->size_in,
-+				     true);
-+	}
-+
- 	if (rc == -ETIMEDOUT) {
- 		cxl_mem_mbox_timeout(cxlm, mbox_cmd);
- 		return rc;
+-/* acpiphp_glue.c */
+-typedef int (*acpiphp_callback)(struct acpiphp_slot *slot, void *data);
+-
+ int acpiphp_enable_slot(struct acpiphp_slot *slot);
+ int acpiphp_disable_slot(struct acpiphp_slot *slot);
+ u8 acpiphp_get_power_status(struct acpiphp_slot *slot);
 -- 
-2.30.1
+1.7.9.5
+
 
