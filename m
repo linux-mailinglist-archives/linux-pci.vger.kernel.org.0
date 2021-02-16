@@ -2,148 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF4D031CBA7
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 15:18:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35E4431CBAC
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 15:19:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbhBPORT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Feb 2021 09:17:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229796AbhBPORS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 16 Feb 2021 09:17:18 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 782E664D9F;
-        Tue, 16 Feb 2021 14:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613484997;
-        bh=TBPqpnUqDioTSDkHJrAsQrWH6tFfXLDdDLnLtyI64lI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PNi4bBUGEEUao/WyabXMwTTxBbpX9Dfp0SpevABA9NU6aCO3WwWi7UeiziJHPQLi7
-         SNXlMvJUlLXOBDpgWtiiFs2rJx6Rdgl8dHdqJnzcYIFPhJIo3u2UACnrFnE+xPXMSP
-         VSw7q4J2ew4RWjoU0rUSfW6HFtSBnzCMeLtMn4e55+bJoHaIy22QjKhfofeqjKpUlp
-         Xvqo/LH1hXfB2cxfS1+Oaoa8PdntiLb9tYYOaHivQs/3o5ugF0DKsxJpLQsHftJ3I4
-         J3VT+7ncRC9HvZ5wf2RHpB/KVYKmSXBZBFCzmOvKF30t5iQJB49YSbi7r6qdPoxvCX
-         LrnjeRLH3mrDg==
-Date:   Tue, 16 Feb 2021 08:16:34 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Wasim Khan <wasim.khan@nxp.com>
-Cc:     "Wasim Khan (OSS)" <wasim.khan@oss.nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI : check if type 0 devices have all BARs of size zero
-Message-ID: <20210216141634.GA803078@bjorn-Precision-5520>
+        id S229812AbhBPOTG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Feb 2021 09:19:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229830AbhBPOTB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Feb 2021 09:19:01 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B9EC061574;
+        Tue, 16 Feb 2021 06:18:21 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id o38so6285306pgm.9;
+        Tue, 16 Feb 2021 06:18:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PLAWiU4u+/JN6Cect1nU2YTOuyF3kymSRVIxQKTfE7M=;
+        b=ARopcqVdkaKOiZfM1Ig0o9IQpQhfRmv3CfZ5OWs82gp5HJtZNiT9g14DA6eMU7dwyb
+         R+h05Cymdgv2MEE5uhuFsrGPhPxRVr/CvRhCnsHK1xrfC4hyHhazo3jp2q9yE8I98J1T
+         AQc+AAraBQoiyq2iMxrOGsVxkbOiP5kCYfQ/sAI9I4I6b+X46zgbGByz27lqb4vLdBL+
+         B47lFuXUQDq9EA9tbHXNH49CJzdAeLqMNe0q+RDTROSwxoc7NPy0RRp+emvRkYcbRp8Y
+         7n0i6r7Gh4MGwKOxHGp0cJ+WN7rqT7jV90DIUUST1Sig3idozousEmDiNq15Z81H3dM1
+         m/0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PLAWiU4u+/JN6Cect1nU2YTOuyF3kymSRVIxQKTfE7M=;
+        b=VxAtNuPQ14x8kwr1+cELl2gaCZ8IPLKdiwqTAtGmqGb/FYuQLshs5MaQ2R9sx0veqa
+         Evmtw20u8JMRAzWlkeWTTlxSi/nuoASmsDGls+5vxdQJoFXIF6g6aD1YGfvqiZu5nCgp
+         TP1VxgeCGDJWs5q4QMK26LT9FOfGeZSO7v+TSIvVNrEB3cpXBTOcuNblxGjiciUrFhhE
+         3ZBIyIdzDW9ouknHFrIZNwCNu2uMOWbkuSP7DOGL6D6FwR0tO0ZtrJKjFjmSicNS5+1s
+         mN4jVm2k/Dv2iHQ9EY1zPFc3TPeT/Oe8wtxerq7ZCjFNJTdQo/yZLTkX50BiaczQ5600
+         apnA==
+X-Gm-Message-State: AOAM531r/iB78HzBZKcsRwJTzq3q+TU8NNfNH+wZlCIapVCA43YyF7Kr
+        HEZ9+Ed89ufx5fazhyGTTgg=
+X-Google-Smtp-Source: ABdhPJyJYksZEPu8FRF4aATJc1TyLBshMBCNdt1NHgVD5mJvrsga1WKLlugALHoGTiF/j0fQJwNkfA==
+X-Received: by 2002:a65:4983:: with SMTP id r3mr20001308pgs.288.1613485100793;
+        Tue, 16 Feb 2021 06:18:20 -0800 (PST)
+Received: from localhost (185.212.56.4.16clouds.com. [185.212.56.4])
+        by smtp.gmail.com with ESMTPSA id d124sm16101242pgc.82.2021.02.16.06.18.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Feb 2021 06:18:20 -0800 (PST)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, bhelgaas@google.com, wsa@kernel.org,
+        linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, kw@linux.com
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v2 0/4] Introduce pcim_alloc_irq_vectors()
+Date:   Tue, 16 Feb 2021 22:18:06 +0800
+Message-Id: <20210216141810.747678-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6702EE8C0FBAFDFD3B35199090879@VE1PR04MB6702.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 07:52:08AM +0000, Wasim Khan wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Tuesday, February 16, 2021 2:43 AM
-> > To: Wasim Khan (OSS) <wasim.khan@oss.nxp.com>
-> > Cc: bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Wasim Khan <wasim.khan@nxp.com>
-> > Subject: Re: [PATCH] PCI : check if type 0 devices have all BARs of size zero
-> > 
-> > On Fri, Feb 12, 2021 at 11:08:56AM +0100, Wasim Khan wrote:
-> > > From: Wasim Khan <wasim.khan@nxp.com>
-> > >
-> > > Log a message if all BARs of type 0 devices are of size zero. This can
-> > > help detecting type 0 devices not reporting BAR size correctly.
-> > 
-> > I could be missing something, but I don't think we can do this.  I
-> > would think the simplest possible presilicon testing would find
-> > errors like this, and the first attempt to have a driver claim the
-> > device would fail if required BARs were missing, so I'm not sure
-> > what this would add.
-> 
-> Thank you for the review.
-> I observed this issue with an under development EP. Due to some
-> logic problem in EP's firmware, the BAR sizes were reported zero and
-> crash was observed sometime later in PCIe code. 
+Introduce pcim_alloc_irq_vectors(), a device-managed version of
+pci_alloc_irq_vectors(), In some i2c drivers, If pcim_enable_device()
+has been called before, then pci_alloc_irq_vectors() is actually a
+device-managed function. It is used as a device-managed function, So
+replace it with pcim_alloc_irq_vectors().
 
-I'm interested in this crash.  The PCI core should not crash just
-because a BAR size is zero, i.e., the BAR looks like it's
-unimplemented.
+Changelog
+---------
+v1 -> v2:
+	- Use pci_free_irq_vectors() to replace some code in
+	  pcim_release().
+	- Modify some commit messages.
 
-> I agree with you that such issues should have been caught in
-> pre-silicon testing, but not sure of pre-si testing details and if
-> the issue was specifically observed with real OS. Also, because the
-> EP is in early stage of development, device driver of EP is not
-> available as of now. 
+Andy and Krzysztof, thanks for your help!
 
-> So, I though it will be a good idea to print an information message
-> only for *type 0* devices to give a quick hint if the zero BAR size
-> is expected for the given EP or not. So that SW can contribute to
-> identify HW problem.
+Dejin Zheng (4):
+  PCI: Introduce pcim_alloc_irq_vectors()
+  Documentation: devres: Add pcim_alloc_irq_vectors()
+  i2c: designware: Use the correct name of device-managed function
+  i2c: thunderx: Use the correct name of device-managed function
 
-> > While the subject line says "type 0 devices," this code path is
-> > also used for type 1 devices (bridges), and it's quite common for
-> > bridges to have no BARs, which means they would all be hardwired
-> > to zero.
-> 
-> Yes, for type 1 devices, it is common to have zero BAR size, so I
-> added log msg for type 0 devices only , which are in-general
-> expected to have valid BARs.
+ .../driver-api/driver-model/devres.rst        |  1 +
+ drivers/i2c/busses/i2c-designware-pcidrv.c    |  2 +-
+ drivers/i2c/busses/i2c-thunderx-pcidrv.c      |  2 +-
+ drivers/pci/pci.c                             | 33 ++++++++++++++++---
+ include/linux/pci.h                           |  3 ++
+ 5 files changed, 35 insertions(+), 6 deletions(-)
 
-Oh, right, I missed your check of dev->hdr_type.
+-- 
+2.25.0
 
-> > It is also legal for even type 0 devices to implement no BARs.
-> > They may be operated entirely via config space or via
-> > device-specific BARs that are unknown to the PCI core.
-> 
-> OK, I did not know this . Thank you for sharing this.
-
-This is actually quite common.  On my garden-variet laptop, this:
-
-  $ lspci -v | grep -E "^(\S|        (Memory|I/O))"
-
-finds two type 0 devices that have no BARs:
-
-  00:00.0 Host bridge: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers
-  00:1f.0 ISA bridge: Intel Corporation CM238 Chipset LPC/eSPI Controller
-
-I don't really want to add more dmesg logging for things like this
-that are working correctly.  In this case, I think the best solution
-is to either keep this patch in your private branch for testing or to
-manually inspect the dmesg log, where we already log every BAR we
-discover, for devices that should have BARs but don't.
-
-> > > Signed-off-by: Wasim Khan <wasim.khan@nxp.com>
-> > > ---
-> > >  drivers/pci/probe.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c index
-> > > 953f15abc850..6438d6d56777 100644
-> > > --- a/drivers/pci/probe.c
-> > > +++ b/drivers/pci/probe.c
-> > > @@ -321,6 +321,7 @@ int __pci_read_base(struct pci_dev *dev, enum
-> > > pci_bar_type type,  static void pci_read_bases(struct pci_dev *dev,
-> > > unsigned int howmany, int rom)  {
-> > >  	unsigned int pos, reg;
-> > > +	bool found = false;
-> > >
-> > >  	if (dev->non_compliant_bars)
-> > >  		return;
-> > > @@ -333,8 +334,12 @@ static void pci_read_bases(struct pci_dev *dev,
-> > unsigned int howmany, int rom)
-> > >  		struct resource *res = &dev->resource[pos];
-> > >  		reg = PCI_BASE_ADDRESS_0 + (pos << 2);
-> > >  		pos += __pci_read_base(dev, pci_bar_unknown, res, reg);
-> > > +		found |= res->flags ? 1 : 0;
-> > >  	}
-> > >
-> > > +	if (!dev->hdr_type && !found)
-> > > +		pci_info(dev, "BAR size is 0 for BAR[0..%d]\n", howmany - 1);
-> > > +
-> > >  	if (rom) {
-> > >  		struct resource *res = &dev->resource[PCI_ROM_RESOURCE];
-> > >  		dev->rom_base_reg = rom;
-> > > --
-> > > 2.25.1
-> > >
