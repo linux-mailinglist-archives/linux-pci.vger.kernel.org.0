@@ -2,103 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 478C631CE65
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 17:50:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3AC31CEBA
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 18:12:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229764AbhBPQtY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Feb 2021 11:49:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbhBPQtY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Feb 2021 11:49:24 -0500
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0428C06174A
-        for <linux-pci@vger.kernel.org>; Tue, 16 Feb 2021 08:48:43 -0800 (PST)
-Received: by mail-ej1-x635.google.com with SMTP id f14so17609082ejc.8
-        for <linux-pci@vger.kernel.org>; Tue, 16 Feb 2021 08:48:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+ecI3AnraXxD8s3/KbtK83ACA5HZ+x4/w5NBzKVHXCM=;
-        b=Wm4E81qbjZm4Ote4+krHtLMT/Sg47muTNtm9HAKUxuG6Ynbpz/zx9MMwTAxRVTsgVJ
-         /dzzWYIWuocSvGpYzRWHIensXSKdcLuR4nL7RXCE+p8DgFHIcvSeX0wcN5u7/JmCK0qp
-         acnyO5VrRzp2jteOXYfH01EwKQRMekKGfugDte/4je+KFj4VmoylnLVz45G4U+t/SrpB
-         iZWqFLwHhLLKfGymiYFRCCxGZPBfX3wrdFNwaXAyieuKeokwaE98+EHOUIK5WC+f3xUs
-         9De32myHYjeq1IRoGAK7DkzalOxPCkwfTVMLHCtzioAjkOxq3Tp1syboSAYFWZtlM49Y
-         /hvw==
+        id S229699AbhBPRLt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Feb 2021 12:11:49 -0500
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:45128 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230519AbhBPRLt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Feb 2021 12:11:49 -0500
+Received: by mail-lj1-f178.google.com with SMTP id c8so10562998ljd.12;
+        Tue, 16 Feb 2021 09:11:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+ecI3AnraXxD8s3/KbtK83ACA5HZ+x4/w5NBzKVHXCM=;
-        b=lUAFp6ln+r5oGlv6Ej6joQ71xmuupEuQvguzBlAvKslz9+ZDCt8P12vNQQ+mxfWCm1
-         GmJ4Xb18AtCrExvhKSDMAmHw7fcT21cMD8GeBsyh3sxCNHwSA42zneqY6bXAtQwUOrEm
-         cbkmqPxj/LD0Y5pP31Oas2gtR6iC47RBuZWnGb73PBH+/WFZvWQ35BUUwPEeImFcquVJ
-         P0r9K7pYNUb6nrmjdvBdmQ1oJZnJU50qVEC3tr/b6Tgb5AYRmW2FvdoJR4dIBKjX8jsC
-         pGgDRITaxZcX5feH5D5lUV28xBwY+sQVs7aRR5QQnrBN2cQ99/kI00Vp28+iDoQVM3cl
-         AlHg==
-X-Gm-Message-State: AOAM532p8ohhMcScZS5ttlCdBKFusJci16amXi35kgKHBDtimzoAzpub
-        OqoawVaU83lvl2XI1uhS5/xjb2UbZL38jWcsnOt9mw==
-X-Google-Smtp-Source: ABdhPJw7/a6RtFAeh/ix7sMWO3UbzMvUPTqfzkV9KVjhDzFN7lG80bkPRoVGizFBbZxeH5ml2XKSfBwSVxENdDqxJEM=
-X-Received: by 2002:a17:906:5655:: with SMTP id v21mr3112272ejr.264.1613494122365;
- Tue, 16 Feb 2021 08:48:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=FSXYxSuAoSBiUnhjAQu5kedBHgCGKngf/yYTG79ZaFg=;
+        b=BtwdSuLqj6rzB4jJ+jNBn8fkerqIdGsR6lN0w1jjZ82m5DEF3w+qPIKcXCk1rjFVzO
+         D8ceTRg18IV6QLXdFOylrESUyVHV1H2XaB+GKEkNE46mNs7fYRyO5Wf5ViFnJQ8i9lnL
+         oogB4AhWCEQkQZ5byeCTzKgmSX3AkfffEDWeg9P1zT0gd3EX4bTeGZmiuO/xC3Rtoy83
+         5fXo+UbE8zTyGABTt+DGvCjEthhmrux8gw8/1wUiDtUpMXssAhBe0X81bKtXHx8mYprr
+         m3smDf/1179D/qCPbBNDSjifgmAtKe3/rgvoWjWvBBlsWbK55LXYCjco0xLE6+/cG8x8
+         0Mpw==
+X-Gm-Message-State: AOAM530cCkX3koYvRrhOz/NFtkiRzBa0isFiWUmAThkqmZZ2vS00reWL
+        M0CTitqbGHNEq7CndIPdTIA=
+X-Google-Smtp-Source: ABdhPJyaZb/hUDVaLwDIuaICrzeLokXw4yqkEg1I3QUpBwx/MKBPav/hPxELwBbU4b/3xj1lmt1J+Q==
+X-Received: by 2002:a2e:b0e2:: with SMTP id h2mr12511995ljl.483.1613495454793;
+        Tue, 16 Feb 2021 09:10:54 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id v24sm4124110ljg.27.2021.02.16.09.10.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Feb 2021 09:10:53 -0800 (PST)
+Date:   Tue, 16 Feb 2021 18:10:52 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        rric@kernel.org, helgaas@kernel.org, wsa@kernel.org,
+        linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] Documentation: devres: Add
+ pcim_alloc_irq_vectors()
+Message-ID: <YCv8nCX0ZdAb+CHm@rocinante>
+References: <20210216160249.749799-1-zhengdejin5@gmail.com>
+ <20210216160249.749799-3-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-References: <20210216014538.268106-1-ben.widawsky@intel.com>
- <20210216014538.268106-10-ben.widawsky@intel.com> <20210216154857.0000261d@Huawei.com>
-In-Reply-To: <20210216154857.0000261d@Huawei.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Feb 2021 08:48:32 -0800
-Message-ID: <CAPcyv4j+DZq7fkRTW+_O1-AtAQwOPD65A8M5AWg7XU9N+TksRA@mail.gmail.com>
-Subject: Re: [PATCH v4 9/9] cxl/mem: Add payload dumping for debug
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Ben Widawsky <ben.widawsky@intel.com>, linux-cxl@vger.kernel.org,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Chris Browy <cbrowy@avery-design.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jon Masters <jcm@jonmasters.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "John Groves (jgroves)" <jgroves@micron.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210216160249.749799-3-zhengdejin5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 7:50 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Mon, 15 Feb 2021 17:45:38 -0800
-> Ben Widawsky <ben.widawsky@intel.com> wrote:
->
-> > It's often useful in debug scenarios to see what the hardware has dumped
-> > out. As it stands today, any device error will result in the payload not
-> > being copied out, so there is no way to triage commands which weren't
-> > expected to fail (and sometimes the payload may have that information).
-> >
-> > The functionality is protected by normal kernel security mechanisms as
-> > well as a CONFIG option in the CXL driver.
-> >
-> > This was extracted from the original version of the CXL enabling patch
-> > series.
-> >
-> > Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
->
-> My gut feeling here is use a tracepoint rather than spamming the kernel
-> log.  Alternatively just don't bother merging this patch - it's on the list
-> now anyway so trivial for anyone doing such debug to pick it up.
->
+Hi Dejin,
 
-I've long wanted to make dev_dbg() a way to declare trace-points. With
-that, enabling it as a log message, or a trace-point is user policy.
-The value of this is having it readily available, not digging up a
-patch off the list for a debug session.
+Thank you again for all the work here!
+
+> Add pcim_alloc_irq_vectors(), a device-managed version of
+> pci_alloc_irq_vectors(). introducing this function can simplify
+> the error handling path in many drivers.
+
+The second sentence should most likely start with a capital letter.
+
+Having said that, people might ask - how does it simplify the error
+handling path?
+
+You might have to back this with a line of two to explain how does the
+change achieved that, so that when someone looks at the commit message
+it would be clear what the benefits of the change were.
+
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+
+Krzysztof
