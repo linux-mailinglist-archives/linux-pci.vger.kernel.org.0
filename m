@@ -2,134 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE04131D1A5
-	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 21:38:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6991231D1CE
+	for <lists+linux-pci@lfdr.de>; Tue, 16 Feb 2021 22:00:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbhBPUiR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 Feb 2021 15:38:17 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4124 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229943AbhBPUiQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Feb 2021 15:38:16 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B602c2d0e0000>; Tue, 16 Feb 2021 12:37:34 -0800
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 16 Feb
- 2021 20:37:32 +0000
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL101.nvidia.com
- (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 16 Feb
- 2021 20:37:30 +0000
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
- by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Tue, 16 Feb 2021 20:37:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XeH00gjhC8cTBEi/Fvcdpapwd5XQh36f519Rv4kzfWaLIFRBl8y6ZYxcT8I9i8y+KIvMfWkp7itp7M4aGFTjD1eIjkPdOI7NOIixNSyYtTJrfngNQtWHofP4bu0cp2lF3C/OXsQ76uVsiJ77NrRJH05nwnqFnbs3tXsVGEp54+nCtVTuFRUGfTdK33MKXMoyE1qrTAuntAR+kI/lEVZ42rbv6H7L+d9oQOMQmfSplIuPr0UmBvtMSTMMaciQxuaoPy/4Nxytrcn48KQl8NNuyYDsFXyHKZR84WRhIatkqmXuwCd53b6Gk+8QjJ8QSp2bp5cnTHMKif94YR1w35ixuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DO80BabukQjg/O7gbshaqTOtij5NDzriH8zaM/otgcE=;
- b=QetCokRyXcdMP5MYz5QASCu3AOqs7k0xsspmD0cufQ7qh99HuYxpulFGgyQ+ouigDK2PDgy3qGj72pWwf1kdIPNj1EjuCmYO47mLEm5d/5j29ABkOFq7vKhXfl2pxSRdn7MLUtS4K7P2snghEl3CELC73CU1E//gS0nUIczTkVCn0YK9TOpN7nl7ndslmj7i2zLL+j39ym9LedpZ/dfNP8vi7JBTJbxzCb/BOcD7hNeBpQz1T6iaZNM9VHwkJoyQpqxiHIhsyBW2zCq0Kb04kH56pIMmS9fYR4eDheO2gDZc6rgBdM3qLoNI4N+LtyG0OUTKL6MM1RVplkOigXas0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4402.namprd12.prod.outlook.com (2603:10b6:5:2a5::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27; Tue, 16 Feb
- 2021 20:37:27 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::d6b:736:fa28:5e4]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::d6b:736:fa28:5e4%7]) with mapi id 15.20.3846.041; Tue, 16 Feb 2021
- 20:37:27 +0000
-Date:   Tue, 16 Feb 2021 16:37:26 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <20210216203726.GH4247@nvidia.com>
-References: <YCt1WAAEO1hx2pjY@unreal>
- <20210216161212.GA805748@bjorn-Precision-5520>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20210216161212.GA805748@bjorn-Precision-5520>
-X-ClientProxiedBy: MN2PR01CA0008.prod.exchangelabs.com (2603:10b6:208:10c::21)
- To DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+        id S230031AbhBPVAT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 Feb 2021 16:00:19 -0500
+Received: from mail-wr1-f53.google.com ([209.85.221.53]:45986 "EHLO
+        mail-wr1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230006AbhBPVAT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 Feb 2021 16:00:19 -0500
+Received: by mail-wr1-f53.google.com with SMTP id v7so14961862wrr.12
+        for <linux-pci@vger.kernel.org>; Tue, 16 Feb 2021 13:00:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jEO0REltWycHmOyy+3ZDFWWdMIM1IhhKHYVeX58bE90=;
+        b=mTbUsgIvHo1ZZumIjGHwLleMwei+ufxETqY5YiunmaXeLlT1wGa6sjmE0SbXp+BPh/
+         nVFAeP1rkx4tiLx8Z2NVVk97cg3Sf181SNHs9rZkr98GI912GakFukFVnsjpHUqkW6nJ
+         cliqqMdmcMu4TdK6quMkXehW33u15Pe/wKslk+ddy7RQpSeHwa1Hl/ha5bdzLMFosvE0
+         n6180QOCPLEFXZSlykOlOqDY/rlvZiia1G9wlOvsHcyfEDaqSMa5jETEZfTjLoNLkMMd
+         KHLt3CkqXl6urYoCd8WLit09gMR3hPTl0pjO+ffQ+yLFnbSVAK/udjMkeA7kucrKlWaa
+         Etlw==
+X-Gm-Message-State: AOAM530zdOMtxJO4+xUEnsed9QSXkSQKmKAV6U/QVzazt16zKOB0+Skw
+        8eEWQzNjeyC980sYJQTI/64=
+X-Google-Smtp-Source: ABdhPJxNV2oENdEijYNTHZ6O6dWgIJPTN+CkqJtoED18cAFHGSamUJBMwrMPTDz5tYsvCYUiR4CjEQ==
+X-Received: by 2002:adf:e80d:: with SMTP id o13mr26153999wrm.113.1613509177318;
+        Tue, 16 Feb 2021 12:59:37 -0800 (PST)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id c140sm5372496wmd.37.2021.02.16.12.59.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Feb 2021 12:59:36 -0800 (PST)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Tom Joseph <tjoseph@cadence.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: cadence: Fix erroneous early return from an iterator
+Date:   Tue, 16 Feb 2021 20:59:35 +0000
+Message-Id: <20210216205935.3112661-1-kw@linux.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.162.115.133) by MN2PR01CA0008.prod.exchangelabs.com (2603:10b6:208:10c::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend Transport; Tue, 16 Feb 2021 20:37:27 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lC766-009Kh0-2y; Tue, 16 Feb 2021 16:37:26 -0400
-X-Header: ProcessedBy-CMR-outbound
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1613507854; bh=DO80BabukQjg/O7gbshaqTOtij5NDzriH8zaM/otgcE=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Header;
-        b=NpE/iY//vESb1CMPeSQ0kyrqIh4ErodWNyszLNh1hbocUnkqMwkQl1BLFX+RQ9WB1
-         adPKk1+iYGXKKzP5+zxPogYsexY3b3D8d1NYps2rZELIOZ+P+ODy6x8dwLVeGUt4Cr
-         LH5J1HLljoFl4tJhmb2phkzl4TTh2S/UrhJyVTItVtSvaylWbXgy/+y1eYBx40flik
-         7Inbjevu1YG+H9JOGZdXECvSjmJlRBLXt4Vq3XkwG7RlIW3fxxZi00J7Ft9ah9+UR9
-         aWi2N8TB+SauxJq6I5kFBsg/lTkCZjdzAgiCccUPRDoorQ4J6FCRDu9ZLETMxCJ2vm
-         4uZCmfnVZ0Yxw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 10:12:12AM -0600, Bjorn Helgaas wrote:
-> > >
-> > > But I still don't like the fact that we're calling
-> > > sysfs_create_files() and sysfs_remove_files() directly.  It makes
-> > > complication and opportunities for errors.
-> > 
-> > It is not different from any other code that we have in the kernel.
-> 
-> It *is* different.  There is a general rule that drivers should not
-> call sysfs_* [1].  The PCI core is arguably not a "driver," but it is
-> still true that callers of sysfs_create_files() are very special, and
-> I'd prefer not to add another one.
+Function cdns_pcie_host_map_dma_ranges() iterates over a PCIe host
+bridge DMA ranges using the resource_list_for_each_entry() iterator.
 
-I think the point of [1] is people should be setting up their sysfs in
-the struct device attribute groups/etc before doing device_add() and
-allowing the driver core to handle everything. This can be done in
-a lot of cases, eg we have examples of building a dynamic list of
-attributes
+With every iteration it calls cdns_pcie_host_bar_config() on each entry
+in the list, and performs error checking following execution of said
+function.
 
-In other cases, calling wrappers like device_create_file() introduces
-a bit more type safety, so adding a device_create_files() would be
-trivial enough
+Normally, should there be an error, the iteration would be interrupted
+and the function would terminate returning an error, but following the
+merge commit 49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
+that also had to resolve a merge conflict of the pcie-cadence-host.c
+file, where an if-statement involved in the error handling has been
+unintentionally altered causing a return statement to be outside of the
+code block, and thus an undesired early return takes place on first
+iteration.
 
-Other places in PCI are using syfs_create_group() (and there are over
-400 calls to this function in all sorts of device drivers):
+Fix the if-statement and move the return statement inside the correct
+code block so that the error checking works correctly, and to prevent
+undesired early return.
 
-drivers/pci/msi.c:      ret = sysfs_create_groups(&pdev->dev.kobj, msi_irq_groups);
-drivers/pci/p2pdma.c:   error = sysfs_create_group(&pdev->dev.kobj, &p2pmem_group);
-drivers/pci/pci-label.c:        return sysfs_create_group(&pdev->dev.kobj, &smbios_attr_group);
-drivers/pci/pci-label.c:        return sysfs_create_group(&pdev->dev.kobj, &acpi_attr_group);
+Fixes: 49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-For post-driver_add() stuff, maybe this should do the same, a
-"srio_vf/" group?
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 811c1cb2e8de..1cb7cfc75d6e 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -321,9 +321,10 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
+ 
+ 	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+ 		err = cdns_pcie_host_bar_config(rc, entry);
+-		if (err)
++		if (err) {
+ 			dev_err(dev, "Fail to configure IB using dma-ranges\n");
+-		return err;
++			return err;
++		}
+ 	}
+ 
+ 	return 0;
+-- 
+2.30.0
 
-And a minor cleanup would change these to use device_create_bin_file():
-
-drivers/pci/pci-sysfs.c:        retval = sysfs_create_bin_file(&pdev->dev.kobj, res_attr);
-drivers/pci/pci-sysfs.c:                retval = sysfs_create_bin_file(&pdev->dev.kobj, &pcie_config_attr);
-drivers/pci/pci-sysfs.c:                retval = sysfs_create_bin_file(&pdev->dev.kobj, &pci_config_attr);
-drivers/pci/pci-sysfs.c:                retval = sysfs_create_bin_file(&pdev->dev.kobj, attr);
-drivers/pci/vpd.c:      retval = sysfs_create_bin_file(&dev->dev.kobj, attr);
-
-I haven't worked out why pci_create_firmware_label_files() and all of
-this needs to be after device_add() though.. Would be slick to put
-that in the normal attribute list - we've got some examples of dynamic
-pre-device_add() attribute lists in the tree (eg tpm, rdma) that work
-nicely.
-
-Jason
