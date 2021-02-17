@@ -2,105 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0646231E301
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 00:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2BC631E30A
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 00:35:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231239AbhBQXas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Feb 2021 18:30:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
+        id S232214AbhBQXdA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Feb 2021 18:33:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229804AbhBQXas (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Feb 2021 18:30:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B6E09600EF;
-        Wed, 17 Feb 2021 23:30:06 +0000 (UTC)
+        id S232120AbhBQXc7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Feb 2021 18:32:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6084C600EF;
+        Wed, 17 Feb 2021 23:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613604606;
-        bh=CT6bpmyVS41KdJy4ZUvkLaBaOaGujeUrFveQxG0XL2U=;
+        s=k20201202; t=1613604738;
+        bh=xr9Psu8shUX6MrhNK7Dr8wXIVyvf+IrCamxrpwOQW/M=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OTD4XYRLiCymow838KzcZ9GxU5SGtKdmtQ8b0ZQlCpWVp6ZNqJSSt0AcB+MMKWGq7
-         YcN4oJmwoGEjvsx0PGHkZinXdZbe5SXm+YQeOP5N4nVvyq4Lub/x+uojqwGnnESx7p
-         ciRaRNgKgt47NU3+dEYOzzhdhnwqomAQjgd6qH/6CTA7kTE8ToG4wy5b8ZG06QbUlf
-         yj1zXvwOe13E208UMF7gUHV7a1ynrDKHWspKMhIMO8z9frGbpeb50UqNp+EbfCDsz3
-         ODNalPan3gN5nKuHoPFAwGBLX3rqgLchxhfSrg1IyrSFmVAupDMmoB41YSA+76PI6v
-         wzToe13hftOQw==
-Date:   Wed, 17 Feb 2021 17:30:04 -0600
+        b=QaHR5I0XO73Ikb3v5nZ0vwVyxs5fLYIK29epplaUB3jKbSbc5hVQ9DcBCV1OzRIiP
+         lg1+7dsIYdz5PXIrYrrBjX4mb6c0f5hIQ+/FGIhfcNgXCFFfciYd29tLZ0NAVk6wPI
+         1A7PxQcUCduGkvZJk0f0lXvxBy7EPl85f/qRAWbuzSRa4EsURkSw1bR1BI5efpc1mt
+         HI2QVZqKwvSOtCHxmgkeKIpsUmcDUZL+c8c+m+JzNICc7UyvHvraXVjj8qk5EB22Yy
+         Q/uuHitGLZcgv4PdJ7mfxnH4dYTAF3CCKRWu9m3l9aoUKvsezPuAqxSDRoj5sCOEk8
+         FwbtByEXdfv1A==
+Date:   Wed, 17 Feb 2021 17:32:16 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Pali Roh__r <pali@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: pci-bridge-emul: fix array overruns, improve safety
-Message-ID: <20210217233004.GA924023@bjorn-Precision-5520>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Fix memory leak in pci_register_io_range()
+Message-ID: <20210217233216.GA924417@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E1l6z9W-0006Re-MQ@rmk-PC.armlinux.org.uk>
+In-Reply-To: <20210202100332.829047-1-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 05:07:46PM +0000, Russell King wrote:
-> We allow up to PCI_EXP_SLTSTA2 registers to be accessed, but the
-> PCIe behaviour (pcie_cap_regs_behavior) array only covers up to
-> PCI_EXP_RTSTA. Expand this array to avoid walking off the end of it.
+On Tue, Feb 02, 2021 at 11:03:32AM +0100, Geert Uytterhoeven wrote:
+> Kmemleak reports:
 > 
-> Do the same for pci_regs_behavior for consistency, and add a
-> BUILD_BUG_ON() to also check the bridge->conf structure size.
+>     unreferenced object 0xc328de40 (size 64):
+>       comm "kworker/1:1", pid 21, jiffies 4294938212 (age 1484.670s)
+>       hex dump (first 32 bytes):
+>         00 00 00 00 00 00 00 00 e0 d8 fc eb 00 00 00 00  ................
+>         00 00 10 fe 00 00 00 00 00 00 00 00 00 00 00 00  ................
 > 
-> Fixes: 23a5fba4d941 ("PCI: Introduce PCI bridge emulated config space common logic")
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+>     backtrace:
+>       [<ad758d10>] pci_register_io_range+0x3c/0x80
+>       [<2c7f139e>] of_pci_range_to_resource+0x48/0xc0
+>       [<f079ecc8>] devm_of_pci_get_host_bridge_resources.constprop.0+0x2ac/0x3ac
+>       [<e999753b>] devm_of_pci_bridge_init+0x60/0x1b8
+>       [<a895b229>] devm_pci_alloc_host_bridge+0x54/0x64
+>       [<e451ddb0>] rcar_pcie_probe+0x2c/0x644
+> 
+> In case a PCI host driver's probe is deferred, the same I/O range may be
+> allocated again, and be ignored, causing a memory leak.
+> 
+> Fix this by (a) letting logic_pio_register_range() return -EEXIST if the
+> passed range already exists, so pci_register_io_range() will free it,
+> and by (b) making pci_register_io_range() not consider -EEXIST an error
+> condition.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Applied with Pali's Reviewed-by to pci/enumeration for v5.12, thanks!
+Applied to pci/enumeration for v5.12, thanks!
 
 > ---
->  drivers/pci/pci-bridge-emul.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+>  drivers/pci/pci.c | 4 ++++
+>  lib/logic_pio.c   | 3 +++
+>  2 files changed, 7 insertions(+)
 > 
-> diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
-> index 139869d50eb2..fdaf86a888b7 100644
-> --- a/drivers/pci/pci-bridge-emul.c
-> +++ b/drivers/pci/pci-bridge-emul.c
-> @@ -21,8 +21,9 @@
->  #include "pci-bridge-emul.h"
->  
->  #define PCI_BRIDGE_CONF_END	PCI_STD_HEADER_SIZEOF
-> +#define PCI_CAP_PCIE_SIZEOF	(PCI_EXP_SLTSTA2 + 2)
->  #define PCI_CAP_PCIE_START	PCI_BRIDGE_CONF_END
-> -#define PCI_CAP_PCIE_END	(PCI_CAP_PCIE_START + PCI_EXP_SLTSTA2 + 2)
-> +#define PCI_CAP_PCIE_END	(PCI_CAP_PCIE_START + PCI_CAP_PCIE_SIZEOF)
->  
->  /**
->   * struct pci_bridge_reg_behavior - register bits behaviors
-> @@ -46,7 +47,8 @@ struct pci_bridge_reg_behavior {
->  	u32 w1c;
->  };
->  
-> -static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
-> +static const
-> +struct pci_bridge_reg_behavior pci_regs_behavior[PCI_STD_HEADER_SIZEOF / 4] = {
->  	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
->  	[PCI_COMMAND / 4] = {
->  		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
-> @@ -164,7 +166,8 @@ static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
->  	},
->  };
->  
-> -static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
-> +static const
-> +struct pci_bridge_reg_behavior pcie_cap_regs_behavior[PCI_CAP_PCIE_SIZEOF / 4] = {
->  	[PCI_CAP_LIST_ID / 4] = {
->  		/*
->  		 * Capability ID, Next Capability Pointer and
-> @@ -260,6 +263,8 @@ static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
->  int pci_bridge_emul_init(struct pci_bridge_emul *bridge,
->  			 unsigned int flags)
->  {
-> +	BUILD_BUG_ON(sizeof(bridge->conf) != PCI_BRIDGE_CONF_END);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 09b03cfba8894955..c651003e304a2b71 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4037,6 +4037,10 @@ int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
+>  	ret = logic_pio_register_range(range);
+>  	if (ret)
+>  		kfree(range);
 > +
->  	bridge->conf.class_revision |= cpu_to_le32(PCI_CLASS_BRIDGE_PCI << 16);
->  	bridge->conf.header_type = PCI_HEADER_TYPE_BRIDGE;
->  	bridge->conf.cache_line_size = 0x10;
+> +	/* Ignore duplicates due to deferred probing */
+> +	if (ret == -EEXIST)
+> +		ret = 0;
+>  #endif
+>  
+>  	return ret;
+> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+> index f32fe481b4922bc1..07b4b9a1f54b6bf5 100644
+> --- a/lib/logic_pio.c
+> +++ b/lib/logic_pio.c
+> @@ -28,6 +28,8 @@ static DEFINE_MUTEX(io_range_mutex);
+>   * @new_range: pointer to the IO range to be registered.
+>   *
+>   * Returns 0 on success, the error code in case of failure.
+> + * If the range already exists, -EEXIST will be returned, which should be
+> + * considered a success.
+>   *
+>   * Register a new IO range node in the IO range list.
+>   */
+> @@ -51,6 +53,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+>  	list_for_each_entry(range, &io_range_list, list) {
+>  		if (range->fwnode == new_range->fwnode) {
+>  			/* range already there */
+> +			ret = -EEXIST;
+>  			goto end_register;
+>  		}
+>  		if (range->flags == LOGIC_PIO_CPU_MMIO &&
 > -- 
-> 2.20.1
+> 2.25.1
 > 
