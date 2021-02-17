@@ -2,597 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7727031DF15
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Feb 2021 19:25:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB8E031DF99
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Feb 2021 20:26:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234879AbhBQSZ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Feb 2021 13:25:27 -0500
-Received: from mga14.intel.com ([192.55.52.115]:19606 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234808AbhBQSZ0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Feb 2021 13:25:26 -0500
-IronPort-SDR: ob1a7JisNThlYdY4n/z2EvRS4cWBCEbohRFvXDSL6fyx3bM2/rH461efzOOOa6+e8cOJdQSbSF
- gwqANwG5KEpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9898"; a="182493763"
-X-IronPort-AV: E=Sophos;i="5.81,185,1610438400"; 
-   d="scan'208";a="182493763"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2021 10:24:44 -0800
-IronPort-SDR: DHfiBPbg3Td3YaC5ZLcwwv+QZiqCahe3Pu/csyAI9JhZfJ3UD5WOZdXzlTF2BBG7/+D3BGw3cq
- 3x5XuvMBce9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,185,1610438400"; 
-   d="scan'208";a="385290974"
-Received: from intel-z390-ud.iind.intel.com ([10.223.252.51])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Feb 2021 10:24:41 -0800
-From:   srikanth.thokala@intel.com
-To:     bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, mgross@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com,
-        mallikarjunappa.sangannavar@intel.com, kw@linux.com,
-        srikanth.thokala@intel.com
-Subject: [PATCH v8 2/2] PCI: keembay: Add support for Intel Keem Bay
-Date:   Thu, 18 Feb 2021 07:47:57 +0530
-Message-Id: <20210218021757.21931-3-srikanth.thokala@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210218021757.21931-1-srikanth.thokala@intel.com>
-References: <20210218021757.21931-1-srikanth.thokala@intel.com>
+        id S232552AbhBQT0N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Feb 2021 14:26:13 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15429 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229722AbhBQT0M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Feb 2021 14:26:12 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B602d6dab0001>; Wed, 17 Feb 2021 11:25:31 -0800
+Received: from HKMAIL104.nvidia.com (10.18.16.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 17 Feb
+ 2021 19:25:29 +0000
+Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL104.nvidia.com
+ (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 17 Feb
+ 2021 19:25:27 +0000
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.53) by
+ HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 17 Feb 2021 19:25:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I2nCcJMJ10orAMrRB5/UrcEWPh4uVk2/P/OodxJ40Sfzb+3MPzuSBp3OL+hg6nFuzs3U0+wDs8zuGrIOhKhrb9Nfvjh3plERcvdl+SzCx3nHWt9Z2lMq2h2/q3MbAbhji1JnQP5HMPBApY3zIQWG7uqB+M2EHZqIXW8roiwF4KhhMkVLXvgVcpH75KZ19fdQlUGr1qehPE+szODafB/wmNVdPGhs504sd/KokKVR+a6yMkMVNAmgXtq8LU+LTxDl3/4P8tThULjxfSfFqt1NCg9gEtRDZsyN0dmZTPlVeqCLFCsUWvpNrcseL3wYrA9cawL2B4nVrUXn0dKfB++KhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ummEi7dJI4688G6dZce8fv8mf95V5106apXNnNPGYew=;
+ b=HinV0mshVR5KZC4lwPw+CPtduUPqX8oe/DdjsPLWfn3ZA05JF2FM6ed0yAoz02i9r6Dltb0qZ/B0lmCyJMahocxQsKKHx7X3NSXgzhfv0Jrs/hcVJzBs7EUzyIVY3tdYqC7SpJF422grkT4+PLE7J2JBSmBbQRfxMLixKMugIWUUbXAa7x9lxxFVsmgcnKzWXPv6VXk81t8Tt1RJnzCx4wt4J3ELEgeKFWHdjd4Z0WZaf+stvSIYf1VDm2s1gLbiJCCZ7JkqSaoypwiCfsK4IqKn61sxZORvQDg+rhoTB1pk0sEytDYVnhgdkPemyz0nupOYHJjqXNqm+UZJrz/qUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB4499.namprd12.prod.outlook.com (2603:10b6:5:2ab::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27; Wed, 17 Feb
+ 2021 19:25:24 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::d6b:736:fa28:5e4]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::d6b:736:fa28:5e4%7]) with mapi id 15.20.3846.041; Wed, 17 Feb 2021
+ 19:25:24 +0000
+Date:   Wed, 17 Feb 2021 15:25:22 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+Message-ID: <20210217192522.GW4247@nvidia.com>
+References: <YCwj4WsrVeklgl7i@unreal>
+ <20210217180239.GA896669@bjorn-Precision-5520>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20210217180239.GA896669@bjorn-Precision-5520>
+X-ClientProxiedBy: MN2PR15CA0056.namprd15.prod.outlook.com
+ (2603:10b6:208:237::25) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.162.115.133) by MN2PR15CA0056.namprd15.prod.outlook.com (2603:10b6:208:237::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend Transport; Wed, 17 Feb 2021 19:25:23 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lCSRu-00A4CP-GN; Wed, 17 Feb 2021 15:25:22 -0400
+X-Header: ProcessedBy-CMR-outbound
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1613589931; bh=ummEi7dJI4688G6dZce8fv8mf95V5106apXNnNPGYew=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Header;
+        b=IrhJjBDZetT1iYywfk+ioSxjo4iUy4qtVjMse1Ha0EL9dhU4yNbAy/twW0Sb0GzIO
+         ZL/5GLuNSk+c+7nY+5pMrCnfin+ybVdyyMaxbdopybswpSKiIr4DKc35LSyzk+HTbz
+         lDWcBEcuosqndd0SXao1/g07xTGxUpOIg+70xCTvVP83+qcNGXCAUsJ8uhqznCpxN2
+         RxYh+fxeTSXMskvil1nwzuqUQH739TkVoD3VTqZoVzlGY8tmMjkMT+lbjULNFjtuic
+         pE5f6vN1tNvnwXeDz5x5ArwE5MvuseoKUdUgy5ID8w91+OyutAgTLib/EQrOqKcxGx
+         gXj8CYBS23aKg==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Srikanth Thokala <srikanth.thokala@intel.com>
+On Wed, Feb 17, 2021 at 12:02:39PM -0600, Bjorn Helgaas wrote:
 
-Add driver for Intel Keem Bay SoC PCIe controller. This controller
-is based on DesignWare PCIe core.
+> > BTW, I asked more than once how these sysfs knobs should be handled
+> > in the PCI/core.
+> 
+> Thanks for the pointers.  This is the first instance I can think of
+> where we want to create PCI core sysfs files based on a driver
+> binding, so there really isn't a precedent.
 
-In Root Complex mode, only internal reference clock is possible for
-Keem Bay A0. For Keem Bay B0, external reference clock can be used
-and will be the default configuration. Currently, keembay_pcie_of_data
-structure has one member. It will be expanded later to handle this
-difference.
+The MSI stuff does it today, doesn't it? eg:
 
-Endpoint mode link initialization is handled by the boot firmware.
+virtblk_probe (this is a driver bind)
+  init_vq
+   virtio_find_vqs
+    vp_modern_find_vqs
+     vp_find_vqs
+      vp_find_vqs_msix
+       vp_request_msix_vectors
+        pci_alloc_irq_vectors_affinity
+         __pci_enable_msi_range
+          msi_capability_init
+	   populate_msi_sysfs
+	    	ret = sysfs_create_groups(&pdev->dev.kobj, msi_irq_groups);
 
-Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Srikanth Thokala <srikanth.thokala@intel.com>
----
- MAINTAINERS                               |   7 +
- drivers/pci/controller/dwc/Kconfig        |  28 ++
- drivers/pci/controller/dwc/Makefile       |   1 +
- drivers/pci/controller/dwc/pcie-keembay.c | 452 ++++++++++++++++++++++
- 4 files changed, 488 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-keembay.c
+And the sysfs is removed during pci_disable_msi(), also called by the
+driver
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 00836f6452f0..a423b16641ad 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13816,6 +13816,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
- F:	drivers/pci/controller/dwc/pcie-histb.c
- 
-+PCIE DRIVER FOR INTEL KEEM BAY
-+M:	Srikanth Thokala <srikanth.thokala@intel.com>
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/intel,keembay-pcie*
-+F:	drivers/pci/controller/dwc/pcie-keembay.c
-+
- PCIE DRIVER FOR MEDIATEK
- M:	Ryder Lee <ryder.lee@mediatek.com>
- L:	linux-pci@vger.kernel.org
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 22c5529e9a65..31ad37edfae3 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -225,6 +225,34 @@ config PCIE_INTEL_GW
- 	  The PCIe controller uses the DesignWare core plus Intel-specific
- 	  hardware wrappers.
- 
-+config PCIE_KEEMBAY
-+	bool
-+
-+config PCIE_KEEMBAY_HOST
-+	bool "Intel Keem Bay PCIe controller - Host mode"
-+	depends on ARCH_KEEMBAY || COMPILE_TEST
-+	depends on PCI && PCI_MSI_IRQ_DOMAIN
-+	select PCIE_DW_HOST
-+	select PCIE_KEEMBAY
-+	help
-+	  Say 'Y' here to enable support for the PCIe controller in Keem Bay
-+	  to work in host mode.
-+	  The PCIe controller is based on DesignWare Hardware and uses
-+	  DesignWare core functions.
-+
-+config PCIE_KEEMBAY_EP
-+	bool "Intel Keem Bay PCIe controller - Endpoint mode"
-+	depends on ARCH_KEEMBAY || COMPILE_TEST
-+	depends on PCI && PCI_MSI_IRQ_DOMAIN
-+	depends on PCI_ENDPOINT
-+	select PCIE_DW_EP
-+	select PCIE_KEEMBAY
-+	help
-+	  Say 'Y' here to enable support for the PCIe controller in Keem Bay
-+	  to work in endpoint mode.
-+	  The PCIe controller is based on DesignWare Hardware and uses
-+	  DesignWare core functions.
-+
- config PCIE_KIRIN
- 	depends on OF && (ARM64 || COMPILE_TEST)
- 	bool "HiSilicon Kirin series SoCs PCIe controllers"
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a751553fa0db..95da2c62c426 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
- obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
-+obj-$(CONFIG_PCIE_KEEMBAY) += pcie-keembay.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
- obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
- obj-$(CONFIG_PCI_MESON) += pci-meson.o
-diff --git a/drivers/pci/controller/dwc/pcie-keembay.c b/drivers/pci/controller/dwc/pcie-keembay.c
-new file mode 100644
-index 000000000000..b13d0754af50
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-keembay.c
-@@ -0,0 +1,452 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * PCIe controller driver for Intel Keem Bay
-+ * Copyright (C) 2020 Intel Corporation
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/init.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+#include "pcie-designware.h"
-+
-+/* PCIE_REGS_APB_SLV Registers */
-+#define PCIE_REGS_PCIE_CFG		0x0004
-+#define  PCIE_DEVICE_TYPE		BIT(8)
-+#define  PCIE_RSTN			BIT(0)
-+#define PCIE_REGS_PCIE_APP_CNTRL	0x0008
-+#define  APP_LTSSM_ENABLE		BIT(0)
-+#define PCIE_REGS_INTERRUPT_ENABLE	0x0028
-+#define  MSI_CTRL_INT_EN		BIT(8)
-+#define  EDMA_INT_EN			GENMASK(7, 0)
-+#define PCIE_REGS_INTERRUPT_STATUS	0x002c
-+#define  MSI_CTRL_INT			BIT(8)
-+#define PCIE_REGS_PCIE_SII_PM_STATE	0x00b0
-+#define  SMLH_LINK_UP			BIT(19)
-+#define  RDLH_LINK_UP			BIT(8)
-+#define  PCIE_REGS_PCIE_SII_LINK_UP	(SMLH_LINK_UP | RDLH_LINK_UP)
-+#define PCIE_REGS_PCIE_PHY_CNTL		0x0164
-+#define  PHY0_SRAM_BYPASS		BIT(8)
-+#define PCIE_REGS_PCIE_PHY_STAT		0x0168
-+#define  PHY0_MPLLA_STATE		BIT(1)
-+#define PCIE_REGS_LJPLL_STA		0x016c
-+#define  LJPLL_LOCK			BIT(0)
-+#define PCIE_REGS_LJPLL_CNTRL_0		0x0170
-+#define  LJPLL_EN			BIT(29)
-+#define  LJPLL_FOUT_EN			GENMASK(24, 21)
-+#define PCIE_REGS_LJPLL_CNTRL_2		0x0178
-+#define  LJPLL_REF_DIV			GENMASK(17, 12)
-+#define  LJPLL_FB_DIV			GENMASK(11, 0)
-+#define PCIE_REGS_LJPLL_CNTRL_3		0x017c
-+#define  LJPLL_POST_DIV3A		GENMASK(24, 22)
-+#define  LJPLL_POST_DIV2A		GENMASK(18, 16)
-+
-+#define PERST_DELAY_US		1000
-+#define AUX_CLK_RATE_HZ		24000000
-+
-+struct keembay_pcie {
-+	struct dw_pcie		pci;
-+	void __iomem		*apb_base;
-+	enum dw_pcie_device_mode mode;
-+
-+	struct clk		*clk_master;
-+	struct clk		*clk_aux;
-+	struct gpio_desc	*reset;
-+};
-+
-+struct keembay_pcie_of_data {
-+	enum dw_pcie_device_mode mode;
-+};
-+
-+static void keembay_ep_reset_assert(struct keembay_pcie *pcie)
-+{
-+	gpiod_set_value_cansleep(pcie->reset, 1);
-+	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
-+}
-+
-+static void keembay_ep_reset_deassert(struct keembay_pcie *pcie)
-+{
-+	/*
-+	 * Ensure that PERST# is asserted for a minimum of 100ms.
-+	 *
-+	 * For more details, refer to PCI Express Card Electromechanical
-+	 * Specification Revision 1.1, Table-2.4.
-+	 */
-+	msleep(100);
-+
-+	gpiod_set_value_cansleep(pcie->reset, 0);
-+	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
-+}
-+
-+static void keembay_pcie_ltssm_set(struct keembay_pcie *pcie, bool enable)
-+{
-+	u32 val;
-+
-+	val = readl(pcie->apb_base + PCIE_REGS_PCIE_APP_CNTRL);
-+	if (enable)
-+		val |= APP_LTSSM_ENABLE;
-+	else
-+		val &= ~APP_LTSSM_ENABLE;
-+	writel(val, pcie->apb_base + PCIE_REGS_PCIE_APP_CNTRL);
-+}
-+
-+static int keembay_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct keembay_pcie *pcie = dev_get_drvdata(pci->dev);
-+	u32 val;
-+
-+	val = readl(pcie->apb_base + PCIE_REGS_PCIE_SII_PM_STATE);
-+
-+	return (val & PCIE_REGS_PCIE_SII_LINK_UP) == PCIE_REGS_PCIE_SII_LINK_UP;
-+}
-+
-+static int keembay_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct keembay_pcie *pcie = dev_get_drvdata(pci->dev);
-+	u32 val;
-+	int ret;
-+
-+	if (pcie->mode == DW_PCIE_EP_TYPE)
-+		return 0;
-+
-+	keembay_pcie_ltssm_set(pcie, false);
-+
-+	ret = readl_poll_timeout(pcie->apb_base + PCIE_REGS_PCIE_PHY_STAT,
-+				 val, val & PHY0_MPLLA_STATE, 20,
-+				 500 * USEC_PER_MSEC);
-+	if (ret) {
-+		dev_err(pci->dev, "MPLLA is not locked\n");
-+		return ret;
-+	}
-+
-+	keembay_pcie_ltssm_set(pcie, true);
-+
-+	return 0;
-+}
-+
-+static void keembay_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	struct keembay_pcie *pcie = dev_get_drvdata(pci->dev);
-+
-+	keembay_pcie_ltssm_set(pcie, false);
-+}
-+
-+static const struct dw_pcie_ops keembay_pcie_ops = {
-+	.link_up	= keembay_pcie_link_up,
-+	.start_link	= keembay_pcie_start_link,
-+	.stop_link	= keembay_pcie_stop_link,
-+};
-+
-+static inline struct clk *keembay_pcie_probe_clock(struct device *dev,
-+						   const char *id, u64 rate)
-+{
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = devm_clk_get(dev, id);
-+	if (IS_ERR(clk))
-+		return clk;
-+
-+	if (rate) {
-+		ret = clk_set_rate(clk, rate);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = devm_add_action_or_reset(dev,
-+				       (void(*)(void *))clk_disable_unprepare,
-+				       clk);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return clk;
-+}
-+
-+static int keembay_pcie_probe_clocks(struct keembay_pcie *pcie)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct device *dev = pci->dev;
-+
-+	pcie->clk_master = keembay_pcie_probe_clock(dev, "master", 0);
-+	if (IS_ERR(pcie->clk_master))
-+		return dev_err_probe(dev, PTR_ERR(pcie->clk_master),
-+				     "Failed to enable master clock");
-+
-+	pcie->clk_aux = keembay_pcie_probe_clock(dev, "aux", AUX_CLK_RATE_HZ);
-+	if (IS_ERR(pcie->clk_aux))
-+		return dev_err_probe(dev, PTR_ERR(pcie->clk_aux),
-+				     "Failed to enable auxiliary clock");
-+
-+	return 0;
-+}
-+
-+/*
-+ * Initialize the internal PCIe PLL in Host mode.
-+ * See the following sections in Keem Bay data book,
-+ * (1) 6.4.6.1 PCIe Subsystem Example Initialization,
-+ * (2) 6.8 PCIe Low Jitter PLL for Ref Clk Generation.
-+ */
-+static int keembay_pcie_pll_init(struct keembay_pcie *pcie)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	u32 val;
-+	int ret;
-+
-+	val = FIELD_PREP(LJPLL_REF_DIV, 0) | FIELD_PREP(LJPLL_FB_DIV, 0x32);
-+	writel(val, pcie->apb_base + PCIE_REGS_LJPLL_CNTRL_2);
-+
-+	val = FIELD_PREP(LJPLL_POST_DIV3A, 0x2) |
-+		FIELD_PREP(LJPLL_POST_DIV2A, 0x2);
-+	writel(val, pcie->apb_base + PCIE_REGS_LJPLL_CNTRL_3);
-+
-+	val = FIELD_PREP(LJPLL_EN, 0x1) | FIELD_PREP(LJPLL_FOUT_EN, 0xc);
-+	writel(val, pcie->apb_base + PCIE_REGS_LJPLL_CNTRL_0);
-+
-+	ret = readl_poll_timeout(pcie->apb_base + PCIE_REGS_LJPLL_STA,
-+				 val, val & LJPLL_LOCK, 20,
-+				 500 * USEC_PER_MSEC);
-+	if (ret)
-+		dev_err(pci->dev, "Low jitter PLL is not locked\n");
-+
-+	return ret;
-+}
-+
-+static irqreturn_t keembay_pcie_irq_handler(int irq, void *arg)
-+{
-+	struct keembay_pcie *pcie = arg;
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct pcie_port *pp = &pci->pp;
-+	u32 val, mask, status;
-+
-+	val = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
-+	mask = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-+
-+	status = val & mask;
-+	if (!status)
-+		return IRQ_NONE;
-+
-+	if (status & MSI_CTRL_INT)
-+		dw_handle_msi_irq(pp);
-+
-+	writel(status, pcie->apb_base + PCIE_REGS_INTERRUPT_STATUS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int keembay_pcie_setup_irq(struct keembay_pcie *pcie)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct device *dev = pci->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	int irq, ret;
-+
-+	irq = platform_get_irq_byname(pdev, "pcie");
-+	if (irq < 0)
-+		return irq;
-+
-+	ret = devm_request_irq(dev, irq, keembay_pcie_irq_handler,
-+			       IRQF_SHARED | IRQF_NO_THREAD, "pcie", pcie);
-+	if (ret)
-+		dev_err(dev, "Failed to request IRQ: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static void keembay_pcie_ep_init(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct keembay_pcie *pcie = dev_get_drvdata(pci->dev);
-+
-+	writel(EDMA_INT_EN, pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-+}
-+
-+static int keembay_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-+				     enum pci_epc_irq_type type,
-+				     u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+
-+	switch (type) {
-+	case PCI_EPC_IRQ_LEGACY:
-+		/* Legacy interrupts are not supported in Keem Bay */
-+		dev_err(pci->dev, "Legacy IRQ is not supported\n");
-+		return -EINVAL;
-+	case PCI_EPC_IRQ_MSI:
-+		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-+	case PCI_EPC_IRQ_MSIX:
-+		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-+	default:
-+		dev_err(pci->dev, "Unknown IRQ type %d\n", type);
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct pci_epc_features keembay_pcie_epc_features = {
-+	.linkup_notifier	= false,
-+	.msi_capable		= true,
-+	.msix_capable		= true,
-+	.reserved_bar		= BIT(BAR_1) | BIT(BAR_3) | BIT(BAR_5),
-+	.bar_fixed_64bit	= BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
-+	.align			= SZ_16K,
-+};
-+
-+static const struct pci_epc_features *
-+keembay_pcie_get_features(struct dw_pcie_ep *ep)
-+{
-+	return &keembay_pcie_epc_features;
-+}
-+
-+static const struct dw_pcie_ep_ops keembay_pcie_ep_ops = {
-+	.ep_init	= keembay_pcie_ep_init,
-+	.raise_irq	= keembay_pcie_ep_raise_irq,
-+	.get_features	= keembay_pcie_get_features,
-+};
-+
-+static const struct dw_pcie_host_ops keembay_pcie_host_ops = {
-+};
-+
-+static int keembay_pcie_add_pcie_port(struct keembay_pcie *pcie,
-+				      struct platform_device *pdev)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct pcie_port *pp = &pci->pp;
-+	struct device *dev = &pdev->dev;
-+	u32 val;
-+	int ret;
-+
-+	pp->ops = &keembay_pcie_host_ops;
-+	pp->msi_irq = -ENODEV;
-+
-+	pcie->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(pcie->reset))
-+		return PTR_ERR(pcie->reset);
-+
-+	ret = keembay_pcie_probe_clocks(pcie);
-+	if (ret)
-+		return ret;
-+
-+	val = readl(pcie->apb_base + PCIE_REGS_PCIE_PHY_CNTL);
-+	val |= PHY0_SRAM_BYPASS;
-+	writel(val, pcie->apb_base + PCIE_REGS_PCIE_PHY_CNTL);
-+
-+	writel(PCIE_DEVICE_TYPE, pcie->apb_base + PCIE_REGS_PCIE_CFG);
-+
-+	ret = keembay_pcie_pll_init(pcie);
-+	if (ret)
-+		return ret;
-+
-+	val = readl(pcie->apb_base + PCIE_REGS_PCIE_CFG);
-+	writel(val | PCIE_RSTN, pcie->apb_base + PCIE_REGS_PCIE_CFG);
-+	keembay_ep_reset_deassert(pcie);
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret) {
-+		keembay_ep_reset_assert(pcie);
-+		dev_err(dev, "Failed to initialize host: %d\n", ret);
-+		return ret;
-+	}
-+
-+	val = readl(pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-+	if (IS_ENABLED(CONFIG_PCI_MSI))
-+		val |= MSI_CTRL_INT_EN;
-+	writel(val, pcie->apb_base + PCIE_REGS_INTERRUPT_ENABLE);
-+
-+	return 0;
-+}
-+
-+static int keembay_pcie_probe(struct platform_device *pdev)
-+{
-+	const struct keembay_pcie_of_data *data;
-+	struct device *dev = &pdev->dev;
-+	struct keembay_pcie *pcie;
-+	struct dw_pcie *pci;
-+	enum dw_pcie_device_mode mode;
-+	int ret;
-+
-+	data = device_get_match_data(dev);
-+	if (!data)
-+		return -ENODEV;
-+
-+	mode = (enum dw_pcie_device_mode)data->mode;
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	pci = &pcie->pci;
-+	pci->dev = dev;
-+	pci->ops = &keembay_pcie_ops;
-+
-+	pcie->mode = mode;
-+
-+	pcie->apb_base = devm_platform_ioremap_resource_byname(pdev, "apb");
-+	if (IS_ERR(pcie->apb_base))
-+		return PTR_ERR(pcie->apb_base);
-+
-+	ret = keembay_pcie_setup_irq(pcie);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, pcie);
-+
-+	switch (pcie->mode) {
-+	case DW_PCIE_RC_TYPE:
-+		if (!IS_ENABLED(CONFIG_PCIE_KEEMBAY_HOST))
-+			return -ENODEV;
-+
-+		return keembay_pcie_add_pcie_port(pcie, pdev);
-+	case DW_PCIE_EP_TYPE:
-+		if (!IS_ENABLED(CONFIG_PCIE_KEEMBAY_EP))
-+			return -ENODEV;
-+
-+		pci->ep.ops = &keembay_pcie_ep_ops;
-+		return dw_pcie_ep_init(&pci->ep);
-+	default:
-+		dev_err(dev, "Invalid device type %d\n", pcie->mode);
-+		return -ENODEV;
-+	}
-+}
-+
-+static const struct keembay_pcie_of_data keembay_pcie_rc_of_data = {
-+	.mode = DW_PCIE_RC_TYPE,
-+};
-+
-+static const struct keembay_pcie_of_data keembay_pcie_ep_of_data = {
-+	.mode = DW_PCIE_EP_TYPE,
-+};
-+
-+static const struct of_device_id keembay_pcie_of_match[] = {
-+	{
-+		.compatible = "intel,keembay-pcie",
-+		.data = &keembay_pcie_rc_of_data,
-+	},
-+	{
-+		.compatible = "intel,keembay-pcie-ep",
-+		.data = &keembay_pcie_ep_of_data,
-+	},
-+	{}
-+};
-+
-+static struct platform_driver keembay_pcie_driver = {
-+	.driver = {
-+		.name = "keembay-pcie",
-+		.of_match_table = keembay_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe  = keembay_pcie_probe,
-+};
-+builtin_platform_driver(keembay_pcie_driver);
--- 
-2.17.1
-
+Jason
