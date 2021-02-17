@@ -2,93 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BBEF31E0EB
-	for <lists+linux-pci@lfdr.de>; Wed, 17 Feb 2021 21:59:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7087A31E131
+	for <lists+linux-pci@lfdr.de>; Wed, 17 Feb 2021 22:19:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233318AbhBQU6j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Feb 2021 15:58:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46030 "EHLO mail.kernel.org"
+        id S233000AbhBQVTB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Feb 2021 16:19:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232099AbhBQU6i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Feb 2021 15:58:38 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4E6C564E45;
-        Wed, 17 Feb 2021 20:57:57 +0000 (UTC)
+        id S232949AbhBQVS7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 17 Feb 2021 16:18:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3356164E4B;
+        Wed, 17 Feb 2021 21:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613595477;
-        bh=7pHEq2BmxC1gbjH40hnPqBffasILhh3nRLnjPDHvUMY=;
+        s=k20201202; t=1613596698;
+        bh=pkmZzDM0o+Q8ug092G5wDu/oWkG8+4OHqf+YvLIFwk4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bVtRqR19JxQ/dgzSkLuiq7vcYpRC8N7EVw5Qlqs0uKkRiWg/CAOhnjXB1HTTRFc87
-         6a/dWeZpiw3BRPlPeTQ6E0gJEvAcMqmqkEtsFKITjLtKa7Gkz1nPf8ifCEd7aiGTzw
-         bN6NkpoR02j5395kawShvXfz1w1RCF9Pb1Onm80xv0htQCHtKCDozptQp4WTPe+Ak6
-         znn7fZZV/QQ4Rrp37ZYobcK3ez5Tw9Lw0tBi/Vk35AT4hSCxiEB3vfhdwko6xGQwAv
-         dz022dwSxdfuQEhbqJucjREx1JQiRZjujTpxIUo3Zaw6Y9syhEHY5fbrio5UL7+SbM
-         VK176gBhlX2aQ==
-Date:   Wed, 17 Feb 2021 14:57:55 -0600
+        b=e9c+nKfQzioYPmIvmLlOftUtpqt9QiJeaRu3owKX2bfboDCERP7uYecb3ESEQzCgN
+         3IRb6pw2o4ITRQqaYE1Czo5AigFxzjzoGSRTSeHSXkgyLZF/5pZHku9aQ0WYUhp857
+         ICRcTFkH08/0J9iob3VQKDVFiJApxUcK0UyoyAiIbp5KCRyJWgZIOgmuFzXXoZ+Uax
+         ZU3iaNCBJQKaO5n8rnK12OLNwd06rZDKdg3nuk1gHWHus5JaAALZ46C+oSV3AELRW9
+         eBOjHWfU+aUbr9m5gOTEgwOTCt4T21NSFJwOaqQMDNlpbfDL7ggEPt+C35Pvmx3fjm
+         2X4J5DLrrdpGQ==
+Date:   Wed, 17 Feb 2021 15:18:17 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: cadence: Fix erroneous early return from an iterator
-Message-ID: <20210217205755.GA911403@bjorn-Precision-5520>
+To:     Antti =?iso-8859-1?Q?J=E4rvinen?= <antti.jarvinen@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH] PCI: quirk for preventing bus reset on TI C667X
+Message-ID: <20210217211817.GA914074@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210216205935.3112661-1-kw@linux.com>
+In-Reply-To: <20210121235547.GA2705432@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 08:59:35PM +0000, Krzysztof Wilczy≈Ñski wrote:
-> Function cdns_pcie_host_map_dma_ranges() iterates over a PCIe host
-> bridge DMA ranges using the resource_list_for_each_entry() iterator.
+On Thu, Jan 21, 2021 at 05:55:47PM -0600, Bjorn Helgaas wrote:
+> On Tue, Jan 12, 2021 at 03:36:43PM +0000, Antti J‰rvinen wrote:
+> > TI C667X does not support bus/hot reset.
+> > See https://e2e.ti.com/support/processors/f/791/t/954382
 > 
-> With every iteration it calls cdns_pcie_host_bar_config() on each entry
-> in the list, and performs error checking following execution of said
-> function.
-> 
-> Normally, should there be an error, the iteration would be interrupted
-> and the function would terminate returning an error, but following the
-> merge commit 49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
-> that also had to resolve a merge conflict of the pcie-cadence-host.c
-> file, where an if-statement involved in the error handling has been
-> unintentionally altered causing a return statement to be outside of the
-> code block, and thus an undesired early return takes place on first
-> iteration.
-> 
-> Fix the if-statement and move the return statement inside the correct
-> code block so that the error checking works correctly, and to prevent
-> undesired early return.
-> 
-> Fixes: 49e427e6bdd1 ("Merge branch 'pci/host-probe-refactor'")
-> Signed-off-by: Krzysztof Wilczy≈Ñski <kw@linux.com>
+> You can cite the URL as the source, but the URL will eventually become
+> stale, so let's include the relevant details here directly.  
 
-Reviewed-by: Bjorn Helgaas <bhelgaas@google.com>
+Thanks for trying the experiment below.  I'll look for a repost that
+includes details from the URL directly in the commit log.
 
-Ouch, I really botched that merge, sorry!
-
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> From the forum, it looks like the device doesn't respond after a
+> reset (config accesses return ~0).  It seems somewhat surprising that
+> something as basic as a reset would be completely broken.  I wonder if
+> we're not doing the reset correctly.
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 811c1cb2e8de..1cb7cfc75d6e 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -321,9 +321,10 @@ static int cdns_pcie_host_map_dma_ranges(struct cdns_pcie_rc *rc)
->  
->  	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
->  		err = cdns_pcie_host_bar_config(rc, entry);
-> -		if (err)
-> +		if (err) {
->  			dev_err(dev, "Fail to configure IB using dma-ranges\n");
-> -		return err;
-> +			return err;
-> +		}
->  	}
->  
->  	return 0;
-> -- 
-> 2.30.0
+> It looks like we would probably be trying a Secondary Bus Reset using
+> the bridge leading to the C667X.  Can you confirm?  Wonder if you
+> could try doing what pci_reset_secondary_bus() does by hand:
 > 
+>   # BRIDGE=...                              # PCI address, e.g., 00:1c.0
+>   # C667X=...
+>   # setpci -s$C667X VENDOR_ID.w
+>   # setpci -s$BRIDGE BRIDGE_CONTROL.w       # prints "val"
+>   # setpci -s$BRIDGE BRIDGE_CONTROL.w=      # val | 0x40 (set SBR)
+>   # sleep 1
+>   # setpci -s$BRIDGE BRIDGE_CONTROL.w=      # val (clear SBR)
+>   # sleep 1
+>   # setpci -s$C667X VENDOR_ID.w=0
+>   # setpci -s$C667X VENDOR_ID.w
+> 
+> If we use this quirk and avoid the reset, I assume that means
+> assigning the device to VMs with VFIO will leak state between VMs?
+> 
+> > Signed-off-by: Antti J‰rvinen <antti.jarvinen@gmail.com>
+> > ---
+> >  drivers/pci/quirks.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 653660e3ba9e..c8fcf24c5bd0 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -3578,6 +3578,12 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATHEROS, 0x0034, quirk_no_bus_reset);
+> >   */
+> >  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_CAVIUM, 0xa100, quirk_no_bus_reset);
+> >  
+> > +/*
+> > + * Some TI keystone C667X devices do no support bus/hot reset.
+> > + * https://e2e.ti.com/support/processors/f/791/t/954382
+> > + */
+> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TI, 0xb005, quirk_no_bus_reset);
+> > +
+> >  static void quirk_no_pm_reset(struct pci_dev *dev)
+> >  {
+> >  	/*
+> > -- 
+> > 2.17.1
+> > 
