@@ -2,114 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2BC631E30A
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 00:35:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6689331E342
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 00:53:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232214AbhBQXdA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 Feb 2021 18:33:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232120AbhBQXc7 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 17 Feb 2021 18:32:59 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6084C600EF;
-        Wed, 17 Feb 2021 23:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613604738;
-        bh=xr9Psu8shUX6MrhNK7Dr8wXIVyvf+IrCamxrpwOQW/M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QaHR5I0XO73Ikb3v5nZ0vwVyxs5fLYIK29epplaUB3jKbSbc5hVQ9DcBCV1OzRIiP
-         lg1+7dsIYdz5PXIrYrrBjX4mb6c0f5hIQ+/FGIhfcNgXCFFfciYd29tLZ0NAVk6wPI
-         1A7PxQcUCduGkvZJk0f0lXvxBy7EPl85f/qRAWbuzSRa4EsURkSw1bR1BI5efpc1mt
-         HI2QVZqKwvSOtCHxmgkeKIpsUmcDUZL+c8c+m+JzNICc7UyvHvraXVjj8qk5EB22Yy
-         Q/uuHitGLZcgv4PdJ7mfxnH4dYTAF3CCKRWu9m3l9aoUKvsezPuAqxSDRoj5sCOEk8
-         FwbtByEXdfv1A==
-Date:   Wed, 17 Feb 2021 17:32:16 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Fix memory leak in pci_register_io_range()
-Message-ID: <20210217233216.GA924417@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        id S233492AbhBQXww (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 Feb 2021 18:52:52 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18099 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231466AbhBQXww (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 Feb 2021 18:52:52 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B602dac2a0000>; Wed, 17 Feb 2021 15:52:10 -0800
+Received: from HKMAIL103.nvidia.com (10.18.16.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 17 Feb
+ 2021 23:52:09 +0000
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 17 Feb
+ 2021 23:52:07 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 17 Feb 2021 23:52:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aeyZ1Wh238bvlISxGV1tlDcQP2yb4A8bi6EJpvOLKXasH1ZToToQPGB5bWdIddTK4DR9LausaOxt2nVRbYPVRCjrnMdoEEYRSx29QBye4zuoYm2WhnneGr8+9yaUc0KDgxsFX5HOhETDOqSze6nBVJDCgORuPTDlROJwhpXNtJpuEBpv4jmNEFMJej2h+f1JDEVnH5I5cAo6k5Z30LChfFDvNCvEGIGe3PhIYovrZGZsUw7ln8Uh4FmtZ52wsoCypE7jndqCC26CunUc1S0LF5INZNDdSh463CqNLvKyT2P36Y72yA6Aj+KfP9Tz0QOmbogYDPDjqvqqWrQ+zHlkzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OCpilRsxkTZsacGgYRZV0GUIJUyZamMB4n1nsZX42Ao=;
+ b=Wj3bG+1jWu5t+4+wNddC3IXfPfIxmeADR9VAyHGpqLp8HPkVJbCD56OoLyNpxOdbyH60mwm1GmmLQ/PylMrysHuHnj0cU6Y76dVzFjbJ8x4e8kPjPgQJz0d2nL68Qt6w14I30iQKZX452Y4B0WlRLXCLpd0bHV+ghGNivGrkp2aswv3dlL7cEp7eqnSk3raGk1o4UT+7Vh6bXKAabiN6OglRQI/IwiFqPpneL6p5Fv+HvjgjbGZjHYD2W1kR7DkZdBloi4bjhBCAtsOklQoD+/FuQIC+cbWxmCTf32RNpe9mMSnUxrHMCGLDp8n0o1BoZ33lsWJixOLVoJyVSaiKNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1756.namprd12.prod.outlook.com (2603:10b6:3:108::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.30; Wed, 17 Feb
+ 2021 23:52:04 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::d6b:736:fa28:5e4]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::d6b:736:fa28:5e4%7]) with mapi id 15.20.3846.041; Wed, 17 Feb 2021
+ 23:52:04 +0000
+Date:   Wed, 17 Feb 2021 19:52:01 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+Message-ID: <20210217235201.GX4247@nvidia.com>
+References: <20210217192522.GW4247@nvidia.com>
+ <20210217202835.GA906388@bjorn-Precision-5520>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20210202100332.829047-1-geert+renesas@glider.be>
+In-Reply-To: <20210217202835.GA906388@bjorn-Precision-5520>
+X-ClientProxiedBy: BL1PR13CA0213.namprd13.prod.outlook.com
+ (2603:10b6:208:2bf::8) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.162.115.133) by BL1PR13CA0213.namprd13.prod.outlook.com (2603:10b6:208:2bf::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.11 via Frontend Transport; Wed, 17 Feb 2021 23:52:03 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lCWbx-00AEVY-W7; Wed, 17 Feb 2021 19:52:02 -0400
+X-Header: ProcessedBy-CMR-outbound
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1613605930; bh=OCpilRsxkTZsacGgYRZV0GUIJUyZamMB4n1nsZX42Ao=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Header;
+        b=aEBMnrrzvuy2nKcZnPFZuPtwtlRs9Jyxsh1lDx1M15p8MkTwXYm9//KH5DtGTfK8E
+         de8DDnjZB+yyoUubmr0oqeFdBRwv5GYy6XKWJEB+1qpk2d6UjW64O6p2iV2qxpv9rM
+         Tl6n4R7xMfRl+9BXR0zvwh+RML7NbvFQfXTNVuXrSPmI95SaUyQpDTXezIKxJx/keM
+         L8yvnI8bMqFZBjVHa4nehoQKGeeNOQzHnEYKLarSwJs48XxXdJvdmGRkBnFdeB5AwE
+         Tfbh/Yyw/MkP4Y+RIpnVZvXONOCQokQOdo7j4nqqL036AFtAM1qH1uhkJ0BO4mYumI
+         a7rbiL3WiDJHA==
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 11:03:32AM +0100, Geert Uytterhoeven wrote:
-> Kmemleak reports:
+On Wed, Feb 17, 2021 at 02:28:35PM -0600, Bjorn Helgaas wrote:
+> On Wed, Feb 17, 2021 at 03:25:22PM -0400, Jason Gunthorpe wrote:
+> > On Wed, Feb 17, 2021 at 12:02:39PM -0600, Bjorn Helgaas wrote:
+> > 
+> > > > BTW, I asked more than once how these sysfs knobs should be handled
+> > > > in the PCI/core.
+> > > 
+> > > Thanks for the pointers.  This is the first instance I can think of
+> > > where we want to create PCI core sysfs files based on a driver
+> > > binding, so there really isn't a precedent.
+> > 
+> > The MSI stuff does it today, doesn't it? eg:
+> > 
+> > virtblk_probe (this is a driver bind)
+> >   init_vq
+> >    virtio_find_vqs
+> >     vp_modern_find_vqs
+> >      vp_find_vqs
+> >       vp_find_vqs_msix
+> >        vp_request_msix_vectors
+> >         pci_alloc_irq_vectors_affinity
+> >          __pci_enable_msi_range
+> >           msi_capability_init
+> > 	   populate_msi_sysfs
+> > 	    	ret = sysfs_create_groups(&pdev->dev.kobj, msi_irq_groups);
+> > 
+> > And the sysfs is removed during pci_disable_msi(), also called by the
+> > driver
 > 
->     unreferenced object 0xc328de40 (size 64):
->       comm "kworker/1:1", pid 21, jiffies 4294938212 (age 1484.670s)
->       hex dump (first 32 bytes):
->         00 00 00 00 00 00 00 00 e0 d8 fc eb 00 00 00 00  ................
->         00 00 10 fe 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> Yes, you're right, I didn't notice that one.
 > 
->     backtrace:
->       [<ad758d10>] pci_register_io_range+0x3c/0x80
->       [<2c7f139e>] of_pci_range_to_resource+0x48/0xc0
->       [<f079ecc8>] devm_of_pci_get_host_bridge_resources.constprop.0+0x2ac/0x3ac
->       [<e999753b>] devm_of_pci_bridge_init+0x60/0x1b8
->       [<a895b229>] devm_pci_alloc_host_bridge+0x54/0x64
->       [<e451ddb0>] rcar_pcie_probe+0x2c/0x644
-> 
-> In case a PCI host driver's probe is deferred, the same I/O range may be
-> allocated again, and be ignored, causing a memory leak.
-> 
-> Fix this by (a) letting logic_pio_register_range() return -EEXIST if the
-> passed range already exists, so pci_register_io_range() will free it,
-> and by (b) making pci_register_io_range() not consider -EEXIST an error
-> condition.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> I'm not quite convinced that we clean up correctly in all cases --
+> pci_disable_msix(), pci_disable_msi(), pci_free_irq_vectors(),
+> pcim_release(), etc are called by several drivers, but in my quick
+> look I didn't see a guaranteed-to-be-called path to the cleanup during
+> driver unbind.  I probably just missed it.
+ 
+I think the contract is the driver has to pair the msi enable with the
+msi disable on its own? It is very similar to what is happening here.
 
-Applied to pci/enumeration for v5.12, thanks!
+Probably there are bugs in drivers on error paths, but there are
+always bugs in drivers on error paths..
 
-> ---
->  drivers/pci/pci.c | 4 ++++
->  lib/logic_pio.c   | 3 +++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 09b03cfba8894955..c651003e304a2b71 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4037,6 +4037,10 @@ int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
->  	ret = logic_pio_register_range(range);
->  	if (ret)
->  		kfree(range);
-> +
-> +	/* Ignore duplicates due to deferred probing */
-> +	if (ret == -EEXIST)
-> +		ret = 0;
->  #endif
->  
->  	return ret;
-> diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-> index f32fe481b4922bc1..07b4b9a1f54b6bf5 100644
-> --- a/lib/logic_pio.c
-> +++ b/lib/logic_pio.c
-> @@ -28,6 +28,8 @@ static DEFINE_MUTEX(io_range_mutex);
->   * @new_range: pointer to the IO range to be registered.
->   *
->   * Returns 0 on success, the error code in case of failure.
-> + * If the range already exists, -EEXIST will be returned, which should be
-> + * considered a success.
->   *
->   * Register a new IO range node in the IO range list.
->   */
-> @@ -51,6 +53,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
->  	list_for_each_entry(range, &io_range_list, list) {
->  		if (range->fwnode == new_range->fwnode) {
->  			/* range already there */
-> +			ret = -EEXIST;
->  			goto end_register;
->  		}
->  		if (range->flags == LOGIC_PIO_CPU_MMIO &&
-> -- 
-> 2.25.1
-> 
+Jason
