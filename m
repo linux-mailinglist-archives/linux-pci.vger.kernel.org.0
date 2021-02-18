@@ -2,75 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4EE731EF49
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 20:11:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACDE531EF4B
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 20:11:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbhBRTJU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Feb 2021 14:09:20 -0500
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:39332 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231401AbhBRRfE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Feb 2021 12:35:04 -0500
-Received: by mail-lj1-f178.google.com with SMTP id u4so6588321ljh.6;
-        Thu, 18 Feb 2021 09:34:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+H5vXg85aSm3kKn9ABWRfBsJH0MBve5XT0w01S84ZnA=;
-        b=qeBjF9FaK8ywxhhZy7dT8jsUL3y3Ish6j5VUAHUJKYGCvljvKN9OuaA+ZxZ1l1Krk9
-         3iV7SvfUelZKx+H7HuOZKsCus4DZNQuh1JJ/bYTNXWN0JoOkOvdH4d5dHWY25qMPHr4O
-         O5C+apO4ztUKAxzuzRTcyb0skjK9tFX6TNBKmRljy+CRbIx0dUnidjTtm2yOKMudJA3n
-         hRYSQfrNPOhy3vrXXvojdLSuuttF4IH3zkD9Bam/yMddJTNOEt3Fbn8tA9XdpCPm0hM1
-         OSH/S5lTx9eAMuvpnzLafMzPpl+rKfdMC9eOdkK8kRfHIJJ7Gs3QvzgBR5kazfrV0hAv
-         GXKA==
-X-Gm-Message-State: AOAM5309T5kqtpz6SBt55dcnhcOrZAZsQLfn+F4mmviI0ht8VqtL7aya
-        T5teVMJMucat9oKRafi7uis=
-X-Google-Smtp-Source: ABdhPJwl/ulks4iH3qRkRAtn+ihuBahk7zBSXH3/5QASJOyrDU/f5gUKrALLJoY/y819thiC3X6DmQ==
-X-Received: by 2002:a05:6512:3092:: with SMTP id z18mr2875307lfd.249.1613669646944;
-        Thu, 18 Feb 2021 09:34:06 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id u9sm181117lfn.138.2021.02.18.09.34.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Feb 2021 09:34:06 -0800 (PST)
-Date:   Thu, 18 Feb 2021 18:34:05 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, helgaas@kernel.org, stefan@agner.ch,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] PCI: imx6: Limit DBI register length for imx6qp pcie
-Message-ID: <YC6lDYG13DhIppmW@rocinante>
-References: <1613624980-29382-1-git-send-email-hongxing.zhu@nxp.com>
- <YC5VmRTIylDHSFPt@rocinante>
+        id S230104AbhBRTJf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Feb 2021 14:09:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51007 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232846AbhBRSiJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Feb 2021 13:38:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613673402;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UBpV2feeWENB3qElu2PwsYXbdkCfp22tg+Z0/Rz/zOU=;
+        b=W7/84RYCrsETDwwZzzxLMIZCmYHJYZOx/P8VMVHH3WejulgPf3L2NZA1sYHyU1EAH683V5
+        RVqm0HTAw4Tq93ldMWjmvQf4+rpjpvVll+GjPeGZD7SSIeP5tSUvxI2AF0AOJG5fK2uS7a
+        /4bjNt+WqEx366WsVtfh4FTYm2EeRPE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-91-m9ybSTmxMbm61LJCzsjAGw-1; Thu, 18 Feb 2021 13:36:38 -0500
+X-MC-Unique: m9ybSTmxMbm61LJCzsjAGw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA5BD107ACE3;
+        Thu, 18 Feb 2021 18:36:36 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D53A218F0A;
+        Thu, 18 Feb 2021 18:36:35 +0000 (UTC)
+Subject: Re: [PATCH] pci-driver: Add driver load messages
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>, bhelgaas@google.com,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-pci@vger.kernel.org, mstowe@redhat.com
+References: <20210126151259.GA2886142@bjorn-Precision-5520>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <dea3517c-8f2f-9a18-81d2-ab6468354040@redhat.com>
+Date:   Thu, 18 Feb 2021 13:36:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20210126151259.GA2886142@bjorn-Precision-5520>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YC5VmRTIylDHSFPt@rocinante>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[...]
-> > Refer to commit 075af61c19cd ("PCI: imx6: Limit DBI register length"),
-> > i.MX6QP PCIe has the similar issue.
-> > Define the length of the DBI registers and limit config space to its
-> > length for i.MX6QP PCIe too.
-> 
-> You could probably flip these two sentences around to make the commit
-> message read slightly better, so what about this (a suggestion):
-> 
-> Define the length of the DBI registers and limit config space to its
-> length. This makes sure that the kernel does not access registers beyond
-> that point that otherwise would lead to an abort on a i.MX 6QuadPlus.
-> 
-> See commit 075af61c19cd ("PCI: imx6: Limit DBI register length") that
-> resolves a similar issue on a i.MX 6Quad PCIe.
-[...]
 
-If you do decide to send another version, then also use "PCIe" in the
-subject, rather than "pcie".  I forgot to mention this in the previous
-message, apologies.
 
-Krzysztof
+On 1/26/21 10:12 AM, Bjorn Helgaas wrote:
+> Hi Prarit,
+> 
+> On Tue, Jan 26, 2021 at 09:05:23AM -0500, Prarit Bhargava wrote:
+>> On 1/26/21 8:53 AM, Leon Romanovsky wrote:
+>>> On Tue, Jan 26, 2021 at 08:42:12AM -0500, Prarit Bhargava wrote:
+>>>> On 1/26/21 8:14 AM, Leon Romanovsky wrote:
+>>>>> On Tue, Jan 26, 2021 at 07:54:46AM -0500, Prarit Bhargava wrote:
+>>>>>>   Leon Romanovsky <leon@kernel.org> wrote:
+>>>>>>> On Mon, Jan 25, 2021 at 02:41:38PM -0500, Prarit Bhargava wrote:
+>>>>>>>> There are two situations where driver load messages are helpful.
+>>>>>>>>
+>>>>>>>> 1) Some drivers silently load on devices and debugging driver or system
+>>>>>>>> failures in these cases is difficult.  While some drivers (networking
+>>>>>>>> for example) may not completely initialize when the PCI driver probe() function
+>>>>>>>> has returned, it is still useful to have some idea of driver completion.
+>>>>>>>
+>>>>>>> Sorry, probably it is me, but I don't understand this use case.
+>>>>>>> Are you adding global to whole kernel command line boot argument to debug
+>>>>>>> what and when?
+>>>>>>>
+>>>>>>> During boot:
+>>>>>>> If device success, you will see it in /sys/bus/pci/[drivers|devices]/*.
+>>>>>>> If device fails, you should get an error from that device (fix the
+>>>>>>> device to return an error), or something immediately won't work and
+>>>>>>> you won't see it in sysfs.
+>>>>>>
+>>>>>> What if there is a panic during boot?  There's no way to get to sysfs.
+>>>>>> That's the case where this is helpful.
+>>>>>
+>>>>> How? If you have kernel panic, it means you have much more worse problem
+>>>>> than not-supported device. If kernel panic was caused by the driver, you
+>>>>> will see call trace related to it. If kernel panic was caused by
+>>>>> something else, supported/not supported won't help here.
+>>>>
+>>>> I still have no idea *WHICH* device it was that the panic occurred on.
+>>>
+>>> The kernel panic is printed from the driver. There is one driver loaded
+>>> for all same PCI devices which are probed without relation to their
+>>> number.>
+>>> If you have host with ten same cards, you will see one driver and this
+>>> is where the problem and not in supported/not-supported device.
+>>
+>> That's true, but you can also have different cards loading the same driver.
+>> See, for example, any PCI_IDs list in a driver.
+>>
+>> For example,
+>>
+>> 10:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3008 [Fury] (rev 02)
+>> 20:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3108 [Invader] (rev 02)
+>>
+>> Both load the megaraid driver and have different profiles within the
+>> driver.  I have no idea which one actually panicked until removing
+>> one card.
+>>
+>> It's MUCH worse when debugging new hardware and getting a panic
+>> from, for example, the uncore code which binds to a PCI mapped
+>> device.  One device might work and the next one doesn't.  And then
+>> you can multiply that by seeing *many* panics at once and trying to
+>> determine if the problem was on one specific socket, die, or core.
+> 
+> Would a dev_panic() interface that identified the device and driver
+> help with this?
+> 
+
+^^ the more I look at this problem, the more a dev_panic() that would output a
+device specific message at panic time is what I really need.
+
+> For driver_load_messages, it doesn't seem necessarily PCI-specific.
+> If we want a message like that, maybe it could be in
+> driver_probe_device() or similar?  There are already a few pr_debug()
+> calls in that path.  There are some enabled by initcall_debug that
+> include the return value from the probe; would those be close to what
+> you're looking for?
+
+I took a look at those, and unfortunately they do not meet my requirements.
+Ultimately, at panic time, I need to know that a driver was loaded on a device
+at a specific location in the PCI space.
+
+The driver_probe_device() pr_debug calls tell me the location and the driver,
+but not anything to uniquely identify the device (ie, the PCI vendor and device
+IDs).
+
+It sounds like you've had some thoughts about a dev_panic() implementation.
+Care to share them with me?  I'm more than willing to implement it but just want
+to get your more experienced view of what is needed.
+
+P.
+
+> 
+> Bjorn
+> 
+
