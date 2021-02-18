@@ -2,98 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAC7431ECFE
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 18:14:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0136331ED00
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 18:14:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233426AbhBRRMR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Feb 2021 12:12:17 -0500
-Received: from mga07.intel.com ([134.134.136.100]:1093 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232653AbhBROGL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 18 Feb 2021 09:06:11 -0500
-IronPort-SDR: xnK0tsWla3Q1zCbO2NvpDYvJ0RU+1t11yALo6dpz0so1AlA4YUsffvc8KQZKkFl0vi/mBPbVVI
- XbhKXijZCyjQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9898"; a="247585178"
-X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="247585178"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 06:02:02 -0800
-IronPort-SDR: HiiFi7WXW+xa/kiPFzNBdRoER3V0irwMC05IZpVp3GgeW7pmBBbqIUuExc/xuetwOlNDym4vvt
- s1+IttZZg81A==
-X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="364840235"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 06:01:59 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lCjsS-005xjl-6S; Thu, 18 Feb 2021 16:01:56 +0200
-Date:   Thu, 18 Feb 2021 16:01:56 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Robert Richter <rric@kernel.org>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>, corbet@lwn.net,
-        jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
-        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, kw@linux.com,
+        id S233449AbhBRRMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Feb 2021 12:12:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231983AbhBRORQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Feb 2021 09:17:16 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038C2C061786;
+        Thu, 18 Feb 2021 06:15:36 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id e9so1557757pjj.0;
+        Thu, 18 Feb 2021 06:15:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=PSqyUdGTB3twfGzpr0rkJfuAQ74/BJdntEYk2Uew8j0=;
+        b=ck8xl5ZO5ojgD4zXc67R7gGKF7xdyJVwl6tcsHOy2lAcTlvB0gFEROTdFMaFeO2FCe
+         Oz0fKsG94vTHd0hEAx4dXr9gGJ0H3wonwZ0IdPjoQRWdEMAm2YSt22+2ju3pakDkUAS9
+         032lELSemywhEgLHRAna6DRdfGOSKPOmdOYjMw8o3zAoRzGZUaVcV1IIrhvM4yPsSHYt
+         mCo2cwDD0aiUOoItU+sHeby+5SbQX0CluJ6qfAEASjWXG4VuwXScuKdSnkBBKoMrfD+d
+         LdgN5421dX09iVKR6qahCBguMoYrtIsToHZ3XmlboPnuWEnuo5Bt+fdtHXT5u7MmvxDX
+         IL2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=PSqyUdGTB3twfGzpr0rkJfuAQ74/BJdntEYk2Uew8j0=;
+        b=LqJBbgm3f9OGlwDnkvnzkOZnD/P2JrTvCcm6Cfv7m+0KsiIiBW0iEoY5PYfR5rh3k6
+         XujpRor2eI70MyP9tJbEvqjik4rYBIznTguMLQljduakM1a0jKG1odifskYpiQjx8JJ5
+         vLD2rihJ5SHDusxGcqeSokC0ARbvh9MD89DGO5dkoumy2qLKrAd61jTpWXshyLATto5w
+         efpihJQ4L7InC1kZMLpeCB3mHf/XwPCQrFAbcBAavJ2nAiSc0mC3ua3DsQIDaRRu0I4x
+         uYb2dF+gGUooiHJT40QUr7uRfqRTt3JvC0toe1BgYPIfm+Ua31dWm92J3Gw6tbfPGyEZ
+         uT2g==
+X-Gm-Message-State: AOAM532JC56KmCP5cpHSpxb6OGRWVorM4JvsoVwycLmx8t0MX5m+NHX/
+        7PbZsDtf2GN54HNwHCe0zEc=
+X-Google-Smtp-Source: ABdhPJz/cGXsUNcWYRM5m4W0CCThC5C9l7KWYZzRgAQFScVlKxvVBmli1ifUZWY1HQtD64OfkBVkZA==
+X-Received: by 2002:a17:90a:77c4:: with SMTP id e4mr4067588pjs.185.1613657735492;
+        Thu, 18 Feb 2021 06:15:35 -0800 (PST)
+Received: from localhost (185.212.56.4.16clouds.com. [185.212.56.4])
+        by smtp.gmail.com with ESMTPSA id g3sm6387903pfq.42.2021.02.18.06.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Feb 2021 06:15:34 -0800 (PST)
+Date:   Thu, 18 Feb 2021 22:15:32 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        mika.westerberg@linux.intel.com, rric@kernel.org,
+        helgaas@kernel.org, wsa@kernel.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] Introduce pcim_alloc_irq_vectors()
-Message-ID: <YC5zVHnRog3EX0rl@smile.fi.intel.com>
+Subject: Re: [PATCH v3 3/4] i2c: designware: Use the correct name of
+ device-managed function
+Message-ID: <20210218141532.GA783878@nuc8i5>
 References: <20210216160249.749799-1-zhengdejin5@gmail.com>
- <YC41HD422Mjh1IZK@rric.localdomain>
+ <20210216160249.749799-4-zhengdejin5@gmail.com>
+ <YCwE2cf9X/Gd6lWy@rocinante>
+ <20210217114014.GB766103@nuc8i5>
+ <YC0eVZf4Xci0IF5+@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YC41HD422Mjh1IZK@rric.localdomain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YC0eVZf4Xci0IF5+@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 18, 2021 at 10:36:28AM +0100, Robert Richter wrote:
-> On 17.02.21 00:02:45, Dejin Zheng wrote:
-> > Introduce pcim_alloc_irq_vectors(), a device-managed version of
-> > pci_alloc_irq_vectors(), In some i2c drivers, If pcim_enable_device()
-> > has been called before, then pci_alloc_irq_vectors() is actually a
-> > device-managed function. It is used as a device-managed function, So
-> > replace it with pcim_alloc_irq_vectors().
-> > 
-> > Changelog
-> > ---------
-> > v2 -> v3:
-> > 	- Add some commit comments for replace some codes in
-> > 	  pcim_release() by pci_free_irq_vectors().
-> > 	- Simplify the error handling path in i2c designware
-> > 	  driver.
-> > v1 -> v2:
-> > 	- Use pci_free_irq_vectors() to replace some code in
-> > 	  pcim_release().
-> > 	- Modify some commit messages.
-> > 
-> > Dejin Zheng (4):
-> >   PCI: Introduce pcim_alloc_irq_vectors()
-> >   Documentation: devres: Add pcim_alloc_irq_vectors()
+On Wed, Feb 17, 2021 at 03:47:01PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 17, 2021 at 07:40:14PM +0800, Dejin Zheng wrote:
+> > On Tue, Feb 16, 2021 at 06:46:01PM +0100, Krzysztof Wilczyński wrote:
 > 
-> This is already taken care of, see pcim_release():
+> ...
 > 
->         if (dev->msi_enabled)
->                 pci_disable_msi(dev);
->         if (dev->msix_enabled)
->                 pci_disable_msix(dev);
+> > > The change simplifies the error handling path, how?  A line of two which
+> > > explains how it has been achieved might help should someone reads the
+> > > commit message in the future.
+> > > 
+> > To put it simply, if the driver probe fail, the device-managed function
+> > mechanism will automatically call pcim_release(), then the pci_free_irq_vectors()
+> > will be executed. For details, please see the relevant code.
 > 
-> Activated when used with pcim_enable_device().
+> Perhaps as a compromise you may add this short sentence to your commit
+> messages, like "the freeing resources will take automatically when device
+> is gone".
+>
+Ok, I will do it. Andy, Thanks for your help. And so sorry for the late
+reply. Yesterday was the last day of the Chinese New Year holiday. There
+were a lot of things to deal with.
+
+BR,
+Dejin
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 > 
-> This series is not required.
-
-The problem this series solves is an imbalanced API.
-Christoph IIRC was clear that if we want to use PCI IRQ allocation API the
-caller must know what's going on. Hiding this behind the scenes is not good.
-And this series unhides that.
-
-Also, you may go and clean up all pci_free_irq_vectors() when
-pcim_enable_device() is called, but I guess you will get painful process and
-rejection in a pile of cases.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
