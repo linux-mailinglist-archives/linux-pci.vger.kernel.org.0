@@ -2,71 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E516E31E7EA
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 10:25:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF35931E99B
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 13:25:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231208AbhBRJVu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Feb 2021 04:21:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231396AbhBRJA5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Feb 2021 04:00:57 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77048C061574
-        for <linux-pci@vger.kernel.org>; Thu, 18 Feb 2021 01:00:05 -0800 (PST)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1lCfAH-0002cD-59; Thu, 18 Feb 2021 10:00:01 +0100
-Message-ID: <9b244af36848525e061efa2d85f8d0219fd7652b.camel@pengutronix.de>
-Subject: Re: [PATCH] PCI: imx6: Limit DBI register length for imx6qp pcie
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Richard Zhu <hongxing.zhu@nxp.com>, bhelgaas@google.com,
-        stefan@agner.ch, lorenzo.pieralisi@arm.com
-Cc:     linux-pci@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Date:   Thu, 18 Feb 2021 09:59:59 +0100
-In-Reply-To: <1613624980-29382-1-git-send-email-hongxing.zhu@nxp.com>
-References: <1613624980-29382-1-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        id S230113AbhBRMMR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Feb 2021 07:12:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230352AbhBRJhS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Feb 2021 04:37:18 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E51D64D99;
+        Thu, 18 Feb 2021 09:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1613640994;
+        bh=UnZtLNC2SE7t6sL20JzyCDF5LpgoYFQOPCU+CtVkXfo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IEfg2oarpQ9AVEjnfI0xSBr14d9NTYLzO1Mxatgys1i68NteBf8wcGZo09Ta6R9df
+         KtDBFmU+VXVZxK2r1CIaxTL9P/3QjRL1oZixV/mTosBKEjpNtOZwtypWEozOagN636
+         n2t89hSt/1kT7mZptqS3tHyx6zehYmQJ2zxrV1DQsEcJ0MXE8z9FXKZjpfCkdH2Ed5
+         mr1BMgsFPJz+odExn1BwrgIM38+SF6LdWLl/xxylAww3+VMFhR3pzFujobDwc7CUbi
+         CN9zywKrDmi5XkO9KNht8sHS2cc3t/0bDK1ig020zDFKTddPXWYACZNPQ6YRpKtuGy
+         +hPj25L8zHNPQ==
+Date:   Thu, 18 Feb 2021 10:36:28 +0100
+From:   Robert Richter <rric@kernel.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, kw@linux.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] Introduce pcim_alloc_irq_vectors()
+Message-ID: <YC41HD422Mjh1IZK@rric.localdomain>
+References: <20210216160249.749799-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210216160249.749799-1-zhengdejin5@gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Donnerstag, dem 18.02.2021 um 13:09 +0800 schrieb Richard Zhu:
-> Refer to commit 075af61c19cd ("PCI: imx6: Limit DBI register length"),
-> i.MX6QP PCIe has the similar issue.
-> Define the length of the DBI registers and limit config space to its
-> length for i.MX6QP PCIe too.
+On 17.02.21 00:02:45, Dejin Zheng wrote:
+> Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> pci_alloc_irq_vectors(), In some i2c drivers, If pcim_enable_device()
+> has been called before, then pci_alloc_irq_vectors() is actually a
+> device-managed function. It is used as a device-managed function, So
+> replace it with pcim_alloc_irq_vectors().
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 1 +
->  1 file changed, 1 insertion(+)
+> Changelog
+> ---------
+> v2 -> v3:
+> 	- Add some commit comments for replace some codes in
+> 	  pcim_release() by pci_free_irq_vectors().
+> 	- Simplify the error handling path in i2c designware
+> 	  driver.
+> v1 -> v2:
+> 	- Use pci_free_irq_vectors() to replace some code in
+> 	  pcim_release().
+> 	- Modify some commit messages.
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 0cf1333c0440..853ea8e82952 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1175,6 +1175,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  		.variant = IMX6QP,
->  		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
->  			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
-> +		.dbi_length = 0x200,
->  	},
->  	[IMX7D] = {
->  		.variant = IMX7D,
+> Dejin Zheng (4):
+>   PCI: Introduce pcim_alloc_irq_vectors()
+>   Documentation: devres: Add pcim_alloc_irq_vectors()
 
+This is already taken care of, see pcim_release():
 
+        if (dev->msi_enabled)
+                pci_disable_msi(dev);
+        if (dev->msix_enabled)
+                pci_disable_msix(dev);
+
+Activated when used with pcim_enable_device().
+
+This series is not required.
+
+-Robert
+
+>   i2c: designware: Use the correct name of device-managed function
+>   i2c: thunderx: Use the correct name of device-managed function
+> 
+>  .../driver-api/driver-model/devres.rst        |  1 +
+>  drivers/i2c/busses/i2c-designware-pcidrv.c    | 15 +++------
+>  drivers/i2c/busses/i2c-thunderx-pcidrv.c      |  2 +-
+>  drivers/pci/pci.c                             | 33 ++++++++++++++++---
+>  include/linux/pci.h                           |  3 ++
+>  5 files changed, 38 insertions(+), 16 deletions(-)
+> 
+> -- 
+> 2.25.0
+> 
