@@ -2,94 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57CC931E9A0
-	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 13:25:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAC7431ECFE
+	for <lists+linux-pci@lfdr.de>; Thu, 18 Feb 2021 18:14:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231549AbhBRMPy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 Feb 2021 07:15:54 -0500
-Received: from mail-qt1-f179.google.com ([209.85.160.179]:35734 "EHLO
-        mail-qt1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231633AbhBRL5n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 Feb 2021 06:57:43 -0500
-Received: by mail-qt1-f179.google.com with SMTP id g24so1136867qts.2;
-        Thu, 18 Feb 2021 03:55:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2kEv8sIFU+zpk6Mq8W5TYFeq6VABHf9B9emGrVNqUxw=;
-        b=P5Cq27fWBFe56Jgi5mVg4WDyYBWU5CS6aXI5sEIoLRJhM5N1yM9s1ZZyyu1dKnm+ZF
-         FPdG/H6PJ+kfU2GigYgBhk//vQJmXrkaOVA99hfyxvhKt1Xdnn11zIje1m27xOK41C2L
-         CIqbAfrRpp+4pVop3C6m6IxIj1whsqp12kV4ZY7wQhqsswuff+FH+fkSNr4dwWzh3SfO
-         lPnKV4DzNy1E1CcYi2F6IrgM6S6yre6yBbG9PKlV6WAJe3GXrtMe+AvFl/sALC+W2y/A
-         4CbLWq8mp4JqpzHjV8oSekPEx0XNcuH3yH/kXZC4zxsVWG/nU9hbjLGhdCpZtEhTwmWv
-         1zfg==
-X-Gm-Message-State: AOAM533R+rIFFLRpt9IbqfY7FT6TJzJHtqlM3bNvkP9fxqSSWVXvaEZ1
-        lqN4H6xJGJw+h2B5Kuc7HMM=
-X-Google-Smtp-Source: ABdhPJwq4o+OkO9IbuRkPF2GzLzPv1GdXZmEb2PU7uYq1lEm+iWIvWB4fZ/UW01rHB9BLj9o4u3yuA==
-X-Received: by 2002:a05:622a:28b:: with SMTP id z11mr3735807qtw.225.1613649309429;
-        Thu, 18 Feb 2021 03:55:09 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id 16sm3001512qtp.38.2021.02.18.03.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Feb 2021 03:55:09 -0800 (PST)
-Date:   Thu, 18 Feb 2021 12:55:05 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, helgaas@kernel.org, stefan@agner.ch,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] PCI: imx6: Limit DBI register length for imx6qp pcie
-Message-ID: <YC5VmRTIylDHSFPt@rocinante>
-References: <1613624980-29382-1-git-send-email-hongxing.zhu@nxp.com>
+        id S233426AbhBRRMR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 Feb 2021 12:12:17 -0500
+Received: from mga07.intel.com ([134.134.136.100]:1093 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232653AbhBROGL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 18 Feb 2021 09:06:11 -0500
+IronPort-SDR: xnK0tsWla3Q1zCbO2NvpDYvJ0RU+1t11yALo6dpz0so1AlA4YUsffvc8KQZKkFl0vi/mBPbVVI
+ XbhKXijZCyjQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9898"; a="247585178"
+X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
+   d="scan'208";a="247585178"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 06:02:02 -0800
+IronPort-SDR: HiiFi7WXW+xa/kiPFzNBdRoER3V0irwMC05IZpVp3GgeW7pmBBbqIUuExc/xuetwOlNDym4vvt
+ s1+IttZZg81A==
+X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
+   d="scan'208";a="364840235"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 06:01:59 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lCjsS-005xjl-6S; Thu, 18 Feb 2021 16:01:56 +0200
+Date:   Thu, 18 Feb 2021 16:01:56 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Robert Richter <rric@kernel.org>
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>, corbet@lwn.net,
+        jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
+        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, kw@linux.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] Introduce pcim_alloc_irq_vectors()
+Message-ID: <YC5zVHnRog3EX0rl@smile.fi.intel.com>
+References: <20210216160249.749799-1-zhengdejin5@gmail.com>
+ <YC41HD422Mjh1IZK@rric.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1613624980-29382-1-git-send-email-hongxing.zhu@nxp.com>
+In-Reply-To: <YC41HD422Mjh1IZK@rric.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Richard,
-
-Thank you for sending the patch over!
-
-> Refer to commit 075af61c19cd ("PCI: imx6: Limit DBI register length"),
-> i.MX6QP PCIe has the similar issue.
-> Define the length of the DBI registers and limit config space to its
-> length for i.MX6QP PCIe too.
-
-You could probably flip these two sentences around to make the commit
-message read slightly better, so what about this (a suggestion):
-
-Define the length of the DBI registers and limit config space to its
-length. This makes sure that the kernel does not access registers beyond
-that point that otherwise would lead to an abort on a i.MX 6QuadPlus.
-
-See commit 075af61c19cd ("PCI: imx6: Limit DBI register length") that
-resolves a similar issue on a i.MX 6Quad PCIe.
-
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 1 +
->  1 file changed, 1 insertion(+)
+On Thu, Feb 18, 2021 at 10:36:28AM +0100, Robert Richter wrote:
+> On 17.02.21 00:02:45, Dejin Zheng wrote:
+> > Introduce pcim_alloc_irq_vectors(), a device-managed version of
+> > pci_alloc_irq_vectors(), In some i2c drivers, If pcim_enable_device()
+> > has been called before, then pci_alloc_irq_vectors() is actually a
+> > device-managed function. It is used as a device-managed function, So
+> > replace it with pcim_alloc_irq_vectors().
+> > 
+> > Changelog
+> > ---------
+> > v2 -> v3:
+> > 	- Add some commit comments for replace some codes in
+> > 	  pcim_release() by pci_free_irq_vectors().
+> > 	- Simplify the error handling path in i2c designware
+> > 	  driver.
+> > v1 -> v2:
+> > 	- Use pci_free_irq_vectors() to replace some code in
+> > 	  pcim_release().
+> > 	- Modify some commit messages.
+> > 
+> > Dejin Zheng (4):
+> >   PCI: Introduce pcim_alloc_irq_vectors()
+> >   Documentation: devres: Add pcim_alloc_irq_vectors()
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 0cf1333c0440..853ea8e82952 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1175,6 +1175,7 @@ static const struct imx6_pcie_drvdata drvdata[] = {
->  		.variant = IMX6QP,
->  		.flags = IMX6_PCIE_FLAG_IMX6_PHY |
->  			 IMX6_PCIE_FLAG_IMX6_SPEED_CHANGE,
-> +		.dbi_length = 0x200,
->  	},
->  	[IMX7D] = {
->  		.variant = IMX7D,
+> This is already taken care of, see pcim_release():
+> 
+>         if (dev->msi_enabled)
+>                 pci_disable_msi(dev);
+>         if (dev->msix_enabled)
+>                 pci_disable_msix(dev);
+> 
+> Activated when used with pcim_enable_device().
+> 
+> This series is not required.
 
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+The problem this series solves is an imbalanced API.
+Christoph IIRC was clear that if we want to use PCI IRQ allocation API the
+caller must know what's going on. Hiding this behind the scenes is not good.
+And this series unhides that.
 
-Krzysztof
+Also, you may go and clean up all pci_free_irq_vectors() when
+pcim_enable_device() is called, but I guess you will get painful process and
+rejection in a pile of cases.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
