@@ -2,242 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D0A631FD85
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 17:59:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B26F31FE22
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 18:45:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbhBSQ7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Feb 2021 11:59:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58140 "EHLO mail.kernel.org"
+        id S229810AbhBSRpD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Feb 2021 12:45:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229555AbhBSQ7H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Feb 2021 11:59:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4DF136024A;
-        Fri, 19 Feb 2021 16:58:24 +0000 (UTC)
+        id S229636AbhBSRou (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Feb 2021 12:44:50 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B77A26024A;
+        Fri, 19 Feb 2021 17:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613753905;
-        bh=NMo5yhyTlIxLySt+nSwX0SRCkEKanmzR/cCYJOgr3iI=;
+        s=k20201202; t=1613756649;
+        bh=LDCIaj2BBAV+JMmfUr87lrFSYcdWgXA7O40c+miWoPY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bNOPbzHSaM4/vVw3+4RymgErrpNZfj8y/7buzxo2BkSuoUfn1cxTW1zvwW6Jr5J8N
-         NdYj5KxrzgbVy53zttyqJDHLjUxkzTKya+unKCcFG70MVf35cjEqXyFuV9lgNUSRf8
-         d1xEEXqhTARJIYpzLMQlS6kKlhzVcBZ3CktHc/DqE3YrZCxMRlrc6ozfR/zg26W70Y
-         iX4UOo2let49EMToU1mHhFqkSTAPSRArVTUoCjQW1vKrkxB7UHOw2ZORTS2PfTUutZ
-         AdyNYjkjJxfVd6My+aSZiXhCAzjFtW8bAdnU4B139cO9iF2cppDQgUszMRPfdT04xq
-         L7VbwLFauDCaQ==
-Date:   Fri, 19 Feb 2021 18:58:20 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <YC/uLNk2YMPMVL5c@unreal>
-References: <YC4+V6W7s7ytwiC6@unreal>
- <20210218223950.GA1004646@bjorn-Precision-5520>
- <YC9uLDAQJK9KgxbB@unreal>
- <YC90wkwk/CdgcYY6@kroah.com>
+        b=T6cSSRls/Y4wdxqYhqbk7EDBf9UAFKMlT7CbTFYB5tHrUE4yYoUHR4uALDou/ZDkU
+         P41KEbt3ZoarjFa/WBLzzS/IC4K4yKwvQNZFnuKUYbIlwYbOUSG7qLsAFlRojm8/po
+         1Hl8F8+E0VkRVxS2f93UenWMyMLPU+40ZgJm+s7iy7hhzwmL7Hcpdj9xDblr43roBF
+         b5Gzcqtvi5hbovK8001Pmw/NzQf3s634eQ8zcPTPS4rQ2WoDs/hHrSGa1V3RMEc+4R
+         l92sgYblk1LOg5TtLLTR4NtI4fUhV75rsVOmNptNbiAXLqwBPu+ENHMcwMGL9u3Yv+
+         f+NyCmlr8PGVQ==
+Received: by pali.im (Postfix)
+        id 8A6E87F6; Fri, 19 Feb 2021 18:44:06 +0100 (CET)
+Date:   Fri, 19 Feb 2021 18:44:06 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Stefan Chulski <stefanc@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        Stefan Roese <sr@denx.de>, Phil Sutter <phil@nwl.cc>,
+        Mario Six <mario.six@gdsys.cc>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [EXT] Re: pci mvebu issue (memory controller)
+Message-ID: <20210219174406.2kioa4ikeippgwou@pali>
+References: <20210209141759.6960fccb@kernel.org>
+ <20210210095408.75839806@windsurf.home>
+ <CO6PR18MB38735F882B1DDB29D7DEA170B08D9@CO6PR18MB3873.namprd18.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YC90wkwk/CdgcYY6@kroah.com>
+In-Reply-To: <CO6PR18MB38735F882B1DDB29D7DEA170B08D9@CO6PR18MB3873.namprd18.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 19, 2021 at 09:20:18AM +0100, Greg Kroah-Hartman wrote:
-> On Fri, Feb 19, 2021 at 09:52:12AM +0200, Leon Romanovsky wrote:
-> > On Thu, Feb 18, 2021 at 04:39:50PM -0600, Bjorn Helgaas wrote:
-> > > On Thu, Feb 18, 2021 at 12:15:51PM +0200, Leon Romanovsky wrote:
-> > > > On Wed, Feb 17, 2021 at 12:02:39PM -0600, Bjorn Helgaas wrote:
-> > > > > [+cc Greg in case he wants to chime in on the sysfs discussion.
-> > > > > TL;DR: we're trying to add/remove sysfs files when a PCI driver that
-> > > > > supports certain callbacks binds or unbinds; series at
-> > > > > https://lore.kernel.org/r/20210209133445.700225-1-leon@kernel.org]
-> > > > >
-> > > > > On Tue, Feb 16, 2021 at 09:58:25PM +0200, Leon Romanovsky wrote:
-> > > > > > On Tue, Feb 16, 2021 at 10:12:12AM -0600, Bjorn Helgaas wrote:
-> > > > > > > On Tue, Feb 16, 2021 at 09:33:44AM +0200, Leon Romanovsky wrote:
-> > > > > > > > On Mon, Feb 15, 2021 at 03:01:06PM -0600, Bjorn Helgaas wrote:
-> > > > > > > > > On Tue, Feb 09, 2021 at 03:34:42PM +0200, Leon Romanovsky wrote:
-> > > > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > > >
-> > > > > > > > > > +int pci_enable_vf_overlay(struct pci_dev *dev)
-> > > > > > > > > > +{
-> > > > > > > > > > +	struct pci_dev *virtfn;
-> > > > > > > > > > +	int id, ret;
-> > > > > > > > > > +
-> > > > > > > > > > +	if (!dev->is_physfn || !dev->sriov->num_VFs)
-> > > > > > > > > > +		return 0;
-> > > > > > > > > > +
-> > > > > > > > > > +	ret = sysfs_create_files(&dev->dev.kobj, sriov_pf_dev_attrs);
-> > > > > > > > >
-> > > > > > > > > But I still don't like the fact that we're calling
-> > > > > > > > > sysfs_create_files() and sysfs_remove_files() directly.  It makes
-> > > > > > > > > complication and opportunities for errors.
-> > > > > > > >
-> > > > > > > > It is not different from any other code that we have in the kernel.
-> > > > > > >
-> > > > > > > It *is* different.  There is a general rule that drivers should not
-> > > > > > > call sysfs_* [1].  The PCI core is arguably not a "driver," but it is
-> > > > > > > still true that callers of sysfs_create_files() are very special, and
-> > > > > > > I'd prefer not to add another one.
-> > > > > >
-> > > > > > PCI for me is a bus, and bus is the right place to manage sysfs.
-> > > > > > But it doesn't matter, we understand each other positions.
-> > > > > >
-> > > > > > > > Let's be concrete, can you point to the errors in this code that I
-> > > > > > > > should fix?
-> > > > > > >
-> > > > > > > I'm not saying there are current errors; I'm saying the additional
-> > > > > > > code makes errors possible in future code.  For example, we hope that
-> > > > > > > other drivers can use these sysfs interfaces, and it's possible they
-> > > > > > > may not call pci_enable_vf_overlay() or pci_disable_vfs_overlay()
-> > > > > > > correctly.
-> > > > > >
-> > > > > > If not, we will fix, we just need is to ensure that sysfs name won't
-> > > > > > change, everything else is easy to change.
-> > > > > >
-> > > > > > > Or there may be races in device addition/removal.  We have current
-> > > > > > > issues in this area, e.g., [2], and they're fairly subtle.  I'm not
-> > > > > > > saying your patches have these issues; only that extra code makes more
-> > > > > > > chances for mistakes and it's more work to validate it.
-> > > > > > >
-> > > > > > > > > I don't see the advantage of creating these files only when
-> > > > > > > > > the PF driver supports this.  The management tools have to
-> > > > > > > > > deal with sriov_vf_total_msix == 0 and sriov_vf_msix_count ==
-> > > > > > > > > 0 anyway.  Having the sysfs files not be present at all might
-> > > > > > > > > be slightly prettier to the person running "ls", but I'm not
-> > > > > > > > > sure the code complication is worth that.
-> > > > > > > >
-> > > > > > > > It is more than "ls", right now sriov_numvfs is visible without
-> > > > > > > > relation to the driver, even if driver doesn't implement
-> > > > > > > > ".sriov_configure", which IMHO bad. We didn't want to repeat.
-> > > > > > > >
-> > > > > > > > Right now, we have many devices that supports SR-IOV, but small
-> > > > > > > > amount of them are capable to rewrite their VF MSI-X table siz.
-> > > > > > > > We don't want "to punish" and clatter their sysfs.
-> > > > > > >
-> > > > > > > I agree, it's clutter, but at least it's just cosmetic clutter
-> > > > > > > (but I'm willing to hear discussion about why it's more than
-> > > > > > > cosmetic; see below).
-> > > > > >
-> > > > > > It is more than cosmetic and IMHO it is related to the driver role.
-> > > > > > This feature is advertised, managed and configured by PF. It is very
-> > > > > > natural request that the PF will view/hide those sysfs files.
-> > > > >
-> > > > > Agreed, it's natural if the PF driver adds/removes those files.  But I
-> > > > > don't think it's *essential*, and they *could* be static because of
-> > > > > this:
-> > > > >
-> > > > > > > From the management software point of view, I don't think it matters.
-> > > > > > > That software already needs to deal with files that don't exist (on
-> > > > > > > old kernels) and files that contain zero (feature not supported or no
-> > > > > > > vectors are available).
-> > > > >
-> > > > > I wonder if sysfs_update_group() would let us have our cake and eat
-> > > > > it, too?  Maybe we could define these files as static attributes and
-> > > > > call sysfs_update_group() when the PF driver binds or unbinds?
-> > > > >
-> > > > > Makes me wonder if the device core could call sysfs_update_group()
-> > > > > when binding/unbinding drivers.  But there are only a few existing
-> > > > > callers, and it looks like none of them are for the bind/unbind
-> > > > > situation, so maybe that would be pointless.
-> > > >
-> > > > Also it will be not an easy task to do it in driver/core. Our
-> > > > attributes need to be visible if driver is bound -> we will call to
-> > > > sysfs_update_group() after ->bind() callback. It means that in
-> > > > uwind, we will call to sysfs_update_group() before ->unbind() and
-> > > > the driver will be still bound. So the check is is_supported() for
-> > > > driver exists/or not won't be possible.
+On Wednesday 10 February 2021 13:59:41 Stefan Chulski wrote:
+> > > (sending this e-mail again because previously I sent it to Thomas' old
+> > > e-mail address at free-electrons)
+> > 
+> > Thanks. Turns out I still receive e-mail sent to @free-electrons.com, so I had
+> > seen your previous e-mail but didn't had the chance to reply.
+> > 
+> > > we have enountered an issue with pci-mvebu driver and would like your
+> > > opinion, since you are the author of commit
+> > > https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_pu
+> > > b_scm_linux_kernel_git_torvalds_linux.git_commit_-3Fid-
+> > 3Df4ac99011e542
 > > >
-> > > Poking around some more, I found .dev_groups, which might be
-> > > applicable?  The test patch below applies to v5.11 and makes the "bh"
-> > > file visible in devices bound to the uhci_hcd driver if the function
-> > > number is odd.
-> >
-> > This solution can be applicable for generic drivers where we can afford
-> > to have custom sysfs files for this driver. In our case, we are talking
-> > about hardware device driver. Both RDMA and netdev are against allowing
-> > for such drivers to create their own sysfs. It will be real nightmare to
-> > have different names/layout/output for the same functionality.
-> >
-> > This .dev_groups moves responsibility over sysfs to the drivers and it
-> > is no-go for us.
->
-> But it _is_ the driver's responsibility for sysfs files, right?
+> > d06ea2bda10063502583c6d7991&d=DwIFaQ&c=nKjWec2b6R0mOyPaz7xtfQ&
+> > r=DDQ3dK
+> > > wkTIxKAl6_Bs7GMx4zhJArrXKN2mDMOXGh7lg&m=lENmudbu2hlK44mVm-
+> > e8bgdi9Rm2AC
+> > > DXN8QY0frgcuY&s=7109I-
+> > xvpx1wW532pxvk1W8s_XeG77VQf2iP7QzhEao&e=
+> > >
+> > > After upgrading to new version of U-Boot on a Armada XP / 38x device,
+> > > some WiFi cards stopped working in kernel. Ath10k driver, for example,
+> > > could not load firmware into the card.
+> > >
+> > > We discovered that the issue is caused by U-Boot:
+> > > - when U-Boot's pci_mvebu driver was converted to driver model API,
+> > >   U-Boot started to configure PCIe registers not only for the newtork
+> > >   adapter, but also for the Marvell Memory Controller (that you are
+> > >   mentioning in your commit).
+> > > - Since pci-mvebu driver in Linux is ignoring the Marvell Memory
+> > >   Controller device, and U-Boot configures its registers (BARs and what
+> > >   not), after kernel boots, the registers of this device are
+> > >   incompatible with kernel, or something, and this causes problems for
+> > >   the real PCIe device.
+> > > - Stefan Roese has temporarily solved this issue with U-Boot commit
+> > >   https://urldefense.proofpoint.com/v2/url?u=https-
+> > 3A__gitlab.denx.de_u-2Dboot_custodians_u-2Dboot-2Dmarvell_-
+> > 2D_commit_6a2fa284aee2981be2c7661b3757ce112de8d528&d=DwIFaQ&c=n
+> > KjWec2b6R0mOyPaz7xtfQ&r=DDQ3dKwkTIxKAl6_Bs7GMx4zhJArrXKN2mDM
+> > OXGh7lg&m=lENmudbu2hlK44mVm-
+> > e8bgdi9Rm2ACDXN8QY0frgcuY&s=B0eKBkblEygPGYvKDdMuwzzYhDg5Jlh_Q4
+> > eXHlIL-oc&e=
+> > >   which basically just masks the Memory Controller's existence.
+> > >
+> > > - in Linux commit f4ac99011e54 ("pci: mvebu: no longer fake the slot
+> > >   location of downstream devices") you mention that:
+> > >
+> > >    * On slot 0, a "Marvell Memory controller", identical on all PCIe
+> > >      interfaces, and which isn't useful when the Marvell SoC is the PCIe
+> > >      root complex (i.e, the normal case when we run Linux on the Marvell
+> > >      SoC).
+> > >
+> > > What we are wondering is:
+> > > - what does the Marvell Memory controller really do? Can it be used to
+> > >   configure something? It clearly does something, because if it is
+> > >   configured in U-Boot somehow but not in kernel, problems can occur.
+> > > - is the best solution really just to ignore this device?
+> > > - should U-Boot also start doing what commit f4ac99011e54 does? I.e.
+> > >   to make sure that the real device is in slot 0, and Marvell Memory
+> > >   Controller in slot 1.
+> > > - why is Linux ignoring this device? It isn't even listed in lspci
+> > >   output.
+> > 
+> > To be honest, I don't have much details about what this device does, and my
+> > memory is unclear on whether I really ever had any details. I vaguely
+> > remember that this is a device that made sense when the Marvell PCIe
+> > controller is used as an endpoint, and in such a situation this device also the
+> > root complex to "see" the physical memory of the Marvell SoC. And
+> > therefore in a situation where the Marvell PCIe controller is the root
+> > complex, seeing this device didn't make sense.
+> > 
+> > In addition, I /think/ it was causing problems with the MBus windows
+> > allocation. Indeed, if this device is visible, then we will try to allocate MBus
+> > windows for its different BARs, and those windows are in limited number.
+> > 
+> > I know this isn't a very helpful answer, but the documentation on this is
+> > pretty much nonexistent, and I don't remember ever having very solid and
+> > convincing answers.
+> > 
+> > I've added in Cc Stefan Chulski, from Marvell, who has recently posted
+> > patches on the PPv2 driver. I don't know if he will have details about PCIe,
+> > but perhaps he will be able to ask internally at Marvell.
+> > 
+> > Best regards,
+> 
+> I not familiar with Armada XP PCIe. But I can check internally at Marvell.
+> 
+> Best Regards,
+> Stefan.
+> 
 
-It depends on how you declare "responsibility". Direct creating/deletion of
-sysfs files is prohibited in netdev and RDMA subsystems. We want to provide
-to our users and stack uniformed way of interacting with the system.
+Stefan: If you get any information internally in Marvell, please let us know!
 
-It is super painful to manage large fleet of NICs and/or HCAs if every device
-driver provides something different for the same feature.
-
->
-> If not, what exactly are you trying to do here, as I am very confused.
-
-https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#m899d883c8a10d95959ac0cd2833762f93729b8ef
-Please see more details below.
-
->
-> > Another problem with this approach is addition of VFs, not only every
-> > driver will start to manage its own sysfs, but it will need to iterate
-> > over PCI bus or internal lists to find VFs, because we want to create
-> > .set_msix_vec on VFs after PF is bound.
->
-> What?  I don't understand at all.
->
-> > So instead of one, controlled place, we will find ourselves with many
-> > genius implementations of the same thing in the drivers.
->
-> Same _what_ thing?
-
-This thread is part of conversation with Bjorn where he is looking for a
-way to avoid creation of sysfs files in the PCI/core.
-https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#madc000cf04b5246b450f7183a1d80abdf408a949
-
-https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#Z2e.:..:20210209133445.700225-2-leon::40kernel.org:0drivers:pci:iov.c
-
->
-> > Bjorn, we really do standard enable/disable flow with out overlay thing.
->
-> Ok, can you step back and try to explain what problem you are trying to
-> solve first, before getting bogged down in odd details?  I find it
-> highly unlikely that this is something "unique", but I could be wrong as
-> I do not understand what you are wanting to do here at all.
-
-I don't know if you are familiar with SR-IOV concepts, if yes, just skip
-the following paragraph.
-
-SR-IOV capable devices have two types of their hardware functions which visible
-as PCI devices: physical functions (PF) and virtual functions (VF). Both types
-have PCI BDF and driver which probes them during initialization. The PF has extra
-properties and it is the one who creates (spawns) new VFs (everything according to
-he PCI-SIG).
-
-This series adds new sysfs files to the VFs which are not bound yet (without driver attached)
-while the PF driver is loaded. The change to VFs is needed to be done before their driver is
-loaded because MSI-X table vector size (the property which we are changing) is used very early
-in the initialization sequence.
-https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#m899d883c8a10d95959ac0cd2833762f93729b8ef
-
-We have two different flows for supported devices:
-1. PF starts and initiates VFs.
-2. PF starts and connects to already existing VFs.
-
-So there is nothing "unique" here, as long as this logic is handled by the PCI/core.
-
-Thanks
-
->
-> thanks,
->
-> greg k-h
+Bjorn: What do you think, should Linux kernel completely hide some PCIe
+devices from /sys hierarchy and also from 'lspci' output? Or should
+kernel preserve even non-functional / unknown PCIe devices visible in
+'lspci' output?
