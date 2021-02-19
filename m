@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6EE331FF04
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 19:56:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6378331FF05
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 19:56:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229896AbhBSS4i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Feb 2021 13:56:38 -0500
-Received: from mga11.intel.com ([192.55.52.93]:13713 "EHLO mga11.intel.com"
+        id S229587AbhBSS4j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Feb 2021 13:56:39 -0500
+Received: from mga18.intel.com ([134.134.136.126]:30525 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229726AbhBSS4i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Feb 2021 13:56:38 -0500
-IronPort-SDR: kiGDWI5PM42/9yaXPhePnM0VNkRgvA647uu1zPNpbSViTXCrN4EK/L/ZXTU458UfYS0F/NrMFV
- 3iC4ZI5sibAw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9900"; a="180420398"
+        id S229612AbhBSS4j (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Feb 2021 13:56:39 -0500
+IronPort-SDR: AjQhpb5PQEHAkLbF2RqqHuMU6SrAMvwiLG8uAMemJKYjvIBd+L90YCdVVxaarUuqlsQyx2L87K
+ ipw5f79A6Zpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9900"; a="171598070"
 X-IronPort-AV: E=Sophos;i="5.81,189,1610438400"; 
-   d="scan'208";a="180420398"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2021 10:55:57 -0800
-IronPort-SDR: b2HGXtaMC1Gg2iBQiIFCYR8PeT7ug6WTV6ZPBwc7VbcDWvgqRZSXFi8r0cUKNyQuWtjz8Ap4hv
- anmG9/f3yhVA==
+   d="scan'208";a="171598070"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2021 10:55:57 -0800
+IronPort-SDR: eiH9x4G9hraJjQ8aywD0naUMtp4f+bEJONeVLjAkXvx8D4TPXP2ZpSjBUQ9EgEdMtr9QSbRjlI
+ B3PPJVG66WGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.81,189,1610438400"; 
-   d="scan'208";a="378987576"
+   d="scan'208";a="581782856"
 Received: from lkp-server02.sh.intel.com (HELO cd560a204411) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 19 Feb 2021 10:55:55 -0800
+  by orsmga005.jf.intel.com with ESMTP; 19 Feb 2021 10:55:56 -0800
 Received: from kbuild by cd560a204411 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lDAwV-000AZj-26; Fri, 19 Feb 2021 18:55:55 +0000
-Date:   Sat, 20 Feb 2021 02:55:31 +0800
+        id 1lDAwV-000AZp-Kq; Fri, 19 Feb 2021 18:55:55 +0000
+Date:   Sat, 20 Feb 2021 02:55:34 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/hotplug] BUILD SUCCESS
- fc235fcb0f7c1865ccb2d1f50267eef299a4f3fb
-Message-ID: <603009a3.haZuTab33H7N8zen%lkp@intel.com>
+Subject: [pci:pci/enumeration] BUILD SUCCESS
+ f6bda644fa3a7070621c3bf12cd657f69a42f170
+Message-ID: <603009a6.x1irm36hPAM1YXJu%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,10 +43,10 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
-branch HEAD: fc235fcb0f7c1865ccb2d1f50267eef299a4f3fb  PCI: acpiphp: Remove unused acpiphp_callback typedef
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/enumeration
+branch HEAD: f6bda644fa3a7070621c3bf12cd657f69a42f170  PCI: Fix pci_register_io_range() memory leak
 
-elapsed time: 721m
+elapsed time: 722m
 
 configs tested: 149
 configs skipped: 4
