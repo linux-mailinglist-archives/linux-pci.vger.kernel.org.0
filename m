@@ -2,288 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 228E331FEBF
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 19:26:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6EE331FF04
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 19:56:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbhBSSZj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Feb 2021 13:25:39 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42070 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229799AbhBSSZh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Feb 2021 13:25:37 -0500
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Fri, 19 Feb 2021 13:25:35 EST
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_smtp) via UNIX with SMTP (IdeaSmtpServer 0.83.537)
- id 816e0173f029b67d; Fri, 19 Feb 2021 19:18:13 +0100
-Received: from kreacher.localnet (89-64-81-29.dynamic.chello.pl [89.64.81.29])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id AB2AD661E07;
-        Fri, 19 Feb 2021 19:18:12 +0100 (CET)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v1 4/4] ACPI: PCI: Replace direct printk() invocations in pci_link.c
-Date:   Fri, 19 Feb 2021 19:17:44 +0100
-Message-ID: <2246899.HyxBmBtjVt@kreacher>
-In-Reply-To: <4822757.tvZ08WQ2Gl@kreacher>
-References: <4822757.tvZ08WQ2Gl@kreacher>
+        id S229896AbhBSS4i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Feb 2021 13:56:38 -0500
+Received: from mga11.intel.com ([192.55.52.93]:13713 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229726AbhBSS4i (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Feb 2021 13:56:38 -0500
+IronPort-SDR: kiGDWI5PM42/9yaXPhePnM0VNkRgvA647uu1zPNpbSViTXCrN4EK/L/ZXTU458UfYS0F/NrMFV
+ 3iC4ZI5sibAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9900"; a="180420398"
+X-IronPort-AV: E=Sophos;i="5.81,189,1610438400"; 
+   d="scan'208";a="180420398"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2021 10:55:57 -0800
+IronPort-SDR: b2HGXtaMC1Gg2iBQiIFCYR8PeT7ug6WTV6ZPBwc7VbcDWvgqRZSXFi8r0cUKNyQuWtjz8Ap4hv
+ anmG9/f3yhVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,189,1610438400"; 
+   d="scan'208";a="378987576"
+Received: from lkp-server02.sh.intel.com (HELO cd560a204411) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 19 Feb 2021 10:55:55 -0800
+Received: from kbuild by cd560a204411 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1lDAwV-000AZj-26; Fri, 19 Feb 2021 18:55:55 +0000
+Date:   Sat, 20 Feb 2021 02:55:31 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:pci/hotplug] BUILD SUCCESS
+ fc235fcb0f7c1865ccb2d1f50267eef299a4f3fb
+Message-ID: <603009a3.haZuTab33H7N8zen%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduledrjeeigddutdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtvdenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpefgleehfffhtefflefhleetjeffteettefgteekjedvhfeffedtueefveegveeiveenucfkphepkeelrdeigedrkedurddvleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrieegrdekuddrvdelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehguhhohhgrnhhjuhhnsehhuhgrfigvihdrtgho
- mh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/hotplug
+branch HEAD: fc235fcb0f7c1865ccb2d1f50267eef299a4f3fb  PCI: acpiphp: Remove unused acpiphp_callback typedef
 
-Replace the direct printk() invocations in pci_link.c with (mostly
-corresponding) acpi_handle_*() calls relative to the ACPI handle of
-the given link device, which allows the AML corresponding to those
-messages to be identified more easily, or with pr_*() calls.
+elapsed time: 721m
 
-While at it, add a pr_fmt() definition ot pci_link.c, make
-acpi_pci_link_check_possible() print all messages with
-acpi_handle_debug() for consistency and replace the (not-so-
-reliable) KERN_CONT-based message line composition in
-acpi_pci_link_add() with two pr_info() and a series of
-acpi_handle_debug() calls (the latter for the possible IRQs).
+configs tested: 149
+configs skipped: 4
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                      cm5200_defconfig
+mips                       rbtx49xx_defconfig
+powerpc                     stx_gp3_defconfig
+sh                           se7780_defconfig
+arc                        vdk_hs38_defconfig
+nios2                            allyesconfig
+mips                            ar7_defconfig
+sh                          sdk7786_defconfig
+powerpc                       eiger_defconfig
+arc                        nsimosci_defconfig
+arm                        mvebu_v5_defconfig
+powerpc                     sequoia_defconfig
+ia64                             alldefconfig
+sh                             espt_defconfig
+arm                          pcm027_defconfig
+mips                      pistachio_defconfig
+arm                  colibri_pxa270_defconfig
+sh                            migor_defconfig
+arm                          pxa910_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                  storcenter_defconfig
+mips                       bmips_be_defconfig
+arm                            u300_defconfig
+powerpc                  iss476-smp_defconfig
+arm                        spear3xx_defconfig
+powerpc                 mpc836x_rdk_defconfig
+sh                          rsk7201_defconfig
+powerpc                   motionpro_defconfig
+arm                             pxa_defconfig
+sh                          polaris_defconfig
+arm                         at91_dt_defconfig
+sh                        edosk7760_defconfig
+powerpc                 mpc834x_mds_defconfig
+arm                         bcm2835_defconfig
+arm                         s5pv210_defconfig
+powerpc                 canyonlands_defconfig
+sh                     sh7710voipgw_defconfig
+powerpc                      ppc44x_defconfig
+riscv                    nommu_k210_defconfig
+x86_64                           alldefconfig
+arm                        mini2440_defconfig
+riscv                               defconfig
+sh                           se7721_defconfig
+m68k                       bvme6000_defconfig
+arm                           viper_defconfig
+mips                         rt305x_defconfig
+arm                       omap2plus_defconfig
+powerpc                    amigaone_defconfig
+sparc64                          alldefconfig
+mips                          rb532_defconfig
+mips                           jazz_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                     sbc8548_defconfig
+arm                         hackkit_defconfig
+powerpc                    adder875_defconfig
+sh                           se7724_defconfig
+arm                           stm32_defconfig
+arm                          imote2_defconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7264_defconfig
+powerpc                 mpc8540_ads_defconfig
+mips                          rm200_defconfig
+xtensa                         virt_defconfig
+arm                           corgi_defconfig
+m68k                        mvme16x_defconfig
+sh                   sh7770_generic_defconfig
+arm                            hisi_defconfig
+ia64                            zx1_defconfig
+powerpc                     redwood_defconfig
+powerpc                          allyesconfig
+powerpc                       holly_defconfig
+riscv                    nommu_virt_defconfig
+arm                        multi_v7_defconfig
+powerpc                  mpc866_ads_defconfig
+arm                            qcom_defconfig
+sh                               j2_defconfig
+powerpc                mpc7448_hpc2_defconfig
+xtensa                  nommu_kc705_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                               tinyconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20210219
+i386                 randconfig-a003-20210219
+i386                 randconfig-a002-20210219
+i386                 randconfig-a004-20210219
+i386                 randconfig-a001-20210219
+i386                 randconfig-a006-20210219
+x86_64               randconfig-a012-20210219
+x86_64               randconfig-a016-20210219
+x86_64               randconfig-a013-20210219
+x86_64               randconfig-a015-20210219
+x86_64               randconfig-a011-20210219
+x86_64               randconfig-a014-20210219
+i386                 randconfig-a016-20210219
+i386                 randconfig-a012-20210219
+i386                 randconfig-a014-20210219
+i386                 randconfig-a013-20210219
+i386                 randconfig-a011-20210219
+i386                 randconfig-a015-20210219
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                      rhel-8.3-kbuiltin
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a003-20210219
+x86_64               randconfig-a001-20210219
+x86_64               randconfig-a004-20210219
+x86_64               randconfig-a002-20210219
+x86_64               randconfig-a005-20210219
+x86_64               randconfig-a006-20210219
+
 ---
- drivers/acpi/pci_link.c |   86 +++++++++++++++++++++---------------------------
- 1 file changed, 38 insertions(+), 48 deletions(-)
-
-Index: linux-pm/drivers/acpi/pci_link.c
-===================================================================
---- linux-pm.orig/drivers/acpi/pci_link.c
-+++ linux-pm/drivers/acpi/pci_link.c
-@@ -12,6 +12,8 @@
-  *	   for IRQ management (e.g. start()->_SRS).
-  */
- 
-+#define pr_fmt(fmt) "ACPI: PCI: " fmt
-+
- #include <linux/syscore_ops.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -102,9 +104,9 @@ static acpi_status acpi_pci_link_check_p
- 			     (i < p->interrupt_count
- 			      && i < ACPI_PCI_LINK_MAX_POSSIBLE); i++) {
- 				if (!p->interrupts[i]) {
--					printk(KERN_WARNING PREFIX
--					       "Invalid _PRS IRQ %d\n",
--					       p->interrupts[i]);
-+					acpi_handle_debug(handle,
-+							  "Invalid _PRS IRQ %d\n",
-+							  p->interrupts[i]);
- 					continue;
- 				}
- 				link->irq.possible[i] = p->interrupts[i];
-@@ -120,17 +122,17 @@ static acpi_status acpi_pci_link_check_p
- 			struct acpi_resource_extended_irq *p =
- 			    &resource->data.extended_irq;
- 			if (!p || !p->interrupt_count) {
--				printk(KERN_WARNING PREFIX
--					      "Blank _PRS EXT IRQ resource\n");
-+				acpi_handle_debug(handle,
-+						  "Blank _PRS EXT IRQ resource\n");
- 				return AE_OK;
- 			}
- 			for (i = 0;
- 			     (i < p->interrupt_count
- 			      && i < ACPI_PCI_LINK_MAX_POSSIBLE); i++) {
- 				if (!p->interrupts[i]) {
--					printk(KERN_WARNING PREFIX
--					       "Invalid _PRS IRQ %d\n",
--					       p->interrupts[i]);
-+					acpi_handle_debug(handle,
-+							  "Invalid _PRS IRQ %d\n",
-+							  p->interrupts[i]);
- 					continue;
- 				}
- 				link->irq.possible[i] = p->interrupts[i];
-@@ -142,8 +144,8 @@ static acpi_status acpi_pci_link_check_p
- 			break;
- 		}
- 	default:
--		printk(KERN_ERR PREFIX "_PRS resource type 0x%x isn't an IRQ\n",
--		       resource->type);
-+		acpi_handle_debug(handle, "_PRS resource type 0x%x is not IRQ\n",
-+				  resource->type);
- 		return AE_OK;
- 	}
- 
-@@ -527,6 +529,7 @@ static int acpi_irq_balance = -1;	/* 0:
- 
- static int acpi_pci_link_allocate(struct acpi_pci_link *link)
- {
-+	acpi_handle handle = link->device->handle;
- 	int irq;
- 	int i;
- 
-@@ -549,8 +552,8 @@ static int acpi_pci_link_allocate(struct
- 	 */
- 	if (i == link->irq.possible_count) {
- 		if (acpi_strict)
--			printk(KERN_WARNING PREFIX "_CRS %d not found"
--				      " in _PRS\n", link->irq.active);
-+			acpi_handle_warn(handle, "_CRS %d not found in _PRS\n",
-+					 link->irq.active);
- 		link->irq.active = 0;
- 	}
- 
-@@ -574,28 +577,23 @@ static int acpi_pci_link_allocate(struct
- 		}
- 	}
- 	if (acpi_irq_get_penalty(irq) >= PIRQ_PENALTY_ISA_ALWAYS) {
--		printk(KERN_ERR PREFIX "No IRQ available for %s [%s]. "
--			    "Try pci=noacpi or acpi=off\n",
--			    acpi_device_name(link->device),
--			    acpi_device_bid(link->device));
-+		acpi_handle_err(handle,
-+				"No IRQ available. Try pci=noacpi or acpi=off\n");
- 		return -ENODEV;
- 	}
- 
- 	/* Attempt to enable the link device at this IRQ. */
- 	if (acpi_pci_link_set(link, irq)) {
--		printk(KERN_ERR PREFIX "Unable to set IRQ for %s [%s]. "
--			    "Try pci=noacpi or acpi=off\n",
--			    acpi_device_name(link->device),
--			    acpi_device_bid(link->device));
-+		acpi_handle_err(handle,
-+				"Unable to set IRQ. Try pci=noacpi or acpi=off\n");
- 		return -ENODEV;
- 	} else {
- 		if (link->irq.active < ACPI_MAX_ISA_IRQS)
- 			acpi_isa_irq_penalty[link->irq.active] +=
- 				PIRQ_PENALTY_PCI_USING;
- 
--		pr_info("%s [%s] enabled at IRQ %d\n",
--		       acpi_device_name(link->device),
--		       acpi_device_bid(link->device), link->irq.active);
-+		acpi_handle_info(handle, "Enabled at IRQ %d\n",
-+				 link->irq.active);
- 	}
- 
- 	link->irq.initialized = 1;
-@@ -616,19 +614,19 @@ int acpi_pci_link_allocate_irq(acpi_hand
- 
- 	result = acpi_bus_get_device(handle, &device);
- 	if (result) {
--		printk(KERN_ERR PREFIX "Invalid link device\n");
-+		acpi_handle_err(handle, "Invalid link device\n");
- 		return -1;
- 	}
- 
- 	link = acpi_driver_data(device);
- 	if (!link) {
--		printk(KERN_ERR PREFIX "Invalid link context\n");
-+		acpi_handle_err(handle, "Invalid link context\n");
- 		return -1;
- 	}
- 
- 	/* TBD: Support multiple index (IRQ) entries per Link Device */
- 	if (index) {
--		printk(KERN_ERR PREFIX "Invalid index %d\n", index);
-+		acpi_handle_err(handle, "Invalid index %d\n", index);
- 		return -1;
- 	}
- 
-@@ -640,7 +638,7 @@ int acpi_pci_link_allocate_irq(acpi_hand
- 
- 	if (!link->irq.active) {
- 		mutex_unlock(&acpi_link_lock);
--		printk(KERN_ERR PREFIX "Link active IRQ is 0!\n");
-+		acpi_handle_err(handle, "Link active IRQ is 0!\n");
- 		return -1;
- 	}
- 	link->refcnt++;
-@@ -668,20 +666,20 @@ int acpi_pci_link_free_irq(acpi_handle h
- 
- 	result = acpi_bus_get_device(handle, &device);
- 	if (result) {
--		printk(KERN_ERR PREFIX "Invalid link device\n");
-+		acpi_handle_err(handle, "Invalid link device\n");
- 		return -1;
- 	}
- 
- 	link = acpi_driver_data(device);
- 	if (!link) {
--		printk(KERN_ERR PREFIX "Invalid link context\n");
-+		acpi_handle_err(handle, "Invalid link context\n");
- 		return -1;
- 	}
- 
- 	mutex_lock(&acpi_link_lock);
- 	if (!link->irq.initialized) {
- 		mutex_unlock(&acpi_link_lock);
--		printk(KERN_ERR PREFIX "Link isn't initialized\n");
-+		acpi_handle_err(handle, "Link isn't initialized\n");
- 		return -1;
- 	}
- #ifdef	FUTURE_USE
-@@ -712,10 +710,10 @@ int acpi_pci_link_free_irq(acpi_handle h
- static int acpi_pci_link_add(struct acpi_device *device,
- 			     const struct acpi_device_id *not_used)
- {
--	int result;
-+	acpi_handle handle = device->handle;
- 	struct acpi_pci_link *link;
-+	int result;
- 	int i;
--	int found = 0;
- 
- 	link = kzalloc(sizeof(struct acpi_pci_link), GFP_KERNEL);
- 	if (!link)
-@@ -734,31 +732,23 @@ static int acpi_pci_link_add(struct acpi
- 	/* query and set link->irq.active */
- 	acpi_pci_link_get_current(link);
- 
--	printk(KERN_INFO PREFIX "%s [%s] (IRQs", acpi_device_name(device),
--	       acpi_device_bid(device));
-+	pr_info("Interrupt link %s configured for IRQ %d\n",
-+		acpi_device_bid(device), link->irq.active);
-+
- 	for (i = 0; i < link->irq.possible_count; i++) {
--		if (link->irq.active == link->irq.possible[i]) {
--			printk(KERN_CONT " *%d", link->irq.possible[i]);
--			found = 1;
--		} else
--			printk(KERN_CONT " %d", link->irq.possible[i]);
-+		if (link->irq.active != link->irq.possible[i])
-+			acpi_handle_debug(handle, "Possible IRQ %d\n",
-+					  link->irq.possible[i]);
- 	}
- 
--	printk(KERN_CONT ")");
--
--	if (!found)
--		printk(KERN_CONT " *%d", link->irq.active);
--
- 	if (!link->device->status.enabled)
--		printk(KERN_CONT ", disabled.");
--
--	printk(KERN_CONT "\n");
-+		pr_info("Interrupt link %s disabled\n", acpi_device_bid(device));
- 
- 	list_add_tail(&link->list, &acpi_link_list);
- 
-       end:
- 	/* disable all links -- to be activated on use */
--	acpi_evaluate_object(device->handle, "_DIS", NULL, NULL);
-+	acpi_evaluate_object(handle, "_DIS", NULL, NULL);
- 	mutex_unlock(&acpi_link_lock);
- 
- 	if (result)
-
-
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
