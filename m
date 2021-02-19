@@ -2,89 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FC4B31F84A
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 12:21:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 513D231FA22
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 14:54:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbhBSLV0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Feb 2021 06:21:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
+        id S230228AbhBSNx6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Feb 2021 08:53:58 -0500
+Received: from mga09.intel.com ([134.134.136.24]:64464 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229804AbhBSLUH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 19 Feb 2021 06:20:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2CCB464E77;
-        Fri, 19 Feb 2021 11:19:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613733566;
-        bh=YFg4Atmp59pHQeT8wPbE/amvEYcgx1e0rb0E2V1wsVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CPQwToA/EWAwk27hMnWle2hs4utfQvNVMPw1h0h7/qLa3RjmZqFsCUAdKuqBxjEjQ
-         yTmpuyV5C1bZEZQHFpRr9SB0d0dXuaxrfTED3E+DWTQkP+ntQDhgehhhqn386QsGP2
-         jvBtwfPVRF2KLV5Eb8ylf6V3hxPOgqwlaMGC0A4x3kIIYgf0W2/JwEu8rDFAxC4pkf
-         /ZUAcJKvqdHgfoB+rrUqCCEgeHPPjZ3R3edCI71vugtkZCWJxwKPSEiw6or/YaBQ5v
-         13BOdBO1SlfmZGzpTXR2pi72xB9WzPoMd1wYX4BrvU6mncI2DbMS8rkJPmgOB4qcKM
-         JLBnXKeqdc3/w==
-Date:   Fri, 19 Feb 2021 12:19:20 +0100
-From:   Robert Richter <rric@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S230177AbhBSNxv (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Feb 2021 08:53:51 -0500
+IronPort-SDR: rgeTPppgYXTdSDu3AekE3jDHvYWRaxXYgGRdWWsCcaM9OGYuFAVDVQ2nH8H6J+TRu/gJ1TYzQZ
+ 0EMhq3XPfIhA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9899"; a="183960797"
+X-IronPort-AV: E=Sophos;i="5.81,189,1610438400"; 
+   d="scan'208";a="183960797"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2021 05:52:05 -0800
+IronPort-SDR: EK5Wgt/62jce1ymNozB9AcLEBud6htWOyYNWoERO8THhqspUe0CsaFjRRSoEWukDrsRVFVcpjq
+ L+uCGTd68/zg==
+X-IronPort-AV: E=Sophos;i="5.81,189,1610438400"; 
+   d="scan'208";a="378874125"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2021 05:52:02 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lD6CN-006DxP-8c; Fri, 19 Feb 2021 15:51:59 +0200
+Date:   Fri, 19 Feb 2021 15:51:59 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Robert Richter <rric@kernel.org>
 Cc:     Dejin Zheng <zhengdejin5@gmail.com>, corbet@lwn.net,
         jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com,
         bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
         linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org, kw@linux.com,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 0/4] Introduce pcim_alloc_irq_vectors()
-Message-ID: <YC+euDIrR5apkAqp@rric.localdomain>
+Message-ID: <YC/CfxHM2RMZLejc@smile.fi.intel.com>
 References: <20210216160249.749799-1-zhengdejin5@gmail.com>
  <YC41HD422Mjh1IZK@rric.localdomain>
  <YC5zVHnRog3EX0rl@smile.fi.intel.com>
+ <YC+euDIrR5apkAqp@rric.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YC5zVHnRog3EX0rl@smile.fi.intel.com>
+In-Reply-To: <YC+euDIrR5apkAqp@rric.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18.02.21 16:01:56, Andy Shevchenko wrote:
-> The problem this series solves is an imbalanced API.
+On Fri, Feb 19, 2021 at 12:19:20PM +0100, Robert Richter wrote:
+> On 18.02.21 16:01:56, Andy Shevchenko wrote:
+> > The problem this series solves is an imbalanced API.
+> 
+> This (added) API is bloated and incomplete. It adds functions without
+> benefit, the only is to have a single pcim alloc function in addition
+> to the pairing of alloc/free functions. I agree, it is hard to detect
+> which parts are released if pcim_enable_device() is used.
 
-This (added) API is bloated and incomplete. It adds functions without
-benefit, the only is to have a single pcim alloc function in addition
-to the pairing of alloc/free functions. I agree, it is hard to detect
-which parts are released if pcim_enable_device() is used.
+No, this API solves the above mentioned problem (what makes so special about
+pci_free_irq_vectors() that it should be present?) Why do we have pcim_iomap*()
+variations and not the rest?
 
-Additional, you need to go through pcim_release() to add other
-pcim_*() functions for everything else that is released there.
-Otherwise that new API is still incomplete. But this adds another
-bunch of useless functions.
+The PCIm API is horrible in the sense of being used properly. Yes, I know how
+it works and I was trying to help with that, the problem is that people didn't
+and don't get how it works and stream of patches like the ones that add
+pci_free_irq_vectors() are coming.
 
-> Christoph IIRC was clear that if we want to use PCI IRQ allocation API the
-> caller must know what's going on. Hiding this behind the scenes is not good.
-> And this series unhides that.
+> Additional, you need to go through pcim_release() to add other
+> pcim_*() functions for everything else that is released there.
+> Otherwise that new API is still incomplete.
 
-IMO, this is more a documentation issue. pcim_enable_device() must be
-better documented and list all enable/alloc functions that are going
-to be released out of the box later.
+True. And here is the part that most annoying right now.
+Btw, I never saw you fought against these small clean ups here and there, that
+*add* explicit calls to freeing resources. Also I haven't noticed anybody
+trying to correct documentation.
 
-Even better, make sure everything is managed and thus all of a pci_dev
-is released, no matter how it was setup (this could even already be
-the case).
+This series is a step to a right direction.
 
-In addition you could implement a static code checker.
+> But this adds another
+> bunch of useless functions.
 
-> Also, you may go and clean up all pci_free_irq_vectors() when
-> pcim_enable_device() is called, but I guess you will get painful process and
-> rejection in a pile of cases.
+Wrong. This is quite useful to have balanced APIs. How many patches you have
+seen related to the PCIm imbalanced APIs? I could tell from my experience, I
+saw plenty and each time I'm trying to explain how it works people don't easily
+get.
 
-Why should something be rejected if it is not correctly freed?
+> > Christoph IIRC was clear that if we want to use PCI IRQ allocation API the
+> > caller must know what's going on. Hiding this behind the scenes is not good.
+> > And this series unhides that.
+> 
+> IMO, this is more a documentation issue. pcim_enable_device() must be
+> better documented and list all enable/alloc functions that are going
+> to be released out of the box later.
+> 
+> Even better, make sure everything is managed and thus all of a pci_dev
+> is released, no matter how it was setup (this could even already be
+> the case).
+> 
+> In addition you could implement a static code checker.
 
-Even if pci_free_irq_vectors() is called, pcim_release() will not
-complain if it was already freed before. So using
-pci_free_irq_vectors() is ok even in conjunction with
-pcim_enable_device().
+It's open source, why should we do that and not what we are proposing here?
+Propose your ideas and we will discuss the patches, right?
 
-In the end, let's make sure everything is released in pci_dev if it is
-managed and document this.
+> > Also, you may go and clean up all pci_free_irq_vectors() when
+> > pcim_enable_device() is called, but I guess you will get painful process and
+> > rejection in a pile of cases.
+> 
+> Why should something be rejected if it is not correctly freed?
 
-Thanks,
+Why it's not correctly freed? The function is idempotent.
 
--Robert
+> Even if pci_free_irq_vectors() is called, pcim_release() will not
+> complain if it was already freed before. So using
+> pci_free_irq_vectors() is ok even in conjunction with
+> pcim_enable_device().
+
+No, it's not okay from API namespace / semantics perspective.
+
+> In the end, let's make sure everything is released in pci_dev if it is
+> managed and document this.
+
+Feel free to submit a patch!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
