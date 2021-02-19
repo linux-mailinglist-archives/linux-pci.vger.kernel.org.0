@@ -2,231 +2,242 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1003031FD62
-	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 17:48:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D0A631FD85
+	for <lists+linux-pci@lfdr.de>; Fri, 19 Feb 2021 17:59:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbhBSQrr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 Feb 2021 11:47:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229952AbhBSQre (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 Feb 2021 11:47:34 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACDAC061574;
-        Fri, 19 Feb 2021 08:46:54 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id d2so4485972pjs.4;
-        Fri, 19 Feb 2021 08:46:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gyD0O44OuFPHQqdM1wRapc1LcuE15W3160bQsjYFhPI=;
-        b=ASvBUnekhY67h1i1Ybkbk48wt4RanRZWV0Lcmwh418bM2g7KLrZYTuhsli69GCqEBT
-         EXlwaqpaikOrF+z1bK8IY+Lc7E0bCoshEPfN0f5cqGMngRLRNlrKVfnHzqYZ9FJqvjGz
-         ztKVBzbkJuXe4pkXRvi8iPILN68yDEDtMfW8J+SCBAOtui87eiMaraEEE94ANfd251aK
-         W809FfZCC7v+SmtufuC6weNGQhDtszS77SP1qRHW4zdAZlni6UPZiCAQ/rs//Cma1b4F
-         GLuMCprbabF6GZZ3tgHjQxUpCtkPNYykqKVedGjl+v55qu7JgiQY29rEyenynTzdzksm
-         BBeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gyD0O44OuFPHQqdM1wRapc1LcuE15W3160bQsjYFhPI=;
-        b=R2XoTmT/yMA4E/VbMZB6mZG+klccTJbEA8mBpODBdp/VBFLzW33w1uWEJ4Q/qhRRG8
-         QGQL3SPgh2Yj8Bnceu56OGSdESxiw7Ws9Gln55xKYXO28Mwd8Q/HY5XsSJETSZX+la3H
-         0k5xLP81OAl91YXW6EETvHKUSU3mdp7CrbxpmoEKCWqrOZNlNrOJ/H95a6ddNGHcXgP7
-         6QgC+hjgYihZ6Dc7peyP+w/aCh2klzFm+J8/JMSeYCJyeF6aMjHkeAHs3o+IZnkJD5mP
-         T/T+dTgbpJRgAlVNk7ojPwvi6dLJfUThMXb/8HylGxtBw2Znpfh73x6bcfkYRTtoWuL8
-         X3Sg==
-X-Gm-Message-State: AOAM531/vDo/Kq27/X2j9CL2jv7JFCYEUAV3LBgJcC7cFT3lRVk6CMuc
-        wtEuzHEvDgQVNAIgSo2N+jU=
-X-Google-Smtp-Source: ABdhPJyRJH/ZakwPj3IEMp53yZ5Z6zpZOZY11vzpn3W+7++rxjyZNd577w7d9F1wgYOTni9PD9hSQA==
-X-Received: by 2002:a17:90b:4d06:: with SMTP id mw6mr9672170pjb.24.1613753213724;
-        Fri, 19 Feb 2021 08:46:53 -0800 (PST)
-Received: from localhost (89.208.244.53.16clouds.com. [89.208.244.53])
-        by smtp.gmail.com with ESMTPSA id u31sm9979605pgl.9.2021.02.19.08.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Feb 2021 08:46:52 -0800 (PST)
-Date:   Sat, 20 Feb 2021 00:46:49 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Robert Richter <rric@kernel.org>
-Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] PCI: Introduce pcim_alloc_irq_vectors()
-Message-ID: <20210219164649.GA814637@nuc8i5>
-References: <20210218150458.798347-1-zhengdejin5@gmail.com>
- <20210218150458.798347-2-zhengdejin5@gmail.com>
- <YC/NxfsQn2RKkrp8@rric.localdomain>
+        id S229808AbhBSQ7J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 Feb 2021 11:59:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229555AbhBSQ7H (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 19 Feb 2021 11:59:07 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4DF136024A;
+        Fri, 19 Feb 2021 16:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1613753905;
+        bh=NMo5yhyTlIxLySt+nSwX0SRCkEKanmzR/cCYJOgr3iI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bNOPbzHSaM4/vVw3+4RymgErrpNZfj8y/7buzxo2BkSuoUfn1cxTW1zvwW6Jr5J8N
+         NdYj5KxrzgbVy53zttyqJDHLjUxkzTKya+unKCcFG70MVf35cjEqXyFuV9lgNUSRf8
+         d1xEEXqhTARJIYpzLMQlS6kKlhzVcBZ3CktHc/DqE3YrZCxMRlrc6ozfR/zg26W70Y
+         iX4UOo2let49EMToU1mHhFqkSTAPSRArVTUoCjQW1vKrkxB7UHOw2ZORTS2PfTUutZ
+         AdyNYjkjJxfVd6My+aSZiXhCAzjFtW8bAdnU4B139cO9iF2cppDQgUszMRPfdT04xq
+         L7VbwLFauDCaQ==
+Date:   Fri, 19 Feb 2021 18:58:20 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+Message-ID: <YC/uLNk2YMPMVL5c@unreal>
+References: <YC4+V6W7s7ytwiC6@unreal>
+ <20210218223950.GA1004646@bjorn-Precision-5520>
+ <YC9uLDAQJK9KgxbB@unreal>
+ <YC90wkwk/CdgcYY6@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YC/NxfsQn2RKkrp8@rric.localdomain>
+In-Reply-To: <YC90wkwk/CdgcYY6@kroah.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 19, 2021 at 03:40:05PM +0100, Robert Richter wrote:
-> On 18.02.21 23:04:55, Dejin Zheng wrote:
-> > Introduce pcim_alloc_irq_vectors(), a device-managed version of
-> > pci_alloc_irq_vectors(). Introducing this function can simplify
-> > the error handling path in many drivers.
-> > 
-> > And use pci_free_irq_vectors() to replace some code in pcim_release(),
-> > they are equivalent, and no functional change. It is more explicit
-> > that pcim_alloc_irq_vectors() is a device-managed function.
-> > 
-> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> > v3 -> v4:
-> > 	- No change
-> > v2 -> v3:
-> > 	- Add some commit comments for replace some codes in
-> > 	  pcim_release() by pci_free_irq_vectors().
-> > v1 -> v2:
-> > 	- Use pci_free_irq_vectors() to replace some code in
-> > 	  pcim_release().
-> > 	- Modify some commit messages.
-> > 
-> >  drivers/pci/pci.c   | 33 +++++++++++++++++++++++++++++----
-> >  include/linux/pci.h |  3 +++
-> >  2 files changed, 32 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index b67c4327d307..db799d089c85 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -1969,10 +1969,7 @@ static void pcim_release(struct device *gendev, void *res)
-> >  	struct pci_devres *this = res;
-> >  	int i;
-> >  
-> > -	if (dev->msi_enabled)
-> > -		pci_disable_msi(dev);
-> > -	if (dev->msix_enabled)
-> > -		pci_disable_msix(dev);
-> > +	pci_free_irq_vectors(dev);
-> >  
-> >  	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
-> >  		if (this->region_mask & (1 << i))
-> > @@ -2054,6 +2051,34 @@ void pcim_pin_device(struct pci_dev *pdev)
-> >  }
-> >  EXPORT_SYMBOL(pcim_pin_device);
-> >  
-> > +/**
-> > + * pcim_alloc_irq_vectors - a device-managed pci_alloc_irq_vectors()
-> > + * @dev:		PCI device to operate on
-> > + * @min_vecs:		minimum number of vectors required (must be >= 1)
-> > + * @max_vecs:		maximum (desired) number of vectors
-> > + * @flags:		flags or quirks for the allocation
-> > + *
-> > + * Return the number of vectors allocated, (which might be smaller than
-> > + * @max_vecs) if successful, or a negative error code on error. If less
-> > + * than @min_vecs interrupt vectors are available for @dev the function
-> > + * will fail with -ENOSPC.
-> > + *
-> > + * It depends on calling pcim_enable_device() to make IRQ resources
-> > + * manageable.
-> > + */
-> > +int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-> > +				unsigned int max_vecs, unsigned int flags)
-> > +{
-> > +	struct pci_devres *dr;
-> > +
-> > +	dr = find_pci_dr(dev);
-> > +	if (!dr || !dr->enabled)
-> > +		return -EINVAL;
-> > +
-> > +	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
-> > +}
-> > +EXPORT_SYMBOL(pcim_alloc_irq_vectors);
-> 
-> If it is just about having a pcim-* counterpart why not just an inline
-> function like the one below.
+On Fri, Feb 19, 2021 at 09:20:18AM +0100, Greg Kroah-Hartman wrote:
+> On Fri, Feb 19, 2021 at 09:52:12AM +0200, Leon Romanovsky wrote:
+> > On Thu, Feb 18, 2021 at 04:39:50PM -0600, Bjorn Helgaas wrote:
+> > > On Thu, Feb 18, 2021 at 12:15:51PM +0200, Leon Romanovsky wrote:
+> > > > On Wed, Feb 17, 2021 at 12:02:39PM -0600, Bjorn Helgaas wrote:
+> > > > > [+cc Greg in case he wants to chime in on the sysfs discussion.
+> > > > > TL;DR: we're trying to add/remove sysfs files when a PCI driver that
+> > > > > supports certain callbacks binds or unbinds; series at
+> > > > > https://lore.kernel.org/r/20210209133445.700225-1-leon@kernel.org]
+> > > > >
+> > > > > On Tue, Feb 16, 2021 at 09:58:25PM +0200, Leon Romanovsky wrote:
+> > > > > > On Tue, Feb 16, 2021 at 10:12:12AM -0600, Bjorn Helgaas wrote:
+> > > > > > > On Tue, Feb 16, 2021 at 09:33:44AM +0200, Leon Romanovsky wrote:
+> > > > > > > > On Mon, Feb 15, 2021 at 03:01:06PM -0600, Bjorn Helgaas wrote:
+> > > > > > > > > On Tue, Feb 09, 2021 at 03:34:42PM +0200, Leon Romanovsky wrote:
+> > > > > > > > > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > > >
+> > > > > > > > > > +int pci_enable_vf_overlay(struct pci_dev *dev)
+> > > > > > > > > > +{
+> > > > > > > > > > +	struct pci_dev *virtfn;
+> > > > > > > > > > +	int id, ret;
+> > > > > > > > > > +
+> > > > > > > > > > +	if (!dev->is_physfn || !dev->sriov->num_VFs)
+> > > > > > > > > > +		return 0;
+> > > > > > > > > > +
+> > > > > > > > > > +	ret = sysfs_create_files(&dev->dev.kobj, sriov_pf_dev_attrs);
+> > > > > > > > >
+> > > > > > > > > But I still don't like the fact that we're calling
+> > > > > > > > > sysfs_create_files() and sysfs_remove_files() directly.  It makes
+> > > > > > > > > complication and opportunities for errors.
+> > > > > > > >
+> > > > > > > > It is not different from any other code that we have in the kernel.
+> > > > > > >
+> > > > > > > It *is* different.  There is a general rule that drivers should not
+> > > > > > > call sysfs_* [1].  The PCI core is arguably not a "driver," but it is
+> > > > > > > still true that callers of sysfs_create_files() are very special, and
+> > > > > > > I'd prefer not to add another one.
+> > > > > >
+> > > > > > PCI for me is a bus, and bus is the right place to manage sysfs.
+> > > > > > But it doesn't matter, we understand each other positions.
+> > > > > >
+> > > > > > > > Let's be concrete, can you point to the errors in this code that I
+> > > > > > > > should fix?
+> > > > > > >
+> > > > > > > I'm not saying there are current errors; I'm saying the additional
+> > > > > > > code makes errors possible in future code.  For example, we hope that
+> > > > > > > other drivers can use these sysfs interfaces, and it's possible they
+> > > > > > > may not call pci_enable_vf_overlay() or pci_disable_vfs_overlay()
+> > > > > > > correctly.
+> > > > > >
+> > > > > > If not, we will fix, we just need is to ensure that sysfs name won't
+> > > > > > change, everything else is easy to change.
+> > > > > >
+> > > > > > > Or there may be races in device addition/removal.  We have current
+> > > > > > > issues in this area, e.g., [2], and they're fairly subtle.  I'm not
+> > > > > > > saying your patches have these issues; only that extra code makes more
+> > > > > > > chances for mistakes and it's more work to validate it.
+> > > > > > >
+> > > > > > > > > I don't see the advantage of creating these files only when
+> > > > > > > > > the PF driver supports this.  The management tools have to
+> > > > > > > > > deal with sriov_vf_total_msix == 0 and sriov_vf_msix_count ==
+> > > > > > > > > 0 anyway.  Having the sysfs files not be present at all might
+> > > > > > > > > be slightly prettier to the person running "ls", but I'm not
+> > > > > > > > > sure the code complication is worth that.
+> > > > > > > >
+> > > > > > > > It is more than "ls", right now sriov_numvfs is visible without
+> > > > > > > > relation to the driver, even if driver doesn't implement
+> > > > > > > > ".sriov_configure", which IMHO bad. We didn't want to repeat.
+> > > > > > > >
+> > > > > > > > Right now, we have many devices that supports SR-IOV, but small
+> > > > > > > > amount of them are capable to rewrite their VF MSI-X table siz.
+> > > > > > > > We don't want "to punish" and clatter their sysfs.
+> > > > > > >
+> > > > > > > I agree, it's clutter, but at least it's just cosmetic clutter
+> > > > > > > (but I'm willing to hear discussion about why it's more than
+> > > > > > > cosmetic; see below).
+> > > > > >
+> > > > > > It is more than cosmetic and IMHO it is related to the driver role.
+> > > > > > This feature is advertised, managed and configured by PF. It is very
+> > > > > > natural request that the PF will view/hide those sysfs files.
+> > > > >
+> > > > > Agreed, it's natural if the PF driver adds/removes those files.  But I
+> > > > > don't think it's *essential*, and they *could* be static because of
+> > > > > this:
+> > > > >
+> > > > > > > From the management software point of view, I don't think it matters.
+> > > > > > > That software already needs to deal with files that don't exist (on
+> > > > > > > old kernels) and files that contain zero (feature not supported or no
+> > > > > > > vectors are available).
+> > > > >
+> > > > > I wonder if sysfs_update_group() would let us have our cake and eat
+> > > > > it, too?  Maybe we could define these files as static attributes and
+> > > > > call sysfs_update_group() when the PF driver binds or unbinds?
+> > > > >
+> > > > > Makes me wonder if the device core could call sysfs_update_group()
+> > > > > when binding/unbinding drivers.  But there are only a few existing
+> > > > > callers, and it looks like none of them are for the bind/unbind
+> > > > > situation, so maybe that would be pointless.
+> > > >
+> > > > Also it will be not an easy task to do it in driver/core. Our
+> > > > attributes need to be visible if driver is bound -> we will call to
+> > > > sysfs_update_group() after ->bind() callback. It means that in
+> > > > uwind, we will call to sysfs_update_group() before ->unbind() and
+> > > > the driver will be still bound. So the check is is_supported() for
+> > > > driver exists/or not won't be possible.
+> > >
+> > > Poking around some more, I found .dev_groups, which might be
+> > > applicable?  The test patch below applies to v5.11 and makes the "bh"
+> > > file visible in devices bound to the uhci_hcd driver if the function
+> > > number is odd.
+> >
+> > This solution can be applicable for generic drivers where we can afford
+> > to have custom sysfs files for this driver. In our case, we are talking
+> > about hardware device driver. Both RDMA and netdev are against allowing
+> > for such drivers to create their own sysfs. It will be real nightmare to
+> > have different names/layout/output for the same functionality.
+> >
+> > This .dev_groups moves responsibility over sysfs to the drivers and it
+> > is no-go for us.
 >
-Robert and Andy,
+> But it _is_ the driver's responsibility for sysfs files, right?
 
-First of all, thank you very much for your suggestions and help.
-I think this is not just a pcim-* counterpart, I may not explain this
-place clearly. In addition to calling pci_alloc_irq_vectors(), the
-pcim_alloc_irq_vectors() function also checks whether the pci device is
-enabled and whether the pci device resource has been managed. If any one
-is wrong, it will return failure. Therefore, I think it should be used
-as a function. For novices, maybe I understand it incorrectly, so I look
-forward to your suggestions.
+It depends on how you declare "responsibility". Direct creating/deletion of
+sysfs files is prohibited in netdev and RDMA subsystems. We want to provide
+to our users and stack uniformed way of interacting with the system.
 
-> > +	dr = find_pci_dr(dev);
-static struct pci_devres *find_pci_dr(struct pci_dev *pdev)
-{
-        if (pci_is_managed(pdev))
-                return devres_find(&pdev->dev, pcim_release, NULL, NULL);                                                         
-        return NULL;
-}
-here checks whether the pci device resource has been managed.
+It is super painful to manage large fleet of NICs and/or HCAs if every device
+driver provides something different for the same feature.
 
-> > +	if (!dr || !dr->enabled)
-here checks whether the pci device is enabled.
+>
+> If not, what exactly are you trying to do here, as I am very confused.
 
-int pcim_enable_device(struct pci_dev *pdev)
-{
-        struct pci_devres *dr;
-        int rc;
+https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#m899d883c8a10d95959ac0cd2833762f93729b8ef
+Please see more details below.
 
-        dr = get_pci_dr(pdev);
-        if (unlikely(!dr))
-                return -ENOMEM;
-        if (dr->enabled)
-                return 0;
+>
+> > Another problem with this approach is addition of VFs, not only every
+> > driver will start to manage its own sysfs, but it will need to iterate
+> > over PCI bus or internal lists to find VFs, because we want to create
+> > .set_msix_vec on VFs after PF is bound.
+>
+> What?  I don't understand at all.
+>
+> > So instead of one, controlled place, we will find ourselves with many
+> > genius implementations of the same thing in the drivers.
+>
+> Same _what_ thing?
 
-        rc = pci_enable_device(pdev);
-        if (!rc) {
-                pdev->is_managed = 1;
-                dr->enabled = 1;
-        }
-        return rc;
-}
+This thread is part of conversation with Bjorn where he is looking for a
+way to avoid creation of sysfs files in the PCI/core.
+https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#madc000cf04b5246b450f7183a1d80abdf408a949
 
-BR,
-Dejin
+https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#Z2e.:..:20210209133445.700225-2-leon::40kernel.org:0drivers:pci:iov.c
 
-> > +
-> >  /*
-> >   * pcibios_add_device - provide arch specific hooks when adding device dev
-> >   * @dev: the PCI device being added
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 86c799c97b77..d75ba85ddfc5 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -1818,6 +1818,9 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-> >  					      NULL);
-> >  }
-> >  
-> > +int pcim_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-> > +				unsigned int max_vecs, unsigned int flags);
-> > +
-> 
-> static inline int pcim_alloc_irq_vectors(struct pci_dev *dev,
-> 	unsigned int min_vecs, unsigned int max_vecs, unsigned int flags)
-> {
-> 	if (!pci_is_managed(dev, min_vecs, max_vecs, flags))
-> 		return -EINVAL;
-> 
-> 	return pci_alloc_irq_vectors(dev, min_vecs, max_vecs, flags);
-> }
-> 
-> All those stub functions with EXPORT_SYMBOLS etc. could be dropped
-> then.
-> 
-> With some macro magic added a list of functions could easily being
-> created that are already managed but just need a pcim* counterpart.
-> 
-> -Robert
-> 
-> >  /* Include architecture-dependent settings and functions */
-> >  
-> >  #include <asm/pci.h>
-> > -- 
-> > 2.25.0
-> > 
+>
+> > Bjorn, we really do standard enable/disable flow with out overlay thing.
+>
+> Ok, can you step back and try to explain what problem you are trying to
+> solve first, before getting bogged down in odd details?  I find it
+> highly unlikely that this is something "unique", but I could be wrong as
+> I do not understand what you are wanting to do here at all.
+
+I don't know if you are familiar with SR-IOV concepts, if yes, just skip
+the following paragraph.
+
+SR-IOV capable devices have two types of their hardware functions which visible
+as PCI devices: physical functions (PF) and virtual functions (VF). Both types
+have PCI BDF and driver which probes them during initialization. The PF has extra
+properties and it is the one who creates (spawns) new VFs (everything according to
+he PCI-SIG).
+
+This series adds new sysfs files to the VFs which are not bound yet (without driver attached)
+while the PF driver is loaded. The change to VFs is needed to be done before their driver is
+loaded because MSI-X table vector size (the property which we are changing) is used very early
+in the initialization sequence.
+https://lore.kernel.org/linux-rdma/20210216203726.GH4247@nvidia.com/T/#m899d883c8a10d95959ac0cd2833762f93729b8ef
+
+We have two different flows for supported devices:
+1. PF starts and initiates VFs.
+2. PF starts and connects to already existing VFs.
+
+So there is nothing "unique" here, as long as this logic is handled by the PCI/core.
+
+Thanks
+
+>
+> thanks,
+>
+> greg k-h
