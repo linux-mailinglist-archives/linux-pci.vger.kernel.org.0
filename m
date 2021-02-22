@@ -2,398 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 241FB321150
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 08:20:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0472C32123B
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 09:48:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229863AbhBVHUz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Feb 2021 02:20:55 -0500
-Received: from lucky1.263xmail.com ([211.157.147.131]:46268 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbhBVHUy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Feb 2021 02:20:54 -0500
-Received: from localhost (unknown [192.168.167.32])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 2CCDAB7A43;
-        Mon, 22 Feb 2021 15:18:33 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from xxm-vm.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P27940T140460514129664S1613978310069861_;
-        Mon, 22 Feb 2021 15:18:32 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <fa12f2743453e366d2d0c8ad4503d3d4>
-X-RL-SENDER: xxm@rock-chips.com
-X-SENDER: xxm@rock-chips.com
-X-LOGIN-NAME: xxm@rock-chips.com
-X-FST-TO: bhelgaas@google.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-System-Flag: 0
-From:   Simon Xue <xxm@rock-chips.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Simon Xue <xxm@rock-chips.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v5 2/2] PCI: rockchip: Add DesignWare based PCIe controller
-Date:   Mon, 22 Feb 2021 15:18:28 +0800
-Message-Id: <20210222071828.30120-1-xxm@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210222071721.30062-1-xxm@rock-chips.com>
-References: <20210222071721.30062-1-xxm@rock-chips.com>
+        id S230072AbhBVIs2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Feb 2021 03:48:28 -0500
+Received: from mail-eopbgr690056.outbound.protection.outlook.com ([40.107.69.56]:30354
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230060AbhBVIs1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Feb 2021 03:48:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i17Hykr5ZyTrWA/hrxRvk39Trvsbp90ZcldmamKE2zgkm+lCaaPcV9BN+4fLMiXassPaN5jIpqT9h/oB8xenhdBAL27CTGCzdxybKDMH+eozQhggCsjV0YLE/ERsrXikv4LuNMiEIGBDYlWrC5AilIqDa+atp22vMJBO6XuxdNaZOfRgx3eFzmBnA5JQNPoOg/r8nNS3sMcF9y4ilrzY9UE955BvG7wyzm0G7nwF+I4NAXqg4VkI9HeBTB/1O3BwZ3WbryypkR2toKIT+7yGEKG+idlwAMQIbFLu/+9aa+xiAX+pUV8Nr+EneRwsaDV437rVDnC3e/EDfqrlD5wMhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mmLMXEyeKFpgCU/tGUHhLhmVXnLHKxoeOimHwef8gMY=;
+ b=Es9XNZHFeAsQL4TfMVQQzCp9/Z1gCbThnQUezqiAe1SFNTulgUuRWD7/1ZWDXSN2G6rxz8ai/jSuifdYhQJHaCJOAReESUGwsSBYmM7NhMPBlAjyVhkEe0N5h6y1H78JE1smbXwgkwYt1dWJyPNoRLiUO8M/qGi43xruYjzNA/0lzEGxeMbYH8B1BJ5gzK3H5hJd+sL567U4BXI0yuCsxRWywnzRiiYjz0wducupYbJxiKtfdZJoFOKa6lJ900iiKET/1pL7Smgfy06Oqn4nSz0PYGpT8PnvUA/U+KOxWU/Q3M6WWxVgg+gQP/vevFP/ZGNey7KyqICtZdBzcRuSzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mmLMXEyeKFpgCU/tGUHhLhmVXnLHKxoeOimHwef8gMY=;
+ b=FWDeP/gpZ9YsLPloy+fYgYjzC8mbgXdMAgmJ7nAp4BHNoSKG8Vve4A1e4dhgzchkYfrL+i9hTlBp2aBXcKpIjNHaQP2L2LeWmnW/pdVmGRcWmZ2aumDrbTx71hbAeEc1A+iyZExmNpaRaVKKfI0Dj8EHXnT/6GZIMyQEAqXERQg=
+Received: from DM5PR10CA0018.namprd10.prod.outlook.com (2603:10b6:4:2::28) by
+ DM6PR02MB6587.namprd02.prod.outlook.com (2603:10b6:5:220::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3868.32; Mon, 22 Feb 2021 08:47:37 +0000
+Received: from DM3NAM02FT010.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:4:2:cafe::f4) by DM5PR10CA0018.outlook.office365.com
+ (2603:10b6:4:2::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend
+ Transport; Mon, 22 Feb 2021 08:47:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT010.mail.protection.outlook.com (10.13.5.124) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3868.27 via Frontend Transport; Mon, 22 Feb 2021 08:47:37 +0000
+Received: from xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 22 Feb 2021 00:47:36 -0800
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server id
+ 15.1.1913.5 via Frontend Transport; Mon, 22 Feb 2021 00:47:36 -0800
+Envelope-to: bharat.kumar.gogada@xilinx.com,
+ linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ bhelgaas@google.com
+Received: from [10.140.9.2] (port=33774 helo=xhdbharatku40.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1lE6sR-0007zZ-S1; Mon, 22 Feb 2021 00:47:36 -0800
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <bhelgaas@google.com>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v3 1/2] PCI: xilinx-nwl: Enable coherent PCIe DMA traffic using CCI
+Date:   Mon, 22 Feb 2021 14:17:31 +0530
+Message-ID: <20210222084732.21521-1-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c96fbd61-02c4-497c-3f7e-08d8d70e8141
+X-MS-TrafficTypeDiagnostic: DM6PR02MB6587:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB658746D465E144826E1F5E96A5819@DM6PR02MB6587.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WUJuP3WUM+wayvysI2mFbot5mS+OJXCDtMk+ddNhPr6vuIO6T7uHAR1y/Nl3bWg31xxR2HEQqdcoxN0ciICL3onMabfXIYt+v73i3DgnBYZpJBtrGpsMRI/is6o0RPakicpURnNH3FoCYf4WN2WsxrXAw53ytVcmstnPG+cXQ8RMRcRIiGvpUGZzAqmVErKEj0DQXB4QwAZAl9XKOIMq+Z27VAWdiE1ETjNG6Qh1tou8fndeKs8tLoTI4p9Yi69rj2H4Mnbj2E5E5PtP7xhJROBCYC6/7T/QnaIHxFOWIhV1qdXShius8tMBv/hr+E9v4florQSPB8me9EYGUPFUnemw9qpEaDwh5MUHVxPTCkVdhqFzwY2WFqVdzwoYz3zFM9j7dNjSzwL1J7Xv6V+JxnhPFau2GpXxtzDSKojCtlFRsTS5sm29ZpPMDgHwv/1vksVrvRzdQ9wVBF8z340tuJplRuX/Yc1Y0vrn8riA98dLF1n0pur6Yz+Far/as+7Btdvytb70CaTrBl/e/X4wrDVdW0IV8AoRPOTC0lnq9kIK8Z3pzzD+FvtluSWjtjYaqvScQJTozm8ggykEjgFZQgYa6ionWhPoOuMizypP7jaYXqobtEH9l4A3z3LDgBw5JejCNk5ygB8UGcSPA4UUVCEPn0ukOv46HRIefxDtmQZzNucazcosUvedLXxOtzsZXBGRNZg4wKIf/gG/VdLxjD28O8BZ5U77REAKx3otuBN6T+mm1N2Xb4li3W36AZ7iGsuDNh0vPqWAdoL2Y5Qc9g==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(136003)(346002)(396003)(46966006)(36840700001)(82740400003)(356005)(478600001)(7636003)(47076005)(82310400003)(8676002)(26005)(8936002)(4326008)(6666004)(36756003)(54906003)(7696005)(103116003)(186003)(9786002)(110136005)(107886003)(966005)(5660300002)(2616005)(36860700001)(1076003)(336012)(70206006)(2906002)(426003)(70586007)(36906005)(316002)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2021 08:47:37.0076
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c96fbd61-02c4-497c-3f7e-08d8d70e8141
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT010.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6587
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add driver for DesignWare based PCIe controller found on RK356X.
-The already existed driver pcie-rockchip-host is only used for
-Rockchip designed IP found on RK3399.
+Add support for routing PCIe DMA traffic coherently when
+Cache Coherent Interconnect (CCI) is enabled in the system.
+The "dma-coherent" property is used to determine if CCI is enabled
+or not.
+Refer to https://developer.arm.com/documentation/ddi0470/k/preface
+for the CCI specification.
 
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 ---
- drivers/pci/controller/dwc/Kconfig            |  10 +
- drivers/pci/controller/dwc/Makefile           |   1 +
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 288 ++++++++++++++++++
- 3 files changed, 299 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+ drivers/pci/controller/pcie-xilinx-nwl.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 22c5529e9a65..159791775cc6 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -214,6 +214,16 @@ config PCIE_ARTPEC6_EP
- 	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
- 	  endpoint mode. This uses the DesignWare core.
+diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+index 07e36661bbc2..8689311c5ef6 100644
+--- a/drivers/pci/controller/pcie-xilinx-nwl.c
++++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+@@ -26,6 +26,7 @@
  
-+config PCIE_ROCKCHIP_DW_HOST
-+	bool "Rockchip DesignWare PCIe controller"
-+	select PCIE_DW
-+	select PCIE_DW_HOST
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
-+	depends on OF
-+	help
-+	  Enables support for the DesignWare PCIe controller in the
-+	  Rockchip SoC except RK3399.
+ /* Bridge core config registers */
+ #define BRCFG_PCIE_RX0			0x00000000
++#define BRCFG_PCIE_RX1			0x00000004
+ #define BRCFG_INTERRUPT			0x00000010
+ #define BRCFG_PCIE_RX_MSG_FILTER	0x00000020
+ 
+@@ -128,6 +129,7 @@
+ #define NWL_ECAM_VALUE_DEFAULT		12
+ 
+ #define CFG_DMA_REG_BAR			GENMASK(2, 0)
++#define CFG_PCIE_CACHE			GENMASK(7, 0)
+ 
+ #define INT_PCI_MSI_NR			(2 * 32)
+ 
+@@ -675,6 +677,11 @@ static int nwl_pcie_bridge_init(struct nwl_pcie *pcie)
+ 	nwl_bridge_writel(pcie, CFG_ENABLE_MSG_FILTER_MASK,
+ 			  BRCFG_PCIE_RX_MSG_FILTER);
+ 
++	/* This routes the PCIe DMA traffic to go through CCI path */
++	if (of_dma_is_coherent(dev->of_node))
++		nwl_bridge_writel(pcie, nwl_bridge_readl(pcie, BRCFG_PCIE_RX1) |
++				  CFG_PCIE_CACHE, BRCFG_PCIE_RX1);
 +
- config PCIE_INTEL_GW
- 	bool "Intel Gateway PCIe host controller support"
- 	depends on OF && (X86 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a751553fa0db..30eef8e9ee8a 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE_EP) += pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-+obj-$(CONFIG_PCIE_ROCKCHIP_DW_HOST) += pcie-dw-rockchip.o
- obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
- obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-new file mode 100644
-index 000000000000..f0c40f0a7480
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -0,0 +1,288 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe host controller driver for Rockchip SoCs.
-+ *
-+ * Copyright (C) 2021 Rockchip Electronics Co., Ltd.
-+ *		http://www.rock-chips.com
-+ *
-+ * Author: Simon Xue <xxm@rock-chips.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#include "pcie-designware.h"
-+
-+/*
-+ * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
-+ * mask for the lower 16 bits.
-+ */
-+#define HIWORD_UPDATE(mask, val) (((mask) << 16) | (val))
-+#define HIWORD_UPDATE_BIT(val)	HIWORD_UPDATE(val, val)
-+
-+#define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
-+
-+#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-+#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-+#define PCIE_SMLH_LINKUP		BIT(16)
-+#define PCIE_RDLH_LINKUP		BIT(17)
-+#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-+#define PCIE_L0S_ENTRY			0x11
-+#define PCIE_CLIENT_GENERAL_CONTROL	0x0
-+#define PCIE_CLIENT_GENERAL_DEBUG	0x104
-+#define PCIE_CLIENT_HOT_RESET_CTRL      0x180
-+#define PCIE_CLIENT_LTSSM_STATUS	0x300
-+#define PCIE_LTSSM_ENABLE_ENHANCE       BIT(4)
-+
-+struct rockchip_pcie {
-+	struct dw_pcie			pci;
-+	void __iomem			*apb_base;
-+	struct phy			*phy;
-+	struct clk_bulk_data		*clks;
-+	unsigned int			clk_cnt;
-+	struct reset_control		*rst;
-+	struct gpio_desc		*rst_gpio;
-+	struct regulator                *vpcie3v3;
-+};
-+
-+static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip,
-+					     u32 reg)
-+{
-+	return readl(rockchip->apb_base + reg);
-+}
-+
-+static void rockchip_pcie_writel_apb(struct rockchip_pcie *rockchip,
-+						u32 val, u32 reg)
-+{
-+	writel(val, rockchip->apb_base + reg);
-+}
-+
-+static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
-+{
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
-+				 PCIE_CLIENT_GENERAL_CONTROL);
-+}
-+
-+static int rockchip_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+	u32 val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_STATUS);
-+
-+	if ((val & (PCIE_RDLH_LINKUP | PCIE_SMLH_LINKUP)) == PCIE_LINKUP &&
-+	    (val & GENMASK(5, 0)) == PCIE_L0S_ENTRY)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+
-+	/* Reset device */
-+	gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
-+	msleep(100);
-+	gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
-+
-+	rockchip_pcie_enable_ltssm(rockchip);
-+
-+	return 0;
-+}
-+
-+static void rockchip_pcie_fast_link_setup(struct rockchip_pcie *rockchip)
-+{
-+	u32 val;
-+
-+	/* LTSSM enable control mode */
-+	val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_HOT_RESET_CTRL);
-+	val |= PCIE_LTSSM_ENABLE_ENHANCE | (PCIE_LTSSM_ENABLE_ENHANCE << 16);
-+	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-+}
-+
-+static int rockchip_pcie_host_init(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+
-+	rockchip_pcie_fast_link_setup(rockchip);
-+
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE,
-+				 PCIE_CLIENT_GENERAL_CONTROL);
-+
-+	return 0;
-+}
-+
-+static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
-+	.host_init = rockchip_pcie_host_init,
-+};
-+
-+static int rockchip_pcie_clk_init(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->pci.dev;
-+	int ret;
-+
-+	ret = devm_clk_bulk_get_all(dev, &rockchip->clks);
-+	if (ret < 0)
-+		return ret;
-+
-+	rockchip->clk_cnt = ret;
-+
-+	ret = clk_bulk_prepare_enable(rockchip->clk_cnt, rockchip->clks);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_resource_get(struct platform_device *pdev,
-+				      struct rockchip_pcie *rockchip)
-+{
-+	rockchip->apb_base = devm_platform_ioremap_resource_byname(pdev, "apb");
-+	if (IS_ERR(rockchip->apb_base))
-+		return PTR_ERR(rockchip->apb_base);
-+
-+	rockchip->rst_gpio = devm_gpiod_get_optional(&pdev->dev, "reset",
-+						     GPIOD_OUT_HIGH);
-+	if (IS_ERR(rockchip->rst_gpio))
-+		return PTR_ERR(rockchip->rst_gpio);
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->pci.dev;
-+	int ret;
-+
-+	rockchip->phy = devm_phy_get(dev, "pcie-phy");
-+	if (IS_ERR(rockchip->phy))
-+		return dev_err_probe(dev, PTR_ERR(rockchip->phy),
-+				     "missing PHY\n");
-+
-+	ret = phy_init(rockchip->phy);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_power_on(rockchip->phy);
-+	if (ret)
-+		phy_exit(rockchip->phy);
-+
-+	return ret;
-+}
-+
-+static void rockchip_pcie_phy_deinit(struct rockchip_pcie *rockchip)
-+{
-+	phy_exit(rockchip->phy);
-+	phy_power_off(rockchip->phy);
-+}
-+
-+static int rockchip_pcie_reset_control_release(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->pci.dev;
-+	int ret;
-+
-+	rockchip->rst = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR(rockchip->rst))
-+		return dev_err_probe(dev, PTR_ERR(rockchip->rst),
-+				     "failed to get reset lines\n");
-+
-+	ret = reset_control_deassert(rockchip->rst);
-+
-+	return ret;
-+}
-+
-+static const struct dw_pcie_ops dw_pcie_ops = {
-+	.link_up = rockchip_pcie_link_up,
-+	.start_link = rockchip_pcie_start_link,
-+};
-+
-+static int rockchip_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rockchip_pcie *rockchip;
-+	struct pcie_port *pp;
-+	int ret;
-+
-+	rockchip = devm_kzalloc(dev, sizeof(*rockchip), GFP_KERNEL);
-+	if (!rockchip)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, rockchip);
-+
-+	rockchip->pci.dev = dev;
-+	rockchip->pci.ops = &dw_pcie_ops;
-+
-+	pp = &rockchip->pci.pp;
-+	pp->ops = &rockchip_pcie_host_ops;
-+
-+	ret = rockchip_pcie_resource_get(pdev, rockchip);
-+	if (ret)
-+		return ret;
-+
-+	/* DON'T MOVE ME: must be enable before PHY init */
-+	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
-+	if (IS_ERR(rockchip->vpcie3v3))
-+		return dev_err_probe(dev, PTR_ERR(rockchip->rst),
-+				     "failed to get vpcie3v3 regulator\n");
-+
-+	if (rockchip->vpcie3v3) {
-+		ret = regulator_enable(rockchip->vpcie3v3);
-+		if (ret) {
-+			dev_err(dev, "failed to enable vpcie3v3 regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	ret = rockchip_pcie_phy_init(rockchip);
-+	if (ret)
-+		goto disable_regulator;
-+
-+	ret = rockchip_pcie_reset_control_release(rockchip);
-+	if (ret)
-+		goto deinit_phy;
-+
-+	ret = rockchip_pcie_clk_init(rockchip);
-+	if (ret)
-+		goto deinit_phy;
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret)
-+		goto deinit_clk;
-+
-+	return 0;
-+
-+deinit_clk:
-+	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-+deinit_phy:
-+	rockchip_pcie_phy_deinit(rockchip);
-+disable_regulator:
-+	if (rockchip->vpcie3v3)
-+		regulator_disable(rockchip->vpcie3v3);
-+
-+	return ret;
-+}
-+
-+MODULE_DEVICE_TABLE(of, rockchip_pcie_of_match);
-+
-+static const struct of_device_id rockchip_pcie_of_match[] = {
-+	{ .compatible = "rockchip,rk3568-pcie", },
-+	{},
-+};
-+
-+static struct platform_driver rockchip_pcie_driver = {
-+	.driver = {
-+		.name	= "rockchip-dw-pcie",
-+		.of_match_table = rockchip_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = rockchip_pcie_probe,
-+};
-+
-+builtin_platform_driver(rockchip_pcie_driver);
+ 	err = nwl_wait_for_link(pcie);
+ 	if (err)
+ 		return err;
 -- 
-2.25.1
-
-
+2.17.1
 
