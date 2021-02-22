@@ -2,137 +2,96 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC9D32154E
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 12:43:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEDDC321B25
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 16:18:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230214AbhBVLmk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Feb 2021 06:42:40 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60602 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230375AbhBVLmb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Feb 2021 06:42:31 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 11MBelgK012592;
-        Mon, 22 Feb 2021 05:40:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1613994047;
-        bh=nleILobfMKrszZKPLki70KC/+TSFlp8Thy//aVVnqQ8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ogDe6+kFgPit6OqfNMQZbNHDEVQ6xyutHVgouQMw+eZ+yZ4LV+liqYFa9+roIegfD
-         euHevik/TgkF19DW3e6L2P4N0yqso77AapXrPSJqCpSFhDTAH7nxmeEk0+mbNIQtC3
-         flS5+5vrSYC42YheyQyqKCjUmjKvdY6NPedk1SY4=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 11MBel63126196
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Feb 2021 05:40:47 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 22
- Feb 2021 05:40:47 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 22 Feb 2021 05:40:47 -0600
-Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 11MBeVjq105473;
-        Mon, 22 Feb 2021 05:40:44 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v3 4/4] PCI: j721e: Add support to provide refclk to PCIe connector
-Date:   Mon, 22 Feb 2021 17:10:30 +0530
-Message-ID: <20210222114030.26445-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210222114030.26445-1-kishon@ti.com>
-References: <20210222114030.26445-1-kishon@ti.com>
+        id S231354AbhBVPRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Feb 2021 10:17:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231404AbhBVPPX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Feb 2021 10:15:23 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B34C061574;
+        Mon, 22 Feb 2021 07:14:19 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id e17so58914240ljl.8;
+        Mon, 22 Feb 2021 07:14:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hq2/gvw9RtoaQB1TB4erX0u+6dSXoT0qR4ybLmvRHog=;
+        b=J8ZPYlqPoWUSAZrJqGyUKqmxz97aSVUyQh0z+7l0YNAJ8roetNbI3bgQBXY2VWxHCI
+         9GtXreYDeWnhC47FBlDciZpwVy8ZhkW5iHFmO6geR05L76gllbnp/oQWkRjP4sEbvUKr
+         nFBcl7D+6ixsqOnjGvLi7p5zGnzPhkUpK7Ojvnoe0u+ugdn6eo7aIRiuzbSlKlAtK6XY
+         UaqEKxcvUhc0PsQpFTmqmGAu522CbIkOcBp8BTsPLC5GOdRlO+RxMUMbh6JjiFmKfvc7
+         6o2qaU2j48cgs3RqaxvtiXOpB20mlaqnJ4gEkCO8X/0OCDPEr3uTKJsL91igY4ET1WXL
+         nabQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hq2/gvw9RtoaQB1TB4erX0u+6dSXoT0qR4ybLmvRHog=;
+        b=Eef+H+OOhtjog13moESnyMZkY4ZXxlxac+z2S6PBYbaHzJxzY6nTpxuNBEo1zSmR3T
+         p/kWHFgvMWLNYG1gbbcnCumKR2UjpbCJkp1gQ0fjr4fohWidngWIf7k/TZ3szolWd20O
+         /uePLciJ1zAr+15cLxFq/65+wWdO3eKmXpNv3aXZDGs+vxPfZZ22s6DnwjQ21tPjeKiD
+         LSQOBCAxRo2m9Rlkw0XPNTiItXjdSo5+70iE1I6MNy0LRHOd8Zn4MZ7XnUy65YyLK5hC
+         3h32SbMa68nBvEPeSc/TLyyeP914f9wqa0p/XgRLwlGj/5tmCb1tSqK4QcIWLLAZn1pB
+         Jasw==
+X-Gm-Message-State: AOAM530lTiUfZ5GaVdcIplpsHoNWuJ6aeZ0lzMXC+v53Zg5zJh0BBJTB
+        5NFQ5US7YnQBLdKoE/u4yNw=
+X-Google-Smtp-Source: ABdhPJyVoh2nz4TTvTVYRiKOXHcdcmJ0zW4Zt6T3Rif/FkAR+cNVhnQKSr3OUx9SH3ib6N50kFfXPQ==
+X-Received: by 2002:a05:651c:338:: with SMTP id b24mr14177795ljp.157.1614006858048;
+        Mon, 22 Feb 2021 07:14:18 -0800 (PST)
+Received: from localhost ([104.193.8.209])
+        by smtp.gmail.com with ESMTPSA id x6sm734695lfn.114.2021.02.22.07.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Feb 2021 07:14:17 -0800 (PST)
+Date:   Mon, 22 Feb 2021 23:14:15 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Robert Richter <rric@kernel.org>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <20210222151415.GA896979@nuc8i5>
+References: <20210218150458.798347-1-zhengdejin5@gmail.com>
+ <20210218150458.798347-2-zhengdejin5@gmail.com>
+ <YC/NxfsQn2RKkrp8@rric.localdomain>
+ <20210219164649.GA814637@nuc8i5>
+ <YDONyMSHO9FDeY69@rric.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YDONyMSHO9FDeY69@rric.localdomain>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to provide refclk to PCIe connector.
+On Mon, Feb 22, 2021 at 11:56:08AM +0100, Robert Richter wrote:
+> On 20.02.21 00:46:49, Dejin Zheng wrote:
+> > > On 18.02.21 23:04:55, Dejin Zheng wrote:
+> 
+> > > > +	if (!dr || !dr->enabled)
+> > here checks whether the pci device is enabled.
+> 
+> What is the purpose of this? The device "is_managed" or not.
+>
+The device is managed or not by check whether "dr" is NULL. And
+check the "dr->enabled" is for the PCI device enable. I think it
+may not make sense to apply for irq vectors when PCI device is not
+enabled.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+PCI device enable by call pci_enable_device() function, this function
+initialize device before it's used by a driver. Ask low-level code
+to enable I/O and memory. Wake up the device if it was suspended.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index dac1ac8a7615..f99af98ab7d1 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -6,6 +6,7 @@
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-+#include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -50,6 +51,7 @@ enum link_status {
- 
- struct j721e_pcie {
- 	struct device		*dev;
-+	struct clk		*refclk;
- 	u32			mode;
- 	u32			num_lanes;
- 	struct cdns_pcie	*cdns_pcie;
-@@ -310,6 +312,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 	struct cdns_pcie_ep *ep;
- 	struct gpio_desc *gpiod;
- 	void __iomem *base;
-+	struct clk *clk;
- 	u32 num_lanes;
- 	u32 mode;
- 	int ret;
-@@ -408,6 +411,19 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 			goto err_get_sync;
- 		}
- 
-+		clk = devm_clk_get_optional(dev, "pcie_refclk");
-+		if (IS_ERR(clk)) {
-+			dev_err(dev, "failed to get pcie_refclk\n");
-+			goto err_pcie_setup;
-+		}
-+
-+		ret = clk_prepare_enable(clk);
-+		if (ret) {
-+			dev_err(dev, "failed to enable pcie_refclk\n");
-+			goto err_get_sync;
-+		}
-+		pcie->refclk = clk;
-+
- 		/*
- 		 * "Power Sequencing and Reset Signal Timings" table in
- 		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-@@ -422,8 +438,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		}
- 
- 		ret = cdns_pcie_host_setup(rc);
--		if (ret < 0)
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
- 			goto err_pcie_setup;
-+		}
- 
- 		break;
- 	case PCI_MODE_EP:
-@@ -476,6 +494,7 @@ static int j721e_pcie_remove(struct platform_device *pdev)
- 	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
- 	struct device *dev = &pdev->dev;
- 
-+	clk_disable_unprepare(pcie->refclk);
- 	cdns_pcie_disable_phy(cdns_pcie);
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
--- 
-2.17.1
+So I think it might be better to return to failure when it is found
+the PCI device is not enabled in the pcim_alloc_irq_vectors() function.
+It can facilitate developers to find problems as soon as possible.
 
+BR,
+Dejin
+> -Robert
