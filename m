@@ -2,85 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D79FE320EFD
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 02:21:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6A1F320F69
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 03:29:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbhBVBSD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 21 Feb 2021 20:18:03 -0500
-Received: from mga12.intel.com ([192.55.52.136]:16866 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229866AbhBVBSC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 21 Feb 2021 20:18:02 -0500
-IronPort-SDR: Qz7k2j+NlNLcH4GnGFlVWDa2N3t/MSSYQjCjV6SFxUC8jBQmHzvq+0sbf5ARdB5PZzBK7Ogd7a
- xQLADd5mTcsA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9902"; a="163508221"
-X-IronPort-AV: E=Sophos;i="5.81,195,1610438400"; 
-   d="scan'208";a="163508221"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2021 17:17:21 -0800
-IronPort-SDR: JpFBsS5FfOtqOFdx+oG2MqSRlAKrfPDQZuqavKtqDBP2U4jHQxyeNfH8C0hRVM/qtk6pJ8xthC
- crHysZ/sVJqw==
-X-IronPort-AV: E=Sophos;i="5.81,195,1610438400"; 
-   d="scan'208";a="402317241"
-Received: from qiuxu-lab.sh.intel.com ([10.239.53.1])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2021 17:17:18 -0800
-From:   Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        id S231633AbhBVC3m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 21 Feb 2021 21:29:42 -0500
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:33556 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229895AbhBVC3k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Feb 2021 21:29:40 -0500
+Received: by mail-wr1-f41.google.com with SMTP id 7so17471138wrz.0;
+        Sun, 21 Feb 2021 18:29:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YuSXhHVkvdpvKkmvEHEbBP8ABWSLjzYRJOtjdQKRU14=;
+        b=aB7e+LFOc50DTj2misfyZJ5PjHZkqMS0lhA1EgE0dmtoj+ZmaQi/KNclsBnhtBuAk+
+         O4ShelMRUD9N6ZFjH2Y6eQbog7nntFuSp7kaFStGRBHHUcECPhHTPhTm5ipw9Voizvun
+         9bkDxXaUMfLYFG5mWUqeee2sj3+b90dUWIRVFu4I2HGHzMJtlnucsKHxHWBIyLpdov6Z
+         7mRtU0OGi7hSGtXSKAHb4G05NmbwRcvY3S5SnxM8oVLJvkv9j/v+eNUttp535UonayVn
+         W9kOa03HiesV/I0vCvW9ryiA4yoAixhBCO4dAR08nWXQmKSjhUWaZj1JJ/EagoIFUz+g
+         Tx6g==
+X-Gm-Message-State: AOAM530fO1sMXtOGSmbf48SCDjbkH/xyJYSWgHy6X9HM84HC1ykx8OBg
+        6zvjBn31n0syly5wOaqDotQ=
+X-Google-Smtp-Source: ABdhPJzjkMmOUD3BxfW4ijeEEW5ctadh2zzf9bje2PH+jq4NNLhgJ+ZUZ+b3mX/y8o+Xqi+FhyiN3Q==
+X-Received: by 2002:adf:8bd2:: with SMTP id w18mr19479969wra.204.1613960938470;
+        Sun, 21 Feb 2021 18:28:58 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id o14sm25602426wri.48.2021.02.21.18.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Feb 2021 18:28:57 -0800 (PST)
+Date:   Mon, 22 Feb 2021 03:28:56 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Simon Xue <xxm@rock-chips.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, "Jin, Wen" <wen.jin@intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC association
-Date:   Mon, 22 Feb 2021 09:17:17 +0800
-Message-Id: <20210222011717.43266-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <4a0bf3a852ed47deb072890319fb39ec@intel.com>
-References: <4a0bf3a852ed47deb072890319fb39ec@intel.com>
+        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        Johan Jonker <jbx6244@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v4 2/2] PCI: rockchip: add DesignWare based PCIe
+ controller
+Message-ID: <YDMW6OmnnrIgt1RR@rocinante>
+References: <20210127022406.820975-1-xxm@rock-chips.com>
+ <20210127022519.821025-1-xxm@rock-chips.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210127022519.821025-1-xxm@rock-chips.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Function rcec_assoc_rciep() incorrectly used "rciep->devfn" (a single
-byte encoding the device and function number) as the device number to
-check whether the corresponding bit was set in the RCiEPBitmap of the
-RCEC (Root Complex Event Collector) while enumerating over each bit of
-the RCiEPBitmap.
+Hi Simon,
 
-As per the PCI Express Base Specification, Revision 5.0, Version 1.0,
-Section 7.9.10.2, "Association Bitmap for RCiEPs", p. 935, only needs to
-use a device number to check whether the corresponding bit was set in
-the RCiEPBitmap.
+The subject should start with a capital letter.
 
-Fix rcec_assoc_rciep() using the PCI_SLOT() macro and convert the value
-of "rciep->devfn" to a device number to ensure that the RCiEP devices
-associated with the RCEC are linked when the RCEC is enumerated.
+[...]
+> pcie-dw-rockchip is based on DWC IP. But pcie-rockchip-host
+> is Rockchip designed IP which is only used for RK3399. So all the following
+> non-RK3399 SoCs should use this driver.
 
-Fixes: 507b460f8144 ("PCI/ERR: Add pcie_link_rcec() to associate RCiEPs")
-Reported-and-tested-by: Wen Jin <wen.jin@intel.com>
-Reviewed-by: Sean V Kelley <sean.v.kelley@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
-v2->v3:
- Drop "[ Krzysztof: Update commit message. ]" from the commit message
+You might need to wrap the long line in the above.
 
- drivers/pci/pcie/rcec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The commit message above could use some polish in terms of wording and
+adding more context - what are you adding, what is this driver going to
+support.  For example, what are the "all the following" SoCs?  Should
+there be a list?  Or did you mean "all the other (...)", etc.
 
-diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
-index 2c5c552994e4..d0bcd141ac9c 100644
---- a/drivers/pci/pcie/rcec.c
-+++ b/drivers/pci/pcie/rcec.c
-@@ -32,7 +32,7 @@ static bool rcec_assoc_rciep(struct pci_dev *rcec, struct pci_dev *rciep)
- 
- 	/* Same bus, so check bitmap */
- 	for_each_set_bit(devn, &bitmap, 32)
--		if (devn == rciep->devfn)
-+		if (devn == PCI_SLOT(rciep->devfn))
- 			return true;
- 
- 	return false;
--- 
-2.17.1
+[...]
+> +config PCIE_ROCKCHIP_DW_HOST
+> +	bool "Rockchip DesignWare PCIe controller"
+> +	select PCIE_DW
+> +	select PCIE_DW_HOST
+> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
+> +	depends on OF
+> +	help
+> +	  Enables support for the DW PCIe controller in the Rockchip SoC.
 
+Perhaps replacing "DW" with "DesignWare" would be better.  Also, do you
+want to mention here - for the sake of the future user - that this not
+intended to support RK3399 as per the commit message.
+
+[...]
+> +/*
+> + * PCIe host controller driver for Rockchip SoCs
+
+A nitpick.  Missing period at the end of the sentence.
+
+[...]
+> +static int rockchip_pcie_link_up(struct dw_pcie *pci)
+> +{
+> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> +	u32 val = rockchip_pcie_readl_apb(rockchip, PCIE_CLIENT_LTSSM_STATUS);
+> +
+> +	if ((val & (PCIE_RDLH_LINKUP | PCIE_SMLH_LINKUP)) == 0x30000 &&
+[...]
+
+A suggestion.  Would it make sense to add a definition for this
+open-coded value of 0x30000 above?
+
+> +static void rockchip_pcie_fast_link_setup(struct rockchip_pcie *rockchip)
+> +{
+> +	u32 val;
+> +
+> +	/* LTSSM EN ctrl mode */
+[...]
+
+Does this comment above stands for "LTSSM enable control mode"?
+
+> +static int rockchip_pcie_phy_init(struct rockchip_pcie *rockchip)
+> +{
+> +	int ret;
+> +	struct device *dev = rockchip->pci.dev;
+
+These two variables should swap place to keep order of use, and to match
+how it has been done everywhere else in this drivers.
+
+> +
+> +	rockchip->phy = devm_phy_get(dev, "pcie-phy");
+> +	if (IS_ERR(rockchip->phy))
+> +		return dev_err_probe(dev, PTR_ERR(rockchip->phy),
+> +				     "missing phy\n");
+
+I would be "PHY" here.
+
+> +	ret = phy_init(rockchip->phy);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	phy_power_on(rockchip->phy);
+[...]
+
+We should probably check phy_power_on() for a possible failure.  Some
+platforms also clean up on a failure from phy_init() and phy_power_on(),
+but I am not sure if this particular platform would require anything.
+
+[...]
+> +	/* DON'T MOVE ME: must be enable before phy init */
+
+It would be "PHY" here.
+
+> +	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
+> +	if (IS_ERR(rockchip->vpcie3v3))
+> +		return dev_err_probe(dev, PTR_ERR(rockchip->rst),
+> +				     "failed to get vpcie3v3 regulator\n");
+> +
+> +	if (rockchip->vpcie3v3) {
+> +		ret = regulator_enable(rockchip->vpcie3v3);
+> +		if (ret) {
+> +			dev_err(dev, "fail to enable vpcie3v3 regulator\n");
+
+It would be "failed" here.
+
+[...]
+> +static const struct of_device_id rockchip_pcie_of_match[] = {
+> +	{ .compatible = "rockchip,rk3568-pcie", },
+> +	{ /* sentinel */ },
+> +};
+
+We could probably drop the comment about the "sentinel" from the above.
+
+Krzysztof
