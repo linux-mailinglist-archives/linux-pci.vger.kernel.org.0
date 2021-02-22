@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 926B8320EA7
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 01:12:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7919320EB4
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 01:25:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229983AbhBVAMa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 21 Feb 2021 19:12:30 -0500
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:34906 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbhBVAM3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Feb 2021 19:12:29 -0500
-Received: by mail-lj1-f178.google.com with SMTP id a17so53178935ljq.2;
-        Sun, 21 Feb 2021 16:12:11 -0800 (PST)
+        id S230019AbhBVAZ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 21 Feb 2021 19:25:26 -0500
+Received: from mail-lj1-f172.google.com ([209.85.208.172]:38568 "EHLO
+        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229998AbhBVAZY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 21 Feb 2021 19:25:24 -0500
+Received: by mail-lj1-f172.google.com with SMTP id e8so14365799ljj.5
+        for <linux-pci@vger.kernel.org>; Sun, 21 Feb 2021 16:25:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=iAV4QBzD8PGsRdJ/UfZ3CXI2nHgklw5SFON490rbnhA=;
-        b=o0clzOs8k8xRQDtUS2dx/xJEHx9p0HCPbd2odOLAASQ45PputusYrx70X2Pz6RvRSd
-         w+br0zH5erotXXUOH5d8PEv4Q41BzoYzl7SXVDL59WdVjNWpJYe5AMh5qBM88g3jlGG2
-         zLZqEZ7oMtu7UmHcYNkkkFOgc9ZBBSCm/G1WlHRjM9hLosjaKGIToJTS+SAWqd3LaJM1
-         TiX0CE4zq61nCG7sWcDMh6Yp29u9fwJKaYbeGb0x1q0G67ccEtYKn7gBqqos/yM9ptuK
-         9BtmKKtK+NwarlYE3lDNdvoe+7OnSXOieb6LDRixjmu4TVf8HW+vZESFRw5D8MMMQKXW
-         Nhhw==
-X-Gm-Message-State: AOAM5303X3vnM8snYBjY25gyMd0EjkHn3AKvaKB7O8GDzXJvUaXFLihb
-        W3UC0k8QIlHy0o8Nt72dWl8=
-X-Google-Smtp-Source: ABdhPJzA6jsVAcee2KhqjJLnDSkFdh5FNVoXBAEGcc63jkoFjzBcIF3MFjeGkWfCo9NLtYA1tcU1UA==
-X-Received: by 2002:a05:651c:2001:: with SMTP id s1mr13318496ljo.181.1613952705461;
-        Sun, 21 Feb 2021 16:11:45 -0800 (PST)
+        bh=9/W5vqXLuXygQbp7Hfjhi2yf9xNJ/W2qyUcwlafWXcg=;
+        b=LE0etKqsnGKU+PxdKMM3MephYv1jOepnhZMDU1S08E8RuT1bu7XPyGYGLiP2k0xlAp
+         Nw3qRMJraNiPl7qGxKmV2SzUwidWT0b+0zI4rb8a/cnrUTCismRpUf+l93GRgUbYBXva
+         nxHwIRJPiRMvgTeds28iIofy/lo+vqUte8FWb98qVoOCX8Vl8SJqX1qruXDZuVp2A7ap
+         dawsQ0WYXORSC6h4SDeKmdHk14owkG3u335JAXEdnMaBHmsRq+CEazzdIz6L8LSIjMyB
+         ZUnAWTFHFq5zMaqNYc6G8ymxxhfCuYM0gq0ohidogx9EqJ8vk3GZIQoDBvqZwVSzK2PG
+         oE1Q==
+X-Gm-Message-State: AOAM532s8HIbo/MCMw6v35/zFFtVV1+bY/ckOmfwZJufchN6WWESsy8M
+        CeLX1J3OC6WPMiWFJXUFpw4J4FvBKp3WPw==
+X-Google-Smtp-Source: ABdhPJxus68CwgPG4T6MWq54NBDNsO7K2R0UMnvzfGqH9se8c/2+oskit5dGN+QT57NT9f2knHRX/g==
+X-Received: by 2002:a2e:b012:: with SMTP id y18mr5144563ljk.466.1613953479946;
+        Sun, 21 Feb 2021 16:24:39 -0800 (PST)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id w6sm606166lfn.136.2021.02.21.16.11.43
+        by smtp.gmail.com with ESMTPSA id 194sm1710400lfo.263.2021.02.21.16.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Feb 2021 16:11:44 -0800 (PST)
+        Sun, 21 Feb 2021 16:24:39 -0800 (PST)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Borislav Petkov <bp@alien8.de>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Colin Ian King <colin.king@canonical.com>,
-        Myron Stowe <myron.stowe@redhat.com>, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-net-drivers@solarflare.com,
+        Myron Stowe <myron.stowe@redhat.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2] PCI: Convert enum pci_dev_flags to bit fields in struct pci_dev
-Date:   Mon, 22 Feb 2021 00:11:43 +0000
-Message-Id: <20210222001143.2200687-1-kw@linux.com>
+Subject: [PATCH v2] PCI: Convert enum pci_bus_flags to bit fields in struct pci_bus
+Date:   Mon, 22 Feb 2021 00:24:38 +0000
+Message-Id: <20210222002438.2209091-1-kw@linux.com>
 X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -57,421 +57,300 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-All the flags defined in the enum pci_dev_flags are used to determine
-whether a particular feature of an underlying PCI device should be used
-or not - features are also often disabled via a device-specific quirk.
+All the flags defined in the enum pci_bus_flags are used to determine
+whether a particular feature of a PCI bus is available or not - features
+are also often disabled via architecture or device-specific quirk.
 
-These flags are tightly coupled with a PCI device and primarily used in
-simple binary on/off manner to check whether something is enabled or
-disabled, and have almost no other users (aside of two network drivers)
-outside of the PCI device drivers space.
+These flags are tightly coupled with a PCI buses and PCI bridges and
+primarily used in simple binary on/off manner to check whether something
+is enabled or disabled, and have almost no other users (with an
+exception of the x86 architecture-specific quirk) outside of the PCI
+device drivers space.
 
-Therefore, convert enum pci_dev_flags into a set of bit fields in the
-struct pci_dev, and then drop said enum and the typedef pci_dev_flags_t.
+Therefore, convert enum pci_bus_flags into a set of bit fields in the
+struct pci_bus, and then drop said enum and the typedef pci_bus_flags_t.
 
 This will keep PCI device-specific features as part of the struct
 pci_dev and make the code that used to use flags simpler.
 
 Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-Acked-by: Martin Habets <mhabets@solarflare.com>
 ---
 Changes in v2:
-  Added missing "PCI" prefix to the subject.
-  Rebased against kernel 5.11 resolving conflicts with the following:
-    - drivers/pci/pci.c
-    - include/linux/pci.h
-  Added Martin's "Acked-by" for drivers/net/ethernet/sfc/ef10_sriov.c.
+  Rebased against kernel 5.11.
 
- drivers/net/ethernet/atheros/alx/main.c |  2 +-
- drivers/net/ethernet/sfc/ef10_sriov.c   |  3 +-
- drivers/pci/msi.c                       |  2 +-
- drivers/pci/pci.c                       | 23 ++++++------
- drivers/pci/probe.c                     |  2 +-
- drivers/pci/quirks.c                    | 24 ++++++-------
- drivers/pci/search.c                    |  4 +--
- drivers/pci/vpd.c                       |  4 +--
- include/linux/pci.h                     | 47 +++++++++----------------
- 9 files changed, 48 insertions(+), 63 deletions(-)
+ arch/x86/pci/fixup.c    |  6 +++---
+ drivers/pci/msi.c       |  8 ++++----
+ drivers/pci/pci-sysfs.c | 14 ++++++--------
+ drivers/pci/pci.c       |  2 +-
+ drivers/pci/pcie/aer.c  |  5 ++---
+ drivers/pci/probe.c     | 13 +++++++++----
+ drivers/pci/quirks.c    | 16 ++++++++--------
+ include/linux/pci.h     | 20 ++++++++++----------
+ 8 files changed, 43 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index 9b7f1af5f574..c52669f8ec26 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1763,7 +1763,7 @@ static int alx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	netdev->watchdog_timeo = ALX_WATCHDOG_TIME;
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index 0a0e168be1cb..a43316ced8ab 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -641,14 +641,14 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x8c10, quirk_apple_mbp_poweroff);
+  * ID, the AER driver should traverse the child device tree, reading
+  * AER registers to find the faulting device.
+  */
+-static void quirk_no_aersid(struct pci_dev *pdev)
++static void quirk_no_aer_sid(struct pci_dev *pdev)
+ {
+ 	/* VMD Domain */
+ 	if (is_vmd(pdev->bus) && pci_is_root_bus(pdev->bus))
+-		pdev->bus->bus_flags |= PCI_BUS_FLAGS_NO_AERSID;
++		pdev->bus->no_aer_sid = 1;
+ }
+ DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
+-			      PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid);
++			      PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aer_sid);
  
- 	if (ent->driver_data & ALX_DEV_QUIRK_MSI_INTX_DISABLE_BUG)
--		pdev->dev_flags |= PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG;
-+		pdev->msi_intx_disabled = 1;
- 
- 	err = alx_init_sw(alx);
- 	if (err) {
-diff --git a/drivers/net/ethernet/sfc/ef10_sriov.c b/drivers/net/ethernet/sfc/ef10_sriov.c
-index 21fa6c0e8873..9af7e11ea113 100644
---- a/drivers/net/ethernet/sfc/ef10_sriov.c
-+++ b/drivers/net/ethernet/sfc/ef10_sriov.c
-@@ -122,8 +122,7 @@ static void efx_ef10_sriov_free_vf_vports(struct efx_nic *efx)
- 		struct ef10_vf *vf = nic_data->vf + i;
- 
- 		/* If VF is assigned, do not free the vport  */
--		if (vf->pci_dev &&
--		    vf->pci_dev->dev_flags & PCI_DEV_FLAGS_ASSIGNED)
-+		if (vf->pci_dev && vf->pci_dev->flags_assigned)
- 			continue;
- 
- 		if (vf->vport_assigned) {
+ static void quirk_intel_th_dnv(struct pci_dev *dev)
+ {
 diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-index 3162f88fe940..e66a11a1d9f1 100644
+index 3162f88fe940..134ddf20bde8 100644
 --- a/drivers/pci/msi.c
 +++ b/drivers/pci/msi.c
-@@ -408,7 +408,7 @@ static void free_msi_irqs(struct pci_dev *dev)
- 
- static void pci_intx_for_msi(struct pci_dev *dev, int enable)
- {
--	if (!(dev->dev_flags & PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG))
-+	if (!dev->msi_intx_disabled)
- 		pci_intx(dev, enable);
- }
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 790393d1e318..7ba09819f224 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1327,7 +1327,7 @@ int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	 * This device is quirked not to be put into D3, so don't put it in
- 	 * D3
- 	 */
--	if (state >= PCI_D3hot && (dev->dev_flags & PCI_DEV_FLAGS_NO_D3))
-+	if (state >= PCI_D3hot && dev->no_d3)
- 		return 0;
+@@ -899,13 +899,13 @@ static int pci_msi_supported(struct pci_dev *dev, int nvec)
  
  	/*
-@@ -4572,7 +4572,7 @@ bool pcie_has_flr(struct pci_dev *dev)
- {
- 	u32 cap;
+ 	 * Any bridge which does NOT route MSI transactions from its
+-	 * secondary bus to its primary bus must set NO_MSI flag on
+-	 * the secondary pci_bus.
++	 * secondary bus to its primary bus must enable "no_msi" on
++	 * the secondary bus (pci_bus).
+ 	 * We expect only arch-specific PCI host bus controller driver
+-	 * or quirks for specific PCI bridges to be setting NO_MSI.
++	 * or quirks for specific PCI bridges to enable "no_msi".
+ 	 */
+ 	for (bus = dev->bus; bus; bus = bus->parent)
+-		if (bus->bus_flags & PCI_BUS_FLAGS_NO_MSI)
++		if (bus->no_msi)
+ 			return 0;
  
--	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-+	if (dev->no_flr_reset)
- 		return false;
+ 	return 1;
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index fb072f4b3176..414727551660 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -366,9 +366,7 @@ static ssize_t msi_bus_show(struct device *dev, struct device_attribute *attr,
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct pci_bus *subordinate = pdev->subordinate;
  
- 	pcie_capability_read_dword(dev, PCI_EXP_DEVCAP, &cap);
-@@ -4618,7 +4618,7 @@ static int pci_af_flr(struct pci_dev *dev, int probe)
- 	if (!pos)
- 		return -ENOTTY;
+-	return sprintf(buf, "%u\n", subordinate ?
+-		       !(subordinate->bus_flags & PCI_BUS_FLAGS_NO_MSI)
+-			   : !pdev->no_msi);
++	return sprintf(buf, "%u\n", subordinate ? !subordinate->no_msi : !pdev->no_msi);
+ }
  
--	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-+	if (dev->no_flr_reset)
- 		return -ENOTTY;
+ static ssize_t msi_bus_store(struct device *dev, struct device_attribute *attr,
+@@ -385,9 +383,9 @@ static ssize_t msi_bus_store(struct device *dev, struct device_attribute *attr,
+ 		return -EPERM;
  
- 	pci_read_config_byte(dev, pos + PCI_AF_CAP, &cap);
-@@ -4672,7 +4672,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
- {
- 	u16 csr;
- 
--	if (!dev->pm_cap || dev->dev_flags & PCI_DEV_FLAGS_NO_PM_RESET)
-+	if (!dev->pm_cap || dev->no_pm_reset)
- 		return -ENOTTY;
- 
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &csr);
-@@ -4933,7 +4933,7 @@ static int pci_parent_bus_reset(struct pci_dev *dev, int probe)
- 	struct pci_dev *pdev;
- 
- 	if (pci_is_root_bus(dev->bus) || dev->subordinate ||
--	    !dev->bus->self || dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
-+	    !dev->bus->self || dev->no_bus_reset)
- 		return -ENOTTY;
- 
- 	list_for_each_entry(pdev, &dev->bus->devices, bus_list)
-@@ -4963,8 +4963,8 @@ static int pci_reset_hotplug_slot(struct hotplug_slot *hotplug, int probe)
- 
- static int pci_dev_reset_slot_function(struct pci_dev *dev, int probe)
- {
--	if (dev->multifunction || dev->subordinate || !dev->slot ||
--	    dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET)
-+	if (dev->multifunction || dev->subordinate ||
-+	    !dev->slot || dev->no_bus_reset)
- 		return -ENOTTY;
- 
- 	return pci_reset_hotplug_slot(dev->slot->hotplug, probe);
-@@ -5232,11 +5232,11 @@ static bool pci_bus_resetable(struct pci_bus *bus)
- 	struct pci_dev *dev;
- 
- 
--	if (bus->self && (bus->self->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET))
-+	if (bus->self && bus->self->no_bus_reset)
- 		return false;
- 
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
--		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
-+		if (dev->no_bus_reset ||
- 		    (dev->subordinate && !pci_bus_resetable(dev->subordinate)))
- 			return false;
+ 	/*
+-	 * "no_msi" and "bus_flags" only affect what happens when a driver
+-	 * requests MSI or MSI-X.  They don't affect any drivers that have
+-	 * already requested MSI or MSI-X.
++	 * "no_msi" enabled for device and bus only affect what happens
++	 * when a driver requests MSI or MSI-X.  They don't affect any
++	 * drivers that have already requested MSI or MSI-X.
+ 	 */
+ 	if (!subordinate) {
+ 		pdev->no_msi = !val;
+@@ -397,9 +395,9 @@ static ssize_t msi_bus_store(struct device *dev, struct device_attribute *attr,
  	}
-@@ -5299,14 +5299,13 @@ static bool pci_slot_resetable(struct pci_slot *slot)
- {
- 	struct pci_dev *dev;
  
--	if (slot->bus->self &&
--	    (slot->bus->self->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET))
-+	if (slot->bus->self && slot->bus->self->no_bus_reset)
- 		return false;
+ 	if (val)
+-		subordinate->bus_flags &= ~PCI_BUS_FLAGS_NO_MSI;
++		subordinate->no_msi = 0;
+ 	else
+-		subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
++		subordinate->no_msi = 1;
  
- 	list_for_each_entry(dev, &slot->bus->devices, bus_list) {
- 		if (!dev->slot || dev->slot != slot)
- 			continue;
--		if (dev->dev_flags & PCI_DEV_FLAGS_NO_BUS_RESET ||
-+		if (dev->no_bus_reset ||
- 		    (dev->subordinate && !pci_bus_resetable(dev->subordinate)))
- 			return false;
- 	}
+ 	dev_info(&subordinate->dev, "MSI/MSI-X %s for future drivers of devices on this bus\n",
+ 		 val ? "allowed" : "disallowed");
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 790393d1e318..803c2c7b0808 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5694,7 +5694,7 @@ int pcix_set_mmrbc(struct pci_dev *dev, int mmrbc)
+ 
+ 	o = (cmd & PCI_X_CMD_MAX_READ) >> 2;
+ 	if (o != v) {
+-		if (v > o && (dev->bus->bus_flags & PCI_BUS_FLAGS_NO_MMRBC))
++		if (v > o && dev->bus->no_mmrbc)
+ 			return -EIO;
+ 
+ 		cmd &= ~PCI_X_CMD_MAX_READ;
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 77b0f2c45bc0..b164d6df720f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -829,8 +829,7 @@ static bool is_error_source(struct pci_dev *dev, struct aer_err_info *e_info)
+ 	 * When bus id is equal to 0, it might be a bad id
+ 	 * reported by root port.
+ 	 */
+-	if ((PCI_BUS_NUM(e_info->id) != 0) &&
+-	    !(dev->bus->bus_flags & PCI_BUS_FLAGS_NO_AERSID)) {
++	if (PCI_BUS_NUM(e_info->id) != 0 && !dev->bus->no_aer_sid) {
+ 		/* Device ID match? */
+ 		if (e_info->id == ((dev->bus->number << 8) | dev->devfn))
+ 			return true;
+@@ -844,7 +843,7 @@ static bool is_error_source(struct pci_dev *dev, struct aer_err_info *e_info)
+ 	 * When either
+ 	 *      1) bus id is equal to 0. Some ports might lose the bus
+ 	 *              id of error source id;
+-	 *      2) bus flag PCI_BUS_FLAGS_NO_AERSID is set
++	 *      2) bus has "no_aer_sid" enabled
+ 	 *      3) There are multiple errors and prior ID comparing fails;
+ 	 * We check AER status registers to find possible reporter.
+ 	 */
 diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 953f15abc850..71f97bac4776 100644
+index 953f15abc850..081e130d1cbd 100644
 --- a/drivers/pci/probe.c
 +++ b/drivers/pci/probe.c
-@@ -2086,7 +2086,7 @@ static void pci_configure_relaxed_ordering(struct pci_dev *dev)
- 	if (!root)
- 		return;
+@@ -1009,7 +1009,7 @@ static bool pci_bridge_child_ext_cfg_accessible(struct pci_dev *bridge)
+ 	 * If extended config space isn't accessible on a bridge's primary
+ 	 * bus, we certainly can't access it on the secondary bus.
+ 	 */
+-	if (bridge->bus->bus_flags & PCI_BUS_FLAGS_NO_EXTCFG)
++	if (bridge->bus->no_ext_cfg)
+ 		return false;
  
--	if (root->dev_flags & PCI_DEV_FLAGS_NO_RELAXED_ORDERING) {
-+	if (root->no_relaxed_ordering) {
- 		pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
- 					   PCI_EXP_DEVCTL_RELAX_EN);
- 		pci_info(dev, "Relaxed Ordering disabled because the Root Port didn't support it\n");
+ 	/*
+@@ -1055,7 +1055,12 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 	child->parent = parent;
+ 	child->msi = parent->msi;
+ 	child->sysdata = parent->sysdata;
+-	child->bus_flags = parent->bus_flags;
++
++	/* PCI bus flags */
++	child->no_msi = parent->no_msi;
++	child->no_mmrbc = parent->no_mmrbc;
++	child->no_aer_sid = parent->no_aer_sid;
++	child->no_ext_cfg = parent->no_ext_cfg;
+ 
+ 	host = pci_find_host_bridge(parent);
+ 	if (host->child_ops)
+@@ -1092,7 +1097,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 	 * the root bus.
+ 	 */
+ 	if (!pci_bridge_child_ext_cfg_accessible(bridge)) {
+-		child->bus_flags |= PCI_BUS_FLAGS_NO_EXTCFG;
++		child->no_ext_cfg = 1;
+ 		pci_info(child, "extended config space not accessible\n");
+ 	}
+ 
+@@ -1657,7 +1662,7 @@ int pci_cfg_space_size(struct pci_dev *dev)
+ 		return PCI_CFG_SPACE_EXP_SIZE;
+ #endif
+ 
+-	if (dev->bus->bus_flags & PCI_BUS_FLAGS_NO_EXTCFG)
++	if (dev->bus->no_ext_cfg)
+ 		return PCI_CFG_SPACE_SIZE;
+ 
+ 	class = dev->class >> 8;
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 653660e3ba9e..33bc774e372d 100644
+index 653660e3ba9e..134ca3bca916 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -1341,7 +1341,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82801CA_10, qui
- /* Some ATA devices break if put into D3 */
- static void quirk_no_ata_d3(struct pci_dev *pdev)
- {
--	pdev->dev_flags |= PCI_DEV_FLAGS_NO_D3;
-+	pdev->no_d3 = 1;
- }
- /* Quirk the legacy ATA devices only. The AHCI ones are ok */
- DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_SERVERWORKS, PCI_ANY_ID,
-@@ -2963,7 +2963,7 @@ DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID, nv_msi_ht_cap_q
- 
- static void quirk_msi_intx_disable_bug(struct pci_dev *dev)
- {
--	dev->dev_flags |= PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG;
-+	dev->msi_intx_disabled = 1;
- }
- 
- static void quirk_msi_intx_disable_ati_bug(struct pci_dev *dev)
-@@ -2981,7 +2981,7 @@ static void quirk_msi_intx_disable_ati_bug(struct pci_dev *dev)
- 		return;
- 
- 	if ((p->revision < 0x3B) && (p->revision >= 0x30))
--		dev->dev_flags |= PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG;
-+		dev->msi_intx_disabled = 1;
- 	pci_dev_put(p);
- }
- 
-@@ -2990,7 +2990,7 @@ static void quirk_msi_intx_disable_qca_bug(struct pci_dev *dev)
- 	/* AR816X/AR817X/E210X MSI is fixed at HW level from revision 0x18 */
- 	if (dev->revision < 0x18) {
- 		pci_info(dev, "set MSI_INTX_DISABLE_BUG flag\n");
--		dev->dev_flags |= PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG;
-+		dev->msi_intx_disabled = 1;
+@@ -1052,7 +1052,7 @@ static void quirk_amd_8131_mmrbc(struct pci_dev *dev)
+ 	if (dev->subordinate && dev->revision <= 0x12) {
+ 		pci_info(dev, "AMD8131 rev %x detected; disabling PCI-X MMRBC\n",
+ 			 dev->revision);
+-		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MMRBC;
++		dev->subordinate->no_mmrbc = 1;
  	}
  }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_BROADCOM,
-@@ -3555,7 +3555,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MELLANOX, PCI_ANY_ID,
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_8131_BRIDGE, quirk_amd_8131_mmrbc);
+@@ -2503,10 +2503,10 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82875_HB,
  
- static void quirk_no_bus_reset(struct pci_dev *dev)
- {
--	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
-+	dev->no_bus_reset = 1;
- }
- 
+ #ifdef CONFIG_PCI_MSI
  /*
-@@ -3585,7 +3585,7 @@ static void quirk_no_pm_reset(struct pci_dev *dev)
- 	 * PM reset may be better than nothing.
- 	 */
- 	if (!pci_is_root_bus(dev->bus))
--		dev->dev_flags |= PCI_DEV_FLAGS_NO_PM_RESET;
-+		dev->no_pm_reset = 1;
- }
- 
- /*
-@@ -4071,7 +4071,7 @@ static void quirk_use_pcie_bridge_dma_alias(struct pci_dev *pdev)
- 	    pdev->hdr_type == PCI_HEADER_TYPE_BRIDGE &&
- 	    !pci_is_pcie(pdev) && pci_is_pcie(pdev->bus->self) &&
- 	    pci_pcie_type(pdev->bus->self) != PCI_EXP_TYPE_PCI_BRIDGE)
--		pdev->dev_flags |= PCI_DEV_FLAG_PCIE_BRIDGE_ALIAS;
-+		pdev->pcie_bridge_alias = 1;
- }
- /* ASM1083/1085, https://bugzilla.kernel.org/show_bug.cgi?id=44881#c46 */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ASMEDIA, 0x1080,
-@@ -4136,7 +4136,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x295A, quirk_pex_vca_alias);
+- * Some chipsets do not support MSI. We cannot easily rely on setting
+- * PCI_BUS_FLAGS_NO_MSI in its bus flags because there are actually some
+- * other buses controlled by the chipset even if Linux is not aware of it.
+- * Instead of setting the flag on all buses in the machine, simply disable
++ * Some chipsets do not support MSI. We cannot easily rely on enabling
++ * "no_msi" for its bus because there are actually some other buses
++ * controlled by the chipset even if Linux is not aware of it. Instead
++ * of enabling "no_msi" on all buses in the machine, simply disable
+  * MSI globally.
   */
- static void quirk_bridge_cavm_thrx2_pcie_root(struct pci_dev *pdev)
+ static void quirk_disable_all_msi(struct pci_dev *dev)
+@@ -2529,7 +2529,7 @@ static void quirk_disable_msi(struct pci_dev *dev)
  {
--	pdev->dev_flags |= PCI_DEV_FLAGS_BRIDGE_XLATE_ROOT;
-+	pdev->bridge_xlate_root = 1;
+ 	if (dev->subordinate) {
+ 		pci_warn(dev, "MSI quirk detected; subordinate MSI disabled\n");
+-		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
++		dev->subordinate->no_msi = 1;
+ 	}
  }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_BROADCOM, 0x9000,
- 				quirk_bridge_cavm_thrx2_pcie_root);
-@@ -4172,7 +4172,7 @@ DECLARE_PCI_FIXUP_CLASS_EARLY(0x1797, 0x6869, PCI_CLASS_NOT_DEFINED, 8,
-  */
- static void quirk_relaxedordering_disable(struct pci_dev *dev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_8131_BRIDGE, quirk_disable_msi);
+@@ -2587,7 +2587,7 @@ static void quirk_msi_ht_cap(struct pci_dev *dev)
  {
--	dev->dev_flags |= PCI_DEV_FLAGS_NO_RELAXED_ORDERING;
-+	dev->no_relaxed_ordering = 1;
- 	pci_info(dev, "Disable Relaxed Ordering Attributes to avoid PCIe Completion erratum\n");
+ 	if (dev->subordinate && !msi_ht_cap_enabled(dev)) {
+ 		pci_warn(dev, "MSI quirk detected; subordinate MSI disabled\n");
+-		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
++		dev->subordinate->no_msi = 1;
+ 	}
  }
- 
-@@ -4504,7 +4504,7 @@ static int pci_quirk_intel_pch_acs(struct pci_dev *dev, u16 acs_flags)
- 	if (!pci_quirk_intel_pch_acs_match(dev))
- 		return -ENOTTY;
- 
--	if (dev->dev_flags & PCI_DEV_FLAGS_ACS_ENABLED_QUIRK)
-+	if (dev->acs_quirk_enabled)
- 		return pci_acs_ctrl_enabled(acs_flags,
- 			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- 
-@@ -4915,7 +4915,7 @@ static int pci_quirk_enable_intel_pch_acs(struct pci_dev *dev)
- 
- 	pci_quirk_enable_intel_rp_mpc_acs(dev);
- 
--	dev->dev_flags |= PCI_DEV_FLAGS_ACS_ENABLED_QUIRK;
-+	dev->acs_quirk_enabled = 1;
- 
- 	pci_info(dev, "Intel PCH root port ACS workaround enabled\n");
- 
-@@ -5128,7 +5128,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  */
- static void quirk_no_flr(struct pci_dev *dev)
- {
--	dev->dev_flags |= PCI_DEV_FLAGS_NO_FLR_RESET;
-+	dev->no_flr_reset = 1;
- }
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x1487, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x148c, quirk_no_flr);
-diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-index 2061672954ee..b26b12e2cc3f 100644
---- a/drivers/pci/search.c
-+++ b/drivers/pci/search.c
-@@ -67,7 +67,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
- 		tmp = bus->self;
- 
- 		/* stop at bridge where translation unit is associated */
--		if (tmp->dev_flags & PCI_DEV_FLAGS_BRIDGE_XLATE_ROOT)
-+		if (tmp->bridge_xlate_root)
- 			return ret;
- 
- 		/*
-@@ -99,7 +99,7 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
- 				continue;
- 			}
- 		} else {
--			if (tmp->dev_flags & PCI_DEV_FLAG_PCIE_BRIDGE_ALIAS)
-+			if (tmp->pcie_bridge_alias)
- 				ret = fn(tmp,
- 					 PCI_DEVID(tmp->subordinate->number,
- 						   PCI_DEVFN(0, 0)), data);
-diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
-index 7915d10f9aa1..5c4366362bd7 100644
---- a/drivers/pci/vpd.c
-+++ b/drivers/pci/vpd.c
-@@ -380,7 +380,7 @@ int pci_vpd_init(struct pci_dev *dev)
- 		return -ENOMEM;
- 
- 	vpd->len = PCI_VPD_MAX_SIZE;
--	if (dev->dev_flags & PCI_DEV_FLAGS_VPD_REF_F0)
-+	if (dev->pci_vpd_f0)
- 		vpd->ops = &pci_vpd_f0_ops;
- 	else
- 		vpd->ops = &pci_vpd_ops;
-@@ -536,7 +536,7 @@ static void quirk_f0_vpd_link(struct pci_dev *dev)
- 
- 	if (f0->vpd && dev->class == f0->class &&
- 	    dev->vendor == f0->vendor && dev->device == f0->device)
--		dev->dev_flags |= PCI_DEV_FLAGS_VPD_REF_F0;
-+		dev->pci_vpd_f0 = 1;
- 
- 	pci_dev_put(f0);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_SERVERWORKS, PCI_DEVICE_ID_SERVERWORKS_HT2000_PCIE,
+@@ -2613,7 +2613,7 @@ static void quirk_nvidia_ck804_msi_ht_cap(struct pci_dev *dev)
+ 		return;
+ 	if (!msi_ht_cap_enabled(dev) && !msi_ht_cap_enabled(pdev)) {
+ 		pci_warn(dev, "MSI quirk detected; subordinate MSI disabled\n");
+-		dev->subordinate->bus_flags |= PCI_BUS_FLAGS_NO_MSI;
++		dev->subordinate->no_msi = 1;
+ 	}
+ 	pci_dev_put(pdev);
  }
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index b32126d26997..aee4658989f7 100644
+index b32126d26997..f4c6cb618c0a 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -203,32 +203,6 @@ enum pcie_reset_state {
- 	pcie_hot_reset = (__force pcie_reset_state_t) 3
+@@ -234,14 +234,6 @@ enum pci_irq_reroute_variant {
+ 	MAX_IRQ_REROUTE_VARIANTS = 3
  };
  
--typedef unsigned short __bitwise pci_dev_flags_t;
--enum pci_dev_flags {
--	/* INTX_DISABLE in PCI_COMMAND register disables MSI too */
--	PCI_DEV_FLAGS_MSI_INTX_DISABLE_BUG = (__force pci_dev_flags_t) (1 << 0),
--	/* Device configuration is irrevocably lost if disabled into D3 */
--	PCI_DEV_FLAGS_NO_D3 = (__force pci_dev_flags_t) (1 << 1),
--	/* Provide indication device is assigned by a Virtual Machine Manager */
--	PCI_DEV_FLAGS_ASSIGNED = (__force pci_dev_flags_t) (1 << 2),
--	/* Flag for quirk use to store if quirk-specific ACS is enabled */
--	PCI_DEV_FLAGS_ACS_ENABLED_QUIRK = (__force pci_dev_flags_t) (1 << 3),
--	/* Use a PCIe-to-PCI bridge alias even if !pci_is_pcie */
--	PCI_DEV_FLAG_PCIE_BRIDGE_ALIAS = (__force pci_dev_flags_t) (1 << 5),
--	/* Do not use bus resets for device */
--	PCI_DEV_FLAGS_NO_BUS_RESET = (__force pci_dev_flags_t) (1 << 6),
--	/* Do not use PM reset even if device advertises NoSoftRst- */
--	PCI_DEV_FLAGS_NO_PM_RESET = (__force pci_dev_flags_t) (1 << 7),
--	/* Get VPD from function 0 VPD */
--	PCI_DEV_FLAGS_VPD_REF_F0 = (__force pci_dev_flags_t) (1 << 8),
--	/* A non-root bridge where translation occurs, stop alias search here */
--	PCI_DEV_FLAGS_BRIDGE_XLATE_ROOT = (__force pci_dev_flags_t) (1 << 9),
--	/* Do not use FLR even if device advertises PCI_AF_CAP */
--	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
--	/* Don't use Relaxed Ordering for TLPs directed at this device */
--	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+-typedef unsigned short __bitwise pci_bus_flags_t;
+-enum pci_bus_flags {
+-	PCI_BUS_FLAGS_NO_MSI	= (__force pci_bus_flags_t) 1,
+-	PCI_BUS_FLAGS_NO_MMRBC	= (__force pci_bus_flags_t) 2,
+-	PCI_BUS_FLAGS_NO_AERSID	= (__force pci_bus_flags_t) 4,
+-	PCI_BUS_FLAGS_NO_EXTCFG	= (__force pci_bus_flags_t) 8,
 -};
 -
- enum pci_irq_reroute_variant {
- 	INTEL_IRQ_REROUTE_VARIANT = 1,
- 	MAX_IRQ_REROUTE_VARIANTS = 3
-@@ -453,7 +427,20 @@ struct pci_dev {
- 	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
- 	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
- 	unsigned int	no_command_memory:1;	/* No PCI_COMMAND_MEMORY */
--	pci_dev_flags_t dev_flags;
-+
-+	/* PCI device flags */
-+	unsigned int	flags_assigned:1;	/* Provide indication device is assigned by a Virtual Machine Manager */
-+	unsigned int	msi_intx_disabled:1;	/* INTX_DISABLE in PCI_COMMAND register disables MSI too */
-+	unsigned int	acs_quirk_enabled:1;	/* Flag for quirk use to store if quirk-specific ACS is enabled */
-+	unsigned int	no_d3:1;		/* Device configuration is irrevocably lost if disabled into D3 */
-+	unsigned int	no_bus_reset:1;		/* Don't use bus resets for device */
-+	unsigned int	no_pm_reset:1;		/* Don't use PM reset even if device advertises NoSoftRst- */
-+	unsigned int	no_flr_reset:1;		/* Don't use FLR even if device advertises PCI_AF_CAP */
-+	unsigned int	no_relaxed_ordering:1;	/* Don't use Relaxed Ordering for TLPs directed at this device */
-+	unsigned int	pcie_bridge_alias:1;	/* Use a PCIe-to-PCI bridge alias even if !pci_is_pcie */
-+	unsigned int	bridge_xlate_root:1;	/* A non-root bridge where translation occurs, stop alias search here */
-+	unsigned int	pci_vpd_f0:1;		/* Get VPD from function 0 VPD */
-+
- 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+ /* Values from Link Status register, PCIe r3.1, sec 7.8.8 */
+ enum pcie_link_width {
+ 	PCIE_LNK_WIDTH_RESRV	= 0x00,
+@@ -636,12 +628,20 @@ struct pci_bus {
+ 	char		name[48];
  
- 	u32		saved_config_space[16]; /* Config space saved at suspend time */
-@@ -2354,15 +2341,15 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
- /* Helper functions for operation of device flag */
- static inline void pci_set_dev_assigned(struct pci_dev *pdev)
- {
--	pdev->dev_flags |= PCI_DEV_FLAGS_ASSIGNED;
-+	pdev->flags_assigned = 1;
- }
- static inline void pci_clear_dev_assigned(struct pci_dev *pdev)
- {
--	pdev->dev_flags &= ~PCI_DEV_FLAGS_ASSIGNED;
-+	pdev->flags_assigned = 0;
- }
- static inline bool pci_is_dev_assigned(struct pci_dev *pdev)
- {
--	return (pdev->dev_flags & PCI_DEV_FLAGS_ASSIGNED) == PCI_DEV_FLAGS_ASSIGNED;
-+	return !!pdev->flags_assigned;
- }
+ 	unsigned short	bridge_ctl;	/* Manage NO_ISA/FBB/et al behaviors */
+-	pci_bus_flags_t bus_flags;	/* Inherited by child buses */
+ 	struct device		*bridge;
+ 	struct device		dev;
+ 	struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
+ 	struct bin_attribute	*legacy_mem;	/* Legacy mem */
+-	unsigned int		is_added:1;
++	unsigned int		is_added:1;	/* This bus has already been registered */
++
++	/* PCI bus flags are inherited by child buses */
++	unsigned int		no_msi:1;	/* Don't use MSI/MSI-X for devices behind a bridge that does not route
++						   MSI transactions from its secondary bus to its primary bus */
++	unsigned int		no_mmrbc:1;	/* Disallow setting PCI-X Maximum Memory Read Byte Count on this bus */
++	unsigned int		no_aer_sid:1;	/* Allow Root Port buses to skip the AER source ID matching when finding
++						   the faulting device */
++	unsigned int		no_ext_cfg:1;	/* Don't use PCIe/PCI-X Mode 2 Extended Configuration Space
++						   when it isn't available on bridge's primary bus */
+ };
  
- /**
+ #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
 -- 
 2.30.0
 
