@@ -2,96 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDDC321B25
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 16:18:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CBDF321BCF
+	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 16:48:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbhBVPRN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Feb 2021 10:17:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231404AbhBVPPX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Feb 2021 10:15:23 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B34C061574;
-        Mon, 22 Feb 2021 07:14:19 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id e17so58914240ljl.8;
-        Mon, 22 Feb 2021 07:14:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hq2/gvw9RtoaQB1TB4erX0u+6dSXoT0qR4ybLmvRHog=;
-        b=J8ZPYlqPoWUSAZrJqGyUKqmxz97aSVUyQh0z+7l0YNAJ8roetNbI3bgQBXY2VWxHCI
-         9GtXreYDeWnhC47FBlDciZpwVy8ZhkW5iHFmO6geR05L76gllbnp/oQWkRjP4sEbvUKr
-         nFBcl7D+6ixsqOnjGvLi7p5zGnzPhkUpK7Ojvnoe0u+ugdn6eo7aIRiuzbSlKlAtK6XY
-         UaqEKxcvUhc0PsQpFTmqmGAu522CbIkOcBp8BTsPLC5GOdRlO+RxMUMbh6JjiFmKfvc7
-         6o2qaU2j48cgs3RqaxvtiXOpB20mlaqnJ4gEkCO8X/0OCDPEr3uTKJsL91igY4ET1WXL
-         nabQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hq2/gvw9RtoaQB1TB4erX0u+6dSXoT0qR4ybLmvRHog=;
-        b=Eef+H+OOhtjog13moESnyMZkY4ZXxlxac+z2S6PBYbaHzJxzY6nTpxuNBEo1zSmR3T
-         p/kWHFgvMWLNYG1gbbcnCumKR2UjpbCJkp1gQ0fjr4fohWidngWIf7k/TZ3szolWd20O
-         /uePLciJ1zAr+15cLxFq/65+wWdO3eKmXpNv3aXZDGs+vxPfZZ22s6DnwjQ21tPjeKiD
-         LSQOBCAxRo2m9Rlkw0XPNTiItXjdSo5+70iE1I6MNy0LRHOd8Zn4MZ7XnUy65YyLK5hC
-         3h32SbMa68nBvEPeSc/TLyyeP914f9wqa0p/XgRLwlGj/5tmCb1tSqK4QcIWLLAZn1pB
-         Jasw==
-X-Gm-Message-State: AOAM530lTiUfZ5GaVdcIplpsHoNWuJ6aeZ0lzMXC+v53Zg5zJh0BBJTB
-        5NFQ5US7YnQBLdKoE/u4yNw=
-X-Google-Smtp-Source: ABdhPJyVoh2nz4TTvTVYRiKOXHcdcmJ0zW4Zt6T3Rif/FkAR+cNVhnQKSr3OUx9SH3ib6N50kFfXPQ==
-X-Received: by 2002:a05:651c:338:: with SMTP id b24mr14177795ljp.157.1614006858048;
-        Mon, 22 Feb 2021 07:14:18 -0800 (PST)
-Received: from localhost ([104.193.8.209])
-        by smtp.gmail.com with ESMTPSA id x6sm734695lfn.114.2021.02.22.07.14.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Feb 2021 07:14:17 -0800 (PST)
-Date:   Mon, 22 Feb 2021 23:14:15 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Robert Richter <rric@kernel.org>
-Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
-        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] PCI: Introduce pcim_alloc_irq_vectors()
-Message-ID: <20210222151415.GA896979@nuc8i5>
-References: <20210218150458.798347-1-zhengdejin5@gmail.com>
- <20210218150458.798347-2-zhengdejin5@gmail.com>
- <YC/NxfsQn2RKkrp8@rric.localdomain>
- <20210219164649.GA814637@nuc8i5>
- <YDONyMSHO9FDeY69@rric.localdomain>
+        id S231276AbhBVPsM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Feb 2021 10:48:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55658 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231500AbhBVPsH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Feb 2021 10:48:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DA433AD73;
+        Mon, 22 Feb 2021 15:47:23 +0000 (UTC)
+Message-ID: <c188698ca0de3ed6c56a0cf7880e1578aa753077.camel@suse.de>
+Subject: RPi4 can't deal with 64 bit PCI accesses
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-pci <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Robin Murphy <robin.murphy@arm.con>
+Date:   Mon, 22 Feb 2021 16:47:22 +0100
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-2vObhEbCJZFrLJMv1iYe"
+User-Agent: Evolution 3.38.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YDONyMSHO9FDeY69@rric.localdomain>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 22, 2021 at 11:56:08AM +0100, Robert Richter wrote:
-> On 20.02.21 00:46:49, Dejin Zheng wrote:
-> > > On 18.02.21 23:04:55, Dejin Zheng wrote:
-> 
-> > > > +	if (!dr || !dr->enabled)
-> > here checks whether the pci device is enabled.
-> 
-> What is the purpose of this? The device "is_managed" or not.
->
-The device is managed or not by check whether "dr" is NULL. And
-check the "dr->enabled" is for the PCI device enable. I think it
-may not make sense to apply for irq vectors when PCI device is not
-enabled.
 
-PCI device enable by call pci_enable_device() function, this function
-initialize device before it's used by a driver. Ask low-level code
-to enable I/O and memory. Wake up the device if it was suspended.
+--=-2vObhEbCJZFrLJMv1iYe
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-So I think it might be better to return to failure when it is found
-the PCI device is not enabled in the pcim_alloc_irq_vectors() function.
-It can facilitate developers to find problems as soon as possible.
+Hi everyone,
+Raspberry Pi 4, a 64bit arm system on chip, contains a PCIe bus that can't
+handle 64bit accesses to its MMIO address space, in other words, writeq() h=
+as
+to be split into two distinct writel() operations. This isn't ideal, as it
+misrepresents PCI's promise of being able to treat device memory as regular
+memory, ultimately breaking a bunch of PCI device drivers[1].
 
-BR,
-Dejin
-> -Robert
+I'd like to have a go at fixing this in a way that can be distributed in a
+generic distro without prejudice to other users.
+
+AFAIK there is no way to detect this limitation through generic PCIe
+capabilities, so one solution would be to expose it through firmware
+(devicetree in this case), and pass the limitations through 'struct device'=
+ so
+as for the drivers to choose the right access method in a way that doesn't
+affect performance much[2]. All in all, most of this doesn't need to be
+PCI-centric as the property could be applied to any MMIO bus.
+
+Thoughts? Opinions? Is it overkill just for a single SoC?
+
+Regards,
+Nicolas
+
+[1] https://github.com/raspberrypi/linux/issues/4158#issuecomment-782351510
+[2] Things might get even weirder as the order in which the 32bit operation=
+s
+    are performed might matter (low/high vs high/low).
+
+
+--=-2vObhEbCJZFrLJMv1iYe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAmAz0goACgkQlfZmHno8
+x/51WAf+P4m0o3Zf4MyAwnKhuvCKj1FZALj/AdsWETPKfnW0w+kzUentV+8JAqQ9
+isR5mzRZTQ2650jCgSKHotdAeizmj5aVRjcp7e8crzOSd/QHcUo+CdLX4JObp22P
+/KdbwttMLn5GkbDhQ3shBY/TQS52YXTjigdTIDrOhfqVgqBeP0rlZFCYDT2fM0L0
+QNU9wbpx6ybgFhJWjPX0NeZfbGl64ZMJBEb3hYWklIqKV2Ut9cbQ/a+P69AG3VZv
+D0l4w5ix5Ee5BJT9xYT6yqBlAUvnszm346MF8hKY8aMZHGnIHheFl2UddOUUmhI4
+WrxqeVOw9A3zLOJEfC4xrq4dgYTQ6g==
+=hCqg
+-----END PGP SIGNATURE-----
+
+--=-2vObhEbCJZFrLJMv1iYe--
+
