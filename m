@@ -2,71 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ACE3321E9B
-	for <lists+linux-pci@lfdr.de>; Mon, 22 Feb 2021 18:58:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47F1B3223A3
+	for <lists+linux-pci@lfdr.de>; Tue, 23 Feb 2021 02:24:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231857AbhBVR4z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 Feb 2021 12:56:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231843AbhBVR4p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 Feb 2021 12:56:45 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7368FC061574;
-        Mon, 22 Feb 2021 09:56:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pRxdkKM/shNOUrE0VDWVoit+UMzavwHlgZAAJDI4xN4=; b=UujCKQ+crZxVjqrN529v5vjJu
-        IKFneIJxGPv1feg6Hp0PTYC+iM7qla7kLEpYu2UIxbSqMpHW0+QjhfxBpfVrkY5lAjpieUVl+/LfA
-        8BmGqA22/5iUStJTFvT7acmbmsj4PxopuYW1Rqj9ztayoiVAR1w0BRcxvlE48eFuACp/crdzXR3Jm
-        8IXnXtIWmhXHos6KnV1x7dmYMTGMhTCRBiw7a5hSTYphslwkU4+ISXPTDZcFYHku4gwrB8zW7V8Bj
-        7w8k1h8EvrUr96EWUm/RAc8Ntbkc7vsB2LxNQy13In9lyz8vb2GyuJhIKru5Tx8s4iIepepI4dwXP
-        CwTFYFc4g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46562)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1lEFR0-0006dz-Qy; Mon, 22 Feb 2021 17:55:50 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1lEFQz-0002Kn-Vb; Mon, 22 Feb 2021 17:55:50 +0000
-Date:   Mon, 22 Feb 2021 17:55:49 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Robin Murphy <robin.murphy@arm.con>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
-Subject: Re: RPi4 can't deal with 64 bit PCI accesses
-Message-ID: <20210222175549.GO1463@shell.armlinux.org.uk>
-References: <c188698ca0de3ed6c56a0cf7880e1578aa753077.camel@suse.de>
+        id S230446AbhBWBX5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 Feb 2021 20:23:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230380AbhBWBXI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 22 Feb 2021 20:23:08 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A8BC86023B;
+        Tue, 23 Feb 2021 01:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614043347;
+        bh=QyNsljerVpDiDO+K9/ltiFTkhVqcxc/0Ay2CXZ1z8vI=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=qT9uEWGJgqYzpURFhCR6u+Wbw6bbsJzfvEpXt+qOvRpZBeHHsRUnipN3HQHDDB3E3
+         gCjXrJz0oOmy8eLfkAtbzisTgVdrdP8aPT65rPgULTDiPO+qGgU3kXayVSCi7szBX/
+         MfxWKKRGZmJ1Y0ya3KFks5fDwYLPA+LP36j6egOWcx+zZZlUCQVI7We8WcL7pgLfTc
+         aFyNR7YKXv/dZO9DLIrqsrZIWF99Xag6MDO0N1HuYflfFdk0rqJHeOrj3VhyML8MHz
+         tVChYYBBryvSqBDuB2Mo5J/NvyYzT12d/wTuwUUZX0GTHVvNU/omP5eYzJ827lYJXw
+         ABjqJ4JGM8RZA==
+Date:   Mon, 22 Feb 2021 17:22:24 -0800 (PST)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+cc:     Christoph Hellwig <hch@lst.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>, jgross@suse.com,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, nouveau@lists.freedesktop.org,
+        x86@kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        akpm@linux-foundation.org, benh@kernel.crashing.org,
+        bskeggs@redhat.com, bhelgaas@google.com, bp@alien8.de,
+        chris@chris-wilson.co.uk, daniel@ffwll.ch, airlied@linux.ie,
+        hpa@zytor.com, mingo@kernel.org, mingo@redhat.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        m.szyprowski@samsung.com, matthew.auld@intel.com,
+        mpe@ellerman.id.au, rppt@kernel.org, paulus@samba.org,
+        peterz@infradead.org, robin.murphy@arm.com, rodrigo.vivi@intel.com,
+        sstabellini@kernel.org, bauerman@linux.ibm.com,
+        tsbogend@alpha.franken.de, tglx@linutronix.de,
+        ulf.hansson@linaro.org, joe.jin@oracle.com, thomas.lendacky@amd.com
+Subject: Re: [PATCH RFC v1 5/6] xen-swiotlb: convert variables to arrays
+In-Reply-To: <YDAgT2ZIdncNwNlf@Konrads-MacBook-Pro.local>
+Message-ID: <alpine.DEB.2.21.2102221511360.3234@sstabellini-ThinkPad-T480s>
+References: <20210203233709.19819-1-dongli.zhang@oracle.com> <20210203233709.19819-6-dongli.zhang@oracle.com> <20210204084023.GA32328@lst.de> <20210207155601.GA25111@lst.de> <YDAgT2ZIdncNwNlf@Konrads-MacBook-Pro.local>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c188698ca0de3ed6c56a0cf7880e1578aa753077.camel@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 22, 2021 at 04:47:22PM +0100, Nicolas Saenz Julienne wrote:
-> [2] Things might get even weirder as the order in which the 32bit operations
->     are performed might matter (low/high vs high/low).
+On Fri, 19 Feb 2021, Konrad Rzeszutek Wilk wrote:
+> On Sun, Feb 07, 2021 at 04:56:01PM +0100, Christoph Hellwig wrote:
+> > On Thu, Feb 04, 2021 at 09:40:23AM +0100, Christoph Hellwig wrote:
+> > > So one thing that has been on my mind for a while:  I'd really like
+> > > to kill the separate dma ops in Xen swiotlb.  If we compare xen-swiotlb
+> > > to swiotlb the main difference seems to be:
+> > > 
+> > >  - additional reasons to bounce I/O vs the plain DMA capable
+> > >  - the possibility to do a hypercall on arm/arm64
+> > >  - an extra translation layer before doing the phys_to_dma and vice
+> > >    versa
+> > >  - an special memory allocator
+> > > 
+> > > I wonder if inbetween a few jump labels or other no overhead enablement
+> > > options and possibly better use of the dma_range_map we could kill
+> > > off most of swiotlb-xen instead of maintaining all this code duplication?
+> > 
+> > So I looked at this a bit more.
+> > 
+> > For x86 with XENFEAT_auto_translated_physmap (how common is that?)
+> 
+> Juergen, Boris please correct me if I am wrong, but that XENFEAT_auto_translated_physmap
+> only works for PVH guests?
 
-Note that arm32 does not provide writeq() very purposely because it
-is device specific whether writing high-then-low or low-then-high is
-the correct approach. See linux/io-64-nonatomic-*.h
+ARM is always XENFEAT_auto_translated_physmap
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+
+> > pfn_to_gfn is a nop, so plain phys_to_dma/dma_to_phys do work as-is.
+> > 
+> > xen_arch_need_swiotlb always returns true for x86, and
+> > range_straddles_page_boundary should never be true for the
+> > XENFEAT_auto_translated_physmap case.
+> 
+> Correct. The kernel should have no clue of what the real MFNs are
+> for PFNs.
+
+On ARM, Linux knows the MFNs because for local pages MFN == PFN and for
+foreign pages it keeps track in arch/arm/xen/p2m.c. More on this below.
+
+xen_arch_need_swiotlb only returns true on ARM in rare situations where
+bouncing on swiotlb buffers is required. Today it only happens on old
+versions of Xen that don't support the cache flushing hypercall but
+there could be more cases in the future.
+
+
+> > 
+> > So as far as I can tell the mapping fast path for the
+> > XENFEAT_auto_translated_physmap can be trivially reused from swiotlb.
+> > 
+> > That leaves us with the next more complicated case, x86 or fully cache
+> > coherent arm{,64} without XENFEAT_auto_translated_physmap.  In that case
+> > we need to patch in a phys_to_dma/dma_to_phys that performs the MFN
+> > lookup, which could be done using alternatives or jump labels.
+> > I think if that is done right we should also be able to let that cover
+> > the foreign pages in is_xen_swiotlb_buffer/is_swiotlb_buffer, but
+> > in that worst case that would need another alternative / jump label.
+> > 
+> > For non-coherent arm{,64} we'd also need to use alternatives or jump
+> > labels to for the cache maintainance ops, but that isn't a hard problem
+> > either.
+
+With the caveat that ARM is always XENFEAT_auto_translated_physmap, what
+you wrote looks correct. I am writing down a brief explanation on how
+swiotlb-xen is used on ARM.
+
+
+pfn: address as seen by the guest, pseudo-physical address in ARM terminology
+mfn (or bfn): real address, physical address in ARM terminology
+
+
+On ARM dom0 is auto_translated (so Xen sets up the stage2 translation
+in the MMU) and the translation is 1:1. So pfn == mfn for Dom0.
+
+However, when another domain shares a page with Dom0, that page is not
+1:1. Swiotlb-xen is used to retrieve the mfn for the foreign page at
+xen_swiotlb_map_page. It does that with xen_phys_to_bus -> pfn_to_bfn.
+It is implemented with a rbtree in arch/arm/xen/p2m.c.
+
+In addition, swiotlb-xen is also used to cache-flush the page via
+hypercall at xen_swiotlb_unmap_page. That is done because dev_addr is
+really the mfn at unmap_page and we don't know the pfn for it. We can do
+pfn-to-mfn but we cannot do mfn-to-pfn (there are good reasons for it
+unfortunately). The only way to cache-flush by mfn is by issuing a
+hypercall. The hypercall is implemented in arch/arm/xen/mm.c.
+
+The pfn != bfn and pfn_valid() checks are used to detect if the page is
+local (of dom0) or foreign; they work thanks to the fact that Dom0 is
+1:1 mapped.
+
+
+Getting back to what you wrote, yes if we had a way to do MFN lookups in
+phys_to_dma, and a way to call the hypercall at unmap_page if the page
+is foreign (e.g. if it fails a pfn_valid check) then I think we would be
+good from an ARM perspective. The only exception is when
+xen_arch_need_swiotlb returns true, in which case we need to actually
+bounce on swiotlb buffers.
