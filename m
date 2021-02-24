@@ -2,129 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F4E732457D
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 21:55:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1943E3245DC
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 22:39:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235189AbhBXUzJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 15:55:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235579AbhBXUzI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 15:55:08 -0500
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B210C061786
-        for <linux-pci@vger.kernel.org>; Wed, 24 Feb 2021 12:54:28 -0800 (PST)
-Received: by mail-ua1-x932.google.com with SMTP id 67so1191167uao.1
-        for <linux-pci@vger.kernel.org>; Wed, 24 Feb 2021 12:54:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LLIfyeFIub3muB/CP7Hm2VoepJyVW4tHjdnBCk4yhLg=;
-        b=ollMcONV3bdQ14QYtVBWt6OyYXIP4whd8nwR5FrAAoQprgeHlmN1Lh632mEYtxVBSI
-         G4+0oh8aEKmX6WHRxZ/cD3de2wT6ITxtYGBJRwApyx5JOWST1pJvimvC7kIIEcRmJIhX
-         cxWpev8Q9LWPytWtDWk5kkB7hijixTdqVkP5KuyaHMKZiVa/Quydp+bZJyfzHOEo3S0y
-         10d7fNSsZkyAahwGnT4i6pWEhNAUdZpnmNn9XiLqYORRONogk6w8ca+FtsbgpAxmHru+
-         GjzVvfuqXIq5M68x+natPnOzaLGwVMOrCilUbMYcEktclLWM0NLBY34qeQmJ/lQ8dJzi
-         lEAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LLIfyeFIub3muB/CP7Hm2VoepJyVW4tHjdnBCk4yhLg=;
-        b=KNm8GWCLv4Z+RdLKW+o1ZoQkoeil+D6iDbazrN1jMPOJDPub1Foebcko3g1+pl1Tx+
-         QbNNmX+MtDjayFaRU7pqOR1E40qc4ISSPN5nDmIuC7DcZsaeaeFgqwPUNuNtCmWGiaHu
-         w3YfXx/PGr3nbdklOnYnVn3qguBfEQ2s7/YGXw0Vx4kBsa/IgLcKQHsqI1K8qeY635J2
-         wskMWbgm0noBWRkECnoxucomLXWzTXL77YS7dKAJ2iIYIxhVWyPZG1DhGQd0inEYcOxy
-         bDA+mNrLqvrregw0CAB1J2J+Ulie9B5ucpGJKF7vkMah5fPI/nRj9lbxSHsp7psIC0cv
-         omeQ==
-X-Gm-Message-State: AOAM530fvmwb3uPTDBRbyrHa7u8VyVlo114tAJ/zdyxTVvuFkQuDKHpT
-        dbJ2kKGLtW2CAdkhPQ1dc0yN4CPIiRkzd3NKU6PORw==
-X-Google-Smtp-Source: ABdhPJwDkAZHxqTqNM1na6tlHBSoIcFQFsNIy4TN5WNwBY+1hn1Ea0NqgKnjX2WoQcdN6Tf/Ph1uK9pKsYI+hEdPksc=
-X-Received: by 2002:a9f:2021:: with SMTP id 30mr11157082uam.66.1614200066849;
- Wed, 24 Feb 2021 12:54:26 -0800 (PST)
+        id S236010AbhBXVjZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 16:39:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41829 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235402AbhBXVjS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 16:39:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614202672;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r0VVhQgbHXdIHWVEalPSwejZCgGaETPw/01RIXLdloc=;
+        b=VrrQEkaHsPUArR/ieyUsr0jJfFpyGlGdaA9aCQNL6A7j7QtI756rf6usmh64P8VRVO7wVj
+        9Gg6OdJjAG8QhRw4VMtG8Kp8ar+j5ysC8WwzJb9OogpP2X0L6vNsmVJFEbxWyNmlbjdVEu
+        QRlWFY3CKuzuEKalwiBlyJ7qVrzT+Tk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-363-kyVKejzEPj2INF83MbZV4A-1; Wed, 24 Feb 2021 16:37:47 -0500
+X-MC-Unique: kyVKejzEPj2INF83MbZV4A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56519AFA80;
+        Wed, 24 Feb 2021 21:37:45 +0000 (UTC)
+Received: from [10.3.112.31] (ovpn-112-31.phx2.redhat.com [10.3.112.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C9D55D9D3;
+        Wed, 24 Feb 2021 21:37:40 +0000 (UTC)
+Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
+ table size change of SR-IOV VFs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84s?= =?UTF-8?Q?ki?= <kw@linux.com>
+References: <YDIExpismOnU3c4k@unreal>
+ <20210223210743.GA1475710@bjorn-Precision-5520> <YDYJpTaxXL4ESwZS@kroah.com>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <f88031ee-699f-458f-c8f5-952f2a24e723@redhat.com>
+Date:   Wed, 24 Feb 2021 16:37:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20201211184633.3213045-1-samitolvanen@google.com>
- <20201211184633.3213045-2-samitolvanen@google.com> <20210224201723.GA69309@roeck-us.net>
- <202102241238.93BC4DCF@keescook>
-In-Reply-To: <202102241238.93BC4DCF@keescook>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 24 Feb 2021 12:54:15 -0800
-Message-ID: <CABCJKufph4se58eiJNSJUd3ASBgbJGmL2e3wg4Jwo4Bi2UxP=Q@mail.gmail.com>
-Subject: Re: [PATCH v9 01/16] tracing: move function tracer options to Kconfig
- (causing parisc build failures)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>, linux-parisc@vger.kernel.org,
-        Helge Deller <deller@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YDYJpTaxXL4ESwZS@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 12:38 PM Kees Cook <keescook@chromium.org> wrote:
+On 2/24/21 3:09 AM, Greg Kroah-Hartman wrote:
+> On Tue, Feb 23, 2021 at 03:07:43PM -0600, Bjorn Helgaas wrote:
+>> On Sun, Feb 21, 2021 at 08:59:18AM +0200, Leon Romanovsky wrote:
+>>> On Sat, Feb 20, 2021 at 01:06:00PM -0600, Bjorn Helgaas wrote:
+>>>> On Fri, Feb 19, 2021 at 09:20:18AM +0100, Greg Kroah-Hartman wrote:
+>>>>
+>>>>> Ok, can you step back and try to explain what problem you are trying to
+>>>>> solve first, before getting bogged down in odd details?  I find it
+>>>>> highly unlikely that this is something "unique", but I could be wrong as
+>>>>> I do not understand what you are wanting to do here at all.
+>>>> We want to add two new sysfs files:
+>>>>
+>>>>    sriov_vf_total_msix, for PF devices
+>>>>    sriov_vf_msix_count, for VF devices associated with the PF
+>>>>
+>>>> AFAICT it is *acceptable* if they are both present always.  But it
+>>>> would be *ideal* if they were only present when a driver that
+>>>> implements the ->sriov_get_vf_total_msix() callback is bound to the
+>>>> PF.
+>>> BTW, we already have all possible combinations: static, static with
+>>> folder, with and without "sriov_" prefix, dynamic with and without
+>>> folders on VFs.
+>>>
+>>> I need to know on which version I'll get Acked-by and that version I
+>>> will resubmit.
+>> I propose that you make static attributes for both files, so
+>> "sriov_vf_total_msix" is visible for *every* PF in the system and
+>> "sriov_vf_msix_count" is visible for *every* VF in the system.
+>>
+>> The PF "sriov_vf_total_msix" show function can return zero if there's
+>> no PF driver or it doesn't support ->sriov_get_vf_total_msix().
+>> (Incidentally, I think the documentation should mention that when it
+>> *is* supported, the contents of this file are *constant*, i.e., it
+>> does not decrease as vectors are assigned to VFs.)
+>>
+>> The "sriov_vf_msix_count" set function can ignore writes if there's no
+>> PF driver or it doesn't support ->sriov_get_vf_total_msix(), or if a
+>> VF driver is bound.
+>>
+>> Any userspace software must be able to deal with those scenarios
+>> anyway, so I don't think the mere presence or absence of the files is
+>> a meaningful signal to that software.
+> Hopefully, good luck with that!
+Management sw is use to dealing with optional sysfs files.
+libvirt does that now with the VF files for a PF -- all PF's don't have VFs.
+The VF files are only created if a VF ext-cfg-hdr exists.
+
+So, as Bjorn said, mgmt sw related to optionally tuning PCIe devices are designed to check for file existence.
+
+>> If we figure out a way to make the files visible only when the
+>> appropriate driver is bound, that might be nice and could always be
+>> done later.  But I don't think it's essential.
+> That seems reasonable, feel free to cc: me on the next patch series and
+> I'll try to review it, which should make more sense to me than this
+> email thread :)
 >
-> On Wed, Feb 24, 2021 at 12:17:23PM -0800, Guenter Roeck wrote:
-> > On Fri, Dec 11, 2020 at 10:46:18AM -0800, Sami Tolvanen wrote:
-> > > Move function tracer options to Kconfig to make it easier to add
-> > > new methods for generating __mcount_loc, and to make the options
-> > > available also when building kernel modules.
-> > >
-> > > Note that FTRACE_MCOUNT_USE_* options are updated on rebuild and
-> > > therefore, work even if the .config was generated in a different
-> > > environment.
-> > >
-> > > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > > Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> >
-> > With this patch in place, parisc:allmodconfig no longer builds.
-> >
-> > Error log:
-> > Arch parisc is not supported with CONFIG_FTRACE_MCOUNT_RECORD at scripts/recordmcount.pl line 405.
-> > make[2]: *** [scripts/mod/empty.o] Error 2
-> >
-> > Due to this problem, CONFIG_FTRACE_MCOUNT_RECORD can no longer be
-> > enabled in parisc builds. Since that is auto-selected by DYNAMIC_FTRACE,
-> > DYNAMIC_FTRACE can no longer be enabled, and with it everything that
-> > depends on it.
+> thanks,
 >
-> Ew. Any idea why this didn't show up while it was in linux-next?
+> greg k-h
+>
 
-Does anyone build parisc allmodconfig from -next?
-
-parisc seems to always use -fpatchable-function-entry with dynamic
-ftrace, so we just need to select
-FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY to stop it from defaulting
-to recordmcount:
-
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index ecef9aff9d72..9ee806f68123 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -60,6 +60,7 @@ config PARISC
-        select HAVE_KPROBES
-        select HAVE_KRETPROBES
-        select HAVE_DYNAMIC_FTRACE if
-$(cc-option,-fpatchable-function-entry=1,1)
-+       select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY if HAVE_DYNAMIC_FTRACE
-        select HAVE_FTRACE_MCOUNT_RECORD if HAVE_DYNAMIC_FTRACE
-        select HAVE_KPROBES_ON_FTRACE
-        select HAVE_DYNAMIC_FTRACE_WITH_REGS
-
-I'll send a proper patch shortly.
-
-Sami
