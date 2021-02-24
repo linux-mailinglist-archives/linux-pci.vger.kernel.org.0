@@ -2,99 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1093D3239F9
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 10:56:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AF9C323CC2
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 14:05:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234841AbhBXJyl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 04:54:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
+        id S235350AbhBXMyr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 07:54:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234828AbhBXJyP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Feb 2021 04:54:15 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 55AC264DE7;
-        Wed, 24 Feb 2021 09:53:33 +0000 (UTC)
+        id S235215AbhBXMwl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Feb 2021 07:52:41 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D684664F1A;
+        Wed, 24 Feb 2021 12:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614160414;
-        bh=yPq43gjzxrgBKpMUKdRA8k7osexf6QroB0Hwxh2xhRM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J47XGjL/RWEgvCjt9OrrAs8q/K4YqViy0nMAZ8p4k1rMcVhwx8ah2cyG7f8MYtTJJ
-         Aa18lAUd3hlWwBwhZFF8MrJ8fxBZw9EF+CuqJhNe+0HGjZJBhl9chcP3AKfX60DiYO
-         Gq9N7GACqILJ74Db5NWffmSrH0/xelPdKBaCYYAIsYQpE4Z6B+ffXvCbQ6/TlWNshd
-         F1y4uO8SzwqkcEcnmqoCqUv+DLdqyhu4KkYEV3dC8uU73UYYEU1C7IPdxph5cmy3oD
-         Ms6S3E6KGOap1wtQovM1ZVzFEHQOWgFkQmocDmq334k7Td6KHIQ0BwtEnpM98k4UVT
-         CNwaO6ZY5Z3/A==
-Date:   Wed, 24 Feb 2021 11:53:30 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        s=k20201202; t=1614171070;
+        bh=FGTsEusI4ijthr6rzGwCAsuV/OxYPaGNI42pxurTs/U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lzsXnVTWwUTlWT88Mqj5OOD6EDvvaizwmitrHQ8PeW+MvaR8OdmzbIsG2cnsp7Ae4
+         KXGDqplS5bbWFn/J6hsrXP9o1C9jlWIZw77szFxZQwtcz6/X2G9KXHS3aFyROLBlMl
+         /gcSG0u5IBoGMo3iB8/y+abcTReFkVp1nN8rNwSyVKt8kCNcZNmF8naxI1/SSGUlWK
+         P+AoXQ24ht8x+GYqqPmW0ce+ho3POw8/u6n4gkfXu3mv8ZjB7LRcLSO9qBsgCjjU+K
+         8kby9h6+MYXyXHa98KDx7ileCoHyg6TSZ9aIwWXGz0NEmLqtfdjc1IK+kMa8j4Rd2A
+         YRGDoM80OKjLQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nirmoy Das <nirmoy.das@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <YDYiGmpWDx9I59Qx@unreal>
-References: <YDIExpismOnU3c4k@unreal>
- <20210223210743.GA1475710@bjorn-Precision-5520>
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.11 32/67] PCI: Add a REBAR size quirk for Sapphire RX 5600 XT Pulse
+Date:   Wed, 24 Feb 2021 07:49:50 -0500
+Message-Id: <20210224125026.481804-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210224125026.481804-1-sashal@kernel.org>
+References: <20210224125026.481804-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210223210743.GA1475710@bjorn-Precision-5520>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 23, 2021 at 03:07:43PM -0600, Bjorn Helgaas wrote:
-> On Sun, Feb 21, 2021 at 08:59:18AM +0200, Leon Romanovsky wrote:
-> > On Sat, Feb 20, 2021 at 01:06:00PM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Feb 19, 2021 at 09:20:18AM +0100, Greg Kroah-Hartman wrote:
-> > >
-> > > > Ok, can you step back and try to explain what problem you are trying to
-> > > > solve first, before getting bogged down in odd details?  I find it
-> > > > highly unlikely that this is something "unique", but I could be wrong as
-> > > > I do not understand what you are wanting to do here at all.
-> > >
-> > > We want to add two new sysfs files:
-> > >
-> > >   sriov_vf_total_msix, for PF devices
-> > >   sriov_vf_msix_count, for VF devices associated with the PF
-> > >
-> > > AFAICT it is *acceptable* if they are both present always.  But it
-> > > would be *ideal* if they were only present when a driver that
-> > > implements the ->sriov_get_vf_total_msix() callback is bound to the
-> > > PF.
-> >
-> > BTW, we already have all possible combinations: static, static with
-> > folder, with and without "sriov_" prefix, dynamic with and without
-> > folders on VFs.
-> >
-> > I need to know on which version I'll get Acked-by and that version I
-> > will resubmit.
->
-> I propose that you make static attributes for both files, so
-> "sriov_vf_total_msix" is visible for *every* PF in the system and
-> "sriov_vf_msix_count" is visible for *every* VF in the system.
+From: Nirmoy Das <nirmoy.das@amd.com>
 
-No problem, this is close to v0/v1.
+[ Upstream commit 907830b0fc9e374d00f3c83de5e426157b482c01 ]
 
->
-> The PF "sriov_vf_total_msix" show function can return zero if there's
-> no PF driver or it doesn't support ->sriov_get_vf_total_msix().
-> (Incidentally, I think the documentation should mention that when it
-> *is* supported, the contents of this file are *constant*, i.e., it
-> does not decrease as vectors are assigned to VFs.)
->
-> The "sriov_vf_msix_count" set function can ignore writes if there's no
-> PF driver or it doesn't support ->sriov_get_vf_total_msix(), or if a
-> VF driver is bound.
+RX 5600 XT Pulse advertises support for BAR 0 being 256MB, 512MB,
+or 1GB, but it also supports 2GB, 4GB, and 8GB. Add a rebar
+size quirk so that the BAR 0 is big enough to cover complete VARM.
 
-Just to be clear, why don't we return EINVAL/EOPNOTSUPP instead of
-silently ignore?
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://patchwork.kernel.org/project/dri-devel/patch/20210107175017.15893-5-nirmoy.das@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/pci.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Thanks
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 790393d1e3189..ba791165ed194 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3596,7 +3596,14 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+ 		return 0;
+ 
+ 	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
+-	return (cap & PCI_REBAR_CAP_SIZES) >> 4;
++	cap &= PCI_REBAR_CAP_SIZES;
++
++	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
++	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
++	    bar == 0 && cap == 0x7000)
++		cap = 0x3f000;
++
++	return cap >> 4;
+ }
+ 
+ /**
+-- 
+2.27.0
+
