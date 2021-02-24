@@ -2,133 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85DBF324718
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 23:47:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA1CC324742
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 00:01:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231974AbhBXWqo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 17:46:44 -0500
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:37764 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234111AbhBXWqo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 17:46:44 -0500
-Received: by mail-lj1-f175.google.com with SMTP id q14so4338138ljp.4
-        for <linux-pci@vger.kernel.org>; Wed, 24 Feb 2021 14:46:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zEOeOF+dyL+70GRUxvvCG6gksJHyaUSPb9h5Wo2G58U=;
-        b=ig+3ZvL8WUtCdkmSiBedxF2pkOClIsIGZjY/H90c5a/bddpPRqHD0AJ7UPj7DMBjpz
-         /UgJvY67ZR5l2nOZaZpZjSf5L50MMrwUjv0QteOjeolvwTqe+1+GSK74ZN6U43oFEVzK
-         H8R9u/tMj4bo8TioaY48hVMA4rEmw9M6saL/GPGCOFKndZ7SderMrSAqfqRegVq0MfDZ
-         mW2ihzx+o5dwgDPoHgx1wEnF3tHmxgFi1bla5VpqoCLmJTL9iRfLjmlsOTlaT86qIEmh
-         Kdmt8U9EbqZL63VXc8S0kXNGq/dcAetfVZxTbdPNyrYhP8FeVfXlMXi/ugIcxFuJyC70
-         7qcg==
-X-Gm-Message-State: AOAM5339JGLPnePzmc2efKFuCcU5hRo6a1Xkr2cCjKFFIhTcIBW93Whm
-        TVp0kLxmjnMesYd1wd9y0qFzQe0IlAXflw==
-X-Google-Smtp-Source: ABdhPJyEFJ/ds1+PxUzNKSx7F9AwR3WLm6uUMeK6/cOVmxhyAVpWM6aLitnu0MDCOTL6ruiNBJmVUA==
-X-Received: by 2002:a2e:2e04:: with SMTP id u4mr26835lju.460.1614206761780;
-        Wed, 24 Feb 2021 14:46:01 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id c11sm750739lfb.104.2021.02.24.14.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Feb 2021 14:46:01 -0800 (PST)
-Date:   Wed, 24 Feb 2021 23:46:00 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: Take __pci_set_master in do_pci_disable_device
-Message-ID: <YDbXKHB31nz+tKjR@rocinante>
-References: <20210214110637.24750-1-minwoo.im.dev@gmail.com>
- <YCloAA+od1WIo7o3@rocinante>
- <20210215132220.GA32476@localhost.localdomain>
+        id S231375AbhBXXBF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 18:01:05 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:33516 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234728AbhBXXBF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 18:01:05 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11ON0LaZ003867;
+        Wed, 24 Feb 2021 15:00:21 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=VCzb5jrNLxNWd7+KBoBOrCAWvMof7wgRGvfUxf/pRTI=;
+ b=LFbBSPPT+8IwHSbcgrJu4YHV1vhfIBJ9pZuW4/g0UD/HET/GngbjOwxEE4j4ZHG1kk8V
+ Cn/QP6WMEgvxbAptXoF2Gh+n6lq61rDZFOoWgMamRcFpBjwzbtfjnofaYtyAbAuRnJMq
+ Ut3rzz4sDTnyBVKucXuIzWb2Dxn6xpK+DN/6Mn9Z2fb1qamsKMF0GdTBTijH8Uei3YSt
+ +udhJIKjGgjdQOKg5lSfSmbH6sJowdAU7hDL5NXVbkNHUnWQ9+KSBpRT1KhD3iT+dQOL
+ BAzYXMq4XT43zWJVAVxB7ew/RQmt1Dw9MxkMP2i+FvtUkOs+E8ULzePKScJvN8gYLYZx Fw== 
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 36wxbwr87x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 24 Feb 2021 15:00:21 -0800
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 24 Feb
+ 2021 15:00:19 -0800
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 24 Feb
+ 2021 15:00:18 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 24 Feb 2021 15:00:18 -0800
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id CE8A53F7040;
+        Wed, 24 Feb 2021 15:00:18 -0800 (PST)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 11ON0InO026325;
+        Wed, 24 Feb 2021 15:00:18 -0800
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Wed, 24 Feb 2021 15:00:18 -0800
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, Girish Basrur <GBasrur@marvell.com>,
+        "Quinn Tran" <qutran@marvell.com>
+Subject: Re: [PATCH] PCI/VPD: Remove VPD quirk for QLogic 1077:2261
+In-Reply-To: <20201219010443.6966-1-aeasi@marvell.com>
+Message-ID: <alpine.LRH.2.21.9999.2102241456360.13940@irv1user01.caveonetworks.com>
+References: <20201219010443.6966-1-aeasi@marvell.com>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210215132220.GA32476@localhost.localdomain>
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-02-24_13:2021-02-24,2021-02-24 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Minwoo,
+Hi Bjorn,
 
-Sorry for a very late reply!
+On Fri, 18 Dec 2020, 5:04pm, Arun Easi wrote:
 
-[...]
-> > You might need to improve the subject a little - it should be brief but
-> > still informative.
-> > 
-> > > __pci_set_mater() has debug log in there so that it would be better to
-> > > take this function.  So take __pci_set_master() function rather than
-> > > open coding it.  This patch didn't move __pci_set_master() to above to
-> > > avoid churns.
-> > [...]
-> > 
-> > It would be __pci_set_master() in the sentence above.  Also, perhaps
-> > "use" would be better than "take".  Generally, this commit message might
-> > need a little improvement to be more clear why are you do doing this.
+> The VPD quirk was added by [0] to avoid a system NMI; this issue
+> has been long fixed in the HBA firmware. In addition, PCI also has
+> the logic to check the VPD size [1], so this quirk can be reverted
+> now. More details in the thread:
+>     "VPD blacklist of Marvell QLogic 1077/2261" [2].
 > 
-> Sure, if we consolidate bus master enable clear functions to a single
-> one, it would be better to debug and tracing the kernel behaviors.
+> [0] 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722")
+> [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
+> [2] https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dpci_alpine.LRH.2.21.9999.2012161641230.28924-40irv1user01.caveonetworks.com_&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=P-q_Qkt75qFy33SvdD2nAxAyN87eO1d-mFO-lqNOomw&m=Bw8qGbVsETqSibSD8JVMAxZh8BCn1cHuskKjbarfuT8&s=IMvYnIBgaHJkzF2-GgIrGymbRguV287NVLG1_KcP_po&e= 
 > 
-> Let me describe this 'why' to the description.
+> Signed-off-by: Arun Easi <aeasi@marvell.com>
+> CC: stable@vger.kernel.org      # v4.6+
+> ---
 
-Sounds great!  Thank you!
+Wondering if there is something needed from my side. I could not find this 
+in the v5.12 list.
 
-[...]
-> > You could use pci_clear_master(), which we export and that internally
-> > calls __pci_set_master(), so there would be no need to add any forward
-> > declarations or to move anything around in the file.
-> 
-> Moving delcaration to above might be churn, and I agree with your point.
-
-I am sure that when it makes sense, then probably folks would not
-object, especially since "churn" can be subjective.
-
-> > Having said that, there is a difference between do_pci_disable_device()
-> > and how __pci_set_master() works - the latter sets the is_busmaster flag
-> > accordingly on the given device whereas the former does not.  This might
-> > be of some significance - not sure if we should or should not set this,
-> > since the do_pci_disable_device() does not do that (perhaps it's on
-> > purpose or due to some hisoric reasons).
-> 
-> Thanks for pointing out this.  I think the difference about
-> `is_busmaster` flag looks like it should not be cleared in case of power
-> suspend case:
-> 
-> 	# Suspend
-> 	pci_pm_default_suspend()
-> 		pci_disable_enabled_device()
-> 
-> 	# Resume
-> 	pci_pm_reenable_device()
-> 		pci_set_master()  <-- This is based on (is_busmaster)
-> 
-> 
-> Please let me know if I'm missing here, and appreciate pointing that
-> out.  Maybe I can post v2 patch with add an argument of whether
-> `is_busmaster` shoud be set inside of the function or not to
-> __pci_set_master()?
-[...]
-
-Nothing is ever simple, isn't it? :-)
-
-We definitely need to make sure that PM can keep relying on the
-is_busmaster flag to restore bus mastering to previous state after the
-device would resume after being suspended.
-
-If we add another boolean argument, then we would need to update the
-__pci_set_master() only in two other places, aside of using it in the
-do_pci_disable_device() function, as per (as of 5.11.1 kernel):
-
-  File              Line Content
-  drivers/pci/pci.c 4308 __pci_set_master(dev, true);
-  drivers/pci/pci.c 4319 __pci_set_master(dev, false);
-
-This is not all that terrible, provided that we _really_ do want to
-change this function signature and then add another condition inside.
-
-What do you think?  If you still like the idea, then send second version
-over with all the other proposed changes.
-
-Krzysztof
+Regards,
+-Arun
