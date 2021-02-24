@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63C68323733
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 07:14:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17697323731
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 07:14:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234122AbhBXGNb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 01:13:31 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:34563 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229539AbhBXGNT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 01:13:19 -0500
-X-UUID: fd775a4caf1f4d46839edb304dd6f87c-20210224
-X-UUID: fd775a4caf1f4d46839edb304dd6f87c-20210224
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        id S234114AbhBXGNa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 01:13:30 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:34517 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234106AbhBXGNR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 01:13:17 -0500
+X-UUID: 14e40e8dd615412686d72d79a8ce7428-20210224
+X-UUID: 14e40e8dd615412686d72d79a8ce7428-20210224
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
         (envelope-from <jianjun.wang@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 250371193; Wed, 24 Feb 2021 14:12:27 +0800
+        with ESMTP id 832059160; Wed, 24 Feb 2021 14:12:28 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 24 Feb 2021 14:12:25 +0800
+ 15.0.1497.2; Wed, 24 Feb 2021 14:12:27 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 24 Feb 2021 14:12:25 +0800
+ Transport; Wed, 24 Feb 2021 14:12:26 +0800
 From:   Jianjun Wang <jianjun.wang@mediatek.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>, <maz@kernel.org>,
@@ -39,9 +39,9 @@ CC:     Philipp Zabel <p.zabel@pengutronix.de>,
         <qizhong.cheng@mediatek.com>, <sin_jieyang@mediatek.com>,
         <drinkcat@chromium.org>, <Rex-BC.Chen@mediatek.com>,
         <anson.chuang@mediatek.com>
-Subject: [v8,1/7] dt-bindings: PCI: mediatek-gen3: Add YAML schema
-Date:   Wed, 24 Feb 2021 14:11:26 +0800
-Message-ID: <20210224061132.26526-2-jianjun.wang@mediatek.com>
+Subject: [v8,2/7] PCI: Export pci_pio_to_address() for module use
+Date:   Wed, 24 Feb 2021 14:11:27 +0800
+Message-ID: <20210224061132.26526-3-jianjun.wang@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20210224061132.26526-1-jianjun.wang@mediatek.com>
 References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
@@ -52,203 +52,26 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add YAML schemas documentation for Gen3 PCIe controller on
-MediaTek SoCs.
+This interface will be used by PCI host drivers for PIO translation,
+export it to support compiling those drivers as kernel modules.
 
 Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- .../bindings/pci/mediatek-pcie-gen3.yaml      | 181 ++++++++++++++++++
- 1 file changed, 181 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+ drivers/pci/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-new file mode 100644
-index 000000000000..e7b1f9892da4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-@@ -0,0 +1,181 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/mediatek-pcie-gen3.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Gen3 PCIe controller on MediaTek SoCs
-+
-+maintainers:
-+  - Jianjun Wang <jianjun.wang@mediatek.com>
-+
-+description: |+
-+  PCIe Gen3 MAC controller for MediaTek SoCs, it supports Gen3 speed
-+  and compatible with Gen2, Gen1 speed.
-+
-+  This PCIe controller supports up to 256 MSI vectors, the MSI hardware
-+  block diagram is as follows:
-+
-+                    +-----+
-+                    | GIC |
-+                    +-----+
-+                       ^
-+                       |
-+                   port->irq
-+                       |
-+               +-+-+-+-+-+-+-+-+
-+               |0|1|2|3|4|5|6|7| (PCIe intc)
-+               +-+-+-+-+-+-+-+-+
-+                ^ ^           ^
-+                | |    ...    |
-+        +-------+ +------+    +-----------+
-+        |                |                |
-+  +-+-+---+--+--+  +-+-+---+--+--+  +-+-+---+--+--+
-+  |0|1|...|30|31|  |0|1|...|30|31|  |0|1|...|30|31| (MSI sets)
-+  +-+-+---+--+--+  +-+-+---+--+--+  +-+-+---+--+--+
-+   ^ ^      ^  ^    ^ ^      ^  ^    ^ ^      ^  ^
-+   | |      |  |    | |      |  |    | |      |  |  (MSI vectors)
-+   | |      |  |    | |      |  |    | |      |  |
-+
-+    (MSI SET0)       (MSI SET1)  ...   (MSI SET7)
-+
-+  With 256 MSI vectors supported, the MSI vectors are composed of 8 sets,
-+  each set has its own address for MSI message, and supports 32 MSI vectors
-+  to generate interrupt.
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+properties:
-+  compatible:
-+    const: mediatek,mt8192-pcie
-+
-+  reg:
-+    maxItems: 1
-+
-+  reg-names:
-+    items:
-+      - const: pcie-mac
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  ranges:
-+    minItems: 1
-+    maxItems: 8
-+
-+  resets:
-+    minItems: 1
-+    maxItems: 2
-+
-+  reset-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: phy
-+      - const: mac
-+
-+  clocks:
-+    maxItems: 6
-+
-+  clock-names:
-+    items:
-+      - const: pl_250m
-+      - const: tl_26m
-+      - const: tl_96m
-+      - const: tl_32k
-+      - const: peri_26m
-+      - const: top_133m
-+
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clock-parents:
-+    maxItems: 1
-+
-+  phys:
-+    maxItems: 1
-+
-+  '#interrupt-cells':
-+    const: 1
-+
-+  interrupt-controller:
-+    description: Interrupt controller node for handling legacy PCI interrupts.
-+    type: object
-+    properties:
-+      '#address-cells':
-+        const: 0
-+      '#interrupt-cells':
-+        const: 1
-+      interrupt-controller: true
-+
-+    required:
-+      - '#address-cells'
-+      - '#interrupt-cells'
-+      - interrupt-controller
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - ranges
-+  - clocks
-+  - '#interrupt-cells'
-+  - interrupt-controller
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie: pcie@11230000 {
-+            compatible = "mediatek,mt8192-pcie";
-+            device_type = "pci";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            reg = <0x00 0x11230000 0x00 0x4000>;
-+            reg-names = "pcie-mac";
-+            interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH 0>;
-+            bus-range = <0x00 0xff>;
-+            ranges = <0x82000000 0x00 0x12000000 0x00
-+                      0x12000000 0x00 0x1000000>;
-+            clocks = <&infracfg 44>,
-+                     <&infracfg 40>,
-+                     <&infracfg 43>,
-+                     <&infracfg 97>,
-+                     <&infracfg 99>,
-+                     <&infracfg 111>;
-+            clock-names = "pl_250m", "tl_26m", "tl_96m",
-+                          "tl_32k", "peri_26m", "top_133m";
-+            assigned-clocks = <&topckgen 50>;
-+            assigned-clock-parents = <&topckgen 91>;
-+
-+            phys = <&pciephy>;
-+            phy-names = "pcie-phy";
-+
-+            resets = <&infracfg_rst 2>,
-+                     <&infracfg_rst 3>;
-+            reset-names = "phy", "mac";
-+
-+            #interrupt-cells = <1>;
-+            interrupt-map-mask = <0 0 0 0x7>;
-+            interrupt-map = <0 0 0 1 &pcie_intc 0>,
-+                            <0 0 0 2 &pcie_intc 1>,
-+                            <0 0 0 3 &pcie_intc 2>,
-+                            <0 0 0 4 &pcie_intc 3>;
-+            pcie_intc: interrupt-controller {
-+                      #address-cells = <0>;
-+                      #interrupt-cells = <1>;
-+                      interrupt-controller;
-+            };
-+        };
-+    };
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b9fecc25d213..7ce72a82bec5 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4047,6 +4047,7 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
+ 
+ 	return address;
+ }
++EXPORT_SYMBOL(pci_pio_to_address);
+ 
+ unsigned long __weak pci_address_to_pio(phys_addr_t address)
+ {
 -- 
 2.25.1
 
