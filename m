@@ -2,130 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EB8B32451B
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 21:19:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D0232452A
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 21:27:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235556AbhBXUS5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 15:18:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45730 "EHLO
+        id S234256AbhBXU06 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 15:26:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235728AbhBXUSG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 15:18:06 -0500
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C529C061574;
-        Wed, 24 Feb 2021 12:17:26 -0800 (PST)
-Received: by mail-oi1-x22e.google.com with SMTP id 18so3715765oiz.7;
-        Wed, 24 Feb 2021 12:17:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ylNlgfdcvRYOD6kXq/95XnGE6RgCAMqXvQ1uBMMg7TU=;
-        b=RhNsZyzXgtTZGyid5j7nVxfjC5vdc5cxSATcD8rc+cg00YD/Uu1qopgE0wLckdrrfh
-         AMbMPE6l42p5jtO2qEMlB6RBoiy/u6oeOfBKxB9YDRU+CyIdVN+OqiFMfONkZ5OBUyJT
-         pYqWHcQ9YjSGTuxG6MK2ztRqiuOxyxd7MkbB895Aoxto9JgmmfUqRh2iu5hVc54oWKUI
-         Gq97bliEvUmmhPnIPYtuOBB/ESNbs1xmeQ5jhfh/sAVUw4iaxufO7htAed0SwH5o4oJe
-         scdddBN+FqryhHDKlk8OmTM346/xXlWpfcKrSkUNbd9PEEnxF6oU6vnbhOaAA+zbLoP9
-         RTHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ylNlgfdcvRYOD6kXq/95XnGE6RgCAMqXvQ1uBMMg7TU=;
-        b=YGC7euZ5PUqaO7Xk+uCvufUqnIKXA2RBj6FjYNmpe29GjRa9zcy2/91LbNfrlu8JJi
-         67FqRsz09rCaIFgAiQ/S+xAY98+cN0XNFbM/OPh1HvyKZ7jGRT/0iDF36yxQ4iRmnf5S
-         lIte+f2olPsa2VFMVQcE/Dq/2kLSdEhl57oEvaNh2zUCmqlGBBbs6AtqPmiQDHqEw822
-         FWhKKosySqiDZgQqLDBFzeJW7A0qRYFkOe1SBeU4qkY0i1TJqP4vPehIdyvEC9Ukf+so
-         TIQKUzBmHu5/dWOS/9FKuGp/fSZNaE31yhCC1sSxk16CRUC5iCv2H03jHRn189QmPola
-         tcMA==
-X-Gm-Message-State: AOAM5324hpkIL5vSocIcPEx6ITCxnKxoEZYpOrRU0V1rKz5GkL34DPKI
-        1xf+9oL08N+PB/xjSzdnRhI=
-X-Google-Smtp-Source: ABdhPJzDBcW556aZO7mgeeunZgHfhSVx/5GFriwJvwVEbAj9sOwTknCGBEak65KhGzHJp7g/DrTp8Q==
-X-Received: by 2002:aca:ad0d:: with SMTP id w13mr3743625oie.170.1614197845430;
-        Wed, 24 Feb 2021 12:17:25 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n93sm572233ota.37.2021.02.24.12.17.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Feb 2021 12:17:24 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 24 Feb 2021 12:17:23 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-parisc@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v9 01/16] tracing: move function tracer options to
- Kconfig (causing parisc build failures)
-Message-ID: <20210224201723.GA69309@roeck-us.net>
-References: <20201211184633.3213045-1-samitolvanen@google.com>
- <20201211184633.3213045-2-samitolvanen@google.com>
+        with ESMTP id S231638AbhBXU05 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 15:26:57 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F7CC061574;
+        Wed, 24 Feb 2021 12:26:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=12uBme4GCr5a64UICfDbTfX0OuT87MBZBcK/kCTZvbk=; b=SLzy9dCxAYlVLXy9GlVICcWvPV
+        ZONL9MQqnJfS1YM/LP75Jfcel8YwDJkw6fH5DdbfexEETSxS9ZiRhvP8QNPaYa3T9rbQ+ZZ8DRQev
+        sLpED6AGOXn7Og/bztdtJXh8KRt17lvpa1FwI/tAXYAuNYvurT1uej9jqAJ/BIB6GnEgm7XDrBvUH
+        HZu1fqXTyo9NXr27Gq3Gjgc9BCbWq39LBfHPCepditv8nnhRU5uj/uu1OzpfSorpP9bx1uQUYKIRx
+        m8qNHOcctLnyxydwggT39kNF1kscayTHiEI7wCW2WEr9V4ZpWxZ3zfeHojXDcUffe8WJB/8raN8lB
+        hbB9c3NQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lF0j4-009qsn-3j; Wed, 24 Feb 2021 20:25:49 +0000
+Date:   Wed, 24 Feb 2021 20:25:38 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Robin Murphy <robin.murphy@arm.con>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Subject: Re: RPi4 can't deal with 64 bit PCI accesses
+Message-ID: <20210224202538.GA2346950@infradead.org>
+References: <c188698ca0de3ed6c56a0cf7880e1578aa753077.camel@suse.de>
+ <2220c875-f327-586c-79c7-eadff87e4b4d@arm.com>
+ <6088038a-2366-2f63-0678-c65a0d2efabd@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201211184633.3213045-2-samitolvanen@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <6088038a-2366-2f63-0678-c65a0d2efabd@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Dec 11, 2020 at 10:46:18AM -0800, Sami Tolvanen wrote:
-> Move function tracer options to Kconfig to make it easier to add
-> new methods for generating __mcount_loc, and to make the options
-> available also when building kernel modules.
+On Wed, Feb 24, 2021 at 08:55:10AM -0800, Florian Fainelli wrote:
+> > Working around kernel I/O accessors is all very well, but another
+> > concern for PCI in particular is when things like framebuffer memory can
+> > get mmap'ed into userspace (or even memremap'ed within the kernel). Even
+> > in AArch32, compiled code may result in 64-bit accesses being generated
+> > depending on how the CPU and interconnect handle LDRD/STRD/LDM/STM/etc.,
+> > so it's basically not safe to ever let that happen at all.
 > 
-> Note that FTRACE_MCOUNT_USE_* options are updated on rebuild and
-> therefore, work even if the .config was generated in a different
-> environment.
-> 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Agreed, this makes finding a generic solution a tiny bit harder. Do you
+> have something in mind Nicolas?
 
-With this patch in place, parisc:allmodconfig no longer builds.
+The only workable solution is a new
 
-Error log:
-Arch parisc is not supported with CONFIG_FTRACE_MCOUNT_RECORD at scripts/recordmcount.pl line 405.
-make[2]: *** [scripts/mod/empty.o] Error 2
+bool 64bit_mmio_supported(void)
 
-Due to this problem, CONFIG_FTRACE_MCOUNT_RECORD can no longer be
-enabled in parisc builds. Since that is auto-selected by DYNAMIC_FTRACE,
-DYNAMIC_FTRACE can no longer be enabled, and with it everything that
-depends on it.
+check that is used like:
 
-Bisect log attached.
+	if (64bit_mmio_supported())
+		readq(foodev->regs, REG_OFFSET);
+	else
+		lo_hi_readq(foodev->regs, REG_OFFSET);
 
-Guenter
+where 64bit_mmio_supported() return false for all 32-bit kernels,
+true for all non-broken 64-bit kernels and is an actual function
+for arm64 multiplatforms builds that include te RPi quirk.
 
----
-# bad: [414eece95b98b209cef0f49cfcac108fd00b8ced] Merge tag 'clang-lto-v5.12-rc1-part2' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux
-# good: [b12b47249688915e987a9a2a393b522f86f6b7ab] Merge tag 'powerpc-5.12-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
-git bisect start '414eece95b98' 'b12b47249688'
-# bad: [f6e1e1d1e149802ed4062fa514c2d184d30aacdf] Merge tag 'gfs2-for-5.12' of git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2
-git bisect bad f6e1e1d1e149802ed4062fa514c2d184d30aacdf
-# bad: [79db4d2293eba2ce6265a341bedf6caecad5eeb3] Merge tag 'clang-lto-v5.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux
-git bisect bad 79db4d2293eba2ce6265a341bedf6caecad5eeb3
-# good: [9d5032f97e9e0655e8c507ab1f43237e31520b00] dt-bindings: mediatek: mt8192: Fix dt_binding_check warning
-git bisect good 9d5032f97e9e0655e8c507ab1f43237e31520b00
-# good: [f81f213850ca84b3d5e59e17d17acb2ecfc24076] Merge tag 'for-linus-5.12-1' of git://github.com/cminyard/linux-ipmi
-git bisect good f81f213850ca84b3d5e59e17d17acb2ecfc24076
-# bad: [112b6a8e038d793d016e330f53acb9383ac504b3] arm64: allow LTO to be selected
-git bisect bad 112b6a8e038d793d016e330f53acb9383ac504b3
-# bad: [3578ad11f3fba07e64c26d8db68cfd3dde28c59e] init: lto: fix PREL32 relocations
-git bisect bad 3578ad11f3fba07e64c26d8db68cfd3dde28c59e
-# bad: [22d429e75f24d114d99223389d6ba7047e952e32] kbuild: lto: limit inlining
-git bisect bad 22d429e75f24d114d99223389d6ba7047e952e32
-# bad: [dc5723b02e523b2c4a68667f7e28c65018f7202f] kbuild: add support for Clang LTO
-git bisect bad dc5723b02e523b2c4a68667f7e28c65018f7202f
-# bad: [3b15cdc15956673ba1551d79bceae471436ac6a9] tracing: move function tracer options to Kconfig
-git bisect bad 3b15cdc15956673ba1551d79bceae471436ac6a9
-# first bad commit: [3b15cdc15956673ba1551d79bceae471436ac6a9] tracing: move function tracer options to Kconfig
+The above would then replace the existing magic from the
+<linux/io-64-nonatomic-lo-hi.h> and <linux/io-64-nonatomic-hi-lo.h>
+headers.
