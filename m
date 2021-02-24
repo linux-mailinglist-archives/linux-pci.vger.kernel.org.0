@@ -2,106 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14C5132384E
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 09:09:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9403B323919
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 09:57:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230001AbhBXIJy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 03:09:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231439AbhBXIJx (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Feb 2021 03:09:53 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5092864EC9;
-        Wed, 24 Feb 2021 08:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1614154152;
-        bh=RETsMJK2CkuQGmJyX4ZtY1lIevb1XJyyBhbQe9+7WBM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MlPeznh1EgFmavD9KZTNj1a/dQRwLCMXrbTpGNcgqHyatMTTzttIMjKpASUSN8o5w
-         TZVmYg7rvAVQ2eX+/QH316884GM/vhfr9lyPr+r1m5FxR8Cj8VOUoUy/qyjZcr4wMS
-         Z8360HGPCLnuHoSYU74FF26nH0TLnw2/SyU60MyU=
-Date:   Wed, 24 Feb 2021 09:09:09 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        id S232476AbhBXI5X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 03:57:23 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12994 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232417AbhBXI5X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 03:57:23 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DlqVw0yJRzjRb0;
+        Wed, 24 Feb 2021 16:55:04 +0800 (CST)
+Received: from [127.0.0.1] (10.69.38.196) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.498.0; Wed, 24 Feb 2021
+ 16:56:29 +0800
+Subject: Re: [PATCH] PCI/DPC: Disable ERR_COR explicitly for native dpc
+ service
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH mlx5-next v6 1/4] PCI: Add sysfs callback to allow MSI-X
- table size change of SR-IOV VFs
-Message-ID: <YDYJpTaxXL4ESwZS@kroah.com>
-References: <YDIExpismOnU3c4k@unreal>
- <20210223210743.GA1475710@bjorn-Precision-5520>
+CC:     <linux-pci@vger.kernel.org>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, <kbusch@kernel.org>,
+        <sean.v.kelley@intel.com>, <qiuxu.zhuo@intel.com>,
+        <prime.zeng@huawei.com>, <linuxarm@openeuler.org>
+References: <20210218172053.GA986776@bjorn-Precision-5520>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <f00ab835-345d-6700-158e-94121b6f042b@hisilicon.com>
+Date:   Wed, 24 Feb 2021 16:56:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210223210743.GA1475710@bjorn-Precision-5520>
+In-Reply-To: <20210218172053.GA986776@bjorn-Precision-5520>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.38.196]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 23, 2021 at 03:07:43PM -0600, Bjorn Helgaas wrote:
-> On Sun, Feb 21, 2021 at 08:59:18AM +0200, Leon Romanovsky wrote:
-> > On Sat, Feb 20, 2021 at 01:06:00PM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Feb 19, 2021 at 09:20:18AM +0100, Greg Kroah-Hartman wrote:
-> > >
-> > > > Ok, can you step back and try to explain what problem you are trying to
-> > > > solve first, before getting bogged down in odd details?  I find it
-> > > > highly unlikely that this is something "unique", but I could be wrong as
-> > > > I do not understand what you are wanting to do here at all.
-> > >
-> > > We want to add two new sysfs files:
-> > >
-> > >   sriov_vf_total_msix, for PF devices
-> > >   sriov_vf_msix_count, for VF devices associated with the PF
-> > >
-> > > AFAICT it is *acceptable* if they are both present always.  But it
-> > > would be *ideal* if they were only present when a driver that
-> > > implements the ->sriov_get_vf_total_msix() callback is bound to the
-> > > PF.
-> > 
-> > BTW, we already have all possible combinations: static, static with
-> > folder, with and without "sriov_" prefix, dynamic with and without
-> > folders on VFs.
-> > 
-> > I need to know on which version I'll get Acked-by and that version I
-> > will resubmit.
+On 2021/2/19 1:20, Bjorn Helgaas wrote:
+> On Wed, Feb 03, 2021 at 08:53:15PM +0800, Yicong Yang wrote:
+>> Per Downstream Port Containment Related Enhancements ECN[1],
+>> Table 4-6 Interpretation of _OSC Control Field Returned Value,
+>> for bit 7 of _OSC control return value:
+>>
+>>   "If firmware allows the OS control of this feature, then,
+>>   in the context of the _OSC method the OS must ensure that
+>>   Downstream Port Containment ERR_COR signaling is disabled
+>>   as described in the PCI Express Base Specification."
 > 
-> I propose that you make static attributes for both files, so
-> "sriov_vf_total_msix" is visible for *every* PF in the system and
-> "sriov_vf_msix_count" is visible for *every* VF in the system.
+> I think "the OS must ensure" is a typo in the spec.  In the new r3.3
+> of the spec, it has been corrected to:
 > 
-> The PF "sriov_vf_total_msix" show function can return zero if there's
-> no PF driver or it doesn't support ->sriov_get_vf_total_msix().
-> (Incidentally, I think the documentation should mention that when it
-> *is* supported, the contents of this file are *constant*, i.e., it
-> does not decrease as vectors are assigned to VFs.)
+>   If firmware allows the operating system control of this feature,
+>   then, in the context of the _OSC method firmware must clear the DPC
+>   ERR_COR Enable bit in the DPC Control Register (refer to the PCI
+>   Express Base Specification) to 0.
 > 
-> The "sriov_vf_msix_count" set function can ignore writes if there's no
-> PF driver or it doesn't support ->sriov_get_vf_total_msix(), or if a
-> VF driver is bound.
+
+yes, it's probably a typo according to the latest spec.
+
+>> and PCI Express Base Specification Revision 4.0 Version 1.0
+>> section 6.2.10.2, Use of DPC ERR_COR Signaling:
+>>
+>>   "...DPC ERR_COR signaling is primarily intended for use by
+>>   platform firmware..."
+>>
+>> Currently we don't set DPC ERR_COR enable bit, but explicitly
+>> clear the bit to ensure it's disabled.
 > 
-> Any userspace software must be able to deal with those scenarios
-> anyway, so I don't think the mere presence or absence of the files is
-> a meaningful signal to that software.
+> Does this fix a problem you observed?  If you're seeing a problem, and
+> this patch fixes it, we need to do something.  But if it's just to
+> line up with the language in the spec, I think we can rely on the
+> corrected spec language, which says the *firmware* is responsible for
+> doing this, and leave dpc_probe() alone.
+> 
 
-Hopefully, good luck with that!
+this patch comes when i was debugging the EDR and navigating the code and spec
+(i cannot get the latest spec at that time). no problem was observed but
+i have thought it might be sanity to ensure the ERR_COR was not set.
 
-> If we figure out a way to make the files visible only when the
-> appropriate driver is bound, that might be nice and could always be
-> done later.  But I don't think it's essential.
+it's ok leave the code as is, as the latest spec exlicitly requires the
+firmware to ensure this.
 
-That seems reasonable, feel free to cc: me on the next patch series and
-I'll try to review it, which should make more sense to me than this
-email thread :)
+>> [1] Downstream Port Containment Related Enhancements ECN,
+>>     Jan 28, 2019, affecting PCI Firmware Specification, Rev. 3.2
+>>     https://members.pcisig.com/wg/PCI-SIG/document/12888
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> ---
+>>  drivers/pci/pcie/dpc.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+>> index e05aba8..5cc8ef3 100644
+>> --- a/drivers/pci/pcie/dpc.c
+>> +++ b/drivers/pci/pcie/dpc.c
+>> @@ -302,7 +302,7 @@ static int dpc_probe(struct pcie_device *dev)
+>>  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+>>  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+>>  
+>> -	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+>> +	ctl = (ctl & 0xffe4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+> 
+> If we need to clear things here, I'd prefer to have names instead of
+> the 0xfff4 or 0xffe4 magic numbers.
+> 
 
-thanks,
+sure, that will be clearer. i just followed the previous implementation.
 
-greg k-h
+Thanks,
+Yicong
+
+>>  	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
+>>  	pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
+>>  
+>> -- 
+>> 2.8.1
+>>
+> 
+> .
+> 
+
