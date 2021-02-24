@@ -2,187 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79ACE3239D4
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 10:49:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24ED33239E3
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 10:52:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234679AbhBXJs3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 04:48:29 -0500
-Received: from mga12.intel.com ([192.55.52.136]:12485 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234728AbhBXJr3 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Feb 2021 04:47:29 -0500
-IronPort-SDR: mEfX0bHiybqsdAp+K0zlyMMXriCHct9CpVrv2nkyaySI0P8iNOnXpmc4VHo/jBC+Rpzi1Uy4j2
- C5o6PSuL5BQw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9904"; a="164328967"
-X-IronPort-AV: E=Sophos;i="5.81,202,1610438400"; 
-   d="scan'208";a="164328967"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2021 01:47:05 -0800
-IronPort-SDR: qATeBQvz1d7WVxRJZHPN0pkeHE9VQMJIjwqKS3kJPXzUQ2oK0lwcAXxgE9Yx0IcAfuYMpyV4Xm
- t3GYOiKcJeDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,202,1610438400"; 
-   d="scan'208";a="431562891"
-Received: from lkp-server01.sh.intel.com (HELO 16660e54978b) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Feb 2021 01:47:04 -0800
-Received: from kbuild by 16660e54978b with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lEql5-0001x8-3W; Wed, 24 Feb 2021 09:47:03 +0000
-Date:   Wed, 24 Feb 2021 17:46:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS 6039bd61b69f5a48c87f933dfc4152250e62c3ce
-Message-ID: <60362063.aVlV/ZTPCIe35SVt%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S234754AbhBXJuj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 04:50:39 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:13372 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234762AbhBXJsv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 Feb 2021 04:48:51 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4DlrfF4zMyz7pk3;
+        Wed, 24 Feb 2021 17:46:29 +0800 (CST)
+Received: from [127.0.0.1] (10.69.38.196) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.498.0; Wed, 24 Feb 2021
+ 17:47:58 +0800
+Subject: Re: [PATCH v2] PCI/DPC: Check host->native_dpc before enable dpc
+ service
+To:     <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+CC:     <sathyanarayanan.kuppuswamy@linux.intel.com>, <kbusch@kernel.org>,
+        <sean.v.kelley@intel.com>, <qiuxu.zhuo@intel.com>,
+        <prime.zeng@huawei.com>, <linuxarm@openeuler.org>
+References: <1612356795-32505-1-git-send-email-yangyicong@hisilicon.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <8ab7923c-c9d4-d864-86f0-743077e15d98@hisilicon.com>
+Date:   Wed, 24 Feb 2021 17:47:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <1612356795-32505-1-git-send-email-yangyicong@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.69.38.196]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-branch HEAD: 6039bd61b69f5a48c87f933dfc4152250e62c3ce  Merge branch 'remotes/lorenzo/pci/misc'
+On 2021/2/3 20:53, Yicong Yang wrote:
+> Per Downstream Port Containment Related Enhancements ECN[1]
+> Table 4-6, Interpretation of _OSC Control Field Returned Value,
+> for bit 7 of _OSC control return value:
+> 
+>   "Firmware sets this bit to 1 to grant the OS control over PCI Express
+>   Downstream Port Containment configuration."
+>   "If control of this feature was requested and denied,
+>   or was not requested, the firmware returns this bit set to 0."
+> 
+> We store bit 7 of _OSC control return value in host->native_dpc,
+> check it before enable the dpc service as the firmware may not
+> grant the control.
+> 
+> [1] Downstream Port Containment Related Enhancements ECN,
+>     Jan 28, 2019, affecting PCI Firmware Specification, Rev. 3.2
+>     https://members.pcisig.com/wg/PCI-SIG/document/12888
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+> Change since v1:
+> - use correct reference for _OSC control return value
+> 
+>  drivers/pci/pcie/portdrv_core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index e1fed664..7445d03 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -253,7 +253,8 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  	 */
+>  	if (pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DPC) &&
+>  	    pci_aer_available() &&
+> -	    (pcie_ports_dpc_native || (services & PCIE_PORT_SERVICE_AER)))
+> +	    (pcie_ports_dpc_native ||
+> +	    ((services & PCIE_PORT_SERVICE_AER) && host->native_dpc)))
+>  		services |= PCIE_PORT_SERVICE_DPC;
+>  
 
-elapsed time: 728m
+the check here maybe problematic. the bit 7 of _OSC return value is reserved
+previously and the change here may break the backward compatibility.
+currently we make dpc enabled along with aer, which can ensure the native
+dpc won't be enabled if the edr is enabled.
 
-configs tested: 126
-configs skipped: 2
+i feel a bit confused as the bit 7 is not used.
+does it provide a way to enable native dpc regardless of aer ownership?
+just as pcie_ports=dpc-native does when i checked the discussion in [1].
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[1] https://lore.kernel.org/linux-pci/20191023192205.97024-1-olof@lixom.net/
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                   milbeaut_m10v_defconfig
-arm                        vexpress_defconfig
-sh                           sh2007_defconfig
-powerpc                     kmeter1_defconfig
-arm                          collie_defconfig
-mips                             allyesconfig
-powerpc                      chrp32_defconfig
-arm                           sama5_defconfig
-powerpc                     tqm5200_defconfig
-mips                     loongson1c_defconfig
-ia64                        generic_defconfig
-m68k                       m5275evb_defconfig
-sh                             shx3_defconfig
-powerpc                      pasemi_defconfig
-sh                           se7751_defconfig
-mips                           xway_defconfig
-csky                             alldefconfig
-powerpc                   currituck_defconfig
-mips                         tb0226_defconfig
-arm64                            alldefconfig
-mips                    maltaup_xpa_defconfig
-arm                            hisi_defconfig
-sh                           se7619_defconfig
-nios2                         3c120_defconfig
-powerpc                      arches_defconfig
-parisc                generic-64bit_defconfig
-powerpc                     tqm8560_defconfig
-powerpc                 mpc834x_mds_defconfig
-arm                        oxnas_v6_defconfig
-arm                         s3c2410_defconfig
-arm                              alldefconfig
-sh                          lboxre2_defconfig
-mips                        workpad_defconfig
-sh                           se7712_defconfig
-arm                       netwinder_defconfig
-mips                        vocore2_defconfig
-powerpc                      makalu_defconfig
-arm                            zeus_defconfig
-parisc                generic-32bit_defconfig
-openrisc                    or1ksim_defconfig
-sh                     magicpanelr2_defconfig
-arm                      footbridge_defconfig
-powerpc                     sequoia_defconfig
-arm                        multi_v5_defconfig
-mips                          ath79_defconfig
-riscv                          rv32_defconfig
-mips                      maltaaprp_defconfig
-xtensa                generic_kc705_defconfig
-powerpc                   lite5200b_defconfig
-powerpc                     pseries_defconfig
-mips                           rs90_defconfig
-mips                         mpc30x_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20210223
-i386                 randconfig-a006-20210223
-i386                 randconfig-a004-20210223
-i386                 randconfig-a003-20210223
-i386                 randconfig-a001-20210223
-i386                 randconfig-a002-20210223
-x86_64               randconfig-a015-20210223
-x86_64               randconfig-a011-20210223
-x86_64               randconfig-a012-20210223
-x86_64               randconfig-a016-20210223
-x86_64               randconfig-a014-20210223
-x86_64               randconfig-a013-20210223
-i386                 randconfig-a013-20210223
-i386                 randconfig-a012-20210223
-i386                 randconfig-a011-20210223
-i386                 randconfig-a014-20210223
-i386                 randconfig-a016-20210223
-i386                 randconfig-a015-20210223
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+Thanks,
+Yicong
 
-clang tested configs:
-x86_64               randconfig-a001-20210223
-x86_64               randconfig-a002-20210223
-x86_64               randconfig-a003-20210223
-x86_64               randconfig-a005-20210223
-x86_64               randconfig-a006-20210223
-x86_64               randconfig-a004-20210223
+>  	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> 
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
