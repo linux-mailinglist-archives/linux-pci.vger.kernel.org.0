@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA86F3239D5
-	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 10:49:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 677EB3239D6
+	for <lists+linux-pci@lfdr.de>; Wed, 24 Feb 2021 10:49:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234652AbhBXJsl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 Feb 2021 04:48:41 -0500
-Received: from mga03.intel.com ([134.134.136.65]:45359 "EHLO mga03.intel.com"
+        id S234742AbhBXJsq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 Feb 2021 04:48:46 -0500
+Received: from mga18.intel.com ([134.134.136.126]:53215 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234754AbhBXJrt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 24 Feb 2021 04:47:49 -0500
-IronPort-SDR: Xa9owsU7GmLccn5Q2amBG9b1OjsMlfcLP6ZiyMH0abUdsaRdIjk6wDT1DVBmN+xBkdaTWZrfGw
- dlK+wZlr0+Qw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9904"; a="185165066"
+        id S234748AbhBXJru (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 24 Feb 2021 04:47:50 -0500
+IronPort-SDR: m7fTJj+wXxUAXIwx0zPpQX43ThEVGx+CBcZgi0RJ2y4osdbqhoebLyPXUjdwwvNCJK3WutkQNl
+ dL41+t9G0a0g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9904"; a="172767888"
 X-IronPort-AV: E=Sophos;i="5.81,202,1610438400"; 
-   d="scan'208";a="185165066"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2021 01:46:05 -0800
-IronPort-SDR: XkmQOr5gCRQ+jImUQ5TnQGAOEvMjDyIORIEYIZp0qELyZ656kGCKHt2uIJ2reQWm4LgjXwrPpS
- YZHXe01uD+2A==
+   d="scan'208";a="172767888"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2021 01:47:05 -0800
+IronPort-SDR: I8d4F/bxo07ut77Z6oo8u/c2lVGXIvwmpi18+zYgezgRZdwAjpno+LsqXgHfFlt/DdaciISlWV
+ NHeI0SWi+l2A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.81,202,1610438400"; 
-   d="scan'208";a="431562530"
+   d="scan'208";a="593587929"
 Received: from lkp-server01.sh.intel.com (HELO 16660e54978b) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Feb 2021 01:46:03 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 24 Feb 2021 01:47:03 -0800
 Received: from kbuild by 16660e54978b with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1lEqk6-0001wq-Lg; Wed, 24 Feb 2021 09:46:02 +0000
-Date:   Wed, 24 Feb 2021 17:45:17 +0800
+        id 1lEql4-0001ww-Rw; Wed, 24 Feb 2021 09:47:02 +0000
+Date:   Wed, 24 Feb 2021 17:46:03 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/dwc] BUILD SUCCESS
- 718466bbe763599995452cdb5d6ba9ff2e954cb6
-Message-ID: <6036202d.ZSzpfrZzdwl4JyqK%lkp@intel.com>
+Subject: [pci:pci/ntb] BUILD SUCCESS
+ b28a23676e0945934df983fcc8df0bfd9b24f866
+Message-ID: <6036205b.5LfTfkieLYZF8qLI%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/dwc
-branch HEAD: 718466bbe763599995452cdb5d6ba9ff2e954cb6  PCI: dwc: Add upper limit address for outbound iATU
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ntb
+branch HEAD: b28a23676e0945934df983fcc8df0bfd9b24f866  Documentation: PCI: Add PCI endpoint NTB function user guide
 
-elapsed time: 727m
+elapsed time: 728m
 
-configs tested: 138
+configs tested: 134
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -60,32 +60,22 @@ arm64                            allyesconfig
 arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
-sh                         ap325rxa_defconfig
-m68k                       m5475evb_defconfig
-arm                            pleb_defconfig
-sh                     sh7710voipgw_defconfig
-powerpc                  iss476-smp_defconfig
 mips                             allyesconfig
 arm                   milbeaut_m10v_defconfig
 arm                        vexpress_defconfig
 sh                           sh2007_defconfig
 powerpc                     kmeter1_defconfig
 arm                          collie_defconfig
-nds32                            alldefconfig
 powerpc                      chrp32_defconfig
-sh                          landisk_defconfig
-arc                                 defconfig
-arm                      tct_hammer_defconfig
-arm                          pcm027_defconfig
 arm                           sama5_defconfig
 nds32                               defconfig
 m68k                       m5275evb_defconfig
 sh                           se7619_defconfig
 microblaze                      mmu_defconfig
 m68k                             allyesconfig
+xtensa                generic_kc705_defconfig
 arm                           omap1_defconfig
 powerpc                mpc7448_hpc2_defconfig
-xtensa                generic_kc705_defconfig
 powerpc                     tqm8560_defconfig
 powerpc                     tqm5200_defconfig
 mips                     loongson1c_defconfig
@@ -97,6 +87,11 @@ mips                           xway_defconfig
 csky                             alldefconfig
 powerpc                   currituck_defconfig
 mips                         tb0226_defconfig
+sh                           se7750_defconfig
+i386                             alldefconfig
+sh                 kfr2r09-romimage_defconfig
+m68k                        mvme16x_defconfig
+sh                        edosk7705_defconfig
 arm64                            alldefconfig
 mips                    maltaup_xpa_defconfig
 arm                            hisi_defconfig
@@ -142,6 +137,7 @@ alpha                               defconfig
 alpha                            allyesconfig
 xtensa                           allyesconfig
 h8300                            allyesconfig
+arc                                 defconfig
 sh                               allmodconfig
 parisc                              defconfig
 s390                             allyesconfig
