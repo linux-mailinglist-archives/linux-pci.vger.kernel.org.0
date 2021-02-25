@@ -2,29 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74A793254AC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 18:42:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7891B3254AE
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 18:42:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232086AbhBYRls (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Feb 2021 12:41:48 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:45792 "EHLO
+        id S232014AbhBYRl6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Feb 2021 12:41:58 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:45801 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231881AbhBYRlq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Feb 2021 12:41:46 -0500
+        with ESMTP id S232103AbhBYRlz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Feb 2021 12:41:55 -0500
 Received: from 1-171-225-221.dynamic-ip.hinet.net ([1.171.225.221] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <kai.heng.feng@canonical.com>)
-        id 1lFKdM-0007iZ-VY; Thu, 25 Feb 2021 17:41:05 +0000
+        id 1lFKdQ-0007iq-Oa; Thu, 25 Feb 2021 17:41:09 +0000
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
 To:     bhelgaas@google.com
-Cc:     Aaron Ma <aaron.ma@canonical.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/3] PCI: Set AMD Renoir USB controller to D3 when shutdown
-Date:   Fri, 26 Feb 2021 01:40:39 +0800
-Message-Id: <20210225174041.405739-2-kai.heng.feng@canonical.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Yan-Hsuan Chuang <tony0620emma@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER
+        (rtw88)), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list),
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
+Subject: [PATCH 3/3] PCI: Convert rtw88 power cycle quirk to shutdown quirk
+Date:   Fri, 26 Feb 2021 01:40:40 +0800
+Message-Id: <20210225174041.405739-3-kai.heng.feng@canonical.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210225174041.405739-1-kai.heng.feng@canonical.com>
 References: <20210225174041.405739-1-kai.heng.feng@canonical.com>
@@ -34,44 +39,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Aaron Ma <aaron.ma@canonical.com>
+Now we have a generic D3 shutdown quirk, so convert the original
+approach to a PCI quirk.
 
-On AMD Renoir/Cezanne platforms, when set "Always on USB" to "On" in BIOS,
-USB controller will consume more power than 0.03w.
-
-Set it to D3cold when shutdown, S5 power consumption will be 0.03w lower.
-The USB can charge other devices as before.
-USB controller works fine after power on and reboot.
-
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
 Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 ---
- drivers/pci/quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/wireless/realtek/rtw88/pci.c | 2 --
+ drivers/pci/quirks.c                     | 6 ++++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index 786a48649946..cddc9b09bb1f 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -1709,8 +1709,6 @@ void rtw_pci_shutdown(struct pci_dev *pdev)
+ 
+ 	if (chip->ops->shutdown)
+ 		chip->ops->shutdown(rtwdev);
+-
+-	pci_set_power_state(pdev, PCI_D3hot);
+ }
+ EXPORT_SYMBOL(rtw_pci_shutdown);
+ 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 1f94fafc6920..0a848ef0b7db 100644
+index 0a848ef0b7db..dfb8746e3b72 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -28,6 +28,7 @@
- #include <linux/platform_data/x86/apple.h>
- #include <linux/pm_runtime.h>
- #include <linux/switchtec.h>
-+#include <linux/kexec.h>
- #include <asm/dma.h>	/* isa_dma_bridge_buggy */
- #include "pci.h"
- 
-@@ -5619,3 +5620,10 @@ static void apex_pci_fixup_class(struct pci_dev *pdev)
+@@ -5627,3 +5627,9 @@ static void pci_fixup_shutdown_d3(struct pci_dev *pdev)
+ 		pci_set_power_state(pdev, PCI_D3cold);
  }
- DECLARE_PCI_FIXUP_CLASS_HEADER(0x1ac1, 0x089a,
- 			       PCI_CLASS_NOT_DEFINED, 8, apex_pci_fixup_class);
-+
-+static void pci_fixup_shutdown_d3(struct pci_dev *pdev)
-+{
-+	if (!kexec_in_progress)
-+		pci_set_power_state(pdev, PCI_D3cold);
-+}
-+DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_AMD, 0x1639, pci_fixup_shutdown_d3);
+ DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_AMD, 0x1639, pci_fixup_shutdown_d3);
++DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_REALTEK, 0xd723, pci_fixup_shutdown_d3);
++DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_REALTEK, 0xc821, pci_fixup_shutdown_d3);
++DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_REALTEK, 0xb822, pci_fixup_shutdown_d3);
++DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_REALTEK, 0xb822, pci_fixup_shutdown_d3);
++DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_REALTEK, 0xc822, pci_fixup_shutdown_d3);
++DECLARE_PCI_FIXUP_SHUTDOWN(PCI_VENDOR_ID_REALTEK, 0xc82f, pci_fixup_shutdown_d3);
 -- 
 2.30.0
 
