@@ -2,70 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E10FD325690
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 20:21:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F0BF3256CB
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 20:35:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234354AbhBYTUE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Feb 2021 14:20:04 -0500
-Received: from mga17.intel.com ([192.55.52.151]:23288 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234587AbhBYTR0 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Feb 2021 14:17:26 -0500
-IronPort-SDR: IL96esFtdF8l2WxPCm0a0dKB8/Kcg04+7VooUJoQyI551MH82xt/W1ypOPYUrgxJ4Z/+rGzPe9
- xWX811cv3ZLw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9906"; a="165511517"
-X-IronPort-AV: E=Sophos;i="5.81,206,1610438400"; 
-   d="scan'208";a="165511517"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2021 11:15:39 -0800
-IronPort-SDR: Q4NbPCrOj8ewAhHVXK9/AOSspttBeGrXIVm4pAAMiIfCbyMMkq63rxYhOExH9VFzNLE3Het+6A
- 1ljQ8NNBdZfQ==
-X-IronPort-AV: E=Sophos;i="5.81,206,1610438400"; 
-   d="scan'208";a="424766251"
-Received: from dgnichol-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.104.209])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2021 11:15:38 -0800
-Subject: Re: [PATCH 1/2] PCI: controller: thunder: fix compile testing
+        id S234464AbhBYTfW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Feb 2021 14:35:22 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:53228 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235186AbhBYTdZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Feb 2021 14:33:25 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11PJUWEw004976;
+        Thu, 25 Feb 2021 11:32:31 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=HraabW82K+sMIIfvUrBZngCWyOuSaJDv4W/m/bvfKrk=;
+ b=B9cZJ/oq8R/IdCosF9cvvdqSqt4sZqlezAtH2Qljo7pLpZ05wgBJyz60x/5D0RRIU86N
+ /lK4V/Pu5EDFFciHqiIEzbR4feb9EvhnoCXX+PiUbTCEXNOoj6yhZ65weDATmPWso7QL
+ 5KtDyMPf7bgObhr9hbLeUyw0nSSEOtilLqIz4yzviNS0HE7FITZ/ile9Nqc+H3ucZbhc
+ p/QpiVW1/ol8Q8JFhHrRYEaLMhgKD+vBOw7KSa6Zx08ELN2O4bNwEJmjrvwhSeq1Nmjo
+ p0uikHuV7R74xAZ+uxb/98Wfw1PjsxWek5HJtxgVd7Qf9mq4u7uLCxtvrzZADCN2mZEX Dg== 
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 36wxbwueas-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 25 Feb 2021 11:32:30 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Feb
+ 2021 11:32:29 -0800
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Feb
+ 2021 11:32:29 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 25 Feb 2021 11:32:29 -0800
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id 282193F7040;
+        Thu, 25 Feb 2021 11:32:29 -0800 (PST)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 11PJWSTs012642;
+        Thu, 25 Feb 2021 11:32:28 -0800
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Thu, 25 Feb 2021 11:32:28 -0800
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Arnd Bergmann <arnd@kernel.org>, Robert Richter <rric@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20210225185100.GA17711@bjorn-Precision-5520>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <2d6143a5-974b-466b-e0a7-0d817c167562@linux.intel.com>
-Date:   Thu, 25 Feb 2021 11:15:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+CC:     Bjorn Helgaas <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        "Girish Basrur" <GBasrur@marvell.com>,
+        Quinn Tran <qutran@marvell.com>
+Subject: Re: [EXT] Re: [PATCH] PCI/VPD: Remove VPD quirk for QLogic
+ 1077:2261
+In-Reply-To: <20210225163157.GA5064@bjorn-Precision-5520>
+Message-ID: <alpine.LRH.2.21.9999.2102251127560.13940@irv1user01.caveonetworks.com>
+References: <20210225163157.GA5064@bjorn-Precision-5520>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-In-Reply-To: <20210225185100.GA17711@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-02-25_11:2021-02-24,2021-02-25 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, 25 Feb 2021, 8:31am, Bjorn Helgaas wrote:
 
+> On Wed, Feb 24, 2021 at 03:00:18PM -0800, Arun Easi wrote:
+> > Hi Bjorn,
+> > 
+> > On Fri, 18 Dec 2020, 5:04pm, Arun Easi wrote:
+> > 
+> > > The VPD quirk was added by [0] to avoid a system NMI; this issue
+> > > has been long fixed in the HBA firmware. In addition, PCI also has
+> > > the logic to check the VPD size [1], so this quirk can be reverted
+> > > now. More details in the thread:
+> > >     "VPD blacklist of Marvell QLogic 1077/2261" [2].
+> > > 
+> > > [0] 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722")
+> > > [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
+> > > [2] https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dpci_alpine.LRH.2.21.9999.2012161641230.28924-40irv1user01.caveonetworks.com_&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=P-q_Qkt75qFy33SvdD2nAxAyN87eO1d-mFO-lqNOomw&m=Bw8qGbVsETqSibSD8JVMAxZh8BCn1cHuskKjbarfuT8&s=IMvYnIBgaHJkzF2-GgIrGymbRguV287NVLG1_KcP_po&e= 
+> > > 
+> > > Signed-off-by: Arun Easi <aeasi@marvell.com>
+> > > CC: stable@vger.kernel.org      # v4.6+
+> > > ---
+> > 
+> > Wondering if there is something needed from my side. I could not find this 
+> > in the v5.12 list.
+> 
+> Sorry, I blew it on this one (and other VPD patches from Heiner).
+> It's too late for v5.12, but I'll try again for v5.13.
+> 
 
-On 2/25/21 10:51 AM, Bjorn Helgaas wrote:
-> Thanks for looking this over!  I'd like to acknowledge your review,
-> but I need an explicit Reviewed-by or similar.  I don't want to put
-> words in your mouth by converting "Looks good to me" to "Reviewed-by".
+No worries. As these are mostly one-liners and straight forward changes, 
+posting during RC is not an option for 5.12 inclusion?
 
-will do so in future reviews.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Regards,
+-Arun
