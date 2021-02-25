@@ -2,66 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E005B32538D
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 17:33:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D14D3254A1
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 18:41:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232033AbhBYQc6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Feb 2021 11:32:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231326AbhBYQcl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Feb 2021 11:32:41 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6373B64F19;
-        Thu, 25 Feb 2021 16:31:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614270719;
-        bh=Qz/Xs/XBCsL6aNkel3z9wHufehEW1z7s+f3I1qeFZeM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tAd6D2P02k6wqKnk8cA18RzWjnxt1m0DH8p5JdFMuqwQDFxuUqZrfPll+AEc6oXPb
-         D0OL0hgQ5QyOsI4dcwlcmX6Y76HTCru8cd/fpISPbF+G9JNKfCpguASwZfJpiccUtx
-         5UuV4bHzbqgwlsf/ZoNOJ7Vz3xnWCGdoUNvps1gQQOF89kK+tzma0oKKDpS/8Lr/iP
-         DyreQ84ac5oRGbX74sSfFvTE3nv/UESmgmQJm0jQJESAMsDLQtbU4pEtS7A2ToDe2h
-         K9GLqnrd1I4Urs39pFdGfUga4dlwk74n5a1Hi8d4zA4rJ2Vs/lknrKZ00bxVW1+l/R
-         0NVIDHhj7B6nw==
-Date:   Thu, 25 Feb 2021 10:31:57 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arun Easi <aeasi@marvell.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Girish Basrur <GBasrur@marvell.com>,
-        Quinn Tran <qutran@marvell.com>
-Subject: Re: [PATCH] PCI/VPD: Remove VPD quirk for QLogic 1077:2261
-Message-ID: <20210225163157.GA5064@bjorn-Precision-5520>
+        id S229769AbhBYRlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Feb 2021 12:41:44 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:45787 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229613AbhBYRlo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 Feb 2021 12:41:44 -0500
+Received: from 1-171-225-221.dynamic-ip.hinet.net ([1.171.225.221] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1lFKdJ-0007hu-1X; Thu, 25 Feb 2021 17:41:01 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     bhelgaas@google.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list),
+        linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES)
+Subject: [PATCH 1/3] PCI: Introduce quirk hook after driver shutdown callback
+Date:   Fri, 26 Feb 2021 01:40:38 +0800
+Message-Id: <20210225174041.405739-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.9999.2102241456360.13940@irv1user01.caveonetworks.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 03:00:18PM -0800, Arun Easi wrote:
-> Hi Bjorn,
-> 
-> On Fri, 18 Dec 2020, 5:04pm, Arun Easi wrote:
-> 
-> > The VPD quirk was added by [0] to avoid a system NMI; this issue
-> > has been long fixed in the HBA firmware. In addition, PCI also has
-> > the logic to check the VPD size [1], so this quirk can be reverted
-> > now. More details in the thread:
-> >     "VPD blacklist of Marvell QLogic 1077/2261" [2].
-> > 
-> > [0] 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722")
-> > [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
-> > [2] https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_linux-2Dpci_alpine.LRH.2.21.9999.2012161641230.28924-40irv1user01.caveonetworks.com_&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=P-q_Qkt75qFy33SvdD2nAxAyN87eO1d-mFO-lqNOomw&m=Bw8qGbVsETqSibSD8JVMAxZh8BCn1cHuskKjbarfuT8&s=IMvYnIBgaHJkzF2-GgIrGymbRguV287NVLG1_KcP_po&e= 
-> > 
-> > Signed-off-by: Arun Easi <aeasi@marvell.com>
-> > CC: stable@vger.kernel.org      # v4.6+
-> > ---
-> 
-> Wondering if there is something needed from my side. I could not find this 
-> in the v5.12 list.
+It can be useful to apply quirk after device shutdown callback, like
+putting device into a different power state.
 
-Sorry, I blew it on this one (and other VPD patches from Heiner).
-It's too late for v5.12, but I'll try again for v5.13.
+This will be used by later patches.
 
-Bjorn
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/pci/pci-driver.c          | 2 ++
+ drivers/pci/quirks.c              | 7 +++++++
+ include/asm-generic/vmlinux.lds.h | 3 +++
+ include/linux/pci.h               | 4 ++++
+ 4 files changed, 16 insertions(+)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index ec44a79e951a..7941f6190815 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -498,6 +498,8 @@ static void pci_device_shutdown(struct device *dev)
+ 	 */
+ 	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+ 		pci_clear_master(pci_dev);
++
++	pci_fixup_device(pci_fixup_shutdown, pci_dev);
+ }
+ 
+ #ifdef CONFIG_PM
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 653660e3ba9e..1f94fafc6920 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -93,6 +93,8 @@ extern struct pci_fixup __start_pci_fixups_suspend[];
+ extern struct pci_fixup __end_pci_fixups_suspend[];
+ extern struct pci_fixup __start_pci_fixups_suspend_late[];
+ extern struct pci_fixup __end_pci_fixups_suspend_late[];
++extern struct pci_fixup __start_pci_fixups_shutdown[];
++extern struct pci_fixup __end_pci_fixups_shutdown[];
+ 
+ static bool pci_apply_fixup_final_quirks;
+ 
+@@ -143,6 +145,11 @@ void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev)
+ 		end = __end_pci_fixups_suspend_late;
+ 		break;
+ 
++	case pci_fixup_shutdown:
++		start = __start_pci_fixups_shutdown;
++		end = __end_pci_fixups_shutdown;
++		break;
++
+ 	default:
+ 		/* stupid compiler warning, you would think with an enum... */
+ 		return;
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index c54adce8f6f6..aba43fc2f7b1 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -472,6 +472,9 @@
+ 		__start_pci_fixups_suspend_late = .;			\
+ 		KEEP(*(.pci_fixup_suspend_late))			\
+ 		__end_pci_fixups_suspend_late = .;			\
++		__start_pci_fixups_shutdown = .;			\
++		KEEP(*(.pci_fixup_shutdown))				\
++		__end_pci_fixups_shutdown = .;				\
+ 	}								\
+ 									\
+ 	/* Built-in firmware blobs */					\
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 86c799c97b77..7cbe9b21e049 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1923,6 +1923,7 @@ enum pci_fixup_pass {
+ 	pci_fixup_suspend,	/* pci_device_suspend() */
+ 	pci_fixup_resume_early, /* pci_device_resume_early() */
+ 	pci_fixup_suspend_late,	/* pci_device_suspend_late() */
++	pci_fixup_shutdown,	/* pci_device_shutdown() */
+ };
+ 
+ #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+@@ -2028,6 +2029,9 @@ enum pci_fixup_pass {
+ #define DECLARE_PCI_FIXUP_SUSPEND_LATE(vendor, device, hook)		\
+ 	DECLARE_PCI_FIXUP_SECTION(.pci_fixup_suspend_late,		\
+ 		suspend_late##hook, vendor, device, PCI_ANY_ID, 0, hook)
++#define DECLARE_PCI_FIXUP_SHUTDOWN(vendor, device, hook)		\
++	DECLARE_PCI_FIXUP_SECTION(.pci_fixup_shutdown,			\
++		shutdown##hook, vendor, device, PCI_ANY_ID, 0, hook)
+ 
+ #ifdef CONFIG_PCI_QUIRKS
+ void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev);
+-- 
+2.30.0
+
