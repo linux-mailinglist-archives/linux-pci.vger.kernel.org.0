@@ -2,106 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EA9F324CDC
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 10:31:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D709324D09
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 10:38:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233777AbhBYJaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Feb 2021 04:30:55 -0500
-Received: from foss.arm.com ([217.140.110.172]:49898 "EHLO foss.arm.com"
+        id S236526AbhBYJhH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Feb 2021 04:37:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231771AbhBYJax (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Feb 2021 04:30:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FEF6ED1;
-        Thu, 25 Feb 2021 01:30:07 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1BB03F73D;
-        Thu, 25 Feb 2021 01:30:05 -0800 (PST)
-Date:   Thu, 25 Feb 2021 09:30:00 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jon Masters <jcm@jonmasters.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Will Deacon <will@kernel.org>, mark.rutland@arm.com,
-        linux-pci@vger.kernel.org, sudeep.holla@arm.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: PCI: Enable SMC conduit
-Message-ID: <20210225093000.GA22843@e121166-lin.cambridge.arm.com>
-References: <4c2db08d-ccc4-05eb-6b7b-5fd7d07dd11e@arm.com>
- <20210128233147.GA28434@bjorn-Precision-5520>
- <CACCGGCc3zULqHgUh3Q9wA5WtPBnQ4eq_v2+1qA8bOBCQZJ5YoQ@mail.gmail.com>
+        id S236530AbhBYJek (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Feb 2021 04:34:40 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3E19164EC3;
+        Thu, 25 Feb 2021 09:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614245639;
+        bh=8Do2C4WBXZBF/0ynfKiFsieMc4j7Q7V/sblXKRyy2/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qFyrV+U7evW7a1f+VttInzAOAUpvh/39rN8QnzAN9k9HB7YfZPH4KOxvc6Letqy1g
+         33r3K8mSdgZiaytCB4/wa6mJEMPpBOUuV4iTnapx4mDRCNrmgIwHoaCgO9aMojTJY4
+         UioHSZV+6nfRm0PvDb0I/T2fOBrr33+5BeRqBU8vhOFLSY5qwkT/XKQN1vR5E6IFZl
+         tePTPy2G7quKsSZMD5pk6y3yk8ob/oFVE+HtMGWki0EWP+6VaOCRX1JrI9IkrZXubZ
+         u1P/oqS28P7nls4m0lyb+A64PXVmkWRMdGBRM2JMn9mJmMmOZ7gMJehS/zFOESgXV5
+         9FhNszGN9MMcA==
+Date:   Thu, 25 Feb 2021 10:33:53 +0100
+From:   Robert Richter <rric@kernel.org>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <YDdvAYLckBHi7qSe@rric.localdomain>
+References: <20210218150458.798347-1-zhengdejin5@gmail.com>
+ <20210218150458.798347-2-zhengdejin5@gmail.com>
+ <YC/NxfsQn2RKkrp8@rric.localdomain>
+ <20210219164649.GA814637@nuc8i5>
+ <YDONyMSHO9FDeY69@rric.localdomain>
+ <20210222151415.GA896979@nuc8i5>
+ <YDS2rkJu7PTJJiZr@rric.localdomain>
+ <20210223141435.GA912403@nuc8i5>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACCGGCc3zULqHgUh3Q9wA5WtPBnQ4eq_v2+1qA8bOBCQZJ5YoQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210223141435.GA912403@nuc8i5>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 18, 2021 at 12:43:30PM -0500, Jon Masters wrote:
-> Hi Bjorn, all,
-> 
-> On Thu, Jan 28, 2021 at 6:31 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
->     On Tue, Jan 26, 2021 at 10:46:04AM -0600, Jeremy Linton wrote:
-> 
->  
-> 
->     > Does that mean its open season for ECAM quirks, and we can expect
->     > them to start being merged now?
-> 
->     "Open season" makes me cringe because it suggests we have a license to
->     use quirks indiscriminately forever, and I hope that's not the case.
-> 
->     Lorenzo is closer to this issue than I am and has much better insight
->     into the mess this could turn into.  From my point of view, it's
->     shocking how much of a hassle this is compared to x86.  There just
->     aren't ECAM quirks, in-kernel clock management, or any of that crap.
->     I don't know how they do it on x86 and I don't have to care.  Whatever
->     they need to do, they apparently do in AML.  Eventually ARM64 has to
->     get there as well if vendors want distro support.
-> 
->     I don't want to be in the position of enforcing a draconian "no more
->     quirks ever" policy.  The intent -- to encourage/force vendors to
->     develop spec-compliant machines -- is good, but it seems like the
->     reward of having compliant machines "just work" vs the penalty of
->     having to write quirks and shepherd them upstream and into distros
->     will probably be more effective and not much slower.
-> 
-> 
-> The problem is that the third party IP vendors (still) make too much junk. For
-> years, there wasn't a compliance program (e.g. SystemReady with some of the
-> meat behind PCI-SIG compliance) and even when there was the third party IP
-> vendors building "root ports" (not even RCs) would make some junk with a hacked
-> up Linux kernel booting on a model and demo that as "PCI". There wasn't the
-> kind of adult supervision that was required. It is (slowly) happening now, but
-> it's years and years late. It's just embarrassing to see the lack of ECAM that
-> works. In many cases, it's because the IP being used was baked years ago or
-> made for some "non server" (as if there is such a thing) use case, etc. But in
-> others, there was a chance to do it right, and it still happens. Some of us
-> have lost what hair we had over the years getting third party IP vendors to
-> wake up and start caring about this.
-> 
-> So there's no excuse. None at all. However, this is where we are. And it /is/
-> improving. But it's still too slow, and we have platforms still coming to
-> market that need to boot and run. Based on this, and the need to have something
-> more flexible than just solving for ECAM deficiencies (which are really just a
-> symptom), I can see the allure of an SMC. I don't like it, but if that's where
-> folks want to go, and if we can find a way to constrain the enthusiasm for it,
-> then perhaps it is a path forward. But if we are to go down that path it needs
-> to come with a giant warning from the kernel that a system was booted at is
-> relying on that. Something that will cause an OS certification program to fail
-> without a waiver, or will cause customers to phone up for support wondering why
-> the hw is broken. It *must* not be a silent thing. It needs to be "this
-> hardware is broken and non-standard, get the next version fixed".
+On 23.02.21 22:14:35, Dejin Zheng wrote:
+> On Tue, Feb 23, 2021 at 09:02:54AM +0100, Robert Richter wrote:
+> > On 22.02.21 23:14:15, Dejin Zheng wrote:
+> > > On Mon, Feb 22, 2021 at 11:56:08AM +0100, Robert Richter wrote:
+> > > > On 20.02.21 00:46:49, Dejin Zheng wrote:
+> > > > > > On 18.02.21 23:04:55, Dejin Zheng wrote:
+> > > > 
+> > > > > > > +	if (!dr || !dr->enabled)
+> > > > > here checks whether the pci device is enabled.
+> > > > 
+> > > > What is the purpose of this? The device "is_managed" or not.
+> > > >
+> > > The device is managed or not by check whether "dr" is NULL. And
+> > > check the "dr->enabled" is for the PCI device enable. I think it
+> > > may not make sense to apply for irq vectors when PCI device is not
+> > > enabled.
+> > 
+> > I don't see how a disabled device affects in any way the release of
+> > the irq vectors during device removal. dr is always non-null in case
+> > the device is managed, a check isn't needed for that.
+> >
+> Yes, the disabled device does not affect release irq vectors, But
+> the disabled device affects apply for irq vectors, It is wrong to apply
+> for the irq vectors when the device is not enabled.
 
-It is a stance I agree with in many respects, it should be shared (it
-was in HTML format - the lists unfortunately dropped the message) so I
-am replying to it to make it public.
+What is the scenario you have in mind here? What does happen then?
+The typical use case is to pcim_enable_device() it and then add the
+irq vectors. It is always enabled then.
 
-Thanks,
-Lorenzo
+Even if the device could wrongly be disabled, it does not affect the
+device's release.
+
+Also, how is this related to pcim? There isn't a check in
+pci_alloc_irq_vectors() either for that case. 
+
+> Add this check can
+> facilitate developers to find problems as soon as possible.
+
+No, there are many ways to shoot yourself in the foot. We cannot add
+checks here and there for this, esp. at runtime. If there is a valid
+reason that the device must always be enabled and we cannot assume
+this is the case, then we could add a WARN_ON(). But I doubt that.
+
+-Robert
