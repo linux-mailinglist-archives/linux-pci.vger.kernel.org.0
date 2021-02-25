@@ -2,172 +2,139 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8597E324F4B
-	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 12:36:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA76325196
+	for <lists+linux-pci@lfdr.de>; Thu, 25 Feb 2021 15:39:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231833AbhBYLgL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 Feb 2021 06:36:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50190 "EHLO mx2.suse.de"
+        id S231154AbhBYOiQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 Feb 2021 09:38:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231160AbhBYLgL (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 25 Feb 2021 06:36:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C1514AAAE;
-        Thu, 25 Feb 2021 11:35:28 +0000 (UTC)
-Message-ID: <01091991523dac4c0c7e40f40e95c887af84f560.camel@suse.de>
-Subject: Re: RPi4 can't deal with 64 bit PCI accesses
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Robin Murphy <robin.murphy@arm.con>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
-Date:   Thu, 25 Feb 2021 12:35:27 +0100
-In-Reply-To: <0cca5246-065b-b52e-7005-b1b5229922a7@arm.com>
-References: <c188698ca0de3ed6c56a0cf7880e1578aa753077.camel@suse.de>
-         <2220c875-f327-586c-79c7-eadff87e4b4d@arm.com>
-         <6088038a-2366-2f63-0678-c65a0d2efabd@gmail.com>
-         <20210224202538.GA2346950@infradead.org>
-         <0142a12e-8637-5d8e-673a-20953807d0d4@gmail.com>
-         <0e52b124-e5a8-cdea-9f15-11be8c20af2a@baylibre.com>
-         <0cca5246-065b-b52e-7005-b1b5229922a7@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-k9sBTC5TTgICOQsKCsHi"
-User-Agent: Evolution 3.38.4 
+        id S229548AbhBYOiP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 25 Feb 2021 09:38:15 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 95E4964EC3;
+        Thu, 25 Feb 2021 14:37:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614263854;
+        bh=6Tt0YqzUup5G9sN7wbK/5I0h/g6iUR4Ib3aa4YlxGT8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rg089cuRZBVrAMbFXXK10J1eg57n1JeI/pb6iTygD7mke7oN3IVQL3elleAP2qgHb
+         pC2aF2tPCPx9lC242d+AY3ofSr4/JTmw1KL1gJupzcCnWgTuuevpWiv2+RxfdTickz
+         rKt9QLXUVulZOh5rzqiCbKay1E+eNKPPWuNKSVRzd4AViPeBrSRrBgIpxx+QBHiVhR
+         Ou+H8BfM/+BSyPYkfUfyTVhSODBbkRiW5rH8pgXNfLQ/Aiu8XC2HnLCkoKH604SEkj
+         rN4Y/+VU8c1AXjBcz0bneE6ePVLS3YoJZ8xG8uPFh0GRiLanVYYWMZfvOfKzto8JsI
+         kFaLYfQHBqYMg==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Robert Richter <rric@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] PCI: controller: thunder: fix compile testing
+Date:   Thu, 25 Feb 2021 15:37:09 +0100
+Message-Id: <20210225143727.3912204-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
 
---=-k9sBTC5TTgICOQsKCsHi
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Compile-testing these drivers is currently broken. Enabling
+it causes a couple of build failures though:
 
-On Thu, 2021-02-25 at 11:10 +0000, Robin Murphy wrote:
-> On 2021-02-25 10:29, Neil Armstrong wrote:
-> > On 24/02/2021 21:35, Florian Fainelli wrote:
-> > >=20
-> > >=20
-> > > On 2/24/2021 12:25 PM, Christoph Hellwig wrote:
-> > > > On Wed, Feb 24, 2021 at 08:55:10AM -0800, Florian Fainelli wrote:
-> > > > > > Working around kernel I/O accessors is all very well, but anoth=
-er
-> > > > > > concern for PCI in particular is when things like framebuffer m=
-emory can
-> > > > > > get mmap'ed into userspace (or even memremap'ed within the kern=
-el). Even
-> > > > > > in AArch32, compiled code may result in 64-bit accesses being g=
-enerated
-> > > > > > depending on how the CPU and interconnect handle LDRD/STRD/LDM/=
-STM/etc.,
-> > > > > > so it's basically not safe to ever let that happen at all.
-> > > > >=20
-> > > > > Agreed, this makes finding a generic solution a tiny bit harder. =
-Do you
-> > > > > have something in mind Nicolas?
-> > > >=20
-> > > > The only workable solution is a new
-> > > >=20
-> > > > bool 64bit_mmio_supported(void)
->=20
-> Note that to be sufficiently generic this would have to be a per-device=
-=20
-> property - a system could have an affected PCIe root complex but still=
-=20
-> have other devices elsewhere in the SoC that can, or even need to, use=
-=20
-> 64-bit accesses.
+drivers/pci/controller/pci-thunder-ecam.c:119:30: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+drivers/pci/controller/pci-thunder-pem.c:54:2: error: implicit declaration of function 'writeq' [-Werror,-Wimplicit-function-declaration]
+drivers/pci/controller/pci-thunder-pem.c:392:8: error: implicit declaration of function 'acpi_get_rc_resources' [-Werror,-Wimplicit-function-declaration]
 
-Yes, that's what I had in mind myself. All in all, why penalize the rest of
-busses in the system. What I'm planning is to introduce a '64bit-mmio-broke=
-n'
-DT property that'll utimately live somwhere in 'struct device.'
+Fix them with the obvious one-line changes.
 
-WRT why not defaulting to 32-bit accesses for distro images if they support
-RPi4. My *un-educated* guess is that, the performance penalty of checking f=
-or a
-device flag is (way) lower than having to resort to two distinct write
-operations with their assorted memory barriers. I'm sure you can
-comment/correct me here.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/pci/controller/pci-thunder-ecam.c |  2 +-
+ drivers/pci/controller/pci-thunder-pem.c  | 13 +++++++------
+ drivers/pci/pci.h                         |  6 ++++++
+ 3 files changed, 14 insertions(+), 7 deletions(-)
 
-> > > > check that is used like:
-> > > >=20
-> > > > 	if (64bit_mmio_supported())
-> > > > 		readq(foodev->regs, REG_OFFSET);
-> > > > 	else
-> > > > 		lo_hi_readq(foodev->regs, REG_OFFSET);
-> > > >=20
-> > > > where 64bit_mmio_supported() return false for all 32-bit kernels,
-> > > > true for all non-broken 64-bit kernels and is an actual function
-> > > > for arm64 multiplatforms builds that include te RPi quirk.
-> > > >=20
-> > > > The above would then replace the existing magic from the
-> > > > <linux/io-64-nonatomic-lo-hi.h> and <linux/io-64-nonatomic-hi-lo.h>
-> > > > headers.
-> > >=20
-> > > That would work. The use case described by Robin is highly unlikely t=
-o
-> > > exist on the Pi4 given that you cannot easily access the PCIe bus and
-> > > plug an arbitrary GPU, so maybe there is nothing to do for framebuffe=
-r
-> > > memory.
->=20
-> Framebuffers are only the most obvious example - I don't feel the=20
-> inclination to audit every driver/subsystem that can possibly make a=20
-> non-iomem remapping or userspace mmap of a prefetchable BAR, but I'm=20
-> sure there are more.
-
-IIUC the only solution to the issue here is to disallow mmaping memory
-belonging to a broken bus, right? In this case, the function above would do=
- the
-trick.
-
-> > Erf, not really, with the compute module ATX/ITX boards are being desig=
-ned
-> > with a full PCIe connector like:
-> > https://www.indiegogo.com/projects/over-board-raspberry-pi-4-mini-itx-m=
-otherboard/#/
->=20
-> Right, this whole thread looks to have come about due to random=20
-> endpoints getting connected to the exposed bus on compute modules. If it=
-=20
-> was an issue at all for the XHCI on standard Pi 4 boards I don't think=
-=20
-> people would just be starting to notice it now...
-
-Indeed. For the record, here's the original complaint, although I'm sure ot=
-hers
-exist: https://github.com/raspberrypi/linux/issues/4158
-
-Regards,
-Nicolas
-
-
---=-k9sBTC5TTgICOQsKCsHi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAmA3i38ACgkQlfZmHno8
-x/7j2gf/Wm4btxu14ABJYNT9Ka0J/ZmlrryekmdEd17AzE9/GuqlekCA/N3mEpaN
-Ust22YrrJ5olTC1liNOALC+MbmPL+xBHrRW1cLetXphtRAeqj/VIvF6wFFjRzQgv
-pOiS+RKE8YPcJAwHKRk1ue4pGq0Uh9ukFTznUj61bSO4iy3dj0Yo7BegGailGge4
-J63isBXzymXAttoggb8Yh9K0oix29FIcELTvlyajc5Zb2FbpW8xJLHJ0ZCEfBLfj
-TzTC0IOCYOL5qbCHlDgxOI3UN+dprJFfbgZkAQwxng2xO5BzHB8rAEnLbFqqtIp/
-0rccDhCpOcgZCHHsAO1ewWtcYT4qyw==
-=fM0L
------END PGP SIGNATURE-----
-
---=-k9sBTC5TTgICOQsKCsHi--
+diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
+index f964fd26f7e0..ffd84656544f 100644
+--- a/drivers/pci/controller/pci-thunder-ecam.c
++++ b/drivers/pci/controller/pci-thunder-ecam.c
+@@ -116,7 +116,7 @@ static int thunder_ecam_p2_config_read(struct pci_bus *bus, unsigned int devfn,
+ 	 * the config space access window.  Since we are working with
+ 	 * the high-order 32 bits, shift everything down by 32 bits.
+ 	 */
+-	node_bits = (cfg->res.start >> 32) & (1 << 12);
++	node_bits = upper_32_bits(cfg->res.start) & (1 << 12);
+ 
+ 	v |= node_bits;
+ 	set_val(v, where, size, val);
+diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
+index 1a3f70ac61fc..0660b9da204f 100644
+--- a/drivers/pci/controller/pci-thunder-pem.c
++++ b/drivers/pci/controller/pci-thunder-pem.c
+@@ -12,6 +12,7 @@
+ #include <linux/pci-acpi.h>
+ #include <linux/pci-ecam.h>
+ #include <linux/platform_device.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
+ #include "../pci.h"
+ 
+ #if defined(CONFIG_PCI_HOST_THUNDER_PEM) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
+@@ -324,9 +325,9 @@ static int thunder_pem_init(struct device *dev, struct pci_config_window *cfg,
+ 	 * structure here for the BAR.
+ 	 */
+ 	bar4_start = res_pem->start + 0xf00000;
+-	pem_pci->ea_entry[0] = (u32)bar4_start | 2;
+-	pem_pci->ea_entry[1] = (u32)(res_pem->end - bar4_start) & ~3u;
+-	pem_pci->ea_entry[2] = (u32)(bar4_start >> 32);
++	pem_pci->ea_entry[0] = lower_32_bits(bar4_start) | 2;
++	pem_pci->ea_entry[1] = lower_32_bits(res_pem->end - bar4_start) & ~3u;
++	pem_pci->ea_entry[2] = upper_32_bits(bar4_start);
+ 
+ 	cfg->priv = pem_pci;
+ 	return 0;
+@@ -334,9 +335,9 @@ static int thunder_pem_init(struct device *dev, struct pci_config_window *cfg,
+ 
+ #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+ 
+-#define PEM_RES_BASE		0x87e0c0000000UL
+-#define PEM_NODE_MASK		GENMASK(45, 44)
+-#define PEM_INDX_MASK		GENMASK(26, 24)
++#define PEM_RES_BASE		0x87e0c0000000ULL
++#define PEM_NODE_MASK		GENMASK_ULL(45, 44)
++#define PEM_INDX_MASK		GENMASK_ULL(26, 24)
+ #define PEM_MIN_DOM_IN_NODE	4
+ #define PEM_MAX_DOM_IN_NODE	10
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 0a2b6d993fe1..022c2f433676 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -625,6 +625,12 @@ static inline int pci_dev_specific_reset(struct pci_dev *dev, int probe)
+ #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
+ int acpi_get_rc_resources(struct device *dev, const char *hid, u16 segment,
+ 			  struct resource *res);
++#else
++static inline int acpi_get_rc_resources(struct device *dev, const char *hid,
++					u16 segment, struct resource *res)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar);
+-- 
+2.29.2
 
