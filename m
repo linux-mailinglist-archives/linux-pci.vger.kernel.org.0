@@ -2,87 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65E75325E10
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 08:17:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BB3B3260FD
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 11:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbhBZHNV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Feb 2021 02:13:21 -0500
-Received: from z11.mailgun.us ([104.130.96.11]:41557 "EHLO z11.mailgun.us"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230148AbhBZHNO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Feb 2021 02:13:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1614323568; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=RWm26C6uYDpSadKJBqd9m+6DvYzgFfycib1pUY7Kcqg=; b=MdPiCJYGDY3Pdy+FS5ZN17lC5jlrQFiuqvlqwjzl9nza/8d6+cb2/ERnsLuEhg9BJsfc2bWV
- 8HDvqI8LUk11yvRh/N3yncWnaYLsWkC6iFalHO1HKCDbGz+junoNchYWn5N7WQ7kboOWw32F
- UT/ILNIxQ99aHJR1f2ms7oozr74=
-X-Mailgun-Sending-Ip: 104.130.96.11
-X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 60389f576ba9d8a92b635101 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Feb 2021 07:12:23
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 544FFC433ED; Fri, 26 Feb 2021 07:12:22 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32330C433CA;
-        Fri, 26 Feb 2021 07:12:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 32330C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, Yan-Hsuan Chuang <tony0620emma@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org (open list),
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/3] PCI: Convert rtw88 power cycle quirk to shutdown quirk
-References: <20210225174041.405739-1-kai.heng.feng@canonical.com>
-        <20210225174041.405739-3-kai.heng.feng@canonical.com>
-Date:   Fri, 26 Feb 2021 09:12:17 +0200
-In-Reply-To: <20210225174041.405739-3-kai.heng.feng@canonical.com> (Kai-Heng
-        Feng's message of "Fri, 26 Feb 2021 01:40:40 +0800")
-Message-ID: <87o8g7e20e.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        id S231195AbhBZKJv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Feb 2021 05:09:51 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:24657 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231208AbhBZKHo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Feb 2021 05:07:44 -0500
+X-UUID: fc30d3fd80e648dda72a3f05d36f43bd-20210226
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PVKSM4Lm1Un0eIRTe/LnvU17Suj/+2hi3zvhdZHUu3o=;
+        b=VNoxE7uO5d+hskiokRvh5NMeX97PSMud89+8mUkO5zowKa5zxj/WQPEjR3H34xXIKNvzQqao6xtHvSXTfyY2SCIvu9VEIB103OxdWhhjvz0IgIjdFbts6j9e7ZVkTLI46uA//I/RuAdGSZm4eQtFSqEWLWs2/ELmQL5fwpit21E=;
+X-UUID: fc30d3fd80e648dda72a3f05d36f43bd-20210226
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1566552519; Fri, 26 Feb 2021 18:06:52 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 26 Feb
+ 2021 18:06:44 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 26 Feb 2021 18:06:43 +0800
+Message-ID: <1614334003.25750.17.camel@mhfsdcap03>
+Subject: Re: [v8,6/7] PCI: mediatek-gen3: Add system PM support
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Sj Huang" <sj.huang@mediatek.com>, <youlin.pei@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <qizhong.cheng@mediatek.com>,
+        <sin_jieyang@mediatek.com>, <drinkcat@chromium.org>,
+        <Rex-BC.Chen@mediatek.com>, <anson.chuang@mediatek.com>
+Date:   Fri, 26 Feb 2021 18:06:43 +0800
+In-Reply-To: <YDgeAoYHgiAyU16a@rocinante>
+References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
+         <20210224061132.26526-7-jianjun.wang@mediatek.com>
+         <YDZeRc6CHV/WzyCm@rocinante> <1614224089.25750.14.camel@mhfsdcap03>
+         <YDgeAoYHgiAyU16a@rocinante>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-TM-SNTS-SMTP: 83325A2427D844602B40EF0F0B42549976481FE7C785EA4C1A7D7650DD31D3DD2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+SGkgS3J6eXN6dG9mLA0KDQpUaGFua3MgZm9yIHlvdXIgc3VnZ2VzdGlvbiwgSSB3aWxsIGZpeCBp
+dCBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQpPbiBUaHUsIDIwMjEtMDItMjUgYXQgMjM6MDAgKzAx
+MDAsIEtyenlzenRvZiBXaWxjennFhHNraSB3cm90ZToNCj4gSGkgSmlhbmp1biwNCj4gDQo+IFsu
+Li5dDQo+ID4gVGhhbmtzIGZvciB5b3VyIHJldmlldywNCj4gDQo+IFRoYW5rIFlPVSBmb3IgYWxs
+IHRoZSB3b3JrIGhlcmUhDQo+ICANCj4gWy4uLl0NCj4gPiA+ID4gQWRkIHN1c3BlbmRfbm9pcnEg
+YW5kIHJlc3VtZV9ub2lycSBjYWxsYmFjayBmdW5jdGlvbnMgdG8gaW1wbGVtZW50DQo+ID4gPiA+
+IFBNIHN5c3RlbSBzdXNwZW5kIGhvb2tzIGZvciBNZWRpYVRlayBHZW4zIFBDSWUgY29udHJvbGxl
+ci4NCj4gPiA+IA0KPiA+ID4gU28sICJzeXN0ZW1zIHN1c3BlbmQiIGFuZCAicmVzdW1lIiBob29r
+cywgY29ycmVjdD8NCj4gPiANCj4gPiBUaGUgY2FsbGJhY2sgZnVuY3Rpb25zIGlzIHN1c3BlbmRf
+bm9pcnEgYW5kIHJlc3VtZV9ub2lycSwgc2hvdWxkIEkgdXNlDQo+ID4gInN5c3RlbXMgc3VzcGVu
+ZCIgYW5kICJyZXN1bWUiIGluIHRoZSBjb21taXQgbWVzc2FnZT8NCj4gWy4uLl0NCj4gDQo+IA0K
+PiBXaGF0IEkgbWVhbnQgd2FzIHNvbWV0aGluZyBhbG9uZyB0aGVzZSBsaW5lczoNCj4gDQo+ICAg
+QWRkIHN1c3BlbmRfbm9pcnEgYW5kIHJlc3VtZV9ub2lycSBjYWxsYmFjayBmdW5jdGlvbnMgdG8g
+aW1wbGVtZW50IFBNDQo+ICAgc3lzdGVtIHN1c3BlbmQgYW5kIHJlc3VtZSBob29rcyBmb3IgdGhl
+IE1lZGlhVGVrIEdlbjMgUENJZSBjb250cm9sbGVyLg0KPiAgIA0KPiAgIFdoZW4gdGhlIHN5c3Rl
+bSBzdXNwZW5kcywgdHJpZ2dlciB0aGUgUENJZSBsaW5rIHRvIGVudGVyIHRoZSBMMiBzdGF0ZQ0K
+PiAgIGFuZCBwdWxsIGRvd24gdGhlIFBFUlNUIyBwaW4sIGdhdGluZyB0aGUgY2xvY2tzIG9mIHRo
+ZSBNQUMgbGF5ZXIsIGFuZA0KPiAgIHRoZW4gcG93ZXItb2ZmIHRoZSBwaHlzaWNhbCBsYXllciB0
+byBwcm92aWRlIHBvd2VyLXNhdmluZy4NCj4gICANCj4gICBXaGVuIHRoZSBzeXN0ZW0gcmVzdW1l
+cywgdGhlIFBDSWUgbGluayBzaG91bGQgYmUgcmUtZXN0YWJsaXNoZWQgYW5kIHRoZQ0KPiAgIHJl
+bGF0ZWQgY29udHJvbCByZWdpc3RlciB2YWx1ZXMgc2hvdWxkIGJlIHJlc3RvcmVkLg0KPiANCj4g
+VGhlIGFib3ZlIGlzIGp1c3QgYSBzdWdnZXN0aW9uLCB0aHVzIGZlZWwgdHJlZSB0byBpZ25vcmUg
+aXQgY29tcGxldGVseSwNCj4gYW5kIGl0J3MgaGVhdmlseSBiYXNlZCBvbiB5b3VyIG9yaWdpbmFs
+IGNvbW1pdCBtZXNzYWdlLg0KPiANCj4gS3J6eXN6dG9mDQoNClRoYW5rcy4NCg0K
 
-> Now we have a generic D3 shutdown quirk, so convert the original
-> approach to a PCI quirk.
->
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/net/wireless/realtek/rtw88/pci.c | 2 --
->  drivers/pci/quirks.c                     | 6 ++++++
->  2 files changed, 6 insertions(+), 2 deletions(-)
-
-It would have been nice to CC linux-wireless also on patches 1-2. I only
-saw patch 3 and had to search the rest of patches from lkml.
-
-I assume this goes via the PCI tree so:
-
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
