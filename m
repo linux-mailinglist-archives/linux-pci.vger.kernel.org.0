@@ -2,79 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F6CF325D3B
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 06:34:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65E75325E10
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 08:17:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbhBZFdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Feb 2021 00:33:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbhBZFdO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Feb 2021 00:33:14 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F37C06174A;
-        Thu, 25 Feb 2021 21:32:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rWddWXnuro4YAoJY8JcUhOg9+DBTrAAV7EgLMgansOs=; b=Y95JvHz+p/fgRuSqZdUJ6kTozG
-        0hAoFtiyNg4giHk7sA+bUreJm0TfS3bLevc6PdklG1y06IzBDHblgOs5KDo9/3NWCY7NuMA/7UByg
-        9jrDHwNwr5X1zHL8GYCCj0qcmzuCZ5LuVSQIWYroEgW1XQmEOlqVfUgYZRdlAspXhZcYl7YsK+cC8
-        BCoG5w3WO3JuUlZ42r1a7m+lvxdVhuZk0p4FfsKRNYqw4tXn5We8K20zdsnscKzt8F/YATHIqQgHr
-        ebQ03kMaxevLZc0Q8VZCIhTZKr4mmk0mW9HRB3r69f6tERAcAurrZcGA/SC0wowDiJtUBHY8Zgqd6
-        bX7rKyag==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lFVjj-00Bb9c-6O; Fri, 26 Feb 2021 05:32:23 +0000
-Date:   Fri, 26 Feb 2021 05:32:23 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Robin Murphy <robin.murphy@arm.con>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
-Subject: Re: RPi4 can't deal with 64 bit PCI accesses
-Message-ID: <20210226053223.GA2763268@infradead.org>
-References: <c188698ca0de3ed6c56a0cf7880e1578aa753077.camel@suse.de>
- <2220c875-f327-586c-79c7-eadff87e4b4d@arm.com>
- <6088038a-2366-2f63-0678-c65a0d2efabd@gmail.com>
- <20210224202538.GA2346950@infradead.org>
- <0142a12e-8637-5d8e-673a-20953807d0d4@gmail.com>
- <0e52b124-e5a8-cdea-9f15-11be8c20af2a@baylibre.com>
- <0cca5246-065b-b52e-7005-b1b5229922a7@arm.com>
- <01091991523dac4c0c7e40f40e95c887af84f560.camel@suse.de>
+        id S229618AbhBZHNV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Feb 2021 02:13:21 -0500
+Received: from z11.mailgun.us ([104.130.96.11]:41557 "EHLO z11.mailgun.us"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230148AbhBZHNO (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Feb 2021 02:13:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1614323568; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=RWm26C6uYDpSadKJBqd9m+6DvYzgFfycib1pUY7Kcqg=; b=MdPiCJYGDY3Pdy+FS5ZN17lC5jlrQFiuqvlqwjzl9nza/8d6+cb2/ERnsLuEhg9BJsfc2bWV
+ 8HDvqI8LUk11yvRh/N3yncWnaYLsWkC6iFalHO1HKCDbGz+junoNchYWn5N7WQ7kboOWw32F
+ UT/ILNIxQ99aHJR1f2ms7oozr74=
+X-Mailgun-Sending-Ip: 104.130.96.11
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 60389f576ba9d8a92b635101 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 26 Feb 2021 07:12:23
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 544FFC433ED; Fri, 26 Feb 2021 07:12:22 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32330C433CA;
+        Fri, 26 Feb 2021 07:12:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 32330C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Yan-Hsuan Chuang <tony0620emma@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org (open list),
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/3] PCI: Convert rtw88 power cycle quirk to shutdown quirk
+References: <20210225174041.405739-1-kai.heng.feng@canonical.com>
+        <20210225174041.405739-3-kai.heng.feng@canonical.com>
+Date:   Fri, 26 Feb 2021 09:12:17 +0200
+In-Reply-To: <20210225174041.405739-3-kai.heng.feng@canonical.com> (Kai-Heng
+        Feng's message of "Fri, 26 Feb 2021 01:40:40 +0800")
+Message-ID: <87o8g7e20e.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01091991523dac4c0c7e40f40e95c887af84f560.camel@suse.de>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 25, 2021 at 12:35:27PM +0100, Nicolas Saenz Julienne wrote:
-> Yes, that's what I had in mind myself. All in all, why penalize the rest of
-> busses in the system. What I'm planning is to introduce a '64bit-mmio-broken'
-> DT property that'll utimately live somwhere in 'struct device.'
-> 
-> WRT why not defaulting to 32-bit accesses for distro images if they support
-> RPi4. My *un-educated* guess is that, the performance penalty of checking for a
-> device flag is (way) lower than having to resort to two distinct write
-> operations with their assorted memory barriers. I'm sure you can
-> comment/correct me here.
+Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
 
-Various high performance devices rely on the fact that 64-bit MMIO
-writes are atomic, and will have to use an extra lock and/or an entirely
-different programming model if they are not supported.
+> Now we have a generic D3 shutdown quirk, so convert the original
+> approach to a PCI quirk.
+>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/net/wireless/realtek/rtw88/pci.c | 2 --
+>  drivers/pci/quirks.c                     | 6 ++++++
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 
-If that is not the case just using 32-bit accesses always is certainly
-easier, that's what we did for the slow-path only 64-bit registers in
-NVMe.
+It would have been nice to CC linux-wireless also on patches 1-2. I only
+saw patch 3 and had to search the rest of patches from lkml.
+
+I assume this goes via the PCI tree so:
+
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
