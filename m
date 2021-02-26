@@ -2,77 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B95DE326142
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 11:30:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 440B4326257
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 13:12:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbhBZKaN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Feb 2021 05:30:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56590 "EHLO
+        id S230014AbhBZMLS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Feb 2021 07:11:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230087AbhBZKaH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Feb 2021 05:30:07 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9278EC061756
-        for <linux-pci@vger.kernel.org>; Fri, 26 Feb 2021 02:29:27 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id e9so5081176plh.3
-        for <linux-pci@vger.kernel.org>; Fri, 26 Feb 2021 02:29:27 -0800 (PST)
+        with ESMTP id S229989AbhBZMLR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Feb 2021 07:11:17 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B51C061574;
+        Fri, 26 Feb 2021 04:10:36 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id w7so7244966wmb.5;
+        Fri, 26 Feb 2021 04:10:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=ipeLPmiH0nMH5KiGxsW1RmVlDVVUV3UPS90WzrIlN60=;
-        b=d/IfawqDp5VuoQJYzbvaSJKDRvb4K3HW8Uythr9nk8BNAXk9OANSExmPGnwtHpINej
-         G9TfHGEVgU7rRapv+nIyLvrT94ER49Lw9u5sxPgdFNDUD5nvqPNUY0DeArLjoPGHyei9
-         QtuKmIgRu6vTNNAYE19PLMjv2DrxcAlhyamdn6cMVQW5BoStqo8cyuD+UmRiLHnmqtSC
-         hNV6QczTzC1BjfCBbCcOajYkghKP6Wr4B2McCODGenT/md8Ypn5fKgPI+rd9SdGKy4zU
-         B5TD70nDtXxpms81oiRtLcTWePiJMas+1Way40tV/abVS1jl+riV3rnDjnFrWeECTh71
-         hApA==
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O8grGw91Md2y89hra9UyHWr6e2gg7S6aJOWyyIS8g3Q=;
+        b=OtQ7UHJfBBiVUhEyqFppblMyT1dIYIbsf8ZPCPK66/0T0rx+cqwxXFWooYXeVBRKzq
+         96E9e7/B5lujgYGhTYX+1syVeiIuIdMOciCEkpZnQIddjjGE7DStXnqi0yIs5IOSdvrR
+         00lnbYlHWEbgCVdBVE45GIiXcjXBS7wcRIFtEOkslR1JglGG1SW13wJbH2h60bpz6A2O
+         GcWwvfVu4WlpXBOTEMMt4qmdH26P3chY7IE24nDtFnxhbhgB+weGD7Rc23e3Hi1jJJVc
+         wLAlW3q08rS6xDEmZCqMn5rP4jBTQ1HOoDivqYZwzpXae+PPFks/SiA5kr+o2LbzPDhC
+         rpmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=ipeLPmiH0nMH5KiGxsW1RmVlDVVUV3UPS90WzrIlN60=;
-        b=BCyuonWG3+D2n0sfAU3qDRYt12yvYADtMYCUHWmNZ2IXLjZpQAm/KS0cF3Pm+ZZm+2
-         rBENKBGUEbl9UnaDUQ5FJP8iUDgOlEoIuVhjQeJiaMrZc5tZJF82STv0DDnk0/TRzfxz
-         +m2kZ3O0bo/AIPHZu83/HJ2DXHeNbOJlkpV3gXKsVoPYOES4uyttmjEKbKbcmpVx9ovk
-         sjMScByRW25L0Rh5emPj7qFviomolov2Ur0CLrA/yYuVupeKkGtPPjrKFDXdEBETOCAN
-         avEDZ2cywplrlR6BxTnyOQIdf655Elu7zpKY0b/kvgMiKxTosy8sndYJJp4kPIipKT4a
-         QlxA==
-X-Gm-Message-State: AOAM531uIY8nOSx0wevz9M7pCbu095Q8OCmIZDDvjguUQRpfQ9d0HlBY
-        Ur0nZhmv0iQKI+rLPYE3LS5me+Ywb6LIRsOWAL5rjA==
-X-Google-Smtp-Source: ABdhPJwumt1FUFQNjdYx1MlgOTReistnXXA1j/v/guPEdHn5B8bme0IGIKoEXqD1nf/ZfKlbs23jBOyLFrK+rpYigxQ=
-X-Received: by 2002:a17:902:8501:b029:e2:d953:212c with SMTP id
- bj1-20020a1709028501b02900e2d953212cmr2660056plb.49.1614335367042; Fri, 26
- Feb 2021 02:29:27 -0800 (PST)
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O8grGw91Md2y89hra9UyHWr6e2gg7S6aJOWyyIS8g3Q=;
+        b=BDC66o5yaVBr3lYbF12VHxApOvELhSIBqpgeHnvTcfE4ZbYyf2wq814bhC9WdPK0uN
+         1X6JNHNn2oiRwzyzRT45x7jbm1O3ywSeo5LT5/ZBkq1mNIyB789AqYabMq+lkSw0sKRp
+         pIZLNL+wXv/kk12zDkAJvbtXIlfxuUoGPQyaXO1Io7DphKTI6Vo/1h76RZT6/KpejNnW
+         /egGly79gfvU4oq2+a+NcTW2/95P5sfhiJuswCkiaQ8egyvt34jEEkzHa1Oa6RaSop/6
+         1vP5+CzrONvPy5qtDX5OS6B73i7JZO1zT3vM/Xr9HqdEMidgFXl/qSg5GsMoaM5DMPT/
+         B7Kg==
+X-Gm-Message-State: AOAM530zx3My1WC/qpp2m1Q4zmxZmmX7D5oIa31yFcpd5vC6Ykyqh6Sk
+        A7yaN9xmb8+zZO7egUdwvgrx7eTUyOvDbg==
+X-Google-Smtp-Source: ABdhPJxEgUewsPLnX1CqGAn5g/rmXTcK3TCeazb5KytZIK5nb4TH4LKJKDGW0KWn4FXYKBwpZ2HmAw==
+X-Received: by 2002:a7b:c083:: with SMTP id r3mr2626403wmh.177.1614341435432;
+        Fri, 26 Feb 2021 04:10:35 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f39:5b00:3483:8cf6:25ff:155b? (p200300ea8f395b0034838cf625ff155b.dip0.t-ipconnect.de. [2003:ea:8f39:5b00:3483:8cf6:25ff:155b])
+        by smtp.googlemail.com with ESMTPSA id x13sm18160074wmj.2.2021.02.26.04.10.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Feb 2021 04:10:35 -0800 (PST)
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Yan-Hsuan Chuang <tony0620emma@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+References: <20210225174041.405739-1-kai.heng.feng@canonical.com>
+ <20210225174041.405739-3-kai.heng.feng@canonical.com>
+ <87o8g7e20e.fsf@codeaurora.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH 3/3] PCI: Convert rtw88 power cycle quirk to shutdown
+ quirk
+Message-ID: <0e8ba5a4-0029-6966-e4ab-265a538f3b3d@gmail.com>
+Date:   Fri, 26 Feb 2021 13:10:29 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-From:   Loic Poulain <loic.poulain@linaro.org>
-Date:   Fri, 26 Feb 2021 11:37:12 +0100
-Message-ID: <CAMZdPi9PGWcPOHKk3cNU3Nw+hdVOsivLeXzqyd2FQ7nn8dDfvg@mail.gmail.com>
-Subject: PME while runtime suspend
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87o8g7e20e.fsf@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On 26.02.2021 08:12, Kalle Valo wrote:
+> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+> 
+>> Now we have a generic D3 shutdown quirk, so convert the original
+>> approach to a PCI quirk.
+>>
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>>  drivers/net/wireless/realtek/rtw88/pci.c | 2 --
+>>  drivers/pci/quirks.c                     | 6 ++++++
+>>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> It would have been nice to CC linux-wireless also on patches 1-2. I only
+> saw patch 3 and had to search the rest of patches from lkml.
+> 
+> I assume this goes via the PCI tree so:
+> 
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> 
 
-Trying to support runtime suspend in a driver, which puts the device
-in D3hot and wait either for host/driver initiated resume
-(runtime_get), or device initiated resume (PME).
-
-But, given that old change: 42eca2302146 ("PCI: Don't touch card regs
-after runtime suspend D3")
-
-PME that was enabled from pci_finish_runtime_suspend() is not enabled
-anymore for almost all drivers in case of runtime-suspend. The only
-way to enable this is by calling pci_wake_from_d3() from the PCI device
-driver's runtime_suspend() callback, but this function fails if the
-device wake_up is not enabled, which makes sense since it targets
-system-wide sleep wake-up (and wake-up is user/distro policy).
-
-So is there a proper way to allow PME while the device is runtime
-suspended, without having to tell the user to enabled 'unrelated' wake_up
-capability?
-
-Regards,
-Loic
+To me it looks odd to (mis-)use the quirk mechanism to set a device
+to D3cold on shutdown. As I see it the quirk mechanism is used to work
+around certain device misbehavior. And setting a device to a D3
+state on shutdown is a normal activity, and the shutdown() callback
+seems to be a good place for it.
+I miss an explanation what the actual benefit of the change is.
