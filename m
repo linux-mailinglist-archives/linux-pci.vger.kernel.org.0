@@ -2,128 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A92DF326859
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 21:21:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D833269EE
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 23:23:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230113AbhBZUOW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Feb 2021 15:14:22 -0500
-Received: from mga17.intel.com ([192.55.52.151]:35678 "EHLO mga17.intel.com"
+        id S229823AbhBZWXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Feb 2021 17:23:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231150AbhBZUOC (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Feb 2021 15:14:02 -0500
-IronPort-SDR: VxfR5jkt3HFxkn681jJcDta0X1KeYqEP8rBlGLR3rNCUxrT7N/VncmFDF1QYT1WzgTA0JcUM2m
- Ykl42Q2WsRvQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9907"; a="165846919"
-X-IronPort-AV: E=Sophos;i="5.81,209,1610438400"; 
-   d="scan'208";a="165846919"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2021 12:11:15 -0800
-IronPort-SDR: nb0fcvfHHm0m8Hdy1+xls3a8hEnYNqDlXOEEWSI1luFshB5X1P5oXgEgsXgT8eoI0Qn46ShK9E
- yLC1P6ZemW2g==
-X-IronPort-AV: E=Sophos;i="5.81,209,1610438400"; 
-   d="scan'208";a="405109464"
-Received: from megha-z97x-ud7-th.sc.intel.com ([143.183.85.154])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-SHA; 26 Feb 2021 12:11:15 -0800
-From:   Megha Dey <megha.dey@intel.com>
-To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, dave.jiang@intel.com,
-        ashok.raj@intel.com, kevin.tian@intel.com, dwmw@amazon.co.uk,
-        x86@kernel.org, tony.luck@intel.com, dan.j.williams@intel.com,
-        megha.dey@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, alex.williamson@redhat.com,
-        bhelgaas@google.com, maz@kernel.org, linux-pci@vger.kernel.org,
-        baolu.lu@linux.intel.com, ravi.v.shankar@intel.com
-Subject: [Patch V2 13/13] genirq/msi: Provide helpers to return Linux IRQ/dev_msi hw IRQ number
-Date:   Fri, 26 Feb 2021 12:11:17 -0800
-Message-Id: <1614370277-23235-14-git-send-email-megha.dey@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1614370277-23235-1-git-send-email-megha.dey@intel.com>
-References: <1614370277-23235-1-git-send-email-megha.dey@intel.com>
+        id S230165AbhBZWXJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 26 Feb 2021 17:23:09 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 05BF464EC4;
+        Fri, 26 Feb 2021 22:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614378148;
+        bh=8s/XKXRb4CorJtfRkBsrGYYS9jN/xNVULVhEkfuwWoE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=W3lg2uVmBFu70NeWztp1viDjVk/IuVnP4C15SR/psLdV6UvBIKHdNiDBrqlcnjMQ3
+         e1RVLRQQb4WWh6tBlgc9F0i8u17ywIrUly/IOBA42nqZSGQxVUFKhYULZfTy6o5mzb
+         OLydfBuOyyDr01ofY+ZHRYUvZFDEt+629wKQotOJBKu+eA/JODLfa/LDtdNtFv0PWI
+         uhNTvqjigLhg1RsoP1+rKPNgUZtzG3amjGloWYu5AdZSiRJCb1ullm1IOqcIVqnh1i
+         amLsbzeAPG+hnXrOe2kjiK1fcVwUT8OuGQwvUPaOBEbgXE7I46Eueco4hXjzdVxiHA
+         UMJIhe5ZSm41Q==
+Date:   Fri, 26 Feb 2021 16:22:25 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Loic Poulain <loic.poulain@linaro.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Dave Airlie <airlied@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-pm@vger.kernel.org
+Subject: Re: PME while runtime suspend
+Message-ID: <20210226222225.GA164608@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMZdPi9PGWcPOHKk3cNU3Nw+hdVOsivLeXzqyd2FQ7nn8dDfvg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+[+cc Rafael, Dave (author of 42eca2302146), Vaibhav, linux-pm]
 
-Add new helpers to get the Linux IRQ number and device specific index
-for given device-relative vector so that the drivers don't need to
-allocate their own arrays to keep track of the vectors and hwirq for
-the multi vector device MSI case.
+On Fri, Feb 26, 2021 at 11:37:12AM +0100, Loic Poulain wrote:
+> Hi Bjorn,
+> 
+> Trying to support runtime suspend in a driver, which puts the device
+> in D3hot and wait either for host/driver initiated resume
+> (runtime_get), or device initiated resume (PME).
+> 
+> But, given that old change: 42eca2302146 ("PCI: Don't touch card regs
+> after runtime suspend D3")
+> 
+> PME that was enabled from pci_finish_runtime_suspend() is not enabled
+> anymore for almost all drivers in case of runtime-suspend. The only
+> way to enable this is by calling pci_wake_from_d3() from the PCI device
+> driver's runtime_suspend() callback, but this function fails if the
+> device wake_up is not enabled, which makes sense since it targets
+> system-wide sleep wake-up (and wake-up is user/distro policy).
+> 
+> So is there a proper way to allow PME while the device is runtime
+> suspended, without having to tell the user to enabled 'unrelated' wake_up
+> capability?
 
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Megha Dey <megha.dey@intel.com>
----
- include/linux/msi.h |  2 ++
- kernel/irq/msi.c    | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 46 insertions(+)
+pci_pm_runtime_suspend() calls pci_finish_runtime_suspend(), which
+enables wake-up, unless "pci_dev->state_saved".  IIUC we should be
+enabling wake-up unless the driver has called pci_save_state() itself.
 
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 24abec0..d60a6ba 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -451,6 +451,8 @@ struct irq_domain *platform_msi_create_irq_domain(struct fwnode_handle *fwnode,
- int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
- 				   irq_write_msi_msg_t write_msi_msg);
- void platform_msi_domain_free_irqs(struct device *dev);
-+int msi_irq_vector(struct device *dev, unsigned int nr);
-+int dev_msi_hwirq(struct device *dev, unsigned int nr);
- 
- /* When an MSI domain is used as an intermediate domain */
- int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 047b59d..f2a8f55 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -581,4 +581,48 @@ struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain)
- 	return (struct msi_domain_info *)domain->host_data;
- }
- 
-+/**
-+ * msi_irq_vector - Get the Linux IRQ number of a device vector
-+ * @dev: device to operate on
-+ * @nr: device-relative interrupt vector index (0-based).
-+ *
-+ * Returns the Linux IRQ number of a device vector.
-+ */
-+int msi_irq_vector(struct device *dev, unsigned int nr)
-+{
-+	struct msi_desc *entry;
-+	int i = 0;
-+
-+	for_each_msi_entry(entry, dev) {
-+		if (i == nr)
-+			return entry->irq;
-+		i++;
-+	}
-+	WARN_ON_ONCE(1);
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(msi_irq_vector);
-+
-+/**
-+ * dev_msi_hwirq - Get the device MSI hw IRQ number of a device vector
-+ * @dev: device to operate on
-+ * @nr: device-relative interrupt vector index (0-based).
-+ *
-+ * Return the dev_msi hw IRQ number of a device vector.
-+ */
-+int dev_msi_hwirq(struct device *dev, unsigned int nr)
-+{
-+	struct msi_desc *entry;
-+	int i = 0;
-+
-+	for_each_msi_entry(entry, dev) {
-+		if (i == nr)
-+			return entry->device_msi.hwirq;
-+		i++;
-+	}
-+	WARN_ON_ONCE(1);
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(dev_msi_hwirq);
-+
- #endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
--- 
-2.7.4
+So I infer that your driver does call pci_save_state() and the PCI
+core does not enable wake-up.  Right?
 
+Why does your driver call pci_save_state()?  In most cases I don't
+think drivers should need to do that themselves because the PCI core
+will do it for them.  E.g., see Vaibhav's recent eb6779d4c505 ("e1000:
+use generic power management") [1]
+
+Bjorn
+
+[1] https://git.kernel.org/linus/eb6779d4c505
