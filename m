@@ -2,73 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DE8932648E
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 16:15:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 297153264A4
+	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 16:24:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbhBZPNa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Feb 2021 10:13:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229535AbhBZPNT (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Feb 2021 10:13:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D9B764EC0;
-        Fri, 26 Feb 2021 15:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614352358;
-        bh=n7w9qkBiteyMGHBPhW+95R9XdkHKd3796bUZi7qxMec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mU7ezZVSvjjRwwbYBOt7DI1VpTB9ivK0ztc0mMRW/OGi4vGLPC+2z+5gz0ixa2I6e
-         mSZGYattvTO1pMWNilRqiMdBjljbFYwHb7XE/PABNtYpt9B1LiTnXaPJZ2cVRHyeVf
-         S1ua+RR6aYFnPJl3tkDzLX7qKo+Cke5+XlcPTL0hCfGX9EuUnetDFDIjNu6jbSLyD4
-         X+VaNQn9TgEglkzdFw2VYLwIkMnbRDfhKVJpC4Ay1MeHXZOtTfVMgoRhKO5ww9fFEh
-         77TBXWYZ2zTwoURHVse/4Bhh5usNsy4kywqlFDrHcIJFjNunN8VLtQPLfBI9uf0xtg
-         9NkKkhuaEa+ow==
-Date:   Fri, 26 Feb 2021 16:12:31 +0100
-From:   Robert Richter <rric@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Yicong Yang <yangyicong@hisilicon.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S230184AbhBZPXG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 Feb 2021 10:23:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229989AbhBZPXE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 Feb 2021 10:23:04 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB6BC061574;
+        Fri, 26 Feb 2021 07:22:23 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id f8so5467137plg.5;
+        Fri, 26 Feb 2021 07:22:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=N+8bSP4jmKRK45sk0elNZOZAzDCg0/KrbuIhk6AYYpI=;
+        b=of6GrdclCGu6wWKR3lfeZTkk193cw4Pc/er951ZhLuVJbFJ+Q4X8ib+ietQkvWsuEg
+         V7Mn/cpu1wKOZpPuAIlLcXKCu142LRz0FezFPS+CZkcmjOYofO1MpCdPmS+3hqb1k0pE
+         Tq3VHW7wcuTh4y1GeinZeoFlSRqFhwbrvxoFNdcHE8/6AhjOss2yS+ltfOxQ8for4sr1
+         xfqqFbK4IUnq2ZiKZNXlNY1VjmWsKbmHrXk84zvGxhgqw7P2janJ4zGkhN4bXXNjo5II
+         TrXvgZW0/JxUebyaCNZKD0YM/N3mnvxTYMZQKN29/MVecbOnHIF9SX1SUQqHEFO9hn9z
+         sB/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=N+8bSP4jmKRK45sk0elNZOZAzDCg0/KrbuIhk6AYYpI=;
+        b=JLTasXmVvehLKnj49qjNbFZYDzxfoF4MVQnCaHmIvJ6beYlb8+6C9RxklQyGGVFop/
+         CDvt623ZP7F0cgpLikfZjkUCxPaFBVOhmFAzIaYo3ATot8P+Fp5rcPYMfu3U6JZsk0q/
+         SiaPz7zkUfQMWdy6q6zEKWPPgTgP+dbaHIAIFJJ8g0N7MCETwBTR5fhkVMRBmQEYu/Fw
+         ZphGeCe3ePFMNeWeRZ56eIiYg8CcvJoBcHkaiit/NZ/lIJuzzWY6aZfcHw+6xohsWEWe
+         NmX1aeHuJc/v08355F2ZyYXKKngJdEcw0+9nIN4vnydYuOLgn2xm03b3+oiVPSigWaiC
+         gsVQ==
+X-Gm-Message-State: AOAM532JUqVXP9lV0w3o4PCPQUdnZ8cAQZ7FtMtslJgEtPQ32Fyi7NSx
+        SQJy3pRYLGJdhcJQsXzscKh1NrZ1pOGh4g==
+X-Google-Smtp-Source: ABdhPJxhJNQFy77Bza8Jh3C1dv53eJTpmV0dwial77CDPlDY1jQvGL2YNRo4nRBr0bPrIAP1L7+nbw==
+X-Received: by 2002:a17:90a:13c1:: with SMTP id s1mr3878764pjf.60.1614352942649;
+        Fri, 26 Feb 2021 07:22:22 -0800 (PST)
+Received: from localhost (89.208.244.53.16clouds.com. [89.208.244.53])
+        by smtp.gmail.com with ESMTPSA id gm13sm9401596pjb.47.2021.02.26.07.22.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Feb 2021 07:22:22 -0800 (PST)
+Date:   Fri, 26 Feb 2021 23:22:20 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Robert Richter <rric@kernel.org>
+Cc:     corbet@lwn.net, jarkko.nikula@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
+        bhelgaas@google.com, wsa@kernel.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: controller: thunder: fix compile testing
-Message-ID: <YDkP3xwbKi1Cp6aX@rric.localdomain>
-References: <20210225143727.3912204-1-arnd@kernel.org>
+Subject: Re: [PATCH v4 1/4] PCI: Introduce pcim_alloc_irq_vectors()
+Message-ID: <20210226152220.GA1053401@nuc8i5>
+References: <20210218150458.798347-1-zhengdejin5@gmail.com>
+ <20210218150458.798347-2-zhengdejin5@gmail.com>
+ <YC/NxfsQn2RKkrp8@rric.localdomain>
+ <20210219164649.GA814637@nuc8i5>
+ <YDONyMSHO9FDeY69@rric.localdomain>
+ <20210222151415.GA896979@nuc8i5>
+ <YDS2rkJu7PTJJiZr@rric.localdomain>
+ <20210223141435.GA912403@nuc8i5>
+ <YDdvAYLckBHi7qSe@rric.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210225143727.3912204-1-arnd@kernel.org>
+In-Reply-To: <YDdvAYLckBHi7qSe@rric.localdomain>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 25.02.21 15:37:09, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Feb 25, 2021 at 10:33:53AM +0100, Robert Richter wrote:
+> On 23.02.21 22:14:35, Dejin Zheng wrote:
+> > On Tue, Feb 23, 2021 at 09:02:54AM +0100, Robert Richter wrote:
+> > > On 22.02.21 23:14:15, Dejin Zheng wrote:
+> > > > On Mon, Feb 22, 2021 at 11:56:08AM +0100, Robert Richter wrote:
+> > > > > On 20.02.21 00:46:49, Dejin Zheng wrote:
+> > > > > > > On 18.02.21 23:04:55, Dejin Zheng wrote:
+> > > > > 
+> > > > > > > > +	if (!dr || !dr->enabled)
+> > > > > > here checks whether the pci device is enabled.
+> > > > > 
+> > > > > What is the purpose of this? The device "is_managed" or not.
+> > > > >
+> > > > The device is managed or not by check whether "dr" is NULL. And
+> > > > check the "dr->enabled" is for the PCI device enable. I think it
+> > > > may not make sense to apply for irq vectors when PCI device is not
+> > > > enabled.
+> > > 
+> > > I don't see how a disabled device affects in any way the release of
+> > > the irq vectors during device removal. dr is always non-null in case
+> > > the device is managed, a check isn't needed for that.
+> > >
+> > Yes, the disabled device does not affect release irq vectors, But
+> > the disabled device affects apply for irq vectors, It is wrong to apply
+> > for the irq vectors when the device is not enabled.
 > 
-> Compile-testing these drivers is currently broken. Enabling
-> it causes a couple of build failures though:
+> What is the scenario you have in mind here? What does happen then?
+> The typical use case is to pcim_enable_device() it and then add the
+> irq vectors. It is always enabled then.
 > 
-> drivers/pci/controller/pci-thunder-ecam.c:119:30: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-> drivers/pci/controller/pci-thunder-pem.c:54:2: error: implicit declaration of function 'writeq' [-Werror,-Wimplicit-function-declaration]
-> drivers/pci/controller/pci-thunder-pem.c:392:8: error: implicit declaration of function 'acpi_get_rc_resources' [-Werror,-Wimplicit-function-declaration]
+> Even if the device could wrongly be disabled, it does not affect the
+> device's release.
 > 
-> Fix them with the obvious one-line changes.
+> Also, how is this related to pcim? There isn't a check in
+> pci_alloc_irq_vectors() either for that case. 
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > Add this check can
+> > facilitate developers to find problems as soon as possible.
+> 
+> No, there are many ways to shoot yourself in the foot. We cannot add
+> checks here and there for this, esp. at runtime. If there is a valid
+> reason that the device must always be enabled and we cannot assume
+> this is the case, then we could add a WARN_ON(). But I doubt that.
+>
+Robert, You are right, I will remove the enable check. Thanks!
 
-Reviewed-by: Robert Richter <rric@kernel.org>
-
-> ---
->  drivers/pci/controller/pci-thunder-ecam.c |  2 +-
->  drivers/pci/controller/pci-thunder-pem.c  | 13 +++++++------
->  drivers/pci/pci.h                         |  6 ++++++
->  3 files changed, 14 insertions(+), 7 deletions(-)
+BR,
+Dejin
+> -Robert
