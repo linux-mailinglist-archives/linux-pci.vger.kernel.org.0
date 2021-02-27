@@ -2,80 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52D833269EE
-	for <lists+linux-pci@lfdr.de>; Fri, 26 Feb 2021 23:23:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED4E326D0E
+	for <lists+linux-pci@lfdr.de>; Sat, 27 Feb 2021 13:32:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbhBZWXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 Feb 2021 17:23:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55520 "EHLO mail.kernel.org"
+        id S230049AbhB0McT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 27 Feb 2021 07:32:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230165AbhBZWXJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 26 Feb 2021 17:23:09 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 05BF464EC4;
-        Fri, 26 Feb 2021 22:22:27 +0000 (UTC)
+        id S230041AbhB0McS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Sat, 27 Feb 2021 07:32:18 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1D27864EED;
+        Sat, 27 Feb 2021 12:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614378148;
-        bh=8s/XKXRb4CorJtfRkBsrGYYS9jN/xNVULVhEkfuwWoE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=W3lg2uVmBFu70NeWztp1viDjVk/IuVnP4C15SR/psLdV6UvBIKHdNiDBrqlcnjMQ3
-         e1RVLRQQb4WWh6tBlgc9F0i8u17ywIrUly/IOBA42nqZSGQxVUFKhYULZfTy6o5mzb
-         OLydfBuOyyDr01ofY+ZHRYUvZFDEt+629wKQotOJBKu+eA/JODLfa/LDtdNtFv0PWI
-         uhNTvqjigLhg1RsoP1+rKPNgUZtzG3amjGloWYu5AdZSiRJCb1ullm1IOqcIVqnh1i
-         amLsbzeAPG+hnXrOe2kjiK1fcVwUT8OuGQwvUPaOBEbgXE7I46Eueco4hXjzdVxiHA
-         UMJIhe5ZSm41Q==
-Date:   Fri, 26 Feb 2021 16:22:25 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Loic Poulain <loic.poulain@linaro.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Dave Airlie <airlied@redhat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-pm@vger.kernel.org
-Subject: Re: PME while runtime suspend
-Message-ID: <20210226222225.GA164608@bjorn-Precision-5520>
+        s=k20201202; t=1614429098;
+        bh=xCbEHh+FkWpSJkLJVph2u7gMhzOwLYE0/eak4nPjjxI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GlkK5zzF3cOoHDgGOwPCURT5LSJHIiIjfahVY7wyjoik5XrnsJ6f8Wct4rTnhveGM
+         u5kpDEa54ghQ//woMoAdpCQyZPAEYWfgTlDOWeQuORMECtJs5srnpMyRDxZfUeildM
+         tevzrjkIVXrsb09geHHAcflskXAqfuXYIR0EhjCb7rbDpFUVJ5cEiEuftX1q1eFbC+
+         HbYAd9YhxYoRbwTW10hKms88rePgnaWbomLAtteX+iNpGMHTjmH3F1TDRqo7tQTUvd
+         c2Whpu5GCDHX0Ggmd3njgIDDQUYdRJ1u7uggg0Cmc3s/WWa4VpyT06zzJXw56ET1Dt
+         kL8q89WL5fWpg==
+Received: by mail-ot1-f45.google.com with SMTP id k13so11762488otn.13;
+        Sat, 27 Feb 2021 04:31:38 -0800 (PST)
+X-Gm-Message-State: AOAM533z/LdoTn2IyI1UuKayxVZPTD5+jFlgYmGoUZTSMOTt9XUZ7IzL
+        anipH1k4RvBZT41nM2fn3XmeSbO3/Gq61em5HBo=
+X-Google-Smtp-Source: ABdhPJwcnl8F5FKz59tIBI0s9av0ixuP1VHt2AlYhsmpbwl2BHS6VeMe96XVuDdzDoM6mkkRvk7YKxiHU1a8Kb/IKDM=
+X-Received: by 2002:a9d:7f11:: with SMTP id j17mr6368646otq.251.1614429097292;
+ Sat, 27 Feb 2021 04:31:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMZdPi9PGWcPOHKk3cNU3Nw+hdVOsivLeXzqyd2FQ7nn8dDfvg@mail.gmail.com>
+References: <20210225143727.3912204-1-arnd@kernel.org> <20210225143727.3912204-2-arnd@kernel.org>
+ <YDlHSYxayqq5WMt0@rric.localdomain>
+In-Reply-To: <YDlHSYxayqq5WMt0@rric.localdomain>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Sat, 27 Feb 2021 13:31:21 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1DMCUPgJ5CMfJv3MnTLV8cmv0BdeyCuRjsL0oEZwaJ+g@mail.gmail.com>
+Message-ID: <CAK8P3a1DMCUPgJ5CMfJv3MnTLV8cmv0BdeyCuRjsL0oEZwaJ+g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] PCI: controller: avoid building empty drivers
+To:     Robert Richter <rric@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Yicong Yang <yangyicong@hisilicon.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, Dave (author of 42eca2302146), Vaibhav, linux-pm]
+On Fri, Feb 26, 2021 at 8:08 PM Robert Richter <rric@kernel.org> wrote:
+> On 25.02.21 15:37:10, Arnd Bergmann wrote:
+>
+> A possible double inclusion isn't really nice here, but it should work
+> that way.
+>
+> Also, the menu entry for the driver is in fact only for the OF case,
+> as it is always included for ACPI even if the option is disabled (and
+> thus the choice is useless). But this is unrelated to this patch.
 
-On Fri, Feb 26, 2021 at 11:37:12AM +0100, Loic Poulain wrote:
-> Hi Bjorn,
-> 
-> Trying to support runtime suspend in a driver, which puts the device
-> in D3hot and wait either for host/driver initiated resume
-> (runtime_get), or device initiated resume (PME).
-> 
-> But, given that old change: 42eca2302146 ("PCI: Don't touch card regs
-> after runtime suspend D3")
-> 
-> PME that was enabled from pci_finish_runtime_suspend() is not enabled
-> anymore for almost all drivers in case of runtime-suspend. The only
-> way to enable this is by calling pci_wake_from_d3() from the PCI device
-> driver's runtime_suspend() callback, but this function fails if the
-> device wake_up is not enabled, which makes sense since it targets
-> system-wide sleep wake-up (and wake-up is user/distro policy).
-> 
-> So is there a proper way to allow PME while the device is runtime
-> suspended, without having to tell the user to enabled 'unrelated' wake_up
-> capability?
+Yes, I considered doing this using Kconfig syntax by adding another
+symbol for each affected driver and selecting those, but the Makefile
+hack seemed easier here.
 
-pci_pm_runtime_suspend() calls pci_finish_runtime_suspend(), which
-enables wake-up, unless "pci_dev->state_saved".  IIUC we should be
-enabling wake-up unless the driver has called pci_save_state() itself.
+> Reviewed-by: Robert Richter <rric@kernel.org>
 
-So I infer that your driver does call pci_save_state() and the PCI
-core does not enable wake-up.  Right?
+Thanks,
 
-Why does your driver call pci_save_state()?  In most cases I don't
-think drivers should need to do that themselves because the PCI core
-will do it for them.  E.g., see Vaibhav's recent eb6779d4c505 ("e1000:
-use generic power management") [1]
-
-Bjorn
-
-[1] https://git.kernel.org/linus/eb6779d4c505
+        Arnd
