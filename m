@@ -2,97 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9B89327838
-	for <lists+linux-pci@lfdr.de>; Mon,  1 Mar 2021 08:23:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 872353278AB
+	for <lists+linux-pci@lfdr.de>; Mon,  1 Mar 2021 08:56:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232433AbhCAHWq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 Mar 2021 02:22:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60418 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232465AbhCAHWo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 Mar 2021 02:22:44 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0094BC061756;
-        Sun, 28 Feb 2021 23:22:03 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id u11so9274251plg.13;
-        Sun, 28 Feb 2021 23:22:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=IThTwekI4XM8rq4lBOf5YlVybHfLGC0F77zKTFbjBzM=;
-        b=Ia8PGxrFRL5mZwYtVG0IeKrFiFgYtlTXY1xeWlHq/QI0MtoV4rGUPdIfR9WV4VsQg/
-         LaLUxaJWbl+9FDWBDxji3crtd2YA2U8F9zMqXQMbwMbGjHKuOsSwv/eG3QqdmJPofMWB
-         ayjlGevbDfHqjnlRibgqyPVnZGHNXQYLmHNcroq7PR1h10QifR7DlTh3icetXFI4AOvc
-         e+06J+br4ouPCzX1QSWdaQu+h9E0loXQxLUMg1Ni8RBn4nvYE3pUOeqzou39xIAMwpQV
-         vNKRnooxzOb+d9DRsK0pGs83iZNATgVSF9F86Z4HzHa2W/mqsCxsbli1aZ5YtNuMr4S7
-         9FtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IThTwekI4XM8rq4lBOf5YlVybHfLGC0F77zKTFbjBzM=;
-        b=X4b/3Zdt0EfiW8FmZWDrGQDy6Ym58Am4IZ6L2F+z2H2+8OtQRpef0aGQBg/OHefiXl
-         A9wSr9vp3ocH9R2BJXWGV6KIWeb58e/v6WfJfE+guVLTT6HtVc6vXMx6sG+YJpXHF+ux
-         tjcGXwRqVFctVY/lnH134hKX8RDK2JQ97U+wTxAgkBQ8iraUjxRrRvm95hRsDJt/d9sQ
-         KP2otBNwt5f6YYdDv2xfXZcZ+UoPuT0AQUyafj7t2fAah49BegGhvGQk5Z1Ck75y22qT
-         R11VzHQ209xCuWKisLmhIKy94b+3sv6SzoC9DZGqlFhfS6aX5jEJIWNgH1QtA+pAL+6f
-         /FoQ==
-X-Gm-Message-State: AOAM531zPrM010cIhc+B3ymS6WmRdAhMGeP0P9hg+H+YNy/Fo2rC4MIt
-        NaXwylTsQKaIKqbdJcuRlS0koze0Kxmmew==
-X-Google-Smtp-Source: ABdhPJyWCkfDfK317QY++613co0oSVnhflBb5cDANGa7DfX0jIbqjSSOaJx+HPw0Tdk/vLOk86YNhw==
-X-Received: by 2002:a17:902:edcb:b029:df:cce5:1105 with SMTP id q11-20020a170902edcbb02900dfcce51105mr14651251plk.2.1614583323544;
-        Sun, 28 Feb 2021 23:22:03 -0800 (PST)
-Received: from rayare.domain.name ([106.51.141.71])
-        by smtp.googlemail.com with ESMTPSA id r123sm16512994pfc.211.2021.02.28.23.22.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Feb 2021 23:22:03 -0800 (PST)
-From:   chakravarthikulkarni <chakravarthikulkarni2021@gmail.com>
-Cc:     chakravarthikulkarni2021@gmail.com,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: acpiphp:  Fixed coding style
-Date:   Mon,  1 Mar 2021 12:51:45 +0530
-Message-Id: <20210301072145.19018-1-chakravarthikulkarni2021@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        id S232561AbhCAH4S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 Mar 2021 02:56:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232480AbhCAH4R (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 1 Mar 2021 02:56:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8EDE164DBD;
+        Mon,  1 Mar 2021 07:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614585334;
+        bh=eeHQCvd8UbNO8JIbmuAMLChEtfZ+6ZSQnbzdOgqBwZI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A89S5Fg+640FyMyslrCMMQ/22J05ojC+rZuqZW759yFfL025YiYpLzgOW5gpVu9aK
+         b8xZN3el+nr+mWlTJjUZUoAj0N1rYRpetFLJ/q4k64ZKBf2tn018yfN+NxAkw0eMlx
+         PBqFa9F4/fyU6GZ3TrdP8aHklJJ/BEtnpJ9BF2EMuNPEb29jjJ63NGNEXT/vk1qtJM
+         ZoQ8vvF96z3YyGtioBok3R2or7l12ihbmrytlh2lx1zty7xP0JaXRbCgo2FJaqQjsx
+         Urjl41kXUXkzn3+Q0ydLDYEBmuW5VkmBRNEXijXe9x9oPSPfzrJUDFOLIctnTZeRG1
+         SA4eg2Z40yHzg==
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Date:   Mon,  1 Mar 2021 09:55:20 +0200
+Message-Id: <20210301075524.441609-1-leon@kernel.org>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In this commit fixed coding style for braces and comments.
+From: Leon Romanovsky <leonro@nvidia.com>
 
-Signed-off-by: chakravarthikulkarni <chakravarthikulkarni2021@gmail.com>
----
- drivers/pci/hotplug/acpiphp.h | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+@Alexander Duyck, please update me if I can add your ROB tag again
+to the series, because you liked v6 more.
 
-diff --git a/drivers/pci/hotplug/acpiphp.h b/drivers/pci/hotplug/acpiphp.h
-index a74b274a8c45..e0964600a78f 100644
---- a/drivers/pci/hotplug/acpiphp.h
-+++ b/drivers/pci/hotplug/acpiphp.h
-@@ -80,8 +80,8 @@ struct acpiphp_bridge {
- struct acpiphp_slot {
- 	struct list_head node;
- 	struct pci_bus *bus;
--	struct list_head funcs;		/* one slot may have different
--					   objects (i.e. for each function) */
-+	struct list_head funcs;		/* one slot may have different */
-+					/* objects (i.e. for each function) */
- 	struct slot *slot;
- 
- 	u8		device;		/* pci device# */
-@@ -148,8 +148,7 @@ static inline struct acpiphp_root_context *to_acpiphp_root_context(struct acpi_h
-  * ACPI has no generic method of setting/getting attention status
-  * this allows for device specific driver registration
-  */
--struct acpiphp_attention_info
--{
-+struct acpiphp_attention_info {
- 	int (*set_attn)(struct hotplug_slot *slot, u8 status);
- 	int (*get_attn)(struct hotplug_slot *slot, u8 *status);
- 	struct module *owner;
--- 
-2.17.1
+Thanks
+
+---------------------------------------------------------------------------------
+Changelog
+v7:
+ * Rebase on top v5.12-rc1
+ * More english fixes
+ * Returned to static sysfs creation model as was implemented in v0/v1.
+v6: https://lore.kernel.org/linux-pci/20210209133445.700225-1-leon@kernel.org
+ * Patch 1:
+   * English fixes
+   * Moved pci_vf_set_msix_vec_count() from msi.c to iov.c
+   * Embedded pci_vf_set_msix_vec_count() into sriov_vf_msix_count_store
+   * Deleted sriov_vf_msix_count_show
+   * Deleted vfs_overlay folder
+   * Renamed functions *_vfs_overlay_* to be *_vf_overlay_*
+   * Deleted is_supported and attribute_group because it confused people more than
+     it gave advantage.
+   * Changed vf_total_msix to be callback
+ * Patch 3:
+   * Fixed english as suggested by Bjorn
+   * Added more explanations to the commit message
+ * Patch 4:
+   * Protected enable/disable with capability check
+v5: https://lore.kernel.org/linux-pci/20210126085730.1165673-1-leon@kernel.org
+ * Patch 1:
+  * Added forgotten "inline" keyword when declaring empty functions.
+v4: https://lore.kernel.org/linux-pci/20210124131119.558563-1-leon@kernel.org
+ * Used sysfs_emit() instead of sprintf() in new sysfs entries.
+ * Changed EXPORT_SYMBOL to be EXPORT_SYMBOL_GPL for pci_iov_virtfn_devfn().
+ * Rewrote sysfs registration code to be driven by PF that wants to enable VF
+   overlay instead of creating to all SR-IOV devices.
+ * Grouped all such functionality under new "vfs_overlay" folder.
+ * Combined two PCI patches into one.
+v3: https://lore.kernel.org/linux-pci/20210117081548.1278992-1-leon@kernel.org
+ * Renamed pci_set_msix_vec_count to be pci_vf_set_msix_vec_count.
+ * Added VF msix_cap check to hide sysfs entry if device doesn't support msix.
+ * Changed "-" to be ":" in the mlx5 patch to silence CI warnings about missing
+   kdoc description.
+ * Split differently error print in mlx5 driver to avoid checkpatch warning.
+v2: https://lore.kernel.org/linux-pci/20210114103140.866141-1-leon@kernel.org
+ * Patch 1:
+  * Renamed vf_msix_vec sysfs knob to be sriov_vf_msix_count
+  * Added PF and VF device locks during set MSI-X call to protect from parallel
+    driver bind/unbind operations.
+  * Removed extra checks when reading sriov_vf_msix, because users will
+    be able to distinguish between supported/not supported by looking on
+    sriov_vf_total_msix count.
+  * Changed all occurrences of "numb" to be "count"
+  * Changed returned error from EOPNOTSUPP to be EBUSY if user tries to set
+    MSI-X count after driver already bound to the VF.
+  * Added extra comment in pci_set_msix_vec_count() to emphasize that driver
+    should not be bound.
+ * Patch 2:
+  * Changed vf_total_msix from int to be u32 and updated function signatures
+    accordingly.
+  * Improved patch title
+v1: https://lore.kernel.org/linux-pci/20210110150727.1965295-1-leon@kernel.org
+ * Improved wording and commit messages of first PCI patch
+ * Added extra PCI patch to provide total number of MSI-X vectors
+ * Prohibited read of vf_msix_vec sysfs file if driver doesn't support write
+ * Removed extra function definition in pci.h
+v0: https://lore.kernel.org/linux-pci/20210103082440.34994-1-leon@kernel.org
+
+--------------------------------------------------------------------
+Hi,
+
+The number of MSI-X vectors is PCI property visible through lspci, that
+field is read-only and configured by the device.
+
+The static assignment of an amount of MSI-X vectors doesn't allow utilize
+the newly created VF because it is not known to the device the future load
+and configuration where that VF will be used.
+
+The VFs are created on the hypervisor and forwarded to the VMs that have
+different properties (for example number of CPUs).
+
+To overcome the inefficiency in the spread of such MSI-X vectors, we
+allow the kernel to instruct the device with the needed number of such
+vectors, before VF is initialized and bounded to the driver.
+
+Before this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+        Capabilities: [9c] MSI-X: Enable- Count=12 Masked-
+
+Configuration script:
+1. Start fresh
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+modprobe -q -r mlx5_ib mlx5_core
+2. Ensure that driver doesn't run and it is safe to change MSI-X
+echo 0 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_drivers_autoprobe
+3. Load driver for the PF
+modprobe mlx5_core
+4. Configure one of the VFs with new number
+echo 2 > /sys/bus/pci/devices/0000\:08\:00.0/sriov_numvfs
+echo 21 > /sys/bus/pci/devices/0000\:08\:00.2/sriov_vf_msix_count
+
+After this series:
+[root@server ~]# lspci -vs 0000:08:00.2
+08:00.2 Ethernet controller: Mellanox Technologies MT27800 Family [ConnectX-5 Virtual Function]
+....
+        Capabilities: [9c] MSI-X: Enable- Count=21 Masked-
+
+Thanks
+
+Leon Romanovsky (4):
+  PCI: Add a sysfs file to change the MSI-X table size of SR-IOV VFs
+  net/mlx5: Add dynamic MSI-X capabilities bits
+  net/mlx5: Dynamically assign MSI-X vectors count
+  net/mlx5: Implement sriov_get_vf_total_msix/count() callbacks
+
+ Documentation/ABI/testing/sysfs-bus-pci       |  29 +++++
+ .../net/ethernet/mellanox/mlx5/core/main.c    |   6 ++
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  12 +++
+ .../net/ethernet/mellanox/mlx5/core/pci_irq.c |  73 +++++++++++++
+ .../net/ethernet/mellanox/mlx5/core/sriov.c   |  48 ++++++++-
+ drivers/pci/iov.c                             | 102 ++++++++++++++++--
+ drivers/pci/pci-sysfs.c                       |   3 +-
+ drivers/pci/pci.h                             |   3 +-
+ include/linux/mlx5/mlx5_ifc.h                 |  11 +-
+ include/linux/pci.h                           |   8 ++
+ 10 files changed, 284 insertions(+), 11 deletions(-)
+
+--
+2.29.2
 
