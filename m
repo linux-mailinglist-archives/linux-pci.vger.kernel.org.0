@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C4F32B1EB
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:47:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D51C32B1FD
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:47:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239426AbhCCB5M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Mar 2021 20:57:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
+        id S239738AbhCCB51 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Mar 2021 20:57:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1446885AbhCBMNt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Mar 2021 07:13:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B61E964F6B;
-        Tue,  2 Mar 2021 11:57:29 +0000 (UTC)
+        id S1350241AbhCBMOU (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Mar 2021 07:14:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F22D164F75;
+        Tue,  2 Mar 2021 11:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614686250;
-        bh=c9d8Nxabf4kZIzvaMyb+3PXWhBlaUpycrmLAB2mLcjc=;
+        s=k20201202; t=1614686252;
+        bh=/psRUJrzF/+lIPENVTGRXA5EbFyUi4ZN6AnumT3lG7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qo+G+g8QGZagd1s2IcHH7xb/LV7/L2QpjS708+/jDjidtdGMs7L8Znx8W8DTmozOz
-         eZPnju0dwiS5BIrOF7X5vUGnn6VNDhnUmN/iE88akmjM/VCXh1R2hmqbvhXYCYkImH
-         EuZowrw62nbb6OxSM0SbonTe1RuyN8V89kqNifvi6BlxVTLyrVbPHLZaWXKJBVNSJf
-         Najcnqdn6IdhWyC1vcflC+YaNbo140Qh8H7IOzIkPtFuAzn4k6+ulSFvXx8dSVbZ8K
-         2HKgILTiIXEwxLCcfV9RH44DIbdVMTyfV2oSIfUaBZzq08JBHV60eX+HtytatrR9mP
-         TTwGw7Injd9Zw==
+        b=QyBKvYQmp6fBCOKo5StCAdJO+WIuU3mOoYRQYMRSK1XGuXfB8vSYAxajFbIMQkUGS
+         UiL7ucYsgdhKlSgt+/hW7vi2dnKqqX5sBYwOas8UHHayjdyXGdlhmqdvt1thhkrBKb
+         GDI/aiONeZ0DLkD2F1z5BTI99TRqIkij9ZQ0vRsuxsGHu/I5EYLHG+UY0Q9xmHg0TN
+         4E9kn4nJYds0Nb6EVT0JPBXb3fG8kPvzqOyZ8ThQK1q+EMT9Mf3GyAormUoZMZXZAL
+         gSAmWcB7hVJYh5iuPDWHrqcjYjvmCRO2qVdhf4XsUtsCCCwsGr/eXJynkiq/dugmzP
+         CKVRSuCrY6Xxg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nadeem Athani <nadeem@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 35/47] PCI: cadence: Retrain Link to work around Gen2 training defect
-Date:   Tue,  2 Mar 2021 06:56:34 -0500
-Message-Id: <20210302115646.62291-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 37/47] PCI: Fix pci_register_io_range() memory leak
+Date:   Tue,  2 Mar 2021 06:56:36 -0500
+Message-Id: <20210302115646.62291-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210302115646.62291-1-sashal@kernel.org>
 References: <20210302115646.62291-1-sashal@kernel.org>
@@ -42,200 +42,79 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Nadeem Athani <nadeem@cadence.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 4740b969aaf58adeca6829947a3ad8da423976cf ]
+[ Upstream commit f6bda644fa3a7070621c3bf12cd657f69a42f170 ]
 
-Cadence controller will not initiate autonomous speed change if strapped
-as Gen2. The Retrain Link bit is set as quirk to enable this speed change.
+Kmemleak reports:
 
-Link: https://lore.kernel.org/r/20210209144622.26683-3-nadeem@cadence.com
-Signed-off-by: Nadeem Athani <nadeem@cadence.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+  unreferenced object 0xc328de40 (size 64):
+    comm "kworker/1:1", pid 21, jiffies 4294938212 (age 1484.670s)
+    hex dump (first 32 bytes):
+      00 00 00 00 00 00 00 00 e0 d8 fc eb 00 00 00 00  ................
+      00 00 10 fe 00 00 00 00 00 00 00 00 00 00 00 00  ................
+
+  backtrace:
+    [<ad758d10>] pci_register_io_range+0x3c/0x80
+    [<2c7f139e>] of_pci_range_to_resource+0x48/0xc0
+    [<f079ecc8>] devm_of_pci_get_host_bridge_resources.constprop.0+0x2ac/0x3ac
+    [<e999753b>] devm_of_pci_bridge_init+0x60/0x1b8
+    [<a895b229>] devm_pci_alloc_host_bridge+0x54/0x64
+    [<e451ddb0>] rcar_pcie_probe+0x2c/0x644
+
+In case a PCI host driver's probe is deferred, the same I/O range may be
+allocated again, and be ignored, causing a memory leak.
+
+Fix this by (a) letting logic_pio_register_range() return -EEXIST if the
+passed range already exists, so pci_register_io_range() will free it, and
+by (b) making pci_register_io_range() not consider -EEXIST an error
+condition.
+
+Link: https://lore.kernel.org/r/20210202100332.829047-1-geert+renesas@glider.be
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/cadence/pci-j721e.c    |  3 +
- .../controller/cadence/pcie-cadence-host.c    | 81 ++++++++++++++-----
- drivers/pci/controller/cadence/pcie-cadence.h | 11 ++-
- 3 files changed, 76 insertions(+), 19 deletions(-)
+ drivers/pci/pci.c | 4 ++++
+ lib/logic_pio.c   | 3 +++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 586b9d69fa5e..d34ca0fda0f6 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -63,6 +63,7 @@ enum j721e_pcie_mode {
- 
- struct j721e_pcie_data {
- 	enum j721e_pcie_mode	mode;
-+	bool quirk_retrain_flag;
- };
- 
- static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
-@@ -270,6 +271,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
- 
- static const struct j721e_pcie_data j721e_pcie_rc_data = {
- 	.mode = PCI_MODE_RC,
-+	.quirk_retrain_flag = true,
- };
- 
- static const struct j721e_pcie_data j721e_pcie_ep_data = {
-@@ -378,6 +380,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 
- 		bridge->ops = &cdns_ti_pcie_host_ops;
- 		rc = pci_host_bridge_priv(bridge);
-+		rc->quirk_retrain_flag = data->quirk_retrain_flag;
- 
- 		cdns_pcie = &rc->pcie;
- 		cdns_pcie->dev = dev;
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 811c1cb2e8de..6f591d382578 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -77,6 +77,68 @@ static struct pci_ops cdns_pcie_host_ops = {
- 	.write		= pci_generic_config_write,
- };
- 
-+static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
-+{
-+	struct device *dev = pcie->dev;
-+	int retries;
-+
-+	/* Check if the link is up or not */
-+	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
-+		if (cdns_pcie_link_up(pcie)) {
-+			dev_info(dev, "Link up\n");
-+			return 0;
-+		}
-+		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
-+	}
-+
-+	return -ETIMEDOUT;
-+}
-+
-+static int cdns_pcie_retrain(struct cdns_pcie *pcie)
-+{
-+	u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
-+	u16 lnk_stat, lnk_ctl;
-+	int ret = 0;
-+
-+	/*
-+	 * Set retrain bit if current speed is 2.5 GB/s,
-+	 * but the PCIe root port support is > 2.5 GB/s.
-+	 */
-+
-+	lnk_cap_sls = cdns_pcie_readl(pcie, (CDNS_PCIE_RP_BASE + pcie_cap_off +
-+					     PCI_EXP_LNKCAP));
-+	if ((lnk_cap_sls & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
-+		return ret;
-+
-+	lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
-+	if ((lnk_stat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB) {
-+		lnk_ctl = cdns_pcie_rp_readw(pcie,
-+					     pcie_cap_off + PCI_EXP_LNKCTL);
-+		lnk_ctl |= PCI_EXP_LNKCTL_RL;
-+		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
-+				    lnk_ctl);
-+
-+		ret = cdns_pcie_host_wait_for_link(pcie);
-+	}
-+	return ret;
-+}
-+
-+static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
-+{
-+	struct cdns_pcie *pcie = &rc->pcie;
-+	int ret;
-+
-+	ret = cdns_pcie_host_wait_for_link(pcie);
-+
-+	/*
-+	 * Retrain link for Gen2 training defect
-+	 * if quirk flag is set.
-+	 */
-+	if (!ret && rc->quirk_retrain_flag)
-+		ret = cdns_pcie_retrain(pcie);
-+
-+	return ret;
-+}
- 
- static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
- {
-@@ -398,23 +460,6 @@ static int cdns_pcie_host_init(struct device *dev,
- 	return cdns_pcie_host_init_address_translation(rc);
- }
- 
--static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
--{
--	struct device *dev = pcie->dev;
--	int retries;
--
--	/* Check if the link is up or not */
--	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
--		if (cdns_pcie_link_up(pcie)) {
--			dev_info(dev, "Link up\n");
--			return 0;
--		}
--		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
--	}
--
--	return -ETIMEDOUT;
--}
--
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- {
- 	struct device *dev = rc->pcie.dev;
-@@ -457,7 +502,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 		return ret;
- 	}
- 
--	ret = cdns_pcie_host_wait_for_link(pcie);
-+	ret = cdns_pcie_host_start_link(rc);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 6427cbd0a5be..a13b5ea987f6 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4003,6 +4003,10 @@ int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
+ 	ret = logic_pio_register_range(range);
  	if (ret)
- 		dev_dbg(dev, "PCIe link never came up\n");
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index feed1e3038f4..6705a5fedfbb 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -119,7 +119,7 @@
-  * Root Port Registers (PCI configuration space for the root port function)
-  */
- #define CDNS_PCIE_RP_BASE	0x00200000
--
-+#define CDNS_PCIE_RP_CAP_OFFSET 0xc0
- 
- /*
-  * Address Translation Registers
-@@ -290,6 +290,7 @@ struct cdns_pcie {
-  * @device_id: PCI device ID
-  * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
-  *                available
-+ * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
-  */
- struct cdns_pcie_rc {
- 	struct cdns_pcie	pcie;
-@@ -298,6 +299,7 @@ struct cdns_pcie_rc {
- 	u32			vendor_id;
- 	u32			device_id;
- 	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
-+	bool                    quirk_retrain_flag;
- };
- 
- /**
-@@ -413,6 +415,13 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
- 	cdns_pcie_write_sz(addr, 0x2, value);
- }
- 
-+static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
-+{
-+	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
+ 		kfree(range);
 +
-+	return cdns_pcie_read_sz(addr, 0x2);
-+}
-+
- /* Endpoint Function register access */
- static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
- 					  u32 reg, u8 value)
++	/* Ignore duplicates due to deferred probing */
++	if (ret == -EEXIST)
++		ret = 0;
+ #endif
+ 
+ 	return ret;
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index f32fe481b492..07b4b9a1f54b 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -28,6 +28,8 @@ static DEFINE_MUTEX(io_range_mutex);
+  * @new_range: pointer to the IO range to be registered.
+  *
+  * Returns 0 on success, the error code in case of failure.
++ * If the range already exists, -EEXIST will be returned, which should be
++ * considered a success.
+  *
+  * Register a new IO range node in the IO range list.
+  */
+@@ -51,6 +53,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	list_for_each_entry(range, &io_range_list, list) {
+ 		if (range->fwnode == new_range->fwnode) {
+ 			/* range already there */
++			ret = -EEXIST;
+ 			goto end_register;
+ 		}
+ 		if (range->flags == LOGIC_PIO_CPU_MMIO &&
 -- 
 2.30.1
 
