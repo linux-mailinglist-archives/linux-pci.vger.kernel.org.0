@@ -2,35 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F51C32B24D
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC82432B234
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242132AbhCCB6N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Mar 2021 20:58:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35854 "EHLO mail.kernel.org"
+        id S241400AbhCCB6F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Mar 2021 20:58:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1446278AbhCBN25 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Mar 2021 08:28:57 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5E6F064F0B;
-        Tue,  2 Mar 2021 11:56:27 +0000 (UTC)
+        id S1383907AbhCBMcs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Mar 2021 07:32:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D6A7F64F41;
+        Tue,  2 Mar 2021 11:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614686188;
-        bh=u2P5i4xmHCSSHOMVfd8dvwLyx+VXBqLuGZ/cmQoff18=;
+        s=k20201202; t=1614686190;
+        bh=38D3J8FLIRGFAsRoxpxp1VThzkM0HObSRrfrFVgjVag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M7WJ2feZixRyl5TiAN5qxOKOB/3l7QHfQXb9iDGYsE+xKVNT3Bi/AVfiRb6jiJlSf
-         E3tJXs+BqPgS64e+zCoyLhM1KKpYkmLQlMKyi6KbEv5UzAyr0ROPdFSq87+8IlFk+b
-         KouXBxcxO3kefLzmw6GB7un3Fsy3hen7oihh7dIifcW4V1CB0VnbojDm+hceiWMbtJ
-         uT+aQohNWQkzq+RU0DYdauT6WAWWS37JuGpqUZg/Jocb8BmdP6Or1vywqE7mYiMXkp
-         VZEFF/zKN41fZ294gnZDNnMnzsfGHWUMsXK8xtGpCY/SnlJhgs7/FHJxLYFP9bdaU5
-         xxF9905tMKReQ==
+        b=PKkjZNdHJoCBVqosdov+8udFpKV3tBd4gaxSu+FsGNepOlk5DvGIOO4RNey3m8n1p
+         o2dP+yUjpeEIMrTDsCBfJpSK+hC2ylacA1xg6pTqp63xEZKSm4k8km9p0+yqT0mwtK
+         y5IHWLmUdIajGpHkQNfbgmakn+EQcG4FuMb/I2IYcAhB0/ZMVo45WOc8NeiG+F9uDE
+         ZHy29EX3hpNTDxCEcVj6mMkApqRTafNkowI926Rzn379ET2ZS6zpzUV2oTvPk7wPD2
+         EtYWh4vU4uSGvkMcDDtxf6qp60pbgXAiQRrI1NiVXfT6bkL24MA71k3n9cB8hDJzOG
+         1p+oxr510niUg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Hinko Kocevar <hinko.kocevar@ess.eu>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.11 41/52] PCI: Fix pci_register_io_range() memory leak
-Date:   Tue,  2 Mar 2021 06:55:22 -0500
-Message-Id: <20210302115534.61800-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.11 43/52] PCI/ERR: Retain status from error notification
+Date:   Tue,  2 Mar 2021 06:55:24 -0500
+Message-Id: <20210302115534.61800-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210302115534.61800-1-sashal@kernel.org>
 References: <20210302115534.61800-1-sashal@kernel.org>
@@ -42,79 +45,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit f6bda644fa3a7070621c3bf12cd657f69a42f170 ]
+[ Upstream commit 387c72cdd7fb6bef650fb078d0f6ae9682abf631 ]
 
-Kmemleak reports:
+Overwriting the frozen detected status with the result of the link reset
+loses the NEED_RESET result that drivers are depending on for error
+handling to report the .slot_reset() callback. Retain this status so
+that subsequent error handling has the correct flow.
 
-  unreferenced object 0xc328de40 (size 64):
-    comm "kworker/1:1", pid 21, jiffies 4294938212 (age 1484.670s)
-    hex dump (first 32 bytes):
-      00 00 00 00 00 00 00 00 e0 d8 fc eb 00 00 00 00  ................
-      00 00 10 fe 00 00 00 00 00 00 00 00 00 00 00 00  ................
-
-  backtrace:
-    [<ad758d10>] pci_register_io_range+0x3c/0x80
-    [<2c7f139e>] of_pci_range_to_resource+0x48/0xc0
-    [<f079ecc8>] devm_of_pci_get_host_bridge_resources.constprop.0+0x2ac/0x3ac
-    [<e999753b>] devm_of_pci_bridge_init+0x60/0x1b8
-    [<a895b229>] devm_pci_alloc_host_bridge+0x54/0x64
-    [<e451ddb0>] rcar_pcie_probe+0x2c/0x644
-
-In case a PCI host driver's probe is deferred, the same I/O range may be
-allocated again, and be ignored, causing a memory leak.
-
-Fix this by (a) letting logic_pio_register_range() return -EEXIST if the
-passed range already exists, so pci_register_io_range() will free it, and
-by (b) making pci_register_io_range() not consider -EEXIST an error
-condition.
-
-Link: https://lore.kernel.org/r/20210202100332.829047-1-geert+renesas@glider.be
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20210104230300.1277180-4-kbusch@kernel.org
+Reported-by: Hinko Kocevar <hinko.kocevar@ess.eu>
+Tested-by: Hedi Berriche <hedi.berriche@hpe.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Sean V Kelley <sean.v.kelley@intel.com>
+Acked-by: Hedi Berriche <hedi.berriche@hpe.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 4 ++++
- lib/logic_pio.c   | 3 +++
- 2 files changed, 7 insertions(+)
+ drivers/pci/pcie/err.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 790393d1e318..a53e25d75d04 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4022,6 +4022,10 @@ int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
- 	ret = logic_pio_register_range(range);
- 	if (ret)
- 		kfree(range);
-+
-+	/* Ignore duplicates due to deferred probing */
-+	if (ret == -EEXIST)
-+		ret = 0;
- #endif
- 
- 	return ret;
-diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-index f32fe481b492..07b4b9a1f54b 100644
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -28,6 +28,8 @@ static DEFINE_MUTEX(io_range_mutex);
-  * @new_range: pointer to the IO range to be registered.
-  *
-  * Returns 0 on success, the error code in case of failure.
-+ * If the range already exists, -EEXIST will be returned, which should be
-+ * considered a success.
-  *
-  * Register a new IO range node in the IO range list.
-  */
-@@ -51,6 +53,7 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
- 	list_for_each_entry(range, &io_range_list, list) {
- 		if (range->fwnode == new_range->fwnode) {
- 			/* range already there */
-+			ret = -EEXIST;
- 			goto end_register;
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 510f31f0ef6d..4798bd6de97d 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -198,8 +198,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 	pci_dbg(bridge, "broadcast error_detected message\n");
+ 	if (state == pci_channel_io_frozen) {
+ 		pci_walk_bridge(bridge, report_frozen_detected, &status);
+-		status = reset_subordinates(bridge);
+-		if (status != PCI_ERS_RESULT_RECOVERED) {
++		if (reset_subordinates(bridge) != PCI_ERS_RESULT_RECOVERED) {
+ 			pci_warn(bridge, "subordinate device reset failed\n");
+ 			goto failed;
  		}
- 		if (range->flags == LOGIC_PIO_CPU_MMIO &&
 -- 
 2.30.1
 
