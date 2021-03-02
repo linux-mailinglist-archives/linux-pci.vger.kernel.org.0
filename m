@@ -2,89 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49B2B32B22F
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5404F32B255
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241052AbhCCB6C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Mar 2021 20:58:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1383811AbhCBMcs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Mar 2021 07:32:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6C2BA64FD0;
-        Tue,  2 Mar 2021 11:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614686384;
-        bh=nzfBEvURGIAy8Ojlx75w2U2uuZQ96+VrmVDH4xtSifc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fh7Wqo75nrcHGosrRNwmmBobQdjP00NpkMkfbG7BmBWQlboh1je0oBvVaUMWdo7vQ
-         15Ft/ZeNKWQsTkSml0t3duwww44swuNW+WK1dmA/cH/5kfXgm9YUULivTKTD01v7A7
-         cZBd/JHpSq+WUdiikXGjW+BOhl+bOebicXdYGAbxpxQbSX+tHhzbO69CKpeSN0yBZY
-         jmYcoB4wn6vkx2oktHVECFKLjpwlMnyTh8DItDLYD2iuwMOGErkiWAMipZeaf+ys3i
-         a4SdjBgre9GZVOSA8bppL0VK4rgWvwmcLRN3hOGjqRWpp3i3y23NJZ3NE/JqzzhE4T
-         dbWt5tVVllwlA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Kaiser <martin@kaiser.cx>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 6/8] PCI: xgene-msi: Fix race in installing chained irq handler
-Date:   Tue,  2 Mar 2021 06:59:33 -0500
-Message-Id: <20210302115935.63777-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210302115935.63777-1-sashal@kernel.org>
-References: <20210302115935.63777-1-sashal@kernel.org>
+        id S242251AbhCCB6P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Mar 2021 20:58:15 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:13418 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1447956AbhCBNy0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Mar 2021 08:54:26 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Dqcgn1HZ0zjTX6;
+        Tue,  2 Mar 2021 21:00:53 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.498.0; Tue, 2 Mar 2021 21:02:08 +0800
+From:   Yicong Yang <yangyicong@hisilicon.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <tanxiaofei@huawei.com>, <prime.zeng@huawei.com>,
+        <yangyicong@hisilicon.com>, <linuxarm@huawei.com>
+Subject: [PATCH] PCI/AER: Correctly handle advisory non-fatal errors
+Date:   Tue, 2 Mar 2021 20:59:54 +0800
+Message-ID: <1614689994-10925-1-git-send-email-yangyicong@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Martin Kaiser <martin@kaiser.cx>
+Per PCIe Spec 4.0 sctions 6.2.3.2.4 and 6.2.4.3, some uncorrectable
+errors may signal ERR_COR instead of ERR_NONFATAL and logged as
+advisory non-fatal error. And section 6.2.5 mentions, for advisory
+non-fatal errors, both corresponding bit in Uncorrectable Error Status
+reg and bit in Correctable Error status will be set.
 
-[ Upstream commit a93c00e5f975f23592895b7e83f35de2d36b7633 ]
+Currently we only print the information of correctable error status
+when advisory non-fatal error received, and with corresponding
+bit in uncorrectable error status uncleared. This will leads to
+wrong information when non-fatal errors arrive in the future, as
+AER will print the non-fatal errors that already handled as
+advisory non-fatal errors.
 
-Fix a race where a pending interrupt could be received and the handler
-called before the handler's data has been setup, by converting to
-irq_set_chained_handler_and_data().
+Print non-fatal error status signaled as advisory non-fatal error
+and clear the uncorrectable error status.
 
-See also 2cf5a03cb29d ("PCI/keystone: Fix race in installing chained IRQ
-handler").
-
-Based on the mail discussion, it seems ok to drop the error handling.
-
-Link: https://lore.kernel.org/r/20210115212435.19940-3-martin@kaiser.cx
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/pci/host/pci-xgene-msi.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/pci/pci.h      |  1 +
+ drivers/pci/pcie/aer.c | 23 ++++++++++++++++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/host/pci-xgene-msi.c b/drivers/pci/host/pci-xgene-msi.c
-index a6456b578269..b6a099371ad2 100644
---- a/drivers/pci/host/pci-xgene-msi.c
-+++ b/drivers/pci/host/pci-xgene-msi.c
-@@ -393,13 +393,9 @@ static int xgene_msi_hwirq_alloc(unsigned int cpu)
- 		if (!msi_group->gic_irq)
- 			continue;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index ef7c466..6a5f76c 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -424,6 +424,7 @@ struct aer_err_info {
  
--		irq_set_chained_handler(msi_group->gic_irq,
--					xgene_msi_isr);
--		err = irq_set_handler_data(msi_group->gic_irq, msi_group);
--		if (err) {
--			pr_err("failed to register GIC IRQ handler\n");
--			return -EINVAL;
--		}
-+		irq_set_chained_handler_and_data(msi_group->gic_irq,
-+			xgene_msi_isr, msi_group);
+ 	unsigned int status;		/* COR/UNCOR Error Status */
+ 	unsigned int mask;		/* COR/UNCOR Error Mask */
++	unsigned int nf_status;		/* Non-Fatal Error Status signaled as COR Error */
+ 	struct aer_header_log_regs tlp;	/* TLP Header */
+ };
+ 
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index ba22388..a3e7d8d 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -691,6 +691,20 @@ static void __aer_print_error(struct pci_dev *dev,
+ 		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
+ 				info->first_error == i ? " (First)" : "");
+ 	}
 +
- 		/*
- 		 * Statically allocate MSI GIC IRQs to each CPU core.
- 		 * With 8-core X-Gene v1, 2 MSI GIC IRQs are allocated
++	if (info->severity == AER_CORRECTABLE &&
++	    (status & PCI_ERR_COR_ADV_NFAT)) {
++		status = info->nf_status;
++		pci_printk(level, dev, "   Non-Fatal errors signaled as correctable NonFatalErr:");
++		for_each_set_bit(i, &status, 32) {
++			errmsg = aer_uncorrectable_error_string[i];
++			if (!errmsg)
++				errmsg = "Unknown Error Bit";
++
++			pci_printk(level, dev, "   [%2d] %-22s\n", i, errmsg);
++		}
++	}
++
+ 	pci_dev_aer_stats_incr(dev, info);
+ }
+ 
+@@ -781,6 +795,7 @@ void cper_print_aer(struct pci_dev *dev, int aer_severity,
+ 	info.status = status;
+ 	info.mask = mask;
+ 	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
++	info.nf_status = aer->uncor_status;
+ 
+ 	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+ 	__aer_print_error(dev, &info);
+@@ -946,9 +961,13 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+ 		 * Correctable error does not need software intervention.
+ 		 * No need to go through error recovery process.
+ 		 */
+-		if (aer)
++		if (aer) {
+ 			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+ 					info->status);
++			if (info->status & PCI_ERR_COR_ADV_NFAT)
++				pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
++						       info->nf_status);
++		}
+ 		if (pcie_aer_is_native(dev))
+ 			pcie_clear_device_status(dev);
+ 	} else if (info->severity == AER_NONFATAL)
+@@ -1058,6 +1077,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+ 			&info->mask);
+ 		if (!(info->status & ~info->mask))
+ 			return 0;
++		if (info->status & PCI_ERR_COR_ADV_NFAT)
++			pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &info->nf_status);
+ 	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
+ 		   type == PCI_EXP_TYPE_RC_EC ||
+ 		   type == PCI_EXP_TYPE_DOWNSTREAM ||
 -- 
-2.30.1
+2.8.1
 
