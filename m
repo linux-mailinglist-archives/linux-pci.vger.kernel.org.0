@@ -2,34 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A84F332B1DF
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:47:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AB9032B239
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239272AbhCCB5I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Mar 2021 20:57:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41062 "EHLO mail.kernel.org"
+        id S241472AbhCCB6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Mar 2021 20:58:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1383742AbhCBME1 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Mar 2021 07:04:27 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6CF2C64F39;
-        Tue,  2 Mar 2021 11:56:22 +0000 (UTC)
+        id S1444797AbhCBMeA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Mar 2021 07:34:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E111364F33;
+        Tue,  2 Mar 2021 11:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614686183;
-        bh=oSmYJSaniA1wucTg3e261y/3zV4byiy7r8YlXMkbqt0=;
+        s=k20201202; t=1614686185;
+        bh=WivTFf5RrxXAlXBoHdcFGsnevMFtmQzD3w53KWzBk3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ub5b2G1Cqd22seBi3fEAi2AwEe628DD9i3gQ+aDmWsMJ4y0Q2DhfU/ZSm/XNiJ9m7
-         SBERZxQC2+8GwFjSBJnUaFepV1Ku7zhKvKUDt2H3lW1UcKIzvce30mdl0bFSFBPJJw
-         9hEPwza2ESJLGc2Sj9uYT0yjfyM1QBGS78BRPw7Wut3uXTYKJva+qH9eddq9U/NGSt
-         umRVFC8PZfHzMLqJyP218la7zxH8LwdBcaIbh8+JeY3Y/ah8sM79Y/R6tPI+wofyLL
-         x05D3B/hLze+3pgKbKl67mR2XAEzZrypRhy4GIb+7iK7P2x2Wp6K6eTDK6sNejd03Z
-         idC3GQOQEiq5g==
+        b=Utmbz9FebLVthGV0InP3Kt5lLGauvGR7ylEOuAO9qxvVYnE70Ycf/vI98Pw/4k2/Z
+         0B0PPt1FIq5AQ1E1CUU2jl1LWkxvciCauQM3Kiu+QaUFGc9GHcVfxhEE1qIMHbLc4t
+         eqycVFt98G9R32rgkwwTU7jeJvMQxYvWYKIC4r2CoaHHhgv7OXC3reb7hxp1ZUSbdO
+         ikFgEaDHYbhH00pVthISrJzEFUTkXyz2iMP2ggRIuOck9TbuMcbJ/lBonIk3JSqR1d
+         7QfbF/atMcUWNxFLfOmh6Q/mR27iiKzfyrB5J/23KhqjOWUgesds9SxCHPEJ27lMjJ
+         nUFSfx7vsf0zg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+Cc:     Nadeem Athani <nadeem@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.11 37/52] PCI/LINK: Remove bandwidth notification
-Date:   Tue,  2 Mar 2021 06:55:18 -0500
-Message-Id: <20210302115534.61800-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.11 39/52] PCI: cadence: Retrain Link to work around Gen2 training defect
+Date:   Tue,  2 Mar 2021 06:55:20 -0500
+Message-Id: <20210302115534.61800-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210302115534.61800-1-sashal@kernel.org>
 References: <20210302115534.61800-1-sashal@kernel.org>
@@ -41,238 +42,200 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Nadeem Athani <nadeem@cadence.com>
 
-[ Upstream commit b4c7d2076b4e767dd2e075a2b3a9e57753fc67f5 ]
+[ Upstream commit 4740b969aaf58adeca6829947a3ad8da423976cf ]
 
-The PCIe Bandwidth Change Notification feature logs messages when the link
-bandwidth changes.  Some users have reported that these messages occur
-often enough to significantly reduce NVMe performance.  GPUs also seem to
-generate these messages.
+Cadence controller will not initiate autonomous speed change if strapped
+as Gen2. The Retrain Link bit is set as quirk to enable this speed change.
 
-We don't know why the link bandwidth changes, but in the reported cases
-there's no indication that it's caused by hardware failures.
-
-Remove the bandwidth change notifications for now.  Hopefully we can add
-this back when we have a better understanding of why this happens and how
-we can make the messages useful instead of overwhelming.
-
-Link: https://lore.kernel.org/r/20200115221008.GA191037@google.com/
-Link: https://lore.kernel.org/r/155605909349.3575.13433421148215616375.stgit@gimli.home/
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206197
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Link: https://lore.kernel.org/r/20210209144622.26683-3-nadeem@cadence.com
+Signed-off-by: Nadeem Athani <nadeem@cadence.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/Kconfig           |   8 --
- drivers/pci/pcie/Makefile          |   1 -
- drivers/pci/pcie/bw_notification.c | 138 -----------------------------
- drivers/pci/pcie/portdrv.h         |   6 --
- drivers/pci/pcie/portdrv_pci.c     |   1 -
- 5 files changed, 154 deletions(-)
- delete mode 100644 drivers/pci/pcie/bw_notification.c
+ drivers/pci/controller/cadence/pci-j721e.c    |  3 +
+ .../controller/cadence/pcie-cadence-host.c    | 81 ++++++++++++++-----
+ drivers/pci/controller/cadence/pcie-cadence.h | 11 ++-
+ 3 files changed, 76 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-index 3946555a6042..45a2ef702b45 100644
---- a/drivers/pci/pcie/Kconfig
-+++ b/drivers/pci/pcie/Kconfig
-@@ -133,14 +133,6 @@ config PCIE_PTM
- 	  This is only useful if you have devices that support PTM, but it
- 	  is safe to enable even if you don't.
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index dac1ac8a7615..849f1e416ea5 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -64,6 +64,7 @@ enum j721e_pcie_mode {
  
--config PCIE_BW
--	bool "PCI Express Bandwidth Change Notification"
--	depends on PCIEPORTBUS
--	help
--	  This enables PCI Express Bandwidth Change Notification.  If
--	  you know link width or rate changes occur only to correct
--	  unreliable links, you may answer Y.
--
- config PCIE_EDR
- 	bool "PCI Express Error Disconnect Recover support"
- 	depends on PCIE_DPC && ACPI
-diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-index d9697892fa3e..b2980db88cc0 100644
---- a/drivers/pci/pcie/Makefile
-+++ b/drivers/pci/pcie/Makefile
-@@ -12,5 +12,4 @@ obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
- obj-$(CONFIG_PCIE_PME)		+= pme.o
- obj-$(CONFIG_PCIE_DPC)		+= dpc.o
- obj-$(CONFIG_PCIE_PTM)		+= ptm.o
--obj-$(CONFIG_PCIE_BW)		+= bw_notification.o
- obj-$(CONFIG_PCIE_EDR)		+= edr.o
-diff --git a/drivers/pci/pcie/bw_notification.c b/drivers/pci/pcie/bw_notification.c
-deleted file mode 100644
-index 565d23cccb8b..000000000000
---- a/drivers/pci/pcie/bw_notification.c
-+++ /dev/null
-@@ -1,138 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0+
--/*
-- * PCI Express Link Bandwidth Notification services driver
-- * Author: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-- *
-- * Copyright (C) 2019, Dell Inc
-- *
-- * The PCIe Link Bandwidth Notification provides a way to notify the
-- * operating system when the link width or data rate changes.  This
-- * capability is required for all root ports and downstream ports
-- * supporting links wider than x1 and/or multiple link speeds.
-- *
-- * This service port driver hooks into the bandwidth notification interrupt
-- * and warns when links become degraded in operation.
-- */
--
--#define dev_fmt(fmt) "bw_notification: " fmt
--
--#include "../pci.h"
--#include "portdrv.h"
--
--static bool pcie_link_bandwidth_notification_supported(struct pci_dev *dev)
--{
--	int ret;
--	u32 lnk_cap;
--
--	ret = pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnk_cap);
--	return (ret == PCIBIOS_SUCCESSFUL) && (lnk_cap & PCI_EXP_LNKCAP_LBNC);
--}
--
--static void pcie_enable_link_bandwidth_notification(struct pci_dev *dev)
--{
--	u16 lnk_ctl;
--
--	pcie_capability_write_word(dev, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA_LBMS);
--
--	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnk_ctl);
--	lnk_ctl |= PCI_EXP_LNKCTL_LBMIE;
--	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
--}
--
--static void pcie_disable_link_bandwidth_notification(struct pci_dev *dev)
--{
--	u16 lnk_ctl;
--
--	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnk_ctl);
--	lnk_ctl &= ~PCI_EXP_LNKCTL_LBMIE;
--	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnk_ctl);
--}
--
--static irqreturn_t pcie_bw_notification_irq(int irq, void *context)
--{
--	struct pcie_device *srv = context;
--	struct pci_dev *port = srv->port;
--	u16 link_status, events;
--	int ret;
--
--	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
--	events = link_status & PCI_EXP_LNKSTA_LBMS;
--
--	if (ret != PCIBIOS_SUCCESSFUL || !events)
--		return IRQ_NONE;
--
--	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
--	pcie_update_link_speed(port->subordinate, link_status);
--	return IRQ_WAKE_THREAD;
--}
--
--static irqreturn_t pcie_bw_notification_handler(int irq, void *context)
--{
--	struct pcie_device *srv = context;
--	struct pci_dev *port = srv->port;
--	struct pci_dev *dev;
--
--	/*
--	 * Print status from downstream devices, not this root port or
--	 * downstream switch port.
--	 */
--	down_read(&pci_bus_sem);
--	list_for_each_entry(dev, &port->subordinate->devices, bus_list)
--		pcie_report_downtraining(dev);
--	up_read(&pci_bus_sem);
--
--	return IRQ_HANDLED;
--}
--
--static int pcie_bandwidth_notification_probe(struct pcie_device *srv)
--{
--	int ret;
--
--	/* Single-width or single-speed ports do not have to support this. */
--	if (!pcie_link_bandwidth_notification_supported(srv->port))
--		return -ENODEV;
--
--	ret = request_threaded_irq(srv->irq, pcie_bw_notification_irq,
--				   pcie_bw_notification_handler,
--				   IRQF_SHARED, "PCIe BW notif", srv);
--	if (ret)
--		return ret;
--
--	pcie_enable_link_bandwidth_notification(srv->port);
--	pci_info(srv->port, "enabled with IRQ %d\n", srv->irq);
--
--	return 0;
--}
--
--static void pcie_bandwidth_notification_remove(struct pcie_device *srv)
--{
--	pcie_disable_link_bandwidth_notification(srv->port);
--	free_irq(srv->irq, srv);
--}
--
--static int pcie_bandwidth_notification_suspend(struct pcie_device *srv)
--{
--	pcie_disable_link_bandwidth_notification(srv->port);
--	return 0;
--}
--
--static int pcie_bandwidth_notification_resume(struct pcie_device *srv)
--{
--	pcie_enable_link_bandwidth_notification(srv->port);
--	return 0;
--}
--
--static struct pcie_port_service_driver pcie_bandwidth_notification_driver = {
--	.name		= "pcie_bw_notification",
--	.port_type	= PCIE_ANY_PORT,
--	.service	= PCIE_PORT_SERVICE_BWNOTIF,
--	.probe		= pcie_bandwidth_notification_probe,
--	.suspend	= pcie_bandwidth_notification_suspend,
--	.resume		= pcie_bandwidth_notification_resume,
--	.remove		= pcie_bandwidth_notification_remove,
--};
--
--int __init pcie_bandwidth_notification_init(void)
--{
--	return pcie_port_service_register(&pcie_bandwidth_notification_driver);
--}
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index af7cf237432a..2ff5724b8f13 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -53,12 +53,6 @@ int pcie_dpc_init(void);
- static inline int pcie_dpc_init(void) { return 0; }
- #endif
+ struct j721e_pcie_data {
+ 	enum j721e_pcie_mode	mode;
++	bool quirk_retrain_flag;
+ };
  
--#ifdef CONFIG_PCIE_BW
--int pcie_bandwidth_notification_init(void);
--#else
--static inline int pcie_bandwidth_notification_init(void) { return 0; }
--#endif
--
- /* Port Type */
- #define PCIE_ANY_PORT			(~0)
+ static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+@@ -280,6 +281,7 @@ static struct pci_ops cdns_ti_pcie_host_ops = {
  
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 0b250bc5f405..8bd4992a4f32 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -255,7 +255,6 @@ static void __init pcie_init_services(void)
- 	pcie_pme_init();
- 	pcie_dpc_init();
- 	pcie_hp_init();
--	pcie_bandwidth_notification_init();
+ static const struct j721e_pcie_data j721e_pcie_rc_data = {
+ 	.mode = PCI_MODE_RC,
++	.quirk_retrain_flag = true,
+ };
+ 
+ static const struct j721e_pcie_data j721e_pcie_ep_data = {
+@@ -388,6 +390,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 		bridge->ops = &cdns_ti_pcie_host_ops;
+ 		rc = pci_host_bridge_priv(bridge);
++		rc->quirk_retrain_flag = data->quirk_retrain_flag;
+ 
+ 		cdns_pcie = &rc->pcie;
+ 		cdns_pcie->dev = dev;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 811c1cb2e8de..6f591d382578 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -77,6 +77,68 @@ static struct pci_ops cdns_pcie_host_ops = {
+ 	.write		= pci_generic_config_write,
+ };
+ 
++static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
++{
++	struct device *dev = pcie->dev;
++	int retries;
++
++	/* Check if the link is up or not */
++	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
++		if (cdns_pcie_link_up(pcie)) {
++			dev_info(dev, "Link up\n");
++			return 0;
++		}
++		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
++	}
++
++	return -ETIMEDOUT;
++}
++
++static int cdns_pcie_retrain(struct cdns_pcie *pcie)
++{
++	u32 lnk_cap_sls, pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
++	u16 lnk_stat, lnk_ctl;
++	int ret = 0;
++
++	/*
++	 * Set retrain bit if current speed is 2.5 GB/s,
++	 * but the PCIe root port support is > 2.5 GB/s.
++	 */
++
++	lnk_cap_sls = cdns_pcie_readl(pcie, (CDNS_PCIE_RP_BASE + pcie_cap_off +
++					     PCI_EXP_LNKCAP));
++	if ((lnk_cap_sls & PCI_EXP_LNKCAP_SLS) <= PCI_EXP_LNKCAP_SLS_2_5GB)
++		return ret;
++
++	lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
++	if ((lnk_stat & PCI_EXP_LNKSTA_CLS) == PCI_EXP_LNKSTA_CLS_2_5GB) {
++		lnk_ctl = cdns_pcie_rp_readw(pcie,
++					     pcie_cap_off + PCI_EXP_LNKCTL);
++		lnk_ctl |= PCI_EXP_LNKCTL_RL;
++		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
++				    lnk_ctl);
++
++		ret = cdns_pcie_host_wait_for_link(pcie);
++	}
++	return ret;
++}
++
++static int cdns_pcie_host_start_link(struct cdns_pcie_rc *rc)
++{
++	struct cdns_pcie *pcie = &rc->pcie;
++	int ret;
++
++	ret = cdns_pcie_host_wait_for_link(pcie);
++
++	/*
++	 * Retrain link for Gen2 training defect
++	 * if quirk flag is set.
++	 */
++	if (!ret && rc->quirk_retrain_flag)
++		ret = cdns_pcie_retrain(pcie);
++
++	return ret;
++}
+ 
+ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+ {
+@@ -398,23 +460,6 @@ static int cdns_pcie_host_init(struct device *dev,
+ 	return cdns_pcie_host_init_address_translation(rc);
  }
  
- static int __init pcie_portdrv_init(void)
+-static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+-{
+-	struct device *dev = pcie->dev;
+-	int retries;
+-
+-	/* Check if the link is up or not */
+-	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+-		if (cdns_pcie_link_up(pcie)) {
+-			dev_info(dev, "Link up\n");
+-			return 0;
+-		}
+-		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+-	}
+-
+-	return -ETIMEDOUT;
+-}
+-
+ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ {
+ 	struct device *dev = rc->pcie.dev;
+@@ -457,7 +502,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 		return ret;
+ 	}
+ 
+-	ret = cdns_pcie_host_wait_for_link(pcie);
++	ret = cdns_pcie_host_start_link(rc);
+ 	if (ret)
+ 		dev_dbg(dev, "PCIe link never came up\n");
+ 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 30eba6cafe2c..254d2570f8c9 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -119,7 +119,7 @@
+  * Root Port Registers (PCI configuration space for the root port function)
+  */
+ #define CDNS_PCIE_RP_BASE	0x00200000
+-
++#define CDNS_PCIE_RP_CAP_OFFSET 0xc0
+ 
+ /*
+  * Address Translation Registers
+@@ -291,6 +291,7 @@ struct cdns_pcie {
+  * @device_id: PCI device ID
+  * @avail_ib_bar: Satus of RP_BAR0, RP_BAR1 and	RP_NO_BAR if it's free or
+  *                available
++ * @quirk_retrain_flag: Retrain link as quirk for PCIe Gen2
+  */
+ struct cdns_pcie_rc {
+ 	struct cdns_pcie	pcie;
+@@ -299,6 +300,7 @@ struct cdns_pcie_rc {
+ 	u32			vendor_id;
+ 	u32			device_id;
+ 	bool			avail_ib_bar[CDNS_PCIE_RP_MAX_IB];
++	bool                    quirk_retrain_flag;
+ };
+ 
+ /**
+@@ -414,6 +416,13 @@ static inline void cdns_pcie_rp_writew(struct cdns_pcie *pcie,
+ 	cdns_pcie_write_sz(addr, 0x2, value);
+ }
+ 
++static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
++{
++	void __iomem *addr = pcie->reg_base + CDNS_PCIE_RP_BASE + reg;
++
++	return cdns_pcie_read_sz(addr, 0x2);
++}
++
+ /* Endpoint Function register access */
+ static inline void cdns_pcie_ep_fn_writeb(struct cdns_pcie *pcie, u8 fn,
+ 					  u32 reg, u8 value)
 -- 
 2.30.1
 
