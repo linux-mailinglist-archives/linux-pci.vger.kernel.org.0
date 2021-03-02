@@ -2,128 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5404F32B255
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 476CA32B25E
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242251AbhCCB6P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Mar 2021 20:58:15 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:13418 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1447956AbhCBNy0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Mar 2021 08:54:26 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Dqcgn1HZ0zjTX6;
-        Tue,  2 Mar 2021 21:00:53 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.498.0; Tue, 2 Mar 2021 21:02:08 +0800
-From:   Yicong Yang <yangyicong@hisilicon.com>
-To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
-CC:     <tanxiaofei@huawei.com>, <prime.zeng@huawei.com>,
-        <yangyicong@hisilicon.com>, <linuxarm@huawei.com>
-Subject: [PATCH] PCI/AER: Correctly handle advisory non-fatal errors
-Date:   Tue, 2 Mar 2021 20:59:54 +0800
-Message-ID: <1614689994-10925-1-git-send-email-yangyicong@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        id S242397AbhCCB6Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Mar 2021 20:58:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1574473AbhCBPQn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 Mar 2021 10:16:43 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDBDC061356
+        for <linux-pci@vger.kernel.org>; Tue,  2 Mar 2021 06:44:25 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id ba1so12170514plb.1
+        for <linux-pci@vger.kernel.org>; Tue, 02 Mar 2021 06:44:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LN47YQRLXAfp8nIdMqhDzM0X4bI1obU+R6IhTtEL2Io=;
+        b=a+pZDevbRMBzVHeyVrUO9js4WTarj30oxeztG1eQ/JH7bSHlNTEgfumDapN+L1xUBd
+         thkX0uJmPfv4AiDasKw99D5O4jWj3bMshkghODPCVcqXhd1EUV3Hn2/ilJEmrKZDPehA
+         T/xbhdm0wr8I2T4sf1xq1KGxy10gCsMDfr2mbmlqUX2ySIOYC5sTV1IpYP38qB2LVytv
+         efRwChaOd7/aLOzypxV2f8N0GGdxCGuWsbOcyiO8KVtIF39B68Y3Z10gqihSZiyW+tBh
+         3nh1ppaJC+A63UdxcgA66Cb1usc+ut9KZ9FINzV4iEW0gksDjtUXhSUskbVbHMrl7zER
+         eIog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LN47YQRLXAfp8nIdMqhDzM0X4bI1obU+R6IhTtEL2Io=;
+        b=LZ9H2rZcIYkIwI9OjRSHhxZMk8j+rZXhJgPryipsU+LZxfPUPz0EVEdJ+xcF5jhWdX
+         WAxKstQtvjNvCBM5mKJ9k2gSxt3RHUDRiFOcOfEl4yP3uAXYHlKlh7c/lJiCYTlEIwGW
+         ydiK5tIdR5e9x4rcQdi114h7KjrbOKpIlxYGidp6w92aX2zs9HSw90gnk9JZUkyeUsgu
+         TIszxHeYAGDTbXOsLBOfOPG3qvVcA6GvpAYDj7ici//ad/I5cO7w4z5dUIy8vskgEj7c
+         XsH+IgHMwy2lAFsmIvN+I7dzAaVnXdRrqOtdegCATQ9h0WoqsA1SPfgTz2cqTrn9xO5D
+         MYBA==
+X-Gm-Message-State: AOAM530WFIFWUxRduaQLBgciysm5xFdM12pd0ljgdP4jzOR7eMv4P5wF
+        TNb2QS+Vh57zD8SypOLROmVLOZsYNM1t8lz5keyW1A==
+X-Google-Smtp-Source: ABdhPJx4KB3uDOfcVX2aHG/MRoxaLduQ1Apbymam8qtnXkHoi83pWR8tDMhX7mZ+LUCn3l7asUrDrvx4IQV7v1XDe8M=
+X-Received: by 2002:a17:90a:1463:: with SMTP id j90mr3963527pja.205.1614696264461;
+ Tue, 02 Mar 2021 06:44:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+References: <CAMZdPi9PGWcPOHKk3cNU3Nw+hdVOsivLeXzqyd2FQ7nn8dDfvg@mail.gmail.com>
+ <20210226222225.GA164608@bjorn-Precision-5520>
+In-Reply-To: <20210226222225.GA164608@bjorn-Precision-5520>
+From:   Loic Poulain <loic.poulain@linaro.org>
+Date:   Tue, 2 Mar 2021 15:52:05 +0100
+Message-ID: <CAMZdPi-mmwYa4CqTtaNW3X8RrMzE8F0QchzqkB4SQ0QHCQvPVg@mail.gmail.com>
+Subject: Re: PME while runtime suspend
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Dave Airlie <airlied@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        "open list:QUALCOMM CPUFREQ DRIVER MSM8996/APQ8096" 
+        <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Per PCIe Spec 4.0 sctions 6.2.3.2.4 and 6.2.4.3, some uncorrectable
-errors may signal ERR_COR instead of ERR_NONFATAL and logged as
-advisory non-fatal error. And section 6.2.5 mentions, for advisory
-non-fatal errors, both corresponding bit in Uncorrectable Error Status
-reg and bit in Correctable Error status will be set.
+Hi Bjorn,
 
-Currently we only print the information of correctable error status
-when advisory non-fatal error received, and with corresponding
-bit in uncorrectable error status uncleared. This will leads to
-wrong information when non-fatal errors arrive in the future, as
-AER will print the non-fatal errors that already handled as
-advisory non-fatal errors.
+On Fri, 26 Feb 2021 at 23:22, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rafael, Dave (author of 42eca2302146), Vaibhav, linux-pm]
+>
+> On Fri, Feb 26, 2021 at 11:37:12AM +0100, Loic Poulain wrote:
+> > Hi Bjorn,
+> >
+> > Trying to support runtime suspend in a driver, which puts the device
+> > in D3hot and wait either for host/driver initiated resume
+> > (runtime_get), or device initiated resume (PME).
+> >
+> > But, given that old change: 42eca2302146 ("PCI: Don't touch card regs
+> > after runtime suspend D3")
+> >
+> > PME that was enabled from pci_finish_runtime_suspend() is not enabled
+> > anymore for almost all drivers in case of runtime-suspend. The only
+> > way to enable this is by calling pci_wake_from_d3() from the PCI device
+> > driver's runtime_suspend() callback, but this function fails if the
+> > device wake_up is not enabled, which makes sense since it targets
+> > system-wide sleep wake-up (and wake-up is user/distro policy).
+> >
+> > So is there a proper way to allow PME while the device is runtime
+> > suspended, without having to tell the user to enabled 'unrelated' wake_up
+> > capability?
+>
+> pci_pm_runtime_suspend() calls pci_finish_runtime_suspend(), which
+> enables wake-up, unless "pci_dev->state_saved".  IIUC we should be
+> enabling wake-up unless the driver has called pci_save_state() itself.
+>
+> So I infer that your driver does call pci_save_state() and the PCI
+> core does not enable wake-up.  Right?
 
-Print non-fatal error status signaled as advisory non-fatal error
-and clear the uncorrectable error status.
+Right.
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- drivers/pci/pci.h      |  1 +
- drivers/pci/pcie/aer.c | 23 ++++++++++++++++++++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index ef7c466..6a5f76c 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -424,6 +424,7 @@ struct aer_err_info {
- 
- 	unsigned int status;		/* COR/UNCOR Error Status */
- 	unsigned int mask;		/* COR/UNCOR Error Mask */
-+	unsigned int nf_status;		/* Non-Fatal Error Status signaled as COR Error */
- 	struct aer_header_log_regs tlp;	/* TLP Header */
- };
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ba22388..a3e7d8d 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -691,6 +691,20 @@ static void __aer_print_error(struct pci_dev *dev,
- 		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
- 				info->first_error == i ? " (First)" : "");
- 	}
-+
-+	if (info->severity == AER_CORRECTABLE &&
-+	    (status & PCI_ERR_COR_ADV_NFAT)) {
-+		status = info->nf_status;
-+		pci_printk(level, dev, "   Non-Fatal errors signaled as correctable NonFatalErr:");
-+		for_each_set_bit(i, &status, 32) {
-+			errmsg = aer_uncorrectable_error_string[i];
-+			if (!errmsg)
-+				errmsg = "Unknown Error Bit";
-+
-+			pci_printk(level, dev, "   [%2d] %-22s\n", i, errmsg);
-+		}
-+	}
-+
- 	pci_dev_aer_stats_incr(dev, info);
- }
- 
-@@ -781,6 +795,7 @@ void cper_print_aer(struct pci_dev *dev, int aer_severity,
- 	info.status = status;
- 	info.mask = mask;
- 	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
-+	info.nf_status = aer->uncor_status;
- 
- 	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
- 	__aer_print_error(dev, &info);
-@@ -946,9 +961,13 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
- 		 * Correctable error does not need software intervention.
- 		 * No need to go through error recovery process.
- 		 */
--		if (aer)
-+		if (aer) {
- 			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
- 					info->status);
-+			if (info->status & PCI_ERR_COR_ADV_NFAT)
-+				pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
-+						       info->nf_status);
-+		}
- 		if (pcie_aer_is_native(dev))
- 			pcie_clear_device_status(dev);
- 	} else if (info->severity == AER_NONFATAL)
-@@ -1058,6 +1077,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- 			&info->mask);
- 		if (!(info->status & ~info->mask))
- 			return 0;
-+		if (info->status & PCI_ERR_COR_ADV_NFAT)
-+			pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &info->nf_status);
- 	} else if (type == PCI_EXP_TYPE_ROOT_PORT ||
- 		   type == PCI_EXP_TYPE_RC_EC ||
- 		   type == PCI_EXP_TYPE_DOWNSTREAM ||
--- 
-2.8.1
 
+>
+> Why does your driver call pci_save_state()?  In most cases I don't
+> think drivers should need to do that themselves because the PCI core
+> will do it for them.  E.g., see Vaibhav's recent eb6779d4c505 ("e1000:
+> use generic power management") [1]
+
+Thanks for the pointer, I was storing the PCI state in order to
+restore it when the device is crashing and lose its PCI context. But I
+can do that one time once the device is initialized. I've applied the
+same changes as you pointed, and it works as expected.
+
+Thanks,
+Loic
