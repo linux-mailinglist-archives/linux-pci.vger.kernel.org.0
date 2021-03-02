@@ -2,39 +2,39 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A407F32B249
-	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49B2B32B22F
+	for <lists+linux-pci@lfdr.de>; Wed,  3 Mar 2021 04:48:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242039AbhCCB6M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 Mar 2021 20:58:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
+        id S241052AbhCCB6C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 Mar 2021 20:58:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1351018AbhCBNEf (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 2 Mar 2021 08:04:35 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9EE2064FC4;
-        Tue,  2 Mar 2021 11:59:30 +0000 (UTC)
+        id S1383811AbhCBMcs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 2 Mar 2021 07:32:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6C2BA64FD0;
+        Tue,  2 Mar 2021 11:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614686371;
+        s=k20201202; t=1614686384;
         bh=nzfBEvURGIAy8Ojlx75w2U2uuZQ96+VrmVDH4xtSifc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IC1SIBlPfuQeAUnWDR8Sv20NmGzkUCV37m4lDki4qYTTHQhi4j99BBYLgJXaOrF22
-         tkO5x0R2xA07/vcz7jZHDMyS1Y7bOa8BkLjslnlMEnG2ohJixuHWDOOuZth67Dxt90
-         gYLjJv3AvAGpS6TSe1tWV+8gsiJAA/53W22MZiV5dU4NWleiG3xwdnZ9Vbywss8c1K
-         ujWlwXSfW73VLoqTR+X+SmmLoQkYBMQJydYPxBYTUFdVgHOCSYDVt/7CZVeeMydb1x
-         l4zO5QPTjQZ2+mpBwEJTaJBDA1dpKZDRYiKccFGVHCE59M2GkHaKjcUny53mw0Bumd
-         aDjNAv+3D2A+w==
+        b=fh7Wqo75nrcHGosrRNwmmBobQdjP00NpkMkfbG7BmBWQlboh1je0oBvVaUMWdo7vQ
+         15Ft/ZeNKWQsTkSml0t3duwww44swuNW+WK1dmA/cH/5kfXgm9YUULivTKTD01v7A7
+         cZBd/JHpSq+WUdiikXGjW+BOhl+bOebicXdYGAbxpxQbSX+tHhzbO69CKpeSN0yBZY
+         jmYcoB4wn6vkx2oktHVECFKLjpwlMnyTh8DItDLYD2iuwMOGErkiWAMipZeaf+ys3i
+         a4SdjBgre9GZVOSA8bppL0VK4rgWvwmcLRN3hOGjqRWpp3i3y23NJZ3NE/JqzzhE4T
+         dbWt5tVVllwlA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Martin Kaiser <martin@kaiser.cx>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 07/10] PCI: xgene-msi: Fix race in installing chained irq handler
-Date:   Tue,  2 Mar 2021 06:59:18 -0500
-Message-Id: <20210302115921.63636-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 6/8] PCI: xgene-msi: Fix race in installing chained irq handler
+Date:   Tue,  2 Mar 2021 06:59:33 -0500
+Message-Id: <20210302115935.63777-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210302115921.63636-1-sashal@kernel.org>
-References: <20210302115921.63636-1-sashal@kernel.org>
+In-Reply-To: <20210302115935.63777-1-sashal@kernel.org>
+References: <20210302115935.63777-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
