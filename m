@@ -2,192 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1308E32C278
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 01:04:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29DE232C28A
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 01:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231604AbhCCUyY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Mar 2021 15:54:24 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7754 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232698AbhCCK0c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Mar 2021 05:26:32 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1239iKST177489;
-        Wed, 3 Mar 2021 04:53:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=GiMYhcqP64MDO+8UvWA5bM2tZfeXB9Mta2yfwV7bUNg=;
- b=i6vW56P1CPxvzztV4BveFIb5helupK9zwDNl6sCy4u+egFFZuIT9jipBrgCgIlgJqVpf
- z/JWgzR1G2RWsgMlHKznkEGICIiwQGFyvoc3rgeEo7tjgPtzwU51sqcrzGfBgUzJP/vb
- yrzxvdidJC3rqq1Wo9C3Of6O6OSJZgS1tIyRymEPko+IG1cakmMMtjoNGPEHNapuurc5
- H05qO7opXczkEPZnGdDXydyo4XMaK6LZwf+X6D+lENFnoBXjAZQ4WE40v5AYMlUEE+kc
- 5mhWxrhCn1PxZosyXzmGB6eP71jH+NZznXUWpicMe8APGYn4/yRIV//I2oBah7fgedjR 7g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3728390cer-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Mar 2021 04:53:51 -0500
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1239l5ex183414;
-        Wed, 3 Mar 2021 04:53:02 -0500
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3728390c99-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Mar 2021 04:53:02 -0500
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 1239iIxx009812;
-        Wed, 3 Mar 2021 09:52:54 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 371a8erpwr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 Mar 2021 09:52:54 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1239qbh533948068
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Mar 2021 09:52:37 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20FBB42045;
-        Wed,  3 Mar 2021 09:52:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C4F4542047;
-        Wed,  3 Mar 2021 09:52:50 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  3 Mar 2021 09:52:50 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Narendra K <narendra_k@dell.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [RFC 1/1] s390/pci: expose a PCI device's UID as its index
-Date:   Wed,  3 Mar 2021 10:52:50 +0100
-Message-Id: <20210303095250.1360007-2-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210303095250.1360007-1-schnelle@linux.ibm.com>
-References: <20210303095250.1360007-1-schnelle@linux.ibm.com>
+        id S234697AbhCCUyd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Mar 2021 15:54:33 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:13424 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349890AbhCCLgD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Mar 2021 06:36:03 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4DrBhy0SFDzjT7l;
+        Wed,  3 Mar 2021 19:33:54 +0800 (CST)
+Received: from linux-ioko.site (10.78.228.23) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.498.0; Wed, 3 Mar 2021 19:35:14 +0800
+From:   Dongdong Liu <liudongdong3@huawei.com>
+To:     <mj@ucw.cz>, <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
+Subject: [PATCH RESEND] lspci: Decode VF 10-Bit Tag Requester
+Date:   Wed, 3 Mar 2021 19:14:08 +0800
+Message-ID: <1614770048-41209-1-git-send-email-liudongdong3@huawei.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-02_08:2021-03-01,2021-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 phishscore=0 impostorscore=0 suspectscore=0
- adultscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103030072
+Content-Type: text/plain
+X-Originating-IP: [10.78.228.23]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On s390 each PCI device has a user-defined ID (UID) exposed under
-/sys/bus/pci/devices/<dev>/uid. This ID was designed to serve as the PCI
-device's primary index and to match the device within Linux to the
-device configured in the hypervisor. To serve as a primary identifier
-the UID must be unique within the Linux instance, this is guaranteed by
-the platform if and only if the UID Uniqueness Checking flag is set
-within the CLP List PCI Functions response.
+Decode VF 10-Bit Tag Requester Supported and Enable bit
+in SR-IOV Capabilities Register.
 
-In this the UID serves an analogous function as the SMBIOS instance
-number or ACPI index exposed as the "index" respectively "acpi_index"
-device attributes and used by e.g. systemd to set interface names. As
-s390 does not use and will likely never use ACPI nor SMBIOS there is no
-conflict and we can just expose the UID under the "index" attribute
-whenever UID Uniqueness Checking is active and get systemd's interface
-naming support for free.
+Sample output:
+  IOVCap: Migration-, 10BitTagReq+, Interrupt Message Number: 000
+  IOVCtl: Enable+ Migration- Interrupt- MSE+ ARIHierarchy- 10BitTagReq+
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Acked-by: Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
 ---
- Documentation/ABI/testing/sysfs-bus-pci | 11 +++++---
- arch/s390/pci/pci_sysfs.c               | 36 +++++++++++++++++++++++++
- 2 files changed, 43 insertions(+), 4 deletions(-)
+ lib/header.h | 2 ++
+ ls-ecaps.c   | 8 ++++----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 25c9c39770c6..1241b6d11a52 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -195,10 +195,13 @@ What:		/sys/bus/pci/devices/.../index
- Date:		July 2010
- Contact:	Narendra K <narendra_k@dell.com>, linux-bugs@dell.com
- Description:
--		Reading this attribute will provide the firmware
--		given instance (SMBIOS type 41 device type instance) of the
--		PCI device. The attribute will be created only if the firmware
--		has given an instance number to the PCI device.
-+		Reading this attribute will provide the firmware given instance
-+		number of the PCI device.  Depending on the platform this can
-+		be for example the SMBIOS type 41 device type instance or the
-+		user-defined ID (UID) on s390. The attribute will be created
-+		only if the firmware has given an instance number to the PCI
-+		device and that number is guaranteed to uniquely identify the
-+		device in the system.
- Users:
- 		Userspace applications interested in knowing the
- 		firmware assigned device type instance of the PCI
-diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-index 5c028bee91b9..30f48e8a1156 100644
---- a/arch/s390/pci/pci_sysfs.c
-+++ b/arch/s390/pci/pci_sysfs.c
-@@ -131,6 +131,38 @@ static ssize_t report_error_write(struct file *filp, struct kobject *kobj,
- }
- static BIN_ATTR(report_error, S_IWUSR, NULL, report_error_write, PAGE_SIZE);
+diff --git a/lib/header.h b/lib/header.h
+index 170e5c1..bff49c2 100644
+--- a/lib/header.h
++++ b/lib/header.h
+@@ -1126,6 +1126,7 @@
+ /* Single Root I/O Virtualization */
+ #define PCI_IOV_CAP		0x04	/* SR-IOV Capability Register */
+ #define  PCI_IOV_CAP_VFM	0x00000001 /* VF Migration Capable */
++#define  PCI_IOV_CAP_VF_10BIT_TAG_REQ 0x00000004 /* VF 10-Bit Tag Requester Supported */
+ #define  PCI_IOV_CAP_IMN(x)	((x) >> 21) /* VF Migration Interrupt Message Number */
+ #define PCI_IOV_CTRL		0x08	/* SR-IOV Control Register */
+ #define  PCI_IOV_CTRL_VFE	0x0001	/* VF Enable */
+@@ -1133,6 +1134,7 @@
+ #define  PCI_IOV_CTRL_VFMIE	0x0004	/* VF Migration Interrupt Enable */
+ #define  PCI_IOV_CTRL_MSE	0x0008	/* VF MSE */
+ #define  PCI_IOV_CTRL_ARI	0x0010	/* ARI Capable Hierarchy */
++#define  PCI_IOV_CTRL_VF_10BIT_TAG_REQ_EN 0x0020 /* VF 10-Bit Tag Requester Enable */
+ #define PCI_IOV_STATUS		0x0a	/* SR-IOV Status Register */
+ #define  PCI_IOV_STATUS_MS	0x0001	/* VF Migration Status */
+ #define PCI_IOV_INITIALVF	0x0c	/* Number of VFs that are initially associated */
+diff --git a/ls-ecaps.c b/ls-ecaps.c
+index 99c55ff..9b50aec 100644
+--- a/ls-ecaps.c
++++ b/ls-ecaps.c
+@@ -369,13 +369,13 @@ cap_sriov(struct device *d, int where)
+     return;
  
-+#ifndef CONFIG_DMI
-+/* analogous to smbios index */
-+static ssize_t index_show(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
-+	u32 index = ~0;
-+
-+	if (zpci_unique_uid)
-+		index = zdev->uid;
-+
-+	return sprintf(buf, "%u\n", index);
-+}
-+static DEVICE_ATTR_RO(index);
-+
-+static umode_t zpci_unique_uids(struct kobject *kobj,
-+				struct attribute *attr, int n)
-+{
-+	return zpci_unique_uid ? attr->mode : 0;
-+}
-+
-+static struct attribute *zpci_ident_attrs[] = {
-+	&dev_attr_index.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group zpci_ident_attr_group = {
-+	.attrs = zpci_ident_attrs,
-+	.is_visible = zpci_unique_uids,
-+};
-+#endif
-+
- static struct bin_attribute *zpci_bin_attrs[] = {
- 	&bin_attr_util_string,
- 	&bin_attr_report_error,
-@@ -150,6 +182,7 @@ static struct attribute *zpci_dev_attrs[] = {
- 	&dev_attr_mio_enabled.attr,
- 	NULL,
- };
-+
- static struct attribute_group zpci_attr_group = {
- 	.attrs = zpci_dev_attrs,
- 	.bin_attrs = zpci_bin_attrs,
-@@ -170,5 +203,8 @@ static struct attribute_group pfip_attr_group = {
- const struct attribute_group *zpci_attr_groups[] = {
- 	&zpci_attr_group,
- 	&pfip_attr_group,
-+#ifndef CONFIG_DMI
-+	&zpci_ident_attr_group,
-+#endif
- 	NULL,
- };
+   l = get_conf_long(d, where + PCI_IOV_CAP);
+-  printf("\t\tIOVCap:\tMigration%c, Interrupt Message Number: %03x\n",
+-	FLAG(l, PCI_IOV_CAP_VFM), PCI_IOV_CAP_IMN(l));
++  printf("\t\tIOVCap:\tMigration%c, 10BitTagReq%c, Interrupt Message Number: %03x\n",
++	FLAG(l, PCI_IOV_CAP_VFM), FLAG(l, PCI_IOV_CAP_VF_10BIT_TAG_REQ), PCI_IOV_CAP_IMN(l));
+   w = get_conf_word(d, where + PCI_IOV_CTRL);
+-  printf("\t\tIOVCtl:\tEnable%c Migration%c Interrupt%c MSE%c ARIHierarchy%c\n",
++  printf("\t\tIOVCtl:\tEnable%c Migration%c Interrupt%c MSE%c ARIHierarchy%c 10BitTagReq%c\n",
+ 	FLAG(w, PCI_IOV_CTRL_VFE), FLAG(w, PCI_IOV_CTRL_VFME),
+ 	FLAG(w, PCI_IOV_CTRL_VFMIE), FLAG(w, PCI_IOV_CTRL_MSE),
+-	FLAG(w, PCI_IOV_CTRL_ARI));
++	FLAG(w, PCI_IOV_CTRL_ARI), FLAG(w, PCI_IOV_CTRL_VF_10BIT_TAG_REQ_EN));
+   w = get_conf_word(d, where + PCI_IOV_STATUS);
+   printf("\t\tIOVSta:\tMigration%c\n", FLAG(w, PCI_IOV_STATUS_MS));
+   w = get_conf_word(d, where + PCI_IOV_INITIALVF);
 -- 
-2.25.1
+1.9.1
 
