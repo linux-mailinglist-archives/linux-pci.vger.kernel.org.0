@@ -2,67 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2179232C100
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 01:01:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B782732C8F2
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 02:17:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348403AbhCCU65 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 Mar 2021 15:58:57 -0500
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:37747 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1579945AbhCCScs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Mar 2021 13:32:48 -0500
-Received: by mail-oi1-f172.google.com with SMTP id l133so27042400oib.4;
-        Wed, 03 Mar 2021 10:32:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WZY0tUHu6hLONyVYVjIAaxzNB+f61DoThMHd4BdYBAI=;
-        b=X4tZH0H9R4tFrX732HHJ1jT+HE0HuNtMCM82HsfepL9zUtmUfNMTORdKMK0LnzZsF2
-         KKXHmEaQAZtIeOkj3IM/bBiWh+GDsN9L6rwsapm7vefGV8TE8gGxevzC5JWy4PV7Ct1B
-         mVl4UEhAg1ewmt+UD3xl1VoXUZFaWuT97KxbPr/d8EzdeEKtEMcgTozPJGc5k+Dp2sVF
-         YhrhfZfOFTFDekdRRyzuKONU6luGx25EkH/i3cTy/dgYw+nlhvwYp5IJsVqcfYaY2ysx
-         699e7Jn0MpT37h3nWAcnFdpnsZVUak+ZExrolQvxvSamB0+mZZembflNVG4SfLG7TN99
-         pkYg==
-X-Gm-Message-State: AOAM530MOBpC5Tr0nYJEpt4slYC8dWQVpofgcZ4zuBzazr8Thar1yJG0
-        VShPxsM8iuCcIxWVyRcHKVnSt9Fq3W/iryyrdPY=
-X-Google-Smtp-Source: ABdhPJxRZiwCxfjQ6YQPd5xzCEoDWawYZdCETLZONsXJyxbwnui8GXBZ0orhSdLgwXeq7BWI6duGV59e1B4X/AirAD8=
-X-Received: by 2002:aca:3d85:: with SMTP id k127mr111298oia.157.1614796327952;
- Wed, 03 Mar 2021 10:32:07 -0800 (PST)
+        id S236582AbhCDA7P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 Mar 2021 19:59:15 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:42412 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1354293AbhCDAH6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 Mar 2021 19:07:58 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 123MUlVL014392;
+        Wed, 3 Mar 2021 14:42:57 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=pfpt0220;
+ bh=3Rtq+mYaWUizuUOqOCLWl1taTBxP0x0Hz30+OhNVEh4=;
+ b=BMompRfRbbKKzyXnljs9o3MgiWOVJieAqV3/AHkD41vkenyWWFCVIavYZ1xNMVKBVtqt
+ r+doouLRgpQKLDliUlEIdrwOiV3/3Eg+VfcPw/m0AsOx9rhxMuQ0QB/kfc1X3VgYR0a5
+ 3mUwRISnx8mU4cnmrM7tWHn/Ijsww62WBgGgzDhlaQVoBmBDt0bMmy4uiA/prEqe51LQ
+ hnux2ooFiJC6EYb1YeG6Z608tmD6OtIzvWr67y4AyXmvUj/dHmhdj99DJ6uuox9/vOBz
+ MUGLWDAqoaGQjnu+l7E/pzpgnKdWXa76RVThHmQ+MgGuHopWbTZHyf6J/q3Nuh9SZnjB SA== 
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 36ymaueup7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 03 Mar 2021 14:42:57 -0800
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 3 Mar
+ 2021 14:42:55 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 3 Mar 2021 14:42:55 -0800
+Received: from dut6246.localdomain (unknown [10.112.88.36])
+        by maili.marvell.com (Postfix) with ESMTP id F24F43F7040;
+        Wed,  3 Mar 2021 14:42:55 -0800 (PST)
+Received: by dut6246.localdomain (Postfix, from userid 0)
+        id D7747228064; Wed,  3 Mar 2021 14:42:55 -0800 (PST)
+From:   Arun Easi <aeasi@marvell.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, Girish Basrur <GBasrur@marvell.com>,
+        "Quinn Tran" <qutran@marvell.com>
+Subject: [PATCH 0/1] PCI/VPD: Fix blocking of VPD data in lspci for QLogic 1077:2261
+Date:   Wed, 3 Mar 2021 14:42:49 -0800
+Message-ID: <20210303224250.12618-1-aeasi@marvell.com>
+X-Mailer: git-send-email 2.9.5
 MIME-Version: 1.0
-References: <4822757.tvZ08WQ2Gl@kreacher> <7de92ec8-3a15-6165-2384-15d301e7b568@huawei.com>
-In-Reply-To: <7de92ec8-3a15-6165-2384-15d301e7b568@huawei.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 3 Mar 2021 19:31:56 +0100
-Message-ID: <CAJZ5v0iHN5Z2O141c-E4ehGJFSU=NhwK+6p_9==QJT2edj-LqQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] ACPI: PCI: Unify printing of messages
-To:     Hanjun Guo <guohanjun@huawei.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-03_07:2021-03-03,2021-03-03 signatures=0
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 20, 2021 at 10:25 AM Hanjun Guo <guohanjun@huawei.com> wrote:
->
-> On 2021/2/20 2:14, Rafael J. Wysocki wrote:
-> > Hi All,
-> >
-> > This series gets rid of ACPICA debugging from non-ACPICA code related to PCI
-> > (patches [1-3/4]) and replaces direct printk() usage in pci_link.c with
-> > pr_*() or acpi_handle_*().
-> >
-> > Please refer to the patch changelogs for details.
->
-> Looks good to me,
->
-> Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Hi Bjorn,
 
-Thanks!
+As discussed, re-sending the patch with updated commit message.
+You can disregard the earlier patch titled:
 
-Given the absence of any further comments I will be queuing up this
-series for 5.13, thanks!
+	"[PATCH] PCI/VPD: Remove VPD quirk for QLogic 1077:2261"
+
+Regards,
+-Arun
+
+Arun Easi (1):
+  PCI/VPD: Fix blocking of VPD data in lspci for QLogic 1077:2261
+
+ drivers/pci/vpd.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+-- 
+2.9.5
+
+base-commit: e18fb64b79860cf5f381208834b8fbc493ef7cbc
