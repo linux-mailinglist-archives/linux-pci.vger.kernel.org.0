@@ -2,139 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 772C032D2AC
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 13:13:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A940932D5A0
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 15:45:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240154AbhCDMMd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Mar 2021 07:12:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240310AbhCDMMZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Mar 2021 07:12:25 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 33A82601FC;
-        Thu,  4 Mar 2021 12:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614859905;
-        bh=vQ8RnpXMyqA61QBx4SeK5jkq5GWFtLLQnjzD5WHRFUY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WGv7sU7rfZzH64peIaO7rg4Jhprp4fTHooeeqwB7MvvIbDCUFUqLsssKcEzAy2asf
-         IQA0W6YCSRtjZ9fpiQ1rO0ljPzvEbzwmnSagvPT8lqh/jIv5woXp/OUGNo5TG+Gwnl
-         JBZv2FZ2uA6y/nLQRB37PPqy+RyWBL0UoQptqjj+6AP+9qSW/ehe3UUegF0j9PMCKZ
-         deaGQuOfONy+bnMcLK1aesg9XDpmH46WUSNzTv9HvImlelofdJbNKAtu2bRjVzTRre
-         aNAdPybW7uGjkVudBrKzPyiWWndXlGHA0sw/Ymrwh60xOPccCFgWzXX6hc80Vi0ASD
-         00dLbga6mns8g==
-Date:   Thu, 4 Mar 2021 06:11:43 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Take __pci_set_master in do_pci_disable_device
-Message-ID: <20210304121143.GA821086@bjorn-Precision-5520>
+        id S232611AbhCDOog (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Mar 2021 09:44:36 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30905 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232450AbhCDOoQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Mar 2021 09:44:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614868971;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WtE6rQGgBStCxiYKH1KCeU5bCMvRZhVHeezm1zYPWL4=;
+        b=NRNE5o5O3kLS1FxTAfEkIoEAmmESitlA8t3rkig469WE9d5Mdis0Ms46l5QtHA0MzOIayX
+        7oxx8E3U7oTu983aviGGYdWjhJMVeIIuvBqhMNzQiE9KISqVhjNzDsjfn4ihL1XCdmwCeK
+        uFmXsy450Oav9yWGUi42sgqtqc7tgp0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-NX1wg6mjM5So2T6usmvUug-1; Thu, 04 Mar 2021 09:42:46 -0500
+X-MC-Unique: NX1wg6mjM5So2T6usmvUug-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4827983DD28;
+        Thu,  4 Mar 2021 14:42:45 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9037B5DA2D;
+        Thu,  4 Mar 2021 14:42:44 +0000 (UTC)
+Subject: Re: [PATCH] pci-driver: Add driver load messages
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>, bhelgaas@google.com,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-pci@vger.kernel.org, mstowe@redhat.com
+References: <20210218190603.GA993998@bjorn-Precision-5520>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <4a584957-24d5-54c8-07f8-36fd7d2e9fce@redhat.com>
+Date:   Thu, 4 Mar 2021 09:42:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20210218190603.GA993998@bjorn-Precision-5520>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210304044013.GA15757@localhost.localdomain>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 04, 2021 at 01:40:13PM +0900, Minwoo Im wrote:
-> On 21-02-24 23:46:00, Krzysztof Wilczyński wrote:
-> > Hi Minwoo,
-> > 
-> > Sorry for a very late reply!
-> > 
-> > [...]
-> > > > You might need to improve the subject a little - it should be brief but
-> > > > still informative.
-> > > > 
-> > > > > __pci_set_mater() has debug log in there so that it would be better to
-> > > > > take this function.  So take __pci_set_master() function rather than
-> > > > > open coding it.  This patch didn't move __pci_set_master() to above to
-> > > > > avoid churns.
-> > > > [...]
-> > > > 
-> > > > It would be __pci_set_master() in the sentence above.  Also, perhaps
-> > > > "use" would be better than "take".  Generally, this commit message might
-> > > > need a little improvement to be more clear why are you do doing this.
-> > > 
-> > > Sure, if we consolidate bus master enable clear functions to a single
-> > > one, it would be better to debug and tracing the kernel behaviors.
-> > > 
-> > > Let me describe this 'why' to the description.
-> > 
-> > Sounds great!  Thank you!
-> > 
-> > [...]
-> > > > You could use pci_clear_master(), which we export and that internally
-> > > > calls __pci_set_master(), so there would be no need to add any forward
-> > > > declarations or to move anything around in the file.
-> > > 
-> > > Moving delcaration to above might be churn, and I agree with your point.
-> > 
-> > I am sure that when it makes sense, then probably folks would not
-> > object, especially since "churn" can be subjective.
-> > 
-> > > > Having said that, there is a difference between do_pci_disable_device()
-> > > > and how __pci_set_master() works - the latter sets the is_busmaster flag
-> > > > accordingly on the given device whereas the former does not.  This might
-> > > > be of some significance - not sure if we should or should not set this,
-> > > > since the do_pci_disable_device() does not do that (perhaps it's on
-> > > > purpose or due to some hisoric reasons).
-> > > 
-> > > Thanks for pointing out this.  I think the difference about
-> > > `is_busmaster` flag looks like it should not be cleared in case of power
-> > > suspend case:
-> > > 
-> > > 	# Suspend
-> > > 	pci_pm_default_suspend()
-> > > 		pci_disable_enabled_device()
-> > > 
-> > > 	# Resume
-> > > 	pci_pm_reenable_device()
-> > > 		pci_set_master()  <-- This is based on (is_busmaster)
-> > > 
-> > > 
-> > > Please let me know if I'm missing here, and appreciate pointing that
-> > > out.  Maybe I can post v2 patch with add an argument of whether
-> > > `is_busmaster` shoud be set inside of the function or not to
-> > > __pci_set_master()?
-> > [...]
-> > 
-> > Nothing is ever simple, isn't it? :-)
-> > 
-> > We definitely need to make sure that PM can keep relying on the
-> > is_busmaster flag to restore bus mastering to previous state after the
-> > device would resume after being suspended.
-> 
-> Yes,
-> 
-> > If we add another boolean argument, then we would need to update the
-> > __pci_set_master() only in two other places, aside of using it in the
-> > do_pci_disable_device() function, as per (as of 5.11.1 kernel):
-> 
-> I agree with this approach.  I can try it by adding another bool
-> argument to decide whether to update the is_busmaster flag or not inside
-> of the __pci_set_master.
-> 
-> > 
-> >   File              Line Content
-> >   drivers/pci/pci.c 4308 __pci_set_master(dev, true);
-> >   drivers/pci/pci.c 4319 __pci_set_master(dev, false);
-> > 
-> > This is not all that terrible, provided that we _really_ do want to
-> > change this function signature and then add another condition inside.
-> > 
-> > What do you think?  If you still like the idea, then send second version
-> > over with all the other proposed changes.
-> 
-> Let me prepare the next version of this patch. Thanks!
 
-Can you clarify what the purpose of this patch is?  Is it to fix a
-defect, improve debug output, make the code cleaner, etc?
 
-The commit log really just describes *what* the patch does, and I'm
-looking for the *why*.
+On 2/18/21 2:06 PM, Bjorn Helgaas wrote:
+> On Thu, Feb 18, 2021 at 01:36:35PM -0500, Prarit Bhargava wrote:
+>> On 1/26/21 10:12 AM, Bjorn Helgaas wrote:
+>>> On Tue, Jan 26, 2021 at 09:05:23AM -0500, Prarit Bhargava wrote:
+>>>> On 1/26/21 8:53 AM, Leon Romanovsky wrote:
+>>>>> On Tue, Jan 26, 2021 at 08:42:12AM -0500, Prarit Bhargava wrote:
+>>>>>> On 1/26/21 8:14 AM, Leon Romanovsky wrote:
+>>>>>>> On Tue, Jan 26, 2021 at 07:54:46AM -0500, Prarit Bhargava wrote:
+>>>>>>>>   Leon Romanovsky <leon@kernel.org> wrote:
+>>>>>>>>> On Mon, Jan 25, 2021 at 02:41:38PM -0500, Prarit Bhargava wrote:
+>>>>>>>>>> There are two situations where driver load messages are helpful.
+>>>>>>>>>>
+>>>>>>>>>> 1) Some drivers silently load on devices and debugging driver or system
+>>>>>>>>>> failures in these cases is difficult.  While some drivers (networking
+>>>>>>>>>> for example) may not completely initialize when the PCI driver probe() function
+>>>>>>>>>> has returned, it is still useful to have some idea of driver completion.
+>>>>>>>>>
+>>>>>>>>> Sorry, probably it is me, but I don't understand this use case.
+>>>>>>>>> Are you adding global to whole kernel command line boot argument to debug
+>>>>>>>>> what and when?
+>>>>>>>>>
+>>>>>>>>> During boot:
+>>>>>>>>> If device success, you will see it in /sys/bus/pci/[drivers|devices]/*.
+>>>>>>>>> If device fails, you should get an error from that device (fix the
+>>>>>>>>> device to return an error), or something immediately won't work and
+>>>>>>>>> you won't see it in sysfs.
+>>>>>>>>
+>>>>>>>> What if there is a panic during boot?  There's no way to get to sysfs.
+>>>>>>>> That's the case where this is helpful.
+>>>>>>>
+>>>>>>> How? If you have kernel panic, it means you have much more worse problem
+>>>>>>> than not-supported device. If kernel panic was caused by the driver, you
+>>>>>>> will see call trace related to it. If kernel panic was caused by
+>>>>>>> something else, supported/not supported won't help here.
+>>>>>>
+>>>>>> I still have no idea *WHICH* device it was that the panic occurred on.
+>>>>>
+>>>>> The kernel panic is printed from the driver. There is one driver loaded
+>>>>> for all same PCI devices which are probed without relation to their
+>>>>> number.>
+>>>>> If you have host with ten same cards, you will see one driver and this
+>>>>> is where the problem and not in supported/not-supported device.
+>>>>
+>>>> That's true, but you can also have different cards loading the same driver.
+>>>> See, for example, any PCI_IDs list in a driver.
+>>>>
+>>>> For example,
+>>>>
+>>>> 10:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3008 [Fury] (rev 02)
+>>>> 20:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3108 [Invader] (rev 02)
+>>>>
+>>>> Both load the megaraid driver and have different profiles within the
+>>>> driver.  I have no idea which one actually panicked until removing
+>>>> one card.
+>>>>
+>>>> It's MUCH worse when debugging new hardware and getting a panic
+>>>> from, for example, the uncore code which binds to a PCI mapped
+>>>> device.  One device might work and the next one doesn't.  And
+>>>> then you can multiply that by seeing *many* panics at once and
+>>>> trying to determine if the problem was on one specific socket,
+>>>> die, or core.
+>>>
+>>> Would a dev_panic() interface that identified the device and
+>>> driver help with this?
+>>
+>> ^^ the more I look at this problem, the more a dev_panic() that
+>> would output a device specific message at panic time is what I
+>> really need.
 
-Bjorn
+Bjorn,
+
+I went down this road a bit and had a realization.  The issue isn't with
+printing something at panic time, but the *data* that is output.  Each PCI
+device is associated with a struct device.  That device struct's name is output
+for dev_dbg(), etc., commands.  The PCI subsystem sets the device struct name at
+drivers/pci/probe.c: 1799
+
+	        dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(dev->bus),
+                     dev->bus->number, PCI_SLOT(dev->devfn),
+                     PCI_FUNC(dev->devfn));
+
+My problem really is that the above information is insufficient when I (or a
+user) need to debug a system.  The complexities of debugging multiple broken
+driver loads would be much easier if I didn't have to constantly add this output
+manually :).
+
+Would you be okay with adding a *debug* parameter to expand the device name to
+include the vendor & device ID pair?  FWIW, I'm somewhat against
+yet-another-kernel-option but that's really the information I need.  I could
+then add dev_dbg() statements in the local_pci_probe() function.
+
+Thoughts?
+
+P.
+
+
+
