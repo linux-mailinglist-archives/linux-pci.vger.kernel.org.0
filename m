@@ -2,119 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6635D32D747
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 17:04:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 444A132D955
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 19:18:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236253AbhCDQDc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Mar 2021 11:03:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236242AbhCDQDH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Mar 2021 11:03:07 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1E73F64E28;
-        Thu,  4 Mar 2021 16:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614873747;
-        bh=cGEWlSoCTya/ot2EVTO9KSdGc7xk6jo0zMvEBvDQYHE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DUOSCaMGuj1tnFivMq/qcuHSVZnHEWqVmUFgwmlm6MqJfY/W1AG+kVeZAaHABqPLa
-         WvMkgfPTAGvSItB5FZaRBPTct+V6tD4fVgbQlthxSwzNUrRSzLjWh6rN8vnU3n2Sb/
-         msGx4V0vAVg5YmXDKCQk6WIo4HcUNmXjf88Id9PZdwo2rUW/GJOgsnG3DfWUH7YxdA
-         IyCRCXsFAdyBC2q8rm1N8sYpDRbfEwg37athcrO63WuY/VM54nKPv5xL11/BeaJd7H
-         jFeJjdCai9/XfMc3PKr2FwuD1wpkzN2TCPmIz61e7RnVljNSh+eOV2CvfgpNndWBVs
-         Z25hl6GXSAggg==
-Date:   Thu, 4 Mar 2021 10:02:25 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Yan-Hsuan Chuang <tony0620emma@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 3/3] PCI: Convert rtw88 power cycle quirk to shutdown
- quirk
-Message-ID: <20210304160225.GA846157@bjorn-Precision-5520>
+        id S233397AbhCDSRs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Mar 2021 13:17:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51712 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233954AbhCDSRf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Mar 2021 13:17:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614881770;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wCLLVeuQSYKDdbpI1wltydL0veeTCSBx9VV/dM1Mezo=;
+        b=GNXYzgaq8xOpZID2MMGxFi/y0EFevSD7WislXNHkNZ9Sd+EikCcaz22ZHkk5BEPsYJLHa5
+        l/NzM1bjOENMB3gA/utoQhJ9sDZ/7HScbvVF5Q8SGUxJa3lCRdehs7BqRAvPSfwfSLAxhF
+        Psnu7GX5rSn34MgcyZr70LQ1Zfg2/Fg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-HrI0Mh4EPT21OQD9tTiQ3A-1; Thu, 04 Mar 2021 13:16:03 -0500
+X-MC-Unique: HrI0Mh4EPT21OQD9tTiQ3A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E8211084D6B;
+        Thu,  4 Mar 2021 18:16:00 +0000 (UTC)
+Received: from [10.10.112.189] (ovpn-112-189.rdu2.redhat.com [10.10.112.189])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE17E5C8A8;
+        Thu,  4 Mar 2021 18:15:32 +0000 (UTC)
+Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping
+ CPUs
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, frederic@kernel.org,
+        juri.lelli@redhat.com, abelits@marvell.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
+        peterz@infradead.org, davem@davemloft.net,
+        akpm@linux-foundation.org, sfr@canb.auug.org.au,
+        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
+        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
+References: <20200625223443.2684-1-nitesh@redhat.com>
+ <20200625223443.2684-2-nitesh@redhat.com>
+ <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com>
+ <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de>
+ <20210128165903.GB38339@fuller.cnet> <87h7n0de5a.fsf@nanos.tec.linutronix.de>
+ <20210204181546.GA30113@fuller.cnet>
+ <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com>
+ <20210204190647.GA32868@fuller.cnet>
+ <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
+ <87y2g26tnt.fsf@nanos.tec.linutronix.de>
+ <d0aed683-87ae-91a2-d093-de3f5d8a8251@redhat.com>
+ <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com>
+Organization: Red Hat Inc,
+Message-ID: <07c04bc7-27f0-9c07-9f9e-2d1a450714ef@redhat.com>
+Date:   Thu, 4 Mar 2021 13:15:31 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAd53p62zy64gsmdNYSuV1sxOiB1Hye5R0WkY-gNFf+CKbG12A@mail.gmail.com>
+In-Reply-To: <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, linux-pm]
 
-On Thu, Mar 04, 2021 at 02:07:18PM +0800, Kai-Heng Feng wrote:
-> On Sat, Feb 27, 2021 at 2:17 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Feb 26, 2021 at 02:31:31PM +0100, Heiner Kallweit wrote:
-> > > On 26.02.2021 13:18, Kai-Heng Feng wrote:
-> > > > On Fri, Feb 26, 2021 at 8:10 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
-> > > >>
-> > > >> On 26.02.2021 08:12, Kalle Valo wrote:
-> > > >>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
-> > > >>>
-> > > >>>> Now we have a generic D3 shutdown quirk, so convert the original
-> > > >>>> approach to a PCI quirk.
-> > > >>>>
-> > > >>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > >>>> ---
-> > > >>>>  drivers/net/wireless/realtek/rtw88/pci.c | 2 --
-> > > >>>>  drivers/pci/quirks.c                     | 6 ++++++
-> > > >>>>  2 files changed, 6 insertions(+), 2 deletions(-)
-> > > >>>
-> > > >>> It would have been nice to CC linux-wireless also on patches 1-2. I only
-> > > >>> saw patch 3 and had to search the rest of patches from lkml.
-> > > >>>
-> > > >>> I assume this goes via the PCI tree so:
-> > > >>>
-> > > >>> Acked-by: Kalle Valo <kvalo@codeaurora.org>
-> > > >>
-> > > >> To me it looks odd to (mis-)use the quirk mechanism to set a device
-> > > >> to D3cold on shutdown. As I see it the quirk mechanism is used to work
-> > > >> around certain device misbehavior. And setting a device to a D3
-> > > >> state on shutdown is a normal activity, and the shutdown() callback
-> > > >> seems to be a good place for it.
-> > > >> I miss an explanation what the actual benefit of the change is.
-> > > >
-> > > > To make putting device to D3 more generic, as there are more than one
-> > > > device need the quirk.
-> > > >
-> > > > Here's the discussion:
-> > > > https://lore.kernel.org/linux-usb/00de6927-3fa6-a9a3-2d65-2b4d4e8f0012@linux.intel.com/
-> > > >
-> > >
-> > > Thanks for the link. For the AMD USB use case I don't have a strong opinion,
-> > > what's considered the better option may be a question of personal taste.
-> > > For rtw88 however I'd still consider it over-engineering to replace a simple
-> > > call to pci_set_power_state() with a PCI quirk.
-> > > I may be biased here because I find it sometimes bothering if I want to
-> > > look up how a device is handled and in addition to checking the respective
-> > > driver I also have to grep through quirks.c whether there's any special
-> > > handling.
-> >
-> > I haven't looked at these patches carefully, but in general, I agree
-> > that quirks should be used to work around hardware defects in the
-> > device.  If the device behaves correctly per spec, we should use a
-> > different mechanism so the code remains generic and all devices get
-> > the benefit.
-> >
-> > If we do add quirks, the commit log should explain what the device
-> > defect is.
-> 
-> So maybe it's reasonable to put all PCI devices to D3 at shutdown?
+On 2/11/21 10:55 AM, Nitesh Narayan Lal wrote:
+> On 2/6/21 7:43 PM, Nitesh Narayan Lal wrote:
+>> On 2/5/21 5:23 PM, Thomas Gleixner wrote:
+>>> On Thu, Feb 04 2021 at 14:17, Nitesh Narayan Lal wrote:
+>>>> On 2/4/21 2:06 PM, Marcelo Tosatti wrote:
+>>>>>>> How about adding a new flag for isolcpus instead?
+>>>>>>>
+>>>>>> Do you mean a flag based on which we can switch the affinity mask to
+>>>>>> housekeeping for all the devices at the time of IRQ distribution?
+>>>>> Yes a new flag for isolcpus. HK_FLAG_IRQ_SPREAD or some better name.
+>>>> Does sounds like a nice idea to explore, lets see what Thomas thinks about it.
+> <snip>
+>
+>>>> When the affinity mask of the interrupt at the time when it is actually
+>>>> requested contains an isolated CPU then nothing prevents the kernel from
+>>>> steering it at an isolated CPU. But that has absolutely nothing to do
+>>>> with that spreading thingy.
+>>>>
+>>>> The only difference which this change makes is the fact that the
+>>>> affinity hint changes. Nothing else.
+>>>>
+>> Thanks for the detailed explanation.
+>>
+>> Before I posted this patch, I was doing some debugging on a setup where I
+>> was observing some latency issues due to the iavf IRQs that were pinned on
+>> the isolated CPUs.
+>>
+>> Based on some initial traces I had this impression that the affinity hint
+>> or cpumask_local_spread was somehow playing a role in deciding the affinity
+>> mask of these IRQs. Although, that does look incorrect after going through
+>> your explanation.
+>> For some reason, with a kernel that had this patch when I tried creating
+>> VFs iavf IRQs always ended up on the HK CPUs.
+>>
+>> The reasoning for the above is still not very clear to me. I will investigate
+>> this further to properly understand this behavior.
+>>
+>>
+> After a little more digging, I found out why cpumask_local_spread change
+> affects the general/initial smp_affinity for certain device IRQs.
+>
+> After the introduction of the commit:
+>
+>     e2e64a932 genirq: Set initial affinity in irq_set_affinity_hint()
+>
 
-I don't know off-hand.  I added Rafael and linux-pm in case they do.
+Continuing the conversation about the above commit and adding Jesse.
+I was trying to understand the problem that the commit message explains
+"The default behavior of the kernel is somewhat undesirable as all
+requested interrupts end up on CPU0 after registration.", I have also been
+trying to reproduce this behavior without the patch but I failed in doing
+so, maybe because I am missing something here.
 
-If not, I suggest working up a patch to do that and a commit log that
-explains why that's a good idea and then we can have a discussion
-about it.  This thread really doesn't have that justification.  It
-says "putting device X in D3cold at shutdown saves 0.03w while in S5",
-but doesn't explain why that's safe or desirable for all devices.
+@Jesse Can you please explain? FWIU IRQ affinity should be decided based on
+the default affinity mask.
 
-Bjorn
+The problem with the commit is that when we overwrite the affinity mask
+based on the hinting mask we completely ignore the default SMP affinity
+mask. If we do want to overwrite the affinity based on the hint mask we
+should atleast consider the default SMP affinity.
+
+-- 
+Thanks
+Nitesh
+
