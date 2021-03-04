@@ -2,141 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 444A132D955
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 19:18:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 020F832D975
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 19:30:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233397AbhCDSRs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Mar 2021 13:17:48 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51712 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233954AbhCDSRf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Mar 2021 13:17:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614881770;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wCLLVeuQSYKDdbpI1wltydL0veeTCSBx9VV/dM1Mezo=;
-        b=GNXYzgaq8xOpZID2MMGxFi/y0EFevSD7WislXNHkNZ9Sd+EikCcaz22ZHkk5BEPsYJLHa5
-        l/NzM1bjOENMB3gA/utoQhJ9sDZ/7HScbvVF5Q8SGUxJa3lCRdehs7BqRAvPSfwfSLAxhF
-        Psnu7GX5rSn34MgcyZr70LQ1Zfg2/Fg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-HrI0Mh4EPT21OQD9tTiQ3A-1; Thu, 04 Mar 2021 13:16:03 -0500
-X-MC-Unique: HrI0Mh4EPT21OQD9tTiQ3A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E8211084D6B;
-        Thu,  4 Mar 2021 18:16:00 +0000 (UTC)
-Received: from [10.10.112.189] (ovpn-112-189.rdu2.redhat.com [10.10.112.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE17E5C8A8;
-        Thu,  4 Mar 2021 18:15:32 +0000 (UTC)
-Subject: Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to houskeeping
- CPUs
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, frederic@kernel.org,
-        juri.lelli@redhat.com, abelits@marvell.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
-References: <20200625223443.2684-1-nitesh@redhat.com>
- <20200625223443.2684-2-nitesh@redhat.com>
- <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com>
- <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de>
- <20210128165903.GB38339@fuller.cnet> <87h7n0de5a.fsf@nanos.tec.linutronix.de>
- <20210204181546.GA30113@fuller.cnet>
- <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com>
- <20210204190647.GA32868@fuller.cnet>
- <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
- <87y2g26tnt.fsf@nanos.tec.linutronix.de>
- <d0aed683-87ae-91a2-d093-de3f5d8a8251@redhat.com>
- <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com>
-Organization: Red Hat Inc,
-Message-ID: <07c04bc7-27f0-9c07-9f9e-2d1a450714ef@redhat.com>
-Date:   Thu, 4 Mar 2021 13:15:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        id S231718AbhCDSaE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Mar 2021 13:30:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234603AbhCDS3u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Mar 2021 13:29:50 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5489A64F60;
+        Thu,  4 Mar 2021 18:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614882549;
+        bh=9e6Mgs7GsNfUWeTNex9JV65Iiwbpw8eLNnrDFxGu+Jg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uxmlN0sKvvVsRP3Igs5AFUIsSb5yAvfKIaecPYTqkQH21ZmHSUCDfdE3YQMvX4Hv7
+         zpJL1kpzhNMjzZRAmus8GtWbdnEG+ahUtHG/NiSpMq7IC00VAlXrzXV/oKampIOBS8
+         Wz6BAWFbguF5b/CK1XCYxjytjdt2BjmYFmfhrhd2gbtiBaQTdJZQubyuXznKtBnQgw
+         ShAQRft0XTzhKuYd+PAyfx1GE3Ybsskt9uRkHe7DvbvZSDXiWJdgoklbCPVvw+D2NT
+         qnE+svTrdPzrk049w8IUlKF/8A+TbqEOB4ZtZnKcLyxcwuyRAKHKlvb81V7nkC3m7k
+         Xj7AK9gPjexMA==
+Date:   Thu, 4 Mar 2021 12:29:08 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Stefan Chulski <stefanc@marvell.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+        Stefan Roese <sr@denx.de>, Phil Sutter <phil@nwl.cc>,
+        Mario Six <mario.six@gdsys.cc>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [EXT] Re: pci mvebu issue (memory controller)
+Message-ID: <20210304182908.GA858065@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20210219174406.2kioa4ikeippgwou@pali>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Feb 19, 2021 at 06:44:06PM +0100, Pali Roh�r wrote:
+> On Wednesday 10 February 2021 13:59:41 Stefan Chulski wrote:
+> > > > (sending this e-mail again because previously I sent it to Thomas' old
+> > > > e-mail address at free-electrons)
+> > > 
+> > > Thanks. Turns out I still receive e-mail sent to @free-electrons.com, so I had
+> > > seen your previous e-mail but didn't had the chance to reply.
+> > > 
+> > > > we have enountered an issue with pci-mvebu driver and would like your
+> > > > opinion, since you are the author of commit
+> > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_pu
+> > > > b_scm_linux_kernel_git_torvalds_linux.git_commit_-3Fid-
+> > > 3Df4ac99011e542
+> > > >
+> > > d06ea2bda10063502583c6d7991&d=DwIFaQ&c=nKjWec2b6R0mOyPaz7xtfQ&
+> > > r=DDQ3dK
+> > > > wkTIxKAl6_Bs7GMx4zhJArrXKN2mDMOXGh7lg&m=lENmudbu2hlK44mVm-
+> > > e8bgdi9Rm2AC
+> > > > DXN8QY0frgcuY&s=7109I-
+> > > xvpx1wW532pxvk1W8s_XeG77VQf2iP7QzhEao&e=
+> > > >
+> > > > After upgrading to new version of U-Boot on a Armada XP / 38x device,
+> > > > some WiFi cards stopped working in kernel. Ath10k driver, for example,
+> > > > could not load firmware into the card.
+> > > >
+> > > > We discovered that the issue is caused by U-Boot:
+> > > > - when U-Boot's pci_mvebu driver was converted to driver model API,
+> > > >   U-Boot started to configure PCIe registers not only for the newtork
+> > > >   adapter, but also for the Marvell Memory Controller (that you are
+> > > >   mentioning in your commit).
+> > > > - Since pci-mvebu driver in Linux is ignoring the Marvell Memory
+> > > >   Controller device, and U-Boot configures its registers (BARs and what
+> > > >   not), after kernel boots, the registers of this device are
+> > > >   incompatible with kernel, or something, and this causes problems for
+> > > >   the real PCIe device.
+> > > > - Stefan Roese has temporarily solved this issue with U-Boot commit
+> > > >   https://urldefense.proofpoint.com/v2/url?u=https-
+> > > 3A__gitlab.denx.de_u-2Dboot_custodians_u-2Dboot-2Dmarvell_-
+> > > 2D_commit_6a2fa284aee2981be2c7661b3757ce112de8d528&d=DwIFaQ&c=n
+> > > KjWec2b6R0mOyPaz7xtfQ&r=DDQ3dKwkTIxKAl6_Bs7GMx4zhJArrXKN2mDM
+> > > OXGh7lg&m=lENmudbu2hlK44mVm-
+> > > e8bgdi9Rm2ACDXN8QY0frgcuY&s=B0eKBkblEygPGYvKDdMuwzzYhDg5Jlh_Q4
+> > > eXHlIL-oc&e=
+> > > >   which basically just masks the Memory Controller's existence.
+> > > >
+> > > > - in Linux commit f4ac99011e54 ("pci: mvebu: no longer fake the slot
+> > > >   location of downstream devices") you mention that:
+> > > >
+> > > >    * On slot 0, a "Marvell Memory controller", identical on all PCIe
+> > > >      interfaces, and which isn't useful when the Marvell SoC is the PCIe
+> > > >      root complex (i.e, the normal case when we run Linux on the Marvell
+> > > >      SoC).
+> > > >
+> > > > What we are wondering is:
+> > > > - what does the Marvell Memory controller really do? Can it be used to
+> > > >   configure something? It clearly does something, because if it is
+> > > >   configured in U-Boot somehow but not in kernel, problems can occur.
+> > > > - is the best solution really just to ignore this device?
+> > > > - should U-Boot also start doing what commit f4ac99011e54 does? I.e.
+> > > >   to make sure that the real device is in slot 0, and Marvell Memory
+> > > >   Controller in slot 1.
+> > > > - why is Linux ignoring this device? It isn't even listed in lspci
+> > > >   output.
+> > > 
+> > > To be honest, I don't have much details about what this device does, and my
+> > > memory is unclear on whether I really ever had any details. I vaguely
+> > > remember that this is a device that made sense when the Marvell PCIe
+> > > controller is used as an endpoint, and in such a situation this device also the
+> > > root complex to "see" the physical memory of the Marvell SoC. And
+> > > therefore in a situation where the Marvell PCIe controller is the root
+> > > complex, seeing this device didn't make sense.
+> > > 
+> > > In addition, I /think/ it was causing problems with the MBus windows
+> > > allocation. Indeed, if this device is visible, then we will try to allocate MBus
+> > > windows for its different BARs, and those windows are in limited number.
+> > > 
+> > > I know this isn't a very helpful answer, but the documentation on this is
+> > > pretty much nonexistent, and I don't remember ever having very solid and
+> > > convincing answers.
+> > > 
+> > > I've added in Cc Stefan Chulski, from Marvell, who has recently posted
+> > > patches on the PPv2 driver. I don't know if he will have details about PCIe,
+> > > but perhaps he will be able to ask internally at Marvell.
+> > > 
+> > > Best regards,
+> > 
+> > I not familiar with Armada XP PCIe. But I can check internally at Marvell.
+> > 
+> > Best Regards,
+> > Stefan.
+> > 
+> 
+> Stefan: If you get any information internally in Marvell, please let us know!
+> 
+> Bjorn: What do you think, should Linux kernel completely hide some PCIe
+> devices from /sys hierarchy and also from 'lspci' output? Or should
+> kernel preserve even non-functional / unknown PCIe devices visible in
+> 'lspci' output?
 
-On 2/11/21 10:55 AM, Nitesh Narayan Lal wrote:
-> On 2/6/21 7:43 PM, Nitesh Narayan Lal wrote:
->> On 2/5/21 5:23 PM, Thomas Gleixner wrote:
->>> On Thu, Feb 04 2021 at 14:17, Nitesh Narayan Lal wrote:
->>>> On 2/4/21 2:06 PM, Marcelo Tosatti wrote:
->>>>>>> How about adding a new flag for isolcpus instead?
->>>>>>>
->>>>>> Do you mean a flag based on which we can switch the affinity mask to
->>>>>> housekeeping for all the devices at the time of IRQ distribution?
->>>>> Yes a new flag for isolcpus. HK_FLAG_IRQ_SPREAD or some better name.
->>>> Does sounds like a nice idea to explore, lets see what Thomas thinks about it.
-> <snip>
->
->>>> When the affinity mask of the interrupt at the time when it is actually
->>>> requested contains an isolated CPU then nothing prevents the kernel from
->>>> steering it at an isolated CPU. But that has absolutely nothing to do
->>>> with that spreading thingy.
->>>>
->>>> The only difference which this change makes is the fact that the
->>>> affinity hint changes. Nothing else.
->>>>
->> Thanks for the detailed explanation.
->>
->> Before I posted this patch, I was doing some debugging on a setup where I
->> was observing some latency issues due to the iavf IRQs that were pinned on
->> the isolated CPUs.
->>
->> Based on some initial traces I had this impression that the affinity hint
->> or cpumask_local_spread was somehow playing a role in deciding the affinity
->> mask of these IRQs. Although, that does look incorrect after going through
->> your explanation.
->> For some reason, with a kernel that had this patch when I tried creating
->> VFs iavf IRQs always ended up on the HK CPUs.
->>
->> The reasoning for the above is still not very clear to me. I will investigate
->> this further to properly understand this behavior.
->>
->>
-> After a little more digging, I found out why cpumask_local_spread change
-> affects the general/initial smp_affinity for certain device IRQs.
->
-> After the introduction of the commit:
->
->     e2e64a932 genirq: Set initial affinity in irq_set_affinity_hint()
->
+In general I don't think the kernel should hide PCI devices.  The PCI
+core has no way of knowing whether devices are non-functional, and
+"unknown" doesn't really mean anything because a driver could be
+loaded later.
 
-Continuing the conversation about the above commit and adding Jesse.
-I was trying to understand the problem that the commit message explains
-"The default behavior of the kernel is somewhat undesirable as all
-requested interrupts end up on CPU0 after registration.", I have also been
-trying to reproduce this behavior without the patch but I failed in doing
-so, maybe because I am missing something here.
+But if a device is in use by firmware, or if exposing it causes some
+problem, it might make sense to hide it.
 
-@Jesse Can you please explain? FWIU IRQ affinity should be decided based on
-the default affinity mask.
+In your case, the problem description is "... the registers of this
+device are incompatible with kernel, or something, and this causes
+problems for the real PCIe device ..."
 
-The problem with the commit is that when we overwrite the affinity mask
-based on the hinting mask we completely ignore the default SMP affinity
-mask. If we do want to overwrite the affinity based on the hint mask we
-should atleast consider the default SMP affinity.
+That's not much to go on.  Someone with more knowledge of the actual
+problem would have to weigh in on whether hiding a device is the best
+approach.
 
--- 
-Thanks
-Nitesh
+With more details we might see what the conflict between the devices
+is.  E.g., maybe we assign the same resources to both, or maybe we
+don't assign a bridge window to reach the WiFi card.
 
+Bjorn
