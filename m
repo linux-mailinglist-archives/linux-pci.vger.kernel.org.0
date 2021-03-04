@@ -2,146 +2,119 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4560E32D71F
-	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 16:52:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6635D32D747
+	for <lists+linux-pci@lfdr.de>; Thu,  4 Mar 2021 17:04:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233706AbhCDPvs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Mar 2021 10:51:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48818 "EHLO mail.kernel.org"
+        id S236253AbhCDQDc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Mar 2021 11:03:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232776AbhCDPvW (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 4 Mar 2021 10:51:22 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B05A560230;
-        Thu,  4 Mar 2021 15:50:41 +0000 (UTC)
+        id S236242AbhCDQDH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 4 Mar 2021 11:03:07 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1E73F64E28;
+        Thu,  4 Mar 2021 16:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614873042;
-        bh=wQ0PUkMAPriKUZRWfHBPQn5zZ1IErGigM15osFPlP1E=;
+        s=k20201202; t=1614873747;
+        bh=cGEWlSoCTya/ot2EVTO9KSdGc7xk6jo0zMvEBvDQYHE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N7ZcSdIU426bAspbzcApfAK315ZCRbEFOZJKDaN1mloCttlEqwCtgmjvuZuCw2csL
-         Gy4JG7U/Wgt1nGwarXVvx3oGy9FGlGbzysqn3Az35wDnfAki7z64oQmJYL37j7AnJG
-         hDfOhAH7ntoYLJKXEwQH9iDspIUU817Eta4vXgmI0MhvbpubN9WebW12CYm1WrsJk5
-         Ul4qoosx1DtLPcuWroArme7eP//qQ7IJVtAmUM4PEpy8c2Tx5zf8Twl8H73rfyERPG
-         OhkoIaPpVib6oLaOkFw42x59azFqxS7E4i9y2GnI7tjvCyqOgB8Ah08KDRjHmranCS
-         kQygnW7w6XezA==
-Date:   Thu, 4 Mar 2021 09:50:40 -0600
+        b=DUOSCaMGuj1tnFivMq/qcuHSVZnHEWqVmUFgwmlm6MqJfY/W1AG+kVeZAaHABqPLa
+         WvMkgfPTAGvSItB5FZaRBPTct+V6tD4fVgbQlthxSwzNUrRSzLjWh6rN8vnU3n2Sb/
+         msGx4V0vAVg5YmXDKCQk6WIo4HcUNmXjf88Id9PZdwo2rUW/GJOgsnG3DfWUH7YxdA
+         IyCRCXsFAdyBC2q8rm1N8sYpDRbfEwg37athcrO63WuY/VM54nKPv5xL11/BeaJd7H
+         jFeJjdCai9/XfMc3PKr2FwuD1wpkzN2TCPmIz61e7RnVljNSh+eOV2CvfgpNndWBVs
+         Z25hl6GXSAggg==
+Date:   Thu, 4 Mar 2021 10:02:25 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     Leon Romanovsky <leon@kernel.org>, bhelgaas@google.com,
-        corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, mstowe@redhat.com
-Subject: Re: [PATCH] pci-driver: Add driver load messages
-Message-ID: <20210304155040.GA844982@bjorn-Precision-5520>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yan-Hsuan Chuang <tony0620emma@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 3/3] PCI: Convert rtw88 power cycle quirk to shutdown
+ quirk
+Message-ID: <20210304160225.GA846157@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4a584957-24d5-54c8-07f8-36fd7d2e9fce@redhat.com>
+In-Reply-To: <CAAd53p62zy64gsmdNYSuV1sxOiB1Hye5R0WkY-gNFf+CKbG12A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 04, 2021 at 09:42:44AM -0500, Prarit Bhargava wrote:
-> 
-> 
-> On 2/18/21 2:06 PM, Bjorn Helgaas wrote:
-> > On Thu, Feb 18, 2021 at 01:36:35PM -0500, Prarit Bhargava wrote:
-> >> On 1/26/21 10:12 AM, Bjorn Helgaas wrote:
-> >>> On Tue, Jan 26, 2021 at 09:05:23AM -0500, Prarit Bhargava wrote:
-> >>>> On 1/26/21 8:53 AM, Leon Romanovsky wrote:
-> >>>>> On Tue, Jan 26, 2021 at 08:42:12AM -0500, Prarit Bhargava wrote:
-> >>>>>> On 1/26/21 8:14 AM, Leon Romanovsky wrote:
-> >>>>>>> On Tue, Jan 26, 2021 at 07:54:46AM -0500, Prarit Bhargava wrote:
-> >>>>>>>>   Leon Romanovsky <leon@kernel.org> wrote:
-> >>>>>>>>> On Mon, Jan 25, 2021 at 02:41:38PM -0500, Prarit Bhargava wrote:
-> >>>>>>>>>> There are two situations where driver load messages are helpful.
-> >>>>>>>>>>
-> >>>>>>>>>> 1) Some drivers silently load on devices and debugging driver or system
-> >>>>>>>>>> failures in these cases is difficult.  While some drivers (networking
-> >>>>>>>>>> for example) may not completely initialize when the PCI driver probe() function
-> >>>>>>>>>> has returned, it is still useful to have some idea of driver completion.
-> >>>>>>>>>
-> >>>>>>>>> Sorry, probably it is me, but I don't understand this use case.
-> >>>>>>>>> Are you adding global to whole kernel command line boot argument to debug
-> >>>>>>>>> what and when?
-> >>>>>>>>>
-> >>>>>>>>> During boot:
-> >>>>>>>>> If device success, you will see it in /sys/bus/pci/[drivers|devices]/*.
-> >>>>>>>>> If device fails, you should get an error from that device (fix the
-> >>>>>>>>> device to return an error), or something immediately won't work and
-> >>>>>>>>> you won't see it in sysfs.
-> >>>>>>>>
-> >>>>>>>> What if there is a panic during boot?  There's no way to get to sysfs.
-> >>>>>>>> That's the case where this is helpful.
-> >>>>>>>
-> >>>>>>> How? If you have kernel panic, it means you have much more worse problem
-> >>>>>>> than not-supported device. If kernel panic was caused by the driver, you
-> >>>>>>> will see call trace related to it. If kernel panic was caused by
-> >>>>>>> something else, supported/not supported won't help here.
-> >>>>>>
-> >>>>>> I still have no idea *WHICH* device it was that the panic occurred on.
-> >>>>>
-> >>>>> The kernel panic is printed from the driver. There is one driver loaded
-> >>>>> for all same PCI devices which are probed without relation to their
-> >>>>> number.>
-> >>>>> If you have host with ten same cards, you will see one driver and this
-> >>>>> is where the problem and not in supported/not-supported device.
-> >>>>
-> >>>> That's true, but you can also have different cards loading the same driver.
-> >>>> See, for example, any PCI_IDs list in a driver.
-> >>>>
-> >>>> For example,
-> >>>>
-> >>>> 10:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3008 [Fury] (rev 02)
-> >>>> 20:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3108 [Invader] (rev 02)
-> >>>>
-> >>>> Both load the megaraid driver and have different profiles within the
-> >>>> driver.  I have no idea which one actually panicked until removing
-> >>>> one card.
-> >>>>
-> >>>> It's MUCH worse when debugging new hardware and getting a panic
-> >>>> from, for example, the uncore code which binds to a PCI mapped
-> >>>> device.  One device might work and the next one doesn't.  And
-> >>>> then you can multiply that by seeing *many* panics at once and
-> >>>> trying to determine if the problem was on one specific socket,
-> >>>> die, or core.
-> >>>
-> >>> Would a dev_panic() interface that identified the device and
-> >>> driver help with this?
-> >>
-> >> ^^ the more I look at this problem, the more a dev_panic() that
-> >> would output a device specific message at panic time is what I
-> >> really need.
-> 
-> I went down this road a bit and had a realization.  The issue isn't
-> with printing something at panic time, but the *data* that is
-> output.  Each PCI device is associated with a struct device.  That
-> device struct's name is output for dev_dbg(), etc., commands.  The
-> PCI subsystem sets the device struct name at drivers/pci/probe.c:
-> 1799
-> 
-> 	        dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(dev->bus),
->                      dev->bus->number, PCI_SLOT(dev->devfn),
->                      PCI_FUNC(dev->devfn));
-> 
-> My problem really is that the above information is insufficient when
-> I (or a user) need to debug a system.  The complexities of debugging
-> multiple broken driver loads would be much easier if I didn't have
-> to constantly add this output manually :).
+[+cc Rafael, linux-pm]
 
-This *should* already be in the dmesg log:
+On Thu, Mar 04, 2021 at 02:07:18PM +0800, Kai-Heng Feng wrote:
+> On Sat, Feb 27, 2021 at 2:17 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, Feb 26, 2021 at 02:31:31PM +0100, Heiner Kallweit wrote:
+> > > On 26.02.2021 13:18, Kai-Heng Feng wrote:
+> > > > On Fri, Feb 26, 2021 at 8:10 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> > > >>
+> > > >> On 26.02.2021 08:12, Kalle Valo wrote:
+> > > >>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+> > > >>>
+> > > >>>> Now we have a generic D3 shutdown quirk, so convert the original
+> > > >>>> approach to a PCI quirk.
+> > > >>>>
+> > > >>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > >>>> ---
+> > > >>>>  drivers/net/wireless/realtek/rtw88/pci.c | 2 --
+> > > >>>>  drivers/pci/quirks.c                     | 6 ++++++
+> > > >>>>  2 files changed, 6 insertions(+), 2 deletions(-)
+> > > >>>
+> > > >>> It would have been nice to CC linux-wireless also on patches 1-2. I only
+> > > >>> saw patch 3 and had to search the rest of patches from lkml.
+> > > >>>
+> > > >>> I assume this goes via the PCI tree so:
+> > > >>>
+> > > >>> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> > > >>
+> > > >> To me it looks odd to (mis-)use the quirk mechanism to set a device
+> > > >> to D3cold on shutdown. As I see it the quirk mechanism is used to work
+> > > >> around certain device misbehavior. And setting a device to a D3
+> > > >> state on shutdown is a normal activity, and the shutdown() callback
+> > > >> seems to be a good place for it.
+> > > >> I miss an explanation what the actual benefit of the change is.
+> > > >
+> > > > To make putting device to D3 more generic, as there are more than one
+> > > > device need the quirk.
+> > > >
+> > > > Here's the discussion:
+> > > > https://lore.kernel.org/linux-usb/00de6927-3fa6-a9a3-2d65-2b4d4e8f0012@linux.intel.com/
+> > > >
+> > >
+> > > Thanks for the link. For the AMD USB use case I don't have a strong opinion,
+> > > what's considered the better option may be a question of personal taste.
+> > > For rtw88 however I'd still consider it over-engineering to replace a simple
+> > > call to pci_set_power_state() with a PCI quirk.
+> > > I may be biased here because I find it sometimes bothering if I want to
+> > > look up how a device is handled and in addition to checking the respective
+> > > driver I also have to grep through quirks.c whether there's any special
+> > > handling.
+> >
+> > I haven't looked at these patches carefully, but in general, I agree
+> > that quirks should be used to work around hardware defects in the
+> > device.  If the device behaves correctly per spec, we should use a
+> > different mechanism so the code remains generic and all devices get
+> > the benefit.
+> >
+> > If we do add quirks, the commit log should explain what the device
+> > defect is.
+> 
+> So maybe it's reasonable to put all PCI devices to D3 at shutdown?
 
-  pci 0000:00:00.0: [8086:5910] type 00 class 0x060000
-  pci 0000:00:01.0: [8086:1901] type 01 class 0x060400
-  pci 0000:00:02.0: [8086:591b] type 00 class 0x030000
+I don't know off-hand.  I added Rafael and linux-pm in case they do.
 
-So if you had a dev_panic(), that message would include the
-bus/device/function number, and that would be enough to find the
-vendor/device ID from when the device was first enumerated.
+If not, I suggest working up a patch to do that and a commit log that
+explains why that's a good idea and then we can have a discussion
+about it.  This thread really doesn't have that justification.  It
+says "putting device X in D3cold at shutdown saves 0.03w while in S5",
+but doesn't explain why that's safe or desirable for all devices.
 
-Or are you saying you can't get the part of the dmesg log that
-contains those vendor/device IDs?
-
-> Would you be okay with adding a *debug* parameter to expand the
-> device name to include the vendor & device ID pair?  FWIW, I'm
-> somewhat against yet-another-kernel-option but that's really the
-> information I need.  I could then add dev_dbg() statements in the
-> local_pci_probe() function.
+Bjorn
