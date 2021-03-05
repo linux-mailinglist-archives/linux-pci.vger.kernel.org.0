@@ -2,52 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2686F32DFDA
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 03:59:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89E0C32E100
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 06:05:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbhCEC7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Mar 2021 21:59:25 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45160 "EHLO
+        id S229582AbhCEFFE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Mar 2021 00:05:04 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48898 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbhCEC7Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Mar 2021 21:59:24 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1252xIXF026556;
-        Thu, 4 Mar 2021 20:59:18 -0600
+        with ESMTP id S229497AbhCEFFC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 00:05:02 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12554MVb074851;
+        Thu, 4 Mar 2021 23:04:22 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1614913158;
-        bh=4ahj61Ka0+iqhWERh7yRL39qOUve4QTofA7lhdzVP6M=;
+        s=ti-com-17Q1; t=1614920662;
+        bh=U0H1T2uqfz94VIfupekbSvG64g6Q1bFcWLHxDtZXkRo=;
         h=From:To:CC:Subject:Date;
-        b=atLib6IfCvdhxB2qqxzMrqn582vEurvNRni4xyzQuAkfXOra5h8suuBnrBcC1c7rm
-         lCxSZQg2+eMzFjYbEptSnJG1wTNZDfLxVk+PJvoDf6sfZRYbYv9STrk4EOII4GU0XV
-         pEUqNUYaXxqSWO3yZNbyu1PTj4ha0VYMUG/khIjI=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1252xI3c051045
+        b=Wux98L/XpAmOM9Zb2Eh+ZhhJsnrgGtKK0RPf8ykrGgND+z4oygQL0Nuc0uUHW1KSP
+         AcnmxZ6+p7jqpDJd0qgMLAc7vdcff+Fzk8qQBJxeYsGoJA497pIKnCeNldZFGujxdE
+         w1om3sRvuPNmuldvIX2OekFrlhVzl/fQOeFB9reg=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12554MQH012146
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Mar 2021 20:59:18 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 4 Mar 2021 23:04:22 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Mar
- 2021 20:59:18 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ 2021 23:04:21 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 4 Mar 2021 20:59:18 -0600
+ Frontend Transport; Thu, 4 Mar 2021 23:04:21 -0600
 Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1252xDqN121008;
-        Thu, 4 Mar 2021 20:59:14 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12554D95116197;
+        Thu, 4 Mar 2021 23:04:14 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Tom Joseph <tjoseph@cadence.com>,
         Jingoo Han <jingoohan1@gmail.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Nadeem Athani <nadeem@cadence.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
         Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH] PCI: designware-ep: Fix NULL pointer dereference error
-Date:   Fri, 5 Mar 2021 08:29:10 +0530
-Message-ID: <20210305025910.9652-1-kishon@ti.com>
+Subject: [PATCH v3 0/7] Add SR-IOV support in PCIe Endpoint Core
+Date:   Fri, 5 Mar 2021 10:34:03 +0530
+Message-ID: <20210305050410.9201-1-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -56,97 +69,59 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-commit 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows") detected
-the number of inbound and outbound windows dynamically at runtime in
-dw_pcie_setup(). However pcie-designware-ep.c accessed the variables
-holding the number of inbound and outbound windows even before
-dw_pcie_setup() was invoked. Fix the sequence here.
+Patch series
+*) Adds support to add virtual functions to enable endpoint controller
+   which supports SR-IOV capability
+*) Add support in Cadence endpoint driver to configure virtual functions
+*) Enable pci_endpoint_test driver to create pci_device for virtual
+   functions
 
-Fixes: 281f1f99cf3a ("PCI: dwc: Detect number of iATU windows")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- .../pci/controller/dwc/pcie-designware-ep.c   | 44 ++++++++++---------
- 1 file changed, 23 insertions(+), 21 deletions(-)
+v1 of the patch series can be found at [1]
+v2 of the patch series can be found at [2]
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 1c25d8337151..2c0f837af458 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -636,9 +636,11 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
- int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct device *dev = pci->dev;
- 	unsigned int offset;
- 	unsigned int nbars;
- 	u8 hdr_type;
-+	void *addr;
- 	u32 reg;
- 	int i;
- 
-@@ -665,6 +667,27 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 	}
- 
- 	dw_pcie_setup(pci);
-+
-+	ep->ib_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ib_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ib_window_map)
-+		return -ENOMEM;
-+
-+	ep->ob_window_map = devm_kcalloc(dev,
-+					 BITS_TO_LONGS(pci->num_ob_windows),
-+					 sizeof(long),
-+					 GFP_KERNEL);
-+	if (!ep->ob_window_map)
-+		return -ENOMEM;
-+
-+	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
-+			    GFP_KERNEL);
-+	if (!addr)
-+		return -ENOMEM;
-+	ep->outbound_addr = addr;
-+
- 	dw_pcie_dbi_ro_wr_dis(pci);
- 
- 	return 0;
-@@ -674,7 +697,6 @@ EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
- int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- {
- 	int ret;
--	void *addr;
- 	u8 func_no;
- 	struct resource *res;
- 	struct pci_epc *epc;
-@@ -712,26 +734,6 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	ep->phys_base = res->start;
- 	ep->addr_size = resource_size(res);
- 
--	ep->ib_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ib_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ib_window_map)
--		return -ENOMEM;
--
--	ep->ob_window_map = devm_kcalloc(dev,
--					 BITS_TO_LONGS(pci->num_ob_windows),
--					 sizeof(long),
--					 GFP_KERNEL);
--	if (!ep->ob_window_map)
--		return -ENOMEM;
--
--	addr = devm_kcalloc(dev, pci->num_ob_windows, sizeof(phys_addr_t),
--			    GFP_KERNEL);
--	if (!addr)
--		return -ENOMEM;
--	ep->outbound_addr = addr;
--
- 	if (pci->link_gen < 1)
- 		pci->link_gen = of_pci_get_max_link_speed(np);
- 
+Here both physical functions and virtual functions use the same
+pci_endpoint_test driver and existing pcitest utility can be used
+to test virtual functions as well.
+
+Changes from v2:
+*) Fixed DT binding documentation comment by Rob
+*) Fixed the error check in pci-epc-core.c
+
+Changes from v1:
+*) Re-based and Re-worked to latest kernel 5.10.0-rc2+ (now has generic
+   binding for EP)
+
+[1] -> http://lore.kernel.org/r/20191231113534.30405-1-kishon@ti.com
+[2] -> http://lore.kernel.org/r/20201112175358.2653-1-kishon@ti.com
+
+Kishon Vijay Abraham I (7):
+  dt-bindings: PCI: pci-ep: Add binding to specify virtual function
+  PCI: endpoint: Add support to add virtual function in endpoint core
+  PCI: endpoint: Add support to link a physical function to a virtual
+    function
+  PCI: endpoint: Add virtual function number in pci_epc ops
+  PCI: cadence: Add support to configure virtual functions
+  misc: pci_endpoint_test: Populate sriov_configure ops to configure
+    SR-IOV device
+  Documentation: PCI: endpoint/pci-endpoint-cfs: Guide to use SR-IOV
+
+ .../PCI/endpoint/pci-endpoint-cfs.rst         |  12 +-
+ .../devicetree/bindings/pci/pci-ep.yaml       |   9 +
+ drivers/misc/pci_endpoint_test.c              |   1 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 251 +++++++++++++++---
+ drivers/pci/controller/cadence/pcie-cadence.h |   7 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |  36 +--
+ drivers/pci/controller/pcie-rcar-ep.c         |  19 +-
+ drivers/pci/controller/pcie-rockchip-ep.c     |  18 +-
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  |  79 +++---
+ drivers/pci/endpoint/functions/pci-epf-test.c |  66 +++--
+ drivers/pci/endpoint/pci-ep-cfs.c             |  24 ++
+ drivers/pci/endpoint/pci-epc-core.c           | 130 ++++++---
+ drivers/pci/endpoint/pci-epf-core.c           | 144 +++++++++-
+ include/linux/pci-epc.h                       |  57 ++--
+ include/linux/pci-epf.h                       |  16 +-
+ 15 files changed, 666 insertions(+), 203 deletions(-)
+
 -- 
 2.17.1
 
