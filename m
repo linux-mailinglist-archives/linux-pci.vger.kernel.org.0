@@ -2,248 +2,313 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9872E32F395
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 20:12:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09DB632F59B
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 22:58:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbhCETMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Mar 2021 14:12:21 -0500
-Received: from mta-02.yadro.com ([89.207.88.252]:43214 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230053AbhCETMP (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 5 Mar 2021 14:12:15 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 4FE5A41292;
-        Fri,  5 Mar 2021 19:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        mime-version:content-transfer-encoding:content-id:content-type
-        :content-type:content-language:accept-language:in-reply-to
-        :references:message-id:date:date:subject:subject:from:from
-        :received:received:received:received; s=mta-01; t=1614971532; x=
-        1616785933; bh=gY+PANKt4UItfjZ7Y8pLH0gFEQSMOXLzwWgXVzHjEsw=; b=t
-        uTNt5W9PATEMKcLYTgoAopE8BM0e6LgwhcyGP7Ua+Yqg8Cyqebx+bFqPATH6QG8p
-        DEIFlPIE00ZruSO/cYPP6Z4acYM6kDBWmJe/AtWe/+CDnEhAhYnQu+dMJATRUlk4
-        o7aoAF+Gz/Bax5U6khkOHb0EJtsXvwRieT3jshT45c=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oM9-cFnJTPld; Fri,  5 Mar 2021 22:12:12 +0300 (MSK)
-Received: from T-EXCH-03.corp.yadro.com (t-exch-03.corp.yadro.com [172.17.100.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 31E4A41283;
-        Fri,  5 Mar 2021 22:12:11 +0300 (MSK)
-Received: from T-EXCH-03.corp.yadro.com (172.17.100.103) by
- T-EXCH-03.corp.yadro.com (172.17.100.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 5 Mar 2021 22:12:11 +0300
-Received: from T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272]) by
- T-EXCH-03.corp.yadro.com ([fe80::39f4:7b05:b1d3:5272%14]) with mapi id
- 15.01.0669.032; Fri, 5 Mar 2021 22:12:11 +0300
-From:   Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-To:     "andrey.grodzovsky@amd.com" <andrey.grodzovsky@amd.com>
-CC:     "Alexander.Deucher@amd.com" <Alexander.Deucher@amd.com>,
-        "Christian.Koenig@amd.com" <Christian.Koenig@amd.com>,
-        "anatoli.antonovitch@amd.com" <anatoli.antonovitch@amd.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux@yadro.com" <linux@yadro.com>
-Subject: Re: Question about supporting AMD eGPU hot plug case
-Thread-Topic: Question about supporting AMD eGPU hot plug case
-Thread-Index: AQHW+OZCLrcKjeWn9U26wbGoIrW3kKpDtUMAgAMa8QCAAZA8AIAHl62AgAGbQTWAAcXUAIABBq+AgAgRTACAAdG764AF+qGAgAOCQVGAABswAIAAiN+AgADALoCAAM2HAIAKSU2AgAFUg4CAABJUgIAAIReA
-Date:   Fri, 5 Mar 2021 19:12:11 +0000
-Message-ID: <98ac52f982409e22fbd6e6659e2724f9b1f2fafd.camel@yadro.com>
-References: <ddef2da4-4726-7321-40fe-5f90788cc836@amd.com>
-         <MN2PR12MB44880052F5C4ECF3EF22B58EF7B69@MN2PR12MB4488.namprd12.prod.outlook.com>
-         <ffb816ae8336ff2373ec5fcf695e698900c3d557.camel@yadro.com>
-         <9c41221f-ecfa-5554-f2ea-6f72cfe7dc7e@amd.com>
-         <dae8dfd8-3a99-620d-f0aa-ceb39923b807@amd.com>
-         <7d9e947648ce47a4ba8d223cdec08197@yadro.com>
-         <c82919f3-5296-cd0a-0b8f-c33614ca3ea9@amd.com>
-         <340062dba82b813b311b2c78022d2d3d0e6f414d.camel@yadro.com>
-         <927d7fbe-756f-a4f1-44cd-c68aecd906d7@amd.com>
-         <dc2de228b92c4e27819c7681f650e1e5@yadro.com>
-         <a6af29ed-179a-7619-3dde-474542c180f4@amd.com>
-         <8f53f1403f0c4121885398487bbfa241@yadro.com>
-         <fc2ea091-8470-9501-242d-8d82714adecb@amd.com>
-         <50afd1079dbabeba36fd35fdef84e6e15470ef45.camel@yadro.com>
-         <c53c23b5-dd37-44f1-dffd-ff9699018a82@amd.com>
-         <8d7e2d7b7982d8d78c0ecaa74b9d40ace4db8453.camel@yadro.com>
-         <f5a9bc49-3708-a4af-fff1-6822b49732c0@amd.com>
-         <1647946cb73ae390b40a593bb021699308bab33e.camel@yadro.com>
-         <3873f1ee-1cec-1740-4238-a154dd670d62@amd.com>
-In-Reply-To: <3873f1ee-1cec-1740-4238-a154dd670d62@amd.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [172.17.15.136]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C48A6AED9E1EBD4E953EA6D2E6A1CC42@yadro.com>
-Content-Transfer-Encoding: base64
+        id S229672AbhCEV5z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Mar 2021 16:57:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229493AbhCEV5u (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Mar 2021 16:57:50 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 477D0650A8;
+        Fri,  5 Mar 2021 21:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614981470;
+        bh=Aj0cFvIyz7NQcACEFdepojn3t06iDgfxmYBrnBVP67U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eHiu5fHqQyZFvUxNqh5sWVMaDYQ89eJPH43cuBFseS+MNOfkq6/uCo7z/tyqHt5ZV
+         2CdqT6dydGQdvG67wTrszafQMJISXg8gSv7+mNERY3jtwQF+LlY/KkxrzXp5Ba75vO
+         DaxyvpeZkVJ4Dln8IvmPI+IPKtplJz1Ck1NK3ROgPojNCLan1IqCJUz1RZ8FiDMAvo
+         sC3DrQy97FksVY13wjRP3CtguFCxao33QXQOr8QQ+sX25FI0FcgN4g0fZ1QvC/HrXi
+         Fk3Poc6DBehy0Kj08Bx5ypxdhHaejai06cDnfBD8Q6jTXayr5eIoDdOg7RvYwn4Jui
+         X1LIY+0QJvUJw==
+Date:   Fri, 5 Mar 2021 15:57:49 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net,
+        lenb@kernel.org, andrew.murray@arm.com, treding@nvidia.com,
+        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Subject: Re: [PATCH V3 2/2] PCI: Add MCFG quirks for Tegra194 host controllers
+Message-ID: <20210305215749.GA1117765@bjorn-Precision-5520>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110191500.9538-3-vidyas@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-T24gRnJpLCAyMDIxLTAzLTA1IGF0IDEyOjEzIC0wNTAwLCBBbmRyZXkgR3JvZHpvdnNreSB3cm90
-ZToNCj4gDQo+IE9uIDIwMjEtMDMtMDUgMTE6MDggYS5tLiwgU2VyZ2VpIE1pcm9zaG5pY2hlbmtv
-IHdyb3RlOg0KPiA+IE9uIFRodSwgMjAyMS0wMy0wNCBhdCAxNDo0OSAtMDUwMCwgQW5kcmV5IEdy
-b2R6b3Zza3kgd3JvdGU6DQo+ID4gPiArIGxpbnV4LXBjaQ0KPiA+ID4gDQo+ID4gPiBPbiAyMDIx
-LTAyLTI2IDE6NDQgYS5tLiwgU2VyZ2VpIE1pcm9zaG5pY2hlbmtvIHdyb3RlOg0KPiA+ID4gPiBP
-biBUaHUsIDIwMjEtMDItMjUgYXQgMTM6MjggLTA1MDAsIEFuZHJleSBHcm9kem92c2t5IHdyb3Rl
-Og0KPiA+ID4gPiA+IE9uIDIwMjEtMDItMjUgMjowMCBhLm0uLCBTZXJnZWkgTWlyb3NobmljaGVu
-a28gd3JvdGU6DQo+ID4gPiA+ID4gPiBPbiBXZWQsIDIwMjEtMDItMjQgYXQgMTc6NTEgLTA1MDAs
-IEFuZHJleSBHcm9kem92c2t5IHdyb3RlOg0KPiA+ID4gPiA+ID4gPiBPbiAyMDIxLTAyLTI0IDE6
-MjMgcC5tLiwgU2VyZ2VpIE1pcm9zaG5pY2hlbmtvIHdyb3RlOg0KPiA+ID4gPiA+ID4gPiA+IC4u
-Lg0KPiA+ID4gPiA+ID4gPiBBcmUgeW91IHNheWluZyB0aGF0IGV2ZW4gd2l0aG91dCBob3QtcGx1
-Z2dpbmcsIHdoaWxlIGJvdGgNCj4gPiA+ID4gPiA+ID4gbnZtZQ0KPiA+ID4gPiA+ID4gPiBhbmQN
-Cj4gPiA+ID4gPiA+ID4gQU1EDQo+ID4gPiA+ID4gPiA+IGNhcmQgYXJlIHByZXNlbnQNCj4gPiA+
-ID4gPiA+ID4gcmlnaHQgZnJvbSBib290LCB5b3Ugc3RpbGwgZ2V0IEJBUnMgbW92aW5nIGFuZCBN
-TUlPDQo+ID4gPiA+ID4gPiA+IHJhbmdlcw0KPiA+ID4gPiA+ID4gPiByZWFzc2lnbmVkDQo+ID4g
-PiA+ID4gPiA+IGZvciBOVk1FIEJBUnMNCj4gPiA+ID4gPiA+ID4ganVzdCBiZWNhdXNlIGFtZGdw
-dSBkcml2ZXIgd2lsbCBzdGFydCByZXNpemUgb2YgQU1EIGNhcmQNCj4gPiA+ID4gPiA+ID4gQkFS
-cw0KPiA+ID4gPiA+ID4gPiBhbmQNCj4gPiA+ID4gPiA+ID4gdGhpcw0KPiA+ID4gPiA+ID4gPiB3
-aWxsIHRyaWdnZXIgTlZNRXMgQkFScyBtb3ZlIHRvDQo+ID4gPiA+ID4gPiA+IGFsbG93IEFNRCBj
-YXJkIEJBUnMgdG8gY292ZXIgZnVsbCByYW5nZSBvZiBWSURFTyBSQU0gPw0KPiA+ID4gPiA+ID4g
-WWVzLiBVbmNvbmRpdGlvbmFsbHksIGJlY2F1c2UgaXQgaXMgdW5rbm93biBiZWZvcmVoYW5kIGlm
-DQo+ID4gPiA+ID4gPiBOVk1lJ3MNCj4gPiA+ID4gPiA+IEJBUg0KPiA+ID4gPiA+ID4gbW92ZW1l
-bnQgd2lsbCBoZWxwLiBJbiB0aGlzIHBhcnRpY3VsYXIgY2FzZSBCQVIgbW92ZW1lbnQgaXMNCj4g
-PiA+ID4gPiA+IG5vdA0KPiA+ID4gPiA+ID4gbmVlZGVkLA0KPiA+ID4gPiA+ID4gYnV0IGlzIGRv
-bmUgYW55d2F5Lg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBCQVJzIGFyZSBub3QgbW92ZWQg
-b25lIGJ5IG9uZSwgYnV0IHRoZSBrZXJuZWwgcmVsZWFzZXMgYWxsDQo+ID4gPiA+ID4gPiB0aGUN
-Cj4gPiA+ID4gPiA+IHJlbGVhc2FibGUgb25lcywgYW5kIHRoZW4gcmVjYWxjdWxhdGVzIGEgbmV3
-IEJBUiBsYXlvdXQgdG8NCj4gPiA+ID4gPiA+IGZpdA0KPiA+ID4gPiA+ID4gdGhlbQ0KPiA+ID4g
-PiA+ID4gYWxsLiBLZXJuZWwncyBhbGdvcml0aG0gaXMgZGlmZmVyZW50IGZyb20gQklPUydzLCBz
-byBOVk1FDQo+ID4gPiA+ID4gPiBoYXMNCj4gPiA+ID4gPiA+IGFwcGVhcmVkDQo+ID4gPiA+ID4g
-PiBhdCBhIG5ldyBwbGFjZS4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gVGhpcyBpcyB0cmln
-Z2VyZWQgYnkgZm9sbG93aW5nOg0KPiA+ID4gPiA+ID4gLSBhdCBib290LCBpZiBCSU9TIGhhZCBh
-c3NpZ25lZCBub3QgZXZlcnkgQkFSOw0KPiA+ID4gPiA+ID4gLSBkdXJpbmcgcGNpX3Jlc2l6ZV9y
-ZXNvdXJjZSgpOw0KPiA+ID4gPiA+ID4gLSBkdXJpbmcgcGNpX3Jlc2Nhbl9idXMoKSAtLSBhZnRl
-ciBhIHBjaWVocCBldmVudCBvciBhDQo+ID4gPiA+ID4gPiBtYW51YWwNCj4gPiA+ID4gPiA+IHZp
-YQ0KPiA+ID4gPiA+ID4gc3lzZnMuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gQnkgbWFudWFsIHZp
-YSBzeXNmcyB5b3UgbWVhbiBzb21ldGhpbmcgbGlrZSB0aGlzIC0gJ2VjaG8gMSA+DQo+ID4gPiA+
-ID4gL3N5cy9idXMvcGNpL2RyaXZlcnMvYW1kZ3B1LzAwMDBcOjBjXDowMC4wL3JlbW92ZSAmJiBl
-Y2hvIDEgPg0KPiA+ID4gPiA+IC9zeXMvYnVzL3BjaS9yZXNjYW4gJyA/IEkgYW0gbG9va2luZyBp
-bnRvIGhvdyBtb3N0IHJlbGlhYmx5DQo+ID4gPiA+ID4gdHJpZ2dlcg0KPiA+ID4gPiA+IFBDSQ0K
-PiA+ID4gPiA+IGNvZGUgdG8gY2FsbCBteSBjYWxsYmFja3MgZXZlbiB3aXRob3V0IGhhdmluZyBl
-eHRlcm5hbCBQQ0kNCj4gPiA+ID4gPiBjYWdlDQo+ID4gPiA+ID4gZm9yDQo+ID4gPiA+ID4gR1BV
-DQo+ID4gPiA+ID4gKHdpbGwgdGFrZSBtZSBzb21lIHRpbWUgdG8gZ2V0IGl0KS4NCj4gPiA+ID4g
-DQo+ID4gPiA+IFllYWgsIHRoaXMgaXMgb3VyIHdheSB0byBnbyB3aGVuIGEgZGV2aWNlIGNhbid0
-IGJlIHBoeXNpY2FsbHkNCj4gPiA+ID4gcmVtb3ZlZA0KPiA+ID4gPiBvciB1bnBvd2VyZWQgcmVt
-b3RlbHkuIFdpdGgganVzdCBhIGJpdCBzaG9ydGVyIHBhdGg6DQo+ID4gPiA+IA0KPiA+ID4gPiAg
-ICAgc3VkbyBzaCAtYyAnZWNobyAxID4NCj4gPiA+ID4gL3N5cy9idXMvcGNpL2RldmljZXMvMDAw
-MFw6MGNcOjAwLjAvcmVtb3ZlJw0KPiA+ID4gPiAgICAgc3VkbyBzaCAtYyAnZWNobyAxID4gL3N5
-cy9idXMvcGNpL3Jlc2NhbicNCj4gPiA+ID4gDQo+ID4gPiA+IE9yLCBqdXN0IGEgc2Vjb25kIGNv
-bW1hbmQgKHJlc2NhbikgaXMgZW5vdWdoOiBhIEJBUiBtb3ZlbWVudA0KPiA+ID4gPiBhdHRlbXB0
-DQo+ID4gPiA+IHdpbGwgYmUgdHJpZ2dlcmVkIGV2ZW4gaWYgdGhlcmUgd2VyZSBubyBjaGFuZ2Vz
-IGluIFBDSQ0KPiA+ID4gPiB0b3BvbG9neS4NCj4gPiA+ID4gDQo+ID4gPiA+IFNlcmdlDQo+ID4g
-PiA+IA0KPiA+ID4gDQo+ID4gPiBIaSBTZWdyZWkNCj4gPiA+IA0KPiA+ID4gSGVyZSBpcyBhIGxp
-bmsgdG8gaW5pdGlhbCBpbXBsZW1lbnRhdGlvbiBvbiB0b3Agb2YgeW91ciB0cmVlDQo+ID4gPiAo
-bW92YWJsZV9iYXJzX3Y5LjEpIC0NCj4gPiA+IGh0dHBzOi8vbmFtMTEuc2FmZWxpbmtzLnByb3Rl
-Y3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwczolMkYlMkZjZ2l0LmZyZWVkZXNrdG9wLm9yZyUy
-Rn5hZ3JvZHpvdiUyRmxpbnV4JTJGY29tbWl0JTJGJTNGaCUzRHlhZHJvJTJGcGNpZV9ob3RwbHVn
-JTJGbW92YWJsZV9iYXJzX3Y5LjElMjZpZCUzRDA1ZDZhYmNlZWQ2NTAxODFiYjdmZTBhNDk4ODRh
-MjZlMzc4YjkwOGUmYW1wO2RhdGE9MDQlN0MwMSU3Q2FuZHJleS5ncm9kem92c2t5JTQwYW1kLmNv
-bSU3QzYzN2JmM2FhYjM2MzRhYjY5ZGM2MDhkOGRmZjBlMGIxJTdDM2RkODk2MWZlNDg4NGU2MDhl
-MTFhODJkOTk0ZTE4M2QlN0MwJTdDMCU3QzYzNzUwNTU3Mjk1ODU2NTMzMiU3Q1Vua25vd24lN0NU
-V0ZwYkdac2IzZDhleUpXSWpvaU1DNHdMakF3TURBaUxDSlFJam9pVjJsdU16SWlMQ0pCVGlJNklr
-MWhhV3dpTENKWFZDSTZNbjAlM0QlN0MxMDAwJmFtcDtzZGF0YT0lMkYydXJiWHFDTE16WkJLZTBs
-VHlBZmhncURxRHhpT1pOMDRSOUxUVnh2STAlM0QmYW1wO3Jlc2VydmVkPTANCj4gPiA+IEkgYW0g
-YWJsZSB0byBwYXNzIG9uZSByZS1zY2FuIGN5Y2xlIGFuZCBjYW4gdXNlIHRoZSBjYXJkDQo+ID4g
-PiBhZnRlcndhcmRzDQo+ID4gPiAoc2VlDQo+ID4gPiBsb2cxLmxvZykuDQo+ID4gPiBCdXQsIGFj
-Y29yZGluZyB0byB5b3VyIHByaW50cyBvbmx5IEJBUjUgd2hpY2ggaXMgcmVnaXN0ZXJzIEJBUg0K
-PiA+ID4gd2FzDQo+ID4gPiB1cGRhdGVkIChhbWRncHUgMDAwMDowYjowMC4wOiBCQVIgNSB1cGRh
-dGVkOiAweGZjYzAwMDAwIC0+DQo+ID4gPiAweGZjMTAwMDAwKQ0KPiA+ID4gd2hpbGUgSSBhbSBp
-bnRlcmVzdGVkIHRvIHRlc3QgQkFSMCAoR3JhcGhpYyBSQU0pIG1vdmUgc2luY2UgdGhpcw0KPiA+
-ID4gaXMNCj4gPiA+IHdoZXJlIG1vc3Qgb2YgdGhlIGNvbXBsZXhpdHkgaXMuIElzIHRoZXJlIGEg
-d2F5IHRvIGhhY2sgeW91ciBjb2RlDQo+ID4gPiB0bw0KPiA+ID4gZm9yY2UgdGhpcyA/DQo+ID4g
-DQo+ID4gSGkgQW5kcmV5LA0KPiA+IA0KPiA+IFJlZ2FyZGluZyB0aGUgYW1kZ3B1J3MgQkFSMCBy
-ZW1haW5pbmcgb24gaXRzIHBsYWNlOiBpdCBzZWVtcyB0aGlzDQo+ID4gaXMNCj4gPiBiZWNhdXNl
-IG9mIGZpeGVkIEJBUnMgc3RhcnRpbmcgZnJvbSBmYzYwMDAwMC4gVGhlIGtlcm5lbCB0ZW5kcyB0
-bw0KPiA+IGdyb3VwDQo+ID4gdGhlIEJBUnMgY2xvc2UgdG8gZWFjaCBvdGhlciwgbWFraW5nIGEg
-YnJpZGdlIHdpbmRvdyBhcyBjb21wYWN0IGFzDQo+ID4gcG9zc2libGUuIFNvIHRoZSBCQVIwIGhh
-ZCBvY2N1cGllZCB0aGUgY2xvc2VzdCAiY29tZm9ydGFibGUiIHNsb3RzDQo+ID4gMHhlMDAwMDAw
-MC0weGVmZmZmZmZmLCB3aXRoIHRoZSByZXN1bHRpbmcgYnJpZGdlIHdpbmRvdyBvZiBidXMgMDAN
-Cj4gPiBjb3ZlcmluZyBhbGwgdGhlIEJBUnM6DQo+ID4gDQo+ID4gICAgICBwY2lfYnVzIDAwMDA6
-MDA6IHJlc291cmNlIDEwIFttZW0gMHhlMDAwMDAwMC0weGZlYzJmZmZmDQo+ID4gd2luZG93XQ0K
-PiA+IA0KPiA+IEknbGwgbGV0IHlvdSBrbm93IGlmIEkgZ2V0IGFuIGlkZWEgaG93IHRvIHJlYXJy
-YW5nZSB0aGF0IG1hbnVhbGx5Lg0KPiA+IA0KPiA+IFR3byBHUFVzIGNhbiBhY3R1YWxseSBzd2Fw
-IHRoZWlyIHBsYWNlcy4NCj4gDQo+IFdoYXQgZG8geW91IG1lYW4gPw0KDQpJIHdhcyB0aGlua2lu
-Zzogd2hlbiB0aGUgc2NlbmFyaW8gb2YgYSBQQ0kgcmVzY2FuIHdpdGggdHdvIEdQVXMgKGFzIHdh
-cw0KZGVzY3JpYmVkIGJlbG93KSB3aWxsIHN0YXJ0IHdvcmtpbmcsIEJBUjAgb2YgR1BVMCBjYW4g
-dGFrZSBwbGFjZSBvZg0KQkFSMCBvZiBHUFUxIGFmdGVyIHRoZSBmaXJzdCByZXNjYW4uDQoNCj4g
-PiBXaGF0IGFsc28gY2FuIG1ha2UgYSBCQVIgbW92YWJsZSAtLSBpcyBybW1vZCdpbmcgaXRzIGRy
-aXZlci4gSXQNCj4gPiBjb3VsZA0KPiA+IGJlIHNvbWUgaGFjayBmcm9tIHdpdGhpbiBhIHRtdXgs
-IGxpa2U6DQo+ID4gDQo+ID4gICAgcm1tb2QgaWdiOyBcDQo+ID4gICAgcm1tb2QgeGhjaV9oY2Q7
-IFwNCj4gPiAgICBybW1vZCBhaGNpOyBcDQo+ID4gICAgZWNobyAxID4gL3N5cy9idXMvcGNpL3Jl
-c2NhbjsgXA0KPiA+ICAgIG1vZHByb2JlIGlnYjsgXA0KPiA+ICAgIG1vZHByb2JlIHhoY2lfaGNk
-OyBcDQo+ID4gICAgbW9kcHJvYmUgYWhjaQ0KPiANCj4gQnV0IHNob3VsZCBJIGFsc28gcm1tb2Qg
-YW1kZ3B1ID8gT3IgbW9kcHJvYmluZyBiYWNrIHRoZSBvdGhlcg0KPiBkcml2ZXJzIA0KPiBzaG91
-bGQgY2F1c2UgKGhvcGVmdWxseSkgQkFSMCBtb3ZlIGluIEFNRCBncmFwaGljIGNhcmQgPw0KDQpZ
-b3UgaGF2ZSBhbHJlYWR5IG1hZGUgdGhlIGFtZGdwdSBtb3ZhYmxlLCBzbyBubyBuZWVkIHRvIHJt
-bW9kIGl0IC0tDQpqdXN0IHRob3NlIHdpdGggZml4ZWQgQkFSczoNCg0KICAgIHhoY2lfaGNkIDAw
-MDA6MGM6MDAuMzogQkFSIDA6IGFzc2lnbmVkIGZpeGVkIFttZW0gMHhmYzYwMDAwMC0NCjB4ZmM2
-ZmZmZmYgNjRiaXRdDQogICAgaWdiIDAwMDA6MDc6MDAuMDogQkFSIDA6IGFzc2lnbmVkIGZpeGVk
-IFttZW0gMHhmYzkwMDAwMC0weGZjOTFmZmZmXQ0KICAgIGlnYiAwMDAwOjA3OjAwLjA6IEJBUiAz
-OiBhc3NpZ25lZCBmaXhlZCBbbWVtIDB4ZmM5MjAwMDAtMHhmYzkyM2ZmZl0NCiAgICBhaGNpIDAw
-MDA6MDI6MDAuMTogQkFSIDY6IGFzc2lnbmVkIGZpeGVkIFttZW0gMHhmY2IwMDAwMC0weGZjYjdm
-ZmZmIA0KcHJlZl0NCiAgICBhaGNpIDAwMDA6MDI6MDAuMTogQkFSIDU6IGFzc2lnbmVkIGZpeGVk
-IFttZW0gMHhmY2I4MDAwMC0NCjB4ZmNiOWZmZmZdDQogICAgeGhjaV9oY2QgMDAwMDowMjowMC4w
-OiBCQVIgMDogYXNzaWduZWQgZml4ZWQgW21lbSAweGZjYmEwMDAwLQ0KMHhmY2JhN2ZmZiA2NGJp
-dF0NCiAgICB4aGNpX2hjZCAwMDAwOjA1OjAwLjA6IEJBUiAwOiBhc3NpZ25lZCBmaXhlZCBbbWVt
-IDB4ZmNhMDAwMDAtDQoweGZjYTA3ZmZmIDY0Yml0XQ0KICAgIGFoY2kgMDAwMDowZDowMC4yOiBC
-QVIgNTogYXNzaWduZWQgZml4ZWQgW21lbSAweGZjZTA4MDAwLQ0KMHhmY2UwOGZmZl0NCg0KVGhl
-IGV4cGVjdGVkIHJlc3VsdCBpcyB0aGV5IGFsbCBtb3ZlIGNsb3NlciB0byB0aGUgc3RhcnQgb2Yg
-UENJIGFkZHJlc3MNCnNwYWNlLg0KDQo+ID4gSSB0aGluayBwY2lfcmVsZWFzZV9yZXNvdXJjZSgp
-IHNob3VsZCBub3QgYmUgaW4NCj4gPiBhbWRncHVfZGV2aWNlX3VubWFwX21taW8oKSAtLSB0aGUg
-cGF0Y2hlZCBrZXJuZWwgd2lsbCBkbyB0aGF0DQo+ID4gaXRzZWxmDQo+ID4gZm9yIEJBUnMgdGhl
-IGFtZGdwdV9kZXZpY2VfYmFyX2ZpeGVkKCkgcmV0dXJucyBmYWxzZS4gRXZlbiBtb3JlIC0tDQo+
-ID4gdGhlDQo+ID4ga2VybmVsIHdpbGwgZW5zdXJlIHRoYXQgYWxsIEJBUnMgd2hpY2ggd2VyZSB3
-b3JraW5nIGJlZm9yZSwgYXJlDQo+ID4gcmVhc3NpZ25lZCBwcm9wZXJseSwgc28gaXQgbmVlZHMg
-dGhlbSB0byBiZSBhc3NpZ25lZCBiZWZvcmUgdGhlDQo+ID4gcHJvY2VkdXJlLg0KPiA+IFRoZSBz
-YW1lIGZvciBwY2lfYXNzaWduX3VuYXNzaWduZWRfYnVzX3Jlc291cmNlcygpIGluDQo+ID4gYW1k
-Z3B1X2RldmljZV9yZW1hcF9tbWlvKCk6IHRoaXMgY2FsbGJhY2sgaXMgaW52b2tlZCBmcm9tDQo+
-ID4gcGNpX3Jlc2Nhbl9idXMoKSBhZnRlciBwY2lfYXNzaWduX3VuYXNzaWduZWRfcm9vdF9idXNf
-cmVzb3VyY2VzKCkuDQo+IA0KPiBUaGlzIHNlZW1zIHRvIG1lIGluIGNvbnRyYXN0IHRvIHlvdXIg
-ZG9jdW1lbnRhdGlvbiAoc2VlIA0KPiBodHRwczovL2dpdGh1Yi5jb20vWUFEUk8tS05TL2xpbnV4
-L2NvbW1pdC81YmMxMmJhN2M3NGYxYzE5YzExZGIyOWI0ODA3YmQzMmFjZmFjMmMyIA0KPiBzdGVw
-IDEpIGFsdGhvdWdoIHN0ZXAgMiBzZWVtcyBhbHNvIHRvIGNvbnRyYWRpY3Qgc3RlcCAxIHdpdGgg
-cmVnYXJkDQo+IHRvIA0KPiBCQVJzIHJlbGVhc2UgLSBzbyBub3cgSSBhbSBhIGJpdCBjb25mdXNl
-ZC4gQWxzbyBsb29raW5nIGF0IA0KPiBudm1lX2Rldl91bm1hcCAtIGl0IGNhbGxzIHBjaV9yZWxl
-YXNlX21lbV9yZWdpb25zLiBTeW1tZXRyaWNhbCANCj4gYWNxdWlzaXRpb24gaGFwcGVucyBpbiBu
-dm1lX2Rldl91bm1hcC4NCg0KQWgsIHRoZXJlIGlzIGEgZGlmZmVyZW5jZSBiZXR3ZWVuIHBjaV9y
-ZWxlYXNlX3JlZ2lvbigpIGFuZA0KcGNpX3JlbGVhc2VfcmVzb3VyY2UoKSwgc28gc3VidGxlIHRo
-YXQgSSBoYWQgdG8gcmVmcmVzaCBteSBtZW1vcnkuIFlvdQ0KYXJlIHJpZ2h0LCB0aGlzIGhhcyB0
-byBiZSBleHBsYWluZWQgaW4gdGhlIGRvY3VtZW50YXRpb24hDQoNCiQgc3VkbyBjYXQgL3Byb2Mv
-aW9tZW0NCi4uLg0KZjAwMDAwMDAtZmNmZmZmZmYgOiBQQ0kgQnVzIDAwMDA6MDAgICAgIC0tIHJv
-b3QgYnVzIHJlc291cmNlDQouLi4NCiAgZmNmMDAwMDAtZmNmZmZmZmYgOiBQQ0kgQnVzIDAwMDA6
-MDEgICAtLSBicmlkZ2Ugd2luZG93DQogICAgZmNmMDAwMDAtZmNmMDNmZmYgOiAwMDAwOjAxOjAw
-LjAgICAgLS0gcGNpIHJlc291cmNlIChCQVIpDQogICAgICBmY2YwMDAwMC1mY2YwM2ZmZiA6IG52
-bWUgICAgICAgICAgLS0gcGNpIHJlZ2lvbiAocmVzZXJ2ZWQgYnkNCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBhIGRyaXZlciwgaGFzIGl0cyBuYW1lKS4NCg0KU28g
-dGhlIG52bWVfZGV2X3VubWFwKCkgcmVmbGVjdHMgd2l0aCBwY2lfcmVsZWFzZV9yZWdpb24oKSB0
-aGF0IHRoZSBCQVINCmlzIG5vdCB1c2VkIGJ5IHRoZSBkcml2ZXIgYW55bW9yZSAtLSB0aGlzIGFj
-dHVhbGx5IHNob3VsZCBiZSBjYWxsZWQgaW4NCmV2ZXJ5IHJlc2Nhbl9wcmVwYXJlKCkuDQoNCkJ1
-dCB0aGUgcGNpX3JlbGVhc2VfcmVzb3VyY2UoKSB0ZWxscyB0byB0aGUgUENJIHN1YnN5c3RlbSB0
-aGF0IHRoZSBCQVINCmlzICJyZWxlYXNlZCIgZnJvbSB0aGUgZGV2aWNlIGFuZCBoYXMgdG8gYmUg
-YXNzaWduZWQgdG8gc29tZSBhZGRyZXNzDQpiZWZvcmUgdXNpbmcgYWdhaW4sIGFuZCBtYWtlcyB0
-aGUgcGNpX3Jlc291cmNlX3N0YXJ0KHBkZXYsDQpyZWxhc2VkX2Jhcm5vKSBpbnZhbGlkLg0KDQpX
-aHkgdGhlIHF1b3RlczogcGNpX3JlbGVhc2VfcmVzb3VyY2UoKSBkb2Vzbid0IHR1cm4gb2ZmIHRo
-ZSBCQVIsDQpkb2Vzbid0IHdyaXRlIHRoZSByZWdpc3RlcnMgLS0gdGhpcyBoYXBwZW5zIGxhdGVy
-Lg0KDQpJIHRob3VodCBhdCBmaXJzdCB0aGF0IHBjaV9yZWxlYXNlX3Jlc291cmNlKCkgaXMgbm90
-IHNhZmUgaW4gYQ0KcmVzY2FuX3ByZXBhcmUoKSwgYnV0IHRoZW4gZG91YmxlLWNoZWNrZWQsIGFu
-ZCBmb3VuZCBpdCdzIGZpbmUsIGp1c3QNCm5vdCBuZWVkZWQsIGFzIHRoZSBrZXJuZWwgd2lsbCBk
-byBpdCBhbnl3YXkuIEFuZCB0aGUNCnBjaV9idXNfY2hlY2tfYmFyc19hc3NpZ25lZCgpIHRvIGNv
-bXBhcmUgdGhlIGJpdG1hc2tzIG9mIHN1Y2Nlc3NmdWxseQ0KYXNzaWduZWQgQkFScyBpcyBjYWxs
-ZWQgKmJlZm9yZSogdGhlIGhvb2suDQoNCj4gPiA+IFdoZW4gdGVzdGluZyB3aXRoIDIgZ3JhcGhp
-YyBjYXJkcyBhbmQgdHJpZ2dlcmluZyByZXNjYW4sIGhhcmQNCj4gPiA+IGhhbmcgb2YNCj4gPiA+
-IHRoZSBzeXN0ZW0gaGFwcGVucyBkdXJpbmcgcmVzY2FuX3ByZXBhcmUgb2YgdGhlIHNlY29uZCBj
-YXJkICB3aGVuDQo+ID4gPiBzdG9wcGluZyB0aGUgSFcgKHNlZSBsb2cyLmxvZykgLSBJIGRvbid0
-IHVuZGVyc3RhbmQgd2h5IHRoaXMNCj4gPiA+IHdvdWxkDQo+ID4gPiBoYXBwZW4gYXMgZWFjaCBv
-ZiB0aGVtIHBhc3NlcyBmaW5lIHdoZW4gdGhleSBhcmUgc3RhbmRhbG9uZQ0KPiA+ID4gdGVzdGVk
-DQo+ID4gPiBhbmQNCj4gPiA+IHRoZXJlIHNob3VsZCBiZSBubyBpbnRlcmRlcGVuZGVuY2UgYmV0
-d2VlbiB0aGVtIGFzIGZhciBhcyBpIGtub3cuDQo+ID4gPiBEbyB5b3UgaGF2ZSBhbnkgaWRlYSA/
-DQo+ID4gDQo+ID4gV2hhdCBoYXBwZW5zIHdpdGggdHdvIEdQVXMgaXMgdW5jbGVhciBmb3IgbWUg
-YXMgd2VsbCwgbm90aGluZyBsb29rcw0KPiA+IHN1c3BpY2lvdXMuDQo+ID4gDQo+ID4gU2VyZ2UN
-Cj4gPiANCg==
+[+cc Krzysztof for .bus_shift below]
+
+This is [2/2] but I don't see a [1/2].  Is there something missing?
+
+On Sat, Jan 11, 2020 at 12:45:00AM +0530, Vidya Sagar wrote:
+> The PCIe controller in Tegra194 SoC is not completely ECAM-compliant.
+> With the current hardware design limitations in place, ECAM can be enabled
+> only for one controller (C5 controller to be precise) with bus numbers
+> starting from 160 instead of 0. A different approach is taken to avoid this
+> abnormal way of enabling ECAM for just one controller but to enable
+> configuration space access for all the other controllers. In this approach,
+> ops are added through MCFG quirk mechanism which access the configuration
+> spaces by dynamically programming iATU (internal AddressTranslation Unit)
+> to generate respective configuration accesses just like the way it is
+> done in DesignWare core sub-system.
+
+Is this a published erratum in the device?  The purpose of specs is so
+we can run existing code on new platforms without having to add quirks
+like this, so I'm looking for some acknowledgement that this is an
+issue that will be fixed in future designs.
+
+Ideally this would be a URL to published errata, and we would include
+the text or a synopsis here in the commit log.
+
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
+
+What is this "Reported-by" telling me?  Normally this would be a
+person who could supply more information about a defect we're fixing
+and might be able to test the fix.
+
+> ---
+> V3:
+> * Removed MCFG address hardcoding in pci_mcfg.c file
+> * Started using 'dbi_base' for accessing root port's own config space
+> * and using 'config_base' for accessing config space of downstream hierarchy
+> 
+> V2:
+> * Fixed build issues reported by kbuild test bot
+
+Ah, I see this is probably where the "Reported-by" came from.  To me,
+it would make sense to add the tag if the commit *only* fixes the
+build problem so it's obvious what the robot reported.
+
+But here, the build fix got squashed in before merging, so it's more
+like a general review comment and I think the robot's response on the
+mailing list is probably enough.
+
+>  drivers/acpi/pci_mcfg.c                    |   7 ++
+>  drivers/pci/controller/dwc/Kconfig         |   3 +-
+>  drivers/pci/controller/dwc/Makefile        |   2 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 102 +++++++++++++++++++++
+>  include/linux/pci-ecam.h                   |   1 +
+>  5 files changed, 113 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> index 6b347d9920cc..707181408173 100644
+> --- a/drivers/acpi/pci_mcfg.c
+> +++ b/drivers/acpi/pci_mcfg.c
+> @@ -116,6 +116,13 @@ static struct mcfg_fixup mcfg_quirks[] = {
+>  	THUNDER_ECAM_QUIRK(2, 12),
+>  	THUNDER_ECAM_QUIRK(2, 13),
+>  
+> +	{ "NVIDIA", "TEGRA194", 1, 0, MCFG_BUS_ANY, &tegra194_pcie_ops},
+> +	{ "NVIDIA", "TEGRA194", 1, 1, MCFG_BUS_ANY, &tegra194_pcie_ops},
+> +	{ "NVIDIA", "TEGRA194", 1, 2, MCFG_BUS_ANY, &tegra194_pcie_ops},
+> +	{ "NVIDIA", "TEGRA194", 1, 3, MCFG_BUS_ANY, &tegra194_pcie_ops},
+> +	{ "NVIDIA", "TEGRA194", 1, 4, MCFG_BUS_ANY, &tegra194_pcie_ops},
+> +	{ "NVIDIA", "TEGRA194", 1, 5, MCFG_BUS_ANY, &tegra194_pcie_ops},
+> +
+>  #define XGENE_V1_ECAM_MCFG(rev, seg) \
+>  	{"APM   ", "XGENE   ", rev, seg, MCFG_BUS_ANY, \
+>  		&xgene_v1_pcie_ecam_ops }
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 0830dfcfa43a..f5b9e75aceed 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -255,7 +255,8 @@ config PCIE_TEGRA194
+>  	select PHY_TEGRA194_P2U
+>  	help
+>  	  Say Y here if you want support for DesignWare core based PCIe host
+> -	  controller found in NVIDIA Tegra194 SoC.
+> +	  controller found in NVIDIA Tegra194 SoC. ACPI platforms with Tegra194
+> +	  don't need to enable this.
+>  
+>  config PCIE_UNIPHIER
+>  	bool "Socionext UniPhier PCIe controllers"
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 8a637cfcf6e9..76a6c52b8500 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -17,7 +17,6 @@ obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+>  obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
+>  obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
+>  obj-$(CONFIG_PCI_MESON) += pci-meson.o
+> -obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  
+>  # The following drivers are for devices that use the generic ACPI
+> @@ -33,4 +32,5 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+>  ifdef CONFIG_PCI
+>  obj-$(CONFIG_ARM64) += pcie-al.o
+>  obj-$(CONFIG_ARM64) += pcie-hisi.o
+> +obj-$(CONFIG_ARM64) += pcie-tegra194.o
+>  endif
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index cbe95f0ea0ca..660f55caa8be 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-acpi.h>
+> +#include <linux/pci-ecam.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+> @@ -285,6 +287,103 @@ struct tegra_pcie_dw {
+>  	struct dentry *debugfs;
+>  };
+>  
+> +#if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
+> +struct tegra194_pcie_acpi  {
+> +	void __iomem *config_base;
+> +	void __iomem *iatu_base;
+> +	void __iomem *dbi_base;
+> +};
+> +
+> +static int tegra194_acpi_init(struct pci_config_window *cfg)
+> +{
+> +	struct device *dev = cfg->parent;
+> +	struct tegra194_pcie_acpi *pcie;
+
+"pcie" doesn't seem like the best name for this since everywhere else
+in this driver, "pcie" is a "struct tegra_pcie_dw *".  Maybe "mcfg"
+or similar?
+
+With some rename of tegra194_pcie_acpi along the same lines, since it
+really isn't ACPI-specific.  It's just that the ACPI MCFG table
+happens to be the way to discover the ECAM address space.
+
+> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +	if (!pcie)
+> +		return -ENOMEM;
+> +
+> +	pcie->config_base = cfg->win;
+> +	pcie->iatu_base = cfg->win + SZ_256K;
+> +	pcie->dbi_base = cfg->win + SZ_512K;
+> +	cfg->priv = pcie;
+> +
+> +	return 0;
+> +}
+> +
+> +static inline void atu_reg_write(struct tegra194_pcie_acpi *pcie, int index,
+> +				 u32 val, u32 reg)
+
+"inline" is pointless, I think, since this isn't a performance path
+and the compiler will probably inline it by itself.
+
+> +{
+> +	u32 offset = PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(index);
+> +
+> +	writel(val, pcie->iatu_base + offset + reg);
+> +}
+> +
+> +static void program_outbound_atu(struct tegra194_pcie_acpi *pcie, int index,
+> +				 int type, u64 cpu_addr, u64 pci_addr, u64 size)
+> +{
+> +	atu_reg_write(pcie, index, lower_32_bits(cpu_addr),
+> +		      PCIE_ATU_LOWER_BASE);
+> +	atu_reg_write(pcie, index, upper_32_bits(cpu_addr),
+> +		      PCIE_ATU_UPPER_BASE);
+> +	atu_reg_write(pcie, index, lower_32_bits(pci_addr),
+> +		      PCIE_ATU_LOWER_TARGET);
+> +	atu_reg_write(pcie, index, lower_32_bits(cpu_addr + size - 1),
+> +		      PCIE_ATU_LIMIT);
+> +	atu_reg_write(pcie, index, upper_32_bits(pci_addr),
+> +		      PCIE_ATU_UPPER_TARGET);
+> +	atu_reg_write(pcie, index, type, PCIE_ATU_CR1);
+> +	atu_reg_write(pcie, index, PCIE_ATU_ENABLE, PCIE_ATU_CR2);
+> +}
+> +
+> +static void __iomem *tegra194_map_bus(struct pci_bus *bus,
+> +				      unsigned int devfn, int where)
+> +{
+> +	struct pci_config_window *cfg = bus->sysdata;
+> +	struct tegra194_pcie_acpi *pcie = cfg->priv;
+> +	u32 busdev;
+> +	int type;
+> +
+> +	if (bus->number < cfg->busr.start || bus->number > cfg->busr.end)
+> +		return NULL;
+> +
+> +	if (bus->number == cfg->busr.start) {
+> +		if (PCI_SLOT(devfn) == 0)
+> +			return pcie->dbi_base + where;
+> +		else
+> +			return NULL;
+> +	}
+> +
+> +	busdev = PCIE_ATU_BUS(bus->number) | PCIE_ATU_DEV(PCI_SLOT(devfn)) |
+> +		 PCIE_ATU_FUNC(PCI_FUNC(devfn));
+> +
+> +	if (bus->parent->number == cfg->busr.start) {
+> +		if (PCI_SLOT(devfn) == 0)
+> +			type = PCIE_ATU_TYPE_CFG0;
+> +		else
+> +			return NULL;
+> +	} else {
+> +		type = PCIE_ATU_TYPE_CFG1;
+> +	}
+> +
+> +	program_outbound_atu(pcie, PCIE_ATU_REGION_INDEX0, type,
+> +			     cfg->res.start, busdev, SZ_256K);
+
+I don't see a PCIE_ATU_REGION_INDEX0 definition.  Maybe that's what's
+in the [1/2] patch?  I guess there's some way to be sure this ATU
+isn't used for other purposes?
+
+> +	return (void __iomem *)(pcie->config_base + where);
+
+Isn't the type correct even without the cast, same as above for
+"pcie->dbi_base + where"?
+
+> +}
+> +
+> +struct pci_ecam_ops tegra194_pcie_ops = {
+> +	.bus_shift	= 20,
+
+I think e7708f5b10e2 ("PCI: Unify ECAM constants in native PCI Express
+drivers") means you don't need this .bus_shift.
+
+> +	.init		= tegra194_acpi_init,
+> +	.pci_ops	= {
+> +		.map_bus	= tegra194_map_bus,
+> +		.read		= pci_generic_config_read,
+> +		.write		= pci_generic_config_write,
+> +	}
+> +};
+> +#endif /* defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS) */
+> +
+> +#ifdef CONFIG_PCIE_TEGRA194
+> +
+>  static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+>  {
+>  	return container_of(pci, struct tegra_pcie_dw, pci);
+> @@ -1728,3 +1827,6 @@ MODULE_DEVICE_TABLE(of, tegra_pcie_dw_of_match);
+>  MODULE_AUTHOR("Vidya Sagar <vidyas@nvidia.com>");
+>  MODULE_DESCRIPTION("NVIDIA PCIe host controller driver");
+>  MODULE_LICENSE("GPL v2");
+> +
+> +#endif /* CONFIG_PCIE_TEGRA194 */
+> +
+> diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> index a73164c85e78..6156140dcbb6 100644
+> --- a/include/linux/pci-ecam.h
+> +++ b/include/linux/pci-ecam.h
+> @@ -57,6 +57,7 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+>  extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
+>  extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+>  extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
+> +extern struct pci_ecam_ops tegra194_pcie_ops; /* Tegra194 PCIe */
+>  #endif
+>  
+>  #ifdef CONFIG_PCI_HOST_COMMON
+> -- 
+> 2.17.1
+> 
