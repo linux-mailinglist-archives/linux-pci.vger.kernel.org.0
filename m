@@ -2,176 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D48F832F25A
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 19:21:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA08D32F312
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 19:45:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbhCESVA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Mar 2021 13:21:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42397 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229906AbhCESUp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 13:20:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614968444;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JfSvRiV9id+sTOHyrwsGFVmiHVDEJVgf/6uCXFbnT2I=;
-        b=flJubouJm9ZtbslsUmR7PEwg18dWdwEQEFK/pAGqBeK53ndpw/RLsQ/8vm/NoexhdwyZGn
-        mx9ud59dzywDMx7a08FTDxEM2Bxg0wdhem0ro2HhDy/N6wzkr6Y5X0HrFT1B3hIwx92ZJp
-        19dqlLK3YbkbZ6sldUKs2J3Bcj/xWyg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-285-H7lXu8zzPyaVXFKbtTthjA-1; Fri, 05 Mar 2021 13:20:43 -0500
-X-MC-Unique: H7lXu8zzPyaVXFKbtTthjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S229651AbhCESpN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Mar 2021 13:45:13 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:49578 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229631AbhCESok (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 13:44:40 -0500
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 0.83.537)
+ id 40b9a7510e5517b8; Fri, 5 Mar 2021 19:44:37 +0100
+Received: from kreacher.localnet (89-64-81-9.dynamic.chello.pl [89.64.81.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96702101F00B;
-        Fri,  5 Mar 2021 18:20:41 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BFC0510023BE;
-        Fri,  5 Mar 2021 18:20:40 +0000 (UTC)
-Subject: Re: [PATCH] pci-driver: Add driver load messages
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>, bhelgaas@google.com,
-        corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-pci@vger.kernel.org, mstowe@redhat.com
-References: <20210304155040.GA844982@bjorn-Precision-5520>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <940bfcbb-2672-74b8-432b-cf7b33bc036a@redhat.com>
-Date:   Fri, 5 Mar 2021 13:20:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by v370.home.net.pl (Postfix) with ESMTPSA id 46B4D663EA1;
+        Fri,  5 Mar 2021 19:44:36 +0100 (CET)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Linux PCI <linux-pci@vger.kernel.org>
+Subject: [PATCH v1 2/4] ACPI: utils: Introduce acpi_evaluation_failure_warn()
+Date:   Fri, 05 Mar 2021 19:41:44 +0100
+Message-ID: <3660317.i3jicEtL8u@kreacher>
+In-Reply-To: <2775419.haJ69vZeI0@kreacher>
+References: <2775419.haJ69vZeI0@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <20210304155040.GA844982@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduledruddtiedguddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkfgjfhgggfgtsehtufertddttddvnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgfelheffhfetffelhfelteejffetteetgfetkeejvdfhfeeftdeufeevgeevieevnecukfhppeekledrieegrdekuddrleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekledrieegrdekuddrledphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehruhhirdiihhgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtohepjhhitgdvfeeskhgvrhhnvghlrdhorhhgpdhrtghp
+ thhtoheplhgrrhhssehmvghtrghfohhordguvgdprhgtphhtthhopehpmhgvvghrfiesphhmvggvrhifrdhnvghtpdhrtghpthhtoheplhhinhhugidqihhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjuggvlhhvrghrvgesshhushgvrdgtohhmpdhrtghpthhtoheplhhinhhugiesrhhovggtkhdquhhsrdhnvghtpdhrtghpthhtoheplhhinhhugidqhhifmhhonhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhptghisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Quite a few users of ACPI objects want to log a warning message if
+the evaluation fails which is a repeating pattern, so introduce a
+helper function for that purpose and convert some code where it is
+open-coded to using it.
+
+No intentional functional impact.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/pci_link.c             |    6 ++----
+ drivers/acpi/processor_perflib.c    |   10 +++-------
+ drivers/acpi/processor_throttling.c |   16 ++++------------
+ drivers/acpi/utils.c                |   14 ++++++++++++++
+ include/linux/acpi.h                |    5 +++++
+ 5 files changed, 28 insertions(+), 23 deletions(-)
+
+Index: linux-pm/drivers/acpi/utils.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/utils.c
++++ linux-pm/drivers/acpi/utils.c
+@@ -512,6 +512,20 @@ EXPORT_SYMBOL(__acpi_handle_debug);
+ #endif
+ 
+ /**
++ * acpi_evaluation_failure_warn - Log evaluation failure warning.
++ * @handle: Parent object handle.
++ * @name: Name of the object whose evaluation has failed.
++ * @status: Status value returned by the failing object evaluation.
++ */
++void acpi_evaluation_failure_warn(acpi_handle handle, const char *name,
++				  acpi_status status)
++{
++	acpi_handle_warn(handle, "%s evaluation failed: %s\n", name,
++			 acpi_format_exception(status));
++}
++EXPORT_SYMBOL_GPL(acpi_evaluation_failure_warn);
++
++/**
+  * acpi_has_method: Check whether @handle has a method named @name
+  * @handle: ACPI device handle
+  * @name: name of object or method
+Index: linux-pm/include/linux/acpi.h
+===================================================================
+--- linux-pm.orig/include/linux/acpi.h
++++ linux-pm/include/linux/acpi.h
+@@ -1027,9 +1027,14 @@ static inline void acpi_ec_set_gpe_wake_
+ __printf(3, 4)
+ void acpi_handle_printk(const char *level, acpi_handle handle,
+ 			const char *fmt, ...);
++void acpi_evaluation_failure_warn(acpi_handle handle, const char *name,
++				  acpi_status status);
+ #else	/* !CONFIG_ACPI */
+ static inline __printf(3, 4) void
+ acpi_handle_printk(const char *level, void *handle, const char *fmt, ...) {}
++static inline void acpi_evaluation_failure_warn(acpi_handle handle,
++						const char *name,
++						acpi_status status) {}
+ #endif	/* !CONFIG_ACPI */
+ 
+ #if defined(CONFIG_ACPI) && defined(CONFIG_DYNAMIC_DEBUG)
+Index: linux-pm/drivers/acpi/processor_throttling.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/processor_throttling.c
++++ linux-pm/drivers/acpi/processor_throttling.c
+@@ -281,9 +281,7 @@ static int acpi_processor_get_platform_l
+ 	status = acpi_evaluate_integer(pr->handle, "_TPC", NULL, &tpc);
+ 	if (ACPI_FAILURE(status)) {
+ 		if (status != AE_NOT_FOUND)
+-			acpi_handle_warn(pr->handle,
+-					 "_TPC evaluation failed: %s\n",
+-					 acpi_format_exception(status));
++			acpi_evaluation_failure_warn(pr->handle, "_TPC", status);
+ 
+ 		return -ENODEV;
+ 	}
+@@ -416,9 +414,7 @@ static int acpi_processor_get_throttling
+ 	status = acpi_evaluate_object(pr->handle, "_PTC", NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+ 		if (status != AE_NOT_FOUND)
+-			acpi_handle_warn(pr->handle,
+-					 "_PTC evaluation failed: %s\n",
+-					 acpi_format_exception(status));
++			acpi_evaluation_failure_warn(pr->handle, "_PTC", status);
+ 
+ 		return -ENODEV;
+ 	}
+@@ -503,9 +499,7 @@ static int acpi_processor_get_throttling
+ 	status = acpi_evaluate_object(pr->handle, "_TSS", NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+ 		if (status != AE_NOT_FOUND)
+-			acpi_handle_warn(pr->handle,
+-					 "_TSS evaluation failed: %s\n",
+-					 acpi_format_exception(status));
++			acpi_evaluation_failure_warn(pr->handle, "_TSS", status);
+ 
+ 		return -ENODEV;
+ 	}
+@@ -586,9 +580,7 @@ static int acpi_processor_get_tsd(struct
+ 	status = acpi_evaluate_object(pr->handle, "_TSD", NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+ 		if (status != AE_NOT_FOUND)
+-			acpi_handle_warn(pr->handle,
+-					 "_TSD evaluation failed: %s\n",
+-					 acpi_format_exception(status));
++			acpi_evaluation_failure_warn(pr->handle, "_TSD", status);
+ 
+ 		return -ENODEV;
+ 	}
+Index: linux-pm/drivers/acpi/pci_link.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/pci_link.c
++++ linux-pm/drivers/acpi/pci_link.c
+@@ -256,8 +256,7 @@ static int acpi_pci_link_get_current(str
+ 	status = acpi_walk_resources(handle, METHOD_NAME__CRS,
+ 				     acpi_pci_link_check_current, &irq);
+ 	if (ACPI_FAILURE(status)) {
+-		acpi_handle_warn(handle, "_CRS evaluation failed: %s\n",
+-				 acpi_format_exception(status));
++		acpi_evaluation_failure_warn(handle, "_CRS", status);
+ 		result = -ENODEV;
+ 		goto end;
+ 	}
+@@ -345,8 +344,7 @@ static int acpi_pci_link_set(struct acpi
+ 
+ 	/* check for total failure */
+ 	if (ACPI_FAILURE(status)) {
+-		acpi_handle_warn(handle, "_SRS evaluation failed: %s",
+-				 acpi_format_exception(status));
++		acpi_evaluation_failure_warn(handle, "_SRS", status);
+ 		result = -ENODEV;
+ 		goto end;
+ 	}
+Index: linux-pm/drivers/acpi/processor_perflib.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/processor_perflib.c
++++ linux-pm/drivers/acpi/processor_perflib.c
+@@ -67,9 +67,7 @@ static int acpi_processor_get_platform_l
+ 		acpi_processor_ppc_in_use = true;
+ 
+ 		if (ACPI_FAILURE(status)) {
+-			acpi_handle_warn(pr->handle,
+-					 "_PPC evaluation failed: %s\n",
+-					 acpi_format_exception(status));
++			acpi_evaluation_failure_warn(pr->handle, "_PPC", status);
+ 			return -ENODEV;
+ 		}
+ 	}
+@@ -199,8 +197,7 @@ static int acpi_processor_get_performanc
+ 
+ 	status = acpi_evaluate_object(pr->handle, "_PCT", NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+-		acpi_handle_warn(pr->handle, "_PCT evaluation failed: %s\n",
+-				 acpi_format_exception(status));
++		acpi_evaluation_failure_warn(pr->handle, "_PCT", status);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -300,8 +297,7 @@ static int acpi_processor_get_performanc
+ 
+ 	status = acpi_evaluate_object(pr->handle, "_PSS", NULL, &buffer);
+ 	if (ACPI_FAILURE(status)) {
+-		acpi_handle_warn(pr->handle, "_PSS evaluation failed: %s\n",
+-				 acpi_format_exception(status));
++		acpi_evaluation_failure_warn(pr->handle, "_PSS", status);
+ 		return -ENODEV;
+ 	}
+ 
 
 
-On 3/4/21 10:50 AM, Bjorn Helgaas wrote:
-> On Thu, Mar 04, 2021 at 09:42:44AM -0500, Prarit Bhargava wrote:
->>
->>
->> On 2/18/21 2:06 PM, Bjorn Helgaas wrote:
->>> On Thu, Feb 18, 2021 at 01:36:35PM -0500, Prarit Bhargava wrote:
->>>> On 1/26/21 10:12 AM, Bjorn Helgaas wrote:
->>>>> On Tue, Jan 26, 2021 at 09:05:23AM -0500, Prarit Bhargava wrote:
->>>>>> On 1/26/21 8:53 AM, Leon Romanovsky wrote:
->>>>>>> On Tue, Jan 26, 2021 at 08:42:12AM -0500, Prarit Bhargava wrote:
->>>>>>>> On 1/26/21 8:14 AM, Leon Romanovsky wrote:
->>>>>>>>> On Tue, Jan 26, 2021 at 07:54:46AM -0500, Prarit Bhargava wrote:
->>>>>>>>>>   Leon Romanovsky <leon@kernel.org> wrote:
->>>>>>>>>>> On Mon, Jan 25, 2021 at 02:41:38PM -0500, Prarit Bhargava wrote:
->>>>>>>>>>>> There are two situations where driver load messages are helpful.
->>>>>>>>>>>>
->>>>>>>>>>>> 1) Some drivers silently load on devices and debugging driver or system
->>>>>>>>>>>> failures in these cases is difficult.  While some drivers (networking
->>>>>>>>>>>> for example) may not completely initialize when the PCI driver probe() function
->>>>>>>>>>>> has returned, it is still useful to have some idea of driver completion.
->>>>>>>>>>>
->>>>>>>>>>> Sorry, probably it is me, but I don't understand this use case.
->>>>>>>>>>> Are you adding global to whole kernel command line boot argument to debug
->>>>>>>>>>> what and when?
->>>>>>>>>>>
->>>>>>>>>>> During boot:
->>>>>>>>>>> If device success, you will see it in /sys/bus/pci/[drivers|devices]/*.
->>>>>>>>>>> If device fails, you should get an error from that device (fix the
->>>>>>>>>>> device to return an error), or something immediately won't work and
->>>>>>>>>>> you won't see it in sysfs.
->>>>>>>>>>
->>>>>>>>>> What if there is a panic during boot?  There's no way to get to sysfs.
->>>>>>>>>> That's the case where this is helpful.
->>>>>>>>>
->>>>>>>>> How? If you have kernel panic, it means you have much more worse problem
->>>>>>>>> than not-supported device. If kernel panic was caused by the driver, you
->>>>>>>>> will see call trace related to it. If kernel panic was caused by
->>>>>>>>> something else, supported/not supported won't help here.
->>>>>>>>
->>>>>>>> I still have no idea *WHICH* device it was that the panic occurred on.
->>>>>>>
->>>>>>> The kernel panic is printed from the driver. There is one driver loaded
->>>>>>> for all same PCI devices which are probed without relation to their
->>>>>>> number.>
->>>>>>> If you have host with ten same cards, you will see one driver and this
->>>>>>> is where the problem and not in supported/not-supported device.
->>>>>>
->>>>>> That's true, but you can also have different cards loading the same driver.
->>>>>> See, for example, any PCI_IDs list in a driver.
->>>>>>
->>>>>> For example,
->>>>>>
->>>>>> 10:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3008 [Fury] (rev 02)
->>>>>> 20:00.0 RAID bus controller: Broadcom / LSI MegaRAID SAS-3 3108 [Invader] (rev 02)
->>>>>>
->>>>>> Both load the megaraid driver and have different profiles within the
->>>>>> driver.  I have no idea which one actually panicked until removing
->>>>>> one card.
->>>>>>
->>>>>> It's MUCH worse when debugging new hardware and getting a panic
->>>>>> from, for example, the uncore code which binds to a PCI mapped
->>>>>> device.  One device might work and the next one doesn't.  And
->>>>>> then you can multiply that by seeing *many* panics at once and
->>>>>> trying to determine if the problem was on one specific socket,
->>>>>> die, or core.
->>>>>
->>>>> Would a dev_panic() interface that identified the device and
->>>>> driver help with this?
->>>>
->>>> ^^ the more I look at this problem, the more a dev_panic() that
->>>> would output a device specific message at panic time is what I
->>>> really need.
->>
->> I went down this road a bit and had a realization.  The issue isn't
->> with printing something at panic time, but the *data* that is
->> output.  Each PCI device is associated with a struct device.  That
->> device struct's name is output for dev_dbg(), etc., commands.  The
->> PCI subsystem sets the device struct name at drivers/pci/probe.c:
->> 1799
->>
->> 	        dev_set_name(&dev->dev, "%04x:%02x:%02x.%d", pci_domain_nr(dev->bus),
->>                      dev->bus->number, PCI_SLOT(dev->devfn),
->>                      PCI_FUNC(dev->devfn));
->>
->> My problem really is that the above information is insufficient when
->> I (or a user) need to debug a system.  The complexities of debugging
->> multiple broken driver loads would be much easier if I didn't have
->> to constantly add this output manually :).
-> 
-> This *should* already be in the dmesg log:
-> 
->   pci 0000:00:00.0: [8086:5910] type 00 class 0x060000
->   pci 0000:00:01.0: [8086:1901] type 01 class 0x060400
->   pci 0000:00:02.0: [8086:591b] type 00 class 0x030000
-> 
-> So if you had a dev_panic(), that message would include the
-> bus/device/function number, and that would be enough to find the
-> vendor/device ID from when the device was first enumerated.
-> 
-> Or are you saying you can't get the part of the dmesg log that
-> contains those vendor/device IDs?
-
-/me hangs head in shame
-
-I didn't notice that until now. :)
-
-Uh thanks for the polite hit with a cluebat :)  I *think* that will work.  Let
-me try some additional driver failure tests.
-
-P.
-
-> 
->> Would you be okay with adding a *debug* parameter to expand the
->> device name to include the vendor & device ID pair?  FWIW, I'm
->> somewhat against yet-another-kernel-option but that's really the
->> information I need.  I could then add dev_dbg() statements in the
->> local_pci_probe() function.
-> 
 
