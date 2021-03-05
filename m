@@ -2,65 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C05D032E490
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 10:17:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4345E32E7C5
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 13:20:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbhCEJR1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Mar 2021 04:17:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbhCEJRR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 04:17:17 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89574C061574
-        for <linux-pci@vger.kernel.org>; Fri,  5 Mar 2021 01:17:17 -0800 (PST)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1lI6aC-0005BF-6p; Fri, 05 Mar 2021 10:17:16 +0100
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH] PCI: mediatek: fix optional reset handling
-Date:   Fri,  5 Mar 2021 10:17:15 +0100
-Message-Id: <20210305091715.4319-1-p.zabel@pengutronix.de>
-X-Mailer: git-send-email 2.29.2
+        id S229493AbhCEMTv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Mar 2021 07:19:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229616AbhCEMTg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Mar 2021 07:19:36 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D733064F23;
+        Fri,  5 Mar 2021 12:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614946776;
+        bh=GBl51kueNYD0/cSM2pjdnOh+zc+HvLIDgj3UGRTVzyU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ih2PqElWDEWswVfujhjf/JWrSgkIcOglXY+6CPjZfgHD73y6n98zeoAup6L1vi4SU
+         NJ6qkuaONdPcqbxRY8xOd3iubIBNlyMUY3jRDBa1klFTeOxX6m25AE5vSIwOKWbLxN
+         Ww9kgVqqLN98XkxxiUOsjiFjQP0itFUAq10CdID6fu/i58h2Bp20918aVoBNfAP2Y7
+         mhwNgkt+sPMA/ObYIfC0K9u9v8y1rQ4RbWwZl4YvCIr6En+693E2jmh185B/afMiXS
+         Vleac7IzFnV/BsyissTpTFVEWsteWRQOhRvRuo3HF0j9HGFQdRGl80+CYdPcCm5M5M
+         3FCNDi2WIuYiA==
+Date:   Fri, 5 Mar 2021 06:19:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Om Prakash Singh <omp@nvidia.com>
+Cc:     vidyas@nvidia.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        amurray@thegoodpenguin.co.uk, bhelgaas@google.com, kishon@ti.com,
+        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, oop.singh@gmail.com
+Subject: Re: [PATCH] PCI: tegra: Disable PTM capabilities for EP mode
+Message-ID: <20210305121934.GA1067436@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1614931954-11741-1-git-send-email-omp@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As of commit bb475230b8e5 ("reset: make optional functions really
-optional"), the reset framework API calls use NULL pointers to describe
-optional, non-present reset controls.
+On Fri, Mar 05, 2021 at 01:42:34PM +0530, Om Prakash Singh wrote:
+> PCIe EP compliance expect PTM capabilities (ROOT_CAPABLE, RES_CAPABLE,
+> CLK_GRAN) to be disabled.
 
-This allows to unconditionally return errors from
-devm_reset_control_get_optional_exclusive.
+I guess this is just enforcing the PCIe spec requirements that only
+Root Ports, RCRBs, and Switches are allowed to set the PTM Responder
+Capable bit, and that the Local Clock Granularity is RsvdP if PTM Root
+Capable is zero?  (PCIe r5.0, sec 7.9.16.2)
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/pci/controller/pcie-mediatek.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Should this be done more generally somewhere in the dwc code as
+opposed to in the tegra code?
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 23548b517e4b..35c66fa770a6 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -954,7 +954,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
- 
- 	snprintf(name, sizeof(name), "pcie-rst%d", slot);
- 	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
--	if (PTR_ERR(port->reset) == -EPROBE_DEFER)
-+	if (IS_ERR(port->reset))
- 		return PTR_ERR(port->reset);
- 
- 	/* some platforms may use default PHY setting */
--- 
-2.29.2
+> Signed-off-by: Om Prakash Singh <omp@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 17 ++++++++++++++++-
+>  include/uapi/linux/pci_regs.h              |  1 +
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 6fa216e..a588312 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -1639,7 +1639,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>  	struct dw_pcie *pci = &pcie->pci;
+>  	struct dw_pcie_ep *ep = &pci->ep;
+>  	struct device *dev = pcie->dev;
+> -	u32 val;
+> +	u32 val, ptm_cap_base = 0;
 
+Unnecessary init.
+
+>  	int ret;
+>  
+>  	if (pcie->ep_state == EP_STATE_ENABLED)
+> @@ -1760,6 +1760,21 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>  						      PCI_CAP_ID_EXP);
+>  	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
+>  
+> +	/* Disable PTM root and responder capability */
+> +	ptm_cap_base = dw_pcie_find_ext_capability(&pcie->pci,
+> +						   PCI_EXT_CAP_ID_PTM);
+> +	if (ptm_cap_base) {
+> +		dw_pcie_dbi_ro_wr_en(pci);
+> +		val = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
+> +		val &= ~PCI_PTM_CAP_ROOT;
+> +		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, val);
+> +
+> +		val = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
+> +		val &= ~(PCI_PTM_CAP_RES | PCI_PTM_GRANULARITY_MASK);
+> +		dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, val);
+> +		dw_pcie_dbi_ro_wr_dis(pci);
+> +	}
+> +
+>  	val = (ep->msi_mem_phys & MSIX_ADDR_MATCH_LOW_OFF_MASK);
+>  	val |= MSIX_ADDR_MATCH_LOW_OFF_EN;
+>  	dw_pcie_writel_dbi(pci, MSIX_ADDR_MATCH_LOW_OFF, val);
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index e709ae8..9dd6f8d 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1050,6 +1050,7 @@
+>  /* Precision Time Measurement */
+>  #define PCI_PTM_CAP			0x04	    /* PTM Capability */
+>  #define  PCI_PTM_CAP_REQ		0x00000001  /* Requester capable */
+> +#define  PCI_PTM_CAP_RES		0x00000002  /* Responder capable */
+>  #define  PCI_PTM_CAP_ROOT		0x00000004  /* Root capable */
+>  #define  PCI_PTM_GRANULARITY_MASK	0x0000FF00  /* Clock granularity */
+>  #define PCI_PTM_CTRL			0x08	    /* PTM Control */
+> -- 
+> 2.7.4
+> 
