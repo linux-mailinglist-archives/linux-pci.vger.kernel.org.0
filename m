@@ -2,177 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87CC332E158
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 06:18:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AD4532E207
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 07:12:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbhCEFR6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Mar 2021 00:17:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbhCEFRw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 00:17:52 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 557A3C061574
-        for <linux-pci@vger.kernel.org>; Thu,  4 Mar 2021 21:17:49 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id a24so778109plm.11
-        for <linux-pci@vger.kernel.org>; Thu, 04 Mar 2021 21:17:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=uSrdnkV09lTxG+R7vQpH6L1VvRfYR70ruw7SEzHASnM=;
-        b=ZaPVd5akbCMUMuPKO4M62UBbcP/k0UW2rylGFGwh3yE8fpTsH54uHtz3NGZmkhFlzC
-         WnWfmVJ8zuDKzes6tRevN16C99ak2tr0LQSt5inf98u1aImf1krM8Ra6CdbTm5trjsrd
-         qFbe8Cv2P2lkXnU0uNC/PIAtw+IOwlxp4JzA2QSmzmt4649Rx/tzQ+ubNUh/K8T51cIZ
-         8NTyzfU9DM+FQKYhrJwVjJpJrj3Oi0E1OGsOcbU4H3wgYGTCaKh4Gq+lyqBCAc6iXZ9e
-         Sk/RzRHQMYnbLFKKDPKENvYmNP/6gL4m/P0Y3dLiP3ctSXSop3uImMhwvnMGT1UjUCzF
-         K8Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=uSrdnkV09lTxG+R7vQpH6L1VvRfYR70ruw7SEzHASnM=;
-        b=KPJzz8638DlBj7RfysCk0SGePhU12sAqtjkLoHXfuxiHPhs8+0nuZ2y686OCVwWzFw
-         g6TgwvjmcQLTa3NcEngNXaiD+IlxTukaq+Va6gmtxFeT+/rVM0fFrmh3LOCO04Xgm7RF
-         CY7D8FXGgrAasn1dOL7BrB2lf+/etew4EcygE9br7V89E4wdPj3iGTyNwb+yrLd++AWi
-         XYQ9DMD0884+C6iEBOCMST1tZDUaTZp5XZLNBsn66mmXcRuP6DqR8roPR9ij8eUA94T+
-         WPQa+EzNqvwobMqahmccnuHMZe6mhskDNw1zBdz1ruiLJ7u7O/oHjWroFJutmzCrsb9k
-         b39w==
-X-Gm-Message-State: AOAM5330k4xagA4PL4QaD6bNaYPbvxfqpyc12X+iaV3dkewYSqV3TnQq
-        88eIzbPhhwNiTbWedr8t3AiIzgtml/KDOw==
-X-Google-Smtp-Source: ABdhPJwE1QSa6JvKxFSr8tuXNoaJxifu7iNzJaUB/YTefI+iwZYytL2LfQ0jOtkXg3HsAZXofpOLyw==
-X-Received: by 2002:a17:90a:7e94:: with SMTP id j20mr8784615pjl.8.1614921468816;
-        Thu, 04 Mar 2021 21:17:48 -0800 (PST)
-Received: from localhost ([211.108.35.36])
-        by smtp.gmail.com with ESMTPSA id 21sm953310pfo.167.2021.03.04.21.17.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Mar 2021 21:17:48 -0800 (PST)
-Date:   Fri, 5 Mar 2021 14:17:46 +0900
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Take __pci_set_master in do_pci_disable_device
-Message-ID: <20210305051746.GA4744@localhost.localdomain>
-References: <20210304044013.GA15757@localhost.localdomain>
- <20210304121143.GA821086@bjorn-Precision-5520>
+        id S229494AbhCEGMl convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 5 Mar 2021 01:12:41 -0500
+Received: from mga18.intel.com ([134.134.136.126]:27758 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229448AbhCEGMk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Mar 2021 01:12:40 -0500
+IronPort-SDR: FNxpkIOH3nFIXm6Og9i8PCbgx/HenRYa9xCs8PkE1KA06ApSoLQ0zQEvyXWLO70cwHIDpiLq9B
+ mOFc/7kn8z4Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9913"; a="175209077"
+X-IronPort-AV: E=Sophos;i="5.81,224,1610438400"; 
+   d="scan'208";a="175209077"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 22:12:40 -0800
+IronPort-SDR: ZfcXcgfo3INW0TpmgzYUaWfSm95uw/OHtr75iij2tRkjF8VCavOOLEe8IwLGJ76uDPbCZXccPO
+ v/dOkRGbtn1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,224,1610438400"; 
+   d="scan'208";a="518942639"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by orsmga004.jf.intel.com with ESMTP; 04 Mar 2021 22:12:40 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Thu, 4 Mar 2021 22:12:39 -0800
+Received: from shsmsx605.ccr.corp.intel.com (10.109.6.215) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Thu, 4 Mar 2021 22:12:38 -0800
+Received: from shsmsx605.ccr.corp.intel.com ([10.109.6.215]) by
+ SHSMSX605.ccr.corp.intel.com ([10.109.6.215]) with mapi id 15.01.2106.013;
+ Fri, 5 Mar 2021 14:12:36 +0800
+From:   "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, "Jin, Wen" <wen.jin@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC
+ association
+Thread-Topic: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC
+ association
+Thread-Index: AQHXCLh6LEG1CfkjwEO3CLgkzlZ+yap0+zLA
+Date:   Fri, 5 Mar 2021 06:12:36 +0000
+Message-ID: <bd90aee237e44aef9953a86c53b77dfc@intel.com>
+References: <4a0bf3a852ed47deb072890319fb39ec@intel.com>
+ <20210222011717.43266-1-qiuxu.zhuo@intel.com>
+In-Reply-To: <20210222011717.43266-1-qiuxu.zhuo@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+x-originating-ip: [10.239.127.36]
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210304121143.GA821086@bjorn-Precision-5520>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21-03-04 06:11:43, Bjorn Helgaas wrote:
-> On Thu, Mar 04, 2021 at 01:40:13PM +0900, Minwoo Im wrote:
-> > On 21-02-24 23:46:00, Krzysztof WilczyÅ„ski wrote:
-> > > Hi Minwoo,
-> > > 
-> > > Sorry for a very late reply!
-> > > 
-> > > [...]
-> > > > > You might need to improve the subject a little - it should be brief but
-> > > > > still informative.
-> > > > > 
-> > > > > > __pci_set_mater() has debug log in there so that it would be better to
-> > > > > > take this function.  So take __pci_set_master() function rather than
-> > > > > > open coding it.  This patch didn't move __pci_set_master() to above to
-> > > > > > avoid churns.
-> > > > > [...]
-> > > > > 
-> > > > > It would be __pci_set_master() in the sentence above.  Also, perhaps
-> > > > > "use" would be better than "take".  Generally, this commit message might
-> > > > > need a little improvement to be more clear why are you do doing this.
-> > > > 
-> > > > Sure, if we consolidate bus master enable clear functions to a single
-> > > > one, it would be better to debug and tracing the kernel behaviors.
-> > > > 
-> > > > Let me describe this 'why' to the description.
-> > > 
-> > > Sounds great!  Thank you!
-> > > 
-> > > [...]
-> > > > > You could use pci_clear_master(), which we export and that internally
-> > > > > calls __pci_set_master(), so there would be no need to add any forward
-> > > > > declarations or to move anything around in the file.
-> > > > 
-> > > > Moving delcaration to above might be churn, and I agree with your point.
-> > > 
-> > > I am sure that when it makes sense, then probably folks would not
-> > > object, especially since "churn" can be subjective.
-> > > 
-> > > > > Having said that, there is a difference between do_pci_disable_device()
-> > > > > and how __pci_set_master() works - the latter sets the is_busmaster flag
-> > > > > accordingly on the given device whereas the former does not.  This might
-> > > > > be of some significance - not sure if we should or should not set this,
-> > > > > since the do_pci_disable_device() does not do that (perhaps it's on
-> > > > > purpose or due to some hisoric reasons).
-> > > > 
-> > > > Thanks for pointing out this.  I think the difference about
-> > > > `is_busmaster` flag looks like it should not be cleared in case of power
-> > > > suspend case:
-> > > > 
-> > > > 	# Suspend
-> > > > 	pci_pm_default_suspend()
-> > > > 		pci_disable_enabled_device()
-> > > > 
-> > > > 	# Resume
-> > > > 	pci_pm_reenable_device()
-> > > > 		pci_set_master()  <-- This is based on (is_busmaster)
-> > > > 
-> > > > 
-> > > > Please let me know if I'm missing here, and appreciate pointing that
-> > > > out.  Maybe I can post v2 patch with add an argument of whether
-> > > > `is_busmaster` shoud be set inside of the function or not to
-> > > > __pci_set_master()?
-> > > [...]
-> > > 
-> > > Nothing is ever simple, isn't it? :-)
-> > > 
-> > > We definitely need to make sure that PM can keep relying on the
-> > > is_busmaster flag to restore bus mastering to previous state after the
-> > > device would resume after being suspended.
-> > 
-> > Yes,
-> > 
-> > > If we add another boolean argument, then we would need to update the
-> > > __pci_set_master() only in two other places, aside of using it in the
-> > > do_pci_disable_device() function, as per (as of 5.11.1 kernel):
-> > 
-> > I agree with this approach.  I can try it by adding another bool
-> > argument to decide whether to update the is_busmaster flag or not inside
-> > of the __pci_set_master.
-> > 
-> > > 
-> > >   File              Line Content
-> > >   drivers/pci/pci.c 4308 __pci_set_master(dev, true);
-> > >   drivers/pci/pci.c 4319 __pci_set_master(dev, false);
-> > > 
-> > > This is not all that terrible, provided that we _really_ do want to
-> > > change this function signature and then add another condition inside.
-> > > 
-> > > What do you think?  If you still like the idea, then send second version
-> > > over with all the other proposed changes.
-> > 
-> > Let me prepare the next version of this patch. Thanks!
+Hi Bjorn,
+
+Do you have any comments on this patch? If need any changes, please let me know. 
+Thanks!
+
+-Qiuxu
+
+> -----Original Message-----
+> From: Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
+> Sent: Monday, February 22, 2021 9:17 AM
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Zhuo, Qiuxu <qiuxu.zhuo@intel.com>; Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com>; Krzysztof Wilczyñski <kw@linux.com>; Kelley,
+> Sean V <sean.v.kelley@intel.com>; Luck, Tony <tony.luck@intel.com>; Jin, Wen
+> <wen.jin@intel.com>; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC association
 > 
-> Can you clarify what the purpose of this patch is?  Is it to fix a
-> defect, improve debug output, make the code cleaner, etc?
->
-> The commit log really just describes *what* the patch does, and I'm
-> looking for the *why*.
+> Function rcec_assoc_rciep() incorrectly used "rciep->devfn" (a single byte
+> encoding the device and function number) as the device number to check
+> whether the corresponding bit was set in the RCiEPBitmap of the RCEC (Root
+> Complex Event Collector) while enumerating over each bit of the RCiEPBitmap.
+> 
+> As per the PCI Express Base Specification, Revision 5.0, Version 1.0, Section
+> 7.9.10.2, "Association Bitmap for RCiEPs", p. 935, only needs to use a device
+> number to check whether the corresponding bit was set in the RCiEPBitmap.
+> 
+> Fix rcec_assoc_rciep() using the PCI_SLOT() macro and convert the value of
+> "rciep->devfn" to a device number to ensure that the RCiEP devices associated
+> with the RCEC are linked when the RCEC is enumerated.
+> 
+> Fixes: 507b460f8144 ("PCI/ERR: Add pcie_link_rcec() to associate RCiEPs")
+> Reported-and-tested-by: Wen Jin <wen.jin@intel.com>
+> Reviewed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> ---
+> v2->v3:
+>  Drop "[ Krzysztof: Update commit message. ]" from the commit message
+> 
+>  drivers/pci/pcie/rcec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c index
+> 2c5c552994e4..d0bcd141ac9c 100644
+> --- a/drivers/pci/pcie/rcec.c
+> +++ b/drivers/pci/pcie/rcec.c
+> @@ -32,7 +32,7 @@ static bool rcec_assoc_rciep(struct pci_dev *rcec, struct
+> pci_dev *rciep)
+> 
+>  	/* Same bus, so check bitmap */
+>  	for_each_set_bit(devn, &bitmap, 32)
+> -		if (devn == rciep->devfn)
+> +		if (devn == PCI_SLOT(rciep->devfn))
+>  			return true;
+> 
+>  	return false;
+> --
+> 2.17.1
 
-I should have described why this patch is introdcued.
-do_pci_disable_device clears the Bus Master Enable bit just like what
-__pci_set_master does which is kind of duplications.  Also,
-__pci_set_master has debug print log which is useful for users to figure
-out whether bus master is set or cleared.  This patch makes
-do_pci_disable_device call __pci_set_master to take the debug log
-advantages and make code cleaner by clearing duplicated codes.
-
-> Bjorn
