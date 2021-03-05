@@ -2,201 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8DE32DDD5
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 00:23:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 211C132DE46
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 01:23:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233034AbhCDXXU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 Mar 2021 18:23:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40097 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232959AbhCDXXT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Mar 2021 18:23:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614900199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MnytmvR9EgRDtqBYT2OPErFkvJpnrPLeu+T2bLeBpMQ=;
-        b=C4M5+nrAR7JC3ILOsYdgAzOZOuEuASI81BGZX4er98vgDf2i+n2T3F3lAoFeegwA+WNYp3
-        oZ/j3qektwMYRgMICd8dDNYi6IOQwuMzI722EfOPaZHxvggCC6LaIdH1AxcDNdpNGjA9mp
-        BqQhbRZOXhbRfK9eKWPMxXoHk+uG5MM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-MogDKMT5MLqdHFaevOLoVQ-1; Thu, 04 Mar 2021 18:23:17 -0500
-X-MC-Unique: MogDKMT5MLqdHFaevOLoVQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 333A61842146;
-        Thu,  4 Mar 2021 23:23:14 +0000 (UTC)
-Received: from [10.10.112.189] (ovpn-112-189.rdu2.redhat.com [10.10.112.189])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D0C639A71;
-        Thu,  4 Mar 2021 23:23:04 +0000 (UTC)
-Subject: Re: [EXT] Re: [Patch v4 1/3] lib: Restrict cpumask_local_spread to
- houskeeping CPUs
-To:     Alex Belits <abelits@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, frederic@kernel.org,
-        juri.lelli@redhat.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org,
-        peterz@infradead.org, davem@davemloft.net,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        stephen@networkplumber.org, rppt@linux.vnet.ibm.com,
-        jinyuqi@huawei.com, zhangshaokun@hisilicon.com
-References: <20200625223443.2684-1-nitesh@redhat.com>
- <20200625223443.2684-2-nitesh@redhat.com>
- <3e9ce666-c9cd-391b-52b6-3471fe2be2e6@arm.com>
- <20210127121939.GA54725@fuller.cnet> <87r1m5can2.fsf@nanos.tec.linutronix.de>
- <20210128165903.GB38339@fuller.cnet> <87h7n0de5a.fsf@nanos.tec.linutronix.de>
- <20210204181546.GA30113@fuller.cnet>
- <cfa138e9-38e3-e566-8903-1d64024c917b@redhat.com>
- <20210204190647.GA32868@fuller.cnet>
- <d8884413-84b4-b204-85c5-810342807d21@redhat.com>
- <87y2g26tnt.fsf@nanos.tec.linutronix.de>
- <d0aed683-87ae-91a2-d093-de3f5d8a8251@redhat.com>
- <7780ae60-efbd-2902-caaa-0249a1f277d9@redhat.com>
- <07c04bc7-27f0-9c07-9f9e-2d1a450714ef@redhat.com>
- <faa8d84e-db67-7fbe-891e-f4987f106b20@marvell.com>
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-Organization: Red Hat Inc,
-Message-ID: <250eedca-e594-e8d4-358b-4472aa9e3588@redhat.com>
-Date:   Thu, 4 Mar 2021 18:23:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        id S230135AbhCEAXL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 Mar 2021 19:23:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229611AbhCEAXK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 Mar 2021 19:23:10 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69825C061574
+        for <linux-pci@vger.kernel.org>; Thu,  4 Mar 2021 16:23:10 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id bm21so117225ejb.4
+        for <linux-pci@vger.kernel.org>; Thu, 04 Mar 2021 16:23:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ctssx0s49lGSAdWUyMh3xnPoBsxWYBpSg2BkeSWd3Yg=;
+        b=L/Iucm4tZynUDeC8hzZbGLAFhLfUd4/O9i4UUcFwGuhazBQRxsfx7XfODc90AilQBT
+         GcgxXvPqez0oomVo98w07QAeR21mzYiexh3+dmaIxns0mORlJx1bMi6w/KmrTWmYYZIF
+         8oblHjDjVZsrglxYHKV31vpXmwWxUP95fUTmJw8fAWBHLvqtxObYbOji99u7UFGJEVrR
+         SVPEJAplsX93MWHleDsQEmouisnwWYeShr27rGTeO/alVYYWnM9eLv+hhzlT58o8E9ob
+         MfKQXeWXI9Hb9dJ9NFbsLsFznuePef09ws+U4pqG6SFHI1Ur7qZoi2vy0ZquauzMpYqE
+         32aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ctssx0s49lGSAdWUyMh3xnPoBsxWYBpSg2BkeSWd3Yg=;
+        b=Sj5mAhCu45OWU7iDYUguq9OMvs8ZnbfGTjqMnxZR+HLKynuwI2iTaT8C9C58432OyZ
+         ZQnbgomNdLH6sEpoGXtJDPgU+nAj6k0IeOtJ5Y5eOt1LjP2qkga0BeFuIwyLdUJNugKL
+         RFxYxHLT/anah2s+rqoF0uHz2eSE3lj2bjvfEZ0lA73QjIHtnAcwmxRrpBmI4zNifH6D
+         YnODgQmBzFK3CoqmNZ0mpKGIVc1PrHqNJHUEdAE8cs8NFT0s+M467ogkfSaI1q89CopL
+         IIB37UOI7nlrZm300HGBBhCIy3XFgF4FzfsXaS5AnWaLrNJK7HidSv+ExdRBsGpHkq74
+         7wjg==
+X-Gm-Message-State: AOAM532ZJQ07Ns9YTJl8X+AxhXSduEHaD0GzCCFiEHoiRXOtuFIUAQeb
+        cRxBDFiojW7cDOu24uZPL4LoFG8GT6BqRhZdH3Rmyg==
+X-Google-Smtp-Source: ABdhPJyxr2cBOdYkx5EjuJxO78gFkTGCiHaIIJJyb1Z2zQSr7PJkEkj51PBxjq4cHXLryrlmgghQZvnYarkgrNrvk74=
+X-Received: by 2002:a17:906:2818:: with SMTP id r24mr85804ejc.472.1614903789176;
+ Thu, 04 Mar 2021 16:23:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <faa8d84e-db67-7fbe-891e-f4987f106b20@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20210104230300.1277180-1-kbusch@kernel.org> <20210104230300.1277180-4-kbusch@kernel.org>
+ <fe1defb66b5438f45093d67e05ef4153d0ae60eb.camel@intel.com>
+ <d9ee4151-b28d-a52a-b5be-190a75e0e49b@intel.com> <20210304200109.GB32558@redsun51.ssa.fujisawa.hgst.com>
+ <CAPcyv4gZPc3izOaRBx8sBBM_1YV3F3OMjjZX8Ha0m3PxzJhiCw@mail.gmail.com>
+ <23551edc-965c-21dc-0da8-a492c27c362d@intel.com> <CAPcyv4jFYtNeA7TdeCBh5v1S=Pw2BGvdv91SMjX0MTj_0VE4DQ@mail.gmail.com>
+ <4c2a799f-c4e9-b203-3487-f9c117fba5e7@intel.com>
+In-Reply-To: <4c2a799f-c4e9-b203-3487-f9c117fba5e7@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 4 Mar 2021 16:23:01 -0800
+Message-ID: <CAPcyv4iHPEtpftGMMqkvKW5_SaLJN5R=kVV8urnqibJ5-Lo=_A@mail.gmail.com>
+Subject: Re: [PATCHv2 3/5] PCI/ERR: Retain status from error notification
+To:     "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "hinko.kocevar@ess.eu" <hinko.kocevar@ess.eu>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 3/4/21 4:13 PM, Alex Belits wrote:
-> On 3/4/21 10:15, Nitesh Narayan Lal wrote:
->> External Email
->>
->> ----------------------------------------------------------------------
->>
->> On 2/11/21 10:55 AM, Nitesh Narayan Lal wrote:
->>> On 2/6/21 7:43 PM, Nitesh Narayan Lal wrote:
->>>> On 2/5/21 5:23 PM, Thomas Gleixner wrote:
->>>>> On Thu, Feb 04 2021 at 14:17, Nitesh Narayan Lal wrote:
->>>>>> On 2/4/21 2:06 PM, Marcelo Tosatti wrote:
->>>>>>>>> How about adding a new flag for isolcpus instead?
->>>>>>>>>
->>>>>>>> Do you mean a flag based on which we can switch the affinity mask to
->>>>>>>> housekeeping for all the devices at the time of IRQ distribution?
->>>>>>> Yes a new flag for isolcpus. HK_FLAG_IRQ_SPREAD or some better name.
->>>>>> Does sounds like a nice idea to explore, lets see what Thomas thinks
->>>>>> about it.
->>> <snip>
->>>
->>>>>> When the affinity mask of the interrupt at the time when it is actually
->>>>>> requested contains an isolated CPU then nothing prevents the kernel from
->>>>>> steering it at an isolated CPU. But that has absolutely nothing to do
->>>>>> with that spreading thingy.
->>>>>>
->>>>>> The only difference which this change makes is the fact that the
->>>>>> affinity hint changes. Nothing else.
->>>>>>
->>>> Thanks for the detailed explanation.
->>>>
->>>> Before I posted this patch, I was doing some debugging on a setup where I
->>>> was observing some latency issues due to the iavf IRQs that were pinned on
->>>> the isolated CPUs.
->>>>
->>>> Based on some initial traces I had this impression that the affinity hint
->>>> or cpumask_local_spread was somehow playing a role in deciding the affinity
->>>> mask of these IRQs. Although, that does look incorrect after going through
->>>> your explanation.
->>>> For some reason, with a kernel that had this patch when I tried creating
->>>> VFs iavf IRQs always ended up on the HK CPUs.
->>>>
->>>> The reasoning for the above is still not very clear to me. I will
->>>> investigate
->>>> this further to properly understand this behavior.
->>>>
->>>>
->>> After a little more digging, I found out why cpumask_local_spread change
->>> affects the general/initial smp_affinity for certain device IRQs.
->>>
->>> After the introduction of the commit:
->>>
->>>      e2e64a932 genirq: Set initial affinity in irq_set_affinity_hint()
->>>
->>
->> Continuing the conversation about the above commit and adding Jesse.
->> I was trying to understand the problem that the commit message explains
->> "The default behavior of the kernel is somewhat undesirable as all
->> requested interrupts end up on CPU0 after registration.", I have also been
->> trying to reproduce this behavior without the patch but I failed in doing
->> so, maybe because I am missing something here.
->>
->> @Jesse Can you please explain? FWIU IRQ affinity should be decided based on
->> the default affinity mask.
->>
->> The problem with the commit is that when we overwrite the affinity mask
->> based on the hinting mask we completely ignore the default SMP affinity
->> mask. If we do want to overwrite the affinity based on the hint mask we
->> should atleast consider the default SMP affinity.
->>
+On Thu, Mar 4, 2021 at 3:19 PM Kuppuswamy, Sathyanarayanan
+<sathyanarayanan.kuppuswamy@intel.com> wrote:
 >
-> cpumask_local_spread() is used by a small number of drivers, mostly for
-> Ethernet and cryptographic devices, however it includes Cavium and Marvell
-> devices that were included in every piece of hardware that I and Yury Norov
-> worked on. Without my patch (or previous, later replaced, Yury's patch that
-> was developed before there were housekeeping CPUs), driver would completely
-> break any attempts to configure task isolation, because it would distribute
-> processing over CPUs regardless of any masks related to isolation (and later
-> housekeeping). This is why it was created, and it just happens that it also
-> makes sense for CPU isolation in general. Of course, none of it would be
-> experienced on hardware that does not include those devices, possibly
-> creating some wrong impression about its effect and purpose.
 >
-> It may be that my patch can be criticized for not accommodating CPU hotplug
-> and other runtime changes of masks. Or drivers can be criticized for their
-> behavior that relies on calling cpumask_local_spread() once on
-> initialization and then assuming that all CPUs are configured forever.
-> However as far as I can tell, currently we have no other means of
-> controlling the behavior of drivers that manage their own interrupt or
-> thread to CPU mapping, and no way to communicate any of those changes to
-> them while they are running. Drivers may have legitimate reasons for
-> maintaining permanent or semi-permanent CPU core to interrupt mapping,
-> especially on devices with very large numbers of CPU cores and built-in
-> support for parallel processing of network packets.
->
-> If we want it to be done in some manner that accommodates current demands,
-> we should simply replace cpumask_local_spread() with something else, or,
-> maybe, add some means that will allow dynamic changes. Thankfully, there are
-> very few (IIRC, 19) places where cpumask_local_spread() is used, so it may
-> be accommodated with relatively small amount of code to write and test. Then
-> everything else will be able to switch to the same mechanism whenever
-> necessary.
->
+> On 3/4/21 2:59 PM, Dan Williams wrote:
+> > On Thu, Mar 4, 2021 at 2:38 PM Kuppuswamy, Sathyanarayanan
+> > <sathyanarayanan.kuppuswamy@intel.com> wrote:
+> >>
+> >> On 3/4/21 2:11 PM, Dan Williams wrote:
+> >>
+> >> On Thu, Mar 4, 2021 at 12:03 PM Keith Busch <kbusch@kernel.org> wrote:
+> >>
+> >> On Tue, Mar 02, 2021 at 09:46:40PM -0800, Kuppuswamy, Sathyanarayanan wrote:
+> >>
+> >> On 3/2/21 9:34 PM, Williams, Dan J wrote:
+> >>
+> >> [ Add Sathya ]
+> >>
+> >> On Mon, 2021-01-04 at 15:02 -0800, Keith Busch wrote:
+> >>
+> >> Overwriting the frozen detected status with the result of the link reset
+> >> loses the NEED_RESET result that drivers are depending on for error
+> >> handling to report the .slot_reset() callback. Retain this status so
+> >> that subsequent error handling has the correct flow.
+> >>
+> >> Reported-by: Hinko Kocevar <hinko.kocevar@ess.eu>
+> >> Acked-by: Sean V Kelley <sean.v.kelley@intel.com>
+> >> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> >>
+> >> Just want to report that this fix might be a candidate for -stable.
+> >>
+> >> Agree.
+> >>
+> >> I think it can be merged in both stable and mainline kernels.
+> >>
+> >> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>
+> >> Just FYI, this patch is practically a revert of this one:
+> >>
+> >>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit?id=6d2c89441571ea534d6240f7724f518936c44f8d
+> >>
+> >> so please let me know if that is still a problem for you.
+> >>
+> >> For what it's worth I think "6d2c89441571 PCI/ERR: Update error status
+> >> after reset_link()" is not justified. The link shouldn't recover if
+> >> the attached device is not prepared to handle DPC events.
+> >>
+> >> I added that fix to address the recovery issue seen in a Dell server
+> >> platform (for EDR test case). If I understand the history correctly,
+> >> In EDR case, AER and DPC is owned by firmware, hence we get
+> >> PCI_ERS_RESULT_NO_AER_DRIVER when executing error_detected() callbacks.
+> >> So If we continue the pcie_do_recovery() with PCI_ERS_RESULT_NO_AER_DRIVER
+> >> as error status, then even if we successfully reset the link we will report
+> >> the recovery status as failure.
+> > But that's the right response if there is no handler.
+> If the handler is not available due to AER being owned by firmware,
+> then it needs to be fixed. In EDR mode, even if DPC/AER is owned
+> by firmware , OS need to own the recovery part. So I think it
+> needs further investigation to understand why it reports,
+> PCI_ERS_RESULT_NO_AER_DRIVER
 
-So there are two different issues, the first issue is how the mask
-retrieved based on the cpumask_local_spread is used to set IRQ affinity.
-Ideally when a device is initialized its IRQs are distributed based on the
-default SMP affinity mask (considering irqbalance is disabled). However, it
-is not the case right now as some drivers that set their hint affinity
-using cpumask_local_spread overwrites the previously set affinity mask for
-the IRQs. So even if you configure the default_smp_affinity from the
-userspace it will not affect these device IRQs. This is precisely why your
-fix for cpumask_local_spread helped in improving the isolation.
-
-The second issue that you brought up is to balance the IRQ-specific load
-between CPUs efficiently. FWIU if you have irqbalance enabled it should
-already be doing that based on the policy that you define in the userspace.
-Is that not the case or maybe I am missing something?
-
--- 
-Thanks
-Nitesh
-
+As far as I can see the only way to get PCI_ERS_RESULT_NO_AER_DRIVER
+is when there actually is no handler, or the device io state has set
+to failed. I notice the hotplug handler sets the device io state to
+failed while processing link down. If the device is actually missing a
+handler definition then disconnect seems the right response.
