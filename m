@@ -2,156 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E206132E7DB
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 13:24:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7F7232EF07
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 16:37:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbhCEMXh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Mar 2021 07:23:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbhCEMXY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 07:23:24 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294C3C061574
-        for <linux-pci@vger.kernel.org>; Fri,  5 Mar 2021 04:23:08 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id 192so2079430pfv.0
-        for <linux-pci@vger.kernel.org>; Fri, 05 Mar 2021 04:23:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLEgE3KLEJBq4GjswhlTmPclj40rgJ4aU4TdrpasfvY=;
-        b=HcGig8wh4FuqeqC5JagtzG3Tlq0AzchonA+4qTGaJYAumSn705D2UO0xVnU05s2exw
-         JRMAP5mm7eapsHRW2ttoCkrgdUQVYHHH4pU4zxQMcXQI4RkIKS8yDgFOP4W+xJ4+a8F0
-         4+qtlV0rPo2X1fyTAmBEzXpR9LFFN1S6yTE6ktPWwBo0jfVtN+d7KfmwW+Q/LonQoF2o
-         6mWgaQc9FGfxUZgm+pJC2WYaFfNYw/wg5Dz6fLIabuyLtl/EdsB33SyMPm8bHC6fOW+v
-         XzPHEnUUuanl+r8M0q+yab6PJZFbDWdhqlkyA4bcBxM5ayuK3mjCMtwhZqX3lZMNBnbJ
-         d5RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLEgE3KLEJBq4GjswhlTmPclj40rgJ4aU4TdrpasfvY=;
-        b=K6R4pDf+KQMlbKXCnTjuR/9AP8JFu0TEhr0OB1iKtasBg3NwIUGjSwyO5wG3yTGNG1
-         uaAJqFhzDKphLrGalPonmji1FBGpcKsm51dgivlDE8/cr24UE8oAuj/6oqK5wQ0+a561
-         x4pBgsIPakgL7qqyL4GR5Wzlprmw14+OJqLdDaBd1LUhwE5LkLVR8mo1w0HqloGmRaIz
-         V/c5xTvWUilD0/HggKbV3nkVPQyUSKkrBxuVh6s/YGW+NgCdMARoVE+jp+DZyY92Vuvj
-         YMs8hx7KhmYgQ0AnegHzvLhUSCRNHxaXaN5Rc7sLKrliEI8xrpoHwMI+uXTkXA/Tffj9
-         lavA==
-X-Gm-Message-State: AOAM532NRA/y00ysTF2Lc2CN2wrVjzTmsqxoH5lPfbCXuauGM4LfsWSg
-        48qZN8yyumRtmcX5Fvhs331/UzW7ujFYOQ==
-X-Google-Smtp-Source: ABdhPJzG5046nlmJ0u+Dtd1NFLEs4EOoEcaC1pqJqXoNVYSNMuXewn8sp+CjkmHKCtpK/nYCyCBPWQ==
-X-Received: by 2002:a63:fa4d:: with SMTP id g13mr8332681pgk.201.1614946987521;
-        Fri, 05 Mar 2021 04:23:07 -0800 (PST)
-Received: from localhost.localdomain ([211.108.35.36])
-        by smtp.gmail.com with ESMTPSA id 184sm2363069pgj.93.2021.03.05.04.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Mar 2021 04:23:07 -0800 (PST)
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>
-Subject: [PATCH V2] PCI: Use __pci_set_master from do_pci_disable_device
-Date:   Fri,  5 Mar 2021 21:22:56 +0900
-Message-Id: <20210305122256.133779-1-minwoo.im.dev@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        id S230323AbhCEPhU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Mar 2021 10:37:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230396AbhCEPhA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 5 Mar 2021 10:37:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5713265090;
+        Fri,  5 Mar 2021 15:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614958620;
+        bh=rbMzPDjT4HmtnkJbeXK9PYCr8n58NGk1TLIuSFpw8Eo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=m/gXkHAkJUvzGM2T9xnIEc8FAETryEb4epzy7G+Arv9SWZOoKErj66y8yuyM3xJHl
+         dPZyDkd2755T5pNKGi0XH6o8W3DVC7vfG9RNKg+6GNuYhHH4EmqXLNNC0UaVXu9oDF
+         BAztiUdwXX6k5FWomitWLlVA4kKzmmIXa4XFUtn6rQN0EKwVoSNM2HfuGbpfNuuOXc
+         +xdTE14BhKLfgqXsXG7nifm6J0fADs/BXqShOawJXr7Z0r96CmnUfv2PgbrTqmS8D7
+         qX75HFPQ1iyf98NfdP3KHZu1rrKgKfarWpKJqDhWDCUMYckyujMUlD8tAnkfGFPUxr
+         g/cVkZFYvw6mw==
+Date:   Fri, 5 Mar 2021 09:36:59 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] PCI: mediatek: fix optional reset handling
+Message-ID: <20210305153659.GA1098921@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210305091715.4319-1-p.zabel@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-__pci_set_master is there to enable or disable the Bus Master Enable
-bit in the COMMAND register.  This function also has debug log which is
-useful to users.
+[+cc Ryder, Lorenzo, Rob, linux-mediatek (mediatek maintainers)]
 
-do_pci_disable_device is also disabling the BME bitfield where some of
-the codes are duplicated with __pci_set_master.  The only difference
-between the two is whether to set flag `dev->is_busmaster` or not.
+Capitalize first word of subject per convention:
 
-This patch removed that duplications by adding one more parameter to
-__pci_set_master `update_bm` to decide whether to update the flag or
-not.  It also will have the debug log from __pci_set_master which is
-good for debug from logs.
+  PCI: mediatek: Fix optional reset handling
 
-Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
----
-Since V1:
-  - Update commit description to indicate why this patch is needed.
-    (Krzysztof)
-  - Take dev->is_busmaster into account by adding a new argument to
-    __pci_set_master.  (Krzysztof)
+But "Fix" is pretty non-specific; it doesn't give any information
+about what the change does.
 
- drivers/pci/pci.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+On Fri, Mar 05, 2021 at 10:17:15AM +0100, Philipp Zabel wrote:
+> As of commit bb475230b8e5 ("reset: make optional functions really
+> optional"), the reset framework API calls use NULL pointers to describe
+> optional, non-present reset controls.
+> 
+> This allows to unconditionally return errors from
+> devm_reset_control_get_optional_exclusive.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 16a17215f633..374b555b59c0 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -48,6 +48,8 @@ EXPORT_SYMBOL(pci_pci_problems);
- 
- unsigned int pci_pm_d3hot_delay;
- 
-+static void __pci_set_master(struct pci_dev *dev, bool enable,
-+			     bool update_bme);
- static void pci_pme_list_scan(struct work_struct *work);
- 
- static LIST_HEAD(pci_pme_list);
-@@ -2101,13 +2103,7 @@ void __weak pcibios_penalize_isa_irq(int irq, int active) {}
- 
- static void do_pci_disable_device(struct pci_dev *dev)
- {
--	u16 pci_command;
--
--	pci_read_config_word(dev, PCI_COMMAND, &pci_command);
--	if (pci_command & PCI_COMMAND_MASTER) {
--		pci_command &= ~PCI_COMMAND_MASTER;
--		pci_write_config_word(dev, PCI_COMMAND, pci_command);
--	}
-+	__pci_set_master(dev, false, false);
- 
- 	pcibios_disable_device(dev);
- }
-@@ -4244,7 +4240,7 @@ void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
- }
- EXPORT_SYMBOL(devm_pci_remap_cfg_resource);
- 
--static void __pci_set_master(struct pci_dev *dev, bool enable)
-+static void __pci_set_master(struct pci_dev *dev, bool enable, bool update_bme)
- {
- 	u16 old_cmd, cmd;
- 
-@@ -4258,7 +4254,9 @@ static void __pci_set_master(struct pci_dev *dev, bool enable)
- 			enable ? "enabling" : "disabling");
- 		pci_write_config_word(dev, PCI_COMMAND, cmd);
- 	}
--	dev->is_busmaster = enable;
-+
-+	if (update_bme)
-+		dev->is_busmaster = enable;
- }
- 
- /**
-@@ -4309,7 +4307,7 @@ void __weak pcibios_set_master(struct pci_dev *dev)
-  */
- void pci_set_master(struct pci_dev *dev)
- {
--	__pci_set_master(dev, true);
-+	__pci_set_master(dev, true, true);
- 	pcibios_set_master(dev);
- }
- EXPORT_SYMBOL(pci_set_master);
-@@ -4320,7 +4318,7 @@ EXPORT_SYMBOL(pci_set_master);
-  */
- void pci_clear_master(struct pci_dev *dev)
- {
--	__pci_set_master(dev, false);
-+	__pci_set_master(dev, false, true);
- }
- EXPORT_SYMBOL(pci_clear_master);
- 
--- 
-2.27.0
+"devm_reset_control_get_optional_exclusive()"
 
+This basically restates the code change, but doesn't say *why* we want
+this change.
+
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 23548b517e4b..35c66fa770a6 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -954,7 +954,7 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
+>  
+>  	snprintf(name, sizeof(name), "pcie-rst%d", slot);
+>  	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
+> -	if (PTR_ERR(port->reset) == -EPROBE_DEFER)
+> +	if (IS_ERR(port->reset))
+>  		return PTR_ERR(port->reset);
+
+Before this patch,
+
+  -EPROBE_DEFER:           abort probe, return -EPROBE_DEFER
+  other errors:            port->reset = -EINVAL, etc, continue probe
+                           future WARN_ON() from reset_control_assert()
+  NULL (no reset control): port->reset = NULL, continue probe
+  valid reset control:     port->reset = rstc, continue probe
+
+After this patch,
+
+  all errors:              abort probe, return err
+  NULL (no reset control): port->reset = NULL, continue probe
+  valid reset control:     port->reset = rstc, continue probe
+
+So IIUC, if devm_reset_control_get_optional_exclusive() returns an
+error other than -EPROBE_DEFER, e.g., -EINVAL, we used to continue.
+We would then get warnings from reset_control_assert() and
+reset_control_deassert() because "IS_ERR(port->reset)" was true.
+Since the reset control seems to be optional, I assume the port *may*
+still be usable even though we get warnings.
+
+But after this patch, if devm_reset_control_get_optional_exclusive()
+returns -EINVAL, we will fail the probe, rendering the port useless.
+
+If my understanding is correct, this seems like a difference we should
+mention in the commit log because it took me a while to untangle this
+and the subject line doesn't hint at it at all.
+
+>  	/* some platforms may use default PHY setting */
+> -- 
+> 2.29.2
+> 
