@@ -2,129 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ACBC32E119
-	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 06:05:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87CC332E158
+	for <lists+linux-pci@lfdr.de>; Fri,  5 Mar 2021 06:18:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbhCEFFl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 Mar 2021 00:05:41 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41320 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbhCEFFl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 00:05:41 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12555IMB125585;
-        Thu, 4 Mar 2021 23:05:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1614920718;
-        bh=PswJzuVJEpo2V7rLJvAKEapfrXwbPZ/ywMR3JM+8zp4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=galF1hDSGYo5AiK1GQzq18N9xdhnaKS4ZsR0R3liPXzfpbIUZGRU+Cd4uIiVBrll4
-         E8qqybUJ9EAVaswmX6XhFdiwwicUvxqTEDFCfrmdAlOyRDYB54onv2HyOevKg/MtWt
-         Bp1ibl5OdBNt4StefrvhdG4OGhgU8jl8ZxNi/jlM=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12555IEt013649
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 4 Mar 2021 23:05:18 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 4 Mar
- 2021 23:05:18 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 4 Mar 2021 23:05:18 -0600
-Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12554D9C116197;
-        Thu, 4 Mar 2021 23:05:11 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Nadeem Athani <nadeem@cadence.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v3 7/7] Documentation: PCI: endpoint/pci-endpoint-cfs: Guide to use SR-IOV
-Date:   Fri, 5 Mar 2021 10:34:10 +0530
-Message-ID: <20210305050410.9201-8-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210305050410.9201-1-kishon@ti.com>
-References: <20210305050410.9201-1-kishon@ti.com>
+        id S229486AbhCEFR6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 Mar 2021 00:17:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229528AbhCEFRw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 Mar 2021 00:17:52 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 557A3C061574
+        for <linux-pci@vger.kernel.org>; Thu,  4 Mar 2021 21:17:49 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id a24so778109plm.11
+        for <linux-pci@vger.kernel.org>; Thu, 04 Mar 2021 21:17:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=uSrdnkV09lTxG+R7vQpH6L1VvRfYR70ruw7SEzHASnM=;
+        b=ZaPVd5akbCMUMuPKO4M62UBbcP/k0UW2rylGFGwh3yE8fpTsH54uHtz3NGZmkhFlzC
+         WnWfmVJ8zuDKzes6tRevN16C99ak2tr0LQSt5inf98u1aImf1krM8Ra6CdbTm5trjsrd
+         qFbe8Cv2P2lkXnU0uNC/PIAtw+IOwlxp4JzA2QSmzmt4649Rx/tzQ+ubNUh/K8T51cIZ
+         8NTyzfU9DM+FQKYhrJwVjJpJrj3Oi0E1OGsOcbU4H3wgYGTCaKh4Gq+lyqBCAc6iXZ9e
+         Sk/RzRHQMYnbLFKKDPKENvYmNP/6gL4m/P0Y3dLiP3ctSXSop3uImMhwvnMGT1UjUCzF
+         K8Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=uSrdnkV09lTxG+R7vQpH6L1VvRfYR70ruw7SEzHASnM=;
+        b=KPJzz8638DlBj7RfysCk0SGePhU12sAqtjkLoHXfuxiHPhs8+0nuZ2y686OCVwWzFw
+         g6TgwvjmcQLTa3NcEngNXaiD+IlxTukaq+Va6gmtxFeT+/rVM0fFrmh3LOCO04Xgm7RF
+         CY7D8FXGgrAasn1dOL7BrB2lf+/etew4EcygE9br7V89E4wdPj3iGTyNwb+yrLd++AWi
+         XYQ9DMD0884+C6iEBOCMST1tZDUaTZp5XZLNBsn66mmXcRuP6DqR8roPR9ij8eUA94T+
+         WPQa+EzNqvwobMqahmccnuHMZe6mhskDNw1zBdz1ruiLJ7u7O/oHjWroFJutmzCrsb9k
+         b39w==
+X-Gm-Message-State: AOAM5330k4xagA4PL4QaD6bNaYPbvxfqpyc12X+iaV3dkewYSqV3TnQq
+        88eIzbPhhwNiTbWedr8t3AiIzgtml/KDOw==
+X-Google-Smtp-Source: ABdhPJwE1QSa6JvKxFSr8tuXNoaJxifu7iNzJaUB/YTefI+iwZYytL2LfQ0jOtkXg3HsAZXofpOLyw==
+X-Received: by 2002:a17:90a:7e94:: with SMTP id j20mr8784615pjl.8.1614921468816;
+        Thu, 04 Mar 2021 21:17:48 -0800 (PST)
+Received: from localhost ([211.108.35.36])
+        by smtp.gmail.com with ESMTPSA id 21sm953310pfo.167.2021.03.04.21.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Mar 2021 21:17:48 -0800 (PST)
+Date:   Fri, 5 Mar 2021 14:17:46 +0900
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] PCI: Take __pci_set_master in do_pci_disable_device
+Message-ID: <20210305051746.GA4744@localhost.localdomain>
+References: <20210304044013.GA15757@localhost.localdomain>
+ <20210304121143.GA821086@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210304121143.GA821086@bjorn-Precision-5520>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Documentation to help users use PCI endpoint to create virtual
-functions using configfs. An endpoint function is designated as a
-virtual endpoint function device when it is linked to a physical
-endpoint function device (instead of a endpoint controller).
+On 21-03-04 06:11:43, Bjorn Helgaas wrote:
+> On Thu, Mar 04, 2021 at 01:40:13PM +0900, Minwoo Im wrote:
+> > On 21-02-24 23:46:00, Krzysztof Wilczyński wrote:
+> > > Hi Minwoo,
+> > > 
+> > > Sorry for a very late reply!
+> > > 
+> > > [...]
+> > > > > You might need to improve the subject a little - it should be brief but
+> > > > > still informative.
+> > > > > 
+> > > > > > __pci_set_mater() has debug log in there so that it would be better to
+> > > > > > take this function.  So take __pci_set_master() function rather than
+> > > > > > open coding it.  This patch didn't move __pci_set_master() to above to
+> > > > > > avoid churns.
+> > > > > [...]
+> > > > > 
+> > > > > It would be __pci_set_master() in the sentence above.  Also, perhaps
+> > > > > "use" would be better than "take".  Generally, this commit message might
+> > > > > need a little improvement to be more clear why are you do doing this.
+> > > > 
+> > > > Sure, if we consolidate bus master enable clear functions to a single
+> > > > one, it would be better to debug and tracing the kernel behaviors.
+> > > > 
+> > > > Let me describe this 'why' to the description.
+> > > 
+> > > Sounds great!  Thank you!
+> > > 
+> > > [...]
+> > > > > You could use pci_clear_master(), which we export and that internally
+> > > > > calls __pci_set_master(), so there would be no need to add any forward
+> > > > > declarations or to move anything around in the file.
+> > > > 
+> > > > Moving delcaration to above might be churn, and I agree with your point.
+> > > 
+> > > I am sure that when it makes sense, then probably folks would not
+> > > object, especially since "churn" can be subjective.
+> > > 
+> > > > > Having said that, there is a difference between do_pci_disable_device()
+> > > > > and how __pci_set_master() works - the latter sets the is_busmaster flag
+> > > > > accordingly on the given device whereas the former does not.  This might
+> > > > > be of some significance - not sure if we should or should not set this,
+> > > > > since the do_pci_disable_device() does not do that (perhaps it's on
+> > > > > purpose or due to some hisoric reasons).
+> > > > 
+> > > > Thanks for pointing out this.  I think the difference about
+> > > > `is_busmaster` flag looks like it should not be cleared in case of power
+> > > > suspend case:
+> > > > 
+> > > > 	# Suspend
+> > > > 	pci_pm_default_suspend()
+> > > > 		pci_disable_enabled_device()
+> > > > 
+> > > > 	# Resume
+> > > > 	pci_pm_reenable_device()
+> > > > 		pci_set_master()  <-- This is based on (is_busmaster)
+> > > > 
+> > > > 
+> > > > Please let me know if I'm missing here, and appreciate pointing that
+> > > > out.  Maybe I can post v2 patch with add an argument of whether
+> > > > `is_busmaster` shoud be set inside of the function or not to
+> > > > __pci_set_master()?
+> > > [...]
+> > > 
+> > > Nothing is ever simple, isn't it? :-)
+> > > 
+> > > We definitely need to make sure that PM can keep relying on the
+> > > is_busmaster flag to restore bus mastering to previous state after the
+> > > device would resume after being suspended.
+> > 
+> > Yes,
+> > 
+> > > If we add another boolean argument, then we would need to update the
+> > > __pci_set_master() only in two other places, aside of using it in the
+> > > do_pci_disable_device() function, as per (as of 5.11.1 kernel):
+> > 
+> > I agree with this approach.  I can try it by adding another bool
+> > argument to decide whether to update the is_busmaster flag or not inside
+> > of the __pci_set_master.
+> > 
+> > > 
+> > >   File              Line Content
+> > >   drivers/pci/pci.c 4308 __pci_set_master(dev, true);
+> > >   drivers/pci/pci.c 4319 __pci_set_master(dev, false);
+> > > 
+> > > This is not all that terrible, provided that we _really_ do want to
+> > > change this function signature and then add another condition inside.
+> > > 
+> > > What do you think?  If you still like the idea, then send second version
+> > > over with all the other proposed changes.
+> > 
+> > Let me prepare the next version of this patch. Thanks!
+> 
+> Can you clarify what the purpose of this patch is?  Is it to fix a
+> defect, improve debug output, make the code cleaner, etc?
+>
+> The commit log really just describes *what* the patch does, and I'm
+> looking for the *why*.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/PCI/endpoint/pci-endpoint-cfs.rst | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+I should have described why this patch is introdcued.
+do_pci_disable_device clears the Bus Master Enable bit just like what
+__pci_set_master does which is kind of duplications.  Also,
+__pci_set_master has debug print log which is useful for users to figure
+out whether bus master is set or cleared.  This patch makes
+do_pci_disable_device call __pci_set_master to take the debug log
+advantages and make code cleaner by clearing duplicated codes.
 
-diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-index 696f8eeb4738..56fb33c5e8fd 100644
---- a/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-+++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.rst
-@@ -43,6 +43,7 @@ entries corresponding to EPF driver will be created by the EPF core.
- 		.. <EPF Driver1>/
- 			... <EPF Device 11>/
- 			... <EPF Device 21>/
-+			... <EPF Device 31>/
- 		.. <EPF Driver2>/
- 			... <EPF Device 12>/
- 			... <EPF Device 22>/
-@@ -68,6 +69,7 @@ created)
- 				... subsys_vendor_id
- 				... subsys_id
- 				... interrupt_pin
-+			        ... <Symlink EPF Device 31>/
-                                 ... primary/
- 			                ... <Symlink EPC Device1>/
-                                 ... secondary/
-@@ -79,6 +81,13 @@ interface should be added in 'primary' directory and symlink of endpoint
- controller connected to secondary interface should be added in 'secondary'
- directory.
- 
-+The <EPF Device> directory can have a list of symbolic links
-+(<Symlink EPF Device 31>) to other <EPF Device>. These symbolic links should
-+be created by the user to represent the virtual functions that are bound to
-+the physical function. In the above directory structure <EPF Device 11> is a
-+physical function and <EPF Device 31> is a virtual function. An EPF device once
-+it's linked to another EPF device, cannot be linked to a EPC device.
-+
- EPC Device
- ==========
- 
-@@ -98,7 +107,8 @@ entries corresponding to EPC device will be created by the EPC core.
- 
- The <EPC Device> directory will have a list of symbolic links to
- <EPF Device>. These symbolic links should be created by the user to
--represent the functions present in the endpoint device.
-+represent the functions present in the endpoint device. Only <EPF Device>
-+that represents a physical function can be linked to a EPC device.
- 
- The <EPC Device> directory will also have a *start* field. Once
- "1" is written to this field, the endpoint device will be ready to
--- 
-2.17.1
-
+> Bjorn
