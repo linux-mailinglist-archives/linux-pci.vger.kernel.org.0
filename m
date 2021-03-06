@@ -2,80 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2271432FE12
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 00:58:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CAB432FE16
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 01:00:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbhCFX55 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 Mar 2021 18:57:57 -0500
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:43037 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbhCFX5v (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Mar 2021 18:57:51 -0500
-Received: by mail-wr1-f52.google.com with SMTP id w11so7166803wrr.10
-        for <linux-pci@vger.kernel.org>; Sat, 06 Mar 2021 15:57:51 -0800 (PST)
+        id S229758AbhCFX7i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 Mar 2021 18:59:38 -0500
+Received: from mail-ed1-f48.google.com ([209.85.208.48]:43892 "EHLO
+        mail-ed1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229719AbhCFX72 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 Mar 2021 18:59:28 -0500
+Received: by mail-ed1-f48.google.com with SMTP id bd6so8930220edb.10;
+        Sat, 06 Mar 2021 15:59:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=beocdEScBPeSIr1vaFYZtGBWWyFIKVYuh9rbyBcuAOc=;
-        b=OFq1Hf6+6HzbcNO42IUZ9gEZewT2sOepMc/zcdToxeca4Gr7wsXeSXgWJLl9Eco3Gz
-         HVNvpox5A4QUioD9noPqvCYyMTxIx5zrLrHrmxf0YFq4Ch/X3gaBTKN1DdyKcbmSUgUS
-         6dMXsdy2fMjvcsoSqyT1u+MI0U941TRjSpYXWsM5xXwhxTh+Sl+qM0k1bp3VqfYk+3By
-         ONCaEqqt578AYkb563gn25u4kQdsIlBK1ytU+/mQ8OrYxh+PGTzvMtJ9njeGLYGGXm9q
-         V6q8/vL1x/TfQJPssWL3tHBvc2JZgcPSBeuB0700gaFbXiozlrvJgitiBvpYFImb1Bb9
-         2PHQ==
-X-Gm-Message-State: AOAM532Iai0pAv7/2pjHb9TfCTmCXRlRC3tItzB6q+w9S70ph+wgQpLD
-        C5hVJjCLeKwt2S0AfmU3hYc=
-X-Google-Smtp-Source: ABdhPJzFDayXNGiKRw5E9nfrRiFbbejPupxfptVe6/4oNEdkXo5HD38KIyj65MB6F0PrOE4x0C8N2A==
-X-Received: by 2002:a05:6000:1363:: with SMTP id q3mr15858322wrz.74.1615075070450;
-        Sat, 06 Mar 2021 15:57:50 -0800 (PST)
+        bh=RkKHuuou1fbGpv6ZIX+yWrf0LwYVGw6dLWgr4M+rjOs=;
+        b=fqcvxAJTrQxBEbmFuzUiMRoHf7PMbOZuirBq6tqGl+9ue3VkAInI2JsUh6DmQqVWV6
+         tEixwNB70DdA+KzrxOPu9rPF1ZIivP1zTVyLMZLNRozbZ5rrmXPzoTIw0YL66sGP3PkW
+         9q06bP9pzbeOONNZiBFo8RMdqBQVQ5RzfA2O/iwBhO5yVRt1C41pvr+ujh9HA1z+tp/y
+         MfPQRXUShVnIssh8P9ndb/OR076tPCmgdldV2Q/+Fq7NjNRBDTICH6JpfZevRmgcoqN/
+         j2BuVnGkbym0qhvgs27VS5rIn+HELw1Y8DgWfDRx7vUGTTn7EIut2vhDH+BL4c8VctOv
+         Ku+g==
+X-Gm-Message-State: AOAM530sNewxeVvANZHWnSqF3iWMeYORG4+Wy6aDKO5vhwL0Ytniy5e3
+        z8VxPWA8ENOBO0SCghKV66o=
+X-Google-Smtp-Source: ABdhPJzk6nL/1JWmO3TqFeAiFFiv4yy/xlP13ujtxH1Rb7ZCSZp9sQDmIPnd5znlqdHb62miJ/hq5Q==
+X-Received: by 2002:aa7:ce8a:: with SMTP id y10mr15884345edv.66.1615075167183;
+        Sat, 06 Mar 2021 15:59:27 -0800 (PST)
 Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id g16sm10819033wrs.76.2021.03.06.15.57.49
+        by smtp.gmail.com with ESMTPSA id r5sm4350727eds.49.2021.03.06.15.59.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Mar 2021 15:57:49 -0800 (PST)
-Date:   Sun, 7 Mar 2021 00:57:48 +0100
+        Sat, 06 Mar 2021 15:59:26 -0800 (PST)
+Date:   Sun, 7 Mar 2021 00:59:25 +0100
 From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Arun Easi <aeasi@marvell.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Girish Basrur <GBasrur@marvell.com>,
-        Quinn Tran <qutran@marvell.com>
-Subject: Re: [PATCH 1/1] PCI/VPD: Fix blocking of VPD data in lspci for
- QLogic 1077:2261
-Message-ID: <YEQW/BFDb2Ny0NaV@rocinante>
-References: <20210303224250.12618-1-aeasi@marvell.com>
- <20210303224250.12618-2-aeasi@marvell.com>
+To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Sandor Bodo-Merle <sbodomerle@gmail.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: iproc: Fix return value of
+ iproc_msi_irq_domain_alloc()
+Message-ID: <YEQXXXvgVjogSROE@rocinante>
+References: <20210303142202.25780-1-pali@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210303224250.12618-2-aeasi@marvell.com>
+In-Reply-To: <20210303142202.25780-1-pali@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Arun,
+Hi Pali,
 
-> "lspci -vvv" for Qlogic Fibre Channel HBA 1077:2261 displays
-> "Vital Product Data" as "Not readable" today and thus preventing
-> customers from getting relevant HBA information. Fix it by removing
-> the blacklist quirk.
+> IRQ domain alloc function should return zero on success. Non-zero value
+> indicates failure.
 > 
-> The VPD quirk was added by [0] to avoid a system NMI; this issue has
-> been long fixed in the HBA firmware. In addition, PCI also has changes
-> to check the VPD size [1], so this quirk can be reverted now regardless
-> of a firmware update.
-> 
-> Some more details can be found in the following thread:
->     "VPD blacklist of Marvell QLogic 1077/2261" [2].
-> 
-> [0] 0d5370d1d852 ("PCI: Prevent VPD access for QLogic ISP2722")
-> [1] 104daa71b396 ("PCI: Determine actual VPD size on first access")
-> [2] https://lore.kernel.org/linux-pci/alpine.LRH.2.21.9999.2012161641230.28924@irv1user01.caveonetworks.com/
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Fixes: fc54bae28818 ("PCI: iproc: Allow allocation of multiple MSIs")
 [...]
 
-Looks good!  Assuming that this won't break QLogic ISP2722 with older
-firmware, like you say, it's a nice fix.
+Nice catch!
 
 Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
