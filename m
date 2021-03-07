@@ -2,110 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80F72330436
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 20:20:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FE7E3304AA
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 21:47:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232040AbhCGTUU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Mar 2021 14:20:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231162AbhCGTTy (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Sun, 7 Mar 2021 14:19:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E01C4650B4;
-        Sun,  7 Mar 2021 19:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615144793;
-        bh=90FiEZxZT00j65VyfA0AM5/U3rAujXSlyrhkbSDs89E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F60Lam6JqX6gFlpgunyzI2hikGrx0QsW/1cP+3TudKZEyyRkbZ0tc/+ZFfFOxBoOz
-         cPlE6GnrbmzmEXzjY5kgfR4oIqSjntgIfM/IvsRQkyDe6fIuRbGlr9f+5jL8TP8+oB
-         LoaDvUu8MmM1nAE7zwZmsBaHaoYrtBGUoB2HAjufEMgjiDyjyEi2aVMyQXCMsExpqQ
-         yXRbzhU5O/AaqyIgJRlBeAYYRl8lC/wBcnyH1sDdxZgPuEKriWktYShr9wC8ZYDgJg
-         xWZnE3tSvkuZM8E6Ib/E1J0YAnrsQvvurVQOOLelMSY5O+2kxsaALgTPTfJtsG++YS
-         kBK3RVsmHMnSA==
-Date:   Sun, 7 Mar 2021 21:19:49 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <YEUnVcW+lIXBlqT1@unreal>
-References: <20210301075524.441609-1-leon@kernel.org>
- <CAKgT0Ue=g+1pZCct8Kd0OnkPEP0qhggBF96s=noDoWHMJTL6FA@mail.gmail.com>
+        id S231910AbhCGUqh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Mar 2021 15:46:37 -0500
+Received: from mail-ed1-f47.google.com ([209.85.208.47]:46279 "EHLO
+        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230194AbhCGUqE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Mar 2021 15:46:04 -0500
+Received: by mail-ed1-f47.google.com with SMTP id w9so11670171edt.13;
+        Sun, 07 Mar 2021 12:46:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Y/j6Cq0L0/qK+bPKbsMfp46b9C06hF4J+uRP7tNJ/uQ=;
+        b=pOW19Ie5sD+JbC5rh2BfSlJNI8j+7uGR5isFbWu/cFf5qDZlEW8DJcz1jPmHwjntyv
+         uLIczGsSQHrBM/tc0BKxsjpqHf4ZayicUhyeaSeV1QlYTDPcYyWKdrTGy5gwtHKNzif9
+         Oh3gB6oDYwGnSE4IpmsQfGh2pxwUrAEOYeac/XzYI9uSsR3BYB6JnoX/GBKAmPBk1Q8T
+         fEObKjwi/8TA4wwxLvDjVFAog4LPT3P6bYP5bYUxqRjqEJrFskhPS7KCaBlFcINOuXbx
+         yX/fX/pUWc+B6xjB9yVIYoscIsP+Q5Pta7mZ5GRtlJLZJJOyNbmVrY+Z91kA4OzoPYUz
+         prYA==
+X-Gm-Message-State: AOAM531CRyiOslKgUp1GHVCczXhJc78d9cK06rqD0MV4xCf9MeXfQv4q
+        e9qJAMY4UgFg0X0Gl9zgS4U=
+X-Google-Smtp-Source: ABdhPJzD0EWBZ9NQK51HxGvb39ETnp5a2NDmgKgrkl6dachAz9OfSnmgWX6A8tHqKj5AwXXFcJLNyA==
+X-Received: by 2002:a05:6402:158d:: with SMTP id c13mr18828466edv.297.1615149962785;
+        Sun, 07 Mar 2021 12:46:02 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id lu26sm5495962ejb.33.2021.03.07.12.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Mar 2021 12:46:01 -0800 (PST)
+Date:   Sun, 7 Mar 2021 21:46:00 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Narendra K <narendra_k@dell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [RFC 1/1] s390/pci: expose a PCI device's UID as its index
+Message-ID: <YEU7iFjxNxQK3ldc@rocinante>
+References: <20210303095250.1360007-1-schnelle@linux.ibm.com>
+ <20210303095250.1360007-2-schnelle@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAKgT0Ue=g+1pZCct8Kd0OnkPEP0qhggBF96s=noDoWHMJTL6FA@mail.gmail.com>
+In-Reply-To: <20210303095250.1360007-2-schnelle@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Mar 07, 2021 at 10:55:24AM -0800, Alexander Duyck wrote:
-> On Sun, Feb 28, 2021 at 11:55 PM Leon Romanovsky <leon@kernel.org> wrote:
-> >
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> >
-> > @Alexander Duyck, please update me if I can add your ROB tag again
-> > to the series, because you liked v6 more.
-> >
-> > Thanks
-> >
-> > ---------------------------------------------------------------------------------
-> > Changelog
-> > v7:
-> >  * Rebase on top v5.12-rc1
-> >  * More english fixes
-> >  * Returned to static sysfs creation model as was implemented in v0/v1.
->
-> Yeah, so I am not a fan of the series. The problem is there is only
-> one driver that supports this, all VFs are going to expose this sysfs,
-> and I don't know how likely it is that any others are going to
-> implement this functionality. I feel like you threw out all the
-> progress from v2-v6.
+Hi Niklas,
 
-I'm with you here and tried to present the rationale in v6 when had
-a discussion with Bjorn, so it is unfair to say "you threw out".
+[...]
+> +static ssize_t index_show(struct device *dev,
+> +			  struct device_attribute *attr, char *buf)
+> +{
+> +	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
+> +	u32 index = ~0;
+> +
+> +	if (zpci_unique_uid)
+> +		index = zdev->uid;
+> +
+> +	return sprintf(buf, "%u\n", index);
+[...]
 
-Bjorn expressed his preference, and no one came forward to support v6.
+Would it be possible to use the new sysfs_emit() rather than sprintf()
+even though the zpci_attr macro and still use mio_enabled_show() still
+would use sprintf().  What do you think?
 
->
-> I really feel like the big issue is that this model is broken as you
-> have the VFs exposing sysfs interfaces that make use of the PFs to
-> actually implement. Greg's complaint was the PF pushing sysfs onto the
-> VFs. My complaint is VFs sysfs files operating on the PF. The trick is
-> to find a way to address both issues.
+See https://www.kernel.org/doc/html/latest/filesystems/sysfs.html for
+the changes in the internal API.
 
-It is hard to say something meaningful about Greg's complain, he was
-added in the middle of the discussion without much chances to get full
-picture.
-
->
-> Maybe the compromise is to reach down into the IOV code and have it
-> register the sysfs interface at device creation time in something like
-> pci_iov_sysfs_link if the PF has the functionality present to support
-> it.
-
-IMHO, it adds nothing.
-
->
-> Also we might want to double check that the PF cannot be unbound while
-> the VF is present. I know for a while there it was possible to remove
-> the PF driver while the VF was present. The Mellanox drivers may not
-> allow it but it might not hurt to look at taking a reference against
-> the PF driver if you are allocating the VF MSI-X configuration sysfs
-> file.
-
-Right now, we always allocate these sysfs without relation if PF
-supports or not. The check is done during write() call to such sysfs
-and at that phase we check the existence of the drivers. It greatly
-simplifies creation phase.
-
-Thanks
+Krzysztof
