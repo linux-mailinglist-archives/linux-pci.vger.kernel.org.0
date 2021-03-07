@@ -2,59 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ADBD330405
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 19:54:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CD393303F6
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 19:38:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231624AbhCGSwJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Mar 2021 13:52:09 -0500
-Received: from laguna-zmb.netlogic.rs ([185.22.144.142]:53074 "EHLO
-        laguna-zmb.netlogic.rs" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230323AbhCGSvn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Mar 2021 13:51:43 -0500
-Received: from laguna-zmb.netlogic.rs (localhost [127.0.0.1])
-        by laguna-zmb.netlogic.rs (Postfix) with ESMTPS id DC84818D6F71;
-        Sun,  7 Mar 2021 14:11:06 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by laguna-zmb.netlogic.rs (Postfix) with ESMTP id DF27618D55F2;
-        Sun,  7 Mar 2021 13:01:42 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.9.2 laguna-zmb.netlogic.rs DF27618D55F2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=delfi.rs;
-        s=2BE130EA-9E84-11EA-B66F-5E65CC0E01BC; t=1615118502;
-        bh=4a+dP/l5EV9ITFe+y9NjNJNQFTq47T51LupNCf3e0cY=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Reply-To:Message-Id;
-        b=aiSgiyTkIs82NPszNgukHZo6bfAiYPEHe8ufvl4r/hGTGqX0zm2bhP6xLqThJC2fl
-         o8tXVJMNNeTP9yEMWBk82p5Wj+Sd92lKrFOYQ/91WyAlcm5IGW2/5X3YwV6KUiQpBw
-         e+fN5I/pyFELLarWwWWy45VGSc9zetDHd9ARSR70=
-X-Virus-Scanned: amavisd-new at laguna-zmb.netlogic.rs
-Received: from laguna-zmb.netlogic.rs ([127.0.0.1])
-        by localhost (laguna-zmb.netlogic.rs [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yrwGDPsfZaOG; Sun,  7 Mar 2021 13:01:42 +0100 (CET)
-Received: from Admin-PC.www.tendawifi.com (169-1-248-241.ip.afrihost.co.za [169.1.248.241])
-        by laguna-zmb.netlogic.rs (Postfix) with ESMTPSA id 89D6D18D86BC;
-        Sun,  7 Mar 2021 13:01:27 +0100 (CET)
-Content-Type: text/plain; charset="utf-8"
+        id S231484AbhCGShE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Mar 2021 13:37:04 -0500
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:34005 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231514AbhCGShC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Mar 2021 13:37:02 -0500
+Received: by mail-lf1-f45.google.com with SMTP id v9so15950816lfa.1;
+        Sun, 07 Mar 2021 10:37:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ThbITLkHOU2/dQSeUt335dQeSvRoHsbaI5Fk6bsL6es=;
+        b=uTXnV3OArt5NUjL81bGOMCd5xjBq7325jkIb5YCaLaSyZXytZqC/9WqNh6eDBbMHR1
+         ni6FggMAIQ78hbgJSxTuJlxkXwoRWPtrNocAhg+TccezrydFsooogrMqb4GGUhrxoP1o
+         S3fs7MCClZaFQrFZDz7ZcsvOrGRsIrAYoMJNBM0KKl7wgO28plwnCM7ZWeKST6asyuYO
+         ao6vM4bigO5C8Bqm55VdhfZYxOzv2Apww8DaMjD+kfxzxEb0WEWcittGXR8xE4co1msu
+         zQ1jEL8RWrurlTCL577U4K3PvaaN1MmZrBlPguUYV0S2XUY+BvQODkRsXtoybj1sUWah
+         qTmA==
+X-Gm-Message-State: AOAM5325ywLlCv0AgGQdI+OiubnQNL9sX7996vUQHLoEwVBctPlfKv68
+        8rugwmyB4Fdm/EpRLzjJi9w=
+X-Google-Smtp-Source: ABdhPJwzkmkqC/Pw8HWTIEHGBNMbMZdlHNa4mm3nBRwXwyxM6V/4OrZHbwQtOm9tb4iSU0SGC7jDEQ==
+X-Received: by 2002:ac2:4465:: with SMTP id y5mr12100641lfl.70.1615142219485;
+        Sun, 07 Mar 2021 10:36:59 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id g2sm1179250ljk.15.2021.03.07.10.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Mar 2021 10:36:58 -0800 (PST)
+Date:   Sun, 7 Mar 2021 19:36:57 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Zheng Yongjun <zhengyongjun3@huawei.com>,
+        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
+        robh@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] pci/controller/dwc: convert comma to semicolon
+Message-ID: <YEUdSZpwzg0k5z2+@rocinante>
+References: <20201216131944.14990-1-zhengyongjun3@huawei.com>
+ <20210106190722.GA1327553@bjorn-Precision-5520>
+ <20210115113654.GA22508@e121166-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Darowizna w wysokosci 3.000.000,00 euro
-To:     Recipients <jelena.oljacic@delfi.rs>
-From:   Sheryll Goedert <jelena.oljacic@delfi.rs>
-Date:   Sun, 07 Mar 2021 13:01:20 +0100
-Reply-To: sheryllgoedert955@gmail.com
-Message-Id: <20210307120127.89D6D18D86BC@laguna-zmb.netlogic.rs>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210115113654.GA22508@e121166-lin.cambridge.arm.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Czesc,
+Hi,
 
-Zostales wybrany do otrzymania darowizny w wysokosci 3 000 000,00 =E2=82=AC=
- od Sheryll Goedert. Wygralem America Lottery o wartosci 396,9 miliona dola=
-r=C3=B3w i czesc z tego przekazuje pieciu szczesliwym ludziom i organizacjo=
-m charytatywnym. Ta darowizna upamietnia mojego zmarlego na raka syna i pop=
-rawe zycia wielu os=C3=B3b dotknietych tym koronawirusem. Aby uzyskac wiece=
-j informacji, odpowiedz na tego e-maila.
+[...]
+> I would request NXP maintainers to take this patch, rewrite it as
+> Bjorn requested and resend it as fast as possible, this is a very
+> relevant fix.
+[...]
 
-Pozdrowienia;
-Sheryll Goedert
+Looking at the state of the pci-layerscape-ep.c file in Linus' tree,
+this still hasn't been fixed, and it has been a while.
+
+NXP folks, are you intend to pick this up?  Do let us know.
+
+Krzysztof
