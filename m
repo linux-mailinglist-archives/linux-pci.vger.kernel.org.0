@@ -2,77 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9459B3303EA
-	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 19:28:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ADBD330405
+	for <lists+linux-pci@lfdr.de>; Sun,  7 Mar 2021 19:54:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231330AbhCGS11 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 Mar 2021 13:27:27 -0500
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:42986 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231320AbhCGS1R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Mar 2021 13:27:17 -0500
-Received: by mail-lj1-f180.google.com with SMTP id k12so12115079ljg.9
-        for <linux-pci@vger.kernel.org>; Sun, 07 Mar 2021 10:27:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EM3WO/cpA2xTKyEmRtrPyl3CA+LFNIT0kx7gSLinBwM=;
-        b=h1SbLf3OyQ1MauR2sczTRfc0evjHAOSIQafFo1iAWjDMJZWXdnU9z591cIgD3vl0Wa
-         pb51DKyB1Z76Hci8R5H8OjShP2nT0693L6oAGQY3Aq8JBqI4LzavwLSnyVDansKkm8W2
-         Zb1a289+i9j0xUrsPgexbCUK9SKycF52VRIMReTipmi66i5kiEfj7svCDDYLuCOgRGmg
-         hf3qTKbIZgSFNf8bL5dyoaaxT86x+/baMmFNcd6dnSwC/Qx3kESnj8xQ6i8+RHE9LV9F
-         1bmj2qLrRHm/h/S6N4qQ68eomR+RkJAVAHUM4fM0xwYniC+rieLKWQX8hq4tF6tqhO5m
-         ZJuQ==
-X-Gm-Message-State: AOAM533ORqd7/qHUdo0Ppjs5uInFjF2aPb0/7XaEQxDJfYujylb25ZwG
-        nj4Ey7d6e7VBJ1CLElxk7Zo=
-X-Google-Smtp-Source: ABdhPJxGe2Av7cNlU0FPlMUKnUApEQ/zYGaOf7nK00KS/tFS/ZK7PuOGQ/JTimwH3zwxC1zzEJpHcA==
-X-Received: by 2002:a2e:910a:: with SMTP id m10mr11202698ljg.421.1615141636266;
-        Sun, 07 Mar 2021 10:27:16 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id w8sm682364ljh.131.2021.03.07.10.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Mar 2021 10:27:15 -0800 (PST)
-Date:   Sun, 7 Mar 2021 19:27:14 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI/VPD: Silence warning if optional VPD PROM is missing
-Message-ID: <YEUbAi8jV6mzKvp4@rocinante>
-References: <b04a0e46-0b97-da3d-aa77-b05c9b37d21f@gmail.com>
+        id S231624AbhCGSwJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 Mar 2021 13:52:09 -0500
+Received: from laguna-zmb.netlogic.rs ([185.22.144.142]:53074 "EHLO
+        laguna-zmb.netlogic.rs" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230323AbhCGSvn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 Mar 2021 13:51:43 -0500
+Received: from laguna-zmb.netlogic.rs (localhost [127.0.0.1])
+        by laguna-zmb.netlogic.rs (Postfix) with ESMTPS id DC84818D6F71;
+        Sun,  7 Mar 2021 14:11:06 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by laguna-zmb.netlogic.rs (Postfix) with ESMTP id DF27618D55F2;
+        Sun,  7 Mar 2021 13:01:42 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.9.2 laguna-zmb.netlogic.rs DF27618D55F2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=delfi.rs;
+        s=2BE130EA-9E84-11EA-B66F-5E65CC0E01BC; t=1615118502;
+        bh=4a+dP/l5EV9ITFe+y9NjNJNQFTq47T51LupNCf3e0cY=;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
+         From:Date:Reply-To:Message-Id;
+        b=aiSgiyTkIs82NPszNgukHZo6bfAiYPEHe8ufvl4r/hGTGqX0zm2bhP6xLqThJC2fl
+         o8tXVJMNNeTP9yEMWBk82p5Wj+Sd92lKrFOYQ/91WyAlcm5IGW2/5X3YwV6KUiQpBw
+         e+fN5I/pyFELLarWwWWy45VGSc9zetDHd9ARSR70=
+X-Virus-Scanned: amavisd-new at laguna-zmb.netlogic.rs
+Received: from laguna-zmb.netlogic.rs ([127.0.0.1])
+        by localhost (laguna-zmb.netlogic.rs [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id yrwGDPsfZaOG; Sun,  7 Mar 2021 13:01:42 +0100 (CET)
+Received: from Admin-PC.www.tendawifi.com (169-1-248-241.ip.afrihost.co.za [169.1.248.241])
+        by laguna-zmb.netlogic.rs (Postfix) with ESMTPSA id 89D6D18D86BC;
+        Sun,  7 Mar 2021 13:01:27 +0100 (CET)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b04a0e46-0b97-da3d-aa77-b05c9b37d21f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Darowizna w wysokosci 3.000.000,00 euro
+To:     Recipients <jelena.oljacic@delfi.rs>
+From:   Sheryll Goedert <jelena.oljacic@delfi.rs>
+Date:   Sun, 07 Mar 2021 13:01:20 +0100
+Reply-To: sheryllgoedert955@gmail.com
+Message-Id: <20210307120127.89D6D18D86BC@laguna-zmb.netlogic.rs>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Heiner,
+Czesc,
 
-> Realtek RTL8169/8168/8125 NIC families indicate VPD capability and an
-> optional VPD EEPROM can be connected via I2C/SPI. However I haven't
-> seen any card or system with such a VPD EEPROM yet. The missing EEPROM
-> causes the following warning whenever e.g. lscpi -vv is executed.
-> 
-> invalid short VPD tag 00 at offset 01
-> 
-> The warning confuses users, I think we should handle the situation more
-> gentle. Therefore, if first VPD byte is read as 0x00, assume a missing
-> optional VPD PROM as and silently set the VPD length to 0.
-[...]
+Zostales wybrany do otrzymania darowizny w wysokosci 3 000 000,00 =E2=82=AC=
+ od Sheryll Goedert. Wygralem America Lottery o wartosci 396,9 miliona dola=
+r=C3=B3w i czesc z tego przekazuje pieciu szczesliwym ludziom i organizacjo=
+m charytatywnym. Ta darowizna upamietnia mojego zmarlego na raka syna i pop=
+rawe zycia wielu os=C3=B3b dotknietych tym koronawirusem. Aby uzyskac wiece=
+j informacji, odpowiedz na tego e-maila.
 
-True.  I saw people on different forum and IRC asking for clarification
-assuming their NIC broke, or that something is wrong, so this would
-indeed save them some worry, nice!
-
-Having said that, I also saw this particular warning showing up for some
-storage controllers (often some SAS cards), so a question here: would it
-warrant adding a pci_dbg() with an appropriate message rather than just
-returning 0?  I wonder if this might be useful for someone who is trying
-to troubleshoot and/or debug some issues with their device.
-
-What do you think?
-
-Krzysztof
+Pozdrowienia;
+Sheryll Goedert
