@@ -2,121 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 819D1331715
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 20:17:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFC32331720
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 20:21:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230439AbhCHTRG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 14:17:06 -0500
-Received: from mga18.intel.com ([134.134.136.126]:7497 "EHLO mga18.intel.com"
+        id S230475AbhCHTUz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 14:20:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229701AbhCHTQ6 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Mar 2021 14:16:58 -0500
-IronPort-SDR: 5AZ4rRs3TrWafxpM/u/BgdhIL8TIp1a6FDAbZOEzFlTWaA8OoZXNwX6/ZhGXS9N9lApSXxj2Ba
- iDZE99IrCD9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="175704374"
-X-IronPort-AV: E=Sophos;i="5.81,233,1610438400"; 
-   d="scan'208";a="175704374"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 11:16:57 -0800
-IronPort-SDR: xCEhKGvn12MnWivwFnLJwGcSstpYUBabTQLIVR+SWBzzbKV+opX+SgcBGE/inQcgN8s8i3qkGz
- h2+dCiGfnQSg==
-X-IronPort-AV: E=Sophos;i="5.81,233,1610438400"; 
-   d="scan'208";a="437595267"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 11:16:53 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lJLN4-00AtQQ-HD; Mon, 08 Mar 2021 21:16:50 +0200
-Date:   Mon, 8 Mar 2021 21:16:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
-        henning.schild@siemens.com
-Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
- support library
-Message-ID: <YEZ4IitUa+I9HM5F@smile.fi.intel.com>
-References: <20210308122020.57071-4-andriy.shevchenko@linux.intel.com>
- <20210308185212.GA1790506@bjorn-Precision-5520>
+        id S229790AbhCHTUt (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Mar 2021 14:20:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 996216529E;
+        Mon,  8 Mar 2021 19:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615231249;
+        bh=esK9fkuRMWQjIb5nJglJWhNgHT/wvvo1endmAFKzgWA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M9XShbf/F0QT4XNnppXFxIhDqbxY+3ueSye/Q70v+fQv6HJauRHkLkOkZ/rGoIU4g
+         w15sNA3cIapggePoVAkZP0gpaUipJchpGPP3KSNMWj4DqTznQ8eOZGbAoE0x0QxsEm
+         05m/sfhsa9edv1Mv/Zfqje4bwbg+EPv2nSm5OGWpY5j+s1GQaJcGj0WXqf/de2CLzh
+         NN+/+HCGy193e+qAieWg2E0DIokIWAUtVpBL/tgJC1YUV0Ob7lxHpwrCVn/oIA1iK7
+         2/xypvvHYaQgY4i0l9Sn3zPeYvNik7CyFobBU3Tep5NvOMX73hEVGv7RqZbx21NFJY
+         XfpDoUTDaEFdw==
+Date:   Mon, 8 Mar 2021 21:20:45 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <YEZ5DRk19Gag06nq@unreal>
+References: <20210301075524.441609-1-leon@kernel.org>
+ <CAKgT0Ue=g+1pZCct8Kd0OnkPEP0qhggBF96s=noDoWHMJTL6FA@mail.gmail.com>
+ <YEUnVcW+lIXBlqT1@unreal>
+ <CAKgT0UdzjeD7fnE6kX2qN6V4ZddSV2ZMnONEwGXhwkSwoUXUug@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210308185212.GA1790506@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAKgT0UdzjeD7fnE6kX2qN6V4ZddSV2ZMnONEwGXhwkSwoUXUug@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 08, 2021 at 12:52:12PM -0600, Bjorn Helgaas wrote:
-> On Mon, Mar 08, 2021 at 02:20:16PM +0200, Andy Shevchenko wrote:
-> > From: Jonathan Yong <jonathan.yong@intel.com>
-> > 
-> > There is already one and at least one more user is coming which
-> > requires an access to Primary to Sideband bridge (P2SB) in order to
-> > get IO or MMIO bar hidden by BIOS. Create a library to access P2SB
-> > for x86 devices.
-> 
-> Can you include a spec reference?
+On Mon, Mar 08, 2021 at 08:33:03AM -0800, Alexander Duyck wrote:
+> On Sun, Mar 7, 2021 at 11:19 AM Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > On Sun, Mar 07, 2021 at 10:55:24AM -0800, Alexander Duyck wrote:
+> > > On Sun, Feb 28, 2021 at 11:55 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > > >
+> > > > From: Leon Romanovsky <leonro@nvidia.com>
+> > > >
+> > > > @Alexander Duyck, please update me if I can add your ROB tag again
+> > > > to the series, because you liked v6 more.
+> > > >
+> > > > Thanks
+> > > >
+> > > > ---------------------------------------------------------------------------------
+> > > > Changelog
+> > > > v7:
+> > > >  * Rebase on top v5.12-rc1
+> > > >  * More english fixes
+> > > >  * Returned to static sysfs creation model as was implemented in v0/v1.
+> > >
+> > > Yeah, so I am not a fan of the series. The problem is there is only
+> > > one driver that supports this, all VFs are going to expose this sysfs,
+> > > and I don't know how likely it is that any others are going to
+> > > implement this functionality. I feel like you threw out all the
+> > > progress from v2-v6.
+> >
+> > I'm with you here and tried to present the rationale in v6 when had
+> > a discussion with Bjorn, so it is unfair to say "you threw out".
+> >
+> > Bjorn expressed his preference, and no one came forward to support v6.
+>
+> Sorry, it wasn't my intention to be accusatory. I'm just not a fan of
+> going back to where we were with v1.
+>
+> With that said, if it is what Bjorn wants then you are probably better
+> off going with that. However if that is the direction we are going in
+> then you should probably focus on getting his Reviewed-by or Ack since
+> he will ultimately be the maintainer for the code.
 
-I'm not sure I have a public link to the spec. It's the 100 Series PCH [1].
-The document number to look for is 546955 [2] and there actually a bit of
-information about this.
+I hope that he will do it soon.
 
-> I'm trying to figure out why this
-> belongs in drivers/pci/.  It looks very device-specific.
+>
+> > >
+> > > I really feel like the big issue is that this model is broken as you
+> > > have the VFs exposing sysfs interfaces that make use of the PFs to
+> > > actually implement. Greg's complaint was the PF pushing sysfs onto the
+> > > VFs. My complaint is VFs sysfs files operating on the PF. The trick is
+> > > to find a way to address both issues.
+> >
+> > It is hard to say something meaningful about Greg's complain, he was
+> > added in the middle of the discussion without much chances to get full
+> > picture.
+>
+> Right, but what I am getting at is that the underlying problem is that
+> you either have sysfs being pushed onto a remote device, or sysfs that
+> is having to call into another device. It's not exactly something we
+> have had precedent for enabling before, and either perspective seems a
+> bit ugly.
 
-Because it's all about access to PCI configuration spaces of the (hidden)
-devices.
+I don't agree with the word "ugly", but it is not the point. The point
+is that this interface is backed by the ecosystem and must-to-be for the
+right SR-IOV utilization.
 
-[1]: https://ark.intel.com/content/www/us/en/ark/products/series/98456/intel-100-series-desktop-chipsets.html
-[2]: https://medium.com/@jacksonchen_43335/bios-gpio-p2sb-70e9b829b403
+>
+> > >
+> > > Maybe the compromise is to reach down into the IOV code and have it
+> > > register the sysfs interface at device creation time in something like
+> > > pci_iov_sysfs_link if the PF has the functionality present to support
+> > > it.
+> >
+> > IMHO, it adds nothing.
+>
+> My thought was to reduce clutter. As I mentioned before with this
+> patch set we are enabling sysfs for functionality that is currently
+> only exposed by one device. I'm not sure it will be used by many
+> others or not. Having these sysfs interfaces instantiated at probe
+> time or at creation time in the case of VFs was preferable to me.
 
-...
+I said that in v6 to Bjorn, that I expect up to 2-3 vendors to support
+this knob. There are not many devices in the market that are comparable
+to the mlx5 both in their complexity and adoption.
 
-> > +config PCI_P2SB
-> > +	bool "Primary to Sideband (P2SB) bridge access support"
-> > +	depends on PCI && X86
-> > +	help
-> > +	  The Primary to Sideband bridge is an interface to some PCI
-> > +	  devices connected through it. In particular, SPI NOR
-> > +	  controller in Intel Apollo Lake SoC is one of such devices.
-> 
-> This doesn't sound like a "bridge".  If it's a bridge, what's on the
-> primary (upstream) side?  What's on the secondary side?  What
-> resources are passed through the bridge, i.e., what transactions does
-> it transfer from one side to the other?
-
-It's a confusion terminology here. It's a Bridge according to the spec, but
-it is *not* a PCI Bridge as you may had a first impression.
-
-...
-
-> > +	/* Unhide the P2SB device */
-> > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, 0);
-> > +
-> > +	/* Read the first BAR of the device in question */
-> > +	__pci_bus_read_base(bus, devfn, pci_bar_unknown, mem, PCI_BASE_ADDRESS_0, true);
-> 
-> I don't get this.  Apparently this normally hidden device is consuming
-> PCI address space.  The PCI core needs to know about this.  If it
-> doesn't, the PCI core may assign this space to another device.
-
-Right, it returns all 1:s to any request so PCI core *thinks* it's plugged off
-(like D3cold or so).
-
-> > +	/* Hide the P2SB device */
-> > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, P2SBC_HIDE_BIT);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks
