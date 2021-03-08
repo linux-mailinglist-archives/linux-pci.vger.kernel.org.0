@@ -2,111 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8646331135
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 15:50:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7815C331139
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 15:50:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbhCHOs2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 09:48:28 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:13450 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230231AbhCHOsD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 09:48:03 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4DvLkw5qpmzjWmZ;
-        Mon,  8 Mar 2021 22:46:32 +0800 (CST)
-Received: from [10.67.103.235] (10.67.103.235) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.498.0; Mon, 8 Mar 2021 22:47:53 +0800
-Subject: Re: [PATCH RESEND] lspci: Decode VF 10-Bit Tag Requester
-To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-References: <1614770048-41209-1-git-send-email-liudongdong3@huawei.com>
- <YEQwTRKNmnNk1OY+@rocinante>
-CC:     <mj@ucw.cz>, <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-From:   Dongdong Liu <liudongdong3@huawei.com>
-Message-ID: <0a2925d2-5f2a-18e8-179c-f1bd6bb259ec@huawei.com>
-Date:   Mon, 8 Mar 2021 22:47:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S229528AbhCHOuD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 09:50:03 -0500
+Received: from mail-lj1-f180.google.com ([209.85.208.180]:34520 "EHLO
+        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230521AbhCHOtn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 09:49:43 -0500
+Received: by mail-lj1-f180.google.com with SMTP id i26so4776666ljn.1;
+        Mon, 08 Mar 2021 06:49:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uP1fIZmfDtQZr61LMQHQQSmFTjaTdGRRkSa9BlpzgAc=;
+        b=npzg+/GnhQYMf3B3ETD8KAP/LnYIamkVlXZ7yCxDT5MjavHQzO1cDre90oXHAsMBR/
+         iCV1QocnRQRxwHLsSN1sNkd6qlUsaA32/155czMXigv4k6auuvPZmJr8uKIICmjssfYm
+         6a5hCq6jI6VKJr8KRkXdqiGkLU03NPXhUeHh5NJVtJiwJniz7BMRHechCq/Qcghb1anH
+         sNi2TWyD6WD5v4hfmHBmsUb3gAxnKmu8TRhnnxC+vwRtQiqfkUHLN3yv+CEDFLDUk9hn
+         F9C+GBj6D3abawtgKSUMfglZ0rM7BSSd1T3DPhlg+cAyUnqbp4NM20liHYcdDOvJjBkr
+         YwwA==
+X-Gm-Message-State: AOAM5336FaIRwctwPwa6S6KCV5zV7ufPLQ/FGtu3/YkfDnE1syvjpnSi
+        +/74bS1SoC/7m8jSu2p3l+E=
+X-Google-Smtp-Source: ABdhPJyP8ZPxW8ct3ipsXj51uD/e3cOpusqCx9So2VJw63k1aQJmuyqgCaSZmZRJaLmj3fUZZmD62g==
+X-Received: by 2002:a2e:320c:: with SMTP id y12mr14582266ljy.360.1615214981904;
+        Mon, 08 Mar 2021 06:49:41 -0800 (PST)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id 28sm1517926ljv.125.2021.03.08.06.49.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Mar 2021 06:49:41 -0800 (PST)
+Date:   Mon, 8 Mar 2021 15:49:40 +0100
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     'Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] PCI: brcmstb: Fix error return code in
+ brcm_pcie_probe()
+Message-ID: <YEY5hLEAqnI23DSW@rocinante>
+References: <20210308135619.19133-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <YEQwTRKNmnNk1OY+@rocinante>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.103.235]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20210308135619.19133-1-weiyongjun1@huawei.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-Hi Krzysztof
+[...]
+>  	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
+>  		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
+> +		ret = -ENODEV;
+>  		goto fail;
+[...]
 
-Many thanks for your review.
+Nice catch!
 
-On 2021/3/7 9:45, Krzysztof Wilczyński wrote:
-> Hi,
->
-> [+cc Bjorn who was workingo on making commas usage more consistent]
->
-> Thank you for sending the patch over.
->
->> Decode VF 10-Bit Tag Requester Supported and Enable bit
->> in SR-IOV Capabilities Register.
->>
->> Sample output:
->>   IOVCap: Migration-, 10BitTagReq+, Interrupt Message Number: 000
->>   IOVCtl: Enable+ Migration- Interrupt- MSE+ ARIHierarchy- 10BitTagReq+
-> [...]
->
-> Would you be able to move the "10BitTagReq" in the "IOVCtl" after the
-> "Migration" so that its placement is consistent with the "IOVCap"?  This
-> would be also along the lines of how the same files is already used in
-> the ls-caps.c file.
+Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
 
-To be honest, I am not sure this is suitable.
-PCIe 5.0r1.0 spec section 9.3.3.2 SR-IOV Capabilities Register
-VF 10-Bit Tag Requester Supported defined in BIT[2].
+Thank you!
 
-9.3.3.3 SR-IOV Control Register (Offset 08h)
-VF 10-Bit Tag Requester Enable defined in BIT[5] and this is after the 
-BIT[4] ARI Capable Hierarchy.
-
-Howerver if we need to keep consistent with the "IOVCap". I can
-move the "10BitTagReq" in the "IOVCtl" after the "Migration".
-
->
-> Bjorn was also working on making a lot of the commas usage throughout to
-> follow the best practice, thus I believe that the commas there would not
-> be needed.  Having said that, it might be better to follow the current
-> style present there at the moment.
->
-> See 018f413 ("lspci: Use commas more consistently") for more details on
-> Bjorn's work to normalise the usage of commas.
-
-Good suggestion, will fix.
->
-> Additionally, with the new fields, would you also have to update some of
-> the tests files?  For example:
->
->   Index File                Line Content
->       0 tests/cap-dvsec-cxl   81 Capabilities: [b80 v1] Single Root I/O Virtualization (SR-IOV)
->       1 tests/cap-dvsec-cxl   82 IOVCap: Migration-, Interrupt Message Number: 000
->       2 tests/cap-dvsec-cxl   83 IOVCtl: Enable- Migration- Interrupt- MSE- ARIHierarchy-
->       3 tests/cap-dvsec-cxl   84 IOVSta: Migration-
->       4 tests/cap-pcie-2      50 Capabilities: [160] Single Root I/O Virtualization (SR-IOV)
->       5 tests/cap-pcie-2      51 IOVCap:  Migration-, Interrupt Message Number: 000
->       6 tests/cap-pcie-2      52 IOVCtl:  Enable+ Migration- Interrupt- MSE+ ARIHierarchy-
->       7 tests/cap-pcie-2      53 IOVSta:  Migration-
->       8 tests/cap-ea-1        59 Capabilities: [180 v1] Single Root I/O Virtualization (SR-IOV)
->       9 tests/cap-ea-1        60 IOVCap:  Migration-, Interrupt Message Number: 000
->      10 tests/cap-ea-1        61 IOVCtl:  Enable+ Migration- Interrupt- MSE+ ARIHierarchy+
->      11 tests/cap-ea-1        62 IOVSta:  Migration-
->
-OK, will do.
-
-Thanks,
-Dongdong
-> Otheriwse, it looks good!  Thank you!
->
-> Krzysztof
-> .
->
+Krzysztof
