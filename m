@@ -2,124 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE235330EAC
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 13:52:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E3DA330FE6
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 14:48:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbhCHMvd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 07:51:33 -0500
-Received: from muru.com ([72.249.23.125]:40832 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229754AbhCHMvZ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Mar 2021 07:51:25 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 93F7A80D4;
-        Mon,  8 Mar 2021 12:52:05 +0000 (UTC)
-Date:   Mon, 8 Mar 2021 14:51:20 +0200
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        id S229955AbhCHNr7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 08:47:59 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:13485 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229829AbhCHNrm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 08:47:42 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DvKNv03mhzrSL0;
+        Mon,  8 Mar 2021 21:45:51 +0800 (CST)
+Received: from localhost.localdomain (10.175.102.38) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.498.0; Mon, 8 Mar 2021 21:47:29 +0800
+From:   'Wei Yongjun <weiyongjun1@huawei.com>
+To:     <weiyongjun1@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 09/15] ARM: dts: Configure interconnect target module for
- dra7 dmm
-Message-ID: <YEYdyFShtqq1uXes@atomide.com>
-References: <20210126124004.52550-1-tony@atomide.com>
- <20210126124004.52550-10-tony@atomide.com>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+CC:     <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] PCI: brcmstb: Fix error return code in brcm_pcie_probe()
+Date:   Mon, 8 Mar 2021 13:56:19 +0000
+Message-ID: <20210308135619.19133-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210126124004.52550-10-tony@atomide.com>
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.102.38]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [210126 12:43]:
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-...
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-> +		target-module@4e000000 {
-> +			compatible = "ti,sysc-omap2", "ti,sysc";
->  			ti,hwmods = "dmm";
-> +			reg = <0x4e000000 0x4>,
-> +			      <0x4e000010 0x4>;
-> +			reg-names = "rev", "sysc";
-> +			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> +					<SYSC_IDLE_NO>,
-> +					<SYSC_IDLE_SMART>;
-> +			ranges = <0x0 0x4e000000 0x2000000>;
-> +			#size-cells = <1>;
-> +			#address-cells = <1>;
-> +
-> +			dmm@0 {
-> +				compatible = "ti,omap5-dmm";
-> +				reg = <0x4e000000 0x800>;
-> +				interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
->  		};
+Fix to return negative error code -ENODEV from the unsupported revision
+error handling case instead of 0, as done elsewhere in this function.
 
-
-The dmm@0 reg property above should be zero instead of 0x4e000000 now that
-we're using ranges. Looks like I did not test with omapdrm loaded earlier,
-updated patch below.
-
-Regards,
-
-Tony
-
-8< ---------------------------
-From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony@atomide.com>
-Date: Mon, 8 Mar 2021 14:22:49 +0200
-Subject: [PATCH] ARM: dts: Configure interconnect target module for dra7
- dmm
-
-We can now probe devices with device tree only configuration using
-ti-sysc interconnect target module driver. Let's configure the
-module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
-time warnings. The legacy property will be removed in later patches
-together with the legacy platform data.
-
-Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 0cdfaceb9889 ("PCI: brcmstb: support BCM4908 with external PERST# signal controller")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- arch/arm/boot/dts/dra7.dtsi | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -464,11 +464,24 @@ edma_tptc1: dma@0 {
- 			};
- 		};
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index e330e6811f0b..69c999222cc8 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1296,6 +1296,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ 	pcie->hw_rev = readl(pcie->base + PCIE_MISC_REVISION);
+ 	if (pcie->type == BCM4908 && pcie->hw_rev >= BRCM_PCIE_HW_REV_3_20) {
+ 		dev_err(pcie->dev, "hardware revision with unsupported PERST# setup\n");
++		ret = -ENODEV;
+ 		goto fail;
+ 	}
  
--		dmm@4e000000 {
--			compatible = "ti,omap5-dmm";
--			reg = <0x4e000000 0x800>;
--			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+		target-module@4e000000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
- 			ti,hwmods = "dmm";
-+			reg = <0x4e000000 0x4>,
-+			      <0x4e000010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ranges = <0x0 0x4e000000 0x2000000>;
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+
-+			dmm@0 {
-+				compatible = "ti,omap5-dmm";
-+				reg = <0 0x800>;
-+				interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			};
- 		};
- 
- 		ipu1: ipu@58820000 {
--- 
-2.30.1
+
