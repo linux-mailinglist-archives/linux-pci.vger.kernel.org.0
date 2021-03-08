@@ -2,122 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96CF8330C25
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 12:21:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D0E330CC8
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 12:54:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231631AbhCHLUq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 06:20:46 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37314 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231807AbhCHLUV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 06:20:21 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 128BKA6m034469;
-        Mon, 8 Mar 2021 05:20:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1615202410;
-        bh=X0skZyXiurW0+yZ7uQrkXMAbd3onpmzCMjNgAfTUnDo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GG8gDZrRlDziKcYILS44riX7TAOeb4oC8ruOrOXz5TMe6qw5IkjZQhDthtQLm5FZA
-         hlK+ExkKwBKm3hMBYSpl+yMgtcQErM0rxuMh2TvVQ49ltKlxIO2/eiFaQhcmv/4FMx
-         O1b5h4X1CUOeSRSFI3UK3wg+nYj+uN5hvJWacfnk=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 128BKAL6084081
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Mar 2021 05:20:10 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Mar
- 2021 05:20:09 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Mar 2021 05:20:09 -0600
-Received: from [10.250.234.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 128BK6UM050767;
-        Mon, 8 Mar 2021 05:20:07 -0600
-Subject: Re: [PATCHv2 00/15] Update dra7 devicetree files to probe with genpd
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        id S231506AbhCHLyC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 06:54:02 -0500
+Received: from muru.com ([72.249.23.125]:40734 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231579AbhCHLxa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Mar 2021 06:53:30 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C136980D4;
+        Mon,  8 Mar 2021 11:54:08 +0000 (UTC)
+Date:   Mon, 8 Mar 2021 13:53:23 +0200
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-pci@vger.kernel.org>
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 08/15] ARM: dts: Configure interconnect target module for
+ dra7 mpu
+Message-ID: <YEYQM9yiiMH4kc+w@atomide.com>
 References: <20210126124004.52550-1-tony@atomide.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <09bf6c8c-2a89-82ac-923b-6329759cfcdd@ti.com>
-Date:   Mon, 8 Mar 2021 16:50:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <20210126124004.52550-9-tony@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <20210126124004.52550-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210126124004.52550-9-tony@atomide.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+* Tony Lindgren <tony@atomide.com> [210126 12:43]:
+> We can now probe devices with device tree only configuration using
+> ti-sysc interconnect target module driver. Let's configure the
+> module, but keep the legacy "ti,hwmods" peroperty to avoid new boot
+> time warnings. The legacy property will be removed in later patches
+> together with the legacy platform data.
+...
 
+> +		target-module@48210000 {
+> +			compatible = "ti,sysc-omap4-simple", "ti,sysc";
+> +			ti,hwmods = "mpu";
+> +			power-domains = <&prm_mpu>;
+> +			clocks = <&mpu_clkctrl DRA7_MPU_CLKCTRL 0>;
+> +			clock-names = "fck";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0 0x1f0000>;
+> +
+> +			mpu {
+> +				compatible = "ti,omap5-mpu";
+> +			};
+> +		};
 
-On 26/01/21 6:09 pm, Tony Lindgren wrote:
-> Hi all,
-> 
-> Here's v2 series to update dra7 to probe with ti-sysc and genpd like we've
-> already done for am3 and 4.
-> 
-> These patches are against v5.11-rc1, and depend on the following commits
-> in my fixes branch:
-> 
-> 7078a5ba7a58 ("soc: ti: omap-prm: Fix boot time errors for rst_map_012 bits 0 and 1")
-> 2a39af3870e9 ("ARM: OMAP2+: Fix booting for am335x after moving to simple-pm-bus")
-> 
-> These patches also depend on the series:
-> 
-> [PATCH 0/3] Few ti-sysc changes for v5.12 merge window
-> 
-> Please review and test, I've also pushed out a temporary testing branch to
-> make testing easier to [0][1].
+I noticed the ranges property above is wrong, it should not be 0.
+That range is currently unused thoug. Updated patch below.
 
-Looks good to me and didn't observe any issues in my testing.
+Regards,
 
-Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Regards,
-> 
-> Tony
-> 
-> Changes since v1:
-> 
-> - Split the series into two parts, looks like most of the emails did not
->   make it to the lists
-> 
-> - Dropped Balaji from Cc as the email address bounces
-> 
-> [0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git tmp-testing-genpd-dra7
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v5.12/tmp-testing-genpd-dra7
-> 
-> Tony Lindgren (15):
->   PCI: pci-dra7xx: Prepare for deferred probe with
->     module_platform_driver
->   ARM: dts: Update pcie ranges for dra7
->   ARM: dts: Configure interconnect target module for dra7 pcie
->   ARM: dts: Properly configure dra7 edma sysconfig registers
->   ARM: dts: Move dra7 l3 noc to a separate node
->   ARM: dts: Configure interconnect target module for dra7 qspi
->   ARM: dts: Configure interconnect target module for dra7 sata
->   ARM: dts: Configure interconnect target module for dra7 mpu
->   ARM: dts: Configure interconnect target module for dra7 dmm
->   ARM: dts: Configure simple-pm-bus for dra7 l4_wkup
->   ARM: dts: Configure simple-pm-bus for dra7 l4_per1
->   ARM: dts: Configure simple-pm-bus for dra7 l4_per2
->   ARM: dts: Configure simple-pm-bus for dra7 l4_per3
->   ARM: dts: Configure simple-pm-bus for dra7 l4_cfg
->   ARM: dts: Configure simple-pm-bus for dra7 l3
-> 
->  arch/arm/boot/dts/dra7-l4.dtsi          |  76 ++++++---
->  arch/arm/boot/dts/dra7.dtsi             | 216 ++++++++++++++++--------
->  drivers/pci/controller/dwc/pci-dra7xx.c |  13 +-
->  3 files changed, 213 insertions(+), 92 deletions(-)
-> 
+Tony
+
+8< ----------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Mon, 8 Mar 2021 10:47:59 +0200
+Subject: [PATCH] ARM: dts: Configure interconnect target module for dra7
+ mpu
+
+We can now probe devices with device tree only configuration using
+ti-sysc interconnect target module driver.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/dra7.dtsi | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -124,18 +124,6 @@ opp_high@1500000000 {
+ 		};
+ 	};
+ 
+-	/*
+-	 * The soc node represents the soc top level view. It is used for IPs
+-	 * that are not memory mapped in the MPU view or for the MPU itself.
+-	 */
+-	soc {
+-		compatible = "ti,omap-infra";
+-		mpu {
+-			compatible = "ti,omap5-mpu";
+-			ti,hwmods = "mpu";
+-		};
+-	};
+-
+ 	/*
+ 	 * XXX: Use a flat representation of the SOC interconnect.
+ 	 * The real OMAP interconnect network is quite complex.
+@@ -165,6 +153,21 @@ l4_wkup: interconnect@4ae00000 {
+ 		};
+ 		l4_per1: interconnect@48000000 {
+ 		};
++
++		target-module@48210000 {
++			compatible = "ti,sysc-omap4-simple", "ti,sysc";
++			power-domains = <&prm_mpu>;
++			clocks = <&mpu_clkctrl DRA7_MPU_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x48210000 0x1f0000>;
++
++			mpu {
++				compatible = "ti,omap5-mpu";
++			};
++		};
++
+ 		l4_per2: interconnect@48400000 {
+ 		};
+ 		l4_per3: interconnect@48800000 {
+-- 
+2.30.1
