@@ -2,353 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1524F330AA8
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 10:55:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D45FF330B81
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 11:43:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231255AbhCHJzT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 04:55:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231335AbhCHJzA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Mar 2021 04:55:00 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F272864FB7;
-        Mon,  8 Mar 2021 09:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615197300;
-        bh=bpVCt7UJyIRSLdP7q3PIjz0gBSMbrCfhKQjYGoYMQpE=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=ObXK4a5BEkrInr4pjMLaSObQopmRXyZDIk+R+6fnCWFGkk1BfkvhyBs2A41j5Wb7p
-         UCOihxtSeZopDAwARQ1Yg6Vm6OgE4zrPjHjTQW4F5NnYjCBXJtlhCF0avpaBIrcDQh
-         oCKago99dsi77CYKMUV9LdznGk81qrmu8a+8SdHNQnD3C8eRi3vK1ID+4PDNaTKM/N
-         jmUvDnu/NpVcHlfzCbqYXNNoZ95VbCbWZHa/8Ot9oRrKsCLwNMrzQLmvbspC06MNjp
-         yma4OSGv3SG1F5AfhihUDBLeXB6qi0ljRzTqhFueXK2QHf7JX+ea1IyLTC9wyeMU0J
-         hOqKvYEM+IuwA==
-Received: by pali.im (Postfix)
-        id C2C2585B; Mon,  8 Mar 2021 10:54:57 +0100 (CET)
-Date:   Mon, 8 Mar 2021 10:54:57 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     linux-pci@vger.kernel.org, linux-ide@vger.kernel.org,
-        =?utf-8?B?UsO2dHRp?= 
-        <espressobinboardarmbiantempmailaddress@posteo.de>
-Subject: Re: Kernel panic caused by plugging in a sata cable on a a
- minipcie-sata board
-Message-ID: <20210308095457.4v7dsfjl54tva4sp@pali>
-References: <cbbb2496501fed013ccbeba524e8d573@posteo.de>
- <764d43dd2cce9159d6f8a920b0b32a97@posteo.de>
+        id S231286AbhCHKnY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 05:43:24 -0500
+Received: from mail-bn8nam11on2050.outbound.protection.outlook.com ([40.107.236.50]:36065
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230519AbhCHKnK (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Mar 2021 05:43:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=atASTpSUWf/WCNeTyOgUWuqz+MIV/RpDfmrVUf3WoAnzjnTlGFXo2kjkIYbCx8HEqSyL3e6dvHPB/q7SkF9HcA7dCocf/RdQvbhEqxyEZEiKcve4sRKW+S+4fGasVbO5l0DdKSx3Tj0lymgK3chvxWId8BKL0lcUnS6OwPKaxMUIKcaFLQ1sLqNkyJiaWxB4Yr2h5fhlzjFgjTX5hFWJaGbGKQZPgsnlnsiXFVsQVWfxRDkwfeF+Y8LATbXxGIZUkUf5wjwhZ21SI9KU/RjKcpzcn85i7bj9F0XcQo6OqRtwBZynpg3bkTXtbKA2nnP2HPWvBln/TRnUu1tbJoNXAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HRrTQHfu0ZFRc/pYjqZvOmvTsKN1s6Lu9adk08Srijw=;
+ b=DQNZToqV6V9H9Etj/Tb/flgkufBg46FgEq8KE8JDtT32OWe4D9HXUXFbF58VsYEug9KfmvZCXv+IpCkd3AaCVqs6Az6j300kubcmmf2KfBEghiMO+ZzSWXLrJJedFUDPlxCKM7zsrFs6Yv34/RwicFsaKP1EAzua+FQF09FHWvGiwOWAKkaezQYJ8fBRuzgcfCH9dSf9FL3aEjH77kdNmHNZ6C2cCYcs6r1YH9XBGe0DKLFjVXQydkIfdlwJFQhjVXhKWtr99v7liDoSvkLYwB4C8KfIN5HagXLduhpJGj4mZfUaBvMAOl0Tk8rsJeF4/WRHWcOea6RLHUN1zruTPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HRrTQHfu0ZFRc/pYjqZvOmvTsKN1s6Lu9adk08Srijw=;
+ b=lYUC1QI3jtM+4i4AEMoy/wFzGxCS6LDXCofDbdiB7dDl1054ad5vbiFSP9JYh3MPv9aynk6aLlM6X/qr7rID66HbOvkKt8vAom4UhPIJFanPchvBX0j+0OJ30ce259XfbJKp48sEgvDvboDkJTK0Bfva1krOMXygut5NGyec4/8=
+Received: from MW4PR04CA0331.namprd04.prod.outlook.com (2603:10b6:303:8a::6)
+ by DM6PR12MB2716.namprd12.prod.outlook.com (2603:10b6:5:49::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.19; Mon, 8 Mar
+ 2021 10:43:05 +0000
+Received: from CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8a:cafe::65) by MW4PR04CA0331.outlook.office365.com
+ (2603:10b6:303:8a::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend
+ Transport; Mon, 8 Mar 2021 10:43:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ CO1NAM11FT060.mail.protection.outlook.com (10.13.175.132) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3890.19 via Frontend Transport; Mon, 8 Mar 2021 10:43:04 +0000
+Received: from [10.25.79.200] (172.20.145.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 8 Mar
+ 2021 10:42:59 +0000
+Subject: Re: [PATCH] PCI: tegra: Disable PTM capabilities for EP mode
+To:     Vidya Sagar <vidyas@nvidia.com>, Bjorn Helgaas <helgaas@kernel.org>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <amurray@thegoodpenguin.co.uk>,
+        <bhelgaas@google.com>, <kishon@ti.com>, <thierry.reding@gmail.com>,
+        <Jisheng.Zhang@synaptics.com>, <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>,
+        <oop.singh@gmail.com>
+References: <20210305121934.GA1067436@bjorn-Precision-5520>
+ <81c84df2-e52b-7713-5026-c3e0a27376bd@nvidia.com>
+From:   Om Prakash Singh <omp@nvidia.com>
+Message-ID: <26834aba-4d45-6da4-0548-1fb61e684b59@nvidia.com>
+Date:   Mon, 8 Mar 2021 16:12:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <81c84df2-e52b-7713-5026-c3e0a27376bd@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <764d43dd2cce9159d6f8a920b0b32a97@posteo.de>
-User-Agent: NeoMutt/20180716
+X-Originating-IP: [172.20.145.6]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3d21c63a-3b01-46ad-a457-08d8e21ef466
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2716:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB2716DE2B0AD2A3FA8B82B8E2DA939@DM6PR12MB2716.namprd12.prod.outlook.com>
+X-MS-Exchange-Transport-Forked: True
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YB6v1jXGTgGiKe6LwXa5m1pJnmb4axyntCsLy/1+SO6aJWLyXXFl6bEqi/D1uqo34T8wkInM1tO+xZ+FoEl1RTc3BF5jMb9UHU7fN/37EmiFKCpPXTu6f1xaxYUaedavss4RsB+9Ri4TcljhjkOSZXsumZOyohov0AK7NylnEfcfqdgOEw3NK4bVNgSauvTZrSLqXPJ8ZZfC+87FffNHbZ09CmoMa8MiI45uCbfCbo2udAX9iVKhGhhEM04jE+fxUvzSDNE6bg8CkTEIwTK+qorLvF/tZTUHauHQEQOOljz/MgnnoZ42/v0cc+bfoygdUEc6GXODqXqSOOIzcm3SEbVRn844G/gsZ2RyPSWJAnz5Zz91rZJc4vPuDogXTW69jfJZh4fCUwFbSMgCdmrFv5rxtjI1swF6wBXH2/YMOZvZesPkE66mN1bbXsdLjKO+u/7AeL+OWCOBoxBDYrfINg9mC+OmBWErNVZ9SwhQO5TyZ0SPSDRpcLDi4cRD1KaSFoQExC8vmIHDsP0eweHTyHqJ6KM2Q0CVSLikuJG4eWV7npR+Tx3jU4/OavvpwGxzPJUzEzisCTzPwywSSDZfsR0faNV/uIf/VgJCerRubIiL0yKvq3BB1vAn4xDydAfibVllPEI5m59h+WknmEoFro7BrD0HtdnOPkgGi8cdA/dTkGmlrrpjgQ44FxcOXwHAIKLkOuXcIklV+U4Rl5CZ0g==
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(136003)(346002)(396003)(46966006)(36840700001)(2616005)(36756003)(2906002)(36860700001)(31686004)(5660300002)(426003)(8676002)(53546011)(356005)(16576012)(336012)(7416002)(47076005)(8936002)(31696002)(70586007)(54906003)(316002)(6666004)(86362001)(26005)(82310400003)(34020700004)(186003)(83380400001)(7636003)(4326008)(16526019)(70206006)(82740400003)(36906005)(478600001)(110136005)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2021 10:43:04.9149
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d21c63a-3b01-46ad-a457-08d8e21ef466
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT060.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Adding linux-pci ML to the loop.
+On 3/5/2021 11:43 PM, Vidya Sagar wrote:
+> 
+> 
+> On 3/5/2021 5:49 PM, Bjorn Helgaas wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On Fri, Mar 05, 2021 at 01:42:34PM +0530, Om Prakash Singh wrote:
+>>> PCIe EP compliance expect PTM capabilities (ROOT_CAPABLE, RES_CAPABLE,
+>>> CLK_GRAN) to be disabled.
+>>
+>> I guess this is just enforcing the PCIe spec requirements that only
+>> Root Ports, RCRBs, and Switches are allowed to set the PTM Responder
+>> Capable bit, and that the Local Clock Granularity is RsvdP if PTM Root
+>> Capable is zero?  (PCIe r5.0, sec 7.9.16.2)
+>>
+>> Should this be done more generally somewhere in the dwc code as
+>> opposed to in the tegra code?
+> Agree.
+>
+I'll take care of this in next patch version
+ 
+>>
+>>> Signed-off-by: Om Prakash Singh <omp@nvidia.com>
+>>> ---
+>>>   drivers/pci/controller/dwc/pcie-tegra194.c | 17 ++++++++++++++++-
+>>>   include/uapi/linux/pci_regs.h              |  1 +
+>>>   2 files changed, 17 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+>>> index 6fa216e..a588312 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+>>> @@ -1639,7 +1639,7 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>>>        struct dw_pcie *pci = &pcie->pci;
+>>>        struct dw_pcie_ep *ep = &pci->ep;
+>>>        struct device *dev = pcie->dev;
+>>> -     u32 val;
+>>> +     u32 val, ptm_cap_base = 0;
+>>
+>> Unnecessary init.
+>>
+>>>        int ret;
+>>>
+>>>        if (pcie->ep_state == EP_STATE_ENABLED)
+>>> @@ -1760,6 +1760,21 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>>>                                                      PCI_CAP_ID_EXP);
+>>>        clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
+>>>
+>>> +     /* Disable PTM root and responder capability */
+>>> +     ptm_cap_base = dw_pcie_find_ext_capability(&pcie->pci,
+>>> +                                                PCI_EXT_CAP_ID_PTM);
+>>> +     if (ptm_cap_base) {
+>>> +             dw_pcie_dbi_ro_wr_en(pci);
+>>> +             val = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
+>>> +             val &= ~PCI_PTM_CAP_ROOT;
+>>> +             dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, val);
+>>> +
+>>> +             val = dw_pcie_readl_dbi(pci, ptm_cap_base + PCI_PTM_CAP);
+>>> +             val &= ~(PCI_PTM_CAP_RES | PCI_PTM_GRANULARITY_MASK);
+> Why can't this be clubbed with "val &= ~PCI_PTM_CAP_ROOT;" ?
+>
+This cannot be clubbed as PTM root capability needs to disable first before disabling responded capability 
+ 
+>>> +             dw_pcie_writel_dbi(pci, ptm_cap_base + PCI_PTM_CAP, val);
+>>> +             dw_pcie_dbi_ro_wr_dis(pci);
+>>> +     }
+>>> +
+>>>        val = (ep->msi_mem_phys & MSIX_ADDR_MATCH_LOW_OFF_MASK);
+>>>        val |= MSIX_ADDR_MATCH_LOW_OFF_EN;
+>>>        dw_pcie_writel_dbi(pci, MSIX_ADDR_MATCH_LOW_OFF, val);
+>>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>>> index e709ae8..9dd6f8d 100644
+>>> --- a/include/uapi/linux/pci_regs.h
+>>> +++ b/include/uapi/linux/pci_regs.h
+>>> @@ -1050,6 +1050,7 @@
+>>>   /* Precision Time Measurement */
+>>>   #define PCI_PTM_CAP                  0x04        /* PTM Capability */
+>>>   #define  PCI_PTM_CAP_REQ             0x00000001  /* Requester capable */
+>>> +#define  PCI_PTM_CAP_RES             0x00000002  /* Responder capable */
+>>>   #define  PCI_PTM_CAP_ROOT            0x00000004  /* Root capable */
+>>>   #define  PCI_PTM_GRANULARITY_MASK    0x0000FF00  /* Clock granularity */
+>>>   #define PCI_PTM_CTRL                 0x08        /* PTM Control */
+>>> -- 
+>>> 2.7.4
+>>>
 
-Any idea where can be the issue? Problematic interrupt is triggered from
-the pci-aardvark.c driver. But I guess that issue can be in ahci code.
-
-On Sunday 07 March 2021 13:38:03 Rötti wrote:
-> Hello everyone,
-> 
-> I'm sorry, I've been missing some information:
-> 
-> Here is the output of lspci -nn -vv to correctly identify type of your PCIe
-> SATA controller:
-> 
-> 00:00.0 PCI bridge [0604]: Marvell Technology Group Ltd. Device [1b4b:0100]
-> (prog-if 00 [Normal decode])
->         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
-> Stepping- SERR- FastB2B- DisINTx-
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0, Cache Line Size: 64 bytes
->         Interrupt: pin A routed to IRQ 52
->         Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
->         I/O behind bridge: e9001000-e9001fff [size=4K]
->         Memory behind bridge: e8000000-e80fffff [size=1M]
->         Prefetchable memory behind bridge: [disabled]
->         Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> <TAbort- <MAbort- <SERR- <PERR-
->         Expansion ROM at e8100000 [virtual] [disabled] [size=2K]
->         BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
->                 PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
->         Capabilities: [40] Express (v1) Root Port (Slot-), MSI 00
->                 DevCap: MaxPayload 512 bytes, PhantFunc 0
->                         ExtTag- RBE+
->                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
->                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
->                         MaxPayload 512 bytes, MaxReadReq 512 bytes
->                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr-
-> TransPend-
->                 LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit
-> Latency L0s <128ns, L1 <2us
->                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
->                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->                 LnkSta: Speed 2.5GT/s (ok), Width x1 (ok)
->                         TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
->                 RootCap: CRSVisible-
->                 RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+
-> CRSVisible-
->                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
->         Kernel driver in use: pcieport
-> 
-> 01:00.0 SATA controller [0106]: ASMedia Technology Inc. ASM1062 Serial ATA
-> Controller [1b21:0612] (rev 02) (prog-if 01 [AHCI 1.0])
->         Subsystem: ASMedia Technology Inc. ASM1062 Serial ATA Controller
-> [1b21:1060]
->         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
-> Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort-
-> <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0
->         Interrupt: pin A routed to IRQ 53
->         Region 0: I/O ports at 1020 [size=8]
->         Region 1: I/O ports at 1030 [size=4]
->         Region 2: I/O ports at 1028 [size=8]
->         Region 3: I/O ports at 1034 [size=4]
->         Region 4: I/O ports at 1000 [size=32]
->         Region 5: Memory at e8010000 (32-bit, non-prefetchable) [size=512]
->         Expansion ROM at e8000000 [virtual] [disabled] [size=64K]
->         Capabilities: [50] MSI: Enable+ Count=1/1 Maskable- 64bit-
->                 Address: 7f044770  Data: 0035
->         Capabilities: [78] Power Management version 3
->                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA
-> PME(D0-,D1-,D2-,D3hot-,D3cold-)
->                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
->         Capabilities: [80] Express (v2) Legacy Endpoint, MSI 00
->                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s <1us,
-> L1 <8us
->                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset-
->                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
->                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
->                         MaxPayload 512 bytes, MaxReadReq 512 bytes
->                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr-
-> TransPend-
->                 LnkCap: Port #1, Speed 5GT/s, Width x1, ASPM not supported
->                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
->                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->                 LnkSta: Speed 2.5GT/s (downgraded), Width x1 (ok)
->                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
->                 DevCap2: Completion Timeout: Range ABC, TimeoutDis+,
-> NROPrPrP-, LTR-
->                          10BitTagComp-, 10BitTagReq-, OBFF Not Supported,
-> ExtFmt-, EETLPPrefix-
->                          EmergencyPowerReduction Not Supported,
-> EmergencyPowerReductionInit-
->                          FRS-
->                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
->                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-,
-> LTR-, OBFF Disabled
->                          AtomicOpsCtl: ReqEn-
->                 LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance-
-> SpeedDis-
->                          Transmit Margin: Normal Operating Range,
-> EnterModifiedCompliance- ComplianceSOS-
->                          Compliance De-emphasis: -6dB
->                 LnkSta2: Current De-emphasis Level: -3.5dB,
-> EqualizationComplete-, EqualizationPhase1-
->                          EqualizationPhase2-, EqualizationPhase3-,
-> LinkEqualizationRequest-
->         Capabilities: [100 v1] Virtual Channel
->                 Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
->                 Arb:    Fixed- WRR32- WRR64- WRR128-
->                 Ctrl:   ArbSelect=Fixed
->                 Status: InProgress-
->                 VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
->                         Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128-
-> WRR256-
->                         Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
->                         Status: NegoPending- InProgress-
->         Kernel driver in use: ahci
-> 
-> 
-> Kind regards, Rötti!
-> 
-> Am 27.01.2021 22:27 schrieb Rötti:
-> > Hello everyone,
-> > 
-> > I own two ESPRESSOBin boards V5.
-> > 
-> > And to both I attached an XCSOURCE® MiniPCIe Sata3.0 AC696 extension
-> > card via MiniPCIe.
-> > 
-> > This is the link to amazon: https://www.amazon.de/dp/B06XRG2TGV
-> > 
-> > I tested several images from
-> > https://www.armbian.com/espressobin/#kernels-archive-all
-> > 
-> > Tested Kernels 8 weeks ago + the latest two this week:
-> > - 5.10.09-mvebu64  #21.02.0-hirsute (trunk) <-- works not
-> > - 5.08.18-mvebu64  #20.11.6-bionic <-- works not
-> > - 5.08.18-mvebu64  #20.11.3-focal <-- works not
-> > - 5.08.18-mvebu64  #20.11.3-bionic <-- works not
-> > - 5.08.06-mvebu64  #20.08.2-focal <-- works not
-> > - 4.14.135-mvebu64 #19.11.3-bionic <-- works
-> > 
-> > 
-> > Here is the whole UART-dump:
-> > 
-> > TIM-1.0
-> > WTMI-devel-18.12.0-a0a1cb8
-> > WTMI: system early-init
-> > SVC REV: 3, CPU VDD voltage: 1.155V
-> > NOTICE:  Booting Trusted Firmware
-> > NOTICE:  BL1: v1.5(release):1f8ca7e (Marvell-devel-18.12.2)
-> > NOTICE:  BL1: Built : 09:48:09, Feb 20 2019
-> > NOTICE:  BL1: Booting BL2
-> > NOTICE:  BL2: v1.5(release):1f8ca7e (Marvell-devel-18.12.2)
-> > NOTICE:  BL2: Built : 09:48:10, Feb 20 2019
-> > NOTICE:  BL1: Booting BL31
-> > NOTICE:  BL31: v1.5(release):1f8ca7e (Marvell-devel-18.12.2)
-> > NOTICE:  BL31: Built : 09:4
-> > 
-> > U-Boot 2018.03-devel-18.12.3-gc9aa92c-armbian (Feb 20 2019 - 09:45:04
-> > +0100)
-> > 
-> > Model: Marvell Armada 3720 Community Board ESPRESSOBin
-> >        CPU     1000 [MHz]
-> >        L2      800 [MHz]
-> >        TClock  200 [MHz]
-> >        DDR     800 [MHz]
-> > DRAM:  2 GiB
-> > Comphy chip #0:
-> > Comphy-0: USB3          5 Gbps
-> > Comphy-1: PEX0          2.5 Gbps
-> > Comphy-2: SATA0         6 Gbps
-> > Target spinup took 0 ms.
-> > AHCI 0001.0300 32 slots 1 ports 6 Gbps 0x1 impl SATA mode
-> > flags: ncq led only pmp fbss pio slum part sxs
-> > PCIE-0: Link up
-> > MMC:   sdhci@d0000: 0, sdhci@d8000: 1
-> > Loading Environment from SPI Flash... SF: Detected w25q32dw with page
-> > size 256 Bytes, erase size 4 KiB, total 4 MiB
-> > OK
-> > Model: Marvell Armada 3720 Community Board ESPRESSOBin
-> > Net:   eth0: neta@30000 [PRIME]
-> > Hit any key to stop autoboot:  0
-> > starting USB...
-> > USB0:   Register 2000104 NbrPorts 2
-> > Starting the controller
-> > USB XHCI 1.00
-> > USB1:   USB EHCI 1.00
-> > scanning bus 0 for devices... 1 USB Device(s) found
-> > scanning bus 1 for devices... 1 USB Device(s) found
-> >        scanning usb for storage devices... 0 Storage Device(s) found
-> > 
-> > ## Loading init Ramdisk from Legacy Image at 01100000 ...
-> >    Image Name:   uInitrd
-> >    Image Type:   AArch64 Linux RAMDisk Image (gzip compressed)
-> >    Data Size:    10750023 Bytes = 10.3 MiB
-> >    Load Address: 00000000
-> >    Entry Point:  00000000
-> >    Verifying Checksum ... OK
-> > ## Flattened Device Tree blob at 06000000
-> >    Booting using the fdt blob at 0x6000000
-> >    Loading Ramdisk to 7ebea000, end 7f62a847 ... OK
-> >    Using Device Tree in place at 0000000006000000, end 00000000060059cd
-> > 
-> > Starting kernel ...
-> > 
-> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
-> > [    0.000000] Linux version 5.8.18-mvebu64 (root@beast)
-> > (aarch64-linux-gnu-gcc (GNU Toolchain for the A-profile Architecture
-> > 8.3-2019.03 (arm-rel-8.36)) 8.3.0, GNU ld (GNU Toolchain for the
-> > A-profile Architecture 8.3-2019.03 (arm-rel-8.36)) 2.32.0.20190321)
-> > #20.11.3 SMP PREEMPT Fri Dec 11 21:10:52 CET 2020
-> > [    0.000000] Machine model: Globalscale Marvell ESPRESSOBin Board
-> > [    0.000000] earlycon: ar3700_uart0 at MMIO 0x00000000d0012000
-> > (options '')
-> > [    0.000000] printk: bootconsole [ar3700_uart0] enabled
-> > Loading, please wait...
-> > Starting version 245.4-4ubuntu3.3
-> > Begin: Loading essential drivers ... done.
-> > Begin: Running /scripts/init-premount ... done.
-> > Begin: Mounting root file system ... Begin: Running /scripts/local-top
-> > ... done.
-> > Begin: Running /scripts/local-premount ... Scanning for Btrfs
-> > filesystems
-> > done.
-> > Begin: Will now check root file system ... fsck from util-linux 2.34
-> > [/usr/sbin/fsck.ext4 (1) -- /dev/mmcblk0p1] fsck.ext4 -a -C0
-> > /dev/mmcblk0p1
-> > /dev/mmcblk0p1: clean, 41739/1828336 files, 439779/7502824 blocks
-> > done.
-> > done.
-> > Begin: Running /scripts/local-bottom ... done.
-> > Begin: Running /scripts/init-bottom ... done.
-> > [    3.694604] Internal error: synchronous external abort: 96000210
-> > [#1] PREEMPT SMP
-> > [    3.699465] Modules linked in: tag_edsa mv88e6xxx dsa_core bridge
-> > stp llc phy_mvebu_a3700_comphy
-> > [    3.708518] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted
-> > 5.8.18-mvebu64 #20.11.3
-> > [    3.716037] Hardware name: Globalscale Marvell ESPRESSOBin Board (DT)
-> > [    3.722685] Workqueue: events free_work
-> > [    3.726614] pstate: 00000085 (nzcv daIf -PAN -UAO BTYPE=--)
-> > [    3.732352] pc : ahci_single_level_irq_intr+0x1c/0x90
-> > [    3.737549] lr : __handle_irq_event_percpu+0x5c/0x168
-> > [    3.742737] sp : ffffffc0113bbd10
-> > [    3.746142] x29: ffffffc0113bbd10 x28: ffffff807d48b700
-> > [    3.751608] x27: 0000000000000060 x26: ffffffc010f085e8
-> > [    3.757073] x25: ffffffc0113075a5 x24: ffffff8079101800
-> > [    3.762539] x23: 000000000000002d x22: ffffffc0113bbdd4
-> > [    3.768004] x21: 0000000000000000 x20: ffffffc011465008
-> > [    3.773470] x19: ffffff8079381600 x18: 0000000000000000
-> > [    3.778936] x17: 0000000000000000 x16: 0000000000000000
-> > [    3.784401] x15: 000000d2c010fc50 x14: 0000000000000323
-> > [    3.789867] x13: 00000000000002d4 x12: 0000000000000000
-> > [    3.795332] x11: 0000000000000040 x10: ffffffc011282dd8
-> > [    3.800798] x9 : ffffffc011282dd0 x8 : ffffff807d000270
-> > [    3.806263] x7 : 0000000000000000 x6 : 0000000000000000
-> > [    3.811729] x5 : ffffffc06ea93000 x4 : ffffffc0113bbe10
-> > [    3.817196] x3 : ffffffc06ea93000 x2 : ffffff8079101a80
-> > [    3.822661] x1 : ffffff8078803e00 x0 : 000000000000002d
-> > [    3.828126] Call trace:
-> > [    3.830642]  ahci_single_level_irq_intr+0x1c/0x90
-> > [    3.835478]  __handle_irq_event_percpu+0x5c/0x168
-> > [    3.840315]  handle_irq_event_percpu+0x38/0x90
-> > [    3.844885]  handle_irq_event+0x48/0xe0
-> > [    3.848828]  handle_simple_irq+0x94/0xd0
-> > [    3.852860]  generic_handle_irq+0x30/0x48
-> > [    3.856985]  advk_pcie_irq_handler+0x214/0x240
-> > [    3.861552]  __handle_irq_event_percpu+0x5c/0x168
-> > [    3.866389]  handle_irq_event_percpu+0x38/0x90
-> > [    3.870959]  handle_irq_event+0x48/0xe0
-> > [    3.874900]  handle_fasteoi_irq+0xb8/0x170
-> > [    3.879112]  generic_handle_irq+0x30/0x48
-> > [    3.883234]  __handle_domain_irq+0x64/0xc0
-> > [    3.887447]  gic_handle_irq+0xc8/0x168
-> > [    3.891298]  el1_irq+0xb8/0x180
-> > [    3.894524]  unmap_kernel_range_noflush+0x128/0x188
-> > [    3.899540]  remove_vm_area+0xac/0xd0
-> > [    3.903303]  __vunmap+0x48/0x298
-> > [    3.906618]  free_work+0x44/0x60
-> > [    3.909937]  process_one_work+0x1e8/0x360
-> > [    3.914057]  worker_thread+0x44/0x480
-> > [    3.917820]  kthread+0x154/0x158
-> > [    3.921135]  ret_from_fork+0x10/0x34
-> > [    3.924812] Code: a90153f3 f9401022 f9400854 91002294 (b9400293)
-> > [    3.931087] ---[ end trace 98b323414bb99c99 ]---
-> > [    3.935829] Kernel panic - not syncing: Fatal exception in interrupt
-> > [    3.942368] SMP: stopping secondary CPUs
-> > [    3.946403] Kernel Offset: disabled
-> > [    3.949985] CPU features: 0x240002,2000200c
-> > [    3.954283] Memory Limit: none
-> > [    3.957424] ---[ end Kernel panic - not syncing: Fatal exception in
-> > interrupt ]---
-> > 
-> > The boards boots up if I don't plug in any SATA HDDs into the extension
-> > card.
-> > 
-> > I hope this helps. If you need any other information just let me know,
-> > I'm absolutely willing to help. But I have no clue of kernel
-> > patching/compiling etc. Sorry!
-> > 
-> > Thank you very, very much in advance! You're doing an awesome job.
-> > 
-> > Sincerely Rötti
