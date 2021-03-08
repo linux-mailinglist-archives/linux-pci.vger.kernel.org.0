@@ -2,122 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B68C3331221
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 16:27:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 051D0331376
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 17:33:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231410AbhCHP1H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 10:27:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231571AbhCHP0j (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Mar 2021 10:26:39 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D05436526A;
-        Mon,  8 Mar 2021 15:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615217199;
-        bh=Y5COv6YVXEpvFCb0uNokbziozo2rYLvioVJb3NmKXXU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kvRK8TaMzxNKHhx2tYdLswzAW9t6Aw6EWI+MwceDnbx+tk1V24s2ZWoZmpsz1Kmdt
-         fG10PDrY20DVa0a4DDlAoqHFjAfCcLoRxPvax4718zaKeAIO1DtFtT+T9reMeogaUY
-         Azm/AZUkfgVQLex7QEvlfdV6iRQaRKvdJj1tJkSyxxYQA+FAvWetDAPkHFV4hxpeo9
-         nBZevnZ+ihSBBQQO4dLPTAHquxXkGqsuYELU6sH6rWEfYNcVAneBy2S2HV0BauT1t8
-         2KHTKpHRuZddebYo+n66bzc/EKYdESby1mKbBZfMWHe2UrftJ4rC0ITR2YNbTfoG+2
-         JWa3eH3Bvj/Xg==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Robert Richter <rric@kernel.org>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] [RESEND] PCI: controller: avoid building empty drivers
-Date:   Mon,  8 Mar 2021 16:24:48 +0100
-Message-Id: <20210308152501.2135937-3-arnd@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210308152501.2135937-1-arnd@kernel.org>
-References: <20210308152501.2135937-1-arnd@kernel.org>
+        id S230126AbhCHQdT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 11:33:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230046AbhCHQdQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 11:33:16 -0500
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17E3C06174A;
+        Mon,  8 Mar 2021 08:33:15 -0800 (PST)
+Received: by mail-io1-xd2c.google.com with SMTP id 81so10545434iou.11;
+        Mon, 08 Mar 2021 08:33:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dpxk6smN5s9jqDRr6gszhbtGPRhqSGCZqwN880eOGkY=;
+        b=kyZMgMDY02446TqbVqNFcOxrq8jy3Mw89TwDgucEfhuSVHic1kyFNXyfmMo7N2qHjT
+         XRHfwhgGNNMFqGr5uYM31DcqYH5wv5IoIWKbnxQJKZcrTekqb7ddKsB24i8iVgNdMyox
+         AiJBlEgJLhosdb8M5HtwlNLjAB0lFQQJ2vlPk37qY48hHyl1KKc5TtaYx+4KfZq8hFlj
+         K3xDLqYSzEN0/f7/ITfMZSil3ZIpZ6XXfOWPLEHs1gIb2Omg/UpEeJajhgU+UYrW/SE9
+         oPpZwGnkTv3bN/cJ56iCLdWLGBNUhIeOxR32LyVf7u+4PH6nMp2al835aqY4wAmV0dkW
+         Y8xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dpxk6smN5s9jqDRr6gszhbtGPRhqSGCZqwN880eOGkY=;
+        b=Zit/N4qs/QgTWfo34kbWiF+ou9vO4awqkLpgN8KKREpgP1vDSyO1zA2BqrrE2/acyj
+         k7V3zHOcV6uxLvjUWSMb/qKuAstwLK1mIqE7nUfSTboKRacoJZ2jUPegJxpWuFIFpALJ
+         kTP02bpDS3O3qTTwY96hST2kI6zARWBdFUZCvaW5djPp+aOFB2lTAC7jk3IhbLjevYRf
+         FL1uJwMNsvOjzfI7+A5VrN1mGZgVCLvXWKP/jJa+94avtvZpgYp8Ua/FxnXcLobH8cxS
+         BUBgZAYw9G6CF0ccQxOFyXWsD10YBIHcIH/c8zrKbW90IYbPaxv7vPM0e0nuNh1fsTiK
+         +dnw==
+X-Gm-Message-State: AOAM532wRaFca/hLxEyymn29VwEcVOpEuEqvI5P+i0ZPum+4L5Qi+UAu
+        LTTqhTDaNrnKze9w03mmAIJfTt0RRYrMryqy66sG5E7i4KM=
+X-Google-Smtp-Source: ABdhPJxQp9puHVHLX0mh0tI6TqzlVw+DA4E692ROnUueWsgY9ZUU8Sr9mYDd5sMcMrGom9e5vJDo/B0xt/u1SlxbyUM=
+X-Received: by 2002:a05:6638:329e:: with SMTP id f30mr7221139jav.121.1615221195168;
+ Mon, 08 Mar 2021 08:33:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210301075524.441609-1-leon@kernel.org> <CAKgT0Ue=g+1pZCct8Kd0OnkPEP0qhggBF96s=noDoWHMJTL6FA@mail.gmail.com>
+ <YEUnVcW+lIXBlqT1@unreal>
+In-Reply-To: <YEUnVcW+lIXBlqT1@unreal>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 8 Mar 2021 08:33:03 -0800
+Message-ID: <CAKgT0UdzjeD7fnE6kX2qN6V4ZddSV2ZMnONEwGXhwkSwoUXUug@mail.gmail.com>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Sun, Mar 7, 2021 at 11:19 AM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Sun, Mar 07, 2021 at 10:55:24AM -0800, Alexander Duyck wrote:
+> > On Sun, Feb 28, 2021 at 11:55 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > >
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+> > >
+> > > @Alexander Duyck, please update me if I can add your ROB tag again
+> > > to the series, because you liked v6 more.
+> > >
+> > > Thanks
+> > >
+> > > ---------------------------------------------------------------------------------
+> > > Changelog
+> > > v7:
+> > >  * Rebase on top v5.12-rc1
+> > >  * More english fixes
+> > >  * Returned to static sysfs creation model as was implemented in v0/v1.
+> >
+> > Yeah, so I am not a fan of the series. The problem is there is only
+> > one driver that supports this, all VFs are going to expose this sysfs,
+> > and I don't know how likely it is that any others are going to
+> > implement this functionality. I feel like you threw out all the
+> > progress from v2-v6.
+>
+> I'm with you here and tried to present the rationale in v6 when had
+> a discussion with Bjorn, so it is unfair to say "you threw out".
+>
+> Bjorn expressed his preference, and no one came forward to support v6.
 
-There are harmless warnings when compile testing the kernel with
-CONFIG_TRIM_UNUSED_KSYMS:
+Sorry, it wasn't my intention to be accusatory. I'm just not a fan of
+going back to where we were with v1.
 
-drivers/pci/controller/dwc/pcie-al.o: no symbols
-drivers/pci/controller/pci-thunder-ecam.o: no symbols
-drivers/pci/controller/pci-thunder-pem.o: no symbols
+With that said, if it is what Bjorn wants then you are probably better
+off going with that. However if that is the direction we are going in
+then you should probably focus on getting his Reviewed-by or Ack since
+he will ultimately be the maintainer for the code.
 
-The problem here is that the host drivers get built even when the
-configuration symbols are all disabled, as they pretend to not be drivers
-but are silently enabled because of the promise that ACPI based systems
-need no drivers.
+> >
+> > I really feel like the big issue is that this model is broken as you
+> > have the VFs exposing sysfs interfaces that make use of the PFs to
+> > actually implement. Greg's complaint was the PF pushing sysfs onto the
+> > VFs. My complaint is VFs sysfs files operating on the PF. The trick is
+> > to find a way to address both issues.
+>
+> It is hard to say something meaningful about Greg's complain, he was
+> added in the middle of the discussion without much chances to get full
+> picture.
 
-Add back the normal symbols to have these drivers built, and change the
-logic to otherwise only build them when both CONFIG_PCI_QUIRKS and
-CONFIG_ACPI are enabled.
+Right, but what I am getting at is that the underlying problem is that
+you either have sysfs being pushed onto a remote device, or sysfs that
+is having to call into another device. It's not exactly something we
+have had precedent for enabling before, and either perspective seems a
+bit ugly.
 
-As a side-effect, this enables compile-testing the drivers on other
-architectures, which in turn needs the acpi_get_rc_resources()
-function to be defined.
+> >
+> > Maybe the compromise is to reach down into the IOV code and have it
+> > register the sysfs interface at device creation time in something like
+> > pci_iov_sysfs_link if the PF has the functionality present to support
+> > it.
+>
+> IMHO, it adds nothing.
 
-Reviewed-by: Robert Richter <rric@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pci/controller/Makefile     | 7 ++++++-
- drivers/pci/controller/dwc/Makefile | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+My thought was to reduce clutter. As I mentioned before with this
+patch set we are enabling sysfs for functionality that is currently
+only exposed by one device. I'm not sure it will be used by many
+others or not. Having these sysfs interfaces instantiated at probe
+time or at creation time in the case of VFs was preferable to me.
 
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index e4559f2182f2..6d24a163033f 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -11,10 +11,13 @@ obj-$(CONFIG_PCIE_RCAR_HOST) += pcie-rcar.o pcie-rcar-host.o
- obj-$(CONFIG_PCIE_RCAR_EP) += pcie-rcar.o pcie-rcar-ep.o
- obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
- obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
-+obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
-+obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
- obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
- obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
- obj-$(CONFIG_PCIE_XILINX_CPM) += pcie-xilinx-cpm.o
- obj-$(CONFIG_PCI_V3_SEMI) += pci-v3-semi.o
-+obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
- obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
- obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
- obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
-@@ -47,8 +50,10 @@ obj-y				+= mobiveil/
- # ARM64 and use internal ifdefs to only build the pieces we need
- # depending on whether ACPI, the DT driver, or both are enabled.
- 
--ifdef CONFIG_PCI
-+ifdef CONFIG_ACPI
-+ifdef CONFIG_PCI_QUIRKS
- obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
- obj-$(CONFIG_ARM64) += pci-thunder-pem.o
- obj-$(CONFIG_ARM64) += pci-xgene.o
- endif
-+endif
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a751553fa0db..ba7c42f6df6f 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -31,7 +31,12 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
- # ARM64 and use internal ifdefs to only build the pieces we need
- # depending on whether ACPI, the DT driver, or both are enabled.
- 
--ifdef CONFIG_PCI
-+obj-$(CONFIG_PCIE_AL) += pcie-al.o
-+obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
-+
-+ifdef CONFIG_ACPI
-+ifdef CONFIG_PCI_QUIRKS
- obj-$(CONFIG_ARM64) += pcie-al.o
- obj-$(CONFIG_ARM64) += pcie-hisi.o
- endif
-+endif
--- 
-2.29.2
+> >
+> > Also we might want to double check that the PF cannot be unbound while
+> > the VF is present. I know for a while there it was possible to remove
+> > the PF driver while the VF was present. The Mellanox drivers may not
+> > allow it but it might not hurt to look at taking a reference against
+> > the PF driver if you are allocating the VF MSI-X configuration sysfs
+> > file.
+>
+> Right now, we always allocate these sysfs without relation if PF
+> supports or not. The check is done during write() call to such sysfs
+> and at that phase we check the existence of the drivers. It greatly
+> simplifies creation phase.
 
+Yeah, I see that. From what I can tell the locking looks correct to
+keep things from breaking. For what we have it is probably good enough
+to keep things from causing any issues. My concern was more about
+preventing the driver from reloading if we only exposed these
+interfaces if the PF driver supported them.
