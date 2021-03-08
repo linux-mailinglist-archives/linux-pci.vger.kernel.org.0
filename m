@@ -2,39 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D30BB331219
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 16:26:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B68C3331221
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 16:27:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230521AbhCHP0E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 10:26:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58492 "EHLO mail.kernel.org"
+        id S231410AbhCHP1H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 10:27:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229904AbhCHPZl (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Mar 2021 10:25:41 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BC66065268;
-        Mon,  8 Mar 2021 15:25:39 +0000 (UTC)
+        id S231571AbhCHP0j (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Mar 2021 10:26:39 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D05436526A;
+        Mon,  8 Mar 2021 15:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615217141;
-        bh=AGsnXWHX85DTfQsYisHvCvkWl4DJh4fmr4q2y3oyk58=;
+        s=k20201202; t=1615217199;
+        bh=Y5COv6YVXEpvFCb0uNokbziozo2rYLvioVJb3NmKXXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WpF2t2dF1t9cFBIOvZZfSlEefJnRqj5Wloe4ldupVkXWyZ09jx/fHoD0bpW0bULda
-         gw9emXutB2/LugqqvZhgLeJtDiAk4OEaeHdwzLt2B/k160v/GvkZJiQRaZhiyO87j4
-         JSKkd2sA2bWxdLBmiBLddyVEAviNJYvgHiicNTmmbVdKJD8/8O/efY+ePXoErOXvTr
-         zX0W4HWsjJlBwNfooaZDVbCEqlIX1gr+YLM6sKHa1Kie9D+VMy+4HDK0UA196JNr9Y
-         uCB6vS8Q5r2bm8aWJVlmUOW2SNv56/7KFBgfpHz0GKVKVcNG7W+EMCn4yNZrpjQ4jg
-         +7+lrLC/17vbQ==
+        b=kvRK8TaMzxNKHhx2tYdLswzAW9t6Aw6EWI+MwceDnbx+tk1V24s2ZWoZmpsz1Kmdt
+         fG10PDrY20DVa0a4DDlAoqHFjAfCcLoRxPvax4718zaKeAIO1DtFtT+T9reMeogaUY
+         Azm/AZUkfgVQLex7QEvlfdV6iRQaRKvdJj1tJkSyxxYQA+FAvWetDAPkHFV4hxpeo9
+         nBZevnZ+ihSBBQQO4dLPTAHquxXkGqsuYELU6sH6rWEfYNcVAneBy2S2HV0BauT1t8
+         2KHTKpHRuZddebYo+n66bzc/EKYdESby1mKbBZfMWHe2UrftJ4rC0ITR2YNbTfoG+2
+         JWa3eH3Bvj/Xg==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Robert Richter <rric@kernel.org>,
+Cc:     Arnd Bergmann <arnd@arndb.de>, Robert Richter <rric@kernel.org>,
         Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] [RESEND] PCI: controller: thunder: fix compile testing
-Date:   Mon,  8 Mar 2021 16:24:47 +0100
-Message-Id: <20210308152501.2135937-2-arnd@kernel.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] [RESEND] PCI: controller: avoid building empty drivers
+Date:   Mon,  8 Mar 2021 16:24:48 +0100
+Message-Id: <20210308152501.2135937-3-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210308152501.2135937-1-arnd@kernel.org>
 References: <20210308152501.2135937-1-arnd@kernel.org>
@@ -46,92 +43,81 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Compile-testing these drivers is currently broken. Enabling
-it causes a couple of build failures though:
+There are harmless warnings when compile testing the kernel with
+CONFIG_TRIM_UNUSED_KSYMS:
 
-drivers/pci/controller/pci-thunder-ecam.c:119:30: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-drivers/pci/controller/pci-thunder-pem.c:54:2: error: implicit declaration of function 'writeq' [-Werror,-Wimplicit-function-declaration]
-drivers/pci/controller/pci-thunder-pem.c:392:8: error: implicit declaration of function 'acpi_get_rc_resources' [-Werror,-Wimplicit-function-declaration]
+drivers/pci/controller/dwc/pcie-al.o: no symbols
+drivers/pci/controller/pci-thunder-ecam.o: no symbols
+drivers/pci/controller/pci-thunder-pem.o: no symbols
 
-Fix them with the obvious one-line changes.
+The problem here is that the host drivers get built even when the
+configuration symbols are all disabled, as they pretend to not be drivers
+but are silently enabled because of the promise that ACPI based systems
+need no drivers.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Add back the normal symbols to have these drivers built, and change the
+logic to otherwise only build them when both CONFIG_PCI_QUIRKS and
+CONFIG_ACPI are enabled.
+
+As a side-effect, this enables compile-testing the drivers on other
+architectures, which in turn needs the acpi_get_rc_resources()
+function to be defined.
+
 Reviewed-by: Robert Richter <rric@kernel.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/pci/controller/pci-thunder-ecam.c |  2 +-
- drivers/pci/controller/pci-thunder-pem.c  | 13 +++++++------
- drivers/pci/pci.h                         |  6 ++++++
- 3 files changed, 14 insertions(+), 7 deletions(-)
+ drivers/pci/controller/Makefile     | 7 ++++++-
+ drivers/pci/controller/dwc/Makefile | 7 ++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-thunder-ecam.c b/drivers/pci/controller/pci-thunder-ecam.c
-index f964fd26f7e0..ffd84656544f 100644
---- a/drivers/pci/controller/pci-thunder-ecam.c
-+++ b/drivers/pci/controller/pci-thunder-ecam.c
-@@ -116,7 +116,7 @@ static int thunder_ecam_p2_config_read(struct pci_bus *bus, unsigned int devfn,
- 	 * the config space access window.  Since we are working with
- 	 * the high-order 32 bits, shift everything down by 32 bits.
- 	 */
--	node_bits = (cfg->res.start >> 32) & (1 << 12);
-+	node_bits = upper_32_bits(cfg->res.start) & (1 << 12);
+diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+index e4559f2182f2..6d24a163033f 100644
+--- a/drivers/pci/controller/Makefile
++++ b/drivers/pci/controller/Makefile
+@@ -11,10 +11,13 @@ obj-$(CONFIG_PCIE_RCAR_HOST) += pcie-rcar.o pcie-rcar-host.o
+ obj-$(CONFIG_PCIE_RCAR_EP) += pcie-rcar.o pcie-rcar-ep.o
+ obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
+ obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
++obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
++obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
+ obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
+ obj-$(CONFIG_PCIE_XILINX_NWL) += pcie-xilinx-nwl.o
+ obj-$(CONFIG_PCIE_XILINX_CPM) += pcie-xilinx-cpm.o
+ obj-$(CONFIG_PCI_V3_SEMI) += pci-v3-semi.o
++obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
+ obj-$(CONFIG_PCI_XGENE_MSI) += pci-xgene-msi.o
+ obj-$(CONFIG_PCI_VERSATILE) += pci-versatile.o
+ obj-$(CONFIG_PCIE_IPROC) += pcie-iproc.o
+@@ -47,8 +50,10 @@ obj-y				+= mobiveil/
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
  
- 	v |= node_bits;
- 	set_val(v, where, size, val);
-diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
-index 1a3f70ac61fc..0660b9da204f 100644
---- a/drivers/pci/controller/pci-thunder-pem.c
-+++ b/drivers/pci/controller/pci-thunder-pem.c
-@@ -12,6 +12,7 @@
- #include <linux/pci-acpi.h>
- #include <linux/pci-ecam.h>
- #include <linux/platform_device.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
- #include "../pci.h"
+-ifdef CONFIG_PCI
++ifdef CONFIG_ACPI
++ifdef CONFIG_PCI_QUIRKS
+ obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+ obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+ obj-$(CONFIG_ARM64) += pci-xgene.o
+ endif
++endif
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index a751553fa0db..ba7c42f6df6f 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -31,7 +31,12 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
  
- #if defined(CONFIG_PCI_HOST_THUNDER_PEM) || (defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS))
-@@ -324,9 +325,9 @@ static int thunder_pem_init(struct device *dev, struct pci_config_window *cfg,
- 	 * structure here for the BAR.
- 	 */
- 	bar4_start = res_pem->start + 0xf00000;
--	pem_pci->ea_entry[0] = (u32)bar4_start | 2;
--	pem_pci->ea_entry[1] = (u32)(res_pem->end - bar4_start) & ~3u;
--	pem_pci->ea_entry[2] = (u32)(bar4_start >> 32);
-+	pem_pci->ea_entry[0] = lower_32_bits(bar4_start) | 2;
-+	pem_pci->ea_entry[1] = lower_32_bits(res_pem->end - bar4_start) & ~3u;
-+	pem_pci->ea_entry[2] = upper_32_bits(bar4_start);
- 
- 	cfg->priv = pem_pci;
- 	return 0;
-@@ -334,9 +335,9 @@ static int thunder_pem_init(struct device *dev, struct pci_config_window *cfg,
- 
- #if defined(CONFIG_ACPI) && defined(CONFIG_PCI_QUIRKS)
- 
--#define PEM_RES_BASE		0x87e0c0000000UL
--#define PEM_NODE_MASK		GENMASK(45, 44)
--#define PEM_INDX_MASK		GENMASK(26, 24)
-+#define PEM_RES_BASE		0x87e0c0000000ULL
-+#define PEM_NODE_MASK		GENMASK_ULL(45, 44)
-+#define PEM_INDX_MASK		GENMASK_ULL(26, 24)
- #define PEM_MIN_DOM_IN_NODE	4
- #define PEM_MAX_DOM_IN_NODE	10
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 0a2b6d993fe1..022c2f433676 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -625,6 +625,12 @@ static inline int pci_dev_specific_reset(struct pci_dev *dev, int probe)
- #if defined(CONFIG_PCI_QUIRKS) && defined(CONFIG_ARM64)
- int acpi_get_rc_resources(struct device *dev, const char *hid, u16 segment,
- 			  struct resource *res);
-+#else
-+static inline int acpi_get_rc_resources(struct device *dev, const char *hid,
-+					u16 segment, struct resource *res)
-+{
-+	return -ENODEV;
-+}
- #endif
- 
- int pci_rebar_get_current_size(struct pci_dev *pdev, int bar);
+-ifdef CONFIG_PCI
++obj-$(CONFIG_PCIE_AL) += pcie-al.o
++obj-$(CONFIG_PCI_HISI) += pcie-hisi.o
++
++ifdef CONFIG_ACPI
++ifdef CONFIG_PCI_QUIRKS
+ obj-$(CONFIG_ARM64) += pcie-al.o
+ obj-$(CONFIG_ARM64) += pcie-hisi.o
+ endif
++endif
 -- 
 2.29.2
 
