@@ -2,140 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66809330829
-	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 07:37:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64E8833088B
+	for <lists+linux-pci@lfdr.de>; Mon,  8 Mar 2021 08:03:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233961AbhCHGgw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 01:36:52 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55912 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234885AbhCHGgi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 01:36:38 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1286aKYH110190;
-        Mon, 8 Mar 2021 00:36:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1615185380;
-        bh=RuH1XyFPlD2/xUnAbgo3c6Sl0V2SC3r4WGxGh2uZNc8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Yosq7WEROYMiwO5WYdQCKxSPFbB5wBZOqj5aFd8uqPawsoc38DdGULVdseFS45BSG
-         Vvd4MrLkLcwK/QBHNDWnjdAFmgD8Fypi7iQnSA5K9EpECQzIwJW6nsMiWyuP1EyxCp
-         r82XbC4hq/rjyPGcYW4QCVX2T556YyqzPhp+MinI=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1286aKZ7017883
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Mar 2021 00:36:20 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 8 Mar
- 2021 00:36:20 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 8 Mar 2021 00:36:20 -0600
-Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1286ZuTW117458;
-        Mon, 8 Mar 2021 00:36:16 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Nadeem Athani <nadeem@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v4 4/4] PCI: j721e: Add support to provide refclk to PCIe connector
-Date:   Mon, 8 Mar 2021 12:05:50 +0530
-Message-ID: <20210308063550.6227-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210308063550.6227-1-kishon@ti.com>
-References: <20210308063550.6227-1-kishon@ti.com>
+        id S230122AbhCHHCq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 02:02:46 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45978 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229843AbhCHHCR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 02:02:17 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1286YILe152059;
+        Mon, 8 Mar 2021 02:02:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=bS3eYy+BI51TPab9hgRF1rimg0MIGegF8qUN+OmG5BI=;
+ b=e8r1Vxtw4E3FzbzUc64gTx6Yxl32tGfUQeTwykC7PGBe4wtqCT9uL69xNoA84t12/4Zc
+ t/BmENQiBzCr5NLOCfxD/Z/Tx4b9dAxWEDYiqAiEubqaJIJ19DoitAw0PbLlz1Zqx26c
+ RwX9dDh+2tFhCebQgll8HGhD3yJU9C6gVHChh8oaMq/XqQmVRWQrfmhJpf9VKa2cdoKh
+ l/0SX/Csg/FS5taEDG1Htk/x9r9VCxHYdmSjoEHpDvw/KGxH09pp1ww9nBrmbC5+IXIM
+ 5lid74pujT2sMhDJaIJXELgsuLXTf29HQWTcQ46CXTjGS+dlQwrptxk0hZ89+iu9I2zQ xg== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3755xdhu47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Mar 2021 02:02:12 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 1286qOUJ014701;
+        Mon, 8 Mar 2021 07:02:11 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 3741c89jpr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Mar 2021 07:02:10 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 128728I344892458
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Mar 2021 07:02:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CFEAAE053;
+        Mon,  8 Mar 2021 07:02:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DEF2AE057;
+        Mon,  8 Mar 2021 07:02:07 +0000 (GMT)
+Received: from [9.145.174.211] (unknown [9.145.174.211])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Mar 2021 07:02:07 +0000 (GMT)
+Subject: Re: [RFC 1/1] s390/pci: expose a PCI device's UID as its index
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Narendra K <narendra_k@dell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20210303095250.1360007-1-schnelle@linux.ibm.com>
+ <20210303095250.1360007-2-schnelle@linux.ibm.com>
+ <YEU7iFjxNxQK3ldc@rocinante>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <c714ca55-7189-e196-7b8d-f02da555b399@linux.ibm.com>
+Date:   Mon, 8 Mar 2021 08:02:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <YEU7iFjxNxQK3ldc@rocinante>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-08_02:2021-03-08,2021-03-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=864
+ suspectscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0 clxscore=1011
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103080034
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to provide refclk to PCIe connector.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index dac1ac8a7615..7f9dd34b98a9 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -6,6 +6,7 @@
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-+#include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/io.h>
-@@ -50,6 +51,7 @@ enum link_status {
- 
- struct j721e_pcie {
- 	struct device		*dev;
-+	struct clk		*refclk;
- 	u32			mode;
- 	u32			num_lanes;
- 	struct cdns_pcie	*cdns_pcie;
-@@ -310,6 +312,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 	struct cdns_pcie_ep *ep;
- 	struct gpio_desc *gpiod;
- 	void __iomem *base;
-+	struct clk *clk;
- 	u32 num_lanes;
- 	u32 mode;
- 	int ret;
-@@ -408,6 +411,20 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 			goto err_get_sync;
- 		}
- 
-+		clk = devm_clk_get_optional(dev, "pcie_refclk");
-+		if (IS_ERR(clk)) {
-+			ret = PTR_ERR(clk);
-+			dev_err(dev, "failed to get pcie_refclk\n");
-+			goto err_pcie_setup;
-+		}
-+
-+		ret = clk_prepare_enable(clk);
-+		if (ret) {
-+			dev_err(dev, "failed to enable pcie_refclk\n");
-+			goto err_get_sync;
-+		}
-+		pcie->refclk = clk;
-+
- 		/*
- 		 * "Power Sequencing and Reset Signal Timings" table in
- 		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-@@ -422,8 +439,10 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		}
- 
- 		ret = cdns_pcie_host_setup(rc);
--		if (ret < 0)
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
- 			goto err_pcie_setup;
-+		}
- 
- 		break;
- 	case PCI_MODE_EP:
-@@ -476,6 +495,7 @@ static int j721e_pcie_remove(struct platform_device *pdev)
- 	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
- 	struct device *dev = &pdev->dev;
- 
-+	clk_disable_unprepare(pcie->refclk);
- 	cdns_pcie_disable_phy(cdns_pcie);
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
--- 
-2.17.1
+On 3/7/21 9:46 PM, Krzysztof Wilczyński wrote:
+> Hi Niklas,
+> 
+> [...]
+>> +static ssize_t index_show(struct device *dev,
+>> +			  struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
+>> +	u32 index = ~0;
+>> +
+>> +	if (zpci_unique_uid)
+>> +		index = zdev->uid;
+>> +
+>> +	return sprintf(buf, "%u\n", index);
+> [...]
+> 
+> Would it be possible to use the new sysfs_emit() rather than sprintf()
+> even though the zpci_attr macro and still use mio_enabled_show() still
+> would use sprintf().  What do you think?
+> 
+> See https://www.kernel.org/doc/html/latest/filesystems/sysfs.html for
+> the changes in the internal API.
+> 
+> Krzysztof
+> 
 
+Of course that makes sense and thanks for pointing me to this API!
+@Viktor, may I carry your R-b over?
+
+I'll also update the other attributes in a clean up patch.
+
+Thanks,
+Niklas
