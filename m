@@ -2,176 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31F5E332167
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 09:58:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A343322ED
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 11:24:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbhCII5a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Mar 2021 03:57:30 -0500
-Received: from gecko.sbs.de ([194.138.37.40]:35104 "EHLO gecko.sbs.de"
+        id S230150AbhCIKYO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Mar 2021 05:24:14 -0500
+Received: from m42-2.mailgun.net ([69.72.42.2]:49928 "EHLO m42-2.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229684AbhCII5N (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Mar 2021 03:57:13 -0500
-X-Greylist: delayed 833 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Mar 2021 03:57:12 EST
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 1298gtX3016215
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Mar 2021 09:42:55 +0100
-Received: from md1za8fc.ad001.siemens.net ([167.87.1.188])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 1298gsBs017101;
-        Tue, 9 Mar 2021 09:42:54 +0100
-Date:   Tue, 9 Mar 2021 09:42:52 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
+        id S230173AbhCIKXz (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Tue, 9 Mar 2021 05:23:55 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1615285435; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=TjLNpjOkpU3NJvxqk+olVOnd639fxr8nX2GxYnA2gbk=; b=QL5t6IB9xVw5Zhii243B0h02mC/OoPe8hyo3j8zUvdzQSNzwF5VY8kLaxQrEKpOlzbYnpNxj
+ c+Joe8TPQ2pCSQSj+vbmaoxWgTNdanH9n/ewlG7lVrQP52cLnMur1OLc/dPGU8TLksYXQR2m
+ so0LDOyZ7NQhVu8+MK/d4Tic4jY=
+X-Mailgun-Sending-Ip: 69.72.42.2
+X-Mailgun-Sid: WyI2YzdiNyIsICJsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 60474c9be5eea4c43bd9e5fa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 09 Mar 2021 10:23:23
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 57F1DC4346D; Tue,  9 Mar 2021 10:23:23 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+        autolearn=no autolearn_force=no version=3.4.0
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5E8CC433CA;
+        Tue,  9 Mar 2021 10:23:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5E8CC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        ath9k-devel@qca.qualcomm.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        Chas Williams <3chas3@gmail.com>,
+        linux-atm-general@lists.sourceforge.net,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com
-Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
- support library
-Message-ID: <20210309094252.396b7f2d@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210309014221.GA1831206@bjorn-Precision-5520>
-References: <YEZ4IitUa+I9HM5F@smile.fi.intel.com>
-        <20210309014221.GA1831206@bjorn-Precision-5520>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        linux1394-devel@lists.sourceforge.net
+Subject: Re: [patch 10/14] ath9k: Use tasklet_disable_in_atomic()
+References: <20210309084203.995862150@linutronix.de>
+        <20210309084242.313899703@linutronix.de>
+Date:   Tue, 09 Mar 2021 12:23:14 +0200
+In-Reply-To: <20210309084242.313899703@linutronix.de> (Thomas Gleixner's
+        message of "Tue, 09 Mar 2021 09:42:13 +0100")
+Message-ID: <871rco1v8t.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Mon, 8 Mar 2021 19:42:21 -0600
-schrieb Bjorn Helgaas <helgaas@kernel.org>:
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-> On Mon, Mar 08, 2021 at 09:16:50PM +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 08, 2021 at 12:52:12PM -0600, Bjorn Helgaas wrote:  
-> > > On Mon, Mar 08, 2021 at 02:20:16PM +0200, Andy Shevchenko wrote:  
-> > > > From: Jonathan Yong <jonathan.yong@intel.com>
-> > > > 
-> > > > There is already one and at least one more user is coming which
-> > > > requires an access to Primary to Sideband bridge (P2SB) in
-> > > > order to get IO or MMIO bar hidden by BIOS. Create a library to
-> > > > access P2SB for x86 devices.  
-> > > 
-> > > Can you include a spec reference?  
-> > 
-> > I'm not sure I have a public link to the spec. It's the 100 Series
-> > PCH [1]. The document number to look for is 546955 [2] and there
-> > actually a bit of information about this.  
-> 
-> This link, found by googling for "p2sb bridge", looks like it might
-> have relevant public links:
-> 
-> https://lab.whitequark.org/notes/2017-11-08/accessing-intel-ich-pch-gpios/
-> 
-> I'd prefer if you could dig out the relevant sections because I really
-> don't know how to identify them.
-> 
-> > > I'm trying to figure out why this
-> > > belongs in drivers/pci/.  It looks very device-specific.  
-> > 
-> > Because it's all about access to PCI configuration spaces of the
-> > (hidden) devices.  
-> 
-> The PCI core generally doesn't deal with device-specific config
-> registers.
-> 
-> > [1]:
-> > https://ark.intel.com/content/www/us/en/ark/products/series/98456/intel-100-series-desktop-chipsets.html
-> > [2]:
-> > https://medium.com/@jacksonchen_43335/bios-gpio-p2sb-70e9b829b403
-> > 
-> > ...
-> >   
-> > > > +config PCI_P2SB
-> > > > +	bool "Primary to Sideband (P2SB) bridge access support"
-> > > > +	depends on PCI && X86
-> > > > +	help
-> > > > +	  The Primary to Sideband bridge is an interface to
-> > > > some PCI
-> > > > +	  devices connected through it. In particular, SPI NOR
-> > > > +	  controller in Intel Apollo Lake SoC is one of such
-> > > > devices.  
-> > > 
-> > > This doesn't sound like a "bridge".  If it's a bridge, what's on
-> > > the primary (upstream) side?  What's on the secondary side?  What
-> > > resources are passed through the bridge, i.e., what transactions
-> > > does it transfer from one side to the other?  
-> > 
-> > It's a confusion terminology here. It's a Bridge according to the
-> > spec, but it is *not* a PCI Bridge as you may had a first
-> > impression.  
-> 
-> The code suggests that a register on this device controls whether a
-> different device is visible in config space.  I think it will be
-> better if we can describe what's happening.
-> 
-> > ...
-> >   
-> > > > +	/* Unhide the P2SB device */
-> > > > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, 0);
-> > > > +
-> > > > +	/* Read the first BAR of the device in question */
-> > > > +	__pci_bus_read_base(bus, devfn, pci_bar_unknown, mem,
-> > > > PCI_BASE_ADDRESS_0, true);  
-> > > 
-> > > I don't get this.  Apparently this normally hidden device is
-> > > consuming PCI address space.  The PCI core needs to know about
-> > > this.  If it doesn't, the PCI core may assign this space to
-> > > another device.  
-> > 
-> > Right, it returns all 1:s to any request so PCI core *thinks* it's
-> > plugged off (like D3cold or so).  
-> 
-> I'm asking about the MMIO address space.  The BAR is a register in
-> config space.  AFAICT, clearing P2SBC_HIDE_BYTE makes that BAR
-> visible.  The BAR describes a region of PCI address space.  It looks
-> like setting P2SBC_HIDE_BIT makes the BAR disappear from config space,
-> but it sounds like the PCI address space *described* by the BAR is
-> still claimed by the device.  If the device didn't respond to that
-> MMIO space, you would have no reason to read the BAR at all.
-> 
-> So what keeps the PCI core from assigning that MMIO space to another
-> device?
+> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>
+> All callers of ath9k_beacon_ensure_primary_slot() are preemptible /
+> acquire a mutex except for this callchain:
+>
+>   spin_lock_bh(&sc->sc_pcu_lock);
+>   ath_complete_reset()
+>   -> ath9k_calculate_summary_state()
+>      -> ath9k_beacon_ensure_primary_slot()
+>
+> It's unclear how that can be distangled, so use tasklet_disable_in_atomic()
+> for now. This allows tasklet_disable() to become sleepable once the
+> remaining atomic users are cleaned up.
+>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: ath9k-devel@qca.qualcomm.com
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> ---
+>  drivers/net/wireless/ath/ath9k/beacon.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-The device will respond to MMIO while being hidden. I am afraid nothing
-stops a collision, except for the assumption that the BIOS is always
-right and PCI devices never get remapped. But just guessing here.
+I assume this goes via some other tree:
 
-I have seen devices with coreboot having the P2SB visible, and most
-likely relocatable. Making it visible in Linux and not hiding it again
-might work, but probably only as long as Linux will not relocate it.
-Which i am afraid might seriously upset the BIOS, depending on what a
-device does with those GPIOs and which parts are implemented in the
-BIOS.
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
-regards,
-Henning
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-> This all sounds quite irregular from the point of view of the PCI
-> core.  If a device responds to address space that is not described by
-> a standard PCI BAR, or by an EA capability, or by one of the legacy
-> VGA or IDE exceptions, we have a problem.  That space must be
-> described *somehow* in a generic way, e.g., ACPI or similar.
-> 
-> What happens if CONFIG_PCI_P2SB is unset?  The device doesn't know
-> that, and if it is still consuming MMIO address space that we don't
-> know about, that's a problem.
-> 
-> > > > +	/* Hide the P2SB device */
-> > > > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE,
-> > > > P2SBC_HIDE_BIT);  
-> > 
-> > -- 
-> > With Best Regards,
-> > Andy Shevchenko
-> > 
-> >   
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
