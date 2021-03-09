@@ -2,151 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCCA1331C92
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 02:43:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C227A331D40
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 04:01:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbhCIBmw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 20:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229764AbhCIBmX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Mar 2021 20:42:23 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3A4F8652A8;
-        Tue,  9 Mar 2021 01:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615254143;
-        bh=u6Wt4ZYzeRBKFqq9tL6mnx/3bHT+JgCkJ7w4UKtIQbc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fQKV9/XQvwke5T0B9uo45zNWuiZvdnj37A6jyyE6TU69Mvqp8B7EZnQD3kpNz1TeJ
-         O1RGlFzSuaL+ZV5Bq2kYVzBCXOg5QtYwobGNfL4o1AYAUnsJZI96/+FjfS81q5ehnM
-         5eWsLpw6IafAl+jrDuPZzKkzJufkGEYde/s0Qk1G025ZxRWqvV4J/bPdaLLlq4Po17
-         BX1vdfTsXSqLtsh2oF4b54Fq+3EO3dHKMp/nGdo2saRL52Kr0jbEk0WBu2UawW3zXg
-         mN/Omk4JoldCRBL4o67/I0wEKF2nRXrVldgfL2amrsJAEFdf3OEBZZC7gm3v0/jwSp
-         p8TEIdO3OVoHg==
-Date:   Mon, 8 Mar 2021 19:42:21 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
-        henning.schild@siemens.com
-Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
- support library
-Message-ID: <20210309014221.GA1831206@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YEZ4IitUa+I9HM5F@smile.fi.intel.com>
+        id S230506AbhCIDBD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 22:01:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230487AbhCIDBA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 Mar 2021 22:01:00 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54EE6C06175F
+        for <linux-pci@vger.kernel.org>; Mon,  8 Mar 2021 19:01:00 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id 16so1357738pgo.13
+        for <linux-pci@vger.kernel.org>; Mon, 08 Mar 2021 19:01:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=QS+W2evi8k5aHYAfWwTIFQNUplOvcunWdrdhU6E7/AA=;
+        b=kKuYcz7AdrgLmLkWgfpAYgI5827ld1D7r0uARL6409oh58xjPf0s95Mt9rsUKb/c4V
+         TiU2UWZLf55hky2fN2jnn6OWekuSybPn/XV5pTZIpXmzvJNIdyqn8Xkvynr32Mq6cojH
+         13i0+4VM1KX5Ny2E0EIbTBxmEq9w08cgbdeTg5+K9/ybwksUWAhDT4/nKINFLN6j7cIl
+         Bq2aaXjN292EkLs1wn4Rpp1D3OwbtTlwmrfxtbaI0oBJFIiHYbArn+X1K4gkVHNVY133
+         f5ms5mDtZg9XuhygfMhFrePFRv+Y18MEzCzLNVXwSmZYqLFDcoNdy9OM4sNXDxQY/JiT
+         G2Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QS+W2evi8k5aHYAfWwTIFQNUplOvcunWdrdhU6E7/AA=;
+        b=n9VrKgp1YfA06qqaazdwNhWCcVc+MxlPv/WiPjX3kCuJFv0Pjj2Fh/BJf+eAbg5P9b
+         Q4Y2ph5mu/4UT9ENm9clmHdEilCm3BV3enDn+83P394WKHdPsmB/88aIKKL91GLukwMb
+         PR01TiYx8IJchQM3AH1TagFX2c1JAtZG4dbRdq6kca0oGb+sJnKelMUNuy21F+dwifPN
+         dpn4c/GbeGllC/CxpzOUxtqX/wH+czJVhsM6nWCfhm/P5P0p4igOQYwDb3U4fLdU3PJl
+         tFJNVNjjOb1i5QILUYVg7NlGGDAbdFynYCPoMebsKtSnz3e7UqiWpUdqYOx2QvL75xtn
+         prFg==
+X-Gm-Message-State: AOAM531aV4bZtRbj4d9ujD5RuysYm/Q1TtBYwj+6V1GPM4A+LDjCKuyY
+        ym6OaNnDK9S08n8zk4J/4y61OA==
+X-Google-Smtp-Source: ABdhPJwT+ra5WOUg4Um3PiQsfJlLbl29zPQtKJWW422EPe2I7c0CRd9gwTFXtMd/pYdYo87tKtEURQ==
+X-Received: by 2002:a63:1266:: with SMTP id 38mr9543939pgs.266.1615258859820;
+        Mon, 08 Mar 2021 19:00:59 -0800 (PST)
+Received: from localhost.localdomain ([240e:362:435:6a00:e593:6e0:bfb4:a65f])
+        by smtp.gmail.com with ESMTPSA id y24sm3162782pfn.213.2021.03.08.19.00.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Mar 2021 19:00:59 -0800 (PST)
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        jean-philippe <jean-philippe@linaro.org>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        kw@linux.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3 0/3] PCI: Add a quirk to enable SVA for HiSilicon chip
+Date:   Tue,  9 Mar 2021 11:00:34 +0800
+Message-Id: <1615258837-12189-1-git-send-email-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 08, 2021 at 09:16:50PM +0200, Andy Shevchenko wrote:
-> On Mon, Mar 08, 2021 at 12:52:12PM -0600, Bjorn Helgaas wrote:
-> > On Mon, Mar 08, 2021 at 02:20:16PM +0200, Andy Shevchenko wrote:
-> > > From: Jonathan Yong <jonathan.yong@intel.com>
-> > > 
-> > > There is already one and at least one more user is coming which
-> > > requires an access to Primary to Sideband bridge (P2SB) in order to
-> > > get IO or MMIO bar hidden by BIOS. Create a library to access P2SB
-> > > for x86 devices.
-> > 
-> > Can you include a spec reference?
-> 
-> I'm not sure I have a public link to the spec. It's the 100 Series PCH [1].
-> The document number to look for is 546955 [2] and there actually a bit of
-> information about this.
+HiSilicon KunPeng920 and KunPeng930 have devices appear as PCI but are
+actually on the AMBA bus. These fake PCI devices have PASID capability
+though not supporting TLP.
 
-This link, found by googling for "p2sb bridge", looks like it might
-have relevant public links:
+Add a quirk to set pasid_no_tlp and dma-can-stall for these devices.
 
-https://lab.whitequark.org/notes/2017-11-08/accessing-intel-ich-pch-gpios/
+v3:
+Rebase to Linux 5.12-rc1
+Change commit msg adding:
+Property dma-can-stall depends on patchset
+https://lore.kernel.org/linux-iommu/20210302092644.2553014-1-jean-philippe@linaro.org/
 
-I'd prefer if you could dig out the relevant sections because I really
-don't know how to identify them.
+By the way the patchset can directly applied on 5.12-rc1 and build successfully though
+without the dependent patchset.
 
-> > I'm trying to figure out why this
-> > belongs in drivers/pci/.  It looks very device-specific.
-> 
-> Because it's all about access to PCI configuration spaces of the (hidden)
-> devices.
+v2:
+Add a new pci_dev bit: pasid_no_tlp, suggested by Bjorn 
+"Apparently these devices have a PASID capability.  I think you should
+add a new pci_dev bit that is specific to this idea of "PASID works
+without TLP prefixes" and then change pci_enable_pasid() to look at
+that bit as well as eetlp_prefix_path."
+https://lore.kernel.org/linux-pci/20210112170230.GA1838341@bjorn-Precision-5520/
 
-The PCI core generally doesn't deal with device-specific config
-registers.
+Zhangfei Gao (3):
+  PCI: PASID can be enabled without TLP prefix
+  PCI: Add a quirk to set pasid_no_tlp for HiSilicon chips
+  PCI: Set dma-can-stall for HiSilicon chips
 
-> [1]: https://ark.intel.com/content/www/us/en/ark/products/series/98456/intel-100-series-desktop-chipsets.html
-> [2]: https://medium.com/@jacksonchen_43335/bios-gpio-p2sb-70e9b829b403
-> 
-> ...
-> 
-> > > +config PCI_P2SB
-> > > +	bool "Primary to Sideband (P2SB) bridge access support"
-> > > +	depends on PCI && X86
-> > > +	help
-> > > +	  The Primary to Sideband bridge is an interface to some PCI
-> > > +	  devices connected through it. In particular, SPI NOR
-> > > +	  controller in Intel Apollo Lake SoC is one of such devices.
-> > 
-> > This doesn't sound like a "bridge".  If it's a bridge, what's on the
-> > primary (upstream) side?  What's on the secondary side?  What
-> > resources are passed through the bridge, i.e., what transactions does
-> > it transfer from one side to the other?
-> 
-> It's a confusion terminology here. It's a Bridge according to the spec, but
-> it is *not* a PCI Bridge as you may had a first impression.
+ drivers/pci/ats.c    |  2 +-
+ drivers/pci/quirks.c | 27 +++++++++++++++++++++++++++
+ include/linux/pci.h  |  1 +
+ 3 files changed, 29 insertions(+), 1 deletion(-)
 
-The code suggests that a register on this device controls whether a
-different device is visible in config space.  I think it will be
-better if we can describe what's happening.
+-- 
+2.9.5
 
-> ...
-> 
-> > > +	/* Unhide the P2SB device */
-> > > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, 0);
-> > > +
-> > > +	/* Read the first BAR of the device in question */
-> > > +	__pci_bus_read_base(bus, devfn, pci_bar_unknown, mem, PCI_BASE_ADDRESS_0, true);
-> > 
-> > I don't get this.  Apparently this normally hidden device is consuming
-> > PCI address space.  The PCI core needs to know about this.  If it
-> > doesn't, the PCI core may assign this space to another device.
-> 
-> Right, it returns all 1:s to any request so PCI core *thinks* it's
-> plugged off (like D3cold or so).
-
-I'm asking about the MMIO address space.  The BAR is a register in
-config space.  AFAICT, clearing P2SBC_HIDE_BYTE makes that BAR
-visible.  The BAR describes a region of PCI address space.  It looks
-like setting P2SBC_HIDE_BIT makes the BAR disappear from config space,
-but it sounds like the PCI address space *described* by the BAR is
-still claimed by the device.  If the device didn't respond to that
-MMIO space, you would have no reason to read the BAR at all.
-
-So what keeps the PCI core from assigning that MMIO space to another
-device?
-
-This all sounds quite irregular from the point of view of the PCI
-core.  If a device responds to address space that is not described by
-a standard PCI BAR, or by an EA capability, or by one of the legacy
-VGA or IDE exceptions, we have a problem.  That space must be
-described *somehow* in a generic way, e.g., ACPI or similar.
-
-What happens if CONFIG_PCI_P2SB is unset?  The device doesn't know
-that, and if it is still consuming MMIO address space that we don't
-know about, that's a problem.
-
-> > > +	/* Hide the P2SB device */
-> > > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, P2SBC_HIDE_BIT);
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
