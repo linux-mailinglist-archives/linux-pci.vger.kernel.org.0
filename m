@@ -2,234 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB32331F4E
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 07:35:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ACC5331FB7
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 08:24:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbhCIGfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Mar 2021 01:35:10 -0500
-Received: from mga04.intel.com ([192.55.52.120]:33424 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229639AbhCIGep (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Mar 2021 01:34:45 -0500
-IronPort-SDR: QCsQncgDzmKNB3QlLH0q7aWmz/HkWvOESNf02j7guQ9GomTRnEHPvfasNndOoF2S0HoOAAkO5g
- kUqgaPHx/sdw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="185786611"
-X-IronPort-AV: E=Sophos;i="5.81,234,1610438400"; 
-   d="scan'208";a="185786611"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 22:34:21 -0800
-IronPort-SDR: Khmg2CBJtlh2yd/r9ZqbXhdKdmfQioUWS+VNX2SjUXYMB6aozVv1kjxRorHet0Q5e1R7yNj1wh
- VV0d+UlH6qJg==
-X-IronPort-AV: E=Sophos;i="5.81,234,1610438400"; 
-   d="scan'208";a="409604778"
-Received: from aemorris-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.166.56])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 22:34:21 -0800
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, dan.j.williams@intel.com,
-        keith.busch@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        knsathya@kernel.org
-Subject: [PATCH v1 1/1] PCI: pciehp: Skip DLLSC handling if DPC is triggered
-Date:   Mon,  8 Mar 2021 22:34:10 -0800
-Message-Id: <61a4f8aec9b7121bfef47bc5b941c2c94b0cfae1.1615271492.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        id S229480AbhCIHXb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Mar 2021 02:23:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229901AbhCIHX2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Mar 2021 02:23:28 -0500
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238B2C06175F
+        for <linux-pci@vger.kernel.org>; Mon,  8 Mar 2021 23:23:28 -0800 (PST)
+Received: by mail-qk1-x730.google.com with SMTP id t4so12134414qkp.1
+        for <linux-pci@vger.kernel.org>; Mon, 08 Mar 2021 23:23:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oqO7RxhDDe9vwKp/BB6AgPJShCvp9ZtWoA6Sh+EENcs=;
+        b=Ud3PEmS7F/HL1ClBM5fvcc71dFxIGph/JiVvIxFtoAACgUhUdwd3d1JDpZAWyryI4/
+         H00WQUh6kjUPafd2ThBYw9ZtS34nshFF5tWtZGNZ1EgBfQTdUN3XYkl7kzREpnyavn71
+         TK+awh0xLrq0MfmLyTt1/Y13AGmNR3ZBJ15axGl3gd82rU/QKEwN/OMs+2mvmBscgDVy
+         BZeZLu7f0meD98GsZFypmTNkG5/8iycndvsukzJpMwALx2+3+j4rat0gZlbufwYXVt82
+         vFlOJutYcZmd4oW9S7VQwWQPDoXikWAturt0OVgGLzb5SQ+c5k0WpbbIHyWni6dbwUGq
+         Kaow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oqO7RxhDDe9vwKp/BB6AgPJShCvp9ZtWoA6Sh+EENcs=;
+        b=VN2J7rJNWO8OwX5EN2Gsysh8KYBKMqgxKE5XCfRqa9KDVR1I153wjPB8Zf4nOC9VkU
+         sd9G6B4aAQuBZ+cxxNjO4ipM1ViTcRxvkZv6pbT64ZBGrVVKtjVcoVwOJv5eLbycAl1S
+         MY1n2gEkP6eHUPNPGB9P9kvUHManhcNc0N5FhykRRJQwYaH1kf4So+J+BtyjWRBoozIr
+         td8nrFaiyF/EpC5XljfLorrAybZieZY+V8rEDEAd1q+JLkb1LZL4WVWRm9oVWO2b3U6U
+         +NTBzoxjiSO+aJJs2536DRzGY8GWEtzOaW/5ZIlvTXouG498abFvYmkAgX5kRrwr18xv
+         fazA==
+X-Gm-Message-State: AOAM5317HLzk4vla7gK02ji4bQ4ZeF5cVlSW8CIXIheBiX3vn9fO6z2c
+        2eE8ViCKy5wnLrYnXtn0M9xMqNIFJisnk1nTLb97TA==
+X-Google-Smtp-Source: ABdhPJwtYPYtApR4EueplUtwNsjPnC8GSeKATOROKTHuWvVYiLX1g7t/b1oVki8yJ8MfrVSGPDDRQGIb0ZVn6cn5YHw=
+X-Received: by 2002:a37:66cd:: with SMTP id a196mr16664749qkc.374.1615274606652;
+ Mon, 08 Mar 2021 23:23:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1614681831.git.greentime.hu@sifive.com> <e2bd7db9db3c196b9b0399f0655a56939a0f3d62.1614681831.git.greentime.hu@sifive.com>
+ <81c45bf40b397b57343f159baae896528fa32d89.camel@pengutronix.de>
+In-Reply-To: <81c45bf40b397b57343f159baae896528fa32d89.camel@pengutronix.de>
+From:   Greentime Hu <greentime.hu@sifive.com>
+Date:   Tue, 9 Mar 2021 15:23:14 +0800
+Message-ID: <CAHCEehK3P7jXq-v_xVm-0+BQsugG21VgjU0teyuUgANyR5ErKA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/6] clk: sifive: Use reset-simple in prci driver for
+ PCIe driver
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>, hes@sifive.com,
+        Erik Danie <erik.danie@sifive.com>,
+        Zong Li <zong.li@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, robh+dt@kernel.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
+        lorenzo.pieralisi@arm.com, alex.dewar90@gmail.com,
+        khilman@baylibre.com, hayashi.kunihiko@socionext.com,
+        vidyas@nvidia.com, jh80.chung@samsung.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Philipp Zabel <p.zabel@pengutronix.de> =E6=96=BC 2021=E5=B9=B43=E6=9C=884=
+=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:58=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On Tue, 2021-03-02 at 18:59 +0800, Greentime Hu wrote:
+> > We use reset-simple in this patch so that pcie driver can use
+> > devm_reset_control_get() to get this reset data structure and use
+> > reset_control_deassert() to deassert pcie_power_up_rst_n.
+> >
+> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> > ---
+> >  drivers/clk/sifive/Kconfig       |  2 ++
+> >  drivers/clk/sifive/sifive-prci.c | 14 ++++++++++++++
+> >  drivers/clk/sifive/sifive-prci.h |  4 ++++
+> >  drivers/reset/Kconfig            |  3 ++-
+> >  4 files changed, 22 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/clk/sifive/Kconfig b/drivers/clk/sifive/Kconfig
+> > index 1c14eb20c066..9132c3c4aa86 100644
+> > --- a/drivers/clk/sifive/Kconfig
+> > +++ b/drivers/clk/sifive/Kconfig
+> > @@ -10,6 +10,8 @@ if CLK_SIFIVE
+> >
+> >  config CLK_SIFIVE_PRCI
+> >       bool "PRCI driver for SiFive SoCs"
+> > +     select RESET_CONTROLLER
+> > +     select RESET_SIMPLE
+> >       select CLK_ANALOGBITS_WRPLL_CLN28HPC
+> >       help
+> >         Supports the Power Reset Clock interface (PRCI) IP block found =
+in
+> > diff --git a/drivers/clk/sifive/sifive-prci.c b/drivers/clk/sifive/sifi=
+ve-prci.c
+> > index baf7313dac92..925affc6de55 100644
+> > --- a/drivers/clk/sifive/sifive-prci.c
+> > +++ b/drivers/clk/sifive/sifive-prci.c
+> > @@ -583,7 +583,21 @@ static int sifive_prci_probe(struct platform_devic=
+e *pdev)
+> >       if (IS_ERR(pd->va))
+> >               return PTR_ERR(pd->va);
+> >
+> > +     pd->reset.rcdev.owner =3D THIS_MODULE;
+> > +     pd->reset.rcdev.nr_resets =3D PRCI_RST_NR;
+> > +     pd->reset.rcdev.ops =3D &reset_simple_ops;
+> > +     pd->reset.rcdev.of_node =3D pdev->dev.of_node;
+> > +     pd->reset.active_low =3D true;
+> > +     pd->reset.membase =3D pd->va + PRCI_DEVICESRESETREG_OFFSET;
+> > +     spin_lock_init(&pd->reset.lock);
+> > +
+> > +     r =3D devm_reset_controller_register(&pdev->dev, &pd->reset.rcdev=
+);
+> > +     if (r) {
+> > +             dev_err(dev, "could not register reset controller: %d\n",=
+ r);
+> > +             return r;
+> > +     }
+> >       r =3D __prci_register_clocks(dev, pd, desc);
+> > +
+>
+> Accidental whitespace?
+>
+> Otherwise,
+>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-When hotplug and DPC are both enabled on a Root port or
-Downstream Port, during DPC events that cause a DLLSC link
-down/up events, such events must be suppressed to let the DPC
-driver own the recovery path.
-
-When DPC is present and enabled, hardware will put the port in
-containment state to allow SW to recover from the error condition
-in the seamless manner. But, during the DPC error recovery process,
-since the link is in disabled state, it will also raise the DLLSC
-event. In Linux kernel architecture, DPC events are handled by DPC
-driver and DLLSC events are handled by hotplug driver. If a hotplug
-driver is allowed to handle such DLLSC event (triggered by DPC
-containment), then we will have a race condition between error
-recovery handler (in DPC driver) and hotplug handler in recovering
-the contained port. Allowing such a race leads to a lot of stability
-issues while recovering the  device. So skip DLLSC handling in the
-hotplug driver when the PCIe port associated with the hotplug event is
-in DPC triggered state and let the DPC driver be responsible for the
-port recovery.
-
-Following is the sample dmesg log which shows the contention
-between hotplug handler and error recovery handler. In this
-case, hotplug handler won the race and error recovery
-handler reported failure.
-
-[  724.974237] pcieport 0000:97:02.0: pciehp: Slot(4): Link Down
-[  724.974266] pcieport 0000:97:02.0: DPC: containment event, status:0x1f01 source:0x0000
-[  724.974269] pcieport 0000:97:02.0: DPC: unmasked uncorrectable error detected
-[  724.974275] pcieport 0000:97:02.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-[  724.974283] pcieport 0000:97:02.0:   device [8086:347a] error status/mask=00004000/00100020
-[  724.974288] pcieport 0000:97:02.0:    [14] CmpltTO                (First)
-[  724.999181] pci 0000:98:00.0: AER: can't recover (no error_detected callback)
-[  724.999227] pci 0000:98:00.0: Removing from iommu group 181
-[  726.063125] pcieport 0000:97:02.0: pciehp: Slot(4): Card present
-[  726.221117] pcieport 0000:97:02.0: DPC: Data Link Layer Link Active not set in 1000 msec
-[  726.221122] pcieport 0000:97:02.0: AER: subordinate device reset failed
-[  726.221162] pcieport 0000:97:02.0: AER: device recovery failed
-[  727.227176] pci 0000:98:00.0: [8086:0953] type 00 class 0x010802
-[  727.227202] pci 0000:98:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
-[  727.227234] pci 0000:98:00.0: reg 0x30: [mem 0x00000000-0x0000ffff pref]
-[  727.227246] pci 0000:98:00.0: Max Payload Size set to 256 (was 128, max 256)
-[  727.227251] pci 0000:98:00.0: enabling Extended Tags
-[  727.227736] pci 0000:98:00.0: Adding to iommu group 181
-[  727.231150] pci 0000:98:00.0: BAR 6: assigned [mem 0xd1000000-0xd100ffff pref]
-[  727.231156] pci 0000:98:00.0: BAR 0: assigned [mem 0xd1010000-0xd1013fff 64bit]
-[  727.231170] pcieport 0000:97:02.0: PCI bridge to [bus 98]
-[  727.231174] pcieport 0000:97:02.0:   bridge window [io  0xc000-0xcfff]
-[  727.231181] pcieport 0000:97:02.0:   bridge window [mem 0xd1000000-0xd10fffff]
-[  727.231186] pcieport 0000:97:02.0:   bridge window [mem 0x206000000000-0x2060001fffff 64bit pref]
-[  727.231555] nvme nvme1: pci function 0000:98:00.0
-[  727.231581] nvme 0000:98:00.0: enabling device (0140 -> 0142)
-[  737.141132] nvme nvme1: 31/0/0 default/read/poll queues
-[  737.146211]  nvme1n2: p1
-
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Raj Ashok <ashok.raj@intel.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 18 +++++++++++++++++
- drivers/pci/pci.h                |  2 ++
- drivers/pci/pcie/dpc.c           | 33 ++++++++++++++++++++++++++++++--
- include/linux/pci.h              |  1 +
- 4 files changed, 52 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index fb3840e222ad..8e7916abc60e 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -691,6 +691,24 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
- 		goto out;
- 	}
- 
-+	/*
-+	 * If the DLLSC link up/down event is generated due to DPC containment
-+	 * in the PCIe port, skip the DLLSC event handling and let the DPC driver
-+	 * own the port recovery. Allowing both hotplug DLLSC event handler and DPC
-+	 * event trigger handler attempt recovery on the same port leads to stability
-+	 * issues. if DPC recovery is successful, is_dpc_reset_active() will return
-+	 * false and the hotplug handler will not suppress the DLLSC event. If DPC
-+	 * recovery fails and the link is left in disabled state, once the user
-+	 * changes the faulty card, the hotplug handler can still handle the PRESENCE
-+	 * change event and bring the device back up.
-+	 */
-+	if ((events == PCI_EXP_SLTSTA_DLLSC) && is_dpc_reset_active(pdev)) {
-+		ctrl_info(ctrl, "Slot(%s): DLLSC event(DPC), skipped\n",
-+			  slot_name(ctrl));
-+		ret = IRQ_HANDLED;
-+		goto out;
-+	}
-+
- 	/* Check Attention Button Pressed */
- 	if (events & PCI_EXP_SLTSTA_ABP) {
- 		ctrl_info(ctrl, "Slot(%s): Attention button pressed\n",
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index ef7c4661314f..cee7095483bd 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -446,10 +446,12 @@ void pci_restore_dpc_state(struct pci_dev *dev);
- void pci_dpc_init(struct pci_dev *pdev);
- void dpc_process_error(struct pci_dev *pdev);
- pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
-+bool is_dpc_reset_active(struct pci_dev *pdev);
- #else
- static inline void pci_save_dpc_state(struct pci_dev *dev) {}
- static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
- static inline void pci_dpc_init(struct pci_dev *pdev) {}
-+static inline bool is_dpc_reset_active(struct pci_dev *pdev) { return false; }
- #endif
- 
- #ifdef CONFIG_PCIEPORTBUS
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index e05aba86a317..ad51109921af 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -71,6 +71,30 @@ void pci_restore_dpc_state(struct pci_dev *dev)
- 	pci_write_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_CTL, *cap);
- }
- 
-+bool is_dpc_reset_active(struct pci_dev *dev)
-+{
-+	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-+	u16 status;
-+
-+	if (!dev->dpc_cap)
-+		return false;
-+
-+	/*
-+	 * If DPC is owned by firmware and EDR is not supported, there is
-+	 * no race between hotplug and DPC recovery handler. So return
-+	 * false.
-+	 */
-+	if (!host->native_dpc && !IS_ENABLED(CONFIG_PCIE_EDR))
-+		return false;
-+
-+	if (atomic_read_acquire(&dev->dpc_reset_active))
-+		return true;
-+
-+	pci_read_config_word(dev, dev->dpc_cap + PCI_EXP_DPC_STATUS, &status);
-+
-+	return !!(status & PCI_EXP_DPC_STATUS_TRIGGER);
-+}
-+
- static int dpc_wait_rp_inactive(struct pci_dev *pdev)
- {
- 	unsigned long timeout = jiffies + HZ;
-@@ -91,6 +115,7 @@ static int dpc_wait_rp_inactive(struct pci_dev *pdev)
- 
- pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- {
-+	pci_ers_result_t status = PCI_ERS_RESULT_RECOVERED;
- 	u16 cap;
- 
- 	/*
-@@ -109,15 +134,19 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- 	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
- 		return PCI_ERS_RESULT_DISCONNECT;
- 
-+	atomic_inc_return_acquire(&pdev->dpc_reset_active);
-+
- 	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
- 			      PCI_EXP_DPC_STATUS_TRIGGER);
- 
- 	if (!pcie_wait_for_link(pdev, true)) {
- 		pci_info(pdev, "Data Link Layer Link Active not set in 1000 msec\n");
--		return PCI_ERS_RESULT_DISCONNECT;
-+		status = PCI_ERS_RESULT_DISCONNECT;
- 	}
- 
--	return PCI_ERS_RESULT_RECOVERED;
-+	atomic_dec_return_release(&pdev->dpc_reset_active);
-+
-+	return status;
- }
- 
- static void dpc_process_rp_pio_error(struct pci_dev *pdev)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 86c799c97b77..3314f616520d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -479,6 +479,7 @@ struct pci_dev {
- 	u16		dpc_cap;
- 	unsigned int	dpc_rp_extensions:1;
- 	u8		dpc_rp_log_size;
-+	atomic_t	dpc_reset_active;	/* DPC trigger is active */
- #endif
- #ifdef CONFIG_PCI_ATS
- 	union {
--- 
-2.25.1
-
+Thank you, Philipp.
+Yes, it is an accidental whitespace. I'll remove it in my next version patc=
+h.
