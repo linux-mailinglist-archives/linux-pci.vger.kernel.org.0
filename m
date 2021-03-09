@@ -2,154 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9627D331C51
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 02:36:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCCA1331C92
+	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 02:43:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbhCIBfP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 Mar 2021 20:35:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34270 "EHLO mail.kernel.org"
+        id S229688AbhCIBmw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 Mar 2021 20:42:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229520AbhCIBet (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Mon, 8 Mar 2021 20:34:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B6A33650CB;
-        Tue,  9 Mar 2021 01:34:48 +0000 (UTC)
+        id S229764AbhCIBmX (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Mon, 8 Mar 2021 20:42:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3A4F8652A8;
+        Tue,  9 Mar 2021 01:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615253689;
-        bh=N9DEEHqSHBgZ7+31sSiczhaBg08b9xHQZ6OF+C2d/W8=;
+        s=k20201202; t=1615254143;
+        bh=u6Wt4ZYzeRBKFqq9tL6mnx/3bHT+JgCkJ7w4UKtIQbc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EYhPzqZaIgbsLCun9w6l6lU+tPHQ6B3/XXZD49glBvlioU7kg6/K69MAifpl4pFdB
-         VM8TS7AAHL+JYi/LqYfIRx/JJMK+d4f1yi+dgC4O1UV+/3xugywBbeZ1MyDju4gCKR
-         o8xH0eOOA8CAs1YjBv0MyO2igOrbHNjrG3DRZZH2S2O38PnXANwmdFdtghPLjLoflu
-         rsPjXM65dpEhQZe0AvWRNLhXXp1FIB38JsoNFguXq7Pe58p3DUsvG0s1Dy1v7oQaXW
-         k3RGk567HK8E+Z2yx1F9iJ8GnqSG5C/dNHAsCW9ZlzKB03eim7xtiBn1rG1FptKiib
-         sFB2n6/QoNaKw==
-Date:   Mon, 8 Mar 2021 19:34:47 -0600
+        b=fQKV9/XQvwke5T0B9uo45zNWuiZvdnj37A6jyyE6TU69Mvqp8B7EZnQD3kpNz1TeJ
+         O1RGlFzSuaL+ZV5Bq2kYVzBCXOg5QtYwobGNfL4o1AYAUnsJZI96/+FjfS81q5ehnM
+         5eWsLpw6IafAl+jrDuPZzKkzJufkGEYde/s0Qk1G025ZxRWqvV4J/bPdaLLlq4Po17
+         BX1vdfTsXSqLtsh2oF4b54Fq+3EO3dHKMp/nGdo2saRL52Kr0jbEk0WBu2UawW3zXg
+         mN/Omk4JoldCRBL4o67/I0wEKF2nRXrVldgfL2amrsJAEFdf3OEBZZC7gm3v0/jwSp
+         p8TEIdO3OVoHg==
+Date:   Mon, 8 Mar 2021 19:42:21 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jim Quinlan <jquinlan@broadcom.com>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] nPCI: brcmstb: Use reset/rearm instead of
- deassert/assert
-Message-ID: <20210309013447.GA1831980@bjorn-Precision-5520>
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
+        henning.schild@siemens.com
+Subject: Re: [PATCH v1 3/7] PCI: New Primary to Sideband (P2SB) bridge
+ support library
+Message-ID: <20210309014221.GA1831206@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210308195037.1503-3-jim2101024@gmail.com>
+In-Reply-To: <YEZ4IitUa+I9HM5F@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If you update this, please fix the s/nPCI: /PCI: / in the subject
-
-On Mon, Mar 08, 2021 at 02:50:37PM -0500, Jim Quinlan wrote:
-> The Brcmstb PCIe RC uses a reset control "rescal" for certain chips.  This
-> reset implements a "pulse reset" so it matches more the reset/rearm
-> calls instead of the deassert/assert calls.
-
-You say "also" below, but the paragraph above doesn't tell us the
-*first* thing this patch does.  It just tells us that some chips use
-"rescal" and that "rescal" implements a "pulse reset".
-
-I guess you're replacing reset_control_deassert() with
-reset_control_reset(), and reset_control_assert() with
-reset_control_rearm().
-
-It's not obvious to me that those are equivalent or why it's safe to
-do this for all chips, including those that don't use the "rescal"
-(since it sounds like only certain chips have that).
-
-> Also, add reset_control calls in suspend/resume functions.
+On Mon, Mar 08, 2021 at 09:16:50PM +0200, Andy Shevchenko wrote:
+> On Mon, Mar 08, 2021 at 12:52:12PM -0600, Bjorn Helgaas wrote:
+> > On Mon, Mar 08, 2021 at 02:20:16PM +0200, Andy Shevchenko wrote:
+> > > From: Jonathan Yong <jonathan.yong@intel.com>
+> > > 
+> > > There is already one and at least one more user is coming which
+> > > requires an access to Primary to Sideband bridge (P2SB) in order to
+> > > get IO or MMIO bar hidden by BIOS. Create a library to access P2SB
+> > > for x86 devices.
+> > 
+> > Can you include a spec reference?
 > 
-> Fixes: 740d6c3708a9 ("PCI: brcmstb: Add control of rescal reset")
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
+> I'm not sure I have a public link to the spec. It's the 100 Series PCH [1].
+> The document number to look for is 546955 [2] and there actually a bit of
+> information about this.
+
+This link, found by googling for "p2sb bridge", looks like it might
+have relevant public links:
+
+https://lab.whitequark.org/notes/2017-11-08/accessing-intel-ich-pch-gpios/
+
+I'd prefer if you could dig out the relevant sections because I really
+don't know how to identify them.
+
+> > I'm trying to figure out why this
+> > belongs in drivers/pci/.  It looks very device-specific.
 > 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index e330e6811f0b..18f23cba7e3a 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -1148,6 +1148,7 @@ static int brcm_pcie_suspend(struct device *dev)
->  
->  	brcm_pcie_turn_off(pcie);
->  	ret = brcm_phy_stop(pcie);
-> +	reset_control_rearm(pcie->rescal);
->  	clk_disable_unprepare(pcie->clk);
->  
->  	return ret;
-> @@ -1163,9 +1164,13 @@ static int brcm_pcie_resume(struct device *dev)
->  	base = pcie->base;
->  	clk_prepare_enable(pcie->clk);
->  
-> +	ret = reset_control_reset(pcie->rescal);
-> +	if (ret)
-> +		goto err0;
-> +
->  	ret = brcm_phy_start(pcie);
->  	if (ret)
-> -		goto err;
-> +		goto err1;
->  
->  	/* Take bridge out of reset so we can access the SERDES reg */
->  	pcie->bridge_sw_init_set(pcie, 0);
-> @@ -1180,14 +1185,16 @@ static int brcm_pcie_resume(struct device *dev)
->  
->  	ret = brcm_pcie_setup(pcie);
->  	if (ret)
-> -		goto err;
-> +		goto err1;
->  
->  	if (pcie->msi)
->  		brcm_msi_set_regs(pcie->msi);
->  
->  	return 0;
->  
-> -err:
-> +err1:
-> +	reset_control_rearm(pcie->rescal);
-> +err0:
->  	clk_disable_unprepare(pcie->clk);
->  	return ret;
->  }
-> @@ -1197,7 +1204,7 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
->  	brcm_msi_remove(pcie);
->  	brcm_pcie_turn_off(pcie);
->  	brcm_phy_stop(pcie);
-> -	reset_control_assert(pcie->rescal);
-> +	reset_control_rearm(pcie->rescal);
->  	clk_disable_unprepare(pcie->clk);
->  }
->  
-> @@ -1278,13 +1285,13 @@ static int brcm_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(pcie->perst_reset);
->  	}
->  
-> -	ret = reset_control_deassert(pcie->rescal);
-> +	ret = reset_control_reset(pcie->rescal);
->  	if (ret)
->  		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
->  
->  	ret = brcm_phy_start(pcie);
->  	if (ret) {
-> -		reset_control_assert(pcie->rescal);
-> +		reset_control_rearm(pcie->rescal);
->  		clk_disable_unprepare(pcie->clk);
->  		return ret;
->  	}
+> Because it's all about access to PCI configuration spaces of the (hidden)
+> devices.
+
+The PCI core generally doesn't deal with device-specific config
+registers.
+
+> [1]: https://ark.intel.com/content/www/us/en/ark/products/series/98456/intel-100-series-desktop-chipsets.html
+> [2]: https://medium.com/@jacksonchen_43335/bios-gpio-p2sb-70e9b829b403
+> 
+> ...
+> 
+> > > +config PCI_P2SB
+> > > +	bool "Primary to Sideband (P2SB) bridge access support"
+> > > +	depends on PCI && X86
+> > > +	help
+> > > +	  The Primary to Sideband bridge is an interface to some PCI
+> > > +	  devices connected through it. In particular, SPI NOR
+> > > +	  controller in Intel Apollo Lake SoC is one of such devices.
+> > 
+> > This doesn't sound like a "bridge".  If it's a bridge, what's on the
+> > primary (upstream) side?  What's on the secondary side?  What
+> > resources are passed through the bridge, i.e., what transactions does
+> > it transfer from one side to the other?
+> 
+> It's a confusion terminology here. It's a Bridge according to the spec, but
+> it is *not* a PCI Bridge as you may had a first impression.
+
+The code suggests that a register on this device controls whether a
+different device is visible in config space.  I think it will be
+better if we can describe what's happening.
+
+> ...
+> 
+> > > +	/* Unhide the P2SB device */
+> > > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, 0);
+> > > +
+> > > +	/* Read the first BAR of the device in question */
+> > > +	__pci_bus_read_base(bus, devfn, pci_bar_unknown, mem, PCI_BASE_ADDRESS_0, true);
+> > 
+> > I don't get this.  Apparently this normally hidden device is consuming
+> > PCI address space.  The PCI core needs to know about this.  If it
+> > doesn't, the PCI core may assign this space to another device.
+> 
+> Right, it returns all 1:s to any request so PCI core *thinks* it's
+> plugged off (like D3cold or so).
+
+I'm asking about the MMIO address space.  The BAR is a register in
+config space.  AFAICT, clearing P2SBC_HIDE_BYTE makes that BAR
+visible.  The BAR describes a region of PCI address space.  It looks
+like setting P2SBC_HIDE_BIT makes the BAR disappear from config space,
+but it sounds like the PCI address space *described* by the BAR is
+still claimed by the device.  If the device didn't respond to that
+MMIO space, you would have no reason to read the BAR at all.
+
+So what keeps the PCI core from assigning that MMIO space to another
+device?
+
+This all sounds quite irregular from the point of view of the PCI
+core.  If a device responds to address space that is not described by
+a standard PCI BAR, or by an EA capability, or by one of the legacy
+VGA or IDE exceptions, we have a problem.  That space must be
+described *somehow* in a generic way, e.g., ACPI or similar.
+
+What happens if CONFIG_PCI_P2SB is unset?  The device doesn't know
+that, and if it is still consuming MMIO address space that we don't
+know about, that's a problem.
+
+> > > +	/* Hide the P2SB device */
+> > > +	pci_bus_write_config_byte(bus, df, P2SBC_HIDE_BYTE, P2SBC_HIDE_BIT);
+> 
 > -- 
-> 2.17.1
+> With Best Regards,
+> Andy Shevchenko
+> 
 > 
