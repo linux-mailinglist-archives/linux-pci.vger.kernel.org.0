@@ -2,86 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67921333B07
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 12:06:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45A12333B81
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 12:35:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232007AbhCJLGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 06:06:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232670AbhCJLFi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Mar 2021 06:05:38 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8A05164FE4;
-        Wed, 10 Mar 2021 11:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615374337;
-        bh=250n1SIL81Lob3W2vemslcjdvU/uN2/HJ6ayL4zyAdg=;
-        h=Date:From:To:Subject:From;
-        b=bxadrJ8dKI0MtUl/3oZdJqcTMiCFuxi3pl2rfz+6uMEVcOjrajdFcIEFsGdzmzvNB
-         egtiP8g8GkEYQs14JzMqWhK8T0Xsnc9O0Q48Uj2Kl/tvvBZr1Bh8ik6UEm7ZpD8bU9
-         QVjZL7FlD0i0Ct2j/B09eH5FT7Q0zcb9opfbOiMATJTT08pz15U1rEmXy0WpsL1OaQ
-         TAUMm9u463LP3W/bMk1t1qsncTrnpQ3t1sOxadpFihfKtjlgnvfzLMZX2pXvB3isH5
-         YiGNVnGBjvnYUdJ/1RR7F87Sbd4CjG2sQu4jvBuf/+uVseorVeIvJgHdoOqW4b0dZr
-         BLRnzVP8bYn7A==
-Received: by pali.im (Postfix)
-        id 36836A83; Wed, 10 Mar 2021 12:05:35 +0100 (CET)
-Date:   Wed, 10 Mar 2021 12:05:35 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        id S230214AbhCJLej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 06:34:39 -0500
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:52390 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230270AbhCJLeQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 06:34:16 -0500
+Received: by mail-wm1-f48.google.com with SMTP id n22so6895307wmc.2;
+        Wed, 10 Mar 2021 03:34:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7J7s2ULlckxPGV45ObvNHeMFlnciPOBmL4sFeKxQRrY=;
+        b=f+hF+pFH0HAizt2JQ2xgYBt5+SCWy5rWFtjiPaAHluZDlhNTVAFfW3YyvrG8WtjjkE
+         gzybpQUkYL9piVr/2mU8hhKJfTZitAxv6ju4K+sFKPUm80F90AocMyXQVBJl//tG9rjA
+         JGwrnkuE7P9ZEQJHQ3koboVUHoezYIlEl8gsjKo4Gm3vZ+8R3fEGWDCxvFZZiL8xRu3E
+         JppUwYvQCEhXuqFpAKeIbupK7tFUySZgLLJV1uKiQTJj9etpe0kDz4VUHLu4o3GtwaeG
+         Rg3rfIYd5sZxtIYtCdV19hBiCEZJPJoIFClAfNsT5AWndbShOEnZtRaVblkDoLRnGKYn
+         832w==
+X-Gm-Message-State: AOAM530ywGmQCXDobx4UaQCGDsEFT/pGvcCVMahMEHRVWyB0meaU1qU0
+        pkelFlQl5+I4e6c8nsAR+Go=
+X-Google-Smtp-Source: ABdhPJykSDTXQb6rMzAJxlIEs15qvYEmGaFG3pm37E2tlVeGACX4zqvLUH6j+7SC5v6ZH9AFK3lxiA==
+X-Received: by 2002:a7b:ce19:: with SMTP id m25mr2938803wmc.74.1615376055056;
+        Wed, 10 Mar 2021 03:34:15 -0800 (PST)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id m3sm8770402wmc.48.2021.03.10.03.34.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Mar 2021 03:34:14 -0800 (PST)
+Date:   Wed, 10 Mar 2021 11:34:13 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Amey Narkhede <ameynarkhede02@gmail.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: How long should be PCIe card in Warm Reset state?
-Message-ID: <20210310110535.zh4pnn4vpmvzwl5q@pali>
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        ath9k-devel@qca.qualcomm.com, Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless@vger.kernel.org, Chas Williams <3chas3@gmail.com>,
+        linux-atm-general@lists.sourceforge.net,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        linux1394-devel@lists.sourceforge.net
+Subject: Re: [patch 12/14] PCI: hv: Use tasklet_disable_in_atomic()
+Message-ID: <20210310113413.cuvmnrd3vhyhzi4c@liuwe-devbox-debian-v2>
+References: <20210309084203.995862150@linutronix.de>
+ <20210309084242.516519290@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20210309084242.516519290@linutronix.de>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello!
+On Tue, Mar 09, 2021 at 09:42:15AM +0100, Thomas Gleixner wrote:
+> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> 
+> The hv_compose_msi_msg() callback in irq_chip::irq_compose_msi_msg is
+> invoked via irq_chip_compose_msi_msg(), which itself is always invoked from
+> atomic contexts from the guts of the interrupt core code.
+> 
+> There is no way to change this w/o rewriting the whole driver, so use
+> tasklet_disable_in_atomic() which allows to make tasklet_disable()
+> sleepable once the remaining atomic users are addressed.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-I would like to open a question about PCIe Warm Reset. Warm Reset of
-PCIe card is triggered by asserting PERST# signal and in most cases
-PERST# signal is controlled by GPIO.
-
-Basically every native Linux PCIe controller driver is doing this Warm
-Reset of connected PCIe card during native driver initialization
-procedure.
-
-And now the important question is: How long should be PCIe card in Warm
-Reset state? After which timeout can be PERST# signal de-asserted by
-Linux controller driver?
-
-Lorenzo and Rob already expressed concerns [1] [2] that this Warm Reset
-timeout should not be driver specific and I agree with them.
-
-I have done investigation which timeout is using which native PCIe
-driver [3] and basically every driver is using different timeout.
-
-I have tried to find timeouts in PCIe specifications, I was not able to
-understand and deduce correct timeout value for Warm Reset from PCIe
-specifications. What I have found is written in my email [4].
-
-Alex (as a "reset expert"), could you look at this issue?
-
-Or is there somebody else who understand PCIe specifications and PCIe
-diagrams to figure out what is the minimal timeout for de-asserting
-PERST# signal?
-
-There are still some issues with WiFi cards (e.g. Compex one) which
-sometimes do not appear on PCIe bus. And based on these "reset timeout
-differences" in Linux PCIe controller drivers, I suspect that it is not
-(only) the problems in WiFi cards but also in Linux PCIe controller
-drivers. In my email [3] I have written that I figured out that WLE1216
-card needs to be in Warm Reset state for at least 10ms, otherwise card
-is not detected.
-
-[1] - https://lore.kernel.org/linux-pci/20200513115940.fiemtnxfqcyqo6ik@pali/
-[2] - https://lore.kernel.org/linux-pci/20200507212002.GA32182@bogus/
-[3] - https://lore.kernel.org/linux-pci/20200424092546.25p3hdtkehohe3xw@pali/
-[4] - https://lore.kernel.org/linux-pci/20200430082245.xblvb7xeamm4e336@pali/
+Acked-by: Wei Liu <wei.liu@kernel.org>
