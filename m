@@ -2,134 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 421DD333D21
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 13:58:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A00B2333D8B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 14:20:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230341AbhCJM5k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 07:57:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232587AbhCJM5a (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 07:57:30 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0478C061762
-        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 04:57:29 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id l11so19837238wrp.7
-        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 04:57:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cTMvOE1aY9tYXdGR+TBQv9AHcsTzbR2H/zyw8rY1gFg=;
-        b=voDChAePN3lGcrI+g15hdroCEK19w9WwMjBdiBbBV4/seg/y5UOOG69R6m8xrqITQl
-         rCLhxWlbdBRREwbtvKGAqfhSVA1jSkWufntZUX87g3R+qI1yBCITczkoDxwLFH1zp/nL
-         YAiCniEegwIQD/4zs/JCuIwO5JjV3w5IUifu6xT/tmRbmoMUPPxYZrn/GfkOY2vJiohH
-         anofs2ni8L7kkhd8IYYYoCtg2CwgH24OUYtZZ5lwjwFmLydKlKiWLtwJ3aMkKCvc/NnH
-         UHr3awiKzo/YSG6ZOn0kh64cs3RaZwulewChFglI7winAthP4vJG61RbR+rdP4xODIwQ
-         4bXg==
+        id S231132AbhCJNTq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 08:19:46 -0500
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:33631 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230477AbhCJNTP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 08:19:15 -0500
+Received: by mail-wr1-f42.google.com with SMTP id 7so23319721wrz.0
+        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 05:19:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cTMvOE1aY9tYXdGR+TBQv9AHcsTzbR2H/zyw8rY1gFg=;
-        b=LCeHmIkS1v6YdgJVbz/7vymRiFuZiNG1Hlrjkk/2GylXkEqLv1VCmIYbQwRI6TCFQu
-         8O2bvoqxU5qVqEIZ9X4dzzxQIdvhAkcZ7PzvfXTZGCbh+AzMwvZmzRTFA+3n1qc2Q50e
-         Ktu59bASGEupup0RA8EG9gk7wVUSzZXCBhXAWJoWe8AzGcbh8BlMwPg6frxlHPq7JGdx
-         WmrKnjVx5cwlsaGfVOJwbqUEGqupA9w8xGuLngpywEFZkJKqUAKDpAt7WC3+pQvqVIfr
-         2/k8SQwn9iqlvCetLsKQev6J5ue6UezAT6w3cFzo0HU9or0omOa7bwUYkbHekSWac0LK
-         du0w==
-X-Gm-Message-State: AOAM5320QBsI9/suqKOuc3SHbYgrscthP6BHIq2OxlfqqREfswiDV+1F
-        gF8TIukSwLnzY3d1qdb+m31AVA==
-X-Google-Smtp-Source: ABdhPJyv42ta79+HXX9BNbdmsCVAhY3y637uTADEZywR/B0pQOav2a1BH/4Zw/b8IUR9gERxOpmtbw==
-X-Received: by 2002:a5d:4341:: with SMTP id u1mr3503760wrr.88.1615381048726;
-        Wed, 10 Mar 2021 04:57:28 -0800 (PST)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id l8sm30063213wrx.83.2021.03.10.04.57.27
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7FE/aFUGR4FJTAvdWhgR7s8cfhra8+tchwzJGXoPprw=;
+        b=OhDiYvvtrprbweTUNM5c5xl87udBWy2AEtZsc9cZ0NgZvHqhNfEi08iYTGb1F4oiie
+         VdR1d+LfIt8TOf4BoFM7tY+XzEak/avwWjOX3iiGyvzRo25yYkzAc/yrMfAmxP/f4Ulc
+         KivXFLzW/KEysmvjaFwwie7+sYqZLXxxLyochUzhjXXLrVr1MBSVnwsDsnAF3rtDhgU6
+         9Sh/SPKGkqTFfhYqbDxEkqPPdPac10b5lj/JfBcNdfeijdGvF2Ybd1RB/qBJpig1SY6m
+         vfUmGp8NDCZsKXMeItxAmaFqael/DUMZ3h9bIHYFpIhBzNY/PulNS/FRInO0sfk0oNLd
+         mXPw==
+X-Gm-Message-State: AOAM531ar7nHi2eykSBrJL4NM6lwq+XYz08Y+kIYbFqJv/lyE3bu8c3J
+        eoEWYu0aikGaeW38nqf2QZc=
+X-Google-Smtp-Source: ABdhPJxrsXm71hfXVP623gczvcGXlXW/LSxe6p80c+KDlFBhJqi/AvmB9n32ZC141Ik5Y33ZYMaUBA==
+X-Received: by 2002:adf:dc91:: with SMTP id r17mr3492581wrj.293.1615382354643;
+        Wed, 10 Mar 2021 05:19:14 -0800 (PST)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id l15sm9087457wme.43.2021.03.10.05.19.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 04:57:28 -0800 (PST)
-Date:   Wed, 10 Mar 2021 12:57:26 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
-        henning.schild@siemens.com
-Subject: Re: [PATCH v1 5/7] mfd: lpc_ich: Switch to generic pci_p2sb_bar()
-Message-ID: <20210310125726.GO701493@dell>
-References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
- <20210308122020.57071-6-andriy.shevchenko@linux.intel.com>
- <20210310103539.GF701493@dell>
- <YEi2DhLu+tpegdOR@smile.fi.intel.com>
+        Wed, 10 Mar 2021 05:19:14 -0800 (PST)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: microchip: Remove dev_err() when handing an error from platform_get_irq()
+Date:   Wed, 10 Mar 2021 13:19:13 +0000
+Message-Id: <20210310131913.2802385-1-kw@linux.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YEi2DhLu+tpegdOR@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 10 Mar 2021, Andy Shevchenko wrote:
+There is no need to call the dev_err() function directly to print a
+custom message when handling an error from either the platform_get_irq()
+or platform_get_irq_byname() functions as both are going to display an
+appropriate error message in case of a failure.
 
-> On Wed, Mar 10, 2021 at 10:35:39AM +0000, Lee Jones wrote:
-> > On Mon, 08 Mar 2021, Andy Shevchenko wrote:
-> > 
-> > > Instead of open coding pci_p2sb_bar() functionality we are going to
-> > > use generic library for that. There one more user of it is coming.
-> > > 
-> > > Besides cleaning up it fixes a potential issue if, by some reason,
-> > > SPI bar is 64-bit.
-> > 
-> > Probably worth cleaning up the English in both these sections.
-> > 
-> >  Instead of open coding pci_p2sb_bar() functionality we are going to
-> >  use generic library. There is one more user en route.
-> > 
-> >  This is more than just a clean-up.  It also fixes a potential issue
-> >  seen when SPI bar is 64-bit.
-> 
-> Thanks!
-> 
-> > Also worth briefly describing what that issue is I think.
-> 
-> Current code works if and only if the PCI BAR of the hidden device is inside 4G
-> address space. In case firmware decides to go above 4G, we will get a wrong
-> address.
-> 
-> Does it sound good enough?
+This change is as per suggestions from Coccinelle, e.g.,
+  drivers/pci/controller/pcie-microchip-host.c:1027:2-9: line 1027 is
+  redundant because platform_get_irq() already prints an error
 
-Yes, that explains it, thanks.
+Related commit caecb05c8000 ("PCI: Remove dev_err() when handing an
+error from platform_get_irq()").
 
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > ---
-> > >  drivers/mfd/Kconfig   |  1 +
-> > >  drivers/mfd/lpc_ich.c | 20 ++++++--------------
-> > >  2 files changed, 7 insertions(+), 14 deletions(-)
-> > 
-> > Code looks fine:
-> > 
-> > For my own reference (apply this as-is to your sign-off block):
-> > 
-> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> 
-> Thanks for reviewing this series, can you have a look at the earlier sent [1]
-> and [2]? First one has a regression fix.
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/pcie-microchip-host.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Yes, thanks for the nudge.  These were not in my TODO list.
-
-> [1]: https://lore.kernel.org/lkml/20210302135620.89958-1-andriy.shevchenko@linux.intel.com/T/#u
-> [2]: https://lore.kernel.org/lkml/20210301144222.31290-1-andriy.shevchenko@linux.intel.com/T/#u
-> 
-
+diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
+index 04c19ff81aff..80cef572c904 100644
+--- a/drivers/pci/controller/pcie-microchip-host.c
++++ b/drivers/pci/controller/pcie-microchip-host.c
+@@ -1023,10 +1023,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
+ 	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "unable to request IRQ%d\n", irq);
++	if (irq < 0)
+ 		return -ENODEV;
+-	}
+ 
+ 	for (i = 0; i < NUM_EVENTS; i++) {
+ 		event_irq = irq_create_mapping(port->event_domain, i);
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.30.1
+
