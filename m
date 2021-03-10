@@ -2,86 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A00B2333D8B
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 14:20:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A6F333FD6
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 15:02:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231132AbhCJNTq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 08:19:46 -0500
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:33631 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230477AbhCJNTP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 08:19:15 -0500
-Received: by mail-wr1-f42.google.com with SMTP id 7so23319721wrz.0
-        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 05:19:15 -0800 (PST)
+        id S232786AbhCJOBj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 09:01:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232712AbhCJOBT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 09:01:19 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88EACC061760
+        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 06:01:19 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id ox4so23277310ejb.11
+        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 06:01:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=5rh8dKjg0pKk0KNWl2xSO7nhxy+c296f7suB18dXI8U=;
+        b=NRys/JVgIifMs/VJcA3qxZwyt7VHc80TVQPtrFTbXgnYmg8X2NJt4edDx/oy8xJfnH
+         4kEmg4xqymUo4bKVUZW8evb4ZssZYn1ao9fRmO9Ck+QolrGB1zpVvCvr0duPidoqchwp
+         5FWub1ITyXlRu4HialhPIglQCOksUcjnUPeAoyujqqXO0Q6QGB6TQSyfy20nPZTjztiQ
+         FmRJPN3FkWLk5WgQ335YqhGCu2MsIivQcU3lNJinLxDDa0cSv/2C5ccHGH2/lL7Yw7pJ
+         gvMfL+h4VRj8so8S0SkRRWYiz6NWJ6piGdDnyePVglxIMevfIr8276fGtegf2ApQXI8q
+         OCmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7FE/aFUGR4FJTAvdWhgR7s8cfhra8+tchwzJGXoPprw=;
-        b=OhDiYvvtrprbweTUNM5c5xl87udBWy2AEtZsc9cZ0NgZvHqhNfEi08iYTGb1F4oiie
-         VdR1d+LfIt8TOf4BoFM7tY+XzEak/avwWjOX3iiGyvzRo25yYkzAc/yrMfAmxP/f4Ulc
-         KivXFLzW/KEysmvjaFwwie7+sYqZLXxxLyochUzhjXXLrVr1MBSVnwsDsnAF3rtDhgU6
-         9Sh/SPKGkqTFfhYqbDxEkqPPdPac10b5lj/JfBcNdfeijdGvF2Ybd1RB/qBJpig1SY6m
-         vfUmGp8NDCZsKXMeItxAmaFqael/DUMZ3h9bIHYFpIhBzNY/PulNS/FRInO0sfk0oNLd
-         mXPw==
-X-Gm-Message-State: AOAM531ar7nHi2eykSBrJL4NM6lwq+XYz08Y+kIYbFqJv/lyE3bu8c3J
-        eoEWYu0aikGaeW38nqf2QZc=
-X-Google-Smtp-Source: ABdhPJxrsXm71hfXVP623gczvcGXlXW/LSxe6p80c+KDlFBhJqi/AvmB9n32ZC141Ik5Y33ZYMaUBA==
-X-Received: by 2002:adf:dc91:: with SMTP id r17mr3492581wrj.293.1615382354643;
-        Wed, 10 Mar 2021 05:19:14 -0800 (PST)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id l15sm9087457wme.43.2021.03.10.05.19.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 05:19:14 -0800 (PST)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Daire McNamara <daire.mcnamara@microchip.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH] PCI: microchip: Remove dev_err() when handing an error from platform_get_irq()
-Date:   Wed, 10 Mar 2021 13:19:13 +0000
-Message-Id: <20210310131913.2802385-1-kw@linux.com>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=5rh8dKjg0pKk0KNWl2xSO7nhxy+c296f7suB18dXI8U=;
+        b=NV4bPGIt6+2HshORplbDn+94dto07aIbLsL9wBQSJm7ba6rYfYv5LBQc61AYlr31uN
+         PdEWUBMpi5Apx+sUjceuZZDgotsRjhOXLj1+3rp3faheBNgHY1F3nCDCA7R8hC/ZfT2V
+         /wloaaxeVOwIxAc1uLBbIxXZNmG44cRoTz5PncI1+VmnI4jB8ZoLxKMyHRB3UqCritWJ
+         gdAnbzm100BF3AiMBrd2qfGAezsKgHgqbWm0VgUwL/4q0+th+Wi8bjl2/qIvsZ3eVWez
+         skcmvYLhzmb0e6oznMyxiaR7dwMy820nk7HUr3t6lR+j5UGJtmZ3/DttuAc+e8Gf5vqn
+         2IeQ==
+X-Gm-Message-State: AOAM530VnGEQm5hpwahcCG52nEufF3g6SeTQxHqUC3reEngdt5R5G+Al
+        gMYKuTC7EWksDxdgwp0Da7hpsIgvwCoxeY2l/9Q=
+X-Google-Smtp-Source: ABdhPJytB6NSUorcr8eD+98rcO1p2jWS4nnEquxcHuUcQVP4Yz7JOZD4wvG5FyttQxluaKz/5Hl+LY+4JZqDHnAyKfE=
+X-Received: by 2002:a17:906:959:: with SMTP id j25mr3813128ejd.553.1615384874534;
+ Wed, 10 Mar 2021 06:01:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ab4:92c3:0:0:0:0:0 with HTTP; Wed, 10 Mar 2021 06:01:13
+ -0800 (PST)
+From:   JOHN UMAH <pastorjohnumnewaposchurch@gmail.com>
+Date:   Wed, 10 Mar 2021 14:01:13 +0000
+Message-ID: <CANw=0K6gD7r=Jz8gnsZbVAu7YRVEpo9uYzpqYSAnfTz2LtBBFg@mail.gmail.com>
+Subject: Caleb Leo Foundation,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-There is no need to call the dev_err() function directly to print a
-custom message when handling an error from either the platform_get_irq()
-or platform_get_irq_byname() functions as both are going to display an
-appropriate error message in case of a failure.
+Caleb Leo Foundation
+1501 K St NWWashington DC 20005
+United States of America
+You've received $ 1,300,000 from the Calab Leo Foundation course
+Humanitarian aid / poverty reduction program.
+In the case of claims for this gift, please fill in the following form;
 
-This change is as per suggestions from Coccinelle, e.g.,
-  drivers/pci/controller/pcie-microchip-host.c:1027:2-9: line 1027 is
-  redundant because platform_get_irq() already prints an error
-
-Related commit caecb05c8000 ("PCI: Remove dev_err() when handing an
-error from platform_get_irq()").
-
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/controller/pcie-microchip-host.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 04c19ff81aff..80cef572c904 100644
---- a/drivers/pci/controller/pcie-microchip-host.c
-+++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -1023,10 +1023,8 @@ static int mc_platform_init(struct pci_config_window *cfg)
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(dev, "unable to request IRQ%d\n", irq);
-+	if (irq < 0)
- 		return -ENODEV;
--	}
- 
- 	for (i = 0; i < NUM_EVENTS; i++) {
- 		event_irq = irq_create_mapping(port->event_domain, i);
--- 
-2.30.1
-
+Full name:
+Telephone number:
+State:
+Country:
+kindly respond for more details.
+in God We Trust.
