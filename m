@@ -2,85 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45A12333B81
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 12:35:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5824333C32
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 13:06:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230214AbhCJLej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 06:34:39 -0500
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:52390 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230270AbhCJLeQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 06:34:16 -0500
-Received: by mail-wm1-f48.google.com with SMTP id n22so6895307wmc.2;
-        Wed, 10 Mar 2021 03:34:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7J7s2ULlckxPGV45ObvNHeMFlnciPOBmL4sFeKxQRrY=;
-        b=f+hF+pFH0HAizt2JQ2xgYBt5+SCWy5rWFtjiPaAHluZDlhNTVAFfW3YyvrG8WtjjkE
-         gzybpQUkYL9piVr/2mU8hhKJfTZitAxv6ju4K+sFKPUm80F90AocMyXQVBJl//tG9rjA
-         JGwrnkuE7P9ZEQJHQ3koboVUHoezYIlEl8gsjKo4Gm3vZ+8R3fEGWDCxvFZZiL8xRu3E
-         JppUwYvQCEhXuqFpAKeIbupK7tFUySZgLLJV1uKiQTJj9etpe0kDz4VUHLu4o3GtwaeG
-         Rg3rfIYd5sZxtIYtCdV19hBiCEZJPJoIFClAfNsT5AWndbShOEnZtRaVblkDoLRnGKYn
-         832w==
-X-Gm-Message-State: AOAM530ywGmQCXDobx4UaQCGDsEFT/pGvcCVMahMEHRVWyB0meaU1qU0
-        pkelFlQl5+I4e6c8nsAR+Go=
-X-Google-Smtp-Source: ABdhPJykSDTXQb6rMzAJxlIEs15qvYEmGaFG3pm37E2tlVeGACX4zqvLUH6j+7SC5v6ZH9AFK3lxiA==
-X-Received: by 2002:a7b:ce19:: with SMTP id m25mr2938803wmc.74.1615376055056;
-        Wed, 10 Mar 2021 03:34:15 -0800 (PST)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id m3sm8770402wmc.48.2021.03.10.03.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 03:34:14 -0800 (PST)
-Date:   Wed, 10 Mar 2021 11:34:13 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        id S232597AbhCJMFz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 07:05:55 -0500
+Received: from mga18.intel.com ([134.134.136.126]:40617 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232985AbhCJMFm (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Mar 2021 07:05:42 -0500
+IronPort-SDR: NfAu9YXbYMo2Liwmm5JwHzDe2qUe5QAXJZQe6gSL0mRtcwPFFgf7uBkVO9wc/hbvlOwgzfL26N
+ EqblV5RX7RvA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9917"; a="176048325"
+X-IronPort-AV: E=Sophos;i="5.81,237,1610438400"; 
+   d="scan'208";a="176048325"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2021 04:05:41 -0800
+IronPort-SDR: Sv/7lmh+oYy9YXTuK6T+oVj4wy6XqXQAevOODZkBBEmybeHO/Z++EkCMx6axv6mSN+Q/VHyQoW
+ uW9diC3DExfw==
+X-IronPort-AV: E=Sophos;i="5.81,237,1610438400"; 
+   d="scan'208";a="409058518"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2021 04:05:37 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lJxao-00BJhJ-9S; Wed, 10 Mar 2021 14:05:34 +0200
+Date:   Wed, 10 Mar 2021 14:05:34 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        ath9k-devel@qca.qualcomm.com, Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, Chas Williams <3chas3@gmail.com>,
-        linux-atm-general@lists.sourceforge.net,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        linux1394-devel@lists.sourceforge.net
-Subject: Re: [patch 12/14] PCI: hv: Use tasklet_disable_in_atomic()
-Message-ID: <20210310113413.cuvmnrd3vhyhzi4c@liuwe-devbox-debian-v2>
-References: <20210309084203.995862150@linutronix.de>
- <20210309084242.516519290@linutronix.de>
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
+        henning.schild@siemens.com
+Subject: Re: [PATCH v1 5/7] mfd: lpc_ich: Switch to generic pci_p2sb_bar()
+Message-ID: <YEi2DhLu+tpegdOR@smile.fi.intel.com>
+References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
+ <20210308122020.57071-6-andriy.shevchenko@linux.intel.com>
+ <20210310103539.GF701493@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210309084242.516519290@linutronix.de>
+In-Reply-To: <20210310103539.GF701493@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 09, 2021 at 09:42:15AM +0100, Thomas Gleixner wrote:
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On Wed, Mar 10, 2021 at 10:35:39AM +0000, Lee Jones wrote:
+> On Mon, 08 Mar 2021, Andy Shevchenko wrote:
 > 
-> The hv_compose_msi_msg() callback in irq_chip::irq_compose_msi_msg is
-> invoked via irq_chip_compose_msi_msg(), which itself is always invoked from
-> atomic contexts from the guts of the interrupt core code.
+> > Instead of open coding pci_p2sb_bar() functionality we are going to
+> > use generic library for that. There one more user of it is coming.
+> > 
+> > Besides cleaning up it fixes a potential issue if, by some reason,
+> > SPI bar is 64-bit.
 > 
-> There is no way to change this w/o rewriting the whole driver, so use
-> tasklet_disable_in_atomic() which allows to make tasklet_disable()
-> sleepable once the remaining atomic users are addressed.
+> Probably worth cleaning up the English in both these sections.
 > 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>  Instead of open coding pci_p2sb_bar() functionality we are going to
+>  use generic library. There is one more user en route.
+> 
+>  This is more than just a clean-up.  It also fixes a potential issue
+>  seen when SPI bar is 64-bit.
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Thanks!
+
+> Also worth briefly describing what that issue is I think.
+
+Current code works if and only if the PCI BAR of the hidden device is inside 4G
+address space. In case firmware decides to go above 4G, we will get a wrong
+address.
+
+Does it sound good enough?
+
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/mfd/Kconfig   |  1 +
+> >  drivers/mfd/lpc_ich.c | 20 ++++++--------------
+> >  2 files changed, 7 insertions(+), 14 deletions(-)
+> 
+> Code looks fine:
+> 
+> For my own reference (apply this as-is to your sign-off block):
+> 
+>   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+Thanks for reviewing this series, can you have a look at the earlier sent [1]
+and [2]? First one has a regression fix.
+
+[1]: https://lore.kernel.org/lkml/20210302135620.89958-1-andriy.shevchenko@linux.intel.com/T/#u
+[2]: https://lore.kernel.org/lkml/20210301144222.31290-1-andriy.shevchenko@linux.intel.com/T/#u
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
