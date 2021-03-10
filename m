@@ -2,107 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 584C8334B28
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 23:12:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 303F1334B9B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 23:31:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232828AbhCJWJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 17:09:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232907AbhCJWJg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Mar 2021 17:09:36 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AB90264FC1;
-        Wed, 10 Mar 2021 22:09:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615414176;
-        bh=fR6gW1+1QfgSkn5iHHd/VcUl7Qo8AyFE2dXd9ItkJZA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qXtiJNkoo088NuI5CEDONE97IWGjNz1qz+E5RnubQues5PoqSuBaYVJQXtA+0D0M5
-         f8yNHr4+85pZkP0t4o2WOBZNANkke+ugfJ0p4uE+qzfmAX10JiPwfqlxK565FUoOOU
-         vJoKKbi9VcvH2FlvHjk8izDSt8T8EqlA+FV4DO6E/nfp+3/hTXvk2LwSoPhyLT36NE
-         22NZ1phGZIJ+oHZCN/f2zSnwlVKKo3/QT9HfDRHK49AvihOourIhxbfxh+2orRou1O
-         5TvEBVfP77yG1N3CilyT8U0HbYDQZVJ+pH3NU2kYxSgmZnO/YSUn1cVmaF1vSjZXRy
-         WkAJsm6Y/72ng==
-Date:   Wed, 10 Mar 2021 16:09:34 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/switchtec: Fix Spectre v1 vulnerability
-Message-ID: <20210310220934.GA2070222@bjorn-Precision-5520>
+        id S230499AbhCJWbG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 17:31:06 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46358 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S231584AbhCJWac (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 17:30:32 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12AMPNIm164288;
+        Wed, 10 Mar 2021 17:30:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=1iQoD3fd5RgR2RgIABs5t23f6KOHvmQUvhztTuamw7M=;
+ b=F3iYUm0Wa8vf97RmOiyFDe5RdhYDm5NC201r1lY96Ieh8xz+xQK0AFJYcKQQMBAg39od
+ ivDOzBFY1s0cUfUt801kfKgtZJYltoQMQ6dDxD4D7LneelzQ/+qiuGCQ3m4IFN5an9sK
+ WfIDypg4/ZRWsVuV4VGmRMRB+LlyOhgwJwlhUyqHR58B+0e8QjupbfZleEMyGIJkfnMe
+ t81WsxA/FGvkPWb1b/DrnfmIiOBmUBxTRncpDdr+URJHMAq0aFgjZPU/hAZ9waaRr1Ix
+ mOKZzonG24dcLBDhCClFBEKvOBQ5pFwFk3AfhB6JvSybxnYPlwuiLNw3rLFwAhiGrmo1 qA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3774mpm2cr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Mar 2021 17:30:26 -0500
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12AMQLaM166441;
+        Wed, 10 Mar 2021 17:30:25 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3774mpm2cj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Mar 2021 17:30:25 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12AMHQwa009210;
+        Wed, 10 Mar 2021 22:30:25 GMT
+Received: from b03cxnp07027.gho.boulder.ibm.com (b03cxnp07027.gho.boulder.ibm.com [9.17.130.14])
+        by ppma03dal.us.ibm.com with ESMTP id 3768s2618x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Mar 2021 22:30:25 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12AMUN2820381978
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Mar 2021 22:30:23 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7806D6E056;
+        Wed, 10 Mar 2021 22:30:23 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35D276E050;
+        Wed, 10 Mar 2021 22:30:23 +0000 (GMT)
+Received: from vios4361.aus.stglabs.ibm.com (unknown [9.3.43.61])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 10 Mar 2021 22:30:23 +0000 (GMT)
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, mmc@linux.ibm.com,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: [PATCH] rpadlpar: fix potential drc_name corruption in store functions
+Date:   Wed, 10 Mar 2021 16:30:21 -0600
+Message-Id: <20210310223021.423155-1-tyreld@linux.ibm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210220062837.1683159-1-kw@linux.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-10_12:2021-03-10,2021-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ adultscore=0 clxscore=1011 impostorscore=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103100105
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Feb 20, 2021 at 06:28:37AM +0000, Krzysztof Wilczyński wrote:
-> The "partition" member of the struct switchtec_ioctl_pff_port can be
-> indirectly controlled from user-space through an IOCTL that the device
-> driver provides enabling conversion between a PCI Function Framework
-> (PFF) number and Switchtec logical port ID and partition number, thus
-> allowing for command-line tooling [1] interact with the device from
-> user-space.
-> 
-> This can lead to potential exploitation of the Spectre variant 1 [2]
-> vulnerability since the value of the partition is then used directly
-> as an index to mmio_part_cfg_all of the struct switchtec_dev to retrieve
-> configuration from Switchtec for a specific partition number.
-> 
-> Fix this by sanitizing the value coming from user-space through the
-> available IOCTL before it's then used as an index to mmio_part_cfg_all.
-> 
-> This issue was detected with the help of Smatch:
-> 
->   drivers/pci/switch/switchtec.c:1118 ioctl_port_to_pff() warn:
->   potential spectre issue 'stdev->mmio_part_cfg_all' [r] (local cap)
-> 
-> Notice that given that speculation windows are large, the policy is
-> to kill the speculation on the first load and not worry if it can be
-> completed with a dependent load/store [3].
-> 
-> Related commit 46feb6b495f7 ("switchtec: Fix Spectre v1 vulnerability").
-> 
-> 1. https://github.com/Microsemi/switchtec-user/blob/master/lib/platform/linux.c
-> 2. https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/spectre.html
-> 3. https://lore.kernel.org/lkml/CAPcyv4gLKYiCtXsKFX2FY+rW93aRtQt9zB8hU1hMsj770m8gxQ@mail.gmail.com/
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+Both add_slot_store() and remove_slot_store() try to fix up the drc_name
+copied from the store buffer by placing a NULL terminator at nbyte + 1
+or in place of a '\n' if present. However, the static buffer that we
+copy the drc_name data into is not zeored and can contain anything past
+the n-th byte. This is problematic if a '\n' byte appears in that buffer
+after nbytes and the string copied into the store buffer was not NULL
+terminated to start with as the strchr() search for a '\n' byte will mark
+this incorrectly as the end of the drc_name string resulting in a drc_name
+string that contains garbage data after the n-th byte. The following
+debugging shows an example of the drmgr utility writing "PHB 4543" to
+the add_slot sysfs attribute, but add_slot_store logging a corrupted
+string value.
 
-Applied with Logan's ack to for-linus for v5.12, thanks!
+[135823.702864] drmgr: drmgr: -c phb -a -s PHB 4543 -d 1
+[135823.702879] add_slot_store: drc_name = PHB 4543°|<82>!, rc = -19
 
-> ---
->  drivers/pci/switch/switchtec.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
-> index ba52459928f7..bb6957101fc0 100644
-> --- a/drivers/pci/switch/switchtec.c
-> +++ b/drivers/pci/switch/switchtec.c
-> @@ -1112,12 +1112,15 @@ static int ioctl_port_to_pff(struct switchtec_dev *stdev,
->  	if (copy_from_user(&p, up, sizeof(p)))
->  		return -EFAULT;
->  
-> -	if (p.partition == SWITCHTEC_IOCTL_EVENT_LOCAL_PART_IDX)
-> +	if (p.partition == SWITCHTEC_IOCTL_EVENT_LOCAL_PART_IDX) {
->  		pcfg = stdev->mmio_part_cfg;
-> -	else if (p.partition < stdev->partition_count)
-> +	} else if (p.partition < stdev->partition_count) {
-> +		p.partition = array_index_nospec(p.partition,
-> +						 stdev->partition_count);
->  		pcfg = &stdev->mmio_part_cfg_all[p.partition];
-> -	else
-> +	} else {
->  		return -EINVAL;
-> +	}
->  
->  	switch (p.port) {
->  	case 0:
-> -- 
-> 2.30.0
-> 
+Fix this by NULL terminating the string when we copy it into our static
+buffer by coping nbytes + 1 of data from the store buffer. The code has
+already made sure that nbytes is not >= MAX_DRC_NAME_LEN and the store
+buffer is guaranteed to be zeroed beyond the nth-byte of data copied
+from the user. Further, since the string is now NULL terminated the code
+only needs to change '\n' to '\0' when present.
+
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+---
+ drivers/pci/hotplug/rpadlpar_sysfs.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pci/hotplug/rpadlpar_sysfs.c b/drivers/pci/hotplug/rpadlpar_sysfs.c
+index cdbfa5df3a51..375087921284 100644
+--- a/drivers/pci/hotplug/rpadlpar_sysfs.c
++++ b/drivers/pci/hotplug/rpadlpar_sysfs.c
+@@ -34,12 +34,11 @@ static ssize_t add_slot_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 	if (nbytes >= MAX_DRC_NAME_LEN)
+ 		return 0;
+ 
+-	memcpy(drc_name, buf, nbytes);
++	memcpy(drc_name, buf, nbytes + 1);
+ 
+ 	end = strchr(drc_name, '\n');
+-	if (!end)
+-		end = &drc_name[nbytes];
+-	*end = '\0';
++	if (end)
++		*end = '\0';
+ 
+ 	rc = dlpar_add_slot(drc_name);
+ 	if (rc)
+@@ -65,12 +64,11 @@ static ssize_t remove_slot_store(struct kobject *kobj,
+ 	if (nbytes >= MAX_DRC_NAME_LEN)
+ 		return 0;
+ 
+-	memcpy(drc_name, buf, nbytes);
++	memcpy(drc_name, buf, nbytes + 1);
+ 
+ 	end = strchr(drc_name, '\n');
+-	if (!end)
+-		end = &drc_name[nbytes];
+-	*end = '\0';
++	if (end)
++		*end = '\0';
+ 
+ 	rc = dlpar_remove_slot(drc_name);
+ 	if (rc)
+-- 
+2.27.0
+
