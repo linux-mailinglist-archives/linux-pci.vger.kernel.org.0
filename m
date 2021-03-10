@@ -2,225 +2,265 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBFF033377D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 09:39:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABBE13339F3
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 11:28:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230156AbhCJIiv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 03:38:51 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:13081 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231660AbhCJIig (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 03:38:36 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4DwQQh4YV4zMk4x;
-        Wed, 10 Mar 2021 16:36:12 +0800 (CST)
-Received: from [127.0.0.1] (10.69.38.196) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.498.0; Wed, 10 Mar 2021
- 16:38:21 +0800
-Subject: Re: [RESEND PATCH] PCI: Factor functions of PCI function reset
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <prime.zeng@huawei.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        <linuxarm@openeuler.org>
-References: <20210309155018.GA1894628@bjorn-Precision-5520>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <5972b940-25eb-c768-62aa-1813fd3108af@hisilicon.com>
-Date:   Wed, 10 Mar 2021 16:38:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S231828AbhCJK1o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 05:27:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229706AbhCJK1V (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 05:27:21 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75DE7C061761
+        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 02:27:20 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id l11so19319156wrp.7
+        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 02:27:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Kptfrvu/Fb55Ii8aAQJW9aAPQICxkOK8F9AK/ZdQ2Fw=;
+        b=mW8WRTrJtBe2h2nWOnSf9jX0FJEijKlVoT7LfXXNq9vEuWpDJW6SoXlq8JOnjc3k2Q
+         k7wmmhIdMZU5/qRpQJzkMrgm41tzNsmXbeib2TTTdp816tA8o6minWSH76zjQhwQPgis
+         7rKGutUp2aai8ZZHDMxdNyNaf1u4/xgIzUEQ1hOJ33uCCsDsdeLpr8b+Ayge18G0zV2k
+         f6caWhdaDJoygStuwQ73cUzlj18nJ0amZ97UU8Q++J55TGO3/N+cw/2uj47bZzGG+s8A
+         1MMBIS9rogUx89mWOMwziuG8BsT4BX1i3+VqxMyKmYuozuWtUuso9PE9dnjhdYbYJbkR
+         B2zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Kptfrvu/Fb55Ii8aAQJW9aAPQICxkOK8F9AK/ZdQ2Fw=;
+        b=T7Jpc4fnWgnKi1ZNXqIq7zBLCyaYC2YYCpLD8uJhPG3WJ6gy3THmbXAizSva3qQ7H+
+         OXDJyaSvC+09/wzbi/q129JFr2ypktQwmQCOtBl+9Xw89TH7lADX33moFxXMXa9DpU0c
+         cxnh3Ae3EKecZpl3rb5AjLiTaTdqCV0l+RH0iH1aR7FWDTC1ri3UNZZqY5QEv4T7vzsr
+         aQdCwgR5gQrwhgDd6axmGraQK3mJmO7ss6y6M4ezKfjffNAN8GJ7b3oDs9gD3rXd6Uol
+         myNUmVLC8h33mngbmp0iG1VfgqbFmSE6nmflYy18+qhg38lSstRFkbvbgG3YPoUCL01q
+         ZEiA==
+X-Gm-Message-State: AOAM530rmhk8bq3cae+WkzmMS37+EnOWT0ulxgC5l3WEE74ZKQGusTR6
+        zD5ZWjqN/5nAHYLq00eSjmQcBA==
+X-Google-Smtp-Source: ABdhPJw91nTbMxgmH2k+xHu7UiIV0Tg4WDDIYXozAWRvYVX5+daHddjc1PjIT/YEgQZ3N6wl12VGwQ==
+X-Received: by 2002:a5d:61c9:: with SMTP id q9mr2690991wrv.219.1615372039013;
+        Wed, 10 Mar 2021 02:27:19 -0800 (PST)
+Received: from dell ([91.110.221.204])
+        by smtp.gmail.com with ESMTPSA id j12sm28611919wrx.59.2021.03.10.02.27.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Mar 2021 02:27:18 -0800 (PST)
+Date:   Wed, 10 Mar 2021 10:27:16 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        gregkh@linuxfoundation.org
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Jim Quinlan <james.quinlan@broadcom.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
+        henning.schild@siemens.com
+Subject: Re: [PATCH v1 6/7] mfd: lpc_ich: Add support for pinctrl in non-ACPI
+ system
+Message-ID: <20210310102716.GD701493@dell>
+References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
+ <20210308122020.57071-7-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20210309155018.GA1894628@bjorn-Precision-5520>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.69.38.196]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210308122020.57071-7-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021/3/9 23:50, Bjorn Helgaas wrote:
-> [+cc Alex, Krzysztof]
+On Mon, 08 Mar 2021, Andy Shevchenko wrote:
+
+> From: Tan Jui Nee <jui.nee.tan@intel.com>
 > 
-> On Wed, Nov 11, 2020 at 06:22:03PM +0800, Yicong Yang wrote:
->> Previosly we use pci_probe_reset_function() to probe whehter a function
->> can be reset and use __pci_reset_function_locked() to perform a function
->> reset. These two functions have lots of common lines.
+> Add support for non-ACPI systems, such as system that uses
+> Advanced Boot Loader (ABL) whereby a platform device has to be created
+> in order to bind with pin control and GPIO.
 > 
-> s/Previosly/Previously/
-> s/we use/we used/
-> s/whehter/whether/
-
-will fix.
-
+> At the moment, Intel Apollo Lake In-Vehicle Infotainment (IVI) system
+> requires a driver to hide and unhide P2SB to lookup P2SB BAR and pass
+> the PCI BAR address to GPIO.
 > 
-> I'm not a big fan of dual-purpose functions that decide whether to
-> probe or to reset based on a parameter.  Those two things just don't
-> seem semantically compatible.  But I do see your point about common
-> lines, and the underlying functions (pci_dev_specific_reset(),
-> pci_af_flr(), etc) already have that structure.
+> Signed-off-by: Tan Jui Nee <jui.nee.tan@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/mfd/lpc_ich.c | 100 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 99 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/mfd/lpc_ich.c b/drivers/mfd/lpc_ich.c
+> index 8e9bd6813287..959247b6987a 100644
+> --- a/drivers/mfd/lpc_ich.c
+> +++ b/drivers/mfd/lpc_ich.c
+> @@ -8,7 +8,8 @@
+>   *  Configuration Registers.
+>   *
+>   *  This driver is derived from lpc_sch.
+> -
+> + *
+> + *  Copyright (C) 2017, 2021 Intel Corporation
 
-i noticed this when i tried to fix another issue with FLR[1]. as you said, the underlying
-functions use the probe flag to indicate whether it is a probe operation or not
-and i think it make sense to reduce the redundency in the same way.
+Big C or little c?  Please be consistent.
 
+>   *  Copyright (c) 2011 Extreme Engineering Solution, Inc.
+>   *  Author: Aaron Sierra <asierra@xes-inc.com>
+>   *
+> @@ -43,6 +44,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-p2sb.h>
+> +#include <linux/pinctrl/pinctrl.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/lpc_ich.h>
+>  #include <linux/platform_data/itco_wdt.h>
+> @@ -140,6 +142,73 @@ static struct mfd_cell lpc_ich_gpio_cell = {
+>  	.ignore_resource_conflicts = true,
+>  };
+>  
+> +/* Offset data for Apollo Lake GPIO controllers */
+> +#define APL_GPIO_SOUTHWEST_OFFSET	0xc00000
+> +#define APL_GPIO_SOUTHWEST_SIZE		0x654
+> +#define APL_GPIO_NORTHWEST_OFFSET	0xc40000
+> +#define APL_GPIO_NORTHWEST_SIZE		0x764
+> +#define APL_GPIO_NORTH_OFFSET		0xc50000
+> +#define APL_GPIO_NORTH_SIZE		0x76c
+> +#define APL_GPIO_WEST_OFFSET		0xc70000
+> +#define APL_GPIO_WEST_SIZE		0x674
+> +
+> +#define APL_GPIO_NR_DEVICES		4
+> +#define APL_GPIO_IRQ			14
+> +
+> +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET, APL_GPIO_NORTH_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_NORTHWEST_OFFSET, APL_GPIO_NORTHWEST_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_WEST_OFFSET, APL_GPIO_WEST_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +	{
+> +		DEFINE_RES_MEM(APL_GPIO_SOUTHWEST_OFFSET, APL_GPIO_SOUTHWEST_SIZE),
+> +		DEFINE_RES_IRQ(APL_GPIO_IRQ),
+> +	},
+> +};
+> +
+> +/* The order must be in sync with apl_pinctrl_soc_data */
+> +static const struct mfd_cell apl_gpio_devices[APL_GPIO_NR_DEVICES] = {
+> +	{
+> +		/* North */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 0,
 
-> Let me think about this some more.
-> 
+Do these have to be hard-coded?
 
-sure, of course.
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[0]),
+> +		.resources = apl_gpio_resources[0],
 
-It's also very kind to have any comments on the previous issue we met:
-[1] https://lore.kernel.org/linux-pci/1605090088-13960-1-git-send-email-yangyicong@hisilicon.com/
+You can make this less fragile by defining the index and using:
 
-Thanks,
-Yicong
+  [DEFINE_X_Y_Z] = { /* resource */ }, /* etc */
 
->> Factor the two functions and reduce the redundancy.
->>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> ---
->>  drivers/pci/pci.c   | 61 ++++++++++++++++-------------------------------------
->>  drivers/pci/pci.h   |  2 +-
->>  drivers/pci/probe.c |  2 +-
->>  3 files changed, 20 insertions(+), 45 deletions(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index e39c549..e3e5f0f 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -5006,9 +5006,11 @@ static void pci_dev_restore(struct pci_dev *dev)
->>  }
->>
->>  /**
->> - * __pci_reset_function_locked - reset a PCI device function while holding
->> - * the @dev mutex lock.
->> + * pci_probe_reset_function - check whether the device can be safely reset
->> + *                            or reset a PCI device function while holding
->> + *                            the @dev mutex lock.
->>   * @dev: PCI device to reset
->> + * @probe: Probe or not whether the device can be reset.
->>   *
->>   * Some devices allow an individual function to be reset without affecting
->>   * other functions in the same device.  The PCI device must be responsive
->> @@ -5022,10 +5024,10 @@ static void pci_dev_restore(struct pci_dev *dev)
->>   * device including MSI, bus mastering, BARs, decoding IO and memory spaces,
->>   * etc.
->>   *
->> - * Returns 0 if the device function was successfully reset or negative if the
->> - * device doesn't support resetting a single function.
->> + * Returns 0 if the device function can be reset or was successfully reset.
->> + * negative if the device doesn't support resetting a single function.
->>   */
->> -int __pci_reset_function_locked(struct pci_dev *dev)
->> +int pci_probe_reset_function(struct pci_dev *dev, int probe)
->>  {
->>  	int rc;
->>
->> @@ -5039,61 +5041,34 @@ int __pci_reset_function_locked(struct pci_dev *dev)
->>  	 * other error, we're also finished: this indicates that further
->>  	 * reset mechanisms might be broken on the device.
->>  	 */
->> -	rc = pci_dev_specific_reset(dev, 0);
->> +	rc = pci_dev_specific_reset(dev, probe);
->>  	if (rc != -ENOTTY)
->>  		return rc;
->>  	if (pcie_has_flr(dev)) {
->> +		if (probe)
->> +			return 0;
->>  		rc = pcie_flr(dev);
->>  		if (rc != -ENOTTY)
->>  			return rc;
->>  	}
->> -	rc = pci_af_flr(dev, 0);
->> +	rc = pci_af_flr(dev, probe);
->>  	if (rc != -ENOTTY)
->>  		return rc;
->> -	rc = pci_pm_reset(dev, 0);
->> +	rc = pci_pm_reset(dev, probe);
->>  	if (rc != -ENOTTY)
->>  		return rc;
->> -	rc = pci_dev_reset_slot_function(dev, 0);
->> +	rc = pci_dev_reset_slot_function(dev, probe);
->>  	if (rc != -ENOTTY)
->>  		return rc;
->> -	return pci_parent_bus_reset(dev, 0);
->> +
->> +	return pci_parent_bus_reset(dev, probe);
->>  }
->> -EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
->>
->> -/**
->> - * pci_probe_reset_function - check whether the device can be safely reset
->> - * @dev: PCI device to reset
->> - *
->> - * Some devices allow an individual function to be reset without affecting
->> - * other functions in the same device.  The PCI device must be responsive
->> - * to PCI config space in order to use this function.
->> - *
->> - * Returns 0 if the device function can be reset or negative if the
->> - * device doesn't support resetting a single function.
->> - */
->> -int pci_probe_reset_function(struct pci_dev *dev)
->> +int __pci_reset_function_locked(struct pci_dev *dev)
->>  {
->> -	int rc;
->> -
->> -	might_sleep();
->> -
->> -	rc = pci_dev_specific_reset(dev, 1);
->> -	if (rc != -ENOTTY)
->> -		return rc;
->> -	if (pcie_has_flr(dev))
->> -		return 0;
->> -	rc = pci_af_flr(dev, 1);
->> -	if (rc != -ENOTTY)
->> -		return rc;
->> -	rc = pci_pm_reset(dev, 1);
->> -	if (rc != -ENOTTY)
->> -		return rc;
->> -	rc = pci_dev_reset_slot_function(dev, 1);
->> -	if (rc != -ENOTTY)
->> -		return rc;
->> -
->> -	return pci_parent_bus_reset(dev, 1);
->> +	return pci_probe_reset_function(dev, 0);
->>  }
->> +EXPORT_SYMBOL_GPL(__pci_reset_function_locked);
->>
->>  /**
->>   * pci_reset_function - quiesce and reset a PCI device function
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index fa12f7c..73740dd 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -39,7 +39,7 @@ enum pci_mmap_api {
->>  int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
->>  		  enum pci_mmap_api mmap_api);
->>
->> -int pci_probe_reset_function(struct pci_dev *dev);
->> +int pci_probe_reset_function(struct pci_dev *dev, int probe);
->>  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->>  int pci_bus_error_reset(struct pci_dev *dev);
->>
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 03d3712..793cc8a 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -2403,7 +2403,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->>
->>  	pcie_report_downtraining(dev);
->>
->> -	if (pci_probe_reset_function(dev) == 0)
->> +	if (pci_probe_reset_function(dev, 1) == 0)
->>  		dev->reset_fn = 1;
->>  }
->>
->> --
->> 2.8.1
->>
-> 
-> .
-> 
+... above.
 
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +	{
+> +		/* NorthWest */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 1,
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[1]),
+> +		.resources = apl_gpio_resources[1],
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +	{
+> +		/* West */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 2,
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[2]),
+> +		.resources = apl_gpio_resources[2],
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +	{
+> +		/* SouthWest */
+> +		.name = "apollolake-pinctrl",
+> +		.id = 3,
+> +		.num_resources = ARRAY_SIZE(apl_gpio_resources[3]),
+> +		.resources = apl_gpio_resources[3],
+> +		.ignore_resource_conflicts = true,
+> +	},
+> +};
+>  
+>  static struct mfd_cell lpc_ich_spi_cell = {
+>  	.name = "intel-spi",
+> @@ -1082,6 +1151,29 @@ static int lpc_ich_init_wdt(struct pci_dev *dev)
+>  	return ret;
+>  }
+>  
+> +static int lpc_ich_init_pinctrl(struct pci_dev *dev)
+> +{
+> +	struct resource base;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = pci_p2sb_bar(dev, PCI_DEVFN(13, 0), &base);
+
+What is 13 and 0?  Should these be defined?
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
+> +		struct resource *mem = &apl_gpio_resources[i][0];
+> +
+> +		/* Fill MEM resource */
+> +		mem->start += base.start;
+> +		mem->end += base.start;
+> +		mem->flags = base.flags;
+> +	}
+
+So you're converting PCI devices to platform devices.
+
+I'm not sure how 'okay' that is.
+
+Adding Greg to see if he has an opinion.
+
+> +	return mfd_add_devices(&dev->dev, 0, apl_gpio_devices,
+
+Please use the defines, rather than 0.
+
+> +			       ARRAY_SIZE(apl_gpio_devices), NULL, 0, NULL);
+> +}
+> +
+>  static void lpc_ich_test_spi_write(struct pci_dev *dev, unsigned int devfn,
+>  				   struct intel_spi_boardinfo *info)
+>  {
+> @@ -1198,6 +1290,12 @@ static int lpc_ich_probe(struct pci_dev *dev,
+>  			cell_added = true;
+>  	}
+>  
+> +	if (priv->chipset == LPC_APL) {
+> +		ret = lpc_ich_init_pinctrl(dev);
+> +		if (!ret)
+> +			cell_added = true;
+> +	}
+> +
+>  	if (lpc_chipset_info[priv->chipset].spi_type) {
+>  		ret = lpc_ich_init_spi(dev);
+>  		if (!ret)
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
