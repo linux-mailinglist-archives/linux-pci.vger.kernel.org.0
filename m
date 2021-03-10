@@ -2,110 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F378E333A1D
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 11:36:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67921333B07
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 12:06:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231785AbhCJKfw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 05:35:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231800AbhCJKfn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 05:35:43 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7058C061760
-        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 02:35:42 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id i9so6782985wml.0
-        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 02:35:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=k11X2IaCm7778Ql6a7D/ZiOxFU1ZEqfWNW+eBOH3OF8=;
-        b=KqK258d2QHv7GjqtjRSg40t0WuJXZB5TC4pmhS1sfVUud9iiq28hZscR/pYRDHADt0
-         3ngif1VVcCFN8W1KFj+FJyByX89v1XlrNRu8Eqb2rPMS+/v8ikJKCriSIsrUyqrR9AAI
-         c/GKw6xIW0xrZJG8H2KBpJceqc2IY27Xa6mvV05UpaMYS+AuN396IIJMfNFvOAT9A7Xi
-         JeRgMOTNcd5VHfj2Ud3g4Spjf4QtlbhPNy1saLLdxmgNJnvOVfcHj5TKfQ+tbPFQuNh6
-         eZLrxAG5qs2Gfx+JWUCGv0at9m45ur7leVzSQBAkzg+Oke4Cftu8w80ZEcURiQOnV1jw
-         hJvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=k11X2IaCm7778Ql6a7D/ZiOxFU1ZEqfWNW+eBOH3OF8=;
-        b=iexfHiIpTOlPrPFMe3SBWthhiRMZgWuYOIQyIDoaqxZdJVgxgiRS6C7ZTk89W+iUNv
-         jnkSwBTXWBbD1hONMGySxEzg1+FH9/QJW4HYnRY2FlCHZ9dIkbd5vJxv2shRbapGHeiV
-         XjgnBZh10rBubYSzzi/Yi36sI/NuFtm9BxKdif4c/pTe+fmGVP9pFdzs/LByHUg8DDZK
-         IY1S70rmSEyX1sV2q4oene1YAuIkOy6bDzYMat2DHVjm66fUlAfKHckeefKculMnCicl
-         2syKmZ1uHgYb8DdVP4g6eHEK/9Mn2Q9fy/IgdJog2ehCQvclLRM0pUAnWoKXm4+UbbBP
-         H9aw==
-X-Gm-Message-State: AOAM532i48kDX8kg4dH2MDUGLh94LIWDJgYr2MyGZuUAXydeH48iHHyk
-        SXqapo/dVCClbrpnCaB/TDAsLw==
-X-Google-Smtp-Source: ABdhPJyLdOIr4E9Qa53UvZvv/KO6KjoXTUQ6/+YP6LjE0pSDSgp7inNcVk00mLbhh5ugPQI+9vacOg==
-X-Received: by 2002:a05:600c:47d7:: with SMTP id l23mr2682273wmo.155.1615372541428;
-        Wed, 10 Mar 2021 02:35:41 -0800 (PST)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id s3sm2307358wmd.21.2021.03.10.02.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 02:35:41 -0800 (PST)
-Date:   Wed, 10 Mar 2021 10:35:39 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>, hdegoede@redhat.com,
-        henning.schild@siemens.com
-Subject: Re: [PATCH v1 5/7] mfd: lpc_ich: Switch to generic pci_p2sb_bar()
-Message-ID: <20210310103539.GF701493@dell>
-References: <20210308122020.57071-1-andriy.shevchenko@linux.intel.com>
- <20210308122020.57071-6-andriy.shevchenko@linux.intel.com>
+        id S232007AbhCJLGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 06:06:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232670AbhCJLFi (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Mar 2021 06:05:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8A05164FE4;
+        Wed, 10 Mar 2021 11:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615374337;
+        bh=250n1SIL81Lob3W2vemslcjdvU/uN2/HJ6ayL4zyAdg=;
+        h=Date:From:To:Subject:From;
+        b=bxadrJ8dKI0MtUl/3oZdJqcTMiCFuxi3pl2rfz+6uMEVcOjrajdFcIEFsGdzmzvNB
+         egtiP8g8GkEYQs14JzMqWhK8T0Xsnc9O0Q48Uj2Kl/tvvBZr1Bh8ik6UEm7ZpD8bU9
+         QVjZL7FlD0i0Ct2j/B09eH5FT7Q0zcb9opfbOiMATJTT08pz15U1rEmXy0WpsL1OaQ
+         TAUMm9u463LP3W/bMk1t1qsncTrnpQ3t1sOxadpFihfKtjlgnvfzLMZX2pXvB3isH5
+         YiGNVnGBjvnYUdJ/1RR7F87Sbd4CjG2sQu4jvBuf/+uVseorVeIvJgHdoOqW4b0dZr
+         BLRnzVP8bYn7A==
+Received: by pali.im (Postfix)
+        id 36836A83; Wed, 10 Mar 2021 12:05:35 +0100 (CET)
+Date:   Wed, 10 Mar 2021 12:05:35 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Amey Narkhede <ameynarkhede02@gmail.com>,
+        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: How long should be PCIe card in Warm Reset state?
+Message-ID: <20210310110535.zh4pnn4vpmvzwl5q@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210308122020.57071-6-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 08 Mar 2021, Andy Shevchenko wrote:
+Hello!
 
-> Instead of open coding pci_p2sb_bar() functionality we are going to
-> use generic library for that. There one more user of it is coming.
-> 
-> Besides cleaning up it fixes a potential issue if, by some reason,
-> SPI bar is 64-bit.
+I would like to open a question about PCIe Warm Reset. Warm Reset of
+PCIe card is triggered by asserting PERST# signal and in most cases
+PERST# signal is controlled by GPIO.
 
-Probably worth cleaning up the English in both these sections.
+Basically every native Linux PCIe controller driver is doing this Warm
+Reset of connected PCIe card during native driver initialization
+procedure.
 
- Instead of open coding pci_p2sb_bar() functionality we are going to
- use generic library. There is one more user en route.
+And now the important question is: How long should be PCIe card in Warm
+Reset state? After which timeout can be PERST# signal de-asserted by
+Linux controller driver?
 
- This is more than just a clean-up.  It also fixes a potential issue
- seen when SPI bar is 64-bit.
+Lorenzo and Rob already expressed concerns [1] [2] that this Warm Reset
+timeout should not be driver specific and I agree with them.
 
-Also worth briefly describing what that issue is I think.
+I have done investigation which timeout is using which native PCIe
+driver [3] and basically every driver is using different timeout.
 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/mfd/Kconfig   |  1 +
->  drivers/mfd/lpc_ich.c | 20 ++++++--------------
->  2 files changed, 7 insertions(+), 14 deletions(-)
+I have tried to find timeouts in PCIe specifications, I was not able to
+understand and deduce correct timeout value for Warm Reset from PCIe
+specifications. What I have found is written in my email [4].
 
-Code looks fine:
+Alex (as a "reset expert"), could you look at this issue?
 
-For my own reference (apply this as-is to your sign-off block):
+Or is there somebody else who understand PCIe specifications and PCIe
+diagrams to figure out what is the minimal timeout for de-asserting
+PERST# signal?
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+There are still some issues with WiFi cards (e.g. Compex one) which
+sometimes do not appear on PCIe bus. And based on these "reset timeout
+differences" in Linux PCIe controller drivers, I suspect that it is not
+(only) the problems in WiFi cards but also in Linux PCIe controller
+drivers. In my email [3] I have written that I figured out that WLE1216
+card needs to be in Warm Reset state for at least 10ms, otherwise card
+is not detected.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+[1] - https://lore.kernel.org/linux-pci/20200513115940.fiemtnxfqcyqo6ik@pali/
+[2] - https://lore.kernel.org/linux-pci/20200507212002.GA32182@bogus/
+[3] - https://lore.kernel.org/linux-pci/20200424092546.25p3hdtkehohe3xw@pali/
+[4] - https://lore.kernel.org/linux-pci/20200430082245.xblvb7xeamm4e336@pali/
