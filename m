@@ -2,102 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86914333174
-	for <lists+linux-pci@lfdr.de>; Tue,  9 Mar 2021 23:18:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B8E533332B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 03:34:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231786AbhCIWSQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 Mar 2021 17:18:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231960AbhCIWR4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Tue, 9 Mar 2021 17:17:56 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F254A650AC;
-        Tue,  9 Mar 2021 22:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615328276;
-        bh=3yN0EEuV6v6QjQlZgm324hPSjzM9yE63G1GoN8AzqVA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ZONvT4O3X7mG9tB+BPAHTig514bejv4EKVE2Q6fH3X9Vq3jHnjI1cQTDx8g/t8jYk
-         Kx4paUrFU4gTTVCd5iLK2IxqxGg4aXze1WrwOFhlUZiTJkEYQQo+sXAL7o1hUX5HjF
-         WHSH5tN/f9zbIBZlKe4oKOBQzSu+9buwvczYz+BLgeZzgOsLNrLVEmGQoKXKsdWJ3V
-         exn4MJiD/cMd6t5OuABDcThtyFgCrkns3twfZ+RjX4pnP3NWS1B+nN47QYbenBcBu9
-         wBR7x1XCXg+cG71jt5cPs29p2izdS1JUNveppKyN8nlHv4CfESxvdV9ojPkH3MiaAR
-         FNDG6oUcz8Gdw==
-Date:   Tue, 9 Mar 2021 16:17:53 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        ath9k-devel@qca.qualcomm.com, Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless@vger.kernel.org, Chas Williams <3chas3@gmail.com>,
-        linux-atm-general@lists.sourceforge.net,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        linux1394-devel@lists.sourceforge.net
-Subject: Re: [patch 12/14] PCI: hv: Use tasklet_disable_in_atomic()
-Message-ID: <20210309221753.GA1930915@bjorn-Precision-5520>
+        id S231571AbhCJCeM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 Mar 2021 21:34:12 -0500
+Received: from mail-io1-f52.google.com ([209.85.166.52]:32799 "EHLO
+        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231228AbhCJCeG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 Mar 2021 21:34:06 -0500
+Received: by mail-io1-f52.google.com with SMTP id n132so16315789iod.0;
+        Tue, 09 Mar 2021 18:34:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jVJuHwNtFnhiIpdvi4iXC7hbsxDw7lapoWRXaBtbaCY=;
+        b=WBo9aLGdQo6Wv9ir34Vyd3IeO76B8ZBAx2IR85L65/LPciYZmUaBx4g3dyXCD3kDnN
+         RsKmfMP703Nv5Zl+UXcr3LeJYJVdDLalk44cI/+DGUBFwVs1TDPkgJ2YFkfMKrVR/OB9
+         95uprE2OxNiopkPSSe5D9DpnGabzUEF4Um+G5es7hKWMwscRD5eZDe2Ri0IUlAN4zYGl
+         reHALZs+XgBbxnwE5E/s+AKqlxtNIHO9N//tqYvtFBT3l/eIfs5u21b/1Vc/YOV/3JOs
+         +S/UcB4VyFY2DJ29/4FUuy+ccqU2wBs+81BNG19HeW3AEzPF/63e6PfuoyIfitiu29DP
+         kSJw==
+X-Gm-Message-State: AOAM530DF1K/hRb52bVykFd6bHeyEQHYm2cPrYWIhFG83Idkrt+DSVZF
+        7qWIlPtGfVezWqtCZcWH7Q==
+X-Google-Smtp-Source: ABdhPJzn5+OnaQcbq9py83N+I+20k5N0ExASimPvcyzCWj4ldTkE5CXKuj+Y0I7vEhmibFklnXgpEQ==
+X-Received: by 2002:a6b:e20a:: with SMTP id z10mr908695ioc.99.1615343646327;
+        Tue, 09 Mar 2021 18:34:06 -0800 (PST)
+Received: from robh.at.kernel.org ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id t7sm8632404ilj.62.2021.03.09.18.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Mar 2021 18:34:05 -0800 (PST)
+Received: (nullmailer pid 1622948 invoked by uid 1000);
+        Wed, 10 Mar 2021 02:34:03 -0000
+Date:   Tue, 9 Mar 2021 19:34:03 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>,
+        Nadeem Athani <nadeem@cadence.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: PCI: ti, j721e: Add binding to
+ represent refclk to the connector
+Message-ID: <20210310023403.GA1622887@robh.at.kernel.org>
+References: <20210308063550.6227-1-kishon@ti.com>
+ <20210308063550.6227-2-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210309084242.516519290@linutronix.de>
+In-Reply-To: <20210308063550.6227-2-kishon@ti.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 09, 2021 at 09:42:15AM +0100, Thomas Gleixner wrote:
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On Mon, 08 Mar 2021 12:05:47 +0530, Kishon Vijay Abraham I wrote:
+> Add binding to represent refclk to the PCIe connector.
 > 
-> The hv_compose_msi_msg() callback in irq_chip::irq_compose_msi_msg is
-> invoked via irq_chip_compose_msi_msg(), which itself is always invoked from
-> atomic contexts from the guts of the interrupt core code.
-> 
-> There is no way to change this w/o rewriting the whole driver, so use
-> tasklet_disable_in_atomic() which allows to make tasklet_disable()
-> sleepable once the remaining atomic users are addressed.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-hyperv@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-It'd be ideal if you could merge this as a group.  Let me know if you
-want me to do anything else.
-
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/pci/controller/pci-hyperv.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml       | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1458,7 +1458,7 @@ static void hv_compose_msi_msg(struct ir
->  	 * Prevents hv_pci_onchannelcallback() from running concurrently
->  	 * in the tasklet.
->  	 */
-> -	tasklet_disable(&channel->callback_event);
-> +	tasklet_disable_in_atomic(&channel->callback_event);
->  
->  	/*
->  	 * Since this function is called with IRQ locks held, can't
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
