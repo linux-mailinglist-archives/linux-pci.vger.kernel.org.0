@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6FC334646
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 19:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C35FE334649
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 19:09:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232695AbhCJSI2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 13:08:28 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2679 "EHLO
+        id S233386AbhCJSJA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 13:09:00 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2680 "EHLO
         frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbhCJSIC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 13:08:02 -0500
-Received: from fraeml743-chm.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DwfzZ3LFnz67tLR;
-        Thu, 11 Mar 2021 02:02:02 +0800 (CST)
+        with ESMTP id S229602AbhCJSId (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 13:08:33 -0500
+Received: from fraeml742-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Dwg1z1wN4z67nSb;
+        Thu, 11 Mar 2021 02:04:07 +0800 (CST)
 Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml743-chm.china.huawei.com (10.206.15.224) with Microsoft SMTP Server
+ fraeml742-chm.china.huawei.com (10.206.15.223) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Wed, 10 Mar 2021 19:08:00 +0100
+ 15.1.2106.2; Wed, 10 Mar 2021 19:08:31 +0100
 Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
  lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2106.2; Wed, 10 Mar 2021 18:08:00 +0000
+ 15.1.2106.2; Wed, 10 Mar 2021 18:08:30 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
 To:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         Ben Widawsky <ben.widawsky@intel.com>,
@@ -33,9 +33,9 @@ CC:     Chris Browy <cbrowy@avery-design.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         <linuxarm@huawei.com>, Fangjian <f.fangjian@huawei.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [RFC PATCH 1/2] PCI/doe: Initial support PCI Data Object Exchange
-Date:   Thu, 11 Mar 2021 02:03:05 +0800
-Message-ID: <20210310180306.1588376-2-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH 2/2] cxl/mem: Add CDAT table reading from DOE
+Date:   Thu, 11 Mar 2021 02:03:06 +0800
+Message-ID: <20210310180306.1588376-3-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
 References: <20210310180306.1588376-1-Jonathan.Cameron@huawei.com>
@@ -50,446 +50,490 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Introduced in an ECN to the PCI 5.0, DOE provides a config space
-based mailbox with standard protocol discovery.  Each mailbox
-is accessed through a DOE PCIE Extended Capability.
+This patch simply provides some debug print outs of the entries
+at probe time + a sysfs binary attribute to allow dumping of the
+whole table.
 
-A device may have 1 or more DOE mailboxes, each of which is allowed
-to support any number of protocols (some DOE protocols
-specifications apply additional restrictions).  A given protocol
-may be supported on more than one DOE mailbox on a given function.
+Binary dumping is modelled on /sys/firmware/ACPI/tables/
 
-The current infrastructure is fairly simplistic and pushes the burden
-of handling this many-to-many relantionship to the drivers. In many
-cases the arrangement will be static, making this straight forward.
+The ability to dump this table will be very useful for emulation of
+real devices once they become available as QEMU CXL type 3 device
+emulation will be able to load this file in.
 
 Open questions:
-* timeouts: The DOE specification allows for 1 second for some
-  operations, but notes that specific protocols may have different
-  requirements. Should we introduce the flexiblity now, or leave
-  that to be implemented when support for such a protocol is added?
-* DOE mailboxes may use MSI / MSIX to signal that the have prepared
-  a response. These require normal conditions are setup by the driver.
-  Should we move some of this into the DOE support (such as ensuring
-  bus mastering is enabled)?
-
-Testing conducted against QEMU using:
-
-https://lore.kernel.org/qemu-devel/1612900760-7361-1-git-send-email-cbrowy@avery-design.com/
-+ fix for interrupt flag mentioned in that thread.
-
-Additional testing to be done, particularly around error handling.
+* No support here for table updates. Worth including these from the
+  start, or leave that complexity for later?
+* Worth logging the reported info for debug, or is the binary attribute
+  sufficient?  Larger open question of whether to expose this info to
+  userspace or not left for another day!
+* Where to put the CDAT file?  Is it worth a subdirectory?
+* What is maximum size of the SSLBIS entry - I haven't quite managed
+  to figure that out and this is the record with largest size.
+  We could support dynamic allocation of the record size, but it
+  would add complexity that seems unnecessary.
+  It would not be compliant with the specification for a type 3 memory
+  device to report this record anyway so I'm not that worried about this
+  for now.  It will become relevant once we have support for reading
+  CDAT from CXL switches.
+* cdat.h is formatted in a similar style to pci_regs.h on basis that
+  it may well be helpful to share this header with userspace tools.
+* Move the generic parts of this out to driver/cxl/cdat.c or leave that
+  until we have other CXL drivers wishing to use this?
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/pci/pcie/Kconfig      |   8 +
- drivers/pci/pcie/Makefile     |   1 +
- drivers/pci/pcie/doe.c        | 284 ++++++++++++++++++++++++++++++++++
- include/linux/pcie-doe.h      |  35 +++++
- include/uapi/linux/pci_regs.h |  29 +++-
- 5 files changed, 356 insertions(+), 1 deletion(-)
+ drivers/cxl/cdat.h |  79 ++++++++++++++
+ drivers/cxl/cxl.h  |  13 +++
+ drivers/cxl/mem.c  | 253 ++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 344 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-index 45a2ef702b45..f1cada7790fd 100644
---- a/drivers/pci/pcie/Kconfig
-+++ b/drivers/pci/pcie/Kconfig
-@@ -142,3 +142,11 @@ config PCIE_EDR
- 	  the PCI Firmware Specification r3.2.  Enable this if you want to
- 	  support hybrid DPC model which uses both firmware and OS to
- 	  implement DPC.
-+
-+config PCIE_DOE
-+       bool "PCI Express Data Object Exchange support"
-+       help
-+         This enables library support PCI Data Object Exchange capability.
-+         DOE provides a simple mailbox in PCI express config space that is
-+         used by a number of different protocols.
-+         It is defined in he Data Object Exchnage ECN to PCI 5.0.
-diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-index b2980db88cc0..801fdd5fbfc1 100644
---- a/drivers/pci/pcie/Makefile
-+++ b/drivers/pci/pcie/Makefile
-@@ -13,3 +13,4 @@ obj-$(CONFIG_PCIE_PME)		+= pme.o
- obj-$(CONFIG_PCIE_DPC)		+= dpc.o
- obj-$(CONFIG_PCIE_PTM)		+= ptm.o
- obj-$(CONFIG_PCIE_EDR)		+= edr.o
-+obj-$(CONFIG_PCIE_DOE)		+= doe.o
-diff --git a/drivers/pci/pcie/doe.c b/drivers/pci/pcie/doe.c
+diff --git a/drivers/cxl/cdat.h b/drivers/cxl/cdat.h
 new file mode 100644
-index 000000000000..b091ef379362
+index 000000000000..e67b18e02c35
 --- /dev/null
-+++ b/drivers/pci/pcie/doe.c
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/drivers/cxl/cdat.h
+@@ -0,0 +1,79 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Data Object Exchange was added to the PCI spec as an ECN to 5.0.
++ * Coherent Device Attribute table (CDAT)
 + *
-+ * Copyright (C) 2021 Huawei
-+ *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
++ * Specification available from UEFI.org
++ *
++ * Whilst CDAT is defined as a single table, the access via DOE maiboxes is
++ * done one entry at a time, where the first entry is the header.
 + */
 +
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/jiffies.h>
-+#include <linux/mutex.h>
-+#include <linux/pci.h>
++#define CXL_DOE_TABLE_ACCESS_REQ_CODE		0x000000ff
++#define   CXL_DOE_TABLE_ACCESS_REQ_CODE_READ	0
++#define CXL_DOE_TABLE_ACCESS_TABLE_TYPE		0x0000ff00
++#define   CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA	0
++#define CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE	0xffff0000
++
++
++/*
++ * CDAT entries are little endian and are read from PCI config space which
++ * is also little endian.
++ * As such, on a big endian system these will have been reversed.
++ * This prevents us from making easy use of packed structures.
++ * Style form pci_regs.h
++ */
++
++#define CDAT_HEADER_LENGTH_DW 3
++#define CDAT_HEADER_DW0_LENGTH		0xFFFFFFFF
++#define CDAT_HEADER_DW1_REVISION	0x000000FF
++#define CDAT_HEADER_DW1_CHECKSUM	0x0000FF00
++#define CDAT_HEADER_DW2_SEQUENCE	0xFFFFFFFF
++
++/* All structures have a common first DW */
++#define CDAT_STRUCTURE_DW0_TYPE		0x000000FF
++#define   CDAT_STRUCTURE_DW0_TYPE_DSMAS 0
++#define   CDAT_STRUCTURE_DW0_TYPE_DSLBIS 1
++#define   CDAT_STRUCTURE_DW0_TYPE_DSMSCIS 2
++#define   CDAT_STRUCTURE_DW0_TYPE_DSIS 3
++#define   CDAT_STRUCTURE_DW0_TYPE_DSEMTS 4
++#define   CDAT_STRUCTURE_DW0_TYPE_SSLBIS 5
++
++#define CDAT_STRUCTURE_DW0_LENGTH	0xFFFF0000
++
++/* Device Scoped Memory Affinity Structure */
++#define CDAT_DSMAS_DW1_DSMAD_HANDLE	0x000000ff
++#define CDAT_DSMAS_DW1_FLAGS		0x0000ff00
++#define CDAT_DSMAS_DPA_OFFSET(entry) ((u64)((entry)[3]) << 32 | (entry)[2])
++#define CDAT_DSMAS_DPA_LEN(entry) ((u64)((entry)[5]) << 32 | (entry)[4])
++
++/* Device Scoped Latency and Bandwidth Information Structure */
++#define CDAT_DSLBIS_DW1_HANDLE		0x000000ff
++#define CDAT_DSLBIS_DW1_FLAGS		0x0000ff00
++#define CDAT_DSLBIS_DW1_DATA_TYPE	0x00ff0000
++#define CDAT_DSLBIS_BASE_UNIT(entry) ((u64)((entry)[3]) << 32 | (entry)[2])
++#define CDAT_DSLBIS_DW4_ENTRY_0		0x0000ffff
++#define CDAT_DSLBIS_DW4_ENTRY_1		0xffff0000
++#define CDAT_DSLBIS_DW5_ENTRY_2		0x0000ffff
++
++/* Device Scoped Memory Side Cache Information Structure */
++#define CDAT_DSMSCIS_DW1_HANDLE		0x000000ff
++#define CDAT_DSMSCIS_MEMORY_SIDE_CACHE_SIZE(entry) \
++	((u64)((entry)[3]) << 32 | (entry)[2])
++#define CDAT_DSMSCIS_DW4_MEMORY_SIDE_CACHE_ATTRS 0xffffffff
++
++/* Device Scoped Initiator Structure */
++#define CDAT_DSIS_DW1_FLAGS		0x000000ff
++#define CDAT_DSIS_DW1_HANDLE		0x0000ff00
++
++/* Device Scoped EFI Memory Type Structure */
++#define CDAT_DSEMTS_DW1_HANDLE		0x000000ff
++#define CDAT_DSEMTS_DW1_EFI_MEMORY_TYPE_ATTR	0x0000ff00
++#define CDAT_DSEMTS_DPA_OFFSET(entry)	((u64)((entry)[3]) << 32 | (entry)[2])
++#define CDAT_DSEMTS_DPA_LENGTH(entry)	((u64)((entry)[5]) << 32 | (entry)[4])
++
++/* Switch Scoped Latency and Bandwidth Information Structure */
++#define CDAT_SSLBIS_DW1_DATA_TYPE	0x000000ff
++#define CDAT_SSLBIS_BASE_UNIT(entry)	((u64)((entry)[3]) << 32 | (entry)[2])
++#define CDAT_SSLBIS_ENTRY_PORT_X(entry, i) ((entry)[4 + (i) * 2] & 0x0000ffff)
++#define CDAT_SSLBIS_ENTRY_PORT_Y(entry, i) (((entry)[4 + (i) * 2] & 0xffff0000) >> 16)
++#define CDAT_SSLBIS_ENTRY_LAT_OR_BW(entry, i) ((entry)[4 + (i) * 2 + 1] & 0x0000ffff)
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 6f14838c2d25..2f5a69201fc3 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -7,6 +7,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
+ #include <linux/io.h>
 +#include <linux/pcie-doe.h>
+ 
+ /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+ #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+@@ -57,10 +58,21 @@
+ 	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
+ 	 CXLMDEV_RESET_NEEDED_NOT)
+ 
++#define CXL_DOE_PROTOCOL_COMPLIANCE 0
++#define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
 +
-+static irqreturn_t doe_irq(int irq, void *data)
++/* Common to request and response */
++#define CXL_DOE_TABLE_ACCESS_3_CODE GENMASK(7, 0)
++#define   CXL_DOE_TABLE_ACCESS_3_CODE_READ 0
++#define CXL_DOE_TABLE_ACCESS_3_TYPE GENMASK(15, 8)
++#define   CXL_DOE_TABLE_ACCESS_3_TYPE_CDAT 0
++#define CXL_DOE_TABLE_ACCESS_3_ENTRY_HANDLE GENMASK(31, 16)
++
+ struct cxl_memdev;
+ /**
+  * struct cxl_mem - A CXL memory device
+  * @pdev: The PCI device associated with this CXL device.
++ * @doe: Data exchange object mailbox used to read tables.
+  * @regs: IO mappings to the device's MMIO
+  * @status_regs: CXL 2.0 8.2.8.3 Device Status Registers
+  * @mbox_regs: CXL 2.0 8.2.8.4 Mailbox Registers
+@@ -75,6 +87,7 @@ struct cxl_memdev;
+  */
+ struct cxl_mem {
+ 	struct pci_dev *pdev;
++	struct pcie_doe doe;
+ 	void __iomem *regs;
+ 	struct cxl_memdev *cxlmd;
+ 
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 4597b28aeb3f..71de66bc6c54 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -12,6 +12,7 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include "pci.h"
+ #include "cxl.h"
++#include "cdat.h"
+ 
+ /**
+  * DOC: cxl mem
+@@ -91,6 +92,11 @@ struct mbox_cmd {
+ #define CXL_MBOX_SUCCESS 0
+ };
+ 
++struct doe_table_attr {
++	struct bin_attribute attr;
++	void *table;
++};
++
+ /**
+  * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
+  * @dev: driver core device object
+@@ -98,6 +104,7 @@ struct mbox_cmd {
+  * @cxlm: pointer to the parent device driver data
+  * @ops_active: active user of @cxlm in ops handlers
+  * @ops_dead: completion when all @cxlm ops users have exited
++ * @table_attr: attribute used to provide dumping of table
+  * @id: id number of this memdev instance.
+  */
+ struct cxl_memdev {
+@@ -106,6 +113,7 @@ struct cxl_memdev {
+ 	struct cxl_mem *cxlm;
+ 	struct percpu_ref ops_active;
+ 	struct completion ops_dead;
++	struct doe_table_attr table_attr;
+ 	int id;
+ };
+ 
+@@ -976,13 +984,165 @@ static int cxl_mem_setup_mailbox(struct cxl_mem *cxlm)
+ 	return 0;
+ }
+ 
++#define CDAT_DOE_REQ(entry_handle)					\
++	[0] = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID,		\
++			 PCI_DVSEC_VENDOR_ID_CXL) |			\
++	      FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE,		\
++			   CXL_DOE_PROTOCOL_TABLE_ACCESS),		\
++	[1] = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, 3),	\
++	[2] = FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,			\
++			 CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |		\
++	      FIELD_PREP(CXL_DOE_TABLE_ACCESS_TABLE_TYPE,		\
++			 CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |	\
++	      FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle))
++
++static ssize_t cdat_get_length(struct pcie_doe *doe)
 +{
-+	struct pcie_doe *doe = data;
-+	struct pci_dev *pdev = doe->pdev;
-+	u32 val;
++	u32 cdat_request[3] = {
++		CDAT_DOE_REQ(0),
++	};
++	u32 cdat_response[32];
++	ssize_t rc;
 +
-+	pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_STATUS, &val);
-+	if (FIELD_GET(PCI_DOE_STATUS_INT_STATUS, val)) {
-+		pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_STATUS,
-+				       val);
-+		complete(&doe->c);
-+		return IRQ_HANDLED;
-+	}
-+	/* Leave the error case to be handled outside irq */
-+	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
-+		complete(&doe->c);
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+static int pcie_doe_abort(struct pcie_doe *doe)
-+{
-+	struct pci_dev *pdev = doe->pdev;
-+	int retry = 0;
-+	u32 val;
-+
-+	pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_CTRL,
-+			       PCI_DOE_CTRL_ABORT);
-+	/* Abort is allowed to take up to 1 second */
-+	do {
-+		retry++;
-+		pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_STATUS,
-+				      &val);
-+		if (FIELD_GET(PCI_DOE_STATUS_ERROR, val) &&
-+		    !FIELD_GET(PCI_DOE_STATUS_BUSY, val))
-+			return 0;
-+		usleep_range(1000, 2000);
-+	} while (retry < 1000);
-+
-+	return -EIO;
-+}
-+
-+/**
-+ * pcie_doe_init() - Initialise a Data Object Exchange mailbox
-+ * @doe: state structure for the DOE mailbox
-+ * @pdev: pci device which has this DOE mailbox
-+ * @doe_offset: offset in configuration space of the DOE extended capability.
-+ * @use_int: whether to use the optional interrupt
-+ * Returns: 0 on success, <0 on error
-+ *
-+ * Caller responsible for calling pci_alloc_irq_vectors() including DOE
-+ * interrupt.
-+ */
-+int pcie_doe_init(struct pcie_doe *doe, struct pci_dev *pdev, int doe_offset,
-+		  bool use_int)
-+{
-+	u32 val;
-+	int rc;
-+
-+	mutex_init(&doe->lock);
-+	init_completion(&doe->c);
-+	doe->cap_offset = doe_offset;
-+	doe->pdev = pdev;
-+	/* Reset the mailbox by issuing an abort */
-+	rc = pcie_doe_abort(doe);
++	rc = pcie_doe_exchange(doe, cdat_request, sizeof(cdat_request),
++			       cdat_response, sizeof(cdat_response));
 +	if (rc)
 +		return rc;
 +
-+	pci_read_config_dword(pdev, doe_offset + PCI_DOE_CAP, &val);
++	return cdat_response[3];
++}
 +
-+	if (use_int && FIELD_GET(PCI_DOE_CAP_INT, val)) {
-+		rc = devm_request_irq(&pdev->dev,
-+				      pci_irq_vector(pdev,
-+						     FIELD_GET(PCI_DOE_CAP_IRQ, val)),
-+				      doe_irq, 0, "DOE", doe);
++static int cdat_to_buffer(struct pcie_doe *doe, u32 *buffer, size_t length)
++{
++	int entry_handle = 0;
++	int rc;
++
++	do {
++		u32 cdat_request[3] = {
++			CDAT_DOE_REQ(entry_handle)
++		};
++		u32 cdat_response[32];
++		size_t entry_dw;
++		u32 *entry;
++
++		rc = pcie_doe_exchange(doe, cdat_request, sizeof(cdat_request),
++				       cdat_response, sizeof(cdat_response));
 +		if (rc)
 +			return rc;
 +
-+		doe->use_int = use_int;
-+		pci_write_config_dword(pdev, doe_offset + PCI_DOE_CTRL,
-+				       FIELD_PREP(PCI_DOE_CTRL_INT_EN, 1));
-+	}
++		entry = cdat_response + CDAT_HEADER_LENGTH_DW;
++
++		entry_dw = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, cdat_response[1]);
++		/* Skip Header */
++		entry_dw -= 3;
++		entry_dw = min(length / 4, entry_dw);
++		memcpy(buffer, entry, entry_dw * sizeof(u32));
++		length -= entry_dw * sizeof(u32);
++		buffer += entry_dw;
++		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, cdat_response[2]);
++	} while (entry_handle != 0xFFFF);
 +
 +	return 0;
 +}
 +
-+
-+/**
-+ * pcie_doe_exchange() - Send a request and receive a response
-+ * @doe: DOE mailbox state structure
-+ * @request: request data to be sent
-+ * @request_sz: size of request in bytes
-+ * @response: buffer into which to place the response
-+ * @response_sz: size of available response buffer in bytes
-+ *
-+ * Return: 0 on success, < 0 on error
-+ * Excess data will be discarded.
-+ */
-+int pcie_doe_exchange(struct pcie_doe *doe, u32 *request, size_t request_sz,
-+		      u32 *response, size_t response_sz)
++static int cdat_dump(struct pcie_doe *doe)
 +{
-+	struct pci_dev *pdev = doe->pdev;
-+	int ret = 0;
-+	int i;
-+	u32 val;
-+	int retry = -1;
-+	size_t length;
-+
-+	/* DOE requests must be a whole number of DW */
-+	if (request_sz % sizeof(u32))
-+		return -EINVAL;
-+
-+	/* Need at least 2 DW to get the length */
-+	if (response_sz < 2 * sizeof(u32))
-+		return -EINVAL;
-+
-+	mutex_lock(&doe->lock);
-+	/*
-+	 * Check the DOE busy bit is not set.
-+	 * If it is set, this could indicate someone other than Linux is
-+	 * using the mailbox.
-+	 */
-+	pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_STATUS, &val);
-+	if (FIELD_GET(PCI_DOE_STATUS_BUSY, val)) {
-+		ret = -EBUSY;
-+		goto unlock;
-+	}
-+
-+	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
-+		ret = pcie_doe_abort(doe);
-+		if (ret)
-+			goto unlock;
-+	}
-+
-+	for (i = 0; i < request_sz / 4; i++)
-+		pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_WRITE,
-+				       request[i]);
-+
-+	reinit_completion(&doe->c);
-+	pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_CTRL,
-+			       PCI_DOE_CTRL_GO);
-+
-+	if (doe->use_int) {
-+		/*
-+		 * Timeout of 1 second from 6.xx.1 ECN - Data Object Exchange
-+		 * Note a protocol is allowed to specify a different timeout, so
-+		 * that may need supporting in future.
-+		 */
-+		if (!wait_for_completion_timeout(&doe->c,
-+						 msecs_to_jiffies(1000))) {
-+			ret = -ETIMEDOUT;
-+			goto unlock;
-+		}
-+
-+		pci_read_config_dword(pdev,
-+				      doe->cap_offset + PCI_DOE_STATUS,
-+				      &val);
-+		if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
-+			pcie_doe_abort(doe);
-+			ret = -EIO;
-+			goto unlock;
-+		}
-+	} else {
-+		do {
-+			retry++;
-+			pci_read_config_dword(pdev,
-+					      doe->cap_offset + PCI_DOE_STATUS,
-+					      &val);
-+			if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
-+				pcie_doe_abort(doe);
-+				ret = -EIO;
-+				goto unlock;
-+			}
-+
-+			if (FIELD_GET(PCI_DOE_STATUS_DATA_OBJECT_READY, val))
-+				break;
-+			usleep_range(1000, 2000);
-+		} while (retry < 1000);
-+		if (!FIELD_GET(PCI_DOE_STATUS_DATA_OBJECT_READY, val)) {
-+			ret = -ETIMEDOUT;
-+			goto unlock;
-+		}
-+	}
-+
-+	/* Read the first two dwords to get the length */
-+	pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_READ,
-+			      &response[0]);
-+	pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_READ, 0);
-+	pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_READ,
-+			      &response[1]);
-+	pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_READ, 0);
-+	length = FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
-+			   response[1]);
-+	if (length > SZ_1M)
-+		return -EIO;
-+
-+	for (i = 2; i < min(length, response_sz / 4); i++) {
-+		pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_READ,
-+				      &response[i]);
-+		pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_READ, 0);
-+	}
-+	/* flush excess length */
-+	for (; i < length; i++) {
-+		pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_READ,
-+				      &val);
-+		pci_write_config_dword(pdev, doe->cap_offset + PCI_DOE_READ, 0);
-+	}
-+	/* Final error check to pick up on any since Data Object Ready */
-+	pci_read_config_dword(pdev, doe->cap_offset + PCI_DOE_STATUS, &val);
-+	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val)) {
-+		pcie_doe_abort(doe);
-+		ret = -EIO;
-+	}
-+unlock:
-+	mutex_unlock(&doe->lock);
-+
-+	return ret;
-+}
-+
-+
-+static int pcie_doe_discovery(struct pcie_doe *doe, u8 *index, u16 *vid, u8 *protocol)
-+{
-+	u32 request[3] = {
-+		[0] = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, 0001) |
-+		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, 0),
-+		[1] = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH, 3),
-+		[2] = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX, *index)
-+	};
-+	u32 response[3];
-+	int ret;
-+
-+	ret = pcie_doe_exchange(doe, request, sizeof(request), response, sizeof(response));
-+	if (ret)
-+		return ret;
-+
-+	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response[2]);
-+	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL, response[2]);
-+	*index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX, response[2]);
-+
-+	return 0;
-+}
-+
-+/**
-+ * pcie_doe_protocol_check() - check if this DOE mailbox supports specific protocol
-+ * @doe: DOE state structure
-+ * @vid: Vendor ID
-+ * @protocol: Protocol number as defined by Vendor
-+ * Returns: 0 on success, <0 on error
-+ */
-+int pcie_doe_protocol_check(struct pcie_doe *doe, u16 vid, u8 protocol)
-+{
-+	u8 index = 0;
++	struct pci_dev *dev = doe->pdev;
++	int entry_handle = 0;
++	int rc;
 +
 +	do {
-+		u8 this_protocol;
-+		u16 this_vid;
-+		int ret;
++		/* Table access is available */
++		u32 cdat_request[3] = {
++			CDAT_DOE_REQ(entry_handle)
++		};
++		u32 cdat_response[32];
++		u32 *entry;
 +
-+		ret = pcie_doe_discovery(doe, &index, &this_vid, &this_protocol);
-+		if (ret)
-+			return ret;
-+		if (this_vid == vid && this_protocol == protocol)
-+			return 0;
-+	} while (index);
++		rc = pcie_doe_exchange(doe, cdat_request, sizeof(cdat_request),
++				       cdat_response, sizeof(cdat_response));
++		if (rc)
++			return rc;
 +
-+	return -ENODEV;
++		entry = cdat_response + CDAT_HEADER_LENGTH_DW;
++		if (entry_handle == 0) {
++			pci_info(dev,
++				 "CDAT Header (Length=%u, Revision=%u, Checksum=0x%x, Sequence=%u\n",
++				 entry[0],
++				 FIELD_GET(CDAT_HEADER_DW1_REVISION, entry[1]),
++				 FIELD_GET(CDAT_HEADER_DW1_CHECKSUM, entry[1]),
++				 entry[2]);
++		} else {
++			u8 entry_type = FIELD_GET(CDAT_STRUCTURE_DW0_TYPE, entry[0]);
++
++			switch (entry_type) {
++			case CDAT_STRUCTURE_DW0_TYPE_DSMAS:
++				pci_info(dev,
++					 "CDAT DSMAS (handle=%u flags=0x%x, dpa(0x%llx 0x%llx)\n",
++					 FIELD_GET(CDAT_DSMAS_DW1_DSMAD_HANDLE, entry[1]),
++					 FIELD_GET(CDAT_DSMAS_DW1_FLAGS, entry[1]),
++					 CDAT_DSMAS_DPA_OFFSET(entry),
++					 CDAT_DSMAS_DPA_LEN(entry));
++				break;
++			case CDAT_STRUCTURE_DW0_TYPE_DSLBIS:
++				pci_info(dev,
++					 "CDAT DSLBIS (handle=%u flags=0x%x, ent_base=0x%llx, entry[%u %u %u])\n",
++					 FIELD_GET(CDAT_DSLBIS_DW1_HANDLE, entry[1]),
++					 FIELD_GET(CDAT_DSLBIS_DW1_FLAGS, entry[1]),
++					 CDAT_DSLBIS_BASE_UNIT(entry),
++					 FIELD_GET(CDAT_DSLBIS_DW4_ENTRY_0, entry[4]),
++					 FIELD_GET(CDAT_DSLBIS_DW4_ENTRY_1, entry[4]),
++					 FIELD_GET(CDAT_DSLBIS_DW5_ENTRY_2, entry[5]));
++				break;
++			case CDAT_STRUCTURE_DW0_TYPE_DSMSCIS:
++				pci_info(dev,
++					 "CDAT DSMSCIS (handle=%u sc_size=0x%llx attrs=0x%x)\n",
++					 FIELD_GET(CDAT_DSMSCIS_DW1_HANDLE, entry[1]),
++					 CDAT_DSMSCIS_MEMORY_SIDE_CACHE_SIZE(entry),
++					 FIELD_GET(CDAT_DSMSCIS_DW4_MEMORY_SIDE_CACHE_ATTRS,
++						   entry[4]));
++				break;
++			case CDAT_STRUCTURE_DW0_TYPE_DSIS:
++				pci_info(dev,
++					 "CDAT DSIS (handle=%u flags=0x%x)\n",
++					 FIELD_GET(CDAT_DSIS_DW1_HANDLE, entry[1]),
++					 FIELD_GET(CDAT_DSIS_DW1_FLAGS, entry[1]));
++				break;
++			case CDAT_STRUCTURE_DW0_TYPE_DSEMTS:
++				pci_info(dev,
++					 "CDAT DSEMTS (handle=%u EFI=0x%x dpa(0x%llx 0x%llx)\n",
++					 FIELD_GET(CDAT_DSEMTS_DW1_HANDLE, entry[1]),
++					 FIELD_GET(CDAT_DSEMTS_DW1_EFI_MEMORY_TYPE_ATTR,
++						   entry[1]),
++					 CDAT_DSEMTS_DPA_OFFSET(entry),
++					 CDAT_DSEMTS_DPA_LENGTH(entry));
++				break;
++			case CDAT_STRUCTURE_DW0_TYPE_SSLBIS:
++				pci_info(dev,
++					 "CDAT SSLBIS (type%u ent_base=%llu...)\n",
++					 FIELD_GET(CDAT_SSLBIS_DW1_DATA_TYPE,
++						   entry[1]),
++					 CDAT_SSLBIS_BASE_UNIT(entry));
++				break;
++			}
++		}
++		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
++					 cdat_response[2]);
++	} while (entry_handle != 0xFFFF);
++
++	return 0;
 +}
-diff --git a/include/linux/pcie-doe.h b/include/linux/pcie-doe.h
-new file mode 100644
-index 000000000000..36eaa8532254
---- /dev/null
-+++ b/include/linux/pcie-doe.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Data Object Exchange was added to the PCI spec as an ECN to 5.0.
-+ *
-+ * Copyright (C) 2021 Huawei
-+ *     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-+ */
 +
-+#include <linux/completion.h>
-+#include <linux/mutex.h>
-+
-+#ifndef LINUX_PCIE_DOE_H
-+#define LINUX_PCIE_DOE_H
-+/**
-+ * struct pcie_doe - State to support use of DOE mailbox
-+ * @lock: Ensure users of the mailbox are serialized
-+ * @cap_offset: Config space offset to base of DOE capability.
-+ * @pdev: PCI device that hosts this DOE.
-+ * @c: Completion used for interrupt handling.
-+ * @use_int: Flage to indicate if interrupts rather than polling used.
-+ */
-+struct pcie_doe {
-+	struct mutex lock;
-+	int cap_offset;
-+	struct pci_dev *pdev;
-+	struct completion c;
-+	bool use_int;
-+};
-+
-+int pcie_doe_init(struct pcie_doe *doe, struct pci_dev *dev, int doe_offset,
-+		  bool use_int);
-+int pcie_doe_exchange(struct pcie_doe *doe, u32 *request, size_t request_sz,
-+		      u32 *response, size_t response_sz);
-+int pcie_doe_protocol_check(struct pcie_doe *doe, u16 vid, u8 protocol);
-+#endif
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index e709ae8235e7..4d8a5fee2cdf 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -730,7 +730,8 @@
- #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
- #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
- #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
--#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL_16GT
-+#define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
-+#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
+ 				      u32 reg_hi)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct cxl_mem *cxlm;
+ 	void __iomem *regs;
++	bool doe_use_irq;
++	int pos = 0;
+ 	u64 offset;
++	int irqs;
+ 	u8 bar;
+ 	int rc;
  
- #define PCI_EXT_CAP_DSN_SIZEOF	12
- #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-@@ -1092,4 +1093,30 @@
- #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_MASK		0x000000F0
- #define  PCI_PL_16GT_LE_CTRL_USP_TX_PRESET_SHIFT	4
+@@ -1021,6 +1181,44 @@ static struct cxl_mem *cxl_mem_create(struct pci_dev *pdev, u32 reg_lo,
+ 		return NULL;
+ 	}
  
-+/* Data Object Exchange */
-+#define PCI_DOE_CAP		0x04	/* DOE Capabilities Register */
-+#define  PCI_DOE_CAP_INT			0x00000001  /* Interrupt Support */
-+#define  PCI_DOE_CAP_IRQ			0x00000ffe  /* Interrupt Message Number */
-+#define PCI_DOE_CTRL		0x08	/* DOE Control Register */
-+#define  PCI_DOE_CTRL_ABORT			0x00000001  /* DOE Abort */
-+#define  PCI_DOE_CTRL_INT_EN			0x00000002  /* DOE Interrupt Enable */
-+#define  PCI_DOE_CTRL_GO			0x80000000  /* DOE Go */
-+#define PCI_DOE_STATUS		0x0C	/* DOE Status Register */
-+#define  PCI_DOE_STATUS_BUSY			0x00000001  /* DOE Busy */
-+#define  PCI_DOE_STATUS_INT_STATUS		0x00000002  /* DOE Interrupt Status */
-+#define  PCI_DOE_STATUS_ERROR			0x00000004  /* DOE Error */
-+#define  PCI_DOE_STATUS_DATA_OBJECT_READY	0x80000000  /* Data Object Ready */
-+#define PCI_DOE_WRITE		0x10	/* DOE Write Data Mailbox Register */
-+#define PCI_DOE_READ		0x14	/* DOE Read Data Mailbox Register */
++	/*
++	 * An implementation of a cxl type3 device may support an unknown
++	 * number of interrupts. Assume that number is not that large and
++	 * request them all.
++	 */
++	irqs = pci_msix_vec_count(pdev);
++	rc = pci_alloc_irq_vectors(pdev, irqs, irqs, PCI_IRQ_MSIX);
++	if (rc != irqs) {
++		/* No interrupt available - carry on */
++		dev_dbg(dev, "No interrupts available for DOE\n");
++		doe_use_irq = false;
++	} else {
++		/*
++		 * Enabling bus mastering could be done within the DOE
++		 * initialization, but as it potentially has other impacts
++		 * keep it within the driver.
++		 */
++		pci_set_master(pdev);
++		doe_use_irq = true;
++	}
 +
-+/* DOE Data Object - note not actually registers */
-+#define PCI_DOE_DATA_OBJECT_HEADER_1_VID	0x0000FFFF
-+#define PCI_DOE_DATA_OBJECT_HEADER_1_TYPE	0x00FF0000
-+#define PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH	0x0003FFFF
++	/*
++	 * Find a DOE mailbox that supports CDAT.
++	 * Supporting other DOE protocols will require more complexity.
++	 */
++	do {
++		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DOE);
++		if (!pos)
++			return NULL;
 +
-+#define PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX	0x000000FF
-+#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID	0x0000FFFF
-+#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL	0x00FF0000
-+#define PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX 0xFF000000
++		pcie_doe_init(&cxlm->doe, pdev, pos, doe_use_irq);
++	} while (pcie_doe_protocol_check(&cxlm->doe, PCI_DVSEC_VENDOR_ID_CXL,
++					 CXL_DOE_PROTOCOL_TABLE_ACCESS));
 +
- #endif /* LINUX_PCI_REGS_H */
++	rc = cdat_dump(&cxlm->doe);
++	if (rc)
++		return NULL;
++
+ 	dev_dbg(dev, "Mapped CXL Memory Device resource\n");
+ 	return cxlm;
+ }
+@@ -1178,6 +1376,55 @@ static void cxlmdev_ops_active_release(struct percpu_ref *ref)
+ 	complete(&cxlmd->ops_dead);
+ }
+ 
++static ssize_t cdat_table_show(struct file *filp, struct kobject *kobj,
++			       struct bin_attribute *bin_attr, char *buf,
++			       loff_t offset, size_t count)
++{
++	struct doe_table_attr *table_attr =
++		container_of(bin_attr, struct doe_table_attr, attr);
++
++	return memory_read_from_buffer(buf, count, &offset, table_attr->table,
++				       bin_attr->size);
++}
++
++static void cxl_remove_table_sysfs(void *_cxlmd)
++{
++	struct cxl_memdev *cxlmd = _cxlmd;
++	struct device *dev = &cxlmd->dev;
++
++	sysfs_remove_bin_file(&dev->kobj, &cxlmd->table_attr.attr);
++}
++
++static int cxl_add_table_sysfs(struct cxl_memdev *cxlmd)
++{
++	struct cxl_mem *cxlm = cxlmd->cxlm;
++	struct device *dev = &cxlmd->dev;
++	ssize_t cdat_length;
++	int rc;
++
++	cdat_length = cdat_get_length(&cxlm->doe);
++	if (cdat_length < 0)
++		return cdat_length;
++
++	sysfs_attr_init(&cxlmd->table_attr.attr.attr);
++	/* Updates of CDAT are not yet handled so length is fixed. */
++	cxlmd->table_attr.attr.size = cdat_length;
++	cxlmd->table_attr.attr.read = cdat_table_show;
++	cxlmd->table_attr.attr.attr.name = "CDAT";
++	cxlmd->table_attr.attr.attr.mode = 0400;
++	cxlmd->table_attr.table = devm_kzalloc(dev->parent, cdat_length, GFP_KERNEL);
++
++	rc = cdat_to_buffer(&cxlm->doe, cxlmd->table_attr.table, cdat_length);
++	if (rc)
++		return rc;
++
++	rc = sysfs_create_bin_file(&dev->kobj, &cxlmd->table_attr.attr);
++	if (rc)
++		return rc;
++
++	return devm_add_action_or_reset(dev->parent, cxl_remove_table_sysfs, cxlmd);
++}
++
+ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+ {
+ 	struct pci_dev *pdev = cxlm->pdev;
+@@ -1221,7 +1468,11 @@ static int cxl_mem_add_memdev(struct cxl_mem *cxlm)
+ 	if (rc)
+ 		goto err_add;
+ 
+-	return devm_add_action_or_reset(dev->parent, cxlmdev_unregister, cxlmd);
++	rc = devm_add_action_or_reset(dev->parent, cxlmdev_unregister, cxlmd);
++	if (rc)
++		return rc;
++
++	return cxl_add_table_sysfs(cxlmd);
+ 
+ err_add:
+ 	ida_free(&cxl_memdev_ida, cxlmd->id);
 -- 
 2.19.1
 
