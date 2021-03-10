@@ -2,126 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF35A334790
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 20:10:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C8D3347F4
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 20:30:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbhCJTJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 14:09:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
+        id S232096AbhCJTaI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 14:30:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232880AbhCJTJJ (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Mar 2021 14:09:09 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 609A764F93;
-        Wed, 10 Mar 2021 19:09:08 +0000 (UTC)
+        id S233342AbhCJTaA (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Mar 2021 14:30:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0FA3F64EF6;
+        Wed, 10 Mar 2021 19:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615403348;
-        bh=/zpyjVEYsl5qnKnsooOKZ2w+XT7cw6yuEAItNuarinc=;
+        s=k20201202; t=1615404600;
+        bh=e2Z2DQoJIeiblci+Xk9crwWl1In7MRqs54LMBzkItlg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hVtTJdMIu4SQ2XrTyYP3PKyc0zktSkjizJJujRecAM+7qc/DqUUZEsM8+aKrf+SwE
-         UZiSJb42rwlhmkT2RTD+C/slo+LmD9Nnae8qFtSYGdPBJWL/yBm4WB3D1YmGFJ0PLI
-         8d3s6/fZbRFHNmSwcZWgSin3kExP4X+LXNy9Y/KODfuyysAxvezcxwAqLEIJImjULA
-         QTLUFEY+znsoSooI6UYYbJoz806X8HVfCKYy43Ayi+a1nJ2KxRi8/fBXs9e+8yG9Dv
-         y8Mdq5DEUlQ6OZeHRlZGiUvfN2LHsURoIGpEAEixF0PvBZ5Cigd07bLnCEfyqE549N
-         qTAJr2GfTPOxg==
-Date:   Wed, 10 Mar 2021 13:09:06 -0600
+        b=OnEKcfxiVfKnmrYB3LuZNSCzCJ5RObqvWa5z7S7UYzXT41zckhszQZK3URD5ZROrS
+         mr/AK9os9EhYoQ7PyJyRNqsjKNmTWZueZLoSXevk8tn+f21HuOQRWzC1bNzJKdX9nD
+         xlDbOAIJD6HeE8dQ1olV1H+X8urrhTauCwhKyfJV7cp/WWE5k1qMKvLUm08+e568+c
+         +Yu/chwpdBMmupaC0y+yM2u2jEZuFDM8RVe1Z32xuNAghxpQwKdrVXV5hygXNaa3yy
+         Xxq3HE2lNWKLQJ0FBFojwrg61Orlx6meI5fCKFT2m5ULbr+j0awHh8vAGTAKVnTtuB
+         brXStsZQ/nJvQ==
+Date:   Wed, 10 Mar 2021 13:29:58 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <20210310190906.GA2020121@bjorn-Precision-5520>
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 00/13] PCI: MSI: Getting rid of msi_controller, and other
+ cleanups
+Message-ID: <20210310192958.GA2032926@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgT0Ue=g+1pZCct8Kd0OnkPEP0qhggBF96s=noDoWHMJTL6FA@mail.gmail.com>
+In-Reply-To: <20210225151023.3642391-1-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Mar 07, 2021 at 10:55:24AM -0800, Alexander Duyck wrote:
-> On Sun, Feb 28, 2021 at 11:55 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> >
-> > @Alexander Duyck, please update me if I can add your ROB tag again
-> > to the series, because you liked v6 more.
-> >
-> > Thanks
-> >
-> > ---------------------------------------------------------------------------------
-> > Changelog
-> > v7:
-> >  * Rebase on top v5.12-rc1
-> >  * More english fixes
-> >  * Returned to static sysfs creation model as was implemented in v0/v1.
+On Thu, Feb 25, 2021 at 03:10:10PM +0000, Marc Zyngier wrote:
+> The msi_controller data structure was the first attempt at treating
+> MSIs like any other interrupt. We replaced it a few years ago with the
+> generic MSI framework, but as it turns out, some older drivers are
+> still using it.
 > 
-> Yeah, so I am not a fan of the series. The problem is there is only
-> one driver that supports this, all VFs are going to expose this sysfs,
-> and I don't know how likely it is that any others are going to
-> implement this functionality. I feel like you threw out all the
-> progress from v2-v6.
-
-pci_enable_vfs_overlay() turned up in v4, so I think v0-v3 had static
-sysfs files regardless of whether the PF driver was bound.
-
-> I really feel like the big issue is that this model is broken as you
-> have the VFs exposing sysfs interfaces that make use of the PFs to
-> actually implement. Greg's complaint was the PF pushing sysfs onto the
-> VFs. My complaint is VFs sysfs files operating on the PF. The trick is
-> to find a way to address both issues.
+> This series aims at converting these stragglers, drop msi_controller,
+> and fix some other nits such as having ways for a host bridge to
+> advertise whether it supports MSIs or not.
 > 
-> Maybe the compromise is to reach down into the IOV code and have it
-> register the sysfs interface at device creation time in something like
-> pci_iov_sysfs_link if the PF has the functionality present to support
-> it.
+> A few notes:
+> 
+> - The Tegra patch is the result of back and forth work with Thierry: I
+>   wrote the initial patch, which didn't work (I didn't have any HW at
+>   the time). Thierry made it work, and I subsequently fixed a couple
+>   of bugs/cleanups. I'm responsible for the result, so don't blame
+>   Thierry for any of it! FWIW, I'm now running a Jetson TX2 with its
+>   root fs over NVME, and MSIs are OK.
+> 
+> - RCAR is totally untested, though Marek had a go at a previous
+>   version. More testing required.
+> 
+> - The xilinx stuff is *really* untested. Paul, if you have a RISC-V
+>   board that uses it, could you please give it a go? Michal, same
+>   thing for the stuff you have at hand...
+> 
+> - hyperv: I don't have access to such hypervisor, and no way to test
+>   it. Help welcomed.
+> 
+> - The patches dealing with the advertising of MSI handling are the
+>   result of a long discussion that took place here[1]. I took the
+>   liberty to rejig Thomas' initial patches, and add what I needed for
+>   the MSI domain stuff. Again, blame me if something is wrong, and not
+>   Thomas.
+> 
+> Feedback welcome.
+> 
+> 	M.
+> 
+> [1] https://lore.kernel.org/r/20201031140330.83768-1-linux@fw-web.de
+> 
+> Marc Zyngier (11):
+>   PCI: tegra: Convert to MSI domains
+>   PCI: rcar: Convert to MSI domains
+>   PCI: xilinx: Convert to MSI domains
+>   PCI: hyperv: Drop msi_controller structure
+>   PCI: MSI: Drop use of msi_controller from core code
+>   PCI: MSI: Kill msi_controller structure
+>   PCI: MSI: Kill default_teardown_msi_irqs()
+>   PCI: MSI: Let PCI host bridges declare their reliance on MSI domains
+>   PCI: Make pci_host_common_probe() declare its reliance on MSI domains
+>   PCI: MSI: Document the various ways of ending up with NO_MSI
+>   PCI: quirks: Refactor advertising of the NO_MSI flag
+> 
+> Thomas Gleixner (2):
+>   PCI: MSI: Let PCI host bridges declare their lack of MSI handling
+>   PCI: mediatek: Advertise lack of MSI handling
 
-IIUC there are two questions on the table:
+All looks good to me; I'm guessing Lorenzo will want to apply it or at
+least take a look since the bulk of this is in the native host
+drivers.
 
-  1) Should the sysfs files be visible only when a PF driver that
-     supports MSI-X vector assignment is bound?
+s|PCI: MSI:|PCI/MSI:| above (I use "PCI/<FEATURE>:" and "PCI: <driver>:")
+s|PCI: hyperv:|PCI: hv:| to match previous practice
 
-     I think this is a cosmetic issue.  The presence of the file is
-     not a reliable signal to management software; it must always
-     tolerate files that don't exist (e.g., on old kernels) or files
-     that are visible but don't work (e.g., vectors may be exhausted).
+Maybe:
 
-     If we start with the files always being visible, we should be
-     able to add smarts later to expose them only when the PF driver
-     is bound.
+  PCI: Refactor HT advertising of NO_MSI flag
 
-     My concerns with pci_enable_vf_overlay() are that it uses a
-     little more sysfs internals than I'd like (although there are
-     many callers of sysfs_create_files()) and it uses
-     pci_get_domain_bus_and_slot(), which is generally a hack and
-     creates refcounting hassles.  Speaking of which, isn't v6 missing
-     a pci_dev_put() to match the pci_get_domain_bus_and_slot()?
+since "HT" contains more information than "quirks"?
 
-  2) Should a VF sysfs file use the PF to implement this?
+In the 03/13 commit log, s/appaling/appalling/ :)
+In the patch, it sounds like the MSI capture address change might be
+separable into its own patch?  If it were separate, it would be easier
+to see the problem/fix and watch for it elsewhere.
 
-     Can you elaborate on your idea here?  I guess
-     pci_iov_sysfs_link() makes a "virtfnX" link from the PF to the
-     VF, and you're thinking we could also make a "virtfnX_msix_count"
-     in the PF directory?  That's a really interesting idea.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> Also we might want to double check that the PF cannot be unbound while
-> the VF is present. I know for a while there it was possible to remove
-> the PF driver while the VF was present. The Mellanox drivers may not
-> allow it but it might not hurt to look at taking a reference against
-> the PF driver if you are allocating the VF MSI-X configuration sysfs
-> file.
-
-Unbinding the PF driver will either remove the *_msix_count files or
-make them stop working.  Is that a problem?  I'm not sure we should
-add a magic link that prevents driver unbinding.  Seems like it would
-be hard for users to figure out why the driver can't be removed.
-
-Bjorn
+>  drivers/pci/controller/Kconfig           |   4 +-
+>  drivers/pci/controller/pci-host-common.c |   1 +
+>  drivers/pci/controller/pci-hyperv.c      |   4 -
+>  drivers/pci/controller/pci-tegra.c       | 343 ++++++++++++-----------
+>  drivers/pci/controller/pcie-mediatek.c   |   4 +
+>  drivers/pci/controller/pcie-rcar-host.c  | 342 +++++++++++-----------
+>  drivers/pci/controller/pcie-xilinx.c     | 238 +++++++---------
+>  drivers/pci/msi.c                        |  46 +--
+>  drivers/pci/probe.c                      |   4 +-
+>  drivers/pci/quirks.c                     |  15 +-
+>  include/linux/msi.h                      |  17 +-
+>  include/linux/pci.h                      |   4 +-
+>  12 files changed, 463 insertions(+), 559 deletions(-)
+> 
+> -- 
+> 2.29.2
+> 
