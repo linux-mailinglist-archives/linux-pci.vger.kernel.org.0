@@ -2,76 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAB823347FE
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 20:33:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A8ED3348AA
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 21:11:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233919AbhCJTct (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 14:32:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49054 "EHLO mail.kernel.org"
+        id S229595AbhCJUKz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 15:10:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233992AbhCJTcs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Mar 2021 14:32:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 33EEF64FB2;
-        Wed, 10 Mar 2021 19:32:48 +0000 (UTC)
+        id S230525AbhCJUKq (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Mar 2021 15:10:46 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F17B564F93;
+        Wed, 10 Mar 2021 20:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615404768;
-        bh=f5/lUJllLGXsUxKTawCkR3n1Ver3P//PbBnMTRmYk/o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=fUbYZ64I87gmzgnsW41cv2cHvR1Ba5VaKcad5Du7xG5eVNOyr715DL+39NQuGyE02
-         QcI3yJOBiah1yKhatbZOpU4WUOjQv85YQXB726vwjqgB+/EB0fSpVZx96oHkkSsM9I
-         m8rv2HkKtGUhf1wrvkPvfrTWQxbLqlXJakLmPUx0L5zRd6fkp7s7mss8K7rAin3chl
-         XgKlvGRwIpf7cXK5aLu+ddEEGinavXXwLmnBGK0RIKBeilic6qfpjhbyqN9I5527b5
-         gk89tI+MGJ9iX8ote//aWqqqD0Eewn3Gro8vC4LZG4+Ky4eJm+FFaqOUJqVQ0cGpkV
-         3nT7vmIcMmEVg==
-Date:   Wed, 10 Mar 2021 13:32:46 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        s=k20201202; t=1615407045;
+        bh=HD9VOBnSGTScWxDQSoGkCML5OLKSaqNVSIokZCpoYlM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tDnak1ZVJo+WYG8QcQjzTWALZl8cHkT2vyBdWTTxelJi49bpb4jnBsnLBBy3UBSk3
+         dhQ77xG8vFZXBTE79T/c2LTE8QT+U652as09oaK5m7xaVE5/berbfUUGmfs6eo6djN
+         D+XaprlqGWzcerDntgG9qGLkwf7tC6yvzqnQPE30eCUyQD8LI4Q5aJmtjjY2X1Ukk5
+         ZyGRaZr1bTbQsvwEYmJAP0Nmau/gPYDy0oBlUFll4NffVQbrEAypaCmGAYaEhpxN6k
+         DqgrOPdGaD+p+FNmRziOrCzOX+3Pe4fxerGmMnxnRuxoV8veJIPUl3ocu6mo5kWWeH
+         ueR1Zb+dnl0eQ==
+Date:   Wed, 10 Mar 2021 22:10:41 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] PCI: controller: al: select CONFIG_PCI_ECAM
-Message-ID: <20210310193246.GA2033984@bjorn-Precision-5520>
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <YEknweta9TXcw1l5@unreal>
+References: <CAKgT0Ue=g+1pZCct8Kd0OnkPEP0qhggBF96s=noDoWHMJTL6FA@mail.gmail.com>
+ <20210310190906.GA2020121@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210308152501.2135937-1-arnd@kernel.org>
+In-Reply-To: <20210310190906.GA2020121@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 08, 2021 at 04:24:46PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Compile-testing this driver without ECAM support results in a link
-> failure:
-> 
-> ld.lld: error: undefined symbol: pci_ecam_map_bus
-> >>> referenced by pcie-al.c
-> >>>               pci/controller/dwc/pcie-al.o:(al_pcie_map_bus) in archive drivers/built-in.a
-> 
-> Select CONFIG_ECAM like the other drivers do.
+On Wed, Mar 10, 2021 at 01:09:06PM -0600, Bjorn Helgaas wrote:
+> On Sun, Mar 07, 2021 at 10:55:24AM -0800, Alexander Duyck wrote:
+> > On Sun, Feb 28, 2021 at 11:55 PM Leon Romanovsky <leon@kernel.org> wrote:
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+> > >
+> > > @Alexander Duyck, please update me if I can add your ROB tag again
+> > > to the series, because you liked v6 more.
+> > >
+> > > Thanks
+> > >
+> > > ---------------------------------------------------------------------------------
+> > > Changelog
+> > > v7:
+> > >  * Rebase on top v5.12-rc1
+> > >  * More english fixes
+> > >  * Returned to static sysfs creation model as was implemented in v0/v1.
 
-Did we add these compile issues in the v5.12-rc1?  I.e., are the fixes
-candidates for v5.12?
+<...>
 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/pci/controller/dwc/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 5a3032d9b844..d981a0eba99f 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -311,6 +311,7 @@ config PCIE_AL
->  	depends on OF && (ARM64 || COMPILE_TEST)
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIE_DW_HOST
-> +	select PCI_ECAM
->  	help
->  	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
->  	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
-> -- 
-> 2.29.2
-> 
+>   2) Should a VF sysfs file use the PF to implement this?
+>
+>      Can you elaborate on your idea here?  I guess
+>      pci_iov_sysfs_link() makes a "virtfnX" link from the PF to the
+>      VF, and you're thinking we could also make a "virtfnX_msix_count"
+>      in the PF directory?  That's a really interesting idea.
+
+I want to remind that we are talking about mlx5 devices that support
+upto 255 VFs and they indeed are used to their limits. So seeing 255
+links of virtfnX_msix_count in the same directory looks too much unpleasant
+to me.
+
+Thanks
