@@ -2,84 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82A4A3348CB
-	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 21:22:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B745334960
+	for <lists+linux-pci@lfdr.de>; Wed, 10 Mar 2021 22:04:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231617AbhCJUWN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 15:22:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55484 "EHLO mail.kernel.org"
+        id S231393AbhCJVDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 16:03:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229687AbhCJUV5 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Mar 2021 15:21:57 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 13D2664FB3;
-        Wed, 10 Mar 2021 20:21:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1615407717;
-        bh=XWvj0JslvFZs+01VP69i7olpjPeWFnAwyEg8rNUwEGQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O7uIYvJGhXFsowgV/wMRSGezK9bwSBZX9hvlkUmDzHuQ6oYGOfjf9hau4a4AQ18fz
-         ffLwcSVXa1RrZSTXKCw0GI3MnK2oI2ZEYdpHF13cV8oBPN8m+OOZXd2bTDTNLVTHeW
-         XZ+Q/1IjCJiuR2uOoNAT15fCpovRW/XI0ZtspcYk=
-Date:   Wed, 10 Mar 2021 21:21:55 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        Don Dutile <ddutile@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
-Message-ID: <YEkqY5ZJLXp8dork@kroah.com>
-References: <CAKgT0Ue=g+1pZCct8Kd0OnkPEP0qhggBF96s=noDoWHMJTL6FA@mail.gmail.com>
- <20210310190906.GA2020121@bjorn-Precision-5520>
- <YEknweta9TXcw1l5@unreal>
+        id S230521AbhCJVDN (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Mar 2021 16:03:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8137F64FC9;
+        Wed, 10 Mar 2021 21:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615410192;
+        bh=Jf27xRVYrSMID5wTQvmY/hiQVLNvvOHY8yJ1fyvs+0E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gkHWX/k3e2zE2f3boEGX7GUR611wYLRuGOuOjdp+DTcaXuOlK0/5/SoEmO1hKh+i+
+         2OYp5Y3F8Dgiusca7JwirA2QJpeRYW70ovAsNpPpvFjfmqKUz1Kr/JRTMekzkGm2MV
+         lSh0Wc0/M3n5g8BX567pq4s0c/RrftUNxdkhhLQPiYmObp5lKZ039kMMTXJiOohaUM
+         1zBmORIFVQ6hUDXRLPKXf2hec64ESYUr2x7kT2glWL3JUap07qYeDfM9Iy3nwrnRKw
+         5dUC9UiMMgtINpkkFK6yhyLM+2z4bQWzkfCZoqzU2lUq3gzqe2UnVW1apTcU32H96b
+         tG1SjWz6jbkqQ==
+Received: by mail-oi1-f176.google.com with SMTP id x78so20717599oix.1;
+        Wed, 10 Mar 2021 13:03:12 -0800 (PST)
+X-Gm-Message-State: AOAM533JLASTx064DSuU3WHVeVH1XmNXW/s/6jLeUDrlHBj24K10NlI3
+        bmVW6HL3JMM0RKufcoT0RIzd3Pz+KLN8LrMFF/o=
+X-Google-Smtp-Source: ABdhPJxpCLy1jm0jLk8mhwUrnd66JTa55h/eyphlho8VJcUZlwk+T07aVZCbeZx7HMknpX1hePxVclScPgclVctmiK4=
+X-Received: by 2002:aca:5e85:: with SMTP id s127mr3606549oib.67.1615410191745;
+ Wed, 10 Mar 2021 13:03:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YEknweta9TXcw1l5@unreal>
+References: <20210308152501.2135937-1-arnd@kernel.org> <20210310193246.GA2033984@bjorn-Precision-5520>
+In-Reply-To: <20210310193246.GA2033984@bjorn-Precision-5520>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Wed, 10 Mar 2021 22:02:55 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2tNAqjSSP4g6dguT58C4DUGUT4Jgf-Osa1Da03cecLRQ@mail.gmail.com>
+Message-ID: <CAK8P3a2tNAqjSSP4g6dguT58C4DUGUT4Jgf-Osa1Da03cecLRQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] PCI: controller: al: select CONFIG_PCI_ECAM
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 10, 2021 at 10:10:41PM +0200, Leon Romanovsky wrote:
-> On Wed, Mar 10, 2021 at 01:09:06PM -0600, Bjorn Helgaas wrote:
-> > On Sun, Mar 07, 2021 at 10:55:24AM -0800, Alexander Duyck wrote:
-> > > On Sun, Feb 28, 2021 at 11:55 PM Leon Romanovsky <leon@kernel.org> wrote:
-> > > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > >
-> > > > @Alexander Duyck, please update me if I can add your ROB tag again
-> > > > to the series, because you liked v6 more.
-> > > >
-> > > > Thanks
-> > > >
-> > > > ---------------------------------------------------------------------------------
-> > > > Changelog
-> > > > v7:
-> > > >  * Rebase on top v5.12-rc1
-> > > >  * More english fixes
-> > > >  * Returned to static sysfs creation model as was implemented in v0/v1.
-> 
-> <...>
-> 
-> >   2) Should a VF sysfs file use the PF to implement this?
+On Wed, Mar 10, 2021 at 8:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Mon, Mar 08, 2021 at 04:24:46PM +0100, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
 > >
-> >      Can you elaborate on your idea here?  I guess
-> >      pci_iov_sysfs_link() makes a "virtfnX" link from the PF to the
-> >      VF, and you're thinking we could also make a "virtfnX_msix_count"
-> >      in the PF directory?  That's a really interesting idea.
-> 
-> I want to remind that we are talking about mlx5 devices that support
-> upto 255 VFs and they indeed are used to their limits. So seeing 255
-> links of virtfnX_msix_count in the same directory looks too much unpleasant
-> to me.
+> > Compile-testing this driver without ECAM support results in a link
+> > failure:
+> >
+> > ld.lld: error: undefined symbol: pci_ecam_map_bus
+> > >>> referenced by pcie-al.c
+> > >>>               pci/controller/dwc/pcie-al.o:(al_pcie_map_bus) in archive drivers/built-in.a
+> >
+> > Select CONFIG_ECAM like the other drivers do.
+>
+> Did we add these compile issues in the v5.12-rc1?  I.e., are the fixes
+> candidates for v5.12?
 
-255 files are nothing, if that's what the hardware supports, what is the
-problem?  If it's "unpleasant", go complain to the hardware designers :)
+No, the bug exists but is hidden until you apply patch 3/3 because the
+driver is never compile tested on anything other than arm64, which
+turns on PCI_ECAM unconditionally.
 
-greg k-h
+Merging all three for 5.13 is sufficient.
+
+       Arnd
