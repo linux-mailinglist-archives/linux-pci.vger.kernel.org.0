@@ -2,129 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C065336882
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 01:18:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 927E5336A79
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 04:14:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbhCKARn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 19:17:43 -0500
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:42519 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbhCKARf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 19:17:35 -0500
-Received: by mail-lf1-f52.google.com with SMTP id v2so23688793lft.9
-        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 16:17:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NOaZ9L90hSCMz6oZGX1bbSsAE8thLW/EO9o9W5+QirQ=;
-        b=b4uDjrutkHmie/hTvLvL88rVFvKmpVyoX3n3VvaApzvHLjahvXds5WIUZ8RxESZVrt
-         xM7siBrz1CY9Zs3gh3KPM96LMEuDR8S6hqYlF31fkSAMXjqDjf6CwZOPSg4iF6uo52RV
-         MpnCV6oCSc96mY3anOVVYPX1/tz0WDNwYTYa1GEAk+9FPUyA1WGA4M8mv+bYAp8wOgML
-         iN2q5bf50wVMJHoDilCQB5r4Xq/mN7TfbvuVVKpsnrkKy75bCB0TeGl0jLbXQ0D8GG1A
-         01pVU7MfR01Aj9ISRQ63E/69HdWFiBwKqoPJ/VTr4ZYqgIPd1mt5NLOZhwztnsOHKT5r
-         H1rg==
-X-Gm-Message-State: AOAM531scZ/YT1CrWrUFT3+bWl1cvmH1QotiDEYW/6e58hByuaJJpuf+
-        FtwE+zyJOzONVgBe+mFwunQ=
-X-Google-Smtp-Source: ABdhPJyIHIUKWITbj+6M9WCWXYHfQKp2laz5VSCEBSOg4vL/S+jWouIS61nsZuzW7UzCYhbjI0Wk1Q==
-X-Received: by 2002:a19:f510:: with SMTP id j16mr635398lfb.301.1615421854491;
-        Wed, 10 Mar 2021 16:17:34 -0800 (PST)
-Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id y186sm269332lfc.304.2021.03.10.16.17.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 16:17:34 -0800 (PST)
-From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell Currey <ruscur@russell.cc>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Jay Fang <f.fangjian@huawei.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 8/8] PCI: of: Fix kernel-doc formatting and add missing documentation
-Date:   Thu, 11 Mar 2021 00:17:24 +0000
-Message-Id: <20210311001724.423356-8-kw@linux.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210311001724.423356-1-kw@linux.com>
-References: <20210311001724.423356-1-kw@linux.com>
+        id S230403AbhCKDNe convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 10 Mar 2021 22:13:34 -0500
+Received: from mga14.intel.com ([192.55.52.115]:52462 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229971AbhCKDNH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Wed, 10 Mar 2021 22:13:07 -0500
+IronPort-SDR: BhKXoqS3G88QgZR5uwchuOl3v7XdbxSIKqH3YDmB6SaN3SaVKwHR2brx5qtaRtQWirm3wZ/pbG
+ THs7rKMCfGlg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9919"; a="187969867"
+X-IronPort-AV: E=Sophos;i="5.81,238,1610438400"; 
+   d="scan'208";a="187969867"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2021 19:13:06 -0800
+IronPort-SDR: F3pACgYlTs8CBDSVQ5RlGllv1DSyR8uBThdE+p8bxtiapg0xRu79HdIxkWCByfBKEEJx0twRsU
+ MsD+jwekRijw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,238,1610438400"; 
+   d="scan'208";a="370421299"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by orsmga003.jf.intel.com with ESMTP; 10 Mar 2021 19:13:06 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Wed, 10 Mar 2021 19:13:06 -0800
+Received: from shsmsx605.ccr.corp.intel.com (10.109.6.215) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Wed, 10 Mar 2021 19:13:05 -0800
+Received: from shsmsx605.ccr.corp.intel.com ([10.109.6.215]) by
+ SHSMSX605.ccr.corp.intel.com ([10.109.6.215]) with mapi id 15.01.2106.013;
+ Thu, 11 Mar 2021 11:13:02 +0800
+From:   "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To:     'Bjorn Helgaas' <helgaas@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        "Kelley, Sean V" <sean.v.kelley@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, "Jin, Wen" <wen.jin@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC
+ association
+Thread-Topic: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC
+ association
+Thread-Index: AQHXCLh6LEG1CfkjwEO3CLgkzlZ+yap9WgQAgADHGrA=
+Date:   Thu, 11 Mar 2021 03:13:02 +0000
+Message-ID: <b76a5239650842f7bd852b6b4dba3288@intel.com>
+References: <20210222011717.43266-1-qiuxu.zhuo@intel.com>
+ <20210310220030.GA2068330@bjorn-Precision-5520>
+In-Reply-To: <20210310220030.GA2068330@bjorn-Precision-5520>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+x-originating-ip: [10.239.127.36]
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix kernel-doc formatting and add missing documentation for the "node"
-parameter of the of_get_pci_domain_nr() and of_pci_get_max_link_speed()
-functions, and resolve build time warnings related to kernel-doc:
+> [...]
+> 
+> I think 507b460f8144 appeared in v5.11, so not something we broke in v5.12.
+> Applied to pci/error for v5.13, thanks!
 
-  drivers/pci/of.c:202: warning: expecting prototype for This function
-  will try to obtain the host bridge domain number by(). Prototype was
-  for of_get_pci_domain_nr() instead
+Thanks Bjorn!
 
-  drivers/pci/of.c:597: warning: expecting prototype for This function
-  will try to find the limitation of link speed by finding(). Prototype
-  was for of_pci_get_max_link_speed() instead
+> If I understand correctly, we previously only got this right in one
+> case:
+> 
+>    0 == PCI_SLOT(00.0)    # correct
+>    1 == PCI_SLOT(00.1)    # incorrect
+>    2 == PCI_SLOT(00.2)    # incorrect
+>    ...
+>    8 == PCI_SLOT(01.0)    # incorrect
+>    9 == PCI_SLOT(01.1)    # incorrect
+>    ...
+>   31 == PCI_SLOT(03.7)    # incorrect
 
-No change to functionality intended.
+Yes, you're right. 
 
-Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
----
- drivers/pci/of.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 5ea472ae22ac..da5b414d585a 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -190,10 +190,18 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
- EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
- 
- /**
-- * This function will try to obtain the host bridge domain number by
-- * finding a property called "linux,pci-domain" of the given device node.
-+ * of_get_pci_domain_nr - Find the host bridge domain number
-+ *			  of the given device node.
-+ * @node: Device tree node with the domain information.
-  *
-- * @node: device tree node with the domain information
-+ * This function will try to obtain the host bridge domain number by finding
-+ * a property called "linux,pci-domain" of the given device node.
-+ *
-+ * Return:
-+ * * > 0	- On success, an associated domain number.
-+ * * -EINVAL	- The property "linux,pci-domain" does not exist.
-+ * * -ENODATA	- The linux,pci-domain" property does not have value.
-+ * * -EOVERFLOW	- Invalid "linux,pci-domain" property value.
-  *
-  * Returns the associated domain number from DT in the range [0-0xffff], or
-  * a negative value if the required property is not found.
-@@ -585,10 +593,16 @@ int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
- #endif /* CONFIG_PCI */
- 
- /**
-+ * of_pci_get_max_link_speed - Find the maximum link speed of the given device node.
-+ * @node: Device tree node with the maximum link speed information.
-+ *
-  * This function will try to find the limitation of link speed by finding
-  * a property called "max-link-speed" of the given device node.
-  *
-- * @node: device tree node with the max link speed information
-+ * Return:
-+ * * > 0	- On success, a maximum link speed.
-+ * * -EINVAL	- Invalid "max-link-speed" property value, or failure to access
-+ *		  the property of the device tree node.
-  *
-  * Returns the associated max link speed from DT, or a negative value if the
-  * required property is not found or is invalid.
--- 
-2.30.1
+Thanks!
+-Qiuxu
 
