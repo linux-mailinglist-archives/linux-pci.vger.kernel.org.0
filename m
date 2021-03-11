@@ -2,95 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 927E5336A79
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 04:14:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BED7B336AD1
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 04:38:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230403AbhCKDNe convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 10 Mar 2021 22:13:34 -0500
-Received: from mga14.intel.com ([192.55.52.115]:52462 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229971AbhCKDNH (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Wed, 10 Mar 2021 22:13:07 -0500
-IronPort-SDR: BhKXoqS3G88QgZR5uwchuOl3v7XdbxSIKqH3YDmB6SaN3SaVKwHR2brx5qtaRtQWirm3wZ/pbG
- THs7rKMCfGlg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9919"; a="187969867"
-X-IronPort-AV: E=Sophos;i="5.81,238,1610438400"; 
-   d="scan'208";a="187969867"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2021 19:13:06 -0800
-IronPort-SDR: F3pACgYlTs8CBDSVQ5RlGllv1DSyR8uBThdE+p8bxtiapg0xRu79HdIxkWCByfBKEEJx0twRsU
- MsD+jwekRijw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,238,1610438400"; 
-   d="scan'208";a="370421299"
-Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
-  by orsmga003.jf.intel.com with ESMTP; 10 Mar 2021 19:13:06 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Wed, 10 Mar 2021 19:13:06 -0800
-Received: from shsmsx605.ccr.corp.intel.com (10.109.6.215) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Wed, 10 Mar 2021 19:13:05 -0800
-Received: from shsmsx605.ccr.corp.intel.com ([10.109.6.215]) by
- SHSMSX605.ccr.corp.intel.com ([10.109.6.215]) with mapi id 15.01.2106.013;
- Thu, 11 Mar 2021 11:13:02 +0800
-From:   "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-To:     'Bjorn Helgaas' <helgaas@kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        id S229818AbhCKDiQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 22:38:16 -0500
+Received: from mail-qk1-f169.google.com ([209.85.222.169]:45186 "EHLO
+        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230409AbhCKDiB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 22:38:01 -0500
+Received: by mail-qk1-f169.google.com with SMTP id m186so2688496qke.12
+        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 19:37:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HoIkSwuB9kFb/7o0k8S78I/HpiyIT43O0+mWxnUnfJI=;
+        b=ruiwFCdofD3I4gLRuG3xg19HYSeuCGe2mkt1rt4X1YNN3zEYzaoQSg74nOxVpy/MKW
+         PAnFZrK5t3d8+CJv+8ljW9QYSQhO49LctrD8gxb8D2UPGZsabUC/jPNGHyPZVOATpCaW
+         A4qxWRrI1j1hmOR/I7ENDnTwqlnzbGM6PFG35/QmNJJI3P4da/QoeeOBas1gx8q5TJ6N
+         5GPe901la4BjFHmxQ7vRDkwJHRQ0iPAr+nxp/h7XYAlGFwEIqhER5K71YRwkeHcBOFZ5
+         Q2cop0e3DsuQCpsIZMYPawoRBL7Ne3JmSbsQNgURFMf11z81XZykPsIT6fLrzWQ3O4L0
+         iWQA==
+X-Gm-Message-State: AOAM530FWuo6LIMJDxBOF1rc6Fhho+OnwS7O6XPGwSr6kOnD6m4WURqs
+        JRu/mr7njtGGMRIEWfGUJuQ=
+X-Google-Smtp-Source: ABdhPJyKZhUdOe1LCVxqhW5iBVJS/b2WAnNvPcpQJ7B6+4Fnw8aEHmu32vFpUVzeLUQfGiIHqbOtQQ==
+X-Received: by 2002:a37:94b:: with SMTP id 72mr4823437qkj.94.1615433870050;
+        Wed, 10 Mar 2021 19:37:50 -0800 (PST)
+Received: from workstation.lan ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id j1sm949876qti.55.2021.03.10.19.37.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Mar 2021 19:37:49 -0800 (PST)
+From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Zheng Yongjun <zhengyongjun3@huawei.com>,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        "Kelley, Sean V" <sean.v.kelley@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, "Jin, Wen" <wen.jin@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC
- association
-Thread-Topic: [PATCH v3 1/1] PCI/RCEC: Fix RCiEP capable devices RCEC
- association
-Thread-Index: AQHXCLh6LEG1CfkjwEO3CLgkzlZ+yap9WgQAgADHGrA=
-Date:   Thu, 11 Mar 2021 03:13:02 +0000
-Message-ID: <b76a5239650842f7bd852b6b4dba3288@intel.com>
-References: <20210222011717.43266-1-qiuxu.zhuo@intel.com>
- <20210310220030.GA2068330@bjorn-Precision-5520>
-In-Reply-To: <20210310220030.GA2068330@bjorn-Precision-5520>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.239.127.36]
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: 8BIT
+        Rob Herring <robh@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: layerscape: Correct syntax by changing comma to semicolon
+Date:   Thu, 11 Mar 2021 03:37:45 +0000
+Message-Id: <20210311033745.1547044-1-kw@linux.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> [...]
-> 
-> I think 507b460f8144 appeared in v5.11, so not something we broke in v5.12.
-> Applied to pci/error for v5.13, thanks!
+Replace command with a semicolon to correct syntax and to prevent
+potential unspecified behaviour and/or unintended side effects.
 
-Thanks Bjorn!
+Related:
+  https://lore.kernel.org/linux-pci/20201216131944.14990-1-zhengyongjun3@huawei.com/
 
-> If I understand correctly, we previously only got this right in one
-> case:
-> 
->    0 == PCI_SLOT(00.0)    # correct
->    1 == PCI_SLOT(00.1)    # incorrect
->    2 == PCI_SLOT(00.2)    # incorrect
->    ...
->    8 == PCI_SLOT(01.0)    # incorrect
->    9 == PCI_SLOT(01.1)    # incorrect
->    ...
->   31 == PCI_SLOT(03.7)    # incorrect
+Co-authored-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+---
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, you're right. 
-
-Thanks!
--Qiuxu
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index 39fe2ed5a6a2..39f4664bd84c 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -154,7 +154,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = pcie->drvdata->dw_pcie_ops;
+ 
+-	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
++	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4);
+ 
+ 	pcie->pci = pci;
+ 	pcie->ls_epc = ls_epc;
+-- 
+2.30.1
 
