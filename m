@@ -2,98 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7DE933731D
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 13:54:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7E6F3373B4
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 14:24:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232933AbhCKMxa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 07:53:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233160AbhCKMxY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Mar 2021 07:53:24 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0475664FC3;
-        Thu, 11 Mar 2021 12:53:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615467204;
-        bh=DnEDJvBOcnn+xcMAMBOQVUQFe5m0A2svDeanci8B4pI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kON20EEmW+t2JyhDRhWTaQ6V243h/z55ycqRXoyck3OjbwPq6dq3JKdDGEL/AKgat
-         a8I8h7IrB7dJ/sx34bf7DlTCN6HB90EgN3MArOb5M1k4qv/OcRMrRCLhhmLpH0uGmp
-         uA+aCG2wk+IP7CR3UQXMuAgGUY8S0SKlaHpzYrHRo5Vi9F3dW7xkVPuRI/swXHNDWd
-         2t2/dNyfhf0zEXjOfNsSLytDwS1HwdIWiMimRgvef4Xl0rzIsmCjzCwLXapMtQ6s9D
-         hqkxzVIBpYUsMhUoCTt9AFiFril74vAQ1LZ1sZn4cn+5L4KX7ur3b+XObYvfXLTrze
-         YRMRTZfLnsnUQ==
-Date:   Thu, 11 Mar 2021 06:53:22 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shirish S <shirish.s@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Julian Schroeder <julian.schroeder@amd.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] PCI: Add AMD RV2 based APUs, such as 3015Ce, to D3hot to
- D3 quirk table.
-Message-ID: <20210311125322.GA2122226@bjorn-Precision-5520>
+        id S233528AbhCKNXb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 08:23:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4260 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233523AbhCKNXY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Mar 2021 08:23:24 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12BDLYOY177910;
+        Thu, 11 Mar 2021 08:23:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=HoI1Hk2ZBlzD7gj6q9asIOXi6AplmwxWdhOXCjCm0cY=;
+ b=noVj3cpoohNaKk7zUikaMzBCbWOiBvFUmooIMuLkW1Z2UJD1J+4yMqpzXD524EBjR4lW
+ me7A9Eyg5S8WADobj8AKZBKhCxo6WWAIaJSGhYE2WMTNSPC0YHETKMozcMoUbpwMVmJS
+ OX2320iqfwGw/VgHRs0XKVURf90KPxCTS6CKfK9jkQonVlSuvP6wplsNxARAvfrjACNS
+ 61/XlWUWLmZladf++B+/A80Gmxc6jwgpqj1P778NhjYT9nNel206ubUqFfh8Te5D+uBO
+ F1WALwNAavZtzdKrETSBybsh0hY3mc+SDhAX5cFXpSfbvDaitwAvXwiFETRyeB4VikPr Xw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3774m073vm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Mar 2021 08:23:22 -0500
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12BDMGjS184778;
+        Thu, 11 Mar 2021 08:23:22 -0500
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3774m073s9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Mar 2021 08:23:21 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12BDMEeP020474;
+        Thu, 11 Mar 2021 13:23:14 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 376mb0scu0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Mar 2021 13:23:14 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12BDNCT844564988
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Mar 2021 13:23:12 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89AC4A404D;
+        Thu, 11 Mar 2021 13:23:12 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63793A4040;
+        Thu, 11 Mar 2021 13:23:12 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Mar 2021 13:23:12 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Print a debug message on PCI device release
+Date:   Thu, 11 Mar 2021 14:23:12 +0100
+Message-Id: <20210311132312.2882425-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210311044135.119942-1-shirish.s@amd.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-11_04:2021-03-10,2021-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 phishscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103110070
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Daniel, Mika (author, reviewer of 3030df209aa8]
+Commit 62795041418d ("PCI: enhance physical slot debug information")
+added a debug print on releasing the PCI slot and another message on
+destroying it. There is however no debug print on releasing the PCI
+device structure itself and even with closely looking at the kernel log
+during hotplug testing, I overlooked several missing pci_dev_put() calls
+for way too long. So let's add a debug print in pci_release_dev() making
+it much easier to spot when the PCI device structure is not released
+when it is supposed to.
 
-On Thu, Mar 11, 2021 at 10:11:35AM +0530, Shirish S wrote:
-> From: Julian Schroeder <julian.schroeder@amd.com>
-> 
-> This allows for an extra 10ms for the state transition.
-> Currently only AMD PCO based APUs are covered by this table.
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+---
+ drivers/pci/probe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm really glad to see this coming straight from AMD.  Is this a
-documented erratum?  Please provide a reference to that.
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 953f15abc850..3e3669a00a2f 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2226,6 +2226,7 @@ static void pci_release_dev(struct device *dev)
+ 	pci_bus_put(pci_dev->bus);
+ 	kfree(pci_dev->driver_override);
+ 	bitmap_free(pci_dev->dma_alias_mask);
++	dev_dbg(dev, "device released\n");
+ 	kfree(pci_dev);
+ }
+ 
+-- 
+2.25.1
 
-The point is that quirks are for working around hardware defects.  If
-the device is not defective, and it is actually following the spec
-correctly, there should be a way to fix this in a generic way that
-doesn't require quirks.  That avoids the need to add more quirks for
-future devices.
-
-> WIP. Working on commit to kernel.org.
-
-I'm not sure what "WIP. Working on commit to kernel.org." means.  Does
-it mean I should ignore this and wait for the final posting?
-
-I'm OCD enough that I like commits doing the same thing to have the
-same subject line.  This is an extension of 3030df209aa8 ("PCI:
-Increase D3 delay for AMD Ryzen5/7 XHCI controllers"), so it should
-look like that.
-
-> Signed-off-by: Julian Schroeder <julian.schroeder@amd.com>
-
-This appears to require an additional signoff from you, Shiresh; see
-[1].
-
-Bjorn
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n356
-
-> ---
->  drivers/pci/quirks.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 653660e3ba9e..7d8f52524ada 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -1904,6 +1904,7 @@ static void quirk_ryzen_xhci_d3hot(struct pci_dev *dev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e0, quirk_ryzen_xhci_d3hot);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e1, quirk_ryzen_xhci_d3hot);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15e5, quirk_ryzen_xhci_d3hot);
->  
->  #ifdef CONFIG_X86_IO_APIC
->  static int dmi_disable_ioapicreroute(const struct dmi_system_id *d)
-> -- 
-> 2.17.1
-> 
