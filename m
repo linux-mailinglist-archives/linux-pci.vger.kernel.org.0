@@ -2,175 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11610336FFD
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 11:28:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D71353372DF
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 13:39:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232159AbhCKK2P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 05:28:15 -0500
-Received: from mga06.intel.com ([134.134.136.31]:38551 "EHLO mga06.intel.com"
+        id S233399AbhCKMjG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 07:39:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232224AbhCKK1q (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Mar 2021 05:27:46 -0500
-IronPort-SDR: D62zh3i6tCRK4hd2W3w8otpyPOauBz8Uj42wPJMjjp1/r6dTUMc9hv1D996Mc16WX+uLLqZHLH
- ygZVnpfarfaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9919"; a="250011979"
-X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
-   d="scan'208";a="250011979"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2021 02:27:45 -0800
-IronPort-SDR: j72GOYeVpj8Jo6CYMlhTfksUr6k0DhKxAIgfvAilHafYCkSNoYOlPZZqo7uK8Vjc6cMOHtKJ9w
- r1WpUd05XZiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,240,1610438400"; 
-   d="scan'208";a="521049302"
-Received: from lkp-server02.sh.intel.com (HELO ce64c092ff93) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 11 Mar 2021 02:27:44 -0800
-Received: from kbuild by ce64c092ff93 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1lKIXf-0000jS-Pc; Thu, 11 Mar 2021 10:27:43 +0000
-Date:   Thu, 11 Mar 2021 18:27:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pci/error] BUILD SUCCESS
- d9b7eae8e3424c3480fe9f40ebafbb0c96426e4c
-Message-ID: <6049f096.kX9hC2jhxLRmqGrQ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233453AbhCKMis (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Mar 2021 07:38:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E1801601FC;
+        Thu, 11 Mar 2021 12:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615466328;
+        bh=kiZx6X2u4fkLyNZRYPGNjVsvCuNlk6cl7UlHxmmB1sE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jJgsZKR1DIU5WZLHXgEhCqhcLpQQggquOzflc2nNlTmlTmFe+BkFxqUww+070b3wi
+         j+z0snIPYD2fqtslQ8Xqh69Bsbhy2VdKjKDbYg3I+FeWIrhBzE+REU9ujYj8VLzAh+
+         hEQbnLNv19tSPP1NcRrClSze0OI8yifmVNc4GfjUKlGc3Mub2axAY0fEVpr4lrfZiG
+         4FxqF5g/duMRu8+oaSC7+lPoraPURFQjQp5RxQ/qKsB/Ve5DnB4BcfikdP4jsXNzC7
+         zDk+Fr4WJxIU0bY040HiylXA0evyqD5L0guCEiIIbzise6wtDY/WCwPKCnW7r38KCA
+         XdRVIIQBOl69w==
+Received: by pali.im (Postfix)
+        id 0C4E18A7; Thu, 11 Mar 2021 13:38:44 +0100 (CET)
+Date:   Thu, 11 Mar 2021 13:38:44 +0100
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jianjun Wang <jianjun.wang@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>, maz@kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Sj Huang <sj.huang@mediatek.com>, youlin.pei@mediatek.com,
+        chuanjia.liu@mediatek.com, qizhong.cheng@mediatek.com,
+        sin_jieyang@mediatek.com, drinkcat@chromium.org,
+        Rex-BC.Chen@mediatek.com, anson.chuang@mediatek.com
+Subject: Re: [v8,3/7] PCI: mediatek-gen3: Add MediaTek Gen3 driver for MT8192
+Message-ID: <20210311123844.qzl264ungtk7b6xz@pali>
+References: <20210224061132.26526-1-jianjun.wang@mediatek.com>
+ <20210224061132.26526-4-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210224061132.26526-4-jianjun.wang@mediatek.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/error
-branch HEAD: d9b7eae8e3424c3480fe9f40ebafbb0c96426e4c  PCI/RCEC: Fix RCiEP device to RCEC association
+On Wednesday 24 February 2021 14:11:28 Jianjun Wang wrote:
+> +static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
+> +{
+...
+> +
+> +	/* Delay 100ms to wait the reference clocks become stable */
+> +	msleep(100);
+> +
+> +	/* De-assert PERST# signal */
+> +	val &= ~PCIE_PE_RSTB;
+> +	writel_relaxed(val, port->base + PCIE_RST_CTRL_REG);
 
-elapsed time: 725m
+Hello! This is a new driver which introduce yet another custom timeout
+prior PERST# signal for PCIe card is de-asserted. Timeouts for other
+drivers I collected in older email [2].
 
-configs tested: 113
-configs skipped: 3
+Please look at my email [1] about PCIe Warm Reset if you have any clue
+about it. Lorenzo and Rob already expressed that this timeout should not
+be driver specific. But nobody was able to "decode" and "understand"
+PCIe spec yet about these timeouts.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +
+> +	/* Check if the link is up or not */
+> +	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_REG, val,
+> +				 !!(val & PCIE_PORT_LINKUP), 20,
+> +				 50 * USEC_PER_MSEC);
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-powerpc                 xes_mpc85xx_defconfig
-arm                         lubbock_defconfig
-m68k                       bvme6000_defconfig
-arc                          axs103_defconfig
-m68k                             allmodconfig
-sh                        dreamcast_defconfig
-mips                           ip22_defconfig
-mips                        bcm63xx_defconfig
-sh                     magicpanelr2_defconfig
-arm                       imx_v4_v5_defconfig
-csky                                defconfig
-arm                         s5pv210_defconfig
-arm                           h5000_defconfig
-ia64                         bigsur_defconfig
-powerpc                     tqm8548_defconfig
-sh                     sh7710voipgw_defconfig
-sh                        sh7785lcr_defconfig
-powerpc                 mpc836x_rdk_defconfig
-sh                        apsh4ad0a_defconfig
-arm                        keystone_defconfig
-xtensa                  cadence_csp_defconfig
-sh                        edosk7705_defconfig
-openrisc                  or1klitex_defconfig
-arm                           sama5_defconfig
-powerpc                    mvme5100_defconfig
-m68k                         amcore_defconfig
-arc                     nsimosci_hs_defconfig
-arc                          axs101_defconfig
-riscv                    nommu_k210_defconfig
-s390                             allmodconfig
-xtensa                       common_defconfig
-powerpc                 mpc8315_rdb_defconfig
-powerpc                 mpc8540_ads_defconfig
-arc                         haps_hs_defconfig
-sh                           se7712_defconfig
-x86_64                              defconfig
-powerpc                     skiroot_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20210309
-i386                 randconfig-a003-20210309
-i386                 randconfig-a002-20210309
-i386                 randconfig-a006-20210309
-i386                 randconfig-a004-20210309
-i386                 randconfig-a001-20210309
-x86_64               randconfig-a013-20210309
-x86_64               randconfig-a016-20210309
-x86_64               randconfig-a015-20210309
-x86_64               randconfig-a014-20210309
-x86_64               randconfig-a011-20210309
-x86_64               randconfig-a012-20210309
-i386                 randconfig-a016-20210309
-i386                 randconfig-a012-20210309
-i386                 randconfig-a014-20210309
-i386                 randconfig-a013-20210309
-i386                 randconfig-a011-20210309
-i386                 randconfig-a015-20210309
-x86_64               randconfig-a006-20210308
-x86_64               randconfig-a001-20210308
-x86_64               randconfig-a004-20210308
-x86_64               randconfig-a002-20210308
-x86_64               randconfig-a005-20210308
-x86_64               randconfig-a003-20210308
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
+IIRC, you need to wait at least 100ms after de-asserting PERST# signal
+as it is required by PCIe specs and also because experiments proved that
+some Compex wifi cards (e.g. WLE900VX) are not detected if you do not
+wait this minimal time.
 
-clang tested configs:
-x86_64               randconfig-a006-20210309
-x86_64               randconfig-a001-20210309
-x86_64               randconfig-a004-20210309
-x86_64               randconfig-a002-20210309
-x86_64               randconfig-a005-20210309
-x86_64               randconfig-a003-20210309
+> +	if (err) {
+> +		val = readl_relaxed(port->base + PCIE_LTSSM_STATUS_REG);
+> +		dev_err(port->dev, "PCIe link down, ltssm reg val: %#x\n", val);
+> +		return err;
+> +	}
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+[1] - https://lore.kernel.org/linux-pci/20210310110535.zh4pnn4vpmvzwl5q@pali/
+[2] - https://lore.kernel.org/linux-pci/20200424092546.25p3hdtkehohe3xw@pali/
