@@ -2,80 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74E56337F93
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 22:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 625C3337F96
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 22:23:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbhCKVW2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 16:22:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41922 "EHLO mail.kernel.org"
+        id S230150AbhCKVXE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 16:23:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229679AbhCKVV4 (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Mar 2021 16:21:56 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 697FF64F91;
-        Thu, 11 Mar 2021 21:21:55 +0000 (UTC)
+        id S229490AbhCKVWk (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Mar 2021 16:22:40 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 11FD964F9F;
+        Thu, 11 Mar 2021 21:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615497715;
-        bh=bWhxGi69aLbiI/43wckgcUfry0IkgWHtLgLYXm6vlTA=;
+        s=k20201202; t=1615497760;
+        bh=oasnzg0v+A/izrbjsAY+YofycDi4i+ZadoG5W9BgJuo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VFZMUY4cjDc2Tq79J0o6EQ8Qn48LImTG3qu6cTzyvNmo02Pl6daYmQY12J/tqYBtE
-         tuILkyblqzQ9tuI3vAv49HEMUirjxoyjh6NlwCAjhD1DwSBfsoOYZ9u5XAgHk+ElPm
-         Xl2NnYKUfdlJLnzgGNJK6LAmmJRpaGe90rG+CgmfEf1Nb5ibJnfLJRbFEIc/6Y/VpX
-         ZH82YIDYEAFnGNtu8zVvy1i6lerDqJZYodAsmw454jORVGUgxRqarM5nKHWqOOTKdP
-         f/Fcs3FdP8BdD+P2mAoX7pH/yzOMfEjpNg64sJn5bsSCZGASAVbCGygTF600Fp5Wdf
-         PZBny2/epZKpg==
-Date:   Thu, 11 Mar 2021 15:21:53 -0600
+        b=oUxSKxGJGNPP3L+KvJksO9LfWPSKopMM5RRg4vFGPECDhLNwfOGXbbfIXPSA65aKQ
+         W43U65I8qbAqgBOZOSOyZc3XWls5mDKw1Z5mgqAk+1XAtUmIIaRZtXuZAt00uN0ZpK
+         qlxecAFCJ9YyQmdRxIy3s7konocztYkAtwqp/eaQg1YQrSyHqIwhEwyJxSVE2JSyHA
+         4Wp0HzEDbew0WdY4VALhnQXEIAx3uhQdZXSrzJ+Ue1JpHy4VGxMDknk3tbzokwYKnv
+         l2DFpKN96hA49CRKfDmPxj6t2gY1dqVQOZl+QVFSlxcH5M5uoeTrblvczVPSqyMT9s
+         80bcnW79fvR6A==
+Date:   Thu, 11 Mar 2021 15:22:38 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] MAINTAINERS: Update PCI patchwork to kernel.org instance
-Message-ID: <20210311212153.GA2169497@bjorn-Precision-5520>
+        linux-pci <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] PCI: controller: al: select CONFIG_PCI_ECAM
+Message-ID: <20210311212238.GA2169679@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210311211223.2168267-1-helgaas@kernel.org>
+In-Reply-To: <CAK8P3a2tNAqjSSP4g6dguT58C4DUGUT4Jgf-Osa1Da03cecLRQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 03:12:23PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Mar 10, 2021 at 10:02:55PM +0100, Arnd Bergmann wrote:
+> On Wed, Mar 10, 2021 at 8:32 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Mon, Mar 08, 2021 at 04:24:46PM +0100, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > Compile-testing this driver without ECAM support results in a link
+> > > failure:
+> > >
+> > > ld.lld: error: undefined symbol: pci_ecam_map_bus
+> > > >>> referenced by pcie-al.c
+> > > >>>               pci/controller/dwc/pcie-al.o:(al_pcie_map_bus) in archive drivers/built-in.a
+> > >
+> > > Select CONFIG_ECAM like the other drivers do.
+> >
+> > Did we add these compile issues in the v5.12-rc1?  I.e., are the fixes
+> > candidates for v5.12?
 > 
-> We now use the kernel.org patchwork instance.  Update the links in
-> MAINTAINERS.
+> No, the bug exists but is hidden until you apply patch 3/3 because the
+> driver is never compile tested on anything other than arm64, which
+> turns on PCI_ECAM unconditionally.
 > 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Merging all three for 5.13 is sufficient.
 
-I put this on for-linus for v5.12.
-
-> ---
->  MAINTAINERS | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d92f85ca831d..a3c2e930b3d5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13843,7 +13843,7 @@ M:	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->  R:	Rob Herring <robh@kernel.org>
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
-> -Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
-> +Q:	http://patchwork.kernel.org/project/linux-pci/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/
->  F:	drivers/pci/controller/
->  
-> @@ -13851,7 +13851,7 @@ PCI SUBSYSTEM
->  M:	Bjorn Helgaas <bhelgaas@google.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Supported
-> -Q:	http://patchwork.ozlabs.org/project/linux-pci/list/
-> +Q:	http://patchwork.kernel.org/project/linux-pci/list/
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
->  F:	Documentation/PCI/
->  F:	Documentation/devicetree/bindings/pci/
-> -- 
-> 2.25.1
-> 
+I put these on pci/misc for v5.13, thanks!
