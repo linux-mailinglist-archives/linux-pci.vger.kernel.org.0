@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8331336883
+	by mail.lfdr.de (Postfix) with ESMTP id 7C065336882
 	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 01:18:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbhCKARm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 Mar 2021 19:17:42 -0500
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:40248 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbhCKARe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 19:17:34 -0500
-Received: by mail-lj1-f182.google.com with SMTP id e2so82901ljo.7
-        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 16:17:34 -0800 (PST)
+        id S229632AbhCKARn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 Mar 2021 19:17:43 -0500
+Received: from mail-lf1-f52.google.com ([209.85.167.52]:42519 "EHLO
+        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229668AbhCKARf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 Mar 2021 19:17:35 -0500
+Received: by mail-lf1-f52.google.com with SMTP id v2so23688793lft.9
+        for <linux-pci@vger.kernel.org>; Wed, 10 Mar 2021 16:17:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QLZENbJQtmVGcctaPup6m6pSUGnrpLqtTIGTnn/p2nM=;
-        b=MCAT3Yflh/c2xZbqu/ZtNtm9QeEdIIV/QTR2M6fTQE52Qr75VceCQdF5+ZlB4iII7q
-         jABymP6GBiLKE7oPWeLl8/arCrKbvYbnoquodUpme5o/7fAhRXNzVHKHub1aR1lEch3n
-         5JkRl882dXVz2UqdGtguaKug12xvsRg+8ubKbJ+ixMFOt3ojXKAX3rFAoYhvDI7gyfR3
-         zRmc3QZbeuhu5otwWLsTyFzep0wXzMR2cNfcoHsRTrlkizRmkHr279z6jQUDQwOyQkAL
-         We7dWxz8dJRgCvpeg+uK+j6BXiKmNTKswVpewyRiibaswevvZqYy5M5zH6hrwyFMU5Ib
-         5dYg==
-X-Gm-Message-State: AOAM531isX4UURACACjozU4LT4z/BPQK6v1jUjILxDlzoHAfAN2Y9o+r
-        B4jpzFhLlRbKpRx4kGv1SDA=
-X-Google-Smtp-Source: ABdhPJwhyjM+FAGn4pZP2S/Gi6bQwMNNT1qwUW9HP4jRBhdLjLD6a8/P3p3Fc5iwib7x8dyz/rcUdA==
-X-Received: by 2002:a2e:9012:: with SMTP id h18mr3338382ljg.139.1615421853436;
-        Wed, 10 Mar 2021 16:17:33 -0800 (PST)
+        bh=NOaZ9L90hSCMz6oZGX1bbSsAE8thLW/EO9o9W5+QirQ=;
+        b=b4uDjrutkHmie/hTvLvL88rVFvKmpVyoX3n3VvaApzvHLjahvXds5WIUZ8RxESZVrt
+         xM7siBrz1CY9Zs3gh3KPM96LMEuDR8S6hqYlF31fkSAMXjqDjf6CwZOPSg4iF6uo52RV
+         MpnCV6oCSc96mY3anOVVYPX1/tz0WDNwYTYa1GEAk+9FPUyA1WGA4M8mv+bYAp8wOgML
+         iN2q5bf50wVMJHoDilCQB5r4Xq/mN7TfbvuVVKpsnrkKy75bCB0TeGl0jLbXQ0D8GG1A
+         01pVU7MfR01Aj9ISRQ63E/69HdWFiBwKqoPJ/VTr4ZYqgIPd1mt5NLOZhwztnsOHKT5r
+         H1rg==
+X-Gm-Message-State: AOAM531scZ/YT1CrWrUFT3+bWl1cvmH1QotiDEYW/6e58hByuaJJpuf+
+        FtwE+zyJOzONVgBe+mFwunQ=
+X-Google-Smtp-Source: ABdhPJyIHIUKWITbj+6M9WCWXYHfQKp2laz5VSCEBSOg4vL/S+jWouIS61nsZuzW7UzCYhbjI0Wk1Q==
+X-Received: by 2002:a19:f510:: with SMTP id j16mr635398lfb.301.1615421854491;
+        Wed, 10 Mar 2021 16:17:34 -0800 (PST)
 Received: from workstation.lan ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id y186sm269332lfc.304.2021.03.10.16.17.32
+        by smtp.gmail.com with ESMTPSA id y186sm269332lfc.304.2021.03.10.16.17.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 16:17:32 -0800 (PST)
+        Wed, 10 Mar 2021 16:17:34 -0800 (PST)
 From:   =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -49,9 +49,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sean V Kelley <sean.v.kelley@intel.com>,
         Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
         Jay Fang <f.fangjian@huawei.com>, linux-pci@vger.kernel.org
-Subject: [PATCH 7/8] PCI: dwc: Remove surplus and document missing function parameters
-Date:   Thu, 11 Mar 2021 00:17:23 +0000
-Message-Id: <20210311001724.423356-7-kw@linux.com>
+Subject: [PATCH 8/8] PCI: of: Fix kernel-doc formatting and add missing documentation
+Date:   Thu, 11 Mar 2021 00:17:24 +0000
+Message-Id: <20210311001724.423356-8-kw@linux.com>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210311001724.423356-1-kw@linux.com>
 References: <20210311001724.423356-1-kw@linux.com>
@@ -62,84 +62,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing documentation for the parameters "ks_pcie", "bus"
-and "pci" of the ks_pcie_set_dbi_mode(), ks_pcie_clear_dbi_mode(),
-ks_pcie_v3_65_add_bus() and ks_pcie_link_up() functions and resolve
-build time warnings related to kernel-doc:
+Fix kernel-doc formatting and add missing documentation for the "node"
+parameter of the of_get_pci_domain_nr() and of_pci_get_max_link_speed()
+functions, and resolve build time warnings related to kernel-doc:
 
-  drivers/pci/controller/dwc/pci-keystone.c:356: warning: Function
-  parameter or member 'ks_pcie' not described in 'ks_pcie_set_dbi_mode'
+  drivers/pci/of.c:202: warning: expecting prototype for This function
+  will try to obtain the host bridge domain number by(). Prototype was
+  for of_get_pci_domain_nr() instead
 
-  drivers/pci/controller/dwc/pci-keystone.c:375: warning: Function
-  parameter or member 'ks_pcie' not described in
-  'ks_pcie_clear_dbi_mode'
-
-  drivers/pci/controller/dwc/pci-keystone.c:456: warning: Function
-  parameter or member 'bus' not described in 'ks_pcie_v3_65_add_bus'
-
-  drivers/pci/controller/dwc/pci-keystone.c:493: warning: Function
-  parameter or member 'pci' not described in 'ks_pcie_link_up'
-
-  drivers/pci/controller/dwc/pci-keystone.c:615: warning: Excess
-  function parameter 'irq' description in 'ks_pcie_legacy_irq_handler'
+  drivers/pci/of.c:597: warning: expecting prototype for This function
+  will try to find the limitation of link speed by finding(). Prototype
+  was for of_pci_get_max_link_speed() instead
 
 No change to functionality intended.
 
 Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/pci/of.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 53aa35cb3a49..6745e69b7020 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -346,8 +346,9 @@ static const struct irq_domain_ops ks_pcie_legacy_irq_domain_ops = {
- };
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 5ea472ae22ac..da5b414d585a 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -190,10 +190,18 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+ EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
  
  /**
-- * ks_pcie_set_dbi_mode() - Set DBI mode to access overlaid BAR mask
-- * registers
-+ * ks_pcie_set_dbi_mode() - Set DBI mode to access overlaid BAR mask registers
-+ * @ks_pcie: A pointer to the keystone_pcie structure which holds the KeyStone
-+ *	     PCIe host controller driver information.
+- * This function will try to obtain the host bridge domain number by
+- * finding a property called "linux,pci-domain" of the given device node.
++ * of_get_pci_domain_nr - Find the host bridge domain number
++ *			  of the given device node.
++ * @node: Device tree node with the domain information.
   *
-  * Since modification of dbi_cs2 involves different clock domain, read the
-  * status back to ensure the transition is complete.
-@@ -367,6 +368,8 @@ static void ks_pcie_set_dbi_mode(struct keystone_pcie *ks_pcie)
- 
- /**
-  * ks_pcie_clear_dbi_mode() - Disable DBI mode
-+ * @ks_pcie: A pointer to the keystone_pcie structure which holds the KeyStone
-+ *	     PCIe host controller driver information.
+- * @node: device tree node with the domain information
++ * This function will try to obtain the host bridge domain number by finding
++ * a property called "linux,pci-domain" of the given device node.
++ *
++ * Return:
++ * * > 0	- On success, an associated domain number.
++ * * -EINVAL	- The property "linux,pci-domain" does not exist.
++ * * -ENODATA	- The linux,pci-domain" property does not have value.
++ * * -EOVERFLOW	- Invalid "linux,pci-domain" property value.
   *
-  * Since modification of dbi_cs2 involves different clock domain, read the
-  * status back to ensure the transition is complete.
-@@ -449,6 +452,7 @@ static struct pci_ops ks_child_pcie_ops = {
+  * Returns the associated domain number from DT in the range [0-0xffff], or
+  * a negative value if the required property is not found.
+@@ -585,10 +593,16 @@ int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge)
+ #endif /* CONFIG_PCI */
  
  /**
-  * ks_pcie_v3_65_add_bus() - keystone add_bus post initialization
-+ * @bus: A pointer to the PCI bus structure.
++ * of_pci_get_max_link_speed - Find the maximum link speed of the given device node.
++ * @node: Device tree node with the maximum link speed information.
++ *
+  * This function will try to find the limitation of link speed by finding
+  * a property called "max-link-speed" of the given device node.
   *
-  * This sets BAR0 to enable inbound access for MSI_IRQ register
-  */
-@@ -488,6 +492,8 @@ static struct pci_ops ks_pcie_ops = {
- 
- /**
-  * ks_pcie_link_up() - Check if link up
-+ * @pci: A pointer to the dw_pcie structure which holds the DesignWare PCIe host
-+ *	 controller driver information.
-  */
- static int ks_pcie_link_up(struct dw_pcie *pci)
- {
-@@ -605,7 +611,6 @@ static void ks_pcie_msi_irq_handler(struct irq_desc *desc)
- 
- /**
-  * ks_pcie_legacy_irq_handler() - Handle legacy interrupt
-- * @irq: IRQ line for legacy interrupts
-  * @desc: Pointer to irq descriptor
+- * @node: device tree node with the max link speed information
++ * Return:
++ * * > 0	- On success, a maximum link speed.
++ * * -EINVAL	- Invalid "max-link-speed" property value, or failure to access
++ *		  the property of the device tree node.
   *
-  * Traverse through pending legacy interrupts and invoke handler for each. Also
+  * Returns the associated max link speed from DT, or a negative value if the
+  * required property is not found or is invalid.
 -- 
 2.30.1
 
