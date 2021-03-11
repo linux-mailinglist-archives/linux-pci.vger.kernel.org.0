@@ -2,208 +2,252 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3859B3375BC
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 15:31:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7BC1337AED
+	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 18:35:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233443AbhCKOau (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 09:30:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56760 "EHLO mail.kernel.org"
+        id S229774AbhCKRfA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 12:35:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233905AbhCKOaa (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Mar 2021 09:30:30 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E433D64FE2;
-        Thu, 11 Mar 2021 14:30:29 +0000 (UTC)
+        id S229914AbhCKReg (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Mar 2021 12:34:36 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 69BE264F90;
+        Thu, 11 Mar 2021 17:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615473030;
-        bh=m2XUVNPGUTgDKeGFE7OBmHC8+8gXlteTLyWvGrLc4Jc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KFSrSouV867Dp29ScUKZyCvSd9AROjGXtxnlN7oGKWIQSo1QKBFQMP2WTJ2Vyha7l
-         8UPz8O0UmbI7WB+TSl+e1VIhihv1pvHpJ7CuUJquNf1KSDPz4BJJVo8eU33Ey3rTYk
-         ejC6o3lweUqXJ/XGf0VL+3kMUNNH5F/s8AwvYkwwcrKiSTNFuCVQdE+Q816NKNo/m0
-         9vcZrsKdUD92toBHE3VJ430v2ri5hMkhPQWzsW6QYtN+69bHqnpzvmq5WR07pN6WSI
-         W2pSZ2CiCQ93cdd95qJdGVNEXKO1flRtIcfGbSsZw0v805MRB2tDRWYIEaMW9BeyRV
-         M6ifTDBMwHtqA==
-Received: by pali.im (Postfix)
-        id 7EEC88A7; Thu, 11 Mar 2021 15:30:27 +0100 (CET)
-Date:   Thu, 11 Mar 2021 15:30:27 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
+        s=k20201202; t=1615484075;
+        bh=iNN2zownLKbHetBsCygEAW1/v3+W5uETEqkoW22vGqs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=agrMrkebeT9PSY05fmnsQZQ1qFj5ZUo2w9A7Tr3yAW/SE1BLeFHMZQ54WAMGbdPjT
+         7CjAwF7Hn1GLjANBtsdQDfL+qeRhl6m5QHmljdhuK+u4124mq3++zF0iLae9q4KU9r
+         F4Gj+B1znOTW2rbo5yOP4TO7KfUweT4ZzMGdoP4lcmUVxalCwVVGmlKQZcSnrZa42H
+         DYvYAm6cneoyBmEYVn2jhkPbOKLeTg5U3X1rYiOKdVbSTHYtGH9ffkgi46xwwvUg5D
+         34tSLrDQtzGdihPp97ACXWSR9JYostQgLKWL8DaGM2ceVquWxiXsQjMo1uOft8PJiZ
+         hokHJnW7khpyg==
+Date:   Thu, 11 Mar 2021 11:34:33 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Victor Ding <victording@google.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ben Chuang <ben.chuang@genesyslogic.com.tw>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Amey Narkhede <ameynarkhede02@gmail.com>
-Subject: Re: RFC: sysfs node for Secondary PCI bus reset (PCIe Hot Reset)
-Message-ID: <20210311143027.mwzdgme3omkj3ld5@pali>
-References: <20210301171221.3d42a55i7h5ubqsb@pali>
- <20210301202817.GA201451@bjorn-Precision-5520>
- <20210302125829.216784cd@omen.home.shazbot.org>
- <20210303175635.nv7kxiulevpy5ax5@pali>
- <85786a3a-c7d4-95cc-170f-26f89c2b337e@nvidia.com>
+        linux-mmc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Subject: Re: [PATCH v2] PCI/ASPM: Disable ASPM when save/restore PCI state
+Message-ID: <20210311173433.GA2071075@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <85786a3a-c7d4-95cc-170f-26f89c2b337e@nvidia.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20210128155237.v2.1.I42c1001f8b0eaac973a99e1e5c2170788ee36c9c@changeid>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thursday 11 March 2021 19:53:26 Vidya Sagar wrote:
-> On 3/3/2021 11:26 PM, Pali Rohár wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > On Tuesday 02 March 2021 12:58:29 Alex Williamson wrote:
-> > > On Mon, 1 Mar 2021 14:28:17 -0600
-> > > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > 
-> > > > [+cc Alex, reset expert]
-> > > > 
-> > > > On Mon, Mar 01, 2021 at 06:12:21PM +0100, Pali Rohár wrote:
-> > > > > Hello!
-> > > > > 
-> > > > > PCIe card can be reset via in-band Hot Reset signal which can be
-> > > > > triggered by PCIe bridge via Secondary Bus Reset bit in PCI config
-> > > > > space.
-> > > > > 
-> > > > > Kernel already exports sysfs node "reset" for triggering Functional
-> > > > > Reset of particular function of PCI device. But in some cases Functional
-> > > > > Reset is not enough and Hot Reset is required.
-> > > > > 
-> > > > > Following RFC patch exports sysfs node "reset_bus" for PCI bridges which
-> > > > > triggers Secondary Bus Reset and therefore for PCIe bridges it resets
-> > > > > connected PCIe card.
-> > > > > 
-> > > > > What do you think about it?
-> > > > > 
-> > > > > Currently there is userspace script which can trigger PCIe Hot Reset by
-> > > > > modifying PCI config space from userspace:
-> > > > > 
-> > > > > https://alexforencich.com/wiki/en/pcie/hot-reset-linux
-> > > > > 
-> > > > > But because kernel already provides way how to trigger Functional Reset
-> > > > > it could provide also way how to trigger PCIe Hot Reset.
-> > > 
-> > > What that script does and what this does, or what the existing reset
-> > > attribute does, are very different.  The script finds the upstream
-> > > bridge for a given device, removes the device (ignoring that more than
-> > > one device might be affected by the bus reset), uses setpci to trigger
-> > > a secondary bus reset, then rescans devices.  The below only triggers
-> > > the secondary bus reset, neither saving and restoring affected device
-> > > state like the existing function level reset attribute, nor removing
-> > > and rescanning as the script does.  It simply leaves an entire
-> > > hierarchy of PCI devices entirely un-programmed yet still has struct
-> > > pci_devs attached to them for untold future misery.
-> > > 
-> > > In fact, for the case of a single device affected by the bus reset, as
-> > > intended by the script, the existing reset attribute will already do
-> > > that if the device supports no other reset mechanism.  There's actually
-> > > a running LFX mentorship project that aims to allow the user to control
-> > > the type of reset performed by the existing reset attribute such that a
-> > > user could force the bus reset behavior over other reset methods.
-> > 
-> > Hello Alex? Do you have a link for this "reset" project? I'm interesting
-> > in it as I'm dealing with Compex wifi cards which are causing problems.
-> > 
-> > For correct initialization I need to issue PCIe Warm Reset for these
-> > cards (Warm Reset is done via PERST# pin which most linux controller
-> > drivers controls via GPIO subsystem). And for now there is no way to
-> > trigger PCIe Warm Reset for particular PCIe device from userspace. As
-> > there is no userspace <--> kernel API for it.
-> > 
-> > > There might be some justification for an attribute that actually
-> > > implements the referenced script correctly, perhaps in kernel we could
-> > > avoid races with bus rescans, but simply triggering an SBR to quietly
-> > > de-program all downstream devices with no state restore or device
-> > > rescan is not it.  Any affected device would be unusable.  Was this
-> > > tested?  Thanks,
-> > 
-> > I have tested my change. First I called 'remove' attribute for PCIe
-> > card, then I called this 'bus_reset' on parent PCIe bridge and later I
-> > called 'rescan' attribute on bridge. It correctly rested tested ath9k
-> > card. So I did something similar as in above script. But I agree that
-> > there are race conditions and basically lot of other calls needs to be
-> > done to restore state.
-> > 
-> > So I see that to make it 'usable' we need to do it automatically in
-> > kernel and also rescan/restore state of PCIe devices behind bridge after
-> > reset...
-> But, is save-restore alone going to be enough? I mean what is the state of
-> the device-driver going to be when the device is going through the reset
-> process? Isn't remove-rescan the correct thing to do here rather than
-> save/restore?
+On Thu, Jan 28, 2021 at 03:52:42PM +0000, Victor Ding wrote:
+> Certain PCIe devices (e.g. GL9750) have high penalties (e.g. high Port
+> T_POWER_ON) when exiting L1 but enter L1 aggressively. As a result,
+> such devices enter and exit L1 frequently during pci_save_state and
+> pci_restore_state; eventually causing poor suspend/resume performance.
+> 
+> Based on the observation that PCI accesses dominance pci_save_state/
+> pci_restore_state plus these accesses are fairly close to each other, the
+> actual time the device could stay in low power states is negligible.
+> Therefore, the little power-saving benefit from ASPM during suspend/resume
+> does not overweight the performance degradation caused by high L1 exit
+> penalties.
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=211187
 
-I think that remove-reset-rescan (if done atomically with correct
-timeouts between them and applying kernel quirks) should be correct
-here.
+Thanks for this!
 
-> - Vidya Sagar
-> > 
-> > > Alex
-> > > 
-> > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > > index 50fcb62d59b5..f5e11c589498 100644
-> > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > @@ -1321,6 +1321,30 @@ static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
-> > > > > 
-> > > > >   static DEVICE_ATTR(reset, 0200, NULL, reset_store);
-> > > > > 
-> > > > > +static ssize_t reset_bus_store(struct device *dev, struct device_attribute *attr,
-> > > > > +                        const char *buf, size_t count)
-> > > > > +{
-> > > > > + struct pci_dev *pdev = to_pci_dev(dev);
-> > > > > + unsigned long val;
-> > > > > + ssize_t result = kstrtoul(buf, 0, &val);
-> > > > > +
-> > > > > + if (result < 0)
-> > > > > +         return result;
-> > > > > +
-> > > > > + if (val != 1)
-> > > > > +         return -EINVAL;
-> > > > > +
-> > > > > + pm_runtime_get_sync(dev);
-> > > > > + result = pci_bridge_secondary_bus_reset(pdev);
-> > > > > + pm_runtime_put(dev);
-> > > > > + if (result < 0)
-> > > > > +         return result;
-> > > > > +
-> > > > > + return count;
-> > > > > +}
-> > > > > +
-> > > > > +static DEVICE_ATTR(reset_bus, 0200, NULL, reset_bus_store);
-> > > > > +
-> > > > >   static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> > > > >   {
-> > > > >    int retval;
-> > > > > @@ -1332,8 +1356,15 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
-> > > > >            if (retval)
-> > > > >                    goto error;
-> > > > >    }
-> > > > > + if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
-> > > > > +         retval = device_create_file(&dev->dev, &dev_attr_reset_bus);
-> > > > > +         if (retval)
-> > > > > +                 goto error_reset_bus;
-> > > > > + }
-> > > > >    return 0;
-> > > > > 
-> > > > > +error_reset_bus:
-> > > > > + device_remove_file(&dev->dev, &dev_attr_reset);
-> > > > >   error:
-> > > > >    pcie_vpd_remove_sysfs_dev_files(dev);
-> > > > >    return retval;
-> > > > > @@ -1414,6 +1445,8 @@ static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
-> > > > >            device_remove_file(&dev->dev, &dev_attr_reset);
-> > > > >            dev->reset_fn = 0;
-> > > > >    }
-> > > > > + if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
-> > > > > +         device_remove_file(&dev->dev, &dev_attr_reset_bus);
-> > > > >   }
-> > > > > 
-> > > > >   /**
-> > > > 
-> > > 
+This device can tolerate unlimited delay for L1 exit (DevCtl Endpoint
+L1 Acceptable Latency is unlimited) and it makes no guarantees about
+how fast it can exit L1 (LnkCap L1 Exit Latency is also unlimited), so
+I think there's basically no restriction on when it can enter ASPM
+L1.0.
+
+I have a hard time interpreting the L1.2 entry conditions in PCIe
+r5.0, sec 5.5.1, but I can believe it enters L1.2 aggressively since
+the device says it can tolerate any latencies.
+
+If L1.2 exit takes 3100us, it could do ~60 L1 exits in 200ms.  I guess
+config accesses and code execution can account for some of that, but
+still seems like a lot of L1 entries/exits during suspend.  I wouldn't
+think we would touch the device that much and that intermittently.
+
+> Signed-off-by: Victor Ding <victording@google.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Updated commit message to remove unnecessary information
+> - Fixed a bug reading wrong register in pcie_save_aspm_control
+> - Updated to reuse existing pcie_config_aspm_dev where possible
+> - Fixed goto label style
+> 
+>  drivers/pci/pci.c       | 18 +++++++++++++++---
+>  drivers/pci/pci.h       |  6 ++++++
+>  drivers/pci/pcie/aspm.c | 27 +++++++++++++++++++++++++++
+>  include/linux/pci.h     |  1 +
+>  4 files changed, 49 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 32011b7b4c04..9ea88953f90b 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1542,6 +1542,10 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
+>  int pci_save_state(struct pci_dev *dev)
+>  {
+>  	int i;
+> +
+> +	pcie_save_aspm_control(dev);
+> +	pcie_disable_aspm(dev);
+
+If I understand this patch correctly, it basically does this:
+
+    pci_save_state
+  +   pcie_save_aspm_control
+  +   pcie_disable_aspm
+      <save state>
+  +   pcie_restore_aspm_control
+
+The <save state> part is just a bunch of config reads with very little
+other code execution.  I'm really surprised that there's enough time
+between config reads for the link to go to L1.  I guess you've
+verified that this does speed up suspend significantly, but this just
+doesn't make sense to me.
+
+In the bugzilla you say the GL9750 can go to L1.2 after ~4us of
+inactivity.  That's enough time for a lot of code execution.  We must
+be missing something.  There's so much PCI traffic during save/restore
+that it should be easy to match up the analyzer trace with the code.
+Can you get any insight into what's going on that way?
+
+>  	/* XXX: 100% dword access ok here? */
+>  	for (i = 0; i < 16; i++) {
+>  		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
+> @@ -1552,18 +1556,22 @@ int pci_save_state(struct pci_dev *dev)
+>  
+>  	i = pci_save_pcie_state(dev);
+>  	if (i != 0)
+> -		return i;
+> +		goto exit;
+>  
+>  	i = pci_save_pcix_state(dev);
+>  	if (i != 0)
+> -		return i;
+> +		goto exit;
+>  
+>  	pci_save_ltr_state(dev);
+>  	pci_save_aspm_l1ss_state(dev);
+>  	pci_save_dpc_state(dev);
+>  	pci_save_aer_state(dev);
+>  	pci_save_ptm_state(dev);
+> -	return pci_save_vc_state(dev);
+> +	i = pci_save_vc_state(dev);
+> +
+> +exit:
+> +	pcie_restore_aspm_control(dev);
+> +	return i;
+>  }
+>  EXPORT_SYMBOL(pci_save_state);
+>  
+> @@ -1661,6 +1669,8 @@ void pci_restore_state(struct pci_dev *dev)
+>  	if (!dev->state_saved)
+>  		return;
+>  
+> +	pcie_disable_aspm(dev);
+> +
+>  	/*
+>  	 * Restore max latencies (in the LTR capability) before enabling
+>  	 * LTR itself (in the PCIe capability).
+> @@ -1689,6 +1699,8 @@ void pci_restore_state(struct pci_dev *dev)
+>  	pci_enable_acs(dev);
+>  	pci_restore_iov_state(dev);
+>  
+> +	pcie_restore_aspm_control(dev);
+> +
+>  	dev->state_saved = false;
+>  }
+>  EXPORT_SYMBOL(pci_restore_state);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index a81459159f6d..e074a0cbe73c 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -584,6 +584,9 @@ void pcie_aspm_pm_state_change(struct pci_dev *pdev);
+>  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+>  void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+>  void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+> +void pcie_save_aspm_control(struct pci_dev *dev);
+> +void pcie_restore_aspm_control(struct pci_dev *dev);
+> +void pcie_disable_aspm(struct pci_dev *pdev);
+>  #else
+>  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+> @@ -591,6 +594,9 @@ static inline void pcie_aspm_pm_state_change(struct pci_dev *pdev) { }
+>  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+>  static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
+>  static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
+> +static inline void pcie_save_aspm_control(struct pci_dev *dev) { }
+> +static inline void pcie_restore_aspm_control(struct pci_dev *dev) { }
+> +static inline void pcie_disable_aspm(struct pci_dev *pdev) { }
+>  #endif
+>  
+>  #ifdef CONFIG_PCIE_ECRC
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index a08e7d6dc248..e1e97db32e8b 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -784,6 +784,33 @@ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+>  					   PCI_EXP_LNKCTL_ASPMC, val);
+>  }
+>  
+> +void pcie_disable_aspm(struct pci_dev *pdev)
+> +{
+> +	if (!pci_is_pcie(pdev))
+> +		return;
+> +
+> +	pcie_config_aspm_dev(pdev, 0);
+> +}
+> +
+> +void pcie_save_aspm_control(struct pci_dev *pdev)
+> +{
+> +	u16 lnkctl;
+> +
+> +	if (!pci_is_pcie(pdev))
+> +		return;
+> +
+> +	pcie_capability_read_word(pdev, PCI_EXP_LNKCTL, &lnkctl);
+> +	pdev->saved_aspm_ctl = lnkctl & PCI_EXP_LNKCTL_ASPMC;
+> +}
+> +
+> +void pcie_restore_aspm_control(struct pci_dev *pdev)
+> +{
+> +	if (!pci_is_pcie(pdev))
+> +		return;
+> +
+> +	pcie_config_aspm_dev(pdev, pdev->saved_aspm_ctl);
+> +}
+> +
+>  static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+>  {
+>  	u32 upstream = 0, dwstream = 0;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index b32126d26997..a21bfd6e3f89 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -387,6 +387,7 @@ struct pci_dev {
+>  	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
+>  					   supported from root to here */
+>  	u16		l1ss;		/* L1SS Capability pointer */
+> +	u16		saved_aspm_ctl; /* ASPM Control saved at suspend time */
+>  #endif
+>  	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
+>  
+> -- 
+> 2.30.0.280.ga3ce27912f-goog
+> 
