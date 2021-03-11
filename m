@@ -2,228 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38C7C338197
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 00:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0EFC3381FF
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 01:00:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231181AbhCKXjL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 18:39:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231131AbhCKXim (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Mar 2021 18:38:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 17B6264F7C;
-        Thu, 11 Mar 2021 23:38:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615505922;
-        bh=WTNMtBzBosw4mswkjqGuY/L4ZDTEMd5IPp0xg3s3ZEY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kW4Mmu2mVUaozEg26xo+zfSDjivbNSdbrLOC2cMCM/ihiZo3fRr9/X3iDbXEHJ6sQ
-         2YHTpFy7QM2nOlxDz/tOUQzEvwWOefK+NptAbimUPoB/6/EIP8+E8DI3sUG9lGtDoq
-         fjo67bCZh37uDVLIZMCmxMep4eR1K+CbYUmbGxUCbnkb4TAKo1imZRMA67mvpYX26q
-         8sBHIhkkE5LbHd0BxqqOtURlWSDhOeLHAZb9a0kVlejRei0vEcQxcPyRW7tXYIjTW6
-         InBCp4qLl7Pwb9qlj+Hqh+cnHgjoAigSC9ILXiugTv5QgHkr5g2k7dFlqUFzgWeMsh
-         NNS5S0XTN5nCQ==
-Date:   Thu, 11 Mar 2021 17:38:40 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh@kernel.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Jay Fang <f.fangjian@huawei.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/8] PCI: endpoint: Fix kernel-doc formatting and add
- missing documentation
-Message-ID: <20210311233840.GA2188908@bjorn-Precision-5520>
+        id S230491AbhCLAAX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 19:00:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229526AbhCKX7r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Mar 2021 18:59:47 -0500
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45A2C061574
+        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 15:59:46 -0800 (PST)
+Received: by mail-qt1-x836.google.com with SMTP id 6so2548896qty.3
+        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 15:59:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9rzGlCXRuAYzD4FxF8/kX8t+sLM/xQ6RjW+kfB9MHUI=;
+        b=Sht35sRAWhjUnG/vlACxlUdN1NXxZ2hn78xSNsQrOQiOnK1nALUmlUGHUAK1T+DYhZ
+         MX3lwQI/UxwTrkQv8d3kMYROr1PLyoiqVafUPMi7P056ufFmL/tRZlvShlZxbmxqDyNW
+         NLKw5iBy24OxHbW+DCJ1DQJfzdSe8iTc3c8sHbtF9tFwbdZcos5KLgrKfPlUhIrDUvII
+         vIew7klGAO8Wn/28Da6K3YhKEWpKl3Z8yXO4c0K2hvWjTBIXhDYwZP0hefzSiur217jB
+         Lo+rOwqj5lF4a/tIzhlWfi67C2vz4vtRgSFudHgU/4CmiKi4zEw8bQzulGoxFckdnomp
+         ZbNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9rzGlCXRuAYzD4FxF8/kX8t+sLM/xQ6RjW+kfB9MHUI=;
+        b=Y/qkgo6fic0DYyQ8jOHkPIVrEtEkG2jEaEUVuHjL2gYRwIHxwo3+gBdLjNrZKxrzHc
+         sg6f/fYm0C1i19O7yfh88YZDvzloi8mdgYBvZXCK7QfD/Pt3oxxBd783Xm5ssaFgkwIq
+         qaR/MyRkpCifukk3PBlJVCic468UywgUTsfqkGpYFIqGbKdFjztKR80k84vmhJ9VhGEG
+         MBpLut0HErtGItsE1GF+qDCKjNlTVKxGLEtFvKeTGdAU0t5hBDfbtk/N6fGCevHo1P2r
+         2zJq8T7RZPv3KyhQJEK2hz2luaFOBGMTjSSs1+7EGoM5WaUkgf9D0aqSXpFTuDrOx/Uq
+         LIDQ==
+X-Gm-Message-State: AOAM532GqVnqdu3J55YB3UVFwWXEgrCv6n5dIwoPebbiOept11aLbTuJ
+        2VknJ6yZ+3pc+sfID+O6aXctmQ==
+X-Google-Smtp-Source: ABdhPJxiCSaM0aAia7Gh2ystvnvxFkgXLtQu1szm+rOtvCsRMIOPRh5BDiwH0XxEbvHajGL8eIa3Yg==
+X-Received: by 2002:aed:20cd:: with SMTP id 71mr9996620qtb.346.1615507185328;
+        Thu, 11 Mar 2021 15:59:45 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-115-133.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.115.133])
+        by smtp.gmail.com with ESMTPSA id z89sm2953405qtd.5.2021.03.11.15.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Mar 2021 15:59:44 -0800 (PST)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1lKVDT-00BbRW-RG; Thu, 11 Mar 2021 19:59:43 -0400
+Date:   Thu, 11 Mar 2021 19:59:43 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Stephen Bates <sbates@raithlin.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Ira Weiny <iweiny@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Don Dutile <ddutile@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Minturn Dave B <dave.b.minturn@intel.com>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Xiong Jianxin <jianxin.xiong@intel.com>
+Subject: Re: [RFC PATCH v2 11/11] nvme-pci: Convert to using dma_map_sg for
+ p2pdma pages
+Message-ID: <20210311235943.GB2710221@ziepe.ca>
+References: <20210311233142.7900-1-logang@deltatee.com>
+ <20210311233142.7900-12-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210311001724.423356-1-kw@linux.com>
+In-Reply-To: <20210311233142.7900-12-logang@deltatee.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 12:17:17AM +0000, Krzysztof Wilczyński wrote:
-> Add missing documentation for the parameters "ntb_epc", "type", "dev",
-> and "group" of the following functions:
+On Thu, Mar 11, 2021 at 04:31:41PM -0700, Logan Gunthorpe wrote:
+> Convert to using dma_[un]map_sg() for PCI p2pdma pages.
 > 
->   - epf_ntb_add_cfs()
->   - epf_ntb_alloc_peer_mem()
->   - epf_ntb_config_sspad_bar_clear(),
->   - epf_ntb_config_sspad_bar_set()
->   - epf_ntb_peer_spad_bar_clear()
->   - epf_ntb_peer_spad_bar_set()
->   - pci_epc_remove_epf()
+> This should be equivalent, though support will be somewhat less
+> (only dma-direct and dma-iommu are currently supported).
 > 
-> Remove surplus parameter from the epf_ntb_init_epc_bar() function.
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>  drivers/nvme/host/pci.c | 27 +++++++--------------------
+>  1 file changed, 7 insertions(+), 20 deletions(-)
 > 
-> Additionally, fix a non-compliant kernel-doc at the top of the files
-> pci-epf-ntb.c and pci-epf-test.c, and resolve number of build time
-> warnings related to kernel-doc:
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:1363: warning: Function
->  parameter or member 'dev' not described in 'epf_ntb_alloc_peer_mem'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:2046: warning: Function
->  parameter or member 'group' not described in 'epf_ntb_add_cfs'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:1670: warning: Excess
->  function parameter 'type' description in 'epf_ntb_init_epc_bar'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:45: warning: cannot
->  understand function prototype: 'struct workqueue_struct
->  *kpcintb_workqueue; '
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:727: warning: Excess
->  function parameter 'ntb' description in 'epf_ntb_peer_spad_bar_clear'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:727: warning: Function
->  parameter or member 'ntb_epc' not described in
->  'epf_ntb_peer_spad_bar_clear'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:771: warning: Function
->  parameter or member 'type' not described in 'epf_ntb_peer_spad_bar_set'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:839: warning: Excess
->  function parameter 'ntb' description in
->  'epf_ntb_config_sspad_bar_clear'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:839: warning: Function
->  parameter or member 'ntb_epc' not described in
->  'epf_ntb_config_sspad_bar_clear'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:882: warning: Excess
->  function parameter 'ntb' description in 'epf_ntb_config_sspad_bar_set'
-> 
->  drivers/pci/endpoint/functions/pci-epf-ntb.c:882: warning: Function
->  parameter or member 'ntb_epc' not described in
->  'epf_ntb_config_sspad_bar_set'
-> 
->  drivers/pci/endpoint/functions/pci-epf-test.c:22: warning: expecting
->  prototype for Test driver to test endpoint functionality(). Prototype
->  was for IRQ_TYPE_LEGACY() instead
-> 
-> No change to functionality intended.
-> 
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 7d40c6a9e58e..89ca5acf7a62 100644
+> +++ b/drivers/nvme/host/pci.c
+> @@ -577,17 +577,6 @@ static void nvme_free_sgls(struct nvme_dev *dev, struct request *req)
+>  
+>  }
+>  
+> -static void nvme_unmap_sg(struct nvme_dev *dev, struct request *req)
+> -{
+> -	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
+> -
+> -	if (is_pci_p2pdma_page(sg_page(iod->sg)))
+> -		pci_p2pdma_unmap_sg(dev->dev, iod->sg, iod->nents,
+> -				    rq_dma_dir(req));
+> -	else
+> -		dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
+> -}
 
-Applied all to pci/kernel-doc, thanks!  I squashed them into one patch
-since these only change comments.
+Can the two other places with this code pattern be changed too?
 
-> ---
->  drivers/pci/endpoint/functions/pci-epf-ntb.c  | 16 +++++++++++-----
->  drivers/pci/endpoint/functions/pci-epf-test.c |  2 +-
->  drivers/pci/endpoint/pci-epc-core.c           |  2 ++
->  3 files changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> index 338148cf56f5..bce274d02dcf 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
-> @@ -1,5 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -/**
-> +/*
->   * Endpoint Function Driver to implement Non-Transparent Bridge functionality
->   *
->   * Copyright (C) 2020 Texas Instruments
-> @@ -696,7 +696,8 @@ static void epf_ntb_cmd_handler(struct work_struct *work)
->  
->  /**
->   * epf_ntb_peer_spad_bar_clear() - Clear Peer Scratchpad BAR
-> - * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-> + * @ntb_epc: EPC associated with one of the HOST which holds peer's outbound
-> + *	     address.
->   *
->   *+-----------------+------->+------------------+        +-----------------+
->   *|       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
-> @@ -740,6 +741,7 @@ static void epf_ntb_peer_spad_bar_clear(struct epf_ntb_epc *ntb_epc)
->  /**
->   * epf_ntb_peer_spad_bar_set() - Set peer scratchpad BAR
->   * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-> + * @type: PRIMARY interface or SECONDARY interface
->   *
->   *+-----------------+------->+------------------+        +-----------------+
->   *|       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
-> @@ -808,7 +810,8 @@ static int epf_ntb_peer_spad_bar_set(struct epf_ntb *ntb,
->  
->  /**
->   * epf_ntb_config_sspad_bar_clear() - Clear Config + Self scratchpad BAR
-> - * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-> + * @ntb_epc: EPC associated with one of the HOST which holds peer's outbound
-> + *	     address.
->   *
->   * +-----------------+------->+------------------+        +-----------------+
->   * |       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
-> @@ -851,7 +854,8 @@ static void epf_ntb_config_sspad_bar_clear(struct epf_ntb_epc *ntb_epc)
->  
->  /**
->   * epf_ntb_config_sspad_bar_set() - Set Config + Self scratchpad BAR
-> - * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-> + * @ntb_epc: EPC associated with one of the HOST which holds peer's outbound
-> + *	     address.
->   *
->   * +-----------------+------->+------------------+        +-----------------+
->   * |       BAR0      |        |  CONFIG REGION   |        |       BAR0      |
-> @@ -1312,6 +1316,7 @@ static int epf_ntb_configure_interrupt(struct epf_ntb *ntb,
->  
->  /**
->   * epf_ntb_alloc_peer_mem() - Allocate memory in peer's outbound address space
-> + * @dev: The PCI device.
->   * @ntb_epc: EPC associated with one of the HOST whose BAR holds peer's outbound
->   *   address
->   * @bar: BAR of @ntb_epc in for which memory has to be allocated (could be
-> @@ -1660,7 +1665,6 @@ static int epf_ntb_init_epc_bar_interface(struct epf_ntb *ntb,
->   * epf_ntb_init_epc_bar() - Identify BARs to be used for each of the NTB
->   * constructs (scratchpad region, doorbell, memorywindow)
->   * @ntb: NTB device that facilitates communication between HOST1 and HOST2
-> - * @type: PRIMARY interface or SECONDARY interface
->   *
->   * Wrapper to epf_ntb_init_epc_bar_interface() to identify the free BARs
->   * to be used for each of BAR_CONFIG, BAR_PEER_SPAD, BAR_DB_MW1, BAR_MW2,
-> @@ -2037,6 +2041,8 @@ static const struct config_item_type ntb_group_type = {
->  /**
->   * epf_ntb_add_cfs() - Add configfs directory specific to NTB
->   * @epf: NTB endpoint function device
-> + * @group: A pointer to the config_group structure referencing a group of
-> + *	   config_items of a specific type that belong to a specific sub-system.
->   *
->   * Add configfs directory specific to NTB. This directory will hold
->   * NTB specific properties like db_count, spad_count, num_mws etc.,
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index c0ac4e9cbe72..63d5f5c6e3e0 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -1,5 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -/**
-> +/*
->   * Test driver to test endpoint functionality
->   *
->   * Copyright (C) 2017 Texas Instruments
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index cc8f9eb2b177..adec9bee72cf 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -594,6 +594,8 @@ EXPORT_SYMBOL_GPL(pci_epc_add_epf);
->   * pci_epc_remove_epf() - remove PCI endpoint function from endpoint controller
->   * @epc: the EPC device from which the endpoint function should be removed
->   * @epf: the endpoint function to be removed
-> + * @type: identifies if the EPC is connected to the primary or secondary
-> + *        interface of EPF
->   *
->   * Invoke to remove PCI endpoint function from the endpoint controller.
->   */
-> -- 
-> 2.30.1
-> 
+Jason
