@@ -2,400 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D0953380C1
-	for <lists+linux-pci@lfdr.de>; Thu, 11 Mar 2021 23:42:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7D2833815F
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 00:22:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbhCKWlb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 17:41:31 -0500
-Received: from mail-dm6nam11on2088.outbound.protection.outlook.com ([40.107.223.88]:44992
+        id S229488AbhCKXVa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 18:21:30 -0500
+Received: from mail-dm6nam11on2069.outbound.protection.outlook.com ([40.107.223.69]:40225
         "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229441AbhCKWlB (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Thu, 11 Mar 2021 17:41:01 -0500
+        id S229441AbhCKXVF (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Thu, 11 Mar 2021 18:21:05 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UrXydLkbmfPoT/5u6S1F4KeKaDQ5/XWS72wMQemuOfU8P93P+fRb0TB4WhkThXIoof1Cu6d3crNVChAKYjdgoIUvSf/Uhhjb6LoFvD2XbsDxwKyFieiiwEGKUeCHsRDNq55i9qv4CBqU8bLAIvlvQL+90TyEE90yFWG5RQicAcDTmbX0hye4G1gsCHBd8JuUM1nnq/685JsZf1R0vrznGwpKVVcsQHMH8SXmFIq5ExFekIN2JJaND9emdl7zQeqmOS3zwjvYFEaF3Xz/BxGwFhyAepYFVWYvN2IAgVFHwndsD48236odVl4BeN3KOj77Zi9BylSdKnCMEO2piFFStg==
+ b=hX25lSLAr54t5CTLuevLmqrlEQ3yGQcsGtvjOZHR4l8ciNVVcMbGnf3lwoqu0pgRXWdc5/jd1n0S+kS1LbGLRx2nwRG+tkDGdQPzxXRKc8rcXrL59Kg5QOOrQZ8fJwx49pdox4B9AbI1PC/iQHSq4yfcPYq/rz8LCZPdxqlL1rs8hBXSAYdiVsPiHYO+6evSDwY/4T4vbD97Zp3sjl2s/V2J+Z5wrmv/1c9QnrZCpuPXBKyPOHmhUNxvUlkTkPT+CAPp6leQ+SkOyZbR5rWeX0WUTBnbevDshJfZQQIK2lYsSIlcQuj0wbW16qWBV1SmkTO9wgOIjWM1OztIuvinUg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=no65LuAqCMscKEzlt1nS8Guoxdw/J0HbwNf7OqOK/OA=;
- b=TrZHI3DARwGBBUcdL8wv9lsRe2cYe+FM4uSZ3yV3q93Xlhu0EQ2yshXEl1xBEYqm0a7esYXfQa2B+NDoew68yY/7Xn7nfNwra0ojz6nvW/4oFQtvl0jW8+irwRnXAVyRYEoZh3R31iA/OrMkPDD2I0auWV1V5rdhgN/4m2KNN6Iu1z+0qFhkxqE6w6bfATsiLt2WakV2rHZ3Fkq9ci37PIXCjn3/EnP0B4+ySIqYv46aWVFej0KaSYr5YltlclU5QwtSasJb1DIxzk1cR0/sLxpa4P5tpCORFi6bY0SBY6iERCS+ZNo+fxUwPLyZaxYrNh3bUmwOPtL8eoZxl6ufcA==
+ bh=lAecs/jSShWp3pVDVbFpfjflLAHy8jZiXlRgo5Tujbo=;
+ b=VmIjugsSzQKOZJsnJrOVnGenJCBVn2IAWK0ihd0HgQbVdZcWNzgUbL5M3wAMsPHqaQKCZXIjNd/C8Z9gRgCXo85Pu3K8kK5/pTLiXqIiVVFvTmHeFm5XpdyPoAO1byUGS8+CPd6zQMNzYtQw77MBm9y1B2sAbPOOJ5TUDpBJ7EfFWe/P29DokULjc9nntVP+d8gIMGLxocKb0leMTSwQ2vyfNLBc7/ZOjRrLgYB+u9ltre2H6gGrr/7ymIKI7b5Yz0WhEFg8vQmojng1v+FBRY6zjbc41zaB4XBYjN+JgrmfXcqpBT/BLd35u38u4DiltQTAqsvjpvXNvDoZN6luQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=no65LuAqCMscKEzlt1nS8Guoxdw/J0HbwNf7OqOK/OA=;
- b=jSunb2BiIPEs4MpTAqW/0kf6NGAJVTYY8zmG1zrteeQuQEEypWtUXAW7XgGCWCWckvWNZwKaN+Y8/UE8LQg/I5ySy/6xBszRHHGO6lHOqMbGIIDCAwEqg6YeXjL0/B7nmc/8PNTs4Hbqj43TuGAtdPz4yTHpjcn5mrZ53x9XtWU=
-Authentication-Results: yadro.com; dkim=none (message not signed)
- header.d=none;yadro.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com (2603:10b6:805:e9::17)
- by SN6PR12MB2655.namprd12.prod.outlook.com (2603:10b6:805:72::17) with
+ bh=lAecs/jSShWp3pVDVbFpfjflLAHy8jZiXlRgo5Tujbo=;
+ b=kjSukSRi0H1etOxPmw0dBDPtUm4/bVBBzND2YvKIBfE9duXwPWLaw/PVhlqXWPiN5iyrxOuBun7m0wN+fHbeuK+30KDBI+ziNYp+4lErhPolKADMGc3uSqYz4jxyJkELOlAZdL4BMsGkppwmPV1Tqogae1rgYQj75lbgvqXmxoy4s7UUcOGXW+aN5KDX01kxutuqzUeSrMrY7FKLLb3I3PJV08jsyACdb7EBpa0tFCE6jcS066FRaxIU043mjM+octND3x/38uaG4aoVMj9/aTIUEFVG75fDr4lBIGrH+M59GlLxEvvmric4IhGKe1/wLanfyIAi/WHz3aXhNdV7BQ==
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB3827.namprd12.prod.outlook.com (2603:10b6:a03:1ab::16)
+ by BYAPR12MB2903.namprd12.prod.outlook.com (2603:10b6:a03:139::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.29; Thu, 11 Mar
- 2021 22:40:58 +0000
-Received: from SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::29cb:752d:a8a7:24a8]) by SN6PR12MB4623.namprd12.prod.outlook.com
- ([fe80::29cb:752d:a8a7:24a8%6]) with mapi id 15.20.3912.031; Thu, 11 Mar 2021
- 22:40:58 +0000
-Subject: Re: Question about supporting AMD eGPU hot plug case
-From:   Andrey Grodzovsky <andrey.grodzovsky@amd.com>
-To:     Sergei Miroshnichenko <s.miroshnichenko@yadro.com>
-Cc:     "Alexander.Deucher@amd.com" <Alexander.Deucher@amd.com>,
-        "Christian.Koenig@amd.com" <Christian.Koenig@amd.com>,
-        "anatoli.antonovitch@amd.com" <anatoli.antonovitch@amd.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux@yadro.com" <linux@yadro.com>
-References: <ddef2da4-4726-7321-40fe-5f90788cc836@amd.com>
- <9c41221f-ecfa-5554-f2ea-6f72cfe7dc7e@amd.com>
- <dae8dfd8-3a99-620d-f0aa-ceb39923b807@amd.com>
- <7d9e947648ce47a4ba8d223cdec08197@yadro.com>
- <c82919f3-5296-cd0a-0b8f-c33614ca3ea9@amd.com>
- <340062dba82b813b311b2c78022d2d3d0e6f414d.camel@yadro.com>
- <927d7fbe-756f-a4f1-44cd-c68aecd906d7@amd.com>
- <dc2de228b92c4e27819c7681f650e1e5@yadro.com>
- <a6af29ed-179a-7619-3dde-474542c180f4@amd.com>
- <8f53f1403f0c4121885398487bbfa241@yadro.com>
- <fc2ea091-8470-9501-242d-8d82714adecb@amd.com>
- <50afd1079dbabeba36fd35fdef84e6e15470ef45.camel@yadro.com>
- <c53c23b5-dd37-44f1-dffd-ff9699018a82@amd.com>
- <8d7e2d7b7982d8d78c0ecaa74b9d40ace4db8453.camel@yadro.com>
- <f5a9bc49-3708-a4af-fff1-6822b49732c0@amd.com>
- <1647946cb73ae390b40a593bb021699308bab33e.camel@yadro.com>
- <3873f1ee-1cec-1740-4238-a154dd670d62@amd.com>
- <98ac52f982409e22fbd6e6659e2724f9b1f2fafd.camel@yadro.com>
- <146844cc-e2d9-aade-8223-db41b37853c5@amd.com>
-Message-ID: <e3f3de55-8011-77d8-25ac-f16f8256beff@amd.com>
-Date:   Thu, 11 Mar 2021 17:40:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
-In-Reply-To: <146844cc-e2d9-aade-8223-db41b37853c5@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [2607:fea8:3edf:49b0:9d0c:37c8:e184:bbaa]
-X-ClientProxiedBy: YTOPR0101CA0072.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::49) To SN6PR12MB4623.namprd12.prod.outlook.com
- (2603:10b6:805:e9::17)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.27; Thu, 11 Mar
+ 2021 23:21:01 +0000
+Received: from BY5PR12MB3827.namprd12.prod.outlook.com
+ ([fe80::4c46:77c0:7d7:7e43]) by BY5PR12MB3827.namprd12.prod.outlook.com
+ ([fe80::4c46:77c0:7d7:7e43%6]) with mapi id 15.20.3912.028; Thu, 11 Mar 2021
+ 23:21:01 +0000
+Date:   Thu, 11 Mar 2021 19:20:59 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <20210311232059.GR2356281@nvidia.com>
+References: <CAKgT0UevrCLSQp=dNiHXWFu=10OiPb5PPgP1ZkPN1uKHfD=zBQ@mail.gmail.com>
+ <20210311181729.GA2148230@bjorn-Precision-5520>
+ <CAKgT0UeprjR8QCQMCV8Le+Br=bQ7j2tCE6k6gxK4zCZML5woAA@mail.gmail.com>
+ <20210311201929.GN2356281@nvidia.com>
+ <CAKgT0Ud1tzpAWO4+5GxiUiHT2wEaLacjC0NEifZ2nfOPPLW0cg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0Ud1tzpAWO4+5GxiUiHT2wEaLacjC0NEifZ2nfOPPLW0cg@mail.gmail.com>
+X-Originating-IP: [142.162.115.133]
+X-ClientProxiedBy: BL0PR02CA0119.namprd02.prod.outlook.com
+ (2603:10b6:208:35::24) To BY5PR12MB3827.namprd12.prod.outlook.com
+ (2603:10b6:a03:1ab::16)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2607:fea8:3edf:49b0:9d0c:37c8:e184:bbaa] (2607:fea8:3edf:49b0:9d0c:37c8:e184:bbaa) by YTOPR0101CA0072.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00:14::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.26 via Frontend Transport; Thu, 11 Mar 2021 22:40:57 +0000
+Received: from mlx.ziepe.ca (142.162.115.133) by BL0PR02CA0119.namprd02.prod.outlook.com (2603:10b6:208:35::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend Transport; Thu, 11 Mar 2021 23:21:01 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lKUbz-00BZQq-IG; Thu, 11 Mar 2021 19:20:59 -0400
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c65052e4-db51-426a-fd7c-08d8e4debd0b
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2655:
+X-MS-Office365-Filtering-Correlation-Id: 5d585829-8324-4f79-e395-08d8e4e4558e
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2903:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB26553959E92B42CDEEA76B96EA909@SN6PR12MB2655.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Microsoft-Antispam-PRVS: <BYAPR12MB290393DE69D722A5A6E137EFC2909@BYAPR12MB2903.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ajrHCyaMZ9JlWHKl0ZVpNYyYQCturT7Fd7wPPmcy3cTIPyc31HH1U66qJW9IA0agJCZasCyGoNFGnN1v8zD4wquwPMUzpElDquUZD8LVFqWkpzJjHvNvkHRbt9yEpyzMopd3g6WVZ46sPU74cSwhuswQjiEJrzSSXXVd3555Ksfw6DyBWo9Q69MHV5VSCMOFgWvO/tEyKBKuNaiM0CrnvdUYvr7lGPYtmnFmSEHIGuQ1q1HZlWFW3U1Bx0NKTja6k/hMxn+CXQHP6N8/E4mdDtPef9DxvpgQwrnNdYFeJIiIDD9aD/SoSOdcwZd9v2MdgDutVc8kuHIW2ojjK/y7Z2gOnh8lh3r8TZ4b+Bo3fNGWKUEVzj4PxKR7tsn1xvrddMBkLLZtZQSMDsPlpoptCzsAapDxyE/vqFSdsZGp+aDSE5mjlhMzDw5Fu7Fy3TAURSVoypy87cMDw9NrQL6kzqY/0Dy7zLf3sdJ2iQq++S5RXUavqka35gyKdvdrIXFJ06OoE74O0CD8UvEEwL2sP7LXd5ZftzpScNIdkaLtwv4OHvwVq/tqizWjiAHcXAsHRAYXINzEXbyvXwUzKQMi/7asVUZBTccAav1sC4ruEyK5yErZNenZLadeqjgnoJDP/S+tOBJoTJA1hzjkxv1e08HfU+Ud8ZqoRl3aX2yxq7+BgsllnnWXRLokNdPS0rin
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB4623.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(136003)(366004)(396003)(2616005)(6916009)(44832011)(54906003)(186003)(16526019)(4326008)(45080400002)(86362001)(8676002)(83380400001)(5660300002)(52116002)(66946007)(66556008)(53546011)(2906002)(36756003)(966005)(316002)(66476007)(31686004)(6486002)(30864003)(31696002)(478600001)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?RmpvdEg2Zk1YalcvRjJkWWJxMWs3cGh1ZTFQSXJEbDR1NlFhd1BaMUdUUysy?=
- =?utf-8?B?LzI3bFd1cFp5YmRWWGhOSHdwenVySU1jbElUajVnNGVITHRGWFFEVVVka0pK?=
- =?utf-8?B?RXZrUlBJQnlyZ296Y2k3OVlTbXM2dUpiTThxcFQ1NHlZUFdhUzJWeVRybDlp?=
- =?utf-8?B?U3prZld4U2pCOFlYeTlvcmZVSDZHUkFtenJBcWluU2ZPNU12b29SaXU2N3R4?=
- =?utf-8?B?UU0zZEtnQXQzWFJETmw0REVaVmhaK09XMWVrMWg2RzBldW5JM1VuR252TEJu?=
- =?utf-8?B?bWVGUXpYL09TamEyL09nTFc5VnJmNXlVcGJ5SXpxcldRUWhYREhrclhwQi9C?=
- =?utf-8?B?eUNwT3VGU1dWMzU1Ym1RRVVPU04yUUR2WlhRSklGVUF4c0RKL0pueHh2S2Zj?=
- =?utf-8?B?MHV2SERVcmRmWTlYcndIbUZTblJSYVZMTW5zS2xaRVJ3Wm5lRmV1d214Zk9z?=
- =?utf-8?B?c1JnUXRLaHhXbFpMUThyRXQ2bThqdEdjN1h0UWJISElDZHNSNGxKTjBPcW5Q?=
- =?utf-8?B?R0lkaUE3UHJ4SGZiQ3VDTHlIM3Y5SGZEN1ZqeVJXaFJYWHp2eFY2VzdFR05V?=
- =?utf-8?B?b251TUxEY1VIZnd5S0U2SUxUUzVCeDc4TVRrNVE2UHBqcW9QN0xCTlNhV2ZR?=
- =?utf-8?B?NEhiNVZ5eWpkbjVyRHlMeGEybC9GNHE1dVVWbjhIUXl2d2pkVU1INzllVnFx?=
- =?utf-8?B?bmRlVkx5ZzJwL1JoMUZkeE1hMW51ZWY4aUJvbk0rWUNIQUVJZlZMRm5Uenkr?=
- =?utf-8?B?cFZWdU1acHBSaUhHcEVNeVA2TzdveVliUWYrMFBWN29JUFdCMStPK1FKdTJW?=
- =?utf-8?B?M3FQYk1vdjZSd092cHNzQ0pSS2dKRmFsTXNTZlFEZmdDKzdpZElMWFk1Z2g0?=
- =?utf-8?B?TWZ6b1g5MVEzRyt2OCthbklFSlZQSE9ZYlZmTngzQlVTUWZRV1NLa1RhZzY4?=
- =?utf-8?B?SU9ST3hBNjRTTmVuL1RmeTNHYUgxRmZ2STJjclhKNmRNeU1WZ3l1RWlBOS9k?=
- =?utf-8?B?UjNCU0I0MjVRQmcvS3lYbG1mOG53dmxpL1RNQzJUc20vVjNlMmc2Z095QS9G?=
- =?utf-8?B?SGViSEN5YmMyRklEVm1IY0dxNjUyRFcrc3lTTEhkakQzVTdsSFl1K3F6WjEy?=
- =?utf-8?B?Qmp6d0VWS211Qm5QemhiRkNiRmF6MENWeE8zQnhOdTQ0NEpabGZKZTEvN3Za?=
- =?utf-8?B?blhvOTdpOXpKNjZ1RkFoSDZZTzVvTnY4K1dpWmEzdGJ1aEhrcEtHMHY3Z2Nv?=
- =?utf-8?B?bFo2YnRZUDA5NHZYQS8yL28vNTNnNjhlSm1hQzVMbEQ1UzIxZDNwUm9QWlh3?=
- =?utf-8?B?Y3Rsck5EUXc1RXgwMDJ2dFhmUkR1REhBZHZxenp2SVdheTgveVR5Wk5NYy96?=
- =?utf-8?B?dE1naFNNdldLQ0VxbnRIUXY4cStJUjlPN3pnYnI5bHV6YkdYSEIxaFZjZGVQ?=
- =?utf-8?B?UG9ZaDB0eTlMY2ZQVGdXTEtkZjhKTWdndUtRdkNuRjlRY2pBV0l4K0c3c0dJ?=
- =?utf-8?B?QWtjalFqU2Nuei90NndGOTZXU3ludDg0cGNPSXlIakxmOFFseWZ0NnRnenNB?=
- =?utf-8?B?WU1nZUpXbTd5SGJ5OTFiNzFPV2ZsWC8vOWpENGFXdDhoeHUrQ3llSEtYbHM0?=
- =?utf-8?B?WHBOVDFqQWVnbHB2Nlhxa21UY3N5NzU3a0R1SGlTQUU1T0V6S1hFNFFpTHJp?=
- =?utf-8?B?VDh3cWlibDJtMUt4REJQSklEQjBDdHJHSG8ydGdJdEFNc0NyVDNsMDFTZ2hQ?=
- =?utf-8?B?Ujh5UVMzZ0pJRklPckN5OG56T2ZSVEpTaW9zeUFWVkI1bFlJS2ZiTDMxNUpR?=
- =?utf-8?B?cFVneUhVTlZXaHJqZDFiOTRsZE4raXVlRnNtbjN6RTA4OEJ2dTk0T3RUNUIw?=
- =?utf-8?Q?scEIdcV9Rmgkc?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c65052e4-db51-426a-fd7c-08d8e4debd0b
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB4623.namprd12.prod.outlook.com
+X-Microsoft-Antispam-Message-Info: RqzPXN0t6Yi7phWCv1w7EpHZjaZ2JNvhocnTCNNRIU6wusGuXDCkc71RkXsrBVh5oBP/Cyobp1p94Xn7eZhVl0JQjLPjRWJ9U5zQDH+bDkrK8bjKj9ZedrgpSqEIJ/X2c7fyMZM5Y76VItd1t4lfYYxKELjbly79tp75z9s+rcmgZ2tK2jBX+E5Vt5WNRYSE8S81eakii68WMoq3ygSdN4zkqSkx+48l5RI+YsJwqifAa7wNKOFwQIQmfGtdDNJ+hWEiMIfhZyccnv/gJ353aFN9Lcnv/R+GdQzFml9wV6UolMr/hY3ZZP1jFlyCOIcS+CsniccV4ar+GWdFCGsWFqS5l6Uij4vwHj9N3Nrlx0ip2UV4AmDihEot7FNph9R67Rnv1UyCk9bJFvW3d4oHgF6Qh0UP7LGFFuMoVBxRMBcAo5o0LCNZzoxlKNXdHvjHblqyjvNhT7B/sqj5p35DrKyV14Hl3QeIAQENY+ldjDu60RGRo7hNKK/+gamiM0zXc3rl+5jfyEEE/GGt0t/elg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB3827.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(26005)(426003)(6916009)(478600001)(1076003)(5660300002)(54906003)(7416002)(8936002)(8676002)(33656002)(9786002)(66476007)(2906002)(66556008)(9746002)(66946007)(4326008)(186003)(316002)(36756003)(83380400001)(86362001)(4744005)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?XioJrNw+ANEchsMQ/8yZNzEJQtEPUenPAVnziHvs5cGl1i0p+zb+laEeMzaK?=
+ =?us-ascii?Q?eCNj87DXl+C5kKuN9vEn7QulQHt5RAYPE8g+rqxwxCJxF+NbF5yCpRn8hcSk?=
+ =?us-ascii?Q?zBCrj9deih4DYP59PDT/zH9UWSyPQtZYkVuw6zkMWUphg0xtjaBkGu0uiupc?=
+ =?us-ascii?Q?lzbLyWXXVPRYv1/XADyE50duWadFu2Y9eDqM0vPcd1IPFzJvMDAEESJcfE20?=
+ =?us-ascii?Q?xkX1qMer1LDKbLdDJ89RMixDNo7B3nhTq5FY0YryyNYOoW7aJcpusD3u5O+R?=
+ =?us-ascii?Q?LieUf37IDUwus+ayB1OA+1vA02yPSxPqNKyooeGp+ubG4vPIanrErGrtxGkh?=
+ =?us-ascii?Q?1osWqB0cec338NlZXLYVFxoB3PNp/1bWJdLjUIF2zvoQWZlpYkB0oAnF0Wsn?=
+ =?us-ascii?Q?iHYfZDTQ3MgArh3K8rSODONcndAiWU+wVfopITPJK/2Hi20yrYcyOZFdXaTo?=
+ =?us-ascii?Q?T+t3WjoxLwAyiK6fT10eK3IQ3gd9o1HKvQ+k9BhYUNkdbkaL5xS1iKVIA5f7?=
+ =?us-ascii?Q?cvOVIPbvVHqB6t/ZfRLFZO97uz4M9LbU9jQ37l+uVqIgbbO33VL7Tkiwk5mW?=
+ =?us-ascii?Q?PB0vjNQTfKz216TbHDOROApzpS5gRm0xjX8uBRFA/4kXy3G214YKQTFQB5Jg?=
+ =?us-ascii?Q?u6E/lPDIw+mdS1Cdj8o+CAAFeENqNKd08rD7VZcdqGiJAIwnIjlPO0JkAxGW?=
+ =?us-ascii?Q?DXrbu9YbMD9GFXFuq5TJkIH/1B+3YNQClbOWbucRzEyWckIhgFdXwizlDwEx?=
+ =?us-ascii?Q?dkpMEdUDafiIazZM1iyvA+r6+RmaR1Du+jzfUTha79PNlSWAJBG9V3PjWRh0?=
+ =?us-ascii?Q?1PCrm015i6ZVzr2ZCEWEWL89wnMbxtYEhVeAZbWmVJq0fYV8Xw4Q7jrRfh1/?=
+ =?us-ascii?Q?Aio9pRF0a/x+h0lEq9LQSsruMIUlD3gjVLdaKgjl2tV6pnn3fxxEnhWl+fV3?=
+ =?us-ascii?Q?Rbm+1PX4VbsV6ytUNnPmQHE5KPLJpAm7wNMulVUF6OK31EmfmJ87NgzjI1Vl?=
+ =?us-ascii?Q?oq64zS3BUfstL3rS8mk4l19zvHUZispJrIw+sO1pAi547RBvf19vmQF1x2s0?=
+ =?us-ascii?Q?inpNOX14aZKcf87ymg5a0nKjgDGZBf0S52WSt1moXJEEAEaN4zNrSQlXdaW5?=
+ =?us-ascii?Q?m5ZWwC55KXoxwGQeE9QP72mp0v2exLVcUNkZAuapoTPb316chkDRpaWeysDG?=
+ =?us-ascii?Q?+3WGjJUD2qGHtZsbjCa8dlmjnCEUf+AQMdnYHQQtQqT1N4jXA/9xjNOOwBQY?=
+ =?us-ascii?Q?sUA1wpUrJ+k0yT5+CBk5rPQFyB5psakDMaC5NFLiRoNLEx1+LkeRaVDiHTJj?=
+ =?us-ascii?Q?/UCNtJbTN5S9zyGJOE0Xyxyr/AOWNM41Ufa9wrjiXYbaUg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d585829-8324-4f79-e395-08d8e4e4558e
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB3827.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2021 22:40:58.1655
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Mar 2021 23:21:01.4767
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KTipOyeG5APptUy5wGFD2c/Iqp2QkvgRyBbwHWNL3qb4cAABzbctK0/1U1jmsyEcO2A5Xb/xQq0JHnDJQDbEHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2655
+X-MS-Exchange-CrossTenant-UserPrincipalName: wXmTUhUSB3QT4b5pZLjGlua7xrA790LafiyRYom7DY6KQeDR5YRUCdTyGCTWZeEl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2903
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-03-05 6:13 p.m., Andrey Grodzovsky wrote:
+On Thu, Mar 11, 2021 at 01:49:24PM -0800, Alexander Duyck wrote:
+> > We don't need to invent new locks and new complexity for something
+> > that is trivially solved already.
 > 
-> 
-> On 2021-03-05 2:12 p.m., Sergei Miroshnichenko wrote:
->> On Fri, 2021-03-05 at 12:13 -0500, Andrey Grodzovsky wrote:
->>>
->>> On 2021-03-05 11:08 a.m., Sergei Miroshnichenko wrote:
->>>> On Thu, 2021-03-04 at 14:49 -0500, Andrey Grodzovsky wrote:
->>>>> + linux-pci
->>>>>
->>>>> On 2021-02-26 1:44 a.m., Sergei Miroshnichenko wrote:
->>>>>> On Thu, 2021-02-25 at 13:28 -0500, Andrey Grodzovsky wrote:
->>>>>>> On 2021-02-25 2:00 a.m., Sergei Miroshnichenko wrote:
->>>>>>>> On Wed, 2021-02-24 at 17:51 -0500, Andrey Grodzovsky wrote:
->>>>>>>>> On 2021-02-24 1:23 p.m., Sergei Miroshnichenko wrote:
->>>>>>>>>> ...
->>>>>>>>> Are you saying that even without hot-plugging, while both
->>>>>>>>> nvme
->>>>>>>>> and
->>>>>>>>> AMD
->>>>>>>>> card are present
->>>>>>>>> right from boot, you still get BARs moving and MMIO
->>>>>>>>> ranges
->>>>>>>>> reassigned
->>>>>>>>> for NVME BARs
->>>>>>>>> just because amdgpu driver will start resize of AMD card
->>>>>>>>> BARs
->>>>>>>>> and
->>>>>>>>> this
->>>>>>>>> will trigger NVMEs BARs move to
->>>>>>>>> allow AMD card BARs to cover full range of VIDEO RAM ?
->>>>>>>> Yes. Unconditionally, because it is unknown beforehand if
->>>>>>>> NVMe's
->>>>>>>> BAR
->>>>>>>> movement will help. In this particular case BAR movement is
->>>>>>>> not
->>>>>>>> needed,
->>>>>>>> but is done anyway.
->>>>>>>>
->>>>>>>> BARs are not moved one by one, but the kernel releases all
->>>>>>>> the
->>>>>>>> releasable ones, and then recalculates a new BAR layout to
->>>>>>>> fit
->>>>>>>> them
->>>>>>>> all. Kernel's algorithm is different from BIOS's, so NVME
->>>>>>>> has
->>>>>>>> appeared
->>>>>>>> at a new place.
->>>>>>>>
->>>>>>>> This is triggered by following:
->>>>>>>> - at boot, if BIOS had assigned not every BAR;
->>>>>>>> - during pci_resize_resource();
->>>>>>>> - during pci_rescan_bus() -- after a pciehp event or a
->>>>>>>> manual
->>>>>>>> via
->>>>>>>> sysfs.
->>>>>>>
->>>>>>> By manual via sysfs you mean something like this - 'echo 1 >
->>>>>>> /sys/bus/pci/drivers/amdgpu/0000\:0c\:00.0/remove && echo 1 >
->>>>>>> /sys/bus/pci/rescan ' ? I am looking into how most reliably
->>>>>>> trigger
->>>>>>> PCI
->>>>>>> code to call my callbacks even without having external PCI
->>>>>>> cage
->>>>>>> for
->>>>>>> GPU
->>>>>>> (will take me some time to get it).
->>>>>>
->>>>>> Yeah, this is our way to go when a device can't be physically
->>>>>> removed
->>>>>> or unpowered remotely. With just a bit shorter path:
->>>>>>
->>>>>>      sudo sh -c 'echo 1 >
->>>>>> /sys/bus/pci/devices/0000\:0c\:00.0/remove'
->>>>>>      sudo sh -c 'echo 1 > /sys/bus/pci/rescan'
->>>>>>
->>>>>> Or, just a second command (rescan) is enough: a BAR movement
->>>>>> attempt
->>>>>> will be triggered even if there were no changes in PCI
->>>>>> topology.
->>>>>>
->>>>>> Serge
->>>>>>
->>>>>
->>>>> Hi Segrei
->>>>>
->>>>> Here is a link to initial implementation on top of your tree
->>>>> (movable_bars_v9.1) -
->>>>> https://nam11.safelinks.protection.outlook.com/?url=https:%2F%2Fcgit.freedesktop.org%2F~agrodzov%2Flinux%2Fcommit%2F%3Fh%3Dyadro%2Fpcie_hotplug%2Fmovable_bars_v9.1%26id%3D05d6abceed650181bb7fe0a49884a26e378b908e&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7C6658f0cc7c344791ce0f08d8e00a96bf%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637505683386334114%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=qEC3qIAM8h1vU4gGEgT6sThXsaCuatTI2UjM9Bb8KGI%3D&amp;reserved=0 
->>>>>
->>>>> I am able to pass one re-scan cycle and can use the card
->>>>> afterwards
->>>>> (see
->>>>> log1.log).
->>>>> But, according to your prints only BAR5 which is registers BAR
->>>>> was
->>>>> updated (amdgpu 0000:0b:00.0: BAR 5 updated: 0xfcc00000 ->
->>>>> 0xfc100000)
->>>>> while I am interested to test BAR0 (Graphic RAM) move since this
->>>>> is
->>>>> where most of the complexity is. Is there a way to hack your code
->>>>> to
->>>>> force this ?
->>>>
->>>> Hi Andrey,
->>>>
->>>> Regarding the amdgpu's BAR0 remaining on its place: it seems this
->>>> is
->>>> because of fixed BARs starting from fc600000. The kernel tends to
->>>> group
->>>> the BARs close to each other, making a bridge window as compact as
->>>> possible. So the BAR0 had occupied the closest "comfortable" slots
->>>> 0xe0000000-0xefffffff, with the resulting bridge window of bus 00
->>>> covering all the BARs:
->>>>
->>>>       pci_bus 0000:00: resource 10 [mem 0xe0000000-0xfec2ffff
->>>> window]
->>>>
->>>> I'll let you know if I get an idea how to rearrange that manually.
->>>>
->>>> Two GPUs can actually swap their places.
->>>
->>> What do you mean ?
->>
->> I was thinking: when the scenario of a PCI rescan with two GPUs (as was
->> described below) will start working, BAR0 of GPU0 can take place of
->> BAR0 of GPU1 after the first rescan.
->>
->>>> What also can make a BAR movable -- is rmmod'ing its driver. It
->>>> could
->>>> be some hack from within a tmux, like:
->>>>
->>>>     rmmod igb; \
->>>>     rmmod xhci_hcd; \
->>>>     rmmod ahci; \
->>>>     echo 1 > /sys/bus/pci/rescan; \
->>>>     modprobe igb; \
->>>>     modprobe xhci_hcd; \
->>>>     modprobe ahci
->>>
->>> But should I also rmmod amdgpu ? Or modprobing back the other
->>> drivers
->>> should cause (hopefully) BAR0 move in AMD graphic card ?
->>
->> You have already made the amdgpu movable, so no need to rmmod it --
->> just those with fixed BARs:
->>
->>      xhci_hcd 0000:0c:00.3: BAR 0: assigned fixed [mem 0xfc600000-
->> 0xfc6fffff 64bit]
->>      igb 0000:07:00.0: BAR 0: assigned fixed [mem 0xfc900000-0xfc91ffff]
->>      igb 0000:07:00.0: BAR 3: assigned fixed [mem 0xfc920000-0xfc923fff]
->>      ahci 0000:02:00.1: BAR 6: assigned fixed [mem 0xfcb00000-0xfcb7ffff
->> pref]
->>      ahci 0000:02:00.1: BAR 5: assigned fixed [mem 0xfcb80000-
->> 0xfcb9ffff]
->>      xhci_hcd 0000:02:00.0: BAR 0: assigned fixed [mem 0xfcba0000-
->> 0xfcba7fff 64bit]
->>      xhci_hcd 0000:05:00.0: BAR 0: assigned fixed [mem 0xfca00000-
->> 0xfca07fff 64bit]
->>      ahci 0000:0d:00.2: BAR 5: assigned fixed [mem 0xfce08000-
->> 0xfce08fff]
->>
->> The expected result is they all move closer to the start of PCI address
->> space.
->>
-> 
-> Ok, I updated as you described. Also I removed PCI conf command to stop
-> address decoding and restart later as I noticed PCI core does it itself
-> when needed.
-> I tested now also with graphic desktop enabled while submitting
-> 3d draw commands and seems like under this scenario everything still
-> works. Again, this all needs to be tested with VRAM BAR move as then
-> I believe I will see more issues like handling of MMIO mapped VRAM 
-> objects (like GART table). In case you do have an AMD card you could 
-> also maybe give it a try. In the meanwhile I will add support to 
-> ioremapping of those VRAM objects.
-> 
-> Andrey
+> I am not wanting a new lock. What I am wanting is a way to mark the VF
+> as being stale/offline while we are performing the update. With that
+> we would be able to apply similar logic to any changes in the future.
 
-Just an update, added support for unmaping/remapping of all VRAM
-objects, both user space mmaped and kernel ioremaped. Seems to work
-ok but again, without forcing VRAM BAR to move I can't be sure.
-Alex, Chsristian - take a look when you have some time to give me some
-initial feedback on the amdgpu side.
+I think we should hold off doing this until someone comes up with HW
+that needs it. The response time here is microseconds, it is not worth
+any complexity
 
-The code is at 
-https://cgit.freedesktop.org/~agrodzov/linux/log/?h=yadro%2Fpcie_hotplug%2Fmovable_bars_v9.1
-
-Andrey
-
-> 
->>>> I think pci_release_resource() should not be in
->>>> amdgpu_device_unmap_mmio() -- the patched kernel will do that
->>>> itself
->>>> for BARs the amdgpu_device_bar_fixed() returns false. Even more --
->>>> the
->>>> kernel will ensure that all BARs which were working before, are
->>>> reassigned properly, so it needs them to be assigned before the
->>>> procedure.
->>>> The same for pci_assign_unassigned_bus_resources() in
->>>> amdgpu_device_remap_mmio(): this callback is invoked from
->>>> pci_rescan_bus() after pci_assign_unassigned_root_bus_resources().
->>>
->>> This seems to me in contrast to your documentation (see
->>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2FYADRO-KNS%2Flinux%2Fcommit%2F5bc12ba7c74f1c19c11db29b4807bd32acfac2c2&amp;data=04%7C01%7Candrey.grodzovsky%40amd.com%7C6658f0cc7c344791ce0f08d8e00a96bf%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637505683386334114%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=kO1OlRL8iHMTcijuV0jDpODCtXpCCTpJv6YIn%2FuypNQ%3D&amp;reserved=0 
->>>
->>> step 1) although step 2 seems also to contradict step 1 with regard
->>> to
->>> BARs release - so now I am a bit confused. Also looking at
->>> nvme_dev_unmap - it calls pci_release_mem_regions. Symmetrical
->>> acquisition happens in nvme_dev_unmap.
->>
->> Ah, there is a difference between pci_release_region() and
->> pci_release_resource(), so subtle that I had to refresh my memory. You
->> are right, this has to be explained in the documentation!
->>
->> $ sudo cat /proc/iomem
->> ...
->> f0000000-fcffffff : PCI Bus 0000:00     -- root bus resource
->> ...
->>    fcf00000-fcffffff : PCI Bus 0000:01   -- bridge window
->>      fcf00000-fcf03fff : 0000:01:00.0    -- pci resource (BAR)
->>        fcf00000-fcf03fff : nvme          -- pci region (reserved by
->>                                             a driver, has its name).
->>
->> So the nvme_dev_unmap() reflects with pci_release_region() that the BAR
->> is not used by the driver anymore -- this actually should be called in
->> every rescan_prepare().
->>
->> But the pci_release_resource() tells to the PCI subsystem that the BAR
->> is "released" from the device and has to be assigned to some address
->> before using again, and makes the pci_resource_start(pdev,
->> relased_barno) invalid.
->>
->> Why the quotes: pci_release_resource() doesn't turn off the BAR,
->> doesn't write the registers -- this happens later.
->>
->> I thouht at first that pci_release_resource() is not safe in a
->> rescan_prepare(), but then double-checked, and found it's fine, just
->> not needed, as the kernel will do it anyway. And the
->> pci_bus_check_bars_assigned() to compare the bitmasks of successfully
->> assigned BARs is called *before* the hook.
->>
->>>>> When testing with 2 graphic cards and triggering rescan, hard
->>>>> hang of
->>>>> the system happens during rescan_prepare of the second card  when
->>>>> stopping the HW (see log2.log) - I don't understand why this
->>>>> would
->>>>> happen as each of them passes fine when they are standalone
->>>>> tested
->>>>> and
->>>>> there should be no interdependence between them as far as i know.
->>>>> Do you have any idea ?
->>>>
->>>> What happens with two GPUs is unclear for me as well, nothing looks
->>>> suspicious.
->>>>
->>>> Serge
->>>>
+Jason
