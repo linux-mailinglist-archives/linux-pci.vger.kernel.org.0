@@ -2,156 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F1C13396C7
+	by mail.lfdr.de (Postfix) with ESMTP id 43B6A3396C6
 	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 19:41:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233552AbhCLSlZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S233659AbhCLSlZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 12 Mar 2021 13:41:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233036AbhCLSlT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 13:41:19 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAE1C061574;
-        Fri, 12 Mar 2021 10:41:18 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id s21so2471876pfm.1;
-        Fri, 12 Mar 2021 10:41:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4yRPxufzWT3thQ7Bv+f09drpbgtD2Z1Oj1m47AWLtpw=;
-        b=XW4UHta53j/lMCQhf6ZIWbHCTtIkoPjRHjL0Y3ZT9eSjftYN418B5pVvbexerz/rb/
-         JwRTG+v8LcqiY409epXxWGrojOVTZ14YZZ4clda2vG4nm9mnUv+gimOj+xaQ1GZKyE4e
-         Kk09hRUU1VvtrMrWFPkKxgm1epfBndvbr7D6zKWoCZowENAXebbGCVyTdZ6oU4/pFUJ5
-         8fxlIg07MF7F9r0Ae3cj9DvkZWBZvjuxz9DE37hdhfGADWJEgQz5uO2laQ+5iOBvNhCk
-         4OvAoGNmYmydYS9uHLJBk6tt71cV8HYBXghCyDS9NN+J83/uO4LMKC5dt5sAQVOItXa0
-         3bQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4yRPxufzWT3thQ7Bv+f09drpbgtD2Z1Oj1m47AWLtpw=;
-        b=Ae6raJVoLRsXXkoHAC+hLIbcquRZqvNqfjVj1rv5mVPYL6G9NLF3eqY8OAMU1QJfb4
-         sAIP0ZbJYzGThKTSOK50DDgHd2LQES2l2st7jBJ1ZXuCSMhYJdo59kklQM7VpKswIFPD
-         V0weauXLOcHD4wCV3NnTjqq1i8YXyDF3lBzlyssTEZQ67kSYFvUXdRmIvmlacjY6bfXZ
-         vtBtM2EG4Y13Y6aipb0GdJ+PIfrqhBftOGPqHmYhD3ichAwEzn3cRvAKv55sVAlVW1b4
-         9xqH38gTbg293SBWP68YsqhKAwvJfaYry4UZq++1ymTO76xOoGonBX6trSmWytdW/dCE
-         IiEA==
-X-Gm-Message-State: AOAM5304EqVwNw2vB8EBd/3LwLE+TH7ti+BeEBPUZns4fQVeBrPuCbi3
-        aB6ZHFUrMUlyE2v9CESJfX9hHnuea0dPHw==
-X-Google-Smtp-Source: ABdhPJzX+Kk6OzaJLcGb4y3lU8P7acpzzlbTVaWA3v23i0E2TNvrXi406JAmWEYpkU4MvEGaPDXmKg==
-X-Received: by 2002:a63:7885:: with SMTP id t127mr12651569pgc.237.1615574477523;
-        Fri, 12 Mar 2021 10:41:17 -0800 (PST)
-Received: from localhost ([103.248.31.144])
-        by smtp.gmail.com with ESMTPSA id v27sm6104554pfi.89.2021.03.12.10.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 10:41:17 -0800 (PST)
-Date:   Sat, 13 Mar 2021 00:10:38 +0530
-From:   Amey Narkhede <ameynarkhede03@gmail.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, raphael.norwitz@nutanix.com
-Subject: Re: [PATCH 0/4] Expose and manage PCI device reset
-Message-ID: <20210312184038.to3g3px6ep4xfavn@archlinux>
-References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
- <20210312112043.3f2954e3@omen.home.shazbot.org>
+Received: from mail.kernel.org ([198.145.29.99]:45200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233480AbhCLSlY (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Mar 2021 13:41:24 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A25E64F66;
+        Fri, 12 Mar 2021 18:41:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615574484;
+        bh=p4Iq8QDpE+cKe45FPp3H2DkG/bTl5wiONopGpibm5MQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H8nWVFENutzCJOztMorbrf9sGO6zIvpHjo+Wv4i268nTN5nhYkr4YfUgfURTrSqvg
+         Q9hge2vzakljiVg+t2KQDifldFGQY7fr3H9ECRdVqyecckyF0QDfXBtTQQ+JeIqzf1
+         X127rNns53jj/Gkl+e4IGVnK46awbUvTstI5CXAcTVhiUQ7MHXhflUXItFbx6URL5G
+         dAIz8GsudBz0opP+P8hr9RHAU9R7umW+VZ7dwA+rugYi2yupGxHUb6a2es38pXhIwG
+         wXsnmh+ViT0WScx/Alax8H/TaUsOzLy94aQM/nAwu77NUg+JEKUScaQaU4VOWTjuj1
+         Waf0XWJlUbpwg==
+Date:   Fri, 12 Mar 2021 20:41:20 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <YEu10NTnYxYbkRu1@unreal>
+References: <CAKgT0UevrCLSQp=dNiHXWFu=10OiPb5PPgP1ZkPN1uKHfD=zBQ@mail.gmail.com>
+ <20210311181729.GA2148230@bjorn-Precision-5520>
+ <CAKgT0UeprjR8QCQMCV8Le+Br=bQ7j2tCE6k6gxK4zCZML5woAA@mail.gmail.com>
+ <20210311201929.GN2356281@nvidia.com>
+ <CAKgT0Ud1tzpAWO4+5GxiUiHT2wEaLacjC0NEifZ2nfOPPLW0cg@mail.gmail.com>
+ <20210311232059.GR2356281@nvidia.com>
+ <CAKgT0Ud+gnw=W-2U22_iQ671himz8uWkr-DaBnVT9xfAsx6pUg@mail.gmail.com>
+ <YEsK6zoNY+BXfbQ7@unreal>
+ <CAKgT0UfsoXayB72KD+H_h14eN7wiYtWCUjxKJxwiNKr44XUPfA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210312112043.3f2954e3@omen.home.shazbot.org>
+In-Reply-To: <CAKgT0UfsoXayB72KD+H_h14eN7wiYtWCUjxKJxwiNKr44XUPfA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21/03/12 11:20AM, Alex Williamson wrote:
-> On Fri, 12 Mar 2021 23:04:48 +0530
-> ameynarkhede03@gmail.com wrote:
->
-> > From: Amey Narkhede <ameynarkhede03@gmail.com>
+On Fri, Mar 12, 2021 at 08:59:38AM -0800, Alexander Duyck wrote:
+> On Thu, Mar 11, 2021 at 10:32 PM Leon Romanovsky <leon@kernel.org> wrote:
 > >
-> > PCI and PCIe devices may support a number of possible reset mechanisms
-> > for example Function Level Reset (FLR) provided via Advanced Feature or
-> > PCIe capabilities, Power Management reset, bus reset, or device specific reset.
-> > Currently the PCI subsystem creates a policy prioritizing these reset methods
-> > which provides neither visibility nor control to userspace.
+> > On Thu, Mar 11, 2021 at 06:53:16PM -0800, Alexander Duyck wrote:
+> > > On Thu, Mar 11, 2021 at 3:21 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
+> > > >
+> > > > On Thu, Mar 11, 2021 at 01:49:24PM -0800, Alexander Duyck wrote:
+> > > > > > We don't need to invent new locks and new complexity for something
+> > > > > > that is trivially solved already.
+> > > > >
+> > > > > I am not wanting a new lock. What I am wanting is a way to mark the VF
+> > > > > as being stale/offline while we are performing the update. With that
+> > > > > we would be able to apply similar logic to any changes in the future.
+> > > >
+> > > > I think we should hold off doing this until someone comes up with HW
+> > > > that needs it. The response time here is microseconds, it is not worth
+> > > > any complexity
 > >
-> > Expose the reset methods available per device to userspace, via sysfs
-> > and allow an administrative user or device owner to have ability to
-> > manage per device reset method priorities or exclusions.
-> > This feature aims to allow greater control of a device for use cases
-> > as device assignment, where specific device or platform issues may
-> > interact poorly with a given reset method, and for which device specific
-> > quirks have not been developed.
+> > <...>
 > >
-> > Suggested-by: Alex Williamson <alex.williamson@redhat.com>
-> > Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-> > Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+> > > Another way to think of this is that we are essentially pulling a
+> > > device back after we have already allocated the VFs and we are
+> > > reconfiguring it before pushing it back out for usage. Having a flag
+> > > that we could set on the VF device to say it is "under
+> > > construction"/modification/"not ready for use" would be quite useful I
+> > > would think.
+> >
+> > It is not simple flag change, but change of PCI state machine, which is
+> > far more complex than holding two locks or call to sysfs_create_file in
+> > the loop that made Bjorn nervous.
+> >
+> > I want to remind again that the suggestion here has nothing to do with
+> > the real use case of SR-IOV capable devices in the Linux.
+> >
+> > The flow is:
+> > 1. Disable SR-IOV driver autoprobe
+> > 2. Create as much as possible VFs
+> > 3. Wait for request from the user to get VM
+> > 4. Change MSI-X table according to requested in item #3
+> > 5. Bind ready to go VF to VM
+> > 6. Inform user about VM readiness
+> >
+> > The destroy flow includes VM destroy and unbind.
+> >
+> > Let's focus on solutions for real problems instead of trying to solve theoretical
+> > cases that are not going to be tested and deployed.
+> >
+> > Thanks
 >
-> Reviews/Acks/Sign-off-by from others (aside from Tested/Reported-by)
-> really need to be explicit, IMO.  This is a common issue for new
-> developers, but it really needs to be more formal.  I wouldn't claim to
-> be able to speak for Raphael and interpret his comments so far as his
-> final seal of approval.
+> So part of the problem with this all along has been that you are only
+> focused on how you are going to use this and don't think about how
+> somebody else might need to use or implement it. In addition there are
+> a number of half measures even within your own flow. In reality if we
+> are thinking we are going to have to reconfigure every device it might
+> make sense to simply block the driver from being able to load until
+> you have configured it. Then the SR-IOV autoprobe would be redundant
+> since you could use something like the "offline" flag to avoid that.
 >
-> Also in the patches, all Sign-offs/Reviews/Acks need to be above the
-> triple dash '---' line.  Anything between that line and the beginning
-> of the diff is discarded by tools.  People will often use that for
-> difference between version since it will be discarded on commit.
-> Likewise, the cover letter is not committed, so Review-by there are
-> generally not done.  I generally make my Sign-off last in the chain and
-> maintainers will generally add theirs after that.  This makes for a
-> chain where someone can read up from the bottom to see how this commit
-> entered the kernel.  Reviews, Acks, and whatnot will therefore usually
-> be collected above the author posting the patch.
+> If you are okay with step 1 where you are setting a flag to prevent
+> driver auto probing why is it so much more overhead to set a bit
+> blocking drivers from loading entirely while you are changing the
+> config space? Sitting on two locks and assuming a synchronous
+> operation is assuming a lot about the hardware and how this is going
+> to be used.
 >
-> Since this is a v1 patch and it's likely there will be more revisions,
-> rather than send a v2 immediately with corrections, I'd probably just
-> reply to the cover letter retracting Raphael's Review-by for him to
-> send his own and noting that you'll fix the commit reviews formatting,
-> but will wait for a bit for further comments before sending a new
-> version.
+> In addition it seems like the logic is that step 4 will always
+> succeed. What happens if for example you send the message to the
+> firmware and you don't get a response? Do you just say the request
+> failed let the VF be used anyway? This is another reason why I would
+> be much more comfortable with the option to offline the device and
+> then tinker with it rather than hope that your operation can somehow
+> do everything in one shot.
 >
-> No big deal, nice work getting it sent out.  Thanks,
+> In my mind step 4 really should be 4 steps.
 >
-> Alex
+> 1. Offline VF to reserve it for modification
+> 2. Submit request for modification
+> 3. Verify modification has occurred, reset if needed.
+> 4. Online VF
 >
-Raphael sent me the email with
-Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com> that
-is why I included it.
-So basically in v2 I should reorder tags such that Sign-off will be
-the last. Did I get that right? Or am I missing something?
+> Doing it in that order allows for handling many more scenarios
+> including those where perhaps step 2 actually consists of several
+> changes to support any future extensions that are needed. Splitting
+> step 2 and 3 allows for an asynchronous event where you can wait if
+> firmware takes an excessively long time, or if step 2 somehow fails
+> you can then repeat or revert it to get back to a consistent state.
+> Lastly by splitting out the onlining step you can avoid potentially
+> releasing a broken VF to be reserved if there is some sort of
+> unrecoverable error between steps 2 and 3.
 
-Thanks,
-Amey
+In all scenarios users need to disable autoprobe and unbind drivers.
+This is actually the "offline" mode. Any SR-IOV capable HW that will
+need this asynchronous probe will be able to extend current mechanism.
 
-> > Amey Narkhede (4):
-> >   PCI: Refactor pcie_flr to follow calling convention of other reset
-> >     methods
-> >   PCI: Add new bitmap for keeping track of supported reset mechanisms
-> >   PCI: Remove reset_fn field from pci_dev
-> >   PCI/sysfs: Allow userspace to query and set device reset mechanism
-> >
-> >  Documentation/ABI/testing/sysfs-bus-pci       |  15 ++
-> >  drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
-> >  drivers/crypto/qat/qat_common/adf_aer.c       |   2 +-
-> >  drivers/infiniband/hw/hfi1/chip.c             |   4 +-
-> >  drivers/net/ethernet/broadcom/bnxt/bnxt.c     |   2 +-
-> >  .../ethernet/cavium/liquidio/lio_vf_main.c    |   4 +-
-> >  .../ethernet/cavium/liquidio/octeon_mailbox.c |   2 +-
-> >  drivers/net/ethernet/freescale/enetc/enetc.c  |   2 +-
-> >  .../ethernet/freescale/enetc/enetc_pci_mdio.c |   2 +-
-> >  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |   4 +-
-> >  drivers/pci/pci-sysfs.c                       |  68 +++++++-
-> >  drivers/pci/pci.c                             | 160 ++++++++++--------
-> >  drivers/pci/pci.h                             |  11 +-
-> >  drivers/pci/pcie/aer.c                        |  12 +-
-> >  drivers/pci/probe.c                           |   4 +-
-> >  drivers/pci/quirks.c                          |  17 +-
-> >  include/linux/pci.h                           |  17 +-
-> >  17 files changed, 213 insertions(+), 117 deletions(-)
-> >
-> > --
-> > 2.30.2
-> >
->
+However I don't expect to see in Foreseen future any new SR-IOV player
+that will be able to provide brand new high-speed, high-performance
+and customizable SR-IOV card that will need asynchronous probe.
+
+BTW, even NVMe with their "offline" mode in their spec implemented
+the flow exactly like I'm proposing here.
+
+Thanks
