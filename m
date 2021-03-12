@@ -2,22 +2,23 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC0A9339250
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 16:52:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A114E339276
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 16:54:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231557AbhCLPwK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Mar 2021 10:52:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:56260 "EHLO foss.arm.com"
+        id S232351AbhCLPyL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Mar 2021 10:54:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:56294 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232105AbhCLPvs (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Mar 2021 10:51:48 -0500
+        id S232553AbhCLPwI (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Mar 2021 10:52:08 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79DA01FB;
-        Fri, 12 Mar 2021 07:51:47 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8D0211B3;
+        Fri, 12 Mar 2021 07:52:07 -0800 (PST)
 Received: from [10.57.52.136] (unknown [10.57.52.136])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38D593F7D7;
-        Fri, 12 Mar 2021 07:51:43 -0800 (PST)
-Subject: Re: [RFC PATCH v2 00/11] Add support to dma_map_sg for P2PDMA
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DA3A3F7D7;
+        Fri, 12 Mar 2021 07:52:04 -0800 (PST)
+Subject: Re: [RFC PATCH v2 06/11] dma-direct: Support PCI P2PDMA pages in
+ dma-direct map_sg
 To:     Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
         linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -37,13 +38,14 @@ Cc:     Minturn Dave B <dave.b.minturn@intel.com>,
         Christoph Hellwig <hch@lst.de>,
         Xiong Jianxin <jianxin.xiong@intel.com>
 References: <20210311233142.7900-1-logang@deltatee.com>
+ <20210311233142.7900-7-logang@deltatee.com>
 From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6b9be188-1ec7-527c-ae47-3f5b4e153758@arm.com>
-Date:   Fri, 12 Mar 2021 15:51:37 +0000
+Message-ID: <215e1472-5294-d20a-a43a-ff6dfe8cd66e@arm.com>
+Date:   Fri, 12 Mar 2021 15:52:02 +0000
 User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210311233142.7900-1-logang@deltatee.com>
+In-Reply-To: <20210311233142.7900-7-logang@deltatee.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
@@ -52,106 +54,133 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 2021-03-11 23:31, Logan Gunthorpe wrote:
-> Hi,
+> Add PCI P2PDMA support for dma_direct_map_sg() so that it can map
+> PCI P2PDMA pages directly without a hack in the callers. This allows
+> for heterogeneous SGLs that contain both P2PDMA and regular pages.
 > 
-> This is a rework of the first half of my RFC for doing P2PDMA in userspace
-> with O_DIRECT[1].
+> SGL segments that contain PCI bus addresses are marked with
+> sg_mark_pci_p2pdma() and are ignored when unmapped.
 > 
-> The largest issue with that series was the gross way of flagging P2PDMA
-> SGL segments. This RFC proposes a different approach, (suggested by
-> Dan Williams[2]) which uses the third bit in the page_link field of the
-> SGL.
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>   kernel/dma/direct.c  | 35 ++++++++++++++++++++++++++++++++---
+>   kernel/dma/mapping.c | 13 ++++++++++---
+>   2 files changed, 42 insertions(+), 6 deletions(-)
 > 
-> This approach is a lot less hacky but comes at the cost of adding a
-> CONFIG_64BIT dependency to CONFIG_PCI_P2PDMA and using up the last
-> scarce bit in the page_link. For our purposes, a 64BIT restriction is
-> acceptable but it's not clear if this is ok for all usecases hoping
-> to make use of P2PDMA.
-> 
-> Matthew Wilcox has already suggested (off-list) that this is the wrong
-> approach, preferring a new dma mapping operation and an SGL replacement. I
-> don't disagree that something along those lines would be a better long
-> term solution, but it involves overcoming a lot of challenges to get
-> there. Creating a new mapping operation still means adding support to more
-> than 25 dma_map_ops implementations (many of which are on obscure
-> architectures) or creating a redundant path to fallback with dma_map_sg()
-> for every driver that uses the new operation. This RFC is an approach
-> that doesn't require overcoming these blocks.
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 002268262c9a..f326d32062dd 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/vmalloc.h>
+>   #include <linux/set_memory.h>
+>   #include <linux/slab.h>
+> +#include <linux/pci-p2pdma.h>
+>   #include "direct.h"
+>   
+>   /*
+> @@ -387,19 +388,47 @@ void dma_direct_unmap_sg(struct device *dev, struct scatterlist *sgl,
+>   	struct scatterlist *sg;
+>   	int i;
+>   
+> -	for_each_sg(sgl, sg, nents, i)
+> +	for_each_sg(sgl, sg, nents, i) {
+> +		if (sg_is_pci_p2pdma(sg))
+> +			continue;
+> +
+>   		dma_direct_unmap_page(dev, sg->dma_address, sg_dma_len(sg), dir,
+>   			     attrs);
+> +	}
+>   }
+>   #endif
+>   
+>   int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+>   		enum dma_data_direction dir, unsigned long attrs)
+>   {
+> -	int i;
+> +	struct dev_pagemap *pgmap = NULL;
+> +	int i, map = -1, ret = 0;
+>   	struct scatterlist *sg;
+> +	u64 bus_off;
+>   
+>   	for_each_sg(sgl, sg, nents, i) {
+> +		if (is_pci_p2pdma_page(sg_page(sg))) {
+> +			if (sg_page(sg)->pgmap != pgmap) {
+> +				pgmap = sg_page(sg)->pgmap;
+> +				map = pci_p2pdma_dma_map_type(dev, pgmap);
+> +				bus_off = pci_p2pdma_bus_offset(sg_page(sg));
+> +			}
+> +
+> +			if (map < 0) {
+> +				sg->dma_address = DMA_MAPPING_ERROR;
+> +				ret = -EREMOTEIO;
+> +				goto out_unmap;
+> +			}
+> +
+> +			if (map) {
+> +				sg->dma_address = sg_phys(sg) + sg->offset -
+> +					bus_off;
+> +				sg_dma_len(sg) = sg->length;
+> +				sg_mark_pci_p2pdma(sg);
+> +				continue;
+> +			}
+> +		}
+> +
+>   		sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
+>   				sg->offset, sg->length, dir, attrs);
+>   		if (sg->dma_address == DMA_MAPPING_ERROR)
+> @@ -411,7 +440,7 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+>   
+>   out_unmap:
+>   	dma_direct_unmap_sg(dev, sgl, i, dir, attrs | DMA_ATTR_SKIP_CPU_SYNC);
+> -	return 0;
+> +	return ret;
+>   }
+>   
+>   dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index b6a633679933..adc1a83950be 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -178,8 +178,15 @@ void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
+>   EXPORT_SYMBOL(dma_unmap_page_attrs);
+>   
+>   /*
+> - * dma_maps_sg_attrs returns 0 on error and > 0 on success.
+> - * It should never return a value < 0.
+> + * dma_maps_sg_attrs returns 0 on any resource error and > 0 on success.
+> + *
+> + * If 0 is returned, the mapping can be retried and will succeed once
+> + * sufficient resources are available.
 
-I don't really follow that argument - you're only adding support to two 
-implementations with the awkward flag, so why would using a dedicated 
-operation instead be any different? Whatever callers need to do if 
-dma_pci_p2pdma_supported() says no, they could equally do if 
-dma_map_p2p_sg() (or whatever) returns -ENXIO, no?
+That's not a guarantee we can uphold. Retrying forever in the vain hope 
+that a device might evolve some extra address bits, or a bounce buffer 
+might magically grow big enough for a gigantic mapping, isn't 
+necessarily the best idea.
 
-We don't try to multiplex .map_resource through .map_page, so there 
-doesn't seem to be any good reason to force that complexity on .map_sg 
-either. And having a distinct API from the outset should make it a lot 
-easier to transition to better "list of P2P memory regions" data 
-structures in future without rewriting the whole world. As it is, there 
-are potential benefits in a P2P interface which can define its own 
-behaviour - for instance if threw out the notion of segment merging it 
-could save a load of bother by just maintaining the direct correlation 
-between pages and DMA addresses.
+> + *
+> + * If there are P2PDMA pages in the scatterlist then this function may
+> + * return -EREMOTEIO to indicate that the pages are not mappable by the
+> + * device. In this case, an error should be returned for the IO as it
+> + * will never be successfully retried.
+>    */
+>   int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int nents,
+>   		enum dma_data_direction dir, unsigned long attrs)
+> @@ -197,7 +204,7 @@ int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int nents,
+>   		ents = dma_direct_map_sg(dev, sg, nents, dir, attrs);
+>   	else
+>   		ents = ops->map_sg(dev, sg, nents, dir, attrs);
+> -	BUG_ON(ents < 0);
+> +
+
+This scares me - I hesitate to imagine the amount of driver/subsystem 
+code out there that will see nonzero and merrily set off iterating a 
+negative number of segments, if we open the floodgates of allowing 
+implementations to return error codes here.
 
 Robin.
 
-> Any alternative ideas or feedback is welcome.
-> 
-> These patches are based on v5.12-rc2 and a git branch is available here:
-> 
->    https://github.com/sbates130272/linux-p2pmem/  p2pdma_dma_map_ops_rfc
-> 
-> A branch with the patches from the previous RFC that add userspace
-> O_DIRECT support is available at the same URL with the name
-> "p2pdma_dma_map_ops_rfc+user" (however, none of the issues with those
-> extra patches from the feedback of the last posting have been fixed).
-> 
-> Thanks,
-> 
-> Logan
-> 
-> [1] https://lore.kernel.org/linux-block/20201106170036.18713-1-logang@deltatee.com/
-> [2] https://lore.kernel.org/linux-block/CAPcyv4ifGcrdOtUt8qr7pmFhmecGHqGVre9G0RorGczCGVECQQ@mail.gmail.com/
-> 
-> --
-> 
-> Logan Gunthorpe (11):
->    PCI/P2PDMA: Pass gfp_mask flags to upstream_bridge_distance_warn()
->    PCI/P2PDMA: Avoid pci_get_slot() which sleeps
->    PCI/P2PDMA: Attempt to set map_type if it has not been set
->    PCI/P2PDMA: Introduce pci_p2pdma_should_map_bus() and
->      pci_p2pdma_bus_offset()
->    lib/scatterlist: Add flag for indicating P2PDMA segments in an SGL
->    dma-direct: Support PCI P2PDMA pages in dma-direct map_sg
->    dma-mapping: Add flags to dma_map_ops to indicate PCI P2PDMA support
->    iommu/dma: Support PCI P2PDMA pages in dma-iommu map_sg
->    block: Add BLK_STS_P2PDMA
->    nvme-pci: Check DMA ops when indicating support for PCI P2PDMA
->    nvme-pci: Convert to using dma_map_sg for p2pdma pages
-> 
->   block/blk-core.c            |  2 +
->   drivers/iommu/dma-iommu.c   | 63 +++++++++++++++++++++-----
->   drivers/nvme/host/core.c    |  3 +-
->   drivers/nvme/host/nvme.h    |  2 +-
->   drivers/nvme/host/pci.c     | 38 +++++++---------
->   drivers/pci/Kconfig         |  2 +-
->   drivers/pci/p2pdma.c        | 89 +++++++++++++++++++++++++++++++------
->   include/linux/blk_types.h   |  7 +++
->   include/linux/dma-map-ops.h |  3 ++
->   include/linux/dma-mapping.h |  5 +++
->   include/linux/pci-p2pdma.h  | 11 +++++
->   include/linux/scatterlist.h | 49 ++++++++++++++++++--
->   kernel/dma/direct.c         | 35 +++++++++++++--
->   kernel/dma/mapping.c        | 21 +++++++--
->   14 files changed, 271 insertions(+), 59 deletions(-)
-> 
-> 
-> base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
-> --
-> 2.20.1
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>   	debug_dma_map_sg(dev, sg, nents, ents, dir);
+>   
+>   	return ents;
 > 
