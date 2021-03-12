@@ -2,145 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD410339333
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 17:26:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6B4C33941C
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 18:00:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231906AbhCLQZe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Mar 2021 11:25:34 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:46686 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232550AbhCLQZI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 11:25:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=z71Dy4S8XtDaYoM2XRkuE2wAHe2/+OE53EIe7Kw+TNU=; b=HqXLStXu7JHag3wGbK3mOgF/M8
-        gsYjKlyGMCNs6Kp2trWSjJWEdoTTL7l0upjMGEke4ssz2qv6SN3QkQZ8mcg+a143IC5xIOM3SURoN
-        lw4HuqO4LhNWzh1WAKj6/9SxZhr2mvmmvBMwjW/oqcvFMPefmD+CQ/sZD2cfS3DQ9XdARnulhX379
-        XEmUxtLccrt+N+K+iBiVDqkj/U2P4KyQUA3p6kqQsHQwLLUNipLb7OSQ8YfLEh8+nzalEco/na8NL
-        WnrW6BHAXcHt9X8Oyt7VfthZmCHT2QggtvHtaFRpzf4jqY5LDY0Xy1Vgj3qD6rJy+XfYFYP5DTIA3
-        2H01sjhg==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lKkar-0007E2-BR; Fri, 12 Mar 2021 09:24:54 -0700
-To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org
-Cc:     Minturn Dave B <dave.b.minturn@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <iweiny@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Xiong Jianxin <jianxin.xiong@intel.com>
-References: <20210311233142.7900-1-logang@deltatee.com>
- <20210311233142.7900-7-logang@deltatee.com>
- <215e1472-5294-d20a-a43a-ff6dfe8cd66e@arm.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <d7ead722-7356-8e0f-22de-cb9dea12b556@deltatee.com>
-Date:   Fri, 12 Mar 2021 09:24:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S232458AbhCLQ7v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Mar 2021 11:59:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232398AbhCLQ7t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 11:59:49 -0500
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4C5AC061574;
+        Fri, 12 Mar 2021 08:59:49 -0800 (PST)
+Received: by mail-il1-x12b.google.com with SMTP id c10so3177269ilo.8;
+        Fri, 12 Mar 2021 08:59:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8lyG9mI2+ZJ9STRsO49iQYUUEtp1pPpZxebMdUf5OrU=;
+        b=lOa/pXAUadrrdSUfTfsnb3u9ozA2I3n4dpJYV1nAZQ3IftoPv6nv0MKopf8+HxrPsJ
+         DLugt+E+IRC3GDqzvl6dAtuBVuzGeR2reElxkayv+VhzxT1Eya4mvuxiYjyg6XVbT6iQ
+         1Wwh7YoXz8Rrj7S4jKcthXJ3/qBE+y3kZbccxBs9Ef4XMoILwwvfUSxHi4G+bBspAgXs
+         KYSjQpgYS+l0aseN1WIMVYMChTtZu44Sj/v7IGNhJTtPzLMElIN4V1T9xnXOqr8oT2j4
+         DDBK2GTkN9R4dd1TLAhuhSylTzjop8abB1LeIHc+C8EITCLC/A5hVraS02E4I9gDGb7g
+         +hww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8lyG9mI2+ZJ9STRsO49iQYUUEtp1pPpZxebMdUf5OrU=;
+        b=QSlgiCkBzddeOUH3dXbB8khWS9RNs2vQ9M3aW5L9/WYtNfrlLjFnE4nf1tUeM2Q28g
+         kGCLTc0V0+gegsiid/Hmid5y96zywyO0VGLy8rmGBq5XlBTY5emMDqw9tvWWCgceFhx8
+         WYYSjZG/8bJeE3N+9aWBJOOZiNDWQyBdcq/LRtF+eeWVnRwf4hsDiA3m87FD5l9IsA7h
+         jSytbKHFpp1KrCwM7zzvRw5x8I4HkN23NO9jEEsgUxriz+0CWJgN1MaPwfwDau7XQouo
+         5Y9Ek++N8FpRe1wRNm3Dt70KXaT9TKj8uPqklG21J8gLQ5VX4IF4LRfzEin/6KpG+JVb
+         BwhQ==
+X-Gm-Message-State: AOAM5321/bfXJmqj1NWmMzj+fWFu6szHRNBshBckk69ojsC5l53bI6Bd
+        e3gutdqvGjl2LZERO0/MTuobN+ZtQIwP8kJFfCA=
+X-Google-Smtp-Source: ABdhPJyxhAZqqHgpN7WIcSRLeNGYeqqplMBUXvARRawTxYw/AyadyFWdybe5WkPRPdMigwFmCN6SbgSFFU26kRoUOeI=
+X-Received: by 2002:a92:d18c:: with SMTP id z12mr3132686ilz.95.1615568389141;
+ Fri, 12 Mar 2021 08:59:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <215e1472-5294-d20a-a43a-ff6dfe8cd66e@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: jianxin.xiong@intel.com, hch@lst.de, andrzej.jakowski@intel.com, sbates@raithlin.com, dan.j.williams@intel.com, daniel.vetter@ffwll.ch, jason@jlekstrand.net, jgg@ziepe.ca, christian.koenig@amd.com, willy@infradead.org, iweiny@intel.com, dave.hansen@linux.intel.com, jhubbard@nvidia.com, dave.b.minturn@intel.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [RFC PATCH v2 06/11] dma-direct: Support PCI P2PDMA pages in
- dma-direct map_sg
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <CAKgT0UevrCLSQp=dNiHXWFu=10OiPb5PPgP1ZkPN1uKHfD=zBQ@mail.gmail.com>
+ <20210311181729.GA2148230@bjorn-Precision-5520> <CAKgT0UeprjR8QCQMCV8Le+Br=bQ7j2tCE6k6gxK4zCZML5woAA@mail.gmail.com>
+ <20210311201929.GN2356281@nvidia.com> <CAKgT0Ud1tzpAWO4+5GxiUiHT2wEaLacjC0NEifZ2nfOPPLW0cg@mail.gmail.com>
+ <20210311232059.GR2356281@nvidia.com> <CAKgT0Ud+gnw=W-2U22_iQ671himz8uWkr-DaBnVT9xfAsx6pUg@mail.gmail.com>
+ <YEsK6zoNY+BXfbQ7@unreal>
+In-Reply-To: <YEsK6zoNY+BXfbQ7@unreal>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 12 Mar 2021 08:59:38 -0800
+Message-ID: <CAKgT0UfsoXayB72KD+H_h14eN7wiYtWCUjxKJxwiNKr44XUPfA@mail.gmail.com>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Mar 11, 2021 at 10:32 PM Leon Romanovsky <leon@kernel.org> wrote:
+>
+> On Thu, Mar 11, 2021 at 06:53:16PM -0800, Alexander Duyck wrote:
+> > On Thu, Mar 11, 2021 at 3:21 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
+> > >
+> > > On Thu, Mar 11, 2021 at 01:49:24PM -0800, Alexander Duyck wrote:
+> > > > > We don't need to invent new locks and new complexity for something
+> > > > > that is trivially solved already.
+> > > >
+> > > > I am not wanting a new lock. What I am wanting is a way to mark the VF
+> > > > as being stale/offline while we are performing the update. With that
+> > > > we would be able to apply similar logic to any changes in the future.
+> > >
+> > > I think we should hold off doing this until someone comes up with HW
+> > > that needs it. The response time here is microseconds, it is not worth
+> > > any complexity
+>
+> <...>
+>
+> > Another way to think of this is that we are essentially pulling a
+> > device back after we have already allocated the VFs and we are
+> > reconfiguring it before pushing it back out for usage. Having a flag
+> > that we could set on the VF device to say it is "under
+> > construction"/modification/"not ready for use" would be quite useful I
+> > would think.
+>
+> It is not simple flag change, but change of PCI state machine, which is
+> far more complex than holding two locks or call to sysfs_create_file in
+> the loop that made Bjorn nervous.
+>
+> I want to remind again that the suggestion here has nothing to do with
+> the real use case of SR-IOV capable devices in the Linux.
+>
+> The flow is:
+> 1. Disable SR-IOV driver autoprobe
+> 2. Create as much as possible VFs
+> 3. Wait for request from the user to get VM
+> 4. Change MSI-X table according to requested in item #3
+> 5. Bind ready to go VF to VM
+> 6. Inform user about VM readiness
+>
+> The destroy flow includes VM destroy and unbind.
+>
+> Let's focus on solutions for real problems instead of trying to solve theoretical
+> cases that are not going to be tested and deployed.
+>
+> Thanks
 
+So part of the problem with this all along has been that you are only
+focused on how you are going to use this and don't think about how
+somebody else might need to use or implement it. In addition there are
+a number of half measures even within your own flow. In reality if we
+are thinking we are going to have to reconfigure every device it might
+make sense to simply block the driver from being able to load until
+you have configured it. Then the SR-IOV autoprobe would be redundant
+since you could use something like the "offline" flag to avoid that.
 
-On 2021-03-12 8:52 a.m., Robin Murphy wrote:
->> +
->>           sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
->>                   sg->offset, sg->length, dir, attrs);
->>           if (sg->dma_address == DMA_MAPPING_ERROR)
->> @@ -411,7 +440,7 @@ int dma_direct_map_sg(struct device *dev, struct
->> scatterlist *sgl, int nents,
->>     out_unmap:
->>       dma_direct_unmap_sg(dev, sgl, i, dir, attrs |
->> DMA_ATTR_SKIP_CPU_SYNC);
->> -    return 0;
->> +    return ret;
->>   }
->>     dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t
->> paddr,
->> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
->> index b6a633679933..adc1a83950be 100644
->> --- a/kernel/dma/mapping.c
->> +++ b/kernel/dma/mapping.c
->> @@ -178,8 +178,15 @@ void dma_unmap_page_attrs(struct device *dev,
->> dma_addr_t addr, size_t size,
->>   EXPORT_SYMBOL(dma_unmap_page_attrs);
->>     /*
->> - * dma_maps_sg_attrs returns 0 on error and > 0 on success.
->> - * It should never return a value < 0.
->> + * dma_maps_sg_attrs returns 0 on any resource error and > 0 on success.
->> + *
->> + * If 0 is returned, the mapping can be retried and will succeed once
->> + * sufficient resources are available.
-> 
-> That's not a guarantee we can uphold. Retrying forever in the vain hope
-> that a device might evolve some extra address bits, or a bounce buffer
-> might magically grow big enough for a gigantic mapping, isn't
-> necessarily the best idea.
+If you are okay with step 1 where you are setting a flag to prevent
+driver auto probing why is it so much more overhead to set a bit
+blocking drivers from loading entirely while you are changing the
+config space? Sitting on two locks and assuming a synchronous
+operation is assuming a lot about the hardware and how this is going
+to be used.
 
-Perhaps this is just poorly worded. Returning 0 is the normal case and
-nothing has changed there. The block layer, for example, will retry if
-zero is returned as this only happens if it failed to allocate resources
-for the mapping. The reason we have to return -1 is to tell the block
-layer not to retry these requests as they will never succeed in the future.
+In addition it seems like the logic is that step 4 will always
+succeed. What happens if for example you send the message to the
+firmware and you don't get a response? Do you just say the request
+failed let the VF be used anyway? This is another reason why I would
+be much more comfortable with the option to offline the device and
+then tinker with it rather than hope that your operation can somehow
+do everything in one shot.
 
->> + *
->> + * If there are P2PDMA pages in the scatterlist then this function may
->> + * return -EREMOTEIO to indicate that the pages are not mappable by the
->> + * device. In this case, an error should be returned for the IO as it
->> + * will never be successfully retried.
->>    */
->>   int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int
->> nents,
->>           enum dma_data_direction dir, unsigned long attrs)
->> @@ -197,7 +204,7 @@ int dma_map_sg_attrs(struct device *dev, struct
->> scatterlist *sg, int nents,
->>           ents = dma_direct_map_sg(dev, sg, nents, dir, attrs);
->>       else
->>           ents = ops->map_sg(dev, sg, nents, dir, attrs);
->> -    BUG_ON(ents < 0);
->> +
-> 
-> This scares me - I hesitate to imagine the amount of driver/subsystem
-> code out there that will see nonzero and merrily set off iterating a
-> negative number of segments, if we open the floodgates of allowing
-> implementations to return error codes here.
+In my mind step 4 really should be 4 steps.
 
-Yes, but it will never happen on existing drivers/subsystems. The only
-way it can return a negative number is if the driver passes in P2PDMA
-pages which can't happen without changes in the driver. We are careful
-about where P2PDMA pages can get into so we don't have to worry about
-all the existing driver code out there.
+1. Offline VF to reserve it for modification
+2. Submit request for modification
+3. Verify modification has occurred, reset if needed.
+4. Online VF
 
-Logan
+Doing it in that order allows for handling many more scenarios
+including those where perhaps step 2 actually consists of several
+changes to support any future extensions that are needed. Splitting
+step 2 and 3 allows for an asynchronous event where you can wait if
+firmware takes an excessively long time, or if step 2 somehow fails
+you can then repeat or revert it to get back to a consistent state.
+Lastly by splitting out the onlining step you can avoid potentially
+releasing a broken VF to be reserved if there is some sort of
+unrecoverable error between steps 2 and 3.
