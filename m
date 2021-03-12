@@ -2,166 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC3FE339676
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 19:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E52B3396B2
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 19:35:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233141AbhCLS2h (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Mar 2021 13:28:37 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:47694 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232802AbhCLS2I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 13:28:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=Hyn4+hD/rcL5U1sAMSyBYqlThrIcs7n2BvWezL3fddg=; b=O02RcMlN/pcj/N4ypIgx4I/pQ5
-        odKzndiBxONwDvQY7XeQHM0yUL6tNtRu+tqAeZboQCn2uqEptBRencRIbjQGRldJW/jyvUA/KDtL+
-        coOgr94guexcTd1f7Szt8zRpwy1IvMAy2W3ftljmL4P8GFdKj1SN8onH4rfBxF57fhBf9xXAzAhQV
-        /qljiRXeamubdsafvZ8ZJFJ3NXcbdH1tgLymdvkHTAsjp3Q7Tool9D/nXyWTP4daDpVDiawZwjhWQ
-        lPu90abCSPKAPLbTenEiF3R13QKr9Taag/gseqawH8n8+t4hT7g05jFpAdVBsSakM2wzLS7c3hm29
-        lwmEDUkA==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lKmVn-0000Xs-8W; Fri, 12 Mar 2021 11:27:48 -0700
-To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org
-Cc:     Minturn Dave B <dave.b.minturn@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Xiong Jianxin <jianxin.xiong@intel.com>
-References: <20210311233142.7900-1-logang@deltatee.com>
- <20210311233142.7900-7-logang@deltatee.com>
- <215e1472-5294-d20a-a43a-ff6dfe8cd66e@arm.com>
- <d7ead722-7356-8e0f-22de-cb9dea12b556@deltatee.com>
- <a8205c02-a43f-d4e8-a9fe-5963df3a7b40@arm.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <367fa81e-588d-5734-c69c-8cdc800dcb7e@deltatee.com>
-Date:   Fri, 12 Mar 2021 11:27:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S233635AbhCLSfC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Mar 2021 13:35:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233756AbhCLSei (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Mar 2021 13:34:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 76CF364F5B;
+        Fri, 12 Mar 2021 18:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615574078;
+        bh=eBRGUpzOaiG5s/KUQiDidE3SFCB985o0uUgGmkVc+7Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jUXTQMMT4xJUisClB8arBD8gM7tXact5Bf9ae/m0vxPmf25EdtjZc/lchUomrMr4L
+         /48tlBwvJ76SwgO5bNIWJxvvTrcoCjBVwWnPqIU0xMmvPuixxy6oDWVKY69c6fzeyW
+         8sYRPwS1GxbSJH6A+huhqLafajZtRNA4QcGjtsJHeSIcOGmMW8ozZRx4u2Ecxr0AYj
+         Y8hLJmGUYwXz4NI1aKezPsd+rvIQ4XAr5NhaBooytorb/exulIyrlQYwgEA6RpawNj
+         SF90jzZhNBz8183tpzY905dSdLOkNxL/r42lYlCTNLazc2fkBIMmEn4bktu/+AQJvC
+         11sHQomgrHM0A==
+Date:   Fri, 12 Mar 2021 20:34:33 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        Don Dutile <ddutile@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH mlx5-next v7 0/4] Dynamically assign MSI-X vectors count
+Message-ID: <YEu0OZTjizqooG89@unreal>
+References: <CAKgT0UevrCLSQp=dNiHXWFu=10OiPb5PPgP1ZkPN1uKHfD=zBQ@mail.gmail.com>
+ <20210311181729.GA2148230@bjorn-Precision-5520>
+ <CAKgT0UeprjR8QCQMCV8Le+Br=bQ7j2tCE6k6gxK4zCZML5woAA@mail.gmail.com>
+ <20210311201929.GN2356281@nvidia.com>
+ <CAKgT0Ud1tzpAWO4+5GxiUiHT2wEaLacjC0NEifZ2nfOPPLW0cg@mail.gmail.com>
+ <20210311232059.GR2356281@nvidia.com>
+ <CAKgT0Ud+gnw=W-2U22_iQ671himz8uWkr-DaBnVT9xfAsx6pUg@mail.gmail.com>
+ <YEsK6zoNY+BXfbQ7@unreal>
+ <CAKgT0UfsoXayB72KD+H_h14eN7wiYtWCUjxKJxwiNKr44XUPfA@mail.gmail.com>
+ <20210312170319.GG2356281@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <a8205c02-a43f-d4e8-a9fe-5963df3a7b40@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: jianxin.xiong@intel.com, hch@lst.de, andrzej.jakowski@intel.com, sbates@raithlin.com, dan.j.williams@intel.com, daniel.vetter@ffwll.ch, jason@jlekstrand.net, jgg@ziepe.ca, christian.koenig@amd.com, willy@infradead.org, dave.hansen@linux.intel.com, jhubbard@nvidia.com, dave.b.minturn@intel.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [RFC PATCH v2 06/11] dma-direct: Support PCI P2PDMA pages in
- dma-direct map_sg
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210312170319.GG2356281@nvidia.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Mar 12, 2021 at 01:03:19PM -0400, Jason Gunthorpe wrote:
+> On Fri, Mar 12, 2021 at 08:59:38AM -0800, Alexander Duyck wrote:
+>
+> > Lastly by splitting out the onlining step you can avoid potentially
+> > releasing a broken VF to be reserved if there is some sort of
+> > unrecoverable error between steps 2 and 3.
+>
+> If the PF FW gets in a state that it can't respond to a trivial
+> command like this then *every* VF is broken. It not a useful scenario
+> to focus on.
 
+Right, many VF initial configurations are done through PF. It MUST work.
 
-On 2021-03-12 11:11 a.m., Robin Murphy wrote:
-> On 2021-03-12 16:24, Logan Gunthorpe wrote:
->>
->>
->> On 2021-03-12 8:52 a.m., Robin Murphy wrote:
->>>> +
->>>>            sg->dma_address = dma_direct_map_page(dev, sg_page(sg),
->>>>                    sg->offset, sg->length, dir, attrs);
->>>>            if (sg->dma_address == DMA_MAPPING_ERROR)
->>>> @@ -411,7 +440,7 @@ int dma_direct_map_sg(struct device *dev, struct
->>>> scatterlist *sgl, int nents,
->>>>      out_unmap:
->>>>        dma_direct_unmap_sg(dev, sgl, i, dir, attrs |
->>>> DMA_ATTR_SKIP_CPU_SYNC);
->>>> -    return 0;
->>>> +    return ret;
->>>>    }
->>>>      dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t
->>>> paddr,
->>>> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
->>>> index b6a633679933..adc1a83950be 100644
->>>> --- a/kernel/dma/mapping.c
->>>> +++ b/kernel/dma/mapping.c
->>>> @@ -178,8 +178,15 @@ void dma_unmap_page_attrs(struct device *dev,
->>>> dma_addr_t addr, size_t size,
->>>>    EXPORT_SYMBOL(dma_unmap_page_attrs);
->>>>      /*
->>>> - * dma_maps_sg_attrs returns 0 on error and > 0 on success.
->>>> - * It should never return a value < 0.
->>>> + * dma_maps_sg_attrs returns 0 on any resource error and > 0 on
->>>> success.
->>>> + *
->>>> + * If 0 is returned, the mapping can be retried and will succeed once
->>>> + * sufficient resources are available.
->>>
->>> That's not a guarantee we can uphold. Retrying forever in the vain hope
->>> that a device might evolve some extra address bits, or a bounce buffer
->>> might magically grow big enough for a gigantic mapping, isn't
->>> necessarily the best idea.
->>
->> Perhaps this is just poorly worded. Returning 0 is the normal case and
->> nothing has changed there. The block layer, for example, will retry if
->> zero is returned as this only happens if it failed to allocate resources
->> for the mapping. The reason we have to return -1 is to tell the block
->> layer not to retry these requests as they will never succeed in the
->> future.
->>
->>>> + *
->>>> + * If there are P2PDMA pages in the scatterlist then this function may
->>>> + * return -EREMOTEIO to indicate that the pages are not mappable by
->>>> the
->>>> + * device. In this case, an error should be returned for the IO as it
->>>> + * will never be successfully retried.
->>>>     */
->>>>    int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg, int
->>>> nents,
->>>>            enum dma_data_direction dir, unsigned long attrs)
->>>> @@ -197,7 +204,7 @@ int dma_map_sg_attrs(struct device *dev, struct
->>>> scatterlist *sg, int nents,
->>>>            ents = dma_direct_map_sg(dev, sg, nents, dir, attrs);
->>>>        else
->>>>            ents = ops->map_sg(dev, sg, nents, dir, attrs);
->>>> -    BUG_ON(ents < 0);
->>>> +
->>>
->>> This scares me - I hesitate to imagine the amount of driver/subsystem
->>> code out there that will see nonzero and merrily set off iterating a
->>> negative number of segments, if we open the floodgates of allowing
->>> implementations to return error codes here.
->>
->> Yes, but it will never happen on existing drivers/subsystems. The only
->> way it can return a negative number is if the driver passes in P2PDMA
->> pages which can't happen without changes in the driver. We are careful
->> about where P2PDMA pages can get into so we don't have to worry about
->> all the existing driver code out there.
-> 
-> Sure, that's how things stand immediately after this patch. But then
-> someone comes along with the perfectly reasonable argument for returning
-> more expressive error information for regular mapping failures as well
-> (because sometimes those can be terminal too, as above), we start to get
-> divergent behaviour across architectures and random bits of old code
-> subtly breaking down the line. *That* is what makes me wary of making a
-> fundamental change to a long-standing "nonzero means success" interface...
+Thanks
 
-So then we reject the patches that make that change. Seems like an odd
-argument to say that we can't do something that won't cause problems
-because someone might use it as an example and do something that will
-cause problems. Reject the change that causes the problem.
-
-Logan
+>
+> Jason
