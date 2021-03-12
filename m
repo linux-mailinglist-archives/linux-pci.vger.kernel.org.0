@@ -2,27 +2,33 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D653397B6
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 20:48:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DADE63397FE
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 21:07:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234515AbhCLTrn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Mar 2021 14:47:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:59856 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234524AbhCLTrS (ORCPT <rfc822;linux-pci@vger.kernel.org>);
-        Fri, 12 Mar 2021 14:47:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20D92ED1;
-        Fri, 12 Mar 2021 11:47:18 -0800 (PST)
-Received: from [10.57.52.136] (unknown [10.57.52.136])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA35E3F793;
-        Fri, 12 Mar 2021 11:47:13 -0800 (PST)
-Subject: Re: [RFC PATCH v2 08/11] iommu/dma: Support PCI P2PDMA pages in
- dma-iommu map_sg
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+        id S234603AbhCLUHY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Mar 2021 15:07:24 -0500
+Received: from ale.deltatee.com ([204.191.154.188]:59886 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234596AbhCLUGx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 15:06:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=/dKXn2MTgnalq4INDTL+cUYvr798DsS+qKv7RTLo0q8=; b=da62C93BS1h63ogYf0+1s+anR6
+        jE7LGT3lzTTjYIIqb+PgW/fdS/Tx6fEntgD51NJlTprHY0a60/LT/QP4Fc5Ai6ePuzSg+5NF+L6py
+        nRbrs8LRxsjgEQ3bbreB2q1tcLRZSbwiR6N63c8IPAj25MKLjTff5d3tDmA5GNH69iLyo75HdTRQL
+        icsGfRW5L4uGM435GQLPMFZysIjMtxvto4KAjvE2O5c0vlurrQcxvNGeRxzpZnms87a0en6OmRz0y
+        4VE4+Oyatorjzq2kdC3StQcBh4Yfq+TM0mZnbCUm+7sKjhSlsjY53WT5kVLKDNyivZA8UJ6mwJmxv
+        bJOEOTPw==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1lKo3U-00023x-1V; Fri, 12 Mar 2021 13:06:41 -0700
+To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org
 Cc:     Minturn Dave B <dave.b.minturn@intel.com>,
         John Hubbard <jhubbard@nvidia.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
@@ -41,195 +47,110 @@ References: <20210311233142.7900-1-logang@deltatee.com>
  <20210311233142.7900-9-logang@deltatee.com>
  <accd4187-7a9d-a8fc-f216-98ec24e3411a@arm.com>
  <45701356-ee41-1ad2-0e06-ca74af87b05a@deltatee.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <76cc1c82-3cf4-92d3-992f-5c876ed30523@arm.com>
-Date:   Fri, 12 Mar 2021 19:47:08 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ <76cc1c82-3cf4-92d3-992f-5c876ed30523@arm.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <6dd679b3-e38b-2c18-1990-bfc96bb4d971@deltatee.com>
+Date:   Fri, 12 Mar 2021 13:06:34 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <45701356-ee41-1ad2-0e06-ca74af87b05a@deltatee.com>
+In-Reply-To: <76cc1c82-3cf4-92d3-992f-5c876ed30523@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: jianxin.xiong@intel.com, hch@lst.de, andrzej.jakowski@intel.com, sbates@raithlin.com, dan.j.williams@intel.com, daniel.vetter@ffwll.ch, jason@jlekstrand.net, jgg@ziepe.ca, christian.koenig@amd.com, willy@infradead.org, iweiny@intel.com, dave.hansen@linux.intel.com, jhubbard@nvidia.com, dave.b.minturn@intel.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [RFC PATCH v2 08/11] iommu/dma: Support PCI P2PDMA pages in
+ dma-iommu map_sg
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2021-03-12 17:03, Logan Gunthorpe wrote:
-> 
-> 
-> On 2021-03-12 8:52 a.m., Robin Murphy wrote:
->> On 2021-03-11 23:31, Logan Gunthorpe wrote:
->>> When a PCI P2PDMA page is seen, set the IOVA length of the segment
->>> to zero so that it is not mapped into the IOVA. Then, in finalise_sg(),
->>> apply the appropriate bus address to the segment. The IOVA is not
->>> created if the scatterlist only consists of P2PDMA pages.
+
+
+On 2021-03-12 12:47 p.m., Robin Murphy wrote:
+>>>>    {
+>>>>        struct scatterlist *s, *cur = sg;
+>>>>        unsigned long seg_mask = dma_get_seg_boundary(dev);
+>>>> @@ -864,6 +865,20 @@ static int __finalise_sg(struct device *dev,
+>>>> struct scatterlist *sg, int nents,
+>>>>            sg_dma_address(s) = DMA_MAPPING_ERROR;
+>>>>            sg_dma_len(s) = 0;
+>>>>    +        if (is_pci_p2pdma_page(sg_page(s)) && !s_iova_len) {
+>>>> +            if (i > 0)
+>>>> +                cur = sg_next(cur);
+>>>> +
+>>>> +            sg_dma_address(cur) = sg_phys(s) + s->offset -
+>>>
+>>> Are you sure about that? ;)
 >>
->> This misled me at first, but I see the implementation does actually
->> appear to accomodate the case of working ACS where P2P *would* still
->> need to be mapped at the IOMMU.
+>> Do you see a bug? I don't follow you...
 > 
-> Yes, that's correct.
->>>    static int __finalise_sg(struct device *dev, struct scatterlist *sg,
->>> int nents,
->>> -        dma_addr_t dma_addr)
->>> +        dma_addr_t dma_addr, unsigned long attrs)
->>>    {
->>>        struct scatterlist *s, *cur = sg;
->>>        unsigned long seg_mask = dma_get_seg_boundary(dev);
->>> @@ -864,6 +865,20 @@ static int __finalise_sg(struct device *dev,
->>> struct scatterlist *sg, int nents,
->>>            sg_dma_address(s) = DMA_MAPPING_ERROR;
->>>            sg_dma_len(s) = 0;
->>>    +        if (is_pci_p2pdma_page(sg_page(s)) && !s_iova_len) {
->>> +            if (i > 0)
->>> +                cur = sg_next(cur);
->>> +
->>> +            sg_dma_address(cur) = sg_phys(s) + s->offset -
+> sg_phys() already accounts for the offset, so you're adding it twice.
+
+Ah, oops. Nice catch. I missed that.
+
+> 
+>>>> +                pci_p2pdma_bus_offset(sg_page(s));
+>>>
+>>> Can the bus offset make P2P addresses overlap with regions of mem space
+>>> that we might use for regular IOVA allocation? That would be very bad...
 >>
->> Are you sure about that? ;)
+>> No. IOMMU drivers already disallow all PCI addresses from being used as
+>> IOVA addresses. See, for example,  dmar_init_reserved_ranges(). It would
+>> be a huge problem for a whole lot of other reasons if it didn't.
 > 
-> Do you see a bug? I don't follow you...
+> I know we reserve the outbound windows (largely *because* some host 
+> bridges will consider those addresses as attempts at unsupported P2P and 
+> prevent them working), I just wanted to confirm that this bus offset is 
+> always something small that stays within the relevant window, rather 
+> than something that might make a BAR appear in a completely different 
+> place for P2P purposes. If so, that's good.
 
-sg_phys() already accounts for the offset, so you're adding it twice.
-
->>> +                pci_p2pdma_bus_offset(sg_page(s));
+Yes, well if an IOVA overlaps with any PCI bus address there's going to 
+be some difficult brokenness because when the IOVA is used it might be 
+directed to the a PCI device and not the IOMMU. I fixed a bug like that 
+once.
+>>> I'm not really thrilled about the idea of passing zero-length segments
+>>> to iommu_map_sg(). Yes, it happens to trick the concatenation logic in
+>>> the current implementation into doing what you want, but it feels 
+>>> fragile.
 >>
->> Can the bus offset make P2P addresses overlap with regions of mem space
->> that we might use for regular IOVA allocation? That would be very bad...
+>> We're not passing zero length segments to iommu_map_sg() (or any
+>> function). This loop is just scanning to calculate the length of the
+>> required IOVA. __finalise_sg() (which is intimately tied to this loop)
+>> then needs a way to determine which segments were P2P segments. The
+>> existing code already overwrites s->length with an aligned length and
+>> stores the original length in sg_dma_len. So we're not relying on
+>> tricking any logic here.
 > 
-> No. IOMMU drivers already disallow all PCI addresses from being used as
-> IOVA addresses. See, for example,  dmar_init_reserved_ranges(). It would
-> be a huge problem for a whole lot of other reasons if it didn't.
+> Yes, we temporarily shuffle in page-aligned quantities to satisfy the 
+> needs of the iommu_map_sg() call, before unpacking things again in 
+> __finalise_sg(). It's some disgusting trickery that I'm particularly 
+> proud of. My point is that if you have a mix of both p2p and normal 
+> segments - which seems to be a case you want to support - then the 
+> length of 0 that you set to flag p2p segments here will be seen by 
+> iommu_map_sg() (as it walks the list to map the other segments) before 
+> you then use it as a key to override the DMA address in the final step. 
+> It's not a concern if you have a p2p-only list and short-circuit 
+> straight to that step (in which case all the shuffling was wasted effort 
+> anyway), but since it's not entirely clear what a segment with zero 
+> length would mean in general, it seems like a good idea to avoid passing 
+> the list across a public boundary in that state, if possible.
 
-I know we reserve the outbound windows (largely *because* some host 
-bridges will consider those addresses as attempts at unsupported P2P and 
-prevent them working), I just wanted to confirm that this bus offset is 
-always something small that stays within the relevant window, rather 
-than something that might make a BAR appear in a completely different 
-place for P2P purposes. If so, that's good.
+Ok, well, I mean the iommu_map_sg() does the right thing as is without 
+changing it and IMO sg->length set to zero does make sense. Supporting 
+mixed P2P and normal segments is really the whole point of this series 
+(the current kernel supports homogeneous SGLs with a specialized path -- 
+see pci_p2pdma_unmap_sg_attrs()). But do you have an alternate solution 
+for sg->length?
 
->>> @@ -960,11 +975,12 @@ static int iommu_dma_map_sg(struct device *dev,
->>> struct scatterlist *sg,
->>>        struct iommu_dma_cookie *cookie = domain->iova_cookie;
->>>        struct iova_domain *iovad = &cookie->iovad;
->>>        struct scatterlist *s, *prev = NULL;
->>> +    struct dev_pagemap *pgmap = NULL;
->>>        int prot = dma_info_to_prot(dir, dev_is_dma_coherent(dev), attrs);
->>>        dma_addr_t iova;
->>>        size_t iova_len = 0;
->>>        unsigned long mask = dma_get_seg_boundary(dev);
->>> -    int i;
->>> +    int i, map = -1, ret = 0;
->>>          if (static_branch_unlikely(&iommu_deferred_attach_enabled) &&
->>>            iommu_deferred_attach(dev, domain))
->>> @@ -993,6 +1009,23 @@ static int iommu_dma_map_sg(struct device *dev,
->>> struct scatterlist *sg,
->>>            s_length = iova_align(iovad, s_length + s_iova_off);
->>>            s->length = s_length;
->>>    +        if (is_pci_p2pdma_page(sg_page(s))) {
->>> +            if (sg_page(s)->pgmap != pgmap) {
->>> +                pgmap = sg_page(s)->pgmap;
->>> +                map = pci_p2pdma_dma_map_type(dev, pgmap);
->>> +            }
->>> +
->>> +            if (map < 0) {
->>
->> It rather feels like it should be the job of whoever creates the list in
->> the first place not to put unusable pages in it, especially since the
->> p2pdma_map_type looks to be a fairly coarse-grained and static thing.
->> The DMA API isn't responsible for validating normal memory pages, so
->> what makes P2P special?
-> 
-> Yes, that would be ideal, but there's some difficulties there. For the
-> driver to check the pages, it would need to loop through the entire SG
-> one more time on every transaction, regardless of whether there are
-> P2PDMA pages, or not. So that will have a performance impact even when
-> the feature isn't being used. I don't think that'll be acceptable for
-> many drivers.
-> 
-> The other possibility is for GUP to do it when it gets the pages from
-> userspace. But GUP doesn't have all the information to do this at the
-> moment. We'd have to pass the struct device that will eventually map the
-> pages through all the nested functions in the GUP to do that test at
-> that time. This might not be a bad option (that I half looked into), but
-> I'm not sure how acceptable it would be to the GUP developers.
-
-Urgh, yes, if a page may or may not be valid for p2p depending on which 
-device is trying to map it, then it probably is most reasonable to 
-figure that out at this point. It's a little unfortunate having to cope 
-with failure so late, but oh well.
-
-> But even if we do verify the pages ahead of time, we still need the same
-> infrastructure in dma_map_sg(); it could only now be a BUG if the driver
-> sent invalid pages instead of an error return.
-
-The hope was that we could save doing even that - e.g. if you pass a 
-dodgy page into dma_map_page(), maybe page_to_phys() will crash, maybe 
-you'll just end up with a DMA address that won't work, but either way it 
-doesn't care in its own right - but it seems that's moot.
-
->>> +                ret = -EREMOTEIO;
->>> +                goto out_restore_sg;
->>> +            }
->>> +
->>> +            if (map) {
->>> +                s->length = 0;
->>
->> I'm not really thrilled about the idea of passing zero-length segments
->> to iommu_map_sg(). Yes, it happens to trick the concatenation logic in
->> the current implementation into doing what you want, but it feels fragile.
-> 
-> We're not passing zero length segments to iommu_map_sg() (or any
-> function). This loop is just scanning to calculate the length of the
-> required IOVA. __finalise_sg() (which is intimately tied to this loop)
-> then needs a way to determine which segments were P2P segments. The
-> existing code already overwrites s->length with an aligned length and
-> stores the original length in sg_dma_len. So we're not relying on
-> tricking any logic here.
-
-Yes, we temporarily shuffle in page-aligned quantities to satisfy the 
-needs of the iommu_map_sg() call, before unpacking things again in 
-__finalise_sg(). It's some disgusting trickery that I'm particularly 
-proud of. My point is that if you have a mix of both p2p and normal 
-segments - which seems to be a case you want to support - then the 
-length of 0 that you set to flag p2p segments here will be seen by 
-iommu_map_sg() (as it walks the list to map the other segments) before 
-you then use it as a key to override the DMA address in the final step. 
-It's not a concern if you have a p2p-only list and short-circuit 
-straight to that step (in which case all the shuffling was wasted effort 
-anyway), but since it's not entirely clear what a segment with zero 
-length would mean in general, it seems like a good idea to avoid passing 
-the list across a public boundary in that state, if possible.
-
-Robin.
-
->>>    }
->>>      static void iommu_dma_unmap_sg(struct device *dev, struct
->>> scatterlist *sg,
->>>            int nents, enum dma_data_direction dir, unsigned long attrs)
->>>    {
->>> -    dma_addr_t start, end;
->>> +    dma_addr_t end, start = DMA_MAPPING_ERROR;
->>>        struct scatterlist *tmp;
->>>        int i;
->>>    @@ -1054,14 +1090,20 @@ static void iommu_dma_unmap_sg(struct device
->>> *dev, struct scatterlist *sg,
->>>         * The scatterlist segments are mapped into a single
->>>         * contiguous IOVA allocation, so this is incredibly easy.
->>>         */
->>> -    start = sg_dma_address(sg);
->>> -    for_each_sg(sg_next(sg), tmp, nents - 1, i) {
->>> +    for_each_sg(sg, tmp, nents, i) {
->>> +        if (sg_is_pci_p2pdma(tmp))
->>
->> Since the flag is associated with the DMA address which will no longer
->> be valid, shouldn't it be cleared? The circumstances in which leaving it
->> around could cause a problem are tenuous, but definitely possible.
-> 
-> Yes, that's a good idea.
-> 
-> Thanks for the review!
-> 
-> Logan
-> 
+Logan
