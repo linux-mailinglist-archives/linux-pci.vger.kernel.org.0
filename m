@@ -2,115 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0EFC3381FF
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 01:00:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B60AE338293
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 01:50:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230491AbhCLAAX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 19:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41300 "EHLO
+        id S231492AbhCLAtn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 19:49:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbhCKX7r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Mar 2021 18:59:47 -0500
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45A2C061574
-        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 15:59:46 -0800 (PST)
-Received: by mail-qt1-x836.google.com with SMTP id 6so2548896qty.3
-        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 15:59:46 -0800 (PST)
+        with ESMTP id S230247AbhCLAtV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Mar 2021 19:49:21 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D804C061762
+        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 16:49:21 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id o9so27460582yba.18
+        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 16:49:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9rzGlCXRuAYzD4FxF8/kX8t+sLM/xQ6RjW+kfB9MHUI=;
-        b=Sht35sRAWhjUnG/vlACxlUdN1NXxZ2hn78xSNsQrOQiOnK1nALUmlUGHUAK1T+DYhZ
-         MX3lwQI/UxwTrkQv8d3kMYROr1PLyoiqVafUPMi7P056ufFmL/tRZlvShlZxbmxqDyNW
-         NLKw5iBy24OxHbW+DCJ1DQJfzdSe8iTc3c8sHbtF9tFwbdZcos5KLgrKfPlUhIrDUvII
-         vIew7klGAO8Wn/28Da6K3YhKEWpKl3Z8yXO4c0K2hvWjTBIXhDYwZP0hefzSiur217jB
-         Lo+rOwqj5lF4a/tIzhlWfi67C2vz4vtRgSFudHgU/4CmiKi4zEw8bQzulGoxFckdnomp
-         ZbNQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=tdPCoglx2rEXEqBLmU0P2QxdgUDSrZlH5oMXt14Ies0=;
+        b=SAiryR+/1F4QR2Sh8/WAofpQOiQwcTfPu82zao4pCXa65lDYdqykBnXnKwFzTFtMK/
+         Q87M8HfYyHqw99Zdf118VxSCYvhYnQG+eORKppK6x+MBlf2oo3XoOt/Ohol2wSmQf/xp
+         wVB0nZ00nVc3+TPKKfTZbsjBNWzzFRvtYZXbIz4ACG5q8p5WvFqy7E2CFmi9Ajz+E04A
+         Uy8u/v8dN+bKkASP3R9AC07S2LEbbwjDZ5SaGCse/p2/gv+5lH2YYZ87b6g6SBBijhwA
+         347Gs/LWWReVAPqK6YJPcO1tmv+IQfOs/BpEy7EpcOK3zCcOayp6J+gmy+3OI53yFvzD
+         zZJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9rzGlCXRuAYzD4FxF8/kX8t+sLM/xQ6RjW+kfB9MHUI=;
-        b=Y/qkgo6fic0DYyQ8jOHkPIVrEtEkG2jEaEUVuHjL2gYRwIHxwo3+gBdLjNrZKxrzHc
-         sg6f/fYm0C1i19O7yfh88YZDvzloi8mdgYBvZXCK7QfD/Pt3oxxBd783Xm5ssaFgkwIq
-         qaR/MyRkpCifukk3PBlJVCic468UywgUTsfqkGpYFIqGbKdFjztKR80k84vmhJ9VhGEG
-         MBpLut0HErtGItsE1GF+qDCKjNlTVKxGLEtFvKeTGdAU0t5hBDfbtk/N6fGCevHo1P2r
-         2zJq8T7RZPv3KyhQJEK2hz2luaFOBGMTjSSs1+7EGoM5WaUkgf9D0aqSXpFTuDrOx/Uq
-         LIDQ==
-X-Gm-Message-State: AOAM532GqVnqdu3J55YB3UVFwWXEgrCv6n5dIwoPebbiOept11aLbTuJ
-        2VknJ6yZ+3pc+sfID+O6aXctmQ==
-X-Google-Smtp-Source: ABdhPJxiCSaM0aAia7Gh2ystvnvxFkgXLtQu1szm+rOtvCsRMIOPRh5BDiwH0XxEbvHajGL8eIa3Yg==
-X-Received: by 2002:aed:20cd:: with SMTP id 71mr9996620qtb.346.1615507185328;
-        Thu, 11 Mar 2021 15:59:45 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-115-133.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.115.133])
-        by smtp.gmail.com with ESMTPSA id z89sm2953405qtd.5.2021.03.11.15.59.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Mar 2021 15:59:44 -0800 (PST)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1lKVDT-00BbRW-RG; Thu, 11 Mar 2021 19:59:43 -0400
-Date:   Thu, 11 Mar 2021 19:59:43 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Ira Weiny <iweiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>
-Subject: Re: [RFC PATCH v2 11/11] nvme-pci: Convert to using dma_map_sg for
- p2pdma pages
-Message-ID: <20210311235943.GB2710221@ziepe.ca>
-References: <20210311233142.7900-1-logang@deltatee.com>
- <20210311233142.7900-12-logang@deltatee.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210311233142.7900-12-logang@deltatee.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=tdPCoglx2rEXEqBLmU0P2QxdgUDSrZlH5oMXt14Ies0=;
+        b=mDCSWGqNVxVm3VzzZpyGq+IXH/vf/f2WHFzCvywLxX4xu2xOQZtwj8+mykztenNCXX
+         V/QRniXW9UvCxYKPkuU7x7OwCx9buQjUFzVGA0dDIy0Qk97dG6VVO1mNGMkQ7Da+55+x
+         6gi8euPTIiofs7IWrQ21FkV30ksv7ul+DNVXyP4AFzo6NHoA8ljnco+vKboA2I+W4bLE
+         IHkzgpCXqOAIMmfnOq6ZFoKJSx3xgFUgvxp6mLv+UPwtOriT3GPsVUQPHzsysCPV5HqN
+         6FmKFKANHkk/GutqKsqiAlQoBOUizrYcONH3sZ6iFCByqmN40Bz7Mdx7HH1ZJ9NMfMpU
+         GZ1w==
+X-Gm-Message-State: AOAM532IFg2zTsXSvgOcc4bwp+qDaKK3v5gzxC09uIrp+4WltPZBE2X/
+        QbgjTyfY0e7z/CUD+y5RMzLCqMD8BkTw+E97Nvk=
+X-Google-Smtp-Source: ABdhPJzShn28s+halMR+vzT0zjcZemE7Ff5yb7+xlvVhoC/UuBoxjvMG/z2t2Y6cw7vtqzmvzKenzjBEbPWRbnPwaZo=
+X-Received: from samitolvanen1.mtv.corp.google.com ([2620:15c:201:2:c86b:8269:af92:55a])
+ (user=samitolvanen job=sendgmr) by 2002:a25:e785:: with SMTP id
+ e127mr15903182ybh.451.1615510160709; Thu, 11 Mar 2021 16:49:20 -0800 (PST)
+Date:   Thu, 11 Mar 2021 16:49:02 -0800
+Message-Id: <20210312004919.669614-1-samitolvanen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.0.rc2.261.g7f71774620-goog
+Subject: [PATCH 00/17] Add support for Clang CFI
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kbuild@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 11, 2021 at 04:31:41PM -0700, Logan Gunthorpe wrote:
-> Convert to using dma_[un]map_sg() for PCI p2pdma pages.
-> 
-> This should be equivalent, though support will be somewhat less
-> (only dma-direct and dma-iommu are currently supported).
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->  drivers/nvme/host/pci.c | 27 +++++++--------------------
->  1 file changed, 7 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 7d40c6a9e58e..89ca5acf7a62 100644
-> +++ b/drivers/nvme/host/pci.c
-> @@ -577,17 +577,6 @@ static void nvme_free_sgls(struct nvme_dev *dev, struct request *req)
->  
->  }
->  
-> -static void nvme_unmap_sg(struct nvme_dev *dev, struct request *req)
-> -{
-> -	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
-> -
-> -	if (is_pci_p2pdma_page(sg_page(iod->sg)))
-> -		pci_p2pdma_unmap_sg(dev->dev, iod->sg, iod->nents,
-> -				    rq_dma_dir(req));
-> -	else
-> -		dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
-> -}
+This series adds support for Clang's Control-Flow Integrity (CFI)
+checking. With CFI, the compiler injects a runtime check before each
+indirect function call to ensure the target is a valid function with
+the correct static type. This restricts possible call targets and
+makes it more difficult for an attacker to exploit bugs that allow the
+modification of stored function pointers. For more details, see:
 
-Can the two other places with this code pattern be changed too?
+  https://clang.llvm.org/docs/ControlFlowIntegrity.html
 
-Jason
+The first patch contains build system changes and error handling,
+and implements support for cross-module indirect call checking. The
+remaining patches address issues caused by the compiler
+instrumentation. These include fixing known type mismatches, as well
+as issues with address space confusion and cross-module function
+address equality.
+
+These patches add support only for arm64, but I'll post patches also
+for x86_64 after we address the remaining issues there, including
+objtool support.
+
+You can also pull this series from
+
+  https://github.com/samitolvanen/linux.git cfi-v1
+
+
+Sami Tolvanen (17):
+  add support for Clang CFI
+  cfi: add __cficanonical
+  mm: add generic __va_function and __pa_function macros
+  module: cfi: ensure __cfi_check alignment
+  workqueue: cfi: disable callback pointer check with modules
+  kthread: cfi: disable callback pointer check with modules
+  kallsyms: cfi: strip hashes from static functions
+  bpf: disable CFI in dispatcher functions
+  lib/list_sort: fix function type mismatches
+  lkdtm: use __va_function
+  psci: use __pa_function for cpu_resume
+  arm64: implement __va_function
+  arm64: use __pa_function
+  arm64: add __nocfi to functions that jump to a physical address
+  arm64: add __nocfi to __apply_alternatives
+  KVM: arm64: Disable CFI for nVHE
+  arm64: allow CONFIG_CFI_CLANG to be selected
+
+ Makefile                                  |  17 ++
+ arch/Kconfig                              |  45 +++
+ arch/arm64/Kconfig                        |   1 +
+ arch/arm64/include/asm/memory.h           |  15 +
+ arch/arm64/include/asm/mmu_context.h      |   4 +-
+ arch/arm64/kernel/acpi_parking_protocol.c |   2 +-
+ arch/arm64/kernel/alternative.c           |   4 +-
+ arch/arm64/kernel/cpu-reset.h             |  10 +-
+ arch/arm64/kernel/cpufeature.c            |   4 +-
+ arch/arm64/kernel/psci.c                  |   3 +-
+ arch/arm64/kernel/smp_spin_table.c        |   2 +-
+ arch/arm64/kvm/hyp/nvhe/Makefile          |   6 +-
+ drivers/firmware/psci/psci.c              |   4 +-
+ drivers/misc/lkdtm/usercopy.c             |   2 +-
+ include/asm-generic/vmlinux.lds.h         |  20 +-
+ include/linux/bpf.h                       |   4 +-
+ include/linux/cfi.h                       |  41 +++
+ include/linux/compiler-clang.h            |   3 +
+ include/linux/compiler_types.h            |   8 +
+ include/linux/init.h                      |   6 +-
+ include/linux/mm.h                        |   8 +
+ include/linux/module.h                    |  13 +-
+ include/linux/pci.h                       |   4 +-
+ init/Kconfig                              |   2 +-
+ kernel/Makefile                           |   4 +
+ kernel/cfi.c                              | 329 ++++++++++++++++++++++
+ kernel/kallsyms.c                         |  54 +++-
+ kernel/kthread.c                          |   8 +-
+ kernel/module.c                           |  43 +++
+ kernel/workqueue.c                        |   9 +-
+ lib/list_sort.c                           |   8 +-
+ scripts/Makefile.modfinal                 |   2 +-
+ scripts/module.lds.S                      |  14 +-
+ 33 files changed, 655 insertions(+), 44 deletions(-)
+ create mode 100644 include/linux/cfi.h
+ create mode 100644 kernel/cfi.c
+
+
+base-commit: 28806e4d9b97865b450d72156e9ad229f2067f0b
+-- 
+2.31.0.rc2.261.g7f71774620-goog
+
