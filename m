@@ -2,240 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AD9A339526
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 18:37:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 231B4339558
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 18:47:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232836AbhCLRhY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Mar 2021 12:37:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232057AbhCLRgy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 12:36:54 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDE9C061761;
-        Fri, 12 Mar 2021 09:36:53 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id lr10-20020a17090b4b8ab02900dd61b95c5eso8813967pjb.4;
-        Fri, 12 Mar 2021 09:36:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Zjhsutfaeg2zNXMNMCFjuL9SYJCyEz5Q4XqI1wTv0Ik=;
-        b=RF1TURJaNG+GldM5/SQ5joAXkkFNDBuM6+XdowZkvodau/rvsnvyF73wAIafTxZqBO
-         8rC+JnPWv17QtUrQTGLCn5KLUGMBbaCI16q2z8FcQyOi38KYGJcUmvLPZpz/dOnb2+RW
-         c3/+v1daRTRlp1Ox1h+BdTUvcQmo6Iv1Dr+ifqoiyAzlE4EhPFos6ippfrB8U5D2Rtuz
-         I0fgFtnbj0JB0mkreB86chsonVUecAX97iELeurqJxxfzgRBtgPUQLS+GBqQnBS4e3g3
-         ZvQKSejG9CkqckJb6TieLKtyZshMR7rjLwpTIs3YUqMxQTTXnnNH82TAbPDCno1IsKA/
-         Pybg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Zjhsutfaeg2zNXMNMCFjuL9SYJCyEz5Q4XqI1wTv0Ik=;
-        b=tyNOzVNOkLeD0HjB0A8zDsnbdAiLmVX6hQU0Zm4LGrhEiaNVfAZ2ag8jQBqGCf4not
-         YN/ny77HI/yJldm4X6bGibUDhoNOJF/020YyL5qBnf2OQSm8whuarGYghPEdYcgZi+KU
-         XIivJ2J3s9H8YIWCWL1RF3bKBXsppWUdQZzSk6C0gYDTVUTB2Tbs8nbyR9BhKuBraZ/Y
-         Svk4Y3Yuvr0lOAdpEOwPq/emzX3FAdopptTs5MiJnhEq2/AHZqH+oDUeNzfgEUxA2V+T
-         wOigJKxq667im9zbd0yPkbXMcU+XuXeVSAgmfeuPgDSn/iCWBWBdyt0OBfEzmRgo6voi
-         KYzA==
-X-Gm-Message-State: AOAM533euhx0kCk7KG86tWKIlHqq4FKZXcNW8pWTwSprdTCICW4eRh9G
-        RRfKu/ts5uEfmvtK34HBvuE=
-X-Google-Smtp-Source: ABdhPJxTH/NXED/lfZqHjFsm4/PGtY8ZKPZbRVS/szN/fl0IfyyToFyhfbcnYUS3XB1iCAI5DPxfKg==
-X-Received: by 2002:a17:902:7444:b029:e4:30bf:8184 with SMTP id e4-20020a1709027444b02900e430bf8184mr115558plt.45.1615570613463;
-        Fri, 12 Mar 2021 09:36:53 -0800 (PST)
-Received: from localhost.localdomain ([103.248.31.144])
-        by smtp.googlemail.com with ESMTPSA id l10sm180045pfc.125.2021.03.12.09.36.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Mar 2021 09:36:53 -0800 (PST)
-From:   ameynarkhede03@gmail.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, raphael.norwitz@nutanix.com,
-        Amey Narkhede <ameynarkhede03@gmail.com>
-Subject: [PATCH 4/4] PCI/sysfs: Allow userspace to query and set device reset mechanism
-Date:   Fri, 12 Mar 2021 23:04:52 +0530
-Message-Id: <20210312173452.3855-5-ameynarkhede03@gmail.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210312173452.3855-1-ameynarkhede03@gmail.com>
-References: <20210312173452.3855-1-ameynarkhede03@gmail.com>
+        id S232740AbhCLRrG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Mar 2021 12:47:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:58176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231557AbhCLRqo (ORCPT <rfc822;linux-pci@vger.kernel.org>);
+        Fri, 12 Mar 2021 12:46:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA4DC1FB;
+        Fri, 12 Mar 2021 09:46:43 -0800 (PST)
+Received: from [10.57.52.136] (unknown [10.57.52.136])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74DF03F7D7;
+        Fri, 12 Mar 2021 09:46:38 -0800 (PST)
+Subject: Re: [RFC PATCH v2 00/11] Add support to dma_map_sg for P2PDMA
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc:     Minturn Dave B <dave.b.minturn@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ira Weiny <iweiny@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Ekstrand <jason@jlekstrand.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Jakowski Andrzej <andrzej.jakowski@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Xiong Jianxin <jianxin.xiong@intel.com>
+References: <20210311233142.7900-1-logang@deltatee.com>
+ <6b9be188-1ec7-527c-ae47-3f5b4e153758@arm.com>
+ <c66d247e-5da9-4866-8e6b-ee2ec4bc03d5@deltatee.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <90a2825c-da2f-c031-a70f-08c5efb3db56@arm.com>
+Date:   Fri, 12 Mar 2021 17:46:31 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c66d247e-5da9-4866-8e6b-ee2ec4bc03d5@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Amey Narkhede <ameynarkhede03@gmail.com>
+On 2021-03-12 16:18, Logan Gunthorpe wrote:
+> 
+> 
+> On 2021-03-12 8:51 a.m., Robin Murphy wrote:
+>> On 2021-03-11 23:31, Logan Gunthorpe wrote:
+>>> Hi,
+>>>
+>>> This is a rework of the first half of my RFC for doing P2PDMA in
+>>> userspace
+>>> with O_DIRECT[1].
+>>>
+>>> The largest issue with that series was the gross way of flagging P2PDMA
+>>> SGL segments. This RFC proposes a different approach, (suggested by
+>>> Dan Williams[2]) which uses the third bit in the page_link field of the
+>>> SGL.
+>>>
+>>> This approach is a lot less hacky but comes at the cost of adding a
+>>> CONFIG_64BIT dependency to CONFIG_PCI_P2PDMA and using up the last
+>>> scarce bit in the page_link. For our purposes, a 64BIT restriction is
+>>> acceptable but it's not clear if this is ok for all usecases hoping
+>>> to make use of P2PDMA.
+>>>
+>>> Matthew Wilcox has already suggested (off-list) that this is the wrong
+>>> approach, preferring a new dma mapping operation and an SGL
+>>> replacement. I
+>>> don't disagree that something along those lines would be a better long
+>>> term solution, but it involves overcoming a lot of challenges to get
+>>> there. Creating a new mapping operation still means adding support to
+>>> more
+>>> than 25 dma_map_ops implementations (many of which are on obscure
+>>> architectures) or creating a redundant path to fallback with dma_map_sg()
+>>> for every driver that uses the new operation. This RFC is an approach
+>>> that doesn't require overcoming these blocks.
+>>
+>> I don't really follow that argument - you're only adding support to two
+>> implementations with the awkward flag, so why would using a dedicated
+>> operation instead be any different? Whatever callers need to do if
+>> dma_pci_p2pdma_supported() says no, they could equally do if
+>> dma_map_p2p_sg() (or whatever) returns -ENXIO, no?
+> 
+> The thing is if the dma_map_sg doesn't support P2PDMA then P2PDMA
+> transactions cannot be done, but regular transactions can still go
+> through as they always did.
+> 
+> But replacing dma_map_sg() with dma_map_new() affects all operations,
+> P2PDMA or otherwise. If dma_map_new() isn't supported it can't simply
+> not support P2PDMA; it has to maintain a fallback path to dma_map_sg().
 
-Add reset_methods_enabled bitmap to struct pci_dev to
-keep track of user preferred device reset mechanisms.
-Add reset_method sysfs attribute to query and set
-user preferred device reset mechanisms.
+But AFAICS the equivalent fallback path still has to exist either way. 
+My impression so far is that callers would end up looking something like 
+this:
 
-Signed-off-by: Amey Narkhede <ameynarkhede03@gmail.com>
----
-Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
-Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
+	if (dma_pci_p2pdma_supported()) {
+		if (dma_map_sg(...) < 0)
+			//do non-p2p fallback due to p2p failure
+	} else {
+		//do non-p2p fallback due to lack of support
+	}
 
- Documentation/ABI/testing/sysfs-bus-pci | 15 ++++++
- drivers/pci/pci-sysfs.c                 | 66 +++++++++++++++++++++++--
- drivers/pci/pci.c                       |  3 +-
- include/linux/pci.h                     |  2 +
- 4 files changed, 82 insertions(+), 4 deletions(-)
+at which point, simply:
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 25c9c3977..ae53ecd2e 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -121,6 +121,21 @@ Description:
- 		child buses, and re-discover devices removed earlier
- 		from this part of the device tree.
+	if (dma_map_sg_p2p(...) < 0)
+		//do non-p2p fallback either way
 
-+What:		/sys/bus/pci/devices/.../reset_method
-+Date:		March 2021
-+Contact:	Amey Narkhede <ameynarkhede03@gmail.com>
-+Description:
-+		Some devices allow an individual function to be reset
-+		without affecting other functions in the same slot.
-+		For devices that have this support, a file named reset_method
-+		will be present in sysfs. Reading this file will give names
-+		of the device supported reset methods. Currently used methods
-+		are enclosed in brackets. Writing the name of any of the device
-+		supported reset method to this file will set the reset method to
-+		be used when resetting the device. Writing "none" to this file
-+		will disable ability to reset the device and writing "default"
-+		will return to the original value.
-+
- What:		/sys/bus/pci/devices/.../reset
- Date:		July 2009
- Contact:	Michael S. Tsirkin <mst@redhat.com>
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 78d2c130c..3cd06d1c0 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1304,6 +1304,59 @@ static const struct bin_attribute pcie_config_attr = {
- 	.write = pci_write_config,
- };
+seems entirely reasonable. What am I missing?
 
-+static ssize_t reset_method_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	const struct pci_reset_fn_method *reset;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	ssize_t len = 0;
-+	int i;
-+
-+	for (i = 0, reset = pci_reset_fn_methods; reset->reset_fn; i++, reset++) {
-+		if (pdev->reset_methods_enabled & (1 << i))
-+			len += sysfs_emit_at(buf, len, "[%s] ", reset->name);
-+		else if (pdev->reset_methods & (1 << i))
-+			len += sysfs_emit_at(buf, len, "%s ", reset->name);
-+	}
-+
-+	return len;
-+}
-+
-+static ssize_t reset_method_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	const struct pci_reset_fn_method *reset = pci_reset_fn_methods;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	u8 reset_mechanism;
-+	int i = 0;
-+
-+	/* Writing none disables reset */
-+	if (sysfs_streq(buf, "none")) {
-+		reset_mechanism = 0;
-+	} else if (sysfs_streq(buf, "default")) {
-+		/* Writing default returns to initial value */
-+		reset_mechanism = pdev->reset_methods;
-+	} else {
-+		reset_mechanism = 0;
-+		for (; reset->reset_fn; i++, reset++) {
-+			if (sysfs_streq(buf, reset->name)) {
-+				reset_mechanism = 1 << i;
-+				break;
-+			}
-+		}
-+		if (!reset_mechanism || !(pdev->reset_methods & reset_mechanism))
-+			return -EINVAL;
-+	}
-+
-+	pdev->reset_methods_enabled = reset_mechanism;
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(reset_method);
-+
- static ssize_t reset_store(struct device *dev, struct device_attribute *attr,
- 			   const char *buf, size_t count)
- {
-@@ -1337,11 +1390,16 @@ static int pci_create_capabilities_sysfs(struct pci_dev *dev)
- 	if (dev->reset_methods) {
- 		retval = device_create_file(&dev->dev, &dev_attr_reset);
- 		if (retval)
--			goto error;
-+			goto err_reset;
-+		retval = device_create_file(&dev->dev, &dev_attr_reset_method);
-+		if (retval)
-+			goto err_method;
- 	}
- 	return 0;
+Let's not pretend that overloading an existing API means we can start 
+feeding P2P pages into any old subsystem/driver without further changes 
+- there already *are* at least some that retry ad infinitum if DMA 
+mapping fails (the USB layer springs to mind...) and thus wouldn't 
+handle the PCI_P2PDMA_MAP_NOT_SUPPORTED case acceptably.
 
--error:
-+err_method:
-+	device_remove_file(&dev->dev, &dev_attr_reset);
-+err_reset:
- 	pcie_vpd_remove_sysfs_dev_files(dev);
- 	return retval;
- }
-@@ -1417,8 +1475,10 @@ int __must_check pci_create_sysfs_dev_files(struct pci_dev *pdev)
- static void pci_remove_capabilities_sysfs(struct pci_dev *dev)
- {
- 	pcie_vpd_remove_sysfs_dev_files(dev);
--	if (dev->reset_methods)
-+	if (dev->reset_methods) {
- 		device_remove_file(&dev->dev, &dev_attr_reset);
-+		device_remove_file(&dev->dev, &dev_attr_reset_method);
-+	}
- }
+> Given that the inputs and outputs for dma_map_new() will be completely
+> different data structures this will be quite a lot of similar paths
+> required in the driver. (ie mapping a bvec to the input struct and the
+> output struct to hardware requirements) If a bug crops up in the old
+> dma_map_sg(), developers might not notice it for some time seeing it
+> won't be used on the most popular architectures.
 
- /**
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index b7f6c6588..81cebea56 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5106,7 +5106,7 @@ int __pci_reset_function_locked(struct pci_dev *dev)
- 	might_sleep();
+Huh? I'm specifically suggesting a new interface that takes the *same* 
+data structure (at least to begin with), but just gives us more 
+flexibility in terms of introducing p2p-aware behaviour somewhat more 
+safely. Yes, we already know that we ultimately want something better 
+than scatterlists for representing things like this and dma-buf imports, 
+but that hardly has to happen overnight.
 
- 	for (i = 0, reset = pci_reset_fn_methods; reset->reset_fn; i++, reset++) {
--		if (!(dev->reset_methods & (1 << i)))
-+		if (!(dev->reset_methods_enabled & (1 << i)))
- 			continue;
-
- 		/*
-@@ -5153,6 +5153,7 @@ void pci_init_reset_methods(struct pci_dev *dev)
- 		else if (rc != -ENOTTY)
- 			break;
- 	}
-+	dev->reset_methods_enabled = dev->reset_methods;
- }
-
- /**
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index a2f003f4e..400f614e0 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -335,6 +335,8 @@ struct pci_dev {
- 	 * See pci_reset_fn_methods array in pci.c
- 	 */
- 	u8 __bitwise reset_methods;		/* bitmap for device supported reset capabilities */
-+	/* bitmap for user enabled and device supported reset capabilities */
-+	u8 __bitwise reset_methods_enabled;
- #ifdef CONFIG_PCIEAER
- 	u16		aer_cap;	/* AER capability offset */
- 	struct aer_stats *aer_stats;	/* AER stats for this device */
---
-2.30.2
+Robin.
