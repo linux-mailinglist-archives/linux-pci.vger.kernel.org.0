@@ -2,110 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAE9633833A
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 02:38:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A13B33383A7
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 03:40:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231153AbhCLBhw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 Mar 2021 20:37:52 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:36550 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230341AbhCLBhY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Mar 2021 20:37:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=TthgKQQeKaY8Nk8kByxBsMn1+rajpO9j2vCO0oMycYg=; b=k5/TOv/t9MI8U4lhl5xd0eVHRI
-        DEKyTXEcuq5sX7Xy2TXIwqOAOZ73ZqhrLuTntYIMTvCOCq8PRu9o7rWRFdwy4LEmwJcHwyWL9BvxE
-        E3psi+/9MRziL+BVzgCEmcxCM77bWwNBiF0H8QBoLUfFeTtCEH58WSnu/bBSwfWEc0X1HLYx+UY6W
-        Ig6tahtLX1Cp8ddWB4Vw3kJiR4S7bXzhUgT4PrlGFGZiBmn37haj35vV85OvDcD2h9GakgTEPhmP8
-        5ULZeqF8e05hdIS9qe+Vati5jKVwahKR4z2FkN46o43eFB9sPRT5TVTR6byB7fKBkdA6vj9c1GMvK
-        qXUpe9FA==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lKWjj-0005aG-5w; Thu, 11 Mar 2021 18:37:08 -0700
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Stephen Bates <sbates@raithlin.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Ira Weiny <iweiny@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Don Dutile <ddutile@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Minturn Dave B <dave.b.minturn@intel.com>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Xiong Jianxin <jianxin.xiong@intel.com>
-References: <20210311233142.7900-1-logang@deltatee.com>
- <20210311233142.7900-12-logang@deltatee.com>
- <20210311235943.GB2710221@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <c6cc9e07-b7cf-6d3d-b0bf-25428b197731@deltatee.com>
-Date:   Thu, 11 Mar 2021 18:37:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S231241AbhCLCjh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 Mar 2021 21:39:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229636AbhCLCj0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 Mar 2021 21:39:26 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1541FC061760
+        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 18:39:26 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id z5so11225433plg.3
+        for <linux-pci@vger.kernel.org>; Thu, 11 Mar 2021 18:39:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=djQZd3ysyoSutQHrswnBnuimUYSb59dZwog3T2MV0T0=;
+        b=mLI4wibQX2QDrTDp0g3oVwAnp8g8JH2ZHX3coY+tloIS7hQDHaHg7O3U0tqNyPkaXm
+         8rDqn7xBBo4XHsB+a2U3CBHCbqJ61M0ldpB/4IwR6Z3ug6eLs539FiVfed3DGaRV2ZTJ
+         k+65bJQ0eM8Sc9pNW/ZbuOFd1znR6iQPephC8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=djQZd3ysyoSutQHrswnBnuimUYSb59dZwog3T2MV0T0=;
+        b=o5TiOa5Eq9gDyvhwUzGXkGcQw2pCnpp2YhIo/RrkvppkEWiNQUfwy+P0RS/BEyij7L
+         KqHry91fiXqbubF1JfRn7n2HDtbaV5mmeXoVPjwJSC0olRhFxJP9YrrLiH89YR1kIoqS
+         CfMn+iIvSEI8ZB+0wSdQAIkh6xjY1e3AP4ZaAKjQRwvLhsRWh40T2+HdVg3Ou7+SKyj1
+         mgy+yRU7DRO+sFtymUOw6UCAH0uRvcq4NC3bHZb83iFfsBTnCXC5KfccJ04tyMSHuIpI
+         2Fc8Hlp69TpKzVEsQhk60E16+ny+Q/6OnnIEkWpUcQTP7e46JGRc7RVCvLVGRD0EqIZo
+         w4hQ==
+X-Gm-Message-State: AOAM530y7ljYBQF+Ku4GFCORHZy/LjJwyYEbBIoCGIO/o3HblBHgsFKJ
+        Gnrbu8g2plYrivnvmlPUiZBBYQ==
+X-Google-Smtp-Source: ABdhPJyXid/WhlRRi3IuEn/gj018RDIJnIysnt+MQKHLqWW7jwLJATluPmfQx4YLScgrHSTI05ABow==
+X-Received: by 2002:a17:902:344:b029:e4:a7ab:2e55 with SMTP id 62-20020a1709020344b02900e4a7ab2e55mr11594605pld.63.1615516765493;
+        Thu, 11 Mar 2021 18:39:25 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k127sm3858828pfd.63.2021.03.11.18.39.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Mar 2021 18:39:24 -0800 (PST)
+Date:   Thu, 11 Mar 2021 18:39:23 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Tejun Heo <tj@kernel.org>,
+        bpf@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kbuild@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/17] module: cfi: ensure __cfi_check alignment
+Message-ID: <202103111837.813997B4@keescook>
+References: <20210312004919.669614-1-samitolvanen@google.com>
+ <20210312004919.669614-5-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20210311235943.GB2710221@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: jianxin.xiong@intel.com, dave.hansen@linux.intel.com, jason@jlekstrand.net, dave.b.minturn@intel.com, andrzej.jakowski@intel.com, daniel.vetter@ffwll.ch, willy@infradead.org, ddutile@redhat.com, jhubbard@nvidia.com, iweiny@intel.com, christian.koenig@amd.com, dan.j.williams@intel.com, hch@lst.de, sbates@raithlin.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_FREE,NICE_REPLY_A autolearn=ham
-        autolearn_force=no version=3.4.2
-Subject: Re: [RFC PATCH v2 11/11] nvme-pci: Convert to using dma_map_sg for
- p2pdma pages
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210312004919.669614-5-samitolvanen@google.com>
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2021-03-11 4:59 p.m., Jason Gunthorpe wrote:
-> On Thu, Mar 11, 2021 at 04:31:41PM -0700, Logan Gunthorpe wrote:
->> Convert to using dma_[un]map_sg() for PCI p2pdma pages.
->>
->> This should be equivalent, though support will be somewhat less
->> (only dma-direct and dma-iommu are currently supported).
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>  drivers/nvme/host/pci.c | 27 +++++++--------------------
->>  1 file changed, 7 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
->> index 7d40c6a9e58e..89ca5acf7a62 100644
->> +++ b/drivers/nvme/host/pci.c
->> @@ -577,17 +577,6 @@ static void nvme_free_sgls(struct nvme_dev *dev, struct request *req)
->>  
->>  }
->>  
->> -static void nvme_unmap_sg(struct nvme_dev *dev, struct request *req)
->> -{
->> -	struct nvme_iod *iod = blk_mq_rq_to_pdu(req);
->> -
->> -	if (is_pci_p2pdma_page(sg_page(iod->sg)))
->> -		pci_p2pdma_unmap_sg(dev->dev, iod->sg, iod->nents,
->> -				    rq_dma_dir(req));
->> -	else
->> -		dma_unmap_sg(dev->dev, iod->sg, iod->nents, rq_dma_dir(req));
->> -}
+On Thu, Mar 11, 2021 at 04:49:06PM -0800, Sami Tolvanen wrote:
+> CONFIG_CFI_CLANG_SHADOW assumes the __cfi_check() function is page
+> aligned and at the beginning of the .text section. While Clang would
+> normally align the function correctly, it fails to do so for modules
+> with no executable code.
 > 
-> Can the two other places with this code pattern be changed too?
+> This change ensures the correct __cfi_check() location and
+> alignment. It also discards the .eh_frame section, which Clang can
+> generate with certain sanitizers, such as CFI.
+> 
+> Link: https://bugs.llvm.org/show_bug.cgi?id=46293
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  scripts/module.lds.S | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/module.lds.S b/scripts/module.lds.S
+> index 168cd27e6122..552ddb084f76 100644
+> --- a/scripts/module.lds.S
+> +++ b/scripts/module.lds.S
+> @@ -3,10 +3,13 @@
+>   * Archs are free to supply their own linker scripts.  ld will
+>   * combine them automatically.
+>   */
+> +#include <asm/page.h>
+> +
+>  SECTIONS {
+>  	/DISCARD/ : {
+>  		*(.discard)
+>  		*(.discard.*)
+> +		*(.eh_frame)
+>  	}
+>  
+>  	__ksymtab		0 : { *(SORT(___ksymtab+*)) }
+> @@ -40,7 +43,16 @@ SECTIONS {
+>  		*(.rodata..L*)
+>  	}
+>  
+> -	.text : { *(.text .text.[0-9a-zA-Z_]*) }
+> +#ifdef CONFIG_CFI_CLANG
+> +	/*
+> +	 * With CFI_CLANG, ensure __cfi_check is at the beginning of the
+> +	 * .text section, and that the section is aligned to page size.
+> +	 */
+> +	.text : ALIGN(PAGE_SIZE) {
+> +		*(.text.__cfi_check)
+> +		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+> +	}
+> +#endif
 
-Yes, if this goes forward, I imagine completely dropping
-pci_p2pdma_unmap_sg().
+Whoops, I think this reverts to the default .text declaration when
+CONFIG_CFI_CLANG is unset.
 
-Logan
+I think the only thing that needs the ifdef is the ALIGN, yes? Perhaps
+something like this?
+
+#ifdef CONFIG_CFI_CLANG
+# define ALIGN_CFI ALIGN(PAGE_SIZE)
+#else
+# define ALIGN_CFI
+#endif
+
+	.text : ALIGN_CFI {
+		*(.text.__cfi_check)
+		*(.text .text.[0-9a-zA-Z_]* .text..L.cfi*)
+	}
+
+
+-Kees
+
+>  }
+>  
+>  /* bring in arch-specific sections */
+> -- 
+> 2.31.0.rc2.261.g7f71774620-goog
+> 
+
+-- 
+Kees Cook
