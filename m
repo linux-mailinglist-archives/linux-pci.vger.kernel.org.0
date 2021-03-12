@@ -2,216 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83BDE339445
-	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 18:04:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 696C633951B
+	for <lists+linux-pci@lfdr.de>; Fri, 12 Mar 2021 18:37:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232116AbhCLREM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 Mar 2021 12:04:12 -0500
-Received: from ale.deltatee.com ([204.191.154.188]:42248 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232324AbhCLRDz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 12:03:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
-        Message-ID:From:References:Cc:To:content-disposition;
-        bh=V/VslKJywQsa+B9YAC8dghP1OO6CVmZUKXpLzW4pIhQ=; b=hvIdFq2DAqZRf+jqWidcKj23gK
-        25AAfGpLmwIThDbmmZoRtxX0b8MWQN1I83BkIkCfG35j4ZNKIf8B6ZTZ/jgdT003ovN4T5xlZVcsy
-        jMqI7v7ZgfNyjIK9Y3gz/UFDtQLfV2L/5OTBbVO+4EeCF29eUe/Xs8yA4hGkodsUWqZMHjl9ObvbT
-        UlWR/0K94BQ0t2VXgd4rlsJO1VCweVLuaREQlx4mCqN1D2xxRvOOd5SQUMQBcFk3W6Kuukq0HeoG5
-        sUeZeX9ISQJYUCc+e8SQ1CtaHLsHhzcptg5958i8F1nX8awDpGpn036mCjZazwTrRxyKMG3rEht3H
-        HLX9E1fA==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1lKlCO-0007pn-Nb; Fri, 12 Mar 2021 10:03:41 -0700
-To:     Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org
-Cc:     Minturn Dave B <dave.b.minturn@intel.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <iweiny@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Ekstrand <jason@jlekstrand.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Jakowski Andrzej <andrzej.jakowski@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Xiong Jianxin <jianxin.xiong@intel.com>
-References: <20210311233142.7900-1-logang@deltatee.com>
- <20210311233142.7900-9-logang@deltatee.com>
- <accd4187-7a9d-a8fc-f216-98ec24e3411a@arm.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <45701356-ee41-1ad2-0e06-ca74af87b05a@deltatee.com>
-Date:   Fri, 12 Mar 2021 10:03:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S232363AbhCLRgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 Mar 2021 12:36:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232392AbhCLRgj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 Mar 2021 12:36:39 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFABC061574;
+        Fri, 12 Mar 2021 09:36:39 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id s21so5481252pjq.1;
+        Fri, 12 Mar 2021 09:36:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5ihFZ7BHLilp/vZCzAtM3Ib6e3/Q4HLkfYso80HW+1A=;
+        b=By+wEJ2gTR3BGf3ZwucvwFywlAr3EOl1y2J1RgszSFax28ruvnMz//bqhTRizLaSas
+         ZdnzOumuXuFZoQ7d+aKSIMBYg4seGF1Gq30Y3lADRwXn380JHlwDQmVWnCfubxhHo2yH
+         fXLR6tJooSTg+KyVFfsVl5/z+Bxk/50iRr71NON4ZbX1ydqfr+XSJYmXB/sgOm8YcQKT
+         MStxiHACLZrAO457oDOPum/N2PCmE2HsNp9pRZe0CsNa3CfREPOkmKSeq9rx+kAsRFAH
+         rIt+dEP7z/gNBECZKSCXBgW21+bZ1vwy/e5EDfuUSSUVAMp7IZboJMROq1DnnlM3ROMc
+         nadA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5ihFZ7BHLilp/vZCzAtM3Ib6e3/Q4HLkfYso80HW+1A=;
+        b=UESW6DwzePQYJnTWwozt320EKnfgF/xFasW0qqI+FUTxWLMjgZExTygU7s4iyDB0EP
+         ksWp0LkT5ygSsGND5EOL/dRAmm6+d/P1maHw7lq1Fkm8BuWZy1dwL28ksjkFV3HOLsTt
+         52DnDyZMeieCRT0nWCqRRwIHnRUzxhe2jDzdm4Xv5Gyd7YP2QhsAzYtDdH0hTH71TFek
+         ued2JgS5WeWzx4CaWHOyfxvvb8++qvYyV3PMvM2seh2KEl4bAIGgRQLsaybqehmjJ3MC
+         nr51+peu7vCqP28JsKzqKeZ88O07B1iQYCyaTgHk3KoNBVgkum1husz8QxtUnW05x7de
+         VqzQ==
+X-Gm-Message-State: AOAM532CjnmVqowJThrP/x6PFkEnxe8KySdNQJuvalfGmXhdsxg8hYrP
+        p80j8UWQaf5Vvxt70uymKBs=
+X-Google-Smtp-Source: ABdhPJyRWwwEAmq9mh9/pmG4QBAK3h0WHECgl8+56tprKYv+8IQKSr5XJLAGXGHt3koRJtHd/bdT3A==
+X-Received: by 2002:a17:90a:670a:: with SMTP id n10mr15081646pjj.101.1615570599284;
+        Fri, 12 Mar 2021 09:36:39 -0800 (PST)
+Received: from localhost.localdomain ([103.248.31.144])
+        by smtp.googlemail.com with ESMTPSA id l10sm180045pfc.125.2021.03.12.09.36.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Mar 2021 09:36:38 -0800 (PST)
+From:   ameynarkhede03@gmail.com
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, raphael.norwitz@nutanix.com,
+        Amey Narkhede <ameynarkhede03@gmail.com>
+Subject: [PATCH 0/4] Expose and manage PCI device reset
+Date:   Fri, 12 Mar 2021 23:04:48 +0530
+Message-Id: <20210312173452.3855-1-ameynarkhede03@gmail.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <accd4187-7a9d-a8fc-f216-98ec24e3411a@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: jianxin.xiong@intel.com, hch@lst.de, andrzej.jakowski@intel.com, sbates@raithlin.com, dan.j.williams@intel.com, daniel.vetter@ffwll.ch, jason@jlekstrand.net, jgg@ziepe.ca, christian.koenig@amd.com, willy@infradead.org, iweiny@intel.com, dave.hansen@linux.intel.com, jhubbard@nvidia.com, dave.b.minturn@intel.com, iommu@lists.linux-foundation.org, linux-mm@kvack.org, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: Re: [RFC PATCH v2 08/11] iommu/dma: Support PCI P2PDMA pages in
- dma-iommu map_sg
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Amey Narkhede <ameynarkhede03@gmail.com>
 
+PCI and PCIe devices may support a number of possible reset mechanisms
+for example Function Level Reset (FLR) provided via Advanced Feature or
+PCIe capabilities, Power Management reset, bus reset, or device specific reset.
+Currently the PCI subsystem creates a policy prioritizing these reset methods
+which provides neither visibility nor control to userspace.
 
-On 2021-03-12 8:52 a.m., Robin Murphy wrote:
-> On 2021-03-11 23:31, Logan Gunthorpe wrote:
->> When a PCI P2PDMA page is seen, set the IOVA length of the segment
->> to zero so that it is not mapped into the IOVA. Then, in finalise_sg(),
->> apply the appropriate bus address to the segment. The IOVA is not
->> created if the scatterlist only consists of P2PDMA pages.
-> 
-> This misled me at first, but I see the implementation does actually
-> appear to accomodate the case of working ACS where P2P *would* still
-> need to be mapped at the IOMMU.
+Expose the reset methods available per device to userspace, via sysfs
+and allow an administrative user or device owner to have ability to
+manage per device reset method priorities or exclusions.
+This feature aims to allow greater control of a device for use cases
+as device assignment, where specific device or platform issues may
+interact poorly with a given reset method, and for which device specific
+quirks have not been developed.
 
-Yes, that's correct.
->>   static int __finalise_sg(struct device *dev, struct scatterlist *sg,
->> int nents,
->> -        dma_addr_t dma_addr)
->> +        dma_addr_t dma_addr, unsigned long attrs)
->>   {
->>       struct scatterlist *s, *cur = sg;
->>       unsigned long seg_mask = dma_get_seg_boundary(dev);
->> @@ -864,6 +865,20 @@ static int __finalise_sg(struct device *dev,
->> struct scatterlist *sg, int nents,
->>           sg_dma_address(s) = DMA_MAPPING_ERROR;
->>           sg_dma_len(s) = 0;
->>   +        if (is_pci_p2pdma_page(sg_page(s)) && !s_iova_len) {
->> +            if (i > 0)
->> +                cur = sg_next(cur);
->> +
->> +            sg_dma_address(cur) = sg_phys(s) + s->offset -
-> 
-> Are you sure about that? ;)
+Suggested-by: Alex Williamson <alex.williamson@redhat.com>
+Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+Reviewed-by: Raphael Norwitz <raphael.norwitz@nutanix.com>
 
-Do you see a bug? I don't follow you...
+Amey Narkhede (4):
+  PCI: Refactor pcie_flr to follow calling convention of other reset
+    methods
+  PCI: Add new bitmap for keeping track of supported reset mechanisms
+  PCI: Remove reset_fn field from pci_dev
+  PCI/sysfs: Allow userspace to query and set device reset mechanism
 
->> +                pci_p2pdma_bus_offset(sg_page(s));
-> 
-> Can the bus offset make P2P addresses overlap with regions of mem space
-> that we might use for regular IOVA allocation? That would be very bad...
+ Documentation/ABI/testing/sysfs-bus-pci       |  15 ++
+ drivers/crypto/cavium/nitrox/nitrox_main.c    |   4 +-
+ drivers/crypto/qat/qat_common/adf_aer.c       |   2 +-
+ drivers/infiniband/hw/hfi1/chip.c             |   4 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c     |   2 +-
+ .../ethernet/cavium/liquidio/lio_vf_main.c    |   4 +-
+ .../ethernet/cavium/liquidio/octeon_mailbox.c |   2 +-
+ drivers/net/ethernet/freescale/enetc/enetc.c  |   2 +-
+ .../ethernet/freescale/enetc/enetc_pci_mdio.c |   2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |   4 +-
+ drivers/pci/pci-sysfs.c                       |  68 +++++++-
+ drivers/pci/pci.c                             | 160 ++++++++++--------
+ drivers/pci/pci.h                             |  11 +-
+ drivers/pci/pcie/aer.c                        |  12 +-
+ drivers/pci/probe.c                           |   4 +-
+ drivers/pci/quirks.c                          |  17 +-
+ include/linux/pci.h                           |  17 +-
+ 17 files changed, 213 insertions(+), 117 deletions(-)
 
-No. IOMMU drivers already disallow all PCI addresses from being used as
-IOVA addresses. See, for example,  dmar_init_reserved_ranges(). It would
-be a huge problem for a whole lot of other reasons if it didn't.
-
-
->> @@ -960,11 +975,12 @@ static int iommu_dma_map_sg(struct device *dev,
->> struct scatterlist *sg,
->>       struct iommu_dma_cookie *cookie = domain->iova_cookie;
->>       struct iova_domain *iovad = &cookie->iovad;
->>       struct scatterlist *s, *prev = NULL;
->> +    struct dev_pagemap *pgmap = NULL;
->>       int prot = dma_info_to_prot(dir, dev_is_dma_coherent(dev), attrs);
->>       dma_addr_t iova;
->>       size_t iova_len = 0;
->>       unsigned long mask = dma_get_seg_boundary(dev);
->> -    int i;
->> +    int i, map = -1, ret = 0;
->>         if (static_branch_unlikely(&iommu_deferred_attach_enabled) &&
->>           iommu_deferred_attach(dev, domain))
->> @@ -993,6 +1009,23 @@ static int iommu_dma_map_sg(struct device *dev,
->> struct scatterlist *sg,
->>           s_length = iova_align(iovad, s_length + s_iova_off);
->>           s->length = s_length;
->>   +        if (is_pci_p2pdma_page(sg_page(s))) {
->> +            if (sg_page(s)->pgmap != pgmap) {
->> +                pgmap = sg_page(s)->pgmap;
->> +                map = pci_p2pdma_dma_map_type(dev, pgmap);
->> +            }
->> +
->> +            if (map < 0) {
-> 
-> It rather feels like it should be the job of whoever creates the list in
-> the first place not to put unusable pages in it, especially since the
-> p2pdma_map_type looks to be a fairly coarse-grained and static thing.
-> The DMA API isn't responsible for validating normal memory pages, so
-> what makes P2P special?
-
-Yes, that would be ideal, but there's some difficulties there. For the
-driver to check the pages, it would need to loop through the entire SG
-one more time on every transaction, regardless of whether there are
-P2PDMA pages, or not. So that will have a performance impact even when
-the feature isn't being used. I don't think that'll be acceptable for
-many drivers.
-
-The other possibility is for GUP to do it when it gets the pages from
-userspace. But GUP doesn't have all the information to do this at the
-moment. We'd have to pass the struct device that will eventually map the
-pages through all the nested functions in the GUP to do that test at
-that time. This might not be a bad option (that I half looked into), but
-I'm not sure how acceptable it would be to the GUP developers.
-
-But even if we do verify the pages ahead of time, we still need the same
-infrastructure in dma_map_sg(); it could only now be a BUG if the driver
-sent invalid pages instead of an error return.
-
->> +                ret = -EREMOTEIO;
->> +                goto out_restore_sg;
->> +            }
->> +
->> +            if (map) {
->> +                s->length = 0;
-> 
-> I'm not really thrilled about the idea of passing zero-length segments
-> to iommu_map_sg(). Yes, it happens to trick the concatenation logic in
-> the current implementation into doing what you want, but it feels fragile.
-
-We're not passing zero length segments to iommu_map_sg() (or any
-function). This loop is just scanning to calculate the length of the
-required IOVA. __finalise_sg() (which is intimately tied to this loop)
-then needs a way to determine which segments were P2P segments. The
-existing code already overwrites s->length with an aligned length and
-stores the original length in sg_dma_len. So we're not relying on
-tricking any logic here.
-
-
->>   }
->>     static void iommu_dma_unmap_sg(struct device *dev, struct
->> scatterlist *sg,
->>           int nents, enum dma_data_direction dir, unsigned long attrs)
->>   {
->> -    dma_addr_t start, end;
->> +    dma_addr_t end, start = DMA_MAPPING_ERROR;
->>       struct scatterlist *tmp;
->>       int i;
->>   @@ -1054,14 +1090,20 @@ static void iommu_dma_unmap_sg(struct device
->> *dev, struct scatterlist *sg,
->>        * The scatterlist segments are mapped into a single
->>        * contiguous IOVA allocation, so this is incredibly easy.
->>        */
->> -    start = sg_dma_address(sg);
->> -    for_each_sg(sg_next(sg), tmp, nents - 1, i) {
->> +    for_each_sg(sg, tmp, nents, i) {
->> +        if (sg_is_pci_p2pdma(tmp))
-> 
-> Since the flag is associated with the DMA address which will no longer
-> be valid, shouldn't it be cleared? The circumstances in which leaving it
-> around could cause a problem are tenuous, but definitely possible.
-
-Yes, that's a good idea.
-
-Thanks for the review!
-
-Logan
+--
+2.30.2
